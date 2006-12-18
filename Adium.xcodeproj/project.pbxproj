@@ -935,7 +935,6 @@
 		377ED0220AE95D7D00CB7BDF /* PSMTabBarControl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 377EC8930AE9525B00CB7BDF /* PSMTabBarControl.framework */; };
 		377ED2670AED59E600CB7BDF /* TabsAdvancedPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 377ED2640AED59E600CB7BDF /* TabsAdvancedPreferences.m */; };
 		377ED2680AED59E600CB7BDF /* TabsAdvanced.nib in Resources */ = {isa = PBXBuildFile; fileRef = 377ED2650AED59E600CB7BDF /* TabsAdvanced.nib */; };
-		38238C610A9B5CF4005EBAEE /* smackx-jingle.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 81E708810A98AA9300D9409E /* smackx-jingle.jar */; };
 		38399DCB0A95C9CF006C8EB1 /* AIVideoConfControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 383984700A94F780006C8EB1 /* AIVideoConfControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		387226C90A8B7C84002CC4F4 /* AIVideoConfController.m in Sources */ = {isa = PBXBuildFile; fileRef = 387226C50A8B7C84002CC4F4 /* AIVideoConfController.m */; };
 		3872285E0A8BFCA4002CC4F4 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D836F307CBF960006466F2 /* QuickTime.framework */; };
@@ -1086,7 +1085,6 @@
 		633F175B08F905A700C76383 /* AIXtraInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F175708F905A700C76383 /* AIXtraInfo.m */; };
 		633F175D08F905A800C76383 /* AIXtrasManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F175908F905A700C76383 /* AIXtrasManager.m */; };
 		638392F809D4D67A0067B9B7 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
-		6383935009D4D6AA0067B9B7 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
 		63AF931A0AA81E2300B88299 /* Bright Blue.ListTheme in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63AF91C90AA8102600B88299 /* Bright Blue.ListTheme */; };
 		63AF931B0AA81E2300B88299 /* Bright Green.ListTheme in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63AF91CA0AA8102600B88299 /* Bright Green.ListTheme */; };
 		63AF931C0AA81E2300B88299 /* Bright Orange.ListTheme in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63AF91CB0AA8102600B88299 /* Bright Orange.ListTheme */; };
@@ -1126,106 +1124,10 @@
 		7E824CE106387FAF00813072 /* SHAutoValidatingTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CD206387FAF00813072 /* SHAutoValidatingTextView.m */; };
 		7E824CE306387FAF00813072 /* SHLinkEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CD406387FAF00813072 /* SHLinkEditorWindowController.m */; };
 		7E824CEB06387FAF00813072 /* SHLinkManagementPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */; };
-		8102A7260A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102A7240A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m */; };
-		8102A8210A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102A81F0A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m */; };
-		8102A8880A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 8102A8860A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m */; };
-		8109A5910ABF68BB00D5F669 /* SmackJavaBridge.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81B4C9900A416BE500A8ABF5 /* SmackJavaBridge.jar */; };
-		811DE2170A862E5900487D47 /* InvisibleCommand.java in Sources */ = {isa = PBXBuildFile; fileRef = 811DE2160A862E5900487D47 /* InvisibleCommand.java */; };
-		81376B690A9273A000298452 /* SmackGoogleService.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376B670A9273A000298452 /* SmackGoogleService.m */; };
-		81376B810A9274F000298452 /* SmackGoogleAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376B7F0A9274F000298452 /* SmackGoogleAccount.m */; };
-		81376B8D0A92794F00298452 /* SmackGoogleAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81376B870A92794E00298452 /* SmackGoogleAccountView.nib */; };
-		81376B940A92797E00298452 /* SmackGoogleAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376B920A92797D00298452 /* SmackGoogleAccountViewController.m */; };
-		81376DF70A92B01500298452 /* SmackLiveJournalAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81376DF10A92B01400298452 /* SmackLiveJournalAccountView.nib */; };
-		81376DFF0A92B06B00298452 /* SmackLiveJournalAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376DF90A92B06B00298452 /* SmackLiveJournalAccount.m */; };
-		81376E010A92B06B00298452 /* SmackLiveJournalAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376DFB0A92B06B00298452 /* SmackLiveJournalAccountViewController.m */; };
-		81376E030A92B06B00298452 /* SmackLiveJournalService.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376DFD0A92B06B00298452 /* SmackLiveJournalService.m */; };
-		81376E3D0A92B66E00298452 /* SmackGoogleNewMailPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81376E3B0A92B66E00298452 /* SmackGoogleNewMailPlugin.m */; };
-		81376E460A92B6FB00298452 /* GoogleSettings.java in Sources */ = {isa = PBXBuildFile; fileRef = 81376E450A92B6FB00298452 /* GoogleSettings.java */; };
-		81376EA10A92C11800298452 /* MailNotification.java in Sources */ = {isa = PBXBuildFile; fileRef = 81376EA00A92C11800298452 /* MailNotification.java */; };
-		815679900A339B1F005ADC13 /* SmackListContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 8156798E0A339B1F005ADC13 /* SmackListContact.m */; };
-		815D2F2A0A74D903009338C2 /* OutOfBandDataExtension.java in Sources */ = {isa = PBXBuildFile; fileRef = 815D2F290A74D903009338C2 /* OutOfBandDataExtension.java */; };
-		815D321F0A751674009338C2 /* SmackXMPPChatStateNotificationsPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 815D321D0A751674009338C2 /* SmackXMPPChatStateNotificationsPlugin.m */; };
-		815D32380A7518D7009338C2 /* ChatStateNotifications.java in Sources */ = {isa = PBXBuildFile; fileRef = 815D32370A7518D7009338C2 /* ChatStateNotifications.java */; };
-		815D357F0A7585EA009338C2 /* SmackXMPPVCardPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 815D357D0A7585EA009338C2 /* SmackXMPPVCardPlugin.m */; };
-		815D37550A765E83009338C2 /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 815D37460A765E83009338C2 /* CoreServices.framework */; };
-		815ECFBB0A6A56540024B6FE /* SmackXMPPRosterPluginListener.java in Sources */ = {isa = PBXBuildFile; fileRef = 815ECFBA0A6A56530024B6FE /* SmackXMPPRosterPluginListener.java */; };
-		815ED1B50A6C4CD80024B6FE /* SmackXMPPMUCChangeNickname.nib in Resources */ = {isa = PBXBuildFile; fileRef = 815ED1B30A6C4CD80024B6FE /* SmackXMPPMUCChangeNickname.nib */; };
-		815ED2920A6C5AA00024B6FE /* SmackXMPPMUCChangeSubject.nib in Resources */ = {isa = PBXBuildFile; fileRef = 815ED2900A6C5A9F0024B6FE /* SmackXMPPMUCChangeSubject.nib */; };
-		815ED31E0A6C637E0024B6FE /* SmackXMPPGatewayInteractionPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 815ED31C0A6C637D0024B6FE /* SmackXMPPGatewayInteractionPlugin.m */; };
-		81AB120C0A8B5F6100E32420 /* SmackJinglePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81AB120A0A8B5F6100E32420 /* SmackJinglePlugin.m */; };
-		81AB120E0A8B5F8A00E32420 /* SmackXMPPJingleListener.java in Sources */ = {isa = PBXBuildFile; fileRef = 81AB120D0A8B5F8A00E32420 /* SmackXMPPJingleListener.java */; };
-		81B4CA200A416C3B00A8ABF5 /* SmackBridge.java in Sources */ = {isa = PBXBuildFile; fileRef = 81E2C5EE0A416A0D0070CE78 /* SmackBridge.java */; };
-		81B4CA210A416C4200A8ABF5 /* smack.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 81F659B90A2A8C4E008FC8E7 /* smack.jar */; };
-		81B4CA220A416C4200A8ABF5 /* smackx.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 81F659BA0A2A8C4E008FC8E7 /* smackx.jar */; };
-		81B4CA7D0A416F8300A8ABF5 /* ruli_addr.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA520A416F7E00A8ABF5 /* ruli_addr.c */; };
-		81B4CA7F0A416F8300A8ABF5 /* ruli_conf.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA540A416F7F00A8ABF5 /* ruli_conf.c */; };
-		81B4CA810A416F8300A8ABF5 /* ruli_fsm.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA560A416F7F00A8ABF5 /* ruli_fsm.c */; };
-		81B4CA830A416F8300A8ABF5 /* ruli_getaddrinfo.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA580A416F7F00A8ABF5 /* ruli_getaddrinfo.c */; };
-		81B4CA850A416F8300A8ABF5 /* ruli_host.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA5A0A416F7F00A8ABF5 /* ruli_host.c */; };
-		81B4CA870A416F8300A8ABF5 /* ruli_http.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA5C0A416F7F00A8ABF5 /* ruli_http.c */; };
-		81B4CA890A416F8300A8ABF5 /* ruli_isaac.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA5E0A416F7F00A8ABF5 /* ruli_isaac.c */; };
-		81B4CA8C0A416F8300A8ABF5 /* ruli_list.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA610A416F8000A8ABF5 /* ruli_list.c */; };
-		81B4CA8E0A416F8300A8ABF5 /* ruli_mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA630A416F8000A8ABF5 /* ruli_mem.c */; };
-		81B4CA900A416F8300A8ABF5 /* ruli_msg.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA650A416F8000A8ABF5 /* ruli_msg.c */; };
-		81B4CA930A416F8300A8ABF5 /* ruli_parse.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA680A416F8000A8ABF5 /* ruli_parse.c */; };
-		81B4CA950A416F8300A8ABF5 /* ruli_rand.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA6A0A416F8100A8ABF5 /* ruli_rand.c */; };
-		81B4CA970A416F8300A8ABF5 /* ruli_res.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA6C0A416F8100A8ABF5 /* ruli_res.c */; };
-		81B4CA990A416F8300A8ABF5 /* ruli_search.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA6E0A416F8100A8ABF5 /* ruli_search.c */; };
-		81B4CA9B0A416F8300A8ABF5 /* ruli_smtp.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA700A416F8100A8ABF5 /* ruli_smtp.c */; };
-		81B4CA9D0A416F8300A8ABF5 /* ruli_sock.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA720A416F8200A8ABF5 /* ruli_sock.c */; };
-		81B4CA9F0A416F8300A8ABF5 /* ruli_srv.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA740A416F8200A8ABF5 /* ruli_srv.c */; };
-		81B4CAA10A416F8300A8ABF5 /* ruli_sync.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA760A416F8200A8ABF5 /* ruli_sync.c */; };
-		81B4CAA30A416F8300A8ABF5 /* ruli_txt.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA780A416F8200A8ABF5 /* ruli_txt.c */; };
-		81B4CAA50A416F8300A8ABF5 /* ruli_util.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CA7A0A416F8200A8ABF5 /* ruli_util.c */; };
-		81B4CDA40A4181C500A8ABF5 /* read-fd.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CD9C0A4181C500A8ABF5 /* read-fd.c */; };
-		81B4CDA50A4181C500A8ABF5 /* read-mem.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CD9D0A4181C500A8ABF5 /* read-mem.c */; };
-		81B4CDA60A4181C500A8ABF5 /* read.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CD9E0A4181C500A8ABF5 /* read.c */; };
-		81B4CDA70A4181C500A8ABF5 /* select.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CD9F0A4181C500A8ABF5 /* select.c */; };
-		81B4CDA80A4181C500A8ABF5 /* signal.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CDA00A4181C500A8ABF5 /* signal.c */; };
-		81B4CDA90A4181C500A8ABF5 /* sys.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CDA10A4181C500A8ABF5 /* sys.c */; };
-		81B4CDE50A41857D00A8ABF5 /* alloc.c in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CDE40A41857D00A8ABF5 /* alloc.c */; };
-		81B4CE640A42449700A8ABF5 /* SmackXMPPRosterPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81B4CE620A42449600A8ABF5 /* SmackXMPPRosterPlugin.m */; };
-		81BE445E0A6C710B00AADA28 /* SmackXMPPServiceDiscoveryBrowsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 81BE445C0A6C710B00AADA28 /* SmackXMPPServiceDiscoveryBrowsing.m */; };
-		81BE44690A6C731900AADA28 /* SmackXMPPServiceDiscoveryBrowser.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81BE44670A6C731900AADA28 /* SmackXMPPServiceDiscoveryBrowser.nib */; };
-		81BE5F300A70660000AADA28 /* SmackXMPPRegistration.m in Sources */ = {isa = PBXBuildFile; fileRef = 81BE5F2E0A70660000AADA28 /* SmackXMPPRegistration.m */; };
-		81BE647A0A711F6600AADA28 /* SmackXMPPFileTransferListener.java in Sources */ = {isa = PBXBuildFile; fileRef = 81BE64790A711F6600AADA28 /* SmackXMPPFileTransferListener.java */; };
-		81BE648B0A71220300AADA28 /* SmackXMPPFileTransferPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81BE64890A71220300AADA28 /* SmackXMPPFileTransferPlugin.m */; };
-		81BE66B80A715FB200AADA28 /* SmackXMPPAccountRegistrationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81BE66B60A715FB200AADA28 /* SmackXMPPAccountRegistrationController.m */; };
-		81C3A7060A8FE15000A575B6 /* SmackXMPPHeadlinesViewer.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81C3A7040A8FE15000A575B6 /* SmackXMPPHeadlinesViewer.nib */; };
-		81C3A8DA0A90F63B00A575B6 /* SmackXMPPPhoneControl.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81C3A8D80A90F63B00A575B6 /* SmackXMPPPhoneControl.nib */; };
-		81C3A8FD0A91072900A575B6 /* asterisk-im-client.jar in Frameworks */ = {isa = PBXBuildFile; fileRef = 81C3A8FC0A91072900A575B6 /* asterisk-im-client.jar */; };
-		81C3A8FE0A91076100A575B6 /* asterisk-im-client.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81C3A8FC0A91072900A575B6 /* asterisk-im-client.jar */; };
-		81C3A94D0A910A5100A575B6 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 348E5ACA06D2A74C004C051C /* AddressBook.framework */; };
-		81C3AA8B0A91393F00A575B6 /* SmackXMPPAsteriskListener.java in Sources */ = {isa = PBXBuildFile; fileRef = 81C3A9930A91162E00A575B6 /* SmackXMPPAsteriskListener.java */; };
-		81C3AC1D0A9171CD00A575B6 /* SmackXMPPPhonePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81C3AC1C0A9171CC00A575B6 /* SmackXMPPPhonePlugin.m */; };
-		81D5A15C0A5943240099F9B9 /* SmackXMPPMultiUserChatPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81D5A15A0A5943230099F9B9 /* SmackXMPPMultiUserChatPlugin.m */; };
-		81D5A1690A5944320099F9B9 /* SmackXMPPMultiUserChatPluginListener.java in Sources */ = {isa = PBXBuildFile; fileRef = 81D5A1680A5944320099F9B9 /* SmackXMPPMultiUserChatPluginListener.java */; };
-		81D5A1CC0A59710E0099F9B9 /* SmackXMPPJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81D5A1CA0A59710D0099F9B9 /* SmackXMPPJoinChatView.nib */; };
-		81D5A80A0A59F77A0099F9B9 /* SmackXMPPFormConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 81D5A8080A59F77A0099F9B9 /* SmackXMPPFormConverter.m */; };
-		81D5A8600A5A14460099F9B9 /* SmackXMPPForm.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81D5A85E0A5A14450099F9B9 /* SmackXMPPForm.nib */; };
-		81D5A8640A5A14AE0099F9B9 /* SmackXMPPFormController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81D5A8620A5A14AE0099F9B9 /* SmackXMPPFormController.m */; };
-		81D5A8F50A5A15D10099F9B9 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C103FAE057127A500F3C158 /* WebKit.framework */; };
-		81DA14730A779B2E00569134 /* SmackXMPPVCardEditor.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81DA14710A779B2E00569134 /* SmackXMPPVCardEditor.nib */; };
-		81E708820A98AAA800D9409E /* smackx-jingle.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81E708810A98AA9300D9409E /* smackx-jingle.jar */; };
-		81F651740A291004008FC8E7 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
-		81F651750A291004008FC8E7 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
-		81F651760A291004008FC8E7 /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 115E0E8D0952514A003218FE /* JavaVM.framework */; };
-		81F6519D0A291145008FC8E7 /* SmackServicePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F6519B0A291145008FC8E7 /* SmackServicePlugin.m */; };
-		81F651AD0A29123D008FC8E7 /* SmackXMPPService.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F651AB0A29123C008FC8E7 /* SmackXMPPService.m */; };
-		81F654B20A29339F008FC8E7 /* SmackXMPPAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F654B00A29339F008FC8E7 /* SmackXMPPAccount.m */; };
-		81F654BE0A29349C008FC8E7 /* SmackCocoaAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F654BC0A29349C008FC8E7 /* SmackCocoaAdapter.m */; };
-		81F6554F0A293DD0008FC8E7 /* Smack-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 81F6554E0A293DD0008FC8E7 /* Smack-Info.plist */; };
-		81F656580A2A5315008FC8E7 /* Smack.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F6508D0A290FB6008FC8E7 /* Smack.AdiumPlugin */; };
-		81F656720A2A5458008FC8E7 /* SmackXMPPAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F656700A2A5458008FC8E7 /* SmackXMPPAccountViewController.m */; };
-		81F656BE0A2A5880008FC8E7 /* SmackXMPPAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81F656BC0A2A587F008FC8E7 /* SmackXMPPAccountView.nib */; };
-		81F659BD0A2A8C81008FC8E7 /* smack.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F659B90A2A8C4E008FC8E7 /* smack.jar */; };
-		81F659BE0A2A8C81008FC8E7 /* smackx.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 81F659BA0A2A8C4E008FC8E7 /* smackx.jar */; };
-		81F9CDEA0A7D83AE004A35BD /* VCardUpdateExtension.java in Sources */ = {isa = PBXBuildFile; fileRef = 81F9CDE90A7D83AE004A35BD /* VCardUpdateExtension.java */; };
+		8163F99C0B318824002005EE /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
 		81F9D0850A7E905B004A35BD /* AIJavaController.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F9D0830A7E905B004A35BD /* AIJavaController.m */; };
 		81F9D1E80A7F832A004A35BD /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 115E0E8D0952514A003218FE /* JavaVM.framework */; };
 		81F9D1EA0A7F8396004A35BD /* JavaCocoaAdapter.java in Sources */ = {isa = PBXBuildFile; fileRef = 81F9D1E90A7F8395004A35BD /* JavaCocoaAdapter.java */; };
-		81F9D4980A8158EB004A35BD /* SmackXMPPVersionPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F9D4960A8158EA004A35BD /* SmackXMPPVersionPlugin.m */; };
-		81F9D8B00A83A92F004A35BD /* SmackXMPPPrivacyPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 81F9D8AE0A83A92E004A35BD /* SmackXMPPPrivacyPlugin.m */; };
 		81FB2B1A0A95DFB20095E77A /* AIJavaControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 8191AB1A0A94EAEE00A5A404 /* AIJavaControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E124DEC07D34C7300AA91C5 /* CBGrowlAlertDetailPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E124DE807D34C7300AA91C5 /* CBGrowlAlertDetailPane.m */; };
 		9E124DEE07D34C7400AA91C5 /* NEHGrowlPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E124DEA07D34C7300AA91C5 /* NEHGrowlPlugin.m */; };
@@ -1281,7 +1183,6 @@
 		EE147A800896B33400A21377 /* OWABSearchWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE147A7E0896B33400A21377 /* OWABSearchWindowController.m */; };
 		EE96A3CC0A9C5E4000C47A57 /* FriBidi.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
 		EEC461B6096D68580028632F /* OWSpellingPerContactPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = EEC461B4096D68580028632F /* OWSpellingPerContactPlugin.m */; };
-		EEE0AB750B15E99C00C496A1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		EEF71BA60A9C76AB00284E7E /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
 		F4D9BBF70ACF5B5300615461 /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
 		F4D9BBF80ACF5B9400615461 /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
@@ -1309,6 +1210,23 @@
 			script = "javac -d \"${TARGET_BUILD_DIR}\" \"${INPUT_FILE_PATH}\"";
 		};
 /* End PBXBuildRule section */
+
+/* Begin PBXBuildStyle section */
+		819EAA6D0B0CE743001C67C1 /* Development */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+			};
+			name = Development;
+		};
+		819EAA6E0B0CE743001C67C1 /* Deployment */ = {
+			isa = PBXBuildStyle;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+			};
+			name = Deployment;
+		};
+/* End PBXBuildStyle section */
 
 /* Begin PBXContainerItemProxy section */
 		11F5F42B09537E00007DCC49 /* PBXContainerItemProxy */ = {
@@ -1465,13 +1383,6 @@
 			remoteGlobalIDString = 34BD9DAF05314751000AB133;
 			remoteInfo = Adium.Framework;
 		};
-		38D8FAF90A8A4FEA0078E442 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 38D8FA9A0A8A4F350078E442;
-			remoteInfo = "QuickTime Plugin";
-		};
 		4B215DAF059896B000305B3C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -1506,20 +1417,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 34BD9DAF05314751000AB133;
 			remoteInfo = Adium.Framework;
-		};
-		81B4CA1A0A416C1000A8ABF5 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 81B4C98F0A416BE500A8ABF5;
-			remoteInfo = SmackJavaBridge;
-		};
-		81F6510B0A290FC8008FC8E7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 81F6508C0A290FB6008FC8E7;
-			remoteInfo = Smack;
 		};
 		B72537BD058C45CF004BA969 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1607,7 +1504,6 @@
 				EE96A3CC0A9C5E4000C47A57 /* FriBidi.framework in CopyFiles */,
 				F51BCD3B0A156261000FDC06 /* AIHyperlinks.framework in CopyFiles */,
 				F51BCD3C0A156269000FDC06 /* AIUtilities.framework in CopyFiles */,
-				6383935009D4D6AA0067B9B7 /* Sparkle.framework in CopyFiles */,
 				341BDBBB0968BC9B00CF83F5 /* OTR.framework in CopyFiles */,
 				3419FE230531586A00C68BA3 /* Adium.framework in CopyFiles */,
 				9E12765407D38B5000AA91C5 /* Growl-WithInstaller.framework in CopyFiles */,
@@ -1621,7 +1517,6 @@
 			dstSubfolderSpec = 13;
 			files = (
 				38722C410A8CEE75002CC4F4 /* QuickTime.AdiumPlugin in CopyFiles */,
-				81F656580A2A5315008FC8E7 /* Smack.AdiumPlugin in CopyFiles */,
 				11F5F44309537E34007DCC49 /* joscar.AdiumPlugin in CopyFiles */,
 				4B7F27C705440DE900CDFC90 /* Gaim.AdiumPlugin in CopyFiles */,
 				344C0F0D06B709AC00DA7200 /* Bonjour.AdiumPlugin in CopyFiles */,
@@ -1682,20 +1577,6 @@
 				63AF932C0AA81E2300B88299 /* Pure White.ListTheme in CopyFiles */,
 				63AF932D0AA81E2300B88299 /* Tiny (with user icons).ListLayout in CopyFiles */,
 				63AF932E0AA81E2300B88299 /* Tiny.ListLayout in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		81F659940A2A8BE4008FC8E7 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 15;
-			files = (
-				8109A5910ABF68BB00D5F669 /* SmackJavaBridge.jar in CopyFiles */,
-				81F659BD0A2A8C81008FC8E7 /* smack.jar in CopyFiles */,
-				81F659BE0A2A8C81008FC8E7 /* smackx.jar in CopyFiles */,
-				81C3A8FE0A91076100A575B6 /* asterisk-im-client.jar in CopyFiles */,
-				81E708820A98AAA800D9409E /* smackx-jingle.jar in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2948,7 +2829,7 @@
 		34BCB1A20ACB099D00562745 /* joscar-common.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar-common.jar"; path = "Plugins/joscar Service/joscar-common.jar"; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3685,157 +3566,12 @@
 		7E824CD406387FAF00813072 /* SHLinkEditorWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHLinkEditorWindowController.m; sourceTree = "<group>"; };
 		7E824CDB06387FAF00813072 /* SHLinkManagementPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SHLinkManagementPlugin.h; sourceTree = "<group>"; };
 		7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHLinkManagementPlugin.m; sourceTree = "<group>"; };
-		8102A7230A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPMessagePlugin.h; path = "Plugins/Smack Service/SmackXMPPMessagePlugin.h"; sourceTree = "<group>"; };
-		8102A7240A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPMessagePlugin.m; path = "Plugins/Smack Service/SmackXMPPMessagePlugin.m"; sourceTree = "<group>"; };
-		8102A81E0A4B6F82004DF0F5 /* SmackXMPPErrorMessagePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPErrorMessagePlugin.h; path = "Plugins/Smack Service/SmackXMPPErrorMessagePlugin.h"; sourceTree = "<group>"; };
-		8102A81F0A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPErrorMessagePlugin.m; path = "Plugins/Smack Service/SmackXMPPErrorMessagePlugin.m"; sourceTree = "<group>"; };
-		8102A8850A4B7A1E004DF0F5 /* SmackXMPPHeadlineMessagePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPHeadlineMessagePlugin.h; path = "Plugins/Smack Service/SmackXMPPHeadlineMessagePlugin.h"; sourceTree = "<group>"; };
-		8102A8860A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPHeadlineMessagePlugin.m; path = "Plugins/Smack Service/SmackXMPPHeadlineMessagePlugin.m"; sourceTree = "<group>"; };
-		811DE2160A862E5900487D47 /* InvisibleCommand.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = InvisibleCommand.java; path = "Plugins/Smack Service/InvisibleCommand.java"; sourceTree = "<group>"; };
-		81376B660A9273A000298452 /* SmackGoogleService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackGoogleService.h; path = "Plugins/Smack Service/SmackGoogleService.h"; sourceTree = "<group>"; };
-		81376B670A9273A000298452 /* SmackGoogleService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackGoogleService.m; path = "Plugins/Smack Service/SmackGoogleService.m"; sourceTree = "<group>"; };
-		81376B7E0A9274F000298452 /* SmackGoogleAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackGoogleAccount.h; path = "Plugins/Smack Service/SmackGoogleAccount.h"; sourceTree = "<group>"; };
-		81376B7F0A9274F000298452 /* SmackGoogleAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackGoogleAccount.m; path = "Plugins/Smack Service/SmackGoogleAccount.m"; sourceTree = "<group>"; };
-		81376B880A92794E00298452 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Smack Service/English.lproj/SmackGoogleAccountView.nib"; sourceTree = "<group>"; };
-		81376B910A92797D00298452 /* SmackGoogleAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackGoogleAccountViewController.h; path = "Plugins/Smack Service/SmackGoogleAccountViewController.h"; sourceTree = "<group>"; };
-		81376B920A92797D00298452 /* SmackGoogleAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackGoogleAccountViewController.m; path = "Plugins/Smack Service/SmackGoogleAccountViewController.m"; sourceTree = "<group>"; };
-		81376DF20A92B01400298452 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Smack Service/English.lproj/SmackLiveJournalAccountView.nib"; sourceTree = "<group>"; };
-		81376DF80A92B06B00298452 /* SmackLiveJournalAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackLiveJournalAccount.h; path = "Plugins/Smack Service/SmackLiveJournalAccount.h"; sourceTree = "<group>"; };
-		81376DF90A92B06B00298452 /* SmackLiveJournalAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackLiveJournalAccount.m; path = "Plugins/Smack Service/SmackLiveJournalAccount.m"; sourceTree = "<group>"; };
-		81376DFA0A92B06B00298452 /* SmackLiveJournalAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackLiveJournalAccountViewController.h; path = "Plugins/Smack Service/SmackLiveJournalAccountViewController.h"; sourceTree = "<group>"; };
-		81376DFB0A92B06B00298452 /* SmackLiveJournalAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackLiveJournalAccountViewController.m; path = "Plugins/Smack Service/SmackLiveJournalAccountViewController.m"; sourceTree = "<group>"; };
-		81376DFC0A92B06B00298452 /* SmackLiveJournalService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackLiveJournalService.h; path = "Plugins/Smack Service/SmackLiveJournalService.h"; sourceTree = "<group>"; };
-		81376DFD0A92B06B00298452 /* SmackLiveJournalService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackLiveJournalService.m; path = "Plugins/Smack Service/SmackLiveJournalService.m"; sourceTree = "<group>"; };
-		81376E3A0A92B66E00298452 /* SmackGoogleNewMailPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackGoogleNewMailPlugin.h; path = "Plugins/Smack Service/SmackGoogleNewMailPlugin.h"; sourceTree = "<group>"; };
-		81376E3B0A92B66E00298452 /* SmackGoogleNewMailPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackGoogleNewMailPlugin.m; path = "Plugins/Smack Service/SmackGoogleNewMailPlugin.m"; sourceTree = "<group>"; };
-		81376E450A92B6FB00298452 /* GoogleSettings.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = GoogleSettings.java; path = "Plugins/Smack Service/GoogleSettings.java"; sourceTree = "<group>"; };
-		81376EA00A92C11800298452 /* MailNotification.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = MailNotification.java; path = "Plugins/Smack Service/MailNotification.java"; sourceTree = "<group>"; };
-		8156798D0A339B1F005ADC13 /* SmackListContact.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackListContact.h; path = "Plugins/Smack Service/SmackListContact.h"; sourceTree = "<group>"; };
-		8156798E0A339B1F005ADC13 /* SmackListContact.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackListContact.m; path = "Plugins/Smack Service/SmackListContact.m"; sourceTree = "<group>"; };
-		815D2F290A74D903009338C2 /* OutOfBandDataExtension.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = OutOfBandDataExtension.java; path = "Plugins/Smack Service/OutOfBandDataExtension.java"; sourceTree = "<group>"; };
-		815D321C0A751673009338C2 /* SmackXMPPChatStateNotificationsPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPChatStateNotificationsPlugin.h; path = "Plugins/Smack Service/SmackXMPPChatStateNotificationsPlugin.h"; sourceTree = "<group>"; };
-		815D321D0A751674009338C2 /* SmackXMPPChatStateNotificationsPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPChatStateNotificationsPlugin.m; path = "Plugins/Smack Service/SmackXMPPChatStateNotificationsPlugin.m"; sourceTree = "<group>"; };
-		815D32370A7518D7009338C2 /* ChatStateNotifications.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = ChatStateNotifications.java; path = "Plugins/Smack Service/ChatStateNotifications.java"; sourceTree = "<group>"; };
-		815D357C0A7585EA009338C2 /* SmackXMPPVCardPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPVCardPlugin.h; path = "Plugins/Smack Service/SmackXMPPVCardPlugin.h"; sourceTree = "<group>"; };
-		815D357D0A7585EA009338C2 /* SmackXMPPVCardPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPVCardPlugin.m; path = "Plugins/Smack Service/SmackXMPPVCardPlugin.m"; sourceTree = "<group>"; };
 		815D37460A765E83009338C2 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
-		815ECFBA0A6A56530024B6FE /* SmackXMPPRosterPluginListener.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = SmackXMPPRosterPluginListener.java; path = "Plugins/Smack Service/SmackXMPPRosterPluginListener.java"; sourceTree = "<group>"; };
-		815ED1B40A6C4CD80024B6FE /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Smack Service/English.lproj/SmackXMPPMUCChangeNickname.nib"; sourceTree = "<group>"; };
-		815ED2910A6C5A9F0024B6FE /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Smack Service/English.lproj/SmackXMPPMUCChangeSubject.nib"; sourceTree = "<group>"; };
-		815ED31B0A6C637D0024B6FE /* SmackXMPPGatewayInteractionPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPGatewayInteractionPlugin.h; path = "Plugins/Smack Service/SmackXMPPGatewayInteractionPlugin.h"; sourceTree = "<group>"; };
-		815ED31C0A6C637D0024B6FE /* SmackXMPPGatewayInteractionPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPGatewayInteractionPlugin.m; path = "Plugins/Smack Service/SmackXMPPGatewayInteractionPlugin.m"; sourceTree = "<group>"; };
 		8191AB1A0A94EAEE00A5A404 /* AIJavaControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIJavaControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIJavaControllerProtocol.h"; sourceTree = "<group>"; };
-		81AB12090A8B5F6100E32420 /* SmackJinglePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackJinglePlugin.h; path = "Plugins/Smack Service/SmackJinglePlugin.h"; sourceTree = "<group>"; };
-		81AB120A0A8B5F6100E32420 /* SmackJinglePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackJinglePlugin.m; path = "Plugins/Smack Service/SmackJinglePlugin.m"; sourceTree = "<group>"; };
-		81AB120D0A8B5F8A00E32420 /* SmackXMPPJingleListener.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = SmackXMPPJingleListener.java; path = "Plugins/Smack Service/SmackXMPPJingleListener.java"; sourceTree = "<group>"; };
-		81B4C9900A416BE500A8ABF5 /* SmackJavaBridge.jar */ = {isa = PBXFileReference; explicitFileType = archive.jar; includeInIndex = 0; path = SmackJavaBridge.jar; sourceTree = BUILT_PRODUCTS_DIR; };
-		81B4CA520A416F7E00A8ABF5 /* ruli_addr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_addr.c; sourceTree = "<group>"; };
-		81B4CA530A416F7E00A8ABF5 /* ruli_addr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_addr.h; sourceTree = "<group>"; };
-		81B4CA540A416F7F00A8ABF5 /* ruli_conf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_conf.c; sourceTree = "<group>"; };
-		81B4CA550A416F7F00A8ABF5 /* ruli_conf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_conf.h; sourceTree = "<group>"; };
-		81B4CA560A416F7F00A8ABF5 /* ruli_fsm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_fsm.c; sourceTree = "<group>"; };
-		81B4CA570A416F7F00A8ABF5 /* ruli_fsm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_fsm.h; sourceTree = "<group>"; };
-		81B4CA580A416F7F00A8ABF5 /* ruli_getaddrinfo.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_getaddrinfo.c; sourceTree = "<group>"; };
-		81B4CA590A416F7F00A8ABF5 /* ruli_getaddrinfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_getaddrinfo.h; sourceTree = "<group>"; };
-		81B4CA5A0A416F7F00A8ABF5 /* ruli_host.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_host.c; sourceTree = "<group>"; };
-		81B4CA5B0A416F7F00A8ABF5 /* ruli_host.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_host.h; sourceTree = "<group>"; };
-		81B4CA5C0A416F7F00A8ABF5 /* ruli_http.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_http.c; sourceTree = "<group>"; };
-		81B4CA5D0A416F7F00A8ABF5 /* ruli_http.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_http.h; sourceTree = "<group>"; };
-		81B4CA5E0A416F7F00A8ABF5 /* ruli_isaac.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_isaac.c; sourceTree = "<group>"; };
-		81B4CA5F0A416F7F00A8ABF5 /* ruli_isaac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_isaac.h; sourceTree = "<group>"; };
-		81B4CA600A416F8000A8ABF5 /* ruli_limits.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_limits.h; sourceTree = "<group>"; };
-		81B4CA610A416F8000A8ABF5 /* ruli_list.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_list.c; sourceTree = "<group>"; };
-		81B4CA620A416F8000A8ABF5 /* ruli_list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_list.h; sourceTree = "<group>"; };
-		81B4CA630A416F8000A8ABF5 /* ruli_mem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_mem.c; sourceTree = "<group>"; };
-		81B4CA640A416F8000A8ABF5 /* ruli_mem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_mem.h; sourceTree = "<group>"; };
-		81B4CA650A416F8000A8ABF5 /* ruli_msg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_msg.c; sourceTree = "<group>"; };
-		81B4CA660A416F8000A8ABF5 /* ruli_msg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_msg.h; sourceTree = "<group>"; };
-		81B4CA670A416F8000A8ABF5 /* ruli_oop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_oop.h; sourceTree = "<group>"; };
-		81B4CA680A416F8000A8ABF5 /* ruli_parse.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_parse.c; sourceTree = "<group>"; };
-		81B4CA690A416F8100A8ABF5 /* ruli_parse.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_parse.h; sourceTree = "<group>"; };
-		81B4CA6A0A416F8100A8ABF5 /* ruli_rand.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_rand.c; sourceTree = "<group>"; };
-		81B4CA6B0A416F8100A8ABF5 /* ruli_rand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_rand.h; sourceTree = "<group>"; };
-		81B4CA6C0A416F8100A8ABF5 /* ruli_res.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_res.c; sourceTree = "<group>"; };
-		81B4CA6D0A416F8100A8ABF5 /* ruli_res.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_res.h; sourceTree = "<group>"; };
-		81B4CA6E0A416F8100A8ABF5 /* ruli_search.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_search.c; sourceTree = "<group>"; };
-		81B4CA6F0A416F8100A8ABF5 /* ruli_search.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_search.h; sourceTree = "<group>"; };
-		81B4CA700A416F8100A8ABF5 /* ruli_smtp.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_smtp.c; sourceTree = "<group>"; };
-		81B4CA710A416F8200A8ABF5 /* ruli_smtp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_smtp.h; sourceTree = "<group>"; };
-		81B4CA720A416F8200A8ABF5 /* ruli_sock.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_sock.c; sourceTree = "<group>"; };
-		81B4CA730A416F8200A8ABF5 /* ruli_sock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_sock.h; sourceTree = "<group>"; };
-		81B4CA740A416F8200A8ABF5 /* ruli_srv.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_srv.c; sourceTree = "<group>"; };
-		81B4CA750A416F8200A8ABF5 /* ruli_srv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_srv.h; sourceTree = "<group>"; };
-		81B4CA760A416F8200A8ABF5 /* ruli_sync.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_sync.c; sourceTree = "<group>"; };
-		81B4CA770A416F8200A8ABF5 /* ruli_sync.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_sync.h; sourceTree = "<group>"; };
-		81B4CA780A416F8200A8ABF5 /* ruli_txt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_txt.c; sourceTree = "<group>"; };
-		81B4CA790A416F8200A8ABF5 /* ruli_txt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_txt.h; sourceTree = "<group>"; };
-		81B4CA7A0A416F8200A8ABF5 /* ruli_util.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ruli_util.c; sourceTree = "<group>"; };
-		81B4CA7B0A416F8200A8ABF5 /* ruli_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli_util.h; sourceTree = "<group>"; };
-		81B4CA7C0A416F8200A8ABF5 /* ruli.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ruli.h; sourceTree = "<group>"; };
-		81B4CD9A0A4181C500A8ABF5 /* oop-read.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "oop-read.h"; path = "Plugins/Smack Service/oop/oop-read.h"; sourceTree = "<group>"; };
-		81B4CD9B0A4181C500A8ABF5 /* oop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oop.h; path = "Plugins/Smack Service/oop/oop.h"; sourceTree = "<group>"; };
-		81B4CD9C0A4181C500A8ABF5 /* read-fd.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "read-fd.c"; path = "Plugins/Smack Service/oop/read-fd.c"; sourceTree = "<group>"; };
-		81B4CD9D0A4181C500A8ABF5 /* read-mem.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "read-mem.c"; path = "Plugins/Smack Service/oop/read-mem.c"; sourceTree = "<group>"; };
-		81B4CD9E0A4181C500A8ABF5 /* read.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = read.c; path = "Plugins/Smack Service/oop/read.c"; sourceTree = "<group>"; };
-		81B4CD9F0A4181C500A8ABF5 /* select.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = select.c; path = "Plugins/Smack Service/oop/select.c"; sourceTree = "<group>"; };
-		81B4CDA00A4181C500A8ABF5 /* signal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = signal.c; path = "Plugins/Smack Service/oop/signal.c"; sourceTree = "<group>"; };
-		81B4CDA10A4181C500A8ABF5 /* sys.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = sys.c; path = "Plugins/Smack Service/oop/sys.c"; sourceTree = "<group>"; };
-		81B4CDE40A41857D00A8ABF5 /* alloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = alloc.c; path = "Plugins/Smack Service/oop/alloc.c"; sourceTree = "<group>"; };
-		81B4CE610A42449600A8ABF5 /* SmackXMPPRosterPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPRosterPlugin.h; path = "Plugins/Smack Service/SmackXMPPRosterPlugin.h"; sourceTree = "<group>"; };
-		81B4CE620A42449600A8ABF5 /* SmackXMPPRosterPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPRosterPlugin.m; path = "Plugins/Smack Service/SmackXMPPRosterPlugin.m"; sourceTree = "<group>"; };
-		81BE445B0A6C710B00AADA28 /* SmackXMPPServiceDiscoveryBrowsing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPServiceDiscoveryBrowsing.h; path = "Plugins/Smack Service/SmackXMPPServiceDiscoveryBrowsing.h"; sourceTree = "<group>"; };
-		81BE445C0A6C710B00AADA28 /* SmackXMPPServiceDiscoveryBrowsing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPServiceDiscoveryBrowsing.m; path = "Plugins/Smack Service/SmackXMPPServiceDiscoveryBrowsing.m"; sourceTree = "<group>"; };
-		81BE44680A6C731900AADA28 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Smack Service/English.lproj/SmackXMPPServiceDiscoveryBrowser.nib"; sourceTree = "<group>"; };
-		81BE5F2D0A70660000AADA28 /* SmackXMPPRegistration.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPRegistration.h; path = "Plugins/Smack Service/SmackXMPPRegistration.h"; sourceTree = "<group>"; };
-		81BE5F2E0A70660000AADA28 /* SmackXMPPRegistration.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPRegistration.m; path = "Plugins/Smack Service/SmackXMPPRegistration.m"; sourceTree = "<group>"; };
-		81BE64790A711F6600AADA28 /* SmackXMPPFileTransferListener.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = SmackXMPPFileTransferListener.java; path = "Plugins/Smack Service/SmackXMPPFileTransferListener.java"; sourceTree = "<group>"; };
-		81BE64880A71220300AADA28 /* SmackXMPPFileTransferPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPFileTransferPlugin.h; path = "Plugins/Smack Service/SmackXMPPFileTransferPlugin.h"; sourceTree = "<group>"; };
-		81BE64890A71220300AADA28 /* SmackXMPPFileTransferPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPFileTransferPlugin.m; path = "Plugins/Smack Service/SmackXMPPFileTransferPlugin.m"; sourceTree = "<group>"; };
-		81BE66B50A715FB200AADA28 /* SmackXMPPAccountRegistrationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPAccountRegistrationController.h; path = "Plugins/Smack Service/SmackXMPPAccountRegistrationController.h"; sourceTree = "<group>"; };
-		81BE66B60A715FB200AADA28 /* SmackXMPPAccountRegistrationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPAccountRegistrationController.m; path = "Plugins/Smack Service/SmackXMPPAccountRegistrationController.m"; sourceTree = "<group>"; };
-		81C3A7050A8FE15000A575B6 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Smack Service/English.lproj/SmackXMPPHeadlinesViewer.nib"; sourceTree = "<group>"; };
-		81C3A8D90A90F63B00A575B6 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Smack Service/English.lproj/SmackXMPPPhoneControl.nib"; sourceTree = "<group>"; };
-		81C3A8E20A91051F00A575B6 /* SmackXMPPPhonePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPPhonePlugin.h; path = "Plugins/Smack Service/SmackXMPPPhonePlugin.h"; sourceTree = "<group>"; };
-		81C3A8FC0A91072900A575B6 /* asterisk-im-client.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "asterisk-im-client.jar"; path = "Plugins/Smack Service/asterisk-im-client.jar"; sourceTree = "<group>"; };
-		81C3A9930A91162E00A575B6 /* SmackXMPPAsteriskListener.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = SmackXMPPAsteriskListener.java; path = "Plugins/Smack Service/SmackXMPPAsteriskListener.java"; sourceTree = "<group>"; };
-		81C3AC1C0A9171CC00A575B6 /* SmackXMPPPhonePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPPhonePlugin.m; path = "Plugins/Smack Service/SmackXMPPPhonePlugin.m"; sourceTree = SOURCE_ROOT; };
-		81D5A1590A5943230099F9B9 /* SmackXMPPMultiUserChatPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPMultiUserChatPlugin.h; path = "Plugins/Smack Service/SmackXMPPMultiUserChatPlugin.h"; sourceTree = "<group>"; };
-		81D5A15A0A5943230099F9B9 /* SmackXMPPMultiUserChatPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPMultiUserChatPlugin.m; path = "Plugins/Smack Service/SmackXMPPMultiUserChatPlugin.m"; sourceTree = "<group>"; };
-		81D5A1680A5944320099F9B9 /* SmackXMPPMultiUserChatPluginListener.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = SmackXMPPMultiUserChatPluginListener.java; path = "Plugins/Smack Service/SmackXMPPMultiUserChatPluginListener.java"; sourceTree = "<group>"; };
-		81D5A1CB0A59710D0099F9B9 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Smack Service/English.lproj/SmackXMPPJoinChatView.nib"; sourceTree = "<group>"; };
-		81D5A8070A59F7790099F9B9 /* SmackXMPPFormConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPFormConverter.h; path = "Plugins/Smack Service/SmackXMPPFormConverter.h"; sourceTree = "<group>"; };
-		81D5A8080A59F77A0099F9B9 /* SmackXMPPFormConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPFormConverter.m; path = "Plugins/Smack Service/SmackXMPPFormConverter.m"; sourceTree = "<group>"; };
-		81D5A85F0A5A14450099F9B9 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Smack Service/English.lproj/SmackXMPPForm.nib"; sourceTree = "<group>"; };
-		81D5A8610A5A14AD0099F9B9 /* SmackXMPPFormController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPFormController.h; path = "Plugins/Smack Service/SmackXMPPFormController.h"; sourceTree = "<group>"; };
-		81D5A8620A5A14AE0099F9B9 /* SmackXMPPFormController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPFormController.m; path = "Plugins/Smack Service/SmackXMPPFormController.m"; sourceTree = "<group>"; };
-		81DA14720A779B2E00569134 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Smack Service/English.lproj/SmackXMPPVCardEditor.nib"; sourceTree = "<group>"; };
-		81E2C5EE0A416A0D0070CE78 /* SmackBridge.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = SmackBridge.java; path = "Plugins/Smack Service/SmackBridge.java"; sourceTree = "<group>"; };
-		81E708810A98AA9300D9409E /* smackx-jingle.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "smackx-jingle.jar"; path = "Plugins/Smack Service/smackx-jingle.jar"; sourceTree = "<group>"; };
-		81F6508D0A290FB6008FC8E7 /* Smack.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Smack.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
-		81F6519A0A291145008FC8E7 /* SmackServicePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackServicePlugin.h; path = "Plugins/Smack Service/SmackServicePlugin.h"; sourceTree = "<group>"; };
-		81F6519B0A291145008FC8E7 /* SmackServicePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackServicePlugin.m; path = "Plugins/Smack Service/SmackServicePlugin.m"; sourceTree = "<group>"; };
-		81F651AA0A29123C008FC8E7 /* SmackXMPPService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPService.h; path = "Plugins/Smack Service/SmackXMPPService.h"; sourceTree = "<group>"; };
-		81F651AB0A29123C008FC8E7 /* SmackXMPPService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPService.m; path = "Plugins/Smack Service/SmackXMPPService.m"; sourceTree = "<group>"; };
-		81F654AF0A29339F008FC8E7 /* SmackXMPPAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPAccount.h; path = "Plugins/Smack Service/SmackXMPPAccount.h"; sourceTree = "<group>"; };
-		81F654B00A29339F008FC8E7 /* SmackXMPPAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPAccount.m; path = "Plugins/Smack Service/SmackXMPPAccount.m"; sourceTree = "<group>"; };
-		81F654BB0A29349C008FC8E7 /* SmackCocoaAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackCocoaAdapter.h; path = "Plugins/Smack Service/SmackCocoaAdapter.h"; sourceTree = "<group>"; };
-		81F654BC0A29349C008FC8E7 /* SmackCocoaAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackCocoaAdapter.m; path = "Plugins/Smack Service/SmackCocoaAdapter.m"; sourceTree = "<group>"; };
-		81F6554E0A293DD0008FC8E7 /* Smack-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = "Smack-Info.plist"; path = "Plugins/Smack Service/Smack-Info.plist"; sourceTree = "<group>"; };
-		81F6566F0A2A5457008FC8E7 /* SmackXMPPAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPAccountViewController.h; path = "Plugins/Smack Service/SmackXMPPAccountViewController.h"; sourceTree = "<group>"; };
-		81F656700A2A5458008FC8E7 /* SmackXMPPAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPAccountViewController.m; path = "Plugins/Smack Service/SmackXMPPAccountViewController.m"; sourceTree = "<group>"; };
-		81F656BD0A2A587F008FC8E7 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Smack Service/English.lproj/SmackXMPPAccountView.nib"; sourceTree = "<group>"; };
-		81F658160A2A75AF008FC8E7 /* SmackInterfaceDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackInterfaceDefinitions.h; path = "Plugins/Smack Service/SmackInterfaceDefinitions.h"; sourceTree = "<group>"; };
-		81F659B90A2A8C4E008FC8E7 /* smack.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = smack.jar; path = "Plugins/Smack Service/smack.jar"; sourceTree = "<group>"; };
-		81F659BA0A2A8C4E008FC8E7 /* smackx.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = smackx.jar; path = "Plugins/Smack Service/smackx.jar"; sourceTree = "<group>"; };
-		81F9CDE90A7D83AE004A35BD /* VCardUpdateExtension.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = VCardUpdateExtension.java; path = "Plugins/Smack Service/VCardUpdateExtension.java"; sourceTree = "<group>"; };
 		81F9D0820A7E905B004A35BD /* AIJavaController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIJavaController.h; path = Source/AIJavaController.h; sourceTree = "<group>"; };
 		81F9D0830A7E905B004A35BD /* AIJavaController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIJavaController.m; path = Source/AIJavaController.m; sourceTree = "<group>"; };
 		81F9D1E90A7F8395004A35BD /* JavaCocoaAdapter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = JavaCocoaAdapter.java; path = Source/JavaCocoaAdapter.java; sourceTree = "<group>"; };
 		81F9D2000A7F8B99004A35BD /* JavaCocoaAdapter.class */ = {isa = PBXFileReference; lastKnownFileType = compiled.javaclass; name = JavaCocoaAdapter.class; path = net/adium/JavaCocoaAdapter.class; sourceTree = BUILT_PRODUCTS_DIR; };
-		81F9D4950A8158EA004A35BD /* SmackXMPPVersionPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPVersionPlugin.h; path = "Plugins/Smack Service/SmackXMPPVersionPlugin.h"; sourceTree = "<group>"; };
-		81F9D4960A8158EA004A35BD /* SmackXMPPVersionPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPVersionPlugin.m; path = "Plugins/Smack Service/SmackXMPPVersionPlugin.m"; sourceTree = "<group>"; };
-		81F9D8AD0A83A92E004A35BD /* SmackXMPPPrivacyPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmackXMPPPrivacyPlugin.h; path = "Plugins/Smack Service/SmackXMPPPrivacyPlugin.h"; sourceTree = "<group>"; };
-		81F9D8AE0A83A92E004A35BD /* SmackXMPPPrivacyPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmackXMPPPrivacyPlugin.m; path = "Plugins/Smack Service/SmackXMPPPrivacyPlugin.m"; sourceTree = "<group>"; };
 		9C103FAE057127A500F3C158 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
 		9E124DE707D34C7300AA91C5 /* CBGrowlAlertDetailPane.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBGrowlAlertDetailPane.h; path = Source/CBGrowlAlertDetailPane.h; sourceTree = "<group>"; };
 		9E124DE807D34C7300AA91C5 /* CBGrowlAlertDetailPane.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBGrowlAlertDetailPane.m; path = Source/CBGrowlAlertDetailPane.m; sourceTree = "<group>"; };
@@ -4158,6 +3894,7 @@
 				9E1E1DFD0A96741500E16DFC /* LMX.framework in Frameworks */,
 				34EFC46C0AACC4CD0086AC43 /* FriBidi.framework in Frameworks */,
 				377EC8940AE9525B00CB7BDF /* PSMTabBarControl.framework in Frameworks */,
+				8163F99C0B318824002005EE /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4235,31 +3972,6 @@
 				345AFA690A5D76B400D7DA6F /* Sparkle.framework in Frameworks */,
 				34E0EA4007CC55B100A82198 /* AIUtilities.framework in Frameworks */,
 				3448769906D1EF6100DA778C /* Cocoa.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		81B4C98E0A416BE500A8ABF5 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				81B4CA210A416C4200A8ABF5 /* smack.jar in Frameworks */,
-				81B4CA220A416C4200A8ABF5 /* smackx.jar in Frameworks */,
-				81C3A8FD0A91072900A575B6 /* asterisk-im-client.jar in Frameworks */,
-				38238C610A9B5CF4005EBAEE /* smackx-jingle.jar in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		81F6508B0A290FB6008FC8E7 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				EEE0AB750B15E99C00C496A1 /* Cocoa.framework in Frameworks */,
-				81D5A8F50A5A15D10099F9B9 /* WebKit.framework in Frameworks */,
-				81F651740A291004008FC8E7 /* Adium.framework in Frameworks */,
-				81F651750A291004008FC8E7 /* AIUtilities.framework in Frameworks */,
-				81F651760A291004008FC8E7 /* JavaVM.framework in Frameworks */,
-				815D37550A765E83009338C2 /* CoreServices.framework in Frameworks */,
-				81C3A94D0A910A5100A575B6 /* AddressBook.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4372,7 +4084,6 @@
 				34B323C009B9FEAC00029361 /* IRC Service.AdiumLibgaimPlugin */,
 				3417D26109C332B900FC413E /* Translator.AdiumPlugin */,
 				3485D68009EB416300232CC4 /* AdiumLibgaim.framework */,
-				81F6508D0A290FB6008FC8E7 /* Smack.AdiumPlugin */,
 				38D8FAE10A8A4F350078E442 /* QuickTime.AdiumPlugin */,
 			);
 			name = Products;
@@ -6546,7 +6257,6 @@
 		4BD672C406001B530049CAF7 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				81F650820A290F6C008FC8E7 /* Smack */,
 				118C52BA091BF05B00219458 /* joscar */,
 				4B7F278605440C6200CDFC90 /* Gaim */,
 				4947F5BB0655E7C400B791E5 /* Bonjour */,
@@ -6865,222 +6575,6 @@
 			);
 			name = "Link Management";
 			path = "Plugins/Link Management";
-			sourceTree = "<group>";
-		};
-		81376B6A0A9273BD00298452 /* Google Talk */ = {
-			isa = PBXGroup;
-			children = (
-				81376B660A9273A000298452 /* SmackGoogleService.h */,
-				81376B670A9273A000298452 /* SmackGoogleService.m */,
-				81376B7E0A9274F000298452 /* SmackGoogleAccount.h */,
-				81376B7F0A9274F000298452 /* SmackGoogleAccount.m */,
-				81376B910A92797D00298452 /* SmackGoogleAccountViewController.h */,
-				81376B920A92797D00298452 /* SmackGoogleAccountViewController.m */,
-				81376B870A92794E00298452 /* SmackGoogleAccountView.nib */,
-				81376E420A92B6C400298452 /* Extensions */,
-			);
-			name = "Google Talk";
-			sourceTree = "<group>";
-		};
-		81376DE60A92AFB500298452 /* LiveJournal */ = {
-			isa = PBXGroup;
-			children = (
-				81376DF80A92B06B00298452 /* SmackLiveJournalAccount.h */,
-				81376DF90A92B06B00298452 /* SmackLiveJournalAccount.m */,
-				81376DFA0A92B06B00298452 /* SmackLiveJournalAccountViewController.h */,
-				81376DFB0A92B06B00298452 /* SmackLiveJournalAccountViewController.m */,
-				81376DFC0A92B06B00298452 /* SmackLiveJournalService.h */,
-				81376DFD0A92B06B00298452 /* SmackLiveJournalService.m */,
-				81376DF10A92B01400298452 /* SmackLiveJournalAccountView.nib */,
-			);
-			name = LiveJournal;
-			sourceTree = "<group>";
-		};
-		81376E420A92B6C400298452 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				81376E3A0A92B66E00298452 /* SmackGoogleNewMailPlugin.h */,
-				81376E3B0A92B66E00298452 /* SmackGoogleNewMailPlugin.m */,
-				81376E450A92B6FB00298452 /* GoogleSettings.java */,
-				81376EA00A92C11800298452 /* MailNotification.java */,
-			);
-			name = Extensions;
-			sourceTree = "<group>";
-		};
-		81B4CD870A4181A000A8ABF5 /* liboop */ = {
-			isa = PBXGroup;
-			children = (
-				81B4CDE40A41857D00A8ABF5 /* alloc.c */,
-				81B4CD9A0A4181C500A8ABF5 /* oop-read.h */,
-				81B4CD9B0A4181C500A8ABF5 /* oop.h */,
-				81B4CD9C0A4181C500A8ABF5 /* read-fd.c */,
-				81B4CD9D0A4181C500A8ABF5 /* read-mem.c */,
-				81B4CD9E0A4181C500A8ABF5 /* read.c */,
-				81B4CD9F0A4181C500A8ABF5 /* select.c */,
-				81B4CDA00A4181C500A8ABF5 /* signal.c */,
-				81B4CDA10A4181C500A8ABF5 /* sys.c */,
-			);
-			name = liboop;
-			sourceTree = "<group>";
-		};
-		81B4CE600A42443500A8ABF5 /* Extensions */ = {
-			isa = PBXGroup;
-			children = (
-				81B4CE610A42449600A8ABF5 /* SmackXMPPRosterPlugin.h */,
-				81B4CE620A42449600A8ABF5 /* SmackXMPPRosterPlugin.m */,
-				8102A7230A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.h */,
-				8102A7240A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m */,
-				8102A81E0A4B6F82004DF0F5 /* SmackXMPPErrorMessagePlugin.h */,
-				8102A81F0A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m */,
-				8102A8850A4B7A1E004DF0F5 /* SmackXMPPHeadlineMessagePlugin.h */,
-				8102A8860A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m */,
-				81D5A1590A5943230099F9B9 /* SmackXMPPMultiUserChatPlugin.h */,
-				81D5A15A0A5943230099F9B9 /* SmackXMPPMultiUserChatPlugin.m */,
-				815ED31B0A6C637D0024B6FE /* SmackXMPPGatewayInteractionPlugin.h */,
-				815ED31C0A6C637D0024B6FE /* SmackXMPPGatewayInteractionPlugin.m */,
-				81BE445B0A6C710B00AADA28 /* SmackXMPPServiceDiscoveryBrowsing.h */,
-				81BE445C0A6C710B00AADA28 /* SmackXMPPServiceDiscoveryBrowsing.m */,
-				81BE64880A71220300AADA28 /* SmackXMPPFileTransferPlugin.h */,
-				81BE64890A71220300AADA28 /* SmackXMPPFileTransferPlugin.m */,
-				815D321C0A751673009338C2 /* SmackXMPPChatStateNotificationsPlugin.h */,
-				815D321D0A751674009338C2 /* SmackXMPPChatStateNotificationsPlugin.m */,
-				815D357C0A7585EA009338C2 /* SmackXMPPVCardPlugin.h */,
-				815D357D0A7585EA009338C2 /* SmackXMPPVCardPlugin.m */,
-				81F9D4950A8158EA004A35BD /* SmackXMPPVersionPlugin.h */,
-				81F9D4960A8158EA004A35BD /* SmackXMPPVersionPlugin.m */,
-				81F9D8AD0A83A92E004A35BD /* SmackXMPPPrivacyPlugin.h */,
-				81F9D8AE0A83A92E004A35BD /* SmackXMPPPrivacyPlugin.m */,
-				81AB12090A8B5F6100E32420 /* SmackJinglePlugin.h */,
-				81AB120A0A8B5F6100E32420 /* SmackJinglePlugin.m */,
-				81C3A8E20A91051F00A575B6 /* SmackXMPPPhonePlugin.h */,
-				81C3AC1C0A9171CC00A575B6 /* SmackXMPPPhonePlugin.m */,
-			);
-			name = Extensions;
-			sourceTree = "<group>";
-		};
-		81C3AA620A91341000A575B6 /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				81F656BC0A2A587F008FC8E7 /* SmackXMPPAccountView.nib */,
-				81D5A1CA0A59710D0099F9B9 /* SmackXMPPJoinChatView.nib */,
-				81D5A85E0A5A14450099F9B9 /* SmackXMPPForm.nib */,
-				815ED1B30A6C4CD80024B6FE /* SmackXMPPMUCChangeNickname.nib */,
-				815ED2900A6C5A9F0024B6FE /* SmackXMPPMUCChangeSubject.nib */,
-				81BE44670A6C731900AADA28 /* SmackXMPPServiceDiscoveryBrowser.nib */,
-				81DA14710A779B2E00569134 /* SmackXMPPVCardEditor.nib */,
-				81C3A7040A8FE15000A575B6 /* SmackXMPPHeadlinesViewer.nib */,
-				81C3A8D80A90F63B00A575B6 /* SmackXMPPPhoneControl.nib */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-		};
-		81E2C5FD0A416AB60070CE78 /* Java-part */ = {
-			isa = PBXGroup;
-			children = (
-				81E2C5EE0A416A0D0070CE78 /* SmackBridge.java */,
-				81D5A1680A5944320099F9B9 /* SmackXMPPMultiUserChatPluginListener.java */,
-				815ECFBA0A6A56530024B6FE /* SmackXMPPRosterPluginListener.java */,
-				81BE64790A711F6600AADA28 /* SmackXMPPFileTransferListener.java */,
-				81C3A9930A91162E00A575B6 /* SmackXMPPAsteriskListener.java */,
-				81AB120D0A8B5F8A00E32420 /* SmackXMPPJingleListener.java */,
-				815D2F290A74D903009338C2 /* OutOfBandDataExtension.java */,
-				81F9CDE90A7D83AE004A35BD /* VCardUpdateExtension.java */,
-				811DE2160A862E5900487D47 /* InvisibleCommand.java */,
-				815D32370A7518D7009338C2 /* ChatStateNotifications.java */,
-				81B4C9900A416BE500A8ABF5 /* SmackJavaBridge.jar */,
-				81F659B90A2A8C4E008FC8E7 /* smack.jar */,
-				81F659BA0A2A8C4E008FC8E7 /* smackx.jar */,
-				81C3A8FC0A91072900A575B6 /* asterisk-im-client.jar */,
-				81E708810A98AA9300D9409E /* smackx-jingle.jar */,
-			);
-			name = "Java-part";
-			sourceTree = "<group>";
-		};
-		81F650820A290F6C008FC8E7 /* Smack */ = {
-			isa = PBXGroup;
-			children = (
-				81F6660B0A2FE2CF008FC8E7 /* ruli */,
-				81B4CD870A4181A000A8ABF5 /* liboop */,
-				81E2C5FD0A416AB60070CE78 /* Java-part */,
-				81376B6A0A9273BD00298452 /* Google Talk */,
-				81376DE60A92AFB500298452 /* LiveJournal */,
-				81F6519A0A291145008FC8E7 /* SmackServicePlugin.h */,
-				81F6519B0A291145008FC8E7 /* SmackServicePlugin.m */,
-				81F651AA0A29123C008FC8E7 /* SmackXMPPService.h */,
-				81F651AB0A29123C008FC8E7 /* SmackXMPPService.m */,
-				81F654AF0A29339F008FC8E7 /* SmackXMPPAccount.h */,
-				81F654B00A29339F008FC8E7 /* SmackXMPPAccount.m */,
-				8156798D0A339B1F005ADC13 /* SmackListContact.h */,
-				8156798E0A339B1F005ADC13 /* SmackListContact.m */,
-				81F654BB0A29349C008FC8E7 /* SmackCocoaAdapter.h */,
-				81F654BC0A29349C008FC8E7 /* SmackCocoaAdapter.m */,
-				81F6566F0A2A5457008FC8E7 /* SmackXMPPAccountViewController.h */,
-				81F656700A2A5458008FC8E7 /* SmackXMPPAccountViewController.m */,
-				81D5A8070A59F7790099F9B9 /* SmackXMPPFormConverter.h */,
-				81D5A8080A59F77A0099F9B9 /* SmackXMPPFormConverter.m */,
-				81D5A8610A5A14AD0099F9B9 /* SmackXMPPFormController.h */,
-				81D5A8620A5A14AE0099F9B9 /* SmackXMPPFormController.m */,
-				81BE5F2D0A70660000AADA28 /* SmackXMPPRegistration.h */,
-				81BE5F2E0A70660000AADA28 /* SmackXMPPRegistration.m */,
-				81BE66B50A715FB200AADA28 /* SmackXMPPAccountRegistrationController.h */,
-				81BE66B60A715FB200AADA28 /* SmackXMPPAccountRegistrationController.m */,
-				81F6554E0A293DD0008FC8E7 /* Smack-Info.plist */,
-				81F658160A2A75AF008FC8E7 /* SmackInterfaceDefinitions.h */,
-				81C3AA620A91341000A575B6 /* Resources */,
-				81B4CE600A42443500A8ABF5 /* Extensions */,
-			);
-			name = Smack;
-			sourceTree = "<group>";
-		};
-		81F6660B0A2FE2CF008FC8E7 /* ruli */ = {
-			isa = PBXGroup;
-			children = (
-				81B4CA520A416F7E00A8ABF5 /* ruli_addr.c */,
-				81B4CA530A416F7E00A8ABF5 /* ruli_addr.h */,
-				81B4CA540A416F7F00A8ABF5 /* ruli_conf.c */,
-				81B4CA550A416F7F00A8ABF5 /* ruli_conf.h */,
-				81B4CA560A416F7F00A8ABF5 /* ruli_fsm.c */,
-				81B4CA570A416F7F00A8ABF5 /* ruli_fsm.h */,
-				81B4CA580A416F7F00A8ABF5 /* ruli_getaddrinfo.c */,
-				81B4CA590A416F7F00A8ABF5 /* ruli_getaddrinfo.h */,
-				81B4CA5A0A416F7F00A8ABF5 /* ruli_host.c */,
-				81B4CA5B0A416F7F00A8ABF5 /* ruli_host.h */,
-				81B4CA5C0A416F7F00A8ABF5 /* ruli_http.c */,
-				81B4CA5D0A416F7F00A8ABF5 /* ruli_http.h */,
-				81B4CA5E0A416F7F00A8ABF5 /* ruli_isaac.c */,
-				81B4CA5F0A416F7F00A8ABF5 /* ruli_isaac.h */,
-				81B4CA600A416F8000A8ABF5 /* ruli_limits.h */,
-				81B4CA610A416F8000A8ABF5 /* ruli_list.c */,
-				81B4CA620A416F8000A8ABF5 /* ruli_list.h */,
-				81B4CA630A416F8000A8ABF5 /* ruli_mem.c */,
-				81B4CA640A416F8000A8ABF5 /* ruli_mem.h */,
-				81B4CA650A416F8000A8ABF5 /* ruli_msg.c */,
-				81B4CA660A416F8000A8ABF5 /* ruli_msg.h */,
-				81B4CA670A416F8000A8ABF5 /* ruli_oop.h */,
-				81B4CA680A416F8000A8ABF5 /* ruli_parse.c */,
-				81B4CA690A416F8100A8ABF5 /* ruli_parse.h */,
-				81B4CA6A0A416F8100A8ABF5 /* ruli_rand.c */,
-				81B4CA6B0A416F8100A8ABF5 /* ruli_rand.h */,
-				81B4CA6C0A416F8100A8ABF5 /* ruli_res.c */,
-				81B4CA6D0A416F8100A8ABF5 /* ruli_res.h */,
-				81B4CA6E0A416F8100A8ABF5 /* ruli_search.c */,
-				81B4CA6F0A416F8100A8ABF5 /* ruli_search.h */,
-				81B4CA700A416F8100A8ABF5 /* ruli_smtp.c */,
-				81B4CA710A416F8200A8ABF5 /* ruli_smtp.h */,
-				81B4CA720A416F8200A8ABF5 /* ruli_sock.c */,
-				81B4CA730A416F8200A8ABF5 /* ruli_sock.h */,
-				81B4CA740A416F8200A8ABF5 /* ruli_srv.c */,
-				81B4CA750A416F8200A8ABF5 /* ruli_srv.h */,
-				81B4CA760A416F8200A8ABF5 /* ruli_sync.c */,
-				81B4CA770A416F8200A8ABF5 /* ruli_sync.h */,
-				81B4CA780A416F8200A8ABF5 /* ruli_txt.c */,
-				81B4CA790A416F8200A8ABF5 /* ruli_txt.h */,
-				81B4CA7A0A416F8200A8ABF5 /* ruli_util.c */,
-				81B4CA7B0A416F8200A8ABF5 /* ruli_util.h */,
-				81B4CA7C0A416F8200A8ABF5 /* ruli.h */,
-			);
-			name = ruli;
-			path = "Plugins/Smack Service/ruli";
 			sourceTree = "<group>";
 		};
 		81F9D1D40A7F8128004A35BD /* Java Bridge Stuff */ = {
@@ -8065,16 +7559,6 @@
 		};
 /* End PBXHeadersBuildPhase section */
 
-/* Begin PBXJavaArchiveBuildPhase section */
-		81B4C98D0A416BE500A8ABF5 /* JavaArchive */ = {
-			isa = PBXJavaArchiveBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXJavaArchiveBuildPhase section */
-
 /* Begin PBXNativeTarget section */
 		118C52C5091BF0DB00219458 /* joscar */ = {
 			isa = PBXNativeTarget;
@@ -8234,7 +7718,6 @@
 				349C31630867D199000BF883 /* PBXTargetDependency */,
 				11F5F42C09537E00007DCC49 /* PBXTargetDependency */,
 				F5B17CDF0A16C767004AE99E /* PBXTargetDependency */,
-				81F6510C0A290FC8008FC8E7 /* PBXTargetDependency */,
 				38722C2D0A8CEC51002CC4F4 /* PBXTargetDependency */,
 			);
 			name = Adium;
@@ -8378,26 +7861,6 @@
 			productReference = 4B7F78B50597F42400162728 /* Adium Crash Reporter.app */;
 			productType = "com.apple.product-type.application";
 		};
-		81F6508C0A290FB6008FC8E7 /* Smack */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 81F651040A290FBB008FC8E7 /* Build configuration list for PBXNativeTarget "Smack" */;
-			buildPhases = (
-				81F650890A290FB6008FC8E7 /* Resources */,
-				81F6508A0A290FB6008FC8E7 /* Sources */,
-				81F6508B0A290FB6008FC8E7 /* Frameworks */,
-				81F659940A2A8BE4008FC8E7 /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				81B4CA1B0A416C1000A8ABF5 /* PBXTargetDependency */,
-				38D8FAFA0A8A4FEA0078E442 /* PBXTargetDependency */,
-			);
-			name = Smack;
-			productName = Smack;
-			productReference = 81F6508D0A290FB6008FC8E7 /* Smack.AdiumPlugin */;
-			productType = "com.apple.product-type.bundle";
-		};
 		B72537BB058C4577004BA969 /* Latex Plugin */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DADE8E1D085507450062B664 /* Build configuration list for PBXNativeTarget "Latex Plugin" */;
@@ -8422,6 +7885,12 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
+			buildSettings = {
+			};
+			buildStyles = (
+				819EAA6D0B0CE743001C67C1 /* Development */,
+				819EAA6E0B0CE743001C67C1 /* Deployment */,
+			);
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				English,
@@ -8466,7 +7935,6 @@
 					ProjectRef = 3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */;
 				},
 			);
-			projectRoot = "";
 			targets = (
 				34BD9CD1053146CC000AB133 /* Adium */,
 				4B7F78B40597F42400162728 /* Adium Crash Reporter */,
@@ -8486,9 +7954,7 @@
 				3417D25009C332B900FC413E /* Translator */,
 				F5B17CCF0A16C6AC004AE99E /* Plist Macros */,
 				38D8FA9A0A8A4F350078E442 /* QuickTime Plugin */,
-				81F6508C0A290FB6008FC8E7 /* Smack */,
 				F53C25AE0A2F95F100F7B73D /* Setup Build Directory */,
-				81B4C98F0A416BE500A8ABF5 /* SmackJavaBridge */,
 			);
 		};
 /* End PBXProject section */
@@ -8948,25 +8414,6 @@
 				4B215DBE0598A71400305B3C /* crashDuck.icns in Resources */,
 				4BB7670D05B31DBA00E89FA2 /* crashDuck.png in Resources */,
 				34E0E9B807CC4B3600A82198 /* Localizable.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		81F650890A290FB6008FC8E7 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				81F6554F0A293DD0008FC8E7 /* Smack-Info.plist in Resources */,
-				81F656BE0A2A5880008FC8E7 /* SmackXMPPAccountView.nib in Resources */,
-				81D5A1CC0A59710E0099F9B9 /* SmackXMPPJoinChatView.nib in Resources */,
-				81D5A8600A5A14460099F9B9 /* SmackXMPPForm.nib in Resources */,
-				815ED1B50A6C4CD80024B6FE /* SmackXMPPMUCChangeNickname.nib in Resources */,
-				815ED2920A6C5AA00024B6FE /* SmackXMPPMUCChangeSubject.nib in Resources */,
-				81BE44690A6C731900AADA28 /* SmackXMPPServiceDiscoveryBrowser.nib in Resources */,
-				81DA14730A779B2E00569134 /* SmackXMPPVCardEditor.nib in Resources */,
-				81C3A7060A8FE15000A575B6 /* SmackXMPPHeadlinesViewer.nib in Resources */,
-				81C3A8DA0A90F63B00A575B6 /* SmackXMPPPhoneControl.nib in Resources */,
-				81376B8D0A92794F00298452 /* SmackGoogleAccountView.nib in Resources */,
-				81376DF70A92B01500298452 /* SmackLiveJournalAccountView.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9668,90 +9115,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		81B4C98C0A416BE500A8ABF5 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				81B4CA200A416C3B00A8ABF5 /* SmackBridge.java in Sources */,
-				81D5A1690A5944320099F9B9 /* SmackXMPPMultiUserChatPluginListener.java in Sources */,
-				815ECFBB0A6A56540024B6FE /* SmackXMPPRosterPluginListener.java in Sources */,
-				81BE647A0A711F6600AADA28 /* SmackXMPPFileTransferListener.java in Sources */,
-				81C3AA8B0A91393F00A575B6 /* SmackXMPPAsteriskListener.java in Sources */,
-				815D2F2A0A74D903009338C2 /* OutOfBandDataExtension.java in Sources */,
-				815D32380A7518D7009338C2 /* ChatStateNotifications.java in Sources */,
-				81F9CDEA0A7D83AE004A35BD /* VCardUpdateExtension.java in Sources */,
-				811DE2170A862E5900487D47 /* InvisibleCommand.java in Sources */,
-				81AB120E0A8B5F8A00E32420 /* SmackXMPPJingleListener.java in Sources */,
-				81376E460A92B6FB00298452 /* GoogleSettings.java in Sources */,
-				81376EA10A92C11800298452 /* MailNotification.java in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		81F6508A0A290FB6008FC8E7 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				81F6519D0A291145008FC8E7 /* SmackServicePlugin.m in Sources */,
-				81F651AD0A29123D008FC8E7 /* SmackXMPPService.m in Sources */,
-				81F654B20A29339F008FC8E7 /* SmackXMPPAccount.m in Sources */,
-				81F654BE0A29349C008FC8E7 /* SmackCocoaAdapter.m in Sources */,
-				81F656720A2A5458008FC8E7 /* SmackXMPPAccountViewController.m in Sources */,
-				815679900A339B1F005ADC13 /* SmackListContact.m in Sources */,
-				81B4CA7D0A416F8300A8ABF5 /* ruli_addr.c in Sources */,
-				81B4CA7F0A416F8300A8ABF5 /* ruli_conf.c in Sources */,
-				81B4CA810A416F8300A8ABF5 /* ruli_fsm.c in Sources */,
-				81B4CA830A416F8300A8ABF5 /* ruli_getaddrinfo.c in Sources */,
-				81B4CA850A416F8300A8ABF5 /* ruli_host.c in Sources */,
-				81B4CA870A416F8300A8ABF5 /* ruli_http.c in Sources */,
-				81B4CA890A416F8300A8ABF5 /* ruli_isaac.c in Sources */,
-				81B4CA8C0A416F8300A8ABF5 /* ruli_list.c in Sources */,
-				81B4CA8E0A416F8300A8ABF5 /* ruli_mem.c in Sources */,
-				81B4CA900A416F8300A8ABF5 /* ruli_msg.c in Sources */,
-				81B4CA930A416F8300A8ABF5 /* ruli_parse.c in Sources */,
-				81B4CA950A416F8300A8ABF5 /* ruli_rand.c in Sources */,
-				81B4CA970A416F8300A8ABF5 /* ruli_res.c in Sources */,
-				81B4CA990A416F8300A8ABF5 /* ruli_search.c in Sources */,
-				81B4CA9B0A416F8300A8ABF5 /* ruli_smtp.c in Sources */,
-				81B4CA9D0A416F8300A8ABF5 /* ruli_sock.c in Sources */,
-				81B4CA9F0A416F8300A8ABF5 /* ruli_srv.c in Sources */,
-				81B4CAA10A416F8300A8ABF5 /* ruli_sync.c in Sources */,
-				81B4CAA30A416F8300A8ABF5 /* ruli_txt.c in Sources */,
-				81B4CAA50A416F8300A8ABF5 /* ruli_util.c in Sources */,
-				81B4CDA40A4181C500A8ABF5 /* read-fd.c in Sources */,
-				81B4CDA50A4181C500A8ABF5 /* read-mem.c in Sources */,
-				81B4CDA60A4181C500A8ABF5 /* read.c in Sources */,
-				81B4CDA70A4181C500A8ABF5 /* select.c in Sources */,
-				81B4CDA80A4181C500A8ABF5 /* signal.c in Sources */,
-				81B4CDA90A4181C500A8ABF5 /* sys.c in Sources */,
-				81B4CDE50A41857D00A8ABF5 /* alloc.c in Sources */,
-				81B4CE640A42449700A8ABF5 /* SmackXMPPRosterPlugin.m in Sources */,
-				8102A7260A4B66C5004DF0F5 /* SmackXMPPMessagePlugin.m in Sources */,
-				8102A8210A4B6F83004DF0F5 /* SmackXMPPErrorMessagePlugin.m in Sources */,
-				8102A8880A4B7A1F004DF0F5 /* SmackXMPPHeadlineMessagePlugin.m in Sources */,
-				81D5A15C0A5943240099F9B9 /* SmackXMPPMultiUserChatPlugin.m in Sources */,
-				81D5A80A0A59F77A0099F9B9 /* SmackXMPPFormConverter.m in Sources */,
-				81D5A8640A5A14AE0099F9B9 /* SmackXMPPFormController.m in Sources */,
-				815ED31E0A6C637E0024B6FE /* SmackXMPPGatewayInteractionPlugin.m in Sources */,
-				81BE445E0A6C710B00AADA28 /* SmackXMPPServiceDiscoveryBrowsing.m in Sources */,
-				81BE5F300A70660000AADA28 /* SmackXMPPRegistration.m in Sources */,
-				81BE648B0A71220300AADA28 /* SmackXMPPFileTransferPlugin.m in Sources */,
-				81BE66B80A715FB200AADA28 /* SmackXMPPAccountRegistrationController.m in Sources */,
-				815D321F0A751674009338C2 /* SmackXMPPChatStateNotificationsPlugin.m in Sources */,
-				815D357F0A7585EA009338C2 /* SmackXMPPVCardPlugin.m in Sources */,
-				81F9D4980A8158EB004A35BD /* SmackXMPPVersionPlugin.m in Sources */,
-				81F9D8B00A83A92F004A35BD /* SmackXMPPPrivacyPlugin.m in Sources */,
-				81AB120C0A8B5F6100E32420 /* SmackJinglePlugin.m in Sources */,
-				81C3AC1D0A9171CD00A575B6 /* SmackXMPPPhonePlugin.m in Sources */,
-				81376B690A9273A000298452 /* SmackGoogleService.m in Sources */,
-				81376B810A9274F000298452 /* SmackGoogleAccount.m in Sources */,
-				81376B940A92797E00298452 /* SmackGoogleAccountViewController.m in Sources */,
-				81376DFF0A92B06B00298452 /* SmackLiveJournalAccount.m in Sources */,
-				81376E010A92B06B00298452 /* SmackLiveJournalAccountViewController.m in Sources */,
-				81376E030A92B06B00298452 /* SmackLiveJournalService.m in Sources */,
-				81376E3D0A92B66E00298452 /* SmackGoogleNewMailPlugin.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B72537B8058C4577004BA969 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -9848,11 +9211,6 @@
 			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
 			targetProxy = 38722DE90A909509002CC4F4 /* PBXContainerItemProxy */;
 		};
-		38D8FAFA0A8A4FEA0078E442 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 38D8FA9A0A8A4F350078E442 /* QuickTime Plugin */;
-			targetProxy = 38D8FAF90A8A4FEA0078E442 /* PBXContainerItemProxy */;
-		};
 		4947F5BD0655E85200B791E5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
@@ -9883,16 +9241,6 @@
 			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
 			targetProxy = 6C3E0151054445C000A4AE2E /* PBXContainerItemProxy */;
 		};
-		81B4CA1B0A416C1000A8ABF5 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 81B4C98F0A416BE500A8ABF5 /* SmackJavaBridge */;
-			targetProxy = 81B4CA1A0A416C1000A8ABF5 /* PBXContainerItemProxy */;
-		};
-		81F6510C0A290FC8008FC8E7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 81F6508C0A290FB6008FC8E7 /* Smack */;
-			targetProxy = 81F6510B0A290FC8008FC8E7 /* PBXContainerItemProxy */;
-		};
 		B72537BE058C45CF004BA969 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
@@ -9919,24 +9267,6 @@
 			targetProxy = F5B17CDE0A16C767004AE99E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXToolTarget section */
-		81B4C98F0A416BE500A8ABF5 /* SmackJavaBridge */ = {
-			isa = PBXToolTarget;
-			buildConfigurationList = 81B4CA110A416BEC00A8ABF5 /* Build configuration list for PBXToolTarget "SmackJavaBridge" */;
-			buildPhases = (
-				81B4C98C0A416BE500A8ABF5 /* Sources */,
-				81B4C98D0A416BE500A8ABF5 /* JavaArchive */,
-				81B4C98E0A416BE500A8ABF5 /* Frameworks */,
-			);
-			dependencies = (
-			);
-			name = SmackJavaBridge;
-			productInstallPath = /usr/local/bin;
-			productName = SmackJavaBridge;
-			productReference = 81B4C9900A416BE500A8ABF5 /* SmackJavaBridge.jar */;
-		};
-/* End PBXToolTarget section */
 
 /* Begin PBXVariantGroup section */
 		071C56310827933000399C0F /* Shared Dock Icon Images */ = {
@@ -10973,94 +10303,6 @@
 			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
-		81376B870A92794E00298452 /* SmackGoogleAccountView.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				81376B880A92794E00298452 /* English */,
-			);
-			name = SmackGoogleAccountView.nib;
-			sourceTree = "<group>";
-		};
-		81376DF10A92B01400298452 /* SmackLiveJournalAccountView.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				81376DF20A92B01400298452 /* English */,
-			);
-			name = SmackLiveJournalAccountView.nib;
-			sourceTree = "<group>";
-		};
-		815ED1B30A6C4CD80024B6FE /* SmackXMPPMUCChangeNickname.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				815ED1B40A6C4CD80024B6FE /* English */,
-			);
-			name = SmackXMPPMUCChangeNickname.nib;
-			sourceTree = "<group>";
-		};
-		815ED2900A6C5A9F0024B6FE /* SmackXMPPMUCChangeSubject.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				815ED2910A6C5A9F0024B6FE /* English */,
-			);
-			name = SmackXMPPMUCChangeSubject.nib;
-			sourceTree = "<group>";
-		};
-		81BE44670A6C731900AADA28 /* SmackXMPPServiceDiscoveryBrowser.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				81BE44680A6C731900AADA28 /* English */,
-			);
-			name = SmackXMPPServiceDiscoveryBrowser.nib;
-			sourceTree = "<group>";
-		};
-		81C3A7040A8FE15000A575B6 /* SmackXMPPHeadlinesViewer.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				81C3A7050A8FE15000A575B6 /* English */,
-			);
-			name = SmackXMPPHeadlinesViewer.nib;
-			sourceTree = "<group>";
-		};
-		81C3A8D80A90F63B00A575B6 /* SmackXMPPPhoneControl.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				81C3A8D90A90F63B00A575B6 /* English */,
-			);
-			name = SmackXMPPPhoneControl.nib;
-			sourceTree = "<group>";
-		};
-		81D5A1CA0A59710D0099F9B9 /* SmackXMPPJoinChatView.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				81D5A1CB0A59710D0099F9B9 /* English */,
-			);
-			name = SmackXMPPJoinChatView.nib;
-			sourceTree = "<group>";
-		};
-		81D5A85E0A5A14450099F9B9 /* SmackXMPPForm.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				81D5A85F0A5A14450099F9B9 /* English */,
-			);
-			name = SmackXMPPForm.nib;
-			sourceTree = "<group>";
-		};
-		81DA14710A779B2E00569134 /* SmackXMPPVCardEditor.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				81DA14720A779B2E00569134 /* English */,
-			);
-			name = SmackXMPPVCardEditor.nib;
-			sourceTree = "<group>";
-		};
-		81F656BC0A2A587F008FC8E7 /* SmackXMPPAccountView.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				81F656BD0A2A587F008FC8E7 /* English */,
-			);
-			name = SmackXMPPAccountView.nib;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -11659,6 +10901,7 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
+					"$(SRCROOT)/Frameworks",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
@@ -11993,35 +11236,6 @@
 			};
 			name = "Development-libgaim_oscar";
 		};
-		34D0746C0B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				JAVA_ARCHIVE_COMPRESSION = YES;
-				JAVA_ARCHIVE_TYPE = JAR;
-				JAVA_COMPILER = /usr/bin/javac;
-				JAVA_COMPILER_SOURCE_VERSION = 1.5;
-				JAVA_COMPILER_TARGET_VM_VERSION = 1.5;
-				JAVA_SOURCE_SUBDIR = .;
-				OPTIMIZATION_CFLAGS = "-O0";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = SmackJavaBridge;
-				PURE_JAVA = YES;
-				REZ_EXECUTABLE = YES;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = "Development-libgaim_oscar";
-		};
 		34D0746D0B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -12034,24 +11248,6 @@
 			};
 			name = "Development-libgaim_oscar";
 		};
-		34D0746E0B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_INPUT_FILETYPE = sourcecode.c.objc;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = "Plugins/Smack Service/Smack-Info.plist";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Foundation,
-					"-framework",
-					AppKit,
-				);
-				PRODUCT_NAME = Smack;
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = "Development-libgaim_oscar";
-		};
 		34D0746F0B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -12060,6 +11256,7 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
+					"$(SRCROOT)/Frameworks",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
@@ -12275,174 +11472,6 @@
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
 				INFOPLIST_FILE = Plists/QuickTimePlugin.plist;
 				PRODUCT_NAME = QuickTime;
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = "Deployment-Debug_PPC-Only";
-		};
-		81B4CA120A416BEC00A8ABF5 /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				JAVA_ARCHIVE_COMPRESSION = YES;
-				JAVA_ARCHIVE_TYPE = JAR;
-				JAVA_COMPILER = /usr/bin/javac;
-				JAVA_COMPILER_SOURCE_VERSION = 1.5;
-				JAVA_COMPILER_TARGET_VM_VERSION = 1.5;
-				JAVA_SOURCE_SUBDIR = .;
-				OPTIMIZATION_CFLAGS = "-O0";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = SmackJavaBridge;
-				PURE_JAVA = YES;
-				REZ_EXECUTABLE = YES;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = Development;
-		};
-		81B4CA130A416BEC00A8ABF5 /* Deployment */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = YES;
-				GCC_ENABLE_FIX_AND_CONTINUE = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
-				JAVA_ARCHIVE_CLASSES = YES;
-				JAVA_ARCHIVE_TYPE = JAR;
-				JAVA_COMPILER = /usr/bin/javac;
-				JAVA_SOURCE_SUBDIR = .;
-				OPTIMIZATION_CFLAGS = "-O0";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = SmackJavaBridge;
-				PURE_JAVA = YES;
-				REZ_EXECUTABLE = YES;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-				ZERO_LINK = NO;
-			};
-			name = Deployment;
-		};
-		81B4CA140A416BEC00A8ABF5 /* Deployment-Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				JAVA_ARCHIVE_CLASSES = YES;
-				JAVA_ARCHIVE_TYPE = JAR;
-				JAVA_COMPILER = /usr/bin/javac;
-				JAVA_SOURCE_SUBDIR = .;
-				OPTIMIZATION_CFLAGS = "-O0";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = SmackJavaBridge;
-				PURE_JAVA = YES;
-				REZ_EXECUTABLE = YES;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = "Deployment-Debug";
-		};
-		81B4CA150A416BEC00A8ABF5 /* Deployment-Debug_PPC-Only */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				JAVA_ARCHIVE_CLASSES = YES;
-				JAVA_ARCHIVE_TYPE = JAR;
-				JAVA_COMPILER = /usr/bin/javac;
-				JAVA_SOURCE_SUBDIR = .;
-				OPTIMIZATION_CFLAGS = "-O0";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = SmackJavaBridge;
-				PURE_JAVA = YES;
-				REZ_EXECUTABLE = YES;
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = "Deployment-Debug_PPC-Only";
-		};
-		81F651050A290FBB008FC8E7 /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_INPUT_FILETYPE = sourcecode.c.objc;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = "Plugins/Smack Service/Smack-Info.plist";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Foundation,
-					"-framework",
-					AppKit,
-				);
-				PRODUCT_NAME = Smack;
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = Development;
-		};
-		81F651060A290FBB008FC8E7 /* Deployment */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_INPUT_FILETYPE = sourcecode.c.objc;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = "Plugins/Smack Service/Smack-Info.plist";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Foundation,
-					"-framework",
-					AppKit,
-				);
-				PRODUCT_NAME = Smack;
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = Deployment;
-		};
-		81F651070A290FBB008FC8E7 /* Deployment-Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_INPUT_FILETYPE = sourcecode.c.objc;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = "Plugins/Smack Service/Smack-Info.plist";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Foundation,
-					"-framework",
-					AppKit,
-				);
-				PRODUCT_NAME = Smack;
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = "Deployment-Debug";
-		};
-		81F651080A290FBB008FC8E7 /* Deployment-Debug_PPC-Only */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_INPUT_FILETYPE = sourcecode.c.objc;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = "Plugins/Smack Service/Smack-Info.plist";
-				PRODUCT_NAME = Smack;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			name = "Deployment-Debug_PPC-Only";
@@ -12862,6 +11891,7 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
+					"$(SRCROOT)/Frameworks",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
@@ -12894,6 +11924,7 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
+					"$(SRCROOT)/Frameworks",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
@@ -12926,6 +11957,7 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
+					"$(SRCROOT)/Frameworks",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
@@ -13380,30 +12412,6 @@
 				38D8FADE0A8A4F350078E442 /* Deployment */,
 				38D8FADF0A8A4F350078E442 /* Deployment-Debug */,
 				38D8FAE00A8A4F350078E442 /* Deployment-Debug_PPC-Only */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
-		};
-		81B4CA110A416BEC00A8ABF5 /* Build configuration list for PBXToolTarget "SmackJavaBridge" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				81B4CA120A416BEC00A8ABF5 /* Development */,
-				34D0746C0B1E1AB600D63DF2 /* Development-libgaim_oscar */,
-				81B4CA130A416BEC00A8ABF5 /* Deployment */,
-				81B4CA140A416BEC00A8ABF5 /* Deployment-Debug */,
-				81B4CA150A416BEC00A8ABF5 /* Deployment-Debug_PPC-Only */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
-		};
-		81F651040A290FBB008FC8E7 /* Build configuration list for PBXNativeTarget "Smack" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				81F651050A290FBB008FC8E7 /* Development */,
-				34D0746E0B1E1AB600D63DF2 /* Development-libgaim_oscar */,
-				81F651060A290FBB008FC8E7 /* Deployment */,
-				81F651070A290FBB008FC8E7 /* Deployment-Debug */,
-				81F651080A290FBB008FC8E7 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
