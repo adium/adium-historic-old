@@ -224,13 +224,14 @@
                         avatarimage = smallerimage;
                     }
                     
-                    NSData *jpgdata = [avatarimage JPEGRepresentation];
+                    NSData *jpgdata = [[avatarimage JPEGRepresentation] retain];
                     [avatarimage release];
                     
                     // cheap way to calculate SHA1 hash, just let Smack do it
                     NSString *serverhash = [vCard getAvatarHash];
                     [SmackCocoaAdapter setAvatar:jpgdata forVCard:vCard];
                     NSString *localhash = [vCard getAvatarHash];
+					[jpgdata release];
                     
                     // do local and server-side avatars match?
                     if (![serverhash isEqualToString:localhash])
