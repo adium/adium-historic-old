@@ -60,7 +60,7 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 		 * update our group information. */
 		if (!(oldGroupName = [groupDict objectForKey:buddyValue]) ||
 		   !(groupName) ||
-		   !([oldGroupName isEqualToString:groupName])) {
+		   !([oldGroupName isEqualToString:groupName]) || !((!groupName) && oldGroupName)) {
 
 			/* We pass in buddy->name directly (without filtering or normalizing it) as it may indicate a 
 			 * formatted version of the UID.  We have a signal for when a rename occurs, but passing here lets us get
