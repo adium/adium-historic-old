@@ -63,7 +63,8 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 		else if (groupName && !([oldGroupName isEqualToString:groupName]))
 			update = YES;
 		
-		if(update) {
+		//HAX. This shouldn't work, but it's equivalent to something that seemed (?) to work. So I'm trying it temporarily.
+		if(YES) {
 
 			/* We pass in buddy->name directly (without filtering or normalizing it) as it may indicate a 
 			 * formatted version of the UID.  We have a signal for when a rename occurs, but passing here lets us get
