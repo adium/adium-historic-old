@@ -141,8 +141,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			[theContact setRemoteGroupName:AILocalizedString(@"Orphans","Name for the orphans group")];
 		} else if (groupName && [groupName length] != 0) {
 			[theContact setRemoteGroupName:[self _mapIncomingGroupName:groupName]];
-		} else {
-			[theContact setRemoteGroupName:[self _mapIncomingGroupName:nil]];
 		}
 		
 		[self gotGroupForContact:theContact];

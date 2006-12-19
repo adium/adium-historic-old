@@ -56,15 +56,11 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 		//We also use this opportunity to check the contact's name against its formattedUID
 		if (!groupDict) groupDict = [[NSMutableDictionary alloc] init];
 
-		BOOL update = NO;
-		
-		if (!(oldGroupName = [groupDict objectForKey:buddyValue]))
-			update = YES;
-		else if (groupName && !([oldGroupName isEqualToString:groupName]))
-			update = YES;
-		
-		//HAX. This shouldn't work, but it's equivalent to something that seemed (?) to work. So I'm trying it temporarily.
-		if(YES) {
+		/* If there is no old group name, or there is and there is no current group name, or the two don't match,
+		 * update our group information. */
+		if (!(oldGroupName = [groupDict objectForKey:buddyValue]) ||
+		    !(groupName) ||
+		    !([oldGroupName isEqualToString:groupName])) {
 
 			/* We pass in buddy->name directly (without filtering or normalizing it) as it may indicate a 
 			 * formatted version of the UID.  We have a signal for when a rename occurs, but passing here lets us get
