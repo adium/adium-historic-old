@@ -962,7 +962,7 @@ static NSString	*prefsCategory;
 	
 	NSCalendarDate *lastCheckDate = [NSCalendarDate dateWithString:[defaults stringForKey:@"AILastSubmittedProfileDate"]];
 //	if (lastCheckDate && [lastCheckDate php4CompatibleIsFromSameWeekAsDate:[NSCalendarDate date]]) {
-	if (lastCheckDate && abs([lastCheckDate dayOfCommonEra] - [[NSCalendarDate date] dayOfCommonEra]) > 7)
+	if (lastCheckDate && abs([lastCheckDate dayOfCommonEra] - [[NSCalendarDate date] dayOfCommonEra]) > 7) {
 		return [NSArray array];
 	} else {
 		[defaults setObject:[[NSCalendarDate date] description] forKey:@"AILastSubmittedProfileDate"];
