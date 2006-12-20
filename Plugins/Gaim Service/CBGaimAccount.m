@@ -1875,9 +1875,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				prplScales = (prpl_info->icon_spec.scale_rules & GAIM_ICON_SCALE_SEND) || (prpl_info->icon_spec.scale_rules & GAIM_ICON_SCALE_DISPLAY);
 
 				if (prplScales && !smallEnough) {
-					int width, height;
+					int width = imageSize.width;
+					int height = imageSize.height;
 					
 					gaim_buddy_icon_get_scale_size(&prpl_info->icon_spec, &width, &height);
+					AILog(@"Scaling to %i %i",width,height);
 					//Determine the scaled size.  If it's too big, scale to the largest permissable size
 					image = [image imageByScalingToSize:NSMakeSize(width, height)];
 
