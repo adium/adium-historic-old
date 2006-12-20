@@ -133,7 +133,7 @@ static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who,
 		if (!contact) {
 			NSString *UID = [NSString stringWithUTF8String:gaim_normalize(account, who)];
 			
-			contact = [accountLookup(account) mainThreadContactWithUID:UID];
+			contact = [accountLookup(account) contactWithUID:UID];
 		}
 		
 		[adiumAccount updateUserInfo:contact
