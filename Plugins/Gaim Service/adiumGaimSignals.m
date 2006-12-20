@@ -119,7 +119,8 @@ static void buddy_status_changed_cb(GaimBuddy *buddy, GaimStatus *oldstatus, Gai
 	NSAttributedString	*statusMessage;	
 	BOOL				isAvailable;
 
-	GaimDebug(@"buddy_status_changed_cb: %@ (%i): name %s, message %s",
+	GaimDebug(@"buddy_status_changed_cb: %x - %@ (%i): name %s, message %s",
+			  buddy,
 			  theContact,
 			  gaim_status_type_get_primitive(gaim_status_get_type(status)),
 			  gaim_status_get_name(status),
