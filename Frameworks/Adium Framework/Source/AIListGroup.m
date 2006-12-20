@@ -199,12 +199,12 @@
 - (void)removeObject:(AIListObject *)inObject
 {	
 	if ([containedObjects containsObject:inObject]) {
-		//Update our visible count
-		[self _recomputeVisibleCount];
-		
 		//Remove the object
 		[inObject setContainingObject:nil];
 		[containedObjects removeObject:inObject];
+		
+		//Update our visible count
+		[self _recomputeVisibleCount];
 
 		//
 		[self setStatusObject:[NSNumber numberWithInt:[containedObjects count]]
