@@ -266,7 +266,7 @@ AIListContact* contactLookupFromBuddy(GaimBuddy *buddy)
 	
 		UID = [NSString stringWithUTF8String:gaim_normalize(buddy->account, buddy->name)];
 		
-		theContact = [accountLookup(buddy->account) mainThreadContactWithUID:UID];
+		theContact = [accountLookup(buddy->account) contactWithUID:UID];
 		
 		//Associate the handle with ui_data and the buddy with our statusDictionary
 		buddy->node.ui_data = [theContact retain];
@@ -288,7 +288,7 @@ AIChat* groupChatLookupFromConv(GaimConversation *conv)
 	if (!chat) {
 		NSString *name = [NSString stringWithUTF8String:conv->name];
 		
-		chat = [accountLookup(conv->account) mainThreadChatWithName:name];
+		chat = [accountLookup(conv->account) chatWithName:name];
 
 		[chatDict setObject:[NSValue valueWithPointer:conv] forKey:[chat uniqueChatID]];
 		conv->ui_data = [chat retain];
@@ -345,7 +345,7 @@ AIChat* imChatLookupFromConv(GaimConversation *conv)
 		sourceContact = contactLookupFromBuddy(buddy);
 
 		// Need to start a new chat, associating with the GaimConversation
-		chat = [accountLookup(account) mainThreadChatWithContact:sourceContact];
+		chat = [accountLookup(account) chatWithContact:sourceContact];
 
 		if (!chat) {
 			NSString	*errorString;
