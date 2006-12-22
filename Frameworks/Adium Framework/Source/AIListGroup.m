@@ -20,7 +20,7 @@
 #import <AIUtilities/AIArrayAdditions.h>
 
 @interface AIListGroup (PRIVATE)
-- (void)_setVisibleCount:(int)newCount;
+- (void)_recomputeVisibleCount;
 @end
 
 @implementation AIListGroup
@@ -74,24 +74,28 @@
     return visibleCount;
 }
 
-//Set this group as visible if it contains anything visible
-- (void)_setVisibleCount:(int)newCount
+//Cache the number of contained objects that are visible
+- (void)_recomputeVisibleCount
 {
-	if (visibleCount != newCount) {
-		visibleCount = newCount;
-		
-		//
-		[self setStatusObject:(visibleCount ? [NSNumber numberWithInt:visibleCount] : nil)
-					   forKey:@"VisibleObjectCount"
-					   notify:NotifyNow];
-	}
+	visibleCount = 0;
+	
+	NSEnumerator *containedObjectEnumerator = [[self containedObjects] objectEnumerator];
+	AIListObject *containedObject = nil;
+	
+	while ((containedObject = [containedObjectEnumerator nextObject]))
+		if ([containedObject visible])
+			visibleCount++;
+	
+	[self setStatusObject:(visibleCount ? [NSNumber numberWithInt:visibleCount] : nil)
+				   forKey:@"VisibleObjectCount"
+				   notify:NotifyNow];
 }
 
 //Called when the visibility of an object in this group changes
 - (void)visibilityOfContainedObject:(AIListObject *)inObject changedTo:(BOOL)inVisible
 {
 	//Update our visibility as a result of this change
-	[self _setVisibleCount:(inVisible ? visibleCount + 1 : visibleCount - 1)];
+	[self _recomputeVisibleCount];
 	
 	//Sort the contained object to or from the bottom (invisible section) of the group
 	[[adium contactController] sortListObject:inObject];
@@ -174,7 +178,7 @@
 	if (![containedObjects containsObjectIdenticalTo:inObject]) {
 		//Update our visible count
 		if ([inObject visible]) {
-			[self _setVisibleCount:visibleCount+1];
+			[self _recomputeVisibleCount];
 		}
 		
 		//Add the object
@@ -203,15 +207,13 @@
 //Remove an object from this group (PRIVATE: For contact controller only)
 - (void)removeObject:(AIListObject *)inObject
 {	
-	if ([containedObjects containsObject:inObject]) {
-		//Update our visible count
-		if ([inObject visible]) {
-			[self _setVisibleCount:visibleCount-1];
-		}
-		
+	if ([containedObjects containsObject:inObject]) {		
 		//Remove the object
 		[inObject setContainingObject:nil];
 		[containedObjects removeObject:inObject];
+		
+		//Update our visible count
+		[self _recomputeVisibleCount];
 
 		//
 		[self setStatusObject:[NSNumber numberWithInt:[containedObjects count]]

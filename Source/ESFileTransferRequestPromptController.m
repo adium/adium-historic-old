@@ -79,8 +79,12 @@
  */
 - (void)handleFileTransferAction:(AIFileTransferAction)action
 {
+	[self retain];
+
 	NSString	*localFilename = nil;
 	BOOL		finished = NO;
+	
+	[fileTransfer retain];
 	
 	switch (action) {			
 		case AISaveFile: /* Save */
@@ -117,8 +121,14 @@
 		}
 	}
 	
+	BOOL remotelyCanceled = [fileTransfer isStopped];
+	[fileTransfer release];
+	if(remotelyCanceled) {
+		[self release];
+		return;
+	}
+	
 	if (finished) {
-		[self retain];
 		[target performSelector:selector
 					 withObject:fileTransfer
 					 withObject:localFilename];

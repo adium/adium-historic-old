@@ -418,7 +418,7 @@ static NSMutableDictionary *fileTransferDict = nil;
 - (void)setFileTransferRequestPromptController:(ESFileTransferRequestPromptController *)inPromptController
 {
 	if (promptController != inPromptController) {
-		[promptController release];
+		[promptController autorelease];
 		promptController = [inPromptController retain];
 	}
 }
