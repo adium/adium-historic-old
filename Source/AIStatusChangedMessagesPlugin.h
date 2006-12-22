@@ -19,7 +19,7 @@
 @protocol AIListObjectObserver;
 
 @interface AIStatusChangedMessagesPlugin : AIPlugin {
-
+	NSMutableDictionary *previousStatusChangedMessages;
 }
 
 @end
