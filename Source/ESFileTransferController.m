@@ -235,7 +235,7 @@ static ESFileTransferPreferences *preferences;
  */
 - (void)_finishReceiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer localFilename:(NSString *)localFilename
 {	
-	if (localFilename) {
+	if (localFilename && (![fileTransfer isStopped])) {
 		[fileTransfer setLocalFilename:localFilename];
 		[fileTransfer setStatus:Accepted_FileTransfer];
 
