@@ -520,6 +520,17 @@ static void update_context_list_cb(void *opdata)
 	otrg_ui_update_keylist();
 }
 
+static const char *account_display_name_cb(void *opdata, const char *accountname, const char *protocol)
+{
+	return [[accountFromAccountID(accountname) formattedUID] UTF8String];
+}
+
+static void account_display_name_free_cb(void *opdata, const char *account_display_name)
+{
+    /* Do nothing, since we didn't actually allocate any memory in
+	 * account_display_name_cb(). */
+}
+
 static const char *protocol_name_cb(void *opdata, const char *protocol)
 {
 	return [[serviceFromServiceID(protocol) shortDescription] UTF8String];
@@ -528,8 +539,9 @@ static const char *protocol_name_cb(void *opdata, const char *protocol)
 static void protocol_name_free_cb(void *opdata, const char *protocol_name)
 {
     /* Do nothing, since we didn't actually allocate any memory in
-	* protocol_name_cb. */
+	 * protocol_name_cb(). */
 }
+
 
 static void confirm_fingerprint_cb(void *opdata, OtrlUserState us,
 								   const char *accountname, const char *protocol, const char *username,
@@ -592,6 +604,8 @@ static OtrlMessageAppOps ui_ops = {
     notify_cb,
     display_otr_message_cb,
     update_context_list_cb,
+	account_display_name_cb,
+	account_display_name_free_cb,
     protocol_name_cb,
     protocol_name_free_cb,
     confirm_fingerprint_cb,
