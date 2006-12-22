@@ -177,6 +177,15 @@ static void ZombieKiller_Signal(int i)
 	NSString	*gaimUserDir = [[[adium loginController] userDirectory] stringByAppendingPathComponent:@"libgaim"];
 	gaim_util_set_user_dir([[gaimUserDir stringByExpandingTildeInPath] UTF8String]);
 
+	/* Delete blist.xml once when 1.0 runs to clear out any old silliness */
+	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"Adium 1.0 deleted blist.xml"]) {
+		[[NSFileManager defaultManager] removeFileAtPath:
+			[[[NSString stringWithUTF8String:gaim_user_dir()] stringByAppendingPathComponent:@"blist"] stringByAppendingPathExtension:@"xml"]
+												 handler:nil];
+		[[NSUserDefaults standardUserDefaults] setBool:YES
+												forKey:@"Adium 1.0 deleted blist.xml"];
+	}
+
 	gaim_core_set_ui_ops(adium_gaim_core_get_ops());
 	gaim_eventloop_set_ui_ops(adium_gaim_eventloop_get_ui_ops());
 
@@ -944,8 +953,8 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 - (void)moveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
 	GaimAccount *account;
-	GaimGroup 	*group;
 	GaimBuddy	*buddy;
+	GaimGroup 	*group;
 	const char	*buddyUTF8String;
 	const char	*groupUTF8String;
 	BOOL		needToAddServerside = NO;
@@ -963,19 +972,27 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	}
 
 	buddyUTF8String = [objectUID UTF8String];
-	buddy = gaim_find_buddy(account, buddyUTF8String);
-	if (!buddy) {
+	/* If we support contacts in multiple groups at once this should change */
+	GSList *buddies = gaim_find_buddies(account, buddyUTF8String);
+
+	if (buddies) {
+		GSList *cur;
+		for (cur = buddies; cur; cur = cur->next) {
+			/* gaim_blist_add_buddy() will update the local list and perform a serverside move as necessary */
+			gaim_blist_add_buddy(cur->data, NULL, group, NULL);			
+		}
+
+	} else {
 		/* If we can't find a buddy, something's gone wrong... we shouldn't be moving a buddy we don't have.
  		 * As with the group, we'll just silently turn this into an add operation. */
 		buddy = gaim_buddy_new(account, buddyUTF8String, NULL);
-		needToAddServerside = YES;
+
+		/* gaim_blist_add_buddy() will update the local list and perform a serverside move as necessary */
+		gaim_blist_add_buddy(buddy, NULL, group, NULL);
+		
+		/* gaim_blist_add_buddy() won't perform a serverside add, however.  Add if necessary. */
+		gaim_account_add_buddy(account, buddy);
 	}
-
-	/* gaim_blist_add_buddy() will update the local list and perform a serverside move as necessary */
-	gaim_blist_add_buddy(buddy, NULL, group, NULL);
-
-	/* gaim_blist_add_buddy() won't perform a serverside add, however.  Add if necessary. */
-	if (needToAddServerside) gaim_account_add_buddy(account, buddy);
 }
 
 - (void)renameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName
