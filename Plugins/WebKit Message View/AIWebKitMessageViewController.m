@@ -1185,7 +1185,7 @@ static NSArray *draggedTypes = nil;
 			a = AICancel;
 		else
 			a = AISaveFile;
-		
+		AILog(@"Telling %@'s %@ to handle the action",fileTransfer,tc);
 		[tc handleFileTransferAction:a];
 	}
 }
