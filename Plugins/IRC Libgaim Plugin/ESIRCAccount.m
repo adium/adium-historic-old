@@ -77,7 +77,7 @@ void gaim_account_set_bool(void *account, const char *name,
 - (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact
 {
 	return ([[inContact UID] isEqualToString:@"nickserv"] ||
-			[[inContact UID] isEqualToString:@"chanserv"])
+			[[inContact UID] isEqualToString:@"chanserv"]);
 }
 
 @end
