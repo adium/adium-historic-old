@@ -4,10 +4,10 @@
     <title>Adium Updates</title>
     <language>en</language>
     <item>
-        <title>Adium 1.0b18</title>
-        <pubDate>Tuesday, December 19th, 2006 22:30:00 GMT-5</pubDate>
-        <sparkle:releaseNotesLink>http://www.adiumx.com/changelogs/1.0b18.html</sparkle:releaseNotesLink> 
-        <enclosure sparkle:md5Sum="9d3fb06c7e6df49c7214ea821dc9396b" sparkle:version="1.0b18" url="http://adiumx.cachefly.net/Adium_1.0b18.dmg" length="18339350" type="application/octet-stream"/>
+        <title>Adium 1.0b19</title>
+        <pubDate>Friday, December 22nd, 2006 22:30:00 GMT-5</pubDate>
+        <sparkle:releaseNotesLink>http://www.adiumx.com/changelogs/1.0b19.html</sparkle:releaseNotesLink> 
+        <enclosure sparkle:md5Sum="cc3085a728154c708261d3880c5b3e1c" sparkle:version="1.0b19" url="http://adiumx.cachefly.net/Adium_1.0b19.dmg" length="18356702" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
