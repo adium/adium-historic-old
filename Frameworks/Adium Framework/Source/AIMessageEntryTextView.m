@@ -237,13 +237,6 @@
 				}
 			}
 
-		} else if ([charactersIgnoringModifiers isEqualToString:@"\r"] == YES || inChar == NSEnterCharacter) {
-			if (flags & NSShiftKeyMask) {
-				[self insertText:@"\n"];
-			} else {
-				[super keyDown:inEvent];
-			}
-
 		} else if (inChar == NSTabCharacter) {
 			if ([[self delegate] respondsToSelector:@selector(textViewShouldTabComplete:)] &&
 				[[self delegate] textViewShouldTabComplete:self]) {
