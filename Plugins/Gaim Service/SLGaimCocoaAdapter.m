@@ -553,7 +553,8 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	NSScanner			*scanner;
     NSString			*chunkString = nil;
     NSMutableString		*newString;
-	NSString			*targetString = @"<IMG ID=\"";
+	NSString			*targetString = @"<IMG ID=";
+	NSCharacterSet		*quoteApostropheCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"\"'"];
     int imageID;
 
 	if ([inString rangeOfString:targetString options:NSCaseInsensitiveSearch].location == NSNotFound) {
@@ -577,12 +578,17 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		}
 		
 		if ([scanner scanString:targetString intoString:&chunkString]) {
-			
+			//Skip past a quote or apostrophe
+			[scanner scanCharactersFromSet:quoteApostropheCharacterSet intoString:NULL];
+
 			//Get the image ID from the tag
 			[scanner scanInt:&imageID];
 
-			//Scan up to ">
-			[scanner scanString:@"'>" intoString:nil];
+			//Skip past a quote or apostrophe
+			[scanner scanCharactersFromSet:quoteApostropheCharacterSet intoString:NULL];
+
+			//Scan past a >
+			[scanner scanString:@">" intoString:nil];
 			
 			//Get the image, then write it out as a png
 			GaimStoredImage		*gaimImage = gaim_imgstore_get(imageID);
@@ -608,7 +614,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 				[image release];
 			} else {
 				//If we didn't get a gaimImage, just leave the tag for now.. maybe it was important?
-				[newString appendString:chunkString];
+				[newString appendFormat:@"<IMG ID=\"%i\">",chunkString];
 			}
 		}
 	}
