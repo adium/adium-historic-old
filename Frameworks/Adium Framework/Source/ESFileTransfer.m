@@ -91,7 +91,7 @@ static NSMutableDictionary *fileTransferDict = nil;
 
 - (void)dealloc
 {
-	[fileTransferDict removeObjectForKey:uniqueID];
+	[fileTransferDict removeObjectForKey:[self uniqueID]];
 	[uniqueID release];
 
     [remoteFilename release];
