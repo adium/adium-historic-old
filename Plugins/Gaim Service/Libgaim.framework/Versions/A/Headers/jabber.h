@@ -134,8 +134,6 @@ typedef struct _JabberStream
 	char *gmail_last_time;
 	char *gmail_last_tid;
 
-	gchar* last_mail_alert_time;
-
 	/* OK, this stays at the end of the struct, so plugins can depend
 	 * on the rest of the stuff being in the right place
 	 */
