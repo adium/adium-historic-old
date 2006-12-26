@@ -893,6 +893,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 }
 
 #pragma mark GaimConversation User Lists
+- (NSString *)uidForContactWithUID:(NSString *)inUID inChat:(AIChat *)chat
+{
+	//No change for the superclass; subclasses may wish to modify it
+	return inUID;
+}
 - (void)addUsersArray:(NSArray *)usersArray
 			withFlags:(NSArray *)flagsArray
 		   andAliases:(NSArray *)aliasesArray 
@@ -915,7 +920,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		flags = [[flagsArray objectAtIndex:i] intValue];
 		alias = [aliasesArray objectAtIndex:i];
 
-		listContact = [self contactWithUID:contactName];
+		listContact = [self contactWithUID:[self uidForContactWithUID:contactName inChat:chat]];
 		[listContact setStatusObject:contactName forKey:@"FormattedUID" notify:NotifyNow];
 
 		if (alias && [alias length]) {
@@ -931,12 +936,15 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	AIListContact	*contact;
 
 	if ((chat) && 
-		(contact = [self contactWithUID:contactName])) {
+		(contact = [self contactWithUID:[self uidForContactWithUID:contactName inChat:chat]])) {
 		
 		[chat removeParticipatingListObject:contact];
 		
 		GaimDebug(@"%@ removeUser:%@ fromChat:%@",self,contact,chat);
-	}	
+	} else {
+		AILog(@"Could not remove %@ from %@ (contactWithUID: %@)",
+			  contactName,chat,[self contactWithUID:[self uidForContactWithUID:contactName inChat:chat]]);
+	}
 }
 
 - (void)removeUsersArray:(NSArray *)usersArray fromChat:(AIChat *)chat
