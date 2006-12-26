@@ -54,7 +54,6 @@
 	[[textField_displayName cell] setPlaceholderString:(defaultAlias ? defaultAlias : @"")];
 
 	[self configureProfile];
-	[self configureImageView];
 	[self configureTooltips];
 	
 	if ([[[adium preferenceController] preferenceForKey:KEY_USE_USER_ICON
@@ -127,13 +126,17 @@
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	if (object) return;
-	
+
 	if ([key isEqualToString:KEY_ACCOUNT_DISPLAY_NAME]) {
 		NSString *displayName = [textField_displayName stringValue];
 		NSString *newDisplayName = [[[prefDict objectForKey:KEY_ACCOUNT_DISPLAY_NAME] attributedString] string];
 		if (![displayName isEqualToString:newDisplayName]) {
 			[textField_displayName setStringValue:newDisplayName];
 		}
+	}
+
+	if (firstTime || [key isEqualToString:KEY_USER_ICON] || [key isEqualToString:KEY_DEFAULT_USER_ICON]) {
+		[self configureImageView];
 	}
 }
 
