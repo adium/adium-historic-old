@@ -40,6 +40,8 @@ if [ ! -z "${APPLESCRIPT}" -a "${APPLESCRIPT}" != "-null-" ]; then
     echo "Done running the applescript..."
 fi
 
+cp RightDS_Store "/Volumes/${VOLUME_NAME}/.DS_Store"
+
 # run shell script
 # if [ ! -z "${SHELLSCRIPT}" -a "${SHELLSCRIPT}" != "-null-" ]; then
 #   ./${SHELLSCRIPT} \"${VOLUME_NAME}\"
