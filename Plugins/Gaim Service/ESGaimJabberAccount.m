@@ -33,6 +33,8 @@
 
 #define DEFAULT_JABBER_HOST @"@jabber.org"
 
+extern void jabber_roster_request(JabberStream *js);
+
 @implementation ESGaimJabberAccount
 	
 /*!
