@@ -554,13 +554,13 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
     NSString			*chunkString = nil;
     NSMutableString		*newString;
 	NSString			*targetString = @"<IMG ID=";
-	NSCharacterSet		*quoteApostropheCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"\"'"];
+	NSCharacterSet		*quoteApostropheCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"\"\'"];
     int imageID;
-
+	
 	if ([inString rangeOfString:targetString options:NSCaseInsensitiveSearch].location == NSNotFound) {
 		return inString;
 	}
-
+	
     //set up
 	newString = [[NSMutableString alloc] init];
 	
@@ -568,7 +568,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
     [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
 	
 	//A gaim image tag takes the form <IMG ID='12'></IMG> where 12 is the reference for use in GaimStoredImage* gaim_imgstore_get(int)
-
+	
 	//Parse the incoming HTML
     while (![scanner isAtEnd]) {
 		
@@ -580,7 +580,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		if ([scanner scanString:targetString intoString:&chunkString]) {
 			//Skip past a quote or apostrophe
 			[scanner scanCharactersFromSet:quoteApostropheCharacterSet intoString:NULL];
-
+			
 			//Get the image ID from the tag
 			[scanner scanInt:&imageID];
 
@@ -963,7 +963,6 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	GaimGroup 	*group;
 	const char	*buddyUTF8String;
 	const char	*groupUTF8String;
-	BOOL		needToAddServerside = NO;
 
 	account = accountLookupFromAdiumAccount(adiumAccount);
 
