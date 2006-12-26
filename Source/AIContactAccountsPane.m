@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIAccountControllerProtocol.h>
 #import "AIContactAccountsPane.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <AIUtilities/AIAlternatingRowTableView.h>
 #import <AIUtilities/AIMenuAdditions.h>
@@ -25,7 +25,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListGroup.h>
-#import "AILocalizationTextField.h"
+#import <Adium/AILocalizationTextField.h>
 #import <Adium/AIMetaContact.h>
 
 @interface AIContactAccountsPane (PRIVATE)
@@ -89,6 +89,8 @@ static NSComparisonResult compareContactsByTheirAccounts(id firstContact, id sec
 									   name:Account_ListChanged
 									 object:nil];
 	[self updateAccountList];
+	
+	[tableView_accounts sizeToFit];
 }
 
 /*!
@@ -148,6 +150,32 @@ static NSComparisonResult compareContactsByTheirAccounts(id firstContact, id sec
 	}
 }
 
+- (void)getAccounts:(NSArray **)outAccounts withContacts:(NSArray **)outContacts forListContact:(AIListContact *)listContact
+{
+	//Build a list of all accounts (compatible with the service of the input contact) that have the input contact's UID on their contact list.
+	AIService		*service = [listContact service];
+	NSString		*UID = [listContact UID];
+	
+	NSArray			*compatibleAccounts = [[adium accountController] accountsCompatibleWithService:service];
+	NSMutableArray	*foundAccounts = [[NSMutableArray alloc] initWithCapacity:[compatibleAccounts count]];
+	NSMutableArray	*contactTimesN = [[NSMutableArray alloc] initWithCapacity:[compatibleAccounts count]];
+
+	id <AIContactController> contactController = [adium contactController];
+	NSEnumerator *compatibleAccountsEnum = [compatibleAccounts objectEnumerator];
+	AIAccount *account;
+	while ((account = [compatibleAccountsEnum nextObject])) {
+		AIListContact *contactOnThisAccount;
+		if ((contactOnThisAccount = [contactController existingContactWithService:service account:account UID:UID]) &&
+			[contactOnThisAccount remoteGroupName]) {
+			[foundAccounts addObject:account];
+			[contactTimesN addObject:contactOnThisAccount];
+		}
+	}
+	
+	if (outAccounts) *outAccounts = [foundAccounts autorelease];
+	if (outContacts) *outContacts = [contactTimesN autorelease];
+}
+
 /*!
  * @brief Update our list of accounts
  */
@@ -155,36 +183,38 @@ static NSComparisonResult compareContactsByTheirAccounts(id firstContact, id sec
 {
 	//Get the new accounts
 	[accounts release];
-	
+	[contacts release];
+
 	if ([listObject isKindOfClass:[AIMetaContact class]]) {
 		//Get all contacts of the metacontact.
 		//Sort them by account.
 		//Get the account of each contact.
 		//Finally, uniquify the accounts through a set.
-		contacts = [[[(AIMetaContact *)listObject listContacts] sortedArrayUsingFunction:compareContactsByTheirAccounts context:NULL] retain];
-		accounts = [[contacts valueForKey:@"account"] retain];
-		
-	} else {
-		//Build a list of all accounts (compatible with the service of the input contact) that have the input contact's UID on their contact list.
-		AIService *service = [listObject service];
-		NSString *UID = [listObject UID];
-		NSArray *compatibleAccounts = [[adium accountController] accountsCompatibleWithService:service];
-		NSMutableArray *foundAccounts = [[NSMutableArray alloc] initWithCapacity:[compatibleAccounts count]];
-		NSMutableArray *contactTimesN = [[NSMutableArray alloc] initWithCapacity:[compatibleAccounts count]];
-
-		id <AIContactController> contactController = [adium contactController];
-		NSEnumerator *compatibleAccountsEnum = [compatibleAccounts objectEnumerator];
-		AIAccount *account;
-		while ((account = [compatibleAccountsEnum nextObject])) {
-			if ([contactController existingContactWithService:service account:account UID:UID]) {
-				[foundAccounts addObject:account];
-				[contactTimesN addObject:listObject];
-			}
+		NSMutableArray	*workingAccounts = [NSMutableArray array];
+		NSMutableArray	*workingContacts = [NSMutableArray array];
+		NSEnumerator	*enumerator;
+		AIListContact	*listContact;
+		enumerator = [[[(AIMetaContact *)listObject listContacts] sortedArrayUsingFunction:compareContactsByTheirAccounts
+																				   context:NULL] objectEnumerator];
+		while ((listContact = [enumerator nextObject])) {
+			NSArray *thisContactAccounts;
+			NSArray *thisContactContacts;
+			
+			[self getAccounts:&thisContactAccounts withContacts:&thisContactContacts forListContact:listContact];
+			[workingAccounts addObjectsFromArray:thisContactAccounts];
+			[workingContacts addObjectsFromArray:thisContactContacts];
 		}
 
-		//These accounts were created with alloc/init. Borrow those implicit retains, and make them our retains of the arrays.
-		accounts = foundAccounts;
-		contacts = contactTimesN;
+		accounts = [workingAccounts retain];
+		contacts = [workingContacts retain];
+
+	} else if ([listObject isKindOfClass:[AIListContact class]]) {
+		[self getAccounts:&accounts withContacts:&contacts forListContact:(AIListContact *)listObject];
+		[accounts retain];
+		[contacts retain];
+	} else {
+		accounts = nil;
+		contacts = nil;
 	}
 	
 	//Refresh our table
