@@ -1,0 +1,17 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {setPref = id; }; 
+            CLASS = ESLibgaimPrefSetterWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "popUp_type" = NSPopUpButton; 
+                "textField_pref" = NSTextField; 
+                "textField_value" = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

@@ -104,6 +104,16 @@
 		34082675075B079800703011 /* Dock Icons in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3408254D075B078B00703011 /* Dock Icons */; };
 		34082690075B5CB900703011 /* Awake.png in Resources */ = {isa = PBXBuildFile; fileRef = 3408268E075B5CB900703011 /* Awake.png */; };
 		34082691075B5CB900703011 /* Flap.png in Resources */ = {isa = PBXBuildFile; fileRef = 3408268F075B5CB900703011 /* Flap.png */; };
+		340A85820B3FADB9009488C5 /* Libgaim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libgaim.framework */; };
+		340A85830B3FADB9009488C5 /* AdiumLibgaim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3485D68009EB416300232CC4 /* AdiumLibgaim.framework */; };
+		340A85840B3FADB9009488C5 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
+		340A85850B3FADB9009488C5 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
+		340A85860B3FADB9009488C5 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
+		340A85C90B3FB08C009488C5 /* LibgaimPrefSetter.nib in Resources */ = {isa = PBXBuildFile; fileRef = 340A85C80B3FB08C009488C5 /* LibgaimPrefSetter.nib */; };
+		340A86990B3FC4B0009488C5 /* ESLibgaimPrefSetterWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 340A85C40B3FB064009488C5 /* ESLibgaimPrefSetterWindowController.m */; };
+		340A869B0B3FC4B2009488C5 /* ESLibgaimPrefSetterPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 340A85BE0B3FAFD5009488C5 /* ESLibgaimPrefSetterPlugin.m */; };
+		340A869C0B3FC4B2009488C5 /* ESLibgaimPrefSetterWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 340A85C30B3FB063009488C5 /* ESLibgaimPrefSetterWindowController.h */; };
+		340A869D0B3FC4B3009488C5 /* ESLibgaimPrefSetterPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 340A85BD0B3FAFD5009488C5 /* ESLibgaimPrefSetterPlugin.h */; };
 		340B9BD4069C735900FE1E57 /* WebKit Message View.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3499F45006309AC80035B468 /* WebKit Message View.AdiumPlugin */; };
 		340BA8D809EC5E35000EC441 /* Libgaim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libgaim.framework */; };
 		340BAB1D09EC6E53000EC441 /* libirc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 340BAB1C09EC6E53000EC441 /* libirc.a */; };
@@ -1316,6 +1326,27 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		340A85680B3FADB9009488C5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3485D67F09EB416300232CC4;
+			remoteInfo = AdiumLibgaim;
+		};
+		340A856A0B3FADB9009488C5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
+			remoteInfo = Adium.Framework;
+		};
+		340A856C0B3FADB9009488C5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = AIUtilities;
+		};
 		340BA85509EC59AF000EC441 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -1785,6 +1816,12 @@
 		340833EA075C3A7900703011 /* AILocalizationTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILocalizationTextField.h; path = "Frameworks/Adium Framework/Source/AILocalizationTextField.h"; sourceTree = "<group>"; };
 		340833EB075C3A7900703011 /* AILocalizationTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationTextField.m; path = "Frameworks/Adium Framework/Source/AILocalizationTextField.m"; sourceTree = "<group>"; };
 		340915F105C0A5DF00CDE3DD /* GaimCommon.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = GaimCommon.h; path = "Plugins/Gaim Service/GaimCommon.h"; sourceTree = "<group>"; };
+		340A858D0B3FADB9009488C5 /* Libgaim Preference Setter.AdiumLibgaimPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Libgaim Preference Setter.AdiumLibgaimPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
+		340A85BD0B3FAFD5009488C5 /* ESLibgaimPrefSetterPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESLibgaimPrefSetterPlugin.h; path = "Plugins/Libgaim Preference Setter/ESLibgaimPrefSetterPlugin.h"; sourceTree = "<group>"; };
+		340A85BE0B3FAFD5009488C5 /* ESLibgaimPrefSetterPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESLibgaimPrefSetterPlugin.m; path = "Plugins/Libgaim Preference Setter/ESLibgaimPrefSetterPlugin.m"; sourceTree = "<group>"; };
+		340A85C30B3FB063009488C5 /* ESLibgaimPrefSetterWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESLibgaimPrefSetterWindowController.h; path = "Plugins/Libgaim Preference Setter/ESLibgaimPrefSetterWindowController.h"; sourceTree = "<group>"; };
+		340A85C40B3FB064009488C5 /* ESLibgaimPrefSetterWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESLibgaimPrefSetterWindowController.m; path = "Plugins/Libgaim Preference Setter/ESLibgaimPrefSetterWindowController.m"; sourceTree = "<group>"; };
+		340A85C80B3FB08C009488C5 /* LibgaimPrefSetter.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = LibgaimPrefSetter.nib; path = "Plugins/Libgaim Preference Setter/LibgaimPrefSetter.nib"; sourceTree = "<group>"; };
 		340BA84409EC593A000EC441 /* AICorePluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AICorePluginLoader.h; path = "Frameworks/Adium Framework/Source/AICorePluginLoader.h"; sourceTree = "<group>"; };
 		340BA84509EC593B000EC441 /* AICorePluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AICorePluginLoader.m; path = "Frameworks/Adium Framework/Source/AICorePluginLoader.m"; sourceTree = "<group>"; };
 		340BAB1C09EC6E53000EC441 /* libirc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libirc.a; path = "Plugins/IRC Libgaim Plugin/libirc.a"; sourceTree = "<group>"; };
@@ -3868,6 +3905,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		340A85810B3FADB9009488C5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				340A85820B3FADB9009488C5 /* Libgaim.framework in Frameworks */,
+				340A85830B3FADB9009488C5 /* AdiumLibgaim.framework in Frameworks */,
+				340A85840B3FADB9009488C5 /* AIUtilities.framework in Frameworks */,
+				340A85850B3FADB9009488C5 /* Adium.framework in Frameworks */,
+				340A85860B3FADB9009488C5 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3417D25809C332B900FC413E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -4136,6 +4185,7 @@
 				3417D26109C332B900FC413E /* Translator.AdiumPlugin */,
 				3485D68009EB416300232CC4 /* AdiumLibgaim.framework */,
 				34DC50810A978EA700C75374 /* SystemVersionCheck */,
+				340A858D0B3FADB9009488C5 /* Libgaim Preference Setter.AdiumLibgaimPlugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4196,6 +4246,18 @@
 				347E781907CA962100350507 /* userIconToolbar.png */,
 			);
 			name = "User Icon Handling";
+			sourceTree = "<group>";
+		};
+		340A85BA0B3FAFAF009488C5 /* Libgaim Prefrence Setter */ = {
+			isa = PBXGroup;
+			children = (
+				340A85BD0B3FAFD5009488C5 /* ESLibgaimPrefSetterPlugin.h */,
+				340A85BE0B3FAFD5009488C5 /* ESLibgaimPrefSetterPlugin.m */,
+				340A85C30B3FB063009488C5 /* ESLibgaimPrefSetterWindowController.h */,
+				340A85C40B3FB064009488C5 /* ESLibgaimPrefSetterWindowController.m */,
+				340A85C80B3FB08C009488C5 /* LibgaimPrefSetter.nib */,
+			);
+			name = "Libgaim Prefrence Setter";
 			sourceTree = "<group>";
 		};
 		340F444F06D87A830072E2FA /* Contact List */ = {
@@ -5289,6 +5351,7 @@
 		34DC84380A7EAA21003E1636 /* Plugins (Not included in release) */ = {
 			isa = PBXGroup;
 			children = (
+				340A85BA0B3FAFAF009488C5 /* Libgaim Prefrence Setter */,
 				118C52BA091BF05B00219458 /* joscar */,
 				3417D27109C3334900FC413E /* Translator */,
 				34B3241D09B9FF6900029361 /* IRC Libgaim Plugin */,
@@ -7299,6 +7362,15 @@
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
+		340A856E0B3FADB9009488C5 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				340A869C0B3FC4B2009488C5 /* ESLibgaimPrefSetterWindowController.h in Headers */,
+				340A869D0B3FC4B3009488C5 /* ESLibgaimPrefSetterPlugin.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3417D25309C332B900FC413E /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -7733,6 +7805,27 @@
 			productReference = 118C52C6091BF0DB00219458 /* joscar.AdiumPlugin */;
 			productType = "com.apple.product-type.bundle";
 		};
+		340A85660B3FADB9009488C5 /* Libgaim Preference Setter */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 340A85880B3FADB9009488C5 /* Build configuration list for PBXNativeTarget "Libgaim Preference Setter" */;
+			buildPhases = (
+				340A856E0B3FADB9009488C5 /* Headers */,
+				340A85750B3FADB9009488C5 /* Resources */,
+				340A857A0B3FADB9009488C5 /* Sources */,
+				340A85810B3FADB9009488C5 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				340A85670B3FADB9009488C5 /* PBXTargetDependency */,
+				340A85690B3FADB9009488C5 /* PBXTargetDependency */,
+				340A856B0B3FADB9009488C5 /* PBXTargetDependency */,
+			);
+			name = "Libgaim Preference Setter";
+			productName = Gaim;
+			productReference = 340A858D0B3FADB9009488C5 /* Libgaim Preference Setter.AdiumLibgaimPlugin */;
+			productType = "com.apple.product-type.bundle";
+		};
 		3417D25009C332B900FC413E /* Translator */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3417D25C09C332B900FC413E /* Build configuration list for PBXNativeTarget "Translator" */;
@@ -8109,6 +8202,7 @@
 				3417D25009C332B900FC413E /* Translator */,
 				F5B17CCF0A16C6AC004AE99E /* Plist Macros */,
 				F53C25AE0A2F95F100F7B73D /* Setup Build Directory */,
+				340A85660B3FADB9009488C5 /* Libgaim Preference Setter */,
 			);
 		};
 /* End PBXProject section */
@@ -8163,6 +8257,14 @@
 				3423622B09D8BCAA009FF634 /* SecuridPrompt.nib in Resources */,
 				3415F83B0A43A5B600B093B7 /* aim.png in Resources */,
 				349B3FB90A6210AA008BE092 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		340A85750B3FADB9009488C5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				340A85C90B3FB08C009488C5 /* LibgaimPrefSetter.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8714,6 +8816,15 @@
 				11CC0DEE097B120D00E1DE20 /* RAFjoscarICQAccount.m in Sources */,
 				11669A2E0999395D003CB8A1 /* ESjoscarJoinChatViewController.m in Sources */,
 				342340E109D1AF58009FF634 /* RAFjoscarSecuridPromptController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		340A857A0B3FADB9009488C5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				340A86990B3FC4B0009488C5 /* ESLibgaimPrefSetterWindowController.m in Sources */,
+				340A869B0B3FC4B2009488C5 /* ESLibgaimPrefSetterPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9296,6 +9407,21 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		340A85670B3FADB9009488C5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3485D67F09EB416300232CC4 /* AdiumLibgaim */;
+			targetProxy = 340A85680B3FADB9009488C5 /* PBXContainerItemProxy */;
+		};
+		340A85690B3FADB9009488C5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
+			targetProxy = 340A856A0B3FADB9009488C5 /* PBXContainerItemProxy */;
+		};
+		340A856B0B3FADB9009488C5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIUtilities;
+			targetProxy = 340A856C0B3FADB9009488C5 /* PBXContainerItemProxy */;
+		};
 		340BA85609EC59AF000EC441 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
@@ -10632,6 +10758,130 @@
 					"-Wno-unknown-pragmas",
 				);
 				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
+		340A85890B3FADB9009488C5 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(SRCROOT)/Frameworks",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
+					"$(SDK_ROOT)/usr/include/libxml2",
+				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service/Libgaim.framework/Headers";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_5 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/gobject";
+				INFOPLIST_FILE = "/Users/evands/adium-1.0/Plists/Libgaim Preference Setter.plist";
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libgaim\\ Plugin";
+				PRODUCT_NAME = "Libgaim Preference Setter";
+				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
+			};
+			name = Development;
+		};
+		340A858A0B3FADB9009488C5 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(SRCROOT)/Frameworks",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
+					"$(SDK_ROOT)/usr/include/libxml2",
+				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service/Libgaim.framework/Headers";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_5 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/gobject";
+				INFOPLIST_FILE = "/Users/evands/adium-1.0/Plists/Libgaim Preference Setter.plist";
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libgaim\\ Plugin";
+				PRODUCT_NAME = "Libgaim Preference Setter";
+				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
+			};
+			name = Deployment;
+		};
+		340A858B0B3FADB9009488C5 /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(SRCROOT)/Frameworks",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
+					"$(SDK_ROOT)/usr/include/libxml2",
+				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service/Libgaim.framework/Headers";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_5 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/gobject";
+				INFOPLIST_FILE = "/Users/evands/adium-1.0/Plists/Libgaim Preference Setter.plist";
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libgaim\\ Plugin";
+				PRODUCT_NAME = "Libgaim Preference Setter";
+				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
+			};
+			name = "Deployment-Debug";
+		};
+		340A858C0B3FADB9009488C5 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(BUILT_PRODUCTS_DIR)",
+					"$(SRCROOT)/Frameworks",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service";
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = Adium.pch;
+				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
+					"$(SDK_ROOT)/usr/include/libxml2",
+				);
+				HEADER_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service/Libgaim.framework/Headers";
+				HEADER_SEARCH_PATHS_QUOTED_2 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib";
+				HEADER_SEARCH_PATHS_QUOTED_3 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/glib";
+				HEADER_SEARCH_PATHS_QUOTED_4 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/gmodule";
+				HEADER_SEARCH_PATHS_QUOTED_5 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/gobject";
+				INFOPLIST_FILE = "/Users/evands/adium-1.0/Plists/Libgaim Preference Setter.plist";
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libgaim\\ Plugin";
+				PRODUCT_NAME = "Libgaim Preference Setter";
+				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
 			};
 			name = "Deployment-Debug_PPC-Only";
 		};
@@ -12441,6 +12691,17 @@
 				11B1A56C09CE42300087442E /* Deployment */,
 				11B1A56D09CE42300087442E /* Deployment-Debug */,
 				11B1A56E09CE42300087442E /* Deployment-Debug_PPC-Only */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		340A85880B3FADB9009488C5 /* Build configuration list for PBXNativeTarget "Libgaim Preference Setter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				340A85890B3FADB9009488C5 /* Development */,
+				340A858A0B3FADB9009488C5 /* Deployment */,
+				340A858B0B3FADB9009488C5 /* Deployment-Debug */,
+				340A858C0B3FADB9009488C5 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
