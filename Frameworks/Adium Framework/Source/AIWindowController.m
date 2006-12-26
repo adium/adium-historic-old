@@ -100,7 +100,6 @@
 
 	if (key) {
 		NSString	*frameString;
-		int			numberOfScreens;
 
 		//Unique key for each number of screens
 		if ([[NSScreen screens] count] > 1) {
@@ -109,7 +108,7 @@
 
 			if (!frameString) {
 				//Fall back on the old number-of-screens key
-				frameString = [[adium preferenceController] preferenceForKey:[NSString stringWithFormat:@"%@-%i",key,numberOfScreens]
+				frameString = [[adium preferenceController] preferenceForKey:[NSString stringWithFormat:@"%@-%i",key,[[NSScreen screens] count]]
 																	   group:PREF_GROUP_WINDOW_POSITIONS];
 				if (!frameString) {
 					//Fall back on the single screen preference if necessary (this is effectively a preference upgrade).
