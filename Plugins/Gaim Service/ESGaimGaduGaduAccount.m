@@ -20,6 +20,7 @@
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
+#import <Libgaim/gg.h>
 
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
@@ -71,6 +72,20 @@
 - (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact
 {
 	return YES;
+}
+
+- (void)accountConnectionConnected
+{
+	if (!(gaim_find_buddies(account, NULL))) {
+		//If we're connected and have no buddies, request 'em from the server.
+		GaimConnection *gc = account->gc;
+		GGPInfo *info = gc->proto_data;
+		
+		AILog(@"Requesting gadu-gadu list...");
+		gg_userlist_request(info->session, GG_USERLIST_GET, NULL);
+	}
+
+	[super accountConnectionConnected];
 }
 
 #pragma mark Status
