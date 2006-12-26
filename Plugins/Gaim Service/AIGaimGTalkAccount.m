@@ -44,6 +44,12 @@
 	return @"@gmail.com";
 }
 
+//HACK - see superclass
+- (BOOL)shouldRequestRosterOnConnect
+{
+	return NO;
+}
+
 /*!
  * @brief Allow a file transfer with an object?
  *
