@@ -197,6 +197,7 @@
 			iconImage = [[NSWorkspace sharedWorkspace] iconForFile:[self path]];
 		} else {
 			NSLog(@"-[%@ iconImage]: Warning, no path available", self);
+			iconImage = nil;
 		}
 	}
 	
