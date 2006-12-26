@@ -1189,6 +1189,14 @@
 		4BFF665B063693FA00308A3B /* ESSendMessageAlertDetailPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 342DC49C05783BE8000E1D83 /* ESSendMessageAlertDetailPane.m */; };
 		63093C2F0892143500F118D3 /* newContentThreeDigits.png in Resources */ = {isa = PBXBuildFile; fileRef = 63093C2D0892143500F118D3 /* newContentThreeDigits.png */; };
 		63093C300892143500F118D3 /* newContentTwoDigits.png in Resources */ = {isa = PBXBuildFile; fileRef = 63093C2E0892143500F118D3 /* newContentTwoDigits.png */; };
+		631378680B3F144C00E97A74 /* IOConsolePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 631378670B3F144C00E97A74 /* IOConsolePlugin.m */; };
+		631379940B3F1CBB00E97A74 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
+		631379FC0B3F1D0D00E97A74 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
+		63137A0A0B3F1D7C00E97A74 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
+		63137A0B0B3F1D8500E97A74 /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
+		63137A3A0B3F1E2300E97A74 /* libiovmall.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63137A390B3F1E2300E97A74 /* libiovmall.a */; };
+		63137BB40B3F209900E97A74 /* ioconsole.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 631378500B3F13F600E97A74 /* ioconsole.AdiumPlugin */; };
+		63137E8A0B3F5A7C00E97A74 /* libIoObjcBridge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 63137E890B3F5A7C00E97A74 /* libIoObjcBridge.a */; };
 		632D60C1094B81AB003A9786 /* AIDockIconPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 632D60BF094B81AB003A9786 /* AIDockIconPreviewController.m */; };
 		632D801708E7E0A40032C187 /* XtrasManager.nib in Resources */ = {isa = PBXBuildFile; fileRef = 632D801608E7E0A40032C187 /* XtrasManager.nib */; };
 		6332879B0A769BF3004D0F2B /* AIGaimLiveJournalAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 63125D8D0A75EBF000303EE9 /* AIGaimLiveJournalAccount.h */; };
@@ -1484,6 +1492,20 @@
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AIHyperlinks.framework;
 		};
+		631378610B3F140F00E97A74 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133 /* Adium.Framework */;
+			remoteInfo = Adium.Framework;
+		};
+		63137BF10B3F226700E97A74 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6313784F0B3F13F600E97A74 /* IOConsole */;
+			remoteInfo = IOConsole;
+		};
 		6C3E0151054445C000A4AE2E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -1603,6 +1625,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				63137BB40B3F209900E97A74 /* ioconsole.AdiumPlugin in CopyFiles */,
 				348EF1F6080B31280015E0FC /* Latex Plugin.AdiumPlugin in CopyFiles */,
 				4B7F27C705440DE900CDFC90 /* Gaim.AdiumPlugin in CopyFiles */,
 				344C0F0D06B709AC00DA7200 /* Bonjour.AdiumPlugin in CopyFiles */,
@@ -3532,6 +3555,112 @@
 		63125D970A75ECE400303EE9 /* AILiveJournalService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILiveJournalService.h; path = "Plugins/Gaim Service/AILiveJournalService.h"; sourceTree = "<group>"; };
 		63125D980A75ECE400303EE9 /* AILiveJournalService.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILiveJournalService.m; path = "Plugins/Gaim Service/AILiveJournalService.m"; sourceTree = "<group>"; };
 		63125D990A75ECE400303EE9 /* GaimDefaultsLiveJournal.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = GaimDefaultsLiveJournal.plist; path = "Plugins/Gaim Service/GaimDefaultsLiveJournal.plist"; sourceTree = "<group>"; };
+		631378500B3F13F600E97A74 /* ioconsole.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ioconsole.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		631378510B3F13F600E97A74 /* ioconsole-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "ioconsole-Info.plist"; sourceTree = "<group>"; };
+		631378660B3F144C00E97A74 /* IOConsolePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOConsolePlugin.h; sourceTree = "<group>"; };
+		631378670B3F144C00E97A74 /* IOConsolePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IOConsolePlugin.m; sourceTree = "<group>"; };
+		63137A390B3F1E2300E97A74 /* libiovmall.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libiovmall.a; sourceTree = "<group>"; };
+		63137A4B0B3F1EAD00E97A74 /* Base.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Base.h; sourceTree = "<group>"; };
+		63137A4C0B3F1EAD00E97A74 /* BStream.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = BStream.h; sourceTree = "<group>"; };
+		63137A4D0B3F1EAD00E97A74 /* BStreamTag.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = BStreamTag.h; sourceTree = "<group>"; };
+		63137A4E0B3F1EAE00E97A74 /* ByteArray.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ByteArray.h; sourceTree = "<group>"; };
+		63137A4F0B3F1EAE00E97A74 /* ByteArray_inline.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ByteArray_inline.h; sourceTree = "<group>"; };
+		63137A500B3F1EAE00E97A74 /* Collector.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Collector.h; sourceTree = "<group>"; };
+		63137A510B3F1EAE00E97A74 /* Collector_inline.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Collector_inline.h; sourceTree = "<group>"; };
+		63137A520B3F1EAE00E97A74 /* CollectorMarker.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CollectorMarker.h; sourceTree = "<group>"; };
+		63137A530B3F1EAE00E97A74 /* CollectorMarker_inline.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = CollectorMarker_inline.h; sourceTree = "<group>"; };
+		63137A540B3F1EAE00E97A74 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
+		63137A550B3F1EAE00E97A74 /* Common_inline.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Common_inline.h; sourceTree = "<group>"; };
+		63137A560B3F1EAE00E97A74 /* Coro.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Coro.h; sourceTree = "<group>"; };
+		63137A570B3F1EAE00E97A74 /* Date.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Date.h; sourceTree = "<group>"; };
+		63137A580B3F1EAE00E97A74 /* Datum.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Datum.h; sourceTree = "<group>"; };
+		63137A590B3F1EAE00E97A74 /* Duration.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Duration.h; sourceTree = "<group>"; };
+		63137A5A0B3F1EAE00E97A74 /* DynLib.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = DynLib.h; sourceTree = "<group>"; };
+		63137A5B0B3F1EAE00E97A74 /* Hash.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Hash.h; sourceTree = "<group>"; };
+		63137A5C0B3F1EAE00E97A74 /* Hash_inline.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Hash_inline.h; sourceTree = "<group>"; };
+		63137A5D0B3F1EAE00E97A74 /* IoBlock.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoBlock.h; sourceTree = "<group>"; };
+		63137A5E0B3F1EAE00E97A74 /* IoCall.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoCall.h; sourceTree = "<group>"; };
+		63137A5F0B3F1EAE00E97A74 /* IoCFunction.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoCFunction.h; sourceTree = "<group>"; };
+		63137A600B3F1EAE00E97A74 /* IoCollector.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoCollector.h; sourceTree = "<group>"; };
+		63137A610B3F1EAE00E97A74 /* IoCompiler.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoCompiler.h; sourceTree = "<group>"; };
+		63137A620B3F1EAE00E97A74 /* IoConfig.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoConfig.h; sourceTree = "<group>"; };
+		63137A630B3F1EAE00E97A74 /* IoContext.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoContext.h; sourceTree = "<group>"; };
+		63137A640B3F1EAE00E97A74 /* IoCoroutine.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoCoroutine.h; sourceTree = "<group>"; };
+		63137A650B3F1EAE00E97A74 /* IoDate.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoDate.h; sourceTree = "<group>"; };
+		63137A660B3F1EAE00E97A74 /* IoDebugger.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoDebugger.h; sourceTree = "<group>"; };
+		63137A670B3F1EAE00E97A74 /* IoDirectory.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoDirectory.h; sourceTree = "<group>"; };
+		63137A680B3F1EAE00E97A74 /* IoDuration.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoDuration.h; sourceTree = "<group>"; };
+		63137A690B3F1EAE00E97A74 /* IoDynLib.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoDynLib.h; sourceTree = "<group>"; };
+		63137A6A0B3F1EAE00E97A74 /* IoFile.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoFile.h; sourceTree = "<group>"; };
+		63137A6B0B3F1EAE00E97A74 /* IoFile_stat.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoFile_stat.h; sourceTree = "<group>"; };
+		63137A6C0B3F1EAE00E97A74 /* IoLexer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoLexer.h; sourceTree = "<group>"; };
+		63137A6D0B3F1EAE00E97A74 /* IoList.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoList.h; sourceTree = "<group>"; };
+		63137A6E0B3F1EAE00E97A74 /* IoMap.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoMap.h; sourceTree = "<group>"; };
+		63137A6F0B3F1EAE00E97A74 /* IoMessage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoMessage.h; sourceTree = "<group>"; };
+		63137A700B3F1EAE00E97A74 /* IoMessage_inline.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoMessage_inline.h; sourceTree = "<group>"; };
+		63137A710B3F1EAE00E97A74 /* IoMessage_opShuffle.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoMessage_opShuffle.h; sourceTree = "<group>"; };
+		63137A720B3F1EAF00E97A74 /* IoMessage_parser.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoMessage_parser.h; sourceTree = "<group>"; };
+		63137A730B3F1EAF00E97A74 /* IoNumber.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoNumber.h; sourceTree = "<group>"; };
+		63137A740B3F1EAF00E97A74 /* IoObject.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoObject.h; sourceTree = "<group>"; };
+		63137A750B3F1EAF00E97A74 /* IoObject_flow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoObject_flow.h; sourceTree = "<group>"; };
+		63137A760B3F1EAF00E97A74 /* IoObject_inline.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoObject_inline.h; sourceTree = "<group>"; };
+		63137A770B3F1EAF00E97A74 /* IoObject_persistence.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoObject_persistence.h; sourceTree = "<group>"; };
+		63137A780B3F1EAF00E97A74 /* IoObject_struct.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoObject_struct.h; sourceTree = "<group>"; };
+		63137A790B3F1EAF00E97A74 /* IoRange.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoRange.h; sourceTree = "<group>"; };
+		63137A7A0B3F1EAF00E97A74 /* IoRange_inline.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoRange_inline.h; sourceTree = "<group>"; };
+		63137A7B0B3F1EAF00E97A74 /* IoSandbox.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoSandbox.h; sourceTree = "<group>"; };
+		63137A7C0B3F1EAF00E97A74 /* IoSeq.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoSeq.h; sourceTree = "<group>"; };
+		63137A7D0B3F1EAF00E97A74 /* IoSeq_immutable.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoSeq_immutable.h; sourceTree = "<group>"; };
+		63137A7E0B3F1EAF00E97A74 /* IoSeq_inline.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoSeq_inline.h; sourceTree = "<group>"; };
+		63137A7F0B3F1EAF00E97A74 /* IoSeq_mutable.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoSeq_mutable.h; sourceTree = "<group>"; };
+		63137A800B3F1EAF00E97A74 /* IoState.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoState.h; sourceTree = "<group>"; };
+		63137A810B3F1EAF00E97A74 /* IoState_callbacks.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoState_callbacks.h; sourceTree = "<group>"; };
+		63137A820B3F1EAF00E97A74 /* IoState_coros.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoState_coros.h; sourceTree = "<group>"; };
+		63137A830B3F1EAF00E97A74 /* IoState_debug.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoState_debug.h; sourceTree = "<group>"; };
+		63137A840B3F1EAF00E97A74 /* IoState_eval.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoState_eval.h; sourceTree = "<group>"; };
+		63137A850B3F1EAF00E97A74 /* IoState_exceptions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoState_exceptions.h; sourceTree = "<group>"; };
+		63137A860B3F1EAF00E97A74 /* IoState_flowControl.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoState_flowControl.h; sourceTree = "<group>"; };
+		63137A870B3F1EAF00E97A74 /* IoState_inline.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoState_inline.h; sourceTree = "<group>"; };
+		63137A880B3F1EAF00E97A74 /* IoState_symbols.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoState_symbols.h; sourceTree = "<group>"; };
+		63137A890B3F1EAF00E97A74 /* IoStore.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoStore.h; sourceTree = "<group>"; };
+		63137A8A0B3F1EAF00E97A74 /* IoSystem.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoSystem.h; sourceTree = "<group>"; };
+		63137A8B0B3F1EAF00E97A74 /* IoTag.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoTag.h; sourceTree = "<group>"; };
+		63137A8C0B3F1EAF00E97A74 /* IoTag_inline.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoTag_inline.h; sourceTree = "<group>"; };
+		63137A8D0B3F1EAF00E97A74 /* IoToken.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoToken.h; sourceTree = "<group>"; };
+		63137A8E0B3F1EAF00E97A74 /* IoVersion.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoVersion.h; sourceTree = "<group>"; };
+		63137A8F0B3F1EAF00E97A74 /* IoVM.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoVM.h; sourceTree = "<group>"; };
+		63137A900B3F1EAF00E97A74 /* IoVMApi.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoVMApi.h; sourceTree = "<group>"; };
+		63137A910B3F1EAF00E97A74 /* IoWeakLink.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IoWeakLink.h; sourceTree = "<group>"; };
+		63137A920B3F1EAF00E97A74 /* JFile.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = JFile.h; sourceTree = "<group>"; };
+		63137A930B3F1EAF00E97A74 /* List.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = List.h; sourceTree = "<group>"; };
+		63137A940B3F1EAF00E97A74 /* List_inline.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = List_inline.h; sourceTree = "<group>"; };
+		63137A950B3F1EAF00E97A74 /* MainArgs.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = MainArgs.h; sourceTree = "<group>"; };
+		63137A960B3F1EB000E97A74 /* PHash.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PHash.h; sourceTree = "<group>"; };
+		63137A970B3F1EB000E97A74 /* PHash_inline.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PHash_inline.h; sourceTree = "<group>"; };
+		63137A980B3F1EB000E97A74 /* PortableGettimeofday.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PortableGettimeofday.h; sourceTree = "<group>"; };
+		63137A990B3F1EB000E97A74 /* PortableStdint.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PortableStdint.h; sourceTree = "<group>"; };
+		63137A9A0B3F1EB000E97A74 /* PortableStrlcpy.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PortableStrlcpy.h; sourceTree = "<group>"; };
+		63137A9B0B3F1EB000E97A74 /* PortableStrptime.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PortableStrptime.h; sourceTree = "<group>"; };
+		63137A9C0B3F1EB000E97A74 /* PortableTruncate.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PortableTruncate.h; sourceTree = "<group>"; };
+		63137A9D0B3F1EB000E97A74 /* PortableUContext.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PortableUContext.h; sourceTree = "<group>"; };
+		63137A9E0B3F1EB000E97A74 /* PortableUContext386.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PortableUContext386.h; sourceTree = "<group>"; };
+		63137A9F0B3F1EB000E97A74 /* PortableUContextPPC.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PortableUContextPPC.h; sourceTree = "<group>"; };
+		63137AA00B3F1EB000E97A74 /* PortableUsleep.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = PortableUsleep.h; sourceTree = "<group>"; };
+		63137AA10B3F1EB000E97A74 /* RandomGen.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = RandomGen.h; sourceTree = "<group>"; };
+		63137AA20B3F1EB000E97A74 /* SkipDB.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SkipDB.h; sourceTree = "<group>"; };
+		63137AA30B3F1EB000E97A74 /* SkipDBCursor.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SkipDBCursor.h; sourceTree = "<group>"; };
+		63137AA40B3F1EB000E97A74 /* SkipDBM.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SkipDBM.h; sourceTree = "<group>"; };
+		63137AA50B3F1EB000E97A74 /* SkipDBRecord.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SkipDBRecord.h; sourceTree = "<group>"; };
+		63137AA60B3F1EB000E97A74 /* Sorting.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Sorting.h; sourceTree = "<group>"; };
+		63137AA70B3F1EB000E97A74 /* Stack.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Stack.h; sourceTree = "<group>"; };
+		63137AA80B3F1EB000E97A74 /* Stack_inline.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Stack_inline.h; sourceTree = "<group>"; };
+		63137AA90B3F1EB000E97A74 /* UDB.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = UDB.h; sourceTree = "<group>"; };
+		63137AAA0B3F1EB000E97A74 /* UDBIndex.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = UDBIndex.h; sourceTree = "<group>"; };
+		63137AAB0B3F1EB000E97A74 /* UDBRecord.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = UDBRecord.h; sourceTree = "<group>"; };
+		63137AAC0B3F1EB000E97A74 /* UDBRecords.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = UDBRecords.h; sourceTree = "<group>"; };
+		63137AAD0B3F1EB100E97A74 /* UTinstant.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = UTinstant.h; sourceTree = "<group>"; };
+		63137AAE0B3F1EB100E97A74 /* UTzones.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = UTzones.h; sourceTree = "<group>"; };
+		63137E890B3F5A7C00E97A74 /* libIoObjcBridge.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libIoObjcBridge.a; sourceTree = "<group>"; };
 		632D608D094B7EEB003A9786 /* AIXtraPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraPreviewController.h; path = Source/AIXtraPreviewController.h; sourceTree = "<group>"; };
 		632D60BE094B81AB003A9786 /* AIDockIconPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIDockIconPreviewController.h; path = Source/AIDockIconPreviewController.h; sourceTree = "<group>"; };
 		632D60BF094B81AB003A9786 /* AIDockIconPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIDockIconPreviewController.m; path = Source/AIDockIconPreviewController.m; sourceTree = "<group>"; };
@@ -4026,6 +4155,19 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6313784E0B3F13F600E97A74 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				63137A0B0B3F1D8500E97A74 /* FriBidi.framework in Frameworks */,
+				63137A0A0B3F1D7C00E97A74 /* AIUtilities.framework in Frameworks */,
+				631379FC0B3F1D0D00E97A74 /* Adium.framework in Frameworks */,
+				631379940B3F1CBB00E97A74 /* Cocoa.framework in Frameworks */,
+				63137A3A0B3F1E2300E97A74 /* libiovmall.a in Frameworks */,
+				63137E8A0B3F5A7C00E97A74 /* libIoObjcBridge.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B72537BA058C4577004BA969 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -4136,6 +4278,7 @@
 				3417D26109C332B900FC413E /* Translator.AdiumPlugin */,
 				3485D68009EB416300232CC4 /* AdiumLibgaim.framework */,
 				34DC50810A978EA700C75374 /* SystemVersionCheck */,
+				631378500B3F13F600E97A74 /* ioconsole.AdiumPlugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4160,6 +4303,7 @@
 				349C2F310867ACF7000BF883 /* ApplescriptRunner */,
 				29B97323FDCFA39411CA2CEA /* Linked Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
+				631378510B3F13F600E97A74 /* ioconsole-Info.plist */,
 			);
 			name = CocAIMe2;
 			sourceTree = "<group>";
@@ -6262,6 +6406,7 @@
 		4BD672C706001B560049CAF7 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				631378630B3F142800E97A74 /* IOConsolePlugin */,
 				B782F088058BB60B00AF4BBA /* LaTeX Plugin */,
 			);
 			name = Other;
@@ -6438,6 +6583,126 @@
 				63125D990A75ECE400303EE9 /* GaimDefaultsLiveJournal.plist */,
 			);
 			name = LiveJournal;
+			sourceTree = "<group>";
+		};
+		631378630B3F142800E97A74 /* IOConsolePlugin */ = {
+			isa = PBXGroup;
+			children = (
+				63137E890B3F5A7C00E97A74 /* libIoObjcBridge.a */,
+				63137A4A0B3F1EAD00E97A74 /* headers */,
+				63137A390B3F1E2300E97A74 /* libiovmall.a */,
+				631378660B3F144C00E97A74 /* IOConsolePlugin.h */,
+				631378670B3F144C00E97A74 /* IOConsolePlugin.m */,
+			);
+			name = IOConsolePlugin;
+			path = Plugins/IOConsolePlugin;
+			sourceTree = "<group>";
+		};
+		63137A4A0B3F1EAD00E97A74 /* headers */ = {
+			isa = PBXGroup;
+			children = (
+				63137A4B0B3F1EAD00E97A74 /* Base.h */,
+				63137A4C0B3F1EAD00E97A74 /* BStream.h */,
+				63137A4D0B3F1EAD00E97A74 /* BStreamTag.h */,
+				63137A4E0B3F1EAE00E97A74 /* ByteArray.h */,
+				63137A4F0B3F1EAE00E97A74 /* ByteArray_inline.h */,
+				63137A500B3F1EAE00E97A74 /* Collector.h */,
+				63137A510B3F1EAE00E97A74 /* Collector_inline.h */,
+				63137A520B3F1EAE00E97A74 /* CollectorMarker.h */,
+				63137A530B3F1EAE00E97A74 /* CollectorMarker_inline.h */,
+				63137A540B3F1EAE00E97A74 /* Common.h */,
+				63137A550B3F1EAE00E97A74 /* Common_inline.h */,
+				63137A560B3F1EAE00E97A74 /* Coro.h */,
+				63137A570B3F1EAE00E97A74 /* Date.h */,
+				63137A580B3F1EAE00E97A74 /* Datum.h */,
+				63137A590B3F1EAE00E97A74 /* Duration.h */,
+				63137A5A0B3F1EAE00E97A74 /* DynLib.h */,
+				63137A5B0B3F1EAE00E97A74 /* Hash.h */,
+				63137A5C0B3F1EAE00E97A74 /* Hash_inline.h */,
+				63137A5D0B3F1EAE00E97A74 /* IoBlock.h */,
+				63137A5E0B3F1EAE00E97A74 /* IoCall.h */,
+				63137A5F0B3F1EAE00E97A74 /* IoCFunction.h */,
+				63137A600B3F1EAE00E97A74 /* IoCollector.h */,
+				63137A610B3F1EAE00E97A74 /* IoCompiler.h */,
+				63137A620B3F1EAE00E97A74 /* IoConfig.h */,
+				63137A630B3F1EAE00E97A74 /* IoContext.h */,
+				63137A640B3F1EAE00E97A74 /* IoCoroutine.h */,
+				63137A650B3F1EAE00E97A74 /* IoDate.h */,
+				63137A660B3F1EAE00E97A74 /* IoDebugger.h */,
+				63137A670B3F1EAE00E97A74 /* IoDirectory.h */,
+				63137A680B3F1EAE00E97A74 /* IoDuration.h */,
+				63137A690B3F1EAE00E97A74 /* IoDynLib.h */,
+				63137A6A0B3F1EAE00E97A74 /* IoFile.h */,
+				63137A6B0B3F1EAE00E97A74 /* IoFile_stat.h */,
+				63137A6C0B3F1EAE00E97A74 /* IoLexer.h */,
+				63137A6D0B3F1EAE00E97A74 /* IoList.h */,
+				63137A6E0B3F1EAE00E97A74 /* IoMap.h */,
+				63137A6F0B3F1EAE00E97A74 /* IoMessage.h */,
+				63137A700B3F1EAE00E97A74 /* IoMessage_inline.h */,
+				63137A710B3F1EAE00E97A74 /* IoMessage_opShuffle.h */,
+				63137A720B3F1EAF00E97A74 /* IoMessage_parser.h */,
+				63137A730B3F1EAF00E97A74 /* IoNumber.h */,
+				63137A740B3F1EAF00E97A74 /* IoObject.h */,
+				63137A750B3F1EAF00E97A74 /* IoObject_flow.h */,
+				63137A760B3F1EAF00E97A74 /* IoObject_inline.h */,
+				63137A770B3F1EAF00E97A74 /* IoObject_persistence.h */,
+				63137A780B3F1EAF00E97A74 /* IoObject_struct.h */,
+				63137A790B3F1EAF00E97A74 /* IoRange.h */,
+				63137A7A0B3F1EAF00E97A74 /* IoRange_inline.h */,
+				63137A7B0B3F1EAF00E97A74 /* IoSandbox.h */,
+				63137A7C0B3F1EAF00E97A74 /* IoSeq.h */,
+				63137A7D0B3F1EAF00E97A74 /* IoSeq_immutable.h */,
+				63137A7E0B3F1EAF00E97A74 /* IoSeq_inline.h */,
+				63137A7F0B3F1EAF00E97A74 /* IoSeq_mutable.h */,
+				63137A800B3F1EAF00E97A74 /* IoState.h */,
+				63137A810B3F1EAF00E97A74 /* IoState_callbacks.h */,
+				63137A820B3F1EAF00E97A74 /* IoState_coros.h */,
+				63137A830B3F1EAF00E97A74 /* IoState_debug.h */,
+				63137A840B3F1EAF00E97A74 /* IoState_eval.h */,
+				63137A850B3F1EAF00E97A74 /* IoState_exceptions.h */,
+				63137A860B3F1EAF00E97A74 /* IoState_flowControl.h */,
+				63137A870B3F1EAF00E97A74 /* IoState_inline.h */,
+				63137A880B3F1EAF00E97A74 /* IoState_symbols.h */,
+				63137A890B3F1EAF00E97A74 /* IoStore.h */,
+				63137A8A0B3F1EAF00E97A74 /* IoSystem.h */,
+				63137A8B0B3F1EAF00E97A74 /* IoTag.h */,
+				63137A8C0B3F1EAF00E97A74 /* IoTag_inline.h */,
+				63137A8D0B3F1EAF00E97A74 /* IoToken.h */,
+				63137A8E0B3F1EAF00E97A74 /* IoVersion.h */,
+				63137A8F0B3F1EAF00E97A74 /* IoVM.h */,
+				63137A900B3F1EAF00E97A74 /* IoVMApi.h */,
+				63137A910B3F1EAF00E97A74 /* IoWeakLink.h */,
+				63137A920B3F1EAF00E97A74 /* JFile.h */,
+				63137A930B3F1EAF00E97A74 /* List.h */,
+				63137A940B3F1EAF00E97A74 /* List_inline.h */,
+				63137A950B3F1EAF00E97A74 /* MainArgs.h */,
+				63137A960B3F1EB000E97A74 /* PHash.h */,
+				63137A970B3F1EB000E97A74 /* PHash_inline.h */,
+				63137A980B3F1EB000E97A74 /* PortableGettimeofday.h */,
+				63137A990B3F1EB000E97A74 /* PortableStdint.h */,
+				63137A9A0B3F1EB000E97A74 /* PortableStrlcpy.h */,
+				63137A9B0B3F1EB000E97A74 /* PortableStrptime.h */,
+				63137A9C0B3F1EB000E97A74 /* PortableTruncate.h */,
+				63137A9D0B3F1EB000E97A74 /* PortableUContext.h */,
+				63137A9E0B3F1EB000E97A74 /* PortableUContext386.h */,
+				63137A9F0B3F1EB000E97A74 /* PortableUContextPPC.h */,
+				63137AA00B3F1EB000E97A74 /* PortableUsleep.h */,
+				63137AA10B3F1EB000E97A74 /* RandomGen.h */,
+				63137AA20B3F1EB000E97A74 /* SkipDB.h */,
+				63137AA30B3F1EB000E97A74 /* SkipDBCursor.h */,
+				63137AA40B3F1EB000E97A74 /* SkipDBM.h */,
+				63137AA50B3F1EB000E97A74 /* SkipDBRecord.h */,
+				63137AA60B3F1EB000E97A74 /* Sorting.h */,
+				63137AA70B3F1EB000E97A74 /* Stack.h */,
+				63137AA80B3F1EB000E97A74 /* Stack_inline.h */,
+				63137AA90B3F1EB000E97A74 /* UDB.h */,
+				63137AAA0B3F1EB000E97A74 /* UDBIndex.h */,
+				63137AAB0B3F1EB000E97A74 /* UDBRecord.h */,
+				63137AAC0B3F1EB000E97A74 /* UDBRecords.h */,
+				63137AAD0B3F1EB100E97A74 /* UTinstant.h */,
+				63137AAE0B3F1EB100E97A74 /* UTzones.h */,
+			);
+			path = headers;
 			sourceTree = "<group>";
 		};
 		632D800908E7DE2C0032C187 /* Xtras Management */ = {
@@ -7890,6 +8155,7 @@
 				DA70F2B2080CAE8200C72D8B /* PBXTargetDependency */,
 				346C9D46060046AB000F5A8A /* PBXTargetDependency */,
 				34677B3F07CC3E8400F59F7B /* PBXTargetDependency */,
+				63137BF20B3F226700E97A74 /* PBXTargetDependency */,
 				349C31630867D199000BF883 /* PBXTargetDependency */,
 				F5B17CDF0A16C767004AE99E /* PBXTargetDependency */,
 			);
@@ -8019,6 +8285,24 @@
 			productReference = 4B7F78B50597F42400162728 /* Adium Crash Reporter.app */;
 			productType = "com.apple.product-type.application";
 		};
+		6313784F0B3F13F600E97A74 /* IOConsole */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 631378520B3F13F700E97A74 /* Build configuration list for PBXNativeTarget "IOConsole" */;
+			buildPhases = (
+				6313784C0B3F13F600E97A74 /* Resources */,
+				6313784D0B3F13F600E97A74 /* Sources */,
+				6313784E0B3F13F600E97A74 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				631378620B3F140F00E97A74 /* PBXTargetDependency */,
+			);
+			name = IOConsole;
+			productName = ioconsole;
+			productReference = 631378500B3F13F600E97A74 /* ioconsole.AdiumPlugin */;
+			productType = "com.apple.product-type.bundle";
+		};
 		B72537BB058C4577004BA969 /* Latex Plugin */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DADE8E1D085507450062B664 /* Build configuration list for PBXNativeTarget "Latex Plugin" */;
@@ -8109,6 +8393,7 @@
 				3417D25009C332B900FC413E /* Translator */,
 				F5B17CCF0A16C6AC004AE99E /* Plist Macros */,
 				F53C25AE0A2F95F100F7B73D /* Setup Build Directory */,
+				6313784F0B3F13F600E97A74 /* IOConsole */,
 			);
 		};
 /* End PBXProject section */
@@ -8559,6 +8844,13 @@
 				4B215DBE0598A71400305B3C /* crashDuck.icns in Resources */,
 				4BB7670D05B31DBA00E89FA2 /* crashDuck.png in Resources */,
 				34E0E9B807CC4B3600A82198 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6313784C0B3F13F600E97A74 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9285,6 +9577,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		6313784D0B3F13F600E97A74 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				631378680B3F144C00E97A74 /* IOConsolePlugin.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B72537B8058C4577004BA969 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -9395,6 +9695,16 @@
 			isa = PBXTargetDependency;
 			name = AIHyperlinks.framework;
 			targetProxy = 4B8E0BD9086A16D4009A7A4D /* PBXContainerItemProxy */;
+		};
+		631378620B3F140F00E97A74 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
+			targetProxy = 631378610B3F140F00E97A74 /* PBXContainerItemProxy */;
+		};
+		63137BF20B3F226700E97A74 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6313784F0B3F13F600E97A74 /* IOConsole */;
+			targetProxy = 63137BF10B3F226700E97A74 /* PBXContainerItemProxy */;
 		};
 		6C3E0152054445C000A4AE2E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -11430,6 +11740,140 @@
 			};
 			name = "Deployment-Debug_PPC-Only";
 		};
+		631378530B3F13F700E97A74 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "IOConsole-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Bundles";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Plugins/IOConsolePlugin\"";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = ioconsole;
+				WRAPPER_EXTENSION = AdiumPlugin;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		631378540B3F13F700E97A74 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "IOConsole-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Bundles";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Plugins/IOConsolePlugin\"";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = ioconsole;
+				WRAPPER_EXTENSION = AdiumPlugin;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		631378550B3F13F700E97A74 /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "IOConsole-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Bundles";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Plugins/IOConsolePlugin\"";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = ioconsole;
+				WRAPPER_EXTENSION = AdiumPlugin;
+				ZERO_LINK = YES;
+			};
+			name = "Deployment-Debug";
+		};
+		631378560B3F13F700E97A74 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "IOConsole-Info.plist";
+				INSTALL_PATH = "$(HOME)/Library/Bundles";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Plugins/IOConsolePlugin\"";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = ioconsole;
+				WRAPPER_EXTENSION = AdiumPlugin;
+				ZERO_LINK = YES;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
 		DACF3EDF085574F6006BFB18 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -12496,6 +12940,17 @@
 				34B323BD09B9FEAC00029361 /* Deployment */,
 				34B323BE09B9FEAC00029361 /* Deployment-Debug */,
 				34B323BF09B9FEAC00029361 /* Deployment-Debug_PPC-Only */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		631378520B3F13F700E97A74 /* Build configuration list for PBXNativeTarget "IOConsole" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				631378530B3F13F700E97A74 /* Development */,
+				631378540B3F13F700E97A74 /* Deployment */,
+				631378550B3F13F700E97A74 /* Deployment-Debug */,
+				631378560B3F13F700E97A74 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
