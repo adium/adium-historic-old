@@ -311,8 +311,20 @@
 	return nil;
 }
 
+- (BOOL)shouldRequestRosterOnConnect
+{
+	return YES;
+}
+
 - (void)accountConnectionConnected
 {
+	//HACK UNTIL LIBGAIM (broken as of [18051]) IS FIXED
+	if ([self shouldRequestRosterOnConnect]) {
+		JabberStream *js = account->gc->proto_data;
+		
+		jabber_roster_request(js);
+	}
+
 	[super accountConnectionConnected];
 }
 
