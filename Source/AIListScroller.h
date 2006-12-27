@@ -10,7 +10,7 @@
 
 
 @interface AIListScroller : NSScroller {
-
+	NSColor *backgroundColor;
 }
 
 @end
