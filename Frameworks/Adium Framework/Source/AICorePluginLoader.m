@@ -140,7 +140,8 @@
 			if (principalClass) {
 				plugin = [[principalClass alloc] init];
 			} else {
-				NSLog(@"Failed to obtain principal class from plugin \"%@\" (\"%@\")! infoDictionary: %@",
+				NSLog(@"Failed to obtain principal class \"%@\" from plugin \"%@\" (\"%@\")! infoDictionary: %@",
+					  [[pluginBundle infoDictionary] objectForKey:@"NSPrincipalClass"],
 					  [pluginPath lastPathComponent],
 					  pluginPath,
 					  [pluginBundle infoDictionary]);
