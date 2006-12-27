@@ -429,17 +429,17 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
-- (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)inGroup
+- (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)group
 {
 	NSEnumerator	*enumerator = [objects objectEnumerator];
 	AIListContact	*object;
-	NSString		*groupName = [self _mapOutgoingGroupName:[inGroup UID]];
+	NSString		*groupName = [self _mapOutgoingGroupName:[group UID]];
 	
 	while ((object = [enumerator nextObject])) {
 		[gaimThread addUID:[self _UIDForAddingObject:object] onAccount:self toGroup:groupName];
 		
 		//Add it to Adium's list
-		[object setRemoteGroupName:[inGroup UID]]; //Use the non-mapped group name locally
+		[object setRemoteGroupName:[group UID]]; //Use the non-mapped group name locally
 	}
 }
 
