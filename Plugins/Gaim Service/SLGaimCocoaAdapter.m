@@ -653,7 +653,9 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 			([secondaryString rangeOfString:@"Error reading from Switchboard server"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"0x001a: Unknown error"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Not supported by host"].location != NSNotFound) ||
-			([secondaryString rangeOfString:@"Not logged in"].location != NSNotFound)) {
+			([secondaryString rangeOfString:@"Not logged in"].location != NSNotFound) ||
+			([secondaryString rangeOfString:@"Your buddy list was downloaded from the server."].location != NSNotFound) || /* Gadu-gadu */
+			([secondaryString rangeOfString:@"Your buddy list was stored on the server."].location != NSNotFound) /* Gadu-gadu */) {
 			return adium_gaim_get_handle();
 		}
 	}
