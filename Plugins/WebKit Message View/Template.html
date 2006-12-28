@@ -6,7 +6,8 @@
 	
 	var keywords = new Array("%userIconPath%", "%message%", "%time%", "%sender%");
 	var hfkeywords = new Array("%chatName%");
-	var contentHTML = "";
+	var incomingContentHTML = "";
+	var outgoingContentHTML = "";
 	var eventHTML = "";
 
 	function fillHeaderFooterKeywords(input)
@@ -79,25 +80,27 @@
 	    
 		client.debugLog("At main stylesheet");
 		
-	    var mainStyleSheet = document.createElement("style");
+	    var mainStyleSheet = document.createElement("link");
 	    mainStyleSheet.type = "text/css";
 	    mainStyleSheet.id = "mainStyles";
-	    mainStyleSheet.media = "screen, print";
-	    mainStyleSheet.src = client.mainStylePath();
-	    //mainStyleSheet.insertRule("*{ word-wrap:break-word; }", 0);
-		//mainStyleSheet.insertRule("img.scaledToFitImage { height:auto; width:100%; }", 0);
+	    mainStyleSheet.rel = "stylesheet";
+	    mainStyleSheet.href = "file://" + client.mainStylePath();
 	    document.getElementsByTagName("head")[0].appendChild(mainStyleSheet);
 		
 		client.debugLog("At variant stylesheet");
 		
-		var variantStyleSheet = document.createElement("style");
+		var variantStyleSheet = document.createElement("link");
 	    variantStyleSheet.type = "text/css";
-	    variantStyleSheet.media = "screen, print";
+	    variantStyleSheet.rel = "stylesheet";
 	    variantStyleSheet.id = "variantStyles";
-	    variantStyleSheet.src = client.variantStylePath();
+	    variantStyleSheet.href = "file://" + client.variantStylePath();
 	    document.getElementsByTagName("head")[0].appendChild(variantStyleSheet);
+		
+		//document.styleSheets[0].insertRule("*{ word-wrap:break-word; }", 0);
+		//document.styleSheets[0].insertRule("img.scaledToFitImage { height:auto; width:100%; }", 0);
 	    		
-		contentHTML = client.getTemplateNamed("Incoming/Content.html");
+		incomingContentHTML = client.getTemplateNamed("Incoming/Content.html");
+		outgoingContentHTML = client.getTemplateNamed("Outgoing/Content.html");
 		eventHTML = client.getTemplateNamed("Status.html");
 		
 		client.debugLog("Loaded content templates");
@@ -170,7 +173,10 @@
 				messageHTML = new String(eventHTML);
 				messageHTML = messageHTML.replace(new RegExp("%message%", "g"), "<div class=\"progressbar\" style=\"background-color:blue; width:10%;\">progressbar<div>");
 			} else if(type == "message") {
-				messageHTML = new String(contentHTML);
+				if(message.direction == "outgoing")
+					messageHTML = new String(outgoingContentHTML);
+				else
+					messageHTML = new String(incomingContentHTML);
 			}
 			client.debugLog("Message html is" + messageHTML);
 			messageHTML = fillKeywords(messageHTML, message);
