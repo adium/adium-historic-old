@@ -3,18 +3,18 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<script type="text/javascript">
-	function load()
+	function loadtemplate()
 	{
+		client.debugLog("Loading template.js");
 		var js = document.createElement("script");
 		js.type = "text/javascript";
 		//should load from the client if not found in the message style.
-		js.src = client.getResourceURL("Template.js"); 
+		js.src = client.getResourceURL("Template.js");
 		document.getElementsByTagName("head")[0].appendChild(js);
-		open();
 	}
 	</script>
 </head>
-<body onload="load()">
+<body onload="loadtemplate()">
 	<div id="header"></div>
 	<div id="Chat"></div>
 	<div id="footer"></div>

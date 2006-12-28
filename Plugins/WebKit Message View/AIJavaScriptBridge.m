@@ -69,8 +69,10 @@
 	NSString *resource = [[styleBundle resourcePath] stringByAppendingPathComponent:resourceName];
 	if(![[NSFileManager defaultManager] fileExistsAtPath:resource])
 		resource = [[[NSBundle bundleForClass:[self class]] resourcePath] stringByAppendingPathComponent:resourceName];
-	if(resource && [resource length] > 0)
+	if(resource && [resource length] > 0) {
+		NSLog(@"Got resource url: %@", [[NSURL fileURLWithPath:resource] absoluteString]);
 		return [[NSURL fileURLWithPath:resource] absoluteString];
+	}
 	return @"";
 }
 - (AIChat *)chat
@@ -122,6 +124,10 @@
 @end
 
 @implementation AIContentObject (JSBridging)
+- (NSString *) classes
+{
+	return @"";
+}
 
 - (NSString *) getType
 {
@@ -158,6 +164,7 @@
 	if(aSelector == @selector(source)) return NO;
 	if(aSelector == @selector(getType)) return NO;
 	if(aSelector == @selector(getID)) return NO;
+	if(aSelector == @selector(classes)) return NO;
 	return YES;
 }
 
@@ -257,6 +264,15 @@
 + (NSString *)webScriptNameForSelector:(SEL)aSelector
 {
 	return NSStringFromSelector(aSelector);
+}
+
+@end
+
+@implementation AIContentContext (JSBridging)
+
+- (NSString *) classes
+{
+	return @"history";
 }
 
 @end
