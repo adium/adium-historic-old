@@ -16,7 +16,7 @@
 
 #import <Adium/AIObject.h>
 
-@class AIWebKitMessageViewPlugin, AIWebkitMessageViewStyle, AIContentObject, ESWebView, DOMDocument;
+@class AIWebKitMessageViewPlugin, AIContentObject, ESWebView, DOMDocument;
 @class AIChat, AIContentObject;
 
 @protocol AIMessageViewController;
@@ -31,6 +31,7 @@
 	id							preferencesChangedDelegate;
 	AIChat						*chat;
 	BOOL						shouldReflectPreferenceChanges;
+	NSBundle					*styleBundle;
 
 	//Content processing
 	AIContentObject				*previousContent;
@@ -39,7 +40,6 @@
 	BOOL						webViewIsReady;
 	
 	//Style & Variant
-	AIWebkitMessageViewStyle	*messageStyle;
 	NSString					*activeStyle;
 	NSString					*activeVariant;
 
@@ -75,7 +75,6 @@
 /*!
  *	@return our message style controller
  */
-- (AIWebkitMessageViewStyle *)messageStyle;
 
 /*!
  *	@brief Enable or disable updating to reflect preference changes

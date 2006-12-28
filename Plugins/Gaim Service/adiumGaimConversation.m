@@ -156,6 +156,11 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 					[accountLookup(conv->account) updateContact:[chat listObject]
 													   forEvent:[NSNumber numberWithInt:GAIM_BUDDY_DIRECTIM_CONNECTED]];
 
+				} else if ([messageString rangeOfString:@" entered the room"].location != NSNotFound ||
+						   [messageString rangeOfString:@" left the room"].location != NSNotFound) {
+					//We handle entered/left messages directly via the conversation UI ops; don't display this system message
+					return;
+
 				} else if (([messageString rangeOfString:@"The remote user has closed the connection."].location != NSNotFound) ||
 						   ([messageString rangeOfString:@"The remote user has declined your request."].location != NSNotFound) ||
 						   ([messageString rangeOfString:@"Lost connection with the remote user:"].location != NSNotFound) ||
@@ -261,8 +266,15 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 				}
 
 				if (errorType != -2) {
-					[accountLookup(conv->account) errorForChat:chat
-														  type:[NSNumber numberWithInt:errorType]];
+					if (errorType != AIChatUnknownError) {
+						[accountLookup(conv->account) errorForChat:chat
+															  type:[NSNumber numberWithInt:errorType]];
+					} else {
+						//If we don't know what to do with this message, display it!
+						[[[AIObject sharedAdiumInstance] contentController] displayEvent:messageString
+																				  ofType:@"libgaimMessage"
+																				  inChat:chat];						
+					}
 				}
 
 				GaimDebug (@"*** Conversation error type %i (%@): %@",

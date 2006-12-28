@@ -41,9 +41,12 @@
 #import <AIUtilities/AIMutableStringAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 
+#import "AIContentEventTest.h"
+
 #import "ESFileTransferRequestPromptController.h"
 
 #import "ESWebView.h"
+#import "AIJavaScriptBridge.h"
 
 @interface AIWebKitMessageViewController (PRIVATE)
 - (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
@@ -168,7 +171,7 @@ static NSMutableDictionary *wkmvControllers = nil;
 	[webView release];
 
 	//Clean up style/variant info
-	[messageStyle release]; messageStyle = nil;
+	[styleBundle release]; styleBundle = nil;
 	[activeStyle release]; activeStyle = nil;
 	[activeVariant release]; activeVariant = nil;
 	
@@ -303,10 +306,10 @@ static NSMutableDictionary *wkmvControllers = nil;
 	return [[webView mainFrame] frameView];
 }
 
-- (AIWebkitMessageViewStyle *)messageStyle
-{
-	return messageStyle;
-}
+//- (AIWebkitMessageViewStyle *)messageStyle
+//{
+//	return messageStyle;
+//}
 
 /*!
  * @brief Apply preference changes to our webview
@@ -390,42 +393,31 @@ static NSMutableDictionary *wkmvControllers = nil;
 {
 	NSLog(@"Updating prefs!");
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	NSBundle		*styleBundle;
 	
 	//Cleanup first
-	[messageStyle release];
+	//[messageStyle release];
 	[activeStyle release];
 	[activeVariant release];
 	
 	//Load the message style
-	styleBundle = [plugin messageStyleBundleWithIdentifier:[prefDict objectForKey:KEY_WEBKIT_STYLE]];
+	styleBundle = [[plugin messageStyleBundleWithIdentifier:[prefDict objectForKey:KEY_WEBKIT_STYLE]] retain];
 	activeStyle = [[styleBundle bundleIdentifier] retain];
 
-	messageStyle = [[AIWebkitMessageViewStyle messageViewStyleFromBundle:styleBundle] retain];
 	[webView setPreferencesIdentifier:activeStyle];
 
 	//Get the prefered variant (or the default if a prefered is not available)
 	activeVariant = [[prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:activeStyle]] retain];
-	if (!activeVariant) activeVariant = [[messageStyle defaultVariant] retain];
-	if (!activeVariant) {
-		/* If the message style doesn't specify a default variant, choose the first one.
-		 * Note: Old styles (styleVersion < 3) will always report a variant for defaultVariant.
-		 */
-		NSArray *availableVariants = [messageStyle availableVariants];
-		if ([availableVariants count]) {
-			activeVariant = [[availableVariants objectAtIndex:0] retain];
-		}
-	}
+	if (!activeVariant) activeVariant = [[styleBundle objectForInfoDictionaryKey:@"DefaultVariant"] retain];
 
 	//Update message style behavior
-	[messageStyle setShowUserIcons:[[prefDict objectForKey:KEY_WEBKIT_SHOW_USER_ICONS] boolValue]];
+	/*[messageStyle setShowUserIcons:[[prefDict objectForKey:KEY_WEBKIT_SHOW_USER_ICONS] boolValue]];
 	[messageStyle setShowHeader:[[prefDict objectForKey:KEY_WEBKIT_SHOW_HEADER] boolValue]];
 	[messageStyle setUseCustomNameFormat:[[prefDict objectForKey:KEY_WEBKIT_USE_NAME_FORMAT] boolValue]];
 	[messageStyle setNameFormat:[[prefDict objectForKey:KEY_WEBKIT_NAME_FORMAT] intValue]];
 	[messageStyle setDateFormat:[prefDict objectForKey:KEY_WEBKIT_TIME_STAMP_FORMAT]];
 	[messageStyle setShowIncomingMessageColors:[[prefDict objectForKey:KEY_WEBKIT_SHOW_MESSAGE_COLORS] boolValue]];
 	[messageStyle setShowIncomingMessageFonts:[[prefDict objectForKey:KEY_WEBKIT_SHOW_MESSAGE_FONTS] boolValue]];
-	
+	*/
 	//Custom background image
 	//Webkit wants to load these from disk, but we have it stuffed in a plist.  So we'll write it out as an image
 	//into the cache and have webkit fetch from there.
@@ -457,23 +449,25 @@ static NSMutableDictionary *wkmvControllers = nil;
 			}
 		}
 	}
-	[messageStyle setCustomBackgroundPath:cachePath];
-	[messageStyle setCustomBackgroundType:[[prefDict objectForKey:[plugin styleSpecificKey:@"BackgroundType" forStyle:activeStyle]] intValue]];
+//	[messageStyle setCustomBackgroundPath:cachePath];
+//	[messageStyle setCustomBackgroundType:[[prefDict objectForKey:[plugin styleSpecificKey:@"BackgroundType" forStyle:activeStyle]] intValue]];
 
 	//Custom background color
-	if ([[prefDict objectForKey:[plugin styleSpecificKey:@"UseCustomBackground" forStyle:activeStyle]] boolValue]) {
+/*	if ([[prefDict objectForKey:[plugin styleSpecificKey:@"UseCustomBackground" forStyle:activeStyle]] boolValue]) {
 		[messageStyle setCustomBackgroundColor:[[prefDict objectForKey:[plugin styleSpecificKey:@"BackgroundColor" forStyle:activeStyle]] representedColor]];
 	} else {
 		[messageStyle setCustomBackgroundColor:nil];
 	}
 	[webView setDrawsBackground:![[self messageStyle] isBackgroundTransparent]];
-
+*/
 	//Update webview font settings
 	NSString	*fontFamily = [prefDict objectForKey:[plugin styleSpecificKey:@"FontFamily" forStyle:activeStyle]];
-	[webView setFontFamily:(fontFamily ? fontFamily : [messageStyle defaultFontFamily])];
+	//[webView setFontFamily:(fontFamily ? fontFamily : [messageStyle defaultFontFamily])];
+	[webView setFontFamily: [[NSFont systemFontOfSize:0] familyName]];
 	
 	NSNumber	*fontSize = [prefDict objectForKey:[plugin styleSpecificKey:@"FontSize" forStyle:activeStyle]];
-	[[webView preferences] setDefaultFontSize:[(fontSize ? fontSize : [messageStyle defaultFontSize]) intValue]];
+	//[[webView preferences] setDefaultFontSize:[(fontSize ? fontSize : [messageStyle defaultFontSize]) intValue]];
+	[[webView preferences] setDefaultFontSize:12];
 	
 	NSNumber	*minSize = [prefDict objectForKey:KEY_WEBKIT_MIN_FONT_SIZE];
 	[[webView preferences] setMinimumFontSize:(minSize ? [minSize intValue] : 1)];
@@ -488,15 +482,15 @@ static NSMutableDictionary *wkmvControllers = nil;
 /*!
  * @brief Updates our webview to the currently active varient without refreshing the view
  */
-- (void)_updateVariantWithoutPrimingView
-{
-	//We can only change the variant if the web view is ready.  If it's not ready we wait a bit and try again.
-	if (webViewIsReady) {
-		[webView stringByEvaluatingJavaScriptFromString:[messageStyle scriptForChangingVariant:activeVariant]];			
-	} else {
-		[self performSelector:@selector(_updateVariantWithoutPrimingView) withObject:nil afterDelay:NEW_CONTENT_RETRY_DELAY];
-	}
-}
+//- (void)_updateVariantWithoutPrimingView
+//{
+//	//We can only change the variant if the web view is ready.  If it's not ready we wait a bit and try again.
+//	if (webViewIsReady) {
+//		[webView stringByEvaluatingJavaScriptFromString:[messageStyle scriptForChangingVariant:activeVariant]];			
+//	} else {
+//		[self performSelector:@selector(_updateVariantWithoutPrimingView) withObject:nil afterDelay:NEW_CONTENT_RETRY_DELAY];
+//	}
+//}
 
 /*!
  * @brief Primes our webview to the currently active style and variant
@@ -509,8 +503,9 @@ static NSMutableDictionary *wkmvControllers = nil;
 	webViewIsReady = NO;
 
 	[webView setFrameLoadDelegate:self];
-	[[webView mainFrame] loadHTMLString:[messageStyle baseTemplateWithVariant:activeVariant chat:chat] baseURL:nil];
-
+	//[[webView mainFrame] loadHTMLString:[messageStyle baseTemplateWithVariant:activeVariant chat:chat] baseURL:nil];
+	[[webView mainFrame] loadHTMLString:[NSString stringWithContentsOfFile:[[NSBundle bundleForClass:[self class]] pathForResource:@"Template" ofType:@"html"]] baseURL:nil];
+/*
 	if (reprocessContent) {
 		NSArray	*currentContentQueue;
 		
@@ -534,7 +529,7 @@ static NSMutableDictionary *wkmvControllers = nil;
 
 		//We're still holding onto the previousContent from before, which is no longer accurate. Release it.
 		[previousContent release]; previousContent = nil;
-	}
+	}*/
 }
 
 
@@ -550,6 +545,8 @@ static NSMutableDictionary *wkmvControllers = nil;
 
 - (void)enqueueContentObject:(AIContentObject *)contentObject
 {
+	if([contentObject isKindOfClass:[ESFileTransfer class]])
+		[[adium notificationCenter] addObserver:self selector:@selector(updateFT:) name:@"FileTransferUpdated" object:contentObject];
 	[contentQueue addObject:contentObject];
 	
 	/* Immediately update our display if the content requires it.
@@ -559,6 +556,12 @@ static NSMutableDictionary *wkmvControllers = nil;
 	if ([contentObject displayContentImmediately]) {
 		[self processQueuedContent];
 	}
+}
+
+- (void) updateFT:(NSNotification *)not
+{
+	[[webView windowScriptObject] callWebScriptMethod:@"updateItem"
+										withArguments:[NSArray arrayWithObjects:[not object], @"state", nil]];
 }
 
 /*!
@@ -577,7 +580,7 @@ static NSMutableDictionary *wkmvControllers = nil;
 	if (webViewIsReady) {
 		unsigned contentQueueCount = [contentQueue count];
 
-		for (int i = 0; i < contentQueueCount; i++) {
+		/*for (int i = 0; i < contentQueueCount; i++) {
 			AIContentObject *content;
 			
 			//Prepare the content
@@ -587,7 +590,7 @@ static NSMutableDictionary *wkmvControllers = nil;
 			 If the day has changed since our last message (or if there was no previous message and 
 															we are about to display context), insert a date line.
 			 */
-			
+		/*
 			if ((!previousContent && [content isKindOfClass:[AIContentContext class]]) ||
 				(![content isFromSameDayAsContent:previousContent])) {
 				NSString *dateMessage = [[content date] descriptionWithCalendarFormat:[[NSDateFormatter localizedDateFormatter] dateFormat]
@@ -607,17 +610,17 @@ static NSMutableDictionary *wkmvControllers = nil;
 				[previousContent release]; previousContent = [dateSeparator retain];
 			}
 			
-			BOOL similar = (previousContent && [content isSimilarToContent:previousContent] && ![content isKindOfClass:[ESFileTransfer class]]);
+			//BOOL similar = (previousContent && [content isSimilarToContent:previousContent] && ![content isKindOfClass:[ESFileTransfer class]]);
 			
-			if(similar)
-				[content setDisplayType:[[content displayType] stringByAppendingString:@" next"]];
+			//if(similar)
+			//	[content setDisplayType:[[content displayType] stringByAppendingString:@" next"]];
 			
 			[previousContent release]; previousContent = [content retain];
 
 			//If we are going to reflect preference changes, store this content object
 		//	if (shouldReflectPreferenceChanges)
 		//		[storedContentObjects addObject:content];
-		}
+		}*/
 		[[webView windowScriptObject] callWebScriptMethod:@"appendMessages"
 											withArguments:contentQueue];
 		[contentQueue removeAllObjects];
@@ -641,8 +644,28 @@ static NSMutableDictionary *wkmvControllers = nil;
 	[webView setFrameLoadDelegate:nil];
 }
 - (void)webViewIsReady{
+	NSLog(@"WebView is Ready");
 	webViewIsReady = YES;
+	[[webView windowScriptObject] callWebScriptMethod:@"open"
+										withArguments:[NSArray array]];
 	[self processQueuedContent];
+	AIContentEventTest *test = [[AIContentEventTest alloc] initWithChat:chat
+																 source:[[chat participatingListObjects] objectAtIndex:0]
+															destination:[[chat participatingListObjects] objectAtIndex:0]
+																   date:[NSDate date]
+																message:[[NSAttributedString alloc] initWithString:@"zomg"]
+															  autoreply:NO];
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(testUpdate:)
+									   name:@"ZOMGTEST"
+									 object:test];
+	[[adium notificationCenter] postNotificationName:Content_ContentObjectAdded object:chat userInfo:[NSDictionary dictionaryWithObject:test forKey:@"AIContentObject"]];
+}
+
+- (void) testUpdate:(NSNotification *)not
+{
+	[[webView windowScriptObject] callWebScriptMethod:@"updateItem"
+										withArguments:[NSArray arrayWithObjects:[not object], @"state", nil]];
 }
 
 /*!
@@ -955,9 +978,9 @@ static NSMutableDictionary *wkmvControllers = nil;
 	enumerator = [participatingListObjects objectEnumerator];
 	while ((listContact = [enumerator nextObject])) {
 		//Update the mask for any user which just entered the chat
-		if (![objectsWithUserIconsArray containsObjectIdenticalTo:listContact]) {
-			[self _updateUserIconForObject:listContact];
-		}
+		//if (![objectsWithUserIconsArray containsObjectIdenticalTo:listContact]) {
+		//	[self _updateUserIconForObject:listContact];
+		//}
 		
 		//In the future, watch for changes on the parent object, since that's the icon we display
 		[[adium notificationCenter] addObserver:self
@@ -986,7 +1009,7 @@ static NSMutableDictionary *wkmvControllers = nil;
 	[objectsWithUserIconsArray release]; objectsWithUserIconsArray = nil;
 	[self participatingListObjectsChanged:nil];
 	
-	[self _updateUserIconForObject:[chat account]];
+	//[self _updateUserIconForObject:[chat account]];
 }
 
 /*!
@@ -1027,78 +1050,78 @@ static NSMutableDictionary *wkmvControllers = nil;
 	}
 }
 
-/*!
- * @brief Generate an updated masked user icon for the passed list object
- */
-- (void)_updateUserIconForObject:(AIListObject *)inObject
-{
-	AIListObject		*iconSourceObject = ([inObject isKindOfClass:[AIListContact class]] ?
-											 [(AIListContact *)inObject parentContact] :
-											 inObject);
-	NSImage				*userIcon;
-	NSString			*webKitUserIconPath;
-	NSImage				*webKitUserIcon;
-	
-	/*
-	 * We probably already have a userIcon waiting for us, the active display icon; use that
-	 * rather than loading one from disk.
-	 */
-	if (!(userIcon = [iconSourceObject userIcon])) {
-		//If that's not the case, try using the UserIconPath
-		userIcon = [[[NSImage alloc] initWithContentsOfFile:[iconSourceObject statusObjectForKey:@"UserIconPath"]] autorelease];
-	}
-
-	if (userIcon) {
-		if ([messageStyle userIconMask]) {
-			//Apply the mask is the style has one
-			webKitUserIcon = [[[messageStyle userIconMask] copy] autorelease];
-			[webKitUserIcon lockFocus];
-			[userIcon drawInRect:NSMakeRect(0,0,[webKitUserIcon size].width,[webKitUserIcon size].height)
-						fromRect:NSMakeRect(0,0,[userIcon size].width,[userIcon size].height)
-					   operation:NSCompositeSourceIn
-						fraction:1.0];
-			[webKitUserIcon unlockFocus];
-		} else {
-			//Otherwise, just use the icon as-is
-			webKitUserIcon = userIcon;
-		}
-
-		/*
-		 * Writing the icon out is necessary for webkit to be able to use it; it also guarantees that there won't be
-		 * any animation, which is good since animation in the message view is slow and annoying.
-		 */
-		webKitUserIconPath = [self webKitUserIconPathForObject:inObject];
-		if ([[webKitUserIcon TIFFRepresentation] writeToFile:webKitUserIconPath
-												  atomically:YES]) {
-			[inObject setStatusObject:webKitUserIconPath
-							   forKey:KEY_WEBKIT_USER_ICON
-							   notify:NO];
-
-			//Make sure it's known that this user has been handled (this will rarely be a problem, if ever)
-			if (![objectsWithUserIconsArray containsObjectIdenticalTo:inObject]) {
-				[objectsWithUserIconsArray addObject:inObject];
-			}
-			
-			DOMNodeList  *images = [[[webView mainFrame] DOMDocument] getElementsByTagName:@"img"];
-			unsigned int imagesCount = [images length];
-
-			if (imagesCount > 0) {
-				NSString	*internalObjectID = [inObject internalObjectID];
-
-				for (int i = 0; i < imagesCount; i++) {
-					DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
-					NSString *imgClass = [img className];
-					//being very careful to only get user icons... a better way would be to put a class "usericon" on the img, but I haven't worked out how to do that, so we test for the name of the person in the src, and that it's not an emoticon or direct connect image.
-					if([[img getAttribute:@"src"] rangeOfString:internalObjectID].location != NSNotFound &&
-					   [imgClass rangeOfString:@"emoticon"].location == NSNotFound &&
-					   [imgClass rangeOfString:@"fullSizeImage"].location == NSNotFound &&
-					   [imgClass rangeOfString:@"scaledToFitImage"].location == NSNotFound)
-						[img setSrc:webKitUserIconPath];
-				}
-			}
-		}
-	}
-}
+///*!
+// * @brief Generate an updated masked user icon for the passed list object
+// */
+///*- (void)_updateUserIconForObject:(AIListObject *)inObject
+//{
+//	AIListObject		*iconSourceObject = ([inObject isKindOfClass:[AIListContact class]] ?
+//											 [(AIListContact *)inObject parentContact] :
+//											 inObject);
+//	NSImage				*userIcon;
+//	NSString			*webKitUserIconPath;
+//	NSImage				*webKitUserIcon;
+//	
+//	/*
+//	 * We probably already have a userIcon waiting for us, the active display icon; use that
+//	 * rather than loading one from disk.
+//	 */
+//	if (!(userIcon = [iconSourceObject userIcon])) {
+//		//If that's not the case, try using the UserIconPath
+//		userIcon = [[[NSImage alloc] initWithContentsOfFile:[iconSourceObject statusObjectForKey:@"UserIconPath"]] autorelease];
+//	}
+//
+//	if (userIcon) {
+//		if ([messageStyle userIconMask]) {
+//			//Apply the mask is the style has one
+//			webKitUserIcon = [[[messageStyle userIconMask] copy] autorelease];
+//			[webKitUserIcon lockFocus];
+//			[userIcon drawInRect:NSMakeRect(0,0,[webKitUserIcon size].width,[webKitUserIcon size].height)
+//						fromRect:NSMakeRect(0,0,[userIcon size].width,[userIcon size].height)
+//					   operation:NSCompositeSourceIn
+//						fraction:1.0];
+//			[webKitUserIcon unlockFocus];
+//		} else {
+//			//Otherwise, just use the icon as-is
+//			webKitUserIcon = userIcon;
+//		}
+//
+//		/*
+//		 * Writing the icon out is necessary for webkit to be able to use it; it also guarantees that there won't be
+//		 * any animation, which is good since animation in the message view is slow and annoying.
+//		 */
+//		webKitUserIconPath = [self webKitUserIconPathForObject:inObject];
+//		if ([[webKitUserIcon TIFFRepresentation] writeToFile:webKitUserIconPath
+//												  atomically:YES]) {
+//			[inObject setStatusObject:webKitUserIconPath
+//							   forKey:KEY_WEBKIT_USER_ICON
+//							   notify:NO];
+//
+//			//Make sure it's known that this user has been handled (this will rarely be a problem, if ever)
+//			if (![objectsWithUserIconsArray containsObjectIdenticalTo:inObject]) {
+//				[objectsWithUserIconsArray addObject:inObject];
+//			}
+//			
+//			DOMNodeList  *images = [[[webView mainFrame] DOMDocument] getElementsByTagName:@"img"];
+//			unsigned int imagesCount = [images length];
+//
+//			if (imagesCount > 0) {
+//				NSString	*internalObjectID = [inObject internalObjectID];
+//
+//				for (int i = 0; i < imagesCount; i++) {
+//					DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
+//					NSString *imgClass = [img className];
+//					//being very careful to only get user icons... a better way would be to put a class "usericon" on the img, but I haven't worked out how to do that, so we test for the name of the person in the src, and that it's not an emoticon or direct connect image.
+//					if([[img getAttribute:@"src"] rangeOfString:internalObjectID].location != NSNotFound &&
+//					   [imgClass rangeOfString:@"emoticon"].location == NSNotFound &&
+//					   [imgClass rangeOfString:@"fullSizeImage"].location == NSNotFound &&
+//					   [imgClass rangeOfString:@"scaledToFitImage"].location == NSNotFound)
+//						[img setSrc:webKitUserIconPath];
+//				}
+//			}
+//		}
+//	}
+//}
 
 - (void)customEmoticonUpdated:(NSNotification *)inNotification
 {
@@ -1142,103 +1165,5 @@ static NSMutableDictionary *wkmvControllers = nil;
 }
 
 #pragma mark File Transfer
-
-- (void)handleAction:(NSString *)action forFileTransfer:(NSString *)fileTransferID
-{
-	ESFileTransfer *fileTransfer = [ESFileTransfer existingFileTransferWithID:fileTransferID];
-	ESFileTransferRequestPromptController *tc = [fileTransfer fileTransferRequestPromptController];
-
-	if (tc) {
-		AIFileTransferAction a;
-		if ([action isEqualToString:@"SaveAs"])
-			a = AISaveFileAs;
-		else if ([action isEqualToString:@"Cancel"]) 
-			a = AICancel;
-		else
-			a = AISaveFile;
-		
-		[tc handleFileTransferAction:a];
-	}
-}
-
-#pragma mark JS Bridging
-/*See http://developer.apple.com/documentation/AppleApplications/Conceptual/SafariJSProgTopics/Tasks/ObjCFromJavaScript.html#//apple_ref/doc/uid/30001215 for more information.
-*/
-
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
-{
-	if(aSelector == @selector(handleAction:forFileTransfer:)) return NO;
-	if(aSelector == @selector(debugLog:)) return NO;
-	if(aSelector == @selector(getMessageHTML)) return NO;
-	return YES;
-}
-
-/*
- * This method returns the name to be used in the scripting environment for the selector specified by aSelector.
- * It is your responsibility to ensure that the returned name is unique to the script invoking this method.
- * If this method returns nil or you do not implement it, the default name for the selector will be constructed as follows:
- *
- * Any colon (“:”)in the Objective-C selector is replaced by an underscore (“_”).
- * Any underscore in the Objective-C selector is prefixed with a dollar sign (“$”).
- * Any dollar sign in the Objective-C selector is prefixed with another dollar sign.
- */
-+ (NSString *)webScriptNameForSelector:(SEL)aSelector
-{
-	if(aSelector == @selector(handleAction:forFileTransfer:)) return @"handleFileTransfer";
-	if(aSelector == @selector(debugLog:)) return @"debugLog";
-	return @"";
-}
-
-- (void)debugLog:(NSString *)message { NSLog(message); }
-
-//gets the source of the html page, for debugging
-- (NSString *)webviewSource
-{
-	return [(DOMHTMLHtmlElement *)[[[[webView mainFrame] DOMDocument] getElementsByTagName:@"html"] item:0] outerHTML];
-}
-
-@end
-
-@interface AIContentObject (JSBridging)
-
-@end
-
-@implementation AIContentObject (JSBridging)
-
-- (NSString *) HTMLForWebKitMessageView
-{
-	//XXX cache the current message style?
-	return [[[[adium interfaceController] messageViewControllerForChat:[self chat]] messageStyle] htmlForContentObject:self];
-}
-
-- (NSString *) direction
-{
-	return [self isOutgoing] ? @"outgoing" : @"incoming";
-}
-
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector
-{
-	if(aSelector == @selector(HTMLForWebKitMessageView)) return NO;
-	if(aSelector == @selector(direction)) return NO;
-	if(aSelector == @selector(displayType)) return NO;
-	return YES;
-}
-
-/*
- * This method returns the name to be used in the scripting environment for the selector specified by aSelector.
- * It is your responsibility to ensure that the returned name is unique to the script invoking this method.
- * If this method returns nil or you do not implement it, the default name for the selector will be constructed as follows:
- *
- * Any colon (“:”)in the Objective-C selector is replaced by an underscore (“_”).
- * Any underscore in the Objective-C selector is prefixed with a dollar sign (“$”).
- * Any dollar sign in the Objective-C selector is prefixed with another dollar sign.
- */
-+ (NSString *)webScriptNameForSelector:(SEL)aSelector
-{
-	if(aSelector == @selector(HTMLForWebKitMessageView)) return @"getMessageHTML";
-	if(aSelector == @selector(direction)) return @"getIsOutgoing";
-	if(aSelector == @selector(displayType)) return @"getMessageType";
-	return @"";
-}
 
 @end

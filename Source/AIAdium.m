@@ -961,13 +961,15 @@ static NSString	*prefsCategory;
 		return [NSArray array]; 
 	
 	NSCalendarDate *lastCheckDate = [NSCalendarDate dateWithString:[defaults stringForKey:@"AILastSubmittedProfileDate"]];
-	if (lastCheckDate && [lastCheckDate php4CompatibleIsFromSameWeekAsDate:[NSCalendarDate date]]) {
+//	if (lastCheckDate && [lastCheckDate php4CompatibleIsFromSameWeekAsDate:[NSCalendarDate date]]) {
+	if (lastCheckDate && abs([lastCheckDate dayOfCommonEra] - [[NSCalendarDate date] dayOfCommonEra]) <= 7) {
 		return [NSArray array];
-	}	
+	} else {
+		[defaults setObject:[[NSCalendarDate date] description] forKey:@"AILastSubmittedProfileDate"];
+	}
 	
-	[defaults setObject:[[NSCalendarDate date] description] forKey:@"AILastSubmittedProfileDate"];
 	
-	NSString *value = [[NSNumber numberWithBool:![[defaults objectForKey:@"AIHasSentProfileInfo"] boolValue]] stringValue];
+	NSString *value = ([defaults boolForKey:@"AIHasSentSparkleProfileInfo"]) ? @"no" : @"yes";
 
 	NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
 		@"FirstSubmission", @"key", 
@@ -978,7 +980,7 @@ static NSString	*prefsCategory;
 	
 	[profileInfo addObject:entry];
 	
-	[defaults setObject:[NSNumber numberWithBool:YES] forKey:@"AIHasSentProfileInfo"];
+	[defaults setBool:YES forKey:@"AIHasSentSparkleProfileInfo"];
 	
 	/*************** Include info about what IM services are used ************/
 	NSMutableString *accountInfo = [NSMutableString string];

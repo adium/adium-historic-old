@@ -119,7 +119,8 @@ static void buddy_status_changed_cb(GaimBuddy *buddy, GaimStatus *oldstatus, Gai
 	NSAttributedString	*statusMessage;	
 	BOOL				isAvailable;
 
-	GaimDebug(@"buddy_status_changed_cb: %@ (%i): name %s, message %s",
+	GaimDebug(@"buddy_status_changed_cb: %x - %@ (%i): name %s, message %s",
+			  buddy,
 			  theContact,
 			  gaim_status_type_get_primitive(gaim_status_get_type(status)),
 			  gaim_status_get_name(status),
@@ -162,11 +163,29 @@ static void buddy_idle_changed_cb(GaimBuddy *buddy, gboolean old_idle, gboolean 
 	AILog(@"buddy_event_cb: %@ is %@ [old_idle %i, idle %i]",theContact,(idle ? @"idle" : @"not idle"),old_idle,idle);
 }
 
+static void buddy_added_cb(GaimBuddy *buddy)
+{
+	GaimGroup		*g = gaim_buddy_get_group(buddy);
+
+	/* We pass in buddy->name directly (without filtering or normalizing it) as it may indicate a 
+	 * formatted version of the UID.  We have a signal for when a rename occurs, but passing here lets us get
+	 * formatted names which are originally formatted in a way which differs from the results of normalization.
+	 * For example, TekJew will normalize to tekjew in AIM; we want to use tekjew internally but display TekJew.
+	 */	
+	[accountLookup(buddy->account) updateContact:contactLookupFromBuddy(buddy)
+									 toGroupName:((g && g->name) ? [NSString stringWithUTF8String:g->name] : nil)
+									 contactName:(buddy->name ? [NSString stringWithUTF8String:buddy->name] : nil)];
+}
+
 void configureAdiumGaimSignals(void)
 {
 	void *blist_handle = gaim_blist_get_handle();
 	void *handle       = adium_gaim_get_handle();
-	
+
+	gaim_signal_connect(blist_handle, "buddy-added",
+						handle, GAIM_CALLBACK(buddy_added_cb),
+						GINT_TO_POINTER(0));
+
 	//Idle
 	gaim_signal_connect(blist_handle, "buddy-idle-changed",
 						handle, GAIM_CALLBACK(buddy_idle_changed_cb),

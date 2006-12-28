@@ -1,29 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>Growl Installation Recommended</key>
-	<string>Growl installasjon anbefalt</string>
+/* Button title for canceling installation of Growl */
+"Cancel" = "Avbryt";
 
-	<key>Growl Update Available</key>
-	<string>Growl oppdatering tilgjengelig</string>
+/* Don't ask again checkbox title for installation of Growl */
+"Don't Ask Again" = "Ikke spør igjen";
 
-	<key>This program displays information via Growl, a centralized notification system.  Growl is not currently installed; to see Growl notifications from this and other applications, you must install it.  No download is required.</key>
-	<string>Dette programmet viser informasjon via Growl, et sentralisert notifikasjonssystem. Growl er ikke installert på din maskin. For å se Growl notifikasjoner fra dette og andre programmer, må du installere det. Ingen nedlastning trengs.</string>
+/* Growl installation window title */
+"Growl Installation Recommended" = "Growl installasjon anbefalt";
 
-	<key>This program displays information via Growl, a centralized notification system.  A version of Growl is currently installed, but this program includes an updated version of Growl.  It is strongly recommended that you update now.  No download is required.</key>
-	<string>Dette programmet viser informasjon via Growl, et sentralisert notifikasjonssystem.  En gammel versjon av Growl er allerede installert, men dette programmet inneholder en oppdatering. Det er anbefalt at du oppdaterer. Ingen nedlastning trengs.</string>
+/* Growl update window title */
+"Growl Update Available" = "Growl oppdatering tilgjengelig";
 
-	<key>Install</key>
-	<string>Installer</string>
+/* Button title for installing Growl */
+"Install" = "Installer";
 
-	<key>Update</key>
-	<string>Oppdatering</string>
+/* Default Growl update explanation */
+"This program displays information via Growl, a centralized notification system.  A version of Growl is currently installed, but this program includes an updated version of Growl.  It is strongly recommended that you update now.  No download is required." = "Dette programmet viser informasjon via Growl, et sentralisert notifikasjonssystem.  En gammel versjon av Growl er allerede installert, men dette programmet inneholder en oppdatering. Det er anbefalt at du oppdaterer. Ingen nedlastning trengs.";
 
-	<key>Cancel</key>
-	<string>Avbryt</string>
+/* Default Growl installation explanation */
+"This program displays information via Growl, a centralized notification system.  Growl is not currently installed; to see Growl notifications from this and other applications, you must install it.  No download is required." = "Dette programmet viser informasjon via Growl, et sentralisert notifikasjonssystem. Growl er ikke installert på din maskin. For å se Growl notifikasjoner fra dette og andre programmer, må du installere det. Ingen nedlastning trengs.";
 
-	<key>Don't Ask Again</key>
-	<string>Ikke spør igjen</string>
-</dict>
-</plist>
+/* Button title for updating Growl */
+"Update" = "Oppdatering";

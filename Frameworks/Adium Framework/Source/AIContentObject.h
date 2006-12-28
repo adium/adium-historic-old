@@ -37,6 +37,7 @@
 	NSDictionary		*userInfo;
 	
 	NSString			*displayType;
+	NSString			*uuid;
 }
 
 - (id)initWithChat:(AIChat *)inChat
@@ -65,6 +66,8 @@
 - (void)setMessage:(NSAttributedString *)inMessage;
 - (NSAttributedString *)message;
 - (NSString *)messageString;
+- (void)setMessageHTML:(NSString *)inMessageString;
+- (NSString *)messageHTML;
 - (void)setDisplayType:(NSString *)type;
 - (NSString *)displayType;
 

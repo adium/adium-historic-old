@@ -177,6 +177,15 @@ static void ZombieKiller_Signal(int i)
 	NSString	*gaimUserDir = [[[adium loginController] userDirectory] stringByAppendingPathComponent:@"libgaim"];
 	gaim_util_set_user_dir([[gaimUserDir stringByExpandingTildeInPath] UTF8String]);
 
+	/* Delete blist.xml once when 1.0 runs to clear out any old silliness */
+	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"Adium 1.0 deleted blist.xml"]) {
+		[[NSFileManager defaultManager] removeFileAtPath:
+			[[[NSString stringWithUTF8String:gaim_user_dir()] stringByAppendingPathComponent:@"blist"] stringByAppendingPathExtension:@"xml"]
+												 handler:nil];
+		[[NSUserDefaults standardUserDefaults] setBool:YES
+												forKey:@"Adium 1.0 deleted blist.xml"];
+	}
+
 	gaim_core_set_ui_ops(adium_gaim_core_get_ops());
 	gaim_eventloop_set_ui_ops(adium_gaim_eventloop_get_ui_ops());
 
@@ -266,7 +275,7 @@ AIListContact* contactLookupFromBuddy(GaimBuddy *buddy)
 	
 		UID = [NSString stringWithUTF8String:gaim_normalize(buddy->account, buddy->name)];
 		
-		theContact = [accountLookup(buddy->account) mainThreadContactWithUID:UID];
+		theContact = [accountLookup(buddy->account) contactWithUID:UID];
 		
 		//Associate the handle with ui_data and the buddy with our statusDictionary
 		buddy->node.ui_data = [theContact retain];
@@ -288,7 +297,7 @@ AIChat* groupChatLookupFromConv(GaimConversation *conv)
 	if (!chat) {
 		NSString *name = [NSString stringWithUTF8String:conv->name];
 		
-		chat = [accountLookup(conv->account) mainThreadChatWithName:name];
+		chat = [accountLookup(conv->account) chatWithName:name];
 
 		[chatDict setObject:[NSValue valueWithPointer:conv] forKey:[chat uniqueChatID]];
 		conv->ui_data = [chat retain];
@@ -345,7 +354,7 @@ AIChat* imChatLookupFromConv(GaimConversation *conv)
 		sourceContact = contactLookupFromBuddy(buddy);
 
 		// Need to start a new chat, associating with the GaimConversation
-		chat = [accountLookup(account) mainThreadChatWithContact:sourceContact];
+		chat = [accountLookup(account) chatWithContact:sourceContact];
 
 		if (!chat) {
 			NSString	*errorString;
@@ -544,13 +553,14 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	NSScanner			*scanner;
     NSString			*chunkString = nil;
     NSMutableString		*newString;
-	NSString			*targetString = @"<IMG ID=\"";
+	NSString			*targetString = @"<IMG ID=";
+	NSCharacterSet		*quoteApostropheCharacterSet = [NSCharacterSet characterSetWithCharactersInString:@"\"\'"];
     int imageID;
-
+	
 	if ([inString rangeOfString:targetString options:NSCaseInsensitiveSearch].location == NSNotFound) {
 		return inString;
 	}
-
+	
     //set up
 	newString = [[NSMutableString alloc] init];
 	
@@ -558,7 +568,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
     [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
 	
 	//A gaim image tag takes the form <IMG ID='12'></IMG> where 12 is the reference for use in GaimStoredImage* gaim_imgstore_get(int)
-
+	
 	//Parse the incoming HTML
     while (![scanner isAtEnd]) {
 		
@@ -568,12 +578,17 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		}
 		
 		if ([scanner scanString:targetString intoString:&chunkString]) {
+			//Skip past a quote or apostrophe
+			[scanner scanCharactersFromSet:quoteApostropheCharacterSet intoString:NULL];
 			
 			//Get the image ID from the tag
 			[scanner scanInt:&imageID];
 
-			//Scan up to ">
-			[scanner scanString:@"'>" intoString:nil];
+			//Skip past a quote or apostrophe
+			[scanner scanCharactersFromSet:quoteApostropheCharacterSet intoString:NULL];
+
+			//Scan past a >
+			[scanner scanString:@">" intoString:nil];
 			
 			//Get the image, then write it out as a png
 			GaimStoredImage		*gaimImage = gaim_imgstore_get(imageID);
@@ -599,7 +614,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 				[image release];
 			} else {
 				//If we didn't get a gaimImage, just leave the tag for now.. maybe it was important?
-				[newString appendString:chunkString];
+				[newString appendFormat:@"<IMG ID=\"%i\">",chunkString];
 			}
 		}
 	}
@@ -638,7 +653,9 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 			([secondaryString rangeOfString:@"Error reading from Switchboard server"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"0x001a: Unknown error"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Not supported by host"].location != NSNotFound) ||
-			([secondaryString rangeOfString:@"Not logged in"].location != NSNotFound)) {
+			([secondaryString rangeOfString:@"Not logged in"].location != NSNotFound) ||
+			([secondaryString rangeOfString:@"Your buddy list was downloaded from the server."].location != NSNotFound) || /* Gadu-gadu */
+			([secondaryString rangeOfString:@"Your buddy list was stored on the server."].location != NSNotFound) /* Gadu-gadu */) {
 			return adium_gaim_get_handle();
 		}
 	}
@@ -944,11 +961,10 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 - (void)moveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
 	GaimAccount *account;
-	GaimGroup 	*group;
 	GaimBuddy	*buddy;
+	GaimGroup 	*group;
 	const char	*buddyUTF8String;
 	const char	*groupUTF8String;
-	BOOL		needToAddServerside = NO;
 
 	account = accountLookupFromAdiumAccount(adiumAccount);
 
@@ -963,19 +979,27 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	}
 
 	buddyUTF8String = [objectUID UTF8String];
-	buddy = gaim_find_buddy(account, buddyUTF8String);
-	if (!buddy) {
+	/* If we support contacts in multiple groups at once this should change */
+	GSList *buddies = gaim_find_buddies(account, buddyUTF8String);
+
+	if (buddies) {
+		GSList *cur;
+		for (cur = buddies; cur; cur = cur->next) {
+			/* gaim_blist_add_buddy() will update the local list and perform a serverside move as necessary */
+			gaim_blist_add_buddy(cur->data, NULL, group, NULL);			
+		}
+
+	} else {
 		/* If we can't find a buddy, something's gone wrong... we shouldn't be moving a buddy we don't have.
  		 * As with the group, we'll just silently turn this into an add operation. */
 		buddy = gaim_buddy_new(account, buddyUTF8String, NULL);
-		needToAddServerside = YES;
+
+		/* gaim_blist_add_buddy() will update the local list and perform a serverside move as necessary */
+		gaim_blist_add_buddy(buddy, NULL, group, NULL);
+		
+		/* gaim_blist_add_buddy() won't perform a serverside add, however.  Add if necessary. */
+		gaim_account_add_buddy(account, buddy);
 	}
-
-	/* gaim_blist_add_buddy() will update the local list and perform a serverside move as necessary */
-	gaim_blist_add_buddy(buddy, NULL, group, NULL);
-
-	/* gaim_blist_add_buddy() won't perform a serverside add, however.  Add if necessary. */
-	if (needToAddServerside) gaim_account_add_buddy(account, buddy);
 }
 
 - (void)renameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName

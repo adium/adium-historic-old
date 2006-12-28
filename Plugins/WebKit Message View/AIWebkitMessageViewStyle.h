@@ -113,6 +113,8 @@ typedef enum {
 	NSMutableDictionary *statusIconPathCache;
 }
 
+- (NSBundle *)bundle;
+
 /*!
  *	@brief Create a message view style instance for the passed style bundle
  */

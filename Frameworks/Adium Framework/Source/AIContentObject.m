@@ -56,6 +56,7 @@
 		chat = [inChat retain];
 		outgoing = ([source isKindOfClass:[AIAccount class]]);
 		userInfo = nil;
+		uuid = [[NSString uuid]retain];
 	}
     
     return self;

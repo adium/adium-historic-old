@@ -1232,7 +1232,9 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
 							NSAttributedString *attachString = [self processImgTagArgs:[self parseArguments:chunkString] 
 																			attributes:textAttributes];
-							[attrString appendAttributedString:attachString];
+							if (attachString) {
+								[attrString appendAttributedString:attachString];
+							}
 						}
 					} else if ([chunkString caseInsensitiveCompare:@"/IMG"] == NSOrderedSame) {
 						//just ignore </img> if we find it
@@ -1664,12 +1666,16 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	//Otherwise, use an icon representing the image
 	if (!image) image = [attachment iconImage];
 
-	NSTextAttachmentCell *cell = [[NSTextAttachmentCell alloc] initImageCell:image];
-	[attachment setAttachmentCell:cell];
-	[cell release];
-
-	attachString = [NSAttributedString attributedStringWithAttachment:attachment];
-	[attachment release];
+	if (image) {
+		NSTextAttachmentCell *cell = [[NSTextAttachmentCell alloc] initImageCell:image];
+		[attachment setAttachmentCell:cell];
+		[cell release];
+		
+		attachString = [NSAttributedString attributedStringWithAttachment:attachment];
+		[attachment release];
+	} else {
+		attachString = nil;
+	}
 
 	return attachString;
 }

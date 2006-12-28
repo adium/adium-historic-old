@@ -1,29 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>Growl Installation Recommended</key>
-	<string>Growl 安装要求</string>
+/* Button title for canceling installation of Growl */
+"Cancel" = "取消";
 
-	<key>Growl Update Available</key>
-	<string>Growl 更新可用</string>
+/* Don't ask again checkbox title for installation of Growl */
+"Don't Ask Again" = "别再问我";
 
-	<key>This program displays information via Growl, a centralized notification system.  Growl is not currently installed; to see Growl notifications from this and other applications, you must install it.  No download is required.</key>
-	<string>这程序通过 Growl，一种集成通告系统来显示信息。当前，Growl 尚未被安装; 要从这里或其他应用程序看到 Growl 通告，你必须安装它。无需其他下载。</string>
+/* Growl installation window title */
+"Growl Installation Recommended" = "Growl 安装要求";
 
-	<key>This program displays information via Growl, a centralized notification system.  A version of Growl is currently installed, but this program includes an updated version of Growl.  It is strongly recommended that you update now.  No download is required.</key>
-	<string>这程序通过 Growl，一种集成通告系统来显示信息。当前已经安装了某版本的 Growl，但这程序包括了更新版本的 Growl。强烈建议你进行更新。无需其他下载。</string>
+/* Growl update window title */
+"Growl Update Available" = "Growl 更新可用";
 
-	<key>Install</key>
-	<string>安装</string>
+/* Button title for installing Growl */
+"Install" = "安装";
 
-	<key>Update</key>
-	<string>更新</string>
+/* Default Growl update explanation */
+"This program displays information via Growl, a centralized notification system.  A version of Growl is currently installed, but this program includes an updated version of Growl.  It is strongly recommended that you update now.  No download is required." = "这程序通过 Growl，一种集成通告系统来显示信息。当前已经安装了某版本的 Growl，但这程序包括了更新版本的 Growl。强烈建议你进行更新。无需其他下载。";
 
-	<key>Cancel</key>
-	<string>取消</string>
+/* Default Growl installation explanation */
+"This program displays information via Growl, a centralized notification system.  Growl is not currently installed; to see Growl notifications from this and other applications, you must install it.  No download is required." = "这程序通过 Growl，一种集成通告系统来显示信息。当前，Growl 尚未被安装; 要从这里或其他应用程序看到 Growl 通告，你必须安装它。无需其他下载。";
 
-	<key>Don't Ask Again</key>
-	<string>别再问我</string>
-</dict>
-</plist>
+/* Button title for updating Growl */
+"Update" = "更新";
