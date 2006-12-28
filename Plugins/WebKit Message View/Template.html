@@ -5,16 +5,10 @@
 	<script type="text/javascript">
 	function load()
 	{
-		client.debugLog("Yay!");
 		var js = document.createElement("script");
-		client.debugLog("Created script element");
 		js.type = "text/javascript";
-		client.debugLog("Set type");
 		//should load from the client if not found in the message style.
-		var resourceURL = client.getResourceURL("Template.js"); 
-		client.debugLog("Resource URL is " + resourceURL);		
-		js.src = resourceURL;
-		client.debugLog("Js is " + js);
+		js.src = client.getResourceURL("Template.js"); 
 		document.getElementsByTagName("head")[0].appendChild(js);
 		open();
 	}
