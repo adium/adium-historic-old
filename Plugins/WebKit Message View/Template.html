@@ -84,7 +84,7 @@
 	    mainStyleSheet.type = "text/css";
 	    mainStyleSheet.id = "mainStyles";
 	    mainStyleSheet.rel = "stylesheet";
-	    mainStyleSheet.href = "file://" + client.mainStylePath();
+	    mainStyleSheet.href = client.mainStyleURL();
 	    document.getElementsByTagName("head")[0].appendChild(mainStyleSheet);
 		
 		client.debugLog("At variant stylesheet");
@@ -93,7 +93,7 @@
 	    variantStyleSheet.type = "text/css";
 	    variantStyleSheet.rel = "stylesheet";
 	    variantStyleSheet.id = "variantStyles";
-	    variantStyleSheet.href = "file://" + client.variantStylePath();
+	    variantStyleSheet.href = client.variantStyleURL();
 	    document.getElementsByTagName("head")[0].appendChild(variantStyleSheet);
 		
 		//document.styleSheets[0].insertRule("*{ word-wrap:break-word; }", 0);

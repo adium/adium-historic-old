@@ -68,14 +68,14 @@
 	return @"background-color: rgba(255, 255, 255, 1.0)";
 }
 
-- (NSString *) mainStylePath
+- (NSString *) mainStyleURL
 {
-	return [styleBundle pathForResource:@"main" ofType:@"css"];
+	return [[NSURL fileURLWithPath:[styleBundle pathForResource:@"main" ofType:@"css"]] absoluteString];
 }
 
-- (NSString *) variantStylePath
+- (NSString *) variantStyleURL
 {
-	return [styleBundle pathForResource:@"Alt Blue - Grey" ofType:@"css" inDirectory:@"Variants"];
+	return [[NSURL fileURLWithPath:[styleBundle pathForResource:@"Alt Blue - Grey" ofType:@"css" inDirectory:@"Variants"]] absoluteString];
 }
 
 - (AIChat *)chat
@@ -248,7 +248,7 @@
 	}
 	
 	if (/*showUserIcons*/YES && userIconPath) {
-		replacementString = [NSString stringWithFormat:@"file://%@", userIconPath];
+		replacementString = [[NSURL fileURLWithPath:userIconPath] absoluteString];
 		
 	}
 	return (replacementString != nil) ? replacementString : @"";
