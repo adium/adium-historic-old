@@ -91,7 +91,7 @@ static NSMutableDictionary *fileTransferDict = nil;
 
 - (void)dealloc
 {
-	[fileTransferDict removeObjectForKey:uniqueID];
+	[fileTransferDict removeObjectForKey:[self uniqueID]];
 	[uniqueID release];
 
     [remoteFilename release];
@@ -243,6 +243,8 @@ static NSMutableDictionary *fileTransferDict = nil;
 
         bytesSent = inBytesSent;
 	}
+	
+	[[adium notificationCenter] postNotificationName:@"FileTransferUpdated" object:self];
 	
 	if ((percentDone != oldPercentDone) || (bytesSent != oldBytesSent)) {
 		if (delegate) {
@@ -418,7 +420,7 @@ static NSMutableDictionary *fileTransferDict = nil;
 - (void)setFileTransferRequestPromptController:(ESFileTransferRequestPromptController *)inPromptController
 {
 	if (promptController != inPromptController) {
-		[promptController release];
+		[promptController autorelease];
 		promptController = [inPromptController retain];
 	}
 }

@@ -696,6 +696,7 @@ struct aim_chat_roominfo
 {
 	guint16 exchange;
 	char *name;
+	guint8 namelen;
 	guint16 instance;
 };
 

@@ -141,8 +141,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			[theContact setRemoteGroupName:AILocalizedString(@"Orphans","Name for the orphans group")];
 		} else if (groupName && [groupName length] != 0) {
 			[theContact setRemoteGroupName:[self _mapIncomingGroupName:groupName]];
-		} else {
-			[theContact setRemoteGroupName:[self _mapIncomingGroupName:nil]];
 		}
 		
 		[self gotGroupForContact:theContact];
@@ -431,17 +429,17 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
-- (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)inGroup
+- (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)group
 {
 	NSEnumerator	*enumerator = [objects objectEnumerator];
 	AIListContact	*object;
-	NSString		*groupName = [self _mapOutgoingGroupName:[inGroup UID]];
+	NSString		*groupName = [self _mapOutgoingGroupName:[group UID]];
 	
 	while ((object = [enumerator nextObject])) {
 		[gaimThread addUID:[self _UIDForAddingObject:object] onAccount:self toGroup:groupName];
 		
 		//Add it to Adium's list
-		[object setRemoteGroupName:[inGroup UID]]; //Use the non-mapped group name locally
+		[object setRemoteGroupName:[group UID]]; //Use the non-mapped group name locally
 	}
 }
 
@@ -576,20 +574,15 @@ static SLGaimCocoaAdapter *gaimThread = nil;
     return YES;
 }
 
-- (AIChat *)mainThreadChatWithContact:(AIListContact *)contact
+- (AIChat *)chatWithContact:(AIListContact *)contact
 {
-	return [[adium chatController] mainPerformSelector:@selector(chatWithContact:)
-											withObject:contact
-										   returnValue:YES];
+	return [[adium chatController] chatWithContact:contact];
 }
 
-- (AIChat *)mainThreadChatWithName:(NSString *)name
+
+- (AIChat *)chatWithName:(NSString *)name
 {
-	return [[adium chatController] mainPerformSelector:@selector(chatWithName:onAccount:chatCreationInfo:)
-											withObject:name
-											withObject:self
-											withObject:nil
-										   returnValue:YES];;
+	return [[adium chatController] chatWithName:name onAccount:self chatCreationInfo:nil];
 }
 
 //Typing update in an IM
@@ -900,6 +893,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 }
 
 #pragma mark GaimConversation User Lists
+- (NSString *)uidForContactWithUID:(NSString *)inUID inChat:(AIChat *)chat
+{
+	//No change for the superclass; subclasses may wish to modify it
+	return inUID;
+}
 - (void)addUsersArray:(NSArray *)usersArray
 			withFlags:(NSArray *)flagsArray
 		   andAliases:(NSArray *)aliasesArray 
@@ -922,7 +920,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		flags = [[flagsArray objectAtIndex:i] intValue];
 		alias = [aliasesArray objectAtIndex:i];
 
-		listContact = [self contactWithUID:contactName];
+		listContact = [self contactWithUID:[self uidForContactWithUID:contactName inChat:chat]];
 		[listContact setStatusObject:contactName forKey:@"FormattedUID" notify:NotifyNow];
 
 		if (alias && [alias length]) {
@@ -938,12 +936,15 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	AIListContact	*contact;
 
 	if ((chat) && 
-		(contact = [self contactWithUID:contactName])) {
+		(contact = [self contactWithUID:[self uidForContactWithUID:contactName inChat:chat]])) {
 		
 		[chat removeParticipatingListObject:contact];
 		
 		GaimDebug(@"%@ removeUser:%@ fromChat:%@",self,contact,chat);
-	}	
+	} else {
+		AILog(@"Could not remove %@ from %@ (contactWithUID: %@)",
+			  contactName,chat,[self contactWithUID:[self uidForContactWithUID:contactName inChat:chat]]);
+	}
 }
 
 - (void)removeUsersArray:(NSArray *)usersArray fromChat:(AIChat *)chat
@@ -1169,31 +1170,21 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[[adium fileTransferController] receiveRequestForFileTransfer:fileTransfer];
 }
 
-- (ESFileTransfer *)_mainThreadNewFileTransferObjectWith:(NSString *)destinationUID
-													size:(NSNumber *)inSize
-										  remoteFilename:remoteFilename
-{
-	AIListContact   *contact = [self contactWithUID:destinationUID];
-    ESFileTransfer	*fileTransfer;
-
-	fileTransfer = [[adium fileTransferController] newFileTransferWithContact:contact
-																   forAccount:self
-																		 type:Unknown_FileTransfer]; 
-	[fileTransfer setSize:[inSize unsignedLongLongValue]];
-	[fileTransfer setRemoteFilename:remoteFilename];
-
-    return fileTransfer;
-}
 //Create an ESFileTransfer object from an xfer
 - (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID
 										 size:(unsigned long long)inSize
 							   remoteFilename:(NSString *)remoteFilename
 {
-	return [self mainPerformSelector:@selector(_mainThreadNewFileTransferObjectWith:size:remoteFilename:)
-						  withObject:destinationUID
-						  withObject:[NSNumber numberWithUnsignedLongLong:inSize]
-						  withObject:remoteFilename
-						 returnValue:YES];
+	AIListContact   *contact = [self contactWithUID:destinationUID];
+    ESFileTransfer	*fileTransfer;
+	
+	fileTransfer = [[adium fileTransferController] newFileTransferWithContact:contact
+																   forAccount:self
+																		 type:Unknown_FileTransfer]; 
+	[fileTransfer setSize:inSize];
+	[fileTransfer setRemoteFilename:remoteFilename];
+	
+    return fileTransfer;
 }
 
 //Update an ESFileTransfer object progress
@@ -1891,10 +1882,14 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 					
 				prplScales = (prpl_info->icon_spec.scale_rules & GAIM_ICON_SCALE_SEND) || (prpl_info->icon_spec.scale_rules & GAIM_ICON_SCALE_DISPLAY);
 
-				if (prplScales &&  !smallEnough) {
+				if (prplScales && !smallEnough) {
+					int width = imageSize.width;
+					int height = imageSize.height;
+					
+					gaim_buddy_icon_get_scale_size(&prpl_info->icon_spec, &width, &height);
+					AILog(@"Scaling to %i %i",width,height);
 					//Determine the scaled size.  If it's too big, scale to the largest permissable size
-					image = [image imageByScalingToSize:NSMakeSize(prpl_info->icon_spec.max_width,
-																   prpl_info->icon_spec.max_height)];
+					image = [image imageByScalingToSize:NSMakeSize(width, height)];
 
 					/* Our original data is no longer valid, since we had to scale to a different size */
 					originalData = nil;
@@ -2341,22 +2336,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	static unsigned long long emoticonID = 0;
     NSString    *filename = [NSString stringWithFormat:@"TEMP-CustomEmoticon_%@_%@_%qu.gif", [inChat uniqueChatID], emoticonEquivalent,emoticonID++];
     return [[adium cachesPath] stringByAppendingPathComponent:[filename safeFilenameString]];	
-}
-
-- (AIListContact *)contactWithUID:(NSString *)inUID
-{
-	return [super contactWithUID:inUID];
-}
-
-- (AIListContact *)mainThreadContactWithUID:(NSString *)inUID
-{
-	AIListContact	*contact;
-
-	contact = [self mainPerformSelector:@selector(contactWithUID:)
-							 withObject:inUID
-							returnValue:YES];
-
-	return contact;
 }
 
 - (NSNumber *)shouldCheckMail

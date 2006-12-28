@@ -33,6 +33,8 @@
 
 #define DEFAULT_JABBER_HOST @"@jabber.org"
 
+extern void jabber_roster_request(JabberStream *js);
+
 @implementation ESGaimJabberAccount
 	
 /*!
@@ -248,6 +250,15 @@
 	return contactService;
 }
 
+#pragma mark Contacts
+- (void)updateSignon:(AIListContact *)theContact withData:(void *)data
+{
+	[super updateSignon:theContact withData:data];
+	
+	//We only get user icons in Jabber when we request info. Do that now!
+	[self delayedUpdateContactStatus:theContact];
+}
+
 #pragma mark Status
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
@@ -311,8 +322,20 @@
 	return nil;
 }
 
+- (BOOL)shouldRequestRosterOnConnect
+{
+	return YES;
+}
+
 - (void)accountConnectionConnected
 {
+	//HACK UNTIL LIBGAIM (broken as of [18051]) IS FIXED
+	if ([self shouldRequestRosterOnConnect]) {
+		JabberStream *js = account->gc->proto_data;
+		
+		jabber_roster_request(js);
+	}
+
 	[super accountConnectionConnected];
 }
 
@@ -503,33 +526,9 @@
 #pragma mark Multiuser chat
 
 //Multiuser chats come in with just the contact's name as contactName, but we want to actually do it right.
-- (void)addUser:(NSString *)contactName toChat:(AIChat *)chat newArrival:(NSNumber *)newArrival
+- (NSString *)uidForContactWithUID:(NSString *)inUID inChat:(AIChat *)chat
 {
-	if (chat) {
-		NSString		*chatNameWithServer = [chat name];
-		NSString		*chatParticipantName = [NSString stringWithFormat:@"%@/%@",chatNameWithServer,contactName];
-		AIListContact	*listContact = [self contactWithUID:chatParticipantName];
-
-		[listContact setStatusObject:contactName forKey:@"FormattedUID" notify:YES];
-		
-		[chat addParticipatingListObject:listContact notify:(newArrival && [newArrival boolValue])];
-
-		GaimDebug (@"Jabber: added user %@ to chat %@",chatParticipantName,chatNameWithServer);
-	}	
-}
-
-- (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat
-{
-	if (chat) {
-		NSString	*chatNameWithServer = [chat name];
-		NSString	*chatParticipantName = [NSString stringWithFormat:@"%@/%@",chatNameWithServer,contactName];
-		
-		AIListContact *contact = [self contactWithUID:chatParticipantName];
-		
-		[chat removeParticipatingListObject:contact];
-		
-		GaimDebug (@"Jabber: removed user %@ to chat %@",chatParticipantName,chatNameWithServer);
-	}	
+	return [NSString stringWithFormat:@"%@/%@",[chat name],inUID];
 }
 
 #pragma mark Status

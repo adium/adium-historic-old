@@ -20,6 +20,8 @@
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
+#import <Libgaim/gg.h>
+#import <Libgaim/buddylist.h>
 
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
@@ -73,6 +75,59 @@
 	return YES;
 }
 
+- (void)uploadContactListToServer
+{
+	char *buddylist = ggp_buddylist_dump(account);
+		
+	if (buddylist) {
+		GaimConnection *gc = account->gc;
+		GGPInfo *info = gc->proto_data;
+		
+		AILog(@"Uploading gadu-gadu list...");
+		
+		gg_userlist_request(info->session, GG_USERLIST_PUT, buddylist);
+		g_free(buddylist);
+	}
+}
+
+- (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group
+{
+	[super moveListObjects:objects toGroup:group];
+	
+	[self uploadContactListToServer];
+}
+
+- (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)group
+{
+	[super addContacts:objects toGroup:group];	
+	
+	[self uploadContactListToServer];
+}
+
+- (void)removeContacts:(NSArray *)objects
+{
+	[super removeContacts:objects];
+	
+	[self uploadContactListToServer];
+}
+
+- (void)downloadContactListFromServer
+{
+	//If we're connected and have no buddies, request 'em from the server.
+	GaimConnection *gc = account->gc;
+	GGPInfo *info = gc->proto_data;
+	
+	AILog(@"Requesting gadu-gadu list...");
+	gg_userlist_request(info->session, GG_USERLIST_GET, NULL);	
+}
+
+- (void)accountConnectionConnected
+{
+	[self downloadContactListFromServer];
+
+	[super accountConnectionConnected];
+}
+
 #pragma mark Status
 /*!
  * @brief Encode an attributed string for a status type
@@ -106,10 +161,14 @@
 
 #pragma mark Menu Actions
 
-- (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
+- (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
-	if(strcmp(label, "Download buddylist from Server") == 0) return nil; //this crashes as of Sept. 19th, 2006. See ticket #3953.
-	return [super titleForContactMenuLabel:label forContact:inContact];
+	/* These are dumb and should be handled automatically */
+	if (strcmp(label, "Download buddylist from Server") == 0) return nil;
+	if (strcmp(label, "Upload buddylist to Server") == 0) return nil;
+	if (strcmp(label, "Delete buddylist from Server") == 0) return nil;
+
+	return [super titleForAccountActionMenuLabel:label];
 }
 
 @end

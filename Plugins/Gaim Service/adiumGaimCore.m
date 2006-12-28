@@ -158,8 +158,6 @@ static void adiumGaimCoreUiInit(void)
 		*	Another possible advantage:
 		*		- Using Gaim's own buddy icon caching (which depends on both files) allows us to avoid
 		*			re-requesting icons we already have locally on some protocols such as AIM.
-		*   However, we seem to end up with out of date icons when we rely on Gaim's caching, particularly over MSN,
-		*   so we'll just ignore this gain and turn off caching. 
 		*/	
 	//Setup the buddy list; then load the blist.
 	gaim_set_blist(gaim_blist_new());

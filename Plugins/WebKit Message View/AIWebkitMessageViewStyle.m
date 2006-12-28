@@ -81,6 +81,11 @@ static NSArray *validSenderColors;
 
 @implementation AIWebkitMessageViewStyle
 
+- (NSBundle *)bundle
+{
+	return styleBundle;
+}
+
 + (id)messageViewStyleFromBundle:(NSBundle *)inBundle
 {
 	return [[[self alloc] initWithBundle:inBundle] autorelease];

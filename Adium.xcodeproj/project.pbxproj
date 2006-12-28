@@ -64,7 +64,6 @@
 		1124817409562CDB00F69C1E /* retroweaver-rt.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1124817309562CDB00F69C1E /* retroweaver-rt.jar */; };
 		112FC2B309393926001FB00D /* ESjoscarCocoaAdapter.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 112FC2B109393924001FB00D /* ESjoscarCocoaAdapter.h */; };
 		112FC2B409393926001FB00D /* ESjoscarCocoaAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 112FC2B209393925001FB00D /* ESjoscarCocoaAdapter.m */; };
-		115E0E8E0952514A003218FE /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 115E0E8D0952514A003218FE /* JavaVM.framework */; };
 		11669A2D0999395D003CB8A1 /* ESjoscarJoinChatViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11669A2B0999395D003CB8A1 /* ESjoscarJoinChatViewController.h */; };
 		11669A2E0999395D003CB8A1 /* ESjoscarJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11669A2C0999395D003CB8A1 /* ESjoscarJoinChatViewController.m */; };
 		11669AB309994697003CB8A1 /* joscarJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 11669AB109994697003CB8A1 /* joscarJoinChatView.nib */; };
@@ -1145,8 +1144,6 @@
 		4BCAC4E607B59B65006641B9 /* Alias Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC4E307B59B65006641B9 /* Alias Defaults.plist */; };
 		4BCAC4E707B59B65006641B9 /* Display Format Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC4E407B59B65006641B9 /* Display Format Defaults.plist */; };
 		4BCAC56D07B5A31A006641B9 /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC56C07B5A31A006641B9 /* Sounds */; };
-		4BD62D8007CE8F240099EBA2 /* AIWebkitMessageViewStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BD62D7E07CE8F240099EBA2 /* AIWebkitMessageViewStyle.h */; };
-		4BD62D8107CE8F240099EBA2 /* AIWebkitMessageViewStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD62D7F07CE8F240099EBA2 /* AIWebkitMessageViewStyle.m */; };
 		4BD6737406001BF00049CAF7 /* AIAccountListPreferencesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F55B413C03AB895501A8010A /* AIAccountListPreferencesPlugin.m */; };
 		4BD673B706001C5F0049CAF7 /* AIContactStatusColoringPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B31E8C104C46A9100A8010A /* AIContactStatusColoringPlugin.m */; };
 		4BD673CE06001C960049CAF7 /* AIOfflineContactHidingPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F5793990033E759C01A8010A /* AIOfflineContactHidingPlugin.m */; };
@@ -1203,6 +1200,8 @@
 		633F175B08F905A700C76383 /* AIXtraInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F175708F905A700C76383 /* AIXtraInfo.m */; };
 		633F175D08F905A800C76383 /* AIXtrasManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F175908F905A700C76383 /* AIXtrasManager.m */; };
 		6341B9B60ADC1A3C00FB449B /* Template.js in Resources */ = {isa = PBXBuildFile; fileRef = 6341B9B50ADC1A3B00FB449B /* Template.js */; };
+		635D44030B39AA2A009F3EEA /* AIJavaScriptBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 635D44010B39AA2A009F3EEA /* AIJavaScriptBridge.h */; };
+		635D44040B39AA2A009F3EEA /* AIJavaScriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 635D44020B39AA2A009F3EEA /* AIJavaScriptBridge.m */; };
 		638392F809D4D67A0067B9B7 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
 		6383935009D4D6AA0067B9B7 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
 		63AF931A0AA81E2300B88299 /* Bright Blue.ListTheme in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63AF91C90AA8102600B88299 /* Bright Blue.ListTheme */; };
@@ -1226,9 +1225,9 @@
 		63AF932C0AA81E2300B88299 /* Pure White.ListTheme in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63AF91DB0AA8102900B88299 /* Pure White.ListTheme */; };
 		63AF932D0AA81E2300B88299 /* Tiny (with user icons).ListLayout in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63AF91DC0AA8102900B88299 /* Tiny (with user icons).ListLayout */; };
 		63AF932E0AA81E2300B88299 /* Tiny.ListLayout in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63AF91DD0AA8102A00B88299 /* Tiny.ListLayout */; };
-		63C0B09B0AE48BB6003CB0CD /* AIPreviewChat.h in Headers */ = {isa = PBXBuildFile; fileRef = 63C0B0990AE48BB5003CB0CD /* AIPreviewChat.h */; };
-		63C0B09C0AE48BB6003CB0CD /* AIPreviewChat.m in Sources */ = {isa = PBXBuildFile; fileRef = 63C0B09A0AE48BB5003CB0CD /* AIPreviewChat.m */; };
 		63C120750910A0DD00C9DB57 /* DefaultXtraReadme.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 63C120740910A0DD00C9DB57 /* DefaultXtraReadme.rtf */; };
+		63CAABCF0B42EAA300C861E0 /* AIContentEventTest.h in Headers */ = {isa = PBXBuildFile; fileRef = 63CAABCD0B42EAA300C861E0 /* AIContentEventTest.h */; };
+		63CAABD00B42EAA300C861E0 /* AIContentEventTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 63CAABCE0B42EAA300C861E0 /* AIContentEventTest.m */; };
 		63DEB88F09BD3FEC0026DC69 /* AIXtraPreviewImageController.h in Headers */ = {isa = PBXBuildFile; fileRef = 63DEB88D09BD3FEC0026DC69 /* AIXtraPreviewImageController.h */; };
 		63DEB89009BD3FEC0026DC69 /* AIXtraPreviewImageController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63DEB88E09BD3FEC0026DC69 /* AIXtraPreviewImageController.m */; };
 		63EA62CA094B832D009C8453 /* AIEmoticonPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EA62C8094B832D009C8453 /* AIEmoticonPreviewController.m */; };
@@ -1709,7 +1708,6 @@
 		1124817309562CDB00F69C1E /* retroweaver-rt.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "retroweaver-rt.jar"; path = "Plugins/joscar Service/joscar Java Bridge/Utilities/Retroweave/release/retroweaver-rt.jar"; sourceTree = SOURCE_ROOT; };
 		112FC2B109393924001FB00D /* ESjoscarCocoaAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESjoscarCocoaAdapter.h; path = "Plugins/joscar Service/ESjoscarCocoaAdapter.h"; sourceTree = "<group>"; };
 		112FC2B209393925001FB00D /* ESjoscarCocoaAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESjoscarCocoaAdapter.m; path = "Plugins/joscar Service/ESjoscarCocoaAdapter.m"; sourceTree = "<group>"; };
-		115E0E8D0952514A003218FE /* JavaVM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaVM.framework; path = /System/Library/Frameworks/JavaVM.framework; sourceTree = "<absolute>"; };
 		11669A2B0999395D003CB8A1 /* ESjoscarJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESjoscarJoinChatViewController.h; path = "Plugins/joscar Service/ESjoscarJoinChatViewController.h"; sourceTree = "<group>"; };
 		11669A2C0999395D003CB8A1 /* ESjoscarJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESjoscarJoinChatViewController.m; path = "Plugins/joscar Service/ESjoscarJoinChatViewController.m"; sourceTree = "<group>"; };
 		11669AB209994697003CB8A1 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/joscar Service/English.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
@@ -3550,6 +3548,8 @@
 		633F175808F905A700C76383 /* AIXtrasManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtrasManager.h; path = Source/AIXtrasManager.h; sourceTree = "<group>"; };
 		633F175908F905A700C76383 /* AIXtrasManager.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtrasManager.m; path = Source/AIXtrasManager.m; sourceTree = "<group>"; };
 		6341B9B50ADC1A3B00FB449B /* Template.js */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.javascript; name = Template.js; path = "Plugins/WebKit Message View/Template.js"; sourceTree = "<group>"; };
+		635D44010B39AA2A009F3EEA /* AIJavaScriptBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIJavaScriptBridge.h; sourceTree = "<group>"; };
+		635D44020B39AA2A009F3EEA /* AIJavaScriptBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIJavaScriptBridge.m; sourceTree = "<group>"; };
 		636AB7F1087E2B6700A87670 /* AIDockBadger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIDockBadger.h; sourceTree = "<group>"; };
 		636AB7F2087E2B6700A87670 /* AIDockBadger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIDockBadger.m; sourceTree = "<group>"; };
 		638392F609D4D67A0067B9B7 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
@@ -3577,6 +3577,8 @@
 		63C0B0990AE48BB5003CB0CD /* AIPreviewChat.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIPreviewChat.h; path = "Plugins/WebKit Message View/AIPreviewChat.h"; sourceTree = "<group>"; };
 		63C0B09A0AE48BB5003CB0CD /* AIPreviewChat.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIPreviewChat.m; path = "Plugins/WebKit Message View/AIPreviewChat.m"; sourceTree = "<group>"; };
 		63C120740910A0DD00C9DB57 /* DefaultXtraReadme.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = DefaultXtraReadme.rtf; path = Resources/DefaultXtraReadme.rtf; sourceTree = "<group>"; };
+		63CAABCD0B42EAA300C861E0 /* AIContentEventTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIContentEventTest.h; sourceTree = "<group>"; };
+		63CAABCE0B42EAA300C861E0 /* AIContentEventTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIContentEventTest.m; sourceTree = "<group>"; };
 		63DEB88D09BD3FEC0026DC69 /* AIXtraPreviewImageController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraPreviewImageController.h; path = Source/AIXtraPreviewImageController.h; sourceTree = "<group>"; };
 		63DEB88E09BD3FEC0026DC69 /* AIXtraPreviewImageController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtraPreviewImageController.m; path = Source/AIXtraPreviewImageController.m; sourceTree = "<group>"; };
 		63EA62C7094B832D009C8453 /* AIEmoticonPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonPreviewController.h; path = Source/AIEmoticonPreviewController.h; sourceTree = "<group>"; };
@@ -3875,7 +3877,6 @@
 			files = (
 				11DAEBD0092FB857007A8682 /* Adium.framework in Frameworks */,
 				11DAEBD1092FB85F007A8682 /* AIUtilities.framework in Frameworks */,
-				115E0E8E0952514A003218FE /* JavaVM.framework in Frameworks */,
 				F4D9BBFB0ACF5BD000615461 /* FriBidi.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4182,7 +4183,6 @@
 				9E1E1DFC0A96741500E16DFC /* LMX.framework */,
 				EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */,
 				638392F609D4D67A0067B9B7 /* Sparkle.framework */,
-				115E0E8D0952514A003218FE /* JavaVM.framework */,
 				3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */,
 				3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */,
 				341BDBBA0968BC9A00CF83F5 /* OTR.framework */,
@@ -6680,10 +6680,14 @@
 				4B539C4C05EFD6CD00E5921A /* AIWebKitMessageViewPlugin.m */,
 				4B539C5105EFD6FA00E5921A /* AIWebKitMessageViewController.h */,
 				4B539C5205EFD6FB00E5921A /* AIWebKitMessageViewController.m */,
+				635D44010B39AA2A009F3EEA /* AIJavaScriptBridge.h */,
+				635D44020B39AA2A009F3EEA /* AIJavaScriptBridge.m */,
 				4BD62D7E07CE8F240099EBA2 /* AIWebkitMessageViewStyle.h */,
 				4BD62D7F07CE8F240099EBA2 /* AIWebkitMessageViewStyle.m */,
 				34C2D70306338E2E0018E5D2 /* ESWebKitMessageViewPreferences.h */,
 				34C2D70406338E2E0018E5D2 /* ESWebKitMessageViewPreferences.m */,
+				63CAABCD0B42EAA300C861E0 /* AIContentEventTest.h */,
+				63CAABCE0B42EAA300C861E0 /* AIContentEventTest.m */,
 				348EE1B3080A57480015E0FC /* WebKitPreferencesView.nib */,
 				347065E406015DC5004F0D20 /* WebKit Defaults.plist */,
 				34C2DBE5063449AF0018E5D2 /* Preview.plist */,
@@ -7348,8 +7352,9 @@
 				346C9D1206004645000F5A8A /* ESWebView.h in Headers */,
 				346C9D3006004650000F5A8A /* WebKitPrivateDefinitions.h in Headers */,
 				34C2D70506338E2E0018E5D2 /* ESWebKitMessageViewPreferences.h in Headers */,
-				4BD62D8007CE8F240099EBA2 /* AIWebkitMessageViewStyle.h in Headers */,
 				34182F4A0AC2CA3C0067DEF3 /* AIPreviewChat.h in Headers */,
+				635D44030B39AA2A009F3EEA /* AIJavaScriptBridge.h in Headers */,
+				63CAABCF0B42EAA300C861E0 /* AIContentEventTest.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8766,8 +8771,9 @@
 				346C9D1006004644000F5A8A /* ESWebFrameViewAdditions.m in Sources */,
 				346C9D1606004646000F5A8A /* ESWebView.m in Sources */,
 				34C2D70606338E2E0018E5D2 /* ESWebKitMessageViewPreferences.m in Sources */,
-				4BD62D8107CE8F240099EBA2 /* AIWebkitMessageViewStyle.m in Sources */,
 				34182F4B0AC2CA3C0067DEF3 /* AIPreviewChat.m in Sources */,
+				635D44040B39AA2A009F3EEA /* AIJavaScriptBridge.m in Sources */,
+				63CAABD00B42EAA300C861E0 /* AIContentEventTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -86,6 +86,8 @@
 		if ([containedObject visible])
 			visibleCount++;
 	
+	NSLog(@"AdiumAssertionLogging: recomputing visible count on thread %@, new value is %d, contained object count is %d", [NSThread currentThread], visibleCount, [[self containedObjects] count]);
+	
 	[self setStatusObject:(visibleCount ? [NSNumber numberWithInt:visibleCount] : nil)
 				   forKey:@"VisibleObjectCount"
 				   notify:NotifyNow];
@@ -199,12 +201,12 @@
 - (void)removeObject:(AIListObject *)inObject
 {	
 	if ([containedObjects containsObject:inObject]) {
-		//Update our visible count
-		[self _recomputeVisibleCount];
-		
 		//Remove the object
 		[inObject setContainingObject:nil];
 		[containedObjects removeObject:inObject];
+		
+		//Update our visible count
+		[self _recomputeVisibleCount];
 
 		//
 		[self setStatusObject:[NSNumber numberWithInt:[containedObjects count]]

@@ -454,7 +454,7 @@ static void hostResolvedCallback(CFHostRef theHost, CFHostInfoType typeInfo,  co
 		observer, @"observer",
 		host, @"host",
 		nil];
-	BOOL addedNewUnconfiguredHost;
+	BOOL addedNewUnconfiguredHost = NO;
 	[hostAndObserverListLock lock];
 	if (![unconfiguredHostsAndObservers containsObject:unconfiguredHostDict]) {
 		addedNewUnconfiguredHost = YES;

@@ -2,35 +2,195 @@
 <html>
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<base href="%@">
-	<script type="text/ecmascript" defer="defer">		
+	<script type="text/ecmascript" defer="defer">	
+	
+	var keywords = new Array("%userIconPath%", "%message%", "%time%", "%sender%");
+	var hfkeywords = new Array("%chatName%");
+	var contentHTML = "";
+	var eventHTML = "";
+
+	function fillHeaderFooterKeywords(input)
+	{
+		var keyword;
+		for(var i = 0; i < hfkeywords.length; i++)
+		{
+			keyword = hfkeywords[i];
+			input = input.replace(new RegExp(keyword, "g"), getHeaderFooterKeywordValue(keyword, message));
+		}
+		return input;
+	}
+	
+	function fillKeywords(input, message)
+	{
+		var keyword;
+		client.debugLog("Filling keywords for message");
+		for(var i = 0; i < keywords.length; i++)
+		{
+			keyword = keywords[i];
+			input = input.replace(new RegExp(keyword, "g"), getKeywordValue(keyword, message));
+		}
+		return input;
+	}
+	
+	function getHeaderFooterKeywordValue(word)
+	{
+		var chat = client.chat();
+		client.debugLog("Getting keyword value for header keyword " + word);
+		switch(word)
+		{
+			case "%chatName%":
+				return chat.name();
+		}
+		client.debugLog("Found no switch case for header keyword " + word);
+		return "";
+	}
+
+	function getKeywordValue(word, message)
+	{
+			client.debugLog("Getting keyword value for message keyword " + word);
+		var sender = message.sender();
+		var value = "";
+		switch(word)
+		{
+			case "%userIconPath%":
+				client.debugLog("About to get icon path for " + sender);
+				value = sender.iconPath();
+				break;
+			case "%message%":
+				client.debugLog("Reached %message% case");
+				value = message.HTMLContent();
+				break;
+			case "%time%":
+				value = message.localizedTimeStamp();
+				break;
+			case "%sender%":
+				value = sender.displayName();
+				break;
+		}
+		client.debugLog("Found " + value + " for " + word);
+
+		return value;
+	}
+	
+	function open()
+	{
+		client.debugLog("Opening Chat");
+	    document.body.setAttribute("style", client.backgroundStyle());
+	    
+		client.debugLog("At main stylesheet");
+		
+	    var mainStyleSheet = document.createElement("style");
+	    mainStyleSheet.type = "text/css";
+	    mainStyleSheet.id = "mainStyles";
+	    mainStyleSheet.media = "screen, print";
+	    mainStyleSheet.src = client.mainStylePath();
+	    //mainStyleSheet.insertRule("*{ word-wrap:break-word; }", 0);
+		//mainStyleSheet.insertRule("img.scaledToFitImage { height:auto; width:100%; }", 0);
+	    document.getElementsByTagName("head")[0].appendChild(mainStyleSheet);
+		
+		client.debugLog("At variant stylesheet");
+		
+		var variantStyleSheet = document.createElement("style");
+	    variantStyleSheet.type = "text/css";
+	    variantStyleSheet.media = "screen, print";
+	    variantStyleSheet.id = "variantStyles";
+	    variantStyleSheet.src = client.variantStylePath();
+	    document.getElementsByTagName("head")[0].appendChild(variantStyleSheet);
+	    		
+		contentHTML = client.getTemplateNamed("Incoming/Content.html");
+		eventHTML = client.getTemplateNamed("Status.html");
+		
+		client.debugLog("Loaded content templates");
+		
+		var range = document.createRange();
+		range.selectNode(document.body);
+		client.debugLog("About to load header template");
+		var headerHTML = client.getTemplateNamed("Header.html");
+		var headerNode = null;
+		client.debugLog("Loaded template header");
+		if(headerHTML.length > 5)
+		{
+			headerNode = range.createContextualFragment(fillHeaderFooterKeywords(headerHTML));
+		}
+		else 
+		{
+			headerNode = document.createElement("span");
+		}
+		document.body.replaceChild(headerNode, document.getElementById("header"));
+		
+		var range = document.createRange();
+		range.selectNode(document.body);
+		var footerHTML = client.getTemplateNamed("Footer.html");
+		var footerNode = null;
+		if(footerHTML.length > 5)
+		{
+			footerNode = range.createContextualFragment(fillHeaderFooterKeywords(footerHTML));
+		}
+		else 
+		{
+			footerNode = document.createElement("span");
+		}
+		document.body.replaceChild(footerNode, document.getElementById("footer"));
+	}
+	
+	Element.prototype.query = function(query) 
+	{
+		return document.evaluate(query, this, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+	}
+	
+	function updateItem(item, property)
+	{
+	   client.debugLog("Updating item " + item + " at property " + property);
+		var node = document.getElementById(item.getID());
+		client.debugLog("Switching based on event type, node is " + node + "event type is " + item.getType());
+		switch(item.getType() + "")
+		{
+			case "event":
+				switch(property)
+				{
+					case "state":
+						node.query('.//div[@class="progressbar"]').style.width = item.getState() + "%";
+						break;
+				}
+				break;
+		}
+	}
+				
 	function appendMessages()
 	{
 		shouldScroll = nearBottom();
 		var message = null;
+		var messageHTML = null;
 		for(var i = 0; i < arguments.length; i++) {
 			message = arguments[i];
-			var messageType = message.getMessageType();
+			client.debugLog("Got to getType");
+			var type = message.getType();
+			client.debugLog("Type is " + type);
+			if(type == "event") {
+				messageHTML = new String(eventHTML);
+				messageHTML = messageHTML.replace(new RegExp("%message%", "g"), "<div class=\"progressbar\" style=\"background-color:blue; width:10%;\">progressbar<div>");
+			} else if(type == "message") {
+				messageHTML = new String(contentHTML);
+			}
+			client.debugLog("Message html is" + messageHTML);
+			messageHTML = fillKeywords(messageHTML, message);
+			client.debugLog("Message html now is " + messageHTML);
 			insert = document.getElementById("insert");
 			range = document.createRange();
-			if(messageType.indexOf("next") > -1) {
-				//make the new node
-				range.selectNode(insert.parentNode);
-				newNode = range.createContextualFragment(message.getMessageHTML());
-
-				//swap
-				insert.parentNode.replaceChild(newNode,insert);
-			} else {
-				//Remove any existing insertion point
-				if(insert) insert.parentNode.removeChild(insert);
-				
-				//Append the new message to the bottom of our chat block
-				chat = document.getElementById("Chat");
-				range.selectNode(chat);
-				//message.getMessageHTML()
-				documentFragment = range.createContextualFragment(message.getMessageHTML());
-				chat.appendChild(documentFragment);
-			}
+			//Remove any existing insertion point
+			if(insert) insert.parentNode.removeChild(insert);
+			
+			//Append the new message to the bottom of our chat block
+			chat = document.getElementById("Chat");
+			var container = document.createElement("div");
+			client.debugLog("About to get id");
+			var id = message.getID();
+			client.debugLog("message id is " + id);
+			chat.appendChild(container);
+			range.selectNode(container);
+			documentFragment = range.createContextualFragment(messageHTML);
+			container.id = id;
+			container.appendChild(documentFragment);
 		}
 		alignChat(shouldScroll);
 	}
@@ -39,6 +199,7 @@
 	function nearBottom() {
 		return document.body.scrollTop >= document.body.offsetHeight - (window.innerHeight * 1.2);
 	}
+	
 	function scrollToBottom() {
 		document.body.scrollTop = document.body.offsetHeight;
 	}
@@ -144,24 +305,10 @@
 
 	window.onresize = windowDidResize;
 	</script>
-	
-	<!-- This style is shared by all variants. !-->
-	<style id="baseStyle" type="text/css" media="screen,print">	
-		%@  
-		*{ word-wrap:break-word; }
-		img.scaledToFitImage { height:auto; width:100%; }
-	</style>
-	
-	<!-- Although we call this mainStyle for legacy reasons, it's actually the variant style !-->
-	<style id="mainStyle" type="text/css" media="screen,print">	
-		@import url( "%@" );
-	</style>
-
 </head>
-<body onload="alignchat(true);" style="==bodyBackground==">
-%@
-<div id="Chat">
-</div>
-%@
+<body>
+	<div id="header"></div>
+	<div id="Chat"></div>
+	<div id="footer"></div>
 </body>
 </html>
