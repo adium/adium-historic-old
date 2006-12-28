@@ -1,5 +1,5 @@
-var keywords = new Array("%userIconPath%", "%message%", "%time%", "%sender%");
-var hfkeywords = new Array("%chatName%");
+var keywords = ["%userIconPath%", "%message%", "%time%", "%sender%"];
+var hfkeywords = ["%chatName%"];
 var incomingContentHTML = "";
 var outgoingContentHTML = "";
 var eventHTML = "";
@@ -7,24 +7,26 @@ var eventHTML = "";
 function fillHeaderFooterKeywords(input)
 {
 	var keyword;
+	var temp = input;
+	client.debugLog("Temp is " + temp);
 	for(var i = 0; i < hfkeywords.length; i++)
 	{
 		keyword = hfkeywords[i];
-		input = input.replace(new RegExp(keyword, "g"), getHeaderFooterKeywordValue(keyword, message));
+		temp = temp.replace(new RegExp(keyword, "g"), getHeaderFooterKeywordValue(keyword));
 	}
-	return input;
+	return temp;
 }
 
 function fillKeywords(input, message)
 {
 	var keyword;
-	client.debugLog("Filling keywords for message");
+	var temp = input;
 	for(var i = 0; i < keywords.length; i++)
 	{
 		keyword = keywords[i];
-		input = input.replace(new RegExp(keyword, "g"), getKeywordValue(keyword, message));
+		temp = temp.replace(new RegExp(keyword, "g"), getKeywordValue(keyword, message));
 	}
-	return input;
+	return temp;
 }
 
 function getHeaderFooterKeywordValue(word)
@@ -48,11 +50,9 @@ function getKeywordValue(word, message)
 	switch(word)
 	{
 		case "%userIconPath%":
-			client.debugLog("About to get icon path for " + sender);
 			value = sender.iconPath();
 			break;
 		case "%message%":
-		client.debugLog("Reached %message% case");
 			value = message.HTMLContent();
 			break;
 		case "%time%":
@@ -97,6 +97,8 @@ function open()
 	outgoingContentHTML = client.getResourceContents("Outgoing/Content.html");
 	eventHTML = client.getResourceContents("Status.html");
 	
+	client.debugLog("Incoming content html is " + incomingContentHTML);
+	
 	client.debugLog("Loaded content templates");
 	
 	var range = document.createRange();
@@ -113,7 +115,7 @@ function open()
 	}
 	document.body.replaceChild(headerNode, document.getElementById("header"));
 	
-	var range = document.createRange();
+	range = document.createRange();
 	range.selectNode(document.body);
 	var footerHTML = client.getResourceContents("Footer.html");
 	var footerNode = null;
@@ -131,7 +133,7 @@ function open()
 Element.prototype.query = function(query) 
 {
 	return document.evaluate(query, this, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-}
+};
 
 function updateItem(item, property)
 {
@@ -162,19 +164,21 @@ function appendMessages()
 		var type = message.getType();
 		client.debugLog("Type is " + type);
 		if(type == "event") {
-			messageHTML = new String(eventHTML);
-			messageHTML = messageHTML.replace(new RegExp("%message%", "g"), "<div class=\"progressbar\" style=\"background-color:blue; width:10%;\">progressbar<div>");
+			messageHTML = eventHTML.replace(new RegExp("%message%", "g"), "<div class=\"progressbar\" style=\"background-color:blue; width:10%;\">progressbar<div>");
 		} else if(type == "message") {
-			if(message.direction == "outgoing")
-				messageHTML = new String(outgoingContentHTML);
-			else
-				messageHTML = new String(incomingContentHTML);
+			if(message.direction == "outgoing") {
+				messageHTML = outgoingContentHTML;
+
+			} else {
+				messageHTML = incomingContentHTML;
+			}
 		}
 		messageHTML = fillKeywords(messageHTML, message);
+		client.debugLog("Message html is " + messageHTML);
 		insert = document.getElementById("insert");
 		range = document.createRange();
 		//Remove any existing insertion point
-		if(insert) insert.parentNode.removeChild(insert);
+		if(insert) { insert.parentNode.removeChild(insert); }
 		
 		//Append the new message to the bottom of our chat block
 		chat = document.getElementById("Chat");
@@ -186,6 +190,7 @@ function appendMessages()
 		range.selectNode(container);
 		documentFragment = range.createContextualFragment(messageHTML);
 		container.id = id;
+		container.className = message.classes();
 		container.appendChild(documentFragment);
 	}
 	alignChat(shouldScroll);
@@ -203,7 +208,7 @@ function scrollToBottom() {
 //Dynamically exchange the active stylesheet
 function setStylesheet( id, url ) {
 	code = "<style id=\"" + id + "\" type=\"text/css\" media=\"screen,print\">";
-	if( url.length ) code += "@import url( \"" + url + "\" );";
+	if( url.length ) { code += "@import url( \"" + url + "\" );"; }
 	code += "</style>";
 	range = document.createRange();
 	head = document.getElementsByTagName( "head" ).item(0);
@@ -261,9 +266,10 @@ function zoomImage(img)
 
 Element.prototype.removeClass = function(className)
 {
-	if(this.hasClass(className))
+	if(this.hasClass(className)) {
 		this.className = this.className.replace(className, "");
-}
+	}
+};
 
 Element.prototype.addClass = function(className)
 {
@@ -271,7 +277,7 @@ Element.prototype.addClass = function(className)
 		//make sure to space-separate multiple classes
 		this.className += (this.className.length ? " " + className : className);
 	}
-}
+};
 
 Element.prototype.hasClass = function(className) {
 	return this.className.toLowerCase().indexOf(className.toLowerCase()) > -1;
@@ -292,7 +298,7 @@ function alignChat(shouldScroll) {
 		}
 	}
 	
-	if (shouldScroll) scrollToBottom();
+	if (shouldScroll) { scrollToBottom(); } 
 }
 
 function windowDidResize(){
@@ -300,3 +306,5 @@ function windowDidResize(){
 }
 
 window.onresize = windowDidResize;
+
+open();
