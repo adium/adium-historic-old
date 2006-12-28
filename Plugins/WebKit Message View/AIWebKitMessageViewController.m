@@ -646,8 +646,7 @@ static NSMutableDictionary *wkmvControllers = nil;
 - (void)webViewIsReady{
 	NSLog(@"WebView is Ready");
 	webViewIsReady = YES;
-	[[webView windowScriptObject] callWebScriptMethod:@"open"
-										withArguments:[NSArray array]];
+
 	[self processQueuedContent];
 	AIContentEventTest *test = [[AIContentEventTest alloc] initWithChat:chat
 																 source:[[chat participatingListObjects] objectAtIndex:0]
