@@ -56,11 +56,7 @@
 
 - (NSString *) loadTemplate:(NSString *)templateName
 {
-	NSLog(@"Loading template %@", templateName);
-	NSString *template = [NSString stringWithContentsOfFile:[[styleBundle resourcePath] stringByAppendingPathComponent:templateName]];
-	if(template && [template length] > 0)
-		return template;
-	return @"";
+	return [NSString stringWithContentsOfURL:[NSURL URLWithString:[self getResourceURL:templateName]]];
 }
 
 - (NSString *) backgroundStyle
@@ -68,16 +64,15 @@
 	return @"background-color: rgba(255, 255, 255, 1.0)";
 }
 
-- (NSString *) mainStyleURL
+- (NSString *) getResourceURL:(NSString *)resourceName
 {
-	return [[NSURL fileURLWithPath:[styleBundle pathForResource:@"main" ofType:@"css"]] absoluteString];
+	NSString *resource = [[styleBundle resourcePath] stringByAppendingPathComponent:resourceName];
+	if(![[NSFileManager defaultManager] fileExistsAtPath:resource])
+		resource = [[[NSBundle bundleForClass:[self class]] resourcePath] stringByAppendingPathComponent:resourceName];
+	if(resource && [resource length] > 0)
+		return [[NSURL fileURLWithPath:resource] absoluteString];
+	return @"";
 }
-
-- (NSString *) variantStyleURL
-{
-	return [[NSURL fileURLWithPath:[styleBundle pathForResource:@"Alt Blue - Grey" ofType:@"css" inDirectory:@"Variants"]] absoluteString];
-}
-
 - (AIChat *)chat
 {
 	return chat;
@@ -92,8 +87,7 @@
 	if(aSelector == @selector(debugLog:)) return NO;
 	if(aSelector == @selector(loadTemplate:)) return NO;
 	if(aSelector == @selector(backgroundStyle)) return NO;
-	if(aSelector == @selector(mainStylePath)) return NO;
-	if(aSelector == @selector(variantStylePath)) return NO;
+	if(aSelector == @selector(getResourceURL:)) return NO;
 	if(aSelector == @selector(chat)) return NO;
 	//return YES;
 	return NO;
@@ -112,7 +106,8 @@
 {
 	if(aSelector == @selector(handleAction:forFileTransfer:)) return @"handleFileTransfer";
 	if(aSelector == @selector(debugLog:)) return @"debugLog";
-	if(aSelector == @selector(loadTemplate:)) return @"getTemplateNamed";
+	if(aSelector == @selector(loadTemplate:)) return @"getResourceContents";
+	if(aSelector == @selector(getResourceURL:)) return @"getResourceURL";
 	return NSStringFromSelector(aSelector);
 }
 
