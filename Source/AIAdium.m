@@ -960,84 +960,51 @@ static NSString	*prefsCategory;
 	if (![[defaults objectForKey:SUSendProfileInfoKey] boolValue])
 		return [NSArray array]; 
 	
-	NSCalendarDate *lastCheckDate = [NSCalendarDate dateWithString:[defaults stringForKey:@"AILastSubmittedProfileDate"]];
-//	if (lastCheckDate && [lastCheckDate php4CompatibleIsFromSameWeekAsDate:[NSCalendarDate date]]) {
-	if (lastCheckDate && abs([lastCheckDate dayOfCommonEra] - [[NSCalendarDate date] dayOfCommonEra]) <= 7) {
-		return [NSArray array];
-	} else {
-		[defaults setObject:[[NSCalendarDate date] description] forKey:@"AILastSubmittedProfileDate"];
-	}
-	
-	
-	NSString *value = ([defaults boolForKey:@"AIHasSentSparkleProfileInfo"]) ? @"no" : @"yes";
+	int now = [[NSCalendarDate date] dayOfCommonEra];
 
-	NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
-		@"FirstSubmission", @"key", 
-		@"First Time Submitting Profile Information", @"visibleKey",
-		value, @"value",
-		value, @"visibleValue",
-		nil];
-	
-	[profileInfo addObject:entry];
-	
-	[defaults setBool:YES forKey:@"AIHasSentSparkleProfileInfo"];
-	
-	/*************** Include info about what IM services are used ************/
-	NSMutableString *accountInfo = [NSMutableString string];
-	NSCountedSet *condensedAccountInfo = [NSCountedSet set];
-	NSEnumerator *accountEnu = [[[self accountController] accounts] objectEnumerator];
-	AIAccount *account = nil;
-	while ((account = [accountEnu nextObject])) {
-		NSString *serviceID = [account serviceID];
-		[accountInfo appendFormat:@"%@, ", serviceID];
-		if([serviceID isEqualToString:@"Yahoo! Japan"]) serviceID = @"YJ";
-		[condensedAccountInfo addObject:[NSString stringWithFormat:@"%@", [serviceID substringToIndex:2]]]; 
-	}
-	
-	NSMutableString *accountInfoString = [NSMutableString string];
-	NSEnumerator *infoEnu = [[[condensedAccountInfo allObjects] sortedArrayUsingSelector:@selector(compare:)] objectEnumerator];
-	while ((value = [infoEnu nextObject]))
-		[accountInfoString appendFormat:@"%@%d", value, [condensedAccountInfo countForObject:value]];
-	
-	entry = [NSDictionary dictionaryWithObjectsAndKeys:
-								@"IMServices", @"key", 
-								@"IM Services Used", @"visibleKey",
-								accountInfoString, @"value",
-								accountInfo, @"visibleValue",
-								nil];
-	[profileInfo addObject:entry];
-	
-	/***************** JVM Version ****************/
-	
-	//This is ridiculous, but we can't load java inside adium without bloating memory usage for non-AIM users unnecessarily
-	/*NSTask *java = [[[NSTask alloc] init] autorelease];
-	[java setLaunchPath:@"/usr/bin/java"];
-	[java setArguments:[NSArray arrayWithObject:@"-version"]];
-	NSPipe *readPipe = [NSPipe pipe];
-	[java setStandardOutput:readPipe];
-	NSFileHandle *readHandle = [readPipe fileHandleForReading];
-	[java launch];
-	[java waitUntilExit];
-	NSData *d = [readHandle readDataToEndOfFile];
-	NSMutableString *output = [[NSMutableString alloc] initWithData:d
-														   encoding:NSUTF8StringEncoding];
-	[output deleteCharactersInRange:NSMakeRange(0, [output rangeOfString:@"\""].location)];
-	unsigned loc = [output rangeOfString:@"\""].location;
-	[output deleteCharactersInRange:NSMakeRange(loc, [output length] - loc)];*/
-/*	
-	NSString	*javaVersion = [NSClassFromString(@"java.lang.System") getProperty:@"java.version"];
-	if (javaVersion) {
-		entry = [NSDictionary dictionaryWithObjectsAndKeys:
-			@"JVMVersion", @"key", 
-			@"Java Version", @"visibleKey",
-			javaVersion, @"value",
-			javaVersion, @"visibleValue",
+	if (abs([defaults integerForKey:@"AILastSubmittedProfileDate2"] - now) > 7) {
+		[defaults setInteger:now forKey:@"AILastSubmittedProfileDate2"];
+		
+		NSString *value = ([defaults boolForKey:@"AIHasSentSparkleProfileInfo"]) ? @"no" : @"yes";
+
+		NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
+			@"FirstSubmission", @"key", 
+			@"First Time Submitting Profile Information", @"visibleKey",
+			value, @"value",
+			value, @"visibleValue",
 			nil];
 		
 		[profileInfo addObject:entry];
+		
+		[defaults setBool:YES forKey:@"AIHasSentSparkleProfileInfo"];
+		
+		/*************** Include info about what IM services are used ************/
+		NSMutableString *accountInfo = [NSMutableString string];
+		NSCountedSet *condensedAccountInfo = [NSCountedSet set];
+		NSEnumerator *accountEnu = [[[self accountController] accounts] objectEnumerator];
+		AIAccount *account = nil;
+		while ((account = [accountEnu nextObject])) {
+			NSString *serviceID = [account serviceID];
+			[accountInfo appendFormat:@"%@, ", serviceID];
+			if([serviceID isEqualToString:@"Yahoo! Japan"]) serviceID = @"YJ";
+			[condensedAccountInfo addObject:[NSString stringWithFormat:@"%@", [serviceID substringToIndex:2]]]; 
+		}
+		
+		NSMutableString *accountInfoString = [NSMutableString string];
+		NSEnumerator *infoEnu = [[[condensedAccountInfo allObjects] sortedArrayUsingSelector:@selector(compare:)] objectEnumerator];
+		while ((value = [infoEnu nextObject]))
+			[accountInfoString appendFormat:@"%@%d", value, [condensedAccountInfo countForObject:value]];
+		
+		entry = [NSDictionary dictionaryWithObjectsAndKeys:
+									@"IMServices", @"key", 
+									@"IM Services Used", @"visibleKey",
+									accountInfoString, @"value",
+									accountInfo, @"visibleValue",
+									nil];
+		[profileInfo addObject:entry];
+		return profileInfo;
 	}
-	*/
-	return profileInfo;
+	return [NSMutableArray array];
 }
 
 - (NSComparisonResult) compareVersion:(NSString *)newVersion toVersion:(NSString *)currentVersion
