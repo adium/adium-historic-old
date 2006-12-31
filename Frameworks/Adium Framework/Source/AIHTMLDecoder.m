@@ -571,9 +571,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			 * character, replacing any non-ascii characters with the designated SGML escape sequence.
 			 */
 			if (thingsToInclude.nonASCII) {
-				unsigned i;
 				unsigned length = [chunk length];
-				for (i = 0; i < length; i++) {
+				for (unsigned i = 0; i < length; i++) {
 					unichar currentChar = [chunk characterAtIndex:i];
 					if (currentChar > 127) {
 						[string appendFormat:@"&#%d;", currentChar];
