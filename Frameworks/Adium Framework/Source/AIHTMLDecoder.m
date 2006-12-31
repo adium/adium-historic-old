@@ -36,6 +36,8 @@
 
 #import <FriBidi/NSString-FBAdditions.h>
 
+#include <CoreServices/CoreServices.h>
+
 int HTMLEquivalentForFontSize(int fontSize);
 
 @interface AIHTMLDecoder (PRIVATE)
@@ -574,8 +576,31 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				unsigned length = [chunk length];
 				for (unsigned i = 0; i < length; i++) {
 					unichar currentChar = [chunk characterAtIndex:i];
-					if (currentChar > 127) {
-						[string appendFormat:@"&#%d;", currentChar];
+					if (currentChar < 32) {
+						//Control character.
+						[string appendFormat:@"&#%u;", currentChar];
+
+					} else if (currentChar >= 127) {
+						if (!UCIsSurrogateHighCharacter(currentChar)) {
+							[string appendFormat:@"&#%u;", currentChar];
+
+						} else {
+							//currentChar is the high character of a surrogate pair.
+							unichar lowSurrogate = 0xFFFF;
+							if ((i + 1) < length) {
+								lowSurrogate = [chunk characterAtIndex:++i];
+							}
+
+							if (!UCIsSurrogateLowCharacter(lowSurrogate)) {
+								//In case you're wondering: 0xFFFF is not a low surrogate. (Nor anything else, for that matter.)
+								AILog(@"AIHTMLDecoder: Got high surrogate of surrogate pair, but there's no low surrogate after it. This is at index %u of chunk with length %u. The chunk is: %@", i, length, chunk);
+
+							} else {
+								UnicodeScalarValue codePoint = UCGetUnicodeScalarValueForSurrogatePair(/*highSurrogate*/ currentChar, lowSurrogate);
+								[string appendFormat:@"&#%u;", codePoint];
+							}
+						}
+
 					} else if (currentChar == '\r') {
 						/* \r\n is a single line break, so encode it as such. If we have an \r followed by a \n,
 						 * skip the \n
