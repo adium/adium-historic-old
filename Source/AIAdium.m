@@ -962,7 +962,7 @@ static NSString	*prefsCategory;
 	
 	int now = [[NSCalendarDate date] dayOfCommonEra];
 
-	if (abs([defaults integerForKey:@"AILastSubmittedProfileDate2"] - now) > 7) {
+	if (abs([defaults integerForKey:@"AILastSubmittedProfileDate2"] - now) >= 7) {
 		[defaults setInteger:now forKey:@"AILastSubmittedProfileDate2"];
 		
 		NSString *value = ([defaults boolForKey:@"AIHasSentSparkleProfileInfo"]) ? @"no" : @"yes";
