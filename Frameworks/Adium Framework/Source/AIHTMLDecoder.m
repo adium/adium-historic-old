@@ -578,11 +578,11 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					unichar currentChar = [chunk characterAtIndex:i];
 					if (currentChar < 32) {
 						//Control character.
-						[string appendFormat:@"&#%u;", currentChar];
+						[string appendFormat:@"&#x%x;", currentChar];
 
 					} else if (currentChar >= 127) {
 						if (!UCIsSurrogateHighCharacter(currentChar)) {
-							[string appendFormat:@"&#%u;", currentChar];
+							[string appendFormat:@"&#x%x;", currentChar];
 
 						} else {
 							//currentChar is the high character of a surrogate pair.
@@ -597,7 +597,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 							} else {
 								UnicodeScalarValue codePoint = UCGetUnicodeScalarValueForSurrogatePair(/*highSurrogate*/ currentChar, lowSurrogate);
-								[string appendFormat:@"&#%u;", codePoint];
+								[string appendFormat:@"&#x%x;", codePoint];
 							}
 						}
 
