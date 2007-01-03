@@ -168,8 +168,8 @@ static BOOL is_leap_year(unsigned year) {
 + (NSCalendarDate *)calendarDateWithString:(NSString *)str strictly:(BOOL)strict timeSeparator:(unichar)timeSep getRange:(out NSRange *)outRange {
 	if (!str || ![str length]) {
 		if (outRange) {
-			*outRange.location = NSNotFound;
-			*outRange.length = 0;
+			outRange->location = NSNotFound;
+			outRange->length = 0U;
 		}		
 
 		return nil;
