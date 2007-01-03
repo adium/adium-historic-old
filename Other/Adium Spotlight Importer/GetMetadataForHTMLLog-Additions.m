@@ -185,7 +185,7 @@ BOOL AIGetSurrogates(UTF32Char in, UTF16Char *outHigh, UTF16Char *outLow)
  */
 - (NSString *)stringByUnescapingFromXMLWithEntities:(NSDictionary *)entities
 {
-	if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3) {
+	if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber10_3) {
 		return [(NSString *)CFXMLCreateStringByUnescapingEntities(kCFAllocatorDefault, (CFStringRef)self, (CFDictionaryRef)entities) autorelease];
 	} else {
 		//COMPAT 10.3
