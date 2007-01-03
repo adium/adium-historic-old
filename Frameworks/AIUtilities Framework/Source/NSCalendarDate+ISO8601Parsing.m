@@ -166,6 +166,15 @@ static BOOL is_leap_year(unsigned year) {
  *  -W-d
  */
 + (NSCalendarDate *)calendarDateWithString:(NSString *)str strictly:(BOOL)strict timeSeparator:(unichar)timeSep getRange:(out NSRange *)outRange {
+	if (!str || ![str length]) {
+		if (outRange) {
+			*outRange.location = NSNotFound;
+			*outRange.length = 0;
+		}		
+
+		return nil;
+	}
+	
 	NSCalendarDate *now = [NSCalendarDate calendarDate];
 	unsigned
 		//Date
