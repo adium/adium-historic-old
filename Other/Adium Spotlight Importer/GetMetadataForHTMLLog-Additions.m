@@ -7,6 +7,9 @@
 
 #import "GetMetadataForHTMLLog-Additions.h"
 
+//From LMX. Included under the BSD license. http://trac.adiumx.com/wiki/LMXParser
+static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *outHigh, unichar *outLow);
+
 /*
  * @brief These additions are all from AIUtilities
  *
@@ -273,3 +276,62 @@ BOOL AIGetSurrogates(UTF32Char in, UTF16Char *outHigh, UTF16Char *outLow)
 }
 
 @end
+
+static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *outHigh, unichar *outLow) {
+	if(scalar <= 0xffff) {
+		if(outHigh)
+			*outHigh = 0x0000;
+		if(outLow)
+			*outLow  = scalar;
+		return NO;
+	}
+
+	//note: names uuuuu, wwww, and xxxxx+ are taken from the Unicode book (section 3.9, table 3-4).
+	union {
+		UTF32Char scalar;
+		struct {
+			unsigned unused:     11;
+			unsigned uuuuu:       5;
+			unsigned xxxxxx:      6;
+			unsigned xxxxxxxxxx: 10;
+		} components;
+	} componentsUnion = {
+		.scalar = scalar
+	};
+
+	if(outHigh) {
+		union {
+			struct {
+				unsigned highPrefix: 6;
+				unsigned wwww:       4;
+				unsigned xxxxxx:     6;
+			} highComponents;
+			unichar codeUnit;
+		} highUnion = {
+			.highComponents = {
+				.highPrefix = 0x36, //0b110110
+				.wwww   = componentsUnion.components.uuuuu - 1,
+				.xxxxxx = componentsUnion.components.xxxxxx,
+			}
+		};
+		*outHigh = highUnion.codeUnit;
+	}
+
+	if(outLow) {
+		union {
+			struct {
+				unsigned lowPrefix:   6;
+				unsigned xxxxxxxxxx: 10;
+			} lowComponents;
+			unichar codeUnit;
+		} lowUnion = {
+			.lowComponents = {
+				.lowPrefix = 0x37, //0b110111
+				.xxxxxxxxxx = componentsUnion.components.xxxxxxxxxx,
+			}
+		};
+		*outLow = lowUnion.codeUnit;
+	};
+
+	return YES;
+}
