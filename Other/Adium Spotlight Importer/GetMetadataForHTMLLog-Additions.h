@@ -8,8 +8,8 @@
 #import <Cocoa/Cocoa.h>
 
 @interface NSString (AdiumSpotlightImporterAdditions)
-- (NSString *)stringByUnescapingFromHTML;
 + (NSString *)stringWithContentsOfUTF8File:(NSString *)path;
+- (NSString *)stringByUnescapingFromXMLWithEntities:(NSDictionary *)entities;
 @end
 
 @interface NSScanner (AdiumSpotlightImporterAdditions)

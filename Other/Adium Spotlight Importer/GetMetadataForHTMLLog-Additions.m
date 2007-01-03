@@ -92,87 +92,6 @@ BOOL AIGetSurrogates(UTF32Char in, UTF16Char *outHigh, UTF16Char *outLow)
 	}
 }
 
-- (NSString *)stringByUnescapingFromHTML
-{
-	if ([self length] == 0) return [[self copy] autorelease]; //avoids various RangeExceptions.
-	
-	static NSString *ampersand = @"&", *semicolon = @";";
-	
-	NSString *segment = nil, *entity = nil;
-	NSScanner *scanner = [NSScanner scannerWithString:self];
-	[scanner setCaseSensitive:YES];
-	unsigned myLength = [self length];
-	NSMutableString *result = [NSMutableString string];
-	
-	do {
-		if ([scanner scanUpToString:ampersand intoString:&segment] || [self characterAtIndex:[scanner scanLocation]] == '&') {
-			if (segment) {
-				[result appendString:segment];
-				segment = nil;
-			}
-			if (![scanner isAtEnd]) {
-				[scanner setScanLocation:[scanner scanLocation]+1];
-			}
-		}
-		if ([scanner scanUpToString:semicolon intoString:&entity]) {
-			unsigned number;
-			if ([entity characterAtIndex:0] == '#') {
-				NSScanner	*numScanner;
-				unichar		secondCharacter;
-				BOOL		appendIt = NO;
-				
-				numScanner = [NSScanner scannerWithString:entity];
-				[numScanner setCaseSensitive:YES];
-				secondCharacter = [entity characterAtIndex:1];
-				
-				if (secondCharacter == 'x' || secondCharacter == 'X') {
-					//hexadecimal: "#x..." or "#X..."
-					[numScanner setScanLocation:2];
-					appendIt = [numScanner scanHexInt:&number];
-					
-				} else {
-					//decimal: "#..."
-					[numScanner setScanLocation:1];
-					appendIt = [numScanner scanUnsignedInt:&number];
-				}
-				
-				if (appendIt) {
-					unichar chars[2] = { number, 0xffff };
-					CFIndex length = 1;
-					if (number > 0xffff) {
-						//split into surrogate pair
-						AIGetSurrogates(number, &chars[0], &chars[1]);
-						++length;
-					}
-					CFStringAppendCharacters((CFMutableStringRef)result, chars, length);
-				}
-			} else {
-				//named entity. for now, we only support the five essential ones.
-				static NSDictionary *entityNames = nil;
-				if (entityNames == nil) {
-					entityNames = [[NSDictionary alloc] initWithObjectsAndKeys:
-						[NSNumber numberWithUnsignedInt:'"'], @"quot",
-						[NSNumber numberWithUnsignedInt:'&'], @"amp",
-						[NSNumber numberWithUnsignedInt:'<'], @"lt",
-						[NSNumber numberWithUnsignedInt:'>'], @"gt",
-						[NSNumber numberWithUnsignedInt:' '], @"nbsp",
-						nil];
-				}
-				number = [[entityNames objectForKey:[entity lowercaseString]] unsignedIntValue];
-				if (number) {
-					[result appendFormat:@"%C", (unichar)number];
-				}
-			}
-			if (![scanner isAtEnd]) {
-				[scanner setScanLocation:[scanner scanLocation]+1];
-			}
-		} //if ([scanner scanUpToString:semicolon intoString:&entity])
-	} while ([scanner scanLocation] < myLength);
-	//	NSLog(@"unescaped %@\ninto %@", self, result);
-	return result;
-}
-
-
 /*
  * @brief Read a string from a file, assuming it to be UTF8
  *
@@ -247,6 +166,110 @@ BOOL AIGetSurrogates(UTF32Char in, UTF16Char *outHigh, UTF16Char *outLow)
 	}
 	
 	return string;
+}
+
+//stringByUnescapingFromXMLWithEntities: was written by Peter Hosey and is explicitly released under the BSD license.
+/*
+ Copyright ¬© 2006 Peter Hosey
+ All rights reserved.
+ 
+ Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+ Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+ Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+ Neither the name of Peter Hosey nor the names of his contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+ 
+ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+- (NSString *)stringByUnescapingFromXMLWithEntities:(NSDictionary *)entities
+{
+	if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3) {
+		return [(NSString *)CFXMLCreateStringByUnescapingEntities(kCFAllocatorDefault, (CFStringRef)self, (CFDictionaryRef)entities) autorelease];
+	} else {
+		//COMPAT 10.3
+		
+		if (!entities) {
+			static const unichar nbsp = 0xa0;
+			entities = [NSDictionary dictionaryWithObjectsAndKeys:
+				@"&",  @"amp",
+				@"<",  @"lt",
+				@">",  @"gt",
+				@"\"", @"quot",
+				@"'",  @"apos",
+				[NSString stringWithCharacters:&nbsp length:1], @"nbsp",
+				nil];
+		}
+		
+		unsigned len = [self length];
+		NSMutableString *result = [NSMutableString stringWithCapacity:len];
+		NSScanner *scanner = [NSScanner scannerWithString:self];
+		[scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithRange:(NSRange){ 0, 0 }]];
+		
+		NSString *chunk = nil;
+		while (YES) { //Actual condition is below.
+			chunk = nil;
+			if ([scanner scanUpToString:@"&" intoString:&chunk]) {
+				[result appendString:chunk];
+			}
+			[scanner scanString:@"&" intoString:NULL];
+			
+			//Condition is here.
+			if ([scanner scanLocation] >= len)
+				break;
+			
+			if ([scanner scanString:@"#" intoString:NULL]) {
+				NSString *hexIdentifier = nil;
+				if ([scanner scanString:@"x" intoString:&hexIdentifier] || [scanner scanString:@"X" intoString:&hexIdentifier]) {
+					//Probably hex.
+					unsigned unichar32 = 0xffff;
+					if (![scanner scanHexInt:&unichar32]) {
+						[result appendFormat:@"&#%@", hexIdentifier];
+					} else if (![scanner scanString:@";" intoString:NULL]) {
+						[result appendFormat:@"&#%@%u", hexIdentifier, unichar32];
+					} else {
+						unichar high, low;
+						if (getSurrogatesForUnicodeScalarValue(unichar32, &high, &low)) {
+							[result appendFormat:@"%C%C", high, low];
+						} else {
+							[result appendFormat:@"%C", low];
+						}
+					}
+				} else {
+					//Not hex. Hopefully decimal.
+					int unichar32 = 65535; //== 0xffff
+					if (![scanner scanInt:&unichar32]) {
+						[result appendString:@"&#"];
+					} else if (![scanner scanString:@";" intoString:NULL]) {
+						[result appendFormat:@"&#%i", unichar32];
+					} else {
+						unichar high, low;
+						if (getSurrogatesForUnicodeScalarValue(unichar32, &high, &low)) {
+							[result appendFormat:@"%C%C", high, low];
+						} else {
+							[result appendFormat:@"%C", low];
+						}
+					}
+				}
+			} else {
+				//Not a numeric entity. Should be a named entity.
+				NSString *entityName = nil;
+				if (![scanner scanUpToString:@";" intoString:&entityName]) {
+					[result appendString:@"&"];
+				} else {
+					//Strip the semicolon.
+					NSString *entity = [entities objectForKey:entityName];
+					if (entity) {
+						[result appendString:entity];
+						
+					} else {
+						NSLog(@"-[NSString(AIStringAdditions) stringByUnescapingFromXMLWithEntities]: Named entity %@ unknown.", entityName);
+					}
+					[scanner scanString:@";" intoString:NULL];
+				}
+			}
+		}
+		
+		return [NSString stringWithString:result];
+	}
 }
 
 @end
