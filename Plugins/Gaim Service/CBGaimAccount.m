@@ -141,6 +141,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			[theContact setRemoteGroupName:AILocalizedString(@"Orphans","Name for the orphans group")];
 		} else if (groupName && [groupName length] != 0) {
 			[theContact setRemoteGroupName:[self _mapIncomingGroupName:groupName]];
+		} else {
+			AILog(@"Got a nil group for %@",theContact);
 		}
 		
 		[self gotGroupForContact:theContact];
@@ -1298,7 +1300,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		statusState = [[adium statusController] defaultInitialStatusState];
 	}
 
-	GaimDebug(@"Adium: Connect: %@ initiating connection using status state %@.",[self UID],statusState);
+	GaimDebug(@"Adium: Connect: %@ initiating connection using status state %@ (%@).",[self UID],statusState,
+			  [statusState statusMessageString]);
 
 	[self autoRefreshingOutgoingContentForStatusKey:@"StatusState"
 										   selector:@selector(gotFilteredStatusMessage:forStatusState:)
@@ -1423,6 +1426,22 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 //Sublcasses should override to provide a string for each progress step
 - (NSString *)connectionStringForStep:(int)step { return nil; };
+
+/*!
+ * @brief Should the account's status be updated as soon as it is connected?
+ *
+ * If YES, the StatusState and IdleSince status keys will be told to update as soon as the account connects.
+ * This will allow the account to send its status information to the server upon connecting.
+ *
+ * If this information is already known by the account at the time it connects and further prompting to send it is
+ * not desired, return NO.
+ *
+ * libgaim should already have been told of our status before connecting began.
+ */
+- (BOOL)updateStatusImmediatelyAfterConnecting
+{
+	return NO;
+}
 
 //Our account has connected
 - (void)accountConnectionConnected
@@ -1764,7 +1783,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 							[self encodedAttributedString:statusMessage
 										   forStatusState:statusState]  :
 							nil);
-
 	if (encodedStatusMessage) {
 		[arguments setObject:encodedStatusMessage
 					  forKey:@"message"];
@@ -1885,13 +1903,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 					int height = imageSize.height;
 					
 					gaim_buddy_icon_get_scale_size(&prpl_info->icon_spec, &width, &height);
-					AILog(@"Scaling to %i %i",width,height);
 					//Determine the scaled size.  If it's too big, scale to the largest permissable size
 					image = [image imageByScalingToSize:NSMakeSize(width, height)];
 
 					/* Our original data is no longer valid, since we had to scale to a different size */
 					originalData = nil;
-					GaimDebug(@"Scaled image to size %@",NSStringFromSize([image size]));
+					GaimDebug(@"%@: Scaled image to size %@", self, NSStringFromSize([image size]));
 				}
 
 				if (!buddyIconData) {
