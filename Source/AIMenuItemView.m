@@ -366,7 +366,7 @@
 
 			trackingTag = [self addTrackingRect:trackRect owner:self userData:nil assumeInside:mouseInside];
 			[trackingTags addObject:[NSNumber numberWithInt:trackingTag]];
-//			NSLog(@"Added tracking rect %i for %@",trackingTag,NSStringFromRect(trackRect));
+			NSLog(@"Added tracking rect %i for %@ (%i)",trackingTag,NSStringFromRect(trackRect), mouseInside);
 			if (mouseInside) [self mouseEntered:nil];
 		}
 	}

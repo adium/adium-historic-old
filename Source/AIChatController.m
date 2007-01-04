@@ -293,6 +293,9 @@
 		return nil;
 	}
 	
+	//XXX Temporary.. make sure that the fixes early in adium-1.1svn are right.
+	NSAssert1(![targetContact isMemberOfClass:[AIMetaContact class]], @"Should not get this far in chatWithContact: with an AIMetaContact (%@)!",targetContact);
+	
 	//Search for an existing chat we can switch instead of replacing
 	enumerator = [openChats objectEnumerator];
 	while ((chat = [enumerator nextObject])) {
@@ -573,6 +576,9 @@
 - (NSSet *)allChatsWithContact:(AIListContact *)inContact
 {
     NSMutableSet	*foundChats = nil;
+	static int		invocationNumber = 0;
+	int				thisInvocation = invocationNumber;
+	invocationNumber++;
 	
 	//Scan the objects participating in each chat, looking for the requested object
 	if ([inContact isKindOfClass:[AIMetaContact class]]) {
@@ -604,7 +610,7 @@
 			}
 		}
 	}
-	
+
     return foundChats;
 }
 
