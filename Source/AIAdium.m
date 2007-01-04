@@ -570,7 +570,7 @@ static NSString	*prefsCategory;
 																			  group:@"Appearance"
 																			 object:nil];
 */
-		NSString	*defaultPackName = @"Gems";
+		NSString	*defaultPackName = @"iBubble";
 
 		if (![packName isEqualToString:defaultPackName]) {
 			destination = [AISearchPathForDirectoriesInDomains(AIStatusIconsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
