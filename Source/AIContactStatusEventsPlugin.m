@@ -283,6 +283,7 @@
 
 		if ([inModifiedKeys containsObject:@"Online"]) {
 			id newValue = [inObject numberStatusObjectForKey:@"Online" fromAnyContainedObject:NO];
+
 			if ([self updateCache:onlineCache
 						  forKey:@"Online"
 						newValue:newValue
@@ -390,6 +391,8 @@
 - (BOOL)updateCache:(NSMutableDictionary *)cache forKey:(NSString *)key newValue:(id)newStatus listObject:(AIListObject *)inObject performCompare:(BOOL)performCompare
 {
 	id		oldStatus = [cache objectForKey:[inObject internalObjectID]];
+	AILog(@"ContactStatusEvents: %@ updated %@ from %@ to %@",inObject,key,oldStatus,newStatus);
+
 	if ((newStatus && !oldStatus) ||
 	   (oldStatus && !newStatus) ||
 	   ((performCompare && newStatus && oldStatus && ![newStatus performSelector:@selector(compare:) withObject:oldStatus] == 0))) {

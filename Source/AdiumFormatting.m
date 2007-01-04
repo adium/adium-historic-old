@@ -90,6 +90,7 @@
 		//Build formatting dict
 		_defaultAttributes = [[NSMutableDictionary dictionaryWithObject:font forKey:NSFontAttributeName] retain];
 		if (textColor && ![textColor equalToRGBColor:[NSColor textColor]]) {
+			AILog(@"TextColor is %@; -[NSColor textColor] gives %@",textColor,[NSColor textColor]);
 			[_defaultAttributes setObject:textColor forKey:NSForegroundColorAttributeName];	
 		}	
 		if (backgroundColor && ![backgroundColor equalToRGBColor:[NSColor textBackgroundColor]]) {

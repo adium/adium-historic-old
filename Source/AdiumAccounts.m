@@ -303,8 +303,18 @@
 	*/
 	else if ([serviceID isEqualToString:@"libgaim-oscar-Mac"])
 		serviceID = @"joscar-OSCAR-dotMac";
+#else
+	if ([serviceID isEqualToString:@"joscar-OSCAR-AIM"])
+		serviceID = @"libgaim-oscar-AIM";
+	/*
+	 //Reenable if joscar takes over ICQ again
+	 else if ([serviceID isEqualToString:@"libgaim-oscar-ICQ"])
+	 serviceID = @"joscar-OSCAR-ICQ";
+	 */
+	else if ([serviceID isEqualToString:@"joscar-OSCAR-dotMac"])
+		serviceID = @"libgaim-oscar-Mac";
 #endif
-	
+
 	return serviceID;
 }
 
