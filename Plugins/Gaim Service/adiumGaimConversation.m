@@ -161,6 +161,11 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 					//We handle entered/left messages directly via the conversation UI ops; don't display this system message
 					return;
 
+				} else if ((([messageString rangeOfString:@"Transfer of file"].location != NSNotFound) &&
+								([messageString rangeOfString:@"complete"].location != NSNotFound)) ||
+						   ([messageString rangeOfString:@"is offering to send file"].location != NSNotFound)) {
+								//These file transfer messages are hanlded in ESFileTransferMessagesPlugin; don't show libgaim's version
+					return;
 				} else if (([messageString rangeOfString:@"The remote user has closed the connection."].location != NSNotFound) ||
 						   ([messageString rangeOfString:@"The remote user has declined your request."].location != NSNotFound) ||
 						   ([messageString rangeOfString:@"Lost connection with the remote user:"].location != NSNotFound) ||
