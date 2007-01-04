@@ -749,7 +749,14 @@
 	NSAttributedString	*originalValue;
 	
 	if ([key isEqualToString:@"StatusState"]) {
-		originalValue = [[self statusState] statusMessage];
+		AIStatus *statusState = [self actualStatusState];
+		/* -[AIAccount actualStatusState] won't set usinto an initial state if we don't have one yet,
+		 * unlike -[AIAccount statusState]. Although I expect that the default state will never have an associated
+		 * statusMessage,  it's good form to check it.
+		 */
+		if (!statusState) statusState = [[adium statusController] defaultInitialStatusState];
+
+		originalValue = [statusState statusMessage];
 
 	} else {
 		originalValue = [[self preferenceForKey:key group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:isTemporary] attributedString];				
@@ -994,6 +1001,20 @@
 }
 
 /*!
+ * @brief Should the account's status be updated as soon as it is connected?
+ *
+ * If YES, the StatusState and IdleSince status keys will be told to update as soon as the account connects.
+ * This will allow the account to send its status information to the server upon connecting.
+ *
+ * If this information is already known by the account at the time it connects and further prompting to send it is
+ * not desired, return NO.
+ */
+- (BOOL)updateStatusImmediatelyAfterConnecting
+{
+	return YES;
+}
+
+/*!
  * @brief The account did connect
  *
  * Subclasses should call this on self after connecting
@@ -1012,7 +1033,7 @@
 	//Update our status and idle status to ensure our newly connected account is in the states we want it to be
 	if ([[self statusState] statusType] == AIOfflineStatusType) {
 		/* If our account thinks it's still in an offline status, that means it went offline previously via an offline status.
-		 * Set to the status being used by other accounts if possible; otherwise, set to our default initiate status.
+		 * Set to the status being used by other accounts if possible; otherwise, set to our default initial status.
 		 */
 		AIStatus *newStatus = [[adium statusController] activeStatusState];
 		if ([newStatus statusType] == AIOfflineStatusType) {
@@ -1022,9 +1043,12 @@
 		[self setStatusState:newStatus];
 
 	} else {
-		[self updateStatusForKey:@"StatusState"];
+		if ([self updateStatusImmediatelyAfterConnecting]) {
+			[self updateStatusForKey:@"StatusState"];
+		}
 	}
-	[self updateStatusForKey:@"IdleSince"];	
+
+	[self updateStatusForKey:@"IdleSince"];
 }
 
 - (void)cancelAutoReconnect
