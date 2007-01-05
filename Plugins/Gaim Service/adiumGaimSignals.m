@@ -100,12 +100,20 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 			}
 		}
 		
-		//Update the contact's status and idle if the event was a signon or signoff event, since the status changed event may not be sent.
-		if (event == GAIM_BUDDY_SIGNON || event == GAIM_BUDDY_SIGNOFF) {
+		/* If a status event didn't change from its previous value, we won't be notified of it.
+		 * That's generally a good thing, but we clear some values when a contact signs off, including
+		 * status, idle time, and signed-on time.  Manually update these as appropriate when we're informed of
+		 * a signon.
+		 */
+		if ((event == GAIM_BUDDY_SIGNON) || (event == GAIM_BUDDY_SIGNOFF)) {
 			GaimPresence	*presence = gaim_buddy_get_presence(buddy);
 			GaimStatus		*status = gaim_presence_get_active_status(presence);
 			buddy_status_changed_cb(buddy, NULL, status, event);
-			buddy_idle_changed_cb(buddy, FALSE, gaim_presence_is_idle(presence), event);
+			
+			if (event == GAIM_BUDDY_SIGNON) {
+				buddy_idle_changed_cb(buddy, FALSE, gaim_presence_is_idle(presence), event);
+				buddy_event_cb(buddy, GAIM_BUDDY_SIGNON_TIME);
+			}
 		}
 	}
 }
