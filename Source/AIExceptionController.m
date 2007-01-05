@@ -59,6 +59,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			@"No text was found", //ICeCoffEE is an APE haxie which would crash us whenever a user pasted, or something like that
 			@"No URL is selected", //ICeCoffEE also crashes us when clicking links. How obnoxious. Release software should not use NSAssert like this.
 			@"Error (1000) creating CGSWindow", //This looks like an odd NSImage error... it occurs sporadically, seems harmless, and doesn't appear avoidable
+			@"Error (1007) creating CGSWindow", //This looks like an odd NSImage error... it occurs sporadically, seems harmless, and doesn't appear avoidable
 			@"Access invalid attribute location 0 (length 0)", //The undo manager can throw this one when restoring a large amount of attributed text... doesn't appear avoidable
 			@"Invalid parameter not satisfying: (index >= 0) && (index < (_itemArray ? CFArrayGetCount(_itemArray) : 0))", //A couple AppKit methods, particularly NSSpellChecker, seem to expect this exception to be happily thrown in the normal course of operation. Lovely. Also needed for FontSight compatibility.
 			@"Invalid parameter not satisfying: (index >= 0) && (index <= (_itemArray ? CFArrayGetCount(_itemArray) : 0))", //Like the above, but <= instead of <
