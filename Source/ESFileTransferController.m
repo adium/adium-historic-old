@@ -102,7 +102,7 @@ static ESFileTransferPreferences *preferences;
     toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:SEND_FILE_IDENTIFIER
 														  label:SEND_FILE
 												   paletteLabel:SEND_FILE
-														toolTip:AILocalizedString(@"Send a file",nil)
+														toolTip:AILocalizedString(@"Send a file","Tooltip for the Send File toolbar item")
 														 target:self
 												settingSelector:@selector(setImage:)
 													itemContent:[NSImage imageNamed:@"sendfile" forClass:[self class]]
@@ -676,21 +676,21 @@ static ESFileTransferPreferences *preferences;
 		
 		if ([eventID isEqualToString:FILE_TRANSFER_REQUEST]) {
 			//Should only happen for an incoming transfer
-			format = AILocalizedString(@"%@ requests to send you %@",nil);
+			format = AILocalizedString(@"%@ requests to send you %@","A person is wanting to send you a file. The first %@ is a name; the second %@ is the filename of the file being sent.");
 			
 		} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
 			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
-				format = AILocalizedString(@"%@ began sending you %@",nil);
+				format = AILocalizedString(@"%@ began sending you %@","A person began sending you a file. The first %@ is a name; the second %@ is the filename of the file being sent.");
 			} else {
-				format = AILocalizedString(@"%@ began receiving %@",nil);	
+				format = AILocalizedString(@"%@ began receiving %@","A person began receiving a file from you. The first %@ is the recipient of the file; the second %@ is the filename of the file being sent.");
 			}
 		} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELLED]) {
-			format = AILocalizedString(@"%@ cancelled the transfer of %@",nil);
+			format = AILocalizedString(@"%@ cancelled the transfer of %@","The other contact cancelled a file transfer in progress. The first %@ is the recipient of the file; the second %@ is the filename of the file being sent.");
 		} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
 			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
-				format = AILocalizedString(@"%@ sent you %@",nil);
+				format = AILocalizedString(@"%@ sent you %@","First placeholder is a name; second is a filename");
 			} else {
-				format = AILocalizedString(@"%@ received %@",nil);	
+				format = AILocalizedString(@"%@ received %@","First placeholder is a name; second is a filename");
 			}
 		} else if ([eventID isEqualToString:FILE_TRANSFER_FAILED]) {
 			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
@@ -709,27 +709,27 @@ static ESFileTransferPreferences *preferences;
 		
 		if ([eventID isEqualToString:FILE_TRANSFER_REQUEST]) {
 			//Should only happen for an incoming transfer
-			format = AILocalizedString(@"requests to send you %@",nil);
+			format = AILocalizedString(@"requests to send you %@","%@ is a filename of a file being sent");
 			
 		} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
 			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
-				format = AILocalizedString(@"began sending you %@",nil);
+				format = AILocalizedString(@"began sending you %@","%@ is a filename of a file being sent");
 			} else {
-				format = AILocalizedString(@"began receiving %@",nil);	
+				format = AILocalizedString(@"began receiving %@","%@ is a filename of a file being sent");
 			}
 		} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELLED]) {
-			format = AILocalizedString(@"cancelled the transfer of %@",nil);
+			format = AILocalizedString(@"cancelled the transfer of %@","%@ is a filename of a file being sent");
 		} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
 			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
-				format = AILocalizedString(@"sent you %@",nil);
+				format = AILocalizedString(@"sent you %@","%@ is a filename of a file being sent");
 			} else {
-				format = AILocalizedString(@"received %@",nil);	
+				format = AILocalizedString(@"received %@","%@ is a filename of a file being sent");
 			}
 		} else if ([eventID isEqualToString:FILE_TRANSFER_FAILED]) {
 			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
-				format = AILocalizedString(@"failed to send you %@",nil);
+				format = AILocalizedString(@"failed to send you %@","%@ is a filename of a file being sent");
 			} else {
-				format = AILocalizedString(@"failed to receive %@",nil);	
+				format = AILocalizedString(@"failed to receive %@","%@ is a filename of a file being sent");
 			}
 		}
 
