@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>FriBidi</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.yourcompany.yourcocoaframework</string>
+	<string>com.dpompa.fribidi</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
