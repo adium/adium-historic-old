@@ -72,7 +72,7 @@ static NSComparisonResult compareContactsByTheirAccounts(id firstContact, id sec
 	[tableView_accounts setAcceptsFirstMouse:YES];
 
 	[[[tableView_accounts tableColumnWithIdentifier:@"account"] headerCell] setTitle:AILocalizedString(@"On Account",nil)];
-	[[[tableView_accounts tableColumnWithIdentifier:@"contact"] headerCell] setTitle:AILocalizedString(@"Individual Contact",nil)];
+	[[[tableView_accounts tableColumnWithIdentifier:@"contact"] headerCell] setTitle:AILocalizedString(@"Individual Contact","This header for the table in the Accounts tab of the Get Info window indicates the name of the contact within a metacontact")];
 	[[[tableView_accounts tableColumnWithIdentifier:@"group"] headerCell] setTitle:AILocalizedString(@"In Group",nil)];
 	contactsColumnIsInAccountsTableView = YES; //It's in the table view in the nib.
 
