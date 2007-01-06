@@ -124,20 +124,6 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 }
 
 #pragma mark Adding a contact to the list
-- (IBAction)runBlockSheet:(id)sender
-{
-	[field setStringValue:@""];
-
-	sheetAccountMenu = [[AIAccountMenu accountMenuWithDelegate:self
-												   submenuType:AIAccountNoSubmenu
-												showTitleVerbs:NO] retain];
-
-	[NSApp beginSheet:sheet 
-	   modalForWindow:[self window]
-		modalDelegate:self 
-	   didEndSelector:@selector(didEndSheet:returnCode:contextInfo:)
-		  contextInfo:nil];
-}
 
 - (void)selectAccountInSheet:(AIAccount *)inAccount
 {
@@ -146,9 +132,26 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 	
 	NSString	*userNameLabel = [[inAccount service] userNameLabel];
 	
-	[buddyText setStringValue:[(userNameLabel ? userNameLabel :
-								AILocalizedString(@"Contact ID",nil)) stringByAppendingString:AILocalizedString(@":", "Colon which will be appended after a label such as 'User Name', before an input field")]];	
+	[buddyText setLocalizedString:[(userNameLabel ?
+									userNameLabel : AILocalizedString(@"Contact ID",nil)) stringByAppendingString:AILocalizedString(@":", "Colon which will be appended after a label such as 'User Name', before an input field")]];
 }
+
+- (IBAction)runBlockSheet:(id)sender
+{
+	[field setStringValue:@""];
+	
+	sheetAccountMenu = [[AIAccountMenu accountMenuWithDelegate:self
+												   submenuType:AIAccountNoSubmenu
+												showTitleVerbs:NO] retain];
+	[self selectAccountInSheet:[[popUp_sheetAccounts selectedItem] representedObject]];
+	
+	[NSApp beginSheet:sheet 
+	   modalForWindow:[self window]
+		modalDelegate:self 
+	   didEndSelector:@selector(didEndSheet:returnCode:contextInfo:)
+		  contextInfo:nil];
+}
+
 
 - (IBAction)cancelBlockSheet:(id)sender
 {
