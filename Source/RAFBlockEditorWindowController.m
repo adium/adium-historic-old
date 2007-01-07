@@ -51,14 +51,18 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 
 	{
 		//Let the min X margin be resizeable while label_account and label_privacyLevel localize in case the window moves
-		[stateChooser setAutoresizingMask:(NSViewWidthSizable | NSViewMinYMargin | NSViewMinXMargin)];
-		[popUp_accounts setAutoresizingMask:(NSViewWidthSizable | NSViewMinYMargin | NSViewMinXMargin)];
-		
+		[stateChooser setAutoresizingMask:(NSViewMinYMargin | NSViewMinXMargin)];
+		[popUp_accounts setAutoresizingMask:(NSViewMinYMargin | NSViewMinXMargin)];
+
+		//Keep label_privacyLevel in place, too, while label_account potentially resizes the window
+		[label_privacyLevel setAutoresizingMask:(NSViewMinYMargin | NSViewMinXMargin)];
 		[label_account setLocalizedString:AILocalizedString(@"Account:",nil)];
-		[label_privacyLevel setLocalizedString:AILocalizedString(@"Privacy level:", nil)];
-		
-		[stateChooser setAutoresizingMask:(NSViewWidthSizable | NSViewMinYMargin)];
+		[label_privacyLevel setAutoresizingMask:(NSViewMinYMargin | NSViewMaxXMargin)];
+		//Account is in place; popUp_accounts can width-resize again
 		[popUp_accounts setAutoresizingMask:(NSViewWidthSizable | NSViewMinYMargin)];
+
+		[label_privacyLevel setLocalizedString:AILocalizedString(@"Privacy level:", nil)];		
+		[stateChooser setAutoresizingMask:(NSViewWidthSizable | NSViewMinYMargin)];
 	}
 
 	accountColumnsVisible = YES;
@@ -414,6 +418,9 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 
 				[[self window] setMinSize:NSMakeSize(250, frame.size.height)];
 				[[self window] setMaxSize:NSMakeSize(FLT_MAX, frame.size.height)];
+				
+				AILog(@"Because of privacy option %i, resizing from %@ to %@",privacyOption,
+					  NSStringFromRect([[self window] frame]),NSStringFromRect(frame));
 				[[self window] setFrame:frame display:YES animate:YES];
 			}
 			break;
@@ -432,6 +439,8 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 				[[self window] setMaxSize:NSMakeSize(FLT_MAX, FLT_MAX)];
 				
 				//Set frame after fixing our min/max size so the resize won't fail
+				AILog(@"Because of privacy option %i, resizing from %@ to %@",privacyOption,
+					  NSStringFromRect([[self window] frame]),NSStringFromRect(frame));
 				[[self window] setFrame:frame display:YES animate:YES];
 
 				[tabView_contactList setHidden:NO];
