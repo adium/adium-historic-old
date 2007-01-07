@@ -591,10 +591,12 @@
 - (void)_updateAccountSelectionViewHeight
 {
 	int		contentsHeight = [view_contents frame].size.height;
-	int 	accountSelectionHeight = [view_accountSelection frame].size.height;
+	int 	accountSelectionHeight = (view_accountSelection ? [view_accountSelection frame].size.height : 0);
 	
-	[view_accountSelection setFrameOrigin:NSMakePoint([view_accountSelection frame].origin.x, 
-													  contentsHeight - accountSelectionHeight)];
+	if (view_accountSelection) {
+		[view_accountSelection setFrameOrigin:NSMakePoint([view_accountSelection frame].origin.x, 
+														  contentsHeight - accountSelectionHeight)];
+	}
 	[splitView_textEntryHorizontal setFrameSize:NSMakeSize([splitView_textEntryHorizontal frame].size.width,
 														   contentsHeight - accountSelectionHeight)];
 }	
