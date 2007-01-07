@@ -51,14 +51,18 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 
 	{
 		//Let the min X margin be resizeable while label_account and label_privacyLevel localize in case the window moves
-		[stateChooser setAutoresizingMask:(NSViewWidthSizable | NSViewMinYMargin | NSViewMinXMargin)];
-		[popUp_accounts setAutoresizingMask:(NSViewWidthSizable | NSViewMinYMargin | NSViewMinXMargin)];
-		
+		[stateChooser setAutoresizingMask:(NSViewMinYMargin | NSViewMinXMargin)];
+		[popUp_accounts setAutoresizingMask:(NSViewMinYMargin | NSViewMinXMargin)];
+
+		//Keep label_privacyLevel in place, too, while label_account potentially resizes the window
+		[label_privacyLevel setAutoresizingMask:(NSViewMinYMargin | NSViewMinXMargin)];
 		[label_account setLocalizedString:AILocalizedString(@"Account:",nil)];
-		[label_privacyLevel setLocalizedString:AILocalizedString(@"Privacy level:", nil)];
-		
-		[stateChooser setAutoresizingMask:(NSViewWidthSizable | NSViewMinYMargin)];
+		[label_privacyLevel setAutoresizingMask:(NSViewMinYMargin | NSViewMaxXMargin)];
+		//Account is in place; popUp_accounts can width-resize again
 		[popUp_accounts setAutoresizingMask:(NSViewWidthSizable | NSViewMinYMargin)];
+
+		[label_privacyLevel setLocalizedString:AILocalizedString(@"Privacy level:", nil)];		
+		[stateChooser setAutoresizingMask:(NSViewWidthSizable | NSViewMinYMargin)];
 	}
 
 	accountColumnsVisible = YES;
@@ -124,20 +128,6 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 }
 
 #pragma mark Adding a contact to the list
-- (IBAction)runBlockSheet:(id)sender
-{
-	[field setStringValue:@""];
-
-	sheetAccountMenu = [[AIAccountMenu accountMenuWithDelegate:self
-												   submenuType:AIAccountNoSubmenu
-												showTitleVerbs:NO] retain];
-
-	[NSApp beginSheet:sheet 
-	   modalForWindow:[self window]
-		modalDelegate:self 
-	   didEndSelector:@selector(didEndSheet:returnCode:contextInfo:)
-		  contextInfo:nil];
-}
 
 - (void)selectAccountInSheet:(AIAccount *)inAccount
 {
@@ -146,9 +136,26 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 	
 	NSString	*userNameLabel = [[inAccount service] userNameLabel];
 	
-	[buddyText setStringValue:[(userNameLabel ? userNameLabel :
-								AILocalizedString(@"Contact ID",nil)) stringByAppendingString:AILocalizedString(@":", "Colon which will be appended after a label such as 'User Name', before an input field")]];	
+	[buddyText setLocalizedString:[(userNameLabel ?
+									userNameLabel : AILocalizedString(@"Contact ID",nil)) stringByAppendingString:AILocalizedString(@":", "Colon which will be appended after a label such as 'User Name', before an input field")]];
 }
+
+- (IBAction)runBlockSheet:(id)sender
+{
+	[field setStringValue:@""];
+	
+	sheetAccountMenu = [[AIAccountMenu accountMenuWithDelegate:self
+												   submenuType:AIAccountNoSubmenu
+												showTitleVerbs:NO] retain];
+	[self selectAccountInSheet:[[popUp_sheetAccounts selectedItem] representedObject]];
+	
+	[NSApp beginSheet:sheet 
+	   modalForWindow:[self window]
+		modalDelegate:self 
+	   didEndSelector:@selector(didEndSheet:returnCode:contextInfo:)
+		  contextInfo:nil];
+}
+
 
 - (IBAction)cancelBlockSheet:(id)sender
 {
@@ -411,6 +418,9 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 
 				[[self window] setMinSize:NSMakeSize(250, frame.size.height)];
 				[[self window] setMaxSize:NSMakeSize(FLT_MAX, frame.size.height)];
+				
+				AILog(@"Because of privacy option %i, resizing from %@ to %@",privacyOption,
+					  NSStringFromRect([[self window] frame]),NSStringFromRect(frame));
 				[[self window] setFrame:frame display:YES animate:YES];
 			}
 			break;
@@ -429,6 +439,8 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 				[[self window] setMaxSize:NSMakeSize(FLT_MAX, FLT_MAX)];
 				
 				//Set frame after fixing our min/max size so the resize won't fail
+				AILog(@"Because of privacy option %i, resizing from %@ to %@",privacyOption,
+					  NSStringFromRect([[self window] frame]),NSStringFromRect(frame));
 				[[self window] setFrame:frame display:YES animate:YES];
 
 				[tabView_contactList setHidden:NO];
