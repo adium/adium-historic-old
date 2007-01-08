@@ -92,7 +92,7 @@ CFSocketRef socketInRunLoop(int fd, CFOptionFlags callBackTypes, CFSocketContext
 	/* If we created a new socket (versus returning a cached one -- see the CFSocketCreateWithNative() documentation), have it
 	 * reenable callbacks automatically, and add it to the run loop.
 	 */
-	CFSocketContext actualSocketContext;
+	CFSocketContext actualSocketContext = { 0, NULL, NULL, NULL, NULL };
 	CFSocketGetContext(socket, &actualSocketContext);
 	if (actualSocketContext.info == context->info) {		
 		//Re-enable callbacks automatically and _don't_ close the socket on invalidate
@@ -287,7 +287,7 @@ guint adium_input_add(int fd, GaimInputCondition condition,
     struct SourceInfo *info = newSourceInfo();
 	
     // And likewise the entire CFSocket
-    CFSocketContext context = { 0, info, /* CFAllocatorRetainCallBack */ NULL, /* CFAllocatorReleaseCallBack */ NULL, /* CFAllocatorCopyDescriptionCallBack */ NULL };	
+    CFSocketContext context = { 0, info, /* CFAllocatorRetainCallBack */ NULL, /* CFAllocatorReleaseCallBack */ NULL, /* CFAllocatorCopyDescriptionCallBack */ NULL };
 
     // Build the CFSocket callback flags to use from the libgaim ones
     CFOptionFlags callBackTypes = 0;
@@ -308,12 +308,16 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 	 * If an existing socket was returned by CFSocketCreateWithNative(), its context will not have been changed to match the context
 	 * we made above.  We should then invalidate and release that socket and its information, then create a new one.
 	 */
-	CFSocketContext actualSocketContext;
+	CFSocketContext actualSocketContext = { 0, NULL, NULL, NULL, NULL };
 	CFSocketGetContext(socket, &actualSocketContext);
 	if (actualSocketContext.info != info) {
-		free(info);
-		context.info = actualSocketContext.info;
-		info = context.info;
+		if (actualSocketContext.info) {
+			free(info);
+			context.info = actualSocketContext.info;
+			info = context.info;
+		} else {
+			actualSocketContext.info = info;
+		}
 #ifdef GAIM_SOCKET_DEBUG
 		AILog(@"adium_input_add(): We need to recreate the socket for fd %i. Invalidating and releasing %x",fd,socket);
 #endif
