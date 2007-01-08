@@ -21,6 +21,9 @@
 #import <Adium/AIStatusMenu.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <Adium/AIAccount.h>
+#import <Adium/AIService.h>
+#import <Adium/AIServiceMenu.h>
+#import "AIEditAccountWindowController.h"
 
 //Menu titles
 #define	ACCOUNT_CONNECT_ACTION_MENU_TITLE			AILocalizedString(@"Connect: %@", "Connect account prefix")
@@ -32,6 +35,8 @@
 #define ACCOUNT_CONNECT_PARENS_MENU_TITLE			AILocalizedString(@"%@ (Connecting)", "Account Name (Connecting) - shown for an account while it is connecting")
 
 #define NEW_ACCOUNT_DISPLAY_TEXT			AILocalizedString(@"<New Account>", "Placeholder displayed as the name of a new account")
+
+// XXX Fix those method names! Apple's naming convention don't allow them to start with _
 
 @interface AIAccountMenu (PRIVATE)
 - (id)initWithDelegate:(id)inDelegate
@@ -215,14 +220,31 @@
 			}
 		}
 
+        [menuItemArray addObject:[NSMenuItem separatorItem]];
+        
+        //Build the 'add account' menu of each available service
+        NSMenu	*serviceMenu = [AIServiceMenu menuOfServicesWithTarget:self 
+                                                    activeServicesOnly:NO
+                                                       longDescription:YES
+                                                                format:AILocalizedString(@"%@",nil)];
+        
+        
+        NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Add Account", nil)
+                                                                                    target:self
+                                                                                    action:@selector(dummyAction:)
+                                                                             keyEquivalent:@""
+                                                                         representedObject:nil];
+        [menuItemArray addObject:menuItem];
+        [menuItem setSubmenu:serviceMenu];
+        [menuItem release];
+        
 		if ([disabledAccountMenu numberOfItems]) {
-			[menuItemArray addObject:[NSMenuItem separatorItem]];
 
-			NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Disabled Accounts", nil)
-																						target:self
-																						action:@selector(dummyAction:)
-																				 keyEquivalent:@""
-																			 representedObject:nil];
+			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Disabled Accounts", nil)
+                                                                            target:self
+                                                                            action:@selector(dummyAction:)
+                                                                     keyEquivalent:@""
+                                                                 representedObject:nil];
 			[menuItemArray addObject:menuItem];
 			[menuItem setSubmenu:disabledAccountMenu];
 			[menuItem release];
@@ -351,6 +373,30 @@
     return nil;
 }
 
+- (IBAction)selectServiceType:(id)sender
+{
+	AIService	*service = [sender representedObject];
+	AIAccount	*account = [[adium accountController] createAccountWithService:service
+																		   UID:[service defaultUserName]];
+    
+	[NSClassFromString(@"AIEditAccountWindowController") editAccount:account
+                                                            onWindow:nil
+                                                     notifyingTarget:self];
+}
+
+/*!
+* @brief Editing of an account completed
+ */
+- (void)editAccountSheetDidEndForAccount:(AIAccount *)inAccount withSuccess:(BOOL)successful
+{
+	if (successful) {
+		//New accounts need to be added to our account list once they're configured
+		[[adium accountController] addAccount:inAccount];
+        
+		//Put new accounts online by default
+		[inAccount setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+	}
+}
 
 //Account Action Submenu -----------------------------------------------------------------------------------------------
 #pragma mark Account Action Submenu
