@@ -1071,6 +1071,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		}
 		account->perm_deny = privacyType;
 		serv_set_permit_deny(gaim_account_get_connection(account));
+		AILog(@"Set privacy options for %@ (%x %x) to %i",
+			  self,account,gaim_account_get_connection(account),account->perm_deny);
 	} else {
 		AILog(@"Couldn't set privacy options for %@ (%x %x)",self,account,gaim_account_get_connection(account));
 	}
@@ -1102,7 +1104,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				break;
 		}
 	}
-
+	AILog(@"%@: privacyOptions are %i",self,privacyOption);
 	return privacyOption;
 }
 
