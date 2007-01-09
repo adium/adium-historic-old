@@ -64,9 +64,14 @@
 	NSString *title = [statusGroup title];
 	[textField_title setStringValue:(title ? title : @"")];
 
+	[label_groupWith setAutoresizingMask:NSViewMinXMargin];	
 	[label_title setLocalizedString:AILocalizedString(@"Title:", nil)];
+	[label_groupWith setAutoresizingMask:NSViewMaxXMargin];
+
+	[label_title setAutoresizingMask:NSViewMinXMargin];	
 	[label_groupWith setLocalizedString:AILocalizedString(@"Group with:", "The popup button after this lists status types; it will determine the status type with which a status group will be listed in status menus")];
-	
+	[label_title setAutoresizingMask:NSViewMaxXMargin];
+
 	[super windowDidLoad];
 }
 
