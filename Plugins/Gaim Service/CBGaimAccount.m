@@ -1767,7 +1767,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		statusMessage = [NSAttributedString stringWithString:[[adium statusController] descriptionForStateOfStatus:statusState]];
 	}
 
-	if (statusMessage && ([statusState specialStatusType] == AINowPlayingSpecialStatusType) && [self shouldAddMusicalNoteToNowPlayingStatus]) {
+	if ([statusMessage length]	&& ([statusState specialStatusType] == AINowPlayingSpecialStatusType) && [self shouldAddMusicalNoteToNowPlayingStatus]) {
 #define MUSICAL_NOTE_AND_SPACE [NSString stringWithUTF8String:"\xe2\x99\xab "]
 		NSMutableAttributedString *temporaryStatusMessage;
 		temporaryStatusMessage = [[[NSMutableAttributedString alloc] initWithString:MUSICAL_NOTE_AND_SPACE] autorelease];
