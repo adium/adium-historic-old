@@ -123,9 +123,6 @@
 - (void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
 - (void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat;
 
-- (void)accountPrivacyList:(AIPrivacyType)type added:(NSString *)sourceUID;
-- (void)accountPrivacyList:(AIPrivacyType)type removed:(NSString *)sourceUID;
-
 - (void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer;
 - (void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer 
 									 percent:(NSNumber *)percent
@@ -171,14 +168,6 @@
 		   andAliases:(NSArray *)aliasesArray 
 		  newArrivals:(NSNumber *)newArrivals
 			   toChat:(AIChat *)chat;
-
-
-#pragma mark Privacy
-- (void)privacyPermitListAdded:(NSString *)sourceUID;
-- (void)privacyPermitListRemoved:(NSString *)sourceUID;
-- (void)privacyDenyListAdded:(NSString *)sourceUID;
-- (void)privacyDenyListRemoved:(NSString *)sourceUID;
-
 
 #pragma mark Emoticons
 - (void)chat:(AIChat *)inChat isWaitingOnCustomEmoticon:(NSString *)isWaiting;

@@ -40,7 +40,6 @@
 
 @interface ESBlockingPlugin(PRIVATE)
 - (void)_setContact:(AIListContact *)contact isBlocked:(BOOL)isBlocked;
-- (BOOL)_searchPrivacyListsForListContact:(AIListContact *)contact withDesiredResult:(BOOL)desiredResult;
 - (void)accountConnected:(NSNotification *)notification;
 - (BOOL)areAllGivenContactsBlocked:(NSArray *)contacts;
 - (void)setPrivacy:(BOOL)block forContacts:(NSArray *)contacts;
@@ -350,46 +349,24 @@
 	}
 }
 
-- (BOOL)_searchPrivacyListsForListContact:(AIListContact *)contact withDesiredResult:(BOOL)desiredResult
-{
-	AIAccount *account = nil;
-	NSEnumerator *enumerator;
-	
-	enumerator = [[[adium accountController] accountsCompatibleWithService:[contact service]] objectEnumerator];
-	
-	while ((account = [enumerator nextObject])) {
-		if ([account conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-			AIAccount <AIAccount_Privacy> *privacyAccount = (AIAccount <AIAccount_Privacy> *)account;
-			if ([[privacyAccount listObjectIDsOnPrivacyList:AIPrivacyTypeDeny] containsObject:[contact UID]] == desiredResult) {
-				return YES;
-			}
-		}
-	}
-	return NO;
-}
-
 /*!
  * @brief Inform AIListContact instances of the user's intended privacy towards the people they represent
  */
 - (void)accountConnected:(NSNotification *)notification
 {
-	//NSLog(@"account connected: %@", notification);
-	
-	AIAccount		*accountConnected = [notification object];
-	NSEnumerator	*contactEnumerator = nil;
-	AIListContact	*currentContact = nil;
-	
-	if ([accountConnected conformsToProtocol:@protocol(AIAccount_Privacy)]) {
+	AIAccount		*account = [notification object];
+
+	if ([account conformsToProtocol:@protocol(AIAccount_Privacy)]) {
+		NSEnumerator	*contactEnumerator;
+		AIListContact	*currentContact;
+		NSArray			*blockedContacts = [(AIAccount <AIAccount_Privacy> *)account listObjectsOnPrivacyList:AIPrivacyTypeDeny];
 		
 		//check if each contact is on the account's deny list
-		contactEnumerator = [[accountConnected contacts] objectEnumerator];
+		contactEnumerator = [[account contacts] objectEnumerator];
 		while ((currentContact = [contactEnumerator nextObject])) {
-			//NSLog(@"The current contact is: %@", currentContact);
-			
-			if ([[(AIAccount <AIAccount_Privacy> *)accountConnected listObjectIDsOnPrivacyList:AIPrivacyTypeDeny] containsObject:[currentContact UID]]) {
+			if ([blockedContacts containsObject:[currentContact UID]]) {
 				//inform the contact that they're blocked
 				[currentContact setIsBlocked:YES updateList:NO];
-				//NSLog(@"** %@ is blocked **", [currentContact formattedUID]);
 			} else {
 				[currentContact setIsBlocked:NO updateList:NO];
 			}

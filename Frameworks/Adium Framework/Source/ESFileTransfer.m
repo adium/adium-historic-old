@@ -409,7 +409,7 @@ static NSMutableDictionary *fileTransferDict = nil;
 	}
 	
 	[self setMessage:[NSAttributedString stringWithString:
-		[NSString stringWithFormat:AILocalizedString(@"%@ requests to send you %@",nil),
+		[NSString stringWithFormat:AILocalizedString(@"%@ requests to send you %@","This is displayed in the message window when prompting to receive a file. The first %@ is the sender; the second %@ is the filename of the file being sent. It will be followed by buttons such as 'Save' and 'Cancel'."),
 			[[self contact] formattedUID],
 			filenameDisplay]]];
 	
