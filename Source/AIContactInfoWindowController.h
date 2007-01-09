@@ -56,9 +56,6 @@
 - (IBAction)addContact:(id)sender;
 - (IBAction)removeContact:(id)sender;
 
-- (IBAction)chooseContactIcon:(id)sender;
-- (IBAction)clearContactIcon:(id)sender;
-
 //Internal use
 - (float)drawerTrailingOffset;
 - (void)contactInfoListControllerSelectionDidChangeToListObject:(AIListObject *)listObject;
