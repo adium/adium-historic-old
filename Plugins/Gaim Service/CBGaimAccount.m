@@ -978,21 +978,27 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (NSArray *)listObjectsOnPrivacyList:(AIPrivacyType)type
 {
-	return (type == AIPrivacyTypePermit ? permittedContactsArray : deniedContactsArray);
+	GSList			*list;
+	GSList			*sourceList = ((type == AIPrivacyTypePermit) ? account->permit : account->deny);
+	NSMutableArray	*array = [NSMutableArray array];
+
+	for (list = sourceList; (list != NULL); list=list->next) {
+		[array addObject:[self contactWithUID:[NSString stringWithUTF8String:(char *)list->data]]];
+	}
+
+	return array;
 }
 
-- (NSArray *)listObjectIDsOnPrivacyList:(AIPrivacyType)type
+- (void)accountPrivacyList:(AIPrivacyType)type added:(NSString *)sourceUID
 {
-	NSArray *listObjectArray = [self listObjectsOnPrivacyList:type];
-	NSMutableArray *idArray =  [[NSMutableArray alloc] initWithCapacity:[listObjectArray count]];
-	NSEnumerator *enumerator = [listObjectArray objectEnumerator];
-	AIListObject *object = nil;
-	
-	while ((object = [enumerator nextObject])) {
-		[idArray addObject:[object UID]];
+	//Can't really trust sourceUID to not be @"" or something silly like that
+	if ([sourceUID length]) {
+		//Get our contact
+		AIListContact   *contact = [self contactWithUID:sourceUID];
+
+		//Update Adium's knowledge of it
+		[contact setIsBlocked:((type == AIPrivacyTypeDeny) ? YES : NO) updateList:NO];
 	}
-	
-	return [idArray autorelease];
 }
 
 - (void)privacyPermitListAdded:(NSString *)sourceUID
@@ -1005,14 +1011,23 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[self accountPrivacyList:AIPrivacyTypeDeny added:sourceUID];
 }
 
-- (void)accountPrivacyList:(AIPrivacyType)type added:(NSString *)sourceUID
+- (void)accountPrivacyList:(AIPrivacyType)type removed:(NSString *)sourceUID
 {
 	//Can't really trust sourceUID to not be @"" or something silly like that
 	if ([sourceUID length]) {
-		//Get our contact
-		AIListContact   *contact = [self contactWithUID:sourceUID];
+		if (!namesAreCaseSensitive) {
+			sourceUID = [sourceUID compactedString];
+		}
+
+		//Get our contact, which must already exist for us to care about its removal
+		AIListContact   *contact = [[adium contactController] existingContactWithService:service
+																				 account:self
+																					 UID:sourceUID];
 		
-		[(type == AIPrivacyTypePermit ? permittedContactsArray : deniedContactsArray) addObject:contact];
+		if (contact) {			
+			//Update Adium's knowledge of it
+			[contact setIsBlocked:((type == AIPrivacyTypeDeny) ? NO : YES) updateList:NO];
+		}
 	}
 }
 
@@ -1024,25 +1039,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (void)privacyDenyListRemoved:(NSString *)sourceUID
 {
 	[self accountPrivacyList:AIPrivacyTypeDeny removed:sourceUID];
-}
-
-- (void)accountPrivacyList:(AIPrivacyType)type removed:(NSString *)sourceUID
-{
-	//Can't really trust sourceUID to not be @"" or something silly like that
-	if ([sourceUID length]) {
-		if (!namesAreCaseSensitive) {
-			sourceUID = [sourceUID compactedString];
-		}
-		
-		//Get our contact, which must already exist for us to care about its removal
-		AIListContact   *contact = [[adium contactController] existingContactWithService:service
-																				 account:self
-																					 UID:sourceUID];
-		
-		if (contact) {
-			[(type == AIPrivacyTypePermit ? permittedContactsArray : deniedContactsArray) removeObject:contact];
-		}
-	}
 }
 
 - (void)setPrivacyOptions:(AIPrivacyOption)option

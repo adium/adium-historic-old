@@ -98,8 +98,6 @@ typedef enum {
     -(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(AIPrivacyType)type;
 	//Return an array of AIListContacts on the specified privacy list.  Returns an empty array if no contacts are on the list.
 	-(NSArray *)listObjectsOnPrivacyList:(AIPrivacyType)type;
-	//Identical to the above method, except it returns an array of strings, not list objects
-	-(NSArray *)listObjectIDsOnPrivacyList:(AIPrivacyType)type;
     //Set the privacy options
     -(void)setPrivacyOptions:(AIPrivacyOption)option;
 	//Get the privacy options
