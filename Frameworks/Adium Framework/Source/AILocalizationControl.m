@@ -16,6 +16,8 @@
 
 //Implementation file for AILocalizationXXXX classes; this is imported by them and should not be used directly
 
+@class AILocalizationTextField;
+
 - (id)initWithCoder:(NSCoder *)inCoder
 {
 	[super initWithCoder:inCoder];
@@ -144,24 +146,27 @@
 	
 	float distanceToRightAnchoredView = 0;
 	if (view_anchorToRightSide) {
-		distanceToRightAnchoredView = NSMaxX([view_anchorToRightSide frame]) - NSMaxX(oldFrame);
+		distanceToRightAnchoredView = NSMinX([view_anchorToRightSide frame]) - NSMaxX(oldFrame);
 	}
 	
 	[TARGET_CONTROL setFrame:newFrame];
 	[TARGET_CONTROL setNeedsDisplay:YES];
-	
+	if ([TARGET_CONTROL respondsToSelector:@selector(superview)]) {
+		[[(id)TARGET_CONTROL superview] setNeedsDisplayInRect:oldFrame];
+	}
+
 	//Resize the window to fit the contactNameLabel if the current size is not correct
 	if (NSWidth(newFrame) != NSWidth(oldFrame)) {
 		
 		//Too close on left; need to expand window left
 		if (window_anchorOnLeftSide && NSMinX(newFrame) < 17) {
 			float		difference = 17 - NSMinX(newFrame);
-			
+
 			[self _resizeWindow:window_anchorOnLeftSide leftBy:difference];				
 			
 			//Fix the origin - autosizing will end up moving this into the proper location
 			newFrame.origin.x = 17;
-
+			
 			[TARGET_CONTROL setFrame:newFrame];
 			[TARGET_CONTROL setNeedsDisplay:YES];
 		}
@@ -262,7 +267,7 @@
 			if (view_anchorToRightSide) {
 				NSRect		rightAnchorFrame = [view_anchorToRightSide frame];
 				if (window_anchorOnLeftSide) {
-					float newDistanceToRightAnchoredView = NSMaxX(rightAnchorFrame) - NSMaxX(newFrame);
+					float newDistanceToRightAnchoredView = NSMinX(rightAnchorFrame) - NSMaxX(newFrame);
 					
 					if (distanceToRightAnchoredView < newDistanceToRightAnchoredView) {
 						/* The right-anchored view is now too close to our right side -
@@ -302,7 +307,7 @@
 					} else { /*rightAnchorMovementType == AILOCALIZATION_MOVE_SELF */
 						
 						//Move us left to keep our distance from our anchor view to the right
-						newFrame.origin.x = rightAnchorFrame.origin.x - newFrame.size.width - 10;
+						newFrame.origin.x = NSMinX(rightAnchorFrame) - distanceToRightAnchoredView - NSWidth(newFrame);
 						
 						[TARGET_CONTROL setFrame:newFrame];
 						[TARGET_CONTROL setNeedsDisplay:YES];
@@ -339,25 +344,36 @@
 				NSRect		rightAnchorFrame = [view_anchorToRightSide frame];
 
 				//Ensure we are not now overlapping our right anchor; if so, shift left
-				if (NSMaxX(newFrame) > NSMinX(rightAnchorFrame)) {
-					//+8 perhaps for textviews; 0 for buttons, which have weird frames.
-					newFrame.origin.x -= ((NSMaxX(newFrame) - NSMinX(rightAnchorFrame))/* + 8 */);
-					
-					[TARGET_CONTROL setFrame:newFrame];
-					[TARGET_CONTROL setNeedsDisplay:YES];
-					
-					//As we did initially, check to see if we now need to expand the window to the left
-					if (window_anchorOnLeftSide && newFrame.origin.x < 17) {
-						float		difference = 17 - newFrame.origin.x;
+				if (window_anchorOnLeftSide) {
+					//We'll be able to shit the whole window; maintain distance to the right anchor
+					if ((NSMinX(rightAnchorFrame) - NSMaxX(newFrame)) < distanceToRightAnchoredView) {
+						newFrame.origin.x = NSMinX(rightAnchorFrame) - distanceToRightAnchoredView - NSWidth(newFrame);
+						[TARGET_CONTROL setFrame:newFrame];
+						[TARGET_CONTROL setNeedsDisplay:YES];
 						
-						[self _resizeWindow:window_anchorOnLeftSide leftBy:difference];				
-						
-						//Fix the origin - autosizing will end up moving this into the proper location
-						newFrame.origin.x = 17;
+						//As we did initially, check to see if we now need to expand the window to the left
+						if (window_anchorOnLeftSide && newFrame.origin.x < 17) {
+							float		difference = 17 - newFrame.origin.x;
+
+							[self _resizeWindow:window_anchorOnLeftSide leftBy:difference];				
+
+							//Fix the origin - autosizing will end up moving this into the proper location
+							newFrame.origin.x = 17;
+							
+							[TARGET_CONTROL setFrame:newFrame];
+							[TARGET_CONTROL setNeedsDisplay:YES];
+						}
+					}
+					
+				} else {
+					//We can't shift the window; just keep it from overlapping the right anchor
+					if (NSMaxX(newFrame) > NSMinX(rightAnchorFrame)) {
+						//+8 perhaps for textviews; 0 for buttons, which have weird frames.
+						newFrame.origin.x -= ((NSMaxX(newFrame) - NSMinX(rightAnchorFrame))/* + 8 */);
 						
 						[TARGET_CONTROL setFrame:newFrame];
 						[TARGET_CONTROL setNeedsDisplay:YES];
-					}
+					}					
 				}
 			}
 		}
