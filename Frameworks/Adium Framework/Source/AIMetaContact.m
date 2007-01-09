@@ -195,6 +195,9 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 			[[adium contactController] _moveContactLocally:self
 												   toGroup:targetGroup];
 		}
+	} else {
+		[[adium contactController] _moveContactLocally:self
+											   toGroup:[[adium contactController] contactList]];		
 	}
 }
 
@@ -656,7 +659,8 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	[self _determineIfWeShouldAppearToContainOnlyOneContact];
 	
 	//It's possible we didn't know to be in a group before if all our contained contacts were also groupless.
-	if (![self containingObject]) {
+	if (![self containingObject] ||
+		(![[adium contactController] useContactListGroups] && ([self containingObject] != [[adium contactController] contactList]))) {
 		[self restoreGrouping];
 	}
 }
