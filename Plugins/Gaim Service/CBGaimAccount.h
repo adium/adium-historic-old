@@ -169,6 +169,12 @@
 		  newArrivals:(NSNumber *)newArrivals
 			   toChat:(AIChat *)chat;
 
+#pragma mark Privacy
+- (void)privacyPermitListAdded:(NSString *)sourceUID;
+- (void)privacyDenyListAdded:(NSString *)sourceUID;
+- (void)privacyPermitListRemoved:(NSString *)sourceUID;
+- (void)privacyDenyListRemoved:(NSString *)sourceUID;
+
 #pragma mark Emoticons
 - (void)chat:(AIChat *)inChat isWaitingOnCustomEmoticon:(NSString *)isWaiting;
 - (void)chat:(AIChat *)inChat setCustomEmoticon:(NSString *)emoticonEquivalent withImageData:(NSData *)inImageData;

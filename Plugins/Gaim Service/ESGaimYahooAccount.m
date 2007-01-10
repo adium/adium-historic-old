@@ -44,6 +44,29 @@
 	gaim_account_set_bool(account, "yahoojp", FALSE);
 }
 
+/*!
+* @brief The UID will be changed. The account has a chance to perform modifications
+ *
+ * Remove @yahoo.com from the proposedUID - a common mistake is to include it in the yahoo ID
+ *
+ * @param proposedUID The proposed, pre-filtered UID (filtered means it has no characters invalid for this servce)
+ * @result The UID to use; the default implementation just returns proposedUID.
+ */
+- (NSString *)accountWillSetUID:(NSString *)proposedUID
+{
+	NSString	*correctUID;
+	
+	if ((proposedUID && ([proposedUID length] > 0)) && 
+		([proposedUID rangeOfString:@"@yahoo.com" options:NSCaseInsensitiveSearch].location != NSNotFound)) {
+		correctUID = [proposedUID substringToIndex:[proposedUID rangeOfString:@"@yahoo.com" 
+																	  options:NSCaseInsensitiveSearch].location];
+	} else {
+		correctUID = proposedUID;
+	}
+	
+	return correctUID;
+}
+
 - (NSSet *)supportedPropertyKeys
 {
 	static NSMutableSet *supportedPropertyKeys = nil;
