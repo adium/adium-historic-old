@@ -167,7 +167,7 @@
 		[requestController close];
 	}
 	
-	[self release];
+	[self autorelease];
 }
 
 /*!
