@@ -352,24 +352,20 @@
 /*!
  * @brief Inform AIListContact instances of the user's intended privacy towards the people they represent
  */
+#warning Something similar needs to happen to update when an account privacyOptions change
 - (void)accountConnected:(NSNotification *)notification
 {
 	AIAccount		*account = [notification object];
 
-	if ([account conformsToProtocol:@protocol(AIAccount_Privacy)]) {
+	if ([account conformsToProtocol:@protocol(AIAccount_Privacy)] &&
+		([(AIAccount <AIAccount_Privacy> *)account privacyOptions] == AIPrivacyOptionDenyUsers)) {
 		NSEnumerator	*contactEnumerator;
 		AIListContact	*currentContact;
 		NSArray			*blockedContacts = [(AIAccount <AIAccount_Privacy> *)account listObjectsOnPrivacyList:AIPrivacyTypeDeny];
 		
-		//check if each contact is on the account's deny list
-		contactEnumerator = [[account contacts] objectEnumerator];
+		contactEnumerator = [blockedContacts objectEnumerator];
 		while ((currentContact = [contactEnumerator nextObject])) {
-			if ([blockedContacts containsObject:[currentContact UID]]) {
-				//inform the contact that they're blocked
-				[currentContact setIsBlocked:YES updateList:NO];
-			} else {
-				[currentContact setIsBlocked:NO updateList:NO];
-			}
+			[currentContact setIsBlocked:YES updateList:NO];
 		}
 	}
 }
