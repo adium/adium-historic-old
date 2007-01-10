@@ -27,6 +27,7 @@ enum {
 	AIServiceIconsDirectory = 415,
 	AISoundsDirectory = 416,
 	AIStatusIconsDirectory = 417,
+	AIMenuBarIconsDirectory = 418,
 };
 
 enum {

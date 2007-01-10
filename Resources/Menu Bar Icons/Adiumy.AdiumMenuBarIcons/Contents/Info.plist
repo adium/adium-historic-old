@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleGetInfoString</key>
+	<string>Adiumy</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.adiumx.menubar.adiumy</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>1.0</string>
+	<key>CFBundleName</key>
+	<string>Adiumy</string>
+	<key>CFBundlePackageType</key>
+	<string>AdMB</string>
+	<key>Icons</key>
+	<dict>
+		<key>Away</key>
+		<string>online.png</string>
+		<key>AwayHighlight</key>
+		<string>highlight.png</string>
+		<key>Content</key>
+		<string>content.png</string>
+		<key>ContentHighlight</key>
+		<string>highlight.png</string>
+		<key>Invisible</key>
+		<string>online.png</string>
+		<key>InvisibleHighlight</key>
+		<string>highlight.png</string>
+		<key>Offline</key>
+		<string>offline.png</string>
+		<key>OfflineHighlight</key>
+		<string>highlight.png</string>
+		<key>Online</key>
+		<string>online.png</string>
+		<key>OnlineHighlight</key>
+		<string>highlight.png</string>
+	</dict>
+	<key>Show Badge</key>
+	<true/>
+	<key>XtraBundleVersion</key>
+	<string>1</string>
+</dict>
+</plist>

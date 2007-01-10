@@ -19,6 +19,7 @@
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIStatusController.h"
 #import "CBStatusMenuItemController.h"
+#import "AIMenuBarIcons.h"
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
@@ -30,6 +31,7 @@
 #import <Adium/AIStatusMenu.h>
 #import <Adium/AIAccountMenu.h>
 #import <AIUtilities/AIColorAdditions.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 
 #define STATUS_ITEM_MARGIN 8
 
@@ -43,6 +45,8 @@
 - (void)setOnlineDuckWithoutBadge;
 - (void)setOnlineDuckWithBadgeImage:(NSImage *)inImage;
 - (void)setOnlineDuck;
+- (void)updateMenuIcons;
+- (void)updateMenuIconsBundle;
 @end
 
 @implementation CBStatusMenuItemController
@@ -61,19 +65,14 @@
 		[statusItem setHighlightMode:YES];
 
 		unviewedContent = NO;
-
-		if ([[adium accountController] oneOrMoreConnectedAccounts]) {
-			[self setOnlineDuck];
-		} else {
-			[self setOfflineDuck];
-		}
+		[self updateMenuIconsBundle];
 		
 		//Create and install the menu
 		theMenu = [[NSMenu alloc] init];
 		[theMenu setAutoenablesItems:YES];
 		[statusItem setMenu:theMenu];
 		[theMenu setDelegate:self];
-
+		
 		//Setup for open chats and unviewed content catching
 		accountMenuItemsArray = [[NSMutableArray alloc] init];
 		stateMenuItemsArray = [[NSMutableArray alloc] init];
@@ -96,6 +95,11 @@
 							   selector:@selector(statusIconSetDidChange:)
 								   name:AIStatusIconSetDidChangeNotification
 								 object:nil];
+								 
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(menuBarIconsDidChange:)
+										   name:AIMenuBarIconsDidChangeNotification
+										 object:nil];
 		
 		//Register as a chat observer (So we can catch the unviewed content status flag)
 		[[adium chatController] registerChatObserver:self];
@@ -129,11 +133,7 @@
 	[unviewedObjectsArray release];
 	[accountMenu release];
 	[statusMenu release];
-
-	[adiumOfflineImage release]; 
-	[adiumOfflineHighlightImage release];
-	[adiumImage release];
-	[adiumHighlightImage release];
+	[menuIcons release];
 
 	// Can't release this because it causes a crash on quit. rdar://4139755, rdar://4160625, and #743. --boredzo
 	// [statusItem release];
@@ -144,6 +144,102 @@
 
 //Icon State --------------------------------------------------------
 #pragma mark Icon State
+
+#define PREF_GROUP_APPEARANCE		@"Appearance"
+#define	KEY_MENU_BAR_ICONS			@"Menu Bar Icons"
+#define EXTENSION_MENU_BAR_ICONS	@"AdiumMenuBarIcons"
+#define	RESOURCE_MENU_BAR_ICONS		@"Menu Bar Icons"
+
+- (void)updateMenuIconsBundle
+{
+	NSString *menuIconPath, *menuIconName;
+		
+	menuIconName = [[adium preferenceController] preferenceForKey:KEY_MENU_BAR_ICONS
+																   group:PREF_GROUP_APPEARANCE
+																  object:nil];
+
+	// Get the path of the pack if found.
+	if (menuIconName) {
+		menuIconPath = [adium pathOfPackWithName:menuIconName
+									   extension:EXTENSION_MENU_BAR_ICONS
+							  resourceFolderName:RESOURCE_MENU_BAR_ICONS];
+	}
+	
+	// If the pack is not found, get the default one.
+	if (!menuIconPath || !menuIconName) {
+		menuIconName = [[adium preferenceController] defaultPreferenceForKey:KEY_MENU_BAR_ICONS
+																	   group:PREF_GROUP_APPEARANCE
+																	  object:nil];																	  
+		menuIconPath = [adium pathOfPackWithName:menuIconName
+									   extension:EXTENSION_MENU_BAR_ICONS
+							  resourceFolderName:RESOURCE_MENU_BAR_ICONS];
+	}
+	
+	[menuIcons release];
+	menuIcons = [[AIMenuBarIcons alloc] initWithURL:[NSURL fileURLWithPath:menuIconPath]];
+	
+	[self updateMenuIcons];
+}
+
+#define	IMAGE_TYPE_CONTENT		@"Content"
+#define	IMAGE_TYPE_AWAY			@"Away"
+#define	IMAGE_TYPE_INVISIBLE	@"Invisible"
+#define	IMAGE_TYPE_OFFLINE		@"Offline"
+#define	IMAGE_TYPE_ONLINE		@"Online"
+
+- (void)updateMenuIcons
+{
+	NSImage *badge = nil, *regular = nil, *highlight = nil;
+	BOOL showBadge = [menuIcons showBadge]; // Checks if this set wants to show badges or not.
+	
+	// If there's content, set our badge to the "content" icon.
+	if (unviewedContent) {
+		regular = [menuIcons imageOfType:IMAGE_TYPE_CONTENT];
+		highlight = [menuIcons imageHighlightOfType:IMAGE_TYPE_CONTENT];
+		
+		if (showBadge) {
+			badge = [AIStatusIcons statusIconForStatusName:@"content"
+												statusType:AIAvailableStatusType
+											      iconType:AIStatusIconList
+												 direction:AIIconNormal];
+		}
+	} else {
+		// Get the correct icon for our current state.
+		switch([[[adium statusController] activeStatusState] statusType]) {
+			case AIAwayStatusType:
+				regular = [menuIcons imageOfType:IMAGE_TYPE_AWAY];
+				highlight = [menuIcons imageHighlightOfType:IMAGE_TYPE_AWAY];
+				
+				if (showBadge) {
+					badge = [[[adium statusController] activeStatusState] icon];
+				}
+			break;
+				
+			case AIInvisibleStatusType:
+				regular = [menuIcons imageOfType:IMAGE_TYPE_INVISIBLE];
+				highlight = [menuIcons imageHighlightOfType:IMAGE_TYPE_INVISIBLE];
+				
+				if (showBadge) {
+					badge = [[[adium statusController] activeStatusState] icon];
+				}
+			break;
+				
+			case AIOfflineStatusType:
+				regular = [menuIcons imageOfType:IMAGE_TYPE_OFFLINE];
+				highlight = [menuIcons imageHighlightOfType:IMAGE_TYPE_OFFLINE];
+			break;
+				
+			default:
+				regular = [menuIcons imageOfType:IMAGE_TYPE_ONLINE];
+				highlight = [menuIcons imageHighlightOfType:IMAGE_TYPE_ONLINE];
+			break;
+		}
+	}
+
+	// Set our icon, and highlight icon, to a badged version.
+	[statusItem setImage:[self badgeDuck:regular withImage:badge]];
+	[statusItem setAlternateImage:[self badgeDuck:highlight withImage:badge]];
+}
 
 - (NSImage *)badgeDuck:(NSImage *)duckImage withImage:(NSImage *)badgeImage {
 	NSImage *image = duckImage;
@@ -190,60 +286,6 @@
 	}
 
 	return image;
-}
-
-- (NSImage *)badgeOnlineDuckWithImage:(NSImage *)inImage
-{
-	if (!adiumImage) {
-		adiumImage = [[NSImage imageNamed:@"adium.png" forClass:[self class]] retain];
-	}
-	return [self badgeDuck:adiumImage withImage:inImage];
-}
-- (NSImage *)badgeOnlineHighlightDuckWithImage:(NSImage *)inImage
-{
-	if (!adiumHighlightImage) {
-		adiumHighlightImage = [[NSImage imageNamed:@"adiumHighlight.png" forClass:[self class]] retain];
-	}
-	return [self badgeDuck:adiumHighlightImage withImage:inImage];
-}
-
-- (void)setOfflineDuck
-{
-	if (!adiumOfflineImage) {
-		adiumOfflineImage = [[NSImage imageNamed:@"adiumOffline.png" forClass:[self class]] retain];
-	}
-	if (!adiumOfflineHighlightImage) {
-		adiumOfflineHighlightImage = [[NSImage imageNamed:@"adiumOfflineHighlight.png" forClass:[self class]] retain];
-	}
-
-	[statusItem setImage:adiumOfflineImage];
-	[statusItem setAlternateImage:adiumOfflineHighlightImage];
-}
-- (void)setOnlineDuckWithoutBadge
-{
-	[statusItem setImage:[self badgeOnlineDuckWithImage:nil]];
-	[statusItem setAlternateImage:[self badgeOnlineHighlightDuckWithImage:nil]];
-}
-- (void)setOnlineDuckWithBadgeImage:(NSImage *)inImage
-{	
-	if (!inImage) {
-		inImage = [[[adium statusController] activeStatusState] icon];
-	}
-
-	[statusItem setImage:[self badgeOnlineDuckWithImage:inImage]];
-
-	[statusItem setAlternateImage:[self badgeOnlineHighlightDuckWithImage:inImage]];
-}
-- (void)setOnlineDuck {
-	switch([[[adium statusController] activeStatusState] statusType]) {
-		case AIAvailableStatusType:
-		case AIOfflineStatusType:
-			[self setOnlineDuckWithoutBadge];
-			break;
-
-		default:
-			[self setOnlineDuckWithBadgeImage:nil];
-	}
 }
 
 //Account Menu --------------------------------------------------------
@@ -340,22 +382,15 @@
 	if ([unviewedObjectsArray count] == 0) {
 		//If there are no more contacts with unviewed content, set our icon to normal.
 		if (unviewedContent) {
-			if ([[adium accountController] oneOrMoreConnectedAccounts]) {
-				[self setOnlineDuck];
-			} else {
-				[self setOfflineDuck];
-			}
 			unviewedContent = NO;
+			[self updateMenuIcons];
 		}
 
 	} else {
 		//If this is the first contact with unviewed content, set our icon to unviewed content.
 		if (!unviewedContent) {
 			unviewedContent = YES;
-			[self setOnlineDuckWithBadgeImage:[AIStatusIcons statusIconForStatusName:@"content"
-																		  statusType:AIAvailableStatusType
-																			iconType:AIStatusIconList
-																		   direction:AIIconNormal]];
+			[self updateMenuIcons];
 		}
 	}
 
@@ -496,29 +531,16 @@
 
 - (void)accountStateChanged:(NSNotification *)notification
 {
-	if (!unviewedContent) {
-		if ([[adium accountController] oneOrMoreConnectedAccounts]) {
-			[self setOnlineDuck];
-		} else {
-			[self setOfflineDuck];
-		}
-	}
+	[self updateMenuIcons];
 }
 
 - (void)statusIconSetDidChange:(NSNotification *)notification
 {
-	if (unviewedContent) {
-		[self setOnlineDuckWithBadgeImage:[AIStatusIcons statusIconForStatusName:@"content"
-																	  statusType:AIAvailableStatusType
-																		iconType:AIStatusIconList
-																	   direction:AIIconNormal]];
-	} else {
-		if ([[adium accountController] oneOrMoreConnectedAccounts]) {
-			[self setOnlineDuck];
-		} else {
-			[self setOfflineDuck];
-		}
-	}
+	[self updateMenuIcons];
 }
 
+- (void)menuBarIconsDidChange:(NSNotification *)notification
+{
+	[self updateMenuIconsBundle];
+}
 @end

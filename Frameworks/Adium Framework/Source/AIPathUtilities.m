@@ -35,6 +35,7 @@
 #define SERVICE_ICONS_DIRECTORY		@"Service Icons"
 #define SOUNDS_DIRECTORY			@"Sounds"
 #define STATUS_ICONS_DIRECTORY		@"Status Icons"
+#define MENU_BAR_ICONS_DIRECTORY	@"Menu Bar Icons"
 
 /*!
  * @brief Function to search for Adium resources
@@ -79,6 +80,8 @@ AISearchPathForDirectoriesInDomains(unsigned directory, unsigned domainMask, BOO
 		adiumResourceName = SOUNDS_DIRECTORY;
 	} else if (directory == AIStatusIconsDirectory) {
 		adiumResourceName = STATUS_ICONS_DIRECTORY;
+	} else if (directory == AIMenuBarIconsDirectory) {
+		adiumResourceName = MENU_BAR_ICONS_DIRECTORY;
 	}
 
 	if (adiumResourceName) {

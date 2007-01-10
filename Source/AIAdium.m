@@ -574,6 +574,12 @@ static NSString	*prefsCategory;
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 		prefsCategory = @"appearance";
 		
+	} else if ([extension caseInsensitiveCompare:@"AdiumMenuBarIcons"] == NSOrderedSame) {
+		destination = [AISearchPathForDirectoriesInDomains(AIMenuBarIconsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
+		fileDescription = AILocalizedString(@"menu bar icons",nil);
+		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
+		prefsCategory = @"appearance";
+		
 	} else if ([extension caseInsensitiveCompare:@"AdiumStatusIcons"] == NSOrderedSame) {
 		NSString	*packName = [[filename lastPathComponent] stringByDeletingPathExtension];
 /*

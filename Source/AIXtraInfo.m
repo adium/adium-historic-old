@@ -66,6 +66,10 @@
 				previewImage = [[NSImage alloc] initByReferencingFile:previewImagePath];
 		}
 		else {
+			if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+				[self autorelease];
+				return nil;
+			}
 			[self setName:[[path lastPathComponent] stringByDeletingPathExtension]];
 			resourcePath = [path copy];//root of the xtra
 		}	

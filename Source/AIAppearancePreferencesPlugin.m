@@ -21,6 +21,7 @@
 #import <Adium/AIAbstractListController.h>
 #import <Adium/AIStatusIcons.h>
 #import <Adium/AIServiceIcons.h>
+#import <AIMenuBarIcons.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
@@ -133,6 +134,13 @@
 
 				[AIServiceIcons setActiveServiceIconsFromPath:path];
 			}
+		}
+		
+		// Menu Bar Icons
+		if (firstTime || [key isEqualToString:KEY_MENU_BAR_ICONS]) {
+			// Post a notification to update the menu bar icons.
+			[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:AIMenuBarIconsDidChangeNotification
+																			   object:nil];
 		}
 		
 		//Theme

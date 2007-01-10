@@ -14,29 +14,19 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIObject.h>
-#import "AIMenuBarIcons.h"
+#include <AIXtraInfo.h>
 
-@class AIAccountMenu, AIStatusMenu;
-@protocol AIChatObserver;
+// Our notification
+#define AIMenuBarIconsDidChangeNotification		@"AIMenuBarIconsDidChangeNotification"
 
-@interface CBStatusMenuItemController : AIObject <AIChatObserver>
-{
-	NSStatusItem            *statusItem;
-	NSMenu                  *theMenu;
-	AIAccountMenu           *accountMenu;
-	AIStatusMenu			*statusMenu;
-	AIMenuBarIcons			*menuIcons;
-
-	NSMutableArray          *accountMenuItemsArray;
-	NSMutableArray          *stateMenuItemsArray;
-	NSMutableArray          *unviewedObjectsArray;
-	NSMutableArray          *openChatsArray;
-
-	BOOL					unviewedContent;
-	BOOL                    needsUpdate;
+@interface AIMenuBarIcons : AIXtraInfo {
+	NSMutableDictionary *imageStates;
+	NSDictionary		*iconInfo;
 }
 
-+ (CBStatusMenuItemController *)statusMenuItemController;
++ (NSImage *)previewMenuImageForIconPackAtPath:(NSString *)inPath;
+- (NSImage *)imageOfType:(NSString *)type;
+- (NSImage *)imageHighlightOfType:(NSString *)type;
+- (BOOL)showBadge;
 
 @end

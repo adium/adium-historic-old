@@ -103,6 +103,30 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
+				<string>AdiumMenuBarIcons</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>AdiumMenuBarIcons.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Adium Menu Bar Icons</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>AdMB</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adiumx.menubaricons</string>
+			</array>
+			<key>LSTypeIsPackage</key>
+			<true/>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>Binary</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
 				<string>AdiumEmoticonset</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
