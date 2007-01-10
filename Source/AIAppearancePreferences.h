@@ -19,6 +19,7 @@
 @interface AIAppearancePreferences : AIPreferencePane {
 	IBOutlet	NSPopUpButton	*popUp_statusIcons;
 	IBOutlet	NSPopUpButton	*popUp_serviceIcons;
+	IBOutlet	NSPopUpButton	*popUp_menuBarIcons;
 	IBOutlet	NSPopUpButton	*popUp_emoticons;
 	IBOutlet	NSPopUpButton	*popUp_dockIcon;
 	IBOutlet	NSPopUpButton	*popUp_listLayout;
@@ -38,6 +39,7 @@
 	IBOutlet	NSTextField		*label_serviceIcons;
 	IBOutlet	NSTextField		*label_statusIcons;
 	IBOutlet	NSTextField		*label_dockIcons;
+	IBOutlet	NSTextField		*label_menuBarIcons;
 
 	//
 	NSArray		*_listLayouts;	//Will NOT always be a valid reference.  Do not use as one!

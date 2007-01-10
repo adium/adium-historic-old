@@ -77,6 +77,9 @@
 		11CC0DEE097B120D00E1DE20 /* RAFjoscarICQAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CC0DEC097B120D00E1DE20 /* RAFjoscarICQAccount.m */; };
 		11DAEBD0092FB857007A8682 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		11DAEBD1092FB85F007A8682 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
+		11F145F00B546AC500CA91F6 /* Menu Bar Icons in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11F145C70B546A6D00CA91F6 /* Menu Bar Icons */; };
+		11F1460B0B546C1200CA91F6 /* AIMenuBarIcons.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11F146090B546C1200CA91F6 /* AIMenuBarIcons.h */; };
+		11F1460C0B546C1200CA91F6 /* AIMenuBarIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = 11F1460A0B546C1200CA91F6 /* AIMenuBarIcons.m */; };
 		11F5F44309537E34007DCC49 /* joscar.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 118C52C6091BF0DB00219458 /* joscar.AdiumPlugin */; };
 		11F5F70209539C70007DCC49 /* joscarDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 11F5F70109539C70007DCC49 /* joscarDefaults.plist */; };
 		311AC6D20AF4BA5B0007F952 /* JavaCocoaAdapter.class in CopyFiles */ = {isa = PBXBuildFile; fileRef = 311AC6CD0AF4BA140007F952 /* JavaCocoaAdapter.class */; };
@@ -1138,15 +1141,9 @@
 		9E12765407D38B5000AA91C5 /* Growl-WithInstaller.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9E124DF507D34CF500AA91C5 /* Growl-WithInstaller.framework */; };
 		9E1E1DFD0A96741500E16DFC /* LMX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9E1E1DFC0A96741500E16DFC /* LMX.framework */; };
 		9E1E1E270A96770C00E16DFC /* LMX.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 9E1E1DFC0A96741500E16DFC /* LMX.framework */; };
-		9E20910A06A601A100E33E27 /* adium.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E791E26057746D100547562 /* adium.png */; };
-		9E20910D06A601AD00E33E27 /* adiumHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 6C0FD8C20578D47B00D70FEB /* adiumHighlight.png */; };
 		9E20910E06A601AF00E33E27 /* CBStatusMenuItemController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E791DA40577094400547562 /* CBStatusMenuItemController.m */; };
 		9E20911006A601B200E33E27 /* CBStatusMenuItemPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E791D9505768B7A00547562 /* CBStatusMenuItemPlugin.m */; };
 		9E217B7B06A74CA8002A3F27 /* StatusMenuItemDefaultPrefs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E217B7706A74CA7002A3F27 /* StatusMenuItemDefaultPrefs.plist */; };
-		9E28FDE706ADB30D0041553E /* adiumRed.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E28FDE506ADB30D0041553E /* adiumRed.png */; };
-		9E28FDE806ADB30D0041553E /* adiumRedHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E28FDE606ADB30D0041553E /* adiumRedHighlight.png */; };
-		9E6A9BF70732CB500032C9F6 /* adiumOfflineHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E6A9BF50732CB500032C9F6 /* adiumOfflineHighlight.png */; };
-		9E6A9BF80732CB500032C9F6 /* adiumOffline.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E6A9BF60732CB500032C9F6 /* adiumOffline.png */; };
 		9ECB03E709F2A9D900996F44 /* AIDictionaryDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECB03E309F2A9D800996F44 /* AIDictionaryDebug.m */; };
 		9ECB03E909F2A9D900996F44 /* AIXMLAppender.m in Sources */ = {isa = PBXBuildFile; fileRef = 9ECB03E509F2A9D800996F44 /* AIXMLAppender.m */; };
 		9EF0DBFA09D944C200FBCC1E /* Resources/block.png in Resources */ = {isa = PBXBuildFile; fileRef = 9EF0DBF309D944A300FBCC1E /* Resources/block.png */; };
@@ -1526,6 +1523,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
+				11F145F00B546AC500CA91F6 /* Menu Bar Icons in CopyFiles */,
 				34082675075B079800703011 /* Dock Icons in CopyFiles */,
 				4BA62D8E06C51257001D6B3C /* Status Icons in CopyFiles */,
 				34A29DB706ED68C000E1366C /* Contact List in CopyFiles */,
@@ -1572,6 +1570,7 @@
 			dstSubfolderSpec = 1;
 			files = (
 				F51BCE390A156312000FDC06 /* AdiumSpotlightImporter.mdimporter in CopyFiles */,
+				11F1460B0B546C1200CA91F6 /* AIMenuBarIcons.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1633,6 +1632,9 @@
 		11CC0DBA097B0AE600E1DE20 /* RAFjoscarICQService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarICQService.m; path = "Plugins/joscar Service/RAFjoscarICQService.m"; sourceTree = "<group>"; };
 		11CC0DEB097B120C00E1DE20 /* RAFjoscarICQAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarICQAccount.h; path = "Plugins/joscar Service/RAFjoscarICQAccount.h"; sourceTree = "<group>"; };
 		11CC0DEC097B120D00E1DE20 /* RAFjoscarICQAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarICQAccount.m; path = "Plugins/joscar Service/RAFjoscarICQAccount.m"; sourceTree = "<group>"; };
+		11F145C70B546A6D00CA91F6 /* Menu Bar Icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Menu Bar Icons"; path = "Resources/Menu Bar Icons"; sourceTree = "<group>"; };
+		11F146090B546C1200CA91F6 /* AIMenuBarIcons.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMenuBarIcons.h; path = Source/AIMenuBarIcons.h; sourceTree = "<group>"; };
+		11F1460A0B546C1200CA91F6 /* AIMenuBarIcons.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMenuBarIcons.m; path = Source/AIMenuBarIcons.m; sourceTree = "<group>"; };
 		11F5F46309538B99007DCC49 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/joscar Service/English.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
 		11F5F70109539C70007DCC49 /* joscarDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = joscarDefaults.plist; path = "Plugins/joscar Service/joscarDefaults.plist"; sourceTree = "<group>"; };
 		11F5F72D0953A227007DCC49 /* joscarClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = joscarClasses.h; path = "Plugins/joscar Service/joscarClasses.h"; sourceTree = SOURCE_ROOT; };
@@ -3497,7 +3499,6 @@
 		63EA62EE094B8705009C8453 /* AIXtraInfoController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtraInfoController.m; path = Source/AIXtraInfoController.m; sourceTree = "<group>"; };
 		63EA6406094BB9A9009C8453 /* AIStatusIconPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIStatusIconPreviewController.h; path = Source/AIStatusIconPreviewController.h; sourceTree = "<group>"; };
 		63EA6407094BB9A9009C8453 /* AIStatusIconPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIStatusIconPreviewController.m; path = Source/AIStatusIconPreviewController.m; sourceTree = "<group>"; };
-		6C0FD8C20578D47B00D70FEB /* adiumHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumHighlight.png; path = "Plugins/Status Menu Item/adiumHighlight.png"; sourceTree = "<group>"; };
 		6C1C712F0A7E0FD500F901F1 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = "Plugins/joscar Service/Spanish.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
 		6C1C71330A7E0FE700F901F1 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = "Plugins/joscar Service/Spanish.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
 		6C5C3C2605F6532600490341 /* SQL Logger.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SQL Logger.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3569,17 +3570,12 @@
 		9E125C6407D3571400AA91C5 /* ESBlockingPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESBlockingPlugin.m; path = Source/ESBlockingPlugin.m; sourceTree = "<group>"; };
 		9E1E1DFC0A96741500E16DFC /* LMX.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LMX.framework; path = Frameworks/LMX.framework; sourceTree = "<group>"; };
 		9E217B7706A74CA7002A3F27 /* StatusMenuItemDefaultPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = StatusMenuItemDefaultPrefs.plist; path = "Plugins/Status Menu Item/StatusMenuItemDefaultPrefs.plist"; sourceTree = "<group>"; };
-		9E28FDE506ADB30D0041553E /* adiumRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumRed.png; path = "Plugins/Status Menu Item/adiumRed.png"; sourceTree = "<group>"; };
-		9E28FDE606ADB30D0041553E /* adiumRedHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumRedHighlight.png; path = "Plugins/Status Menu Item/adiumRedHighlight.png"; sourceTree = "<group>"; };
 		9E44248608E11F380015D4DD /* AdiumURLHandling.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AdiumURLHandling.h; path = Source/AdiumURLHandling.h; sourceTree = "<group>"; };
 		9E44248708E11F380015D4DD /* AdiumURLHandling.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AdiumURLHandling.m; path = Source/AdiumURLHandling.m; sourceTree = "<group>"; };
-		9E6A9BF50732CB500032C9F6 /* adiumOfflineHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumOfflineHighlight.png; path = "Plugins/Status Menu Item/adiumOfflineHighlight.png"; sourceTree = "<group>"; };
-		9E6A9BF60732CB500032C9F6 /* adiumOffline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumOffline.png; path = "Plugins/Status Menu Item/adiumOffline.png"; sourceTree = "<group>"; };
 		9E791D9405768B7A00547562 /* CBStatusMenuItemPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBStatusMenuItemPlugin.h; path = "Plugins/Status Menu Item/CBStatusMenuItemPlugin.h"; sourceTree = "<group>"; };
 		9E791D9505768B7A00547562 /* CBStatusMenuItemPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBStatusMenuItemPlugin.m; path = "Plugins/Status Menu Item/CBStatusMenuItemPlugin.m"; sourceTree = "<group>"; };
 		9E791DA30577094300547562 /* CBStatusMenuItemController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBStatusMenuItemController.h; path = "Plugins/Status Menu Item/CBStatusMenuItemController.h"; sourceTree = "<group>"; };
 		9E791DA40577094400547562 /* CBStatusMenuItemController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBStatusMenuItemController.m; path = "Plugins/Status Menu Item/CBStatusMenuItemController.m"; sourceTree = "<group>"; };
-		9E791E26057746D100547562 /* adium.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adium.png; path = "Plugins/Status Menu Item/adium.png"; sourceTree = "<group>"; };
 		9E95316703C8E0BE00415B22 /* AIDockController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIDockController.h; path = Source/AIDockController.h; sourceTree = "<group>"; };
 		9E95316903C8E0C700415B22 /* AIDockController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIDockController.m; path = Source/AIDockController.m; sourceTree = "<group>"; };
 		9EA125E8055B630900ECF349 /* CBGaimOscarAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CBGaimOscarAccount.m; path = "Plugins/Gaim Service/CBGaimOscarAccount.m"; sourceTree = "<group>"; };
@@ -6312,6 +6308,7 @@
 		4BF2E6BE067CB72400743318 /* Xtras (Built In) */ = {
 			isa = PBXGroup;
 			children = (
+				11F145C70B546A6D00CA91F6 /* Menu Bar Icons */,
 				071C56390827933A00399C0F /* Localized */,
 				342838ED07D2D004004F01C9 /* Shared Dock Icon Images */,
 				3408254D075B078B00703011 /* Dock Icons */,
@@ -6707,12 +6704,8 @@
 		9E791D8505768A3000547562 /* Status Menu Item */ = {
 			isa = PBXGroup;
 			children = (
-				9E6A9BF50732CB500032C9F6 /* adiumOfflineHighlight.png */,
-				9E6A9BF60732CB500032C9F6 /* adiumOffline.png */,
-				9E791E26057746D100547562 /* adium.png */,
-				6C0FD8C20578D47B00D70FEB /* adiumHighlight.png */,
-				9E28FDE506ADB30D0041553E /* adiumRed.png */,
-				9E28FDE606ADB30D0041553E /* adiumRedHighlight.png */,
+				11F146090B546C1200CA91F6 /* AIMenuBarIcons.h */,
+				11F1460A0B546C1200CA91F6 /* AIMenuBarIcons.m */,
 				9E217B7706A74CA7002A3F27 /* StatusMenuItemDefaultPrefs.plist */,
 				9E791D9405768B7A00547562 /* CBStatusMenuItemPlugin.h */,
 				9E791D9505768B7A00547562 /* CBStatusMenuItemPlugin.m */,
@@ -8154,17 +8147,11 @@
 				4B191D8B0611C10800E8A4E7 /* ReadMe.rtf in Resources */,
 				4BAA1B530632EF0000D8B92C /* ErrorAlert.png in Resources */,
 				4BAA1B610632EFE700D8B92C /* WindowAlert.png in Resources */,
-				9E20910A06A601A100E33E27 /* adium.png in Resources */,
-				9E20910D06A601AD00E33E27 /* adiumHighlight.png in Resources */,
 				9E217B7B06A74CA8002A3F27 /* StatusMenuItemDefaultPrefs.plist in Resources */,
 				4B97DB6706AC123A0003EE49 /* linkToolbar.png in Resources */,
-				9E28FDE706ADB30D0041553E /* adiumRed.png in Resources */,
-				9E28FDE806ADB30D0041553E /* adiumRedHighlight.png in Resources */,
 				4BF98DCD06D149EE00E8781D /* ContactStatusColoringDefaults.plist in Resources */,
 				3461621406FB482D009181D8 /* UserList Theme.plist in Resources */,
 				3461621706FB482D009181D8 /* UserList Layout.plist in Resources */,
-				9E6A9BF70732CB500032C9F6 /* adiumOfflineHighlight.png in Resources */,
-				9E6A9BF80732CB500032C9F6 /* adiumOffline.png in Resources */,
 				34082690075B5CB900703011 /* Awake.png in Resources */,
 				34082691075B5CB900703011 /* Flap.png in Resources */,
 				346BA3640774C35500628F06 /* GlobalEventsPreferences.nib in Resources */,
@@ -8915,6 +8902,7 @@
 				345EE2DF0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.m in Sources */,
 				387226C90A8B7C84002CC4F4 /* AIVideoConfController.m in Sources */,
 				377ED2670AED59E600CB7BDF /* TabsAdvancedPreferences.m in Sources */,
+				11F1460C0B546C1200CA91F6 /* AIMenuBarIcons.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -33,6 +33,7 @@
 #import <Adium/AIStatusIcons.h>
 #import <Adium/ESPresetManagementController.h>
 #import <Adium/ESPresetNameSheetController.h>
+#import <AIMenuBarIcons.h>
 
 #define OLD_LIST_SETTINGS_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"OldListXtras"]
 
@@ -58,6 +59,7 @@ typedef enum {
 - (void)configureDockIconMenu;
 - (void)configureStatusIconsMenu;
 - (void)configureServiceIconsMenu;
+- (void)configureMenuBarIconsMenu;
 @end
 
 @implementation AIAppearancePreferences
@@ -126,6 +128,10 @@ typedef enum {
 	
 	if (!type || [type isEqualToString:@"adiumstatusicons"]) {
 		[self configureStatusIconsMenu];
+	}
+	
+	if (!type || [type isEqualToString:@"adiummenubaricons"]) {
+		[self configureMenuBarIconsMenu];
 	}
 	
 	if (!type || [type isEqualToString:@"listtheme"]) {
@@ -203,7 +209,17 @@ typedef enum {
 																										group:PREF_GROUP_APPEARANCE
 																									   object:nil]];
 			}
-		}		
+		}
+		if (firstTime || [key isEqualToString:KEY_MENU_BAR_ICONS]) {
+			[popUp_menuBarIcons selectItemWithTitle:[prefDict objectForKey:KEY_MENU_BAR_ICONS]];
+			
+			//If the prefDict's item isn't present, we're using the default, so select that one
+			if (![popUp_menuBarIcons selectedItem]) {
+				[popUp_menuBarIcons selectItemWithTitle:[[adium preferenceController] defaultPreferenceForKey:KEY_MENU_BAR_ICONS
+																										group:PREF_GROUP_APPEARANCE
+																									   object:nil]];
+			}
+		}
 		if (firstTime || [key isEqualToString:KEY_LIST_LAYOUT_NAME]) {
 			[popUp_listLayout selectItemWithRepresentedObject:[prefDict objectForKey:KEY_LIST_LAYOUT_NAME]];
 		}
@@ -258,7 +274,10 @@ typedef enum {
         [[adium preferenceController] setPreference:[[sender selectedItem] title]
                                              forKey:KEY_SERVICE_ICON_PACK
                                               group:PREF_GROUP_APPEARANCE];
-		
+	} else if (sender == popUp_menuBarIcons) {
+        [[adium preferenceController] setPreference:[[sender selectedItem] title]
+                                             forKey:KEY_MENU_BAR_ICONS
+                                              group:PREF_GROUP_APPEARANCE];	
 	} else if (sender == popUp_dockIcon) {
         [[adium preferenceController] setPreference:[[sender selectedItem] representedObject]
                                              forKey:KEY_ACTIVE_DOCK_ICON
@@ -947,8 +966,8 @@ typedef enum {
 	[popUp_dockIcon selectItemWithRepresentedObject:activePackName];
 }
 
-//Status and Service icons ---------------------------------------------------------------------------------------------
-#pragma mark Status and service icons
+//Status, Service and Menu Bar icons ---------------------------------------------------------------------------------------------
+#pragma mark Status, service and menu bar icons
 - (NSMenuItem *)meuItemForIconPackAtPath:(NSString *)packPath class:(Class)iconClass
 {
 	NSString	*name = [[packPath lastPathComponent] stringByDeletingPathExtension];
@@ -1036,6 +1055,33 @@ typedef enum {
 	[popUp_serviceIcons selectItemWithRepresentedObject:activePackName];
 }
 
+- (void)configureMenuBarIconsMenu
+{
+	NSMenu		*tempMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
+	NSString	*iconPath;
+	NSString	*activePackName = [[adium preferenceController] preferenceForKey:KEY_MENU_BAR_ICONS
+																		   group:PREF_GROUP_APPEARANCE];
+	iconPath = [adium pathOfPackWithName:activePackName
+							   extension:@"AdiumMenuBarIcons"
+					  resourceFolderName:@"Menu Bar Icons"];
+	
+	if (!iconPath) {
+		activePackName = [[adium preferenceController] defaultPreferenceForKey:KEY_MENU_BAR_ICONS
+																		 group:PREF_GROUP_APPEARANCE
+																		object:nil];
+		
+		iconPath = [adium pathOfPackWithName:activePackName
+								   extension:@"AdiumMenuBarIcons"
+						  resourceFolderName:@"Menu Bar Icons"];		
+	}
+	[tempMenu addItem:[self meuItemForIconPackAtPath:iconPath class:[AIMenuBarIcons class]]];
+	[tempMenu setDelegate:self];
+	[tempMenu setTitle:@"Temporary Menu Bar Icons Menu"];
+	
+	[popUp_menuBarIcons setMenu:tempMenu];
+	[popUp_menuBarIcons selectItemWithRepresentedObject:activePackName];
+}
+
 #pragma mark Menu delegate
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
@@ -1067,6 +1113,13 @@ typedef enum {
 															 group:PREF_GROUP_APPEARANCE];
 		popUpButton = popUp_serviceIcons;
 		
+	} else if ([title isEqualToString:@"Temporary Menu Bar Icons Menu"]) {
+		menuItemArray = [self _iconPackMenuArrayForPacks:[adium allResourcesForName:@"Menu Bar Icons" 
+																	 withExtensions:@"AdiumMenuBarIcons"] 
+												   class:[AIMenuBarIcons class]];
+		repObject = [[adium preferenceController] preferenceForKey:KEY_MENU_BAR_ICONS
+															 group:PREF_GROUP_APPEARANCE];
+		popUpButton = popUp_menuBarIcons;	
 	}
 	
 	if (menuItemArray) {
