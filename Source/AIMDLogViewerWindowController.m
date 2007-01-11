@@ -16,6 +16,14 @@
 
 @implementation AIMDLogViewerWindowController
 
+- (id)initWithWindowNibName:(NSString *)windowNibName
+{
+	if ((self = [super initWithWindowNibName:windowNibName])) {
+		currentSearchLock = [[NSLock alloc] init];
+	}
+	return self;
+}
+
 - (void)windowDidLoad
 {
 	[super windowDidLoad];
@@ -37,6 +45,7 @@
     Boolean			more = true;
     UInt32			totalCount = 0;
 
+	[currentSearchLock lock];
 	if (currentSearch) {
 		SKSearchCancel(currentSearch);
 		CFRelease(currentSearch); currentSearch = NULL;
@@ -46,6 +55,7 @@
 								(CFStringRef)searchString,
 								kSKSearchOptionDefault);
 	currentSearch = (thisSearch ? (SKSearchRef)CFRetain(thisSearch) : NULL);
+	[currentSearchLock unlock];
 
 	//Retrieve matches as long as more are pending
     while (more && currentSearch) {
@@ -146,20 +156,24 @@
     }
 	
 	//Ensure current search isn't released in two places simultaneously
+	[currentSearchLock lock];
 	if (currentSearch) {
 		CFRelease(currentSearch);
 		currentSearch = NULL;
 	}
-	
+	[currentSearchLock unlock];
+
 	if (thisSearch) CFRelease(thisSearch);
 }
 
 - (void)stopSearching
 {	
+	[currentSearchLock lock];
 	if (currentSearch) {
 		SKSearchCancel(currentSearch);
 		CFRelease(currentSearch); currentSearch = nil;
 	}
+	[currentSearchLock unlock];
 
 	[super stopSearching];
 }
@@ -268,6 +282,7 @@
 - (void)dealloc
 {
 	[filterDate release]; filterDate = nil;
+	[currentSearchLock release]; currentSearchLock = nil;
 
 	[super dealloc];
 }
