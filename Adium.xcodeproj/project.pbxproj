@@ -2069,6 +2069,50 @@
 		342F88CC0A2A74EA0001DB29 /* PTHotKeyCenter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PTHotKeyCenter.h; path = Source/PTHotKeyCenter.h; sourceTree = "<group>"; };
 		342F88CD0A2A74EB0001DB29 /* PTHotKey.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = PTHotKey.m; path = Source/PTHotKey.m; sourceTree = "<group>"; };
 		342F88CE0A2A74EB0001DB29 /* PTHotKey.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PTHotKey.h; path = Source/PTHotKey.h; sourceTree = "<group>"; };
+		342F9D870B5525AF000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/WebKit Message View/Finnish.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
+		342F9D880B5525AF000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
+		342F9D890B5525B0000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
+		342F9D8A0B5525B0000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = Resources/Finnish.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
+		342F9D8B0B5525B0000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Finnish; path = "Resources/Finnish.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
+		342F9D8C0B5525B0000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/joscar Service/Finnish.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
+		342F9D8D0B5525B0000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
+		342F9D8E0B5525B0000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
+		342F9D8F0B5525B0000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
+		342F9D900B5525B0000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
+		342F9D910B5525B1000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
+		342F9D920B5525B1000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Adium Crash Reporter/Finnish.lproj/MainMenu.nib"; sourceTree = "<group>"; };
+		342F9D930B5525B1000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = "Adium Crash Reporter/Finnish.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		342F9D940B5525B1000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = "Plugins/WebKit Message View/Finnish.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		342F9D950B5525B1000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = "Frameworks/Adium Framework/Resources/Finnish.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		342F9D960B5525B1000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = Resources/Finnish.lproj/Localizable.strings; sourceTree = "<group>"; };
+		342F9D970B5525B2000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = "Plugins/Gaim Service/Finnish.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		342F9D980B5525B2000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = "Plugins/joscar Service/Finnish.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		342F9D990B5525B2000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
+		342F9D9A0B5525B2000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
+		342F9D9B0B5525B2000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/joscar Service/Finnish.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
+		342F9D9C0B5525B2000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = Resources/Finnish.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		342F9D9D0B5525B2000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		342F9D9E0B5525B3000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/Gaim Service/Finnish.lproj/ESGaimZephyrAccountView.nib"; sourceTree = "<group>"; };
+		342F9D9F0B5525B3000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/Gaim Service/Finnish.lproj/ESGaimYahooAccountView.nib"; sourceTree = "<group>"; };
+		342F9DA00B5525B3000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/Gaim Service/Finnish.lproj/ESGaimSimpleAccountView.nib"; sourceTree = "<group>"; };
+		342F9DA10B5525B3000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/Gaim Service/Finnish.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
+		342F9DA20B5525B3000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/Gaim Service/Finnish.lproj/ESGaimNovellAccountView.nib"; sourceTree = "<group>"; };
+		342F9DA30B5525B3000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/Gaim Service/Finnish.lproj/ESGaimMSNAccountView.nib"; sourceTree = "<group>"; };
+		342F9DA40B5525B4000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/Gaim Service/Finnish.lproj/ESGaimMeanwhileAccountView.nib"; sourceTree = "<group>"; };
+		342F9DA50B5525B4000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/Gaim Service/Finnish.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
+		342F9DA60B5525B4000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/Gaim Service/Finnish.lproj/ESGaimICQAccountView.nib"; sourceTree = "<group>"; };
+		342F9DA70B5525B4000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/Gaim Service/Finnish.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
+		342F9DA80B5525B4000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
+		342F9DA90B5525B5000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Frameworks/Adium Framework/Resources/Finnish.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
+		342F9DAA0B5525B5000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
+		342F9DAB0B5525B5000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/Gaim Service/Finnish.lproj/DCGaimZephyrJoinChatView.nib"; sourceTree = "<group>"; };
+		342F9DAC0B5525B5000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/Gaim Service/Finnish.lproj/DCGaimYahooJoinChatView.nib"; sourceTree = "<group>"; };
+		342F9DAD0B5525B6000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/Gaim Service/Finnish.lproj/DCGaimOscarJoinChatView.nib"; sourceTree = "<group>"; };
+		342F9DAE0B5525B6000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/Gaim Service/Finnish.lproj/DCGaimMeanwhileJoinChatView.nib"; sourceTree = "<group>"; };
+		342F9DAF0B5525B6000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/Gaim Service/Finnish.lproj/DCGaimJabberJoinChatView.nib"; sourceTree = "<group>"; };
+		342F9DB00B5525B6000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = Resources/Finnish.lproj/Buttons.strings; sourceTree = "<group>"; };
+		342F9DB10B5525B6000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
+		342F9DB20B5525B6000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/AccountProxy.nib; sourceTree = "<group>"; };
 		343022270AB4766E0082CF7C /* AINulRemovalPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AINulRemovalPlugin.h; path = Source/AINulRemovalPlugin.h; sourceTree = "<group>"; };
 		343022280AB4766E0082CF7C /* AINulRemovalPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AINulRemovalPlugin.m; path = Source/AINulRemovalPlugin.m; sourceTree = "<group>"; };
 		34327BD6060D2FE6003D7AD9 /* GaimServiceDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = GaimServiceDefaults.plist; path = "Plugins/Gaim Service/GaimServiceDefaults.plist"; sourceTree = "<group>"; };
@@ -8067,6 +8111,7 @@
 				en_CA,
 				en_AU,
 				Turkish,
+				Finnish,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CocAIMe2 */;
 			projectDirPath = "";
@@ -9438,6 +9483,7 @@
 				34C898C2089297B00046AD38 /* Japanese */,
 				347AC44608AAA7C70043FB94 /* Catalan */,
 				34A30EA208D8EE7B00697644 /* Spanish */,
+				342F9D8B0B5525B0000D5FC2 /* Finnish */,
 			);
 			name = "Shared Dock Icon Images";
 			sourceTree = "<group>";
@@ -9463,6 +9509,7 @@
 				34EFC23B0AAC6BD50086AC43 /* pl */,
 				34EFC23C0AAC6BDD0086AC43 /* zh_CN */,
 				34EFC23D0AAC6BE50086AC43 /* zh_TW */,
+				342F9D9B0B5525B2000D5FC2 /* Finnish */,
 			);
 			name = joscarJoinChatView.nib;
 			sourceTree = "<group>";
@@ -9488,6 +9535,7 @@
 				34A81DCB093CE92300B0E93D /* pl */,
 				34DC84280A7EA012003E1636 /* Dutch */,
 				3437FF530A9BF0A60028604E /* Turkish */,
+				342F9DA80B5525B4000D5FC2 /* Finnish */,
 			);
 			name = ESFileTransferProgressView.nib;
 			sourceTree = "<group>";
@@ -9512,6 +9560,7 @@
 				34A30EA108D8EE7B00697644 /* Spanish */,
 				34A81DB5093CE92200B0E93D /* pl */,
 				3437FF440A9BF0A50028604E /* Turkish */,
+				342F9D8D0B5525B0000D5FC2 /* Finnish */,
 			);
 			name = ProxyPasswordPrompt.nib;
 			sourceTree = "<group>";
@@ -9536,6 +9585,7 @@
 				34A30EA008D8EE7B00697644 /* Spanish */,
 				34A81DB6093CE92200B0E93D /* pl */,
 				3437FF450A9BF0A60028604E /* Turkish */,
+				342F9D8F0B5525B0000D5FC2 /* Finnish */,
 			);
 			name = PasswordPrompt.nib;
 			sourceTree = "<group>";
@@ -9563,6 +9613,7 @@
 				34A81DF5093CE98F00B0E93D /* en_CA */,
 				349710CB096C4C2300699948 /* en_AU */,
 				3419E5960A86996200C3FC68 /* Turkish */,
+				342F9D960B5525B1000D5FC2 /* Finnish */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -9589,6 +9640,7 @@
 				34A81DBD093CE92200B0E93D /* pl */,
 				349710CA096C4C2300699948 /* en_AU */,
 				3419E5970A86996300C3FC68 /* Turkish */,
+				342F9D970B5525B2000D5FC2 /* Finnish */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -9615,6 +9667,7 @@
 				34A81DBC093CE92200B0E93D /* pl */,
 				349710CC096C4C2300699948 /* en_AU */,
 				3419E5950A86996000C3FC68 /* Turkish */,
+				342F9D940B5525B1000D5FC2 /* Finnish */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -9640,6 +9693,7 @@
 				34A81DCD093CE92300B0E93D /* pl */,
 				34CF88A70A6D5EC0009D9A21 /* Dutch */,
 				3437FF550A9BF0A70028604E /* Turkish */,
+				342F9DAA0B5525B5000D5FC2 /* Finnish */,
 			);
 			name = DualWindowMessageAdvanced.nib;
 			sourceTree = "<group>";
@@ -9667,6 +9721,7 @@
 				3419E2F20A81451500C3FC68 /* pl */,
 				3419E2F30A81451D00C3FC68 /* zh_CN */,
 				3419E2F40A81452400C3FC68 /* zh_TW */,
+				342F9D950B5525B1000D5FC2 /* Finnish */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -9690,6 +9745,7 @@
 				341BD58B0965ECCD00CF83F5 /* Catalan */,
 				34CF88AD0A6D5EF1009D9A21 /* Dutch */,
 				3437FF460A9BF0A60028604E /* Turkish */,
+				342F9D900B5525B0000D5FC2 /* Finnish */,
 			);
 			name = OTRPrefs.nib;
 			sourceTree = "<group>";
@@ -9700,6 +9756,7 @@
 				4B7F78C10597F5B700162728 /* English */,
 				342113DD08261FC100A3B0FB /* French */,
 				346522D608371999009565FE /* cs */,
+				342F9D920B5525B1000D5FC2 /* Finnish */,
 			);
 			name = MainMenu.nib;
 			sourceTree = "<group>";
@@ -9725,6 +9782,7 @@
 				34A30E7E08D8EE7900697644 /* Spanish */,
 				34A81DCC093CE92300B0E93D /* pl */,
 				3437FF540A9BF0A70028604E /* Turkish */,
+				342F9DA90B5525B5000D5FC2 /* Finnish */,
 			);
 			name = EditStateSheet.nib;
 			sourceTree = "<group>";
@@ -9750,6 +9808,7 @@
 				34A30E7508D8EE7800697644 /* Spanish */,
 				34A81DD5093CE92400B0E93D /* pl */,
 				3437FF5D0A9BF0A70028604E /* Turkish */,
+				342F9DB20B5525B6000D5FC2 /* Finnish */,
 			);
 			name = AccountProxy.nib;
 			sourceTree = "<group>";
@@ -9775,6 +9834,7 @@
 				34A30E8508D8EE7900697644 /* Spanish */,
 				34A81DC5093CE92300B0E93D /* pl */,
 				3437FF4D0A9BF0A60028604E /* Turkish */,
+				342F9DA20B5525B3000D5FC2 /* Finnish */,
 			);
 			name = ESGaimNovellAccountView.nib;
 			sourceTree = "<group>";
@@ -9802,6 +9862,7 @@
 				349710FF096C4D7F00699948 /* en_AU */,
 				345AF9B50A5D67EC00D7DA6F /* Dutch */,
 				3437FF5C0A9BF0A70028604E /* Turkish */,
+				342F9DB10B5525B6000D5FC2 /* Finnish */,
 			);
 			name = AppearancePrefs.nib;
 			sourceTree = "<group>";
@@ -9827,6 +9888,7 @@
 				34A30E8008D8EE7900697644 /* Spanish */,
 				34A81DCA093CE92300B0E93D /* pl */,
 				3437FF520A9BF0A60028604E /* Turkish */,
+				342F9DA70B5525B4000D5FC2 /* Finnish */,
 			);
 			name = ESGaimGaduGaduAccountView.nib;
 			sourceTree = "<group>";
@@ -9852,6 +9914,7 @@
 				34A30E8408D8EE7900697644 /* Spanish */,
 				34A81DC6093CE92300B0E93D /* pl */,
 				3437FF4E0A9BF0A60028604E /* Turkish */,
+				342F9DA30B5525B3000D5FC2 /* Finnish */,
 			);
 			name = ESGaimMSNAccountView.nib;
 			sourceTree = "<group>";
@@ -9877,6 +9940,7 @@
 				34A30E7C08D8EE7900697644 /* Spanish */,
 				34A81DCE093CE92300B0E93D /* pl */,
 				3437FF560A9BF0A70028604E /* Turkish */,
+				342F9DAB0B5525B5000D5FC2 /* Finnish */,
 			);
 			name = DCGaimZephyrJoinChatView.nib;
 			sourceTree = "<group>";
@@ -9902,6 +9966,7 @@
 				34A30E7A08D8EE7800697644 /* Spanish */,
 				34A81DD0093CE92300B0E93D /* pl */,
 				3437FF580A9BF0A70028604E /* Turkish */,
+				342F9DAD0B5525B6000D5FC2 /* Finnish */,
 			);
 			name = DCGaimOscarJoinChatView.nib;
 			sourceTree = "<group>";
@@ -9927,6 +9992,7 @@
 				34A30E7B08D8EE7900697644 /* Spanish */,
 				34A81DCF093CE92300B0E93D /* pl */,
 				3437FF570A9BF0A70028604E /* Turkish */,
+				342F9DAC0B5525B5000D5FC2 /* Finnish */,
 			);
 			name = DCGaimYahooJoinChatView.nib;
 			sourceTree = "<group>";
@@ -9952,6 +10018,7 @@
 				34A30E8E08D8EE7A00697644 /* Spanish */,
 				34A81DC2093CE92300B0E93D /* pl */,
 				3437FF4A0A9BF0A60028604E /* Turkish */,
+				342F9D9E0B5525B3000D5FC2 /* Finnish */,
 			);
 			name = ESGaimZephyrAccountView.nib;
 			sourceTree = "<group>";
@@ -9977,6 +10044,7 @@
 				34A30E7908D8EE7800697644 /* Spanish */,
 				34A81DD1093CE92300B0E93D /* pl */,
 				3437FF590A9BF0A70028604E /* Turkish */,
+				342F9DAE0B5525B6000D5FC2 /* Finnish */,
 			);
 			name = DCGaimMeanwhileJoinChatView.nib;
 			sourceTree = "<group>";
@@ -10001,6 +10069,7 @@
 				34A30EA408D8EE7B00697644 /* Spanish */,
 				34A81DB3093CE92200B0E93D /* pl */,
 				3437FF420A9BF0A50028604E /* Turkish */,
+				342F9D880B5525AF000D5FC2 /* Finnish */,
 			);
 			name = StatusSortConfiguration.nib;
 			sourceTree = "<group>";
@@ -10026,6 +10095,7 @@
 				34A30E7808D8EE7800697644 /* Spanish */,
 				34A81DD2093CE92300B0E93D /* pl */,
 				3437FF5A0A9BF0A70028604E /* Turkish */,
+				342F9DAF0B5525B6000D5FC2 /* Finnish */,
 			);
 			name = DCGaimJabberJoinChatView.nib;
 			sourceTree = "<group>";
@@ -10051,6 +10121,7 @@
 				34A30E8108D8EE7900697644 /* Spanish */,
 				34A81DC9093CE92300B0E93D /* pl */,
 				3437FF510A9BF0A60028604E /* Turkish */,
+				342F9DA60B5525B4000D5FC2 /* Finnish */,
 			);
 			name = ESGaimICQAccountView.nib;
 			sourceTree = "<group>";
@@ -10076,6 +10147,7 @@
 				34A30E8608D8EE7900697644 /* Spanish */,
 				34A81DC4093CE92300B0E93D /* pl */,
 				3437FF4C0A9BF0A60028604E /* Turkish */,
+				342F9DA10B5525B3000D5FC2 /* Finnish */,
 			);
 			name = ESGaimOscarAccountView.nib;
 			sourceTree = "<group>";
@@ -10101,6 +10173,7 @@
 				34A30E8308D8EE7900697644 /* Spanish */,
 				34A81DC7093CE92300B0E93D /* pl */,
 				3437FF4F0A9BF0A60028604E /* Turkish */,
+				342F9DA40B5525B4000D5FC2 /* Finnish */,
 			);
 			name = ESGaimMeanwhileAccountView.nib;
 			sourceTree = "<group>";
@@ -10126,6 +10199,7 @@
 				34A30E8708D8EE7900697644 /* Spanish */,
 				34A81DC3093CE92300B0E93D /* pl */,
 				3437FF4B0A9BF0A60028604E /* Turkish */,
+				342F9D9F0B5525B3000D5FC2 /* Finnish */,
 			);
 			name = ESGaimYahooAccountView.nib;
 			sourceTree = "<group>";
@@ -10151,6 +10225,7 @@
 				34A30E8208D8EE7900697644 /* Spanish */,
 				34A81DC8093CE92300B0E93D /* pl */,
 				3437FF500A9BF0A60028604E /* Turkish */,
+				342F9DA50B5525B4000D5FC2 /* Finnish */,
 			);
 			name = ESGaimJabberAccountView.nib;
 			sourceTree = "<group>";
@@ -10178,6 +10253,7 @@
 				34971108096C4D9C00699948 /* en_AU */,
 				34EA648E0A62E2ED0053DFEB /* Dutch */,
 				3437FF480A9BF0A60028604E /* Turkish */,
+				342F9D990B5525B2000D5FC2 /* Finnish */,
 			);
 			name = ListThemeSheet.nib;
 			sourceTree = "<group>";
@@ -10205,6 +10281,7 @@
 				34971104096C4D9200699948 /* en_AU */,
 				34EA64880A62E2DA0053DFEB /* Dutch */,
 				3437FF490A9BF0A60028604E /* Turkish */,
+				342F9D9A0B5525B2000D5FC2 /* Finnish */,
 			);
 			name = ListLayoutSheet.nib;
 			sourceTree = "<group>";
@@ -10230,6 +10307,7 @@
 				34A81DB8093CE92200B0E93D /* pl */,
 				34CF88B50A6D6005009D9A21 /* Dutch */,
 				3437FF470A9BF0A60028604E /* Turkish */,
+				342F9D910B5525B1000D5FC2 /* Finnish */,
 			);
 			name = MessageContextDisplayPrefs.nib;
 			sourceTree = "<group>";
@@ -10238,6 +10316,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				345A7B840954AEF400FF3113 /* English */,
+				342F9DA00B5525B3000D5FC2 /* Finnish */,
 			);
 			name = ESGaimSimpleAccountView.nib;
 			sourceTree = "<group>";
@@ -10263,6 +10342,7 @@
 				347374FE0AA9215800AD18E3 /* Turkish */,
 				347374FF0AA9215F00AD18E3 /* zh_CN */,
 				347375000AA9216700AD18E3 /* zh_TW */,
+				342F9D8A0B5525B0000D5FC2 /* Finnish */,
 			);
 			name = ShortcutRecorder.strings;
 			sourceTree = "<group>";
@@ -10288,6 +10368,7 @@
 				34A30EA308D8EE7B00697644 /* Spanish */,
 				34A81DB4093CE92200B0E93D /* pl */,
 				3437FF430A9BF0A50028604E /* Turkish */,
+				342F9D890B5525B0000D5FC2 /* Finnish */,
 			);
 			name = StatusPreferences.nib;
 			sourceTree = "<group>";
@@ -10315,6 +10396,7 @@
 				34A81DFB093CE99F00B0E93D /* en_CA */,
 				349710F9096C4D4F00699948 /* en_AU */,
 				3437FF410A9BF0A50028604E /* Turkish */,
+				342F9D870B5525AF000D5FC2 /* Finnish */,
 			);
 			name = WebKitPreferencesView.nib;
 			sourceTree = "<group>";
@@ -10325,6 +10407,7 @@
 				3496A8BF07CE6B3D0055BBAB /* English */,
 				34652316083719F0009565FE /* Norwegian */,
 				34A81DC0093CE92200B0E93D /* pl */,
+				342F9D9C0B5525B2000D5FC2 /* Finnish */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -10350,6 +10433,7 @@
 				349710F1096C4CE000699948 /* zh_CN */,
 				349710F2096C4CE500699948 /* zh_TW */,
 				3437FF5B0A9BF0A70028604E /* Turkish */,
+				342F9DB00B5525B6000D5FC2 /* Finnish */,
 			);
 			name = Buttons.strings;
 			sourceTree = "<group>";
@@ -10375,6 +10459,7 @@
 				349B3FCA0A621168008BE092 /* pl */,
 				349B3FCB0A621178008BE092 /* zh_CN */,
 				349B3FCC0A621183008BE092 /* zh_TW */,
+				342F9D980B5525B2000D5FC2 /* Finnish */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -10401,6 +10486,7 @@
 				345AF6CB0A5C9B4200D7DA6F /* is */,
 				345AF6CC0A5C9B4E00D7DA6F /* zh_CN */,
 				345AF6CD0A5C9B5A00D7DA6F /* zh_TW */,
+				342F9D9D0B5525B2000D5FC2 /* Finnish */,
 			);
 			name = GeneralPreferences.nib;
 			sourceTree = "<group>";
@@ -10426,6 +10512,7 @@
 				34695FA20A89BA2B00E3B0D0 /* zh_TW */,
 				34695FA30A89BA3600E3B0D0 /* zh_CN */,
 				34695FA40A89BA5800E3B0D0 /* Turkish */,
+				342F9D8E0B5525B0000D5FC2 /* Finnish */,
 			);
 			name = PersonalPreferences.nib;
 			sourceTree = "<group>";
@@ -10451,6 +10538,7 @@
 				34739BB10AA4F1A8007BF788 /* Turkish */,
 				34739BB20AA4F1AF007BF788 /* zh_CN */,
 				34739BB30AA4F1B6007BF788 /* zh_TW */,
+				342F9D8C0B5525B0000D5FC2 /* Finnish */,
 			);
 			name = RAFjoscarAccountView.nib;
 			sourceTree = "<group>";
@@ -10459,6 +10547,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				34E0E9B007CC4B1800A82198 /* English */,
+				342F9D930B5525B1000D5FC2 /* Finnish */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
