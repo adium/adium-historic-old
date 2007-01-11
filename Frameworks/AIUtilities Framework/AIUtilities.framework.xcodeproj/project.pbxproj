@@ -295,6 +295,7 @@
 		341BCFF609615D8600CF83F5 /* AITextAttachmentAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AITextAttachmentAdditions.h; path = Source/AITextAttachmentAdditions.h; sourceTree = "<group>"; };
 		34235A6909D7B370009FF634 /* AICharacterSetAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AICharacterSetAdditions.h; path = Source/AICharacterSetAdditions.h; sourceTree = "<group>"; };
 		34235A6A09D7B370009FF634 /* AICharacterSetAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AICharacterSetAdditions.m; path = Source/AICharacterSetAdditions.m; sourceTree = "<group>"; };
+		342F9E8A0B552659000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = Resources/Finnish.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3437FF6D0A9BF0F70028604E /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Turkish; path = Resources/Turkish.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34486B3806D1DF0300DA778C /* AIAlternatingRowOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAlternatingRowOutlineView.h; path = Source/AIAlternatingRowOutlineView.h; sourceTree = "<group>"; };
 		34486B3906D1DF0300DA778C /* AIAlternatingRowOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAlternatingRowOutlineView.m; path = Source/AIAlternatingRowOutlineView.m; sourceTree = "<group>"; };
@@ -1591,6 +1592,7 @@
 				en_CA,
 				pl,
 				Turkish,
+				Finnish,
 			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* AIUtilities.framework */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
@@ -1776,6 +1778,7 @@
 				34A30EC308D8EE9F00697644 /* Spanish */,
 				34A81D42093CE90D00B0E93D /* pl */,
 				3437FF6D0A9BF0F70028604E /* Turkish */,
+				342F9E8A0B552659000D5FC2 /* Finnish */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
