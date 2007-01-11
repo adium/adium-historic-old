@@ -91,6 +91,11 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 		
 		[self setShelfView: aShelfView];
 		[self setContentView: aContentView];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self 
+        										 selector:@selector(windowDidResize:) 
+        											 name:NSWindowDidResizeNotification 
+        										   object:[self window]];
 	}
 	return self;
 }
@@ -101,7 +106,14 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	if( actionButtonImage ){ [actionButtonImage release]; }
 	if( shelfBackgroundColor ){ [shelfBackgroundColor release]; }
 	if( contextButtonMenu ){ [contextButtonMenu release]; }
+	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResizeNotification object:self]; 
 	[super dealloc];
+}
+
+- (void)windowDidResize:(NSNotification *)aNotification
+{	
+	[self setShelfWidth: [self shelfWidth]];
+	[self recalculateSizes];
 }
 
 -(void)setDelegate:(id)aDelegate{
@@ -558,26 +570,23 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	}
 }
 
-//This glass implementation is actually broken but works for Adium -- a proper one would take the width of aRect into account.
--(void)drawControlBackgroundInRect:(NSRect)aRect active:(BOOL)isActive{
-	NSRect	frame = [self frame];
-	
-	//Draw the background, tiling across
+-(void)drawControlBackgroundInRect:(NSRect)aRect active:(BOOL)isActive{	
+    //Draw the background, tiling across
     NSRect sourceRect = NSMakeRect(0, 0, backgroundSize.width, backgroundSize.height);
-    NSRect destRect = NSMakeRect(frame.origin.x, frame.origin.y, sourceRect.size.width, aRect.size.height);
-	
-    while ((destRect.origin.x < NSMaxX(frame)) && destRect.size.width > 0) {
+    NSRect destRect = NSMakeRect(aRect.origin.x, aRect.origin.y, aRect.size.width, aRect.size.height);
+
+    while ((destRect.origin.x < NSMaxX(aRect)) && destRect.size.width > 0) {
         //Crop
-        if (NSMaxX(destRect) > NSMaxX(frame)) {
+        if (NSMaxX(destRect) > NSMaxX(aRect)) {
             sourceRect.size.width = NSWidth(destRect);
         }
-		
+
         [background drawInRect:destRect
-					  fromRect:sourceRect
-					 operation:NSCompositeSourceOver
-					  fraction:1.0];
+    				  fromRect:sourceRect
+    				 operation:NSCompositeSourceOver
+    				  fraction:1.0];
         destRect.origin.x += destRect.size.width;
-    }	
+    }
 }
 
 -(void)setFrame:(NSRect)aRect{
