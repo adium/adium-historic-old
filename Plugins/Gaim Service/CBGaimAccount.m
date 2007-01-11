@@ -978,12 +978,14 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (NSArray *)listObjectsOnPrivacyList:(AIPrivacyType)type
 {
-	GSList			*list;
-	GSList			*sourceList = ((type == AIPrivacyTypePermit) ? account->permit : account->deny);
 	NSMutableArray	*array = [NSMutableArray array];
-
-	for (list = sourceList; (list != NULL); list=list->next) {
-		[array addObject:[self contactWithUID:[NSString stringWithUTF8String:(char *)list->data]]];
+	if (account) {
+		GSList			*list;
+		GSList			*sourceList = ((type == AIPrivacyTypePermit) ? account->permit : account->deny);
+		
+		for (list = sourceList; (list != NULL); list=list->next) {
+			[array addObject:[self contactWithUID:[NSString stringWithUTF8String:(char *)list->data]]];
+		}
 	}
 
 	return array;
