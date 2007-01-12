@@ -2080,8 +2080,6 @@
 		342F9D8F0B5525B0000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
 		342F9D900B5525B0000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
 		342F9D910B5525B1000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
-		342F9D920B5525B1000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Adium Crash Reporter/Finnish.lproj/MainMenu.nib"; sourceTree = "<group>"; };
-		342F9D930B5525B1000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = "Adium Crash Reporter/Finnish.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		342F9D940B5525B1000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = "Plugins/WebKit Message View/Finnish.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		342F9D950B5525B1000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = "Frameworks/Adium Framework/Resources/Finnish.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		342F9D960B5525B1000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = Resources/Finnish.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -2957,7 +2955,7 @@
 		34BCB1A20ACB099D00562745 /* joscar-common.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar-common.jar"; path = "Plugins/joscar Service/joscar-common.jar"; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -9756,7 +9754,6 @@
 				4B7F78C10597F5B700162728 /* English */,
 				342113DD08261FC100A3B0FB /* French */,
 				346522D608371999009565FE /* cs */,
-				342F9D920B5525B1000D5FC2 /* Finnish */,
 			);
 			name = MainMenu.nib;
 			sourceTree = "<group>";
@@ -10547,7 +10544,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				34E0E9B007CC4B1800A82198 /* English */,
-				342F9D930B5525B1000D5FC2 /* Finnish */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
