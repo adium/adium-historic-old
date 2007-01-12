@@ -269,53 +269,21 @@ static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *
 
 - (NSString *)safeFilenameString
 {
-	//create a translation table for fast substitution.
-	static UniChar table[USHRT_MAX + 1];
-	static BOOL tableInitialized = NO;
-	NSString *result;
-	if (!tableInitialized) {
-		for (register unsigned i = 0; i <= USHRT_MAX; ++i) {
-			table[i] = i;
-		}
-		table['/'] = '-';
-		tableInitialized = YES;
-	}
-
 	unsigned length = [self length];
+	
+	if (!length)
+		return self;
+
 	if (length > NAME_MAX) {
 		NSLog(@"-safeFilenameString called on a string longer than %u characters (it will be truncated): @\"%@\"", NAME_MAX, self);
 		length = NAME_MAX;
 	}
-	if (!length) {
-		//it will be an empty string anyway, so save the malloc and all the translation work.
-		result = [NSString string];
-	} else {
-		//there are characters here; translate them.
-		NSRange range = { 0, length };
-		UniChar *buf = malloc(length * sizeof(UniChar));
-		if (!buf) {
-			//can't malloc the memory - see if NSMutableString can do it
-			NSMutableString *string = [self mutableCopy];
-	
-			[string replaceOccurrencesOfString:@"/" withString:@"-" options:NSLiteralSearch range:range];
-	
-			result = [string autorelease];
-		} else {
-			CFStringGetCharacters((CFStringRef)self, *(CFRange *)&range, buf);
-	
-			register unsigned remaining = length;
-			register UniChar *ch = buf;
-			while (remaining--) {
-				*ch = table[*ch];
-				++ch;
-			}
-	
-			result = [NSString stringWithCharacters:buf length:length];
-			free(buf);
-		}
-	}
 
-	return result;
+	NSMutableString *string = [self mutableCopy];
+
+	[string replaceOccurrencesOfString:@"/" withString:@"-" options:NSLiteralSearch range:NSMakeRange(0, length)];
+
+	return [string autorelease];
 }
 
 //- (NSString *)stringByEncodingURLEscapes
