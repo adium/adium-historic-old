@@ -1983,9 +1983,7 @@
 		342F9E5A0B552629000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
 		342F9E5B0B552629000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
 		342F9E5C0B552629000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
-		342F9E5D0B55262A000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Adium Crash Reporter/Finnish.lproj/MainMenu.nib"; sourceTree = "<group>"; };
 		342F9E5E0B55262A000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = Resources/Finnish.lproj/Localizable.strings; sourceTree = "<group>"; };
-		342F9E5F0B55262A000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = "Adium Crash Reporter/Finnish.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		342F9E600B55262B000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = "Plugins/Gaim Service/Finnish.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		342F9E610B55262B000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = "Plugins/WebKit Message View/Finnish.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		342F9E620B55262B000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = "Plugins/joscar Service/Finnish.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -9563,7 +9561,6 @@
 				4B7F78C10597F5B700162728 /* English */,
 				342113DD08261FC100A3B0FB /* French */,
 				346522D608371999009565FE /* cs */,
-				342F9E5D0B55262A000D5FC2 /* Finnish */,
 			);
 			name = MainMenu.nib;
 			sourceTree = "<group>";
@@ -10354,7 +10351,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				34E0E9B007CC4B1800A82198 /* English */,
-				342F9E5F0B55262A000D5FC2 /* Finnish */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
