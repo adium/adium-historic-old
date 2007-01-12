@@ -106,7 +106,9 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	if( actionButtonImage ){ [actionButtonImage release]; }
 	if( shelfBackgroundColor ){ [shelfBackgroundColor release]; }
 	if( contextButtonMenu ){ [contextButtonMenu release]; }
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResizeNotification object:self]; 
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	[super dealloc];
 }
 
