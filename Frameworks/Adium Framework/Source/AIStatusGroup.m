@@ -120,11 +120,14 @@ int statusArraySort(id objectA, id objectB, void *context);
 - (AIStatus *)anyContainedStatus
 {
 	//Pick a random contained status item
-	AIStatusItem *anyStatus = [containedStatusItems objectAtIndex:(random() % [containedStatusItems count])];
+	AIStatusItem *anyStatus = ([containedStatusItems count] ?
+							   [containedStatusItems objectAtIndex:(random() % [containedStatusItems count])] :
+							   nil);
 	
 	//If it's a status group, recurse into it
 	if ([anyStatus isKindOfClass:[AIStatusGroup class]]) {
 		anyStatus = [(AIStatusGroup *)anyStatus anyContainedStatus];
+		//XXX if we found an empty status group, we should look elsewhere if possible, iterating through the list or something.
 	}
 	
 	return (AIStatus *)anyStatus;
