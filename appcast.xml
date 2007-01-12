@@ -6,7 +6,7 @@
     <item>
         <title>Adium 1.0b23</title>
         <pubDate>Tuesday, January 9th, 2007 20:30:00 GMT-5</pubDate>
-        <sparkle:releaseNotesLink>http://www.adiumx.com/changelogs/1.0b22.html</sparkle:releaseNotesLink> 
+        <sparkle:releaseNotesLink>http://www.adiumx.com/changelogs/1.0b23.html</sparkle:releaseNotesLink> 
         <enclosure sparkle:md5Sum="7a0139171aedbab7f5ecdc118b72e0bb" sparkle:version="1.0b23" url="http://adiumx.cachefly.net/Adium_1.0b23.dmg" length="18830967" type="application/octet-stream"/>
     </item>
   </channel>
