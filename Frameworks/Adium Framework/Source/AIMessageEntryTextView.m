@@ -1010,10 +1010,10 @@
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
 	NSString 		*type = [pasteboard availableTypeFromArray:FILES_AND_IMAGES_TYPES];
-	NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
+	//NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY]; Unused after Drag-Image fix.
 
 	BOOL	success = NO;
-	if (type && !superclassType) {
+	if (type) {
 		[self addAttachmentsFromPasteboard:pasteboard];
 
 		success = YES;
