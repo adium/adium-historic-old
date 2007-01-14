@@ -10,14 +10,14 @@
 # - make all
 ###########
 
-VERSION=1.0b23
+VERSION=1.0b24
 BETA=TRUE
 
 ###########
 # To release!
 # Releasing requires cachefly access and adiumx.com access.
 #
-# First upload to cachefly. If you don't have access and need to do a release, get with Evan or Chris (tick).
+# First upload to cachefly. If you don't have access and need to do a release, get with Evan, David, or Chris (tick).
 # Triggering the version checker once the release is up:
 # 1) Build Adium
 # 2) Get the number out of the 'buildnum' file in Adium.app/Contents/Resources
