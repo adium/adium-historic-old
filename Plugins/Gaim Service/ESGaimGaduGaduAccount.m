@@ -131,13 +131,21 @@
 #pragma mark Status
 /*!
  * @brief Encode an attributed string for a status type
- *
  */
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forStatusState:(AIStatus *)statusState
 {
 	NSString	*messageString = [[inAttributedString attributedStringByConvertingLinksToStrings] string];
 	return [messageString stringWithEllipsisByTruncatingToLength:MAX_GADU_STATUS_MESSAGE_LENGTH];
 }
+
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
+{
+	/* While Gadu-Gadu technically should support richtext formatting,
+	 * libgaim's gg doesn't currently use gg_send_message_richtext()
+	 */
+	return [[inAttributedString attributedStringByConvertingLinksToStrings] string];
+}
+
 
 - (BOOL)handleOfflineAsStatusChange
 {
