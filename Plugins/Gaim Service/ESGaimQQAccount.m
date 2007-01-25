@@ -15,4 +15,15 @@
     return "prpl-qq";
 }
 
+#pragma mark Account Action Menu Items
+- (NSString *)titleForAccountActionMenuLabel:(const char *)label
+{
+	if (label && (strcmp(label, "Modify my information") == 0)) {
+		/* Modifying information depends upon adiumGaimRequestFields */
+		return nil;
+	}
+	
+	return [super titleForAccountActionMenuLabel:label];
+}
+
 @end
