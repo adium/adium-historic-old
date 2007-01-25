@@ -641,7 +641,8 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	NSString *description = nil;
 	
 	if (primaryString) {
-		if (([primaryString rangeOfString:@"Already there"].location != NSNotFound)) {
+		if (([primaryString rangeOfString:@"Already there"].location != NSNotFound) ||
+			([primaryString rangeOfString:@"Group not removed"].location != NSNotFound)) {
 			return adium_gaim_get_handle();
 		}
 	}
@@ -655,7 +656,8 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 			([secondaryString rangeOfString:@"Not supported by host"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Not logged in"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Your buddy list was downloaded from the server."].location != NSNotFound) || /* Gadu-gadu */
-			([secondaryString rangeOfString:@"Your buddy list was stored on the server."].location != NSNotFound) /* Gadu-gadu */) {
+			([secondaryString rangeOfString:@"Your buddy list was stored on the server."].location != NSNotFound) /* Gadu-gadu */ ||
+			([secondaryString rangeOfString:@"Your contact is using Windows Live"].location != NSNotFound) /* Yahoo without MSN support */) {
 			return adium_gaim_get_handle();
 		}
 	}
