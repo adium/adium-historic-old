@@ -655,7 +655,8 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 			([secondaryString rangeOfString:@"Not supported by host"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Not logged in"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Your buddy list was downloaded from the server."].location != NSNotFound) || /* Gadu-gadu */
-			([secondaryString rangeOfString:@"Your buddy list was stored on the server."].location != NSNotFound) /* Gadu-gadu */) {
+			([secondaryString rangeOfString:@"Your buddy list was stored on the server."].location != NSNotFound) /* Gadu-gadu */ ||
+			([secondaryString rangeOfString:@"Your contact is using Windows Live"].location != NSNotFound) /* Yahoo without MSN support */) {
 			return adium_gaim_get_handle();
 		}
 	}
