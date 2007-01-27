@@ -98,7 +98,7 @@ extern gchar *oscar_encoding_extract(const char *encoding);
 	BOOL shouldAttemptReconnect = YES;
 
 	if (disconnectionError && *disconnectionError) {
-		if (([*disconnectionError rangeOfString:@"Incorrect nickname or password."].location != NSNotFound) ||
+		if (([*disconnectionError rangeOfString:@"Incorrect password"].location != NSNotFound) ||
 			([*disconnectionError rangeOfString:@"Authentication failed"].location != NSNotFound)){
 			[self serverReportedInvalidPassword];
 
@@ -106,6 +106,9 @@ extern gchar *oscar_encoding_extract(const char *encoding);
 			shouldAttemptReconnect = NO;
 		} else if ([*disconnectionError rangeOfString:@"too frequently"].location != NSNotFound) {
 			shouldAttemptReconnect = NO;	
+		} else if ([*disconnectionError rangeOfString:@"Invalid screen name"].location != NSNotFound) {
+			shouldAttemptReconnect = NO;
+			*disconnectionError = AILocalizedString(@"The screen name you entered is not registered. Check to ensure you typed it correctly. If it is a new name, you must register it at www.aim.com before you can use it.", "Invalid name on AIM");
 		}
 	}
 	
