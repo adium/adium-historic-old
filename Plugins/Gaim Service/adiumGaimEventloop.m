@@ -17,6 +17,8 @@
 #import "adiumGaimEventloop.h"
 #import <AIUtilities/AIApplicationAdditions.h>
 
+#define GAIM_SOCKET_DEBUG 1
+
 static guint				sourceId = 0;		//The next source key; continuously incrementing
 static NSMutableDictionary	*sourceInfoDict = nil;
 static CFRunLoopRef			gaimRunLoop = nil;
@@ -221,6 +223,9 @@ guint adium_source_remove(guint tag) {
 			}
 			
 			if (sourceInfo->socket && (sourceInfo->read_tag || sourceInfo->write_tag)) {
+#ifdef GAIM_SOCKET_DEBUG
+				AILog(@"adium_source_remove(): Calling updateSocketForSourceInfo(%x)",sourceInfo);
+#endif				
 				updateSocketForSourceInfo(sourceInfo);
 			}
 		}
