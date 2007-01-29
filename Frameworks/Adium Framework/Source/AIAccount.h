@@ -145,7 +145,7 @@ typedef enum {
 - (NSString *)explicitFormattedUID;
 
 //Properties
-- (BOOL)shouldSendAutoresponsesWhileAway;
+- (BOOL)supportsAutoReplies;
 - (BOOL)disconnectOnFastUserSwitch;
 - (BOOL)connectivityBasedOnNetworkReachability;
 - (BOOL)suppressTypingNotificationChangesAfterSend;

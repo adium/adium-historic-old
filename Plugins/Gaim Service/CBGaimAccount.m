@@ -793,8 +793,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		return NO;
 }
 
-// **XXX** Not used at present. Do we want to?
-- (BOOL)shouldSendAutoresponsesWhileAway
+- (BOOL)supportsAutoReplies
 {
 	if (account && account->gc) {
 		return (account->gc->flags & GAIM_CONNECTION_AUTO_RESP);
