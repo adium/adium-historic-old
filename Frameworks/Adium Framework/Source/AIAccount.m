@@ -144,7 +144,7 @@
  * Subclass to alter the behavior of this account with regards to autoresponses.  Certain services expect the client to
  * auto-respond with away messages.  Adium will provide this behavior automatically if desired.
  */
-- (BOOL)shouldSendAutoresponsesWhileAway
+- (BOOL)supportsAutoReplies
 {
 	return NO;
 }

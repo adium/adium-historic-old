@@ -135,16 +135,26 @@
  */
 - (void)sendAutoReplyFromAccount:(id)source toContact:(id)destination onChat:(AIChat *)chat
 {
-	AIContentMessage	*responseContent;
-	NSAttributedString 	*autoReply;
+	AIContentMessage	*responseContent = nil;
+	NSAttributedString 	*autoReply = [[[chat account] statusState] autoReply];
+	BOOL				supportsAutoreply = [source supportsAutoReplies];
+		
+	if (autoReply) {
+		if (!supportsAutoreply) {
+			//Tthe service isn't natively expecting an autoresponse, so make it a bit clearer what's going on
+			NSMutableAttributedString *mutableAutoReply = [[autoReply mutableCopy] autorelease];
+			[mutableAutoReply replaceCharactersInRange:NSMakeRange(0, 0) 
+											withString:AILocalizedString(@"(Autoreply) ", 
+												"Prefix to place before autoreplies on services which do not natively support them")];
+			autoReply = mutableAutoReply;
+		}
 
-	if ((autoReply = [[[chat account] statusState] autoReply])) {
 		responseContent = [AIContentMessage messageInChat:chat
 											   withSource:source
 											  destination:destination
 													 date:nil
 												  message:autoReply
-												autoreply:YES];
+												autoreply:supportsAutoreply];
 		
 		[[adium contentController] sendContentObject:responseContent];
 	}
