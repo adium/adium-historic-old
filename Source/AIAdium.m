@@ -53,6 +53,7 @@
 #import <Sparkle/SUUtilities.h>
 
 #define ADIUM_TRAC_PAGE						@"http://trac.adiumx.com/"
+#define ADIUM_REPORT_BUG_PAGE				@"http://trac.adiumx.com/wiki/ReportingBugs"
 #define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com/","Adium forums page. Localized only if a translated version exists.")
 #define ADIUM_FEEDBACK_PAGE					@"mailto:feedback@adiumx.com"
 
@@ -381,7 +382,7 @@ static NSString	*prefsCategory;
     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_TRAC_PAGE]];
 }
 - (IBAction)reportABug:(id)sender{
-    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_TRAC_PAGE]];
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_REPORT_BUG_PAGE]];
 }
 - (IBAction)sendFeedback:(id)sender{
     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_FEEDBACK_PAGE]];
