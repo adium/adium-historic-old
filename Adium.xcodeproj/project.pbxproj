@@ -1022,6 +1022,7 @@
 		34F312930ADC3FE800A4310E /* KNShelfSplitView.h in Headers */ = {isa = PBXBuildFile; fileRef = 348B25C70A50FBF300B2B972 /* KNShelfSplitView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34F312BD0ADC43CA00A4310E /* xtras_duck.png in Resources */ = {isa = PBXBuildFile; fileRef = 34F312BC0ADC43CA00A4310E /* xtras_duck.png */; };
 		34F312F00ADC476300A4310E /* KNShelfSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 348B25C60A50FBF300B2B972 /* KNShelfSplitView.m */; };
+		34F42BDF0B711CB200A03603 /* simple.png in Resources */ = {isa = PBXBuildFile; fileRef = 34F42BDE0B711CB200A03603 /* simple.png */; };
 		34F4675E080F46AC007800AB /* ESBonjourAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46755080F46AB007800AB /* ESBonjourAccountViewController.m */; };
 		34F4675F080F46AC007800AB /* ESBonjourAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F46756080F46AB007800AB /* ESBonjourAccountViewController.h */; };
 		34F46760080F46AC007800AB /* AWBonjourPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46757080F46AB007800AB /* AWBonjourPlugin.m */; };
@@ -2073,7 +2074,6 @@
 		342F9D880B5525AF000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
 		342F9D890B5525B0000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
 		342F9D8A0B5525B0000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = Resources/Finnish.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
-		342F9D8B0B5525B0000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Finnish; path = "Resources/Finnish.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
 		342F9D8C0B5525B0000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/joscar Service/Finnish.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
 		342F9D8D0B5525B0000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		342F9D8E0B5525B0000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
@@ -3149,6 +3149,7 @@
 		34D8370007CBF97A006466F2 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
 		34DC50810A978EA700C75374 /* SystemVersionCheck */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SystemVersionCheck; sourceTree = BUILT_PRODUCTS_DIR; };
 		34DC84280A7EA012003E1636 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
+		34DCCC3E0B57650100F00299 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Finnish; path = "Resources/Finnish.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
 		34DFF46007A5EABF00B92233 /* ESSecureMessagingPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESSecureMessagingPlugin.h; path = "Plugins/Secure Messaging/ESSecureMessagingPlugin.h"; sourceTree = "<group>"; };
 		34DFF46107A5EABF00B92233 /* ESSecureMessagingPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESSecureMessagingPlugin.m; path = "Plugins/Secure Messaging/ESSecureMessagingPlugin.m"; sourceTree = "<group>"; };
 		34DFF52607A62EB000B92233 /* Lock_Unlocked State.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Lock_Unlocked State.png"; path = "Plugins/Secure Messaging/Lock_Unlocked State.png"; sourceTree = "<group>"; };
@@ -3228,6 +3229,7 @@
 		34F2E83807C2CDBD007EAAAB /* ESFileWrapperExtension.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESFileWrapperExtension.m; path = "Frameworks/Adium Framework/Source/ESFileWrapperExtension.m"; sourceTree = "<group>"; };
 		34F2E83907C2CDBD007EAAAB /* ESFileWrapperExtension.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESFileWrapperExtension.h; path = "Frameworks/Adium Framework/Source/ESFileWrapperExtension.h"; sourceTree = "<group>"; };
 		34F312BC0ADC43CA00A4310E /* xtras_duck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = xtras_duck.png; path = Resources/xtras_duck.png; sourceTree = "<group>"; };
+		34F42BDE0B711CB200A03603 /* simple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = simple.png; path = "Plugins/Gaim Service/simple.png"; sourceTree = "<group>"; };
 		34F46755080F46AB007800AB /* ESBonjourAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ESBonjourAccountViewController.m; sourceTree = "<group>"; };
 		34F46756080F46AB007800AB /* ESBonjourAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ESBonjourAccountViewController.h; sourceTree = "<group>"; };
 		34F46757080F46AB007800AB /* AWBonjourPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = AWBonjourPlugin.m; sourceTree = "<group>"; };
@@ -4691,6 +4693,7 @@
 				345A7B6C0954AD3A00FF3113 /* ESGaimSimpleAccountViewController.m */,
 				345A7B830954AEF400FF3113 /* ESGaimSimpleAccountView.nib */,
 				345A7B710954AD4D00FF3113 /* GaimDefaultsSimple.plist */,
+				34F42BDE0B711CB200A03603 /* simple.png */,
 			);
 			name = SIMPLE;
 			sourceTree = "<group>";
@@ -8283,6 +8286,7 @@
 				34A3CA940B293249001147FB /* GaimDefaultsMac.plist in Resources */,
 				34A3CA9E0B293285001147FB /* GaimDefaultsAIM.plist in Resources */,
 				34A3D2E60B2B1BEB001147FB /* ESGaimOscarAccountView.nib in Resources */,
+				34F42BDF0B711CB200A03603 /* simple.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9481,7 +9485,7 @@
 				34C898C2089297B00046AD38 /* Japanese */,
 				347AC44608AAA7C70043FB94 /* Catalan */,
 				34A30EA208D8EE7B00697644 /* Spanish */,
-				342F9D8B0B5525B0000D5FC2 /* Finnish */,
+				34DCCC3E0B57650100F00299 /* Finnish */,
 			);
 			name = "Shared Dock Icon Images";
 			sourceTree = "<group>";
