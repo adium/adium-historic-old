@@ -235,7 +235,7 @@ static int linesLeftToFind = 0;
 				
 		//Stick the base path on to the beginning
 		logPath = [baseLogPath stringByAppendingPathComponent:logPath];
-		NSLog(@"Message History: Loading log file: %@", logPath);
+		//NSLog(@"Message History: Loading log file: %@", logPath);
 		
 		//Initialize the found messages array and element stack for us-as-delegate
 		foundMessages = [NSMutableArray arrayWithCapacity:linesLeftToFind];
@@ -271,6 +271,7 @@ static int linesLeftToFind = 0;
 		int readSize = 4 * getpagesize(); //Read 4 pages at a time.
 		NSMutableData *chunk = [NSMutableData dataWithLength:readSize];
 		int fd = [file fileDescriptor];
+		fcntl(fd, F_NOCACHE, 1);
 		char *buf = [chunk mutableBytes];
 		off_t offset = [file offsetInFile];
 		enum LMXParseResult result = LMXParsedIncomplete;
