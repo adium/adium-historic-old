@@ -1133,6 +1133,7 @@ static NSArray *draggedTypes = nil;
 {
 	DOMNodeList  *images = [[[webView mainFrame] DOMDocument] getElementsByTagName:@"img"];
 	unsigned int imagesCount = [images length];
+	AILog(@"Updating cusotm emoticon in %@",self);
 
 	if (imagesCount > 0) {
 		AIEmoticon	*emoticon = [[inNotification userInfo] objectForKey:@"AIEmoticon"];
@@ -1146,11 +1147,16 @@ static NSArray *draggedTypes = nil;
 			
 			if ([[img className] isEqualToString:@"emoticon"] &&
 				[[img getAttribute:@"alt"] isEqualToString:textEquivalent]) {
+				AILog(@"Updating image %@ to %@",img,path);
 				[img setSrc:path];
 				[img setWidth:emoticonSize.width];
 				[img setHeight:emoticonSize.height];
 				updatedImage = YES;
 			}
+		}
+		if (!updatedImage) {
+			AILog(@"Couldn't find an image out of the %i with className \"emoticon\" and alt of %@",
+				  imagesCount,textEquivalent);
 		}
 		NSNumber *shouldScroll = [[webView windowScriptObject] callWebScriptMethod:@"nearBottom"
 																	 withArguments:nil];
