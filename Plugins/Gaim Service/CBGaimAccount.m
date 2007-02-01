@@ -510,15 +510,18 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	NSNumber *indexNumber;
 	
 	//Inform libgaim that the request window closed
-	[ESGaimRequestAdapter requestCloseWithHandle:inWindowController];
-
-	if (inDidAuthorize) {
-		callback = [[[infoDict objectForKey:@"authorizeCB"] retain] autorelease];
-	} else {
-		callback = [[[infoDict objectForKey:@"denyCB"] retain] autorelease];
+	//[ESGaimRequestAdapter requestCloseWithHandle:inWindowController];
+	if (account) {
+		gaim_account_request_close(inWindowController);
+		
+		if (inDidAuthorize) {
+			callback = [[[infoDict objectForKey:@"authorizeCB"] retain] autorelease];
+		} else {
+			callback = [[[infoDict objectForKey:@"denyCB"] retain] autorelease];
+		}
+		
+		[gaimThread doAuthRequestCbValue:callback withUserDataValue:[[[infoDict objectForKey:@"userData"] retain] autorelease]];
 	}
-
-	[gaimThread doAuthRequestCbValue:callback withUserDataValue:[[[infoDict objectForKey:@"userData"] retain] autorelease]];
 }
 
 //Chats ------------------------------------------------------------

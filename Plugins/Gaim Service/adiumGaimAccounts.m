@@ -8,6 +8,8 @@
 #import "adiumGaimAccounts.h"
 #import <Adium/AIContactControllerProtocol.h>
 
+static NSMutableSet *authRequests = nil;
+
 /* A buddy we already have added us to their buddy list. */
 static void adiumGaimAccountNotifyAdded(GaimAccount *account, const char *remote_user,
 							 const char *id, const char *alias,
@@ -43,9 +45,9 @@ static void adiumGaimAccountRequestAdd(GaimAccount *account, const char *remote_
  * @param deny_cb Call if authroization denied
  * @param user_data Data for the process; be sure to return it in the callback
  */
-static void adiumGaimAccountRequestAuthorize(GaimAccount *account, const char *remote_user, const char *anId,
+static void *adiumGaimAccountRequestAuthorize(GaimAccount *account, const char *remote_user, const char *anId,
 									   const char *alias, const char *message, 
-									   GCallback authorize_cb, GCallback deny_cb, void *user_data)
+									   gboolean on_list, GCallback authorize_cb, GCallback deny_cb, void *user_data)
 {
 	NSMutableDictionary	*infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 		[NSString stringWithUTF8String:remote_user], @"Remote Name",
@@ -56,15 +58,39 @@ static void adiumGaimAccountRequestAuthorize(GaimAccount *account, const char *r
 	
 	if (message && strlen(message)) [infoDict setObject:[NSString stringWithUTF8String:message] forKey:@"Reason"];
 	
-	[[[AIObject sharedAdiumInstance] contactController] showAuthorizationRequestWithDict:infoDict
-																			  forAccount:accountLookup(account)];
+	id authRequestWindow = [[[AIObject sharedAdiumInstance] contactController] showAuthorizationRequestWithDict:infoDict
+																									 forAccount:accountLookup(account)];
+	if (!authRequests) authRequests = [[NSMutableSet alloc] init];
+	[authRequests addObject:authRequestWindow];
+	
+	return authRequestWindow;
+}
+
+static void adiumGaimAccountRequestClose(void *ui_handle)
+{
+	id	ourHandle = (id)ui_handle;
+
+	if ([ourHandle respondsToSelector:@selector(gaimRequestClose)]) {
+		[ourHandle performSelector:@selector(gaimRequestClose)];
+		
+	} else if ([ourHandle respondsToSelector:@selector(closeWindow:)]) {
+		[ourHandle performSelector:@selector(closeWindow:)
+						withObject:nil];
+	}
+	
+	[authRequests removeObject:(id)ui_handle];
+	if (![authRequests count]) {
+		[authRequests release];
+		authRequests = nil;
+	}
 }
 
 static GaimAccountUiOps adiumGaimAccountOps = {
 	&adiumGaimAccountNotifyAdded,
 	&adiumGaimAccountStatusChanged,
 	&adiumGaimAccountRequestAdd,
-	&adiumGaimAccountRequestAuthorize
+	&adiumGaimAccountRequestAuthorize,
+	&adiumGaimAccountRequestClose
 };
 
 GaimAccountUiOps *adium_gaim_accounts_get_ui_ops(void)

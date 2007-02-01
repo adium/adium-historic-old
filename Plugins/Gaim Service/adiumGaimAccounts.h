@@ -8,3 +8,5 @@
 #import "SLGaimCocoaAdapter.h"
 
 GaimAccountUiOps *adium_gaim_accounts_get_ui_ops(void);
+
+void didCloseAccountRequest(void *ui_handle);
