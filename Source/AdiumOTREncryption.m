@@ -775,9 +775,9 @@ void update_security_details_for_chat(AIChat *inChat)
 				[[inChat listObject] formattedUID],
 				[securityDetailsDict objectForKey:@"Fingerprint"],
 				AILocalizedString(@"Secure ID for this session:",nil),
-				AILocalizedString(@"Incoming:",nil),
+				AILocalizedString(@"Incoming:","This is shown before the Off-the-Record Session ID (a series of numbers and letters) sent by the other party with whom you are having an encrypted chat."),
 				[securityDetailsDict objectForKey:@"Incoming SessionID"],
-				AILocalizedString(@"Outgoing:",nil),
+				AILocalizedString(@"Outgoing:","This is shown before the Off-the-Record Session ID (a series of numbers and letters) sent by you to the other party with whom you are having an encrypted chat."),
 				[securityDetailsDict objectForKey:@"Outgoing SessionID"],
 				nil];
 			
