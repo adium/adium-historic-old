@@ -89,6 +89,10 @@ prepare-release-bundle:
 	@echo Converting nibs to binary format...
 	find $(BUILD_DIR) -name keyedobjects.nib -print0 | xargs -0 plutil -convert binary1
 
+	@echo Converting strings files to XML...
+	@# convert strings files to xml
+	find $(BUILD_DIR) -name "*.strings" -type f -exec plutil -convert xml1 {} \; -prune
+
 	@# delete unneeded nib files for non-beta builds
 	@echo Cleaning Adium.app for release
 ifeq ($(BETA),FALSE)
