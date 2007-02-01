@@ -112,12 +112,6 @@
 				<key>ActionID</key>
 				<string>DockOverlay</string>
 				<key>EventID</key>
-				<string>Content_MessageReceivedBackground</string>
-			</dict>
-			<dict>
-				<key>ActionID</key>
-				<string>DockOverlay</string>
-				<key>EventID</key>
 				<string>Content_MessageReceived</string>
 			</dict>
 			<dict>
