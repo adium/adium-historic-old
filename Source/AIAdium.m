@@ -69,7 +69,7 @@ enum {
 
 // The version comparison code here is courtesy of Kevin Ballard, adapted from MacPAD. Thanks, Kevin!
 
-int SUGetCharType(NSString *character)
+int AIGetCharType(NSString *character)
 {
     if ([character isEqualToString:@"."]) {
         return kPeriodType;
@@ -80,7 +80,7 @@ int SUGetCharType(NSString *character)
     }	
 }
 
-NSArray *SUSplitVersionString(NSString *version)
+NSArray *AISplitVersionString(NSString *version)
 {
     NSString *character;
     NSMutableString *s;
@@ -91,11 +91,11 @@ NSArray *SUSplitVersionString(NSString *version)
         return parts;
     }
     s = [[[version substringToIndex:1] mutableCopy] autorelease];
-    oldType = SUGetCharType(s);
+    oldType = AIGetCharType(s);
     n = [version length] - 1;
     for (i = 1; i <= n; ++i) {
         character = [version substringWithRange:NSMakeRange(i, 1)];
-        newType = SUGetCharType(character);
+        newType = AIGetCharType(character);
         if (oldType != newType || oldType == kPeriodType) {
             // We've reached a new segment
 			NSString *aPart = [[NSString alloc] initWithString:s];
@@ -116,8 +116,8 @@ NSArray *SUSplitVersionString(NSString *version)
 
 NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versionB)
 {
-	NSArray *partsA = SUSplitVersionString(versionA);
-    NSArray *partsB = SUSplitVersionString(versionB);
+	NSArray *partsA = AISplitVersionString(versionA);
+    NSArray *partsB = AISplitVersionString(versionB);
     
     NSString *partA, *partB;
     int i, n, typeA, typeB, intA, intB;
@@ -127,8 +127,8 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
         partA = [partsA objectAtIndex:i];
         partB = [partsB objectAtIndex:i];
         
-        typeA = SUGetCharType(partA);
-        typeB = SUGetCharType(partB);
+        typeA = AIGetCharType(partA);
+        typeB = AIGetCharType(partB);
         
         // Compare types
         if (typeA == typeB) {
@@ -195,7 +195,7 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
             largerResult = NSOrderedDescending;
         }
         
-        missingType = SUGetCharType(missingPart);
+        missingType = AIGetCharType(missingPart);
         // Check the type
         if (missingType == kStringType) {
             // It's a string. Shorter version wins
