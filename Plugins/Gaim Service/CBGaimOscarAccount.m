@@ -345,6 +345,40 @@ extern gchar *oscar_encoding_extract(const char *encoding);
 	return YES;
 }
 
+/*!
+* @brief Update the status message and away state of the contact
+ */
+- (void)updateStatusForContact:(AIListContact *)theContact 
+				  toStatusType:(NSNumber *)statusTypeNumber
+					statusName:(NSString *)statusName
+				 statusMessage:(NSAttributedString *)statusMessage
+{
+	/* XXX - Giant hack!
+	 * Libgaim, as of 2.0.0 but not before so far as we've seen, sometimes feeds us truncated AIM away messages.
+	 * The full message will then follow... followed by the truncated one... and so on. This makes the message
+	 * change in the buddy list and in the message window repeatedly.
+	 * I'm not sure how long the truncted versions are - I've seen 60 to 70 characters.  We'll therefore ignore
+	 * an incoming message which is the same as the first 50 characters of the existing one.  I wonder how long
+	 * before someone will notice this "odd" behavior and file a bug report... -evands
+	 */
+	 
+	if (([theContact statusType] == [statusTypeNumber intValue]) &&
+		((statusName && ![theContact statusName]) || [[theContact statusName] isEqualToString:statusName])) {
+		//Type and name match...
+		NSString *currentStatusMessage = [theContact statusMessageString];
+		if (currentStatusMessage &&
+			([currentStatusMessage length] > [statusMessage length]) &&
+			([statusMessage length] > 50) &&
+			([currentStatusMessage rangeOfString:[statusMessage string] options:NSAnchoredSearch].location == 0)) {
+			/* New message is shorter but at least 50 characters, and it matches the start of the current one.
+			 * Do nothing.
+			 */
+			return;
+		}
+	}
+	
+	[super updateStatusForContact:theContact toStatusType:statusTypeNumber statusName:statusName statusMessage:statusMessage];
+}
 
 #pragma mark Contact List Menu Items
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
