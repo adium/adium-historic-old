@@ -196,7 +196,9 @@
  */
 - (void)handleConnectivityForAccount:(AIAccount *)account reachable:(BOOL)reachable
 {
-	AILog(@"handleConnectivityForAccount: %@ reachable: %i",account,reachable);
+	AILog(@"handleConnectivityForAccount: %@ reachable: %; will connect: %i (online %i, connecting %i)",account,
+		  reachable,(reachable && [accountsToConnect containsObject:account]),
+		  [account online],[account integerStatusObjectForKey:@"Connecting"]);
 
 	if (reachable) {
 		//If we are now online and are waiting to connect this account, do it if the account hasn't already
