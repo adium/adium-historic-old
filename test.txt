@@ -1,4 +1,4 @@
-testing
+post-commit hook test
 
 Testing accounts with commit access:
 tick account works
