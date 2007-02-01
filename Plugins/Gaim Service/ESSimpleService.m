@@ -86,7 +86,13 @@
  */
 - (NSImage *)defaultServiceIconOfType:(AIServiceIconType)iconType
 {
-	return [NSImage imageNamed:@"simple" forClass:[self class]];
+	NSImage *baseImage = [NSImage imageNamed:@"simple" forClass:[self class]];
+
+	if (iconType == AIServiceIconSmall) {
+		baseImage = [baseImage imageByScalingToSize:NSMakeSize(16, 16)];
+	}
+
+	return baseImage;
 }
 
 @end
