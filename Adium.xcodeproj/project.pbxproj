@@ -1023,6 +1023,7 @@
 		34F312BD0ADC43CA00A4310E /* xtras_duck.png in Resources */ = {isa = PBXBuildFile; fileRef = 34F312BC0ADC43CA00A4310E /* xtras_duck.png */; };
 		34F312F00ADC476300A4310E /* KNShelfSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 348B25C60A50FBF300B2B972 /* KNShelfSplitView.m */; };
 		34F42BDF0B711CB200A03603 /* simple.png in Resources */ = {isa = PBXBuildFile; fileRef = 34F42BDE0B711CB200A03603 /* simple.png */; };
+		34F42E910B73088E00A03603 /* AdiumHelp in Resources */ = {isa = PBXBuildFile; fileRef = 34F42E570B73088D00A03603 /* AdiumHelp */; };
 		34F4675E080F46AC007800AB /* ESBonjourAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46755080F46AB007800AB /* ESBonjourAccountViewController.m */; };
 		34F4675F080F46AC007800AB /* ESBonjourAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F46756080F46AB007800AB /* ESBonjourAccountViewController.h */; };
 		34F46760080F46AC007800AB /* AWBonjourPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46757080F46AB007800AB /* AWBonjourPlugin.m */; };
@@ -3230,6 +3231,7 @@
 		34F2E83907C2CDBD007EAAAB /* ESFileWrapperExtension.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESFileWrapperExtension.h; path = "Frameworks/Adium Framework/Source/ESFileWrapperExtension.h"; sourceTree = "<group>"; };
 		34F312BC0ADC43CA00A4310E /* xtras_duck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = xtras_duck.png; path = Resources/xtras_duck.png; sourceTree = "<group>"; };
 		34F42BDE0B711CB200A03603 /* simple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = simple.png; path = "Plugins/Gaim Service/simple.png"; sourceTree = "<group>"; };
+		34F42E570B73088D00A03603 /* AdiumHelp */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AdiumHelp; sourceTree = "<group>"; };
 		34F46755080F46AB007800AB /* ESBonjourAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ESBonjourAccountViewController.m; sourceTree = "<group>"; };
 		34F46756080F46AB007800AB /* ESBonjourAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ESBonjourAccountViewController.h; sourceTree = "<group>"; };
 		34F46757080F46AB007800AB /* AWBonjourPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = AWBonjourPlugin.m; sourceTree = "<group>"; };
@@ -7053,6 +7055,7 @@
 		F50A325A03B5798301A8010A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				34F42E570B73088D00A03603 /* AdiumHelp */,
 				63AF91C80AA80FE300B88299 /* OldListXtras */,
 				63C120740910A0DD00C9DB57 /* DefaultXtraReadme.rtf */,
 				34575E3807CBA88E004A4FFF /* MainMenu.nib */,
@@ -8537,6 +8540,7 @@
 				341548CE0A92D6D30087EB98 /* SRSnapback.tiff in Resources */,
 				347374BD0AA9206B00AD18E3 /* ShortcutRecorder.strings in Resources */,
 				34F312BD0ADC43CA00A4310E /* xtras_duck.png in Resources */,
+				34F42E910B73088E00A03603 /* AdiumHelp in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
