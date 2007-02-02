@@ -182,23 +182,15 @@ TrustLevel otrg_plugin_context_to_trust(ConnContext *context);
  */
 static NSDictionary* details_for_context(ConnContext *context)
 {
+	if (!context) return nil;
+
 	NSDictionary		*securityDetailsDict;
-	if (context == NULL) {
-		return nil;
-	}
-	
-	Fingerprint *fprint = context->active_fingerprint;
-	
-	unsigned char *fingerprint;
-	char our_hash[45], their_hash[45];
-	
-    if (fprint == NULL) return nil;
-    if (fprint->fingerprint == NULL) return nil;
+	Fingerprint *fprint = context->active_fingerprint;	
+
+    if (!fprint || !(fprint->fingerprint)) return nil;
     context = fprint->context;
-    if (context == NULL) return nil;
-	
-	fingerprint = fprint->fingerprint;
-	
+    if (!context) return nil;
+
     TrustLevel			level = otrg_plugin_context_to_trust(context);
 	AIEncryptionStatus	encryptionStatus;
 	AIAccount			*account;
@@ -219,14 +211,19 @@ static NSDictionary* details_for_context(ConnContext *context)
 			break;
 	}
 	
-    otrl_privkey_fingerprint(otrg_plugin_userstate, our_hash,
-							 context->accountname, context->protocol);
-	
-    otrl_privkey_hash_to_human(their_hash, fprint->fingerprint);
-	
 	char hash[45];
-    otrl_privkey_hash_to_human(hash, fingerprint);
-	
+    otrl_privkey_hash_to_human(hash, fprint->fingerprint);
+
+	unsigned char *sessionid;
+    char sess1[21], sess2[21];
+	BOOL sess1_outgoing = (context->sessionid_half == OTRL_SESSIONID_FIRST_HALF_BOLD);
+    size_t idhalflen = (context->sessionid_len) / 2;
+
+    /* Make a human-readable version of the sessionid (in two parts) */
+    sessionid = context->sessionid;
+    for(int i = 0; i < idhalflen; ++i) sprintf(sess1+(2*i), "%02x", sessionid[i]);
+    for(int i = 0; i < idhalflen; ++i) sprintf(sess2+(2*i), "%02x", sessionid[i+idhalflen]);
+
 	account = [[[AIObject sharedAdiumInstance] accountController] accountWithInternalObjectID:[NSString stringWithUTF8String:context->accountname]];
 
 	securityDetailsDict = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -234,8 +231,8 @@ static NSDictionary* details_for_context(ConnContext *context)
 		[NSNumber numberWithInt:encryptionStatus], @"EncryptionStatus",
 		account, @"AIAccount",
 		[NSString stringWithUTF8String:context->username], @"who",
-		[NSString stringWithUTF8String:our_hash], @"Outgoing SessionID",
-		[NSString stringWithUTF8String:their_hash], @"Incoming SessionID",
+		[NSString stringWithUTF8String:sess1], (sess1_outgoing ? @"Outgoing SessionID" : @"Incoming SessionID"),
+		[NSString stringWithUTF8String:sess2], (sess1_outgoing ? @"Incoming SessionID" : @"Outgoing SessionID"),
 		nil];
 	
 	AILog(@"Security details: %@",securityDetailsDict);
