@@ -50,6 +50,9 @@
 #import <Sparkle/SUConstants.h>
 #import <Sparkle/SUUtilities.h>
 
+//For Apple Help
+#import <Carbon/Carbon.h>
+
 #define ADIUM_TRAC_PAGE						@"http://trac.adiumx.com/"
 #define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com/","Adium forums page. Localized only if a translated version exists.")
 #define ADIUM_FEEDBACK_PAGE					@"mailto:feedback@adiumx.com"
@@ -214,7 +217,7 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 - (void)configureCrashReporter;
 - (void)completeLogin;
 - (void)openAppropriatePreferencesIfNeeded;
-
+- (void)configureHelp;
 - (void)deleteTemporaryFiles;
 @end
 
@@ -459,6 +462,8 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 	
 	completedApplicationLoad = YES;
 
+	[self configureHelp];
+	
 	[[self notificationCenter] postNotificationName:Adium_CompletedApplicationLoad object:nil];
 	[pool release];
 }
@@ -513,10 +518,6 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
     [[LNAboutBoxController aboutBoxController] showWindow:nil];
 }
 
-//Show our help
-- (IBAction)showHelp:(id)sender{
-    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_TRAC_PAGE]];
-}
 - (IBAction)reportABug:(id)sender{
     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_TRAC_PAGE]];
 }
@@ -1091,6 +1092,22 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 	}
 	
 	return handleKey;
+}
+
+#pragma mark Help
+- (void)configureHelp
+{
+	CFBundleRef myApplicationBundle;
+	CFURLRef myBundleURL;
+	FSRef myBundleRef;
+
+	if ((myApplicationBundle = CFBundleGetMainBundle())) {
+		myBundleURL = CFBundleCopyBundleURL(myApplicationBundle);
+
+		if (CFURLGetFSRef(myBundleURL, &myBundleRef)) {
+			AHRegisterHelpBook(&myBundleRef);
+		}
+	}
 }
 
 #pragma mark Sparkle Delegate Methods
