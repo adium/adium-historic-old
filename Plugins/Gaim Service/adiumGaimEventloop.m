@@ -16,6 +16,7 @@
 
 #import "adiumGaimEventloop.h"
 #import <AIUtilities/AIApplicationAdditions.h>
+#include <poll.h>
 
 #define GAIM_SOCKET_DEBUG 1
 
@@ -107,7 +108,7 @@ CFSocketRef socketInRunLoop(int fd, CFOptionFlags callBackTypes, CFSocketContext
 		if (callBackTypes & kCFSocketWriteCallBack) {
 			flags |= kCFSocketAutomaticallyReenableWriteCallBack;
 		}
-		
+			
 #ifdef GAIM_SOCKET_DEBUG
 		AILog(@"socket %x created with flags %i",socket,flags);
 #endif
@@ -320,6 +321,49 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 			free(info);
 			context.info = actualSocketContext.info;
 			info = context.info;
+			
+#ifdef GAIM_SOCKET_DEBUG
+			if (info->read_tag) {
+				static BOOL avoidingInfiniteLoop = NO;
+				if (!avoidingInfiniteLoop) {
+					//Check out the fd on which we were waiting.... do its thing now if needed
+					struct pollfd	*fds;
+					int				rv;
+					
+					avoidingInfiniteLoop = YES;
+					
+					fds = calloc(1, sizeof(struct pollfd));
+					AILog(@"adium_input_add(): about to poll %i. info->read_tag is %i; info->write_tag is %i",
+						  fd, info->read_tag,info->write_tag);
+					fds[0].fd = fd;
+					fds[0].events |= (info->read_tag ? POLLIN : POLLOUT);
+					rv = poll(fds, 1, 0);
+					if (rv == -1) {
+						AILog(@"adium_input_add(): poll() ended in tears");
+					}
+					if (fds[0].revents & (info->read_tag ? POLLIN : POLLOUT)) {
+						AILog(@"adium_input_add(): fd %i is ready to %s",
+							  fd, (info->read_tag ? "read" : "write"));
+						//Call the callback, as if we got it now, since we won't later...
+#if 0
+						//This does the actual THING that goes into an infinite loop...
+						socketCallback(socket,
+									   (info->read_tag ? kCFSocketReadCallBack : kCFSocketWriteCallBack),
+									   /* CFDataRef */ NULL,
+									   /* data */ NULL,
+									   info);
+#endif
+					} else {
+						AILog(@"adium_input_add(): fd %i wasn't ready yet...",
+							  fd);
+					}
+					free(fds);
+					
+					avoidingInfiniteLoop = NO;
+				}
+			}
+#endif
+
 		} else {
 			actualSocketContext.info = info;
 		}
