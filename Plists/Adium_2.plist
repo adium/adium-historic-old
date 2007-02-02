@@ -310,7 +310,7 @@
 	<key>CFBundleGetInfoString</key>
 	<string>1.0rc1, Copyright 2001-2007 The Adium Team</string>
 	<key>CFBundleHelpBookFolder</key>
-	<string>Adium Help</string>
+	<string>AdiumHelp</string>
 	<key>CFBundleHelpBookName</key>
 	<string>Adium Help</string>
 	<key>CFBundleIconFile</key>
