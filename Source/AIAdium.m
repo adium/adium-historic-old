@@ -52,6 +52,9 @@
 #import <Sparkle/SUConstants.h>
 #import <Sparkle/SUUtilities.h>
 
+//For Apple Help
+#import <Carbon/Carbon.h>
+
 #define ADIUM_TRAC_PAGE						@"http://trac.adiumx.com/"
 #define ADIUM_REPORT_BUG_PAGE				@"http://trac.adiumx.com/wiki/ReportingBugs"
 #define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com/","Adium forums page. Localized only if a translated version exists.")
@@ -68,7 +71,7 @@ static NSString	*prefsCategory;
 - (void)configureCrashReporter;
 - (void)completeLogin;
 - (void)openAppropriatePreferencesIfNeeded;
-
+- (void)configureHelp;
 - (void)deleteTemporaryFiles;
 @end
 
@@ -321,6 +324,8 @@ static NSString	*prefsCategory;
 	
 	completedApplicationLoad = YES;
 
+	[self configureHelp];
+	
 	[[self notificationCenter] postNotificationName:Adium_CompletedApplicationLoad object:nil];
 	[pool release];
 }
@@ -377,10 +382,6 @@ static NSString	*prefsCategory;
     [[LNAboutBoxController aboutBoxController] showWindow:nil];
 }
 
-//Show our help
-- (IBAction)showHelp:(id)sender{
-    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_TRAC_PAGE]];
-}
 - (IBAction)reportABug:(id)sender{
     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_REPORT_BUG_PAGE]];
 }
@@ -961,6 +962,22 @@ static NSString	*prefsCategory;
 	}
 	
 	return handleKey;
+}
+
+#pragma mark Help
+- (void)configureHelp
+{
+	CFBundleRef myApplicationBundle;
+	CFURLRef myBundleURL;
+	FSRef myBundleRef;
+
+	if ((myApplicationBundle = CFBundleGetMainBundle())) {
+		myBundleURL = CFBundleCopyBundleURL(myApplicationBundle);
+
+		if (CFURLGetFSRef(myBundleURL, &myBundleRef)) {
+			AHRegisterHelpBook(&myBundleRef);
+		}
+	}
 }
 
 #pragma mark Sparkle Delegate Methods
