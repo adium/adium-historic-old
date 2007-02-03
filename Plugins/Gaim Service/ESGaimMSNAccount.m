@@ -240,10 +240,6 @@
 															  accountDisplayName, @"accountDisplayName",
 															  [NSString stringWithUTF8String:displayName], @"displayName",
 															  nil]];
-			} else {
-				NSLog(@"Not updating the display naame; it's %s and the display name is %s, mine is %@",
-					  accountDisplayNameUTF8String,displayName, 
-					  [self displayName]);
 			}
 
 		} else {
