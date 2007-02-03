@@ -61,7 +61,6 @@
 }
 
 - (IBAction)showAboutBox:(id)sender;
-- (IBAction)showHelp:(id)sender;
 - (IBAction)reportABug:(id)sender;
 - (IBAction)sendFeedback:(id)sender;
 - (IBAction)showForums:(id)sender;
