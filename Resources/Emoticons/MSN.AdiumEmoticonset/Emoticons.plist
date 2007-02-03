@@ -58,7 +58,9 @@
 			<key>Equivalents</key>
 			<array>
 				<string>:-O</string>
+				<string>:-o</string>
 				<string>:o</string>
+				<string>:O</string>
 				<string></string>
 			</array>
 			<key>Name</key>
@@ -69,7 +71,9 @@
 			<key>Equivalents</key>
 			<array>
 				<string>:-D</string>
+				<string>:-d</string>
 				<string>:d</string>
+				<string>:D</string>
 				<string></string>
 			</array>
 			<key>Name</key>
@@ -112,7 +116,9 @@
 			<key>Equivalents</key>
 			<array>
 				<string>:-S</string>
+				<string>:-s</string>
 				<string>:s</string>
+				<string>:S</string>
 				<string></string>
 			</array>
 			<key>Name</key>
@@ -134,7 +140,9 @@
 			<key>Equivalents</key>
 			<array>
 				<string>:-P</string>
+				<string>:-p</string>
 				<string>:p</string>
+				<string>:P</string>
 				<string></string>
 			</array>
 			<key>Name</key>
