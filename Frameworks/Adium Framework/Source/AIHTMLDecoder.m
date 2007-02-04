@@ -1544,6 +1544,23 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				}
 			}
 
+			attributeRange = [style rangeOfString:@"background-color: " options:NSCaseInsensitiveSearch];
+			if (attributeRange.location != NSNotFound) {
+				NSRange	 nextSemicolon = [style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
+				if (nextSemicolon.location != NSNotFound) {
+					NSString *hexColor = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
+					
+					[textAttributes setBackgroundColor:[NSColor colorWithHTMLString:hexColor
+																	   defaultColor:[NSColor blackColor]]];
+				}
+
+				//Take out the background-color attribute, so that the following search for color: does not match it.
+				NSMutableString *mStyle = [[style mutableCopy] autorelease];
+				[mStyle replaceCharactersInRange:attributeRange
+				                      withString:@"onpxtebhaq-pbybe: "]; //ROT13('background-color: ')
+				style = mStyle;
+			}
+
 			attributeRange = [style rangeOfString:@"color: " options:NSCaseInsensitiveSearch];
 			if (attributeRange.location != NSNotFound) {
 				NSRange	 nextSemicolon = [style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
@@ -1552,17 +1569,6 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					
 					[textAttributes setTextColor:[NSColor colorWithHTMLString:hexColor
 																 defaultColor:[NSColor blackColor]]];
-				}
-			}
-
-            attributeRange = [style rangeOfString:@"background-color: " options:NSCaseInsensitiveSearch];
-			if (attributeRange.location != NSNotFound) {
-				NSRange	 nextSemicolon = [style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
-				if (nextSemicolon.location != NSNotFound) {
-					NSString *hexColor = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
-					
-					[textAttributes setBackgroundColor:[NSColor colorWithHTMLString:hexColor
-																	   defaultColor:[NSColor blackColor]]];
 				}
 			}
         }
