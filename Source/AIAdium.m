@@ -452,6 +452,20 @@ static NSString	*prefsCategory;
 //Last call to perform actions before the app shuffles off its mortal coil and joins the bleeding choir invisible
 - (IBAction)confirmQuit:(id)sender
 {
+	/* We may have received a message or begun a file transfer while the menu was open, if this is reached via a menu item.
+	 * Wait one last run loop before beginning to quit so that activity can be registered, since menus run in
+	 * a different run loop mode, NSEventTrackingRunLoopMode.
+	 */
+	[NSObject cancelPreviousPerformRequestsWithTarget:self
+											 selector:@selector(reallyConfirmQuit)
+											   object:nil];
+	[self performSelector:@selector(reallyConfirmQuit)
+			   withObject:nil
+			   afterDelay:0];
+}
+
+- (void)reallyConfirmQuit
+{
 	BOOL allowQuit = YES;
 	if (([chatController unviewedContentCount] > 0) &&
 		(![[preferenceController preferenceForKey:@"Suppress Quit Confirmation for Unread Messages"
