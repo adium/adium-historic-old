@@ -54,34 +54,13 @@
 		110763F608676CC9005987A5 /* RAFBlockEditorPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */; };
 		110763F808676CC9005987A5 /* RAFBlockEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F408676CC9005987A5 /* RAFBlockEditorWindowController.m */; };
 		110763FA08676D05005987A5 /* BlockEditorWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 110763F908676D04005987A5 /* BlockEditorWindow.nib */; };
-		110C125909608F6C003FAD0A /* RAFjoscarLogHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 110C121709608C5A003FAD0A /* RAFjoscarLogHandler.m */; };
-		11247EC70956177D00F69C1E /* RAFjoscarAIMService.m in Sources */ = {isa = PBXBuildFile; fileRef = 11247EC50956177D00F69C1E /* RAFjoscarAIMService.m */; };
-		11247EF509561A8500F69C1E /* RAFjoscarAIMAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 11247EF309561A8500F69C1E /* RAFjoscarAIMAccount.m */; };
-		1124816C09562C9D00F69C1E /* joscar bridge.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1124816909562C9500F69C1E /* joscar bridge.jar */; };
-		1124817409562CDB00F69C1E /* retroweaver-rt.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1124817309562CDB00F69C1E /* retroweaver-rt.jar */; };
-		112FC2B409393926001FB00D /* ESjoscarCocoaAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 112FC2B209393925001FB00D /* ESjoscarCocoaAdapter.m */; };
 		115E0E8E0952514A003218FE /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 115E0E8D0952514A003218FE /* JavaVM.framework */; };
-		11669A2E0999395D003CB8A1 /* ESjoscarJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11669A2C0999395D003CB8A1 /* ESjoscarJoinChatViewController.m */; };
-		11669AB309994697003CB8A1 /* joscarJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 11669AB109994697003CB8A1 /* joscarJoinChatView.nib */; };
-		11669ABA09994865003CB8A1 /* joscarJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 11669AB109994697003CB8A1 /* joscarJoinChatView.nib */; };
-		117481E1092E68DD00CFE3FF /* RAFjoscarServicePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 117481DF092E68DC00CFE3FF /* RAFjoscarServicePlugin.m */; };
-		11A00DD309742D9700768128 /* RAFjoscarDotMacAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 11A00DCD09742D8600768128 /* RAFjoscarDotMacAccount.m */; };
-		11A00DD509742D9700768128 /* RAFjoscarDotMacService.m in Sources */ = {isa = PBXBuildFile; fileRef = 11A00DAD09742B9E00768128 /* RAFjoscarDotMacService.m */; };
-		11AD534D0963492D00CA0C6F /* RAFjoscarDebugWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11AD534B0963492D00CA0C6F /* RAFjoscarDebugWindowController.m */; };
-		11AD5363096349D000CA0C6F /* RAFjoscarDebugController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11AD5361096349D000CA0C6F /* RAFjoscarDebugController.m */; };
-		11AD53E90963523000CA0C6F /* joscarDebugWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 11AD53E80963523000CA0C6F /* joscarDebugWindow.nib */; };
-		11CBDD4409326F8100BE7961 /* RAFjoscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CBDD3E09326F8000BE7961 /* RAFjoscarAccount.m */; };
-		11CBDD4609326F8100BE7961 /* RAFjoscarAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CBDD4009326F8000BE7961 /* RAFjoscarAccountViewController.m */; };
-		11CBDD4809326F8100BE7961 /* RAFjoscarService.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CBDD4209326F8100BE7961 /* RAFjoscarService.m */; };
-		11CC0DBC097B0AE700E1DE20 /* RAFjoscarICQService.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CC0DBA097B0AE600E1DE20 /* RAFjoscarICQService.m */; };
-		11CC0DEE097B120D00E1DE20 /* RAFjoscarICQAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 11CC0DEC097B120D00E1DE20 /* RAFjoscarICQAccount.m */; };
 		11DAEBD0092FB857007A8682 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		11DAEBD1092FB85F007A8682 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		11F145F00B546AC500CA91F6 /* Menu Bar Icons in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11F145C70B546A6D00CA91F6 /* Menu Bar Icons */; };
 		11F1460B0B546C1200CA91F6 /* AIMenuBarIcons.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11F146090B546C1200CA91F6 /* AIMenuBarIcons.h */; };
 		11F1460C0B546C1200CA91F6 /* AIMenuBarIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = 11F1460A0B546C1200CA91F6 /* AIMenuBarIcons.m */; };
 		11F5F44309537E34007DCC49 /* joscar.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 118C52C6091BF0DB00219458 /* joscar.AdiumPlugin */; };
-		11F5F70209539C70007DCC49 /* joscarDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 11F5F70109539C70007DCC49 /* joscarDefaults.plist */; };
 		311AC6D20AF4BA5B0007F952 /* JavaCocoaAdapter.class in CopyFiles */ = {isa = PBXBuildFile; fileRef = 311AC6CD0AF4BA140007F952 /* JavaCocoaAdapter.class */; };
 		3402D5A5080DBC91004E50B4 /* SortConfiguration.nib in Resources */ = {isa = PBXBuildFile; fileRef = 347E791D07CAA52300350507 /* SortConfiguration.nib */; };
 		3402E01B07CB0CED0044F818 /* ESFileTransferProgressView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E01A07CB0CEC0044F818 /* ESFileTransferProgressView.nib */; };
@@ -106,7 +85,6 @@
 		341548CD0A92D6D30087EB98 /* SRRemoveShortcutRollover.tif in Resources */ = {isa = PBXBuildFile; fileRef = 341548C90A92D6D20087EB98 /* SRRemoveShortcutRollover.tif */; };
 		341548CE0A92D6D30087EB98 /* SRSnapback.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 341548CA0A92D6D30087EB98 /* SRSnapback.tiff */; };
 		341591E405463DA800291275 /* SQL_Logger_Prefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 341591E105463DA800291275 /* SQL_Logger_Prefs.nib */; };
-		3415F83B0A43A5B600B093B7 /* aim.png in Resources */ = {isa = PBXBuildFile; fileRef = 3415F83A0A43A5B600B093B7 /* aim.png */; };
 		34167FED081D706300E35678 /* DualWindowMessageAdvanced.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34167FEC081D706200E35678 /* DualWindowMessageAdvanced.nib */; };
 		3417D25A09C332B900FC413E /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3417D27C09C3336A00FC413E /* TranslationEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = 3417D27809C3336900FC413E /* TranslationEngine.m */; };
@@ -157,9 +135,7 @@
 		341BDF5E0969814A00CF83F5 /* BadgerDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 341BDF5D0969814900CF83F5 /* BadgerDefaults.plist */; };
 		341BDF700969829E00CF83F5 /* DockUnviewedContentDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 341BDF6F0969829E00CF83F5 /* DockUnviewedContentDefaults.plist */; };
 		342113CE08261FB900A3B0FB /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 342113CD08261FB900A3B0FB /* MainMenu.nib */; };
-		342340E109D1AF58009FF634 /* RAFjoscarSecuridPromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342340DF09D1AF58009FF634 /* RAFjoscarSecuridPromptController.m */; };
 		342353D709D45726009FF634 /* AIAbstractLogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */; };
-		3423622B09D8BCAA009FF634 /* SecuridPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3423622A09D8BCA9009FF634 /* SecuridPrompt.nib */; };
 		3428328907D2643F004F01C9 /* ESStatusPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 3428328507D2643F004F01C9 /* ESStatusPreferences.m */; };
 		3428328B07D2643F004F01C9 /* ESStatusPreferencesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3428328707D2643F004F01C9 /* ESStatusPreferencesPlugin.m */; };
 		342838EE07D2D004004F01C9 /* Shared Dock Icon Images in Resources */ = {isa = PBXBuildFile; fileRef = 342838ED07D2D004004F01C9 /* Shared Dock Icon Images */; };
@@ -185,7 +161,6 @@
 		34382CEC0A50386C004BF6A2 /* DCMessageContextDisplayPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 34382CE80A50386C004BF6A2 /* DCMessageContextDisplayPreferences.m */; };
 		34382CEF0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34382CEE0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist */; };
 		3439FDAA05794D1300B2E449 /* JMSQLLoggerAdvancedPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = B799BC8005793C1200338E54 /* JMSQLLoggerAdvancedPreferences.m */; };
-		343E7718097BEFE000BCFF92 /* jsocks-klea.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 343E7716097BEFD500BCFF92 /* jsocks-klea.jar */; };
 		343EB3FE08086D2F00E27095 /* AccountProxy.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB3FD08086D2F00E27095 /* AccountProxy.nib */; };
 		343EB40208086D9000E27095 /* AppearancePrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB40108086D9000E27095 /* AppearancePrefs.nib */; };
 		343EB41708086D9100E27095 /* StatusSortConfiguration.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB41608086D9100E27095 /* StatusSortConfiguration.nib */; };
@@ -468,7 +443,6 @@
 		3497CC0D09BA0D7900C0428E /* ESIRCAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3497CC0B09BA0D7900C0428E /* ESIRCAccountViewController.m */; };
 		3497CC1C09BA0DC100C0428E /* ESIRCAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3497CC1B09BA0DC100C0428E /* ESIRCAccountView.nib */; };
 		3497CC2709BA0FDB00C0428E /* GaimDefaultsIRC.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3497CC2609BA0FDB00C0428E /* GaimDefaultsIRC.plist */; };
-		349B3FB90A6210AA008BE092 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 349B3FB80A6210AA008BE092 /* Localizable.strings */; };
 		349C2F470867AD16000BF883 /* ApplescriptRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 349C2F460867AD16000BF883 /* ApplescriptRunner.m */; };
 		349C2FF00867AD65000BF883 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 349C2FEF0867AD65000BF883 /* Foundation.framework */; };
 		349C30790867ADA3000BF883 /* AdiumApplescriptRunner in Resources */ = {isa = PBXBuildFile; fileRef = 349C2EFA0867AC97000BF883 /* AdiumApplescriptRunner */; };
@@ -508,9 +482,6 @@
 		34B9C7900A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34B9C78F0A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib */; };
 		34B9C7920A255DCE00CEA8AE /* LogViewerDateFilter.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34B9C7910A255DCE00CEA8AE /* LogViewerDateFilter.nib */; };
 		34BC8F7B0ACA3AAC00562745 /* AIScannerDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BC8F790ACA3AAC00562745 /* AIScannerDebug.m */; };
-		34BCB1A30ACB099D00562745 /* joscar-protocol.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34BCB1A00ACB099B00562745 /* joscar-protocol.jar */; };
-		34BCB1A40ACB099D00562745 /* joscar-client.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34BCB1A10ACB099C00562745 /* joscar-client.jar */; };
-		34BCB1A50ACB099D00562745 /* joscar-common.jar in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34BCB1A20ACB099D00562745 /* joscar-common.jar */; };
 		34BD9D4A053146CC000AB133 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F59DB6AD033EB74801A8010A /* main.m */; };
 		34BD9D4C053146CC000AB133 /* AIContactInfoWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F570A59903704B6101A8010A /* AIContactInfoWindowController.m */; };
 		34BD9D54053146CC000AB133 /* AIAdium.m in Sources */ = {isa = PBXBuildFile; fileRef = F59DB3D7033EA9CD01A8010A /* AIAdium.m */; };
@@ -549,7 +520,6 @@
 		34C9461C0AE209990094E504 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		34CA22300A671BEF00B11032 /* PersonalPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34CA222F0A671BEF00B11032 /* PersonalPreferences.nib */; };
 		34CEBE6306F117DF00A89DDE /* ESContactInfoListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */; };
-		34CF889F0A6D5D94009D9A21 /* RAFjoscarAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34CF889E0A6D5D94009D9A21 /* RAFjoscarAccountView.nib */; };
 		34CF9DF5085B8B7900D87E37 /* ESiTunesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CF9DF3085B8B7900D87E37 /* ESiTunesPlugin.m */; };
 		34D000C60957918000DCB678 /* ContactListRecentImages.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34D000C50957918000DCB678 /* ContactListRecentImages.nib */; };
 		34D001E80958868000DCB678 /* AIMenuItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D001E60958868000DCB678 /* AIMenuItemView.m */; };
@@ -1252,13 +1222,6 @@
 			remoteGlobalIDString = DACF3ED3085574D0006BFB18;
 			remoteInfo = "External Frameworks";
 		};
-		3423412D09D1B67B009FF634 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 112480870956271F00F69C1E;
-			remoteInfo = "joscar bridge";
-		};
 		345AF7D30A5D559B00D7DA6F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 34611C7D09B6756D00870036 /* AdiumSpotlightImporter.xcodeproj */;
@@ -1443,12 +1406,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 15;
 			files = (
-				34BCB1A30ACB099D00562745 /* joscar-protocol.jar in CopyFiles */,
-				34BCB1A40ACB099D00562745 /* joscar-client.jar in CopyFiles */,
-				34BCB1A50ACB099D00562745 /* joscar-common.jar in CopyFiles */,
-				343E7718097BEFE000BCFF92 /* jsocks-klea.jar in CopyFiles */,
-				1124816C09562C9D00F69C1E /* joscar bridge.jar in CopyFiles */,
-				1124817409562CDB00F69C1E /* retroweaver-rt.jar in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1593,51 +1550,13 @@
 		110763F308676CC9005987A5 /* RAFBlockEditorWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorWindowController.h; path = Source/RAFBlockEditorWindowController.h; sourceTree = "<group>"; };
 		110763F408676CC9005987A5 /* RAFBlockEditorWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFBlockEditorWindowController.m; path = Source/RAFBlockEditorWindowController.m; sourceTree = "<group>"; };
 		110763F908676D04005987A5 /* BlockEditorWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = BlockEditorWindow.nib; path = Resources/BlockEditorWindow.nib; sourceTree = "<group>"; };
-		110C121609608C5A003FAD0A /* RAFjoscarLogHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarLogHandler.h; path = "Plugins/joscar Service/RAFjoscarLogHandler.h"; sourceTree = "<group>"; };
-		110C121709608C5A003FAD0A /* RAFjoscarLogHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarLogHandler.m; path = "Plugins/joscar Service/RAFjoscarLogHandler.m"; sourceTree = "<group>"; };
-		11247EC40956177D00F69C1E /* RAFjoscarAIMService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarAIMService.h; path = "Plugins/joscar Service/RAFjoscarAIMService.h"; sourceTree = "<group>"; };
-		11247EC50956177D00F69C1E /* RAFjoscarAIMService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarAIMService.m; path = "Plugins/joscar Service/RAFjoscarAIMService.m"; sourceTree = "<group>"; };
-		11247EF209561A8500F69C1E /* RAFjoscarAIMAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarAIMAccount.h; path = "Plugins/joscar Service/RAFjoscarAIMAccount.h"; sourceTree = "<group>"; };
-		11247EF309561A8500F69C1E /* RAFjoscarAIMAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarAIMAccount.m; path = "Plugins/joscar Service/RAFjoscarAIMAccount.m"; sourceTree = "<group>"; };
-		1124816909562C9500F69C1E /* joscar bridge.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar bridge.jar"; path = "Plugins/joscar Service/joscar bridge.jar"; sourceTree = SOURCE_ROOT; };
-		1124817309562CDB00F69C1E /* retroweaver-rt.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "retroweaver-rt.jar"; path = "Plugins/joscar Service/joscar Java Bridge/Utilities/Retroweave/release/retroweaver-rt.jar"; sourceTree = SOURCE_ROOT; };
-		112FC2B109393924001FB00D /* ESjoscarCocoaAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESjoscarCocoaAdapter.h; path = "Plugins/joscar Service/ESjoscarCocoaAdapter.h"; sourceTree = "<group>"; };
-		112FC2B209393925001FB00D /* ESjoscarCocoaAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESjoscarCocoaAdapter.m; path = "Plugins/joscar Service/ESjoscarCocoaAdapter.m"; sourceTree = "<group>"; };
 		115E0E8D0952514A003218FE /* JavaVM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaVM.framework; path = /System/Library/Frameworks/JavaVM.framework; sourceTree = "<absolute>"; };
-		11669A2B0999395D003CB8A1 /* ESjoscarJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESjoscarJoinChatViewController.h; path = "Plugins/joscar Service/ESjoscarJoinChatViewController.h"; sourceTree = "<group>"; };
-		11669A2C0999395D003CB8A1 /* ESjoscarJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESjoscarJoinChatViewController.m; path = "Plugins/joscar Service/ESjoscarJoinChatViewController.m"; sourceTree = "<group>"; };
-		11669AB209994697003CB8A1 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/joscar Service/English.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		117481DE092E68DC00CFE3FF /* RAFjoscarServicePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarServicePlugin.h; path = "Plugins/joscar Service/RAFjoscarServicePlugin.h"; sourceTree = "<group>"; };
-		117481DF092E68DC00CFE3FF /* RAFjoscarServicePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarServicePlugin.m; path = "Plugins/joscar Service/RAFjoscarServicePlugin.m"; sourceTree = "<group>"; };
 		118C52C6091BF0DB00219458 /* joscar.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = joscar.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
-		118C52CC091BF0DB00219458 /* joscar-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "joscar-Info.plist"; path = "Plists/joscar-Info.plist"; sourceTree = "<group>"; };
-		11A00DAC09742B9E00768128 /* RAFjoscarDotMacService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarDotMacService.h; path = "Plugins/joscar Service/RAFjoscarDotMacService.h"; sourceTree = "<group>"; };
-		11A00DAD09742B9E00768128 /* RAFjoscarDotMacService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarDotMacService.m; path = "Plugins/joscar Service/RAFjoscarDotMacService.m"; sourceTree = "<group>"; };
-		11A00DCC09742D8600768128 /* RAFjoscarDotMacAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarDotMacAccount.h; path = "Plugins/joscar Service/RAFjoscarDotMacAccount.h"; sourceTree = "<group>"; };
-		11A00DCD09742D8600768128 /* RAFjoscarDotMacAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarDotMacAccount.m; path = "Plugins/joscar Service/RAFjoscarDotMacAccount.m"; sourceTree = "<group>"; };
-		11AD534A0963492D00CA0C6F /* RAFjoscarDebugWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarDebugWindowController.h; path = "Plugins/joscar Service/RAFjoscarDebugWindowController.h"; sourceTree = "<group>"; };
-		11AD534B0963492D00CA0C6F /* RAFjoscarDebugWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarDebugWindowController.m; path = "Plugins/joscar Service/RAFjoscarDebugWindowController.m"; sourceTree = "<group>"; };
-		11AD5360096349D000CA0C6F /* RAFjoscarDebugController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarDebugController.h; path = "Plugins/joscar Service/RAFjoscarDebugController.h"; sourceTree = "<group>"; };
-		11AD5361096349D000CA0C6F /* RAFjoscarDebugController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarDebugController.m; path = "Plugins/joscar Service/RAFjoscarDebugController.m"; sourceTree = "<group>"; };
-		11AD53E80963523000CA0C6F /* joscarDebugWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = joscarDebugWindow.nib; path = "Plugins/joscar Service/joscarDebugWindow.nib"; sourceTree = "<group>"; };
 		11C157D804A88E04008E0C76 /* AIEmoticonController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonController.h; path = Source/AIEmoticonController.h; sourceTree = "<group>"; };
 		11C157D904A88E04008E0C76 /* AIEmoticonController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonController.m; path = Source/AIEmoticonController.m; sourceTree = "<group>"; };
-		11CBDD3D09326F7F00BE7961 /* RAFjoscarAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarAccount.h; path = "Plugins/joscar Service/RAFjoscarAccount.h"; sourceTree = "<group>"; };
-		11CBDD3E09326F8000BE7961 /* RAFjoscarAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarAccount.m; path = "Plugins/joscar Service/RAFjoscarAccount.m"; sourceTree = "<group>"; };
-		11CBDD3F09326F8000BE7961 /* RAFjoscarAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarAccountViewController.h; path = "Plugins/joscar Service/RAFjoscarAccountViewController.h"; sourceTree = "<group>"; };
-		11CBDD4009326F8000BE7961 /* RAFjoscarAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarAccountViewController.m; path = "Plugins/joscar Service/RAFjoscarAccountViewController.m"; sourceTree = "<group>"; };
-		11CBDD4109326F8100BE7961 /* RAFjoscarService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarService.h; path = "Plugins/joscar Service/RAFjoscarService.h"; sourceTree = "<group>"; };
-		11CBDD4209326F8100BE7961 /* RAFjoscarService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarService.m; path = "Plugins/joscar Service/RAFjoscarService.m"; sourceTree = "<group>"; };
-		11CC0DB9097B0AE600E1DE20 /* RAFjoscarICQService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarICQService.h; path = "Plugins/joscar Service/RAFjoscarICQService.h"; sourceTree = "<group>"; };
-		11CC0DBA097B0AE600E1DE20 /* RAFjoscarICQService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarICQService.m; path = "Plugins/joscar Service/RAFjoscarICQService.m"; sourceTree = "<group>"; };
-		11CC0DEB097B120C00E1DE20 /* RAFjoscarICQAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarICQAccount.h; path = "Plugins/joscar Service/RAFjoscarICQAccount.h"; sourceTree = "<group>"; };
-		11CC0DEC097B120D00E1DE20 /* RAFjoscarICQAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarICQAccount.m; path = "Plugins/joscar Service/RAFjoscarICQAccount.m"; sourceTree = "<group>"; };
 		11F145C70B546A6D00CA91F6 /* Menu Bar Icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Menu Bar Icons"; path = "Resources/Menu Bar Icons"; sourceTree = "<group>"; };
 		11F146090B546C1200CA91F6 /* AIMenuBarIcons.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMenuBarIcons.h; path = Source/AIMenuBarIcons.h; sourceTree = "<group>"; };
 		11F1460A0B546C1200CA91F6 /* AIMenuBarIcons.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMenuBarIcons.m; path = Source/AIMenuBarIcons.m; sourceTree = "<group>"; };
-		11F5F46309538B99007DCC49 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/joscar Service/English.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		11F5F70109539C70007DCC49 /* joscarDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = joscarDefaults.plist; path = "Plugins/joscar Service/joscarDefaults.plist"; sourceTree = "<group>"; };
-		11F5F72D0953A227007DCC49 /* joscarClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = joscarClasses.h; path = "Plugins/joscar Service/joscarClasses.h"; sourceTree = SOURCE_ROOT; };
 		311AC6CD0AF4BA140007F952 /* JavaCocoaAdapter.class */ = {isa = PBXFileReference; lastKnownFileType = compiled.javaclass; name = JavaCocoaAdapter.class; path = net/adium/JavaCocoaAdapter.class; sourceTree = BUILT_PRODUCTS_DIR; };
 		3402E01807CB0CE40044F818 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		3402E01F07CB0D150044F818 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
@@ -1743,7 +1662,6 @@
 		341548C90A92D6D20087EB98 /* SRRemoveShortcutRollover.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = SRRemoveShortcutRollover.tif; path = Frameworks/ShortcutRecorder/Images/SRRemoveShortcutRollover.tif; sourceTree = "<group>"; };
 		341548CA0A92D6D30087EB98 /* SRSnapback.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = SRSnapback.tiff; path = Frameworks/ShortcutRecorder/Images/SRSnapback.tiff; sourceTree = "<group>"; };
 		341591E105463DA800291275 /* SQL_Logger_Prefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = SQL_Logger_Prefs.nib; sourceTree = "<group>"; };
-		3415F83A0A43A5B600B093B7 /* aim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = aim.png; path = "Plugins/joscar Service/aim.png"; sourceTree = "<group>"; };
 		34167FE5081D700B00E35678 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		3417D26109C332B900FC413E /* Translator.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Translator.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		3417D27709C3336900FC413E /* TranslationEngine.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TranslationEngine.h; path = Plugins/Translation/TranslationEngine.h; sourceTree = "<group>"; };
@@ -1864,12 +1782,8 @@
 		3421181A0827D86900A3B0FB /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = "Plugins/Gaim Service/Dutch.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
 		3421186C0827D8B100A3B0FB /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = "Frameworks/Adium Framework/Resources/Dutch.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
 		342118800827D8C300A3B0FB /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
-		342340DE09D1AF58009FF634 /* RAFjoscarSecuridPromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = RAFjoscarSecuridPromptController.h; path = "Plugins/joscar Service/RAFjoscarSecuridPromptController.h"; sourceTree = "<group>"; };
-		342340DF09D1AF58009FF634 /* RAFjoscarSecuridPromptController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarSecuridPromptController.m; path = "Plugins/joscar Service/RAFjoscarSecuridPromptController.m"; sourceTree = "<group>"; };
-		3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "joscar Java Bridge.xcodeproj"; path = "Plugins/joscar Service/joscar Java Bridge/joscar Java Bridge.xcodeproj"; sourceTree = "<group>"; };
 		342353D409D45725009FF634 /* AIAbstractLogViewerWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAbstractLogViewerWindowController.h; path = Source/AIAbstractLogViewerWindowController.h; sourceTree = "<group>"; };
 		342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAbstractLogViewerWindowController.m; path = Source/AIAbstractLogViewerWindowController.m; sourceTree = "<group>"; };
-		3423622A09D8BCA9009FF634 /* SecuridPrompt.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = SecuridPrompt.nib; path = "Plugins/joscar Service/SecuridPrompt.nib"; sourceTree = "<group>"; };
 		3426FD090699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m; path = "Frameworks/Adium Framework/Source/ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m"; sourceTree = "<group>"; };
 		3426FD0A0699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h; path = "Frameworks/Adium Framework/Source/ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h"; sourceTree = "<group>"; };
 		3428328407D2643E004F01C9 /* ESStatusPreferencesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESStatusPreferencesPlugin.h; path = Source/ESStatusPreferencesPlugin.h; sourceTree = "<group>"; };
@@ -1977,7 +1891,6 @@
 		342F9E540B552627000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
 		342F9E550B552628000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = Resources/Finnish.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
 		342F9E560B552628000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Finnish; path = "Resources/Finnish.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
-		342F9E570B552628000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/joscar Service/Finnish.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
 		342F9E580B552628000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		342F9E590B552628000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
 		342F9E5A0B552629000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
@@ -1986,11 +1899,9 @@
 		342F9E5E0B55262A000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = Resources/Finnish.lproj/Localizable.strings; sourceTree = "<group>"; };
 		342F9E600B55262B000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = "Plugins/Gaim Service/Finnish.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		342F9E610B55262B000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = "Plugins/WebKit Message View/Finnish.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		342F9E620B55262B000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = "Plugins/joscar Service/Finnish.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		342F9E630B55262B000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = "Frameworks/Adium Framework/Resources/Finnish.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		342F9E640B55262B000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		342F9E650B55262B000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
-		342F9E660B55262B000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/joscar Service/Finnish.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
 		342F9E670B55262C000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Finnish; path = Resources/Finnish.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		342F9E680B55262C000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = Resources/Finnish.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
 		342F9E690B55262D000D5FC2 /* Finnish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Finnish; path = "Plugins/Gaim Service/Finnish.lproj/ESGaimZephyrAccountView.nib"; sourceTree = "<group>"; };
@@ -2080,7 +1991,6 @@
 		343C461F0816CD0400FF5FA7 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = "Plugins/Gaim Service/Italian.lproj/DCGaimOscarJoinChatView.nib"; sourceTree = "<group>"; };
 		343C47760816FBDA00FF5FA7 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = "Plugins/WebKit Message View/German.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
 		343C47790816FBE500FF5FA7 /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = "Plugins/WebKit Message View/German.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		343E7716097BEFD500BCFF92 /* jsocks-klea.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "jsocks-klea.jar"; path = "Plugins/joscar Service/jsocks-klea.jar"; sourceTree = "<group>"; };
 		343EB4270808709E00E27095 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		343EC68F0809DD2900E27095 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
 		343EC6A70809DEC700E27095 /* ESContactAlertsPane.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESContactAlertsPane.m; path = Source/ESContactAlertsPane.m; sourceTree = "<group>"; };
@@ -2441,21 +2351,6 @@
 		347374FE0AA9215800AD18E3 /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Turkish; path = Resources/Turkish.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
 		347374FF0AA9215F00AD18E3 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = Resources/zh_CN.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
 		347375000AA9216700AD18E3 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = Resources/zh_TW.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
-		34739BA50AA4F131007BF788 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = "Plugins/joscar Service/Catalan.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BA60AA4F136007BF788 /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/joscar Service/cs.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BA70AA4F13C007BF788 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/joscar Service/Danish.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BA80AA4F142007BF788 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = "Plugins/joscar Service/Dutch.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BA90AA4F14A007BF788 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = "Plugins/joscar Service/French.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BAA0AA4F15B007BF788 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/joscar Service/is.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BAB0AA4F162007BF788 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = "Plugins/joscar Service/Italian.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BAC0AA4F17D007BF788 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = "Plugins/joscar Service/Japanese.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BAD0AA4F189007BF788 /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = "Plugins/joscar Service/Norwegian.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BAE0AA4F191007BF788 /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/joscar Service/pl.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BAF0AA4F199007BF788 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = "Plugins/joscar Service/Russian.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BB00AA4F1A0007BF788 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = "Plugins/joscar Service/Swedish.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BB10AA4F1A8007BF788 /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Plugins/joscar Service/Turkish.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BB20AA4F1AF007BF788 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/joscar Service/zh_CN.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BB30AA4F1B6007BF788 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Plugins/joscar Service/zh_TW.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
 		3474DD6F0824699D00BF30F0 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		3474DFFC08254F3500BF30F0 /* Copyright.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Copyright.txt; sourceTree = "<group>"; };
 		3474DFFF082550FD00BF30F0 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Credits.rtf; path = Resources/Credits.rtf; sourceTree = "<group>"; };
@@ -2605,24 +2500,6 @@
 		3499F4A706309AF60035B468 /* ESGaimRequestWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimRequestWindowController.h; path = "Plugins/Gaim Service/ESGaimRequestWindowController.h"; sourceTree = "<group>"; };
 		349B39290A5FB150008BE092 /* AIContentEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContentEvent.h; path = "Frameworks/Adium Framework/Source/AIContentEvent.h"; sourceTree = "<group>"; };
 		349B392A0A5FB150008BE092 /* AIContentEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIContentEvent.m; path = "Frameworks/Adium Framework/Source/AIContentEvent.m"; sourceTree = "<group>"; };
-		349B3FB60A62109D008BE092 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = "Plugins/joscar Service/English.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FBC0A6210E0008BE092 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Catalan; path = "Plugins/joscar Service/Catalan.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FBD0A6210E6008BE092 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Danish; path = "Plugins/joscar Service/Danish.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FBE0A6210EF008BE092 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Dutch; path = "Plugins/joscar Service/Dutch.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FBF0A6210FA008BE092 /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = "Plugins/joscar Service/French.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FC00A621104008BE092 /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = "Plugins/joscar Service/German.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FC10A62110C008BE092 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = "Plugins/joscar Service/Italian.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FC20A621115008BE092 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Japanese; path = "Plugins/joscar Service/Japanese.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FC30A62111C008BE092 /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Norwegian; path = "Plugins/joscar Service/Norwegian.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FC40A621127008BE092 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Russian; path = "Plugins/joscar Service/Russian.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FC50A621130008BE092 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Spanish; path = "Plugins/joscar Service/Spanish.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FC60A62113A008BE092 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Swedish; path = "Plugins/joscar Service/Swedish.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FC70A621145008BE092 /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Turkish; path = "Plugins/joscar Service/Turkish.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FC80A621155008BE092 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = "Plugins/joscar Service/cs.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FC90A62115E008BE092 /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = "Plugins/joscar Service/is.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FCA0A621168008BE092 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = "Plugins/joscar Service/pl.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FCB0A621178008BE092 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = "Plugins/joscar Service/zh_CN.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FCC0A621183008BE092 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = "Plugins/joscar Service/zh_TW.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		349C2EFA0867AC97000BF883 /* AdiumApplescriptRunner */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AdiumApplescriptRunner; sourceTree = BUILT_PRODUCTS_DIR; };
 		349C2F460867AD16000BF883 /* ApplescriptRunner.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ApplescriptRunner.m; path = Source/ApplescriptRunner.m; sourceTree = "<group>"; };
 		349C2FEF0867AD65000BF883 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -2853,12 +2730,9 @@
 		34BBE1B907A2F4C500663CC9 /* adiumGaimSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimSignals.m; path = "Plugins/Gaim Service/adiumGaimSignals.m"; sourceTree = "<group>"; };
 		34BC8F780ACA3AAC00562745 /* AIScannerDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIScannerDebug.h; path = Source/AIScannerDebug.h; sourceTree = "<group>"; };
 		34BC8F790ACA3AAC00562745 /* AIScannerDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIScannerDebug.m; path = Source/AIScannerDebug.m; sourceTree = "<group>"; };
-		34BCB1A00ACB099B00562745 /* joscar-protocol.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar-protocol.jar"; path = "Plugins/joscar Service/joscar-protocol.jar"; sourceTree = "<group>"; };
-		34BCB1A10ACB099C00562745 /* joscar-client.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar-client.jar"; path = "Plugins/joscar Service/joscar-client.jar"; sourceTree = "<group>"; };
-		34BCB1A20ACB099D00562745 /* joscar-common.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar-common.jar"; path = "Plugins/joscar Service/joscar-common.jar"; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2955,7 +2829,6 @@
 		34CA23A50A6723A200B11032 /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
 		34CEBE6006F117DF00A89DDE /* ESContactInfoListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESContactInfoListController.h; path = Source/ESContactInfoListController.h; sourceTree = "<group>"; };
 		34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESContactInfoListController.m; path = Source/ESContactInfoListController.m; sourceTree = "<group>"; };
-		34CF88A20A6D5DBC009D9A21 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = "Plugins/joscar Service/German.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
 		34CF88A70A6D5EC0009D9A21 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		34CF88AD0A6D5EF1009D9A21 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
 		34CF88B50A6D6005009D9A21 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
@@ -3099,22 +2972,6 @@
 		34EA648E0A62E2ED0053DFEB /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		34EA6B2F0A62F3420053DFEB /* AIApplication.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIApplication.h; path = Source/AIApplication.h; sourceTree = "<group>"; };
 		34EA6B300A62F3420053DFEB /* AIApplication.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIApplication.m; path = Source/AIApplication.m; sourceTree = "<group>"; };
-		34EFC22E0AAC6B590086AC43 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = "Plugins/joscar Service/Catalan.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC22F0AAC6B5F0086AC43 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/joscar Service/Danish.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC2300AAC6B690086AC43 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = "Plugins/joscar Service/Dutch.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC2310AAC6B740086AC43 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = "Plugins/joscar Service/French.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC2320AAC6B850086AC43 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = "Plugins/joscar Service/German.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC2330AAC6B920086AC43 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = "Plugins/joscar Service/Italian.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC2340AAC6B9A0086AC43 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = "Plugins/joscar Service/Japanese.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC2350AAC6BA20086AC43 /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = "Plugins/joscar Service/Norwegian.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC2360AAC6BAA0086AC43 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = "Plugins/joscar Service/Russian.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC2370AAC6BB70086AC43 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = "Plugins/joscar Service/Swedish.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC2380AAC6BC00086AC43 /* Turkish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Turkish; path = "Plugins/joscar Service/Turkish.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC2390AAC6BC80086AC43 /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/joscar Service/cs.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC23A0AAC6BCE0086AC43 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/joscar Service/is.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC23B0AAC6BD50086AC43 /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/joscar Service/pl.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC23C0AAC6BDD0086AC43 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/joscar Service/zh_CN.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC23D0AAC6BE50086AC43 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Plugins/joscar Service/zh_TW.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
 		34F101E307342B4D00890D3B /* ESGaimDotMacAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimDotMacAccount.m; path = "Plugins/Gaim Service/ESGaimDotMacAccount.m"; sourceTree = "<group>"; };
 		34F101E407342B4D00890D3B /* ESGaimDotMacAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimDotMacAccount.h; path = "Plugins/Gaim Service/ESGaimDotMacAccount.h"; sourceTree = "<group>"; };
 		34F1022A0734499600890D3B /* XtraProgressWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = XtraProgressWindow.nib; path = Resources/XtraProgressWindow.nib; sourceTree = "<group>"; };
@@ -3543,8 +3400,6 @@
 		63EA62EE094B8705009C8453 /* AIXtraInfoController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtraInfoController.m; path = Source/AIXtraInfoController.m; sourceTree = "<group>"; };
 		63EA6406094BB9A9009C8453 /* AIStatusIconPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIStatusIconPreviewController.h; path = Source/AIStatusIconPreviewController.h; sourceTree = "<group>"; };
 		63EA6407094BB9A9009C8453 /* AIStatusIconPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIStatusIconPreviewController.m; path = Source/AIStatusIconPreviewController.m; sourceTree = "<group>"; };
-		6C1C712F0A7E0FD500F901F1 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = "Plugins/joscar Service/Spanish.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		6C1C71330A7E0FE700F901F1 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = "Plugins/joscar Service/Spanish.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
 		6C5C3C2605F6532600490341 /* SQL Logger.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SQL Logger.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CE795BD0A6F9CEE00FF3217 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Resources/Spanish.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
 		6CF42677057763E100F27FAA /* ESContactAlertsController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESContactAlertsController.h; path = Source/ESContactAlertsController.h; sourceTree = "<group>"; };
@@ -4022,65 +3877,6 @@
 			name = Localized;
 			sourceTree = "<group>";
 		};
-		118C52BA091BF05B00219458 /* joscar */ = {
-			isa = PBXGroup;
-			children = (
-				118C52F4091BF64800219458 /* joscar Bridge and Jars */,
-				342340F909D1B03A009FF634 /* AIM */,
-				342340F609D1B02D009FF634 /* dotMac */,
-				342340F309D1B010009FF634 /* ICQ */,
-				11CBDD3D09326F7F00BE7961 /* RAFjoscarAccount.h */,
-				11CBDD3E09326F8000BE7961 /* RAFjoscarAccount.m */,
-				11CBDD4109326F8100BE7961 /* RAFjoscarService.h */,
-				11CBDD4209326F8100BE7961 /* RAFjoscarService.m */,
-				3415F83A0A43A5B600B093B7 /* aim.png */,
-				342340DE09D1AF58009FF634 /* RAFjoscarSecuridPromptController.h */,
-				342340DF09D1AF58009FF634 /* RAFjoscarSecuridPromptController.m */,
-				3423622A09D8BCA9009FF634 /* SecuridPrompt.nib */,
-				11CBDD3F09326F8000BE7961 /* RAFjoscarAccountViewController.h */,
-				11CBDD4009326F8000BE7961 /* RAFjoscarAccountViewController.m */,
-				34CF889E0A6D5D94009D9A21 /* RAFjoscarAccountView.nib */,
-				11669A2B0999395D003CB8A1 /* ESjoscarJoinChatViewController.h */,
-				11669A2C0999395D003CB8A1 /* ESjoscarJoinChatViewController.m */,
-				11669AB109994697003CB8A1 /* joscarJoinChatView.nib */,
-				349B3FB80A6210AA008BE092 /* Localizable.strings */,
-				342340EA09D1AFAF009FF634 /* Plugin */,
-				11AD5343096348B200CA0C6F /* Debug Window */,
-			);
-			name = joscar;
-			sourceTree = "<group>";
-		};
-		118C52F4091BF64800219458 /* joscar Bridge and Jars */ = {
-			isa = PBXGroup;
-			children = (
-				11F5F72D0953A227007DCC49 /* joscarClasses.h */,
-				112FC2B109393924001FB00D /* ESjoscarCocoaAdapter.h */,
-				112FC2B209393925001FB00D /* ESjoscarCocoaAdapter.m */,
-				110C121609608C5A003FAD0A /* RAFjoscarLogHandler.h */,
-				110C121709608C5A003FAD0A /* RAFjoscarLogHandler.m */,
-				1124817309562CDB00F69C1E /* retroweaver-rt.jar */,
-				1124816909562C9500F69C1E /* joscar bridge.jar */,
-				34BCB1A00ACB099B00562745 /* joscar-protocol.jar */,
-				34BCB1A10ACB099C00562745 /* joscar-client.jar */,
-				34BCB1A20ACB099D00562745 /* joscar-common.jar */,
-				343E7716097BEFD500BCFF92 /* jsocks-klea.jar */,
-				3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */,
-			);
-			name = "joscar Bridge and Jars";
-			sourceTree = "<group>";
-		};
-		11AD5343096348B200CA0C6F /* Debug Window */ = {
-			isa = PBXGroup;
-			children = (
-				11AD53E80963523000CA0C6F /* joscarDebugWindow.nib */,
-				11AD534A0963492D00CA0C6F /* RAFjoscarDebugWindowController.h */,
-				11AD534B0963492D00CA0C6F /* RAFjoscarDebugWindowController.m */,
-				11AD5360096349D000CA0C6F /* RAFjoscarDebugController.h */,
-				11AD5361096349D000CA0C6F /* RAFjoscarDebugController.m */,
-			);
-			name = "Debug Window";
-			sourceTree = "<group>";
-		};
 		11C157D504A88DE0008E0C76 /* Emoticons */ = {
 			isa = PBXGroup;
 			children = (
@@ -4237,58 +4033,6 @@
 				341BD5660965E99200CF83F5 /* OTRCommon.h */,
 			);
 			name = OTR;
-			sourceTree = "<group>";
-		};
-		342340EA09D1AFAF009FF634 /* Plugin */ = {
-			isa = PBXGroup;
-			children = (
-				117481DE092E68DC00CFE3FF /* RAFjoscarServicePlugin.h */,
-				117481DF092E68DC00CFE3FF /* RAFjoscarServicePlugin.m */,
-				11F5F70109539C70007DCC49 /* joscarDefaults.plist */,
-				118C52CC091BF0DB00219458 /* joscar-Info.plist */,
-			);
-			name = Plugin;
-			sourceTree = "<group>";
-		};
-		342340F309D1B010009FF634 /* ICQ */ = {
-			isa = PBXGroup;
-			children = (
-				11CC0DB9097B0AE600E1DE20 /* RAFjoscarICQService.h */,
-				11CC0DBA097B0AE600E1DE20 /* RAFjoscarICQService.m */,
-				11CC0DEB097B120C00E1DE20 /* RAFjoscarICQAccount.h */,
-				11CC0DEC097B120D00E1DE20 /* RAFjoscarICQAccount.m */,
-			);
-			name = ICQ;
-			sourceTree = "<group>";
-		};
-		342340F609D1B02D009FF634 /* dotMac */ = {
-			isa = PBXGroup;
-			children = (
-				11A00DAC09742B9E00768128 /* RAFjoscarDotMacService.h */,
-				11A00DAD09742B9E00768128 /* RAFjoscarDotMacService.m */,
-				11A00DCC09742D8600768128 /* RAFjoscarDotMacAccount.h */,
-				11A00DCD09742D8600768128 /* RAFjoscarDotMacAccount.m */,
-			);
-			name = dotMac;
-			sourceTree = "<group>";
-		};
-		342340F909D1B03A009FF634 /* AIM */ = {
-			isa = PBXGroup;
-			children = (
-				11247EC40956177D00F69C1E /* RAFjoscarAIMService.h */,
-				11247EC50956177D00F69C1E /* RAFjoscarAIMService.m */,
-				11247EF209561A8500F69C1E /* RAFjoscarAIMAccount.h */,
-				11247EF309561A8500F69C1E /* RAFjoscarAIMAccount.m */,
-			);
-			name = AIM;
-			sourceTree = "<group>";
-		};
-		3423412809D1B67B009FF634 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				3423412E09D1B67B009FF634 /* joscar bridge.jar */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		3428328307D263F0004F01C9 /* Status Preferences */ = {
@@ -6282,7 +6026,6 @@
 		4BD672C406001B530049CAF7 /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				118C52BA091BF05B00219458 /* joscar */,
 				4B7F278605440C6200CDFC90 /* Gaim */,
 				4947F5BB0655E7C400B791E5 /* Bonjour */,
 				4BA88A4C0524AFD700A8010A /* Stress Test */,
@@ -7947,10 +7690,6 @@
 					ProductGroup = 34D834D107CBE7B2006466F2 /* Products */;
 					ProjectRef = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
 				},
-				{
-					ProductGroup = 3423412809D1B67B009FF634 /* Products */;
-					ProjectRef = 3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */;
-				},
 			);
 			targets = (
 				34BD9CD1053146CC000AB133 /* Adium */,
@@ -7960,30 +7699,23 @@
 				3485D67F09EB416300232CC4 /* AdiumLibgaim */,
 				4B7F278205440C0800CDFC90 /* Gaim */,
 				B72537BB058C4577004BA969 /* Latex Plugin */,
-				3419F3A605314BE000C68BA3 /* SQL Logger */,
 				34BD9EE00531476D000AB133 /* Stress Test */,
 				346C9C5306004525000F5A8A /* WebKit Message View */,
 				4947F5BC0655E85200B791E5 /* Bonjour */,
 				DACF3ED3085574D0006BFB18 /* External Frameworks */,
 				349C2EF90867AC97000BF883 /* AdiumApplescriptRunner */,
-				118C52C5091BF0DB00219458 /* joscar */,
 				34B322F609B9FEAC00029361 /* IRC Service Libgaim Plugin */,
 				3417D25009C332B900FC413E /* Translator */,
 				F5B17CCF0A16C6AC004AE99E /* Plist Macros */,
 				38D8FA9A0A8A4F350078E442 /* QuickTime Plugin */,
 				F53C25AE0A2F95F100F7B73D /* Setup Build Directory */,
+				3419F3A605314BE000C68BA3 /* SQL Logger */,
+				118C52C5091BF0DB00219458 /* joscar */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		3423412E09D1B67B009FF634 /* joscar bridge.jar */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.jar;
-			path = "joscar bridge.jar";
-			remoteRef = 3423412D09D1B67B009FF634 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		345AF7D40A5D559B00D7DA6F /* AISpotlightImporterTest */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.executable";
@@ -8019,13 +7751,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				34CF889F0A6D5D94009D9A21 /* RAFjoscarAccountView.nib in Resources */,
-				11F5F70209539C70007DCC49 /* joscarDefaults.plist in Resources */,
-				11AD53E90963523000CA0C6F /* joscarDebugWindow.nib in Resources */,
-				11669AB309994697003CB8A1 /* joscarJoinChatView.nib in Resources */,
-				3423622B09D8BCAA009FF634 /* SecuridPrompt.nib in Resources */,
-				3415F83B0A43A5B600B093B7 /* aim.png in Resources */,
-				349B3FB90A6210AA008BE092 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8281,7 +8006,6 @@
 				34CA22300A671BEF00B11032 /* PersonalPreferences.nib in Resources */,
 				34D0FF8509569FE500DCB678 /* PersonalPreferencesDefaults.plist in Resources */,
 				34D000C60957918000DCB678 /* ContactListRecentImages.nib in Resources */,
-				11669ABA09994865003CB8A1 /* joscarJoinChatView.nib in Resources */,
 				341BD5700965EC3500CF83F5 /* OTRFingerprintDetailsWindow.nib in Resources */,
 				341BD5710965EC3500CF83F5 /* OTRPrivateKeyGenerationWindow.nib in Resources */,
 				341BD57B0965EC4700CF83F5 /* OTRPrefs.nib in Resources */,
@@ -8530,22 +8254,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				117481E1092E68DD00CFE3FF /* RAFjoscarServicePlugin.m in Sources */,
-				11CBDD4409326F8100BE7961 /* RAFjoscarAccount.m in Sources */,
-				11CBDD4609326F8100BE7961 /* RAFjoscarAccountViewController.m in Sources */,
-				11CBDD4809326F8100BE7961 /* RAFjoscarService.m in Sources */,
-				112FC2B409393926001FB00D /* ESjoscarCocoaAdapter.m in Sources */,
-				11247EC70956177D00F69C1E /* RAFjoscarAIMService.m in Sources */,
-				11247EF509561A8500F69C1E /* RAFjoscarAIMAccount.m in Sources */,
-				110C125909608F6C003FAD0A /* RAFjoscarLogHandler.m in Sources */,
-				11AD534D0963492D00CA0C6F /* RAFjoscarDebugWindowController.m in Sources */,
-				11AD5363096349D000CA0C6F /* RAFjoscarDebugController.m in Sources */,
-				11A00DD309742D9700768128 /* RAFjoscarDotMacAccount.m in Sources */,
-				11A00DD509742D9700768128 /* RAFjoscarDotMacService.m in Sources */,
-				11CC0DBC097B0AE700E1DE20 /* RAFjoscarICQService.m in Sources */,
-				11CC0DEE097B120D00E1DE20 /* RAFjoscarICQAccount.m in Sources */,
-				11669A2E0999395D003CB8A1 /* ESjoscarJoinChatViewController.m in Sources */,
-				342340E109D1AF58009FF634 /* RAFjoscarSecuridPromptController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9293,32 +9001,6 @@
 				342F9E560B552628000D5FC2 /* Finnish */,
 			);
 			name = "Shared Dock Icon Images";
-			sourceTree = "<group>";
-		};
-		11669AB109994697003CB8A1 /* joscarJoinChatView.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				11669AB209994697003CB8A1 /* English */,
-				6C1C71330A7E0FE700F901F1 /* Spanish */,
-				34EFC22E0AAC6B590086AC43 /* Catalan */,
-				34EFC22F0AAC6B5F0086AC43 /* Danish */,
-				34EFC2300AAC6B690086AC43 /* Dutch */,
-				34EFC2310AAC6B740086AC43 /* French */,
-				34EFC2320AAC6B850086AC43 /* German */,
-				34EFC2330AAC6B920086AC43 /* Italian */,
-				34EFC2340AAC6B9A0086AC43 /* Japanese */,
-				34EFC2350AAC6BA20086AC43 /* Norwegian */,
-				34EFC2360AAC6BAA0086AC43 /* Russian */,
-				34EFC2370AAC6BB70086AC43 /* Swedish */,
-				34EFC2380AAC6BC00086AC43 /* Turkish */,
-				34EFC2390AAC6BC80086AC43 /* cs */,
-				34EFC23A0AAC6BCE0086AC43 /* is */,
-				34EFC23B0AAC6BD50086AC43 /* pl */,
-				34EFC23C0AAC6BDD0086AC43 /* zh_CN */,
-				34EFC23D0AAC6BE50086AC43 /* zh_TW */,
-				342F9E660B55262B000D5FC2 /* Finnish */,
-			);
-			name = joscarJoinChatView.nib;
 			sourceTree = "<group>";
 		};
 		3402E01A07CB0CEC0044F818 /* ESFileTransferProgressView.nib */ = {
@@ -10246,32 +9928,6 @@
 			name = Buttons.strings;
 			sourceTree = "<group>";
 		};
-		349B3FB80A6210AA008BE092 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				349B3FB60A62109D008BE092 /* English */,
-				349B3FBC0A6210E0008BE092 /* Catalan */,
-				349B3FBD0A6210E6008BE092 /* Danish */,
-				349B3FBE0A6210EF008BE092 /* Dutch */,
-				349B3FBF0A6210FA008BE092 /* French */,
-				349B3FC00A621104008BE092 /* German */,
-				349B3FC10A62110C008BE092 /* Italian */,
-				349B3FC20A621115008BE092 /* Japanese */,
-				349B3FC30A62111C008BE092 /* Norwegian */,
-				349B3FC40A621127008BE092 /* Russian */,
-				349B3FC50A621130008BE092 /* Spanish */,
-				349B3FC60A62113A008BE092 /* Swedish */,
-				349B3FC70A621145008BE092 /* Turkish */,
-				349B3FC80A621155008BE092 /* cs */,
-				349B3FC90A62115E008BE092 /* is */,
-				349B3FCA0A621168008BE092 /* pl */,
-				349B3FCB0A621178008BE092 /* zh_CN */,
-				349B3FCC0A621183008BE092 /* zh_TW */,
-				342F9E620B55262B000D5FC2 /* Finnish */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
 		34A6F68407D65D6200972830 /* GeneralPreferences.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -10323,32 +9979,6 @@
 				342F9E590B552628000D5FC2 /* Finnish */,
 			);
 			name = PersonalPreferences.nib;
-			sourceTree = "<group>";
-		};
-		34CF889E0A6D5D94009D9A21 /* RAFjoscarAccountView.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				11F5F46309538B99007DCC49 /* English */,
-				34CF88A20A6D5DBC009D9A21 /* German */,
-				6C1C712F0A7E0FD500F901F1 /* Spanish */,
-				34739BA50AA4F131007BF788 /* Catalan */,
-				34739BA60AA4F136007BF788 /* cs */,
-				34739BA70AA4F13C007BF788 /* Danish */,
-				34739BA80AA4F142007BF788 /* Dutch */,
-				34739BA90AA4F14A007BF788 /* French */,
-				34739BAA0AA4F15B007BF788 /* is */,
-				34739BAB0AA4F162007BF788 /* Italian */,
-				34739BAC0AA4F17D007BF788 /* Japanese */,
-				34739BAD0AA4F189007BF788 /* Norwegian */,
-				34739BAE0AA4F191007BF788 /* pl */,
-				34739BAF0AA4F199007BF788 /* Russian */,
-				34739BB00AA4F1A0007BF788 /* Swedish */,
-				34739BB10AA4F1A8007BF788 /* Turkish */,
-				34739BB20AA4F1AF007BF788 /* zh_CN */,
-				34739BB30AA4F1B6007BF788 /* zh_TW */,
-				342F9E570B552628000D5FC2 /* Finnish */,
-			);
-			name = RAFjoscarAccountView.nib;
 			sourceTree = "<group>";
 		};
 		34E0E9B707CC4B3600A82198 /* Localizable.strings */ = {
@@ -11077,412 +10707,6 @@
 				ZERO_LINK = NO;
 			};
 			name = "Deployment-Debug_PPC-Only";
-		};
-		34D074610B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				PRODUCT_NAME = "Setup Build Directory";
-			};
-			name = "Development-libgaim_oscar";
-		};
-		34D074620B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				OPTIMIZATION_CFLAGS = "-O0";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "External Frameworks";
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = "Development-libgaim_oscar";
-		};
-		34D074630B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
-				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = "$(HEADER_SEARCH_PATHS_QUOTED_4)";
-				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
-				INFOPLIST_FILE = Plists/Adium_Framework.plist;
-				INSTALL_PATH = "@executable_path/../Frameworks";
-				PRODUCT_NAME = Adium;
-				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wno-long-double",
-				);
-			};
-			name = "Development-libgaim_oscar";
-		};
-		34D074640B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
-				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
-				PRODUCT_NAME = "Adium Crash Reporter";
-			};
-			name = "Development-libgaim_oscar";
-		};
-		34D074650B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(FRAMEWORK_SEARCH_PATHS)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_4)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/Frameworks\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_4 = "\"$(SRCROOT)/Frameworks\"";
-				FRAMEWORK_VERSION = A;
-				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
-					"$(SDK_ROOT)/usr/include/libxml2",
-				);
-				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
-				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
-				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
-				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
-				HEADER_SEARCH_PATHS_QUOTED_5 = "Plugins/Gaim\\ Service/Libgaim.framework/Headers";
-				INFOPLIST_FILE = Plists/AdiumLibgaim.plist;
-				INSTALL_PATH = "@executable_path/../PlugIns/Gaim.AdiumPlugin/Contents/Frameworks/";
-				PRODUCT_NAME = AdiumLibgaim;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wno-long-double",
-				);
-			};
-			name = "Development-libgaim_oscar";
-		};
-		34D074660B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CONFIGURATION_BUILD_DIR = "$(BUILD_DIR)/$(CONFIGURATION)";
-				CONFIGURATION_TEMP_DIR = "$(PROJECT_TEMP_DIR)/$(CONFIGURATION)";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/Frameworks\"";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
-					"$(SDK_ROOT)/usr/include/libxml2",
-				);
-				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
-				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
-				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
-				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
-				HEADER_SEARCH_PATHS_QUOTED_5 = "Plugins/Gaim\\ Service/Libgaim.framework/Headers";
-				INFOPLIST_FILE = Plists/Gaim_Service.plist;
-				OTHER_LDFLAGS = (
-					"-flat_namespace",
-					"-undefined",
-					suppress,
-				);
-				PRODUCT_NAME = Gaim;
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = "Development-libgaim_oscar";
-		};
-		34D074670B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
-				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
-				INFOPLIST_FILE = Plists/Bonjour.plist;
-				PRODUCT_NAME = Bonjour;
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = "Development-libgaim_oscar";
-		};
-		34D074680B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = Plists/WebKit_Message_View.plist;
-				OTHER_LDFLAGS = (
-					"-undefined",
-					dynamic_lookup,
-				);
-				PRODUCT_NAME = "WebKit Message View";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = "Development-libgaim_oscar";
-		};
-		34D074690B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = NO;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
-				OTHER_LDFLAGS = (
-					"-framework",
-					Foundation,
-					"-framework",
-					AppKit,
-				);
-				PRODUCT_NAME = AdiumApplescriptRunner;
-				WARNING_CFLAGS = (
-					"-Wmost",
-					"-Wno-four-char-constants",
-					"-Wno-unknown-pragmas",
-				);
-			};
-			name = "Development-libgaim_oscar";
-		};
-		34D0746A0B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = "Plists/joscar-Info.plist";
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
-				PRODUCT_NAME = joscar;
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = "Development-libgaim_oscar";
-		};
-		34D0746B0B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				PRODUCT_NAME = "Plist Macros";
-			};
-			name = "Development-libgaim_oscar";
-		};
-		34D0746D0B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
-				INFOPLIST_FILE = Plists/QuickTimePlugin.plist;
-				PRODUCT_NAME = QuickTime;
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = "Development-libgaim_oscar";
-		};
-		34D0746F0B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
-					"$(SRCROOT)/Frameworks",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
-				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/Frameworks\"";
-				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
-					"$(SDK_ROOT)/usr/include/libxml2",
-				);
-				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Gaim\\ Service/Include/glib";
-				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Gaim\\ Service/Include/glib/glib";
-				HEADER_SEARCH_PATHS_QUOTED_3 = "Plugins/Gaim\\ Service/Include/glib/gmodule";
-				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Gaim\\ Service/Include/";
-				INFOPLIST_FILE = Plists/Adium_2.plist;
-				INFOPLIST_OTHER_PREPROCESSOR_FLAGS = "-C";
-				INFOPLIST_PREFIX_HEADER = "$(TARGET_BUILD_DIR)/include/PlistMacros.h";
-				INFOPLIST_PREPROCESS = YES;
-				PRODUCT_NAME = Adium;
-			};
-			name = "Development-libgaim_oscar";
-		};
-		34D074700B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = Plists/Adium_1_6_Pref_Importer.plist;
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
-				PRODUCT_NAME = "Adium 1.6 Pref Importer";
-				WRAPPER_EXTENSION = app;
-			};
-			name = "Development-libgaim_oscar";
-		};
-		34D074710B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = "Plists/Latex Plugin.plist";
-				PRODUCT_NAME = "Latex Plugin";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = "Development-libgaim_oscar";
-		};
-		34D074720B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
-				GCC_WARN_MISSING_PARENTHESES = NO;
-				GCC_WARN_SHADOW = NO;
-				GCC_WARN_SIGN_COMPARE = NO;
-				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = NO;
-				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = /usr/local/pgsql/include;
-				INFOPLIST_FILE = Plists/SQL_Logger.plist;
-				INSTALL_PATH = /Adium.app/Contents/Plugins/;
-				LIBRARY_SEARCH_PATHS = (
-					/usr/local/pgsql/lib,
-					/sw/lib,
-					/opt/local/lib,
-				);
-				OTHER_CFLAGS = (
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
-				OTHER_LDFLAGS = (
-					"-lpq",
-					"-lssl",
-					"-lcrypto",
-				);
-				OTHER_REZFLAGS = "";
-				PRODUCT_NAME = "SQL Logger";
-				WARNING_CFLAGS = "-Wmost";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = "Development-libgaim_oscar";
-		};
-		34D074730B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = Plists/Stress_Test.plist;
-				PRODUCT_NAME = "Stress Test";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = "Development-libgaim_oscar";
-		};
-		34D074740B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(SRCROOT)/Frameworks",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service";
-				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
-					"$(SDK_ROOT)/usr/include/libxml2",
-				);
-				HEADER_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Gaim\\ Service/Libgaim.framework/Headers";
-				HEADER_SEARCH_PATHS_QUOTED_2 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib";
-				HEADER_SEARCH_PATHS_QUOTED_3 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/glib";
-				HEADER_SEARCH_PATHS_QUOTED_4 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/gmodule";
-				HEADER_SEARCH_PATHS_QUOTED_5 = "$(SRCROOT)/Plugins/Gaim\\ Service/Include/glib/gobject";
-				INFOPLIST_FILE = "Plists/IRC Service Libgaim.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(LIBRARY_SEARCH_PATHS)",
-					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
-				);
-				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libgaim\\ Plugin";
-				PRODUCT_NAME = "IRC Service";
-				WRAPPER_EXTENSION = AdiumLibgaimPlugin;
-			};
-			name = "Development-libgaim_oscar";
-		};
-		34D074750B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = Plists/Translator.plist;
-				PRODUCT_NAME = Translator;
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = "Development-libgaim_oscar";
-		};
-		34D074760B1E1AB600D63DF2 /* Development-libgaim_oscar */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(SRCROOT)/Frameworks",
-				);
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_FIX_AND_CONTINUE = YES;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_ENABLE_SYMBOL_SEPARATION = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_CHECK_SWITCH_STATEMENTS = YES;
-				GCC_WARN_MISSING_PARENTHESES = YES;
-				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
-				MACOSX_DEPLOYMENT_TARGET = 10.4;
-				OTHER_CFLAGS = (
-					"-DDEBUG_BUILD",
-					"-fconstant-cfstrings",
-					"-fms-extensions",
-				);
-				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
-				PREBINDING = NO;
-				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
-				STRIP_INSTALLED_PRODUCT = NO;
-				STRIP_STYLE = "non-global";
-				WARNING_CFLAGS = "-Wall";
-				ZERO_LINK = NO;
-			};
-			name = "Development-libgaim_oscar";
 		};
 		38D8FADC0A8A4F350078E442 /* Development */ = {
 			isa = XCBuildConfiguration;
@@ -12311,7 +11535,6 @@
 				OTHER_CFLAGS = (
 					"-DCRASH_REPORTER",
 					"-DDEBUG_BUILD",
-					"-DJOSCAR_SUPERCEDE_LIBGAIM",
 					"-fconstant-cfstrings",
 					"-fms-extensions",
 				);
@@ -12404,7 +11627,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				11B1A56B09CE42300087442E /* Development */,
-				34D0746A0B1E1AB600D63DF2 /* Development-libgaim_oscar */,
 				11B1A56C09CE42300087442E /* Deployment */,
 				11B1A56D09CE42300087442E /* Deployment-Debug */,
 				11B1A56E09CE42300087442E /* Deployment-Debug_PPC-Only */,
@@ -12416,7 +11638,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3417D25D09C332B900FC413E /* Development */,
-				34D074750B1E1AB600D63DF2 /* Development-libgaim_oscar */,
 				3417D25E09C332B900FC413E /* Deployment */,
 				3417D25F09C332B900FC413E /* Deployment-Debug */,
 				3417D26009C332B900FC413E /* Deployment-Debug_PPC-Only */,
@@ -12428,7 +11649,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3485D68309EB416500232CC4 /* Development */,
-				34D074650B1E1AB600D63DF2 /* Development-libgaim_oscar */,
 				3485D68409EB416500232CC4 /* Deployment */,
 				3485D68509EB416500232CC4 /* Deployment-Debug */,
 				3485D68609EB416500232CC4 /* Deployment-Debug_PPC-Only */,
@@ -12440,7 +11660,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				349C2F230867ACA9000BF883 /* Development */,
-				34D074690B1E1AB600D63DF2 /* Development-libgaim_oscar */,
 				349C2F240867ACA9000BF883 /* Deployment */,
 				349C2F250867ACA9000BF883 /* Deployment-Debug */,
 				34BAF98B0942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12452,7 +11671,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				34B323BC09B9FEAC00029361 /* Development */,
-				34D074740B1E1AB600D63DF2 /* Development-libgaim_oscar */,
 				34B323BD09B9FEAC00029361 /* Deployment */,
 				34B323BE09B9FEAC00029361 /* Deployment-Debug */,
 				34B323BF09B9FEAC00029361 /* Deployment-Debug_PPC-Only */,
@@ -12464,7 +11682,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				38D8FADC0A8A4F350078E442 /* Development */,
-				34D0746D0B1E1AB600D63DF2 /* Development-libgaim_oscar */,
 				38D8FADE0A8A4F350078E442 /* Deployment */,
 				38D8FADF0A8A4F350078E442 /* Deployment-Debug */,
 				38D8FAE00A8A4F350078E442 /* Deployment-Debug_PPC-Only */,
@@ -12476,7 +11693,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DACF3EDF085574F6006BFB18 /* Development */,
-				34D074620B1E1AB600D63DF2 /* Development-libgaim_oscar */,
 				DACF3EE0085574F6006BFB18 /* Deployment */,
 				DACF3EE1085574F6006BFB18 /* Deployment-Debug */,
 				34BAF9840942598700689991 /* Deployment-Debug_PPC-Only */,
@@ -12488,7 +11704,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E00085507450062B664 /* Development */,
-				34D074630B1E1AB600D63DF2 /* Development-libgaim_oscar */,
 				DADE8E01085507450062B664 /* Deployment */,
 				DADE8E02085507450062B664 /* Deployment-Debug */,
 				34BAF9850942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12500,7 +11715,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E05085507450062B664 /* Development */,
-				34D074640B1E1AB600D63DF2 /* Development-libgaim_oscar */,
 				DADE8E06085507450062B664 /* Deployment */,
 				DADE8E07085507450062B664 /* Deployment-Debug */,
 				34BAF9860942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12512,7 +11726,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E0A085507450062B664 /* Development */,
-				34D074660B1E1AB600D63DF2 /* Development-libgaim_oscar */,
 				DADE8E0B085507450062B664 /* Deployment */,
 				DADE8E0C085507450062B664 /* Deployment-Debug */,
 				34BAF9870942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12524,7 +11737,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E0F085507450062B664 /* Development */,
-				34D074670B1E1AB600D63DF2 /* Development-libgaim_oscar */,
 				DADE8E10085507450062B664 /* Deployment */,
 				DADE8E11085507450062B664 /* Deployment-Debug */,
 				34BAF9880942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12536,7 +11748,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E14085507450062B664 /* Development */,
-				34D074680B1E1AB600D63DF2 /* Development-libgaim_oscar */,
 				DADE8E15085507450062B664 /* Deployment */,
 				DADE8E16085507450062B664 /* Deployment-Debug */,
 				34BAF9890942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12548,7 +11759,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E1E085507450062B664 /* Development */,
-				34D074710B1E1AB600D63DF2 /* Development-libgaim_oscar */,
 				DADE8E1F085507450062B664 /* Deployment */,
 				DADE8E20085507450062B664 /* Deployment-Debug */,
 				34BAF98A0942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12560,7 +11770,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E23085507450062B664 /* Development */,
-				34D0746F0B1E1AB600D63DF2 /* Development-libgaim_oscar */,
 				DADE8E24085507450062B664 /* Deployment */,
 				DADE8E25085507450062B664 /* Deployment-Debug */,
 				34BAF98C0942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12572,7 +11781,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E28085507450062B664 /* Development */,
-				34D074700B1E1AB600D63DF2 /* Development-libgaim_oscar */,
 				DADE8E29085507450062B664 /* Deployment */,
 				DADE8E2A085507450062B664 /* Deployment-Debug */,
 				34BAF98D0942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12584,7 +11792,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E2D085507450062B664 /* Development */,
-				34D074720B1E1AB600D63DF2 /* Development-libgaim_oscar */,
 				DADE8E2E085507450062B664 /* Deployment */,
 				DADE8E2F085507450062B664 /* Deployment-Debug */,
 				34BAF98E0942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12596,7 +11803,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E32085507450062B664 /* Development */,
-				34D074730B1E1AB600D63DF2 /* Development-libgaim_oscar */,
 				DADE8E33085507450062B664 /* Deployment */,
 				DADE8E34085507450062B664 /* Deployment-Debug */,
 				34BAF98F0942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12608,7 +11814,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DADE8E3B085507450062B664 /* Development */,
-				34D074760B1E1AB600D63DF2 /* Development-libgaim_oscar */,
 				DADE8E3C085507450062B664 /* Deployment */,
 				DADE8E3D085507450062B664 /* Deployment-Debug */,
 				34BAF9900942598800689991 /* Deployment-Debug_PPC-Only */,
@@ -12620,7 +11825,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F53C25B00A2F95F600F7B73D /* Development */,
-				34D074610B1E1AB600D63DF2 /* Development-libgaim_oscar */,
 				F53C25B10A2F95F600F7B73D /* Deployment */,
 				F53C25B20A2F95F600F7B73D /* Deployment-Debug */,
 				F53C25B30A2F95F600F7B73D /* Deployment-Debug_PPC-Only */,
@@ -12632,7 +11836,6 @@
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F5B17CD80A16C6BA004AE99E /* Development */,
-				34D0746B0B1E1AB600D63DF2 /* Development-libgaim_oscar */,
 				F5B17CD90A16C6BA004AE99E /* Deployment */,
 				F5B17CDA0A16C6BA004AE99E /* Deployment-Debug */,
 				F5B17CDB0A16C6BA004AE99E /* Deployment-Debug_PPC-Only */,
