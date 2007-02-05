@@ -3130,6 +3130,8 @@
 		34F2E83807C2CDBD007EAAAB /* ESFileWrapperExtension.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESFileWrapperExtension.m; path = "Frameworks/Adium Framework/Source/ESFileWrapperExtension.m"; sourceTree = "<group>"; };
 		34F2E83907C2CDBD007EAAAB /* ESFileWrapperExtension.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESFileWrapperExtension.h; path = "Frameworks/Adium Framework/Source/ESFileWrapperExtension.h"; sourceTree = "<group>"; };
 		34F312BC0ADC43CA00A4310E /* xtras_duck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = xtras_duck.png; path = Resources/xtras_duck.png; sourceTree = "<group>"; };
+		34F430890B7724E700A03603 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
+		34F4308A0B7724E800A03603 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
 		34F46755080F46AB007800AB /* ESBonjourAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ESBonjourAccountViewController.m; sourceTree = "<group>"; };
 		34F46756080F46AB007800AB /* ESBonjourAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ESBonjourAccountViewController.h; sourceTree = "<group>"; };
 		34F46757080F46AB007800AB /* AWBonjourPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = AWBonjourPlugin.m; sourceTree = "<group>"; };
@@ -9366,6 +9368,7 @@
 				34A81DB5093CE92200B0E93D /* pl */,
 				3437FF440A9BF0A50028604E /* Turkish */,
 				342F9E580B552628000D5FC2 /* Finnish */,
+				34F430890B7724E700A03603 /* Dutch */,
 			);
 			name = ProxyPasswordPrompt.nib;
 			sourceTree = "<group>";
@@ -9391,6 +9394,7 @@
 				34A81DB6093CE92200B0E93D /* pl */,
 				3437FF450A9BF0A60028604E /* Turkish */,
 				342F9E5A0B552629000D5FC2 /* Finnish */,
+				34F4308A0B7724E800A03603 /* Dutch */,
 			);
 			name = PasswordPrompt.nib;
 			sourceTree = "<group>";
