@@ -175,8 +175,9 @@
 - (void)listObjectAttributesChanged:(NSNotification *)notification
 {
 	AIListObject *listObject = [notification object];
-
-	if (!listObject || (listObject == [messageViewController listObject])) {
+	AIListContact *messageViewContact = [messageViewController listObject]; //Is the contact in the message view part of a metacontact?
+	
+	if (!listObject || (listObject == messageViewContact) || listObject == [messageViewContact parentContact]) {
 		NSSet		 *keys = [[notification userInfo] objectForKey:@"Keys"];
 		
 		//Redraw if the icon has changed
