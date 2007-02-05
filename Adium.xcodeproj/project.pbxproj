@@ -3228,6 +3228,8 @@
 		34F312BC0ADC43CA00A4310E /* xtras_duck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = xtras_duck.png; path = Resources/xtras_duck.png; sourceTree = "<group>"; };
 		34F42BDE0B711CB200A03603 /* simple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = simple.png; path = "Plugins/Gaim Service/simple.png"; sourceTree = "<group>"; };
 		34F42E570B73088D00A03603 /* AdiumHelp */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AdiumHelp; sourceTree = "<group>"; };
+		34F430210B77247200A03603 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
+		34F430220B77247300A03603 /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Dutch; path = Resources/Dutch.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
 		34F46755080F46AB007800AB /* ESBonjourAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ESBonjourAccountViewController.m; sourceTree = "<group>"; };
 		34F46756080F46AB007800AB /* ESBonjourAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ESBonjourAccountViewController.h; sourceTree = "<group>"; };
 		34F46757080F46AB007800AB /* AWBonjourPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = AWBonjourPlugin.m; sourceTree = "<group>"; };
@@ -9559,6 +9561,7 @@
 				34A81DB5093CE92200B0E93D /* pl */,
 				3437FF440A9BF0A50028604E /* Turkish */,
 				342F9D8D0B5525B0000D5FC2 /* Finnish */,
+				34F430210B77247200A03603 /* Dutch */,
 			);
 			name = ProxyPasswordPrompt.nib;
 			sourceTree = "<group>";
@@ -9584,6 +9587,7 @@
 				34A81DB6093CE92200B0E93D /* pl */,
 				3437FF450A9BF0A60028604E /* Turkish */,
 				342F9D8F0B5525B0000D5FC2 /* Finnish */,
+				34F430220B77247300A03603 /* Dutch */,
 			);
 			name = PasswordPrompt.nib;
 			sourceTree = "<group>";
