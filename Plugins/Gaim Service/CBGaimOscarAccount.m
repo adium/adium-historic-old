@@ -26,6 +26,7 @@
 #import <Adium/AIService.h>
 #import <Adium/AIStatus.h>
 #import <Adium/ESFileTransfer.h>
+#import <Adium/AIHTMLDecoder.h>
 
 #define DELAYED_UPDATE_INTERVAL			2.0
 
