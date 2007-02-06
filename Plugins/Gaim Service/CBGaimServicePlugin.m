@@ -37,13 +37,9 @@
 										  forGroup:GROUP_ACCOUNT_STATUS];
 	
     //Install the services
-#ifndef JOSCAR_SUPERCEDE_LIBGAIM
-	/* Not currently compiled */
 	AIMService			= [[ESAIMService alloc] init];
 	DotMacService		= [[ESDotMacService alloc] init];
-#endif
 	ICQService			= [[ESICQService alloc] init];
-
 	GaduGaduService		= [[ESGaduGaduService alloc] init];
 	GTalkService		= [[AIGTalkService alloc] init];
 	LiveJournalService  = [[AILiveJournalService alloc] init];
@@ -65,10 +61,8 @@
 
 - (void)uninstallPlugin
 {
-#ifndef JOSCAR_SUPERCEDE_LIBGAIM
 	[AIMService release]; AIMService = nil;
 	[DotMacService release]; DotMacService = nil;
-#endif
 	[ICQService release]; ICQService = nil;
 
 	[GaduGaduService release]; GaduGaduService = nil;
