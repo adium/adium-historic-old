@@ -41,10 +41,8 @@
 #include <glib.h>
 #include <stdlib.h>
 
-#ifndef JOSCAR_SUPERCEDE_LIBGAIM
-	#import "ESGaimAIMAccount.h"
-	#import "CBGaimOscarAccount.h"
-#endif
+#import "ESGaimAIMAccount.h"
+#import "CBGaimOscarAccount.h"
 
 //Gaim slash command interface
 #include <Libgaim/cmds.h>
@@ -1266,7 +1264,6 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 }
 
 #pragma mark Protocol specific accessors
-#ifndef JOSCAR_SUPERCEDE_LIBGAIM
 - (void)OSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
@@ -1296,7 +1293,6 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		oscar_reformat_screenname(gaim_account_get_connection(account), [inFormattedUID UTF8String]);
 	}
 }
-#endif
 
 #pragma mark Request callbacks
 

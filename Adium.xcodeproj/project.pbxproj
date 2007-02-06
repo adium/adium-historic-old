@@ -2732,7 +2732,7 @@
 		34BC8F790ACA3AAC00562745 /* AIScannerDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIScannerDebug.m; path = Source/AIScannerDebug.m; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -4156,6 +4156,7 @@
 				34416053059FC2270019246B /* Jabber */,
 				343A7F2206935DAF00150CEC /* Meanwhile */,
 				344159A2059F971C0019246B /* MSN */,
+				34415960059F94F80019246B /* Oscar */,
 				34C2E6650634CF010018E5D2 /* Novell GroupWise */,
 				3419E72D0A88086E00C3FC68 /* QQ */,
 				345A7B560954ACD900FF3113 /* SIMPLE */,
@@ -4881,19 +4882,10 @@
 			name = "General Preferences";
 			sourceTree = "<group>";
 		};
-		34C7C62009EC4E140060FB4A /* Services (Disabled) */ = {
-			isa = PBXGroup;
-			children = (
-				34415960059F94F80019246B /* Oscar */,
-			);
-			name = "Services (Disabled)";
-			sourceTree = "<group>";
-		};
 		34C7C62109EC4E480060FB4A /* AdiumLibgaim */ = {
 			isa = PBXGroup;
 			children = (
 				34415880059F8F050019246B /* Services */,
-				34C7C62009EC4E140060FB4A /* Services (Disabled) */,
 				34F59B760667A33900F01E8C /* Notify UI */,
 				34C2CF8F0633405C0018E5D2 /* Request UI */,
 				34C2CFE6063340780018E5D2 /* Libgaim */,
