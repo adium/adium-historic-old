@@ -46,15 +46,45 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 	return sharedDebugWindowInstance != nil;
 }
 
-- (void)addedDebugMessage:(NSString *)aDebugString
+- (void)performFilter
 {
-	unsigned int aDebugStringLength = [aDebugString length];
+	NSEnumerator *enumerator = [fullDebugLogArray objectEnumerator];
+	NSString	 *aDebugString;
 	
-	[mutableDebugString appendString:aDebugString];
+	[mutableDebugString setString:@""];
+	while ((aDebugString = [enumerator nextObject])) {
+		if (!filter || 
+			[aDebugString rangeOfString:filter options:NSCaseInsensitiveSearch].location != NSNotFound) {
+			[mutableDebugString appendString:aDebugString];			
+		}
+	}
+	
 	
 	[[textView_debug textStorage] addAttribute:NSParagraphStyleAttributeName
 										 value:debugParagraphStyle
-										 range:NSMakeRange([mutableDebugString length] - aDebugStringLength, aDebugStringLength)];
+										 range:NSMakeRange(0, [mutableDebugString length])];
+
+//	[fullDebugLogArray removeAllObjects];
+	
+//	[[adium debugController] clearDebugLogArray];
+	
+	[scrollView_debug scrollToBottom];	
+}
+
+- (void)addedDebugMessage:(NSString *)aDebugString
+{
+	[fullDebugLogArray addObject:aDebugString];
+
+	if (!filter || 
+		[aDebugString rangeOfString:filter options:NSCaseInsensitiveSearch].location != NSNotFound) {
+		unsigned int aDebugStringLength = [aDebugString length];
+		
+		[mutableDebugString appendString:aDebugString];
+		
+		[[textView_debug textStorage] addAttribute:NSParagraphStyleAttributeName
+											 value:debugParagraphStyle
+											 range:NSMakeRange([mutableDebugString length] - aDebugStringLength, aDebugStringLength)];
+	}
 }
 + (void)addedDebugMessage:(NSString *)aDebugString
 {
@@ -76,7 +106,8 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 
 	//We store the reference to the mutableString of the textStore for efficiency
 	mutableDebugString = [[[textView_debug textStorage] mutableString] retain];
-	
+	fullDebugLogArray = [[NSMutableArray alloc] init];
+
 	debugParagraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 	[debugParagraphStyle setHeadIndent:12];
 	[debugParagraphStyle setFirstLineHeadIndent:2];
@@ -90,7 +121,9 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 		if ((![aDebugString hasSuffix:@"\n"]) && (![aDebugString hasSuffix:@"\r"])) {
 			[mutableDebugString appendString:@"\n"];
 		}
+		[fullDebugLogArray addObject:aDebugString];
 	}
+
 
 	[[self window] setTitle:AILocalizedString(@"Adium Debug Log","Debug window title")];
 
@@ -118,6 +151,7 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 	
 	//Close down
 	[mutableDebugString release]; mutableDebugString = nil;
+	[fullDebugLogArray release]; fullDebugLogArray = nil;
 	[debugParagraphStyle release]; debugParagraphStyle = nil;
     [self autorelease]; sharedDebugWindowInstance = nil;
 }
@@ -132,9 +166,21 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 - (IBAction)clearLog:(id)sender
 {
 	[mutableDebugString setString:@""];
+	[fullDebugLogArray removeAllObjects];
+
 	[[adium debugController] clearDebugLogArray];
 	
 	[scrollView_debug scrollToTop];
+}
+
+- (void)setFilter:(NSString *)inFilter
+{
+	if (inFilter != filter) {
+		[filter release];
+		filter = [inFilter copy];
+
+		[self performFilter];
+	}
 }
 
 #endif
