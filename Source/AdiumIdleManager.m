@@ -13,7 +13,6 @@
 #define MACHINE_IDLE_POLL_INTERVAL		1	//Poll every second when the user is idle
 
 //Private idle function
-#warning Double check this; Missing header include may have fucked it up. http://trac.adiumx.com/changeset/12711
 extern CFTimeInterval CGSSecondsSinceLastInputEvent(unsigned long evType);
 
 @interface AdiumIdleManager (PRIVATE)
