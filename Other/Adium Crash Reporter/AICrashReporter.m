@@ -35,10 +35,6 @@
 #define ADIUM_UPDATE_URL			@"http://download.adiumx.com/"
 #define ADIUM_UPDATE_BETA_URL		@"http://beta.adiumx.com/"
 
-#define VERSION_PLIST_URL			@"http://www.adiumx.com/version.plist"
-#define VERSION_PLIST_KEY			@"adium-version"
-#define VERSION_BETA_PLIST_KEY		@"adium-beta-version"
-
 #define UNABLE_TO_SEND				AILocalizedString(@"Unable to send crash report",nil)
 
 @interface AICrashReporter (PRIVATE)
