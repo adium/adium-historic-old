@@ -124,13 +124,13 @@
 		
 		NSDictionary *properties = [account objectForKey:@"Properties"];
 		NSString *connectHost = [properties objectForKey:@"server"];
-		if([connectHost length])
+		if([connectHost length] && ![connectHost hasPrefix:@"toc"])
 			[newAcct setPreference:connectHost
 							forKey:KEY_CONNECT_HOST
 							 group:GROUP_ACCOUNT_STATUS];	
 		
 		int port = [[properties objectForKey:@"port"] intValue];
-		if(port)
+		if(port && port != 9898)
 			[newAcct setPreference:[NSNumber numberWithInt:port]
 							forKey:KEY_CONNECT_PORT
 							 group:GROUP_ACCOUNT_STATUS];
