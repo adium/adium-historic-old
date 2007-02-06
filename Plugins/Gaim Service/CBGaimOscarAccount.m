@@ -70,19 +70,11 @@ extern gchar *oscar_encoding_extract(const char *encoding);
 
 	//Determine service based on UID
 	if ([contactUID hasSuffix:@"@mac.com"]) {
-#ifdef JOSCAR_SUPERCEDE_LIBGAIM
-		contactServiceID = @"joscar-OSCAR-dotMac";
-#else
 		contactServiceID = @"libgaim-oscar-Mac";
-#endif
 	} else if (firstCharacter && (firstCharacter >= '0' && firstCharacter <= '9')) {
 		contactServiceID = @"libgaim-oscar-ICQ";
 	} else {
-#ifdef JOSCAR_SUPERCEDE_LIBGAIM
-		contactServiceID = @"joscar-OSCAR-AIM";
-#else
 		contactServiceID = @"libgaim-oscar-AIM";
-#endif
 	}
 
 	contactService = [[adium accountController] serviceWithUniqueID:contactServiceID];
@@ -233,7 +225,6 @@ extern gchar *oscar_encoding_extract(const char *encoding);
 {
 	[super preferencesChangedForGroup:group key:key object:object preferenceDict:prefDict firstTime:firstTime];
 	
-#ifndef JOSCAR_SUPERCEDE_LIBGAIM
 	if ([group isEqualToString:PREF_GROUP_NOTES]) {
 		//If the notification object is a listContact belonging to this account, update the serverside information
 		if (account &&
@@ -249,7 +240,6 @@ extern gchar *oscar_encoding_extract(const char *encoding);
 			}			
 		}
 	}
-#endif
 }
 
 
