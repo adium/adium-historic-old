@@ -108,6 +108,9 @@ extern void jabber_roster_request(JabberStream *js);
 
 	//'Connect via' server (nil by default)
 	connectServer = [self preferenceForKey:KEY_JABBER_CONNECT_SERVER group:GROUP_ACCOUNT_STATUS];
+	//XXX - As of libgaim 2.0.0, 'localhost' doesn't work properly by 127.0.0.1 does. Hack!
+	if (connectServer && [connectServer isEqualToString:@"localhost"])
+		connectServer = @"127.0.0.1";
 	
 	gaim_account_set_string(account, "connect_server", (connectServer ?
 														[connectServer UTF8String] :
