@@ -576,9 +576,6 @@
 - (NSSet *)allChatsWithContact:(AIListContact *)inContact
 {
     NSMutableSet	*foundChats = nil;
-	static int		invocationNumber = 0;
-	int				thisInvocation = invocationNumber;
-	invocationNumber++;
 	
 	//Scan the objects participating in each chat, looking for the requested object
 	if ([inContact isKindOfClass:[AIMetaContact class]]) {
