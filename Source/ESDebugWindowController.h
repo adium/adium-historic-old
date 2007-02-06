@@ -22,8 +22,11 @@
 	IBOutlet	NSTextView			*textView_debug;
 	IBOutlet	AIAutoScrollView	*scrollView_debug;
 	NSMutableString					*mutableDebugString;
+	NSMutableArray					*fullDebugLogArray;
 	NSMutableParagraphStyle			*debugParagraphStyle;
 	IBOutlet	NSButton			*checkBox_logWriting;
+	
+	NSString						*filter;
 }
 
 #ifdef DEBUG_BUILD
@@ -33,6 +36,8 @@
 + (void)addedDebugMessage:(NSString *)message;
 - (IBAction)toggleLogWriting:(id)sender;
 - (IBAction)clearLog:(id)sender;
+
+- (void)setFilter:(NSString *)inFilter;
 #endif
 
 
