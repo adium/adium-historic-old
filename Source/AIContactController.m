@@ -882,11 +882,12 @@
 //so the association is lasting across program launches.
 - (void)addListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact
 {
-	if (!listObject) {
-		NSLog(@"Warning: addListObject:toMetaContact: Attempted to add (null) to %@",metaContact);
+	if (!listObject || [listObject isKindOfClass:[AIListGroup class]]) {
+		//I can't think of why one would want to add an entire group to a metacontact. Let's say you can't.
+		NSLog(@"Warning: addListObject:toMetaContact: Attempted to add %@ to %@",listObject,metaContact);
+		return;
 	}
-	//I can't think of why one would want to add an entire group to a metacontact. Let's say you can't.
-	NSParameterAssert(![listObject isKindOfClass:[AIListGroup class]]);
+
 	if (listObject == metaContact) return;
 
 	//If listObject contains other contacts, perform addListObject:toMetaContact: recursively
