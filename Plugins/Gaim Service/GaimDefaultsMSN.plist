@@ -8,13 +8,13 @@
 	<integer>1863</integer>
 	<key>MSN:HTTP Connect Method</key>
 	<false/>
-	<key>MSN:Display Names As Status</key>
+	<key>Display Names As Status</key>
 	<false/>
 	<key>MSN:Conversation Closed</key>
 	<true/>	
 	<key>MSN:Conversation Timed Out</key>
 	<false/>
-	<key>MSN:Display Custom Emoticons</key>
+	<key>Display Custom Emoticons</key>
 	<true/>
 </dict>
 </plist>
