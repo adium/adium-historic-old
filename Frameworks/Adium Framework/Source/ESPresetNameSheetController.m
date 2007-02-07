@@ -118,7 +118,10 @@
 
 	//Set the default name
 	[textField_name setStringValue:defaultName];
-
+	[label_name setLocalizedString:AILocalizedString(@"Title:", "Label in front of the title for a preset")];
+	[button_ok setLocalizedString:AILocalizedString(@"OK", nil)];
+	[button_cancel setLocalizedString:AILocalizedString(@"Cancel", nil)];
+	
 	[self configureExplanatoryTextWithString:explanatoryText];
 }
 

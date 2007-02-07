@@ -15,10 +15,13 @@ typedef enum {
 
 @interface ESPresetNameSheetController : AIWindowController {
 	IBOutlet	NSTextField		*textField_name;
-	
+	IBOutlet	NSTextField		*label_name;
+	IBOutlet	NSButton		*button_ok;
+	IBOutlet	NSButton		*button_cancel;	
+
 	IBOutlet	NSTextView		*textView_explanatoryText;
 	IBOutlet	NSScrollView	*scrollView_explanatoryText;
-	
+
 	NSString	*defaultName;
 	NSString	*explanatoryText;
 	id			target;
