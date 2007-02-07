@@ -42,6 +42,13 @@ static AIGuestAccountWindowController *sharedGuestAccountWindowController = nil;
 	[[self window] setTitle:AILocalizedString(@"Connect Guest Account",nil)];
 }
 
+- (void)dealloc
+{
+	[account release];
+	
+	[super dealloc];
+}
+
 - (void)windowDidLoad
 {
 	[super windowDidLoad];
