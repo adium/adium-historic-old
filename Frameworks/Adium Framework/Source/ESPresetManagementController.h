@@ -10,7 +10,8 @@
 
 @interface ESPresetManagementController : AIWindowController {
 	IBOutlet		NSTableView		*tableView_presets;
-	
+
+	IBOutlet		NSTextField		*label_editPresets;
 	IBOutlet		NSButton		*button_duplicate;
 	IBOutlet		NSButton		*button_delete;
 	IBOutlet		NSButton		*button_rename;
