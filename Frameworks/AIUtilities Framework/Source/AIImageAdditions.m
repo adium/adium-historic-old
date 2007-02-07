@@ -242,7 +242,7 @@
 	}
 }
 
-+ (NSImage *)imageFromGWorld:(GWorldPtr)gworld
+/*+ (NSImage *)imageFromGWorld:(GWorldPtr)gworld
 {
     NSParameterAssert(gworld != NULL);
 	
@@ -319,7 +319,7 @@
         return image;
     }
     return nil;
-}
+}*/
 
 //Fun drawing toys
 //Draw an image, altering and returning the available destination rect
