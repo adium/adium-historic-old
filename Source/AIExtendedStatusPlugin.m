@@ -115,7 +115,11 @@
 			statusMessage = [[[[filteredMessage string] stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet] mutableCopy] autorelease];
 
 			//Incredibly long status messages are slow to size, so we crop them to a reasonable length
-			if ([statusMessage length] > STATUS_MAX_LENGTH) {
+			int statusMessageLength = [statusMessage length];
+			if (statusMessageLength == 0) {
+				statusMessage = nil;
+
+			} else if (statusMessageLength > STATUS_MAX_LENGTH) {
 				[statusMessage deleteCharactersInRange:NSMakeRange(STATUS_MAX_LENGTH,
 																   [statusMessage length] - STATUS_MAX_LENGTH)];
 			}
