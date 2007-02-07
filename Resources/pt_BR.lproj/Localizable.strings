@@ -1,0 +1,1526 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key> (Autoreply)</key>
+	<string>(Auto resposta)</string>
+	<key> - Indexing %i of %i</key>
+	<string>- Indexando %1$i de %2$i</string>
+	<key> - Searching for '%@'</key>
+	<string>- Buscando '%@'</string>
+	<key> Please restart Adium.</key>
+	<string>Por favor reinicie o Adium</string>
+	<key> containing '%@'</key>
+	<string> contendo '%@'</string>
+	<key> of chats on %@</key>
+	<string> de conversas em %@</string>
+	<key> of chats with %@</key>
+	<string> de conversas com %@</string>
+	<key>"Safe" files include movies, pictures,
+sounds, text documents, and archives.</key>
+	<string>Arquivos "seguros" incluem filmes, imagens
+sons, documentos de texto e comprimidos.</string>
+	<key>%.1f KB</key>
+	<string>%.1f KB</string>
+	<key>%.1f KB of %@</key>
+	<string>%1$.1f KB de %2$@</string>
+	<key>%.1f of %.1f KB</key>
+	<string>%1$.1f de %2$.1f KB</string>
+	<key>%.2f MB</key>
+	<string>%.2f MB</string>
+	<key>%.2f MB of %@</key>
+	<string>%1$.2f MB de %2$@</string>
+	<key>%.2f of %.2f MB</key>
+	<string>%1$.2f de %2$.2f MB</string>
+	<key>%.3f GB</key>
+	<string>%.3f GB</string>
+	<key>%.3f GB of %@</key>
+	<string>%1$.3f GB de %2$@</string>
+	<key>%.3f of %.3f GB</key>
+	<string>%1$.3f de %2$.3f GB</string>
+	<key>%.4f TB</key>
+	<string>%.4f TB</string>
+	<key>%.4f TB of %@</key>
+	<string>%1$.4f TB de %2$@</string>
+	<key>%.4f of %.4f TB</key>
+	<string>%1$.4f de %2$.4f TB</string>
+	<key>%@</key>
+	<string>%@</string>
+	<key>%@ became active</key>
+	<string>%@ ficou ativo</string>
+	<key>%@ began receiving %@</key>
+	<string>%15@ iniciou a receber %2$@</string>
+	<key>%@ began sending you %@</key>
+	<string>%15@ iniciou a enviar %2$@</string>
+	<key>%@ came back</key>
+	<string>%@ voltou</string>
+	<key>%@ canceled the transfer of %@</key>
+	<string>%1$@ cancelou a transferência de %2$@</string>
+	<key>%@ closed the conversation window.</key>
+	<string>%@ fechou a janela de conversação</string>
+	<key>%@ connected</key>
+	<string>%@ conectado</string>
+	<key>%@ disconnected</key>
+	<string>%@ desconectado</string>
+	<key>%@ is no longer seen</key>
+	<string>%@ não está mais visível</string>
+	<key>%@ is seen</key>
+	<string>%@ está visível</string>
+	<key>%@ is the name of the default status icon pack; this pack therefore can not be installed.</key>
+	<string>%@ é o nome de do pacote padrão de ícones de status; este pacote não pode, portanto, ser instalado.</string>
+	<key>%@ per sec.</key>
+	<string>%@ por seg.</string>
+	<key>%@ received</key>
+	<string>%@ recebido</string>
+	<key>%@ received %@</key>
+	<string>%1$@ recevido %2$@</string>
+	<key>%@ received new email</key>
+	<string>%@ recebeu novo email</string>
+	<key>%@ remaining.</key>
+	<string>%@ restando</string>
+	<key>%@ requests to send you %@</key>
+	<string>%1$@ quer enviar %2$@ a você</string>
+	<key>%@ said %@</key>
+	<string>%1$@ disse %2$@</string>
+	<key>%@ sent</key>
+	<string>%@ enviado</string>
+	<key>%@ sent you %@</key>
+	<string>%1$@ enviou %2$@ a você</string>
+	<key>%@ went away</key>
+	<string>%@ saiu</string>
+	<key>%@ went idle</key>
+	<string>%@ está ocioso</string>
+	<key>%@'s Image</key>
+	<string>Imagem de %@</string>
+	<key>%@'s Info</key>
+	<string>Info de %@</string>
+	<key>%_album</key>
+	<string>%_álbum</string>
+	<key>%_artist</key>
+	<string>%_artista</string>
+	<key>%_composer</key>
+	<string>%_compositor</string>
+	<key>%_genre</key>
+	<string>%_gênero</string>
+	<key>%_iTMS</key>
+	<string>%_iTMS</string>
+	<key>%_iTunes</key>
+	<string>%_iTunes</string>
+	<key>%_music</key>
+	<string>%_music</string>
+	<key>%_status</key>
+	<string>%_status</string>
+	<key>%_track</key>
+	<string>%_trilha</string>
+	<key>%i Accounts</key>
+	<string>%i Contas</string>
+	<key>%i Contacts</key>
+	<string>%i Contatos</string>
+	<key>%i accounts, %i online</key>
+	<string>%1$i contas, %2$i online</string>
+	<key>%i contacts</key>
+	<string>%i contatos</string>
+	<key>%i downloads</key>
+	<string>%i descarregamentos</string>
+	<key>%i hours</key>
+	<string>%i horas</string>
+	<key>%i logs</key>
+	<string>%i registros</string>
+	<key>%i minutes</key>
+	<string>%i minutos</string>
+	<key>%i uploads</key>
+	<string>%i envios</string>
+	<key>%lu bytes</key>
+	<string>%lu bytes</string>
+	<key>%lu bytes of %@</key>
+	<string>%1$lu bytes de %2$@</string>
+	<key>%lu of %lu bytes</key>
+	<string>%1$lu de %2$lu bytes</string>
+	<key>(Copy)</key>
+	<string>(Cópia)</string>
+	<key>(Idle) Status</key>
+	<string>Status (Ocioso)</string>
+	<key>(Not Listed)</key>
+	<string>(Não Listado)</string>
+	<key>(Unavailable)</key>
+	<string>(Não disponível)</string>
+	<key>*is listening to %@ by %@*</key>
+	<string>*está escutando a %1$@ por %2$@*</string>
+	<key>*is listening to nothing*</key>
+	<string>*não está escutanto nada*</string>
+	<key>1 download</key>
+	<string>1 descarregamento</string>
+	<key>1 hour</key>
+	<string>1 hora</string>
+	<key>1 log</key>
+	<string>1 registro</string>
+	<key>1 minute</key>
+	<string>1 minuto</string>
+	<key>1 upload</key>
+	<string>1 envio</string>
+	<key>&lt;New Account&gt;</key>
+	<string>&lt;New Account&gt;</string>
+	<key>&lt;None&gt;</key>
+	<string>&lt;None&gt;</string>
+	<key>&gt;= 1000 unread messages</key>
+	<string>&gt;= 1000 mensagens não lidas</string>
+	<key>A message may not have been sent; a timeout occurred.</key>
+	<string>Um mensagem pode não ter sido enviada; ocorreu timeout</string>
+	<key>About Adium</key>
+	<string>Sobre o Adium</string>
+	<key>About Encryption</key>
+	<string>Sobre Criptografia</string>
+	<key>About Encryption...</key>
+	<string>Sobre Criptografia…</string>
+	<key>Above other windows</key>
+	<string>Acima das outras janelas</string>
+	<key>Accepted file transfer</key>
+	<string>Aceitou transferência de arquivo</string>
+	<key>Accepted file transfer...</key>
+	<string>Aceitou transferência de arquivo…</string>
+	<key>Accessing Proxy</key>
+	<string>Acessando Proxy</string>
+	<key>Account</key>
+	<string>Conta</string>
+	<key>Account:</key>
+	<string>Conta:</string>
+	<key>Accounts</key>
+	<string>Contas</string>
+	<key>Add</key>
+	<string>Adicionar</string>
+	<key>Add Contact</key>
+	<string>Adicionar Contato</string>
+	<key>Add Contact To Group</key>
+	<string>Adicionar Contato ao Grupo</string>
+	<key>Add Group</key>
+	<string>Adicionar Grupo</string>
+	<key>Add Link</key>
+	<string>Adicionar Link</string>
+	<key>Add Link...</key>
+	<string>Adicionar Link…</string>
+	<key>Add New Layout</key>
+	<string>Adicionar Novo Layout</string>
+	<key>Add New Layout...</key>
+	<string>Adicionar Novo Layout…</string>
+	<key>Add New Preset</key>
+	<string>Adicionar Novo Pré-Ajuste</string>
+	<key>Add New Preset...</key>
+	<string>Adicionar Novo Pré-Ajuste…</string>
+	<key>Add New Theme</key>
+	<string>Adicionar Novo Tema</string>
+	<key>Add New Theme...</key>
+	<string>Adicionar Novo Tema…</string>
+	<key>Add a new contact</key>
+	<string>Adicionar novo contato</string>
+	<key>Add a new group</key>
+	<string>Adicionar novo grupo</string>
+	<key>Add to Accounts:</key>
+	<string>Adicionar a Contas:</string>
+	<key>Add/Edit Hyperlink</key>
+	<string>Adicionar/Editar Hyperlink</string>
+	<key>Address Book</key>
+	<string>Agenda de Endereços</string>
+	<key>Address Book Information (optional):</key>
+	<string>Address Book Information (optional):</string>
+	<key>Adium : Error</key>
+	<string>Adium: Erro</string>
+	<key>Adium Debug Log</key>
+	<string>Registro de Debug do Adium</string>
+	<key>Adium Forums</key>
+	<string>Fóruns do Adium</string>
+	<key>Adium Help</key>
+	<string>Ajuda do Adium</string>
+	<key>Adium Homepage</key>
+	<string>Homepage do Adium</string>
+	<key>Adium Xtras</key>
+	<string>Adium Xtras</string>
+	<key>Adium plugin</key>
+	<string>Plugin do Adium</string>
+	<key>Adium uses the Growl notification system to provide a configurable interface to display status changes, incoming messages and more.
+
+It is strongly recommended that you allow Adium to automatically install Growl; no download is required.</key>
+	<string>Adium usa o sitema de notificações Growl para prover uma interface para apresentação de mudança de status, mensagens e mais.
+
+É extremamente recomendável que você permita que o Adium instale automaticamente o Growl; não serão necessários descarregamentos.</string>
+	<key>Adium uses the Growl notification system to provide a configurable interface to display status changes, incoming messages and more.
+
+This release of Adium includes an updated version of Growl. It is strongly recommended that you allow Adium to automatically update Growl; no download is required.</key>
+	<string>Adium usa o sitema de notificações Growl para prover uma interface para apresentação de mudança de status, mensagens e mais.
+
+Esta versão do Adium inclui uma versão atualizada do Growl. É altamente recomendável que você permita que o Adium atualize o Growl; não é necessário descarregamento.</string>
+	<key>Adium was updated on %@. Your copy is %@ old.  Would you like to update?</key>
+	<string>Adium foi atualizado em %1$@. Sua cópia é %2$@. Você gostaria de atualizar?</string>
+	<key>Advanced</key>
+	<string>Avançado</string>
+	<key>Album</key>
+	<string>Album</string>
+	<key>Alias</key>
+	<string>Apelido</string>
+	<key>Alias (User Name)</key>
+	<string>Apelido (Usuário)</string>
+	<key>Alias:</key>
+	<string>Apelido:</string>
+	<key>An error occurred</key>
+	<string>Um erro ocorreu</string>
+	<key>An error occurred while installing the X(tra).</key>
+	<string>Um erro ocorreu ao instalar o X(tra)</string>
+	<key>Appearance</key>
+	<string>Aparência</string>
+	<key>AppleScript set</key>
+	<string>Grupo AppleScript</string>
+	<key>Applescript:</key>
+	<string>Applescript:</string>
+	<key>Are you sure you want to block %@?</key>
+	<string>Tem certeza de que quer bloquear %@?</string>
+	<key>Are you sure you want to delete any logs of past conversations with %@? These items will be moved to the Trash.</key>
+	<string>Are you sure you want to delete any logs of past conversations with %@? These items will be moved to the Trash.</string>
+	<key>Are you sure you want to delete the %@ Dock Icon? It will be moved to the Trash.</key>
+	<string>Tem certeza de que quer apagar o Ícone do Dock %@? Ele será movido para o Lixo.</string>
+	<key>Are you sure you want to delete the %@ Emoticon Pack? It will be moved to the Trash.</key>
+	<string>Você tem certeza que deseja apagar o Pacote de Emoticons %@? Ele será movido para o Lixo.</string>
+	<key>Are you sure you want to delete your %@ account's folder and all prior conversations with all contacts? This will be moved to the Trash.</key>
+	<string>Are you sure you want to delete your %@ account's folder and all prior conversations with all contacts? This will be moved to the Trash.</string>
+	<key>Are you sure you want to unblock %@?</key>
+	<string>Você tem certeza que deseja desbloquear %@?</string>
+	<key>Arrows (%@ and %@)</key>
+	<string>Setas (%1$@ e %2$@)</string>
+	<key>Artist</key>
+	<string>Artist</string>
+	<key>Automatically accept files...</key>
+	<string>Aceitar arquivos automaticamente…</string>
+	<key>Automatically connect on launch</key>
+	<string>Conectar automaticamente ao iniciar</string>
+	<key>Automatically on screen edges</key>
+	<string>Bordas da tela automaticamente</string>
+	<key>Available</key>
+	<string>Disponível</string>
+	<key>Available for friends only</key>
+	<string>Disponível somente para amigos</string>
+	<key>Away</key>
+	<string>Fora</string>
+	<key>Away Message</key>
+	<string>Mensagem de fora</string>
+	<key>Away Message: %@</key>
+	<string>Mensagem de fora: %@</string>
+	<key>Away and Idle</key>
+	<string>Fora e ocioso</string>
+	<key>Away for friends only</key>
+	<string>Fora somente para amigos</string>
+	<key>Badge (Lower Left)</key>
+	<string>Crachá (Embaixo à Esquerda)</string>
+	<key>Badge (Lower Right)</key>
+	<string>Crachá (Embaixo à Direita)</string>
+	<key>Be careful. You cannot undo this action.</key>
+	<string>Be careful. You cannot undo this action.</string>
+	<key>Be right back</key>
+	<string>Volto logo</string>
+	<key>Becomes idle</key>
+	<string>Ficar ocioso</string>
+	<key>Began receiving %@</key>
+	<string>Começou a receber %@</string>
+	<key>Began sending %@</key>
+	<string>Começou a enviar %@</string>
+	<key>Behavior</key>
+	<string>Comportamento</string>
+	<key>Below Name</key>
+	<string>Abaixo do Nome</string>
+	<key>Below other windows</key>
+	<string>Abaixo de outras Janelas</string>
+	<key>Beside Name</key>
+	<string>Ao Lado do Nome</string>
+	<key>Block</key>
+	<string>Bloquear</string>
+	<key>Block List</key>
+	<string>Lista de Bloqueio</string>
+	<key>Block List Editor...</key>
+	<string>Editor de Lista de Bloqueio…</string>
+	<key>Bold</key>
+	<string>Negrito</string>
+	<key>Bookmarks</key>
+	<string>Favoritos</string>
+	<key>Borderless Window</key>
+	<string>Janela Sem Bordas</string>
+	<key>Bounce the dock icon</key>
+	<string>Animar ícone no Dock</string>
+	<key>Bounce the dock icon %@</key>
+	<string>Animar ícone no Dock %@</string>
+	<key>Brackets (%@ and %@)</key>
+	<string>Colchetes (%1$@ e %2$@)</string>
+	<key>Bring Adium to Front</key>
+	<string>Trazer o Adium para Frente</string>
+	<key>Bring All to Front</key>
+	<string>Trazer Tudo para Frente</string>
+	<key>Bring iTunes to Front</key>
+	<string>Bring iTunes to Front</string>
+	<key>Browse</key>
+	<string>Navegar</string>
+	<key>Browse...</key>
+	<string>Navegar…</string>
+	<key>Buddy:</key>
+	<string>Colega:</string>
+	<key>Busy</key>
+	<string>Ocupado</string>
+	<key>Cancel</key>
+	<string>Cancelar</string>
+	<key>Cancel Encrypted Chat</key>
+	<string>Cancelar Conversa Criptografada</string>
+	<key>Canceled</key>
+	<string>Cancelado</string>
+	<key>Center</key>
+	<string>Centrar</string>
+	<key>Check Spelling</key>
+	<string>Verificar Ortografia</string>
+	<key>Check Spelling As You Type</key>
+	<string>Verificar Ortografia ao Digitar</string>
+	<key>Check for Updates</key>
+	<string>Verificar atualizações</string>
+	<key>Check for Updates...</key>
+	<string>Verificar Atualizações…</string>
+	<key>Check for updates automatically</key>
+	<string>Verificar atualizações automaticamente</string>
+	<key>Choose Icon</key>
+	<string>Escolher Ícone</string>
+	<key>Clear</key>
+	<string>Limpar</string>
+	<key>Clear completed transfers automatically</key>
+	<string>Limpar transferências completas automaticamente</string>
+	<key>Click the + to add a new account</key>
+	<string>Clique no + para adiciona uma nova conta</string>
+	<key>Client</key>
+	<string>Cliente</string>
+	<key>Close</key>
+	<string>Fechar</string>
+	<key>Close Chat</key>
+	<string>Fechar Conversa</string>
+	<key>Combine</key>
+	<string>Combinar</string>
+	<key>Combine %@ and %@?</key>
+	<string>Combinar %1$@ e %2$@?</string>
+	<key>Combine these contacts with %@?</key>
+	<string>Combinar esses contatos com %@?</string>
+	<key>Command failed.</key>
+	<string>Comando falhou.</string>
+	<key>Complete</key>
+	<string>Completo</string>
+	<key>Composer</key>
+	<string>Composer</string>
+	<key>Configure Alphabetical Sort</key>
+	<string>Configurar Ordenamento Alfabético</string>
+	<key>Configure Sorting</key>
+	<string>Configurar Ordenamento</string>
+	<key>Configure Sorting...</key>
+	<string>Configurar Ordenamento…</string>
+	<key>Configure Status Sort</key>
+	<string>Configurar Ordenamento por Status</string>
+	<key>Connecting</key>
+	<string>Conectando</string>
+	<key>Connecting Account</key>
+	<string>Concectando Conta</string>
+	<key>Consolidate Chats</key>
+	<string>Consolidar Conversas</string>
+	<key>Consolidate contacts listed in the card</key>
+	<string>Consolidar contatos listados no cartão</string>
+	<key>Contact</key>
+	<string>Contato</string>
+	<key>Contact Alert</key>
+	<string>Alerta de Contato</string>
+	<key>Contact Alert Error</key>
+	<string>Erro de Alerta de Contato</string>
+	<key>Contact Bubbles</key>
+	<string>Bolhas de Contato</string>
+	<key>Contact Bubbles (To Fit)</key>
+	<string>Bolhas de Contato (para Ajustar)</string>
+	<key>Contact ID</key>
+	<string>ID do Contato</string>
+	<key>Contact Icon</key>
+	<string>Ícone de Contato</string>
+	<key>Contact Info</key>
+	<string>Info do Contato</string>
+	<key>Contact List</key>
+	<string>Lista de Contatos</string>
+	<key>Contact Name Format</key>
+	<string>Formato do Nome do Contato</string>
+	<key>Contact Type:</key>
+	<string>Tipo de Contato:</string>
+	<key>Contact becomes idle</key>
+	<string>Contato  ficou ocioso</string>
+	<key>Contact goes away</key>
+	<string>Contato vai embora</string>
+	<key>Contact is no longer seen</key>
+	<string>Contato não está mais visível</string>
+	<key>Contact is seen</key>
+	<string>Contato está sendo visto</string>
+	<key>Contact returns from away</key>
+	<string>Contato retorna</string>
+	<key>Contact returns from idle</key>
+	<string>Contato sai da ociosidade</string>
+	<key>Contact signs off</key>
+	<string>Contato sai</string>
+	<key>Contact signs on</key>
+	<string>Contato entra</string>
+	<key>Contacts</key>
+	<string>Contatos</string>
+	<key>Contacts Drawer</key>
+	<string>Gaveta de Contatos</string>
+	<key>Content</key>
+	<string>Conteúdo</string>
+	<key>Copy</key>
+	<string>Copiar</string>
+	<key>Could not create the %@ folder.</key>
+	<string>Não foi possível criar a pasta %@.</string>
+	<key>Could not receive because the rate limit has been exceeded.</key>
+	<string>Não foi possível receber pois o limite da taxa foi excedido.</string>
+	<key>Could not receive the last message because it was invalid.</key>
+	<string>Não foi possível receber a última mensagem pois ela era inválida.</string>
+	<key>Could not receive the last message because it was too large.</key>
+	<string>Não foi possível receber a última mensagem pois ela era muito grande.</string>
+	<key>Could not receive: you are too evil.</key>
+	<string>Não foi possível receber: você é muito mau.</string>
+	<key>Could not receive; %@ is too evil.</key>
+	<string>Não foi possível receber: %@ é muito mau.</string>
+	<key>Could not send because %@ is blocked.</key>
+	<string>Não foi possível enviar pois %@ está bloqueado.</string>
+	<key>Could not send because %@ is not available.</key>
+	<string>Não foi possível enviar pois %@ não está disponível.</string>
+	<key>Could not send the last message because it was too large.</key>
+	<string>Não foi possível enviar a última mensagem pois ela era muito grande.</string>
+	<key>Could not send; a connection error occurred.</key>
+	<string>Não foi possível enviar: um erro de conexão ocorreu.</string>
+	<key>Could not send; not allowed while invisible.</key>
+	<string>Não foi possível enviar: não é permitido enquanto invisível.</string>
+	<key>Create New Person</key>
+	<string>Create New Person</string>
+	<key>Create new messages in tabs</key>
+	<string>Criar novas mensagens em abas</string>
+	<key>Curly braces (%@ and %@)</key>
+	<string>Parênteses (%1$@ e %2$@)</string>
+	<key>Current Status</key>
+	<string>Status Atual</string>
+	<key>Current iTunes Track</key>
+	<string>Current iTunes Track</string>
+	<key>Custom</key>
+	<string>Personalizado</string>
+	<key>Custom...</key>
+	<string>Prsonalizado…</string>
+	<key>Customize Toolbar</key>
+	<string>Personalizar Barra de Ferramentas</string>
+	<key>Customize Toolbar...</key>
+	<string>Personalizar Barra de Ferramentas…</string>
+	<key>Cut</key>
+	<string>Cortar</string>
+	<key>Date</key>
+	<string>Data</string>
+	<key>Days</key>
+	<string>Dias</string>
+	<key>Debug Window</key>
+	<string>Janela de Debug</string>
+	<key>Default</key>
+	<string>Padrão</string>
+	<key>Default Notifications</key>
+	<string>Notificações Padrão</string>
+	<key>Delete</key>
+	<string>Apagar</string>
+	<key>Delete %@'s Logs</key>
+	<string>Delete %@'s Logs</string>
+	<key>Delete Account</key>
+	<string>Apagar Conta</string>
+	<key>Delete All</key>
+	<string>Apagar Todos</string>
+	<key>Delete Dock Icon</key>
+	<string>Apagar Ícone do Dock</string>
+	<key>Delete Emoticon Pack</key>
+	<string>Apagar Pacote de Emoticons</string>
+	<key>Delete Layout</key>
+	<string>Apagar Layout</string>
+	<key>Delete Logs?</key>
+	<string>Delete Logs?</string>
+	<key>Delete Theme</key>
+	<string>Apagar Tema</string>
+	<key>Delete all logs</key>
+	<string>Apagar Todos os Registros</string>
+	<key>Delete selected log</key>
+	<string>Apagar registro selecionado</string>
+	<key>Delete the account %@?</key>
+	<string>Apagar a conta %@?</string>
+	<key>Delete the layout "%@" from %@?</key>
+	<string>Apagar o layout "%1$@" de %2$@?</string>
+	<key>Delete the theme "%@" from %@?</key>
+	<string>Apagar o tema "%1$@" de %2$@?</string>
+	<key>Details</key>
+	<string>Detalhes</string>
+	<key>Disable chat encryption</key>
+	<string>Desabilitar criptografia de conversa</string>
+	<key>Disassociate the selected contact from this meta contact. This does not remove the contact from your contact list.</key>
+	<string>Dissociar o contato selecionado deste meta-contato. Isto não removerá o contato da lista de contatos.</string>
+	<key>Disconnecting</key>
+	<string>Desconectando</string>
+	<key>Display Name</key>
+	<string>Mostrar nome</string>
+	<key>Display Preferences</key>
+	<string>Mostrar Preferências</string>
+	<key>Display a Growl notification</key>
+	<string>Mostrar notificação Growl</string>
+	<key>Display a sticky Growl notification</key>
+	<string>Mostrar notificação Growl permanente</string>
+	<key>Display an alert</key>
+	<string>Mostrar um alerta</string>
+	<key>Display name in the dock icon</key>
+	<string>Mostrar nome no ícone do dock</string>
+	<key>Display the alert "%@"</key>
+	<string>Mostrar o alerta "%@"</string>
+	<key>Do not disturb</key>
+	<string>Não perturbe</string>
+	<key>Dock icons:</key>
+	<string>Ícones do dock:</string>
+	<key>Done</key>
+	<string>Feito</string>
+	<key>Edit</key>
+	<string>Editar</string>
+	<key>Edit In Address Book</key>
+	<string>Edit In Address Book</string>
+	<key>Edit Layouts</key>
+	<string>Editar Layouts</string>
+	<key>Edit Layouts...</key>
+	<string>Editar Layouts...</string>
+	<key>Edit Link</key>
+	<string>Editar Link</string>
+	<key>Edit Link...</key>
+	<string>Editar Link...</string>
+	<key>Edit Presets</key>
+	<string>Editar Ajustes</string>
+	<key>Edit Presets...</key>
+	<string>Editar Ajustes...</string>
+	<key>Edit Status Menu</key>
+	<string>Editar Menu de Status</string>
+	<key>Edit Status Menu...</key>
+	<string>Editar Menu de Status...</string>
+	<key>Edit Themes</key>
+	<string>Editar Temas</string>
+	<key>Edit Themes...</key>
+	<string>Editar Temas...</string>
+	<key>Email:</key>
+	<string>Email:</string>
+	<key>Emoticon</key>
+	<string>Emoticon</string>
+	<key>Emoticons</key>
+	<string>Emoticons</string>
+	<key>Emoticons in %@</key>
+	<string>Emoticons em %@</string>
+	<key>Encrypt chats as requested</key>
+	<string>Criptografar conversa como solicitado</string>
+	<key>Encrypt chats automatically</key>
+	<string>Criptografar conversas automaticamente</string>
+	<key>Encrypted Messaging</key>
+	<string>Mensagens Criptografadas</string>
+	<key>Encrypted OTR chat initiated.</key>
+	<string>Conversa criptografada iniciada</string>
+	<key>Encryption</key>
+	<string>Criptografia</string>
+	<key>Encryption Settings</key>
+	<string>Ajustes de Criptografia</string>
+	<key>Encryption:</key>
+	<string>Criptografia:</string>
+	<key>Ended encrypted OTR chat.</key>
+	<string>Conversa criptografada terminada</string>
+	<key>Enter</key>
+	<string>Entrar</string>
+	<key>Enter a unique name for this new event set.</key>
+	<string>Entrar com nome único para esse novo grupo de eventos.</string>
+	<key>Enter a unique name for this new layout.</key>
+	<string>Entrar com nome único para esse novo layout.</string>
+	<key>Enter a unique name for this new theme.</key>
+	<string>Entrar com nome único para esse novo tema.</string>
+	<key>Enter and Return</key>
+	<string>Enter e Return</string>
+	<key>Enter group name:</key>
+	<string>Entrar com nome de grupo:</string>
+	<key>Enter the contact's type and screen name/number:</key>
+	<string>Enter the contact's type and screen name/number:</string>
+	<key>Error Saving Theme</key>
+	<string>Erro ao Salvar Tema</string>
+	<key>Error occurs</key>
+	<string>Erro ocorreu</string>
+	<key>Even if the contact already has a contact icon</key>
+	<string>Mesmo se o contato já tiver um ícone de contato</string>
+	<key>Event preset:</key>
+	<string>Pré-ajuste de evento:</string>
+	<key>Events</key>
+	<string>Eventos</string>
+	<key>Every 10 Seconds</key>
+	<string>Cada 10 segundos</string>
+	<key>Every 15 Seconds</key>
+	<string>Cada 15 segundos</string>
+	<key>Every 30 Seconds</key>
+	<string>Cada 30 segundos</string>
+	<key>Every 5 Seconds</key>
+	<string>Cada 5 segundos</string>
+	<key>Every 60 Seconds</key>
+	<string>Cada 60 segundos</string>
+	<key>Extended away</key>
+	<string>Ausência extendida</string>
+	<key>Far Left</key>
+	<string>Esquerda</string>
+	<key>Far Right</key>
+	<string>Direita</string>
+	<key>File</key>
+	<string>Arquivo</string>
+	<key>File Transfer</key>
+	<string>Transferência de Arquivo</string>
+	<key>File Transfer Request</key>
+	<string>Pedido de Transferência de Arquivo</string>
+	<key>File Transfers</key>
+	<string>Transferências</string>
+	<key>File transfer begins</key>
+	<string>Início da transferência</string>
+	<key>File transfer canceled by the other side</key>
+	<string>Transferência cancelada pelo outro lado</string>
+	<key>File transfer completed successfully</key>
+	<string>Transferência completada com sucesso</string>
+	<key>File transfer requested</key>
+	<string>Transferência de arquivo solicitada</string>
+	<key>Fill</key>
+	<string>Preencher</string>
+	<key>Find</key>
+	<string>Encontrar</string>
+	<key>Find Next</key>
+	<string>Encontrar próximo</string>
+	<key>Find Previous</key>
+	<string>Encontrar anterior</string>
+	<key>First</key>
+	<string>Primeiro</string>
+	<key>First Last</key>
+	<string>Primeiro Último</string>
+	<key>First Name:</key>
+	<string>First Name:</string>
+	<key>Flash names with unviewed messages</key>
+	<string>Piscar nomes com mensagens não lidas</string>
+	<key>Force encryption and refuse plaintext</key>
+	<string>Forçar criptografia e recusar texto simples</string>
+	<key>Format</key>
+	<string>Formatar</string>
+	<key>Format name as:</key>
+	<string>Formatar nome como:</string>
+	<key>Found %i matches</key>
+	<string>Encontrados %i </string>
+	<key>Found 1 match</key>
+	<string>Encontrado 1</string>
+	<key>Free for chat</key>
+	<string>Livre para conversa</string>
+	<key>From</key>
+	<string>De</string>
+	<key>From:</key>
+	<string>De:</string>
+	<key>General</key>
+	<string>Geral</string>
+	<key>Genre</key>
+	<string>Genre</string>
+	<key>Get Info</key>
+	<string>Informações</string>
+	<key>Goes away</key>
+	<string>Saindo</string>
+	<key>Group</key>
+	<string>Grupo</string>
+	<key>Group Bubbles</key>
+	<string>Bolhas de grupo</string>
+	<key>Group Name:</key>
+	<string>Nome do Grupo:</string>
+	<key>Growl Installation Recommended</key>
+	<string>Instalação do Growl recomendada</string>
+	<key>Growl Update Available</key>
+	<string>Update para o Growl disponível</string>
+	<key>Help</key>
+	<string>Ajuda</string>
+	<key>Hide</key>
+	<string>Esconder</string>
+	<key>Hide Adium</key>
+	<string>Esconder Adium</string>
+	<key>Hide Emoticons</key>
+	<string>Esconder os Emoticons</string>
+	<key>Hide Others</key>
+	<string>Esconder Outros</string>
+	<key>Hide Toolbar</key>
+	<string>Esconder Barra de Ferramentas</string>
+	<key>Hide while Adium is in the background</key>
+	<string>Esconder quando o Adium esciver em segundo plano</string>
+	<key>Hours</key>
+	<string>Horas</string>
+	<key>I have switched logged in users. Someone else may be using the computer.</key>
+	<string>Eu troquei o status dos usuários logados. Alguém pode estar usando este computador.</string>
+	<key>Icon</key>
+	<string>Ícone</string>
+	<key>Idle</key>
+	<string>Ocioso</string>
+	<key>Idle Time</key>
+	<string>Tempo de ociosidade</string>
+	<key>Ignore</key>
+	<string>Ignorar</string>
+	<key>Image Picker</key>
+	<string>Escolher Imagem</string>
+	<key>Images</key>
+	<string>Imagens</string>
+	<key>Import my contacts' names from the Address Book</key>
+	<string>Importar nomes dos contatos do Address Book</string>
+	<key>In Group</key>
+	<string>No Grupo</string>
+	<key>In Group:</key>
+	<string>No Grupo:</string>
+	<key>Incorrect number of command argments.</key>
+	<string>Número incorreto de argumentos de comando.</string>
+	<key>Info</key>
+	<string>Info</string>
+	<key>Initializing transfer</key>
+	<string>Iniciando transferência</string>
+	<key>Initializing transfer...</key>
+	<string>Iniciando transferência...</string>
+	<key>Initiate Encrypted OTR Chat</key>
+	<string>Iniciar Conversa Criptografada</string>
+	<key>Initiating file transfer</key>
+	<string>Iniciando transferência de arquivo</string>
+	<key>Initiating file transfer...</key>
+	<string>Iniciando transferência de arquivo...</string>
+	<key>Insert</key>
+	<string>Inserir</string>
+	<key>Insert Emoticon</key>
+	<string>Inserir Emoticon</string>
+	<key>Insert Link</key>
+	<string>Inserir Link</string>
+	<key>Insert Safari Link</key>
+	<string>Inserir Link do Safari</string>
+	<key>Insert Script</key>
+	<string>Inserir Script</string>
+	<key>Insert a script</key>
+	<string>Inserir um script</string>
+	<key>Insert an emoticon into the text</key>
+	<string>Inserir um emoticon no texto</string>
+	<key>Insert current iTunes track information.</key>
+	<string>Insert current iTunes track information.</string>
+	<key>Insert iTunes Token</key>
+	<string>Insert iTunes Token</string>
+	<key>Insert link to active page in Safari</key>
+	<string>Inserir link para a página ativa no Safari</string>
+	<key>Installation Failed</key>
+	<string>Instalação Falhou</string>
+	<key>Installation Successful</key>
+	<string>Sucesso na Instalação</string>
+	<key>Installation of the %@ %@ was successful because the file was already in the correct location.</key>
+	<string>A instalação do %1$@ %2$@ foi um sucesso pois o arquivo já estava no local correto.</string>
+	<key>Installation of the %@ %@ was successful.</key>
+	<string>A instalação do %1$@ %2$@ foi um sucesso.</string>
+	<key>Installation of the %@ %@ was unsuccessful.</key>
+	<string>A instalação do %1$@ %2$@ não ocorreu.</string>
+	<key>Invisible</key>
+	<string>Invisível</string>
+	<key>Invite to Chat</key>
+	<string>Convidar para Conversar</string>
+	<key>Is no longer seen</key>
+	<string>Não está mais visível</string>
+	<key>Is seen</key>
+	<string>Está visível</string>
+	<key>Is sent a message</key>
+	<string>Foi enviada uma mensagem</string>
+	<key>Italic</key>
+	<string>Itálico</string>
+	<key>Join Group Chat</key>
+	<string>Entrar num Grupo de Conversa</string>
+	<key>Join Group Chat...</key>
+	<string>Entrar num Grupo de Conversa...</string>
+	<key>Jump to Selection</key>
+	<string>Ir para Seleção</string>
+	<key>Labels</key>
+	<string>Rótulos</string>
+	<key>Last First</key>
+	<string>Último Primeiro</string>
+	<key>Last Name:</key>
+	<string>Last Name:</string>
+	<key>Last Seen</key>
+	<string>Último Visto</string>
+	<key>Last, First</key>
+	<string>Último, Primeiro</string>
+	<key>Launch Disk Utility</key>
+	<string>Abrir Utilitário de Disco</string>
+	<key>Left</key>
+	<string>Esquerda</string>
+	<key>License</key>
+	<string>Licença</string>
+	<key>Link</key>
+	<string>Link</string>
+	<key>Link Text:</key>
+	<string>Texto de Link:</string>
+	<key>Listed on the following of your accounts:</key>
+	<string>Listado nas seguintes contas:</string>
+	<key>Loading</key>
+	<string>Carregando</string>
+	<key>Log Viewer</key>
+	<string>Visualizador de Gravações</string>
+	<key>Log messages</key>
+	<string>Gravar mensagens</string>
+	<key>Logs</key>
+	<string>Gravações</string>
+	<key>Maximum width:</key>
+	<string>Largura máxima:</string>
+	<key>Menu item:</key>
+	<string>Item de menu:</string>
+	<key>Message</key>
+	<string>Mensagem</string>
+	<key>Message History</key>
+	<string>Histórico de Mensagens</string>
+	<key>Message received</key>
+	<string>Mensagem recebida</string>
+	<key>Message received (Background chat)</key>
+	<string>Mensagem recebida (conversa em segundo plano)</string>
+	<key>Message received (Initial)</key>
+	<string>Mensagem recebida (inicial)</string>
+	<key>Message sent</key>
+	<string>Mensagem enviada</string>
+	<key>Message tabs:</key>
+	<string>Tabulação na mensagem:</string>
+	<key>Message:</key>
+	<string>Mensagem:</string>
+	<key>Messages</key>
+	<string>Mensagens</string>
+	<key>Messages send on:</key>
+	<string>Mensagens enviadas em:</string>
+	<key>Messages:</key>
+	<string>Mensagens:</string>
+	<key>Minimize</key>
+	<string>Minimizar</string>
+	<key>Mobile</key>
+	<string>Móvel</string>
+	<key>Multiple Packs Selected</key>
+	<string>Múltiplos Pacotes Selecionados</string>
+	<key>Multiple browsers are open. Please select one link:</key>
+	<string>Multiple browsers are open. Please select one link:</string>
+	<key>Mute While Away</key>
+	<string>Mute While Away</string>
+	<key>My Webcam</key>
+	<string>Minha Webcam</string>
+	<key>Name</key>
+	<string>Name</string>
+	<key>Names</key>
+	<string>Nomes</string>
+	<key>New Chat</key>
+	<string>Nova Conversa</string>
+	<key>New Chat...</key>
+	<string>Nova Conversa...</string>
+	<key>New Event Set</key>
+	<string>Novo Grupo de Eventos</string>
+	<key>New Message</key>
+	<string>Nova Mensagem</string>
+	<key>New Person</key>
+	<string>New Person</string>
+	<key>New email notification</key>
+	<string>Nova notificação de email</string>
+	<key>Next Chat</key>
+	<string>Próxima Conversa</string>
+	<key>Nickname:</key>
+	<string>Nickname:</string>
+	<key>No updates are available.  Please try again later.</key>
+	<string>Nenhum update disponível. Favor tentar mais tarde.</string>
+	<key>None</key>
+	<string>Nenhum</string>
+	<key>Nontrusted Xtra</key>
+	<string>Xtra não confiável</string>
+	<key>Normal</key>
+	<string>Normal</string>
+	<key>Normally</key>
+	<string>Normalmente</string>
+	<key>Not at home</key>
+	<string>Não está em casa</string>
+	<key>Not at my desk</key>
+	<string>Não está na escrivaninha</string>
+	<key>Not available</key>
+	<string>Não disponível</string>
+	<key>Not in the office</key>
+	<string>Não está no escritório</string>
+	<key>Notes</key>
+	<string>Notas</string>
+	<key>Notes:</key>
+	<string>Notas:</string>
+	<key>OK</key>
+	<string>OK</string>
+	<key>Occupied</key>
+	<string>Ocupado</string>
+	<key>Offline</key>
+	<string>Fora do ar</string>
+	<key>Offline Contacts</key>
+	<string>Contatos Fora do Ar</string>
+	<key>On Account</key>
+	<string>Conta Ligada</string>
+	<key>On Accounts:</key>
+	<string>Contas Ligadas:</string>
+	<key>On the phone</key>
+	<string>No telefona</string>
+	<key>On vacation</key>
+	<string>De férias</string>
+	<key>Once</key>
+	<string>Uma vez</string>
+	<key>Once combined, Adium will treat these contacts as a single individual both on your contact list and when sending messages.
+
+You may un-combine these contacts by getting info on the combined contact.</key>
+	<string>Once combined, Adium will treat these contacts as a single individual both on your contact list and when sending messages.
+
+You may un-combine these contacts by getting info on the combined contact.</string>
+	<key>Online</key>
+	<string>Online</string>
+	<key>Online For</key>
+	<string>Online Por</string>
+	<key>Online Since</key>
+	<string>Online Desde</string>
+	<key>Open</key>
+	<string>Abrir</string>
+	<key>Open "Safe" files after receiving</key>
+	<string>Abrir arquivos "seguros" após o recebimento</string>
+	<key>Open Appearance Prefs</key>
+	<string>Abrir Preferências de Aparência</string>
+	<key>Open Event Prefs</key>
+	<string>Abrir Preferências de Eventos</string>
+	<key>Open Message Prefs</key>
+	<string>Abrir Preferências de Mensagens</string>
+	<key>Open Preferences</key>
+	<string>Abrir Preferências</string>
+	<key>Open a message window</key>
+	<string>Abrir uma janela de mensagens</string>
+	<key>Opening logs</key>
+	<string>Abrindo registros</string>
+	<key>Opening logs...</key>
+	<string>Abrindo registros...</string>
+	<key>Options</key>
+	<string>Opções</string>
+	<key>Order the contact list:</key>
+	<string>Ordenar a lista de contatos:</string>
+	<key>Organize tabs into new windows by group</key>
+	<string>Organizar abas em novas janelas por grupos</string>
+	<key>Other</key>
+	<string>Outros</string>
+	<key>Other Unavailable</key>
+	<string>Outros Não Disponíveis</string>
+	<key>Other...</key>
+	<string>Outros...</string>
+	<key>Out to lunch</key>
+	<string>Fora para almoço</string>
+	<key>Overwrite Address Book images with contacts' icons</key>
+	<string>Sobre-escrever imagens do Address Book com os ícones dos contatos</string>
+	<key>Page Setup</key>
+	<string>Ajuste de Página</string>
+	<key>Page Setup...</key>
+	<string>Ajuste de Página...</string>
+	<key>Paste</key>
+	<string>Colar</string>
+	<key>Paste Formatted</key>
+	<string>Colar Formatado</string>
+	<key>Personal</key>
+	<string>Pessoal</string>
+	<key>Play a sound</key>
+	<string>Tocar um som</string>
+	<key>Play the sound "%@"</key>
+	<string>Tocar o som "%@"</string>
+	<key>Play through alert device</key>
+	<string>Tocar pelo dispositivo de alerta</string>
+	<key>Play through default device</key>
+	<string>Tocar pelo dispositivo padrão</string>
+	<key>Please wait...</key>
+	<string>Favor esperar...</string>
+	<key>Preferences</key>
+	<string>Preferências</string>
+	<key>Preferences...</key>
+	<string>Preferências...</string>
+	<key>Previous Chat</key>
+	<string>Conversa Anterior</string>
+	<key>Print</key>
+	<string>Imprimir</string>
+	<key>Print...</key>
+	<string>Imprimir...</string>
+	<key>Privacy</key>
+	<string>Privacidade</string>
+	<key>Profile (if available):</key>
+	<string>Perfil (se disponível):</string>
+	<key>Progress:</key>
+	<string>Progresso:</string>
+	<key>Proxy</key>
+	<string>Proxy</string>
+	<key>Quit Adium</key>
+	<string>Encerrar o Adium</string>
+	<key>Rank</key>
+	<string>Classificação</string>
+	<key>Receiving files:</key>
+	<string>Recebendo arquivos:</string>
+	<key>Regular Window</key>
+	<string>Janela Regular</string>
+	<key>Remote contact canceled</key>
+	<string>Contato remoto cancelado</string>
+	<key>Remove</key>
+	<string>Remover</string>
+	<key>Remove %@</key>
+	<string>Remover %@</string>
+	<key>Remove %@ from your list?</key>
+	<string>Remove %@ from your list?</string>
+	<key>Remove Contact</key>
+	<string>Remover Contato</string>
+	<key>Remove Link</key>
+	<string>Remover Link</string>
+	<key>Remove from List</key>
+	<string>Remover da Lista</string>
+	<key>Remove from list?</key>
+	<string>Remover da Lista?</string>
+	<key>Rename Group</key>
+	<string>Renomear Grupo</string>
+	<key>Reorder emoticon packs by dragging. Packs are used in the order listed.</key>
+	<string>Reordenar pacotes de emoticons ao arrastar. Pacotes são usados na ordem listada.</string>
+	<key>Repeatedly</key>
+	<string>Repetidamente</string>
+	<key>Report a Bug</key>
+	<string>Relatar um Bug</string>
+	<key>Restore Default Formatting</key>
+	<string>Retaurar Formatação Padrão</string>
+	<key>Return</key>
+	<string>Return</string>
+	<key>Returns from away</key>
+	<string>Voltar de fora</string>
+	<key>Returns from idle</key>
+	<string>Voltar de ocioso</string>
+	<key>Right</key>
+	<string>Direita</string>
+	<key>Run an Applescript</key>
+	<string>Rodar um Applescript</string>
+	<key>Run the Applescript "%@"</key>
+	<string>Rodar o Applescript "%@"</string>
+	<key>Safari Link</key>
+	<string>Link para Safari</string>
+	<key>Sample</key>
+	<string>Amostra</string>
+	<key>Save</key>
+	<string>Salvar</string>
+	<key>Save As</key>
+	<string>Salvar como</string>
+	<key>Save As...</key>
+	<string>Salvar como...</string>
+	<key>Save files to:</key>
+	<string>Salvar arquivos em:</string>
+	<key>Scripts</key>
+	<string>Scripts</string>
+	<key>Search</key>
+	<string>Procurar</string>
+	<key>Search Content</key>
+	<string>Procurar Conteúdo</string>
+	<key>Search From</key>
+	<string>Procurar de</string>
+	<key>Search In Address Book</key>
+	<string>Search In Address Book</string>
+	<key>Search Menu</key>
+	<string>Menu de Procura</string>
+	<key>Search Selection in Music Store</key>
+	<string>Search Selection in Music Store</string>
+	<key>Search To</key>
+	<string>Procurar para</string>
+	<key>Search by Date</key>
+	<string>Procurar por Data</string>
+	<key>Search or filter logs</key>
+	<string>Procurar ou filtrar registros</string>
+	<key>Select All</key>
+	<string>Selecionar Todos</string>
+	<key>Select Buddy</key>
+	<string>Select Buddy</string>
+	<key>Select an Applescript</key>
+	<string>Selecionar um Applescript</string>
+	<key>Select an entry from your address book, or add a new person.</key>
+	<string>Select an entry from your address book, or add a new person.</string>
+	<key>Send %@ the message "%@"</key>
+	<string>Enviar %1$@ a mensagem "%2$@"</string>
+	<key>Send Feedback</key>
+	<string>Enviar Feedback</string>
+	<key>Send File</key>
+	<string>Enviar Arquivo</string>
+	<key>Send File to %@</key>
+	<string>Enviar Arquivo para %@</string>
+	<key>Send a file</key>
+	<string>Enviar um arquivo</string>
+	<key>Send a message</key>
+	<string>Enviar mensagem</string>
+	<key>Send messages with:</key>
+	<string>Enviar mensagens com:</string>
+	<key>Send on Enter</key>
+	<string>Enviar com "Enter"</string>
+	<key>Send on Return</key>
+	<string>Enviar com "Return"</string>
+	<key>Sends a message</key>
+	<string>Enviar uma mensagem</string>
+	<key>Sends a message in a background chat</key>
+	<string>Envia uma mensagem em uma conversa em segundo plano</string>
+	<key>Sends an initial message</key>
+	<string>Envia uma mensagem inicial</string>
+	<key>Service icons:</key>
+	<string>Ícones de serviço:</string>
+	<key>Services</key>
+	<string>Serviços</string>
+	<key>Settings</key>
+	<string>Ajustes</string>
+	<key>Shift + Arrows (%@ and %@)</key>
+	<string>Maiúsculas + Setas (%1$@ e %2$@)</string>
+	<key>Show Adium status in menu bar</key>
+	<string>Mostrar o status do Adium na barra de menu</string>
+	<key>Show All</key>
+	<string>Mostrar Todos</string>
+	<key>Show Colors</key>
+	<string>Mostrar Cores</string>
+	<key>Show Details</key>
+	<string>Mostrar Detalhes</string>
+	<key>Show Details...</key>
+	<string>Mostrar Detalhes...</string>
+	<key>Show Emoticons</key>
+	<string>Mostrar Emoticons</string>
+	<key>Show Fonts</key>
+	<string>Mostrar Fontes</string>
+	<key>Show Group Online Count</key>
+	<string>Mostrar Contagem de Grupos Online</string>
+	<key>Show Group Total Count</key>
+	<string>Mostrar Contagem Total de Grupos</string>
+	<key>Show Groups</key>
+	<string>Mostrar Grupos</string>
+	<key>Show In Address Book</key>
+	<string>Mostrar no Address Book</string>
+	<key>Show Info</key>
+	<string>Mostrar Informações</string>
+	<key>Show Offline Contacts</key>
+	<string>Mostrar Contatos Offline</string>
+	<key>Show Toolbar</key>
+	<string>Mostrar Barra de Ferramentas</string>
+	<key>Show contact information tooltips</key>
+	<string>Mostrar tooltips com informações dos contatos</string>
+	<key>Show in Finder</key>
+	<string>Mostrar no Finder</string>
+	<key>Show information about this contact or group and change settings specific to it</key>
+	<string>Mostrar informações sobre esse contato ou grupo e alterar ajustes específicos a ele</string>
+	<key>Show or hide emoticons in logs</key>
+	<string>Mostrar ou esconder emoticons nos registros</string>
+	<key>Show the File Transfers window automatically</key>
+	<string>Mostrar a janela Transferência de Arquivos automaticamente</string>
+	<key>Show the contact list window</key>
+	<string>Mostrar a janela da lista de contatos</string>
+	<key>Show the contact list window for %.1f seconds</key>
+	<string>Mostrar a janela da lista de contatos por %1f segundos</string>
+	<key>Show the contact list:</key>
+	<string>Mostrar a lista de contatos:</string>
+	<key>Show this contact's icon</key>
+	<string>Mostrar o ícone deste contato</string>
+	<key>Show transitions as contacts sign on and off</key>
+	<string>Mostrar transições quando um contato entra ou sai</string>
+	<key>Show window shadow</key>
+	<string>Mostrar sombra da janela</string>
+	<key>Show/Hide Bookmarks</key>
+	<string>Mostrar/Esconder Favoritos</string>
+	<key>Show/Hide Emoticons</key>
+	<string>Mostrar/Esconder Emoticons</string>
+	<key>Show/Hide the Contacts Drawer</key>
+	<string>Mostrar/Esconder Gaveta de Contatos</string>
+	<key>Signing off</key>
+	<string>Saindo</string>
+	<key>Signs off</key>
+	<string>Sai</string>
+	<key>Signs on</key>
+	<string>Entra</string>
+	<key>Sorry, but Adium Message Styles are not supported in OS X 10.2 (Jaguar).</key>
+	<string>Desculpe, mas os Estilos de Mensagem do Adium não podem ser usados no OS X 10.2 (Jaguar)</string>
+	<key>Sort Contacts</key>
+	<string>Ordenar Contatos</string>
+	<key>Sort Contacts Alphabetically</key>
+	<string>Ordenar Contatos Alfabeticamente</string>
+	<key>Sort Contacts Manually</key>
+	<string>Ordenar Contatos Manualmente</string>
+	<key>Sort Contacts by Status</key>
+	<string>Ordenar Contatos pelo Status</string>
+	<key>Sort contacts by last name</key>
+	<string>Ordenar contatos pelo último nome</string>
+	<key>Sort groups alphabetically</key>
+	<string>Ordenar grupos alfabeticamente</string>
+	<key>Sort tabs with the current sort options</key>
+	<string>Ordenar abas com as opções atuais de ordenamento</string>
+	<key>Sound set:</key>
+	<string>Grupo de sons:</string>
+	<key>Sound:</key>
+	<string>Som:</string>
+	<key>Speak Event</key>
+	<string>Falar Evento</string>
+	<key>Speak Event Time</key>
+	<string>Falar Horário do Evento</string>
+	<key>Speak Name</key>
+	<string>Falar Nome</string>
+	<key>Speak Specific Text</key>
+	<string>Falar Texto Específico</string>
+	<key>Speak the event aloud</key>
+	<string>Falar o evento alto</string>
+	<key>Speak the text "%@"</key>
+	<string>Falar o texto "%@"</string>
+	<key>Speech</key>
+	<string>Fala</string>
+	<key>Spelling</key>
+	<string>Ortografia</string>
+	<key>Stalled</key>
+	<string>Sem Progresso</string>
+	<key>Start Speaking</key>
+	<string>Iniciar Fala</string>
+	<key>Status</key>
+	<string>Status</string>
+	<key>Status icons:</key>
+	<string>Ícones de status:</string>
+	<key>Stepped out</key>
+	<string>Saiu</string>
+	<key>Sticky</key>
+	<string>Permanente</string>
+	<key>Stop Speaking</key>
+	<string>Parar de Falar</string>
+	<key>Stopped</key>
+	<string>Parado</string>
+	<key>Store URL</key>
+	<string>Store URL</string>
+	<key>Stretch to fill</key>
+	<string>Extender para preencher</string>
+	<key>Successfully received %@</key>
+	<string>Recebeu %@ com sucesso</string>
+	<key>Successfully sent %@</key>
+	<string>Enviou %@ com sucesso</string>
+	<key>Switch tabs with:</key>
+	<string>Mudar abas com:</string>
+	<key>Systemwide HTTP Settings</key>
+	<string>Ajustes HTTP Globais</string>
+	<key>Systemwide SOCKS4 Settings</key>
+	<string>Ajustes SOCKS4 Globais</string>
+	<key>Systemwide SOCKS5 Settings</key>
+	<string>Ajustes SOCKS5 Globais</string>
+	<key>Text To Speak:</key>
+	<string>Texto para Ser Falado:</string>
+	<key>The conversation with %@ timed out.</key>
+	<string>A conversa com %@ excedeu tempo de espera.</string>
+	<key>This Xtra is not hosted by adiumxtras.com. Automatic installation is not allowed.</key>
+	<string>Este Xtra não está hospedado por adiumxtras.com. Instalação automática não é permitida.</string>
+	<key>This will remove %@ from the contact lists of your online accounts.</key>
+	<string>Isto removerá %@ das listas de contatos de suas contas online.</string>
+	<key>Tile</key>
+	<string>Ladrilho</string>
+	<key>To</key>
+	<string>Para</string>
+	<key>To:</key>
+	<string>Para:</string>
+	<key>Toggle Groups Display</key>
+	<string>Alternar Exibição de Grupos</string>
+	<key>Toggle Offline Contacts</key>
+	<string>Alternar Contatos Offline</string>
+	<key>Toggle display of groups</key>
+	<string>Alternar exibição de grupos</string>
+	<key>Toggle display of offline contacts</key>
+	<string>Alternar exibição de contatos offline</string>
+	<key>Toggle display of your browser's bookmarks for insertion into text</key>
+	<string>Toggle display of your browser's bookmarks for insertion into text</string>
+	<key>Toggle encrypted messaging. Shows a closed lock when secure and an open lock when insecure.</key>
+	<string>Alternar mensagens criptografadas. Mostra um cadeado fechado quando seguro e aberto quando inseguro.</string>
+	<key>Tooltips</key>
+	<string>Tooltipos</string>
+	<key>Track Information</key>
+	<string>Track Information</string>
+	<key>Try running Repair Permissions from Disk Utility.</key>
+	<string>Tente reparar as Permissões a partir do Utilitário de Disco.</string>
+	<key>URL</key>
+	<string>URL</string>
+	<key>Un-ignore</key>
+	<string>Não ignorar</string>
+	<key>Unable to send message to %@.</key>
+	<string>Não foi posssível enviar mensagem para %@.</string>
+	<key>Unable to write file %@ to %@</key>
+	<string>Não foi possível escrever arquivo %1$@ para %2$@</string>
+	<key>Unavailable</key>
+	<string>Indisponível</string>
+	<key>Unblock</key>
+	<string>Desbloquear</string>
+	<key>Underline</key>
+	<string>Sublinhar</string>
+	<key>Unknown conversation error.</key>
+	<string>Erro de conversação desconhecido.</string>
+	<key>Use Address Book images as contacts' icons</key>
+	<string>Use as imagens do Address Book como ícones dos contatos</string>
+	<key>Use Selection for Find</key>
+	<string>Usar Seleção para Procurar</string>
+	<key>Use another account if necessary</key>
+	<string>Use uma nova conta se necessário</string>
+	<key>Use nickname if available</key>
+	<string>Use apelido se disponível</string>
+	<key>User Name</key>
+	<string>Usuário</string>
+	<key>User Name (Alias)</key>
+	<string>Usuário (Apelido)</string>
+	<key>View</key>
+	<string>Visualizar</string>
+	<key>View Logs</key>
+	<string>Visualizar Registros</string>
+	<key>View Previous Conversations</key>
+	<string>Visualizar Conversas Prévias</string>
+	<key>View logs of this contact or chat</key>
+	<string>Visualizar registros deste contato ou conversa</string>
+	<key>Visual Notifications</key>
+	<string>Notificações Visuais</string>
+	<key>Waiting to start.</key>
+	<string>Esperando para iniciar.</string>
+	<key>Warning Level</key>
+	<string>Nível de Aviso</string>
+	<key>Warning: Are you sure you want to delete the selected logs? This operation cannot be undone.</key>
+	<string>Warning: Are you sure you want to delete the selected logs? This operation cannot be undone.</string>
+	<key>When %@ connects</key>
+	<string>Quando %@ conectar</string>
+	<key>When %@ disconnects</key>
+	<string>Quando %@ desconectar</string>
+	<key>When %@ goes away</key>
+	<string>Quando %@ sair</string>
+	<key>When %@ goes idle</key>
+	<string>Quando %@ ficar ocioso</string>
+	<key>When %@ returns from away</key>
+	<string>Quando %@ voltar de fora</string>
+	<key>When %@ returns from idle</key>
+	<string>Quando %@ voltar de ocioso</string>
+	<key>When %@ sends a message to you</key>
+	<string>Quando %@ enviar uma mensagem para você</string>
+	<key>When %@ sends a message to you in a background chat</key>
+	<string>Quando %@ enviar uma mensagem para uma conversa em segundo plano</string>
+	<key>When %@ sends an initial message to you</key>
+	<string>Quando %@ enviar uma mensagem inicial para você</string>
+	<key>When a file transfer begins</key>
+	<string>Quando uma transferência inicia</string>
+	<key>When a file transfer is canceled remotely</key>
+	<string>Quando uma transferência de arquivo é canelada remotamente</string>
+	<key>When a file transfer is completed successfully</key>
+	<string>Quando uma transferência de arquiovo é completada com sucesso</string>
+	<key>When a file transfer is requested</key>
+	<string>Quando uma transferência de arquivo é solicitada</string>
+	<key>When an error occurs</key>
+	<string>Quando um erro ocorre</string>
+	<key>When you connect</key>
+	<string>Quando você conecta</string>
+	<key>When you disconnect</key>
+	<string>Quando você desconecta</string>
+	<key>When you no longer see %@</key>
+	<string>Quando você não mais vê %@</string>
+	<key>When you receive a message in a background chat</key>
+	<string>Quando você receve uma mensagem de uma conversa em segundo plano</string>
+	<key>When you receive a new email notification</key>
+	<string>Quando você recebe uma notificação de novo email</string>
+	<key>When you receive an initial message</key>
+	<string>Quando você recebe a mensagem inicial</string>
+	<key>When you receive any message</key>
+	<string>Quando você recebe uma mensagem</string>
+	<key>When you see %@</key>
+	<string>Qaundo você vê %@</string>
+	<key>When you send %@ a message</key>
+	<string>Quando você envia %@ uma mensagem</string>
+	<key>When you send a message</key>
+	<string>Quando você envia uma mensagem</string>
+	<key>While Adium is in the background</key>
+	<string>Enquanto o Adium está em segundo plano</string>
+	<key>Width:</key>
+	<string>Largura:</string>
+	<key>Window</key>
+	<string>Janela</string>
+	<key>Window Handling</key>
+	<string>Gerenciamento de Janela</string>
+	<key>Xtra Download</key>
+	<string>Descarregar Xtra</string>
+	<key>Yes</key>
+	<string>Sim</string>
+	<key>You are editing a default event set.  Please enter a unique name for your modified set.</key>
+	<string>Você está editando um grupo de eventos padrão. Favor entrar com um nome único para o grupo.</string>
+	<key>You connect</key>
+	<string>Covê conecta</string>
+	<key>You disconnect</key>
+	<string>Você desconecta</string>
+	<key>You said %@ to %@</key>
+	<string>Você disse %1$@ para %2$@</string>
+	<key>Your Adium is up to date</key>
+	<string>Seu Adium está atualizado</string>
+	<key>Zero bytes</key>
+	<string>Zero bytes</string>
+	<key>a contact</key>
+	<string>um contato</string>
+	<key>a member of %@</key>
+	<string>um membro de %@</string>
+	<key>became active</key>
+	<string>ficou ativo</string>
+	<key>began receiving %@</key>
+	<string>começou a receber %@</string>
+	<key>began sending you %@</key>
+	<string>começou a lhe enviar %@</string>
+	<key>came back</key>
+	<string>voltou</string>
+	<key>canceled the transfer of %@</key>
+	<string>cancelada a transferência de %@</string>
+	<key>connected</key>
+	<string>conectado</string>
+	<key>contact list layout</key>
+	<string>layout da lista de contatos</string>
+	<key>contact list theme</key>
+	<string>tema da lista de contatos</string>
+	<key>day</key>
+	<string>dia</string>
+	<key>days</key>
+	<string>dias</string>
+	<key>disconnected</key>
+	<string>desconectado</string>
+	<key>dock icon set</key>
+	<string>ícones do dock</string>
+	<key>emoticon set</key>
+	<string>grupo de emoticons</string>
+	<key>hour</key>
+	<string>hora</string>
+	<key>hours</key>
+	<string>horas</string>
+	<key>http://forum.adiumx.com/</key>
+	<string>http://forum.adiumx.com/</string>
+	<key>http://www.adiumx.com/</key>
+	<string>http://www.adiumx.com/</string>
+	<key>http://www.adiumxtras.com/</key>
+	<string>http://www.adiumxtras.com/</string>
+	<key>iTunes</key>
+	<string>iTunes</string>
+	<key>is no longer seen</key>
+	<string>não está mais visível</string>
+	<key>is seen</key>
+	<string>está visível</string>
+	<key>message style</key>
+	<string>estilo de mensagem</string>
+	<key>minute</key>
+	<string>minuto</string>
+	<key>minutes</key>
+	<string>minutos</string>
+	<key>month</key>
+	<string>mês</string>
+	<key>months</key>
+	<string>mêses</string>
+	<key>only from contacts on my Contact List</key>
+	<string>somente para contatos em minha Lista de Contatos</string>
+	<key>received %@</key>
+	<string>recebido %@</string>
+	<key>received new email</key>
+	<string>novo email recebido</string>
+	<key>requests to send you %@</key>
+	<string>padido para enviar-lhe %@</string>
+	<key>second</key>
+	<string>segundo</string>
+	<key>seconds</key>
+	<string>segundos</string>
+	<key>sent you %@</key>
+	<string>enviou para você %@</string>
+	<key>service icons</key>
+	<string>ícones de serviço</string>
+	<key>sound set</key>
+	<string>grupo de sons</string>
+	<key>status icons</key>
+	<string>ícones de status</string>
+	<key>week</key>
+	<string>semana</string>
+	<key>weeks</key>
+	<string>semanas</string>
+	<key>went away</key>
+	<string>saiu</string>
+	<key>went idle</key>
+	<string>ficou ocioso</string>
+	<key>year</key>
+	<string>ano</string>
+	<key>years</key>
+	<string>anos</string>
+</dict>
+</plist>
