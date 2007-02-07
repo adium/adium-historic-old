@@ -228,7 +228,7 @@
 						  AILocalizedString(@"Delete",nil),
 						  AILocalizedString(@"Cancel",nil),
 						  @"",[[self view] window], self, 
-						  @selector(deleteAccountSheetDidEnd:returnCode:contextInfo:), nil, targetAccount, 
+						  @selector(deleteAccountSheetDidEnd:returnCode:contextInfo:), nil, [targetAccount retain], 
 						  AILocalizedString(@"Delete the account %@?",nil), ([accountFormattedUID length] ? accountFormattedUID : NEW_ACCOUNT_DISPLAY_TEXT));
 	}
 }
@@ -259,6 +259,9 @@
             [tableView_accountList selectRow:index byExtendingSelection:NO];
         }
     }
+	
+	//targetAccount was retained in original NSBeginAlertSheet() call
+	[targetAccount release];
 }
 
 
