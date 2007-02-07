@@ -10517,14 +10517,14 @@
 					ppc,
 					i386,
 				);
-				COPY_PHASE_STRIP = NO;
+				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(BUILT_PRODUCTS_DIR)",
 					"$(SRCROOT)/Frameworks",
 				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DEBUGGING_SYMBOLS = default;
+				GCC_DEBUGGING_SYMBOLS = used;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_ENABLE_SYMBOL_SEPARATION = NO;
 				GCC_VERSION = 4.0;
@@ -10545,7 +10545,8 @@
 				PREBINDING = NO;
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
-				STRIP_INSTALLED_PRODUCT = NO;
+				SEPARATE_STRIP = YES;
+				STRIP_INSTALLED_PRODUCT = YES;
 				WARNING_CFLAGS = "-Wall";
 				ZERO_LINK = NO;
 			};
