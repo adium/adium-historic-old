@@ -55,7 +55,6 @@
 		110763F608676CC9005987A5 /* RAFBlockEditorPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */; };
 		110763F808676CC9005987A5 /* RAFBlockEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F408676CC9005987A5 /* RAFBlockEditorWindowController.m */; };
 		110763FA08676D05005987A5 /* BlockEditorWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 110763F908676D04005987A5 /* BlockEditorWindow.nib */; };
-		11669ABA09994865003CB8A1 /* joscarJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 11669AB109994697003CB8A1 /* joscarJoinChatView.nib */; };
 		3402D5A5080DBC91004E50B4 /* SortConfiguration.nib in Resources */ = {isa = PBXBuildFile; fileRef = 347E791D07CAA52300350507 /* SortConfiguration.nib */; };
 		3402E01B07CB0CED0044F818 /* ESFileTransferProgressView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E01A07CB0CEC0044F818 /* ESFileTransferProgressView.nib */; };
 		3402E02407CB0D1B0044F818 /* ProxyPasswordPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E02307CB0D1B0044F818 /* ProxyPasswordPrompt.nib */; };
@@ -1303,13 +1302,6 @@
 			remoteGlobalIDString = DACF3ED3085574D0006BFB18;
 			remoteInfo = "External Frameworks";
 		};
-		3423412D09D1B67B009FF634 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 112480870956271F00F69C1E;
-			remoteInfo = "joscar bridge";
-		};
 		345AF7D30A5D559B00D7DA6F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 34611C7D09B6756D00870036 /* AdiumSpotlightImporter.xcodeproj */;
@@ -1605,46 +1597,8 @@
 		110763F308676CC9005987A5 /* RAFBlockEditorWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorWindowController.h; path = Source/RAFBlockEditorWindowController.h; sourceTree = "<group>"; };
 		110763F408676CC9005987A5 /* RAFBlockEditorWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFBlockEditorWindowController.m; path = Source/RAFBlockEditorWindowController.m; sourceTree = "<group>"; };
 		110763F908676D04005987A5 /* BlockEditorWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = BlockEditorWindow.nib; path = Resources/BlockEditorWindow.nib; sourceTree = "<group>"; };
-		110C121609608C5A003FAD0A /* RAFjoscarLogHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarLogHandler.h; path = "Plugins/joscar Service/RAFjoscarLogHandler.h"; sourceTree = "<group>"; };
-		110C121709608C5A003FAD0A /* RAFjoscarLogHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarLogHandler.m; path = "Plugins/joscar Service/RAFjoscarLogHandler.m"; sourceTree = "<group>"; };
-		11247EC40956177D00F69C1E /* RAFjoscarAIMService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarAIMService.h; path = "Plugins/joscar Service/RAFjoscarAIMService.h"; sourceTree = "<group>"; };
-		11247EC50956177D00F69C1E /* RAFjoscarAIMService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarAIMService.m; path = "Plugins/joscar Service/RAFjoscarAIMService.m"; sourceTree = "<group>"; };
-		11247EF209561A8500F69C1E /* RAFjoscarAIMAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarAIMAccount.h; path = "Plugins/joscar Service/RAFjoscarAIMAccount.h"; sourceTree = "<group>"; };
-		11247EF309561A8500F69C1E /* RAFjoscarAIMAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarAIMAccount.m; path = "Plugins/joscar Service/RAFjoscarAIMAccount.m"; sourceTree = "<group>"; };
-		1124816909562C9500F69C1E /* joscar bridge.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar bridge.jar"; path = "Plugins/joscar Service/joscar bridge.jar"; sourceTree = SOURCE_ROOT; };
-		1124817309562CDB00F69C1E /* retroweaver-rt.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "retroweaver-rt.jar"; path = "Plugins/joscar Service/joscar Java Bridge/Utilities/Retroweave/release/retroweaver-rt.jar"; sourceTree = SOURCE_ROOT; };
-		112FC2B109393924001FB00D /* ESjoscarCocoaAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESjoscarCocoaAdapter.h; path = "Plugins/joscar Service/ESjoscarCocoaAdapter.h"; sourceTree = "<group>"; };
-		112FC2B209393925001FB00D /* ESjoscarCocoaAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESjoscarCocoaAdapter.m; path = "Plugins/joscar Service/ESjoscarCocoaAdapter.m"; sourceTree = "<group>"; };
-		11669A2B0999395D003CB8A1 /* ESjoscarJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESjoscarJoinChatViewController.h; path = "Plugins/joscar Service/ESjoscarJoinChatViewController.h"; sourceTree = "<group>"; };
-		11669A2C0999395D003CB8A1 /* ESjoscarJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESjoscarJoinChatViewController.m; path = "Plugins/joscar Service/ESjoscarJoinChatViewController.m"; sourceTree = "<group>"; };
-		11669AB209994697003CB8A1 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/joscar Service/en.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		117481DE092E68DC00CFE3FF /* RAFjoscarServicePlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarServicePlugin.h; path = "Plugins/joscar Service/RAFjoscarServicePlugin.h"; sourceTree = "<group>"; };
-		117481DF092E68DC00CFE3FF /* RAFjoscarServicePlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarServicePlugin.m; path = "Plugins/joscar Service/RAFjoscarServicePlugin.m"; sourceTree = "<group>"; };
-		118C52CC091BF0DB00219458 /* joscar-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "joscar-Info.plist"; path = "Plists/joscar-Info.plist"; sourceTree = "<group>"; };
-		11A00DAC09742B9E00768128 /* RAFjoscarDotMacService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarDotMacService.h; path = "Plugins/joscar Service/RAFjoscarDotMacService.h"; sourceTree = "<group>"; };
-		11A00DAD09742B9E00768128 /* RAFjoscarDotMacService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarDotMacService.m; path = "Plugins/joscar Service/RAFjoscarDotMacService.m"; sourceTree = "<group>"; };
-		11A00DCC09742D8600768128 /* RAFjoscarDotMacAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarDotMacAccount.h; path = "Plugins/joscar Service/RAFjoscarDotMacAccount.h"; sourceTree = "<group>"; };
-		11A00DCD09742D8600768128 /* RAFjoscarDotMacAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarDotMacAccount.m; path = "Plugins/joscar Service/RAFjoscarDotMacAccount.m"; sourceTree = "<group>"; };
-		11AD534A0963492D00CA0C6F /* RAFjoscarDebugWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarDebugWindowController.h; path = "Plugins/joscar Service/RAFjoscarDebugWindowController.h"; sourceTree = "<group>"; };
-		11AD534B0963492D00CA0C6F /* RAFjoscarDebugWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarDebugWindowController.m; path = "Plugins/joscar Service/RAFjoscarDebugWindowController.m"; sourceTree = "<group>"; };
-		11AD5360096349D000CA0C6F /* RAFjoscarDebugController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarDebugController.h; path = "Plugins/joscar Service/RAFjoscarDebugController.h"; sourceTree = "<group>"; };
-		11AD5361096349D000CA0C6F /* RAFjoscarDebugController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarDebugController.m; path = "Plugins/joscar Service/RAFjoscarDebugController.m"; sourceTree = "<group>"; };
-		11AD53E80963523000CA0C6F /* joscarDebugWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = joscarDebugWindow.nib; path = "Plugins/joscar Service/joscarDebugWindow.nib"; sourceTree = "<group>"; };
 		11C157D804A88E04008E0C76 /* AIEmoticonController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonController.h; path = Source/AIEmoticonController.h; sourceTree = "<group>"; };
 		11C157D904A88E04008E0C76 /* AIEmoticonController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonController.m; path = Source/AIEmoticonController.m; sourceTree = "<group>"; };
-		11CBDD3D09326F7F00BE7961 /* RAFjoscarAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarAccount.h; path = "Plugins/joscar Service/RAFjoscarAccount.h"; sourceTree = "<group>"; };
-		11CBDD3E09326F8000BE7961 /* RAFjoscarAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarAccount.m; path = "Plugins/joscar Service/RAFjoscarAccount.m"; sourceTree = "<group>"; };
-		11CBDD3F09326F8000BE7961 /* RAFjoscarAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarAccountViewController.h; path = "Plugins/joscar Service/RAFjoscarAccountViewController.h"; sourceTree = "<group>"; };
-		11CBDD4009326F8000BE7961 /* RAFjoscarAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarAccountViewController.m; path = "Plugins/joscar Service/RAFjoscarAccountViewController.m"; sourceTree = "<group>"; };
-		11CBDD4109326F8100BE7961 /* RAFjoscarService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarService.h; path = "Plugins/joscar Service/RAFjoscarService.h"; sourceTree = "<group>"; };
-		11CBDD4209326F8100BE7961 /* RAFjoscarService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarService.m; path = "Plugins/joscar Service/RAFjoscarService.m"; sourceTree = "<group>"; };
-		11CC0DB9097B0AE600E1DE20 /* RAFjoscarICQService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarICQService.h; path = "Plugins/joscar Service/RAFjoscarICQService.h"; sourceTree = "<group>"; };
-		11CC0DBA097B0AE600E1DE20 /* RAFjoscarICQService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarICQService.m; path = "Plugins/joscar Service/RAFjoscarICQService.m"; sourceTree = "<group>"; };
-		11CC0DEB097B120C00E1DE20 /* RAFjoscarICQAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFjoscarICQAccount.h; path = "Plugins/joscar Service/RAFjoscarICQAccount.h"; sourceTree = "<group>"; };
-		11CC0DEC097B120D00E1DE20 /* RAFjoscarICQAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarICQAccount.m; path = "Plugins/joscar Service/RAFjoscarICQAccount.m"; sourceTree = "<group>"; };
-		11F5F46309538B99007DCC49 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/joscar Service/en.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		11F5F70109539C70007DCC49 /* joscarDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = joscarDefaults.plist; path = "Plugins/joscar Service/joscarDefaults.plist"; sourceTree = "<group>"; };
-		11F5F72D0953A227007DCC49 /* joscarClasses.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = joscarClasses.h; path = "Plugins/joscar Service/joscarClasses.h"; sourceTree = SOURCE_ROOT; };
 		3402E01807CB0CE40044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		3402E01F07CB0D150044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		3402E02007CB0D150044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
@@ -1749,7 +1703,6 @@
 		341548C90A92D6D20087EB98 /* SRRemoveShortcutRollover.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = SRRemoveShortcutRollover.tif; path = Frameworks/ShortcutRecorder/Images/SRRemoveShortcutRollover.tif; sourceTree = "<group>"; };
 		341548CA0A92D6D30087EB98 /* SRSnapback.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = SRSnapback.tiff; path = Frameworks/ShortcutRecorder/Images/SRSnapback.tiff; sourceTree = "<group>"; };
 		341591E105463DA800291275 /* SQL_Logger_Prefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = SQL_Logger_Prefs.nib; sourceTree = "<group>"; };
-		3415F83A0A43A5B600B093B7 /* aim.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = aim.png; path = "Plugins/joscar Service/aim.png"; sourceTree = "<group>"; };
 		34167FE5081D700B00E35678 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		3417D26109C332B900FC413E /* Translator.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Translator.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		3417D27709C3336900FC413E /* TranslationEngine.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = TranslationEngine.h; path = Plugins/Translation/TranslationEngine.h; sourceTree = "<group>"; };
@@ -1870,12 +1823,8 @@
 		3421181A0827D86900A3B0FB /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = "Plugins/Gaim Service/nl.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
 		3421186C0827D8B100A3B0FB /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = "Frameworks/Adium Framework/Resources/nl.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
 		342118800827D8C300A3B0FB /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = Resources/nl.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
-		342340DE09D1AF58009FF634 /* RAFjoscarSecuridPromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = RAFjoscarSecuridPromptController.h; path = "Plugins/joscar Service/RAFjoscarSecuridPromptController.h"; sourceTree = "<group>"; };
-		342340DF09D1AF58009FF634 /* RAFjoscarSecuridPromptController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = RAFjoscarSecuridPromptController.m; path = "Plugins/joscar Service/RAFjoscarSecuridPromptController.m"; sourceTree = "<group>"; };
-		3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = "joscar Java Bridge.xcodeproj"; path = "Plugins/joscar Service/joscar Java Bridge/joscar Java Bridge.xcodeproj"; sourceTree = "<group>"; };
 		342353D409D45725009FF634 /* AIAbstractLogViewerWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAbstractLogViewerWindowController.h; path = Source/AIAbstractLogViewerWindowController.h; sourceTree = "<group>"; };
 		342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAbstractLogViewerWindowController.m; path = Source/AIAbstractLogViewerWindowController.m; sourceTree = "<group>"; };
-		3423622A09D8BCA9009FF634 /* SecuridPrompt.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = SecuridPrompt.nib; path = "Plugins/joscar Service/SecuridPrompt.nib"; sourceTree = "<group>"; };
 		3426FD090699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m; path = "Frameworks/Adium Framework/Source/ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.m"; sourceTree = "<group>"; };
 		3426FD0A0699D3D100751059 /* ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h; path = "Frameworks/Adium Framework/Source/ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h"; sourceTree = "<group>"; };
 		3428328407D2643E004F01C9 /* ESStatusPreferencesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESStatusPreferencesPlugin.h; path = Source/ESStatusPreferencesPlugin.h; sourceTree = "<group>"; };
@@ -1982,7 +1931,6 @@
 		342F9D880B5525AF000D5FC2 /* fi */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fi; path = Resources/fi.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
 		342F9D890B5525B0000D5FC2 /* fi */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fi; path = Resources/fi.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
 		342F9D8A0B5525B0000D5FC2 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = Resources/fi.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
-		342F9D8C0B5525B0000D5FC2 /* fi */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fi; path = "Plugins/joscar Service/fi.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
 		342F9D8D0B5525B0000D5FC2 /* fi */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fi; path = Resources/fi.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		342F9D8E0B5525B0000D5FC2 /* fi */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fi; path = Resources/fi.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
 		342F9D8F0B5525B0000D5FC2 /* fi */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fi; path = Resources/fi.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
@@ -1992,10 +1940,8 @@
 		342F9D950B5525B1000D5FC2 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = "Frameworks/Adium Framework/Resources/fi.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		342F9D960B5525B1000D5FC2 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = Resources/fi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		342F9D970B5525B2000D5FC2 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = "Plugins/Gaim Service/fi.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		342F9D980B5525B2000D5FC2 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = "Plugins/joscar Service/fi.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		342F9D990B5525B2000D5FC2 /* fi */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fi; path = Resources/fi.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		342F9D9A0B5525B2000D5FC2 /* fi */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fi; path = Resources/fi.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
-		342F9D9B0B5525B2000D5FC2 /* fi */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fi; path = "Plugins/joscar Service/fi.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
 		342F9D9C0B5525B2000D5FC2 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = Resources/fi.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		342F9D9D0B5525B2000D5FC2 /* fi */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fi; path = Resources/fi.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
 		342F9D9E0B5525B3000D5FC2 /* fi */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fi; path = "Plugins/Gaim Service/fi.lproj/ESGaimZephyrAccountView.nib"; sourceTree = "<group>"; };
@@ -2085,7 +2031,6 @@
 		343C461F0816CD0400FF5FA7 /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = "Plugins/Gaim Service/it.lproj/DCGaimOscarJoinChatView.nib"; sourceTree = "<group>"; };
 		343C47760816FBDA00FF5FA7 /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = "Plugins/WebKit Message View/de.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
 		343C47790816FBE500FF5FA7 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "Plugins/WebKit Message View/de.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		343E7716097BEFD500BCFF92 /* jsocks-klea.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "jsocks-klea.jar"; path = "Plugins/joscar Service/jsocks-klea.jar"; sourceTree = "<group>"; };
 		343EB4270808709E00E27095 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		343EC68F0809DD2900E27095 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
 		343EC6A70809DEC700E27095 /* ESContactAlertsPane.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESContactAlertsPane.m; path = Source/ESContactAlertsPane.m; sourceTree = "<group>"; };
@@ -2446,21 +2391,6 @@
 		347374FE0AA9215800AD18E3 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = Resources/tr.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
 		347374FF0AA9215F00AD18E3 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = Resources/zh_CN.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
 		347375000AA9216700AD18E3 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = Resources/zh_TW.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
-		34739BA50AA4F131007BF788 /* ca */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ca; path = "Plugins/joscar Service/ca.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BA60AA4F136007BF788 /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/joscar Service/cs.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BA70AA4F13C007BF788 /* da */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = da; path = "Plugins/joscar Service/da.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BA80AA4F142007BF788 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = "Plugins/joscar Service/nl.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BA90AA4F14A007BF788 /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = "Plugins/joscar Service/fr.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BAA0AA4F15B007BF788 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/joscar Service/is.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BAB0AA4F162007BF788 /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = "Plugins/joscar Service/it.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BAC0AA4F17D007BF788 /* ja */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ja; path = "Plugins/joscar Service/ja.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BAD0AA4F189007BF788 /* nb */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nb; path = "Plugins/joscar Service/nb.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BAE0AA4F191007BF788 /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/joscar Service/pl.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BAF0AA4F199007BF788 /* ru */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ru; path = "Plugins/joscar Service/ru.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BB00AA4F1A0007BF788 /* sv */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sv; path = "Plugins/joscar Service/sv.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BB10AA4F1A8007BF788 /* tr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = tr; path = "Plugins/joscar Service/tr.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BB20AA4F1AF007BF788 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/joscar Service/zh_CN.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		34739BB30AA4F1B6007BF788 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Plugins/joscar Service/zh_TW.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
 		3474DD6F0824699D00BF30F0 /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = Resources/de.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		3474DFFC08254F3500BF30F0 /* Copyright.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Copyright.txt; sourceTree = "<group>"; };
 		3474DFFF082550FD00BF30F0 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Credits.rtf; path = Resources/Credits.rtf; sourceTree = "<group>"; };
@@ -2610,24 +2540,6 @@
 		3499F4A706309AF60035B468 /* ESGaimRequestWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimRequestWindowController.h; path = "Plugins/Gaim Service/ESGaimRequestWindowController.h"; sourceTree = "<group>"; };
 		349B39290A5FB150008BE092 /* AIContentEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContentEvent.h; path = "Frameworks/Adium Framework/Source/AIContentEvent.h"; sourceTree = "<group>"; };
 		349B392A0A5FB150008BE092 /* AIContentEvent.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIContentEvent.m; path = "Frameworks/Adium Framework/Source/AIContentEvent.m"; sourceTree = "<group>"; };
-		349B3FB60A62109D008BE092 /* en */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = en; path = "Plugins/joscar Service/en.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FBC0A6210E0008BE092 /* ca */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ca; path = "Plugins/joscar Service/ca.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FBD0A6210E6008BE092 /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = "Plugins/joscar Service/da.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FBE0A6210EF008BE092 /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = "Plugins/joscar Service/nl.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FBF0A6210FA008BE092 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = "Plugins/joscar Service/fr.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FC00A621104008BE092 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "Plugins/joscar Service/de.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FC10A62110C008BE092 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "Plugins/joscar Service/it.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FC20A621115008BE092 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = "Plugins/joscar Service/ja.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FC30A62111C008BE092 /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = "Plugins/joscar Service/nb.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FC40A621127008BE092 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = "Plugins/joscar Service/ru.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FC50A621130008BE092 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = "Plugins/joscar Service/es.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FC60A62113A008BE092 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = "Plugins/joscar Service/sv.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FC70A621145008BE092 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = "Plugins/joscar Service/tr.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FC80A621155008BE092 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = "Plugins/joscar Service/cs.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FC90A62115E008BE092 /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = "Plugins/joscar Service/is.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FCA0A621168008BE092 /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = "Plugins/joscar Service/pl.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FCB0A621178008BE092 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = "Plugins/joscar Service/zh_CN.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		349B3FCC0A621183008BE092 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = "Plugins/joscar Service/zh_TW.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		349C2EFA0867AC97000BF883 /* AdiumApplescriptRunner */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AdiumApplescriptRunner; sourceTree = BUILT_PRODUCTS_DIR; };
 		349C2F460867AD16000BF883 /* ApplescriptRunner.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ApplescriptRunner.m; path = Source/ApplescriptRunner.m; sourceTree = "<group>"; };
 		349C2FEF0867AD65000BF883 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -2858,9 +2770,6 @@
 		34BBE1B907A2F4C500663CC9 /* adiumGaimSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimSignals.m; path = "Plugins/Gaim Service/adiumGaimSignals.m"; sourceTree = "<group>"; };
 		34BC8F780ACA3AAC00562745 /* AIScannerDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIScannerDebug.h; path = Source/AIScannerDebug.h; sourceTree = "<group>"; };
 		34BC8F790ACA3AAC00562745 /* AIScannerDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIScannerDebug.m; path = Source/AIScannerDebug.m; sourceTree = "<group>"; };
-		34BCB1A00ACB099B00562745 /* joscar-protocol.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar-protocol.jar"; path = "Plugins/joscar Service/joscar-protocol.jar"; sourceTree = "<group>"; };
-		34BCB1A10ACB099C00562745 /* joscar-client.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar-client.jar"; path = "Plugins/joscar Service/joscar-client.jar"; sourceTree = "<group>"; };
-		34BCB1A20ACB099D00562745 /* joscar-common.jar */ = {isa = PBXFileReference; lastKnownFileType = archive.jar; name = "joscar-common.jar"; path = "Plugins/joscar Service/joscar-common.jar"; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
 		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2960,7 +2869,6 @@
 		34CA23A50A6723A200B11032 /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
 		34CEBE6006F117DF00A89DDE /* ESContactInfoListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESContactInfoListController.h; path = Source/ESContactInfoListController.h; sourceTree = "<group>"; };
 		34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESContactInfoListController.m; path = Source/ESContactInfoListController.m; sourceTree = "<group>"; };
-		34CF88A20A6D5DBC009D9A21 /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = "Plugins/joscar Service/de.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
 		34CF88A70A6D5EC0009D9A21 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = Resources/nl.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		34CF88AD0A6D5EF1009D9A21 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = Resources/nl.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
 		34CF88B50A6D6005009D9A21 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = Resources/nl.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
@@ -3106,22 +3014,6 @@
 		34EA648E0A62E2ED0053DFEB /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = Resources/nl.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		34EA6B2F0A62F3420053DFEB /* AIApplication.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIApplication.h; path = Source/AIApplication.h; sourceTree = "<group>"; };
 		34EA6B300A62F3420053DFEB /* AIApplication.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIApplication.m; path = Source/AIApplication.m; sourceTree = "<group>"; };
-		34EFC22E0AAC6B590086AC43 /* ca */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ca; path = "Plugins/joscar Service/ca.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC22F0AAC6B5F0086AC43 /* da */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = da; path = "Plugins/joscar Service/da.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC2300AAC6B690086AC43 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = "Plugins/joscar Service/nl.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC2310AAC6B740086AC43 /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = "Plugins/joscar Service/fr.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC2320AAC6B850086AC43 /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = "Plugins/joscar Service/de.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC2330AAC6B920086AC43 /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = "Plugins/joscar Service/it.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC2340AAC6B9A0086AC43 /* ja */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ja; path = "Plugins/joscar Service/ja.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC2350AAC6BA20086AC43 /* nb */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nb; path = "Plugins/joscar Service/nb.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC2360AAC6BAA0086AC43 /* ru */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ru; path = "Plugins/joscar Service/ru.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC2370AAC6BB70086AC43 /* sv */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sv; path = "Plugins/joscar Service/sv.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC2380AAC6BC00086AC43 /* tr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = tr; path = "Plugins/joscar Service/tr.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC2390AAC6BC80086AC43 /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/joscar Service/cs.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC23A0AAC6BCE0086AC43 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/joscar Service/is.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC23B0AAC6BD50086AC43 /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = "Plugins/joscar Service/pl.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC23C0AAC6BDD0086AC43 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/joscar Service/zh_CN.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
-		34EFC23D0AAC6BE50086AC43 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Plugins/joscar Service/zh_TW.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
 		34F101E307342B4D00890D3B /* ESGaimDotMacAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimDotMacAccount.m; path = "Plugins/Gaim Service/ESGaimDotMacAccount.m"; sourceTree = "<group>"; };
 		34F101E407342B4D00890D3B /* ESGaimDotMacAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimDotMacAccount.h; path = "Plugins/Gaim Service/ESGaimDotMacAccount.h"; sourceTree = "<group>"; };
 		34F1022A0734499600890D3B /* XtraProgressWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = XtraProgressWindow.nib; path = Resources/XtraProgressWindow.nib; sourceTree = "<group>"; };
@@ -3531,8 +3423,6 @@
 		63EA6406094BB9A9009C8453 /* AIStatusIconPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIStatusIconPreviewController.h; path = Source/AIStatusIconPreviewController.h; sourceTree = "<group>"; };
 		63EA6407094BB9A9009C8453 /* AIStatusIconPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIStatusIconPreviewController.m; path = Source/AIStatusIconPreviewController.m; sourceTree = "<group>"; };
 		6C0FD8C20578D47B00D70FEB /* adiumHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumHighlight.png; path = "Plugins/Status Menu Item/adiumHighlight.png"; sourceTree = "<group>"; };
-		6C1C712F0A7E0FD500F901F1 /* es */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = es; path = "Plugins/joscar Service/es.lproj/RAFjoscarAccountView.nib"; sourceTree = "<group>"; };
-		6C1C71330A7E0FE700F901F1 /* es */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = es; path = "Plugins/joscar Service/es.lproj/joscarJoinChatView.nib"; sourceTree = "<group>"; };
 		6C5C3C2605F6532600490341 /* SQL Logger.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SQL Logger.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CE795BD0A6F9CEE00FF3217 /* es */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = es; path = Resources/es.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
 		6CF42677057763E100F27FAA /* ESContactAlertsController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESContactAlertsController.h; path = Source/ESContactAlertsController.h; sourceTree = "<group>"; };
@@ -3991,65 +3881,6 @@
 			name = Localized;
 			sourceTree = "<group>";
 		};
-		118C52BA091BF05B00219458 /* joscar */ = {
-			isa = PBXGroup;
-			children = (
-				118C52F4091BF64800219458 /* joscar Bridge and Jars */,
-				342340F909D1B03A009FF634 /* AIM */,
-				342340F609D1B02D009FF634 /* dotMac */,
-				342340F309D1B010009FF634 /* ICQ */,
-				11CBDD3D09326F7F00BE7961 /* RAFjoscarAccount.h */,
-				11CBDD3E09326F8000BE7961 /* RAFjoscarAccount.m */,
-				11CBDD4109326F8100BE7961 /* RAFjoscarService.h */,
-				11CBDD4209326F8100BE7961 /* RAFjoscarService.m */,
-				3415F83A0A43A5B600B093B7 /* aim.png */,
-				342340DE09D1AF58009FF634 /* RAFjoscarSecuridPromptController.h */,
-				342340DF09D1AF58009FF634 /* RAFjoscarSecuridPromptController.m */,
-				3423622A09D8BCA9009FF634 /* SecuridPrompt.nib */,
-				11CBDD3F09326F8000BE7961 /* RAFjoscarAccountViewController.h */,
-				11CBDD4009326F8000BE7961 /* RAFjoscarAccountViewController.m */,
-				34CF889E0A6D5D94009D9A21 /* RAFjoscarAccountView.nib */,
-				11669A2B0999395D003CB8A1 /* ESjoscarJoinChatViewController.h */,
-				11669A2C0999395D003CB8A1 /* ESjoscarJoinChatViewController.m */,
-				11669AB109994697003CB8A1 /* joscarJoinChatView.nib */,
-				349B3FB80A6210AA008BE092 /* Localizable.strings */,
-				342340EA09D1AFAF009FF634 /* Plugin */,
-				11AD5343096348B200CA0C6F /* Debug Window */,
-			);
-			name = joscar;
-			sourceTree = "<group>";
-		};
-		118C52F4091BF64800219458 /* joscar Bridge and Jars */ = {
-			isa = PBXGroup;
-			children = (
-				11F5F72D0953A227007DCC49 /* joscarClasses.h */,
-				112FC2B109393924001FB00D /* ESjoscarCocoaAdapter.h */,
-				112FC2B209393925001FB00D /* ESjoscarCocoaAdapter.m */,
-				110C121609608C5A003FAD0A /* RAFjoscarLogHandler.h */,
-				110C121709608C5A003FAD0A /* RAFjoscarLogHandler.m */,
-				1124817309562CDB00F69C1E /* retroweaver-rt.jar */,
-				1124816909562C9500F69C1E /* joscar bridge.jar */,
-				34BCB1A00ACB099B00562745 /* joscar-protocol.jar */,
-				34BCB1A10ACB099C00562745 /* joscar-client.jar */,
-				34BCB1A20ACB099D00562745 /* joscar-common.jar */,
-				343E7716097BEFD500BCFF92 /* jsocks-klea.jar */,
-				3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */,
-			);
-			name = "joscar Bridge and Jars";
-			sourceTree = "<group>";
-		};
-		11AD5343096348B200CA0C6F /* Debug Window */ = {
-			isa = PBXGroup;
-			children = (
-				11AD53E80963523000CA0C6F /* joscarDebugWindow.nib */,
-				11AD534A0963492D00CA0C6F /* RAFjoscarDebugWindowController.h */,
-				11AD534B0963492D00CA0C6F /* RAFjoscarDebugWindowController.m */,
-				11AD5360096349D000CA0C6F /* RAFjoscarDebugController.h */,
-				11AD5361096349D000CA0C6F /* RAFjoscarDebugController.m */,
-			);
-			name = "Debug Window";
-			sourceTree = "<group>";
-		};
 		11C157D504A88DE0008E0C76 /* Emoticons */ = {
 			isa = PBXGroup;
 			children = (
@@ -4202,58 +4033,6 @@
 				341BD5660965E99200CF83F5 /* OTRCommon.h */,
 			);
 			name = OTR;
-			sourceTree = "<group>";
-		};
-		342340EA09D1AFAF009FF634 /* Plugin */ = {
-			isa = PBXGroup;
-			children = (
-				117481DE092E68DC00CFE3FF /* RAFjoscarServicePlugin.h */,
-				117481DF092E68DC00CFE3FF /* RAFjoscarServicePlugin.m */,
-				11F5F70109539C70007DCC49 /* joscarDefaults.plist */,
-				118C52CC091BF0DB00219458 /* joscar-Info.plist */,
-			);
-			name = Plugin;
-			sourceTree = "<group>";
-		};
-		342340F309D1B010009FF634 /* ICQ */ = {
-			isa = PBXGroup;
-			children = (
-				11CC0DB9097B0AE600E1DE20 /* RAFjoscarICQService.h */,
-				11CC0DBA097B0AE600E1DE20 /* RAFjoscarICQService.m */,
-				11CC0DEB097B120C00E1DE20 /* RAFjoscarICQAccount.h */,
-				11CC0DEC097B120D00E1DE20 /* RAFjoscarICQAccount.m */,
-			);
-			name = ICQ;
-			sourceTree = "<group>";
-		};
-		342340F609D1B02D009FF634 /* dotMac */ = {
-			isa = PBXGroup;
-			children = (
-				11A00DAC09742B9E00768128 /* RAFjoscarDotMacService.h */,
-				11A00DAD09742B9E00768128 /* RAFjoscarDotMacService.m */,
-				11A00DCC09742D8600768128 /* RAFjoscarDotMacAccount.h */,
-				11A00DCD09742D8600768128 /* RAFjoscarDotMacAccount.m */,
-			);
-			name = dotMac;
-			sourceTree = "<group>";
-		};
-		342340F909D1B03A009FF634 /* AIM */ = {
-			isa = PBXGroup;
-			children = (
-				11247EC40956177D00F69C1E /* RAFjoscarAIMService.h */,
-				11247EC50956177D00F69C1E /* RAFjoscarAIMService.m */,
-				11247EF209561A8500F69C1E /* RAFjoscarAIMAccount.h */,
-				11247EF309561A8500F69C1E /* RAFjoscarAIMAccount.m */,
-			);
-			name = AIM;
-			sourceTree = "<group>";
-		};
-		3423412809D1B67B009FF634 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				3423412E09D1B67B009FF634 /* joscar bridge.jar */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		3428328307D263F0004F01C9 /* Status Preferences */ = {
@@ -5232,7 +5011,6 @@
 		34DC84380A7EAA21003E1636 /* Plugins (Not included in release) */ = {
 			isa = PBXGroup;
 			children = (
-				118C52BA091BF05B00219458 /* joscar */,
 				3417D27109C3334900FC413E /* Translator */,
 				34B3241D09B9FF6900029361 /* IRC Libgaim Plugin */,
 				B7AE664D0465778E0051E914 /* SQL Logger */,
@@ -8007,10 +7785,6 @@
 					ProductGroup = 34D834D107CBE7B2006466F2 /* Products */;
 					ProjectRef = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
 				},
-				{
-					ProductGroup = 3423412809D1B67B009FF634 /* Products */;
-					ProjectRef = 3423412709D1B67B009FF634 /* joscar Java Bridge.xcodeproj */;
-				},
 			);
 			projectRoot = "";
 			targets = (
@@ -8037,13 +7811,6 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
-		3423412E09D1B67B009FF634 /* joscar bridge.jar */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.jar;
-			path = "joscar bridge.jar";
-			remoteRef = 3423412D09D1B67B009FF634 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
 		345AF7D40A5D559B00D7DA6F /* AISpotlightImporterTest */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.executable";
@@ -8335,7 +8102,6 @@
 				34CA22300A671BEF00B11032 /* PersonalPreferences.nib in Resources */,
 				34D0FF8509569FE500DCB678 /* PersonalPreferencesDefaults.plist in Resources */,
 				34D000C60957918000DCB678 /* ContactListRecentImages.nib in Resources */,
-				11669ABA09994865003CB8A1 /* joscarJoinChatView.nib in Resources */,
 				341BD5700965EC3500CF83F5 /* OTRFingerprintDetailsWindow.nib in Resources */,
 				341BD5710965EC3500CF83F5 /* OTRPrivateKeyGenerationWindow.nib in Resources */,
 				341BD57B0965EC4700CF83F5 /* OTRPrefs.nib in Resources */,
@@ -9331,32 +9097,6 @@
 			name = "Shared Dock Icon Images";
 			sourceTree = "<group>";
 		};
-		11669AB109994697003CB8A1 /* joscarJoinChatView.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				11669AB209994697003CB8A1 /* en */,
-				6C1C71330A7E0FE700F901F1 /* es */,
-				34EFC22E0AAC6B590086AC43 /* ca */,
-				34EFC22F0AAC6B5F0086AC43 /* da */,
-				34EFC2300AAC6B690086AC43 /* nl */,
-				34EFC2310AAC6B740086AC43 /* fr */,
-				34EFC2320AAC6B850086AC43 /* de */,
-				34EFC2330AAC6B920086AC43 /* it */,
-				34EFC2340AAC6B9A0086AC43 /* ja */,
-				34EFC2350AAC6BA20086AC43 /* nb */,
-				34EFC2360AAC6BAA0086AC43 /* ru */,
-				34EFC2370AAC6BB70086AC43 /* sv */,
-				34EFC2380AAC6BC00086AC43 /* tr */,
-				34EFC2390AAC6BC80086AC43 /* cs */,
-				34EFC23A0AAC6BCE0086AC43 /* is */,
-				34EFC23B0AAC6BD50086AC43 /* pl */,
-				34EFC23C0AAC6BDD0086AC43 /* zh_CN */,
-				34EFC23D0AAC6BE50086AC43 /* zh_TW */,
-				342F9D9B0B5525B2000D5FC2 /* fi */,
-			);
-			name = joscarJoinChatView.nib;
-			sourceTree = "<group>";
-		};
 		3402E01A07CB0CEC0044F818 /* ESFileTransferProgressView.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -10282,32 +10022,6 @@
 			name = Buttons.strings;
 			sourceTree = "<group>";
 		};
-		349B3FB80A6210AA008BE092 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				349B3FB60A62109D008BE092 /* en */,
-				349B3FBC0A6210E0008BE092 /* ca */,
-				349B3FBD0A6210E6008BE092 /* da */,
-				349B3FBE0A6210EF008BE092 /* nl */,
-				349B3FBF0A6210FA008BE092 /* fr */,
-				349B3FC00A621104008BE092 /* de */,
-				349B3FC10A62110C008BE092 /* it */,
-				349B3FC20A621115008BE092 /* ja */,
-				349B3FC30A62111C008BE092 /* nb */,
-				349B3FC40A621127008BE092 /* ru */,
-				349B3FC50A621130008BE092 /* es */,
-				349B3FC60A62113A008BE092 /* sv */,
-				349B3FC70A621145008BE092 /* tr */,
-				349B3FC80A621155008BE092 /* cs */,
-				349B3FC90A62115E008BE092 /* is */,
-				349B3FCA0A621168008BE092 /* pl */,
-				349B3FCB0A621178008BE092 /* zh_CN */,
-				349B3FCC0A621183008BE092 /* zh_TW */,
-				342F9D980B5525B2000D5FC2 /* fi */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
 		34A6F68407D65D6200972830 /* GeneralPreferences.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -10359,32 +10073,6 @@
 				342F9D8E0B5525B0000D5FC2 /* fi */,
 			);
 			name = PersonalPreferences.nib;
-			sourceTree = "<group>";
-		};
-		34CF889E0A6D5D94009D9A21 /* RAFjoscarAccountView.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				11F5F46309538B99007DCC49 /* en */,
-				34CF88A20A6D5DBC009D9A21 /* de */,
-				6C1C712F0A7E0FD500F901F1 /* es */,
-				34739BA50AA4F131007BF788 /* ca */,
-				34739BA60AA4F136007BF788 /* cs */,
-				34739BA70AA4F13C007BF788 /* da */,
-				34739BA80AA4F142007BF788 /* nl */,
-				34739BA90AA4F14A007BF788 /* fr */,
-				34739BAA0AA4F15B007BF788 /* is */,
-				34739BAB0AA4F162007BF788 /* it */,
-				34739BAC0AA4F17D007BF788 /* ja */,
-				34739BAD0AA4F189007BF788 /* nb */,
-				34739BAE0AA4F191007BF788 /* pl */,
-				34739BAF0AA4F199007BF788 /* ru */,
-				34739BB00AA4F1A0007BF788 /* sv */,
-				34739BB10AA4F1A8007BF788 /* tr */,
-				34739BB20AA4F1AF007BF788 /* zh_CN */,
-				34739BB30AA4F1B6007BF788 /* zh_TW */,
-				342F9D8C0B5525B0000D5FC2 /* fi */,
-			);
-			name = RAFjoscarAccountView.nib;
 			sourceTree = "<group>";
 		};
 		34E0E9B707CC4B3600A82198 /* Localizable.strings */ = {
