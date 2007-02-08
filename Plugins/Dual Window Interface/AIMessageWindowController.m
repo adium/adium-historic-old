@@ -767,6 +767,15 @@
 			NSToolbarCustomizeToolbarItemIdentifier, nil]];
 }
 
+- (void)toolbarWillAddItem:(NSNotification *)notification
+{
+	NSToolbarItem *item = [[notification userInfo] objectForKey:@"item"];
+	if ([[item itemIdentifier] isEqualToString:NSToolbarShowFontsItemIdentifier]) {
+		[item setTarget:[adium interfaceController]];
+		[item setAction:@selector(toggleFontPanel:)];
+	}
+}
+
 #pragma mark Miniaturization
 /*!
  * @brief Our window is about to minimize
