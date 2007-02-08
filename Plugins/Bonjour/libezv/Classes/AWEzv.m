@@ -6,7 +6,7 @@
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
- * Copyright (C) 2004-2005 Andrew Wellington.
+ * Copyright (C) 2004-2007 Andrew Wellington.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -48,12 +48,7 @@
 {
     if((self = [super init]))
 	{
-		if (newClient != client) 
-		{
-			[client release];
-			client = [newClient retain];
-		}
-		
+		client = newClient;
 		name = nil;
 		status = AWEzvUndefined;
 	}	
@@ -65,9 +60,7 @@
 	//Ensure we log out before deallocing
 	[self logout];
 	
-    [manager release];
-    [client release];
-	
+    [manager release];	
 	[super dealloc];
 }
 
@@ -139,6 +132,7 @@
 - (void) logout {
     [manager logout];
     [manager stopListening];
+    [manager stopBrowsing];
     
     [client reportLoggedOut];
 }

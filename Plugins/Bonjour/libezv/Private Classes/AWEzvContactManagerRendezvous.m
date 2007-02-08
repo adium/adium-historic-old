@@ -6,7 +6,7 @@
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
- * Copyright (C) 2004-2005 Andrew Wellington.
+ * Copyright (C) 2004-2007 Andrew Wellington.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -663,6 +663,19 @@ NSData *decode_dns(char* buffer, unsigned int len )
 			     ofLevel:AWEzvError];
 	[self disconnect];
     }
+}
+
+/* stop looking for new rendezvous clients */
+- (void)stopBrowsing
+{
+	if (browseRef) {
+		DNSServiceDiscoveryDeallocate(browseRef);
+		browseRef = nil;
+	}
+	if (avBrowseRef) {
+		DNSServiceDiscoveryDeallocate(avBrowseRef);
+		avBrowseRef = nil;
+	}
 }
 
 /* handle a message from our browser */
