@@ -54,6 +54,7 @@ enum {
 @interface AIXMLAppender(PRIVATE)
 - (NSString *)createElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values;
 - (NSString *)rootElementNameForFileAtPath:(NSString *)path;
+- (void)prepareFileHandle;
 @end
 
 /*!
@@ -86,35 +87,10 @@ enum {
 {
 	if ((self = [super init])) {
 		//Set up our instance variables
-		initialized = NO;
 		rootElementName = nil;
 		filePath = [path copy];
-		NSFileManager *manager = [NSFileManager defaultManager];
 		
-		//Check if the file already exists
-		if ([manager fileExistsAtPath:filePath]) {
-			//Get the root element name and set initialized
-			rootElementName = [[self rootElementNameForFileAtPath:filePath] retain];
-			initialized = (rootElementName != nil);				
-		//We may need to create the directory structure, so call this just in case
-		} else
-			[manager createDirectoriesForPath:[filePath stringByDeletingLastPathComponent]];
-		
-		//Open our file handle and seek if necessary
-		const char *pathCString = [filePath fileSystemRepresentation];
-		int fd = open(pathCString, O_CREAT | O_WRONLY, 0644);
-		if(fd == -1) {
-			AILog(@"Couldn't open log file %@ (%s - length %u) for writing!",
-				  filePath, pathCString, (pathCString ? strlen(pathCString) : 0));
-		} else {
-			file = [[NSFileHandle alloc] initWithFileDescriptor:fd closeOnDealloc:YES];
-			if (initialized) {
-				struct stat sb;
-				fstat(fd, &sb);
-				int closingTagLength = [rootElementName length] + 4; //</rootElementName>
-				[file seekToFileOffset:sb.st_size - closingTagLength];
-			}
-		}
+		[self prepareFileHandle];
 	}
 
 	return self;
@@ -165,6 +141,100 @@ enum {
 	return rootElementName;
 }
 
+- (void)prepareFileHandle
+{	
+	NSFileManager *manager = [NSFileManager defaultManager];
+	
+	//Check if the file already exists
+	if ([manager fileExistsAtPath:filePath]) {
+		//Get the root element name and set initialized
+		rootElementName = [[self rootElementNameForFileAtPath:filePath] retain];
+		initialized = (rootElementName != nil);				
+		//We may need to create the directory structure, so call this just in case
+	} else {
+		[manager createDirectoriesForPath:[filePath stringByDeletingLastPathComponent]];
+		initialized = NO;
+	}
+	
+	//Open our file handle and seek if necessary
+	const char *pathCString = [filePath fileSystemRepresentation];
+	int fd = open(pathCString, O_CREAT | O_WRONLY, 0644);
+	if(fd == -1) {
+		AILog(@"Couldn't open log file %@ (%s - length %u) for writing!",
+			  filePath, pathCString, (pathCString ? strlen(pathCString) : 0));
+	} else {
+		file = [[NSFileHandle alloc] initWithFileDescriptor:fd closeOnDealloc:YES];
+		if (initialized) {
+			struct stat sb;
+			fstat(fd, &sb);
+			int closingTagLength = [rootElementName length] + 4; //</rootElementName>
+			[file seekToFileOffset:sb.st_size - closingTagLength];
+		}
+	}
+}
+
+- (BOOL)writeData:(NSData *)data seekBackLength:(int)seekBackLength
+{
+	BOOL success = YES;
+	
+	@try {
+		[file writeData:data];
+
+	} @catch (NSException *writingException) {
+		/* NSFileHandle raises an exception if:
+		 *    * the file descriptor is closed or is not valid - we should reopen the file and try again
+		 *    * if the receiver represents an unconnected pipe or socket endpoint - this should never happen
+		 *    * if no free space is left on the file system - this should be handled gracefully if possible.. but the user is probably in trouble.
+		 *    * if any other writing error occurs - as with lack of free space.
+		 */
+		if (initialized &&
+			[[writingException name] isEqualToString:NSFileHandleOperationException] &&
+			[[writingException reason] rangeOfString:@"Bad file descriptor"].location != NSNotFound) {
+			@try {
+				[file release]; file = nil;
+			} @catch (NSException *releaseException) {
+				//Don't need to do anything... but if we failed to write, we may fail to deallocate, too.
+				 file = nil;
+			}
+			
+			[self prepareFileHandle];
+			@try {
+				[file writeData:data];
+				success = YES;
+
+			} @catch (NSException *secondWritingException) {
+				NSLog(@"Exception while writing %@ log file %@: %@ (%@)",
+					  (initialized ? @"initialized" : @"uninitialized"), filePath, [secondWritingException name], [secondWritingException reason]);
+				success = NO;
+			}
+			
+		} else {
+			NSLog(@"Exception while writing %@ log file %@: %@ (%@)",
+				  (initialized ? @"initialized" : @"uninitialized"), filePath, [writingException name], [writingException reason]);
+			success = NO;
+		}
+	}
+
+	if (success) {
+		fcntl([file fileDescriptor], F_FULLFSYNC, /*arg*/ 0);
+		@try {
+			[file seekToFileOffset:([file offsetInFile] - seekBackLength)];	
+			
+		} @catch (NSException *seekException) {
+			/* -[NSFileHandler seekToFileOffset:] raises an exception if
+			*    * the message is sent to an NSFileHandle object representing a pipe or socket
+			*    * if the file descriptor is closed
+			*    * if any other error occurs in seeking.
+			*/
+			NSLog(@"Exception while seeking in %@ log file %@: %@ (%@)",
+				  (initialized ? @"initialized" : @"uninitialized"), filePath, [seekException name], [seekException reason]);
+			success = NO;
+		}
+	}
+
+	return success;
+}
+
 /*!
  * @brief Sets up the document.
  *
@@ -172,9 +242,11 @@ enum {
  * @param attributeKeys An array of the attribute keys the element has.
  * @param attributeValues An array of the attribute values the element has.
  */
-- (void)initializeDocumentWithRootElementName:(NSString *)name attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
+- (BOOL)initializeDocumentWithRootElementName:(NSString *)name attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
 {
 	//Don't initialize twice
+	BOOL success = NO;
+
 	if (!initialized && file) {
 		//Keep track of this for later
 		rootElementName = [name retain];
@@ -185,12 +257,12 @@ enum {
 		NSString *initialDocument = [NSString stringWithFormat:@"%@\n%@", XML_MARKER, rootElement];
 		
 		//Write the data, and then seek backwards
-		[file writeData:[initialDocument dataUsingEncoding:NSUTF8StringEncoding]];
-		fcntl([file fileDescriptor], F_FULLFSYNC, /*arg*/ 0);
-		[file seekToFileOffset:([file offsetInFile] - closingTagLength)];
-		
+		success = [self writeData:[initialDocument dataUsingEncoding:NSUTF8StringEncoding] seekBackLength:closingTagLength];
+
 		initialized = YES;
 	}
+	
+	return success;
 }
 
 /*!
@@ -202,12 +274,12 @@ enum {
  * @param attributeValues An array of the attribute values the element has.
  */
 
-- (void)addElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
+- (BOOL)addElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
 {
-	[self addElementWithName:name
-			  escapedContent:(content ? [content stringByEscapingForXMLWithEntities:nil] : nil)
-			   attributeKeys:keys
-			 attributeValues:values];
+	return [self addElementWithName:name
+					 escapedContent:(content ? [content stringByEscapingForXMLWithEntities:nil] : nil)
+					  attributeKeys:keys
+					attributeValues:values];
 }
 
 /*!
@@ -219,22 +291,24 @@ enum {
  * @param attributeValues An array of the attribute values the element has.
  */
 
-- (void)addElementWithName:(NSString *)name escapedContent:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
+- (BOOL)addElementWithName:(NSString *)name escapedContent:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
 {
+	BOOL success = NO;
+
 	//Don't add if not initialized, or if we couldn't open the file
 	if (initialized && file) {
 		//Create our strings
 		NSString *element = [self createElementWithName:name content:content attributeKeys:keys attributeValues:values];
 		NSString *closingTag = [NSString stringWithFormat:@"</%@>\n", rootElementName];
 		
-		if(element != nil)
-		{
+		if (element != nil) {
 			//Write the data, and then seek backwards
-			[file writeData:[[element stringByAppendingString:closingTag] dataUsingEncoding:NSUTF8StringEncoding]];
-			fcntl([file fileDescriptor], F_FULLFSYNC, /*arg*/ 0);
-			[file seekToFileOffset:([file offsetInFile] - [closingTag length])];
+			success = [self writeData:[[element stringByAppendingString:closingTag] dataUsingEncoding:NSUTF8StringEncoding]
+					   seekBackLength:[closingTag length]];
 		}
 	}
+	
+	return success;
 }
 
 #pragma mark Private Methods
@@ -335,7 +409,7 @@ enum {
 	
 	[handle closeFile];
 	
-	//We've obviously found the root element name, so return a nonmutble copy.
+	//We've obviously found the root element name, so return a nonmutable copy.
 	return [NSString stringWithString:accumulator];
 }
 
