@@ -395,12 +395,35 @@ extern gchar *oscar_encoding_extract(const char *encoding);
 {
 	if (strcmp(label, "Set User Info...") == 0) {
 		return nil;
+		
 	} else if (strcmp(label, "Edit Buddy Comment") == 0) {
 		return nil;
 	} else if (strcmp(label, "Show Buddies Awaiting Authorization") == 0) {
 		/* XXX Depends on adiumGaimRequestFields() */
+		//AILocalizedString(@"Show Contacts Awaiting Authorization", "Account action menu item to show a list of contacts for whom this account is awaiting authorization to be able to show them in the contact list")
 		return nil;
+	} else if (strcmp(label, "Configure IM Forwarding (URL)") == 0) {
+		return [AILocalizedString(@"Configure IM Forwarding", nil) stringByAppendingEllipsis];
+
+	} else if (strcmp(label, "Change Password (URL)") == 0) {
+		return [AILocalizedString(@"Change Password", nil) stringByAppendingEllipsis];
+		
+	} else if (strcmp(label, "Display Currently Registered E-Mail Address") == 0) {
+		return AILocalizedString(@"Display Currently Registered Email Address", nil);
+		
+	} else if (strcmp(label, "Change Currently Registered E-Mail Address...") == 0) {
+		return [AILocalizedString(@"Change Currently Registered Email Address", nil) stringByAppendingEllipsis];
+		
+	} else if (strcmp(label, "Search for Buddy by E-Mail Address...") == 0) {
+		return [AILocalizedString(@"Search for Contact By Email Address", nil) stringByAppendingEllipsis];		
+
+	} else if (strcmp(label, "Set User Info (URL)...") == 0) {
+		return [AILocalizedString(@"Set User Info", nil) stringByAppendingEllipsis];
+
+	} else if (strcmp(label, "Set Privacy Options...") == 0) {
+		return [AILocalizedString(@"Set Privacy Options", nil) stringByAppendingEllipsis];
 	}
+	
 
 	return [super titleForAccountActionMenuLabel:label];
 }
