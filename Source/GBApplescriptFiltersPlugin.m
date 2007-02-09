@@ -184,15 +184,18 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 	enumerator = [[adium allResourcesForName:@"Scripts" withExtensions:SCRIPT_BUNDLE_EXTENSION] objectEnumerator];
 	while ((filePath = [enumerator nextObject])) {
 		if ((scriptBundle = [NSBundle bundleWithPath:filePath])) {
-			
 			NSString		*scriptsSetName;
 			NSEnumerator	*scriptEnumerator;
 			NSDictionary	*scriptDict;
-			NSDictionary	*infoDict = [scriptBundle infoDictionary];
+			NSDictionary	*infoDict = [NSDictionary dictionaryWithContentsOfFile:[[scriptBundle bundlePath] stringByAppendingPathComponent:@"Info.plist"]];
+			if (!infoDict) infoDict= [scriptBundle infoDictionary];
+
+			NSDictionary	*localizedInfoDict = [scriptBundle localizedInfoDictionary];
 
 			//Get the name of the set these scripts will go into
-			scriptsSetName = [infoDict objectForKey:@"Set"];
-			
+			scriptsSetName = [localizedInfoDict objectForKey:@"Set"];
+			if (!scriptsSetName) scriptsSetName = [infoDict objectForKey:@"Set"];
+
 			//Now enumerate each script the bundle claims as its own
 			scriptEnumerator = [[infoDict objectForKey:@"Scripts"] objectEnumerator];
 			
@@ -207,7 +210,14 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 					
 					keyword = [scriptDict objectForKey:@"Keyword"];
 					title = [scriptDict objectForKey:@"Title"];
-					
+
+					//The keywords titles are keyed by their English version in the localized info dict
+					NSString *localizedKeyword = [localizedInfoDict objectForKey:keyword];
+					if (localizedKeyword) keyword = localizedKeyword;
+
+					NSString *localizedTitle = [localizedInfoDict objectForKey:title];
+					if (localizedTitle) title = localizedTitle;
+
 					if (keyword && [keyword length] && title && [title length]) {
 						NSMutableDictionary	*infoDict;
 						
@@ -241,7 +251,9 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 					}
 				}
 			}
-		}		
+		} else {
+			NSLog(@"Warning: Could not load Adium script bundle at %@",filePath);
+		}
 	}
 }
 
