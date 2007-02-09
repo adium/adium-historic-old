@@ -46,7 +46,7 @@
 
 	scriptPath = nil;
 	
-	[label_applescript setLocalizedString:AILocalizedString(@"Applescript:",nil)];
+	[label_applescript setLocalizedString:AILocalizedString(@"AppleScript:",nil)];
 	[button_browse setLocalizedString:[AILocalizedString(@"Browse",nil) stringByAppendingEllipsis]];
 }
 
@@ -85,7 +85,7 @@
 - (IBAction)chooseFile:(id)sender
 {
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-	[openPanel setTitle:AILocalizedString(@"Select an Applescript",nil)];
+	[openPanel setTitle:AILocalizedString(@"Select an AppleScript",nil)];
 	
 	if ([openPanel runModalForDirectory:nil
 								   file:nil
