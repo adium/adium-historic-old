@@ -152,13 +152,7 @@ static void *adiumGaimRequestAction(const char *title, const char *primary,
 		//Redirect a "wants to send you" action request to our file choosing method so we handle it as a normal file transfer
 		((GaimRequestActionCb)ok_cb)(userData, default_action);
 		
-    } else if (primaryString && ([primaryString rangeOfString:@"Add buddy to your list?"].location != NSNotFound)) {
-		/* This is Jabber doing inelegantly what we elegantly handle in the authorization request window for all
-		 * services, asking if the user wants to add a contact which just added him.  We just ignore this request, as
-		 * the authorization window let the user do this if he wanted.
-		 */
-
-	} else if (primaryString && ([primaryString rangeOfString:@"Create New Room"].location != NSNotFound)) {
+    } else if (primaryString && ([primaryString rangeOfString:@"Create New Room"].location != NSNotFound)) {
 		/* Jabber's Create New Room dialog has a default option of accepting default values and another option
 		 * of configuration of the room... unfortunately, configuring the room requires a gaim_request_fields
 		 * implementation, which we don't have yet, so the dialog is just confusing.  Accept the defaults.
