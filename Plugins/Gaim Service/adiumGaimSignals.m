@@ -140,10 +140,14 @@ static void buddy_status_changed_cb(GaimBuddy *buddy, GaimStatus *oldstatus, Gai
 	statusTypeNumber = [NSNumber numberWithInt:(isAvailable ? 
 												AIAvailableStatusType : 
 												AIAwayStatusType)];
-	
+
 	statusName = [account statusNameForGaimBuddy:buddy];
 	statusMessage = [account statusMessageForGaimBuddy:buddy];
 
+	[theContact setIsMobile:(gaim_presence_is_status_primitive_active(gaim_buddy_get_presence(buddy), GAIM_STATUS_MOBILE))
+					 notify:NotifyLater];
+
+	//Will also notify
 	[account updateStatusForContact:theContact
 					   toStatusType:statusTypeNumber
 						 statusName:statusName
@@ -219,9 +223,4 @@ void configureAdiumGaimSignals(void)
 	gaim_signal_connect(blist_handle, "buddy-got-login-time",
 						handle, GAIM_CALLBACK(buddy_event_cb),
 						GINT_TO_POINTER(GAIM_BUDDY_SIGNON_TIME));	
-
-	//Miscellaneous - I'm not thrilled about this existence of this one...
-	gaim_signal_connect(blist_handle, "buddy-miscellaneous-changed",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_MISCELLANEOUS));		
 }
