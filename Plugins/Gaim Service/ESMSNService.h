@@ -20,9 +20,6 @@
 #define PREF_GROUP_MSN_SERVICE				@"MSN"
 #define	KEY_MSN_DISPLAY_NAMES_AS_STATUS		@"Display Names As Status"
 #define KEY_MSN_DISPLAY_CUSTOM_EMOTICONS	@"Display Custom Emoticons"
-#define	KEY_MSN_CONVERSATION_CLOSED			@"Conversation Closed"
-#define	KEY_MSN_CONVERSATION_TIMED_OUT		@"Conversation Timed Out"
-
 
 @class AIPreferencePane;
 

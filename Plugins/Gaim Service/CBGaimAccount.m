@@ -341,9 +341,16 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (void)updateUserInfo:(AIListContact *)theContact withData:(GaimNotifyUserInfo *)user_info
 {
 	char *user_info_text = gaim_notify_user_info_get_text_with_newline(user_info, "<BR />");
-	NSString *gaimUserInfo = (user_info_text ? [NSString stringWithUTF8String:user_info_text] : nil);
+	NSMutableString *mutableGaimUserInfo = (user_info_text ? [NSMutableString stringWithUTF8String:user_info_text] : nil);
 	g_free(user_info_text);
 
+	//Libgaim may pass us HTML with embedded </html> tags. Yuck. Don't abort when we hit one in AIHTMLDecoder.
+	[mutableGaimUserInfo replaceOccurrencesOfString:@"</html>"
+										 withString:@""
+											options:(NSCaseInsensitiveSearch | NSLiteralSearch)
+											  range:NSMakeRange(0, [mutableGaimUserInfo length])];
+
+	NSString	*gaimUserInfo = mutableGaimUserInfo;
 	gaimUserInfo = processGaimImages(gaimUserInfo, self);
 	gaimUserInfo = [self processedIncomingUserInfo:gaimUserInfo];
 

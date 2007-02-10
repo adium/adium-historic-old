@@ -23,16 +23,12 @@
 
 #define MAX_AVAILABLE_MESSAGE_LENGTH	58
 
-#define AOL_MOBILE_DEVICE AILocalizedString(@"AOL Mobile Device", "Phrase to describe the client through which a contact is connected mobilely; cell phones, for example, may be AOL Mobile Devices.")
-
 @interface ESGaimAIMAccount (PRIVATE)
 - (NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding;
 - (NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString;
 - (void)setFormattedUID;
 
 - (void)updateInfo:(AIListContact *)theContact;
-- (void)updateMiscellaneous:(AIListContact *)theContact;
-
 @end
 
 @implementation ESGaimAIMAccount
@@ -428,10 +424,6 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 			updateSelector = @selector(updateInfo:);
 			break;
 		}
-		case GAIM_BUDDY_MISCELLANEOUS: {  
-			updateSelector = @selector(updateMiscellaneous:);
-			break;
-		}
 		case GAIM_BUDDY_DIRECTIM_CONNECTED: {
 			updateSelector = @selector(directIMConnected:);
 			break;
@@ -499,65 +491,6 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	}
 }	
 
-- (void)updateMiscellaneous:(AIListContact *)theContact
-{
-	OscarData			*od;
-	NSString			*theContactUID;
-	aim_userinfo_t		*userinfo;
-	
-	if ((gaim_account_is_connected(account)) &&
-		(od = account->gc->proto_data) && 
-		(theContactUID = [theContact UID]) && 
-		(userinfo = aim_locate_finduserinfo(od, [theContactUID UTF8String]))) {
-
-		//Client
-		NSString	*storedString = [theContact statusObjectForKey:@"Client"];
-		NSString	*client = nil;
-		BOOL		isMobile = NO;
-
-		if (userinfo->present & AIM_USERINFO_PRESENT_FLAGS) {
-			if (userinfo->capabilities & OSCAR_CAPABILITY_HIPTOP) {
-				client = AILocalizedString(@"AIM via Hiptop", "A 'Hiptop' is a mobile device; this phrase descibes a contact who is connected to AIM through a hiptop.");
-				isMobile = YES;
-				
-			} else if (userinfo->flags & AIM_FLAG_WIRELESS) {
-				/* Incorrectly called just before a contact is added to a group chat */
-				if (![[adium chatController] contactIsInGroupChat:theContact]) {
-					client = AOL_MOBILE_DEVICE;
-					isMobile = YES;
-				}
-				
-			} else if (userinfo->flags & AIM_FLAG_ADMINISTRATOR) {
-				client = AILocalizedString(@"AOL Administrator", nil);
-				
-			} else if (userinfo->flags & AIM_FLAG_AOL) {
-				client = AILocalizedString(@"America Online", nil);
-			}/* else if ((userinfo->flags & AIM_FLAG_FREE) || (userinfo->flags & AIM_FLAG_UNCONFIRMED)) {
-							client = @"AOL Instant Messenger";
-			}*/
-		}
-
-		[theContact setIsMobile:isMobile notify:NotifyLater];
-
-		if (client) {
-			//Set the client if necessary
-			if (storedString == nil || ![client isEqualToString:storedString]) {
-				[theContact setStatusObject:client forKey:@"Client" notify:NotifyLater];
-						
-				//Apply any changes
-				[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-			}
-		} else {
-			//Clear the client value if one was present before
-			if (storedString) {
-				[theContact setStatusObject:nil forKey:@"Client" notify:NotifyLater];
-						
-				//Apply any changes
-				[theContact notifyOfChangedStatusSilently:silentAndDelayed];	
-			}
-		}
-	}
-}
 
 #pragma mark Status
 /*!
@@ -622,7 +555,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 		 * to assume that a contact in a group chat is by definition not on their cell phone. This assumption
 		 * could become wrong in the future... we can deal with it more properly at that time. :P -eds
 		 */	
-		if ([[listContact statusObjectForKey:@"Client"] isEqualToString:AOL_MOBILE_DEVICE]) {
+		if ([listContact isMobile]) {
 			[listContact setIsMobile:NO notify:NotifyLater];
 			
 			[listContact setStatusObject:nil
