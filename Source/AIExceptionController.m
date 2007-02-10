@@ -90,10 +90,8 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 	if (catchExceptions) {
 		NSString	*theReason = [exception reason];
 		NSString	*theName   = [exception name];
-		NSString	*backtrace = [exception decodedExceptionStackTrace];
+		NSString	*backtrace;
 
-		NSLog(@"Caught exception: %@ - %@",theName,theReason);
-		
 		//Ignore various known harmless or unavoidable exceptions (From the system or system hacks)
 		if ((!theReason) || //Harmless
 			[safeExceptionReasons containsObject:theReason] || 
@@ -120,6 +118,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		}
 		
 		//Check the stack trace for a third set of known offenders
+		backtrace = (shouldLaunchCrashReporter ? [exception decodedExceptionStackTrace] : nil);
 		if (!backtrace ||
 			[backtrace rangeOfString:@"-[NSFontPanel setPanelFont:isMultiple:] (in AppKit)"].location != NSNotFound || //NSFontPanel likes to create exceptions
 			[backtrace rangeOfString:@"-[NSScrollView(NSScrollViewAccessibility) accessibilityChildrenAttribute]"].location != NSNotFound || //Perhaps we aren't implementing an accessibility method properly? No idea what though :(
@@ -130,7 +129,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		{
 			   shouldLaunchCrashReporter = NO;
 		}
-			   
+
 		if (shouldLaunchCrashReporter) {
 			NSString	*bundlePath = [[NSBundle mainBundle] bundlePath];
 			NSString	*crashReporterPath = [bundlePath stringByAppendingPathComponent:RELATIVE_PATH_TO_CRASH_REPORTER];
@@ -147,6 +146,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 
 			exit(-1);
 		} else {
+			/*
 			NSLog(@"The following unhandled exception was ignored: %@ (%@)\nStack trace:\n%@",
 				  theName,
 				  theReason,
@@ -155,6 +155,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 				  theName,
 				  theReason,
 				  (backtrace ? backtrace : @"(Unavailable)"));
+			 */
 		}
 	}
 
