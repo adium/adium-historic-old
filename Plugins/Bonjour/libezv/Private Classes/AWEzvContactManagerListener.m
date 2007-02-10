@@ -152,7 +152,7 @@
     }
     
     if (contact == nil) {
-		AWEzvLog(@"Incoming connection from non-existent contact: %@", contactIdentifier);
+		//AWEzvLog(@"Incoming connection from non-existent contact: %@", contactIdentifier);
 		[incomingConnection closeFile];
 		return;
     }
