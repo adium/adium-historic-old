@@ -74,9 +74,13 @@ static	NSMutableDictionary	*controllerDict = nil;
 	NSNumber	*targetHash = [NSNumber numberWithUnsignedInt:[inTarget hash]];
 		
 	if ((controller = [controllerDict objectForKey:targetHash])) {
-		[controller setOriginalStatusState:inStatusState forType:inStatusType];
 		[controller setAccount:inAccount];
-		[controller configureForAccountAndWorkingStatusState];
+
+		if ([[controller currentConfiguration] statusType] != inStatusType) {
+			//It's not currently editing a status of the type requested; configure based on the passed status
+			[controller setOriginalStatusState:inStatusState forType:inStatusType];
+			[controller configureForAccountAndWorkingStatusState];
+		}
 
 	} else {
 		controller = [[self alloc] initWithWindowNibName:@"EditStateSheet" 
