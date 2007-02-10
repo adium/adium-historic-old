@@ -106,7 +106,6 @@ Class LogViewerWindowControllerClass = NULL;
 	observingContent = NO;
 
 	activeAppenders = [[NSMutableDictionary alloc] init];
-	appenderCloseTimers = [[NSMutableDictionary alloc] init];
 	
 	xhtmlDecoder = [[AIHTMLDecoder alloc] initWithHeaders:NO
 												 fontTags:YES
@@ -188,11 +187,13 @@ Class LogViewerWindowControllerClass = NULL;
 
 - (void)uninstallPlugin
 {
-	[activeAppenders release];
-	[appenderCloseTimers release];
-	[xhtmlDecoder release];
-	[statusTranslation release];
+	[activeAppenders release]; activeAppenders = nil;
+	[xhtmlDecoder release]; xhtmlDecoder = nil;
+	[statusTranslation release]; statusTranslation = nil;
 
+	[NSObject cancelPreviousPerformRequestsWithTarget:self];
+
+	[[adium notificationCenter] removeObserver:self];
 	[[adium preferenceController] removeObserver:self forKeyPath:PREF_KEYPATH_LOGGER_ENABLE];
 }
 
@@ -484,11 +485,12 @@ Class LogViewerWindowControllerClass = NULL;
 	NSString *chatID = [NSString stringWithFormat:@"%@.%@-%@", [chatLog serviceClass], [chatLog from], [chatLog to]];
 	AIXMLAppender *appender = [activeAppenders objectForKey:chatID];
 	
-	if (appender != nil) {
+	if (appender) {
 		if ([[appender path] hasSuffix:[chatLog path]]) {
-			[activeAppenders removeObjectForKey:chatID];
-			[[appenderCloseTimers objectForKey:chatID] invalidate];
-			[appenderCloseTimers removeObjectForKey:chatID];
+			[NSObject cancelPreviousPerformRequestsWithTarget:self
+													 selector:@selector(finishClosingAppender:) 
+													   object:chatID];
+			[self finishClosingAppender:chatID];
 		}
 	}
 }
@@ -504,23 +506,22 @@ Class LogViewerWindowControllerClass = NULL;
 - (AIXMLAppender *)existingAppenderForChat:(AIChat *)chat
 {
 	//Look up the key for this chat and use it to try to retrieve the appender
-	NSString *chatKey = [self keyForChat:chat];
-	return [activeAppenders objectForKey:chatKey];	
+	return [activeAppenders objectForKey:[self keyForChat:chat]];	
 }
 
 - (AIXMLAppender *)appenderForChat:(AIChat *)chat
 {
 	//Check if there is already an appender for this chat
 	AIXMLAppender	*appender = [self existingAppenderForChat:chat];
-	NSString		*chatKey = [self keyForChat:chat];
-	NSDate			*chatDate = [chat dateOpened];
 
-	//If there's an appender scheduled to be closed for this chat, invalidate the timer, since we're using it now
-	if (appender && [appenderCloseTimers objectForKey:chatKey]) {
-		[[appenderCloseTimers objectForKey:chatKey] invalidate];
-		[appenderCloseTimers removeObjectForKey:chatKey];
-	//If there isn't already an appender, create a new one and add it to the dictionary
-	} else if (!appender) {
+	if (appender) {
+		//Ensure a timeout isn't set for closing the appender, since we're now using it
+		[NSObject cancelPreviousPerformRequestsWithTarget:self
+												 selector:@selector(finishClosingAppender:) 
+												   object:[self keyForChat:chat]];
+	} else {
+		//If there isn't already an appender, create a new one and add it to the dictionary
+		NSDate			*chatDate = [chat dateOpened];
 		NSString		*fullPath = [AILoggerPlugin fullPathForLogOfChat:chat onDate:chatDate];
 
 		appender = [AIXMLAppender documentWithPath:fullPath];
@@ -538,7 +539,7 @@ Class LogViewerWindowControllerClass = NULL;
 			   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
 			 attributeValues:[NSArray arrayWithObjects:@"windowOpened", [[chat account] UID], [[chatDate dateWithCalendarFormat:nil timeZone:nil] ISO8601DateString], nil]];
 
-		[activeAppenders setObject:appender forKey:chatKey];
+		[activeAppenders setObject:appender forKey:[self keyForChat:chat]];
 		
 		[self markLogDirtyAtPath:[appender path] forChat:chat];
 	}
@@ -550,21 +551,18 @@ Class LogViewerWindowControllerClass = NULL;
 {
 	//Create a new timer to fire after the timeout period, which will close the appender
 	NSString *chatKey = [self keyForChat:chat];
-	NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:NEW_LOGFILE_TIMEOUT 
-													  target:self 
-													selector:@selector(finishClosingAppender:) 
-													userInfo:chatKey
-													 repeats:NO];
-	//Add it to the appenderCloseTimers dictionary
-	[appenderCloseTimers setObject:timer forKey:chatKey];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self
+											 selector:@selector(finishClosingAppender:) 
+											   object:chatKey];
+	[self performSelector:@selector(finishClosingAppender:) 
+			   withObject:chatKey
+			   afterDelay:NEW_LOGFILE_TIMEOUT];
 }
 
-- (void)finishClosingAppender:(NSTimer *)timer
+- (void)finishClosingAppender:(NSString *)chatKey
 {
 	//Remove the appender, closing its file descriptor upon dealloc
-	[activeAppenders removeObjectForKey:[timer userInfo]];
-	//Remove the timer, it's invalid anyway and not very useful
-	[appenderCloseTimers removeObjectForKey:[timer userInfo]];
+	[activeAppenders removeObjectForKey:chatKey];
 }
 
 
@@ -1152,7 +1150,9 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 			[self _saveDirtyLogArray];
 		}
 
+		[logAccessLock lock];
 		SKIndexFlush(searchIndex);
+		[logAccessLock unlock];
 
 		[self performSelectorOnMainThread:@selector(didCleanDirtyLogs)
 							   withObject:nil
