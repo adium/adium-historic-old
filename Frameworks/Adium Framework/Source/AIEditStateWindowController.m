@@ -647,6 +647,11 @@ static	NSMutableDictionary	*controllerDict = nil;
 		[workingStatusState setTitle:[textField_title stringValue]];
 	}
 
+	//Do not allow the creation of a Now Playing status
+	if ([workingStatusState specialStatusType] == AINowPlayingSpecialStatusType) {
+		[workingStatusState setSpecialStatusType:AINoSpecialStatusType];
+	}
+
 	return workingStatusState;
 }
 
