@@ -136,6 +136,11 @@ extern gchar *oscar_encoding_extract(const char *encoding);
 
 - (oneway void)updateUserInfo:(AIListContact *)theContact withData:(GaimNotifyUserInfo *)user_info
 {
+	/*
+	[super updateUserInfo:theContact withData:user_info];
+
+	return;
+	 */
 	NSString	*contactUID = [theContact UID];
 	const char	firstCharacter = [contactUID characterAtIndex:0];
 
