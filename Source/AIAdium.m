@@ -67,6 +67,12 @@
 
 static NSString	*prefsCategory;
 
+enum {
+    kNumberType,
+    kStringType,
+    kPeriodType
+};
+
 // The version comparison code here is courtesy of Kevin Ballard, adapted from MacPAD. Thanks, Kevin!
 
 int AIGetCharType(NSString *character)
