@@ -301,6 +301,7 @@ AIChat* groupChatLookupFromConv(GaimConversation *conv)
 
 		[chatDict setObject:[NSValue valueWithPointer:conv] forKey:[chat uniqueChatID]];
 		conv->ui_data = [chat retain];
+		AILog(@"group chat lookup assigned %@ to %p",chat,conv);
 	}
 
 	return chat;
@@ -421,7 +422,7 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 				 
 				 However, there's no reason not to check just in case.
 				 */
-				GaimChat *gaimChat = gaim_blist_find_chat (account, name);
+				GaimChat *gaimChat = gaim_blist_find_chat(account, name);
 				if (!gaimChat) {
 					
 					/*
@@ -431,6 +432,11 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					 perform the join.
 					 */
 					NSDictionary	*chatCreationInfo = [chat statusObjectForKey:@"ChatCreationInfo"];
+					
+					if (!chatCreationInfo) {
+						AILog(@"*** No chat creation info for %@ on %@",chat,adiumAccount);
+						return NULL;
+					}
 					
 					GaimDebug (@"Creating a chat.");
 
