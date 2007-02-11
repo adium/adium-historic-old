@@ -75,10 +75,6 @@ static NSString	*prefsCategory;
 - (void)deleteTemporaryFiles;
 @end
 
-@interface NSObject (JavaObject)
-+ (NSString *)getProperty:(NSString *)propertyName;
-@end
-
 @implementation AIAdium
 
 //Init
@@ -143,9 +139,6 @@ static NSString	*prefsCategory;
 }
 - (NSObject <AIStatusController> *)statusController{
     return statusController;
-}
-- (NSObject <AIJavaController> *)javaController{
-    return javaController;
 }
 - (NSObject <AIVideoConfController> *)vcController{
     return vcController;
@@ -257,7 +250,6 @@ static NSString	*prefsCategory;
 	fileTransferController = [[ESFileTransferController alloc] init];
 	applescriptabilityController = [[ESApplescriptabilityController alloc] init];
 	statusController = [[AIStatusController alloc] init];
-    javaController = [[AIJavaController alloc] init];
     vcController = [[AIVideoConfController alloc] init];
 
 	//Finish setting up the preference controller before the components and plugins load so they can read prefs 
@@ -359,7 +351,6 @@ static NSString	*prefsCategory;
     [applescriptabilityController controllerWillClose];
 	[debugController controllerWillClose];
 	[toolbarController controllerWillClose];
-    [javaController controllerWillClose];
     [vcController controllerWillClose];
     [preferenceController controllerWillClose];			//** Last since other controllers may want to write preferences as they close
 	
