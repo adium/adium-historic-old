@@ -1123,6 +1123,12 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 
 #pragma mark Sparkle Delegate Methods
 
+#ifdef BETA_RELEASE
+#define UPDATE_TYPE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"release", @"value", @"Release Versions Only", @"visibleValue", nil];
+#else
+#define UPDATE_TYPE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"beta", @"value", @"Beta or Release Versions", @"visibleValue", nil];
+#endif
+
 /* This method gives the delegate the opportunity to customize the information that will
  * be included with update checks.  Add or remove items from the dictionary as desired.
  * Each entry in profileInfo is an NSDictionary with the following keys:
@@ -1135,7 +1141,7 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	if (![[defaults objectForKey:SUSendProfileInfoKey] boolValue])
-		return [NSArray array]; 
+		return [NSArray arrayWithObject:UPDATE_TYPE_DICT]; 
 	
 	int now = [[NSCalendarDate date] dayOfCommonEra];
 
@@ -1152,6 +1158,8 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 			nil];
 		
 		[profileInfo addObject:entry];
+		
+		[profileInfo addObject:UPDATE_TYPE_DICT];
 		
 		[defaults setBool:YES forKey:@"AIHasSentSparkleProfileInfo"];
 		
@@ -1181,7 +1189,7 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 		[profileInfo addObject:entry];
 		return profileInfo;
 	}
-	return [NSMutableArray array];
+	return [NSMutableArray arrayWithObject:UPDATE_TYPE_DICT];
 }
 
 - (NSComparisonResult) compareVersion:(NSString *)newVersion toVersion:(NSString *)currentVersion
