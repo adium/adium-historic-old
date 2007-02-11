@@ -114,6 +114,7 @@ NSArray *AISplitVersionString(NSString *version)
     return parts;
 }
 
+//newVersion, currentVersion
 NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versionB)
 {
 	NSArray *partsA = AISplitVersionString(versionA);
@@ -144,20 +145,19 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
             } else if (typeA == kStringType) {
                 NSComparisonResult result = [partA compare:partB];
                 if (result != NSOrderedSame) {
-					if ([partA isEqualToString:@"rc"])
-						return NSOrderedAscending;
 					if ([partB isEqualToString:@"rc"])
 						return NSOrderedDescending;
-					if ([partA isEqualToString:@"b"])
+					if ([partA isEqualToString:@"rc"])
 						return NSOrderedAscending;
 					if ([partB isEqualToString:@"b"])
 						return NSOrderedDescending;
-					if ([partA isEqualToString:@"a"])
+					if ([partA isEqualToString:@"b"])
 						return NSOrderedAscending;
 					if ([partB isEqualToString:@"a"])
 						return NSOrderedDescending;
+					if ([partA isEqualToString:@"a"])
+						return NSOrderedAscending;
                 }
-				return result;
             }
         } else {
             // Not the same type? Now we have to do some validity checking
