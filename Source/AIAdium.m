@@ -67,6 +67,149 @@
 
 static NSString	*prefsCategory;
 
+// The version comparison code here is courtesy of Kevin Ballard, adapted from MacPAD. Thanks, Kevin!
+
+int AIGetCharType(NSString *character)
+{
+    if ([character isEqualToString:@"."]) {
+        return kPeriodType;
+    } else if ([character isEqualToString:@"0"] || [character intValue] != 0) {
+        return kNumberType;
+    } else {
+        return kStringType;
+    }	
+}
+
+NSArray *AISplitVersionString(NSString *version)
+{
+    NSString *character;
+    NSMutableString *s;
+    int i, n, oldType, newType;
+    NSMutableArray *parts = [NSMutableArray array];
+    if ([version length] == 0) {
+        // Nothing to do here
+        return parts;
+    }
+    s = [[[version substringToIndex:1] mutableCopy] autorelease];
+    oldType = AIGetCharType(s);
+    n = [version length] - 1;
+    for (i = 1; i <= n; ++i) {
+        character = [version substringWithRange:NSMakeRange(i, 1)];
+        newType = AIGetCharType(character);
+        if (oldType != newType || oldType == kPeriodType) {
+            // We've reached a new segment
+			NSString *aPart = [[NSString alloc] initWithString:s];
+            [parts addObject:aPart];
+			[aPart release];
+            [s setString:character];
+        } else {
+            // Add character to string and continue
+            [s appendString:character];
+        }
+        oldType = newType;
+    }
+    
+    // Add the last part onto the array
+    [parts addObject:[NSString stringWithString:s]];
+    return parts;
+}
+
+NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versionB)
+{
+	NSArray *partsA = AISplitVersionString(versionA);
+    NSArray *partsB = AISplitVersionString(versionB);
+    
+    NSString *partA, *partB;
+    int i, n, typeA, typeB, intA, intB;
+    
+    n = MIN([partsA count], [partsB count]);
+    for (i = 0; i < n; ++i) {
+        partA = [partsA objectAtIndex:i];
+        partB = [partsB objectAtIndex:i];
+        
+        typeA = AIGetCharType(partA);
+        typeB = AIGetCharType(partB);
+        
+        // Compare types
+        if (typeA == typeB) {
+            // Same type; we can compare
+            if (typeA == kNumberType) {
+                intA = [partA intValue];
+                intB = [partB intValue];
+                if (intA > intB) {
+                    return NSOrderedAscending;
+                } else if (intA < intB) {
+                    return NSOrderedDescending;
+                }
+            } else if (typeA == kStringType) {
+                NSComparisonResult result = [partA compare:partB];
+                if (result != NSOrderedSame) {
+					if ([partA isEqualToString:@"rc"])
+						return NSOrderedAscending;
+					if ([partB isEqualToString:@"rc"])
+						return NSOrderedDescending;
+					if ([partA isEqualToString:@"b"])
+						return NSOrderedAscending;
+					if ([partB isEqualToString:@"b"])
+						return NSOrderedDescending;
+					if ([partA isEqualToString:@"a"])
+						return NSOrderedAscending;
+					if ([partB isEqualToString:@"a"])
+						return NSOrderedDescending;
+                }
+				return result;
+            }
+        } else {
+            // Not the same type? Now we have to do some validity checking
+            if (typeA != kStringType && typeB == kStringType) {
+                // typeA wins
+                return NSOrderedAscending;
+            } else if (typeA == kStringType && typeB != kStringType) {
+                // typeB wins
+                return NSOrderedDescending;
+            } else {
+                // One is a number and the other is a period. The period is invalid
+                if (typeA == kNumberType) {
+                    return NSOrderedAscending;
+                } else {
+                    return NSOrderedDescending;
+                }
+            }
+        }
+    }
+    // The versions are equal up to the point where they both still have parts
+    // Lets check to see if one is larger than the other
+    if ([partsA count] != [partsB count]) {
+        // Yep. Lets get the next part of the larger
+        // n holds the value we want
+        NSString *missingPart;
+        int missingType, shorterResult, largerResult;
+        
+        if ([partsA count] > [partsB count]) {
+            missingPart = [partsA objectAtIndex:n];
+            shorterResult = NSOrderedDescending;
+            largerResult = NSOrderedAscending;
+        } else {
+            missingPart = [partsB objectAtIndex:n];
+            shorterResult = NSOrderedAscending;
+            largerResult = NSOrderedDescending;
+        }
+        
+        missingType = AIGetCharType(missingPart);
+        // Check the type
+        if (missingType == kStringType) {
+            // It's a string. Shorter version wins
+            return shorterResult;
+        } else {
+            // It's a number/period. Larger version wins
+            return largerResult;
+        }
+    }
+    
+    // The 2 strings are identical
+    return NSOrderedSame;
+}
+
 @interface AIAdium (PRIVATE)
 - (void)configureCrashReporter;
 - (void)completeLogin;
@@ -987,96 +1130,73 @@ static NSString	*prefsCategory;
 
 #pragma mark Sparkle Delegate Methods
 
+#if BETA_RELEASE == FALSE
+#define UPDATE_TYPE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"release", @"value", @"Release Versions Only", @"visibleValue", nil]
+#else
+#define UPDATE_TYPE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"beta", @"value", @"Beta or Release Versions", @"visibleValue", nil]
+#endif
+
 /* This method gives the delegate the opportunity to customize the information that will
- * be included with update checks.  Add or remove items from the dictionary as desired.
- * Each entry in profileInfo is an NSDictionary with the following keys:
- *		key: 		The key to be used  when reporting data to the server
- *		visibleKey:	Alternate version of key to be used in UI displays of profile information
- *		value:		Value to be used when reporting data to the server
- *		visibleValue:	Alternate version of value to be used in UI displays of profile information.
- */
+* be included with update checks.  Add or remove items from the dictionary as desired.
+* Each entry in profileInfo is an NSDictionary with the following keys:
+*		key: 		The key to be used  when reporting data to the server
+*		visibleKey:	Alternate version of key to be used in UI displays of profile information
+*		value:		Value to be used when reporting data to the server
+*		visibleValue:	Alternate version of value to be used in UI displays of profile information.
+*/
 - (NSMutableArray *)updaterCustomizeProfileInfo:(NSMutableArray *)profileInfo
 {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-	if (![[defaults objectForKey:@"SUSendProfileInfoKey"] boolValue])
-		return [NSArray array]; 
+	if (![[defaults objectForKey:SUSendProfileInfoKey] boolValue])
+		return [NSArray arrayWithObject:UPDATE_TYPE_DICT]; 
 	
-	NSCalendarDate *lastCheckDate = [NSCalendarDate dateWithString:[defaults stringForKey:@"AILastSubmittedProfileDate"]];
-	if (lastCheckDate && [lastCheckDate php4CompatibleIsFromSameWeekAsDate:[NSCalendarDate date]]) {
-		return [NSArray array];
-	}	
+	int now = [[NSCalendarDate date] dayOfCommonEra];
 	
-	[defaults setObject:[[NSCalendarDate date] description] forKey:@"AILastSubmittedProfileDate"];
-	
-	NSString *value = [[NSNumber numberWithBool:![[defaults objectForKey:@"AIHasSentProfileInfo"] boolValue]] stringValue];
-
-	NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
-		@"FirstSubmission", @"key", 
-		@"First Time Submitting Profile Information", @"visibleKey",
-		@"yes", @"value",
-		@"yes", @"visibleValue",
-		nil];
-	
-	[profileInfo addObject:entry];
-	
-	[defaults setObject:[NSNumber numberWithBool:YES] forKey:@"AIHasSentProfileInfo"];
-	
-	/*************** Include info about what IM services are used ************/
-	NSMutableString *accountInfo = [NSMutableString string];
-	NSCountedSet *condensedAccountInfo = [NSCountedSet set];
-	NSEnumerator *accountEnu = [[[self accountController] accounts] objectEnumerator];
-	AIAccount *account = nil;
-	while ((account = [accountEnu nextObject])) {
-		NSString *serviceID = [account serviceID];
-		[accountInfo appendFormat:@"%@, ", serviceID];
-		if([serviceID isEqualToString:@"Yahoo! Japan"]) serviceID = @"YJ";
-		[condensedAccountInfo addObject:[NSString stringWithFormat:@"%@", [serviceID substringToIndex:2]]]; 
-	}
-	
-	NSMutableString *accountInfoString = [NSMutableString string];
-	NSEnumerator *infoEnu = [[[condensedAccountInfo allObjects] sortedArrayUsingSelector:@selector(compare:)] objectEnumerator];
-	while ((value = [infoEnu nextObject]))
-		[accountInfoString appendFormat:@"%@%d", value, [condensedAccountInfo countForObject:value]];
-	
-	entry = [NSDictionary dictionaryWithObjectsAndKeys:
-								@"IMServices", @"key", 
-								@"IM Services Used", @"visibleKey",
-								accountInfoString, @"value",
-								accountInfo, @"visibleValue",
-								nil];
-	[profileInfo addObject:entry];
-	
-	/***************** JVM Version ****************/
-	
-	//This is ridiculous, but we can't load java inside adium without bloating memory usage for non-AIM users unnecessarily
-	/*NSTask *java = [[[NSTask alloc] init] autorelease];
-	[java setLaunchPath:@"/usr/bin/java"];
-	[java setArguments:[NSArray arrayWithObject:@"-version"]];
-	NSPipe *readPipe = [NSPipe pipe];
-	[java setStandardOutput:readPipe];
-	NSFileHandle *readHandle = [readPipe fileHandleForReading];
-	[java launch];
-	[java waitUntilExit];
-	NSData *d = [readHandle readDataToEndOfFile];
-	NSMutableString *output = [[NSMutableString alloc] initWithData:d
-														   encoding:NSUTF8StringEncoding];
-	[output deleteCharactersInRange:NSMakeRange(0, [output rangeOfString:@"\""].location)];
-	unsigned loc = [output rangeOfString:@"\""].location;
-	[output deleteCharactersInRange:NSMakeRange(loc, [output length] - loc)];*/
-	
-	NSString	*javaVersion = [NSClassFromString(@"java.lang.System") getProperty:@"java.version"];
-	if (javaVersion) {
-		entry = [NSDictionary dictionaryWithObjectsAndKeys:
-			@"JVMVersion", @"key", 
-			@"Java Version", @"visibleKey",
-			javaVersion, @"value",
-			javaVersion, @"visibleValue",
+	if (abs([defaults integerForKey:@"AILastSubmittedProfileDate2"] - now) >= 7) {
+		[defaults setInteger:now forKey:@"AILastSubmittedProfileDate2"];
+		
+		NSString *value = ([defaults boolForKey:@"AIHasSentSparkleProfileInfo"]) ? @"no" : @"yes";
+		
+		NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
+			@"FirstSubmission", @"key", 
+			@"First Time Submitting Profile Information", @"visibleKey",
+			value, @"value",
+			value, @"visibleValue",
 			nil];
 		
 		[profileInfo addObject:entry];
+		
+		[profileInfo addObject:UPDATE_TYPE_DICT];
+		
+		[defaults setBool:YES forKey:@"AIHasSentSparkleProfileInfo"];
+		
+		/*************** Include info about what IM services are used ************/
+		NSMutableString *accountInfo = [NSMutableString string];
+		NSCountedSet *condensedAccountInfo = [NSCountedSet set];
+		NSEnumerator *accountEnu = [[[self accountController] accounts] objectEnumerator];
+		AIAccount *account = nil;
+		while ((account = [accountEnu nextObject])) {
+			NSString *serviceID = [account serviceID];
+			[accountInfo appendFormat:@"%@, ", serviceID];
+			if([serviceID isEqualToString:@"Yahoo! Japan"]) serviceID = @"YJ";
+			[condensedAccountInfo addObject:[NSString stringWithFormat:@"%@", [serviceID substringToIndex:2]]]; 
+		}
+		
+		NSMutableString *accountInfoString = [NSMutableString string];
+		NSEnumerator *infoEnu = [[[condensedAccountInfo allObjects] sortedArrayUsingSelector:@selector(compare:)] objectEnumerator];
+		while ((value = [infoEnu nextObject]))
+			[accountInfoString appendFormat:@"%@%d", value, [condensedAccountInfo countForObject:value]];
+		
+		entry = [NSDictionary dictionaryWithObjectsAndKeys:
+			@"IMServices", @"key", 
+			@"IM Services Used", @"visibleKey",
+			accountInfoString, @"value",
+			accountInfo, @"visibleValue",
+			nil];
+		[profileInfo addObject:entry];
+		return profileInfo;
 	}
-	
-	return profileInfo;
+	return [NSMutableArray arrayWithObject:UPDATE_TYPE_DICT];
 }
 
 - (NSComparisonResult) compareVersion:(NSString *)newVersion toVersion:(NSString *)currentVersion
@@ -1085,7 +1205,7 @@ static NSString	*prefsCategory;
 	//Careful! a15 is fine, but A15 is not, because it would hit the A in Adium.
 	NSCharacterSet *guardCharacters = [NSCharacterSet characterSetWithCharactersInString:@"abBrcRC"];
 	if([currentVersion rangeOfCharacterFromSet:guardCharacters].location != NSNotFound || !([newVersion rangeOfCharacterFromSet:guardCharacters].location != NSNotFound))
-		return SUStandardVersionComparison(newVersion, currentVersion);
+		return AICustomVersionComparison(newVersion, currentVersion); //handles rc > b > a properly
 	else 
 		return NSOrderedSame;
 }
