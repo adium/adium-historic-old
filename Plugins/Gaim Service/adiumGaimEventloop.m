@@ -18,7 +18,7 @@
 #import <AIUtilities/AIApplicationAdditions.h>
 #include <poll.h>
 
-#define GAIM_SOCKET_DEBUG 1
+//#define GAIM_SOCKET_DEBUG
 
 static guint				sourceId = 0;		//The next source key; continuously incrementing
 static NSMutableDictionary	*sourceInfoDict = nil;
