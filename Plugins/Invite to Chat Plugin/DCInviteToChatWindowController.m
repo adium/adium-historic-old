@@ -75,6 +75,8 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 	[contact release]; contact = nil;
 	[service release]; service = nil;
 	[chat release]; chat = nil;
+	[contactMenu release];
+
 	[super dealloc];
 }
 
@@ -109,8 +111,8 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 	[self window];
 		
 	//Configure the contact menu (primarily for handling metacontacts)
-	//If the contact is not online, we should include offline so it will be shown; if it is, we don't need 'em
-    [menu_contacts setMenu:[AIContactMenu contactMenuWithDelegate:self forContactsInObject:contact]];
+	[contactMenu release];
+    contactMenu = [[AIContactMenu contactMenuWithDelegate:self forContactsInObject:contact] retain];
 
 	if ([contact isKindOfClass:[AIMetaContact class]]) {
 		[menu_contacts selectItemWithRepresentedObject:[(AIMetaContact *)contact preferredContactWithService:service]];
