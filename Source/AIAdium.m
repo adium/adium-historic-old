@@ -222,10 +222,6 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 - (void)deleteTemporaryFiles;
 @end
 
-@interface NSObject (JavaObject)
-+ (NSString *)getProperty:(NSString *)propertyName;
-@end
-
 @implementation AIAdium
 
 //Init
