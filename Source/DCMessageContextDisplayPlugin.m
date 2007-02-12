@@ -360,7 +360,7 @@ static int linesLeftToFind = 0;
 			//Create the context object
 			//http://www.visualdistortion.org/crash/view.jsp?crash=211821
 			if (timeString) {
-				NSLog(@"Message Context Display: Parsing message time attribute %@", timeString);
+				AILog(@"Message Context Display: Parsing message time attribute %@", timeString);
 				
 				NSCalendarDate *time = [NSCalendarDate calendarDateWithString:timeString];
 
@@ -387,7 +387,7 @@ static int linesLeftToFind = 0;
 				//Add it to the array (in front, since we're working backwards, and we want the array in forward order)
 				[foundMessages insertObject:message atIndex:0];
 			} else {
-				NSLog(@"Null message context display time for %@",element);
+				AILog(@"Null message context display time for %@",element);
 			}
 		}
 
