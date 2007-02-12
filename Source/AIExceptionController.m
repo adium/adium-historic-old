@@ -80,7 +80,6 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			@"NSObjectInaccessibleException", //We don't use DO, but spell checking does; AppleScript execution requires multiple run loops, and the HIToolbox can get confused and try to spellcheck in the applescript thread. Silly Apple.
 			@"NSCharacterConversionException", //We can't help it if a character can't be converted...
 			@"NSRTFException", //Better to ignore than to crash
-            @"org/jivesoftware/smack/XMPPException", //XMPPExceptions aren't that critical
 			nil];
 	}
 }

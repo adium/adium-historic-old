@@ -22,7 +22,6 @@
 #import "AITextAttributes.h"
 #import "AIApplicationAdditions.h"
 #import "AIStringUtilities.h"
-#import "AIExceptionHandlingUtilities.h"
 
 NSString *AIFontFamilyAttributeName = @"AIFontFamily";
 NSString *AIFontSizeAttributeName   = @"AIFontSize";
@@ -466,7 +465,8 @@ NSString *AIFontStyleAttributeName  = @"AIFontStyle";
 	 *		-[NSPlaceholderDictionary initWithObjects_ex:forKeys:count:]: attempt to insert nil value
 	 * if we feed it invalid data.
 	 */
-	AI_DURING
+	@try
+	{
 		if (inData && [inData length]) {
 			//If inData (which must bt non-nil) is not valid archived data, this returns nil.
 			NSUnarchiver		*unarchiver = [[NSUnarchiver alloc] initForReadingWithData:inData];
@@ -490,8 +490,8 @@ NSString *AIFontStyleAttributeName  = @"AIFontStyle";
 			
 			[unarchiver release];
 		}
-	AI_HANDLER
-	AI_ENDHANDLER
+	}
+	@catch(id exc) {	}
 			
 	return returnValue;
 }

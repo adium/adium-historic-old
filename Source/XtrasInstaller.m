@@ -157,16 +157,15 @@
 		[uncompress setArguments:[NSArray arrayWithObjects:@"-df" , [dest lastPathComponent] ,  nil]];
 		[uncompress setCurrentDirectoryPath:[dest stringByDeletingLastPathComponent]];
 		
-		AI_DURING
+		@try
 		{
 			[uncompress launch];
 			[uncompress waitUntilExit];
 		}
-		AI_HANDLER
+		@catch(id exc)
 		{
 			decompressionSuccess = NO;	
 		}
-		AI_ENDHANDLER
 			
 		[uncompress release];
 		
@@ -183,16 +182,15 @@
 			[untar setArguments:[NSArray arrayWithObjects:@"-xvf", [dest lastPathComponent], nil]];
 			[untar setCurrentDirectoryPath:[dest stringByDeletingLastPathComponent]];
 			
-			AI_DURING
+			@try
 			{
 				[untar launch];
 				[untar waitUntilExit];
 			}
-			AI_HANDLER
+			@catch(id exc)
 			{
 				decompressionSuccess = NO;
 			}
-			AI_ENDHANDLER
 			[untar release];
 		}
 		
@@ -211,16 +209,15 @@
 
 		[unzip setCurrentDirectoryPath:[dest stringByDeletingLastPathComponent]];
 
-		AI_DURING
+		@try
 		{
 			[unzip launch];
 			[unzip waitUntilExit];
 		}
-		AI_HANDLER
+		@catch(id exc)
 		{
 			decompressionSuccess = NO;			
 		}
-		AI_ENDHANDLER
 		[unzip release];
 
 	} else {

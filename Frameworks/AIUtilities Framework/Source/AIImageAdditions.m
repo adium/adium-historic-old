@@ -7,7 +7,6 @@
 
 #import "AIImageAdditions.h"
 
-#import "AIExceptionHandlingUtilities.h"
 #import "AIBezierPathAdditions.h"
 
 @interface NSImage (AIImageAdditions_PRIVATE)
@@ -123,12 +122,13 @@
 		
 		if (size.width > 0 && size.height > 0) {
 			
-			AI_DURING
+			@try {
 				GIFRepresentation = [bm representationUsingType:NSGIFFileType
 													 properties:properties];
-			AI_HANDLER
+			}
+			@catch(id exc) {
 				GIFRepresentation = nil;	// must have failed
-			AI_ENDHANDLER
+			}
 		}
 	}
 
@@ -488,7 +488,8 @@
 	[self prepareCache:tiffCache];	
 	
 	// if something should happen, AI_DURING/AI_HANDLER protects us!
-	AI_DURING
+	@try
+	{
 		[tiffCache lockFocusOnRepresentation:rep];
 		[self compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
 		
@@ -498,9 +499,11 @@
 			bm = [NSBitmapImageRep imageRepWithData: [tiffCache TIFFRepresentation]];
 
 		[tiffCache unlockFocus];
-	AI_HANDLER
+	}
+	@catch(id exc)
+	{
 		bm = nil;
-	AI_ENDHANDLER
+	}
 
 	if (bm == nil)
 		NSLog(@"in getBitMap : no NSBitmapImageRep of the right depth found");
