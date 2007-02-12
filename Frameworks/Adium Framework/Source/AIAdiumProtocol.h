@@ -15,7 +15,7 @@
 		  AIPreferenceController, AIMenuController, AIApplescriptabilityController, AIStatusController,
 		  AIContentController, AIToolbarController, AISoundController, AIDockController,
 		  AIFileTransferController, AILoginController, AIInterfaceController, AIContactController,
-		  AIEmoticonController, AIVideoConfController;
+		  AIEmoticonController;
 
 @protocol AIAdium <NSObject>
 - (NSObject <AIAccountController> *)accountController;
@@ -33,7 +33,6 @@
 - (NSObject <AIToolbarController> *)toolbarController;
 - (NSObject <AIContactAlertsController> *)contactAlertsController;
 - (NSObject <AIFileTransferController> *)fileTransferController;
-- (NSObject <AIVideoConfController> *)vcController;
 
 - (NSObject <AIDebugController> *)debugController;
 - (NSObject <AIApplescriptabilityController> *)applescriptabilityController;

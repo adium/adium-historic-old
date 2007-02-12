@@ -33,8 +33,6 @@
 #import "AISoundController.h"
 #import "AIStatusController.h"
 #import "AIToolbarController.h"
-#import "AIJavaController.h"
-#import "AIVideoConfController.h"
 #import "ESApplescriptabilityController.h"
 #import "ESContactAlertsController.h"
 #import "ESDebugController.h"
@@ -289,9 +287,6 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 - (NSObject <AIStatusController> *)statusController{
     return statusController;
 }
-- (NSObject <AIVideoConfController> *)vcController{
-    return vcController;
-}
 
 //Loaders --------------------------------------------------------------------------------------------------------
 #pragma mark Loaders
@@ -399,7 +394,6 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 	fileTransferController = [[ESFileTransferController alloc] init];
 	applescriptabilityController = [[ESApplescriptabilityController alloc] init];
 	statusController = [[AIStatusController alloc] init];
-    vcController = [[AIVideoConfController alloc] init];
 
 	//Finish setting up the preference controller before the components and plugins load so they can read prefs 
 	[preferenceController controllerDidLoad];
@@ -500,7 +494,6 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
     [applescriptabilityController controllerWillClose];
 	[debugController controllerWillClose];
 	[toolbarController controllerWillClose];
-    [vcController controllerWillClose];
     [preferenceController controllerWillClose];			//** Last since other controllers may want to write preferences as they close
 	
 	[self deleteTemporaryFiles];

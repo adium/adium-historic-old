@@ -21,7 +21,7 @@
 			AIPreferenceController, AIMenuController, AIApplescriptabilityController, AIStatusController,
 			AIContentController, AIToolbarController, AISoundController, AIDockController,
 			AIFileTransferController, AILoginController, AIInterfaceController, AIContactController,
-			AIEmoticonController, AIVideoConfController;
+			AIEmoticonController;
 
 @interface AIAdium : NSObject <AIAdium> {
     IBOutlet	NSObject <AIMenuController>			*menuController;
@@ -41,7 +41,6 @@
 	NSObject <AIToolbarController>		*toolbarController;
 	NSObject <AIContactAlertsController>*contactAlertsController;
 	NSObject <AIFileTransferController>	*fileTransferController;
-	NSObject <AIVideoConfController>	*vcController;
 
 	NSObject <AIApplescriptabilityController>	*applescriptabilityController;
 	NSObject <AIDebugController>				*debugController;
