@@ -181,7 +181,6 @@
 		34D835A707CBEBEF006466F2 /* PopUpRollover_Middle.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8359B07CBEBEF006466F2 /* PopUpRollover_Middle.png */; };
 		34D835A807CBEBEF006466F2 /* PopUpRollover_Caps.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8359C07CBEBEF006466F2 /* PopUpRollover_Caps.png */; };
 		34D835A907CBEBEF006466F2 /* PopUpArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8359D07CBEBEF006466F2 /* PopUpArrow.png */; };
-		34DCE28A08A68E180073319F /* AIExceptionHandlingUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 34DCE28908A68E180073319F /* AIExceptionHandlingUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34E4692A075681AE004C3A42 /* AIVariableHeightOutlineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E46928075681AE004C3A42 /* AIVariableHeightOutlineView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34E4692B075681AE004C3A42 /* AIVariableHeightOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E46929075681AE004C3A42 /* AIVariableHeightOutlineView.m */; };
 		34F2E92D07C2D1E7007EAAAB /* AIFlexibleLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F2E92B07C2D1E7007EAAAB /* AIFlexibleLink.m */; };
@@ -462,7 +461,6 @@
 		34D8359B07CBEBEF006466F2 /* PopUpRollover_Middle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PopUpRollover_Middle.png; path = Resources/PopUpRollover_Middle.png; sourceTree = "<group>"; };
 		34D8359C07CBEBEF006466F2 /* PopUpRollover_Caps.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PopUpRollover_Caps.png; path = Resources/PopUpRollover_Caps.png; sourceTree = "<group>"; };
 		34D8359D07CBEBEF006466F2 /* PopUpArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PopUpArrow.png; path = Resources/PopUpArrow.png; sourceTree = "<group>"; };
-		34DCE28908A68E180073319F /* AIExceptionHandlingUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIExceptionHandlingUtilities.h; path = Source/AIExceptionHandlingUtilities.h; sourceTree = "<group>"; };
 		34E46928075681AE004C3A42 /* AIVariableHeightOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIVariableHeightOutlineView.h; path = Source/AIVariableHeightOutlineView.h; sourceTree = "<group>"; };
 		34E46929075681AE004C3A42 /* AIVariableHeightOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIVariableHeightOutlineView.m; path = Source/AIVariableHeightOutlineView.m; sourceTree = "<group>"; };
 		34F2E92B07C2D1E7007EAAAB /* AIFlexibleLink.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIFlexibleLink.m; path = Source/AIFlexibleLink.m; sourceTree = "<group>"; };
@@ -658,7 +656,6 @@
 			children = (
 				34486BC906D1DF0400DA778C /* AIUtilities.h */,
 				4B5CBF7607BC1887007E4075 /* AIStringUtilities.h */,
-				34DCE28908A68E180073319F /* AIExceptionHandlingUtilities.h */,
 				076CAD720785B64600250504 /* Functions */,
 				4BD1EFBC06D2661200B3975E /* Fun New Classes */,
 				4BD1EFA506D264AC00B3975E /* Fun New Controls */,
@@ -1521,7 +1518,6 @@
 				34057BD6087DF73F00664D64 /* AIFlexibleToolbarItem.h in Headers */,
 				34057F28087E032400664D64 /* AIFontManagerAdditions.h in Headers */,
 				EEB11D590887E5B200D0C340 /* OWAddressBookAdditions.h in Headers */,
-				34DCE28A08A68E180073319F /* AIExceptionHandlingUtilities.h in Headers */,
 				013F80C408E685B8000F31B2 /* AITextViewAdditions.h in Headers */,
 				073C0D8D0939023200D6AEEA /* AIPlasticButtonCell.h in Headers */,
 				341BCFF809615D8600CF83F5 /* AITextAttachmentAdditions.h in Headers */,

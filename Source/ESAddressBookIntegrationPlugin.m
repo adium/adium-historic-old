@@ -982,7 +982,8 @@ NSString* serviceIDForJabberUID(NSString *UID);
  */
 - (void)updateSelfIncludingIcon:(BOOL)includeIcon
 {
-	AI_DURING 
+	@try
+	{
         //Begin loading image data for the "me" address book entry, if one exists
         ABPerson *me;
         if ((me = [sharedAddressBook me])) {
@@ -1021,9 +1022,11 @@ NSString* serviceIDForJabberUID(NSString *UID);
 													  forGroup:GROUP_ACCOUNT_STATUS];
 			}
         }
-	AI_HANDLER
-		NSLog(@"ABIntegration: Caught %@: %@", [localException name], [localException reason]);
-	AI_ENDHANDLER
+	}
+	@catch(id exc)
+	{
+		NSLog(@"ABIntegration: Caught %@", exc);
+	}
 }
 
 #pragma mark Address book caching

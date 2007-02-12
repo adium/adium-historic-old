@@ -305,18 +305,20 @@ static ESFileTransferPreferences *preferences;
 				folderName, //store the folder
 				nil];
 			
-			zipTask = [[NSTask alloc] init];
-			[zipTask setLaunchPath:launchPath];
-			[zipTask setArguments:arguments];
-			[zipTask setCurrentDirectoryPath:[inPath stringByDeletingLastPathComponent]];
+			@try
+			{
+				zipTask = [[NSTask alloc] init];
+				[zipTask setLaunchPath:launchPath];
+				[zipTask setArguments:arguments];
+				[zipTask setCurrentDirectoryPath:[inPath stringByDeletingLastPathComponent]];
+			} 
+			@catch (id exc) {}
 			
-			AI_DURING
-				[zipTask launch];
-				[zipTask waitUntilExit];
-				success = ([zipTask terminationStatus] == 0);
-			AI_HANDLER
-				/* No exception handler needed */
-			AI_ENDHANDLER
+			
+			[zipTask launch];
+			[zipTask waitUntilExit];
+			success = ([zipTask terminationStatus] == 0);
+
 			[zipTask release];
 				
 			if (!success) pathToArchive = nil;

@@ -68,51 +68,52 @@
  */
 - (void)chatBecameActive:(NSNotification *)notification
 {
-	AI_DURING
-	AIChat	 *newChat = [notification object];
-	AIChat	 *previousChat = [[notification userInfo] objectForKey:@"PreviouslyActiveChat"];
+	@try
+	{
+		AIChat	 *newChat = [notification object];
+		AIChat	 *previousChat = [[notification userInfo] objectForKey:@"PreviouslyActiveChat"];
 
-	if (previousChat) {
-		NSString *language = [[NSSpellChecker sharedSpellChecker] language];
-		NSString *chatID = [previousChat uniqueChatID];
+		if (previousChat) {
+			NSString *language = [[NSSpellChecker sharedSpellChecker] language];
+			NSString *chatID = [previousChat uniqueChatID];
 
-		if (language &&
-			![[languageDict objectForKey:chatID] isEqualToString:language]) {
-			//If this chat is not known to be in the current language, store its setting in our languageDict
-			[languageDict setObject:language
-							 forKey:chatID];
-		}
-	}
-	
-	if (newChat) {
-		NSString *chatID = [newChat uniqueChatID];
-		NSString *newChatLanguage = [languageDict objectForKey:chatID];
-		
-		//If we don't have a previously noted language, try to load one from a preference
-		if (!newChatLanguage) {
-			AIListObject *listObject = [newChat listObject];
-
-			if (listObject) {
-				//Load the preference if possible
-				newChatLanguage = [listObject preferenceForKey:KEY_LAST_USED_SPELLING group:GROUP_LAST_USED_SPELLING];
+			if (language &&
+				![[languageDict objectForKey:chatID] isEqualToString:language]) {
+				//If this chat is not known to be in the current language, store its setting in our languageDict
+				[languageDict setObject:language
+								 forKey:chatID];
 			}
-
+		}
+		
+		if (newChat) {
+			NSString *chatID = [newChat uniqueChatID];
+			NSString *newChatLanguage = [languageDict objectForKey:chatID];
+			
+			//If we don't have a previously noted language, try to load one from a preference
 			if (!newChatLanguage) {
-				//If no preference, set to @"" so we won't keep trying to load the preference
-				newChatLanguage = @"";
-			}
+				AIListObject *listObject = [newChat listObject];
 
-			[languageDict setObject:newChatLanguage
-							 forKey:chatID];
-		}
-		
-		if ([newChatLanguage length]) {
-			//Only set the language if we have one specified
-			[[NSSpellChecker sharedSpellChecker] setLanguage:newChatLanguage];
+				if (listObject) {
+					//Load the preference if possible
+					newChatLanguage = [listObject preferenceForKey:KEY_LAST_USED_SPELLING group:GROUP_LAST_USED_SPELLING];
+				}
+
+				if (!newChatLanguage) {
+					//If no preference, set to @"" so we won't keep trying to load the preference
+					newChatLanguage = @"";
+				}
+
+				[languageDict setObject:newChatLanguage
+								 forKey:chatID];
+			}
+			
+			if ([newChatLanguage length]) {
+				//Only set the language if we have one specified
+				[[NSSpellChecker sharedSpellChecker] setLanguage:newChatLanguage];
+			}
 		}
 	}
-	AI_HANDLER
-	AI_ENDHANDLER
+	@catch(id exc) {}
 }
 
 /*!
