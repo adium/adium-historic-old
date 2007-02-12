@@ -904,15 +904,12 @@
 		377ED2670AED59E600CB7BDF /* TabsAdvancedPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 377ED2640AED59E600CB7BDF /* TabsAdvancedPreferences.m */; };
 		377ED2680AED59E600CB7BDF /* TabsAdvanced.nib in Resources */ = {isa = PBXBuildFile; fileRef = 377ED2650AED59E600CB7BDF /* TabsAdvanced.nib */; };
 		38399DCB0A95C9CF006C8EB1 /* AIVideoConfControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 383984700A94F780006C8EB1 /* AIVideoConfControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		387226C90A8B7C84002CC4F4 /* AIVideoConfController.m in Sources */ = {isa = PBXBuildFile; fileRef = 387226C50A8B7C84002CC4F4 /* AIVideoConfController.m */; };
 		3872285E0A8BFCA4002CC4F4 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D836F307CBF960006466F2 /* QuickTime.framework */; };
-		38722C410A8CEE75002CC4F4 /* QuickTime.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 38D8FAE10A8A4F350078E442 /* QuickTime.AdiumPlugin */; };
 		38722C790A8CF682002CC4F4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		38722DC90A9093CD002CC4F4 /* AIVideoConf.h in Headers */ = {isa = PBXBuildFile; fileRef = 38722C8C0A8CFFA5002CC4F4 /* AIVideoConf.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		38722DCA0A9093CD002CC4F4 /* AIVideoConf.m in Sources */ = {isa = PBXBuildFile; fileRef = 38722C8D0A8CFFA5002CC4F4 /* AIVideoConf.m */; };
 		38725B580A912770002CC4F4 /* QTRTPConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 38725B560A91276F002CC4F4 /* QTRTPConnection.m */; };
 		38725B5C0A912800002CC4F4 /* QTConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 38725B5A0A912800002CC4F4 /* QTConnection.m */; };
-		38BADCC60A921B1F00D41C08 /* pref-quicktime.png in Resources */ = {isa = PBXBuildFile; fileRef = 38BADCBE0A921ADB00D41C08 /* pref-quicktime.png */; };
 		38D8FAD70A8A4F350078E442 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		38D8FAD80A8A4F350078E442 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		38D8FAF40A8A4FCC0078E442 /* QTPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 38D8FA2A0A8A46600078E442 /* QTPlugin.m */; };
@@ -1091,8 +1088,6 @@
 		7E824CE306387FAF00813072 /* SHLinkEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CD406387FAF00813072 /* SHLinkEditorWindowController.m */; };
 		7E824CEB06387FAF00813072 /* SHLinkManagementPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */; };
 		8163F99C0B318824002005EE /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
-		81F9D1E80A7F832A004A35BD /* JavaVM.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 115E0E8D0952514A003218FE /* JavaVM.framework */; };
-		81F9D1EA0A7F8396004A35BD /* JavaCocoaAdapter.java in Sources */ = {isa = PBXBuildFile; fileRef = 81F9D1E90A7F8395004A35BD /* JavaCocoaAdapter.java */; };
 		81FB2B1A0A95DFB20095E77A /* AIJavaControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 8191AB1A0A94EAEE00A5A404 /* AIJavaControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E124DEC07D34C7300AA91C5 /* CBGrowlAlertDetailPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E124DE807D34C7300AA91C5 /* CBGrowlAlertDetailPane.m */; };
 		9E124DEE07D34C7400AA91C5 /* NEHGrowlPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E124DEA07D34C7300AA91C5 /* NEHGrowlPlugin.m */; };
@@ -1297,13 +1292,6 @@
 			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
 			remoteInfo = AIUtilities;
 		};
-		38722C2C0A8CEC51002CC4F4 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 38D8FA9A0A8A4F350078E442;
-			remoteInfo = "QuickTime Plugin";
-		};
 		38722DE90A909509002CC4F4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -1430,7 +1418,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				38722C410A8CEE75002CC4F4 /* QuickTime.AdiumPlugin in CopyFiles */,
 				4B7F27C705440DE900CDFC90 /* Gaim.AdiumPlugin in CopyFiles */,
 				344C0F0D06B709AC00DA7200 /* Bonjour.AdiumPlugin in CopyFiles */,
 				340B9BD4069C735900FE1E57 /* WebKit Message View.AdiumPlugin in CopyFiles */,
@@ -1522,7 +1509,6 @@
 		110763F308676CC9005987A5 /* RAFBlockEditorWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorWindowController.h; path = Source/RAFBlockEditorWindowController.h; sourceTree = "<group>"; };
 		110763F408676CC9005987A5 /* RAFBlockEditorWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFBlockEditorWindowController.m; path = Source/RAFBlockEditorWindowController.m; sourceTree = "<group>"; };
 		110763F908676D04005987A5 /* BlockEditorWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = BlockEditorWindow.nib; path = Resources/BlockEditorWindow.nib; sourceTree = "<group>"; };
-		115E0E8D0952514A003218FE /* JavaVM.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaVM.framework; path = /System/Library/Frameworks/JavaVM.framework; sourceTree = "<absolute>"; };
 		11C157D804A88E04008E0C76 /* AIEmoticonController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonController.h; path = Source/AIEmoticonController.h; sourceTree = "<group>"; };
 		11C157D904A88E04008E0C76 /* AIEmoticonController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonController.m; path = Source/AIEmoticonController.m; sourceTree = "<group>"; };
 		11F145C70B546A6D00CA91F6 /* Menu Bar Icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Menu Bar Icons"; path = "Resources/Menu Bar Icons"; sourceTree = "<group>"; };
@@ -3726,7 +3712,6 @@
 				348E5ACB06D2A74C004C051C /* AddressBook.framework in Frameworks */,
 				9E124DF607D34CF500AA91C5 /* Growl-WithInstaller.framework in Frameworks */,
 				638392F809D4D67A0067B9B7 /* Sparkle.framework in Frameworks */,
-				81F9D1E80A7F832A004A35BD /* JavaVM.framework in Frameworks */,
 				F58904F20A7828B9001F0ADC /* OTR.framework in Frameworks */,
 				9E1E1DFD0A96741500E16DFC /* LMX.framework in Frameworks */,
 				34EFC46C0AACC4CD0086AC43 /* FriBidi.framework in Frameworks */,
@@ -3898,7 +3883,6 @@
 				EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */,
 				815D37460A765E83009338C2 /* CoreServices.framework */,
 				638392F609D4D67A0067B9B7 /* Sparkle.framework */,
-				115E0E8D0952514A003218FE /* JavaVM.framework */,
 				3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */,
 				3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */,
 				341BDBBA0968BC9A00CF83F5 /* OTR.framework */,
@@ -7410,7 +7394,6 @@
 				346C9D46060046AB000F5A8A /* PBXTargetDependency */,
 				349C31630867D199000BF883 /* PBXTargetDependency */,
 				F5B17CDF0A16C767004AE99E /* PBXTargetDependency */,
-				38722C2D0A8CEC51002CC4F4 /* PBXTargetDependency */,
 			);
 			name = Adium;
 			productInstallPath = /;
@@ -7989,7 +7972,6 @@
 				341548CE0A92D6D30087EB98 /* SRSnapback.tiff in Resources */,
 				347374BD0AA9206B00AD18E3 /* ShortcutRecorder.strings in Resources */,
 				34F312BD0ADC43CA00A4310E /* xtras_duck.png in Resources */,
-				38BADCC60A921B1F00D41C08 /* pref-quicktime.png in Resources */,
 				377ED2680AED59E600CB7BDF /* TabsAdvanced.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8506,7 +8488,6 @@
 				340670A90A55A4B4004E22AC /* ESGlassSplitView.m in Sources */,
 				345AFAEE0A5D9A5F00D7DA6F /* AINoisyTableColumn.m in Sources */,
 				34EA6B320A62F3420053DFEB /* AIApplication.m in Sources */,
-				81F9D1EA0A7F8396004A35BD /* JavaCocoaAdapter.java in Sources */,
 				34E6C5670A791BAF0076D7F0 /* AIContactInfoWindowPlugin.m in Sources */,
 				34B5E2600A7C94D3005186E6 /* AILogDateFormatter.m in Sources */,
 				34DC88140A7EEE2E003E1636 /* AIAccountController.m in Sources */,
@@ -8564,7 +8545,6 @@
 				3430222A0AB4766E0082CF7C /* AINulRemovalPlugin.m in Sources */,
 				34BC8F7B0ACA3AAC00562745 /* AIScannerDebug.m in Sources */,
 				345EE2DF0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.m in Sources */,
-				387226C90A8B7C84002CC4F4 /* AIVideoConfController.m in Sources */,
 				377ED2670AED59E600CB7BDF /* TabsAdvancedPreferences.m in Sources */,
 				11F1460C0B546C1200CA91F6 /* AIMenuBarIcons.m in Sources */,
 			);
@@ -8826,11 +8806,6 @@
 			isa = PBXTargetDependency;
 			target = 3485D67F09EB416300232CC4 /* AdiumLibgaim */;
 			targetProxy = 34C7C62C09EC4EBE0060FB4A /* PBXContainerItemProxy */;
-		};
-		38722C2D0A8CEC51002CC4F4 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 38D8FA9A0A8A4F350078E442 /* QuickTime Plugin */;
-			targetProxy = 38722C2C0A8CEC51002CC4F4 /* PBXContainerItemProxy */;
 		};
 		38722DEA0A909509002CC4F4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
