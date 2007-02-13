@@ -28,7 +28,6 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
-#import <AIUtilities/AIExceptionHandlingUtilities.h>
 
 #import "AIHoveringPopUpButton.h"
 #import "AIContactListImagePicker.h"

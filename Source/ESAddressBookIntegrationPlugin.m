@@ -23,7 +23,6 @@
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/OWAddressBookAdditions.h>
-#import <AIUtilities/AIExceptionHandlingUtilities.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListObject.h>

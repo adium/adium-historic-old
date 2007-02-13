@@ -32,8 +32,7 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIWindowAdditions.h>
-#import <AIUtilities/AIExceptionHandlingUtilities.h>
-#import <AIUtilities/AISplitView.h>B
+#import <AIUtilities/AISplitView.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
