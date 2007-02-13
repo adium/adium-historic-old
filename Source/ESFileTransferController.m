@@ -32,7 +32,6 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIObjectAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
-#import <AIUtilities/AIExceptionHandlingUtilities.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>

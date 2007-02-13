@@ -17,7 +17,6 @@
 #import "XtrasInstaller.h"
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIBundleAdditions.h>
-#import <AIUtilities/AIExceptionHandlingUtilities.h>
 #import <AIUtilities/AIStringAdditions.h>
 
 //Should only be YES for testing

@@ -46,9 +46,6 @@
 
 #import <Adium/VirtualRingBuffer.h>
 
-//Adium only: use AI_(DURING|HANDLER|ENDHANDLER) instead of NS_\1
-#import <AIUtilities/AIExceptionHandlingUtilities.h>
-
 //
 // Theory of operation:
 //

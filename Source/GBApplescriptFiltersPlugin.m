@@ -23,7 +23,6 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/MVMenuButton.h>
-#import <AIUtilities/AIExceptionHandlingUtilities.h>
 #import <Adium/AIContentObject.h>
 #import <Adium/AIHTMLDecoder.h>
 
