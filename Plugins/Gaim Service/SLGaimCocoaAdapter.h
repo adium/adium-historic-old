@@ -84,8 +84,8 @@
 - (void *)handleNotifyMessageOfType:(GaimNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
 - (void *)handleNotifyFormattedWithTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary text:(const char *)text;
 
-- (void)performContactMenuActionFromDict:(NSDictionary *)dict;
-- (void)performAccountMenuActionFromDict:(NSDictionary *)dict;
+- (void)performContactMenuActionFromDict:(NSDictionary *)dict forAccount:(id)adiumAccount;
+- (void)performAccountMenuActionFromDict:(NSDictionary *)dict forAccount:(id)adiumAccount;
 
 - (void)doAuthRequestCbValue:(NSValue *)inCallBackValue withUserDataValue:(NSValue *)inUserDataValue;
 @end

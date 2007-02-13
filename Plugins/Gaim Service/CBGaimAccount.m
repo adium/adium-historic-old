@@ -2017,7 +2017,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	NSDictionary		*dict = [sender representedObject];
 	
-	[gaimThread performContactMenuActionFromDict:dict];
+	[gaimThread performContactMenuActionFromDict:dict forAccount:self];
 }
 
 /*!
@@ -2042,10 +2042,19 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 																		action:@selector(performContactMenuAction:)
 																 keyEquivalent:@""];
 		[menuItem setImage:serviceIcon];
-		dict = [NSDictionary dictionaryWithObjectsAndKeys:
-			[NSValue valueWithPointer:act],@"GaimMenuAction",
-			[NSValue valueWithPointer:buddy],@"GaimBuddy",
-			nil];
+
+		if (act->data) {
+			dict = [NSDictionary dictionaryWithObjectsAndKeys:
+				[NSValue valueWithPointer:act->callback],@"GaimMenuActionCallback",
+				[NSValue valueWithPointer:act->callback],@"GaimMenuActionData",
+				[NSValue valueWithPointer:buddy],@"GaimBuddy",
+				nil];
+		} else {
+			dict = [NSDictionary dictionaryWithObjectsAndKeys:
+				[NSValue valueWithPointer:act->callback],@"GaimMenuActionCallback",
+				[NSValue valueWithPointer:buddy],@"GaimBuddy",
+				nil];			
+		}
 		
 		[menuItem setRepresentedObject:dict];
 		
@@ -2061,7 +2070,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 									   toArray:childrenArray
 							   withServiceIcon:serviceIcon];
 			}
-			
+			g_list_free(act->children);
+
 			if ([childrenArray count]) {
 				NSEnumerator *enumerator = [childrenArray objectEnumerator];
 				NSMenuItem	 *childMenuItem;
@@ -2078,7 +2088,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 		[menuItemArray addObject:menuItem];
 		[menuItem release];
-	}				
+	}
+
+	gaim_menu_action_free(act);
 }
 
 //Returns an array of menuItems specific for this contact based on its account and potentially status
@@ -2143,11 +2155,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		GaimPlugin *plugin = account->gc->prpl;
 		
 		if (GAIM_PLUGIN_HAS_ACTIONS(plugin)) {
-			GList	*l, *ll;
+			GList	*l, *actions;
 			
+			actions = GAIM_PLUGIN_ACTIONS(plugin, account->gc);
+
 			//Avoid adding separators between nonexistant items (i.e. items which Gaim shows but we don't)
 			BOOL	addedAnAction = NO;
-			for (l = ll = GAIM_PLUGIN_ACTIONS(plugin, account->gc); l; l = l->next) {
+			for (l = actions; l; l = l->next) {
 				
 				if (l->data) {
 					GaimPluginAction	*action;
@@ -2169,8 +2183,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 																						 target:self
 																						 action:@selector(performAccountMenuAction:)
 																				  keyEquivalent:@""] autorelease];
-						dict = [NSDictionary dictionaryWithObject:[NSValue valueWithPointer:action]
-														   forKey:@"GaimPluginAction"];
+						dict = [NSDictionary dictionaryWithObject:[NSValue valueWithPointer:action->callback]
+														   forKey:@"GaimPluginActionCallback"];
 						
 						[menuItem setRepresentedObject:dict];
 						
@@ -2178,9 +2192,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 						
 						[menuItemArray addObject:menuItem];
 						addedAnAction = YES;
-					} else {
-						g_free(action);
-					}
+					} 
+					
+					gaim_plugin_action_free(action);
 					
 				} else {
 					if (addedAnAction) {
@@ -2190,7 +2204,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				}
 			} /* end for */
 			
-			g_list_free(ll);
+			g_list_free(actions);
 		}
 	}
 
@@ -2201,8 +2215,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (void)performAccountMenuAction:(NSMenuItem *)sender
 {
 	NSDictionary		*dict = [sender representedObject];
-	
-	[gaimThread performAccountMenuActionFromDict:dict];
+
+	[gaimThread performAccountMenuActionFromDict:dict forAccount:self];
 }
 
 //Subclasses may override to provide a localized label and/or prevent a specified label from being shown
