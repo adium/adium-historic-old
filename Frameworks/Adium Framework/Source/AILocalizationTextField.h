@@ -29,6 +29,8 @@
 	BOOL								alwaysMoveRightAnchoredWindow;
 }
 
+- (void)setAlwaysMoveRightAnchoredWindow:(BOOL)inAlwaysMove;
+
 @end
 
 @interface NSTextField (AILocalizationAssistance)

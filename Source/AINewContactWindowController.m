@@ -123,7 +123,10 @@
 	[textField_alias setLocalizedString:AILocalizedString(@"Alias:",nil)];
 	[textField_inGroup setLocalizedString:AILocalizedString(@"In Group:",nil)];
 	[textField_addToAccounts setLocalizedString:AILocalizedString(@"On Accounts:",nil)];
+	
+	[textField_searchInAB setAlwaysMoveRightAnchoredWindow:YES];
 	[textField_searchInAB setLocalizedString:AILocalizedString(@"Search In Address Book",nil)];
+
 	[button_add setLocalizedString:AILocalizedString(@"Add",nil)];
 	[button_cancel setLocalizedString:AILocalizedString(@"Cancel",nil)];
 
