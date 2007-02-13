@@ -1,5 +1,31 @@
 				Adium X Version History
 				-----------------------
+Version 1.0.1
+ * Fixed white text color in chat transcripts under certain conditions
+ * Fixed incorrect display of oneself on the contact list when logging in with Bonjour (#177, #5992)
+ * Fixed a sporadic crash when closing message windows with logging enabled (#6270)
+ * Fixed the Fonts toolbar item in the message window to show the Set Default button in the resulting Fonts window (#6286)
+ * Fixed retention of the musical notes prefix when switching away from the iTunes Now Playing status (#6250)
+ * Fixed a crash wen retrieving Yahoo! Japan profiles
+ * Fixed slowdown problems when VoiceOver is enabled (#6904)
+ * Fixed MSN emoticons which don't have case-reversed equivalents
+ * Made "Accept MSN Custom Emoticons" default to Yes
+ * Fixed a problem when importing Fire settings in which AIM accounts would have the wrong server set
+ * Fixed crash when inviting a contact to a chat
+ * Fixed display of an error message when accepting a group chat invitation
+ * Fixed use of 'localhost' as a Jabber connect server (#6300)
+ * Fixed display of the password prompt window in Dutch
+ * Fixed a crash when upgrading from old versions of Adium in certain situations (#6273)
+ * Fixed a crash when deleting a Guest account
+ * Fixed display of 0-length status messages in the contact list
+ * Fixed a display problem with the included Stockholm message style
+ * Selecting Custom... for a status which is currently being edited now brings the status window forwad (#5714)
+ * Properly handle new messages received while the File menu is visible when determining whether to display a quit confirmation dialogue (#5668)
+ * Removed some unneeded debug logging
+ * Fixed a memory leak which occurred when navigating account and contact action menus
+ * Various localization improvements, including German, Dutch, and French updates. Restored the Brazilian Portuguese localization.
+
+
 Version 1.0 (1/2/2007)
 
 == Selected Major Changes ==
