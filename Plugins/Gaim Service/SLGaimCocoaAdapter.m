@@ -1307,22 +1307,31 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 
 #pragma mark Request callbacks
 
-- (void)performContactMenuActionFromDict:(NSDictionary *)dict 
+- (void)performContactMenuActionFromDict:(NSDictionary *)dict forAccount:(id)adiumAccount
 {
-	GaimMenuAction	*act = [[dict objectForKey:@"GaimMenuAction"] pointerValue];
 	GaimBuddy		*buddy = [[dict objectForKey:@"GaimBuddy"] pointerValue];
-
+	void (*callback)(gpointer, gpointer);
+	
 	//Perform act's callback with the desired buddy and data
-	if (act->callback)
-		((void (*)(void *, void *))act->callback)((GaimBlistNode *)buddy, act->data);
+	callback = [[dict objectForKey:@"GaimMenuActionCallback"] pointerValue];
+	if (callback)
+		callback((GaimBlistNode *)buddy, [[dict objectForKey:@"GaimMenuActionData"] pointerValue]);
 }
 
-- (void)performAccountMenuActionFromDict:(NSDictionary *)dict
+- (void)performAccountMenuActionFromDict:(NSDictionary *)dict forAccount:(id)adiumAccount
 {
-	GaimPluginAction	*pam = [[dict objectForKey:@"GaimPluginAction"] pointerValue];
+	GaimPluginAction *act;
+	GaimAccount		 *account = accountLookupFromAdiumAccount(adiumAccount);
 
-	if (pam->callback)
-		pam->callback(pam);
+	if (account && account->gc) {
+		act = gaim_plugin_action_new(NULL, [[dict objectForKey:@"GaimPluginActionCallback"] pointerValue]);
+		if (act->callback) {
+			act->plugin = account->gc->prpl;
+			act->context = account->gc;
+			act->callback(act);
+		}
+		gaim_plugin_action_free(act);
+	}
 }
 
 /*!
