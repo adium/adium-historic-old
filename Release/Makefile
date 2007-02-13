@@ -115,7 +115,7 @@ createfolder:
 	cp -R $(ADIUM_BUILD_DIR)/Adium.app $(ADIUM_DIR)
 
 	@# copy the text files
-	cp $(SRC_DIR)/Changes.txt $(ADIUM_DIR)
+	cp $(SRC_DIR)/ChangeLogs/Changes.txt $(ADIUM_DIR)
 	cp $(SRC_DIR)/License.txt $(ADIUM_DIR)
 	
 	@# symlink /Applications
