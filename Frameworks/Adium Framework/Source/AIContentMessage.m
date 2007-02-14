@@ -53,10 +53,22 @@
     if ((self = [super initWithChat:inChat source:inSource destination:inDest date:inDate message:inMessage])) {
 		isAutoreply = inAutoReply;
 		encodedMessage = nil;
+		encodedMessageAccountData = nil;
 	}
 
     return self;
 }
+
+- (void)dealloc
+{
+	if (encodedMessage)
+		[encodedMessage release];
+	if (encodedMessageAccountData)
+		[encodedMessageAccountData release];
+	
+	[super dealloc];
+}
+
 
 //This message was automatically generated
 - (void)setIsAutoreply:(BOOL)inAutoreply{
