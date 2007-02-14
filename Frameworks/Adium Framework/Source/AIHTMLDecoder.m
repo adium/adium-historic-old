@@ -856,7 +856,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	[elementStack addObject:divElement];
 	[attributeNamesStack addObject:emptySet];
 
-	NSMutableSet *CSSCapableAttributes = [[NSAttributedString CSSCapableAttributesSet] mutableCopy];
+	NSMutableSet *CSSCapableAttributes = [[[NSAttributedString CSSCapableAttributesSet] mutableCopy] autorelease];
 	[CSSCapableAttributes addObject:NSLinkAttributeName];
 	NSSet *CSSCapableAttributesWithNoAttachment = [NSSet setWithSet:CSSCapableAttributes];
 	[CSSCapableAttributes addObject:NSAttachmentAttributeName];
