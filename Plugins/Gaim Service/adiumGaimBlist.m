@@ -41,9 +41,6 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 	if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
 		GaimBuddy *buddy = (GaimBuddy*)node;
 
-		AILog(@"blist update for %s (contact %@, account %x)",
-			  buddy->name, contactLookupFromBuddy(buddy), buddy->account);
-
 		//Take no action if the relevant account isn't online.
 		if (!buddy->account || !gaim_account_is_connected(buddy->account))
 			return;

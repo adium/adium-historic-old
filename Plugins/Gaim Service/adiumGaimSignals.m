@@ -16,6 +16,7 @@
 
 #import "adiumGaimSignals.h"
 #import <AIUtilities/AIObjectAdditions.h>
+#import <Adium/AIListContact.h>
 
 static void buddy_status_changed_cb(GaimBuddy *buddy, GaimStatus *oldstatus, GaimStatus *status, GaimBuddyEvent event);
 static void buddy_idle_changed_cb(GaimBuddy *buddy, gboolean old_idle, gboolean idle, GaimBuddyEvent event);
@@ -127,13 +128,6 @@ static void buddy_status_changed_cb(GaimBuddy *buddy, GaimStatus *oldstatus, Gai
 	NSAttributedString	*statusMessage;	
 	BOOL				isAvailable;
 
-	GaimDebug(@"buddy_status_changed_cb: %x - %@ (%i): name %s, message %s",
-			  buddy,
-			  theContact,
-			  gaim_status_type_get_primitive(gaim_status_get_type(status)),
-			  gaim_status_get_name(status),
-			  gaim_status_get_attr_string(status, "message"));
-
 	isAvailable = ((gaim_status_type_get_primitive(gaim_status_get_type(status)) == GAIM_STATUS_AVAILABLE) ||
 				   (gaim_status_type_get_primitive(gaim_status_get_type(status)) == GAIM_STATUS_OFFLINE));
 
@@ -171,8 +165,6 @@ static void buddy_idle_changed_cb(GaimBuddy *buddy, gboolean old_idle, gboolean 
 		[account updateIdleReturn:theContact
 						 withData:nil];
 	}
-				
-	AILog(@"buddy_event_cb: %@ is %@ [old_idle %i, idle %i]",theContact,(idle ? @"idle" : @"not idle"),old_idle,idle);
 }
 
 static void buddy_added_cb(GaimBuddy *buddy)

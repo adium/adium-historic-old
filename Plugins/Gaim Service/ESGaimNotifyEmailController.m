@@ -107,7 +107,7 @@
 			if (haveFroms) {
 				NSString	*fromString = [NSString stringWithUTF8String:(*froms)];
 				if (fromString && [fromString length]) {
-					[message appendAttributedString:[[[NSAttributedString alloc] initWithString:AILocalizedString(@"From: ",nil)
+					[message appendAttributedString:[[[NSAttributedString alloc] initWithString:AILocalizedString(@"From: ","Note that there is a space at the end of this label!")
 																					 attributes:fieldAttributed] autorelease]];
 					[message appendAttributedString:[[[NSAttributedString alloc] initWithString:fromString
 																					 attributes:infoAttributed] autorelease]];
@@ -121,7 +121,7 @@
 			if (haveSubjects) {
 				NSString	*subjectString = [NSString stringWithUTF8String:(*subjects)];
 				if (subjectString && [subjectString length]) {
-					[message appendAttributedString:[[[NSAttributedString alloc] initWithString:AILocalizedString(@"Subject: ",nil)
+					[message appendAttributedString:[[[NSAttributedString alloc] initWithString:AILocalizedString(@"Subject: ","Note that there is a space at the end of this label!")
 																					 attributes:fieldAttributed] autorelease]];
 					AILog(@"%@: %@ appending %@",self,message,subjectString);
 					[message appendAttributedString:[[[NSAttributedString alloc] initWithString:subjectString
