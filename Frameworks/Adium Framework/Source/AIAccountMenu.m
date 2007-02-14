@@ -312,7 +312,7 @@
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if ([inObject isKindOfClass:[AIAccount class]]) {
-		NSMenuItem	*menuItem = [[self menuItemForAccount:(AIAccount *)inObject] retain];
+		NSMenuItem	*menuItem = [self menuItemForAccount:(AIAccount *)inObject];
 		BOOL		rebuilt = NO;
 		
 		if ([inModifiedKeys containsObject:@"Enabled"]) {
