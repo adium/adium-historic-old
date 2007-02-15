@@ -57,7 +57,6 @@
 		11F145F00B546AC500CA91F6 /* Menu Bar Icons in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11F145C70B546A6D00CA91F6 /* Menu Bar Icons */; };
 		11F1460B0B546C1200CA91F6 /* AIMenuBarIcons.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11F146090B546C1200CA91F6 /* AIMenuBarIcons.h */; };
 		11F1460C0B546C1200CA91F6 /* AIMenuBarIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = 11F1460A0B546C1200CA91F6 /* AIMenuBarIcons.m */; };
-		311AC6D20AF4BA5B0007F952 /* JavaCocoaAdapter.class in CopyFiles */ = {isa = PBXBuildFile; fileRef = 311AC6CD0AF4BA140007F952 /* JavaCocoaAdapter.class */; };
 		3402D5A5080DBC91004E50B4 /* SortConfiguration.nib in Resources */ = {isa = PBXBuildFile; fileRef = 347E791D07CAA52300350507 /* SortConfiguration.nib */; };
 		3402E01B07CB0CED0044F818 /* ESFileTransferProgressView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E01A07CB0CEC0044F818 /* ESFileTransferProgressView.nib */; };
 		3402E02407CB0D1B0044F818 /* ProxyPasswordPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E02307CB0D1B0044F818 /* ProxyPasswordPrompt.nib */; };
@@ -1088,7 +1087,6 @@
 		7E824CE306387FAF00813072 /* SHLinkEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CD406387FAF00813072 /* SHLinkEditorWindowController.m */; };
 		7E824CEB06387FAF00813072 /* SHLinkManagementPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */; };
 		8163F99C0B318824002005EE /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
-		81FB2B1A0A95DFB20095E77A /* AIJavaControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 8191AB1A0A94EAEE00A5A404 /* AIJavaControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9E124DEC07D34C7300AA91C5 /* CBGrowlAlertDetailPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E124DE807D34C7300AA91C5 /* CBGrowlAlertDetailPane.m */; };
 		9E124DEE07D34C7400AA91C5 /* NEHGrowlPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E124DEA07D34C7300AA91C5 /* NEHGrowlPlugin.m */; };
 		9E124DF107D34C9100AA91C5 /* GrowlAlert.nib in Resources */ = {isa = PBXBuildFile; fileRef = 9E124DEF07D34C9000AA91C5 /* GrowlAlert.nib */; };
@@ -1379,7 +1377,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
-				311AC6D20AF4BA5B0007F952 /* JavaCocoaAdapter.class in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1514,7 +1511,6 @@
 		11F145C70B546A6D00CA91F6 /* Menu Bar Icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Menu Bar Icons"; path = "Resources/Menu Bar Icons"; sourceTree = "<group>"; };
 		11F146090B546C1200CA91F6 /* AIMenuBarIcons.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMenuBarIcons.h; path = Source/AIMenuBarIcons.h; sourceTree = "<group>"; };
 		11F1460A0B546C1200CA91F6 /* AIMenuBarIcons.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMenuBarIcons.m; path = Source/AIMenuBarIcons.m; sourceTree = "<group>"; };
-		311AC6CD0AF4BA140007F952 /* JavaCocoaAdapter.class */ = {isa = PBXFileReference; lastKnownFileType = compiled.javaclass; name = JavaCocoaAdapter.class; path = net/adium/JavaCocoaAdapter.class; sourceTree = BUILT_PRODUCTS_DIR; };
 		3402E01807CB0CE40044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		3402E01F07CB0D150044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		3402E02007CB0D150044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
@@ -3407,11 +3403,6 @@
 		7E824CDB06387FAF00813072 /* SHLinkManagementPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SHLinkManagementPlugin.h; sourceTree = "<group>"; };
 		7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHLinkManagementPlugin.m; sourceTree = "<group>"; };
 		815D37460A765E83009338C2 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
-		8191AB1A0A94EAEE00A5A404 /* AIJavaControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIJavaControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIJavaControllerProtocol.h"; sourceTree = "<group>"; };
-		81F9D0820A7E905B004A35BD /* AIJavaController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIJavaController.h; path = Source/AIJavaController.h; sourceTree = "<group>"; };
-		81F9D0830A7E905B004A35BD /* AIJavaController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIJavaController.m; path = Source/AIJavaController.m; sourceTree = "<group>"; };
-		81F9D1E90A7F8395004A35BD /* JavaCocoaAdapter.java */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.java; name = JavaCocoaAdapter.java; path = Source/JavaCocoaAdapter.java; sourceTree = "<group>"; };
-		81F9D2000A7F8B99004A35BD /* JavaCocoaAdapter.class */ = {isa = PBXFileReference; lastKnownFileType = compiled.javaclass; name = JavaCocoaAdapter.class; path = net/adium/JavaCocoaAdapter.class; sourceTree = BUILT_PRODUCTS_DIR; };
 		9C103FAE057127A500F3C158 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
 		9E124DE707D34C7300AA91C5 /* CBGrowlAlertDetailPane.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBGrowlAlertDetailPane.h; path = Source/CBGrowlAlertDetailPane.h; sourceTree = "<group>"; };
 		9E124DE807D34C7300AA91C5 /* CBGrowlAlertDetailPane.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBGrowlAlertDetailPane.m; path = Source/CBGrowlAlertDetailPane.m; sourceTree = "<group>"; };
@@ -5723,7 +5714,6 @@
 				340D0EA90A7E826C0059A3AF /* AIStatusControllerProtocol.h */,
 				340D0EAF0A7E82F70059A3AF /* AIToolbarControllerProtocol.h */,
 				340D0EC20A7E84680059A3AF /* AIDebugControllerProtocol.h */,
-				8191AB1A0A94EAEE00A5A404 /* AIJavaControllerProtocol.h */,
 				383984700A94F780006C8EB1 /* AIVideoConfControllerProtocol.h */,
 				F53B9A1302CCEDCA01A8010A /* Adium.Framework */,
 				34D8342B07CBE6A4006466F2 /* External Sources */,
@@ -5907,8 +5897,6 @@
 			children = (
 				34FDD6E305632BFD00F5B30F /* ESFileTransferController.h */,
 				34FDD6E405632BFD00F5B30F /* ESFileTransferController.m */,
-				81F9D0820A7E905B004A35BD /* AIJavaController.h */,
-				81F9D0830A7E905B004A35BD /* AIJavaController.m */,
 				F57938FB033E745F01A8010A /* AILoginController.h */,
 				F57938AD033E737001A8010A /* AILoginController.m */,
 				F57938ED033E745F01A8010A /* AIPreferenceController.h */,
@@ -6279,8 +6267,6 @@
 		81F9D1D40A7F8128004A35BD /* Java Bridge Stuff */ = {
 			isa = PBXGroup;
 			children = (
-				81F9D1E90A7F8395004A35BD /* JavaCocoaAdapter.java */,
-				311AC6CD0AF4BA140007F952 /* JavaCocoaAdapter.class */,
 			);
 			name = "Java Bridge Stuff";
 			sourceTree = "<group>";
@@ -6721,7 +6707,6 @@
 			isa = PBXGroup;
 			children = (
 				63AF91C80AA80FE300B88299 /* OldListXtras */,
-				81F9D2000A7F8B99004A35BD /* JavaCocoaAdapter.class */,
 				34D8326307CBD598006466F2 /* sendfile.png */,
 				34D8326507CBD598006466F2 /* info.png */,
 				34D8326707CBD598006466F2 /* DefaultIcon.png */,
@@ -7227,7 +7212,6 @@
 				34F312930ADC3FE800A4310E /* KNShelfSplitView.h in Headers */,
 				38722DC90A9093CD002CC4F4 /* AIVideoConf.h in Headers */,
 				38399DCB0A95C9CF006C8EB1 /* AIVideoConfControllerProtocol.h in Headers */,
-				81FB2B1A0A95DFB20095E77A /* AIJavaControllerProtocol.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
