@@ -10,8 +10,8 @@
 # - make all
 ###########
 
-VERSION=1.0.1b2
-BETA=TRUE
+VERSION=1.0.1b3
+BETA=FALSE
 
 ###########
 # To release!
