@@ -1,9 +1,11 @@
 				Adium X Version History
 				-----------------------
 Version 1.0.1
+ * Improved reliability of AIM file transfer reception
  * Fixed white text color in chat transcripts under certain conditions
  * Fixed incorrect display of oneself on the contact list when logging in with Bonjour (#177, #5992)
  * Fixed a sporadic crash when closing message windows with logging enabled (#6270)
+ * Fixed a crash when waking from sleep with a Jabber account connected
  * Fixed the Fonts toolbar item in the message window to show the Set Default button in the resulting Fonts window (#6286)
  * Fixed retention of the musical notes prefix when switching away from the iTunes Now Playing status (#6250)
  * Fixed a crash wen retrieving Yahoo! Japan profiles
@@ -21,9 +23,15 @@ Version 1.0.1
  * Fixed a display problem with the included Stockholm message style
  * Selecting Custom... for a status which is currently being edited now brings the status window forwad (#5714)
  * Properly handle new messages received while the File menu is visible when determining whether to display a quit confirmation dialogue (#5668)
+ * Fixed focus-stealing of password prompt windows
  * Removed some unneeded debug logging
- * Fixed a memory leak which occurred when navigating account and contact action menus
- * Various localization improvements, including German, Dutch, and French updates. Restored the Brazilian Portuguese localization.
+ * Fixed memory leaks when:
+    * Sending a message (#6425)
+    * Utilizing encryption (#6424)
+    * Initializing MSN (#6430)
+    * Handling Jabber network traffic (#6429)
+    * Displaying certain menus (#6427)
+ * Various localization improvements, including Dutch, French, German, Japanese, Russian, and zh_TW updates. Restored the Brazilian Portuguese localization.
 
 
 Version 1.0 (1/2/2007)
