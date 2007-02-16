@@ -29,6 +29,8 @@
 #import "ESOTRUnknownFingerprintController.h"
 #import "OTRCommon.h"
 
+#include <stdlib.h>
+
 #define PRIVKEY_PATH [[[[[AIObject sharedAdiumInstance] loginController] userDirectory] stringByAppendingPathComponent:@"otr.private_key"] UTF8String]
 #define STORE_PATH	 [[[[[AIObject sharedAdiumInstance] loginController] userDirectory] stringByAppendingPathComponent:@"otr.fingerprints"] UTF8String]
 
@@ -678,6 +680,9 @@ static OtrlMessageAppOps ui_ops = {
 		decryptedMessage = nil;
 	}
 
+	if (newMessage)
+		otrl_message_free(newMessage);
+
     tlv = otrl_tlv_find(tlvs, OTRL_TLV_DISCONNECTED);
     if (tlv) {
 		/* Notify the user that the other side disconnected. */
@@ -798,6 +803,8 @@ void send_default_query_to_chat(AIChat *inChat)
 	
 	[[[AIObject sharedAdiumInstance] contentController] sendRawMessage:[NSString stringWithUTF8String:(msg ? msg : "?OTRv2?")]
 															 toContact:[inChat listObject]];
+	if (msg)
+		free(msg);
 }
 
 /* Disconnect a context, sending a notice to the other side, if
