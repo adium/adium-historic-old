@@ -96,6 +96,11 @@
     
 }
 
+- (void)localizePane
+{
+	
+}
+
 //Preference view is closing
 - (void)viewWillClose
 {
@@ -120,6 +125,9 @@
 	return NO;
 }
 
-
+- (BOOL)resizableHorizontally
+{
+	return NO;
+}
 
 @end
