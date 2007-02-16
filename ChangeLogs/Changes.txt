@@ -9,7 +9,7 @@ Version 1.0.1 (2/16/2007)
  * Fixed the Fonts toolbar item in the message window to show the Set Default button in the resulting Fonts window (#6286)
  * Fixed retention of the musical notes prefix when switching away from the iTunes Now Playing status (#6250)
  * Fixed a crash wen retrieving Yahoo! Japan profiles
- * Fixed slowdown problems when VoiceOver is enabled (#6904)
+ * Fixed slowdown problems when VoiceOver is enabled (#6094)
  * Fixed MSN emoticons which don't have case-reversed equivalents
  * Made "Accept MSN Custom Emoticons" default to Yes
  * Fixed a problem when importing Fire settings in which AIM accounts would have the wrong server set
