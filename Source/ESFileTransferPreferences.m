@@ -85,8 +85,16 @@
 			[checkBox_autoAcceptFiles setState:NSOnState];
 			[checkBox_autoAcceptOnlyFromCLList setState:NSOffState];
 			break;
-	}
-	
+	}	
+}
+
+- (BOOL)resizableHorizontally
+{
+	return YES;
+}
+
+- (void)localizePane
+{
 	[label_whenReceivingFiles setLocalizedString:AILocalizedString(@"Receiving files:","File Transfer preferences label")];
 	[label_defaultReceivingFolder setLocalizedString:AILocalizedString(@"Save files to:","File Transfer preferences label")];
 	[label_safeFilesDescription setLocalizedString:AILocalizedString(@"\"Safe\" files include movies, pictures,\nsounds, text documents, and archives.","Description of safe files (files which Adium can open automatically without danger to the user). This description should be on two lines; the lines are separated by \n.")];
