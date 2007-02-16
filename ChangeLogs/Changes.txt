@@ -1,6 +1,6 @@
 				Adium X Version History
 				-----------------------
-Version 1.0.1
+Version 1.0.1 (2/16/2007)
  * Improved reliability of AIM file transfer reception
  * Fixed white text color in chat transcripts under certain conditions
  * Fixed incorrect display of oneself on the contact list when logging in with Bonjour (#177, #5992)
@@ -34,7 +34,7 @@ Version 1.0.1
  * Various localization improvements, including Dutch, French, German, Japanese, Russian, and zh_TW updates. Restored the Brazilian Portuguese localization.
 
 
-Version 1.0 (1/2/2007)
+Version 1.0 (2/2/2007)
 
 == Selected Major Changes ==
  * Added global user profile and buddy icon settings. (Personal Preferences)
