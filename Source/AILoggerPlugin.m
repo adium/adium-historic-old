@@ -88,6 +88,7 @@
 - (NSString *)keyForChat:(AIChat *)chat;
 - (AIXMLAppender *)existingAppenderForChat:(AIChat *)chat;
 - (AIXMLAppender *)appenderForChat:(AIChat *)chat;
+- (void)finishClosingAppender:(NSString *)chatKey;
 - (void)closeAppenderForChat:(AIChat *)chat;
 @end
 
@@ -183,6 +184,10 @@ Class LogViewerWindowControllerClass = NULL;
 								   selector:@selector(showLogNotification:)
 									   name:Adium_ShowLogAtPath
 									 object:nil];
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(chatWillDelete:)
+									   name:ChatLog_WillDelete
+									 object:nil];				
 }
 
 - (void)uninstallPlugin
@@ -228,10 +233,6 @@ Class LogViewerWindowControllerClass = NULL;
 			[[adium notificationCenter] addObserver:self
 										   selector:@selector(chatClosed:)
 											   name:Chat_WillClose
-											 object:nil];
-			[[adium notificationCenter] addObserver:self
-										   selector:@selector(chatWillDelete:)
-											   name:ChatLog_WillDelete
 											 object:nil];
 		}
 	}
