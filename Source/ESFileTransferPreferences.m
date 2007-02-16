@@ -85,8 +85,16 @@
 			[checkBox_autoAcceptFiles setState:NSOnState];
 			[checkBox_autoAcceptOnlyFromCLList setState:NSOffState];
 			break;
-	}
-	
+	}	
+}
+
+- (BOOL)resizableHorizontally
+{
+	return YES;
+}
+
+- (void)localizePane
+{
 	[label_whenReceivingFiles setLocalizedString:AILocalizedString(@"Receiving files:","FT Preferences")];
 	[label_defaultReceivingFolder setLocalizedString:AILocalizedString(@"Save files to:","FT Preferences")];
 	[label_safeFilesDescription setLocalizedString:AILocalizedString(@"\"Safe\" files include movies, pictures,\nsounds, text documents, and archives.","Description of safe files (files which Adium can open automatically without danger to the user). This description should be on two lines; the lines are separated by \n.")];
@@ -96,7 +104,7 @@
 	[checkBox_autoAcceptOnlyFromCLList setLocalizedString:AILocalizedString(@"only from contacts on my Contact List","FT Preferences")];
 	[checkBox_autoOpenFiles setLocalizedString:AILocalizedString(@"Open \"Safe\" files after receiving","FT Preferences")];
 	[checkBox_showProgress setLocalizedString:AILocalizedString(@"Show the File Transfers window automatically","FT Preferences")];
-	[checkBox_autoClearCompleted setLocalizedString:AILocalizedString(@"Clear completed transfers automatically","FT Preferences")];
+	[checkBox_autoClearCompleted setLocalizedString:AILocalizedString(@"Clear completed transfers automatically","FT Preferences")];	
 }
 
 - (void)buildDownloadLocationMenu
