@@ -363,8 +363,8 @@ extern gchar *oscar_encoding_extract(const char *encoding);
 	 * Libgaim, as of 2.0.0 but not before so far as we've seen, sometimes feeds us truncated AIM away messages.
 	 * The full message will then follow... followed by the truncated one... and so on. This makes the message
 	 * change in the buddy list and in the message window repeatedly.
-	 * I'm not sure how long the truncted versions are - I've seen 60 to 70 characters.  We'll therefore ignore
-	 * an incoming message which is the same as the first 50 characters of the existing one.  I wonder how long
+	 * I'm not sure how long the truncted versions are - I've seen 40 to 70 characters.  We'll therefore ignore
+	 * an incoming message which is the same as the first 40 characters of the existing one.  I wonder how long
 	 * before someone will notice this "odd" behavior and file a bug report... -evands
 	 */
 	 
@@ -374,9 +374,9 @@ extern gchar *oscar_encoding_extract(const char *encoding);
 		NSString *currentStatusMessage = [theContact statusMessageString];
 		if (currentStatusMessage &&
 			([currentStatusMessage length] > [statusMessage length]) &&
-			([statusMessage length] > 50) &&
+			([statusMessage length] >= 40) &&
 			([currentStatusMessage rangeOfString:[statusMessage string] options:NSAnchoredSearch].location == 0)) {
-			/* New message is shorter but at least 50 characters, and it matches the start of the current one.
+			/* New message is shorter but at least 40 characters, and it matches the start of the current one.
 			 * Do nothing.
 			 */
 			return;
