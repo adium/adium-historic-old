@@ -82,6 +82,8 @@
 		[button_addGroup sizeToFit];
 		newFrame = [button_addGroup frame];
 		if (newFrame.size.height < oldFrame.size.height) newFrame.size.height = oldFrame.size.height;
+		if (newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
+		if (newFrame.size.width > oldFrame.size.width) newFrame.size.width += 8;
 		[button_addGroup setFrame:newFrame];
 	}
 	
