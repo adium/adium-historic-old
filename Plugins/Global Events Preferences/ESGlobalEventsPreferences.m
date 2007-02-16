@@ -85,6 +85,11 @@
     return @"GlobalEventsPreferences";
 }
 
+- (BOOL)resizableHorizontally
+{
+	return YES;
+}
+
 /*!
  * @brief Configure the preference view
  */
@@ -107,9 +112,6 @@
 	//Presets menu
 	[self setAndConfigureEventPresetsMenu];
 
-	[label_eventPreset setLocalizedString:AILocalizedString(@"Event preset:",nil)];
-	[label_soundSet setLocalizedString:AILocalizedString(@"Sound set:",nil)];
-
 	//And event presets to update our presets menu
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EVENT_PRESETS];
 
@@ -119,6 +121,12 @@
 	//Volume
 	[slider_volume setFloatValue:[[[adium preferenceController] preferenceForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL
 																		   group:PREF_GROUP_SOUNDS] floatValue]];	
+}
+
+- (void)localizePane
+{
+	[label_eventPreset setLocalizedString:AILocalizedString(@"Event preset:",nil)];
+	[label_soundSet setLocalizedString:AILocalizedString(@"Sound set:",nil)];
 }
 
 /*!

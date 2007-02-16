@@ -51,14 +51,22 @@
     enumerator = [paneArray objectEnumerator];
     while ((pane = [enumerator nextObject])) {
         NSView	*paneView = [pane view];
-        
+
         //Add the view
         if (![paneView superview]) {
             [self addSubview:paneView];
             [paneView setFrameOrigin:NSMakePoint(0,yPos)];
-			if ([pane resizable]) [paneView setFrameSize:[self frame].size];
+			if ([pane resizable]) {
+				[paneView setFrameSize:[self frame].size];
+			} else if ([pane resizableHorizontally]) {
+				[paneView setFrameSize:NSMakeSize([self frame].size.width, [paneView frame].size.height)];
+			}
         }
         
+		if ([pane respondsToSelector:@selector(localizePane)]) {
+			[pane performSelector:@selector(localizePane)];
+		}
+		
         //Move down for the next view
         yPos += [paneView frame].size.height;
     }
