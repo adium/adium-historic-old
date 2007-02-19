@@ -45,7 +45,7 @@
 #define KEY_LOG_VIEWER_GROUP_STATE		@"Log Viewer Group State"	//Expand/Collapse state of groups
 #define TOOLBAR_LOG_VIEWER				@"Log Viewer Toolbar"
 
-#define MAX_LOGS_TO_SORT_WHILE_SEARCHING	3000	//Max number of logs we will live sort while searching
+#define MAX_LOGS_TO_SORT_WHILE_SEARCHING	10000	//Max number of logs we will live sort while searching
 #define LOG_SEARCH_STATUS_INTERVAL			20	//1/60ths of a second to wait before refreshing search status
 
 #define SEARCH_MENU						AILocalizedString(@"Search Menu",nil)
@@ -63,7 +63,7 @@
 #define IMAGE_EMOTICONS_OFF				@"emoticon32"
 #define IMAGE_EMOTICONS_ON				@"emoticon32_transparent"
 
-#define	REFRESH_RESULTS_INTERVAL		0.5 //Interval between results refreshes while searching
+#define	REFRESH_RESULTS_INTERVAL		1.0 //Interval between results refreshes while searching
 
 @interface AIAbstractLogViewerWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin;
@@ -82,6 +82,9 @@
 - (void)rebuildContactsList;
 - (void)filterForContact:(AIListContact *)inContact;
 - (void)selectCachedIndex;
+
+- (void)_willOpenForContact;
+- (void)_didOpenForContact;
 
 - (void)deleteSelection:(id)sender;
 @end
@@ -119,10 +122,15 @@ static int toArraySort(id itemA, id itemB, void *context);
 //Open the log viewer window to a specific contact's logs
 + (id)openForContact:(AIListContact *)inContact plugin:(id)inPlugin
 {
-    [self openForPlugin:inPlugin];
+    if (!sharedLogViewerInstance) {
+		sharedLogViewerInstance = [[self alloc] initWithWindowNibName:[self nibName] plugin:inPlugin];
+	}
 
+	[sharedLogViewerInstance _willOpenForContact];
+	[sharedLogViewerInstance showWindow:nil];
 	[sharedLogViewerInstance filterForContact:inContact];
-	
+	[sharedLogViewerInstance _didOpenForContact];
+
     return sharedLogViewerInstance;
 }
 
@@ -324,7 +332,10 @@ static int toArraySort(id itemA, id itemB, void *context);
 	[toArray sortUsingFunction:toArraySort context:NULL];
 	[outlineView_contacts reloadData];
 
-	[self outlineViewSelectionDidChange:nil];
+	if (!isOpeningForContact) {
+		//If we're opening for a contact, the outline view selection will be changed in a moment anyways
+		[self outlineViewSelectionDidChange:nil];
+	}
 }
 
 //
@@ -336,7 +347,11 @@ static int toArraySort(id itemA, id itemB, void *context);
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {
+	suppressSearchRequests = YES;
+
 	[super windowDidLoad];
+
+	[plugin pauseIndexing];
 
 	[[self window] setTitle:AILocalizedString(@"Chat Transcripts Viewer",nil)];
     [textField_progress setStringValue:@""];
@@ -412,7 +427,14 @@ static int toArraySort(id itemA, id itemB, void *context);
 	[self setSearchMode:LOG_SEARCH_TO];
 
     [searchField_logs setStringValue:(activeSearchString ? activeSearchString : @"")];
-    [self startSearchingClearingCurrentResults:YES];
+	suppressSearchRequests = NO;
+
+	if (!isOpeningForContact) {
+		//If we're opening for a contact, we'll select it and then begin searching
+		[self startSearchingClearingCurrentResults:YES];
+	}
+
+	[plugin resumeIndexing];
 }
 
 -(void)rebuildIndices
@@ -482,16 +504,16 @@ static int toArraySort(id itemA, id itemB, void *context);
 	unsigned count = [currentSearchResults count];
     if (activeSearchString && [activeSearchString length]) {
 		[shelf_splitView setResizeThumbStringValue:[NSString stringWithFormat:((count != 1) ? 
-																			   AILocalizedString(@"%i matching logs",nil) :
-																			   AILocalizedString(@"1 matching log",nil)),count]];
+																			   AILocalizedString(@"%i matching transcripts",nil) :
+																			   AILocalizedString(@"1 matching transcripts",nil)),count]];
     } else {
 		[shelf_splitView setResizeThumbStringValue:[NSString stringWithFormat:((count != 1) ? 
-																			   AILocalizedString(@"%i logs",nil) :
-																			   AILocalizedString(@"1 log",nil)),count]];
+																			   AILocalizedString(@"%i transcripts",nil) :
+																			   AILocalizedString(@"1 transcripts",nil)),count]];
 		
 		//We are searching, but there is no active search  string. This indicates we're still opening logs.
 		if (searching) {
-			progress = [[AILocalizedString(@"Opening logs",nil) mutableCopy] autorelease];			
+			progress = [[AILocalizedString(@"Opening transcripts",nil) mutableCopy] autorelease];			
 		}
     }
     [resultsLock unlock];
@@ -521,7 +543,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 			progress = [NSMutableString string];
 		}
 		
-		[progress appendString:[NSString stringWithFormat:AILocalizedString(@"Indexing %i of %i",nil), indexNumber, indexTotal]];
+		[progress appendString:[NSString stringWithFormat:AILocalizedString(@"Indexing %i of %i transcripts",nil), indexNumber, indexTotal]];
     }
 	
 	if (progress && (searching || indexing || !(activeSearchString && [activeSearchString length]))) {
@@ -548,13 +570,13 @@ static int toArraySort(id itemA, id itemB, void *context);
 		//If we are searching by content, we should re-search without clearing our current results so the
 		//the newly-indexed logs can be added without blanking the current table contents.
 		if (searchMode == LOG_SEARCH_CONTENT && (activeSearchString && [activeSearchString length])) {
-			if (searching) {
+			//if (searching) {
 				//We're already searching; reattempt when done
 				searchIDToReattemptWhenComplete = activeSearchID;
-			} else {
+			//} else {
 				//We're not searching - restart the search immediately
-				[self startSearchingClearingCurrentResults:NO];
-			}
+			//	[self startSearchingClearingCurrentResults:NO];
+			//}
 		}
 	}
 }
@@ -572,7 +594,7 @@ static int toArraySort(id itemA, id itemB, void *context);
     [resultsLock lock];
     int count = [currentSearchResults count];
     [resultsLock unlock];
-	
+	AILog(@"refreshResultsSearchIsComplete: %i (count is %i)",searchIsComplete,count);
     if (!searching || count <= MAX_LOGS_TO_SORT_WHILE_SEARCHING) {
 		//Sort the logs correctly which will also reload the table
 		[self resortLogs];
@@ -1005,6 +1027,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 {
     automaticSearch = NO;
     [self setSearchString:[[[searchField_logs stringValue] copy] autorelease]];
+	AILog(@"updateSearch calling startSearching");
     [self startSearchingClearingCurrentResults:YES];
 }
 
@@ -1020,6 +1043,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 	[self setSearchString:activeSearchString];
 
 	//Now we are ready to start searching
+	AILog(@"selectSearchType calling startSearching");
     [self startSearchingClearingCurrentResults:YES];
 }
 
@@ -1031,6 +1055,7 @@ static int toArraySort(id itemA, id itemB, void *context);
     [self setSearchMode:inMode];
     [self setSearchString:inString];
 
+	AILog(@"setSearchString:mode: calling startSearching");
     [self startSearchingClearingCurrentResults:YES];
 }
 
@@ -1038,6 +1063,9 @@ static int toArraySort(id itemA, id itemB, void *context);
 - (void)startSearchingClearingCurrentResults:(BOOL)clearCurrentResults
 {
     NSDictionary    *searchDict;
+
+	if (suppressSearchRequests) return;
+	AILog(@"Starting a search for %@",activeSearchString);
 
     //Once all searches have exited, we can start a new one
 	if (clearCurrentResults) {
@@ -1064,10 +1092,10 @@ static int toArraySort(id itemA, id itemB, void *context);
 	//Update the table periodically while the logs load.
 	[refreshResultsTimer invalidate]; [refreshResultsTimer release];
 	refreshResultsTimer = [[NSTimer scheduledTimerWithTimeInterval:REFRESH_RESULTS_INTERVAL
-                                                                target:self
-                                                              selector:@selector(refreshResults)
-                                                              userInfo:nil
-                                                               repeats:YES] retain];
+															target:self
+														  selector:@selector(refreshResults)
+														  userInfo:nil
+														   repeats:YES] retain];
 }
 
 //Abort any active searches
@@ -1189,6 +1217,16 @@ static int toArraySort(id itemA, id itemB, void *context);
 	[[searchField_logs cell] setSearchMenuTemplate:cellMenu];
 }
 
+- (void)_willOpenForContact
+{
+	isOpeningForContact = YES;
+}
+
+- (void)_didOpenForContact
+{
+	isOpeningForContact = NO;
+}
+
 /*!
  * @brief Focus the log viewer on a particular contact
  *
@@ -1197,17 +1235,15 @@ static int toArraySort(id itemA, id itemB, void *context);
 - (void)filterForContact:(AIListContact *)inContact
 {
 	AIListContact *parentContact = [inContact parentContact];
-	
-	/* Ensure the contacts list includes this contact, since only existing AIListContacts are to be used
-	 * (with AILogToGroup objects used if an AIListContact isn't available) but that situation may have changed
-	 * with regard to inContact since the log viewer opened.
-	 */
-	[self rebuildContactsList];
-	
-	[outlineView_contacts selectItemsInArray:[NSArray arrayWithObject:(parentContact ? (id)parentContact : (id)allContactsIdentifier)]];
-	unsigned int selectedRow = [[outlineView_contacts selectedRowIndexes] firstIndex];
-	if (selectedRow != NSNotFound) {
-		[outlineView_contacts scrollRowToVisible:selectedRow];
+
+	if (!isOpeningForContact) {
+		/* Ensure the contacts list includes this contact, since only existing AIListContacts are to be used
+		* (with AILogToGroup objects used if an AIListContact isn't available) but that situation may have changed
+		* with regard to inContact since the log viewer opened.
+		*
+		* If we're opening initially, the list is guaranteed fresh.
+		*/
+		[self rebuildContactsList];
 	}
 
 	//If the search mode is currently the TO field, switch it to content, which is what it should now intuitively do
@@ -1217,8 +1253,13 @@ static int toArraySort(id itemA, id itemB, void *context);
 		//Update our search string to ensure we're configured for content searching
 		[self setSearchString:activeSearchString];
 	}
-	
-    [self startSearchingClearingCurrentResults:YES];
+
+	//Changing the selection will start a new search
+	[outlineView_contacts selectItemsInArray:[NSArray arrayWithObject:(parentContact ? (id)parentContact : (id)allContactsIdentifier)]];
+	unsigned int selectedRow = [[outlineView_contacts selectedRowIndexes] firstIndex];
+	if (selectedRow != NSNotFound) {
+		[outlineView_contacts scrollRowToVisible:selectedRow];
+	}
 }
 
 /*!
@@ -1323,8 +1364,9 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 
     if (searchID == activeSearchID) { //If we're still supposed to go
 		searching = YES;
-		
+		AILog(@"filterLogsWithSearch (search ID %i): %@",searchID,searchInfoDict);
 		//Search
+		[plugin pauseIndexing];
 		if (searchString && [searchString length]) {
 			switch (mode) {
 				case LOG_SEARCH_FROM:
@@ -1349,6 +1391,8 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 		//Refresh
 		searching = NO;
 		[self performSelectorOnMainThread:@selector(searchComplete) withObject:nil waitUntilDone:NO];
+		[plugin resumeIndexing];
+		AILog(@"filterLogsWithSearch (search ID %i): finished",searchID);
     }
 	
     //Cleanup
@@ -1647,10 +1691,6 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
-	if (![NSApp isOnTigerOrBetter]) {
-		NSLog(@"item has address 0x%08x [class %@]", (unsigned long)item, [item class]);
-	}
-	
 	Class itemClass = [item class];
 
 	if (itemClass == [AIMetaContact class]) {
@@ -1781,9 +1821,11 @@ static int toArraySort(id itemA, id itemB, void *context)
 {
 	NSString *nameA = [sharedLogViewerInstance outlineView:nil objectValueForTableColumn:nil byItem:itemA];
 	NSString *nameB = [sharedLogViewerInstance outlineView:nil objectValueForTableColumn:nil byItem:itemB];
+	NSComparisonResult result = [nameA caseInsensitiveCompare:nameB];
+	if (result == NSOrderedSame) result = [nameA compare:nameB];
 
-	return [nameA caseInsensitiveCompare:nameB];
-}	
+	return result;
+}
 
 - (void)draggedDividerRightBy:(float)deltaX
 {	
@@ -2262,8 +2304,8 @@ static int toArraySort(id itemA, id itemB, void *context)
 			
 			[[adium notificationCenter] postNotificationName:ChatLog_WillDelete object:aLog userInfo:nil];
 			AILogToGroup	*logToGroup = [logToGroupDict objectForKey:[NSString stringWithFormat:@"%@.%@/%@",[aLog serviceClass],[aLog from],[aLog to]]];
-			[logToGroup trashLog:aLog];
-			
+			BOOL success = [logToGroup trashLog:aLog];
+			AILog(@"Trashing %@: %i",[aLog path], success);
 			//Clear the to group out if it no longer has anything of interest
 			if ([logToGroup logCount] == 0) {
 				AILogFromGroup	*logFromGroup = [logFromGroupDict objectForKey:[NSString stringWithFormat:@"%@.%@",[aLog serviceClass],[aLog from]]];
@@ -2320,11 +2362,11 @@ static int toArraySort(id itemA, id itemB, void *context)
  *
  * @param logCount If non-NULL, will be set to the total number of logs on return
  */
-- (NSSet *)allSelectedToGroups:(int *)totalLogCount
+- (NSArray *)allSelectedToGroups:(int *)totalLogCount
 {
     NSEnumerator        *fromEnumerator;
     AILogFromGroup      *fromGroup;
-	NSMutableSet		*allToGroups = [NSMutableSet set];
+	NSMutableArray		*allToGroups = [NSMutableArray array];
 
 	if (totalLogCount) *totalLogCount = 0;
 
@@ -2346,7 +2388,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 			}
 		}
 	}
-	
+
 	return allToGroups;
 }
 
@@ -2355,7 +2397,7 @@ static int toArraySort(id itemA, id itemB, void *context)
  *
  * The logs will be marked for readdition to the index
  */
-- (void)restoreDeletedToGroups:(NSSet *)toGroups
+- (void)restoreDeletedToGroups:(NSArray *)toGroups
 {
 	NSEnumerator	*enumerator;
 	AILogToGroup	*toGroup;
@@ -2391,7 +2433,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 
 - (void)deleteSelectedContactsFromSourceListAlertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 {
-	NSSet *allSelectedToGroups = (NSSet *)contextInfo;
+	NSArray *allSelectedToGroups = (NSArray *)contextInfo;
 	if (returnCode == NSAlertFirstButtonReturn) {
 		AILogToGroup	*logToGroup;
 		NSEnumerator	*enumerator;
@@ -2436,7 +2478,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 - (void)deleteSelectedContactsFromSourceList
 {
 	int totalLogCount;
-	NSSet *allSelectedToGroups = [self allSelectedToGroups:&totalLogCount];
+	NSArray *allSelectedToGroups = [self allSelectedToGroups:&totalLogCount];
 
 	if (totalLogCount > 1) {
 		NSAlert *alert = [self alertForDeletionOfLogCount:totalLogCount];

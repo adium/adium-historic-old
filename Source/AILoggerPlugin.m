@@ -62,14 +62,14 @@
 #define LOG_VIEWER					AILocalizedString(@"Chat Transcripts Viewer",nil)
 #define VIEW_LOGS_WITH_CONTACT		AILocalizedString(@"View Chat Transcripts",nil)
 
-#define	CURRENT_LOG_VERSION			7       //Version of the log index.  Increase this number to reset everyone's index.
+#define	CURRENT_LOG_VERSION			8       //Version of the log index.  Increase this number to reset everyone's index.
 
 #define	LOG_VIEWER_IDENTIFIER		@"LogViewer"
 
 #define XML_LOGGING_NAMESPACE		@"http://purl.org/net/ulf/ns/0.4-02"
 #define NEW_LOGFILE_TIMEOUT			600		//10 minutes
 
-#define ENABLE_PROXIMITY_SEARCH		TRUE
+#define ENABLE_PROXIMITY_SEARCH		FALSE
 
 @interface AILoggerPlugin (PRIVATE)
 - (void)configureMenuItems;
@@ -839,6 +839,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 		if ([NSApp isOnTigerOrBetter]) {
 			textAnalysisProperties = [NSDictionary dictionaryWithObjectsAndKeys:
 				[NSNumber numberWithInt:0], kSKMaximumTerms,
+				[NSNumber numberWithInt:2], kSKMinTermLength,
 #if ENABLE_PROXIMITY_SEARCH
 				kCFBooleanTrue, kSKProximityIndexing, 
 #endif
@@ -986,10 +987,10 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 
 		//Walk through every 'to' group
 		toEnumerator = [[[fromGroup toGroupArray] objectEnumerator] retain];
-		while (!stopIndexingThreads && (toGroup = [[toEnumerator nextObject] retain])) {
+		while ((toGroup = [[toEnumerator nextObject] retain])) {
 			//Walk through every log
 			logEnumerator = [toGroup logEnumerator];
-			while ((theLog = [logEnumerator nextObject]) && !stopIndexingThreads) {
+			while ((theLog = [logEnumerator nextObject])) {
 				//Add this log's path to our dirty array.  The dirty array is guarded with a lock
 				//since it will be accessed from outside this thread as well
 				[dirtyLogLock lock];
@@ -1011,14 +1012,14 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
     }
     [fromEnumerator release];
 	
+	AILog(@"Finished dritying all logs");
+	
     //Save the dirty array we just built
-    if (!stopIndexingThreads) {
-		[self _saveDirtyLogArray];
-		suspendDirtyArraySave = NO; //Re-allow saving of the dirty array
-    }
+	[self _saveDirtyLogArray];
+	suspendDirtyArraySave = NO; //Re-allow saving of the dirty array
     
     //Begin cleaning the logs (If the log viewer is open)
-    if ([LogViewerWindowControllerClass existingWindowController]) {
+    if (!stopIndexingThreads && [LogViewerWindowControllerClass existingWindowController]) {
 		[self cleanDirtyLogs];
     }
     
@@ -1033,22 +1034,25 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
  */
 - (void)cleanDirtyLogs
 {
+	//Do nothing if we're paused
+	if (logIndexingPauses) return;
+
     //Reset the cleaning progress
     [dirtyLogLock lock];
     logsToIndex = [dirtyLogArray count];
     [dirtyLogLock unlock];
     logsIndexed = 0;
-
-	[NSThread detachNewThreadSelector:@selector(_cleanDirtyLogsThread:) toTarget:self withObject:(id)[self logContentIndex]];
+	AILog(@"cleanDirtyLogs: logsToIndex is %i",logsToIndex);
+	if (logsToIndex > 0) {
+		[NSThread detachNewThreadSelector:@selector(_cleanDirtyLogsThread:) toTarget:self withObject:(id)[self logContentIndex]];
+	}
 }
 
 - (void)didCleanDirtyLogs
 {
 	//Update our progress
-	if (!stopIndexingThreads) {
-		logsToIndex = 0;
-		[[LogViewerWindowControllerClass existingWindowController] logIndexingProgressUpdate];
-	}
+	logsToIndex = 0;
+	[[LogViewerWindowControllerClass existingWindowController] logIndexingProgressUpdate];
 	
 	//Clear the dirty status of all open chats so they will be marked dirty if they receive another message
 	NSEnumerator *enumerator = [[[adium chatController] openChats] objectEnumerator];
@@ -1068,13 +1072,44 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 	}
 }
 
+- (void)pauseIndexing
+{
+	if (logsToIndex) {
+		[self stopIndexingThreads];
+		logsToIndex = 0;
+		logIndexingPauses++;
+		AILog(@"Pausing %i",logIndexingPauses);
+	}
+}
+
+- (void)resumeIndexing
+{
+	if (logIndexingPauses)
+		logIndexingPauses--;
+	AILog(@"Told to resume; log indexing paauses is now %i",logIndexingPauses);
+	if (logIndexingPauses == 0) {
+		stopIndexingThreads = NO;
+		[self cleanDirtyLogs];
+	}
+}
+
 - (void)_cleanDirtyLogsThread:(SKIndexRef)searchIndex
 {
     NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
 
 	//Ensure log indexing (in an old thread) isn't already going on and just waiting to stop
 	[indexingThreadLock lock]; [indexingThreadLock unlock];
-	
+
+	//If it was going on, we can just cancel
+	if (logsToIndex == 0) {
+		AILog(@"Nothing to clean!");
+		[self performSelectorOnMainThread:@selector(didCleanDirtyLogs)
+							   withObject:nil
+							waitUntilDone:NO];
+		[pool release];
+		return;
+	}
+
     [indexingThreadLock lock];
 
     //Start cleaning (If we're still supposed to go)
@@ -1153,6 +1188,9 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 
 		[logAccessLock lock];
 		SKIndexFlush(searchIndex);
+		AILog(@"After cleaning dirty logs, the search index has a max ID of %i and a count of %i",
+			  SKIndexGetMaximumDocumentID(searchIndex),
+			  SKIndexGetDocumentCount(searchIndex));
 		[logAccessLock unlock];
 
 		[self performSelectorOnMainThread:@selector(didCleanDirtyLogs)
