@@ -182,14 +182,17 @@
  *
  * @param inPath A _relative_ path of the form SERVICE.ACCOUNT_NAME/TO_NAME/LogName.Extension
  */
-- (void)trashLog:(AIChatLog *)aLog
+- (BOOL)trashLog:(AIChatLog *)aLog
 {
 	NSString *logPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[aLog path]];
-	[[NSFileManager defaultManager] trashFileAtPath:logPath];
+	BOOL	 success;
+	success = [[NSFileManager defaultManager] trashFileAtPath:logPath];
 
 	//Remove from our dictionaries so we don't reference the removed log
 	[logDict removeObjectForKey:[aLog path]];
 	[partialLogDict removeObjectForKey:[aLog path]];
+	
+	return success;
 }
 
 /*!
