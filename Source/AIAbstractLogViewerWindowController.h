@@ -98,7 +98,9 @@ typedef enum {
     NSLock				*searchingLock;			//Locked when a search is in progress
     BOOL				searching;				//YES if a search is in progress
     NSString			*activeSearchString;	//Current search string
-	
+	BOOL				suppressSearchRequests;
+	BOOL				isOpeningForContact;
+
     BOOL				sortDirection;			//Direction to sort
 
 	NSTimer				*refreshResultsTimer;

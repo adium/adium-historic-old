@@ -66,6 +66,7 @@
     //Indexing progress
     int					logsToIndex;
     int					logsIndexed;
+	int					logIndexingPauses;
     
 }
 
