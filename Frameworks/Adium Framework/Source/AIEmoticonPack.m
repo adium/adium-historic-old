@@ -39,7 +39,7 @@
 - (AIEmoticonPack *)initFromPath:(NSString *)inPath;
 - (void)setEmoticonArray:(NSArray *)inArray;
 - (void)loadEmoticons;
-- (void)loadAdiumEmoticons:(NSDictionary *)emoticons;
+- (void)loadAdiumEmoticons:(NSDictionary *)emoticons localizedStrings:(NSDictionary *)localizationDict;
 - (void)loadProteusEmoticons:(NSDictionary *)emoticons;
 - (void)_upgradeEmoticonPack:(NSString *)packPath;
 - (NSString *)_imagePathForEmoticonPath:(NSString *)inPath;
@@ -72,14 +72,26 @@
 {
     if ((self = [super init])) {
 		path = [inPath retain];
-		name = [[[inPath lastPathComponent] stringByDeletingPathExtension] retain];
-		NSBundle * xtraBundle = [NSBundle bundleWithPath:path];
-		if (xtraBundle && ([[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] intValue] == 1)) {//This checks for a new-style xtra
-			path = [xtraBundle resourcePath]; //new style xtras store the same info, but it's in Contents/Resources/ so that we can have an info.plist file and use NSBundle
+
+		NSBundle *xtraBundle = [NSBundle bundleWithPath:path];
+		if (xtraBundle && ([[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] intValue] == 1)) {
+			//This checks for a new-style xtra
+			//New style xtras store the same info, but it's in Contents/Resources/ so that we can have an info.plist file and use NSBundle.
+			emoticonLocation = [[xtraBundle resourcePath] retain];
+		} else {
+			emoticonLocation = [path retain];
 		}
+		
+		NSString *localizedName;
+		name = [[path lastPathComponent] stringByDeletingPathExtension];
+		if ((localizedName = [[xtraBundle localizedInfoDictionary] objectForKey:name])) {
+			name = localizedName;
+		}
+		[name retain];
+
 		emoticonArray = nil;
 		enabledEmoticonArray = nil;
-		emoticonLocation = [path retain];
+		
 		enabled = NO;
 	}
     
@@ -244,23 +256,20 @@
  */
 - (void)loadEmoticons
 {
-//	NSBundle	*emoticonPackBundle;
-	
 	[emoticonArray release]; emoticonArray = [[NSMutableArray alloc] init];
 	[serviceClass release]; serviceClass = nil;
 
-#warning Localization
-//	if (emoticonPackBundle = [NSBundle bundleWithPath:
 	//
-	NSString		*infoDictPath = [path stringByAppendingPathComponent:EMOTICON_PLIST_FILENAME];
+	NSString		*infoDictPath = [emoticonLocation stringByAppendingPathComponent:EMOTICON_PLIST_FILENAME];
 	NSDictionary	*infoDict = [NSDictionary dictionaryWithContentsOfFile:infoDictPath];
-	
+	NSDictionary	*localizedInfoDict = [[NSBundle bundleWithPath:path] localizedInfoDictionary];
+
 	//If no info dict was found, assume that this is an old emoticon pack and try to upgrade it
 	if (!infoDict) {
 		[self _upgradeEmoticonPack:path];
 		infoDict = [NSDictionary dictionaryWithContentsOfFile:infoDictPath];
 	}
-	
+
 	//Load the emoticons
 	if (infoDict) {
 		/* Handle optional location key, which allows emoticons to be loaded
@@ -314,7 +323,7 @@
 		
 		switch (version) {
 			case 0: [self loadProteusEmoticons:infoDict]; break;
-			case 1: [self loadAdiumEmoticons:[infoDict objectForKey:EMOTICON_LIST]]; break;
+			case 1: [self loadAdiumEmoticons:[infoDict objectForKey:EMOTICON_LIST] localizedStrings:localizedInfoDict]; break;
 			default: break;
 		}
 		
@@ -339,18 +348,39 @@
  *
  * @param emoticons A dictionary whose keys are file names and objects are themselves dictionaries with equivalent and name information.
  */
-- (void)loadAdiumEmoticons:(NSDictionary *)emoticons
+- (void)loadAdiumEmoticons:(NSDictionary *)emoticons localizedStrings:(NSDictionary *)localizationDict
 {
 	NSEnumerator	*enumerator = [emoticons keyEnumerator];
 	NSString		*fileName;
-	
+	NSBundle		*bundle = (!localizationDict ? [NSBundle bundleForClass:[self class]] : nil);
+
 	while ((fileName = [enumerator nextObject])) {
 		id	dict = [emoticons objectForKey:fileName];
-		
+
 		if ([dict isKindOfClass:[NSDictionary class]]) {
+			NSString *emoticonName = [(NSDictionary *)dict objectForKey:EMOTICON_NAME];
+			NSString *localizedEmoticonName = nil;
+
+			if (emoticonName) {
+				if (localizationDict) {
+					//If the bundle provides localizations, use them
+					localizedEmoticonName = [localizationDict objectForKey:emoticonName];
+				} 
+				
+				if (!localizedEmoticonName) {
+					//Otherwise, look at our list of default translations (generated at the bottom of this file)
+					localizedEmoticonName = [bundle localizedStringForKey:emoticonName
+																	value:emoticonName
+																	table:@"EmoticonNames"];
+				}
+				
+				if (localizedEmoticonName)
+					emoticonName = localizedEmoticonName;
+			}
+
 			[emoticonArray addObject:[AIEmoticon emoticonWithIconPath:[emoticonLocation stringByAppendingPathComponent:fileName]
 														  equivalents:[(NSDictionary *)dict objectForKey:EMOTICON_EQUIVALENTS]
-																 name:[(NSDictionary *)dict objectForKey:EMOTICON_NAME]
+																 name:emoticonName
 																 pack:self]];
 		}
 	}
@@ -367,7 +397,7 @@
 	while ((fileName = [enumerator nextObject])) {
 		NSDictionary	*dict = [emoticons objectForKey:fileName];
 		
-		[emoticonArray addObject:[AIEmoticon emoticonWithIconPath:[path stringByAppendingPathComponent:fileName]
+		[emoticonArray addObject:[AIEmoticon emoticonWithIconPath:[emoticonLocation stringByAppendingPathComponent:fileName]
 													  equivalents:[dict objectForKey:@"String Representations"]
 															 name:[dict objectForKey:@"Meaning"]
 															 pack:self]];
@@ -531,5 +561,32 @@
 {
 	return ([NSString stringWithFormat:@"[%@: %@, ServiceClass %@]",[super description], [self name], [self serviceClass]]);
 }
+
+/* Localized emoticon names, listed here for genstrings:
+
+AILocalizedStringFromTable(@"Angry", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Blush", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Cry", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Scared", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Sad", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Gasp", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Grin", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Angel", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Kiss", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Lips Are Sealed", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Money-mouth", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Smile", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Sticking Out Tongue", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Erm", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Cool", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Wink", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Foot In Mouth", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Frown", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Confused", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Halo", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Undecided", "EmoticonNames", "Emoticon name")
+AILocalizedStringFromTable(@"Embarrassed", "EmoticonNames", "Emoticon name")
+
+*/
 
 @end
