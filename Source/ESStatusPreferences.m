@@ -244,7 +244,7 @@
 	[outlineView_stateList scrollRowToVisible:[outlineView_stateList rowForItem:newState]];
 }
 
-- (void)finishedSatusGroupEdit:(AIStatusGroup *)inStatusGroup
+- (void)finishedStatusGroupEdit:(AIStatusGroup *)inStatusGroup
 {
 	if (![inStatusGroup containingStatusGroup]) {
 		//Add it if it's not already in a group
