@@ -107,9 +107,9 @@
 	[statusGroup setTitle:[textField_title stringValue]];
 	[statusGroup setStatusType:[[popUp_groupWith selectedItem] tag]];
 
-	if (target && [target respondsToSelector:@selector(finishedSatusGroupEdit:)]) {
+	if (target && [target respondsToSelector:@selector(finishedStatusGroupEdit:)]) {
 		//Perform on a delay so the sheet can begin closing immediately.
-		[target performSelector:@selector(finishedSatusGroupEdit:)
+		[target performSelector:@selector(finishedStatusGroupEdit:)
 				   withObject:statusGroup
 				   afterDelay:0];
 	}
