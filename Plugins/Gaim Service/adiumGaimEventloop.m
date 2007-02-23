@@ -351,21 +351,39 @@ int adium_input_get_error(int fd, int *error)
 	
 	ret = getsockopt(fd, SOL_SOCKET, SO_ERROR, error, &len);
 	if (!ret && !(*error)) {
-		//There's an existing socket, which CFSocketCreateWithNative() will return
-		CFSocketRef socket = CFSocketCreateWithNative(kCFAllocatorDefault,
-													  fd,
-													  (kCFSocketReadCallBack | kCFSocketWriteCallBack),
-													  socketCallback,
-													  NULL);
-		if (socket) {
-			if (!CFSocketIsValid(socket)) {
-				ret = -1;
-				*error = ENOTCONN;
-				AILog(@"adium_input_get_error(%i): Socket is NOT valid", fd);
-			} else {
-				AILog(@"adium_input_get_error(%i): Socket is valid.", fd);
+		/*
+		 * Taken from Fire's FaimP2PConnection.m:
+		 * The job of this function is to detect if the connection failed or not
+		 * There has to be a better way to do this
+		 *
+		 * Any socket that fails to connect will select for reading and writing
+		 * and all reads and writes will fail
+		 * Any listening socket will select for reading, and any read will fail
+		 * So, select for writing, if you can write, and the write fails, not connected
+		 */
+		
+		{
+			fd_set thisfd;
+			struct timeval timeout;
+			
+			FD_ZERO(&thisfd);
+			FD_SET(fd, &thisfd);
+			timeout.tv_sec = 0;
+			timeout.tv_usec = 0;
+			select(fd+1, NULL, &thisfd, NULL, &timeout);
+			if(FD_ISSET(fd, &thisfd)){
+				ssize_t length = 0;
+				char buffer[4] = {0, 0, 0, 0};
+				
+				length = write(fd, buffer, length);
+				if(length == -1)
+				{
+					/* Not connected */
+					ret = -1;
+					*error = ENOTCONN;
+					AILog(@"adium_input_get_error(%i): Socket is NOT valid", fd);
+				}
 			}
-			CFRelease(socket);
 		}
 	}
 
