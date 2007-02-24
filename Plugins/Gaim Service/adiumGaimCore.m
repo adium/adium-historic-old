@@ -20,6 +20,7 @@
 #import "adiumGaimBlist.h"
 #import "adiumGaimConnection.h"
 #import "adiumGaimConversation.h"
+#import "adiumGaimDnsRequest.h"
 #import "adiumGaimEventloop.h"
 #import "adiumGaimFt.h"
 #import "adiumGaimNotify.h"
@@ -170,6 +171,7 @@ static void adiumGaimCoreUiInit(void)
     gaim_notify_set_ui_ops(adium_gaim_notify_get_ui_ops());
     gaim_request_set_ui_ops(adium_gaim_request_get_ui_ops());
 	gaim_xfers_set_ui_ops(adium_gaim_xfers_get_ui_ops());
+	gaim_dnsquery_set_ui_ops(adium_gaim_dns_request_get_ui_ops());
 	
 	adiumGaimConversation_init();
 
