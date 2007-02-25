@@ -817,6 +817,8 @@ char *gaim_str_binary_to_ascii(const unsigned char *binary, guint len);
 /**************************************************************************/
 /*@{*/
 
+void gaim_got_protocol_handler_uri(const char *uri);
+
 /**
  * Parses a URL, returning its host, port, file path, username and password.
  *
@@ -1069,6 +1071,13 @@ const char *gaim_escape_filename(const char *str);
  * This should not be used by plugins.
  */
 const char *_gaim_oscar_convert(const char *act, const char *protocol);
+
+/**
+ * Restore default signal handlers for signals which might reasonably have
+ * handlers. This should be called by a fork()'d child process, since child processes
+ * inherit the handlers of the parent.
+ */
+void gaim_restore_default_signal_handlers(void);
 #ifdef __cplusplus
 }
 #endif
