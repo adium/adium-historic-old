@@ -5957,7 +5957,6 @@
 			isa = PBXGroup;
 			children = (
 				38D8FA240A8A45E00078E442 /* QuickTime */,
-				3417D27109C3334900FC413E /* Translator */,
 				B782F088058BB60B00AF4BBA /* LaTeX Plugin */,
 			);
 			name = Other;
