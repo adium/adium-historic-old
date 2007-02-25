@@ -3,28 +3,9 @@
 //  Adium
 //
 //  Created by Graham Booker on 2/24/07.
-//  Copyright 2007 __MyCompanyName__. All rights reserved.
 //
 
 #import "adiumGaimDnsRequest.h"
-
-typedef struct _GaimDnsQueryResolverProcess GaimDnsQueryResolverProcess;
-
-struct _GaimDnsQueryData {
-	char *hostname;
-	int port;
-	GaimDnsQueryConnectFunction callback;
-	gpointer data;
-	guint timeout;
-	
-#if defined(__unix__) || defined(__APPLE__)
-	GaimDnsQueryResolverProcess *resolver;
-#elif defined _WIN32 /* end __unix__ || __APPLE__ */
-	GThread *resolver;
-	GSList *hosts;
-	gchar *error_message;
-#endif
-};
 
 @interface AdiumGaimDnsRequest : NSObject {
 	GaimDnsQueryData *query_data;
@@ -85,7 +66,7 @@ static NSMutableDictionary *threads = nil;
 	struct addrinfo hints, *res, *tmp;
 	char servname[20];
 	
-	g_snprintf(servname, sizeof(servname), "%d", query_data->port);
+	g_snprintf(servname, sizeof(servname), "%d", gaim_dnsquery_get_port(query_data));
 	memset(&hints, 0, sizeof(hints));
 	
 	/* This is only used to convert a service
@@ -95,7 +76,7 @@ static NSMutableDictionary *threads = nil;
 	 * library.
 	 */
 	hints.ai_socktype = SOCK_STREAM;
-	errorNumber = getaddrinfo(query_data->hostname, servname, &hints, &res);
+	errorNumber = getaddrinfo(gaim_dnsquery_get_host(query_data), servname, &hints, &res);
 	if (errorNumber != 0) {
 /*		if (show_debug)
 			printf("dns[%d] Error: getaddrinfo returned %d\n",
@@ -147,7 +128,7 @@ static NSMutableDictionary *threads = nil;
 		char message[1024];
 		
 		g_snprintf(message, sizeof(message), _("Error resolving %s:\n%s"),
-				   query_data->hostname, gai_strerror(errorNumber));
+				   gaim_dnsquery_get_host(query_data), gai_strerror(errorNumber));
 		failed_cb(query_data, message);
 	}
 	[self autorelease];  //Release our retain in init...

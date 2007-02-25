@@ -108,6 +108,22 @@ void gaim_dnsquery_set_ui_ops(GaimDnsQueryUiOps *ops);
 GaimDnsQueryUiOps *gaim_dnsquery_get_ui_ops(void);
 
 /**
+ * Get the host associated with a GaimDnsQueryData
+ *
+ * @param query_data The DNS query
+ * @return The host.
+ */
+char *gaim_dnsquery_get_host(GaimDnsQueryData *query_data);
+
+/**
+ * Get the port associated with a GaimDnsQueryData
+ *
+ * @param query_data The DNS query
+ * @return The port.
+ */
+int gaim_dnsquery_get_port(GaimDnsQueryData *query_data);
+
+/**
  * Initializes the DNS query subsystem.
  */
 void gaim_dnsquery_init(void);
