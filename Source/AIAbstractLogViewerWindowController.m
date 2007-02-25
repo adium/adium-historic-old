@@ -505,11 +505,11 @@ static int toArraySort(id itemA, id itemB, void *context);
     if (activeSearchString && [activeSearchString length]) {
 		[shelf_splitView setResizeThumbStringValue:[NSString stringWithFormat:((count != 1) ? 
 																			   AILocalizedString(@"%i matching transcripts",nil) :
-																			   AILocalizedString(@"1 matching transcripts",nil)),count]];
+																			   AILocalizedString(@"1 matching transcript",nil)),count]];
     } else {
 		[shelf_splitView setResizeThumbStringValue:[NSString stringWithFormat:((count != 1) ? 
 																			   AILocalizedString(@"%i transcripts",nil) :
-																			   AILocalizedString(@"1 transcripts",nil)),count]];
+																			   AILocalizedString(@"1 transcript",nil)),count]];
 		
 		//We are searching, but there is no active search  string. This indicates we're still opening logs.
 		if (searching) {
