@@ -275,7 +275,7 @@ errorReturn:
 			semaphore_destroy(mach_task_self(), semaphore);
 			semaphore = nil;
 		}
-		
+
 		[signalFinishPort invalidate];
 		[signalFinishPort release]; signalFinishPort = nil;
 		[signalFinishPortMessage release]; signalFinishPortMessage = nil;
@@ -1125,6 +1125,9 @@ static OSStatus renderCallback(void *inRefCon, AudioUnitRenderActionFlags inActi
     enumerator = [signalFinishRunLoopModes objectEnumerator];
     while ((mode = [enumerator nextObject]))
         [controllingRunLoop addPort:signalFinishPort forMode:mode];
+	
+	//We need to stay alive as long as we're awaiting a reply on the port.
+	[self retain];
 }
 
 - (void)removeSignalFinishPortFromControllingRunLoop
@@ -1135,18 +1138,15 @@ static OSStatus renderCallback(void *inRefCon, AudioUnitRenderActionFlags inActi
     enumerator = [signalFinishRunLoopModes objectEnumerator];
     while ((mode = [enumerator nextObject]))
         [controllingRunLoop removePort:signalFinishPort forMode:mode];
+	
+	//We retained in addSignalFinishPortToControllingRunLoop
+	[self autorelease];
 }
 
 - (void)handlePortMessage:(NSPortMessage *)message
 {
-	//Don't trust we'll make it through the run loop, 
-	//since we could get released in another thread
-	[self retain];
-	
     [self removeSignalFinishPortFromControllingRunLoop];
     [self finishPlaying];
-	
-	[self release];
 }
 
 - (void)finishPlaying
