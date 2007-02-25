@@ -5720,8 +5720,6 @@
 				383984700A94F780006C8EB1 /* AIVideoConfControllerProtocol.h */,
 				F53B9A1302CCEDCA01A8010A /* Adium.Framework */,
 				34D8342B07CBE6A4006466F2 /* External Sources */,
-				F53B9A1302CCEDCA01A8010A /* Adium.Framework */,
-				34D8342B07CBE6A4006466F2 /* External Sources */,
 			);
 			name = "Public Interface";
 			sourceTree = "<group>";
