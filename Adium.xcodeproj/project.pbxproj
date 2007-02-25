@@ -4934,9 +4934,12 @@
 		34DC84380A7EAA21003E1636 /* Plugins (Not included in release) */ = {
 			isa = PBXGroup;
 			children = (
-				3417D27109C3334900FC413E /* Translator */,
+				4BA88A4C0524AFD700A8010A /* Stress Test */,
 				34B3241D09B9FF6900029361 /* IRC Libgaim Plugin */,
+				B782F088058BB60B00AF4BBA /* LaTeX Plugin */,
+				38D8FA240A8A45E00078E442 /* QuickTime */,
 				B7AE664D0465778E0051E914 /* SQL Logger */,
+				3417D27109C3334900FC413E /* Translator */,
 			);
 			name = "Plugins (Not included in release)";
 			sourceTree = "<group>";
@@ -5938,7 +5941,6 @@
 			children = (
 				9CBADC5005712615005187DA /* WebKit Message View */,
 				4BD672C406001B530049CAF7 /* Services */,
-				4BD672C706001B560049CAF7 /* Other */,
 			);
 			name = "Plugins (Built In)";
 			sourceTree = "<group>";
@@ -5948,18 +5950,8 @@
 			children = (
 				4B7F278605440C6200CDFC90 /* Gaim */,
 				4947F5BB0655E7C400B791E5 /* Bonjour */,
-				4BA88A4C0524AFD700A8010A /* Stress Test */,
 			);
 			name = Services;
-			sourceTree = "<group>";
-		};
-		4BD672C706001B560049CAF7 /* Other */ = {
-			isa = PBXGroup;
-			children = (
-				38D8FA240A8A45E00078E442 /* QuickTime */,
-				B782F088058BB60B00AF4BBA /* LaTeX Plugin */,
-			);
-			name = Other;
 			sourceTree = "<group>";
 		};
 		4BE5AC7F07AFD46800422AD5 /* Interface */ = {
