@@ -18,7 +18,7 @@
 #import <AIUtilities/AIApplicationAdditions.h>
 #include <poll.h>
 
-#define GAIM_SOCKET_DEBUG 1
+//#define GAIM_SOCKET_DEBUG
 
 static guint				sourceId = 0;		//The next source key; continuously incrementing
 static NSMutableDictionary	*sourceInfoDict = nil;
@@ -114,7 +114,7 @@ void updateSocketForSourceInfo(struct SourceInfo *sourceInfo)
 	
 }
 
-guint adium_source_remove(guint tag) {
+gboolean adium_source_remove(guint tag) {
     struct SourceInfo *sourceInfo = (struct SourceInfo*)
 	[[sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:tag]] pointerValue];
 
@@ -179,7 +179,7 @@ guint adium_source_remove(guint tag) {
 }
 
 //Like g_source_remove, return TRUE if successful, FALSE if not
-guint adium_timeout_remove(guint tag) {
+gboolean adium_timeout_remove(guint tag) {
     return (adium_source_remove(tag));
 }
 
@@ -257,7 +257,6 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 	CFSocketContext actualSocketContext = { 0, NULL, NULL, NULL, NULL };
 	CFSocketGetContext(socket, &actualSocketContext);
 	if (actualSocketContext.info != info) {
-		AILog(@"*** Got a cached socket; switching to it ***");
 		free(info);
 		CFRelease(socket);
 		info = actualSocketContext.info;
@@ -267,6 +266,7 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 	info->socket = socket;
 
     if ((condition & GAIM_INPUT_READ)) {
+		if (info->read_tag) AILog(@"*** info->read_tag wsa %i; now it'll be %i",info->read_tag, sourceId + 1);
 		info->read_tag = ++sourceId;
 		info->read_ioFunction = func;
 		info->read_user_data = user_data;
@@ -275,6 +275,7 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 						   forKey:[NSNumber numberWithUnsignedInt:info->read_tag]];
 		
 	} else {
+		if (info->write_tag) AILog(@"*** info->write_tag wsa %i; now it'll be %i",info->write_tag, sourceId + 1);
 		info->write_tag = ++sourceId;
 		info->write_ioFunction = func;
 		info->write_user_data = user_data;
@@ -286,20 +287,6 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 	updateSocketForSourceInfo(info);
 	
 	//Add it to our run loop
-#if 0
-	if (info->run_loop_source) {
-		AILog(@"Removing run loop source for %p",socket);
-		CFRunLoopRemoveSource(gaimRunLoop, info->run_loop_source, /*kCFRunLoopCommonModes*/kCFRunLoopDefaultMode);
-		CFRelease(info->run_loop_source);
-	}
-
-	info->run_loop_source = CFSocketCreateRunLoopSource(kCFAllocatorDefault, socket, 0);
-	if (info->run_loop_source) {
-		CFRunLoopAddSource(gaimRunLoop, info->run_loop_source, kCFRunLoopCommonModes);
-	} else {
-		AILog(@"*** Unable to create run loop source for %p",socket);
-	}
-#endif
 	if (!(info->run_loop_source)) {
 		info->run_loop_source = CFSocketCreateRunLoopSource(kCFAllocatorDefault, socket, 0);
 		if (info->run_loop_source) {
@@ -356,11 +343,59 @@ static void socketCallback(CFSocketRef s,
 	}
 }
 
+int adium_input_get_error(int fd, int *error)
+{
+	int		  ret;
+	socklen_t len;
+	len = sizeof(*error);
+	
+	ret = getsockopt(fd, SOL_SOCKET, SO_ERROR, error, &len);
+	if (!ret && !(*error)) {
+		/*
+		 * Taken from Fire's FaimP2PConnection.m:
+		 * The job of this function is to detect if the connection failed or not
+		 * There has to be a better way to do this
+		 *
+		 * Any socket that fails to connect will select for reading and writing
+		 * and all reads and writes will fail
+		 * Any listening socket will select for reading, and any read will fail
+		 * So, select for writing, if you can write, and the write fails, not connected
+		 */
+		
+		{
+			fd_set thisfd;
+			struct timeval timeout;
+			
+			FD_ZERO(&thisfd);
+			FD_SET(fd, &thisfd);
+			timeout.tv_sec = 0;
+			timeout.tv_usec = 0;
+			select(fd+1, NULL, &thisfd, NULL, &timeout);
+			if(FD_ISSET(fd, &thisfd)){
+				ssize_t length = 0;
+				char buffer[4] = {0, 0, 0, 0};
+				
+				length = write(fd, buffer, length);
+				if(length == -1)
+				{
+					/* Not connected */
+					ret = -1;
+					*error = ENOTCONN;
+					AILog(@"adium_input_get_error(%i): Socket is NOT valid", fd);
+				}
+			}
+		}
+	}
+
+	return ret;
+}
+
 static GaimEventLoopUiOps adiumEventLoopUiOps = {
     adium_timeout_add,
     adium_timeout_remove,
     adium_input_add,
-    adium_source_remove
+    adium_source_remove,
+	adium_input_get_error
 };
 
 GaimEventLoopUiOps *adium_gaim_eventloop_get_ui_ops(void)
