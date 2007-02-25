@@ -1145,6 +1145,7 @@
 		F51BCD3C0A156269000FDC06 /* AIUtilities.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		F51BCE390A156312000FDC06 /* AdiumSpotlightImporter.mdimporter in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34611C8309B6756D00870036 /* AdiumSpotlightImporter.mdimporter */; };
 		F51BCEEA0A15793E000FDC06 /* AIHyperlinks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3496A8EA07CE6CA30055BBAB /* AIHyperlinks.framework */; };
+		F551B1000B8F5130007D3A3C /* FireLogImporter.nib in Resources */ = {isa = PBXBuildFile; fileRef = F56E0DAF0A4CDF9C008D1EB5 /* FireLogImporter.nib */; };
 		F58904F20A7828B9001F0ADC /* OTR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 341BDBBA0968BC9A00CF83F5 /* OTR.framework */; };
 		F5DA8A740A546AC5004A41D0 /* GBChatlogHTMLConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DA8A720A546AC4004A41D0 /* GBChatlogHTMLConverter.m */; };
 		F5F8CA4D0A1A9C9400154550 /* GBQuestionHandlerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8CA4B0A1A9C9400154550 /* GBQuestionHandlerPlugin.m */; };
@@ -7946,6 +7947,7 @@
 				347374BD0AA9206B00AD18E3 /* ShortcutRecorder.strings in Resources */,
 				34F312BD0ADC43CA00A4310E /* xtras_duck.png in Resources */,
 				377ED2680AED59E600CB7BDF /* TabsAdvanced.nib in Resources */,
+				F551B1000B8F5130007D3A3C /* FireLogImporter.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
