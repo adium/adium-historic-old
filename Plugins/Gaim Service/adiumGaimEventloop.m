@@ -114,7 +114,7 @@ void updateSocketForSourceInfo(struct SourceInfo *sourceInfo)
 	
 }
 
-guint adium_source_remove(guint tag) {
+gboolean adium_source_remove(guint tag) {
     struct SourceInfo *sourceInfo = (struct SourceInfo*)
 	[[sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:tag]] pointerValue];
 
@@ -179,7 +179,7 @@ guint adium_source_remove(guint tag) {
 }
 
 //Like g_source_remove, return TRUE if successful, FALSE if not
-guint adium_timeout_remove(guint tag) {
+gboolean adium_timeout_remove(guint tag) {
     return (adium_source_remove(tag));
 }
 
