@@ -22,7 +22,7 @@
 #import <AIUtilities/AIAutoScrollView.h>
 #import <Sparkle/Sparkle.h>
 
-#define CRASH_REPORT_URL				@"http://crashes.adiumx.com/post.jsp"
+#define CRASH_REPORT_URL				@"http://www.visualdistortion.org/crash/post.jsp"
 #define KEY_CRASH_EMAIL_ADDRESS			@"AdiumCrashReporterEmailAddress"
 #define KEY_CRASH_AIM_ACCOUNT			@"AdiumCrashReporterAIMAccount"
 
