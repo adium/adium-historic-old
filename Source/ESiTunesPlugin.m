@@ -135,18 +135,27 @@
  * 
  * Retains new information, requests immediate content update and lets the plugin know what iTunes is doing.
  */
-- (void)setiTunesCurrentInfo:(NSDictionary *)newInfo
-{
-	if (newInfo != iTunesCurrentInfo) {
-		[iTunesCurrentInfo release];
-		iTunesCurrentInfo = [newInfo retain];
+ - (void)setiTunesCurrentInfo:(NSDictionary *)newInfo
+ {
+ 	if (newInfo != iTunesCurrentInfo) {
+		NSTimeInterval time = 5.0;
+ 		[iTunesCurrentInfo release];
+ 		iTunesCurrentInfo = [newInfo retain];
 
-		[self setiTunesIsStopped:[[newInfo objectForKey:PLAYER_STATE] isEqualToString:KEY_STOPPED]];
-		[self setiTunesIsPaused:[[newInfo objectForKey:PLAYER_STATE] isEqualToString:KEY_PAUSED]];
+ 		[self setiTunesIsStopped:[[newInfo objectForKey:PLAYER_STATE] isEqualToString:KEY_STOPPED]];
+ 		[self setiTunesIsPaused:[[newInfo objectForKey:PLAYER_STATE] isEqualToString:KEY_PAUSED]];
+        
+        //Cancel any requests we had to fire updates.
+        [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(fireUpdateiTunesInfo) object:nil];
+        //fire an iTunes update in three seconds.
+        [self performSelector:@selector(fireUpdateiTunesInfo) withObject:nil afterDelay:3.0];
+ 	}
+ }
 
-		[[adium notificationCenter] postNotificationName:Adium_RequestImmediateDynamicContentUpdate object:nil];
-	}
-}
+ -(void)fireUpdateiTunesInfo
+ {
+     [[adium notificationCenter] postNotificationName:Adium_RequestImmediateDynamicContentUpdate object:nil];
+ }
 
 #pragma mark -
 #pragma mark Plugin Methods
