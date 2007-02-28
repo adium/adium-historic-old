@@ -138,7 +138,6 @@
  - (void)setiTunesCurrentInfo:(NSDictionary *)newInfo
  {
  	if (newInfo != iTunesCurrentInfo) {
-		NSTimeInterval time = 5.0;
  		[iTunesCurrentInfo release];
  		iTunesCurrentInfo = [newInfo retain];
 

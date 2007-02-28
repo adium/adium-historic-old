@@ -89,6 +89,7 @@
 - (AIXMLAppender *)existingAppenderForChat:(AIChat *)chat;
 - (AIXMLAppender *)appenderForChat:(AIChat *)chat;
 - (void)closeAppenderForChat:(AIChat *)chat;
+- (void)finishClosingAppender:(NSString *)chatKey;
 @end
 
 static NSString     *logBasePath = nil;     //The base directory of all logs
