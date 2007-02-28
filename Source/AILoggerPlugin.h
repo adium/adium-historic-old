@@ -95,6 +95,8 @@
 - (void)stopIndexingThreads;
 - (void)dirtyAllLogs;
 - (void)cleanDirtyLogs;
+- (void)pauseIndexing;
+- (void)resumeIndexing;
 
 - (NSLock *)logAccessLock;
 - (void)removePathsFromIndex:(NSSet *)paths;
