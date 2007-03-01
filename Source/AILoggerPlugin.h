@@ -99,5 +99,8 @@
 - (NSLock *)logAccessLock;
 - (void)removePathsFromIndex:(NSSet *)paths;
 
+- (void)pauseIndexing;
+- (void)resumeIndexing;
+
 @end
 
