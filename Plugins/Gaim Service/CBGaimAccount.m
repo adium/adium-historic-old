@@ -844,18 +844,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
-/*!
- * @brief Return the path at which to save an emoticon
- */
-- (NSString *)_emoticonCachePathForEmoticon:(NSString *)emoticonEquivalent type:(NSBitmapImageFileType)fileType inChat:(AIChat *)inChat
-{
-	static unsigned long long emoticonID = 0;
-    NSString    *filename = [NSString stringWithFormat:@"TEMP-CustomEmoticon_%@_%@_%qu.%@",
-		[inChat uniqueChatID], emoticonEquivalent, emoticonID++, ((fileType == NSGIFFileType) ? @"gif" : @"png")];
-    return [[adium cachesPath] stringByAppendingPathComponent:[filename safeFilenameString]];	
-}
-
-
 - (void)chat:(AIChat *)inChat setCustomEmoticon:(NSString *)emoticonEquivalent withImageData:(NSData *)inImageData
 {
 	if(![[[adium preferenceController] preferenceForKey:KEY_MSN_DISPLAY_CUSTOM_EMOTICONS
@@ -872,24 +860,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		if ([[emoticon textEquivalents] containsObject:emoticonEquivalent]) break;
 	}
 	
-	NSImage				 *image = [[NSImage alloc] initWithData:inImageData];
-	NSImageRep			 *imageRep = [image bestRepresentationForDevice:nil];
-	NSBitmapImageFileType fileType;
-	if ([imageRep isKindOfClass:[NSBitmapImageRep class]] &&
-		[[(NSBitmapImageRep *)imageRep valueForProperty:NSImageFrameCount] intValue] > 1) {
-		//Keep it as a GIF file if it's animated 
-		fileType = NSGIFFileType;
-	} else {
-		//Otherwise, write it out as a PNG file for our use
-		fileType = NSPNGFileType;
-		inImageData = [image PNGRepresentation];
-	}
-	[image release];
-
 	//Write out our image
-	NSString	*path = [self _emoticonCachePathForEmoticon:emoticonEquivalent
-													   type:fileType
-													 inChat:inChat];
+	NSString	*path = [self _emoticonCachePathForEmoticon:emoticonEquivalent inChat:inChat];
 	[inImageData writeToFile:path
 				  atomically:NO];
 
@@ -919,19 +891,18 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		if ([[emoticon textEquivalents] containsObject:emoticonEquivalent]) break;
 	}
 	
-	if (emoticon) {
-		[[adium notificationCenter] postNotificationName:@"AICustomEmoticonUpdated"
-												  object:inChat
-												userInfo:[NSDictionary dictionaryWithObject:emoticon
-																					 forKey:@"AIEmoticon"]];
-	} else {
-		emoticon = [AIEmoticon emoticonWithIconPath:nil
+	NSString	*path = [self _emoticonCachePathForEmoticon:emoticonEquivalent inChat:inChat];
+
+	if (!emoticon) {
+		emoticon = [AIEmoticon emoticonWithIconPath:path
 										equivalents:[NSArray arrayWithObject:emoticonEquivalent]
 											   name:emoticonEquivalent
 											   pack:nil];
-		NSLog(@"Warning: closed custom emoticon %@ without adding it to the chat", emoticon);
-		AILog(@"Warning: closed custom emoticon %@ without adding it to the chat", emoticon);
 	}
+	[[adium notificationCenter] postNotificationName:@"AICustomEmoticonUpdated"
+											  object:inChat
+											userInfo:[NSDictionary dictionaryWithObject:emoticon
+																				 forKey:@"AIEmoticon"]];
 }
 
 #pragma mark GaimConversation User Lists
@@ -2394,6 +2365,19 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	static unsigned long long userIconID = 0;
     NSString    *userIconCacheFilename = [NSString stringWithFormat:@"TEMP-UserIcon_%@_%qu", [self internalObjectID], userIconID];
     return [[adium cachesPath] stringByAppendingPathComponent:userIconCacheFilename];
+}
+
+/*!
+ * @brief Return the path at which to save an emoticon
+ *
+ * We may have data of some type other than JPEG, but providing _some_ file extension means the cached file can easily be opened
+ * in an image editor if the user saves the file or checks the cache directory
+ */
+- (NSString *)_emoticonCachePathForEmoticon:(NSString *)emoticonEquivalent inChat:(AIChat *)inChat
+{
+	static unsigned long long emoticonID = 0;
+    NSString    *filename = [NSString stringWithFormat:@"TEMP-CustomEmoticon_%@_%@_%qu.gif", [inChat uniqueChatID], emoticonEquivalent,emoticonID++];
+    return [[adium cachesPath] stringByAppendingPathComponent:[filename safeFilenameString]];	
 }
 
 - (NSNumber *)shouldCheckMail
