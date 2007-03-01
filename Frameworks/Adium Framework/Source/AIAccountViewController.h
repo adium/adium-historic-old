@@ -44,7 +44,6 @@
 	
 	IBOutlet	NSTextField		*label_port;					//Label for the port field
 	IBOutlet	NSTextField		*label_server;					//Label for the login server field
-	IBOutlet    NSButton        *checkBox_recentBuddies;        //Check box for using the Recent Buddies group.
 	
 	IBOutlet	NSTextField		*label_typing;					//Label for the typing preference
 	IBOutlet	NSButton		*checkBox_sendTyping;			//Send the user's typing state
