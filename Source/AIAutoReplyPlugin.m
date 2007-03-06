@@ -1,3 +1,4 @@
+
 /* 
  * Adium is the legal property of its developers, whose names are listed in the copyright file included
  * with this source distribution.
@@ -107,14 +108,14 @@
 	/* We will not respond to the received message if it is an auto-reply, over a chat where we have already responded,
 	 * or over a group chat.
 	 * Additionally, it's not sensible to send autoreplies if the arriving message
-	 * was an offline message we're getting as we connect and it's older than 5 minutes
+	 * was an 
+		message we're getting as we connect and it's older than 5 minutes
 	 * (or the person sending it is no longer online) -RAF
 	 */
 	if ([[contentObject type] isEqualToString:CONTENT_MESSAGE_TYPE] &&
 	   ![(AIContentMessage *)contentObject isAutoreply] &&
 	   ![receivedAutoReply containsObjectIdenticalTo:chat] &&
 	   ![chat isGroupChat] &&
-		[[contentObject source] statusType] != AIOfflineStatusType &&
 		(abs([[contentObject date] timeIntervalSinceNow]) < 300)  ) {
 		//300 is 5 minutes in seconds
 		
