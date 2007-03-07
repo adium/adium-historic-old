@@ -1,0 +1,33 @@
+Smooth Operator 2.0
+by Brad Smith <brad@mindsmith.net>
+==================================
+
+Basic styles:
+- normal (previously compact)
+- classic
+
+Icon positions:
+- icon left
+- icon right
+- icon alternate
+- hanging icon left
+- hanging icon right
+- hanging icon alternate
+
+Icon sizes:
+- none
+- 16x16
+- 32x32
+- 48x48
+
+Bubble color:
+- white
+- black
+
+Contact colors:
+- incoming
+- outgoing
+
+Javascript features:
+- copy line on click
+- toggle header

@@ -1,0 +1,145 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+	<head>
+		<title>Smooth Operator 2.0</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<link rel="stylesheet" type="text/css" media="screen" href="styles.css"/>
+		<script type="text/ecmascript" defer="defer">
+			var scrollToBottomIsNeeded = false;
+
+			function appendMessage(html) {
+				//Remove any existing insertion point
+				insert = document.getElementById("insert");
+				if(insert) insert.parentNode.removeChild(insert);
+
+				//Append the new message to the bottom of our chat block
+				chat = document.getElementById("Chat");
+				range = document.createRange();
+				range.selectNode(chat);
+				documentFragment = range.createContextualFragment(html);
+				chat.appendChild(documentFragment);
+				alignChat();
+			}
+
+			function appendNextMessage(html){
+				//
+				insert = document.getElementById("insert");
+
+				//make new node
+				range = document.createRange();
+				range.selectNode(insert.parentNode);
+				newNode = range.createContextualFragment(html);
+
+				//swap
+				insert.parentNode.replaceChild(newNode,insert);
+				alignChat();
+			}
+
+			function scrollToBottom() {
+				document.body.scrollTop = document.body.offsetHeight;
+			}
+
+			function checkIfScrollToBottomIsNeeded() {
+				scrollToBottomIsNeeded = ( document.body.scrollTop >= ( document.body.offsetHeight - ( window.innerHeight * 1.2 ) ) );
+			}
+
+			function scrollToBottomIfNeeded() {
+				if( scrollToBottomIsNeeded )
+					document.body.scrollTop = document.body.offsetHeight;
+			}
+
+			function setStylesheet( id, url ) {
+				code = "<style id=\"" + id + "\" type=\"text/css\" media=\"screen,print\">";
+				if( url.length ) code += "@import url( \"" + url + "\" );";
+				code += "</style>";
+				range = document.createRange();
+				head = document.getElementsByTagName( "head" ).item(0);
+				range.selectNode( head );
+				documentFragment = range.createContextualFragment( code );
+				head.removeChild( document.getElementById( id ) );
+				head.appendChild( documentFragment );
+			}
+			document.onclick = imageCheck;
+			function imageCheck() {
+				node = event.target;
+				if(node.tagName == 'IMG' && node.alt) {
+					a = document.createElement('a');
+					a.setAttribute('onclick', 'imageSwap(this)');
+					a.setAttribute('src', node.src);
+					text = document.createTextNode(node.alt);
+					a.appendChild(text);
+					node.parentNode.replaceChild(a, node);
+				}
+			}
+			function imageSwap(node) {
+				img = document.createElement('img');
+				img.setAttribute('src', node.src);
+				img.setAttribute('alt', node.firstChild.nodeValue);
+				node.parentNode.replaceChild(img, node);
+			}
+			function alignChat() {
+				var windowHeight = window.innerHeight;
+				if (windowHeight > 0) {
+					var contentElement = document.getElementById('Chat');
+					var contentHeight = contentElement.offsetHeight;
+					if (windowHeight - contentHeight > 0) {
+						contentElement.style.position = 'relative';
+						contentElement.style.top = (windowHeight - contentHeight) + 'px';
+					}
+					else {
+						contentElement.style.position = 'static';
+					}
+				}
+				scrollToBottom();
+			}
+			window.onresize = alignChat;
+
+		</script>
+	</head>
+	<body onload="alignChat();">
+		<div id="Chat">
+		<ol id="conversation">
+			<li class="incoming">
+				<abbr class="tstamp" title="2006-01-10 18:41:23 CST">6:41:23 PM</abbr>
+				<cite class="vcard"><img src="images/contact_icons/incoming_icon.png" alt="Ashlyn Schniederjans" title="AIM: ams4837898" width="32" height="32" />Ashlyn Schniederjans</cite>
+				<q>Hey Brad! I just wanted to check to be sure we are still on for tomorrow evening. Are we?</q>
+			</li>
+			<li class="outgoing">
+				<abbr class="tstamp" title="2006-01-10 18:41:11 CST">6:42:11 PM</abbr>
+				<cite class="vcard"><img src="images/contact_icons/outgoing_icon.png" alt="Bradley Smith" title="AIM: BradPS" width="32" height="32" />Bradley Smith</cite>
+				<q>Hey Ashlyn! Yes. I bought the rest of the ingredients today, so things should be ready when you get here.</q>
+			</li>
+			<li class="outgoing next">
+				<abbr class="tstamp" title="2006-01-10 18:47:59 CST">6:47:59 PM</abbr>
+				<cite class="vcard"><img src="images/contact_icons/outgoing_icon.png" alt="Bradley Smith" title="AIM: BradPS" width="32" height="32" />Bradley Smith</cite>
+				<q>Oh. By the way. If you're still there, can you bring some diet coke when you come?</q>
+			</li>
+			<li class="incoming">
+				<abbr class="tstamp" title="2006-01-10 19:00:36 CST">7:00:36 PM</abbr>
+				<cite class="vcard"><img src="images/contact_icons/incoming_icon.png" alt="Ashlyn Schniederjans" title="AIM: ams4837898" width="32" height="32" />Ashlyn Schniederjans</cite>
+				<q>Sure. I'll bring a 12-pack when I come over.</q>
+			</li>
+			<li class="incoming next">
+				<abbr class="tstamp" title="2006-01-10 19:02:19 CST">7:02:19 PM</abbr>
+				<cite class="vcard"><img src="images/contact_icons/incoming_icon.png" alt="Ashlyn Schniederjans" title="AIM: ams4837898" width="32" height="32" />Ashlyn Schniederjans</cite>
+				<q>By the way, do you need anything else? I really want to make this evening wonderful. We haven't seen each other in forever. I could pick up some wine or champagne or even some snacks of some sort if you'd like.</q>
+			</li>
+			<li class="outgoing">
+				<abbr class="tstamp" title="2006-01-10 19:02:51 CST">7:02:51 PM</abbr>
+				<cite class="vcard"><img src="images/contact_icons/outgoing_icon.png" alt="Bradley Smith" title="AIM: BradPS" width="32" height="32" />Bradley Smith</cite>
+				<q>No need for you to bring anything, Ashlyn. I've got wine, champagne, cheese, grapes, and crackers. I'm also making a salad, some chicken parmesan, and several side dishes. I want this evening to be perfect, too.</q>
+			</li>
+			<li class="incoming">
+				<abbr class="tstamp" title="2006-01-10 19:03:08 CST">7:03:08 PM</abbr>
+				<cite class="vcard"><img src="images/contact_icons/incoming_icon.png" alt="Ashlyn Schniederjans" title="AIM: ams4837898" width="32" height="32" />Ashlyn Schniederjans</cite>
+				<q>Sounds great. I'll see you in a bit!</q>
+			</li>
+			<li class="incoming">
+				<abbr class="tstamp" title="2006-01-10 19:03:08 CST">7:03:08 PM</abbr>
+				<cite class="vcard"><img src="images/contact_icons/incoming_icon.png" alt="Ashlyn Schniederjans" title="AIM: ams4837898" width="32" height="32" />System</cite>
+				<q>Ashlyn Schniederjans disconnected.</q>
+			</li>
+		</ol>
+		</div>
+	</body>
+</html>
