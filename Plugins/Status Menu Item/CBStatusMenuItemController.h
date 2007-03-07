@@ -19,8 +19,9 @@
 
 @class AIAccountMenu, AIStatusMenu;
 @protocol AIChatObserver;
+@protocol AIListObjectObserver;
 
-@interface CBStatusMenuItemController : AIObject <AIChatObserver>
+@interface CBStatusMenuItemController : AIObject <AIChatObserver, AIListObjectObserver>
 {
 	NSStatusItem            *statusItem;
 	NSMenu                  *theMenu;
