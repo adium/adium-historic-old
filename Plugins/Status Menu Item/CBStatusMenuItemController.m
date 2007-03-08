@@ -120,7 +120,6 @@
 {
 	//Unregister ourself
 	[[adium chatController] unregisterChatObserver:self];
-	[[adium contactController] unregisterListObjectObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 	
 	//Release our objects
