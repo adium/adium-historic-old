@@ -42,6 +42,11 @@
 
 - (NSImage *)imageHighlightOfType:(NSString *)imageType
 {
+	// Use the online highlight if none is found.
+	if (![self keyOfTypeExists:[imageType stringByAppendingString:@"Highlight"]]) {
+		return [self imageOfType:@"OnlineHighlight"];
+	}
+	// Grab the highlight for this (valid) image.
 	return [self imageOfType:[imageType stringByAppendingString:@"Highlight"]];
 }
 

@@ -41,13 +41,6 @@
 - (void)activateAdium:(id)sender;
 - (void)setIconImage:(NSImage *)inImage;
 - (NSImage *)badgeDuck:(NSImage *)duckImage withImage:(NSImage *)inImage;
-- (NSImage *)badgeOnlineDuckWithImage:(NSImage *)inImage;
-- (NSImage *)badgeOnlineHighlightDuckWithImage:(NSImage *)inImage;
-- (BOOL)anyAccountIsIdle;
-- (void)setOfflineDuck;
-- (void)setOnlineDuckWithoutBadge;
-- (void)setOnlineDuckWithBadgeImage:(NSImage *)inImage;
-- (void)setOnlineDuck;
 - (void)updateMenuIcons;
 - (void)updateMenuIconsBundle;
 @end
@@ -113,9 +106,6 @@
 		                           name:AIStatusActiveStateChangedNotification
 		                         object:nil];
 		
-		// Register to receive list object updates (for idle check)
-		[[adium contactController] registerListObjectObserver:self];
-		
 		//Register ourself for the status menu items
 		statusMenu = [[AIStatusMenu statusMenuWithDelegate:self] retain];
 		
@@ -147,31 +137,6 @@
 	
 	//To the superclass, Robin!
 	[super dealloc];
-}
-
-#pragma mark Idle determination
-
-- (BOOL)anyAccountIsIdle
-{
-	NSEnumerator    *enumerator = [[[adium accountController] accounts] objectEnumerator];
-	AIAccount       *account;
-	
-	while ((account = [enumerator nextObject])) {
-		if ([account statusObjectForKey:@"IdleSince"]) return YES;
-	}
-	
-	return NO;	
-}
-
-- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
-{
-	if (inObject == nil || [inModifiedKeys containsObject:@"IdleSince"]) {
-		if ([self anyAccountIsIdle]) {
-			[self updateMenuIcons];
-		}
-	}
-	
-	return nil;
 }
 
 //Icon State --------------------------------------------------------
@@ -222,62 +187,90 @@
 
 - (void)updateMenuIcons
 {
-	NSImage *badge = nil, *regular = nil, *highlight = nil;
-	BOOL showBadge = [menuIcons showBadge]; // Checks if this set wants to show badges or not.
-	
+	NSImage			*badge = nil;
+	BOOL			showBadge = [menuIcons showBadge], isIdle;
+	NSString		*imageName;
+	NSEnumerator	*enumerator;
+	AIAccount		*account;
+
 	// If there's content, set our badge to the "content" icon.
 	if (unviewedContent) {
-		regular = [menuIcons imageOfType:IMAGE_TYPE_CONTENT];
-		highlight = [menuIcons imageHighlightOfType:IMAGE_TYPE_CONTENT];
-		
 		if (showBadge) {
 			badge = [AIStatusIcons statusIconForStatusName:@"content"
 												statusType:AIAvailableStatusType
 											      iconType:AIStatusIconList
 												 direction:AIIconNormal];
 		}
+		
+		imageName = IMAGE_TYPE_CONTENT;
 	} else {
 		// Get the correct icon for our current state.
 		switch([[[adium statusController] activeStatusState] statusType]) {
 			case AIAwayStatusType:
-				regular = [menuIcons imageOfType:IMAGE_TYPE_AWAY];
-				highlight = [menuIcons imageHighlightOfType:IMAGE_TYPE_AWAY];
-				
 				if (showBadge) {
 					badge = [[[adium statusController] activeStatusState] icon];
 				}
-					break;
 				
+				imageName = IMAGE_TYPE_AWAY;
+				break;
+			
 			case AIInvisibleStatusType:
-				regular = [menuIcons imageOfType:IMAGE_TYPE_INVISIBLE];
-				highlight = [menuIcons imageHighlightOfType:IMAGE_TYPE_INVISIBLE];
-				
 				if (showBadge) {
 					badge = [[[adium statusController] activeStatusState] icon];
 				}
-					break;
+				
+				imageName = IMAGE_TYPE_INVISIBLE;
+				break;
 				
 			case AIOfflineStatusType:
-				regular = [menuIcons imageOfType:IMAGE_TYPE_OFFLINE];
-				highlight = [menuIcons imageHighlightOfType:IMAGE_TYPE_OFFLINE];
+				imageName = IMAGE_TYPE_OFFLINE;
 				break;
 				
 			default:
 				// Check idle here, since it has less precedence than offline, invisible, or away.
-				if ([self anyAccountIsIdle]) {
-					regular = [menuIcons imageOfType:IMAGE_TYPE_IDLE];
-					highlight = [menuIcons imageHighlightOfType:IMAGE_TYPE_IDLE];
+				isIdle = FALSE;
+				enumerator = [[[adium accountController] accounts] objectEnumerator];
+				
+				// Check each account for IdleSince
+				while ((account = [enumerator nextObject])) {
+					if ([account statusObjectForKey:@"IdleSince"]) {
+						isIdle = TRUE;
+						break;
+					}
+				}
+				
+				// If any of the accounts were idle...
+				if (isIdle) {
+					if (showBadge) {
+						badge = [AIStatusIcons statusIconForStatusName:@"Idle"
+															statusType:AIAvailableStatusType
+															  iconType:AIStatusIconList
+															 direction:AIIconNormal];
+					}
+					
+					imageName = IMAGE_TYPE_IDLE;
 				} else {
-					regular = [menuIcons imageOfType:IMAGE_TYPE_ONLINE];
-					highlight = [menuIcons imageHighlightOfType:IMAGE_TYPE_ONLINE];
+					// Show badge if an available message is set.
+					enumerator = [[[adium accountController] accounts] objectEnumerator];
+					
+					while ((account = [enumerator nextObject])) {
+						// If the account has a status message...
+						if ([[account statusObjectForKey:@"StatusState"] statusMessage]) {
+							// Set the badge for the "available" status.
+							badge = [[[adium statusController] activeStatusState] icon];
+							break;
+						}
+					}
+				
+					imageName = IMAGE_TYPE_ONLINE;
 				}
 				break;
 		}
 	}
 	
 	// Set our icon, and highlight icon, to a badged version.
-	[statusItem setImage:[self badgeDuck:regular withImage:badge]];
-	[statusItem setAlternateImage:[self badgeDuck:highlight withImage:badge]];
+	[statusItem setImage:[self badgeDuck:[menuIcons imageOfType:imageName] withImage:badge]];
+	[statusItem setAlternateImage:[self badgeDuck:[menuIcons imageHighlightOfType:imageName] withImage:badge]];
 }
 
 - (NSImage *)badgeDuck:(NSImage *)duckImage withImage:(NSImage *)badgeImage {
