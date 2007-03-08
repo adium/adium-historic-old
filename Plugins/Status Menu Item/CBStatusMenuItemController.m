@@ -250,14 +250,16 @@
 					imageName = IMAGE_TYPE_IDLE;
 				} else {
 					// Show badge if an available message is set.
-					enumerator = [[[adium accountController] accounts] objectEnumerator];
-					
-					while ((account = [enumerator nextObject])) {
-						// If the account has a status message...
-						if ([[account statusObjectForKey:@"StatusState"] statusMessage]) {
-							// Set the badge for the "available" status.
-							badge = [[[adium statusController] activeStatusState] icon];
-							break;
+					if (showBadge) {
+						enumerator = [[[adium accountController] accounts] objectEnumerator];
+						
+						while ((account = [enumerator nextObject])) {
+							// If the account has a status message...
+							if ([[account statusObjectForKey:@"StatusState"] statusMessage]) {
+								// Set the badge for the "available" status.
+								badge = [[[adium statusController] activeStatusState] icon];
+								break;
+							}
 						}
 					}
 				
