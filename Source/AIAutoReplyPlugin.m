@@ -114,7 +114,6 @@
 	   ![(AIContentMessage *)contentObject isAutoreply] &&
 	   ![receivedAutoReply containsObjectIdenticalTo:chat] &&
 	   ![chat isGroupChat] &&
-		[[contentObject source] statusType] != AIOfflineStatusType &&
 		(abs([[contentObject date] timeIntervalSinceNow]) < 300)  ) {
 		//300 is 5 minutes in seconds
 		

@@ -1828,8 +1828,8 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	} else {
 		//This contact doesn't contain multiple contacts... but it might still be a metacontact. Do NOT proceed with a metacontact.
 		if ([inContact respondsToSelector:@selector(preferredContact)])
-			inContact = [inContact preferredContact];
-		
+			inContact = [inContact performSelector:@selector(preferredContact)];
+
 		//find the best account for talking to this contact,
 		//and return an AIListContact on that account
 		account = [[adium accountController] preferredAccountForSendingContentType:inType

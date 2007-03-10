@@ -10,7 +10,6 @@
 
 @class AIChatLog, AILoggerPlugin;
 
-#define	REFRESH_RESULTS_INTERVAL		0.5 //Interval between results refreshes while searching
 #define LOG_SEARCH_STATUS_INTERVAL		20	//1/60ths of a second to wait before refreshing search status
 
 #define LOG_CONTENT_SEARCH_MAX_RESULTS	10000	//Max results allowed from a search

@@ -20,6 +20,7 @@
 #import "adiumGaimBlist.h"
 #import "adiumGaimConnection.h"
 #import "adiumGaimConversation.h"
+#import "adiumGaimDnsRequest.h"
 #import "adiumGaimEventloop.h"
 #import "adiumGaimFt.h"
 #import "adiumGaimNotify.h"
@@ -156,8 +157,6 @@ static void adiumGaimCoreUiInit(void)
 		*	Another possible advantage:
 		*		- Using Gaim's own buddy icon caching (which depends on both files) allows us to avoid
 		*			re-requesting icons we already have locally on some protocols such as AIM.
-		*   However, we seem to end up with out of date icons when we rely on Gaim's caching, particularly over MSN,
-		*   so we'll just ignore this gain and turn off caching. 
 		*/	
 	//Setup the buddy list; then load the blist.
 	gaim_set_blist(gaim_blist_new());
@@ -172,6 +171,7 @@ static void adiumGaimCoreUiInit(void)
     gaim_notify_set_ui_ops(adium_gaim_notify_get_ui_ops());
     gaim_request_set_ui_ops(adium_gaim_request_get_ui_ops());
 	gaim_xfers_set_ui_ops(adium_gaim_xfers_get_ui_ops());
+	gaim_dnsquery_set_ui_ops(adium_gaim_dns_request_get_ui_ops());
 	
 	adiumGaimConversation_init();
 
