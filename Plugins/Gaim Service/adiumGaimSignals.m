@@ -16,6 +16,7 @@
 
 #import "adiumGaimSignals.h"
 #import <AIUtilities/AIObjectAdditions.h>
+#import <Adium/AIListContact.h>
 
 static void buddy_status_changed_cb(GaimBuddy *buddy, GaimStatus *oldstatus, GaimStatus *status, GaimBuddyEvent event);
 static void buddy_idle_changed_cb(GaimBuddy *buddy, gboolean old_idle, gboolean idle, GaimBuddyEvent event);

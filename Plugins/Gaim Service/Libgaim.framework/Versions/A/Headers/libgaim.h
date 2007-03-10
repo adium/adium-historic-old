@@ -3,6 +3,7 @@
 #include "Libgaim/conversation.h"
 #include "Libgaim/core.h"
 #include "Libgaim/debug.h"
+#include "Libgaim/dnsquery.h"
 #include "Libgaim/ft.h"
 #include "Libgaim/imgstore.h"
 #include "Libgaim/notify.h"

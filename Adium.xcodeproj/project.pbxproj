@@ -467,6 +467,8 @@
 		34A6FB2D07D6F98600972830 /* SoundAlert.png in Resources */ = {isa = PBXBuildFile; fileRef = 34A6FB2B07D6F98600972830 /* SoundAlert.png */; };
 		34A6FB2E07D6F98600972830 /* SoundFileIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 34A6FB2C07D6F98600972830 /* SoundFileIcon.png */; };
 		34AE249E09BCCFA900A35B51 /* AIWindowDraggingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AE249C09BCCFA900A35B51 /* AIWindowDraggingView.m */; };
+		34B1268E0B924E28003B0451 /* adiumGaimDnsRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B1268C0B924E28003B0451 /* adiumGaimDnsRequest.h */; };
+		34B1268F0B924E28003B0451 /* adiumGaimDnsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B1268D0B924E28003B0451 /* adiumGaimDnsRequest.m */; };
 		34B323B809B9FEAC00029361 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		34B3244009B9FFE800029361 /* ESIRCLibgaimServicePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B3243E09B9FFE800029361 /* ESIRCLibgaimServicePlugin.m */; };
 		34B3245409BA00E700029361 /* ESIRCAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B3245209BA00E700029361 /* ESIRCAccount.m */; };
@@ -1145,6 +1147,7 @@
 		F51BCD3C0A156269000FDC06 /* AIUtilities.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		F51BCE390A156312000FDC06 /* AdiumSpotlightImporter.mdimporter in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34611C8309B6756D00870036 /* AdiumSpotlightImporter.mdimporter */; };
 		F51BCEEA0A15793E000FDC06 /* AIHyperlinks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3496A8EA07CE6CA30055BBAB /* AIHyperlinks.framework */; };
+		F551B1000B8F5130007D3A3C /* FireLogImporter.nib in Resources */ = {isa = PBXBuildFile; fileRef = F56E0DAF0A4CDF9C008D1EB5 /* FireLogImporter.nib */; };
 		F58904F20A7828B9001F0ADC /* OTR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 341BDBBA0968BC9A00CF83F5 /* OTR.framework */; };
 		F5DA8A740A546AC5004A41D0 /* GBChatlogHTMLConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DA8A720A546AC4004A41D0 /* GBChatlogHTMLConverter.m */; };
 		F5F8CA4D0A1A9C9400154550 /* GBQuestionHandlerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8CA4B0A1A9C9400154550 /* GBQuestionHandlerPlugin.m */; };
@@ -2597,6 +2600,8 @@
 		34AEE7DD08E3546F00AE1C78 /* ESGaimFileReceiveRequestController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimFileReceiveRequestController.m; path = "Plugins/Gaim Service/ESGaimFileReceiveRequestController.m"; sourceTree = "<group>"; };
 		34AEE7E808E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimRequestAbstractWindowController.h; path = "Plugins/Gaim Service/ESGaimRequestAbstractWindowController.h"; sourceTree = "<group>"; };
 		34AEE7E908E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimRequestAbstractWindowController.m; path = "Plugins/Gaim Service/ESGaimRequestAbstractWindowController.m"; sourceTree = "<group>"; };
+		34B1268C0B924E28003B0451 /* adiumGaimDnsRequest.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = adiumGaimDnsRequest.h; path = "Plugins/Gaim Service/adiumGaimDnsRequest.h"; sourceTree = "<group>"; };
+		34B1268D0B924E28003B0451 /* adiumGaimDnsRequest.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = adiumGaimDnsRequest.m; path = "Plugins/Gaim Service/adiumGaimDnsRequest.m"; sourceTree = "<group>"; };
 		34B271EB0839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/Gaim Service/is.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
 		34B271EC0839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Frameworks/Adium Framework/Resources/is.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
 		34B271ED0839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = Resources/is.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
@@ -2685,7 +2690,7 @@
 		34BC8F790ACA3AAC00562745 /* AIScannerDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIScannerDebug.m; path = Source/AIScannerDebug.m; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -4741,6 +4746,8 @@
 				34BBE17F07A2F10400663CC9 /* adiumGaimConversation.m */,
 				34BBE1B207A2F36400663CC9 /* adiumGaimCore.h */,
 				34BBE1B307A2F36400663CC9 /* adiumGaimCore.m */,
+				34B1268C0B924E28003B0451 /* adiumGaimDnsRequest.h */,
+				34B1268D0B924E28003B0451 /* adiumGaimDnsRequest.m */,
 				34BBE18A07A2F2A600663CC9 /* adiumGaimEventloop.h */,
 				34BBE18B07A2F2A600663CC9 /* adiumGaimEventloop.m */,
 				34BBE11007A2EED500663CC9 /* adiumGaimFt.h */,
@@ -7081,6 +7088,7 @@
 				34D073D10B1E1A4500D63DF2 /* ESDotMacService.h in Headers */,
 				34D073D30B1E1A4500D63DF2 /* ESAIMService.h in Headers */,
 				344499E90B23CA5D0054B761 /* adiumGaimAccounts.h in Headers */,
+				34B1268E0B924E28003B0451 /* adiumGaimDnsRequest.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7946,6 +7954,7 @@
 				347374BD0AA9206B00AD18E3 /* ShortcutRecorder.strings in Resources */,
 				34F312BD0ADC43CA00A4310E /* xtras_duck.png in Resources */,
 				377ED2680AED59E600CB7BDF /* TabsAdvanced.nib in Resources */,
+				F551B1000B8F5130007D3A3C /* FireLogImporter.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8238,6 +8247,7 @@
 				34D073D00B1E1A4500D63DF2 /* ESDotMacService.m in Sources */,
 				34D073D20B1E1A4500D63DF2 /* ESAIMService.m in Sources */,
 				344499EA0B23CA5D0054B761 /* adiumGaimAccounts.m in Sources */,
+				34B1268F0B924E28003B0451 /* adiumGaimDnsRequest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -17,6 +17,7 @@
 #import "AIDockIconPreviewController.h"
 #import <Adium/AIIconState.h>
 #import <Adium/AIObject.h>
+#import <Adium/AIDockControllerProtocol.h>
 #import <AIUtilities/AIVerticallyCenteredTextCell.h>
 
 @implementation AIDockIconPreviewController
