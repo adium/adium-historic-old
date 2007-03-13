@@ -19,6 +19,10 @@
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AIWindowControllerAdditions.h>
 
+@interface AIWindowController (PRIVATE)
++ (void)updateScreenBoundariesRect:(id)sender;
+@end
+
 /*!
  * @class AIWindowController
  * @brief Base class for window controllers
@@ -28,6 +32,35 @@
  * which every good window controller cannot be without.
  */
 @implementation AIWindowController
+
++ (void)initialize
+{
+	if ([self isEqual:[AIWindowController class]]) {
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(updateScreenBoundariesRect:) 
+													 name:NSApplicationDidChangeScreenParametersNotification 
+												   object:nil];
+		
+		[self updateScreenBoundariesRect:nil];
+	}
+}
+
+static NSRect screenBoundariesRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
++ (void)updateScreenBoundariesRect:(id)sender
+{
+	NSArray *screens = [NSScreen screens];
+	int numScreens = [screens count];
+	
+	if (numScreens > 0) {
+		//The menubar screen is a special case - the menubar is not a part of the rect we're interested in
+		NSScreen *menubarScreen = [screens objectAtIndex:0];
+		screenBoundariesRect = [menubarScreen frame];
+		screenBoundariesRect.size.height = NSMaxY([menubarScreen visibleFrame]) - NSMinY([menubarScreen frame]);
+		for (int i = 1; i < numScreens; i++) {
+			screenBoundariesRect = NSUnionRect(screenBoundariesRect, [[screens objectAtIndex:i] frame]);
+		}
+	}
+}
 
 /*!
  * @brief Initialize
@@ -66,7 +99,14 @@
 	if (contentFrame.size.height < [[self window] toolbarHeight]) {
 		windowFrame.size.height += [[self window] toolbarHeight] - contentFrame.size.height;
 	}
-
+	
+	//Make sure the window is visible on-screen
+	if (NSMaxX(windowFrame) < NSMinX(screenBoundariesRect)) windowFrame.origin.x = NSMinX(screenBoundariesRect);
+	if (NSMinX(windowFrame) > NSMaxX(screenBoundariesRect)) windowFrame.origin.x = NSMaxX(screenBoundariesRect) - NSWidth(windowFrame);
+	if (NSMaxY(windowFrame) < NSMinY(screenBoundariesRect)) windowFrame.origin.y = NSMinY(screenBoundariesRect);
+	if (NSMinY(windowFrame) > NSMaxY(screenBoundariesRect)) windowFrame.origin.y = NSMaxY(screenBoundariesRect) - NSHeight(windowFrame);
+	
+	
 	return NSIntegralRect(windowFrame);
 }
 
