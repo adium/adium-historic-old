@@ -216,6 +216,8 @@
 		3461621606FB482D009181D8 /* ESChatUserListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3461621206FB482C009181D8 /* ESChatUserListController.m */; };
 		3461621706FB482D009181D8 /* UserList Layout.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3461621306FB482D009181D8 /* UserList Layout.plist */; };
 		34677B3907CC3DAF00F59F7B /* Adium Crash Reporter.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B7F78B50597F42400162728 /* Adium Crash Reporter.app */; };
+		346935D50BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 346935D30BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.h */; };
+		346935D60BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 346935D40BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.m */; };
 		346BA33F0774C27400628F06 /* ESGlobalEventsPreferencesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 346BA33D0774C27400628F06 /* ESGlobalEventsPreferencesPlugin.m */; };
 		346BA3450774C2D200628F06 /* ESGlobalEventsPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 346BA3430774C2D200628F06 /* ESGlobalEventsPreferences.m */; };
 		346BA3640774C35500628F06 /* GlobalEventsPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 346BA3630774C35400628F06 /* GlobalEventsPreferences.nib */; };
@@ -1487,6 +1489,7 @@
 			files = (
 				F51BCE390A156312000FDC06 /* AdiumSpotlightImporter.mdimporter in CopyFiles */,
 				11F1460B0B546C1200CA91F6 /* AIMenuBarIcons.h in CopyFiles */,
+				346935D50BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2273,6 +2276,8 @@
 		3465236508371A64009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = "Plugins/Gaim Service/cs.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3465236608371A64009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = "Plugins/WebKit Message View/cs.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3465236808371A65009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = Resources/cs.lproj/Localizable.strings; sourceTree = "<group>"; };
+		346935D30BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIFileTransferProgressOutlineView.h; path = Source/AIFileTransferProgressOutlineView.h; sourceTree = "<group>"; };
+		346935D40BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIFileTransferProgressOutlineView.m; path = Source/AIFileTransferProgressOutlineView.m; sourceTree = "<group>"; };
 		34695FA20A89BA2B00E3B0D0 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
 		34695FA30A89BA3600E3B0D0 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
 		34695FA40A89BA5800E3B0D0 /* tr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = tr; path = Resources/tr.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
@@ -3454,8 +3459,6 @@
 		B023552E08CBE84F008CDDDA /* SMLoggerConversation.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SMLoggerConversation.m; sourceTree = "<group>"; };
 		B023552F08CBE84F008CDDDA /* SMSQLiteDatabase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SMSQLiteDatabase.h; sourceTree = "<group>"; };
 		B023553008CBE84F008CDDDA /* SMSQLiteDatabase.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SMSQLiteDatabase.m; sourceTree = "<group>"; };
-		B023553108CBE850008CDDDA /* SMSQLiteLoggerPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SMSQLiteLoggerPlugin.h; sourceTree = "<group>"; };
-		B023553208CBE850008CDDDA /* SMSQLiteLoggerPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SMSQLiteLoggerPlugin.m; sourceTree = "<group>"; };
 		B023553308CBE850008CDDDA /* SMSQLiteLogViewerWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SMSQLiteLogViewerWindowController.h; sourceTree = "<group>"; };
 		B023553408CBE850008CDDDA /* SMSQLiteLogViewerWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SMSQLiteLogViewerWindowController.m; sourceTree = "<group>"; };
 		B023553608CBE850008CDDDA /* alter.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = alter.c; sourceTree = "<group>"; };
@@ -4445,6 +4448,8 @@
 				34D8325107CBD53B006466F2 /* FTProgressStopPressed_Selected.tif */,
 				34D8325207CBD53B006466F2 /* FTProgressStopPressed.tif */,
 				34D8325307CBD53B006466F2 /* FTProgressRevealPressed_Selected.tif */,
+				346935D30BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.h */,
+				346935D40BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.m */,
 			);
 			name = "File Transfer";
 			sourceTree = "<group>";
@@ -6483,8 +6488,6 @@
 				B023552E08CBE84F008CDDDA /* SMLoggerConversation.m */,
 				B023552F08CBE84F008CDDDA /* SMSQLiteDatabase.h */,
 				B023553008CBE84F008CDDDA /* SMSQLiteDatabase.m */,
-				B023553108CBE850008CDDDA /* SMSQLiteLoggerPlugin.h */,
-				B023553208CBE850008CDDDA /* SMSQLiteLoggerPlugin.m */,
 				B023553508CBE850008CDDDA /* sqlite_source */,
 			);
 			name = "SQLite Logger";
@@ -8530,6 +8533,7 @@
 				345EE2DF0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.m in Sources */,
 				377ED2670AED59E600CB7BDF /* TabsAdvancedPreferences.m in Sources */,
 				11F1460C0B546C1200CA91F6 /* AIMenuBarIcons.m in Sources */,
+				346935D60BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
