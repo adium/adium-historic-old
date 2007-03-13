@@ -75,6 +75,7 @@
 				   speedStatus:(NSString *)inTransferSpeedStatus;
 
 - (IBAction)toggleDetails:(id)sender;
+- (void)setShowsDetails:(BOOL)flag;
 
 - (void)setAllowsCancel:(BOOL)flag;
 

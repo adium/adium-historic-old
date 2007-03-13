@@ -237,6 +237,13 @@
 								 to:newFrame.size.height];
 }
 
+- (void)setShowsDetails:(BOOL)flag
+{
+	if (showingDetails != flag) {
+		[self toggleDetails:nil];	
+	}
+}
+
 - (void)setAllowsCancel:(BOOL)flag
 {
 	[button_stopResume setEnabled:flag];
