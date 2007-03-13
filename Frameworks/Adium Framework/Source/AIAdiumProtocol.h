@@ -7,7 +7,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-#define	BETA_RELEASE FALSE
+#define	BETA_RELEASE TRUE
 
 @class AICoreComponentLoader;
 
