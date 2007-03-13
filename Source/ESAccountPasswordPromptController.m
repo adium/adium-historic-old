@@ -64,7 +64,7 @@ static NSMutableDictionary	*passwordPromptControllerDict = nil;
 	}
 	
     //bring the window front
-	[controller showWindowInFrontIfAllowed:nil];
+	[controller showWindowInFrontIfAllowed:YES];
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
