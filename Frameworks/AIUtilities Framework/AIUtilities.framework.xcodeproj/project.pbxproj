@@ -439,7 +439,7 @@
 		34C2A4540821797100F3363F /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = Resources/da.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34D18390075FC2390075A380 /* AIRolloverButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIRolloverButton.h; path = Source/AIRolloverButton.h; sourceTree = "<group>"; };
 		34D18391075FC2390075A380 /* AIRolloverButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIRolloverButton.m; path = Source/AIRolloverButton.m; sourceTree = "<group>"; };
-		34D833A907CBE34B006466F2 /* en */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		34D833A907CBE34B006466F2 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34D8355407CBEB0E006466F2 /* Aqua_Tab_Divider.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Aqua_Tab_Divider.png; path = Resources/Aqua_Tab_Divider.png; sourceTree = "<group>"; };
 		34D8355507CBEB0E006466F2 /* aquaTabCloseRollover.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = aquaTabCloseRollover.tif; path = Resources/aquaTabCloseRollover.tif; sourceTree = "<group>"; };
 		34D8355607CBEB0E006466F2 /* aquaTabClosePressed.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = aquaTabClosePressed.tif; path = Resources/aquaTabClosePressed.tif; sourceTree = "<group>"; };
@@ -473,6 +473,7 @@
 		34DCE28908A68E180073319F /* AIExceptionHandlingUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIExceptionHandlingUtilities.h; path = Source/AIExceptionHandlingUtilities.h; sourceTree = "<group>"; };
 		34E46928075681AE004C3A42 /* AIVariableHeightOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIVariableHeightOutlineView.h; path = Source/AIVariableHeightOutlineView.h; sourceTree = "<group>"; };
 		34E46929075681AE004C3A42 /* AIVariableHeightOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIVariableHeightOutlineView.m; path = Source/AIVariableHeightOutlineView.m; sourceTree = "<group>"; };
+		34F13FCC0BA6D639000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt_BR; path = Resources/pt_BR.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34F2E92B07C2D1E7007EAAAB /* AIFlexibleLink.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIFlexibleLink.m; path = Source/AIFlexibleLink.m; sourceTree = "<group>"; };
 		34F2E92C07C2D1E7007EAAAB /* AIFlexibleLink.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIFlexibleLink.h; path = Source/AIFlexibleLink.h; sourceTree = "<group>"; };
 		34F2E93E07C2D264007EAAAB /* AITooltipUtilities.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AITooltipUtilities.m; path = Source/AITooltipUtilities.m; sourceTree = "<group>"; };
@@ -1600,6 +1601,7 @@
 				pl,
 				tr,
 				fi,
+				pt_BR,
 			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* AIUtilities.framework */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
@@ -1768,7 +1770,7 @@
 		34D833AB07CBE355006466F2 /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				34D833A907CBE34B006466F2 /* en */,
+				34D833A907CBE34B006466F2 /* English */,
 				3498FEA707F489600004B79A /* it */,
 				3498FEAE07F489730004B79A /* nl */,
 				3498FEAF07F489770004B79A /* fr */,
@@ -1787,6 +1789,7 @@
 				34A81D42093CE90D00B0E93D /* pl */,
 				3437FF6D0A9BF0F70028604E /* tr */,
 				342F9DC30B5525E0000D5FC2 /* fi */,
+				34F13FCC0BA6D639000473DE /* pt_BR */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";

@@ -3028,6 +3028,40 @@
 		34F1022A0734499600890D3B /* XtraProgressWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = XtraProgressWindow.nib; path = Resources/XtraProgressWindow.nib; sourceTree = "<group>"; };
 		34F10239073449D500890D3B /* XtrasInstaller.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = XtrasInstaller.m; path = Source/XtrasInstaller.m; sourceTree = "<group>"; };
 		34F1023A073449D500890D3B /* XtrasInstaller.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = XtrasInstaller.h; path = Source/XtrasInstaller.h; sourceTree = "<group>"; };
+		34F13DC30BA6D37A000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = Resources/pt_BR.lproj/AccountProxy.nib; sourceTree = "<group>"; };
+		34F13E720BA6D524000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = Resources/pt_BR.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
+		34F13E730BA6D524000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt_BR; path = Resources/pt_BR.lproj/Buttons.strings; sourceTree = "<group>"; };
+		34F13E740BA6D524000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = "Plugins/Gaim Service/pt_BR.lproj/DCGaimJabberJoinChatView.nib"; sourceTree = "<group>"; };
+		34F13E750BA6D524000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = "Plugins/Gaim Service/pt_BR.lproj/DCGaimMeanwhileJoinChatView.nib"; sourceTree = "<group>"; };
+		34F13E760BA6D524000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = "Plugins/Gaim Service/pt_BR.lproj/DCGaimOscarJoinChatView.nib"; sourceTree = "<group>"; };
+		34F13E770BA6D524000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = "Plugins/Gaim Service/pt_BR.lproj/DCGaimYahooJoinChatView.nib"; sourceTree = "<group>"; };
+		34F13E780BA6D524000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = "Plugins/Gaim Service/pt_BR.lproj/DCGaimZephyrJoinChatView.nib"; sourceTree = "<group>"; };
+		34F13E790BA6D524000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = Resources/pt_BR.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
+		34F13E7A0BA6D524000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = "Frameworks/Adium Framework/Resources/pt_BR.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
+		34F13E7B0BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = Resources/pt_BR.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
+		34F13E7C0BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = "Plugins/Gaim Service/pt_BR.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
+		34F13E7D0BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = "Plugins/Gaim Service/pt_BR.lproj/ESGaimICQAccountView.nib"; sourceTree = "<group>"; };
+		34F13E7E0BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = "Plugins/Gaim Service/pt_BR.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
+		34F13E7F0BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = "Plugins/Gaim Service/pt_BR.lproj/ESGaimMeanwhileAccountView.nib"; sourceTree = "<group>"; };
+		34F13E800BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = "Plugins/Gaim Service/pt_BR.lproj/ESGaimMSNAccountView.nib"; sourceTree = "<group>"; };
+		34F13E810BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = "Plugins/Gaim Service/pt_BR.lproj/ESGaimNovellAccountView.nib"; sourceTree = "<group>"; };
+		34F13E820BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = "Plugins/Gaim Service/pt_BR.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
+		34F13E830BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = "Plugins/Gaim Service/pt_BR.lproj/ESGaimYahooAccountView.nib"; sourceTree = "<group>"; };
+		34F13E840BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = "Plugins/Gaim Service/pt_BR.lproj/ESGaimZephyrAccountView.nib"; sourceTree = "<group>"; };
+		34F13E850BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = Resources/pt_BR.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		34F13E860BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = Resources/pt_BR.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
+		34F13E870BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = Resources/pt_BR.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
+		34F13E880BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt_BR; path = Resources/pt_BR.lproj/Localizable.strings; sourceTree = "<group>"; };
+		34F13E890BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt_BR; path = "Plugins/Gaim Service/pt_BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		34F13E8A0BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt_BR; path = "Frameworks/Adium Framework/Resources/pt_BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		34F13E8B0BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt_BR; path = "Plugins/WebKit Message View/pt_BR.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		34F13E8C0BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = Resources/pt_BR.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
+		34F13E8D0BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = Resources/pt_BR.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
+		34F13E8E0BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = Resources/pt_BR.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
+		34F13E8F0BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt_BR; path = Resources/pt_BR.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
+		34F13E900BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = Resources/pt_BR.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
+		34F13E910BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = Resources/pt_BR.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
+		34F13E920BA6D525000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = "Plugins/WebKit Message View/pt_BR.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
 		34F1529405E9FDDB00B32FD7 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Gaim Service/en.lproj/ESGaimMSNAccountView.nib"; sourceTree = "<group>"; };
 		34F191DB09BA5F43001D6BE2 /* irc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = irc.png; path = "Plugins/IRC Libgaim Plugin/irc.png"; sourceTree = "<group>"; };
 		34F2BD24059CF8070005B238 /* c++filt */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "c++filt"; sourceTree = "<group>"; };
@@ -9138,6 +9172,7 @@
 				34DC84280A7EA012003E1636 /* nl */,
 				3437FF530A9BF0A60028604E /* tr */,
 				342F9DA80B5525B4000D5FC2 /* fi */,
+				34F13E7B0BA6D525000473DE /* pt_BR */,
 			);
 			name = ESFileTransferProgressView.nib;
 			sourceTree = "<group>";
@@ -9164,6 +9199,7 @@
 				3437FF440A9BF0A50028604E /* tr */,
 				342F9D8D0B5525B0000D5FC2 /* fi */,
 				34F430210B77247200A03603 /* nl */,
+				34F13E8E0BA6D525000473DE /* pt_BR */,
 			);
 			name = ProxyPasswordPrompt.nib;
 			sourceTree = "<group>";
@@ -9190,6 +9226,7 @@
 				3437FF450A9BF0A60028604E /* tr */,
 				342F9D8F0B5525B0000D5FC2 /* fi */,
 				34F430220B77247300A03603 /* nl */,
+				34F13E8D0BA6D525000473DE /* pt_BR */,
 			);
 			name = PasswordPrompt.nib;
 			sourceTree = "<group>";
@@ -9218,6 +9255,7 @@
 				349710CB096C4C2300699948 /* en_AU */,
 				3419E5960A86996200C3FC68 /* tr */,
 				342F9D960B5525B1000D5FC2 /* fi */,
+				34F13E880BA6D525000473DE /* pt_BR */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -9245,6 +9283,7 @@
 				349710CA096C4C2300699948 /* en_AU */,
 				3419E5970A86996300C3FC68 /* tr */,
 				342F9D970B5525B2000D5FC2 /* fi */,
+				34F13E890BA6D525000473DE /* pt_BR */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -9272,6 +9311,7 @@
 				349710CC096C4C2300699948 /* en_AU */,
 				3419E5950A86996000C3FC68 /* tr */,
 				342F9D940B5525B1000D5FC2 /* fi */,
+				34F13E8B0BA6D525000473DE /* pt_BR */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -9298,6 +9338,7 @@
 				34CF88A70A6D5EC0009D9A21 /* nl */,
 				3437FF550A9BF0A70028604E /* tr */,
 				342F9DAA0B5525B5000D5FC2 /* fi */,
+				34F13E790BA6D524000473DE /* pt_BR */,
 			);
 			name = DualWindowMessageAdvanced.nib;
 			sourceTree = "<group>";
@@ -9326,6 +9367,7 @@
 				3419E2F30A81451D00C3FC68 /* zh_CN */,
 				3419E2F40A81452400C3FC68 /* zh_TW */,
 				342F9D950B5525B1000D5FC2 /* fi */,
+				34F13E8A0BA6D525000473DE /* pt_BR */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -9386,6 +9428,7 @@
 				34A81DCC093CE92300B0E93D /* pl */,
 				3437FF540A9BF0A70028604E /* tr */,
 				342F9DA90B5525B5000D5FC2 /* fi */,
+				34F13E7A0BA6D524000473DE /* pt_BR */,
 			);
 			name = EditStateSheet.nib;
 			sourceTree = "<group>";
@@ -9412,6 +9455,7 @@
 				34A81DD5093CE92400B0E93D /* pl */,
 				3437FF5D0A9BF0A70028604E /* tr */,
 				342F9DB20B5525B6000D5FC2 /* fi */,
+				34F13DC30BA6D37A000473DE /* pt_BR */,
 			);
 			name = AccountProxy.nib;
 			sourceTree = "<group>";
@@ -9438,6 +9482,7 @@
 				34A81DC5093CE92300B0E93D /* pl */,
 				3437FF4D0A9BF0A60028604E /* tr */,
 				342F9DA20B5525B3000D5FC2 /* fi */,
+				34F13E810BA6D525000473DE /* pt_BR */,
 			);
 			name = ESGaimNovellAccountView.nib;
 			sourceTree = "<group>";
@@ -9466,6 +9511,7 @@
 				345AF9B50A5D67EC00D7DA6F /* nl */,
 				3437FF5C0A9BF0A70028604E /* tr */,
 				342F9DB10B5525B6000D5FC2 /* fi */,
+				34F13E720BA6D524000473DE /* pt_BR */,
 			);
 			name = AppearancePrefs.nib;
 			sourceTree = "<group>";
@@ -9492,6 +9538,7 @@
 				34A81DCA093CE92300B0E93D /* pl */,
 				3437FF520A9BF0A60028604E /* tr */,
 				342F9DA70B5525B4000D5FC2 /* fi */,
+				34F13E7C0BA6D525000473DE /* pt_BR */,
 			);
 			name = ESGaimGaduGaduAccountView.nib;
 			sourceTree = "<group>";
@@ -9518,6 +9565,7 @@
 				34A81DC6093CE92300B0E93D /* pl */,
 				3437FF4E0A9BF0A60028604E /* tr */,
 				342F9DA30B5525B3000D5FC2 /* fi */,
+				34F13E800BA6D525000473DE /* pt_BR */,
 			);
 			name = ESGaimMSNAccountView.nib;
 			sourceTree = "<group>";
@@ -9544,6 +9592,7 @@
 				34A81DCE093CE92300B0E93D /* pl */,
 				3437FF560A9BF0A70028604E /* tr */,
 				342F9DAB0B5525B5000D5FC2 /* fi */,
+				34F13E780BA6D524000473DE /* pt_BR */,
 			);
 			name = DCGaimZephyrJoinChatView.nib;
 			sourceTree = "<group>";
@@ -9570,6 +9619,7 @@
 				34A81DD0093CE92300B0E93D /* pl */,
 				3437FF580A9BF0A70028604E /* tr */,
 				342F9DAD0B5525B6000D5FC2 /* fi */,
+				34F13E760BA6D524000473DE /* pt_BR */,
 			);
 			name = DCGaimOscarJoinChatView.nib;
 			sourceTree = "<group>";
@@ -9596,6 +9646,7 @@
 				34A81DCF093CE92300B0E93D /* pl */,
 				3437FF570A9BF0A70028604E /* tr */,
 				342F9DAC0B5525B5000D5FC2 /* fi */,
+				34F13E770BA6D524000473DE /* pt_BR */,
 			);
 			name = DCGaimYahooJoinChatView.nib;
 			sourceTree = "<group>";
@@ -9622,6 +9673,7 @@
 				34A81DC2093CE92300B0E93D /* pl */,
 				3437FF4A0A9BF0A60028604E /* tr */,
 				342F9D9E0B5525B3000D5FC2 /* fi */,
+				34F13E840BA6D525000473DE /* pt_BR */,
 			);
 			name = ESGaimZephyrAccountView.nib;
 			sourceTree = "<group>";
@@ -9648,6 +9700,7 @@
 				34A81DD1093CE92300B0E93D /* pl */,
 				3437FF590A9BF0A70028604E /* tr */,
 				342F9DAE0B5525B6000D5FC2 /* fi */,
+				34F13E750BA6D524000473DE /* pt_BR */,
 			);
 			name = DCGaimMeanwhileJoinChatView.nib;
 			sourceTree = "<group>";
@@ -9673,6 +9726,7 @@
 				34A81DB3093CE92200B0E93D /* pl */,
 				3437FF420A9BF0A50028604E /* tr */,
 				342F9D880B5525AF000D5FC2 /* fi */,
+				34F13E910BA6D525000473DE /* pt_BR */,
 			);
 			name = StatusSortConfiguration.nib;
 			sourceTree = "<group>";
@@ -9699,6 +9753,7 @@
 				34A81DD2093CE92300B0E93D /* pl */,
 				3437FF5A0A9BF0A70028604E /* tr */,
 				342F9DAF0B5525B6000D5FC2 /* fi */,
+				34F13E740BA6D524000473DE /* pt_BR */,
 			);
 			name = DCGaimJabberJoinChatView.nib;
 			sourceTree = "<group>";
@@ -9725,6 +9780,7 @@
 				34A81DC9093CE92300B0E93D /* pl */,
 				3437FF510A9BF0A60028604E /* tr */,
 				342F9DA60B5525B4000D5FC2 /* fi */,
+				34F13E7D0BA6D525000473DE /* pt_BR */,
 			);
 			name = ESGaimICQAccountView.nib;
 			sourceTree = "<group>";
@@ -9751,6 +9807,7 @@
 				34A81DC4093CE92300B0E93D /* pl */,
 				3437FF4C0A9BF0A60028604E /* tr */,
 				342F9DA10B5525B3000D5FC2 /* fi */,
+				34F13E820BA6D525000473DE /* pt_BR */,
 			);
 			name = ESGaimOscarAccountView.nib;
 			sourceTree = "<group>";
@@ -9777,6 +9834,7 @@
 				34A81DC7093CE92300B0E93D /* pl */,
 				3437FF4F0A9BF0A60028604E /* tr */,
 				342F9DA40B5525B4000D5FC2 /* fi */,
+				34F13E7F0BA6D525000473DE /* pt_BR */,
 			);
 			name = ESGaimMeanwhileAccountView.nib;
 			sourceTree = "<group>";
@@ -9803,6 +9861,7 @@
 				34A81DC3093CE92300B0E93D /* pl */,
 				3437FF4B0A9BF0A60028604E /* tr */,
 				342F9D9F0B5525B3000D5FC2 /* fi */,
+				34F13E830BA6D525000473DE /* pt_BR */,
 			);
 			name = ESGaimYahooAccountView.nib;
 			sourceTree = "<group>";
@@ -9829,6 +9888,7 @@
 				34A81DC8093CE92300B0E93D /* pl */,
 				3437FF500A9BF0A60028604E /* tr */,
 				342F9DA50B5525B4000D5FC2 /* fi */,
+				34F13E7E0BA6D525000473DE /* pt_BR */,
 			);
 			name = ESGaimJabberAccountView.nib;
 			sourceTree = "<group>";
@@ -9857,6 +9917,7 @@
 				34EA648E0A62E2ED0053DFEB /* nl */,
 				3437FF480A9BF0A60028604E /* tr */,
 				342F9D990B5525B2000D5FC2 /* fi */,
+				34F13E870BA6D525000473DE /* pt_BR */,
 			);
 			name = ListThemeSheet.nib;
 			sourceTree = "<group>";
@@ -9885,6 +9946,7 @@
 				34EA64880A62E2DA0053DFEB /* nl */,
 				3437FF490A9BF0A60028604E /* tr */,
 				342F9D9A0B5525B2000D5FC2 /* fi */,
+				34F13E860BA6D525000473DE /* pt_BR */,
 			);
 			name = ListLayoutSheet.nib;
 			sourceTree = "<group>";
@@ -9911,6 +9973,7 @@
 				34CF88B50A6D6005009D9A21 /* nl */,
 				3437FF470A9BF0A60028604E /* tr */,
 				342F9D910B5525B1000D5FC2 /* fi */,
+				34F13E8C0BA6D525000473DE /* pt_BR */,
 			);
 			name = MessageContextDisplayPrefs.nib;
 			sourceTree = "<group>";
@@ -9946,6 +10009,7 @@
 				347374FF0AA9215F00AD18E3 /* zh_CN */,
 				347375000AA9216700AD18E3 /* zh_TW */,
 				342F9D8A0B5525B0000D5FC2 /* fi */,
+				34F13E8F0BA6D525000473DE /* pt_BR */,
 			);
 			name = ShortcutRecorder.strings;
 			sourceTree = "<group>";
@@ -9972,6 +10036,7 @@
 				34A81DB4093CE92200B0E93D /* pl */,
 				3437FF430A9BF0A50028604E /* tr */,
 				342F9D890B5525B0000D5FC2 /* fi */,
+				34F13E900BA6D525000473DE /* pt_BR */,
 			);
 			name = StatusPreferences.nib;
 			sourceTree = "<group>";
@@ -10000,6 +10065,7 @@
 				349710F9096C4D4F00699948 /* en_AU */,
 				3437FF410A9BF0A50028604E /* tr */,
 				342F9D870B5525AF000D5FC2 /* fi */,
+				34F13E920BA6D525000473DE /* pt_BR */,
 			);
 			name = WebKitPreferencesView.nib;
 			sourceTree = "<group>";
@@ -10037,6 +10103,7 @@
 				349710F2096C4CE500699948 /* zh_TW */,
 				3437FF5B0A9BF0A70028604E /* tr */,
 				342F9DB00B5525B6000D5FC2 /* fi */,
+				34F13E730BA6D524000473DE /* pt_BR */,
 			);
 			name = Buttons.strings;
 			sourceTree = "<group>";
@@ -10064,6 +10131,7 @@
 				345AF6CC0A5C9B4E00D7DA6F /* zh_CN */,
 				345AF6CD0A5C9B5A00D7DA6F /* zh_TW */,
 				342F9D9D0B5525B2000D5FC2 /* fi */,
+				34F13E850BA6D525000473DE /* pt_BR */,
 			);
 			name = GeneralPreferences.nib;
 			sourceTree = "<group>";
