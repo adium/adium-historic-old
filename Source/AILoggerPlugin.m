@@ -471,7 +471,7 @@ Class LogViewerWindowControllerClass = NULL;
 		[appender addElementWithName:@"event"
 							 content:nil
 					   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
-					 attributeValues:[NSArray arrayWithObjects:@"windowClosed", [[chat account] UID], [[[chat dateOpened] dateWithCalendarFormat:nil timeZone:nil] ISO8601DateString], nil]];
+					 attributeValues:[NSArray arrayWithObjects:@"windowClosed", [[chat account] UID], [[[NSDate date] dateWithCalendarFormat:nil timeZone:nil] ISO8601DateString], nil]];
 
 		[self closeAppenderForChat:chat];
 
@@ -500,7 +500,13 @@ Class LogViewerWindowControllerClass = NULL;
 {
 	AIAccount *account = [chat account];
 	NSString *chatID = [chat isGroupChat] ? [chat name] : [[chat listObject] UID];
-	
+	/*
+	NSLog(@"Chat: %@",chat);
+	NSLog(@"service ID is %@",[account serviceID]);
+	NSLog(@"Account UID is %@",[account UID]);
+	NSLog(@"chat ID is %@",chatID);
+	*/
+
 	return [NSString stringWithFormat:@"%@.%@-%@", [account serviceID], [account UID], chatID];
 }
 
