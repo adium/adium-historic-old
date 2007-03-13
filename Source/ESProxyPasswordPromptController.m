@@ -57,7 +57,7 @@ static NSMutableDictionary	*proxyPasswordPromptControllerDict = nil;
 	}
 	
     //bring the window front
-	[controller showWindowInFrontIfAllowed:nil];
+	[controller showWindowInFrontIfAllowed:YES];
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName forProxyServer:(NSString *)inServer userName:(NSString *)inUserName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
