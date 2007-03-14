@@ -56,7 +56,7 @@ static void adiumGaimConnReportDisconnect(GaimConnection *gc, const char *text)
 {
     GaimDebug (@"Connection Disconnected: gc=%x (%s)", gc, text);
 	
-	NSString	*disconnectError = [NSString stringWithUTF8String:text];
+	NSString	*disconnectError = (text ? [NSString stringWithUTF8String:text] : @"");
     [accountLookup(gc->account) accountConnectionReportDisconnect:disconnectError];
 }
 
