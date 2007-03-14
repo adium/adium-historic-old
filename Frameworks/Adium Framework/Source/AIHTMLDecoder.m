@@ -576,7 +576,18 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				unsigned length = [chunk length];
 				for (unsigned i = 0; i < length; i++) {
 					unichar currentChar = [chunk characterAtIndex:i];
-					if (currentChar < 32) {
+					if (currentChar == '\r') {
+						/* \r\n is a single line break, so encode it as such. If we have an \r followed by a \n,
+						 * skip the \n
+						 */
+						if ((i + 1 < length) && ([chunk characterAtIndex:(i+1)] == '\n')) {
+							i++;
+						}
+						[string appendString:@"<BR>"];
+						
+					} else if (currentChar == '\n') {
+						[string appendString:@"<BR>"];
+					} else if (currentChar < 32) {
 						//Control character.
 						[string appendFormat:@"&#x%x;", currentChar];
 
@@ -601,18 +612,6 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 							}
 						}
 
-					} else if (currentChar == '\r') {
-						/* \r\n is a single line break, so encode it as such. If we have an \r followed by a \n,
-						 * skip the \n
-						 */
-						if ((i + 1 < length) && ([chunk characterAtIndex:(i+1)] == '\n')) {
-							i++;
-						}
-						[string appendString:@"<BR>"];
-						
-					} else if (currentChar == '\n') {
-						[string appendString:@"<BR>"];
-						
 					} else {
 						//unichar characters may have a length of up to 3; be careful to get the whole character
 						NSRange composedCharRange = [chunk rangeOfComposedCharacterSequenceAtIndex:i];
