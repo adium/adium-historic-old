@@ -45,6 +45,8 @@
 
     NSString                                *adiumPath;
 	SUStatusChecker							*statusChecker;
+	
+	BOOL									sentCrashLog;
 }
 
 - (void)awakeFromNib;
