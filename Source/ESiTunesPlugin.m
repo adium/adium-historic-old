@@ -364,7 +364,7 @@
 		
 		while ((trigger = [enumerator nextObject])) {
 			//search for phrase in the string that needs to be filtered
-			if (([stringMessage rangeOfString:trigger options:NSCaseInsensitiveSearch].location != NSNotFound)) {
+			if (([stringMessage rangeOfString:trigger options:(NSLiteralSearch | NSCaseInsensitiveSearch)].location != NSNotFound)) {
 				NSDictionary	*replacementDict;
 				NSString		*replacement;
 				
@@ -392,7 +392,7 @@
 				//Perform the replacement
 				[filteredMessage replaceOccurrencesOfString:trigger
 												 withString:replacement
-													options:NSLiteralSearch
+													options:(NSLiteralSearch | NSCaseInsensitiveSearch)
 													  range:NSMakeRange(0, [filteredMessage length])];
 			}
 		}
@@ -407,7 +407,7 @@
 		while ((trigger = [enumerator nextObject])) {
 			
 			//Find if the current trigger is in the string
-			if (([stringMessage rangeOfString:trigger options:NSCaseInsensitiveSearch].location != NSNotFound)) {
+			if (([stringMessage rangeOfString:trigger options:(NSLiteralSearch | NSCaseInsensitiveSearch)].location != NSNotFound)) {
 				NSString *replacement;
 				
 				//Get the info if we don't already have it
@@ -425,7 +425,7 @@
 				//Replace the current trigger with the value we found above
 				[filteredMessage replaceOccurrencesOfString:trigger
 												 withString:replacement
-													options:NSLiteralSearch
+													options:(NSLiteralSearch | NSCaseInsensitiveSearch)
 													  range:NSMakeRange(0, [filteredMessage length])];
 			}
 		}
