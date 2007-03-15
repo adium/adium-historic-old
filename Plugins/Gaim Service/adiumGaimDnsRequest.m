@@ -11,15 +11,14 @@
 	GaimDnsQueryData *query_data;
 	GaimDnsQueryResolvedCallback resolved_cb;
 	GaimDnsQueryFailedCallback failed_cb;
-	int success;
-	GSList *returnData;
+	BOOL success;
 	int errorNumber;
-	int cancel;
+	BOOL cancel;
 }
 + (AdiumGaimDnsRequest *)lookupRequestForData:(GaimDnsQueryData *)query_data;
 - (id)initWithData:(GaimDnsQueryData *)data resolvedCB:(GaimDnsQueryResolvedCallback)resolved failedCB:(GaimDnsQueryFailedCallback)failed;
 - (void)startLookup:(id)sender;
-- (void)lookupComplete:(id)sender;
+- (void)lookupComplete:(NSValue *)resValue;
 - (void)cancel;
 @end
 
@@ -48,10 +47,9 @@ static NSMutableDictionary *threads = nil;
 	query_data = data;
 	resolved_cb = resolved;
 	failed_cb = failed;
-	success = 0;
-	returnData = NULL;
+	success = FALSE;
 	errorNumber = 0;
-	cancel = 0;
+	cancel = FALSE;
 	
 	[threads setObject:self forKey:[NSValue valueWithPointer:query_data]];
 	[self retain];  //Released in lookupComplete:
@@ -63,9 +61,10 @@ static NSMutableDictionary *threads = nil;
 - (void)startLookup:(id)sender
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	struct addrinfo hints, *res, *tmp;
+	struct addrinfo hints, *res;
 	char servname[20];
 	
+	AILog(@"Performing DNS resolve: %s:%d",gaim_dnsquery_get_host(query_data),gaim_dnsquery_get_port(query_data));
 	g_snprintf(servname, sizeof(servname), "%d", gaim_dnsquery_get_port(query_data));
 	memset(&hints, 0, sizeof(hints));
 	
@@ -77,16 +76,33 @@ static NSMutableDictionary *threads = nil;
 	 */
 	hints.ai_socktype = SOCK_STREAM;
 	errorNumber = getaddrinfo(gaim_dnsquery_get_host(query_data), servname, &hints, &res);
-	if (errorNumber != 0) {
-/*		if (show_debug)
-			printf("dns[%d] Error: getaddrinfo returned %d\n",
-				   getpid(), rc);
-		dns_params.hostname[0] = '\0';*/
-		success = 0;
+	if (errorNumber == 0) {
+		success = TRUE;
+	} else {
+		/*
+		 if (show_debug)
+			printf("dns[%d] Error: getaddrinfo returned %d\n", getpid(), rc);
+		 dns_params.hostname[0] = '\0';
+		 */
+		success = FALSE;
 	}
-	else
-	{
-		returnData = NULL;
+	
+	[self performSelectorOnMainThread:@selector(lookupComplete:) withObject:(success ? [NSValue valueWithPointer:res] : nil) waitUntilDone:NO];
+	[pool release];
+}
+
+- (void)lookupComplete:(NSValue *)resValue
+{
+	if (cancel) {
+		//Cancelled, so take no action now that the lookup is complete.
+
+	} else if (success && resValue) {
+		//Success! Build a list of our results and pass it to the resolved callback
+		AILog(@"DNS resolve complete for %s:%d",gaim_dnsquery_get_host(query_data),gaim_dnsquery_get_port(query_data));
+		struct addrinfo *res, *tmp;
+		GSList *returnData = NULL;
+
+		res = [resValue pointerValue];
 		tmp = res;
 		while (res) {
 			size_t addrlen = res->ai_addrlen;
@@ -97,52 +113,33 @@ static NSMutableDictionary *threads = nil;
 			res = res->ai_next;
 		}
 		freeaddrinfo(tmp);
-		success = 1;
-	}
-	[self performSelectorOnMainThread:@selector(lookupComplete:) withObject:nil waitUntilDone:NO];
-	[pool release];
-}
-
-- (void)lookupComplete:(id)sender
-{
-	if(cancel)
-	{
-		//We cancelled
-		if(returnData != NULL)
-		{
-			GSList *hosts = returnData;
-			while (hosts != NULL)
-			{
-				hosts = g_slist_remove(hosts, hosts->data);
-				g_free(hosts->data);
-				hosts = g_slist_remove(hosts, hosts->data);
-			}
-		}
-	}
-	else if(success)
-	{
+		
 		resolved_cb(query_data, returnData);
-	}
-	else
-	{
+
+	} else {
+		//Failure :( Send an error message to the failed callback
 		char message[1024];
 		
 		g_snprintf(message, sizeof(message), _("Error resolving %s:\n%s"),
 				   gaim_dnsquery_get_host(query_data), gai_strerror(errorNumber));
 		failed_cb(query_data, message);
 	}
-	[self autorelease];  //Release our retain in init...
-	if(query_data != NULL)
+
+	//Release our retain in init...
+	[self autorelease];
+
+	if (query_data) {
 		//Can happen if we were cancelled
 		[threads removeObjectForKey:[NSValue valueWithPointer:query_data]];
+	}
 }
 
 - (void)cancel
 {
 	//Can't stop an existing thread, so let it just die gracefully when it is done
-	cancel = 1;
+	cancel = TRUE;
 	
-	//To avoid collitions and the like
+	//To avoid collisions and the like
 	[threads removeObjectForKey:[NSValue valueWithPointer:query_data]];
 	query_data = NULL;
 }
