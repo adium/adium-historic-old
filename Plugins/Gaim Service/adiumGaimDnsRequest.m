@@ -11,7 +11,6 @@
 	GaimDnsQueryData *query_data;
 	GaimDnsQueryResolvedCallback resolved_cb;
 	GaimDnsQueryFailedCallback failed_cb;
-	BOOL success;
 	int errorNumber;
 	BOOL cancel;
 }
@@ -47,7 +46,6 @@ static NSMutableDictionary *threads = nil;
 	query_data = data;
 	resolved_cb = resolved;
 	failed_cb = failed;
-	success = FALSE;
 	errorNumber = 0;
 	cancel = FALSE;
 	
@@ -63,6 +61,7 @@ static NSMutableDictionary *threads = nil;
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	struct addrinfo hints, *res;
 	char servname[20];
+    BOOL success = FALSE;
 	
 	AILog(@"Performing DNS resolve: %s:%d",gaim_dnsquery_get_host(query_data),gaim_dnsquery_get_port(query_data));
 	g_snprintf(servname, sizeof(servname), "%d", gaim_dnsquery_get_port(query_data));
@@ -94,9 +93,12 @@ static NSMutableDictionary *threads = nil;
 - (void)lookupComplete:(NSValue *)resValue
 {
 	if (cancel) {
-		//Cancelled, so take no action now that the lookup is complete.
+		//Cancelled, so take no action now that the lookup is complete, but we must cleanup
+        struct addrinfo *res = [resValue pointerValue];
+        if(res != NULL)
+            freeaddrinfo(res);
 
-	} else if (success && resValue) {
+	} else if (resValue) {
 		//Success! Build a list of our results and pass it to the resolved callback
 		AILog(@"DNS resolve complete for %s:%d",gaim_dnsquery_get_host(query_data),gaim_dnsquery_get_port(query_data));
 		struct addrinfo *res, *tmp;
