@@ -214,23 +214,27 @@ typedef enum {
 		if (forcedWindowWidth != -1) {
 			//If auto-sizing is disabled, use the specified width
 			newWindowFrame.size.width = forcedWindowWidth;
-		} 
-			//Subtract the current size of the view from our frame
-		newWindowFrame.size.width -= viewFrame.size.width;
+		} else {
+			/* Using horizontal auto-sizing, so find and determine our new width
+			 *
+			 * First, subtract the current size of the view from our frame
+			 */
+			newWindowFrame.size.width -= viewFrame.size.width;
 			
 			//Now, figure out how big the view wants to be and add that to our frame
-		newWindowFrame.size.width += [contactListView desiredWidth];
-
+			newWindowFrame.size.width += [contactListView desiredWidth];
+			
 			//Don't get bigger than our maxWindowWidth
-		if (newWindowFrame.size.width > maxWindowWidth) {
-			newWindowFrame.size.width = maxWindowWidth;
-		} else if (newWindowFrame.size.width < 0) {
-			newWindowFrame.size.width = 0;	
+			if (newWindowFrame.size.width > maxWindowWidth) {
+				newWindowFrame.size.width = maxWindowWidth;
+			} else if (newWindowFrame.size.width < 0) {
+				newWindowFrame.size.width = 0;	
+			}
 		}
 
 		//Anchor to the appropriate screen edge
 		anchorToRightEdge = ((currentScreen != nil) &&
-							(windowFrame.origin.x + windowFrame.size.width) + EDGE_CATCH_X > (visibleScreenFrame.origin.x + visibleScreenFrame.size.width));
+							(windowFrame.origin.x + windowFrame.size.width) + EDGE_CATCH_X >= (visibleScreenFrame.origin.x + visibleScreenFrame.size.width));
 		if (anchorToRightEdge) {
 			newWindowFrame.origin.x = (windowFrame.origin.x + windowFrame.size.width) - newWindowFrame.size.width;
 		} else {
