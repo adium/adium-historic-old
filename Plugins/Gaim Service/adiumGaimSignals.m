@@ -138,8 +138,9 @@ static void buddy_status_changed_cb(GaimBuddy *buddy, GaimStatus *oldstatus, Gai
 	statusName = [account statusNameForGaimBuddy:buddy];
 	statusMessage = [account statusMessageForGaimBuddy:buddy];
 
-	[theContact setIsMobile:(gaim_presence_is_status_primitive_active(gaim_buddy_get_presence(buddy), GAIM_STATUS_MOBILE))
-					 notify:NotifyLater];
+	//XXX This is done so MSN can ignore it since it's currently buggy in libgaim
+	[account updateMobileStatus:theContact
+					   withData:(gaim_presence_is_status_primitive_active(gaim_buddy_get_presence(buddy), GAIM_STATUS_MOBILE))];
 
 	//Will also notify
 	[account updateStatusForContact:theContact

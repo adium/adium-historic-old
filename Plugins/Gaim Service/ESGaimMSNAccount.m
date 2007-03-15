@@ -360,6 +360,11 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 	return displayNamesAsStatus;
 }
 
+- (void)updateMobileStatus:(AIListContact *)theContact withData:(BOOL)isMobile
+{
+	//No-op
+}
+
 #pragma mark File transfer
 - (BOOL)canSendFolders
 {
