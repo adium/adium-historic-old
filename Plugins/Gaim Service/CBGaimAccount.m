@@ -323,6 +323,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
+- (void)updateMobileStatus:(AIListContact *)theContact withData:(BOOL)isMobile
+{
+	[theContact setIsMobile:isMobile notify:NotifyLater];
+
+	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+}
+
 - (NSString *)processedIncomingUserInfo:(NSString *)inString
 {
 	NSMutableString *returnString = nil;

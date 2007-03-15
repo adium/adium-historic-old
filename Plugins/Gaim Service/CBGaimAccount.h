@@ -113,6 +113,7 @@
 - (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b;
 - (void)updateEvil:(AIListContact *)theContact withData:(NSNumber *)evilNumber;
 - (void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData;
+- (void)updateMobileStatus:(AIListContact *)theContact withData:(BOOL)isMobile;
 
 - (void)removeContact:(AIListContact *)theContact;
 
