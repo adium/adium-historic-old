@@ -961,7 +961,7 @@ OtrlUserState otrg_get_userstate(void)
 
 #pragma mark Upgrading gaim-otr --> Adium-otr
 /*!
- * @bref Construct a dictionary converting libgaim prpl names to Adium serviceIDs for the purpose of fingerprint upgrading
+ * @brief Construct a dictionary converting libgaim prpl names to Adium serviceIDs for the purpose of fingerprint upgrading
  */
 - (NSDictionary *)prplDict
 {

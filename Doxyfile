@@ -5,7 +5,7 @@
 #---------------------------------------------------------------------------
 PROJECT_NAME           = Adium
 PROJECT_NUMBER         = 1.0
-OUTPUT_DIRECTORY       = /Users/evands/adium/Docs
+OUTPUT_DIRECTORY       = ./Docs
 CREATE_SUBDIRS         = NO
 OUTPUT_LANGUAGE        = English
 USE_WINDOWS_ENCODING   = NO
@@ -24,7 +24,7 @@ ABBREVIATE_BRIEF       = "The $name class" \
                          the
 ALWAYS_DETAILED_SEC    = NO
 INLINE_INHERITED_MEMB  = NO
-FULL_PATH_NAMES        = YES
+FULL_PATH_NAMES        = NO
 STRIP_FROM_PATH        = /Applications/
 STRIP_FROM_INC_PATH    = 
 SHORT_NAMES            = NO
@@ -82,7 +82,7 @@ WARN_LOGFILE           =
 #---------------------------------------------------------------------------
 # configuration options related to the input files
 #---------------------------------------------------------------------------
-INPUT                  = /Users/evands/adium
+INPUT                  = ./
 FILE_PATTERNS          = *.c \
                          *.cc \
                          *.cxx \

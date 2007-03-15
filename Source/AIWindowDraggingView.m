@@ -8,7 +8,7 @@
 #import "AIWindowDraggingView.h"
 
 /*!
- * @class AIClickThroughThemeDocumentButton
+ * @class AIWindowDraggingView
  * @brief This NSView subclass makes the window move when it is dragged by the view itself (but not by subviews).
  *
  * The code is, for reference, a stripped down version of the code powering AIBorderlessWindow's dragging movements.

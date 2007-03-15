@@ -22,11 +22,6 @@
 - (NSImage *)_sampleImageForColor:(NSColor *)inColor;
 @end
 
-/*!
- * @class AIColorSelectionPopUpButton
- *
- * AIColorSelectionPopUpButton is an NSPopUpButton that displays preset color choices.
- */
 @implementation AIColorSelectionPopUpButton
 
 /*!
@@ -41,31 +36,16 @@
     [self setAvailableColors:[NSArray arrayWithObjects:@"Black",[NSColor blackColor],@"White",[NSColor whiteColor],@"Red", [NSColor redColor], @"Blue", [NSColor blueColor], @"Green", [NSColor greenColor], @"Yellow", [NSColor yellowColor], nil]];
 }
 
-/*!
- * @brief Set the currently displayed color
- * 
- * If a preset exists for the color, it will be selected.  Otherwise, the custom option will be changed to this color
- * and selected
- * @param inColor NSColor to make active
- */
 - (void)setColor:(NSColor *)inColor
 {
 	[self setObjectValue:inColor];
 }
 
-/*!
- * @brief Returns the currently displayed color
- */
 - (NSColor *)color
 {
     return [self objectValue];
 }
 
-/*!
- * @brief Set the pre-set color choices
- *
- * @param inColor NSArray or color presets as alternating NSString label, NSColor color pairs
- */
 - (void)setAvailableColors:(NSArray *)inColors
 {
 	[self setPresetValues:inColors];

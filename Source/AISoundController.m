@@ -57,6 +57,7 @@
 /*!
  * @brief Speak the demonstration text for a voice
  *
+ * @param voiceString The name of the voice that should be used to generate speech
  * @param pitch The pitch to use, or 0.0 to use the default pitch
  * @param rate The rate to use, 0.0 to use the default rate
  */

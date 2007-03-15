@@ -2340,7 +2340,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 /*!
  * @brief Returns a set of all selected to groups on all accounts
  *
- * @param logCount If non-NULL, will be set to the total number of logs on return
+ * @param totalLogCount If non-NULL, will be set to the total number of logs on return
  */
 - (NSArray *)allSelectedToGroups:(int *)totalLogCount
 {
