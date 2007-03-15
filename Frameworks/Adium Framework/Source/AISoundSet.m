@@ -108,7 +108,7 @@
 /*!
  * @brief Path to the soundset
  *
- * @resturn NSString with the path to the sound set; may need to be expanded with stringByExpandingBundleIdentifier
+ * @return NSString with the path to the sound set; may need to be expanded with stringByExpandingBundleIdentifier
  */
 - (NSString *)sourcePath
 {
@@ -121,7 +121,7 @@
  * @brief Initialize this object from a soundset at the given path
  *
  * @param inPath NSString path to the .AdiumSoundSet file
- * @result YES if succesful
+ * @return YES if succesful
  */
 - (BOOL)_loadSoundSetFromPath:(NSString *)inPath
 {

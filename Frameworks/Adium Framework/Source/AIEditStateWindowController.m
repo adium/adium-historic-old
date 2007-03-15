@@ -555,7 +555,7 @@ static	NSMutableDictionary	*controllerDict = nil;
  * @brief Configure the editor for a state
  *
  * Configured the editor's controls to represent the passed state dictionary.
- * @param state A NSDictionary containing status state keys and values
+ * @param statusState A NSDictionary containing status state keys and values
  */
 - (void)configureForState:(AIStatus *)statusState
 {

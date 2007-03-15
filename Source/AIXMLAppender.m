@@ -239,8 +239,8 @@ enum {
  * @brief Sets up the document.
  *
  * @param name The name of the root element for this document.
- * @param attributeKeys An array of the attribute keys the element has.
- * @param attributeValues An array of the attribute values the element has.
+ * @param keys An array of the attribute keys the element has.
+ * @param values An array of the attribute values the element has.
  */
 - (BOOL)initializeDocumentWithRootElementName:(NSString *)name attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
 {
@@ -270,8 +270,8 @@ enum {
  *
  * @param name The name of the root element for this document.
  * @param content The stuff between the open and close tags. If nil, then the tag will be self closing.
- * @param attributeKeys An array of the attribute keys the element has.
- * @param attributeValues An array of the attribute values the element has.
+ * @param keys An array of the attribute keys the element has.
+ * @param values An array of the attribute values the element has.
  */
 
 - (BOOL)addElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
@@ -287,8 +287,8 @@ enum {
  *
  * @param name The name of the root element for this document.
  * @param content The stuff between the open and close tags. If nil, then the tag will be self closing. No escaping will be performed on the content.
- * @param attributeKeys An array of the attribute keys the element has.
- * @param attributeValues An array of the attribute values the element has.
+ * @param keys An array of the attribute keys the element has.
+ * @param values An array of the attribute values the element has.
  */
 
 - (BOOL)addElementWithName:(NSString *)name escapedContent:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
@@ -318,8 +318,8 @@ enum {
  *
  * @param name The name of the element.
  * @param content The stuff between the open and close tags. If nil, then the tag will be self closing. No escaping will be performed on the content.
- * @param attributeKeys An array of the attribute keys the element has.
- * @param attributeValues An array of the attribute values the element has.
+ * @param keys An array of the attribute keys the element has.
+ * @param values An array of the attribute values the element has.
  * @return An XML element, suitable for insertion into a document.
  *
  * The two attribute arrays must be of the same size, or the method will return nil.

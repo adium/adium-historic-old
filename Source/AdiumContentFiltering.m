@@ -146,9 +146,9 @@
  *
  * @param attributedString A pointer to the NSAttributedString to filter
  * @param inContentFilterArray Array of filters to use, which must each conform to either AIDelayedContentFilter or AIContentFilter
- * @param filtercontext Passed to each filter as context.
+ * @param filterContext Passed to each filter as context.
  * @param uniqueID A unique ID used by delayed filters
- * @param performedFilters An array of filters which should not be performed, such as previously performed or inappropriate filters
+ * @param filtersToSkip An array of filters which should not be performed, such as previously performed or inappropriate filters
  * @param finishedFilters A pointer to an array which will be filled with the filters which were performed, suitable for passing later as performedFilters
  *
  * @result YES if any delayed filtering began; NO if it did not

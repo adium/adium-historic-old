@@ -10,6 +10,7 @@ Graham Booker
 Jorge Salvador Caffarena
 David Clark
 Nelson Elhage
+Michael Dippery
 Augie Fackler
 Ken Ferry
 Christopher Forsythe

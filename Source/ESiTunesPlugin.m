@@ -827,7 +827,7 @@
 /*!
  * @brief Create Edit and Contextual menus of iTunes triggers
  *
- * Users can then insert %_<token name> into any text view
+ * Users can then insert %_&lt;token name&gt; into any text view
  */
 - (void)createTriggersMenu
 {

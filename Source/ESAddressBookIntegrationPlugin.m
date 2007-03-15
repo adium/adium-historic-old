@@ -659,7 +659,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
  * and image/data creation overhead.
  *
  * @param person The ABPerson to fetch the image from
- * @pram inObject The AIListObject with which to ultimately associate the image
+ * @param inObject The AIListObject with which to ultimately associate the image
  */
 - (void)queueDelayedFetchOfImageForPerson:(ABPerson *)person object:(AIListObject *)inObject
 {

@@ -83,7 +83,7 @@
  * informed of it via a connected window_anchorTo* outlet, resize the window as necessary to allow enough space for the 
  * newly sized control.
  *
- * The TARGET_CONTROL #define is used rather than self because classes using this method can choose to send sizing messages
+ * The TARGET_CONTROL &#35;define is used rather than self because classes using this method can choose to send sizing messages
  * to another object.  For example, AILocalizationButtonCell uses (NSControl *)[self controlView].
  *
  * Whew.
