@@ -249,6 +249,9 @@
  */
 - (void)buildAndSendReport
 {
+	//If we already sent the crash log, do nothing and just return
+	if (sentCrashLog) return;
+
 	NSString	*shortDescription = [textField_description stringValue];
 	
 	//Truncate description field to 300 characters
@@ -322,7 +325,9 @@
                                nil) == NSAlertAlternateReturn) {
                 break;
             }
-        }
+        } else {
+			sentCrashLog = YES;
+		}
     }
 }
 
@@ -455,7 +460,6 @@
 	}
 
 	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(versionCheckingTimedOut) object:nil];
-
 	[self finishWithAcceptableVersion:!isNewVersion newVersionString:versionString];
 }
 
