@@ -398,8 +398,6 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 	return YES;
 }
 
-static AIHTMLDecoder *messageencoder = nil;
-
 /*!
  * @brief Return the string encoded for sending to a remote contact
  *
@@ -407,24 +405,20 @@ static AIHTMLDecoder *messageencoder = nil;
  */
 - (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
 {
-	NSAttributedString *attmessage;
-	AIXMLElement *xhtmlroot;
-	
-	if (!messageencoder)
-	{
-		messageencoder = [[AIHTMLDecoder alloc] init];
-		[messageencoder setGeneratesStrictXHTML:YES];
-		[messageencoder setIncludesStyleTags:YES];
-		[messageencoder setEncodesNonASCII:YES];
-	}
-	
-	attmessage = [inContentMessage message];
-	xhtmlroot = [messageencoder rootStrictXHTMLElementForAttributedString:attmessage imagesPath:nil];
-	if (!xhtmlroot)
-		return nil;
-
-
-	return [xhtmlroot XMLString];
+	return [AIHTMLDecoder encodeHTML:[inContentMessage message]
+							 headers:NO
+							fontTags:YES
+				  includingColorTags:YES
+					   closeFontTags:YES
+						   styleTags:YES
+		  closeStyleTagsOnFontChange:YES
+					  encodeNonASCII:YES
+						encodeSpaces:NO
+						  imagesPath:nil
+				   attachmentsAsText:YES
+		   onlyIncludeOutgoingImages:NO
+					  simpleTagsOnly:NO
+					  bodyBackground:NO];
 }
 
 //Initiate a new chat
