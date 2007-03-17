@@ -1261,6 +1261,8 @@
 		F4D9BBF80ACF5B9400615461 /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
 		F4D9BBF90ACF5B9900615461 /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
 		F4D9BBFA0ACF5B9F00615461 /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
+		F505CEAB0BAB7012001FB1A2 /* GBImportPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = F505CEA90BAB7012001FB1A2 /* GBImportPlugin.h */; };
+		F505CEAC0BAB7012001FB1A2 /* GBImportPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F505CEAA0BAB7012001FB1A2 /* GBImportPlugin.m */; };
 		F51BCD3B0A156261000FDC06 /* AIHyperlinks.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3496A8EA07CE6CA30055BBAB /* AIHyperlinks.framework */; };
 		F51BCD3C0A156269000FDC06 /* AIUtilities.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		F51BCE390A156312000FDC06 /* AdiumSpotlightImporter.mdimporter in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34611C8309B6756D00870036 /* AdiumSpotlightImporter.mdimporter */; };
@@ -2781,7 +2783,7 @@
 		34BC8F790ACA3AAC00562745 /* AIScannerDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIScannerDebug.m; path = Source/AIScannerDebug.m; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3676,6 +3678,8 @@
 		EEC461B5096D68580028632F /* OWSpellingPerContactPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OWSpellingPerContactPlugin.h; path = Source/OWSpellingPerContactPlugin.h; sourceTree = "<group>"; };
 		F11B9621051CDB3B0000000E /* AIMessageAliasPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMessageAliasPlugin.h; path = "Plugins/Message Alias Support/AIMessageAliasPlugin.h"; sourceTree = "<group>"; };
 		F11B9622051CDB3B0000000E /* AIMessageAliasPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMessageAliasPlugin.m; path = "Plugins/Message Alias Support/AIMessageAliasPlugin.m"; sourceTree = "<group>"; };
+		F505CEA90BAB7012001FB1A2 /* GBImportPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBImportPlugin.h; path = Source/GBImportPlugin.h; sourceTree = "<group>"; };
+		F505CEAA0BAB7012001FB1A2 /* GBImportPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GBImportPlugin.m; path = Source/GBImportPlugin.m; sourceTree = "<group>"; };
 		F50A75A00A0AE77A00A6D1BA /* GBFireImporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = GBFireImporter.h; path = Source/GBFireImporter.h; sourceTree = "<group>"; };
 		F50A75A10A0AE77A00A6D1BA /* GBFireImporter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = GBFireImporter.m; path = Source/GBFireImporter.m; sourceTree = "<group>"; };
 		F531836F019E40BB01A80165 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
@@ -5105,6 +5109,7 @@
 				4B0E342E04C4677700A8010A /* Contact Status Coloring */,
 				40AC0EEA03B5BEDB00A80202 /* Error Message Handler */,
 				34C68B1C0778F9C200EB423C /* General Preferences */,
+				F505CEA80BAB6FDB001FB1A2 /* Import */,
 				6EC1684406C1707800F9FAD3 /* Invite to Chat */,
 				6E4D961006B73991005235E9 /* Join Chat Panel */,
 				F51DEC0D03262FB501A8010A /* Login Window */,
@@ -6771,6 +6776,15 @@
 			name = "Standard Toolbar Items";
 			sourceTree = "<group>";
 		};
+		F505CEA80BAB6FDB001FB1A2 /* Import */ = {
+			isa = PBXGroup;
+			children = (
+				F505CEA90BAB7012001FB1A2 /* GBImportPlugin.h */,
+				F505CEAA0BAB7012001FB1A2 /* GBImportPlugin.m */,
+			);
+			name = Import;
+			sourceTree = "<group>";
+		};
 		F50A325A03B5798301A8010A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -7272,6 +7286,7 @@
 				34BC8F7A0ACA3AAC00562745 /* AIScannerDebug.h in Headers */,
 				345EE2DE0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.h in Headers */,
 				346936B60BA6CA8A00E1CF7E /* AIFileTransferProgressOutlineView.h in Headers */,
+				F505CEAB0BAB7012001FB1A2 /* GBImportPlugin.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8825,6 +8840,7 @@
 				34BC8F7B0ACA3AAC00562745 /* AIScannerDebug.m in Sources */,
 				345EE2DF0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.m in Sources */,
 				346936B70BA6CA8A00E1CF7E /* AIFileTransferProgressOutlineView.m in Sources */,
+				F505CEAC0BAB7012001FB1A2 /* GBImportPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
