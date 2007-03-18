@@ -562,25 +562,16 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 			}
 			keywordEnd = [scanner scanLocation];		
 			
-			if (keywordStart != 0 && [inString characterAtIndex:keywordStart - 1] == '\\') {
-				//Ignore the script (It was escaped) and delete the escape character
-				//XXX This is broken now; escaping scripts is no longer possible. Do we care? I don't. -evands
-				[attributedString replaceCharactersInRange:NSMakeRange(keywordStart - 1, 1) withString:@""];
-				foundKeyword = YES;
-
-			} else {
-				//Run the script.
-				NSRange	keywordRange = NSMakeRange(keywordStart, keywordEnd - keywordStart);
-
-				[self _executeScript:infoDict 
-					   withArguments:argArray
-				 forAttributedString:attributedString
-						keywordRange:keywordRange
-							 context:context
-							uniqueID:uniqueID];
-
-				foundKeyword = YES;
-			}
+			//Run the script.
+			NSRange	keywordRange = NSMakeRange(keywordStart, keywordEnd - keywordStart);
+			[self _executeScript:infoDict 
+				   withArguments:argArray
+			 forAttributedString:attributedString
+					keywordRange:keywordRange
+						 context:context
+						uniqueID:uniqueID];
+			
+			foundKeyword = YES;
 		}
 	}
 }
