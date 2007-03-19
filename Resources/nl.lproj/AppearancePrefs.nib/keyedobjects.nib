@@ -2237,7 +2237,7 @@
 				<integer>18</integer>
 			</dict>
 		</dict>
-		<string>maak breedte passend</string>
+		<string>maak hoogte passend</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -2365,7 +2365,7 @@
 				<integer>18</integer>
 			</dict>
 		</dict>
-		<string>maak hoogte passend</string>
+		<string>maak breedte passend</string>
 		<dict>
 			<key>$class</key>
 			<dict>
