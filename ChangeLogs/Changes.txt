@@ -1,5 +1,13 @@
 				Adium X Version History
 				-----------------------
+Version 1.0.2
+ * Fixed incorrect indication of certain MSN contacts as being mobile (#6477)
+ * Added ability to import Fire accounts and logs after first-run (#6519)
+ * Incoming Bonjour messages which don't have an HTML component are now properly displayed (#6590)
+ * Removed the broken feature which was supposed to allow applescript xtra script triggers to be escaped (#6552)
+ * iTunes substitution triggers are now case insensitive (#6293)
+ * Fixed a memory leak when a DNS query is cancelled
+
 Version 1.0.1 (2/16/2007)
  * Improved reliability of AIM file transfer reception
  * Fixed white text color in chat transcripts under certain conditions
