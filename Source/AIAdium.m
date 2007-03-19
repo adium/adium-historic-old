@@ -462,6 +462,12 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 	[self configureHelp];
 	
 	[[self notificationCenter] postNotificationName:Adium_CompletedApplicationLoad object:nil];
+	
+	[[NSDistributedNotificationCenter defaultCenter] addObserver:self
+														selector:@selector(systemTimeZoneDidChange:)
+															name:@"NSSystemTimeZoneDidChangeDistributedNotification"
+														  object:nil];
+	
 	[pool release];
 }
 
@@ -1096,6 +1102,11 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 	}
 
     return nil;	
+}
+
+- (void)systemTimeZoneDidChange:(NSNotification *)inNotification
+{
+	[NSTimeZone resetSystemTimeZone];
 }
 
 #pragma mark Scripting
