@@ -1,12 +1,32 @@
 				Adium X Version History
 				-----------------------
 Version 1.0.2
+ * Fixed a crash which could occur while performing DNS resolutions and optimized for performance
+ * Fixed another situation in which an AIM file transfer could fail, introduced in the fix included in 1.0.1
+ * Emoticon packs' names and emoticon names can now be localized
+ * Fixed linkification of .eu domains
+ * Various performance improvements to the log viewer when opening it and performing searches, particularly in searching while indexing occurs.  All logs will be reindexed the first time 1.0.2's log viewer opens.
+ * Fixed the progress bar in the Fire improter
+ * Correct a situation in which the Fire log importer could generate invalid XML
+ * Fire import now supports HTML-styled away messages
+ * Fixed default Google Talk configuration for Google Talk Enterprise users (#6505)
+ * Fixed searching of the keychain list (#4463)
+ * Fixed rate limiting error when using the iTunes Now Playing status and rapidly changing the iTunes track (#2463)
+ * Use the correct extension for incoming custom emoticons; this hopefully fixes some problems with their display in 10.3. (#6232)
+ * Fixed dock-like hiding on the right side of the screen after the scrollbar disappears with autosizing disabled. (#6179)
+ * We now once again send autoreplies to strangers (#6334)
+ * Fixed a crash when sending formatted MSN text (#5753)
+ * Fixed the password prompt window to properly come to the front
+ * Left and right arrow keys now behave as expected in the file transfer progress window (#1813)
+ * Windows whose saved position is off-screen due to a resolution change now display on-screen, as expected, when opened (#5845)
  * Fixed incorrect indication of certain MSN contacts as being mobile (#6477)
  * Added ability to import Fire accounts and logs after first-run (#6519)
  * Incoming Bonjour messages which don't have an HTML component are now properly displayed (#6590)
  * Removed the broken feature which was supposed to allow applescript xtra script triggers to be escaped (#6552)
  * iTunes substitution triggers are now case insensitive (#6293)
  * Fixed a memory leak when a DNS query is cancelled
+ * Fixed the date logged for a window closed event (#6566)
+ * Catalan, Italian, Portuguese, and French localization updates
 
 Version 1.0.1 (2/16/2007)
  * Improved reliability of AIM file transfer reception
