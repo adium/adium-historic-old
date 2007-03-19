@@ -141,25 +141,19 @@ static NSRect screenBoundariesRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	if (key) {
 		NSString	*frameString;
 
-		//Unique key for each number of screens
-		if ([[NSScreen screens] count] > 1) {
-			frameString = [[adium preferenceController] preferenceForKey:[self multiscreenKeyWithAutosaveName:key]
+		//Unique key for each number and size of screens
+		frameString = [[adium preferenceController] preferenceForKey:[self multiscreenKeyWithAutosaveName:key]
+															   group:PREF_GROUP_WINDOW_POSITIONS];
+		
+		if (!frameString) {
+			//Fall back on the old number-of-screens key
+			frameString = [[adium preferenceController] preferenceForKey:[NSString stringWithFormat:@"%@-%i",key,[[NSScreen screens] count]]
 																   group:PREF_GROUP_WINDOW_POSITIONS];
-
 			if (!frameString) {
-				//Fall back on the old number-of-screens key
-				frameString = [[adium preferenceController] preferenceForKey:[NSString stringWithFormat:@"%@-%i",key,[[NSScreen screens] count]]
+				//Fall back on the single screen preference if necessary (this is effectively a preference upgrade).
+				frameString = [[adium preferenceController] preferenceForKey:key
 																	   group:PREF_GROUP_WINDOW_POSITIONS];
-				if (!frameString) {
-					//Fall back on the single screen preference if necessary (this is effectively a preference upgrade).
-					frameString = [[adium preferenceController] preferenceForKey:key
-																		   group:PREF_GROUP_WINDOW_POSITIONS];
-				}
 			}
-			
-		} else {
-			frameString = [[adium preferenceController] preferenceForKey:key
-																   group:PREF_GROUP_WINDOW_POSITIONS];			
 		}
 		
 		if (frameString) {
@@ -235,13 +229,9 @@ static NSRect screenBoundariesRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	NSString	*key = [self adiumFrameAutosaveName];
 
  	if (key) {
-		//Unique key for each number of screens
-		int	numberOfScreens = [[NSScreen screens] count];
-
+		//Unique key for each number and size of screens
 		[[adium preferenceController] setPreference:[self stringWithSavedFrame]
-											 forKey:((numberOfScreens == 1) ? 
-													 key :
-													 [self multiscreenKeyWithAutosaveName:key])
+											 forKey:[self multiscreenKeyWithAutosaveName:key]
 											  group:PREF_GROUP_WINDOW_POSITIONS];		
 	}
 }
