@@ -30,7 +30,7 @@ Protocol to be observed by all style delegate objects.  These objects handle the
 
 // cell specific parameters
 - (NSRect)dragRectForTabCell:(PSMTabBarCell *)cell orientation:(PSMTabBarOrientation)orientation;
-- (NSRect)closeButtonRectForTabCell:(PSMTabBarCell *)cell;
+- (NSRect)closeButtonRectForTabCell:(PSMTabBarCell *)cell withFrame:(NSRect)cellFrame;
 - (NSRect)iconRectForTabCell:(PSMTabBarCell *)cell;
 - (NSRect)indicatorRectForTabCell:(PSMTabBarCell *)cell;
 - (NSRect)objectCounterRectForTabCell:(PSMTabBarCell *)cell;
