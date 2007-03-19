@@ -25,7 +25,7 @@
 #define kPSMMinimumTitleWidth 30
 #define kPSMTabBarIndicatorWidth 16.0
 #define kPSMTabBarIconWidth 16.0
-#define kPSMHideAnimationSteps 2.0
+#define kPSMHideAnimationSteps 3.0
 
 // Value used in _currentStep to indicate that resizing operation is not in progress
 #define kPSMIsNotBeingResized -1
@@ -33,9 +33,7 @@
 // Value used in _currentStep when a resizing operation has just been started
 #define kPSMStartResizeAnimation 0
 
-@class PSMOverflowPopUpButton;
-@class PSMRolloverButton;
-@class PSMTabBarCell;
+@class PSMOverflowPopUpButton, PSMRolloverButton, PSMTabBarCell, PSMTabBarController;
 @protocol PSMTabStyle;
 
 typedef enum {
@@ -60,7 +58,8 @@ enum {
     IBOutlet NSTabView          *tabView;                   // the tab view being navigated
     PSMOverflowPopUpButton      *_overflowPopUpButton;      // for too many tabs
     PSMRolloverButton           *_addTabButton;
-    
+    PSMTabBarController			*_controller;
+	
     // drawing style
     id<PSMTabStyle>             style;
     BOOL                        _canCloseOnlyTab;
@@ -69,6 +68,7 @@ enum {
     BOOL                        _showAddTabButton;
     BOOL                        _sizeCellsToFit;
     BOOL                        _useOverflowMenu;
+	BOOL						_alwaysShowActiveTab;
 	int							_resizeAreaCompensation;
 	PSMTabBarOrientation		_orientation;
 	BOOL						_automaticallyAnimates;
@@ -90,7 +90,6 @@ enum {
     // animation for hide/show
     int                         _currentStep;
     BOOL                        _isHidden;
-    BOOL                        _hideIndicators;
     IBOutlet id                 partnerView;                // gets resized when hide/show
     BOOL                        _awakenedFromNib;
 	int							_tabBarWidth;
@@ -106,6 +105,8 @@ enum {
 
 // control characteristics
 + (NSBundle *)bundle;
+- (float)availableCellWidth;
+- (NSRect)genericCellRect;
 
 // control configuration
 - (PSMTabBarOrientation)orientation;
@@ -140,6 +141,8 @@ enum {
 - (void)setSelectsTabsOnMouseDown:(BOOL)value;
 - (BOOL)automaticallyAnimates;
 - (void)setAutomaticallyAnimates:(BOOL)value;
+- (BOOL)alwaysShowActiveTab;
+- (void)setAlwaysShowActiveTab:(BOOL)value;
 
 // accessors
 - (NSTabView *)tabView;
@@ -156,10 +159,12 @@ enum {
 // tab information
 - (NSMutableArray *)representedTabViewItems;
 - (int)numberOfVisibleTabs;
+- (PSMTabBarCell *)lastVisibleTab;
 
 // special effects
 - (void)hideTabBar:(BOOL)hide animate:(BOOL)animate;
 - (BOOL)isTabBarHidden;
+- (BOOL)isAnimating;
 
 // internal bindings methods also used by the tab drag assistant
 - (void)bindPropertiesForCell:(PSMTabBarCell *)cell andTabViewItem:(NSTabViewItem *)item;
@@ -197,6 +202,9 @@ enum {
 //tab bar hiding methods
 - (void)tabView:(NSTabView *)aTabView tabBarDidHide:(PSMTabBarControl *)tabBarControl;
 - (void)tabView:(NSTabView *)aTabView tabBarDidUnhide:(PSMTabBarControl *)tabBarControl;
+
+//closing
+- (BOOL)tabView:(NSTabView *)aTabView disableTabCloseForTabViewItem:(NSTabViewItem *)tabViewItem;
 
 //tooltips
 - (NSString *)tabView:(NSTabView *)aTabView toolTipForTabViewItem:(NSTabViewItem *)tabViewItem;
