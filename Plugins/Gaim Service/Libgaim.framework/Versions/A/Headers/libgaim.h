@@ -1,3 +1,4 @@
+#include "Libgaim/gaim-compat.h"
 #include "Libgaim/internal.h"
 #include "Libgaim/connection.h"
 #include "Libgaim/conversation.h"
