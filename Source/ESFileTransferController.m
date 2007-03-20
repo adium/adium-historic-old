@@ -290,7 +290,7 @@ static ESFileTransferPreferences *preferences;
 			NSArray		*arguments;
 			NSTask		*zipTask;
 			
-			BOOL		success = NO;
+			BOOL		success = YES;
 
 			//Ensure our temporary directory exists [it never will the first time this method is called]
 			[defaultManager createDirectoryAtPath:tmpDir attributes:nil];
@@ -304,22 +304,28 @@ static ESFileTransferPreferences *preferences;
 				pathToArchive,   //output to our destination name
 				folderName, //store the folder
 				nil];
-			
-			zipTask = [[NSTask alloc] init];
-			[zipTask setLaunchPath:launchPath];
-			[zipTask setArguments:arguments];
-			[zipTask setCurrentDirectoryPath:[inPath stringByDeletingLastPathComponent]];
-			
+			AILog(@"-[ESFileTransferController pathToArchiveOfFolder:]: Will launch %@ with arguments %@ in directory %@",
+				  launchPath, arguments, [inPath stringByDeletingLastPathComponent]);
+
 			AI_DURING
+				zipTask = [[NSTask alloc] init];
+				[zipTask setLaunchPath:launchPath];
+				[zipTask setArguments:arguments];
+				[zipTask setCurrentDirectoryPath:[inPath stringByDeletingLastPathComponent]];
 				[zipTask launch];
 				[zipTask waitUntilExit];
-				success = ([zipTask terminationStatus] == 0);
 			AI_HANDLER
-				/* No exception handler needed */
+				success = NO;
 			AI_ENDHANDLER
-			[zipTask release];
-				
+
+			if (success) {
+				success = (([zipTask terminationStatus] == -1) || ([zipTask terminationStatus] == 0));
+			}
+
 			if (!success) pathToArchive = nil;
+			AILog(@"-[ESFileTransferController pathToArchiveOfFolder:]: Success %i (%i), so pathToArchive is %@",
+				  success, [zipTask terminationStatus], pathToArchive);
+			[zipTask release];
 		}
 	}
 
