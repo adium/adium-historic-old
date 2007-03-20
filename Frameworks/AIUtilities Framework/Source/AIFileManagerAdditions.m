@@ -202,6 +202,8 @@
 
 - (NSString *)pathByResolvingAlias:(NSString *)path
 {
+	if (!path) return nil;
+
 	NSString *resolvedPath = nil;
 	CFURLRef url;
 
