@@ -16,6 +16,7 @@
 #import <Adium/AITextAttachmentExtension.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AITextAttachmentAdditions.h>
+#import <AIUtilities/AIFileManagerAdditions.h>
 
 #define ICON_WIDTH	64
 #define ICON_HEIGHT	64
@@ -133,6 +134,18 @@
 
 - (NSString *)path
 {
+	if (!path && image) {
+		/* If no path is available, an image *is* available, and we need a path to that image, write it out and return
+		 * the location of the written data.
+		 */
+		NSString *tmpDir = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSProcessInfo processInfo] globallyUniqueString]];
+		NSString *filename = [[self string] stringByAppendingPathExtension:@"png"];
+		[[NSFileManager defaultManager] createDirectoriesForPath:tmpDir];
+
+		[self setPath:[tmpDir stringByAppendingPathComponent:filename]];
+		[[image PNGRepresentation] writeToFile:path atomically:NO];
+	}
+
 	return path;
 }
 
