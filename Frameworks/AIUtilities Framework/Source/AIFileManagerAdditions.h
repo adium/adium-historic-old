@@ -79,4 +79,13 @@
  */
 - (NSString *)userApplicationSupportFolder;
 
+/*
+ * @brief Returns the actual path pointed to by an alias, or the path itself if it is not an alias
+ *
+ * It's safe to pass this any path.
+ *
+ * @result Resolved alias path or the original pathame passed in if it is not an alias
+ */
+- (NSString *)pathByResolvingAlias:(NSString *)path;
+
 @end

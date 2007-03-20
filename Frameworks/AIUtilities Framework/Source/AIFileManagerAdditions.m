@@ -200,4 +200,33 @@
     return [self findFolderOfType:kApplicationSupportFolderType inDomain:kUserDomain createFolder:YES];
 }
 
+- (NSString *)pathByResolvingAlias:(NSString *)path
+{
+	NSString *resolvedPath = nil;
+	CFURLRef url;
+
+	url = CFURLCreateWithFileSystemPath(/* allocator */ NULL, (CFStringRef)path,
+										kCFURLPOSIXPathStyle, /* isDir */ false);
+	NSLog(@"url is %@",url);
+	if (url) {
+		FSRef fsRef;
+		if (CFURLGetFSRef(url, &fsRef)) {
+			Boolean targetIsFolder, wasAliased;
+			NSLog(@"2");
+			if (FSResolveAliasFile (&fsRef, true /*resolveAliasChains*/, 
+									&targetIsFolder, &wasAliased) == noErr && wasAliased) {
+				NSLog(@"FSResolveAliasFile(): %i %i",targetIsFolder,wasAliased);
+				CFURLRef resolvedUrl = CFURLCreateFromFSRef(NULL, &fsRef);
+				if (resolvedUrl) {
+					resolvedPath = [(NSString*)CFURLCopyFileSystemPath(resolvedUrl, kCFURLPOSIXPathStyle) autorelease];
+					CFRelease(resolvedUrl);
+				}
+			}
+		}
+		CFRelease(url);
+	}
+	
+	return (resolvedPath ? resolvedPath : [[path copy] autorelease]);
+}
+
 @end
