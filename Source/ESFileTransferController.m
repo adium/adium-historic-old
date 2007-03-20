@@ -343,6 +343,9 @@ static ESFileTransferPreferences *preferences;
 		NSFileManager	*defaultManager = [NSFileManager defaultManager];
 		BOOL			isDir;
 		
+		//Resolve any alias we're passed if necessary
+		inPath = [defaultManager pathByResolvingAlias:inPath];
+		
 		//Set up a fileTransfer object
 		fileTransfer = [self newFileTransferWithContact:listContact
 											 forAccount:account
