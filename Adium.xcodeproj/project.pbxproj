@@ -442,6 +442,7 @@
 		3485DBCB09EBCE7400232CC4 /* ESGaimRequestActionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341E88690648FF1B00E0C828 /* ESGaimRequestActionController.m */; };
 		3485DBD009EBCE8200232CC4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3402E04D07CB0EB00044F818 /* Localizable.strings */; };
 		3485DBF209EBD01900232CC4 /* Libgaim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libgaim.framework */; };
+		34883FAC0BB10484009C3F7C /* EmoticonNames.strings in Resources */ = {isa = PBXBuildFile; fileRef = 34883FAB0BB10484009C3F7C /* EmoticonNames.strings */; };
 		348B250D0A50A1C900B2B972 /* ESSourceListBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 348B250B0A50A1C900B2B972 /* ESSourceListBackgroundView.m */; };
 		348E5ACB06D2A74C004C051C /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 348E5ACA06D2A74C004C051C /* AddressBook.framework */; };
 		348EE1B4080A57480015E0FC /* WebKitPreferencesView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 348EE1B3080A57480015E0FC /* WebKitPreferencesView.nib */; };
@@ -2479,6 +2480,28 @@
 		3486E9DA097F5FCE0044C496 /* AuthorizationRequestWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AuthorizationRequestWindow.nib; path = Resources/AuthorizationRequestWindow.nib; sourceTree = "<group>"; };
 		3486E9E0097F5FE20044C496 /* ESAuthorizationRequestWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESAuthorizationRequestWindowController.m; path = Source/ESAuthorizationRequestWindowController.m; sourceTree = "<group>"; };
 		3486E9E1097F5FE20044C496 /* ESAuthorizationRequestWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESAuthorizationRequestWindowController.h; path = Source/ESAuthorizationRequestWindowController.h; sourceTree = "<group>"; };
+		34883FAF0BB104A9009C3F7C /* ca */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ca; path = "Frameworks/Adium Framework/Resources/ca.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FB00BB104AB009C3F7C /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = "Frameworks/Adium Framework/Resources/cs.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FB10BB104AD009C3F7C /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = "Frameworks/Adium Framework/Resources/da.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FB20BB104AF009C3F7C /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "Frameworks/Adium Framework/Resources/de.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FB30BB104B2009C3F7C /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_AU; path = "Frameworks/Adium Framework/Resources/en_AU.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FB40BB104B4009C3F7C /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "Frameworks/Adium Framework/Resources/en.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FB50BB104B6009C3F7C /* en_CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_CA; path = "Frameworks/Adium Framework/Resources/en_CA.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FB60BB104B9009C3F7C /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = "Frameworks/Adium Framework/Resources/es.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FB70BB104BD009C3F7C /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = "Frameworks/Adium Framework/Resources/fi.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FB80BB104BF009C3F7C /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = "Frameworks/Adium Framework/Resources/fr.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FB90BB104C2009C3F7C /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = "Frameworks/Adium Framework/Resources/is.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FBA0BB104C4009C3F7C /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "Frameworks/Adium Framework/Resources/it.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FBB0BB104C6009C3F7C /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = "Frameworks/Adium Framework/Resources/ja.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FBC0BB104C9009C3F7C /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = "Frameworks/Adium Framework/Resources/nb.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FBD0BB104CB009C3F7C /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = "Frameworks/Adium Framework/Resources/nl.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FBE0BB104CE009C3F7C /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = "Frameworks/Adium Framework/Resources/pl.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FBF0BB104D0009C3F7C /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt_BR; path = "Frameworks/Adium Framework/Resources/pt_BR.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FC00BB104D3009C3F7C /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = "Frameworks/Adium Framework/Resources/ru.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FC10BB104D7009C3F7C /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = "Frameworks/Adium Framework/Resources/sv.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FC20BB104DA009C3F7C /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = "Frameworks/Adium Framework/Resources/tr.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FC30BB104DD009C3F7C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = "Frameworks/Adium Framework/Resources/zh_CN.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34883FC40BB104E0009C3F7C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = "Frameworks/Adium Framework/Resources/zh_TW.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
 		348862CD05645E94003C9627 /* ESFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransfer.h; path = "Frameworks/Adium Framework/Source/ESFileTransfer.h"; sourceTree = "<group>"; };
 		348862CE05645E95003C9627 /* ESFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransfer.m; path = "Frameworks/Adium Framework/Source/ESFileTransfer.m"; sourceTree = "<group>"; };
 		348A8A190629A68C00FC6E03 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Gaim Service/en.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
@@ -5241,6 +5264,7 @@
 		34E6CEFC0A793E870076D7F0 /* Emoticons */ = {
 			isa = PBXGroup;
 			children = (
+				34883FAB0BB10484009C3F7C /* EmoticonNames.strings */,
 				34503C7F058F96C400FB7AD1 /* AIEmoticon.h */,
 				34503C7E058F96C400FB7AD1 /* AIEmoticon.m */,
 				3C73F83E04D62A2900A80106 /* AIEmoticonPack.h */,
@@ -8256,6 +8280,7 @@
 				34DC8AE40A7EEEF7003E1636 /* stackImage.png in Resources */,
 				3419E2DF0A81445800C3FC68 /* Localizable.strings in Resources */,
 				340D859B0ADC82D100D05B3F /* sourceListBackground.png in Resources */,
+				34883FAC0BB10484009C3F7C /* EmoticonNames.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10055,6 +10080,35 @@
 				34F13E900BA6D525000473DE /* pt_BR */,
 			);
 			name = StatusPreferences.nib;
+			sourceTree = "<group>";
+		};
+		34883FAB0BB10484009C3F7C /* EmoticonNames.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				34883FAF0BB104A9009C3F7C /* ca */,
+				34883FB00BB104AB009C3F7C /* cs */,
+				34883FB10BB104AD009C3F7C /* da */,
+				34883FB20BB104AF009C3F7C /* de */,
+				34883FB30BB104B2009C3F7C /* en_AU */,
+				34883FB40BB104B4009C3F7C /* en */,
+				34883FB50BB104B6009C3F7C /* en_CA */,
+				34883FB60BB104B9009C3F7C /* es */,
+				34883FB70BB104BD009C3F7C /* fi */,
+				34883FB80BB104BF009C3F7C /* fr */,
+				34883FB90BB104C2009C3F7C /* is */,
+				34883FBA0BB104C4009C3F7C /* it */,
+				34883FBB0BB104C6009C3F7C /* ja */,
+				34883FBC0BB104C9009C3F7C /* nb */,
+				34883FBD0BB104CB009C3F7C /* nl */,
+				34883FBE0BB104CE009C3F7C /* pl */,
+				34883FBF0BB104D0009C3F7C /* pt_BR */,
+				34883FC00BB104D3009C3F7C /* ru */,
+				34883FC10BB104D7009C3F7C /* sv */,
+				34883FC20BB104DA009C3F7C /* tr */,
+				34883FC30BB104DD009C3F7C /* zh_CN */,
+				34883FC40BB104E0009C3F7C /* zh_TW */,
+			);
+			name = EmoticonNames.strings;
 			sourceTree = "<group>";
 		};
 		348EE1B3080A57480015E0FC /* WebKitPreferencesView.nib */ = {
