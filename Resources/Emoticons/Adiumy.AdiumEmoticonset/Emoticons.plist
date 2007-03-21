@@ -113,7 +113,7 @@
 				<string>:-X</string>
 			</array>
 			<key>Name</key>
-			<string>Wub</string>
+			<string>Kiss</string>
 		</dict>
 		<key>money.png</key>
 		<dict>
@@ -122,7 +122,7 @@
 				<string>:-$</string>
 			</array>
 			<key>Name</key>
-			<string>Money</string>
+			<string>Money-mouth</string>
 		</dict>
 		<key>smile.png</key>
 		<dict>
@@ -146,7 +146,7 @@
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Tongue</string>
+			<string>Sticking Out Tongue</string>
 		</dict>
 		<key>erm.png</key>
 		<dict>
