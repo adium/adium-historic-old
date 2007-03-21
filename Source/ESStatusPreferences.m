@@ -266,36 +266,42 @@
  */
 - (IBAction)deleteState:(id)sender
 {
-	int			 selectedIndex = [outlineView_stateList selectedRow];
-	AIStatusItem *statusItem = [outlineView_stateList itemAtRow:selectedIndex];
-
-	if (statusItem) {
+	NSArray		 *selectedItems = [outlineView_stateList arrayOfSelectedItems];
+	
+	if ([selectedItems count]) {
 		//Confirm deletion of a status group with contents
-		if ([statusItem isKindOfClass:[AIStatusGroup class]] &&
-			[[(AIStatusGroup *)statusItem containedStatusItems] count]) {
-			unsigned count = [[(AIStatusGroup *)statusItem containedStatusItems] count];
-			NSString *message;
-			
-			if (count > 1) {
-				message = [NSString stringWithFormat:AILocalizedString(@"Are you sure you want to delete the group \"%@\" containing %i saved status items?",nil),
-					[statusItem title], count];
-				
-			} else {
-				message = [NSString stringWithFormat:AILocalizedString(@"Are you sure you want to delete the group \"%@\" containing 1 saved status item?",nil),
-					[statusItem title], count];				
-			}
+		NSEnumerator *enumerator;
+		AIStatusItem *statusItem;
+		int			 numberOfItems = 0;
 
+		enumerator = [selectedItems objectEnumerator];
+		while ((statusItem = [enumerator nextObject])) {
+			if ([statusItem isKindOfClass:[AIStatusGroup class]] &&
+				[[(AIStatusGroup *)statusItem flatStatusSet] count]) {
+				numberOfItems += [[(AIStatusGroup *)statusItem flatStatusSet] count];
+			} else {
+				numberOfItems++;
+			}
+		}
+
+		if (numberOfItems > 1) {
+			NSString *message = [NSString stringWithFormat:AILocalizedString(@"Are you sure you want to delete %i saved status items?",nil),
+				numberOfItems];
+			
 			//Warn if deleting a group containing status items
-			NSBeginAlertSheet(AILocalizedString(@"Status Group Deletion Confirmation",nil),
+			NSBeginAlertSheet(AILocalizedString(@"Status Deletion Confirmation",nil),
 							  AILocalizedString(@"Delete", nil),
 							  AILocalizedString(@"Cancel", nil), nil,
 							  [[self view] window], self,
 							  @selector(sheetDidEnd:returnCode:contextInfo:), NULL,
-							  statusItem,
-							  message);
-			
+							  [selectedItems retain],
+							  message);			
 		} else {
-			[[statusItem containingStatusGroup] removeStatusItem:statusItem];
+			//Use an enumerator because we could be deleting multiple empty groups
+			enumerator = [selectedItems objectEnumerator];
+			while ((statusItem = [enumerator nextObject])) {
+				[[statusItem containingStatusGroup] removeStatusItem:statusItem];
+			}
 		}
 	}
 }
@@ -305,10 +311,18 @@
  */
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
+	NSArray *selectedItems = (NSArray *)contextInfo;
 	if (returnCode == NSAlertDefaultReturn) {
-		AIStatusItem *statusItem = (AIStatusItem *)contextInfo;
-		[[statusItem containingStatusGroup] removeStatusItem:statusItem];
+		NSEnumerator *enumerator;
+		AIStatusItem *statusItem;
+
+		enumerator = [selectedItems objectEnumerator];
+		while ((statusItem = [enumerator nextObject])) {
+			[[statusItem containingStatusGroup] removeStatusItem:statusItem];
+		}
 	}	
+	
+	[selectedItems release];
 }
 
 /*!
