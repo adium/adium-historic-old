@@ -318,8 +318,8 @@
 	[imageView_service setImage:[AIServiceIcons serviceIconForService:service
 																 type:AIServiceIconLarge
 															direction:AIIconNormal]];
-	[textField_contactNameLabel setStringValue:[(userNameLabel ? userNameLabel :
-												 AILocalizedString(@"Contact ID",nil)) stringByAppendingString:AILocalizedString(@":", "Colon which will be appended after a label such as 'User Name', before an input field")]];
+	[textField_contactNameLabel setLocalizedString:[(userNameLabel ? userNameLabel :
+													 AILocalizedString(@"Contact ID",nil)) stringByAppendingString:AILocalizedString(@":", "Colon which will be appended after a label such as 'User Name', before an input field")]];
 
 	//And the list of accounts
 	[self updateAccountList];
@@ -373,8 +373,10 @@
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	[self ensureValidContactTypeSelection];
-	
+	if ([inObject isKindOfClass:[AIAccount class]]) {
+		[self ensureValidContactTypeSelection];
+	}
+
 	return nil;
 }
 
