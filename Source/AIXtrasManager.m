@@ -55,8 +55,10 @@ static AIXtrasManager *manager;
 
 - (void)windowDidLoad
 {
+	[[self window] setTitle:AILocalizedString(@"Xtras Manager", "Xtras Manager window title")];
+
 	[self installToolbar];
-	
+
 	//This is the Mail.app source list background color... which differs from the iTunes one.
 	[tableView_categories setBackgroundColor:[NSColor colorWithCalibratedRed:.9059
 																	   green:.9294
@@ -75,7 +77,7 @@ static AIXtrasManager *manager;
 	[cell setFont:[NSFont systemFontOfSize:12]];
 	[[xtraList tableColumnWithIdentifier:@"xtras"] setDataCell:cell];
 	[cell release];
-	
+
 	//XXX ???
 	[previewContainerView setHasVerticalScroller:YES];
 	[previewContainerView setAutohidesScrollers:YES];
