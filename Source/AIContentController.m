@@ -577,7 +577,7 @@
 					NSString	*path;
 					if ([textAttachment isKindOfClass:[AITextAttachmentExtension class]]) {
 						path = [(AITextAttachmentExtension *)textAttachment path];
-						
+						AILog(@"Sending text attachment %@ which has path %@",textAttachment,path);
 					} else {
 						//Write out the file so we can send it if we have a standard NSTextAttachment to send
 						NSFileWrapper *fileWrapper = [textAttachment fileWrapper];
@@ -588,10 +588,16 @@
 						if (!filename) filename = [NSString randomStringOfLength:5];
 
 						path = [tmpDir stringByAppendingPathComponent:filename];
+						AILog(@"Wrote out the file to %@ for sending",path);
 					}
-
-					[[adium fileTransferController] sendFile:path
-											   toListContact:(AIListContact *)[inContentMessage destination]];
+					if (path) {
+						[[adium fileTransferController] sendFile:path
+												   toListContact:(AIListContact *)[inContentMessage destination]];
+					} else {
+						NSLog(@"-[AIContentController handleFileSendsForContentMessage:]: Warning: Failed to have a path for sending an inline file!");
+						AILog(@"-[AIContentController handleFileSendsForContentMessage:]: Warning: Failed to have a path for sending an inline file for content message %@!",
+							  inContentMessage);
+					}
 
 					//Now remove the attachment
 					[newAttributedString removeAttribute:NSAttachmentAttributeName range:NSMakeRange(searchRange.location,
