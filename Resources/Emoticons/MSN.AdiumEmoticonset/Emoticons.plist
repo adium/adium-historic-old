@@ -30,7 +30,7 @@
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Embarassed</string>
+			<string>Embarrassed</string>
 		</dict>
 		<key>Crying.tiff</key>
 		<dict>
@@ -40,7 +40,7 @@
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Crying</string>
+			<string>Cry</string>
 		</dict>
 		<key>Frown.tiff</key>
 		<dict>
@@ -64,7 +64,7 @@
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Surprised</string>
+			<string>Gasp</string>
 		</dict>
 		<key>Grin.tiff</key>
 		<dict>
@@ -109,7 +109,7 @@
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Don't tell anyone</string>
+			<string>Lips Are Sealed</string>
 		</dict>
 		<key>Money-mouth.tiff</key>
 		<dict>
@@ -157,7 +157,7 @@
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Hot</string>
+			<string>Cool</string>
 		</dict>
 		<key>Wink.tiff</key>
 		<dict>
