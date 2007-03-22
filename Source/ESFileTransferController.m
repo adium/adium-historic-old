@@ -339,7 +339,8 @@ static ESFileTransferPreferences *preferences;
 	ESFileTransfer	*fileTransfer;
 	
 	if ((account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_FILE_TRANSFER_TYPE
-																		  toContact:listContact])) {
+																		  toContact:listContact]) &&
+		[account conformsToProtocol:@protocol(AIAccount_Files)]) {
 		NSFileManager	*defaultManager = [NSFileManager defaultManager];
 		BOOL			isDir;
 		
