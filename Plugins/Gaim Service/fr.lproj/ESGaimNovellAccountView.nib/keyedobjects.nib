@@ -11,32 +11,32 @@
 			<key>$class</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>131</integer>
+				<integer>134</integer>
 			</dict>
 			<key>NSAccessibilityConnectors</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>128</integer>
+				<integer>131</integer>
 			</dict>
 			<key>NSAccessibilityOidsKeys</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>129</integer>
+				<integer>132</integer>
 			</dict>
 			<key>NSAccessibilityOidsValues</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>130</integer>
+				<integer>133</integer>
 			</dict>
 			<key>NSClassesKeys</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>103</integer>
+				<integer>106</integer>
 			</dict>
 			<key>NSClassesValues</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>104</integer>
+				<integer>107</integer>
 			</dict>
 			<key>NSConnections</key>
 			<dict>
@@ -56,34 +56,34 @@
 			<key>NSNamesKeys</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>91</integer>
+				<integer>94</integer>
 			</dict>
 			<key>NSNamesValues</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>92</integer>
+				<integer>95</integer>
 			</dict>
 			<key>NSNextOid</key>
 			<integer>201</integer>
 			<key>NSObjectsKeys</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>88</integer>
+				<integer>91</integer>
 			</dict>
 			<key>NSObjectsValues</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>90</integer>
+				<integer>93</integer>
 			</dict>
 			<key>NSOidsKeys</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>105</integer>
+				<integer>108</integer>
 			</dict>
 			<key>NSOidsValues</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>106</integer>
+				<integer>109</integer>
 			</dict>
 			<key>NSRoot</key>
 			<dict>
@@ -180,15 +180,15 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>84</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
 					<integer>85</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>86</integer>
+					<integer>87</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>89</integer>
 				</dict>
 			</array>
 		</dict>
@@ -373,7 +373,7 @@
 			<key>NSSize</key>
 			<real>13</real>
 			<key>NSfFlags</key>
-			<integer>1044</integer>
+			<integer>1040</integer>
 		</dict>
 		<string>LucidaGrande</string>
 		<dict>
@@ -486,7 +486,6 @@
 			<key>$classes</key>
 			<array>
 				<string>NSTextField</string>
-				<string>%NSTextField</string>
 				<string>NSControl</string>
 				<string>NSView</string>
 				<string>NSResponder</string>
@@ -563,7 +562,7 @@
 				<integer>36</integer>
 			</dict>
 		</dict>
-		<string>Nom d'utilisateur :</string>
+		<string>Nom d'utilisateur :</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -695,7 +694,7 @@
 				<integer>36</integer>
 			</dict>
 		</dict>
-		<string>Mot de passe :</string>
+		<string>Mot de passe :</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -925,7 +924,7 @@
 				<integer>36</integer>
 			</dict>
 		</dict>
-		<string>Serveur :</string>
+		<string>Serveur :</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -994,7 +993,7 @@
 				<integer>36</integer>
 			</dict>
 		</dict>
-		<string>Port :</string>
+		<string>Port :</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -1280,7 +1279,7 @@
 			<key>NSLabel</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>81</integer>
+				<integer>84</integer>
 			</dict>
 			<key>NSSource</key>
 			<dict>
@@ -1288,6 +1287,7 @@
 				<integer>42</integer>
 			</dict>
 		</dict>
+		<string>changedPreference:</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -1302,7 +1302,7 @@
 			<key>NSLabel</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>81</integer>
+				<integer>86</integer>
 			</dict>
 			<key>NSSource</key>
 			<dict>
@@ -1310,6 +1310,7 @@
 				<integer>48</integer>
 			</dict>
 		</dict>
+		<string>changedPreference:</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -1324,7 +1325,7 @@
 			<key>NSLabel</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>81</integer>
+				<integer>88</integer>
 			</dict>
 			<key>NSSource</key>
 			<dict>
@@ -1332,6 +1333,7 @@
 				<integer>12</integer>
 			</dict>
 		</dict>
+		<string>changedPreference:</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -1346,7 +1348,7 @@
 			<key>NSLabel</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>87</integer>
+				<integer>90</integer>
 			</dict>
 			<key>NSSource</key>
 			<dict>
@@ -1359,29 +1361,13 @@
 			<key>$class</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>89</integer>
+				<integer>92</integer>
 			</dict>
 			<key>NS.objects</key>
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>59</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
 					<integer>55</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>10</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>51</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>29</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1389,7 +1375,7 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>38</integer>
+					<integer>12</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1397,7 +1383,23 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>12</integer>
+					<integer>51</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>10</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>29</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>59</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>38</integer>
 				</dict>
 			</array>
 		</dict>
@@ -1414,7 +1416,7 @@
 			<key>$class</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>89</integer>
+				<integer>92</integer>
 			</dict>
 			<key>NS.objects</key>
 			<array>
@@ -1428,19 +1430,19 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
+					<integer>10</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>10</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>10</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
 					<integer>2</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>10</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>10</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>10</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1460,33 +1462,13 @@
 			<key>$class</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>89</integer>
+				<integer>92</integer>
 			</dict>
 			<key>NS.objects</key>
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>59</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
 					<integer>55</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>10</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>2</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>51</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>29</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1494,7 +1476,7 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>38</integer>
+					<integer>12</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1502,7 +1484,27 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>12</integer>
+					<integer>51</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>10</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>2</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>29</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>59</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>38</integer>
 				</dict>
 			</array>
 		</dict>
@@ -1510,22 +1512,10 @@
 			<key>$class</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>89</integer>
+				<integer>92</integer>
 			</dict>
 			<key>NS.objects</key>
 			<array>
-				<dict>
-					<key>CF$UID</key>
-					<integer>93</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>94</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>95</integer>
-				</dict>
 				<dict>
 					<key>CF$UID</key>
 					<integer>96</integer>
@@ -1554,23 +1544,35 @@
 					<key>CF$UID</key>
 					<integer>102</integer>
 				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>103</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>104</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>105</integer>
+				</dict>
 			</array>
 		</dict>
-		<string>NSTextField441111</string>
 		<string>NSTextField11111</string>
+		<string>NSTextField4411</string>
+		<string>NSTextField441</string>
+		<string>NSTextField44111</string>
+		<string>NSTextField1111</string>
 		<string>Setup</string>
 		<string>File's Owner</string>
-		<string>NSTextField1111</string>
 		<string>NSTextField11</string>
-		<string>NSTextField4411</string>
+		<string>NSTextField441111</string>
 		<string>NSTextField111</string>
-		<string>NSTextField44111</string>
-		<string>NSTextField441</string>
 		<dict>
 			<key>$class</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>89</integer>
+				<integer>92</integer>
 			</dict>
 			<key>NS.objects</key>
 			<array>
@@ -1584,7 +1586,7 @@
 			<key>$class</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>89</integer>
+				<integer>92</integer>
 			</dict>
 			<key>NS.objects</key>
 			<array>
@@ -1598,13 +1600,21 @@
 			<key>$class</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>89</integer>
+				<integer>92</integer>
 			</dict>
 			<key>NS.objects</key>
 			<array>
 				<dict>
 					<key>CF$UID</key>
+					<integer>89</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
 					<integer>2</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>70</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1612,7 +1622,15 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>29</integer>
+					<integer>74</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>55</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>83</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1620,23 +1638,11 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>48</integer>
+					<integer>80</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>76</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>85</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>78</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>38</integer>
+					<integer>10</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1648,43 +1654,39 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
+					<integer>12</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>85</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>78</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
 					<integer>42</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>70</integer>
+					<integer>38</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>55</integer>
+					<integer>87</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>86</integer>
+					<integer>48</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>84</integer>
+					<integer>76</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>83</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>10</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>80</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>74</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>12</integer>
+					<integer>29</integer>
 				</dict>
 			</array>
 		</dict>
@@ -1692,22 +1694,10 @@
 			<key>$class</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>89</integer>
+				<integer>92</integer>
 			</dict>
 			<key>NS.objects</key>
 			<array>
-				<dict>
-					<key>CF$UID</key>
-					<integer>107</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>108</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>109</integer>
-				</dict>
 				<dict>
 					<key>CF$UID</key>
 					<integer>110</integer>
@@ -1780,29 +1770,41 @@
 					<key>CF$UID</key>
 					<integer>127</integer>
 				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>128</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>129</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>130</integer>
+				</dict>
 			</array>
 		</dict>
+		<integer>200</integer>
 		<integer>1</integer>
+		<integer>191</integer>
 		<integer>187</integer>
-		<integer>185</integer>
+		<integer>193</integer>
+		<integer>188</integer>
+		<integer>197</integer>
 		<integer>190</integer>
-		<integer>186</integer>
-		<integer>194</integer>
-		<integer>199</integer>
-		<integer>195</integer>
-		<integer>181</integer>
+		<integer>196</integer>
+		<integer>184</integer>
 		<integer>192</integer>
 		<integer>189</integer>
-		<integer>182</integer>
-		<integer>191</integer>
-		<integer>188</integer>
-		<integer>200</integer>
-		<integer>198</integer>
-		<integer>197</integer>
-		<integer>184</integer>
-		<integer>196</integer>
-		<integer>193</integer>
 		<integer>183</integer>
+		<integer>198</integer>
+		<integer>195</integer>
+		<integer>182</integer>
+		<integer>181</integer>
+		<integer>199</integer>
+		<integer>186</integer>
+		<integer>194</integer>
+		<integer>185</integer>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -1816,7 +1818,7 @@
 			<key>$class</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>89</integer>
+				<integer>92</integer>
 			</dict>
 			<key>NS.objects</key>
 			<array/>
@@ -1825,7 +1827,7 @@
 			<key>$class</key>
 			<dict>
 				<key>CF$UID</key>
-				<integer>89</integer>
+				<integer>92</integer>
 			</dict>
 			<key>NS.objects</key>
 			<array/>
