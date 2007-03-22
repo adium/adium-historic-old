@@ -280,7 +280,7 @@
 }
 
 /*!
- * @breif Ensures that the selected contact type is valid, selecting another if it isn't
+ * @brief Ensures that the selected contact type is valid, selecting another if it isn't
  */
 - (void)ensureValidContactTypeSelection
 {
@@ -297,7 +297,7 @@
 		[self _setServiceType:nil];
 	}
 
-	//If we don't have a service, pick the first availbale one
+	//If we don't have a service, pick the first available one
 	if (!service) {
 		[self _setServiceType:[[[popUp_contactType menu] firstEnabledMenuItem] representedObject]];
 	}
