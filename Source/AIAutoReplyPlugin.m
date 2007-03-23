@@ -122,7 +122,7 @@
 		[self sendAutoReplyFromAccount:[contentObject destination]
 							 toContact:[contentObject source]
 								onChat:chat];
-		AILog(@"receivedAutoReply was %@ (%@)",receivedAutoReply,[chat uniqueChatID]);
+
 		[receivedAutoReply addObject:[chat uniqueChatID]];
 	}
 }
