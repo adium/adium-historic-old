@@ -37,6 +37,7 @@
 - (void)contactListDidClose;
 - (void)showContactListAndBringToFront:(BOOL)bringToFront;
 - (BOOL)contactListIsVisibleAndMain;
+- (BOOL)contactListIsVisible;
 - (void)closeContactList;
 - (void)contactListDidClose;
 

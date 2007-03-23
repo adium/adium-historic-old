@@ -75,7 +75,7 @@
 		unviewedObjectsArray = [[NSMutableArray alloc] init];
 		openChatsArray = [[NSMutableArray alloc] init];
 		needsUpdate = YES;
-		contactListOpen = NO;
+		contactListOpen = [[adium interfaceController] contactListIsVisible];
 		
 		NSNotificationCenter *notificationCenter = [adium notificationCenter];
 		//Register to recieve chat opened and chat closed notifications

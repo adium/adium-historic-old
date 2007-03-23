@@ -233,7 +233,7 @@
     //of the Adium system menu will cause it to always be YES.  We won't use it below.
 
 	//If no windows are visible, show the contact list
-	if (![contactListPlugin contactListIsVisibleAndMain] && [[interfacePlugin openContainers] count] == 0) {
+	if (![self contactListIsVisibleAndMain] && [[interfacePlugin openContainers] count] == 0) {
 		[self showContactList:nil];
 	} else {
 		AIChat	*mostRecentUnviewedChat;
@@ -280,7 +280,7 @@
 //Toggle the contact list
 - (IBAction)toggleContactList:(id)sender
 {
-    if ([contactListPlugin contactListIsVisibleAndMain]) {
+    if ([self contactListIsVisibleAndMain]) {
 		[self closeContactList:nil];
     } else {
 		[self showContactList:nil];
@@ -304,6 +304,17 @@
 - (IBAction)closeContactList:(id)sender
 {
 	[contactListPlugin closeContactList];
+}
+
+//Return if the contact list is open or not.
+- (BOOL)contactListIsVisibleAndMain
+{
+	return [contactListPlugin contactListIsVisibleAndMain];
+}
+
+- (BOOL)contactListIsVisible
+{
+	return [contactListPlugin contactListIsVisible];
 }
 
 
