@@ -1,9 +1,9 @@
 /**
  * @file session.h MSN session functions
  *
- * purple
+ * gaim
  *
- * Purple is the legal property of its developers, whose names are too numerous
+ * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -80,7 +80,7 @@ typedef enum
 
 struct _MsnSession
 {
-	PurpleAccount *account;
+	GaimAccount *account;
 	MsnUser *user;
 
 	guint protocol_ver;
@@ -125,7 +125,7 @@ struct _MsnSession
  *
  * @return The new MSN session.
  */
-MsnSession *msn_session_new(PurpleAccount *account);
+MsnSession *msn_session_new(GaimAccount *account);
 
 /**
  * Destroys an MSN session.
@@ -175,7 +175,7 @@ MsnSwitchBoard *msn_session_find_swboard(MsnSession *session,
  * @return The switchboard, if found.
  */
 MsnSwitchBoard *msn_session_find_swboard_with_conv(MsnSession *session,
-												   PurpleConversation *conv);
+												   GaimConversation *conv);
 /**
  * Finds a switchboard with the given chat ID.
  *
