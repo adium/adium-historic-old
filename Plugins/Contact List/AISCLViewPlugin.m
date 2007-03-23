@@ -95,9 +95,15 @@
 //Returns YES if the contact list is visible and in front
 - (BOOL)contactListIsVisibleAndMain
 {
+	return ([self contactListIsVisible] &&
+			[[contactListWindowController window] isMainWindow]);
+}
+
+// Returns YES if hte contact list is visible
+- (BOOL)contactListIsVisible
+{
 	return (contactListWindowController &&
 			[[contactListWindowController window] isVisible] &&
-			[[contactListWindowController window] isMainWindow] &&
 			([contactListWindowController windowSlidOffScreenEdgeMask] == AINoEdges));
 }
 

@@ -60,6 +60,8 @@ typedef enum {
 //Contact List
 - (IBAction)showContactList:(id)sender;
 - (IBAction)closeContactList:(id)sender;
+- (BOOL)contactListIsVisibleAndMain;
+- (BOOL)contactListIsVisible;
 
 //Messaging
 - (void)openChat:(AIChat *)inChat;
@@ -174,6 +176,7 @@ typedef enum {
 @protocol AIContactListComponent <NSObject>
 - (void)showContactListAndBringToFront:(BOOL)bringToFront;
 - (BOOL)contactListIsVisibleAndMain;
+- (BOOL)contactListIsVisible;
 - (void)closeContactList;
 @end
 
