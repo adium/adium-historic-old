@@ -1,7 +1,7 @@
 /*
- * purple
+ * gaim
  *
- * Purple is the legal property of its developers, whose names are too numerous
+ * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -20,9 +20,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#ifndef _PURPLE_H_
-#define _PURPLE_H_
+#ifndef _GAIM_H_
+#define _GAIM_H_
 
 #define XPATCH BAD /* Because Kalla Said So */
 
-#endif /* _PURPLE_H_ */
+#endif /* _GAIM_H_ */

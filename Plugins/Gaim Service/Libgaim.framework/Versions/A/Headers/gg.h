@@ -1,7 +1,7 @@
 /**
  * @file gg.h
  *
- * purple
+ * gaim
  *
  * Copyright (C) 2005  Bartosz Oler <bartosz@bzimage.us>
  *
@@ -21,8 +21,8 @@
  */
 
 
-#ifndef _PURPLE_GG_H
-#define _PURPLE_GG_H
+#ifndef _GAIM_GG_H
+#define _GAIM_GG_H
 
 #include <libgadu.h>
 #include "search.h"
@@ -39,7 +39,7 @@ typedef struct
 
 } GGPChat;
 
-typedef void (*GGPTokenCallback)(PurpleConnection *);
+typedef void (*GGPTokenCallback)(GaimConnection *);
 
 typedef struct
 {
@@ -67,6 +67,6 @@ typedef struct {
 } GGPInfo;
 
 
-#endif /* _PURPLE_GG_H */
+#endif /* _GAIM_GG_H */
 
 /* vim: set ts=8 sts=0 sw=8 noet: */

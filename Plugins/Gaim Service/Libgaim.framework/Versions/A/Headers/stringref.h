@@ -2,9 +2,9 @@
  * @file stringref.h Reference-counted immutable strings
  * @ingroup core
  *
- * purple
+ * gaim
  *
- * Purple is the legal property of its developers, whose names are too numerous
+ * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -23,14 +23,14 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#ifndef _PURPLE_STRINGREF_H_
-#define _PURPLE_STRINGREF_H_
+#ifndef _GAIM_STRINGREF_H_
+#define _GAIM_STRINGREF_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-typedef struct _PurpleStringref PurpleStringref;
+typedef struct _GaimStringref GaimStringref;
 
 /**
  * Creates an immutable reference-counted string object.  The newly
@@ -42,7 +42,7 @@ typedef struct _PurpleStringref PurpleStringref;
  * @return A newly allocated string reference object with a refcount
  *         of 1.
  */
-PurpleStringref *purple_stringref_new(const char *value);
+GaimStringref *gaim_stringref_new(const char *value);
 
 /**
  * Creates an immutable reference-counted string object.  The newly
@@ -56,7 +56,7 @@ PurpleStringref *purple_stringref_new(const char *value);
  * @return A newly allocated string reference object with a refcount
  *         of zero.
  */
-PurpleStringref *purple_stringref_new_noref(const char *value);
+GaimStringref *gaim_stringref_new_noref(const char *value);
 
 /**
  * Creates an immutable reference-counted string object from a printf
@@ -68,7 +68,7 @@ PurpleStringref *purple_stringref_new_noref(const char *value);
  * @return A newly allocated string reference object with a refcount
  *         of 1.
  */
-PurpleStringref *purple_stringref_printf(const char *format, ...);
+GaimStringref *gaim_stringref_printf(const char *format, ...);
 
 /**
  * Increase the reference count of the given stringref.
@@ -77,7 +77,7 @@ PurpleStringref *purple_stringref_printf(const char *format, ...);
  *
  * @return A pointer to the referenced string.
  */
-PurpleStringref *purple_stringref_ref(PurpleStringref *stringref);
+GaimStringref *gaim_stringref_ref(GaimStringref *stringref);
 
 /**
  * Decrease the reference count of the given stringref.  If this
@@ -86,7 +86,7 @@ PurpleStringref *purple_stringref_ref(PurpleStringref *stringref);
  *
  * @param stringref String to be dereferenced.
  */
-void purple_stringref_unref(PurpleStringref *stringref);
+void gaim_stringref_unref(GaimStringref *stringref);
 
 /**
  * Retrieve the value of a stringref.
@@ -104,7 +104,7 @@ void purple_stringref_unref(PurpleStringref *stringref);
  *
  * @return The contents of the string reference.
  */
-const char *purple_stringref_value(const PurpleStringref *stringref);
+const char *gaim_stringref_value(const GaimStringref *stringref);
 
 /**
  * Compare two stringrefs for string equality.  This returns the same
@@ -117,7 +117,7 @@ const char *purple_stringref_value(const PurpleStringref *stringref);
  *
  * @return An ordering indication on s1 and s2.
  */
-int purple_stringref_cmp(const PurpleStringref *s1, const PurpleStringref *s2);
+int gaim_stringref_cmp(const GaimStringref *s1, const GaimStringref *s2);
 
 /**
  * Find the length of the string inside a stringref.
@@ -126,10 +126,10 @@ int purple_stringref_cmp(const PurpleStringref *s1, const PurpleStringref *s2);
  *
  * @return The length of the string in stringref
  */
-size_t purple_stringref_len(const PurpleStringref *stringref);
+size_t gaim_stringref_len(const GaimStringref *stringref);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _PURPLE_STRINGREF_H_ */
+#endif /* _GAIM_STRINGREF_H_ */
