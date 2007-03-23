@@ -35,6 +35,7 @@
 
 	BOOL					unviewedContent;
 	BOOL                    needsUpdate;
+	BOOL					contactListOpen;
 }
 
 + (CBStatusMenuItemController *)statusMenuItemController;
