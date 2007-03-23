@@ -1,9 +1,9 @@
 /**
  * @file directconn.h MSN direct connection functions
  *
- * purple
+ * gaim
  *
- * Purple is the legal property of its developers, whose names are too numerous
+ * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -35,7 +35,7 @@ struct _MsnDirectConn
 	MsnSlpLink *slplink;
 	MsnSlpCall *initial_call;
 
-	PurpleProxyConnectData *connect_data;
+	GaimProxyConnectData *connect_data;
 
 	gboolean acked;
 

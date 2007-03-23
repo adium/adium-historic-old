@@ -1,7 +1,7 @@
 /**
  * @file jutil.h utility functions
  *
- * purple
+ * gaim
  *
  * Copyright (C) 2003 Nathan Walp <faceprint@faceprint.com>
  *
@@ -19,8 +19,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef _PURPLE_JABBER_SI_H_
-#define _PURPLE_JABBER_SI_H_
+#ifndef _GAIM_JABBER_SI_H_
+#define _GAIM_JABBER_SI_H_
 
 #include "ft.h"
 
@@ -28,7 +28,7 @@
 
 void jabber_bytestreams_parse(JabberStream *js, xmlnode *packet);
 void jabber_si_parse(JabberStream *js, xmlnode *packet);
-PurpleXfer *jabber_si_new_xfer(PurpleConnection *gc, const char *who);
-void jabber_si_xfer_send(PurpleConnection *gc, const char *who, const char *file);
+GaimXfer *jabber_si_new_xfer(GaimConnection *gc, const char *who);
+void jabber_si_xfer_send(GaimConnection *gc, const char *who, const char *file);
 
-#endif /* _PURPLE_JABBER_SI_H_ */
+#endif /* _GAIM_JABBER_SI_H_ */
