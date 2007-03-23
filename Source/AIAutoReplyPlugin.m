@@ -46,7 +46,7 @@
 - (void)installPlugin
 {
 	//Init
-	receivedAutoReply = [[NSMutableArray alloc] init];
+	receivedAutoReply = [[NSMutableSet alloc] init];
 	
 	//Add observers
 	[[adium notificationCenter] addObserver:self
@@ -86,8 +86,10 @@
 	   [inModifiedKeys containsObject:@"StatusState"]) {
 			
 		//Reset our list of contacts who have already received an auto-reply
-		[receivedAutoReply release];
-		receivedAutoReply = [[NSMutableArray alloc] init];		
+		[receivedAutoReply release]; receivedAutoReply = [[NSMutableSet alloc] init];
+		
+		//Don't want to remove from the new set any chats which previously closed and are pending removal
+		[NSObject cancelPreviousPerformRequestsWithTarget:self];
 	}
     
     return nil;
@@ -112,7 +114,7 @@
 	 */
 	if ([[contentObject type] isEqualToString:CONTENT_MESSAGE_TYPE] &&
 	   ![(AIContentMessage *)contentObject isAutoreply] &&
-	   ![receivedAutoReply containsObjectIdenticalTo:chat] &&
+	   ![receivedAutoReply containsObject:[chat uniqueChatID]] &&
 	   ![chat isGroupChat] &&
 		(abs([[contentObject date] timeIntervalSinceNow]) < 300)  ) {
 		//300 is 5 minutes in seconds
@@ -120,7 +122,8 @@
 		[self sendAutoReplyFromAccount:[contentObject destination]
 							 toContact:[contentObject source]
 								onChat:chat];
-		[receivedAutoReply addObject:chat];
+		AILog(@"receivedAutoReply was %@ (%@)",receivedAutoReply,[chat uniqueChatID]);
+		[receivedAutoReply addObject:[chat uniqueChatID]];
 	}
 }
 
@@ -171,10 +174,13 @@
 	AIChat			*chat = [contentObject chat];
    
     if ([[contentObject type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
-        if (![receivedAutoReply containsObjectIdenticalTo:chat]) {
-            [receivedAutoReply addObject:chat];
-        }
+		[receivedAutoReply addObject:[chat uniqueChatID]];
     }
+}
+
+- (void)removeChatIDFromReceivedAutoReply:(id)uniqueChatID
+{
+	[receivedAutoReply removeObject:uniqueChatID];
 }
 
 /*!
@@ -187,7 +193,15 @@
  */
 - (void)chatWillClose:(NSNotification *)notification
 {
-    [receivedAutoReply removeObjectIdenticalTo:[notification object]];
+	/* Don't remove the chat until 30 seconds from now to prevent the classic situation in which you close the window,
+	 * the contact messages you one last message, and a needless autoreply is sent
+	 */
+	[NSObject cancelPreviousPerformRequestsWithTarget:self
+											 selector:@selector(removeChatIDFromReceivedAutoReply:)
+											   object:[[notification object] uniqueChatID]];
+	[self performSelector:@selector(removeChatIDFromReceivedAutoReply:)
+			   withObject:[[notification object] uniqueChatID]
+			   afterDelay:30.0];
 }
 
 @end

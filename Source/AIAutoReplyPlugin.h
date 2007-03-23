@@ -20,7 +20,7 @@
 @protocol AIListObjectObserver;
 
 @interface AIAutoReplyPlugin : AIPlugin<AIListObjectObserver> {
-	NSMutableArray	*receivedAutoReply;
+	NSMutableSet	*receivedAutoReply;
 }
 
 - (void)sendAutoReplyFromAccount:(id)source toContact:(id)destination onChat:(AIChat *)chat;
