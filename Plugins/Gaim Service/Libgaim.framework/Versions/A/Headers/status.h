@@ -1,7 +1,7 @@
 /*
- * purple
+ * gaim
  *
- * Purple is the legal property of its developers, whose names are too numerous
+ * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -19,8 +19,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef _PURPLE_STATUS_H_
-#define _PURPLE_STATUS_H_
+#ifndef _GAIM_STATUS_H_
+#define _GAIM_STATUS_H_
 
 /**
  * @file status.h Status API
@@ -28,54 +28,54 @@
  *
  * A brief explanation of the status API:
  *
- * PurpleStatusType's are created by each PRPL.  They outline the
+ * GaimStatusType's are created by each PRPL.  They outline the
  * available statuses of the protocol.  AIM, for example, supports
  * an available state with an optional available message, an away
  * state with a mandatory message, and an invisible state (which is
  * technically "independent" of the other two, but we'll get into
- * that later).  PurpleStatusTypes are very permanent.  They are
+ * that later).  GaimStatusTypes are very permanent.  They are
  * hardcoded in each PRPL and will not change often.  And because
  * they are hardcoded, they do not need to be saved to any XML file.
  *
- * A PurpleStatus can be thought of as an "instance" of a PurpleStatusType.
+ * A GaimStatus can be thought of as an "instance" of a GaimStatusType.
  * If you're familiar with object-oriented programming languages
  * then this should be immediately clear.  Say, for example, that
  * one of your AIM buddies has set himself as "away."  You have a
- * PurpleBuddy node for this person in your buddy list.  Purple wants
- * to mark this buddy as "away," so it creates a new PurpleStatus.
- * The PurpleStatus has its PurpleStatusType set to the "away" state
- * for the oscar PRPL.  The PurpleStatus also contains the buddy's
- * away message.  PurpleStatuses are sometimes saved, depending on
- * the context.  The current PurpleStatuses associated with each of
- * your accounts are saved so that the next time you start Purple,
+ * GaimBuddy node for this person in your buddy list.  Gaim wants
+ * to mark this buddy as "away," so it creates a new GaimStatus.
+ * The GaimStatus has its GaimStatusType set to the "away" state
+ * for the oscar PRPL.  The GaimStatus also contains the buddy's
+ * away message.  GaimStatuses are sometimes saved, depending on
+ * the context.  The current GaimStatuses associated with each of
+ * your accounts are saved so that the next time you start Gaim,
  * your accounts will be set to their last known statuses.  There
  * is also a list of saved statuses that are written to the
- * status.xml file.  Also, each PurpleStatus has a "savable" boolean.
+ * status.xml file.  Also, each GaimStatus has a "savable" boolean.
  * If "savable" is set to FALSE then the status is NEVER saved.
- * All PurpleStatuses should be inside a PurplePresence.
+ * All GaimStatuses should be inside a GaimPresence.
  *
  *
- * A PurpleStatus is either "indepedent" or "exclusive."
+ * A GaimStatus is either "indepedent" or "exclusive."
  * Independent statuses can be active or inactive and it doesn't
  * affect anything else.  However, you can only have one exclusive
- * status per PurplePresence.  If you activate one exlusive status,
+ * status per GaimPresence.  If you activate one exlusive status,
  * then the previous exclusive status is automatically deactivated.
  *
- * A PurplePresence is like a collection of PurpleStatuses (plus some
+ * A GaimPresence is like a collection of GaimStatuses (plus some
  * other random info).  For any buddy, or for any one of your accounts,
  * or for any person you're chatting with, you may know various
  * amounts of information.  This information is all contained in
- * one PurplePresence.  If one of your buddies is away and idle,
- * then the presence contains the PurpleStatus for their awayness,
- * and it contains their current idle time.  PurplePresences are
+ * one GaimPresence.  If one of your buddies is away and idle,
+ * then the presence contains the GaimStatus for their awayness,
+ * and it contains their current idle time.  GaimPresences are
  * never saved to disk.  The information they contain is only relevent
- * for the current PurpleSession.
+ * for the current GaimSession.
  */
 
-typedef struct _PurpleStatusType      PurpleStatusType;
-typedef struct _PurpleStatusAttr      PurpleStatusAttr;
-typedef struct _PurplePresence        PurplePresence;
-typedef struct _PurpleStatus          PurpleStatus;
+typedef struct _GaimStatusType      GaimStatusType;
+typedef struct _GaimStatusAttr      GaimStatusAttr;
+typedef struct _GaimPresence        GaimPresence;
+typedef struct _GaimStatus          GaimStatus;
 
 /**
  * A context for a presence.
@@ -84,29 +84,29 @@ typedef struct _PurpleStatus          PurpleStatus;
  */
 typedef enum
 {
-	PURPLE_PRESENCE_CONTEXT_UNSET   = 0,
-	PURPLE_PRESENCE_CONTEXT_ACCOUNT,
-	PURPLE_PRESENCE_CONTEXT_CONV,
-	PURPLE_PRESENCE_CONTEXT_BUDDY
+	GAIM_PRESENCE_CONTEXT_UNSET   = 0,
+	GAIM_PRESENCE_CONTEXT_ACCOUNT,
+	GAIM_PRESENCE_CONTEXT_CONV,
+	GAIM_PRESENCE_CONTEXT_BUDDY
 
-} PurplePresenceContext;
+} GaimPresenceContext;
 
 /**
  * A primitive defining the basic structure of a status type.
  */
 typedef enum
 {
-	PURPLE_STATUS_UNSET = 0,
-	PURPLE_STATUS_OFFLINE,
-	PURPLE_STATUS_AVAILABLE,
-	PURPLE_STATUS_UNAVAILABLE,
-	PURPLE_STATUS_INVISIBLE,
-	PURPLE_STATUS_AWAY,
-	PURPLE_STATUS_EXTENDED_AWAY,
-	PURPLE_STATUS_MOBILE,
-	PURPLE_STATUS_NUM_PRIMITIVES
+	GAIM_STATUS_UNSET = 0,
+	GAIM_STATUS_OFFLINE,
+	GAIM_STATUS_AVAILABLE,
+	GAIM_STATUS_UNAVAILABLE,
+	GAIM_STATUS_INVISIBLE,
+	GAIM_STATUS_AWAY,
+	GAIM_STATUS_EXTENDED_AWAY,
+	GAIM_STATUS_MOBILE,
+	GAIM_STATUS_NUM_PRIMITIVES
 
-} PurpleStatusPrimitive;
+} GaimStatusPrimitive;
 
 #include "account.h"
 #include "blist.h"
@@ -118,7 +118,7 @@ extern "C" {
 #endif
 
 /**************************************************************************/
-/** @name PurpleStatusPrimitive API                                         */
+/** @name GaimStatusPrimitive API                                         */
 /**************************************************************************/
 /*@{*/
 
@@ -130,7 +130,7 @@ extern "C" {
  *
  * @return The unique ID for this type.
  */
-const char *purple_primitive_get_id_from_type(PurpleStatusPrimitive type);
+const char *gaim_primitive_get_id_from_type(GaimStatusPrimitive type);
 
 /**
  * Lookup the name of a primitive status type based on the type.  This
@@ -141,7 +141,7 @@ const char *purple_primitive_get_id_from_type(PurpleStatusPrimitive type);
  *
  * @return The name of this type, suitable for users to see.
  */
-const char *purple_primitive_get_name_from_type(PurpleStatusPrimitive type);
+const char *gaim_primitive_get_name_from_type(GaimStatusPrimitive type);
 
 /**
  * Lookup the value of a primitive status type based on the id.  The
@@ -149,14 +149,14 @@ const char *purple_primitive_get_name_from_type(PurpleStatusPrimitive type);
  *
  * @param id The unique ID of a primitive status type.
  *
- * @return The PurpleStatusPrimitive value.
+ * @return The GaimStatusPrimitive value.
  */
-PurpleStatusPrimitive purple_primitive_get_type_from_id(const char *id);
+GaimStatusPrimitive gaim_primitive_get_type_from_id(const char *id);
 
 /*@}*/
 
 /**************************************************************************/
-/** @name PurpleStatusType API                                              */
+/** @name GaimStatusType API                                              */
 /**************************************************************************/
 /*@{*/
 
@@ -176,7 +176,7 @@ PurpleStatusPrimitive purple_primitive_get_type_from_id(const char *id);
  *
  * @return A new status type.
  */
-PurpleStatusType *purple_status_type_new_full(PurpleStatusPrimitive primitive,
+GaimStatusType *gaim_status_type_new_full(GaimStatusPrimitive primitive,
 										  const char *id, const char *name,
 										  gboolean saveable,
 										  gboolean user_settable,
@@ -195,7 +195,7 @@ PurpleStatusType *purple_status_type_new_full(PurpleStatusPrimitive primitive,
  *
  * @return A new status type.
  */
-PurpleStatusType *purple_status_type_new(PurpleStatusPrimitive primitive,
+GaimStatusType *gaim_status_type_new(GaimStatusPrimitive primitive,
 									 const char *id, const char *name,
 									 gboolean user_settable);
 
@@ -219,7 +219,7 @@ PurpleStatusType *purple_status_type_new(PurpleStatusPrimitive primitive,
  *
  * @return A new status type.
  */
-PurpleStatusType *purple_status_type_new_with_attrs(PurpleStatusPrimitive primitive,
+GaimStatusType *gaim_status_type_new_with_attrs(GaimStatusPrimitive primitive,
 												const char *id,
 												const char *name,
 												gboolean saveable,
@@ -227,14 +227,14 @@ PurpleStatusType *purple_status_type_new_with_attrs(PurpleStatusPrimitive primit
 												gboolean independent,
 												const char *attr_id,
 												const char *attr_name,
-												PurpleValue *attr_value, ...);
+												GaimValue *attr_value, ...);
 
 /**
  * Destroys a status type.
  *
  * @param status_type The status type to destroy.
  */
-void purple_status_type_destroy(PurpleStatusType *status_type);
+void gaim_status_type_destroy(GaimStatusType *status_type);
 
 /**
  * Sets a status type's primary attribute.
@@ -246,7 +246,7 @@ void purple_status_type_destroy(PurpleStatusType *status_type);
  * @param status_type The status type.
  * @param attr_id     The ID of the primary attribute.
  */
-void purple_status_type_set_primary_attr(PurpleStatusType *status_type,
+void gaim_status_type_set_primary_attr(GaimStatusType *status_type,
 									   const char *attr_id);
 
 /**
@@ -257,8 +257,8 @@ void purple_status_type_set_primary_attr(PurpleStatusType *status_type,
  * @param name        The name presented to the user.
  * @param value       The value type of this attribute.
  */
-void purple_status_type_add_attr(PurpleStatusType *status_type, const char *id,
-							   const char *name, PurpleValue *value);
+void gaim_status_type_add_attr(GaimStatusType *status_type, const char *id,
+							   const char *name, GaimValue *value);
 
 /**
  * Adds multiple attributes to a status type.
@@ -269,8 +269,8 @@ void purple_status_type_add_attr(PurpleStatusType *status_type, const char *id,
  * @param value       The value type of the first attribute attribute.
  * @param ...         Additional attribute information.
  */
-void purple_status_type_add_attrs(PurpleStatusType *status_type, const char *id,
-								const char *name, PurpleValue *value, ...);
+void gaim_status_type_add_attrs(GaimStatusType *status_type, const char *id,
+								const char *name, GaimValue *value, ...);
 
 /**
  * Adds multiple attributes to a status type using a va_list.
@@ -278,7 +278,7 @@ void purple_status_type_add_attrs(PurpleStatusType *status_type, const char *id,
  * @param status_type The status type to add the attribute to.
  * @param args        The va_list of attributes.
  */
-void purple_status_type_add_attrs_vargs(PurpleStatusType *status_type,
+void gaim_status_type_add_attrs_vargs(GaimStatusType *status_type,
 									  va_list args);
 
 /**
@@ -288,8 +288,8 @@ void purple_status_type_add_attrs_vargs(PurpleStatusType *status_type,
  *
  * @return The primitive type of the status type.
  */
-PurpleStatusPrimitive purple_status_type_get_primitive(
-	const PurpleStatusType *status_type);
+GaimStatusPrimitive gaim_status_type_get_primitive(
+	const GaimStatusType *status_type);
 
 /**
  * Returns the ID of a status type.
@@ -298,7 +298,7 @@ PurpleStatusPrimitive purple_status_type_get_primitive(
  *
  * @return The ID of the status type.
  */
-const char *purple_status_type_get_id(const PurpleStatusType *status_type);
+const char *gaim_status_type_get_id(const GaimStatusType *status_type);
 
 /**
  * Returns the name of a status type.
@@ -307,7 +307,7 @@ const char *purple_status_type_get_id(const PurpleStatusType *status_type);
  *
  * @return The name of the status type.
  */
-const char *purple_status_type_get_name(const PurpleStatusType *status_type);
+const char *gaim_status_type_get_name(const GaimStatusType *status_type);
 
 /**
  * Returns whether or not the status type is saveable.
@@ -317,7 +317,7 @@ const char *purple_status_type_get_name(const PurpleStatusType *status_type);
  * @return TRUE if user-defined statuses based off this type are saveable.
  *         FALSE otherwise.
  */
-gboolean purple_status_type_is_saveable(const PurpleStatusType *status_type);
+gboolean gaim_status_type_is_saveable(const GaimStatusType *status_type);
 
 /**
  * Returns whether or not the status type can be set or modified by the
@@ -328,7 +328,7 @@ gboolean purple_status_type_is_saveable(const PurpleStatusType *status_type);
  * @return TRUE if the status type can be set or modified by the user.
  *         FALSE if it's a protocol-set setting.
  */
-gboolean purple_status_type_is_user_settable(const PurpleStatusType *status_type);
+gboolean gaim_status_type_is_user_settable(const GaimStatusType *status_type);
 
 /**
  * Returns whether or not the status type is independent.
@@ -340,7 +340,7 @@ gboolean purple_status_type_is_user_settable(const PurpleStatusType *status_type
  *
  * @return TRUE if the status type is independent, or FALSE otherwise.
  */
-gboolean purple_status_type_is_independent(const PurpleStatusType *status_type);
+gboolean gaim_status_type_is_independent(const GaimStatusType *status_type);
 
 /**
  * Returns whether the status type is exclusive.
@@ -349,7 +349,7 @@ gboolean purple_status_type_is_independent(const PurpleStatusType *status_type);
  *
  * @return TRUE if the status type is exclusive, FALSE otherwise.
  */
-gboolean purple_status_type_is_exclusive(const PurpleStatusType *status_type);
+gboolean gaim_status_type_is_exclusive(const GaimStatusType *status_type);
 
 /**
  * Returns whether or not a status type is available.
@@ -360,7 +360,7 @@ gboolean purple_status_type_is_exclusive(const PurpleStatusType *status_type);
  *
  * @return TRUE if the status is available, or FALSE otherwise.
  */
-gboolean purple_status_type_is_available(const PurpleStatusType *status_type);
+gboolean gaim_status_type_is_available(const GaimStatusType *status_type);
 
 /**
  * Returns a status type's primary attribute ID.
@@ -369,7 +369,7 @@ gboolean purple_status_type_is_available(const PurpleStatusType *status_type);
  *
  * @return The primary attribute's ID.
  */
-const char *purple_status_type_get_primary_attr(const PurpleStatusType *type);
+const char *gaim_status_type_get_primary_attr(const GaimStatusType *type);
 
 /**
  * Returns the attribute with the specified ID.
@@ -379,7 +379,7 @@ const char *purple_status_type_get_primary_attr(const PurpleStatusType *type);
  *
  * @return The attribute, if found. NULL otherwise.
  */
-PurpleStatusAttr *purple_status_type_get_attr(const PurpleStatusType *status_type,
+GaimStatusAttr *gaim_status_type_get_attr(const GaimStatusType *status_type,
 										  const char *id);
 
 /**
@@ -389,10 +389,10 @@ PurpleStatusAttr *purple_status_type_get_attr(const PurpleStatusType *status_typ
  *
  * @return The list of attributes.
  */
-const GList *purple_status_type_get_attrs(const PurpleStatusType *status_type);
+const GList *gaim_status_type_get_attrs(const GaimStatusType *status_type);
 
 /**
- * Find the PurpleStatusType with the given id.
+ * Find the GaimStatusType with the given id.
  *
  * @param status_types A list of status types.  Often account->status_types.
  * @param id The unique ID of the status type you wish to find.
@@ -400,13 +400,13 @@ const GList *purple_status_type_get_attrs(const PurpleStatusType *status_type);
  * @return The status type with the given ID, or NULL if one could
  *         not be found.
  */
-const PurpleStatusType *purple_status_type_find_with_id(GList *status_types,
+const GaimStatusType *gaim_status_type_find_with_id(GList *status_types,
 													const char *id);
 
 /*@}*/
 
 /**************************************************************************/
-/** @name PurpleStatusAttr API                                              */
+/** @name GaimStatusAttr API                                              */
 /**************************************************************************/
 /*@{*/
 
@@ -419,15 +419,15 @@ const PurpleStatusType *purple_status_type_find_with_id(GList *status_types,
  *
  * @return A new status attribute.
  */
-PurpleStatusAttr *purple_status_attr_new(const char *id, const char *name,
-									 PurpleValue *value_type);
+GaimStatusAttr *gaim_status_attr_new(const char *id, const char *name,
+									 GaimValue *value_type);
 
 /**
  * Destroys a status attribute.
  *
  * @param attr The status attribute to destroy.
  */
-void purple_status_attr_destroy(PurpleStatusAttr *attr);
+void gaim_status_attr_destroy(GaimStatusAttr *attr);
 
 /**
  * Returns the ID of a status attribute.
@@ -436,7 +436,7 @@ void purple_status_attr_destroy(PurpleStatusAttr *attr);
  *
  * @return The status attribute's ID.
  */
-const char *purple_status_attr_get_id(const PurpleStatusAttr *attr);
+const char *gaim_status_attr_get_id(const GaimStatusAttr *attr);
 
 /**
  * Returns the name of a status attribute.
@@ -445,7 +445,7 @@ const char *purple_status_attr_get_id(const PurpleStatusAttr *attr);
  *
  * @return The status attribute's name.
  */
-const char *purple_status_attr_get_name(const PurpleStatusAttr *attr);
+const char *gaim_status_attr_get_name(const GaimStatusAttr *attr);
 
 /**
  * Returns the value of a status attribute.
@@ -454,12 +454,12 @@ const char *purple_status_attr_get_name(const PurpleStatusAttr *attr);
  *
  * @return The status attribute's value.
  */
-PurpleValue *purple_status_attr_get_value(const PurpleStatusAttr *attr);
+GaimValue *gaim_status_attr_get_value(const GaimStatusAttr *attr);
 
 /*@}*/
 
 /**************************************************************************/
-/** @name PurpleStatus API                                                  */
+/** @name GaimStatus API                                                  */
 /**************************************************************************/
 /*@{*/
 
@@ -471,15 +471,15 @@ PurpleValue *purple_status_attr_get_value(const PurpleStatusAttr *attr);
  *
  * @return The new status.
  */
-PurpleStatus *purple_status_new(PurpleStatusType *status_type,
-							PurplePresence *presence);
+GaimStatus *gaim_status_new(GaimStatusType *status_type,
+							GaimPresence *presence);
 
 /**
  * Destroys a status.
  *
  * @param status The status to destroy.
  */
-void purple_status_destroy(PurpleStatus *status);
+void gaim_status_destroy(GaimStatus *status);
 
 /**
  * Sets whether or not a status is active.
@@ -489,7 +489,7 @@ void purple_status_destroy(PurpleStatus *status);
  * @param status The status.
  * @param active The active state.
  */
-void purple_status_set_active(PurpleStatus *status, gboolean active);
+void gaim_status_set_active(GaimStatus *status, gboolean active);
 
 /**
  * Sets whether or not a status is active.
@@ -500,10 +500,10 @@ void purple_status_set_active(PurpleStatus *status, gboolean active);
  * @param active The active state.
  * @param args   A list of attributes to set on the status.  This list is
  *               composed of key/value pairs, where each key is a valid
- *               attribute name for this PurpleStatusType.  The list should
+ *               attribute name for this GaimStatusType.  The list should
  *               be NULL terminated.
  */
-void purple_status_set_active_with_attrs(PurpleStatus *status, gboolean active,
+void gaim_status_set_active_with_attrs(GaimStatus *status, gboolean active,
 									   va_list args);
 
 /**
@@ -515,9 +515,9 @@ void purple_status_set_active_with_attrs(PurpleStatus *status, gboolean active,
  * @param active The active state.
  * @param attrs  A list of attributes to set on the status.  This list is
  *               composed of key/value pairs, where each key is a valid
- *               attribute name for this PurpleStatusType.
+ *               attribute name for this GaimStatusType.
  */
-void purple_status_set_active_with_attrs_list(PurpleStatus *status, gboolean active,
+void gaim_status_set_active_with_attrs_list(GaimStatus *status, gboolean active,
 											const GList *attrs);
 
 /**
@@ -527,7 +527,7 @@ void purple_status_set_active_with_attrs_list(PurpleStatus *status, gboolean act
  * @param id     The attribute ID.
  * @param value  The boolean value.
  */
-void purple_status_set_attr_boolean(PurpleStatus *status, const char *id,
+void gaim_status_set_attr_boolean(GaimStatus *status, const char *id,
 								  gboolean value);
 
 /**
@@ -537,7 +537,7 @@ void purple_status_set_attr_boolean(PurpleStatus *status, const char *id,
  * @param id     The attribute ID.
  * @param value  The integer value.
  */
-void purple_status_set_attr_int(PurpleStatus *status, const char *id,
+void gaim_status_set_attr_int(GaimStatus *status, const char *id,
 							  int value);
 
 /**
@@ -547,7 +547,7 @@ void purple_status_set_attr_int(PurpleStatus *status, const char *id,
  * @param id     The attribute ID.
  * @param value  The string value.
  */
-void purple_status_set_attr_string(PurpleStatus *status, const char *id,
+void gaim_status_set_attr_string(GaimStatus *status, const char *id,
 								 const char *value);
 
 /**
@@ -557,7 +557,7 @@ void purple_status_set_attr_string(PurpleStatus *status, const char *id,
  *
  * @return The status's type.
  */
-PurpleStatusType *purple_status_get_type(const PurpleStatus *status);
+GaimStatusType *gaim_status_get_type(const GaimStatus *status);
 
 /**
  * Returns the status's presence.
@@ -566,55 +566,55 @@ PurpleStatusType *purple_status_get_type(const PurpleStatus *status);
  *
  * @return The status's presence.
  */
-PurplePresence *purple_status_get_presence(const PurpleStatus *status);
+GaimPresence *gaim_status_get_presence(const GaimStatus *status);
 
 /**
  * Returns the status's type ID.
  *
  * This is a convenience method for
- * purple_status_type_get_id(purple_status_get_type(status)).
+ * gaim_status_type_get_id(gaim_status_get_type(status)).
  *
  * @param status The status.
  *
  * @return The status's ID.
  */
-const char *purple_status_get_id(const PurpleStatus *status);
+const char *gaim_status_get_id(const GaimStatus *status);
 
 /**
  * Returns the status's name.
  *
  * This is a convenience method for
- * purple_status_type_get_name(purple_status_get_type(status)).
+ * gaim_status_type_get_name(gaim_status_get_type(status)).
  *
  * @param status The status.
  *
  * @return The status's name.
  */
-const char *purple_status_get_name(const PurpleStatus *status);
+const char *gaim_status_get_name(const GaimStatus *status);
 
 /**
  * Returns whether or not a status is independent.
  *
  * This is a convenience method for
- * purple_status_type_is_independent(purple_status_get_type(status)).
+ * gaim_status_type_is_independent(gaim_status_get_type(status)).
  *
  * @param status The status.
  *
  * @return TRUE if the status is independent, or FALSE otherwise.
  */
-gboolean purple_status_is_independent(const PurpleStatus *status);
+gboolean gaim_status_is_independent(const GaimStatus *status);
 
 /**
  * Returns whether or not a status is exclusive.
  *
  * This is a convenience method for
- * purple_status_type_is_exclusive(purple_status_get_type(status)).
+ * gaim_status_type_is_exclusive(gaim_status_get_type(status)).
  *
  * @param status The status.
  *
  * @return TRUE if the status is exclusive, FALSE otherwise.
  */
-gboolean purple_status_is_exclusive(const PurpleStatus *status);
+gboolean gaim_status_is_exclusive(const GaimStatus *status);
 
 /**
  * Returns whether or not a status is available.
@@ -622,13 +622,13 @@ gboolean purple_status_is_exclusive(const PurpleStatus *status);
  * Available statuses are online and possibly invisible, but not away or idle.
  *
  * This is a convenience method for
- * purple_status_type_is_available(purple_status_get_type(status)).
+ * gaim_status_type_is_available(gaim_status_get_type(status)).
  *
  * @param status The status.
  *
  * @return TRUE if the status is available, or FALSE otherwise.
  */
-gboolean purple_status_is_available(const PurpleStatus *status);
+gboolean gaim_status_is_available(const GaimStatus *status);
 
 /**
  * Returns the active state of a status.
@@ -637,7 +637,7 @@ gboolean purple_status_is_available(const PurpleStatus *status);
  *
  * @return The active state of the status.
  */
-gboolean purple_status_is_active(const PurpleStatus *status);
+gboolean gaim_status_is_active(const GaimStatus *status);
 
 /**
  * Returns whether or not a status is considered 'online'
@@ -646,7 +646,7 @@ gboolean purple_status_is_active(const PurpleStatus *status);
  *
  * @return TRUE if the status is considered online, FALSE otherwise
  */
-gboolean purple_status_is_online(const PurpleStatus *status);
+gboolean gaim_status_is_online(const GaimStatus *status);
 
 /**
  * Returns the value of an attribute in a status with the specified ID.
@@ -656,7 +656,7 @@ gboolean purple_status_is_online(const PurpleStatus *status);
  *
  * @return The value of the attribute.
  */
-PurpleValue *purple_status_get_attr_value(const PurpleStatus *status,
+GaimValue *gaim_status_get_attr_value(const GaimStatus *status,
 									  const char *id);
 
 /**
@@ -667,7 +667,7 @@ PurpleValue *purple_status_get_attr_value(const PurpleStatus *status,
  *
  * @return The boolean value of the attribute.
  */
-gboolean purple_status_get_attr_boolean(const PurpleStatus *status,
+gboolean gaim_status_get_attr_boolean(const GaimStatus *status,
 									  const char *id);
 
 /**
@@ -678,7 +678,7 @@ gboolean purple_status_get_attr_boolean(const PurpleStatus *status,
  *
  * @return The integer value of the attribute.
  */
-int purple_status_get_attr_int(const PurpleStatus *status, const char *id);
+int gaim_status_get_attr_int(const GaimStatus *status, const char *id);
 
 /**
  * Returns the string value of an attribute in a status with the specified ID.
@@ -688,7 +688,7 @@ int purple_status_get_attr_int(const PurpleStatus *status, const char *id);
  *
  * @return The string value of the attribute.
  */
-const char *purple_status_get_attr_string(const PurpleStatus *status,
+const char *gaim_status_get_attr_string(const GaimStatus *status,
 										const char *id);
 
 /**
@@ -701,12 +701,12 @@ const char *purple_status_get_attr_string(const PurpleStatus *status,
  *          0 if @a status1 is equal to @a status2.
  *          1 if @a status2 is more available than @a status1.
  */
-gint purple_status_compare(const PurpleStatus *status1, const PurpleStatus *status2);
+gint gaim_status_compare(const GaimStatus *status1, const GaimStatus *status2);
 
 /*@}*/
 
 /**************************************************************************/
-/** @name PurplePresence API                                                */
+/** @name GaimPresence API                                                */
 /**************************************************************************/
 /*@{*/
 
@@ -717,7 +717,7 @@ gint purple_status_compare(const PurpleStatus *status1, const PurpleStatus *stat
  *
  * @return A new presence.
  */
-PurplePresence *purple_presence_new(PurplePresenceContext context);
+GaimPresence *gaim_presence_new(GaimPresenceContext context);
 
 /**
  * Creates a presence for an account.
@@ -726,7 +726,7 @@ PurplePresence *purple_presence_new(PurplePresenceContext context);
  *
  * @return The new presence.
  */
-PurplePresence *purple_presence_new_for_account(PurpleAccount *account);
+GaimPresence *gaim_presence_new_for_account(GaimAccount *account);
 
 /**
  * Creates a presence for a conversation.
@@ -735,7 +735,7 @@ PurplePresence *purple_presence_new_for_account(PurpleAccount *account);
  *
  * @return The new presence.
  */
-PurplePresence *purple_presence_new_for_conv(PurpleConversation *conv);
+GaimPresence *gaim_presence_new_for_conv(GaimConversation *conv);
 
 /**
  * Creates a presence for a buddy.
@@ -744,7 +744,7 @@ PurplePresence *purple_presence_new_for_conv(PurpleConversation *conv);
  *
  * @return The new presence.
  */
-PurplePresence *purple_presence_new_for_buddy(PurpleBuddy *buddy);
+GaimPresence *gaim_presence_new_for_buddy(GaimBuddy *buddy);
 
 /**
  * Destroys a presence.
@@ -753,11 +753,11 @@ PurplePresence *purple_presence_new_for_buddy(PurpleBuddy *buddy);
  * the presence.
  *
  * If this presence belongs to a buddy, you must call
- * purple_presence_remove_buddy() first.
+ * gaim_presence_remove_buddy() first.
  *
  * @param presence The presence to destroy.
  */
-void purple_presence_destroy(PurplePresence *presence);
+void gaim_presence_destroy(GaimPresence *presence);
 
 /**
  * Removes a buddy from a presence.
@@ -767,7 +767,7 @@ void purple_presence_destroy(PurplePresence *presence);
  * @param presence The presence.
  * @param buddy    The buddy.
  */
-void purple_presence_remove_buddy(PurplePresence *presence, PurpleBuddy *buddy);
+void gaim_presence_remove_buddy(GaimPresence *presence, GaimBuddy *buddy);
 
 /**
  * Adds a status to a presence.
@@ -775,7 +775,7 @@ void purple_presence_remove_buddy(PurplePresence *presence, PurpleBuddy *buddy);
  * @param presence The presence.
  * @param status   The status to add.
  */
-void purple_presence_add_status(PurplePresence *presence, PurpleStatus *status);
+void gaim_presence_add_status(GaimPresence *presence, GaimStatus *status);
 
 /**
  * Adds a list of statuses to the presence.
@@ -783,32 +783,32 @@ void purple_presence_add_status(PurplePresence *presence, PurpleStatus *status);
  * @param presence    The presence.
  * @param source_list The source list of statuses to add.
  */
-void purple_presence_add_list(PurplePresence *presence, const GList *source_list);
+void gaim_presence_add_list(GaimPresence *presence, const GList *source_list);
 
 /**
  * Sets the active state of a status in a presence.
  *
  * Only independent statuses can be set unactive. Normal statuses can only
  * be set active, so if you wish to disable a status, set another
- * non-independent status to active, or use purple_presence_switch_status().
+ * non-independent status to active, or use gaim_presence_switch_status().
  *
  * @param presence  The presence.
  * @param status_id The ID of the status.
  * @param active    The active state.
  */
-void purple_presence_set_status_active(PurplePresence *presence,
+void gaim_presence_set_status_active(GaimPresence *presence,
 									 const char *status_id, gboolean active);
 
 /**
  * Switches the active status in a presence.
  *
- * This is similar to purple_presence_set_status_active(), except it won't
+ * This is similar to gaim_presence_set_status_active(), except it won't
  * activate independent statuses.
  *
  * @param presence The presence.
  * @param status_id The status ID to switch to.
  */
-void purple_presence_switch_status(PurplePresence *presence,
+void gaim_presence_switch_status(GaimPresence *presence,
 								 const char *status_id);
 
 /**
@@ -820,7 +820,7 @@ void purple_presence_switch_status(PurplePresence *presence,
  *                  is the time at which the user became idle,
  *                  in seconds since the epoch.
  */
-void purple_presence_set_idle(PurplePresence *presence, gboolean idle,
+void gaim_presence_set_idle(GaimPresence *presence, gboolean idle,
 							time_t idle_time);
 
 /**
@@ -829,7 +829,7 @@ void purple_presence_set_idle(PurplePresence *presence, gboolean idle,
  * @param presence   The presence.
  * @param login_time The login time.
  */
-void purple_presence_set_login_time(PurplePresence *presence, time_t login_time);
+void gaim_presence_set_login_time(GaimPresence *presence, time_t login_time);
 
 
 /**
@@ -839,7 +839,7 @@ void purple_presence_set_login_time(PurplePresence *presence, time_t login_time)
  *
  * @return The presence's context.
  */
-PurplePresenceContext purple_presence_get_context(const PurplePresence *presence);
+GaimPresenceContext gaim_presence_get_context(const GaimPresence *presence);
 
 /**
  * Returns a presence's account.
@@ -848,7 +848,7 @@ PurplePresenceContext purple_presence_get_context(const PurplePresence *presence
  *
  * @return The presence's account.
  */
-PurpleAccount *purple_presence_get_account(const PurplePresence *presence);
+GaimAccount *gaim_presence_get_account(const GaimPresence *presence);
 
 /**
  * Returns a presence's conversation.
@@ -857,7 +857,7 @@ PurpleAccount *purple_presence_get_account(const PurplePresence *presence);
  *
  * @return The presence's conversation.
  */
-PurpleConversation *purple_presence_get_conversation(const PurplePresence *presence);
+GaimConversation *gaim_presence_get_conversation(const GaimPresence *presence);
 
 /**
  * Returns a presence's chat user.
@@ -866,7 +866,7 @@ PurpleConversation *purple_presence_get_conversation(const PurplePresence *prese
  *
  * @return The chat's user.
  */
-const char *purple_presence_get_chat_user(const PurplePresence *presence);
+const char *gaim_presence_get_chat_user(const GaimPresence *presence);
 
 /**
  * Returns a presence's list of buddies.
@@ -875,7 +875,7 @@ const char *purple_presence_get_chat_user(const PurplePresence *presence);
  *
  * @return The presence's list of buddies.
  */
-const GList *purple_presence_get_buddies(const PurplePresence *presence);
+const GList *gaim_presence_get_buddies(const GaimPresence *presence);
 
 /**
  * Returns all the statuses in a presence.
@@ -884,7 +884,7 @@ const GList *purple_presence_get_buddies(const PurplePresence *presence);
  *
  * @return The statuses.
  */
-const GList *purple_presence_get_statuses(const PurplePresence *presence);
+const GList *gaim_presence_get_statuses(const GaimPresence *presence);
 
 /**
  * Returns the status with the specified ID from a presence.
@@ -894,7 +894,7 @@ const GList *purple_presence_get_statuses(const PurplePresence *presence);
  *
  * @return The status if found, or NULL.
  */
-PurpleStatus *purple_presence_get_status(const PurplePresence *presence,
+GaimStatus *gaim_presence_get_status(const GaimPresence *presence,
 									 const char *status_id);
 
 /**
@@ -904,7 +904,7 @@ PurpleStatus *purple_presence_get_status(const PurplePresence *presence,
  *
  * @return The active exclusive status.
  */
-PurpleStatus *purple_presence_get_active_status(const PurplePresence *presence);
+GaimStatus *gaim_presence_get_active_status(const GaimPresence *presence);
 
 /**
  * Returns whether or not a presence is available.
@@ -915,7 +915,7 @@ PurpleStatus *purple_presence_get_active_status(const PurplePresence *presence);
  *
  * @return TRUE if the presence is available, or FALSE otherwise.
  */
-gboolean purple_presence_is_available(const PurplePresence *presence);
+gboolean gaim_presence_is_available(const GaimPresence *presence);
 
 /**
  * Returns whether or not a presence is online.
@@ -924,7 +924,7 @@ gboolean purple_presence_is_available(const PurplePresence *presence);
  *
  * @return TRUE if the presence is online, or FALSE otherwise.
  */
-gboolean purple_presence_is_online(const PurplePresence *presence);
+gboolean gaim_presence_is_online(const GaimPresence *presence);
 
 /**
  * Returns whether or not a status in a presence is active.
@@ -936,7 +936,7 @@ gboolean purple_presence_is_online(const PurplePresence *presence);
  *
  * @return TRUE if the status is active, or FALSE.
  */
-gboolean purple_presence_is_status_active(const PurplePresence *presence,
+gboolean gaim_presence_is_status_active(const GaimPresence *presence,
 										const char *status_id);
 
 /**
@@ -950,8 +950,8 @@ gboolean purple_presence_is_status_active(const PurplePresence *presence,
  *
  * @return TRUE if the status is active, or FALSE.
  */
-gboolean purple_presence_is_status_primitive_active(
-	const PurplePresence *presence, PurpleStatusPrimitive primitive);
+gboolean gaim_presence_is_status_primitive_active(
+	const GaimPresence *presence, GaimStatusPrimitive primitive);
 
 /**
  * Returns whether or not a presence is idle.
@@ -959,10 +959,10 @@ gboolean purple_presence_is_status_primitive_active(
  * @param presence The presence.
  *
  * @return TRUE if the presence is idle, or FALSE otherwise.
- *         If the presence is offline (purple_presence_is_online()
+ *         If the presence is offline (gaim_presence_is_online()
  *         returns FALSE) then FALSE is returned.
  */
-gboolean purple_presence_is_idle(const PurplePresence *presence);
+gboolean gaim_presence_is_idle(const GaimPresence *presence);
 
 /**
  * Returns the presence's idle time.
@@ -971,7 +971,7 @@ gboolean purple_presence_is_idle(const PurplePresence *presence);
  *
  * @return The presence's idle time.
  */
-time_t purple_presence_get_idle_time(const PurplePresence *presence);
+time_t gaim_presence_get_idle_time(const GaimPresence *presence);
 
 /**
  * Returns the presence's login time.
@@ -980,7 +980,7 @@ time_t purple_presence_get_idle_time(const PurplePresence *presence);
  *
  * @return The presence's login time.
  */
-time_t purple_presence_get_login_time(const PurplePresence *presence);
+time_t gaim_presence_get_login_time(const GaimPresence *presence);
 
 /**
  * Compares two presences for availability.
@@ -992,8 +992,8 @@ time_t purple_presence_get_login_time(const PurplePresence *presence);
  *          0 if @a presence1 is equal to @a presence2.
  *          1 if @a presence1 is less available than @a presence2.
  */
-gint purple_presence_compare(const PurplePresence *presence1,
-						   const PurplePresence *presence2);
+gint gaim_presence_compare(const GaimPresence *presence1,
+						   const GaimPresence *presence2);
 
 /*@}*/
 
@@ -1007,17 +1007,17 @@ gint purple_presence_compare(const PurplePresence *presence1,
  *
  * @return the handle to the status subsystem
  */
-void *purple_status_get_handle(void);
+void *gaim_status_get_handle(void);
 
 /**
  * Initializes the status subsystem.
  */
-void purple_status_init(void);
+void gaim_status_init(void);
 
 /**
  * Uninitializes the status subsystem.
  */
-void purple_status_uninit(void);
+void gaim_status_uninit(void);
 
 /*@}*/
 
@@ -1025,4 +1025,4 @@ void purple_status_uninit(void);
 }
 #endif
 
-#endif /* _PURPLE_STATUS_H_ */
+#endif /* _GAIM_STATUS_H_ */

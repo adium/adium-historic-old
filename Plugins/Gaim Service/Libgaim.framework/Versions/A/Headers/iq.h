@@ -1,7 +1,7 @@
 /**
  * @file iq.h JabberID handlers
  *
- * purple
+ * gaim
  *
  * Copyright (C) 2003 Nathan Walp <faceprint@faceprint.com>
  *
@@ -19,8 +19,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef _PURPLE_JABBER_IQ_H_
-#define _PURPLE_JABBER_IQ_H_
+#ifndef _GAIM_JABBER_IQ_H_
+#define _GAIM_JABBER_IQ_H_
 
 #include "jabber.h"
 
@@ -67,4 +67,4 @@ void jabber_iq_uninit(void);
 
 void jabber_iq_register_handler(const char *xmlns, JabberIqHandler *func);
 
-#endif /* _PURPLE_JABBER_IQ_H_ */
+#endif /* _GAIM_JABBER_IQ_H_ */

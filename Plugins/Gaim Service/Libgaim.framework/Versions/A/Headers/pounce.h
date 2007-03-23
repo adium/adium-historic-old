@@ -2,9 +2,9 @@
  * @file pounce.h Buddy Pounce API
  * @ingroup core
  *
- * purple
+ * gaim
  *
- * Purple is the legal property of its developers, whose names are too numerous
+ * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -22,10 +22,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef _PURPLE_POUNCE_H_
-#define _PURPLE_POUNCE_H_
+#ifndef _GAIM_POUNCE_H_
+#define _GAIM_POUNCE_H_
 
-typedef struct _PurplePounce PurplePounce;
+typedef struct _GaimPounce GaimPounce;
 
 #include <glib.h>
 #include "account.h"
@@ -35,28 +35,28 @@ typedef struct _PurplePounce PurplePounce;
  */
 typedef enum
 {
-	PURPLE_POUNCE_NONE             = 0x000, /**< No events.                    */
-	PURPLE_POUNCE_SIGNON           = 0x001, /**< The buddy signed on.          */
-	PURPLE_POUNCE_SIGNOFF          = 0x002, /**< The buddy signed off.         */
-	PURPLE_POUNCE_AWAY             = 0x004, /**< The buddy went away.          */
-	PURPLE_POUNCE_AWAY_RETURN      = 0x008, /**< The buddy returned from away. */
-	PURPLE_POUNCE_IDLE             = 0x010, /**< The buddy became idle.        */
-	PURPLE_POUNCE_IDLE_RETURN      = 0x020, /**< The buddy is no longer idle.  */
-	PURPLE_POUNCE_TYPING           = 0x040, /**< The buddy started typing.     */
-	PURPLE_POUNCE_TYPED            = 0x080, /**< The buddy has entered text.   */
-	PURPLE_POUNCE_TYPING_STOPPED   = 0x100, /**< The buddy stopped typing.     */
-	PURPLE_POUNCE_MESSAGE_RECEIVED = 0x200  /**< The buddy sent a message      */
+	GAIM_POUNCE_NONE             = 0x000, /**< No events.                    */
+	GAIM_POUNCE_SIGNON           = 0x001, /**< The buddy signed on.          */
+	GAIM_POUNCE_SIGNOFF          = 0x002, /**< The buddy signed off.         */
+	GAIM_POUNCE_AWAY             = 0x004, /**< The buddy went away.          */
+	GAIM_POUNCE_AWAY_RETURN      = 0x008, /**< The buddy returned from away. */
+	GAIM_POUNCE_IDLE             = 0x010, /**< The buddy became idle.        */
+	GAIM_POUNCE_IDLE_RETURN      = 0x020, /**< The buddy is no longer idle.  */
+	GAIM_POUNCE_TYPING           = 0x040, /**< The buddy started typing.     */
+	GAIM_POUNCE_TYPED            = 0x080, /**< The buddy has entered text.   */
+	GAIM_POUNCE_TYPING_STOPPED   = 0x100, /**< The buddy stopped typing.     */
+	GAIM_POUNCE_MESSAGE_RECEIVED = 0x200  /**< The buddy sent a message      */
 
-} PurplePounceEvent;
+} GaimPounceEvent;
 
 typedef enum
 {
-	PURPLE_POUNCE_OPTION_NONE		= 0x00, /**< No Option                */
-	PURPLE_POUNCE_OPTION_AWAY		= 0x01  /**< Pounce only when away    */
-} PurplePounceOption;
+	GAIM_POUNCE_OPTION_NONE		= 0x00, /**< No Option                */
+	GAIM_POUNCE_OPTION_AWAY		= 0x01  /**< Pounce only when away    */
+} GaimPounceOption;
 
 /** A pounce callback. */
-typedef void (*PurplePounceCb)(PurplePounce *, PurplePounceEvent, void *);
+typedef void (*GaimPounceCb)(GaimPounce *, GaimPounceEvent, void *);
 
 /**
  * A buddy pounce structure.
@@ -66,13 +66,13 @@ typedef void (*PurplePounceCb)(PurplePounce *, PurplePounceEvent, void *);
  * signs on or returns from away. Such responses are handled in the
  * UI. The events themselves are done in the core.
  */
-struct _PurplePounce
+struct _GaimPounce
 {
 	char *ui_type;                /**< The type of UI.            */
 
-	PurplePounceEvent events;       /**< The event(s) to pounce on. */
-	PurplePounceOption options;     /**< The pounce options         */
-	PurpleAccount *pouncer;         /**< The user who is pouncing.  */
+	GaimPounceEvent events;       /**< The event(s) to pounce on. */
+	GaimPounceOption options;     /**< The pounce options         */
+	GaimAccount *pouncer;         /**< The user who is pouncing.  */
 
 	char *pouncee;                /**< The buddy to pounce on.    */
 
@@ -103,23 +103,23 @@ extern "C" {
  *
  * @return The new buddy pounce structure.
  */
-PurplePounce *purple_pounce_new(const char *ui_type, PurpleAccount *pouncer,
-							const char *pouncee, PurplePounceEvent event,
-							PurplePounceOption option);
+GaimPounce *gaim_pounce_new(const char *ui_type, GaimAccount *pouncer,
+							const char *pouncee, GaimPounceEvent event,
+							GaimPounceOption option);
 
 /**
  * Destroys a buddy pounce.
  *
  * @param pounce The buddy pounce.
  */
-void purple_pounce_destroy(PurplePounce *pounce);
+void gaim_pounce_destroy(GaimPounce *pounce);
 
 /**
  * Destroys all buddy pounces for the account
  *
  * @param account The account to remove all pounces from.
  */
-void purple_pounce_destroy_all_by_account(PurpleAccount *account);
+void gaim_pounce_destroy_all_by_account(GaimAccount *account);
 
 /**
  * Sets the events a pounce should watch for.
@@ -127,7 +127,7 @@ void purple_pounce_destroy_all_by_account(PurpleAccount *account);
  * @param pounce The buddy pounce.
  * @param events The events to watch for.
  */
-void purple_pounce_set_events(PurplePounce *pounce, PurplePounceEvent events);
+void gaim_pounce_set_events(GaimPounce *pounce, GaimPounceEvent events);
 
 /**
  * Sets the options for a pounce.
@@ -135,7 +135,7 @@ void purple_pounce_set_events(PurplePounce *pounce, PurplePounceEvent events);
  * @param pounce  The buddy pounce.
  * @param options The options for the pounce.
  */
-void purple_pounce_set_options(PurplePounce *pounce, PurplePounceOption options);
+void gaim_pounce_set_options(GaimPounce *pounce, GaimPounceOption options);
 
 /**
  * Sets the account that will do the pouncing.
@@ -143,7 +143,7 @@ void purple_pounce_set_options(PurplePounce *pounce, PurplePounceOption options)
  * @param pounce  The buddy pounce.
  * @param pouncer The account that will pounce.
  */
-void purple_pounce_set_pouncer(PurplePounce *pounce, PurpleAccount *pouncer);
+void gaim_pounce_set_pouncer(GaimPounce *pounce, GaimAccount *pouncer);
 
 /**
  * Sets the buddy a pounce should pounce on.
@@ -151,7 +151,7 @@ void purple_pounce_set_pouncer(PurplePounce *pounce, PurpleAccount *pouncer);
  * @param pounce  The buddy pounce.
  * @param pouncee The buddy to pounce on.
  */
-void purple_pounce_set_pouncee(PurplePounce *pounce, const char *pouncee);
+void gaim_pounce_set_pouncee(GaimPounce *pounce, const char *pouncee);
 
 /**
  * Sets whether or not the pounce should be saved after execution.
@@ -159,7 +159,7 @@ void purple_pounce_set_pouncee(PurplePounce *pounce, const char *pouncee);
  * @param pounce The buddy pounce.
  * @param save   @c TRUE if the pounce should be saved, or @c FALSE otherwise.
  */
-void purple_pounce_set_save(PurplePounce *pounce, gboolean save);
+void gaim_pounce_set_save(GaimPounce *pounce, gboolean save);
 
 /**
  * Registers an action type for the pounce.
@@ -167,7 +167,7 @@ void purple_pounce_set_save(PurplePounce *pounce, gboolean save);
  * @param pounce The buddy pounce.
  * @param name   The action name.
  */
-void purple_pounce_action_register(PurplePounce *pounce, const char *name);
+void gaim_pounce_action_register(GaimPounce *pounce, const char *name);
 
 /**
  * Enables or disables an action for a pounce.
@@ -176,7 +176,7 @@ void purple_pounce_action_register(PurplePounce *pounce, const char *name);
  * @param action  The name of the action.
  * @param enabled The enabled state.
  */
-void purple_pounce_action_set_enabled(PurplePounce *pounce, const char *action,
+void gaim_pounce_action_set_enabled(GaimPounce *pounce, const char *action,
 									gboolean enabled);
 
 /**
@@ -189,7 +189,7 @@ void purple_pounce_action_set_enabled(PurplePounce *pounce, const char *action,
  * @param attr   The attribute name.
  * @param value  The value.
  */
-void purple_pounce_action_set_attribute(PurplePounce *pounce, const char *action,
+void gaim_pounce_action_set_attribute(GaimPounce *pounce, const char *action,
 									  const char *attr, const char *value);
 
 /**
@@ -198,7 +198,7 @@ void purple_pounce_action_set_attribute(PurplePounce *pounce, const char *action
  * @param pounce The buddy pounce.
  * @param data   Data specific to the pounce.
  */
-void purple_pounce_set_data(PurplePounce *pounce, void *data);
+void gaim_pounce_set_data(GaimPounce *pounce, void *data);
 
 /**
  * Returns the events a pounce should watch for.
@@ -207,7 +207,7 @@ void purple_pounce_set_data(PurplePounce *pounce, void *data);
  *
  * @return The events the pounce is watching for.
  */
-PurplePounceEvent purple_pounce_get_events(const PurplePounce *pounce);
+GaimPounceEvent gaim_pounce_get_events(const GaimPounce *pounce);
 
 /**
  * Returns the options for a pounce.
@@ -216,7 +216,7 @@ PurplePounceEvent purple_pounce_get_events(const PurplePounce *pounce);
  *
  * @return The options for the pounce.
  */
-PurplePounceOption purple_pounce_get_options(const PurplePounce *pounce);
+GaimPounceOption gaim_pounce_get_options(const GaimPounce *pounce);
 
 /**
  * Returns the account that will do the pouncing.
@@ -225,7 +225,7 @@ PurplePounceOption purple_pounce_get_options(const PurplePounce *pounce);
  *
  * @return The account that will pounce.
  */
-PurpleAccount *purple_pounce_get_pouncer(const PurplePounce *pounce);
+GaimAccount *gaim_pounce_get_pouncer(const GaimPounce *pounce);
 
 /**
  * Returns the buddy a pounce should pounce on.
@@ -234,7 +234,7 @@ PurpleAccount *purple_pounce_get_pouncer(const PurplePounce *pounce);
  *
  * @return The buddy to pounce on.
  */
-const char *purple_pounce_get_pouncee(const PurplePounce *pounce);
+const char *gaim_pounce_get_pouncee(const GaimPounce *pounce);
 
 /**
  * Returns whether or not the pounce should save after execution.
@@ -244,7 +244,7 @@ const char *purple_pounce_get_pouncee(const PurplePounce *pounce);
  * @return @c TRUE if the pounce should be saved after execution, or
  *         @c FALSE otherwise.
  */
-gboolean purple_pounce_get_save(const PurplePounce *pounce);
+gboolean gaim_pounce_get_save(const GaimPounce *pounce);
 
 /**
  * Returns whether or not an action is enabled.
@@ -254,7 +254,7 @@ gboolean purple_pounce_get_save(const PurplePounce *pounce);
  *
  * @return @c TRUE if the action is enabled, or @c FALSE otherwise.
  */
-gboolean purple_pounce_action_is_enabled(const PurplePounce *pounce,
+gboolean gaim_pounce_action_is_enabled(const GaimPounce *pounce,
 									   const char *action);
 
 /**
@@ -266,7 +266,7 @@ gboolean purple_pounce_action_is_enabled(const PurplePounce *pounce,
  *
  * @return The attribute value, if it exists, or @c NULL.
  */
-const char *purple_pounce_action_get_attribute(const PurplePounce *pounce,
+const char *gaim_pounce_action_get_attribute(const GaimPounce *pounce,
 											 const char *action,
 											 const char *attr);
 
@@ -277,7 +277,7 @@ const char *purple_pounce_action_get_attribute(const PurplePounce *pounce,
  *
  * @return The data specific to a buddy pounce.
  */
-void *purple_pounce_get_data(const PurplePounce *pounce);
+void *gaim_pounce_get_data(const GaimPounce *pounce);
 
 /**
  * Executes a pounce with the specified pouncer, pouncee, and event type.
@@ -286,8 +286,8 @@ void *purple_pounce_get_data(const PurplePounce *pounce);
  * @param pouncee The buddy that is being pounced.
  * @param events  The events that triggered the pounce.
  */
-void purple_pounce_execute(const PurpleAccount *pouncer, const char *pouncee,
-						 PurplePounceEvent events);
+void gaim_pounce_execute(const GaimAccount *pouncer, const char *pouncee,
+						 GaimPounceEvent events);
 
 /*@}*/
 
@@ -305,8 +305,8 @@ void purple_pounce_execute(const PurpleAccount *pouncer, const char *pouncee,
  *
  * @return The pounce if found, or @c NULL otherwise.
  */
-PurplePounce *purple_find_pounce(const PurpleAccount *pouncer,
-							 const char *pouncee, PurplePounceEvent events);
+GaimPounce *gaim_find_pounce(const GaimAccount *pouncer,
+							 const char *pouncee, GaimPounceEvent events);
 
 
 /**
@@ -314,7 +314,7 @@ PurplePounce *purple_find_pounce(const PurpleAccount *pouncer,
  *
  * @return @c TRUE if the pounces could be loaded.
  */
-gboolean purple_pounces_load(void);
+gboolean gaim_pounces_load(void);
 
 /**
  * Registers a pounce handler for a UI.
@@ -324,40 +324,40 @@ gboolean purple_pounces_load(void);
  * @param new_pounce  The function called when a pounce is created.
  * @param free_pounce The function called when a pounce is freed.
  */
-void purple_pounces_register_handler(const char *ui, PurplePounceCb cb,
-								   void (*new_pounce)(PurplePounce *pounce),
-								   void (*free_pounce)(PurplePounce *pounce));
+void gaim_pounces_register_handler(const char *ui, GaimPounceCb cb,
+								   void (*new_pounce)(GaimPounce *pounce),
+								   void (*free_pounce)(GaimPounce *pounce));
 
 /**
  * Unregisters a pounce handle for a UI.
  *
  * @param ui The UI name.
  */
-void purple_pounces_unregister_handler(const char *ui);
+void gaim_pounces_unregister_handler(const char *ui);
 
 /**
  * Returns a list of all registered buddy pounces.
  *
  * @return The list of buddy pounces.
  */
-GList *purple_pounces_get_all(void);
+GList *gaim_pounces_get_all(void);
 
 /**
  * Returns the buddy pounce subsystem handle.
  *
  * @return The subsystem handle.
  */
-void *purple_pounces_get_handle(void);
+void *gaim_pounces_get_handle(void);
 
 /**
  * Initializes the pounces subsystem.
  */
-void purple_pounces_init(void);
+void gaim_pounces_init(void);
 
 /**
  * Uninitializes the pounces subsystem.
  */
-void purple_pounces_uninit(void);
+void gaim_pounces_uninit(void);
 
 /*@}*/
 
@@ -365,4 +365,4 @@ void purple_pounces_uninit(void);
 }
 #endif
 
-#endif /* _PURPLE_POUNCE_H_ */
+#endif /* _GAIM_POUNCE_H_ */

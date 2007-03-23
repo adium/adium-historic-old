@@ -1,7 +1,7 @@
 /*
- * purple
+ * gaim
  *
- * Purple is the legal property of its developers, whose names are too numerous
+ * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -27,28 +27,28 @@
 /**
  * Process ymsg events, particular IMViroments like Doodle
  */
-void yahoo_process_p2pfilexfer( PurpleConnection *gc, struct yahoo_packet *pkt );
+void yahoo_process_p2pfilexfer( GaimConnection *gc, struct yahoo_packet *pkt );
 
 /**
  * Process ymsg file receive invites.
  */
-void yahoo_process_filetransfer(PurpleConnection *gc, struct yahoo_packet *pkt);
+void yahoo_process_filetransfer(GaimConnection *gc, struct yahoo_packet *pkt);
 
 /**
- * Create a new PurpleXfer
+ * Create a new GaimXfer
  *
- * @param gc The PurpleConnection handle.
+ * @param gc The GaimConnection handle.
  * @param who Who will we be sending it to?
  */
-PurpleXfer *yahoo_new_xfer(PurpleConnection *gc, const char *who);
+GaimXfer *yahoo_new_xfer(GaimConnection *gc, const char *who);
 
 /**
  * Send a file.
  *
- * @param gc The PurpleConnection handle.
+ * @param gc The GaimConnection handle.
  * @param who Who are we sending it to?
  * @param file What file? If NULL, user will choose after this call.
  */
-void yahoo_send_file(PurpleConnection *gc, const char *who, const char *file);
+void yahoo_send_file(GaimConnection *gc, const char *who, const char *file);
 
 #endif

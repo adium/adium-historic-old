@@ -2,9 +2,9 @@
  * @file signals.h Signal API
  * @ingroup core
  *
- * purple
+ * gaim
  *
- * Purple is the legal property of its developers, whose names are too numerous
+ * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -22,16 +22,16 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef _PURPLE_SIGNALS_H_
-#define _PURPLE_SIGNALS_H_
+#ifndef _GAIM_SIGNALS_H_
+#define _GAIM_SIGNALS_H_
 
 #include <glib.h>
 #include "value.h"
 
-#define PURPLE_CALLBACK(func) ((PurpleCallback)func)
+#define GAIM_CALLBACK(func) ((GaimCallback)func)
 
-typedef void (*PurpleCallback)(void);
-typedef void (*PurpleSignalMarshalFunc)(PurpleCallback cb, va_list args,
+typedef void (*GaimCallback)(void);
+typedef void (*GaimSignalMarshalFunc)(GaimCallback cb, va_list args,
 									  void *data, void **return_val);
 
 #ifdef __cplusplus
@@ -46,9 +46,9 @@ extern "C" {
 /**
  * Signal Connect Priorities
  */
-#define PURPLE_SIGNAL_PRIORITY_DEFAULT     0
-#define PURPLE_SIGNAL_PRIORITY_HIGHEST  9999
-#define PURPLE_SIGNAL_PRIORITY_LOWEST  -9999
+#define GAIM_SIGNAL_PRIORITY_DEFAULT     0
+#define GAIM_SIGNAL_PRIORITY_HIGHEST  9999
+#define GAIM_SIGNAL_PRIORITY_LOWEST  -9999
 
 /**
  * Registers a signal in an instance.
@@ -63,11 +63,11 @@ extern "C" {
  * @return The signal ID local to that instance, or 0 if the signal
  *         couldn't be registered.
  *
- * @see PurpleValue
+ * @see GaimValue
  */
-gulong purple_signal_register(void *instance, const char *signal,
-							PurpleSignalMarshalFunc marshal,
-							PurpleValue *ret_value, int num_values, ...);
+gulong gaim_signal_register(void *instance, const char *signal,
+							GaimSignalMarshalFunc marshal,
+							GaimValue *ret_value, int num_values, ...);
 
 /**
  * Unregisters a signal in an instance.
@@ -75,14 +75,14 @@ gulong purple_signal_register(void *instance, const char *signal,
  * @param instance The instance to unregister the signal for.
  * @param signal   The signal name.
  */
-void purple_signal_unregister(void *instance, const char *signal);
+void gaim_signal_unregister(void *instance, const char *signal);
 
 /**
  * Unregisters all signals in an instance.
  *
  * @param instance The instance to unregister the signal for.
  */
-void purple_signals_unregister_by_instance(void *instance);
+void gaim_signals_unregister_by_instance(void *instance);
 
 /**
  * Returns a list of value types used for a signal.
@@ -93,14 +93,14 @@ void purple_signals_unregister_by_instance(void *instance);
  * @param num_values The returned number of values.
  * @param values     The returned list of values.
  */
-void purple_signal_get_values(void *instance, const char *signal,
-							PurpleValue **ret_value,
-							int *num_values, PurpleValue ***values);
+void gaim_signal_get_values(void *instance, const char *signal,
+							GaimValue **ret_value,
+							int *num_values, GaimValue ***values);
 
 /**
  * Connects a signal handler to a signal for a particular object.
  *
- * Take care not to register a handler function twice. Purple will
+ * Take care not to register a handler function twice. Gaim will
  * not correct any mistakes for you in this area.
  *
  * @param instance The instance to connect to.
@@ -109,20 +109,20 @@ void purple_signal_get_values(void *instance, const char *signal,
  * @param func     The callback function.
  * @param data     The data to pass to the callback function.
  * @param priority The priority with which the handler should be called. Signal handlers are called
- *                 in order from PURPLE_SIGNAL_PRIORITY_LOWEST to PURPLE_SIGNAL_PRIORITY_HIGHEST.
+ *                 in order from GAIM_SIGNAL_PRIORITY_LOWEST to GAIM_SIGNAL_PRIORITY_HIGHEST.
  *
  * @return The signal handler ID.
  *
- * @see purple_signal_disconnect()
+ * @see gaim_signal_disconnect()
  */
-gulong purple_signal_connect_priority(void *instance, const char *signal,
-				   void *handle, PurpleCallback func, void *data, int priority);
+gulong gaim_signal_connect_priority(void *instance, const char *signal,
+				   void *handle, GaimCallback func, void *data, int priority);
 
 /**
  * Connects a signal handler to a signal for a particular object.
  * (priority defaults to 0)
  * 
- * Take care not to register a handler function twice. Purple will
+ * Take care not to register a handler function twice. Gaim will
  * not correct any mistakes for you in this area.
  *
  * @param instance The instance to connect to.
@@ -133,10 +133,10 @@ gulong purple_signal_connect_priority(void *instance, const char *signal,
  *
  * @return The signal handler ID.
  *
- * @see purple_signal_disconnect()
+ * @see gaim_signal_disconnect()
  */
-gulong purple_signal_connect(void *instance, const char *signal,
-						   void *handle, PurpleCallback func, void *data);
+gulong gaim_signal_connect(void *instance, const char *signal,
+						   void *handle, GaimCallback func, void *data);
 
 /**
  * Connects a signal handler to a signal for a particular object.
@@ -144,7 +144,7 @@ gulong purple_signal_connect(void *instance, const char *signal,
  * The signal handler will take a va_args of arguments, instead of
  * individual arguments.
  *
- * Take care not to register a handler function twice. Purple will
+ * Take care not to register a handler function twice. Gaim will
  * not correct any mistakes for you in this area.
  *
  * @param instance The instance to connect to.
@@ -156,10 +156,10 @@ gulong purple_signal_connect(void *instance, const char *signal,
  *
  * @return The signal handler ID.
  *
- * @see purple_signal_disconnect()
+ * @see gaim_signal_disconnect()
  */
-gulong purple_signal_connect_priority_vargs(void *instance, const char *signal,
-					void *handle, PurpleCallback func, void *data, int priority);
+gulong gaim_signal_connect_priority_vargs(void *instance, const char *signal,
+					void *handle, GaimCallback func, void *data, int priority);
 
 /**
  * Connects a signal handler to a signal for a particular object.
@@ -167,7 +167,7 @@ gulong purple_signal_connect_priority_vargs(void *instance, const char *signal,
  * The signal handler will take a va_args of arguments, instead of
  * individual arguments.
  *
- * Take care not to register a handler function twice. Purple will
+ * Take care not to register a handler function twice. Gaim will
  * not correct any mistakes for you in this area.
  *
  * @param instance The instance to connect to.
@@ -178,10 +178,10 @@ gulong purple_signal_connect_priority_vargs(void *instance, const char *signal,
  *
  * @return The signal handler ID.
  *
- * @see purple_signal_disconnect()
+ * @see gaim_signal_disconnect()
  */
-gulong purple_signal_connect_vargs(void *instance, const char *signal,
-								 void *handle, PurpleCallback func, void *data);
+gulong gaim_signal_connect_vargs(void *instance, const char *signal,
+								 void *handle, GaimCallback func, void *data);
 
 /**
  * Disconnects a signal handler from a signal on an object.
@@ -191,17 +191,17 @@ gulong purple_signal_connect_vargs(void *instance, const char *signal,
  * @param handle   The handle of the receiver.
  * @param func     The registered function to disconnect.
  *
- * @see purple_signal_connect()
+ * @see gaim_signal_connect()
  */
-void purple_signal_disconnect(void *instance, const char *signal,
-							void *handle, PurpleCallback func);
+void gaim_signal_disconnect(void *instance, const char *signal,
+							void *handle, GaimCallback func);
 
 /**
  * Removes all callbacks associated with a receiver handle.
  *
  * @param handle The receiver handle.
  */
-void purple_signals_disconnect_by_handle(void *handle);
+void gaim_signals_disconnect_by_handle(void *handle);
 
 /**
  * Emits a signal.
@@ -209,10 +209,10 @@ void purple_signals_disconnect_by_handle(void *handle);
  * @param instance The instance emitting the signal.
  * @param signal   The signal being emitted.
  *
- * @see purple_signal_connect()
- * @see purple_signal_disconnect()
+ * @see gaim_signal_connect()
+ * @see gaim_signal_disconnect()
  */
-void purple_signal_emit(void *instance, const char *signal, ...);
+void gaim_signal_emit(void *instance, const char *signal, ...);
 
 /**
  * Emits a signal, using a va_list of arguments.
@@ -221,10 +221,10 @@ void purple_signal_emit(void *instance, const char *signal, ...);
  * @param signal   The signal being emitted.
  * @param args     The arguments list.
  *
- * @see purple_signal_connect()
- * @see purple_signal_disconnect()
+ * @see gaim_signal_connect()
+ * @see gaim_signal_disconnect()
  */
-void purple_signal_emit_vargs(void *instance, const char *signal, va_list args);
+void gaim_signal_emit_vargs(void *instance, const char *signal, va_list args);
 
 /**
  * Emits a signal and returns the first non-NULL return value.
@@ -237,7 +237,7 @@ void purple_signal_emit_vargs(void *instance, const char *signal, va_list args);
  *
  * @return The first non-NULL return value
  */
-void *purple_signal_emit_return_1(void *instance, const char *signal, ...);
+void *gaim_signal_emit_return_1(void *instance, const char *signal, ...);
 
 /**
  * Emits a signal and returns the first non-NULL return value.
@@ -251,18 +251,18 @@ void *purple_signal_emit_return_1(void *instance, const char *signal, ...);
  *
  * @return The first non-NULL return value
  */
-void *purple_signal_emit_vargs_return_1(void *instance, const char *signal,
+void *gaim_signal_emit_vargs_return_1(void *instance, const char *signal,
 									  va_list args);
 
 /**
  * Initializes the signals subsystem.
  */
-void purple_signals_init(void);
+void gaim_signals_init(void);
 
 /**
  * Uninitializes the signals subsystem.
  */
-void purple_signals_uninit(void);
+void gaim_signals_uninit(void);
 
 /*@}*/
 
@@ -271,76 +271,76 @@ void purple_signals_uninit(void);
 /**************************************************************************/
 /*@{*/
 
-void purple_marshal_VOID(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_VOID__INT(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_VOID__INT_INT(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_VOID__POINTER(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_VOID__POINTER_UINT(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_VOID__POINTER_INT_INT(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_VOID__POINTER_POINTER(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_VOID__POINTER_POINTER_UINT(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_VOID__POINTER_POINTER_UINT_UINT(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_VOID__POINTER_POINTER_POINTER(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_VOID__POINTER_POINTER_POINTER_POINTER(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_VOID__POINTER_POINTER_POINTER_POINTER_POINTER(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_VOID__POINTER_POINTER_POINTER_UINT(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_VOID__POINTER_POINTER_POINTER_POINTER_UINT(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_VOID__POINTER_POINTER_POINTER_UINT_UINT(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_VOID(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_VOID__INT(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_VOID__INT_INT(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_VOID__POINTER(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_VOID__POINTER_UINT(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_VOID__POINTER_INT_INT(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_VOID__POINTER_POINTER(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_VOID__POINTER_POINTER_UINT(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_VOID__POINTER_POINTER_UINT_UINT(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_VOID__POINTER_POINTER_POINTER(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_VOID__POINTER_POINTER_POINTER_POINTER(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_VOID__POINTER_POINTER_POINTER_POINTER_POINTER(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_VOID__POINTER_POINTER_POINTER_UINT(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_VOID__POINTER_POINTER_POINTER_POINTER_UINT(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_VOID__POINTER_POINTER_POINTER_UINT_UINT(
+		GaimCallback cb, va_list args, void *data, void **return_val);
 
-void purple_marshal_INT__INT(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_INT__INT_INT(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_INT__POINTER_POINTER_POINTER_POINTER_POINTER(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_INT__INT(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_INT__INT_INT(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_INT__POINTER_POINTER_POINTER_POINTER_POINTER(
+		GaimCallback cb, va_list args, void *data, void **return_val);
 
-void purple_marshal_BOOLEAN__POINTER(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_BOOLEAN__POINTER_POINTER(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_BOOLEAN__POINTER_POINTER_POINTER(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_BOOLEAN__POINTER_POINTER_UINT(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_BOOLEAN__POINTER_POINTER_POINTER_UINT(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_BOOLEAN__POINTER_POINTER_POINTER_POINTER(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_BOOLEAN__POINTER_POINTER_POINTER_POINTER_POINTER(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_BOOLEAN__POINTER(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_BOOLEAN__POINTER_POINTER(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_BOOLEAN__POINTER_POINTER_POINTER(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_BOOLEAN__POINTER_POINTER_UINT(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_BOOLEAN__POINTER_POINTER_POINTER_UINT(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_BOOLEAN__POINTER_POINTER_POINTER_POINTER(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_BOOLEAN__POINTER_POINTER_POINTER_POINTER_POINTER(
+		GaimCallback cb, va_list args, void *data, void **return_val);
 
-void purple_marshal_BOOLEAN__INT_POINTER(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_BOOLEAN__INT_POINTER(
+		GaimCallback cb, va_list args, void *data, void **return_val);
 
-void purple_marshal_POINTER__POINTER_INT(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_POINTER__POINTER_INT64(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_POINTER__POINTER_INT_BOOLEAN(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_POINTER__POINTER_INT64_BOOLEAN(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
-void purple_marshal_POINTER__POINTER_POINTER(
-		PurpleCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_POINTER__POINTER_INT(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_POINTER__POINTER_INT64(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_POINTER__POINTER_INT_BOOLEAN(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_POINTER__POINTER_INT64_BOOLEAN(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_POINTER__POINTER_POINTER(
+		GaimCallback cb, va_list args, void *data, void **return_val);
 /*@}*/
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _PURPLE_SIGNALS_H_ */
+#endif /* _GAIM_SIGNALS_H_ */

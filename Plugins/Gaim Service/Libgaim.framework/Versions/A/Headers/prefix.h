@@ -3,9 +3,9 @@
  * upgrading these files.
  *
  * Added this comment.
- * Added "purple_ ## " to the namespace
- * Changed the lib macro to use /lib/purple instead of just /lib
- *  (why does purple do that in the -DLIBDIR autoconf thing anyway?)
+ * Added "gaim_ ## " to the namespace
+ * Changed the lib macro to use /lib/gaim instead of just /lib
+ *  (why does gaim do that in the -DLIBDIR autoconf thing anyway?)
  *
  */
 
@@ -44,7 +44,7 @@ extern "C" {
  * --> expands br_locate to foobar_br_locate
  */
 #undef BR_NAMESPACE
-#define BR_NAMESPACE(funcName) purple_ ## funcName
+#define BR_NAMESPACE(funcName) gaim_ ## funcName
 
 
 #ifdef ENABLE_BINRELOC
@@ -76,7 +76,7 @@ extern "C" {
 	#define BINDIR		(br_thread_local_store (br_prepend_prefix ((void *) "", "/bin")))
 	#define SBINDIR		(br_thread_local_store (br_prepend_prefix ((void *) "", "/sbin")))
 	#define DATADIR		(br_thread_local_store (br_prepend_prefix ((void *) "", "/share")))
-	#define LIBDIR		(br_thread_local_store (br_prepend_prefix ((void *) "", "/lib/libpurple")))
+	#define LIBDIR		(br_thread_local_store (br_prepend_prefix ((void *) "", "/lib/libgaim")))
 	#define LIBEXECDIR	(br_thread_local_store (br_prepend_prefix ((void *) "", "/libexec")))
 	#define ETCDIR		(br_thread_local_store (br_prepend_prefix ((void *) "", "/etc")))
 	#define SYSCONFDIR	(br_thread_local_store (br_prepend_prefix ((void *) "", "/etc")))

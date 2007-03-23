@@ -1,9 +1,9 @@
 /**
  * @file httpconn.h HTTP connection
  *
- * purple
+ * gaim
  *
- * Purple is the legal property of its developers, whose names are too numerous
+ * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -37,7 +37,7 @@ struct _MsnHttpConn
 	MsnSession *session; /**< The MSN Session. */
 	MsnServConn *servconn; /**< The connection object. */
 
-	PurpleProxyConnectData *connect_data;
+	GaimProxyConnectData *connect_data;
 
 	char *full_session_id; /**< The full session id. */
 	char *session_id; /**< The trimmed session id. */
@@ -60,7 +60,7 @@ struct _MsnHttpConn
 	char *rx_buf; /**< The receive buffer. */
 	int rx_len; /**< The receive buffer length. */
 
-	PurpleCircBuffer *tx_buf;
+	GaimCircBuffer *tx_buf;
 	guint tx_handler;
 };
 
