@@ -391,7 +391,6 @@
 - (BOOL)updateCache:(NSMutableDictionary *)cache forKey:(NSString *)key newValue:(id)newStatus listObject:(AIListObject *)inObject performCompare:(BOOL)performCompare
 {
 	id		oldStatus = [cache objectForKey:[inObject internalObjectID]];
-	AILog(@"ContactStatusEvents: %@ updated %@ from %@ to %@",inObject,key,oldStatus,newStatus);
 
 	if ((newStatus && !oldStatus) ||
 	   (oldStatus && !newStatus) ||
