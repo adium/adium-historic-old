@@ -55,7 +55,7 @@ static AIXtrasManager *manager;
 
 - (void)windowDidLoad
 {
-	[[self window] setTitle:AILocalizedString(@"Xtras Manager", "Xtras Manager window title")];
+	[window setTitle:AILocalizedString(@"Xtras Manager", "Xtras Manager window title")];
 
 	[self installToolbar];
 
