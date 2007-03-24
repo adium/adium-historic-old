@@ -525,10 +525,10 @@
 				[menuItem setRepresentedObject:chat];
 				
 				//If there is a chat status image, use that
-				if (!(image = [AIStatusIcons statusIconForChat:chat type:AIStatusIconTab direction:AIIconNormal])) {
+				if (!(image = [AIStatusIcons statusIconForChat:chat type:AIStatusIconMenu direction:AIIconNormal])) {
 					//Otherwise use the contact's status image
 					image = [AIStatusIcons statusIconForListObject:[chat listObject]
-					                                          type:AIStatusIconTab
+					                                          type:AIStatusIconMenu
 					                                     direction:AIIconNormal];
 				}
 				//Set the image
