@@ -676,65 +676,85 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 	[prefsCategory release]; prefsCategory = nil;
     [advancedPrefsName release]; advancedPrefsName = nil;
 
-    //Specify a file extension and a human-readable description of what the files of this type do
-    if (([extension caseInsensitiveCompare:@"AdiumPlugin"] == NSOrderedSame) ||
-		([extension caseInsensitiveCompare:@"AdiumLibgaimPlugin"] == NSOrderedSame)) {
+    /* Specify a file extension and a human-readable description of what the files of this type do
+	 * We reassign the extension so that regardless of its original case we end up with the case we want; this allows installation of
+	 * xtras to proceed properly on case-sensitive file systems.
+	 */
+    if ([extension caseInsensitiveCompare:@"AdiumPlugin"] == NSOrderedSame) {
         destination = [AISearchPathForDirectoriesInDomains(AIPluginsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
         //Plugins haven't been loaded yet if the application isn't done loading, so only request a restart if it has finished loading already 
         requiresRestart = completedApplicationLoad;
         fileDescription = AILocalizedString(@"Adium plugin",nil);
+		extension = @"AdiumPlugin";
 
-    } else if ([extension caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame) {
+    } else if ([extension caseInsensitiveCompare:@"AdiumLibgaimPlugin"] == NSOrderedSame) {
+        destination = [AISearchPathForDirectoriesInDomains(AIPluginsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
+        //Plugins haven't been loaded yet if the application isn't done loading, so only request a restart if it has finished loading already 
+        requiresRestart = completedApplicationLoad;
+        fileDescription = AILocalizedString(@"Adium plugin",nil);
+		extension = @"AdiumLibgaimPlugin";
+
+	} else if ([extension caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIDockIconsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
         fileDescription = AILocalizedString(@"dock icon set",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 		prefsCategory = @"appearance";
+		extension = @"AdiumIcon";
 
 	} else if ([extension caseInsensitiveCompare:@"AdiumSoundset"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AISoundsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"sound set",nil);
 		prefsButton = AILocalizedString(@"Open Event Prefs",nil);
 		prefsCategory = @"events";
+		extension = @"AdiumSoundset";
 
 	} else if ([extension caseInsensitiveCompare:@"AdiumEmoticonset"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIEmoticonsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"emoticon set",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 		prefsCategory = @"appearance";
-		
+		extension = @"AdiumEmoticonset";
+
 	} else if ([extension caseInsensitiveCompare:@"AdiumScripts"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIScriptsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"AppleScript set",nil);
-		
+		extension = @"AdiumScripts";
+
 	} else if ([extension caseInsensitiveCompare:@"AdiumMessageStyle"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIMessageStylesDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"message style",nil);
 		prefsButton = AILocalizedString(@"Open Message Prefs",nil);
 		prefsCategory = @"messages";
+		extension = @"AdiumMessageStyle";
+
 	} else if ([extension caseInsensitiveCompare:@"ListLayout"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIContactListDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"contact list layout",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 		prefsCategory = @"appearance";
-		
+		extension = @"ListLayout";
+
 	} else if ([extension caseInsensitiveCompare:@"ListTheme"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIContactListDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"contact list theme",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 		prefsCategory = @"appearance";
-		
+		extension = @"ListTheme";
+
 	} else if ([extension caseInsensitiveCompare:@"AdiumServiceIcons"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIServiceIconsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"service icons",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 		prefsCategory = @"appearance";
-		
+		extension = @"AdiumServiceIcons";
+
 	} else if ([extension caseInsensitiveCompare:@"AdiumMenuBarIcons"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIMenuBarIconsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"menu bar icons",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 		prefsCategory = @"appearance";
-		
+		extension = @"AdiumMenuBarIcons";
+
 	} else if ([extension caseInsensitiveCompare:@"AdiumStatusIcons"] == NSOrderedSame) {
 		NSString	*packName = [[filename lastPathComponent] stringByDeletingPathExtension];
 /*
@@ -750,6 +770,8 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 			fileDescription = AILocalizedString(@"status icons",nil);
 			prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 			prefsCategory = @"appearance";
+			extension = @"AdiumStatusIcons";
+
 		} else {
 			errorMessage = [NSString stringWithFormat:AILocalizedString(@"%@ is the name of the default status icon pack; this pack therefore can not be installed.",nil),
 				packName];
@@ -757,13 +779,15 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 	}
 
     if (destination) {
-        NSString    *destinationFilePath = [destination stringByAppendingPathComponent:[filename lastPathComponent]];
-        
+        NSString    *destinationFilePath;
+		destinationFilePath = [destination stringByAppendingPathComponent:[[filename lastPathComponent] stringByDeletingPathExtension]];
+		destinationFilePath = [destinationFilePath stringByAppendingPathExtension:extension];
+
         NSString	*alertTitle = nil;
         NSString	*alertMsg = nil;
 		NSString	*format;
 		
-		if ([filename isEqualToString:destinationFilePath]) {
+		if ([filename caseInsensitiveCompare:destinationFilePath] == NSOrderedSame) {
 			// Don't copy the file if it's already in the right place!!
 			alertTitle= AILocalizedString(@"Installation Successful","Title of installation successful window");
 			
