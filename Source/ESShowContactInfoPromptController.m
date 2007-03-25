@@ -70,11 +70,18 @@ static ESShowContactInfoPromptController *sharedShowInfoPromptInstance = nil;
 	AIListContact	*contact;
 
 	if ((contact = [self contactFromTextField])) {
+		[super okay:sender];
+
 		[AIContactInfoWindowController showInfoWindowForListObject:contact];
 
 		//Close the prompt
         [[self class] closeSharedInstance];
     }
+}
+
+- (NSString *)lastAccountIDKey
+{
+	return @"ShowContactInfo";
 }
 
 @end
