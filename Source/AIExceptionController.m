@@ -125,7 +125,8 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			[backtrace rangeOfString:@"-[NSScrollView(NSScrollViewAccessibility) accessibilityChildrenAttribute]"].location != NSNotFound || //Perhaps we aren't implementing an accessibility method properly? No idea what though :(
 			[backtrace rangeOfString:@"-[WebBridge objectLoadedFromCacheWithURL:response:data:]"].location != NSNotFound || //WebBridge throws this randomly it seems
 			[backtrace rangeOfString:@"-[NSTextView(NSSharing) _preflightSpellChecker:]"].location != NSNotFound || //Systemwide spell checker gets corrupted on some systems; other apps just end up logging to console, and we should do the same.
-			[backtrace rangeOfString:@"-[NSFontManager(NSFontManagerCollectionAdditions) _collectionsChanged:]"].location != NSNotFound //Deleting an empty collection in 10.4.3 (and possibly other versions) throws an NSRangeException with this in the backtrace.
+			[backtrace rangeOfString:@"-[NSFontManager(NSFontManagerCollectionAdditions) _collectionsChanged:]"].location != NSNotFound || //Deleting an empty collection in 10.4.3 (and possibly other versions) throws an NSRangeException with this in the backtrace.
+			[backtrace rangeOfString:@"[NSSpellChecker sharedSpellChecker]"].location != NSNotFound //The spell checker screws up and starts throwing an exception on every word on many people's systems.
 		   )
 		{
 			   shouldLaunchCrashReporter = NO;
