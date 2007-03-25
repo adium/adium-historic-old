@@ -36,6 +36,7 @@ Roeland Nas
 Laura Natcher
 Daisuke Okada
 Stephen Poprocki
+Eric Richie
 Jesse Rusak
 Evan Schoenberg
 Chris Serino
