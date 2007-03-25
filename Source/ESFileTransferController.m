@@ -288,7 +288,7 @@ static ESFileTransferPreferences *preferences;
 		if ([defaultManager fileExistsAtPath:launchPath]) {
 			NSString	*folderName = [inPath lastPathComponent];
 			NSArray		*arguments;
-			NSTask		*zipTask;
+			NSTask		*zipTask = nil;
 			
 			BOOL		success = YES;
 
