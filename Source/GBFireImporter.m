@@ -280,7 +280,7 @@ NSComparisonResult groupSort(id left, id right, void *context)
 			[newContact setIsBlocked:YES updateList:YES];
 		
 		//Adium can only support a single group per buddy (boo!!!) so use the first
-		NSString *groupName = [[buddy objectForKey:@"Groups"] objectAtIndex:0];
+		NSString *groupName = ([[buddy objectForKey:@"Groups"] count] ? [[buddy objectForKey:@"Groups"] objectAtIndex:0] : nil);
 		if([groupName length] != 0)
 			[newContact setRemoteGroupName:groupName];
 	}	
