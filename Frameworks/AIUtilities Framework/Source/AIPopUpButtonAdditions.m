@@ -31,6 +31,27 @@
 
 	return NO;
 }
+
+- (BOOL)selectItemWithRepresentedObjectUsingCompare:(id)object
+{
+	BOOL selectedItem = NO;
+
+	if ([self numberOfItems] > 0) {
+		NSEnumerator *enumerator = [[self itemArray] objectEnumerator];
+		NSMenuItem	 *menuItem;
+		
+		while ((menuItem = [enumerator nextObject])) {
+			if ([[menuItem representedObject] compare:object] == NSOrderedSame) {
+				[self selectItem:menuItem];
+				selectedItem = YES;
+				break;
+			}
+		}
+	}
+	
+	return selectedItem;	
+}
+
 - (BOOL)compatibleSelectItemWithTag:(int)tag
 {
 	if ([self numberOfItems] > 0) {

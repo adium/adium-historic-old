@@ -157,7 +157,7 @@
 - (void)chatDestinationChanged:(NSNotification *)notification
 {
 	//Update selection in contact menu
-	[popUp_contacts selectItemWithRepresentedObject:[chat listObject]];
+	[popUp_contacts selectItemWithRepresentedObjectUsingCompare:[chat listObject]];
 
 	[self _destroyAccountMenu];
 	//Rebuild 'From' account menu
