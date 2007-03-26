@@ -83,6 +83,8 @@
 */	
 - (void)setFontSize:(int)inSize;
 
+- (int)fontSize;
+
 /*!
  * @brief Add a trait to the current mask
  *
@@ -98,6 +100,8 @@
  * @param inTrait The <tt>NSFontTraitMask</tt> to remove
  */
 - (void)disableTrait:(NSFontTraitMask)inTrait;
+
+- (NSFontTraitMask)traits;
 
 /*!
  * @brief Set the underline attribute
@@ -139,6 +143,8 @@
  */
 - (void)setTextColor:(NSColor *)inColor;
 
+- (NSColor *)textColor;
+
 /*!
  * @brief Set the text background color
  *
@@ -147,6 +153,8 @@
  */
 - (void)setTextBackgroundColor:(NSColor *)inColor;
 
+- (NSColor *)textBackgroundColor;
+
 /*!
  * @brief Set the background color
  *
@@ -154,6 +162,8 @@
  * @param inColor A <tt>NSColor</tt> of the new background color
  */
 - (void)setBackgroundColor:(NSColor *)inColor;
+
+- (NSColor *)backgroundColor;
 
 /*!
  * @brief Set a link attribute
