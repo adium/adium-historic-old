@@ -1439,7 +1439,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	enumerator = [[inArgs allKeys] objectEnumerator];
 	while ((arg = [enumerator nextObject])) {
 		if ([arg caseInsensitiveCompare:@"face"] == NSOrderedSame) {
-			[originalAttributes setObject:([textAttributes fontfamily] ? (id)[textAttributes fontfamily] : (id)[NSNull null])
+			[originalAttributes setObject:([textAttributes fontFamily] ? (id)[textAttributes fontFamily] : (id)[NSNull null])
 								   forKey:@"setFontFamily:"];
 
 			[textAttributes setFontFamily:[inArgs objectForKey:arg]];
