@@ -39,10 +39,10 @@
 int HTMLEquivalentForFontSize(int fontSize);
 
 @interface AIHTMLDecoder (PRIVATE)
-- (void)processFontTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
+- (NSDictionary *)processFontTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (void)processBodyTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (void)processLinkTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
-- (void)processSpanTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
+- (NSDictionary *)processSpanTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (void)processDivTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (NSAttributedString *)processImgTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (BOOL)appendImage:(NSImage *)attachmentImage
@@ -51,6 +51,8 @@ int HTMLEquivalentForFontSize(int fontSize);
 		   withName:(NSString *)inName 
 		 imageClass:(NSString *)imageClass
 		 imagesPath:(NSString *)imagesPath;
+
+- (void)restoreAttributesFromDict:(NSDictionary *)inAttributes intoAttributes:(AITextAttributes *)textAttributes;
 @end
 
 @interface NSString (AIHTMLDecoderAdditions)
@@ -1007,12 +1009,13 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	NSString					*chunkString, *tagOpen;
 	NSMutableAttributedString	*attrString;
 	AITextAttributes			*textAttributes;
-	
+	NSMutableArray				*spanTagChangedAttributesQueue = [NSMutableArray array];
+	NSMutableArray				*fontTagChangedAttributesQueue = [NSMutableArray array];
+
 	//Reset the div and span ivars
 	send = NO;
 	receive = NO;
 	inDiv = NO;
-	inLogSpan = NO;
 
     //set up
 	if (inDefaultAttributes) {
@@ -1104,6 +1107,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 						[scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
 
+						//XXX what's going on here?
 						[textAttributes setTextColor:[NSColor blackColor]];
 
 					//DIV
@@ -1119,8 +1123,6 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 					//LINK
 					} else if ([chunkString caseInsensitiveCompare:@"A"] == NSOrderedSame) {
-						//[textAttributes setUnderline:YES];
-						//[textAttributes setTextColor:[NSColor blueColor]];
 						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
 							[self processLinkTagArgs:[self parseArguments:chunkString] 
 										  attributes:textAttributes]; //Process the linktag's contents
@@ -1141,27 +1143,36 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					//Font
 					} else if ([chunkString caseInsensitiveCompare:@"FONT"] == NSOrderedSame) {
 						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
+							NSDictionary *changedAttributes;
+
 							//Process the font tag's contents
-							[self processFontTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
+							changedAttributes = [self processFontTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
+							[fontTagChangedAttributesQueue addObject:(changedAttributes ? changedAttributes : [NSDictionary dictionary])];
 						}
 
 					} else if ([chunkString caseInsensitiveCompare:@"/FONT"] == NSOrderedSame) {
-						[textAttributes resetFontAttributes];
+						int changedAttributesCount = [fontTagChangedAttributesQueue count];
+						if (changedAttributesCount) {
+							[self restoreAttributesFromDict:[fontTagChangedAttributesQueue lastObject] intoAttributes:textAttributes];
+							[fontTagChangedAttributesQueue removeObjectAtIndex:([fontTagChangedAttributesQueue count] - 1)];	
+						}
 						
 					//span
 					} else if ([chunkString caseInsensitiveCompare:@"SPAN"] == NSOrderedSame) {
 						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
-							[self processSpanTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
+							NSDictionary *changedAttributes;
+
+							changedAttributes = [self processSpanTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
+							[spanTagChangedAttributesQueue addObject:(changedAttributes ? changedAttributes : [NSDictionary dictionary])];
 						}
 
 					} else if ([chunkString caseInsensitiveCompare:@"/SPAN"] == NSOrderedSame) {
-						if (inLogSpan) {
-							[textAttributes setTextColor:[NSColor blackColor]];
-							[textAttributes setFontFamily:@"Helvetica"];
-							[textAttributes setFontSize:12];
-							inLogSpan = NO;
+						int changedAttributesCount = [spanTagChangedAttributesQueue count];
+						if (changedAttributesCount) {
+							[self restoreAttributesFromDict:[spanTagChangedAttributesQueue lastObject] intoAttributes:textAttributes];
+							[spanTagChangedAttributesQueue removeObjectAtIndex:([spanTagChangedAttributesQueue count] - 1)];	
 						}
-						
+
 					//Line Break
 					} else if ([chunkString caseInsensitiveCompare:@"BR"] == NSOrderedSame || 
 							 [chunkString caseInsensitiveCompare:@"BR/"] == NSOrderedSame ||
@@ -1380,15 +1391,34 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
  *  its specification to a text-attributes object.
  */
 
-//Process the contents of a font tag
-- (void)processFontTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
+- (void)restoreAttributesFromDict:(NSDictionary *)inAttributes intoAttributes:(AITextAttributes *)textAttributes
 {
-	NSEnumerator 	*enumerator;
-	NSString		*arg;
+	NSEnumerator *enumerator = [inAttributes keyEnumerator];
+	NSString	 *key;
+	
+	while ((key = [enumerator nextObject])) {
+		id value = [inAttributes objectForKey:key];
+		SEL selector = NSSelectorFromString(key);
+		if (value == [NSNull null]) value = nil;
+		
+		[textAttributes performSelector:selector
+							 withObject:value];
+	}
+}
+
+//Process the contents of a font tag
+- (NSDictionary *)processFontTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
+{
+	NSEnumerator		*enumerator;
+	NSString			*arg;
+	NSMutableDictionary	*originalAttributes = [NSMutableDictionary dictionary];
 
 	enumerator = [[inArgs allKeys] objectEnumerator];
 	while ((arg = [enumerator nextObject])) {
 		if ([arg caseInsensitiveCompare:@"face"] == NSOrderedSame) {
+			[originalAttributes setObject:([textAttributes fontfamily] ? (id)[textAttributes fontfamily] : (id)[NSNull null])
+								   forKey:@"setFontFamily:"];
+
 			[textAttributes setFontFamily:[inArgs objectForKey:arg]];
 
 		} else if ([arg caseInsensitiveCompare:@"size"] == NSOrderedSame) {
@@ -1398,33 +1428,56 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				static int pointSizes[] = { 9, 10, 12, 14, 18, 24, 48, 72 };
 				int size = (absSize <= 8 ? pointSizes[absSize-1] : 12);
 				
+				[originalAttributes setObject:[NSNumber numberWithInt:[textAttributes fontSize]]
+									   forKey:@"setFontSizeFromNumber:"];
+
 				[textAttributes setFontSize:size];
 			}
 
 		} else if ([arg caseInsensitiveCompare:@"absz"] == NSOrderedSame) {
+			[originalAttributes setObject:[NSNumber numberWithInt:[textAttributes fontSize]]
+								   forKey:@"setFontSizeFromNumber:"];
+
 			[textAttributes setFontSize:[[inArgs objectForKey:arg] intValue]];
 
 		} else if ([arg caseInsensitiveCompare:@"color"] == NSOrderedSame) {
+			[originalAttributes setObject:([textAttributes textColor] ? (id)[textAttributes textColor] : (id)[NSNull null])
+								   forKey:@"setTextColor:"];
+
 			[textAttributes setTextColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg] 
 														 defaultColor:[NSColor blackColor]]];
 
 		} else if ([arg caseInsensitiveCompare:@"back"] == NSOrderedSame) {
+			[originalAttributes setObject:([textAttributes textBackgroundColor] ? (id)[textAttributes textBackgroundColor] : (id)[NSNull null])
+								   forKey:@"setTextBackgroundColor:"];
+
 			[textAttributes setTextBackgroundColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg]
 																   defaultColor:[NSColor whiteColor]]];
 
 		} else if ([arg caseInsensitiveCompare:@"lang"] == NSOrderedSame) {
+			[originalAttributes setObject:([textAttributes languageValue] ? (id)[textAttributes languageValue] : (id)[NSNull null])
+								   forKey:@"setLanguageValue:"];
+
 			[textAttributes setLanguageValue:[inArgs objectForKey:arg]];
 
 		}  else if ([arg caseInsensitiveCompare:@"sender"] == NSOrderedSame) {
 			//Ghetto HTML log processing
 			if (inDiv && send) {
+				[originalAttributes setObject:([textAttributes textColor] ? (id)[textAttributes textColor] : (id)[NSNull null])
+					
+									   forKey:@"setTextColor:"];
 				[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.5 blue:0.0 alpha:1.0]];
+
 			} else if (inDiv && receive) {
+				[originalAttributes setObject:([textAttributes textColor] ? (id)[textAttributes textColor] : (id)[NSNull null])
+									   forKey:@"setTextColor:"];
+				
 				[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.0 blue:0.5 alpha:1.0]];
 			}
-		}
-		
+		}	
 	}
+
+	return originalAttributes;
 }
 
 - (void)processBodyTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
@@ -1436,16 +1489,16 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	while ((arg = [enumerator nextObject])) {
 		if ([arg caseInsensitiveCompare:@"bgcolor"] == NSOrderedSame) {
 			[textAttributes setBackgroundColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg] defaultColor:[NSColor whiteColor]]];
-
 		}	
 	}
 }
 
-- (void)processSpanTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
+- (NSDictionary *)processSpanTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
 {
-	NSEnumerator 	*enumerator;
-	NSString		*arg;
-	
+	NSEnumerator		*enumerator;
+	NSString			*arg;
+	NSMutableDictionary	*originalAttributes = [NSMutableDictionary dictionary];
+
 	enumerator = [[inArgs allKeys] objectEnumerator];
 	while ((arg = [enumerator nextObject])) {
 		if ([arg caseInsensitiveCompare:@"class"] == NSOrderedSame) {
@@ -1454,22 +1507,25 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 			if ([class caseInsensitiveCompare:@"sender"] == NSOrderedSame) {
 				if (inDiv && send) {
+					[originalAttributes setObject:([textAttributes textColor] ? (id)[textAttributes textColor] : (id)[NSNull null])
+										   forKey:@"setTextColor:"];
 					[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 
 																		   green:0.5
 																			blue:0.0 
 																		   alpha:1.0]];
-					inLogSpan = YES;
 				} else if (inDiv && receive) {
+					[originalAttributes setObject:([textAttributes textColor] ? (id)[textAttributes textColor] : (id)[NSNull null])
+										   forKey:@"setTextColor:"];
 					[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0
 																		   green:0.0
 																			blue:0.5 
 																		   alpha:1.0]];
-					inLogSpan = YES;
 				}
 
 			} else if ([class caseInsensitiveCompare:@"timestamp"] == NSOrderedSame) {
+				[originalAttributes setObject:([textAttributes textColor] ? (id)[textAttributes textColor] : (id)[NSNull null])
+									   forKey:@"setTextColor:"];
 				[textAttributes setTextColor:[NSColor grayColor]];
-				inLogSpan = YES;
 			}
 		} else if ([arg caseInsensitiveCompare:@"style"] == NSOrderedSame) {
 			NSString	*style = [inArgs objectForKey:arg];
@@ -1484,7 +1540,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				if (nextSemicolon.location != NSNotFound) {
 					NSString *fontFamily = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange),
 																				 nextSemicolon.location - NSMaxRange(attributeRange))];
-					
+					[originalAttributes setObject:([textAttributes fontFamily] ? (id)[textAttributes fontFamily] : (id)[NSNull null])
+										   forKey:@"setFontFamily:"];
 					[textAttributes setFontFamily:fontFamily];
 				}
 			}
@@ -1519,7 +1576,28 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 						size = stylePointSizes[5];
 					}
 					
+					[originalAttributes setObject:[NSNumber numberWithInt:[textAttributes fontSize]]
+										   forKey:@"setFontSizeFromNumber:"];
 					[textAttributes setFontSize:size];
+				}
+			}
+
+			attributeRange = [style rangeOfString:@"font-weight: " options:NSCaseInsensitiveSearch];
+			if (attributeRange.location != NSNotFound) {
+				NSRange	 nextSemicolon = [style rangeOfString:@";"
+													  options:NSLiteralSearch
+														range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
+				if (nextSemicolon.location != NSNotFound) {
+					NSString *fontWeight = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
+					[originalAttributes setObject:[NSNumber numberWithUnsignedInt:[textAttributes traits]]
+										   forKey:@"setTraits:"];
+					if (([fontWeight caseInsensitiveCompare:@"bold"] == NSOrderedSame) ||
+						([fontWeight caseInsensitiveCompare:@"bolder"] == NSOrderedSame) ||
+						([fontWeight intValue] > 400)) {
+						[textAttributes enableTrait:NSBoldFontMask];
+					} else {
+						[textAttributes disableTrait:NSBoldFontMask];						
+					}
 				}
 			}
 
@@ -1539,8 +1617,11 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
                     [fontStringScanner scanUpToString:@" " intoString:nil];
                     [fontStringScanner setScanLocation:[fontStringScanner scanLocation] + 1];
                     NSString *font = [fontString substringFromIndex:[fontStringScanner scanLocation]];
-                    if([font length])
+                    if ([font length]) {
+						[originalAttributes setObject:([textAttributes fontFamily] ? (id)[textAttributes fontFamily] : (id)[NSNull null])
+											   forKey:@"setFontFamily:"];
                         [textAttributes setFontFamily:font];
+					}
 				}
 			}
 
@@ -1550,6 +1631,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				if (nextSemicolon.location != NSNotFound) {
 					NSString *hexColor = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
 					
+					[originalAttributes setObject:([textAttributes backgroundColor] ? (id)[textAttributes backgroundColor] : (id)[NSNull null])
+										   forKey:@"setBackgroundColor:"];
 					[textAttributes setBackgroundColor:[NSColor colorWithHTMLString:hexColor
 																	   defaultColor:[NSColor blackColor]]];
 				}
@@ -1567,12 +1650,16 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				if (nextSemicolon.location != NSNotFound) {
 					NSString *hexColor = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
 					
+					[originalAttributes setObject:([textAttributes textColor] ? (id)[textAttributes textColor] : (id)[NSNull null])
+										   forKey:@"setTextColor:"];
 					[textAttributes setTextColor:[NSColor colorWithHTMLString:hexColor
 																 defaultColor:[NSColor blackColor]]];
 				}
 			}
         }
 	}
+	
+	return originalAttributes;
 }
 
 - (void)processLinkTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
