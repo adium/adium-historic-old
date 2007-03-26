@@ -134,6 +134,12 @@ NSString *quotes[] = {
 		
 		NSString *userAndService = [pathComponents objectAtIndex:[pathComponents count] - 2];
 		NSRange range = [userAndService rangeOfString:@"-" options:NSBackwardsSearch];
+		if (range.location == NSNotFound) {
+			NSLog(@"Warning: [%@ importFireLogs] could not find '-'.", self);
+			//Incorrect directory structure
+			[pool release];
+			continue;			
+		}
 		NSString *user = [userAndService substringToIndex:range.location];
 		NSString *service = [userAndService substringFromIndex:range.location + 1];
 		NSDate *date = [NSDate dateWithNaturalLanguageString:[[pathComponents lastObject] stringByDeletingPathExtension]];
@@ -320,7 +326,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 						mySN = [[account substringFromIndex:range.location + 1] retain];
 						range = [mySN rangeOfString:@"@"];
 						NSRange revRange = [mySN rangeOfString:@"@" options:NSBackwardsSearch];
-						if(revRange.location != range.location)
+						if ((revRange.location != range.location) && (revRange.location != NSNotFound))
 						{
 							NSString *oldMySN = mySN;
 							mySN = [[mySN substringToIndex:revRange.location] retain];
