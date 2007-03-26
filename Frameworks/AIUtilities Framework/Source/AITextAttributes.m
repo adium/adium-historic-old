@@ -110,6 +110,11 @@
 	return newTextAttributes;
 }
 
+- (NSString *)fontFamily
+{
+	return fontFamilyName;
+}
+
 //Set the font family (name)
 - (void)setFontFamily:(NSString *)inName
 {
@@ -121,9 +126,9 @@
 	}
 }
 
-- (NSString *)fontFamily
+- (int)fontSize
 {
-	return fontFamilyName;
+	return fontSize;
 }
 
 //Set the font size
@@ -136,6 +141,16 @@
 	}
 }
 
+- (void)setFontSizeFromNumber:(NSNumber *)inSize
+{
+	[self setFontSize:[inSize intValue]];
+}
+
+- (NSColor *)textColor
+{
+	return [dictionary objectForKey:NSForegroundColorAttributeName];
+}
+
 //Set the text foreground color
 - (void)setTextColor:(NSColor *)inColor
 {
@@ -144,6 +159,11 @@
 	} else {
 		[dictionary removeObjectForKey:NSForegroundColorAttributeName];
 	}
+}
+
+- (NSColor *)textBackgroundColor
+{
+	return [dictionary objectForKey:NSBackgroundColorAttributeName];
 }
 
 //Sub-backround color (drawn just behind the text)
@@ -156,16 +176,36 @@
 	}
 }
 
+- (NSColor *)backgroundColor
+{
+	return [dictionary objectForKey:AIBodyColorAttributeName];
+}
+
 //Set the background color
 - (void)setBackgroundColor:(NSColor *)inColor
 {
-    [dictionary setObject:inColor forKey:AIBodyColorAttributeName];
+	if (inColor) {
+		[dictionary setObject:inColor forKey:AIBodyColorAttributeName];
+	} else {
+		[dictionary removeObjectForKey:AIBodyColorAttributeName];	
+	}
+}
+
+- (NSFontTraitMask)traits
+{
+	return fontTraitsMask;
 }
 
 //Enable a masked trait (bold, italic)
 - (void)enableTrait:(NSFontTraitMask)inTrait
 {
     fontTraitsMask |= inTrait;
+	[dictionary removeObjectForKey:NSFontAttributeName];
+}
+
+- (void)setTraits:(NSNumber *)inTraits
+{
+	fontTraitsMask = [inTraits unsignedIntValue];
 	[dictionary removeObjectForKey:NSFontAttributeName];
 }
 
@@ -179,6 +219,11 @@
 	[dictionary removeObjectForKey:NSFontAttributeName];
 }
 
+- (BOOL)underline
+{
+	return [[dictionary objectForKey:NSUnderlineStyleAttributeName] boolValue];
+}
+
 //Enable/Disable underlining
 - (void)setUnderline:(BOOL)inUnderline
 {
@@ -187,6 +232,11 @@
     } else {
         [dictionary removeObjectForKey:NSUnderlineStyleAttributeName];
     }
+}
+
+- (BOOL)strikethrough
+{
+	return [[dictionary objectForKey:NSStrikethroughStyleAttributeName] boolValue];
 }
 
 // Enable or disable strikethrough
@@ -198,6 +248,11 @@
 	}
 } 
 
+- (BOOL)subscript
+{
+	return [[dictionary objectForKey:NSBaselineOffsetAttributeName] floatValue]  < 0.0f;
+}
+
 // Enable or disable subscript
 - (void)setSubscript:(BOOL)inSubscript{
 	if (inSubscript) {
@@ -208,6 +263,11 @@
 		[dictionary removeObjectForKey:NSBaselineOffsetAttributeName];
 		[self setFontSize:(fontSize + 2)];
 	}
+}
+
+- (BOOL)superscript
+{
+	return [[dictionary objectForKey:NSBaselineOffsetAttributeName] floatValue]  > 0.0f;
 }
 
 // Enable or disable superscript
