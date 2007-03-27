@@ -46,6 +46,7 @@ Greg Smith
 Kent Sutherland
 Vinay Venkatesh
 Wesley Underwood
+Zachary West
 Ofri Wolfus
 
 If you have contributed to Adium and are not on this list, please contact us.

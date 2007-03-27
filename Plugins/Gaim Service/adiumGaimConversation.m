@@ -21,6 +21,7 @@
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIContentControllerProtocol.h>
+#import <AINudgeBuzzHandlerPlugin.h>
 
 #pragma mark Gaim Images
 
@@ -142,7 +143,29 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 	}
 
 	if (chat) {
-		if (flags & GAIM_MESSAGE_SYSTEM) {
+		if (flags & GAIM_MESSAGE_NOTIFY) {
+			// We received a notification (nudge or buzz). Send a notification of such.
+
+			NSString *type, *messageString = [NSString stringWithUTF8String:message];
+			NSDictionary *userInfo;
+			
+			// Determine what we're actually notifying about.
+			if ([messageString rangeOfString:@"Nudge"].location != NSNotFound) {
+				type = @"Nudge";
+			} else if ([messageString rangeOfString:@"Buzz"].location != NSNotFound) {
+				type = @"Buzz";
+			} else {
+				// Just call an unknown type a "notification"
+				type = @"notification";
+			}
+			
+			userInfo = [NSDictionary dictionaryWithObjectsAndKeys:type,@"Type", nil];
+			
+			[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:Chat_NudgeBuzzOccured
+																			   object:chat
+																			 userInfo:userInfo];
+						
+		} else if (flags & GAIM_MESSAGE_SYSTEM) {
 			NSString			*messageString = [NSString stringWithUTF8String:message];
 			if (messageString) {
 				AIChatUpdateType	updateType = -1;
