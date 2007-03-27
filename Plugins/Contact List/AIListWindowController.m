@@ -220,7 +220,7 @@
 		switch (windowLevel) {
 			case AINormalWindowLevel: level = NSNormalWindowLevel; break;
 			case AIFloatingWindowLevel: level = NSFloatingWindowLevel; break;
-			case AIDesktopWindowLevel: level = kCGDesktopWindowLevel; break;
+			case AIDesktopWindowLevel: level = kCGBackstopMenuLevel; break;
 		}
 
 		[[self window] setLevel:level];
