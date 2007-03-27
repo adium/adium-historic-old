@@ -284,7 +284,7 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 
 - (void)setServersideDisplayName:(NSString *)friendlyName
 {
-	if (gaim_account_is_connected(account)) {		
+	if (account && gaim_account_is_connected(account)) {		
 		NSDate *now = [NSDate date];
 
 		if (!lastFriendlyNameChange ||
