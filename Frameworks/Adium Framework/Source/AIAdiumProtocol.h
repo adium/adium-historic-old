@@ -66,6 +66,7 @@
 #define CONTENT_MESSAGE_RECEIVED			@"Content_MessageReceived"
 #define CONTENT_MESSAGE_RECEIVED_FIRST		@"Content_MessageReceivedFirst"
 #define CONTENT_MESSAGE_RECEIVED_BACKGROUND	@"Content_MessageReceivedBackground"
+#define CONTENT_NUDGE_BUZZ_OCCURED			@"Content_NudgeBuzzOccured"
 #define CONTENT_CONTACT_JOINED_CHAT			@"Content_ContactJoinedChat"
 #define CONTENT_CONTACT_LEFT_CHAT			@"Content_ContactLeftChat"
 #define INTERFACE_ERROR_MESSAGE				@"Interface_ErrorMessageReceived"

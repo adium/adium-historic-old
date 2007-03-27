@@ -34,6 +34,7 @@
 	<string>AILoggerPlugin</string>
 	<string>AIMessageAliasPlugin</string>
 	<string>AINewMessagePanelPlugin</string>
+	<string>AINudgeBuzzHandlerPlugin</string>
 	<string>AIOfflineContactHidingPlugin</string>
 	<string>AISCLViewPlugin</string>
 	<string>AIStandardToolbarItemsPlugin</string>

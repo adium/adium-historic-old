@@ -54,8 +54,8 @@
 		110763F608676CC9005987A5 /* RAFBlockEditorPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */; };
 		110763F808676CC9005987A5 /* RAFBlockEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F408676CC9005987A5 /* RAFBlockEditorWindowController.m */; };
 		110763FA08676D05005987A5 /* BlockEditorWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 110763F908676D04005987A5 /* BlockEditorWindow.nib */; };
+		11C7CAF30BB58F4100296D7F /* AINudgeBuzzHandlerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 11C7CAF10BB58F4100296D7F /* AINudgeBuzzHandlerPlugin.m */; };
 		11F145F00B546AC500CA91F6 /* Menu Bar Icons in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11F145C70B546A6D00CA91F6 /* Menu Bar Icons */; };
-		11F1460B0B546C1200CA91F6 /* AIMenuBarIcons.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11F146090B546C1200CA91F6 /* AIMenuBarIcons.h */; };
 		11F1460C0B546C1200CA91F6 /* AIMenuBarIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = 11F1460A0B546C1200CA91F6 /* AIMenuBarIcons.m */; };
 		3402D5A5080DBC91004E50B4 /* SortConfiguration.nib in Resources */ = {isa = PBXBuildFile; fileRef = 347E791D07CAA52300350507 /* SortConfiguration.nib */; };
 		3402E01B07CB0CED0044F818 /* ESFileTransferProgressView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E01A07CB0CEC0044F818 /* ESFileTransferProgressView.nib */; };
@@ -1489,7 +1489,6 @@
 			dstSubfolderSpec = 1;
 			files = (
 				F51BCE390A156312000FDC06 /* AdiumSpotlightImporter.mdimporter in CopyFiles */,
-				11F1460B0B546C1200CA91F6 /* AIMenuBarIcons.h in CopyFiles */,
 				346935D50BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1515,6 +1514,8 @@
 		110763F908676D04005987A5 /* BlockEditorWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = BlockEditorWindow.nib; path = Resources/BlockEditorWindow.nib; sourceTree = "<group>"; };
 		11C157D804A88E04008E0C76 /* AIEmoticonController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonController.h; path = Source/AIEmoticonController.h; sourceTree = "<group>"; };
 		11C157D904A88E04008E0C76 /* AIEmoticonController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonController.m; path = Source/AIEmoticonController.m; sourceTree = "<group>"; };
+		11C7CAF00BB58F4100296D7F /* AINudgeBuzzHandlerPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AINudgeBuzzHandlerPlugin.h; sourceTree = "<group>"; };
+		11C7CAF10BB58F4100296D7F /* AINudgeBuzzHandlerPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = AINudgeBuzzHandlerPlugin.m; sourceTree = "<group>"; };
 		11F145C70B546A6D00CA91F6 /* Menu Bar Icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Menu Bar Icons"; path = "Resources/Menu Bar Icons"; sourceTree = "<group>"; };
 		11F146090B546C1200CA91F6 /* AIMenuBarIcons.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMenuBarIcons.h; path = Source/AIMenuBarIcons.h; sourceTree = "<group>"; };
 		11F1460A0B546C1200CA91F6 /* AIMenuBarIcons.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMenuBarIcons.m; path = Source/AIMenuBarIcons.m; sourceTree = "<group>"; };
@@ -3810,6 +3811,16 @@
 			name = Emoticons;
 			sourceTree = "<group>";
 		};
+		11C7CAEF0BB58F4100296D7F /* Nudge and Buzz Handler */ = {
+			isa = PBXGroup;
+			children = (
+				11C7CAF00BB58F4100296D7F /* AINudgeBuzzHandlerPlugin.h */,
+				11C7CAF10BB58F4100296D7F /* AINudgeBuzzHandlerPlugin.m */,
+			);
+			name = "Nudge and Buzz Handler";
+			path = "Plugins/Nudge and Buzz Handler";
+			sourceTree = "<group>";
+		};
 		19C28FACFE9D520D11CA2CBB /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -4495,6 +4506,7 @@
 				344AB2B4057912C500384CEE /* Open Message Window Contact Alert */,
 				342DC48A05783B8D000E1D83 /* Send Message Contact Alert */,
 				F5AAD085039BA0D301A8010A /* Sound */,
+				11C7CAEF0BB58F4100296D7F /* Nudge and Buzz Handler */,
 			);
 			name = "Events and Actions";
 			sourceTree = "<group>";
@@ -8427,6 +8439,7 @@
 				377ED2670AED59E600CB7BDF /* TabsAdvancedPreferences.m in Sources */,
 				11F1460C0B546C1200CA91F6 /* AIMenuBarIcons.m in Sources */,
 				346935D60BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.m in Sources */,
+				11C7CAF30BB58F4100296D7F /* AINudgeBuzzHandlerPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
