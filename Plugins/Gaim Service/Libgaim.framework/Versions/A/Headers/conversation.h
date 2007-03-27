@@ -115,7 +115,8 @@ typedef enum
 	GAIM_MESSAGE_DELAYED     = 0x0400, /**< Delayed message.         */
 	GAIM_MESSAGE_RAW         = 0x0800, /**< "Raw" message - don't
 	                                        apply formatting         */
-	GAIM_MESSAGE_IMAGES      = 0x1000  /**< Message contains images  */
+	GAIM_MESSAGE_IMAGES      = 0x1000, /**< Message contains images  */
+	GAIM_MESSAGE_NOTIFY      = 0x2000  /**< Message is a notification */
 
 } GaimMessageFlags;
 
