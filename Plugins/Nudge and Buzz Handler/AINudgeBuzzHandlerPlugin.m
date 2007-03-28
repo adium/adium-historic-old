@@ -49,11 +49,18 @@
 - (void)nudgeBuzzDidOccur:(NSNotification *)notification
 {
 	AIChat			*chat     = [notification object];
-	NSDictionary	*userInfo = [notification userInfo];
+	NSString		*description, *format, *type = [[notification userInfo] objectForKey:@"Type"];
+	
+	if ([type isEqualToString:@"Buzz"]) {
+		format = AILocalizedString(@"%@ sent a Buzz!", "Contact sent a Buzz!");
+	} else if ([type isEqualToString:@"Nudge"]) {
+		format = AILocalizedString(@"%@ sent a Nudge!", "Contact sent a Nudge!");
+	} else if ([type isEqualToString:@"notification"]) {
+		format = AILocalizedString(@"%@ sent a notification!", "Contact sent a notification.");
+	}
 	
 	// Create the display text.
-	NSString *description = [NSString stringWithFormat:AILocalizedString(@"%@ sent a %@!", "Contact sent a Nudge/Buzz!"),
-		[[chat listObject] displayName], [userInfo objectForKey:@"Type"]];
+	description = [NSString stringWithFormat:format, [[chat listObject] displayName]];
 	
 	// Print the text to the window.
 	[[adium contentController] displayEvent:description
