@@ -18,6 +18,7 @@
 #import <AIListGroup.h>
 #import <Adium/AIContactAlertsControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AINudgeBuzzHandlerPlugin.h"
 
 @implementation AINudgeBuzzHandlerPlugin
@@ -72,6 +73,11 @@
 									 forListObject:[chat listObject]
 										  userInfo:nil
 					  previouslyPerformedActionIDs:nil];
+	
+	// Flash content if this isn't the active chat.
+	if ([[adium interfaceController] activeChat] != chat) {
+		[chat incrementUnviewedContentCount];
+	}
 }
 
 
