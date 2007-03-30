@@ -21,7 +21,10 @@
 #define Chat_NudgeBuzzOccured		@"Chat_NudgeBuzzOccured"
 
 @interface AINudgeBuzzHandlerPlugin : AIPlugin <AIEventHandler> {
-	
+	NSMenuItem			*notifyMenuItem;
+	NSMenuItem			*notifyContextualMenuItem;
 }
+
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem;
 
 @end
