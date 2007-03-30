@@ -14,12 +14,22 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <AIChat.h>
-#import <AIListGroup.h>
 #import <Adium/AIContactAlertsControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIMenuControllerProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
+
+#import <Adium/AIChat.h>
+#import <Adium/AIContentMessage.h>
+#import <Adium/AIListGroup.h>
+#import <Adium/AIMetaContact.h>
+
+#import <AIUtilities/AIMenuAdditions.h>
+
 #import "AINudgeBuzzHandlerPlugin.h"
+
+#define NOTIFICATION			AILocalizedString(@"Send Notification", "Send notification (nudge or buzz) menu item")
 
 @implementation AINudgeBuzzHandlerPlugin
 
@@ -36,12 +46,131 @@
 								   selector:@selector(nudgeBuzzDidOccur:)
 									   name:Chat_NudgeBuzzOccured
 									 object:nil];
+	
+	// Create the menu item.
+	notifyMenuItem = [[NSMenuItem alloc] initWithTitle:NOTIFICATION
+										  target:self
+										  action:@selector(notifyContact:)
+								   keyEquivalent:@""];
+	
+	// Create the contextual menu item.
+	notifyContextualMenuItem = [[NSMenuItem alloc] initWithTitle:NOTIFICATION
+													target:self
+													action:@selector(notifyContact:)
+											 keyEquivalent:@""];
+	
+	// Register our menu items.
+	[[adium menuController] addMenuItem:notifyMenuItem toLocation:LOC_Contact_Action];
+	[[adium menuController] addContextualMenuItem:notifyContextualMenuItem toLocation:Context_Contact_Action];
+	
 }
 
 - (void)uninstallPlugin
 {
 	// Unregister ourself.
 	[[adium notificationCenter] removeObserver:self];
+	[notifyMenuItem release];
+	[notifyContextualMenuItem release];
+}
+
+#pragma mark Menu Item Handling
+- (IBAction)notifyContact:(id)sender
+{
+	AIListObject		*object;
+	AIListContact		*sendChoice;
+	AIChat				*chat;
+	NSAttributedString	*notificationMessage;
+	AIContentMessage	*messageContent;
+	
+	if (sender == notifyMenuItem) {
+		object = [[adium interfaceController] selectedListObject];
+	} else {
+		object = [[adium menuController] currentContextMenuObject];
+	}
+	
+	// Don't handle groups.
+	if (![object isKindOfClass:[AIListContact class]]) {
+		return;
+	}
+	
+	// Find the correct choice to send for a meta contact.
+	if ([object isKindOfClass:[AIMetaContact class]]) {
+		NSEnumerator	*enumerator = [[(AIMetaContact *)object listContacts] objectEnumerator];
+		AIListContact	*contact = nil;		
+		// Loop until the first MSN or Yahoo service.
+		while ((contact = [enumerator nextObject])) {
+			if ([[[contact service] serviceID] isEqualToString:@"MSN"] || [[[contact service] serviceID] isEqualToString:@"Yahoo!"]) {
+				sendChoice = contact;
+				break;
+			}
+		}
+	// Normal contact. This one is our choice.
+	} else {
+		sendChoice = (AIListContact *)object;
+	}
+	
+	// Pick the chat, or open a new one, with the contact.
+	if (!(chat = [[adium chatController] existingChatWithContact:sendChoice])) {
+		chat = [[adium chatController] chatWithContact:sendChoice];
+	}
+	
+	// Establish the message we're going to send.	
+	if ([[[sendChoice service] serviceID] isEqualToString:@"MSN"]) {
+		// MSN - /nudge
+		notificationMessage = [[[NSAttributedString alloc] initWithString:@"/nudge"] autorelease];
+	} else if ([[[sendChoice service] serviceID] isEqualToString:@"Yahoo!"]) {
+		// Yahoo - /buzz
+		notificationMessage = [[[NSAttributedString alloc] initWithString:@"/buzz"] autorelease];
+	} else {
+		// Wrong protocol?
+		return;
+	}
+	
+	// Create the content message.
+	messageContent = [AIContentMessage messageInChat:chat
+										  withSource:[sendChoice account]
+										 destination:sendChoice
+												date:nil
+											 message:notificationMessage
+										   autoreply:NO];
+	
+	// Send the message.
+	[[adium contentController] sendContentObject:messageContent];
+}
+
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	AIListObject *object;
+	
+	if (menuItem == notifyMenuItem) {
+		object = [[adium interfaceController] selectedListObject];
+	} else {
+		object = [[adium menuController] currentContextMenuObject];
+	}
+	
+	// Don't handle groups.
+	if (![object isKindOfClass:[AIListContact class]]) {
+		return NO;
+	}
+	
+	// Meta Contacts.
+	if ([object isKindOfClass:[AIMetaContact class]]) {
+		NSEnumerator	*enumerator = [[(AIMetaContact *)object listContacts] objectEnumerator];
+		AIListContact	*contact = nil;		
+		// Loop through the various contacts.
+		while ((contact = [enumerator nextObject])) {
+			// If this contact is Yahoo or MSN, we're good to go.
+			if ([[[contact service] serviceID] isEqualToString:@"MSN"] || [[[contact service] serviceID] isEqualToString:@"Yahoo!"]) {
+				return YES;
+			}
+		}
+	// Normal Contacts, if Yahoo or MSN, valid.
+	} else if ([[[object service] serviceID] isEqualToString:@"MSN"] || [[[object service] serviceID] isEqualToString:@"Yahoo!"]) {
+		return YES;
+	}
+	
+	// Default to no.
+	return NO;
 }
 
 #pragma mark Nudge/Buzz Handling
