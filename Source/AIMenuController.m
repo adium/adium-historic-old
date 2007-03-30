@@ -351,7 +351,9 @@
 	[menuItem_close setTitle:AILocalizedString(@"Close","Title for the close menu item")];
 	[menuItem_closeChat setTitle:AILocalizedString(@"Close Chat","Title for the close chat menu item")];
 	[menuItem_closeAllChats setTitle:AILocalizedString(@"Close All Chats","Title for the close all chats menu item")];
-	[menuItem_saveAs setTitle:[AILocalizedString(@"Save As",nil) stringByAppendingEllipsis]];
+	//XXX Until we can actually save anything as anything else, we shouldn't have this menu item. Thus, it is unlinked here, pending the fulfillment of ticket #8.
+//	[menuItem_saveAs setTitle:[AILocalizedString(@"Save As",nil) stringByAppendingEllipsis]];
+	[[menuItem_saveAs menu] removeItem:menuItem_saveAs];
 	[menuItem_pageSetup setTitle:[AILocalizedString(@"Page Setup",nil) stringByAppendingEllipsis]];
 	[menuItem_print setTitle:[AILocalizedString(@"Print",nil) stringByAppendingEllipsis]];
 
