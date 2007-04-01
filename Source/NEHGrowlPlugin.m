@@ -75,7 +75,7 @@
 {
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(adiumFinishedLaunching:)
-									   name:Adium_CompletedApplicationLoad
+									   name:AIApplicationDidFinishLoadingNotification
 									 object:nil];
 }
 
@@ -100,7 +100,7 @@
 			   afterDelay:0.00001];
 
 	[[adium notificationCenter] removeObserver:self
-										  name:Adium_CompletedApplicationLoad
+										  name:AIApplicationDidFinishLoadingNotification
 										object:nil];
 }
 

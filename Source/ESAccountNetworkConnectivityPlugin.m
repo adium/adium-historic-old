@@ -49,7 +49,7 @@
 	//Wait for Adium to finish launching to handle autoconnecting enabled accounts
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(adiumFinishedLaunching:)
-									   name:Adium_CompletedApplicationLoad
+									   name:AIApplicationDidFinishLoadingNotification
 									 object:nil];
 
 	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
@@ -149,6 +149,12 @@
 									 object:nil];
 }
 
+- (void)networkDidChange
+{
+	[[adium notificationCenter] postNotificationName:AINetworkDidChangeNotification
+											  object:nil];
+}
+
 /*!
  * @brief Network connectivity changed
  *
@@ -173,6 +179,12 @@
 			}
 		}
 	}
+	
+	//Collate reachability changes for multiple hosts into a single notification
+	[NSObject cancelPreviousPerformRequestsWithTarget:self
+											 selector:@selector(networkDidChange)
+											   object:nil];
+	[self performSelector:@selector(networkDidChange) withObject:nil afterDelay:1.0];
 }
 
 #pragma mark AIHostReachabilityObserver compliance
