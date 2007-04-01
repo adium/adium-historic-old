@@ -79,7 +79,8 @@
 #define FILE_TRANSFER_FAILED				@"FileTransfer_Failed"
 #define FILE_TRANSFER_COMPLETE				@"FileTransfer_Complete"
 
-#define Adium_Xtras_Changed					@"Adium_Xtras_Changed"
-#define Adium_CompletedApplicationLoad		@"Adium_CompletedApplicationLoad"
-#define Adium_WillTerminate					@"Adium_WillTerminate"
-#define Adium_ShowLogAtPath					@"Adium_ShowLogAtPath"
+#define AIXtrasDidChangeNotification				@"AIXtrasDidChange"
+#define AIApplicationDidFinishLoadingNotification	@"AIApplicationDidFinishLoading"
+#define AIAppWillTerminateNotification				@"AIAppWillTerminate"
+#define AIShowLogAtPathNotification					@"AIShowLogAtPath"
+#define AINetworkDidChangeNotification				@"AINetworkDidChange"
