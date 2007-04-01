@@ -171,6 +171,11 @@ static void ZombieKiller_Signal(int i)
 	while ((child_pid = waitpid(-1, &status, WNOHANG)) > 0);
 }
 
+- (void)networkDidChange:(NSNotification *)inNotification
+{
+	gaim_signal_emit(gaim_network_get_handle(), "network-configuration-changed", NULL);
+}
+
 - (void)initLibGaim
 {	
 	//Set the gaim user directory to be within this user's directory
@@ -205,6 +210,12 @@ static void ZombieKiller_Signal(int i)
 
 		sigaction(SIGCHLD, &act, NULL);
 	}
+	
+	//Observe for network changes to tell libgaim about it
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(networkDidChange:)
+									   name:AINetworkDidChangeNotification
+									 object:nil];
 }
 
 #pragma mark Lookup functions

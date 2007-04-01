@@ -41,6 +41,13 @@ extern "C" {
 
 typedef void (*GaimUPnPCallback) (gboolean success, gpointer data);
 
+
+/**
+ * Initialize UPnP
+ */
+void gaim_upnp_init(void);
+
+
 /**
  * Sends a discovery request to search for a UPnP enabled IGD that
  * contains the WANIPConnection service that will allow us to recieve the

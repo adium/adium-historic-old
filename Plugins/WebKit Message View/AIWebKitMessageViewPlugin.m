@@ -51,7 +51,7 @@
 	//Observe for installation of new styles
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(xtrasChanged:)
-									   name:Adium_Xtras_Changed
+									   name:AIXtrasDidChangeNotification
 									 object:nil];
 
 	//Register ourself as a message view plugin

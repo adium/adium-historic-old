@@ -96,7 +96,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 	//Observe for installation of new emoticon sets
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(xtrasChanged:)
-									   name:Adium_Xtras_Changed
+									   name:AIXtrasDidChangeNotification
 									 object:nil];
 }
 

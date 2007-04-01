@@ -7,6 +7,7 @@
 #include "Libgaim/dnsquery.h"
 #include "Libgaim/ft.h"
 #include "Libgaim/imgstore.h"
+#include "Libgaim/network.h"
 #include "Libgaim/notify.h"
 #include "Libgaim/plugin.h"
 #include "Libgaim/pounce.h"

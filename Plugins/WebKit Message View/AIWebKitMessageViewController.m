@@ -649,7 +649,6 @@ static NSArray *draggedTypes = nil;
  */
 - (void)_appendContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects
 {
-	AILog(@"Content is %@",content);
 	[webView stringByEvaluatingJavaScriptFromString:[messageStyle scriptForAppendingContent:content
 																					similar:contentIsSimilar
 																  willAddMoreContentObjects:willAddMoreContentObjects]];

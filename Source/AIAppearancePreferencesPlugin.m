@@ -253,7 +253,7 @@
 		path = [path stringByAppendingPathComponent:@"Contents/Resources/Data.plist"];
 	
 	if ([[[adium preferenceController] preferencesForGroup:preferenceGroup] writeToFile:path atomically:NO]) {
-		[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
+		[[adium notificationCenter] postNotificationName:AIXtrasDidChangeNotification object:extension];
 		
 		return YES;
 	} else {
@@ -279,7 +279,7 @@
 													   handler:nil];
 	
 	//The availability of an xtras just changed, since we deleted it... post a notification so we can update
-	[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
+	[[adium notificationCenter] postNotificationName:AIXtrasDidChangeNotification object:extension];
 	
 	return success;
 }
@@ -299,7 +299,7 @@
 											   handler:nil];
 	
 	//The availability of an xtras just changed, since we deleted it... post a notification so we can update
-	[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
+	[[adium notificationCenter] postNotificationName:AIXtrasDidChangeNotification object:extension];
 	
 	return success;
 }
@@ -320,7 +320,7 @@
 											   handler:nil];
 	
 	//The availability of an xtras just changed, since we deleted it... post a notification so we can update
-	[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
+	[[adium notificationCenter] postNotificationName:AIXtrasDidChangeNotification object:extension];
 	
 	return success;
 }

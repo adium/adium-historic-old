@@ -49,7 +49,7 @@
 	//Wait for Adium to finish launching before we perform further actions
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(adiumFinishedLaunching:)
-									   name:Adium_CompletedApplicationLoad
+									   name:AIApplicationDidFinishLoadingNotification
 									 object:nil];
 }
 

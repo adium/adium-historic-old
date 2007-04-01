@@ -139,7 +139,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 	//Wait for Adium to finish launching before we build the address book so the contact list will be ready
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(adiumFinishedLaunching:)
-									   name:Adium_CompletedApplicationLoad
+									   name:AIApplicationDidFinishLoadingNotification
 									 object:nil];
 	
 	//Update self immediately so the information is available to plugins and interface elements as they load
