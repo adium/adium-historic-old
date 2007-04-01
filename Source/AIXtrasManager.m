@@ -95,7 +95,7 @@ static AIXtrasManager *manager;
 		
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(xtrasChanged:)
-										   name:Adium_Xtras_Changed
+										   name:AIXtrasDidChangeNotification
 										 object:nil];
 		[NSBundle loadNibNamed:@"XtrasManager" owner:self];
 		[self windowDidLoad];
@@ -107,7 +107,7 @@ static AIXtrasManager *manager;
 - (void)windowWillClose:(NSNotification *)aNotification
 {
 	[[adium notificationCenter] removeObserver:self
-										  name:Adium_Xtras_Changed
+										  name:AIXtrasDidChangeNotification
 										object:nil];
 	
 	[categories release]; categories = nil;
@@ -325,7 +325,7 @@ int categorySort(id categoryA, id categoryB, void * context)
 		*/
 		NSEnumerator * extEnu = [pathExtensions objectEnumerator];
 		while ((path = [extEnu nextObject])) { //usually this will only run once
-			[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed
+			[[adium notificationCenter] postNotificationName:AIXtrasDidChangeNotification
 													  object:path];
 		}
 	}

@@ -92,7 +92,7 @@ typedef enum {
 	//Observe xtras changes
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(xtrasChanged:)
-									   name:Adium_Xtras_Changed
+									   name:AIXtrasDidChangeNotification
 									 object:nil];	
 	[self xtrasChanged:nil];
 }

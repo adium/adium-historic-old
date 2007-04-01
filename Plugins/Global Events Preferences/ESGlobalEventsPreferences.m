@@ -103,7 +103,7 @@
 	//Observe for installation of new sound sets and set up the sound set menu
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(xtrasChanged:)
-									   name:Adium_Xtras_Changed
+									   name:AIXtrasDidChangeNotification
 									 object:nil];
 
 	//This will build the sound set menu

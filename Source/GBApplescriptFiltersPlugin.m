@@ -111,7 +111,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 	//Observe for installation of new scripts
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(xtrasChanged:)
-									   name:Adium_Xtras_Changed
+									   name:AIXtrasDidChangeNotification
 									 object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(toolbarWillAddItem:)
