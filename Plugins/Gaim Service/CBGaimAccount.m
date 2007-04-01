@@ -1542,8 +1542,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 	//Create a fresh version of the account
     if ((account = gaim_account_new([self gaimAccountName], [self protocolPlugin]))) {
-		account->perm_deny = GAIM_PRIVACY_DENY_USERS;
-
 		[gaimThread addAdiumAccount:self];
 	} else {
 		AILog(@"Unable to create Libgaim account with name %s and protocol plugin %s",

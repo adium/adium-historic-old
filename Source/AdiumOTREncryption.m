@@ -83,7 +83,7 @@ TrustLevel otrg_plugin_context_to_trust(ConnContext *context);
 		//Wait for Adium to finish launching to prepare encryption so that accounts will be loaded
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(adiumFinishedLaunching:)
-										   name:Adium_CompletedApplicationLoad
+										   name:AIApplicationDidFinishLoadingNotification
 										 object:nil];
 		/*
 		gaim_signal_connect(conn_handle, "signed-on", otrg_plugin_handle,
@@ -139,7 +139,7 @@ TrustLevel otrg_plugin_context_to_trust(ConnContext *context);
 	
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(adiumWillTerminate:)
-									   name:Adium_WillTerminate
+									   name:AIAppWillTerminateNotification
 									 object:nil];
 	
 	[[adium notificationCenter] addObserver:self

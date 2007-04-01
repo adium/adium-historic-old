@@ -71,7 +71,7 @@
 	
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(adiumWillTerminate:)
-									   name:Adium_WillTerminate
+									   name:AIAppWillTerminateNotification
 									 object:nil];
 
 	//Ignore menu item for contacts in group chats

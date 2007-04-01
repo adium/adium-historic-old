@@ -452,7 +452,7 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 	
 	//If we were asked to open a log at launch, do it now
 	if (queuedLogPathToShow) {
-		[[self notificationCenter] postNotificationName:Adium_ShowLogAtPath
+		[[self notificationCenter] postNotificationName:AIShowLogAtPathNotification
 												 object:queuedLogPathToShow];
 		[queuedLogPathToShow release];
 	}
@@ -461,7 +461,7 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 
 	[self configureHelp];
 	
-	[[self notificationCenter] postNotificationName:Adium_CompletedApplicationLoad object:nil];
+	[[self notificationCenter] postNotificationName:AIApplicationDidFinishLoadingNotification object:nil];
 	[pool release];
 }
 
@@ -471,7 +471,7 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 	//Take no action if we didn't complete the application load
 	if (!completedApplicationLoad) return;
 
-	[[self notificationCenter] postNotificationName:Adium_WillTerminate object:nil];
+	[[self notificationCenter] postNotificationName:AIAppWillTerminateNotification object:nil];
 	
 	//Close the preference window before we shut down the plugins that compose it
 	[preferenceController closePreferenceWindow:nil];
@@ -654,7 +654,7 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 		([extension caseInsensitiveCompare:@"chatlog"] == NSOrderedSame)) {
 		if (completedApplicationLoad) {
 			//Request display of the log immediately if Adium is ready
-			[[self notificationCenter] postNotificationName:Adium_ShowLogAtPath
+			[[self notificationCenter] postNotificationName:AIShowLogAtPathNotification
 													 object:filename];
 		} else {
 			//Queue the request until Adium is done launching if Adium is not ready
@@ -794,7 +794,7 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 			}
 		}
 		
-		[[self notificationCenter] postNotificationName:Adium_Xtras_Changed
+		[[self notificationCenter] postNotificationName:AIXtrasDidChangeNotification
 												 object:[[filename lastPathComponent] pathExtension]];
 		
         buttonPressed = NSRunInformationalAlertPanel(alertTitle,alertMsg,nil,prefsButton,nil);

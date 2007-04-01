@@ -182,7 +182,7 @@ Class LogViewerWindowControllerClass = NULL;
 	
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(showLogNotification:)
-									   name:Adium_ShowLogAtPath
+									   name:AIShowLogAtPathNotification
 									 object:nil];
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(chatWillDelete:)
