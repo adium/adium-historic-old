@@ -279,10 +279,6 @@
 	[_backgroundColorWithOpacity release]; _backgroundColorWithOpacity = nil;
 	[_rowColorWithOpacity release]; _rowColorWithOpacity = nil;
 	
-	//Turn our shadow drawing hack on if they're going to be visible through the transparency
-	[self setUpdateShadowsWhileDrawing:((backgroundOpacity < 0.9) ||
-										(windowStyle == AIContactListWindowStyleContactBubbles_Fitted))];
-
 	//Mockie and pillow lists always require a non-opaque window, other lists only require a non-opaque window when
 	//the user has requested transparency.
 	if (windowStyle == AIContactListWindowStyleGroupBubbles || windowStyle == AIContactListWindowStyleContactBubbles || windowStyle == AIContactListWindowStyleContactBubbles_Fitted) {
@@ -290,6 +286,9 @@
 	} else {
 		[[self window] setOpaque:(backgroundOpacity == 1.0)];
 	}
+	
+	//Turn our shadow drawing hack on if they're going to be visible through the transparency
+	[self setUpdateShadowsWhileDrawing:(![[self window] isOpaque])];
 
 	[self setNeedsDisplay:YES];
 
