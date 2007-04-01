@@ -196,6 +196,14 @@ unsigned short gaim_network_get_port_from_fd(int fd);
  */
 gboolean gaim_network_is_available(void);
 
+
+/**
+ * Get the handle for the network system
+ *
+ * @return the handle to the network system
+ */
+void *gaim_network_get_handle(void);
+
 /**
  * Initializes the network subsystem.
  */
