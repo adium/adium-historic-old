@@ -48,5 +48,6 @@ Vinay Venkatesh
 Wesley Underwood
 Zachary West
 Ofri Wolfus
+Brian Dickman
 
 If you have contributed to Adium and are not on this list, please contact us.
