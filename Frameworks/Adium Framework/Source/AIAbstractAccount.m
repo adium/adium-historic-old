@@ -94,7 +94,7 @@
 		//Some actions must wait until Adium is finished loading so that all plugins are available
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(adiumDidLoad:)
-										   name:Adium_CompletedApplicationLoad
+										   name:AIApplicationDidFinishLoadingNotification
 										 object:nil];
 
 		//Handle the preference changed monitoring (for account status) for our subclass
@@ -135,7 +135,7 @@
 	[self updateStatusForKey:KEY_ACCOUNT_DISPLAY_NAME];
 
 	[[adium notificationCenter] removeObserver:self 
-										  name:Adium_CompletedApplicationLoad
+										  name:AIApplicationDidFinishLoadingNotification
 										object:nil];
 }
    
