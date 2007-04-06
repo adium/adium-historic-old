@@ -668,6 +668,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	if (secondaryString) {
 		if (([secondaryString rangeOfString:@"Could not add the buddy 1 for an unknown reason"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Your screen name is currently formatted as follows"].location != NSNotFound) ||
+			([secondaryString rangeOfString:@"Unable to format screen name"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Error reading from Switchboard server"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"0x001a: Unknown error"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Not supported by host"].location != NSNotFound) ||
