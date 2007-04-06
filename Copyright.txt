@@ -29,6 +29,7 @@ Ian Krieg
 Thomas Kunze
 Scott Lamb
 Jack M.H. Lin
+Paul R. Livesey
 Sam McCandlish
 Nicola Del Monaco
 Jeffrey Melloy

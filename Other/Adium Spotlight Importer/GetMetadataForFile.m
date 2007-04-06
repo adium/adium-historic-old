@@ -136,7 +136,7 @@ Boolean GetMetadataForXMLLog(NSMutableDictionary *attributes, NSString *pathToFi
 		[(NSMutableDictionary *)attributes setObject:authorsArray
 											  forKey:(NSString *)kMDItemAuthors];
 		
-		NSArray *contentArray = [xmlDoc nodesForXPath:@"//message/*/text()"
+		NSArray *contentArray = [xmlDoc nodesForXPath:@"//message//text()"
 												error:&err];
 		NSString *contentString = [contentArray componentsJoinedByString:@" "];
 		
@@ -239,7 +239,7 @@ NSString *GetTextContentForXMLLog(NSString *pathToFile)
 	xmlDoc = [[NSXMLDocument alloc] initWithContentsOfURL:furl
 												  options:NSXMLNodePreserveCDATA
 													error:&err];    
-	NSArray *contentArray = [xmlDoc nodesForXPath:@"//*/*/text()"
+	NSArray *contentArray = [xmlDoc nodesForXPath:@"//message//text()"
 											error:&err];
 	contentString = [contentArray componentsJoinedByString:@" "];
 	[xmlDoc release];
