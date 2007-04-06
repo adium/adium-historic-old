@@ -106,6 +106,8 @@
 {
 	//Center our window if we're not a sheet (or opening a sheet failed)
 	[[self window] center];
+	
+	[[self window] setTitle:AILocalizedString(@"Edit Account", nil)];
 
 	//Account Overview
 	[textField_serviceName setStringValue:[[account service] longDescription]];
