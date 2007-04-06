@@ -578,7 +578,13 @@
 
 - (AIChat *)activeChat
 {
-	return [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] chat];
+	AIMessageTabViewItem *selectedTabViewItem = (AIMessageTabViewItem *)[tabView_messages selectedTabViewItem];
+	
+	if (![selectedTabViewItem isKindOfClass:[AIMessageTabViewItem class]]) {
+		return nil;
+	}
+	
+	return [selectedTabViewItem chat];
 }
 
 //AISplitView Delegate -------------------------------------------------------------------------------------------------
