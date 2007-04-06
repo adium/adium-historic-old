@@ -194,6 +194,10 @@ extern gchar *oscar_encoding_extract(const char *encoding);
 	return statusID;
 }
 
+- (BOOL)shouldSetITMSLinkForNowPlayingStatus
+{
+	return YES;
+}
 
 #pragma mark Contact notes
 -(NSString *)serversideCommentForContact:(AIListContact *)theContact

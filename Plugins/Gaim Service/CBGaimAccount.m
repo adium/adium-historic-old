@@ -1783,6 +1783,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	return YES;
 }
 
+- (BOOL)shouldSetITMSLinkForNowPlayingStatus
+{
+	return NO;
+}
+
 /*!
  * @brief Perform the setting of a status state
  *
@@ -1812,15 +1817,26 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		statusMessage = [NSAttributedString stringWithString:[[adium statusController] descriptionForStateOfStatus:statusState]];
 	}
 
-	if ([statusMessage length]	&& ([statusState specialStatusType] == AINowPlayingSpecialStatusType) && [self shouldAddMusicalNoteToNowPlayingStatus]) {
+	if ([statusMessage length]	&& ([statusState specialStatusType] == AINowPlayingSpecialStatusType)) {
+		if ([self shouldAddMusicalNoteToNowPlayingStatus]) {
 #define MUSICAL_NOTE_AND_SPACE [NSString stringWithUTF8String:"\xe2\x99\xab "]
-		NSMutableAttributedString *temporaryStatusMessage;
-		temporaryStatusMessage = [[[NSMutableAttributedString alloc] initWithString:MUSICAL_NOTE_AND_SPACE] autorelease];
-		[temporaryStatusMessage appendAttributedString:statusMessage];
-
-		statusMessage = temporaryStatusMessage;
+			NSMutableAttributedString *temporaryStatusMessage;
+			temporaryStatusMessage = [[[NSMutableAttributedString alloc] initWithString:MUSICAL_NOTE_AND_SPACE] autorelease];
+			[temporaryStatusMessage appendAttributedString:statusMessage];
+			
+			statusMessage = temporaryStatusMessage;
+		}
+		
+		if ([self shouldSetITMSLinkForNowPlayingStatus]) {
+			//Grab the message's subtext, which is the song link if we're using the Current iTunes Track status
+			NSString *itmsStoreLink	= [statusMessage attribute:@"AIMessageSubtext" atIndex:0 effectiveRange:NULL];
+			if (itmsStoreLink) {
+				[arguments setObject:itmsStoreLink
+							  forKey:@"itmsurl"];
+			}
+		}		
 	}
-
+	
 	//Encode the status message if we have one
 	encodedStatusMessage = (statusMessage ? 
 							[self encodedAttributedString:statusMessage

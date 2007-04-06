@@ -126,7 +126,7 @@ static void buddy_status_changed_cb(GaimBuddy *buddy, GaimStatus *oldstatus, Gai
 	NSNumber			*statusTypeNumber;
 	NSString			*statusName;
 	NSAttributedString	*statusMessage;	
-	BOOL				isAvailable;
+	BOOL				isAvailable, isMobile;
 
 	GaimDebug(@"buddy_status_changed_cb: %@ (%i): name %s, message %s",
 			  theContact,
@@ -136,7 +136,7 @@ static void buddy_status_changed_cb(GaimBuddy *buddy, GaimStatus *oldstatus, Gai
 
 	isAvailable = ((gaim_status_type_get_primitive(gaim_status_get_type(status)) == GAIM_STATUS_AVAILABLE) ||
 				   (gaim_status_type_get_primitive(gaim_status_get_type(status)) == GAIM_STATUS_OFFLINE));
-
+	isMobile = gaim_presence_is_status_primitive_active(gaim_buddy_get_presence(buddy), GAIM_STATUS_MOBILE);
 	statusTypeNumber = [NSNumber numberWithInt:(isAvailable ? 
 												AIAvailableStatusType : 
 												AIAwayStatusType)];
@@ -146,8 +146,8 @@ static void buddy_status_changed_cb(GaimBuddy *buddy, GaimStatus *oldstatus, Gai
 
 	//XXX This is done so MSN can ignore it since it's currently buggy in libgaim
 	[account updateMobileStatus:theContact
-					   withData:(gaim_presence_is_status_primitive_active(gaim_buddy_get_presence(buddy), GAIM_STATUS_MOBILE))];
-
+					   withData:isMobile];
+	
 	//Will also notify
 	[account updateStatusForContact:theContact
 					   toStatusType:statusTypeNumber
