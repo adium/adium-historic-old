@@ -2183,7 +2183,24 @@ static int toArraySort(id itemA, id itemB, void *context)
 
 - (void)adiumPrint:(id)sender
 {
-	[textView_content print:sender];
+	NSTextView			*printView;
+    NSPrintOperation    *printOperation;
+    NSPrintInfo			*printInfo = [NSPrintInfo sharedPrintInfo];
+
+    [printInfo setHorizontalPagination:NSFitPagination];
+    [printInfo setHorizontallyCentered:NO];
+    [printInfo setVerticallyCentered:NO];
+    
+	printView = [[NSTextView alloc] initWithFrame:[[NSPrintInfo sharedPrintInfo] imageablePageBounds]];
+    [printView setVerticallyResizable:YES];
+    [printView setHorizontallyResizable:NO];
+	
+    [[printView textStorage] setAttributedString:[textView_content textStorage]];
+	
+    printOperation = [NSPrintOperation printOperationWithView:printView printInfo:printInfo];
+    [printOperation runOperationModalForWindow:[self window] delegate:nil
+								didRunSelector:NULL contextInfo:NULL];
+	[printView release];
 }
 
 - (BOOL)validatePrintMenuItem:(id <NSMenuItem>)menuItem
