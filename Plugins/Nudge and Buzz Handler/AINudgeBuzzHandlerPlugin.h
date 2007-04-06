@@ -23,8 +23,10 @@
 @interface AINudgeBuzzHandlerPlugin : AIPlugin <AIEventHandler> {
 	NSMenuItem			*notifyMenuItem;
 	NSMenuItem			*notifyContextualMenuItem;
+	
+	NSImage				*notifyToolbarIcon;
 }
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem;
-
+- (BOOL)validateToolbarItem:(NSToolbarItem *)senderItem;
 @end

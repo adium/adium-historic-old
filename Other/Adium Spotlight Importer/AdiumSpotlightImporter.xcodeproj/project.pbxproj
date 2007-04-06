@@ -40,7 +40,7 @@
 		3459CBB90A25FC0800ECC256 /* GetMetadataForHTMLLog-Additions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "GetMetadataForHTMLLog-Additions.h"; sourceTree = "<group>"; };
 		3459CBBA0A25FC0800ECC256 /* GetMetadataForHTMLLog-Additions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "GetMetadataForHTMLLog-Additions.m"; sourceTree = "<group>"; };
 		3459CBC70A25FEA200ECC256 /* AdiumSpotlightImporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AdiumSpotlightImporter.h; sourceTree = "<group>"; };
-		345AF7D00A5D559900D7DA6F /* AISpotlightImporterTest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "compiled.mach-o.executable"; path = AISpotlightImporterTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		345AF7D00A5D559900D7DA6F /* AISpotlightImporterTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AISpotlightImporterTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		345AF91F0A5D560600D7DA6F /* maintest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = maintest.m; sourceTree = "<group>"; };
 		34611BEF09B662FF00870036 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		34611BF509B664FC00870036 /* GetMetadataForHTMLLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GetMetadataForHTMLLog.h; sourceTree = "<group>"; };

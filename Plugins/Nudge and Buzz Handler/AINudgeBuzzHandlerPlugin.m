@@ -19,17 +19,44 @@
 #import <Adium/AIMenuControllerProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIToolbarControllerProtocol.h>
 
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AIMetaContact.h>
 
+#import <AIUtilities/AIToolbarUtilities.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 
 #import "AINudgeBuzzHandlerPlugin.h"
 
-#define NOTIFICATION			AILocalizedString(@"Send Notification", "Send notification (nudge or buzz) menu item")
+#define NOTIFICATION				AILocalizedString(@"Send Notification", "Send notification (nudge or buzz) menu item")
+#define TOOLBAR_NOTIFY_IDENTIFIER	@"NotifyParticipants"
+
+@interface AINudgeBuzzHandlerPlugin(PRIVATE)
+- (BOOL)contactDoesSupportNotification:(AIListObject *)object;
+- (IBAction)notifyParticipants:(NSToolbarItem *)senderItem;
+- (AIChat *)chatForToolbar:(NSToolbarItem *)senderItem;
+
+// AIListObject interaction
+- (void)sendNotification:(AIListObject *)object;
+
+// Notifications.
+- (void)nudgeBuzzDidOccur:(NSNotification *)notification;
+
+// Event processing.
+- (NSString *)shortDescriptionForEventID:(NSString *)eventID;
+- (NSString *)globalShortDescriptionForEventID:(NSString *)eventID;
+- (NSString *)englishGlobalShortDescriptionForEventID:(NSString *)eventID;
+- (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject;
+- (NSString *)naturalLanguageDescriptionForEventID:(NSString *)eventID
+										listObject:(AIListObject *)listObject
+										  userInfo:(id)userInfo
+									includeSubject:(BOOL)includeSubject;
+- (NSImage *)imageForEventID:(NSString *)eventID;
+@end
 
 @implementation AINudgeBuzzHandlerPlugin
 
@@ -63,6 +90,22 @@
 	[[adium menuController] addMenuItem:notifyMenuItem toLocation:LOC_Contact_Action];
 	[[adium menuController] addContextualMenuItem:notifyContextualMenuItem toLocation:Context_Contact_Action];
 	
+	// Load the toolbar icon.
+	notifyToolbarIcon = [NSImage imageNamed:@"notify.png" forClass:[self class]];
+	
+	// Create the toolbar item
+	NSToolbarItem *chatItem = [AIToolbarUtilities toolbarItemWithIdentifier:TOOLBAR_NOTIFY_IDENTIFIER
+																	  label:NOTIFICATION
+															   paletteLabel:NOTIFICATION
+																	toolTip:AILocalizedString(@"Send a notification to a contact", nil)
+																	 target:self
+															settingSelector:@selector(setImage:)
+																itemContent:notifyToolbarIcon
+																	 action:@selector(notifyParticipants:)
+																	   menu:nil];
+	
+	// Register the toolbar into message windows
+	[[adium toolbarController] registerToolbarItem:chatItem forToolbarType:@"MessageWindow"];
 }
 
 - (void)uninstallPlugin
@@ -73,20 +116,116 @@
 	[notifyContextualMenuItem release];
 }
 
+#pragma mark Toolbar Handling
+- (IBAction)notifyParticipants:(NSToolbarItem *)senderItem
+{
+	AIChat *chat = [self chatForToolbar:senderItem];
+	
+	// Don't handle group chats.
+	if (!chat || [chat isGroupChat]) {
+		return;
+	}
+	
+	// Send a notification to this contact.
+	[self sendNotification:[chat listObject]];
+}
+
+- (BOOL)validateToolbarItem:(NSToolbarItem *)senderItem
+{
+	// Get the chat for this window.
+	AIChat *chat = [self chatForToolbar:senderItem];
+	
+	// Don't handle group chats.
+	if (!chat || [chat isGroupChat]) {
+		return NO;
+	}
+	
+	// Return if the contact can be notified.
+	return [self contactDoesSupportNotification:[chat listObject]];
+}
+
+- (AIChat *)chatForToolbar:(NSToolbarItem *)senderItem
+{
+	NSEnumerator	*windowEnumerator = [[NSApp windows] objectEnumerator];
+	NSWindow		*currentWindow = nil;
+	NSToolbar		*windowToolbar = nil;
+	NSToolbar		*senderToolbar = [senderItem toolbar];
+
+	//for each open window
+	while ((currentWindow = [windowEnumerator nextObject])) {
+		//if it has a toolbar & it's ours
+		if ((windowToolbar = [currentWindow toolbar]) && (windowToolbar == senderToolbar)) {
+			return [[adium interfaceController] activeChatInWindow:currentWindow];
+		}
+	}
+	
+	return nil;
+}
+
 #pragma mark Menu Item Handling
 - (IBAction)notifyContact:(id)sender
 {
-	AIListObject		*object;
-	AIListContact		*sendChoice;
-	AIChat				*chat;
-	NSAttributedString	*notificationMessage;
-	AIContentMessage	*messageContent;
+	AIListObject *object;
 	
 	if (sender == notifyMenuItem) {
 		object = [[adium interfaceController] selectedListObject];
 	} else {
 		object = [[adium menuController] currentContextMenuObject];
 	}
+	
+	[self sendNotification:object];
+	
+}
+
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	AIListObject *object;
+	
+	if (menuItem == notifyMenuItem) {
+		object = [[adium interfaceController] selectedListObject];
+	} else {
+		object = [[adium menuController] currentContextMenuObject];
+	}
+	
+	return [self contactDoesSupportNotification:object];
+}
+
+#pragma mark Validation Checking
+- (BOOL)contactDoesSupportNotification:(AIListObject *)object
+{
+	// Don't handle groups.
+	if (![object isKindOfClass:[AIListContact class]]) {
+		return NO;
+	}
+	
+	// Meta Contacts.
+	if ([object isKindOfClass:[AIMetaContact class]]) {
+		NSEnumerator	*enumerator = [[(AIMetaContact *)object listContacts] objectEnumerator];
+		AIListContact	*contact = nil;		
+		// Loop through the various contacts.
+		while ((contact = [enumerator nextObject])) {
+			// If this contact is Yahoo or MSN, we're good to go.
+			if ([[[contact service] serviceID] isEqualToString:@"MSN"] || [[[contact service] serviceID] isEqualToString:@"Yahoo!"]) {
+				return YES;
+			}
+		}
+		// Normal Contacts, if Yahoo or MSN, valid.
+	} else if ([[[object service] serviceID] isEqualToString:@"MSN"] || [[[object service] serviceID] isEqualToString:@"Yahoo!"]) {
+		return YES;
+	}
+	
+	// Default to no.
+	return NO;	
+}
+
+#pragma mark Nudge/Buzz Handling
+
+- (void)sendNotification:(AIListObject *)object
+{
+	AIListContact		*sendChoice;
+	AIChat				*chat;
+	NSAttributedString	*notificationMessage;
+	AIContentMessage	*messageContent;
 	
 	// Don't handle groups.
 	if (![object isKindOfClass:[AIListContact class]]) {
@@ -99,12 +238,12 @@
 		AIListContact	*contact = nil;		
 		// Loop until the first MSN or Yahoo service.
 		while ((contact = [enumerator nextObject])) {
-			if ([[[contact service] serviceID] isEqualToString:@"MSN"] || [[[contact service] serviceID] isEqualToString:@"Yahoo!"]) {
+			if ([self contactDoesSupportNotification:contact]) {
 				sendChoice = contact;
 				break;
 			}
 		}
-	// Normal contact. This one is our choice.
+		// Normal contact. This one is our choice.
 	} else {
 		sendChoice = (AIListContact *)object;
 	}
@@ -137,43 +276,6 @@
 	// Send the message.
 	[[adium contentController] sendContentObject:messageContent];
 }
-
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
-{
-	AIListObject *object;
-	
-	if (menuItem == notifyMenuItem) {
-		object = [[adium interfaceController] selectedListObject];
-	} else {
-		object = [[adium menuController] currentContextMenuObject];
-	}
-	
-	// Don't handle groups.
-	if (![object isKindOfClass:[AIListContact class]]) {
-		return NO;
-	}
-	
-	// Meta Contacts.
-	if ([object isKindOfClass:[AIMetaContact class]]) {
-		NSEnumerator	*enumerator = [[(AIMetaContact *)object listContacts] objectEnumerator];
-		AIListContact	*contact = nil;		
-		// Loop through the various contacts.
-		while ((contact = [enumerator nextObject])) {
-			// If this contact is Yahoo or MSN, we're good to go.
-			if ([[[contact service] serviceID] isEqualToString:@"MSN"] || [[[contact service] serviceID] isEqualToString:@"Yahoo!"]) {
-				return YES;
-			}
-		}
-	// Normal Contacts, if Yahoo or MSN, valid.
-	} else if ([[[object service] serviceID] isEqualToString:@"MSN"] || [[[object service] serviceID] isEqualToString:@"Yahoo!"]) {
-		return YES;
-	}
-	
-	// Default to no.
-	return NO;
-}
-
-#pragma mark Nudge/Buzz Handling
 
 // Echoes the buzz event to the window and generates the event.
 - (void)nudgeBuzzDidOccur:(NSNotification *)notification
