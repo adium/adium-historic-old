@@ -234,7 +234,7 @@
 		AIService	*service = [[adium accountController] serviceWithUniqueID:serviceID];
 		NSString	*accountUID = [accountDict objectForKey:ACCOUNT_UID];
 		NSString	*internalObjectID = [accountDict objectForKey:ACCOUNT_OBJECT_ID];
-		
+
         //Create the account and add it to our array
         if (service && accountUID && [accountUID length]) {
 			if ((newAccount = [service accountWithUID:accountUID internalObjectID:internalObjectID])) {
@@ -260,7 +260,15 @@
 - (NSString *)_upgradeServiceID:(NSString *)serviceID forAccountDict:(NSDictionary *)accountDict
 {
 	//Libgaim
-	if ([serviceID rangeOfString:@"LIBGAIM" options:(NSLiteralSearch | NSAnchoredSearch | NSBackwardsSearch)].location != NSNotFound) {
+	if ([serviceID rangeOfString:@"libgaim" options:(NSLiteralSearch | NSAnchoredSearch)].location != NSNotFound) {
+		NSMutableString *newServiceID = [serviceID mutableCopy];
+		[newServiceID replaceOccurrencesOfString:@"libgaim"
+									  withString:@"libpurple"
+										 options:(NSLiteralSearch | NSAnchoredSearch)
+										   range:NSMakeRange(0, [newServiceID length])];
+		serviceID = [newServiceID autorelease];
+
+	} else if ([serviceID rangeOfString:@"LIBGAIM" options:(NSLiteralSearch | NSAnchoredSearch | NSBackwardsSearch)].location != NSNotFound) {
 		if ([serviceID isEqualToString:@"AIM-LIBGAIM"]) {
 			NSString 	*uid = [accountDict objectForKey:ACCOUNT_UID];
 			if (uid && [uid length]) {
