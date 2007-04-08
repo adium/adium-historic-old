@@ -4,7 +4,7 @@
  *
  * purple
  *
- * Gaim is the legal property of its developers, whose names are too numerous
+ * Purple is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -22,8 +22,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef _GAIM_NETWORK_H_
-#define _GAIM_NETWORK_H_
+#ifndef _PURPLE_NETWORK_H_
+#define _PURPLE_NETWORK_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -34,9 +34,9 @@ extern "C" {
 /**************************************************************************/
 /*@{*/
 
-typedef struct _GaimNetworkListenData GaimNetworkListenData;
+typedef struct _PurpleNetworkListenData PurpleNetworkListenData;
 
-typedef void (*GaimNetworkListenCallback) (int listenfd, gpointer data);
+typedef void (*PurpleNetworkListenCallback) (int listenfd, gpointer data);
 
 /**
  * Converts a dot-decimal IP address to an array of unsigned
@@ -109,11 +109,11 @@ const char *purple_network_get_my_ip(int fd);
  * Attempts to open a listening port ONLY on the specified port number.
  * You probably want to use purple_network_listen_range() instead of this.
  * This function is useful, for example, if you wanted to write a telnet
- * server as a Gaim plugin, and you HAD to listen on port 23.  Why anyone
+ * server as a Purple plugin, and you HAD to listen on port 23.  Why anyone
  * would want to do that is beyond me.
  *
  * This opens a listening port. The caller will want to set up a watcher
- * of type GAIM_INPUT_READ on the fd returned in cb. It will probably call
+ * of type PURPLE_INPUT_READ on the fd returned in cb. It will probably call
  * accept in the watcher callback, and then possibly remove the watcher and close
  * the listening socket, and add a new watcher on the new socket accept
  * returned.
@@ -130,8 +130,8 @@ const char *purple_network_get_my_ip(int fd);
  *         the pending listener, or NULL if unable to obtain a local
  *         socket to listen on.
  */
-GaimNetworkListenData *purple_network_listen(unsigned short port,
-		int socket_type, GaimNetworkListenCallback cb, gpointer cb_data);
+PurpleNetworkListenData *purple_network_listen(unsigned short port,
+		int socket_type, PurpleNetworkListenCallback cb, gpointer cb_data);
 
 /**
  * Opens a listening port selected from a range of ports.  The range of
@@ -142,7 +142,7 @@ GaimNetworkListenData *purple_network_listen(unsigned short port,
  * Otherwise a port is chosen at random by the operating system.
  *
  * This opens a listening port. The caller will want to set up a watcher
- * of type GAIM_INPUT_READ on the fd returned in cb. It will probably call
+ * of type PURPLE_INPUT_READ on the fd returned in cb. It will probably call
  * accept in the watcher callback, and then possibly remove the watcher and close
  * the listening socket, and add a new watcher on the new socket accept
  * returned.
@@ -163,9 +163,9 @@ GaimNetworkListenData *purple_network_listen(unsigned short port,
  *         the pending listener, or NULL if unable to obtain a local
  *         socket to listen on.
  */
-GaimNetworkListenData *purple_network_listen_range(unsigned short start,
+PurpleNetworkListenData *purple_network_listen_range(unsigned short start,
 		unsigned short end, int socket_type,
-		GaimNetworkListenCallback cb, gpointer cb_data);
+		PurpleNetworkListenCallback cb, gpointer cb_data);
 
 /**
  * This can be used to cancel any in-progress listener connection
@@ -175,14 +175,14 @@ GaimNetworkListenData *purple_network_listen_range(unsigned short start,
  * @param listen_data This listener attempt will be canceled and
  *        the struct will be freed.
  */
-void purple_network_listen_cancel(GaimNetworkListenData *listen_data);
+void purple_network_listen_cancel(PurpleNetworkListenData *listen_data);
 
 /**
  * Gets a port number from a file descriptor.
  *
  * @param fd The file descriptor. This should be a tcp socket. The current
  *           implementation probably dies on anything but IPv4. Perhaps this
- *           possible bug will inspire new and valuable contributors to Gaim.
+ *           possible bug will inspire new and valuable contributors to Purple.
  * @return The port number, in host byte order.
  */
 unsigned short purple_network_get_port_from_fd(int fd);
@@ -195,7 +195,6 @@ unsigned short purple_network_get_port_from_fd(int fd);
  * @return TRUE if the Internet is available
  */
 gboolean purple_network_is_available(void);
-
 
 /**
  * Get the handle for the network system
@@ -220,4 +219,4 @@ void purple_network_uninit(void);
 }
 #endif
 
-#endif /* _GAIM_NETWORK_H_ */
+#endif /* _PURPLE_NETWORK_H_ */

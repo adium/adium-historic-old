@@ -65,50 +65,50 @@ typedef struct _PurpleCircBuffer {
  * @return The new PurpleCircBuffer. This should be freed with
  *         purple_circ_buffer_destroy when you are done with it
  */
-GaimCircBuffer *purple_circ_buffer_new(gsize growsize);
+PurpleCircBuffer *purple_circ_buffer_new(gsize growsize);
 
 /**
- * Dispose of the GaimCircBuffer and free any memory used by it (including any
+ * Dispose of the PurpleCircBuffer and free any memory used by it (including any
  * memory used by the internal buffer).
  *
- * @param buf The GaimCircBuffer to free
+ * @param buf The PurpleCircBuffer to free
  */
-void purple_circ_buffer_destroy(GaimCircBuffer *buf);
+void purple_circ_buffer_destroy(PurpleCircBuffer *buf);
 
 /**
- * Append data to the GaimCircBuffer.  This will grow the internal
+ * Append data to the PurpleCircBuffer.  This will grow the internal
  * buffer to fit the added data, if needed.
  *
- * @param buf The GaimCircBuffer to which to append the data
+ * @param buf The PurpleCircBuffer to which to append the data
  * @param src pointer to the data to copy into the buffer
  * @param len number of bytes to copy into the buffer
  */
-void purple_circ_buffer_append(GaimCircBuffer *buf, gconstpointer src, gsize len);
+void purple_circ_buffer_append(PurpleCircBuffer *buf, gconstpointer src, gsize len);
 
 /**
  * Determine the maximum number of contiguous bytes that can be read from the
- * GaimCircBuffer.
+ * PurpleCircBuffer.
  * Note: This may not be the total number of bytes that are buffered - a
  * subsequent call after calling purple_circ_buffer_mark_read() may indicate more
  * data is available to read.
  *
- * @param buf the GaimCircBuffer for which to determine the maximum contiguous
+ * @param buf the PurpleCircBuffer for which to determine the maximum contiguous
  *            bytes that can be read.
  *
- * @return the number of bytes that can be read from the GaimCircBuffer
+ * @return the number of bytes that can be read from the PurpleCircBuffer
  */
-gsize purple_circ_buffer_get_max_read(const GaimCircBuffer *buf);
+gsize purple_circ_buffer_get_max_read(const PurpleCircBuffer *buf);
 
 /**
  * Mark the number of bytes that have been read from the buffer.
  *
- * @param buf The GaimCircBuffer to mark bytes read from
+ * @param buf The PurpleCircBuffer to mark bytes read from
  * @param len The number of bytes to mark as read
  *
  * @return TRUE if we successfully marked the bytes as having been read, FALSE
  *         otherwise.
  */
-gboolean purple_circ_buffer_mark_read(GaimCircBuffer *buf, gsize len);
+gboolean purple_circ_buffer_mark_read(PurpleCircBuffer *buf, gsize len);
 
 #ifdef __cplusplus
 }

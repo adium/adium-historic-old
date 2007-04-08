@@ -4,7 +4,7 @@
  *
  * purple
  *
- * Gaim is the legal property of its developers, whose names are too numerous
+ * Purple is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -23,11 +23,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#ifndef _GAIM_IMGSTORE_H_
-#define _GAIM_IMGSTORE_H_
+#ifndef _PURPLE_IMGSTORE_H_
+#define _PURPLE_IMGSTORE_H_
 
-struct _GaimStoredImage;
-typedef struct _GaimStoredImage GaimStoredImage;
+struct _PurpleStoredImage;
+typedef struct _PurpleStoredImage PurpleStoredImage;
 
 #ifdef __cplusplus
 extern "C" {
@@ -54,7 +54,7 @@ int purple_imgstore_add(const void *data, size_t size, const char *filename);
  *
  * @return A pointer to the requested image, or NULL if it was not found.
  */
-GaimStoredImage *purple_imgstore_get(int id);
+PurpleStoredImage *purple_imgstore_get(int id);
 
 /**
  * Retrieves a pointer to the image's data.
@@ -64,7 +64,7 @@ GaimStoredImage *purple_imgstore_get(int id);
  * @return A pointer to the data, which must not
  *         be freed or modified.
  */
-gpointer purple_imgstore_get_data(GaimStoredImage *i);
+gpointer purple_imgstore_get_data(PurpleStoredImage *i);
 
 /**
  * Retrieves the length of the image's data.
@@ -74,7 +74,7 @@ gpointer purple_imgstore_get_data(GaimStoredImage *i);
  * @return The size of the data that the pointer returned by
  *         purple_imgstore_get_data points to.
  */
-size_t purple_imgstore_get_size(GaimStoredImage *i);
+size_t purple_imgstore_get_size(PurpleStoredImage *i);
 
 /**
  * Retrieves a pointer to the image's filename.
@@ -84,7 +84,7 @@ size_t purple_imgstore_get_size(GaimStoredImage *i);
  * @return A pointer to the filename, which must not
  *         be freed or modified.
  */
-const char *purple_imgstore_get_filename(GaimStoredImage *i);
+const char *purple_imgstore_get_filename(PurpleStoredImage *i);
 
 /**
  * Increment the reference count for an image in the store. The
@@ -108,4 +108,4 @@ void purple_imgstore_unref(int id);
 }
 #endif
 
-#endif /* _GAIM_IMGSTORE_H_ */
+#endif /* _PURPLE_IMGSTORE_H_ */

@@ -29,12 +29,12 @@
 /**************************************************************************/
 /*@{*/
 
-typedef enum _GaimCmdPriority GaimCmdPriority;
-typedef enum _GaimCmdFlag     GaimCmdFlag;
-typedef enum _GaimCmdStatus   GaimCmdStatus;
-typedef enum _GaimCmdRet      GaimCmdRet;
+typedef enum _PurpleCmdPriority PurpleCmdPriority;
+typedef enum _PurpleCmdFlag     PurpleCmdFlag;
+typedef enum _PurpleCmdStatus   PurpleCmdStatus;
+typedef enum _PurpleCmdRet      PurpleCmdRet;
 
-enum _GaimCmdStatus {
+enum _PurpleCmdStatus {
 	PURPLE_CMD_STATUS_OK,
 	PURPLE_CMD_STATUS_FAILED,
 	PURPLE_CMD_STATUS_NOT_FOUND,
@@ -43,19 +43,19 @@ enum _GaimCmdStatus {
 	PURPLE_CMD_STATUS_WRONG_TYPE,
 };
 
-enum _GaimCmdRet {
+enum _PurpleCmdRet {
 	PURPLE_CMD_RET_OK,       /**< Everything's okay. Don't look for another command to call. */
 	PURPLE_CMD_RET_FAILED,   /**< The command failed, but stop looking.*/
 	PURPLE_CMD_RET_CONTINUE, /**< Continue, looking for other commands with the same name to call. */
 };
 
-#define PURPLE_CMD_FUNC(func) ((GaimCmdFunc)func)
+#define PURPLE_CMD_FUNC(func) ((PurpleCmdFunc)func)
 
-typedef GaimCmdRet (*GaimCmdFunc)(GaimConversation *, const gchar *cmd,
+typedef PurpleCmdRet (*PurpleCmdFunc)(PurpleConversation *, const gchar *cmd,
                                   gchar **args, gchar **error, void *data);
-typedef guint GaimCmdId;
+typedef guint PurpleCmdId;
 
-enum _GaimCmdPriority {
+enum _PurpleCmdPriority {
 	PURPLE_CMD_P_VERY_LOW  = -1000,
 	PURPLE_CMD_P_LOW       =     0,
 	PURPLE_CMD_P_DEFAULT   =  1000,
@@ -66,7 +66,7 @@ enum _GaimCmdPriority {
 	PURPLE_CMD_P_VERY_HIGH =  6000,
 };
 
-enum _GaimCmdFlag {
+enum _PurpleCmdFlag {
 	PURPLE_CMD_FLAG_IM               = 0x01,
 	PURPLE_CMD_FLAG_CHAT             = 0x02,
 	PURPLE_CMD_FLAG_PRPL_ONLY        = 0x04,
@@ -93,8 +93,8 @@ extern "C" {
  *
  * @param cmd The command. This should be a UTF8 (or ASCII) string, with no spaces
  *            or other white space.
- * @param args This tells Gaim how to parse the arguments to the command for you.
- *             If what the user types doesn't match, Gaim will keep looking for another
+ * @param args This tells Purple how to parse the arguments to the command for you.
+ *             If what the user types doesn't match, Purple will keep looking for another
  *             command, unless the flag @c PURPLE_CMD_FLAG_ALLOW_WRONG_ARGS is passed in f.
  *             This string contains no whitespace, and uses a single character for each argument.
  *             The recognized characters are:
@@ -118,12 +118,12 @@ extern "C" {
  *                and any arguments it accepts (if it takes any arguments, otherwise no space), followed
  *                by a colon, two spaces, and a description of the command in sentence form. No slash
  *                before the command name.
- * @param data User defined data to pass to the GaimCmdFunc
- * @return A GaimCmdId. This is only used for calling purple_cmd_unregister.
+ * @param data User defined data to pass to the PurpleCmdFunc
+ * @return A PurpleCmdId. This is only used for calling purple_cmd_unregister.
  *         Returns 0 on failure.
  */
-GaimCmdId purple_cmd_register(const gchar *cmd, const gchar *args, GaimCmdPriority p, GaimCmdFlag f,
-                             const gchar *prpl_id, GaimCmdFunc func, const gchar *helpstr, void *data);
+PurpleCmdId purple_cmd_register(const gchar *cmd, const gchar *args, PurpleCmdPriority p, PurpleCmdFlag f,
+                             const gchar *prpl_id, PurpleCmdFunc func, const gchar *helpstr, void *data);
 
 /**
  * Unregister a command with the core.
@@ -132,9 +132,9 @@ GaimCmdId purple_cmd_register(const gchar *cmd, const gchar *args, GaimCmdPriori
  * or something else that might go away. Normally this is called when the plugin
  * unloads itself.
  *
- * @param id The GaimCmdId to unregister.
+ * @param id The PurpleCmdId to unregister.
  */
-void purple_cmd_unregister(GaimCmdId id);
+void purple_cmd_unregister(PurpleCmdId id);
 
 /**
  * Do a command.
@@ -152,9 +152,9 @@ void purple_cmd_unregister(GaimCmdId id);
  *               include both the default formatting and any extra manual formatting.
  * @param errormsg If the command failed errormsg is filled in with the appropriate error
  *                 message. It must be freed by the caller with g_free().
- * @return A GaimCmdStatus indicated if the command succeeded or failed.
+ * @return A PurpleCmdStatus indicated if the command succeeded or failed.
  */
-GaimCmdStatus purple_cmd_do_command(GaimConversation *conv, const gchar *cmdline,
+PurpleCmdStatus purple_cmd_do_command(PurpleConversation *conv, const gchar *cmdline,
                                   const gchar *markup, gchar **errormsg);
 
 /**
@@ -168,7 +168,7 @@ GaimCmdStatus purple_cmd_do_command(GaimConversation *conv, const gchar *cmdline
  * @param conv The conversation, or @c NULL.
  * @return A GList of const char*, which must be freed with g_list_free().
  */
-GList *purple_cmd_list(GaimConversation *conv);
+GList *purple_cmd_list(PurpleConversation *conv);
 
 /**
  * Get the help string for a command.
@@ -182,7 +182,7 @@ GList *purple_cmd_list(GaimConversation *conv);
  * @return A GList of const char*s, which is the help string
  *         for that command.
  */
-GList *purple_cmd_help(GaimConversation *conv, const gchar *cmd);
+GList *purple_cmd_help(PurpleConversation *conv, const gchar *cmd);
 
 /*@}*/
 
@@ -190,4 +190,4 @@ GList *purple_cmd_help(GaimConversation *conv, const gchar *cmd);
 }
 #endif
 
-#endif /* _GAIM_CMDS_H_ */
+#endif /* _PURPLE_CMDS_H_ */

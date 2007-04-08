@@ -4,7 +4,7 @@
  *
  * purple
  *
- * Gaim is the legal property of its developers, whose names are too numerous
+ * Purple is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -22,8 +22,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef _GAIM_EVENTLOOP_H_
-#define _GAIM_EVENTLOOP_H_
+#ifndef _PURPLE_EVENTLOOP_H_
+#define _PURPLE_EVENTLOOP_H_
 
 #include <glib.h>
 
@@ -36,16 +36,16 @@ extern "C" {
  */
 typedef enum
 {
-	GAIM_INPUT_READ  = 1 << 0,  /**< A read condition.  */
-	GAIM_INPUT_WRITE = 1 << 1   /**< A write condition. */
+	PURPLE_INPUT_READ  = 1 << 0,  /**< A read condition.  */
+	PURPLE_INPUT_WRITE = 1 << 1   /**< A write condition. */
 
-} GaimInputCondition;
+} PurpleInputCondition;
 
-typedef void (*GaimInputFunction)(gpointer, gint, GaimInputCondition);
+typedef void (*PurpleInputFunction)(gpointer, gint, PurpleInputCondition);
 
-typedef struct _GaimEventLoopUiOps GaimEventLoopUiOps;
+typedef struct _PurpleEventLoopUiOps PurpleEventLoopUiOps;
 
-struct _GaimEventLoopUiOps
+struct _PurpleEventLoopUiOps
 {
 	/**
 	 * Creates a callback timer.
@@ -63,8 +63,8 @@ struct _GaimEventLoopUiOps
 	 * Adds an input handler.
 	 * @see purple_input_add, g_io_add_watch_full
 	 */
-	guint (*input_add)(int fd, GaimInputCondition cond,
-					   GaimInputFunction func, gpointer user_data);
+	guint (*input_add)(int fd, PurpleInputCondition cond,
+					   PurpleInputFunction func, gpointer user_data);
 
 	/**
 	 * Removes an input handler.
@@ -120,8 +120,8 @@ gboolean purple_timeout_remove(guint handle);
  * @return The resulting handle (will be greater than 0).
  * @see g_io_add_watch_full
  */
-guint purple_input_add(int fd, GaimInputCondition cond,
-					 GaimInputFunction func, gpointer user_data);
+guint purple_input_add(int fd, PurpleInputCondition cond,
+					 PurpleInputFunction func, gpointer user_data);
 
 /**
  * Removes an input handler.
@@ -138,7 +138,7 @@ gboolean purple_input_remove(guint handle);
  * implement the input_get_error UI op.
  *
  * @param fd        The input file descriptor.
- * @param errno		A pointer to an int which on return will have the error, or 0 if no error.
+ * @param error		A pointer to an int which on return will have the error, or 0 if no error.
  *
  * @return 0 if there is no error; -1 if there is an error, in which case errno will be set.
  */
@@ -158,14 +158,14 @@ purple_input_get_error(int fd, int *error);
  *
  * @param ops The UI operations structure.
  */
-void purple_eventloop_set_ui_ops(GaimEventLoopUiOps *ops);
+void purple_eventloop_set_ui_ops(PurpleEventLoopUiOps *ops);
 
 /**
  * Returns the UI operations structure used for accounts.
  *
  * @return The UI operations structure in use.
  */
-GaimEventLoopUiOps *purple_eventloop_get_ui_ops(void);
+PurpleEventLoopUiOps *purple_eventloop_get_ui_ops(void);
 
 /*@}*/
 
@@ -173,4 +173,4 @@ GaimEventLoopUiOps *purple_eventloop_get_ui_ops(void);
 }
 #endif
 
-#endif /* _GAIM_EVENTLOOP_H_ */
+#endif /* _PURPLE_EVENTLOOP_H_ */

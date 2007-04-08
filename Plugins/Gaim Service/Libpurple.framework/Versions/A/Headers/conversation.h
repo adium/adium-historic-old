@@ -4,7 +4,7 @@
  *
  * purple
  *
- * Gaim is the legal property of its developers, whose names are too numerous
+ * Purple is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -24,115 +24,115 @@
  *
  * @see @ref conversation-signals
  */
-#ifndef _GAIM_CONVERSATION_H_
-#define _GAIM_CONVERSATION_H_
+#ifndef _PURPLE_CONVERSATION_H_
+#define _PURPLE_CONVERSATION_H_
 
 /**************************************************************************/
 /** Data Structures                                                       */
 /**************************************************************************/
 
 
-typedef struct _GaimConversationUiOps GaimConversationUiOps;
-typedef struct _GaimConversation      GaimConversation;
-typedef struct _GaimConvIm            GaimConvIm;
-typedef struct _GaimConvChat          GaimConvChat;
-typedef struct _GaimConvChatBuddy     GaimConvChatBuddy;
+typedef struct _PurpleConversationUiOps PurpleConversationUiOps;
+typedef struct _PurpleConversation      PurpleConversation;
+typedef struct _PurpleConvIm            PurpleConvIm;
+typedef struct _PurpleConvChat          PurpleConvChat;
+typedef struct _PurpleConvChatBuddy     PurpleConvChatBuddy;
 
 /**
  * A type of conversation.
  */
 typedef enum
 {
-	GAIM_CONV_TYPE_UNKNOWN = 0, /**< Unknown conversation type. */
-	GAIM_CONV_TYPE_IM,          /**< Instant Message.           */
-	GAIM_CONV_TYPE_CHAT,        /**< Chat room.                 */
-	GAIM_CONV_TYPE_MISC,        /**< A misc. conversation.      */
-	GAIM_CONV_TYPE_ANY          /**< Any type of conversation.  */
+	PURPLE_CONV_TYPE_UNKNOWN = 0, /**< Unknown conversation type. */
+	PURPLE_CONV_TYPE_IM,          /**< Instant Message.           */
+	PURPLE_CONV_TYPE_CHAT,        /**< Chat room.                 */
+	PURPLE_CONV_TYPE_MISC,        /**< A misc. conversation.      */
+	PURPLE_CONV_TYPE_ANY          /**< Any type of conversation.  */
 
-} GaimConversationType;
+} PurpleConversationType;
 
 /**
  * Conversation update type.
  */
 typedef enum
 {
-	GAIM_CONV_UPDATE_ADD = 0, /**< The buddy associated with the conversation
+	PURPLE_CONV_UPDATE_ADD = 0, /**< The buddy associated with the conversation
 	                               was added.   */
-	GAIM_CONV_UPDATE_REMOVE,  /**< The buddy associated with the conversation
+	PURPLE_CONV_UPDATE_REMOVE,  /**< The buddy associated with the conversation
 	                               was removed. */
-	GAIM_CONV_UPDATE_ACCOUNT, /**< The purple_account was changed. */
-	GAIM_CONV_UPDATE_TYPING,  /**< The typing state was updated. */
-	GAIM_CONV_UPDATE_UNSEEN,  /**< The unseen state was updated. */
-	GAIM_CONV_UPDATE_LOGGING, /**< Logging for this conversation was
+	PURPLE_CONV_UPDATE_ACCOUNT, /**< The purple_account was changed. */
+	PURPLE_CONV_UPDATE_TYPING,  /**< The typing state was updated. */
+	PURPLE_CONV_UPDATE_UNSEEN,  /**< The unseen state was updated. */
+	PURPLE_CONV_UPDATE_LOGGING, /**< Logging for this conversation was
 	                               enabled or disabled. */
-	GAIM_CONV_UPDATE_TOPIC,   /**< The topic for a chat was updated. */
+	PURPLE_CONV_UPDATE_TOPIC,   /**< The topic for a chat was updated. */
 	/*
 	 * XXX These need to go when we implement a more generic core/UI event
 	 * system.
 	 */
-	GAIM_CONV_ACCOUNT_ONLINE,  /**< One of the user's accounts went online.  */
-	GAIM_CONV_ACCOUNT_OFFLINE, /**< One of the user's accounts went offline. */
-	GAIM_CONV_UPDATE_AWAY,     /**< The other user went away.                */
-	GAIM_CONV_UPDATE_ICON,     /**< The other user's buddy icon changed.     */
-	GAIM_CONV_UPDATE_TITLE,
-	GAIM_CONV_UPDATE_CHATLEFT,
+	PURPLE_CONV_ACCOUNT_ONLINE,  /**< One of the user's accounts went online.  */
+	PURPLE_CONV_ACCOUNT_OFFLINE, /**< One of the user's accounts went offline. */
+	PURPLE_CONV_UPDATE_AWAY,     /**< The other user went away.                */
+	PURPLE_CONV_UPDATE_ICON,     /**< The other user's buddy icon changed.     */
+	PURPLE_CONV_UPDATE_TITLE,
+	PURPLE_CONV_UPDATE_CHATLEFT,
 
-	GAIM_CONV_UPDATE_FEATURES, /**< The features for a chat have changed */
+	PURPLE_CONV_UPDATE_FEATURES, /**< The features for a chat have changed */
 
-} GaimConvUpdateType;
+} PurpleConvUpdateType;
 
 /**
  * The typing state of a user.
  */
 typedef enum
 {
-	GAIM_NOT_TYPING = 0,  /**< Not typing.                 */
-	GAIM_TYPING,          /**< Currently typing.           */
-	GAIM_TYPED            /**< Stopped typing momentarily. */
+	PURPLE_NOT_TYPING = 0,  /**< Not typing.                 */
+	PURPLE_TYPING,          /**< Currently typing.           */
+	PURPLE_TYPED            /**< Stopped typing momentarily. */
 
-} GaimTypingState;
+} PurpleTypingState;
 
 /**
  * Flags applicable to a message. Most will have send, recv or system.
  */
 typedef enum
 {
-	GAIM_MESSAGE_SEND        = 0x0001, /**< Outgoing message.        */
-	GAIM_MESSAGE_RECV        = 0x0002, /**< Incoming message.        */
-	GAIM_MESSAGE_SYSTEM      = 0x0004, /**< System message.          */
-	GAIM_MESSAGE_AUTO_RESP   = 0x0008, /**< Auto response.           */
-	GAIM_MESSAGE_ACTIVE_ONLY = 0x0010,  /**< Hint to the UI that this
+	PURPLE_MESSAGE_SEND        = 0x0001, /**< Outgoing message.        */
+	PURPLE_MESSAGE_RECV        = 0x0002, /**< Incoming message.        */
+	PURPLE_MESSAGE_SYSTEM      = 0x0004, /**< System message.          */
+	PURPLE_MESSAGE_AUTO_RESP   = 0x0008, /**< Auto response.           */
+	PURPLE_MESSAGE_ACTIVE_ONLY = 0x0010,  /**< Hint to the UI that this
 	                                        message should not be
 	                                        shown in conversations
 	                                        which are only open for
 	                                        internal UI purposes
 	                                        (e.g. for contact-aware
 	                                         conversions).           */
-	GAIM_MESSAGE_NICK        = 0x0020, /**< Contains your nick.      */
-	GAIM_MESSAGE_NO_LOG      = 0x0040, /**< Do not log.              */
-	GAIM_MESSAGE_WHISPER     = 0x0080, /**< Whispered message.       */
-	GAIM_MESSAGE_ERROR       = 0x0200, /**< Error message.           */
-	GAIM_MESSAGE_DELAYED     = 0x0400, /**< Delayed message.         */
-	GAIM_MESSAGE_RAW         = 0x0800, /**< "Raw" message - don't
+	PURPLE_MESSAGE_NICK        = 0x0020, /**< Contains your nick.      */
+	PURPLE_MESSAGE_NO_LOG      = 0x0040, /**< Do not log.              */
+	PURPLE_MESSAGE_WHISPER     = 0x0080, /**< Whispered message.       */
+	PURPLE_MESSAGE_ERROR       = 0x0200, /**< Error message.           */
+	PURPLE_MESSAGE_DELAYED     = 0x0400, /**< Delayed message.         */
+	PURPLE_MESSAGE_RAW         = 0x0800, /**< "Raw" message - don't
 	                                        apply formatting         */
-	GAIM_MESSAGE_IMAGES      = 0x1000, /**< Message contains images  */
-	GAIM_MESSAGE_NOTIFY      = 0x2000  /**< Message is a notification */
+	PURPLE_MESSAGE_IMAGES      = 0x1000, /**< Message contains images  */
+	PURPLE_MESSAGE_NOTIFY      = 0x2000  /**< Message is a notification */
 
-} GaimMessageFlags;
+} PurpleMessageFlags;
 
 /**
  * Flags applicable to users in Chats.
  */
 typedef enum
 {
-	GAIM_CBFLAGS_NONE          = 0x0000, /**< No flags                     */
-	GAIM_CBFLAGS_VOICE         = 0x0001, /**< Voiced user or "Participant" */
-	GAIM_CBFLAGS_HALFOP        = 0x0002, /**< Half-op                      */
-	GAIM_CBFLAGS_OP            = 0x0004, /**< Channel Op or Moderator      */
-	GAIM_CBFLAGS_FOUNDER       = 0x0008, /**< Channel Founder              */
-	GAIM_CBFLAGS_TYPING        = 0x0010, /**< Currently typing             */
+	PURPLE_CBFLAGS_NONE          = 0x0000, /**< No flags                     */
+	PURPLE_CBFLAGS_VOICE         = 0x0001, /**< Voiced user or "Participant" */
+	PURPLE_CBFLAGS_HALFOP        = 0x0002, /**< Half-op                      */
+	PURPLE_CBFLAGS_OP            = 0x0004, /**< Channel Op or Moderator      */
+	PURPLE_CBFLAGS_FOUNDER       = 0x0008, /**< Channel Founder              */
+	PURPLE_CBFLAGS_TYPING        = 0x0010, /**< Currently typing             */
 
-} GaimConvChatBuddyFlags;
+} PurpleConvChatBuddyFlags;
 
 #include "account.h"
 #include "buddyicon.h"
@@ -143,63 +143,63 @@ typedef enum
  * Conversation operations and events.
  *
  * Any UI representing a conversation must assign a filled-out
- * GaimConversationUiOps structure to the GaimConversation.
+ * PurpleConversationUiOps structure to the PurpleConversation.
  */
-struct _GaimConversationUiOps
+struct _PurpleConversationUiOps
 {
-	void (*create_conversation)(GaimConversation *conv);
-	void (*destroy_conversation)(GaimConversation *conv);
-	void (*write_chat)(GaimConversation *conv, const char *who,
-	                   const char *message, GaimMessageFlags flags,
+	void (*create_conversation)(PurpleConversation *conv);
+	void (*destroy_conversation)(PurpleConversation *conv);
+	void (*write_chat)(PurpleConversation *conv, const char *who,
+	                   const char *message, PurpleMessageFlags flags,
 	                   time_t mtime);
-	void (*write_im)(GaimConversation *conv, const char *who,
-	                 const char *message, GaimMessageFlags flags,
+	void (*write_im)(PurpleConversation *conv, const char *who,
+	                 const char *message, PurpleMessageFlags flags,
 	                 time_t mtime);
-	void (*write_conv)(GaimConversation *conv, const char *name, const char *alias,
-	                   const char *message, GaimMessageFlags flags,
+	void (*write_conv)(PurpleConversation *conv, const char *name, const char *alias,
+	                   const char *message, PurpleMessageFlags flags,
 	                   time_t mtime);
 
-	void (*chat_add_users)(GaimConversation *conv, GList *cbuddies, gboolean new_arrivals);	
+	void (*chat_add_users)(PurpleConversation *conv, GList *cbuddies, gboolean new_arrivals);	
 	
-	void (*chat_rename_user)(GaimConversation *conv, const char *old_name,
+	void (*chat_rename_user)(PurpleConversation *conv, const char *old_name,
 	                         const char *new_name, const char *new_alias);
-	void (*chat_remove_users)(GaimConversation *conv, GList *users);
-	void (*chat_update_user)(GaimConversation *conv, const char *user);
+	void (*chat_remove_users)(PurpleConversation *conv, GList *users);
+	void (*chat_update_user)(PurpleConversation *conv, const char *user);
 
-	void (*present)(GaimConversation *conv);
+	void (*present)(PurpleConversation *conv);
 
-	gboolean (*has_focus)(GaimConversation *conv);
+	gboolean (*has_focus)(PurpleConversation *conv);
 
 	/* Custom Smileys */
-	gboolean (*custom_smiley_add)(GaimConversation *conv, const char *smile, gboolean remote);
-	void (*custom_smiley_write)(GaimConversation *conv, const char *smile,
+	gboolean (*custom_smiley_add)(PurpleConversation *conv, const char *smile, gboolean remote);
+	void (*custom_smiley_write)(PurpleConversation *conv, const char *smile,
 	                            const guchar *data, gsize size);
-	void (*custom_smiley_close)(GaimConversation *conv, const char *smile);
+	void (*custom_smiley_close)(PurpleConversation *conv, const char *smile);
 
-	void (*send_confirm)(GaimConversation *conv, const char *message);
+	void (*send_confirm)(PurpleConversation *conv, const char *message);
 };
 
 /**
  * Data specific to Instant Messages.
  */
-struct _GaimConvIm
+struct _PurpleConvIm
 {
-	GaimConversation *conv;            /**< The parent conversation.     */
+	PurpleConversation *conv;            /**< The parent conversation.     */
 
-	GaimTypingState typing_state;      /**< The current typing state.    */
+	PurpleTypingState typing_state;      /**< The current typing state.    */
 	guint  typing_timeout;             /**< The typing timer handle.     */
 	time_t type_again;                 /**< The type again time.         */
 	guint  send_typed_timeout;         /**< The type again timer handle. */
 
-	GaimBuddyIcon *icon;               /**< The buddy icon.              */
+	PurpleBuddyIcon *icon;               /**< The buddy icon.              */
 };
 
 /**
  * Data specific to Chats.
  */
-struct _GaimConvChat
+struct _PurpleConvChat
 {
-	GaimConversation *conv;          /**< The parent conversation.      */
+	PurpleConversation *conv;          /**< The parent conversation.      */
 
 	GList *in_room;                  /**< The users in the room.        */
 	GList *ignored;                  /**< Ignored users.                */
@@ -214,13 +214,13 @@ struct _GaimConvChat
 /**
  * Data for "Chat Buddies"
  */
-struct _GaimConvChatBuddy
+struct _PurpleConvChatBuddy
 {
 	char *name;                      /**< The name                      */
 	char *alias;					 /**< The alias 					*/
 	char *alias_key;				 /**< The alias key					*/
 	gboolean buddy;					 /**< ChatBuddy is on the blist		*/
-	GaimConvChatBuddyFlags flags;    /**< Flags (ops, voice etc.)       */
+	PurpleConvChatBuddyFlags flags;    /**< Flags (ops, voice etc.)       */
 };
 
 /**
@@ -228,11 +228,11 @@ struct _GaimConvChatBuddy
  *
  * The conversation can be an IM or a chat.
  */
-struct _GaimConversation
+struct _PurpleConversation
 {
-	GaimConversationType type;  /**< The type of conversation.          */
+	PurpleConversationType type;  /**< The type of conversation.          */
 
-	GaimAccount *account;       /**< The user using this conversation.  */
+	PurpleAccount *account;       /**< The user using this conversation.  */
 
 
 	char *name;                 /**< The name of the conversation.      */
@@ -244,18 +244,18 @@ struct _GaimConversation
 
 	union
 	{
-		GaimConvIm   *im;       /**< IM-specific data.                  */
-		GaimConvChat *chat;     /**< Chat-specific data.                */
+		PurpleConvIm   *im;       /**< IM-specific data.                  */
+		PurpleConvChat *chat;     /**< Chat-specific data.                */
 		void *misc;             /**< Misc. data.                        */
 
 	} u;
 
-	GaimConversationUiOps *ui_ops;           /**< UI-specific operations. */
+	PurpleConversationUiOps *ui_ops;           /**< UI-specific operations. */
 	void *ui_data;                           /**< UI-specific data.       */
 
 	GHashTable *data;                        /**< Plugin-specific data.   */
 
-	GaimConnectionFlags features; /**< The supported features */
+	PurpleConnectionFlags features; /**< The supported features */
 
 };
 
@@ -278,8 +278,8 @@ extern "C" {
  *
  * @return The new conversation.
  */
-GaimConversation *purple_conversation_new(GaimConversationType type,
-										GaimAccount *account,
+PurpleConversation *purple_conversation_new(PurpleConversationType type,
+										PurpleAccount *account,
 										const char *name);
 
 /**
@@ -291,7 +291,7 @@ GaimConversation *purple_conversation_new(GaimConversationType type,
  *
  * @param conv The conversation to destroy.
  */
-void purple_conversation_destroy(GaimConversation *conv);
+void purple_conversation_destroy(PurpleConversation *conv);
 
 
 /**
@@ -299,7 +299,7 @@ void purple_conversation_destroy(GaimConversation *conv);
  * conversation by displaying the IM dialog.
  * @param conv The conversation to present
  */
-void purple_conversation_present(GaimConversation *conv);
+void purple_conversation_present(PurpleConversation *conv);
 
 
 /**
@@ -309,7 +309,7 @@ void purple_conversation_present(GaimConversation *conv);
  *
  * @return The conversation's type.
  */
-GaimConversationType purple_conversation_get_type(const GaimConversation *conv);
+PurpleConversationType purple_conversation_get_type(const PurpleConversation *conv);
 
 /**
  * Sets the specified conversation's UI operations structure.
@@ -317,15 +317,15 @@ GaimConversationType purple_conversation_get_type(const GaimConversation *conv);
  * @param conv The conversation.
  * @param ops  The UI conversation operations structure.
  */
-void purple_conversation_set_ui_ops(GaimConversation *conv,
-								  GaimConversationUiOps *ops);
+void purple_conversation_set_ui_ops(PurpleConversation *conv,
+								  PurpleConversationUiOps *ops);
 
 /**
  * Sets the default conversation UI operations structure.
  *
  * @param ops  The UI conversation operations structure.
  */
-void purple_conversations_set_ui_ops(GaimConversationUiOps *ops);
+void purple_conversations_set_ui_ops(PurpleConversationUiOps *ops);
 
 /**
  * Returns the specified conversation's UI operations structure.
@@ -334,8 +334,8 @@ void purple_conversations_set_ui_ops(GaimConversationUiOps *ops);
  *
  * @return The operations structure.
  */
-GaimConversationUiOps *purple_conversation_get_ui_ops(
-		const GaimConversation *conv);
+PurpleConversationUiOps *purple_conversation_get_ui_ops(
+		const PurpleConversation *conv);
 
 /**
  * Sets the specified conversation's purple_account.
@@ -346,8 +346,8 @@ GaimConversationUiOps *purple_conversation_get_ui_ops(
  * @param conv The conversation.
  * @param account The purple_account.
  */
-void purple_conversation_set_account(GaimConversation *conv,
-                                   GaimAccount *account);
+void purple_conversation_set_account(PurpleConversation *conv,
+                                   PurpleAccount *account);
 
 /**
  * Returns the specified conversation's purple_account.
@@ -359,7 +359,7 @@ void purple_conversation_set_account(GaimConversation *conv,
  *
  * @return The conversation's purple_account.
  */
-GaimAccount *purple_conversation_get_account(const GaimConversation *conv);
+PurpleAccount *purple_conversation_get_account(const PurpleConversation *conv);
 
 /**
  * Returns the specified conversation's purple_connection.
@@ -370,7 +370,7 @@ GaimAccount *purple_conversation_get_account(const GaimConversation *conv);
  *
  * @return The conversation's purple_connection.
  */
-GaimConnection *purple_conversation_get_gc(const GaimConversation *conv);
+PurpleConnection *purple_conversation_get_gc(const PurpleConversation *conv);
 
 /**
  * Sets the specified conversation's title.
@@ -378,7 +378,7 @@ GaimConnection *purple_conversation_get_gc(const GaimConversation *conv);
  * @param conv  The conversation.
  * @param title The title.
  */
-void purple_conversation_set_title(GaimConversation *conv, const char *title);
+void purple_conversation_set_title(PurpleConversation *conv, const char *title);
 
 /**
  * Returns the specified conversation's title.
@@ -387,7 +387,7 @@ void purple_conversation_set_title(GaimConversation *conv, const char *title);
  *
  * @return The title.
  */
-const char *purple_conversation_get_title(const GaimConversation *conv);
+const char *purple_conversation_get_title(const PurpleConversation *conv);
 
 /**
  * Automatically sets the specified conversation's title.
@@ -397,7 +397,7 @@ const char *purple_conversation_get_title(const GaimConversation *conv);
  *
  * @param conv The conversation.
  */
-void purple_conversation_autoset_title(GaimConversation *conv);
+void purple_conversation_autoset_title(PurpleConversation *conv);
 
 /**
  * Sets the specified conversation's name.
@@ -405,7 +405,7 @@ void purple_conversation_autoset_title(GaimConversation *conv);
  * @param conv The conversation.
  * @param name The conversation's name.
  */
-void purple_conversation_set_name(GaimConversation *conv, const char *name);
+void purple_conversation_set_name(PurpleConversation *conv, const char *name);
 
 /**
  * Returns the specified conversation's name.
@@ -414,7 +414,7 @@ void purple_conversation_set_name(GaimConversation *conv, const char *name);
  *
  * @return The conversation's name.
  */
-const char *purple_conversation_get_name(const GaimConversation *conv);
+const char *purple_conversation_get_name(const PurpleConversation *conv);
 
 /**
  * Enables or disables logging for this conversation.
@@ -422,7 +422,7 @@ const char *purple_conversation_get_name(const GaimConversation *conv);
  * @param conv The conversation.
  * @param log  @c TRUE if logging should be enabled, or @c FALSE otherwise.
  */
-void purple_conversation_set_logging(GaimConversation *conv, gboolean log);
+void purple_conversation_set_logging(PurpleConversation *conv, gboolean log);
 
 /**
  * Returns whether or not logging is enabled for this conversation.
@@ -431,7 +431,7 @@ void purple_conversation_set_logging(GaimConversation *conv, gboolean log);
  *
  * @return @c TRUE if logging is enabled, or @c FALSE otherwise.
  */
-gboolean purple_conversation_is_logging(const GaimConversation *conv);
+gboolean purple_conversation_is_logging(const PurpleConversation *conv);
 
 /**
  * Closes any open logs for this conversation.
@@ -442,33 +442,33 @@ gboolean purple_conversation_is_logging(const GaimConversation *conv);
  *
  * @param conv The conversation.
  */
-void purple_conversation_close_logs(GaimConversation *conv);
+void purple_conversation_close_logs(PurpleConversation *conv);
 
 /**
  * Returns the specified conversation's IM-specific data.
  *
- * If the conversation type is not GAIM_CONV_TYPE_IM, this will return @c NULL.
+ * If the conversation type is not PURPLE_CONV_TYPE_IM, this will return @c NULL.
  *
  * @param conv The conversation.
  *
  * @return The IM-specific data.
  */
-GaimConvIm *purple_conversation_get_im_data(const GaimConversation *conv);
+PurpleConvIm *purple_conversation_get_im_data(const PurpleConversation *conv);
 
-#define GAIM_CONV_IM(c) (purple_conversation_get_im_data(c))
+#define PURPLE_CONV_IM(c) (purple_conversation_get_im_data(c))
 
 /**
  * Returns the specified conversation's chat-specific data.
  *
- * If the conversation type is not GAIM_CONV_TYPE_CHAT, this will return @c NULL.
+ * If the conversation type is not PURPLE_CONV_TYPE_CHAT, this will return @c NULL.
  *
  * @param conv The conversation.
  *
  * @return The chat-specific data.
  */
-GaimConvChat *purple_conversation_get_chat_data(const GaimConversation *conv);
+PurpleConvChat *purple_conversation_get_chat_data(const PurpleConversation *conv);
 
-#define GAIM_CONV_CHAT(c) (purple_conversation_get_chat_data(c))
+#define PURPLE_CONV_CHAT(c) (purple_conversation_get_chat_data(c))
 
 /**
  * Sets extra data for a conversation.
@@ -477,7 +477,7 @@ GaimConvChat *purple_conversation_get_chat_data(const GaimConversation *conv);
  * @param key  The unique key.
  * @param data The data to assign.
  */
-void purple_conversation_set_data(GaimConversation *conv, const char *key,
+void purple_conversation_set_data(PurpleConversation *conv, const char *key,
 								gpointer data);
 
 /**
@@ -488,7 +488,7 @@ void purple_conversation_set_data(GaimConversation *conv, const char *key,
  *
  * @return The data associated with the key.
  */
-gpointer purple_conversation_get_data(GaimConversation *conv, const char *key);
+gpointer purple_conversation_get_data(PurpleConversation *conv, const char *key);
 
 /**
  * Returns a list of all conversations.
@@ -514,7 +514,7 @@ GList *purple_get_ims(void);
 GList *purple_get_chats(void);
 
 /**
- * Finds a conversation with the specified type, name, and Gaim account.
+ * Finds a conversation with the specified type, name, and Purple account.
  *
  * @param type The type of the conversation.
  * @param name The name of the conversation.
@@ -522,9 +522,9 @@ GList *purple_get_chats(void);
  *
  * @return The conversation if found, or @c NULL otherwise.
  */
-GaimConversation *purple_find_conversation_with_account(
-		GaimConversationType type, const char *name,
-		const GaimAccount *account);
+PurpleConversation *purple_find_conversation_with_account(
+		PurpleConversationType type, const char *name,
+		const PurpleAccount *account);
 
 /**
  * Writes to a conversation window.
@@ -546,8 +546,8 @@ GaimConversation *purple_find_conversation_with_account(
  * @see purple_conv_im_write()
  * @see purple_conv_chat_write()
  */
-void purple_conversation_write(GaimConversation *conv, const char *who,
-		const char *message, GaimMessageFlags flags,
+void purple_conversation_write(PurpleConversation *conv, const char *who,
+		const char *message, PurpleMessageFlags flags,
 		time_t mtime);
 
 
@@ -556,15 +556,15 @@ void purple_conversation_write(GaimConversation *conv, const char *who,
 	@param conv      The conversation
 	@param features  Bitset defining supported features
 */
-void purple_conversation_set_features(GaimConversation *conv,
-		GaimConnectionFlags features);
+void purple_conversation_set_features(PurpleConversation *conv,
+		PurpleConnectionFlags features);
 
 
 /**
 	Get the features supported by the given conversation.
 	@param conv  The conversation
 */
-GaimConnectionFlags purple_conversation_get_features(GaimConversation *conv);
+PurpleConnectionFlags purple_conversation_get_features(PurpleConversation *conv);
 
 /**
  * Determines if a conversation has focus
@@ -574,7 +574,7 @@ GaimConnectionFlags purple_conversation_get_features(GaimConversation *conv);
  * @return @c TRUE if the conversation has focus, @c FALSE if
  * it does not or the UI does not have a concept of conversation focus
  */
-gboolean purple_conversation_has_focus(GaimConversation *conv);
+gboolean purple_conversation_has_focus(PurpleConversation *conv);
 
 /**
  * Updates the visual status and UI of a conversation.
@@ -582,14 +582,14 @@ gboolean purple_conversation_has_focus(GaimConversation *conv);
  * @param conv The conversation.
  * @param type The update type.
  */
-void purple_conversation_update(GaimConversation *conv, GaimConvUpdateType type);
+void purple_conversation_update(PurpleConversation *conv, PurpleConvUpdateType type);
 
 /**
  * Calls a function on each conversation.
  *
  * @param func The function.
  */
-void purple_conversation_foreach(void (*func)(GaimConversation *conv));
+void purple_conversation_foreach(void (*func)(PurpleConversation *conv));
 
 /*@}*/
 
@@ -606,12 +606,12 @@ void purple_conversation_foreach(void (*func)(GaimConversation *conv));
  *
  * @return The parent conversation.
  */
-GaimConversation *purple_conv_im_get_conversation(const GaimConvIm *im);
+PurpleConversation *purple_conv_im_get_conversation(const PurpleConvIm *im);
 
 /**
  * Sets the IM's buddy icon.
  *
- * This should only be called from within Gaim. You probably want to
+ * This should only be called from within Purple. You probably want to
  * call purple_buddy_icon_set_data().
  *
  * @param im   The IM.
@@ -619,7 +619,7 @@ GaimConversation *purple_conv_im_get_conversation(const GaimConvIm *im);
  *
  * @see purple_buddy_icon_set_data()
  */
-void purple_conv_im_set_icon(GaimConvIm *im, GaimBuddyIcon *icon);
+void purple_conv_im_set_icon(PurpleConvIm *im, PurpleBuddyIcon *icon);
 
 /**
  * Returns the IM's buddy icon.
@@ -628,7 +628,7 @@ void purple_conv_im_set_icon(GaimConvIm *im, GaimBuddyIcon *icon);
  *
  * @return The buddy icon.
  */
-GaimBuddyIcon *purple_conv_im_get_icon(const GaimConvIm *im);
+PurpleBuddyIcon *purple_conv_im_get_icon(const PurpleConvIm *im);
 
 /**
  * Sets the IM's typing state.
@@ -636,7 +636,7 @@ GaimBuddyIcon *purple_conv_im_get_icon(const GaimConvIm *im);
  * @param im    The IM.
  * @param state The typing state.
  */
-void purple_conv_im_set_typing_state(GaimConvIm *im, GaimTypingState state);
+void purple_conv_im_set_typing_state(PurpleConvIm *im, PurpleTypingState state);
 
 /**
  * Returns the IM's typing state.
@@ -645,7 +645,7 @@ void purple_conv_im_set_typing_state(GaimConvIm *im, GaimTypingState state);
  *
  * @return The IM's typing state.
  */
-GaimTypingState purple_conv_im_get_typing_state(const GaimConvIm *im);
+PurpleTypingState purple_conv_im_get_typing_state(const PurpleConvIm *im);
 
 /**
  * Starts the IM's typing timeout.
@@ -653,14 +653,14 @@ GaimTypingState purple_conv_im_get_typing_state(const GaimConvIm *im);
  * @param im      The IM.
  * @param timeout The timeout.
  */
-void purple_conv_im_start_typing_timeout(GaimConvIm *im, int timeout);
+void purple_conv_im_start_typing_timeout(PurpleConvIm *im, int timeout);
 
 /**
  * Stops the IM's typing timeout.
  *
  * @param im The IM.
  */
-void purple_conv_im_stop_typing_timeout(GaimConvIm *im);
+void purple_conv_im_stop_typing_timeout(PurpleConvIm *im);
 
 /**
  * Returns the IM's typing timeout.
@@ -669,44 +669,44 @@ void purple_conv_im_stop_typing_timeout(GaimConvIm *im);
  *
  * @return The timeout.
  */
-guint purple_conv_im_get_typing_timeout(const GaimConvIm *im);
+guint purple_conv_im_get_typing_timeout(const PurpleConvIm *im);
 
 /**
- * Sets the quiet-time when no GAIM_TYPING messages will be sent.
+ * Sets the quiet-time when no PURPLE_TYPING messages will be sent.
  * Few protocols need this (maybe only MSN).  If the user is still
- * typing after this quiet-period, then another GAIM_TYPING message
+ * typing after this quiet-period, then another PURPLE_TYPING message
  * will be sent.
  *
  * @param im  The IM.
  * @param val The number of seconds to wait before allowing another
- *            GAIM_TYPING message to be sent to the user.  Or 0 to
- *            not send another GAIM_TYPING message.
+ *            PURPLE_TYPING message to be sent to the user.  Or 0 to
+ *            not send another PURPLE_TYPING message.
  */
-void purple_conv_im_set_type_again(GaimConvIm *im, unsigned int val);
+void purple_conv_im_set_type_again(PurpleConvIm *im, unsigned int val);
 
 /**
- * Returns the time after which another GAIM_TYPING message should be sent.
+ * Returns the time after which another PURPLE_TYPING message should be sent.
  *
  * @param im The IM.
  *
  * @return The time in seconds since the epoch.  Or 0 if no additional
- *         GAIM_TYPING message should be sent.
+ *         PURPLE_TYPING message should be sent.
  */
-time_t purple_conv_im_get_type_again(const GaimConvIm *im);
+time_t purple_conv_im_get_type_again(const PurpleConvIm *im);
 
 /**
  * Starts the IM's type again timeout.
  *
  * @param im      The IM.
  */
-void purple_conv_im_start_send_typed_timeout(GaimConvIm *im);
+void purple_conv_im_start_send_typed_timeout(PurpleConvIm *im);
 
 /**
  * Stops the IM's type again timeout.
  *
  * @param im The IM.
  */
-void purple_conv_im_stop_send_typed_timeout(GaimConvIm *im);
+void purple_conv_im_stop_send_typed_timeout(PurpleConvIm *im);
 
 /**
  * Returns the IM's type again timeout interval.
@@ -715,14 +715,14 @@ void purple_conv_im_stop_send_typed_timeout(GaimConvIm *im);
  *
  * @return The type again timeout interval.
  */
-guint purple_conv_im_get_send_typed_timeout(const GaimConvIm *im);
+guint purple_conv_im_get_send_typed_timeout(const PurpleConvIm *im);
 
 /**
  * Updates the visual typing notification for an IM conversation.
  *
  * @param im The IM.
  */
-void purple_conv_im_update_typing(GaimConvIm *im);
+void purple_conv_im_update_typing(PurpleConvIm *im);
 
 /**
  * Writes to an IM.
@@ -733,8 +733,8 @@ void purple_conv_im_update_typing(GaimConvIm *im);
  * @param flags   The message flags.
  * @param mtime   The time the message was sent.
  */
-void purple_conv_im_write(GaimConvIm *im, const char *who,
-						const char *message, GaimMessageFlags flags,
+void purple_conv_im_write(PurpleConvIm *im, const char *who,
+						const char *message, PurpleMessageFlags flags,
 						time_t mtime);
 
 /**
@@ -750,7 +750,7 @@ void purple_conv_im_write(GaimConvIm *im, const char *who,
  * @param what    The error
  * @return        TRUE if the error was presented, else FALSE
  */
-gboolean purple_conv_present_error(const char *who, GaimAccount *account, const char *what);
+gboolean purple_conv_present_error(const char *who, PurpleAccount *account, const char *what);
 
 /**
  * Sends a message to this IM conversation.
@@ -758,7 +758,7 @@ gboolean purple_conv_present_error(const char *who, GaimAccount *account, const 
  * @param im      The IM.
  * @param message The message to send.
  */
-void purple_conv_im_send(GaimConvIm *im, const char *message);
+void purple_conv_im_send(PurpleConvIm *im, const char *message);
 
 /**
  * Sends a message to a conversation after confirming with
@@ -772,16 +772,16 @@ void purple_conv_im_send(GaimConvIm *im, const char *message);
  * @param conv    The conversation.
  * @param message The message to send.
  */
-void purple_conv_send_confirm(GaimConversation *conv, const char *message);
+void purple_conv_send_confirm(PurpleConversation *conv, const char *message);
 
 /**
  * Sends a message to this IM conversation with specified flags.
  *
  * @param im      The IM.
  * @param message The message to send.
- * @param flags   The GaimMessageFlags flags to use in addition to GAIM_MESSAGE_SEND.
+ * @param flags   The PurpleMessageFlags flags to use in addition to PURPLE_MESSAGE_SEND.
  */
-void purple_conv_im_send_with_flags(GaimConvIm *im, const char *message, GaimMessageFlags flags);
+void purple_conv_im_send_with_flags(PurpleConvIm *im, const char *message, PurpleMessageFlags flags);
 
 /**
  * Adds a smiley to the conversation's smiley tree. If this returns
@@ -802,7 +802,7 @@ void purple_conv_im_send_with_flags(GaimConvIm *im, const char *message, GaimMes
  *              @c FALSE is returned.
  */
 
-gboolean purple_conv_custom_smiley_add(GaimConversation *conv, const char *smile,
+gboolean purple_conv_custom_smiley_add(PurpleConversation *conv, const char *smile,
                                       const char *cksum_type, const char *chksum,
 									  gboolean remote);
 
@@ -816,7 +816,7 @@ gboolean purple_conv_custom_smiley_add(GaimConversation *conv, const char *smile
  * @param size The length of the data.
  */
 
-void purple_conv_custom_smiley_write(GaimConversation *conv,
+void purple_conv_custom_smiley_write(PurpleConversation *conv,
                                    const char *smile,
                                    const guchar *data,
                                    gsize size);
@@ -830,7 +830,7 @@ void purple_conv_custom_smiley_write(GaimConversation *conv,
  * @param smile The text associated with the smiley
  */
 
-void purple_conv_custom_smiley_close(GaimConversation *conv, const char *smile);
+void purple_conv_custom_smiley_close(PurpleConversation *conv, const char *smile);
 
 /*@}*/
 
@@ -847,7 +847,7 @@ void purple_conv_custom_smiley_close(GaimConversation *conv, const char *smile);
  *
  * @return The parent conversation.
  */
-GaimConversation *purple_conv_chat_get_conversation(const GaimConvChat *chat);
+PurpleConversation *purple_conv_chat_get_conversation(const PurpleConvChat *chat);
 
 /**
  * Sets the list of users in the chat room.
@@ -861,7 +861,7 @@ GaimConversation *purple_conv_chat_get_conversation(const GaimConvChat *chat);
  *
  * @return The list passed.
  */
-GList *purple_conv_chat_set_users(GaimConvChat *chat, GList *users);
+GList *purple_conv_chat_set_users(PurpleConvChat *chat, GList *users);
 
 /**
  * Returns a list of users in the chat room.
@@ -870,7 +870,7 @@ GList *purple_conv_chat_set_users(GaimConvChat *chat, GList *users);
  *
  * @return The list of users.
  */
-GList *purple_conv_chat_get_users(const GaimConvChat *chat);
+GList *purple_conv_chat_get_users(const PurpleConvChat *chat);
 
 /**
  * Ignores a user in a chat room.
@@ -878,7 +878,7 @@ GList *purple_conv_chat_get_users(const GaimConvChat *chat);
  * @param chat The chat.
  * @param name The name of the user.
  */
-void purple_conv_chat_ignore(GaimConvChat *chat, const char *name);
+void purple_conv_chat_ignore(PurpleConvChat *chat, const char *name);
 
 /**
  * Unignores a user in a chat room.
@@ -886,7 +886,7 @@ void purple_conv_chat_ignore(GaimConvChat *chat, const char *name);
  * @param chat The chat.
  * @param name The name of the user.
  */
-void purple_conv_chat_unignore(GaimConvChat *chat, const char *name);
+void purple_conv_chat_unignore(PurpleConvChat *chat, const char *name);
 
 /**
  * Sets the list of ignored users in the chat room.
@@ -896,7 +896,7 @@ void purple_conv_chat_unignore(GaimConvChat *chat, const char *name);
  *
  * @return The list passed.
  */
-GList *purple_conv_chat_set_ignored(GaimConvChat *chat, GList *ignored);
+GList *purple_conv_chat_set_ignored(PurpleConvChat *chat, GList *ignored);
 
 /**
  * Returns the list of ignored users in the chat room.
@@ -905,7 +905,7 @@ GList *purple_conv_chat_set_ignored(GaimConvChat *chat, GList *ignored);
  *
  * @return The list of ignored users.
  */
-GList *purple_conv_chat_get_ignored(const GaimConvChat *chat);
+GList *purple_conv_chat_get_ignored(const PurpleConvChat *chat);
 
 /**
  * Returns the actual name of the specified ignored user, if it exists in
@@ -921,7 +921,7 @@ GList *purple_conv_chat_get_ignored(const GaimConvChat *chat);
  * @return The ignored user if found, complete with prefixes, or @c NULL
  *         if not found.
  */
-const char *purple_conv_chat_get_ignored_user(const GaimConvChat *chat,
+const char *purple_conv_chat_get_ignored_user(const PurpleConvChat *chat,
 											const char *user);
 
 /**
@@ -932,7 +932,7 @@ const char *purple_conv_chat_get_ignored_user(const GaimConvChat *chat,
  *
  * @return @c TRUE if the user is in the ignore list; @c FALSE otherwise.
  */
-gboolean purple_conv_chat_is_user_ignored(const GaimConvChat *chat,
+gboolean purple_conv_chat_is_user_ignored(const PurpleConvChat *chat,
 										const char *user);
 
 /**
@@ -942,7 +942,7 @@ gboolean purple_conv_chat_is_user_ignored(const GaimConvChat *chat,
  * @param who   The user that set the topic.
  * @param topic The topic.
  */
-void purple_conv_chat_set_topic(GaimConvChat *chat, const char *who,
+void purple_conv_chat_set_topic(PurpleConvChat *chat, const char *who,
 							  const char *topic);
 
 /**
@@ -952,7 +952,7 @@ void purple_conv_chat_set_topic(GaimConvChat *chat, const char *who,
  *
  * @return The chat's topic.
  */
-const char *purple_conv_chat_get_topic(const GaimConvChat *chat);
+const char *purple_conv_chat_get_topic(const PurpleConvChat *chat);
 
 /**
  * Sets the chat room's ID.
@@ -960,7 +960,7 @@ const char *purple_conv_chat_get_topic(const GaimConvChat *chat);
  * @param chat The chat.
  * @param id   The ID.
  */
-void purple_conv_chat_set_id(GaimConvChat *chat, int id);
+void purple_conv_chat_set_id(PurpleConvChat *chat, int id);
 
 /**
  * Returns the chat room's ID.
@@ -969,7 +969,7 @@ void purple_conv_chat_set_id(GaimConvChat *chat, int id);
  *
  * @return The ID.
  */
-int purple_conv_chat_get_id(const GaimConvChat *chat);
+int purple_conv_chat_get_id(const PurpleConvChat *chat);
 
 /**
  * Writes to a chat.
@@ -980,8 +980,8 @@ int purple_conv_chat_get_id(const GaimConvChat *chat);
  * @param flags   The flags.
  * @param mtime   The time the message was sent.
  */
-void purple_conv_chat_write(GaimConvChat *chat, const char *who,
-						  const char *message, GaimMessageFlags flags,
+void purple_conv_chat_write(PurpleConvChat *chat, const char *who,
+						  const char *message, PurpleMessageFlags flags,
 						  time_t mtime);
 
 /**
@@ -997,9 +997,9 @@ void purple_conv_chat_send(PurpleConvChat *chat, const char *message);
  *
  * @param chat    The chat.
  * @param message The message to send.
- * @param flags   The GaimMessageFlags flags to use.
+ * @param flags   The PurpleMessageFlags flags to use.
  */
-void purple_conv_chat_send_with_flags(GaimConvChat *chat, const char *message, GaimMessageFlags flags);
+void purple_conv_chat_send_with_flags(PurpleConvChat *chat, const char *message, PurpleMessageFlags flags);
 
 /**
  * Adds a user to a chat.
@@ -1010,8 +1010,8 @@ void purple_conv_chat_send_with_flags(GaimConvChat *chat, const char *message, G
  * @param flags       The users flags
  * @param new_arrival Decides whether or not to show a join notice.
  */
-void purple_conv_chat_add_user(GaimConvChat *chat, const char *user,
-							 const char *extra_msg, GaimConvChatBuddyFlags flags,
+void purple_conv_chat_add_user(PurpleConvChat *chat, const char *user,
+							 const char *extra_msg, PurpleConvChatBuddyFlags flags,
 							 gboolean new_arrival);
 
 /**
@@ -1031,7 +1031,7 @@ void purple_conv_chat_add_user(GaimConvChat *chat, const char *user,
  * @param flags        The list of flags for each user.
  * @param new_arrivals Decides whether or not to show join notices.
  */
-void purple_conv_chat_add_users(GaimConvChat *chat, GList *users, GList *extra_msgs,
+void purple_conv_chat_add_users(PurpleConvChat *chat, GList *users, GList *extra_msgs,
 							  GList *flags, gboolean new_arrivals);
 
 /**
@@ -1041,7 +1041,7 @@ void purple_conv_chat_add_users(GaimConvChat *chat, GList *users, GList *extra_m
  * @param old_user The old username.
  * @param new_user The new username.
  */
-void purple_conv_chat_rename_user(GaimConvChat *chat, const char *old_user,
+void purple_conv_chat_rename_user(PurpleConvChat *chat, const char *old_user,
 								const char *new_user);
 
 /**
@@ -1053,7 +1053,7 @@ void purple_conv_chat_rename_user(GaimConvChat *chat, const char *old_user,
  * @param user   The user that is being removed.
  * @param reason The optional reason given for the removal. Can be @c NULL.
  */
-void purple_conv_chat_remove_user(GaimConvChat *chat, const char *user,
+void purple_conv_chat_remove_user(PurpleConvChat *chat, const char *user,
 								const char *reason);
 
 /**
@@ -1063,7 +1063,7 @@ void purple_conv_chat_remove_user(GaimConvChat *chat, const char *user,
  * @param users  The users that are being removed.
  * @param reason The optional reason given for the removal. Can be @c NULL.
  */
-void purple_conv_chat_remove_users(GaimConvChat *chat, GList *users,
+void purple_conv_chat_remove_users(PurpleConvChat *chat, GList *users,
 								 const char *reason);
 
 /**
@@ -1074,7 +1074,7 @@ void purple_conv_chat_remove_users(GaimConvChat *chat, GList *users,
  *
  * @return TRUE if the user is in the chat, FALSE if not
  */
-gboolean purple_conv_chat_find_user(GaimConvChat *chat, const char *user);
+gboolean purple_conv_chat_find_user(PurpleConvChat *chat, const char *user);
 
 /**
  * Set a users flags in a chat
@@ -1083,8 +1083,8 @@ gboolean purple_conv_chat_find_user(GaimConvChat *chat, const char *user);
  * @param user   The user to update.
  * @param flags  The new flags.
  */
-void purple_conv_chat_user_set_flags(GaimConvChat *chat, const char *user,
-								   GaimConvChatBuddyFlags flags);
+void purple_conv_chat_user_set_flags(PurpleConvChat *chat, const char *user,
+								   PurpleConvChatBuddyFlags flags);
 
 /**
  * Get the flags for a user in a chat
@@ -1094,7 +1094,7 @@ void purple_conv_chat_user_set_flags(GaimConvChat *chat, const char *user,
  *
  * @return The flags for the user
  */
-GaimConvChatBuddyFlags purple_conv_chat_user_get_flags(GaimConvChat *chat,
+PurpleConvChatBuddyFlags purple_conv_chat_user_get_flags(PurpleConvChat *chat,
 													 const char *user);
 
 /**
@@ -1102,7 +1102,7 @@ GaimConvChatBuddyFlags purple_conv_chat_user_get_flags(GaimConvChat *chat,
  *
  * @param chat The chat.
  */
-void purple_conv_chat_clear_users(GaimConvChat *chat);
+void purple_conv_chat_clear_users(PurpleConvChat *chat);
 
 /**
  * Sets your nickname (used for hilighting) for a chat.
@@ -1110,7 +1110,7 @@ void purple_conv_chat_clear_users(GaimConvChat *chat);
  * @param chat The chat.
  * @param nick The nick.
  */
-void purple_conv_chat_set_nick(GaimConvChat *chat, const char *nick);
+void purple_conv_chat_set_nick(PurpleConvChat *chat, const char *nick);
 
 /**
  * Gets your nickname (used for hilighting) for a chat.
@@ -1118,7 +1118,7 @@ void purple_conv_chat_set_nick(GaimConvChat *chat, const char *nick);
  * @param chat The chat.
  * @return  The nick.
  */
-const char *purple_conv_chat_get_nick(GaimConvChat *chat);
+const char *purple_conv_chat_get_nick(PurpleConvChat *chat);
 
 /**
  * Finds a chat with the specified chat ID.
@@ -1128,7 +1128,7 @@ const char *purple_conv_chat_get_nick(GaimConvChat *chat);
  *
  * @return The chat conversation.
  */
-GaimConversation *purple_find_chat(const GaimConnection *gc, int id);
+PurpleConversation *purple_find_chat(const PurpleConnection *gc, int id);
 
 /**
  * Lets the core know we left a chat, without destroying it.
@@ -1136,7 +1136,7 @@ GaimConversation *purple_find_chat(const GaimConnection *gc, int id);
  *
  * @param chat The chat.
  */
-void purple_conv_chat_left(GaimConvChat *chat);
+void purple_conv_chat_left(PurpleConvChat *chat);
 
 /**
  * Returns true if we're no longer in this chat,
@@ -1147,7 +1147,7 @@ void purple_conv_chat_left(GaimConvChat *chat);
  * @return @c TRUE if we left the chat already, @c FALSE if
  * we're still there.
  */
-gboolean purple_conv_chat_has_left(GaimConvChat *chat);
+gboolean purple_conv_chat_has_left(PurpleConvChat *chat);
 
 /**
  * Creates a new chat buddy
@@ -1159,7 +1159,7 @@ gboolean purple_conv_chat_has_left(GaimConvChat *chat);
  * @return The new chat buddy
  */
 PurpleConvChatBuddy *purple_conv_chat_cb_new(const char *name, const char *alias,
-										GaimConvChatBuddyFlags flags);
+										PurpleConvChatBuddyFlags flags);
 
 /**
  * Find a chat buddy in a chat
@@ -1167,7 +1167,7 @@ PurpleConvChatBuddy *purple_conv_chat_cb_new(const char *name, const char *alias
  * @param chat The chat.
  * @param name The name of the chat buddy to find.
  */
-GaimConvChatBuddy *purple_conv_chat_cb_find(GaimConvChat *chat, const char *name);
+PurpleConvChatBuddy *purple_conv_chat_cb_find(PurpleConvChat *chat, const char *name);
 
 /**
  * Get the name of a chat buddy
@@ -1176,14 +1176,14 @@ GaimConvChatBuddy *purple_conv_chat_cb_find(GaimConvChat *chat, const char *name
  *
  * @return The name of the chat buddy.
  */
-const char *purple_conv_chat_cb_get_name(GaimConvChatBuddy *cb);
+const char *purple_conv_chat_cb_get_name(PurpleConvChatBuddy *cb);
 
 /**
  * Destroys a chat buddy
  *
  * @param cb The chat buddy to destroy
  */
-void purple_conv_chat_cb_destroy(GaimConvChatBuddy *cb);
+void purple_conv_chat_cb_destroy(PurpleConvChatBuddy *cb);
 
 /*@}*/
 
@@ -1215,4 +1215,4 @@ void purple_conversations_uninit(void);
 }
 #endif
 
-#endif /* _GAIM_CONVERSATION_H_ */
+#endif /* _PURPLE_CONVERSATION_H_ */

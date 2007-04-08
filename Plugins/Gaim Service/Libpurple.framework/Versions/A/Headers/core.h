@@ -3,7 +3,7 @@
  *
  * purple
  *
- * Gaim is the legal property of its developers, whose names are too numerous
+ * Purple is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -21,10 +21,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef _GAIM_CORE_H_
-#define _GAIM_CORE_H_
+#ifndef _PURPLE_CORE_H_
+#define _PURPLE_CORE_H_
 
-typedef struct GaimCore GaimCore;
+typedef struct PurpleCore PurpleCore;
 
 typedef struct
 {
@@ -33,7 +33,7 @@ typedef struct
 	void (*ui_init)(void);
 	void (*quit)(void);
 
-} GaimCoreUiOps;
+} PurpleCoreUiOps;
 
 #ifdef __cplusplus
 extern "C" {
@@ -59,8 +59,8 @@ void purple_core_quit(void);
 
 /**
  * Calls purple_core_quit().  This can be used as the function 
- * passed to purple_timeout_add() when you want to shutdown Gaim 
- * in a specified amount of time.  When shutting down Gaim 
+ * passed to purple_timeout_add() when you want to shutdown Purple 
+ * in a specified amount of time.  When shutting down Purple 
  * from a plugin, you must use this with a timeout value of 0: 
  *   purple_timeout_add(0, purple_core_quitcb, NULL);
  * This is ensures that code from your plugin is not being 
@@ -90,27 +90,27 @@ const char *purple_core_get_ui(void);
  *
  * This is used for such things as signals.
  */
-GaimCore *purple_get_core(void);
+PurpleCore *purple_get_core(void);
 
 /**
  * Sets the UI ops for the core.
  *
  * @param ops A UI ops structure for the core.
  */
-void purple_core_set_ui_ops(GaimCoreUiOps *ops);
+void purple_core_set_ui_ops(PurpleCoreUiOps *ops);
 
 /**
  * Returns the UI ops for the core.
  *
  * @return The core's UI ops structure.
  */
-GaimCoreUiOps *purple_core_get_ui_ops(void);
+PurpleCoreUiOps *purple_core_get_ui_ops(void);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* _GAIM_CORE_H_ */
+#endif /* _PURPLE_CORE_H_ */
 
 /*
 

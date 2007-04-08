@@ -4,7 +4,7 @@
  *
  * purple
  *
- * Gaim is the legal property of its developers, whose names are too numerous
+ * Purple is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -23,8 +23,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef _GAIM_UPNP_H_
-#define _GAIM_UPNP_H_
+#ifndef _PURPLE_UPNP_H_
+#define _PURPLE_UPNP_H_
 
 typedef struct _UPnPMappingAddRemove UPnPMappingAddRemove;
 
@@ -37,9 +37,9 @@ extern "C" {
 /**************************************************************************/
 /*@{*/
 
-/* typedef struct _GaimUPnPRequestData GaimUPnPRequestData; */
+/* typedef struct _PurpleUPnPRequestData PurpleUPnPRequestData; */
 
-typedef void (*GaimUPnPCallback) (gboolean success, gpointer data);
+typedef void (*PurpleUPnPCallback) (gboolean success, gpointer data);
 
 
 /**
@@ -58,7 +58,7 @@ void purple_upnp_init(void);
  *           discovery is complete
  * @param cb_data Extra data to be passed to the callback
  */
-void purple_upnp_discover(GaimUPnPCallback cb, gpointer cb_data);
+void purple_upnp_discover(PurpleUPnPCallback cb, gpointer cb_data);
 
 #if 0
 /**
@@ -68,7 +68,7 @@ void purple_upnp_discover(GaimUPnPCallback cb, gpointer cb_data);
  *
  * @return The control URL for the IGD we'll use to use the IGD services
  */
-const GaimUPnPControlInfo* purple_upnp_get_control_info(void);
+const PurpleUPnPControlInfo* purple_upnp_get_control_info(void);
 #endif
 
 /**
@@ -103,7 +103,7 @@ void purple_upnp_cancel_port_mapping(UPnPMappingAddRemove *mapping_data);
  * @return Data which can be passed to purple_upnp_port_mapping_cancel() to cancel
  */
 UPnPMappingAddRemove *purple_upnp_set_port_mapping(unsigned short portmap, const gchar* protocol,
-		GaimUPnPCallback cb, gpointer cb_data);
+		PurpleUPnPCallback cb, gpointer cb_data);
 
 /**
  * Deletes a port mapping in a UPnP enabled IGD that sits on the local network
@@ -120,7 +120,7 @@ UPnPMappingAddRemove *purple_upnp_set_port_mapping(unsigned short portmap, const
  * @return Data which can be passed to purple_upnp_port_mapping_cancel() to cancel
  */
 UPnPMappingAddRemove *purple_upnp_remove_port_mapping(unsigned short portmap,
-		const gchar* protocol, GaimUPnPCallback cb, gpointer cb_data);
+		const gchar* protocol, PurpleUPnPCallback cb, gpointer cb_data);
 
 /*@}*/
 
@@ -128,4 +128,4 @@ UPnPMappingAddRemove *purple_upnp_remove_port_mapping(unsigned short portmap,
 }
 #endif
 
-#endif /* _GAIM_UPNP_H_ */
+#endif /* _PURPLE_UPNP_H_ */

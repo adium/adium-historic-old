@@ -7,9 +7,6 @@
 /* Define to the full name and version of this package. */
 #define PACKAGE_STRING "libpurple 2.0.0"
 
-/* OTR version */
-#define GAIM_OTR_VERSION "3.0.0"
-
 #define DATADIR ""
 
 /* MEANWHILE plugin */
@@ -68,7 +65,7 @@ first (like Motorola and SPARC, unlike Intel and VAX). */
 #endif
 
 /* Define if plugins are enabled. */
-//#define GAIM_PLUGINS
+//#define PURPLE_PLUGINS
 
 /* configure arguments */
 #define CONFIG_ARGS "'--disable-perl' '--enable-debug'"
@@ -83,10 +80,10 @@ first (like Motorola and SPARC, unlike Intel and VAX). */
 #define ENABLE_NLS 1
 
 /* Define to make assertions fatal (useful for debugging). */
-/* #define GAIM_FATAL_ASSERTS 1 */
+/* #define PURPLE_FATAL_ASSERTS 1 */
 
 /* Define if plugins are enabled. */
-//#define GAIM_PLUGINS 1
+//#define PURPLE_PLUGINS 1
 
 /* Define if you have the external 'altzone' variable. */
 /* #undef HAVE_ALTZONE */

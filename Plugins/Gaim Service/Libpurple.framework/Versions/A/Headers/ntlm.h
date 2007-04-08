@@ -23,8 +23,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-#ifndef _GAIM_NTLM_H
-#define _GAIM_NTLM_H
+#ifndef _PURPLE_NTLM_H
+#define _PURPLE_NTLM_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -69,4 +69,4 @@ gchar *purple_ntlm_gen_type3(const gchar *username, const gchar *passw, const gc
 }
 #endif
 
-#endif /* _GAIM_NTLM_H */
+#endif /* _PURPLE_NTLM_H */
