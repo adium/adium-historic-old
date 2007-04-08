@@ -302,6 +302,7 @@
     //Custom vertically-centered text cell for account names
     cell = [[AIVerticallyCenteredTextCell alloc] init];
     [cell setFont:[NSFont boldSystemFontOfSize:13]];
+	[cell setLineBreakMode:NSLineBreakByTruncatingMiddle];
     [[tableView_accountList tableColumnWithIdentifier:@"name"] setDataCell:cell];
 	[cell release];
 
@@ -311,6 +312,8 @@
     [[tableView_accountList tableColumnWithIdentifier:@"status"] setDataCell:cell];
 	[cell release];
     
+	[tableView_accountList sizeToFit];
+
 	//Observe changes to the account list
     [[adium notificationCenter] addObserver:self
 								   selector:@selector(accountListChanged:) 
