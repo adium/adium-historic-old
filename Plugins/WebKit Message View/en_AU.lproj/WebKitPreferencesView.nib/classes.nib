@@ -47,7 +47,7 @@
                 "checkBox_useCustomBackground" = NSButton; 
                 "colorWell_customBackgroundColor" = NSColorWell; 
                 "fontPreviewField_currentFont" = JVFontPreviewField; 
-                "imageView_backgroundImage" = NSImageView; 
+                "imageView_backgroundImage" = AIImageViewWithImagePicker; 
                 "popUp_backgroundImageType" = NSPopUpButton; 
                 "popUp_styles" = NSPopUpButton; 
                 "popUp_variants" = NSPopUpButton; 
