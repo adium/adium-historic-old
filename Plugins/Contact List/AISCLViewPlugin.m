@@ -15,12 +15,13 @@
  */
 
 #import "AIBorderlessListWindowController.h"
-#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIListLayoutWindowController.h"
 #import "AIListThemeWindowController.h"
 #import "AISCLViewPlugin.h"
 #import "AIStandardListWindowController.h"
 #import "ESContactListAdvancedPreferences.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 
 #define PREF_GROUP_APPEARANCE		@"Appearance"
