@@ -30,6 +30,7 @@
 #import <AIUtilities/AIVerticallyCenteredTextCell.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIImageTextCell.h>
 
 #define PREF_GROUP_EVENT_PRESETS	@"Event Presets"
@@ -66,23 +67,22 @@
 @end
 
 @implementation ESGlobalEventsPreferences
-/*!
- * @brief Category
- */
-- (AIPreferenceCategory)category{
-    return AIPref_Events;
+- (NSString *)paneIdentifier
+{
+	return @"Events";
 }
-/*!
- * @brief Label
- */
-- (NSString *)label{
-    return AILocalizedString(@"Events", "Name of preferences and tab for specifying what Adium should do when events occur - for example, when display a Growl alert when John signs on.");
+- (NSString *)paneName{	
+    return AILocalizedString(@"Events", "Name of preferences and tab for specifying what Adium should do when events occur - for example, display a Growl alert when John signs on.");
 }
 /*!
  * @brief Nib name
  */
 - (NSString *)nibName{
     return @"GlobalEventsPreferences";
+}
+- (NSImage *)paneIcon
+{
+	return [NSImage imageNamed:@"pref-events" forClass:[self class]];
 }
 
 - (BOOL)resizableHorizontally
