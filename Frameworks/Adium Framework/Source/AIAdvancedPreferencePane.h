@@ -6,10 +6,12 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <Adium/AIPreferencePane.h>
+#import <Adium/AIModularPane.h>
 
-@interface AIAdvancedPreferencePane : AIPreferencePane {
+@interface AIAdvancedPreferencePane : AIModularPane {
 
 }
+
++ (AIAdvancedPreferencePane *)preferencePane;
 
 @end
