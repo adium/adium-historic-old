@@ -25,6 +25,7 @@
 #import "AdiumURLHandling.h"
 #import "XtrasInstaller.h"
 #import "ESTextAndButtonsWindowController.h"
+#import "AINewContactWindowController.h"
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIURLAdditions.h>
 #import <Adium/AIAccount.h>
@@ -178,6 +179,7 @@
 		
 		if ((serviceID = [schemeToServiceDict objectForKey:scheme])) {
 			NSString *host = [url host];
+			NSString *query = [url query];
 			if ([host caseInsensitiveCompare:@"goim"] == NSOrderedSame) {
 				// aim://goim?screenname=tekjew
 				NSString	*name = [[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] compactedString];
@@ -271,21 +273,48 @@
 					}
 				}
 				
+			//Jabber additions
+			} else if ([query rangeOfString:@"message"].location == 0) {
+				//xmpp:johndoe@jabber.org?message;subject=Subject;body=Body
+				NSString *msg = [[url queryArgumentForKey:@"body"] stringByDecodingURLEscapes];
+				
+				[self _openChatToContactWithName:[NSString stringWithFormat:@"%@@%@", [url user], [url host]]
+				                       onService:serviceID
+				                     withMessage:msg];
+			} else if ([query rangeOfString:@"roster"].location == 0
+			           || [query rangeOfString:@"subscribe"].location == 0) {
+				//xmpp:johndoe@jabber.org?roster;name=John%20Doe;group=Friends
+				//xmpp:johndoe@jabber.org?subscribe
+				
+				//Group specification and name specification is currently ignored,
+				//due to limitations in the AINewContactWindowController API.
+
+				AIService *jabberService;
+
+				jabberService = [[[AIObject sharedAdiumInstance] accountController] firstServiceWithServiceID:@"Jabber"];
+
+				[AINewContactWindowController promptForNewContactOnWindow:nil
+				                                                     name:[NSString stringWithFormat:@"%@@%@", [url user], [url host]]
+				                                                  service:jabberService];
+			} else if ([query rangeOfString:@"remove"].location == 0
+			           || [query rangeOfString:@"unsubscribe"].location == 0) {
+				// xmpp:johndoe@jabber.org?remove
+				// xmpp:johndoe@jabber.org?unsubscribe
+				
 			} else {
 				//Default to opening the host as a name.
-
 				NSString	*user = [url user];
 				NSString	*host = [url host];
 				NSString	*name;
 				if (user && [user length]) {
-					// jabber://tekjew@jabber.org
-					// msn://jdoe@hotmail.com
+					//jabber://tekjew@jabber.org
+					//msn://jdoe@hotmail.com
 					name = [NSString stringWithFormat:@"%@@%@",[url user],[url host]];
 				} else {
-					// aim://tekjew
+					//aim://tekjew
 					name = host;
 				}
-				
+
 				[self _openChatToContactWithName:[name compactedString]
 									   onService:serviceID
 									 withMessage:nil];
