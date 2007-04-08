@@ -19,8 +19,8 @@
  * Contributor(s):
  *
  */
-#ifndef _GAIM_SHA_H_
-#define _GAIM_SHA_H_
+#ifndef _PURPLE_SHA_H_
+#define _PURPLE_SHA_H_
 
 #include <glib.h>
 
@@ -38,4 +38,4 @@ void shaUpdate(SHA_CTX *ctx, unsigned char *dataIn, int len);
 void shaFinal(SHA_CTX *ctx, unsigned char hashout[20]);
 void shaBlock(unsigned char *dataIn, int len, unsigned char hashout[20]);
 
-#endif /* _GAIM_SHA_H_ */
+#endif /* _PURPLE_SHA_H_ */

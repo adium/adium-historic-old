@@ -1,2 +1,2 @@
 //***Adium
-void msn_set_friendly_name(GaimConnection *gc, const char *entry);
+void msn_set_friendly_name(PurpleConnection *gc, const char *entry);
