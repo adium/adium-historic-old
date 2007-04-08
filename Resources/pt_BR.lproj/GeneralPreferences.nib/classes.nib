@@ -47,6 +47,7 @@
         }, 
         {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {
+            ACTIONS = {configureMessageHistory = id; }; 
             CLASS = ESGeneralPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
