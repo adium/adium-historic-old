@@ -4,7 +4,7 @@
  *
  * purple
  *
- * Gaim is the legal property of its developers, whose names are too numerous
+ * Purple is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -23,31 +23,31 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  *
  */
-#ifndef _GAIM_PREFS_H_
-#define _GAIM_PREFS_H_
+#ifndef _PURPLE_PREFS_H_
+#define _PURPLE_PREFS_H_
 
 #include <glib.h>
 
 /**
  * Pref data types.
  */
-typedef enum _GaimPrefType
+typedef enum _PurplePrefType
 {
-	GAIM_PREF_NONE,
-	GAIM_PREF_BOOLEAN,
-	GAIM_PREF_INT,
-	GAIM_PREF_STRING,
-	GAIM_PREF_STRING_LIST,
-	GAIM_PREF_PATH,
-	GAIM_PREF_PATH_LIST
+	PURPLE_PREF_NONE,
+	PURPLE_PREF_BOOLEAN,
+	PURPLE_PREF_INT,
+	PURPLE_PREF_STRING,
+	PURPLE_PREF_STRING_LIST,
+	PURPLE_PREF_PATH,
+	PURPLE_PREF_PATH_LIST
 
-} GaimPrefType;
+} PurplePrefType;
 
 /**
  * Pref change callback type
  */
 
-typedef void (*GaimPrefCallback) (const char *name, GaimPrefType type,
+typedef void (*PurplePrefCallback) (const char *name, PurplePrefType type,
 		gconstpointer val, gpointer data);
 
 #ifdef __cplusplus
@@ -231,7 +231,7 @@ gboolean purple_prefs_exists(const char *name);
  * @param name The name of the pref
  * @return The type of the pref
  */
-GaimPrefType purple_prefs_get_type(const char *name);
+PurplePrefType purple_prefs_get_type(const char *name);
 
 /**
  * Get boolean pref value
@@ -285,7 +285,7 @@ GList *purple_prefs_get_path_list(const char *name);
 /**
  * Add a callback to a pref (and its children)
  */
-guint purple_prefs_connect_callback(void *handle, const char *name, GaimPrefCallback cb,
+guint purple_prefs_connect_callback(void *handle, const char *name, PurplePrefCallback cb,
 		gpointer data);
 
 /**
@@ -319,4 +319,4 @@ void purple_prefs_update_old(void);
 }
 #endif
 
-#endif /* _GAIM_PREFS_H_ */
+#endif /* _PURPLE_PREFS_H_ */

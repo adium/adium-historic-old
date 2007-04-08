@@ -4,7 +4,7 @@
  *
  * purple
  *
- * Gaim is the legal property of its developers, whose names are too numerous
+ * Purple is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -22,18 +22,18 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef _GAIM_BUDDYICON_H_
-#define _GAIM_BUDDYICON_H_
+#ifndef _PURPLE_BUDDYICON_H_
+#define _PURPLE_BUDDYICON_H_
 
-typedef struct _GaimBuddyIcon GaimBuddyIcon;
+typedef struct _PurpleBuddyIcon PurpleBuddyIcon;
 
 #include "account.h"
 #include "blist.h"
 #include "prpl.h"
 
-struct _GaimBuddyIcon
+struct _PurpleBuddyIcon
 {
-	GaimAccount *account;  /**< The account the user is on.        */
+	PurpleAccount *account;  /**< The account the user is on.        */
 	char *username;        /**< The username the icon belongs to.  */
 
 	void  *data;           /**< The buddy icon data.               */
@@ -62,7 +62,7 @@ extern "C" {
  *
  * @return The buddy icon structure.
  */
-GaimBuddyIcon *purple_buddy_icon_new(GaimAccount *account, const char *username,
+PurpleBuddyIcon *purple_buddy_icon_new(PurpleAccount *account, const char *username,
 								void *icon_data, size_t icon_len);
 
 /**
@@ -73,7 +73,7 @@ GaimBuddyIcon *purple_buddy_icon_new(GaimAccount *account, const char *username,
  *
  * @param icon The buddy icon structure to destroy.
  */
-void purple_buddy_icon_destroy(GaimBuddyIcon *icon);
+void purple_buddy_icon_destroy(PurpleBuddyIcon *icon);
 
 /**
  * Increments the reference count on a buddy icon.
@@ -82,7 +82,7 @@ void purple_buddy_icon_destroy(GaimBuddyIcon *icon);
  *
  * @return @a icon.
  */
-GaimBuddyIcon *purple_buddy_icon_ref(GaimBuddyIcon *icon);
+PurpleBuddyIcon *purple_buddy_icon_ref(PurpleBuddyIcon *icon);
 
 /**
  * Decrements the reference count on a buddy icon.
@@ -93,14 +93,14 @@ GaimBuddyIcon *purple_buddy_icon_ref(GaimBuddyIcon *icon);
  *
  * @return @a icon, or @c NULL if the reference count reached 0.
  */
-GaimBuddyIcon *purple_buddy_icon_unref(GaimBuddyIcon *icon);
+PurpleBuddyIcon *purple_buddy_icon_unref(PurpleBuddyIcon *icon);
 
 /**
  * Updates every instance of this icon.
  *
  * @param icon The buddy icon.
  */
-void purple_buddy_icon_update(GaimBuddyIcon *icon);
+void purple_buddy_icon_update(PurpleBuddyIcon *icon);
 
 /**
  * Caches a buddy icon associated with a specific buddy to disk.
@@ -108,14 +108,14 @@ void purple_buddy_icon_update(GaimBuddyIcon *icon);
  * @param icon  The buddy icon.
  * @param buddy The buddy that this icon belongs to.
  */
-void purple_buddy_icon_cache(GaimBuddyIcon *icon, GaimBuddy *buddy);
+void purple_buddy_icon_cache(PurpleBuddyIcon *icon, PurpleBuddy *buddy);
 
 /**
  * Removes cached buddy icon for a specific buddy.
  *
  * @param buddy The buddy for which to remove the cached icon.
  */
-void purple_buddy_icon_uncache(GaimBuddy *buddy);
+void purple_buddy_icon_uncache(PurpleBuddy *buddy);
 
 /**
  * Sets the buddy icon's account.
@@ -123,7 +123,7 @@ void purple_buddy_icon_uncache(GaimBuddy *buddy);
  * @param icon    The buddy icon.
  * @param account The account.
  */
-void purple_buddy_icon_set_account(GaimBuddyIcon *icon, GaimAccount *account);
+void purple_buddy_icon_set_account(PurpleBuddyIcon *icon, PurpleAccount *account);
 
 /**
  * Sets the buddy icon's username.
@@ -131,7 +131,7 @@ void purple_buddy_icon_set_account(GaimBuddyIcon *icon, GaimAccount *account);
  * @param icon     The buddy icon.
  * @param username The username.
  */
-void purple_buddy_icon_set_username(GaimBuddyIcon *icon, const char *username);
+void purple_buddy_icon_set_username(PurpleBuddyIcon *icon, const char *username);
 
 /**
  * Sets the buddy icon's icon data.
@@ -140,7 +140,7 @@ void purple_buddy_icon_set_username(GaimBuddyIcon *icon, const char *username);
  * @param data The buddy icon data.
  * @param len  The length of the icon data.
  */
-void purple_buddy_icon_set_data(GaimBuddyIcon *icon, void *data, size_t len);
+void purple_buddy_icon_set_data(PurpleBuddyIcon *icon, void *data, size_t len);
 
 /**
  * Sets the buddy icon's path.
@@ -148,7 +148,7 @@ void purple_buddy_icon_set_data(GaimBuddyIcon *icon, void *data, size_t len);
  * @param icon The buddy icon.
  * @param path The buddy icon's non-cached path.
  */
-void purple_buddy_icon_set_path(GaimBuddyIcon *icon, const gchar *path);
+void purple_buddy_icon_set_path(PurpleBuddyIcon *icon, const gchar *path);
 
 /**
  * Returns the buddy icon's account.
@@ -157,7 +157,7 @@ void purple_buddy_icon_set_path(GaimBuddyIcon *icon, const gchar *path);
  *
  * @return The account.
  */
-GaimAccount *purple_buddy_icon_get_account(const GaimBuddyIcon *icon);
+PurpleAccount *purple_buddy_icon_get_account(const PurpleBuddyIcon *icon);
 
 /**
  * Returns the buddy icon's username.
@@ -166,7 +166,7 @@ GaimAccount *purple_buddy_icon_get_account(const GaimBuddyIcon *icon);
  *
  * @return The username.
  */
-const char *purple_buddy_icon_get_username(const GaimBuddyIcon *icon);
+const char *purple_buddy_icon_get_username(const PurpleBuddyIcon *icon);
 
 /**
  * Returns the buddy icon's data.
@@ -176,16 +176,16 @@ const char *purple_buddy_icon_get_username(const GaimBuddyIcon *icon);
  *
  * @return The icon data.
  */
-const guchar *purple_buddy_icon_get_data(const GaimBuddyIcon *icon, size_t *len);
+const guchar *purple_buddy_icon_get_data(const PurpleBuddyIcon *icon, size_t *len);
 
 /**
  * Returns the buddy icon's path.
  *
  * @param icon The buddy icon.
- * 
- * @preturn The buddy icon's non-cached path.
+ *
+ * @return The buddy icon's non-cached path.
  */
-const gchar *purple_buddy_icon_get_path(GaimBuddyIcon *icon);
+const gchar *purple_buddy_icon_get_path(PurpleBuddyIcon *icon);
 
 /**
  * Returns an extension corresponding to the buddy icon's file type.
@@ -194,7 +194,7 @@ const gchar *purple_buddy_icon_get_path(GaimBuddyIcon *icon);
  *
  * @return The icon's extension.
  */
-const char *purple_buddy_icon_get_type(const GaimBuddyIcon *icon);
+const char *purple_buddy_icon_get_type(const PurpleBuddyIcon *icon);
 
 /*@}*/
 
@@ -213,7 +213,7 @@ const char *purple_buddy_icon_get_type(const GaimBuddyIcon *icon);
  *
  * @return The buddy icon set, or NULL if no icon was set.
  */
-void purple_buddy_icons_set_for_user(GaimAccount *account, const char *username,
+void purple_buddy_icons_set_for_user(PurpleAccount *account, const char *username,
 									void *icon_data, size_t icon_len);
 
 /**
@@ -224,7 +224,7 @@ void purple_buddy_icons_set_for_user(GaimAccount *account, const char *username,
  *
  * @return The icon data if found, or @c NULL if not found.
  */
-GaimBuddyIcon *purple_buddy_icons_find(GaimAccount *account,
+PurpleBuddyIcon *purple_buddy_icons_find(PurpleAccount *account,
 									 const char *username);
 
 /**
@@ -301,7 +301,7 @@ void purple_buddy_icons_uninit(void);
 /**
  * Gets display size for a buddy icon
  */
-void purple_buddy_icon_get_scale_size(GaimBuddyIconSpec *spec, int *width, int *height);
+void purple_buddy_icon_get_scale_size(PurpleBuddyIconSpec *spec, int *width, int *height);
 
 /*@}*/
 
@@ -309,4 +309,4 @@ void purple_buddy_icon_get_scale_size(GaimBuddyIconSpec *spec, int *width, int *
 }
 #endif
 
-#endif /* _GAIM_BUDDYICON_H_ */
+#endif /* _PURPLE_BUDDYICON_H_ */

@@ -4,7 +4,7 @@
  *
  * purple
  *
- * Gaim is the legal property of its developers, whose names are too numerous
+ * Purple is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -22,8 +22,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef _GAIM_REQUEST_H_
-#define _GAIM_REQUEST_H_
+#ifndef _PURPLE_REQUEST_H_
+#define _PURPLE_REQUEST_H_
 
 #include <stdlib.h>
 #include <glib-object.h>
@@ -31,38 +31,38 @@
 
 #include "account.h"
 
-#define GAIM_DEFAULT_ACTION_NONE	-1
+#define PURPLE_DEFAULT_ACTION_NONE	-1
 
 /**
  * Request types.
  */
 typedef enum
 {
-	GAIM_REQUEST_INPUT = 0,  /**< Text input request.        */
-	GAIM_REQUEST_CHOICE,     /**< Multiple-choice request.   */
-	GAIM_REQUEST_ACTION,     /**< Action request.            */
-	GAIM_REQUEST_FIELDS,     /**< Multiple fields request.   */
-	GAIM_REQUEST_FILE,       /**< File open or save request. */
-	GAIM_REQUEST_FOLDER      /**< Folder selection request.  */
+	PURPLE_REQUEST_INPUT = 0,  /**< Text input request.        */
+	PURPLE_REQUEST_CHOICE,     /**< Multiple-choice request.   */
+	PURPLE_REQUEST_ACTION,     /**< Action request.            */
+	PURPLE_REQUEST_FIELDS,     /**< Multiple fields request.   */
+	PURPLE_REQUEST_FILE,       /**< File open or save request. */
+	PURPLE_REQUEST_FOLDER      /**< Folder selection request.  */
 
-} GaimRequestType;
+} PurpleRequestType;
 
 /**
  * A type of field.
  */
 typedef enum
 {
-	GAIM_REQUEST_FIELD_NONE,
-	GAIM_REQUEST_FIELD_STRING,
-	GAIM_REQUEST_FIELD_INTEGER,
-	GAIM_REQUEST_FIELD_BOOLEAN,
-	GAIM_REQUEST_FIELD_CHOICE,
-	GAIM_REQUEST_FIELD_LIST,
-	GAIM_REQUEST_FIELD_LABEL,
-	GAIM_REQUEST_FIELD_IMAGE,
-	GAIM_REQUEST_FIELD_ACCOUNT
+	PURPLE_REQUEST_FIELD_NONE,
+	PURPLE_REQUEST_FIELD_STRING,
+	PURPLE_REQUEST_FIELD_INTEGER,
+	PURPLE_REQUEST_FIELD_BOOLEAN,
+	PURPLE_REQUEST_FIELD_CHOICE,
+	PURPLE_REQUEST_FIELD_LIST,
+	PURPLE_REQUEST_FIELD_LABEL,
+	PURPLE_REQUEST_FIELD_IMAGE,
+	PURPLE_REQUEST_FIELD_ACCOUNT
 
-} GaimRequestFieldType;
+} PurpleRequestFieldType;
 
 /**
  * Multiple fields request data.
@@ -77,28 +77,28 @@ typedef struct
 
 	void *ui_data;
 
-} GaimRequestFields;
+} PurpleRequestFields;
 
 /**
  * A group of fields with a title.
  */
 typedef struct
 {
-	GaimRequestFields *fields_list;
+	PurpleRequestFields *fields_list;
 
 	char *title;
 
 	GList *fields;
 
-} GaimRequestFieldGroup;
+} PurpleRequestFieldGroup;
 
 /**
  * A request field.
  */
 typedef struct
 {
-	GaimRequestFieldType type;
-	GaimRequestFieldGroup *group;
+	PurpleRequestFieldType type;
+	PurpleRequestFieldGroup *group;
 
 	char *id;
 	char *label;
@@ -155,11 +155,11 @@ typedef struct
 
 		struct
 		{
-			GaimAccount *default_account;
-			GaimAccount *account;
+			PurpleAccount *default_account;
+			PurpleAccount *account;
 			gboolean show_all;
 
-			GaimFilterAccountFunc filter_func;
+			PurpleFilterAccountFunc filter_func;
 
 		} account;
 
@@ -175,7 +175,7 @@ typedef struct
 
 	void *ui_data;
 
-} GaimRequestField;
+} PurpleRequestField;
 
 /**
  * Request UI operations.
@@ -198,24 +198,24 @@ typedef struct
 							void *user_data, size_t action_count,
 							va_list actions);
 	void *(*request_fields)(const char *title, const char *primary,
-							const char *secondary, GaimRequestFields *fields,
+							const char *secondary, PurpleRequestFields *fields,
 							const char *ok_text, GCallback ok_cb,
 							const char *cancel_text, GCallback cancel_cb,
 							void *user_data);
 	void *(*request_file)(const char *title, const char *filename,
 						  gboolean savedialog, GCallback ok_cb,
 						  GCallback cancel_cb, void *user_data);
-	void (*close_request)(GaimRequestType type, void *ui_handle);
+	void (*close_request)(PurpleRequestType type, void *ui_handle);
 	void *(*request_folder)(const char *title, const char *dirname,
 						  GCallback ok_cb, GCallback cancel_cb,
 						  void *user_data);
-} GaimRequestUiOps;
+} PurpleRequestUiOps;
 
-typedef void (*GaimRequestInputCb)(void *, const char *);
-typedef void (*GaimRequestActionCb)(void *, int);
-typedef void (*GaimRequestChoiceCb)(void *, int);
-typedef void (*GaimRequestFieldsCb)(void *, GaimRequestFields *fields);
-typedef void (*GaimRequestFileCb)(void *, const char *filename);
+typedef void (*PurpleRequestInputCb)(void *, const char *);
+typedef void (*PurpleRequestActionCb)(void *, int);
+typedef void (*PurpleRequestChoiceCb)(void *, int);
+typedef void (*PurpleRequestFieldsCb)(void *, PurpleRequestFields *fields);
+typedef void (*PurpleRequestFileCb)(void *, const char *filename);
 
 #ifdef __cplusplus
 extern "C" {
@@ -229,16 +229,16 @@ extern "C" {
 /**
  * Creates a list of fields to pass to purple_request_fields().
  *
- * @return A GaimRequestFields structure.
+ * @return A PurpleRequestFields structure.
  */
-GaimRequestFields *purple_request_fields_new(void);
+PurpleRequestFields *purple_request_fields_new(void);
 
 /**
  * Destroys a list of fields.
  *
  * @param fields The list of fields to destroy.
  */
-void purple_request_fields_destroy(GaimRequestFields *fields);
+void purple_request_fields_destroy(PurpleRequestFields *fields);
 
 /**
  * Adds a group of fields to the list.
@@ -246,8 +246,8 @@ void purple_request_fields_destroy(GaimRequestFields *fields);
  * @param fields The fields list.
  * @param group  The group to add.
  */
-void purple_request_fields_add_group(GaimRequestFields *fields,
-								   GaimRequestFieldGroup *group);
+void purple_request_fields_add_group(PurpleRequestFields *fields,
+								   PurpleRequestFieldGroup *group);
 
 /**
  * Returns a list of all groups in a field list.
@@ -256,7 +256,7 @@ void purple_request_fields_add_group(GaimRequestFields *fields,
  *
  * @return A list of groups.
  */
-GList *purple_request_fields_get_groups(const GaimRequestFields *fields);
+GList *purple_request_fields_get_groups(const PurpleRequestFields *fields);
 
 /**
  * Returns whether or not the field with the specified ID exists.
@@ -266,7 +266,7 @@ GList *purple_request_fields_get_groups(const GaimRequestFields *fields);
  *
  * @return TRUE if the field exists, or FALSE.
  */
-gboolean purple_request_fields_exists(const GaimRequestFields *fields,
+gboolean purple_request_fields_exists(const PurpleRequestFields *fields,
 									const char *id);
 
 /**
@@ -276,7 +276,7 @@ gboolean purple_request_fields_exists(const GaimRequestFields *fields,
  *
  * @return The list of required fields.
  */
-const GList *purple_request_fields_get_required(const GaimRequestFields *fields);
+const GList *purple_request_fields_get_required(const PurpleRequestFields *fields);
 
 /**
  * Returns whether or not a field with the specified ID is required.
@@ -286,7 +286,7 @@ const GList *purple_request_fields_get_required(const GaimRequestFields *fields)
  *
  * @return TRUE if the specified field is required, or FALSE.
  */
-gboolean purple_request_fields_is_field_required(const GaimRequestFields *fields,
+gboolean purple_request_fields_is_field_required(const PurpleRequestFields *fields,
 											   const char *id);
 
 /**
@@ -297,7 +297,7 @@ gboolean purple_request_fields_is_field_required(const GaimRequestFields *fields
  * @return TRUE if all required fields have values, or FALSE.
  */
 gboolean purple_request_fields_all_required_filled(
-	const GaimRequestFields *fields);
+	const PurpleRequestFields *fields);
 
 /**
  * Return the field with the specified ID.
@@ -307,8 +307,8 @@ gboolean purple_request_fields_all_required_filled(
  *
  * @return The field, if found.
  */
-GaimRequestField *purple_request_fields_get_field(
-		const GaimRequestFields *fields, const char *id);
+PurpleRequestField *purple_request_fields_get_field(
+		const PurpleRequestFields *fields, const char *id);
 
 /**
  * Returns the string value of a field with the specified ID.
@@ -318,7 +318,7 @@ GaimRequestField *purple_request_fields_get_field(
  *
  * @return The string value, if found, or @c NULL otherwise.
  */
-const char *purple_request_fields_get_string(const GaimRequestFields *fields,
+const char *purple_request_fields_get_string(const PurpleRequestFields *fields,
 										   const char *id);
 
 /**
@@ -329,7 +329,7 @@ const char *purple_request_fields_get_string(const GaimRequestFields *fields,
  *
  * @return The integer value, if found, or 0 otherwise.
  */
-int purple_request_fields_get_integer(const GaimRequestFields *fields,
+int purple_request_fields_get_integer(const PurpleRequestFields *fields,
 									const char *id);
 
 /**
@@ -340,7 +340,7 @@ int purple_request_fields_get_integer(const GaimRequestFields *fields,
  *
  * @return The boolean value, if found, or @c FALSE otherwise.
  */
-gboolean purple_request_fields_get_bool(const GaimRequestFields *fields,
+gboolean purple_request_fields_get_bool(const PurpleRequestFields *fields,
 									  const char *id);
 
 /**
@@ -351,7 +351,7 @@ gboolean purple_request_fields_get_bool(const GaimRequestFields *fields,
  *
  * @return The choice index, if found, or -1 otherwise.
  */
-int purple_request_fields_get_choice(const GaimRequestFields *fields,
+int purple_request_fields_get_choice(const PurpleRequestFields *fields,
 								   const char *id);
 
 /**
@@ -362,7 +362,7 @@ int purple_request_fields_get_choice(const GaimRequestFields *fields,
  *
  * @return The account value, if found, or NULL otherwise.
  */
-GaimAccount *purple_request_fields_get_account(const GaimRequestFields *fields,
+PurpleAccount *purple_request_fields_get_account(const PurpleRequestFields *fields,
 											 const char *id);
 
 /*@}*/
@@ -379,14 +379,14 @@ GaimAccount *purple_request_fields_get_account(const GaimRequestFields *fields,
  *
  * @return A new fields group
  */
-GaimRequestFieldGroup *purple_request_field_group_new(const char *title);
+PurpleRequestFieldGroup *purple_request_field_group_new(const char *title);
 
 /**
  * Destroys a fields group.
  *
  * @param group The group to destroy.
  */
-void purple_request_field_group_destroy(GaimRequestFieldGroup *group);
+void purple_request_field_group_destroy(PurpleRequestFieldGroup *group);
 
 /**
  * Adds a field to the group.
@@ -394,8 +394,8 @@ void purple_request_field_group_destroy(GaimRequestFieldGroup *group);
  * @param group The group to add the field to.
  * @param field The field to add to the group.
  */
-void purple_request_field_group_add_field(GaimRequestFieldGroup *group,
-										GaimRequestField *field);
+void purple_request_field_group_add_field(PurpleRequestFieldGroup *group,
+										PurpleRequestField *field);
 
 /**
  * Returns the title of a fields group.
@@ -405,7 +405,7 @@ void purple_request_field_group_add_field(GaimRequestFieldGroup *group,
  * @return The title, if set.
  */
 const char *purple_request_field_group_get_title(
-		const GaimRequestFieldGroup *group);
+		const PurpleRequestFieldGroup *group);
 
 /**
  * Returns a list of all fields in a group.
@@ -415,7 +415,7 @@ const char *purple_request_field_group_get_title(
  * @return The list of fields in the group.
  */
 GList *purple_request_field_group_get_fields(
-		const GaimRequestFieldGroup *group);
+		const PurpleRequestFieldGroup *group);
 
 /*@}*/
 
@@ -433,15 +433,15 @@ GList *purple_request_field_group_get_fields(
  *
  * @return The new field.
  */
-GaimRequestField *purple_request_field_new(const char *id, const char *text,
-										 GaimRequestFieldType type);
+PurpleRequestField *purple_request_field_new(const char *id, const char *text,
+										 PurpleRequestFieldType type);
 
 /**
  * Destroys a field.
  *
  * @param field The field to destroy.
  */
-void purple_request_field_destroy(GaimRequestField *field);
+void purple_request_field_destroy(PurpleRequestField *field);
 
 /**
  * Sets the label text of a field.
@@ -449,7 +449,7 @@ void purple_request_field_destroy(GaimRequestField *field);
  * @param field The field.
  * @param label The text label.
  */
-void purple_request_field_set_label(GaimRequestField *field, const char *label);
+void purple_request_field_set_label(PurpleRequestField *field, const char *label);
 
 /**
  * Sets whether or not a field is visible.
@@ -457,7 +457,7 @@ void purple_request_field_set_label(GaimRequestField *field, const char *label);
  * @param field   The field.
  * @param visible TRUE if visible, or FALSE if not.
  */
-void purple_request_field_set_visible(GaimRequestField *field, gboolean visible);
+void purple_request_field_set_visible(PurpleRequestField *field, gboolean visible);
 
 /**
  * Sets the type hint for the field.
@@ -468,7 +468,7 @@ void purple_request_field_set_visible(GaimRequestField *field, gboolean visible)
  * @param field     The field.
  * @param type_hint The type hint.
  */
-void purple_request_field_set_type_hint(GaimRequestField *field,
+void purple_request_field_set_type_hint(PurpleRequestField *field,
 									  const char *type_hint);
 
 /**
@@ -477,7 +477,7 @@ void purple_request_field_set_type_hint(GaimRequestField *field,
  * @param field    The field.
  * @param required TRUE if required, or FALSE.
  */
-void purple_request_field_set_required(GaimRequestField *field,
+void purple_request_field_set_required(PurpleRequestField *field,
 									 gboolean required);
 
 /**
@@ -487,7 +487,7 @@ void purple_request_field_set_required(GaimRequestField *field,
  *
  * @return The field's type.
  */
-GaimRequestFieldType purple_request_field_get_type(const GaimRequestField *field);
+PurpleRequestFieldType purple_request_field_get_type(const PurpleRequestField *field);
 
 /**
  * Returns the ID of a field.
@@ -496,7 +496,7 @@ GaimRequestFieldType purple_request_field_get_type(const GaimRequestField *field
  *
  * @return The ID
  */
-const char *purple_request_field_get_id(const GaimRequestField *field);
+const char *purple_request_field_get_id(const PurpleRequestField *field);
 
 /**
  * Returns the label text of a field.
@@ -505,7 +505,7 @@ const char *purple_request_field_get_id(const GaimRequestField *field);
  *
  * @return The label text.
  */
-const char *purple_request_field_get_label(const GaimRequestField *field);
+const char *purple_request_field_get_label(const PurpleRequestField *field);
 
 /**
  * Returns whether or not a field is visible.
@@ -514,7 +514,7 @@ const char *purple_request_field_get_label(const GaimRequestField *field);
  *
  * @return TRUE if the field is visible. FALSE otherwise.
  */
-gboolean purple_request_field_is_visible(const GaimRequestField *field);
+gboolean purple_request_field_is_visible(const PurpleRequestField *field);
 
 /**
  * Returns the field's type hint.
@@ -523,7 +523,7 @@ gboolean purple_request_field_is_visible(const GaimRequestField *field);
  *
  * @return The field's type hint.
  */
-const char *purple_request_field_get_type_hint(const GaimRequestField *field);
+const char *purple_request_field_get_type_hint(const PurpleRequestField *field);
 
 /**
  * Returns whether or not a field is required.
@@ -532,7 +532,7 @@ const char *purple_request_field_get_type_hint(const GaimRequestField *field);
  *
  * @return TRUE if the field is required, or FALSE.
  */
-gboolean purple_request_field_is_required(const GaimRequestField *field);
+gboolean purple_request_field_is_required(const PurpleRequestField *field);
 
 /*@}*/
 
@@ -551,7 +551,7 @@ gboolean purple_request_field_is_required(const GaimRequestField *field);
  *
  * @return The new field.
  */
-GaimRequestField *purple_request_field_string_new(const char *id,
+PurpleRequestField *purple_request_field_string_new(const char *id,
 												const char *text,
 												const char *default_value,
 												gboolean multiline);
@@ -562,7 +562,7 @@ GaimRequestField *purple_request_field_string_new(const char *id,
  * @param field         The field.
  * @param default_value The default value.
  */
-void purple_request_field_string_set_default_value(GaimRequestField *field,
+void purple_request_field_string_set_default_value(PurpleRequestField *field,
 												 const char *default_value);
 
 /**
@@ -571,7 +571,7 @@ void purple_request_field_string_set_default_value(GaimRequestField *field,
  * @param field The field.
  * @param value The value.
  */
-void purple_request_field_string_set_value(GaimRequestField *field,
+void purple_request_field_string_set_value(PurpleRequestField *field,
 										 const char *value);
 
 /**
@@ -581,7 +581,7 @@ void purple_request_field_string_set_value(GaimRequestField *field,
  * @param field  The field.
  * @param masked The masked value.
  */
-void purple_request_field_string_set_masked(GaimRequestField *field,
+void purple_request_field_string_set_masked(PurpleRequestField *field,
 										  gboolean masked);
 
 /**
@@ -590,7 +590,7 @@ void purple_request_field_string_set_masked(GaimRequestField *field,
  * @param field    The field.
  * @param editable The editable value.
  */
-void purple_request_field_string_set_editable(GaimRequestField *field,
+void purple_request_field_string_set_editable(PurpleRequestField *field,
 											gboolean editable);
 
 /**
@@ -601,7 +601,7 @@ void purple_request_field_string_set_editable(GaimRequestField *field,
  * @return The default value.
  */
 const char *purple_request_field_string_get_default_value(
-		const GaimRequestField *field);
+		const PurpleRequestField *field);
 
 /**
  * Returns the user-entered value in a string field.
@@ -610,7 +610,7 @@ const char *purple_request_field_string_get_default_value(
  *
  * @return The value.
  */
-const char *purple_request_field_string_get_value(const GaimRequestField *field);
+const char *purple_request_field_string_get_value(const PurpleRequestField *field);
 
 /**
  * Returns whether or not a string field is multi-line.
@@ -619,7 +619,7 @@ const char *purple_request_field_string_get_value(const GaimRequestField *field)
  *
  * @return @c TRUE if the field is mulit-line, or @c FALSE otherwise.
  */
-gboolean purple_request_field_string_is_multiline(const GaimRequestField *field);
+gboolean purple_request_field_string_is_multiline(const PurpleRequestField *field);
 
 /**
  * Returns whether or not a string field is masked.
@@ -628,7 +628,7 @@ gboolean purple_request_field_string_is_multiline(const GaimRequestField *field)
  *
  * @return @c TRUE if the field is masked, or @c FALSE otherwise.
  */
-gboolean purple_request_field_string_is_masked(const GaimRequestField *field);
+gboolean purple_request_field_string_is_masked(const PurpleRequestField *field);
 
 /**
  * Returns whether or not a string field is editable.
@@ -637,7 +637,7 @@ gboolean purple_request_field_string_is_masked(const GaimRequestField *field);
  *
  * @return @c TRUE if the field is editable, or @c FALSE otherwise.
  */
-gboolean purple_request_field_string_is_editable(const GaimRequestField *field);
+gboolean purple_request_field_string_is_editable(const PurpleRequestField *field);
 
 /*@}*/
 
@@ -655,7 +655,7 @@ gboolean purple_request_field_string_is_editable(const GaimRequestField *field);
  *
  * @return The new field.
  */
-GaimRequestField *purple_request_field_int_new(const char *id,
+PurpleRequestField *purple_request_field_int_new(const char *id,
 											 const char *text,
 											 int default_value);
 
@@ -665,7 +665,7 @@ GaimRequestField *purple_request_field_int_new(const char *id,
  * @param field         The field.
  * @param default_value The default value.
  */
-void purple_request_field_int_set_default_value(GaimRequestField *field,
+void purple_request_field_int_set_default_value(PurpleRequestField *field,
 											  int default_value);
 
 /**
@@ -674,7 +674,7 @@ void purple_request_field_int_set_default_value(GaimRequestField *field,
  * @param field The field.
  * @param value The value.
  */
-void purple_request_field_int_set_value(GaimRequestField *field, int value);
+void purple_request_field_int_set_value(PurpleRequestField *field, int value);
 
 /**
  * Returns the default value in an integer field.
@@ -683,7 +683,7 @@ void purple_request_field_int_set_value(GaimRequestField *field, int value);
  *
  * @return The default value.
  */
-int purple_request_field_int_get_default_value(const GaimRequestField *field);
+int purple_request_field_int_get_default_value(const PurpleRequestField *field);
 
 /**
  * Returns the user-entered value in an integer field.
@@ -692,7 +692,7 @@ int purple_request_field_int_get_default_value(const GaimRequestField *field);
  *
  * @return The value.
  */
-int purple_request_field_int_get_value(const GaimRequestField *field);
+int purple_request_field_int_get_value(const PurpleRequestField *field);
 
 /*@}*/
 
@@ -712,7 +712,7 @@ int purple_request_field_int_get_value(const GaimRequestField *field);
  *
  * @return The new field.
  */
-GaimRequestField *purple_request_field_bool_new(const char *id,
+PurpleRequestField *purple_request_field_bool_new(const char *id,
 											  const char *text,
 											  gboolean default_value);
 
@@ -722,7 +722,7 @@ GaimRequestField *purple_request_field_bool_new(const char *id,
  * @param field         The field.
  * @param default_value The default value.
  */
-void purple_request_field_bool_set_default_value(GaimRequestField *field,
+void purple_request_field_bool_set_default_value(PurpleRequestField *field,
 											   gboolean default_value);
 
 /**
@@ -731,7 +731,7 @@ void purple_request_field_bool_set_default_value(GaimRequestField *field,
  * @param field The field.
  * @param value The value.
  */
-void purple_request_field_bool_set_value(GaimRequestField *field,
+void purple_request_field_bool_set_value(PurpleRequestField *field,
 									   gboolean value);
 
 /**
@@ -742,7 +742,7 @@ void purple_request_field_bool_set_value(GaimRequestField *field,
  * @return The default value.
  */
 gboolean purple_request_field_bool_get_default_value(
-		const GaimRequestField *field);
+		const PurpleRequestField *field);
 
 /**
  * Returns the user-entered value in an boolean field.
@@ -751,7 +751,7 @@ gboolean purple_request_field_bool_get_default_value(
  *
  * @return The value.
  */
-gboolean purple_request_field_bool_get_value(const GaimRequestField *field);
+gboolean purple_request_field_bool_get_value(const PurpleRequestField *field);
 
 /*@}*/
 
@@ -771,7 +771,7 @@ gboolean purple_request_field_bool_get_value(const GaimRequestField *field);
  *
  * @return The new field.
  */
-GaimRequestField *purple_request_field_choice_new(const char *id,
+PurpleRequestField *purple_request_field_choice_new(const char *id,
 												const char *text,
 												int default_value);
 
@@ -781,7 +781,7 @@ GaimRequestField *purple_request_field_choice_new(const char *id,
  * @param field The choice field.
  * @param label The choice label.
  */
-void purple_request_field_choice_add(GaimRequestField *field,
+void purple_request_field_choice_add(PurpleRequestField *field,
 								   const char *label);
 
 /**
@@ -790,7 +790,7 @@ void purple_request_field_choice_add(GaimRequestField *field,
  * @param field         The field.
  * @param default_value The default value.
  */
-void purple_request_field_choice_set_default_value(GaimRequestField *field,
+void purple_request_field_choice_set_default_value(PurpleRequestField *field,
 												 int default_value);
 
 /**
@@ -799,7 +799,7 @@ void purple_request_field_choice_set_default_value(GaimRequestField *field,
  * @param field The field.
  * @param value The value.
  */
-void purple_request_field_choice_set_value(GaimRequestField *field, int value);
+void purple_request_field_choice_set_value(PurpleRequestField *field, int value);
 
 /**
  * Returns the default value in an choice field.
@@ -808,7 +808,7 @@ void purple_request_field_choice_set_value(GaimRequestField *field, int value);
  *
  * @return The default value.
  */
-int purple_request_field_choice_get_default_value(const GaimRequestField *field);
+int purple_request_field_choice_get_default_value(const PurpleRequestField *field);
 
 /**
  * Returns the user-entered value in an choice field.
@@ -817,7 +817,7 @@ int purple_request_field_choice_get_default_value(const GaimRequestField *field)
  *
  * @return The value.
  */
-int purple_request_field_choice_get_value(const GaimRequestField *field);
+int purple_request_field_choice_get_value(const PurpleRequestField *field);
 
 /**
  * Returns a list of labels in a choice field.
@@ -826,7 +826,7 @@ int purple_request_field_choice_get_value(const GaimRequestField *field);
  *
  * @return The list of labels.
  */
-GList *purple_request_field_choice_get_labels(const GaimRequestField *field);
+GList *purple_request_field_choice_get_labels(const PurpleRequestField *field);
 
 /*@}*/
 
@@ -843,7 +843,7 @@ GList *purple_request_field_choice_get_labels(const GaimRequestField *field);
  *
  * @return The new field.
  */
-GaimRequestField *purple_request_field_list_new(const char *id, const char *text);
+PurpleRequestField *purple_request_field_list_new(const char *id, const char *text);
 
 /**
  * Sets whether or not a list field allows multiple selection.
@@ -852,7 +852,7 @@ GaimRequestField *purple_request_field_list_new(const char *id, const char *text
  * @param multi_select TRUE if multiple selection is enabled,
  *                     or FALSE otherwise.
  */
-void purple_request_field_list_set_multi_select(GaimRequestField *field,
+void purple_request_field_list_set_multi_select(PurpleRequestField *field,
 											  gboolean multi_select);
 
 /**
@@ -863,7 +863,7 @@ void purple_request_field_list_set_multi_select(GaimRequestField *field,
  * @return TRUE if multiple selection is enabled, or FALSE otherwise.
  */
 gboolean purple_request_field_list_get_multi_select(
-	const GaimRequestField *field);
+	const PurpleRequestField *field);
 
 /**
  * Returns the data for a particular item.
@@ -873,7 +873,7 @@ gboolean purple_request_field_list_get_multi_select(
  *
  * @return The data associated with the item.
  */
-void *purple_request_field_list_get_data(const GaimRequestField *field,
+void *purple_request_field_list_get_data(const PurpleRequestField *field,
 									   const char *text);
 
 /**
@@ -883,7 +883,7 @@ void *purple_request_field_list_get_data(const GaimRequestField *field,
  * @param item  The list item.
  * @param data  The associated data.
  */
-void purple_request_field_list_add(GaimRequestField *field,
+void purple_request_field_list_add(PurpleRequestField *field,
 								 const char *item, void *data);
 
 /**
@@ -892,7 +892,7 @@ void purple_request_field_list_add(GaimRequestField *field,
  * @param field The field.
  * @param item  The item to add.
  */
-void purple_request_field_list_add_selected(GaimRequestField *field,
+void purple_request_field_list_add_selected(PurpleRequestField *field,
 										  const char *item);
 
 /**
@@ -900,7 +900,7 @@ void purple_request_field_list_add_selected(GaimRequestField *field,
  *
  * @param field The field.
  */
-void purple_request_field_list_clear_selected(GaimRequestField *field);
+void purple_request_field_list_clear_selected(PurpleRequestField *field);
 
 /**
  * Sets a list of selected items in a list field.
@@ -908,7 +908,7 @@ void purple_request_field_list_clear_selected(GaimRequestField *field);
  * @param field The field.
  * @param items The list of selected items.
  */
-void purple_request_field_list_set_selected(GaimRequestField *field,
+void purple_request_field_list_set_selected(PurpleRequestField *field,
 										  const GList *items);
 
 /**
@@ -919,7 +919,7 @@ void purple_request_field_list_set_selected(GaimRequestField *field,
  *
  * @return TRUE if the item is selected. FALSE otherwise.
  */
-gboolean purple_request_field_list_is_selected(const GaimRequestField *field,
+gboolean purple_request_field_list_is_selected(const PurpleRequestField *field,
 											 const char *item);
 
 /**
@@ -933,7 +933,7 @@ gboolean purple_request_field_list_is_selected(const GaimRequestField *field,
  * @return The list of selected items.
  */
 const GList *purple_request_field_list_get_selected(
-	const GaimRequestField *field);
+	const PurpleRequestField *field);
 
 /**
  * Returns a list of items in a list field.
@@ -942,7 +942,7 @@ const GList *purple_request_field_list_get_selected(
  *
  * @return The list of items.
  */
-const GList *purple_request_field_list_get_items(const GaimRequestField *field);
+const GList *purple_request_field_list_get_items(const PurpleRequestField *field);
 
 /*@}*/
 
@@ -959,7 +959,7 @@ const GList *purple_request_field_list_get_items(const GaimRequestField *field);
  *
  * @return The new field.
  */
-GaimRequestField *purple_request_field_label_new(const char *id,
+PurpleRequestField *purple_request_field_label_new(const char *id,
 											   const char *text);
 
 /*@}*/
@@ -979,7 +979,7 @@ GaimRequestField *purple_request_field_label_new(const char *id,
  *
  * @return The new field.
  */
-GaimRequestField *purple_request_field_image_new(const char *id, const char *text,
+PurpleRequestField *purple_request_field_image_new(const char *id, const char *text,
 											   const char *buf, gsize size);
 
 /**
@@ -989,7 +989,7 @@ GaimRequestField *purple_request_field_image_new(const char *id, const char *tex
  * @param x     The x scale factor.
  * @param y     The y scale factor.
  */
-void purple_request_field_image_set_scale(GaimRequestField *field, unsigned int x, unsigned int y);
+void purple_request_field_image_set_scale(PurpleRequestField *field, unsigned int x, unsigned int y);
 
 /**
  * Returns pointer to the image.
@@ -998,7 +998,7 @@ void purple_request_field_image_set_scale(GaimRequestField *field, unsigned int 
  *
  * @return Pointer to the image.
  */
-const char *purple_request_field_image_get_buffer(GaimRequestField *field);
+const char *purple_request_field_image_get_buffer(PurpleRequestField *field);
 
 /**
  * Returns size (in bytes) of the image.
@@ -1007,7 +1007,7 @@ const char *purple_request_field_image_get_buffer(GaimRequestField *field);
  *
  * @return Size of the image.
  */
-gsize purple_request_field_image_get_size(GaimRequestField *field);
+gsize purple_request_field_image_get_size(PurpleRequestField *field);
 
 /**
  * Returns X scale coefficient of the image.
@@ -1016,7 +1016,7 @@ gsize purple_request_field_image_get_size(GaimRequestField *field);
  *
  * @return X scale coefficient of the image.
  */
-unsigned int purple_request_field_image_get_scale_x(GaimRequestField *field);
+unsigned int purple_request_field_image_get_scale_x(PurpleRequestField *field);
 
 /**
  * Returns Y scale coefficient of the image.
@@ -1025,7 +1025,7 @@ unsigned int purple_request_field_image_get_scale_x(GaimRequestField *field);
  *
  * @return Y scale coefficient of the image.
  */
-unsigned int purple_request_field_image_get_scale_y(GaimRequestField *field);
+unsigned int purple_request_field_image_get_scale_y(PurpleRequestField *field);
 
 /*@}*/
 
@@ -1045,9 +1045,9 @@ unsigned int purple_request_field_image_get_scale_y(GaimRequestField *field);
  *
  * @return The new field.
  */
-GaimRequestField *purple_request_field_account_new(const char *id,
+PurpleRequestField *purple_request_field_account_new(const char *id,
 												 const char *text,
-												 GaimAccount *account);
+												 PurpleAccount *account);
 
 /**
  * Sets the default account on an account field.
@@ -1055,8 +1055,8 @@ GaimRequestField *purple_request_field_account_new(const char *id,
  * @param field         The account field.
  * @param default_value The default account.
  */
-void purple_request_field_account_set_default_value(GaimRequestField *field,
-												  GaimAccount *default_value);
+void purple_request_field_account_set_default_value(PurpleRequestField *field,
+												  PurpleAccount *default_value);
 
 /**
  * Sets the account in an account field.
@@ -1064,8 +1064,8 @@ void purple_request_field_account_set_default_value(GaimRequestField *field,
  * @param field The account field.
  * @param value The account.
  */
-void purple_request_field_account_set_value(GaimRequestField *field,
-										  GaimAccount *value);
+void purple_request_field_account_set_value(PurpleRequestField *field,
+										  PurpleAccount *value);
 
 /**
  * Sets whether or not to show all accounts in an account field.
@@ -1076,7 +1076,7 @@ void purple_request_field_account_set_value(GaimRequestField *field,
  * @param field    The account field.
  * @param show_all Whether or not to show all accounts.
  */
-void purple_request_field_account_set_show_all(GaimRequestField *field,
+void purple_request_field_account_set_show_all(PurpleRequestField *field,
 											 gboolean show_all);
 
 /**
@@ -1088,8 +1088,8 @@ void purple_request_field_account_set_show_all(GaimRequestField *field,
  * @param field       The account field.
  * @param filter_func The account filter function.
  */
-void purple_request_field_account_set_filter(GaimRequestField *field,
-										   GaimFilterAccountFunc filter_func);
+void purple_request_field_account_set_filter(PurpleRequestField *field,
+										   PurpleFilterAccountFunc filter_func);
 
 /**
  * Returns the default account in an account field.
@@ -1098,8 +1098,8 @@ void purple_request_field_account_set_filter(GaimRequestField *field,
  *
  * @return The default account.
  */
-GaimAccount *purple_request_field_account_get_default_value(
-		const GaimRequestField *field);
+PurpleAccount *purple_request_field_account_get_default_value(
+		const PurpleRequestField *field);
 
 /**
  * Returns the user-entered account in an account field.
@@ -1108,8 +1108,8 @@ GaimAccount *purple_request_field_account_get_default_value(
  *
  * @return The user-entered account.
  */
-GaimAccount *purple_request_field_account_get_value(
-		const GaimRequestField *field);
+PurpleAccount *purple_request_field_account_get_value(
+		const PurpleRequestField *field);
 
 /**
  * Returns whether or not to show all accounts in an account field.
@@ -1121,7 +1121,7 @@ GaimAccount *purple_request_field_account_get_value(
  * @return Whether or not to show all accounts.
  */
 gboolean purple_request_field_account_get_show_all(
-		const GaimRequestField *field);
+		const PurpleRequestField *field);
 
 /**
  * Returns the account filter function in an account field.
@@ -1133,8 +1133,8 @@ gboolean purple_request_field_account_get_show_all(
  *
  * @return The account filter function.
  */
-GaimFilterAccountFunc purple_request_field_account_get_filter(
-		const GaimRequestField *field);
+PurpleFilterAccountFunc purple_request_field_account_get_filter(
+		const PurpleRequestField *field);
 
 /*@}*/
 
@@ -1151,7 +1151,7 @@ GaimFilterAccountFunc purple_request_field_account_get_filter(
  *                      handle is used to programmatically close
  *                      the request dialog when it is no longer
  *                      needed.  For PRPLs this is often a pointer
- *                      to the GaimConnection instance.  For plugins
+ *                      to the PurpleConnection instance.  For plugins
  *                      this should be a similar, unique memory
  *                      location.  This value is important because
  *                      it allows a request to be closed, say, when
@@ -1311,7 +1311,7 @@ void *purple_request_action_varg(void *handle, const char *title,
  */
 void *purple_request_fields(void *handle, const char *title,
 						  const char *primary, const char *secondary,
-						  GaimRequestFields *fields,
+						  PurpleRequestFields *fields,
 						  const char *ok_text, GCallback ok_cb,
 						  const char *cancel_text, GCallback cancel_cb,
 						  void *user_data);
@@ -1322,7 +1322,7 @@ void *purple_request_fields(void *handle, const char *title,
  * @param type     The request type.
  * @param uihandle The request UI handle.
  */
-void purple_request_close(GaimRequestType type, void *uihandle);
+void purple_request_close(PurpleRequestType type, void *uihandle);
 
 /**
  * Closes all requests registered with the specified handle.
@@ -1413,7 +1413,7 @@ void *purple_request_folder(void *handle, const char *title, const char *dirname
  *
  * @param ops The UI operations structure.
  */
-void purple_request_set_ui_ops(GaimRequestUiOps *ops);
+void purple_request_set_ui_ops(PurpleRequestUiOps *ops);
 
 /**
  * Returns the UI operations structure to be used when displaying a
@@ -1421,7 +1421,7 @@ void purple_request_set_ui_ops(GaimRequestUiOps *ops);
  *
  * @return The UI operations structure.
  */
-GaimRequestUiOps *purple_request_get_ui_ops(void);
+PurpleRequestUiOps *purple_request_get_ui_ops(void);
 
 /*@}*/
 
@@ -1429,4 +1429,4 @@ GaimRequestUiOps *purple_request_get_ui_ops(void);
 }
 #endif
 
-#endif /* _GAIM_REQUEST_H_ */
+#endif /* _PURPLE_REQUEST_H_ */

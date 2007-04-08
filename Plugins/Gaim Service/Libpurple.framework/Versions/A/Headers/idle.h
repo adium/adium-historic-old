@@ -4,7 +4,7 @@
  *
  * purple
  *
- * Gaim is the legal property of its developers, whose names are too numerous
+ * Purple is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -22,8 +22,8 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-#ifndef _GAIM_IDLE_H_
-#define _GAIM_IDLE_H_
+#ifndef _PURPLE_IDLE_H_
+#define _PURPLE_IDLE_H_
 
 /**
  * Idle UI operations.
@@ -31,7 +31,7 @@
 typedef struct
 {
 	time_t (*get_time_idle)(void);
-} GaimIdleUiOps;
+} PurpleIdleUiOps;
 
 #ifdef __cplusplus
 extern "C" {
@@ -68,14 +68,14 @@ void purple_idle_set(time_t time);
  *
  * @param ops The UI operations structure.
  */
-void purple_idle_set_ui_ops(GaimIdleUiOps *ops);
+void purple_idle_set_ui_ops(PurpleIdleUiOps *ops);
 
 /**
  * Returns the UI operations structure used for idle reporting.
  *
  * @return The UI operations structure in use.
  */
-GaimIdleUiOps *purple_idle_get_ui_ops(void);
+PurpleIdleUiOps *purple_idle_get_ui_ops(void);
 
 /**
  * Initializes the idle system.
@@ -93,4 +93,4 @@ void purple_idle_uninit(void);
 }
 #endif
 
-#endif /* _GAIM_IDLE_H_ */
+#endif /* _PURPLE_IDLE_H_ */

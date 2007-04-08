@@ -4,7 +4,7 @@
  *
  * purple
  *
- * Gaim is the legal property of its developers, whose names are too numerous
+ * Purple is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -25,8 +25,8 @@
  * @todo Rename the functions so that they live somewhere in the purple
  *       namespace.
  */
-#ifndef _GAIM_UTIL_H_
-#define _GAIM_UTIL_H_
+#ifndef _PURPLE_UTIL_H_
+#define _PURPLE_UTIL_H_
 
 #include <stdio.h>
 
@@ -37,17 +37,17 @@
 extern "C" {
 #endif
 
-typedef struct _GaimUtilFetchUrlData GaimUtilFetchUrlData;
+typedef struct _PurpleUtilFetchUrlData PurpleUtilFetchUrlData;
 
-typedef struct _GaimMenuAction
+typedef struct _PurpleMenuAction
 {
 	char *label;
-	GaimCallback callback;
+	PurpleCallback callback;
 	gpointer data;
 	GList *children;
-} GaimMenuAction;
+} PurpleMenuAction;
 
-typedef char *(*GaimInfoFieldFormatCallback)(const char *field, size_t len);
+typedef char *(*PurpleInfoFieldFormatCallback)(const char *field, size_t len);
 
 /**
  * A key-value pair.
@@ -55,33 +55,33 @@ typedef char *(*GaimInfoFieldFormatCallback)(const char *field, size_t len);
  * This is used by, among other things, purple_gtk_combo* functions to pass in a
  * list of key-value pairs so it can display a user-friendly value.
  */
-typedef struct _GaimKeyValuePair
+typedef struct _PurpleKeyValuePair
 {
 	gchar *key;
 	void *value;
 
-} GaimKeyValuePair;
+} PurpleKeyValuePair;
 
 /**
- * Creates a new GaimMenuAction.
+ * Creates a new PurpleMenuAction.
  *
  * @param label    The text label to display for this action.
  * @param callback The function to be called when the action is used on
  *                 the selected item.
  * @param data     Additional data to be passed to the callback.
- * @param children A GList of GaimMenuActions to be added as a submenu
+ * @param children A GList of PurpleMenuActions to be added as a submenu
  *                 of the action.
- * @return The GaimMenuAction.
+ * @return The PurpleMenuAction.
  */
-GaimMenuAction *purple_menu_action_new(const char *label, GaimCallback callback,
+PurpleMenuAction *purple_menu_action_new(const char *label, PurpleCallback callback,
                                      gpointer data, GList *children);
 
 /**
- * Frees a GaimMenuAction
+ * Frees a PurpleMenuAction
  *
- * @param act The GaimMenuAction to free.
+ * @param act The PurpleMenuAction to free.
  */
-void purple_menu_action_free(GaimMenuAction *act);
+void purple_menu_action_free(PurpleMenuAction *act);
 
 /**************************************************************************/
 /** @name Base16 Functions                                                */
@@ -305,7 +305,7 @@ time_t purple_time_build(int year, int month, int day, int hour,
 
 /** Used by purple_str_to_time to indicate no timezone offset was
   * specified in the timestamp string. */
-#define GAIM_NO_TZ_OFF -500000
+#define PURPLE_NO_TZ_OFF -500000
 
 /**
  * Parses a timestamp in jabber, ISO8601, or MM/DD/YYYY format and returns
@@ -318,7 +318,7 @@ time_t purple_time_build(int year, int month, int day, int hour,
  * @param tz_off    If not @c NULL, the caller can get a copy of the
  *                  timezone offset (from UTC) used to calculate the time_t
  *                  return value. Note: Zero is a valid offset. As such,
- *                  the value of the macro @c GAIM_NO_TZ_OFF indicates no
+ *                  the value of the macro @c PURPLE_NO_TZ_OFF indicates no
  *                  offset was specified (which means that the local
  *                  timezone was used in the calculation).
  * @param rest      If not @c NULL, the caller can get a pointer to the
@@ -365,7 +365,7 @@ gboolean purple_markup_find_tag(const char *needle, const char *haystack,
  *
  * @param str            The string to parse.
  * @param len            The size of str.
- * @param user_info      The destination GaimNotifyUserInfo to which the new
+ * @param user_info      The destination PurpleNotifyUserInfo to which the new
  *                       field info should be added.
  * @param start_token    The beginning token.
  * @param skip           The number of characters to skip after the
@@ -380,13 +380,13 @@ gboolean purple_markup_find_tag(const char *needle, const char *haystack,
  *
  * @return TRUE if successful, or FALSE otherwise.
  */
-gboolean purple_markup_extract_info_field(const char *str, int len, GaimNotifyUserInfo *user_info,
+gboolean purple_markup_extract_info_field(const char *str, int len, PurpleNotifyUserInfo *user_info,
                                         const char *start_token, int skip,
                                         const char *end_token, char check_value,
                                         const char *no_value_token,
                                         const char *display_name, gboolean is_link,
                                         const char *link_prefix,
-					GaimInfoFieldFormatCallback format_cb);
+					PurpleInfoFieldFormatCallback format_cb);
 
 /**
  * Converts HTML markup to XHTML.
@@ -508,9 +508,9 @@ void purple_util_set_user_dir(const char *dir);
 int purple_build_dir(const char *path, int mode);
 
 /**
- * Write a string of data to a file of the given name in the Gaim
+ * Write a string of data to a file of the given name in the Purple
  * user directory ($HOME/.purple by default).  The data is typically
- * a serialized version of one of Gaim's config files, such as
+ * a serialized version of one of Purple's config files, such as
  * prefs.xml, accounts.xml, etc.  And the string is typically
  * obtained using xmlnode_to_formatted_str.  However, this function
  * should work fine for saving binary files as well.
@@ -528,7 +528,7 @@ gboolean purple_util_write_data_to_file(const char *filename, const char *data,
 /**
  * Read the contents of a given file and parse the results into an
  * xmlnode tree structure.  This is intended to be used to read
- * Gaim's configuration xml files (prefs.xml, pounces.xml, etc.)
+ * Purple's configuration xml files (prefs.xml, pounces.xml, etc.)
  *
  * @param filename    The basename of the file to open in the purple_user_dir.
  * @param description A very short description of the contents of this
@@ -624,7 +624,7 @@ char *purple_fd_get_ip(int fd);
  *
  * @return A pointer to the normalized version stored in a static buffer.
  */
-const char *purple_normalize(const GaimAccount *account, const char *str);
+const char *purple_normalize(const PurpleAccount *account, const char *str);
 
 /**
  * Normalizes a string, so that it is suitable for comparison.
@@ -638,7 +638,7 @@ const char *purple_normalize(const GaimAccount *account, const char *str);
  *
  * @return A pointer to the normalized version stored in a static buffer.
  */
-const char *purple_normalize_nocase(const GaimAccount *account, const char *str);
+const char *purple_normalize_nocase(const PurpleAccount *account, const char *str);
 
 /**
  * Compares two strings to see if the first contains the second as
@@ -849,7 +849,7 @@ gboolean purple_url_parse(const char *url, char **ret_host, int *ret_port,
  *                      a descriptive error message, and buf will be
  *                      NULL and len will be 0.
  */
-typedef void (*GaimUtilFetchUrlCallback)(GaimUtilFetchUrlData *url_data, gpointer user_data, const gchar *url_text, gsize len, const gchar *error_message);
+typedef void (*PurpleUtilFetchUrlCallback)(PurpleUtilFetchUrlData *url_data, gpointer user_data, const gchar *url_text, gsize len, const gchar *error_message);
 
 /**
  * Fetches the data from a URL, and passes it to a callback function.
@@ -881,10 +881,10 @@ typedef void (*GaimUtilFetchUrlCallback)(GaimUtilFetchUrlData *url_data, gpointe
  * @param callback   The callback function.
  * @param data       The user data to pass to the callback function.
  */
-GaimUtilFetchUrlData *purple_util_fetch_url_request(const gchar *url,
+PurpleUtilFetchUrlData *purple_util_fetch_url_request(const gchar *url,
 		gboolean full, const gchar *user_agent, gboolean http11,
 		const gchar *request, gboolean include_headers,
-		GaimUtilFetchUrlCallback callback, gpointer data);
+		PurpleUtilFetchUrlCallback callback, gpointer data);
 
 /**
  * Cancel a pending URL request started with either
@@ -892,7 +892,7 @@ GaimUtilFetchUrlData *purple_util_fetch_url_request(const gchar *url,
  *
  * @param url_data The data returned when you initiated the URL fetch.
  */
-void purple_util_fetch_url_cancel(GaimUtilFetchUrlData *url_data);
+void purple_util_fetch_url_cancel(PurpleUtilFetchUrlData *url_data);
 
 /**
  * Decodes a URL into a plain string.
@@ -1082,4 +1082,4 @@ void purple_restore_default_signal_handlers(void);
 }
 #endif
 
-#endif /* _GAIM_UTIL_H_ */
+#endif /* _PURPLE_UTIL_H_ */
