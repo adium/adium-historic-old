@@ -84,5 +84,6 @@
 	<string>OWSpellingPerContactPlugin</string>
 	<string>GBQuestionHandlerPlugin</string>
 	<string>AINulRemovalPlugin</string>
+	<string>AIAdvancedPreferencesPlugin</string>
 </array>
 </plist>

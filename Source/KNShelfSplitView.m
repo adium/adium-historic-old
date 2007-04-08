@@ -519,10 +519,9 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 		}
 		
 		//remainder and thumb
-		[self drawControlBackgroundInRect: NSMakeRect( remainderStart, 0, (controlRect.size.width - remainderStart), controlRect.size.height )
-			active: NO
-		];
-		
+		[self drawControlBackgroundInRect:NSMakeRect( remainderStart, 0, (controlRect.size.width - remainderStart), controlRect.size.height )
+								   active:NO];
+
 		[[NSColor windowFrameColor] set];
 		NSRectFill( NSMakeRect( 0, CONTROL_HEIGHT, currentShelfWidth, 1 ) );
 		

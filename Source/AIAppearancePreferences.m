@@ -67,14 +67,19 @@ typedef enum {
 /*!
  * @brief Preference pane properties
  */
-- (AIPreferenceCategory)category{
-    return AIPref_Appearance;
+- (NSString *)paneIdentifier
+{
+	return @"Appearance";
 }
-- (NSString *)label{
+- (NSString *)paneName{
     return AILocalizedString(@"Appearance","Appearance preferences label");
 }
 - (NSString *)nibName{
     return @"AppearancePrefs";
+}
+- (NSImage *)paneIcon
+{
+	return [NSImage imageNamed:@"pref-appearance" forClass:[self class]];
 }
 
 /*!

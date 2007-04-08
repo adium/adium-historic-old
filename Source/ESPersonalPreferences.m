@@ -6,15 +6,16 @@
 //
 
 #import "ESPersonalPreferences.h"
-#import <Adium/AIPreferenceControllerProtocol.h>
-#import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIAccount.h>
-#import <AIUtilities/AIAttributedStringAdditions.h>
-#import <AIUtilities/AIImageViewWithImagePicker.h>
-#import <AIUtilities/AIAutoScrollView.h>
-#import <AIUtilities/AIImageViewWithImagePicker.h>
-#import <AIUtilities/AIDelayedTextField.h>
+#import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIMessageEntryTextView.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIAutoScrollView.h>
+#import <AIUtilities/AIDelayedTextField.h>
+#import <AIUtilities/AIImageViewWithImagePicker.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageViewWithImagePicker.h>
 
 @interface ESPersonalPreferences (PRIVATE)
 - (void)fireProfileChangesImmediately;
@@ -28,14 +29,19 @@
 /*!
  * @brief Preference pane properties
  */
-- (AIPreferenceCategory)category{
-    return AIPref_Personal;
+- (NSString *)paneIdentifier
+{
+	return @"Personal";
 }
-- (NSString *)label{
+- (NSString *)paneName{
     return AILocalizedString(@"Personal","Personal preferences label");
 }
 - (NSString *)nibName{
     return @"PersonalPreferences";
+}
+- (NSImage *)paneIcon
+{
+	return [NSImage imageNamed:@"pref-personal" forClass:[self class]];
 }
 
 /*!

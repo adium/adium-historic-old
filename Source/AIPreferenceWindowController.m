@@ -16,6 +16,8 @@
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
+#import "SS_PrefsController.h"
+
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIModularPaneCategoryView.h>
@@ -29,7 +31,6 @@
 
 //Preferences
 #define KEY_PREFERENCE_SELECTED_CATEGORY		@"Preference Selected Category Name"
-#define KEY_ADVANCED_PREFERENCE_SELECTED_ROW    @"Preference Advanced Selected Row"
 
 //Other
 #define PREFERENCE_WINDOW_NIB					@"PreferenceWindow"	//Filename of the preference window nib
@@ -51,7 +52,7 @@
 - (void)sizeWindowForToolbar;
 @end
 
-static AIPreferenceWindowController *sharedPreferenceInstance = nil;
+static SS_PrefsController			*prefsController = nil;
 
 /*!
  * @class AIPreferenceWindowController
@@ -62,33 +63,37 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  */
 @implementation AIPreferenceWindowController
 
++ (SS_PrefsController *)sharedPrefsController
+{
+	if (!prefsController) {
+		prefsController = [[SS_PrefsController preferencesWithPanes:[[[AIObject sharedAdiumInstance] preferenceController] paneArray]] retain];
+
+		// Set which panes are included, and their order.
+		[prefsController setPanesOrder:[NSArray arrayWithObjects:
+			@"Accounts",
+			NSToolbarSeparatorItemIdentifier,
+			@"General", @"Personal", @"Appearance", @"Messages", @"Status", @"Events", @"File Transfer", @"Advanced", nil]];
+		[prefsController setDebug:YES];
+	}
+	
+	return prefsController;
+}
+
 /*!
  * @brief Open the preference window
  */
 + (void)openPreferenceWindow
 {
-	[[self _preferenceWindowController] showWindow:nil];
+	// Show the preferences window.
+	[[self sharedPrefsController] showPreferencesWindow];
 }
 
 /*!
  * @brief Open the preference window to a specific category
  */
 + (void)openPreferenceWindowToCategoryWithIdentifier:(NSString *)identifier
-{
-	//Load the window first
-	[[self _preferenceWindowController] window];
-	
-	[[self _preferenceWindowController] selectCategoryWithIdentifier:identifier];
-	[[self _preferenceWindowController] showWindow:nil];
-}
-
-/*!
- * @brief Open the preference window to a specific advanced category
- */
-+ (void)openPreferenceWindowToAdvancedPane:(NSString *)advancedPane
-{
-	[[self _preferenceWindowController] selectAdvancedPane:advancedPane];
-	[[self _preferenceWindowController] showWindow:nil];
+{	
+	[[self sharedPrefsController] loadPreferencePaneNamed:identifier];
 }
 
 /*!
@@ -96,99 +101,8 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  */
 + (void)closePreferenceWindow
 {
-	if (sharedPreferenceInstance) [sharedPreferenceInstance closeWindow:nil];
-}
-
-/*!
- * @brief Returns the shared preference window controller
- *
- * Loads (if necessary) and returns a shared instance of AIPreferenceWindowController.
- * This method is used by the varions openPreferenceWindow methods and shouldn't be called from
- * outside AIPreferenceWindowController.
- */
-+ (AIPreferenceWindowController *)_preferenceWindowController
-{
-    if (!sharedPreferenceInstance) {
-        sharedPreferenceInstance = [[self alloc] initWithWindowNibName:PREFERENCE_WINDOW_NIB];
-    }
-    
-    return sharedPreferenceInstance;
-}
-
-/*!
- * @brief Initialize
- */
-- (id)initWithWindowNibName:(NSString *)windowNibName
-{
-	if ((self = [super initWithWindowNibName:windowNibName])) {
-		loadedPanes = [[NSMutableArray alloc] init];
-		loadedAdvancedPanes = nil;
-		_advancedCategoryArray = nil;
-		shouldRestorePreviousSelectedPane = YES;
-	}
-	return self;    
-}
-
-/*!
- * @brief Deallocate
- */
-- (void)dealloc
-{	
-    [viewArray release];
-    [loadedPanes release];
-	[loadedAdvancedPanes release];
-	[_advancedCategoryArray release];
-	
-    [super dealloc];
-}
-
-/*!
- * @brief Setup the window before it is displayed
- */
-- (void)windowDidLoad
-{
-	[super windowDidLoad];
-
-	//Configure window
-	[[self window] setTitle:PREFERENCE_WINDOW_TITLE];
-	[[[self window] standardWindowButton:NSWindowToolbarButton] setFrame:NSZeroRect];
-	[self _configureAdvancedPreferencesTable];
-	[[self window] betterCenter];
-
-	[self sizeWindowForToolbar];
-	
-	//Prepare our array of preference views.  We place these in an array to cut down on a ton of duplicate code.
-	viewArray = [[NSArray alloc] initWithObjects:
-		view_General,
-		view_Accounts,
-		view_Personal,
-		view_Appearance,
-		view_Messages,
-		view_Status,
-		view_Events,
-		view_FileTransfer,
-		view_Advanced,
-		nil];
-}
-
-/*!
- * @brief Invoked before the window opens
- */
-- (IBAction)showWindow:(id)sender
-{
-	//Ensure the window is loaded
-	[self window];
-	
-	//Make the previously selected category active if it is valid
-	if (shouldRestorePreviousSelectedPane) {
-		NSString *previouslySelectedCategory = [[adium preferenceController] preferenceForKey:KEY_PREFERENCE_SELECTED_CATEGORY
-																						group:PREF_GROUP_WINDOW_POSITIONS];
-		if (!previouslySelectedCategory || [previouslySelectedCategory isEqualToString:@"loading"])
-			previouslySelectedCategory = @"accounts";
-		[self selectCategoryWithIdentifier:previouslySelectedCategory];
-	}
-	
-	[super showWindow:sender];
+	[prefsController destroyPreferencesWindow];
+	[prefsController release]; prefsController = nil;
 }
 
 /*!
@@ -200,26 +114,10 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 - (void)windowWillClose:(id)sender
 {
 	[super windowWillClose:sender];
-		
-	//Save changes
-	[self _saveControlChanges];
-	
-    //Save the selected category and advanced category
-    [[adium preferenceController] setPreference:[[tabView_category selectedTabViewItem] identifier]
-										 forKey:KEY_PREFERENCE_SELECTED_CATEGORY
-										  group:PREF_GROUP_WINDOW_POSITIONS];
-	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[tableView_advanced selectedRow]]
-										 forKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW
-										  group:PREF_GROUP_WINDOW_POSITIONS];
-    
+		    
     //Close all panes and our shared instance
-	[loadedPanes makeObjectsPerformSelector:@selector(closeView)];
-    [sharedPreferenceInstance autorelease]; sharedPreferenceInstance = nil;
-}
-
-- (BOOL) canCustomizeToolbar
-{
-	return NO;
+#warning XXX
+//	[loadedPanes makeObjectsPerformSelector:@selector(closeView)];
 }
 
 //Panes ---------------------------------------------------------------------------------------------------------------
@@ -229,6 +127,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  */
 - (void)selectCategoryWithIdentifier:(NSString *)identifier
 {
+#if 0
 	NSTabViewItem	*tabViewItem;
 	int				index;
 
@@ -243,118 +142,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	}
 
 	shouldRestorePreviousSelectedPane = NO;
-}
-
-/*!
- * @brief Select an advanced preference category
- */
-- (void)selectAdvancedPane:(NSString *)advancedPane
-{
-	NSEnumerator		*enumerator = [[self advancedCategoryArray] objectEnumerator];
-	AIPreferencePane	*pane;
-
-	shouldRestorePreviousSelectedPane = NO;
-	
-	//Load the window first
-	[self window];
-
-    //First, select the advanced category
-    [self selectCategoryWithIdentifier:@"advanced"];
-
-	//Search for the advanded pane
-	while ((pane = [enumerator nextObject])) {
-		if ([advancedPane caseInsensitiveCompare:[pane label]] == NSOrderedSame) break;
-	}
-
-	//If it exists, make it active
-	if (pane) {
-		int row = [[self advancedCategoryArray] indexOfObject:pane];
-		if ([self tableView:tableView_advanced shouldSelectRow:row]) {
-			[tableView_advanced selectRow:row byExtendingSelection:NO];
-		}		
-	}
-}
-
-/*!
- * @brief Loads and returns the AIPreferencePanes in the specified category
- */
-- (NSArray *)_panesInCategory:(AIPreferenceCategory)inCategory
-{
-    NSMutableArray		*paneArray = [NSMutableArray array];
-    NSEnumerator		*enumerator = [[[adium preferenceController] paneArray] objectEnumerator];
-    AIPreferencePane	*pane;
-    
-    //Get the panes for this category
-    while ((pane = [enumerator nextObject])) {
-        if ([pane category] == inCategory) {
-            [paneArray addObject:pane];
-            [loadedPanes addObject:pane];
-        }
-    }
-
-    //Alphabetize them
-    [paneArray sortUsingSelector:@selector(caseInsensitiveCompare:)];
-    
-    return paneArray;
-}
-
-/*!
- * @brief Save any preference changes
- *
- * This takes focus away from any controls to ensure that any changes in the current pane are saved.
- * This isn't a problem for most controls, but can cause issues with text fields if the user switches panes
- * with a text field focused.
- */
-- (void)_saveControlChanges
-{
-	[[self window] makeFirstResponder:tabView_category];
-}
-
-- (NSDictionary *)identifierToLabelDict
-{
-	static NSDictionary	*_identifierToLabelDict = nil;
-	if (!_identifierToLabelDict) {
-		_identifierToLabelDict = [[NSDictionary alloc] initWithObjectsAndKeys:
-			AILocalizedString(@"Accounts",nil), @"accounts",
-			AILocalizedString(@"General",nil), @"general",
-			AILocalizedString(@"Personal",nil), @"personal",
-			AILocalizedString(@"Appearance",nil), @"appearance",
-			AILocalizedString(@"Messages",nil), @"messages",
-			AILocalizedString(@"Status",nil), @"status",
-			AILocalizedString(@"Events",nil), @"events",
-			AILocalizedString(@"File Transfer",nil), @"ft",
-			AILocalizedString(@"Advanced",nil), @"advanced",
-			AILocalizedString(@"Loading",nil), @"loading",
-			nil];
-	}
-
-	return _identifierToLabelDict;
-}
-
-//Toolbar tab view -----------------------------------------------------------------------------------------------------
-#pragma mark Toolbar tab view
-/*!
- * @brief Tabview will select a new pane; load the views for that pane.
- */
-- (void)tabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
-{
-    if (tabView == tabView_category && 
-	   ![[tabViewItem identifier] isEqualToString:@"loading"]) {
-		
-		int selectedIndex = [tabView indexOfTabViewItem:tabViewItem];
-
-		//Save changes
-		[self _saveControlChanges];
-		
-		//Load the pane if it isn't already loaded
-		if (![[tabViewItem identifier] isEqualToString:ADVANCED_PANE_IDENTIFIER]) {
-			AIModularPaneCategoryView *view = [viewArray objectAtIndex:selectedIndex];
-			if ([view isEmpty]) [view setPanes:[self _panesInCategory:selectedIndex]];
-		}
-		
-		//Update the window title, using only the currently selected pane, per the Mac OS X standard
-		[[self window] setTitle:[self tabView:tabView labelForTabViewItem:tabViewItem]];
-   }
+#endif
 }
 
 /*!
@@ -364,169 +152,13 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  */
 - (BOOL)immediatelyShowLoadingIndicatorForTabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
+#if 0
 	if (tabView == tabView_category) {
 		AIModularPaneCategoryView *view = [viewArray objectAtIndex:[tabView indexOfTabViewItem:tabViewItem]];
 		if ([view isEmpty]) return YES;
 	}
-
+#endif
 	return NO;
-}
-
-/*!
- * @brief Returns the preference image associated with the tab view item
- */
-- (NSImage *)tabView:(NSTabView *)tabView imageForTabViewItem:(NSTabViewItem *)tabViewItem
-{
-	//We use images from the main bundle, not out own
-	return [NSImage imageNamed:[NSString stringWithFormat:PREFERENCE_ICON_FORMAT, [tabViewItem identifier]]];
-}
-
-/*!
- * @brief Returns the localized label for the tab view item
- */
-- (NSString *)tabView:(NSTabView *)tabView labelForTabViewItem:(NSTabViewItem *)tabViewItem
-{
-	if (tabView == tabView_category) {
-		NSString	*identifier;
-		if ((identifier = [tabViewItem identifier])) {
-			return [[self identifierToLabelDict] objectForKey:identifier];
-		}
-	}
-	
-	return nil;
-}
-
-/*!
- * @brief Returns the desired height for the tab view item
- */
-- (int)tabView:(NSTabView *)tabView heightForTabViewItem:(NSTabViewItem *)tabViewItem
-{
-	if (![[tabViewItem identifier] isEqualToString:ADVANCED_PANE_IDENTIFIER]) {
-		return [[viewArray objectAtIndex:[tabView indexOfTabViewItem:tabViewItem]] desiredHeight];
-	} else {
-		return ADVANCED_PANE_HEIGHT;
-	}
-}
-
-- (void)sizeWindowForToolbar
-{
-	NSWindow	*myWindow = [self window];
-	NSToolbar	*windowToolbar = [myWindow toolbar];
-	NSRect		windowFrame = [myWindow frame];
-
-	while ([[windowToolbar visibleItems] count] < [[windowToolbar items] count]) {
-		//Each toolbar item is 32x32; we expand by one toolbar item width repeatedly until they all fit
-		windowFrame.origin.x -= 16;
-		windowFrame.size.width += 16;
-
-		[myWindow setFrame:windowFrame display:NO];
-	}
-
-	[myWindow displayIfNeeded];
-}
-
-//Advanced Preferences -------------------------------------------------------------------------------------------------
-#pragma mark Advanced Preferences
-/*!
- * @brief Displays the passed AIPreferencePane in the advanced preferences tab of our window
- */
-- (void)configureAdvancedPreferencesForPane:(AIPreferencePane *)preferencePane
-{
-	NSEnumerator		*enumerator;
-	AIPreferencePane	*pane;
-	
-	//Close open panes
-	enumerator = [loadedAdvancedPanes objectEnumerator];
-	while ((pane = [enumerator nextObject])) {
-		[pane closeView];
-	}
-	[view_Advanced removeAllSubviews];
-	[loadedAdvancedPanes release]; loadedAdvancedPanes = nil;
-	
-	//Load new panes
-	if (preferencePane) {
-		loadedAdvancedPanes = [[NSArray arrayWithObject:preferencePane] retain];
-		[view_Advanced setPanes:loadedAdvancedPanes];
-	}
-}
-
-/*!
- * @brief Returns an array containing all the available advanced preference views
- */
-- (NSArray *)advancedCategoryArray
-{
-    if (!_advancedCategoryArray) {
-        _advancedCategoryArray = [[self _panesInCategory:AIPref_Advanced] retain];
-    }
-    
-    return _advancedCategoryArray;
-}
-
-
-//Advanced Preferences (Outline View) ----------------------------------------------------------------------------------
-#pragma mark Advanced Preferences (Outline View)
-/*!
- * @brief Configure the advanced preference category table view
- */
-- (void)_configureAdvancedPreferencesTable
-{
-    AIImageTextCell			*cell;
-	
-    //Configure our tableView
-    cell = [[AIImageTextCell alloc] init];
-    [cell setFont:[NSFont systemFontOfSize:12]];
-    [[tableView_advanced tableColumnWithIdentifier:@"description"] setDataCell:cell];
-	[cell release];
-	
-    [scrollView_advanced setAutohidesScrollers:YES];
-	[tableView_advanced setDrawsGradientSelection:YES];
-
-	//Select the previously selected row
-	int row = [[[adium preferenceController] preferenceForKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW
-														group:PREF_GROUP_WINDOW_POSITIONS] intValue];
-	if (row < 0 || row >= [tableView_advanced numberOfRows]) row = 1;
-	
-	if ([self tableView:tableView_advanced shouldSelectRow:row]) {
-		[tableView_advanced selectRow:row byExtendingSelection:NO];
-	}
-}
-
-/*!
- * @brief Return the number of accounts
- */
-- (int)numberOfRowsInTableView:(NSTableView *)tableView
-{
-	return [[self advancedCategoryArray] count];
-}
-
-/*!
- * @brief Return the account description or image
- */
-- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
-{
-	return [[[self advancedCategoryArray] objectAtIndex:row] label];
-}
-
-/*!
- * @brief Set the category image before the cell is displayed
- */
-- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
-{
-	[cell setImage:[[[self advancedCategoryArray] objectAtIndex:row] image]];
-	[cell setSubString:nil];
-}
-
-/*!
- * @brief Update our advanced preferences for the selected pane
- */
-- (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(int)row
-{
-	if (row >= 0 && row < [[self advancedCategoryArray] count]) {		
-		[self configureAdvancedPreferencesForPane:[[self advancedCategoryArray] objectAtIndex:row]];
-		return YES;
-    } else {
-		return NO;
-	}
 }
 
 @end

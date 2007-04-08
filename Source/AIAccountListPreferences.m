@@ -50,14 +50,19 @@
 /*!
  * @brief Preference pane properties
  */
-- (AIPreferenceCategory)category{
-    return AIPref_Accounts;
+- (NSString *)paneIdentifier
+{
+	return @"Accounts";
 }
-- (NSString *)label{
+- (NSString *)paneName{
     return AILocalizedString(@"Accounts","Accounts preferences label");
 }
 - (NSString *)nibName{
     return @"AccountListPreferences";
+}
+- (NSImage *)paneIcon
+{
+	return [NSImage imageNamed:@"pref-accounts" forClass:[self class]];
 }
 
 /*!
@@ -102,10 +107,12 @@
 /*!
  * @brief Perform actions before the view closes
  */
-- (void)viewWillClose
+- (void)dealloc
 {
 	[[adium contactController] unregisterListObjectObserver:self];
 	[[adium notificationCenter] removeObserver:self];
+
+	[super dealloc];
 }
 
 /*!

@@ -65,24 +65,26 @@
 
 @implementation ESWebKitMessageViewPreferences
 
-/*!
- * @brief Preference pane properties
- */
-- (AIPreferenceCategory)category{
-    return AIPref_Messages;
+- (NSString *)paneIdentifier
+{
+	return @"Messages";
 }
-- (NSString *)label{
-    return @"A";
+- (NSString *)paneName{
+	return AILocalizedString(@"Messages", "Title of the messages preferences");
 }
 - (NSString *)nibName{
     return @"WebKitPreferencesView";
+}
+- (NSImage *)paneIcon
+{
+	return [NSImage imageNamed:@"pref-messages"];
 }
 
 /*!
  * @brief Configure the preference view
  */
 - (void)viewDidLoad
-{	
+{
 	viewIsOpen = YES;
 	previewListObjectsDict = nil;
 

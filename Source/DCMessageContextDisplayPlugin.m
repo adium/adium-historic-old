@@ -67,7 +67,6 @@
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTEXT_DISPLAY_DEFAULTS
 																		forClass:[self class]] 
 										  forGroup:PREF_GROUP_CONTEXT_DISPLAY];
-    preferences = [[DCMessageContextDisplayPreferences preferencePane] retain];
 	
     //Observe preference changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTEXT_DISPLAY];

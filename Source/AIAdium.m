@@ -698,21 +698,21 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 		destination = [AISearchPathForDirectoriesInDomains(AIDockIconsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
         fileDescription = AILocalizedString(@"dock icon set",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
-		prefsCategory = @"appearance";
+		prefsCategory = @"Appearance";
 		extension = @"AdiumIcon";
 
 	} else if ([extension caseInsensitiveCompare:@"AdiumSoundset"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AISoundsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"sound set",nil);
 		prefsButton = AILocalizedString(@"Open Event Prefs",nil);
-		prefsCategory = @"events";
+		prefsCategory = @"Events";
 		extension = @"AdiumSoundset";
 
 	} else if ([extension caseInsensitiveCompare:@"AdiumEmoticonset"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIEmoticonsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"emoticon set",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
-		prefsCategory = @"appearance";
+		prefsCategory = @"Appearance";
 		extension = @"AdiumEmoticonset";
 
 	} else if ([extension caseInsensitiveCompare:@"AdiumScripts"] == NSOrderedSame) {
@@ -724,35 +724,35 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 		destination = [AISearchPathForDirectoriesInDomains(AIMessageStylesDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"message style",nil);
 		prefsButton = AILocalizedString(@"Open Message Prefs",nil);
-		prefsCategory = @"messages";
+		prefsCategory = @"Messages";
 		extension = @"AdiumMessageStyle";
 
 	} else if ([extension caseInsensitiveCompare:@"ListLayout"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIContactListDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"contact list layout",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
-		prefsCategory = @"appearance";
+		prefsCategory = @"Appearance";
 		extension = @"ListLayout";
 
 	} else if ([extension caseInsensitiveCompare:@"ListTheme"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIContactListDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"contact list theme",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
-		prefsCategory = @"appearance";
+		prefsCategory = @"Appearance";
 		extension = @"ListTheme";
 
 	} else if ([extension caseInsensitiveCompare:@"AdiumServiceIcons"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIServiceIconsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"service icons",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
-		prefsCategory = @"appearance";
+		prefsCategory = @"Appearance";
 		extension = @"AdiumServiceIcons";
 
 	} else if ([extension caseInsensitiveCompare:@"AdiumMenuBarIcons"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIMenuBarIconsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"menu bar icons",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
-		prefsCategory = @"appearance";
+		prefsCategory = @"Appearance";
 		extension = @"AdiumMenuBarIcons";
 
 	} else if ([extension caseInsensitiveCompare:@"AdiumStatusIcons"] == NSOrderedSame) {
@@ -769,7 +769,7 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 			destination = [AISearchPathForDirectoriesInDomains(AIStatusIconsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 			fileDescription = AILocalizedString(@"status icons",nil);
 			prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
-			prefsCategory = @"appearance";
+			prefsCategory = @"Appearance";
 			extension = @"AdiumStatusIcons";
 
 		} else {
@@ -874,11 +874,7 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 - (void)openAppropriatePreferencesIfNeeded
 {
 	if (prefsCategory) {
-		if ([prefsCategory isEqualToString:@"advanced"]) {
-			[preferenceController openPreferencesToAdvancedPane:advancedPrefsName];
-		} else {
-			[preferenceController openPreferencesToCategoryWithIdentifier:prefsCategory];
-		}
+		[preferenceController openPreferencesToCategoryWithIdentifier:prefsCategory];
 		
 		[prefsCategory release]; prefsCategory = nil;
 	}
