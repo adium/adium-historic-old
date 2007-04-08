@@ -22,13 +22,15 @@
 #import "PTHotKeyCenter.h"
 #import "PTHotKey.h"
 #import "SRRecorderControl.h"
-#import <AIUtilities/AIColorAdditions.h>
-#import <AIUtilities/AIFontAdditions.h>
-#import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/AIPopUpButtonAdditions.h>
+#import "PTHotKey.h"
+#import "AIMessageHistoryPreferencesWindowController.h"
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
-#import "PTHotKey.h"
+#import <AIUtilities/AIColorAdditions.h>
+#import <AIUtilities/AIFontAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIPopUpButtonAdditions.h>
 
 @interface ESGeneralPreferences (PRIVATE)
 - (NSMenu *)tabKeysMenu;
@@ -47,14 +49,19 @@
 // This comes from http://wafflesoftware.net/shortcut/
 
 //Preference pane properties
-- (AIPreferenceCategory)category{
-    return AIPref_General;
+- (NSString *)paneIdentifier
+{
+	return @"General";
 }
-- (NSString *)label{
+- (NSString *)paneName{	
     return AILocalizedString(@"General","General preferences label");
 }
 - (NSString *)nibName{
     return @"GeneralPreferences";
+}
+- (NSImage *)paneIcon
+{
+	return [NSImage imageNamed:@"pref-general" forClass:[self class]];
 }
 
 //Configure the preference view
@@ -98,18 +105,7 @@
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
-    if (sender == checkBox_messagesInTabs) {
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_TABBED_CHATTING
-                                              group:PREF_GROUP_INTERFACE];
-		[self configureControlDimming];
-		
-	} else if (sender == checkBox_arrangeByGroup) {
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-											 forKey:KEY_GROUP_CHATS_BY_GROUP
-											  group:PREF_GROUP_INTERFACE];
-		
-    } else if (sender == popUp_tabKeys) {
+    if (sender == popUp_tabKeys) {
 		AITabKeys keySelection = [[sender selectedItem] tag];
 
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:keySelection]
@@ -216,6 +212,12 @@
 					   tag:AISendOnBoth];
 
 	return [menu autorelease];		
+}
+
+#pragma mark Message history
+- (IBAction)configureMessageHistory:(id)sender
+{
+	[AIMessageHistoryPreferencesWindowController configureMessageHistoryPreferencesOnWindow:[[self view] window]];
 }
 
 @end

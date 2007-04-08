@@ -33,4 +33,6 @@
     IBOutlet	SRRecorderControl	*shortcutRecorder;		
 }
 
+- (IBAction)configureMessageHistory:(id)sender;
+
 @end

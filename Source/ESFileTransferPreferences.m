@@ -29,14 +29,19 @@
 
 @implementation ESFileTransferPreferences
 //Preference pane properties
-- (AIPreferenceCategory)category{
-    return AIPref_FileTransfer;
+- (NSString *)paneIdentifier
+{
+	return @"File Transfer";
 }
-- (NSString *)label{
-    return @"a";
+- (NSString *)paneName{
+	return AILocalizedString(@"File Transfer", nil);
 }
 - (NSString *)nibName{
     return @"FileTransferPrefs";
+}
+- (NSImage *)paneIcon
+{
+	return [NSImage imageNamed:@"pref-ft" forClass:[self class]];
 }
 
 //Called in response to all preference controls, applies new settings
@@ -86,11 +91,6 @@
 			[checkBox_autoAcceptOnlyFromCLList setState:NSOffState];
 			break;
 	}	
-}
-
-- (BOOL)resizableHorizontally
-{
-	return YES;
 }
 
 - (void)localizePane

@@ -8,9 +8,10 @@
 
 #import "ESContactListAdvancedPreferences.h"
 #import "AISCLViewPlugin.h"
-#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIPreferenceWindowController.h"
 #import "AIListWindowController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 
@@ -24,14 +25,6 @@
  * @brief Advanced contact list preferences
  */
 @implementation ESContactListAdvancedPreferences
-
-/*!
- * @brief Category
- */
-- (AIPreferenceCategory)category{
-    return AIPref_Advanced;
-}
-
 /*!
  * @brief Label
  */

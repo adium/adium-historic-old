@@ -34,17 +34,17 @@
 
 @implementation ESStatusPreferences
 
-/*!
- * @brief Category
- */
-- (AIPreferenceCategory)category{
-    return AIPref_Status;
+- (NSString *)paneIdentifier
+{
+	return @"Status";
 }
-/*!
- * @brief Label
- */
-- (NSString *)label{
+- (NSString *)paneName
+{
     return AILocalizedString(@"Status",nil);
+}
+- (NSImage *)paneIcon
+{
+	return [NSImage imageNamed:@"pref-status" forClass:[self class]];
 }
 
 /*!

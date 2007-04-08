@@ -28,6 +28,7 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIListObject.h>
 #import "AIPreferencePane.h"
+#import "AIAdvancedPreferencePane.h"
 
 #define PREFS_DEFAULT_PREFS 	@"PrefsPrefs.plist"
 #define TITLE_OPEN_PREFERENCES	AILocalizedString(@"Open Preferences",nil)
@@ -56,7 +57,8 @@
 	if ((self = [super init])) {
 		//
 		paneArray = [[NSMutableArray alloc] init];
-		
+		advancedPaneArray = [[NSMutableArray alloc] init];
+
 		defaults = [[NSMutableDictionary alloc] init];
 		prefCache = [[NSMutableDictionary alloc] init];
 		prefWithDefaultsCache = [[NSMutableDictionary alloc] init];
@@ -142,17 +144,6 @@
 }
 
 /*!
- * @brief Show a specific category within the advanced pane of the preference window
- *
- * Opens the preference window if necessary
- *
- */
-- (void)openPreferencesToAdvancedPane:(NSString *)paneName
-{
-	[AIPreferenceWindowController openPreferenceWindowToAdvancedPane:paneName];
-}
-
-/*!
  * @brief Add a view to the preferences
  */
 - (void)addPreferencePane:(AIPreferencePane *)inPane
@@ -168,6 +159,18 @@
     return paneArray;
 }
 
+/*!
+* @brief Add a view to the preferences
+ */
+- (void)addAdvancedPreferencePane:(AIAdvancedPreferencePane *)inPane
+{
+    [advancedPaneArray addObject:inPane];
+}
+
+- (NSArray *)advancedPaneArray
+{
+	return advancedPaneArray;
+}
 
 //Observing ------------------------------------------------------------------------------------------------------------
 #pragma mark Observing

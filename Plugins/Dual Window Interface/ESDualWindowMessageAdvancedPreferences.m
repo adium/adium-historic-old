@@ -24,6 +24,7 @@
 
 #import "AIDockController.h"
 #import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "AIPreferenceWindowController.h"
 
 #import "AIWebKitMessageViewPlugin.h"
@@ -36,10 +37,6 @@
 
 @implementation ESDualWindowMessageAdvancedPreferences
 
-//Preference pane properties
-- (AIPreferenceCategory)category{
-    return AIPref_Advanced;
-}
 - (NSString *)label{
     return AILocalizedString(@"Messages",nil);
 }

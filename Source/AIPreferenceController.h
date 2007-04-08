@@ -23,6 +23,7 @@
 	NSString				*userDirectory;
 	
 	NSMutableArray			*paneArray;						//Loaded preference panes
+	NSMutableArray			*advancedPaneArray;
 	NSMutableDictionary		*observers;						//Preference change observers
 
 	NSMutableDictionary		*defaults;						//Preference defaults

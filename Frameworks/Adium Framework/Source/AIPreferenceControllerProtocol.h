@@ -30,16 +30,18 @@ typedef enum {
 	AIPref_Advanced
 } AIPreferenceCategory;
 
-@class AIPreferencePane, AIAdium, AIListObject;
+@class AIAdium, AIListObject;
+@class AIPreferencePane, AIAdvancedPreferencePane;
 
 @protocol AIPreferenceController <AIController>
 //Preference Window
 - (IBAction)showPreferenceWindow:(id)sender;
 - (IBAction)closePreferenceWindow:(id)sender;
 - (void)openPreferencesToCategoryWithIdentifier:(NSString *)identifier;
-- (void)openPreferencesToAdvancedPane:(NSString *)paneName;
 - (void)addPreferencePane:(AIPreferencePane *)inPane;
 - (NSArray *)paneArray;
+- (void)addAdvancedPreferencePane:(AIAdvancedPreferencePane *)inPane;
+- (NSArray *)advancedPaneArray;
 
 //Observing
 - (void)registerPreferenceObserver:(id)observer forGroup:(NSString *)group;
