@@ -643,7 +643,6 @@
 		34DC88700A7EEE2F003E1636 /* FTProgressRevealPressed_Selected.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8325307CBD53B006466F2 /* FTProgressRevealPressed_Selected.tif */; };
 		34DC88720A7EEE2F003E1636 /* AdiumDisconnectionErrorController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AA35DA095CCA4D003B56DB /* AdiumDisconnectionErrorController.m */; };
 		34DC88740A7EEE2F003E1636 /* AIPreferenceWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = F57938BB033E739101A8010A /* AIPreferenceWindowController.m */; };
-		34DC88750A7EEE2F003E1636 /* PreferenceWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E03607CB0DFB0044F818 /* PreferenceWindow.nib */; };
 		34DC88770A7EEE2F003E1636 /* AdiumSetupWizard.m in Sources */ = {isa = PBXBuildFile; fileRef = 344161BC0943E0D800BC26ED /* AdiumSetupWizard.m */; };
 		34DC88780A7EEE2F003E1636 /* AdiumyButler.png in Resources */ = {isa = PBXBuildFile; fileRef = 344161CF0943E20D00BC26ED /* AdiumyButler.png */; };
 		34DC88790A7EEE2F003E1636 /* SetupWizard.nib in Resources */ = {isa = PBXBuildFile; fileRef = 344161D30943E22F00BC26ED /* SetupWizard.nib */; };
@@ -1537,7 +1536,6 @@
 		3402E01F07CB0D150044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		3402E02007CB0D150044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
 		3402E02D07CB0DBB0044F818 /* AboutBox.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AboutBox.nib; path = Resources/AboutBox.nib; sourceTree = "<group>"; };
-		3402E03607CB0DFB0044F818 /* PreferenceWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = PreferenceWindow.nib; path = Resources/PreferenceWindow.nib; sourceTree = "<group>"; };
 		3402E03F07CB0E400044F818 /* en */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3402E04B07CB0EA70044F818 /* en */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = en; path = "Plugins/Purple Service/en.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3402E06C07CB0F9D0044F818 /* en */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = en; path = "Plugins/WebKit Message View/en.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -2723,7 +2721,7 @@
 		34BC8F790ACA3AAC00562745 /* AIScannerDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIScannerDebug.m; path = Source/AIScannerDebug.m; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -5122,7 +5120,6 @@
 				344836910BC8510B0083723B /* SS_PreferencePaneProtocol.h */,
 				344836900BC8510B0083723B /* SS_PrefsController.m */,
 				344836920BC8510B0083723B /* SS_PrefsController.h */,
-				3402E03607CB0DFB0044F818 /* PreferenceWindow.nib */,
 				344839970BC8644C0083723B /* AIAdvancedPreferencesPlugin.h */,
 				344839980BC8644C0083723B /* AIAdvancedPreferencesPlugin.m */,
 				3448399D0BC864610083723B /* AIAdvancedPreferences.h */,
@@ -7844,7 +7841,6 @@
 				34DC886E0A7EEE2F003E1636 /* FTProgressStopPressed_Selected.tif in Resources */,
 				34DC886F0A7EEE2F003E1636 /* FTProgressStopPressed.tif in Resources */,
 				34DC88700A7EEE2F003E1636 /* FTProgressRevealPressed_Selected.tif in Resources */,
-				34DC88750A7EEE2F003E1636 /* PreferenceWindow.nib in Resources */,
 				34DC88780A7EEE2F003E1636 /* AdiumyButler.png in Resources */,
 				34DC88790A7EEE2F003E1636 /* SetupWizard.nib in Resources */,
 				34DC88820A7EEE2F003E1636 /* SoundPrefs.plist in Resources */,
