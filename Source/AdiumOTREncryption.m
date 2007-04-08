@@ -961,19 +961,19 @@ OtrlUserState otrg_get_userstate(void)
 
 #pragma mark Upgrading gaim-otr --> Adium-otr
 /*!
- * @bref Construct a dictionary converting libgaim prpl names to Adium serviceIDs for the purpose of fingerprint upgrading
+ * @brief Construct a dictionary converting libpurple prpl names to Adium serviceIDs for the purpose of fingerprint upgrading
  */
 - (NSDictionary *)prplDict
 {
 	return [NSDictionary dictionaryWithObjectsAndKeys:
-		@"joscar-OSCAR-AIM", @"prpl-oscar",
-		@"libgaim-Gadu-Gadu", @"prpl-gg",
-		@"libgaim-Jabber", @"prpl-jabber",
-		@"libgaim-Sametime", @"prpl-meanwhile",
-		@"libgaim-MSN", @"prpl-msn",
-		@"libgaim-GroupWise", @"prpl-novell",
-		@"libgaim-Yahoo!", @"prpl-yahoo",
-		@"libgaim-zephyr", @"prpl-zephyr", nil];
+		@"libpurple-OSCAR-AIM", @"prpl-oscar",
+		@"libpurple-Gadu-Gadu", @"prpl-gg",
+		@"libpurple-Jabber", @"prpl-jabber",
+		@"libpurple-Sametime", @"prpl-meanwhile",
+		@"libpurple-MSN", @"prpl-msn",
+		@"libpurple-GroupWise", @"prpl-novell",
+		@"libpurple-Yahoo!", @"prpl-yahoo",
+		@"libpurple-zephyr", @"prpl-zephyr", nil];
 }
 
 - (NSString *)upgradedFingerprintsFromFile:(NSString *)inPath
@@ -1158,7 +1158,7 @@ OtrlUserState otrg_get_userstate(void)
 	if (![[[adium preferenceController] preferenceForKey:@"GaimOTR_to_AdiumOTR_Update"
 												   group:@"OTR"] boolValue]) {
 		NSString	  *destinationPath = [[adium loginController] userDirectory];
-		NSString	  *sourcePath = [destinationPath stringByAppendingPathComponent:@"libgaim"];
+		NSString	  *sourcePath = [destinationPath stringByAppendingPathComponent:@"libpurple"];
 		
 		NSString *privateKey = [self upgradedPrivateKeyFromFile:[sourcePath stringByAppendingPathComponent:@"otr.private_key"]];
 		if (privateKey && [privateKey length]) {
