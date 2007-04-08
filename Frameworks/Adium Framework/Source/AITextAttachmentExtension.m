@@ -239,7 +239,8 @@
 			myFilewrapper = [[[NSFileWrapper alloc] initWithPath:[self path]] autorelease];
 
 		} else if ([self image]) {
-			myFilewrapper = [[[NSFileWrapper alloc] initWithSerializedRepresentation:[[self image] TIFFRepresentation]] autorelease];
+			myFilewrapper = [[[NSFileWrapper alloc] initWithSerializedRepresentation:[[self image] PNGRepresentation]] autorelease];
+			[myFilewrapper setPreferredFilename:[[[NSProcessInfo processInfo] globallyUniqueString] stringByAppendingPathExtension:@"png"]];
 		}
 
 		[self setFileWrapper:myFilewrapper];
