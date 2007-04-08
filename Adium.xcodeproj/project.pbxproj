@@ -2194,6 +2194,25 @@
 		3461621106FB482C009181D8 /* ESChatUserListController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESChatUserListController.h; path = "Plugins/Dual Window Interface/ESChatUserListController.h"; sourceTree = "<group>"; };
 		3461621206FB482C009181D8 /* ESChatUserListController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESChatUserListController.m; path = "Plugins/Dual Window Interface/ESChatUserListController.m"; sourceTree = "<group>"; };
 		3461621306FB482D009181D8 /* UserList Layout.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = "UserList Layout.plist"; path = "Plugins/Dual Window Interface/UserList Layout.plist"; sourceTree = "<group>"; };
+		34619A860BC8BF2300DF383C /* ca */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ca; path = Resources/ca.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		34619A870BC8BF2800DF383C /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		34619A880BC8BF2B00DF383C /* da */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = da; path = Resources/da.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		34619A890BC8BF2D00DF383C /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = Resources/de.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		34619A8A0BC8BF3000DF383C /* es */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = es; path = Resources/es.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		34619A8B0BC8BF3400DF383C /* fi */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fi; path = Resources/fi.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		34619A8C0BC8BF3700DF383C /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = Resources/fr.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		34619A8D0BC8BF3900DF383C /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = Resources/is.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		34619A8E0BC8BF3D00DF383C /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = Resources/it.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		34619A8F0BC8BF4000DF383C /* ja */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ja; path = Resources/ja.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		34619A900BC8BF4200DF383C /* nb */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nb; path = Resources/nb.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		34619A910BC8BF4500DF383C /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = Resources/nl.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		34619A920BC8BF4800DF383C /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		34619A930BC8BF4A00DF383C /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = Resources/pt_BR.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		34619A940BC8BF4D00DF383C /* ru */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ru; path = Resources/ru.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		34619A950BC8BF5100DF383C /* sv */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sv; path = Resources/sv.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		34619A960BC8BF5400DF383C /* tr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = tr; path = Resources/tr.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		34619A970BC8BF5600DF383C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		34619A980BC8BF5B00DF383C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
 		3465228E08371921009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/Purple Service/zh_CN.lproj/ESPurpleOscarAccountView.nib"; sourceTree = "<group>"; };
 		3465228F08371921009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		3465229008371921009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/Purple Service/zh_CN.lproj/DCPurpleZephyrJoinChatView.nib"; sourceTree = "<group>"; };
@@ -2305,7 +2324,7 @@
 		347065E406015DC5004F0D20 /* WebKit Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = "WebKit Defaults.plist"; path = "Plugins/WebKit Message View/WebKit Defaults.plist"; sourceTree = "<group>"; };
 		3470BF5E0BC6F18500388232 /* AIMessageHistoryPreferencesWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIMessageHistoryPreferencesWindowController.h; path = Source/AIMessageHistoryPreferencesWindowController.h; sourceTree = "<group>"; };
 		3470BF5F0BC6F18500388232 /* AIMessageHistoryPreferencesWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIMessageHistoryPreferencesWindowController.m; path = Source/AIMessageHistoryPreferencesWindowController.m; sourceTree = "<group>"; };
-		3470BF660BC6F21200388232 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		3470BF660BC6F21200388232 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
 		347374BC0AA9206B00AD18E3 /* en */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
 		347374F00AA920F300AD18E3 /* ca */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ca; path = Resources/ca.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
 		347374F10AA920F700AD18E3 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = Resources/cs.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
@@ -7484,7 +7503,7 @@
 				tr,
 				fi,
 				pt_BR,
-				English,
+				en,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CocAIMe2 */;
 			projectDirPath = "";
@@ -9607,7 +9626,26 @@
 		3470BF6F0BC6F22200388232 /* MessageHistoryConfiguration.nib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				3470BF660BC6F21200388232 /* English */,
+				3470BF660BC6F21200388232 /* en */,
+				34619A860BC8BF2300DF383C /* ca */,
+				34619A870BC8BF2800DF383C /* cs */,
+				34619A880BC8BF2B00DF383C /* da */,
+				34619A890BC8BF2D00DF383C /* de */,
+				34619A8A0BC8BF3000DF383C /* es */,
+				34619A8B0BC8BF3400DF383C /* fi */,
+				34619A8C0BC8BF3700DF383C /* fr */,
+				34619A8D0BC8BF3900DF383C /* is */,
+				34619A8E0BC8BF3D00DF383C /* it */,
+				34619A8F0BC8BF4000DF383C /* ja */,
+				34619A900BC8BF4200DF383C /* nb */,
+				34619A910BC8BF4500DF383C /* nl */,
+				34619A920BC8BF4800DF383C /* pl */,
+				34619A930BC8BF4A00DF383C /* pt_BR */,
+				34619A940BC8BF4D00DF383C /* ru */,
+				34619A950BC8BF5100DF383C /* sv */,
+				34619A960BC8BF5400DF383C /* tr */,
+				34619A970BC8BF5600DF383C /* zh_CN */,
+				34619A980BC8BF5B00DF383C /* zh_TW */,
 			);
 			name = MessageHistoryConfiguration.nib;
 			sourceTree = "<group>";
