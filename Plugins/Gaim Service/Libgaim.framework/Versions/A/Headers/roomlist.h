@@ -2,7 +2,7 @@
  * @file roomlist.h Room List API
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -126,7 +126,7 @@ extern "C" {
  *
  * @param account The account to get the list on.
  */
-void gaim_roomlist_show_with_account(GaimAccount *account);
+void purple_roomlist_show_with_account(GaimAccount *account);
 
 /**
  * Returns a newly created room list object.
@@ -136,14 +136,14 @@ void gaim_roomlist_show_with_account(GaimAccount *account);
  * @param account The account that's listing rooms.
  * @return The new room list handle.
  */
-GaimRoomlist *gaim_roomlist_new(GaimAccount *account);
+GaimRoomlist *purple_roomlist_new(GaimAccount *account);
 
 /**
  * Increases the reference count on the room list.
  *
  * @param list The object to ref.
  */
-void gaim_roomlist_ref(GaimRoomlist *list);
+void purple_roomlist_ref(GaimRoomlist *list);
 
 /**
  * Decreases the reference count on the room list.
@@ -153,18 +153,18 @@ void gaim_roomlist_ref(GaimRoomlist *list);
  * @param list The room list object to unref and possibly
  *             destroy.
  */
-void gaim_roomlist_unref(GaimRoomlist *list);
+void purple_roomlist_unref(GaimRoomlist *list);
 
 /**
  * Set the different field types and their names for this protocol.
  *
- * This must be called before gaim_roomlist_room_add().
+ * This must be called before purple_roomlist_room_add().
  *
  * @param list The room list.
  * @param fields A GList of GaimRoomlistField's. UI's are encouraged
  *               to default to displaying them in the order given.
  */
-void gaim_roomlist_set_fields(GaimRoomlist *list, GList *fields);
+void purple_roomlist_set_fields(GaimRoomlist *list, GList *fields);
 
 /**
  * Set the "in progress" state of the room list.
@@ -175,7 +175,7 @@ void gaim_roomlist_set_fields(GaimRoomlist *list, GList *fields);
  * @param list The room list.
  * @param in_progress We're downloading it, or we're not.
  */
-void gaim_roomlist_set_in_progress(GaimRoomlist *list, gboolean in_progress);
+void purple_roomlist_set_in_progress(GaimRoomlist *list, gboolean in_progress);
 
 /**
  * Gets the "in progress" state of the room list.
@@ -186,16 +186,16 @@ void gaim_roomlist_set_in_progress(GaimRoomlist *list, gboolean in_progress);
  * @param list The room list.
  * @return True if we're downloading it, or false if we're not.
  */
-gboolean gaim_roomlist_get_in_progress(GaimRoomlist *list);
+gboolean purple_roomlist_get_in_progress(GaimRoomlist *list);
 
 /**
  * Adds a room to the list of them.
  *
  * @param list The room list.
  * @param room The room to add to the list. The GList of fields must be in the same
-               order as was given in gaim_roomlist_set_fields().
+               order as was given in purple_roomlist_set_fields().
 */
-void gaim_roomlist_room_add(GaimRoomlist *list, GaimRoomlistRoom *room);
+void purple_roomlist_room_add(GaimRoomlist *list, GaimRoomlistRoom *room);
 
 /**
  * Returns a GaimRoomlist structure from the prpl, and
@@ -206,7 +206,7 @@ void gaim_roomlist_room_add(GaimRoomlist *list, GaimRoomlistRoom *room);
  * @return A GaimRoomlist* or @c NULL if the protocol
  *         doesn't support that.
  */
-GaimRoomlist *gaim_roomlist_get_list(GaimConnection *gc);
+GaimRoomlist *purple_roomlist_get_list(GaimConnection *gc);
 
 /**
  * Tells the prpl to stop fetching the list.
@@ -216,7 +216,7 @@ GaimRoomlist *gaim_roomlist_get_list(GaimConnection *gc);
  *
  * @param list The room list to cancel a get_list on.
  */
-void gaim_roomlist_cancel_get_list(GaimRoomlist *list);
+void purple_roomlist_cancel_get_list(GaimRoomlist *list);
 
 /**
  * Tells the prpl that a category was expanded.
@@ -229,7 +229,7 @@ void gaim_roomlist_cancel_get_list(GaimRoomlist *list);
  *                 (category->type & GAIM_ROOMLIST_ROOMTYPE_CATEGORY)
  *                 must be true.
  */
-void gaim_roomlist_expand_category(GaimRoomlist *list, GaimRoomlistRoom *category);
+void purple_roomlist_expand_category(GaimRoomlist *list, GaimRoomlistRoom *category);
 
 /*@}*/
 
@@ -247,7 +247,7 @@ void gaim_roomlist_expand_category(GaimRoomlist *list, GaimRoomlistRoom *categor
  *
  * @return A new room.
  */
-GaimRoomlistRoom *gaim_roomlist_room_new(GaimRoomlistRoomType type, const gchar *name,
+GaimRoomlistRoom *purple_roomlist_room_new(GaimRoomlistRoomType type, const gchar *name,
                                          GaimRoomlistRoom *parent);
 
 /**
@@ -257,7 +257,7 @@ GaimRoomlistRoom *gaim_roomlist_room_new(GaimRoomlistRoomType type, const gchar 
  * @param room The room.
  * @param field The field to append. Strings get g_strdup'd internally.
  */
-void gaim_roomlist_room_add_field(GaimRoomlist *list, GaimRoomlistRoom *room, gconstpointer field);
+void purple_roomlist_room_add_field(GaimRoomlist *list, GaimRoomlistRoom *room, gconstpointer field);
 
 /**
  * Join a room, given a GaimRoomlistRoom and it's associated GaimRoomlist.
@@ -265,7 +265,7 @@ void gaim_roomlist_room_add_field(GaimRoomlist *list, GaimRoomlistRoom *room, gc
  * @param list The room list the room belongs to.
  * @param room The room to join.
  */
-void gaim_roomlist_room_join(GaimRoomlist *list, GaimRoomlistRoom *room);
+void purple_roomlist_room_join(GaimRoomlist *list, GaimRoomlistRoom *room);
 
 /*@}*/
 
@@ -283,9 +283,9 @@ void gaim_roomlist_room_join(GaimRoomlist *list, GaimRoomlistRoom *room);
  * @param hidden Hide the field.
  *
  * @return A new GaimRoomlistField, ready to be added to a GList and passed to
- *         gaim_roomlist_set_fields().
+ *         purple_roomlist_set_fields().
  */
-GaimRoomlistField *gaim_roomlist_field_new(GaimRoomlistFieldType type,
+GaimRoomlistField *purple_roomlist_field_new(GaimRoomlistFieldType type,
                                            const gchar *label, const gchar *name,
                                            gboolean hidden);
 /*@}*/
@@ -296,19 +296,19 @@ GaimRoomlistField *gaim_roomlist_field_new(GaimRoomlistFieldType type,
 /*@{*/
 
 /**
- * Sets the UI operations structure to be used in all gaim room lists.
+ * Sets the UI operations structure to be used in all purple room lists.
  *
  * @param ops The UI operations structure.
  */
-void gaim_roomlist_set_ui_ops(GaimRoomlistUiOps *ops);
+void purple_roomlist_set_ui_ops(GaimRoomlistUiOps *ops);
 
 /**
- * Returns the gaim window UI operations structure to be used in
+ * Returns the purple window UI operations structure to be used in
  * new windows.
  *
  * @return A filled-out GaimRoomlistUiOps structure.
  */
-GaimRoomlistUiOps *gaim_roomlist_get_ui_ops(void);
+GaimRoomlistUiOps *purple_roomlist_get_ui_ops(void);
 
 /*@}*/
 

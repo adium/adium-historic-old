@@ -1,7 +1,7 @@
 /**
  * @file ycht.h The Yahoo! protocol plugin, YCHT protocol stuff.
  *
- * gaim
+ * purple
  *
  * Copyright (C) 2004 Timothy Ringenbach <omarvo@hotmail.com>
  *

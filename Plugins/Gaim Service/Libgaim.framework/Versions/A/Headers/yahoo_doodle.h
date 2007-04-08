@@ -1,7 +1,7 @@
 /**
  * @file yahoo_doodle.h The Yahoo! protocol plugin Doodle IMVironment object
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -97,7 +97,7 @@ typedef struct _doodle_session
  * API
  *****************************************************************************/
 
-GaimCmdRet yahoo_doodle_gaim_cmd_start(GaimConversation *conv, const char *cmd, char **args,
+GaimCmdRet yahoo_doodle_purple_cmd_start(GaimConversation *conv, const char *cmd, char **args,
 									   char **error, void *data);
 
 void yahoo_doodle_process(GaimConnection *gc, const char *me, const char *from,

@@ -2,7 +2,7 @@
  * @file sound.h Sound API
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -80,7 +80,7 @@ extern "C" {
  *        account.  This is needed for the "sounds while away?"
  *        preference to work correctly.
  */
-void gaim_sound_play_file(const char *filename, const GaimAccount *account);
+void purple_sound_play_file(const char *filename, const GaimAccount *account);
 
 /**
  * Plays the sound associated with the specified event.
@@ -91,38 +91,38 @@ void gaim_sound_play_file(const char *filename, const GaimAccount *account);
  *        account.  This is needed for the "sounds while away?"
  *        preference to work correctly.
  */
-void gaim_sound_play_event(GaimSoundEventID event, const GaimAccount *account);
+void purple_sound_play_event(GaimSoundEventID event, const GaimAccount *account);
 
 /**
  * Sets the UI sound operations
  *
  * @param ops The UI sound operations structure.
  */
-void gaim_sound_set_ui_ops(GaimSoundUiOps *ops);
+void purple_sound_set_ui_ops(GaimSoundUiOps *ops);
 
 /**
  * Gets the UI sound operations
  *
  * @return The UI sound operations structure.
  */
-GaimSoundUiOps *gaim_sound_get_ui_ops(void);
+GaimSoundUiOps *purple_sound_get_ui_ops(void);
 
 /**
  * Initializes the sound subsystem
  */
-void gaim_sound_init(void);
+void purple_sound_init(void);
 
 /**
  * Shuts down the sound subsystem
  */
-void gaim_sound_uninit(void);
+void purple_sound_uninit(void);
 
 /**
  * Returns the sound subsystem handle.
  *
  * @return The sound subsystem handle.
  */
-void *gaim_sounds_get_handle(void);
+void *purple_sounds_get_handle(void);
 
 /*@}*/
 

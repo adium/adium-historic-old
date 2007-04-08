@@ -1,7 +1,7 @@
 /**
- * @file whiteboard.h The GaimWhiteboard core object
+ * @file whiteboard.h The PurpleWhiteboard core object
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -95,7 +95,7 @@ extern "C" {
  *
  * @param ops The UI operations to set
  */
-void gaim_whiteboard_set_ui_ops(GaimWhiteboardUiOps *ops);
+void purple_whiteboard_set_ui_ops(GaimWhiteboardUiOps *ops);
 
 /**
  * Sets the prpl operations for a whiteboard
@@ -103,7 +103,7 @@ void gaim_whiteboard_set_ui_ops(GaimWhiteboardUiOps *ops);
  * @param wb  The whiteboard for which to set the prpl operations
  * @param ops The prpl operations to set
  */
-void gaim_whiteboard_set_prpl_ops(GaimWhiteboard *wb, GaimWhiteboardPrplOps *ops);
+void purple_whiteboard_set_prpl_ops(GaimWhiteboard *wb, GaimWhiteboardPrplOps *ops);
 
 /**
  * Creates a whiteboard
@@ -114,21 +114,21 @@ void gaim_whiteboard_set_prpl_ops(GaimWhiteboard *wb, GaimWhiteboardPrplOps *ops
  *
  * @return The new whiteboard
  */
-GaimWhiteboard *gaim_whiteboard_create(GaimAccount *account, const char *who, int state);
+GaimWhiteboard *purple_whiteboard_create(GaimAccount *account, const char *who, int state);
 
 /**
  * Destroys a whiteboard
  *
  * @param wb The whiteboard.
  */
-void gaim_whiteboard_destroy(GaimWhiteboard *wb);
+void purple_whiteboard_destroy(GaimWhiteboard *wb);
 
 /**
  * Starts a whiteboard
  *
  * @param wb The whiteboard.
  */
-void gaim_whiteboard_start(GaimWhiteboard *wb);
+void purple_whiteboard_start(GaimWhiteboard *wb);
 
 /**
  * Finds a whiteboard from an account and user.
@@ -138,14 +138,14 @@ void gaim_whiteboard_start(GaimWhiteboard *wb);
  *
  * @return The whiteboard if found, otherwise @c NULL.
  */
-GaimWhiteboard *gaim_whiteboard_get_session(const GaimAccount *account, const char *who);
+GaimWhiteboard *purple_whiteboard_get_session(const GaimAccount *account, const char *who);
 
 /**
  * Destorys a drawing list for a whiteboard
  *
  * @param draw_list The drawing list.
  */
-void gaim_whiteboard_draw_list_destroy(GList *draw_list);
+void purple_whiteboard_draw_list_destroy(GList *draw_list);
 
 /**
  * Gets the dimension of a whiteboard.
@@ -156,7 +156,7 @@ void gaim_whiteboard_draw_list_destroy(GList *draw_list);
  *
  * @return TRUE if the values of width and height were set.
  */
-gboolean gaim_whiteboard_get_dimensions(const GaimWhiteboard *wb, int *width, int *height);
+gboolean purple_whiteboard_get_dimensions(const GaimWhiteboard *wb, int *width, int *height);
 
 /**
  * Sets the dimensions for a whiteboard.
@@ -165,7 +165,7 @@ gboolean gaim_whiteboard_get_dimensions(const GaimWhiteboard *wb, int *width, in
  * @param width  The width.
  * @param height The height.
  */
-void gaim_whiteboard_set_dimensions(GaimWhiteboard *wb, int width, int height);
+void purple_whiteboard_set_dimensions(GaimWhiteboard *wb, int width, int height);
 
 /**
  * Draws a point on a whiteboard.
@@ -176,7 +176,7 @@ void gaim_whiteboard_set_dimensions(GaimWhiteboard *wb, int width, int height);
  * @param color The color to use.
  * @param size  The brush size.
  */
-void gaim_whiteboard_draw_point(GaimWhiteboard *wb, int x, int y, int color, int size);
+void purple_whiteboard_draw_point(GaimWhiteboard *wb, int x, int y, int color, int size);
 
 /**
  * Send a list of points to draw to the buddy.
@@ -184,7 +184,7 @@ void gaim_whiteboard_draw_point(GaimWhiteboard *wb, int x, int y, int color, int
  * @param wb	The whiteboard
  * @param list	A GList of points
  */
-void gaim_whiteboard_send_draw_list(GaimWhiteboard *wb, GList *list);
+void purple_whiteboard_send_draw_list(GaimWhiteboard *wb, GList *list);
 
 /**
  * Draws a line on a whiteboard
@@ -197,21 +197,21 @@ void gaim_whiteboard_send_draw_list(GaimWhiteboard *wb, GList *list);
  * @param color The color to use.
  * @param size  The brush size.
  */
-void gaim_whiteboard_draw_line(GaimWhiteboard *wb, int x1, int y1, int x2, int y2, int color, int size);
+void purple_whiteboard_draw_line(GaimWhiteboard *wb, int x1, int y1, int x2, int y2, int color, int size);
 
 /**
  * Clears a whiteboard
  *
  * @param wb The whiteboard.
  */
-void gaim_whiteboard_clear(GaimWhiteboard *wb);
+void purple_whiteboard_clear(GaimWhiteboard *wb);
 
 /**
  * Sends a request to the buddy to clear the whiteboard.
  *
  * @param wb The whiteboard
  */
-void gaim_whiteboard_send_clear(GaimWhiteboard *wb);
+void purple_whiteboard_send_clear(GaimWhiteboard *wb);
 
 /**
  * Sends a request to change the size and color of the brush.
@@ -220,7 +220,7 @@ void gaim_whiteboard_send_clear(GaimWhiteboard *wb);
  * @param size	The size of the brush
  * @param color	The color of the brush
  */
-void gaim_whiteboard_send_brush(GaimWhiteboard *wb, int size, int color);
+void purple_whiteboard_send_brush(GaimWhiteboard *wb, int size, int color);
 
 /**
  * Gets the size and color of the brush.
@@ -231,7 +231,7 @@ void gaim_whiteboard_send_brush(GaimWhiteboard *wb, int size, int color);
  *
  * @return	TRUE if the size and color were set.
  */
-gboolean gaim_whiteboard_get_brush(const GaimWhiteboard *wb, int *size, int *color);
+gboolean purple_whiteboard_get_brush(const GaimWhiteboard *wb, int *size, int *color);
 
 /**
  * Sets the size and color of the brush.
@@ -240,7 +240,7 @@ gboolean gaim_whiteboard_get_brush(const GaimWhiteboard *wb, int *size, int *col
  * @param size	The size of the brush
  * @param color	The color of the brush
  */
-void gaim_whiteboard_set_brush(GaimWhiteboard *wb, int size, int color);
+void purple_whiteboard_set_brush(GaimWhiteboard *wb, int size, int color);
 
 /*@}*/
 

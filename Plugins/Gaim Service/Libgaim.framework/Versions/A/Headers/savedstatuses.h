@@ -2,7 +2,7 @@
  * @file savedstatuses.h Saved Status API
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -79,7 +79,7 @@ extern "C" {
  * @return The newly created saved status, or NULL if the title you
  *         used was already taken.
  */
-GaimSavedStatus *gaim_savedstatus_new(const char *title,
+GaimSavedStatus *purple_savedstatus_new(const char *title,
 									  GaimStatusPrimitive type);
 
 /**
@@ -88,7 +88,7 @@ GaimSavedStatus *gaim_savedstatus_new(const char *title,
  * @param status  The saved status.
  * @param title   The title of the saved status.
  */
-void gaim_savedstatus_set_title(GaimSavedStatus *status,
+void purple_savedstatus_set_title(GaimSavedStatus *status,
 								const char *title);
 
 /**
@@ -97,7 +97,7 @@ void gaim_savedstatus_set_title(GaimSavedStatus *status,
  * @param status  The saved status.
  * @param type    The type of saved status.
  */
-void gaim_savedstatus_set_type(GaimSavedStatus *status,
+void purple_savedstatus_set_type(GaimSavedStatus *status,
 							   GaimStatusPrimitive type);
 
 /**
@@ -107,7 +107,7 @@ void gaim_savedstatus_set_type(GaimSavedStatus *status,
  * @param message The message, or NULL if you want to unset the
  *                message for this status.
  */
-void gaim_savedstatus_set_message(GaimSavedStatus *status,
+void purple_savedstatus_set_message(GaimSavedStatus *status,
 								  const char *message);
 
 /**
@@ -119,7 +119,7 @@ void gaim_savedstatus_set_message(GaimSavedStatus *status,
  *                  status.
  * @param message	The message for the account in the substatus.
  */
-void gaim_savedstatus_set_substatus(GaimSavedStatus *status,
+void purple_savedstatus_set_substatus(GaimSavedStatus *status,
 									const GaimAccount *account,
 									const GaimStatusType *type,
 									const char *message);
@@ -133,7 +133,7 @@ void gaim_savedstatus_set_substatus(GaimSavedStatus *status,
  * @param saved_status The saved status.
  * @param account      The account.
 */
-void gaim_savedstatus_unset_substatus(GaimSavedStatus *saved_status,
+void purple_savedstatus_unset_substatus(GaimSavedStatus *saved_status,
 												  const GaimAccount *account);
 
 /**
@@ -146,14 +146,14 @@ void gaim_savedstatus_unset_substatus(GaimSavedStatus *saved_status,
  *         status could not be deleted because no saved status exists
  *         with the given title.
  */
-gboolean gaim_savedstatus_delete(const char *title);
+gboolean purple_savedstatus_delete(const char *title);
 
 /**
  * Returns all saved statuses.
  *
  * @return A list of saved statuses.
  */
-const GList *gaim_savedstatuses_get_all(void);
+const GList *purple_savedstatuses_get_all(void);
 
 /**
  * Returns the n most popular saved statuses.  "Popularity" is
@@ -172,17 +172,17 @@ const GList *gaim_savedstatuses_get_all(void);
  *         g_list_free'd by the caller (but the
  *         GaimSavedStatuses must not be free'd).
  */
-GList *gaim_savedstatuses_get_popular(unsigned int how_many);
+GList *purple_savedstatuses_get_popular(unsigned int how_many);
 
 /**
  * Returns the currently selected saved status.  If we are idle
- * then this returns gaim_savedstatus_get_idleaway().  Otherwise
- * it returns gaim_savedstatus_get_default().
+ * then this returns purple_savedstatus_get_idleaway().  Otherwise
+ * it returns purple_savedstatus_get_default().
  *
  * @return A pointer to the in-use GaimSavedStatus.
  *         This function never returns NULL.
  */
-GaimSavedStatus *gaim_savedstatus_get_current(void);
+GaimSavedStatus *purple_savedstatus_get_current(void);
 
 /**
  * Returns the default saved status that is used when our
@@ -191,7 +191,7 @@ GaimSavedStatus *gaim_savedstatus_get_current(void);
  * @return A pointer to the in-use GaimSavedStatus.
  *         This function never returns NULL.
  */
-GaimSavedStatus *gaim_savedstatus_get_default(void);
+GaimSavedStatus *purple_savedstatus_get_default(void);
 
 /**
  * Returns the saved status that is used when your
@@ -200,7 +200,7 @@ GaimSavedStatus *gaim_savedstatus_get_default(void);
  * @return A pointer to the idle-away GaimSavedStatus.
  *         This function never returns NULL.
  */
-GaimSavedStatus *gaim_savedstatus_get_idleaway(void);
+GaimSavedStatus *purple_savedstatus_get_idleaway(void);
 
 /**
  * Return TRUE if we are currently idle-away.  Otherwise
@@ -208,7 +208,7 @@ GaimSavedStatus *gaim_savedstatus_get_idleaway(void);
  *
  * @return TRUE if our accounts have been set to idle-away.
  */
-gboolean gaim_savedstatus_is_idleaway(void);
+gboolean purple_savedstatus_is_idleaway(void);
 
 /**
  * Set whether accounts in Gaim are idle-away or not.
@@ -217,15 +217,15 @@ gboolean gaim_savedstatus_is_idleaway(void);
  *        idle-away saved status.  FALSE if they should
  *        be switched to use the default status.
  */
-void gaim_savedstatus_set_idleaway(gboolean idleaway);
+void purple_savedstatus_set_idleaway(gboolean idleaway);
 
 /**
- * Returns the status to be used when gaim is starting up
+ * Returns the status to be used when purple is starting up
  *
  * @return A pointer to the startup GaimSavedStatus.
  *         This function never returns NULL.
  */
-GaimSavedStatus *gaim_savedstatus_get_startup(void);
+GaimSavedStatus *purple_savedstatus_get_startup(void);
 
 /**
  * Finds a saved status with the specified title.
@@ -234,7 +234,7 @@ GaimSavedStatus *gaim_savedstatus_get_startup(void);
  *
  * @return The saved status if found, or NULL.
  */
-GaimSavedStatus *gaim_savedstatus_find(const char *title);
+GaimSavedStatus *purple_savedstatus_find(const char *title);
 
 /**
  * Finds a saved status with the specified creation time.
@@ -244,7 +244,7 @@ GaimSavedStatus *gaim_savedstatus_find(const char *title);
  *
  * @return The saved status if found, or NULL.
  */
-GaimSavedStatus *gaim_savedstatus_find_by_creation_time(time_t creation_time);
+GaimSavedStatus *purple_savedstatus_find_by_creation_time(time_t creation_time);
 
 /**
  * Finds a saved status with the specified primitive and message.
@@ -256,7 +256,7 @@ GaimSavedStatus *gaim_savedstatus_find_by_creation_time(time_t creation_time);
  *
  * @return The saved status if found, or NULL.
  */
-GaimSavedStatus *gaim_savedstatus_find_transient_by_type_and_message(GaimStatusPrimitive type, const char *message);
+GaimSavedStatus *purple_savedstatus_find_transient_by_type_and_message(GaimStatusPrimitive type, const char *message);
 
 /**
  * Determines if a given saved status is "transient."
@@ -275,7 +275,7 @@ GaimSavedStatus *gaim_savedstatus_find_transient_by_type_and_message(GaimStatusP
  *
  * @return TRUE if the saved status is transient.
  */
-gboolean gaim_savedstatus_is_transient(const GaimSavedStatus *saved_status);
+gboolean purple_savedstatus_is_transient(const GaimSavedStatus *saved_status);
 
 /**
  * Return the name of a given saved status.
@@ -287,7 +287,7 @@ gboolean gaim_savedstatus_is_transient(const GaimSavedStatus *saved_status);
  *         you need a reference to the title for prolonged use then
  *         you should make a copy of it.
  */
-const char *gaim_savedstatus_get_title(const GaimSavedStatus *saved_status);
+const char *purple_savedstatus_get_title(const GaimSavedStatus *saved_status);
 
 /**
  * Return the type of a given saved status.
@@ -296,7 +296,7 @@ const char *gaim_savedstatus_get_title(const GaimSavedStatus *saved_status);
  *
  * @return The name.
  */
-GaimStatusPrimitive gaim_savedstatus_get_type(const GaimSavedStatus *saved_status);
+GaimStatusPrimitive purple_savedstatus_get_type(const GaimSavedStatus *saved_status);
 
 /**
  * Return the default message of a given saved status.
@@ -308,7 +308,7 @@ GaimStatusPrimitive gaim_savedstatus_get_type(const GaimSavedStatus *saved_statu
  *         contain the normal markup that is created by
  *         Gaim's IMHTML (basically HTML markup).
  */
-const char *gaim_savedstatus_get_message(const GaimSavedStatus *saved_status);
+const char *purple_savedstatus_get_message(const GaimSavedStatus *saved_status);
 
 /**
  * Return the time in seconds-since-the-epoch when this
@@ -325,7 +325,7 @@ const char *gaim_savedstatus_get_message(const GaimSavedStatus *saved_status);
  *
  * @return The timestamp when this saved status was created.
  */
-time_t gaim_savedstatus_get_creation_time(const GaimSavedStatus *saved_status);
+time_t purple_savedstatus_get_creation_time(const GaimSavedStatus *saved_status);
 
 /**
  * Determine if a given saved status has "substatuses,"
@@ -337,7 +337,7 @@ time_t gaim_savedstatus_get_creation_time(const GaimSavedStatus *saved_status);
  * @return TRUE if the saved_status has substatuses.
  *         FALSE otherwise.
  */
-gboolean gaim_savedstatus_has_substatuses(const GaimSavedStatus *saved_status);
+gboolean purple_savedstatus_has_substatuses(const GaimSavedStatus *saved_status);
 
 /**
  * Get the substatus for an account in a saved status.
@@ -349,7 +349,7 @@ gboolean gaim_savedstatus_has_substatuses(const GaimSavedStatus *saved_status);
  *         the given account does not have a substatus that
  *         differs from the default status of this GaimSavedStatus.
  */
-GaimSavedStatusSub *gaim_savedstatus_get_substatus(
+GaimSavedStatusSub *purple_savedstatus_get_substatus(
 									const GaimSavedStatus *saved_status,
 									const GaimAccount *account);
 
@@ -360,7 +360,7 @@ GaimSavedStatusSub *gaim_savedstatus_get_substatus(
  *
  * @return The status type.
  */
-const GaimStatusType *gaim_savedstatus_substatus_get_type(const GaimSavedStatusSub *substatus);
+const PurpleStatusType *purple_savedstatus_substatus_get_type(const GaimSavedStatusSub *substatus);
 
 /**
  * Get the message of a given substatus.
@@ -370,16 +370,16 @@ const GaimStatusType *gaim_savedstatus_substatus_get_type(const GaimSavedStatusS
  * @return The message of the substatus, or NULL if this substatus does
  *         not have a message.
  */
-const char *gaim_savedstatus_substatus_get_message(const GaimSavedStatusSub *substatus);
+const char *purple_savedstatus_substatus_get_message(const GaimSavedStatusSub *substatus);
 
 /**
  * Sets the statuses for all your accounts to those specified
  * by the given saved_status.  This function calls
- * gaim_savedstatus_activate_for_account() for all your accounts.
+ * purple_savedstatus_activate_for_account() for all your accounts.
  *
  * @param saved_status The status you want to set your accounts to.
  */
-void gaim_savedstatus_activate(GaimSavedStatus *saved_status);
+void purple_savedstatus_activate(GaimSavedStatus *saved_status);
 
 /**
  * Sets the statuses for a given account to those specified
@@ -388,24 +388,24 @@ void gaim_savedstatus_activate(GaimSavedStatus *saved_status);
  * @param saved_status The status you want to set your accounts to.
  * @param account      The account whose statuses you want to change.
  */
-void gaim_savedstatus_activate_for_account(const GaimSavedStatus *saved_status, GaimAccount *account);
+void purple_savedstatus_activate_for_account(const GaimSavedStatus *saved_status, GaimAccount *account);
 
 /**
  * Get the handle for the status subsystem.
  *
  * @return the handle to the status subsystem
  */
-void *gaim_savedstatuses_get_handle(void);
+void *purple_savedstatuses_get_handle(void);
 
 /**
  * Initializes the status subsystem.
  */
-void gaim_savedstatuses_init(void);
+void purple_savedstatuses_init(void);
 
 /**
  * Uninitializes the status subsystem.
  */
-void gaim_savedstatuses_uninit(void);
+void purple_savedstatuses_uninit(void);
 
 /*@}*/
 

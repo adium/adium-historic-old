@@ -15,24 +15,24 @@
  */
 
 #import <Adium/AIStatusControllerProtocol.h>
-#import "ESGaimICQAccount.h"
-#import "ESGaimICQAccountViewController.h"
+#import "ESPurpleICQAccount.h"
+#import "ESPurpleICQAccountViewController.h"
 #import "ESICQService.h"
 
 @implementation ESICQService
 
 //Account Creation
 - (Class)accountClass{
-	return [ESGaimICQAccount class];
+	return [ESPurpleICQAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return [ESGaimICQAccountViewController accountViewController];
+    return [ESPurpleICQAccountViewController accountViewController];
 }
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-oscar-ICQ";
+	return @"libpurple-oscar-ICQ";
 }
 - (NSString *)serviceID{
 	return @"ICQ";

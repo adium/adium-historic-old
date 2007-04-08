@@ -4,9 +4,9 @@
 //
 //  Created by Evan Schoenberg on 12/17/05.
 
-#import "GaimService.h"
+#import "PurpleService.h"
 
-@interface ESSimpleService : GaimService {
+@interface ESSimpleService : PurpleService {
 
 }
 

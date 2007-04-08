@@ -2,7 +2,7 @@
  * @file internal.h Internal definitions and includes
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -178,10 +178,10 @@
 /* Safer ways to work with static buffers. When using non-static
  * buffers, either use g_strdup_* functions (preferred) or use
  * g_strlcpy/g_strlcpy directly. */
-#define gaim_strlcpy(dest, src) g_strlcpy(dest, src, sizeof(dest))
-#define gaim_strlcat(dest, src) g_strlcat(dest, src, sizeof(dest))
+#define purple_strlcpy(dest, src) g_strlcpy(dest, src, sizeof(dest))
+#define purple_strlcat(dest, src) g_strlcat(dest, src, sizeof(dest))
 
-#define GAIM_WEBSITE "http://gaim.sourceforge.net/"
+#define GAIM_WEBSITE "http://purple.sourceforge.net/"
 
 #ifndef _WIN32
 /* Everything needs to include this, because

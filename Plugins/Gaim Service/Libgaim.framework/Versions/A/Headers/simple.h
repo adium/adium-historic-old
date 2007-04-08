@@ -1,7 +1,7 @@
 /**
  * @file simple.h
  *
- * gaim
+ * purple
  *
  * Copyright (C) 2005, Thomas Butter <butter@uni-mannheim.de>
  *

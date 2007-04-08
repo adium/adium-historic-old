@@ -2,7 +2,7 @@
  * @file privacy.h Privacy API
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -65,7 +65,7 @@ typedef struct
  *
  * @return TRUE if the user was added successfully, or @c FALSE otherwise.
  */
-gboolean gaim_privacy_permit_add(GaimAccount *account, const char *name,
+gboolean purple_privacy_permit_add(GaimAccount *account, const char *name,
 								 gboolean local_only);
 
 /**
@@ -78,7 +78,7 @@ gboolean gaim_privacy_permit_add(GaimAccount *account, const char *name,
  *
  * @return TRUE if the user was removed successfully, or @c FALSE otherwise.
  */
-gboolean gaim_privacy_permit_remove(GaimAccount *account, const char *name,
+gboolean purple_privacy_permit_remove(GaimAccount *account, const char *name,
 									gboolean local_only);
 
 /**
@@ -91,7 +91,7 @@ gboolean gaim_privacy_permit_remove(GaimAccount *account, const char *name,
  *
  * @return TRUE if the user was added successfully, or @c FALSE otherwise.
  */
-gboolean gaim_privacy_deny_add(GaimAccount *account, const char *name,
+gboolean purple_privacy_deny_add(GaimAccount *account, const char *name,
 							   gboolean local_only);
 
 /**
@@ -104,7 +104,7 @@ gboolean gaim_privacy_deny_add(GaimAccount *account, const char *name,
  *
  * @return TRUE if the user was removed successfully, or @c FALSE otherwise.
  */
-gboolean gaim_privacy_deny_remove(GaimAccount *account, const char *name,
+gboolean purple_privacy_deny_remove(GaimAccount *account, const char *name,
 								  gboolean local_only);
 
 /**
@@ -127,7 +127,7 @@ gboolean gaim_privacy_deny_remove(GaimAccount *account, const char *name,
  * @param restore	Should the previous allow/deny list be restored if the
  *					privacy setting is changed.
  */
-void gaim_privacy_allow(GaimAccount *account, const char *who, gboolean local,
+void purple_privacy_allow(GaimAccount *account, const char *who, gboolean local,
 						gboolean restore);
 
 /**
@@ -150,7 +150,7 @@ void gaim_privacy_allow(GaimAccount *account, const char *who, gboolean local,
  * @param restore	Should the previous allow/deny list be restored if the
  *					privacy setting is changed.
  */
-void gaim_privacy_deny(GaimAccount *account, const char *who, gboolean local,
+void purple_privacy_deny(GaimAccount *account, const char *who, gboolean local,
 						gboolean restore);
 
 /**
@@ -161,26 +161,26 @@ void gaim_privacy_deny(GaimAccount *account, const char *who, gboolean local,
  *
  * @return @c FALSE if the specified account's privacy settings block the user or @c TRUE otherwise. The meaning of "block" is protocol-dependent and generally relates to status and/or sending of messages.
  */
-gboolean gaim_privacy_check(GaimAccount *account, const char *who);
+gboolean purple_privacy_check(GaimAccount *account, const char *who);
 
 /**
  * Sets the UI operations structure for the privacy subsystem.
  *
  * @param ops The UI operations structure.
  */
-void gaim_privacy_set_ui_ops(GaimPrivacyUiOps *ops);
+void purple_privacy_set_ui_ops(GaimPrivacyUiOps *ops);
 
 /**
  * Returns the UI operations structure for the privacy subsystem.
  *
  * @return The UI operations structure.
  */
-GaimPrivacyUiOps *gaim_privacy_get_ui_ops(void);
+GaimPrivacyUiOps *purple_privacy_get_ui_ops(void);
 
 /**
  * Initializes the privacy subsystem.
  */
-void gaim_privacy_init(void);
+void purple_privacy_init(void);
 
 #ifdef __cplusplus
 }

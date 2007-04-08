@@ -1,5 +1,5 @@
 /*
- * Gaim's oscar protocol plugin
+ * Purple's oscar protocol plugin
  * This file is the legal property of its developers.
  * Please see the AUTHORS file distributed alongside this file.
  *
@@ -275,7 +275,7 @@ struct _ClientInfo
 }
 
 #define CLIENTINFO_PURPLE { \
-	"Gaim/" VERSION, \
+	"Purple/" VERSION, \
 	0x0109, \
 	0x0005, 0x0001, \
 	0x0000, 0x0bdc, \
@@ -376,7 +376,7 @@ struct _FlapConnection
 	gchar *error_message;
 
 	/* A few variables that are only used when connecting */
-	GaimProxyConnectData *connect_data;
+	PurpleProxyConnectData *connect_data;
 	guint16 cookielen;
 	guint8 *cookie;
 	gpointer new_conn_data;
@@ -385,7 +385,7 @@ struct _FlapConnection
 	guint8 header[6];
 	ssize_t header_received;
 	FlapFrame buffer_incoming;
-	GaimCircBuffer *buffer_outgoing;
+	PurpleCircBuffer *buffer_outgoing;
 	guint watcher_incoming;
 	guint watcher_outgoing;
 
@@ -458,7 +458,7 @@ struct _OscarData
 	/* ---- Client Accessible ------------------------ */
 
 	/* Our screen name. */
-	/* TODO: Get rid of this and use gaim_account_get_username() everywhere? */
+	/* TODO: Get rid of this and use purple_account_get_username() everywhere? */
 	char sn[MAXSNLEN+1];
 
 	GaimConnection *gc;
@@ -932,7 +932,7 @@ struct aim_incomingim_ch4_args
 void aim_icbm_makecookie(guchar* cookie);
 gchar *oscar_encoding_extract(const char *encoding);
 gchar *oscar_encoding_to_utf8(const char *encoding, const char *text, int textlen);
-gchar *gaim_plugin_oscar_decode_im_part(GaimAccount *account, const char *sourcesn, guint16 charset, guint16 charsubset, const gchar *data, gsize datalen);
+gchar *purple_plugin_oscar_decode_im_part(GaimAccount *account, const char *sourcesn, guint16 charset, guint16 charsubset, const gchar *data, gsize datalen);
 
 
 /* 0x0002 - family_locate.c */

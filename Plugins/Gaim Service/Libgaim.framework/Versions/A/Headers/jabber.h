@@ -1,7 +1,7 @@
 /**
  * @file jabber.h
  *
- * gaim
+ * purple
  *
  * Copyright (C) 2003 Nathan Walp <faceprint@faceprint.com>
  *
@@ -37,7 +37,7 @@
 #include <sasl/sasl.h>
 #endif
 
-#define CAPS0115_NODE "http://gaim.sf.net/caps"
+#define CAPS0115_NODE "http://purple.sf.net/caps"
 
 typedef enum {
 	JABBER_CAP_NONE           = 0,

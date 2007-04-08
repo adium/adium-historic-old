@@ -15,24 +15,24 @@
  */
 
 #import <Adium/AIStatusControllerProtocol.h>
-#import "DCGaimYahooJoinChatViewController.h"
-#import "ESGaimYahooAccount.h"
-#import "ESGaimYahooAccountViewController.h"
+#import "DCPurpleYahooJoinChatViewController.h"
+#import "ESPurpleYahooAccount.h"
+#import "ESPurpleYahooAccountViewController.h"
 #import "ESYahooService.h"
 
 @implementation ESYahooService
 
 //Account Creation
 - (Class)accountClass{
-	return [ESGaimYahooAccount class];
+	return [ESPurpleYahooAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return [ESGaimYahooAccountViewController accountViewController];
+    return [ESPurpleYahooAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return [DCGaimYahooJoinChatViewController joinChatView];
+	return [DCPurpleYahooJoinChatViewController joinChatView];
 }
 
 - (BOOL)canCreateGroupChats{
@@ -41,7 +41,7 @@
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-Yahoo!";
+	return @"libpurple-Yahoo!";
 }
 - (NSString *)serviceID{
 	return @"Yahoo!";
@@ -89,7 +89,7 @@
 									  ofType:AIInvisibleStatusType
 								  forService:self];
 	
-	/* Yahoo supports custom statuses... ESGaimYahooAccount will convert a properly written cusutom status
+	/* Yahoo supports custom statuses... ESPurpleYahooAccount will convert a properly written cusutom status
 	 * into the Yahoo-specific statuses as necessary. Uncomment to explicitly add support for these statuses. */
 	/*
 	[[adium statusController] registerStatus:STATUS_NAME_BRB

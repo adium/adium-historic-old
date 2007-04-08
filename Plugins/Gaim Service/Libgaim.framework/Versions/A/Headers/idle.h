@@ -2,7 +2,7 @@
  * @file idle.h Idle API
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -47,14 +47,14 @@ extern "C" {
  * 'active'.  The conversation code calls this when the
  * user sends an IM, for example.
  */
-void gaim_idle_touch(void);
+void purple_idle_touch(void);
 
 /**
  * Fake our idle time by setting the time at which our
  * accounts purportedly became idle.  This is used by
  * the I'dle Mak'er plugin.
  */
-void gaim_idle_set(time_t time);
+void purple_idle_set(time_t time);
 
 /*@}*/
 
@@ -68,24 +68,24 @@ void gaim_idle_set(time_t time);
  *
  * @param ops The UI operations structure.
  */
-void gaim_idle_set_ui_ops(GaimIdleUiOps *ops);
+void purple_idle_set_ui_ops(GaimIdleUiOps *ops);
 
 /**
  * Returns the UI operations structure used for idle reporting.
  *
  * @return The UI operations structure in use.
  */
-GaimIdleUiOps *gaim_idle_get_ui_ops(void);
+GaimIdleUiOps *purple_idle_get_ui_ops(void);
 
 /**
  * Initializes the idle system.
  */
-void gaim_idle_init(void);
+void purple_idle_init(void);
 
 /**
  * Uninitializes the idle system.
  */
-void gaim_idle_uninit(void);
+void purple_idle_uninit(void);
 
 /*@}*/
 

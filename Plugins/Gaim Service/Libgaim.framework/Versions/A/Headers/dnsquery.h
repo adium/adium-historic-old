@@ -2,7 +2,7 @@
  * @file dnsquery.h DNS query API
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -80,7 +80,7 @@ extern "C" {
  *         a data structure that can be used to cancel the pending
  *         DNS query, if needed.
  */
-GaimDnsQueryData *gaim_dnsquery_a(const char *hostname, int port, GaimDnsQueryConnectFunction callback, gpointer data);
+GaimDnsQueryData *purple_dnsquery_a(const char *hostname, int port, GaimDnsQueryConnectFunction callback, gpointer data);
 
 /**
  * Cancel a DNS query and destroy the associated data structure.
@@ -88,7 +88,7 @@ GaimDnsQueryData *gaim_dnsquery_a(const char *hostname, int port, GaimDnsQueryCo
  * @param query_data The DNS query to cancel.  This data structure
  *        is freed by this function.
  */
-void gaim_dnsquery_destroy(GaimDnsQueryData *query_data);
+void purple_dnsquery_destroy(GaimDnsQueryData *query_data);
 
 /**
  * Sets the UI operations structure to be used when doing a DNS
@@ -97,7 +97,7 @@ void gaim_dnsquery_destroy(GaimDnsQueryData *query_data);
  *
  * @param ops The UI operations structure.
  */
-void gaim_dnsquery_set_ui_ops(GaimDnsQueryUiOps *ops);
+void purple_dnsquery_set_ui_ops(GaimDnsQueryUiOps *ops);
 
 /**
  * Returns the UI operations structure to be used when doing a DNS
@@ -105,7 +105,7 @@ void gaim_dnsquery_set_ui_ops(GaimDnsQueryUiOps *ops);
  *
  * @return The UI operations structure.
  */
-GaimDnsQueryUiOps *gaim_dnsquery_get_ui_ops(void);
+GaimDnsQueryUiOps *purple_dnsquery_get_ui_ops(void);
 
 /**
  * Get the host associated with a GaimDnsQueryData
@@ -113,7 +113,7 @@ GaimDnsQueryUiOps *gaim_dnsquery_get_ui_ops(void);
  * @param query_data The DNS query
  * @return The host.
  */
-char *gaim_dnsquery_get_host(GaimDnsQueryData *query_data);
+char *purple_dnsquery_get_host(GaimDnsQueryData *query_data);
 
 /**
  * Get the port associated with a GaimDnsQueryData
@@ -121,17 +121,17 @@ char *gaim_dnsquery_get_host(GaimDnsQueryData *query_data);
  * @param query_data The DNS query
  * @return The port.
  */
-int gaim_dnsquery_get_port(GaimDnsQueryData *query_data);
+int purple_dnsquery_get_port(GaimDnsQueryData *query_data);
 
 /**
  * Initializes the DNS query subsystem.
  */
-void gaim_dnsquery_init(void);
+void purple_dnsquery_init(void);
 
 /**
  * Uninitializes the DNS query subsystem.
  */
-void gaim_dnsquery_uninit(void);
+void purple_dnsquery_uninit(void);
 
 /*@}*/
 

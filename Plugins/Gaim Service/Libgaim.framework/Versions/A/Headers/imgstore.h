@@ -2,7 +2,7 @@
  * @file imgstore.h IM Image Store API
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -36,7 +36,7 @@ extern "C" {
 /**
  * Add an image to the store. The caller owns a reference
  * to the image in the store, and must dereference the image
- * with gaim_imgstore_unref for it to be freed.
+ * with purple_imgstore_unref for it to be freed.
  *
  * @param data		Pointer to the image data.
  * @param size		Image data's size.
@@ -44,7 +44,7 @@ extern "C" {
 
  * @return ID for the image.
  */
-int gaim_imgstore_add(const void *data, size_t size, const char *filename);
+int purple_imgstore_add(const void *data, size_t size, const char *filename);
 
 /**
  * Retrieve an image from the store. The caller does not own a
@@ -54,7 +54,7 @@ int gaim_imgstore_add(const void *data, size_t size, const char *filename);
  *
  * @return A pointer to the requested image, or NULL if it was not found.
  */
-GaimStoredImage *gaim_imgstore_get(int id);
+GaimStoredImage *purple_imgstore_get(int id);
 
 /**
  * Retrieves a pointer to the image's data.
@@ -64,7 +64,7 @@ GaimStoredImage *gaim_imgstore_get(int id);
  * @return A pointer to the data, which must not
  *         be freed or modified.
  */
-gpointer gaim_imgstore_get_data(GaimStoredImage *i);
+gpointer purple_imgstore_get_data(GaimStoredImage *i);
 
 /**
  * Retrieves the length of the image's data.
@@ -72,9 +72,9 @@ gpointer gaim_imgstore_get_data(GaimStoredImage *i);
  * @param i	The Image
  *
  * @return The size of the data that the pointer returned by
- *         gaim_imgstore_get_data points to.
+ *         purple_imgstore_get_data points to.
  */
-size_t gaim_imgstore_get_size(GaimStoredImage *i);
+size_t purple_imgstore_get_size(GaimStoredImage *i);
 
 /**
  * Retrieves a pointer to the image's filename.
@@ -84,7 +84,7 @@ size_t gaim_imgstore_get_size(GaimStoredImage *i);
  * @return A pointer to the filename, which must not
  *         be freed or modified.
  */
-const char *gaim_imgstore_get_filename(GaimStoredImage *i);
+const char *purple_imgstore_get_filename(GaimStoredImage *i);
 
 /**
  * Increment the reference count for an image in the store. The
@@ -93,7 +93,7 @@ const char *gaim_imgstore_get_filename(GaimStoredImage *i);
  *
  * @param id		The ID for the image.
  */
-void gaim_imgstore_ref(int id);
+void purple_imgstore_ref(int id);
 
 /**
  * Decrement the reference count for an image in the store. The
@@ -102,7 +102,7 @@ void gaim_imgstore_ref(int id);
  *
  * @param id		The ID for the image.
  */
-void gaim_imgstore_unref(int id);
+void purple_imgstore_unref(int id);
 
 #ifdef __cplusplus
 }

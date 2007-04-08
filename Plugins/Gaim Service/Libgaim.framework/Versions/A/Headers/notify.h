@@ -2,7 +2,7 @@
  * @file notify.h Notification API
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -117,7 +117,7 @@ typedef struct
 /**
  * Callback for a button in a search result.
  *
- * @param c         the GaimConnection passed to gaim_notify_searchresults
+ * @param c         the GaimConnection passed to purple_notify_searchresults
  * @param row       the contents of the selected row
  * @param user_data User defined data.
  */
@@ -202,21 +202,21 @@ extern "C" {
  *
  * @return A UI-specific handle.
  */
-void *gaim_notify_searchresults(GaimConnection *gc, const char *title,
+void *purple_notify_searchresults(GaimConnection *gc, const char *title,
 								const char *primary, const char *secondary,
 								GaimNotifySearchResults *results, GaimNotifyCloseCallback cb,
 								gpointer user_data);
 
-void gaim_notify_searchresults_free(GaimNotifySearchResults *results);
+void purple_notify_searchresults_free(GaimNotifySearchResults *results);
 
 /**
  * Replace old rows with the new. Reuse an existing window.
  *
  * @param gc        The GaimConnection structure.
  * @param results   The GaimNotifySearchResults structure.
- * @param data      Data returned by the gaim_notify_searchresults().
+ * @param data      Data returned by the purple_notify_searchresults().
  */
-void gaim_notify_searchresults_new_rows(GaimConnection *gc,
+void purple_notify_searchresults_new_rows(GaimConnection *gc,
 										GaimNotifySearchResults *results,
 										void *data);
 
@@ -228,7 +228,7 @@ void gaim_notify_searchresults_new_rows(GaimConnection *gc,
  * @param type    Type of the button. (TODO: Only one button of a given type can be displayed.)
  * @param cb      Function that will be called on the click event.
  */
-void gaim_notify_searchresults_button_add(GaimNotifySearchResults *results,
+void purple_notify_searchresults_button_add(GaimNotifySearchResults *results,
 										  GaimNotifySearchButtonType type,
 										  GaimNotifySearchResultsCallback cb);
 
@@ -240,7 +240,7 @@ void gaim_notify_searchresults_button_add(GaimNotifySearchResults *results,
  * @param label   The label to display
  * @param cb      Function that will be called on the click event
  */
-void gaim_notify_searchresults_button_add_labeled(GaimNotifySearchResults *results,
+void purple_notify_searchresults_button_add_labeled(GaimNotifySearchResults *results,
                                                   const char *label,
                                                   GaimNotifySearchResultsCallback cb);
 
@@ -250,7 +250,7 @@ void gaim_notify_searchresults_button_add_labeled(GaimNotifySearchResults *resul
  *
  * @return The new search results object.
  */
-GaimNotifySearchResults *gaim_notify_searchresults_new(void);
+GaimNotifySearchResults *purple_notify_searchresults_new(void);
 
 /**
  * Returns a newly created search result column object.
@@ -259,7 +259,7 @@ GaimNotifySearchResults *gaim_notify_searchresults_new(void);
  * 
  * @return The new search column object.
  */
-GaimNotifySearchColumn *gaim_notify_searchresults_column_new(const char *title);
+GaimNotifySearchColumn *purple_notify_searchresults_column_new(const char *title);
 
 /**
  * Adds a new column to the search result object.
@@ -267,7 +267,7 @@ GaimNotifySearchColumn *gaim_notify_searchresults_column_new(const char *title);
  * @param results The result object to which the column will be added.
  * @param column The column that will be added to the result object.
  */
-void gaim_notify_searchresults_column_add(GaimNotifySearchResults *results,
+void purple_notify_searchresults_column_add(GaimNotifySearchResults *results,
 										  GaimNotifySearchColumn *column);
 
 /**
@@ -276,7 +276,7 @@ void gaim_notify_searchresults_column_add(GaimNotifySearchResults *results,
  * @param results The search results object.
  * @param row     The row of the results.
  */
-void gaim_notify_searchresults_row_add(GaimNotifySearchResults *results,
+void purple_notify_searchresults_row_add(GaimNotifySearchResults *results,
 									   GList *row);
 
 /**
@@ -286,7 +286,7 @@ void gaim_notify_searchresults_row_add(GaimNotifySearchResults *results,
  *
  * @return Number of the result rows.
  */
-guint gaim_notify_searchresults_get_rows_count(GaimNotifySearchResults *results);
+guint purple_notify_searchresults_get_rows_count(GaimNotifySearchResults *results);
 
 /**
  * Returns a number of the columns in the search results object.
@@ -295,7 +295,7 @@ guint gaim_notify_searchresults_get_rows_count(GaimNotifySearchResults *results)
  *
  * @return Number of the columns.
  */
-guint gaim_notify_searchresults_get_columns_count(GaimNotifySearchResults *results);
+guint purple_notify_searchresults_get_columns_count(GaimNotifySearchResults *results);
 
 /**
  * Returns a row of the results from the search results object.
@@ -305,7 +305,7 @@ guint gaim_notify_searchresults_get_columns_count(GaimNotifySearchResults *resul
  *
  * @return Row of the results.
  */
-GList *gaim_notify_searchresults_row_get(GaimNotifySearchResults *results,
+GList *purple_notify_searchresults_row_get(GaimNotifySearchResults *results,
 										 unsigned int row_id);
 
 /**
@@ -316,7 +316,7 @@ GList *gaim_notify_searchresults_row_get(GaimNotifySearchResults *results,
  *
  * @return Title of the column.
  */
-char *gaim_notify_searchresults_column_get_title(GaimNotifySearchResults *results,
+char *purple_notify_searchresults_column_get_title(GaimNotifySearchResults *results,
 												 unsigned int column_id);
 
 /*@}*/
@@ -340,7 +340,7 @@ char *gaim_notify_searchresults_column_get_title(GaimNotifySearchResults *result
  *
  * @return A UI-specific handle.
  */
-void *gaim_notify_message(void *handle, GaimNotifyMsgType type,
+void *purple_notify_message(void *handle, GaimNotifyMsgType type,
 						  const char *title, const char *primary,
 						  const char *secondary, GaimNotifyCloseCallback cb,
 						  gpointer user_data);
@@ -359,7 +359,7 @@ void *gaim_notify_message(void *handle, GaimNotifyMsgType type,
  *
  * @return A UI-specific handle.
  */
-void *gaim_notify_email(void *handle, const char *subject,
+void *purple_notify_email(void *handle, const char *subject,
 						const char *from, const char *to,
 						const char *url, GaimNotifyCloseCallback cb,
 						gpointer user_data);
@@ -381,7 +381,7 @@ void *gaim_notify_email(void *handle, const char *subject,
  *
  * @return A UI-specific handle.
  */
-void *gaim_notify_emails(void *handle, size_t count, gboolean detailed,
+void *purple_notify_emails(void *handle, size_t count, gboolean detailed,
 						 const char **subjects, const char **froms,
 						 const char **tos, const char **urls,
 						 GaimNotifyCloseCallback cb, gpointer user_data);
@@ -403,7 +403,7 @@ void *gaim_notify_emails(void *handle, size_t count, gboolean detailed,
  *
  * @return A UI-specific handle.
  */
-void *gaim_notify_formatted(void *handle, const char *title,
+void *purple_notify_formatted(void *handle, const char *title,
 							const char *primary, const char *secondary,
 							const char *text, GaimNotifyCloseCallback cb, gpointer user_data);
 
@@ -423,23 +423,23 @@ void *gaim_notify_formatted(void *handle, const char *title,
  *
  * @return A UI-specific handle.
  */
-void *gaim_notify_userinfo(GaimConnection *gc, const char *who,
+void *purple_notify_userinfo(GaimConnection *gc, const char *who,
 						   GaimNotifyUserInfo *user_info, GaimNotifyCloseCallback cb,
 						   gpointer user_data);
 
 /**
- * Create a new GaimNotifyUserInfo which is suitable for passing to gaim_notify_userinfo()
+ * Create a new GaimNotifyUserInfo which is suitable for passing to purple_notify_userinfo()
  *
  * @return A new GaimNotifyUserInfo, which the caller must destroy when done
  */
-GaimNotifyUserInfo *gaim_notify_user_info_new(void);
+GaimNotifyUserInfo *purple_notify_user_info_new(void);
 
 /**
  * Destroy a GaimNotifyUserInfo
  *
  * @param user_info          The GaimNotifyUserInfo
  */
-void gaim_notify_user_info_destroy(GaimNotifyUserInfo *user_info);
+void purple_notify_user_info_destroy(GaimNotifyUserInfo *user_info);
 
 /**
  * Retrieve the array of GaimNotifyUserInfoEntry objects from a GaimNotifyUserInfo
@@ -448,13 +448,13 @@ void gaim_notify_user_info_destroy(GaimNotifyUserInfo *user_info);
  * GaimNotifyUserInfoEntry are allowed in the list.  If a GaimNotifyUserInfoEntry item is added to the list,
  * it should not be g_free()'d by the caller; GaimNotifyUserInfo will g_free it when destroyed.
  *
- * To remove a GaimNotifyUserInfoEntry, use gaim_notify_user_info_remove_entry(). Do not use the GList directly.
+ * To remove a GaimNotifyUserInfoEntry, use purple_notify_user_info_remove_entry(). Do not use the GList directly.
  *
  * @param user_info          The GaimNotifyUserInfo
  *
  * @result                   A GList of GaimNotifyUserInfoEntry objects
  */
-GList *gaim_notify_user_info_get_entries(GaimNotifyUserInfo *user_info);
+GList *purple_notify_user_info_get_entries(GaimNotifyUserInfo *user_info);
 
 /**
  * Create a textual representation of a GaimNotifyUserInfo, separating entries with newline
@@ -462,7 +462,7 @@ GList *gaim_notify_user_info_get_entries(GaimNotifyUserInfo *user_info);
  * @param user_info          The GaimNotifyUserInfo
  * @param newline            The separation character
  */
-char *gaim_notify_user_info_get_text_with_newline(GaimNotifyUserInfo *user_info, const char *newline);
+char *purple_notify_user_info_get_text_with_newline(GaimNotifyUserInfo *user_info, const char *newline);
 
 /**
  * Add a label/value pair to a GaimNotifyUserInfo object.
@@ -475,7 +475,7 @@ char *gaim_notify_user_info_get_text_with_newline(GaimNotifyUserInfo *user_info,
  *                           If NULL, label will still be displayed; the UI should then treat label as independent
  *                           and not include a colon if it would otherwise.
  */
-void gaim_notify_user_info_add_pair(GaimNotifyUserInfo *user_info, const char *label, const char *value);
+void purple_notify_user_info_add_pair(GaimNotifyUserInfo *user_info, const char *label, const char *value);
 
 /**
  * Prepend a label/value pair to a GaimNotifyUserInfo object
@@ -487,7 +487,7 @@ void gaim_notify_user_info_add_pair(GaimNotifyUserInfo *user_info, const char *l
  *                           If NULL, label will still be displayed; the UI should then treat label as independent
  *                           and not include a colon if it would otherwise.
  */
-void gaim_notify_user_info_prepend_pair(GaimNotifyUserInfo *user_info, const char *label, const char *value);
+void purple_notify_user_info_prepend_pair(GaimNotifyUserInfo *user_info, const char *label, const char *value);
 
 /**
  * Remove a GaimNotifyUserInfoEntry from a GaimNotifyUserInfo object
@@ -495,12 +495,12 @@ void gaim_notify_user_info_prepend_pair(GaimNotifyUserInfo *user_info, const cha
  * @param user_info          The GaimNotifyUserInfo
  * @param user_info_entry    The GaimNotifyUserInfoEntry
  */
-void gaim_notify_user_info_remove_entry(GaimNotifyUserInfo *user_info, GaimNotifyUserInfoEntry *user_info_entry);
+void purple_notify_user_info_remove_entry(GaimNotifyUserInfo *user_info, GaimNotifyUserInfoEntry *user_info_entry);
 /**
  * Create a new GaimNotifyUserInfoEntry
  *
  * If added to a GaimNotifyUserInfo object, this should not be free()'d, as GaimNotifyUserInfo will do so
- * when destroyed.  gaim_notify_user_info_add_pair() and gaim_notify_user_info_prepend_pair() are convenience
+ * when destroyed.  purple_notify_user_info_add_pair() and purple_notify_user_info_prepend_pair() are convenience
  * methods for creating entries and adding them to a GaimNotifyUserInfo.
  *
  * @param label              A label, which for example might be displayed by a UI with a colon after it ("Status:"). Do not include a colon.
@@ -511,14 +511,14 @@ void gaim_notify_user_info_remove_entry(GaimNotifyUserInfo *user_info, GaimNotif
  *
  * @result A new GaimNotifyUserInfoEntry
  */
-GaimNotifyUserInfoEntry *gaim_notify_user_info_entry_new(const char *label, const char *value);
+GaimNotifyUserInfoEntry *purple_notify_user_info_entry_new(const char *label, const char *value);
 
 /**
  * Add a section break.  A UI might display this as a horizontal line.
  *
  * @param user_info          The GaimNotifyUserInfo
  */
-void gaim_notify_user_info_add_section_break(GaimNotifyUserInfo *user_info);
+void purple_notify_user_info_add_section_break(GaimNotifyUserInfo *user_info);
 
 /**
  * Add a section header.  A UI might display this in a different font from other text.
@@ -526,12 +526,12 @@ void gaim_notify_user_info_add_section_break(GaimNotifyUserInfo *user_info);
  * @param user_info          The GaimNotifyUserInfo
  * @param label              The name of the section
  */
-void gaim_notify_user_info_add_section_header(GaimNotifyUserInfo *user_info, const char *label);
+void purple_notify_user_info_add_section_header(GaimNotifyUserInfo *user_info, const char *label);
 
 /**
  * Remove the last item which was added to a GaimNotifyUserInfo. This could be used to remove a section header which is not needed.
  */
-void gaim_notify_user_info_remove_last_item(GaimNotifyUserInfo *user_info);
+void purple_notify_user_info_remove_last_item(GaimNotifyUserInfo *user_info);
 
 /**
  * Get the label for a GaimNotifyUserInfoEntry
@@ -540,7 +540,7 @@ void gaim_notify_user_info_remove_last_item(GaimNotifyUserInfo *user_info);
  *
  * @result                    The label
  */
-gchar *gaim_notify_user_info_entry_get_label(GaimNotifyUserInfoEntry *user_info_entry);
+gchar *purple_notify_user_info_entry_get_label(GaimNotifyUserInfoEntry *user_info_entry);
 
 /**
  * Set the label for a GaimNotifyUserInfoEntry
@@ -548,7 +548,7 @@ gchar *gaim_notify_user_info_entry_get_label(GaimNotifyUserInfoEntry *user_info_
  * @param user_info_entry     The GaimNotifyUserInfoEntry
  * @param label			      The label
  */
-void gaim_notify_user_info_entry_set_label(GaimNotifyUserInfoEntry *user_info_entry, const char *label);
+void purple_notify_user_info_entry_set_label(GaimNotifyUserInfoEntry *user_info_entry, const char *label);
 
 /**
  * Get the value for a GaimNotifyUserInfoEntry
@@ -557,7 +557,7 @@ void gaim_notify_user_info_entry_set_label(GaimNotifyUserInfoEntry *user_info_en
  *
  * @result                    The value
  */
-gchar *gaim_notify_user_info_entry_get_value(GaimNotifyUserInfoEntry *user_info_entry);
+gchar *purple_notify_user_info_entry_get_value(GaimNotifyUserInfoEntry *user_info_entry);
 
 /**
  * Set the value for a GaimNotifyUserInfoEntry
@@ -565,17 +565,17 @@ gchar *gaim_notify_user_info_entry_get_value(GaimNotifyUserInfoEntry *user_info_
  * @param user_info_entry     The GaimNotifyUserInfoEntry
  * @param value				  The value
  */
-void gaim_notify_user_info_entry_set_value(GaimNotifyUserInfoEntry *user_info_entry, const char *value);
+void purple_notify_user_info_entry_set_value(GaimNotifyUserInfoEntry *user_info_entry, const char *value);
 
 
 /**
  * Get the type of a GaimNotifyUserInfoEntry
  *
- * @param user_info_entry     The GaimNotifyUserInfoEntry
+ * @param user_info_entry     The PurpleNotifyUserInfoEntry
  *
  * @result					  The GaimNotifyUserInfoEntryType
  */
-GaimNotifyUserInfoEntryType gaim_notify_user_info_entry_get_type(GaimNotifyUserInfoEntry *user_info_entry);
+GaimNotifyUserInfoEntryType purple_notify_user_info_entry_get_type(GaimNotifyUserInfoEntry *user_info_entry);
 
 /**
  * Set the type of a GaimNotifyUserInfoEntry
@@ -583,7 +583,7 @@ GaimNotifyUserInfoEntryType gaim_notify_user_info_entry_get_type(GaimNotifyUserI
  * @param user_info_entry     The GaimNotifyUserInfoEntry
  * @param					  The GaimNotifyUserInfoEntryType
  */
-void gaim_notify_user_info_entry_set_type(GaimNotifyUserInfoEntry *user_info_entry,
+void purple_notify_user_info_entry_set_type(GaimNotifyUserInfoEntry *user_info_entry,
 										  GaimNotifyUserInfoEntryType type);
 
 /**
@@ -596,7 +596,7 @@ void gaim_notify_user_info_entry_set_type(GaimNotifyUserInfoEntry *user_info_ent
  *         the UI code displays a dialog instead of a webpage, or something
  *         similar.
  */
-void *gaim_notify_uri(void *handle, const char *uri);
+void *purple_notify_uri(void *handle, const char *uri);
 
 /**
  * Closes a notification.
@@ -607,34 +607,34 @@ void *gaim_notify_uri(void *handle, const char *uri);
  * @param type      The notification type.
  * @param ui_handle The notification UI handle.
  */
-void gaim_notify_close(GaimNotifyType type, void *ui_handle);
+void purple_notify_close(GaimNotifyType type, void *ui_handle);
 
 /**
  * Closes all notifications registered with the specified handle.
  *
  * @param handle The handle.
  */
-void gaim_notify_close_with_handle(void *handle);
+void purple_notify_close_with_handle(void *handle);
 
 /**
- * A wrapper for gaim_notify_message that displays an information message.
+ * A wrapper for purple_notify_message that displays an information message.
  */
-#define gaim_notify_info(handle, title, primary, secondary) \
-	gaim_notify_message((handle), GAIM_NOTIFY_MSG_INFO, (title), \
+#define purple_notify_info(handle, title, primary, secondary) \
+	purple_notify_message((handle), GAIM_NOTIFY_MSG_INFO, (title), \
 						(primary), (secondary), NULL, NULL)
 
 /**
- * A wrapper for gaim_notify_message that displays a warning message.
+ * A wrapper for purple_notify_message that displays a warning message.
  */
-#define gaim_notify_warning(handle, title, primary, secondary) \
-	gaim_notify_message((handle), GAIM_NOTIFY_MSG_WARNING, (title), \
+#define purple_notify_warning(handle, title, primary, secondary) \
+	purple_notify_message((handle), GAIM_NOTIFY_MSG_WARNING, (title), \
 						(primary), (secondary), NULL, NULL)
 
 /**
- * A wrapper for gaim_notify_message that displays an error message.
+ * A wrapper for purple_notify_message that displays an error message.
  */
-#define gaim_notify_error(handle, title, primary, secondary) \
-	gaim_notify_message((handle), GAIM_NOTIFY_MSG_ERROR, (title), \
+#define purple_notify_error(handle, title, primary, secondary) \
+	purple_notify_message((handle), GAIM_NOTIFY_MSG_ERROR, (title), \
 						(primary), (secondary), NULL, NULL)
 
 /*@}*/
@@ -650,7 +650,7 @@ void gaim_notify_close_with_handle(void *handle);
  *
  * @param ops The UI operations structure.
  */
-void gaim_notify_set_ui_ops(GaimNotifyUiOps *ops);
+void purple_notify_set_ui_ops(GaimNotifyUiOps *ops);
 
 /**
  * Returns the UI operations structure to be used when displaying a
@@ -658,7 +658,7 @@ void gaim_notify_set_ui_ops(GaimNotifyUiOps *ops);
  *
  * @return The UI operations structure.
  */
-GaimNotifyUiOps *gaim_notify_get_ui_ops(void);
+GaimNotifyUiOps *purple_notify_get_ui_ops(void);
 
 /*@}*/
 
@@ -672,17 +672,17 @@ GaimNotifyUiOps *gaim_notify_get_ui_ops(void);
  *
  * @return The notify subsystem handle.
  */
-void *gaim_notify_get_handle(void);
+void *purple_notify_get_handle(void);
 
 /**
  * Initializes the notify subsystem.
  */
-void gaim_notify_init(void);
+void purple_notify_init(void);
 
 /**
  * Uninitializes the notify subsystem.
  */
-void gaim_notify_uninit(void);
+void purple_notify_uninit(void);
 
 /*@}*/
 

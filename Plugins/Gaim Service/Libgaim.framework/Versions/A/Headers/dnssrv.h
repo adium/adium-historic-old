@@ -1,7 +1,7 @@
 /**
  * @file dnssrv.h
  *
- * gaim
+ * purple
  *
  * Copyright (C) 2005, Thomas Butter <butter@uni-mannheim.de>
  *i
@@ -48,14 +48,14 @@ typedef void (*GaimSrvCallback)(GaimSrvResponse *resp, int results, gpointer dat
  * @param cb A callback which will be called with the results
  * @param extradata Extra data to be passed to the callback
  */
-GaimSrvQueryData *gaim_srv_resolve(const char *protocol, const char *transport, const char *domain, GaimSrvCallback cb, gpointer extradata);
+GaimSrvQueryData *purple_srv_resolve(const char *protocol, const char *transport, const char *domain, GaimSrvCallback cb, gpointer extradata);
 
 /**
  * Cancel an SRV DNS query.
  *
  * @param query_data The request to cancel.
  */
-void gaim_srv_cancel(GaimSrvQueryData *query_data);
+void purple_srv_cancel(GaimSrvQueryData *query_data);
 
 #ifdef __cplusplus
 }

@@ -20,4 +20,4 @@
 
 #include "oscar.h"
 
-void oscar_reformat_screenname(GaimConnection *gc, const char *nick);
+void oscar_reformat_screenname(PurpleConnection *gc, const char *nick);

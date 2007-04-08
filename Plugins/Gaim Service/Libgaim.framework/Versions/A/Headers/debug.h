@@ -2,7 +2,7 @@
  * @file debug.h Debug API
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -65,87 +65,87 @@ extern "C" {
  * @param category The category (or @c NULL).
  * @param format   The format string.
  */
-void gaim_debug(GaimDebugLevel level, const char *category,
+void purple_debug(GaimDebugLevel level, const char *category,
 				const char *format, ...);
 
 /**
  * Outputs misc. level debug information.
  *
- * This is a wrapper for gaim_debug(), and uses GAIM_DEBUG_MISC as
+ * This is a wrapper for purple_debug(), and uses GAIM_DEBUG_MISC as
  * the level.
  *
  * @param category The category (or @c NULL).
  * @param format   The format string.
  *
- * @see gaim_debug()
+ * @see purple_debug()
  */
-void gaim_debug_misc(const char *category, const char *format, ...);
+void purple_debug_misc(const char *category, const char *format, ...);
 
 /**
  * Outputs info level debug information.
  *
- * This is a wrapper for gaim_debug(), and uses GAIM_DEBUG_INFO as
+ * This is a wrapper for purple_debug(), and uses GAIM_DEBUG_INFO as
  * the level.
  *
  * @param category The category (or @c NULL).
  * @param format   The format string.
  *
- * @see gaim_debug()
+ * @see purple_debug()
  */
-void gaim_debug_info(const char *category, const char *format, ...);
+void purple_debug_info(const char *category, const char *format, ...);
 
 /**
  * Outputs warning level debug information.
  *
- * This is a wrapper for gaim_debug(), and uses GAIM_DEBUG_WARNING as
+ * This is a wrapper for purple_debug(), and uses GAIM_DEBUG_WARNING as
  * the level.
  *
  * @param category The category (or @c NULL).
  * @param format   The format string.
  *
- * @see gaim_debug()
+ * @see purple_debug()
  */
-void gaim_debug_warning(const char *category, const char *format, ...);
+void purple_debug_warning(const char *category, const char *format, ...);
 
 /**
  * Outputs error level debug information.
  *
- * This is a wrapper for gaim_debug(), and uses GAIM_DEBUG_ERROR as
+ * This is a wrapper for purple_debug(), and uses GAIM_DEBUG_ERROR as
  * the level.
  *
  * @param category The category (or @c NULL).
  * @param format   The format string.
  *
- * @see gaim_debug()
+ * @see purple_debug()
  */
-void gaim_debug_error(const char *category, const char *format, ...);
+void purple_debug_error(const char *category, const char *format, ...);
 
 /**
  * Outputs fatal error level debug information.
  *
- * This is a wrapper for gaim_debug(), and uses GAIM_DEBUG_ERROR as
+ * This is a wrapper for purple_debug(), and uses GAIM_DEBUG_ERROR as
  * the level.
  *
  * @param category The category (or @c NULL).
  * @param format   The format string.
  *
- * @see gaim_debug()
+ * @see purple_debug()
  */
-void gaim_debug_fatal(const char *category, const char *format, ...);
+void purple_debug_fatal(const char *category, const char *format, ...);
 
 /**
  * Enable or disable printing debug output to the console.
  *
  * @param enabled TRUE to enable debug output or FALSE to disable it.
  */
-void gaim_debug_set_enabled(gboolean enabled);
+void purple_debug_set_enabled(gboolean enabled);
 
 /**
  * Check if console debug output is enabled.
  *
  * @return TRUE if debuggin is enabled, FALSE if it is not.
  */
-gboolean gaim_debug_is_enabled(void);
+gboolean purple_debug_is_enabled(void);
 
 /*@}*/
 
@@ -160,7 +160,7 @@ gboolean gaim_debug_is_enabled(void);
  *
  * @param ops The UI operations structure.
  */
-void gaim_debug_set_ui_ops(GaimDebugUiOps *ops);
+void purple_debug_set_ui_ops(GaimDebugUiOps *ops);
 
 /**
  * Returns the UI operations structure used when outputting debug
@@ -168,7 +168,7 @@ void gaim_debug_set_ui_ops(GaimDebugUiOps *ops);
  *
  * @return The UI operations structure in use.
  */
-GaimDebugUiOps *gaim_debug_get_ui_ops(void);
+GaimDebugUiOps *purple_debug_get_ui_ops(void);
 
 /*@}*/
 
@@ -180,7 +180,7 @@ GaimDebugUiOps *gaim_debug_get_ui_ops(void);
 /**
  * Initializes the debug subsystem.
  */
-void gaim_debug_init(void);
+void purple_debug_init(void);
 
 /*@}*/
 

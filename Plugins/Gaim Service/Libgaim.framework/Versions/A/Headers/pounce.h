@@ -2,7 +2,7 @@
  * @file pounce.h Buddy Pounce API
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -103,7 +103,7 @@ extern "C" {
  *
  * @return The new buddy pounce structure.
  */
-GaimPounce *gaim_pounce_new(const char *ui_type, GaimAccount *pouncer,
+GaimPounce *purple_pounce_new(const char *ui_type, GaimAccount *pouncer,
 							const char *pouncee, GaimPounceEvent event,
 							GaimPounceOption option);
 
@@ -112,14 +112,14 @@ GaimPounce *gaim_pounce_new(const char *ui_type, GaimAccount *pouncer,
  *
  * @param pounce The buddy pounce.
  */
-void gaim_pounce_destroy(GaimPounce *pounce);
+void purple_pounce_destroy(GaimPounce *pounce);
 
 /**
  * Destroys all buddy pounces for the account
  *
  * @param account The account to remove all pounces from.
  */
-void gaim_pounce_destroy_all_by_account(GaimAccount *account);
+void purple_pounce_destroy_all_by_account(GaimAccount *account);
 
 /**
  * Sets the events a pounce should watch for.
@@ -127,7 +127,7 @@ void gaim_pounce_destroy_all_by_account(GaimAccount *account);
  * @param pounce The buddy pounce.
  * @param events The events to watch for.
  */
-void gaim_pounce_set_events(GaimPounce *pounce, GaimPounceEvent events);
+void purple_pounce_set_events(GaimPounce *pounce, GaimPounceEvent events);
 
 /**
  * Sets the options for a pounce.
@@ -135,7 +135,7 @@ void gaim_pounce_set_events(GaimPounce *pounce, GaimPounceEvent events);
  * @param pounce  The buddy pounce.
  * @param options The options for the pounce.
  */
-void gaim_pounce_set_options(GaimPounce *pounce, GaimPounceOption options);
+void purple_pounce_set_options(GaimPounce *pounce, GaimPounceOption options);
 
 /**
  * Sets the account that will do the pouncing.
@@ -143,7 +143,7 @@ void gaim_pounce_set_options(GaimPounce *pounce, GaimPounceOption options);
  * @param pounce  The buddy pounce.
  * @param pouncer The account that will pounce.
  */
-void gaim_pounce_set_pouncer(GaimPounce *pounce, GaimAccount *pouncer);
+void purple_pounce_set_pouncer(GaimPounce *pounce, GaimAccount *pouncer);
 
 /**
  * Sets the buddy a pounce should pounce on.
@@ -151,7 +151,7 @@ void gaim_pounce_set_pouncer(GaimPounce *pounce, GaimAccount *pouncer);
  * @param pounce  The buddy pounce.
  * @param pouncee The buddy to pounce on.
  */
-void gaim_pounce_set_pouncee(GaimPounce *pounce, const char *pouncee);
+void purple_pounce_set_pouncee(GaimPounce *pounce, const char *pouncee);
 
 /**
  * Sets whether or not the pounce should be saved after execution.
@@ -159,7 +159,7 @@ void gaim_pounce_set_pouncee(GaimPounce *pounce, const char *pouncee);
  * @param pounce The buddy pounce.
  * @param save   @c TRUE if the pounce should be saved, or @c FALSE otherwise.
  */
-void gaim_pounce_set_save(GaimPounce *pounce, gboolean save);
+void purple_pounce_set_save(GaimPounce *pounce, gboolean save);
 
 /**
  * Registers an action type for the pounce.
@@ -167,7 +167,7 @@ void gaim_pounce_set_save(GaimPounce *pounce, gboolean save);
  * @param pounce The buddy pounce.
  * @param name   The action name.
  */
-void gaim_pounce_action_register(GaimPounce *pounce, const char *name);
+void purple_pounce_action_register(GaimPounce *pounce, const char *name);
 
 /**
  * Enables or disables an action for a pounce.
@@ -176,7 +176,7 @@ void gaim_pounce_action_register(GaimPounce *pounce, const char *name);
  * @param action  The name of the action.
  * @param enabled The enabled state.
  */
-void gaim_pounce_action_set_enabled(GaimPounce *pounce, const char *action,
+void purple_pounce_action_set_enabled(GaimPounce *pounce, const char *action,
 									gboolean enabled);
 
 /**
@@ -189,7 +189,7 @@ void gaim_pounce_action_set_enabled(GaimPounce *pounce, const char *action,
  * @param attr   The attribute name.
  * @param value  The value.
  */
-void gaim_pounce_action_set_attribute(GaimPounce *pounce, const char *action,
+void purple_pounce_action_set_attribute(GaimPounce *pounce, const char *action,
 									  const char *attr, const char *value);
 
 /**
@@ -198,7 +198,7 @@ void gaim_pounce_action_set_attribute(GaimPounce *pounce, const char *action,
  * @param pounce The buddy pounce.
  * @param data   Data specific to the pounce.
  */
-void gaim_pounce_set_data(GaimPounce *pounce, void *data);
+void purple_pounce_set_data(GaimPounce *pounce, void *data);
 
 /**
  * Returns the events a pounce should watch for.
@@ -207,7 +207,7 @@ void gaim_pounce_set_data(GaimPounce *pounce, void *data);
  *
  * @return The events the pounce is watching for.
  */
-GaimPounceEvent gaim_pounce_get_events(const GaimPounce *pounce);
+GaimPounceEvent purple_pounce_get_events(const GaimPounce *pounce);
 
 /**
  * Returns the options for a pounce.
@@ -216,7 +216,7 @@ GaimPounceEvent gaim_pounce_get_events(const GaimPounce *pounce);
  *
  * @return The options for the pounce.
  */
-GaimPounceOption gaim_pounce_get_options(const GaimPounce *pounce);
+GaimPounceOption purple_pounce_get_options(const GaimPounce *pounce);
 
 /**
  * Returns the account that will do the pouncing.
@@ -225,7 +225,7 @@ GaimPounceOption gaim_pounce_get_options(const GaimPounce *pounce);
  *
  * @return The account that will pounce.
  */
-GaimAccount *gaim_pounce_get_pouncer(const GaimPounce *pounce);
+GaimAccount *purple_pounce_get_pouncer(const GaimPounce *pounce);
 
 /**
  * Returns the buddy a pounce should pounce on.
@@ -234,7 +234,7 @@ GaimAccount *gaim_pounce_get_pouncer(const GaimPounce *pounce);
  *
  * @return The buddy to pounce on.
  */
-const char *gaim_pounce_get_pouncee(const GaimPounce *pounce);
+const char *purple_pounce_get_pouncee(const GaimPounce *pounce);
 
 /**
  * Returns whether or not the pounce should save after execution.
@@ -244,7 +244,7 @@ const char *gaim_pounce_get_pouncee(const GaimPounce *pounce);
  * @return @c TRUE if the pounce should be saved after execution, or
  *         @c FALSE otherwise.
  */
-gboolean gaim_pounce_get_save(const GaimPounce *pounce);
+gboolean purple_pounce_get_save(const GaimPounce *pounce);
 
 /**
  * Returns whether or not an action is enabled.
@@ -254,7 +254,7 @@ gboolean gaim_pounce_get_save(const GaimPounce *pounce);
  *
  * @return @c TRUE if the action is enabled, or @c FALSE otherwise.
  */
-gboolean gaim_pounce_action_is_enabled(const GaimPounce *pounce,
+gboolean purple_pounce_action_is_enabled(const GaimPounce *pounce,
 									   const char *action);
 
 /**
@@ -266,7 +266,7 @@ gboolean gaim_pounce_action_is_enabled(const GaimPounce *pounce,
  *
  * @return The attribute value, if it exists, or @c NULL.
  */
-const char *gaim_pounce_action_get_attribute(const GaimPounce *pounce,
+const char *purple_pounce_action_get_attribute(const GaimPounce *pounce,
 											 const char *action,
 											 const char *attr);
 
@@ -277,7 +277,7 @@ const char *gaim_pounce_action_get_attribute(const GaimPounce *pounce,
  *
  * @return The data specific to a buddy pounce.
  */
-void *gaim_pounce_get_data(const GaimPounce *pounce);
+void *purple_pounce_get_data(const GaimPounce *pounce);
 
 /**
  * Executes a pounce with the specified pouncer, pouncee, and event type.
@@ -286,7 +286,7 @@ void *gaim_pounce_get_data(const GaimPounce *pounce);
  * @param pouncee The buddy that is being pounced.
  * @param events  The events that triggered the pounce.
  */
-void gaim_pounce_execute(const GaimAccount *pouncer, const char *pouncee,
+void purple_pounce_execute(const GaimAccount *pouncer, const char *pouncee,
 						 GaimPounceEvent events);
 
 /*@}*/
@@ -305,7 +305,7 @@ void gaim_pounce_execute(const GaimAccount *pouncer, const char *pouncee,
  *
  * @return The pounce if found, or @c NULL otherwise.
  */
-GaimPounce *gaim_find_pounce(const GaimAccount *pouncer,
+GaimPounce *purple_find_pounce(const GaimAccount *pouncer,
 							 const char *pouncee, GaimPounceEvent events);
 
 
@@ -314,7 +314,7 @@ GaimPounce *gaim_find_pounce(const GaimAccount *pouncer,
  *
  * @return @c TRUE if the pounces could be loaded.
  */
-gboolean gaim_pounces_load(void);
+gboolean purple_pounces_load(void);
 
 /**
  * Registers a pounce handler for a UI.
@@ -324,7 +324,7 @@ gboolean gaim_pounces_load(void);
  * @param new_pounce  The function called when a pounce is created.
  * @param free_pounce The function called when a pounce is freed.
  */
-void gaim_pounces_register_handler(const char *ui, GaimPounceCb cb,
+void purple_pounces_register_handler(const char *ui, GaimPounceCb cb,
 								   void (*new_pounce)(GaimPounce *pounce),
 								   void (*free_pounce)(GaimPounce *pounce));
 
@@ -333,31 +333,31 @@ void gaim_pounces_register_handler(const char *ui, GaimPounceCb cb,
  *
  * @param ui The UI name.
  */
-void gaim_pounces_unregister_handler(const char *ui);
+void purple_pounces_unregister_handler(const char *ui);
 
 /**
  * Returns a list of all registered buddy pounces.
  *
  * @return The list of buddy pounces.
  */
-GList *gaim_pounces_get_all(void);
+GList *purple_pounces_get_all(void);
 
 /**
  * Returns the buddy pounce subsystem handle.
  *
  * @return The subsystem handle.
  */
-void *gaim_pounces_get_handle(void);
+void *purple_pounces_get_handle(void);
 
 /**
  * Initializes the pounces subsystem.
  */
-void gaim_pounces_init(void);
+void purple_pounces_init(void);
 
 /**
  * Uninitializes the pounces subsystem.
  */
-void gaim_pounces_uninit(void);
+void purple_pounces_uninit(void);
 
 /*@}*/
 

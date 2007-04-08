@@ -2,7 +2,7 @@
  * @file sslconn.h SSL API
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -89,7 +89,7 @@ extern "C" {
  *
  * @return TRUE if SSL is supported, or FALSE otherwise.
  */
-gboolean gaim_ssl_is_supported(void);
+gboolean purple_ssl_is_supported(void);
 
 /**
  * Makes a SSL connection to the specified host and port.  The caller
@@ -101,14 +101,14 @@ gboolean gaim_ssl_is_supported(void);
  * @param port       The destination port.
  * @param func       The SSL input handler function.
  * @param error_func The SSL error handler function.  This function
- *                   should NOT call gaim_ssl_close().  In the event
+ *                   should NOT call purple_ssl_close().  In the event
  *                   of an error the GaimSslConnection will be
  *                   destroyed for you.
  * @param data       User-defined data.
  *
  * @return The SSL connection handle.
  */
-GaimSslConnection *gaim_ssl_connect(GaimAccount *account, const char *host,
+GaimSslConnection *purple_ssl_connect(GaimAccount *account, const char *host,
 									int port, GaimSslInputFunction func,
 									GaimSslErrorFunction error_func,
 									void *data);
@@ -124,7 +124,7 @@ GaimSslConnection *gaim_ssl_connect(GaimAccount *account, const char *host,
  *
  * @return The SSL connection handle.
  */
-GaimSslConnection *gaim_ssl_connect_fd(GaimAccount *account, int fd,
+GaimSslConnection *purple_ssl_connect_fd(GaimAccount *account, int fd,
 									   GaimSslInputFunction func,
 									   GaimSslErrorFunction error_func,
 									   void *data);
@@ -136,7 +136,7 @@ GaimSslConnection *gaim_ssl_connect_fd(GaimAccount *account, int fd,
  * @param func  The callback function.
  * @param data  User-defined data.
  */
-void gaim_ssl_input_add(GaimSslConnection *gsc, GaimSslInputFunction func,
+void purple_ssl_input_add(GaimSslConnection *gsc, GaimSslInputFunction func,
 						void *data);
 
 /**
@@ -144,7 +144,7 @@ void gaim_ssl_input_add(GaimSslConnection *gsc, GaimSslInputFunction func,
  *
  * @param gsc The SSL connection to close.
  */
-void gaim_ssl_close(GaimSslConnection *gsc);
+void purple_ssl_close(GaimSslConnection *gsc);
 
 /**
  * Reads data from an SSL connection.
@@ -155,7 +155,7 @@ void gaim_ssl_close(GaimSslConnection *gsc);
  *
  * @return The number of bytes read.
  */
-size_t gaim_ssl_read(GaimSslConnection *gsc, void *buffer, size_t len);
+size_t purple_ssl_read(GaimSslConnection *gsc, void *buffer, size_t len);
 
 /**
  * Writes data to an SSL connection.
@@ -166,7 +166,7 @@ size_t gaim_ssl_read(GaimSslConnection *gsc, void *buffer, size_t len);
  *
  * @return The number of bytes written.
  */
-size_t gaim_ssl_write(GaimSslConnection *gsc, const void *buffer, size_t len);
+size_t purple_ssl_write(GaimSslConnection *gsc, const void *buffer, size_t len);
 
 /*@}*/
 
@@ -180,24 +180,24 @@ size_t gaim_ssl_write(GaimSslConnection *gsc, const void *buffer, size_t len);
  *
  * @param ops The SSL operations structure to assign.
  */
-void gaim_ssl_set_ops(GaimSslOps *ops);
+void purple_ssl_set_ops(GaimSslOps *ops);
 
 /**
  * Returns the current SSL operations structure.
  *
  * @return The SSL operations structure.
  */
-GaimSslOps *gaim_ssl_get_ops(void);
+GaimSslOps *purple_ssl_get_ops(void);
 
 /**
  * Initializes the SSL subsystem.
  */
-void gaim_ssl_init(void);
+void purple_ssl_init(void);
 
 /**
  * Uninitializes the SSL subsystem.
  */
-void gaim_ssl_uninit(void);
+void purple_ssl_uninit(void);
 
 /*@}*/
 
