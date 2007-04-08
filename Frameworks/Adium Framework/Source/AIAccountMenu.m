@@ -378,7 +378,7 @@
 	AIService	*service = [sender representedObject];
 	AIAccount	*account = [[adium accountController] createAccountWithService:service
 																		   UID:[service defaultUserName]];
-    
+    //XXX UGLY
 	[NSClassFromString(@"AIEditAccountWindowController") editAccount:account
                                                             onWindow:nil
                                                      notifyingTarget:self];
