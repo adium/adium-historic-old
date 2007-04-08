@@ -1,8 +1,8 @@
 /**
- * @file eventloop.h Gaim Event Loop API
+ * @file eventloop.h Purple Event Loop API
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -49,26 +49,26 @@ struct _GaimEventLoopUiOps
 {
 	/**
 	 * Creates a callback timer.
-	 * @see g_timeout_add, gaim_timeout_add
+	 * @see g_timeout_add, purple_timeout_add
 	 **/
 	guint (*timeout_add)(guint interval, GSourceFunc function, gpointer data);
 
 	/**
 	 * Removes a callback timer.
-	 * @see gaim_timeout_remove, g_source_remove
+	 * @see purple_timeout_remove, g_source_remove
 	 */
 	gboolean (*timeout_remove)(guint handle);
 
 	/**
 	 * Adds an input handler.
-	 * @see gaim_input_add, g_io_add_watch_full
+	 * @see purple_input_add, g_io_add_watch_full
 	 */
 	guint (*input_add)(int fd, GaimInputCondition cond,
 					   GaimInputFunction func, gpointer user_data);
 
 	/**
 	 * Removes an input handler.
-	 * @see gaim_input_remove, g_source_remove
+	 * @see purple_input_remove, g_source_remove
 	 */
 	gboolean (*input_remove)(guint handle);
 	
@@ -77,7 +77,7 @@ struct _GaimEventLoopUiOps
 	 * Get the current error status for an input.
 	 * Implementation of this UI op is optional. Implement it if the UI's sockets
 	 * or event loop needs to customize determination of socket error status.
-	 * @see gaim_input_get_error, getsockopt
+	 * @see purple_input_get_error, getsockopt
 	 */
 	int (*input_get_error)(int fd, int *error);
 
@@ -96,18 +96,18 @@ struct _GaimEventLoopUiOps
  * @param function	The function to call.
  * @param data		data to pass to @a function.
  * @return A handle to the timer which can be passed to 
- *         gaim_timeout_remove to remove the timer.
+ *         purple_timeout_remove to remove the timer.
  */
-guint gaim_timeout_add(guint interval, GSourceFunc function, gpointer data);
+guint purple_timeout_add(guint interval, GSourceFunc function, gpointer data);
 
 /**
  * Removes a timeout handler.
  *
- * @param handle The handle, as returned by gaim_timeout_add.
+ * @param handle The handle, as returned by purple_timeout_add.
  *
  * @return Something.
  */
-gboolean gaim_timeout_remove(guint handle);
+gboolean purple_timeout_remove(guint handle);
 
 /**
  * Adds an input handler.
@@ -120,16 +120,16 @@ gboolean gaim_timeout_remove(guint handle);
  * @return The resulting handle (will be greater than 0).
  * @see g_io_add_watch_full
  */
-guint gaim_input_add(int fd, GaimInputCondition cond,
+guint purple_input_add(int fd, GaimInputCondition cond,
 					 GaimInputFunction func, gpointer user_data);
 
 /**
  * Removes an input handler.
  *
  * @param handle The handle of the input handler. Note that this is the return
- * value from gaim_input_add, <i>not</i> the file descriptor.
+ * value from purple_input_add, <i>not</i> the file descriptor.
  */
-gboolean gaim_input_remove(guint handle);
+gboolean purple_input_remove(guint handle);
 
 /**
  * Get the current error status for an input.
@@ -143,7 +143,7 @@ gboolean gaim_input_remove(guint handle);
  * @return 0 if there is no error; -1 if there is an error, in which case errno will be set.
  */
 int
-gaim_input_get_error(int fd, int *error);
+purple_input_get_error(int fd, int *error);
 
 
 /*@}*/
@@ -158,14 +158,14 @@ gaim_input_get_error(int fd, int *error);
  *
  * @param ops The UI operations structure.
  */
-void gaim_eventloop_set_ui_ops(GaimEventLoopUiOps *ops);
+void purple_eventloop_set_ui_ops(GaimEventLoopUiOps *ops);
 
 /**
  * Returns the UI operations structure used for accounts.
  *
  * @return The UI operations structure in use.
  */
-GaimEventLoopUiOps *gaim_eventloop_get_ui_ops(void);
+GaimEventLoopUiOps *purple_eventloop_get_ui_ops(void);
 
 /*@}*/
 

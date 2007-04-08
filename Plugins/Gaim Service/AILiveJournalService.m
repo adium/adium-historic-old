@@ -15,24 +15,24 @@
  */
 
 #import "AILiveJournalService.h"
-#import "AIGaimLiveJournalAccount.h"
-#import "ESGaimJabberAccountViewController.h"
+#import "AIPurpleLiveJournalAccount.h"
+#import "ESPurpleJabberAccountViewController.h"
 
 @implementation AILiveJournalService
 
 //Account Creation
 - (Class)accountClass {
-	return [AIGaimLiveJournalAccount class];
+	return [AIPurpleLiveJournalAccount class];
 }
 
 //
 - (AIAccountViewController *)accountViewController{
-    return [ESGaimJabberAccountViewController accountViewController];
+    return [ESPurpleJabberAccountViewController accountViewController];
 }
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-jabber-livejournal";
+	return @"libpurple-jabber-livejournal";
 }
 
 - (NSString *)serviceID{

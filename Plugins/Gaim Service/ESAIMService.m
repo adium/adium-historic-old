@@ -15,17 +15,17 @@
  */
 
 #import "ESAIMService.h"
-#import "ESGaimAIMAccount.h"
+#import "ESPurpleAIMAccount.h"
 
 @implementation ESAIMService
 
 //Service Description
 - (Class)accountClass{
-	return [ESGaimAIMAccount class];
+	return [ESPurpleAIMAccount class];
 }
 
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-oscar-AIM";
+	return @"libpurple-oscar-AIM";
 }
 - (NSString *)serviceID{
 	return @"AIM";

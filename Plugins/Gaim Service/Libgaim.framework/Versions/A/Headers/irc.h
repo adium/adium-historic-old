@@ -1,7 +1,7 @@
 /**
  * @file irc.h
  *
- * gaim
+ * purple
  *
  * Copyright (C) 2003, Ethan Blanton <eblanton@cs.purdue.edu>
  *
@@ -26,7 +26,7 @@
 #include <glib.h>
 
 #include "ft.h"
-#include "gaim_buffer.h"
+#include "purple_buffer.h"
 #include "roomlist.h"
 #include "sslconn.h"
 
@@ -35,7 +35,7 @@
 #define IRC_DEFAULT_SSL_PORT 994
 
 #define IRC_DEFAULT_CHARSET "UTF-8"
-#define IRC_DEFAULT_ALIAS "gaim"
+#define IRC_DEFAULT_ALIAS "purple"
 
 #define IRC_DEFAULT_QUIT "Leaving."
 

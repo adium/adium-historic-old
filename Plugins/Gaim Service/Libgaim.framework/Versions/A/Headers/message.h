@@ -1,7 +1,7 @@
 /**
  * @file message.h Message handlers
  *
- * gaim
+ * purple
  *
  * Copyright (C) 2003 Nathan Walp <faceprint@faceprint.com>
  *

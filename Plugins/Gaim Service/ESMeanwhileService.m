@@ -15,9 +15,9 @@
  */
 
 #import <Adium/AIStatusControllerProtocol.h>
-#import "DCGaimMeanwhileJoinChatViewController.h"
-#import "ESGaimMeanwhileAccount.h"
-#import "ESGaimMeanwhileAccountViewController.h"
+#import "DCPurpleMeanwhileJoinChatViewController.h"
+#import "ESPurpleMeanwhileAccount.h"
+#import "ESPurpleMeanwhileAccountViewController.h"
 #import "ESMeanwhileService.h"
 #import <AIUtilities/AICharacterSetAdditions.h>
 
@@ -25,20 +25,20 @@
 
 //Account Creation
 - (Class)accountClass{
-	return [ESGaimMeanwhileAccount class];
+	return [ESPurpleMeanwhileAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return [ESGaimMeanwhileAccountViewController accountViewController];
+    return [ESPurpleMeanwhileAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return [DCGaimMeanwhileJoinChatViewController joinChatView];
+	return [DCPurpleMeanwhileJoinChatViewController joinChatView];
 }
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-Sametime";
+	return @"libpurple-Sametime";
 }
 - (NSString *)serviceID{
 	return @"Sametime";

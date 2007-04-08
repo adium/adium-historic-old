@@ -2,7 +2,7 @@
  * @file media.h Voice and Video API
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -70,7 +70,7 @@ struct _GaimMediaPrplOps {
 /**
  * Initializes mediastreamer and ortp
  */
-void gaim_media_init(void);
+void purple_media_init(void);
 
 /**************************************************************************/
 /** @name Voice Chat API **************************************************/
@@ -87,14 +87,14 @@ void gaim_media_init(void);
  * @param name The person on the other end of the call
  * @return     The new voice chat
  */
-GaimVoiceChat *gaim_voice_chat_new(GaimConnection *gc, const char *name);
+GaimVoiceChat *purple_voice_chat_new(GaimConnection *gc, const char *name);
 
 /**
  * Destroys a voice chat
  *
  * @param vc  The voice chat to destroy
  */
-void gaim_voice_chat_destroy(GaimVoiceChat *vc);
+void purple_voice_chat_destroy(GaimVoiceChat *vc);
 
 /**
  * Accessor function to get the name of the other user on the voice chat
@@ -102,7 +102,7 @@ void gaim_voice_chat_destroy(GaimVoiceChat *vc);
  * @param vc  The voice chat
  * @return    The name
  */
-const char *gaim_voice_chat_get_name(GaimVoiceChat *vc);
+const char *purple_voice_chat_get_name(GaimVoiceChat *vc);
 
 /**
  * Accessor function to set the name of the other user on the voice chat
@@ -110,7 +110,7 @@ const char *gaim_voice_chat_get_name(GaimVoiceChat *vc);
  * @param vc  The voice chat
  * @return    The name
  */
-void gaim_voice_chat_set_name(GaimVoiceChat *vc, const char *name);
+void purple_voice_chat_set_name(GaimVoiceChat *vc, const char *name);
 
 /**
  * Accessor for the GaimConnection of the voice chat
@@ -118,7 +118,7 @@ void gaim_voice_chat_set_name(GaimVoiceChat *vc, const char *name);
  * @param vc  The voice chat
  * @return    The GaimConnection
  */
-GaimConnection *gaim_voice_chat_get_connection(GaimVoiceChat *vc);
+GaimConnection *purple_voice_chat_get_connection(GaimVoiceChat *vc);
 
 /**
  * Accessor for the UI data
@@ -126,7 +126,7 @@ GaimConnection *gaim_voice_chat_get_connection(GaimVoiceChat *vc);
  * @param vc  The voice chat
  * @return    The UI data
  */
-void *gaim_voice_chat_get_ui_data(GaimVoiceChat *vc);
+void *purple_voice_chat_get_ui_data(GaimVoiceChat *vc);
 
 /**
  * Mutator for the UI Data
@@ -134,7 +134,7 @@ void *gaim_voice_chat_get_ui_data(GaimVoiceChat *vc);
  * @param vc   The voice chat
  * @param data The data
  */
-void gaim_voice_chat_set_ui_data(GaimVoiceChat *vc, void *data);
+void purple_voice_chat_set_ui_data(GaimVoiceChat *vc, void *data);
 
 /**
  * Accessor for the protocol data
@@ -142,7 +142,7 @@ void gaim_voice_chat_set_ui_data(GaimVoiceChat *vc, void *data);
  * @param vc   The voice chat
  * @return     The protocol data
  */
-void *gaim_voice_chat_get_proto_data(GaimVoiceChat *vc);
+void *purple_voice_chat_get_proto_data(GaimVoiceChat *vc);
 
 /**
  * Mutator for the protocol data
@@ -150,7 +150,7 @@ void *gaim_voice_chat_get_proto_data(GaimVoiceChat *vc);
  * @param vc   The voice chat
  * @param data The protocol data
  */
-void gaim_voice_chat_set_proto_data(GaimVoiceChat *vc, void *data);
+void purple_voice_chat_set_proto_data(GaimVoiceChat *vc, void *data);
 
 /**
  * Accessor for the state
@@ -158,7 +158,7 @@ void gaim_voice_chat_set_proto_data(GaimVoiceChat *vc, void *data);
  * @param vc  The voice chat
  * @return    The state
  */
-GaimMediaState gaim_voice_chat_get_state(GaimVoiceChat *vc);
+GaimMediaState purple_voice_chat_get_state(GaimVoiceChat *vc);
 
 /**
  * Mutator for the state
@@ -166,28 +166,28 @@ GaimMediaState gaim_voice_chat_get_state(GaimVoiceChat *vc);
  * @param vc    The voice chat
  * @param state The state
  */
-void gaim_voice_chat_set_state(GaimVoiceChat *vc, GaimMediaState state);
+void purple_voice_chat_set_state(GaimVoiceChat *vc, GaimMediaState state);
 
 /**
  * Accepts an incoming voice chat
  *
  * @param vc  The voice chat
  */
-void gaim_voice_chat_accept(GaimVoiceChat *vc);
+void purple_voice_chat_accept(GaimVoiceChat *vc);
 
 /**
  * Rejects an incoming voice chat
  *
  * @param vc  The voice chat
  */
-void gaim_voice_chat_reject(GaimVoiceChat *vc);
+void purple_voice_chat_reject(GaimVoiceChat *vc);
 
 /**
  * Terminates an in-progress voice chat
  *
  * @param vc  The voice chat
  */
-void gaim_voice_chat_terminate(GaimVoiceChat *vc);
+void purple_voice_chat_terminate(GaimVoiceChat *vc);
 
 /**
  * Accessor for the microphone and speaker MSFilter objects
@@ -196,7 +196,7 @@ void gaim_voice_chat_terminate(GaimVoiceChat *vc);
  * @param microphone A pointer to return the microphone filter in, or NULL.
  * @param speaker    A poitner to reutrn the speaker filter in, or NULL.
  */
-void gaim_voice_chat_get_filters(GaimVoiceChat *vc, struct _MSFilter **microphone, struct _MSFilter **speaker);
+void purple_voice_chat_get_filters(GaimVoiceChat *vc, struct _MSFilter **microphone, struct _MSFilter **speaker);
 
 /**
  * Accessor for the Mediastreamer timer
@@ -204,14 +204,14 @@ void gaim_voice_chat_get_filters(GaimVoiceChat *vc, struct _MSFilter **microphon
  * @param vc        The voice chat
  * @return          The timer
  */
-struct _MSSync *gaim_voice_chat_get_timer(GaimVoiceChat *vc);
+struct _MSSync *purple_voice_chat_get_timer(GaimVoiceChat *vc);
 
 /**
  * Start the streams
  *
  * @param vc		The voice chat
  */
-void gaim_voice_chat_start_streams(GaimVoiceChat *vc);
+void purple_voice_chat_start_streams(GaimVoiceChat *vc);
 
 /*@}*/
 
@@ -225,14 +225,14 @@ void gaim_voice_chat_start_streams(GaimVoiceChat *vc);
  *
  * @param ops The ops struct.
  */
-void gaim_media_set_ui_ops(GaimMediaUiOps *ops);
+void purple_media_set_ui_ops(GaimMediaUiOps *ops);
 
 /**
  * Returns the UI operations structure to be used for the buddy list.
  *
  * @return The UI operations structure.
  */
-GaimMediaUiOps *gaim_media_get_ui_ops(void);
+GaimMediaUiOps *purple_media_get_ui_ops(void);
 
 /*@}*/
 

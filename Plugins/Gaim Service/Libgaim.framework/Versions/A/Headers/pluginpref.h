@@ -2,7 +2,7 @@
  * @file pluginpref.h Plugin Preferences API
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -63,14 +63,14 @@ extern "C" {
  *
  * @return a new GaimPluginPrefFrame
  */
-GaimPluginPrefFrame *gaim_plugin_pref_frame_new(void);
+GaimPluginPrefFrame *purple_plugin_pref_frame_new(void);
 
 /**
  * Destroy a plugin preference frame
  *
  * @param frame The plugin frame to destroy
  */
-void gaim_plugin_pref_frame_destroy(GaimPluginPrefFrame *frame);
+void purple_plugin_pref_frame_destroy(GaimPluginPrefFrame *frame);
 
 /**
  * Adds a plugin preference to a plugin preference frame
@@ -78,7 +78,7 @@ void gaim_plugin_pref_frame_destroy(GaimPluginPrefFrame *frame);
  * @param frame The plugin frame to add the preference to
  * @param pref  The preference to add to the frame
  */
-void gaim_plugin_pref_frame_add(GaimPluginPrefFrame *frame, GaimPluginPref *pref);
+void purple_plugin_pref_frame_add(GaimPluginPrefFrame *frame, GaimPluginPref *pref);
 
 /**
  * Get the plugin preferences from a plugin preference frame
@@ -86,14 +86,14 @@ void gaim_plugin_pref_frame_add(GaimPluginPrefFrame *frame, GaimPluginPref *pref
  * @param frame The plugin frame to get the plugin preferences from
  * @return a GList of plugin preferences
  */
-GList *gaim_plugin_pref_frame_get_prefs(GaimPluginPrefFrame *frame);
+GList *purple_plugin_pref_frame_get_prefs(GaimPluginPrefFrame *frame);
 
 /**
  * Create a new plugin preference
  *
  * @return a new GaimPluginPref
  */
-GaimPluginPref *gaim_plugin_pref_new(void);
+GaimPluginPref *purple_plugin_pref_new(void);
 
 /**
  * Create a new plugin preference with name
@@ -101,7 +101,7 @@ GaimPluginPref *gaim_plugin_pref_new(void);
  * @param name The name of the pref
  * @return a new GaimPluginPref
  */
-GaimPluginPref *gaim_plugin_pref_new_with_name(const char *name);
+GaimPluginPref *purple_plugin_pref_new_with_name(const char *name);
 
 /**
  * Create a new plugin preference with label
@@ -109,7 +109,7 @@ GaimPluginPref *gaim_plugin_pref_new_with_name(const char *name);
  * @param label The label to be displayed
  * @return a new GaimPluginPref
  */
-GaimPluginPref *gaim_plugin_pref_new_with_label(const char *label);
+GaimPluginPref *purple_plugin_pref_new_with_label(const char *label);
 
 /**
  * Create a new plugin preference with name and label
@@ -118,14 +118,14 @@ GaimPluginPref *gaim_plugin_pref_new_with_label(const char *label);
  * @param label The label to be displayed
  * @return a new GaimPluginPref
  */
-GaimPluginPref *gaim_plugin_pref_new_with_name_and_label(const char *name, const char *label);
+GaimPluginPref *purple_plugin_pref_new_with_name_and_label(const char *name, const char *label);
 
 /**
  * Destroy a plugin preference
  *
  * @param pref The preference to destroy
  */
-void gaim_plugin_pref_destroy(GaimPluginPref *pref);
+void purple_plugin_pref_destroy(GaimPluginPref *pref);
 
 /**
  * Set a plugin pref name
@@ -133,7 +133,7 @@ void gaim_plugin_pref_destroy(GaimPluginPref *pref);
  * @param pref The plugin pref
  * @param name The name of the pref
  */
-void gaim_plugin_pref_set_name(GaimPluginPref *pref, const char *name);
+void purple_plugin_pref_set_name(GaimPluginPref *pref, const char *name);
 
 /**
  * Get a plugin pref name
@@ -141,7 +141,7 @@ void gaim_plugin_pref_set_name(GaimPluginPref *pref, const char *name);
  * @param pref The plugin pref
  * @return The name of the pref
  */
-const char *gaim_plugin_pref_get_name(GaimPluginPref *pref);
+const char *purple_plugin_pref_get_name(GaimPluginPref *pref);
 
 /**
  * Set a plugin pref label
@@ -149,7 +149,7 @@ const char *gaim_plugin_pref_get_name(GaimPluginPref *pref);
  * @param pref  The plugin pref
  * @param label The label for the plugin pref
  */
-void gaim_plugin_pref_set_label(GaimPluginPref *pref, const char *label);
+void purple_plugin_pref_set_label(GaimPluginPref *pref, const char *label);
 
 /**
  * Get a plugin pref label
@@ -157,7 +157,7 @@ void gaim_plugin_pref_set_label(GaimPluginPref *pref, const char *label);
  * @param pref The plugin pref
  * @return The label for the plugin pref
  */
-const char *gaim_plugin_pref_get_label(GaimPluginPref *pref);
+const char *purple_plugin_pref_get_label(GaimPluginPref *pref);
 
 /**
  * Set the bounds for an integer pref
@@ -166,7 +166,7 @@ const char *gaim_plugin_pref_get_label(GaimPluginPref *pref);
  * @param min  The min value
  * @param max  The max value
  */
-void gaim_plugin_pref_set_bounds(GaimPluginPref *pref, int min, int max);
+void purple_plugin_pref_set_bounds(GaimPluginPref *pref, int min, int max);
 
 /**
  * Get the bounds for an integer pref
@@ -175,7 +175,7 @@ void gaim_plugin_pref_set_bounds(GaimPluginPref *pref, int min, int max);
  * @param min  The min value
  * @param max  The max value
  */
-void gaim_plugin_pref_get_bounds(GaimPluginPref *pref, int *min, int *max);
+void purple_plugin_pref_get_bounds(GaimPluginPref *pref, int *min, int *max);
 
 /**
  * Set the type of a plugin pref
@@ -183,7 +183,7 @@ void gaim_plugin_pref_get_bounds(GaimPluginPref *pref, int *min, int *max);
  * @param pref The plugin pref
  * @param type The type
  */
-void gaim_plugin_pref_set_type(GaimPluginPref *pref, GaimPluginPrefType type);
+void purple_plugin_pref_set_type(GaimPluginPref *pref, GaimPluginPrefType type);
 
 /**
  * Get the type of a plugin pref
@@ -191,7 +191,7 @@ void gaim_plugin_pref_set_type(GaimPluginPref *pref, GaimPluginPrefType type);
  * @param pref The plugin pref
  * @return The type
  */
-GaimPluginPrefType gaim_plugin_pref_get_type(GaimPluginPref *pref);
+GaimPluginPrefType purple_plugin_pref_get_type(GaimPluginPref *pref);
 
 /**
  * Set the choices for a choices plugin pref
@@ -200,7 +200,7 @@ GaimPluginPrefType gaim_plugin_pref_get_type(GaimPluginPref *pref);
  * @param label The label for the choice
  * @param choice  A gpointer of the choice
  */
-void gaim_plugin_pref_add_choice(GaimPluginPref *pref, const char *label, gpointer choice);
+void purple_plugin_pref_add_choice(GaimPluginPref *pref, const char *label, gpointer choice);
 
 /**
  * Get the choices for a choices plugin pref
@@ -208,7 +208,7 @@ void gaim_plugin_pref_add_choice(GaimPluginPref *pref, const char *label, gpoint
  * @param pref The plugin pref
  * @return GList of the choices 
  */
-GList *gaim_plugin_pref_get_choices(GaimPluginPref *pref);
+GList *purple_plugin_pref_get_choices(GaimPluginPref *pref);
 
 /**
  * Set the max length for a string plugin pref
@@ -216,7 +216,7 @@ GList *gaim_plugin_pref_get_choices(GaimPluginPref *pref);
  * @param pref       The plugin pref
  * @param max_length The max length of the string
  */
-void gaim_plugin_pref_set_max_length(GaimPluginPref *pref, unsigned int max_length);
+void purple_plugin_pref_set_max_length(GaimPluginPref *pref, unsigned int max_length);
 
 /**
  * Get the max length for a string plugin pref
@@ -224,7 +224,7 @@ void gaim_plugin_pref_set_max_length(GaimPluginPref *pref, unsigned int max_leng
  * @param pref The plugin pref
  * @return the max length
  */
-unsigned int gaim_plugin_pref_get_max_length(GaimPluginPref *pref);
+unsigned int purple_plugin_pref_get_max_length(GaimPluginPref *pref);
 
 /**
  * Sets the masking of a string plugin pref
@@ -232,7 +232,7 @@ unsigned int gaim_plugin_pref_get_max_length(GaimPluginPref *pref);
  * @param pref The plugin pref
  * @param mask The value to set
  */
-void gaim_plugin_pref_set_masked(GaimPluginPref *pref, gboolean mask);
+void purple_plugin_pref_set_masked(GaimPluginPref *pref, gboolean mask);
 
 /**
  * Gets the masking of a string plugin pref
@@ -240,7 +240,7 @@ void gaim_plugin_pref_set_masked(GaimPluginPref *pref, gboolean mask);
  * @param pref The plugin pref
  * @return The masking
  */
-gboolean gaim_plugin_pref_get_masked(GaimPluginPref *pref);
+gboolean purple_plugin_pref_get_masked(GaimPluginPref *pref);
 
 /**
  * Sets the format type for a formattable-string plugin pref. You need to set the
@@ -249,7 +249,7 @@ gboolean gaim_plugin_pref_get_masked(GaimPluginPref *pref);
  * @param pref	 The plugin pref
  * @param format The format of the string
  */
-void gaim_plugin_pref_set_format_type(GaimPluginPref *pref, GaimStringFormatType format);
+void purple_plugin_pref_set_format_type(GaimPluginPref *pref, GaimStringFormatType format);
 
 /**
  * Gets the format type of the formattable-string plugin pref.
@@ -257,7 +257,7 @@ void gaim_plugin_pref_set_format_type(GaimPluginPref *pref, GaimStringFormatType
  * @param pref The plugin pref
  * @return The format of the pref
  */
-GaimStringFormatType gaim_plugin_pref_get_format_type(GaimPluginPref *pref);
+GaimStringFormatType purple_plugin_pref_get_format_type(GaimPluginPref *pref);
 
 /*@}*/
 

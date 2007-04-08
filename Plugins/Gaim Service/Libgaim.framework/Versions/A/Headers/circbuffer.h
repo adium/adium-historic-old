@@ -2,7 +2,7 @@
  * @file circbuffer.h Buffer Utility Functions
  * @ingroup core
  *
- * Gaim is the legal property of its developers, whose names are too numerous
+ * Purple is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
  * source distribution.
  *
@@ -29,7 +29,7 @@
 extern "C" {
 #endif
 
-typedef struct _GaimCircBuffer {
+typedef struct _PurpleCircBuffer {
 
 	/** A pointer to the starting address of our chunk of memory. */
 	gchar *buffer;
@@ -52,7 +52,7 @@ typedef struct _GaimCircBuffer {
 	 *  read by the consumer. */
 	gchar *outptr;
 
-} GaimCircBuffer;
+} PurpleCircBuffer;
 
 /**
  * Creates a new circular buffer.  This will not allocate any memory for the
@@ -62,10 +62,10 @@ typedef struct _GaimCircBuffer {
  *                 is appended and every time more space is needed.  Pass in
  *                 "0" to use the default of 256 bytes.
  *
- * @return The new GaimCircBuffer. This should be freed with
- *         gaim_circ_buffer_destroy when you are done with it
+ * @return The new PurpleCircBuffer. This should be freed with
+ *         purple_circ_buffer_destroy when you are done with it
  */
-GaimCircBuffer *gaim_circ_buffer_new(gsize growsize);
+GaimCircBuffer *purple_circ_buffer_new(gsize growsize);
 
 /**
  * Dispose of the GaimCircBuffer and free any memory used by it (including any
@@ -73,7 +73,7 @@ GaimCircBuffer *gaim_circ_buffer_new(gsize growsize);
  *
  * @param buf The GaimCircBuffer to free
  */
-void gaim_circ_buffer_destroy(GaimCircBuffer *buf);
+void purple_circ_buffer_destroy(GaimCircBuffer *buf);
 
 /**
  * Append data to the GaimCircBuffer.  This will grow the internal
@@ -83,13 +83,13 @@ void gaim_circ_buffer_destroy(GaimCircBuffer *buf);
  * @param src pointer to the data to copy into the buffer
  * @param len number of bytes to copy into the buffer
  */
-void gaim_circ_buffer_append(GaimCircBuffer *buf, gconstpointer src, gsize len);
+void purple_circ_buffer_append(GaimCircBuffer *buf, gconstpointer src, gsize len);
 
 /**
  * Determine the maximum number of contiguous bytes that can be read from the
  * GaimCircBuffer.
  * Note: This may not be the total number of bytes that are buffered - a
- * subsequent call after calling gaim_circ_buffer_mark_read() may indicate more
+ * subsequent call after calling purple_circ_buffer_mark_read() may indicate more
  * data is available to read.
  *
  * @param buf the GaimCircBuffer for which to determine the maximum contiguous
@@ -97,7 +97,7 @@ void gaim_circ_buffer_append(GaimCircBuffer *buf, gconstpointer src, gsize len);
  *
  * @return the number of bytes that can be read from the GaimCircBuffer
  */
-gsize gaim_circ_buffer_get_max_read(const GaimCircBuffer *buf);
+gsize purple_circ_buffer_get_max_read(const GaimCircBuffer *buf);
 
 /**
  * Mark the number of bytes that have been read from the buffer.
@@ -108,7 +108,7 @@ gsize gaim_circ_buffer_get_max_read(const GaimCircBuffer *buf);
  * @return TRUE if we successfully marked the bytes as having been read, FALSE
  *         otherwise.
  */
-gboolean gaim_circ_buffer_mark_read(GaimCircBuffer *buf, gsize len);
+gboolean purple_circ_buffer_mark_read(GaimCircBuffer *buf, gsize len);
 
 #ifdef __cplusplus
 }

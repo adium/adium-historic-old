@@ -15,29 +15,29 @@
  */
 
 #import <Adium/AIStatusControllerProtocol.h>
-#import "DCGaimNovellJoinChatViewController.h"
-#import "ESGaimNovellAccount.h"
-#import "ESGaimNovellAccountViewController.h"
+#import "DCPurpleNovellJoinChatViewController.h"
+#import "ESPurpleNovellAccount.h"
+#import "ESPurpleNovellAccountViewController.h"
 #import "ESNovellService.h"
 
 @implementation ESNovellService
 
 //Account Creation
 - (Class)accountClass{
-	return [ESGaimNovellAccount class];
+	return [ESPurpleNovellAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return [ESGaimNovellAccountViewController accountViewController];
+    return [ESPurpleNovellAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return [DCGaimNovellJoinChatViewController joinChatView];
+	return [DCPurpleNovellJoinChatViewController joinChatView];
 }
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-GroupWise";
+	return @"libpurple-GroupWise";
 }
 - (NSString *)serviceID{
 	return @"GroupWise";
@@ -92,7 +92,7 @@
 	m = g_list_append(m, _("Away"));
 	m = g_list_append(m, _("Busy"));
 	m = g_list_append(m, _("Appear Offline"));
-	m = g_list_append(m, GAIM_AWAY_CUSTOM);
+	m = g_list_append(m, PURPLE_AWAY_CUSTOM);
 */ 
 }
 @end

@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "GaimService.h"
+#import "PurpleService.h"
 #import <Adium/AIPreferencePane.h>
 
 #define PREF_GROUP_MSN_SERVICE				@"MSN"
@@ -23,7 +23,7 @@
 
 @class AIPreferencePane;
 
-@interface ESMSNService : GaimService {
+@interface ESMSNService : PurpleService {
 	AIPreferencePane	*MSNServicePrefs;
 }
 @end

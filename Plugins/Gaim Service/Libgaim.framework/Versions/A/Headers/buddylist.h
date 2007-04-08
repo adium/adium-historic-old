@@ -1,7 +1,7 @@
 /**
  * @file buddylist.h
  *
- * gaim
+ * purple
  *
  * Copyright (C) 2005  Bartosz Oler <bartosz@bzimage.us>
  *

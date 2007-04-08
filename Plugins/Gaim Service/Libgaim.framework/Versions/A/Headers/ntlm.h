@@ -1,7 +1,7 @@
 /**
  * @file ntlm.h
  *
- * gaim
+ * purple
  *
  * Copyright (C) 2005, Thomas Butter <butter@uni-mannheim.de>
  *
@@ -38,7 +38,7 @@ extern "C" {
  * @return base64 encoded string to send to the server.  This should
  *         be g_free'd by the caller.
  */
-gchar *gaim_ntlm_gen_type1(const gchar *hostname, const gchar *domain);
+gchar *purple_ntlm_gen_type1(const gchar *hostname, const gchar *domain);
 
 /**
  * Parses the ntlm type 2 message
@@ -49,7 +49,7 @@ gchar *gaim_ntlm_gen_type1(const gchar *hostname, const gchar *domain);
  * @return The nonce for use in message type3.  This is a statically
  *         allocated 8 byte binary string.
  */
-guint8 *gaim_ntlm_parse_type2(const gchar *type2, guint32 *flags);
+guint8 *purple_ntlm_parse_type2(const gchar *type2, guint32 *flags);
 
 /**
  * Generates a type3 message
@@ -58,12 +58,12 @@ guint8 *gaim_ntlm_parse_type2(const gchar *type2, guint32 *flags);
  * @param passw The password
  * @param hostname The hostname
  * @param domain The domain to authenticate against
- * @param nonce The nonce returned by gaim_ntlm_parse_type2
- * @param flags Pointer to the flags returned by gaim_ntlm_parse_type2
+ * @param nonce The nonce returned by purple_ntlm_parse_type2
+ * @param flags Pointer to the flags returned by purple_ntlm_parse_type2
  * @return A base64 encoded type3 message.  This should be g_free'd by
  *         the caller.
  */
-gchar *gaim_ntlm_gen_type3(const gchar *username, const gchar *passw, const gchar *hostname, const gchar *domain, const guint8 *nonce, guint32 *flags);
+gchar *purple_ntlm_gen_type3(const gchar *username, const gchar *passw, const gchar *hostname, const gchar *domain, const guint8 *nonce, guint32 *flags);
 
 #ifdef __cplusplus
 }

@@ -277,7 +277,7 @@ struct client_info_s {
 	"us", "en", \
 }
 
-#define CLIENTINFO_GAIM { \
+#define CLIENTINFO_PURPLE { \
 	"Gaim/" VERSION, \
 	0x0109, \
 	0x0005, 0x0001, \

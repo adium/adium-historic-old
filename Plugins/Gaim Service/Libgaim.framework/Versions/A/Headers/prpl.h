@@ -2,7 +2,7 @@
  * @file prpl.h Protocol Plugin functions
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -24,7 +24,7 @@
  */
 
 /* this file should be all that prpls need to include. therefore, by including
- * this file, they should get glib, proxy, gaim_connection, prpl, etc. */
+ * this file, they should get glib, proxy, purple_connection, prpl, etc. */
 
 #ifndef _GAIM_PRPL_H_
 #define _GAIM_PRPL_H_
@@ -161,7 +161,7 @@ typedef enum
  * A protocol plugin information structure.
  *
  * Every protocol plugin initializes this structure. It is the gateway
- * between gaim and the protocol plugin.  Many of this callbacks can be
+ * between purple and the protocol plugin.  Many of this callbacks can be
  * NULL.  If a callback must be implemented, it has a comment indicating so.
  */
 struct _GaimPluginProtocolInfo
@@ -335,7 +335,7 @@ extern "C" {
  * @param idle      The user's idle state.
  * @param idle_time The user's idle time.
  */
-void gaim_prpl_got_account_idle(GaimAccount *account, gboolean idle,
+void purple_prpl_got_account_idle(GaimAccount *account, gboolean idle,
 								time_t idle_time);
 
 /**
@@ -346,7 +346,7 @@ void gaim_prpl_got_account_idle(GaimAccount *account, gboolean idle,
  * @param account    The account the user is on.
  * @param login_time The user's log-in time.
  */
-void gaim_prpl_got_account_login_time(GaimAccount *account, time_t login_time);
+void purple_prpl_got_account_login_time(GaimAccount *account, time_t login_time);
 
 /**
  * Notifies Gaim that an account's status has changed.
@@ -358,7 +358,7 @@ void gaim_prpl_got_account_login_time(GaimAccount *account, time_t login_time);
  * @param ...       A NULL-terminated list of attribute IDs and values,
  *                  beginning with the value for @a attr_id.
  */
-void gaim_prpl_got_account_status(GaimAccount *account,
+void purple_prpl_got_account_status(GaimAccount *account,
 								  const char *status_id, ...);
 /**
  * Notifies Gaim that a user's idle state and time have changed.
@@ -372,7 +372,7 @@ void gaim_prpl_got_account_status(GaimAccount *account,
  *                  which the user became idle, in seconds since
  *                  the epoch.
  */
-void gaim_prpl_got_user_idle(GaimAccount *account, const char *name,
+void purple_prpl_got_user_idle(GaimAccount *account, const char *name,
 							 gboolean idle, time_t idle_time);
 
 /**
@@ -384,7 +384,7 @@ void gaim_prpl_got_user_idle(GaimAccount *account, const char *name,
  * @param name       The screen name of the user.
  * @param login_time The user's log-in time.
  */
-void gaim_prpl_got_user_login_time(GaimAccount *account, const char *name,
+void purple_prpl_got_user_login_time(GaimAccount *account, const char *name,
 								   time_t login_time);
 
 /**
@@ -398,11 +398,11 @@ void gaim_prpl_got_user_login_time(GaimAccount *account, const char *name,
  * @param ...       A NULL-terminated list of attribute IDs and values,
  *                  beginning with the value for @a attr_id.
  */
-void gaim_prpl_got_user_status(GaimAccount *account, const char *name,
+void purple_prpl_got_user_status(GaimAccount *account, const char *name,
 							   const char *status_id, ...);
 
 /**
- * Notifies libgaim that a user's status has been deactivated
+ * Notifies libpurple that a user's status has been deactivated
  *
  * This is meant to be called from protocol plugins.
  *
@@ -410,7 +410,7 @@ void gaim_prpl_got_user_status(GaimAccount *account, const char *name,
  * @param name      The screen name of the user.
  * @param status_id The status ID.
  */
-void gaim_prpl_got_user_status_deactive(GaimAccount *account, const char *name,
+void purple_prpl_got_user_status_deactive(GaimAccount *account, const char *name,
 					const char *status_id);
  
 /**
@@ -421,7 +421,7 @@ void gaim_prpl_got_user_status_deactive(GaimAccount *account, const char *name,
  * @param new_status The status that was activated, or deactivated
  *                   (in the case of independent statuses).
  */
-void gaim_prpl_change_account_status(GaimAccount *account,
+void purple_prpl_change_account_status(GaimAccount *account,
 									 GaimStatus *old_status,
 									 GaimStatus *new_status);
 
@@ -433,7 +433,7 @@ void gaim_prpl_change_account_status(GaimAccount *account,
  *
  * @return List of statuses
  */
-GList *gaim_prpl_get_statuses(GaimAccount *account, GaimPresence *presence);
+GList *purple_prpl_get_statuses(GaimAccount *account, GaimPresence *presence);
 
 /*@}*/
 
@@ -447,7 +447,7 @@ GList *gaim_prpl_get_statuses(GaimAccount *account, GaimPresence *presence);
  *
  * @param id The protocol plugin;
  */
-GaimPlugin *gaim_find_prpl(const char *id);
+GaimPlugin *purple_find_prpl(const char *id);
 
 /*@}*/
 

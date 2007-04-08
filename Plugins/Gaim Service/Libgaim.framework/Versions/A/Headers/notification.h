@@ -1,7 +1,7 @@
 /**
  * @file notification.h Notification server functions
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this

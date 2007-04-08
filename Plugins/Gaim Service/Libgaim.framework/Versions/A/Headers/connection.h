@@ -2,7 +2,7 @@
  * @file connection.h Connection API
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -110,7 +110,7 @@ extern "C" {
 /*@{*/
 
 /**
- * This function should only be called by gaim_account_connect()
+ * This function should only be called by purple_account_connect()
  * in account.c.  If you're trying to sign on an account, use that
  * function instead.
  *
@@ -118,27 +118,27 @@ extern "C" {
  * or attempts to register a new account.  If you are logging in,
  * the connection uses the current active status for this account.
  * So if you want to sign on as "away," for example, you need to
- * have called gaim_account_set_status(account, "away").
- * (And this will call gaim_account_connect() automatically).
+ * have called purple_account_set_status(account, "away").
+ * (And this will call purple_account_connect() automatically).
  *
  * @param account  The account the connection should be connecting to.
  * @param regist   Whether we are registering a new account or just
  *                 trying to do a normal signon.
  * @param password The password to use.
  */
-void gaim_connection_new(GaimAccount *account, gboolean regist,
+void purple_connection_new(GaimAccount *account, gboolean regist,
 									const char *password);
 
 /**
  * Disconnects and destroys a GaimConnection.
  *
- * This function should only be called by gaim_account_disconnect()
+ * This function should only be called by purple_account_disconnect()
  * in account.c.  If you're trying to sign off an account, use that
  * function instead.
  *
- * @param gc The gaim connection to destroy.
+ * @param gc The purple connection to destroy.
  */
-void gaim_connection_destroy(GaimConnection *gc);
+void purple_connection_destroy(GaimConnection *gc);
 
 /**
  * Sets the connection state.  PRPLs should call this and pass in
@@ -150,7 +150,7 @@ void gaim_connection_destroy(GaimConnection *gc);
  * @param gc    The connection.
  * @param state The connection state.
  */
-void gaim_connection_set_state(GaimConnection *gc, GaimConnectionState state);
+void purple_connection_set_state(GaimConnection *gc, GaimConnectionState state);
 
 /**
  * Sets the connection's account.
@@ -158,7 +158,7 @@ void gaim_connection_set_state(GaimConnection *gc, GaimConnectionState state);
  * @param gc      The connection.
  * @param account The account.
  */
-void gaim_connection_set_account(GaimConnection *gc, GaimAccount *account);
+void purple_connection_set_account(PurpleConnection *gc, GaimAccount *account);
 
 /**
  * Sets the connection's displayed name.
@@ -166,7 +166,7 @@ void gaim_connection_set_account(GaimConnection *gc, GaimAccount *account);
  * @param gc   The connection.
  * @param name The displayed name.
  */
-void gaim_connection_set_display_name(GaimConnection *gc, const char *name);
+void purple_connection_set_display_name(GaimConnection *gc, const char *name);
 
 /**
  * Returns the connection state.
@@ -175,7 +175,7 @@ void gaim_connection_set_display_name(GaimConnection *gc, const char *name);
  *
  * @return The connection state.
  */
-GaimConnectionState gaim_connection_get_state(const GaimConnection *gc);
+GaimConnectionState purple_connection_get_state(const GaimConnection *gc);
 
 /**
  * Returns TRUE if the account is connected, otherwise returns FALSE.
@@ -192,7 +192,7 @@ GaimConnectionState gaim_connection_get_state(const GaimConnection *gc);
  *
  * @return The connection's account.
  */
-GaimAccount *gaim_connection_get_account(const GaimConnection *gc);
+GaimAccount *purple_connection_get_account(const GaimConnection *gc);
 
 /**
  * Returns the connection's password.
@@ -201,7 +201,7 @@ GaimAccount *gaim_connection_get_account(const GaimConnection *gc);
  *
  * @return The connection's password.
  */
-const char *gaim_connection_get_password(const GaimConnection *gc);
+const char *purple_connection_get_password(const GaimConnection *gc);
 
 /**
  * Returns the connection's displayed name.
@@ -210,7 +210,7 @@ const char *gaim_connection_get_password(const GaimConnection *gc);
  *
  * @return The connection's displayed name.
  */
-const char *gaim_connection_get_display_name(const GaimConnection *gc);
+const char *purple_connection_get_display_name(const GaimConnection *gc);
 
 /**
  * Updates the connection progress.
@@ -220,7 +220,7 @@ const char *gaim_connection_get_display_name(const GaimConnection *gc);
  * @param step  The current step.
  * @param count The total number of steps.
  */
-void gaim_connection_update_progress(GaimConnection *gc, const char *text,
+void purple_connection_update_progress(GaimConnection *gc, const char *text,
 									 size_t step, size_t count);
 
 /**
@@ -229,7 +229,7 @@ void gaim_connection_update_progress(GaimConnection *gc, const char *text,
  * @param gc   The connection.
  * @param text The notice text.
  */
-void gaim_connection_notice(GaimConnection *gc, const char *text);
+void purple_connection_notice(GaimConnection *gc, const char *text);
 
 /**
  * Closes a connection with an error.
@@ -237,7 +237,7 @@ void gaim_connection_notice(GaimConnection *gc, const char *text);
  * @param gc     The connection.
  * @param reason The error text.
  */
-void gaim_connection_error(GaimConnection *gc, const char *reason);
+void purple_connection_error(GaimConnection *gc, const char *reason);
 
 /*@}*/
 
@@ -249,7 +249,7 @@ void gaim_connection_error(GaimConnection *gc, const char *reason);
 /**
  * Disconnects from all connections.
  */
-void gaim_connections_disconnect_all(void);
+void purple_connections_disconnect_all(void);
 
 /**
  * Returns a list of all active connections.  This does not
@@ -257,14 +257,14 @@ void gaim_connections_disconnect_all(void);
  *
  * @return A list of all active connections.
  */
-GList *gaim_connections_get_all(void);
+GList *purple_connections_get_all(void);
 
 /**
  * Returns a list of all connections in the process of connecting.
  *
  * @return A list of connecting connections.
  */
-GList *gaim_connections_get_connecting(void);
+GList *purple_connections_get_connecting(void);
 
 /**
  * Checks if gc is still a valid pointer to a gc.
@@ -275,7 +275,7 @@ GList *gaim_connections_get_connecting(void);
  * TODO: Eventually this bad boy will be removed, because it is
  *       a gross fix for a crashy problem.
  */
-#define GAIM_CONNECTION_IS_VALID(gc) (g_list_find(gaim_connections_get_all(), (gc)))
+#define GAIM_CONNECTION_IS_VALID(gc) (g_list_find(purple_connections_get_all(), (gc)))
 
 /*@}*/
 
@@ -289,14 +289,14 @@ GList *gaim_connections_get_connecting(void);
  *
  * @param ops The UI operations structure.
  */
-void gaim_connections_set_ui_ops(GaimConnectionUiOps *ops);
+void purple_connections_set_ui_ops(GaimConnectionUiOps *ops);
 
 /**
  * Returns the UI operations structure used for connections.
  *
  * @return The UI operations structure in use.
  */
-GaimConnectionUiOps *gaim_connections_get_ui_ops(void);
+GaimConnectionUiOps *purple_connections_get_ui_ops(void);
 
 /*@}*/
 
@@ -308,19 +308,19 @@ GaimConnectionUiOps *gaim_connections_get_ui_ops(void);
 /**
  * Initializes the connections subsystem.
  */
-void gaim_connections_init(void);
+void purple_connections_init(void);
 
 /**
  * Uninitializes the connections subsystem.
  */
-void gaim_connections_uninit(void);
+void purple_connections_uninit(void);
 
 /**
  * Returns the handle to the connections subsystem.
  *
  * @return The connections subsystem handle.
  */
-void *gaim_connections_get_handle(void);
+void *purple_connections_get_handle(void);
 
 /*@}*/
 

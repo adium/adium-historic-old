@@ -2,7 +2,7 @@
  * @file stun.h STUN API
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -74,9 +74,9 @@ typedef void (*StunCallback) (GaimStunNatDiscovery *);
  * @return a GaimStunNatDiscovery which includes the public IP and the type
  *         of NAT or NULL is discovery would block
  */
-GaimStunNatDiscovery *gaim_stun_discover(StunCallback cb);
+GaimStunNatDiscovery *purple_stun_discover(StunCallback cb);
 
-void gaim_stun_init(void);
+void purple_stun_init(void);
 
 /*@}*/
 

@@ -1,7 +1,7 @@
 /**
  * @file jutil.h utility functions
  *
- * gaim
+ * purple
  *
  * Copyright (C) 2003 Nathan Walp <faceprint@faceprint.com>
  *

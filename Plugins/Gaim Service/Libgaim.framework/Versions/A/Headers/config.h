@@ -5,7 +5,7 @@
 #define VERSION "2.0.0"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libgaim 2.0.0"
+#define PACKAGE_STRING "libpurple 2.0.0"
 
 /* OTR version */
 #define GAIM_OTR_VERSION "3.0.0"
@@ -31,10 +31,10 @@
 #define PACKAGE_VERSION VERSION
 
 /* Name of package */
-#define PACKAGE "libgaim"
+#define PACKAGE "libpurple"
 
 /* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT "gaim-devel@lists.sourceforge.net"
+#define PACKAGE_BUGREPORT "purple-devel@lists.sourceforge.net"
 
 /* Define to the full name of this package. */
 #define PACKAGE_NAME PACKAGE

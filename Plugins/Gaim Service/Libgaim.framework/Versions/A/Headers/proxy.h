@@ -2,7 +2,7 @@
  * @file proxy.h Proxy API
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -77,14 +77,14 @@ extern "C" {
  *
  * @return The proxy information structure.
  */
-GaimProxyInfo *gaim_proxy_info_new(void);
+GaimProxyInfo *purple_proxy_info_new(void);
 
 /**
  * Destroys a proxy information structure.
  *
  * @param info The proxy information structure to destroy.
  */
-void gaim_proxy_info_destroy(GaimProxyInfo *info);
+void purple_proxy_info_destroy(GaimProxyInfo *info);
 
 /**
  * Sets the type of proxy.
@@ -92,7 +92,7 @@ void gaim_proxy_info_destroy(GaimProxyInfo *info);
  * @param info The proxy information.
  * @param type The proxy type.
  */
-void gaim_proxy_info_set_type(GaimProxyInfo *info, GaimProxyType type);
+void purple_proxy_info_set_type(GaimProxyInfo *info, GaimProxyType type);
 
 /**
  * Sets the proxy host.
@@ -100,7 +100,7 @@ void gaim_proxy_info_set_type(GaimProxyInfo *info, GaimProxyType type);
  * @param info The proxy information.
  * @param host The host.
  */
-void gaim_proxy_info_set_host(GaimProxyInfo *info, const char *host);
+void purple_proxy_info_set_host(GaimProxyInfo *info, const char *host);
 
 /**
  * Sets the proxy port.
@@ -108,7 +108,7 @@ void gaim_proxy_info_set_host(GaimProxyInfo *info, const char *host);
  * @param info The proxy information.
  * @param port The port.
  */
-void gaim_proxy_info_set_port(GaimProxyInfo *info, int port);
+void purple_proxy_info_set_port(GaimProxyInfo *info, int port);
 
 /**
  * Sets the proxy username.
@@ -116,7 +116,7 @@ void gaim_proxy_info_set_port(GaimProxyInfo *info, int port);
  * @param info     The proxy information.
  * @param username The username.
  */
-void gaim_proxy_info_set_username(GaimProxyInfo *info, const char *username);
+void purple_proxy_info_set_username(GaimProxyInfo *info, const char *username);
 
 /**
  * Sets the proxy password.
@@ -124,7 +124,7 @@ void gaim_proxy_info_set_username(GaimProxyInfo *info, const char *username);
  * @param info     The proxy information.
  * @param password The password.
  */
-void gaim_proxy_info_set_password(GaimProxyInfo *info, const char *password);
+void purple_proxy_info_set_password(GaimProxyInfo *info, const char *password);
 
 /**
  * Returns the proxy's type.
@@ -133,7 +133,7 @@ void gaim_proxy_info_set_password(GaimProxyInfo *info, const char *password);
  *
  * @return The type.
  */
-GaimProxyType gaim_proxy_info_get_type(const GaimProxyInfo *info);
+GaimProxyType purple_proxy_info_get_type(const GaimProxyInfo *info);
 
 /**
  * Returns the proxy's host.
@@ -142,7 +142,7 @@ GaimProxyType gaim_proxy_info_get_type(const GaimProxyInfo *info);
  *
  * @return The host.
  */
-const char *gaim_proxy_info_get_host(const GaimProxyInfo *info);
+const char *purple_proxy_info_get_host(const GaimProxyInfo *info);
 
 /**
  * Returns the proxy's port.
@@ -151,7 +151,7 @@ const char *gaim_proxy_info_get_host(const GaimProxyInfo *info);
  *
  * @return The port.
  */
-int gaim_proxy_info_get_port(const GaimProxyInfo *info);
+int purple_proxy_info_get_port(const GaimProxyInfo *info);
 
 /**
  * Returns the proxy's username.
@@ -160,7 +160,7 @@ int gaim_proxy_info_get_port(const GaimProxyInfo *info);
  *
  * @return The username.
  */
-const char *gaim_proxy_info_get_username(const GaimProxyInfo *info);
+const char *purple_proxy_info_get_username(const GaimProxyInfo *info);
 
 /**
  * Returns the proxy's password.
@@ -169,7 +169,7 @@ const char *gaim_proxy_info_get_username(const GaimProxyInfo *info);
  *
  * @return The password.
  */
-const char *gaim_proxy_info_get_password(const GaimProxyInfo *info);
+const char *purple_proxy_info_get_password(const GaimProxyInfo *info);
 
 /*@}*/
 
@@ -179,11 +179,11 @@ const char *gaim_proxy_info_get_password(const GaimProxyInfo *info);
 /*@{*/
 
 /**
- * Returns gaim's global proxy information.
+ * Returns purple's global proxy information.
  *
  * @return The global proxy information.
  */
-GaimProxyInfo *gaim_global_proxy_get_info(void);
+GaimProxyInfo *purple_global_proxy_get_info(void);
 
 /*@}*/
 
@@ -197,17 +197,17 @@ GaimProxyInfo *gaim_global_proxy_get_info(void);
  *
  * @return The proxy subsystem handle.
  */
-void *gaim_proxy_get_handle(void);
+void *purple_proxy_get_handle(void);
 
 /**
  * Initializes the proxy subsystem.
  */
-void gaim_proxy_init(void);
+void purple_proxy_init(void);
 
 /**
  * Uninitializes the proxy subsystem.
  */
-void gaim_proxy_uninit(void);
+void purple_proxy_uninit(void);
 
 /**
  * Returns configuration of a proxy.
@@ -216,7 +216,7 @@ void gaim_proxy_uninit(void);
  *
  * @return The configuration of a proxy.
  */
-GaimProxyInfo *gaim_proxy_get_setup(GaimAccount *account);
+PurpleProxyInfo *purple_proxy_get_setup(GaimAccount *account);
 
 /**
  * Makes a connection to the specified host and port.  Note that this
@@ -227,7 +227,7 @@ GaimProxyInfo *gaim_proxy_get_setup(GaimAccount *account);
  * @param handle     A handle that should be associated with this
  *                   connection attempt.  The handle can be used
  *                   to cancel the connection attempt using the
- *                   gaim_proxy_connect_cancel_with_handle()
+ *                   purple_proxy_connect_cancel_with_handle()
  *                   function.
  * @param account    The account making the connection.
  * @param host       The destination host.
@@ -242,7 +242,7 @@ GaimProxyInfo *gaim_proxy_get_setup(GaimAccount *account);
  *         structure that can be used to cancel the pending
  *         connection, if needed.
  */
-GaimProxyConnectData *gaim_proxy_connect(void *handle,
+GaimProxyConnectData *purple_proxy_connect(void *handle,
 			GaimAccount *account,
 			const char *host, int port,
 			GaimProxyConnectFunction connect_cb, gpointer data);
@@ -263,7 +263,7 @@ GaimProxyConnectData *gaim_proxy_connect(void *handle,
  *         structure that can be used to cancel the pending
  *         connection, if needed.
  */
-GaimProxyConnectData *gaim_proxy_connect_socks5(void *handle,
+GaimProxyConnectData *purple_proxy_connect_socks5(void *handle,
 			GaimProxyInfo *gpi,
 			const char *host, int port,
 			GaimProxyConnectFunction connect_cb, gpointer data);
@@ -277,14 +277,14 @@ GaimProxyConnectData *gaim_proxy_connect_socks5(void *handle,
  * attempt early rather than just letting the OS's TCP/IP stack
  * time-out the connection.
  */
-void gaim_proxy_connect_cancel(GaimProxyConnectData *connect_data);
+void purple_proxy_connect_cancel(GaimProxyConnectData *connect_data);
 
 /*
  * Closes all proxy connections registered with the specified handle.
  *
  * @param handle The handle.
  */
-void gaim_proxy_connect_cancel_with_handle(void *handle);
+void purple_proxy_connect_cancel_with_handle(void *handle);
 
 /*@}*/
 

@@ -1,7 +1,7 @@
 /**
  * @file chat.h Chat stuff
  *
- * gaim
+ * purple
  *
  * Copyright (C) 2003 Nathan Walp <faceprint@faceprint.com>
  *

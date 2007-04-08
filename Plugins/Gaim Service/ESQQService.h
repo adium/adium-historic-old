@@ -5,9 +5,9 @@
 //  Created by Evan Schoenberg on 8/7/06.
 //
 
-#import "GaimService.h"
+#import "PurpleService.h"
 
-@interface ESQQService : GaimService {
+@interface ESQQService : PurpleService {
 
 }
 

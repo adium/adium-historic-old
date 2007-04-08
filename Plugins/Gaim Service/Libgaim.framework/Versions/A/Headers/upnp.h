@@ -2,7 +2,7 @@
  * @file upnp.h Universal Plug N Play API
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -45,7 +45,7 @@ typedef void (*GaimUPnPCallback) (gboolean success, gpointer data);
 /**
  * Initialize UPnP
  */
-void gaim_upnp_init(void);
+void purple_upnp_init(void);
 
 
 /**
@@ -58,17 +58,17 @@ void gaim_upnp_init(void);
  *           discovery is complete
  * @param cb_data Extra data to be passed to the callback
  */
-void gaim_upnp_discover(GaimUPnPCallback cb, gpointer cb_data);
+void purple_upnp_discover(GaimUPnPCallback cb, gpointer cb_data);
 
 #if 0
 /**
  * Retrieve the current UPnP control info, if there is any available.
- * This will only be filled in if gaim_upnp_discover() had been called,
+ * This will only be filled in if purple_upnp_discover() had been called,
  * and finished discovering.
  *
  * @return The control URL for the IGD we'll use to use the IGD services
  */
-const GaimUPnPControlInfo* gaim_upnp_get_control_info(void);
+const GaimUPnPControlInfo* purple_upnp_get_control_info(void);
 #endif
 
 /**
@@ -79,19 +79,19 @@ const GaimUPnPControlInfo* gaim_upnp_get_control_info(void);
  *
  * @return The IP address of the network, or NULL if something went wrong
  */
-const gchar* gaim_upnp_get_public_ip(void);
+const gchar* purple_upnp_get_public_ip(void);
 
 /**
  * Cancel a pending port mapping request initiated with either
- * gaim_upnp_set_port_mapping() or gaim_upnp_remove_port_mapping().
+ * purple_upnp_set_port_mapping() or purple_upnp_remove_port_mapping().
  *
  * @param mapping_data The data returned when you initiated the UPnP mapping request.
  */
-void gaim_upnp_cancel_port_mapping(UPnPMappingAddRemove *mapping_data);
+void purple_upnp_cancel_port_mapping(UPnPMappingAddRemove *mapping_data);
 
 /**
  * Maps Ports in a UPnP enabled IGD that sits on the local network to
- * this gaim client. Essentially, this function takes care of the port
+ * this purple client. Essentially, this function takes care of the port
  * forwarding so things like file transfers can work behind NAT firewalls
  *
  * @param portmap The port to map to this client
@@ -100,14 +100,14 @@ void gaim_upnp_cancel_port_mapping(UPnPMappingAddRemove *mapping_data);
  *           addition is complete
  * @param cb_data Extra data to be passed to the callback
  *
- * @return Data which can be passed to gaim_upnp_port_mapping_cancel() to cancel
+ * @return Data which can be passed to purple_upnp_port_mapping_cancel() to cancel
  */
-UPnPMappingAddRemove *gaim_upnp_set_port_mapping(unsigned short portmap, const gchar* protocol,
+UPnPMappingAddRemove *purple_upnp_set_port_mapping(unsigned short portmap, const gchar* protocol,
 		GaimUPnPCallback cb, gpointer cb_data);
 
 /**
  * Deletes a port mapping in a UPnP enabled IGD that sits on the local network
- * to this gaim client. Essentially, this function takes care of deleting the
+ * to this purple client. Essentially, this function takes care of deleting the
  * port forwarding after they have completed a connection so another client on
  * the local network can take advantage of the port forwarding
  *
@@ -117,9 +117,9 @@ UPnPMappingAddRemove *gaim_upnp_set_port_mapping(unsigned short portmap, const g
  *           removal is complete
  * @param cb_data Extra data to be passed to the callback
  *
- * @return Data which can be passed to gaim_upnp_port_mapping_cancel() to cancel
+ * @return Data which can be passed to purple_upnp_port_mapping_cancel() to cancel
  */
-UPnPMappingAddRemove *gaim_upnp_remove_port_mapping(unsigned short portmap,
+UPnPMappingAddRemove *purple_upnp_remove_port_mapping(unsigned short portmap,
 		const gchar* protocol, GaimUPnPCallback cb, gpointer cb_data);
 
 /*@}*/

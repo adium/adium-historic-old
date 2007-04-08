@@ -2,7 +2,7 @@
  * @file value.h Value wrapper API
  * @ingroup core
  *
- * gaim
+ * purple
  *
  * Gaim is the legal property of its developers, whose names are too numerous
  * to list here.  Please refer to the COPYRIGHT file distributed with this
@@ -140,7 +140,7 @@ extern "C" {
  *
  * @return The new value.
  */
-GaimValue *gaim_value_new(GaimType type, ...);
+GaimValue *purple_value_new(GaimType type, ...);
 
 /**
  * Creates a new outgoing GaimValue.  If a value is an "outgoing" value
@@ -162,14 +162,14 @@ GaimValue *gaim_value_new(GaimType type, ...);
  *
  * @return The new value.
  */
-GaimValue *gaim_value_new_outgoing(GaimType type, ...);
+GaimValue *purple_value_new_outgoing(GaimType type, ...);
 
 /**
  * Destroys a GaimValue.
  *
  * @param value The value to destroy.
  */
-void gaim_value_destroy(GaimValue *value);
+void purple_value_destroy(GaimValue *value);
 
 /**
  * Duplicated a GaimValue.
@@ -178,7 +178,7 @@ void gaim_value_destroy(GaimValue *value);
  *
  * @return The duplicate value.
  */
-GaimValue *gaim_value_dup(const GaimValue *value);
+GaimValue *purple_value_dup(const GaimValue *value);
 
 /**
  * Returns a value's type.
@@ -187,7 +187,7 @@ GaimValue *gaim_value_dup(const GaimValue *value);
  *
  * @return The value's type.
  */
-GaimType gaim_value_get_type(const GaimValue *value);
+GaimType purple_value_get_type(const GaimValue *value);
 
 /**
  * Returns a value's subtype.
@@ -199,7 +199,7 @@ GaimType gaim_value_get_type(const GaimValue *value);
  *
  * @return The value's subtype, or 0 if @a type is not GAIM_TYPE_SUBTYPE.
  */
-unsigned int gaim_value_get_subtype(const GaimValue *value);
+unsigned int purple_value_get_subtype(const GaimValue *value);
 
 /**
  * Returns a value's specific type.
@@ -210,7 +210,7 @@ unsigned int gaim_value_get_subtype(const GaimValue *value);
  *
  * @return The value's specific type, or @a NULL if not GAIM_TYPE_BOXED.
  */
-const char *gaim_value_get_specific_type(const GaimValue *value);
+const char *purple_value_get_specific_type(const GaimValue *value);
 
 /**
  * Returns whether or not the value is an outgoing value.
@@ -219,7 +219,7 @@ const char *gaim_value_get_specific_type(const GaimValue *value);
  *
  * @return TRUE if the value is outgoing, or FALSE otherwise.
  */
-gboolean gaim_value_is_outgoing(const GaimValue *value);
+gboolean purple_value_is_outgoing(const GaimValue *value);
 
 /**
  * Sets the value's character data.
@@ -227,7 +227,7 @@ gboolean gaim_value_is_outgoing(const GaimValue *value);
  * @param value The value.
  * @param data The character data.
  */
-void gaim_value_set_char(GaimValue *value, char data);
+void purple_value_set_char(GaimValue *value, char data);
 
 /**
  * Sets the value's unsigned character data.
@@ -235,7 +235,7 @@ void gaim_value_set_char(GaimValue *value, char data);
  * @param value The value.
  * @param data The unsigned character data.
  */
-void gaim_value_set_uchar(GaimValue *value, unsigned char data);
+void purple_value_set_uchar(GaimValue *value, unsigned char data);
 
 /**
  * Sets the value's boolean data.
@@ -243,7 +243,7 @@ void gaim_value_set_uchar(GaimValue *value, unsigned char data);
  * @param value The value.
  * @param data The boolean data.
  */
-void gaim_value_set_boolean(GaimValue *value, gboolean data);
+void purple_value_set_boolean(GaimValue *value, gboolean data);
 
 /**
  * Sets the value's short integer data.
@@ -251,7 +251,7 @@ void gaim_value_set_boolean(GaimValue *value, gboolean data);
  * @param value The value.
  * @param data The short integer data.
  */
-void gaim_value_set_short(GaimValue *value, short data);
+void purple_value_set_short(GaimValue *value, short data);
 
 /**
  * Sets the value's unsigned short integer data.
@@ -259,7 +259,7 @@ void gaim_value_set_short(GaimValue *value, short data);
  * @param value The value.
  * @param data The unsigned short integer data.
  */
-void gaim_value_set_ushort(GaimValue *value, unsigned short data);
+void purple_value_set_ushort(GaimValue *value, unsigned short data);
 
 /**
  * Sets the value's integer data.
@@ -267,7 +267,7 @@ void gaim_value_set_ushort(GaimValue *value, unsigned short data);
  * @param value The value.
  * @param data The integer data.
  */
-void gaim_value_set_int(GaimValue *value, int data);
+void purple_value_set_int(GaimValue *value, int data);
 
 /**
  * Sets the value's unsigned integer data.
@@ -275,7 +275,7 @@ void gaim_value_set_int(GaimValue *value, int data);
  * @param value The value.
  * @param data The unsigned integer data.
  */
-void gaim_value_set_uint(GaimValue *value, unsigned int data);
+void purple_value_set_uint(GaimValue *value, unsigned int data);
 
 /**
  * Sets the value's long integer data.
@@ -283,7 +283,7 @@ void gaim_value_set_uint(GaimValue *value, unsigned int data);
  * @param value The value.
  * @param data The long integer data.
  */
-void gaim_value_set_long(GaimValue *value, long data);
+void purple_value_set_long(GaimValue *value, long data);
 
 /**
  * Sets the value's unsigned long integer data.
@@ -291,7 +291,7 @@ void gaim_value_set_long(GaimValue *value, long data);
  * @param value The value.
  * @param data The unsigned long integer data.
  */
-void gaim_value_set_ulong(GaimValue *value, unsigned long data);
+void purple_value_set_ulong(GaimValue *value, unsigned long data);
 
 /**
  * Sets the value's 64-bit integer data.
@@ -299,7 +299,7 @@ void gaim_value_set_ulong(GaimValue *value, unsigned long data);
  * @param value The value.
  * @param data The 64-bit integer data.
  */
-void gaim_value_set_int64(GaimValue *value, gint64 data);
+void purple_value_set_int64(GaimValue *value, gint64 data);
 
 /**
  * Sets the value's unsigned 64-bit integer data.
@@ -307,7 +307,7 @@ void gaim_value_set_int64(GaimValue *value, gint64 data);
  * @param value The value.
  * @param data The unsigned 64-bit integer data.
  */
-void gaim_value_set_uint64(GaimValue *value, guint64 data);
+void purple_value_set_uint64(GaimValue *value, guint64 data);
 
 /**
  * Sets the value's string data.
@@ -315,7 +315,7 @@ void gaim_value_set_uint64(GaimValue *value, guint64 data);
  * @param value The value.
  * @param data The string data.
  */
-void gaim_value_set_string(GaimValue *value, const char *data);
+void purple_value_set_string(GaimValue *value, const char *data);
 
 /**
  * Sets the value's object data.
@@ -323,7 +323,7 @@ void gaim_value_set_string(GaimValue *value, const char *data);
  * @param value The value.
  * @param data The object data.
  */
-void gaim_value_set_object(GaimValue *value, void *data);
+void purple_value_set_object(GaimValue *value, void *data);
 
 /**
  * Sets the value's pointer data.
@@ -331,7 +331,7 @@ void gaim_value_set_object(GaimValue *value, void *data);
  * @param value The value.
  * @param data The pointer data.
  */
-void gaim_value_set_pointer(GaimValue *value, void *data);
+void purple_value_set_pointer(GaimValue *value, void *data);
 
 /**
  * Sets the value's enum data.
@@ -339,7 +339,7 @@ void gaim_value_set_pointer(GaimValue *value, void *data);
  * @param value The value.
  * @param data The enum data.
  */
-void gaim_value_set_enum(GaimValue *value, int data);
+void purple_value_set_enum(GaimValue *value, int data);
 
 /**
  * Sets the value's boxed data.
@@ -347,7 +347,7 @@ void gaim_value_set_enum(GaimValue *value, int data);
  * @param value The value.
  * @param data The boxed data.
  */
-void gaim_value_set_boxed(GaimValue *value, void *data);
+void purple_value_set_boxed(GaimValue *value, void *data);
 
 /**
  * Returns the value's character data.
@@ -356,7 +356,7 @@ void gaim_value_set_boxed(GaimValue *value, void *data);
  *
  * @return The character data.
  */
-char gaim_value_get_char(const GaimValue *value);
+char purple_value_get_char(const GaimValue *value);
 
 /**
  * Returns the value's unsigned character data.
@@ -365,7 +365,7 @@ char gaim_value_get_char(const GaimValue *value);
  *
  * @return The unsigned character data.
  */
-unsigned char gaim_value_get_uchar(const GaimValue *value);
+unsigned char purple_value_get_uchar(const GaimValue *value);
 
 /**
  * Returns the value's boolean data.
@@ -374,7 +374,7 @@ unsigned char gaim_value_get_uchar(const GaimValue *value);
  *
  * @return The boolean data.
  */
-gboolean gaim_value_get_boolean(const GaimValue *value);
+gboolean purple_value_get_boolean(const GaimValue *value);
 
 /**
  * Returns the value's short integer data.
@@ -383,7 +383,7 @@ gboolean gaim_value_get_boolean(const GaimValue *value);
  *
  * @return The short integer data.
  */
-short gaim_value_get_short(const GaimValue *value);
+short purple_value_get_short(const GaimValue *value);
 
 /**
  * Returns the value's unsigned short integer data.
@@ -392,7 +392,7 @@ short gaim_value_get_short(const GaimValue *value);
  *
  * @return The unsigned short integer data.
  */
-unsigned short gaim_value_get_ushort(const GaimValue *value);
+unsigned short purple_value_get_ushort(const GaimValue *value);
 
 /**
  * Returns the value's integer data.
@@ -401,7 +401,7 @@ unsigned short gaim_value_get_ushort(const GaimValue *value);
  *
  * @return The integer data.
  */
-int gaim_value_get_int(const GaimValue *value);
+int purple_value_get_int(const GaimValue *value);
 
 /**
  * Returns the value's unsigned integer data.
@@ -410,7 +410,7 @@ int gaim_value_get_int(const GaimValue *value);
  *
  * @return The unsigned integer data.
  */
-unsigned int gaim_value_get_uint(const GaimValue *value);
+unsigned int purple_value_get_uint(const GaimValue *value);
 
 /**
  * Returns the value's long integer data.
@@ -419,7 +419,7 @@ unsigned int gaim_value_get_uint(const GaimValue *value);
  *
  * @return The long integer data.
  */
-long gaim_value_get_long(const GaimValue *value);
+long purple_value_get_long(const GaimValue *value);
 
 /**
  * Returns the value's unsigned long integer data.
@@ -428,7 +428,7 @@ long gaim_value_get_long(const GaimValue *value);
  *
  * @return The unsigned long integer data.
  */
-unsigned long gaim_value_get_ulong(const GaimValue *value);
+unsigned long purple_value_get_ulong(const GaimValue *value);
 
 /**
  * Returns the value's 64-bit integer data.
@@ -437,7 +437,7 @@ unsigned long gaim_value_get_ulong(const GaimValue *value);
  *
  * @return The 64-bit integer data.
  */
-gint64 gaim_value_get_int64(const GaimValue *value);
+gint64 purple_value_get_int64(const GaimValue *value);
 
 /**
  * Returns the value's unsigned 64-bit integer data.
@@ -446,7 +446,7 @@ gint64 gaim_value_get_int64(const GaimValue *value);
  *
  * @return The unsigned 64-bit integer data.
  */
-guint64 gaim_value_get_uint64(const GaimValue *value);
+guint64 purple_value_get_uint64(const GaimValue *value);
 
 /**
  * Returns the value's string data.
@@ -455,7 +455,7 @@ guint64 gaim_value_get_uint64(const GaimValue *value);
  *
  * @return The string data.
  */
-const char *gaim_value_get_string(const GaimValue *value);
+const char *purple_value_get_string(const GaimValue *value);
 
 /**
  * Returns the value's object data.
@@ -464,7 +464,7 @@ const char *gaim_value_get_string(const GaimValue *value);
  *
  * @return The object data.
  */
-void *gaim_value_get_object(const GaimValue *value);
+void *purple_value_get_object(const GaimValue *value);
 
 /**
  * Returns the value's pointer data.
@@ -473,7 +473,7 @@ void *gaim_value_get_object(const GaimValue *value);
  *
  * @return The pointer data.
  */
-void *gaim_value_get_pointer(const GaimValue *value);
+void *purple_value_get_pointer(const GaimValue *value);
 
 /**
  * Returns the value's enum data.
@@ -482,7 +482,7 @@ void *gaim_value_get_pointer(const GaimValue *value);
  *
  * @return The enum data.
  */
-int gaim_value_get_enum(const GaimValue *value);
+int purple_value_get_enum(const GaimValue *value);
 
 /**
  * Returns the value's boxed data.
@@ -491,7 +491,7 @@ int gaim_value_get_enum(const GaimValue *value);
  *
  * @return The boxed data.
  */
-void *gaim_value_get_boxed(const GaimValue *value);
+void *purple_value_get_boxed(const GaimValue *value);
 
 #ifdef __cplusplus
 }
