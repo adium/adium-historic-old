@@ -1,4 +1,4 @@
-//#include "Libpurple/purple-compat.h"
+#include "Libpurple/gaim-compat.h"
 #include "Libpurple/internal.h"
 #include "Libpurple/connection.h"
 #include "Libpurple/conversation.h"
