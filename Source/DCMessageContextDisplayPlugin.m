@@ -50,6 +50,8 @@
 @interface DCMessageContextDisplayPlugin (PRIVATE)
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime;
+- (void)old_preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+								object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime;
 - (BOOL)contextShouldBeDisplayed:(NSCalendarDate *)inDate;
 - (NSArray *)contextForChat:(AIChat *)chat;
 @end
@@ -67,17 +69,17 @@
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTEXT_DISPLAY_DEFAULTS
 																		forClass:[self class]] 
 										  forGroup:PREF_GROUP_CONTEXT_DISPLAY];
-	
-    //Observe preference changes
-	//[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTEXT_DISPLAY];
-	
+		
 	//Obtain the default preferences and use them - Adium 1.1 experiment to see if people use these prefs
-	[self preferencesChangedForGroup:PREF_GROUP_CONTEXT_DISPLAY
+	[self old_preferencesChangedForGroup:PREF_GROUP_CONTEXT_DISPLAY
 								 key:nil
 							  object:nil
 					  preferenceDict:[NSDictionary dictionaryNamed:CONTEXT_DISPLAY_DEFAULTS
 														  forClass:[self class]]
 						   firstTime:YES];
+	
+	//Observe preference changes for whether or not to display message history
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTEXT_DISPLAY];
 }
 
 /**
@@ -89,24 +91,11 @@
 	[[adium notificationCenter] removeObserver:self];
 }
 
-/**
- * @brief Preferences for when to display history changed
- *
- * Only change our preferences in response to global preference notifications; specific objects use this group as well.
- */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+								object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if (!object) {
-		haveTalkedDays = [[prefDict objectForKey:KEY_HAVE_TALKED_DAYS] intValue];
-		haveNotTalkedDays = [[prefDict objectForKey:KEY_HAVE_NOT_TALKED_DAYS] intValue];
-		displayMode = [[prefDict objectForKey:KEY_DISPLAY_MODE] intValue];
-		
-		haveTalkedUnits = [[prefDict objectForKey:KEY_HAVE_TALKED_UNITS] intValue];
-		haveNotTalkedUnits = [[prefDict objectForKey:KEY_HAVE_NOT_TALKED_UNITS] intValue];
-		
+	if (!object) {		
 		shouldDisplay = [[prefDict objectForKey:KEY_DISPLAY_CONTEXT] boolValue];
-		linesToDisplay = [[prefDict objectForKey:KEY_DISPLAY_LINES] intValue];
 		
 		if (shouldDisplay && linesToDisplay > 0 && !isObserving) {
 			//Observe new message windows only if we aren't already observing them
@@ -122,6 +111,26 @@
 			[[adium notificationCenter] removeObserver:self name:Chat_DidOpen object:nil];
 			
 		}
+	}
+}
+/**
+ * @brief Preferences for when to display history changed
+ *
+ * Only change our preferences in response to global preference notifications; specific objects use this group as well.
+ */
+- (void)old_preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	if (!object) {
+		haveTalkedDays = [[prefDict objectForKey:KEY_HAVE_TALKED_DAYS] intValue];
+		haveNotTalkedDays = [[prefDict objectForKey:KEY_HAVE_NOT_TALKED_DAYS] intValue];
+		displayMode = [[prefDict objectForKey:KEY_DISPLAY_MODE] intValue];
+		
+		haveTalkedUnits = [[prefDict objectForKey:KEY_HAVE_TALKED_UNITS] intValue];
+		haveNotTalkedUnits = [[prefDict objectForKey:KEY_HAVE_NOT_TALKED_UNITS] intValue];
+		
+		shouldDisplay = [[prefDict objectForKey:KEY_DISPLAY_CONTEXT] boolValue];
+		linesToDisplay = [[prefDict objectForKey:KEY_DISPLAY_LINES] intValue];
 	}
 }
 
