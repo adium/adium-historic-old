@@ -34,6 +34,7 @@
 #import <Adium/AIAccountMenu.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
+#import <QuartzCore/CoreImage.h>
 
 #define STATUS_ITEM_MARGIN 8
 
@@ -43,6 +44,7 @@
 - (NSImage *)badgeDuck:(NSImage *)duckImage withImage:(NSImage *)inImage;
 - (void)updateMenuIcons;
 - (void)updateMenuIconsBundle;
+- (NSImage *)alternateImageForImage:(NSImage *)inImage;
 @end
 
 @implementation CBStatusMenuItemController
@@ -282,9 +284,50 @@
 		}
 	}
 	
-	// Set our icon, and highlight icon, to a badged version.
-	[statusItem setImage:[self badgeDuck:[menuIcons imageOfType:imageName] withImage:badge]];
-	[statusItem setAlternateImage:[self badgeDuck:[menuIcons imageHighlightOfType:imageName] withImage:badge]];
+	NSImage *menuIcon = [menuIcons imageOfType:imageName];
+	
+	// Set our icon.
+	[statusItem setImage:[self badgeDuck:menuIcon withImage:badge]];
+	// Generate the highlight image, badge it, and set it.
+	[statusItem setAlternateImage:[self badgeDuck:[self alternateImageForImage:menuIcon] withImage:badge]];
+}
+
+// Returns an inverted image.
+- (NSImage *)alternateImageForImage:(NSImage *)inImage
+{
+	NSImage				*altImage = [[NSImage alloc] initWithSize:[inImage size]];
+	NSBitmapImageRep	*srcImageRep = [inImage bitmapRep];
+
+	id monochromeFilter, invertFilter, alphaFilter;
+	
+	monochromeFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
+	[monochromeFilter setValue:[[[CIImage alloc] initWithBitmapImageRep:srcImageRep] autorelease]
+						forKey:@"inputImage"]; 
+	[monochromeFilter setValue:[NSNumber numberWithFloat:1.0]
+						forKey:@"inputIntensity"];
+	[monochromeFilter setValue:[[[CIColor alloc] initWithColor:[NSColor blackColor]] autorelease]
+						forKey:@"inputColor"];
+	
+	//Now invert our greyscale image
+	invertFilter = [CIFilter filterWithName:@"CIColorInvert"];
+	[invertFilter setValue:[monochromeFilter valueForKey:@"outputImage"]
+					forKey:@"inputImage"]; 
+	
+	//And turn the parts that were previously white (are now black) into transparent
+	alphaFilter = [CIFilter filterWithName:@"CIMaskToAlpha"];
+	[alphaFilter setValue:[invertFilter valueForKey:@"outputImage"]
+				   forKey:@"inputImage"]; 
+	
+	[altImage lockFocus];
+	id context = [CIContext contextWithCGContext:[[NSGraphicsContext currentContext] graphicsPort] 
+									   options:nil];
+	id result = [alphaFilter valueForKey:@"outputImage"];
+	[context drawImage:result
+			   atPoint:CGPointZero
+			  fromRect:[result extent]];
+	[altImage unlockFocus];
+	
+	return [altImage autorelease];
 }
 
 - (NSImage *)badgeDuck:(NSImage *)duckImage withImage:(NSImage *)badgeImage {
