@@ -14,9 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIPreferencePane.h>
+#import <Adium/AIAdvancedPreferencePane.h>
 
-@interface TabsAdvancedPreferences : AIPreferencePane {
+@interface TabsAdvancedPreferences : AIAdvancedPreferencePane {
 	IBOutlet	NSButton		*autohide_tabBar;
     IBOutlet    NSButton		*checkBox_allowInactiveClosing;
 	IBOutlet	NSButton		*checkBox_overflowMenu;
