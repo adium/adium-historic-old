@@ -222,9 +222,7 @@ static NSArray *validSenderColors;
 {
 	if (!format || [format length] == 0) {
 		format = [NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:NO];
-		NSLog(@"Setting timestamp format to default");
 	}
-	NSLog(@"Set timestamp format to %@", format);
 	[timeStampFormatter release];
 	timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:format allowNaturalLanguage:NO];
 }
