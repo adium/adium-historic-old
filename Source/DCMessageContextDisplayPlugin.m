@@ -69,7 +69,15 @@
 										  forGroup:PREF_GROUP_CONTEXT_DISPLAY];
 	
     //Observe preference changes
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTEXT_DISPLAY];
+	//[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTEXT_DISPLAY];
+	
+	//Obtain the default preferences and use them - Adium 1.1 experiment to see if people use these prefs
+	[self preferencesChangedForGroup:PREF_GROUP_CONTEXT_DISPLAY
+								 key:nil
+							  object:nil
+					  preferenceDict:[NSDictionary dictionaryNamed:CONTEXT_DISPLAY_DEFAULTS
+														  forClass:[self class]]
+						   firstTime:YES];
 }
 
 /**
