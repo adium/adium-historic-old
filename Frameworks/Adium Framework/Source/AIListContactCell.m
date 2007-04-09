@@ -148,8 +148,7 @@
 		statusFont = [inFont retain];
 		
 		//Calculate and cache the height of this font
-		statusFontHeight = [NSAttributedString stringHeightForAttributes:[NSDictionary dictionaryWithObject:[self statusFont]
-																									 forKey:NSFontAttributeName]];
+		statusFontHeight = [[[[NSLayoutManager alloc] init] autorelease] defaultLineHeightForFont:[self statusFont]];
 		
 		//Flush the status attributes cache
 		[_statusAttributes release]; _statusAttributes = nil;
