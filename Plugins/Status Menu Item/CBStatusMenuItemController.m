@@ -245,7 +245,7 @@
 				
 				// Check each account for IdleSince
 				while ((account = [enumerator nextObject])) {
-					if ([account statusObjectForKey:@"IdleSince"]) {
+					if ([account online] && [account statusObjectForKey:@"IdleSince"]) {
 						isIdle = TRUE;
 						break;
 					}
