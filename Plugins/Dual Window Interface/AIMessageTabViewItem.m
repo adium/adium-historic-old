@@ -21,6 +21,7 @@
 #import "AIContactController.h"
 #import "AIDualWindowInterfacePlugin.h"
 #import <AIUtilities/AICustomTabsView.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIServiceIcons.h>
@@ -270,6 +271,16 @@
 	return tabViewItemImage;
 }
 
+- (void)setLargeImage:(NSImage *)inImage
+{
+	
+}
+
+- (NSImage *)largeImage
+{
+	return [[[self chat] chatImage] imageByScalingToSize:NSMakeSize(48,48)];
+}
+
 //bindings methods for PSMTabBarControl
 
 - (void)setObjectCount:(NSNumber *)number
@@ -280,8 +291,8 @@
 - (int)objectCount
 {
 	//return 0 to disable the badge
-    return [[[adium preferenceController] preferenceForKey:KEY_TABBAR_SHOW_UNREAD_COUNT group:PREF_GROUP_DUAL_WINDOW_INTERFACE] boolValue] ?
-		[[self chat] unviewedContentCount] : 0;
+    return ([[[adium preferenceController] preferenceForKey:KEY_TABBAR_SHOW_UNREAD_COUNT group:PREF_GROUP_DUAL_WINDOW_INTERFACE] boolValue] ?
+			[[self chat] unviewedContentCount] : 0);
 }
 
 @end

@@ -32,7 +32,6 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIWindowAdditions.h>
-#import <AIUtilities/AISplitView.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
@@ -40,6 +39,7 @@
 #import <PSMTabBarControl/PSMOverflowPopUpButton.h>
 #import <PSMTabBarControl/PSMAdiumTabStyle.h>
 #import <PSMTabBarControl/PSMTabStyle.h>
+#import "AIMessageTabSplitView.h"
 
 #define KEY_MESSAGE_WINDOW_POSITION 			@"Message Window"
 
@@ -356,9 +356,8 @@
 				NSRect splitViewRect = [[[self window] contentView] frame];
 				splitViewRect.size.width++;
 				splitViewRect.size.height++;
-				tabView_splitView = [[[AISplitView alloc] initWithFrame:splitViewRect] autorelease];
-				[tabView_splitView setDividerThickness:6];
-				[tabView_splitView setDrawsDivider:NO];
+				tabView_splitView = [[[AIMessageTabSplitView alloc] initWithFrame:splitViewRect] autorelease];
+				[tabView_splitView setDividerThickness:4];
 				[tabView_splitView setVertical:YES];
 				[tabView_splitView setDelegate:self];
 				if (tabPosition == AdiumTabPositionLeft) {
@@ -593,26 +592,26 @@
 //handles the minimum size of vertical tabs
 - (float)splitView:(NSSplitView *)sender constrainMinCoordinate:(float)proposedMin ofSubviewAt:(int)offset
 {
-	return tabPosition == 2 ? 50 : [sender frame].size.width - 250 - [sender dividerThickness];
+	return (tabPosition == 2 ? 50 : [sender frame].size.width - 250 - [sender dividerThickness]);
 }
 
 //handles the maximum size of vertical tabs
 - (float)splitView:(NSSplitView *)sender constrainMaxCoordinate:(float)proposedMax ofSubviewAt:(int)offset
 {
-	return tabPosition == 2 ? 250 : proposedMax - 50;
+	return (tabPosition == 2 ? 250 : proposedMax - 50);
 }
 
 - (void)splitView:(NSSplitView *)sender resizeSubviewsWithOldSize:(NSSize)oldSize
 {
 	NSRect messageFrame = [tabView_messages frame], tabBarFrame = [tabView_tabBar frame];
-	messageFrame.size = NSMakeSize([sender frame].size.width - tabBarFrame.size.width - 6, [sender frame].size.height);
+	messageFrame.size = NSMakeSize([sender frame].size.width - tabBarFrame.size.width - [sender dividerThickness], [sender frame].size.height);
 	tabBarFrame.size = NSMakeSize(tabBarFrame.size.width, [sender frame].size.height);
 	
 	if (tabPosition == AdiumTabPositionLeft) {
-		messageFrame.origin.x = tabBarFrame.size.width + 6;
+		messageFrame.origin.x = tabBarFrame.size.width + [sender dividerThickness];
 	} else {
 		messageFrame.origin.x = 0;
-		tabBarFrame.origin.x = messageFrame.size.width + 6;
+		tabBarFrame.origin.x = messageFrame.size.width + [sender dividerThickness];
 	}
 	
 	[tabView_messages setFrame:messageFrame];

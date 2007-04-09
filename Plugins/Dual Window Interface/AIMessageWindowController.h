@@ -28,7 +28,7 @@ typedef enum
 	AdiumTabPositionRight,
 } AdiumTabPosition;
 
-@class AIMessageSendingTextView, AIMessageTabViewItem, AIMessageViewController, AIDualWindowInterfacePlugin, AISplitView;
+@class AIMessageSendingTextView, AIMessageTabViewItem, AIMessageViewController, AIDualWindowInterfacePlugin, AIMessageTabSplitView;
 @class PSMTabBarControl, PSMAdiumTabStyle;
 @protocol AIFlexibleToolbarItemDelegate;
 
@@ -36,7 +36,7 @@ typedef enum
     IBOutlet	NSTabView			*tabView_messages;
     IBOutlet	PSMTabBarControl	*tabView_tabBar;
 	PSMAdiumTabStyle				*tabView_tabStyle;
-	AISplitView						*tabView_splitView;
+	AIMessageTabSplitView			*tabView_splitView;
     AIDualWindowInterfacePlugin 	*interface;
 	NSString						*containerName;
 	NSString						*containerID;
