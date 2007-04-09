@@ -21,9 +21,6 @@
 
 @implementation TabsAdvancedPreferences
 
-- (AIPreferenceCategory)category {
-    return AIPref_Advanced;
-}
 - (NSString *)label {
     return AILocalizedString(@"Tabs", nil);
 }
