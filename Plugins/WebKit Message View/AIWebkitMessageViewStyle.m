@@ -222,7 +222,9 @@ static NSArray *validSenderColors;
 {
 	if (!format || [format length] == 0) {
 		format = [NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:NO];
+		NSLog(@"Setting timestamp format to default");
 	}
+	NSLog(@"Set timestamp format to %@", format);
 	[timeStampFormatter release];
 	timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:format allowNaturalLanguage:NO];
 }
@@ -670,8 +672,13 @@ static NSArray *validSenderColors;
 							}
 						}
 					}
+					//Test both displayName and formattedUID for nil-ness. If they're both nil, the assertion will trip.
 					if (!senderDisplay) {
 						senderDisplay = displayName;
+						if (!senderDisplay) {
+							senderDisplay = formattedUID;
+							NSAssert1(senderDisplay, @"Sender has no known display name that we can use! displayName and formattedUID were both nil for sender %@", contentSource);
+						}
 					}
 				} else {
 					senderDisplay = [theSource longDisplayName];
