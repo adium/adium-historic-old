@@ -8,12 +8,8 @@
 	<dict>
 		<key>Offline</key>
 		<string>offline.png</string>
-		<key>OfflineHighlight</key>
-		<string>highlight.png</string>
 		<key>Online</key>
 		<string>online.png</string>
-		<key>OnlineHighlight</key>
-		<string>highlight.png</string>
 	</dict>
 	<key>Show Badge</key>
 	<true/>

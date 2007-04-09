@@ -54,6 +54,7 @@
 		110763F808676CC9005987A5 /* RAFBlockEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F408676CC9005987A5 /* RAFBlockEditorWindowController.m */; };
 		110763FA08676D05005987A5 /* BlockEditorWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 110763F908676D04005987A5 /* BlockEditorWindow.nib */; };
 		117D6DC00BC5F0C40080D02B /* notify.png in Resources */ = {isa = PBXBuildFile; fileRef = 117D6DBF0BC5F0C40080D02B /* notify.png */; };
+		11AA1EFA0BCAE9C3003DDA66 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11AA1EF90BCAE9C3003DDA66 /* Quartz.framework */; };
 		11C7CAF30BB58F4100296D7F /* AINudgeBuzzHandlerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 11C7CAF10BB58F4100296D7F /* AINudgeBuzzHandlerPlugin.m */; };
 		11F145F00B546AC500CA91F6 /* Menu Bar Icons in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11F145C70B546A6D00CA91F6 /* Menu Bar Icons */; };
 		11F1460C0B546C1200CA91F6 /* AIMenuBarIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = 11F1460A0B546C1200CA91F6 /* AIMenuBarIcons.m */; };
@@ -1528,6 +1529,7 @@
 		110763F408676CC9005987A5 /* RAFBlockEditorWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFBlockEditorWindowController.m; path = Source/RAFBlockEditorWindowController.m; sourceTree = "<group>"; };
 		110763F908676D04005987A5 /* BlockEditorWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = BlockEditorWindow.nib; path = Resources/BlockEditorWindow.nib; sourceTree = "<group>"; };
 		117D6DBF0BC5F0C40080D02B /* notify.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = notify.png; path = Resources/notify.png; sourceTree = SOURCE_ROOT; };
+		11AA1EF90BCAE9C3003DDA66 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = /System/Library/Frameworks/Quartz.framework; sourceTree = "<absolute>"; };
 		11C157D804A88E04008E0C76 /* AIEmoticonController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonController.h; path = Source/AIEmoticonController.h; sourceTree = "<group>"; };
 		11C157D904A88E04008E0C76 /* AIEmoticonController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonController.m; path = Source/AIEmoticonController.m; sourceTree = "<group>"; };
 		11C7CAF00BB58F4100296D7F /* AINudgeBuzzHandlerPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AINudgeBuzzHandlerPlugin.h; sourceTree = "<group>"; };
@@ -3728,6 +3730,7 @@
 				34EFC46C0AACC4CD0086AC43 /* FriBidi.framework in Frameworks */,
 				377EC8940AE9525B00CB7BDF /* PSMTabBarControl.framework in Frameworks */,
 				8163F99C0B318824002005EE /* Sparkle.framework in Frameworks */,
+				11AA1EFA0BCAE9C3003DDA66 /* Quartz.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3901,6 +3904,7 @@
 		29B97323FDCFA39411CA2CEA /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				11AA1EF90BCAE9C3003DDA66 /* Quartz.framework */,
 				377EC8930AE9525B00CB7BDF /* PSMTabBarControl.framework */,
 				9E1E1DFC0A96741500E16DFC /* LMX.framework */,
 				EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */,
