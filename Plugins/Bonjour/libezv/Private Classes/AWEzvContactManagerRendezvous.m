@@ -108,7 +108,7 @@ void av_resolve_reply (struct sockaddr	*interface,
 #pragma mark Announcing Functions
 - (NSArray *)currentHostAddresses
 {
-	return [[NSHost currentHost] addresses];
+	return [[[NSHost currentHost] addresses] retain];
 }
 
 - (void) login {
@@ -161,6 +161,8 @@ void av_resolve_reply (struct sockaddr	*interface,
             continue;
         break;
     }
+    
+    [currentHostAddresses release];
     
     if (instanceName == nil) {
 		[[client client] reportError:@"No available IPv4 interfaces" ofLevel:AWEzvError];
