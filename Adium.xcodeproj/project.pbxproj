@@ -225,6 +225,8 @@
 		3461621406FB482D009181D8 /* UserList Theme.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3461621006FB482C009181D8 /* UserList Theme.plist */; };
 		3461621606FB482D009181D8 /* ESChatUserListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3461621206FB482C009181D8 /* ESChatUserListController.m */; };
 		3461621706FB482D009181D8 /* UserList Layout.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3461621306FB482D009181D8 /* UserList Layout.plist */; };
+		346371070BCA0A5400AD57AD /* AIMessageTabSplitView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 346371050BCA0A5400AD57AD /* AIMessageTabSplitView.h */; };
+		346371080BCA0A5400AD57AD /* AIMessageTabSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 346371060BCA0A5400AD57AD /* AIMessageTabSplitView.m */; };
 		34677B3907CC3DAF00F59F7B /* Adium Crash Reporter.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B7F78B50597F42400162728 /* Adium Crash Reporter.app */; };
 		346935D50BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 346935D30BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.h */; };
 		346935D60BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 346935D40BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.m */; };
@@ -1503,6 +1505,7 @@
 				344836950BC8510B0083723B /* SS_PrefsController.h in CopyFiles */,
 				344839990BC8644C0083723B /* AIAdvancedPreferencesPlugin.h in CopyFiles */,
 				3448399F0BC864610083723B /* AIAdvancedPreferences.h in CopyFiles */,
+				346371070BCA0A5400AD57AD /* AIMessageTabSplitView.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2213,6 +2216,9 @@
 		34619A960BC8BF5400DF383C /* tr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = tr; path = Resources/tr.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
 		34619A970BC8BF5600DF383C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
 		34619A980BC8BF5B00DF383C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		34636E4C0BC9A90600AD57AD /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = Resources/pt_BR.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
+		346371050BCA0A5400AD57AD /* AIMessageTabSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIMessageTabSplitView.h; path = Source/AIMessageTabSplitView.h; sourceTree = "<group>"; };
+		346371060BCA0A5400AD57AD /* AIMessageTabSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIMessageTabSplitView.m; path = Source/AIMessageTabSplitView.m; sourceTree = "<group>"; };
 		3465228E08371921009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/Purple Service/zh_CN.lproj/ESPurpleOscarAccountView.nib"; sourceTree = "<group>"; };
 		3465228F08371921009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		3465229008371921009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/Purple Service/zh_CN.lproj/DCPurpleZephyrJoinChatView.nib"; sourceTree = "<group>"; };
@@ -6798,6 +6804,8 @@
 				3461621006FB482C009181D8 /* UserList Theme.plist */,
 				3461621306FB482D009181D8 /* UserList Layout.plist */,
 				377ED2590AED59BD00CB7BDF /* Tab Preferences */,
+				346371050BCA0A5400AD57AD /* AIMessageTabSplitView.h */,
+				346371060BCA0A5400AD57AD /* AIMessageTabSplitView.m */,
 			);
 			name = Messages;
 			sourceTree = "<group>";
@@ -8475,6 +8483,7 @@
 				344838B50BC860770083723B /* AIAccountListPreferences.m in Sources */,
 				3448399A0BC8644C0083723B /* AIAdvancedPreferencesPlugin.m in Sources */,
 				344839A00BC864610083723B /* AIAdvancedPreferences.m in Sources */,
+				346371080BCA0A5400AD57AD /* AIMessageTabSplitView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9837,6 +9846,7 @@
 				34695FA30A89BA3600E3B0D0 /* zh_CN */,
 				34695FA40A89BA5800E3B0D0 /* tr */,
 				342F9E590B552628000D5FC2 /* fi */,
+				34636E4C0BC9A90600AD57AD /* pt_BR */,
 			);
 			name = PersonalPreferences.nib;
 			sourceTree = "<group>";
