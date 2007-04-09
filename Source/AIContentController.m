@@ -761,8 +761,8 @@
 	NSAttributedString	*attributedMessage;
 	
 	//Create our content object
-	attributedMessage = [[NSAttributedString alloc] initWithString:message
-														attributes:[self defaultFormattingAttributes]];
+	attributedMessage = [[AIHTMLDecoder decoder] decodeHTML:message withDefaultAttributes:[self defaultFormattingAttributes]];
+
 	content = [AIContentEvent statusInChat:inChat
 								withSource:[inChat listObject]
 							   destination:[inChat account]
