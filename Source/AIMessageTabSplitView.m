@@ -10,11 +10,40 @@
 
 @implementation AIMessageTabSplitView
 
+- (void)dealloc
+{
+	[leftColor release];
+	[rightColor release];
+	[super dealloc];
+}
+
+- (void)setLeftColor:(NSColor *)inLeftColor rightColor:(NSColor *)inRightColor
+{
+	if (leftColor != inLeftColor) {
+		[leftColor release];
+		leftColor = [inLeftColor retain];
+	}
+
+	if (rightColor != inRightColor) {
+		[rightColor release];
+		rightColor = [inRightColor retain];
+	}
+	
+	[self setNeedsDisplay:YES];
+}
+
 -(void)drawDividerInRect:(NSRect)aRect
 {	
-	NSBezierPath *path = [NSBezierPath bezierPathWithRect:aRect];
-	[path linearVerticalGradientFillWithStartColor:[NSColor colorWithCalibratedWhite:0.92 alpha:1.0]
-										  endColor:[NSColor colorWithCalibratedWhite:0.91 alpha:1.0]];
+	if (rightColor && leftColor) {
+		/* 
+		 * [NSColor colorWithCalibratedWhite:0.91 alpha:1.0]
+		*/
+		NSBezierPath *path = [NSBezierPath bezierPathWithRect:aRect];
+		[path linearVerticalGradientFillWithStartColor:leftColor 
+											  endColor:rightColor];
+	} else {
+		[super drawDividerInRect:aRect];
+	}
 }
 
 @end

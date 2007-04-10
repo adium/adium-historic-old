@@ -60,6 +60,7 @@ typedef enum
 - (IBAction)closeWindow:(id)sender;
 - (NSString *)containerID;
 - (PSMTabBarControl *)tabBar;
+- (AdiumTabPosition)tabPosition;
 - (NSString *)name;
 - (AIChat *)activeChat;
 

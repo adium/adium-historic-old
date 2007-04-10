@@ -33,6 +33,7 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = AISendingTextView; 
         }, 
+        {CLASS = AIMessageTabSplitView; LANGUAGE = ObjC; SUPERCLASS = AISplitView; }, 
         {
             ACTIONS = {
                 adiumPrint = id; 

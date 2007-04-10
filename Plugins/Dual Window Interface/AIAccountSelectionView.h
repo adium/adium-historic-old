@@ -32,10 +32,15 @@
 	AIContactMenu		*contactMenu;	
     NSObject<AIAdium>	*adium;
 	AIChat				*chat;
+	
+	NSColor *leftColor;
+	NSColor *rightColor;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder;
 - (id)initWithFrame:(NSRect)frameRect;
 - (void)setChat:(AIChat *)inChat;
+
+- (void)setLeftColor:(NSColor *)inLeftColor rightColor:(NSColor *)inRightColor;
 
 @end

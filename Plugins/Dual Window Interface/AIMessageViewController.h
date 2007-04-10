@@ -16,15 +16,16 @@
 
 #import "ESChatUserListController.h"
 
-@class AIAccount, AIListContact, AIListObject, AIAccountSelectionView, AISplitView, AIMessageEntryTextView;
+@class AIAccount, AIListContact, AIListObject, AIAccountSelectionView, AIMessageTabSplitView, AIMessageEntryTextView;
+@class AIMessageWindowController;
 @protocol AIMessageViewController;
 
 @interface AIMessageViewController : AIObject <AIListControllerDelegate> {
     IBOutlet	NSView					*view_contents;
 	
 	//Split views
-	IBOutlet	AISplitView				*splitView_textEntryHorizontal;
-	IBOutlet	AISplitView				*splitView_messages;
+	IBOutlet	AIMessageTabSplitView	*splitView_textEntryHorizontal;
+	IBOutlet	AIMessageTabSplitView	*splitView_messages;
 
 	//Message Display
 	NSView								*controllerView_messages;
@@ -44,6 +45,7 @@
 	//
     NSObject<AIMessageViewController>	*messageViewController;
 	AIAccountSelectionView				*view_accountSelection;
+	AIMessageWindowController			*messageWindowController;
 
     AIChat					*chat;
 	BOOL					suppressSendLaterPrompt;
@@ -52,8 +54,8 @@
 }
 
 + (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat;
-- (void)messageViewWillLeaveWindow:(NSWindow *)inWindow;
-- (void)messageViewAddedToWindow:(NSWindow *)inWindow;
+- (void)messageViewWillLeaveWindowController:(AIMessageWindowController *)inWindowController;
+- (void)messageViewAddedToWindowController:(AIMessageWindowController *)inWindowController;
 - (AIChat *)chat;
 
 - (AIListContact *)listObject;

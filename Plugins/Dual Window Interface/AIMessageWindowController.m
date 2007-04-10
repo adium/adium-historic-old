@@ -283,8 +283,13 @@
 		
 		//change the frame of the tab bar according to the orientation
 		if (firstTime || [key isEqualToString:KEY_TABBAR_POSITION]) {
+			PSMTabBarOrientation orientation;
+			
 			tabPosition = [[prefDict objectForKey:KEY_TABBAR_POSITION] intValue];
-			PSMTabBarOrientation orientation = (tabPosition == AdiumTabPositionBottom || tabPosition == AdiumTabPositionTop) ? PSMTabBarHorizontalOrientation : PSMTabBarVerticalOrientation;
+			orientation = ((tabPosition == AdiumTabPositionBottom || tabPosition == AdiumTabPositionTop) ?
+						   PSMTabBarHorizontalOrientation :
+						   PSMTabBarVerticalOrientation);
+
 			NSRect tabBarFrame = [tabView_tabBar frame], tabViewFrame = [tabView_messages frame];
 			NSRect contentRect = [[[self window] contentView] frame];
 			
@@ -363,9 +368,13 @@
 				if (tabPosition == AdiumTabPositionLeft) {
 					[tabView_splitView addSubview:tabView_tabBar];
 					[tabView_splitView addSubview:tabView_messages];
+					[tabView_splitView setLeftColor:[NSColor colorWithCalibratedWhite:0.92 alpha:1.0]
+										 rightColor:[NSColor colorWithCalibratedWhite:0.91 alpha:1.0]];
 				} else {
 					[tabView_splitView addSubview:tabView_messages];
 					[tabView_splitView addSubview:tabView_tabBar];
+					[tabView_splitView setLeftColor:[NSColor colorWithCalibratedWhite:0.91 alpha:1.0]
+										 rightColor:[NSColor colorWithCalibratedWhite:0.92 alpha:1.0]];
 				}
 				[tabView_splitView adjustSubviews];
 				[tabView_splitView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
@@ -411,6 +420,10 @@
 	}
 }
 
+- (AdiumTabPosition)tabPosition
+{
+	return tabPosition;
+}
 
 //Contained Chats ------------------------------------------------------------------------------------------------------
 #pragma mark Contained Chats
@@ -772,18 +785,24 @@
 	[viewImage unlockFocus];
 	
 	id <PSMTabStyle> style = (id <PSMTabStyle>)[[tabView delegate] style];
-	if (tabPosition == AdiumTabPositionBottom) {
-		offset->width = [style leftMarginForTabBarControl];
-		offset->height = contentFrame.size.height;
-	} else if (tabPosition == AdiumTabPositionTop) {
-		offset->width = [style leftMarginForTabBarControl];
-		offset->height = 21;
-	} else if (tabPosition == AdiumTabPositionLeft) {
-		offset->width = 0;
-		offset->height = 21 + [style topMarginForTabBarControl];
-	} else {
-		offset->width = [tabView_tabBar frame].origin.x;
-		offset->height = 21 + [style topMarginForTabBarControl];
+	
+	switch (tabPosition) {
+		case AdiumTabPositionBottom:
+			offset->width = [style leftMarginForTabBarControl];
+			offset->height = contentFrame.size.height;
+			break;
+		case AdiumTabPositionTop:
+			offset->width = [style leftMarginForTabBarControl];
+			offset->height = 21;
+			break;
+		case AdiumTabPositionLeft:
+			offset->width = 0;
+			offset->height = 21 + [style topMarginForTabBarControl];
+			break;
+		case AdiumTabPositionRight:
+			offset->width = [tabView_tabBar frame].origin.x;
+			offset->height = 21 + [style topMarginForTabBarControl];
+			break;
 	}
 	
 	*styleMask = NSTitledWindowMask;
@@ -804,17 +823,21 @@
 	frame.origin = NSZeroPoint;
 	[[newController window] setFrame:frame display:NO];
 	
-	if (tabPosition == AdiumTabPositionBottom) {
-		point.x -= [style leftMarginForTabBarControl];
-		point.y -= 22;
-	} else if (tabPosition == AdiumTabPositionTop) {
-		point.x -= [style leftMarginForTabBarControl];
-		point.y -= [[[newController window] contentView] frame].size.height + 1;
-	} else if (tabPosition == AdiumTabPositionLeft) {
-		point.y -= [[[newController window] contentView] frame].size.height - [style topMarginForTabBarControl] + 1;
-	} else {
-		point.x -= [tabView_tabBar frame].origin.x;
-		point.y -= [[[newController window] contentView] frame].size.height - [style topMarginForTabBarControl] + 1;
+	switch (tabPosition) {
+		case AdiumTabPositionBottom:
+			point.x -= [style leftMarginForTabBarControl];
+			point.y -= 22;
+			break;
+		case AdiumTabPositionTop:
+			point.x -= [style leftMarginForTabBarControl];
+			point.y -= [[[newController window] contentView] frame].size.height + 1;
+			break;
+		case AdiumTabPositionLeft:
+			point.y -= [[[newController window] contentView] frame].size.height - [style topMarginForTabBarControl] + 1;
+			break;
+		case AdiumTabPositionRight:
+			point.x -= [tabView_tabBar frame].origin.x;
+			point.y -= [[[newController window] contentView] frame].size.height - [style topMarginForTabBarControl] + 1;
 	}
 	
 	//set the origin point of the new window
