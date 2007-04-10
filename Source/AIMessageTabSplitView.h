@@ -9,8 +9,10 @@
 #import <AIUtilities/AISplitView.h>
 
 @interface AIMessageTabSplitView : AISplitView {
-	NSImage *background;
-	NSSize backgroundSize;
+	NSColor *leftColor;
+	NSColor *rightColor;
 }
+
+- (void)setLeftColor:(NSColor *)inLeftColor rightColor:(NSColor *)inRightColor;
 
 @end

@@ -28,8 +28,7 @@
 #import <Adium/AIAccountMenu.h>
 #import <Adium/AIContactMenu.h>
 #import <Adium/AIChat.h>
-
-#define ACCOUNT_SELECTION_NIB	@"AccountSelectionView"
+#import <PSMTabBarControl/NSBezierPath_AMShading.h>
 
 #define BOX_RECT	NSMakeRect(0, 0, 300, 28)
 #define LABEL_RECT	NSMakeRect(17, 7, 56, 17)
@@ -91,9 +90,36 @@
 {
 	[self setChat:nil];
 
-    [super dealloc];
+	[leftColor release];
+	[rightColor release];
+	[super dealloc];
 }
 
+- (void)setLeftColor:(NSColor *)inLeftColor rightColor:(NSColor *)inRightColor
+{
+	if (leftColor != inLeftColor) {
+		[leftColor release];
+		leftColor = [inLeftColor retain];
+	}
+	
+	if (rightColor != inRightColor) {
+		[rightColor release];
+		rightColor = [inRightColor retain];
+	}
+	
+	[self setNeedsDisplay:YES];
+}
+
+-(void)drawRect:(NSRect)aRect
+{	
+	if (rightColor && leftColor) {
+		NSBezierPath *path = [NSBezierPath bezierPathWithRect:[self bounds]];
+		[path linearVerticalGradientFillWithStartColor:leftColor 
+											  endColor:rightColor];
+	}
+}
+
+#pragma mark Chat
 /*!
  * @brief Set the chat associated with this selection view
  *

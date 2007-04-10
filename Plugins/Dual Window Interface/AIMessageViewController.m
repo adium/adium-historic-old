@@ -14,24 +14,14 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountSelectionView.h"
+#import "AIMessageViewController.h"
 #import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
-#import "AIContactInfoWindowController.h"
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
-#import "AIDualWindowInterfacePlugin.h"
 #import <Adium/AIInterfaceControllerProtocol.h>
-#import "AIMessageViewController.h"
-#import "AIMessageWindowController.h"
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIContactAlertsControllerProtocol.h>
-#import "ESGeneralPreferencesPlugin.h"
-#import <AIUtilities/AIApplicationAdditions.h>
-#import <AIUtilities/AIAttributedStringAdditions.h>
-#import <AIUtilities/AIAutoScrollView.h>
-#import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/AISplitView.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
@@ -40,6 +30,18 @@
 #import <Adium/AIListOutlineView.h>
 #import <Adium/AIMessageEntryTextView.h>
 #import <Adium/ESTextAndButtonsWindowController.h>
+#import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIAutoScrollView.h>
+#import <AIUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/AISplitView.h>
+#import "AIAccountSelectionView.h"
+#import "AIMessageWindowController.h"
+#import "ESGeneralPreferencesPlugin.h"
+#import "AIDualWindowInterfacePlugin.h"
+#import "AIContactInfoWindowController.h"
+
+#import <PSMTabBarControl/NSBezierPath_AMShading.h>
 
 //Heights and Widths
 #define MESSAGE_VIEW_MIN_HEIGHT_RATIO		.50						//Mininum height ratio of the message view
@@ -209,23 +211,54 @@
 										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 }
 
+- (void)updateGradientColors
+{
+	NSColor *darkerColor = [NSColor colorWithCalibratedWhite:0.90 alpha:1.0];
+	NSColor *lighterColor = [NSColor colorWithCalibratedWhite:0.92 alpha:1.0];
+	NSColor *leftColor, *rightColor;
+
+	switch ([messageWindowController tabPosition]) {
+		case AdiumTabPositionBottom:
+		case AdiumTabPositionTop:
+		case AdiumTabPositionLeft:
+			leftColor = lighterColor;
+			rightColor = darkerColor;
+			break;
+		case AdiumTabPositionRight:
+			leftColor = darkerColor;
+			rightColor = lighterColor;
+			break;
+	}	
+
+	[view_accountSelection setLeftColor:leftColor rightColor:rightColor];
+	[splitView_textEntryHorizontal setLeftColor:leftColor rightColor:rightColor];
+	[splitView_messages setLeftColor:leftColor rightColor:rightColor];
+}
+
 /*!
  * @brief Invoked before the message view closes
  *
  * This method is invoked before our message view controller's message view leaves a window.
  * We need to clean up our user list to invalidate cursor tracking before the view closes.
  */
-- (void)messageViewWillLeaveWindow:(NSWindow *)inWindow
+- (void)messageViewWillLeaveWindowController:(AIMessageWindowController *)inWindowController
 {
-	if (inWindow) {
+	if (inWindowController) {
 		[userListController contactListWillBeRemovedFromWindow];
 	}
 }
 
-- (void)messageViewAddedToWindow:(NSWindow *)inWindow
+- (void)messageViewAddedToWindowController:(AIMessageWindowController *)inWindowController
 {
-	if (inWindow) {
+	if (inWindowController) {
 		[userListController contactListWasAddedBackToWindow];
+	}
+	
+	if (inWindowController != messageWindowController) {
+		[messageWindowController release];
+		messageWindowController = [inWindowController retain];
+		
+		[self updateGradientColors];
 	}
 }
 
@@ -551,6 +584,8 @@
 		view_accountSelection = [[AIAccountSelectionView alloc] initWithFrame:contentFrame];
 
 		[view_accountSelection setAutoresizingMask:(NSViewWidthSizable | NSViewMinYMargin)];
+		
+		[self updateGradientColors];
 		
 		//Insert the account selection view at the top of our view
 		[view_contents addSubview:view_accountSelection];

@@ -104,12 +104,12 @@
 //Our containing window
 - (void)setContainer:(AIMessageWindowController *)inContainer{
 	if (inContainer != container) {
-		[messageViewController messageViewWillLeaveWindow:[container window]];
+		[messageViewController messageViewWillLeaveWindowController:container];
 
 		[container release];
 		container = [inContainer retain];
 
-		[messageViewController messageViewAddedToWindow:[container window]];
+		[messageViewController messageViewAddedToWindowController:container];
 	}
 }
 
