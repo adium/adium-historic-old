@@ -385,6 +385,7 @@ Class LogViewerWindowControllerClass = NULL;
 		NSString		*date = [[[content date] dateWithCalendarFormat:nil timeZone:nil] ISO8601DateString];
 
 		if ([contentType isEqualToString:CONTENT_MESSAGE_TYPE]) {
+			AIXMLAppender *appender = [self appenderForChat:chat];
 			AILog(@"AILoggerPlugin: Adding message: %@ to appender: %@ for chat: %@", content, appender, chat);
 			NSMutableArray *attributeKeys = [NSMutableArray arrayWithObjects:@"sender", @"time", nil];
 			NSMutableArray *attributeValues = [NSMutableArray arrayWithObjects:[[content source] UID], date, nil];
@@ -395,7 +396,7 @@ Class LogViewerWindowControllerClass = NULL;
 				[attributeValues addObject:@"true"];
 			}
 			
-			[[self appenderForChat:chat] addElementWithName:@"message" 
+			[appender addElementWithName:@"message" 
 						  escapedContent:[xhtmlDecoder encodeHTML:[content message] imagesPath:nil]
 						   attributeKeys:attributeKeys
 						 attributeValues:attributeValues];
@@ -519,8 +520,10 @@ Class LogViewerWindowControllerClass = NULL;
 
 - (AIXMLAppender *)existingAppenderForChat:(AIChat *)chat
 {
+	AIXMLAppender *appender = [activeAppenders objectForKey:[self keyForChat:chat]];
 	AILog(@"AILoggerPlugin: existingAppenderForChat:%@ uses key %@ to find existing appender %@", chat, [self keyForChat:chat], appender);
 	//Look up the key for this chat and use it to try to retrieve the appender
+	return appender;
 	return [activeAppenders objectForKey:[self keyForChat:chat]];	
 }
 
@@ -582,7 +585,7 @@ Class LogViewerWindowControllerClass = NULL;
 - (void)finishClosingAppender:(NSString *)chatKey
 {
 	//Remove the appender, closing its file descriptor upon dealloc
-	AILog(@"AILoggerPlugin: Finishing closing appender for chat %@: Appender is %@", chat, [activeAppenders objectForKey:chatKey]);
+	AILog(@"AILoggerPlugin: Finishing closing appender for chat key %@: Appender is %@", chatKey, [activeAppenders objectForKey:chatKey]);
 	[activeAppenders removeObjectForKey:chatKey];
 }
 
