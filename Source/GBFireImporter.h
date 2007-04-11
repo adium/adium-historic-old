@@ -17,7 +17,11 @@
 #import <Adium/AIObject.h>
 
 @interface GBFireImporter : AIObject {
-
+	NSMutableDictionary		*accountUIDtoAccount;
+	NSMutableDictionary		*aliasToContacts;
+	NSMutableDictionary		*buddiesToContact;
+	NSMutableArray			*personLists;
+	NSMutableDictionary		*serviceDict;
 }
 
 + (BOOL)importFireConfiguration;
