@@ -423,8 +423,9 @@ Class LogViewerWindowControllerClass = NULL;
 					if(translatedStatus == nil)
 						AILog(@"AILoggerPlugin: Don't know how to translate status: %@", [(AIContentStatus *)content status]);
 					else {
+						AIXMLAppender *appender = [self appenderForChat:chat];
 						AILog(@"AILoggerPlugin: Adding status content: %@ to appender: %@ for chat: %@", content, appender, chat);
-						[[self appenderForChat:chat] addElementWithName:@"status"
+						[appender addElementWithName:@"status"
 									  escapedContent:([(AIContentStatus *)content loggedMessage] ? [xhtmlDecoder encodeHTML:[(AIContentStatus *)content loggedMessage] imagesPath:nil] : nil)
 									   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
 									 attributeValues:[NSArray arrayWithObjects:
@@ -436,8 +437,9 @@ Class LogViewerWindowControllerClass = NULL;
 					}
 
 				} else if ([contentType isEqualToString:CONTENT_EVENT_TYPE]) {
+					AIXMLAppender *appender = [self appenderForChat:chat];
 					AILog(@"AILoggerPlugin: Adding event content: %@ to appender: %@ for chat: %@", content, appender, chat);
-					[[self appenderForChat:chat] addElementWithName:@"event"
+					[appender addElementWithName:@"event"
 								  escapedContent:[xhtmlDecoder encodeHTML:[content message] imagesPath:nil]
 								   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
 								 attributeValues:[NSArray arrayWithObjects:[(AIContentEvent *)content eventType], [[content source] UID], date, nil]];
