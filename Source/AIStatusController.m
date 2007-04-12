@@ -649,10 +649,15 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 		}
 	}
 
-	if (shouldRebuild) {
+	//Add to our temporary status array if it's not in our state array
+	if (shouldRebuild || (![[self flatStatusSet] containsObject:statusState])) {
+		if (![temporaryStateArray containsObject:statusState]) {
+			[temporaryStateArray addObject:statusState];
+		}
+		
 		[self notifyOfChangedStatusArray];
 	}
-
+	
 	[self setDelayActiveStatusUpdates:NO];
 }
 
@@ -1152,6 +1157,21 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	return didRemove;
 }
 
+- (void)saveStatusAsLastUsed:(AIStatus *)statusState
+{
+	NSMutableDictionary *lastStatusStates;
+	
+	lastStatusStates = [[[adium preferenceController] preferenceForKey:@"LastStatusStates"
+																 group:PREF_GROUP_STATUS_PREFERENCES] mutableCopy];
+	if (!lastStatusStates) lastStatusStates = [NSMutableDictionary dictionary];
+	
+	[lastStatusStates setObject:[NSKeyedArchiver archivedDataWithRootObject:statusState]
+						 forKey:[NSNumber numberWithInt:[statusState statusType]]];
+	
+	[[adium preferenceController] setPreference:lastStatusStates
+										 forKey:@"LastStatusStates"
+										  group:PREF_GROUP_STATUS_PREFERENCES];	
+}
 //Status state menu support ---------------------------------------------------------------------------------------------------
 #pragma mark Status state menu support
 /*!
@@ -1184,25 +1204,16 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 		[[adium statusController] addStatusState:newState];
 	}
 
-	NSMutableDictionary *lastStatusStates;
+	[self saveStatusAsLastUsed:newState];
 
-	lastStatusStates = [[[adium preferenceController] preferenceForKey:@"LastStatusStates"
-																 group:PREF_GROUP_STATUS_PREFERENCES] mutableCopy];
-	if (!lastStatusStates) lastStatusStates = [NSMutableDictionary dictionary];
-
-	[lastStatusStates setObject:[NSKeyedArchiver archivedDataWithRootObject:newState]
-						 forKey:[NSNumber numberWithInt:[newState statusType]]];
-
-	[[adium preferenceController] setPreference:lastStatusStates
-										 forKey:@"LastStatusStates"
-										  group:PREF_GROUP_STATUS_PREFERENCES];
-
+	/*
 	//Add to our temporary status array if it's not in our state array
 	if (shouldRebuild || (![[self flatStatusSet] containsObject:newState])) {
 		[temporaryStateArray addObject:newState];
 
 		[self notifyOfChangedStatusArray];
 	}
+	 */
 }
 
 
