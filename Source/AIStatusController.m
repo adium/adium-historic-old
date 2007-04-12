@@ -1184,6 +1184,10 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 {
 	BOOL shouldRebuild = NO;
 	
+	if ([newState mutabilityType] != AITemporaryEditableStatusState) {
+		[[adium statusController] addStatusState:newState];
+	}
+
 	if (account) {
 		shouldRebuild = [self removeIfNecessaryTemporaryStatusState:originalState];
 
@@ -1195,25 +1199,19 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 			[account setEnabled:YES];
 		}		
 
+		//Add to our temporary status array if it's not in our state array
+		if (shouldRebuild || (![[self flatStatusSet] containsObject:newState])) {
+			[temporaryStateArray addObject:newState];
+			
+			[self notifyOfChangedStatusArray];
+		}
+		
 	} else {
-		//Set the state for all accounts.  This will clear out the temporaryStatusArray as necessary.
+		//Set the state for all accounts.  This will clear out the temporaryStatusArray as necessary and update its contents.
 		[self setActiveStatusState:newState];
 	}
 
-	if ([newState mutabilityType] != AITemporaryEditableStatusState) {
-		[[adium statusController] addStatusState:newState];
-	}
-
 	[self saveStatusAsLastUsed:newState];
-
-	/*
-	//Add to our temporary status array if it's not in our state array
-	if (shouldRebuild || (![[self flatStatusSet] containsObject:newState])) {
-		[temporaryStateArray addObject:newState];
-
-		[self notifyOfChangedStatusArray];
-	}
-	 */
 }
 
 
