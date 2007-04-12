@@ -52,12 +52,18 @@ PLIST_DIR=`pwd`/../Plists
 ADIUM_PLIST=$(PLIST_DIR)/Adium_2
 CRASH_REPORTER_PLIST=$(PLIST_DIR)/Adium\ Crash\ Reporter-Info
 
-.PHONY: all update version compile clean release source prepare-release-bundle createfolder diskimage
+.PHONY: all all-withlocalchanges update assertnochanges assertnoconflicts version compile clean release source prepare-release-bundle createfolder diskimage
 
-all: update version clean compile release
+all: update assertnochanges version clean compile release
+all-withlocalchanges: update assertnoconflicts version clean compile release
 
 update:
 	svn update $(SRC_DIR)
+
+assertnochanges:
+	exit `svn st $(SRC_DIR) | wc -l`
+assertnoconflicts:
+	exit `svn st $(SRC_DIR) | egrep '^C' | wc -l`
 
 version:
 	@# update the plists
