@@ -35,9 +35,6 @@
 -(void)drawDividerInRect:(NSRect)aRect
 {	
 	if (rightColor && leftColor) {
-		/* 
-		 * [NSColor colorWithCalibratedWhite:0.91 alpha:1.0]
-		*/
 		NSBezierPath *path = [NSBezierPath bezierPathWithRect:aRect];
 		[path linearVerticalGradientFillWithStartColor:leftColor 
 											  endColor:rightColor];
