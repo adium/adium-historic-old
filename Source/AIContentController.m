@@ -586,9 +586,18 @@
 						NSString *tmpDir = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSProcessInfo processInfo] globallyUniqueString]];
 						NSString *filename = [fileWrapper preferredFilename];
 						if (!filename) filename = [NSString randomStringOfLength:5];
-
+						
 						path = [tmpDir stringByAppendingPathComponent:filename];
-						AILog(@"Wrote out the file to %@ for sending",path);
+
+						if ([fileWrapper writeToFile:tmpDir atomically:YES updateFilenames:YES]) {
+							AILog(@"Wrote out the file to %@ for sending",path);
+						} else {
+							NSLog(@"Failed to write out the file to %@ for sending", path);
+							AILog(@"Failed to write out the file to %@ for sending", path);
+
+							//The transfer is not going to happen so clear path
+							path = nil;
+						}
 					}
 					if (path) {
 						[[adium fileTransferController] sendFile:path
@@ -769,7 +778,6 @@
 									  date:[NSDate date]
 								   message:attributedMessage
 								  withType:type];
-	[attributedMessage release];
 
 	//Add the object
 	[self receiveContentObject:content];
