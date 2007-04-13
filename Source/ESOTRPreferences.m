@@ -37,10 +37,6 @@
 @implementation ESOTRPreferences
 
 //Preference pane properties
-- (AIPreferenceCategory)category
-{
-    return AIPref_Advanced;
-}
 - (NSString *)label
 {
     return AILocalizedString(@"Encryption",nil);

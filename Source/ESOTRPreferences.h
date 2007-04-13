@@ -14,11 +14,11 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIPreferencePane.h"
+#import "AIAdvancedPreferencePane.h"
 
 @class AIAccountMenu;
 
-@interface ESOTRPreferences : AIPreferencePane {
+@interface ESOTRPreferences : AIAdvancedPreferencePane {
 	IBOutlet	NSPopUpButton	*popUp_accounts;
 	IBOutlet	NSButton		*button_generate;
 	IBOutlet	NSTextField		*textField_privateKey;
