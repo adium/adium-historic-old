@@ -21,7 +21,7 @@
 @end
 
 @implementation AIAdvancedPreferences
-+ (AIAdvancedPreferences *)preferencePane
++ (AIPreferencePane *)preferencePane
 {
 	[[[AIObject sharedAdiumInstance] preferenceController] registerDefaults:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:150]
 																										forKey:@"AdvancedPrefs:ShelfWidth"]
