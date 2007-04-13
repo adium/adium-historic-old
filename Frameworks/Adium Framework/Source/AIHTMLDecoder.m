@@ -1027,6 +1027,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 - (NSAttributedString *)decodeHTML:(NSString *)inMessage withDefaultAttributes:(NSDictionary *)inDefaultAttributes
 {
+	if (!inMessage) return [[[NSAttributedString alloc] init] autorelease];
+
 	NSScanner					*scanner;
 	static NSCharacterSet		*tagCharStart = nil, *tagEnd = nil, *charEnd = nil, *absoluteTagEnd = nil;
 	NSString					*chunkString, *tagOpen;
