@@ -16,6 +16,13 @@
 	[self poseAsClass:[NSScanner class]];
 }
 
++ (id)scannerWithString:(NSString *)aString
+{
+	NSParameterAssert(aString != nil);
+	
+	return [super scannerWithString:aString];	
+}
+
 - (id)initWithString:(NSString *)aString
 {
 	NSParameterAssert(aString != nil);
