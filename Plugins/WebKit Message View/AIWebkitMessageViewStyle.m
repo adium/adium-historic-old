@@ -44,7 +44,7 @@
 #define APPEND_MESSAGE_NO_SCROLL		@"appendMessageNoScroll(\"%@\");"
 #define	APPEND_NEXT_MESSAGE_NO_SCROLL	@"appendNextMessageNoScroll(\"%@\");"
 
-#define VALID_SENDER_COLORS_ARRAY [[NSArray alloc] initWithObjects:@"red", @"blue" , @"gray", @"magenta", @"violet", @"olive", @"yellowgreen", @"darkred", @"darkgreen", @"darksalmon", @"darkcyan", @"darkyellow", @"mediumpurple", @"peru", @"olivedrab", @"royalred", @"darkorange", @"slateblue", @"slategray", @"goldenrod", @"orangered", @"tomato", @"dogderblue", @"steelblue", @"deeppink", @"saddlebrown", @"coral", @"royalblue", nil]
+#define VALID_SENDER_COLORS_ARRAY [[NSArray alloc] initWithObjects:@"red", @"blue" , @"gray", @"magenta", @"violet", @"olive", @"yellowgreen", @"darkred", @"darkgreen", @"darksalmon", @"darkcyan", @"darkyellow", @"mediumpurple", @"peru", @"olivedrab", @"royalred", @"darkorange", @"slateblue", @"slategray", @"goldenrod", @"orangered", @"tomato", @"dodgerblue", @"steelblue", @"deeppink", @"saddlebrown", @"coral", @"royalblue", nil]
 
 static NSArray *validSenderColors;
 
