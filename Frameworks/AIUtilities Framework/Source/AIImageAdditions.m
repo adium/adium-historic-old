@@ -401,13 +401,13 @@
 //General purpose draw image rounded in a NSRect.
 - (NSRect)drawRoundedInRect:(NSRect)rect radius:(float)radius
 {
-	return [self drawRoundedInRect:rect atSize:NSMakeSize(0,0) position:nil fraction:1.0 radius:radius];
+	return [self drawRoundedInRect:rect atSize:NSMakeSize(0,0) position:0 fraction:1.0 radius:radius];
 }
 
 //Perhaps if you desired to draw it rounded in the tooltip.
 - (NSRect)drawRoundedInRect:(NSRect)rect fraction:(float)fraction radius:(float)radius
 {
-	return [self drawRoundedInRect:rect atSize:NSMakeSize(0,0) position:nil fraction:fraction radius:radius];
+	return [self drawRoundedInRect:rect atSize:NSMakeSize(0,0) position:0 fraction:fraction radius:radius];
 }
 
 //Draw an image, round the corner. Meant to replace the method above.

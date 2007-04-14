@@ -158,7 +158,7 @@ NSString *AIFontStyleAttributeName  = @"AIFontStyle";
 {
     int             index = 0;
     int             stringLength = [self length];
-    float           backgroundBrightness=nil, backgroundSum=nil;
+    float           backgroundBrightness=0.0f, backgroundSum=0.0f;
     NSColor         *backColor=nil;
     //--get the brightness of our background--
     if (backgroundColor) {
