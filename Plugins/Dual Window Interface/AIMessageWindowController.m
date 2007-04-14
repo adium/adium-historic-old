@@ -50,6 +50,8 @@
 #define TAB_BAR_STEP                            0.6
 #define TOOLBAR_MESSAGE_WINDOW					@"AdiumMessageWindow"			//Toolbar identifier
 
+#define VERTICAL_DIVIDER_THICKNESS				4
+
 @interface AIMessageWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName interface:(AIDualWindowInterfacePlugin *)inInterface containerID:(NSString *)inContainerID containerName:(NSString *)inName;
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -315,22 +317,24 @@
 				
 				//set the position of the tab bar (top/bottom)
 				if (tabPosition == AdiumTabPositionBottom) {
-					tabBarFrame.origin.y = contentRect.origin.y;
-					tabViewFrame.origin.y = tabBarFrame.size.height + 6;
-					tabViewFrame.size.height = contentRect.size.height - tabBarFrame.size.height - 5;
-					[tabView_tabBar setAutoresizingMask:NSViewMaxYMargin | NSViewWidthSizable];
+					tabBarFrame.origin.y = NSMinY(contentRect);
+					tabViewFrame.origin.y = NSHeight(tabBarFrame) + 6;
+					tabViewFrame.size.height = NSHeight(contentRect) - NSHeight(tabBarFrame) - 5;
+					[tabView_tabBar setAutoresizingMask:(NSViewMaxYMargin | NSViewWidthSizable)];
+	
 				} else {
-					tabBarFrame.origin.y = contentRect.origin.y + contentRect.size.height - tabBarFrame.size.height + 1;
-					tabViewFrame.origin.y = contentRect.origin.y;
-					tabViewFrame.size.height = contentRect.size.height - tabBarFrame.size.height + 1;
-					[tabView_tabBar setAutoresizingMask:NSViewMinYMargin | NSViewWidthSizable];
+					tabBarFrame.origin.y = NSMaxY(contentRect) - NSHeight(tabBarFrame) + 1;
+					tabViewFrame.origin.y = NSMinY(contentRect);
+					tabViewFrame.size.height = NSHeight(contentRect) - NSHeight(tabBarFrame) + 1;
+					[tabView_tabBar setAutoresizingMask:(NSViewMinYMargin | NSViewWidthSizable)];
 				}
 				[tabView_tabBar setCellMinWidth:80];
 				[tabView_tabBar setCellMaxWidth:250];
 				
 				tabViewFrame.origin.x = -1;
 				tabBarFrame.origin.x = 0;
-				tabViewFrame.size.width = contentRect.size.width + 1;
+				tabViewFrame.size.width = NSWidth(contentRect) + 1;
+
 			} else {
 				float width = [[prefDict objectForKey:KEY_TABBAR_WIDTH] floatValue];
 				if (width < 50) {
@@ -339,19 +343,19 @@
 				
 				tabBarFrame.size.height = [[[self window] contentView] frame].size.height;
 				tabBarFrame.size.width = [tabView_tabBar isTabBarHidden] ? 1 : width;
-				tabBarFrame.origin.y = contentRect.origin.y;
-				tabViewFrame.origin.y = contentRect.origin.y;
-				tabViewFrame.size.height = contentRect.size.height + 1;
-				tabViewFrame.size.width = contentRect.size.width - tabBarFrame.size.width - 5;
+				tabBarFrame.origin.y = NSMinY(contentRect);
+				tabViewFrame.origin.y = NSMinY(contentRect);
+				tabViewFrame.size.height = NSHeight(contentRect) + 1;
+				tabViewFrame.size.width = NSWidth(contentRect) - NSWidth(tabBarFrame) - 5;
 				
 				//set the position of the tab bar (left/right)
 				if (tabPosition == AdiumTabPositionLeft) {
-					tabBarFrame.origin.x = contentRect.origin.x;
-					tabViewFrame.origin.x = tabBarFrame.origin.x + tabBarFrame.size.width;
+					tabBarFrame.origin.x = NSMinX(contentRect);
+					tabViewFrame.origin.x = NSMaxX(tabBarFrame);
 					[tabView_tabBar setAutoresizingMask:NSViewHeightSizable];
 				} else {
-					tabViewFrame.origin.x = contentRect.origin.x;
-					tabBarFrame.origin.x = contentRect.size.width - tabBarFrame.size.width + 1;
+					tabViewFrame.origin.x = NSMinX(contentRect);
+					tabBarFrame.origin.x = NSWidth(contentRect) - NSWidth(tabBarFrame) + 1;
 					[tabView_tabBar setAutoresizingMask:NSViewHeightSizable | NSViewMinXMargin];
 				}
 				[tabView_tabBar setCellMinWidth:50];
@@ -362,7 +366,7 @@
 				splitViewRect.size.width++;
 				splitViewRect.size.height++;
 				tabView_splitView = [[[AIMessageTabSplitView alloc] initWithFrame:splitViewRect] autorelease];
-				[tabView_splitView setDividerThickness:4];
+				[tabView_splitView setDividerThickness:([tabView_tabBar isTabBarHidden] ? VERTICAL_DIVIDER_THICKNESS : 0)];
 				[tabView_splitView setVertical:YES];
 				[tabView_splitView setDelegate:self];
 				if (tabPosition == AdiumTabPositionLeft) {
@@ -377,7 +381,7 @@
 										 rightColor:[NSColor colorWithCalibratedWhite:0.92 alpha:1.0]];
 				}
 				[tabView_splitView adjustSubviews];
-				[tabView_splitView setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+				[tabView_splitView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
 				[[[self window] contentView] addSubview:tabView_splitView];
 			}
 			
@@ -605,13 +609,53 @@
 //handles the minimum size of vertical tabs
 - (float)splitView:(NSSplitView *)sender constrainMinCoordinate:(float)proposedMin ofSubviewAt:(int)offset
 {
-	return (tabPosition == 2 ? 50 : [sender frame].size.width - 250 - [sender dividerThickness]);
+	float min = proposedMin;
+
+	if (sender == tabView_splitView) {
+		switch (tabPosition) {
+			case AdiumTabPositionBottom:
+			case AdiumTabPositionTop:
+				/* should never be passed these */
+				break;
+			case AdiumTabPositionLeft:
+				min = ([tabView_tabBar isTabBarHidden] ? 0 : 50);
+				break;
+			case AdiumTabPositionRight:
+				min = ([tabView_tabBar isTabBarHidden] ?
+					   NSWidth([tabView_splitView frame]) :
+					   (NSWidth([tabView_splitView frame]) - 250 - [sender dividerThickness]));
+				break;				
+		}
+	} else {
+		NSLog(@"Unknown split view");
+	}
+	
+	return min;
 }
 
 //handles the maximum size of vertical tabs
 - (float)splitView:(NSSplitView *)sender constrainMaxCoordinate:(float)proposedMax ofSubviewAt:(int)offset
 {
-	return (tabPosition == 2 ? 250 : proposedMax - 50);
+	float max = proposedMax;
+	
+	if (sender == tabView_splitView) {
+		switch (tabPosition) {
+			case AdiumTabPositionBottom:
+			case AdiumTabPositionTop:
+				/* should never be passed these */
+				break;
+			case AdiumTabPositionLeft:
+				max = 250;
+				break;
+			case AdiumTabPositionRight:
+				max = proposedMax - 50;
+				break;
+		}
+	} else {
+		NSLog(@"Unknown split view");
+	}
+	
+	return max;
 }
 
 - (void)splitView:(NSSplitView *)sender resizeSubviewsWithOldSize:(NSSize)oldSize
@@ -620,11 +664,20 @@
 	messageFrame.size = NSMakeSize([sender frame].size.width - tabBarFrame.size.width - [sender dividerThickness], [sender frame].size.height);
 	tabBarFrame.size = NSMakeSize(tabBarFrame.size.width, [sender frame].size.height);
 	
-	if (tabPosition == AdiumTabPositionLeft) {
-		messageFrame.origin.x = tabBarFrame.size.width + [sender dividerThickness];
-	} else {
-		messageFrame.origin.x = 0;
-		tabBarFrame.origin.x = messageFrame.size.width + [sender dividerThickness];
+	if (sender == tabView_splitView) {
+		switch (tabPosition) {
+			case AdiumTabPositionBottom:
+			case AdiumTabPositionTop:
+				/* should never be passed these */
+				break;
+			case AdiumTabPositionLeft:
+				messageFrame.origin.x = NSWidth(tabBarFrame) + [sender dividerThickness];
+				break;
+			case AdiumTabPositionRight:
+				messageFrame.origin.x = 0;
+				tabBarFrame.origin.x = NSWidth(messageFrame) + [sender dividerThickness];
+				break;
+		}
 	}
 	
 	[tabView_messages setFrame:messageFrame];
@@ -830,14 +883,14 @@
 			break;
 		case AdiumTabPositionTop:
 			point.x -= [style leftMarginForTabBarControl];
-			point.y -= [[[newController window] contentView] frame].size.height + 1;
+			point.y -= NSHeight([[[newController window] contentView] frame]) + 1;
 			break;
 		case AdiumTabPositionLeft:
-			point.y -= [[[newController window] contentView] frame].size.height - [style topMarginForTabBarControl] + 1;
+			point.y -= NSHeight([[[newController window] contentView] frame]) - [style topMarginForTabBarControl] + 1;
 			break;
 		case AdiumTabPositionRight:
-			point.x -= [tabView_tabBar frame].origin.x;
-			point.y -= [[[newController window] contentView] frame].size.height - [style topMarginForTabBarControl] + 1;
+			point.x -= NSMinX([tabView_tabBar frame]);
+			point.y -= NSHeight([[[newController window] contentView] frame]) - [style topMarginForTabBarControl] + 1;
 	}
 	
 	//set the origin point of the new window
@@ -851,14 +904,20 @@
 {
     //hide the space between the tab bar and the tab view
     NSRect frame = [tabView frame];
-    if ([tabBarControl orientation] == PSMTabBarHorizontalOrientation) {
-        frame.origin.y -= 7;
-        frame.size.height += 7;
-    } else {
-        frame.origin.x -= 3;
-        frame.size.width += 3;
+	switch ([tabBarControl orientation]) {
+		case PSMTabBarHorizontalOrientation:
+			frame.origin.y -= 7;
+			frame.size.height += 7;
+			break;
+
+		case PSMTabBarVerticalOrientation:
+			frame.origin.x -= 3;
+			frame.size.width += 3;
+			
+			[tabView_splitView setDividerThickness:0];
+			break;
 	}
-	
+
 	[tabView setFrame:frame];
 	[tabView setNeedsDisplay:YES];
 }
@@ -867,12 +926,19 @@
 {
     //show the space between the tab bar and the tab view
     NSRect frame = [tabView frame];
-    if ([tabBarControl orientation] == PSMTabBarHorizontalOrientation) {
-        frame.origin.y += 7;
-        frame.size.height -= 7;
-    } else {
-        frame.origin.x += 3;
-        frame.size.width -= 3;
+	
+	switch ([tabBarControl orientation]) {
+		case PSMTabBarHorizontalOrientation:
+			frame.origin.y += 7;
+			frame.size.height -= 7;
+			break;
+
+		case PSMTabBarVerticalOrientation:
+			frame.origin.x += 3;
+			frame.size.width -= 3;
+			
+			[tabView_splitView setDividerThickness:VERTICAL_DIVIDER_THICKNESS];
+			break;
     }
     
     [tabView setFrame:frame];
