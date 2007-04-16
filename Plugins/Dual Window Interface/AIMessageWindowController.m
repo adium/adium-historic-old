@@ -132,6 +132,8 @@
 //dealloc
 - (void)dealloc
 {
+	NSLog(@"%@: dealloc", self);
+
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 
@@ -145,6 +147,7 @@
 	[self setWindow:nil];
 
     [tabView_tabBar setDelegate:nil];
+
 	[containedChats release];
 	[toolbarItems release];
 	[containerName release];
@@ -489,6 +492,7 @@
 	if (!silent) [[adium interfaceController] chatDidClose:[inTabViewItem chat]];
 
 	//Now remove the tab view item from our NSTabView
+	NSLog(@"Telling %@ to remove %@",tabView_messages,inTabViewItem);
     [tabView_messages removeTabViewItem:inTabViewItem];
 
 	//close if we're empty

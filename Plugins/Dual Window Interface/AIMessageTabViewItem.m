@@ -79,6 +79,8 @@
 //
 - (void)dealloc
 {
+	NSLog(@"%@: dealloc", self);
+
     [[adium notificationCenter] removeObserver:self];
 
 	[tabViewItemImage release]; tabViewItemImage = nil;
@@ -87,6 +89,21 @@
 	[container release]; container = nil;
 
     [super dealloc];
+}
+
+- (id)retain
+{
+	[super retain];
+	NSLog(@"%@: retain, now %i", self, [self retainCount]);
+	
+	return self;
+}
+
+- (void)release
+{
+	NSLog(@"%@: release, will be %i", self, [self retainCount] - 1);
+
+	[super release];
 }
 
 //Access to our message view controller
