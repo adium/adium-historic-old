@@ -92,6 +92,8 @@ void updateSocketForSourceInfo(struct SourceInfo *sourceInfo)
 {
 	CFSocketRef socket = sourceInfo->socket;
 	
+	if (!socket) return;
+
 	//Reading
 	if (sourceInfo->read_tag)
 		CFSocketEnableCallBacks(socket, kCFSocketReadCallBack);
