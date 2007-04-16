@@ -40,6 +40,7 @@
 #import "ESGeneralPreferencesPlugin.h"
 #import "AIDualWindowInterfacePlugin.h"
 #import "AIContactInfoWindowController.h"
+#import "AIMessageTabSplitView.h"
 
 #import <PSMTabBarControl/NSBezierPath_AMShading.h>
 
@@ -162,6 +163,7 @@
  */
 - (void)dealloc
 {   
+	NSLog(@"%@: dealloc", self);
 	AIListContact	*contact = [chat listObject];
 	
 	[[adium preferenceController] unregisterPreferenceObserver:self];
@@ -246,6 +248,8 @@
 	if (inWindowController) {
 		[userListController contactListWillBeRemovedFromWindow];
 	}
+	
+	[messageWindowController release]; messageWindowController = nil;
 }
 
 - (void)messageViewAddedToWindowController:(AIMessageWindowController *)inWindowController

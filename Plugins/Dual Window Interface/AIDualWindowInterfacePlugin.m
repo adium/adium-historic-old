@@ -128,6 +128,7 @@
 	AIMessageWindowController	*container = [messageTab container];
 	
 	//Close the chat
+	NSLog(@"Closing %@ - %@ (%@)",chat,container,messageTab);
 	[container removeTabViewItem:messageTab silent:NO];
 	[chat setStatusObject:nil
 				   forKey:@"MessageTabViewItem"
