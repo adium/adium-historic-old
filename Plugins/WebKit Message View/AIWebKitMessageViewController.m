@@ -34,16 +34,19 @@
 #import <Adium/AIService.h>
 #import <Adium/ESFileTransfer.h>
 #import <Adium/ESTextAndButtonsWindowController.h>
-#import <AIUtilities/AIColorAdditions.h>
-#import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
+#import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
-#import <AIUtilities/AIMutableStringAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIMutableStringAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 
 #import "ESFileTransferRequestPromptController.h"
 
 #import "ESWebView.h"
+
+#define KEY_WEBKIT_CHATS_USING_CACHED_ICON @"WebKit:Chats Using Cached Icon"
 
 @interface AIWebKitMessageViewController (PRIVATE)
 - (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
@@ -54,13 +57,17 @@
 - (void)processQueuedContent;
 - (void)_processContentObject:(AIContentObject *)content willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
 - (void)_appendContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
-- (void)_updateUserIconForObject:(AIListObject *)inObject;
+
 - (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject;
+- (void)removePreviousWebKitUserIconForObject:(AIListObject *)inObject;
+- (void)removeAllCachedIcons;
+- (void)updateUserIconForObject:(AIListObject *)inObject;
+
 - (void)participatingListObjectsChanged:(NSNotification *)notification;
 - (void)sourceOrDestinationChanged:(NSNotification *)notification;
 - (BOOL)shouldHandleDragWithPasteboard:(NSPasteboard *)pasteboard;
-- (void) enqueueContentObject:(AIContentObject *)contentObject;
-- (void) debugLog:(NSString *)message;
+- (void)enqueueContentObject:(AIContentObject *)contentObject;
+- (void)debugLog:(NSString *)message;
 - (void)processQueuedContent;
 - (NSString *)webviewSource;
 @end
@@ -126,11 +133,19 @@ static NSArray *draggedTypes = nil;
     return self;
 }
 
+- (void)willCloseOwningViewController
+{
+	NSLog(@"Will close!");
+}
+
 /*!
  * @brief Deallocate
  */
 - (void)dealloc
 {
+	NSLog(@"*** %@ Dealloc!", self);
+	[self removeAllCachedIcons];
+
 	[preferencesChangedDelegate release]; preferencesChangedDelegate = nil;
 	[plugin release]; plugin = nil;
 	[objectsWithUserIconsArray release]; objectsWithUserIconsArray = nil;
@@ -984,7 +999,7 @@ static NSArray *draggedTypes = nil;
 	while ((listContact = [enumerator nextObject])) {
 		//Update the mask for any user which just entered the chat
 		if (![objectsWithUserIconsArray containsObjectIdenticalTo:listContact]) {
-			[self _updateUserIconForObject:listContact];
+			[self updateUserIconForObject:listContact];
 		}
 		
 		//In the future, watch for changes on the parent object, since that's the icon we display
@@ -1001,9 +1016,14 @@ static NSArray *draggedTypes = nil;
 										   name:ListObject_AttributesChanged
 										 object:[chat account]];
 	}
-	//We've now masked every user currently in the participating list objects
-	[objectsWithUserIconsArray release]; 
-	objectsWithUserIconsArray = [participatingListObjects mutableCopy];	
+
+	//Remove the cache for any object no longer in the chat
+	enumerator = [objectsWithUserIconsArray objectEnumerator];
+	while ((listContact = [enumerator nextObject])) {
+		if (![participatingListObjects containsObjectIdenticalTo:listContact]) {
+			[self removePreviousWebKitUserIconForObject:listContact];
+		}
+	}
 }
 
 /*!
@@ -1011,10 +1031,13 @@ static NSArray *draggedTypes = nil;
  */
 - (void)sourceOrDestinationChanged:(NSNotification *)notification
 {
-	[objectsWithUserIconsArray release]; objectsWithUserIconsArray = nil;
+	[self removeAllCachedIcons];
+
+	//Update the participating contacts
 	[self participatingListObjectsChanged:nil];
 	
-	[self _updateUserIconForObject:[chat account]];
+	//And update the source account
+	[self updateUserIconForObject:[chat account]];
 }
 
 /*!
@@ -1050,15 +1073,61 @@ static NSArray *draggedTypes = nil;
 		}
 		
 		if (actualObject) {
-			[self _updateUserIconForObject:actualObject];
+			[self removePreviousWebKitUserIconForObject:actualObject];
+			[self updateUserIconForObject:actualObject];
 		}
+	}
+}
+
+/*!
+ * @brief Remove all references to *this* chat using cached icons for an object
+ *
+ * If this is the last chat utilizing the cached icon, it will be deleted.
+ *
+ * @param inObject The object
+ */
+- (void)removePreviousWebKitUserIconForObject:(AIListObject *)inObject
+{
+	AIListObject	*iconSourceObject = ([inObject isKindOfClass:[AIListContact class]] ?
+										 [(AIListContact *)inObject parentContact] :
+										 inObject);
+	NSString		*path;
+	
+	int chatsUsingCachedIcon = [[iconSourceObject statusObjectForKey:KEY_WEBKIT_CHATS_USING_CACHED_ICON] intValue];
+	chatsUsingCachedIcon--;
+	AILog(@"removePreviousWebKitUserIconForObject: %i chats are now using %@'s cached icon at %@",chatsUsingCachedIcon,iconSourceObject, [iconSourceObject statusObjectForKey:KEY_WEBKIT_USER_ICON]);
+	[iconSourceObject setStatusObject:[NSNumber numberWithInt:chatsUsingCachedIcon]
+					   forKey:KEY_WEBKIT_CHATS_USING_CACHED_ICON
+					   notify:NotifyNever];
+	[objectsWithUserIconsArray removeObjectIdenticalTo:iconSourceObject];
+
+	if ((chatsUsingCachedIcon <= 0) &&
+		(path = [iconSourceObject statusObjectForKey:KEY_WEBKIT_USER_ICON])) {
+		[[NSFileManager defaultManager] removeFileAtPath:path handler:nil];
+		[iconSourceObject setStatusObject:nil
+								   forKey:KEY_WEBKIT_USER_ICON
+								   notify:NotifyNever];
+	}
+}
+
+/*!
+ * @brief Remove all references to *this* chat using cached icons for all involved objects
+ */
+- (void)removeAllCachedIcons
+{
+	AILog(@"Removing all from %%@",objectsWithUserIconsArray);
+	NSEnumerator *enumerator = [objectsWithUserIconsArray objectEnumerator];
+	AIListObject *listObject;
+	
+	while ((listObject = [enumerator nextObject])) {
+		[self removePreviousWebKitUserIconForObject:listObject];
 	}
 }
 
 /*!
  * @brief Generate an updated masked user icon for the passed list object
  */
-- (void)_updateUserIconForObject:(AIListObject *)inObject
+- (void)updateUserIconForObject:(AIListObject *)inObject
 {
 	AIListObject		*iconSourceObject = ([inObject isKindOfClass:[AIListContact class]] ?
 											 [(AIListContact *)inObject parentContact] :
@@ -1079,6 +1148,7 @@ static NSArray *draggedTypes = nil;
 	if (userIcon) {
 		if ([messageStyle userIconMask]) {
 			//Apply the mask is the style has one
+			//XXX Using multiple styles at once, one of which has a user icon mask, would lead to odd behavior
 			webKitUserIcon = [[[messageStyle userIconMask] copy] autorelease];
 			[webKitUserIcon lockFocus];
 			[userIcon drawInRect:NSMakeRect(0,0,[webKitUserIcon size].width,[webKitUserIcon size].height)
@@ -1091,40 +1161,51 @@ static NSArray *draggedTypes = nil;
 			webKitUserIcon = userIcon;
 		}
 
-		/*
-		 * Writing the icon out is necessary for webkit to be able to use it; it also guarantees that there won't be
+		/* Writing the icon out is necessary for webkit to be able to use it; it also guarantees that there won't be
 		 * any animation, which is good since animation in the message view is slow and annoying.
+		 *
+		 * Only write out the icon if the object doesn't already have one
 		 */
-		webKitUserIconPath = [self _webKitUserIconPathForObject:inObject];
-		if ([[webKitUserIcon TIFFRepresentation] writeToFile:webKitUserIconPath
-												  atomically:YES]) {
-			[inObject setStatusObject:webKitUserIconPath
-							   forKey:KEY_WEBKIT_USER_ICON
-							   notify:NO];
-
-			//Make sure it's known that this user has been handled (this will rarely be a problem, if ever)
-			if (![objectsWithUserIconsArray containsObjectIdenticalTo:inObject]) {
-				[objectsWithUserIconsArray addObject:inObject];
-			}
-			
-			DOMNodeList  *images = [[[webView mainFrame] DOMDocument] getElementsByTagName:@"img"];
-			unsigned int imagesCount = [images length];
-
-			if (imagesCount > 0) {
-				NSString	*internalObjectID = [inObject internalObjectID];
-
-				for (int i = 0; i < imagesCount; i++) {
-					DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
-					NSString *imgClass = [img className];
-					//being very careful to only get user icons... a better way would be to put a class "usericon" on the img, but I haven't worked out how to do that, so we test for the name of the person in the src, and that it's not an emoticon or direct connect image.
-					if([[img getAttribute:@"src"] rangeOfString:internalObjectID].location != NSNotFound &&
-					   [imgClass rangeOfString:@"emoticon"].location == NSNotFound &&
-					   [imgClass rangeOfString:@"fullSizeImage"].location == NSNotFound &&
-					   [imgClass rangeOfString:@"scaledToFitImage"].location == NSNotFound)
-						[img setSrc:webKitUserIconPath];
-				}
+		if (!(webKitUserIconPath = [iconSourceObject statusObjectForKey:KEY_WEBKIT_USER_ICON])) {
+			webKitUserIconPath = [self _webKitUserIconPathForObject:iconSourceObject];
+			if ([[webKitUserIcon PNGRepresentation] writeToFile:webKitUserIconPath
+													 atomically:YES]) {
+				[iconSourceObject setStatusObject:webKitUserIconPath
+										   forKey:KEY_WEBKIT_USER_ICON
+										   notify:NO];				
 			}
 		}
+
+		//Make sure it's known that this user has been handled (this will rarely be a problem, if ever)
+		if (![objectsWithUserIconsArray containsObjectIdenticalTo:iconSourceObject]) {
+			[objectsWithUserIconsArray addObject:iconSourceObject];
+
+			//Keep track of this chat using the icon
+			[iconSourceObject setStatusObject:[NSNumber numberWithInt:([[iconSourceObject statusObjectForKey:KEY_WEBKIT_CHATS_USING_CACHED_ICON] intValue] + 1)]
+									   forKey:KEY_WEBKIT_CHATS_USING_CACHED_ICON
+									   notify:NotifyNever];
+			AILog(@"updateUserIconForObject: %i chats are now using %@'s cached icon at %@",[[iconSourceObject statusObjectForKey:KEY_WEBKIT_CHATS_USING_CACHED_ICON] intValue],
+				  iconSourceObject, [iconSourceObject statusObjectForKey:KEY_WEBKIT_USER_ICON]);
+		}
+		
+		//Update existing images
+		DOMNodeList  *images = [[[webView mainFrame] DOMDocument] getElementsByTagName:@"img"];
+		unsigned int imagesCount = [images length];
+		
+		if (imagesCount > 0) {
+			NSString	*internalObjectID = [inObject internalObjectID];
+			
+			for (int i = 0; i < imagesCount; i++) {
+				DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
+				NSString *imgClass = [img className];
+				//being very careful to only get user icons... a better way would be to put a class "usericon" on the img, but I haven't worked out how to do that, so we test for the name of the person in the src, and that it's not an emoticon or direct connect image.
+				if([[img getAttribute:@"src"] rangeOfString:internalObjectID].location != NSNotFound &&
+				   [imgClass rangeOfString:@"emoticon"].location == NSNotFound &&
+				   [imgClass rangeOfString:@"fullSizeImage"].location == NSNotFound &&
+				   [imgClass rangeOfString:@"scaledToFitImage"].location == NSNotFound)
+					[img setSrc:webKitUserIconPath];
+			}
+		}		
 	}
 }
 
@@ -1165,7 +1246,7 @@ static NSArray *draggedTypes = nil;
  */
 - (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject
 {
-	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@.tiff", [inObject internalObjectID], [NSString randomStringOfLength:5]];
+	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@.png", [inObject internalObjectID], [NSString randomStringOfLength:5]];
 	return [[adium cachesPath] stringByAppendingPathComponent:filename];
 }
 
