@@ -77,7 +77,8 @@
 	shouldDrawFocusRing = NO;
 
 	mouseDownPos = NSZeroPoint;
-	
+	maxSize = NSZeroSize;
+
 	useNSImagePickerController = YES;
 	
 	/* Determine if we can load the image picker controller class.  We might not be able to for a user with a corrupt AddressBook.framework,
@@ -172,6 +173,11 @@
 - (void)setUseNSImagePickerController:(BOOL)inUseNSImagePickerController
 {
 	useNSImagePickerController = inUseNSImagePickerController;
+}
+
+- (void)setMaxSize:(NSSize)inMaxSize
+{
+	maxSize = inMaxSize;
 }
 
 // Monitoring user interaction --------------------------------------------------------
@@ -363,16 +369,28 @@
  */
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
-	BOOL notified = NO;
-	
+	BOOL	notified = NO, resized = NO;
+	NSImage *droppedImage;
+	NSSize	droppedImageSize;
+
 	[super concludeDragOperation:sender];
-	
-	if (pickerController) {
+
+	droppedImage = [self image];
+	droppedImageSize = [droppedImage size];
+
+	if ((maxSize.width > 0 && droppedImageSize.width > maxSize.width) ||
+		(maxSize.height > 0 && droppedImageSize.height > maxSize.height)) {
+		droppedImage = [droppedImage imageByScalingToSize:maxSize];
+		//This will notify the picker controller that the selection changed, as well
+		[self setImage:droppedImage];
+		resized = YES;
+
+	} else if (pickerController) {
 		[pickerController selectionChanged];
 	}
-	
-	//Use the file's data if possible
-	if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
+
+	//Use the file's data if possible and the image wasn't too big
+	if (!resized && [delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
 		NSPasteboard	*pboard = [sender draggingPasteboard];
 
 		if ([[pboard types] containsObject:NSFilenamesPboardType]) {
@@ -397,7 +415,7 @@
 	if (!notified && [delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]) {
 		[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
 					   withObject:self
-					   withObject:[self image]];
+					   withObject:droppedImage];
 	}
 }
 
@@ -429,15 +447,25 @@
 	if (imageData) {
 		NSImage *image = [[[NSImage alloc] initWithData:imageData] autorelease];
 		if (image) {
-			[self setImage:image];
+			NSSize	imageSize = [image size];
+
+			BOOL resized = NO;
+			if ((maxSize.width > 0 && imageSize.width > maxSize.width) ||
+				(maxSize.height > 0 && imageSize.height > maxSize.height)) {
+				image = [image imageByScalingToSize:maxSize];
+				resized = YES;
+			}
 			
+			[self setImage:image];
+							
 			if (pickerController) {
 				[pickerController selectionChanged];
 			}
 			
 			//Inform the delegate
 			if (delegate) {
-				if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
+				if (!resized &&
+					[delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
 					[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)
 								   withObject:self
 								   withObject:imageData];
@@ -543,16 +571,26 @@
 		if ([openPanel runModalForDirectory:nil file:nil types:[NSImage imageFileTypes]] == NSOKButton) {
 			NSData	*imageData;
 			NSImage *image;
-			
+			NSSize	imageSize;
+
 			imageData = [NSData dataWithContentsOfFile:[openPanel filename]];
 			image = (imageData ? [[[NSImage alloc] initWithData:imageData] autorelease] : nil);
+			imageSize = (image ? [image size] : NSZeroSize);
 
+			BOOL resized = NO;
+			if ((maxSize.width > 0 && imageSize.width > maxSize.width) ||
+				(maxSize.height > 0 && imageSize.height > maxSize.height)) {
+				image = [image imageByScalingToSize:maxSize];
+				resized = YES;
+			}
+			
 			//Update the image view
 			[self setImage:image];
 			
 			//Inform the delegate
 			if (delegate) {
-				if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
+				if (!resized &&
+					[delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
 					[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)
 								   withObject:self
 								   withObject:imageData];
@@ -575,6 +613,15 @@
  */
 - (void)imagePicker:(id)sender selectedImage:(NSImage *)image
 {
+	NSSize imageSize = [image size];
+
+	BOOL resized = NO;
+	if ((maxSize.width > 0 && imageSize.width > maxSize.width) ||
+		(maxSize.height > 0 && imageSize.height > maxSize.height)) {
+		image = [image imageByScalingToSize:maxSize];
+		resized = YES;
+	}
+	
 	//Update the NSImageView
 	[self setImage:image];
 	

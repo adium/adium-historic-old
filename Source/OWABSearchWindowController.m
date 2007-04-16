@@ -134,6 +134,8 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	[addContactButton setLocalizedString:AILocalizedString(@"Add Contact", nil)];
 	[addContactCancelButton setLocalizedString:AILocalizedString(@"Cancel", nil)];
 	
+	[imageView_contactIcon setMaxSize:NSMakeSize(256, 256)];
+
 	[self _configurePeoplePicker];
 
 	[[self window] selectKeyViewFollowingView:peoplePicker];
