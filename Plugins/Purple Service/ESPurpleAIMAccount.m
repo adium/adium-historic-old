@@ -393,12 +393,19 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 						NSDictionary	*imgArguments = [AIHTMLDecoder parseArguments:chunkString];
 						NSString		*source = [imgArguments objectForKey:@"src"];
 						NSString		*alt = [imgArguments objectForKey:@"alt"];
-						
+						NSString		*filename;
 						NSData			*imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:source]];
 						
 						//Store the src image's data gaimside
-						int				imgstore = gaim_imgstore_add([imageData bytes], [imageData length], (alt ? [alt UTF8String] : [source UTF8String]));
-						
+						filename = (alt ? alt : [source lastPathComponent]);
+						if (![[filename pathExtension] length]) {
+							filename = [filename stringByAppendingPathExtension:@"png"];
+						}
+
+						int				imgstore = gaim_imgstore_add([imageData bytes], [imageData length], [filename UTF8String]);
+
+						AILog(@"Adding image id %i with name %s", [filename UTF8String]);
+
 						NSString		*newTag = [NSString stringWithFormat:@"<IMG ID=\"%i\" CLASS=\"scaledToFitImage\">",imgstore];
 						[processedString appendString:newTag];
 					}
