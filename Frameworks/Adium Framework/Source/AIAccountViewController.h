@@ -53,6 +53,7 @@
 	
 	//Instance variables
     AIAccount			*account;
+	NSMutableDictionary	*changedPrefDict;
 }
 
 + (id)accountViewController;
@@ -65,5 +66,8 @@
 - (IBAction)changedPreference:(id)sender;
 - (NSString *)nibName;
 - (void)saveConfiguration;
+
+//For subclasses
+- (NSDictionary *)keyToKeyDict;
 
 @end
