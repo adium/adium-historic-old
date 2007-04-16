@@ -60,14 +60,6 @@
 		34486C5106D1DF0400DA778C /* AICompletingTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B5106D1DF0300DA778C /* AICompletingTextField.m */; };
 		34486C5206D1DF0400DA778C /* AICursorAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B5206D1DF0300DA778C /* AICursorAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34486C5306D1DF0400DA778C /* AICursorAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B5306D1DF0300DA778C /* AICursorAdditions.m */; };
-		34486C5406D1DF0400DA778C /* AICustomTabCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B5406D1DF0300DA778C /* AICustomTabCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		34486C5506D1DF0400DA778C /* AICustomTabCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B5506D1DF0300DA778C /* AICustomTabCell.m */; };
-		34486C5606D1DF0400DA778C /* AICustomTabDragging.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B5606D1DF0300DA778C /* AICustomTabDragging.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		34486C5706D1DF0400DA778C /* AICustomTabDragging.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B5706D1DF0300DA778C /* AICustomTabDragging.m */; };
-		34486C5806D1DF0400DA778C /* AICustomTabDragWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B5806D1DF0300DA778C /* AICustomTabDragWindow.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		34486C5906D1DF0400DA778C /* AICustomTabDragWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B5906D1DF0300DA778C /* AICustomTabDragWindow.m */; };
-		34486C5A06D1DF0400DA778C /* AICustomTabsView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B5A06D1DF0300DA778C /* AICustomTabsView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		34486C5B06D1DF0400DA778C /* AICustomTabsView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B5B06D1DF0300DA778C /* AICustomTabsView.m */; };
 		34486C5C06D1DF0400DA778C /* AIDictionaryAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B5C06D1DF0300DA778C /* AIDictionaryAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34486C5D06D1DF0400DA778C /* AIDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B5D06D1DF0300DA778C /* AIDictionaryAdditions.m */; };
 		34486C5E06D1DF0400DA778C /* AIDockingWindow.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B5E06D1DF0300DA778C /* AIDockingWindow.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -153,14 +145,6 @@
 		34D18392075FC2390075A380 /* AIRolloverButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D18390075FC2390075A380 /* AIRolloverButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34D18393075FC2390075A380 /* AIRolloverButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D18391075FC2390075A380 /* AIRolloverButton.m */; };
 		34D833AC07CBE355006466F2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 34D833AB07CBE355006466F2 /* Localizable.strings */; };
-		34D8355C07CBEB0E006466F2 /* Aqua_Tab_Divider.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8355407CBEB0E006466F2 /* Aqua_Tab_Divider.png */; };
-		34D8355D07CBEB0E006466F2 /* aquaTabCloseRollover.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8355507CBEB0E006466F2 /* aquaTabCloseRollover.tif */; };
-		34D8355E07CBEB0E006466F2 /* aquaTabClosePressed.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8355607CBEB0E006466F2 /* aquaTabClosePressed.tif */; };
-		34D8355F07CBEB0E006466F2 /* Aqua_Tab_Right.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8355707CBEB0E006466F2 /* Aqua_Tab_Right.png */; };
-		34D8356007CBEB0E006466F2 /* aquaTabCloseBack.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8355807CBEB0E006466F2 /* aquaTabCloseBack.tif */; };
-		34D8356107CBEB0E006466F2 /* Aqua_Tab_Left.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8355907CBEB0E006466F2 /* Aqua_Tab_Left.png */; };
-		34D8356207CBEB0E006466F2 /* aquaTabClose.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8355A07CBEB0E006466F2 /* aquaTabClose.tif */; };
-		34D8356307CBEB0E006466F2 /* Aqua_Tab_Middle.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8355B07CBEB0E006466F2 /* Aqua_Tab_Middle.png */; };
 		34D8357407CBEB4C006466F2 /* PlasticButtonDefault_Caps.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8356E07CBEB4C006466F2 /* PlasticButtonDefault_Caps.png */; };
 		34D8357507CBEB4C006466F2 /* PlasticButtonNormal_Middle.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8356F07CBEB4C006466F2 /* PlasticButtonNormal_Middle.png */; };
 		34D8357607CBEB4C006466F2 /* PlasticButtonPressed_Caps.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8357007CBEB4C006466F2 /* PlasticButtonPressed_Caps.png */; };
@@ -236,7 +220,6 @@
 		4BD1F3D906D27F3100B3975E /* AIScaledImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD1F3D706D27F3100B3975E /* AIScaledImageCell.m */; };
 		4BD1F5D106D28D2E00B3975E /* AIColoredBoxView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B4C06D1DF0300DA778C /* AIColoredBoxView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BD1F5D206D28D2E00B3975E /* AIColoredBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B4D06D1DF0300DA778C /* AIColoredBoxView.m */; };
-		4BFDF29707D2D36E008E4B91 /* Aqua_Tab_Background.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BFDF29607D2D36E008E4B91 /* Aqua_Tab_Background.png */; };
 		631BE7CF0AD2C56700F3B896 /* AICalendarDateAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 631BE7CD0AD2C56700F3B896 /* AICalendarDateAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		631BE7D00AD2C56700F3B896 /* AICalendarDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 631BE7CE0AD2C56700F3B896 /* AICalendarDateAdditions.m */; };
 		639B3CA80ABC708700D618E9 /* AIWindowControllerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 639B3CA60ABC708700D618E9 /* AIWindowControllerAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -321,14 +304,6 @@
 		34486B5106D1DF0300DA778C /* AICompletingTextField.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AICompletingTextField.m; path = Source/AICompletingTextField.m; sourceTree = "<group>"; };
 		34486B5206D1DF0300DA778C /* AICursorAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AICursorAdditions.h; path = Source/AICursorAdditions.h; sourceTree = "<group>"; };
 		34486B5306D1DF0300DA778C /* AICursorAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AICursorAdditions.m; path = Source/AICursorAdditions.m; sourceTree = "<group>"; };
-		34486B5406D1DF0300DA778C /* AICustomTabCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AICustomTabCell.h; path = Source/AICustomTabCell.h; sourceTree = "<group>"; };
-		34486B5506D1DF0300DA778C /* AICustomTabCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AICustomTabCell.m; path = Source/AICustomTabCell.m; sourceTree = "<group>"; };
-		34486B5606D1DF0300DA778C /* AICustomTabDragging.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AICustomTabDragging.h; path = Source/AICustomTabDragging.h; sourceTree = "<group>"; };
-		34486B5706D1DF0300DA778C /* AICustomTabDragging.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AICustomTabDragging.m; path = Source/AICustomTabDragging.m; sourceTree = "<group>"; };
-		34486B5806D1DF0300DA778C /* AICustomTabDragWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AICustomTabDragWindow.h; path = Source/AICustomTabDragWindow.h; sourceTree = "<group>"; };
-		34486B5906D1DF0300DA778C /* AICustomTabDragWindow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AICustomTabDragWindow.m; path = Source/AICustomTabDragWindow.m; sourceTree = "<group>"; };
-		34486B5A06D1DF0300DA778C /* AICustomTabsView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AICustomTabsView.h; path = Source/AICustomTabsView.h; sourceTree = "<group>"; };
-		34486B5B06D1DF0300DA778C /* AICustomTabsView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AICustomTabsView.m; path = Source/AICustomTabsView.m; sourceTree = "<group>"; };
 		34486B5C06D1DF0300DA778C /* AIDictionaryAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIDictionaryAdditions.h; path = Source/AIDictionaryAdditions.h; sourceTree = "<group>"; };
 		34486B5D06D1DF0300DA778C /* AIDictionaryAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIDictionaryAdditions.m; path = Source/AIDictionaryAdditions.m; sourceTree = "<group>"; };
 		34486B5E06D1DF0300DA778C /* AIDockingWindow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIDockingWindow.h; path = Source/AIDockingWindow.h; sourceTree = "<group>"; };
@@ -433,14 +408,6 @@
 		34D18390075FC2390075A380 /* AIRolloverButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIRolloverButton.h; path = Source/AIRolloverButton.h; sourceTree = "<group>"; };
 		34D18391075FC2390075A380 /* AIRolloverButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIRolloverButton.m; path = Source/AIRolloverButton.m; sourceTree = "<group>"; };
 		34D833A907CBE34B006466F2 /* en */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		34D8355407CBEB0E006466F2 /* Aqua_Tab_Divider.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Aqua_Tab_Divider.png; path = Resources/Aqua_Tab_Divider.png; sourceTree = "<group>"; };
-		34D8355507CBEB0E006466F2 /* aquaTabCloseRollover.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = aquaTabCloseRollover.tif; path = Resources/aquaTabCloseRollover.tif; sourceTree = "<group>"; };
-		34D8355607CBEB0E006466F2 /* aquaTabClosePressed.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = aquaTabClosePressed.tif; path = Resources/aquaTabClosePressed.tif; sourceTree = "<group>"; };
-		34D8355707CBEB0E006466F2 /* Aqua_Tab_Right.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Aqua_Tab_Right.png; path = Resources/Aqua_Tab_Right.png; sourceTree = "<group>"; };
-		34D8355807CBEB0E006466F2 /* aquaTabCloseBack.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = aquaTabCloseBack.tif; path = Resources/aquaTabCloseBack.tif; sourceTree = "<group>"; };
-		34D8355907CBEB0E006466F2 /* Aqua_Tab_Left.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Aqua_Tab_Left.png; path = Resources/Aqua_Tab_Left.png; sourceTree = "<group>"; };
-		34D8355A07CBEB0E006466F2 /* aquaTabClose.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = aquaTabClose.tif; path = Resources/aquaTabClose.tif; sourceTree = "<group>"; };
-		34D8355B07CBEB0E006466F2 /* Aqua_Tab_Middle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Aqua_Tab_Middle.png; path = Resources/Aqua_Tab_Middle.png; sourceTree = "<group>"; };
 		34D8356E07CBEB4C006466F2 /* PlasticButtonDefault_Caps.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PlasticButtonDefault_Caps.png; path = Resources/PlasticButtonDefault_Caps.png; sourceTree = "<group>"; };
 		34D8356F07CBEB4C006466F2 /* PlasticButtonNormal_Middle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PlasticButtonNormal_Middle.png; path = Resources/PlasticButtonNormal_Middle.png; sourceTree = "<group>"; };
 		34D8357007CBEB4C006466F2 /* PlasticButtonPressed_Caps.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PlasticButtonPressed_Caps.png; path = Resources/PlasticButtonPressed_Caps.png; sourceTree = "<group>"; };
@@ -521,7 +488,6 @@
 		4BC869FB08631A6300B2C430 /* AIObjectSelectionPopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIObjectSelectionPopUpButton.m; path = Source/AIObjectSelectionPopUpButton.m; sourceTree = "<group>"; };
 		4BD1F3D606D27F3100B3975E /* AIScaledImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIScaledImageCell.h; path = Source/AIScaledImageCell.h; sourceTree = "<group>"; };
 		4BD1F3D706D27F3100B3975E /* AIScaledImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIScaledImageCell.m; path = Source/AIScaledImageCell.m; sourceTree = "<group>"; };
-		4BFDF29607D2D36E008E4B91 /* Aqua_Tab_Background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Aqua_Tab_Background.png; path = Resources/Aqua_Tab_Background.png; sourceTree = "<group>"; };
 		631BE7CD0AD2C56700F3B896 /* AICalendarDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AICalendarDateAdditions.h; path = Source/AICalendarDateAdditions.h; sourceTree = "<group>"; };
 		631BE7CE0AD2C56700F3B896 /* AICalendarDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AICalendarDateAdditions.m; path = Source/AICalendarDateAdditions.m; sourceTree = "<group>"; };
 		636D3D6508D267F500EFFD69 /* AILinkedList.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILinkedList.h; path = Source/AILinkedList.h; sourceTree = "<group>"; };
@@ -798,22 +764,6 @@
 			name = "Video capture (From FW using QT)";
 			sourceTree = "<group>";
 		};
-		4BD1EED206D25EC900B3975E /* Dynamic, draggable tabs */ = {
-			isa = PBXGroup;
-			children = (
-				34486B5406D1DF0300DA778C /* AICustomTabCell.h */,
-				34486B5506D1DF0300DA778C /* AICustomTabCell.m */,
-				34486B5606D1DF0300DA778C /* AICustomTabDragging.h */,
-				34486B5706D1DF0300DA778C /* AICustomTabDragging.m */,
-				34486B5806D1DF0300DA778C /* AICustomTabDragWindow.h */,
-				34486B5906D1DF0300DA778C /* AICustomTabDragWindow.m */,
-				34486B5A06D1DF0300DA778C /* AICustomTabsView.h */,
-				34486B5B06D1DF0300DA778C /* AICustomTabsView.m */,
-				4BD1F41C06D282EC00B3975E /* Images */,
-			);
-			name = "Dynamic, draggable tabs";
-			sourceTree = "<group>";
-		};
 		4BD1EED506D25ED400B3975E /* Brushed Metal Controls */ = {
 			isa = PBXGroup;
 			children = (
@@ -1076,7 +1026,6 @@
 				4BD1EF7A06D2637800B3975E /* Button with a popup menu for toolbar items */,
 				4BD1F5A706D28BE600B3975E /* Colored box view */,
 				4BD1F2D806D2699D00B3975E /* Delayed action textField */,
-				4BD1EED206D25EC900B3975E /* Dynamic, draggable tabs */,
 				4BD1F32D06D26CE800B3975E /* Image view with image picker from AB/iChat */,
 				4BD1EEFB06D2612B00B3975E /* Link Tracking Text View */,
 				4BD1F38606D276DD00B3975E /* OutlineView with several improvements */,
@@ -1300,22 +1249,6 @@
 			name = "Floating Animations";
 			sourceTree = "<group>";
 		};
-		4BD1F41C06D282EC00B3975E /* Images */ = {
-			isa = PBXGroup;
-			children = (
-				4BFDF29607D2D36E008E4B91 /* Aqua_Tab_Background.png */,
-				34D8355407CBEB0E006466F2 /* Aqua_Tab_Divider.png */,
-				34D8355907CBEB0E006466F2 /* Aqua_Tab_Left.png */,
-				34D8355B07CBEB0E006466F2 /* Aqua_Tab_Middle.png */,
-				34D8355707CBEB0E006466F2 /* Aqua_Tab_Right.png */,
-				34D8355A07CBEB0E006466F2 /* aquaTabClose.tif */,
-				34D8355807CBEB0E006466F2 /* aquaTabCloseBack.tif */,
-				34D8355607CBEB0E006466F2 /* aquaTabClosePressed.tif */,
-				34D8355507CBEB0E006466F2 /* aquaTabCloseRollover.tif */,
-			);
-			name = Images;
-			sourceTree = "<group>";
-		};
 		4BD1F41F06D2830200B3975E /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -1437,10 +1370,6 @@
 				34486C4A06D1DF0400DA778C /* AIColorAdditions.h in Headers */,
 				34486C5006D1DF0400DA778C /* AICompletingTextField.h in Headers */,
 				34486C5206D1DF0400DA778C /* AICursorAdditions.h in Headers */,
-				34486C5406D1DF0400DA778C /* AICustomTabCell.h in Headers */,
-				34486C5606D1DF0400DA778C /* AICustomTabDragging.h in Headers */,
-				34486C5806D1DF0400DA778C /* AICustomTabDragWindow.h in Headers */,
-				34486C5A06D1DF0400DA778C /* AICustomTabsView.h in Headers */,
 				34486C5C06D1DF0400DA778C /* AIDictionaryAdditions.h in Headers */,
 				34486C5E06D1DF0400DA778C /* AIDockingWindow.h in Headers */,
 				34486C6006D1DF0400DA778C /* AIEventAdditions.h in Headers */,
@@ -1601,14 +1530,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				34D833AC07CBE355006466F2 /* Localizable.strings in Resources */,
-				34D8355C07CBEB0E006466F2 /* Aqua_Tab_Divider.png in Resources */,
-				34D8355D07CBEB0E006466F2 /* aquaTabCloseRollover.tif in Resources */,
-				34D8355E07CBEB0E006466F2 /* aquaTabClosePressed.tif in Resources */,
-				34D8355F07CBEB0E006466F2 /* Aqua_Tab_Right.png in Resources */,
-				34D8356007CBEB0E006466F2 /* aquaTabCloseBack.tif in Resources */,
-				34D8356107CBEB0E006466F2 /* Aqua_Tab_Left.png in Resources */,
-				34D8356207CBEB0E006466F2 /* aquaTabClose.tif in Resources */,
-				34D8356307CBEB0E006466F2 /* Aqua_Tab_Middle.png in Resources */,
 				34D8357407CBEB4C006466F2 /* PlasticButtonDefault_Caps.png in Resources */,
 				34D8357507CBEB4C006466F2 /* PlasticButtonNormal_Middle.png in Resources */,
 				34D8357607CBEB4C006466F2 /* PlasticButtonPressed_Caps.png in Resources */,
@@ -1629,7 +1550,6 @@
 				34D835A707CBEBEF006466F2 /* PopUpRollover_Middle.png in Resources */,
 				34D835A807CBEBEF006466F2 /* PopUpRollover_Caps.png in Resources */,
 				34D835A907CBEBEF006466F2 /* PopUpArrow.png in Resources */,
-				4BFDF29707D2D36E008E4B91 /* Aqua_Tab_Background.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1652,10 +1572,6 @@
 				34486C4B06D1DF0400DA778C /* AIColorAdditions.m in Sources */,
 				34486C5106D1DF0400DA778C /* AICompletingTextField.m in Sources */,
 				34486C5306D1DF0400DA778C /* AICursorAdditions.m in Sources */,
-				34486C5506D1DF0400DA778C /* AICustomTabCell.m in Sources */,
-				34486C5706D1DF0400DA778C /* AICustomTabDragging.m in Sources */,
-				34486C5906D1DF0400DA778C /* AICustomTabDragWindow.m in Sources */,
-				34486C5B06D1DF0400DA778C /* AICustomTabsView.m in Sources */,
 				34486C5D06D1DF0400DA778C /* AIDictionaryAdditions.m in Sources */,
 				34486C5F06D1DF0400DA778C /* AIDockingWindow.m in Sources */,
 				34486C6106D1DF0400DA778C /* AIEventAdditions.m in Sources */,
