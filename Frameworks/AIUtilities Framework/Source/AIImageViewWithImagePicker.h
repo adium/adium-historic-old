@@ -79,6 +79,8 @@
 	NSResponder				*lastResp;
 	
 	NSPoint					mouseDownPos;
+	
+	NSSize					maxSize;
 }
 
 - (void)setDelegate:(id)inDelegate;
@@ -86,5 +88,6 @@
 - (void)setTitle:(NSString *)inTitle;
 - (IBAction)showImagePicker:(id)sender;
 - (void)setUseNSImagePickerController:(BOOL)inUseNSImagePickerController;
+- (void)setMaxSize:(NSSize)inMaxSize;
 
 @end
