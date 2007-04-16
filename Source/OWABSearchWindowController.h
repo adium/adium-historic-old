@@ -8,7 +8,7 @@
 
 #import <Adium/AIWindowController.h>
 
-@class AILocalizationButton, ABPeoplePickerView, AIService, ABPerson;
+@class AILocalizationButton, ABPeoplePickerView, AIService, ABPerson, AIImageViewWithImagePicker;
 
 @interface OWABSearchWindowController : AIWindowController {
 	//Search View
@@ -28,7 +28,7 @@
 	IBOutlet NSTextField				*textField_nickname;
 	IBOutlet NSTextField				*textField_email;
 	
-	IBOutlet NSImageView				*imageView_contactIcon;
+	IBOutlet AIImageViewWithImagePicker	*imageView_contactIcon;
 	
 	IBOutlet AILocalizationTextField	*label_mainTitle;
 	IBOutlet AILocalizationTextField	*label_contactType;

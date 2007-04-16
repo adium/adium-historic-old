@@ -83,6 +83,9 @@
 {
 	[imageGridView setImageSize:NSMakeSize(30, 30)];	
 	[coloredBox setColor:[NSColor windowBackgroundColor]];
+	
+	[picker setMaxSize:NSMakeSize(256, 256)];
+
 	currentHoveredIndex = -1;
 }
 
