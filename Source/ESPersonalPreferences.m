@@ -67,6 +67,8 @@
 
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
 
+	[imageView_userIcon setMaxSize:NSMakeSize(256, 256)];
+
 	[super viewDidLoad];
 }
 
