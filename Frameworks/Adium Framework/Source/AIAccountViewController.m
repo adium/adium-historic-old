@@ -45,6 +45,13 @@
  */
 @implementation AIAccountViewController
 
++ (void)initialize
+{
+	if (self == [AIAccountViewController class]) {
+		[self exposeBinding:@"account"];
+	}
+}
+
 /*!
  * @brief Create a new account view controller
  */
@@ -64,7 +71,8 @@
     if ((self = [super init]))
 	{
 		account = nil;
-		
+		changedPrefDict = [[NSMutableDictionary alloc] init];
+
 		//Load custom views for our subclass (If our subclass specifies a nib name)
 		if ([self nibName]) {
 			[NSBundle loadNibNamed:[self nibName] owner:self];
@@ -75,7 +83,7 @@
 		if (!view_profile) [ourBundle loadNibFile:@"AccountProfile" externalNameTable:nameTable withZone:nil];
 		if (!view_options) [ourBundle loadNibFile:@"AccountOptions" externalNameTable:nameTable withZone:nil];
 		if (!view_privacy) [ourBundle loadNibFile:@"AccountPrivacy" externalNameTable:nameTable withZone:nil];
-		
+
 		[self localizeStrings];
 	}
 
@@ -90,6 +98,7 @@
 	[view_setup release];
 	[view_profile release];
 	[view_options release];
+	[changedPrefDict release];
 
     [[adium notificationCenter] removeObserver:self];
     
@@ -181,7 +190,10 @@
 	if (account != inAccount) {
 		AIService *service;
 		
+		[self willChangeValueForKey:@"account"];
 		account = inAccount;
+		[self didChangeValueForKey:@"account"];
+		
 		service = [account service];
 
 		//UID Label
@@ -296,6 +308,10 @@
 	[account setPreference:[NSNumber numberWithInt:[[popUp_encryption selectedItem] tag]]
 					forKey:KEY_ENCRYPTED_CHAT_PREFERENCE
 					 group:GROUP_ENCRYPTION];
+	
+	//Set all preferences in the changedPrefDict
+	[account setPreferences:changedPrefDict
+					inGroup:GROUP_ACCOUNT_STATUS];
 }
 
 /*!
@@ -309,6 +325,50 @@
 {
 	//Empty
 }
+
+/*!
+ * @brief Dictionary mapping Adium preference keys to exposed binding keys
+ *
+ * The objects of the dictionary should be Adium preference keys
+ * The keys of the dictionary should be exposed binding keys
+ *
+ * Subclasses must include the contents of super's dictionary in their return value.
+ *
+ * The contents of this dictionary will be used to automatically retrieve and save account-specific preferences
+ * in the GROUP_ACCOUNT_STATUS group to/from controls bound to the owner's keypath as keyed by the dictionary.
+ */
+- (NSDictionary *)keyToKeyDict
+{
+	return [NSDictionary dictionary];
+}
+
+- (void)setValue:(id)value forKey:(NSString *)key
+{
+	NSString *prefKey = [[self keyToKeyDict] objectForKey:key];
+	if (prefKey) {
+		//If this is a key for which we have an Adium preferences mapping, set the value for saving in saveConfiguration
+		[self willChangeValueForKey:key];
+		[changedPrefDict setValue:value forKey:prefKey];
+		[self didChangeValueForKey:key];
+
+	} else {
+		[super setValue:value forKey:key];
+	}
+}
+
+- (id)valueForKey:(NSString *)key
+{
+	NSString *prefKey = [[self keyToKeyDict] objectForKey:key];
+	if (prefKey) {
+		//If this is a key for which we have an Adium preferences mapping, retrieve the current value
+		id value = [changedPrefDict objectForKey:prefKey];
+		if (!value) value = [account preferenceForKey:prefKey group:GROUP_ACCOUNT_STATUS];
+		return value;
+	} else {
+		return [super valueForKey:key];
+	}
+}
+
 
 #pragma mark Localization
 - (void)localizeStrings
