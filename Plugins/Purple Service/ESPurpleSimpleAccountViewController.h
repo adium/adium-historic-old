@@ -8,8 +8,7 @@
 #import <Adium/AIAccountViewController.h>
 
 @interface ESPurpleSimpleAccountViewController : AIAccountViewController {
-	IBOutlet	NSButton	*checkBox_publishStatus;
-	IBOutlet	NSButton	*checkBox_useUDP;
+
 }
 
 @end
