@@ -337,6 +337,11 @@
 {   
 	[[adium preferenceController] setPreference:value forKey:key group:group object:self];
 }
+- (void)setPreferences:(NSDictionary *)prefs inGroup:(NSString *)group
+{
+	[[adium preferenceController] setPreferences:prefs inGroup:group object:self];	
+}
+
 - (void)setFormattedUID:(NSString *)inFormattedUID notify:(NotifyTiming)notify
 {
 	[self setStatusObject:inFormattedUID

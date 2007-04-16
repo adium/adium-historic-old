@@ -302,6 +302,20 @@
 }
 
 /*!
+* @brief Set multiple preferences at once
+ *
+ * @param inPrefDict An NSDictionary whose keys are preference keys and objects are the preferences for those keys. All must be plist-encodable.
+ * @param group An arbitrary NSString group
+ */
+- (void)setPreferences:(NSDictionary *)inPrefDict inGroup:(NSString *)group object:(AIListObject *)object
+{
+	NSMutableDictionary	*prefDict = [self cachedPreferencesForGroup:group object:object];
+	
+	[prefDict addEntriesFromDictionary:inPrefDict];
+	[self updatePreferences:prefDict forKey:nil group:group object:object];
+}
+
+/*!
  * @brief Set multiple global preferences at once
  *
  * @param inPrefDict An NSDictionary whose keys are preference keys and objects are the preferences for those keys. All must be plist-encodable.
@@ -309,11 +323,7 @@
  */
 - (void)setPreferences:(NSDictionary *)inPrefDict inGroup:(NSString *)group
 {
-	NSMutableDictionary	*prefDict = [self cachedPreferencesForGroup:group object:nil];
-
-	[prefDict addEntriesFromDictionary:inPrefDict];
-	
-	[self updatePreferences:prefDict forKey:nil group:group object:nil];
+	[self setPreferences:inPrefDict inGroup:group object:nil];
 }
 
 /*!
