@@ -379,13 +379,21 @@ static void adiumPurpleRequestClose(PurpleRequestType type, void *uiHandle)
 	}
 }
 
+static void *adiumPurpleRequestFolder(const char *title, const char *dirname, GCallback ok_cb, GCallback cancel_cb, void *user_data)
+{
+	AILog(@"adiumPurpleRequestFolder");
+
+	return NULL;
+}
+
 static PurpleRequestUiOps adiumPurpleRequestOps = {
     adiumPurpleRequestInput,
     adiumPurpleRequestChoice,
     adiumPurpleRequestAction,
     adiumPurpleRequestFields,
 	adiumPurpleRequestFile,
-    adiumPurpleRequestClose
+    adiumPurpleRequestClose,
+	adiumPurpleRequestFolder
 };
 
 PurpleRequestUiOps *adium_purple_request_get_ui_ops()
