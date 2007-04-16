@@ -586,8 +586,18 @@
 						NSString *tmpDir = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSProcessInfo processInfo] globallyUniqueString]];
 						NSString *filename = [fileWrapper preferredFilename];
 						if (!filename) filename = [NSString randomStringOfLength:5];
-
+						
 						path = [tmpDir stringByAppendingPathComponent:filename];
+
+						if ([fileWrapper writeToFile:tmpDir atomically:YES updateFilenames:YES]) {
+							AILog(@"Wrote out the file to %@ for sending",path);
+						} else {
+							NSLog(@"Failed to write out the file to %@ for sending", path);
+							AILog(@"Failed to write out the file to %@ for sending", path);
+
+							//The transfer is not going to happen so clear path
+							path = nil;
+						}
 					}
 
 					[[adium fileTransferController] sendFile:path
@@ -755,15 +765,14 @@
 	NSAttributedString	*attributedMessage;
 	
 	//Create our content object
-	attributedMessage = [[NSAttributedString alloc] initWithString:message
-														attributes:[self defaultFormattingAttributes]];
+	attributedMessage = [[AIHTMLDecoder decoder] decodeHTML:message withDefaultAttributes:[self defaultFormattingAttributes]];
+
 	content = [AIContentEvent statusInChat:inChat
 								withSource:[inChat listObject]
 							   destination:[inChat account]
 									  date:[NSDate date]
 								   message:attributedMessage
 								  withType:type];
-	[attributedMessage release];
 
 	//Add the object
 	[self receiveContentObject:content];
