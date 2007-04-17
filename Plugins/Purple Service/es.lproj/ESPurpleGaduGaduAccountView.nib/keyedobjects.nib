@@ -108,7 +108,7 @@
 				<integer>3</integer>
 			</dict>
 		</dict>
-		<string>ESGaimGaduGaduAccountViewController</string>
+		<string>ESPurpleGaduGaduAccountViewController</string>
 		<dict>
 			<key>$classes</key>
 			<array>
@@ -340,7 +340,7 @@
 			<key>NSSize</key>
 			<real>13</real>
 			<key>NSfFlags</key>
-			<integer>1044</integer>
+			<integer>1040</integer>
 		</dict>
 		<string>LucidaGrande</string>
 		<dict>
@@ -486,7 +486,6 @@
 			<key>$classes</key>
 			<array>
 				<string>NSCustomResource</string>
-				<string>%NSCustomResource</string>
 				<string>NSObject</string>
 			</array>
 			<key>$classname</key>
@@ -568,7 +567,6 @@
 				<string>NSPopUpButtonCell</string>
 				<string>NSMenuItemCell</string>
 				<string>NSButtonCell</string>
-				<string>%NSButtonCell</string>
 				<string>NSActionCell</string>
 				<string>NSCell</string>
 				<string>NSObject</string>
@@ -759,7 +757,6 @@
 			<key>$classes</key>
 			<array>
 				<string>NSTextField</string>
-				<string>%NSTextField</string>
 				<string>NSControl</string>
 				<string>NSView</string>
 				<string>NSResponder</string>
@@ -867,11 +864,11 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>12</integer>
+					<integer>10</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>40</integer>
+					<integer>12</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -883,7 +880,7 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>10</integer>
+					<integer>40</integer>
 				</dict>
 			</array>
 		</dict>
@@ -906,7 +903,7 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>10</integer>
+					<integer>2</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -922,7 +919,7 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>2</integer>
+					<integer>10</integer>
 				</dict>
 			</array>
 		</dict>
@@ -940,11 +937,11 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>12</integer>
+					<integer>10</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>40</integer>
+					<integer>12</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -952,7 +949,7 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>10</integer>
+					<integer>40</integer>
 				</dict>
 			</array>
 		</dict>
@@ -987,10 +984,10 @@
 			</array>
 		</dict>
 		<string>File's Owner</string>
-		<string>NSPopUpButton</string>
-		<string>NSTextField2211</string>
-		<string>PopUpList</string>
 		<string>Privacy</string>
+		<string>NSPopUpButton</string>
+		<string>PopUpList</string>
+		<string>NSTextField2211</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -1019,19 +1016,7 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>23</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>9</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>60</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>40</integer>
+					<integer>2</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1039,15 +1024,27 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>22</integer>
+					<integer>40</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>2</integer>
+					<integer>9</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
 					<integer>10</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>60</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>22</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>23</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1101,14 +1098,14 @@
 				</dict>
 			</array>
 		</dict>
-		<integer>186</integer>
-		<integer>183</integer>
-		<integer>188</integer>
-		<integer>187</integer>
-		<integer>189</integer>
-		<integer>184</integer>
 		<integer>1</integer>
+		<integer>189</integer>
+		<integer>187</integer>
+		<integer>183</integer>
 		<integer>141</integer>
+		<integer>188</integer>
+		<integer>184</integer>
+		<integer>186</integer>
 		<integer>185</integer>
 		<dict>
 			<key>$class</key>
