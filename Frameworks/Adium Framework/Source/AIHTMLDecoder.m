@@ -1851,15 +1851,16 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		NSString *srcPath = [[[NSURL fileURLWithPath:inPath] absoluteString] stringByEscapingForXMLWithEntities:nil];
 		NSString *altName = (inName ? [inName stringByEscapingForXMLWithEntities:nil] : [srcPath lastPathComponent]);
 
+		//Note the space at the end of the tag
+		NSString *imageClassTag = (imageClass ? [NSString stringWithFormat:@"class=\"%@\" ", imageClass] : @"");
+
 		if (attachmentImage) {
 			//Include size information if possible
 			NSSize imageSize = [attachmentImage size];
-			AILog(@"AIHTMLDecoder: appending <img class=\"%@\" src=\"%@\" alt=\"%@\" width=\"%i\" height=\"%i\">", imageClass, srcPath, altName, (int)imageSize.width, (int)imageSize.height);
-			[string appendFormat:@"<img class=\"%@\" src=\"%@\" alt=\"%@\" width=\"%i\" height=\"%i\">", imageClass, srcPath, altName, (int)imageSize.width, (int)imageSize.height];
+			[string appendFormat:@"<img %@src=\"%@\" alt=\"%@\" width=\"%i\" height=\"%i\">", imageClassTag, srcPath, altName, (int)imageSize.width, (int)imageSize.height];
 
 		} else {
-			AILog(@"AIHTMLDecoder: appending <img class=\"%@\" src=\"%@\" alt=\"%@\">", imageClass, srcPath, altName);
-			[string appendFormat:@"<img class=\"%@\" src=\"%@\" alt=\"%@\">", imageClass, srcPath, altName];
+			[string appendFormat:@"<img %@src=\"%@\" alt=\"%@\">", imageClassTag, srcPath, altName];
 		}
 	}
 
