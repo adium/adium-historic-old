@@ -963,11 +963,6 @@
     [tabView setNeedsDisplay:YES];
 }
 
-- (float)tabView:(NSTabView *)aTabView desiredWidthAfterUnhiding:(float)suggestedWidth
-{
-	return lastTabBarWidth;
-}
-
 - (NSString *)tabView:(NSTabView *)tabView toolTipForTabViewItem:(NSTabViewItem *)tabViewItem
 {
 	AIChat		*chat = [(AIMessageTabViewItem *)tabViewItem chat];
