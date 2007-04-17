@@ -874,7 +874,12 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 - (void)releaseIndex:(SKIndexRef)inIndex
 {
     NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
-	CFRelease(inIndex);
+	[logAccessLock lock];
+	if (inIndex) {
+		SKIndexFlush(inIndex);
+		CFRelease(inIndex);
+	}
+	[logAccessLock unlock];
 	[pool release];
 }
 
@@ -1058,6 +1063,16 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 {
 	//Update our progress
 	logsToIndex = 0;
+
+	[logAccessLock lock];
+	if (index_Content) {
+		SKIndexFlush(index_Content);
+		AILog(@"After cleaning dirty logs, the search index has a max ID of %i and a count of %i",
+			  SKIndexGetMaximumDocumentID(index_Content),
+			  SKIndexGetDocumentCount(index_Content));
+	}
+	[logAccessLock unlock];
+
 	[[LogViewerWindowControllerClass existingWindowController] logIndexingProgressUpdate];
 	
 	//Clear the dirty status of all open chats so they will be marked dirty if they receive another message
@@ -1191,13 +1206,6 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 		if (unsavedChanges) {
 			[self _saveDirtyLogArray];
 		}
-
-		[logAccessLock lock];
-		SKIndexFlush(searchIndex);
-		AILog(@"After cleaning dirty logs, the search index has a max ID of %i and a count of %i",
-			  SKIndexGetMaximumDocumentID(searchIndex),
-			  SKIndexGetDocumentCount(searchIndex));
-		[logAccessLock unlock];
 
 		[self performSelectorOnMainThread:@selector(didCleanDirtyLogs)
 							   withObject:nil
