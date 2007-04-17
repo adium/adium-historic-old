@@ -47,6 +47,8 @@
 
 #define LIBDIR ""
 
+#define LOCALEDIR ""
+
 #define SYSCONFDIR "~/Library/Application Support/Adium 2.0/"
 
 #define QQ_BUDDY_ICON_DIR ""
