@@ -131,6 +131,7 @@
 		[matrix_userIcon selectCellWithTag:0];
 	}
 
+	[imageView_userIcon setMaxSize:NSMakeSize(256, 256)];
 	[imageView_userIcon setImage:[account userIcon]];
 
 	[checkbox_autoconnect setState:[[account preferenceForKey:KEY_AUTOCONNECT
