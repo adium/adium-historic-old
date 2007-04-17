@@ -874,7 +874,12 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 - (void)releaseIndex:(SKIndexRef)inIndex
 {
     NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
-	CFRelease(inIndex);
+	[logAccessLock lock];
+	if (inIndex) {
+		SKIndexFlush(inIndex);
+		CFRelease(inIndex);
+	}
+	[logAccessLock unlock];
 	[pool release];
 }
 
@@ -1060,10 +1065,12 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 	logsToIndex = 0;
 
 	[logAccessLock lock];
-	SKIndexFlush(index_Content);
-	AILog(@"After cleaning dirty logs, the search index has a max ID of %i and a count of %i",
-		  SKIndexGetMaximumDocumentID(index_Content),
-		  SKIndexGetDocumentCount(index_Content));
+	if (index_Content) {
+		SKIndexFlush(index_Content);
+		AILog(@"After cleaning dirty logs, the search index has a max ID of %i and a count of %i",
+			  SKIndexGetMaximumDocumentID(index_Content),
+			  SKIndexGetDocumentCount(index_Content));
+	}
 	[logAccessLock unlock];
 
 	[[LogViewerWindowControllerClass existingWindowController] logIndexingProgressUpdate];
