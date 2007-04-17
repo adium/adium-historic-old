@@ -55,16 +55,16 @@
 									 object:nil];
 
 	//Register ourself as a message view plugin
-	[[adium interfaceController] registerMessageViewPlugin:self];
+	[[adium interfaceController] registerMessageDisplayPlugin:self];
 	
 	[NSThread detachNewThreadSelector:@selector(preloadMessageStyles)
 							 toTarget:self
 						   withObject:nil];
 }
 
-- (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat
+- (id <AIMessageDisplayController>)messageDisplayControllerForChat:(AIChat *)inChat
 {
-    return [AIWebKitMessageViewController messageViewControllerForChat:inChat withPlugin:self];
+    return [AIWebKitMessageViewController messageDisplayControllerForChat:inChat withPlugin:self];
 }
 
 /*!

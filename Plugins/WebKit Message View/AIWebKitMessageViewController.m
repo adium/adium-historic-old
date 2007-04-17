@@ -76,7 +76,7 @@ static NSArray *draggedTypes = nil;
 
 @implementation AIWebKitMessageViewController
 
-+ (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
++ (AIWebKitMessageViewController *)messageDisplayControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
 {
     return [[[self alloc] initForChat:inChat withPlugin:inPlugin] autorelease];
 }
@@ -133,9 +133,22 @@ static NSArray *draggedTypes = nil;
     return self;
 }
 
-- (void)willCloseOwningViewController
+- (void)messageViewIsClosing
 {
-	NSLog(@"Will close!");
+	/* The windowScriptObject retained self when we set it as the client in -[AIWebKitMessageViewController _initWebView]...
+	 * Unfortunately, (as of 10.4.9) it won't actually release self until the webView deallocates.  We'll do removeWebScriptKey:
+	 * now in case that works properly later, and do the release of webView here rather than in dealloc to work around the bug.
+	 */
+	[[webView windowScriptObject] removeWebScriptKey:@"client"];
+
+	//Stop observing the webview, since it may attempt callbacks shortly after we dealloc
+	[webView setFrameLoadDelegate:nil];
+	[webView setPolicyDelegate:nil];
+	[webView setUIDelegate:nil];
+	[webView setDraggingDelegate:nil];
+
+	//Release the web view
+	[webView release]; webView = nil;
 }
 
 /*!
@@ -143,7 +156,6 @@ static NSArray *draggedTypes = nil;
  */
 - (void)dealloc
 {
-	NSLog(@"*** %@ Dealloc!", self);
 	[self removeAllCachedIcons];
 
 	[preferencesChangedDelegate release]; preferencesChangedDelegate = nil;
@@ -155,15 +167,6 @@ static NSArray *draggedTypes = nil;
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 	
-	//Stop observing the webview, since it may attempt callbacks shortly after we dealloc
-	[webView setFrameLoadDelegate:nil];
-	[webView setPolicyDelegate:nil];
-	[webView setUIDelegate:nil];
-	[webView setDraggingDelegate:nil];
-	
-	//Release the web view
-	[webView release];
-
 	//Clean up style/variant info
 	[messageStyle release]; messageStyle = nil;
 	[activeStyle release]; activeStyle = nil;

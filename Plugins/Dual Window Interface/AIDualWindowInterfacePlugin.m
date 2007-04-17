@@ -93,7 +93,7 @@
 	//Create the messasge tab (if necessary)
 	if (!messageTab) {
 		container = [self openContainerWithID:containerID name:containerID];
-		messageView = [AIMessageViewController messageViewControllerForChat:chat];
+		messageView = [AIMessageViewController messageDisplayControllerForChat:chat];
 
 		//Add chat to container
 		messageTab = [AIMessageTabViewItem messageTabWithView:messageView];
