@@ -23,6 +23,11 @@
             }; 
             SUPERCLASS = NSObject; 
         }, 
+        {
+            CLASS = DCPurpleGaduGaduJoinChatViewController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = DCJoinChatViewController; 
+        }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 
