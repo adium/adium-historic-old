@@ -116,8 +116,8 @@
 		id <SS_PreferencePaneProtocol> aPane;
 		
 		while ((aPane = [enumerator nextObject])) {
-			[panesOrder addObject:[aPane paneName]];
-			[preferencePanes setObject:aPane forKey:[aPane paneName]];
+			[panesOrder addObject:[aPane paneIdentifier]];
+			[preferencePanes setObject:aPane forKey:[aPane paneIdentifier]];
 		}
 	}
 	
@@ -286,8 +286,8 @@
                     id <SS_PreferencePaneProtocol> aPane;
                     
                     while ((aPane = [enumerator nextObject])) {
-                        [panesOrder addObject:[aPane paneName]];
-                        [preferencePanes setObject:aPane forKey:[aPane paneName]];
+                        [panesOrder addObject:[aPane paneIdentifier]];
+                        [preferencePanes setObject:aPane forKey:[aPane paneIdentifier]];
                     }
                 } else {
                     [self debugLog:[NSString stringWithFormat:@"Did not load bundle: %@ because its Principal Class is either not an NSObject subclass, or does not conform to the PreferencePane Protocol.", paneBundle]];
