@@ -132,8 +132,6 @@
 //dealloc
 - (void)dealloc
 {
-	NSLog(@"%@: dealloc", self);
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 
@@ -492,8 +490,12 @@
 	if (!silent) [[adium interfaceController] chatDidClose:[inTabViewItem chat]];
 
 	//Now remove the tab view item from our NSTabView
-	NSLog(@"Telling %@ to remove %@",tabView_messages,inTabViewItem);
     [tabView_messages removeTabViewItem:inTabViewItem];
+
+	/* AIMessageTabViewItem sets itself as its own identifer.  We have to break the recursive retain from the outside.
+	 * This must be done last so that the NSTabView and its delegate (PSMTabBarControl) can still make use of the idenfitier.
+	 */
+	[inTabViewItem setIdentifier:nil];
 
 	//close if we're empty
 	if (!windowIsClosing && [containedChats count] == 0) {

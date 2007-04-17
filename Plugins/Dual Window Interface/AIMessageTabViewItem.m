@@ -52,7 +52,10 @@
 //init
 - (id)initWithMessageView:(AIMessageViewController *)inMessageViewController
 {
-	if ( (self = [super initWithIdentifier:self]) ) {
+	/* XXX - Warning! Setting self as the identifier also means that we are retaining ourselves!  Something _must_
+	 * break us out of this infinite loop.  This happens in -[AIMesageWindowController removeTabViewItem:silent:].
+	 */
+	if ((self = [super initWithIdentifier:self])) {
 		messageViewController = [inMessageViewController retain];
 		adium = [AIObject sharedAdiumInstance];
 		container = nil;
@@ -84,26 +87,10 @@
     [[adium notificationCenter] removeObserver:self];
 
 	[tabViewItemImage release]; tabViewItemImage = nil;
-
     [messageViewController release]; messageViewController = nil;
 	[container release]; container = nil;
 
     [super dealloc];
-}
-
-- (id)retain
-{
-	[super retain];
-	NSLog(@"%@: retain, now %i", self, [self retainCount]);
-	
-	return self;
-}
-
-- (void)release
-{
-	NSLog(@"%@: release, will be %i", self, [self retainCount] - 1);
-
-	[super release];
 }
 
 //Access to our message view controller
