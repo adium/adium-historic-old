@@ -197,7 +197,7 @@
 	
 	//Release view_contents, for which we are responsible because we loaded it via -[NSBundle loadNibNamed:owner]
 	[view_contents release];
-	
+
 	//Release the hidden user list view
 	if (retainingScrollViewUserList) {
 		[scrollView_userList release];
