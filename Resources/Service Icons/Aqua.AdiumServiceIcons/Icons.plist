@@ -26,8 +26,6 @@
 		<string>msn.png</string>
 		<key>Mac</key>
 		<string>dotmac.png</string>
-		<key>Napster</key>
-		<string>napster.png</string>
 		<key>QQ</key>
 		<string>qq.png</string>
 		<key>Sametime</key>
@@ -67,8 +65,6 @@
 		<string>msn-small.png</string>
 		<key>Mac</key>
 		<string>dotmac-small.png</string>
-		<key>Napster</key>
-		<string>napster-small.png</string>
         <key>QQ</key>
 		<string>qq-small.png</string>
 		<key>Sametime</key>
@@ -108,8 +104,6 @@
 		<string>msn-small.png</string>
 		<key>Mac</key>
 		<string>dotmac-small.png</string>
-		<key>Napster</key>
-		<string>napster-small.png</string>
         <key>QQ</key>
 		<string>qq-small.png</string>
 		<key>Sametime</key>
