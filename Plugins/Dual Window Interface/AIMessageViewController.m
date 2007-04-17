@@ -81,7 +81,7 @@
 /*!
  * @brief Create a new message view controller
  */
-+ (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat
++ (AIMessageViewController *)messageDisplayControllerForChat:(AIChat *)inChat
 {
     return [[[self alloc] initForChat:inChat] autorelease];
 }
@@ -185,8 +185,8 @@
     //Account selection view
 	[self _destroyAccountSelectionView];
 	
-	//This is the controller for the actual view (not self, despite the naming oddness)
-    [messageViewController release];
+	[messageDisplayController messageViewIsClosing];
+    [messageDisplayController release];
 	[userListController release];
 
 	[controllerView_messages release];
@@ -286,13 +286,12 @@
 /*!
  * @brief Configure the message display view
  */
-//XXX - This is a mess because of the naming confusion between AIMessageViewController and <AIMessageViewController>, which are actually two completely separate things :x -ai
 - (void)_configureMessageDisplay
 {
 	//Create the message view
-	messageViewController = [[[adium interfaceController] messageViewControllerForChat:chat] retain];
+	messageDisplayController = [[[adium interfaceController] messageDisplayControllerForChat:chat] retain];
 	//Get the messageView from the controller
-	controllerView_messages = [[messageViewController messageView] retain];
+	controllerView_messages = [[messageDisplayController messageView] retain];
 	//scrollView_messages is originally a placeholder; replace it with controllerView_messages
 	[controllerView_messages setFrame:[scrollView_messages documentVisibleRect]];
 	[[customView_messages superview] replaceSubview:customView_messages with:controllerView_messages];
@@ -317,8 +316,8 @@
  */
 - (void)adiumPrint:(id)sender
 {
-	if ([messageViewController respondsToSelector:@selector(adiumPrint:)]) {
-		[messageViewController adiumPrint:sender];
+	if ([messageDisplayController respondsToSelector:@selector(adiumPrint:)]) {
+		[messageDisplayController adiumPrint:sender];
 	}
 }
 
@@ -640,7 +639,7 @@
 	
 	//Associate the view with our message view so it knows which view to scroll in response to page up/down
 	//and other special key-presses.
-	[textView_outgoing setAssociatedView:[messageViewController messageScrollView]];
+	[textView_outgoing setAssociatedView:[messageDisplayController messageScrollView]];
 	
 	//Associate the text entry view with our chat and inform Adium that it exists.
 	//This is necessary for text entry filters to work correctly.
