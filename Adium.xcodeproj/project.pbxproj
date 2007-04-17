@@ -191,7 +191,6 @@
 		3448762106D1EDB300DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448763B06D1EF0500DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448763D06D1EF3C00DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
-		3448769806D1EF5900DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448769906D1EF6100DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448769A06D1EF7300DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		344C0F0D06B709AC00DA7200 /* Bonjour.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4947F5CB0655E85200B791E5 /* Bonjour.AdiumPlugin */; };
@@ -504,9 +503,6 @@
 		34BD9D5A053146CC000AB133 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F531836F019E40BB01A80165 /* Carbon.framework */; };
 		34BD9EE80531476D000AB133 /* AIStressTestAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC15BEA0524CE5E00A8010A /* AIStressTestAccount.m */; };
 		34BD9EE90531476D000AB133 /* AIStressTestPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC15BEC0524CE5E00A8010A /* AIStressTestPlugin.m */; };
-		34BD9F2E0531477E000AB133 /* CBOldPrefsImporterAppController.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EB3C53304F94FAE001D1F74 /* CBOldPrefsImporterAppController.h */; };
-		34BD9F320531477E000AB133 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EB3C52C04F94E84001D1F74 /* main.m */; };
-		34BD9F330531477E000AB133 /* CBOldPrefsImporterAppController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EB3C53404F94FAE001D1F74 /* CBOldPrefsImporterAppController.m */; };
 		34BEA0F409C4A481000787E4 /* AITranslatorRequestDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BEA0F209C4A481000787E4 /* AITranslatorRequestDelegate.m */; };
 		34BFD7FD07E6A50C00AD984D /* scriptToolbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 34BFD7FC07E6A50C00AD984D /* scriptToolbar.png */; };
 		34BFD80007E6A51D00AD984D /* GBApplescriptFiltersPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BFD7FE07E6A51D00AD984D /* GBApplescriptFiltersPlugin.m */; };
@@ -1125,27 +1121,6 @@
 		B747E987058D144C00A9F037 /* AILaTeXPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B747E985058D144C00A9F037 /* AILaTeXPlugin.m */; };
 		B7FD6C170596550F000C4D9D /* SQLLogging.plist in Resources */ = {isa = PBXBuildFile; fileRef = B7FD6C160596550F000C4D9D /* SQLLogging.plist */; };
 		C44BA7830AAB696400C7504F /* SetupAssistantBoxBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C44BA7810AAB696400C7504F /* SetupAssistantBoxBackgroundView.m */; };
-		CA25AAA907B428C800DDBD7E /* BDFireImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = CA25AA9F07B428C600DDBD7E /* BDFireImporter.h */; };
-		CA25AAAA07B428C800DDBD7E /* BDFireImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CA25AAA007B428C700DDBD7E /* BDFireImporter.m */; };
-		CA25AAAB07B428C800DDBD7E /* BDiChatImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = CA25AAA107B428C700DDBD7E /* BDiChatImporter.h */; };
-		CA25AAAC07B428C800DDBD7E /* BDiChatImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CA25AAA207B428C700DDBD7E /* BDiChatImporter.m */; };
-		CA25AAAD07B428C800DDBD7E /* BDImportController.h in Headers */ = {isa = PBXBuildFile; fileRef = CA25AAA307B428C700DDBD7E /* BDImportController.h */; };
-		CA25AAAE07B428C800DDBD7E /* BDImportController.m in Sources */ = {isa = PBXBuildFile; fileRef = CA25AAA407B428C700DDBD7E /* BDImportController.m */; };
-		CA25AAAF07B428C800DDBD7E /* BDImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = CA25AAA507B428C800DDBD7E /* BDImporter.h */; };
-		CA25AAB007B428C800DDBD7E /* BDImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CA25AAA607B428C800DDBD7E /* BDImporter.m */; };
-		CA25AAB107B428C800DDBD7E /* BDProteusImporter.h in Headers */ = {isa = PBXBuildFile; fileRef = CA25AAA707B428C800DDBD7E /* BDProteusImporter.h */; };
-		CA25AAB207B428C800DDBD7E /* BDProteusImporter.m in Sources */ = {isa = PBXBuildFile; fileRef = CA25AAA807B428C800DDBD7E /* BDProteusImporter.m */; };
-		CA25AAB807B428DA00DDBD7E /* Background.png in Resources */ = {isa = PBXBuildFile; fileRef = CA25AAB707B428DA00DDBD7E /* Background.png */; };
-		CA25AB3407B4296C00DDBD7E /* fire2adium.php in Resources */ = {isa = PBXBuildFile; fileRef = CA25AB3307B4296C00DDBD7E /* fire2adium.php */; };
-		CA25AB3A07B4297A00DDBD7E /* ichat2adium.pl in Resources */ = {isa = PBXBuildFile; fileRef = CA25AB3907B4297A00DDBD7E /* ichat2adium.pl */; };
-		CA25AB4107B4298700DDBD7E /* proteus2adium.pl in Resources */ = {isa = PBXBuildFile; fileRef = CA25AB3F07B4298600DDBD7E /* proteus2adium.pl */; };
-		CA25AB4207B4298700DDBD7E /* sqlite in Resources */ = {isa = PBXBuildFile; fileRef = CA25AB4007B4298700DDBD7E /* sqlite */; };
-		CA25AB4907B429A900DDBD7E /* purple2adium.pl in Resources */ = {isa = PBXBuildFile; fileRef = CA25AB4807B429A900DDBD7E /* purple2adium.pl */; };
-		CA2C84A806F8B91E0024B20E /* Adium.icns in Resources */ = {isa = PBXBuildFile; fileRef = CA2C84A306F8B91D0024B20E /* Adium.icns */; };
-		CA2C84A906F8B91E0024B20E /* Awake.png in Resources */ = {isa = PBXBuildFile; fileRef = CA2C84A406F8B91D0024B20E /* Awake.png */; };
-		CA2C84AA06F8B91E0024B20E /* ErrorAlert.png in Resources */ = {isa = PBXBuildFile; fileRef = CA2C84A506F8B91E0024B20E /* ErrorAlert.png */; };
-		CA2C84AB06F8B91E0024B20E /* notfound.png in Resources */ = {isa = PBXBuildFile; fileRef = CA2C84A606F8B91E0024B20E /* notfound.png */; };
-		CA2C84AC06F8B91E0024B20E /* pref4.tif in Resources */ = {isa = PBXBuildFile; fileRef = CA2C84A706F8B91E0024B20E /* pref4.tif */; };
 		DA4B5CDF080FCC080017BF17 /* CoreComponents.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA4B5CDE080FCC080017BF17 /* CoreComponents.plist */; };
 		EE147A6D0896B18800A21377 /* ABSearch.png in Resources */ = {isa = PBXBuildFile; fileRef = EE147A6C0896B18700A21377 /* ABSearch.png */; };
 		EE147A790896B32400A21377 /* ABSearch.nib in Resources */ = {isa = PBXBuildFile; fileRef = EE147A780896B32400A21377 /* ABSearch.nib */; };
@@ -2751,7 +2726,6 @@
 		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
-		34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium 1.6 Pref Importer.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BEA0F109C4A481000787E4 /* AITranslatorRequestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AITranslatorRequestDelegate.h; path = Plugins/Translation/AITranslatorRequestDelegate.h; sourceTree = "<group>"; };
 		34BEA0F209C4A481000787E4 /* AITranslatorRequestDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AITranslatorRequestDelegate.m; path = Plugins/Translation/AITranslatorRequestDelegate.m; sourceTree = "<group>"; };
 		34BFD7F207E6A22700AD984D /* ESPresetManagementController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESPresetManagementController.h; path = "Frameworks/Adium Framework/Source/ESPresetManagementController.h"; sourceTree = "<group>"; };
@@ -3775,14 +3749,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		34BD9F340531477E000AB133 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				3448769806D1EF5900DA778C /* Cocoa.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		38D8FAD60A8A4F350078E442 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -3874,7 +3840,6 @@
 			isa = PBXGroup;
 			children = (
 				34BD9DA9053146CC000AB133 /* Adium.app */,
-				34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */,
 				4B7F78B50597F42400162728 /* Adium Crash Reporter.app */,
 				34BD9DE105314751000AB133 /* Adium.framework */,
 				4B7F278305440C0800CDFC90 /* Purple.AdiumPlugin */,
@@ -3909,6 +3874,7 @@
 				34EE35FB09C5012800C17DE1 /* Documentation */,
 				9EB3C52304F94DB7001D1F74 /* Migration Assistant */,
 				F50A325A03B5798301A8010A /* Resources */,
+				340C1A210BD58E7E00D09235 /* Other */,
 				34611C7D09B6756D00870036 /* AdiumSpotlightImporter.xcodeproj */,
 				349C2F310867ACF7000BF883 /* ApplescriptRunner */,
 				29B97323FDCFA39411CA2CEA /* Linked Frameworks */,
@@ -3953,6 +3919,13 @@
 				347E781907CA962100350507 /* userIconToolbar.png */,
 			);
 			name = "User Icon Handling";
+			sourceTree = "<group>";
+		};
+		340C1A210BD58E7E00D09235 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Other;
 			sourceTree = "<group>";
 		};
 		340F444F06D87A830072E2FA /* Contact List */ = {
@@ -7177,19 +7150,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		34BD9F2D0531477E000AB133 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				34BD9F2E0531477E000AB133 /* CBOldPrefsImporterAppController.h in Headers */,
-				CA25AAA907B428C800DDBD7E /* BDFireImporter.h in Headers */,
-				CA25AAAB07B428C800DDBD7E /* BDiChatImporter.h in Headers */,
-				CA25AAAD07B428C800DDBD7E /* BDImportController.h in Headers */,
-				CA25AAAF07B428C800DDBD7E /* BDImporter.h in Headers */,
-				CA25AAB107B428C800DDBD7E /* BDProteusImporter.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		4B7F78B00597F42400162728 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
@@ -7386,25 +7346,6 @@
 			productReference = 34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */;
 			productType = "com.apple.product-type.bundle";
 		};
-		34BD9F2C0531477E000AB133 /* Adium 1.6 Pref Importer */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = DADE8E27085507450062B664 /* Build configuration list for PBXNativeTarget "Adium 1.6 Pref Importer" */;
-			buildPhases = (
-				34BD9F2D0531477E000AB133 /* Headers */,
-				34BD9F2F0531477E000AB133 /* Resources */,
-				34BD9F310531477E000AB133 /* Sources */,
-				34BD9F340531477E000AB133 /* Frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Adium 1.6 Pref Importer";
-			productInstallPath = "$(USER_APPS_DIR)";
-			productName = "Adium 1.6 Pref Importer";
-			productReference = 34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */;
-			productType = "com.apple.product-type.application";
-		};
 		38D8FA9A0A8A4F350078E442 /* QuickTime Plugin */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 38D8FADB0A8A4F350078E442 /* Build configuration list for PBXNativeTarget "QuickTime Plugin" */;
@@ -7552,7 +7493,6 @@
 			targets = (
 				34BD9CD1053146CC000AB133 /* Adium */,
 				4B7F78B40597F42400162728 /* Adium Crash Reporter */,
-				34BD9F2C0531477E000AB133 /* Adium 1.6 Pref Importer */,
 				34BD9DAF05314751000AB133 /* Adium.Framework */,
 				3485D67F09EB416300232CC4 /* AdiumLibpurple */,
 				4B7F278205440C0800CDFC90 /* Purple */,
@@ -7955,24 +7895,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6EA3689706B73FE5009CA81A /* DCStressTestJoinChatView.nib in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9F2F0531477E000AB133 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				CA2C84A806F8B91E0024B20E /* Adium.icns in Resources */,
-				CA2C84A906F8B91E0024B20E /* Awake.png in Resources */,
-				CA2C84AA06F8B91E0024B20E /* ErrorAlert.png in Resources */,
-				CA2C84AB06F8B91E0024B20E /* notfound.png in Resources */,
-				CA2C84AC06F8B91E0024B20E /* pref4.tif in Resources */,
-				CA25AAB807B428DA00DDBD7E /* Background.png in Resources */,
-				CA25AB3407B4296C00DDBD7E /* fire2adium.php in Resources */,
-				CA25AB3A07B4297A00DDBD7E /* ichat2adium.pl in Resources */,
-				CA25AB4107B4298700DDBD7E /* proteus2adium.pl in Resources */,
-				CA25AB4207B4298700DDBD7E /* sqlite in Resources */,
-				CA25AB4907B429A900DDBD7E /* purple2adium.pl in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8612,20 +8534,6 @@
 				34BD9EE90531476D000AB133 /* AIStressTestPlugin.m in Sources */,
 				6EA3689906B73FE5009CA81A /* DCStressTestJoinChatViewController.m in Sources */,
 				4BAFD5CB06E00B7C00FF7FBC /* AIStressTestService.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9F310531477E000AB133 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				34BD9F320531477E000AB133 /* main.m in Sources */,
-				34BD9F330531477E000AB133 /* CBOldPrefsImporterAppController.m in Sources */,
-				CA25AAAA07B428C800DDBD7E /* BDFireImporter.m in Sources */,
-				CA25AAAC07B428C800DDBD7E /* BDiChatImporter.m in Sources */,
-				CA25AAAE07B428C800DDBD7E /* BDImportController.m in Sources */,
-				CA25AAB007B428C800DDBD7E /* BDImporter.m in Sources */,
-				CA25AAB207B428C800DDBD7E /* BDProteusImporter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10489,16 +10397,6 @@
 			};
 			name = "Deployment-Debug_PPC-Only";
 		};
-		34BAF98D0942598800689991 /* Deployment-Debug_PPC-Only */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = Plists/Adium_1_6_Pref_Importer.plist;
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
-				PRODUCT_NAME = "Adium 1.6 Pref Importer";
-				WRAPPER_EXTENSION = app;
-			};
-			name = "Deployment-Debug_PPC-Only";
-		};
 		34BAF98E0942598800689991 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -11139,36 +11037,6 @@
 			};
 			name = "Deployment-Debug";
 		};
-		DADE8E28085507450062B664 /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = Plists/Adium_1_6_Pref_Importer.plist;
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
-				PRODUCT_NAME = "Adium 1.6 Pref Importer";
-				WRAPPER_EXTENSION = app;
-			};
-			name = Development;
-		};
-		DADE8E29085507450062B664 /* Deployment */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = Plists/Adium_1_6_Pref_Importer.plist;
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
-				PRODUCT_NAME = "Adium 1.6 Pref Importer";
-				WRAPPER_EXTENSION = app;
-			};
-			name = Deployment;
-		};
-		DADE8E2A085507450062B664 /* Deployment-Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				INFOPLIST_FILE = Plists/Adium_1_6_Pref_Importer.plist;
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
-				PRODUCT_NAME = "Adium 1.6 Pref Importer";
-				WRAPPER_EXTENSION = app;
-			};
-			name = "Deployment-Debug";
-		};
 		DADE8E2D085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -11636,17 +11504,6 @@
 				DADE8E24085507450062B664 /* Deployment */,
 				DADE8E25085507450062B664 /* Deployment-Debug */,
 				34BAF98C0942598800689991 /* Deployment-Debug_PPC-Only */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
-		};
-		DADE8E27085507450062B664 /* Build configuration list for PBXNativeTarget "Adium 1.6 Pref Importer" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				DADE8E28085507450062B664 /* Development */,
-				DADE8E29085507450062B664 /* Deployment */,
-				DADE8E2A085507450062B664 /* Deployment-Debug */,
-				34BAF98D0942598800689991 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
