@@ -47,7 +47,7 @@ typedef enum {
 	DCWebkitMessageView			//Preferred message view
 } DCMessageViewType;
 
-@protocol AIInterfaceComponent, AIContactListComponent, AIMessageViewController, AIMessageViewPlugin;
+@protocol AIInterfaceComponent, AIContactListComponent, AIMessageDisplayController, AIMessageDisplayPlugin;
 @protocol AIContactListTooltipEntry, AIFlashObserver;
 
 @class AIChat, AIListObject;
@@ -89,8 +89,8 @@ typedef enum {
 - (NSArray *)arrayOfSelectedListObjectsInContactList;
 
 //Message View
-- (void)registerMessageViewPlugin:(id <AIMessageViewPlugin>)inPlugin;
-- (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat;
+- (void)registerMessageDisplayPlugin:(id <AIMessageDisplayPlugin>)inPlugin;
+- (id <AIMessageDisplayController>)messageDisplayControllerForChat:(AIChat *)inChat;
 
 //Error Display
 - (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc;
@@ -127,14 +127,30 @@ typedef enum {
 - (id <AIContactListViewController>)contactListViewController;
 @end
 
-@protocol AIMessageViewController <NSObject>
+/*!
+ * @protocol AIMessageDisplayController
+ * @brief    The message display controller is responsible for, unsurprisingly, the actual display of messages.
+ *
+ * The display controller manages a view ("messageView") which will be inserted along with other UI elements such
+ * as a text entry area into a window.  The Interface Plugin knows nothing about how the AIMessageDisplayController 
+ * keeps its messageView up to date, nor should it, but knows that the view will show messages.
+ *
+ * The AIMessageDisplayController is informed when the message view which is using it is closing.
+ */
+@protocol AIMessageDisplayController <NSObject>
 - (NSView *)messageView;
 - (NSView *)messageScrollView;
+- (void)messageViewIsClosing;
 @end
 
-//manages message view controllers
-@protocol AIMessageViewPlugin <NSObject>	
-- (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat;
+/*
+ * @protocol AIMessageDisplayPlugin
+ * @brief    A AIMessageDisplayPlugin provides AIMessageDisplayController objects on demand.
+ *
+ * The WebKit display plugin is one example.
+ */
+@protocol AIMessageDisplayPlugin <NSObject>	
+- (id <AIMessageDisplayController>)messageDisplayControllerForChat:(AIChat *)inChat;
 @end
 
 @protocol AIContactListTooltipEntry <NSObject>

@@ -19,13 +19,13 @@
 @class AIWebKitMessageViewPlugin, AIWebkitMessageViewStyle, AIContentObject, ESWebView, DOMDocument;
 @class AIChat, AIContentObject;
 
-@protocol AIMessageViewController;
+@protocol AIMessageDisplayController;
 
 /*!
  *	@class AIWebKitMessageViewController AIWebKitMessageViewController.h
  *	@brief Main class for the webkit message view. Most of the good stuff happens here
  */
-@interface AIWebKitMessageViewController : AIObject <AIMessageViewController> {
+@interface AIWebKitMessageViewController : AIObject <AIMessageDisplayController> {
 	id							plugin;
 	ESWebView					*webView;
 	id							preferencesChangedDelegate;
@@ -51,7 +51,7 @@
 /*!
  *	@brief Create a new message view controller
  */
-+ (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
++ (AIWebKitMessageViewController *)messageDisplayControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
 
 /*!
  *	@brief Print the webview
