@@ -31,6 +31,8 @@ echo "Mounting disk image..."
 MOUNT_DIR="/Volumes/${VOLUME_NAME}"
 DEV_NAME=`hdiutil attach -readwrite -noverify -noautoopen "${DMG_TEMP_NAME}" | egrep '^/dev/' | sed 1q | awk '{print $1}'`
 
+cp RightDS_Store "/Volumes/${VOLUME_NAME}/.DS_Store"
+
 # run applescript
 if [ ! -z "${APPLESCRIPT}" -a "${APPLESCRIPT}" != "-null-" ]; then
 #	osascript "${APPLESCRIPT}"
@@ -39,6 +41,7 @@ if [ ! -z "${APPLESCRIPT}" -a "${APPLESCRIPT}" != "-null-" ]; then
     ./AdiumApplescriptRunner "${APPLESCRIPT}" process_disk_image "${VOLUME_NAME}" "${ART_PATH}" || true
     echo "Done running the applescript..."
 fi
+
 
 # run shell script
 # if [ ! -z "${SHELLSCRIPT}" -a "${SHELLSCRIPT}" != "-null-" ]; then
