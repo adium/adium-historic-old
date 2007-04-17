@@ -20,7 +20,6 @@
 #import "AIMessageWindowController.h"
 #import "AIContactController.h"
 #import "AIDualWindowInterfacePlugin.h"
-#import <AIUtilities/AICustomTabsView.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>

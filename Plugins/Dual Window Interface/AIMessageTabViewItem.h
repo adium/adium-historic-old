@@ -15,9 +15,9 @@
  */
 
 @class AIChat, AIMessageViewController, AIMessageWindowController;
-@protocol AIAdium, AIInterfaceContainer, AICustomTabViewItem;
+@protocol AIAdium, AIInterfaceContainer;
 
-@interface AIMessageTabViewItem : NSTabViewItem <AIInterfaceContainer, AICustomTabViewItem> {
+@interface AIMessageTabViewItem : NSTabViewItem <AIInterfaceContainer> {
 	AIMessageWindowController	*container;
     AIMessageViewController 	*messageViewController;
     NSObject<AIAdium>			*adium;
