@@ -82,8 +82,6 @@
 //
 - (void)dealloc
 {
-	NSLog(@"%@: dealloc", self);
-
     [[adium notificationCenter] removeObserver:self];
 
 	[tabViewItemImage release]; tabViewItemImage = nil;

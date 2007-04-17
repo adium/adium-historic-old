@@ -815,25 +815,25 @@
 //Message view is abstracted from the containing interface, since they're not directly related to eachother
 #pragma mark Message View
 //Registers a view to handle the contact list
-- (void)registerMessageViewPlugin:(id <AIMessageViewPlugin>)inPlugin
+- (void)registerMessageDisplayPlugin:(id <AIMessageDisplayPlugin>)inPlugin
 {
     [messageViewArray addObject:inPlugin];
 }
-- (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat
+- (id <AIMessageDisplayController>)messageDisplayControllerForChat:(AIChat *)inChat
 {
 	//Sometimes our users find it amusing to disable plugins that are located within the Adium bundle.  This error
 	//trap prevents us from crashing if they happen to disable all the available message view plugins.
 	//PUT THAT PLUGIN BACK IT WAS IMPORTANT!
 	if ([messageViewArray count] == 0) {
 		NSRunCriticalAlertPanel(@"No Message View Plugin Installed",
-								@"Adium cannot find its message view plugin, please re-install.  If you've manually disabled Adium's message view plugin, please re-enable it.",
+								@"Adium cannot find its message view plugin. Please re-install.  If you've manually disabled Adium's message view plugin, please re-enable it.",
 								@"Quit",
 								nil,
 								nil);
 		[NSApp terminate:nil];
 	}
 	
-	return [[messageViewArray objectAtIndex:0] messageViewControllerForChat:inChat];
+	return [[messageViewArray objectAtIndex:0] messageDisplayControllerForChat:inChat];
 }
 
 

@@ -18,7 +18,7 @@
 
 @class AIAccount, AIListContact, AIListObject, AIAccountSelectionView, AIMessageTabSplitView, AIMessageEntryTextView;
 @class AIMessageWindowController;
-@protocol AIMessageViewController;
+@protocol AIMessageDisplayController;
 
 @interface AIMessageViewController : AIObject <AIListControllerDelegate> {
     IBOutlet	NSView					*view_contents;
@@ -43,9 +43,9 @@
 	IBOutlet	AIMessageEntryTextView	*textView_outgoing;
 	
 	//
-    NSObject<AIMessageViewController>	*messageViewController;
-	AIAccountSelectionView				*view_accountSelection;
-	AIMessageWindowController			*messageWindowController;
+    NSObject<AIMessageDisplayController>	*messageDisplayController;
+	AIAccountSelectionView					*view_accountSelection;
+	AIMessageWindowController				*messageWindowController;
 
     AIChat					*chat;
 	BOOL					suppressSendLaterPrompt;
@@ -53,7 +53,7 @@
 	int						userListMinWidth;
 }
 
-+ (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat;
++ (AIMessageViewController *)messageDisplayControllerForChat:(AIChat *)inChat;
 - (void)messageViewWillLeaveWindowController:(AIMessageWindowController *)inWindowController;
 - (void)messageViewAddedToWindowController:(AIMessageWindowController *)inWindowController;
 - (AIChat *)chat;

@@ -89,14 +89,14 @@
 
 @class ESWebKitMessageViewPreferences, AIChat;
 
-@protocol AIMessageViewPlugin, AIMessageViewController;
+@protocol AIMessageDisplayPlugin, AIMessageDisplayController;
 
 /*!
  *	@class AIWebKitMessageViewPlugin AIWebKitMessageViewPlugin.h
  *	@brief Handles loading the WKMV plugin into Adium
  *	@see AIWebKitMessageViewController
  */
-@interface AIWebKitMessageViewPlugin : AIPlugin <AIMessageViewPlugin> {
+@interface AIWebKitMessageViewPlugin : AIPlugin <AIMessageDisplayPlugin> {
 	ESWebKitMessageViewPreferences  *preferences;
 	NSMutableDictionary				*styleDictionary;
 }
@@ -105,7 +105,7 @@
  *	@return a new webkit message view controller initialized to display inChat
  *	@param inChat the chat that the message view will display
  */
-- (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat;
+- (id <AIMessageDisplayController>)messageDisplayControllerForChat:(AIChat *)inChat;
 
 /*!
  *	This method is fairly expensive the first time it's run; however, the first time will almost always been in a thread at startup, to preload the styles. This method is threadsafe.
