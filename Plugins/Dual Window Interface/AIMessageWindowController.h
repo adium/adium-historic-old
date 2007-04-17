@@ -45,7 +45,8 @@ typedef enum
 	BOOL			alwaysShowTabs;		//YES if the tabs should always be visible, even if there is only 1
 
 	AdiumTabPosition tabPosition;
-	
+	float			 lastTabBarWidth;
+
 	NSDictionary	*toolbarItems;
 	NSMutableArray	*containedChats;
 	

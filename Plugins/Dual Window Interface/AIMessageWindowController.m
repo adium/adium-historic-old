@@ -48,6 +48,7 @@
 #define TAB_BAR_STEP                            0.6
 #define TOOLBAR_MESSAGE_WINDOW					@"AdiumMessageWindow"			//Toolbar identifier
 
+#define KEY_VERTICAL_TABS_WIDTH					@"Vertical Tabs Width"
 #define VERTICAL_DIVIDER_THICKNESS				4
 
 @interface AIMessageWindowController (PRIVATE)
@@ -247,6 +248,19 @@
     NSEnumerator			*enumerator;
     AIMessageTabViewItem	*tabViewItem;
 	
+	if ([tabView_tabBar orientation] == PSMTabBarVerticalOrientation) {
+		float widthToStore;
+		if ([tabView_tabBar isTabBarHidden]) {
+			widthToStore = lastTabBarWidth;
+		} else {
+			widthToStore = NSWidth([tabView_tabBar frame]);
+		}
+
+		[[adium preferenceController] setPreference:[NSNumber numberWithFloat:widthToStore]
+											 forKey:KEY_VERTICAL_TABS_WIDTH
+											  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+	}
+	
 	windowIsClosing = YES;
 	[super windowWillClose:sender];
 
@@ -334,11 +348,10 @@
 				tabBarFrame.origin.x = 0;
 				tabViewFrame.size.width = NSWidth(contentRect) + 1;
 
-			} else {
-				float width = [[prefDict objectForKey:KEY_TABBAR_WIDTH] floatValue];
-				if (width < 50) {
-					width = 50;
-				}
+			} else {				
+				float width = ([prefDict objectForKey:KEY_VERTICAL_TABS_WIDTH] ?
+							   [[prefDict objectForKey:KEY_VERTICAL_TABS_WIDTH] floatValue] :
+							   100);
 				
 				tabBarFrame.size.height = [[[self window] contentView] frame].size.height;
 				tabBarFrame.size.width = [tabView_tabBar isTabBarHidden] ? 1 : width;
@@ -365,7 +378,7 @@
 				splitViewRect.size.width++;
 				splitViewRect.size.height++;
 				tabView_splitView = [[[AIMessageTabSplitView alloc] initWithFrame:splitViewRect] autorelease];
-				[tabView_splitView setDividerThickness:([tabView_tabBar isTabBarHidden] ? VERTICAL_DIVIDER_THICKNESS : 0)];
+				[tabView_splitView setDividerThickness:([tabView_tabBar isTabBarHidden] ? 0 : VERTICAL_DIVIDER_THICKNESS)];
 				[tabView_splitView setVertical:YES];
 				[tabView_splitView setDelegate:self];
 				if (tabPosition == AdiumTabPositionLeft) {
@@ -688,6 +701,7 @@
 	[tabView_tabBar setFrame:tabBarFrame];
 }
 
+
 //PSMTabBarControl Delegate -------------------------------------------------------------------------------------------------
 #pragma mark PSMTabBarControl Delegate
 
@@ -928,7 +942,7 @@
 
 - (void)tabView:(NSTabView *)tabView tabBarDidUnhide:(PSMTabBarControl *)tabBarControl
 {
-    //show the space between the tab bar and the tab view
+	//show the space between the tab bar and the tab view
     NSRect frame = [tabView frame];
 	
 	switch ([tabBarControl orientation]) {
@@ -947,6 +961,11 @@
     
     [tabView setFrame:frame];
     [tabView setNeedsDisplay:YES];
+}
+
+- (float)tabView:(NSTabView *)aTabView desiredWidthAfterUnhiding:(float)suggestedWidth
+{
+	return lastTabBarWidth;
 }
 
 - (NSString *)tabView:(NSTabView *)tabView toolTipForTabViewItem:(NSTabViewItem *)tabViewItem
@@ -1011,9 +1030,9 @@
 //Save width of the vertical tabs when changed
 - (void)tabBarFrameChanged:(NSNotification *)notification {
 	if ([tabView_tabBar orientation] == PSMTabBarVerticalOrientation) {
-		[[adium preferenceController] setPreference:[NSNumber numberWithFloat:[tabView_tabBar frame].size.width]
-											 forKey:KEY_TABBAR_WIDTH
-											  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+		if (![tabView_tabBar isTabBarHidden]) {
+			lastTabBarWidth = NSWidth([tabView_tabBar frame]);
+		}
 	}
 }
 
