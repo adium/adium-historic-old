@@ -72,6 +72,11 @@
 		340B9BD4069C735900FE1E57 /* WebKit Message View.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3499F45006309AC80035B468 /* WebKit Message View.AdiumPlugin */; };
 		340BA8D809EC5E35000EC441 /* Libpurple.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libpurple.framework */; };
 		340BAB1D09EC6E53000EC441 /* libirc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 340BAB1C09EC6E53000EC441 /* libirc.a */; };
+		340C1A350BD58F9000D09235 /* AuthorizedTaskManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 340C1A310BD58F9000D09235 /* AuthorizedTaskManager.h */; };
+		340C1A360BD58F9000D09235 /* DiskImageUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 340C1A320BD58F9000D09235 /* DiskImageUtilities.m */; };
+		340C1A370BD58F9000D09235 /* DiskImageUtilities.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 340C1A330BD58F9000D09235 /* DiskImageUtilities.h */; };
+		340C1A380BD58F9000D09235 /* AuthorizedTaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 340C1A340BD58F9000D09235 /* AuthorizedTaskManager.m */; };
+		340C1ABF0BD58FAB00D09235 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 340C1ABE0BD58FAB00D09235 /* Security.framework */; };
 		340D859B0ADC82D100D05B3F /* sourceListBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 340670790A55A044004E22AC /* sourceListBackground.png */; };
 		3410746009B6965700565C9E /* AIMDLogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3410745E09B6965700565C9E /* AIMDLogViewerWindowController.m */; };
 		34107B4C09E9923D001CC042 /* AIGuestAccountWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34107B4A09E9923D001CC042 /* AIGuestAccountWindowController.m */; };
@@ -1482,6 +1487,8 @@
 				344839990BC8644C0083723B /* AIAdvancedPreferencesPlugin.h in CopyFiles */,
 				3448399F0BC864610083723B /* AIAdvancedPreferences.h in CopyFiles */,
 				346371070BCA0A5400AD57AD /* AIMessageTabSplitView.h in CopyFiles */,
+				340C1A350BD58F9000D09235 /* AuthorizedTaskManager.h in CopyFiles */,
+				340C1A370BD58F9000D09235 /* DiskImageUtilities.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1562,6 +1569,11 @@
 		340BA84409EC593A000EC441 /* AICorePluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AICorePluginLoader.h; path = "Frameworks/Adium Framework/Source/AICorePluginLoader.h"; sourceTree = "<group>"; };
 		340BA84509EC593B000EC441 /* AICorePluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AICorePluginLoader.m; path = "Frameworks/Adium Framework/Source/AICorePluginLoader.m"; sourceTree = "<group>"; };
 		340BAB1C09EC6E53000EC441 /* libirc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libirc.a; path = "Plugins/IRC Libpurple Plugin/libirc.a"; sourceTree = "<group>"; };
+		340C1A310BD58F9000D09235 /* AuthorizedTaskManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AuthorizedTaskManager.h; path = Source/AuthorizedTaskManager.h; sourceTree = "<group>"; };
+		340C1A320BD58F9000D09235 /* DiskImageUtilities.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DiskImageUtilities.m; path = Source/DiskImageUtilities.m; sourceTree = "<group>"; };
+		340C1A330BD58F9000D09235 /* DiskImageUtilities.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DiskImageUtilities.h; path = Source/DiskImageUtilities.h; sourceTree = "<group>"; };
+		340C1A340BD58F9000D09235 /* AuthorizedTaskManager.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AuthorizedTaskManager.m; path = Source/AuthorizedTaskManager.m; sourceTree = "<group>"; };
+		340C1ABE0BD58FAB00D09235 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
 		340D03990A7D78FC0059A3AF /* AIAccountControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAccountControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIAccountControllerProtocol.h"; sourceTree = "<group>"; };
 		340D03A80A7D798A0059A3AF /* AIControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIControllerProtocol.h"; sourceTree = "<group>"; };
 		340D081F0A7DBFE40059A3AF /* AIChatControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIChatControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIChatControllerProtocol.h"; sourceTree = "<group>"; };
@@ -3722,6 +3734,7 @@
 				377EC8940AE9525B00CB7BDF /* PSMTabBarControl.framework in Frameworks */,
 				8163F99C0B318824002005EE /* Sparkle.framework in Frameworks */,
 				11AA1EFA0BCAE9C3003DDA66 /* Quartz.framework in Frameworks */,
+				340C1ABF0BD58FAB00D09235 /* Security.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3903,6 +3916,7 @@
 				F531836F019E40BB01A80165 /* Carbon.framework */,
 				3448758D06D1EBDF00DA778C /* Cocoa.framework */,
 				349C2FEF0867AD65000BF883 /* Foundation.framework */,
+				340C1ABE0BD58FAB00D09235 /* Security.framework */,
 				34B588A0058D833A00E7EF0D /* ExceptionHandling.framework */,
 				34D836F307CBF960006466F2 /* QuickTime.framework */,
 				34E839050583207E00F2AADB /* SystemConfiguration.framework */,
@@ -3924,6 +3938,10 @@
 		340C1A210BD58E7E00D09235 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				340C1A310BD58F9000D09235 /* AuthorizedTaskManager.h */,
+				340C1A340BD58F9000D09235 /* AuthorizedTaskManager.m */,
+				340C1A330BD58F9000D09235 /* DiskImageUtilities.h */,
+				340C1A320BD58F9000D09235 /* DiskImageUtilities.m */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -8426,6 +8444,8 @@
 				3448399A0BC8644C0083723B /* AIAdvancedPreferencesPlugin.m in Sources */,
 				344839A00BC864610083723B /* AIAdvancedPreferences.m in Sources */,
 				346371080BCA0A5400AD57AD /* AIMessageTabSplitView.m in Sources */,
+				340C1A360BD58F9000D09235 /* DiskImageUtilities.m in Sources */,
+				340C1A380BD58F9000D09235 /* AuthorizedTaskManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
