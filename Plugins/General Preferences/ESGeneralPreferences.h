@@ -24,7 +24,8 @@
 	
 	IBOutlet	NSPopUpButton	*popUp_tabKeys;
 	IBOutlet	NSPopUpButton	*popUp_sendKeys;
-	
+	IBOutlet	NSPopUpButton	*popUp_tabPositionMenu;
+
 	IBOutlet	NSTextField		*label_logging;
 	IBOutlet	NSTextField		*label_messagesSendOn;
 	IBOutlet	NSTextField		*label_messagesTabs;

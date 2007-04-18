@@ -24,6 +24,7 @@
 #import "SRRecorderControl.h"
 #import "PTHotKey.h"
 #import "AIMessageHistoryPreferencesWindowController.h"
+#import "AIMessageWindowController.h"
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
 #import <AIUtilities/AIColorAdditions.h>
@@ -33,12 +34,12 @@
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 
 @interface ESGeneralPreferences (PRIVATE)
-- (NSMenu *)tabKeysMenu;
+- (NSMenu *)tabChangeKeysMenu;
 - (NSMenu *)sendKeysMenu;
+- (NSMenu *)tabPositionMenu;
 
 - (NSMenu *)statusIconsMenu;
 - (NSMenu *)serviceIconsMenu;
-
 - (NSArray *)_allPacksWithExtension:(NSString *)extension inFolder:(NSString *)inFolder;
 @end
 
@@ -76,7 +77,7 @@
 																				group:PREF_GROUP_INTERFACE] boolValue]];
 
 	//Chat Cycling
-	[popUp_tabKeys setMenu:[self tabKeysMenu]];
+	[popUp_tabKeys setMenu:[self tabChangeKeysMenu]];
 	[popUp_tabKeys compatibleSelectItemWithTag:[[[adium preferenceController] preferenceForKey:KEY_TAB_SWITCH_KEYS
 																						 group:PREF_GROUP_CHAT_CYCLING] intValue]];
 
@@ -95,6 +96,8 @@
 		[popUp_sendKeys compatibleSelectItemWithTag:AISendOnReturn];
 	}
 
+	[popUp_tabPositionMenu setMenu:[self tabPositionMenu]];
+	
 	//Global hotkey
 	PTKeyCombo *keyCombo = [[[PTKeyCombo alloc] initWithPlistRepresentation:[[adium preferenceController] preferenceForKey:KEY_GENERAL_HOTKEY
 																													 group:PREF_GROUP_GENERAL]] autorelease];
@@ -135,7 +138,7 @@
 /*!
  * @brief Construct our menu by hand for easy localization
  */
-- (NSMenu *)tabKeysMenu
+- (NSMenu *)tabChangeKeysMenu
 {
 	NSMenu		*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
 #define PLACE_OF_INTEREST_SIGN	"\u2318"
@@ -211,6 +214,37 @@
 			 keyEquivalent:@""
 					   tag:AISendOnBoth];
 
+	return [menu autorelease];		
+}
+
+- (NSMenu *)tabPositionMenu
+{
+	NSMenu		*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
+	
+	[menu addItemWithTitle:AILocalizedString(@"Top","Position menu item for tabs at the top of the message window")
+					target:nil
+					action:nil
+			 keyEquivalent:@""
+					   tag:AdiumTabPositionTop];
+	
+	[menu addItemWithTitle:AILocalizedString(@"Bottom","Position menu item for tabs at the bottom of the message window")
+					target:nil
+					action:nil
+			 keyEquivalent:@""
+					   tag:AdiumTabPositionBottom];
+	
+	[menu addItemWithTitle:AILocalizedString(@"Left","Position menu item for tabs at the left of the message window")
+					target:nil
+					action:nil
+			 keyEquivalent:@""
+					   tag:AdiumTabPositionLeft];
+
+	[menu addItemWithTitle:AILocalizedString(@"Right","Position menu item for tabs at the right of the message window")
+					target:nil
+					action:nil
+			 keyEquivalent:@""
+					   tag:AdiumTabPositionRight];
+	
 	return [menu autorelease];		
 }
 
