@@ -557,17 +557,15 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	}
 }
 
-//This glass implementation is actually broken but works for Adium -- a proper one would take the width of aRect into account.
--(void)drawControlBackgroundInRect:(NSRect)aRect active:(BOOL)isActive{
-	NSRect	frame = [self frame];
-	
+-(void)drawControlBackgroundInRect:(NSRect)aRect active:(BOOL)isActive{	
 	//Draw the background, tiling across
     NSRect sourceRect = NSMakeRect(0, 0, backgroundSize.width, backgroundSize.height);
-    NSRect destRect = NSMakeRect(frame.origin.x, frame.origin.y, sourceRect.size.width, aRect.size.height);
+    NSRect destRect = NSMakeRect(aRect.origin.x, aRect.origin.y, sourceRect.size.width, aRect.size.height);
 	
-    while ((destRect.origin.x < NSMaxX(frame)) && destRect.size.width > 0) {
+    while ((destRect.origin.x < NSMaxX(aRect)) && destRect.size.width > 0) {
         //Crop
-        if (NSMaxX(destRect) > NSMaxX(frame)) {
+        if (NSMaxX(destRect) > NSMaxX(aRect)) {
+			destRect.size.width = NSMaxX(aRect) - NSMinX(destRect);
             sourceRect.size.width = NSWidth(destRect);
         }
 		
@@ -576,7 +574,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 					 operation:NSCompositeSourceOver
 					  fraction:1.0];
         destRect.origin.x += destRect.size.width;
-    }	
+    }
 }
 
 -(void)setFrame:(NSRect)aRect{
