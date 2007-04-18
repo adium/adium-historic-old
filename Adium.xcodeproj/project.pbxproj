@@ -77,6 +77,8 @@
 		340C1A370BD58F9000D09235 /* DiskImageUtilities.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 340C1A330BD58F9000D09235 /* DiskImageUtilities.h */; };
 		340C1A380BD58F9000D09235 /* AuthorizedTaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 340C1A340BD58F9000D09235 /* AuthorizedTaskManager.m */; };
 		340C1ABF0BD58FAB00D09235 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 340C1ABE0BD58FAB00D09235 /* Security.framework */; };
+		340C1E770BD59A0500D09235 /* GBImportPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 340C1E750BD59A0500D09235 /* GBImportPlugin.m */; };
+		340C1E780BD59A0500D09235 /* GBImportPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 340C1E760BD59A0500D09235 /* GBImportPlugin.h */; };
 		340D859B0ADC82D100D05B3F /* sourceListBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 340670790A55A044004E22AC /* sourceListBackground.png */; };
 		3410746009B6965700565C9E /* AIMDLogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3410745E09B6965700565C9E /* AIMDLogViewerWindowController.m */; };
 		34107B4C09E9923D001CC042 /* AIGuestAccountWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34107B4A09E9923D001CC042 /* AIGuestAccountWindowController.m */; };
@@ -1489,6 +1491,7 @@
 				346371070BCA0A5400AD57AD /* AIMessageTabSplitView.h in CopyFiles */,
 				340C1A350BD58F9000D09235 /* AuthorizedTaskManager.h in CopyFiles */,
 				340C1A370BD58F9000D09235 /* DiskImageUtilities.h in CopyFiles */,
+				340C1E780BD59A0500D09235 /* GBImportPlugin.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1574,6 +1577,8 @@
 		340C1A330BD58F9000D09235 /* DiskImageUtilities.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DiskImageUtilities.h; path = Source/DiskImageUtilities.h; sourceTree = "<group>"; };
 		340C1A340BD58F9000D09235 /* AuthorizedTaskManager.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AuthorizedTaskManager.m; path = Source/AuthorizedTaskManager.m; sourceTree = "<group>"; };
 		340C1ABE0BD58FAB00D09235 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = /System/Library/Frameworks/Security.framework; sourceTree = "<absolute>"; };
+		340C1E750BD59A0500D09235 /* GBImportPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = GBImportPlugin.m; path = Source/GBImportPlugin.m; sourceTree = "<group>"; };
+		340C1E760BD59A0500D09235 /* GBImportPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = GBImportPlugin.h; path = Source/GBImportPlugin.h; sourceTree = "<group>"; };
 		340D03990A7D78FC0059A3AF /* AIAccountControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAccountControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIAccountControllerProtocol.h"; sourceTree = "<group>"; };
 		340D03A80A7D798A0059A3AF /* AIControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIControllerProtocol.h"; sourceTree = "<group>"; };
 		340D081F0A7DBFE40059A3AF /* AIChatControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIChatControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIChatControllerProtocol.h"; sourceTree = "<group>"; };
@@ -5967,6 +5972,8 @@
 				F57938AD033E737001A8010A /* AILoginController.m */,
 				F57938ED033E745F01A8010A /* AIPreferenceController.h */,
 				F57938AF033E737001A8010A /* AIPreferenceController.m */,
+				340C1E750BD59A0500D09235 /* GBImportPlugin.m */,
+				340C1E760BD59A0500D09235 /* GBImportPlugin.h */,
 				344C0D4306B6D5E300DA7200 /* Applescriptability */,
 				83DB8F21061145C400A5C28C /* Version Checker */,
 			);
@@ -8446,6 +8453,7 @@
 				346371080BCA0A5400AD57AD /* AIMessageTabSplitView.m in Sources */,
 				340C1A360BD58F9000D09235 /* DiskImageUtilities.m in Sources */,
 				340C1A380BD58F9000D09235 /* AuthorizedTaskManager.m in Sources */,
+				340C1E770BD59A0500D09235 /* GBImportPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
