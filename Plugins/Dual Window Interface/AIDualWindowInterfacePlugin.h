@@ -17,7 +17,7 @@
 #import <Adium/AIPlugin.h>
 
 @class AIContactListWindowController, AIDualWindowPreferences, AIMessageTabViewItem,
-	AIMessageWindowController, ESDualWindowMessageAdvancedPreferences, AIChat, TabsAdvancedPreferences;
+	AIMessageWindowController, ESDualWindowMessageAdvancedPreferences, AIChat;
 
 @protocol AIInterfaceComponent;
 
@@ -28,11 +28,9 @@
 #define KEY_ALWAYS_CREATE_NEW_WINDOWS 		@"Always Create New Windows"
 //#define KEY_USE_LAST_WINDOW					@"Use Last Window"
 #define KEY_AUTOHIDE_TABBAR					@"Autohide Tab Bar"
-#define KEY_ENABLE_INACTIVE_TAB_CLOSE		@"Enable Inactive Tab Close"
 #define KEY_KEEP_TABS_ARRANGED				@"Keep Tabs Arranged"
 #define KEY_ARRANGE_TABS_BY_GROUP			@"Arrange Tabs By Group"
 #define KEY_TABBAR_POSITION					@"Tab Bar Position"
-#define KEY_TABBAR_USE_OVERFLOW				@"Use Overflow Menu"
 #define KEY_TABBAR_SHOW_UNREAD_COUNT		@"Show Unread Message Count in Tabs"
 
 #define KEY_ALWAYS_CREATE_NEW_WINDOWS 		@"Always Create New Windows"
@@ -87,7 +85,6 @@
     //Preferences
     AIDualWindowPreferences                 *preferenceController;
     ESDualWindowMessageAdvancedPreferences	*preferenceMessageAdvController;
-	TabsAdvancedPreferences					*tabsAdvController;
 
 	BOOL					applicationIsHidden;
 
