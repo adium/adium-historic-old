@@ -460,11 +460,6 @@
 	}
 	
 	if (!silent) [[adium interfaceController] chatDidOpen:[inTabViewItem chat]];
-	
-	//This will enable animations when the time to enable animations has arrived. That time is not now, unless you want ugly to happen.
-	/*if ([tabView_messages numberOfTabViewItems] > 0) {
-		[tabView_tabBar setAutomaticallyAnimates:YES];
-	}*/
 }
 
 //Remove a tab view item container
@@ -792,6 +787,11 @@
     [self _updateWindowTitleAndIcon];
 	[self _reloadContainedChats];
 	[[adium interfaceController] chatOrderDidChange];
+	
+	//Remaining disabled until the last crasher I know of is removed
+	/*if ([tabView numberOfTabViewItems] > 0) {
+		[tabView_tabBar setAutomaticallyAnimates:YES];
+	}*/
 }
 
 //Tabs reordered
