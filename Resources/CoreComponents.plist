@@ -85,5 +85,6 @@
 	<string>GBQuestionHandlerPlugin</string>
 	<string>AINulRemovalPlugin</string>
 	<string>AIAdvancedPreferencesPlugin</string>
+	<string>GBImportPlugin</string>
 </array>
 </plist>
