@@ -240,9 +240,14 @@
 			if ((newAccount = [service accountWithUID:accountUID internalObjectID:internalObjectID])) {
                 [accounts addObject:newAccount];
             } else {
+				NSLog(@"Could not load account %@",accountDict);
 				[unloadableAccounts addObject:accountDict];
 			}
-        }
+        } else {
+			NSLog(@"Avaialble services are %@: could not load account %@",
+				  [[adium accountController] services], accountDict);
+			[unloadableAccounts addObject:accountDict];			
+		}
 		[pool release];
     }
 
