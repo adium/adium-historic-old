@@ -32,7 +32,7 @@
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-oscar-Mac";
+	return @"libpurple-oscar-Mac";
 }
 - (NSString *)serviceID{
 	return @"Mac";

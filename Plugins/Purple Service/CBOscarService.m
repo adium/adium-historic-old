@@ -55,7 +55,7 @@
 
 #pragma mark Must be subclassed
 - (NSString *)serviceCodeUniqueID{
-	return @""; /* Subclasses should return a value starting with libgaim-oscar */
+	return @""; /* Subclasses should return a value starting with libpurple-oscar */
 }
 - (NSString *)shortDescription{
 	return @"";

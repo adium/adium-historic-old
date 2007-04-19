@@ -32,7 +32,7 @@
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-oscar-ICQ";
+	return @"libpurple-oscar-ICQ";
 }
 - (NSString *)serviceID{
 	return @"ICQ";

@@ -37,7 +37,7 @@
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-zephyr";
+	return @"libpurple-zephyr";
 }
 - (NSString *)serviceID{
 	return @"Zephyr";

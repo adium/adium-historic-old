@@ -36,7 +36,7 @@
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-Yahoo!-Japan";
+	return @"libpurple-Yahoo!-Japan";
 }
 - (NSString *)serviceID{
 	return @"Yahoo! Japan";

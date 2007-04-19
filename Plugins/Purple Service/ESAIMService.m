@@ -25,7 +25,7 @@
 }
 
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-oscar-AIM";
+	return @"libpurple-oscar-AIM";
 }
 - (NSString *)serviceID{
 	return @"AIM";

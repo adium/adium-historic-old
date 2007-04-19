@@ -74,15 +74,15 @@ extern gchar *oscar_encoding_extract(const char *encoding);
 #ifdef JOSCAR_SUPERCEDE_LIBGAIM
 		contactServiceID = @"joscar-OSCAR-dotMac";
 #else
-		contactServiceID = @"libgaim-oscar-Mac";
+		contactServiceID = @"libpurple-oscar-Mac";
 #endif
 	} else if (firstCharacter && (firstCharacter >= '0' && firstCharacter <= '9')) {
-		contactServiceID = @"libgaim-oscar-ICQ";
+		contactServiceID = @"libpurple-oscar-ICQ";
 	} else {
 #ifdef JOSCAR_SUPERCEDE_LIBGAIM
 		contactServiceID = @"joscar-OSCAR-AIM";
 #else
-		contactServiceID = @"libgaim-oscar-AIM";
+		contactServiceID = @"libpurple-oscar-AIM";
 #endif
 	}
 

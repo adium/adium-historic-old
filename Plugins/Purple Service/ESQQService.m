@@ -27,7 +27,7 @@
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-qq";
+	return @"libpurple-qq";
 }
 - (NSString *)serviceID{
 	return @"QQ";

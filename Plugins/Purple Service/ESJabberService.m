@@ -42,7 +42,7 @@
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-Jabber";
+	return @"libpurple-Jabber";
 }
 - (NSString *)serviceID{
 	return @"Jabber";

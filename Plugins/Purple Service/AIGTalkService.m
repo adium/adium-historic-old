@@ -32,7 +32,7 @@
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-jabber-gtalk";
+	return @"libpurple-jabber-gtalk";
 }
 - (NSString *)serviceID{
 	return @"GTalk";

@@ -37,7 +37,7 @@
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-GroupWise";
+	return @"libpurple-GroupWise";
 }
 - (NSString *)serviceID{
 	return @"GroupWise";
