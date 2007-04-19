@@ -1055,7 +1055,7 @@
 		4B7A567B07A1754400BDC540 /* AIEditAccountWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7A567807A1754400BDC540 /* AIEditAccountWindowController.m */; };
 		4B7F278D05440C8D00CDFC90 /* CBPurpleServicePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B7F278905440C8D00CDFC90 /* CBPurpleServicePlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B7F278E05440C8D00CDFC90 /* CBPurpleServicePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F278A05440C8D00CDFC90 /* CBPurpleServicePlugin.m */; settings = {COMPILER_FLAGS = "-fconstant-cfstrings"; }; };
-		4B7F27C705440DE900CDFC90 /* Purple.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B7F278305440C0800CDFC90 /* Purple.AdiumPlugin */; };
+		4B7F27C705440DE900CDFC90 /* purple.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B7F278305440C0800CDFC90 /* purple.AdiumPlugin */; };
 		4B7F78BF0597F44D00162728 /* AICrashReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B7F78BD0597F44D00162728 /* AICrashReporter.h */; };
 		4B7F78C00597F44D00162728 /* AICrashReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F78BE0597F44D00162728 /* AICrashReporter.m */; };
 		4B7F78C40597F6F500162728 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F78C30597F6F500162728 /* main.m */; };
@@ -1516,7 +1516,7 @@
 			dstSubfolderSpec = 13;
 			files = (
 				348EF1F6080B31280015E0FC /* Latex Plugin.AdiumPlugin in CopyFiles */,
-				4B7F27C705440DE900CDFC90 /* Purple.AdiumPlugin in CopyFiles */,
+				4B7F27C705440DE900CDFC90 /* purple.AdiumPlugin in CopyFiles */,
 				344C0F0D06B709AC00DA7200 /* Bonjour.AdiumPlugin in CopyFiles */,
 				340B9BD4069C735900FE1E57 /* WebKit Message View.AdiumPlugin in CopyFiles */,
 			);
@@ -3270,7 +3270,7 @@
 		4B7A565A07A1742900BDC540 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Purple Service/en.lproj/ESPurpleNovellAccountView.nib"; sourceTree = "<group>"; };
 		4B7A567707A1754400BDC540 /* AIEditAccountWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEditAccountWindowController.h; path = Source/AIEditAccountWindowController.h; sourceTree = "<group>"; };
 		4B7A567807A1754400BDC540 /* AIEditAccountWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEditAccountWindowController.m; path = Source/AIEditAccountWindowController.m; sourceTree = "<group>"; };
-		4B7F278305440C0800CDFC90 /* Purple.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Purple.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
+		4B7F278305440C0800CDFC90 /* purple.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = purple.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B7F278705440C8D00CDFC90 /* CBPurpleAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBPurpleAccount.h; path = "Plugins/Purple Service/CBPurpleAccount.h"; sourceTree = "<group>"; };
 		4B7F278905440C8D00CDFC90 /* CBPurpleServicePlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBPurpleServicePlugin.h; path = "Plugins/Purple Service/CBPurpleServicePlugin.h"; sourceTree = "<group>"; };
 		4B7F278A05440C8D00CDFC90 /* CBPurpleServicePlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBPurpleServicePlugin.m; path = "Plugins/Purple Service/CBPurpleServicePlugin.m"; sourceTree = "<group>"; };
@@ -3968,7 +3968,7 @@
 				34BD9F390531477E000AB133 /* Adium 1.6 Pref Importer.app */,
 				4B7F78B50597F42400162728 /* Adium Crash Reporter.app */,
 				34BD9DE105314751000AB133 /* Adium.framework */,
-				4B7F278305440C0800CDFC90 /* Purple.AdiumPlugin */,
+				4B7F278305440C0800CDFC90 /* purple.AdiumPlugin */,
 				34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */,
 				346C9DA406004754000F5A8A /* Standard Message View.AdiumPlugin */,
 				6C5C3C2605F6532600490341 /* SQL Logger.AdiumPlugin */,
@@ -7787,7 +7787,7 @@
 			);
 			name = Purple;
 			productName = Purple;
-			productReference = 4B7F278305440C0800CDFC90 /* Purple.AdiumPlugin */;
+			productReference = 4B7F278305440C0800CDFC90 /* purple.AdiumPlugin */;
 			productType = "com.apple.product-type.bundle";
 		};
 		4B7F78B40597F42400162728 /* Adium Crash Reporter */ = {
@@ -10424,7 +10424,7 @@
 					"-undefined",
 					suppress,
 				);
-				PRODUCT_NAME = Purple;
+				PRODUCT_NAME = purple;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			name = Deployment;
@@ -11120,7 +11120,7 @@
 					"-undefined",
 					suppress,
 				);
-				PRODUCT_NAME = Purple;
+				PRODUCT_NAME = purple;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			name = "Deployment-Debug_PPC-Only";
@@ -11515,7 +11515,7 @@
 					"-undefined",
 					suppress,
 				);
-				PRODUCT_NAME = Purple;
+				PRODUCT_NAME = purple;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			name = Development;
@@ -11555,7 +11555,7 @@
 					"-undefined",
 					suppress,
 				);
-				PRODUCT_NAME = Purple;
+				PRODUCT_NAME = purple;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			name = "Deployment-Debug";
