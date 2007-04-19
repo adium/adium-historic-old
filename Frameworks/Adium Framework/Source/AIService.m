@@ -434,8 +434,8 @@
 
 - (NSString *)description
 {
-	return [NSString stringWithFormat:@"<%@: serviceID = %@; serviceClass = %@; longDescription = %@>",
-		NSStringFromClass([self class]), [self serviceID], [self serviceClass], [self longDescription]];
+	return [NSString stringWithFormat:@"<%@: serviceCodeUniqueID = %@; serviceID = %@; serviceClass = %@; longDescription = %@>",
+		NSStringFromClass([self class]), [self serviceCodeUniqueID], [self serviceID], [self serviceClass], [self longDescription]];
 	
 }
 
