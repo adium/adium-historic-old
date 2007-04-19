@@ -432,4 +432,11 @@
 	return [[self longDescription] compare:[inService longDescription]];
 }
 
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"<%@: serviceID = %@; serviceClass = %@; longDescription = %@>",
+		NSStringFromClass([self class]), [self serviceID], [self serviceClass], [self longDescription]];
+	
+}
+
 @end
