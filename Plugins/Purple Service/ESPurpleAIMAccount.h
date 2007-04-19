@@ -1,14 +1,14 @@
 //
-//  ESGaimAIMAccount.h
+//  ESPurpleAIMAccount.h
 //  Adium
 //
 //  Created by Evan Schoenberg on 2/23/05.
 //  Copyright 2006 The Adium Team. All rights reserved.
 //
 
-#import "CBGaimOscarAccount.h"
+#import "CBPurpleOscarAccount.h"
 
-@interface ESGaimAIMAccount : CBGaimOscarAccount {
+@interface ESPurpleAIMAccount : CBPurpleOscarAccount {
 	NSMutableDictionary	*directIMQueue;
 }
 

@@ -1,17 +1,17 @@
 //
-//  ESGaimAIMAccount.m
+//  ESPurpleAIMAccount.m
 //  Adium
 //
 //  Created by Evan Schoenberg on 2/23/05.
 //  Copyright 2006 The Adium Team. All rights reserved.
 //
 
-#import "ESGaimAIMAccount.h"
+#import "ESPurpleAIMAccount.h"
 #import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
-#import "SLGaimCocoaAdapter.h"
+#import "SLPurpleCocoaAdapter.h"
 #import <Adium/AIChat.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
@@ -23,7 +23,7 @@
 
 #define MAX_AVAILABLE_MESSAGE_LENGTH	58
 
-@interface ESGaimAIMAccount (PRIVATE)
+@interface ESPurpleAIMAccount (PRIVATE)
 - (NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding;
 - (NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString;
 - (void)setFormattedUID;
@@ -31,7 +31,7 @@
 - (void)updateInfo:(AIListContact *)theContact;
 @end
 
-@implementation ESGaimAIMAccount
+@implementation ESPurpleAIMAccount
 
 static BOOL				createdEncoders = NO;
 static AIHTMLDecoder	*encoderCloseFontTagsAttachmentsAsText = nil;
@@ -51,7 +51,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	[super initAccount];
 
 	//XXX
-	[SLGaimCocoaAdapter sharedInstance];
+	[SLPurpleCocoaAdapter sharedInstance];
 
 	arrayOfContactsForDelayedUpdates = nil;
 	delayedSignonUpdateTimer = nil;
@@ -265,7 +265,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 		aim_userinfo_t *userinfo = aim_locate_finduserinfo(od, contactUID);
 		
 		if (userinfo &&
-			aim_sncmp(gaim_account_get_username(account), contactUID) &&
+			aim_sncmp(purple_account_get_username(account), contactUID) &&
 			[listObject online]) {
 			return (userinfo->capabilities & OSCAR_CAPABILITY_DIRECTIM);
 
@@ -402,7 +402,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 							filename = [filename stringByAppendingPathExtension:@"png"];
 						}
 
-						int				imgstore = gaim_imgstore_add([imageData bytes], [imageData length], [filename UTF8String]);
+						int				imgstore = purple_imgstore_add([imageData bytes], [imageData length], [filename UTF8String]);
 
 						AILog(@"Adding image id %i with name %s", [filename UTF8String]);
 
@@ -427,15 +427,15 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	SEL updateSelector = nil;
 	
 	switch ([event intValue]) {
-		case GAIM_BUDDY_INFO_UPDATED: {
+		case PURPLE_BUDDY_INFO_UPDATED: {
 			updateSelector = @selector(updateInfo:);
 			break;
 		}
-		case GAIM_BUDDY_DIRECTIM_CONNECTED: {
+		case PURPLE_BUDDY_DIRECTIM_CONNECTED: {
 			updateSelector = @selector(directIMConnected:);
 			break;
 		}
-		case GAIM_BUDDY_DIRECTIM_DISCONNECTED:{
+		case PURPLE_BUDDY_DIRECTIM_DISCONNECTED:{
 			updateSelector = @selector(directIMDisconnected:);
 			break;
 		}
@@ -454,7 +454,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	OscarData			*od;
 	aim_userinfo_t		*userinfo;
 	
-	if (gaim_account_is_connected(account) &&
+	if (purple_account_is_connected(account) &&
 		(od = account->gc->proto_data) &&
 		(userinfo = aim_locate_finduserinfo(od, [[theContact UID] UTF8String]))) {
 		
@@ -558,7 +558,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 			[listContact setStatusObject:contactName forKey:@"FormattedUID" notify:NotifyNow];
 		}
 		
-		/* Gaim incorrectly flags group chat participants as being on a mobile device... we're just going
+		/* Purple incorrectly flags group chat participants as being on a mobile device... we're just going
 		 * to assume that a contact in a group chat is by definition not on their cell phone. This assumption
 		 * could become wrong in the future... we can deal with it more properly at that time. :P -eds
 		 */	

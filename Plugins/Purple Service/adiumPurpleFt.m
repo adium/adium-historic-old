@@ -14,15 +14,15 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "adiumGaimFt.h"
+#import "adiumPurpleFt.h"
 #import <AIUtilities/AIObjectAdditions.h>
 
-static void adiumGaimNewXfer(GaimXfer *xfer)
+static void adiumPurpleNewXfer(PurpleXfer *xfer)
 {
 	
 }
 
-static void adiumGaimDestroy(GaimXfer *xfer)
+static void adiumPurpleDestroy(PurpleXfer *xfer)
 {
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
 	[accountLookup(xfer->account) destroyFileTransfer:fileTransfer];
@@ -30,12 +30,12 @@ static void adiumGaimDestroy(GaimXfer *xfer)
 	xfer->ui_data = nil;
 }
 
-static void adiumGaimAddXfer(GaimXfer *xfer)
+static void adiumPurpleAddXfer(PurpleXfer *xfer)
 {
 	
 }
 
-static void adiumGaimUpdateProgress(GaimXfer *xfer, double percent)
+static void adiumPurpleUpdateProgress(PurpleXfer *xfer, double percent)
 {	
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
 	
@@ -46,30 +46,30 @@ static void adiumGaimUpdateProgress(GaimXfer *xfer, double percent)
 	}
 }
 
-static void adiumGaimCancelLocal(GaimXfer *xfer)
+static void adiumPurpleCancelLocal(PurpleXfer *xfer)
 {
-	GaimDebug (@"adiumGaimCancelLocal");
+	PurpleDebug (@"adiumPurpleCancelLocal");
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
     [accountLookup(xfer->account) fileTransferCancelledLocally:fileTransfer];
 }
 
-static void adiumGaimCancelRemote(GaimXfer *xfer)
+static void adiumPurpleCancelRemote(PurpleXfer *xfer)
 {
-	GaimDebug (@"adiumGaimCancelRemote");
+	PurpleDebug (@"adiumPurpleCancelRemote");
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
     [accountLookup(xfer->account) fileTransferCancelledRemotely:fileTransfer];
 }
 
-static GaimXferUiOps adiumGaimFileTransferOps = {
-    adiumGaimNewXfer,
-    adiumGaimDestroy,
-    adiumGaimAddXfer,
-    adiumGaimUpdateProgress,
-    adiumGaimCancelLocal,
-    adiumGaimCancelRemote
+static PurpleXferUiOps adiumPurpleFileTransferOps = {
+    adiumPurpleNewXfer,
+    adiumPurpleDestroy,
+    adiumPurpleAddXfer,
+    adiumPurpleUpdateProgress,
+    adiumPurpleCancelLocal,
+    adiumPurpleCancelRemote
 };
 
-GaimXferUiOps *adium_gaim_xfers_get_ui_ops()
+PurpleXferUiOps *adium_purple_xfers_get_ui_ops()
 {
-	return &adiumGaimFileTransferOps;
+	return &adiumPurpleFileTransferOps;
 }

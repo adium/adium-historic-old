@@ -14,9 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESGaimRequestAbstractWindowController.h"
+#import "ESPurpleRequestAbstractWindowController.h"
 
-@interface ESGaimRequestWindowController : ESGaimRequestAbstractWindowController {	
+@interface ESPurpleRequestWindowController : ESPurpleRequestAbstractWindowController {	
 	IBOutlet		NSTextView		*textView_primary;
 
 	IBOutlet		NSTextView		*textView_secondary;
@@ -31,7 +31,7 @@
 	NSValue			*userDataValue;
 }
 
-+ (ESGaimRequestWindowController *)showInputWindowWithDict:(NSDictionary *)infoDict;
++ (ESPurpleRequestWindowController *)showInputWindowWithDict:(NSDictionary *)infoDict;
 - (id)initWithWindowNibName:(NSString *)windowNibName withDict:(NSDictionary *)infoDict multiline:(BOOL)multiline;
 - (IBAction)pressedButton:(id)sender;
 

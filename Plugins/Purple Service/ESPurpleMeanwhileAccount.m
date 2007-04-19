@@ -14,19 +14,19 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESGaimMeanwhileAccount.h"
+#import "ESPurpleMeanwhileAccount.h"
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIStatusControllerProtocol.h>
-#import "UndeclaredLibgaimFunctions.h"
+#import "UndeclaredLibpurpleFunctions.h"
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
 #import <Adium/ESFileTransfer.h>
 
-@interface ESGaimMeanwhileAccount (PRIVATE)
+@interface ESPurpleMeanwhileAccount (PRIVATE)
 - (NSAttributedString *)statusMessageForContact:(AIListContact *)theContact;
 @end
 
-@implementation ESGaimMeanwhileAccount
+@implementation ESPurpleMeanwhileAccount
 
 #ifndef MEANWHILE_NOT_AVAILABLE
 
@@ -35,25 +35,25 @@
     return "prpl-meanwhile";
 }
 
-- (void)configureGaimAccount
+- (void)configurePurpleAccount
 {
-	[super configureGaimAccount];
+	[super configurePurpleAccount];
 	
-	gaim_prefs_set_int(MW_PRPL_OPT_BLIST_ACTION, Meanwhile_CL_Load_And_Save);
-	gaim_account_set_bool(account, "force_login", [[self preferenceForKey:KEY_MEANWHILE_FORCE_LOGIN
+	purple_prefs_set_int(MW_PRPL_OPT_BLIST_ACTION, Meanwhile_CL_Load_And_Save);
+	purple_account_set_bool(account, "force_login", [[self preferenceForKey:KEY_MEANWHILE_FORCE_LOGIN
 																	group:GROUP_ACCOUNT_STATUS] boolValue]);
-	gaim_account_set_bool(account, "fake_client_id", [[self preferenceForKey:KEY_MEANWHILE_FAKE_CLIENT_ID
+	purple_account_set_bool(account, "fake_client_id", [[self preferenceForKey:KEY_MEANWHILE_FAKE_CLIENT_ID
 																	   group:GROUP_ACCOUNT_STATUS] boolValue]);
 }
 
 #pragma mark Status Messages
-- (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
+- (NSAttributedString *)statusMessageForPurpleBuddy:(PurpleBuddy *)b
 {
 	NSString				*statusMessageString;
 	NSAttributedString		*statusMessage = nil;
 	const char				*statusMessageText;
-	GaimConnection			*gc = b->account->gc;
-	struct mwGaimPluginData	*pd = ((struct mwGaimPluginData *)(gc->proto_data));
+	PurpleConnection			*gc = b->account->gc;
+	struct mwPurplePluginData	*pd = ((struct mwPurplePluginData *)(gc->proto_data));
 	struct mwAwareIdBlock	t = { mwAware_USER,  b->name, NULL };
 	
 	statusMessageText = (const char *)mwServiceAware_getText(pd->srvc_aware, &t);

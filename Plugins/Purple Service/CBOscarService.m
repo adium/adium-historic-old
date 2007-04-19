@@ -14,10 +14,10 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIGaimOscarAccountViewController.h"
+#import "AIPurpleOscarAccountViewController.h"
 #import <Adium/AIStatusControllerProtocol.h>
 #import "CBOscarService.h"
-#import "DCGaimOscarJoinChatViewController.h"
+#import "DCPurpleOscarJoinChatViewController.h"
 
 /*!
  * @class CBOscarService
@@ -29,11 +29,11 @@
 
 //Account Creation
 - (AIAccountViewController *)accountViewController{
-    return [AIGaimOscarAccountViewController accountViewController];
+    return [AIPurpleOscarAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return [DCGaimOscarJoinChatViewController joinChatView];
+	return [DCPurpleOscarJoinChatViewController joinChatView];
 }
 
 //Service Description

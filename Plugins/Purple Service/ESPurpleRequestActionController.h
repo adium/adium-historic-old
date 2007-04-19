@@ -14,14 +14,14 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "CBGaimServicePlugin.h"
+#import "CBPurpleServicePlugin.h"
 
 @class ESTextAndButtonsWindowController;
 
-@interface ESGaimRequestActionController : AIObject {
+@interface ESPurpleRequestActionController : AIObject {
 	ESTextAndButtonsWindowController	*requestController;
 }
 
-+ (ESGaimRequestActionController *)showActionWindowWithDict:(NSDictionary *)infoDict;
++ (ESPurpleRequestActionController *)showActionWindowWithDict:(NSDictionary *)infoDict;
 
 @end

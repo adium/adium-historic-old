@@ -14,11 +14,11 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "CBGaimAccount.h"
+#import "CBPurpleAccount.h"
 
 #define KEY_YAHOO_ROOM_LIST_LOCALE @"Room List Locale"
 
-@interface ESGaimYahooAccount : CBGaimAccount <AIAccount_Files>{
+@interface ESPurpleYahooAccount : CBPurpleAccount <AIAccount_Files>{
 
 }
 

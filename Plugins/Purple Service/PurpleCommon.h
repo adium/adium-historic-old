@@ -18,20 +18,20 @@
 //Extensive debug logging is always on for a debug build
 #define GAIM_DEBUG  TRUE
 #else
-//Extensive debug logging may be preferentially turned on for Gaim for a non-debug build
+//Extensive debug logging may be preferentially turned on for Purple for a non-debug build
 #define GAIM_DEBUG FALSE
 #endif
 
 #if GAIM_DEBUG
-	#define GaimDebug(...) AILog(__VA_ARGS__)
+	#define PurpleDebug(...) AILog(__VA_ARGS__)
 #else
-	#define GaimDebug(...) /**/
+	#define PurpleDebug(...) /**/
 #endif
 
 //#define MEANWHILE_NOT_AVAILABLE
 
-//Gaim includes
-#include <Libgaim/libgaim.h>
+//Purple includes
+#include <Libpurple/libpurple.h>
 
 
 #define GAIM_ORPHANS_GROUP_NAME				"__AdiumOrphansUE9FHUE7I"  //A group name no sane user would have
@@ -39,16 +39,16 @@
 //Events we care about explicitly via signals
 typedef enum
 {
-	GAIM_BUDDY_NONE				= 0x00, /**< No events.                    */
-	GAIM_BUDDY_SIGNON			= 0x01, /**< The buddy signed on.          */
-	GAIM_BUDDY_SIGNOFF			= 0x02, /**< The buddy signed off.         */
-	GAIM_BUDDY_INFO_UPDATED		= 0x10, /**< The buddy's information (profile) changed.     */
-	GAIM_BUDDY_ICON				= 0x40, /**< The buddy's icon changed.     */
-	GAIM_BUDDY_MISCELLANEOUS	= 0x80, /**< The buddy's service-specific miscalleneous info changed.     */
-	GAIM_BUDDY_SIGNON_TIME		= 0x11, /**< The buddy's signon time changed.     */
-	GAIM_BUDDY_EVIL				= 0x12,  /**< The buddy's warning level changed.     */
-	GAIM_BUDDY_DIRECTIM_CONNECTED = 0x14, /**< Connected to the buddy via DirectIM.  */
-	GAIM_BUDDY_DIRECTIM_DISCONNECTED = 0x18, /**< Disconnected from the buddy via DirectIM.  */
-	GAIM_BUDDY_NAME				= 0x20 /**<Buddy name (UID) changed. */
+	PURPLE_BUDDY_NONE				= 0x00, /**< No events.                    */
+	PURPLE_BUDDY_SIGNON			= 0x01, /**< The buddy signed on.          */
+	PURPLE_BUDDY_SIGNOFF			= 0x02, /**< The buddy signed off.         */
+	PURPLE_BUDDY_INFO_UPDATED		= 0x10, /**< The buddy's information (profile) changed.     */
+	PURPLE_BUDDY_ICON				= 0x40, /**< The buddy's icon changed.     */
+	PURPLE_BUDDY_MISCELLANEOUS	= 0x80, /**< The buddy's service-specific miscalleneous info changed.     */
+	PURPLE_BUDDY_SIGNON_TIME		= 0x11, /**< The buddy's signon time changed.     */
+	PURPLE_BUDDY_EVIL				= 0x12,  /**< The buddy's warning level changed.     */
+	PURPLE_BUDDY_DIRECTIM_CONNECTED = 0x14, /**< Connected to the buddy via DirectIM.  */
+	PURPLE_BUDDY_DIRECTIM_DISCONNECTED = 0x18, /**< Disconnected from the buddy via DirectIM.  */
+	PURPLE_BUDDY_NAME				= 0x20 /**<Buddy name (UID) changed. */
 	
-} GaimBuddyEvent;
+} PurpleBuddyEvent;

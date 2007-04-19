@@ -14,46 +14,46 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "adiumGaimBlist.h"
+#import "adiumPurpleBlist.h"
 #import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/AIListContact.h>
 
 static NSMutableDictionary	*groupDict = nil;
 static NSMutableDictionary	*aliasDict = nil;
 
-static void adiumGaimBlistNewList(GaimBuddyList *list)
+static void adiumPurpleBlistNewList(PurpleBuddyList *list)
 {
 
 }
 
-static void adiumGaimBlistNewNode(GaimBlistNode *node)
+static void adiumPurpleBlistNewNode(PurpleBlistNode *node)
 {
 	
 }
 
-static void adiumGaimBlistShow(GaimBuddyList *list)
+static void adiumPurpleBlistShow(PurpleBuddyList *list)
 {
 	
 }
 
-static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
+static void adiumPurpleBlistUpdate(PurpleBuddyList *list, PurpleBlistNode *node)
 {
-	if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
-		GaimBuddy *buddy = (GaimBuddy*)node;
+	if (PURPLE_BLIST_NODE_IS_BUDDY(node)) {
+		PurpleBuddy *buddy = (PurpleBuddy*)node;
 
 		//Take no action if the relevant account isn't online.
-		if (!buddy->account || !gaim_account_is_connected(buddy->account))
+		if (!buddy->account || !purple_account_is_connected(buddy->account))
 			return;
 		   
 		AIListContact	*theContact = contactLookupFromBuddy(buddy);
 
-		GaimGroup		*g = gaim_buddy_get_group(buddy);
+		PurpleGroup		*g = purple_buddy_get_group(buddy);
 		NSString		*groupName = ((g && g->name) ? [NSString stringWithUTF8String:g->name] : nil);
 		NSString		*oldGroupName;
 		NSValue			*buddyValue = [NSValue valueWithPointer:buddy];
 
 		/* Group changes, including the initial notification of the group.
-		 * We get told about a newly added contact in adiumGaimSignal's buddy_added_cb(), but that doesn't help
+		 * We get told about a newly added contact in adiumPurpleSignal's buddy_added_cb(), but that doesn't help
 		 * because (1) we don't find out about the initially-read blist.xml and (2) we set the remote group name to
 		 * nil when an account goes offline, and therefore we need to find out about the group yet again at a later date.
 		 *
@@ -96,7 +96,7 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 		 * we get any update, but we do want to pass on a changed alias.  We therefore use the static
 		 * aliasDict NSMutableDictionary to track what alias was last used for each buddy.  The first invocation,
 		 * and subsequent invocations for the same alias, are passed back to the main thread for processing. */
-		const char	*alias = gaim_buddy_get_alias_only(buddy);
+		const char	*alias = purple_buddy_get_alias_only(buddy);
 		if (alias) {
 			NSString	*aliasString = [NSString stringWithUTF8String:alias];
 			NSString	*oldAliasString;
@@ -123,14 +123,14 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 }
 
 //A buddy was removed from the list
-static void adiumGaimBlistRemove(GaimBuddyList *list, GaimBlistNode *node)
+static void adiumPurpleBlistRemove(PurpleBuddyList *list, PurpleBlistNode *node)
 {
     NSCAssert(node != nil, @"BlistRemove on null node");
-    if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
-		GaimBuddy	*buddy = (GaimBuddy*) node;
+    if (PURPLE_BLIST_NODE_IS_BUDDY(node)) {
+		PurpleBuddy	*buddy = (PurpleBuddy*) node;
 		NSValue		*buddyValue = [NSValue valueWithPointer:buddy];
 
-//		GaimDebug (@"adiumGaimBlistRemove %s",buddy->name);
+//		PurpleDebug (@"adiumPurpleBlistRemove %s",buddy->name);
 		[accountLookup(buddy->account) removeContact:contactLookupFromBuddy(buddy)];
 
 		//Clear our dictionaries
@@ -142,46 +142,46 @@ static void adiumGaimBlistRemove(GaimBuddyList *list, GaimBlistNode *node)
     }
 }
 
-static void adiumGaimBlistDestroy(GaimBuddyList *list)
+static void adiumPurpleBlistDestroy(PurpleBuddyList *list)
 {
     //Here we're responsible for destroying what we placed in list's ui_data earlier
-    GaimDebug (@"adiumGaimBlistDestroy");
+    PurpleDebug (@"adiumPurpleBlistDestroy");
 }
 
-static void adiumGaimBlistSetVisible(GaimBuddyList *list, gboolean show)
+static void adiumPurpleBlistSetVisible(PurpleBuddyList *list, gboolean show)
 {
-    GaimDebug (@"adiumGaimBlistSetVisible: %i",show);
+    PurpleDebug (@"adiumPurpleBlistSetVisible: %i",show);
 }
 
-static void adiumGaimBlistRequestAddBuddy(GaimAccount *account, const char *username, const char *group, const char *alias)
+static void adiumPurpleBlistRequestAddBuddy(PurpleAccount *account, const char *username, const char *group, const char *alias)
 {
 	[accountLookup(account) requestAddContactWithUID:[NSString stringWithUTF8String:username]];
 }
 
-static void adiumGaimBlistRequestAddChat(GaimAccount *account, GaimGroup *group, const char *alias, const char *name)
+static void adiumPurpleBlistRequestAddChat(PurpleAccount *account, PurpleGroup *group, const char *alias, const char *name)
 {
-    GaimDebug (@"adiumGaimBlistRequestAddChat");
+    PurpleDebug (@"adiumPurpleBlistRequestAddChat");
 }
 
-static void adiumGaimBlistRequestAddGroup(void)
+static void adiumPurpleBlistRequestAddGroup(void)
 {
-    GaimDebug (@"adiumGaimBlistRequestAddGroup");
+    PurpleDebug (@"adiumPurpleBlistRequestAddGroup");
 }
 
-static GaimBlistUiOps adiumGaimBlistOps = {
-    adiumGaimBlistNewList,
-    adiumGaimBlistNewNode,
-    adiumGaimBlistShow,
-    adiumGaimBlistUpdate,
-    adiumGaimBlistRemove,
-    adiumGaimBlistDestroy,
-    adiumGaimBlistSetVisible,
-    adiumGaimBlistRequestAddBuddy,
-    adiumGaimBlistRequestAddChat,
-    adiumGaimBlistRequestAddGroup
+static PurpleBlistUiOps adiumPurpleBlistOps = {
+    adiumPurpleBlistNewList,
+    adiumPurpleBlistNewNode,
+    adiumPurpleBlistShow,
+    adiumPurpleBlistUpdate,
+    adiumPurpleBlistRemove,
+    adiumPurpleBlistDestroy,
+    adiumPurpleBlistSetVisible,
+    adiumPurpleBlistRequestAddBuddy,
+    adiumPurpleBlistRequestAddChat,
+    adiumPurpleBlistRequestAddGroup
 };
 
-GaimBlistUiOps *adium_gaim_blist_get_ui_ops(void)
+PurpleBlistUiOps *adium_purple_blist_get_ui_ops(void)
 {
-	return &adiumGaimBlistOps;
+	return &adiumPurpleBlistOps;
 }

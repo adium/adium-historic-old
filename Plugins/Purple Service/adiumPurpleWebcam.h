@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "SLGaimCocoaAdapter.h"
+#import "SLPurpleCocoaAdapter.h"
 
-struct gaim_webcam_ui_ops *adium_gaim_webcam_get_ui_ops(void);
-void initGaimWebcamSupport(void);
+struct purple_webcam_ui_ops *adium_purple_webcam_get_ui_ops(void);
+void initPurpleWebcamSupport(void);
 

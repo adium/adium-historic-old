@@ -16,7 +16,7 @@
 
 #import <Adium/DCJoinChatViewController.h>
 
-@interface DCGaimGaduGaduJoinChatViewController : DCJoinChatViewController {
+@interface DCPurpleGaduGaduJoinChatViewController : DCJoinChatViewController {
 
 }
 

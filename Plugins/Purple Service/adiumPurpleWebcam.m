@@ -16,21 +16,21 @@
 
 #if	ENABLE_WEBCAM
 
-#import "adiumGaimWebcam.h"
+#import "adiumPurpleWebcam.h"
 
 #pragma mark Webcam
-static void adiumGaimWebcamNew(GaimWebcam *gwc)
+static void adiumPurpleWebcamNew(PurpleWebcam *gwc)
 {
-	GaimDebug(@"adiumGaimWebcamNew");
-	//	GaimGtkWebcam *c;
+	PurpleDebug(@"adiumPurpleWebcamNew");
+	//	PurpleGtkWebcam *c;
 	//	char *tmp;
 	//	
-	//	c = g_new0(GaimGtkWebcam, 1);
+	//	c = g_new0(PurpleGtkWebcam, 1);
 	//	
 	//	gwc->ui_data = c;
 	//	c->gwc = gwc;
 	//	
-	//	c->button = gaim_pixbuf_button_from_stock(_("Close"), GTK_STOCK_CLOSE, GAIM_BUTTON_HORIZONTAL);
+	//	c->button = purple_pixbuf_button_from_stock(_("Close"), GTK_STOCK_CLOSE, PURPLE_BUTTON_HORIZONTAL);
 	//	c->vbox = gtk_vbox_new(FALSE, 0);
 	//	gtk_box_pack_end_defaults(GTK_BOX(c->vbox), GTK_WIDGET(c->button));
 	//	
@@ -42,12 +42,12 @@ static void adiumGaimWebcamNew(GaimWebcam *gwc)
 	//	gtk_container_add(GTK_CONTAINER(c->window), c->vbox);
 	//	
 	//	g_signal_connect(G_OBJECT(c->button), "clicked",
-	//					 G_CALLBACK(gaim_gtk_webcam_close_clicked), c);
+	//					 G_CALLBACK(purple_gtk_webcam_close_clicked), c);
 	//	
 	//	g_signal_connect(G_OBJECT(c->window), "destroy",
-	//					 G_CALLBACK(gaim_gtk_webcam_destroy), c);
+	//					 G_CALLBACK(purple_gtk_webcam_destroy), c);
 	//	
-	//	c->image = gtk_image_new_from_stock(GAIM_STOCK_LOGO, gtk_icon_size_from_name(GAIM_ICON_SIZE_LOGO));
+	//	c->image = gtk_image_new_from_stock(PURPLE_STOCK_LOGO, gtk_icon_size_from_name(PURPLE_ICON_SIZE_LOGO));
 	//	gtk_box_pack_start_defaults(GTK_BOX(c->vbox), c->image);
 	//	gtk_widget_show(GTK_WIDGET(c->image));
 	//	
@@ -58,11 +58,11 @@ static void adiumGaimWebcamNew(GaimWebcam *gwc)
 
 static NSMutableData	*frameData = nil;
 
-static void adiumGaimWebcamUpdate(GaimWebcam *gwc,
+static void adiumPurpleWebcamUpdate(PurpleWebcam *gwc,
 								  const unsigned char *image, unsigned int size,
 								  unsigned int timestamp, unsigned int id)
 {
-	GaimDebug(@"adiumGaimWebcamUpdate (Frame %i , %i bytes)", id, size);
+	PurpleDebug(@"adiumPurpleWebcamUpdate (Frame %i , %i bytes)", id, size);
 	
 	if (!frameData) {
 		frameData = [[NSMutableData alloc] init];		
@@ -70,11 +70,11 @@ static void adiumGaimWebcamUpdate(GaimWebcam *gwc,
 	
 	[frameData appendBytes:image length:size];
 	
-	//	GaimGtkWebcam *cam;
+	//	PurpleGtkWebcam *cam;
 	//	WCFrame *f;
 	//	GError *e = NULL;
 	//	
-	//	gaim_debug_misc("gtkwebcam", "Got %d bytes of frame %d.\n", size, id);
+	//	purple_debug_misc("gtkwebcam", "Got %d bytes of frame %d.\n", size, id);
 	//	
 	//	cam = gwc->ui_data;
 	//	if (!cam)
@@ -87,14 +87,14 @@ static void adiumGaimWebcamUpdate(GaimWebcam *gwc,
 	//	}
 	//	
 	//	if (!gdk_pixbuf_loader_write(f->loader, image, size, &e)) {
-	//		gaim_debug(GAIM_DEBUG_MISC, "gtkwebcam", "gdk_pixbuf_loader_write failed:%s\n", e->message);
+	//		purple_debug(GAIM_DEBUG_MISC, "gtkwebcam", "gdk_pixbuf_loader_write failed:%s\n", e->message);
 	//		g_error_free(e);
 	//	}
 }
 
-static void adiumGaimWebcamFrameFinished(GaimWebcam *wc, unsigned int id)
+static void adiumPurpleWebcamFrameFinished(PurpleWebcam *wc, unsigned int id)
 {
-	GaimDebug(@"adiumGaimWebcamFrameFinished");
+	PurpleDebug(@"adiumPurpleWebcamFrameFinished");
 	
 	NSBitmapImageRep *rep;
 	rep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:(unsigned char **)[frameData bytes]
@@ -108,7 +108,7 @@ static void adiumGaimWebcamFrameFinished(GaimWebcam *wc, unsigned int id)
 												 bytesPerRow:0
 												bitsPerPixel:0]; 
 	
-	GaimDebug(@"rep = %@",rep);
+	PurpleDebug(@"rep = %@",rep);
 	
 	//	[[AIObject sharedAdiumInstance] performSelectorOnMainThread:@selector(showImage:) withObject:rep waitUntilDone:NO];
 	
@@ -127,9 +127,9 @@ static void adiumGaimWebcamFrameFinished(GaimWebcam *wc, unsigned int id)
 	
 	
 	
-	//	GaimDebug(@"Bitmap?: %@",[NSImage initWithData:frameData]);
+	//	PurpleDebug(@"Bitmap?: %@",[NSImage initWithData:frameData]);
 	
-	//	GaimGtkWebcam *cam;
+	//	PurpleGtkWebcam *cam;
 	//	WCFrame *f;
 	//	
 	//	cam = wc->ui_data;
@@ -143,10 +143,10 @@ static void adiumGaimWebcamFrameFinished(GaimWebcam *wc, unsigned int id)
 	//	f->loader = NULL;
 }
 
-static void adiumGaimWebcamClose(GaimWebcam *gwc)
+static void adiumPurpleWebcamClose(PurpleWebcam *gwc)
 {
-	GaimDebug(@"adiumGaimWebcamClose");
-	//	GaimGtkWebcam *cam;
+	PurpleDebug(@"adiumPurpleWebcamClose");
+	//	PurpleGtkWebcam *cam;
 	//	
 	//	cam = gwc->ui_data;
 	//	if (!cam)
@@ -156,49 +156,49 @@ static void adiumGaimWebcamClose(GaimWebcam *gwc)
 	//	gwc->ui_data = NULL;
 }
 
-static void adiumGaimWebcamGotInvite(GaimConnection *gc, const gchar *who)
+static void adiumPurpleWebcamGotInvite(PurpleConnection *gc, const gchar *who)
 {
-	GaimDebug(@"adiumGaimWebcamGotInvite");
+	PurpleDebug(@"adiumPurpleWebcamGotInvite");
 	
-	gaim_webcam_invite_accept(gc, who);
+	purple_webcam_invite_accept(gc, who);
 	
 	
 	//	gchar *str = g_strdup_printf(_("%s has invited you (%s) to view their Webcam."), who,
-	//								 gaim_connection_get_display_name(gc));
+	//								 purple_connection_get_display_name(gc));
 	//	struct _ggwc_gcaw *g = g_new0(struct _ggwc_gcaw, 1);
 	//	
 	//	g->gc = gc;
 	//	g->who = g_strdup(who);
 	//	
-	//	gaim_request_action(gc, _("Webcam Invite"), str, _("Will you accept this invitation?"), 0,
+	//	purple_request_action(gc, _("Webcam Invite"), str, _("Will you accept this invitation?"), 0,
 	//						g, 2, _("Accept"), G_CALLBACK(_invite_accept), _("Decline"),
 	//						G_CALLBACK(_invite_decline));
 	//	
 	//	g_free(str);
 }
 
-static struct gaim_webcam_ui_ops adiumGaimWebcamOps =
+static struct purple_webcam_ui_ops adiumPurpleWebcamOps =
 {
-	adiumGaimWebcamNew,
-	adiumGaimWebcamUpdate,
-	adiumGaimWebcamFrameFinished,
-	adiumGaimWebcamClose,
-	adiumGaimWebcamGotInvite
+	adiumPurpleWebcamNew,
+	adiumPurpleWebcamUpdate,
+	adiumPurpleWebcamFrameFinished,
+	adiumPurpleWebcamClose,
+	adiumPurpleWebcamGotInvite
 };
 
-struct gaim_webcam_ui_ops *adium_gaim_webcam_get_ui_ops(void)
+struct purple_webcam_ui_ops *adium_purple_webcam_get_ui_ops(void)
 {
-	return &adiumGaimWebcamOps;
+	return &adiumPurpleWebcamOps;
 }
 
-gboolean gaim_init_j2k_plugin(void);
-void initGaimWebcamSupport(void)
+gboolean purple_init_j2k_plugin(void);
+void initPurpleWebcamSupport(void)
 {
 	//Init the plugin
-	gaim_init_j2k_plugin();
+	purple_init_j2k_plugin();
 	
 	//Set the UI Ops
-	gaim_webcam_set_ui_ops(adium_gaim_webcam_get_ui_ops());
+	purple_webcam_set_ui_ops(adium_purple_webcam_get_ui_ops());
 }
 
 #endif

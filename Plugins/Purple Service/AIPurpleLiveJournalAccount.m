@@ -14,16 +14,16 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIGaimLiveJournalAccount.h"
+#import "AIPurpleLiveJournalAccount.h"
 
-@implementation AIGaimLiveJournalAccount
+@implementation AIPurpleLiveJournalAccount
 
 - (const char *)gaimAccountName
 {
 	NSString	 *userNameWithLiveJournalDotCom = nil;
 
 	/*
-	 * Gaim stores the username in the format username@server/resource.  We need to pass it a username in this format
+	 * Purple stores the username in the format username@server/resource.  We need to pass it a username in this format
 	 *
 	 * Append @livejournal.com if no domain is specified.
 	 */

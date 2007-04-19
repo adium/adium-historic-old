@@ -14,34 +14,34 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESGaimNotifyEmailController.h"
-#import "adiumGaimNotify.h"
-#import "SLGaimCocoaAdapter.h"
+#import "ESPurpleNotifyEmailController.h"
+#import "adiumPurpleNotify.h"
+#import "SLPurpleCocoaAdapter.h"
 #import <AIUtilities/AIObjectAdditions.h>
-#import "ESGaimMeanwhileContactAdditionController.h"
+#import "ESPurpleMeanwhileContactAdditionController.h"
 
-static void *adiumGaimNotifyMessage(GaimNotifyMsgType type, const char *title, const char *primary, const char *secondary)
+static void *adiumPurpleNotifyMessage(PurpleNotifyMsgType type, const char *title, const char *primary, const char *secondary)
 {
-	GaimDebug (@"adiumGaimNotifyMessage: type: %i\n%s\n%s\n%s ",
+	PurpleDebug (@"adiumPurpleNotifyMessage: type: %i\n%s\n%s\n%s ",
 			   type,
 			   (title ? title : ""),
 			   (primary ? primary : ""),
 			   (secondary ? secondary : ""));
 
-	return ([[SLGaimCocoaAdapter sharedInstance] handleNotifyMessageOfType:type
+	return ([[SLPurpleCocoaAdapter sharedInstance] handleNotifyMessageOfType:type
 																 withTitle:title
 																   primary:primary
 																 secondary:secondary]);
 }
 
-static void *adiumGaimNotifyEmails(GaimConnection *gc, size_t count, gboolean detailed, const char **subjects, const char **froms, const char **tos, const char **urls)
+static void *adiumPurpleNotifyEmails(PurpleConnection *gc, size_t count, gboolean detailed, const char **subjects, const char **froms, const char **tos, const char **urls)
 {
     //Values passed can be null
-	AIAccount	*account = (GAIM_CONNECTION_IS_VALID(gc) ?
-							accountLookup(gaim_connection_get_account(gc)) :
+	AIAccount	*account = (PURPLE_CONNECTION_IS_VALID(gc) ?
+							accountLookup(purple_connection_get_account(gc)) :
 							nil);
 			
-    return [ESGaimNotifyEmailController handleNotifyEmailsForAccount:account
+    return [ESPurpleNotifyEmailController handleNotifyEmailsForAccount:account
 															   count:count 
 															detailed:detailed
 															subjects:subjects
@@ -50,9 +50,9 @@ static void *adiumGaimNotifyEmails(GaimConnection *gc, size_t count, gboolean de
 																urls:urls];
 }
 
-static void *adiumGaimNotifyEmail(GaimConnection *gc, const char *subject, const char *from, const char *to, const char *url)
+static void *adiumPurpleNotifyEmail(PurpleConnection *gc, const char *subject, const char *from, const char *to, const char *url)
 {
-	return adiumGaimNotifyEmails(gc,
+	return adiumPurpleNotifyEmails(gc,
 								 1,
 								 TRUE,
 								 (subject ? &subject : NULL),
@@ -61,23 +61,23 @@ static void *adiumGaimNotifyEmail(GaimConnection *gc, const char *subject, const
 								 (url ? &url : NULL));
 }
 
-static void *adiumGaimNotifyFormatted(const char *title, const char *primary, const char *secondary, const char *text)
+static void *adiumPurpleNotifyFormatted(const char *title, const char *primary, const char *secondary, const char *text)
 {
-	GaimDebug (@"adiumGaimNotifyFormatted: %s\n%s\n%s\n%s ",
+	PurpleDebug (@"adiumPurpleNotifyFormatted: %s\n%s\n%s\n%s ",
 			   (title ? title : ""),
 			   (primary ? primary : ""),
 			   (secondary ? secondary : ""),
 			   (text ? text : ""));
 
-	return ([[SLGaimCocoaAdapter sharedInstance] handleNotifyFormattedWithTitle:title
+	return ([[SLPurpleCocoaAdapter sharedInstance] handleNotifyFormattedWithTitle:title
 																		primary:primary
 																	  secondary:secondary
 																		   text:text]);	
 }
 
-static void *adiumGaimNotifySearchResults(GaimConnection *gc, const char *title,
+static void *adiumPurpleNotifySearchResults(PurpleConnection *gc, const char *title,
 										  const char *primary, const char *secondary,
-										  GaimNotifySearchResults *results, gpointer user_data)
+										  PurpleNotifySearchResults *results, gpointer user_data)
 {
 	NSString *primaryString = (primary ? [NSString stringWithUTF8String:primary] : nil);
 	if (primaryString &&
@@ -99,39 +99,39 @@ static void *adiumGaimNotifySearchResults(GaimConnection *gc, const char *title,
 																	   postRange.location - (preRange.location+preRange.length))];		
 		
 		infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-			[NSValue valueWithPointer:gc], @"GaimConnection",
+			[NSValue valueWithPointer:gc], @"PurpleConnection",
 			[NSValue valueWithPointer:user_data],@"userData",
-			[NSValue valueWithPointer:results], @"GaimNotifySearchResultsValue",
+			[NSValue valueWithPointer:results], @"PurpleNotifySearchResultsValue",
 			originalName, @"Original Name",
 			nil];
 		
-		ESGaimMeanwhileContactAdditionController *requestController = [ESGaimMeanwhileContactAdditionController showContactAdditionListWithDict:infoDict];
+		ESPurpleMeanwhileContactAdditionController *requestController = [ESPurpleMeanwhileContactAdditionController showContactAdditionListWithDict:infoDict];
 		
 		return requestController;
 	}
 		
-	return adium_gaim_get_handle();
+	return adium_purple_get_handle();
 }
 
-static void adiumGaimNotifySearchResultsNewRows(GaimConnection *gc,
-												 GaimNotifySearchResults *results,
+static void adiumPurpleNotifySearchResultsNewRows(PurpleConnection *gc,
+												 PurpleNotifySearchResults *results,
 												 void *data)
 {
 
 }
 
-static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who,
-									 GaimNotifyUserInfo *user_info)
+static void *adiumPurpleNotifyUserinfo(PurpleConnection *gc, const char *who,
+									 PurpleNotifyUserInfo *user_info)
 {	
-	if (GAIM_CONNECTION_IS_VALID(gc)) {
-		GaimAccount		*account = gaim_connection_get_account(gc);
-		GaimBuddy		*buddy = gaim_find_buddy(account, who);
-		CBGaimAccount	*adiumAccount = accountLookup(account);
+	if (PURPLE_CONNECTION_IS_VALID(gc)) {
+		PurpleAccount		*account = purple_connection_get_account(gc);
+		PurpleBuddy		*buddy = purple_find_buddy(account, who);
+		CBPurpleAccount	*adiumAccount = accountLookup(account);
 		AIListContact	*contact;
 
 		contact = contactLookupFromBuddy(buddy);
 		if (!contact) {
-			NSString *UID = [NSString stringWithUTF8String:gaim_normalize(account, who)];
+			NSString *UID = [NSString stringWithUTF8String:purple_normalize(account, who)];
 			
 			contact = [accountLookup(account) contactWithUID:UID];
 		}
@@ -143,7 +143,7 @@ static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who,
     return NULL;
 }
 
-static void *adiumGaimNotifyUri(const char *uri)
+static void *adiumPurpleNotifyUri(const char *uri)
 {
 	if (uri) {
 		NSURL   *notifyURI = [NSURL URLWithString:[NSString stringWithUTF8String:uri]];
@@ -153,24 +153,24 @@ static void *adiumGaimNotifyUri(const char *uri)
     return NULL;
 }
 
-static void adiumGaimNotifyClose(GaimNotifyType type,void *uiHandle)
+static void adiumPurpleNotifyClose(PurpleNotifyType type,void *uiHandle)
 {
-	GaimDebug (@"adiumGaimNotifyClose");
+	PurpleDebug (@"adiumPurpleNotifyClose");
 }
 
-static GaimNotifyUiOps adiumGaimNotifyOps = {
-    adiumGaimNotifyMessage,
-    adiumGaimNotifyEmail,
-    adiumGaimNotifyEmails,
-    adiumGaimNotifyFormatted,
-	adiumGaimNotifySearchResults,
-	adiumGaimNotifySearchResultsNewRows,
-	adiumGaimNotifyUserinfo,
-    adiumGaimNotifyUri,
-    adiumGaimNotifyClose
+static PurpleNotifyUiOps adiumPurpleNotifyOps = {
+    adiumPurpleNotifyMessage,
+    adiumPurpleNotifyEmail,
+    adiumPurpleNotifyEmails,
+    adiumPurpleNotifyFormatted,
+	adiumPurpleNotifySearchResults,
+	adiumPurpleNotifySearchResultsNewRows,
+	adiumPurpleNotifyUserinfo,
+    adiumPurpleNotifyUri,
+    adiumPurpleNotifyClose
 };
 
-GaimNotifyUiOps *adium_gaim_notify_get_ui_ops(void)
+PurpleNotifyUiOps *adium_purple_notify_get_ui_ops(void)
 {
-	return &adiumGaimNotifyOps;
+	return &adiumPurpleNotifyOps;
 }

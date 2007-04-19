@@ -14,16 +14,16 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIGaimGTalkAccount.h"
+#import "AIPurpleGTalkAccount.h"
 
-@implementation AIGaimGTalkAccount
+@implementation AIPurpleGTalkAccount
 
 - (const char *)gaimAccountName
 {
 	NSString	 *userNameWithGmailDotCom = nil;
 
 	/*
-	 * Gaim stores the username in the format username@server/resource.  We need to pass it a username in this format
+	 * Purple stores the username in the format username@server/resource.  We need to pass it a username in this format
 	 *
 	 * Append @gmail.com if no domain is specified.
 	 * Valid domains include gmail.com, googlemail.com, and google-hosted domains like e.co.za.

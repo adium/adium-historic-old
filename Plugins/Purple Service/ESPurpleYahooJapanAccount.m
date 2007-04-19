@@ -14,23 +14,23 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESGaimYahooJapanAccount.h"
+#import "ESPurpleYahooJapanAccount.h"
 
-@implementation ESGaimYahooJapanAccount
+@implementation ESPurpleYahooJapanAccount
 
-- (void)configureGaimAccount
+- (void)configurePurpleAccount
 {
-	[super configureGaimAccount];
+	[super configurePurpleAccount];
 	
 	NSString	*hostName;
 	
 	//Host (server) - Yahoo! Japan uses a different server preference key than other accounts, so set that here
 	hostName = [self host];
 	if (hostName && [hostName length]) {
-		gaim_account_set_string(account, "serverjp", [hostName UTF8String]);
+		purple_account_set_string(account, "serverjp", [hostName UTF8String]);
 	}
 
-	gaim_account_set_bool(account, "yahoojp", TRUE);
+	purple_account_set_bool(account, "yahoojp", TRUE);
 }
 
 @end

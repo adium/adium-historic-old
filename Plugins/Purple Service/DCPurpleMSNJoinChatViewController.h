@@ -16,7 +16,7 @@
 
 #import <Adium/DCJoinChatViewController.h>
 
-@interface DCGaimMSNJoinChatViewController : DCJoinChatViewController {
+@interface DCPurpleMSNJoinChatViewController : DCJoinChatViewController {
 	IBOutlet		NSTextField		*textField_roomName;
 }
 

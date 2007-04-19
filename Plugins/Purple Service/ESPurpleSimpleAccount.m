@@ -1,28 +1,28 @@
 //
-//  ESGaimSimpleAccount.m
+//  ESPurpleSimpleAccount.m
 //  Adium
 //
 //  Created by Evan Schoenberg on 12/17/05.
 //
 
-#import "ESGaimSimpleAccount.h"
+#import "ESPurpleSimpleAccount.h"
 
-@implementation ESGaimSimpleAccount
+@implementation ESPurpleSimpleAccount
 
 - (const char*)protocolPlugin
 {
     return "prpl-simple";
 }
 
-- (void)configureGaimAccount
+- (void)configurePurpleAccount
 {
-	[super configureGaimAccount];
+	[super configurePurpleAccount];
 	
 	BOOL useUDP = [[self preferenceForKey:KEY_SIMPLE_USE_UDP group:GROUP_ACCOUNT_STATUS] boolValue];
-	gaim_account_set_bool(account, "udp", useUDP);
+	purple_account_set_bool(account, "udp", useUDP);
 	
 	BOOL publishStatus = [[self preferenceForKey:KEY_SIMPLE_PUBLISH_STATUS group:GROUP_ACCOUNT_STATUS] boolValue];
-	gaim_account_set_bool(account, "dopublish", publishStatus);
+	purple_account_set_bool(account, "dopublish", publishStatus);
 }
 
 - (const char *)gaimAccountName
@@ -30,7 +30,7 @@
 	NSString	*userNameWithHost;
 
 	/*
-	 * Gaim stores the username in the format username@server.  We need to pass it a username in this format.
+	 * Purple stores the username in the format username@server.  We need to pass it a username in this format.
 	 */
 	if ([UID rangeOfString:@"@"].location != NSNotFound) {
 		userNameWithHost = UID;

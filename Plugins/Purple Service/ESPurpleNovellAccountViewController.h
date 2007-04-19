@@ -15,9 +15,9 @@
  */
 
 #import "AIAccountViewController.h"
-#import "ESGaimNovellAccount.h"
+#import "ESPurpleNovellAccount.h"
 
-@interface ESGaimNovellAccountViewController : AIAccountViewController {
+@interface ESPurpleNovellAccountViewController : AIAccountViewController {
 
 }
 

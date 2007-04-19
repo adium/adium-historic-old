@@ -18,7 +18,7 @@
 
 @class AIAccount, AICompletingTextField;
 
-@interface DCGaimJabberJoinChatViewController : DCJoinChatViewController {
+@interface DCPurpleJabberJoinChatViewController : DCJoinChatViewController {
 	IBOutlet		NSTextField		*textField_roomName;
 	IBOutlet		NSTextField		*textField_server;
 	IBOutlet		NSTextField		*textField_handle;

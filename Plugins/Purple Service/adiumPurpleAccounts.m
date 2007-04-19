@@ -1,30 +1,30 @@
 //
-//  adiumGaimAccounts.m
+//  adiumPurpleAccounts.m
 //  Adium
 //
 //  Created by Evan Schoenberg on 12/3/06.
 //
 
-#import "adiumGaimAccounts.h"
+#import "adiumPurpleAccounts.h"
 #import <Adium/AIContactControllerProtocol.h>
 
 static NSMutableSet *authRequests = nil;
 
 /* A buddy we already have added us to their buddy list. */
-static void adiumGaimAccountNotifyAdded(GaimAccount *account, const char *remote_user,
+static void adiumPurpleAccountNotifyAdded(PurpleAccount *account, const char *remote_user,
 							 const char *id, const char *alias,
 							 const char *message)
 {
 	
 }
 
-static void adiumGaimAccountStatusChanged(GaimAccount *account, GaimStatus *status)
+static void adiumPurpleAccountStatusChanged(PurpleAccount *account, PurpleStatus *status)
 {
 	
 }
 
 /* Someone we don't have on our list added us. Will prompt to add them. */
-static void adiumGaimAccountRequestAdd(GaimAccount *account, const char *remote_user,
+static void adiumPurpleAccountRequestAdd(PurpleAccount *account, const char *remote_user,
 					const char *accountID, const char *alias,
 					const char *message)
 {
@@ -36,7 +36,7 @@ static void adiumGaimAccountRequestAdd(GaimAccount *account, const char *remote_
 /*
  * @brief A contact requests authorization to add us to her list
  *
- * @param account GaimAccount being added
+ * @param account PurpleAccount being added
  * @param remote_user The UID of the contact
  * @param anId May be NULL; an ID associated with the authorization request (?)
  * @param alias The contact's alias. May be NULL.
@@ -45,7 +45,7 @@ static void adiumGaimAccountRequestAdd(GaimAccount *account, const char *remote_
  * @param deny_cb Call if authroization denied
  * @param user_data Data for the process; be sure to return it in the callback
  */
-static void *adiumGaimAccountRequestAuthorize(GaimAccount *account, const char *remote_user, const char *anId,
+static void *adiumPurpleAccountRequestAuthorize(PurpleAccount *account, const char *remote_user, const char *anId,
 									   const char *alias, const char *message, 
 									   gboolean on_list, GCallback authorize_cb, GCallback deny_cb, void *user_data)
 {
@@ -66,7 +66,7 @@ static void *adiumGaimAccountRequestAuthorize(GaimAccount *account, const char *
 	return authRequestWindow;
 }
 
-static void adiumGaimAccountRequestClose(void *ui_handle)
+static void adiumPurpleAccountRequestClose(void *ui_handle)
 {
 	id	ourHandle = (id)ui_handle;
 
@@ -85,15 +85,15 @@ static void adiumGaimAccountRequestClose(void *ui_handle)
 	}
 }
 
-static GaimAccountUiOps adiumGaimAccountOps = {
-	&adiumGaimAccountNotifyAdded,
-	&adiumGaimAccountStatusChanged,
-	&adiumGaimAccountRequestAdd,
-	&adiumGaimAccountRequestAuthorize,
-	&adiumGaimAccountRequestClose
+static PurpleAccountUiOps adiumPurpleAccountOps = {
+	&adiumPurpleAccountNotifyAdded,
+	&adiumPurpleAccountStatusChanged,
+	&adiumPurpleAccountRequestAdd,
+	&adiumPurpleAccountRequestAuthorize,
+	&adiumPurpleAccountRequestClose
 };
 
-GaimAccountUiOps *adium_gaim_accounts_get_ui_ops(void)
+PurpleAccountUiOps *adium_purple_accounts_get_ui_ops(void)
 {
-	return &adiumGaimAccountOps;
+	return &adiumPurpleAccountOps;
 }

@@ -14,34 +14,34 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#include <Libgaim/libgaim.h>
+#import <Libpurple/libpurple.h>
 #import <Adium/AIContentTyping.h>
-#import "GaimCommon.h"
-#import "CBGaimAccount.h"
+#import "PurpleCommon.h"
+#import "CBPurpleAccount.h"
 
 #define	ENABLE_WEBCAM	FALSE
 
-@class AIChat, AIListContact, CBGaimAccount, NDRunLoopMessenger;
+@class AIChat, AIListContact, CBPurpleAccount, NDRunLoopMessenger;
 
 /*!
- * @class SLGaimCocoaAdapter
+ * @class SLPurpleCocoaAdapter
  * Singleton to run libgaim from a Cocoa event loop.
  **/
-@interface SLGaimCocoaAdapter : AIObject {
+@interface SLPurpleCocoaAdapter : AIObject {
 
 }
 
-+ (SLGaimCocoaAdapter *)sharedInstance;
++ (SLPurpleCocoaAdapter *)sharedInstance;
 + (void)pluginDidLoad;
 + (NSArray *)libgaimPluginArray;
 
-- (void)addAdiumAccount:(CBGaimAccount *)adiumAccount;
-- (void)removeAdiumAccount:(CBGaimAccount *)adiumAccount;
+- (void)addAdiumAccount:(CBPurpleAccount *)adiumAccount;
+- (void)removeAdiumAccount:(CBPurpleAccount *)adiumAccount;
 - (void)sendEncodedMessage:(NSString *)encodedMessage
 			   fromAccount:(id)sourceAccount
 					inChat:(AIChat *)chat
-				 withFlags:(GaimMessageFlags)flags;
-- (BOOL)attemptGaimCommandOnMessage:(NSString *)originalMessage
+				 withFlags:(PurpleMessageFlags)flags;
+- (BOOL)attemptPurpleCommandOnMessage:(NSString *)originalMessage
 						fromAccount:(AIAccount *)sourceAccount 
 							 inChat:(AIChat *)chat;
 
@@ -61,10 +61,10 @@
 - (void)closeChat:(AIChat *)chat;
 - (void)disconnectAccount:(id)adiumAccount;
 - (void)registerAccount:(id)adiumAccount;
-- (void)xferRequest:(GaimXfer *)xfer;
-- (void)xferRequestAccepted:(GaimXfer *)xfer withFileName:(NSString *)xferFileName;
-- (void)xferRequestRejected:(GaimXfer *)xfer;
-- (void)xferCancel:(GaimXfer *)xfer;
+- (void)xferRequest:(PurpleXfer *)xfer;
+- (void)xferRequestAccepted:(PurpleXfer *)xfer withFileName:(NSString *)xferFileName;
+- (void)xferRequestRejected:(PurpleXfer *)xfer;
+- (void)xferCancel:(PurpleXfer *)xfer;
 - (void)getInfoFor:(NSString *)inUID onAccount:(id)adiumAccount;
 
 - (void)setStatusID:(const char *)statusID isActive:(NSNumber *)isActive arguments:(NSMutableDictionary *)arguments onAccount:(id)adiumAccount;
@@ -81,7 +81,7 @@
 #endif
 
 - (void)displayFileSendError;
-- (void *)handleNotifyMessageOfType:(GaimNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
+- (void *)handleNotifyMessageOfType:(PurpleNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
 - (void *)handleNotifyFormattedWithTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary text:(const char *)text;
 
 - (void)performContactMenuActionFromDict:(NSDictionary *)dict forAccount:(id)adiumAccount;
@@ -91,18 +91,18 @@
 @end
 
 //Lookup functions
-void *adium_gaim_get_handle(void);
-GaimConversation *existingConvLookupFromChat(AIChat *chat);
-GaimConversation *convLookupFromChat(AIChat *chat, id adiumAccount);
-AIChat *imChatLookupFromConv(GaimConversation *conv);
-AIChat *groupChatLookupFromConv(GaimConversation *conv);
-AIChat *existingChatLookupFromConv(GaimConversation *conv);
-AIChat *chatLookupFromConv(GaimConversation *conv);
-AIListContact *contactLookupFromIMConv(GaimConversation *conv);
-AIListContact *contactLookupFromBuddy(GaimBuddy *buddy);
-GaimAccount *accountLookupFromAdiumAccount(CBGaimAccount *adiumAccount);
-CBGaimAccount *accountLookup(GaimAccount *acct);
+void *adium_purple_get_handle(void);
+PurpleConversation *existingConvLookupFromChat(AIChat *chat);
+PurpleConversation *convLookupFromChat(AIChat *chat, id adiumAccount);
+AIChat *imChatLookupFromConv(PurpleConversation *conv);
+AIChat *groupChatLookupFromConv(PurpleConversation *conv);
+AIChat *existingChatLookupFromConv(PurpleConversation *conv);
+AIChat *chatLookupFromConv(PurpleConversation *conv);
+AIListContact *contactLookupFromIMConv(PurpleConversation *conv);
+AIListContact *contactLookupFromBuddy(PurpleBuddy *buddy);
+PurpleAccount *accountLookupFromAdiumAccount(CBPurpleAccount *adiumAccount);
+CBPurpleAccount *accountLookup(PurpleAccount *acct);
 NSMutableDictionary *get_chatDict(void);
 
 //Images
-NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount);
+NSString* processPurpleImages(NSString* inString, AIAccount* adiumAccount);

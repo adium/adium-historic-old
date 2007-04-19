@@ -6,19 +6,19 @@
 //
 
 #import "ESSimpleService.h"
-#import "ESGaimSimpleAccount.h"
-#import "ESGaimSimpleAccountViewController.h"
+#import "ESPurpleSimpleAccount.h"
+#import "ESPurpleSimpleAccountViewController.h"
 #import <Adium/AIStatusControllerProtocol.h>
 #import <AIUtilities/AIImageAdditions.h>
 
 @implementation ESSimpleService
 //Account Creation
 - (Class)accountClass{
-	return [ESGaimSimpleAccount class];
+	return [ESPurpleSimpleAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return [ESGaimSimpleAccountViewController accountViewController];
+    return [ESPurpleSimpleAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{

@@ -14,12 +14,12 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESGaimNovellAccountViewController.h"
+#import "ESPurpleNovellAccountViewController.h"
 
-@implementation ESGaimNovellAccountViewController
+@implementation ESPurpleNovellAccountViewController
 
 - (NSString *)nibName{
-    return @"ESGaimNovellAccountView";
+    return @"ESPurpleNovellAccountView";
 }
 
 //Return nil to hide the options tab, we don't need it

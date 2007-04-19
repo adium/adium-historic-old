@@ -14,17 +14,17 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESGaimGaduGaduAccountViewController.h"
+#import "ESPurpleGaduGaduAccountViewController.h"
 
 
-@implementation ESGaimGaduGaduAccountViewController
+@implementation ESPurpleGaduGaduAccountViewController
 
 - (NSString *)userNameLabel{
     return AILocalizedString(@"GG Number",nil);
 }
 
 - (NSString *)nibName{
-    return @"ESGaimGaduGaduAccountView";
+    return @"ESPurpleGaduGaduAccountView";
 }
 
 @end

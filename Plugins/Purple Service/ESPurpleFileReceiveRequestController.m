@@ -1,23 +1,23 @@
 //
-//  ESGaimFileReceiveRequestController.m
+//  ESPurpleFileReceiveRequestController.m
 //  Adium
 //
 //  Created by Evan Schoenberg on 9/22/05.
 //
 
-#import "ESGaimFileReceiveRequestController.h"
-#import "adiumGaimRequest.h"
-#import "CBGaimAccount.h"
+#import "ESPurpleFileReceiveRequestController.h"
+#import "adiumPurpleRequest.h"
+#import "CBPurpleAccount.h"
 #import <Adium/AIWindowController.h>
 #import <Adium/ESFileTransfer.h>
 
-@interface ESGaimFileReceiveRequestController (PRIVATE)
+@interface ESPurpleFileReceiveRequestController (PRIVATE)
 - (id)initWithDict:(NSDictionary *)inDict;
 @end
 
-@implementation ESGaimFileReceiveRequestController
+@implementation ESPurpleFileReceiveRequestController
 
-+ (ESGaimFileReceiveRequestController *)showFileReceiveWindowWithDict:(NSDictionary *)inDict
++ (ESPurpleFileReceiveRequestController *)showFileReceiveWindowWithDict:(NSDictionary *)inDict
 {
 	return [[self alloc] initWithDict:inDict];
 }
@@ -25,7 +25,7 @@
 - (id)initWithDict:(NSDictionary *)inDict
 {
 	if ((self = [super init])) {
-		CBGaimAccount		*account = [inDict objectForKey:@"CBGaimAccount"];
+		CBPurpleAccount		*account = [inDict objectForKey:@"CBPurpleAccount"];
 		ESFileTransfer		*fileTransfer = [inDict objectForKey:@"ESFileTransfer"];
 		
 		[account requestReceiveOfFileTransfer:fileTransfer];
@@ -63,7 +63,7 @@
 - (void)cancel:(NSNotification *)inNotification
 {
 	//Inform libgaim that the request was cancelled
-	[ESGaimRequestAdapter requestCloseWithHandle:self];
+	[ESPurpleRequestAdapter requestCloseWithHandle:self];
 }
 
 @end

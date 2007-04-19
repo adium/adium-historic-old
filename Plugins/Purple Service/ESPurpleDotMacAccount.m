@@ -14,9 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESGaimDotMacAccount.h"
+#import "ESPurpleDotMacAccount.h"
 
-@implementation ESGaimDotMacAccount
+@implementation ESPurpleDotMacAccount
 
 - (const char *)gaimAccountName
 {
@@ -33,9 +33,9 @@
 }
 
 /*!
- * @brief Set the spacing and capitilization of our formatted UID serverside (from CBGaimOscarAccount)
+ * @brief Set the spacing and capitilization of our formatted UID serverside (from CBPurpleOscarAccount)
  *
- * CBGaimOscarAccount calls this to perform spacing/capitilization setting serverside.  This is not supported
+ * CBPurpleOscarAccount calls this to perform spacing/capitilization setting serverside.  This is not supported
  * for .Mac accounts and will throw a SNAC error if attempted.  Override the method to perform no action for .Mac.
  */
 - (void)setFormattedUID {};

@@ -1,27 +1,27 @@
 //
-//  adiumGaimDnsRequest.m
+//  adiumPurpleDnsRequest.m
 //  Adium
 //
 //  Created by Graham Booker on 2/24/07.
 //
 
-#import "adiumGaimDnsRequest.h"
+#import "adiumPurpleDnsRequest.h"
 
-@interface AdiumGaimDnsRequest : NSObject {
-	GaimDnsQueryData *query_data;
-	GaimDnsQueryResolvedCallback resolved_cb;
-	GaimDnsQueryFailedCallback failed_cb;
+@interface adiumPurpleDnsRequest : NSObject {
+	PurpleDnsQueryData *query_data;
+	PurpleDnsQueryResolvedCallback resolved_cb;
+	PurpleDnsQueryFailedCallback failed_cb;
 	int errorNumber;
 	BOOL cancel;
 }
-+ (AdiumGaimDnsRequest *)lookupRequestForData:(GaimDnsQueryData *)query_data;
-- (id)initWithData:(GaimDnsQueryData *)data resolvedCB:(GaimDnsQueryResolvedCallback)resolved failedCB:(GaimDnsQueryFailedCallback)failed;
++ (adiumPurpleDnsRequest *)lookupRequestForData:(PurpleDnsQueryData *)query_data;
+- (id)initWithData:(PurpleDnsQueryData *)data resolvedCB:(PurpleDnsQueryResolvedCallback)resolved failedCB:(PurpleDnsQueryFailedCallback)failed;
 - (void)startLookup:(id)sender;
 - (void)lookupComplete:(NSValue *)resValue;
 - (void)cancel;
 @end
 
-@implementation AdiumGaimDnsRequest
+@implementation adiumPurpleDnsRequest
 
 static NSMutableDictionary *threads = nil;
 
@@ -32,12 +32,12 @@ static NSMutableDictionary *threads = nil;
 	threads = [[NSMutableDictionary alloc] init];
 }
 
-+ (AdiumGaimDnsRequest *)lookupRequestForData:(GaimDnsQueryData *)query_data
++ (adiumPurpleDnsRequest *)lookupRequestForData:(PurpleDnsQueryData *)query_data
 {
 	return [threads objectForKey:[NSValue valueWithPointer:query_data]];
 }
 
-- (id)initWithData:(GaimDnsQueryData *)data resolvedCB:(GaimDnsQueryResolvedCallback)resolved failedCB:(GaimDnsQueryFailedCallback)failed
+- (id)initWithData:(PurpleDnsQueryData *)data resolvedCB:(PurpleDnsQueryResolvedCallback)resolved failedCB:(PurpleDnsQueryFailedCallback)failed
 {
 	self = [super init];
 	if(self == nil)
@@ -63,8 +63,8 @@ static NSMutableDictionary *threads = nil;
 	char servname[20];
     BOOL success = FALSE;
 	
-	AILog(@"Performing DNS resolve: %s:%d",gaim_dnsquery_get_host(query_data),gaim_dnsquery_get_port(query_data));
-	g_snprintf(servname, sizeof(servname), "%d", gaim_dnsquery_get_port(query_data));
+	AILog(@"Performing DNS resolve: %s:%d",purple_dnsquery_get_host(query_data),purple_dnsquery_get_port(query_data));
+	g_snprintf(servname, sizeof(servname), "%d", purple_dnsquery_get_port(query_data));
 	memset(&hints, 0, sizeof(hints));
 	
 	/* This is only used to convert a service
@@ -74,7 +74,7 @@ static NSMutableDictionary *threads = nil;
 	 * library.
 	 */
 	hints.ai_socktype = SOCK_STREAM;
-	errorNumber = getaddrinfo(gaim_dnsquery_get_host(query_data), servname, &hints, &res);
+	errorNumber = getaddrinfo(purple_dnsquery_get_host(query_data), servname, &hints, &res);
 	if (errorNumber == 0) {
 		success = TRUE;
 	} else {
@@ -100,7 +100,7 @@ static NSMutableDictionary *threads = nil;
 
 	} else if (resValue) {
 		//Success! Build a list of our results and pass it to the resolved callback
-		AILog(@"DNS resolve complete for %s:%d",gaim_dnsquery_get_host(query_data),gaim_dnsquery_get_port(query_data));
+		AILog(@"DNS resolve complete for %s:%d",purple_dnsquery_get_host(query_data),purple_dnsquery_get_port(query_data));
 		struct addrinfo *res, *tmp;
 		GSList *returnData = NULL;
 
@@ -123,7 +123,7 @@ static NSMutableDictionary *threads = nil;
 		char message[1024];
 		
 		g_snprintf(message, sizeof(message), _("Error resolving %s:\n%s"),
-				   gaim_dnsquery_get_host(query_data), gai_strerror(errorNumber));
+				   purple_dnsquery_get_host(query_data), gai_strerror(errorNumber));
 		failed_cb(query_data, message);
 	}
 
@@ -148,23 +148,23 @@ static NSMutableDictionary *threads = nil;
 
 @end
 
-gboolean adiumGaimDnsRequestResolve(GaimDnsQueryData *query_data, GaimDnsQueryResolvedCallback resolved_cb, GaimDnsQueryFailedCallback failed_cb)
+gboolean adiumPurpleDnsRequestResolve(PurpleDnsQueryData *query_data, PurpleDnsQueryResolvedCallback resolved_cb, PurpleDnsQueryFailedCallback failed_cb)
 {
-	[[[AdiumGaimDnsRequest alloc] initWithData:query_data resolvedCB:resolved_cb failedCB:failed_cb] autorelease];
+	[[[adiumPurpleDnsRequest alloc] initWithData:query_data resolvedCB:resolved_cb failedCB:failed_cb] autorelease];
 	return TRUE;
 }
 
-void adiumGaimDnsRequestDestroy(GaimDnsQueryData *query_data)
+void adiumPurpleDnsRequestDestroy(PurpleDnsQueryData *query_data)
 {
-	[[AdiumGaimDnsRequest lookupRequestForData:query_data] cancel];
+	[[adiumPurpleDnsRequest lookupRequestForData:query_data] cancel];
 }
 
-static GaimDnsQueryUiOps adiumGaimDnsRequestOps = {
-	adiumGaimDnsRequestResolve,
-	adiumGaimDnsRequestDestroy
+static PurpleDnsQueryUiOps adiumPurpleDnsRequestOps = {
+	adiumPurpleDnsRequestResolve,
+	adiumPurpleDnsRequestDestroy
 };
 
-GaimDnsQueryUiOps *adium_gaim_dns_request_get_ui_ops(void)
+PurpleDnsQueryUiOps *adium_purple_dns_request_get_ui_ops(void)
 {
-	return &adiumGaimDnsRequestOps;
+	return &adiumPurpleDnsRequestOps;
 }

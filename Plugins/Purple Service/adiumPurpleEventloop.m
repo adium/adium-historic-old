@@ -14,11 +14,11 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "adiumGaimEventloop.h"
+#import "adiumPurpleEventloop.h"
 #import <AIUtilities/AIApplicationAdditions.h>
 #include <poll.h>
 
-//#define GAIM_SOCKET_DEBUG
+//#define PURPLE_SOCKET_DEBUG
 
 static guint				sourceId = 0;		//The next source key; continuously incrementing
 static NSMutableDictionary	*sourceInfoDict = nil;
@@ -46,11 +46,11 @@ struct SourceInfo {
 	gpointer timer_user_data;
 
     guint read_tag;
-	GaimInputFunction read_ioFunction;
+	PurpleInputFunction read_ioFunction;
     gpointer read_user_data;
 
 	guint write_tag;
-	GaimInputFunction write_ioFunction;
+	PurpleInputFunction write_ioFunction;
     gpointer write_user_data;
 };
 
@@ -119,7 +119,7 @@ gboolean adium_source_remove(guint tag) {
 	[[sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:tag]] pointerValue];
 
     if (sourceInfo) {
-#ifdef GAIM_SOCKET_DEBUG
+#ifdef PURPLE_SOCKET_DEBUG
 		AILog(@"adium_source_remove(): Removing for fd %i [sourceInfo %x]: tag is %i (timer %i, read %i, write %i)",sourceInfo->fd,
 			  sourceInfo, tag, sourceInfo->timer_tag, sourceInfo->read_tag, sourceInfo->write_tag);
 #endif
@@ -144,7 +144,7 @@ gboolean adium_source_remove(guint tag) {
 			}
 			
 			if (sourceInfo->socket) {
-#ifdef GAIM_SOCKET_DEBUG
+#ifdef PURPLE_SOCKET_DEBUG
 				AILog(@"adium_source_remove(): Done with a socket %x, so invalidating it",sourceInfo->socket);
 #endif
 				CFSocketInvalidate(sourceInfo->socket);
@@ -165,7 +165,7 @@ gboolean adium_source_remove(guint tag) {
 			}
 			
 			if (sourceInfo->socket && (sourceInfo->read_tag || sourceInfo->write_tag)) {
-#ifdef GAIM_SOCKET_DEBUG
+#ifdef PURPLE_SOCKET_DEBUG
 				AILog(@"adium_source_remove(): Calling updateSocketForSourceInfo(%x)",sourceInfo);
 #endif				
 				updateSocketForSourceInfo(sourceInfo);
@@ -223,8 +223,8 @@ guint adium_timeout_add(guint interval, GSourceFunc function, gpointer data)
 	return info->timer_tag;
 }
 
-guint adium_input_add(int fd, GaimInputCondition condition,
-					  GaimInputFunction func, gpointer user_data)
+guint adium_input_add(int fd, PurpleInputCondition condition,
+					  PurpleInputFunction func, gpointer user_data)
 {	
 	if (fd < 0) {
 		NSLog(@"INVALID: fd was %i; returning tag %i",fd,sourceId+1);
@@ -241,7 +241,7 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 	 * If a socket already exists on this fd, CFSocketCreateWithNative() will return that existing socket, and the other parameters
 	 * will be ignored.
 	 */
-#ifdef GAIM_SOCKET_DEBUG
+#ifdef PURPLE_SOCKET_DEBUG
 	AILog(@"adium_input_add(): Adding input %i on fd %i", condition, fd);
 #endif
 	CFSocketRef socket = CFSocketCreateWithNative(kCFAllocatorDefault,
@@ -265,7 +265,7 @@ guint adium_input_add(int fd, GaimInputCondition condition,
 	info->fd = fd;
 	info->socket = socket;
 
-    if ((condition & GAIM_INPUT_READ)) {
+    if ((condition & PURPLE_INPUT_READ)) {
 		if (info->read_tag) AILog(@"*** info->read_tag wsa %i; now it'll be %i",info->read_tag, sourceId + 1);
 		info->read_tag = ++sourceId;
 		info->read_ioFunction = func;
@@ -308,14 +308,14 @@ static void socketCallback(CFSocketRef s,
 {
     struct SourceInfo *sourceInfo = (struct SourceInfo*) infoVoid;
 	gpointer user_data;
-    GaimInputCondition c;
-	GaimInputFunction ioFunction = NULL;
+    PurpleInputCondition c;
+	PurpleInputFunction ioFunction = NULL;
 	gint	 fd = sourceInfo->fd;
 
     if ((callbackType & kCFSocketReadCallBack)) {
 		if (sourceInfo->read_tag) {
 			user_data = sourceInfo->read_user_data;
-			c = GAIM_INPUT_READ;
+			c = PURPLE_INPUT_READ;
 			ioFunction = sourceInfo->read_ioFunction;
 		} else {
 			AILog(@"Called read with no read_tag (read_tag %i write_tag %i) for %x",
@@ -325,7 +325,7 @@ static void socketCallback(CFSocketRef s,
 	} else /* if ((callbackType & kCFSocketWriteCallBack)) */ {
 		if (sourceInfo->write_tag) {
 			user_data = sourceInfo->write_user_data;
-			c = GAIM_INPUT_WRITE;	
+			c = PURPLE_INPUT_WRITE;	
 			ioFunction = sourceInfo->write_ioFunction;
 		} else {
 			AILog(@"Called write with no write_tag (read_tag %i write_tag %i) for %x",
@@ -334,7 +334,7 @@ static void socketCallback(CFSocketRef s,
 	}
 
 	if (ioFunction) {
-#ifdef GAIM_SOCKET_DEBUG
+#ifdef PURPLE_SOCKET_DEBUG
 		AILog(@"socketCallback(): Calling the ioFunction for %x, callback type %i (%s: tag is %i)",s,callbackType,
 			  ((callbackType & kCFSocketReadCallBack) ? "reading" : "writing"),
 			  ((callbackType & kCFSocketReadCallBack) ? sourceInfo->read_tag : sourceInfo->write_tag));
@@ -390,7 +390,7 @@ int adium_input_get_error(int fd, int *error)
 	return ret;
 }
 
-static GaimEventLoopUiOps adiumEventLoopUiOps = {
+static PurpleEventLoopUiOps adiumEventLoopUiOps = {
     adium_timeout_add,
     adium_timeout_remove,
     adium_input_add,
@@ -398,7 +398,7 @@ static GaimEventLoopUiOps adiumEventLoopUiOps = {
 	adium_input_get_error
 };
 
-GaimEventLoopUiOps *adium_gaim_eventloop_get_ui_ops(void)
+PurpleEventLoopUiOps *adium_purple_eventloop_get_ui_ops(void)
 {
 	if (!sourceInfoDict) sourceInfoDict = [[NSMutableDictionary alloc] init];
 

@@ -16,7 +16,7 @@
 
 #include "AIAccountViewController.h"
 
-@interface ESGaimYahooAccountViewController : AIAccountViewController {
+@interface ESPurpleYahooAccountViewController : AIAccountViewController {
 	IBOutlet	NSPopUpButton	*popUp_chatServer;
 }
 

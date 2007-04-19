@@ -1,5 +1,5 @@
 /**
- * @file gaim-compat.h Gaim Compat macros
+ * @file gaim-compat.h Purple Compat macros
  * @ingroup core
  *
  * pidgin
@@ -28,190 +28,190 @@
 #define _GAIM_COMPAT_H_
 
 /* from account.h */
-#define GaimAccountUiOps PurpleAccountUiOps
-#define GaimAccount PurpleAccount
+#define PurpleAccountUiOps PurpleAccountUiOps
+#define PurpleAccount PurpleAccount
 
-#define GaimFilterAccountFunc PurpleFilterAccountFunc
-#define GaimAccountRequestAuthorizationCb PurpleAccountRequestAuthorizationCb
+#define PurpleFilterAccountFunc PurpleFilterAccountFunc
+#define PurpleAccountRequestAuthorizationCb PurpleAccountRequestAuthorizationCb
 
-#define gaim_account_new           purple_account_new
-#define gaim_account_destroy       purple_account_destroy
-#define gaim_account_connect       purple_account_connect
-#define gaim_account_register      purple_account_register
-#define gaim_account_disconnect    purple_account_disconnect
-#define gaim_account_notify_added  purple_account_notify_added
-#define gaim_account_request_add   purple_account_request_add
-#define gaim_account_request_close   purple_account_request_close
+#define purple_account_new           purple_account_new
+#define purple_account_destroy       purple_account_destroy
+#define purple_account_connect       purple_account_connect
+#define purple_account_register      purple_account_register
+#define purple_account_disconnect    purple_account_disconnect
+#define purple_account_notify_added  purple_account_notify_added
+#define purple_account_request_add   purple_account_request_add
+#define purple_account_request_close   purple_account_request_close
 
-#define gaim_account_request_authorization     purple_account_request_authorization
-#define gaim_account_request_change_password   purple_account_request_change_password
-#define gaim_account_request_change_user_info  purple_account_request_change_user_info
+#define purple_account_request_authorization     purple_account_request_authorization
+#define purple_account_request_change_password   purple_account_request_change_password
+#define purple_account_request_change_user_info  purple_account_request_change_user_info
 
-#define gaim_account_set_username            purple_account_set_username
-#define gaim_account_set_password            purple_account_set_password
-#define gaim_account_set_alias               purple_account_set_alias
-#define gaim_account_set_user_info           purple_account_set_user_info
-#define gaim_account_set_buddy_icon          purple_account_set_buddy_icon
-#define gaim_account_set_buddy_icon_path     purple_account_set_buddy_icon_path
-#define gaim_account_set_protocol_id         purple_account_set_protocol_id
-#define gaim_account_set_connection          purple_account_set_connection
-#define gaim_account_set_remember_password   purple_account_set_remember_password
-#define gaim_account_set_check_mail          purple_account_set_check_mail
-#define gaim_account_set_enabled             purple_account_set_enabled
-#define gaim_account_set_proxy_info          purple_account_set_proxy_info
-#define gaim_account_set_status_types        purple_account_set_status_types
-#define gaim_account_set_status              purple_account_set_status
-#define gaim_account_set_status_list         purple_account_set_status_list
+#define purple_account_set_username            purple_account_set_username
+#define purple_account_set_password            purple_account_set_password
+#define purple_account_set_alias               purple_account_set_alias
+#define purple_account_set_user_info           purple_account_set_user_info
+#define purple_account_set_buddy_icon          purple_account_set_buddy_icon
+#define purple_account_set_buddy_icon_path     purple_account_set_buddy_icon_path
+#define purple_account_set_protocol_id         purple_account_set_protocol_id
+#define purple_account_set_connection          purple_account_set_connection
+#define purple_account_set_remember_password   purple_account_set_remember_password
+#define purple_account_set_check_mail          purple_account_set_check_mail
+#define purple_account_set_enabled             purple_account_set_enabled
+#define purple_account_set_proxy_info          purple_account_set_proxy_info
+#define purple_account_set_status_types        purple_account_set_status_types
+#define purple_account_set_status              purple_account_set_status
+#define purple_account_set_status_list         purple_account_set_status_list
 
-#define gaim_account_clear_settings   purple_account_clear_settings
+#define purple_account_clear_settings   purple_account_clear_settings
 
-#define gaim_account_set_int    purple_account_set_int
-#define gaim_account_set_string purple_account_set_string
-#define gaim_account_set_bool   purple_account_set_bool
+#define purple_account_set_int    purple_account_set_int
+#define purple_account_set_string purple_account_set_string
+#define purple_account_set_bool   purple_account_set_bool
 
-#define gaim_account_set_ui_int     purple_account_set_ui_int
-#define gaim_account_set_ui_string  purple_account_set_ui_string
-#define gaim_account_set_ui_bool    purple_account_set_ui_bool
+#define purple_account_set_ui_int     purple_account_set_ui_int
+#define purple_account_set_ui_string  purple_account_set_ui_string
+#define purple_account_set_ui_bool    purple_account_set_ui_bool
 
-#define gaim_account_is_connected     purple_account_is_connected
-#define gaim_account_is_connecting    purple_account_is_connecting
-#define gaim_account_is_disconnected  purple_account_is_disconnected
+#define purple_account_is_connected     purple_account_is_connected
+#define purple_account_is_connecting    purple_account_is_connecting
+#define purple_account_is_disconnected  purple_account_is_disconnected
 
-#define gaim_account_get_username           purple_account_get_username
-#define gaim_account_get_password           purple_account_get_password
-#define gaim_account_get_alias              purple_account_get_alias
-#define gaim_account_get_user_info          purple_account_get_user_info
-#define gaim_account_get_buddy_icon         purple_account_get_buddy_icon
-#define gaim_account_get_buddy_icon_path    purple_account_get_buddy_icon_path
-#define gaim_account_get_protocol_id        purple_account_get_protocol_id
-#define gaim_account_get_protocol_name      purple_account_get_protocol_name
-#define gaim_account_get_connection         purple_account_get_connection
-#define gaim_account_get_remember_password  purple_account_get_remember_password
-#define gaim_account_get_check_mail         purple_account_get_check_mail
-#define gaim_account_get_enabled            purple_account_get_enabled
-#define gaim_account_get_proxy_info         purple_account_get_proxy_info
-#define gaim_account_get_active_status      purple_account_get_active_status
-#define gaim_account_get_status             purple_account_get_status
-#define gaim_account_get_status_type        purple_account_get_status_type
-#define gaim_account_get_status_type_with_primitive \
+#define purple_account_get_username           purple_account_get_username
+#define purple_account_get_password           purple_account_get_password
+#define purple_account_get_alias              purple_account_get_alias
+#define purple_account_get_user_info          purple_account_get_user_info
+#define purple_account_get_buddy_icon         purple_account_get_buddy_icon
+#define purple_account_get_buddy_icon_path    purple_account_get_buddy_icon_path
+#define purple_account_get_protocol_id        purple_account_get_protocol_id
+#define purple_account_get_protocol_name      purple_account_get_protocol_name
+#define purple_account_get_connection         purple_account_get_connection
+#define purple_account_get_remember_password  purple_account_get_remember_password
+#define purple_account_get_check_mail         purple_account_get_check_mail
+#define purple_account_get_enabled            purple_account_get_enabled
+#define purple_account_get_proxy_info         purple_account_get_proxy_info
+#define purple_account_get_active_status      purple_account_get_active_status
+#define purple_account_get_status             purple_account_get_status
+#define purple_account_get_status_type        purple_account_get_status_type
+#define purple_account_get_status_type_with_primitive \
 	purple_account_get_status_type_with_primitive
 
-#define gaim_account_get_presence       purple_account_get_presence
-#define gaim_account_is_status_active   purple_account_is_status_active
-#define gaim_account_get_status_types   purple_account_get_status_types
+#define purple_account_get_presence       purple_account_get_presence
+#define purple_account_is_status_active   purple_account_is_status_active
+#define purple_account_get_status_types   purple_account_get_status_types
 
-#define gaim_account_get_int            purple_account_get_int
-#define gaim_account_get_string         purple_account_get_string
-#define gaim_account_get_bool           purple_account_get_bool
+#define purple_account_get_int            purple_account_get_int
+#define purple_account_get_string         purple_account_get_string
+#define purple_account_get_bool           purple_account_get_bool
 
-#define gaim_account_get_ui_int     purple_account_get_ui_int
-#define gaim_account_get_ui_string  purple_account_get_ui_string
-#define gaim_account_get_ui_bool    purple_account_get_ui_bool
+#define purple_account_get_ui_int     purple_account_get_ui_int
+#define purple_account_get_ui_string  purple_account_get_ui_string
+#define purple_account_get_ui_bool    purple_account_get_ui_bool
 
 
-#define gaim_account_get_log      purple_account_get_log
-#define gaim_account_destroy_log  purple_account_destroy_log
+#define purple_account_get_log      purple_account_get_log
+#define purple_account_destroy_log  purple_account_destroy_log
 
-#define gaim_account_add_buddy       purple_account_add_buddy
-#define gaim_account_add_buddies     purple_account_add_buddies
-#define gaim_account_remove_buddy    purple_account_remove_buddy
-#define gaim_account_remove_buddies  purple_account_remove_buddies
+#define purple_account_add_buddy       purple_account_add_buddy
+#define purple_account_add_buddies     purple_account_add_buddies
+#define purple_account_remove_buddy    purple_account_remove_buddy
+#define purple_account_remove_buddies  purple_account_remove_buddies
 
-#define gaim_account_remove_group  purple_account_remove_group
+#define purple_account_remove_group  purple_account_remove_group
 
-#define gaim_account_change_password  purple_account_change_password
+#define purple_account_change_password  purple_account_change_password
 
-#define gaim_account_supports_offline_message  purple_account_supports_offline_message
+#define purple_account_supports_offline_message  purple_account_supports_offline_message
 
-#define gaim_accounts_add      purple_accounts_add
-#define gaim_accounts_remove   purple_accounts_remove
-#define gaim_accounts_delete   purple_accounts_delete
-#define gaim_accounts_reorder  purple_accounts_reorder
+#define purple_accounts_add      purple_accounts_add
+#define purple_accounts_remove   purple_accounts_remove
+#define purple_accounts_delete   purple_accounts_delete
+#define purple_accounts_reorder  purple_accounts_reorder
 
-#define gaim_accounts_get_all         purple_accounts_get_all
-#define gaim_accounts_get_all_active  purple_accounts_get_all_active
+#define purple_accounts_get_all         purple_accounts_get_all
+#define purple_accounts_get_all_active  purple_accounts_get_all_active
 
-#define gaim_accounts_find   purple_accounts_find
+#define purple_accounts_find   purple_accounts_find
 
-#define gaim_accounts_restore_current_statuses  purple_accounts_restore_current_statuses
+#define purple_accounts_restore_current_statuses  purple_accounts_restore_current_statuses
 
-#define gaim_accounts_set_ui_ops  purple_accounts_set_ui_ops
-#define gaim_accounts_get_ui_ops  purple_accounts_get_ui_ops
+#define purple_accounts_set_ui_ops  purple_accounts_set_ui_ops
+#define purple_accounts_get_ui_ops  purple_accounts_get_ui_ops
 
-#define gaim_accounts_get_handle  purple_accounts_get_handle
+#define purple_accounts_get_handle  purple_accounts_get_handle
 
-#define gaim_accounts_init    purple_accounts_init
-#define gaim_accounts_uninit  purple_accounts_uninit
+#define purple_accounts_init    purple_accounts_init
+#define purple_accounts_uninit  purple_accounts_uninit
 
 /* from accountopt.h */
 
-#define GaimAccountOption     PurpleAccountOption
-#define GaimAccountUserSplit  PurpleAccountUserSplit
+#define PurpleAccountOption     PurpleAccountOption
+#define PurpleAccountUserSplit  PurpleAccountUserSplit
 
-#define gaim_account_option_new         purple_account_option_new
-#define gaim_account_option_bool_new    purple_account_option_bool_new
-#define gaim_account_option_int_new     purple_account_option_int_new
-#define gaim_account_option_string_new  purple_account_option_string_new
-#define gaim_account_option_list_new    purple_account_option_list_new
+#define purple_account_option_new         purple_account_option_new
+#define purple_account_option_bool_new    purple_account_option_bool_new
+#define purple_account_option_int_new     purple_account_option_int_new
+#define purple_account_option_string_new  purple_account_option_string_new
+#define purple_account_option_list_new    purple_account_option_list_new
 
-#define gaim_account_option_destroy  purple_account_option_destroy
+#define purple_account_option_destroy  purple_account_option_destroy
 
-#define gaim_account_option_set_default_bool    purple_account_option_set_default_bool
-#define gaim_account_option_set_default_int     purple_account_option_set_default_int
-#define gaim_account_option_set_default_string  purple_account_option_set_default_string
+#define purple_account_option_set_default_bool    purple_account_option_set_default_bool
+#define purple_account_option_set_default_int     purple_account_option_set_default_int
+#define purple_account_option_set_default_string  purple_account_option_set_default_string
 
-#define gaim_account_option_set_masked  purple_account_option_set_masked
+#define purple_account_option_set_masked  purple_account_option_set_masked
 
-#define gaim_account_option_set_list  purple_account_option_set_list
+#define purple_account_option_set_list  purple_account_option_set_list
 
-#define gaim_account_option_add_list_item  purple_account_option_add_list_item
+#define purple_account_option_add_list_item  purple_account_option_add_list_item
 
-#define gaim_account_option_get_type     purple_account_option_get_type
-#define gaim_account_option_get_text     purple_account_option_get_text
-#define gaim_account_option_get_setting  purple_account_option_get_setting
+#define purple_account_option_get_type     purple_account_option_get_type
+#define purple_account_option_get_text     purple_account_option_get_text
+#define purple_account_option_get_setting  purple_account_option_get_setting
 
-#define gaim_account_option_get_default_bool        purple_account_option_get_default_bool
-#define gaim_account_option_get_default_int         purple_account_option_get_default_int
-#define gaim_account_option_get_default_string      purple_account_option_get_default_string
-#define gaim_account_option_get_default_list_value  purple_account_option_get_default_list_value
+#define purple_account_option_get_default_bool        purple_account_option_get_default_bool
+#define purple_account_option_get_default_int         purple_account_option_get_default_int
+#define purple_account_option_get_default_string      purple_account_option_get_default_string
+#define purple_account_option_get_default_list_value  purple_account_option_get_default_list_value
 
-#define gaim_account_option_get_masked  purple_account_option_get_masked
-#define gaim_account_option_get_list    purple_account_option_get_list
+#define purple_account_option_get_masked  purple_account_option_get_masked
+#define purple_account_option_get_list    purple_account_option_get_list
 
-#define gaim_account_user_split_new      purple_account_user_split_new
-#define gaim_account_user_split_destroy  purple_account_user_split_destroy
+#define purple_account_user_split_new      purple_account_user_split_new
+#define purple_account_user_split_destroy  purple_account_user_split_destroy
 
-#define gaim_account_user_split_get_text           purple_account_user_split_get_text
-#define gaim_account_user_split_get_default_value  purple_account_user_split_get_default_value
-#define gaim_account_user_split_get_separator      purple_account_user_split_get_separator
+#define purple_account_user_split_get_text           purple_account_user_split_get_text
+#define purple_account_user_split_get_default_value  purple_account_user_split_get_default_value
+#define purple_account_user_split_get_separator      purple_account_user_split_get_separator
 
 /* from blist.h */
 
-#define GaimBuddyList    PurpleBuddyList
-#define GaimBlistUiOps   PurpleBlistUiOps
-#define GaimBlistNode    PurpleBlistNode
+#define PurpleBuddyList    PurpleBuddyList
+#define PurpleBlistUiOps   PurpleBlistUiOps
+#define PurpleBlistNode    PurpleBlistNode
 
-#define GaimChat     PurpleChat
-#define GaimGroup    PurpleGroup
-#define GaimContact  PurpleContact
-#define GaimBuddy    PurpleBuddy
+#define PurpleChat     PurpleChat
+#define PurpleGroup    PurpleGroup
+#define PurpleContact  PurpleContact
+#define PurpleBuddy    PurpleBuddy
 
 #define GAIM_BLIST_GROUP_NODE     PURPLE_BLIST_GROUP_NODE
 #define GAIM_BLIST_CONTACT_NODE   PURPLE_BLIST_CONTACT_NODE
 #define GAIM_BLIST_BUDDY_NODE     PURPLE_BLIST_BUDDY_NODE
 #define GAIM_BLIST_CHAT_NODE      PURPLE_BLIST_CHAT_NODE
 #define GAIM_BLIST_OTHER_NODE     PURPLE_BLIST_OTHER_NODE
-#define GaimBlistNodeType         PurpleBlistNodeType
+#define PurpleBlistNodeType         PurpleBlistNodeType
 
 #define GAIM_BLIST_NODE_IS_CHAT       PURPLE_BLIST_NODE_IS_CHAT
 #define GAIM_BLIST_NODE_IS_BUDDY      PURPLE_BLIST_NODE_IS_BUDDY
 #define GAIM_BLIST_NODE_IS_CONTACT    PURPLE_BLIST_NODE_IS_CONTACT
 #define GAIM_BLIST_NODE_IS_GROUP      PURPLE_BLIST_NODE_IS_GROUP
 
-#define GAIM_BUDDY_IS_ONLINE PURPLE_BUDDY_IS_ONLINE
+#define GAIM_BUDDY_IS_ONLINE		PURPLE_BUDDY_IS_ONLINE
 
 #define GAIM_BLIST_NODE_FLAG_NO_SAVE  PURPLE_BLIST_NODE_FLAG_NO_SAVE
-#define GaimBlistNodeFlags            PurpleBlistNodeFlags
+#define PurpleBlistNodeFlags            PurpleBlistNodeFlags
 
 #define GAIM_BLIST_NODE_HAS_FLAG     PURPLE_BLIST_NODE_HAS_FLAG
 #define GAIM_BLIST_NODE_SHOULD_SAVE  PURPLE_BLIST_NODE_SHOULD_SAVE
@@ -336,7 +336,7 @@
 #define gaim_blist_uninit  purple_blist_uninit
 
 
-#define GaimBuddyIcon  PurpleBuddyIcon
+#define PurpleBuddyIcon  PurpleBuddyIcon
 
 #define gaim_buddy_icon_new      purple_buddy_icon_new
 #define gaim_buddy_icon_destroy  purple_buddy_icon_destroy
@@ -377,9 +377,9 @@
 #define GAIM_CIPHER_OPS      PURPLE_CIPHER_OPS
 #define GAIM_CIPHER_CONTEXT  PURPLE_CIPHER_CONTEXT
 
-#define GaimCipher         PurpleCipher
-#define GaimCipherOps      PurpleCipherOps
-#define GaimCipherContext  PurpleCipherContext
+#define PurpleCipher         PurpleCipher
+#define PurpleCipherOps      PurpleCipherOps
+#define PurpleCipherContext  PurpleCipherContext
 
 #define GAIM_CIPHER_CAPS_SET_OPT  PURPLE_CIPHER_CAPS_SET_OPT
 #define GAIM_CIPHER_CAPS_GET_OPT  PURPLE_CIPHER_CAPS_GET_OPT
@@ -438,7 +438,7 @@
 
 /* from circbuffer.h */
 
-#define GaimCircBuffer  PurpleCircBuffer
+#define PurpleCircBuffer  PurpleCircBuffer
 
 #define gaim_circ_buffer_new           purple_circ_buffer_new
 #define gaim_circ_buffer_destroy       purple_circ_buffer_destroy
@@ -448,10 +448,10 @@
 
 /* from cmds.h */
 
-#define GaimCmdPriority  PurpleCmdPriority
-#define GaimCmdFlag      PurpleCmdFlag
-#define GaimCmdStatus    PurpleCmdStatus
-#define GaimCmdRet       PurpleCmdRet
+#define PurpleCmdPriority  PurpleCmdPriority
+#define PurpleCmdFlag      PurpleCmdFlag
+#define PurpleCmdStatus    PurpleCmdStatus
+#define PurpleCmdRet       PurpleCmdRet
 
 #define GAIM_CMD_STATUS_OK            PURPLE_CMD_STATUS_OK
 #define GAIM_CMD_STATUS_FAILED        PURPLE_CMD_STATUS_FAILED
@@ -462,9 +462,9 @@
 
 #define GAIM_CMD_FUNC  PURPLE_CMD_FUNC
 
-#define GaimCmdFunc  PurpleCmdFunc
+#define PurpleCmdFunc  PurpleCmdFunc
 
-#define GaimCmdId  PurpleCmdId
+#define PurpleCmdId  PurpleCmdId
 
 #define gaim_cmd_register    purple_cmd_register
 #define gaim_cmd_unregister  purple_cmd_unregister
@@ -474,7 +474,7 @@
 
 /* from connection.h */
 
-#define GaimConnection  PurpleConnection
+#define PurpleConnection  PurpleConnection
 
 #define GAIM_CONNECTION_HTML              PURPLE_CONNECTION_HTML
 #define GAIM_CONNECTION_NO_BGCOLOR        PURPLE_CONNECTION_NO_BGCOLOR
@@ -485,15 +485,15 @@
 #define GAIM_CONNECTION_NO_URLDESC        PURPLE_CONNECTION_NO_URLDESC
 #define GAIM_CONNECTION_NO_IMAGES         PURPLE_CONNECTION_NO_IMAGES
 
-#define GaimConnectionFlags  PurpleConnectionFlags
+#define PurpleConnectionFlags  PurpleConnectionFlags
 
 #define GAIM_DISCONNECTED  PURPLE_DISCONNECTED
 #define GAIM_CONNECTED     PURPLE_CONNECTED
 #define GAIM_CONNECTING    PURPLE_CONNECTING
 
-#define GaimConnectionState  PurpleConnectionState
+#define PurpleConnectionState  PurpleConnectionState
 
-#define GaimConnectionUiOps  PurpleConnectionUiOps
+#define PurpleConnectionUiOps  PurpleConnectionUiOps
 
 #define gaim_connection_new      purple_connection_new
 #define gaim_connection_destroy  purple_connection_destroy
@@ -531,11 +531,11 @@
 
 /* from conversation.h */
 
-#define GaimConversationUiOps  PurpleConversationUiOps
-#define GaimConversation       PurpleConversation
-#define GaimConvIm             PurpleConvIm
-#define GaimConvChat           PurpleConvChat
-#define GaimConvChatBuddy      PurpleConvChatBuddy
+#define PurpleConversationUiOps  PurpleConversationUiOps
+#define PurpleConversation       PurpleConversation
+#define PurpleConvIm             PurpleConvIm
+#define PurpleConvChat           PurpleConvChat
+#define PurpleConvChatBuddy      PurpleConvChatBuddy
 
 #define GAIM_CONV_TYPE_UNKNOWN  PURPLE_CONV_TYPE_UNKNOWN
 #define GAIM_CONV_TYPE_IM       PURPLE_CONV_TYPE_IM
@@ -543,7 +543,7 @@
 #define GAIM_CONV_TYPE_MISC     PURPLE_CONV_TYPE_MISC
 #define GAIM_CONV_TYPE_ANY      PURPLE_CONV_TYPE_ANY
 
-#define GaimConversationType  PurpleConversationType
+#define PurpleConversationType  PurpleConversationType
 
 #define GAIM_CONV_UPDATE_ADD       PURPLE_CONV_UPDATE_ADD
 #define GAIM_CONV_UPDATE_REMOVE    PURPLE_CONV_UPDATE_REMOVE
@@ -560,13 +560,13 @@
 #define GAIM_CONV_UPDATE_CHATLEFT  PURPLE_CONV_UPDATE_CHATLEFT
 #define GAIM_CONV_UPDATE_FEATURES  PURPLE_CONV_UPDATE_FEATURES
 
-#define GaimConvUpdateType  PurpleConvUpdateType
+#define PurpleConvUpdateType  PurpleConvUpdateType
 
 #define GAIM_NOT_TYPING  PURPLE_NOT_TYPING
 #define GAIM_TYPING      PURPLE_TYPING
 #define GAIM_TYPED       PURPLE_TYPED
 
-#define GaimTypingState  PurpleTypingState
+#define PurpleTypingState  PurpleTypingState
 
 #define GAIM_MESSAGE_SEND         PURPLE_MESSAGE_SEND
 #define GAIM_MESSAGE_RECV         PURPLE_MESSAGE_RECV
@@ -581,7 +581,7 @@
 #define GAIM_MESSAGE_RAW          PURPLE_MESSAGE_RAW
 #define GAIM_MESSAGE_IMAGES       PURPLE_MESSAGE_IMAGES
 
-#define GaimMessageFlags  PurpleMessageFlags
+#define PurpleMessageFlags  PurpleMessageFlags
 
 #define GAIM_CBFLAGS_NONE     PURPLE_CBFLAGS_NONE
 #define GAIM_CBFLAGS_VOICE    PURPLE_CBFLAGS_VOICE
@@ -590,7 +590,7 @@
 #define GAIM_CBFLAGS_FOUNDER  PURPLE_CBFLAGS_FOUNDER
 #define GAIM_CBFLAGS_TYPING   PURPLE_CBFLAGS_TYPING
 
-#define GaimConvChatBuddyFlags  PurpleConvChatBuddyFlags
+#define PurpleConvChatBuddyFlags  PurpleConvChatBuddyFlags
 
 #define gaim_conversations_set_ui_ops  purple_conversations_set_ui_ops
 
@@ -712,9 +712,9 @@
 
 /* from core.h */
 
-#define GaimCore  PurpleCore
+#define PurpleCore  PurpleCore
 
-#define GaimCoreUiOps  PurpleCoreUiOps
+#define PurpleCoreUiOps  PurpleCoreUiOps
 
 #define gaim_core_init  purple_core_init
 #define gaim_core_quit  purple_core_quit
@@ -728,16 +728,16 @@
 
 /* from debug.h */
 
-#define GAIM_DEBUG_ALL      PURPLE_DEBUG_ALL
-#define GAIM_DEBUG_MISC     PURPLE_DEBUG_MISC
-#define GAIM_DEBUG_INFO     PURPLE_DEBUG_INFO
-#define GAIM_DEBUG_WARNING  PURPLE_DEBUG_WARNING
-#define GAIM_DEBUG_ERROR    PURPLE_DEBUG_ERROR
-#define GAIM_DEBUG_FATAL    PURPLE_DEBUG_FATAL
+#define GAIM_DEBUG_ALL      GAIM_DEBUG_ALL
+#define GAIM_DEBUG_MISC     GAIM_DEBUG_MISC
+#define GAIM_DEBUG_INFO     GAIM_DEBUG_INFO
+#define GAIM_DEBUG_WARNING  GAIM_DEBUG_WARNING
+#define GAIM_DEBUG_ERROR    GAIM_DEBUG_ERROR
+#define GAIM_DEBUG_FATAL    GAIM_DEBUG_FATAL
 
-#define GaimDebugLevel  PurpleDebugLevel
+#define PurpleDebugLevel  PurpleDebugLevel
 
-#define GaimDebugUiOps  PurpleDebugUiOps
+#define PurpleDebugUiOps  PurpleDebugUiOps
 
 
 #define gaim_debug          purple_debug
@@ -767,9 +767,9 @@
 #define GAIM_DESKTOP_ITEM_TYPE_SERVICE       PURPLE_DESKTOP_ITEM_TYPE_SERVICE
 #define GAIM_DESKTOP_ITEM_TYPE_SERVICE_TYPE  PURPLE_DESKTOP_ITEM_TYPE_SERVICE_TYPE
 
-#define GaimDesktopItemType  PurpleDesktopItemType
+#define PurpleDesktopItemType  PurpleDesktopItemType
 
-#define GaimDesktopItem  PurpleDesktopItem
+#define PurpleDesktopItem  PurpleDesktopItem
 
 #define GAIM_TYPE_DESKTOP_ITEM         PURPLE_TYPE_DESKTOP_ITEM
 #define gaim_desktop_item_get_type     purple_desktop_item_get_type
@@ -815,8 +815,8 @@
 
 /* from dnsquery.h */
 
-#define GaimDnsQueryData  PurpleDnsQueryData
-#define GaimDnsQueryConnectFunction  PurpleDnsQueryConnectFunction
+#define PurpleDnsQueryData  PurpleDnsQueryData
+#define PurpleDnsQueryConnectFunction  PurpleDnsQueryConnectFunction
 
 #define gaim_dnsquery_a        		purple_dnsquery_a
 #define gaim_dnsquery_destroy  		purple_dnsquery_destroy
@@ -828,9 +828,9 @@
 
 /* from dnssrv.h */
 
-#define GaimSrvResponse   PurpleSrvResponse
-#define GaimSrvQueryData  PurpleSrvQueryData
-#define GaimSrvCallback   PurpleSrvCallback
+#define PurpleSrvResponse   PurpleSrvResponse
+#define PurpleSrvQueryData  PurpleSrvQueryData
+#define PurpleSrvCallback   PurpleSrvCallback
 
 #define gaim_srv_resolve  purple_srv_resolve
 #define gaim_srv_cancel   purple_srv_cancel
@@ -840,9 +840,9 @@
 #define GAIM_INPUT_READ   PURPLE_INPUT_READ
 #define GAIM_INPUT_WRITE  PURPLE_INPUT_WRITE
 
-#define GaimInputCondition  PurpleInputCondition
-#define GaimInputFunction   PurpleInputFunction
-#define GaimEventLoopUiOps  PurpleEventLoopUiOps
+#define PurpleInputCondition  PurpleInputCondition
+#define PurpleInputFunction   PurpleInputFunction
+#define PurpleEventLoopUiOps  PurpleEventLoopUiOps
 
 #define gaim_timeout_add     purple_timeout_add
 #define gaim_timeout_remove  purple_timeout_remove
@@ -854,13 +854,13 @@
 
 /* from ft.h */
 
-#define GaimXfer  PurpleXfer
+#define PurpleXfer  PurpleXfer
 
 #define GAIM_XFER_UNKNOWN  PURPLE_XFER_UNKNOWN
 #define GAIM_XFER_SEND     PURPLE_XFER_SEND
 #define GAIM_XFER_RECEIVE  PURPLE_XFER_RECEIVE
 
-#define GaimXferType  PurpleXferType
+#define PurpleXferType  PurpleXferType
 
 #define GAIM_XFER_STATUS_UNKNOWN        PURPLE_XFER_STATUS_UNKNOWN
 #define GAIM_XFER_STATUS_NOT_STARTED    PURPLE_XFER_STATUS_NOT_STARTED
@@ -870,9 +870,9 @@
 #define GAIM_XFER_STATUS_CANCEL_LOCAL   PURPLE_XFER_STATUS_CANCEL_LOCAL
 #define GAIM_XFER_STATUS_CANCEL_REMOTE  PURPLE_XFER_STATUS_CANCEL_REMOTE
 
-#define GaimXferStatusType  PurpleXferStatusType
+#define PurpleXferStatusType  PurpleXferStatusType
 
-#define GaimXferUiOps  PurpleXferUiOps
+#define PurpleXferUiOps  PurpleXferUiOps
 
 #define gaim_xfer_new                  purple_xfer_new
 #define gaim_xfer_ref                  purple_xfer_ref
@@ -935,7 +935,7 @@
 
 /* from idle.h */
 
-#define GaimIdleUiOps  PurpleIdleUiOps
+#define PurpleIdleUiOps  PurpleIdleUiOps
 
 #define gaim_idle_touch       purple_idle_touch
 #define gaim_idle_set         purple_idle_set
@@ -946,7 +946,7 @@
 
 /* from imgstore.h */
 
-#define GaimStoredImage  PurpleStoredImage
+#define PurpleStoredImage  PurpleStoredImage
 
 #define gaim_imgstore_add           purple_imgstore_add
 #define gaim_imgstore_get           purple_imgstore_get
@@ -959,22 +959,22 @@
 
 /* from log.h */
 
-#define GaimLog                  PurpleLog
-#define GaimLogLogger            PurpleLogLogger
-#define GaimLogCommonLoggerData  PurpleLogCommonLoggerData
-#define GaimLogSet               PurpleLogSet
+#define PurpleLog                  PurpleLog
+#define PurpleLogLogger            PurpleLogLogger
+#define PurpleLogCommonLoggerData  PurpleLogCommonLoggerData
+#define PurpleLogSet               PurpleLogSet
 
 #define GAIM_LOG_IM      PURPLE_LOG_IM
 #define GAIM_LOG_CHAT    PURPLE_LOG_CHAT
 #define GAIM_LOG_SYSTEM  PURPLE_LOG_SYSTEM
 
-#define GaimLogType  PurpleLogType
+#define PurpleLogType  PurpleLogType
 
 #define GAIM_LOG_READ_NO_NEWLINE  PURPLE_LOG_READ_NO_NEWLINE
 
-#define GaimLogReadFlags  PurpleLogReadFlags
+#define PurpleLogReadFlags  PurpleLogReadFlags
 
-#define GaimLogSetCallback  PurpleLogSetCallback
+#define PurpleLogSetCallback  PurpleLogSetCallback
 
 #define gaim_log_new    purple_log_new
 #define gaim_log_free   purple_log_free
@@ -1011,8 +1011,8 @@
 
 /* from mime.h */
 
-#define GaimMimeDocument  PurpleMimeDocument
-#define GaimMimePart      PurpleMimePart
+#define PurpleMimeDocument  PurpleMimeDocument
+#define PurpleMimePart      PurpleMimePart
 
 #define gaim_mime_document_new         purple_mime_document_new
 #define gaim_mime_document_free        purple_mime_document_free
@@ -1037,9 +1037,9 @@
 
 /* from network.h */
 
-#define GaimNetworkListenData  PurpleNetworkListenData
+#define PurpleNetworkListenData  PurpleNetworkListenData
 
-#define GaimNetworkListenCallback  PurpleNetworkListenCallback
+#define PurpleNetworkListenCallback  PurpleNetworkListenCallback
 
 #define gaim_network_ip_atoi              purple_network_ip_atoi
 #define gaim_network_set_public_ip        purple_network_set_public_ip
@@ -1060,10 +1060,10 @@
 /* from notify.h */
 
 
-#define GaimNotifyUserInfoEntry  PurpleNotifyUserInfoEntry
-#define GaimNotifyUserInfo       PurpleNotifyUserInfo
+#define PurpleNotifyUserInfoEntry  PurpleNotifyUserInfoEntry
+#define PurpleNotifyUserInfo       PurpleNotifyUserInfo
 
-#define GaimNotifyCloseCallback  PurpleNotifyCloseCallback
+#define PurpleNotifyCloseCallback  PurpleNotifyCloseCallback
 
 #define GAIM_NOTIFY_MESSAGE        PURPLE_NOTIFY_MESSAGE
 #define GAIM_NOTIFY_EMAIL          PURPLE_NOTIFY_EMAIL
@@ -1073,13 +1073,13 @@
 #define GAIM_NOTIFY_USERINFO       PURPLE_NOTIFY_USERINFO
 #define GAIM_NOTIFY_URI            PURPLE_NOTIFY_URI
 
-#define GaimNotifyType  PurpleNotifyType
+#define PurpleNotifyType  PurpleNotifyType
 
 #define GAIM_NOTIFY_MSG_ERROR    PURPLE_NOTIFY_MSG_ERROR
 #define GAIM_NOTIFY_MSG_WARNING  PURPLE_NOTIFY_MSG_WARNING
 #define GAIM_NOTIFY_MSG_INFO     PURPLE_NOTIFY_MSG_INFO
 
-#define GaimNotifyMsgType  PurpleNotifyMsgType
+#define PurpleNotifyMsgType  PurpleNotifyMsgType
 
 #define GAIM_NOTIFY_BUTTON_LABELED   PURPLE_NOTIFY_BUTTON_LABELED
 #define GAIM_NOTIFY_BUTTON_CONTINUE  PURPLE_NOTIFY_BUTTON_CONTINUE
@@ -1089,21 +1089,21 @@
 #define GAIM_NOTIFY_BUTTON_JOIN      PURPLE_NOTIFY_BUTTON_JOIN
 #define GAIM_NOTIFY_BUTTON_INVITE    PURPLE_NOTIFY_BUTTON_INVITE
 
-#define GaimNotifySearchButtonType  PurpleNotifySearchButtonType
+#define PurpleNotifySearchButtonType  PurpleNotifySearchButtonType
 
-#define GaimNotifySearchResults  PurpleNotifySearchResults
+#define PurpleNotifySearchResults  PurpleNotifySearchResults
 
 #define GAIM_NOTIFY_USER_INFO_ENTRY_PAIR            PURPLE_NOTIFY_USER_INFO_ENTRY_PAIR
 #define GAIM_NOTIFY_USER_INFO_ENTRY_SECTION_BREAK   PURPLE_NOTIFY_USER_INFO_ENTRY_SECTION_BREAK
 #define GAIM_NOTIFY_USER_INFO_ENTRY_SECTION_HEADER  PURPLE_NOTIFY_USER_INFO_ENTRY_SECTION_HEADER
 
-#define GaimNotifyUserInfoEntryType  PurpleNotifyUserInfoEntryType
+#define PurpleNotifyUserInfoEntryType  PurpleNotifyUserInfoEntryType
 
-#define GaimNotifySearchColumn           PurpleNotifySearchColumn
-#define GaimNotifySearchResultsCallback  PurpleNotifySearchResultsCallback
-#define GaimNotifySearchButton           PurpleNotifySearchButton
+#define PurpleNotifySearchColumn           PurpleNotifySearchColumn
+#define PurpleNotifySearchResultsCallback  PurpleNotifySearchResultsCallback
+#define PurpleNotifySearchButton           PurpleNotifySearchButton
 
-#define GaimNotifyUiOps  PurpleNotifyUiOps
+#define PurpleNotifyUiOps  PurpleNotifyUiOps
 
 #define gaim_notify_searchresults                     purple_notify_searchresults
 #define gaim_notify_searchresults_free                purple_notify_searchresults_free
@@ -1173,19 +1173,19 @@
 #endif
 #endif
 
-#define GaimPlugin            PurplePlugin
-#define GaimPluginInfo        PurplePluginInfo
-#define GaimPluginUiInfo      PurplePluginUiInfo
-#define GaimPluginLoaderInfo  PurplePluginLoaderInfo
-#define GaimPluginAction      PurplePluginAction
-#define GaimPluginPriority    PurplePluginPriority
+#define PurplePlugin            PurplePlugin
+#define PurplePluginInfo        PurplePluginInfo
+#define PurplePluginUiInfo      PurplePluginUiInfo
+#define PurplePluginLoaderInfo  PurplePluginLoaderInfo
+#define PurplePluginAction      PurplePluginAction
+#define PurplePluginPriority    PurplePluginPriority
 
 #define GAIM_PLUGIN_UNKNOWN   PURPLE_PLUGIN_UNKNOWN
 #define GAIM_PLUGIN_STANDARD  PURPLE_PLUGIN_STANDARD
 #define GAIM_PLUGIN_LOADER    PURPLE_PLUGIN_LOADER
 #define GAIM_PLUGIN_PROTOCOL  PURPLE_PLUGIN_PROTOCOL
 
-#define GaimPluginType        PurplePluginType
+#define PurplePluginType        PurplePluginType
 
 #define GAIM_PRIORITY_DEFAULT  PURPLE_PRIORITY_DEFAULT
 #define GAIM_PRIORITY_HIGHEST  PURPLE_PRIORITY_HIGHEST
@@ -1260,21 +1260,21 @@
 
 /* pluginpref.h */
 
-#define GaimPluginPrefFrame  PurplePluginPrefFrame
-#define GaimPluginPref       PurplePluginPref
+#define PurplePluginPrefFrame  PurplePluginPrefFrame
+#define PurplePluginPref       PurplePluginPref
 
 #define GAIM_STRING_FORMAT_TYPE_NONE       PURPLE_STRING_FORMAT_TYPE_NONE
 #define GAIM_STRING_FORMAT_TYPE_MULTILINE  PURPLE_STRING_FORMAT_TYPE_MULTILINE
 #define GAIM_STRING_FORMAT_TYPE_HTML       PURPLE_STRING_FORMAT_TYPE_HTML
 
-#define GaimStringFormatType  PurpleStringFormatType
+#define PurpleStringFormatType  PurpleStringFormatType
 
 #define GAIM_PLUGIN_PREF_NONE           PURPLE_PLUGIN_PREF_NONE
 #define GAIM_PLUGIN_PREF_CHOICE         PURPLE_PLUGIN_PREF_CHOICE
 #define GAIM_PLUGIN_PREF_INFO           PURPLE_PLUGIN_PREF_INFO
 #define GAIM_PLUGIN_PREF_STRING_FORMAT  PURPLE_PLUGIN_PREF_STRING_FORMAT
 
-#define GaimPluginPrefType  PurplePluginPrefType
+#define PurplePluginPrefType  PurplePluginPrefType
 
 #define gaim_plugin_pref_frame_new        purple_plugin_pref_frame_new
 #define gaim_plugin_pref_frame_destroy    purple_plugin_pref_frame_destroy
@@ -1305,7 +1305,7 @@
 
 /* from pounce.h */
 
-#define GaimPounce  PurplePounce
+#define PurplePounce  PurplePounce
 
 #define GAIM_POUNCE_NONE              PURPLE_POUNCE_NONE
 #define GAIM_POUNCE_SIGNON            PURPLE_POUNCE_SIGNON
@@ -1318,13 +1318,13 @@
 #define GAIM_POUNCE_TYPED             PURPLE_POUNCE_TYPED
 #define GAIM_POUNCE_TYPING_STOPPED    PURPLE_POUNCE_TYPING_STOPPED
 #define GAIM_POUNCE_MESSAGE_RECEIVED  PURPLE_POUNCE_MESSAGE_RECEIVED
-#define GaimPounceEvent  PurplePounceEvent
+#define PurplePounceEvent  PurplePounceEvent
 
 #define GAIM_POUNCE_OPTION_NONE  PURPLE_POUNCE_OPTION_NONE
 #define GAIM_POUNCE_OPTION_AWAY  PURPLE_POUNCE_OPTION_AWAY
-#define GaimPounceOption  PurplePounceOption
+#define PurplePounceOption  PurplePounceOption
 
-#define GaimPounceCb  PurplePounceCb
+#define PurplePounceCb  PurplePounceCb
 
 #define gaim_pounce_new                     purple_pounce_new
 #define gaim_pounce_destroy                 purple_pounce_destroy
@@ -1367,9 +1367,9 @@
 #define GAIM_PREF_STRING_LIST  PURPLE_PREF_STRING_LIST
 #define GAIM_PREF_PATH         PURPLE_PREF_PATH
 #define GAIM_PREF_PATH_LIST    PURPLE_PREF_PATH_LIST
-#define GaimPrefType  PurplePrefType
+#define PurplePrefType  PurplePrefType
 
-#define GaimPrefCallback  PurplePrefCallback
+#define PurplePrefCallback  PurplePrefCallback
 
 #define gaim_prefs_get_handle             purple_prefs_get_handle
 #define gaim_prefs_init                   purple_prefs_init
@@ -1414,9 +1414,9 @@
 #define GAIM_PRIVACY_ALLOW_USERS      PURPLE_PRIVACY_ALLOW_USERS
 #define GAIM_PRIVACY_DENY_USERS       PURPLE_PRIVACY_DENY_USERS
 #define GAIM_PRIVACY_ALLOW_BUDDYLIST  PURPLE_PRIVACY_ALLOW_BUDDYLIST
-#define GaimPrivacyType  PurplePrivacyType
+#define PurplePrivacyType  PurplePrivacyType
 
-#define GaimPrivacyUiOps  PurplePrivacyUiOps
+#define PurplePrivacyUiOps  PurplePrivacyUiOps
 
 #define gaim_privacy_permit_add     purple_privacy_permit_add
 #define gaim_privacy_permit_remove  purple_privacy_permit_remove
@@ -1437,12 +1437,12 @@
 #define GAIM_PROXY_SOCKS4      PURPLE_PROXY_SOCKS4
 #define GAIM_PROXY_SOCKS5      PURPLE_PROXY_SOCKS5
 #define GAIM_PROXY_USE_ENVVAR  PURPLE_PROXY_USE_ENVVAR
-#define GaimProxyType  PurpleProxyType
+#define PurpleProxyType  PurpleProxyType
 
-#define GaimProxyInfo  PurpleProxyInfo
+#define PurpleProxyInfo  PurpleProxyInfo
 
-#define GaimProxyConnectData      PurpleProxyConnectData
-#define GaimProxyConnectFunction  PurpleProxyConnectFunction
+#define PurpleProxyConnectData      PurpleProxyConnectData
+#define PurpleProxyConnectFunction  PurpleProxyConnectFunction
 
 #define gaim_proxy_info_new           purple_proxy_info_new
 #define gaim_proxy_info_destroy       purple_proxy_info_destroy
@@ -1470,15 +1470,15 @@
 
 /* from prpl.h */
 
-#define GaimPluginProtocolInfo  PurplePluginProtocolInfo
+#define PurplePluginProtocolInfo  PurplePluginProtocolInfo
 
 #define GAIM_ICON_SCALE_DISPLAY  PURPLE_ICON_SCALE_DISPLAY
 #define GAIM_ICON_SCALE_SEND     PURPLE_ICON_SCALE_SEND
-#define GaimIconScaleRules  PurpleIconScaleRules
+#define PurpleIconScaleRules  PurpleIconScaleRules
 
-#define GaimBuddyIconSpec  PurpleBuddyIconSpec
+#define PurpleBuddyIconSpec  PurpleBuddyIconSpec
 
-#define GaimProtocolOptions  PurpleProtocolOptions
+#define PurpleProtocolOptions  PurpleProtocolOptions
 
 #define GAIM_IS_PROTOCOL_PLUGIN  PURPLE_IS_PROTOCOL_PLUGIN
 
@@ -1505,7 +1505,7 @@
 #define GAIM_REQUEST_FIELDS  PURPLE_REQUEST_FIELDS
 #define GAIM_REQUEST_FILE    PURPLE_REQUEST_FILE
 #define GAIM_REQUEST_FOLDER  PURPLE_REQUEST_FOLDER
-#define GaimRequestType  PurpleRequestType
+#define PurpleRequestType  PurpleRequestType
 
 #define GAIM_REQUEST_FIELD_NONE     PURPLE_REQUEST_FIELD_NONE
 #define GAIM_REQUEST_FIELD_STRING   PURPLE_REQUEST_FIELD_STRING
@@ -1516,21 +1516,21 @@
 #define GAIM_REQUEST_FIELD_LABEL    PURPLE_REQUEST_FIELD_LABEL
 #define GAIM_REQUEST_FIELD_IMAGE    PURPLE_REQUEST_FIELD_IMAGE
 #define GAIM_REQUEST_FIELD_ACCOUNT  PURPLE_REQUEST_FIELD_ACCOUNT
-#define GaimRequestFieldType  PurpleRequestFieldType
+#define PurpleRequestFieldType  PurpleRequestFieldType
 
-#define GaimRequestFields  PurpleRequestFields
+#define PurpleRequestFields  PurpleRequestFields
 
-#define GaimRequestFieldGroup  PurpleRequestFieldGroup
+#define PurpleRequestFieldGroup  PurpleRequestFieldGroup
 
-#define GaimRequestField  PurpleRequestField
+#define PurpleRequestField  PurpleRequestField
 
-#define GaimRequestUiOps  PurpleRequestUiOps
+#define PurpleRequestUiOps  PurpleRequestUiOps
 
-#define GaimRequestInputCb   PurpleRequestInputCb
-#define GaimRequestActionCb  PurpleRequestActionCb
-#define GaimRequestChoiceCb  PurpleRequestChoiceCb
-#define GaimRequestFieldsCb  PurpleRequestFieldsCb
-#define GaimRequestFileCb    PurpleRequestFileCb
+#define PurpleRequestInputCb   PurpleRequestInputCb
+#define PurpleRequestActionCb  PurpleRequestActionCb
+#define PurpleRequestChoiceCb  PurpleRequestChoiceCb
+#define PurpleRequestFieldsCb  PurpleRequestFieldsCb
+#define PurpleRequestFileCb    PurpleRequestFileCb
 
 #define gaim_request_fields_new                  purple_request_fields_new
 #define gaim_request_fields_destroy              purple_request_fields_destroy
@@ -1657,19 +1657,19 @@
 
 /* from roomlist.h */
 
-#define GaimRoomlist       PurpleRoomlist
-#define GaimRoomlistRoom   PurpleRoomlistRoom
-#define GaimRoomlistField  PurpleRoomlistField
-#define GaimRoomlistUiOps  PurpleRoomlistUiOps
+#define PurpleRoomlist       PurpleRoomlist
+#define PurpleRoomlistRoom   PurpleRoomlistRoom
+#define PurpleRoomlistField  PurpleRoomlistField
+#define PurpleRoomlistUiOps  PurpleRoomlistUiOps
 
 #define GAIM_ROOMLIST_ROOMTYPE_CATEGORY  PURPLE_ROOMLIST_ROOMTYPE_CATEGORY
 #define GAIM_ROOMLIST_ROOMTYPE_ROOM      PURPLE_ROOMLIST_ROOMTYPE_ROOM
-#define GaimRoomlistRoomType  PurpleRoomlistRoomType
+#define PurpleRoomlistRoomType  PurpleRoomlistRoomType
 
 #define GAIM_ROOMLIST_FIELD_BOOL    PURPLE_ROOMLIST_BOOL
 #define GAIM_ROOMLIST_FIELD_INT     PURPLE_ROOMLIST_INT
 #define GAIM_ROOMLIST_FIELD_STRING  PURPLE_ROOMLIST_STRING
-#define GaimRoomlistFieldType  PurpleRoomlistFieldType
+#define PurpleRoomlistFieldType  PurpleRoomlistFieldType
 
 #define gaim_roomlist_show_with_account  purple_roomlist_show_with_account
 #define gaim_roomlist_new                purple_roomlist_new
@@ -1694,8 +1694,8 @@
 
 /* from savedstatuses.h */
 
-#define GaimSavedStatus     PurpleSavedStatus
-#define GaimSavedStatusSub  PurpleSavedStatusSub
+#define PurpleSavedStatus     PurpleSavedStatus
+#define PurpleSavedStatusSub  PurpleSavedStatusSub
 
 #define gaim_savedstatus_new              purple_savedstatus_new
 #define gaim_savedstatus_set_title        purple_savedstatus_set_title
@@ -1738,8 +1738,8 @@
 
 #define GAIM_CALLBACK  PURPLE_CALLBACK
 
-#define GaimCallback           PurpleCallback
-#define GaimSignalMarshalFunc  PurpleSignalMarshalFunc
+#define PurpleCallback           PurpleCallback
+#define PurpleSignalMarshalFunc  PurpleSignalMarshalFunc
 
 #define GAIM_SIGNAL_PRIORITY_DEFAULT  PURPLE_SIGNAL_PRIORITY_DEFAULT
 #define GAIM_SIGNAL_PRIORITY_HIGHEST  PURPLE_SIGNAL_PRIORITY_HIGHEST
@@ -1848,9 +1848,9 @@
 #define GAIM_SOUND_POUNCE_DEFAULT  PURPLE_SOUND_POUNCE_DEFAULT
 #define GAIM_SOUND_CHAT_NICK       PURPLE_SOUND_CHAT_NICK
 #define GAIM_NUM_SOUNDS            PURPLE_NUM_SOUNDS
-#define GaimSoundEventID  PurpleSoundEventID
+#define PurpleSoundEventID  PurpleSoundEventID
 
-#define GaimSoundUiOps  PurpleSoundUiOps
+#define PurpleSoundUiOps  PurpleSoundUiOps
 
 #define gaim_sound_play_file   purple_sound_play_file
 #define gaim_sound_play_event  purple_sound_play_event
@@ -1867,14 +1867,14 @@
 
 #define GAIM_SSL_HANDSHAKE_FAILED  PURPLE_SSL_HANDSHAKE_FAILED
 #define GAIM_SSL_CONNECT_FAILED    PURPLE_SSL_CONNECT_FAILED
-#define GaimSslErrorType  PurpleSslErrorType
+#define PurpleSslErrorType  PurpleSslErrorType
 
-#define GaimSslConnection  PurpleSslConnection
+#define PurpleSslConnection  PurpleSslConnection
 
-#define GaimSslInputFunction  PurpleSslInputFunction
-#define GaimSslErrorFunction  PurpleSslErrorFunction
+#define PurpleSslInputFunction  PurpleSslInputFunction
+#define PurpleSslErrorFunction  PurpleSslErrorFunction
 
-#define GaimSslOps  PurpleSslOps
+#define PurpleSslOps  PurpleSslOps
 
 #define gaim_ssl_is_supported  purple_ssl_is_supported
 #define gaim_ssl_connect       purple_ssl_connect
@@ -1891,16 +1891,16 @@
 
 /* from status.h */
 
-#define GaimStatusType  PurpleStatusType
-#define GaimStatusAttr  PurpleStatusAttr
-#define GaimPresence    PurplePresence
-#define GaimStatus      PurpleStatus
+#define PurpleStatusType  PurpleStatusType
+#define PurpleStatusAttr  PurpleStatusAttr
+#define PurplePresence    PurplePresence
+#define PurpleStatus      PurpleStatus
 
 #define GAIM_PRESENCE_CONTEXT_UNSET    PURPLE_PRESENCE_CONTEXT_UNSET
 #define GAIM_PRESENCE_CONTEXT_ACCOUNT  PURPLE_PRESENCE_CONTEXT_ACCOUNT
 #define GAIM_PRESENCE_CONTEXT_CONV     PURPLE_PRESENCE_CONTEXT_CONV
 #define GAIM_PRESENCE_CONTEXT_BUDDY    PURPLE_PRESENCE_CONTEXT_BUDDY
-#define GaimPresenceContext  PurplePresenceContext
+#define PurplePresenceContext  PurplePresenceContext
 
 #define GAIM_STATUS_UNSET           PURPLE_STATUS_UNSET
 #define GAIM_STATUS_OFFLINE         PURPLE_STATUS_OFFLINE
@@ -1911,7 +1911,7 @@
 #define GAIM_STATUS_EXTENDED_AWAY   PURPLE_STATUS_EXTENDED_AWAY
 #define GAIM_STATUS_MOBILE          PURPLE_STATUS_MOBILE
 #define GAIM_STATUS_NUM_PRIMITIVES  PURPLE_STATUS_NUM_PRIMITIVES
-#define GaimStatusPrimitive  PurpleStatusPrimitive
+#define PurpleStatusPrimitive  PurpleStatusPrimitive
 
 #define gaim_primitive_get_id_from_type    purple_primitive_get_id_from_type
 #define gaim_primitive_get_name_from_type  purple_primitive_get_name_from_type
@@ -2003,7 +2003,7 @@
 
 /* from stringref.h */
 
-#define GaimStringref  PurpleStringref
+#define PurpleStringref  PurpleStringref
 
 #define gaim_stringref_new        purple_stringref_new
 #define gaim_stringref_new_noref  purple_stringref_new_noref
@@ -2016,13 +2016,13 @@
 
 /* from stun.h */
 
-#define GaimStunNatDiscovery  PurpleStunNatDiscovery
+#define PurpleStunNatDiscovery  PurpleStunNatDiscovery
 
 #define GAIM_STUN_STATUS_UNDISCOVERED  PURPLE_STUN_STATUS_UNDISCOVERED
 #define GAIM_STUN_STATUS_UNKNOWN       PURPLE_STUN_STATUS_UNKNOWN
 #define GAIM_STUN_STATUS_DISCOVERING   PURPLE_STUN_STATUS_DISCOVERING
 #define GAIM_STUN_STATUS_DISCOVERED    PURPLE_STUN_STATUS_DISCOVERED
-#define GaimStunStatus  PurpleStunStatus
+#define PurpleStunStatus  PurpleStunStatus
 
 #define GAIM_STUN_NAT_TYPE_PUBLIC_IP             PURPLE_STUN_NAT_TYPE_PUBLIC_IP
 #define GAIM_STUN_NAT_TYPE_UNKNOWN_NAT           PURPLE_STUN_NAT_TYPE_UNKNOWN_NAT
@@ -2030,9 +2030,9 @@
 #define GAIM_STUN_NAT_TYPE_RESTRICTED_CONE       PURPLE_STUN_NAT_TYPE_RESTRICTED_CONE
 #define GAIM_STUN_NAT_TYPE_PORT_RESTRICTED_CONE  PURPLE_STUN_NAT_TYPE_PORT_RESTRICTED_CONE
 #define GAIM_STUN_NAT_TYPE_SYMMETRIC             PURPLE_STUN_NAT_TYPE_SYMMETRIC
-#define GaimStunNatType  PurpleStunNatType
+#define PurpleStunNatType  PurpleStunNatType
 
-/* why didn't this have a Gaim prefix before? */
+/* why didn't this have a Purple prefix before? */
 #define StunCallback  PurpleStunCallback
 
 #define gaim_stun_discover  purple_stun_discover
@@ -2043,7 +2043,7 @@
 /* suggested rename: PurpleUPnpMappingHandle */
 #define UPnPMappingAddRemove  PurpleUPnPMappingAddRemove
 
-#define GaimUPnPCallback  PurpleUPnPCallback
+#define PurpleUPnPCallback  PurpleUPnPCallback
 
 #define gaim_upnp_discover             purple_upnp_discover
 #define gaim_upnp_get_public_ip        purple_upnp_get_public_ip
@@ -2054,12 +2054,12 @@
 
 /* from util.h */
 
-#define GaimUtilFetchUrlData  PurpleUtilFetchUrlData
-#define GaimMenuAction        PurpleMenuAction
+#define PurpleUtilFetchUrlData  PurpleUtilFetchUrlData
+#define PurpleMenuAction        PurpleMenuAction
 
-#define GaimInfoFieldFormatCallback  PurpleIntoFieldFormatCallback
+#define PurpleInfoFieldFormatCallback  PurpleIntoFieldFormatCallback
 
-#define GaimKeyValuePair  PurpleKeyValuePair
+#define PurpleKeyValuePair  PurpleKeyValuePair
 
 #define gaim_menu_action_new   purple_menu_action_new
 #define gaim_menu_action_free  purple_menu_action_free
@@ -2142,7 +2142,7 @@
 
 #define gaim_url_parse  purple_url_parse
 
-#define GaimUtilFetchUrlCallback  PurpleUtilFetchUrlCallback
+#define PurpleUtilFetchUrlCallback  PurpleUtilFetchUrlCallback
 #define gaim_util_fetch_url          purple_util_fetch_url
 #define gaim_util_fetch_url_request  purple_util_fetch_url_request
 #define gaim_util_fetch_url_cancel   purple_util_fetch_url_cancel
@@ -2189,7 +2189,7 @@
 #define GAIM_TYPE_POINTER  PURPLE_TYPE_POINTER
 #define GAIM_TYPE_ENUM     PURPLE_TYPE_ENUM
 #define GAIM_TYPE_BOXED    PURPLE_TYPE_BOXED
-#define GaimType  PurpleType
+#define PurpleType  PurpleType
 
 
 #define GAIM_SUBTYPE_UNKNOWN       PURPLE_SUBTYPE_UNKNOWN
@@ -2210,9 +2210,9 @@
 #define GAIM_SUBTYPE_SAVEDSTATUS   PURPLE_SUBTYPE_SAVEDSTATUS
 #define GAIM_SUBTYPE_XMLNODE       PURPLE_SUBTYPE_XMLNODE
 #define GAIM_SUBTYPE_USERINFO      PURPLE_SUBTYPE_USERINFO
-#define GaimSubType  PurpleSubType
+#define PurpleSubType  PurpleSubType
 
-#define GaimValue  PurpleValue
+#define PurpleValue  PurpleValue
 
 #define gaim_value_new                purple_value_new
 #define gaim_value_new_outgoing       purple_value_new_outgoing
@@ -2265,9 +2265,9 @@
 
 /* from whiteboard.h */
 
-#define GaimWhiteboardPrplOps  PurpleWhiteboardPrplOps
-#define GaimWhiteboard         PurpleWhiteboard
-#define GaimWhiteboardUiOps    PurpleWhiteboardUiOps
+#define PurpleWhiteboardPrplOps  PurpleWhiteboardPrplOps
+#define PurpleWhiteboard         PurpleWhiteboard
+#define PurpleWhiteboardUiOps    PurpleWhiteboardUiOps
 
 #define gaim_whiteboard_set_ui_ops    purple_whiteboard_set_ui_ops
 #define gaim_whiteboard_set_prpl_ops  purple_whiteboard_set_prpl_ops

@@ -16,7 +16,7 @@
 
 #include "AIAccountViewController.h"
 
-@interface AIGaimOscarAccountViewController : AIAccountViewController {
+@interface AIPurpleOscarAccountViewController : AIAccountViewController {
     IBOutlet        NSTextView                      *textView_textProfile;
 }
 

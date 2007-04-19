@@ -1,13 +1,13 @@
 //
-//  ESGaimQQAccount.h
+//  ESPurpleQQAccount.h
 //  Adium
 //
 //  Created by Evan Schoenberg on 8/7/06.
 //
 
-#import "CBGaimAccount.h"
+#import "CBPurpleAccount.h"
 
-@interface ESGaimQQAccount : CBGaimAccount {
+@interface ESPurpleQQAccount : CBPurpleAccount {
 
 }
 

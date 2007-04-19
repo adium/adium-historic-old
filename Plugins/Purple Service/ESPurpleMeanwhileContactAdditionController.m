@@ -1,20 +1,20 @@
 //
-//  ESGaimMeanwhileContactAdditionController.m
+//  ESPurpleMeanwhileContactAdditionController.m
 //  Adium
 //
 //  Created by Evan Schoenberg on 4/29/05.
 //  Copyright 2006 The Adium Team. All rights reserved.
 //
 
-#import "ESGaimMeanwhileContactAdditionController.h"
-#import "SLGaimCocoaAdapter.h"
+#import "ESPurpleMeanwhileContactAdditionController.h"
+#import "SLPurpleCocoaAdapter.h"
 #import <Adium/AIServiceIcons.h>
 #import <Adium/NDRunLoopMessenger.h>
 
 
 //XXX This is close to a generic implementation.... this should be expanded to work for any search results.
 
-@interface ESGaimMeanwhileContactAdditionController (PRIVATE)
+@interface ESPurpleMeanwhileContactAdditionController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName withDict:(NSDictionary *)inInfoDict;
 - (void)doubleClickInTableView:(id)sender;
 - (oneway void)doRequestFieldsCbValue:(NSValue *)inCallBackValue
@@ -22,13 +22,13 @@
 									fieldsValue:(NSValue *)inFieldsValue;	
 @end
 
-@implementation ESGaimMeanwhileContactAdditionController
+@implementation ESPurpleMeanwhileContactAdditionController
 
-+ (ESGaimMeanwhileContactAdditionController *)showContactAdditionListWithDict:(NSDictionary *)inInfoDict
++ (ESPurpleMeanwhileContactAdditionController *)showContactAdditionListWithDict:(NSDictionary *)inInfoDict
 {
-	ESGaimMeanwhileContactAdditionController	*controller;
+	ESPurpleMeanwhileContactAdditionController	*controller;
 	
-	if ((controller = [[self alloc] initWithWindowNibName:@"GaimMeanwhileContactAdditionWindow"
+	if ((controller = [[self alloc] initWithWindowNibName:@"PurpleMeanwhileContactAdditionWindow"
 												 withDict:inInfoDict])) {
 		
 		[controller showWindow:nil];
@@ -77,14 +77,14 @@
 
 - (int)numberOfRowsInTableView:(NSTableView *)aTableView
 {
-	GaimNotifySearchResults *results = [[infoDict objectForKey:@"GaimNotifySearchResultsValue"] pointerValue];
-	return gaim_notify_searchresults_get_rows_count(results);
+	PurpleNotifySearchResults *results = [[infoDict objectForKey:@"PurpleNotifySearchResultsValue"] pointerValue];
+	return purple_notify_searchresults_get_rows_count(results);
 }
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 {
-	GaimNotifySearchResults *results = [[infoDict objectForKey:@"GaimNotifySearchResultsValue"] pointerValue];
-	GList *rowList = gaim_notify_searchresults_row_get(results, rowIndex);
+	PurpleNotifySearchResults *results = [[infoDict objectForKey:@"PurpleNotifySearchResultsValue"] pointerValue];
+	GList *rowList = purple_notify_searchresults_row_get(results, rowIndex);
 
 	NSString *identifier = [aTableColumn identifier];
 
@@ -113,30 +113,30 @@
 - (IBAction)pressedButton:(id)sender
 {
 	if (sender == button_OK) {
-		GaimNotifySearchResults		*results = [[infoDict objectForKey:@"GaimNotifySearchResultsValue"] pointerValue];
+		PurpleNotifySearchResults		*results = [[infoDict objectForKey:@"PurpleNotifySearchResultsValue"] pointerValue];
 		int							selectedRow = [tableView_choices selectedRow];
-		GList						*rowList = gaim_notify_searchresults_row_get(results, selectedRow);
+		GList						*rowList = purple_notify_searchresults_row_get(results, selectedRow);
 		GList						*buttons = results->buttons;
 
-		GaimNotifySearchButton		*button;
+		PurpleNotifySearchButton		*button;
 
 		//IM is first; Add is 2nd
 		button = g_list_nth_data(buttons, 1);
 		
-		button->callback([[infoDict objectForKey:@"GaimConnection"] pointerValue], rowList, [[infoDict objectForKey:@"userData"] pointerValue]);
+		button->callback([[infoDict objectForKey:@"PurpleConnection"] pointerValue], rowList, [[infoDict objectForKey:@"userData"] pointerValue]);
 
 		[infoDict release]; infoDict = nil;
 		[[self window] close];
 
 	} else if (sender == button_cancel) {
-		gaim_notify_close(GAIM_NOTIFY_SEARCHRESULTS, self);
+		purple_notify_close(GAIM_NOTIFY_SEARCHRESULTS, self);
 		[[self window] performClose:nil];
 	}
 }
 
 - (void)windowWillClose:(id)sender
 {
-	gaim_notify_close(GAIM_NOTIFY_SEARCHRESULTS, self);
+	purple_notify_close(GAIM_NOTIFY_SEARCHRESULTS, self);
 }
 
 /*!

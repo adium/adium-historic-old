@@ -14,26 +14,26 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "adiumGaimRequest.h"
-#import "UndeclaredLibgaimFunctions.h"
-#import "ESGaimRequestActionController.h"
-#import "ESGaimRequestWindowController.h"
-#import "ESGaimFileReceiveRequestController.h"
-#import "ESGaimMeanwhileContactAdditionController.h"
+#import "adiumPurpleRequest.h"
+#import "UndeclaredLibpurpleFunctions.h"
+#import "ESPurpleRequestActionController.h"
+#import "ESPurpleRequestWindowController.h"
+#import "ESPurpleFileReceiveRequestController.h"
+#import "ESPurpleMeanwhileContactAdditionController.h"
 #import <Adium/NDRunLoopMessenger.h>
 #import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/ESFileTransfer.h>
 
 /*
- * Gaim requires us to return a handle from each of the request functions.  This handle is passed back to use in 
- * adiumGaimRequestClose() if the request window is no longer valid -- for example, a chat invitation window is open,
- * and then the account disconnects.  All window controllers created from adiumGaimRequest.m should return non-autoreleased
+ * Purple requires us to return a handle from each of the request functions.  This handle is passed back to use in 
+ * adiumPurpleRequestClose() if the request window is no longer valid -- for example, a chat invitation window is open,
+ * and then the account disconnects.  All window controllers created from adiumPurpleRequest.m should return non-autoreleased
  * instances of themselves.  They then release themselves when their window closes.  Rather than calling
- * [[self window] close], they should use gaim_request_close_with_handle(self) to ensure proper bookkeeping gaimside.
+ * [[self window] close], they should use purple_request_close_with_handle(self) to ensure proper bookkeeping gaimside.
  */
  
 //Jabber registration
-#include <Libgaim/jabber.h>
+#include <Libpurple/jabber.h>
 
 /* resolved id for Meanwhile */
 struct resolved_id {
@@ -73,7 +73,7 @@ NSString *processButtonText(NSString *inButtonText)
 	
 }
 
-static void *adiumGaimRequestInput(
+static void *adiumPurpleRequestInput(
 								   const char *title, const char *primary,
 								   const char *secondary, const char *defaultValue,
 								   gboolean multiline, gboolean masked, gchar *hint,
@@ -111,20 +111,20 @@ static void *adiumGaimRequestInput(
 	[infoDict setObject:[NSNumber numberWithBool:multiline] forKey:@"Multiline"];
 	[infoDict setObject:[NSNumber numberWithBool:masked] forKey:@"Masked"];
 	
-	GaimDebug (@"adiumGaimRequestInput: %@",infoDict);
+	PurpleDebug (@"adiumPurpleRequestInput: %@",infoDict);
 	
-	requestController = [ESGaimRequestWindowController showInputWindowWithDict:infoDict];
+	requestController = [ESPurpleRequestWindowController showInputWindowWithDict:infoDict];
 	
 	return (requestController ? requestController : [NSNull null]);
 }
 
-static void *adiumGaimRequestChoice(const char *title, const char *primary,
+static void *adiumPurpleRequestChoice(const char *title, const char *primary,
 									const char *secondary, unsigned int defaultValue,
 									const char *okText, GCallback okCb,
 									const char *cancelText, GCallback cancelCb,
 									void *userData, va_list choices)
 {
-	GaimDebug (@"adiumGaimRequestChoice: %s\n%s\n%s ",
+	PurpleDebug (@"adiumPurpleRequestChoice: %s\n%s\n%s ",
 			   (title ? title : ""),
 			   (primary ? primary : ""),
 			   (secondary ? secondary : ""));
@@ -132,8 +132,8 @@ static void *adiumGaimRequestChoice(const char *title, const char *primary,
 	return [NSNull null];
 }
 
-//Gaim requests the user take an action such as accept or deny a buddy's attempt to add us to her list 
-static void *adiumGaimRequestAction(const char *title, const char *primary,
+//Purple requests the user take an action such as accept or deny a buddy's attempt to add us to her list 
+static void *adiumPurpleRequestAction(const char *title, const char *primary,
 									const char *secondary, unsigned int default_action,
 									void *userData, size_t actionCount, va_list actions)
 {
@@ -150,14 +150,14 @@ static void *adiumGaimRequestAction(const char *title, const char *primary,
 		ok_cb = va_arg(actions, GCallback);
 		
 		//Redirect a "wants to send you" action request to our file choosing method so we handle it as a normal file transfer
-		((GaimRequestActionCb)ok_cb)(userData, default_action);
+		((PurpleRequestActionCb)ok_cb)(userData, default_action);
 		
     } else if (primaryString && ([primaryString rangeOfString:@"Create New Room"].location != NSNotFound)) {
 		/* Jabber's Create New Room dialog has a default option of accepting default values and another option
-		 * of configuration of the room... unfortunately, configuring the room requires a gaim_request_fields
+		 * of configuration of the room... unfortunately, configuring the room requires a purple_request_fields
 		 * implementation, which we don't have yet, so the dialog is just confusing.  Accept the defaults.
 		 */
-		// XXX remove when gaim_request_fields is implemented
+		// XXX remove when purple_request_fields is implemented
 		for (i = 0; i < actionCount; i += 1) {
 			GCallback	tempCallBack;
 			char		*buttonName;
@@ -170,7 +170,7 @@ static void *adiumGaimRequestAction(const char *title, const char *primary,
 			
 			//Perform the default action
 			if (i == default_action) {
-				GaimRequestActionCb callBack = (GaimRequestActionCb)tempCallBack;
+				PurpleRequestActionCb callBack = (PurpleRequestActionCb)tempCallBack;
 				callBack(userData, default_action);
 				
 				break;
@@ -214,14 +214,14 @@ static void *adiumGaimRequestAction(const char *title, const char *primary,
 			titleString,@"Title String",
 			msg,@"Message",nil];
 		
-		requestController = [ESGaimRequestActionController showActionWindowWithDict:infoDict];
+		requestController = [ESPurpleRequestActionController showActionWindowWithDict:infoDict];
 	}
 
 	return (requestController ? requestController : [NSNull null]);
 }
 
-static void *adiumGaimRequestFields(const char *title, const char *primary,
-									const char *secondary, GaimRequestFields *fields,
+static void *adiumPurpleRequestFields(const char *title, const char *primary,
+									const char *secondary, PurpleRequestFields *fields,
 									const char *okText, GCallback okCb,
 									const char *cancelText, GCallback cancelCb,
 									void *userData)
@@ -233,64 +233,64 @@ static void *adiumGaimRequestFields(const char *title, const char *primary,
 		[titleString rangeOfString:@"new jabber"].location != NSNotFound) {
 		/* Jabber registration request. Instead of displaying a request dialogue, we fill in the information automatically.
 		 * And by that, I mean that we accept all the default empty values, since the username and password are preset for us. */
-		((GaimRequestFieldsCb)okCb)(userData, fields);
+		((PurpleRequestFieldsCb)okCb)(userData, fields);
 		
 	} else {		
-		GaimDebug (@"adiumGaimRequestFields: %s\n%s\n%s ",
+		PurpleDebug (@"adiumPurpleRequestFields: %s\n%s\n%s ",
 				   (title ? title : ""),
 				   (primary ? primary : ""),
 				   (secondary ? secondary : ""));
 		
 		GList					*gl, *fl, *field_list;
-		GaimRequestFieldGroup	*group;
+		PurpleRequestFieldGroup	*group;
 
 		//Look through each group, processing each field
-		for (gl = gaim_request_fields_get_groups(fields);
+		for (gl = purple_request_fields_get_groups(fields);
 			 gl != NULL;
 			 gl = gl->next) {
 			
 			group = gl->data;
-			field_list = gaim_request_field_group_get_fields(group);
+			field_list = purple_request_field_group_get_fields(group);
 			
 			for (fl = field_list; fl != NULL; fl = fl->next) {
 				/*
 				typedef enum
 				{
-					GAIM_REQUEST_FIELD_NONE,
-					GAIM_REQUEST_FIELD_STRING,
-					GAIM_REQUEST_FIELD_INTEGER,
-					GAIM_REQUEST_FIELD_BOOLEAN,
-					GAIM_REQUEST_FIELD_CHOICE,
-					GAIM_REQUEST_FIELD_LIST,
-					GAIM_REQUEST_FIELD_LABEL,
-					GAIM_REQUEST_FIELD_ACCOUNT
-				} GaimRequestFieldType;
+					PURPLE_REQUEST_FIELD_NONE,
+					PURPLE_REQUEST_FIELD_STRING,
+					PURPLE_REQUEST_FIELD_INTEGER,
+					PURPLE_REQUEST_FIELD_BOOLEAN,
+					PURPLE_REQUEST_FIELD_CHOICE,
+					PURPLE_REQUEST_FIELD_LIST,
+					PURPLE_REQUEST_FIELD_LABEL,
+					PURPLE_REQUEST_FIELD_ACCOUNT
+				} PurpleRequestFieldType;
 				*/
 
 				/*
-				GaimRequestField		*field;
-				GaimRequestFieldType	type;
+				PurpleRequestField		*field;
+				PurpleRequestFieldType	type;
 				
-				field = (GaimRequestField *)fl->data;
-				type = gaim_request_field_get_type(field);
-				if (type == GAIM_REQUEST_FIELD_STRING) {
-					if (strcasecmp("username", gaim_request_field_get_label(field)) == 0) {
-						gaim_request_field_string_set_value(field, gaim_account_get_username(account));
-					} else if (strcasecmp("password", gaim_request_field_get_label(field)) == 0) {
-						gaim_request_field_string_set_value(field, gaim_account_get_password(account));
+				field = (PurpleRequestField *)fl->data;
+				type = purple_request_field_get_type(field);
+				if (type == PURPLE_REQUEST_FIELD_STRING) {
+					if (strcasecmp("username", purple_request_field_get_label(field)) == 0) {
+						purple_request_field_string_set_value(field, purple_account_get_username(account));
+					} else if (strcasecmp("password", purple_request_field_get_label(field)) == 0) {
+						purple_request_field_string_set_value(field, purple_account_get_password(account));
 					}
 				}
 				 */
 			}
 			
 		}
-//		((GaimRequestFieldsCb)okCb)(userData, fields);
+//		((PurpleRequestFieldsCb)okCb)(userData, fields);
 	}
     
 	return (requestController ? requestController : [NSNull null]);
 }
 
-static void *adiumGaimRequestFile(const char *title, const char *filename,
+static void *adiumPurpleRequestFile(const char *title, const char *filename,
 								  gboolean savedialog, GCallback ok_cb,
 								  GCallback cancel_cb,void *user_data)
 {
@@ -303,29 +303,29 @@ static void *adiumGaimRequestFile(const char *title, const char *filename,
 			NSSavePanel *savePanel = [NSSavePanel savePanel];
 			
 			if ([savePanel runModalForDirectory:nil file:nil] == NSOKButton) {
-				((GaimRequestFileCb)ok_cb)(user_data, [[savePanel filename] UTF8String]);
+				((PurpleRequestFileCb)ok_cb)(user_data, [[savePanel filename] UTF8String]);
 			}
 		} else if ([titleString rangeOfString:@"Import"].location != NSNotFound) {
 			NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 			
 			if ([openPanel runModalForDirectory:nil file:nil types:nil] == NSOKButton) {
-				((GaimRequestFileCb)ok_cb)(user_data, [[openPanel filename] UTF8String]);
+				((PurpleRequestFileCb)ok_cb)(user_data, [[openPanel filename] UTF8String]);
 			}
 		}
 	} else {
-		GaimXfer *xfer = (GaimXfer *)user_data;
+		PurpleXfer *xfer = (PurpleXfer *)user_data;
 		if (xfer) {
-			GaimXferType xferType = gaim_xfer_get_type(xfer);
+			PurpleXferType xferType = purple_xfer_get_type(xfer);
 			
-			if (xferType == GAIM_XFER_RECEIVE) {
-				GaimDebug (@"File request: %s from %s on IP %s",xfer->filename,xfer->who,gaim_xfer_get_remote_ip(xfer));
+			if (xferType == PURPLE_XFER_RECEIVE) {
+				PurpleDebug (@"File request: %s from %s on IP %s",xfer->filename,xfer->who,purple_xfer_get_remote_ip(xfer));
 				
 				ESFileTransfer  *fileTransfer;
-				NSString		*destinationUID = [NSString stringWithUTF8String:gaim_normalize(xfer->account,xfer->who)];
+				NSString		*destinationUID = [NSString stringWithUTF8String:purple_normalize(xfer->account,xfer->who)];
 				
 				//Ask the account for an ESFileTransfer* object
 				fileTransfer = [accountLookup(xfer->account) newFileTransferObjectWith:destinationUID
-																				  size:gaim_xfer_get_size(xfer)
+																				  size:purple_xfer_get_size(xfer)
 																		remoteFilename:[NSString stringWithUTF8String:(xfer->filename)]];
 				
 				//Configure the new object for the transfer
@@ -337,29 +337,29 @@ static void *adiumGaimRequestFile(const char *title, const char *filename,
 				NSDictionary	*infoDict;
 				
 				infoDict = [NSDictionary dictionaryWithObjectsAndKeys:
-					accountLookup(xfer->account), @"CBGaimAccount",
+					accountLookup(xfer->account), @"CBPurpleAccount",
 					fileTransfer, @"ESFileTransfer",
 					nil];
-				requestController = [ESGaimFileReceiveRequestController showFileReceiveWindowWithDict:infoDict];
-				AILog(@"GAIM_XFER_RECEIVE: Request controller for %x is %@",xfer,requestController);
-			} else if (xferType == GAIM_XFER_SEND) {
+				requestController = [ESPurpleFileReceiveRequestController showFileReceiveWindowWithDict:infoDict];
+				AILog(@"PURPLE_XFER_RECEIVE: Request controller for %x is %@",xfer,requestController);
+			} else if (xferType == PURPLE_XFER_SEND) {
 				if (xfer->local_filename != NULL && xfer->filename != NULL) {
-					AILog(@"GAIM_XFER_SEND: %x (%s)",xfer,xfer->local_filename);
-					((GaimRequestFileCb)ok_cb)(user_data, xfer->local_filename);
+					AILog(@"PURPLE_XFER_SEND: %x (%s)",xfer,xfer->local_filename);
+					((PurpleRequestFileCb)ok_cb)(user_data, xfer->local_filename);
 				} else {
-					((GaimRequestFileCb)cancel_cb)(user_data, xfer->local_filename);
-					[[SLGaimCocoaAdapter sharedInstance] displayFileSendError];
+					((PurpleRequestFileCb)cancel_cb)(user_data, xfer->local_filename);
+					[[SLPurpleCocoaAdapter sharedInstance] displayFileSendError];
 				}
 			}
 		}
 	}
 	
-	AILog(@"adiumGaimRequestFile() returning %@",(requestController ? requestController : [NSNull null]));
+	AILog(@"adiumPurpleRequestFile() returning %@",(requestController ? requestController : [NSNull null]));
 	return (requestController ? requestController : [NSNull null]);
 }
 
 /*!
- * @brief Gaim requests that we close a request window
+ * @brief Purple requests that we close a request window
  *
  * This is not sent after user interaction with the window.  Instead, it is sent when the window is no longer valid;
  * for example, a chat invite window after the relevant account disconnects.  We should immediately close the window.
@@ -367,10 +367,10 @@ static void *adiumGaimRequestFile(const char *title, const char *filename,
  * @param type The request type
  * @param uiHandle must be an id; it should either be NSNull or an object which can respond to close, such as NSWindowController.
  */
-static void adiumGaimRequestClose(GaimRequestType type, void *uiHandle)
+static void adiumPurpleRequestClose(PurpleRequestType type, void *uiHandle)
 {
 	id	ourHandle = (id)uiHandle;
-	AILog(@"adiumGaimRequestClose %@ (%i)",uiHandle,[ourHandle respondsToSelector:@selector(gaimRequestClose)]);
+	AILog(@"adiumPurpleRequestClose %@ (%i)",uiHandle,[ourHandle respondsToSelector:@selector(gaimRequestClose)]);
 	if ([ourHandle respondsToSelector:@selector(gaimRequestClose)]) {
 		[ourHandle gaimRequestClose];
 
@@ -379,26 +379,26 @@ static void adiumGaimRequestClose(GaimRequestType type, void *uiHandle)
 	}
 }
 
-static GaimRequestUiOps adiumGaimRequestOps = {
-    adiumGaimRequestInput,
-    adiumGaimRequestChoice,
-    adiumGaimRequestAction,
-    adiumGaimRequestFields,
-	adiumGaimRequestFile,
-    adiumGaimRequestClose
+static PurpleRequestUiOps adiumPurpleRequestOps = {
+    adiumPurpleRequestInput,
+    adiumPurpleRequestChoice,
+    adiumPurpleRequestAction,
+    adiumPurpleRequestFields,
+	adiumPurpleRequestFile,
+    adiumPurpleRequestClose
 };
 
-GaimRequestUiOps *adium_gaim_request_get_ui_ops()
+PurpleRequestUiOps *adium_purple_request_get_ui_ops()
 {
-	return &adiumGaimRequestOps;
+	return &adiumPurpleRequestOps;
 }
 
-@implementation ESGaimRequestAdapter
+@implementation ESPurpleRequestAdapter
 
 + (void)requestCloseWithHandle:(id)handle
 {
 	AILog(@"gaimThreadRequestCloseWithHandle: %@",handle);
-	gaim_request_close_with_handle(handle);
+	purple_request_close_with_handle(handle);
 }
 
 @end

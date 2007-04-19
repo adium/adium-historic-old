@@ -15,19 +15,19 @@
  */
 
 #import "ESDotMacService.h"
-#import "ESGaimDotMacAccount.h"
-#import "ESGaimDotMacAccountViewController.h"
+#import "ESPurpleDotMacAccount.h"
+#import "ESPurpleDotMacAccountViewController.h"
 
 @implementation ESDotMacService
 
 //Account Creation
 - (Class)accountClass{
-	return [ESGaimDotMacAccount class];
+	return [ESPurpleDotMacAccount class];
 }
 
 //
 - (AIAccountViewController *)accountViewController{
-    return [ESGaimDotMacAccountViewController accountViewController];
+    return [ESPurpleDotMacAccountViewController accountViewController];
 }
 
 //Service Description

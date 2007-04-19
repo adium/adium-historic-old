@@ -15,24 +15,24 @@
  */
 
 #import <Adium/AIStatusControllerProtocol.h>
-#import "DCGaimGaduGaduJoinChatViewController.h"
+#import "DCPurpleGaduGaduJoinChatViewController.h"
 #import "ESGaduGaduService.h"
-#import "ESGaimGaduGaduAccount.h"
-#import "ESGaimGaduGaduAccountViewController.h"
+#import "ESPurpleGaduGaduAccount.h"
+#import "ESPurpleGaduGaduAccountViewController.h"
 
 @implementation ESGaduGaduService
 
 //Account Creation
 - (Class)accountClass{
-	return [ESGaimGaduGaduAccount class];
+	return [ESPurpleGaduGaduAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return [ESGaimGaduGaduAccountViewController accountViewController];
+    return [ESPurpleGaduGaduAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return [DCGaimGaduGaduJoinChatViewController joinChatView];
+	return [DCPurpleGaduGaduJoinChatViewController joinChatView];
 }
 
 //Service Description

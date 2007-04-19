@@ -1,14 +1,14 @@
 //
-//  ESGaimRequestAbstractWindowController.m
+//  ESPurpleRequestAbstractWindowController.m
 //  Adium
 //
 //  Created by Evan Schoenberg on 9/22/05.
 //
 
-#import "ESGaimRequestAbstractWindowController.h"
-#import "adiumGaimRequest.h"
+#import "ESPurpleRequestAbstractWindowController.h"
+#import "adiumPurpleRequest.h"
 
-@implementation ESGaimRequestAbstractWindowController
+@implementation ESPurpleRequestAbstractWindowController
 
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {
@@ -22,7 +22,7 @@
 /*!
  * @brief This is where subclasses should generally perform actions they would normally do in windowWillClose:
  *
- * ESGaimRequestAbstractWindowController calls this method only when windowWillClose: is triggered by user action
+ * ESPurpleRequestAbstractWindowController calls this method only when windowWillClose: is triggered by user action
  * as opposed to libgaim closing the window.
  */
 - (void)doWindowWillClose {};
@@ -36,7 +36,7 @@
 		[self doWindowWillClose];
 		
 		//Inform libgaim that the request window closed
-		[ESGaimRequestAdapter requestCloseWithHandle:self];
+		[ESPurpleRequestAdapter requestCloseWithHandle:self];
 	}
 }	
 

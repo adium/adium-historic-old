@@ -14,14 +14,14 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "CBGaimAccount.h"
+#import "CBPurpleAccount.h"
 #import "ESMSNService.h"
-#include <Libgaim/msn.h>
+#include <Libpurple/msn.h>
 
 #define KEY_MSN_HTTP_CONNECT_METHOD		@"MSN:HTTP Connect Method"
 #define KEY_MSN_DISPLAY_NAMED_CHANGED	@"MSN:Display Name Changed"
 
-@interface ESGaimMSNAccount : CBGaimAccount <AIAccount_Files>{
+@interface ESPurpleMSNAccount : CBPurpleAccount <AIAccount_Files>{
 	NSDate		*lastFriendlyNameChange;
 	NSString	*queuedFriendlyName;
 

@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "CBGaimAccount.h"
-#import "SLGaimCocoaAdapter.h"
+#import "CBPurpleAccount.h"
+#import "SLPurpleCocoaAdapter.h"
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
@@ -47,7 +47,7 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AISystemNetworkDefaults.h>
 
-#import "adiumGaimRequest.h"
+#import "adiumPurpleRequest.h"
 
 #import "ESMSNService.h" //why oh why must the superclass know about MSN specific things!?
 
@@ -58,7 +58,7 @@
 
 #define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
 
-@interface CBGaimAccount (PRIVATE)
+@interface CBPurpleAccount (PRIVATE)
 - (NSString *)_userIconCachePath;
 
 - (NSString *)_mapIncomingGroupName:(NSString *)name;
@@ -66,42 +66,42 @@
 
 - (void)setTypingFlagOfChat:(AIChat *)inChat to:(NSNumber *)typingState;
 
-- (void)_receivedMessage:(NSAttributedString *)attributedMessage inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date;
-- (void)_sentMessage:(NSAttributedString *)attributedMessage inChat:(AIChat *)chat toDestinationListContact:(AIListContact *)destinationContact flags:(GaimMessageFlags)flags date:(NSDate *)date;
+- (void)_receivedMessage:(NSAttributedString *)attributedMessage inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(PurpleMessageFlags)flags date:(NSDate *)date;
+- (void)_sentMessage:(NSAttributedString *)attributedMessage inChat:(AIChat *)chat toDestinationListContact:(AIListContact *)destinationContact flags:(PurpleMessageFlags)flags date:(NSDate *)date;
 - (NSString *)_messageImageCachePathForID:(int)imageID;
 
-- (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer;
+- (ESFileTransfer *)createFileTransferObjectForXfer:(PurpleXfer *)xfer;
 
 - (void)displayError:(NSString *)errorDesc;
 - (NSNumber *)shouldCheckMail;
 
-- (void)configureGaimAccountNotifyingTarget:(id)target selector:(SEL)selector;
-- (void)continueConnectWithConfiguredGaimAccount;
+- (void)configurePurpleAccountNotifyingTarget:(id)target selector:(SEL)selector;
+- (void)continueConnectWithConfiguredPurpleAccount;
 - (void)continueConnectWithConfiguredProxy;
-- (void)continueRegisterWithConfiguredGaimAccount;
+- (void)continueRegisterWithConfiguredPurpleAccount;
 
-- (void)setAccountProfileTo:(NSAttributedString *)profile configureGaimAccountContext:(NSInvocation *)inInvocation;
+- (void)setAccountProfileTo:(NSAttributedString *)profile configurePurpleAccountContext:(NSInvocation *)inInvocation;
 
 - (void)performAccountMenuAction:(NSMenuItem *)sender;
 @end
 
-@implementation CBGaimAccount
+@implementation CBPurpleAccount
 
-static SLGaimCocoaAdapter *gaimThread = nil;
+static SLPurpleCocoaAdapter *gaimThread = nil;
 
-// The GaimAccount currently associated with this Adium account
-- (GaimAccount*)gaimAccount
+// The PurpleAccount currently associated with this Adium account
+- (PurpleAccount*)gaimAccount
 {
 	//Create a gaim account if one does not already exist
 	if (!account) {
-		[self createNewGaimAccount];
-		GaimDebug(@"%x: created GaimAccount 0x%x with UID %@, protocolPlugin %s", [NSRunLoop currentRunLoop],account, [self UID], [self protocolPlugin]);
+		[self createNewPurpleAccount];
+		PurpleDebug(@"%x: created PurpleAccount 0x%x with UID %@, protocolPlugin %s", [NSRunLoop currentRunLoop],account, [self UID], [self protocolPlugin]);
 	}
 	
     return account;
 }
 
-- (SLGaimCocoaAdapter *)gaimThread
+- (SLPurpleCocoaAdapter *)gaimThread
 {
 	return gaimThread;
 }
@@ -146,7 +146,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		[self gotGroupForContact:theContact];
 	} else {
-		GaimDebug(@"Got %@ for %@ while not online",groupName,theContact);
+		PurpleDebug(@"Got %@ for %@ while not online",groupName,theContact);
 	}
 }
 
@@ -234,11 +234,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 }
 
 /*!
- * @brief Status name to use for a Gaim buddy
+ * @brief Status name to use for a Purple buddy
  *
- * Called by SLGaimCocoaAdapter on the gaim thread
+ * Called by SLPurpleCocoaAdapter on the gaim thread
  */
-- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)buddy
+- (NSString *)statusNameForPurpleBuddy:(PurpleBuddy *)buddy
 {
 	return nil;
 }
@@ -246,13 +246,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 /*!
  * @brief Status message for a contact
  *
- * Called by SLGaimCocoaAdapter on the gaim thread
+ * Called by SLPurpleCocoaAdapter on the gaim thread
  */
-- (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)buddy
+- (NSAttributedString *)statusMessageForPurpleBuddy:(PurpleBuddy *)buddy
 {
-	GaimPresence	*presence = gaim_buddy_get_presence(buddy);
-	GaimStatus		*status = (presence ? gaim_presence_get_active_status(presence) : NULL);
-	const char		*message = (status ? gaim_status_get_attr_string(status, "message") : NULL);
+	PurplePresence	*presence = purple_buddy_get_presence(buddy);
+	PurpleStatus		*status = (presence ? purple_presence_get_active_status(presence) : NULL);
+	const char		*message = (status ? purple_status_get_attr_string(status, "message") : NULL);
 	NSString		*messageString = (message ? [NSString stringWithUTF8String:message] : nil);
 
 	NSAttributedString	*statusMessage = nil;
@@ -271,7 +271,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 /*!
  * @brief Update the status message and away state of the contact
  *
- *  Called by SLGaimCocoaAdapter on the main thread
+ *  Called by SLPurpleCocoaAdapter on the main thread
  */
 - (void)updateStatusForContact:(AIListContact *)theContact toStatusType:(NSNumber *)statusTypeNumber statusName:(NSString *)statusName statusMessage:(NSAttributedString *)statusMessage
 {
@@ -333,9 +333,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (NSString *)processedIncomingUserInfo:(NSString *)inString
 {
 	NSMutableString *returnString = nil;
-	if ([inString rangeOfString:@"Gaim could not find any information in the user's profile. The user most likely does not exist."].location != NSNotFound) {
+	if ([inString rangeOfString:@"Purple could not find any information in the user's profile. The user most likely does not exist."].location != NSNotFound) {
 		returnString = [[inString mutableCopy] autorelease];
-		[returnString replaceOccurrencesOfString:@"Gaim could not find any information in the user's profile. The user most likely does not exist."
+		[returnString replaceOccurrencesOfString:@"Purple could not find any information in the user's profile. The user most likely does not exist."
 									  withString:AILocalizedString(@"Adium could not find any information in the user's profile. This may not be a registered name.", "Message shown when a contact's profile can't be found")
 										 options:NSLiteralSearch
 										   range:NSMakeRange(0, [returnString length])];
@@ -344,20 +344,20 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	return (returnString ? returnString : inString);
 }
 
-- (void)updateUserInfo:(AIListContact *)theContact withData:(GaimNotifyUserInfo *)user_info
+- (void)updateUserInfo:(AIListContact *)theContact withData:(PurpleNotifyUserInfo *)user_info
 {
-	char *user_info_text = gaim_notify_user_info_get_text_with_newline(user_info, "<BR />");
-	NSMutableString *mutableGaimUserInfo = (user_info_text ? [NSMutableString stringWithUTF8String:user_info_text] : nil);
+	char *user_info_text = purple_notify_user_info_get_text_with_newline(user_info, "<BR />");
+	NSMutableString *mutablePurpleUserInfo = (user_info_text ? [NSMutableString stringWithUTF8String:user_info_text] : nil);
 	g_free(user_info_text);
 
 	//Libgaim may pass us HTML with embedded </html> tags. Yuck. Don't abort when we hit one in AIHTMLDecoder.
-	[mutableGaimUserInfo replaceOccurrencesOfString:@"</html>"
+	[mutablePurpleUserInfo replaceOccurrencesOfString:@"</html>"
 										 withString:@""
 											options:(NSCaseInsensitiveSearch | NSLiteralSearch)
-											  range:NSMakeRange(0, [mutableGaimUserInfo length])];
+											  range:NSMakeRange(0, [mutablePurpleUserInfo length])];
 
-	NSString	*gaimUserInfo = mutableGaimUserInfo;
-	gaimUserInfo = processGaimImages(gaimUserInfo, self);
+	NSString	*gaimUserInfo = mutablePurpleUserInfo;
+	gaimUserInfo = processPurpleImages(gaimUserInfo, self);
 	gaimUserInfo = [self processedIncomingUserInfo:gaimUserInfo];
 
 	[theContact setProfile:[AIHTMLDecoder decodeHTML:gaimUserInfo]
@@ -368,15 +368,15 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 }
 
 /*!
- * @brief Gaim removed a contact from the local blist
+ * @brief Purple removed a contact from the local blist
  *
  * This can happen in many situations:
  *	- For every contact on an account when the account signs off
  *	- For a contact as it is deleted by the user
- *	- For a contact as it is deleted by Gaim (e.g. when Sametime refuses an addition because it is known to be invalid)
+ *	- For a contact as it is deleted by Purple (e.g. when Sametime refuses an addition because it is known to be invalid)
  *	- In the middle of the move process as a contact moves from one group to another
  *
- * We need not take any action; we'll be notified of changes by Gaim as necessary.
+ * We need not take any action; we'll be notified of changes by Purple as necessary.
  */
 - (void)removeContact:(AIListContact *)theContact
 {
@@ -524,9 +524,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //	NSNumber *indexNumber;
 	
 	//Inform libgaim that the request window closed
-	//[ESGaimRequestAdapter requestCloseWithHandle:inWindowController];
+	//[ESPurpleRequestAdapter requestCloseWithHandle:inWindowController];
 	if (account) {
-		gaim_account_request_close(inWindowController);
+		purple_account_request_close(inWindowController);
 		
 		if (inDidAuthorize) {
 			callback = [[[infoDict objectForKey:@"authorizeCB"] retain] autorelease];
@@ -542,7 +542,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 #pragma mark Chats
 
 /*!
- * @brief Called by Gaim code when a chat should be opened by the interface
+ * @brief Called by Purple code when a chat should be opened by the interface
  *
  * If the user sent an initial message, this will be triggered and have no effect.
  *
@@ -552,7 +552,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
  * Another situation in which this is relevant is when we request joining a group chat; the chat should only be actually
  * opened once the server notifies us that we are in the room.
  *
- * This will ultimately call -[CBGaimAccount openChat:] below if the chat was not previously open.
+ * This will ultimately call -[CBPurpleAccount openChat:] below if the chat was not previously open.
  */
 - (void)addChat:(AIChat *)chat
 {
@@ -650,10 +650,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
 {
-	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
+	PurpleMessageFlags		flags = [[messageDict objectForKey:@"PurpleMessageFlags"] intValue];
 	
 	if ((flags & GAIM_MESSAGE_SEND) != 0) {
-        //Gaim is telling us that our message was sent successfully.		
+        //Purple is telling us that our message was sent successfully.		
 
 		//We can now tell the other side that we're done typing
 		//[gaimThread sendTyping:AINotTyping inChat:chat];
@@ -680,7 +680,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
 {	
-	GaimMessageFlags	flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
+	PurpleMessageFlags	flags = [[messageDict objectForKey:@"PurpleMessageFlags"] intValue];
 	NSAttributedString	*attributedMessage = [messageDict objectForKey:@"AttributedMessage"];;
 	NSString			*source = [messageDict objectForKey:@"Source"];
 
@@ -700,7 +700,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
-- (void)_receivedMessage:(NSAttributedString *)attributedMessage inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date
+- (void)_receivedMessage:(NSAttributedString *)attributedMessage inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(PurpleMessageFlags)flags date:(NSDate *)date
 {
 	AIContentMessage *messageObject = [AIContentMessage messageInChat:chat
 														   withSource:sourceContact
@@ -729,7 +729,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (BOOL)sendMessageObject:(AIContentMessage *)inContentMessage
 {
-	GaimMessageFlags		flags = GAIM_MESSAGE_RAW;
+	PurpleMessageFlags		flags = GAIM_MESSAGE_RAW;
 	
 	if ([inContentMessage isAutoreply]) {
 		flags |= GAIM_MESSAGE_AUTO_RESP;
@@ -751,7 +751,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
 {
 	NSString	*encodedString;
-	BOOL		didCommand = [gaimThread attemptGaimCommandOnMessage:[inContentMessage messageString]
+	BOOL		didCommand = [gaimThread attemptPurpleCommandOnMessage:[inContentMessage messageString]
 														 fromAccount:(AIAccount *)[inContentMessage source]
 															  inChat:[inContentMessage chat]];	
 	
@@ -801,7 +801,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
 {
-	GaimPluginProtocolInfo *prpl_info = NULL;
+	PurplePluginProtocolInfo *prpl_info = NULL;
 
 	if (account && account->gc && account->gc->prpl)
 		prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(account->gc->prpl);
@@ -845,7 +845,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 	
 	if (![emoticon path]) {
-		[emoticon setPath:[[NSBundle bundleForClass:[CBGaimAccount class]] pathForResource:@"missing_image"
+		[emoticon setPath:[[NSBundle bundleForClass:[CBPurpleAccount class]] pathForResource:@"missing_image"
 																					ofType:@"png"]];
 	}
 }
@@ -941,7 +941,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
-#pragma mark GaimConversation User Lists
+#pragma mark PurpleConversation User Lists
 - (NSString *)uidForContactWithUID:(NSString *)inUID inChat:(AIChat *)chat
 {
 	//No change for the superclass; subclasses may wish to modify it
@@ -956,14 +956,14 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	int			i, count;
 	BOOL		isNewArrival = (newArrivals && [newArrivals boolValue]);
 
-	GaimDebug(@"*** %@: addUsersArray:%@ toChat:%@",self,usersArray,chat);
+	PurpleDebug(@"*** %@: addUsersArray:%@ toChat:%@",self,usersArray,chat);
 
 	count = [usersArray count];
 	for (i = 0; i < count; i++) {
 		NSString				*contactName;
 		NSString				*alias;
 		AIListContact			*listContact;
-		GaimConvChatBuddyFlags	flags;
+		PurpleConvChatBuddyFlags	flags;
 
 		contactName = [usersArray objectAtIndex:i];
 		flags = [[flagsArray objectAtIndex:i] intValue];
@@ -989,7 +989,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		[chat removeParticipatingListObject:contact];
 		
-		GaimDebug(@"%@ removeUser:%@ fromChat:%@",self,contact,chat);
+		PurpleDebug(@"%@ removeUser:%@ fromChat:%@",self,contact,chat);
 	} else {
 		AILog(@"Could not remove %@ from %@ (contactWithUID: %@)",
 			  contactName,chat,[self contactWithUID:[self uidForContactWithUID:contactName inChat:chat]]);
@@ -1012,17 +1012,17 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(AIPrivacyType)type
 {
     if (type == AIPrivacyTypePermit)
-        return (gaim_privacy_permit_add(account,[[inObject UID] UTF8String],FALSE));
+        return (purple_privacy_permit_add(account,[[inObject UID] UTF8String],FALSE));
     else
-        return (gaim_privacy_deny_add(account,[[inObject UID] UTF8String],FALSE));
+        return (purple_privacy_deny_add(account,[[inObject UID] UTF8String],FALSE));
 }
 
 - (BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(AIPrivacyType)type
 {
     if (type == AIPrivacyTypePermit)
-        return (gaim_privacy_permit_remove(account,[[inObject UID] UTF8String],FALSE));
+        return (purple_privacy_permit_remove(account,[[inObject UID] UTF8String],FALSE));
     else
-        return (gaim_privacy_deny_remove(account,[[inObject UID] UTF8String],FALSE));
+        return (purple_privacy_deny_remove(account,[[inObject UID] UTF8String],FALSE));
 }
 
 - (NSArray *)listObjectsOnPrivacyList:(AIPrivacyType)type
@@ -1094,8 +1094,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (void)setPrivacyOptions:(AIPrivacyOption)option
 {
-	if (account && gaim_account_get_connection(account)) {
-		GaimPrivacyType privacyType;
+	if (account && purple_account_get_connection(account)) {
+		PurplePrivacyType privacyType;
 
 		switch (option) {
 			case AIPrivacyOptionAllowAll:
@@ -1117,11 +1117,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			
 		}
 		account->perm_deny = privacyType;
-		serv_set_permit_deny(gaim_account_get_connection(account));
+		serv_set_permit_deny(purple_account_get_connection(account));
 		AILog(@"Set privacy options for %@ (%x %x) to %i",
-			  self,account,gaim_account_get_connection(account),account->perm_deny);
+			  self,account,purple_account_get_connection(account),account->perm_deny);
 	} else {
-		AILog(@"Couldn't set privacy options for %@ (%x %x)",self,account,gaim_account_get_connection(account));
+		AILog(@"Couldn't set privacy options for %@ (%x %x)",self,account,purple_account_get_connection(account));
 	}
 }
 
@@ -1130,7 +1130,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	AIPrivacyOption privacyOption = -1;
 	
 	if (account) {
-		GaimPrivacyType privacyType = account->perm_deny;
+		PurplePrivacyType privacyType = account->perm_deny;
 		
 		switch (privacyType) {
 			case GAIM_PRIVACY_ALLOW_ALL:
@@ -1167,7 +1167,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Create a protocol-specific xfer object, set it up as requested, and begin sending
 - (void)_beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	GaimXfer *xfer = [self newOutgoingXferForFileTransfer:fileTransfer];
+	PurpleXfer *xfer = [self newOutgoingXferForFileTransfer:fileTransfer];
 	
 	if (xfer) {
 		//Associate the fileTransfer and the xfer with each other
@@ -1175,8 +1175,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		xfer->ui_data = [fileTransfer retain];
 		
 		//Set the filename
-		gaim_xfer_set_local_filename(xfer, [[fileTransfer localFilename] UTF8String]);
-		gaim_xfer_set_filename(xfer, [[[fileTransfer localFilename] lastPathComponent] UTF8String]);
+		purple_xfer_set_local_filename(xfer, [[fileTransfer localFilename] UTF8String]);
+		purple_xfer_set_filename(xfer, [[[fileTransfer localFilename] lastPathComponent] UTF8String]);
 		
 		/*
 		 Request that the transfer begins.
@@ -1187,24 +1187,24 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		[gaimThread xferRequest:xfer];
 	}
 }
-//By default, protocols can not create GaimXfer objects
-- (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
+//By default, protocols can not create PurpleXfer objects
+- (PurpleXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	GaimXfer				*newGaimXfer = NULL;
+	PurpleXfer				*newPurpleXfer = NULL;
 
-	if (account && gaim_account_get_connection(account)) {
-		GaimPlugin				*prpl;
-		GaimPluginProtocolInfo  *prpl_info = ((prpl = gaim_find_prpl(account->protocol_id)) ?
+	if (account && purple_account_get_connection(account)) {
+		PurplePlugin				*prpl;
+		PurplePluginProtocolInfo  *prpl_info = ((prpl = purple_find_prpl(account->protocol_id)) ?
 											  GAIM_PLUGIN_PROTOCOL_INFO(prpl) :
 											  NULL);
 
 		if (prpl_info && prpl_info->new_xfer) {
 			char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
-			newGaimXfer = (prpl_info->new_xfer)(gaim_account_get_connection(account), destsn);
+			newPurpleXfer = (prpl_info->new_xfer)(purple_account_get_connection(account), destsn);
 		}
 	}
 
-	return newGaimXfer;
+	return newPurpleXfer;
 }
 
 /* 
@@ -1215,7 +1215,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
  */
 - (void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	GaimDebug(@"File transfer request received: %@",fileTransfer);
+	PurpleDebug(@"File transfer request received: %@",fileTransfer);
 	[[adium fileTransferController] receiveRequestForFileTransfer:fileTransfer];
 }
 
@@ -1261,7 +1261,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (void)destroyFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	GaimDebug(@"Destroy file transfer %@",fileTransfer);
+	PurpleDebug(@"Destroy file transfer %@",fileTransfer);
 	[fileTransfer release];
 }
 
@@ -1269,14 +1269,14 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Subsequently inform the fileTransferController that the fun has begun.
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
 {
-    GaimDebug(@"Accepted file transfer %@",fileTransfer);
+    PurpleDebug(@"Accepted file transfer %@",fileTransfer);
 	
-	GaimXfer		*xfer;
-	GaimXferType	xferType;
+	PurpleXfer		*xfer;
+	PurpleXferType	xferType;
 	
 	xfer = [[fileTransfer accountData] pointerValue];
 
-    xferType = gaim_xfer_get_type(xfer);
+    xferType = purple_xfer_get_type(xfer);
     if ( xferType == GAIM_XFER_SEND ) {
         [fileTransfer setFileTransferType:Outgoing_FileTransfer];   
     } else if ( xferType == GAIM_XFER_RECEIVE ) {
@@ -1298,7 +1298,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //- (void)fileTransfercancelledLocally:(ESFileTransfer *)fileTransfer
 - (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer
 {
-	GaimXfer	*xfer = [[fileTransfer accountData] pointerValue];
+	PurpleXfer	*xfer = [[fileTransfer accountData] pointerValue];
 	if (xfer) {
 		[gaimThread xferRequestRejected:xfer];
 	}
@@ -1309,7 +1309,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //- (void)fileTransfercancelledLocally:(ESFileTransfer *)fileTransfer
 - (void)cancelFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	GaimXfer	*xfer = [[fileTransfer accountData] pointerValue];
+	PurpleXfer	*xfer = [[fileTransfer accountData] pointerValue];
 	if (xfer) {
 		[gaimThread xferCancel:xfer];
 	}	
@@ -1324,15 +1324,15 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	if (!account) {
 		//create a gaim account if one does not already exist
-		[self createNewGaimAccount];
-		GaimDebug(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
+		[self createNewPurpleAccount];
+		PurpleDebug(@"created PurpleAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
 	}
 	
 	//Make sure our settings are correct
-	[self configureGaimAccountNotifyingTarget:self selector:@selector(continueConnectWithConfiguredGaimAccount)];
+	[self configurePurpleAccountNotifyingTarget:self selector:@selector(continueConnectWithConfiguredPurpleAccount)];
 }
 
-- (void)continueConnectWithConfiguredGaimAccount
+- (void)continueConnectWithConfiguredPurpleAccount
 {
 	//Configure libgaim's proxy settings; continueConnectWithConfiguredProxy will be called once we are ready
 	[self configureAccountProxyNotifyingTarget:self selector:@selector(continueConnectWithConfiguredProxy)];
@@ -1341,7 +1341,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (void)continueConnectWithConfiguredProxy
 {
 	//Set password and connect
-	gaim_account_set_password(account, [password UTF8String]);
+	purple_account_set_password(account, [password UTF8String]);
 
 	//Set our current status state after filtering its statusMessage as appropriate. This will take us online in the process.
 	AIStatus	*statusState = [self statusObjectForKey:@"StatusState"];
@@ -1349,7 +1349,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		statusState = [[adium statusController] defaultInitialStatusState];
 	}
 
-	GaimDebug(@"Adium: Connect: %@ initiating connection using status state %@ (%@).",[self UID],statusState,
+	PurpleDebug(@"Adium: Connect: %@ initiating connection using status state %@ (%@).",[self UID],statusState,
 			  [statusState statusMessageString]);
 
 	[self autoRefreshingOutgoingContentForStatusKey:@"StatusState"
@@ -1359,12 +1359,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 
 //Make sure our settings are correct; notify target/selector when we're finished
-- (void)configureGaimAccountNotifyingTarget:(id)target selector:(SEL)selector
+- (void)configurePurpleAccountNotifyingTarget:(id)target selector:(SEL)selector
 {
 	NSInvocation	*contextInvocation;
 	
 	//Perform the synchronous configuration activities (subclasses may want to take action in this function)
-	[self configureGaimAccount];
+	[self configurePurpleAccount];
 	
 	contextInvocation = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:selector]];
 	
@@ -1373,15 +1373,15 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[contextInvocation retainArguments];
 
 	//Set the text profile BEFORE beginning the connect process, to avoid problems with setting it while the
-	//connect occurs. Once that's done, contextInvocation will be invoked, continuing the configureGaimAccount process.
+	//connect occurs. Once that's done, contextInvocation will be invoked, continuing the configurePurpleAccount process.
 	[self autoRefreshingOutgoingContentForStatusKey:@"TextProfile" 
-										   selector:@selector(setAccountProfileTo:configureGaimAccountContext:)
+										   selector:@selector(setAccountProfileTo:configurePurpleAccountContext:)
 											context:contextInvocation];
 }
 
 //Synchronous gaim account configuration activites, always performed after an account is created.
 //This is a definite subclassing point so prpls can apply their own account settings.
-- (void)configureGaimAccount
+- (void)configurePurpleAccount
 {
 	NSString	*hostName;
 	int			portNumber;
@@ -1389,17 +1389,17 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	//Host (server)
 	hostName = [self host];
 	if (hostName && [hostName length]) {
-		gaim_account_set_string(account, "server", [hostName UTF8String]);
+		purple_account_set_string(account, "server", [hostName UTF8String]);
 	}
 	
 	//Port
 	portNumber = [self port];
 	if (portNumber) {
-		gaim_account_set_int(account, "port", portNumber);
+		purple_account_set_int(account, "port", portNumber);
 	}
 	
 	//E-mail checking
-	gaim_account_set_check_mail(account, [[self shouldCheckMail] boolValue]);
+	purple_account_set_check_mail(account, [[self shouldCheckMail] boolValue]);
 	
 	//Update a few status keys before we begin connecting.  Libgaim will send these automatically
     [self updateStatusForKey:KEY_USER_ICON];
@@ -1430,14 +1430,14 @@ static SLGaimCocoaAdapter *gaimThread = nil;
  */
 - (void)retrievedProxyConfiguration:(NSDictionary *)proxyConfig context:(NSInvocation *)invocation
 {
-	GaimProxyInfo		*proxy_info;
+	PurpleProxyInfo		*proxy_info;
 	
 	AdiumProxyType  	proxyType = [[proxyConfig objectForKey:@"AdiumProxyType"] intValue];
 	
-	proxy_info = gaim_proxy_info_new();
-	gaim_account_set_proxy_info(account, proxy_info);
+	proxy_info = purple_proxy_info_new();
+	purple_account_set_proxy_info(account, proxy_info);
 
-	GaimProxyType		gaimAccountProxyType;
+	PurpleProxyType		gaimAccountProxyType;
 	
 	switch (proxyType) {
 		case Adium_Proxy_HTTP:
@@ -1458,16 +1458,16 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			break;
 	}
 	
-	gaim_proxy_info_set_type(proxy_info, gaimAccountProxyType);
+	purple_proxy_info_set_type(proxy_info, gaimAccountProxyType);
 
 	if (proxyType != Adium_Proxy_None) {
-		gaim_proxy_info_set_host(proxy_info, (char *)[[proxyConfig objectForKey:@"Host"] UTF8String]);
-		gaim_proxy_info_set_port(proxy_info, [[proxyConfig objectForKey:@"Port"] intValue]);
+		purple_proxy_info_set_host(proxy_info, (char *)[[proxyConfig objectForKey:@"Host"] UTF8String]);
+		purple_proxy_info_set_port(proxy_info, [[proxyConfig objectForKey:@"Port"] intValue]);
 
-		gaim_proxy_info_set_username(proxy_info, (char *)[[proxyConfig objectForKey:@"Username"] UTF8String]);
-		gaim_proxy_info_set_password(proxy_info, (char *)[[proxyConfig objectForKey:@"Password"] UTF8String]);
+		purple_proxy_info_set_username(proxy_info, (char *)[[proxyConfig objectForKey:@"Username"] UTF8String]);
+		purple_proxy_info_set_password(proxy_info, (char *)[[proxyConfig objectForKey:@"Password"] UTF8String]);
 		
-		GaimDebug(@"Connecting with proxy type %i and proxy host %@",proxyType, [proxyConfig objectForKey:@"Host"]);
+		PurpleDebug(@"Connecting with proxy type %i and proxy host %@",proxyType, [proxyConfig objectForKey:@"Host"]);
 	}
 
 	[invocation invoke];
@@ -1524,7 +1524,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 }
 
 /*!
- * @brief Name to use when creating a GaimAccount for this CBGaimAccount
+ * @brief Name to use when creating a PurpleAccount for this CBPurpleAccount
  *
  * By default, we just use the formattedUID.  Subclasses can override this to provide other handling,
  * such as appending @mac.com if necessary for dotMac accounts.
@@ -1534,14 +1534,14 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	return [[self formattedUID] UTF8String];
 }
 
-- (void)createNewGaimAccount
+- (void)createNewPurpleAccount
 {
 	if (!gaimThread) {
-		gaimThread = [[SLGaimCocoaAdapter sharedInstance] retain];	
+		gaimThread = [[SLPurpleCocoaAdapter sharedInstance] retain];	
 	}	
 
 	//Create a fresh version of the account
-    if ((account = gaim_account_new([self gaimAccountName], [self protocolPlugin]))) {
+    if ((account = purple_account_new([self gaimAccountName], [self protocolPlugin]))) {
 		[gaimThread addAdiumAccount:self];
 	} else {
 		AILog(@"Unable to create Libgaim account with name %s and protocol plugin %s",
@@ -1574,7 +1574,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
  */
 - (void)accountConnectionReportDisconnect:(NSString *)text
 {
-	//Retain the error message locally for use in -[CBGaimAccount accountConnectionDisconnected]
+	//Retain the error message locally for use in -[CBPurpleAccount accountConnectionDisconnected]
 	if (lastDisconnectionError != text) {
 		[lastDisconnectionError release];
 		lastDisconnectionError = [text retain];
@@ -1583,7 +1583,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	//We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:NotifyNow];
 	
-	GaimDebug(@"%@ accountConnectionReportDisconnect: %@",self,lastDisconnectionError);
+	PurpleDebug(@"%@ accountConnectionReportDisconnect: %@",self,lastDisconnectionError);
 }
 
 - (void)accountConnectionNotice:(NSString *)connectionNotice
@@ -1609,7 +1609,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[self notifyOfChangedStatusSilently:NO];
 	
 	//If we were disconnected unexpectedly, attempt a reconnect. Give subclasses a chance to handle the disconnection error.
-	//connectionIsSuicidal == TRUE when Gaim thinks we shouldn't attempt a reconnect.
+	//connectionIsSuicidal == TRUE when Purple thinks we shouldn't attempt a reconnect.
 	if ([self shouldBeOnline] && lastDisconnectionError) {
 		if (reconnectAttemptsRemaining && 
 			[self shouldAttemptReconnectAfterDisconnectionError:&lastDisconnectionError] && !(connectionIsSuicidal)) {
@@ -1641,7 +1641,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 	
 	//Report that we disconnected
-	GaimDebug(@"%@: Telling the core we disconnected", self);
+	PurpleDebug(@"%@: Telling the core we disconnected", self);
 	[self didDisconnect];
 }
 
@@ -1661,28 +1661,28 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	if (!account) {
 		//create a gaim account if one does not already exist
-		[self createNewGaimAccount];
-		GaimDebug(@"Registering: created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
+		[self createNewPurpleAccount];
+		PurpleDebug(@"Registering: created PurpleAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
 	}
 	
 	//We are connecting
 	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:NotifyNow];
 	
 	//Make sure our settings are correct
-	[self configureGaimAccountNotifyingTarget:self selector:@selector(continueRegisterWithConfiguredGaimAccount)];
+	[self configurePurpleAccountNotifyingTarget:self selector:@selector(continueRegisterWithConfiguredPurpleAccount)];
 }
 
 - (void)continueRegisterWithConfiguredProxy
 {
 	//Set password and connect
-	gaim_account_set_password(account, [password UTF8String]);
+	purple_account_set_password(account, [password UTF8String]);
 	
-	GaimDebug(@"Adium: Register: %@ initiating connection.",[self UID]);
+	PurpleDebug(@"Adium: Register: %@ initiating connection.",[self UID]);
 	
 	[gaimThread registerAccount:self];
 }
 
-- (void)continueRegisterWithConfiguredGaimAccount
+- (void)continueRegisterWithConfiguredPurpleAccount
 {
 	//Configure libgaim's proxy settings; continueConnectWithConfiguredProxy will be called once we are ready
 	[self configureAccountProxyNotifyingTarget:self selector:@selector(continueRegisterWithConfiguredProxy)];
@@ -1717,7 +1717,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
     //Now look at keys which only make sense if we have an account
 	if (account) {
-		GaimDebug(@"%@: Updating status for key: %@",self, key);
+		PurpleDebug(@"%@: Updating status for key: %@",self, key);
 
 		if ([key isEqualToString:@"IdleSince"]) {
 			NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
@@ -1851,9 +1851,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
  * most subclasses will not need to implement this.
  *
  * @param statusState The AIStatus which is being set
- * @param statusID The Gaim-sepcific statusID we are setting
+ * @param statusID The Purple-sepcific statusID we are setting
  * @param isActive An NSNumber with a bool YES if we are activating (going to) the passed state, NO if we are deactivating (going away from) the passed state.
- * @param arguments Gaim-specific arguments specified by the account. It must contain only NSString objects and keys.
+ * @param arguments Purple-specific arguments specified by the account. It must contain only NSString objects and keys.
  */
 - (void)setStatusState:(AIStatus *)statusState statusID:(const char *)statusID isActive:(NSNumber *)isActive arguments:(NSMutableDictionary *)arguments
 {
@@ -1875,8 +1875,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 }
 
 //Set the profile, then invoke the passed invocation to return control to the target/selector specified
-//by a configureGaimAccountNotifyingTarget:selector: call.
-- (void)setAccountProfileTo:(NSAttributedString *)profile configureGaimAccountContext:(NSInvocation *)inInvocation
+//by a configurePurpleAccountNotifyingTarget:selector: call.
+- (void)setAccountProfileTo:(NSAttributedString *)profile configurePurpleAccountContext:(NSInvocation *)inInvocation
 {
 	[self setAccountProfileTo:profile];
 	
@@ -1922,12 +1922,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		 * image to one, and then pass libgaim the path. Check to be sure our image doesn't have an NSZeroSize size,
 		 * which would indicate currupt data */
 		if (image && !NSEqualSizes(NSZeroSize, imageSize)) {
-			GaimPlugin				*prpl;
-			GaimPluginProtocolInfo  *prpl_info = ((prpl = gaim_find_prpl(account->protocol_id)) ?
+			PurplePlugin				*prpl;
+			PurplePluginProtocolInfo  *prpl_info = ((prpl = purple_find_prpl(account->protocol_id)) ?
 												  GAIM_PLUGIN_PROTOCOL_INFO(prpl) :
 												  NULL);
 
-			GaimDebug(@"Original image of size %f %f",imageSize.width,imageSize.height);
+			PurpleDebug(@"Original image of size %f %f",imageSize.width,imageSize.height);
 
 			if (prpl_info && (prpl_info->icon_spec.format)) {
 				NSString	*buddyIconFilename = [self _userIconCachePath];
@@ -1949,13 +1949,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 					int width = imageSize.width;
 					int height = imageSize.height;
 					
-					gaim_buddy_icon_get_scale_size(&prpl_info->icon_spec, &width, &height);
+					purple_buddy_icon_get_scale_size(&prpl_info->icon_spec, &width, &height);
 					//Determine the scaled size.  If it's too big, scale to the largest permissable size
 					image = [image imageByScalingToSize:NSMakeSize(width, height)];
 
 					/* Our original data is no longer valid, since we had to scale to a different size */
 					originalData = nil;
-					GaimDebug(@"%@: Scaled image to size %@", self, NSStringFromSize([image size]));
+					PurpleDebug(@"%@: Scaled image to size %@", self, NSStringFromSize([image size]));
 				}
 
 				if (!buddyIconData) {
@@ -1970,7 +1970,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 							if (strcmp(prpl_formats[i],"gif") == 0) {
 								/* Try to use our original data.  If we had to scale, originalData will have been set
 								* to nil and we'll continue below to convert the image. */
-								GaimDebug(@"l33t script kiddie animated GIF!!111");
+								PurpleDebug(@"l33t script kiddie animated GIF!!111");
 								
 								buddyIconData = originalData;
 								if (buddyIconData)
@@ -2027,7 +2027,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 					[gaimThread setBuddyIcon:buddyIconFilename onAccount:self];
 					
 				} else {
-					GaimDebug(@"Error writing file %@",buddyIconFilename);   
+					PurpleDebug(@"Error writing file %@",buddyIconFilename);   
 				}
 			}
 		}
@@ -2060,7 +2060,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
  * Adds the menu item for act to a growing array of NSMenuItems.  If act has children (a submenu), this method is used recursively
  * to generate the submenu containing each child menu item.
  */
-- (void)addMenuItemForMenuAction:(GaimMenuAction *)act forListContact:(AIListContact *)inContact gaimBuddy:(GaimBuddy *)buddy toArray:(NSMutableArray *)menuItemArray withServiceIcon:(NSImage *)serviceIcon
+- (void)addMenuItemForMenuAction:(PurpleMenuAction *)act forListContact:(AIListContact *)inContact gaimBuddy:(PurpleBuddy *)buddy toArray:(NSMutableArray *)menuItemArray withServiceIcon:(NSImage *)serviceIcon
 {
 	NSDictionary	*dict;
 	NSMenuItem		*menuItem;
@@ -2079,14 +2079,14 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 		if (act->data) {
 			dict = [NSDictionary dictionaryWithObjectsAndKeys:
-				[NSValue valueWithPointer:act->callback],@"GaimMenuActionCallback",
-				[NSValue valueWithPointer:act->callback],@"GaimMenuActionData",
-				[NSValue valueWithPointer:buddy],@"GaimBuddy",
+				[NSValue valueWithPointer:act->callback],@"PurpleMenuActionCallback",
+				[NSValue valueWithPointer:act->callback],@"PurpleMenuActionData",
+				[NSValue valueWithPointer:buddy],@"PurpleBuddy",
 				nil];
 		} else {
 			dict = [NSDictionary dictionaryWithObjectsAndKeys:
-				[NSValue valueWithPointer:act->callback],@"GaimMenuActionCallback",
-				[NSValue valueWithPointer:buddy],@"GaimBuddy",
+				[NSValue valueWithPointer:act->callback],@"PurpleMenuActionCallback",
+				[NSValue valueWithPointer:buddy],@"PurpleBuddy",
 				nil];			
 		}
 		
@@ -2098,7 +2098,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			GList			*l, *ll;
 			//Add a NSMenuItem for each child
 			for (l = ll = act->children; l; l = l->next) {
-				[self addMenuItemForMenuAction:(GaimMenuAction *)l->data
+				[self addMenuItemForMenuAction:(PurpleMenuAction *)l->data
 								forListContact:inContact
 									 gaimBuddy:buddy
 									   toArray:childrenArray
@@ -2124,7 +2124,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		[menuItem release];
 	}
 
-	gaim_menu_action_free(act);
+	purple_menu_action_free(act);
 }
 
 //Returns an array of menuItems specific for this contact based on its account and potentially status
@@ -2132,16 +2132,16 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	NSMutableArray			*menuItemArray = nil;
 
-	if (account && gaim_account_is_connected(account)) {
-		GaimPlugin				*prpl;
-		GaimPluginProtocolInfo  *prpl_info = ((prpl = gaim_find_prpl(account->protocol_id)) ?
+	if (account && purple_account_is_connected(account)) {
+		PurplePlugin				*prpl;
+		PurplePluginProtocolInfo  *prpl_info = ((prpl = purple_find_prpl(account->protocol_id)) ?
 											  GAIM_PLUGIN_PROTOCOL_INFO(prpl) :
 											  NULL);
 		GList					*l, *ll;
-		GaimBuddy				*buddy;
+		PurpleBuddy				*buddy;
 		
-		//Find the GaimBuddy
-		buddy = gaim_find_buddy(account, gaim_normalize(account, [[inContact UID] UTF8String]));
+		//Find the PurpleBuddy
+		buddy = purple_find_buddy(account, purple_normalize(account, [[inContact UID] UTF8String]));
 		
 		if (prpl_info && prpl_info->blist_node_menu && buddy) {
 			NSImage	*serviceIcon = [AIServiceIcons serviceIconForService:[self service]
@@ -2151,8 +2151,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			menuItemArray = [NSMutableArray array];
 
 			//Add a NSMenuItem for each node action specified by the prpl
-			for (l = ll = prpl_info->blist_node_menu((GaimBlistNode *)buddy); l; l = l->next) {
-				[self addMenuItemForMenuAction:(GaimMenuAction *)l->data
+			for (l = ll = prpl_info->blist_node_menu((PurpleBlistNode *)buddy); l; l = l->next) {
+				[self addMenuItemForMenuAction:(PurpleMenuAction *)l->data
 								forListContact:inContact
 									 gaimBuddy:buddy
 									   toArray:menuItemArray
@@ -2185,25 +2185,25 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	NSMutableArray			*menuItemArray = nil;
 	
-	if (account && gaim_account_is_connected(account)) {
-		GaimPlugin *plugin = account->gc->prpl;
+	if (account && purple_account_is_connected(account)) {
+		PurplePlugin *plugin = account->gc->prpl;
 		
 		if (GAIM_PLUGIN_HAS_ACTIONS(plugin)) {
 			GList	*l, *actions;
 			
 			actions = GAIM_PLUGIN_ACTIONS(plugin, account->gc);
 
-			//Avoid adding separators between nonexistant items (i.e. items which Gaim shows but we don't)
+			//Avoid adding separators between nonexistant items (i.e. items which Purple shows but we don't)
 			BOOL	addedAnAction = NO;
 			for (l = actions; l; l = l->next) {
 				
 				if (l->data) {
-					GaimPluginAction	*action;
+					PurplePluginAction	*action;
 					NSDictionary		*dict;
 					NSMenuItem			*menuItem;
 					NSString			*title;
 					
-					action = (GaimPluginAction *) l->data;
+					action = (PurplePluginAction *) l->data;
 					
 					//If titleForAccountActionMenuLabel: returns nil, we don't add the menuItem
 					if (action &&
@@ -2218,7 +2218,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 																						 action:@selector(performAccountMenuAction:)
 																				  keyEquivalent:@""] autorelease];
 						dict = [NSDictionary dictionaryWithObject:[NSValue valueWithPointer:action->callback]
-														   forKey:@"GaimPluginActionCallback"];
+														   forKey:@"PurplePluginActionCallback"];
 						
 						[menuItem setRepresentedObject:dict];
 						
@@ -2228,7 +2228,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 						addedAnAction = YES;
 					} 
 					
-					gaim_plugin_action_free(action);
+					purple_plugin_action_free(action);
 					
 				} else {
 					if (addedAnAction) {
@@ -2257,7 +2257,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
 	if ((strcmp(label, "Change Password...") == 0) || (strcmp(label, "Change Password") == 0)) {
-		/* XXX This depends upon an implementation of adiumGaimRequestFields in adiumGaimRequest.m.
+		/* XXX This depends upon an implementation of adiumPurpleRequestFields in adiumPurpleRequest.m.
 		* Enable once that is done. */
 		return nil;
 	}
@@ -2271,7 +2271,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 #pragma mark AIAccount Subclassed Methods
 - (void)initAccount
 {
-	NSDictionary	*defaults = [NSDictionary dictionaryNamed:[NSString stringWithFormat:@"GaimDefaults%@",[[self service] serviceID]]
+	NSDictionary	*defaults = [NSDictionary dictionaryNamed:[NSString stringWithFormat:@"PurpleDefaults%@",[[self service] serviceID]]
 													 forClass:[self class]];
 	
 	if (defaults) {
@@ -2279,7 +2279,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 											  forGroup:GROUP_ACCOUNT_STATUS
 												object:self];
 	} else {
-		GaimDebug(@"Failed to load defaults for %@",[NSString stringWithFormat:@"GaimDefaults%@",[[self service] serviceID]]);
+		PurpleDebug(@"Failed to load defaults for %@",[NSString stringWithFormat:@"PurpleDefaults%@",[[self service] serviceID]]);
 	}
 	
 	//Defaults
@@ -2301,12 +2301,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
  */
 - (void)didChangeUID
 {
-	//Only need to take action if we have a created GaimAccount already
+	//Only need to take action if we have a created PurpleAccount already
 	if (account != NULL) {
 		//Remove our current account
 		[gaimThread removeAdiumAccount:self];
 		
-		//Clear the reference to the GaimAccount... it'll be created when needed
+		//Clear the reference to the PurpleAccount... it'll be created when needed
 		account = NULL;
 	}
 }
@@ -2392,7 +2392,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 /*!
  * @brief Return the path at which to save our own user icon
  *
- * Gaim expects a file path, not data
+ * Purple expects a file path, not data
  */
 - (NSString *)_userIconCachePath
 {    

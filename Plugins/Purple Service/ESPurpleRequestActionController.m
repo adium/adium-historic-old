@@ -14,15 +14,15 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESGaimRequestActionController.h"
-#import "GaimCommon.h"
-#import "adiumGaimRequest.h"
-#import "SLGaimCocoaAdapter.h"
+#import "ESPurpleRequestActionController.h"
+#import "PurpleCommon.h"
+#import "adiumPurpleRequest.h"
+#import "SLPurpleCocoaAdapter.h"
 #import "ESTextAndButtonsWindowController.h"
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/NDRunLoopMessenger.h>
 
-@interface ESGaimRequestActionController (PRIVATE)
+@interface ESPurpleRequestActionController (PRIVATE)
 - (id)initWithDict:(NSDictionary *)infoDict;
 - (NSDictionary *)translatedInfoDict:(NSDictionary *)inDict;
 - (void)doRequestActionCbValue:(NSValue *)callBackValue
@@ -30,15 +30,15 @@
 				 callBackIndex:(NSNumber *)callBackIndexNumber;
 @end
 
-@implementation ESGaimRequestActionController
+@implementation ESPurpleRequestActionController
 
 /*!
  * @brief Show an action request window
  *
  * @param infoDict Dictionary of information to display, including callbacks for the buttons
- * @result The ESGaimRequestActionController for the displayed window
+ * @result The ESPurpleRequestActionController for the displayed window
  */
-+ (ESGaimRequestActionController *)showActionWindowWithDict:(NSDictionary *)infoDict
++ (ESPurpleRequestActionController *)showActionWindowWithDict:(NSDictionary *)infoDict
 {
 	return [[self alloc] initWithDict:infoDict];
 }
@@ -140,7 +140,7 @@
 	[requestController release]; requestController = nil;
 	
 	//Inform libgaim that the request window closed
-	[ESGaimRequestAdapter requestCloseWithHandle:self];	
+	[ESPurpleRequestAdapter requestCloseWithHandle:self];	
 
 	return YES;
 }
@@ -149,7 +149,7 @@
 			 withUserDataValue:(NSValue *)userDataValue 
 				 callBackIndex:(NSNumber *)callBackIndexNumber
 {
-	GaimRequestActionCb callBack = [callBackValue pointerValue];
+	PurpleRequestActionCb callBack = [callBackValue pointerValue];
 	if (callBack) {
 		callBack([userDataValue pointerValue],[callBackIndexNumber intValue]);
 	}
@@ -187,8 +187,8 @@
 {
 	/*
 	 title is "Buddy list synchronization issue in %s (%s)"),
-	 gaim_account_get_username(account),
-	 gaim_account_get_protocol_name(account));
+	 purple_account_get_username(account),
+	 purple_account_get_protocol_name(account));
 	 
 	 message is ("%s on the local list is inside the group \"%s\" but not on the server list. Do you want this buddy to be added?")
 	 

@@ -14,85 +14,85 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "adiumGaimCore.h"
+#import "adiumPurpleCore.h"
 
-#import "adiumGaimAccounts.h"
-#import "adiumGaimBlist.h"
-#import "adiumGaimConnection.h"
-#import "adiumGaimConversation.h"
-#import "adiumGaimDnsRequest.h"
-#import "adiumGaimEventloop.h"
-#import "adiumGaimFt.h"
-#import "adiumGaimNotify.h"
-#import "adiumGaimPrivacy.h"
-#import "adiumGaimRequest.h"
-#import "adiumGaimRoomlist.h"
-#import "adiumGaimSignals.h"
-#import "adiumGaimWebcam.h"
+#import "adiumPurpleAccounts.h"
+#import "adiumPurpleBlist.h"
+#import "adiumPurpleConnection.h"
+#import "adiumPurpleConversation.h"
+#import "adiumPurpleDnsRequest.h"
+#import "adiumPurpleEventloop.h"
+#import "adiumPurpleFt.h"
+#import "adiumPurpleNotify.h"
+#import "adiumPurplePrivacy.h"
+#import "adiumPurpleRequest.h"
+#import "adiumPurpleRoomlist.h"
+#import "adiumPurpleSignals.h"
+#import "adiumPurpleWebcam.h"
 
-#import "SLGaimCocoaAdapter.h"
-#import "AILibgaimPlugin.h"
+#import "SLPurpleCocoaAdapter.h"
+#import "AILibpurplePlugin.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
 
 #pragma mark Debug
 // Debug ------------------------------------------------------------------------------------------------------
 #if (GAIM_DEBUG)
-static void adiumGaimDebugPrint(GaimDebugLevel level, const char *category, const char *debug_msg)
+static void adiumPurpleDebugPrint(PurpleDebugLevel level, const char *category, const char *debug_msg)
 {
 	//Log error
 	if (!category) category = "general"; //Category can be nil
 	AILog(@"(Libgaim: %s) %s",category, debug_msg);
 }
 
-static GaimDebugUiOps adiumGaimDebugOps = {
-    adiumGaimDebugPrint
+static PurpleDebugUiOps adiumPurpleDebugOps = {
+    adiumPurpleDebugPrint
 };
 
-GaimDebugUiOps *adium_gaim_debug_get_ui_ops(void)
+PurpleDebugUiOps *adium_purple_debug_get_ui_ops(void)
 {
-	return &adiumGaimDebugOps;
+	return &adiumPurpleDebugOps;
 }
 #endif
 
 // Core ------------------------------------------------------------------------------------------------------
 
-extern gboolean gaim_init_ssl_plugin(void);
-extern gboolean gaim_init_ssl_openssl_plugin(void);
-//extern gboolean gaim_init_ssl_gnutls_plugin();
-extern gboolean gaim_init_gg_plugin(void);
-extern gboolean gaim_init_jabber_plugin(void);
-extern gboolean gaim_init_sametime_plugin(void);
-extern gboolean gaim_init_msn_plugin(void);
-extern gboolean gaim_init_novell_plugin(void);
-extern gboolean gaim_init_qq_plugin(void);
-extern gboolean gaim_init_simple_plugin(void);
-extern gboolean gaim_init_yahoo_plugin(void);
-extern gboolean gaim_init_zephyr_plugin(void);
-extern gboolean gaim_init_aim_plugin(void);
-extern gboolean gaim_init_icq_plugin(void);
+extern gboolean purple_init_ssl_plugin(void);
+extern gboolean purple_init_ssl_openssl_plugin(void);
+//extern gboolean purple_init_ssl_gnutls_plugin();
+extern gboolean purple_init_gg_plugin(void);
+extern gboolean purple_init_jabber_plugin(void);
+extern gboolean purple_init_sametime_plugin(void);
+extern gboolean purple_init_msn_plugin(void);
+extern gboolean purple_init_novell_plugin(void);
+extern gboolean purple_init_qq_plugin(void);
+extern gboolean purple_init_simple_plugin(void);
+extern gboolean purple_init_yahoo_plugin(void);
+extern gboolean purple_init_zephyr_plugin(void);
+extern gboolean purple_init_aim_plugin(void);
+extern gboolean purple_init_icq_plugin(void);
 
 static void load_all_plugins()
 {
-	AILog(@"adiumGaimCore: load_all_plugins()");
+	AILog(@"adiumPurpleCore: load_all_plugins()");
 
 	//First, initialize our built-in plugins
-	gaim_init_ssl_plugin();
-	gaim_init_ssl_openssl_plugin();
-//	gaim_init_ssl_gnutls_plugin();
-	gaim_init_gg_plugin();
-	gaim_init_jabber_plugin();
-	gaim_init_sametime_plugin();
-	gaim_init_novell_plugin();
-	gaim_init_msn_plugin();
-	gaim_init_qq_plugin();
-	gaim_init_simple_plugin();
-	gaim_init_yahoo_plugin();
-	gaim_init_zephyr_plugin();
-	gaim_init_aim_plugin();
-	gaim_init_icq_plugin();
+	purple_init_ssl_plugin();
+	purple_init_ssl_openssl_plugin();
+//	purple_init_ssl_gnutls_plugin();
+	purple_init_gg_plugin();
+	purple_init_jabber_plugin();
+	purple_init_sametime_plugin();
+	purple_init_novell_plugin();
+	purple_init_msn_plugin();
+	purple_init_qq_plugin();
+	purple_init_simple_plugin();
+	purple_init_yahoo_plugin();
+	purple_init_zephyr_plugin();
+	purple_init_aim_plugin();
+	purple_init_icq_plugin();
 
 	//Load each plugin
-	NSEnumerator			*enumerator = [[SLGaimCocoaAdapter libgaimPluginArray] objectEnumerator];
+	NSEnumerator			*enumerator = [[SLPurpleCocoaAdapter libgaimPluginArray] objectEnumerator];
 	id <AILibgaimPlugin>	plugin;
 
 	while ((plugin = [enumerator nextObject])) {
@@ -102,38 +102,38 @@ static void load_all_plugins()
 	}
 }
 
-static void adiumGaimPrefsInit(void)
+static void adiumPurplePrefsInit(void)
 {
     //Disable gaim away handling - we do it ourselves
-	gaim_prefs_set_bool("/core/away/away_when_idle", FALSE);
-	gaim_prefs_set_string("/core/away/auto_reply","never");
+	purple_prefs_set_bool("/core/away/away_when_idle", FALSE);
+	purple_prefs_set_string("/core/away/auto_reply","never");
 
 	//Disable gaim idle reporting - we do it ourselves
-	gaim_prefs_set_bool("/core/away/report_idle", FALSE);
+	purple_prefs_set_bool("/core/away/report_idle", FALSE);
 
     //Disable gaim conversation logging
-    gaim_prefs_set_bool("/gaim/gtk/logging/log_chats", FALSE);
-    gaim_prefs_set_bool("/gaim/gtk/logging/log_ims", FALSE);
+    purple_prefs_set_bool("/gaim/gtk/logging/log_chats", FALSE);
+    purple_prefs_set_bool("/gaim/gtk/logging/log_ims", FALSE);
     
     //Typing preference
-    gaim_prefs_set_bool("/core/conversations/im/send_typing", TRUE);
+    purple_prefs_set_bool("/core/conversations/im/send_typing", TRUE);
 	
 	//Use server alias where possible
-	gaim_prefs_set_bool("/core/buddies/use_server_alias", TRUE);
+	purple_prefs_set_bool("/core/buddies/use_server_alias", TRUE);
 	
 	//MSN preferences
-	gaim_prefs_set_bool("/plugins/prpl/msn/conv_close_notice", TRUE);
-	gaim_prefs_set_bool("/plugins/prpl/msn/conv_timeout_notice", TRUE);
+	purple_prefs_set_bool("/plugins/prpl/msn/conv_close_notice", TRUE);
+	purple_prefs_set_bool("/plugins/prpl/msn/conv_timeout_notice", TRUE);
 
 	//Ensure we are using caching
-	gaim_buddy_icons_set_caching(TRUE);	
+	purple_buddy_icons_set_caching(TRUE);	
 }
 
-static void adiumGaimCoreDebugInit(void)
+static void adiumPurpleCoreDebugInit(void)
 {
 #if (GAIM_DEBUG)
-	AILog(@"adiumGaimCoreDebugInit()");
-    gaim_debug_set_ui_ops(adium_gaim_debug_get_ui_ops());
+	AILog(@"adiumPurpleCoreDebugInit()");
+    purple_debug_set_ui_ops(adium_purple_debug_get_ui_ops());
 #endif
 
 	//Load all plugins. This could be done in STATIC_PROTO_INIT in libgaim's config.h at build time, but doing it here allows easier changes.
@@ -141,59 +141,59 @@ static void adiumGaimCoreDebugInit(void)
 }
 
 /* The core is ready... finish configuring libgaim and its plugins */
-static void adiumGaimCoreUiInit(void)
+static void adiumPurpleCoreUiInit(void)
 {
-	GaimDebug (@"adiumGaimCoreUiInit");
+	PurpleDebug (@"adiumPurpleCoreUiInit");
 	//Initialize the core UI ops
-    gaim_blist_set_ui_ops(adium_gaim_blist_get_ui_ops());
-    gaim_connections_set_ui_ops(adium_gaim_connection_get_ui_ops());
-    gaim_privacy_set_ui_ops (adium_gaim_privacy_get_ui_ops());	
-	gaim_accounts_set_ui_ops(adium_gaim_accounts_get_ui_ops());
+    purple_blist_set_ui_ops(adium_purple_blist_get_ui_ops());
+    purple_connections_set_ui_ops(adium_purple_connection_get_ui_ops());
+    purple_privacy_set_ui_ops (adium_purple_privacy_get_ui_ops());	
+	purple_accounts_set_ui_ops(adium_purple_accounts_get_ui_ops());
 
-	/* Why use Gaim's accounts and blist list when we have the information locally?
-		*		- Faster account connection: Gaim doesn't have to recreate the local list
+	/* Why use Purple's accounts and blist list when we have the information locally?
+		*		- Faster account connection: Purple doesn't have to recreate the local list
 		*		- Privacy/blocking support depends on the accounts and blist files existing
 		*
 		*	Another possible advantage:
-		*		- Using Gaim's own buddy icon caching (which depends on both files) allows us to avoid
+		*		- Using Purple's own buddy icon caching (which depends on both files) allows us to avoid
 		*			re-requesting icons we already have locally on some protocols such as AIM.
 		*/	
 	//Setup the buddy list; then load the blist.
-	gaim_set_blist(gaim_blist_new());
-	AILog(@"adiumGaimCore: gaim_blist_load()...");
-	gaim_blist_load();
+	purple_set_blist(purple_blist_new());
+	AILog(@"adiumPurpleCore: purple_blist_load()...");
+	purple_blist_load();
 	
 	//Configure signals for receiving gaim events
-	configureAdiumGaimSignals();
+	configureAdiumPurpleSignals();
 	
 	//Configure the GUI-related UI ops last
-	gaim_roomlist_set_ui_ops (adium_gaim_roomlist_get_ui_ops());
-    gaim_notify_set_ui_ops(adium_gaim_notify_get_ui_ops());
-    gaim_request_set_ui_ops(adium_gaim_request_get_ui_ops());
-	gaim_xfers_set_ui_ops(adium_gaim_xfers_get_ui_ops());
-	gaim_dnsquery_set_ui_ops(adium_gaim_dns_request_get_ui_ops());
+	purple_roomlist_set_ui_ops (adium_purple_roomlist_get_ui_ops());
+    purple_notify_set_ui_ops(adium_purple_notify_get_ui_ops());
+    purple_request_set_ui_ops(adium_purple_request_get_ui_ops());
+	purple_xfers_set_ui_ops(adium_purple_xfers_get_ui_ops());
+	purple_dnsquery_set_ui_ops(adium_purple_dns_request_get_ui_ops());
 	
-	adiumGaimConversation_init();
+	adiumPurpleConversation_init();
 
 #if	ENABLE_WEBCAM
-	initGaimWebcamSupport();
+	initPurpleWebcamSupport();
 #endif
 }
 
-static void adiumGaimCoreQuit(void)
+static void adiumPurpleCoreQuit(void)
 {
-    GaimDebug (@"Core quit");
+    PurpleDebug (@"Core quit");
     exit(0);
 }
 
-static GaimCoreUiOps adiumGaimCoreOps = {
-    adiumGaimPrefsInit,
-    adiumGaimCoreDebugInit,
-    adiumGaimCoreUiInit,
-    adiumGaimCoreQuit
+static PurpleCoreUiOps adiumPurpleCoreOps = {
+    adiumPurplePrefsInit,
+    adiumPurpleCoreDebugInit,
+    adiumPurpleCoreUiInit,
+    adiumPurpleCoreQuit
 };
 
-GaimCoreUiOps *adium_gaim_core_get_ops(void)
+PurpleCoreUiOps *adium_purple_core_get_ops(void)
 {
-	return &adiumGaimCoreOps;
+	return &adiumPurpleCoreOps;
 }
