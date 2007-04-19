@@ -2108,6 +2108,7 @@
 		3452A9F607891C8A00C3C494 /* ESFileTransferRequestPromptController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferRequestPromptController.h; path = Source/ESFileTransferRequestPromptController.h; sourceTree = "<group>"; };
 		3452A9F707891C8A00C3C494 /* ESFileTransferRequestPromptController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferRequestPromptController.m; path = Source/ESFileTransferRequestPromptController.m; sourceTree = "<group>"; };
 		34536750059BA8ED00A83D9E /* atos */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = atos; sourceTree = "<group>"; };
+		3454FE130BD6F227007B644A /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = Resources/pt_BR.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
 		3456231A0A3771D800E7FC97 /* ESRankingCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESRankingCell.m; path = Source/ESRankingCell.m; sourceTree = "<group>"; };
 		3456231B0A3771D800E7FC97 /* ESRankingCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESRankingCell.h; path = Source/ESRankingCell.h; sourceTree = "<group>"; };
 		3456231E0A3771E100E7FC97 /* AIChatLog.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIChatLog.m; path = Source/AIChatLog.m; sourceTree = "<group>"; };
@@ -10228,6 +10229,7 @@
 				34695FA30A89BA3600E3B0D0 /* zh_CN */,
 				34695FA40A89BA5800E3B0D0 /* tr */,
 				342F9D8E0B5525B0000D5FC2 /* fi */,
+				3454FE130BD6F227007B644A /* pt_BR */,
 			);
 			name = PersonalPreferences.nib;
 			sourceTree = "<group>";
