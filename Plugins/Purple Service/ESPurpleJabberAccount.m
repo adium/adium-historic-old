@@ -239,13 +239,13 @@ extern void jabber_roster_request(JabberStream *js);
 
 	if ([contactUID hasSuffix:@"@gmail.com"] ||
 		[contactUID hasSuffix:@"@googlemail.com"]) {
-		contactServiceID = @"libgaim-jabber-gtalk";
+		contactServiceID = @"libpurple-jabber-gtalk";
 
 	} else if([contactUID hasSuffix:@"@livejournal.com"]){
-		contactServiceID = @"libgaim-jabber-livejournal";
+		contactServiceID = @"libpurple-jabber-livejournal";
 		
 	} else {
-		contactServiceID = @"libgaim-Jabber";
+		contactServiceID = @"libpurple-Jabber";
 	}
 
 	contactService = [[adium accountController] serviceWithUniqueID:contactServiceID];

@@ -27,7 +27,7 @@
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-simple";
+	return @"libpurple-simple";
 }
 - (NSString *)serviceID{
 	return @"SIMPLE";

@@ -48,7 +48,7 @@
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-MSN";
+	return @"libpurple-MSN";
 }
 - (NSString *)serviceID{
 	return @"MSN";

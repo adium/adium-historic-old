@@ -32,7 +32,7 @@
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-jabber-livejournal";
+	return @"libpurple-jabber-livejournal";
 }
 
 - (NSString *)serviceID{

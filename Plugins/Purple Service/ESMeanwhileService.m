@@ -38,7 +38,7 @@
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-Sametime";
+	return @"libpurple-Sametime";
 }
 - (NSString *)serviceID{
 	return @"Sametime";

@@ -37,7 +37,7 @@
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-Gadu-Gadu";
+	return @"libpurple-Gadu-Gadu";
 }
 - (NSString *)serviceID{
 	return @"Gadu-Gadu";
