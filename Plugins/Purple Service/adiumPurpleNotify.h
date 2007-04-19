@@ -14,6 +14,6 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "SLGaimCocoaAdapter.h"
+#import "SLPurpleCocoaAdapter.h"
 
-GaimNotifyUiOps *adium_gaim_notify_get_ui_ops(void);
+PurpleNotifyUiOps *adium_purple_notify_get_ui_ops(void);

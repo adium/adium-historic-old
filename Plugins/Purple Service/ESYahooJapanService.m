@@ -14,24 +14,24 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "DCGaimYahooJoinChatViewController.h"
-#import "ESGaimYahooAccountViewController.h"
-#import "ESGaimYahooJapanAccount.h"
+#import "DCPurpleYahooJoinChatViewController.h"
+#import "ESPurpleYahooAccountViewController.h"
+#import "ESPurpleYahooJapanAccount.h"
 #import "ESYahooJapanService.h"
 
 @implementation ESYahooJapanService
 
 //Account Creation
 - (Class)accountClass{
-	return [ESGaimYahooJapanAccount class];
+	return [ESPurpleYahooJapanAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return [ESGaimYahooAccountViewController accountViewController];
+    return [ESPurpleYahooAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return [DCGaimYahooJoinChatViewController joinChatView];
+	return [DCPurpleYahooJoinChatViewController joinChatView];
 }
 
 //Service Description

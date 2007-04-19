@@ -14,20 +14,20 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESGaimICQAccountViewController.h"
+#import "ESPurpleICQAccountViewController.h"
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 
-@interface ESGaimICQAccountViewController (PRIVATE)
+@interface ESPurpleICQAccountViewController (PRIVATE)
 - (NSMenu *)encodingMenu;
 - (void)addEncodingItemsWithNames:(NSArray *)inArray withTitle:(NSString *)inTitle toMenu:(NSMenu *)menu;
 @end
 										   
-@implementation ESGaimICQAccountViewController
+@implementation ESPurpleICQAccountViewController
 
 - (NSString *)nibName{
-    return @"ESGaimICQAccountView";
+    return @"ESPurpleICQAccountView";
 }
 
 //

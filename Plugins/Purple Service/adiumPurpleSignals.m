@@ -14,34 +14,34 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "adiumGaimSignals.h"
+#import "adiumPurpleSignals.h"
 #import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/AIListContact.h>
 
-static void buddy_status_changed_cb(GaimBuddy *buddy, GaimStatus *oldstatus, GaimStatus *status, GaimBuddyEvent event);
-static void buddy_idle_changed_cb(GaimBuddy *buddy, gboolean old_idle, gboolean idle, GaimBuddyEvent event);
+static void buddy_status_changed_cb(PurpleBuddy *buddy, PurpleStatus *oldstatus, PurpleStatus *status, PurpleBuddyEvent event);
+static void buddy_idle_changed_cb(PurpleBuddy *buddy, gboolean old_idle, gboolean idle, PurpleBuddyEvent event);
 
-static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
+static void buddy_event_cb(PurpleBuddy *buddy, PurpleBuddyEvent event)
 {
 	if (buddy) {
 		SEL				updateSelector = nil;
 		id				data = nil;
 		BOOL			letAccountHandleUpdate = YES;
-		CBGaimAccount	*account = accountLookup(buddy->account);
+		CBPurpleAccount	*account = accountLookup(buddy->account);
 		AIListContact   *theContact = contactLookupFromBuddy(buddy);
 
 		switch (event) {
-			case GAIM_BUDDY_SIGNON: {
+			case PURPLE_BUDDY_SIGNON: {
 				updateSelector = @selector(updateSignon:withData:);
 				break;
 			}
-			case GAIM_BUDDY_SIGNOFF: {
+			case PURPLE_BUDDY_SIGNOFF: {
 				updateSelector = @selector(updateSignoff:withData:);
 				break;
 			}
-			case GAIM_BUDDY_SIGNON_TIME: {
-				GaimPresence	*presence = gaim_buddy_get_presence(buddy);
-				time_t			loginTime = gaim_presence_get_login_time(presence);
+			case PURPLE_BUDDY_SIGNON_TIME: {
+				PurplePresence	*presence = purple_buddy_get_presence(buddy);
+				time_t			loginTime = purple_presence_get_login_time(presence);
 				
 				updateSelector = @selector(updateSignonTime:withData:);
 				data = (loginTime ? [NSDate dateWithTimeIntervalSince1970:loginTime] : nil);
@@ -49,7 +49,7 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 				break;
 			}
 
-			case GAIM_BUDDY_EVIL: {
+			case PURPLE_BUDDY_EVIL: {
 				updateSelector = @selector(updateEvil:withData:);
 				//XXX EVIL?
 				/*
@@ -59,15 +59,15 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 				 */
 				break;
 			}
-			case GAIM_BUDDY_ICON: {
-				GaimBuddyIcon *buddyIcon = gaim_buddy_get_icon(buddy);
+			case PURPLE_BUDDY_ICON: {
+				PurpleBuddyIcon *buddyIcon = purple_buddy_get_icon(buddy);
 				updateSelector = @selector(updateIcon:withData:);
 				AILog(@"Buddy icon update for %s",buddy->name);
 				if (buddyIcon) {
 					const guchar  *iconData;
 					size_t		len;
 					
-					iconData = gaim_buddy_icon_get_data(buddyIcon, &len);
+					iconData = purple_buddy_icon_get_data(buddyIcon, &len);
 					
 					if (iconData && len) {
 						data = [NSData dataWithBytes:iconData
@@ -77,7 +77,7 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 				}
 				break;
 			}
-			case GAIM_BUDDY_NAME: {
+			case PURPLE_BUDDY_NAME: {
 				updateSelector = @selector(renameContact:toUID:);
 
 				data = [NSString stringWithUTF8String:buddy->name];
@@ -106,41 +106,41 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 		 * status, idle time, and signed-on time.  Manually update these as appropriate when we're informed of
 		 * a signon.
 		 */
-		if ((event == GAIM_BUDDY_SIGNON) || (event == GAIM_BUDDY_SIGNOFF)) {
-			GaimPresence	*presence = gaim_buddy_get_presence(buddy);
-			GaimStatus		*status = gaim_presence_get_active_status(presence);
+		if ((event == PURPLE_BUDDY_SIGNON) || (event == PURPLE_BUDDY_SIGNOFF)) {
+			PurplePresence	*presence = purple_buddy_get_presence(buddy);
+			PurpleStatus		*status = purple_presence_get_active_status(presence);
 			buddy_status_changed_cb(buddy, NULL, status, event);
 			
-			if (event == GAIM_BUDDY_SIGNON) {
-				buddy_idle_changed_cb(buddy, FALSE, gaim_presence_is_idle(presence), event);
-				buddy_event_cb(buddy, GAIM_BUDDY_SIGNON_TIME);
+			if (event == PURPLE_BUDDY_SIGNON) {
+				buddy_idle_changed_cb(buddy, FALSE, purple_presence_is_idle(presence), event);
+				buddy_event_cb(buddy, PURPLE_BUDDY_SIGNON_TIME);
 			}
 		}
 	}
 }
 
-static void buddy_status_changed_cb(GaimBuddy *buddy, GaimStatus *oldstatus, GaimStatus *status, GaimBuddyEvent event)
+static void buddy_status_changed_cb(PurpleBuddy *buddy, PurpleStatus *oldstatus, PurpleStatus *status, PurpleBuddyEvent event)
 {
-	CBGaimAccount		*account = accountLookup(buddy->account);
+	CBPurpleAccount		*account = accountLookup(buddy->account);
 	AIListContact		*theContact = contactLookupFromBuddy(buddy);
 	NSNumber			*statusTypeNumber;
 	NSString			*statusName;
 	NSAttributedString	*statusMessage;	
 	BOOL				isAvailable;
 
-	isAvailable = ((gaim_status_type_get_primitive(gaim_status_get_type(status)) == GAIM_STATUS_AVAILABLE) ||
-				   (gaim_status_type_get_primitive(gaim_status_get_type(status)) == GAIM_STATUS_OFFLINE));
+	isAvailable = ((purple_status_type_get_primitive(purple_status_get_type(status)) == GAIM_STATUS_AVAILABLE) ||
+				   (purple_status_type_get_primitive(purple_status_get_type(status)) == GAIM_STATUS_OFFLINE));
 
 	statusTypeNumber = [NSNumber numberWithInt:(isAvailable ? 
 												AIAvailableStatusType : 
 												AIAwayStatusType)];
 
-	statusName = [account statusNameForGaimBuddy:buddy];
-	statusMessage = [account statusMessageForGaimBuddy:buddy];
+	statusName = [account statusNameForPurpleBuddy:buddy];
+	statusMessage = [account statusMessageForPurpleBuddy:buddy];
 
 	//XXX This is done so MSN can ignore it since it's currently buggy in libgaim
 	[account updateMobileStatus:theContact
-					   withData:(gaim_presence_is_status_primitive_active(gaim_buddy_get_presence(buddy), GAIM_STATUS_MOBILE))];
+					   withData:(purple_presence_is_status_primitive_active(purple_buddy_get_presence(buddy), GAIM_STATUS_MOBILE))];
 
 	//Will also notify
 	[account updateStatusForContact:theContact
@@ -149,14 +149,14 @@ static void buddy_status_changed_cb(GaimBuddy *buddy, GaimStatus *oldstatus, Gai
 					  statusMessage:statusMessage];
 }
 
-static void buddy_idle_changed_cb(GaimBuddy *buddy, gboolean old_idle, gboolean idle, GaimBuddyEvent event)
+static void buddy_idle_changed_cb(PurpleBuddy *buddy, gboolean old_idle, gboolean idle, PurpleBuddyEvent	event)
 {
-	CBGaimAccount	*account = accountLookup(buddy->account);
+	CBPurpleAccount	*account = accountLookup(buddy->account);
 	AIListContact	*theContact = contactLookupFromBuddy(buddy);
-	GaimPresence	*presence = gaim_buddy_get_presence(buddy);
+	PurplePresence	*presence = purple_buddy_get_presence(buddy);
 				
 	if (idle) {
-		time_t		idleTime = gaim_presence_get_idle_time(presence);
+		time_t		idleTime = purple_presence_get_idle_time(presence);
 
 		[account updateWentIdle:theContact
 					   withData:(idleTime ?
@@ -168,9 +168,9 @@ static void buddy_idle_changed_cb(GaimBuddy *buddy, gboolean old_idle, gboolean 
 	}
 }
 
-static void buddy_added_cb(GaimBuddy *buddy)
+static void buddy_added_cb(PurpleBuddy *buddy)
 {
-	GaimGroup		*g = gaim_buddy_get_group(buddy);
+	PurpleGroup		*g = purple_buddy_get_group(buddy);
 
 	/* We pass in buddy->name directly (without filtering or normalizing it) as it may indicate a 
 	 * formatted version of the UID.  We have a signal for when a rename occurs, but passing here lets us get
@@ -182,38 +182,38 @@ static void buddy_added_cb(GaimBuddy *buddy)
 									 contactName:(buddy->name ? [NSString stringWithUTF8String:buddy->name] : nil)];
 }
 
-void configureAdiumGaimSignals(void)
+void configureAdiumPurpleSignals(void)
 {
-	void *blist_handle = gaim_blist_get_handle();
-	void *handle       = adium_gaim_get_handle();
+	void *blist_handle = purple_blist_get_handle();
+	void *handle       = adium_purple_get_handle();
 
-	gaim_signal_connect(blist_handle, "buddy-added",
+	purple_signal_connect(blist_handle, "buddy-added",
 						handle, GAIM_CALLBACK(buddy_added_cb),
 						GINT_TO_POINTER(0));
 
 	//Idle
-	gaim_signal_connect(blist_handle, "buddy-idle-changed",
+	purple_signal_connect(blist_handle, "buddy-idle-changed",
 						handle, GAIM_CALLBACK(buddy_idle_changed_cb),
 						GINT_TO_POINTER(0));
 	
 	//Status
-	gaim_signal_connect(blist_handle, "buddy-status-changed",
+	purple_signal_connect(blist_handle, "buddy-status-changed",
 						handle, GAIM_CALLBACK(buddy_status_changed_cb),
 						GINT_TO_POINTER(0));
 
 	//Icon
-	gaim_signal_connect(blist_handle, "buddy-icon-changed",
+	purple_signal_connect(blist_handle, "buddy-icon-changed",
 						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_ICON));
+						GINT_TO_POINTER(PURPLE_BUDDY_ICON));
 
 	//Signon / Signoff
-	gaim_signal_connect(blist_handle, "buddy-signed-on",
+	purple_signal_connect(blist_handle, "buddy-signed-on",
 						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_SIGNON));
-	gaim_signal_connect(blist_handle, "buddy-signed-off",
+						GINT_TO_POINTER(PURPLE_BUDDY_SIGNON));
+	purple_signal_connect(blist_handle, "buddy-signed-off",
 						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_SIGNOFF));	
-	gaim_signal_connect(blist_handle, "buddy-got-login-time",
+						GINT_TO_POINTER(PURPLE_BUDDY_SIGNOFF));	
+	purple_signal_connect(blist_handle, "buddy-got-login-time",
 						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_SIGNON_TIME));	
+						GINT_TO_POINTER(PURPLE_BUDDY_SIGNON_TIME));	
 }

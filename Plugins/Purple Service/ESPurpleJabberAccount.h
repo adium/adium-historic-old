@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "CBGaimAccount.h"
+#import "CBPurpleAccount.h"
 
 #define KEY_JABBER_CONNECT_SERVER		@"Jabber:Connect Server"
 #define KEY_JABBER_PRIORITY_AVAILABLE	@"Jabber:Priority when Available"
@@ -24,7 +24,7 @@
 #define KEY_JABBER_FORCE_OLD_SSL		@"Jabber:Force Old SSL"
 #define KEY_JABBER_ALLOW_PLAINTEXT		@"Jabber:Allow Plaintext Authentication"
 
-@interface ESGaimJabberAccount : CBGaimAccount <AIAccount_Files> {
+@interface ESPurpleJabberAccount : CBPurpleAccount <AIAccount_Files> {
 
 }
 

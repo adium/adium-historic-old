@@ -14,16 +14,16 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "SLGaimCocoaAdapter.h"
+#import "SLPurpleCocoaAdapter.h"
 
-GaimRequestUiOps *adium_gaim_request_get_ui_ops();
+PurpleRequestUiOps *adium_purple_request_get_ui_ops();
 
-@protocol GaimRequestController
+@protocol PurpleRequestController
 - (void)gaimRequestClose;
 - (void)mainPerformSelector:(SEL)aSelector;//this is declared in AIObjectAdditions.h, but for some reason it wasn't being noticed, so this fixes a warning.
 @end;
 
-@interface ESGaimRequestAdapter : NSObject {
+@interface ESPurpleRequestAdapter : NSObject {
 	
 }
 + (void)requestCloseWithHandle:(id)handle;

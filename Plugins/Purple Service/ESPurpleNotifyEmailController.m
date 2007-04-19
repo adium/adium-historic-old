@@ -14,19 +14,19 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESGaimNotifyEmailController.h"
-#import "SLGaimCocoaAdapter.h"
-#import "GaimCommon.h"
+#import "ESPurpleNotifyEmailController.h"
+#import "SLPurpleCocoaAdapter.h"
+#import "PurpleCommon.h"
 #import "ESTextAndButtonsWindowController.h"
 #import <Adium/AIContactAlertsControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AIObjectAdditions.h>
 
-@interface ESGaimNotifyEmailController (PRIVATE)
+@interface ESPurpleNotifyEmailController (PRIVATE)
 + (void)openURLString:(NSString *)urlString;
 @end
 
-@implementation ESGaimNotifyEmailController
+@implementation ESPurpleNotifyEmailController
 
 /*!
  * @brief Handle the notification of emails
@@ -150,7 +150,7 @@
 	[centeredParagraphStyle release];
 	[message release];
 	
-	return NULL /*adium_gaim_get_handle()*/ ;
+	return NULL /*adium_purple_get_handle()*/ ;
 }
 
 /*!
@@ -207,7 +207,7 @@
  * @brief Open a URL string from the open mail window
  *
  * The urlString could either be a web address or a path to a local HTML file we are supposed to load.
- * The local HTML file will be in the user's temp directory, which Gaim obtains with g_get_tmp_dir()...  
+ * The local HTML file will be in the user's temp directory, which Purple obtains with g_get_tmp_dir()...  
  * so we will, too.
  */ 
 + (void)openURLString:(NSString *)urlString

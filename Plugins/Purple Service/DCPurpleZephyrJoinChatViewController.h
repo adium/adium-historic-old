@@ -16,7 +16,7 @@
 
 #import <Adium/DCJoinChatViewController.h>
 
-@interface DCGaimZephyrJoinChatViewController : DCJoinChatViewController {
+@interface DCPurpleZephyrJoinChatViewController : DCJoinChatViewController {
 	IBOutlet	NSTextField		*textField_class;
 	IBOutlet	NSTextField		*textField_instance;
 	IBOutlet	NSTextField		*textField_recipient;

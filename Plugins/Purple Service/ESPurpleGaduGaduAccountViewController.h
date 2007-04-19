@@ -16,7 +16,7 @@
 
 #include "AIAccountViewController.h"
 
-@interface ESGaimGaduGaduAccountViewController : AIAccountViewController {
+@interface ESPurpleGaduGaduAccountViewController : AIAccountViewController {
     
 }
 

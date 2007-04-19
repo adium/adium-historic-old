@@ -15,14 +15,14 @@
  */
 
 #import <Adium/AIAccount.h>
-#import "GaimCommon.h"
+#import "PurpleCommon.h"
 
 @protocol AIAccount_Privacy;
-@class SLGaimCocoaAdapter, ESFileTransfer, AIService, AIContentMessage, AIStatus, AIWindowController;
+@class SLPurpleCocoaAdapter, ESFileTransfer, AIService, AIContentMessage, AIStatus, AIWindowController;
 
-@interface CBGaimAccount : AIAccount <AIAccount_Privacy>
+@interface CBPurpleAccount : AIAccount <AIAccount_Privacy>
 {   	
-    GaimAccount         *account;
+    PurpleAccount         *account;
 
 	NSMutableDictionary	*customEmoticonWaitingDict;
 
@@ -34,10 +34,10 @@
 }
 
 - (const char*)protocolPlugin;
-- (GaimAccount*)gaimAccount;
+- (PurpleAccount*)gaimAccount;
 - (const char *)gaimAccountName;
 
-- (void)createNewGaimAccount;
+- (void)createNewPurpleAccount;
 
 - (void)dealloc;
 - (NSSet *)supportedPropertyKeys;
@@ -48,7 +48,7 @@
 - (BOOL)useDisplayNameAsStatusMessage;
 - (AIService *)_serviceForUID:(NSString *)contactUID;
 
-/* CBGaimAccount odes not implement AIAccount_Files; however, all subclasses which do use the same code.
+/* CBPurpleAccount odes not implement AIAccount_Files; however, all subclasses which do use the same code.
 	The superclass therefore has the code and declares the methods here. */
 	//Instructs the account to accept a file transfer request
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer;
@@ -58,7 +58,7 @@
 - (void)cancelFileTransfer:(ESFileTransfer *)fileTransfer;
 
 	//Private (for subclasses only) file transfer methods
-- (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer;
+- (PurpleXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer;
 - (void)_beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer;
 
 	//AIAccount_Privacy
@@ -71,7 +71,7 @@
 - (void)configureAccountProxyNotifyingTarget:(id)target selector:(SEL)selector;
 - (void)disconnect;
 - (NSString *)connectionStringForStep:(int)step;
-- (void)configureGaimAccount;
+- (void)configurePurpleAccount;
 
 //Account status
 - (NSSet *)supportedPropertyKeys;
@@ -87,9 +87,9 @@
 
 - (BOOL)shouldSetAliasesServerside;
 
-- (SLGaimCocoaAdapter *)gaimThread;
+- (SLPurpleCocoaAdapter *)gaimThread;
 
-#pragma mark Gaim callback handling methods
+#pragma mark Purple callback handling methods
 - (void)accountConnectionConnected;
 - (void)accountConnectionReportDisconnect:(NSString *)text;
 - (void)accountConnectionNotice:(NSString *)text;
@@ -109,8 +109,8 @@
 				  toStatusType:(NSNumber *)statusTypeNumber
 					statusName:(NSString *)statusName 
 				 statusMessage:(NSAttributedString *)statusMessage;
-- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)b;
-- (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b;
+- (NSString *)statusNameForPurpleBuddy:(PurpleBuddy *)b;
+- (NSAttributedString *)statusMessageForPurpleBuddy:(PurpleBuddy *)b;
 - (void)updateEvil:(AIListContact *)theContact withData:(NSNumber *)evilNumber;
 - (void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData;
 - (void)updateMobileStatus:(AIListContact *)theContact withData:(BOOL)isMobile;
@@ -157,7 +157,7 @@
 - (void)renameContact:(AIListContact *)theContact toUID:(NSString *)newUID;
 - (void)updateWentIdle:(AIListContact *)theContact withData:(NSDate *)idleSinceDate;
 - (void)updateIdleReturn:(AIListContact *)theContact withData:(void *)data;
-- (void)updateUserInfo:(AIListContact *)theContact withData:(GaimNotifyUserInfo *)user_info;
+- (void)updateUserInfo:(AIListContact *)theContact withData:(PurpleNotifyUserInfo *)user_info;
 
 #pragma mark Chats
 - (void)errorForChat:(AIChat *)chat type:(NSNumber *)type;

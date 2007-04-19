@@ -14,13 +14,13 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESGaimMeanwhileAccountViewController.h"
-#import "ESGaimMeanwhileAccount.h"
+#import "ESPurpleMeanwhileAccountViewController.h"
+#import "ESPurpleMeanwhileAccount.h"
 
-@implementation ESGaimMeanwhileAccountViewController
+@implementation ESPurpleMeanwhileAccountViewController
 
 - (NSString *)nibName{
-    return @"ESGaimMeanwhileAccountView";
+    return @"ESPurpleMeanwhileAccountView";
 }
 
 //Configure our controls

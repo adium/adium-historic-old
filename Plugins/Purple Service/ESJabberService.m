@@ -15,9 +15,9 @@
  */
 
 #import <Adium/AIStatusControllerProtocol.h>
-#import "DCGaimJabberJoinChatViewController.h"
-#import "ESGaimJabberAccount.h"
-#import "ESGaimJabberAccountViewController.h"
+#import "DCPurpleJabberJoinChatViewController.h"
+#import "ESPurpleJabberAccount.h"
+#import "ESPurpleJabberAccountViewController.h"
 #import "ESJabberService.h"
 #import <AIUtilities/AICharacterSetAdditions.h>
 
@@ -25,15 +25,15 @@
 
 //Account Creation
 - (Class)accountClass{
-	return [ESGaimJabberAccount class];
+	return [ESPurpleJabberAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return [ESGaimJabberAccountViewController accountViewController];
+    return [ESPurpleJabberAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return [DCGaimJabberJoinChatViewController joinChatView];
+	return [DCPurpleJabberJoinChatViewController joinChatView];
 }
 
 - (BOOL)canCreateGroupChats{

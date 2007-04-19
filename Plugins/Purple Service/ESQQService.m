@@ -6,19 +6,19 @@
 //
 
 #import "ESQQService.h"
-#import "ESGaimQQAccount.h"
-#import "ESGaimQQAccountViewController.h"
+#import "ESPurpleQQAccount.h"
+#import "ESPurpleQQAccountViewController.h"
 #import <Adium/AIStatusControllerProtocol.h>
 #import <AIUtilities/AICharacterSetAdditions.h>
 
 @implementation ESQQService
 //Account Creation
 - (Class)accountClass{
-	return [ESGaimQQAccount class];
+	return [ESPurpleQQAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return [ESGaimQQAccountViewController accountViewController];
+    return [ESPurpleQQAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{

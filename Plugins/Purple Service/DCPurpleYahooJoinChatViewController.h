@@ -18,7 +18,7 @@
 
 @class AIAccount, AICompletingTextField;
 
-@interface DCGaimYahooJoinChatViewController : DCJoinChatViewController {
+@interface DCPurpleYahooJoinChatViewController : DCJoinChatViewController {
 	IBOutlet		NSTextField		*textField_roomName;
 	
 	IBOutlet		NSTextField					*textField_inviteMessage;

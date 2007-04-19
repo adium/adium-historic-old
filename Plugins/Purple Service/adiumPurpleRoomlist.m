@@ -14,39 +14,39 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "adiumGaimRoomlist.h"
+#import "adiumPurpleRoomlist.h"
 
-static void adiumGaimRoomlistDialogShowWithAccount(GaimAccount *account)
+static void adiumPurpleRoomlistDialogShowWithAccount(PurpleAccount *account)
 {
 }
-static void adiumGaimRoomlistNew(GaimRoomlist *list)
+static void adiumPurpleRoomlistNew(PurpleRoomlist *list)
 {
-	GaimDebug (@"adiumGaimRoomlistNew");
+	PurpleDebug (@"adiumPurpleRoomlistNew");
 }
-static void adiumGaimRoomlistSetFields(GaimRoomlist *list, GList *fields)
-{
-}
-static void adiumGaimRoomlistAddRoom(GaimRoomlist *list, GaimRoomlistRoom *room)
-{
-	GaimDebug (@"adiumGaimRoomlistAddRoom");
-}
-static void adiumGaimRoomlistInProgress(GaimRoomlist *list, gboolean flag)
+static void adiumPurpleRoomlistSetFields(PurpleRoomlist *list, GList *fields)
 {
 }
-static void adiumGaimRoomlistDestroy(GaimRoomlist *list)
+static void adiumPurpleRoomlistAddRoom(PurpleRoomlist *list, PurpleRoomlistRoom *room)
+{
+	PurpleDebug (@"adiumPurpleRoomlistAddRoom");
+}
+static void adiumPurpleRoomlistInProgress(PurpleRoomlist *list, gboolean flag)
+{
+}
+static void adiumPurpleRoomlistDestroy(PurpleRoomlist *list)
 {
 }
 
-static GaimRoomlistUiOps adiumGaimRoomlistOps = {
-	adiumGaimRoomlistDialogShowWithAccount,
-	adiumGaimRoomlistNew,
-	adiumGaimRoomlistSetFields,
-	adiumGaimRoomlistAddRoom,
-	adiumGaimRoomlistInProgress,
-	adiumGaimRoomlistDestroy
+static PurpleRoomlistUiOps adiumPurpleRoomlistOps = {
+	adiumPurpleRoomlistDialogShowWithAccount,
+	adiumPurpleRoomlistNew,
+	adiumPurpleRoomlistSetFields,
+	adiumPurpleRoomlistAddRoom,
+	adiumPurpleRoomlistInProgress,
+	adiumPurpleRoomlistDestroy
 };
 
-GaimRoomlistUiOps *adium_gaim_roomlist_get_ui_ops()
+PurpleRoomlistUiOps *adium_purple_roomlist_get_ui_ops()
 {
-	return &adiumGaimRoomlistOps;
+	return &adiumPurpleRoomlistOps;
 }

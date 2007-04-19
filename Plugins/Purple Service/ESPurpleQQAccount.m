@@ -1,14 +1,14 @@
 //
-//  ESGaimQQAccount.m
+//  ESPurpleQQAccount.m
 //  Adium
 //
 //  Created by Evan Schoenberg on 8/7/06.
 //
 
-#import "ESGaimQQAccount.h"
+#import "ESPurpleQQAccount.h"
 
 
-@implementation ESGaimQQAccount
+@implementation ESPurpleQQAccount
 
 - (const char*)protocolPlugin
 {
@@ -19,7 +19,7 @@
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
 	if (label && (strcmp(label, "Modify my information") == 0)) {
-		/* Modifying information depends upon adiumGaimRequestFields */
+		/* Modifying information depends upon adiumPurpleRequestFields */
 		return nil;
 	}
 	

@@ -15,19 +15,19 @@
  */
 
 #import "AIGTalkService.h"
-#import "AIGaimGTalkAccount.h"
-#import "AIGaimGTalkAccountViewController.h"
+#import "AIPurpleGTalkAccount.h"
+#import "AIPurpleGTalkAccountViewController.h"
 
 @implementation AIGTalkService
 
 //Account Creation
 - (Class)accountClass{
-	return [AIGaimGTalkAccount class];
+	return [AIPurpleGTalkAccount class];
 }
 
 //
 - (AIAccountViewController *)accountViewController{
-    return [AIGaimGTalkAccountViewController accountViewController];
+    return [AIPurpleGTalkAccountViewController accountViewController];
 }
 
 //Service Description

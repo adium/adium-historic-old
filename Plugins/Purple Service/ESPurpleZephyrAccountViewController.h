@@ -16,7 +16,7 @@
 
 #import <Adium/AIAccountViewController.h>
 
-@interface ESGaimZephyrAccountViewController : AIAccountViewController {
+@interface ESPurpleZephyrAccountViewController : AIAccountViewController {
 	IBOutlet	NSButton	*checkBox_exportAnyone;
 	IBOutlet	NSButton	*checkBox_exportSubs;
 	IBOutlet	NSTextField	*textField_exposure;

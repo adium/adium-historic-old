@@ -17,8 +17,8 @@
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIStatusControllerProtocol.h>
-#import "CBGaimOscarAccount.h"
-#import "SLGaimCocoaAdapter.h"
+#import "CBPurpleOscarAccount.h"
+#import "SLPurpleCocoaAdapter.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIObjectAdditions.h>
@@ -32,7 +32,7 @@
 
 extern gchar *oscar_encoding_extract(const char *encoding);
 
-@implementation CBGaimOscarAccount
+@implementation CBPurpleOscarAccount
 
 - (const char*)protocolPlugin
 {
@@ -142,7 +142,7 @@ extern gchar *oscar_encoding_extract(const char *encoding);
 	return nil;
 }
 
-- (oneway void)updateUserInfo:(AIListContact *)theContact withData:(GaimNotifyUserInfo *)user_info
+- (oneway void)updateUserInfo:(AIListContact *)theContact withData:(PurpleNotifyUserInfo *)user_info
 {
 	/*
 	[super updateUserInfo:theContact withData:user_info];
@@ -159,13 +159,13 @@ extern gchar *oscar_encoding_extract(const char *encoding);
 	} else {
 		GList *l;
 		
-		for (l = gaim_notify_user_info_get_entries(user_info); l != NULL; l = l->next) {
-			GaimNotifyUserInfoEntry *user_info_entry = l->data;
-			if (gaim_notify_user_info_entry_get_label(user_info_entry) &&
-				strcmp(gaim_notify_user_info_entry_get_label(user_info_entry), "Profile") == 0) {
+		for (l = purple_notify_user_info_get_entries(user_info); l != NULL; l = l->next) {
+			PurpleNotifyUserInfoEntry *user_info_entry = l->data;
+			if (purple_notify_user_info_entry_get_label(user_info_entry) &&
+				strcmp(purple_notify_user_info_entry_get_label(user_info_entry), "Profile") == 0) {
 
-				[theContact setProfile:[AIHTMLDecoder decodeHTML:(gaim_notify_user_info_entry_get_value(user_info_entry) ?
-																  [NSString stringWithUTF8String:gaim_notify_user_info_entry_get_value(user_info_entry)] :
+				[theContact setProfile:[AIHTMLDecoder decodeHTML:(purple_notify_user_info_entry_get_value(user_info_entry) ?
+																  [NSString stringWithUTF8String:purple_notify_user_info_entry_get_value(user_info_entry)] :
 																  nil)]
 								notify:NotifyLater];
 				
@@ -208,21 +208,21 @@ extern gchar *oscar_encoding_extract(const char *encoding);
 {	
 	NSString *serversideComment = nil;
 	
-	if (gaim_account_is_connected(account)) {
+	if (purple_account_is_connected(account)) {
 		const char  *uidUTF8String = [[theContact UID] UTF8String];
-		GaimBuddy   *buddy;
+		PurpleBuddy   *buddy;
 		
-		if ((buddy = gaim_find_buddy(account, uidUTF8String))) {
-			GaimGroup   *g;
+		if ((buddy = purple_find_buddy(account, uidUTF8String))) {
+			PurpleGroup   *g;
 			char		*comment;
 			OscarData   *od;
 			
-			if ((g = gaim_buddy_get_group(buddy)) &&
+			if ((g = purple_buddy_get_group(buddy)) &&
 				(od = account->gc->proto_data) &&
 				(comment = aim_ssi_getcomment(od->ssi.local, g->name, buddy->name))) {
 				gchar		*comment_utf8;
 				
-				comment_utf8 = gaim_utf8_try_convert(comment);
+				comment_utf8 = purple_utf8_try_convert(comment);
 				serversideComment = [NSString stringWithUTF8String:comment_utf8];
 				g_free(comment_utf8);
 				
@@ -275,7 +275,7 @@ extern gchar *oscar_encoding_extract(const char *encoding);
 		if (aim_sn_is_icq(contactUIDUTF8String)) {
 			OscarData			*od;
 
-			if ((gaim_account_is_connected(account)) &&
+			if ((purple_account_is_connected(account)) &&
 				(od = account->gc->proto_data)) {
 				aim_icq_getalias(od, contactUIDUTF8String);
 			}
@@ -414,7 +414,7 @@ extern gchar *oscar_encoding_extract(const char *encoding);
 	} else if (strcmp(label, "Edit Buddy Comment") == 0) {
 		return nil;
 	} else if (strcmp(label, "Show Buddies Awaiting Authorization") == 0) {
-		/* XXX Depends on adiumGaimRequestFields() */
+		/* XXX Depends on adiumPurpleRequestFields() */
 		//AILocalizedString(@"Show Contacts Awaiting Authorization", "Account action menu item to show a list of contacts for whom this account is awaiting authorization to be able to show them in the contact list")
 		return nil;
 	} else if (strcmp(label, "Configure IM Forwarding (URL)") == 0) {
@@ -471,14 +471,14 @@ extern gchar *oscar_encoding_extract(const char *encoding);
 }
 
 #pragma mark Buddy status
-- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)buddy
+- (NSString *)statusNameForPurpleBuddy:(PurpleBuddy *)buddy
 {
 	NSString		*statusName = nil;
 	
 	if (aim_sn_is_icq(buddy->name)) {
-		GaimPresence	*presence = gaim_buddy_get_presence(buddy);
-		GaimStatus *status = gaim_presence_get_active_status(presence);
-		const char *gaimStatusID = gaim_status_get_id(status);
+		PurplePresence	*presence = purple_buddy_get_presence(buddy);
+		PurpleStatus *status = purple_presence_get_active_status(presence);
+		const char *gaimStatusID = purple_status_get_id(status);
 
 		if (!strcmp(gaimStatusID, OSCAR_STATUS_ID_INVISIBLE)) {
 			statusName = STATUS_NAME_INVISIBLE;

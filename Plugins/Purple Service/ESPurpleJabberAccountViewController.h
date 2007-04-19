@@ -15,9 +15,9 @@
  */
 
 #import "AIAccountViewController.h"
-#import "ESGaimJabberAccount.h"
+#import "ESPurpleJabberAccount.h"
 
-@interface ESGaimJabberAccountViewController : AIAccountViewController {
+@interface ESPurpleJabberAccountViewController : AIAccountViewController {
     IBOutlet	NSTextField *textField_connectServer;
 	IBOutlet	NSTextField *textField_resource;
 	IBOutlet	NSTextField *textField_priorityAvailable;

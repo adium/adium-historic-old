@@ -1,14 +1,14 @@
 //
-//  ESGaimMeanwhileContactAdditionController.h
+//  ESPurpleMeanwhileContactAdditionController.h
 //  Adium
 //
 //  Created by Evan Schoenberg on 4/29/05.
 //  Copyright 2006 The Adium Team. All rights reserved.
 //
 
-#import "ESGaimRequestAbstractWindowController.h"
+#import "ESPurpleRequestAbstractWindowController.h"
 
-@interface ESGaimMeanwhileContactAdditionController : ESGaimRequestAbstractWindowController {
+@interface ESPurpleMeanwhileContactAdditionController : ESPurpleRequestAbstractWindowController {
 	IBOutlet	NSImageView	*imageView_meanwhile;
 	
 	IBOutlet	NSTextField	*textField_header;
@@ -22,7 +22,7 @@
 	NSDictionary			*infoDict;
 }
 
-+ (ESGaimMeanwhileContactAdditionController *)showContactAdditionListWithDict:(NSDictionary *)inInfoDict;
++ (ESPurpleMeanwhileContactAdditionController *)showContactAdditionListWithDict:(NSDictionary *)inInfoDict;
 - (IBAction)pressedButton:(id)sender;
 
 @end

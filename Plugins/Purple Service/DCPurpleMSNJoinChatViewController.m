@@ -14,12 +14,12 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "DCGaimMSNJoinChatViewController.h"
+#import "DCPurpleMSNJoinChatViewController.h"
 #import <Adium/AIChatControllerProtocol.h>
 #import "DCJoinChatWindowController.h"
 #import <Adium/AIAccount.h>
 
-@implementation DCGaimMSNJoinChatViewController
+@implementation DCPurpleMSNJoinChatViewController
 
 - (void)configureForAccount:(AIAccount *)inAccount
 {
@@ -44,7 +44,7 @@
 
 - (NSString *)nibName
 {
-	return @"DCGaimMSNJoinChatView";
+	return @"DCPurpleMSNJoinChatView";
 }
 
 @end

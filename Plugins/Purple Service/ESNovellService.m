@@ -15,24 +15,24 @@
  */
 
 #import <Adium/AIStatusControllerProtocol.h>
-#import "DCGaimNovellJoinChatViewController.h"
-#import "ESGaimNovellAccount.h"
-#import "ESGaimNovellAccountViewController.h"
+#import "DCPurpleNovellJoinChatViewController.h"
+#import "ESPurpleNovellAccount.h"
+#import "ESPurpleNovellAccountViewController.h"
 #import "ESNovellService.h"
 
 @implementation ESNovellService
 
 //Account Creation
 - (Class)accountClass{
-	return [ESGaimNovellAccount class];
+	return [ESPurpleNovellAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return [ESGaimNovellAccountViewController accountViewController];
+    return [ESPurpleNovellAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return [DCGaimNovellJoinChatViewController joinChatView];
+	return [DCPurpleNovellJoinChatViewController joinChatView];
 }
 
 //Service Description

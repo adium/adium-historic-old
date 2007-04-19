@@ -14,9 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESGaimMSNAccount.h"
+#import "ESPurpleMSNAccount.h"
 
-#import <Libgaim/state.h>
+#import <Libpurple/state.h>
 
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
@@ -32,17 +32,17 @@
 #import <AIUtilities/AIMutableStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 
-#import <Libgaim/msn.h>
+#import <Libpurple/msn.h>
 
 #define DEFAULT_MSN_PASSPORT_DOMAIN				@"@hotmail.com"
 #define SECONDS_BETWEEN_FRIENDLY_NAME_CHANGES	10
 
-@interface ESGaimMSNAccount (PRIVATE)
+@interface ESPurpleMSNAccount (PRIVATE)
 - (void)updateFriendlyNameAfterConnect;
 - (void)setServersideDisplayName:(NSString *)friendlyName;
 @end
 
-@implementation ESGaimMSNAccount
+@implementation ESPurpleMSNAccount
 
 /*!
  * @brief The UID will be changed. The account has a chance to perform modifications
@@ -89,12 +89,12 @@
 }
 
 #pragma mark Connection
-- (void)configureGaimAccount
+- (void)configurePurpleAccount
 {
-	[super configureGaimAccount];
+	[super configurePurpleAccount];
 	
 	BOOL HTTPConnect = [[self preferenceForKey:KEY_MSN_HTTP_CONNECT_METHOD group:GROUP_ACCOUNT_STATUS] boolValue];
-	gaim_account_set_bool(account, "http_method", HTTPConnect);
+	purple_account_set_bool(account, "http_method", HTTPConnect);
 }
 
 - (NSString *)connectionStringForStep:(int)step
@@ -186,7 +186,7 @@
  */
 - (void)updateFriendlyNameAfterConnect
 {
-	const char			*displayName = gaim_connection_get_display_name(gaim_account_get_connection(account));
+	const char			*displayName = purple_connection_get_display_name(purple_account_get_connection(account));
 	NSAttributedString	*accountDisplayName = [[self preferenceForKey:KEY_ACCOUNT_DISPLAY_NAME
 														   group:GROUP_ACCOUNT_STATUS
 										   ignoreInheritedValues:YES] attributedString];
@@ -215,7 +215,7 @@
 		 *
 		 * An important exception is if our per-account display name is dynamic (i.e. a 'Now Playing in iTunes' name).
 		 *
-		 * We explicitly ignore any display name starting with "<msnobj" because gaim_connection_get_display_name() occassionaly (rarely)
+		 * We explicitly ignore any display name starting with "<msnobj" because purple_connection_get_display_name() occassionaly (rarely)
 		 * returns invalid data starting with that string.  The user can still set this as an MSN display name if she is really that weird, but
 		 * we won't update to match other clients setting it.
 		 */
@@ -274,7 +274,7 @@
 	}
 }
 
-extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
+extern void msn_set_friendly_name(PurpleConnection *gc, const char *entry);
 
 - (void)doQueuedSetServersideDisplayName
 {
@@ -284,7 +284,7 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 
 - (void)setServersideDisplayName:(NSString *)friendlyName
 {
-	if (gaim_account_is_connected(account)) {		
+	if (purple_account_is_connected(account)) {		
 		NSDate *now = [NSDate date];
 
 		if (!lastFriendlyNameChange ||
@@ -296,7 +296,7 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 			friendlyName = noNewlinesFriendlyName;
 
 			/*
-			 * The MSN display name will be URL encoded via gaim_url_encode().  The maximum length of the _encoded_ string is
+			 * The MSN display name will be URL encoded via purple_url_encode().  The maximum length of the _encoded_ string is
 			 * BUDDY_ALIAS_MAXLEN (387 characters as of gaim 2.0.0). We can't simply encode and truncate as we might end up with
 			 * part of an encoded character being cut off, so we instead truncate to smaller and smaller strings and encode, until it fits
 			 */
@@ -304,16 +304,16 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 			int currentMaxNumberOfPreEncodedCharacters = BUDDY_ALIAS_MAXLEN;
 
 			while (friendlyNameUTF8String &&
-				   strlen(gaim_url_encode(friendlyNameUTF8String)) > BUDDY_ALIAS_MAXLEN) {
+				   strlen(purple_url_encode(friendlyNameUTF8String)) > BUDDY_ALIAS_MAXLEN) {
 				AILog(@"Shortening because %s (max len %i) [%s] len (%i) > %i",
 					  friendlyNameUTF8String, currentMaxNumberOfPreEncodedCharacters,
-					  gaim_url_encode(friendlyNameUTF8String),strlen(gaim_url_encode(friendlyNameUTF8String)),
+					  purple_url_encode(friendlyNameUTF8String),strlen(purple_url_encode(friendlyNameUTF8String)),
 					  BUDDY_ALIAS_MAXLEN);
 				friendlyName = [noNewlinesFriendlyName stringWithEllipsisByTruncatingToLength:currentMaxNumberOfPreEncodedCharacters];				
 				friendlyNameUTF8String = [friendlyName UTF8String];
 				currentMaxNumberOfPreEncodedCharacters -= 10;
 			}
-			msn_set_friendly_name(gaim_account_get_connection(account), friendlyNameUTF8String);
+			msn_set_friendly_name(purple_account_get_connection(account), friendlyNameUTF8String);
 
 			[lastFriendlyNameChange release];
 			lastFriendlyNameChange = [now retain];
@@ -403,12 +403,12 @@ extern void msn_set_friendly_name(GaimConnection *gc, const char *entry);
 
 #pragma mark Status messages
 
-- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)buddy
+- (NSString *)statusNameForPurpleBuddy:(PurpleBuddy *)buddy
 {
 	NSString		*statusName = nil;
-	GaimPresence	*presence = gaim_buddy_get_presence(buddy);
-	GaimStatus		*status = gaim_presence_get_active_status(presence);
-	const char		*gaimStatusID = gaim_status_get_id(status);
+	PurplePresence	*presence = purple_buddy_get_presence(buddy);
+	PurpleStatus		*status = purple_presence_get_active_status(presence);
+	const char		*gaimStatusID = purple_status_get_id(status);
 
 	if (!gaimStatusID) return nil;
 

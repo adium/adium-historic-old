@@ -16,7 +16,7 @@
 
 #import <Adium/AIPlugin.h>
 
-@interface CBGaimServicePlugin : AIPlugin{
+@interface CBPurpleServicePlugin : AIPlugin{
 #ifndef JOSCAR_SUPERCEDE_LIBGAIM
     id  AIMService;
     id  DotMacService;

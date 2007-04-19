@@ -15,18 +15,18 @@
  */
 
 #import <Adium/AIContactControllerProtocol.h>
-#import "DCGaimYahooJoinChatViewController.h"
+#import "DCPurpleYahooJoinChatViewController.h"
 #import "DCJoinChatWindowController.h"
 #import <AIUtilities/AICompletingTextField.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListContact.h>
 
-@interface DCGaimYahooJoinChatViewController (PRIVATE)
+@interface DCPurpleYahooJoinChatViewController (PRIVATE)
 - (void)validateEnteredText;
 - (void)_configureTextField;
 @end
 
-@implementation DCGaimYahooJoinChatViewController
+@implementation DCPurpleYahooJoinChatViewController
 
 - (id)init
 {
@@ -75,7 +75,7 @@
 
 - (NSString *)nibName
 {
-	return @"DCGaimYahooJoinChatView";
+	return @"DCPurpleYahooJoinChatView";
 }
 
 //Entered text is changing

@@ -1,5 +1,5 @@
 //
-//  ESGaimFileReceiveRequestController.h
+//  ESPurpleFileReceiveRequestController.h
 //  Adium
 //
 //  Created by Evan Schoenberg on 9/22/05.
@@ -9,9 +9,9 @@
 
 @class AIWindowController;
 
-@interface ESGaimFileReceiveRequestController : NSObject {
+@interface ESPurpleFileReceiveRequestController : NSObject {
 }
 
-+ (ESGaimFileReceiveRequestController *)showFileReceiveWindowWithDict:(NSDictionary *)inDict;
++ (ESPurpleFileReceiveRequestController *)showFileReceiveWindowWithDict:(NSDictionary *)inDict;
 
 @end

@@ -18,7 +18,7 @@
 
 @class AIAccount, AICompletingTextField;
 
-@interface DCGaimMeanwhileJoinChatViewController : DCJoinChatViewController {
+@interface DCPurpleMeanwhileJoinChatViewController : DCJoinChatViewController {
 	IBOutlet		NSTextField					*textField_topic;
 	IBOutlet		AICompletingTextField		*textField_inviteUsers;
 }

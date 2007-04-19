@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "CBGaimAccount.h"
+#import "CBPurpleAccount.h"
 
 #define	KEY_MEANWHILE_CONTACTLIST		@"Meanwhile:ContactList"
 #define KEY_MEANWHILE_FORCE_LOGIN		@"Meanwhile:ForceLogin"
@@ -30,7 +30,7 @@ enum Meanwhile_CL_Choice {
 
 /** the gaim plugin data.
 available as gc->proto_data and mwSession_getClientData */
-struct mwGaimPluginData {
+struct mwPurplePluginData {
 	struct mwSession *session;
 	
 	struct mwServiceAware *srvc_aware;
@@ -41,7 +41,7 @@ struct mwGaimPluginData {
 	struct mwServiceResolve *srvc_resolve;
 	struct mwServiceStorage *srvc_store;
 	
-	/** map of GaimGroup:mwAwareList and mwAwareList:GaimGroup */
+	/** map of PurpleGroup:mwAwareList and mwAwareList:PurpleGroup */
 	GHashTable *group_list_map;
 	
 	/** event id for the buddy list save callback */
@@ -50,7 +50,7 @@ struct mwGaimPluginData {
 	/** socket fd */
 	int socket;
 	
-	GaimConnection *gc;
+	PurpleConnection *gc;
 };
 
 /* 8.3.8.2 Awareness Presence Types */
@@ -76,7 +76,7 @@ struct mwAwareIdBlock {
 
 @protocol AIAccount_Files;
 
-@interface ESGaimMeanwhileAccount : CBGaimAccount <AIAccount_Files> {
+@interface ESPurpleMeanwhileAccount : CBPurpleAccount <AIAccount_Files> {
 
 }
 

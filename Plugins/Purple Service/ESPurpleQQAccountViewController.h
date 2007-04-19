@@ -1,5 +1,5 @@
 //
-//  ESGaimQQAccountViewController.h
+//  ESPurpleQQAccountViewController.h
 //  Adium
 //
 //  Created by Evan Schoenberg on 8/7/06.
@@ -8,7 +8,7 @@
 
 #import <Adium/AIAccountViewController.h>
 
-@interface ESGaimQQAccountViewController : AIAccountViewController {
+@interface ESPurpleQQAccountViewController : AIAccountViewController {
 
 }
 

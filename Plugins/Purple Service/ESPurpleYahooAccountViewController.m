@@ -14,23 +14,23 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESGaimYahooAccountViewController.h"
-#import "ESGaimYahooAccount.h"
+#import "ESPurpleYahooAccountViewController.h"
+#import "ESPurpleYahooAccount.h"
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 
-@interface ESGaimYahooAccountViewController (PRIVATE)
+@interface ESPurpleYahooAccountViewController (PRIVATE)
 - (NSMenu *)chatServerMenu;
 @end
 
-@implementation ESGaimYahooAccountViewController
+@implementation ESPurpleYahooAccountViewController
 
 /*!
  * @brief Nib name
  */
 - (NSString *)nibName{
-    return @"ESGaimYahooAccountView";
+    return @"ESPurpleYahooAccountView";
 }
 
 /*!

@@ -16,7 +16,7 @@
 
 #import <Adium/AIService.h>
 
-@interface GaimService : AIService {
+@interface PurpleService : AIService {
 
 }
 

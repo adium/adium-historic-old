@@ -15,18 +15,18 @@
  */
 
 #import <Adium/AIContactControllerProtocol.h>
-#import "DCGaimMeanwhileJoinChatViewController.h"
+#import "DCPurpleMeanwhileJoinChatViewController.h"
 #import "DCJoinChatWindowController.h"
 #import <AIUtilities/AICompletingTextField.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListContact.h>
 
-@interface DCGaimMeanwhileJoinChatViewController (PRIVATE)
+@interface DCPurpleMeanwhileJoinChatViewController (PRIVATE)
 - (void)validateEnteredText;
 - (void)_configureTextField;
 @end
 
-@implementation DCGaimMeanwhileJoinChatViewController
+@implementation DCPurpleMeanwhileJoinChatViewController
 
 - (id)init
 {
@@ -41,7 +41,7 @@
 
 - (NSString *)nibName
 {
-	return @"DCGaimMeanwhileJoinChatView";
+	return @"DCPurpleMeanwhileJoinChatView";
 }
 
 - (void)configureForAccount:(AIAccount *)inAccount

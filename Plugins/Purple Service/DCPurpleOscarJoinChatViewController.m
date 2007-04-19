@@ -15,25 +15,25 @@
  */
 
 #import <Adium/AIContactControllerProtocol.h>
-#import "DCGaimOscarJoinChatViewController.h"
+#import "DCPurpleOscarJoinChatViewController.h"
 #import "DCJoinChatWindowController.h"
 #import <Adium/AIChatControllerProtocol.h>
 #import <AIUtilities/AICompletingTextField.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListContact.h>
 
-@interface DCGaimOscarJoinChatViewController (PRIVATE)
+@interface DCPurpleOscarJoinChatViewController (PRIVATE)
 - (void)validateEnteredText;
 - (void)_configureTextField;
 @end
 
-@implementation DCGaimOscarJoinChatViewController
+@implementation DCPurpleOscarJoinChatViewController
 
 //#pragma mark Subclassed from DCJoinChatViewController
 
 - (NSString *)nibName
 {
-	return @"DCGaimOscarJoinChatView";
+	return @"DCPurpleOscarJoinChatView";
 }
 
 - (id)init

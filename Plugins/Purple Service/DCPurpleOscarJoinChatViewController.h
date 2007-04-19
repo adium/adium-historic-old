@@ -18,7 +18,7 @@
  
 @class AIAccount, AICompletingTextField;
 
-@interface DCGaimOscarJoinChatViewController : DCJoinChatViewController {	
+@interface DCPurpleOscarJoinChatViewController : DCJoinChatViewController {	
 	IBOutlet		NSTextField				*textField_roomName;
 	IBOutlet		NSTextField				*textField_inviteMessage;
 	IBOutlet		AICompletingTextField	*textField_inviteUsers;

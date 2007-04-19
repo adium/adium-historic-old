@@ -14,35 +14,35 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESGaimZephyrAccountViewController.h"
-#import "ESGaimZephyrAccount.h"
+#import "ESPurpleZephyrAccountViewController.h"
+#import "ESPurpleZephyrAccount.h"
 
-@implementation ESGaimZephyrAccount
+@implementation ESPurpleZephyrAccount
 
-gboolean gaim_init_zephyr_plugin(void);
+gboolean purple_init_zephyr_plugin(void);
 - (const char*)protocolPlugin
 {
     return "prpl-zephyr";
 }
 
-- (void)configureGaimAccount
+- (void)configurePurpleAccount
 {
-	[super configureGaimAccount];
+	[super configurePurpleAccount];
 	
 	NSString	*exposure_level, *encoding;
 	BOOL		write_anyone, write_zsubs;
 	
 	write_anyone = [[self preferenceForKey:KEY_ZEPHYR_EXPORT_ANYONE group:GROUP_ACCOUNT_STATUS] boolValue];
-	gaim_account_set_bool(account, "write_anyone", write_anyone);
+	purple_account_set_bool(account, "write_anyone", write_anyone);
 
 	write_zsubs = [[self preferenceForKey:KEY_ZEPHYR_EXPORT_SUBS group:GROUP_ACCOUNT_STATUS] boolValue];
-	gaim_account_set_bool(account, "write_zsubs", write_zsubs);
+	purple_account_set_bool(account, "write_zsubs", write_zsubs);
 	
 	exposure_level = [self preferenceForKey:KEY_ZEPHYR_EXPOSURE group:GROUP_ACCOUNT_STATUS];
-	gaim_account_set_string(account, "exposure_level", [exposure_level UTF8String]);
+	purple_account_set_string(account, "exposure_level", [exposure_level UTF8String]);
 
 	encoding = [self preferenceForKey:KEY_ZEPHYR_ENCODING group:GROUP_ACCOUNT_STATUS];
-	gaim_account_set_string(account, "encoding", [encoding UTF8String]);
+	purple_account_set_string(account, "encoding", [encoding UTF8String]);
 }
 
 //Zephyr connects to a local host so need not disconnect/reconnect as the network changes

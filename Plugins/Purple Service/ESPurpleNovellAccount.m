@@ -16,12 +16,12 @@
 
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIStatusControllerProtocol.h>
-#import "ESGaimNovellAccount.h"
+#import "ESPurpleNovellAccount.h"
 #import <Adium/AIStatus.h>
 
-@implementation ESGaimNovellAccount
+@implementation ESPurpleNovellAccount
 
-gboolean gaim_init_novell_plugin(void);
+gboolean purple_init_novell_plugin(void);
 - (const char*)protocolPlugin
 {
     return "prpl-novell";

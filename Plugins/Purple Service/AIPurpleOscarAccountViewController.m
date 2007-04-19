@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIGaimOscarAccountViewController.h"
-#import "CBGaimAccount.h"
+#import "AIPurpleOscarAccountViewController.h"
+#import "CBPurpleAccount.h"
 #import	<Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
@@ -23,13 +23,13 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIMessageEntryTextView.h>
 
-@implementation AIGaimOscarAccountViewController
+@implementation AIPurpleOscarAccountViewController
 
 /*!
  * @brief Nib name
  */
 - (NSString *)nibName{
-    return @"ESGaimOscarAccountView";
+    return @"ESPurpleOscarAccountView";
 }
 
 - (void)awakeFromNib

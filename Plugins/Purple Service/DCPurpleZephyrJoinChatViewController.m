@@ -14,19 +14,19 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "DCGaimZephyrJoinChatViewController.h"
+#import "DCPurpleZephyrJoinChatViewController.h"
 #import "DCJoinChatWindowController.h"
 #import <Adium/AIAccount.h>
 
-@interface DCGaimZephyrJoinChatViewController (PRIVATE)
+@interface DCPurpleZephyrJoinChatViewController (PRIVATE)
 - (void)validateEnteredText;
 @end
 
-@implementation DCGaimZephyrJoinChatViewController
+@implementation DCPurpleZephyrJoinChatViewController
 
 - (NSString *)nibName
 {
-	return @"DCGaimZephyrJoinChatView";
+	return @"DCPurpleZephyrJoinChatView";
 }
 
 - (void)configureForAccount:(AIAccount *)inAccount

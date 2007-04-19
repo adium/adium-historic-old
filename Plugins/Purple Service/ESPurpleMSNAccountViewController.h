@@ -16,7 +16,7 @@
 
 #include "AIAccountViewController.h"
 
-@interface ESGaimMSNAccountViewController : AIAccountViewController {
+@interface ESPurpleMSNAccountViewController : AIAccountViewController {
     IBOutlet		NSTextField		*textField_friendlyName;
 	
 	IBOutlet		NSButton		*checkBox_HTTPConnectMethod;

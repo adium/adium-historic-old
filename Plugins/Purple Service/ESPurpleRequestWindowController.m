@@ -14,14 +14,14 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESGaimRequestWindowController.h"
-#import "SLGaimCocoaAdapter.h"
+#import "ESPurpleRequestWindowController.h"
+#import "SLPurpleCocoaAdapter.h"
 #import <Adium/NDRunLoopMessenger.h>
 
-#define MULTILINE_WINDOW_NIB	@"GaimMultilineRequestWindow"
-#define SINGLELINE_WINDOW_NIB   @"GaimSinglelineRequestWindow"
+#define MULTILINE_WINDOW_NIB	@"PurpleMultilineRequestWindow"
+#define SINGLELINE_WINDOW_NIB   @"PurpleSinglelineRequestWindow"
 
-@interface ESGaimRequestWindowController (PRIVATE)
+@interface ESPurpleRequestWindowController (PRIVATE)
 - (void)showWindowWithDict:(NSDictionary *)infoDict multiline:(BOOL)multiline;
 - (NSDictionary *)translatedInfoDict:(NSDictionary *)inDict;
 - (void)gaimThreadDoRequestInputCbValue:(NSValue *)inCallBackValue
@@ -29,11 +29,11 @@
 							inputString:(NSString *)inString;
 @end
 
-@implementation ESGaimRequestWindowController
+@implementation ESPurpleRequestWindowController
  
-+ (ESGaimRequestWindowController *)showInputWindowWithDict:(NSDictionary *)infoDict
++ (ESPurpleRequestWindowController *)showInputWindowWithDict:(NSDictionary *)infoDict
 {
-	ESGaimRequestWindowController	*requestWindowController;
+	ESPurpleRequestWindowController	*requestWindowController;
 	BOOL							multiline = [[infoDict objectForKey:@"Multiline"] boolValue];
 	
 	if ((requestWindowController = [[self alloc] initWithWindowNibName:(multiline ? MULTILINE_WINDOW_NIB : SINGLELINE_WINDOW_NIB)
@@ -173,7 +173,7 @@
 					  withUserDataValue:(NSValue *)inUserDataValue 
 							inputString:(NSString *)inString
 {
-	GaimRequestInputCb callBack = [inCallBackValue pointerValue];
+	PurpleRequestInputCb callBack = [inCallBackValue pointerValue];
 	if (callBack) {
 		callBack([inUserDataValue pointerValue],[inString UTF8String]);
 	}	

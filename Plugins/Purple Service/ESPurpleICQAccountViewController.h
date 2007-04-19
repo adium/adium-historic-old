@@ -15,9 +15,9 @@
  */
 
 #import "AIAccountViewController.h"
-#import "ESGaimICQAccount.h"
+#import "ESPurpleICQAccount.h"
 
-@interface ESGaimICQAccountViewController : AIAccountViewController {
+@interface ESPurpleICQAccountViewController : AIAccountViewController {
 	IBOutlet	NSPopUpButton		*popUp_encoding;
 }
 

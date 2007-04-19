@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "CBGaimAccount.h"
-#import <Libgaim/oscar.h>
+#import "CBPurpleAccount.h"
+#import <Libpurple/oscar.h>
 
 @class AIHTMLDecoder;
 
@@ -48,8 +48,8 @@ struct buddyinfo {
 
 @class AIHTMLDecoder;
 
-@interface CBGaimOscarAccount : CBGaimAccount  <AIAccount_Files> {
-	AIHTMLDecoder	*oscarGaimThreadHTMLDecoder;
+@interface CBPurpleOscarAccount : CBPurpleAccount  <AIAccount_Files> {
+	AIHTMLDecoder	*oscarPurpleThreadHTMLDecoder;
 	
 	NSTimer			*delayedSignonUpdateTimer;
 	NSMutableArray  *arrayOfContactsForDelayedUpdates;

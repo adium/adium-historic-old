@@ -14,17 +14,17 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "SLGaimCocoaAdapter.h"
+#import "SLPurpleCocoaAdapter.h"
 
 #import <Adium/AIAccountControllerProtocol.h>
 
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AILoginControllerProtocol.h>
-#import "CBGaimAccount.h"
-#import "CBGaimServicePlugin.h"
-#import "adiumGaimCore.h"
-#import "adiumGaimEventloop.h"
-#import "UndeclaredLibgaimFunctions.h"
+#import "CBPurpleAccount.h"
+#import "CBPurpleServicePlugin.h"
+#import "adiumPurpleCore.h"
+#import "adiumPurpleEventloop.h"
+#import "UndeclaredLibpurpleFunctions.h"
 #import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AICorePluginLoader.h>
@@ -37,21 +37,21 @@
 
 #import <CoreFoundation/CFRunLoop.h>
 #import <CoreFoundation/CFSocket.h>
-#include <Libgaim/libgaim.h>
+#include <Libpurple/libpurple.h>
 #include <glib.h>
 #include <stdlib.h>
 
 #ifndef JOSCAR_SUPERCEDE_LIBGAIM
-	#import "ESGaimAIMAccount.h"
-	#import "CBGaimOscarAccount.h"
+	#import "ESPurpleAIMAccount.h"
+	#import "CBPurpleOscarAccount.h"
 #endif
 
-//Gaim slash command interface
-#include <Libgaim/cmds.h>
+//Purple slash command interface
+#include <Libpurple/cmds.h>
 
-@interface SLGaimCocoaAdapter (PRIVATE)
-- (void)initLibGaim;
-- (BOOL)attemptGaimCommandOnMessage:(NSString *)originalMessage fromAccount:(AIAccount *)sourceAccount inChat:(AIChat *)chat;
+@interface SLPurpleCocoaAdapter (PRIVATE)
+- (void)initLibPurple;
+- (BOOL)attemptPurpleCommandOnMessage:(NSString *)originalMessage fromAccount:(AIAccount *)sourceAccount inChat:(AIChat *)chat;
 - (void)refreshAutoreleasePool:(NSTimer *)inTimer;
 @end
 
@@ -61,7 +61,7 @@
  * can't be ObjC methods. The ObjC callbacks do need to be ObjC methods. This
  * allows the C ones to call the ObjC ones.
  **/
-static SLGaimCocoaAdapter   *sharedInstance = nil;
+static SLPurpleCocoaAdapter   *sharedInstance = nil;
 
 //Dictionaries to track gaim<->adium interactions
 NSMutableDictionary *accountDict = nil;
@@ -74,12 +74,12 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 
 static NSMutableArray	*libgaimPluginArray = nil;
 
-@implementation SLGaimCocoaAdapter
+@implementation SLPurpleCocoaAdapter
 
 /*!
  * @brief Return the shared instance
  */
-+ (SLGaimCocoaAdapter *)sharedInstance
++ (SLPurpleCocoaAdapter *)sharedInstance
 {	
 	@synchronized(self) {
 		if (!sharedInstance) {
@@ -104,7 +104,7 @@ static NSMutableArray	*libgaimPluginArray = nil;
 	libgaimPluginArray = [[NSMutableArray alloc] init];
 	
 	enumerator = [[[AIObject sharedAdiumInstance] allResourcesForName:@"Plugins"
-													   withExtensions:@"AdiumLibgaimPlugin"] objectEnumerator];
+													   withExtensions:@"AdiumLibpurplePlugin"] objectEnumerator];
 	while ((libgaimPluginPath = [enumerator nextObject])) {
 		[AICorePluginLoader loadPluginAtPath:libgaimPluginPath
 							  confirmLoading:YES
@@ -118,24 +118,24 @@ static NSMutableArray	*libgaimPluginArray = nil;
 }
 
 //Register the account gaimside in the gaim thread
-- (void)addAdiumAccount:(CBGaimAccount *)adiumAccount
+- (void)addAdiumAccount:(CBPurpleAccount *)adiumAccount
 {
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	account->ui_data = [adiumAccount retain];
 	
-	gaim_accounts_add(account);
-	gaim_account_set_status_list(account, "offline", YES, NULL);
+	purple_accounts_add(account);
+	purple_account_set_status_list(account, "offline", YES, NULL);
 }
 
 //Remove an account gaimside
-- (void)removeAdiumAccount:(CBGaimAccount *)adiumAccount
+- (void)removeAdiumAccount:(CBPurpleAccount *)adiumAccount
 {
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 
-	[(CBGaimAccount *)account->ui_data release];
+	[(CBPurpleAccount *)account->ui_data release];
 	account->ui_data = nil;
 	
-    gaim_accounts_remove(account);	
+    purple_accounts_remove(account);	
 }
 
 #pragma mark Initialization
@@ -145,7 +145,7 @@ static NSMutableArray	*libgaimPluginArray = nil;
 		accountDict = [[NSMutableDictionary alloc] init];
 		chatDict = [[NSMutableDictionary alloc] init];
 
-		[self initLibGaim];		
+		[self initLibPurple];		
 	}
 	
     return self;
@@ -173,31 +173,31 @@ static void ZombieKiller_Signal(int i)
 
 - (void)networkDidChange:(NSNotification *)inNotification
 {
-	gaim_signal_emit(gaim_network_get_handle(), "network-configuration-changed", NULL);
+	purple_signal_emit(purple_network_get_handle(), "network-configuration-changed", NULL);
 }
 
-- (void)initLibGaim
+- (void)initLibPurple
 {	
 	//Set the gaim user directory to be within this user's directory
 	NSString	*gaimUserDir = [[[adium loginController] userDirectory] stringByAppendingPathComponent:@"libgaim"];
-	gaim_util_set_user_dir([[gaimUserDir stringByExpandingTildeInPath] UTF8String]);
+	purple_util_set_user_dir([[gaimUserDir stringByExpandingTildeInPath] UTF8String]);
 
 	/* Delete blist.xml once when 1.0 runs to clear out any old silliness */
 	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"Adium 1.0 deleted blist.xml"]) {
 		[[NSFileManager defaultManager] removeFileAtPath:
-			[[[NSString stringWithUTF8String:gaim_user_dir()] stringByAppendingPathComponent:@"blist"] stringByAppendingPathExtension:@"xml"]
+			[[[NSString stringWithUTF8String:purple_user_dir()] stringByAppendingPathComponent:@"blist"] stringByAppendingPathExtension:@"xml"]
 												 handler:nil];
 		[[NSUserDefaults standardUserDefaults] setBool:YES
 												forKey:@"Adium 1.0 deleted blist.xml"];
 	}
 
-	gaim_core_set_ui_ops(adium_gaim_core_get_ops());
-	gaim_eventloop_set_ui_ops(adium_gaim_eventloop_get_ui_ops());
+	purple_core_set_ui_ops(adium_purple_core_get_ops());
+	purple_eventloop_set_ui_ops(adium_purple_eventloop_get_ui_ops());
 
 	//Initialize the libgaim core; this will call back on the function specified in our core UI ops for us to finish configuring libgaim
-	if (!gaim_core_init("Adium")) {
+	if (!purple_core_init("Adium")) {
 		NSLog(@"*** FATAL ***: Failed to initialize gaim core");
-		GaimDebug (@"*** FATAL ***: Failed to initialize gaim core");
+		PurpleDebug (@"*** FATAL ***: Failed to initialize gaim core");
 	}
 	
 	//Libgaim's async DNS lookup tends to create zombies.
@@ -220,7 +220,7 @@ static void ZombieKiller_Signal(int i)
 
 #pragma mark Lookup functions
 
-NSString* serviceClassForGaimProtocolID(const char *protocolID)
+NSString* serviceClassForPurpleProtocolID(const char *protocolID)
 {
 	NSString	*serviceClass = nil;
 	if (protocolID) {
@@ -246,36 +246,36 @@ NSString* serviceClassForGaimProtocolID(const char *protocolID)
 }
 
 /*
- * Finds an instance of CBGaimAccount for a pointer to a GaimAccount struct.
+ * Finds an instance of CBPurpleAccount for a pointer to a PurpleAccount struct.
  */
-CBGaimAccount* accountLookup(GaimAccount *acct)
+CBPurpleAccount* accountLookup(PurpleAccount *acct)
 {
-	CBGaimAccount *adiumGaimAccount = (acct ? (CBGaimAccount *)acct->ui_data : nil);
+	CBPurpleAccount *adiumPurpleAccount = (acct ? (CBPurpleAccount *)acct->ui_data : nil);
 	/* If the account doesn't have its ui_data associated yet (we haven't tried to connect) but we want this
 	 * lookup data, we have to do some manual parsing.  This is used for example from the OTR preferences.
 	 */
-	if (!adiumGaimAccount && acct) {
+	if (!adiumPurpleAccount && acct) {
 		const char	*protocolID = acct->protocol_id;
-		NSString	*serviceClass = serviceClassForGaimProtocolID(protocolID);
+		NSString	*serviceClass = serviceClassForPurpleProtocolID(protocolID);
 
 		NSEnumerator	*enumerator = [[[[AIObject sharedAdiumInstance] accountController] accounts] objectEnumerator];
-		while ((adiumGaimAccount = [enumerator nextObject])) {
-			if ([adiumGaimAccount isKindOfClass:[CBGaimAccount class]] &&
-			   [[[adiumGaimAccount service] serviceClass] isEqualToString:serviceClass] &&
-			   [[adiumGaimAccount UID] caseInsensitiveCompare:[NSString stringWithUTF8String:acct->username]] == NSOrderedSame) {
+		while ((adiumPurpleAccount = [enumerator nextObject])) {
+			if ([adiumPurpleAccount isKindOfClass:[CBPurpleAccount class]] &&
+			   [[[adiumPurpleAccount service] serviceClass] isEqualToString:serviceClass] &&
+			   [[adiumPurpleAccount UID] caseInsensitiveCompare:[NSString stringWithUTF8String:acct->username]] == NSOrderedSame) {
 				break;
 			}
 		}
 	}
-    return adiumGaimAccount;
+    return adiumPurpleAccount;
 }
 
-GaimAccount* accountLookupFromAdiumAccount(CBGaimAccount *adiumAccount)
+PurpleAccount* accountLookupFromAdiumAccount(CBPurpleAccount *adiumAccount)
 {
 	return [adiumAccount gaimAccount];
 }
 
-AIListContact* contactLookupFromBuddy(GaimBuddy *buddy)
+AIListContact* contactLookupFromBuddy(PurpleBuddy *buddy)
 {
 	//Get the node's ui_data
 	AIListContact *theContact = (buddy ? (AIListContact *)buddy->node.ui_data : nil);
@@ -284,7 +284,7 @@ AIListContact* contactLookupFromBuddy(GaimBuddy *buddy)
 	if (!theContact && buddy) {
 		NSString	*UID;
 	
-		UID = [NSString stringWithUTF8String:gaim_normalize(buddy->account, buddy->name)];
+		UID = [NSString stringWithUTF8String:purple_normalize(buddy->account, buddy->name)];
 		
 		theContact = [accountLookup(buddy->account) contactWithUID:UID];
 		
@@ -295,12 +295,12 @@ AIListContact* contactLookupFromBuddy(GaimBuddy *buddy)
 	return theContact;
 }
 
-AIListContact* contactLookupFromIMConv(GaimConversation *conv)
+AIListContact* contactLookupFromIMConv(PurpleConversation *conv)
 {
 	return nil;
 }
 
-AIChat* groupChatLookupFromConv(GaimConversation *conv)
+AIChat* groupChatLookupFromConv(PurpleConversation *conv)
 {
 	AIChat *chat;
 	
@@ -318,18 +318,18 @@ AIChat* groupChatLookupFromConv(GaimConversation *conv)
 	return chat;
 }
 
-AIChat* existingChatLookupFromConv(GaimConversation *conv)
+AIChat* existingChatLookupFromConv(PurpleConversation *conv)
 {
 	return (conv ? conv->ui_data : nil);
 }
 
-AIChat* chatLookupFromConv(GaimConversation *conv)
+AIChat* chatLookupFromConv(PurpleConversation *conv)
 {
-	switch(gaim_conversation_get_type(conv)) {
-		case GAIM_CONV_TYPE_CHAT:
+	switch(purple_conversation_get_type(conv)) {
+		case PURPLE_CONV_TYPE_CHAT:
 			return groupChatLookupFromConv(conv);
 			break;
-		case GAIM_CONV_TYPE_IM:
+		case PURPLE_CONV_TYPE_IM:
 			return imChatLookupFromConv(conv);
 			break;
 		default:
@@ -338,7 +338,7 @@ AIChat* chatLookupFromConv(GaimConversation *conv)
 	}
 }
 
-AIChat* imChatLookupFromConv(GaimConversation *conv)
+AIChat* imChatLookupFromConv(PurpleConversation *conv)
 {
 	AIChat			*chat;
 	
@@ -347,25 +347,25 @@ AIChat* imChatLookupFromConv(GaimConversation *conv)
 	if (!chat) {
 		//No chat is associated with the IM conversation
 		AIListContact   *sourceContact;
-		GaimBuddy		*buddy;
-		GaimAccount		*account;
+		PurpleBuddy		*buddy;
+		PurpleAccount		*account;
 		
 		account = conv->account;
-//		GaimDebug (@"%x conv->name %s; normalizes to %s",account,conv->name,gaim_normalize(account,conv->name));
+//		PurpleDebug (@"%x conv->name %s; normalizes to %s",account,conv->name,purple_normalize(account,conv->name));
 
-		//First, find the GaimBuddy with whom we are conversing
-		buddy = gaim_find_buddy(account, conv->name);
+		//First, find the PurpleBuddy with whom we are conversing
+		buddy = purple_find_buddy(account, conv->name);
 		if (!buddy) {
-			GaimDebug (@"imChatLookupFromConv: Creating %s %s",account->username,gaim_normalize(account,conv->name));
-			//No gaim_buddy corresponding to the conv->name is on our list, so create one
-			buddy = gaim_buddy_new(account, gaim_normalize(account, conv->name), NULL);	//create a GaimBuddy
+			PurpleDebug (@"imChatLookupFromConv: Creating %s %s",account->username,purple_normalize(account,conv->name));
+			//No purple_buddy corresponding to the conv->name is on our list, so create one
+			buddy = purple_buddy_new(account, purple_normalize(account, conv->name), NULL);	//create a PurpleBuddy
 		}
 
 		NSCAssert(buddy != nil, @"buddy was nil");
 		
 		sourceContact = contactLookupFromBuddy(buddy);
 
-		// Need to start a new chat, associating with the GaimConversation
+		// Need to start a new chat, associating with the PurpleConversation
 		chat = [accountLookup(account) chatWithContact:sourceContact];
 
 		if (!chat) {
@@ -376,7 +376,7 @@ AIChat* imChatLookupFromConv(GaimConversation *conv)
 				sourceContact,
 				buddy,
 				(buddy ? buddy->name : ""),
-				((buddy && buddy->account && buddy->name) ? gaim_normalize(buddy->account, buddy->name) : ""),
+				((buddy && buddy->account && buddy->name) ? purple_normalize(buddy->account, buddy->name) : ""),
 				accountLookup(account),
 				account,
 				(account ? account->username : "")];
@@ -384,7 +384,7 @@ AIChat* imChatLookupFromConv(GaimConversation *conv)
 			NSCAssert(chat != nil, errorString);
 		}
 
-		//Associate the GaimConversation with the AIChat
+		//Associate the PurpleConversation with the AIChat
 		[chatDict setObject:[NSValue valueWithPointer:conv] forKey:[chat uniqueChatID]];
 		conv->ui_data = [chat retain];
 	}
@@ -392,10 +392,10 @@ AIChat* imChatLookupFromConv(GaimConversation *conv)
 	return chat;	
 }
 
-GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
+PurpleConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 {
-	GaimConversation	*conv = [[chatDict objectForKey:[chat uniqueChatID]] pointerValue];
-	GaimAccount			*account = accountLookupFromAdiumAccount(adiumAccount);
+	PurpleConversation	*conv = [[chatDict objectForKey:[chat uniqueChatID]] pointerValue];
+	PurpleAccount			*account = accountLookupFromAdiumAccount(adiumAccount);
 	
 	if (!conv && adiumAccount) {
 		AIListObject *listObject = [chat listObject];
@@ -404,9 +404,9 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 		if (listObject) {
 			char *destination;
 			
-			destination = g_strdup(gaim_normalize(account, [[listObject UID] UTF8String]));
+			destination = g_strdup(purple_normalize(account, [[listObject UID] UTF8String]));
 			
-			conv = gaim_conversation_new(GAIM_CONV_TYPE_IM, account, destination);
+			conv = purple_conversation_new(PURPLE_CONV_TYPE_IM, account, destination);
 			
 			//associate the AIChat with the gaim conv
 			if (conv) imChatLookupFromConv(conv);
@@ -427,19 +427,19 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 				 We will never find one if we are joining a chat on our own (via the Join Chat dialogue).
 				 
 				 We should never get to this point if we were invited to a chat, as groupChatLookupFromConv(),
-				 which was called when we accepted the invitation and got the chat information from Gaim,
-				 will have associated the GaimConversation with the chat and we would have stopped after
+				 which was called when we accepted the invitation and got the chat information from Purple,
+				 will have associated the PurpleConversation with the chat and we would have stopped after
 				 [[chatDict objectForKey:[chat uniqueChatID]] pointerValue] above.
 				 
 				 However, there's no reason not to check just in case.
 				 */
-				GaimChat *gaimChat = gaim_blist_find_chat(account, name);
+				PurpleChat *gaimChat = purple_blist_find_chat(account, name);
 				if (!gaimChat) {
 					
 					/*
-					 If we don't have a GaimChat with this name on this account, we need to create one.
+					 If we don't have a PurpleChat with this name on this account, we need to create one.
 					 Our chat, which should have been created via the Adium Join Chat API, should have
-					 a ChatCreationInfo status object with the information we need to ask Gaim to
+					 a ChatCreationInfo status object with the information we need to ask Purple to
 					 perform the join.
 					 */
 					NSDictionary	*chatCreationInfo = [chat statusObjectForKey:@"ChatCreationInfo"];
@@ -449,12 +449,12 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 						return NULL;
 					}
 					
-					GaimDebug (@"Creating a chat.");
+					PurpleDebug (@"Creating a chat.");
 
 					GHashTable				*components;
 					
 					//Prpl Info
-					GaimConnection			*gc = gaim_account_get_connection(account);
+					PurpleConnection			*gc = purple_account_get_connection(account);
 					GList					*list, *tmp;
 					struct proto_chat_entry *pce;
 					NSString				*identifier;
@@ -477,7 +477,7 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 							valueUTF8String = g_strdup([value UTF8String]);
 
 						} else {
-							GaimDebug (@"Invalid value %@ for identifier %@",value,identifier);
+							PurpleDebug (@"Invalid value %@ for identifier %@",value,identifier);
 						}
 						
 						//Store our chatCreationInfo-supplied value in the compnents hash table
@@ -495,9 +495,9 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 						 objects, each of which has a label and identifier.  Each may also have is_int, with a minimum
 						 and a maximum integer value.
 						 */
-						if ((GAIM_PLUGIN_PROTOCOL_INFO(gc->prpl))->chat_info)
+						if ((PURPLE_PLUGIN_PROTOCOL_INFO(gc->prpl))->chat_info)
 						{
-							list = (GAIM_PLUGIN_PROTOCOL_INFO(gc->prpl))->chat_info(gc);
+							list = (PURPLE_PLUGIN_PROTOCOL_INFO(gc->prpl))->chat_info(gc);
 
 							//Look at each proto_chat_entry in the list to verify we have it in chatCreationInfo
 							for (tmp = list; tmp; tmp = tmp->next)
@@ -507,30 +507,30 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 								
 								NSString	*value = [chatCreationInfo objectForKey:[NSString stringWithUTF8String:identifier]];
 								if (!value) {
-									GaimDebug (@"Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
+									PurpleDebug (@"Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
 								}
 							}
 						}
 					}
 
 					/*
-					 //Add the GaimChat to our local buddy list?
-					gaimChat = gaim_chat_new(account,
+					 //Add the PurpleChat to our local buddy list?
+					gaimChat = purple_chat_new(account,
 											 name,
 											 components);
-					if ((group = gaim_find_group(group_name)) == NULL) {
-						group = gaim_group_new(group_name);
-						gaim_blist_add_group(group, NULL);
+					if ((group = purple_find_group(group_name)) == NULL) {
+						group = purple_group_new(group_name);
+						purple_blist_add_group(group, NULL);
 					}
 					
 					if (gaimChat != NULL) {
-						gaim_blist_add_chat(gaimChat, group, NULL);
+						purple_blist_add_chat(gaimChat, group, NULL);
 					}
 					*/
 
-					//Join the chat serverside - the GHashTable components, couple with the originating GaimConnect,
+					//Join the chat serverside - the GHashTable components, couple with the originating PurpleConnect,
 					//now contains all the information the prpl will need to process our request.
-					GaimDebug (@"In the event of an emergency, your GHashTable may be used as a flotation device...");
+					PurpleDebug (@"In the event of an emergency, your GHashTable may be used as a flotation device...");
 					serv_join_chat(gc, components);
 				}
 			}
@@ -540,16 +540,16 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 	return conv;
 }
 
-GaimConversation* existingConvLookupFromChat(AIChat *chat)
+PurpleConversation* existingConvLookupFromChat(AIChat *chat)
 {
-	return (GaimConversation *)[[chatDict objectForKey:[chat uniqueChatID]] pointerValue];
+	return (PurpleConversation *)[[chatDict objectForKey:[chat uniqueChatID]] pointerValue];
 }
 
-void* adium_gaim_get_handle(void)
+void* adium_purple_get_handle(void)
 {
-	static int adium_gaim_handle;
+	static int adium_purple_handle;
 	
-	return &adium_gaim_handle;
+	return &adium_purple_handle;
 }
 
 NSMutableDictionary* get_chatDict(void)
@@ -565,7 +565,7 @@ static NSString* _messageImageCachePath(int imageID, AIAccount* adiumAccount)
     return [[[[AIObject sharedAdiumInstance] cachesPath] stringByAppendingPathComponent:messageImageCacheFilename] stringByAppendingPathExtension:@"png"];
 }
 
-NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
+NSString* processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 {
 	NSScanner			*scanner;
     NSString			*chunkString = nil;
@@ -584,7 +584,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
     scanner = [NSScanner scannerWithString:inString];
     [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
 	
-	//A gaim image tag takes the form <IMG ID='12'></IMG> where 12 is the reference for use in GaimStoredImage* gaim_imgstore_get(int)
+	//A gaim image tag takes the form <IMG ID='12'></IMG> where 12 is the reference for use in PurpleStoredImage* purple_imgstore_get(int)
 	
 	//Parse the incoming HTML
     while (![scanner isAtEnd]) {
@@ -608,17 +608,17 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 			[scanner scanString:@">" intoString:nil];
 			
 			//Get the image, then write it out as a png
-			GaimStoredImage		*gaimImage = gaim_imgstore_get(imageID);
+			PurpleStoredImage		*gaimImage = purple_imgstore_get(imageID);
 			if (gaimImage) {
-				NSString		*filename = (gaim_imgstore_get_filename(gaimImage) ?
-											 [NSString stringWithUTF8String:gaim_imgstore_get_filename(gaimImage)] :
+				NSString		*filename = (purple_imgstore_get_filename(gaimImage) ?
+											 [NSString stringWithUTF8String:purple_imgstore_get_filename(gaimImage)] :
 											 @"Image");
 				NSString		*imagePath = _messageImageCachePath(imageID, adiumAccount);
 				
 				//First make an NSImage, then request a TIFFRepresentation to avoid an obscure bug in the PNG writing routines
 				//Exception: PNG writer requires compacted components (bits/component * components/pixel = bits/pixel)
-				NSImage				*image = [[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_imgstore_get_data(gaimImage)
-																						  length:gaim_imgstore_get_size(gaimImage)]];
+				NSImage				*image = [[NSImage alloc] initWithData:[NSData dataWithBytes:purple_imgstore_get_data(gaimImage)
+																						  length:purple_imgstore_get_size(gaimImage)]];
 				NSData				*imageTIFFData = [image TIFFRepresentation];
 				NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
 				
@@ -641,8 +641,8 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 
 #pragma mark Notify
 // Notify ----------------------------------------------------------------------------------------------------------
-// We handle the notify messages within SLGaimCocoaAdapter so we can use our localized string macro
-- (void *)handleNotifyMessageOfType:(GaimNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
+// We handle the notify messages within SLPurpleCocoaAdapter so we can use our localized string macro
+- (void *)handleNotifyMessageOfType:(PurpleNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
 {
     NSString *primaryString = [NSString stringWithUTF8String:primary];
 	NSString *secondaryString = secondary ? [NSString stringWithUTF8String:secondary] : nil;
@@ -660,7 +660,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	if (primaryString) {
 		if (([primaryString rangeOfString:@"Already there"].location != NSNotFound) ||
 			([primaryString rangeOfString:@"Group not removed"].location != NSNotFound)) {
-			return adium_gaim_get_handle();
+			return adium_purple_get_handle();
 		}
 	}
 
@@ -676,7 +676,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 			([secondaryString rangeOfString:@"Your buddy list was downloaded from the server."].location != NSNotFound) || /* Gadu-gadu */
 			([secondaryString rangeOfString:@"Your buddy list was stored on the server."].location != NSNotFound) /* Gadu-gadu */ ||
 			([secondaryString rangeOfString:@"Your contact is using Windows Live"].location != NSNotFound) /* Yahoo without MSN support */) {
-			return adium_gaim_get_handle();
+			return adium_purple_get_handle();
 		}
 	}
 
@@ -724,7 +724,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		errorMessage = [NSString stringWithFormat:AILocalizedString(@"%@ granted authorization.",nil),targetUserName];
 	}
 	
-	//If we didn't grab a translated version, at least display the English version Gaim supplied
+	//If we didn't grab a translated version, at least display the English version Purple supplied
 	[[adium interfaceController] handleMessage:([errorMessage length] ? errorMessage : primaryString)
 							   withDescription:([description length] ? description : ([secondaryString length] ? secondaryString : @"") )
 							   withWindowTitle:titleString];
@@ -788,26 +788,26 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 #pragma mark Thread accessors
 - (void)disconnectAccount:(id)adiumAccount
 {
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	AILog(@"Setting %x disabled and offline (%s)...",account,
-		  gaim_status_type_get_id(gaim_account_get_status_type_with_primitive(account, GAIM_STATUS_OFFLINE)));
+		  purple_status_type_get_id(purple_account_get_status_type_with_primitive(account, PURPLE_STATUS_OFFLINE)));
 
-	gaim_account_set_enabled(account, "Adium", NO);
+	purple_account_set_enabled(account, "Adium", NO);
 }
 
 - (void)registerAccount:(id)adiumAccount
 {
-	gaim_account_register(accountLookupFromAdiumAccount(adiumAccount));
+	purple_account_register(accountLookupFromAdiumAccount(adiumAccount));
 }
 
 //Called on the gaim thread, actually performs the specified command (it should have already been tested by 
-//attemptGaimCommandOnMessage:... above.
+//attemptPurpleCommandOnMessage:... above.
 - (BOOL)doCommand:(NSString *)originalMessage
 			fromAccount:(id)sourceAccount
 				 inChat:(AIChat *)chat
 {
-	GaimConversation	*conv = convLookupFromChat(chat, sourceAccount);
-	GaimCmdStatus		status;
+	PurpleConversation	*conv = convLookupFromChat(chat, sourceAccount);
+	PurpleCmdStatus		status;
 	char				*markup, *error;
 	const char			*cmd;
 	BOOL				didCommand = NO;
@@ -816,28 +816,28 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 	
 	//cmd+1 will be the cmd without the leading character, which should be "/"
 	markup = g_markup_escape_text(cmd+1, -1);
-	status = gaim_cmd_do_command(conv, cmd+1, markup, &error);
+	status = purple_cmd_do_command(conv, cmd+1, markup, &error);
 	
 	//The only error status which is possible now is either 
 	switch (status) {
-		case GAIM_CMD_STATUS_FAILED:
+		case PURPLE_CMD_STATUS_FAILED:
 		{
-			gaim_conv_present_error(conv->name, conv->account, "Command failed");
+			purple_conv_present_error(conv->name, conv->account, "Command failed");
 			didCommand = YES;
 			break;
 		}	
-		case GAIM_CMD_STATUS_WRONG_ARGS:
+		case PURPLE_CMD_STATUS_WRONG_ARGS:
 		{
-			gaim_conv_present_error(conv->name, conv->account, "Wrong number of arguments");
+			purple_conv_present_error(conv->name, conv->account, "Wrong number of arguments");
 			didCommand = YES;			
 			break;
 		}
-		case GAIM_CMD_STATUS_OK:
+		case PURPLE_CMD_STATUS_OK:
 			didCommand = YES;
 			break;
-		case GAIM_CMD_STATUS_NOT_FOUND:
-		case GAIM_CMD_STATUS_WRONG_TYPE:
-		case GAIM_CMD_STATUS_WRONG_PRPL:
+		case PURPLE_CMD_STATUS_NOT_FOUND:
+		case PURPLE_CMD_STATUS_WRONG_TYPE:
+		case PURPLE_CMD_STATUS_WRONG_PRPL:
 			/* Ignore this command and let the message send; the user probably doesn't even know what they typed is a command */
 			didCommand = NO;
 			break;
@@ -851,7 +851,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
  *
  * @result YES if a command was performed; NO if it was not
  */
-- (BOOL)attemptGaimCommandOnMessage:(NSString *)originalMessage fromAccount:(AIAccount *)sourceAccount inChat:(AIChat *)chat
+- (BOOL)attemptPurpleCommandOnMessage:(NSString *)originalMessage fromAccount:(AIAccount *)sourceAccount inChat:(AIChat *)chat
 {
 	BOOL				didCommand = NO;
 	
@@ -868,121 +868,121 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 - (void)sendEncodedMessage:(NSString *)encodedMessage
 			   fromAccount:(id)sourceAccount
 					inChat:(AIChat *)chat
-				 withFlags:(GaimMessageFlags)flags
+				 withFlags:(PurpleMessageFlags)flags
 {	
 	const char *encodedMessageUTF8String;
 	
 	if (encodedMessage && (encodedMessageUTF8String = [encodedMessage UTF8String])) {
-		GaimConversation	*conv = convLookupFromChat(chat,sourceAccount);
+		PurpleConversation	*conv = convLookupFromChat(chat,sourceAccount);
 
-		switch (gaim_conversation_get_type(conv)) {				
-			case GAIM_CONV_TYPE_IM: {
-				GaimConvIm			*im = gaim_conversation_get_im_data(conv);
-				gaim_conv_im_send_with_flags(im, encodedMessageUTF8String, flags);
+		switch (purple_conversation_get_type(conv)) {				
+			case PURPLE_CONV_TYPE_IM: {
+				PurpleConvIm			*im = purple_conversation_get_im_data(conv);
+				purple_conv_im_send_with_flags(im, encodedMessageUTF8String, flags);
 				break;
 			}
 
-			case GAIM_CONV_TYPE_CHAT: {
-				GaimConvChat	*gaimChat = gaim_conversation_get_chat_data(conv);
-				gaim_conv_chat_send(gaimChat, encodedMessageUTF8String);
+			case PURPLE_CONV_TYPE_CHAT: {
+				PurpleConvChat	*gaimChat = purple_conversation_get_chat_data(conv);
+				purple_conv_chat_send(gaimChat, encodedMessageUTF8String);
 				break;
 			}
 			
-			case GAIM_CONV_TYPE_ANY:
-				GaimDebug (@"What in the world? Got GAIM_CONV_TYPE_ANY.");
+			case PURPLE_CONV_TYPE_ANY:
+				PurpleDebug (@"What in the world? Got PURPLE_CONV_TYPE_ANY.");
 				break;
 
-			case GAIM_CONV_TYPE_MISC:
-			case GAIM_CONV_TYPE_UNKNOWN:
+			case PURPLE_CONV_TYPE_MISC:
+			case PURPLE_CONV_TYPE_UNKNOWN:
 				break;
 		}
 	} else {
-		GaimDebug (@"*** Error encoding %@ to UTF8",encodedMessage);
+		PurpleDebug (@"*** Error encoding %@ to UTF8",encodedMessage);
 	}
 }
 
 - (void)sendTyping:(AITypingState)typingState inChat:(AIChat *)chat
 {
-	GaimConversation *conv = convLookupFromChat(chat,nil);
+	PurpleConversation *conv = convLookupFromChat(chat,nil);
 	if (conv) {
 		//		BOOL isTyping = (([typingState intValue] == AINotTyping) ? FALSE : TRUE);
 
-		GaimTypingState gaimTypingState;
+		PurpleTypingState gaimTypingState;
 		
 		switch (typingState) {
 			case AINotTyping:
 			default:
-				gaimTypingState = GAIM_NOT_TYPING;
+				gaimTypingState = PURPLE_NOT_TYPING;
 				break;
 			case AITyping:
-				gaimTypingState = GAIM_TYPING;
+				gaimTypingState = PURPLE_TYPING;
 				break;
 			case AIEnteredText:
-				gaimTypingState = GAIM_TYPED;
+				gaimTypingState = PURPLE_TYPED;
 				break;
 		}
 	
-		serv_send_typing(gaim_conversation_get_gc(conv),
-						 gaim_conversation_get_name(conv),
+		serv_send_typing(purple_conversation_get_gc(conv),
+						 purple_conversation_get_name(conv),
 						 gaimTypingState);
 	}	
 }
 
 - (void)addUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	const char	*groupUTF8String, *buddyUTF8String;
-	GaimGroup	*group;
-	GaimBuddy	*buddy;
+	PurpleGroup	*group;
+	PurpleBuddy	*buddy;
 	
 	//Find the group (Create if necessary)
 	groupUTF8String = (groupName ? [groupName UTF8String] : "Buddies");
-	if (!(group = gaim_find_group(groupUTF8String))) {
-		group = gaim_group_new(groupUTF8String);
-		gaim_blist_add_group(group, NULL);
+	if (!(group = purple_find_group(groupUTF8String))) {
+		group = purple_group_new(groupUTF8String);
+		purple_blist_add_group(group, NULL);
 	}
 	
 	//Find the buddy (Create if necessary)
 	buddyUTF8String = [objectUID UTF8String];
-	buddy = gaim_find_buddy(account, buddyUTF8String);
-	if (!buddy) buddy = gaim_buddy_new(account, buddyUTF8String, NULL);
+	buddy = purple_find_buddy(account, buddyUTF8String);
+	if (!buddy) buddy = purple_buddy_new(account, buddyUTF8String, NULL);
 
-	GaimDebug (@"Adding buddy %s to group %s",buddy->name, group->name);
+	PurpleDebug (@"Adding buddy %s to group %s",buddy->name, group->name);
 
-	/* gaim_blist_add_buddy() will move an existing contact serverside, but will not add a buddy serverside.
+	/* purple_blist_add_buddy() will move an existing contact serverside, but will not add a buddy serverside.
 	 * We're working with a new contact, hopefully, so we want to call serv_add_buddy() after modifying the gaim list.
 	 * This is the order done in add_buddy_cb() in gtkblist.c */
-	gaim_blist_add_buddy(buddy, NULL, group, NULL);
-	gaim_account_add_buddy(account, buddy);
+	purple_blist_add_buddy(buddy, NULL, group, NULL);
+	purple_account_add_buddy(account, buddy);
 }
 
 - (void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:(NSString *)groupName
 {
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	GaimBuddy 	*buddy;
+	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	PurpleBuddy 	*buddy;
 	
-	if ((buddy = gaim_find_buddy(account, [objectUID UTF8String]))) {
+	if ((buddy = purple_find_buddy(account, [objectUID UTF8String]))) {
 		const char	*groupUTF8String;
-		GaimGroup	*group;
+		PurpleGroup	*group;
 
 		groupUTF8String = (groupName ? [groupName UTF8String] : "Buddies");
-		if ((group = gaim_find_group(groupUTF8String))) {
+		if ((group = purple_find_group(groupUTF8String))) {
 			/* Remove this contact from the server-side and gaim-side lists. 
 			 * Updating gaimside does not change the server.
 			 *
-			 * Gaim has a commented XXX as to whether this order or the reverse (blist, then serv) is correct.
+			 * Purple has a commented XXX as to whether this order or the reverse (blist, then serv) is correct.
 			 * We'll use the order which gaim uses as of gaim 1.1.4. */
-			gaim_account_remove_buddy(account, buddy, group);
-			gaim_blist_remove_buddy(buddy);
+			purple_account_remove_buddy(account, buddy, group);
+			purple_blist_remove_buddy(buddy);
 		}
 	}
 }
 
 - (void)moveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
-	GaimAccount *account;
-	GaimBuddy	*buddy;
-	GaimGroup 	*group;
+	PurpleAccount *account;
+	PurpleBuddy	*buddy;
+	PurpleGroup 	*group;
 	const char	*buddyUTF8String;
 	const char	*groupUTF8String;
 
@@ -990,76 +990,76 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 
 	//Get the destination group (creating if necessary)
 	groupUTF8String = (groupName ? [groupName UTF8String] : "Buddies");
-	group = gaim_find_group(groupUTF8String);
+	group = purple_find_group(groupUTF8String);
 	if (!group) {
 		/* If we can't find the group, something's gone wrong... we shouldn't be using a group we don't have.
 		 * We'll just silently turn this into an add operation. */
-		group = gaim_group_new(groupUTF8String);
-		gaim_blist_add_group(group, NULL);
+		group = purple_group_new(groupUTF8String);
+		purple_blist_add_group(group, NULL);
 	}
 
 	buddyUTF8String = [objectUID UTF8String];
 	/* If we support contacts in multiple groups at once this should change */
-	GSList *buddies = gaim_find_buddies(account, buddyUTF8String);
+	GSList *buddies = purple_find_buddies(account, buddyUTF8String);
 
 	if (buddies) {
 		GSList *cur;
 		for (cur = buddies; cur; cur = cur->next) {
-			/* gaim_blist_add_buddy() will update the local list and perform a serverside move as necessary */
-			gaim_blist_add_buddy(cur->data, NULL, group, NULL);			
+			/* purple_blist_add_buddy() will update the local list and perform a serverside move as necessary */
+			purple_blist_add_buddy(cur->data, NULL, group, NULL);			
 		}
 
 	} else {
 		/* If we can't find a buddy, something's gone wrong... we shouldn't be moving a buddy we don't have.
  		 * As with the group, we'll just silently turn this into an add operation. */
-		buddy = gaim_buddy_new(account, buddyUTF8String, NULL);
+		buddy = purple_buddy_new(account, buddyUTF8String, NULL);
 
-		/* gaim_blist_add_buddy() will update the local list and perform a serverside move as necessary */
-		gaim_blist_add_buddy(buddy, NULL, group, NULL);
+		/* purple_blist_add_buddy() will update the local list and perform a serverside move as necessary */
+		purple_blist_add_buddy(buddy, NULL, group, NULL);
 		
-		/* gaim_blist_add_buddy() won't perform a serverside add, however.  Add if necessary. */
-		gaim_account_add_buddy(account, buddy);
+		/* purple_blist_add_buddy() won't perform a serverside add, however.  Add if necessary. */
+		purple_account_add_buddy(account, buddy);
 	}
 }
 
 - (void)renameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName
 {
-    GaimGroup *group = gaim_find_group([oldGroupName UTF8String]);
+    PurpleGroup *group = purple_find_group([oldGroupName UTF8String]);
 	
 	//If we don't have a group with this name, just ignore the rename request
     if (group) {
 		//Rename gaimside, which will rename serverside as well
-		gaim_blist_rename_group(group, [newGroupName UTF8String]);
+		purple_blist_rename_group(group, [newGroupName UTF8String]);
 	}
 }
 
 - (void)deleteGroup:(NSString *)groupName onAccount:(id)adiumAccount
 {
-	GaimGroup *group = gaim_find_group([groupName UTF8String]);
+	PurpleGroup *group = purple_find_group([groupName UTF8String]);
 	
 	if (group) {
-		gaim_blist_remove_group(group);
+		purple_blist_remove_group(group);
 	}
 }
 
 #pragma mark Alias
 - (void)setAlias:(NSString *)alias forUID:(NSString *)UID onAccount:(id)adiumAccount
 {
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	if (gaim_account_is_connected(account)) {
+	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	if (purple_account_is_connected(account)) {
 		const char  *uidUTF8String = [UID UTF8String];
-		GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
+		PurpleBuddy   *buddy = purple_find_buddy(account, uidUTF8String);
 		const char  *aliasUTF8String = [alias UTF8String];
-		const char	*oldAlias = (buddy ? gaim_buddy_get_alias(buddy) : nil);
+		const char	*oldAlias = (buddy ? purple_buddy_get_alias(buddy) : nil);
 	
 		if (buddy && ((aliasUTF8String && !oldAlias) ||
 					  (!aliasUTF8String && oldAlias) ||
 					  ((oldAlias && aliasUTF8String && (strcmp(oldAlias,aliasUTF8String) != 0))))) {
 
-			gaim_blist_alias_buddy(buddy,aliasUTF8String);
+			purple_blist_alias_buddy(buddy,aliasUTF8String);
 			serv_alias_buddy(buddy);
 			
-			//If we had an alias before but no longer have, adiumGaimBlistUpdate() is not going to send the update
+			//If we had an alias before but no longer have, adiumPurpleBlistUpdate() is not going to send the update
 			//(Because normally it's wasteful to send a nil alias to the account).  We need to manually invoke the update.
 			if (oldAlias && !alias) {
 				AIListContact *theContact = contactLookupFromBuddy(buddy);
@@ -1074,14 +1074,14 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 #pragma mark Chats
 - (void)openChat:(AIChat *)chat onAccount:(id)adiumAccount
 {
-	//Looking up the conv from the chat will create the GaimConversation gaimside, joining the chat, opening the server
+	//Looking up the conv from the chat will create the PurpleConversation gaimside, joining the chat, opening the server
 	//connection, or whatever else is done when a chat is opened.
 	convLookupFromChat(chat,adiumAccount);
 }
 
 - (void)closeChat:(AIChat *)chat
 {
-	GaimConversation *conv = existingConvLookupFromChat(chat);
+	PurpleConversation *conv = existingConvLookupFromChat(chat);
 
 	if (conv) {
 		//We use chatDict's objectfor the passed chatUniqueID because we can no longer trust any other
@@ -1094,28 +1094,28 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		conv->ui_data = nil;
 		
 		//Tell gaim to destroy the conversation.
-		gaim_conversation_destroy(conv);
+		purple_conversation_destroy(conv);
 	}	
 }
 
 - (void)inviteContact:(AIListContact *)listContact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
 {
-	GaimConversation	*conv;
-	GaimAccount			*account;
-	GaimConvChat		*gaimChat;
+	PurpleConversation	*conv;
+	PurpleAccount			*account;
+	PurpleConvChat		*gaimChat;
 	AIAccount			*adiumAccount = [chat account];
 	
-	GaimDebug (@"#### inviteContact:%@ toChat:%@",[listContact UID],[chat name]);
+	PurpleDebug (@"#### inviteContact:%@ toChat:%@",[listContact UID],[chat name]);
 	// dchoby98
-	if (([adiumAccount isKindOfClass:[CBGaimAccount class]]) &&
+	if (([adiumAccount isKindOfClass:[CBPurpleAccount class]]) &&
 	   (conv = convLookupFromChat(chat, adiumAccount)) &&
-	   (account = accountLookupFromAdiumAccount((CBGaimAccount *)adiumAccount)) &&
-	   (gaimChat = gaim_conversation_get_chat_data(conv))) {
+	   (account = accountLookupFromAdiumAccount((CBPurpleAccount *)adiumAccount)) &&
+	   (gaimChat = purple_conversation_get_chat_data(conv))) {
 
-		//GaimBuddy		*buddy = gaim_find_buddy(account, [[listObject UID] UTF8String]);
-		GaimDebug (@"#### addChatUser chat: %@ (%@) buddy: %@",[chat name], chat,[listContact UID]);
-		serv_chat_invite(gaim_conversation_get_gc(conv),
-						 gaim_conv_chat_get_id(gaimChat),
+		//PurpleBuddy		*buddy = purple_find_buddy(account, [[listObject UID] UTF8String]);
+		PurpleDebug (@"#### addChatUser chat: %@ (%@) buddy: %@",[chat name], chat,[listContact UID]);
+		serv_chat_invite(purple_conversation_get_gc(conv),
+						 purple_conv_chat_get_id(gaimChat),
 						 (inviteMessage ? [inviteMessage UTF8String] : ""),
 						 [[listContact UID] UTF8String]);
 		
@@ -1137,7 +1137,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		  arguments:(NSMutableDictionary *)arguments
 		  onAccount:(id)adiumAccount
 {
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	GList		*attrs = NULL;
 
 	//Generate a GList of attrs from arguments
@@ -1172,115 +1172,115 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		}
 	}
 
-	AILog(@"Setting status on %x (%s): ID %s, isActive %i, attributes %@",account, gaim_account_get_username(account),
+	AILog(@"Setting status on %x (%s): ID %s, isActive %i, attributes %@",account, purple_account_get_username(account),
 		  statusID, [isActive boolValue], arguments);
-	gaim_account_set_status_list(account, statusID, [isActive boolValue], attrs);
+	purple_account_set_status_list(account, statusID, [isActive boolValue], attrs);
 
-	if (gaim_status_is_online(gaim_account_get_active_status(account)) &&
-		gaim_account_is_disconnected(account))  {
+	if (purple_status_is_online(purple_account_get_active_status(account)) &&
+		purple_account_is_disconnected(account))  {
 		//This status is an online status, but the account is not connected or connecting
 
 		//Ensure the account is enabled
-		if (!gaim_account_get_enabled(account, "Adium")) {
-			gaim_account_set_enabled(account, "Adium", YES);
+		if (!purple_account_get_enabled(account, "Adium")) {
+			purple_account_set_enabled(account, "Adium", YES);
 		}
 
 		//Now connect the account
-		gaim_account_connect(account);
+		purple_account_connect(account);
 	}
 	
 }
 
 - (void)setInfo:(NSString *)profileHTML onAccount:(id)adiumAccount
 {
-	GaimAccount 	*account = accountLookupFromAdiumAccount(adiumAccount);
+	PurpleAccount 	*account = accountLookupFromAdiumAccount(adiumAccount);
 	const char *profileHTMLUTF8 = [profileHTML UTF8String];
 
-	gaim_account_set_user_info(account, profileHTMLUTF8);
+	purple_account_set_user_info(account, profileHTMLUTF8);
 
-	if (account->gc != NULL && gaim_account_is_connected(account)) {
+	if (account->gc != NULL && purple_account_is_connected(account)) {
 		serv_set_info(account->gc, profileHTMLUTF8);
 	}
 }
 
 - (void)setBuddyIcon:(NSString *)buddyImageFilename onAccount:(id)adiumAccount
 {
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (account) {
-		gaim_account_set_buddy_icon(account, [buddyImageFilename UTF8String]);
+		purple_account_set_buddy_icon(account, [buddyImageFilename UTF8String]);
 	}
 }
 
 - (void)setIdleSinceTo:(NSDate *)idleSince onAccount:(id)adiumAccount
 {
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	if (gaim_account_is_connected(account)) {
+	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	if (purple_account_is_connected(account)) {
 		NSTimeInterval idle = (idleSince != nil ? [idleSince timeIntervalSince1970] : 0);
-		GaimPresence *presence;
+		PurplePresence *presence;
 
-		presence = gaim_account_get_presence(account);
+		presence = purple_account_get_presence(account);
 
-		gaim_presence_set_idle(presence, (idle > 0), idle);
+		purple_presence_set_idle(presence, (idle > 0), idle);
 	}
 }
 
 #pragma mark Get Info
 - (void)getInfoFor:(NSString *)inUID onAccount:(id)adiumAccount
 {
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	if (gaim_account_is_connected(account)) {
+	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	if (purple_account_is_connected(account)) {
 		
 		serv_get_info(account->gc, [inUID UTF8String]);
 	}
 }
 
 #pragma mark Xfer
-- (void)xferRequest:(GaimXfer *)xfer
+- (void)xferRequest:(PurpleXfer *)xfer
 {
-	gaim_xfer_request(xfer);
+	purple_xfer_request(xfer);
 }
 
-- (void)xferRequestAccepted:(GaimXfer *)xfer withFileName:(NSString *)xferFileName
+- (void)xferRequestAccepted:(PurpleXfer *)xfer withFileName:(NSString *)xferFileName
 {
 	//Only start the file transfer if it's still not marked as cancelled and therefore can be begun.
-	if ((gaim_xfer_get_status(xfer) != GAIM_XFER_STATUS_CANCEL_LOCAL) &&
-		(gaim_xfer_get_status(xfer) != GAIM_XFER_STATUS_CANCEL_REMOTE)) {
-		//XXX should do further error checking as done by gaim_xfer_choose_file_ok_cb() in gaim's ft.c
-		gaim_xfer_request_accepted(xfer, [xferFileName UTF8String]);
+	if ((purple_xfer_get_status(xfer) != PURPLE_XFER_STATUS_CANCEL_LOCAL) &&
+		(purple_xfer_get_status(xfer) != PURPLE_XFER_STATUS_CANCEL_REMOTE)) {
+		//XXX should do further error checking as done by purple_xfer_choose_file_ok_cb() in gaim's ft.c
+		purple_xfer_request_accepted(xfer, [xferFileName UTF8String]);
 	}
 }
 
-- (void)xferRequestRejected:(GaimXfer *)xfer
+- (void)xferRequestRejected:(PurpleXfer *)xfer
 {
-	gaim_xfer_request_denied(xfer);
+	purple_xfer_request_denied(xfer);
 }
 
-- (void)xferCancel:(GaimXfer *)xfer
+- (void)xferCancel:(PurpleXfer *)xfer
 {
-	if ((gaim_xfer_get_status(xfer) == GAIM_XFER_STATUS_UNKNOWN) ||
-		(gaim_xfer_get_status(xfer) == GAIM_XFER_STATUS_NOT_STARTED) ||
-		(gaim_xfer_get_status(xfer) == GAIM_XFER_STATUS_STARTED) ||
-		(gaim_xfer_get_status(xfer) == GAIM_XFER_STATUS_ACCEPTED)) {
-		gaim_xfer_cancel_local(xfer);
+	if ((purple_xfer_get_status(xfer) == PURPLE_XFER_STATUS_UNKNOWN) ||
+		(purple_xfer_get_status(xfer) == PURPLE_XFER_STATUS_NOT_STARTED) ||
+		(purple_xfer_get_status(xfer) == PURPLE_XFER_STATUS_STARTED) ||
+		(purple_xfer_get_status(xfer) == PURPLE_XFER_STATUS_ACCEPTED)) {
+		purple_xfer_cancel_local(xfer);
 	}
 }
 
 #pragma mark Account settings
 - (void)setCheckMail:(NSNumber *)checkMail forAccount:(id)adiumAccount
 {
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	BOOL		shouldCheckMail = [checkMail boolValue];
 
-	gaim_account_set_check_mail(account, shouldCheckMail);
+	purple_account_set_check_mail(account, shouldCheckMail);
 }
 
 - (void)setDefaultPermitDenyForAccount:(id)adiumAccount
 {
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 
-	if (account && gaim_account_get_connection(account)) {
-		account->perm_deny = GAIM_PRIVACY_DENY_USERS;
-		serv_set_permit_deny(gaim_account_get_connection(account));
+	if (account && purple_account_get_connection(account)) {
+		account->perm_deny = PURPLE_PRIVACY_DENY_USERS;
+		serv_set_permit_deny(purple_account_get_connection(account));
 	}	
 }
 
@@ -1288,16 +1288,16 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 #ifndef JOSCAR_SUPERCEDE_LIBGAIM
 - (void)OSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount
 {
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	if (gaim_account_is_connected(account)) {
-		GaimBuddy   *buddy;
-		GaimGroup   *g;
+	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	if (purple_account_is_connected(account)) {
+		PurpleBuddy   *buddy;
+		PurpleGroup   *g;
 		OscarData   *od;
 
 		const char  *uidUTF8String = [inUID UTF8String];
 
-		if ((buddy = gaim_find_buddy(account, uidUTF8String)) &&
-			(g = gaim_buddy_get_group(buddy)) && 
+		if ((buddy = purple_find_buddy(account, uidUTF8String)) &&
+			(g = purple_buddy_get_group(buddy)) && 
 			(od = account->gc->proto_data)) {
 			aim_ssi_editcomment(od, g->name, uidUTF8String, [comment UTF8String]);	
 		}
@@ -1306,13 +1306,13 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 
 - (void)OSCARSetFormatTo:(NSString *)inFormattedUID onAccount:(id)adiumAccount
 {
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 
 	if (account &&
-		gaim_account_is_connected(account) &&
+		purple_account_is_connected(account) &&
 		[inFormattedUID length]) {
 		
-		oscar_reformat_screenname(gaim_account_get_connection(account), [inFormattedUID UTF8String]);
+		oscar_reformat_screenname(purple_account_get_connection(account), [inFormattedUID UTF8String]);
 	}
 }
 #endif
@@ -1321,28 +1321,28 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 
 - (void)performContactMenuActionFromDict:(NSDictionary *)dict forAccount:(id)adiumAccount
 {
-	GaimBuddy		*buddy = [[dict objectForKey:@"GaimBuddy"] pointerValue];
+	PurpleBuddy		*buddy = [[dict objectForKey:@"PurpleBuddy"] pointerValue];
 	void (*callback)(gpointer, gpointer);
 	
 	//Perform act's callback with the desired buddy and data
-	callback = [[dict objectForKey:@"GaimMenuActionCallback"] pointerValue];
+	callback = [[dict objectForKey:@"PurpleMenuActionCallback"] pointerValue];
 	if (callback)
-		callback((GaimBlistNode *)buddy, [[dict objectForKey:@"GaimMenuActionData"] pointerValue]);
+		callback((PurpleBlistNode *)buddy, [[dict objectForKey:@"PurpleMenuActionData"] pointerValue]);
 }
 
 - (void)performAccountMenuActionFromDict:(NSDictionary *)dict forAccount:(id)adiumAccount
 {
-	GaimPluginAction *act;
-	GaimAccount		 *account = accountLookupFromAdiumAccount(adiumAccount);
+	PurplePluginAction *act;
+	PurpleAccount		 *account = accountLookupFromAdiumAccount(adiumAccount);
 
 	if (account && account->gc) {
-		act = gaim_plugin_action_new(NULL, [[dict objectForKey:@"GaimPluginActionCallback"] pointerValue]);
+		act = purple_plugin_action_new(NULL, [[dict objectForKey:@"PurplePluginActionCallback"] pointerValue]);
 		if (act->callback) {
 			act->plugin = account->gc->prpl;
 			act->context = account->gc;
 			act->callback(act);
 		}
-		gaim_plugin_action_free(act);
+		purple_plugin_action_free(act);
 	}
 }
 
@@ -1354,7 +1354,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
  */
 - (void)doAuthRequestCbValue:(NSValue *)inCallBackValue withUserDataValue:(NSValue *)inUserDataValue 
 {	
-	GaimAccountRequestAuthorizationCb callBack = [inCallBackValue pointerValue];
+	PurpleAccountRequestAuthorizationCb callBack = [inCallBackValue pointerValue];
 	if (callBack) {
 		callBack([inUserDataValue pointerValue]);
 	}
@@ -1362,18 +1362,18 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 
 #pragma mark Secure messaging
 
-- (void)gaimConversation:(GaimConversation *)conv setSecurityDetails:(NSDictionary *)securityDetailsDict
+- (void)gaimConversation:(PurpleConversation *)conv setSecurityDetails:(NSDictionary *)securityDetailsDict
 {
 }
 
-- (void)refreshedSecurityOfGaimConversation:(GaimConversation *)conv
+- (void)refreshedSecurityOfPurpleConversation:(PurpleConversation *)conv
 {
-	GaimDebug (@"*** Refreshed security...");
+	PurpleDebug (@"*** Refreshed security...");
 }
 
 - (void)dealloc
 {
-	gaim_signals_disconnect_by_handle(adium_gaim_get_handle());
+	purple_signals_disconnect_by_handle(adium_purple_get_handle());
 
 	[super dealloc];
 }
@@ -1383,7 +1383,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
  //substitutions have already occurred, as of concatenations, because we see them.
 #pragma mark Translation
 
-- (NSString *)localizedGaimString:(NSString *)inString
+- (NSString *)localizedPurpleString:(NSString *)inString
 {
 	static BOOL configuredGettext = NO;
 	if (!configuredGettext) {
@@ -1393,7 +1393,7 @@ NSString* processGaimImages(NSString* inString, AIAccount* adiumAccount)
 		//Change language.
 		NSString	*preferredLocalization = [[[NSBundle mainBundle] preferredLocalizations] objectAtIndex:0];
 		setenv("LANGUAGE", [preferredLocalization UTF8String], 1);
-		AILog(@"Gaim translation using %s",[preferredLocalization UTF8String]);
+		AILog(@"Purple translation using %s",[preferredLocalization UTF8String]);
 
 		//Make change known. _nl_msg_cat_cntr is an external defined in gettext's loadmsgcat.c
 		{

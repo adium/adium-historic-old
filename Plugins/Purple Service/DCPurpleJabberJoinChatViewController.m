@@ -15,20 +15,20 @@
  */
 
 #import <Adium/AIContactControllerProtocol.h>
-#import "CBGaimAccount.h"
-#import "DCGaimJabberJoinChatViewController.h"
+#import "CBPurpleAccount.h"
+#import "DCPurpleJabberJoinChatViewController.h"
 #import "DCJoinChatWindowController.h"
 #import <AIUtilities/AICompletingTextField.h>
 #import <Adium/AIListContact.h>
 
 #define	KEY_DEFAULT_CONFERENCE_SERVER	@"DefaultConferenceServer"
 
-@interface DCGaimJabberJoinChatViewController (PRIVATE)
+@interface DCPurpleJabberJoinChatViewController (PRIVATE)
 - (void)validateEnteredText;
 - (void)_configureTextField;
 @end
 
-@implementation DCGaimJabberJoinChatViewController
+@implementation DCPurpleJabberJoinChatViewController
 
 - (id)init
 {
@@ -139,7 +139,7 @@
 
 - (NSString *)nibName
 {
-	return @"DCGaimJabberJoinChatView";
+	return @"DCPurpleJabberJoinChatView";
 }
 
 //Entered text is changing

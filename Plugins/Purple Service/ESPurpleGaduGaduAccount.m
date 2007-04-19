@@ -14,25 +14,25 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESGaimGaduGaduAccountViewController.h"
-#import "ESGaimGaduGaduAccount.h"
+#import "ESPurpleGaduGaduAccountViewController.h"
+#import "ESPurpleGaduGaduAccount.h"
 #import <Adium/AIStatusControllerProtocol.h>
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
-#import <Libgaim/gg.h>
-#import <Libgaim/buddylist.h>
+#import <Libpurple/gg.h>
+#import <Libpurple/buddylist.h>
 
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 
 #define MAX_GADU_STATUS_MESSAGE_LENGTH 70
 
-@interface ESGaimGaduGaduAccount (PRIVATE)
+@interface ESPurpleGaduGaduAccount (PRIVATE)
 - (NSAttributedString *)statusMessageForContact:(AIListContact *)theContact;
 @end
 
-@implementation ESGaimGaduGaduAccount
+@implementation ESPurpleGaduGaduAccount
 
 - (const char*)protocolPlugin
 {
@@ -80,7 +80,7 @@
 	char *buddylist = ggp_buddylist_dump(account);
 		
 	if (buddylist) {
-		GaimConnection *gc = account->gc;
+		PurpleConnection *gc = account->gc;
 		GGPInfo *info = gc->proto_data;
 		
 		AILog(@"Uploading gadu-gadu list...");
@@ -114,7 +114,7 @@
 - (void)downloadContactListFromServer
 {
 	//If we're connected and have no buddies, request 'em from the server.
-	GaimConnection *gc = account->gc;
+	PurpleConnection *gc = account->gc;
 	GGPInfo *info = gc->proto_data;
 	
 	AILog(@"Requesting gadu-gadu list...");

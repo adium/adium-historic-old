@@ -14,20 +14,20 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "CBGaimServicePlugin.h"
-#import "GaimServices.h"
-#import "SLGaimCocoaAdapter.h"
+#import "CBPurpleServicePlugin.h"
+#import "PurpleServices.h"
+#import "SLPurpleCocoaAdapter.h"
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <AdiumLibgaim/SLGaimCocoaAdapter.h>
+#import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
 
-@implementation CBGaimServicePlugin
+@implementation CBPurpleServicePlugin
 
 #pragma mark Plugin Installation
 //  Plugin Installation ------------------------------------------------------------------------------------------------
 
-#define GAIM_DEFAULTS   @"GaimServiceDefaults"
+#define GAIM_DEFAULTS   @"PurpleServiceDefaults"
 
 - (void)installPlugin
 {
@@ -60,7 +60,7 @@
 	MeanwhileService	= [[ESMeanwhileService alloc] init];
 #endif
 	
-	[SLGaimCocoaAdapter pluginDidLoad];
+	[SLPurpleCocoaAdapter pluginDidLoad];
 }
 
 - (void)uninstallPlugin

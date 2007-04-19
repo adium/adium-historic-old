@@ -15,38 +15,38 @@
  */
 
 #import <Adium/AIStatusControllerProtocol.h>
-#import "ESGaimICQAccount.h"
+#import "ESPurpleICQAccount.h"
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
 #import <Adium/AIContentMessage.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 
-@interface ESGaimICQAccount (PRIVATE)
+@interface ESPurpleICQAccount (PRIVATE)
 - (void)updateStatusMessage:(AIListContact *)theContact;
 @end
 
-@implementation ESGaimICQAccount
+@implementation ESPurpleICQAccount
 - (const char *)protocolPlugin
 {
     return "prpl-icq";
 }
 
-- (void)configureGaimAccount
+- (void)configurePurpleAccount
 {
-	[super configureGaimAccount];
+	[super configurePurpleAccount];
 
 	NSString	*encoding;
 
 	//Default encoding
 	if ((encoding = [self preferenceForKey:KEY_ICQ_ENCODING group:GROUP_ACCOUNT_STATUS])) {
-		gaim_account_set_string(account, "encoding", [encoding UTF8String]);
+		purple_account_set_string(account, "encoding", [encoding UTF8String]);
 	}
 	
 	//Defaults to YES
-	gaim_account_set_bool(account, "authorization", [[self preferenceForKey:KEY_ICQ_REQUIRE_AUTH group:GROUP_ACCOUNT_STATUS] boolValue]);
+	purple_account_set_bool(account, "authorization", [[self preferenceForKey:KEY_ICQ_REQUIRE_AUTH group:GROUP_ACCOUNT_STATUS] boolValue]);
 	
 	//Defaults to NO - web_aware will cause lots of spam for many users!
-	gaim_account_set_bool(account, "web_aware", [[self preferenceForKey:KEY_ICQ_WEB_AWARE group:GROUP_ACCOUNT_STATUS] boolValue]);
+	purple_account_set_bool(account, "web_aware", [[self preferenceForKey:KEY_ICQ_WEB_AWARE group:GROUP_ACCOUNT_STATUS] boolValue]);
 }
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
@@ -55,14 +55,14 @@
 	return [[inAttributedString attributedStringByConvertingLinksToStrings] string];
 }
 
-//CBGaimOscarAccount does complex things here, but ICQ can just perform a normal encodedAttributedString:forListObject
+//CBPurpleOscarAccount does complex things here, but ICQ can just perform a normal encodedAttributedString:forListObject
 - (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
 {		
 	return [self encodedAttributedString:[inContentMessage message] forListObject:[inContentMessage destination]];
 }
 
 /*!
- * @brief Setting aliases serverside would override the information Gaim is feeding us
+ * @brief Setting aliases serverside would override the information Purple is feeding us
  */
 - (BOOL)shouldSetAliasesServerside
 {

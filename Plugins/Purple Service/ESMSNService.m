@@ -16,9 +16,9 @@
 
 #import "AIMSNServicePreferences.h"
 #import <Adium/AIStatusControllerProtocol.h>
-#import "DCGaimMSNJoinChatViewController.h"
-#import "ESGaimMSNAccount.h"
-#import "ESGaimMSNAccountViewController.h"
+#import "DCPurpleMSNJoinChatViewController.h"
+#import "ESPurpleMSNAccount.h"
+#import "ESPurpleMSNAccountViewController.h"
 #import "ESMSNService.h"
 
 @implementation ESMSNService
@@ -35,15 +35,15 @@
 
 //Account Creation
 - (Class)accountClass{
-	return [ESGaimMSNAccount class];
+	return [ESPurpleMSNAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return [ESGaimMSNAccountViewController accountViewController];
+    return [ESPurpleMSNAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return [DCGaimMSNJoinChatViewController joinChatView];
+	return [DCPurpleMSNJoinChatViewController joinChatView];
 }
 
 //Service Description

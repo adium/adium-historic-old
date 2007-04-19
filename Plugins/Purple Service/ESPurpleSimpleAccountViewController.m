@@ -1,17 +1,17 @@
 //
-//  ESGaimSimpleAccountViewController.m
+//  ESPurpleSimpleAccountViewController.m
 //  Adium
 //
 //  Created by Evan Schoenberg on 12/17/05.
 //  Copyright 2006 The Adium Team. All rights reserved.
 //
 
-#import "ESGaimSimpleAccountViewController.h"
-#import "ESGaimSimpleAccount.h"
+#import "ESPurpleSimpleAccountViewController.h"
+#import "ESPurpleSimpleAccount.h"
 
-@implementation ESGaimSimpleAccountViewController
+@implementation ESPurpleSimpleAccountViewController
 - (NSString *)nibName{
-    return @"ESGaimSimpleAccountView";
+    return @"ESPurpleSimpleAccountView";
 }
 
 //Configure controls

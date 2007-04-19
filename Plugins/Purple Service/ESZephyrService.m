@@ -15,24 +15,24 @@
  */
 
 #import <Adium/AIStatusControllerProtocol.h>
-#import "DCGaimZephyrJoinChatViewController.h"
-#import "ESGaimZephyrAccount.h"
-#import "ESGaimZephyrAccountViewController.h"
+#import "DCPurpleZephyrJoinChatViewController.h"
+#import "ESPurpleZephyrAccount.h"
+#import "ESPurpleZephyrAccountViewController.h"
 #import "ESZephyrService.h"
 
 @implementation ESZephyrService
 
 //Account Creation
 - (Class)accountClass{
-	return [ESGaimZephyrAccount class];
+	return [ESPurpleZephyrAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return [ESGaimZephyrAccountViewController accountViewController];
+    return [ESPurpleZephyrAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return [DCGaimZephyrJoinChatViewController joinChatView];
+	return [DCPurpleZephyrJoinChatViewController joinChatView];
 }
 
 //Service Description

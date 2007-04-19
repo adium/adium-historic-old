@@ -16,32 +16,32 @@
 
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIStatusControllerProtocol.h>
-#import "ESGaimYahooAccount.h"
-#import "ESGaimYahooAccountViewController.h"
-#import "SLGaimCocoaAdapter.h"
+#import "ESPurpleYahooAccount.h"
+#import "ESPurpleYahooAccountViewController.h"
+#import "SLPurpleCocoaAdapter.h"
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
 #import <Adium/ESFileTransfer.h>
-#import <Libgaim/yahoo.h>
-#import <Libgaim/yahoo_friend.h>
+#import <Libpurple/yahoo.h>
+#import <Libpurple/yahoo_friend.h>
 
-@implementation ESGaimYahooAccount
+@implementation ESPurpleYahooAccount
 
 - (const char*)protocolPlugin
 {
     return "prpl-yahoo";
 }
 
-- (void)configureGaimAccount
+- (void)configurePurpleAccount
 {
-	[super configureGaimAccount];
+	[super configurePurpleAccount];
 
-	gaim_account_set_string(account, "room_list_locale", [[self preferenceForKey:KEY_YAHOO_ROOM_LIST_LOCALE
+	purple_account_set_string(account, "room_list_locale", [[self preferenceForKey:KEY_YAHOO_ROOM_LIST_LOCALE
 																		   group:GROUP_ACCOUNT_STATUS] UTF8String]);
 
 	//Make sure we're not turning japanese oh no not turning japanese I really think so
-	gaim_account_set_bool(account, "yahoojp", FALSE);
+	purple_account_set_bool(account, "yahoojp", FALSE);
 }
 
 /*!
@@ -173,14 +173,14 @@
 #pragma mark Status Messages
 
 /*!
- * @brief Status name to use for a Gaim buddy
+ * @brief Status name to use for a Purple buddy
  */
-- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)buddy
+- (NSString *)statusNameForPurpleBuddy:(PurpleBuddy *)buddy
 {
 	NSString		*statusName = nil;
-	GaimPresence	*presence = gaim_buddy_get_presence(buddy);
-	GaimStatus		*status = gaim_presence_get_active_status(presence);
-	const char		*gaimStatusID = gaim_status_get_id(status);
+	PurplePresence	*presence = purple_buddy_get_presence(buddy);
+	PurpleStatus		*status = purple_presence_get_active_status(presence);
+	const char		*gaimStatusID = purple_status_get_id(status);
 	
 	if (!gaimStatusID) return nil;
 	
@@ -221,15 +221,15 @@
 /*!
  * @brief Status message for a contact
  */
-- (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
+- (NSAttributedString *)statusMessageForPurpleBuddy:(PurpleBuddy *)b
 {
 	NSString			*statusMessageString = nil;
 	NSAttributedString	*statusMessage = nil;
-	char				*normalized = g_strdup(gaim_normalize(b->account, b->name));
+	char				*normalized = g_strdup(purple_normalize(b->account, b->name));
 	struct yahoo_data   *od;
 	YahooFriend			*f;
 	
-	if ((gaim_account_is_connected(account)) &&
+	if ((purple_account_is_connected(account)) &&
 		(od = account->gc->proto_data) &&
 		(f = g_hash_table_lookup(od->friends, normalized))) {
 		
@@ -306,12 +306,12 @@
 - (void)updateStatusForContact:(AIListContact *)theContact toStatusType:(NSNumber *)statusTypeNumber statusName:(NSString *)statusName statusMessage:(NSAttributedString *)statusMessage
 {
 	NSString			*statusMessageString = [statusMessage string];
-	char				*normalized = g_strdup(gaim_normalize(account, [[theContact UID] UTF8String]));
+	char				*normalized = g_strdup(purple_normalize(account, [[theContact UID] UTF8String]));
 	struct yahoo_data   *od;
 	YahooFriend			*f;
 
 	/* Grab the idle time while we have a chance */
-	if ((gaim_account_is_connected(account)) &&
+	if ((purple_account_is_connected(account)) &&
 		(od = account->gc->proto_data) &&
 		(f = g_hash_table_lookup(od->friends, normalized))) {
 

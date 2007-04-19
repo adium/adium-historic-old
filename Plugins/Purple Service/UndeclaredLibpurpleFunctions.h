@@ -18,8 +18,8 @@
  *	in any header.
  */
 
-void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
-void gaim_xfer_choose_file_cancel_cb(void *user_data, const char *filename);
+void purple_xfer_choose_file_ok_cb(void *user_data, const char *filename);
+void purple_xfer_choose_file_cancel_cb(void *user_data, const char *filename);
 
 /* those aren't actually void * pointers, but it doesn't
  * really matter because in the end all we need is to
@@ -33,4 +33,4 @@ char * mwServiceAware_getText(void *, void *);
  * is making me angry.
  * I checked our libgaim repo and the upstream gaim cvs repo for it.
  */
-void oscar_reformat_screenname(GaimConnection *gc, const char *formattedUID);
+void oscar_reformat_screenname(PurpleConnection *gc, const char *formattedUID);

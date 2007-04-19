@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESGaimJabberAccount.h"
-#import "SLGaimCocoaAdapter.h"
+#import "ESPurpleJabberAccount.h"
+#import "SLPurpleCocoaAdapter.h"
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIStatusControllerProtocol.h>
@@ -27,15 +27,15 @@
 #import <Adium/ESFileTransfer.h>
 #import <Adium/ESTextAndButtonsWindowController.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
-#include <Libgaim/buddy.h>
-#include <Libgaim/presence.h>
-#include <Libgaim/si.h>
+#include <Libpurple/buddy.h>
+#include <Libpurple/presence.h>
+#include <Libpurple/si.h>
 
 #define DEFAULT_JABBER_HOST @"@jabber.org"
 
 extern void jabber_roster_request(JabberStream *js);
 
-@implementation ESGaimJabberAccount
+@implementation ESPurpleJabberAccount
 	
 /*!
  * @brief The UID will be changed. The account has a chance to perform modifications
@@ -97,14 +97,14 @@ extern void jabber_roster_request(JabberStream *js);
 	return supportedPropertyKeys;
 }
 
-- (void)configureGaimAccount
+- (void)configurePurpleAccount
 {
-	[super configureGaimAccount];
+	[super configurePurpleAccount];
 	
 	NSString	*connectServer;
 	BOOL		forceOldSSL, allowPlaintext;
 
-	gaim_account_set_username(account, [self gaimAccountName]);
+	purple_account_set_username(account, [self gaimAccountName]);
 
 	//'Connect via' server (nil by default)
 	connectServer = [self preferenceForKey:KEY_JABBER_CONNECT_SERVER group:GROUP_ACCOUNT_STATUS];
@@ -112,17 +112,17 @@ extern void jabber_roster_request(JabberStream *js);
 	if (connectServer && [connectServer isEqualToString:@"localhost"])
 		connectServer = @"127.0.0.1";
 	
-	gaim_account_set_string(account, "connect_server", (connectServer ?
+	purple_account_set_string(account, "connect_server", (connectServer ?
 														[connectServer UTF8String] :
 														""));
 	
 	//Force old SSL usage? (off by default)
 	forceOldSSL = [[self preferenceForKey:KEY_JABBER_FORCE_OLD_SSL group:GROUP_ACCOUNT_STATUS] boolValue];
-	gaim_account_set_bool(account, "old_ssl", forceOldSSL);
+	purple_account_set_bool(account, "old_ssl", forceOldSSL);
 
-	//Allow plaintext authorization over an unencrypted connection? Gaim will prompt if this is NO and is needed.
+	//Allow plaintext authorization over an unencrypted connection? Purple will prompt if this is NO and is needed.
 	allowPlaintext = [[self preferenceForKey:KEY_JABBER_ALLOW_PLAINTEXT group:GROUP_ACCOUNT_STATUS] boolValue];
-	gaim_account_set_bool(account, "auth_plain_in_clear", allowPlaintext);
+	purple_account_set_bool(account, "auth_plain_in_clear", allowPlaintext);
 }
 
 - (NSString *)serverSuffix
@@ -148,7 +148,7 @@ extern void jabber_roster_request(JabberStream *js);
 	BOOL		serverAppendedToUID;
 	
 	/*
-	 * Gaim stores the username in the format username@server/resource.  We need to pass it a username in this format
+	 * Purple stores the username in the format username@server/resource.  We need to pass it a username in this format
 	 *
 	 * The user should put the username in username@server format, which is common for Jabber. If the user does
 	 * not specify the server, use jabber.org.
@@ -391,7 +391,7 @@ extern void jabber_roster_request(JabberStream *js);
 	 * This will let the prpl know that we are disconnecting with no backing ssl connection and that therefore
 	 * the ssl connection is has should not be messaged in the process of disconnecting.
 	 */
-	GaimConnection *gc = gaim_account_get_connection(account);
+	PurpleConnection *gc = purple_account_get_connection(account);
 	if (GAIM_CONNECTION_IS_VALID(gc) &&
 		!gc->disconnect_timeout) {
 		gc->disconnect_timeout = -1;
@@ -428,12 +428,12 @@ extern void jabber_roster_request(JabberStream *js);
 }
 
 #pragma mark Status Messages
-- (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
+- (NSAttributedString *)statusMessageForPurpleBuddy:(PurpleBuddy *)b
 {
 	NSAttributedString  *statusMessage = nil;
 
-	if (gaim_account_is_connected(account)) {		
-		char	*normalized = g_strdup(gaim_normalize(b->account, b->name));
+	if (purple_account_is_connected(account)) {		
+		char	*normalized = g_strdup(purple_normalize(b->account, b->name));
 		JabberBuddy	*jb;
 		
 		if ((jb = jabber_buddy_find(account->gc->proto_data, normalized, FALSE))) {
@@ -456,12 +456,12 @@ extern void jabber_roster_request(JabberStream *js);
 	return statusMessage;
 }
 
-- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)buddy
+- (NSString *)statusNameForPurpleBuddy:(PurpleBuddy *)buddy
 {
 	NSString		*statusName = nil;
-	GaimPresence	*presence = gaim_buddy_get_presence(buddy);
-	GaimStatus		*status = gaim_presence_get_active_status(presence);
-	const char		*gaimStatusID = gaim_status_get_id(status);
+	PurplePresence	*presence = purple_buddy_get_presence(buddy);
+	PurpleStatus		*status = purple_presence_get_active_status(presence);
+	const char		*gaimStatusID = purple_status_get_id(status);
 	
 	if (!gaimStatusID) return nil;
 
@@ -590,7 +590,7 @@ extern void jabber_roster_request(JabberStream *js);
 #pragma mark Account Action Menu Items
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
-	/* XXX All Jabber account actions depend upon adiumGaimRequestFields */
+	/* XXX All Jabber account actions depend upon adiumPurpleRequestFields */
 	return nil;
 }
 
