@@ -402,9 +402,9 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 							filename = [filename stringByAppendingPathExtension:@"png"];
 						}
 
-						int				imgstore = purple_imgstore_add([imageData bytes], [imageData length], [filename UTF8String]);
+						int	imgstore = purple_imgstore_add([imageData bytes], [imageData length], [filename UTF8String]);
 
-						AILog(@"Adding image id %i with name %s", [filename UTF8String]);
+						AILog(@"Adding image id %i with name %s", imgstore, (filename ? [filename UTF8String] : "(null)"));
 
 						NSString		*newTag = [NSString stringWithFormat:@"<IMG ID=\"%i\" CLASS=\"scaledToFitImage\">",imgstore];
 						[processedString appendString:newTag];
