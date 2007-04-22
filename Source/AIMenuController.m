@@ -88,6 +88,7 @@
 		destination--;
 		menuItem = [locationArray objectAtIndex:destination];
 	}
+
 	if ([menuItem isKindOfClass:[NSMenuItem class]]) {
 		//If attached to a menu item, insert below that item
 		targetMenu = [menuItem menu];
@@ -102,6 +103,7 @@
 	if (location != destination) {
 		[targetMenu insertItem:[NSMenuItem separatorItem] atIndex:++targetIndex];
 	}
+
 	[targetMenu insertItem:newItem atIndex:targetIndex+1];
 
 	//update the location array
@@ -117,6 +119,10 @@
 	int			targetIndex = [targetMenu indexOfItem:targetItem];
 	unsigned	loop, maxLoop;
 
+	if (!targetMenu) {
+		NSLog(@"Warning: Attempting to remove %@, but it has no menu",targetItem);
+	}
+	
 	//Fix the pointer if this is one
 	for (loop = 0, maxLoop = [locationArray count]; loop < maxLoop; loop++) {
 		NSMenuItem	*menuItem = [locationArray objectAtIndex:loop];
