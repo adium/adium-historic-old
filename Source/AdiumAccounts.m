@@ -280,49 +280,36 @@
 				const char	firstCharacter = [uid characterAtIndex:0];
 				
 				if ([uid hasSuffix:@"@mac.com"]) {
-					serviceID = @"libgaim-oscar-Mac";
+					serviceID = @"libpurple-oscar-Mac";
 				} else if (firstCharacter >= '0' && firstCharacter <= '9') {
-					serviceID = @"libgaim-oscar-ICQ";
+					serviceID = @"libpurple-oscar-ICQ";
 				} else {
-					serviceID = @"libgaim-oscar-AIM";
+					serviceID = @"libpurple-oscar-AIM";
 				}
 			}
 		} else if ([serviceID isEqualToString:@"GaduGadu-LIBGAIM"]) {
-			serviceID = @"libgaim-Gadu-Gadu";
+			serviceID = @"libpurple-Gadu-Gadu";
 		} else if ([serviceID isEqualToString:@"Jabber-LIBGAIM"]) {
-			serviceID = @"libgaim-Jabber";
+			serviceID = @"libpurple-Jabber";
 		} else if ([serviceID isEqualToString:@"MSN-LIBGAIM"]) {
-			serviceID = @"libgaim-MSN";
+			serviceID = @"libpurple-MSN";
 		} else if ([serviceID isEqualToString:@"Napster-LIBGAIM"]) {
-			serviceID = @"libgaim-Napster";
+			serviceID = @"libpurple-Napster";
 		} else if ([serviceID isEqualToString:@"Novell-LIBGAIM"]) {
-			serviceID = @"libgaim-GroupWise";
+			serviceID = @"libpurple-GroupWise";
 		} else if ([serviceID isEqualToString:@"Sametime-LIBGAIM"]) {
-			serviceID = @"libgaim-Sametime";
+			serviceID = @"libpurple-Sametime";
 		} else if ([serviceID isEqualToString:@"Yahoo-LIBGAIM"]) {
-			serviceID = @"libgaim-Yahoo!";
+			serviceID = @"libpurple-Yahoo!";
 		} else if ([serviceID isEqualToString:@"Yahoo-Japan-LIBGAIM"]) {
-			serviceID = @"libgaim-Yahoo!-Japan";
+			serviceID = @"libpurple-Yahoo!-Japan";
 		}
 	} else if ([serviceID isEqualToString:@"rvous-libezv"])
 		serviceID = @"bonjour-libezv";
-#ifdef JOSCAR_SUPERCEDE_LIBGAIM
-	else if ([serviceID isEqualToString:@"libgaim-oscar-AIM"])
-		serviceID = @"joscar-OSCAR-AIM";
-	/*
-	 //Reenable if joscar takes over ICQ again
-	else if ([serviceID isEqualToString:@"libgaim-oscar-ICQ"])
-		serviceID = @"joscar-OSCAR-ICQ";
-	*/
-	else if ([serviceID isEqualToString:@"libgaim-oscar-Mac"])
-		serviceID = @"joscar-OSCAR-dotMac";
-#else
 	else if ([serviceID isEqualToString:@"joscar-OSCAR-AIM"])
-		serviceID = @"libgaim-oscar-AIM";
+		serviceID = @"libpurple-oscar-AIM";
 	else if ([serviceID isEqualToString:@"joscar-OSCAR-dotMac"])
-		serviceID = @"libgaim-oscar-Mac";
-
-#endif
+		serviceID = @"libpurple-oscar-Mac";
 	
 	return serviceID;
 }
