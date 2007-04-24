@@ -36,6 +36,17 @@
 }
 
 /*!
+* @brief View did load
+ */
+- (void)viewDidLoad
+{
+	[super viewDidLoad];
+	
+	[label_secondsToShow setLocalizedString:AILocalizedString(@"Seconds To Show:", "Label before a slider which sets the number of seconds to show the contact list when an action is triggerred")];
+	[label_note setLocalizedString:AILocalizedString(@"Note: This behavior is only available if the contact list is set to hide.", "Explanation of when the 'show contact list' action is available for use")];
+}
+
+/*!
 * @brief Load the state of our controls
  */
 - (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject
