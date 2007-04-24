@@ -244,9 +244,13 @@
 				[unloadableAccounts addObject:accountDict];
 			}
         } else {
-			NSLog(@"Avaialble services are %@: could not load account %@",
-				  [[adium accountController] services], accountDict);
-			[unloadableAccounts addObject:accountDict];			
+			if ([accountUID length]) {
+				NSLog(@"Available services are %@: could not load account %@ on service %@ (service %@)",
+					  [[adium accountController] services], accountDict, serviceID, service);
+				[unloadableAccounts addObject:accountDict];
+			} else {
+				AILog(@"Ignored an account with a 0 length accountUID: %@", accountDict);
+			}
 		}
 		[pool release];
     }
@@ -310,7 +314,7 @@
 		serviceID = @"libpurple-oscar-AIM";
 	else if ([serviceID isEqualToString:@"joscar-OSCAR-dotMac"])
 		serviceID = @"libpurple-oscar-Mac";
-	
+
 	return serviceID;
 }
 
