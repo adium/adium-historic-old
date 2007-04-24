@@ -358,7 +358,7 @@
 			<key>$classname</key>
 			<string>NSMutableArray</string>
 		</dict>
-		<string>{{3, 321}, {320, 5}}</string>
+		<string>{{3, 60}, {320, 5}}</string>
 		<string>{0, 0}</string>
 		<dict>
 			<key>$class</key>
@@ -544,7 +544,7 @@
 		</dict>
 		<string>AILocalizationTextField</string>
 		<string>NSTextField</string>
-		<string>{{0, 323}, {344, 14}}</string>
+		<string>{{0, 62}, {344, 14}}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -727,7 +727,7 @@
 		</dict>
 		<string>AILocalizationButton</string>
 		<string>NSButton</string>
-		<string>{{-1, 299}, {309, 18}}</string>
+		<string>{{-1, 38}, {309, 18}}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -905,7 +905,7 @@
 			<integer>268</integer>
 		</dict>
 		<string>NSButton</string>
-		<string>{{-1, 279}, {309, 18}}</string>
+		<string>{{-1, 18}, {309, 18}}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -961,7 +961,7 @@
 			</dict>
 		</dict>
 		<string>Hide the status window when Adium is not active</string>
-		<string>{326, 337}</string>
+		<string>{326, 76}</string>
 		<string>NSView</string>
 		<string>NSResponder</string>
 		<dict>
@@ -1197,7 +1197,7 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>10</integer>
+					<integer>33</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1209,19 +1209,19 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>14</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
 					<integer>48</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>33</integer>
+					<integer>12</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>12</integer>
+					<integer>14</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>10</integer>
 				</dict>
 			</array>
 		</dict>
@@ -1247,10 +1247,6 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>70</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
 					<integer>93</integer>
 				</dict>
 				<dict>
@@ -1259,16 +1255,20 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
+					<integer>70</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
 					<integer>95</integer>
 				</dict>
 			</array>
 		</dict>
-		<string>Messages</string>
+		<string>NSTextField1112</string>
 		<string>NSButton431</string>
 		<string>File's Owner</string>
 		<string>NSButton43</string>
-		<string>NSTextField1112</string>
 		<string>NSBox112</string>
+		<string>Status</string>
 		<dict>
 			<key>$class</key>
 			<dict>
