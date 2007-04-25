@@ -7,6 +7,17 @@
 	objects = {
 
 /* Begin PBXAggregateTarget section */
+		34F3B9510BDF15F40011AB34 /* Touch Framework Bundles to Executable Date */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 34F3B95A0BDF16130011AB34 /* Build configuration list for PBXAggregateTarget "Touch Framework Bundles to Executable Date" */;
+			buildPhases = (
+				34F3B9500BDF15F40011AB34 /* ShellScript */,
+			);
+			dependencies = (
+			);
+			name = "Touch Framework Bundles to Executable Date";
+			productName = "Touch Framework Bundles to Executable Date";
+		};
 		DACF3ED3085574D0006BFB18 /* External Frameworks */ = {
 			isa = PBXAggregateTarget;
 			buildConfigurationList = DACF3EDE085574F6006BFB18 /* Build configuration list for PBXAggregateTarget "External Frameworks" */;
@@ -14,6 +25,7 @@
 			);
 			dependencies = (
 				F53C25E20A2F997700F7B73D /* PBXTargetDependency */,
+				34F3B9AB0BDF177C0011AB34 /* PBXTargetDependency */,
 				4B8E0BD8086A16D4009A7A4D /* PBXTargetDependency */,
 				4B8E0BDA086A16D4009A7A4D /* PBXTargetDependency */,
 				34611CCF09B67ABC00870036 /* PBXTargetDependency */,
@@ -1286,6 +1298,13 @@
 			proxyType = 2;
 			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
 			remoteInfo = AIUtilities;
+		};
+		34F3B9AA0BDF177C0011AB34 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 34F3B9510BDF15F40011AB34 /* Touch Framework Bundles to Executable Date */;
+			remoteInfo = "Touch Framework Bundles to Executable Date";
 		};
 		38722DE90A909509002CC4F4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -7468,6 +7487,7 @@
 				38D8FA9A0A8A4F350078E442 /* QuickTime Plugin */,
 				F53C25AE0A2F95F100F7B73D /* Setup Build Directory */,
 				3419F3A605314BE000C68BA3 /* SQL Logger */,
+				34F3B9510BDF15F40011AB34 /* Touch Framework Bundles to Executable Date */,
 			);
 		};
 /* End PBXProject section */
@@ -7923,6 +7943,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "gcc -E -P -x c -Wno-trigraphs -include \"$SCRIPT_INPUT_FILE_0\" -C \"$SCRIPT_INPUT_FILE_1\" -o \"$SCRIPT_OUTPUT_FILE_0\"";
+		};
+		34F3B9500BDF15F40011AB34 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#############################################################################################\n# Set framework bundles to have their executables' dates, thereby letting Xcode suck less.  #\n#############################################################################################\ntouch -r \"$SRCROOT/Plugins/Purple Service/Libpurple.framework/Versions/A/Libpurple\" \"$SRCROOT/Plugins/Purple Service/Libpurple.framework\"\ntouch -r \"$SRCROOT/Frameworks/Growl-WithInstaller.framework/Versions/A/Growl-WithInstaller\" \"$SRCROOT/Frameworks/Growl-WithInstaller.framework\"\ntouch -r \"$SRCROOT/Frameworks/LMX.framework/Versions/A/LMX\" \"$SRCROOT/Frameworks/LMX.framework\"\ntouch -r \"$SRCROOT/Frameworks/PSMTabBarControl.framework/Versions/A/PSMTabBarControl\" \"$SRCROOT/Frameworks/PSMTabBarControl.framework\"\ntouch -r \"$SRCROOT/Frameworks/Sparkle.framework/Versions/A/Sparkle\" \"$SRCROOT/Frameworks/Sparkle.framework\"\ntouch -r \"$SRCROOT/Frameworks/FriBidi.framework/Versions/A/FriBidi\" \"$SRCROOT/Frameworks/FriBidi.framework\"\ntouch -r \"$SRCROOT/Frameworks/OTR.framework/Versions/A/OTR\" \"$SRCROOT/Frameworks/OTR.framework\"\n";
 		};
 		4BC8AABA059A33B400F940E1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8632,6 +8665,11 @@
 			isa = PBXTargetDependency;
 			target = 3485D67F09EB416300232CC4 /* AdiumLibpurple */;
 			targetProxy = 34C7C62C09EC4EBE0060FB4A /* PBXContainerItemProxy */;
+		};
+		34F3B9AB0BDF177C0011AB34 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 34F3B9510BDF15F40011AB34 /* Touch Framework Bundles to Executable Date */;
+			targetProxy = 34F3B9AA0BDF177C0011AB34 /* PBXContainerItemProxy */;
 		};
 		38722DEA0A909509002CC4F4 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -10443,6 +10481,42 @@
 			};
 			name = "Deployment-Debug_PPC-Only";
 		};
+		34F3B95B0BDF16130011AB34 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				PRODUCT_NAME = "Touch Framework Bundles to Executable Date";
+			};
+			name = Development;
+		};
+		34F3B95C0BDF16130011AB34 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				PRODUCT_NAME = "Touch Framework Bundles to Executable Date";
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		34F3B95D0BDF16130011AB34 /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "Touch Framework Bundles to Executable Date";
+			};
+			name = "Deployment-Debug";
+		};
+		34F3B95E0BDF16130011AB34 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "Touch Framework Bundles to Executable Date";
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
 		38D8FADC0A8A4F350078E442 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -11365,6 +11439,17 @@
 				34B323BD09B9FEAC00029361 /* Deployment */,
 				34B323BE09B9FEAC00029361 /* Deployment-Debug */,
 				34B323BF09B9FEAC00029361 /* Deployment-Debug_PPC-Only */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		34F3B95A0BDF16130011AB34 /* Build configuration list for PBXAggregateTarget "Touch Framework Bundles to Executable Date" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				34F3B95B0BDF16130011AB34 /* Development */,
+				34F3B95C0BDF16130011AB34 /* Deployment */,
+				34F3B95D0BDF16130011AB34 /* Deployment-Debug */,
+				34F3B95E0BDF16130011AB34 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
