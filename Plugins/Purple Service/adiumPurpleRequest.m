@@ -79,6 +79,7 @@ static void *adiumPurpleRequestInput(
 								   gboolean multiline, gboolean masked, gchar *hint,
 								   const char *okText, GCallback okCb, 
 								   const char *cancelText, GCallback cancelCb,
+								   PurpleAccount *account, const char *who, PurpleConversation *conv,
 								   void *userData)
 {
 	/*
@@ -122,6 +123,7 @@ static void *adiumPurpleRequestChoice(const char *title, const char *primary,
 									const char *secondary, unsigned int defaultValue,
 									const char *okText, GCallback okCb,
 									const char *cancelText, GCallback cancelCb,
+									PurpleAccount *account, const char *who, PurpleConversation *conv,
 									void *userData, va_list choices)
 {
 	PurpleDebug (@"adiumPurpleRequestChoice: %s\n%s\n%s ",
@@ -135,7 +137,9 @@ static void *adiumPurpleRequestChoice(const char *title, const char *primary,
 //Purple requests the user take an action such as accept or deny a buddy's attempt to add us to her list 
 static void *adiumPurpleRequestAction(const char *title, const char *primary,
 									const char *secondary, unsigned int default_action,
-									void *userData, size_t actionCount, va_list actions)
+									void *userData,
+									PurpleAccount *account, const char *who, PurpleConversation *conv,
+									size_t actionCount, va_list actions)
 {
     NSString			*titleString = (title ? [NSString stringWithUTF8String:title] : @"");
 	NSString			*primaryString = (primary ?  [NSString stringWithUTF8String:primary] : nil);
@@ -224,6 +228,7 @@ static void *adiumPurpleRequestFields(const char *title, const char *primary,
 									const char *secondary, PurpleRequestFields *fields,
 									const char *okText, GCallback okCb,
 									const char *cancelText, GCallback cancelCb,
+									PurpleAccount *account, const char *who, PurpleConversation *conv,
 									void *userData)
 {
 	id					requestController = nil;
@@ -292,7 +297,9 @@ static void *adiumPurpleRequestFields(const char *title, const char *primary,
 
 static void *adiumPurpleRequestFile(const char *title, const char *filename,
 								  gboolean savedialog, GCallback ok_cb,
-								  GCallback cancel_cb,void *user_data)
+								  GCallback cancel_cb,
+								  PurpleAccount *account, const char *who, PurpleConversation *conv,
+								  void *user_data)
 {
 	id					requestController = nil;
 	NSString			*titleString = (title ? [NSString stringWithUTF8String:title] : nil);
@@ -379,13 +386,23 @@ static void adiumPurpleRequestClose(PurpleRequestType type, void *uiHandle)
 	}
 }
 
+static void *adiumPurpleRequestFolder(const char *title, const char *dirname, GCallback ok_cb, GCallback cancel_cb,
+									  PurpleAccount *account, const char *who, PurpleConversation *conv,
+									  void *user_data)
+{
+	AILog(@"adiumPurpleRequestFolder");
+
+	return NULL;
+}
+
 static PurpleRequestUiOps adiumPurpleRequestOps = {
     adiumPurpleRequestInput,
     adiumPurpleRequestChoice,
     adiumPurpleRequestAction,
     adiumPurpleRequestFields,
 	adiumPurpleRequestFile,
-    adiumPurpleRequestClose
+    adiumPurpleRequestClose,
+	adiumPurpleRequestFolder
 };
 
 PurpleRequestUiOps *adium_purple_request_get_ui_ops()
