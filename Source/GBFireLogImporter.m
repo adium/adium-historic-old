@@ -231,6 +231,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 
 - (BOOL)readFile:(NSString *)inFile toFile:(NSString *)outFile account:(NSString * *)account;
 {
+	AILog(@"%@: readFile:%@ toFile:%@",NSStringFromClass([self class]), inFile, outFile);
+
 	BOOL success = YES;
 	NSData *inputData = [NSData dataWithContentsOfFile:inFile];
 	inputFileString = [[NSString alloc] initWithData:inputData encoding:NSUTF8StringEncoding];
@@ -255,7 +257,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	};
 	parser = CFXMLParserCreateWithDataFromURL(NULL, (CFURLRef)url, kCFXMLParserSkipMetaData | kCFXMLParserSkipWhitespace, kCFXMLNodeCurrentVersion, &callbacks, &context);
 	if (!CFXMLParserParse(parser)) {
-		printf("parse failed\n");
+		NSLog(@"Fire log import: Parse of %@ failed", inFile);
+		AILog(@"Fire log import: Parse of %@ failed", inFile);
 		success = NO;
 	}
 	CFRelease(parser);
