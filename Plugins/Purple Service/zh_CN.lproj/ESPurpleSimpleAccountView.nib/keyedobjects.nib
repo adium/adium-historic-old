@@ -2672,14 +2672,6 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>37</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>115</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
 					<integer>10</integer>
 				</dict>
 				<dict>
@@ -2749,6 +2741,14 @@
 				<dict>
 					<key>CF$UID</key>
 					<integer>108</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>37</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>115</integer>
 				</dict>
 			</array>
 		</dict>
@@ -2771,14 +2771,6 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>10</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>85</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
 					<integer>2</integer>
 				</dict>
 				<dict>
@@ -2832,6 +2824,14 @@
 				<dict>
 					<key>CF$UID</key>
 					<integer>10</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>10</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>85</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -2859,14 +2859,6 @@
 			</dict>
 			<key>NS.objects</key>
 			<array>
-				<dict>
-					<key>CF$UID</key>
-					<integer>37</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>115</integer>
-				</dict>
 				<dict>
 					<key>CF$UID</key>
 					<integer>10</integer>
@@ -2942,6 +2934,14 @@
 				<dict>
 					<key>CF$UID</key>
 					<integer>108</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>37</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>115</integer>
 				</dict>
 			</array>
 		</dict>
@@ -2987,15 +2987,15 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
+					<integer>179</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
 					<integer>185</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
 					<integer>186</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>181</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -3039,8 +3039,6 @@
 				</dict>
 			</array>
 		</dict>
-		<string>NSTextField</string>
-		<string>NSTextField441411</string>
 		<string>Options</string>
 		<string>setup</string>
 		<string>NSTextField1131</string>
@@ -3059,6 +3057,8 @@
 		<string>NSTextField113</string>
 		<string>NSTextField1</string>
 		<string>NSTextField44141</string>
+		<string>NSTextField</string>
+		<string>NSTextField441411</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -3095,6 +3095,26 @@
 			</dict>
 			<key>NS.objects</key>
 			<array>
+				<dict>
+					<key>CF$UID</key>
+					<integer>115</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>159</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>130</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>84</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>85</integer>
+				</dict>
 				<dict>
 					<key>CF$UID</key>
 					<integer>98</integer>
@@ -3238,26 +3258,6 @@
 				<dict>
 					<key>CF$UID</key>
 					<integer>50</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>115</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>159</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>130</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>84</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>85</integer>
 				</dict>
 			</array>
 		</dict>
@@ -3435,6 +3435,11 @@
 				</dict>
 			</array>
 		</dict>
+		<integer>235</integer>
+		<integer>257</integer>
+		<integer>229</integer>
+		<integer>224</integer>
+		<integer>216</integer>
 		<integer>220</integer>
 		<integer>217</integer>
 		<integer>251</integer>
@@ -3471,11 +3476,6 @@
 		<integer>232</integer>
 		<integer>226</integer>
 		<integer>239</integer>
-		<integer>235</integer>
-		<integer>257</integer>
-		<integer>229</integer>
-		<integer>224</integer>
-		<integer>216</integer>
 		<dict>
 			<key>$class</key>
 			<dict>
