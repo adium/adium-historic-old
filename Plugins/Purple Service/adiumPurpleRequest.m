@@ -137,8 +137,8 @@ static void *adiumPurpleRequestChoice(const char *title, const char *primary,
 //Purple requests the user take an action such as accept or deny a buddy's attempt to add us to her list 
 static void *adiumPurpleRequestAction(const char *title, const char *primary,
 									const char *secondary, unsigned int default_action,
-									void *userData,
 									PurpleAccount *account, const char *who, PurpleConversation *conv,
+									void *userData,
 									size_t actionCount, va_list actions)
 {
     NSString			*titleString = (title ? [NSString stringWithUTF8String:title] : @"");
@@ -211,13 +211,24 @@ static void *adiumPurpleRequestAction(const char *title, const char *primary,
 			[buttonNamesArray exchangeObjectAtIndex:default_action withObjectAtIndex:(actionCount-1)];
 		}
 		
-		NSDictionary	*infoDict = [NSDictionary dictionaryWithObjectsAndKeys:
+		
+		NSMutableDictionary	*infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 			buttonNamesArray,@"Button Names",
 			[NSValue valueWithPointer:callBacks],@"callBacks",
 			[NSValue valueWithPointer:userData],@"userData",
 			titleString,@"Title String",
 			msg,@"Message",nil];
 		
+		AIAccount *adiumAccount = accountLookup(account);
+		if (adiumAccount) [infoDict setObject:adiumAccount forKey:@"AIAccount"];
+		
+		if (who) {
+			AIListContact *adiumContact = contactLookupFromBuddy(purple_find_buddy(account, who));
+			if (adiumContact) [infoDict setObject:adiumContact forKey:@"AIListContact"];
+			
+			[infoDict setObject:[NSString stringWithUTF8String:who] forKey:@"who"];
+		}
+
 		requestController = [ESPurpleRequestActionController showActionWindowWithDict:infoDict];
 	}
 
@@ -328,10 +339,9 @@ static void *adiumPurpleRequestFile(const char *title, const char *filename,
 				PurpleDebug (@"File request: %s from %s on IP %s",xfer->filename,xfer->who,purple_xfer_get_remote_ip(xfer));
 				
 				ESFileTransfer  *fileTransfer;
-				NSString		*destinationUID = [NSString stringWithUTF8String:purple_normalize(xfer->account,xfer->who)];
 				
 				//Ask the account for an ESFileTransfer* object
-				fileTransfer = [accountLookup(xfer->account) newFileTransferObjectWith:destinationUID
+				fileTransfer = [accountLookup(xfer->account) newFileTransferObjectWith:[NSString stringWithUTF8String:who]
 																				  size:purple_xfer_get_size(xfer)
 																		remoteFilename:[NSString stringWithUTF8String:(xfer->filename)]];
 				
@@ -344,7 +354,7 @@ static void *adiumPurpleRequestFile(const char *title, const char *filename,
 				NSDictionary	*infoDict;
 				
 				infoDict = [NSDictionary dictionaryWithObjectsAndKeys:
-					accountLookup(xfer->account), @"CBPurpleAccount",
+					accountLookup(account), @"CBPurpleAccount",
 					fileTransfer, @"ESFileTransfer",
 					nil];
 				requestController = [ESPurpleFileReceiveRequestController showFileReceiveWindowWithDict:infoDict];
