@@ -160,6 +160,8 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 //AIM doesn't require we close our tags, so don't waste the characters
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
+	if (![inAttributedString length]) return nil;
+
 	NSString	*returnString;
 	
 	//We don't want to send HTML to ICQ users, or mobile phone users
