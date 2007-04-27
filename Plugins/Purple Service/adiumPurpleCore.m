@@ -105,25 +105,21 @@ static void load_all_plugins()
 static void adiumPurplePrefsInit(void)
 {
     //Disable purple away handling - we do it ourselves
-	purple_prefs_set_bool("/core/away/away_when_idle", FALSE);
-	purple_prefs_set_string("/core/away/auto_reply","never");
+	purple_prefs_set_bool("/purple/away/away_when_idle", FALSE);
+	purple_prefs_set_string("/purple/away/auto_reply","never");
 
 	//Disable purple idle reporting - we do it ourselves
-	purple_prefs_set_bool("/core/away/report_idle", FALSE);
+	purple_prefs_set_bool("/purple/away/report_idle", FALSE);
 
     //Disable purple conversation logging
-    purple_prefs_set_bool("/purple/gtk/logging/log_chats", FALSE);
-    purple_prefs_set_bool("/purple/gtk/logging/log_ims", FALSE);
-    
+    purple_prefs_set_bool("/purple/logging/log_chats", FALSE);
+    purple_prefs_set_bool("/purple/logging/log_ims", FALSE);
+
     //Typing preference
-    purple_prefs_set_bool("/core/conversations/im/send_typing", TRUE);
+    purple_prefs_set_bool("/purple/conversations/im/send_typing", TRUE);
 	
 	//Use server alias where possible
-	purple_prefs_set_bool("/core/buddies/use_server_alias", TRUE);
-	
-	//MSN preferences
-	purple_prefs_set_bool("/plugins/prpl/msn/conv_close_notice", TRUE);
-	purple_prefs_set_bool("/plugins/prpl/msn/conv_timeout_notice", TRUE);
+	purple_prefs_set_bool("/purple/buddies/use_server_alias", TRUE);
 
 	//Ensure we are using caching
 	purple_buddy_icons_set_caching(TRUE);	
