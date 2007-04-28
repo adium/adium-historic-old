@@ -130,43 +130,53 @@ static NSRect screenBoundariesRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 }
 
 /*!
+* @brief Return a string which represents the saved frame for this window
+ *
+ * This will use [self adiumFrameAutosaveName] and a window-configuration dependent identifier to determine the
+ * preference to be used.
+ *
+ * Subclasses have no business overriding this method.  See adiumFrameAutosaveName for the right place to determine the name
+ * under which the frame is stored.
+ *
+ * @result A string suitable for passing to -[self savedFrameFromString:], or nil if no preference has been stored
+ */
+- (NSString *)savedFrameString
+{
+	NSString	*key = [self adiumFrameAutosaveName];
+	NSString	*frameString = nil;
+	
+	if (key) {
+		//Unique key for each number and size of screens
+		frameString = [[adium preferenceController] preferenceForKey:[self multiscreenKeyWithAutosaveName:key]
+															   group:PREF_GROUP_WINDOW_POSITIONS];
+		
+		if (!frameString) {
+			//Fall back on the old number-of-screens key
+			frameString = [[adium preferenceController] preferenceForKey:[NSString stringWithFormat:@"%@-%i",key,[[NSScreen screens] count]]
+																   group:PREF_GROUP_WINDOW_POSITIONS];
+			if (!frameString) {
+				//Fall back on the single screen preference if necessary (this is effectively a preference upgrade).
+				frameString = [[adium preferenceController] preferenceForKey:key
+																	   group:PREF_GROUP_WINDOW_POSITIONS];
+			}
+		}
+	}
+	
+	return frameString;
+}
+
+/*!
  * @brief Configure the window after it loads
  *
  * Here we restore the window's saved position and size before it's displayed on screen.
  */
 - (void)windowDidLoad
 {
-	NSString	*key = [self adiumFrameAutosaveName];
-
-	if (key) {
-		NSString	*frameString;
-
-		//Unique key for each number of screens
-		if ([[NSScreen screens] count] > 1) {
-			frameString = [[adium preferenceController] preferenceForKey:[self multiscreenKeyWithAutosaveName:key]
-																   group:PREF_GROUP_WINDOW_POSITIONS];
-
-			if (!frameString) {
-				//Fall back on the old number-of-screens key
-				frameString = [[adium preferenceController] preferenceForKey:[NSString stringWithFormat:@"%@-%i",key,[[NSScreen screens] count]]
-																	   group:PREF_GROUP_WINDOW_POSITIONS];
-				if (!frameString) {
-					//Fall back on the single screen preference if necessary (this is effectively a preference upgrade).
-					frameString = [[adium preferenceController] preferenceForKey:key
-																		   group:PREF_GROUP_WINDOW_POSITIONS];
-				}
-			}
-			
-		} else {
-			frameString = [[adium preferenceController] preferenceForKey:key
-																   group:PREF_GROUP_WINDOW_POSITIONS];			
-		}
-		
-		if (frameString) {
-			NSRect savedFrame = [self savedFrameFromString:frameString];
-			if (!NSIsEmptyRect(savedFrame)) {
-				[[self window] setFrame:savedFrame display:NO];
-			}
+	NSString *frameString = [self savedFrameString];
+	if (frameString) {
+		NSRect savedFrame = [self savedFrameFromString:frameString];
+		if (!NSIsEmptyRect(savedFrame)) {
+			[[self window] setFrame:savedFrame display:NO];
 		}
 	}
 }
@@ -257,7 +267,9 @@ static NSRect screenBoundariesRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 /*!
  * @brief Auto-saving window frame key
  *
- * This is the string used for saving this window's frame.  It should be unique to this window.
+ * This is the string used for saving this window's frame.  It should be unique to this window. 
+ * Subclasses should override this method.
+ *
  */
 - (NSString *)adiumFrameAutosaveName
 {
