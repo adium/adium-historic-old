@@ -61,9 +61,15 @@ update:
 	svn update $(SRC_DIR)
 
 assertnochanges:
-	exit `svn st $(SRC_DIR) | wc -l`
+	if [[ 0 -ne `svn st $(SRC_DIR) | wc -l` ]]; then \
+		echo 'You have local changes. Please do not build releases from an unclean checkout. You must revert the changes, commit them, or check out another working copy and build from that.' 1>&2; \
+		exit 1; \
+	fi
 assertnoconflicts:
-	exit `svn st $(SRC_DIR) | egrep '^C' | wc -l`
+	if [[ 0 -ne `svn st $(SRC_DIR) | egrep '^C' | wc -l` ]]; then \
+		echo 'You have conflicts in your checkout. You will not be able to build until these are resolved. Also, remember that even after you have fixed all conflict marks, you must use "svn resolved"; otherwise, svn will still believe the files are conflicted.' 1>&2; \
+		exit 2; \
+	fi
 
 version:
 	@# update the plists
