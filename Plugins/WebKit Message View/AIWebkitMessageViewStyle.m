@@ -578,6 +578,9 @@ static NSArray *validSenderColors;
 					  withString:[self statusIconPathForListObject:theSource]];
 	}
 	
+	[inString replaceKeyword:@"%messageClasses%"
+				  withString:[[content displayClasses] componentsJoinedByString:@" "]];
+	
 	if(!validSenderColors) {
 		NSString *path = [stylePath stringByAppendingPathComponent:@"Incoming/SenderColors.txt"];
 		if([[NSFileManager defaultManager] fileExistsAtPath:path])

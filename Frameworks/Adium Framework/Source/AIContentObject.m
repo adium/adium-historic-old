@@ -79,6 +79,13 @@
     return @"";
 }
 
+- (NSMutableArray *)displayClasses
+{
+	NSMutableArray *classes = [NSMutableArray array];
+	[classes addObject:(outgoing) ? @"outgoing" : @"incoming"];
+	return classes;
+}
+
 - (id)userInfo
 {
 	return userInfo;

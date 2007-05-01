@@ -69,6 +69,14 @@
 	[super dealloc];
 }
 
+- (NSMutableArray *)displayClasses
+{
+	NSMutableArray *classes = [super displayClasses];
+	[classes addObject:@"message"];
+	if(isAutoreply) [classes addObject:@"autoreply"];
+	return classes;
+}
+
 
 //This message was automatically generated
 - (void)setIsAutoreply:(BOOL)inAutoreply{

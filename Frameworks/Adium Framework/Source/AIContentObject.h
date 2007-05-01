@@ -64,6 +64,8 @@
 - (NSAttributedString *)message;
 - (NSString *)messageString;
 
+- (NSMutableArray *)displayClasses; //an NSArray of CSS class names for use in WebKit display
+
 - (id)userInfo;
 - (void)setUserInfo:(id)inUserInfo;
 

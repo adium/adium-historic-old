@@ -73,6 +73,14 @@
     [super dealloc];
 }
 
+- (NSMutableArray *)displayClasses
+{
+	NSMutableArray *classes = [super displayClasses];
+	[classes addObject:@"status"];
+	[classes addObject:statusType];
+	return classes;
+}
+
 //Content Identifier
 - (NSString *)type
 {
