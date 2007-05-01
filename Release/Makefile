@@ -10,7 +10,7 @@
 # - make all
 ###########
 
-VERSION=1.0.3b3
+VERSION=1.0.3b4
 BETA=TRUE
 
 ###########
