@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
@@ -442,7 +442,7 @@
 	<key>SmartCrashReports_CompanyName</key>
 	<string>Adium</string>
 	<key>SmartCrashReports_EmailTicket</key>
-	<string>SCR-4C60AF7BD3</string>
+	<string>SCR-2631F8982F</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
