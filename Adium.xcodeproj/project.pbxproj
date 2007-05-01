@@ -149,7 +149,6 @@
 		341BDBBB0968BC9B00CF83F5 /* OTR.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 341BDBBA0968BC9A00CF83F5 /* OTR.framework */; };
 		341BDF5E0969814A00CF83F5 /* BadgerDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 341BDF5D0969814900CF83F5 /* BadgerDefaults.plist */; };
 		341BDF700969829E00CF83F5 /* DockUnviewedContentDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 341BDF6F0969829E00CF83F5 /* DockUnviewedContentDefaults.plist */; };
-		342113CE08261FB900A3B0FB /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 342113CD08261FB900A3B0FB /* MainMenu.nib */; };
 		342353D709D45726009FF634 /* AIAbstractLogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */; };
 		3428328907D2643F004F01C9 /* ESStatusPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 3428328507D2643F004F01C9 /* ESStatusPreferences.m */; };
 		3428328B07D2643F004F01C9 /* ESStatusPreferencesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3428328707D2643F004F01C9 /* ESStatusPreferencesPlugin.m */; };
@@ -209,11 +208,9 @@
 		3448762106D1EDB300DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448763B06D1EF0500DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448763D06D1EF3C00DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
-		3448769906D1EF6100DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448769A06D1EF7300DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		344C0F0D06B709AC00DA7200 /* Bonjour.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4947F5CB0655E85200B791E5 /* Bonjour.AdiumPlugin */; };
 		34500ED00A881F8500509225 /* PurpleDefaultsQQ.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3419E74B0A880C0900C3FC68 /* PurpleDefaultsQQ.plist */; };
-		34536751059BA8EE00A83D9E /* atos in Resources */ = {isa = PBXBuildFile; fileRef = 34536750059BA8ED00A83D9E /* atos */; };
 		3456231C0A3771D800E7FC97 /* ESRankingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3456231A0A3771D800E7FC97 /* ESRankingCell.m */; };
 		345623200A3771E100E7FC97 /* AIChatLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3456231E0A3771E100E7FC97 /* AIChatLog.m */; };
 		345623280A3771F400E7FC97 /* AILogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 345623220A3771F300E7FC97 /* AILogViewerWindowController.m */; };
@@ -228,7 +225,6 @@
 		3459CBED0A25FFBF00ECC256 /* GetMetadataForHTMLLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3459CBE90A25FFBE00ECC256 /* GetMetadataForHTMLLog.m */; };
 		3459CBEF0A25FFBF00ECC256 /* GetMetadataForFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 3459CBEB0A25FFBE00ECC256 /* GetMetadataForFile.m */; };
 		345ACC970811C20F008E4D22 /* AwayStatusWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 345ACC960811C20F008E4D22 /* AwayStatusWindow.nib */; };
-		345AFA690A5D76B400D7DA6F /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
 		345AFAEE0A5D9A5F00D7DA6F /* AINoisyTableColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 345AFAEC0A5D9A5F00D7DA6F /* AINoisyTableColumn.m */; };
 		345EE2DF0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 345EE2DD0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.m */; };
 		345F566B08178356001F733C /* AdiumServiceIcons.icns in Resources */ = {isa = PBXBuildFile; fileRef = 345F566A08178356001F733C /* AdiumServiceIcons.icns */; };
@@ -245,7 +241,6 @@
 		3461621706FB482D009181D8 /* UserList Layout.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3461621306FB482D009181D8 /* UserList Layout.plist */; };
 		346371070BCA0A5400AD57AD /* AIMessageTabSplitView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 346371050BCA0A5400AD57AD /* AIMessageTabSplitView.h */; };
 		346371080BCA0A5400AD57AD /* AIMessageTabSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 346371060BCA0A5400AD57AD /* AIMessageTabSplitView.m */; };
-		34677B3907CC3DAF00F59F7B /* Adium Crash Reporter.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B7F78B50597F42400162728 /* Adium Crash Reporter.app */; };
 		346935D50BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 346935D30BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.h */; };
 		346935D60BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 346935D40BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.m */; };
 		346BA33F0774C27400628F06 /* ESGlobalEventsPreferencesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 346BA33D0774C27400628F06 /* ESGlobalEventsPreferencesPlugin.m */; };
@@ -900,11 +895,9 @@
 		34E0368E0A75AA4F00394F11 /* ESPurpleICQAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB41A08086D9100E27095 /* ESPurpleICQAccountView.nib */; };
 		34E0368F0A75AA4F00394F11 /* PurpleDefaultsICQ.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B7644DC07A05E7E0021CCD7 /* PurpleDefaultsICQ.plist */; };
 		34E0E98707CC48C000A82198 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
-		34E0E9B807CC4B3600A82198 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 34E0E9B707CC4B3600A82198 /* Localizable.strings */; };
 		34E0EA0807CC53ED00A82198 /* NewMessagePrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34E0EA0707CC53EC00A82198 /* NewMessagePrompt.nib */; };
 		34E0EA0F07CC53FE00A82198 /* AINewMessagePanelPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E0EA0B07CC53FE00A82198 /* AINewMessagePanelPlugin.m */; };
 		34E0EA1007CC53FE00A82198 /* AINewMessagePromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E0EA0C07CC53FE00A82198 /* AINewMessagePromptController.m */; };
-		34E0EA4007CC55B100A82198 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		34E2A0BC07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A0BA07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.m */; };
 		34E2A0C307AF593B006735BC /* AIAccountMenuAccessPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A0C107AF593B006735BC /* AIAccountMenuAccessPlugin.m */; };
 		34E2A1CD07AF635A006735BC /* ESFastUserSwitchingSupportPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A1CB07AF635A006735BC /* ESFastUserSwitchingSupportPlugin.m */; };
@@ -918,7 +911,6 @@
 		34EFC46C0AACC4CD0086AC43 /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
 		34F144430BA8FF3C000473DE /* EmoticonNames.strings in Resources */ = {isa = PBXBuildFile; fileRef = 34F144420BA8FF3B000473DE /* EmoticonNames.strings */; };
 		34F191DC09BA5F43001D6BE2 /* irc.png in Resources */ = {isa = PBXBuildFile; fileRef = 34F191DB09BA5F43001D6BE2 /* irc.png */; };
-		34F2BD25059CF8070005B238 /* c++filt in Resources */ = {isa = PBXBuildFile; fileRef = 34F2BD24059CF8070005B238 /* c++filt */; };
 		34F312930ADC3FE800A4310E /* KNShelfSplitView.h in Headers */ = {isa = PBXBuildFile; fileRef = 348B25C70A50FBF300B2B972 /* KNShelfSplitView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34F312BD0ADC43CA00A4310E /* xtras_duck.png in Resources */ = {isa = PBXBuildFile; fileRef = 34F312BC0ADC43CA00A4310E /* xtras_duck.png */; };
 		34F312F00ADC476300A4310E /* KNShelfSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 348B25C60A50FBF300B2B972 /* KNShelfSplitView.m */; };
@@ -970,17 +962,11 @@
 		4B08399C07D235190034A001 /* DockIconSelectionSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4B08399B07D235190034A001 /* DockIconSelectionSheet.nib */; };
 		4B191D8A0611C10800E8A4E7 /* License.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4B191D880611C10800E8A4E7 /* License.txt */; };
 		4B191D8B0611C10800E8A4E7 /* ReadMe.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4B191D890611C10800E8A4E7 /* ReadMe.rtf */; };
-		4B215DBE0598A71400305B3C /* crashDuck.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B215DBD0598A71400305B3C /* crashDuck.icns */; };
 		4B2DC069066F6B1200AD5AAD /* ContactSettingsPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4B2DC068066F6B1200AD5AAD /* ContactSettingsPane.nib */; };
 		4B2DC06E066F705800AD5AAD /* AIContactSettingsPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B2DC06C066F705800AD5AAD /* AIContactSettingsPane.m */; };
-		4B5323ED0747BDED0073DF4D /* AICrashController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B5323EB0747BDED0073DF4D /* AICrashController.m */; };
-		4B53245B0747C82B0073DF4D /* AIExceptionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B5324590747C82B0073DF4D /* AIExceptionController.m */; };
 		4B7A567B07A1754400BDC540 /* AIEditAccountWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7A567807A1754400BDC540 /* AIEditAccountWindowController.m */; };
 		4B7F278E05440C8D00CDFC90 /* CBPurpleServicePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F278A05440C8D00CDFC90 /* CBPurpleServicePlugin.m */; settings = {COMPILER_FLAGS = "-fconstant-cfstrings"; }; };
 		4B7F27C705440DE900CDFC90 /* purple.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4B7F278305440C0800CDFC90 /* purple.AdiumPlugin */; };
-		4B7F78BF0597F44D00162728 /* AICrashReporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B7F78BD0597F44D00162728 /* AICrashReporter.h */; };
-		4B7F78C00597F44D00162728 /* AICrashReporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F78BE0597F44D00162728 /* AICrashReporter.m */; };
-		4B7F78C40597F6F500162728 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7F78C30597F6F500162728 /* main.m */; };
 		4B909C8A064D75400074C9A8 /* BGEmoticonMenuPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = C4243C930638E4EA007AD2D9 /* BGEmoticonMenuPlugin.m */; };
 		4B97DB6706AC123A0003EE49 /* linkToolbar.png in Resources */ = {isa = PBXBuildFile; fileRef = 4B97DB6606AC123A0003EE49 /* linkToolbar.png */; };
 		4BA62D8E06C51257001D6B3C /* Status Icons in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BA62D7F06C51256001D6B3C /* Status Icons */; };
@@ -1009,7 +995,6 @@
 		4BAFD5CB06E00B7C00FF7FBC /* AIStressTestService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAFD5C906E00B7C00FF7FBC /* AIStressTestService.m */; };
 		4BB1E493067F2EAC00D1DB86 /* Scripts in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB1E47D067F2E9F00D1DB86 /* Scripts */; };
 		4BB5B78207D2DC4900CFE06F /* pref-status.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BB5B78107D2DC4900CFE06F /* pref-status.png */; };
-		4BB7670D05B31DBA00E89FA2 /* crashDuck.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BB7670C05B31DBA00E89FA2 /* crashDuck.png */; };
 		4BB9972B083D1A5F006ACD6F /* SMContactListShowBehaviorPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB99727083D1A5F006ACD6F /* SMContactListShowBehaviorPlugin.m */; };
 		4BB9972D083D1A5F006ACD6F /* SMContactListShowDetailsPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB99729083D1A5F006ACD6F /* SMContactListShowDetailsPane.m */; };
 		4BB9972F083D1A74006ACD6F /* ContactListShowBehavior.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BB9972E083D1A74006ACD6F /* ContactListShowBehavior.nib */; };
@@ -1303,7 +1288,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 34F3B9510BDF15F40011AB34 /* Touch Framework Bundles to Executable Date */;
+			remoteGlobalIDString = 34F3B9510BDF15F40011AB34;
 			remoteInfo = "Touch Framework Bundles to Executable Date";
 		};
 		38722DE90A909509002CC4F4 /* PBXContainerItemProxy */ = {
@@ -1312,13 +1297,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 34BD9DAF05314751000AB133;
 			remoteInfo = Adium.Framework;
-		};
-		4B215DAF059896B000305B3C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 4B7F78B40597F42400162728;
-			remoteInfo = "Adium Crash Reporter";
 		};
 		4B7845EB059B50820048A8BA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1402,7 +1380,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 7;
 			files = (
-				34677B3907CC3DAF00F59F7B /* Adium Crash Reporter.app in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1741,7 +1718,6 @@
 		3421137F08261B2E00A3B0FB /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = Resources/it.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
 		3421138008261B2E00A3B0FB /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = Resources/it.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		3421138108261B2E00A3B0FB /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = Resources/it.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
-		342113DD08261FC100A3B0FB /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = "Adium Crash Reporter/fr.lproj/MainMenu.nib"; sourceTree = "<group>"; };
 		342114C40826D37B00A3B0FB /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = "Frameworks/Adium Framework/Resources/it.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
 		342114D30826D38500A3B0FB /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = "Frameworks/Adium Framework/Resources/de.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
 		342114E20826D38E00A3B0FB /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Frameworks/Adium Framework/Resources/zh_TW.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
@@ -2044,7 +2020,6 @@
 		34503C7F058F96C400FB7AD1 /* AIEmoticon.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticon.h; path = "Frameworks/Adium Framework/Source/AIEmoticon.h"; sourceTree = "<group>"; };
 		3452A9F607891C8A00C3C494 /* ESFileTransferRequestPromptController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferRequestPromptController.h; path = Source/ESFileTransferRequestPromptController.h; sourceTree = "<group>"; };
 		3452A9F707891C8A00C3C494 /* ESFileTransferRequestPromptController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferRequestPromptController.m; path = Source/ESFileTransferRequestPromptController.m; sourceTree = "<group>"; };
-		34536750059BA8ED00A83D9E /* atos */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = atos; sourceTree = "<group>"; };
 		3456231A0A3771D800E7FC97 /* ESRankingCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESRankingCell.m; path = Source/ESRankingCell.m; sourceTree = "<group>"; };
 		3456231B0A3771D800E7FC97 /* ESRankingCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESRankingCell.h; path = Source/ESRankingCell.h; sourceTree = "<group>"; };
 		3456231E0A3771E100E7FC97 /* AIChatLog.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIChatLog.m; path = Source/AIChatLog.m; sourceTree = "<group>"; };
@@ -2280,7 +2255,6 @@
 		346522D308371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/Purple Service/cs.lproj/DCPurpleOscarJoinChatView.nib"; sourceTree = "<group>"; };
 		346522D408371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/Purple Service/cs.lproj/ESPurpleNovellAccountView.nib"; sourceTree = "<group>"; };
 		346522D508371999009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/Purple Service/cs.lproj/DCPurpleYahooJoinChatView.nib"; sourceTree = "<group>"; };
-		346522D608371999009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Adium Crash Reporter/cs.lproj/MainMenu.nib"; sourceTree = "<group>"; };
 		346522F8083719ED009565FE /* nb */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nb; path = "Plugins/Purple Service/nb.lproj/ESPurpleOscarAccountView.nib"; sourceTree = "<group>"; };
 		346522F9083719ED009565FE /* nb */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nb; path = "Plugins/Purple Service/nb.lproj/ESPurpleJabberAccountView.nib"; sourceTree = "<group>"; };
 		346522FA083719EE009565FE /* nb */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nb; path = Resources/nb.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
@@ -2971,7 +2945,6 @@
 		34E00F8607B92B88000DF265 /* TextAndButtonsWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = TextAndButtonsWindow.nib; path = "Frameworks/Adium Framework/Resources/TextAndButtonsWindow.nib"; sourceTree = "<group>"; };
 		34E0103207B956F6000DF265 /* ESPurpleNotifyEmailController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESPurpleNotifyEmailController.m; path = "Plugins/Purple Service/ESPurpleNotifyEmailController.m"; sourceTree = "<group>"; };
 		34E0103307B956F6000DF265 /* ESPurpleNotifyEmailController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESPurpleNotifyEmailController.h; path = "Plugins/Purple Service/ESPurpleNotifyEmailController.h"; sourceTree = "<group>"; };
-		34E0E9B007CC4B1800A82198 /* en */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = en; path = "Adium Crash Reporter/en.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		34E0EA0707CC53EC00A82198 /* NewMessagePrompt.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = NewMessagePrompt.nib; path = Resources/NewMessagePrompt.nib; sourceTree = "<group>"; };
 		34E0EA0B07CC53FE00A82198 /* AINewMessagePanelPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AINewMessagePanelPlugin.m; path = Source/AINewMessagePanelPlugin.m; sourceTree = "<group>"; };
 		34E0EA0C07CC53FE00A82198 /* AINewMessagePromptController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AINewMessagePromptController.m; path = Source/AINewMessagePromptController.m; sourceTree = "<group>"; };
@@ -3051,7 +3024,6 @@
 		34F144460BA8FF46000473DE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "Frameworks/Adium Framework/Resources/en.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
 		34F1529405E9FDDB00B32FD7 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Purple Service/en.lproj/ESPurpleMSNAccountView.nib"; sourceTree = "<group>"; };
 		34F191DB09BA5F43001D6BE2 /* irc.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = irc.png; path = "Plugins/IRC Libpurple Plugin/irc.png"; sourceTree = "<group>"; };
-		34F2BD24059CF8070005B238 /* c++filt */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "c++filt"; sourceTree = "<group>"; };
 		34F2E80F07C2CD5E007EAAAB /* AIHTMLDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIHTMLDecoder.m; path = "Frameworks/Adium Framework/Source/AIHTMLDecoder.m"; sourceTree = "<group>"; };
 		34F2E81007C2CD5E007EAAAB /* AIHTMLDecoder.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIHTMLDecoder.h; path = "Frameworks/Adium Framework/Source/AIHTMLDecoder.h"; sourceTree = "<group>"; };
 		34F2E81807C2CD6B007EAAAB /* AITextAttachmentExtension.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AITextAttachmentExtension.h; path = "Frameworks/Adium Framework/Source/AITextAttachmentExtension.h"; sourceTree = "<group>"; };
@@ -3196,7 +3168,6 @@
 		4B18A52C0459F8F200A8010A /* AIContactStatusDockOverlaysPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIContactStatusDockOverlaysPlugin.m; path = "Plugins/Contact Status Dock Overlays/AIContactStatusDockOverlaysPlugin.m"; sourceTree = "<group>"; };
 		4B191D880611C10800E8A4E7 /* License.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = License.txt; sourceTree = "<group>"; };
 		4B191D890611C10800E8A4E7 /* ReadMe.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = ReadMe.rtf; sourceTree = "<group>"; };
-		4B215DBD0598A71400305B3C /* crashDuck.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = crashDuck.icns; path = "Adium Crash Reporter/crashDuck.icns"; sourceTree = "<group>"; };
 		4B22E15C085CAE2E001864DE /* AIAbstractListObjectMenu.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAbstractListObjectMenu.h; path = Source/AIAbstractListObjectMenu.h; sourceTree = "<group>"; };
 		4B22E15D085CAE2F001864DE /* AIAbstractListObjectMenu.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAbstractListObjectMenu.m; path = Source/AIAbstractListObjectMenu.m; sourceTree = "<group>"; };
 		4B25494603F6A32700A8010A /* AIAccountSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountSelectionView.h; path = "Plugins/Dual Window Interface/AIAccountSelectionView.h"; sourceTree = "<group>"; };
@@ -3218,10 +3189,6 @@
 		4B388E4C0719C445004DE713 /* MSNServicePrefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = MSNServicePrefs.nib; path = "Plugins/Purple Service/MSNServicePrefs.nib"; sourceTree = "<group>"; };
 		4B422C0905ACB248005E720B /* AISortController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AISortController.h; path = "Frameworks/Adium Framework/Source/AISortController.h"; sourceTree = "<group>"; };
 		4B422C0A05ACB248005E720B /* AISortController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AISortController.m; path = "Frameworks/Adium Framework/Source/AISortController.m"; sourceTree = "<group>"; };
-		4B5323EA0747BDED0073DF4D /* AICrashController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AICrashController.h; path = Source/AICrashController.h; sourceTree = SOURCE_ROOT; };
-		4B5323EB0747BDED0073DF4D /* AICrashController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AICrashController.m; path = Source/AICrashController.m; sourceTree = SOURCE_ROOT; };
-		4B5324580747C82B0073DF4D /* AIExceptionController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIExceptionController.h; path = Source/AIExceptionController.h; sourceTree = SOURCE_ROOT; };
-		4B5324590747C82B0073DF4D /* AIExceptionController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIExceptionController.m; path = Source/AIExceptionController.m; sourceTree = SOURCE_ROOT; };
 		4B539C4B05EFD6CD00E5921A /* AIWebKitMessageViewPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIWebKitMessageViewPlugin.h; path = "Plugins/WebKit Message View/AIWebKitMessageViewPlugin.h"; sourceTree = "<group>"; };
 		4B539C4C05EFD6CD00E5921A /* AIWebKitMessageViewPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIWebKitMessageViewPlugin.m; path = "Plugins/WebKit Message View/AIWebKitMessageViewPlugin.m"; sourceTree = "<group>"; };
 		4B539C5105EFD6FA00E5921A /* AIWebKitMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIWebKitMessageViewController.h; path = "Plugins/WebKit Message View/AIWebKitMessageViewController.h"; sourceTree = "<group>"; };
@@ -3248,11 +3215,6 @@
 		4B7F278705440C8D00CDFC90 /* CBPurpleAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBPurpleAccount.h; path = "Plugins/Purple Service/CBPurpleAccount.h"; sourceTree = "<group>"; };
 		4B7F278905440C8D00CDFC90 /* CBPurpleServicePlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBPurpleServicePlugin.h; path = "Plugins/Purple Service/CBPurpleServicePlugin.h"; sourceTree = "<group>"; };
 		4B7F278A05440C8D00CDFC90 /* CBPurpleServicePlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBPurpleServicePlugin.m; path = "Plugins/Purple Service/CBPurpleServicePlugin.m"; sourceTree = "<group>"; };
-		4B7F78B50597F42400162728 /* Adium Crash Reporter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Adium Crash Reporter.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		4B7F78BD0597F44D00162728 /* AICrashReporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AICrashReporter.h; path = "Adium Crash Reporter/AICrashReporter.h"; sourceTree = "<group>"; };
-		4B7F78BE0597F44D00162728 /* AICrashReporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AICrashReporter.m; path = "Adium Crash Reporter/AICrashReporter.m"; sourceTree = "<group>"; };
-		4B7F78C10597F5B700162728 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Adium Crash Reporter/en.lproj/MainMenu.nib"; sourceTree = "<group>"; };
-		4B7F78C30597F6F500162728 /* main.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "Adium Crash Reporter/main.m"; sourceTree = "<group>"; };
 		4B82138E049CA6CC00A8010A /* AIChat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIChat.h; path = "Frameworks/Adium Framework/Source/AIChat.h"; sourceTree = "<group>"; };
 		4B82138F049CA6CC00A8010A /* AIChat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIChat.m; path = "Frameworks/Adium Framework/Source/AIChat.m"; sourceTree = "<group>"; };
 		4B82139D049CC3A000A8010A /* AIContentObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContentObject.h; path = "Frameworks/Adium Framework/Source/AIContentObject.h"; sourceTree = "<group>"; };
@@ -3335,7 +3297,6 @@
 		4BB19298079EE90900DAA523 /* PurpleDefaultsJabber.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = PurpleDefaultsJabber.plist; path = "Plugins/Purple Service/PurpleDefaultsJabber.plist"; sourceTree = "<group>"; };
 		4BB1E47D067F2E9F00D1DB86 /* Scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Scripts; path = Resources/Scripts; sourceTree = "<group>"; };
 		4BB5B78107D2DC4900CFE06F /* pref-status.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pref-status.png"; path = "Resources/pref-status.png"; sourceTree = "<group>"; };
-		4BB7670C05B31DBA00E89FA2 /* crashDuck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = crashDuck.png; path = "Adium Crash Reporter/crashDuck.png"; sourceTree = "<group>"; };
 		4BB826B504C8876C00A8010A /* DockOverlayDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist; name = DockOverlayDefaults.plist; path = "Plugins/Contact Status Dock Overlays/DockOverlayDefaults.plist"; sourceTree = "<group>"; };
 		4BB99726083D1A5F006ACD6F /* SMContactListShowBehaviorPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SMContactListShowBehaviorPlugin.h; path = Source/SMContactListShowBehaviorPlugin.h; sourceTree = SOURCE_ROOT; };
 		4BB99727083D1A5F006ACD6F /* SMContactListShowBehaviorPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SMContactListShowBehaviorPlugin.m; path = Source/SMContactListShowBehaviorPlugin.m; sourceTree = SOURCE_ROOT; };
@@ -3795,16 +3756,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4B7F78B30597F42400162728 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				345AFA690A5D76B400D7DA6F /* Sparkle.framework in Frameworks */,
-				34E0EA4007CC55B100A82198 /* AIUtilities.framework in Frameworks */,
-				3448769906D1EF6100DA778C /* Cocoa.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B72537BA058C4577004BA969 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -3851,7 +3802,6 @@
 			isa = PBXGroup;
 			children = (
 				34BD9DA9053146CC000AB133 /* Adium.app */,
-				4B7F78B50597F42400162728 /* Adium Crash Reporter.app */,
 				34BD9DE105314751000AB133 /* Adium.framework */,
 				4B7F278305440C0800CDFC90 /* purple.AdiumPlugin */,
 				34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */,
@@ -3880,7 +3830,6 @@
 				4BD6720906001B2C0049CAF7 /* Plugins (Built In) */,
 				34DC84380A7EAA21003E1636 /* Plugins (Not included in release) */,
 				4BF2E6BE067CB72400743318 /* Xtras (Built In) */,
-				4B7F78BA0597F42D00162728 /* Crash Reporter */,
 				344458F3070B5BF500D8E932 /* Debugging */,
 				34EE35FB09C5012800C17DE1 /* Documentation */,
 				9EB3C52304F94DB7001D1F74 /* Migration Assistant */,
@@ -5194,15 +5143,6 @@
 			name = Documentation;
 			sourceTree = "<group>";
 		};
-		34F2BD2E059CF8E70005B238 /* UNIX tools */ = {
-			isa = PBXGroup;
-			children = (
-				34F2BD24059CF8070005B238 /* c++filt */,
-				34536750059BA8ED00A83D9E /* atos */,
-			);
-			name = "UNIX tools";
-			sourceTree = "<group>";
-		};
 		34F52BD506E2B22800887BE2 /* ICQ */ = {
 			isa = PBXGroup;
 			children = (
@@ -5576,20 +5516,6 @@
 			name = Other;
 			sourceTree = "<group>";
 		};
-		4B5323E90747BDB80073DF4D /* Crash Reporter Application */ = {
-			isa = PBXGroup;
-			children = (
-				4B7F78C30597F6F500162728 /* main.m */,
-				4B7F78BD0597F44D00162728 /* AICrashReporter.h */,
-				4B7F78BE0597F44D00162728 /* AICrashReporter.m */,
-				34E0E9B707CC4B3600A82198 /* Localizable.strings */,
-				342113CD08261FB900A3B0FB /* MainMenu.nib */,
-				4B215DBD0598A71400305B3C /* crashDuck.icns */,
-				4BB7670C05B31DBA00E89FA2 /* crashDuck.png */,
-			);
-			name = "Crash Reporter Application";
-			sourceTree = "<group>";
-		};
 		4B587C3707ABFCA8001832A9 /* State & Status */ = {
 			isa = PBXGroup;
 			children = (
@@ -5734,20 +5660,6 @@
 				34C7C62109EC4E480060FB4A /* AdiumLibpurple */,
 			);
 			name = Libpurple;
-			sourceTree = "<group>";
-		};
-		4B7F78BA0597F42D00162728 /* Crash Reporter */ = {
-			isa = PBXGroup;
-			children = (
-				4B5323EA0747BDED0073DF4D /* AICrashController.h */,
-				4B5323EB0747BDED0073DF4D /* AICrashController.m */,
-				4B5324580747C82B0073DF4D /* AIExceptionController.h */,
-				4B5324590747C82B0073DF4D /* AIExceptionController.m */,
-				4B5323E90747BDB80073DF4D /* Crash Reporter Application */,
-				34F2BD2E059CF8E70005B238 /* UNIX tools */,
-			);
-			name = "Crash Reporter";
-			path = Other;
 			sourceTree = "<group>";
 		};
 		4B873F330840D14A00738987 /* Public Interface */ = {
@@ -7129,14 +7041,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4B7F78B00597F42400162728 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4B7F78BF0597F44D00162728 /* AICrashReporter.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -7273,7 +7177,6 @@
 			dependencies = (
 				34B9E665085B7C74006216DF /* PBXTargetDependency */,
 				34BD9CD2053146CC000AB133 /* PBXTargetDependency */,
-				4B215DB0059896B000305B3C /* PBXTargetDependency */,
 				4B7845EC059B50820048A8BA /* PBXTargetDependency */,
 				DA70F2B2080CAE8200C72D8B /* PBXTargetDependency */,
 				346C9D46060046AB000F5A8A /* PBXTargetDependency */,
@@ -7383,25 +7286,6 @@
 			productReference = 4B7F278305440C0800CDFC90 /* purple.AdiumPlugin */;
 			productType = "com.apple.product-type.bundle";
 		};
-		4B7F78B40597F42400162728 /* Adium Crash Reporter */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = DADE8E04085507450062B664 /* Build configuration list for PBXNativeTarget "Adium Crash Reporter" */;
-			buildPhases = (
-				4B7F78B00597F42400162728 /* Headers */,
-				4B7F78B10597F42400162728 /* Resources */,
-				4B7F78B20597F42400162728 /* Sources */,
-				4B7F78B30597F42400162728 /* Frameworks */,
-				4BC8AABA059A33B400F940E1 /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "Adium Crash Reporter";
-			productName = "Adium Crash Reporter";
-			productReference = 4B7F78B50597F42400162728 /* Adium Crash Reporter.app */;
-			productType = "com.apple.product-type.application";
-		};
 		B72537BB058C4577004BA969 /* Latex Plugin */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DADE8E1D085507450062B664 /* Build configuration list for PBXNativeTarget "Latex Plugin" */;
@@ -7471,7 +7355,6 @@
 			);
 			targets = (
 				34BD9CD1053146CC000AB133 /* Adium */,
-				4B7F78B40597F42400162728 /* Adium Crash Reporter */,
 				34BD9DAF05314751000AB133 /* Adium.Framework */,
 				3485D67F09EB416300232CC4 /* AdiumLibpurple */,
 				4B7F278205440C0800CDFC90 /* Purple */,
@@ -7675,8 +7558,6 @@
 				34A48A0C06F64376002C7C5F /* ContactListWindow.nib in Resources */,
 				34A48A1006F64382002C7C5F /* ContactListWindowBorderless.nib in Resources */,
 				4BE9FFE8055981AB00359B15 /* Adium.pch in Resources */,
-				34536751059BA8EE00A83D9E /* atos in Resources */,
-				34F2BD25059CF8070005B238 /* c++filt in Resources */,
 				4BD6743106001D1E0049CAF7 /* EmoticonDefaults.plist in Resources */,
 				4BD6744906001D460049CAF7 /* DockOverlayDefaults.plist in Resources */,
 				4BD6755406001E1E0049CAF7 /* DualWindowDefaults.plist in Resources */,
@@ -7893,17 +7774,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4B7F78B10597F42400162728 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				342113CE08261FB900A3B0FB /* MainMenu.nib in Resources */,
-				4B215DBE0598A71400305B3C /* crashDuck.icns in Resources */,
-				4BB7670D05B31DBA00E89FA2 /* crashDuck.png in Resources */,
-				34E0E9B807CC4B3600A82198 /* Localizable.strings in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B72537B7058C4577004BA969 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -7956,20 +7826,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "#############################################################################################\n# Set framework bundles to have their executables' dates, thereby letting Xcode suck less.  #\n#############################################################################################\ntouch -r \"$SRCROOT/Plugins/Purple Service/Libpurple.framework/Versions/A/Libpurple\" \"$SRCROOT/Plugins/Purple Service/Libpurple.framework\"\ntouch -r \"$SRCROOT/Frameworks/Growl-WithInstaller.framework/Versions/A/Growl-WithInstaller\" \"$SRCROOT/Frameworks/Growl-WithInstaller.framework\"\ntouch -r \"$SRCROOT/Frameworks/LMX.framework/Versions/A/LMX\" \"$SRCROOT/Frameworks/LMX.framework\"\ntouch -r \"$SRCROOT/Frameworks/PSMTabBarControl.framework/Versions/A/PSMTabBarControl\" \"$SRCROOT/Frameworks/PSMTabBarControl.framework\"\ntouch -r \"$SRCROOT/Frameworks/Sparkle.framework/Versions/A/Sparkle\" \"$SRCROOT/Frameworks/Sparkle.framework\"\ntouch -r \"$SRCROOT/Frameworks/FriBidi.framework/Versions/A/FriBidi\" \"$SRCROOT/Frameworks/FriBidi.framework\"\ntouch -r \"$SRCROOT/Frameworks/OTR.framework/Versions/A/OTR\" \"$SRCROOT/Frameworks/OTR.framework\"\n";
-		};
-		4BC8AABA059A33B400F940E1 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-				"${BUILT_PRODUCTS_DIR}/Adium Crash Reporter.app/Contents/Frameworks",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# Create symlink to the AIUtilities framework in the main Adium application\n#\ncd \"${BUILT_PRODUCTS_DIR}/Adium Crash Reporter.app/Contents/\"\n\necho \"Symlinking AIUtilities framework...\"\n# ..: Adium Crash Reporter.app\n# ..: Adium.app/Contents/Resources\n# ..: Adium.app/Contents\n/bin/ln -fhs \"../../../Frameworks\" \"Frameworks\"\n";
 		};
 		6C15E63106DF3BB600E5A50E /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8207,8 +8063,6 @@
 				3429BB06070378F700EED705 /* ESFileTransferMessagesPlugin.m in Sources */,
 				34B4B5A40708B049002C4C6D /* ESDebugController.m in Sources */,
 				344458F0070B5BEF00D8E932 /* ESDebugWindowController.m in Sources */,
-				4B5323ED0747BDED0073DF4D /* AICrashController.m in Sources */,
-				4B53245B0747C82B0073DF4D /* AIExceptionController.m in Sources */,
 				346BA33F0774C27400628F06 /* ESGlobalEventsPreferencesPlugin.m in Sources */,
 				346BA3450774C2D200628F06 /* ESGlobalEventsPreferences.m in Sources */,
 				34C68B260778FA1300EB423C /* ESGeneralPreferencesPlugin.m in Sources */,
@@ -8576,15 +8430,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		4B7F78B20597F42400162728 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				4B7F78C00597F44D00162728 /* AICrashReporter.m in Sources */,
-				4B7F78C40597F6F500162728 /* main.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B72537B8058C4577004BA969 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -8680,11 +8525,6 @@
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
 			targetProxy = 34BD98D10531467B000AB133 /* PBXContainerItemProxy */;
-		};
-		4B215DB0059896B000305B3C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 4B7F78B40597F42400162728 /* Adium Crash Reporter */;
-			targetProxy = 4B215DAF059896B000305B3C /* PBXContainerItemProxy */;
 		};
 		4B7845EC059B50820048A8BA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -8992,16 +8832,6 @@
 				342F9E5B0B552629000D5FC2 /* fi */,
 			);
 			name = OTRPrefs.nib;
-			sourceTree = "<group>";
-		};
-		342113CD08261FB900A3B0FB /* MainMenu.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				4B7F78C10597F5B700162728 /* en */,
-				342113DD08261FC100A3B0FB /* fr */,
-				346522D608371999009565FE /* cs */,
-			);
-			name = MainMenu.nib;
 			sourceTree = "<group>";
 		};
 		342114B40826D37100A3B0FB /* EditStateSheet.nib */ = {
@@ -9795,14 +9625,6 @@
 			name = PersonalPreferences.nib;
 			sourceTree = "<group>";
 		};
-		34E0E9B707CC4B3600A82198 /* Localizable.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				34E0E9B007CC4B1800A82198 /* en */,
-			);
-			name = Localizable.strings;
-			sourceTree = "<group>";
-		};
 		34F144420BA8FF3B000473DE /* EmoticonNames.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -10248,19 +10070,6 @@
 			};
 			name = "Deployment-Debug_PPC-Only";
 		};
-		34BAF9860942598800689991 /* Deployment-Debug_PPC-Only */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
-				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
-				PRODUCT_NAME = "Adium Crash Reporter";
-			};
-			name = "Deployment-Debug_PPC-Only";
-		};
 		34BAF9870942598800689991 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -10465,9 +10274,7 @@
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				OTHER_CFLAGS = (
-					"-DCRASH_REPORTER",
 					"-DDEBUG_BUILD",
-					"-DJOSCAR_SUPERCEDE_LIBGAIM",
 					"-fconstant-cfstrings",
 					"-fms-extensions",
 				);
@@ -10697,45 +10504,6 @@
 					"-Wall",
 					"-Wno-long-double",
 				);
-			};
-			name = "Deployment-Debug";
-		};
-		DADE8E05085507450062B664 /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
-				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
-				PRODUCT_NAME = "Adium Crash Reporter";
-			};
-			name = Development;
-		};
-		DADE8E06085507450062B664 /* Deployment */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
-				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
-				PRODUCT_NAME = "Adium Crash Reporter";
-			};
-			name = Deployment;
-		};
-		DADE8E07085507450062B664 /* Deployment-Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
-				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
-				PRODUCT_NAME = "Adium Crash Reporter";
 			};
 			name = "Deployment-Debug";
 		};
@@ -11222,7 +10990,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_CFLAGS = (
 					"-DDEBUG_BUILD",
-					"-DJOSCAR_SUPERCEDE_LIBGAIM",
 					"-fconstant-cfstrings",
 					"-fms-extensions",
 				);
@@ -11266,7 +11033,6 @@
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				OTHER_CFLAGS = (
-					"-DCRASH_REPORTER",
 					"-fconstant-cfstrings",
 					"-fms-extensions",
 				);
@@ -11309,7 +11075,6 @@
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.4;
 				OTHER_CFLAGS = (
-					"-DCRASH_REPORTER",
 					"-DDEBUG_BUILD",
 					"-fconstant-cfstrings",
 					"-fms-extensions",
@@ -11483,17 +11248,6 @@
 				DADE8E01085507450062B664 /* Deployment */,
 				DADE8E02085507450062B664 /* Deployment-Debug */,
 				34BAF9850942598800689991 /* Deployment-Debug_PPC-Only */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Development;
-		};
-		DADE8E04085507450062B664 /* Build configuration list for PBXNativeTarget "Adium Crash Reporter" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				DADE8E05085507450062B664 /* Development */,
-				DADE8E06085507450062B664 /* Deployment */,
-				DADE8E07085507450062B664 /* Deployment-Debug */,
-				34BAF9860942598800689991 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
