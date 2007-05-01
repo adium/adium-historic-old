@@ -608,7 +608,7 @@ NSString* processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 			[scanner scanString:@">" intoString:nil];
 			
 			//Get the image, then write it out as a png
-			PurpleStoredImage		*gaimImage = purple_imgstore_get(imageID);
+			PurpleStoredImage		*gaimImage = purple_imgstore_find_by_id(imageID);
 			if (gaimImage) {
 				NSString		*filename = (purple_imgstore_get_filename(gaimImage) ?
 											 [NSString stringWithUTF8String:purple_imgstore_get_filename(gaimImage)] :
@@ -1203,11 +1203,11 @@ NSString* processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 	}
 }
 
-- (void)setBuddyIcon:(NSString *)buddyImageFilename onAccount:(id)adiumAccount
+- (void)setBuddyIcon:(NSData *)buddyImageData onAccount:(id)adiumAccount
 {
 	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (account) {
-		purple_account_set_buddy_icon(account, [buddyImageFilename UTF8String]);
+		purple_buddy_icons_set_account_icon(account, (guchar *)[buddyImageData bytes], [buddyImageData length]);
 	}
 }
 
