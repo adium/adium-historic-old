@@ -650,14 +650,16 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	}
 
 	//Add to our temporary status array if it's not in our state array
-	if (shouldRebuild || (![[self flatStatusSet] containsObject:statusState])) {
-		if (![temporaryStateArray containsObject:statusState]) {
-			[temporaryStateArray addObject:statusState];
-		}
-		
+	if (![[self flatStatusSet] containsObject:statusState] &&
+		![temporaryStateArray containsObject:statusState]) {
+		[temporaryStateArray addObject:statusState];
+		shouldRebuild = YES;
+	}
+
+	if (shouldRebuild) {
 		[self notifyOfChangedStatusArray];
 	}
-	
+
 	[self setDelayActiveStatusUpdates:NO];
 }
 
