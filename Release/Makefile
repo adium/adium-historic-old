@@ -2,8 +2,7 @@
 # What to do before running this script:
 # - openUp needs to be installed.
 # - Set VERSION and BETA below.
-#       The Adium and Adium Crash Reporter plists will automatically
-#       updated to match these values.
+#       The Adium plists will automatically updated to match these values.
 # - To enable beta, also edit Source/AIAdium.h, and set BETA_RELEASE to TRUE. Set it to FALSE when doing a final release.
 #
 # How to run this script:
@@ -50,7 +49,6 @@ else
 endif
 PLIST_DIR=`pwd`/../Plists
 ADIUM_PLIST=$(PLIST_DIR)/Adium_2
-CRASH_REPORTER_PLIST=$(PLIST_DIR)/Adium\ Crash\ Reporter-Info
 
 .PHONY: all all-withlocalchanges update assertnochanges assertnoconflicts version compile clean release source prepare-release-bundle createfolder diskimage
 
@@ -76,11 +74,7 @@ version:
 	defaults write $(ADIUM_PLIST) CFBundleGetInfoString '$(VERSION), Copyright 2001-2007 The Adium Team'
 	defaults write $(ADIUM_PLIST) CFBundleVersion '$(VERSION)'
 	defaults write $(ADIUM_PLIST) CFBundleShortVersionString '$(VERSION)'
-	defaults write $(CRASH_REPORTER_PLIST) CFBundleGetInfoString '$(VERSION), Copyright 2001-2007 The Adium Team'
-	defaults write $(CRASH_REPORTER_PLIST) CFBundleVersion '$(VERSION)'
-	defaults write $(CRASH_REPORTER_PLIST) CFBundleShortVersionString '$(VERSION)'
 	plutil -convert xml1 $(ADIUM_PLIST).plist
-	plutil -convert xml1 $(CRASH_REPORTER_PLIST).plist
 
 compile:
 	$(MAKE) $(BUILDFLAGS) -C $(SRC_DIR)
