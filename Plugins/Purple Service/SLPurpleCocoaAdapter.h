@@ -69,7 +69,7 @@
 
 - (void)setStatusID:(const char *)statusID isActive:(NSNumber *)isActive arguments:(NSMutableDictionary *)arguments onAccount:(id)adiumAccount;
 - (void)setInfo:(NSString *)profileHTML onAccount:(id)adiumAccount;
-- (void)setBuddyIcon:(NSString *)buddyImageFilename onAccount:(id)adiumAccount;
+- (void)setBuddyIcon:(NSData *)buddyImageData onAccount:(id)adiumAccount;
 - (void)setIdleSinceTo:(NSDate *)idleSince onAccount:(id)adiumAccount;
 
 - (void)setCheckMail:(NSNumber *)checkMail forAccount:(id)adiumAccount;

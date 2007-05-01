@@ -404,7 +404,8 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 							filename = [filename stringByAppendingPathExtension:@"png"];
 						}
 
-						int	imgstore = purple_imgstore_add([imageData bytes], [imageData length], [filename UTF8String]);
+						/* XXX Are we leaking every image added here? Where should it be unref'd? */
+						int	imgstore = purple_imgstore_add_with_id((gpointer)[imageData bytes], [imageData length], [filename UTF8String]);
 
 						AILog(@"Adding image id %i with name %s", imgstore, (filename ? [filename UTF8String] : "(null)"));
 
