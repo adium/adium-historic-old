@@ -33,7 +33,7 @@
 - (NSMutableArray *)displayClasses
 {
 	NSMutableArray *classes = [super displayClasses];
-	[classes addObject:@"history "];
+	[classes addObject:@"history"];
 	return classes;
 }
 
