@@ -1207,7 +1207,8 @@ NSString* processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 {
 	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (account) {
-		purple_buddy_icons_set_account_icon(account, (guchar *)[buddyImageData bytes], [buddyImageData length]);
+		unsigned len = [buddyImageData length];
+		purple_buddy_icons_set_account_icon(account, g_memdup([buddyImageData bytes], len), len);
 	}
 }
 
