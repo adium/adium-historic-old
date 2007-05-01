@@ -1,13 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">
   <channel>
     <title>Adium Updates</title>
     <language>en</language>
     <item>
-        <title>Adium 1.0.3b3</title>
-        <pubDate>Sunday, April 22nd, 2007 11:00:00 GMT-5</pubDate>
-        <sparkle:releaseNotesLink>http://www.adiumx.com/changelogs/1.0.3b3.html</sparkle:releaseNotesLink> 
-        <enclosure sparkle:md5Sum="fd91fa240a60937e40b85eb69d48f28b" sparkle:version="1.0.3b3" url="http://adiumx.cachefly.net/Adium_1.0.3b3.dmg" length="18344041" type="application/octet-stream"/>
+        <title>Adium 1.0.3b4</title>
+        <pubDate>Tuesday, May 1st, 2007 2:50:00 GMT-5</pubDate>
+        <sparkle:releaseNotesLink>http://www.adiumx.com/changelogs/1.0.3b4.html</sparkle:releaseNotesLink> 
+        <enclosure sparkle:md5Sum="8e80479406021871f5c508c2089a68b3" sparkle:version="1.0.3b4" url="http://adiumx.cachefly.net/Adium_1.0.3b4.dmg" length="16703787" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
