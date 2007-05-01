@@ -383,15 +383,12 @@ static NSArray *validSenderColors;
 	//Status
 	statusHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Status.html"]] retain];
 	
-	fileTransferHTML = [NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Incoming/FileTransferRequest.html"]];
+	fileTransferHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Incoming/FileTransferRequest.html"]] retain];
 	if(!fileTransferHTML) {
 		fileTransferHTML = [contentInHTML mutableCopy];
 		[(NSMutableString *)fileTransferHTML replaceKeyword:@"%message%"
 												 withString:@"<p><img src=\"%fileIconPath%\" style=\"width:32px; height:32px; vertical-align:middle;\"></img><input type=\"button\" onclick=\"%saveFileAsHandler%\" value=\"Download %fileName%\"></p>"];
 	}
-	else
-		[fileTransferHTML retain];
-	
 }
 
 #pragma mark Scripts
