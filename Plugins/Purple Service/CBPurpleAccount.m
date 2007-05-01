@@ -59,8 +59,6 @@
 #define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
 
 @interface CBPurpleAccount (PRIVATE)
-- (NSString *)_userIconCachePath;
-
 - (NSString *)_mapIncomingGroupName:(NSString *)name;
 - (NSString *)_mapOutgoingGroupName:(NSString *)name;
 
@@ -1930,7 +1928,6 @@ static SLPurpleCocoaAdapter *gaimThread = nil;
 			PurpleDebug(@"Original image of size %f %f",imageSize.width,imageSize.height);
 
 			if (prpl_info && (prpl_info->icon_spec.format)) {
-				NSString	*buddyIconFilename = [self _userIconCachePath];
 				NSData		*buddyIconData = nil;
 				BOOL		smallEnough, prplScales;
 				unsigned	i;
@@ -2023,12 +2020,7 @@ static SLPurpleCocoaAdapter *gaimThread = nil;
 					g_strfreev(prpl_formats);
 				}
 				
-				if ([buddyIconData writeToFile:buddyIconFilename atomically:YES]) {
-					[gaimThread setBuddyIcon:buddyIconFilename onAccount:self];
-					
-				} else {
-					PurpleDebug(@"Error writing file %@",buddyIconFilename);   
-				}
+				[gaimThread setBuddyIcon:buddyIconData onAccount:self];
 			}
 		}
 	}
@@ -2387,18 +2379,6 @@ static SLPurpleCocoaAdapter *gaimThread = nil;
 {
     [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Error",[self UID],[[self service] shortDescription]]
                                     withDescription:errorDesc];
-}
-
-/*!
- * @brief Return the path at which to save our own user icon
- *
- * Purple expects a file path, not data
- */
-- (NSString *)_userIconCachePath
-{    
-	static unsigned long long userIconID = 0;
-    NSString    *userIconCacheFilename = [NSString stringWithFormat:@"TEMP-UserIcon_%@_%qu", [self internalObjectID], userIconID];
-    return [[adium cachesPath] stringByAppendingPathComponent:userIconCacheFilename];
 }
 
 - (NSNumber *)shouldCheckMail
