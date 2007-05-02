@@ -268,7 +268,6 @@ guint adium_input_add(int fd, PurpleInputCondition condition,
 	info->socket = socket;
 
     if ((condition & PURPLE_INPUT_READ)) {
-		if (info->read_tag) AILog(@"*** info->read_tag wsa %i; now it'll be %i",info->read_tag, sourceId + 1);
 		info->read_tag = ++sourceId;
 		info->read_ioFunction = func;
 		info->read_user_data = user_data;
@@ -277,7 +276,6 @@ guint adium_input_add(int fd, PurpleInputCondition condition,
 						   forKey:[NSNumber numberWithUnsignedInt:info->read_tag]];
 		
 	} else {
-		if (info->write_tag) AILog(@"*** info->write_tag wsa %i; now it'll be %i",info->write_tag, sourceId + 1);
 		info->write_tag = ++sourceId;
 		info->write_ioFunction = func;
 		info->write_user_data = user_data;
