@@ -85,6 +85,11 @@
 	[inAccount toggleOnline];
 }
 
+- (BOOL)accountMenuShouldIncludeAddAccountsMenu:(AIAccountMenu *)inAccountMenu
+{
+	return YES;
+}
+
 - (BOOL)accountMenuShouldIncludeDisabledAccountsMenu:(AIAccountMenu *)inAccountMenu
 {
 	return YES;

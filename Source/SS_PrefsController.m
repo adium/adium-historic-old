@@ -306,7 +306,7 @@
 
 - (BOOL)loadPreferencePaneNamed:(NSString *)name
 {
-    return [self loadPrefsWithIdentifier:(NSString *)name display:YES];
+    return [self loadPrefsWithIdentifier:name display:YES];
 }
 
 
@@ -397,9 +397,9 @@
 
 - (void)debugLog:(NSString*)msg
 {
-    if (debug) {
+//    if (debug) {
         NSLog(@"[--- PREFERENCES DEBUG MESSAGE ---]\r%@\r\r", msg);
-    }
+//    }
 }
 
 

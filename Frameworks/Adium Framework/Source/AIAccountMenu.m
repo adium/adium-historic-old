@@ -142,9 +142,12 @@
 	NSParameterAssert([delegate respondsToSelector:@selector(accountMenu:didRebuildMenuItems:)]);
 	delegateRespondsToDidSelectAccount = [delegate respondsToSelector:@selector(accountMenu:didSelectAccount:)];
 	delegateRespondsToShouldIncludeAccount = [delegate respondsToSelector:@selector(accountMenu:shouldIncludeAccount:)];
-	
+
+	includeAddAccountsMenu = ([delegate respondsToSelector:@selector(accountMenuShouldIncludeAddAccountsMenu:)] &&
+							  [delegate accountMenuShouldIncludeAddAccountsMenu:self]);
+
 	includeDisabledAccountsMenu = ([delegate respondsToSelector:@selector(accountMenuShouldIncludeDisabledAccountsMenu:)] &&
-								   [delegate accountMenuShouldIncludeDisabledAccountsMenu:self ]);
+								   [delegate accountMenuShouldIncludeDisabledAccountsMenu:self]);
 }
 - (id)delegate
 {
@@ -203,7 +206,8 @@
 	}
 	
 	if (includeDisabledAccountsMenu) {
-		NSMenu			*disabledAccountMenu = [[NSMenu alloc] init];
+		NSMenu		*disabledAccountMenu = [[NSMenu alloc] init];
+		NSMenuItem	*menuItem;
 
 		enumerator = [accounts objectEnumerator];
 		while ((account = [enumerator nextObject])) {
@@ -220,26 +224,29 @@
 			}
 		}
 
-        [menuItemArray addObject:[NSMenuItem separatorItem]];
-        
-        //Build the 'add account' menu of each available service
-        NSMenu	*serviceMenu = [AIServiceMenu menuOfServicesWithTarget:self 
-                                                    activeServicesOnly:NO
-                                                       longDescription:YES
-                                                                format:AILocalizedString(@"%@",nil)];
-        
-        
-        NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Add Account", nil)
-                                                                                    target:self
-                                                                                    action:@selector(dummyAction:)
-                                                                             keyEquivalent:@""
-                                                                         representedObject:nil];
-        [menuItemArray addObject:menuItem];
-        [menuItem setSubmenu:serviceMenu];
-        [menuItem release];
-        
-		if ([disabledAccountMenu numberOfItems]) {
+		if (includeAddAccountsMenu || [disabledAccountMenu numberOfItems]) {
+			[menuItemArray addObject:[NSMenuItem separatorItem]];
+		}
 
+		if (includeAddAccountsMenu) {
+			//Build the 'add account' menu of each available service
+			NSMenu	*serviceMenu = [AIServiceMenu menuOfServicesWithTarget:self 
+														activeServicesOnly:NO
+														   longDescription:YES
+																	format:AILocalizedString(@"%@",nil)];
+			
+			
+			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Add Account", nil)
+																						target:self
+																						action:@selector(dummyAction:)
+																				 keyEquivalent:@""
+																			 representedObject:nil];
+			[menuItemArray addObject:menuItem];
+			[menuItem setSubmenu:serviceMenu];
+			[menuItem release];
+        }
+
+		if ([disabledAccountMenu numberOfItems]) {
 			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Disabled Accounts", nil)
                                                                             target:self
                                                                             action:@selector(dummyAction:)
