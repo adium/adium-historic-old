@@ -93,7 +93,9 @@ static SS_PrefsController			*prefsController = nil;
  */
 + (void)openPreferenceWindowToCategoryWithIdentifier:(NSString *)identifier
 {	
+	[[self sharedPrefsController] createPreferencesWindowAndDisplay:NO];
 	[[self sharedPrefsController] loadPreferencePaneNamed:identifier];
+	[[self sharedPrefsController] showPreferencesWindow];
 }
 
 /*!
