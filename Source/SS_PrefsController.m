@@ -385,6 +385,7 @@
 
     if ((prefsToolbarItems && ([prefsToolbarItems count] > 1)) || alwaysShowsToolbar) {
         [prefsWindow setTitle:[pane paneName]];
+		[[prefsWindow toolbar] setSelectedItemIdentifier:name];
     }
     
     // Update defaults
