@@ -24,15 +24,34 @@
 #ifndef _PURPLE_VERSION_H_
 #define _PURPLE_VERSION_H_
 
-#define PURPLE_MAJOR_VERSION 2
-#define PURPLE_MINOR_VERSION 0
-#define PURPLE_MICRO_VERSION 0
+#define PURPLE_MAJOR_VERSION (2)
+#define PURPLE_MINOR_VERSION (0)
+#define PURPLE_MICRO_VERSION (0)
 
-#define PURPLE_VERSION_CHECK(x,y,z) ((x) == PURPLE_MAJOR_VERSION && ((y) < PURPLE_MINOR_VERSION || ((y) == PURPLE_MINOR_VERSION && (z) <= PURPLE_MICRO_VERSION)))
+#define PURPLE_VERSION_CHECK(x,y,z) ((x) == PURPLE_MAJOR_VERSION && \
+									 ((y) < PURPLE_MINOR_VERSION || \
+									  ((y) == PURPLE_MINOR_VERSION && (z) <= PURPLE_MICRO_VERSION)))
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+const guint purple_major_version;
+const guint purple_minor_version;
+const guint purple_micro_version;
+
+/**
+ * Checks that the libpurple version is compatible with the requested
+ * version
+ *
+ * @param required_major: the required major version.
+ * @param required_minor: the required minor version.
+ * @param required_micro: the required micro version.
+ *
+ * @return NULL if the versions are compatible, or a string describing
+ *         the version mismatch if not compatible.
+ */
+const char *purple_version_check(guint required_major, guint required_minor, guint required_micro);
 
 #ifdef __cplusplus
 }
