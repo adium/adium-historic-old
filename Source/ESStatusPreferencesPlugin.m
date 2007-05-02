@@ -54,7 +54,7 @@
  */
 - (void)showStatusPreferences:(id)sender
 {
-	[[adium preferenceController] openPreferencesToCategoryWithIdentifier:@"status"];
+	[[adium preferenceController] openPreferencesToCategoryWithIdentifier:@"Status"];
 }
 
 @end
