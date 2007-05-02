@@ -135,17 +135,19 @@ static NSArray *draggedTypes = nil;
 
 - (void)messageViewIsClosing
 {
-	/* The windowScriptObject retained self when we set it as the client in -[AIWebKitMessageViewController _initWebView]...
-	 * Unfortunately, (as of 10.4.9) it won't actually release self until the webView deallocates.  We'll do removeWebScriptKey:
-	 * now in case that works properly later, and do the release of webView here rather than in dealloc to work around the bug.
-	 */
-	[[webView windowScriptObject] removeWebScriptKey:@"client"];
-
+	[webView stopLoading:nil];
+	
 	//Stop observing the webview, since it may attempt callbacks shortly after we dealloc
 	[webView setFrameLoadDelegate:nil];
 	[webView setPolicyDelegate:nil];
 	[webView setUIDelegate:nil];
 	[webView setDraggingDelegate:nil];
+	
+	/* The windowScriptObject retained self when we set it as the client in -[AIWebKitMessageViewController _initWebView]...
+	 * Unfortunately, (as of 10.4.9) it won't actually release self until the webView deallocates.  We'll do removeWebScriptKey:
+	 * now in case that works properly later, and do the release of webView here rather than in dealloc to work around the bug.
+	 */
+	[[webView windowScriptObject] removeWebScriptKey:@"client"];
 
 	//Release the web view
 	[webView release]; webView = nil;
