@@ -489,7 +489,7 @@
 
 			[localGroup addObject:containingObject];
 			[self _listChangedGroup:localGroup object:containingObject];
-			AILog(@"listObjectRemoteGroupingChanged: %@ is in %@, which was moved to %@",inContact,containingObject,localGroup);
+//			AILog(@"listObjectRemoteGroupingChanged: %@ is in %@, which was moved to %@",inContact,containingObject,localGroup);
 		}
 
 	} else {
@@ -503,7 +503,7 @@
 						  ((useOfflineGroup && ![inContact online]) ? [self offlineGroup] : contactGroup) :
 						  contactList);
 
-			AILog(@"listObjectRemoteGroupingChanged: %@: remoteGroupName %@ --> %@",inContact,remoteGroupName,localGroup);
+//			AILog(@"listObjectRemoteGroupingChanged: %@: remoteGroupName %@ --> %@",inContact,remoteGroupName,localGroup);
 
 			[self _moveContactLocally:inContact
 							  toGroup:localGroup];
@@ -516,7 +516,7 @@
 
 				[self _listChangedGroup:(AIListGroup *)containingObject object:inContact];
 				
-				AILog(@"listObjectRemoteGroupingChanged: %@: -- !remoteGroupName so removed from %@",inContact,containingObject);
+//				AILog(@"listObjectRemoteGroupingChanged: %@: -- !remoteGroupName so removed from %@",inContact,containingObject);
 			}
 		}
 	}
@@ -543,7 +543,7 @@
 	[listContact retain];
 
 	//XXX
-	AILog(@"Moving %@ to %@",listContact,localGroup);
+//	AILog(@"Moving %@ to %@",listContact,localGroup);
 	
 	//Remove this object from any local groups we have it in currently
 	if ((containingObject = [listContact containingObject]) &&
@@ -567,7 +567,7 @@
 		//If we found a metaContact to which we should add, do it.
 		if ((metaContact = [contactToMetaContactLookupDict objectForKey:[listContact internalObjectID]])) {
 			//XXX
-			AILog(@"Found an existing metacontact; adding %@ to %@",listContact,metaContact);
+//			AILog(@"Found an existing metacontact; adding %@ to %@",listContact,metaContact);
 
 			[self addListObject:listContact toMetaContact:metaContact];
 			performedGrouping = YES;
@@ -920,7 +920,7 @@
 	//we only allow group->meta->contact, not group->meta->meta->contact
 	NSParameterAssert(![listObject conformsToProtocol:@protocol(AIContainingObject)]);
 	
-	AILog(@"MetaContacts: Storing %@ in %@",listObject, metaContact);
+//	AILog(@"MetaContacts: Storing %@ in %@",listObject, metaContact);
 	NSDictionary		*containedContactDict;
 	NSMutableDictionary	*allMetaContactsDict;
 	NSMutableArray		*containedContactsArray;
