@@ -4,7 +4,7 @@
 #import <AIUtilities/AIWindowAdditions.h>
 
 @interface SS_PrefsController (PRIVATE)
-- (id)initWithPanes:(NSArray *)inArray;
+- (id)initWithPanes:(NSArray *)inArray delegate:(id)inDelegate;
 @end
 
 @implementation SS_PrefsController
@@ -45,9 +45,9 @@
     return [[[SS_PrefsController alloc] init] autorelease];
 }
 
-+ (id)preferencesWithPanes:(NSArray *)inArray
++ (id)preferencesWithPanes:(NSArray *)inArray delegate:(id)inDelegate
 {
-	return [[[SS_PrefsController alloc] initWithPanes:inArray] autorelease];
+	return [[[SS_PrefsController alloc] initWithPanes:inArray delegate:inDelegate] autorelease];
 }
 
 - (id)initWithPanesSearchPath:(NSString*)path
@@ -109,7 +109,7 @@
     return nil;
 }
 
-- (id)initWithPanes:(NSArray *)inArray
+- (id)initWithPanes:(NSArray *)inArray delegate:(id)inDelegate
 {
 	if ((self = [self init])) {
 		NSEnumerator *enumerator = [inArray objectEnumerator];
@@ -119,6 +119,8 @@
 			[panesOrder addObject:[aPane paneIdentifier]];
 			[preferencePanes setObject:aPane forKey:[aPane paneIdentifier]];
 		}
+		
+		delegate = inDelegate;
 	}
 	
 	return self;
@@ -126,27 +128,14 @@
 
 - (void)dealloc
 {
-    if (prefsWindow) {
-        [prefsWindow release];
-    }
-    if (prefsToolbar) {
-        [prefsToolbar release];
-    }
-    if (prefsToolbarItems) {
-        [prefsToolbarItems release];
-    }
-    if (preferencePanes) {
-        [preferencePanes release];
-    }
-    if (panesOrder) {
-        [panesOrder release];
-    }
-    if (bundleExtension) {
-        [bundleExtension release];
-    }
-    if (searchPath) {
-        [searchPath release];
-    }
+	[prefsWindow close]; prefsWindow = nil;
+	[prefsToolbar release];
+	[prefsToolbarItems release];
+	[preferencePanes release];
+	[panesOrder release];
+	[bundleExtension release];
+	[searchPath release];
+
     [super dealloc];
 }
 
@@ -203,8 +192,8 @@
                                               styleMask:styleMask
                                                 backing:NSBackingStoreBuffered
                                                   defer:NO];
-    
-    [prefsWindow setReleasedWhenClosed:NO];
+    [prefsWindow setDelegate:self];
+    [prefsWindow setReleasedWhenClosed:YES];
     [prefsWindow setTitle:@"Preferences"]; // initial default title
     
     [self createPrefsToolbar];
@@ -256,19 +245,30 @@
                     @"OK",
                     nil,
                     nil);
-    [prefsWindow release];
+    [prefsWindow close];
     prefsWindow = nil;
 }
 
 
 - (void)destroyPreferencesWindow
 {
-    if (prefsWindow) {
-        [prefsWindow release];
-    }
+	[prefsWindow close];
     prefsWindow = nil;
 }
 
+- (void)windowWillClose:(NSNotification *)aNotification
+{
+	//Don't continue to work with prefsWindow
+	prefsWindow = nil;
+
+	//Let the preference panes know we're closing	
+	[[preferencePanes allValues] makeObjectsPerformSelector:@selector(closeView)];
+
+	//Tell the delegate
+	if ([delegate respondsToSelector:@selector(prefsWindowWillClose:)]) {
+		[delegate prefsWindowWillClose:self];		
+	}
+}
 
 - (void)activatePane:(NSString*)path {
     NSBundle* paneBundle = [NSBundle bundleWithPath:path];

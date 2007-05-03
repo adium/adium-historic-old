@@ -25,13 +25,15 @@
     BOOL debug;
 	
 	float minimumWidthForToolbar;
+	
+	id delegate;
 }
 
 // Convenience constructors
 + (id)preferencesWithPanesSearchPath:(NSString*)path bundleExtension:(NSString *)ext;
 + (id)preferencesWithBundleExtension:(NSString *)ext;
 + (id)preferencesWithPanesSearchPath:(NSString*)path;
-+ (id)preferencesWithPanes:(NSArray *)inArray;
++ (id)preferencesWithPanes:(NSArray *)inArray delegate:(id)inDelegate;
 + (id)preferences;
 
 // Designated initializer
@@ -76,4 +78,8 @@ float ToolbarHeightForWindow(NSWindow *window);
 - (void)setToolbarSizeMode:(NSToolbarSizeMode)sizeMode;
 #endif
 
+@end
+
+@interface NSObject (SS_PrefsControllerDelegate)
+- (void)prefsWindowWillClose:(SS_PrefsController *)sender;
 @end
