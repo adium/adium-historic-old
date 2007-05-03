@@ -15,6 +15,7 @@
 #import <AIUtilities/AIAlternatingRowTableView.h>
 
 #define KEY_ADVANCED_PREFERENCE_SELECTED_ROW    @"Preference Advanced Selected Row"
+#define KEY_ADVANCED_PREFERENCE_SHELF_WIDTH		@"AdvancedPrefs:ShelfWidth"
 
 @interface AIAdvancedPreferences (PRIVATE)
 - (void)_configureAdvancedPreferencesTable;
@@ -24,7 +25,7 @@
 + (AIPreferencePane *)preferencePane
 {
 	[[[AIObject sharedAdiumInstance] preferenceController] registerDefaults:[NSDictionary dictionaryWithObject:[NSNumber numberWithFloat:150]
-																										forKey:@"AdvancedPrefs:ShelfWidth"]
+																										forKey:KEY_ADVANCED_PREFERENCE_SHELF_WIDTH]
 																   forGroup:PREF_GROUP_WINDOW_POSITIONS];
 	
 	return [super preferencePane];
@@ -51,10 +52,28 @@
 - (void)viewDidLoad
 {
 	[shelf_splitView setFrame:[[shelf_splitView superview] frame]];
-	[shelf_splitView setShelfWidth:[[[adium preferenceController] preferenceForKey:@"AdvancedPrefs:ShelfWidth"
+	[shelf_splitView setShelfWidth:[[[adium preferenceController] preferenceForKey:KEY_ADVANCED_PREFERENCE_SHELF_WIDTH
 																			 group:PREF_GROUP_WINDOW_POSITIONS] floatValue]];
 
 	[self _configureAdvancedPreferencesTable];
+}
+
+- (void)viewWillClose
+{
+	//Select the previously selected row
+	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[tableView_categories selectedRow]]
+										 forKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW
+										  group:PREF_GROUP_WINDOW_POSITIONS];
+
+	[[adium preferenceController] setPreference:[NSNumber numberWithFloat:[shelf_splitView shelfWidth]]
+										 forKey:KEY_ADVANCED_PREFERENCE_SHELF_WIDTH
+										  group:PREF_GROUP_WINDOW_POSITIONS];
+	
+	//Close open panes
+	[loadedAdvancedPanes makeObjectsPerformSelector:@selector(closeView)];
+	[modularPane removeAllSubviews];
+	[loadedAdvancedPanes release]; loadedAdvancedPanes = nil;
+	[_advancedCategoryArray release]; _advancedCategoryArray = nil;
 }
 
 /*!
@@ -74,14 +93,8 @@
  */
 - (void)configureAdvancedPreferencesForPane:(AIAdvancedPreferencePane *)preferencePane
 {
-	NSEnumerator				*enumerator;
-	AIAdvancedPreferencePane	*pane;
-	
 	//Close open panes
-	enumerator = [loadedAdvancedPanes objectEnumerator];
-	while ((pane = [enumerator nextObject])) {
-		[pane closeView];
-	}
+	[loadedAdvancedPanes makeObjectsPerformSelector:@selector(closeView)];
 	[modularPane removeAllSubviews];
 	[loadedAdvancedPanes release]; loadedAdvancedPanes = nil;
 	

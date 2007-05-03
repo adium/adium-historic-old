@@ -66,7 +66,8 @@ static SS_PrefsController			*prefsController = nil;
 + (SS_PrefsController *)sharedPrefsController
 {
 	if (!prefsController) {
-		prefsController = [[SS_PrefsController preferencesWithPanes:[[[AIObject sharedAdiumInstance] preferenceController] paneArray]] retain];
+		prefsController = [[SS_PrefsController preferencesWithPanes:[[[AIObject sharedAdiumInstance] preferenceController] paneArray]
+														   delegate:self] retain];
 
 		// Set which panes are included, and their order.
 		[prefsController setPanesOrder:[NSArray arrayWithObjects:
@@ -107,46 +108,13 @@ static SS_PrefsController			*prefsController = nil;
 	[prefsController release]; prefsController = nil;
 }
 
-/*!
- * @brief Invoked before the window closes
- *
- * We always allow closing of the preference window, so always return YES from this method.  We take this
- * opportunity to save the state of our window and clean up before the window closes.
- */
-- (void)windowWillClose:(id)sender
++ (void)prefsWindowWillClose:(SS_PrefsController *)inPrefsController
 {
-	[super windowWillClose:sender];
-		    
-    //Close all panes and our shared instance
-#warning XXX
-//	[loadedPanes makeObjectsPerformSelector:@selector(closeView)];
+	[prefsController release]; prefsController = nil;
 }
 
 //Panes ---------------------------------------------------------------------------------------------------------------
 #pragma mark Panes 
-/*!
- * @brief Select a preference category
- */
-- (void)selectCategoryWithIdentifier:(NSString *)identifier
-{
-#if 0
-	NSTabViewItem	*tabViewItem;
-	int				index;
-
-	//Load the window first
-	[self window];
-	
-	index = [tabView_category indexOfTabViewItemWithIdentifier:identifier];
-	if (index != NSNotFound) {
-		tabViewItem = [tabView_category tabViewItemAtIndex:index];
-		[self tabView:tabView_category willSelectTabViewItem:tabViewItem];
-		[tabView_category selectTabViewItem:tabViewItem];    
-	}
-
-	shouldRestorePreviousSelectedPane = NO;
-#endif
-}
-
 /*!
  * @brief Tabview will select a new pane; should it immediately show the loading indicator?
  *

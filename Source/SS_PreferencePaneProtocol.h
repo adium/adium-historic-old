@@ -48,4 +48,6 @@
 - (BOOL)allowsVerticalResizing;
 
 
+- (void)closeView;
+
 @end
