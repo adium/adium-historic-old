@@ -1942,6 +1942,7 @@ static SLPurpleCocoaAdapter *gaimThread = nil;
 					
 				prplScales = (prpl_info->icon_spec.scale_rules & GAIM_ICON_SCALE_SEND) || (prpl_info->icon_spec.scale_rules & GAIM_ICON_SCALE_DISPLAY);
 
+#if 1
 				if (prplScales && !smallEnough) {
 					int width = imageSize.width;
 					int height = imageSize.height;
@@ -2014,12 +2015,30 @@ static SLPurpleCocoaAdapter *gaimThread = nil;
 								
 							}						
 						}
-					}
-					
+						
+						size_t maxSize = prpl_info->icon_spec.max_filesize;
+						if (maxSize > 0 && ([buddyIconData length] > maxSize)) {
+							AILog(@"Image %i is larger than %i!",[buddyIconData length],maxSize);
+							for (i = 0; prpl_formats[i]; i++) {
+								if ((strcmp(prpl_formats[i],"jpeg") == 0) || (strcmp(prpl_formats[i],"jpg") == 0)) {
+									for (float compressionFactor = 0.9; compressionFactor > 0.4; compressionFactor -= 0.05) {
+										buddyIconData = [image JPEGRepresentationWithCompressionFactor:compressionFactor];
+										
+										if (buddyIconData && ([buddyIconData length] <= maxSize)) {
+											AILog(@"Succeeded getting it down to %i with compressionFactor %f",[buddyIconData length],compressionFactor);
+											break;
+										}
+									}
+								}
+							}
+						}
+					}	
 					//Cleanup
 					g_strfreev(prpl_formats);
 				}
-				
+#else
+				buddyIconData = originalData;
+#endif				
 				[gaimThread setBuddyIcon:buddyIconData onAccount:self];
 			}
 		}
