@@ -120,7 +120,7 @@
 	unsigned	loop, maxLoop;
 
 	if (!targetMenu) {
-		NSLog(@"Warning: Attempting to remove %@, but it has no menu",targetItem);
+		NSLog(@"Warning: Attempting to remove %@ (%@, target %@), but it has no menu",targetItem, [targetItem title], [targetItem target]);
 	}
 	
 	//Fix the pointer if this is one
