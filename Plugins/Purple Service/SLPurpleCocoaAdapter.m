@@ -179,7 +179,21 @@ static void ZombieKiller_Signal(int i)
 - (void)initLibPurple
 {	
 	//Set the gaim user directory to be within this user's directory
-	NSString	*gaimUserDir = [[[adium loginController] userDirectory] stringByAppendingPathComponent:@"libgaim"];
+	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"Adium 1.0.3 moved to libpurple"]) {
+		//Remove old icons cache
+		[[NSFileManager defaultManager]  removeFileAtPath:[[[[adium loginController] userDirectory] stringByAppendingPathComponent:@"libgaim"] stringByAppendingPathComponent:@"icons"]
+												  handler:nil];
+		
+		//Update the rest
+		[[NSFileManager defaultManager] movePath:[[[adium loginController] userDirectory] stringByAppendingPathComponent:@"libgaim"]
+										  toPath:[[[adium loginController] userDirectory] stringByAppendingPathComponent:@"libpurple"]
+										 handler:nil];
+
+		[[NSUserDefaults standardUserDefaults] setBool:YES
+												forKey:@"Adium 1.0.3 moved to libpurple"];
+	}
+	
+	NSString	*gaimUserDir = [[[adium loginController] userDirectory] stringByAppendingPathComponent:@"libpurple"];
 	purple_util_set_user_dir([[gaimUserDir stringByExpandingTildeInPath] UTF8String]);
 
 	/* Delete blist.xml once when 1.0 runs to clear out any old silliness */
