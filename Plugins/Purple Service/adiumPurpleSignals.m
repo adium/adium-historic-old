@@ -128,12 +128,6 @@ static void buddy_status_changed_cb(PurpleBuddy *buddy, PurpleStatus *oldstatus,
 	NSAttributedString	*statusMessage;	
 	BOOL				isAvailable, isMobile;
 
-	PurpleDebug(@"buddy_status_changed_cb: %@ (%i): name %s, message %s",
-			  theContact,
-			  purple_status_type_get_primitive(purple_status_get_type(status)),
-			  purple_status_get_name(status),
-			  purple_status_get_attr_string(status, "message"));
-
 	isAvailable = ((purple_status_type_get_primitive(purple_status_get_type(status)) == PURPLE_STATUS_AVAILABLE) ||
 				   (purple_status_type_get_primitive(purple_status_get_type(status)) == PURPLE_STATUS_OFFLINE));
 	isMobile = purple_presence_is_status_primitive_active(purple_buddy_get_presence(buddy), PURPLE_STATUS_MOBILE);
