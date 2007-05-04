@@ -167,8 +167,6 @@
 	return nil;
 }
 
-//XXX - Must we monitor content to determine this?
-//XXX - Must we write this preference everytime a message is sent?
 - (void)didSendContent:(NSNotification *)notification
 {
 	NSDictionary	*userInfo = [notification userInfo];
@@ -179,10 +177,14 @@
         AIContentObject *contentObject = [userInfo objectForKey:@"AIContentObject"];
         AIAccount		*sourceAccount = (AIAccount *)[contentObject source];
         
-        [destObject setPreference:[sourceAccount internalObjectID]
-                           forKey:KEY_PREFERRED_SOURCE_ACCOUNT
-                            group:PREF_GROUP_PREFERRED_ACCOUNTS];
-        
+		if (![[destObject preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT
+									 group:PREF_GROUP_PREFERRED_ACCOUNTS
+					ignoreInheritiedValues:YES] isEqualToString:[sourceAccount internalObjectID]]) {
+			[destObject setPreference:[sourceAccount internalObjectID]
+							   forKey:KEY_PREFERRED_SOURCE_ACCOUNT
+								group:PREF_GROUP_PREFERRED_ACCOUNTS];
+        }
+
         [lastAccountIDToSendContent setObject:[sourceAccount internalObjectID] forKey:[[destObject service] serviceID]];
     }
 }
