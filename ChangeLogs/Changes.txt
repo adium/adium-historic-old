@@ -1,5 +1,38 @@
 				Adium X Version History
 				-----------------------
+Version 1.0.3
+ * Fixed a major memory leak after closing chats present since Adium 1.0
+ * Updated to libpurple 2.0.0 (from libpurple 2.0.0 beta)
+   * Improved retrieval of MSN buddy icons
+   * Fixed setting our own buddy icon in some situations in which it would not be set previously
+   * Fixed determination of encoding for some AIM profiles and messages (#6839)
+   * Added NAT-PMP support, significantly improving AIM File Transfer, AIM Direct Connect, and more when behind an Apple Airport Express or Extreme router
+ * Fixed Direct IM images sent to iChat users after pasting from the clipboard
+ * Fixed the dropdown menu shown when there are multiple destination contact choices for an outgoing message. It previously could display a contact different form the one to which the message would actually be sent.
+ * Fixed reversion of privacy settings to "Block Certain Contacts" for ICQ and Yahoo accounts (#4770)
+ * Fixed a crash which could occur when waking a system which had gone to sleep while Adium was conencting
+ * Fixed import of logs via Spotlight (#6287)
+ * Fixed printing of logs (#5617)
+ * Fixed a crash which could occur after finishing indexing of chat transcripts
+ * Fixed an exception when importing Fire contacts
+ * Fixed display of bold in the Chat Transcript viewer
+ * Fixed a crash which could occur with certain font related problems
+ * Improved performance when pasting or dropping large images for use as contact icons or account icons (#6729)
+ * Fixed incorrect shadow drawing in some situations in the contact list (#5232)
+ * Suppressed a spurious warning message when connecting to ICQ in some situations (#6533)
+ * Fixed iTunes away status when nothing is playing (#5899)
+ * Fixed cascading a message windows when 'open new chats in tabs' is disabled. (#4451)
+ * Allow ` in Jabber / XMPP usernames (#6690)
+ * Improved icons for SIMPLE, QQ, and Zephyr, using [http://pidgin.im Pidgin]'s icons
+ * Various localizability improvements
+ * Switch to Smart Crash Reports for crash reporting.  This will only do anything if Smart Crash Reports is installed (see www.smartcrashreports.com); Adium does not install it.
+ * (Portuguese) Fixed Personal preferences
+ * (French) Fixed Encryption preferences
+ * (Turkish) Fixed a crash on first launch
+ * (German) Fixed advanced messages preferences (#6781)
+ * Updated Japanese, zh_CN, zh_TW, Russian, French, pt_BR, Dutch, Turkish, German, Catalan, Czech, and Swedish translations
+
+
 Version 1.0.2 (3/25/2007)
  * Fixed a crash which could occur while performing DNS resolutions and optimized for performance
  * Fixed another situation in which an AIM file transfer could fail, introduced in the fix included in 1.0.1
