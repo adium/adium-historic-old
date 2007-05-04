@@ -75,67 +75,46 @@ static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *
 {
 	NSString	*string;
 	
-	if ([NSApp isOnTigerOrBetter]) {
-		NSError	*error = nil;
+	NSError	*error = nil;
 
-		string = [NSString stringWithContentsOfFile:path
-										   encoding:NSUTF8StringEncoding 
-											  error:&error];
+	string = [NSString stringWithContentsOfFile:path
+									   encoding:NSUTF8StringEncoding 
+										  error:&error];
 
-		if (error) {
-			BOOL	handled = NO;
+	if (error) {
+		BOOL	handled = NO;
 
-			if ([[error domain] isEqualToString:NSCocoaErrorDomain]) {
-				int		errorCode = [error code];
+		if ([[error domain] isEqualToString:NSCocoaErrorDomain]) {
+			int		errorCode = [error code];
 
-				//XXX - I'm sure these constants are defined somewhere, but I can't find them. -eds
-				if (errorCode == 260) {
-					//File not found.
-					string = nil;
+			//XXX - I'm sure these constants are defined somewhere, but I can't find them. -eds
+			if (errorCode == 260) {
+				//File not found.
+				string = nil;
+				handled = YES;
+
+			} else if (errorCode == 261) {
+				/* Reason: File could not be opened using text encoding Unicode (UTF-8).
+				 * Description: Text encoding Unicode (UTF-8) is not applicable.
+				 *
+				 * We couldn't read the file as UTF8.  Let the system try to determine the encoding.
+				 */
+				NSError				*newError = nil;
+
+				string = [NSString stringWithContentsOfFile:path
+												   encoding:NSASCIIStringEncoding
+													  error:&newError];
+
+				//If there isn't a new error, we recovered reasonably successfully...
+				if (!newError) {
 					handled = YES;
-
-				} else if (errorCode == 261) {
-					/* Reason: File could not be opened using text encoding Unicode (UTF-8).
-					 * Description: Text encoding Unicode (UTF-8) is not applicable.
-					 *
-					 * We couldn't read the file as UTF8.  Let the system try to determine the encoding.
-					 */
-					NSError				*newError = nil;
-
-					string = [NSString stringWithContentsOfFile:path
-													   encoding:NSASCIIStringEncoding
-														  error:&newError];
-
-					//If there isn't a new error, we recovered reasonably successfully...
-					if (!newError) {
-						handled = YES;
-					}
 				}
-			}
-
-			if (!handled) {
-				NSLog(@"Error reading %@:\n%@; %@.",path,
-					  [error localizedDescription], [error localizedFailureReason]);
 			}
 		}
 
-	} else {
-		NSData	*data = [NSData dataWithContentsOfFile:path];
-		
-		if (data) {
-			string = [[[NSString alloc] initWithData:data
-											encoding:NSUTF8StringEncoding] autorelease];
-			if (!string) {
-				string = [[[NSString alloc] initWithData:data
-												encoding:NSASCIIStringEncoding] autorelease];			
-			}
-			
-			if (!string) {
-				NSLog(@"Error reading %@",path);
-			}
-		} else {
-			//File not found
-			string = nil;
+		if (!handled) {
+			NSLog(@"Error reading %@:\n%@; %@.",path,
+				  [error localizedDescription], [error localizedFailureReason]);
 		}
 	}
 	
