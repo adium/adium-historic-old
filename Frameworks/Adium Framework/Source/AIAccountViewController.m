@@ -197,6 +197,7 @@
 		service = [account service];
 
 		//UID Label
+		//XXX: shouldn't this be just AILocalizedString? It searches the class's bundle first. Search for other uses of AILocalizedStringFromTableInBundle to find more of these.
 		[textField_accountUIDLabel setStringValue:[[service userNameLabel] stringByAppendingString:AILocalizedStringFromTableInBundle(@":", nil, [NSBundle bundleForClass:[AIAccountViewController class]], "Colon which will be appended after a label such as 'User Name', before an input field")]];
 
 		//UID

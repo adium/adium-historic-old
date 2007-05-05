@@ -349,9 +349,9 @@ static NSArray *validSenderColors;
 	//Load the style's templates
 	//We can't use NSString's initWithContentsOfFile here.  HTML files are interpreted in the defaultCEncoding
 	//(which varies by system) when read that way.  We want to always interpret the files as UTF8.
-	headerHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Header.html"]] retain];
-	footerHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Footer.html"]] retain];
-	baseHTML = [NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Template.html"]];
+	headerHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"Header" ofType:@"html"]] retain];
+	footerHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"Footer" ofType:@"html"]] retain];
+	baseHTML = [NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"Template" ofType:@"html"]];
 
 	//Starting with version 1, styles can choose to not include template.html.  If the template is not included 
 	//Adium's default will be used.  This is preferred since any future template updates will apply to the style
@@ -361,29 +361,41 @@ static NSArray *validSenderColors;
 	} else {
 		usingCustomBaseHTML = YES;
 	}
-	[baseHTML retain];	
+	[baseHTML retain];
 
 	//Content Templates
-	contentInHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Incoming/Content.html"]] retain];
-	nextContentInHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Incoming/NextContent.html"]] retain];
-	contentOutHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Outgoing/Content.html"]] retain];
-	nextContentOutHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Outgoing/NextContent.html"]] retain];
+	contentInHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"Content" ofType:@"html" inDirectory:@"Incoming"]] retain];
+	nextContentInHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"NextContent" ofType:@"html" inDirectory:@"Incoming"]] retain];
+	contentOutHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"Content" ofType:@"html" inDirectory:@"Outgoing"]] retain];
+	nextContentOutHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"NextContent" ofType:@"html" inDirectory:@"Outgoing"]] retain];
+
+	//fall back to Content if NextContent doesn't need to use different HTML
+	if(!nextContentInHTML) nextContentInHTML = [contentInHTML retain];
+	
+	//fall back to Incoming if Outgoing doesn't need to be different
+	if(!contentOutHTML) contentOutHTML = [contentInHTML retain];
+	if(!nextContentOutHTML) nextContentOutHTML = [nextContentInHTML retain];
 		  
-	//Context (Fall back on content if not present)
-	contextInHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Incoming/Context.html"]] retain];
-	nextContextInHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Incoming/NextContext.html"]] retain];
+	//Message history
+	contextInHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"Context" ofType:@"html" inDirectory:@"Incoming"]] retain];
+	nextContextInHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"NextContext" ofType:@"html" inDirectory:@"Incoming"]] retain];
+
+	//Fall back to Content if Context isn't present
 	if (!contextInHTML) contextInHTML = [contentInHTML retain];
 	if (!nextContextInHTML) nextContextInHTML = [nextContentInHTML retain];
 
-	contextOutHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Outgoing/Context.html"]] retain];
-	nextContextOutHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Outgoing/NextContext.html"]] retain];
+	contextOutHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"Context" ofType:@"html" inDirectory:@"Outgoing"]] retain];
+	nextContextOutHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"NextContext" ofType:@"html" inDirectory:@"Outgoing"]] retain];
+	
+	//Fall back to Content if Context isn't present
 	if (!contextOutHTML) contextOutHTML = [contentOutHTML retain];
 	if (!nextContextOutHTML) nextContextOutHTML = [nextContentOutHTML retain];
 
 	//Status
-	statusHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Status.html"]] retain];
+	statusHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"Status" ofType:@"html"]] retain];
 	
-	fileTransferHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Incoming/FileTransferRequest.html"]] retain];
+	//TODO: make a generic Request message, rather than having this ft specific one
+	fileTransferHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"FileTransferRequest" ofType:@"html"]] retain];
 	if(!fileTransferHTML) {
 		fileTransferHTML = [contentInHTML mutableCopy];
 		[(NSMutableString *)fileTransferHTML replaceKeyword:@"%message%"
@@ -574,6 +586,25 @@ static NSArray *validSenderColors;
 		[inString replaceKeyword:@"%senderStatusIcon%"
 					  withString:[self statusIconPathForListObject:theSource]];
 	}
+	
+	//Replaces %localized{x}% with a a localized version of x, searching the style's localizations, and then Adium's localizations
+	do{
+		range = [inString rangeOfString:@"%localized{"];
+		if (range.location != NSNotFound) {
+			NSRange endRange;
+			endRange = [inString rangeOfString:@"}%" options:NSLiteralSearch range:NSMakeRange(NSMaxRange(range), [inString length] - NSMaxRange(range))];
+			if (endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
+				NSString *untranslated = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
+				
+				NSString *translated = AILocalizedStringFromTableInBundle(untranslated, nil, styleBundle, nil);
+				if(!translated || [translated length] == 0)
+					translated = AILocalizedString(untranslated, nil);
+				
+				[inString safeReplaceCharactersInRange:NSUnionRange(range, endRange) 
+											withString:translated];
+			}
+		}
+	} while (range.location != NSNotFound);
 	
 	[inString replaceKeyword:@"%messageClasses%"
 				  withString:[[content displayClasses] componentsJoinedByString:@" "]];
