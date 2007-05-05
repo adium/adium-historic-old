@@ -598,7 +598,7 @@ static NSArray *validSenderColors;
 				
 				NSString *translated = AILocalizedStringFromTableInBundle(untranslated, nil, styleBundle, nil);
 				if(!translated || [translated length] == 0)
-					translated = AILocalizedString(untranslated, nil);
+					translated = AILocalizedString(untranslated, nil); //check if Adium knows about the string, since the style doesn't
 				
 				[inString safeReplaceCharactersInRange:NSUnionRange(range, endRange) 
 											withString:translated];
