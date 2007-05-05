@@ -10231,7 +10231,7 @@
 					"-undefined",
 					suppress,
 				);
-				PRODUCT_NAME = purple;
+				PRODUCT_NAME = Purple;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			name = Deployment;
