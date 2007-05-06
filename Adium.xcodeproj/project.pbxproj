@@ -337,7 +337,6 @@
 		3485DB2F09EBCE6500232CC4 /* adiumPurpleSignals.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE1B907A2F4C500663CC9 /* adiumPurpleSignals.m */; };
 		3485DB3009EBCE6500232CC4 /* adiumPurpleWebcam.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE18407A2F20E00663CC9 /* adiumPurpleWebcam.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3485DB3109EBCE6500232CC4 /* adiumPurpleWebcam.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE18507A2F20E00663CC9 /* adiumPurpleWebcam.m */; };
-		3485DB3209EBCE6500232CC4 /* UndeclaredLibpurpleFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 07F1794F08EBC5B300A9C392 /* UndeclaredLibpurpleFunctions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3485DB3709EBCE7400232CC4 /* PurpleService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34415A63059F9B9B0019246B /* PurpleService.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3485DB3809EBCE7400232CC4 /* PurpleService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34415A64059F9B9B0019246B /* PurpleService.m */; };
 		3485DB3909EBCE7400232CC4 /* CBPurpleAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B7F278705440C8D00CDFC90 /* CBPurpleAccount.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1501,7 +1500,6 @@
 		07B87BDD0A3A7CB300A38283 /* AIXMLElement.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIXMLElement.h; path = "Frameworks/Adium Framework/Source/AIXMLElement.h"; sourceTree = "<group>"; };
 		07B87BDE0A3A7CB300A38283 /* AIXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIXMLElement.m; path = "Frameworks/Adium Framework/Source/AIXMLElement.m"; sourceTree = "<group>"; };
 		07B87D760A3A9FCF00A38283 /* AIStatusDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusDefines.h; path = "Frameworks/Adium Framework/Source/AIStatusDefines.h"; sourceTree = "<group>"; };
-		07F1794F08EBC5B300A9C392 /* UndeclaredLibpurpleFunctions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UndeclaredLibpurpleFunctions.h; path = "Plugins/Purple Service/UndeclaredLibpurpleFunctions.h"; sourceTree = "<group>"; };
 		110763F108676CC9005987A5 /* RAFBlockEditorPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorPlugin.h; path = Source/RAFBlockEditorPlugin.h; sourceTree = "<group>"; };
 		110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFBlockEditorPlugin.m; path = Source/RAFBlockEditorPlugin.m; sourceTree = "<group>"; };
 		110763F308676CC9005987A5 /* RAFBlockEditorWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorWindowController.h; path = Source/RAFBlockEditorWindowController.h; sourceTree = "<group>"; };
@@ -4792,7 +4790,6 @@
 				34BBE18407A2F20E00663CC9 /* adiumPurpleWebcam.h */,
 				34BBE18507A2F20E00663CC9 /* adiumPurpleWebcam.m */,
 				4BDF2C91061E376C00EA75C5 /* Libpurple.framework */,
-				07F1794F08EBC5B300A9C392 /* UndeclaredLibpurpleFunctions.h */,
 			);
 			name = Libpurple;
 			sourceTree = "<group>";
@@ -6918,7 +6915,6 @@
 				3485DB2C09EBCE6500232CC4 /* adiumPurpleRoomlist.h in Headers */,
 				3485DB2E09EBCE6500232CC4 /* adiumPurpleSignals.h in Headers */,
 				3485DB3009EBCE6500232CC4 /* adiumPurpleWebcam.h in Headers */,
-				3485DB3209EBCE6500232CC4 /* UndeclaredLibpurpleFunctions.h in Headers */,
 				3485DB3709EBCE7400232CC4 /* PurpleService.h in Headers */,
 				3485DB3909EBCE7400232CC4 /* CBPurpleAccount.h in Headers */,
 				3485DB5909EBCE7400232CC4 /* ESGaduGaduService.h in Headers */,
