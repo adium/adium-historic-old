@@ -15,7 +15,6 @@
  */
 
 #import "adiumPurpleRequest.h"
-#import "UndeclaredLibpurpleFunctions.h"
 #import "ESPurpleRequestActionController.h"
 #import "ESPurpleRequestWindowController.h"
 #import "ESPurpleFileReceiveRequestController.h"
