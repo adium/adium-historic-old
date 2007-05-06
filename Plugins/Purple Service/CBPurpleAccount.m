@@ -830,11 +830,11 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 /*!
  * @brief Return the path at which to save an emoticon
  */
-- (NSString *)_emoticonCachePathForEmoticon:(NSString *)emoticonEquivalent type:(NSBitmapImageFileType)fileType inChat:(AIChat *)inChat
+- (NSString *)_emoticonCachePathForEmoticon:(NSString *)emoticonEquivalent type:(AIBitmapImageFileType)fileType inChat:(AIChat *)inChat
 {
 	static unsigned long long emoticonID = 0;
     NSString    *filename = [NSString stringWithFormat:@"TEMP-CustomEmoticon_%@_%@_%qu.%@",
-		[inChat uniqueChatID], emoticonEquivalent, emoticonID++, ((fileType == NSGIFFileType) ? @"gif" : @"png")];
+		[inChat uniqueChatID], emoticonEquivalent, emoticonID++, [NSImage extensionForBitmapImageFileType:fileType]];
     return [[adium cachesPath] stringByAppendingPathComponent:[filename safeFilenameString]];	
 }
 
@@ -855,23 +855,9 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 		if ([[emoticon textEquivalents] containsObject:emoticonEquivalent]) break;
 	}
 	
-	NSImage				 *image = [[NSImage alloc] initWithData:inImageData];
-	NSImageRep			 *imageRep = [image bestRepresentationForDevice:nil];
-	NSBitmapImageFileType fileType;
-	if ([imageRep isKindOfClass:[NSBitmapImageRep class]] &&
-		[[(NSBitmapImageRep *)imageRep valueForProperty:NSImageFrameCount] intValue] > 1) {
-		//Keep it as a GIF file if it's animated 
-		fileType = NSGIFFileType;
-	} else {
-		//Otherwise, write it out as a PNG file for our use
-		fileType = NSPNGFileType;
-		inImageData = [image PNGRepresentation];
-	}
-	[image release];
-
 	//Write out our image
 	NSString	*path = [self _emoticonCachePathForEmoticon:emoticonEquivalent
-													   type:fileType
+													   type:[NSImage fileTypeOfData:inImageData]
 													 inChat:inChat];
 	[inImageData writeToFile:path
 				  atomically:NO];
