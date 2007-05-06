@@ -17,10 +17,11 @@
 #import "ESPurpleMeanwhileAccount.h"
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIStatusControllerProtocol.h>
-#import "UndeclaredLibpurpleFunctions.h"
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
 #import <Adium/ESFileTransfer.h>
+
+extern const char *mwServiceAware_getText(void *, void *);
 
 @interface ESPurpleMeanwhileAccount (PRIVATE)
 - (NSAttributedString *)statusMessageForContact:(AIListContact *)theContact;

@@ -15,16 +15,14 @@
  */
 
 #import "SLPurpleCocoaAdapter.h"
-
-#import <Adium/AIAccountControllerProtocol.h>
-
-#import <Adium/AIInterfaceControllerProtocol.h>
-#import <Adium/AILoginControllerProtocol.h>
 #import "CBPurpleAccount.h"
 #import "CBPurpleServicePlugin.h"
 #import "adiumPurpleCore.h"
 #import "adiumPurpleEventloop.h"
-#import "UndeclaredLibpurpleFunctions.h"
+
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AILoginControllerProtocol.h>
 #import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AICorePluginLoader.h>
@@ -34,6 +32,7 @@
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/NDRunLoopMessenger.h>
+#import <AIUtilities/AIImageAdditions.h>
 
 #import <CoreFoundation/CFRunLoop.h>
 #import <CoreFoundation/CFSocket.h>
@@ -46,11 +45,11 @@
 
 //Purple slash command interface
 #include <Libpurple/cmds.h>
+#include <Libpurple/oscar-adium.h>
 
 @interface SLPurpleCocoaAdapter (PRIVATE)
 - (void)initLibPurple;
 - (BOOL)attemptPurpleCommandOnMessage:(NSString *)originalMessage fromAccount:(AIAccount *)sourceAccount inChat:(AIChat *)chat;
-- (void)refreshAutoreleasePool:(NSTimer *)inTimer;
 @end
 
 /*
@@ -63,12 +62,7 @@ static SLPurpleCocoaAdapter   *sharedInstance = nil;
 
 //Dictionaries to track purple<->adium interactions
 NSMutableDictionary *accountDict = nil;
-//NSMutableDictionary *contactDict = nil;
 NSMutableDictionary *chatDict = nil;
-
-//The autorelease pool presently in use; it will be periodically released and recreated
-static NSAutoreleasePool *currentAutoreleasePool = nil;
-#define	AUTORELEASE_POOL_REFRESH	5.0
 
 static NSMutableArray	*libpurplePluginArray = nil;
 
@@ -147,18 +141,6 @@ static NSMutableArray	*libpurplePluginArray = nil;
 	}
 	
     return self;
-}
-
-/*!
- * @brief Empty and recreate the autorelease pool
- *
- * Our autoreleased objects will only be released when the outermost autorelease pool is released.
- * This is handled automatically in the main thread, but we need to do it manually here.
- */
-- (void)refreshAutoreleasePool:(NSTimer *)inTimer
-{
-	[currentAutoreleasePool release];
-	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
 }
 
 static void ZombieKiller_Signal(int i)
@@ -575,7 +557,7 @@ NSMutableDictionary* get_chatDict(void)
 static NSString* _messageImageCachePath(int imageID, AIAccount* adiumAccount)
 {
     NSString    *messageImageCacheFilename = [NSString stringWithFormat:@"TEMP-Image_%@_%i", [adiumAccount internalObjectID], imageID];
-    return [[[[AIObject sharedAdiumInstance] cachesPath] stringByAppendingPathComponent:messageImageCacheFilename] stringByAppendingPathExtension:@"png"];
+    return [[[AIObject sharedAdiumInstance] cachesPath] stringByAppendingPathComponent:messageImageCacheFilename];
 }
 
 NSString* processPurpleImages(NSString* inString, AIAccount* adiumAccount)
@@ -630,18 +612,29 @@ NSString* processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 				
 				//First make an NSImage, then request a TIFFRepresentation to avoid an obscure bug in the PNG writing routines
 				//Exception: PNG writer requires compacted components (bits/component * components/pixel = bits/pixel)
-				NSImage				*image = [[NSImage alloc] initWithData:[NSData dataWithBytes:purple_imgstore_get_data(purpleImage)
-																						  length:purple_imgstore_get_size(purpleImage)]];
-				NSData				*imageTIFFData = [image TIFFRepresentation];
-				NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
+				NSData *data = [NSData dataWithBytes:purple_imgstore_get_data(purpleImage)
+											  length:purple_imgstore_get_size(purpleImage)];
 				
-				//If writing the PNG file is successful, write an <IMG SRC="filepath"> tag to our string; the 'scaledToFitImage' class lets us apply CSS to directIM images only
-				if ([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:imagePath atomically:YES]) {
-					[newString appendString:[NSString stringWithFormat:@"<IMG CLASS=\"scaledToFitImage\" SRC=\"%@\" ALT=\"%@\">",
-						imagePath, filename]];
+				NSString *extension = [NSImage extensionForBitmapImageFileType:[NSImage fileTypeOfData:data]];
+				if (!extension) {
+					//We don't know what it is; try to make a png out of it
+					NSImage				*image = [[NSImage alloc] initWithData:data];
+					NSData				*imageTIFFData = [image TIFFRepresentation];
+					NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
+					
+					data = [bitmapRep representationUsingType:NSPNGFileType properties:nil];
+					extension = @"png";
+					[image release];
 				}
 				
-				[image release];
+				filename = [filename stringByAppendingPathExtension:extension];
+					
+				//If writing the file is successful, write an <IMG SRC="filepath"> tag to our string; the 'scaledToFitImage' class lets us apply CSS to directIM images only
+				if ([data writeToFile:imagePath atomically:YES]) {
+					[newString appendString:[NSString stringWithFormat:@"<IMG CLASS=\"scaledToFitImage\" SRC=\"%@\" ALT=\"%@\">",
+						imagePath, filename]];					
+				}
+
 			} else {
 				//If we didn't get a purpleImage, just leave the tag for now.. maybe it was important?
 				[newString appendFormat:@"<IMG ID=\"%i\">",chunkString];

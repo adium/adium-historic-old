@@ -233,8 +233,6 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 
 /*!
  * @brief Status name to use for a Purple buddy
- *
- * Called by SLPurpleCocoaAdapter on the purple thread
  */
 - (NSString *)statusNameForPurpleBuddy:(PurpleBuddy *)buddy
 {
@@ -243,33 +241,18 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 
 /*!
  * @brief Status message for a contact
- *
- * Called by SLPurpleCocoaAdapter on the purple thread
  */
 - (NSAttributedString *)statusMessageForPurpleBuddy:(PurpleBuddy *)buddy
 {
-	PurplePresence	*presence = purple_buddy_get_presence(buddy);
+	PurplePresence		*presence = purple_buddy_get_presence(buddy);
 	PurpleStatus		*status = (presence ? purple_presence_get_active_status(presence) : NULL);
-	const char		*message = (status ? purple_status_get_attr_string(status, "message") : NULL);
-	NSString		*messageString = (message ? [NSString stringWithUTF8String:message] : nil);
-
-	NSAttributedString	*statusMessage = nil;
-
-	if (messageString) {
-		// We use our own HTML decoder to avoid conflicting with the shared one, since we are running in a thread
-		static AIHTMLDecoder	*statusMessageHTMLDecoder = nil;
-		if (!statusMessageHTMLDecoder) statusMessageHTMLDecoder = [[AIHTMLDecoder decoder] retain];
+	const char			*message = (status ? purple_status_get_attr_string(status, "message") : NULL);
 	
-		statusMessage = [statusMessageHTMLDecoder decodeHTML:messageString];
-	}
-	
-	return statusMessage;
+	return (message ? [AIHTMLDecoder decodeHTML:[NSString stringWithUTF8String:message]] : nil);
 }
 
 /*!
  * @brief Update the status message and away state of the contact
- *
- *  Called by SLPurpleCocoaAdapter on the main thread
  */
 - (void)updateStatusForContact:(AIListContact *)theContact toStatusType:(NSNumber *)statusTypeNumber statusName:(NSString *)statusName statusMessage:(NSAttributedString *)statusMessage
 {

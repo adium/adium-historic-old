@@ -7,11 +7,11 @@
 //
 
 #import "ESPurpleAIMAccount.h"
+#import "SLPurpleCocoaAdapter.h"
 #import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
-#import "SLPurpleCocoaAdapter.h"
 #import <Adium/AIChat.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
@@ -20,6 +20,7 @@
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIObjectAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 
 #define MAX_AVAILABLE_MESSAGE_LENGTH	58
 
@@ -401,7 +402,19 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 						//Store the src image's data purpleside
 						filename = (alt ? alt : [source lastPathComponent]);
 						if (![[filename pathExtension] length]) {
-							filename = [filename stringByAppendingPathExtension:@"png"];
+							NSString *extension = [NSImage extensionForBitmapImageFileType:[NSImage fileTypeOfData:imageData]];
+							if (!extension) {
+								//We don't know what it is; try to make a png out of it
+								NSImage				*image = [[NSImage alloc] initWithData:imageData];
+								NSData				*imageTIFFData = [image TIFFRepresentation];
+								NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
+								
+								imageData = [bitmapRep representationUsingType:NSPNGFileType properties:nil];
+								extension = @"png";
+								[image release];
+							}
+
+							filename = [filename stringByAppendingPathExtension:extension];
 						}
 
 						/* XXX Are we leaking every image added here? Where should it be unref'd? */
