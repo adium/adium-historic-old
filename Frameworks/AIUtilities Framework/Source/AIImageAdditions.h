@@ -21,9 +21,23 @@ typedef enum {
 	IMAGE_POSITION_LOWER_RIGHT
 } IMAGE_POSITION;
 
+typedef enum {
+	AIUnknownFileType = -9999,
+	AITIFFFileType = NSTIFFFileType,
+    AIBMPFileType = NSBMPFileType,
+    AIGIFFileType = NSGIFFileType,
+    AIJPEGFileType = NSJPEGFileType,
+    AIPNGFileType = NSPNGFileType,
+    AIJPEG2000FileType = NSJPEG2000FileType
+} AIBitmapImageFileType;
+
 @interface NSImage (AIImageAdditions)
 
 + (NSImage *)imageNamed:(NSString *)name forClass:(Class)inClass;
+
++ (AIBitmapImageFileType)fileTypeOfData:(NSData *)inData;
++ (NSString *)extensionForBitmapImageFileType:(AIBitmapImageFileType)inFileType;
+
 - (NSData *)JPEGRepresentation;
 - (NSData *)JPEGRepresentationWithCompressionFactor:(float)compressionFactor;
 - (NSData *)PNGRepresentation;
