@@ -529,4 +529,55 @@
 	return [self getBitmap];
 }
 
++ (AIBitmapImageFileType)fileTypeOfData:(NSData *)inData
+{
+	const char *data = [inData bytes];
+	unsigned len = [inData length];
+	AIBitmapImageFileType fileType = AIUnknownFileType;
+
+	if (len >= 4) {
+		if (!strncmp((char *)data, "GIF8", 4))
+			fileType = AIGIFFileType;
+		else if (!strncmp((char *)data, "\xff\xd8\xff\xe0", 4))
+			fileType = AIJPEGFileType;
+		else if (!strncmp((char *)data, "\x89PNG", 4))
+			fileType = AIPNGFileType;
+		else if (!strncmp((char *)data, "MM", 2))
+			fileType = AITIFFFileType;
+		else if (!strncmp((char *)data, "BM", 2))
+			fileType = AIBMPFileType;
+	}
+	
+	return fileType;
+}
+
++ (NSString *)extensionForBitmapImageFileType:(AIBitmapImageFileType)inFileType
+{
+	NSString *extension = nil;
+	switch (inFileType) {
+		case AIUnknownFileType:
+			break;
+		case AITIFFFileType:
+			extension = @"tif";
+			break;
+		case AIBMPFileType:
+			extension = @"bmp";
+			break;
+		case AIGIFFileType:
+			extension = @"gif";
+			break;
+		case AIJPEGFileType:
+			extension = @"jpg";
+			break;
+		case AIPNGFileType:
+			extension = @"png";
+			break;
+		case AIJPEG2000FileType:
+			extension = @"jp2";
+			break;
+	}
+	
+	return extension;
+}
+
 @end
