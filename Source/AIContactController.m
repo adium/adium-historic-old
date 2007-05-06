@@ -1883,12 +1883,12 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
  */
 - (void)didSendContent:(NSNotification *)notification
 {
-    AIChat			*chat = [[notification userInfo] objectForKey:@"AIChat"];
-    AIListContact	*destContact = [chat listObject];
-    AIListContact	*metaContact = [destContact parentContact];
+	AIChat			*chat = [[notification userInfo] objectForKey:@"AIChat"];
+	AIListContact	*destContact = [chat listObject];
+	AIListContact	*metaContact = [destContact parentContact];
 
 	//it's not particularly obvious from the name, but -parentContact can return self
-    if (metaContact == destContact) return;
+	if (metaContact == destContact) return;
 	
 	NSString	*destinationInternalObjectID = [destContact internalObjectID];
 	NSString	*currentPreferredDestination = [metaContact preferenceForKey:KEY_PREFERRED_DESTINATION_CONTACT
