@@ -107,10 +107,17 @@
 /*!
  * @brief Perform actions before the view closes
  */
-- (void)dealloc
+- (void)viewWillClose
 {
 	[[adium contactController] unregisterListObjectObserver:self];
 	[[adium notificationCenter] removeObserver:self];
+	
+	[accountArray release]; accountArray = nil;
+}
+
+- (void)dealloc
+{
+	[accountArray release];
 
 	[super dealloc];
 }
