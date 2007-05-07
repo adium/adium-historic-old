@@ -179,7 +179,7 @@
         
 		if (![[destObject preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT
 									 group:PREF_GROUP_PREFERRED_ACCOUNTS
-					ignoreInheritiedValues:YES] isEqualToString:[sourceAccount internalObjectID]]) {
+					ignoreInheritedValues:YES] isEqualToString:[sourceAccount internalObjectID]]) {
 			[destObject setPreference:[sourceAccount internalObjectID]
 							   forKey:KEY_PREFERRED_SOURCE_ACCOUNT
 								group:PREF_GROUP_PREFERRED_ACCOUNTS];
