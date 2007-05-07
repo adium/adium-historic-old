@@ -18,7 +18,6 @@
 #import "AIChatLog.h"
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
-#import "AILogViewerWindowController.h"
 #import "AIMDLogViewerWindowController.h"
 #import "AIXMLAppender.h"
 #import <Adium/AIContentControllerProtocol.h>
@@ -99,9 +98,8 @@ Class LogViewerWindowControllerClass = NULL;
 //
 - (void)installPlugin
 {
-	LogViewerWindowControllerClass = ([NSApp isOnTigerOrBetter] ?
-									  [AIMDLogViewerWindowController class] :
-									  [AILogViewerWindowController class]);
+	//XXX: this should be refactored now that we can rely on Tiger.
+	LogViewerWindowControllerClass = [AIMDLogViewerWindowController class];
 
     //Init
 	observingContent = NO;
@@ -842,18 +840,13 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
     if (!newIndex) {
 		NSDictionary *textAnalysisProperties;
 		
-		if ([NSApp isOnTigerOrBetter]) {
-			textAnalysisProperties = [NSDictionary dictionaryWithObjectsAndKeys:
-				[NSNumber numberWithInt:0], kSKMaximumTerms,
-				[NSNumber numberWithInt:2], kSKMinTermLength,
+		textAnalysisProperties = [NSDictionary dictionaryWithObjectsAndKeys:
+			[NSNumber numberWithInt:0], kSKMaximumTerms,
+			[NSNumber numberWithInt:2], kSKMinTermLength,
 #if ENABLE_PROXIMITY_SEARCH
-				kCFBooleanTrue, kSKProximityIndexing, 
+			kCFBooleanTrue, kSKProximityIndexing, 
 #endif
-				nil];
-
-		} else {
-			textAnalysisProperties = nil;
-		}
+			nil];
 
 		//Create the index if one doesn't exist
 		[[NSFileManager defaultManager] createDirectoriesForPath:[logIndexPath stringByDeletingLastPathComponent]];

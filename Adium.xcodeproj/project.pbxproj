@@ -215,7 +215,6 @@
 		34500ED00A881F8500509225 /* PurpleDefaultsQQ.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3419E74B0A880C0900C3FC68 /* PurpleDefaultsQQ.plist */; };
 		3456231C0A3771D800E7FC97 /* ESRankingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3456231A0A3771D800E7FC97 /* ESRankingCell.m */; };
 		345623200A3771E100E7FC97 /* AIChatLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3456231E0A3771E100E7FC97 /* AIChatLog.m */; };
-		345623280A3771F400E7FC97 /* AILogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 345623220A3771F300E7FC97 /* AILogViewerWindowController.m */; };
 		3456232A0A3771F400E7FC97 /* AILogToGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 345623240A3771F300E7FC97 /* AILogToGroup.m */; };
 		3456232C0A3771F400E7FC97 /* AILogFromGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 345623260A3771F400E7FC97 /* AILogFromGroup.m */; };
 		3456232F0A37723400E7FC97 /* LogViewer.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3456232E0A37723400E7FC97 /* LogViewer.nib */; };
@@ -508,7 +507,6 @@
 		34B4B5A40708B049002C4C6D /* ESDebugController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B4B5A20708B049002C4C6D /* ESDebugController.m */; };
 		34B588A1058D833A00E7EF0D /* ExceptionHandling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B588A0058D833A00E7EF0D /* ExceptionHandling.framework */; };
 		34B5E2600A7C94D3005186E6 /* AILogDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B5E25E0A7C94D3005186E6 /* AILogDateFormatter.m */; };
-		34B9C7900A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34B9C78F0A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib */; };
 		34B9C7920A255DCE00CEA8AE /* LogViewerDateFilter.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34B9C7910A255DCE00CEA8AE /* LogViewerDateFilter.nib */; };
 		34BC8F7B0ACA3AAC00562745 /* AIScannerDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BC8F790ACA3AAC00562745 /* AIScannerDebug.m */; };
 		34BD9D4A053146CC000AB133 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = F59DB6AD033EB74801A8010A /* main.m */; };
@@ -2025,8 +2023,6 @@
 		3456231B0A3771D800E7FC97 /* ESRankingCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESRankingCell.h; path = Source/ESRankingCell.h; sourceTree = "<group>"; };
 		3456231E0A3771E100E7FC97 /* AIChatLog.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIChatLog.m; path = Source/AIChatLog.m; sourceTree = "<group>"; };
 		3456231F0A3771E100E7FC97 /* AIChatLog.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIChatLog.h; path = Source/AIChatLog.h; sourceTree = "<group>"; };
-		345623220A3771F300E7FC97 /* AILogViewerWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILogViewerWindowController.m; path = Source/AILogViewerWindowController.m; sourceTree = "<group>"; };
-		345623230A3771F300E7FC97 /* AILogViewerWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILogViewerWindowController.h; path = Source/AILogViewerWindowController.h; sourceTree = "<group>"; };
 		345623240A3771F300E7FC97 /* AILogToGroup.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILogToGroup.m; path = Source/AILogToGroup.m; sourceTree = "<group>"; };
 		345623250A3771F400E7FC97 /* AILogToGroup.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILogToGroup.h; path = Source/AILogToGroup.h; sourceTree = "<group>"; };
 		345623260A3771F400E7FC97 /* AILogFromGroup.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILogFromGroup.m; path = Source/AILogFromGroup.m; sourceTree = "<group>"; };
@@ -2701,7 +2697,6 @@
 		34B919C9062DEF15004F1223 /* CBOscarService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBOscarService.h; path = "Plugins/Purple Service/CBOscarService.h"; sourceTree = "<group>"; };
 		34B919CA062DEF15004F1223 /* CBOscarService.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBOscarService.m; path = "Plugins/Purple Service/CBOscarService.m"; sourceTree = "<group>"; };
 		34B995D9092A832700E31E91 /* FontPanelAccessoryView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = FontPanelAccessoryView.nib; path = Resources/FontPanelAccessoryView.nib; sourceTree = "<group>"; };
-		34B9C78F0A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = "LogViewerDateFilter-Panther.nib"; path = "Resources/LogViewerDateFilter-Panther.nib"; sourceTree = "<group>"; };
 		34B9C7910A255DCE00CEA8AE /* LogViewerDateFilter.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = LogViewerDateFilter.nib; path = Resources/LogViewerDateFilter.nib; sourceTree = "<group>"; };
 		34BBE0E907A2ECCF00663CC9 /* adiumPurpleConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = adiumPurpleConnection.h; path = "Plugins/Purple Service/adiumPurpleConnection.h"; sourceTree = "<group>"; };
 		34BBE0EA07A2ECD000663CC9 /* adiumPurpleConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumPurpleConnection.m; path = "Plugins/Purple Service/adiumPurpleConnection.m"; sourceTree = "<group>"; };
@@ -6011,14 +6006,11 @@
 				345623240A3771F300E7FC97 /* AILogToGroup.m */,
 				345623270A3771F400E7FC97 /* AILogFromGroup.h */,
 				345623260A3771F400E7FC97 /* AILogFromGroup.m */,
-				345623230A3771F300E7FC97 /* AILogViewerWindowController.h */,
-				345623220A3771F300E7FC97 /* AILogViewerWindowController.m */,
 				3410745D09B6965600565C9E /* AIMDLogViewerWindowController.h */,
 				3410745E09B6965700565C9E /* AIMDLogViewerWindowController.m */,
 				3456232E0A37723400E7FC97 /* LogViewer.nib */,
 				342353D409D45725009FF634 /* AIAbstractLogViewerWindowController.h */,
 				342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */,
-				34B9C78F0A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib */,
 				34B9C7910A255DCE00CEA8AE /* LogViewerDateFilter.nib */,
 				34F849560A4AF04D0002A017 /* AILogFileUpgradeWindowController.h */,
 				34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */,
@@ -7753,7 +7745,6 @@
 				343ECBEE0971B18E00349098 /* ShowContactInfoPrompt.nib in Resources */,
 				347EAB2D09721D490090EA6E /* pref-personal.png in Resources */,
 				34107B5609E992DA001CC042 /* GuestAccountWindow.nib in Resources */,
-				34B9C7900A255DB800CEA8AE /* LogViewerDateFilter-Panther.nib in Resources */,
 				34B9C7920A255DCE00CEA8AE /* LogViewerDateFilter.nib in Resources */,
 				3456232F0A37723400E7FC97 /* LogViewer.nib in Resources */,
 				345623380A3773C300E7FC97 /* LoggingDefaults.plist in Resources */,
@@ -8308,7 +8299,6 @@
 				342F88D30A2A74EB0001DB29 /* PTHotKey.m in Sources */,
 				3456231C0A3771D800E7FC97 /* ESRankingCell.m in Sources */,
 				345623200A3771E100E7FC97 /* AIChatLog.m in Sources */,
-				345623280A3771F400E7FC97 /* AILogViewerWindowController.m in Sources */,
 				3456232A0A3771F400E7FC97 /* AILogToGroup.m in Sources */,
 				3456232C0A3771F400E7FC97 /* AILogFromGroup.m in Sources */,
 				3456233F0A3773D100E7FC97 /* AILoggerPlugin.m in Sources */,
