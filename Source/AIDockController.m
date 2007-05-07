@@ -47,12 +47,6 @@
 - (void)updateAppBundleIcon;
 @end
 
-#ifndef MAC_OS_X_10_4
-@interface NSWorkspace (NewTigerMethod)
-- (BOOL)setIcon:(NSImage *)image forFile:(NSString *)fullPath options:(unsigned)options;
-@end
-#endif
-
 @implementation AIDockController
  
 //init and close
