@@ -5,13 +5,13 @@
 //  Created by Evan Schoenberg on 3/24/06.
 //
 
+#import "AIAbstractLogViewerWindowController.h"
 #import <Adium/AIAccountControllerProtocol.h>
 #import "AIChatLog.h"
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
-#import "AILogViewerWindowController.h"
 #import "AILoggerPlugin.h"
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import "ESRankingCell.h" 
