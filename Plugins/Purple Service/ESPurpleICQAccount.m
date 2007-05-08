@@ -49,18 +49,6 @@
 	purple_account_set_bool(account, "web_aware", [[self preferenceForKey:KEY_ICQ_WEB_AWARE group:GROUP_ACCOUNT_STATUS] boolValue]);
 }
 
-- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
-{
-	//As an ICQ account we should always send plain text, so no more complex checking is needed
-	return [[inAttributedString attributedStringByConvertingLinksToStrings] string];
-}
-
-//CBPurpleOscarAccount does complex things here, but ICQ can just perform a normal encodedAttributedString:forListObject
-- (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
-{		
-	return [self encodedAttributedString:[inContentMessage message] forListObject:[inContentMessage destination]];
-}
-
 /*!
  * @brief Setting aliases serverside would override the information Purple is feeding us
  */
