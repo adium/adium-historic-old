@@ -17,24 +17,6 @@
 #import "CBPurpleAccount.h"
 #import <Libpurple/oscar.h>
 
-@class AIHTMLDecoder;
-
-struct buddyinfo {
-	gboolean typingnot;
-	guint32 ipaddr;
-	
-	unsigned long ico_me_len;
-	unsigned long ico_me_csum;
-	time_t ico_me_time;
-	gboolean ico_informed;
-	
-	unsigned long ico_len;
-	unsigned long ico_csum;
-	time_t ico_time;
-	gboolean ico_need;
-	gboolean ico_sent;
-};
-
 //From oscar.c
 #define OSCAR_STATUS_ID_INVISIBLE	"invisible"
 #define OSCAR_STATUS_ID_OFFLINE		"offline"
@@ -46,13 +28,11 @@ struct buddyinfo {
 #define OSCAR_STATUS_ID_FREE4CHAT	"free4chat"
 #define OSCAR_STATUS_ID_CUSTOM		"custom"
 
-@class AIHTMLDecoder;
-
 @interface CBPurpleOscarAccount : CBPurpleAccount  <AIAccount_Files> {
-	AIHTMLDecoder	*oscarPurpleThreadHTMLDecoder;
-	
 	NSTimer			*delayedSignonUpdateTimer;
 	NSMutableArray  *arrayOfContactsForDelayedUpdates;
+	
+	NSMutableDictionary	*directIMQueue;
 }
 
 @end
