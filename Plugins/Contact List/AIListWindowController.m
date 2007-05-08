@@ -204,6 +204,12 @@
 	[adiumNotificationCenter postNotificationName:Interface_ContactListDidClose object:self];
 }
 
+- (void)setWindowLevel:(int)level
+{
+	[[self window] setLevel:level];
+	[[self window] setIgnoresExpose:(level == kCGBackstopMenuLevel)]; //Ignore expose while on the desktop
+}
+
 //Preferences have changed
 - (void)preferencesChangedForGroup:(NSString *)group 
 							   key:(NSString *)key
@@ -215,16 +221,15 @@
 
     if ([group isEqualToString:PREF_GROUP_CONTACT_LIST]) {
 		AIWindowLevel	windowLevel = [[prefDict objectForKey:KEY_CL_WINDOW_LEVEL] intValue];
-		int				level = NSNormalWindowLevel;
+		int				level;
 		
 		switch (windowLevel) {
 			case AINormalWindowLevel: level = NSNormalWindowLevel; break;
 			case AIFloatingWindowLevel: level = NSFloatingWindowLevel; break;
 			case AIDesktopWindowLevel: level = kCGBackstopMenuLevel; break;
+			default: level = NSNormalWindowLevel; break;
 		}
-
-		[[self window] setLevel:level];
-		[[self window] setIgnoresExpose:(windowLevel == AIDesktopWindowLevel)]; //Ignore expose while on the desktop
+		[self setWindowLevel:level];
 
 		listHasShadow = [[prefDict objectForKey:KEY_CL_WINDOW_HAS_SHADOW] boolValue];
 		[[self window] setHasShadow:listHasShadow];
@@ -579,16 +584,41 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 - (void)slideWindowIfNeeded:(id)sender
 {
 	if ([self shouldSlideWindowOnScreen]) {
+		//If we're hiding the window (generally) but now sliding it on screen, make sure it's on top
+		if (windowHidingStyle == AIContactListWindowHidingStyleSliding) {
+			previousWindowLevel = [[self window] level];
+			[self setWindowLevel:NSFloatingWindowLevel];
+			overrodeWindowLevel = YES;
+		}
+
 		[self slideWindowOnScreen];
 
 	} else if ([self shouldSlideWindowOffScreen]) {
 		AIRectEdgeMask adjacentEdges = [self slidableEdgesAdjacentToWindow];
-		
+
         if (adjacentEdges & (AIMinXEdgeMask | AIMaxXEdgeMask)) {
             [self slideWindowOffScreenEdges:(adjacentEdges & (AIMinXEdgeMask | AIMaxXEdgeMask))];
 		} else {
             [self slideWindowOffScreenEdges:adjacentEdges];
 		}
+
+		//If we're hiding the window (generally) but now sliding it off screen, make sure it's at its old value
+		if (overrodeWindowLevel &&
+			windowHidingStyle == AIContactListWindowHidingStyleSliding) {
+			[self setWindowLevel:previousWindowLevel];
+			overrodeWindowLevel = NO;
+		}
+		
+	} else if (overrodeWindowLevel &&
+			   ([self slidableEdgesAdjacentToWindow] == AINoEdges) &&
+			   ([self windowSlidOffScreenEdgeMask] == AINoEdges)) {
+		/* If the window level was overridden at some point and now we:
+		 *   1. Are on screen AND
+		 *   2. No longer have any edges eligible for sliding
+		 * we should restore our window level.
+		 */
+		[self setWindowLevel:previousWindowLevel];
+		overrodeWindowLevel = NO;
 	}
 }
 
