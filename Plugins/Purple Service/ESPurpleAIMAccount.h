@@ -9,7 +9,7 @@
 #import "CBPurpleOscarAccount.h"
 
 @interface ESPurpleAIMAccount : CBPurpleOscarAccount {
-	NSMutableDictionary	*directIMQueue;
+
 }
 
 @end

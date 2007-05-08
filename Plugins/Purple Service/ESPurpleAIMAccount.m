@@ -7,11 +7,9 @@
 //
 
 #import "ESPurpleAIMAccount.h"
-#import <Adium/AIChatControllerProtocol.h>
-#import <Adium/AIContactControllerProtocol.h>
-#import <Adium/AIContentControllerProtocol.h>
-#import <Adium/AIPreferenceControllerProtocol.h>
 #import "SLPurpleCocoaAdapter.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
@@ -25,19 +23,12 @@
 
 @interface ESPurpleAIMAccount (PRIVATE)
 - (NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding;
-- (NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString;
 - (void)setFormattedUID;
 
 - (void)updateInfo:(AIListContact *)theContact;
 @end
 
 @implementation ESPurpleAIMAccount
-
-static BOOL				createdEncoders = NO;
-static AIHTMLDecoder	*encoderCloseFontTagsAttachmentsAsText = nil;
-static AIHTMLDecoder	*encoderCloseFontTags = nil;
-static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
-static AIHTMLDecoder	*encoderGroupChat = nil;
 
 #pragma mark Initialization and setup
 
@@ -50,68 +41,9 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 {
 	[super initAccount];
 
-	//XXX
-	[SLPurpleCocoaAdapter sharedInstance];
-
 	arrayOfContactsForDelayedUpdates = nil;
 	delayedSignonUpdateTimer = nil;
 	
-	if (!createdEncoders) {
-		encoderCloseFontTagsAttachmentsAsText = [[AIHTMLDecoder alloc] init];
-		[encoderCloseFontTagsAttachmentsAsText setIncludesHeaders:YES];
-		[encoderCloseFontTagsAttachmentsAsText setIncludesFontTags:YES];
-		[encoderCloseFontTagsAttachmentsAsText setClosesFontTags:YES];
-		[encoderCloseFontTagsAttachmentsAsText setIncludesStyleTags:YES];
-		[encoderCloseFontTagsAttachmentsAsText setIncludesColorTags:YES];
-		[encoderCloseFontTagsAttachmentsAsText setEncodesNonASCII:NO];
-		[encoderCloseFontTagsAttachmentsAsText setPreservesAllSpaces:NO];
-		[encoderCloseFontTagsAttachmentsAsText setUsesAttachmentTextEquivalents:YES];
-		[encoderCloseFontTagsAttachmentsAsText setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
-		[encoderCloseFontTagsAttachmentsAsText setOnlyUsesSimpleTags:NO];
-		[encoderCloseFontTagsAttachmentsAsText setAllowAIMsubprofileLinks:YES];
-		
-		encoderCloseFontTags = [[AIHTMLDecoder alloc] init];
-		[encoderCloseFontTags setIncludesHeaders:YES];
-		[encoderCloseFontTags setIncludesFontTags:YES];
-		[encoderCloseFontTags setClosesFontTags:YES];
-		[encoderCloseFontTags setIncludesStyleTags:YES];
-		[encoderCloseFontTags setIncludesColorTags:YES];
-		[encoderCloseFontTags setEncodesNonASCII:NO];
-		[encoderCloseFontTags setPreservesAllSpaces:NO];
-		[encoderCloseFontTags setUsesAttachmentTextEquivalents:NO];
-		[encoderCloseFontTags setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
-		[encoderCloseFontTags setOnlyUsesSimpleTags:NO];
-		[encoderCloseFontTags setAllowAIMsubprofileLinks:YES];
-
-		encoderAttachmentsAsText = [[AIHTMLDecoder alloc] init];
-		[encoderAttachmentsAsText setIncludesHeaders:YES];
-		[encoderAttachmentsAsText setIncludesFontTags:YES];
-		[encoderAttachmentsAsText setClosesFontTags:NO];
-		[encoderAttachmentsAsText setIncludesStyleTags:YES];
-		[encoderAttachmentsAsText setIncludesColorTags:YES];
-		[encoderAttachmentsAsText setEncodesNonASCII:NO];
-		[encoderAttachmentsAsText setPreservesAllSpaces:NO];
-		[encoderAttachmentsAsText setUsesAttachmentTextEquivalents:YES];
-		[encoderAttachmentsAsText setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
-		[encoderAttachmentsAsText setOnlyUsesSimpleTags:NO];
-		[encoderAttachmentsAsText setAllowAIMsubprofileLinks:YES];
-
-		encoderGroupChat = [[AIHTMLDecoder alloc] init];
-		[encoderGroupChat setIncludesHeaders:NO];
-		[encoderGroupChat setIncludesFontTags:YES];
-		[encoderGroupChat setClosesFontTags:NO];
-		[encoderGroupChat setIncludesStyleTags:YES];
-		[encoderGroupChat setIncludesColorTags:YES];
-		[encoderGroupChat setEncodesNonASCII:NO];
-		[encoderGroupChat setPreservesAllSpaces:NO];
-		[encoderGroupChat setUsesAttachmentTextEquivalents:YES];
-		[encoderGroupChat setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
-		[encoderGroupChat setOnlyUsesSimpleTags:YES];
-		[encoderGroupChat setAllowAIMsubprofileLinks:YES];
-
-		createdEncoders = YES;
-	}
-
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_NOTES];
 }
 
@@ -156,156 +88,6 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	}
 }
 
-#pragma mark Encoding attributed strings
-//AIM doesn't require we close our tags, so don't waste the characters
-- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
-{
-	if (![inAttributedString length]) return nil;
-
-	NSString	*returnString;
-	
-	//We don't want to send HTML to ICQ users, or mobile phone users
-	if (inListObject) {
-		BOOL		nonHTMLUser;
-		char		firstCharacter = [[inListObject UID] characterAtIndex:0];
-
-	    nonHTMLUser = ((firstCharacter >= '0' && firstCharacter <= '9') || firstCharacter == '+');
-		
-		if (nonHTMLUser) {
-			returnString = [[inAttributedString attributedStringByConvertingLinksToStrings] string];
-		} else {
-			returnString = [encoderCloseFontTagsAttachmentsAsText encodeHTML:inAttributedString
-																  imagesPath:nil];
-		}
-
-	} else {
-		returnString = [encoderCloseFontTagsAttachmentsAsText encodeHTML:inAttributedString
-															  imagesPath:nil];
-		AILog(@"Encoded to %@ for no contact",returnString);
-	}
-	
-	return returnString;
-}
-
-- (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
-{		
-	AIListObject *inListObject = [inContentMessage destination];
-	NSAttributedString *inAttributedString = [inContentMessage message];
-
-	if (inListObject) {
-		BOOL		nonHTMLUser = NO;
-		char		firstCharacter = [[inListObject UID] characterAtIndex:0];
-		nonHTMLUser = ((firstCharacter >= '0' && firstCharacter <= '9') || firstCharacter == '+');
-		
-		if (nonHTMLUser) {
-			//We don't want to send HTML to ICQ users, or mobile phone users
-			return ([[inAttributedString attributedStringByConvertingLinksToStrings] string]);
-			
-		} else {
-			//We have a list object and are sending both to and from an AIM account; encode to HTML and look for outgoing images
-			NSString	*returnString;
-			
-			returnString = [encoderCloseFontTags encodeHTML:inAttributedString
-												 imagesPath:@"/tmp"];
-			
-			if ([returnString rangeOfString:@"<IMG " options:NSCaseInsensitiveSearch].location != NSNotFound) {
-				//There's an image... we need to see about a Direct Connect, aborting the send attempt if none is established 
-				//and sending after it is if one is established
-				
-				//Check for a PeerConnection for a direct IM currently open
-				PeerConnection	*conn;
-				OscarData		*od = (OscarData *)account->gc->proto_data;
-				const char		*who = [[inListObject UID] UTF8String];
-				
-				conn = peer_connection_find_by_type(od, who, OSCAR_CAPABILITY_DIRECTIM);
-				
-				returnString = [self stringByProcessingImgTagsForDirectIM:returnString];
-
-				if ((conn != NULL) && (conn->ready)) {
-					//We have a connected dim already; simply continue, and we'll be told to send it in a moment
-					
-				} else {
-					//Either no dim, or the dim we have is no longer conected (oscar_direct_im_initiate_immediately will reconnect it)						
-					peer_connection_propose(od, OSCAR_CAPABILITY_DIRECTIM, who);
-					
-					//Add this content message to the sending queue for this contact to be sent once a connection is established
-					if (!directIMQueue) directIMQueue = [[NSMutableDictionary alloc] init];
-					
-					NSMutableArray	*thisContactQueue = [directIMQueue objectForKey:[inListObject internalObjectID]];
-					if (!thisContactQueue) {
-						thisContactQueue = [NSMutableArray array];
-						
-						[directIMQueue setObject:thisContactQueue
-										  forKey:[inListObject internalObjectID]];
-					}
-					
-					[thisContactQueue addObject:inContentMessage];
-				}
-			}
-			
-			return (returnString);
-		}
-
-	} else { //Send HTML when signed in as an AIM account and we don't know what sort of user we are sending to (most likely multiuser chat)
-		AILog(@"Encoding %@ for no contact",inAttributedString);
-		return [encoderGroupChat encodeHTML:inAttributedString
-								 imagesPath:nil];
-	}
-}
-
-/*!
- * @brief Can we send images for this chat?
- */
-- (BOOL)canSendImagesForChat:(AIChat *)inChat
-{	
-	if ([inChat isGroupChat]) return NO;
-
-	OscarData *od = ((account && account->gc) ? account->gc->proto_data : NULL);
-	if (od) {
-		AIListObject *listObject = [inChat listObject];
-		const char *contactUID = [[listObject UID] UTF8String];
-		aim_userinfo_t *userinfo = aim_locate_finduserinfo(od, contactUID);
-		
-		if (userinfo &&
-			aim_sncmp(purple_account_get_username(account), contactUID) &&
-			[listObject online]) {
-			return (userinfo->capabilities & OSCAR_CAPABILITY_DIRECTIM);
-
-		} else {
-			return NO;
-		}
-
-	} else {
-		return NO;
-	}
-}
-
-- (BOOL)sendMessageObject:(AIContentMessage *)inContentMessage
-{
-	if (directIMQueue) {
-		NSMutableArray	*thisContactQueue = [directIMQueue objectForKey:[[inContentMessage destination] internalObjectID]];
-		if ([thisContactQueue containsObject:inContentMessage]) {
-			//This message is in our queue of messages to send...
-			PeerConnection	*conn;
-			OscarData		*od = (OscarData *)account->gc->proto_data;
-			const char		*who = [[[inContentMessage destination] UID] UTF8String];
-			
-			conn = peer_connection_find_by_type(od, who, OSCAR_CAPABILITY_DIRECTIM);
-			
-			if ((conn != NULL) && (conn->ready)) {
-				//We have a connected dim ready; send it!  We already displayed it, though, so don't do that.
-				[inContentMessage setDisplayContent:NO];
-				return [super sendMessageObject:inContentMessage];
-			} else {
-				//Don't send now, as we'll do the actual send when the dim is connected, in directIMConnected: above, and return here.
-				return YES;				
-			}
-		}
-	}
-
-	return [super sendMessageObject:inContentMessage];
-}
-
 #pragma mark Account Action Menu Items
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
@@ -320,108 +102,6 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	}
 
 	return [super titleForAccountActionMenuLabel:label];
-}
-
-#pragma mark DirectIM (IM Image)
-//We are now connected via DirectIM to theContact
-- (void)directIMConnected:(AIListContact *)theContact
-{
-	AILog(@"Direct IM Connected: %@",[theContact UID]);
-
-	[[adium contentController] displayEvent:AILocalizedString(@"Direct IM connected","Direct IM is an AIM-specific phrase for transferring images in the message window")
-									 ofType:@"directIMConnected"
-									 inChat:[[adium chatController] chatWithContact:theContact]];
-	//Send any pending directIM messages for this contact
-	NSMutableArray	*thisContactQueue = [directIMQueue objectForKey:[theContact internalObjectID]];
-	if (thisContactQueue) {
-		NSEnumerator	*enumerator;
-		AIContentObject	*contentObject;
-		
-		enumerator = [thisContactQueue objectEnumerator];
-		while ((contentObject = [enumerator nextObject])) {
-			[[adium contentController] sendContentObject:contentObject];
-		}
-		
-		[directIMQueue removeObjectForKey:[theContact internalObjectID]];
-		
-		if (![directIMQueue count]) {
-			[directIMQueue release]; directIMQueue = nil;
-		}
-	}
-}
-
-- (void)directIMDisconnected:(AIListContact *)theContact
-{
-	AILog(@"Direct IM Disconnected: %@",[theContact UID]);	
-
-	[[adium contentController] displayEvent:AILocalizedString(@"Direct IM disconnected","Direct IM is an AIM-specific phrase for transferring images in the message window")
-									 ofType:@"directIMDisconnected"
-									 inChat:[[adium chatController] chatWithContact:theContact]];	
-}
-
-- (NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString
-{
-	NSScanner			*scanner;
-
-	static NSCharacterSet *elementEndCharacters = nil;
-	if (!elementEndCharacters)
-		elementEndCharacters = [[NSCharacterSet characterSetWithCharactersInString:@" >"] retain];
-	static NSString		*tagStart = @"<", *tagEnd = @">";
-	NSString			*chunkString;
-	NSMutableString		*processedString;
-	
-    scanner = [NSScanner scannerWithString:inString];
-	[scanner setCaseSensitive:NO];
-    [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
-	
-	processedString = [[NSMutableString alloc] init];
-	
-    //Parse the HTML
-    while (![scanner isAtEnd]) {
-        //Find an HTML IMG tag
-        if ([scanner scanUpToString:@"<img" intoString:&chunkString]) {
-			//Append the text leading up the the IMG tag; a directIM may have image tags inline with message text
-            [processedString appendString:chunkString];
-        }
-		
-        //Look for the start of a tag
-        if ([scanner scanString:tagStart intoString:nil]) {
-			//Get the tag itself
-			if ([scanner scanUpToCharactersFromSet:elementEndCharacters intoString:&chunkString]) {
-				if ([chunkString caseInsensitiveCompare:@"IMG"] == NSOrderedSame) {
-					if ([scanner scanUpToString:tagEnd intoString:&chunkString]) {
-						
-						//Load the src image
-						NSDictionary	*imgArguments = [AIHTMLDecoder parseArguments:chunkString];
-						NSString		*source = [imgArguments objectForKey:@"src"];
-						NSString		*alt = [imgArguments objectForKey:@"alt"];
-						NSString		*filename;
-						NSData			*imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:source]];
-						
-						//Store the src image's data gaimside
-						filename = (alt ? alt : [source lastPathComponent]);
-						if (![[filename pathExtension] length]) {
-							filename = [filename stringByAppendingPathExtension:@"png"];
-						}
-
-						/* XXX Are we leaking every image added here? Where should it be unref'd? */
-						int	imgstore = purple_imgstore_add_with_id((gpointer)[imageData bytes], [imageData length], [filename UTF8String]);
-
-						AILog(@"Adding image id %i with name %s", imgstore, (filename ? [filename UTF8String] : "(null)"));
-
-						NSString		*newTag = [NSString stringWithFormat:@"<IMG ID=\"%i\" CLASS=\"scaledToFitImage\">",imgstore];
-						[processedString appendString:newTag];
-					}
-				}
-				
-				if (![scanner isAtEnd]) {
-					[scanner setScanLocation:[scanner scanLocation]+1];
-				}
-			}
-		}
-	}
-	
-	return ([processedString autorelease]);
 }
 
 #pragma mark Contact updates
@@ -450,6 +130,33 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	}
 	
 	[super updateContact:theContact forEvent:event];
+}
+
+- (NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding
+{
+	//Default to UTF-8
+	NSStringEncoding	desiredEncoding = NSUTF8StringEncoding;
+	
+	//Only attempt to check encoding if we were passed one
+	if (encoding && (encoding[0] != '\0')) {
+		NSString	*encodingString = [NSString stringWithUTF8String:encoding];
+		NSRange		encodingRange;
+		
+		encodingRange = (encodingString ? [encodingString rangeOfString:@"charset=\""] : NSMakeRange(NSNotFound, 0));
+		if (encodingRange.location != NSNotFound) {
+			encodingString = [encodingString substringWithRange:NSMakeRange(NSMaxRange(encodingRange),
+																			[encodingString length] - NSMaxRange(encodingRange) - 1)];
+			if (encodingString && [encodingString length]) {
+				desiredEncoding = CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding((CFStringRef)encodingString));
+				
+				if (desiredEncoding == kCFStringEncodingInvalidId) {
+					desiredEncoding = NSUTF8StringEncoding;
+				}
+			}
+		}
+	}
+	
+	return [[[NSString alloc] initWithBytes:bytes length:length encoding:desiredEncoding] autorelease];
 }
 
 - (void)updateInfo:(AIListContact *)theContact
