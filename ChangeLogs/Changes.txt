@@ -1,8 +1,8 @@
 				Adium X Version History
 				-----------------------
-Version 1.0.3
+Version 1.0.3 (5/9/2007)
  * Fixed a major memory leak after closing chats present since Adium 1.0
- * Updated to libpurple 2.0.0 (from libpurple 2.0.0 beta)
+ * Updated to [http://pidgin.im libpurple] 2.0.0 (from libpurple 2.0.0 beta)
    * Improved retrieval of MSN buddy icons
    * Fixed setting our own buddy icon in some situations in which it would not be set previously
    * Fixed determination of encoding for some AIM profiles and messages (#6839)
@@ -26,11 +26,11 @@ Version 1.0.3
  * Improved icons for SIMPLE, QQ, and Zephyr, using [http://pidgin.im Pidgin]'s icons
  * Various localizability improvements
  * Switch to Smart Crash Reports for crash reporting.  This will only do anything if Smart Crash Reports is installed (see www.smartcrashreports.com); Adium does not install it.
- * (Portuguese) Fixed Personal preferences
  * (French) Fixed Encryption preferences
- * (Turkish) Fixed a crash on first launch
  * (German) Fixed advanced messages preferences (#6781)
- * Updated Japanese, zh_CN, zh_TW, Russian, French, pt_BR, Dutch, Turkish, German, Catalan, Czech, and Swedish translations
+ * (Portuguese) Fixed Personal preferences
+ * (Turkish) Fixed a crash on first launch
+ * Updated Catalan, Chinese (Simplified), Chinese (Traditional), Czech, Dutch, German, French, Italian, Japanese, Portuguese, Russian, Swedish, and Turkish translations
 
 
 Version 1.0.2 (3/25/2007)
