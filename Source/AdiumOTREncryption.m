@@ -52,7 +52,7 @@
 - (NSString *)localizedOTRMessage:(NSString *)message withUsername:(NSString *)username isWorthOpeningANewChat:(BOOL *)isWorthOpeningANewChat;
 - (void)notifyWithTitle:(NSString *)title primary:(NSString *)primary secondary:(NSString *)secondary;
 
-- (void)upgradeOTRFromGaimIfNeeded;
+- (void)upgradeOTRIfNeeded;
 @end
 
 @implementation AdiumOTREncryption
@@ -106,7 +106,7 @@ TrustLevel otrg_plugin_context_to_trust(ConnContext *context);
 	/* Initialize the OTR library */
 	OTRL_INIT;
 
-	[self upgradeOTRFromGaimIfNeeded];
+	[self upgradeOTRIfNeeded];
 
 	/* Make our OtrlUserState; we'll only use the one. */
 	otrg_plugin_userstate = otrl_userstate_create();
@@ -1153,7 +1153,7 @@ OtrlUserState otrg_get_userstate(void)
 	return sourcePrivateKey;
 }
 
-- (void)upgradeOTRFromGaimIfNeeded
+- (void)upgradeOTRIfNeeded
 {
 	if (![[[adium preferenceController] preferenceForKey:@"GaimOTR_to_AdiumOTR_Update"
 												   group:@"OTR"] boolValue]) {
@@ -1174,6 +1174,34 @@ OtrlUserState otrg_get_userstate(void)
 
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
 											 forKey:@"GaimOTR_to_AdiumOTR_Update"
+											  group:@"OTR"];
+	}
+	
+	if (![[[adium preferenceController] preferenceForKey:@"Libgaim_to_Libpurple_Update"
+												   group:@"OTR"] boolValue]) {
+		NSString	*destinationPath = [[adium loginController] userDirectory];
+		
+		NSString	*privateKeyPath = [destinationPath stringByAppendingPathComponent:@"otr.private_key"];
+		NSString	*fingerprintsPath = [destinationPath stringByAppendingPathComponent:@"otr.fingerprints"];
+
+		NSMutableString *privateKeys = [[NSString stringWithContentsOfUTF8File:privateKeyPath] mutableCopy];
+		[privateKeys replaceOccurrencesOfString:@"libgaim"
+									 withString:@"libpurple"
+										options:NSLiteralSearch
+										  range:NSMakeRange(0, [privateKeys length])];
+		[privateKeys writeToFile:privateKeyPath atomically:YES];
+		[privateKeys release];
+
+		NSMutableString *fingerprints = [[NSString stringWithContentsOfUTF8File:fingerprintsPath] mutableCopy];
+		[fingerprints replaceOccurrencesOfString:@"libgaim"
+									 withString:@"libpurple"
+										options:NSLiteralSearch
+										  range:NSMakeRange(0, [fingerprints length])];
+		[fingerprints writeToFile:fingerprintsPath atomically:YES];
+		[fingerprints release];
+
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
+											 forKey:@"Libgaim_to_Libpurple_Update"
 											  group:@"OTR"];
 	}
 }
