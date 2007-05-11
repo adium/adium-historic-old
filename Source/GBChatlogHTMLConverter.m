@@ -17,6 +17,10 @@
 #import "GBChatlogHTMLConverter.h"
 #import <AIUtilities/NSCalendarDate+ISO8601Parsing.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
+#import <Adium/AIListContact.h>
+#import "AIStandardListWindowController.h"
+#import "AIPreferenceController.h"
+#import "AIContactController.h"
 
 static void *createStructure(CFXMLParserRef parser, CFXMLNodeRef node, void *context);
 static void addChild(CFXMLParserRef parser, void *parent, void *child, void *context);
@@ -76,6 +80,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	[eventTranslate release];
 	[sender release];
 	[mySN release];
+	[service release];
 	[date release];
 	[status release];
 	[output release];
@@ -127,6 +132,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 			if([name isEqualToString:@"chat"])
 			{
 				mySN = [[attributes objectForKey:@"account"] retain];
+				service = [[attributes objectForKey:@"service"] retain];
 				state = XML_STATE_CHAT;
 			}
 			break;
@@ -197,6 +203,31 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				NSString *message = nil;
 				if(!empty)
 					message = [inputFileString substringWithRange:NSMakeRange(messageStart, end - messageStart - 11)];  // 10 for </message> and 1 for the index being off
+				NSString *shownSender;
+				NSString *cssClass;
+				NSString *displayName = nil;
+				if([mySN isEqualToString:sender])
+				{
+					AIAccount *activeAccount = [AIStandardListWindowController activeAccountForDisplayNameGettingOnlineAccounts:nil ownDisplayNameAccounts:nil];
+					
+					cssClass = @"send";
+					if(activeAccount != nil)
+						displayName = [activeAccount displayName];
+					else
+						displayName = [[[[adium preferenceController] preferenceForKey:KEY_ACCOUNT_DISPLAY_NAME group:GROUP_ACCOUNT_STATUS] attributedString] string];
+				}
+				else
+				{
+					AIListObject *listObject = [[adium contactController] existingListObjectWithUniqueID:[AIListObject internalObjectIDForServiceID:service UID:sender]];
+					
+					cssClass = @"receive";
+					displayName = [listObject displayName];
+				}
+				if(displayName != nil && ![displayName isEqualToString:sender])
+					shownSender = [NSString stringWithFormat:@"%@ (%@)", displayName, sender];
+				else
+					shownSender = sender;
+				
 				//NSLog(@"%i: %i, %i - %i - 11 = %i; %@",empty,messageStart,end,messageStart, end - messageStart - 11,message);
 				[output appendFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@%@: </span><pre class=\"message\">%@</pre></div>\n",
 					([mySN isEqualToString:sender] ? @"send" : @"receive"), 
@@ -204,7 +235,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 																								   showingAMorPM:YES]
 											   timeZone:nil
 												 locale:nil],
-					sender, 
+					shownSender, 
 					(autoResponse ? AILocalizedString(@" (Autoreply)",nil) : @""),
 					message];
 				state = XML_STATE_CHAT;
