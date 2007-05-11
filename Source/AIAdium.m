@@ -1165,10 +1165,13 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 
 #pragma mark Sparkle Delegate Methods
 
+#define BETA_UPDATE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"beta", @"value", @"Beta or Release Versions", @"visibleValue", nil]
+#define RELEASE_UPDATE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"release", @"value", @"Release Versions Only", @"visibleValue", nil]
+
 #if BETA_RELEASE == FALSE
-#define UPDATE_TYPE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"release", @"value", @"Release Versions Only", @"visibleValue", nil]
+#define UPDATE_TYPE_DICT RELEASE_UPDATE_DICT
 #else
-#define UPDATE_TYPE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"beta", @"value", @"Beta or Release Versions", @"visibleValue", nil]
+#define UPDATE_TYPE_DICT BETA_UPDATE_DICT
 #endif
 
 /* This method gives the delegate the opportunity to customize the information that will
@@ -1201,7 +1204,7 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 		
 		[profileInfo addObject:entry];
 		
-		[profileInfo addObject:UPDATE_TYPE_DICT];
+		[profileInfo addObject:[defaults boolForKey:@"AIAlwaysUpdateToBetas"] ? BETA_UPDATE_DICT : UPDATE_TYPE_DICT];
 		
 		[defaults setBool:YES forKey:@"AIHasSentSparkleProfileInfo"];
 		
