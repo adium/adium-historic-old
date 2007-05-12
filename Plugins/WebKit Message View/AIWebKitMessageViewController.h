@@ -18,6 +18,7 @@
 
 @class AIWebKitMessageViewPlugin, AIWebkitMessageViewStyle, AIContentObject, ESWebView, DOMDocument;
 @class AIChat, AIContentObject;
+@class AIWebKitDelegate;
 
 @protocol AIMessageDisplayController;
 
@@ -26,6 +27,8 @@
  *	@brief Main class for the webkit message view. Most of the good stuff happens here
  */
 @interface AIWebKitMessageViewController : AIObject <AIMessageDisplayController> {
+	AIWebKitDelegate			*delegateProxy;
+	
 	id							plugin;
 	ESWebView					*webView;
 	id							preferencesChangedDelegate;
