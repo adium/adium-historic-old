@@ -9,8 +9,8 @@
 #import "ESIRCAccount.h"
 
 /*
-void gaim_account_set_username(void *account, const char *username);
-void gaim_account_set_bool(void *account, const char *name,
+void purple_account_set_username(void *account, const char *username);
+void purple_account_set_bool(void *account, const char *name,
 						   BOOL value);
 */
 @implementation ESIRCAccount
@@ -30,7 +30,7 @@ void gaim_account_set_bool(void *account, const char *name,
 	return @"irc.freenode.net";
 }
 
-- (const char *)gaimAccountName
+- (const char *)purpleAccountName
 {
 	NSString	*myUID = [self UID];
 	BOOL		serverAppendedToUID  = ([myUID rangeOfString:@"@"].location != NSNotFound);
@@ -38,15 +38,15 @@ void gaim_account_set_bool(void *account, const char *name,
 	return [(serverAppendedToUID ? myUID : [myUID stringByAppendingString:[self serverSuffix]]) UTF8String];
 }
 
-- (void)configureGaimAccount
+- (void)configurePurpleAccount
 {
-	[super configureGaimAccount];
+	[super configurePurpleAccount];
 
-	gaim_account_set_username([self gaimAccount], [self gaimAccountName]);
+	purple_account_set_username([self purpleAccount], [self purpleAccountName]);
 	
 	BOOL useSSL = [[self preferenceForKey:KEY_IRC_USE_SSL group:GROUP_ACCOUNT_STATUS] boolValue];
 	
-	gaim_account_set_bool([self gaimAccount], "ssl", useSSL);
+	purple_account_set_bool([self purpleAccount], "ssl", useSSL);
 }
 
 /*!
