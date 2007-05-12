@@ -15,7 +15,7 @@
  */
 
 #import "CBPurpleAccount.h"
-#import "SLPurpleCocoaAdapter.h"
+#import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>

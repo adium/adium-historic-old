@@ -30,7 +30,7 @@
 #import "adiumPurpleSignals.h"
 #import "adiumPurpleWebcam.h"
 
-#import "SLPurpleCocoaAdapter.h"
+#import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
 #import "AILibpurplePlugin.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
 

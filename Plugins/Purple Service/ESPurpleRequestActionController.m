@@ -15,9 +15,9 @@
  */
 
 #import "ESPurpleRequestActionController.h"
-#import "PurpleCommon.h"
+#import <AdiumLibpurple/PurpleCommon.h>
 #import "adiumPurpleRequest.h"
-#import "SLPurpleCocoaAdapter.h"
+#import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
 #import "ESTextAndButtonsWindowController.h"
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/NDRunLoopMessenger.h>
