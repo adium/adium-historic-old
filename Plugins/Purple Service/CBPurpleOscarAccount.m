@@ -689,6 +689,18 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	[super updateStatusForContact:theContact toStatusType:statusTypeNumber statusName:statusName statusMessage:statusMessage];
 }
 
+/*!
+ * @brief Is a contact on the contact list intentionally listed?
+ *
+ * This is used by AIListContact to determine if the prescence of itself on the list is indicative of a degree
+ * of trust, for preferences such as "automatically accept files from contacts on my contact list".
+ */
+- (BOOL)isContactIntentionallyListed:(AIListContact *)contact
+{
+	return [contact remoteGroupName] && ![[contact remoteGroupName] isEqualToString:@"Recent Buddies"];
+}
+
+
 #pragma mark Contact List Menu Items
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
