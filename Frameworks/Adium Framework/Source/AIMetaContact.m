@@ -664,8 +664,10 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 - (void)remoteGroupingOfContainedObject:(AIListObject *)inListObject changedTo:(NSString *)inRemoteGroupName
 {
+#ifdef META_GROUPING_DEBUG
 	AILog(@"AIMetaContact: Remote grouping of %@ changed to %@",inListObject,inRemoteGroupName);
-
+#endif
+	
 	//When a contact has its remote grouping changed, this may mean it is now listed on an online account.
 	//We therefore update our containsOnlyOneContact boolean.
 	[self _determineIfWeShouldAppearToContainOnlyOneContact];
