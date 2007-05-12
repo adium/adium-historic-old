@@ -1,6 +1,16 @@
-#import "AIPlugin.h"
+#import <Adium/AIPlugin.h>
 
-@protocol AILibgaimPlugin <AIPlugin>
-//Called when it's time for the libgaim part of the plugin to load
-- (void)installLibgaimPlugin;
+@protocol AILibpurplePlugin <AIPlugin>
+/*!
+ * @brief Perform early libpurple-specific installation of the plugin. 
+ *
+ * There is no guarantee what else is loaded at this point besides core functionality. 
+ * See loadLibpurplePlugin to connct to other components' signals and such.
+ */
+- (void)installLibpurplePlugin;
+
+/*!
+ * @brief Once libpurple itself is ready, load the plugin
+ */
+- (void)loadLibpurplePlugin;
 @end

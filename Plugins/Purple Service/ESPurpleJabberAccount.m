@@ -15,7 +15,7 @@
  */
 
 #import "ESPurpleJabberAccount.h"
-#import "SLPurpleCocoaAdapter.h"
+#import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIStatusControllerProtocol.h>
