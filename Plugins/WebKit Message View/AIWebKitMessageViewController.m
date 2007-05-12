@@ -42,6 +42,8 @@
 #import <AIUtilities/AIMutableStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 
+#import "AIWebKitDelegate.h"
+
 #import "ESFileTransferRequestPromptController.h"
 
 #import "ESWebView.h"
@@ -87,7 +89,9 @@ static NSArray *draggedTypes = nil;
     if ((self = [super init]))
 	{		
 		[self _initWebView];
-
+		
+		delegateProxy = [AIWebKitDelegate sharedWebKitDelegate];
+		
 		chat = [inChat retain];
 		plugin = [inPlugin retain];
 		contentQueue = [[NSMutableArray alloc] init];
@@ -138,10 +142,7 @@ static NSArray *draggedTypes = nil;
 	[webView stopLoading:nil];
 	
 	//Stop observing the webview, since it may attempt callbacks shortly after we dealloc
-	[webView setFrameLoadDelegate:nil];
-	[webView setPolicyDelegate:nil];
-	[webView setUIDelegate:nil];
-	[webView setDraggingDelegate:nil];
+	[delegateProxy removeDelegate:self];
 	
 	/* The windowScriptObject retained self when we set it as the client in -[AIWebKitMessageViewController _initWebView]...
 	 * Unfortunately, (as of 10.4.9) it won't actually release self until the webView deallocates.  We'll do removeWebScriptKey:
@@ -362,9 +363,7 @@ static NSArray *draggedTypes = nil;
 									 frameName:nil
 									 groupName:nil];
 	[webView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
-	[webView setPolicyDelegate:self];
-	[webView setUIDelegate:self];
-	[webView setDraggingDelegate:self];
+	[delegateProxy addDelegate:self forView:webView];
 	[webView setMaintainsBackForwardList:NO];
 
 	if (!draggedTypes) {
@@ -509,7 +508,8 @@ static NSArray *draggedTypes = nil;
 {
 	webViewIsReady = NO;
 
-	[webView setFrameLoadDelegate:self];
+	//Hack: this will re-set us for all the delegates, but that shouldn't matter
+	[delegateProxy addDelegate:self forView:webView];
 	[[webView mainFrame] loadHTMLString:[messageStyle baseTemplateWithVariant:activeVariant chat:chat] baseURL:nil];
 
 	if (reprocessContent) {
@@ -677,44 +677,10 @@ static NSArray *draggedTypes = nil;
 
 //WebView Delegates ----------------------------------------------------------------------------------------------------
 #pragma mark Webview delegates
-/*!
- * @brief Invoked once the webview has loaded and is ready to accept content
- */
-- (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
-{
-	//Flag the view as ready (as soon as the current methods exit) so we know it's now safe to add content
-	[self performSelector:@selector(webViewIsReady) withObject:nil afterDelay:0.00001];
-	
-	//We don't care about any further didFinishLoad notifications
-	[webView setFrameLoadDelegate:nil];
-}
+
 - (void)webViewIsReady{
 	webViewIsReady = YES;
 	[self processQueuedContent];
-}
-
-/*!
- * @brief Prevent the webview from following external links.  We direct these to the user's web browser.
- */
-- (void)webView:(WebView *)sender
-    decidePolicyForNavigationAction:(NSDictionary *)actionInformation
-		request:(NSURLRequest *)request
-		  frame:(WebFrame *)frame
-    decisionListener:(id<WebPolicyDecisionListener>)listener
-{
-    int actionKey = [[actionInformation objectForKey: WebActionNavigationTypeKey] intValue];
-    if (actionKey == WebNavigationTypeOther) {
-		[listener use];
-    } else {
-		NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
-		
-		//Ignore file URLs, but open anything else
-		if (![url isFileURL]) {
-			[[NSWorkspace sharedWorkspace] openURL:url];
-		}
-		
-		[listener ignore];
-    }
 }
 
 - (void)openImage:(id)sender
@@ -1138,6 +1104,7 @@ static NSArray *draggedTypes = nil;
 											 [(AIListContact *)inObject parentContact] :
 											 inObject);
 	NSImage				*userIcon;
+	NSString			*oldWebKitUserIconPath;
 	NSString			*webKitUserIconPath;
 	NSImage				*webKitUserIcon;
 	
@@ -1152,7 +1119,7 @@ static NSArray *draggedTypes = nil;
 
 	if (userIcon) {
 		if ([messageStyle userIconMask]) {
-			//Apply the mask is the style has one
+			//Apply the mask if the style has one
 			//XXX Using multiple styles at once, one of which has a user icon mask, would lead to odd behavior
 			webKitUserIcon = [[[messageStyle userIconMask] copy] autorelease];
 			[webKitUserIcon lockFocus];
@@ -1171,7 +1138,9 @@ static NSArray *draggedTypes = nil;
 		 *
 		 * Only write out the icon if the object doesn't already have one
 		 */
-		if (!(webKitUserIconPath = [iconSourceObject statusObjectForKey:KEY_WEBKIT_USER_ICON])) {
+		oldWebKitUserIconPath = [iconSourceObject statusObjectForKey:KEY_WEBKIT_USER_ICON];
+		if (!oldWebKitUserIconPath) {
+			oldWebKitUserIconPath = @"";
 			webKitUserIconPath = [self _webKitUserIconPathForObject:iconSourceObject];
 			if ([[webKitUserIcon PNGRepresentation] writeToFile:webKitUserIconPath
 													 atomically:YES]) {
@@ -1197,20 +1166,13 @@ static NSArray *draggedTypes = nil;
 		DOMNodeList  *images = [[[webView mainFrame] DOMDocument] getElementsByTagName:@"img"];
 		unsigned int imagesCount = [images length];
 		
-		if (imagesCount > 0) {
-			NSString	*internalObjectID = [inObject internalObjectID];
-			
-			for (int i = 0; i < imagesCount; i++) {
-				DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
-				NSString *imgClass = [img className];
-				//being very careful to only get user icons... a better way would be to put a class "usericon" on the img, but I haven't worked out how to do that, so we test for the name of the person in the src, and that it's not an emoticon or direct connect image.
-				if([[img getAttribute:@"src"] rangeOfString:internalObjectID].location != NSNotFound &&
-				   [imgClass rangeOfString:@"emoticon"].location == NSNotFound &&
-				   [imgClass rangeOfString:@"fullSizeImage"].location == NSNotFound &&
-				   [imgClass rangeOfString:@"scaledToFitImage"].location == NSNotFound)
-					[img setSrc:webKitUserIconPath];
+		for (int i = 0; i < imagesCount; i++) {
+			DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
+
+			if([[img getAttribute:@"src"] rangeOfString:oldWebKitUserIconPath].location != NSNotFound) {
+				[img setSrc:webKitUserIconPath];
 			}
-		}		
+		}
 	}
 }
 

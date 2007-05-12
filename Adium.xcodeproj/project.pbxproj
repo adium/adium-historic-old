@@ -1070,6 +1070,7 @@
 		63336E15094AB81300970871 /* XtraInfoView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 63336E14094AB81300970871 /* XtraInfoView.nib */; };
 		633F175B08F905A700C76383 /* AIXtraInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F175708F905A700C76383 /* AIXtraInfo.m */; };
 		633F175D08F905A800C76383 /* AIXtrasManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F175908F905A700C76383 /* AIXtrasManager.m */; };
+		6360B25A0BF2EB93004CD99B /* AIWebKitDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6360B2590BF2EB93004CD99B /* AIWebKitDelegate.m */; };
 		638392F809D4D67A0067B9B7 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
 		63AF931A0AA81E2300B88299 /* Bright Blue.ListTheme in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63AF91C90AA8102600B88299 /* Bright Blue.ListTheme */; };
 		63AF931B0AA81E2300B88299 /* Bright Green.ListTheme in CopyFiles */ = {isa = PBXBuildFile; fileRef = 63AF91CA0AA8102600B88299 /* Bright Green.ListTheme */; };
@@ -3405,6 +3406,8 @@
 		633F175708F905A700C76383 /* AIXtraInfo.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtraInfo.m; path = Source/AIXtraInfo.m; sourceTree = "<group>"; };
 		633F175808F905A700C76383 /* AIXtrasManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtrasManager.h; path = Source/AIXtrasManager.h; sourceTree = "<group>"; };
 		633F175908F905A700C76383 /* AIXtrasManager.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtrasManager.m; path = Source/AIXtrasManager.m; sourceTree = "<group>"; };
+		6360B2580BF2EB93004CD99B /* AIWebKitDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIWebKitDelegate.h; path = "Plugins/WebKit Message View/AIWebKitDelegate.h"; sourceTree = "<group>"; };
+		6360B2590BF2EB93004CD99B /* AIWebKitDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIWebKitDelegate.m; path = "Plugins/WebKit Message View/AIWebKitDelegate.m"; sourceTree = "<group>"; };
 		636AB7F1087E2B6700A87670 /* AIDockBadger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIDockBadger.h; sourceTree = "<group>"; };
 		636AB7F2087E2B6700A87670 /* AIDockBadger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIDockBadger.m; sourceTree = "<group>"; };
 		638392F609D4D67A0067B9B7 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = Frameworks/Sparkle.framework; sourceTree = "<group>"; };
@@ -6363,6 +6366,8 @@
 		9CBADC5005712615005187DA /* WebKit Message View */ = {
 			isa = PBXGroup;
 			children = (
+				6360B2580BF2EB93004CD99B /* AIWebKitDelegate.h */,
+				6360B2590BF2EB93004CD99B /* AIWebKitDelegate.m */,
 				4B539C4B05EFD6CD00E5921A /* AIWebKitMessageViewPlugin.h */,
 				4B539C4C05EFD6CD00E5921A /* AIWebKitMessageViewPlugin.m */,
 				4B539C5105EFD6FA00E5921A /* AIWebKitMessageViewController.h */,
@@ -8009,6 +8014,7 @@
 				34C2D70606338E2E0018E5D2 /* ESWebKitMessageViewPreferences.m in Sources */,
 				4BD62D8107CE8F240099EBA2 /* AIWebkitMessageViewStyle.m in Sources */,
 				34182F4B0AC2CA3C0067DEF3 /* AIPreviewChat.m in Sources */,
+				6360B25A0BF2EB93004CD99B /* AIWebKitDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
