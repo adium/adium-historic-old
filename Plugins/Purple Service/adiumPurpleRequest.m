@@ -144,7 +144,7 @@ static void *adiumPurpleRequestAction(const char *title, const char *primary,
 	NSString			*primaryString = (primary ?  [NSString stringWithUTF8String:primary] : nil);
 	id					requestController = nil;
 	int					i;
-	
+	BOOL				handled = NO;
 	if (primaryString && ([primaryString rangeOfString:@"wants to send you"].location != NSNotFound)) {
 		GCallback ok_cb;
 		
@@ -154,6 +154,8 @@ static void *adiumPurpleRequestAction(const char *title, const char *primary,
 		
 		//Redirect a "wants to send you" action request to our file choosing method so we handle it as a normal file transfer
 		((PurpleRequestActionCb)ok_cb)(userData, default_action);
+		
+		handled = YES;
 		
     } else if (primaryString && ([primaryString rangeOfString:@"Create New Room"].location != NSNotFound)) {
 		/* Jabber's Create New Room dialog has a default option of accepting default values and another option
@@ -180,7 +182,25 @@ static void *adiumPurpleRequestAction(const char *title, const char *primary,
 			}
 		}
 
-	} else {
+		handled = YES;
+	
+	} else if (primaryString && ([primaryString rangeOfString:@"has just asked to directly connect"].location != NSNotFound)) {
+		AIListContact *adiumContact = contactLookupFromBuddy(purple_find_buddy(account, who));
+		//Automatically accept Direct IM requests from contacts on our list
+		if (adiumContact && ![adiumContact isStranger]) {
+			GCallback ok_cb;
+
+			//Get the callback for Connect, skipping over the title
+			va_arg(actions, char *);
+			ok_cb = va_arg(actions, GCallback);
+			
+			((PurpleRequestActionCb)ok_cb)(userData, default_action);
+			
+			handled = YES;
+		}
+	}
+
+	if (!handled) {
 		NSString	    *msg = [NSString stringWithFormat:@"%s%s%s",
 			(primary ? primary : ""),
 			((primary && secondary) ? "\n\n" : ""),
