@@ -452,6 +452,29 @@ Class LogViewerWindowControllerClass = NULL;
 
 	//Don't log chats for temporary accounts
 	if ([[chat account] isTemporary]) return;	
+	
+	//Try reusing the appender opject
+	AIXMLAppender *appender = [self existingAppenderForChat:chat];
+	
+	//If there is an appender, add the windowOpened event
+	if (appender) {
+		/* Ensure a timeout isn't set for closing the appender, since we're now using it.
+		 * This gives us the desired behavior - if chat #2 opens before the timeout on the
+		 * log file, then we want to keep the log continuous until the user has closed the
+		 * window. 
+		 */
+		[NSObject cancelPreviousPerformRequestsWithTarget:self
+												 selector:@selector(finishClosingAppender:) 
+												 object:[self keyForChat:chat]];
+												   
+		// Print the windowOpened event in the log
+		[appender addElementWithName:@"event"
+							 content:nil
+					   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
+					 attributeValues:[NSArray arrayWithObjects:@"windowOpened", [[chat account] UID], [[[NSDate date] dateWithCalendarFormat:nil timeZone:nil] ISO8601DateString], nil]];
+
+		[self markLogDirtyAtPath:[appender path] forChat:chat];
+	}
 }
 
 - (void)chatClosed:(NSNotification *)notification
