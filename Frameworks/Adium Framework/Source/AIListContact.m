@@ -454,6 +454,14 @@
 }
 
 /*!
+ * @brief If this contact intentionally on the contact list?
+ */
+- (BOOL)isIntentionallyNotAStranger
+{
+	return ![self isStranger] && [[self account] isContactIntentionallyListed:self];
+}
+
+/*!
  * @brief Is this object connected via a mobile device?
  */
 - (BOOL)isMobile

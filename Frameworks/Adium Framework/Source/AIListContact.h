@@ -45,6 +45,8 @@
 - (BOOL)canContainOtherContacts;
 - (BOOL)containsMultipleContacts;
 
+- (BOOL)isIntentionallyNotAStranger;
+
 - (void)setIsMobile:(BOOL)isMobile notify:(NotifyTiming)notify;
 - (void)setOnline:(BOOL)online notify:(NotifyTiming)notify silently:(BOOL)silent;
 - (void)setSignonDate:(NSDate *)signonDate notify:(NotifyTiming)notify;
