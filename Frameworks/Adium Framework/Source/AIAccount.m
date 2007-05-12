@@ -573,6 +573,18 @@
 	return nil;
 }
 
+/*!
+ * @brief Is a contact on the contact list intentionally listed?
+ *
+ * By default, it is assumed that any contact on the list is intended be there.
+ * This is used by AIListContact to determine if the prescence of itself on the list is indicative of a degree
+ * of trust, for preferences such as "automatically accept files from contacts on my contact list".
+ */
+- (BOOL)isContactIntentionallyListed:(AIListContact *)contact
+{
+	return YES;
+}
+
 #pragma mark Secure messsaging
 
 /*!

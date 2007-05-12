@@ -180,6 +180,7 @@ typedef enum {
 - (void)deleteGroup:(AIListGroup *)group;
 - (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group;
 - (void)renameGroup:(AIListGroup *)group to:(NSString *)newName;
+- (BOOL)isContactIntentionallyListed:(AIListContact *)contact;
 
 //Contact-specific menu items
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact;
