@@ -212,7 +212,7 @@
 - (void)promptForNewContactOnWindow:(NSWindow *)inWindow selectedListObject:(AIListObject *)inListObject
 {
 	//We only autofill if the selected list object is a contact and a stranger
-	if (![inListObject isKindOfClass:[AIListContact class]] || ![(AIListContact *)inListObject isStranger]) {
+	if (![inListObject isKindOfClass:[AIListContact class]] || [(AIListContact *)inListObject isIntentionallyNotAStranger]) {
 		inListObject = nil;
 	}
 	
