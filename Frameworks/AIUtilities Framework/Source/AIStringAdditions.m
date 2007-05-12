@@ -73,6 +73,8 @@ static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *
  */
 + (NSString *)stringWithContentsOfUTF8File:(NSString *)path
 {
+	if (!path) return nil;
+
 	NSString	*string;
 	
 	NSError	*error = nil;
