@@ -255,7 +255,6 @@ static int linesLeftToFind = 0;
 				
 		//Stick the base path on to the beginning
 		logPath = [baseLogPath stringByAppendingPathComponent:logPath];
-		NSLog(@"Message History: Loading log file: %@", logPath);
 		
 		//Initialize the found messages array and element stack for us-as-delegate
 		foundMessages = [NSMutableArray arrayWithCapacity:linesLeftToFind];
@@ -379,8 +378,6 @@ static int linesLeftToFind = 0;
 			//Create the context object
 			//http://www.visualdistortion.org/crash/view.jsp?crash=211821
 			if (timeString) {
-				NSLog(@"Message Context Display: Parsing message time attribute %@", timeString);
-				
 				NSCalendarDate *time = [NSCalendarDate calendarDateWithString:timeString];
 
 				NSString		*autoreplyAttribute = [attributes objectForKey:@"auto"];
