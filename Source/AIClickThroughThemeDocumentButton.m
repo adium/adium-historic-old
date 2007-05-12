@@ -89,4 +89,14 @@
 	//Empty
 }
 
+/*!
+ * @brief Don't allow the document button to try to show a popup menu
+ *
+ * If we do, we'll crash, since there shouldn't actually *be* a theem document button with no represented filename and no document.
+ */
+- (void)showPopup
+{
+	//Empty
+}
+
 @end
