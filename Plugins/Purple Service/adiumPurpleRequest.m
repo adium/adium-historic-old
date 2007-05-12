@@ -187,7 +187,7 @@ static void *adiumPurpleRequestAction(const char *title, const char *primary,
 	} else if (primaryString && ([primaryString rangeOfString:@"has just asked to directly connect"].location != NSNotFound)) {
 		AIListContact *adiumContact = contactLookupFromBuddy(purple_find_buddy(account, who));
 		//Automatically accept Direct IM requests from contacts on our list
-		if (adiumContact && ![adiumContact isStranger]) {
+		if (adiumContact && [adiumContact isIntentionallyNotAStranger]) {
 			GCallback ok_cb;
 
 			//Get the callback for Connect, skipping over the title
