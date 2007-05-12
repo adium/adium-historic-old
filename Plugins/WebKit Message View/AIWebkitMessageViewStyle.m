@@ -709,7 +709,10 @@ static NSArray *validSenderColors;
 						senderDisplay = displayName;
 						if (!senderDisplay) {
 							senderDisplay = formattedUID;
-							NSAssert1(senderDisplay, @"Sender has no known display name that we can use! displayName and formattedUID were both nil for sender %@", contentSource);
+							if (!senderDisplay) {
+								AILog(@"wtf. we don't have a sender for %@ (%@)", content, [content message]);
+								NSAssert1(senderDisplay, @"Sender has no known display name that we can use! displayName and formattedUID were both nil for sender %@", contentSource);
+							}
 						}
 					}
 				} else {

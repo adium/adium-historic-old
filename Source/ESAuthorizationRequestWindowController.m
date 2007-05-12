@@ -63,7 +63,7 @@
 
 	// Hide the "Add to my Contact List" checkbox if the contact already exists in the list
 	AIListContact *contact = [[adium contactController] existingContactWithService:[account service] account:account UID:[infoDict objectForKey:@"Remote Name"]];
-	if (contact && ![contact isStranger]) {
+	if (contact && [contact isIntentionallyNotAStranger]) {
 		[checkBox_addToList setState:NSOffState];
 		[checkBox_addToList setEnabled:NO];
 		[checkBox_addToList setHidden:YES];

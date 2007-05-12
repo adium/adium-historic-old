@@ -205,7 +205,7 @@ static ESFileTransferPreferences *preferences;
 					  previouslyPerformedActionIDs:nil];
 
 	if ((autoAcceptType == AutoAccept_All) ||
-	   ((autoAcceptType == AutoAccept_FromContactList) && (![listContact isStranger]))) {
+	   ((autoAcceptType == AutoAccept_FromContactList) && [listContact isIntentionallyNotAStranger])) {
 		NSString	*preferredDownloadFolder = [[adium preferenceController] userPreferredDownloadFolder];
 		NSString	*remoteFilename = [fileTransfer remoteFilename];
 		

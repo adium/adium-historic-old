@@ -826,13 +826,12 @@ static NSArray *draggedTypes = nil;
 		}
 		
 		NSArray *locations;
-		if ([chatListObject isStranger]) {
+		if ([chatListObject isIntentionallyNotAStranger]) {
 			locations = [NSArray arrayWithObjects:
 				[NSNumber numberWithInt:Context_Contact_Manage],
 				[NSNumber numberWithInt:Context_Contact_Action],
 				[NSNumber numberWithInt:Context_Contact_NegativeAction],
 				[NSNumber numberWithInt:Context_Contact_ChatAction],
-				[NSNumber numberWithInt:Context_Contact_Stranger_ChatAction],
 				[NSNumber numberWithInt:Context_Contact_Additions], nil];
 		} else {
 			locations = [NSArray arrayWithObjects:
@@ -840,6 +839,7 @@ static NSArray *draggedTypes = nil;
 				[NSNumber numberWithInt:Context_Contact_Action],
 				[NSNumber numberWithInt:Context_Contact_NegativeAction],
 				[NSNumber numberWithInt:Context_Contact_ChatAction],
+				[NSNumber numberWithInt:Context_Contact_Stranger_ChatAction],
 				[NSNumber numberWithInt:Context_Contact_Additions], nil];
 		}
 		
