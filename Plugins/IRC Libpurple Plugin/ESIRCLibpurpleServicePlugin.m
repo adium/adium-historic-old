@@ -1,25 +1,25 @@
 //
-//  ESIRCLibgaimServicePlugin.m
+//  ESIRCLibpurpleServicePlugin.m
 //  Adium
 //
 //  Created by Evan Schoenberg on 3/4/06.
 //
 
-#import "ESIRCLibgaimServicePlugin.h"
+#import "ESIRCLibpurpleServicePlugin.h"
 #import "ESIRCService.h"
 
-@implementation ESIRCLibgaimServicePlugin
+@implementation ESIRCLibpurpleServicePlugin
 
 - (void)installPlugin
 {
 	ircService = [[[ESIRCService alloc] init] retain];
 }
 
-extern BOOL gaim_init_irc_plugin(void);
+extern BOOL purple_init_irc_plugin(void);
 
-- (void)installLibgaimPlugin
+- (void)installLibpurplePlugin
 {
-	gaim_init_irc_plugin();
+	purple_init_irc_plugin();
 }
 
 - (void)dealloc
@@ -34,7 +34,7 @@ extern BOOL gaim_init_irc_plugin(void);
 
 }
 
-- (NSString *)libgaimPluginPath
+- (NSString *)libpurplePluginPath
 {
 	return [[NSBundle bundleForClass:[self class]] resourcePath];
 }

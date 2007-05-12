@@ -27,7 +27,7 @@
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return @"libgaim-IRC";
+	return @"libpurple-IRC";
 }
 - (NSString *)serviceID{
 	return @"IRC";
