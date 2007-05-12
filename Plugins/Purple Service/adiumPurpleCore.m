@@ -71,7 +71,7 @@ extern gboolean purple_init_zephyr_plugin(void);
 extern gboolean purple_init_aim_plugin(void);
 extern gboolean purple_init_icq_plugin(void);
 
-static void load_all_plugins()
+static void init_all_plugins()
 {
 	AILog(@"adiumPurpleCore: load_all_plugins()");
 
@@ -100,6 +100,19 @@ static void load_all_plugins()
 			[plugin installLibpurplePlugin];
 		}
 	}
+}
+
+static void load_external_plugins(void)
+{
+	//Load each plugin
+	NSEnumerator			*enumerator = [[SLPurpleCocoaAdapter libpurplePluginArray] objectEnumerator];
+	id <AILibpurplePlugin>	plugin;
+	
+	while ((plugin = [enumerator nextObject])) {
+		if ([plugin respondsToSelector:@selector(loadLibpurplePlugin)]) {
+			[plugin loadLibpurplePlugin];
+		}
+	}	
 }
 
 static void adiumPurplePrefsInit(void)
@@ -131,9 +144,9 @@ static void adiumPurpleCoreDebugInit(void)
 	AILog(@"adiumPurpleCoreDebugInit()");
     purple_debug_set_ui_ops(adium_purple_debug_get_ui_ops());
 #endif
-
-	//Load all plugins. This could be done in STATIC_PROTO_INIT in libpurple's config.h at build time, but doing it here allows easier changes.
-	load_all_plugins();
+	
+	//Initialize all plugins. This could be done in STATIC_PROTO_INIT in libpurple's config.h at build time, but doing it here allows easier changes.
+	init_all_plugins();
 }
 
 /* The core is ready... finish configuring libpurple and its plugins */
@@ -174,6 +187,8 @@ static void adiumPurpleCoreUiInit(void)
 #if	ENABLE_WEBCAM
 	initPurpleWebcamSupport();
 #endif
+	
+	load_external_plugins();
 }
 
 static void adiumPurpleCoreQuit(void)
