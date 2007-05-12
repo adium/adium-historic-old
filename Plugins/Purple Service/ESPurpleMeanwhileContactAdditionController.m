@@ -7,7 +7,7 @@
 //
 
 #import "ESPurpleMeanwhileContactAdditionController.h"
-#import "SLPurpleCocoaAdapter.h"
+#import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/NDRunLoopMessenger.h>
 

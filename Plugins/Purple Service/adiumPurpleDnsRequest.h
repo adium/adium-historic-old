@@ -6,6 +6,6 @@
 //  Copyright 2007 __MyCompanyName__. All rights reserved.
 //
 
-#import "SLPurpleCocoaAdapter.h"
+#import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
 
 PurpleDnsQueryUiOps *adium_purple_dns_request_get_ui_ops(void);

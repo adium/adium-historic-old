@@ -16,8 +16,8 @@
 
 #import <Libpurple/libpurple.h>
 #import <Adium/AIContentTyping.h>
-#import "PurpleCommon.h"
-#import "CBPurpleAccount.h"
+#import <AdiumLibpurple/PurpleCommon.h>
+#import <AdiumLibpurple/CBPurpleAccount.h>
 
 #define	ENABLE_WEBCAM	FALSE
 

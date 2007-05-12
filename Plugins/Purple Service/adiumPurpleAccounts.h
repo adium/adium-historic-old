@@ -5,7 +5,7 @@
 //  Created by Evan Schoenberg on 12/3/06.
 
 
-#import "SLPurpleCocoaAdapter.h"
+#import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
 
 PurpleAccountUiOps *adium_purple_accounts_get_ui_ops(void);
 

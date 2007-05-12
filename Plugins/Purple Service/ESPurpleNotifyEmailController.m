@@ -15,9 +15,9 @@
  */
 
 #import "ESPurpleNotifyEmailController.h"
-#import "SLPurpleCocoaAdapter.h"
-#import "PurpleCommon.h"
-#import "ESTextAndButtonsWindowController.h"
+#import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
+#import <AdiumLibpurple/PurpleCommon.h>
+#import <Adium/ESTextAndButtonsWindowController.h>
 #import <Adium/AIContactAlertsControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AIObjectAdditions.h>

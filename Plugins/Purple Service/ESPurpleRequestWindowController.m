@@ -15,7 +15,7 @@
  */
 
 #import "ESPurpleRequestWindowController.h"
-#import "SLPurpleCocoaAdapter.h"
+#import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
 #import <Adium/NDRunLoopMessenger.h>
 
 #define MULTILINE_WINDOW_NIB	@"PurpleMultilineRequestWindow"
