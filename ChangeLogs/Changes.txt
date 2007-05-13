@@ -9,7 +9,7 @@ Version 1.0.4
  * Fixed deletion of temporary images when they are no longer needed (#4711 and #6732)
  * Fixed a crash when command-dragging the message window (#6873)
  * Improved chat transcript viewer performance after finishing transcript indexing
- * Added ability for external processes to communicate with Adium via Distributed Objects (connection name: @"com.adiumx.adiumx")
+ * Added ability for external processes to communicate with Adium via Distributed Objects (connection name: @"com.adiumX.adiumX")
  * We now follow updates to the system time zone (#5383)
  * Norwegian update
  
