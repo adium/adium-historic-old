@@ -490,6 +490,7 @@
 		34A48A5006F64692002C7C5F /* AITextColorPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A48A4F06F64692002C7C5F /* AITextColorPreviewView.m */; };
 		34A48A5B06F646BD002C7C5F /* AIListThemePreviewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A48A5906F646BD002C7C5F /* AIListThemePreviewCell.m */; };
 		34A48B3A06F64B27002C7C5F /* AIBorderlessListOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A48B3806F64B27002C7C5F /* AIBorderlessListOutlineView.m */; };
+		34A663920BF66D96008637BB /* PurpleCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 340915F105C0A5DF00CDE3DD /* PurpleCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34A6F68507D65D6200972830 /* GeneralPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A6F68407D65D6200972830 /* GeneralPreferences.nib */; };
 		34A6FAD907D6F3AA00972830 /* AIEventSoundsPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A6FAD507D6F3A600972830 /* AIEventSoundsPlugin.m */; };
 		34A6FADB07D6F3AA00972830 /* ESEventSoundAlertDetailPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A6FAD707D6F3A700972830 /* ESEventSoundAlertDetailPane.m */; };
@@ -7141,6 +7142,7 @@
 				34A3CA990B29325A001147FB /* ESAIMService.h in Headers */,
 				34A3CA9A0B293262001147FB /* ESPurpleDotMacAccount.h in Headers */,
 				34A0A7A40B97125D0038DEE6 /* adiumPurpleDnsRequest.h in Headers */,
+				34A663920BF66D96008637BB /* PurpleCommon.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
