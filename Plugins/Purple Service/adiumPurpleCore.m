@@ -93,7 +93,7 @@ static void init_all_plugins()
 
 	//Load each plugin
 	NSEnumerator			*enumerator = [[SLPurpleCocoaAdapter libgaimPluginArray] objectEnumerator];
-	id <AILibgaimPlugin>	plugin;
+	id <AILibpurplePlugin>	plugin;
 
 	while ((plugin = [enumerator nextObject])) {
 		if ([plugin respondsToSelector:@selector(installLibpurplePlugin)]) {
