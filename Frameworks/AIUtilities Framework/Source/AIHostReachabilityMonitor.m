@@ -307,7 +307,7 @@ static void hostResolvedCallback(CFHostRef theHost, CFHostInfoType typeInfo,  co
 				//We already have valid flags for the reachabilityRef
 #if CONNECTIVITY_DEBUG
 				NSLog(@"Immediate reachability info for %@", reachabilityRef);
-#endif=
+#endif
 				hostReachabilityChangedCallback(reachabilityRef,
 												flags,
 												self);
