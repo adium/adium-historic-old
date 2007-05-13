@@ -602,11 +602,19 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
             [self slideWindowOffScreenEdges:adjacentEdges];
 		}
 
-		//If we're hiding the window (generally) but now sliding it off screen, make sure it's at its old value
+		/* If we're hiding the window (generally) but now sliding it off screen, set it to kCGBackstopMenuLevel and don't
+		 * let it participate in expose.
+		 */
 		if (overrodeWindowLevel &&
 			windowHidingStyle == AIContactListWindowHidingStyleSliding) {
-			[self setWindowLevel:previousWindowLevel];
-			overrodeWindowLevel = NO;
+			[self setWindowLevel:kCGBackstopMenuLevel];
+
+			if (previousWindowLevel == kCGBackstopMenuLevel) {
+				//We may not longer be doing a manal override if the user generally wants the list at kCGBackstopMenuLevel
+				overrodeWindowLevel = NO;
+			} else {
+				overrodeWindowLevel = YES;
+			}
 		}
 		
 	} else if (overrodeWindowLevel &&
