@@ -1513,7 +1513,17 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 		AIChatLog       *theLog = [currentSearchResults objectAtIndex:row];
 
 		if ([identifier isEqualToString:@"To"]) {
-			value = [theLog to]; 
+			// Get ListObject for to-UID
+			AIListObject *listObject = [[adium contactController] existingListObjectWithUniqueID:[AIListObject internalObjectIDForServiceID:[theLog serviceClass]
+																																		UID:[theLog to]]];
+			if (listObject) {
+				//Use the longDisplayName, following the user's contact list preferences as this is presumably how she wants to view contacts' names.
+				value = [listObject longDisplayName];
+
+			} else {
+				//No username available
+				value = [theLog to];
+			}
 			
 		} else if ([identifier isEqualToString:@"From"]) {
 			value = [theLog from];
