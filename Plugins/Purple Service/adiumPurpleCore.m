@@ -105,7 +105,7 @@ static void init_all_plugins()
 static void load_external_plugins(void)
 {
 	//Load each plugin
-	NSEnumerator			*enumerator = [[SLPurpleCocoaAdapter libpurplePluginArray] objectEnumerator];
+	NSEnumerator			*enumerator = [[SLPurpleCocoaAdapter libgaimPluginArray] objectEnumerator];
 	id <AILibpurplePlugin>	plugin;
 	
 	while ((plugin = [enumerator nextObject])) {
