@@ -150,8 +150,8 @@
 	NSDragOperation dragOperation;
 	
 	if (allowsDragAndDrop) {
-		if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(draggingEntered:)]) {
-			dragOperation = [draggingDelegate draggingEntered:sender];
+		if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(webView:draggingEntered:)]) {
+			dragOperation = [draggingDelegate webView:self draggingEntered:sender];
 		} else {
 			dragOperation = [super draggingEntered:sender];
 		}
@@ -167,8 +167,8 @@
 	NSDragOperation dragOperation;
 	
 	if (allowsDragAndDrop) {
-		if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(draggingUpdated:)]) {
-			dragOperation = [draggingDelegate draggingUpdated:sender];
+		if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(webView:draggingUpdated:)]) {
+			dragOperation = [draggingDelegate webView:self draggingUpdated:sender];
 		} else {
 			dragOperation = [super draggingUpdated:sender];
 		}
@@ -182,8 +182,8 @@
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {
 	if (draggingDelegate) {
-		if ([draggingDelegate respondsToSelector:@selector(draggingExited:)]) {
-			[draggingDelegate draggingExited:sender];
+		if ([draggingDelegate respondsToSelector:@selector(webView:draggingExited:)]) {
+			[draggingDelegate webView:self draggingExited:sender];
 		}
 	} else {
 		[super draggingExited:sender];
@@ -198,8 +198,8 @@
 
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
-	if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(prepareForDragOperation:)]) {
-		return [draggingDelegate prepareForDragOperation:sender];
+	if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(webView:prepareForDragOperation:)]) {
+		return [draggingDelegate webView:self prepareForDragOperation:sender];
 	} else {
 		return [super prepareForDragOperation:sender];
 	}
@@ -207,8 +207,8 @@
 
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
-	if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(performDragOperation:)]) {
-		return [draggingDelegate performDragOperation:sender];
+	if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(webView:performDragOperation:)]) {
+		return [draggingDelegate webView:self performDragOperation:sender];
 	} else {
 		return [super performDragOperation:sender];
 	}
@@ -216,8 +216,8 @@
 
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
-	if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(concludeDragOperation:)]) {
-		[draggingDelegate performSelector:@selector(concludeDragOperation:) withObject:sender];
+	if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(webView:concludeDragOperation:)]) {
+		[draggingDelegate webView:self concludeDragOperation:sender];
 	} else {
 		[super concludeDragOperation:sender];
 	}

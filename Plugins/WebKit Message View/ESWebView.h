@@ -59,3 +59,13 @@
 - (void)setShouldForwardEvents:(BOOL)flag;
 
 @end
+
+@interface NSObject (ESWebViewDragDelegate)
+- (NSDragOperation)webView:(ESWebView *)sender draggingEntered:(id <NSDraggingInfo>)info;
+- (NSDragOperation)webView:(ESWebView *)sender draggingUpdated:(id <NSDraggingInfo>)info;
+- (NSDragOperation)webView:(ESWebView *)sender draggingExited:(id <NSDraggingInfo>)info;
+- (BOOL)webView:(ESWebView *)sender performDragOperation:(id <NSDraggingInfo>)info;
+- (BOOL)webView:(ESWebView *)sender prepareForDragOperation:(id <NSDraggingInfo>)info;
+- (void)webView:(ESWebView *)sender concludeDragOperation:(id <NSDraggingInfo>)info;
+- (BOOL)webView:(ESWebView *)sender shouldHandleDragWithPasteboard:(NSPasteboard *)pasteboard;
+@end
