@@ -133,6 +133,7 @@
 	
 	//Window menu
 	IBOutlet	NSMenuItem	*menuItem_minimize;
+	IBOutlet	NSMenuItem	*menuItem_zoom;
 	IBOutlet	NSMenuItem	*menuItem_bringAllToFront;
 
 	//Help menu

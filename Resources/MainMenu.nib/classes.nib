@@ -130,6 +130,7 @@
                 "menuItem_view" = NSMenuItem; 
                 "menuItem_window" = NSMenuItem; 
                 "menuItem_writingDirection" = NSMenuItem; 
+                "menuItem_zoom" = NSMenuItem; 
                 "menu_Adium_About" = id; 
                 "menu_Adium_Other" = id; 
                 "menu_Adium_Preferences" = id; 
