@@ -125,7 +125,11 @@
  */
 - (void)addContextDisplayToWindow:(NSNotification *)notification
 {
-	AIChat	*chat = (AIChat *)[notification object];	
+	AIChat	*chat = (AIChat *)[notification object];
+	
+	//Don't show context for group chats
+	if ([chat isGroupChat]) return;
+	
 	NSArray	*context = [self contextForChat:chat];
 
 	if (context && [context count] > 0 && shouldDisplay) {
