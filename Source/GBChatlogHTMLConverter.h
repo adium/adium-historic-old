@@ -25,6 +25,17 @@ typedef enum{
 	XML_STATE_STATUS_MESSAGE
 } chatLogState;
 
+/*!
+ *	@brief Different ways of formatting display names
+ */
+typedef enum {
+	AIDefaultName = 0,
+	AIDisplayName = 1,
+	AIDisplayName_ScreenName = 2,
+	AIScreenName_DisplayName = 3,
+	AIScreenName = 4
+} AINameFormat;
+
 @interface GBChatlogHTMLConverter : AIObject {
 	CFXMLParserRef	parser;
 	NSString		*inputFileString;
@@ -41,6 +52,8 @@ typedef enum{
 	
 	NSMutableString *output;
 	NSDictionary	*statusLookup;
+	
+	AINameFormat	nameFormat;
 }
 
 + (NSString *)readFile:(NSString *)filePath;
