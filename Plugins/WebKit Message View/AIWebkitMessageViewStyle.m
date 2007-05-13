@@ -572,8 +572,11 @@ static NSArray *validSenderColors;
 	[inString replaceKeyword:@"%time%" 
 			  withString:(date != nil ? [timeStampFormatter stringForObjectValue:date] : @"")];
 	
-	[inString replaceKeyword:@"%senderStatusIcon%"
-				  withString:[self statusIconPathForListObject:theSource]];
+	if ([inString rangeOfString:@"%senderStatusIcon%"].location != NSNotFound) {
+		//Only cache the status icon to disk if the message style will actually use it
+		[inString replaceKeyword:@"%senderStatusIcon%"
+					  withString:[self statusIconPathForListObject:theSource]];
+	}
 	
 	if(!validSenderColors) {
 		NSString *path = [stylePath stringByAppendingPathComponent:@"Incoming/SenderColors.txt"];
@@ -781,14 +784,17 @@ static NSArray *validSenderColors;
 			NSString *fileName = [[transfer remoteFilename] stringByEscapingForXMLWithEntities:nil];
 			NSString *fileTransferID = [[transfer uniqueID] stringByEscapingForXMLWithEntities:nil];
 
-			do{
-				range = [inString rangeOfString:@"%fileIconPath%"];
+			range = [inString rangeOfString:@"%fileIconPath%"];
+			if (range.location != NSNotFound) {
 				NSString *iconPath = [self iconPathForFileTransfer:transfer];
 				NSImage *icon = [transfer iconImage];
-				[[icon TIFFRepresentation] writeToFile:iconPath atomically:YES];
-				[inString safeReplaceCharactersInRange:range withString:iconPath];
-			} while (range.location != NSNotFound);
-			
+				do{
+					[[icon TIFFRepresentation] writeToFile:iconPath atomically:YES];
+					[inString safeReplaceCharactersInRange:range withString:iconPath];
+					range = [inString rangeOfString:@"%fileIconPath%"];
+				} while (range.location != NSNotFound);
+			}
+
 			[inString replaceKeyword:@"%fileName%"
 						  withString:fileName];
 			
