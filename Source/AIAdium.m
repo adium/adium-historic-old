@@ -452,9 +452,6 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 
 	[self configureHelp];
 	
-	[[self notificationCenter] postNotificationName:AIApplicationDidFinishLoadingNotification object:nil];
-	[[NSDistributedNotificationCenter defaultCenter]  postNotificationName:AIApplicationDidFinishLoadingNotification object:nil];
-
 	[[NSDistributedNotificationCenter defaultCenter] addObserver:self
 														selector:@selector(systemTimeZoneDidChange:)
 															name:@"NSSystemTimeZoneDidChangeDistributedNotification"
@@ -464,6 +461,9 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 	NSConnection *connection = [NSConnection defaultConnection];
 	[connection setRootObject:self];
 	[connection registerName:@"com.adiumx.adiumx"];
+
+	[[self notificationCenter] postNotificationName:AIApplicationDidFinishLoadingNotification object:nil];
+	[[NSDistributedNotificationCenter defaultCenter]  postNotificationName:AIApplicationDidFinishLoadingNotification object:nil];
 
 	[pool release];
 }
