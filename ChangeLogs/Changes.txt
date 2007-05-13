@@ -1,5 +1,19 @@
 				Adium X Version History
 				-----------------------
+Version 1.0.4
+ * Fixed a crash introduced in 1.0.3 which could occur when accounts disconnected or status changed
+ * Fixed a crash introduced in 1.0.3 which could occur after a chat is closed
+ * Fixed group chat when message history is enabled
+ * Fixed incorrect updating of icons in an active chat when a contact's icon changes or your own icon changes
+ * Properly upgrade OTR fingerprints and private keys made in Adium 1.0.2 and earlier (#6891)
+ * Fixed deletion of temporary images when they are no longer needed (#4711 and #6732)
+ * Fixed a crash when command-dragging the message window (#6873)
+ * Improved chat transcript viewer performance after finishing transcript indexing
+ * Added ability for external processes to communicate with Adium via Distributed Objects (connection name: @"com.adiumx.adiumx")
+ * We now follow updates to the system time zone (#5383)
+ * Norwegian update
+ 
+
 Version 1.0.3 (5/9/2007)
  * Fixed a major memory leak after closing chats present since Adium 1.0
  * Updated to [http://pidgin.im libpurple] 2.0.0 (from libpurple 2.0.0 beta)
