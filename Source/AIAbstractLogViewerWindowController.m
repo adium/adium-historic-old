@@ -29,6 +29,7 @@
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIDividedAlternatingRowOutlineView.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIMetaContact.h>
@@ -1755,6 +1756,19 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 		NSLog(@"%@: no idea",item);
 		[cell setImage:nil];
 	}	
+}
+
+/*
+ * @brief Is item supposed to have a divider below?
+ *
+ */
+- (AIDividerPosition)outlineView:(NSOutlineView*)outlineView dividerPositionForItem:(id)item
+{
+	if ([item isKindOfClass:[allContactsIdentifier class]]) {
+		return AIDividerPositionBelow;
+	} else {
+		return AIDividerPositionNone;
+	}
 }
 
 - (void)outlineViewDeleteSelectedRows:(NSTableView *)tableView

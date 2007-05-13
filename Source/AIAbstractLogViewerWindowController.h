@@ -6,7 +6,7 @@
 //
 
 #import <Adium/AIWindowController.h>
-#import <AIUtilities/AIAlternatingRowOutlineView.h>
+#import <AIUtilities/AIDividedAlternatingRowOutlineView.h>
 
 @class AIChatLog, AILoggerPlugin;
 
@@ -63,7 +63,7 @@ typedef enum {
 	IBOutlet	KNShelfSplitView	*shelf_splitView;
 	
 	IBOutlet	AISplitView			*splitView_contacts_results;
-	IBOutlet	AIAlternatingRowOutlineView	*outlineView_contacts;
+	IBOutlet	AIDividedAlternatingRowOutlineView	*outlineView_contacts;
 	IBOutlet	NSView				*containingView_contactsSourceList;
 	float							desiredContactsSourceListDeltaX;
 
