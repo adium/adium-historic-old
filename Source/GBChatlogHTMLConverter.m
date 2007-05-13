@@ -22,6 +22,10 @@
 #import "AIPreferenceController.h"
 #import "AIContactController.h"
 
+#define PREF_GROUP_WEBKIT_MESSAGE_DISPLAY		@"WebKit Message Display"
+#define KEY_WEBKIT_USE_NAME_FORMAT				@"Use Custom Name Format"
+#define KEY_WEBKIT_NAME_FORMAT					@"Name Format"
+
 static void *createStructure(CFXMLParserRef parser, CFXMLNodeRef node, void *context);
 static void addChild(CFXMLParserRef parser, void *parent, void *child, void *context);
 static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
@@ -70,7 +74,14 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 		AILocalizedString(@"Stepped Out", nil), @"steppedOut",
 		nil];
 		
-	
+	if ([[[adium preferenceController] preferenceForKey:KEY_WEBKIT_USE_NAME_FORMAT
+												  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] boolValue]) {
+		nameFormat = [[[adium preferenceController] preferenceForKey:KEY_WEBKIT_NAME_FORMAT
+															   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] intValue];
+	} else {
+		nameFormat = AIDefaultName;
+	}
+
 	return self;
 }
 
@@ -205,30 +216,51 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 					message = [inputFileString substringWithRange:NSMakeRange(messageStart, end - messageStart - 11)];  // 10 for </message> and 1 for the index being off
 				NSString *shownSender;
 				NSString *cssClass;
-				NSString *displayName = nil;
-				if([mySN isEqualToString:sender])
-				{
+				NSString *displayName = nil, *longDisplayName = nil;
+				
+				if ([mySN isEqualToString:sender]) {
+					//Find an account if one exists, and use its name
 					AIAccount *activeAccount = [AIStandardListWindowController activeAccountForDisplayNameGettingOnlineAccounts:nil ownDisplayNameAccounts:nil];
-					
+
 					cssClass = @"send";
 					if(activeAccount != nil)
 						displayName = [activeAccount displayName];
 					else
 						displayName = [[[[adium preferenceController] preferenceForKey:KEY_ACCOUNT_DISPLAY_NAME group:GROUP_ACCOUNT_STATUS] attributedString] string];
-				}
-				else
-				{
+				} else {
 					AIListObject *listObject = [[adium contactController] existingListObjectWithUniqueID:[AIListObject internalObjectIDForServiceID:service UID:sender]];
-					
+
 					cssClass = @"receive";
 					displayName = [listObject displayName];
+					longDisplayName = [listObject longDisplayName];
 				}
-				if(displayName != nil && ![displayName isEqualToString:sender])
-					shownSender = [NSString stringWithFormat:@"%@ (%@)", displayName, sender];
-				else
-					shownSender = sender;
+
+				if (displayName && ![displayName isEqualToString:sender]) {
+					switch (nameFormat) {
+						case AIDefaultName:
+							shownSender = (longDisplayName ? longDisplayName : displayName);
+							break;
+
+						case AIDisplayName:
+							shownSender = displayName;
+							break;
+
+						case AIDisplayName_ScreenName:
+							shownSender = [NSString stringWithFormat:@"%@ (%@)",displayName,sender];
+							break;
+
+						case AIScreenName_DisplayName:
+							shownSender = [NSString stringWithFormat:@"%@ (%@)",sender,displayName];
+							break;
+
+						case AIScreenName:
+							shownSender = sender;
+							break;	
+					}
+				} else {
+					shownSender = sender;					
+				}
 				
-				//NSLog(@"%i: %i, %i - %i - 11 = %i; %@",empty,messageStart,end,messageStart, end - messageStart - 11,message);
 				[output appendFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@%@: </span><pre class=\"message\">%@</pre></div>\n",
 					([mySN isEqualToString:sender] ? @"send" : @"receive"), 
 					[date descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:YES
