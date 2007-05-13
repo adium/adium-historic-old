@@ -612,8 +612,6 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 			if (previousWindowLevel == kCGBackstopMenuLevel) {
 				//We may not longer be doing a manal override if the user generally wants the list at kCGBackstopMenuLevel
 				overrodeWindowLevel = NO;
-			} else {
-				overrodeWindowLevel = YES;
 			}
 		}
 		
