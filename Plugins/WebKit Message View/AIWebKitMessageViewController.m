@@ -1140,7 +1140,6 @@ static NSArray *draggedTypes = nil;
 		 */
 		oldWebKitUserIconPath = [iconSourceObject statusObjectForKey:KEY_WEBKIT_USER_ICON];
 		if (!oldWebKitUserIconPath) {
-			oldWebKitUserIconPath = @"";
 			webKitUserIconPath = [self _webKitUserIconPathForObject:iconSourceObject];
 			if ([[webKitUserIcon PNGRepresentation] writeToFile:webKitUserIconPath
 													 atomically:YES]) {
@@ -1169,8 +1168,8 @@ static NSArray *draggedTypes = nil;
 		for (int i = 0; i < imagesCount; i++) {
 			DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
 
-			if([[img getAttribute:@"src"] rangeOfString:oldWebKitUserIconPath].location != NSNotFound) {
-				[img setSrc:webKitUserIconPath];
+			if(!oldWebKitUserIconPath || [[img getAttribute:@"src"] rangeOfString:oldWebKitUserIconPath].location != NSNotFound) {
+				[img setSrc:webKitUserIconPath ? webKitUserIconPath : @""];
 			}
 		}
 	}
