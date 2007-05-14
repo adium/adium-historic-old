@@ -374,20 +374,26 @@
  * @param account The account on which to create the group chat
  * @param chatCreationInfo A dictionary of information which may be used by the account when joining the chat serverside
  */
-- (AIChat *)chatWithName:(NSString *)inName onAccount:(AIAccount *)account chatCreationInfo:(NSDictionary *)chatCreationInfo
+- (AIChat *)chatWithName:(NSString *)name identifier:(id)identifier onAccount:(AIAccount *)account chatCreationInfo:(NSDictionary *)chatCreationInfo
 {
 	AIChat			*chat = nil;
-	
-	//Search for an existing chat we can use instead of creating a new one
-	chat = [self existingChatWithName:inName onAccount:account];
-	AILog(@"chatWithName %@ existing --> %@",inName,chat);
+
+	if (identifier) {
+		chat = [self existingChatWithIdentifier:identifier onAccount:account];
+	} else {
+		//If the caller doesn't care about the identifier, do a search based on name to avoid creating a new chat incorrectly
+		chat = [self existingChatWithName:name onAccount:account];
+	}
+
+	AILog(@"chatWithName %@ identifier %@ existing --> %@", name, identifier, chat);
 	if (!chat) {
 		//Create a new chat
 		chat = [AIChat chatForAccount:account];
-		[chat setName:inName];
+		[chat setName:name];
+		[chat setIdentifier:identifier];
 		[chat setIsGroupChat:YES];
 		[openChats addObject:chat];
-		AILog(@"chatWithName:%@ onAccount:%@ added <<%@>> [%@]",inName,account,chat,openChats);
+		AILog(@"chatWithName:%@ identifier:%@ onAccount:%@ added <<%@>> [%@]",name,identifier,account,chat,openChats);
 		
 		if (chatCreationInfo) [chat setStatusObject:chatCreationInfo
 											 forKey:@"ChatCreationInfo"
@@ -404,8 +410,30 @@
 			chat = nil;
 		}
 		
-		AILog(@"chatWithName %@ created --> %@",inName,chat);
+		AILog(@"chatWithName %@ created --> %@",name,chat);
 	}
+	return chat;
+}
+
+/*!
+* @brief Find an existing group chat
+ *
+ * @result The group AIChat, or nil if no such chat exists
+ */
+- (AIChat *)existingChatWithName:(NSString *)name onAccount:(AIAccount *)account
+{
+	NSEnumerator	*enumerator;
+	AIChat			*chat = nil;
+	
+	enumerator = [openChats objectEnumerator];
+	
+	while ((chat = [enumerator nextObject])) {
+		if (([chat account] == account) &&
+			([[chat name] isEqualToString:name])) {
+			break;
+		}
+	}	
+	
 	return chat;
 }
 
@@ -414,7 +442,7 @@
  *
  * @result The group AIChat, or nil if no such chat exists
  */
-- (AIChat *)existingChatWithName:(NSString *)inName onAccount:(AIAccount *)account
+- (AIChat *)existingChatWithIdentifier:(id)identifier onAccount:(AIAccount *)account
 {
 	NSEnumerator	*enumerator;
 	AIChat			*chat = nil;
@@ -423,7 +451,7 @@
 
 	while ((chat = [enumerator nextObject])) {
 		if (([chat account] == account) &&
-		   ([[chat name] isEqualToString:inName])) {
+		   ([[chat identifier] isEqual:identifier])) {
 			break;
 		}
 	}	

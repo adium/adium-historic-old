@@ -58,13 +58,9 @@
  * can't be ObjC methods. The ObjC callbacks do need to be ObjC methods. This
  * allows the C ones to call the ObjC ones.
  **/
-static SLPurpleCocoaAdapter   *sharedInstance = nil;
+static SLPurpleCocoaAdapter	*sharedInstance = nil;
 
-//Dictionaries to track purple<->adium interactions
-NSMutableDictionary *accountDict = nil;
-NSMutableDictionary *chatDict = nil;
-
-static NSMutableArray	*libpurplePluginArray = nil;
+static NSMutableArray		*libpurplePluginArray = nil;
 
 @implementation SLPurpleCocoaAdapter
 
@@ -134,9 +130,6 @@ static NSMutableArray	*libpurplePluginArray = nil;
 - (id)init
 {
 	if ((self = [super init])) {
-		accountDict = [[NSMutableDictionary alloc] init];
-		chatDict = [[NSMutableDictionary alloc] init];
-
 		[self initLibPurple];		
 	}
 	
@@ -303,9 +296,7 @@ AIChat* groupChatLookupFromConv(PurpleConversation *conv)
 	if (!chat) {
 		NSString *name = [NSString stringWithUTF8String:conv->name];
 		
-		chat = [accountLookup(conv->account) chatWithName:name];
-
-		[chatDict setObject:[NSValue valueWithPointer:conv] forKey:[chat uniqueChatID]];
+		chat = [accountLookup(conv->account) chatWithName:name identifier:[NSValue valueWithPointer:conv]];
 		conv->ui_data = [chat retain];
 		AILog(@"group chat lookup assigned %@ to %p",chat,conv);
 	}
@@ -361,7 +352,7 @@ AIChat* imChatLookupFromConv(PurpleConversation *conv)
 		sourceContact = contactLookupFromBuddy(buddy);
 
 		// Need to start a new chat, associating with the PurpleConversation
-		chat = [accountLookup(account) chatWithContact:sourceContact];
+		chat = [accountLookup(account) chatWithContact:sourceContact identifier:[NSValue valueWithPointer:conv]];
 
 		if (!chat) {
 			NSString	*errorString;
@@ -380,7 +371,6 @@ AIChat* imChatLookupFromConv(PurpleConversation *conv)
 		}
 
 		//Associate the PurpleConversation with the AIChat
-		[chatDict setObject:[NSValue valueWithPointer:conv] forKey:[chat uniqueChatID]];
 		conv->ui_data = [chat retain];
 	}
 
@@ -389,8 +379,8 @@ AIChat* imChatLookupFromConv(PurpleConversation *conv)
 
 PurpleConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 {
-	PurpleConversation	*conv = [[chatDict objectForKey:[chat uniqueChatID]] pointerValue];
-	PurpleAccount			*account = accountLookupFromAdiumAccount(adiumAccount);
+	PurpleConversation	*conv = [[chat identifier] pointerValue];
+	PurpleAccount		*account = accountLookupFromAdiumAccount(adiumAccount);
 	
 	if (!conv && adiumAccount) {
 		AIListObject *listObject = [chat listObject];
@@ -424,7 +414,7 @@ PurpleConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 				 We should never get to this point if we were invited to a chat, as groupChatLookupFromConv(),
 				 which was called when we accepted the invitation and got the chat information from Purple,
 				 will have associated the PurpleConversation with the chat and we would have stopped after
-				 [[chatDict objectForKey:[chat uniqueChatID]] pointerValue] above.
+				 [[chat identifier] pointerValue] above.
 				 
 				 However, there's no reason not to check just in case.
 				 */
@@ -449,7 +439,7 @@ PurpleConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					GHashTable				*components;
 					
 					//Prpl Info
-					PurpleConnection			*gc = purple_account_get_connection(account);
+					PurpleConnection		*gc = purple_account_get_connection(account);
 					GList					*list, *tmp;
 					struct proto_chat_entry *pce;
 					NSString				*identifier;
@@ -537,7 +527,7 @@ PurpleConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 
 PurpleConversation* existingConvLookupFromChat(AIChat *chat)
 {
-	return (PurpleConversation *)[[chatDict objectForKey:[chat uniqueChatID]] pointerValue];
+	return (PurpleConversation *)[[chat identifier] pointerValue];
 }
 
 void* adium_purple_get_handle(void)
@@ -545,11 +535,6 @@ void* adium_purple_get_handle(void)
 	static int adium_purple_handle;
 	
 	return &adium_purple_handle;
-}
-
-NSMutableDictionary* get_chatDict(void)
-{
-	return chatDict;
 }
 
 #pragma mark Images
@@ -1089,10 +1074,6 @@ NSString* processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 	PurpleConversation *conv = existingConvLookupFromChat(chat);
 
 	if (conv) {
-		//We use chatDict's objectfor the passed chatUniqueID because we can no longer trust any other
-		//values due to threading potentially letting them have changed on us.
-		[chatDict removeObjectForKey:[chat uniqueChatID]];
-			
 		//We retained the chat when setting it as the ui_data; we are releasing here, so be sure to set conv->ui_data
 		//to nil so we don't try to do it again.
 		[(AIChat *)conv->ui_data release];

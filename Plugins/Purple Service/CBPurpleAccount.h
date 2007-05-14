@@ -120,7 +120,7 @@
 - (void)addChat:(AIChat *)chat;
 - (void)typingUpdateForIMChat:(AIChat *)chat typing:(NSNumber *)typing;
 - (void)updateForChat:(AIChat *)chat type:(NSNumber *)type;
-- (AIChat *)chatWithContact:(AIListContact *)contact;
+- (AIChat *)chatWithContact:(AIListContact *)contact identifier:(id)identifier;
 
 - (void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
 - (void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
@@ -140,7 +140,7 @@
 - (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject;
 - (BOOL)canSendFolders;
 
-- (AIChat *)chatWithName:(NSString *)name;
+- (AIChat *)chatWithName:(NSString *)name identifier:(id)identifier;
 - (void)requestAddContactWithUID:(NSString *)contactUID;
 
 - (void)gotGroupForContact:(AIListContact *)contact;

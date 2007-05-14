@@ -408,6 +408,7 @@
 	
 	if (roomname && account) {
 		[[[AIObject sharedAdiumInstance] chatController] chatWithName:roomname
+														   identifier:nil
 															onAccount:account
 													 chatCreationInfo:[NSDictionary dictionaryWithObjectsAndKeys:
 																		roomname, @"room",
