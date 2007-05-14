@@ -49,6 +49,7 @@
 	//User icon masking
 	NSImage						*imageMask;
 	NSMutableArray				*objectsWithUserIconsArray;
+	NSMutableDictionary			*objectIconPathDict;
 }
 
 /*!
