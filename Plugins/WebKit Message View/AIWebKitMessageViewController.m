@@ -167,6 +167,7 @@ static NSArray *draggedTypes = nil;
 	[preferencesChangedDelegate release]; preferencesChangedDelegate = nil;
 	[plugin release]; plugin = nil;
 	[objectsWithUserIconsArray release]; objectsWithUserIconsArray = nil;
+	[objectIconPathDict release]; objectIconPathDict = nil;
 
 	//Stop any delayed requests and remove all observers
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
