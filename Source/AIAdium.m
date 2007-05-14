@@ -460,7 +460,7 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 	//Broadcast our presence
 	NSConnection *connection = [NSConnection defaultConnection];
 	[connection setRootObject:self];
-	[connection registerName:@"com.adiumx.adiumx"];
+	[connection registerName:@"com.adiumX.adiumX"];
 
 	[[self notificationCenter] postNotificationName:AIApplicationDidFinishLoadingNotification object:nil];
 	[[NSDistributedNotificationCenter defaultCenter]  postNotificationName:AIApplicationDidFinishLoadingNotification object:nil];
