@@ -381,7 +381,7 @@ PurpleConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 {
 	PurpleConversation	*conv = [[chat identifier] pointerValue];
 	PurpleAccount		*account = accountLookupFromAdiumAccount(adiumAccount);
-	
+
 	if (!conv && adiumAccount) {
 		AIListObject *listObject = [chat listObject];
 		
@@ -1074,11 +1074,14 @@ NSString* processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 	PurpleConversation *conv = existingConvLookupFromChat(chat);
 
 	if (conv) {
-		//We retained the chat when setting it as the ui_data; we are releasing here, so be sure to set conv->ui_data
-		//to nil so we don't try to do it again.
+		[chat setIdentifier:nil];
+
+		/* We retained the chat when setting it as the ui_data; we are releasing here, so be sure to set conv->ui_data
+		 * to nil so we don't try to do it again.
+		 */
 		[(AIChat *)conv->ui_data release];
 		conv->ui_data = nil;
-		
+
 		//Tell purple to destroy the conversation.
 		purple_conversation_destroy(conv);
 	}	
