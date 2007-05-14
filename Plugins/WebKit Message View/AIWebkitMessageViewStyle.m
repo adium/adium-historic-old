@@ -242,7 +242,7 @@ static NSArray *validSenderColors;
 	useCustomNameFormat = inValue;
 }
 
-- (void)setNameFormat:(int)inValue
+- (void)setNameFormat:(AINameFormat)inValue
 {
 	nameFormat = inValue;
 }
@@ -687,23 +687,27 @@ static NSArray *validSenderColors;
 				if (useCustomNameFormat) {
 			 		if (formattedUID && ![displayName isEqualToString:formattedUID]) {
 						switch (nameFormat) {
-							case Display_Name_Screen_Name: {
-								senderDisplay = [NSString stringWithFormat:@"%@ (%@)",displayName,formattedUID];
-								break;	
-							}
-							case Screen_Name_Display_Name: {
-								senderDisplay = [NSString stringWithFormat:@"%@ (%@)",formattedUID,displayName];
-								break;	
-							}
-							case Screen_Name: {
-								senderDisplay = formattedUID;
-								break;	
-							}
-							case Display_Name: {
+							case AIDefaultName:
+								break;
+
+							case AIDisplayName:
 								senderDisplay = displayName;
-							}
+								break;
+
+							case AIDisplayName_ScreenName:
+								senderDisplay = [NSString stringWithFormat:@"%@ (%@)",displayName,formattedUID];
+								break;
+
+							case AIScreenName_DisplayName:
+								senderDisplay = [NSString stringWithFormat:@"%@ (%@)",formattedUID,displayName];
+								break;
+
+							case AIScreenName:
+								senderDisplay = formattedUID;
+								break;
 						}
 					}
+
 					//Test both displayName and formattedUID for nil-ness. If they're both nil, the assertion will trip.
 					if (!senderDisplay) {
 						senderDisplay = displayName;
