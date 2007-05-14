@@ -204,6 +204,20 @@
 	[adiumNotificationCenter postNotificationName:Interface_ContactListDidClose object:self];
 }
 
+int levelForAIWindowLevel(AIWindowLevel windowLevel)
+{
+	int				level;
+
+	switch (windowLevel) {
+		case AINormalWindowLevel: level = NSNormalWindowLevel; break;
+		case AIFloatingWindowLevel: level = NSFloatingWindowLevel; break;
+		case AIDesktopWindowLevel: level = kCGBackstopMenuLevel; break;
+		default: level = NSNormalWindowLevel; break;
+	}
+	
+	return level;
+}
+
 - (void)setWindowLevel:(int)level
 {
 	[[self window] setLevel:level];
@@ -221,15 +235,8 @@
 
     if ([group isEqualToString:PREF_GROUP_CONTACT_LIST]) {
 		AIWindowLevel	windowLevel = [[prefDict objectForKey:KEY_CL_WINDOW_LEVEL] intValue];
-		int				level;
 		
-		switch (windowLevel) {
-			case AINormalWindowLevel: level = NSNormalWindowLevel; break;
-			case AIFloatingWindowLevel: level = NSFloatingWindowLevel; break;
-			case AIDesktopWindowLevel: level = kCGBackstopMenuLevel; break;
-			default: level = NSNormalWindowLevel; break;
-		}
-		[self setWindowLevel:level];
+		[self setWindowLevel:levelForAIWindowLevel(windowLevel)];
 
 		listHasShadow = [[prefDict objectForKey:KEY_CL_WINDOW_HAS_SHADOW] boolValue];
 		[[self window] setHasShadow:listHasShadow];
@@ -586,7 +593,6 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	if ([self shouldSlideWindowOnScreen]) {
 		//If we're hiding the window (generally) but now sliding it on screen, make sure it's on top
 		if (windowHidingStyle == AIContactListWindowHidingStyleSliding) {
-			previousWindowLevel = [[self window] level];
 			[self setWindowLevel:NSFloatingWindowLevel];
 			overrodeWindowLevel = YES;
 		}
@@ -608,11 +614,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		if (overrodeWindowLevel &&
 			windowHidingStyle == AIContactListWindowHidingStyleSliding) {
 			[self setWindowLevel:kCGBackstopMenuLevel];
-
-			if (previousWindowLevel == kCGBackstopMenuLevel) {
-				//We may not longer be doing a manal override if the user generally wants the list at kCGBackstopMenuLevel
-				overrodeWindowLevel = NO;
-			}
+			overrodeWindowLevel = YES;
 		}
 		
 	} else if (overrodeWindowLevel &&
@@ -623,7 +625,9 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		 *   2. No longer have any edges eligible for sliding
 		 * we should restore our window level.
 		 */
-		[self setWindowLevel:previousWindowLevel];
+		AIWindowLevel	windowLevel = [[[adium preferenceController] preferenceForKey:KEY_CL_WINDOW_LEVEL
+																				group:PREF_GROUP_CONTACT_LIST] intValue];
+		[self setWindowLevel:levelForAIWindowLevel(windowLevel)];
 		overrodeWindowLevel = NO;
 	}
 }
