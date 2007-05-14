@@ -49,6 +49,17 @@ typedef enum {
 } NameFormat;
 
 /*!
+ *	@brief Different ways of formatting display names
+ */
+typedef enum {
+	AIDefaultName = 0,
+	AIDisplayName = 1,
+	AIDisplayName_ScreenName = 2,
+	AIScreenName_DisplayName = 3,
+	AIScreenName = 4
+} AINameFormat;
+
+/*!
  *	@brief Different ways of displaying background images
  */
 typedef enum {
@@ -92,7 +103,7 @@ typedef enum {
 
 	//Behavior
 	NSDateFormatter		*timeStampFormatter;
-	NameFormat			nameFormat;
+	AINameFormat		nameFormat;
 	BOOL				useCustomNameFormat;
 	BOOL				showUserIcons;
 	BOOL				showHeader;
@@ -215,7 +226,7 @@ typedef enum {
 /*!
  *	@brief Set the custom name format being used
  */
-- (void)setNameFormat:(int)inValue;
+- (void)setNameFormat:(AINameFormat)inValue;
 
 /*!
  *	@brief Set visibility of message background colors
