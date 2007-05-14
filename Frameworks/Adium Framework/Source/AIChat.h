@@ -97,6 +97,7 @@ typedef enum {
 	AIListContact		*preferredListObject;
 	NSString			*name;
 	NSString			*uniqueChatID;
+	id					identifier;
 	
 	NSMutableSet		*ignoredListContacts;
 	
@@ -141,6 +142,9 @@ typedef enum {
 
 - (NSString *)name;
 - (void)setName:(NSString *)inName;
+
+- (id)identifier;
+- (void)setIdentifier:(id)inIdentifier;
 
 - (NSString *)uniqueChatID;
 

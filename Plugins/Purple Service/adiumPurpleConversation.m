@@ -39,21 +39,15 @@ static void adiumPurpleConvCreate(PurpleConversation *conv)
 
 static void adiumPurpleConvDestroy(PurpleConversation *conv)
 {
-	//Purple is telling us a conv was destroyed.  We've probably already cleaned up, but be sure in case purple calls this
-	//when we don't ask it to (for example if we are summarily kicked from a chat room and purple closes the 'window').
+	/* Purple is telling us a conv was destroyed.  We've probably already cleaned up, but be sure in case purple calls this
+	 * when we don't ask it to (for example if we are summarily kicked from a chat room and purple closes the 'window').
+	 */
 	AIChat *chat;
 
 	chat = (AIChat *)conv->ui_data;
 
 	//Chat will be nil if we've already cleaned up, at which point no further action is needed.
 	if (chat) {
-		//The chat's uniqueChatID may have changed before we got here.  Make sure we are talking about the proper conv
-		//before removing its NSValue from the chatDict
-		NSMutableDictionary	*chatDict = get_chatDict();
-		if (conv == [[chatDict objectForKey:[chat uniqueChatID]] pointerValue]) {
-			[chatDict removeObjectForKey:[chat uniqueChatID]];
-		}
-
 		[chat release];
 		conv->ui_data = nil;
 	}

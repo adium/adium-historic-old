@@ -92,10 +92,12 @@ static int nextChatNumber = 0;
 {
 	AIListObject 	*listObject = [self listObject];
 	NSImage			*image = nil;
-	
+
 	if (listObject) {
 		image = [listObject userIcon];
 		if (!image) image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconNormal];
+	} else {
+		image = [AIServiceIcons serviceIconForObject:[self account] type:AIServiceIconLarge direction:AIIconNormal];
 	}
 
 	return image;
@@ -248,7 +250,34 @@ static int nextChatNumber = 0;
 }
 - (void)setName:(NSString *)inName
 {
-	[name release]; name = [inName retain]; 
+	if (name != inName) {
+		[name release]; name = [inName retain]; 
+	}
+}
+
+/*!
+ * @brief Return an identifier which can be used to look up this chat later
+ *
+ * Use setIdentifier to specify an arbitrary identifier for this chat.
+ *
+ * Use uniqueChatID as a unique identifier for a contact-service combination.
+ */
+- (id)identifier
+{
+	return identifier;
+}
+
+/*!
+ * @brief Set an identifier for this chat
+ *
+ * Only an account which created a chat should specify the identifier; it has no useful menaing outside that context.
+ */
+- (void)setIdentifier:(id)inIdentifier
+{
+	if (identifier != inIdentifier) {
+		[identifier release];
+		identifier = [inIdentifier retain];
+	}
 }
 
 - (NSString *)displayName
@@ -340,14 +369,18 @@ static int nextChatNumber = 0;
 - (NSString *)uniqueChatID
 {
 	if (!uniqueChatID) {
-		AIListObject	*listObject;
-		if ((listObject = [self listObject])) {
-			uniqueChatID = [[listObject internalObjectID] retain];
-		} else if (name) {
-			uniqueChatID = [[NSString alloc] initWithFormat:@"%@.%i",name,nextChatNumber++];
+		if ([self isGroupChat]) {
+			uniqueChatID = [[NSString alloc] initWithFormat:@"%@.%i",[self name],nextChatNumber++];
+		} else {			
+			uniqueChatID = [[[self listObject] internalObjectID] retain];
+		}
+
+		if (!uniqueChatID) {
+			uniqueChatID = [[NSString alloc] initWithFormat:@"UnknownChat.%i",nextChatNumber++];
+			NSLog(@"Warning: Unknown chat %p",self);
 		}
 	}
-	
+
 	return (uniqueChatID);
 }
 

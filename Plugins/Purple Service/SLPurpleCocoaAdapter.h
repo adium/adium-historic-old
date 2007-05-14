@@ -100,7 +100,6 @@ AIListContact *contactLookupFromIMConv(PurpleConversation *conv);
 AIListContact *contactLookupFromBuddy(PurpleBuddy *buddy);
 PurpleAccount *accountLookupFromAdiumAccount(CBPurpleAccount *adiumAccount);
 CBPurpleAccount *accountLookup(PurpleAccount *acct);
-NSMutableDictionary *get_chatDict(void);
 
 //Images
 NSString* processPurpleImages(NSString* inString, AIAccount* adiumAccount);

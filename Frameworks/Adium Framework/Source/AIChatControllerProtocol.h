@@ -25,8 +25,14 @@
 - (AIChat *)chatWithContact:(AIListContact *)inContact;
 - (AIChat *)existingChatWithContact:(AIListContact *)inContact;
 - (AIChat *)existingChatWithUniqueChatID:(NSString *)uniqueChatID;
-- (AIChat *)chatWithName:(NSString *)inName onAccount:(AIAccount *)account chatCreationInfo:(NSDictionary *)chatCreationInfo;
-- (AIChat *)existingChatWithName:(NSString *)inName onAccount:(AIAccount *)account;
+- (AIChat *)chatWithName:(NSString *)inName 
+			  identifier:(id)identifier
+			   onAccount:(AIAccount *)account
+		chatCreationInfo:(NSDictionary *)chatCreationInfo;
+
+- (AIChat *)existingChatWithIdentifier:(id)identifier onAccount:(AIAccount *)account;
+- (AIChat *)existingChatWithName:(NSString *)name onAccount:(AIAccount *)account;
+
 - (BOOL)closeChat:(AIChat *)inChat;
 - (NSSet *)openChats;
 - (AIChat *)mostRecentUnviewedChat;

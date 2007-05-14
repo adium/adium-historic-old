@@ -573,15 +573,18 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
     return YES;
 }
 
-- (AIChat *)chatWithContact:(AIListContact *)contact
+- (AIChat *)chatWithContact:(AIListContact *)contact identifier:(id)identifier
 {
-	return [[adium chatController] chatWithContact:contact];
+	AIChat *chat = [[adium chatController] chatWithContact:contact];
+	[chat setIdentifier:identifier];
+
+	return chat;
 }
 
 
-- (AIChat *)chatWithName:(NSString *)name
+- (AIChat *)chatWithName:(NSString *)name identifier:(id)identifier
 {
-	return [[adium chatController] chatWithName:name onAccount:self chatCreationInfo:nil];
+	return [[adium chatController] chatWithName:name identifier:identifier onAccount:self chatCreationInfo:nil];
 }
 
 //Typing update in an IM
