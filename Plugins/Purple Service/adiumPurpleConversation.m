@@ -48,6 +48,7 @@ static void adiumPurpleConvDestroy(PurpleConversation *conv)
 
 	//Chat will be nil if we've already cleaned up, at which point no further action is needed.
 	if (chat) {
+		[chat setIdentifier:nil];
 		[chat release];
 		conv->ui_data = nil;
 	}
