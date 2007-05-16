@@ -291,7 +291,7 @@
 	
 	//Setup our edit button, keeping its right side in the same location
 	oldFrame = [button_editAccount frame];
-	[button_editAccount setTitle:AILocalizedString(@"Edit",nil)];
+	[button_editAccount setTitle:AILocalizedStringFromTable(@"Edit", @"Buttons", "Verb 'edit' on a button")];
 	[button_editAccount sizeToFit];
 	newFrame = [button_editAccount frame];
 	if (newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;

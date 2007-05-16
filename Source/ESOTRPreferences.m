@@ -127,7 +127,7 @@
 				
 				if (context->msgstate == OTRL_MSGSTATE_ENCRYPTED &&
 					context->active_fingerprint != fingerprint) {
-					state = AILocalizedString(@"Unused",nil);
+					state = AILocalizedString(@"Unused","Word to describe an encryption fingerprint which is not currently being used");
 				} else {
 					TrustLevel trustLevel = otrg_plugin_context_to_trust(context);
 					

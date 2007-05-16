@@ -330,14 +330,14 @@
 - (void)localizeMenuTitles
 {
 	//Menu items in MainMenu.nib for localization purposes
-	[menuItem_file setTitle:AILocalizedString(@"File",nil)];
-	[menuItem_edit setTitle:AILocalizedString(@"Edit",nil)];
-	[menuItem_view setTitle:AILocalizedString(@"View",nil)];
-	[menuItem_status setTitle:AILocalizedString(@"Status",nil)];
-	[menuItem_contact setTitle:AILocalizedString(@"Contact",nil)];
-	[menuItem_format setTitle:AILocalizedString(@"Format",nil)];
-	[menuItem_window setTitle:AILocalizedString(@"Window",nil)];
-	[menuItem_help setTitle:AILocalizedString(@"Help",nil)];
+	[menuItem_file setTitle:AILocalizedString(@"File","Title of the File menu")];
+	[menuItem_edit setTitle:AILocalizedString(@"Edit","Title of the Edit menu")];
+	[menuItem_view setTitle:AILocalizedString(@"View","Title of the View menu")];
+	[menuItem_status setTitle:AILocalizedString(@"Status","Title of the Status menu")];
+	[menuItem_contact setTitle:AILocalizedString(@"Contact","Title of the Contact menu")];
+	[menuItem_format setTitle:AILocalizedString(@"Format","Title of the Format menu")];
+	[menuItem_window setTitle:AILocalizedString(@"Window","Title of the Window menu")];
+	[menuItem_help setTitle:AILocalizedString(@"Help","Title of the Help menu")];
 
 	//Adium menu
 	[menuItem_aboutAdium setTitle:AILocalizedString(@"About Adium",nil)];
