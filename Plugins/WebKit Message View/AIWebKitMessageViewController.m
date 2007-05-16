@@ -162,7 +162,7 @@ static NSArray *draggedTypes = nil;
  */
 - (void)dealloc
 {
-	[self removeAllCachedIcons];
+	[self releaseAllCachedIcons];
 
 	[preferencesChangedDelegate release]; preferencesChangedDelegate = nil;
 	[plugin release]; plugin = nil;
