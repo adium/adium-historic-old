@@ -1192,20 +1192,25 @@ static NSArray *draggedTypes = nil;
 									   notify:NotifyNever];
 		}
 		
+		if (!webKitUserIconPath) webKitUserIconPath = @"";
+
 		//Update existing images
-		if (oldWebKitUserIconPath) {
+		if (oldWebKitUserIconPath &&
+			![oldWebKitUserIconPath isEqualToString:webKitUserIconPath]) {
 			DOMNodeList  *images = [[[webView mainFrame] DOMDocument] getElementsByTagName:@"img"];
 			unsigned int imagesCount = [images length];
-			
+
+			webKitUserIconPath = [[webKitUserIconPath copy] autorelease];
+
 			for (int i = 0; i < imagesCount; i++) {
 				DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
-				
-				if([[img getAttribute:@"src"] rangeOfString:oldWebKitUserIconPath].location != NSNotFound) {
-					[img setSrc:(webKitUserIconPath ? webKitUserIconPath : @"")];
+				NSString *currentSrc = [img getAttribute:@"src"];
+				if (currentSrc && ([currentSrc rangeOfString:oldWebKitUserIconPath].location != NSNotFound)) {
+					[img setSrc:webKitUserIconPath];
 				}
 			}
 		}
-		
+
 		[objectIconPathDict setObject:webKitUserIconPath
 							   forKey:[iconSourceObject internalObjectID]];
 	}
