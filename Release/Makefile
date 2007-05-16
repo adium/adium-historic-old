@@ -50,10 +50,11 @@ endif
 PLIST_DIR=`pwd`/../Plists
 ADIUM_PLIST=$(PLIST_DIR)/Adium_2
 
-.PHONY: all all-withlocalchanges update assertnochanges assertnoconflicts version compile clean release source prepare-release-bundle createfolder diskimage
+.PHONY: all all-withlocalchanges all-withlocalchanges-noclean update assertnochanges assertnoconflicts version compile clean release source prepare-release-bundle createfolder diskimage
 
 all: update assertnochanges version clean compile release
 all-withlocalchanges: update assertnoconflicts version clean compile release
+all-withlocalchanges-noclean: update assertnoconflicts version compile release
 
 update:
 	svn update $(SRC_DIR)
