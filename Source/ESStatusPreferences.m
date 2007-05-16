@@ -68,7 +68,7 @@
 		
 		//Edit, right justified and far enough away from Remove that it can't conceivably overlap
 		oldFrame = [button_editState frame];
-		[button_editState setTitle:AILocalizedString(@"Edit",nil)];
+		[button_editState setTitle:AILocalizedStringFromTable(@"Edit", @"Buttons", "Verb 'edit' on a button")];
 		[button_editState sizeToFit];
 		newFrame = [button_editState frame];
 		if (newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;

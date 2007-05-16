@@ -177,7 +177,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 				label = AILocalizedString(@"Accounts",nil);
 				break;
 			case AIInfo_Alerts:
-				label = AILocalizedString(@"Events", "Name of preferences and tab for specifying what Adium should do when events occur - for example, when display a Growl alert when John signs on.");
+				label = AILocalizedString(@"Events", "Name of preferences and tab for specifying what Adium should do when events occur - for example, display a Growl alert when John signs on.");
 				break;
 			case AIInfo_Settings:
 				label = AILocalizedString(@"Settings","tab view item title for Contact Settings (Settings)");
