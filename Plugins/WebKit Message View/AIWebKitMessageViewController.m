@@ -156,7 +156,6 @@ static NSArray *draggedTypes = nil;
 	[webView release]; webView = nil;
 }
 
-
 /*!
  * @brief Deallocate
  */
@@ -796,13 +795,12 @@ static NSArray *draggedTypes = nil;
 		}
 		
 		NSArray *locations;
-		if ([chatListObject isStranger]) {
+		if (![chatListObject isStranger]) {
 			locations = [NSArray arrayWithObjects:
 				[NSNumber numberWithInt:Context_Contact_Manage],
 				[NSNumber numberWithInt:Context_Contact_Action],
 				[NSNumber numberWithInt:Context_Contact_NegativeAction],
 				[NSNumber numberWithInt:Context_Contact_ChatAction],
-				[NSNumber numberWithInt:Context_Contact_Stranger_ChatAction],
 				[NSNumber numberWithInt:Context_Contact_Additions], nil];
 		} else {
 			locations = [NSArray arrayWithObjects:
@@ -810,6 +808,7 @@ static NSArray *draggedTypes = nil;
 				[NSNumber numberWithInt:Context_Contact_Action],
 				[NSNumber numberWithInt:Context_Contact_NegativeAction],
 				[NSNumber numberWithInt:Context_Contact_ChatAction],
+				[NSNumber numberWithInt:Context_Contact_Stranger_ChatAction],
 				[NSNumber numberWithInt:Context_Contact_Additions], nil];
 		}
 		
@@ -1193,20 +1192,25 @@ static NSArray *draggedTypes = nil;
 									   notify:NotifyNever];
 		}
 		
+		if (!webKitUserIconPath) webKitUserIconPath = @"";
+
 		//Update existing images
-		if (oldWebKitUserIconPath) {
+		if (oldWebKitUserIconPath &&
+			![oldWebKitUserIconPath isEqualToString:webKitUserIconPath]) {
 			DOMNodeList  *images = [[[webView mainFrame] DOMDocument] getElementsByTagName:@"img"];
 			unsigned int imagesCount = [images length];
-			
+
+			webKitUserIconPath = [[webKitUserIconPath copy] autorelease];
+
 			for (int i = 0; i < imagesCount; i++) {
 				DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
-				
-				if([[img getAttribute:@"src"] rangeOfString:oldWebKitUserIconPath].location != NSNotFound) {
-					[img setSrc:(webKitUserIconPath ? webKitUserIconPath : @"")];
+				NSString *currentSrc = [img getAttribute:@"src"];
+				if (currentSrc && ([currentSrc rangeOfString:oldWebKitUserIconPath].location != NSNotFound)) {
+					[img setSrc:webKitUserIconPath];
 				}
 			}
 		}
-		
+
 		[objectIconPathDict setObject:webKitUserIconPath
 							   forKey:[iconSourceObject internalObjectID]];
 	}
@@ -1216,7 +1220,6 @@ static NSArray *draggedTypes = nil;
 {
 	DOMNodeList  *images = [[[webView mainFrame] DOMDocument] getElementsByTagName:@"img"];
 	unsigned int imagesCount = [images length];
-	AILog(@"Updating cusotm emoticon in %@",self);
 
 	if (imagesCount > 0) {
 		AIEmoticon	*emoticon = [[inNotification userInfo] objectForKey:@"AIEmoticon"];
@@ -1230,16 +1233,11 @@ static NSArray *draggedTypes = nil;
 			
 			if ([[img className] isEqualToString:@"emoticon"] &&
 				[[img getAttribute:@"alt"] isEqualToString:textEquivalent]) {
-				AILog(@"Updating image %@ to %@",img,path);
 				[img setSrc:path];
 				[img setWidth:emoticonSize.width];
 				[img setHeight:emoticonSize.height];
 				updatedImage = YES;
 			}
-		}
-		if (!updatedImage) {
-			AILog(@"Couldn't find an image out of the %i with className \"emoticon\" and alt of %@",
-				  imagesCount,textEquivalent);
 		}
 		NSNumber *shouldScroll = [[webView windowScriptObject] callWebScriptMethod:@"nearBottom"
 																	 withArguments:nil];
@@ -1274,7 +1272,7 @@ static NSArray *draggedTypes = nil;
 			a = AICancel;
 		else
 			a = AISaveFile;
-		AILog(@"Telling %@'s %@ to handle the action",fileTransfer,tc);
+		
 		[tc handleFileTransferAction:a];
 	}
 }
