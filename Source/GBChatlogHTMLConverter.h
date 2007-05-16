@@ -45,6 +45,7 @@ typedef enum {
 	NSString		*sender;
 	NSString		*mySN;
 	NSString		*service;
+	NSString		*myDisplayName;
 	NSCalendarDate	*date;
 	int				messageStart;
 	BOOL			autoResponse;

@@ -15,12 +15,16 @@
  */
 
 #import "GBChatlogHTMLConverter.h"
+#import "AIStandardListWindowController.h"
+#import <Adium/AIListContact.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/NSCalendarDate+ISO8601Parsing.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
-#import <Adium/AIListContact.h>
-#import "AIStandardListWindowController.h"
-#import "AIPreferenceController.h"
-#import "AIContactController.h"
+#import <AIUtilities/AIStringAdditions.h>
+
+
 
 #define PREF_GROUP_WEBKIT_MESSAGE_DISPLAY		@"WebKit Message Display"
 #define KEY_WEBKIT_USE_NAME_FORMAT				@"Use Custom Name Format"
@@ -51,6 +55,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	inputFileString = nil;
 	sender = nil;
 	mySN = nil;
+	myDisplayName = nil;
 	date = nil;
 	parser = NULL;
 	status = nil;
@@ -91,6 +96,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	[eventTranslate release];
 	[sender release];
 	[mySN release];
+	[myDisplayName release];
 	[service release];
 	[date release];
 	[status release];
@@ -142,8 +148,25 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 		case XML_STATE_NONE:
 			if([name isEqualToString:@"chat"])
 			{
+				[mySN release];
 				mySN = [[attributes objectForKey:@"account"] retain];
+				
+				[service release];
 				service = [[attributes objectForKey:@"service"] retain];
+				
+				[myDisplayName release];
+				myDisplayName = nil;
+				
+				NSEnumerator *enumerator = [[[adium accountController] accounts] objectEnumerator];
+				AIAccount	 *account;
+				
+				while ((account = [enumerator nextObject])) {
+					if ([[[account UID] compactedString] isEqualToString:[mySN compactedString]] &&
+						[[account serviceID] isEqualToString:service]) {
+						myDisplayName = [[account displayName] retain];
+					}
+				}
+
 				state = XML_STATE_CHAT;
 			}
 			break;
@@ -220,13 +243,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				
 				if ([mySN isEqualToString:sender]) {
 					//Find an account if one exists, and use its name
-					AIAccount *activeAccount = [AIStandardListWindowController activeAccountForDisplayNameGettingOnlineAccounts:nil ownDisplayNameAccounts:nil];
-
+					displayName = (myDisplayName ? myDisplayName : sender);
 					cssClass = @"send";
-					if(activeAccount != nil)
-						displayName = [activeAccount displayName];
-					else
-						displayName = [[[[adium preferenceController] preferenceForKey:KEY_ACCOUNT_DISPLAY_NAME group:GROUP_ACCOUNT_STATUS] attributedString] string];
 				} else {
 					AIListObject *listObject = [[adium contactController] existingListObjectWithUniqueID:[AIListObject internalObjectIDForServiceID:service UID:sender]];
 
