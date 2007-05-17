@@ -327,10 +327,10 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
     [AICrashController enableCrashCatching];
     [AIExceptionController enableExceptionCatching];
 #endif
+ */
     //Ignore SIGPIPE, which is a harmless error signal
     //sent when write() or similar function calls fail due to a broken pipe in the network connection
     signal(SIGPIPE, SIG_IGN);
-*/
 	
 	//Check if we're running from the disk image; if we are, offer to copy to /Applications
 	[DiskImageUtilities handleApplicationLaunchFromReadOnlyDiskImage];
