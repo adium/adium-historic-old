@@ -72,6 +72,7 @@ NSString	*endn = @"\x00\x00\x00\x00";
     /* check that the length is ok */
     if ([data length] < ([subn length] + 4 + [endn length])) {
 	AWEzvLog(@"Invalid rendezvous announcement: length %u", [data length]);
+		[self autorelease];
 	return nil;
     }
         
@@ -81,6 +82,7 @@ NSString	*endn = @"\x00\x00\x00\x00";
     [data getBytes:&version range:range];
     if (version != 1) {
 	AWEzvLog(@"Invalid rendezvous announcement: incorrect version: %u", version);
+		[self autorelease];
 	return nil;
     }
     
@@ -101,6 +103,7 @@ NSString	*endn = @"\x00\x00\x00\x00";
 	/* read length of field name */
 	if ([data length] < i + 2) {
 	    AWEzvLog(@"Invalid rendezvous announcement at field name length");
+		[self autorelease];
 	    return nil;
 	}
 	range.location = i;
@@ -112,6 +115,7 @@ NSString	*endn = @"\x00\x00\x00\x00";
 	/* read field data */
 	if ([data length] < i + fieldLen) {
 	    AWEzvLog(@"Invalid rendezvous announcement at field name");
+		[self autorelease];
 	    return nil;
 	}
         tmpData = [NSData dataWithBytes:[data bytes] + i length:fieldLen];
@@ -121,6 +125,7 @@ NSString	*endn = @"\x00\x00\x00\x00";
 	/* read length of field data */
 	if ([data length] < i + 2) {
 	    AWEzvLog(@"Invalid rendezvous announcement at field data length");
+		[self autorelease];
 	    return nil;
 	}
 	range.location = i;
@@ -135,6 +140,7 @@ NSString	*endn = @"\x00\x00\x00\x00";
 	/* read field data */
 	if ([data length] < i + fieldLen) {
 	    AWEzvLog(@"Invalid rendezvous announcement at field data");
+		[self autorelease];
 	    return nil;
 	}
         if (!binFlag) {
@@ -176,12 +182,14 @@ NSString	*endn = @"\x00\x00\x00\x00";
     /* check if there was an error in extraction */
     if (extracted == nil) {
 	AWEzvLog(@"Unable to extract XML into plist");
+		[self autorelease];
 	return nil;
     }
     
     /* make sure it's an NSData, or reponds to getBytes:range: */
     if (![extracted respondsToSelector:@selector(getBytes:range:)]) {
 	AWEzvLog(@"Extracted object from XML is not an NSData");
+		[self autorelease];
 	return nil;  
     }
 
