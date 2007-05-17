@@ -155,6 +155,7 @@ static NSArray *validSenderColors;
 	[contextOutHTML release];
 	[nextContextOutHTML release];
 	[statusHTML release];	
+	[fileTransferHTML release];
 
 	[timeStampFormatter release];
 
