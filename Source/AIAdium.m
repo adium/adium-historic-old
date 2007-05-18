@@ -317,6 +317,7 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 	prefsCategory = nil;
 	queuedURLEvents = nil;
 	
+ */
     //Ignore SIGPIPE, which is a harmless error signal
     //sent when write() or similar function calls fail due to a broken pipe in the network connection
     signal(SIGPIPE, SIG_IGN);
