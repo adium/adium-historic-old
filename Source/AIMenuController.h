@@ -126,6 +126,8 @@
 	IBOutlet	NSMenuItem	*menuItem_underline;
 	IBOutlet	NSMenuItem	*menuItem_showFonts;
 	IBOutlet	NSMenuItem	*menuItem_showColors;
+	IBOutlet	NSMenuItem	*menuItem_bigger;
+	IBOutlet	NSMenuItem	*menuItem_smaller;
 	IBOutlet	NSMenuItem	*menuItem_copyStyle;
 	IBOutlet	NSMenuItem	*menuItem_pasteStyle;
 	IBOutlet	NSMenuItem	*menuItem_writingDirection;

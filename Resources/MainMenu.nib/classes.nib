@@ -67,12 +67,13 @@
             CLASS = AIMenuController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                adium = AIAdium; 
+                adium = NSObject; 
                 "menuItem_Format_Italics" = id; 
                 "menuItem_aboutAdium" = NSMenuItem; 
                 "menuItem_adiumForums" = NSMenuItem; 
                 "menuItem_adiumHelp" = NSMenuItem; 
                 "menuItem_adiumXtras" = NSMenuItem; 
+                "menuItem_bigger" = NSMenuItem; 
                 "menuItem_bold" = NSMenuItem; 
                 "menuItem_bringAllToFront" = NSMenuItem; 
                 "menuItem_checkForUpdates" = NSMenuItem; 
@@ -118,6 +119,7 @@
                 "menuItem_showAll" = NSMenuItem; 
                 "menuItem_showColors" = NSMenuItem; 
                 "menuItem_showFonts" = NSMenuItem; 
+                "menuItem_smaller" = NSMenuItem; 
                 "menuItem_speech" = NSMenuItem; 
                 "menuItem_spelling" = NSMenuItem; 
                 "menuItem_spellingCheckSpelling" = NSMenuItem; 

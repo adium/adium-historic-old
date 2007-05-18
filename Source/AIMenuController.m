@@ -397,6 +397,8 @@
 	[menuItem_underline setTitle:AILocalizedString(@"Underline",nil)];
 	[menuItem_showFonts setTitle:AILocalizedString(@"Show Fonts",nil)];
 	[menuItem_showColors setTitle:AILocalizedString(@"Show Colors",nil)];
+	[menuItem_bigger setTitle:AILocalizedString(@"Bigger", "Menu item title for making the font size bigger")];
+	[menuItem_smaller setTitle:AILocalizedString(@"Smaller", "menu item title for making the font size smaller")];
 	[menuItem_copyStyle setTitle:AILocalizedString(@"Copy Style",nil)];
 	[menuItem_pasteStyle setTitle:AILocalizedString(@"Paste Style",nil)];
 	[menuItem_writingDirection setTitle:AILocalizedString(@"Writing Direction",nil)];
