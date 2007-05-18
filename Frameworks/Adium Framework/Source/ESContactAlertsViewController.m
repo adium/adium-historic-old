@@ -62,7 +62,7 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 
 		//Edit, right justified and far enough away from Remove that it can't conceivably overlap
 		oldFrame = [button_edit frame];
-		[button_edit setTitle:AILocalizedString(@"Edit", nil)];
+		[button_edit setTitle:AILocalizedStringFromTable(@"Edit", @"Buttons", "Verb 'edit' on a button")];
 		[button_edit sizeToFit];
 		newFrame = [button_edit frame];
 		if (newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
