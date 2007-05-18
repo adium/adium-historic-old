@@ -379,6 +379,7 @@
 		}
 		
 		groupChat = [[[adium chatController] chatWithName:[NSString stringWithFormat:@"%@'s Chat",[[listObjectArray objectAtIndex:0] displayName]]
+											   identifier:nil
 												onAccount:self
 										 chatCreationInfo:nil] retain];
 		
