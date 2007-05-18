@@ -348,6 +348,13 @@ NSString* serviceIDForJabberUID(NSString *UID);
 				}
 				
 				[person setImageData:userIconData];
+				
+				[[sharedAddressBook class] cancelPreviousPerformRequestsWithTarget:sharedAddressBook
+																		  selector:@selector(save)
+																			object:nil];
+				[sharedAddressBook performSelector:@selector(save)
+										withObject:nil
+										afterDelay:5.0];
 			}
 		}
     }
