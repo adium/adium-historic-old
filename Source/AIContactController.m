@@ -153,7 +153,9 @@
 										  forGroup:PREF_GROUP_CONTACT_LIST];
 	
 	contactList = [[AIListGroup alloc] initWithUID:ADIUM_ROOT_GROUP_NAME];
-	
+	//Root is always "expanded"
+	[contactList setExpanded:YES];
+
 	//Show Groups menu item
 	[self prepareShowHideGroups];
 	

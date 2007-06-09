@@ -1042,7 +1042,7 @@
 			<key>$classname</key>
 			<string>NSView</string>
 		</dict>
-		<string>{{0, 0}, {1280, 832}}</string>
+		<string>{{0, 0}, {1440, 878}}</string>
 		<string>{72, 27}</string>
 		<string>{3.40282e+38, 3.40282e+38}</string>
 		<dict>
@@ -1144,15 +1144,15 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>32</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>18</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
 					<integer>24</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>10</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>32</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1160,7 +1160,7 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>10</integer>
+					<integer>18</integer>
 				</dict>
 			</array>
 		</dict>
@@ -1183,15 +1183,15 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>24</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>16</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
 					<integer>18</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>2</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>24</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1199,7 +1199,7 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>2</integer>
+					<integer>16</integer>
 				</dict>
 			</array>
 		</dict>
@@ -1213,7 +1213,11 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>32</integer>
+					<integer>24</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>10</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1221,15 +1225,11 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
+					<integer>32</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
 					<integer>18</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>24</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>10</integer>
 				</dict>
 			</array>
 		</dict>
@@ -1263,11 +1263,11 @@
 				</dict>
 			</array>
 		</dict>
-		<string>NSTableColumn1</string>
-		<string>File's Owner</string>
-		<string>NSScrollView3</string>
 		<string>NSTableView</string>
 		<string>Window</string>
+		<string>File's Owner</string>
+		<string>NSTableColumn1</string>
+		<string>NSScrollView3</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -1314,7 +1314,19 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>79</integer>
+					<integer>24</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>18</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>77</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>9</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1326,7 +1338,11 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>77</integer>
+					<integer>2</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>79</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1334,23 +1350,7 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>9</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
 					<integer>16</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>24</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>18</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>2</integer>
 				</dict>
 			</array>
 		</dict>
@@ -1404,16 +1404,16 @@
 				</dict>
 			</array>
 		</dict>
-		<integer>211</integer>
-		<integer>197</integer>
-		<integer>212</integer>
-		<integer>203</integer>
-		<integer>206</integer>
-		<integer>202</integer>
-		<integer>198</integer>
 		<integer>208</integer>
 		<integer>207</integer>
+		<integer>203</integer>
+		<integer>202</integer>
+		<integer>197</integer>
+		<integer>212</integer>
 		<integer>1</integer>
+		<integer>211</integer>
+		<integer>206</integer>
+		<integer>198</integer>
 		<dict>
 			<key>$class</key>
 			<dict>

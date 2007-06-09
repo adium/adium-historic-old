@@ -1,5 +1,10 @@
 {
     IBClasses = (
+        {
+            CLASS = AIAnimatingListOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIOutlineView; 
+        }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
             CLASS = AIContactListImagePicker; 
