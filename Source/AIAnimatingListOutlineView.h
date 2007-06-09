@@ -9,7 +9,6 @@
 #import <Adium/AIListOutlineView.h>
 
 @interface AIAnimatingListOutlineView : AIListOutlineView {
-	NSTimer *animationTimer;
 	NSMutableDictionary *allAnimatingItemsDict;
 	int animations;
 }
