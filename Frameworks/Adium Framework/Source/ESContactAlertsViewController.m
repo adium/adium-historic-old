@@ -302,7 +302,8 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 	[verticallyCenteredTextCell release];
 
 	[outlineView_summary setDrawsAlternatingRows:YES];
-	[outlineView_summary setIntercellSpacing:NSMakeSize(6.0,4.0)];
+	[outlineView_summary setIntercellSpacing:NSMakeSize(6.0,6.0)];
+	[outlineView_summary setIndentationPerLevel:0];
 	[outlineView_summary setTarget:self];
 	[outlineView_summary setDelegate:self];
 	[outlineView_summary setDataSource:self];
@@ -459,8 +460,7 @@ int actionSort(id objectA, id objectB, void *context)
 	[expandStateDict setObject:[NSNumber numberWithBool:state]
 						forKey:[contactAlertsEvents objectAtIndex:[contactAlertsActions indexOfObjectIdenticalTo:item]]];
 	
-	/* XXX this is because the variable height table view creates some display glitches...
-	 * hack for now to make it look okay. Mea culpa. -eds */
+	[outlineView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:[outlineView rowForItem:item]]];
 	[outlineView display];
 }
 
@@ -597,9 +597,9 @@ int actionSort(id objectA, id objectB, void *context)
 }
 
 //Each row should be tall enough to fit its event and action descriptions as necessary
-- (int)outlineView:(NSOutlineView *)inOutlineView heightForItem:(id)item atRow:(int)row
+- (float)outlineView:(NSOutlineView *)inOutlineView heightOfRowByItem:(id)item
 {
-	int		necessaryHeight = 0;
+	float	necessaryHeight = 0;
 	BOOL	enforceMinimumHeight;
 	
 	if ([contactAlertsActions containsObjectIdenticalTo:item]) {
@@ -608,7 +608,7 @@ int actionSort(id objectA, id objectB, void *context)
 		NSTableColumn	*tableColumn;
 		BOOL			eventIsExtended = [self outlineView:inOutlineView
 										 extendToEdgeColumn:EVENT_COLUMN_INDEX
-													  ofRow:row];
+													  ofRow:[inOutlineView rowForItem:item]];
 		
 		enforceMinimumHeight = ([(NSArray *)item count] > 0);
 

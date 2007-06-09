@@ -153,9 +153,10 @@
     [contactListView setDelegate:self];	
 	[contactListView setDataSource:self];	
 	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedItem:)];
-	
+		
 	//We handle our own intercell spacing, so override the default (3.0, 2.0) to be (0.0, 0.0) instead.
 	[contactListView setIntercellSpacing:NSZeroSize];
+	[contactListView setIndentationPerLevel:0];
 	
 	[scrollView_contactList setDrawsBackground:NO];
     [scrollView_contactList setAutoScrollToBottom:NO];
@@ -507,7 +508,7 @@
 //
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
-	return [item isKindOfClass:[AIListGroup class]];
+	return !item || [item isKindOfClass:[AIListGroup class]];
 }
 
 //
@@ -519,7 +520,7 @@
 //
 - (BOOL)outlineView:(NSOutlineView *)outlineView expandStateOfItem:(id)item
 {
-    return [item isExpanded];
+    return !item || [item isExpanded];
 }
 
 /*!
@@ -562,6 +563,13 @@
 	AIListObject	*listObject = (AIListObject *)[outlineView firstSelectedItem];
 
 	return [self contextualMenuForListObject:listObject];
+}
+
+- (float)outlineView:(NSOutlineView *)outlineView heightOfRowByItem:(id)item
+{
+	float height = ([outlineView isExpandable:item] ? [groupCell cellSize].height : [contentCell cellSize].height);
+	
+	return (height > 0 ? height : 16.0);
 }
 
 #pragma mark Finder-style searching
