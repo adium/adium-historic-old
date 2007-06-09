@@ -52,8 +52,7 @@
 		contentCell = [cell retain];
 	}
 	contentRowHeight = [contentCell cellSize].height;
-	[self setRowHeight:contentRowHeight];
-	[self resetRowHeightCache];
+	[self noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [self numberOfRows])]];
 }
 - (NSCell *)contentCell{
 	return contentCell;
@@ -66,20 +65,15 @@
 		groupCell = [cell retain];
 	}
 	groupRowHeight = [groupCell cellSize].height;
-	[self resetRowHeightCache];
+	
+	[self noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [self numberOfRows])]];
 }
 - (NSCell *)groupCell{
 	return groupCell;
 }
-
 - (id)cellForTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
 	return ([self isExpandable:item] ? groupCell : contentCell);
-}
-
-- (int)heightForRow:(int)row
-{
-	return ([self isExpandable:[self itemAtRow:row]] ? groupRowHeight : contentRowHeight);
 }
 
 @end
