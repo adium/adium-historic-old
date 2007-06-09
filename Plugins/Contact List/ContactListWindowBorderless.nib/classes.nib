@@ -1,10 +1,15 @@
 {
     IBClasses = (
+        {
+            CLASS = AIAnimatingListOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIListOutlineView; 
+        }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
             CLASS = AIBorderlessListOutlineView; 
             LANGUAGE = ObjC; 
-            SUPERCLASS = AIStandardListOutlineView; 
+            SUPERCLASS = AIAnimatingListOutlineView; 
         }, 
         {
             CLASS = AIBorderlessListWindowController; 
@@ -29,11 +34,6 @@
         }, 
         {CLASS = AIMultiCellOutlineView; LANGUAGE = ObjC; SUPERCLASS = AIOutlineView; }, 
         {CLASS = AIOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
-        {
-            CLASS = AIStandardListOutlineView; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = AIListOutlineView; 
-        }, 
         {
             CLASS = AIWindowController; 
             LANGUAGE = ObjC; 

@@ -303,6 +303,10 @@
 		347F51850947449000CEF1FF /* AdiumAddressBookAction_SMS.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E8094743B100CEF1FF /* AdiumAddressBookAction_SMS.scpt */; };
 		347F51860947449000CEF1FF /* AdiumAddressBookAction_Jabber.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E9094743B100CEF1FF /* AdiumAddressBookAction_Jabber.scpt */; };
 		3482E0F50AB5064E00471992 /* AIAdiumProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 3482E0EB0AB5063300471992 /* AIAdiumProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		348477130C1A5CE50019EF08 /* AIAnimatingListOutlineView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 348477110C1A5CE50019EF08 /* AIAnimatingListOutlineView.h */; };
+		348477140C1A5CE50019EF08 /* AIAnimatingListOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 348477120C1A5CE50019EF08 /* AIAnimatingListOutlineView.m */; };
+		34847ADD0C1A62C40019EF08 /* AIOutlineViewAnimation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34847ADB0C1A62C40019EF08 /* AIOutlineViewAnimation.h */; };
+		34847ADE0C1A62C40019EF08 /* AIOutlineViewAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 34847ADC0C1A62C40019EF08 /* AIOutlineViewAnimation.m */; };
 		3485D40409EB3FEA00232CC4 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		3485D5F409EB406000232CC4 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		3485D8B809EB436500232CC4 /* AdiumLibpurple.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3485D68009EB416300232CC4 /* AdiumLibpurple.framework */; };
@@ -1486,6 +1490,8 @@
 				340C1A350BD58F9000D09235 /* AuthorizedTaskManager.h in CopyFiles */,
 				340C1A370BD58F9000D09235 /* DiskImageUtilities.h in CopyFiles */,
 				340C1E780BD59A0500D09235 /* GBImportPlugin.h in CopyFiles */,
+				348477130C1A5CE50019EF08 /* AIAnimatingListOutlineView.h in CopyFiles */,
+				34847ADD0C1A62C40019EF08 /* AIOutlineViewAnimation.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2407,6 +2413,10 @@
 		3482E0EB0AB5063300471992 /* AIAdiumProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAdiumProtocol.h; path = "Frameworks/Adium Framework/Source/AIAdiumProtocol.h"; sourceTree = "<group>"; };
 		3483928405E68B05002BC6C0 /* AIIconState.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIIconState.m; path = "Frameworks/Adium Framework/Source/AIIconState.m"; sourceTree = "<group>"; };
 		3483928505E68B05002BC6C0 /* AIIconState.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIIconState.h; path = "Frameworks/Adium Framework/Source/AIIconState.h"; sourceTree = "<group>"; };
+		348477110C1A5CE50019EF08 /* AIAnimatingListOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAnimatingListOutlineView.h; path = Source/AIAnimatingListOutlineView.h; sourceTree = "<group>"; };
+		348477120C1A5CE50019EF08 /* AIAnimatingListOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAnimatingListOutlineView.m; path = Source/AIAnimatingListOutlineView.m; sourceTree = "<group>"; };
+		34847ADB0C1A62C40019EF08 /* AIOutlineViewAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIOutlineViewAnimation.h; path = Source/AIOutlineViewAnimation.h; sourceTree = "<group>"; };
+		34847ADC0C1A62C40019EF08 /* AIOutlineViewAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIOutlineViewAnimation.m; path = Source/AIOutlineViewAnimation.m; sourceTree = "<group>"; };
 		3485D68009EB416300232CC4 /* AdiumLibpurple.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AdiumLibpurple.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3486E8A4097F24A90044C496 /* AdiumAuthorization.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumAuthorization.h; path = Source/AdiumAuthorization.h; sourceTree = "<group>"; };
 		3486E8A5097F24A90044C496 /* AdiumAuthorization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumAuthorization.m; path = Source/AdiumAuthorization.m; sourceTree = "<group>"; };
@@ -5957,6 +5967,10 @@
 				34A489FE06F6436D002C7C5F /* AIListWindowController.m */,
 				34A48A1306F6438F002C7C5F /* AIListController.h */,
 				34A48A1506F6438F002C7C5F /* AIListController.m */,
+				348477110C1A5CE50019EF08 /* AIAnimatingListOutlineView.h */,
+				348477120C1A5CE50019EF08 /* AIAnimatingListOutlineView.m */,
+				34847ADB0C1A62C40019EF08 /* AIOutlineViewAnimation.h */,
+				34847ADC0C1A62C40019EF08 /* AIOutlineViewAnimation.m */,
 				34E1066A09536D7300EBE478 /* Borderless */,
 				4BF98D2906D147BB00E8781D /* Standard Window */,
 				34878F710518289B003B2F21 /* Contact List Advanced Preferences */,
@@ -8389,6 +8403,8 @@
 				340C1A360BD58F9000D09235 /* DiskImageUtilities.m in Sources */,
 				340C1A380BD58F9000D09235 /* AuthorizedTaskManager.m in Sources */,
 				340C1E770BD59A0500D09235 /* GBImportPlugin.m in Sources */,
+				348477140C1A5CE50019EF08 /* AIAnimatingListOutlineView.m in Sources */,
+				34847ADE0C1A62C40019EF08 /* AIOutlineViewAnimation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
