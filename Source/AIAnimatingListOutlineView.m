@@ -20,6 +20,38 @@
  * Implementation inspired by Dan Wood's AnimatingTableView in TableTester, http://gigliwood.com/tabletester/
  */
 @implementation AIAnimatingListOutlineView
+
+- (void)_initAnimatingListOutlineView
+{
+	allAnimatingItemsDict  = [[NSMutableDictionary alloc] init];
+	animations = 0;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder
+{
+    if ((self = [super initWithCoder:aDecoder])) {
+		[self _initAnimatingListOutlineView];
+	}
+
+    return self;
+}
+
+- (id)initWithFrame:(NSRect)frame
+{
+    if ((self = [super initWithFrame:frame])) {
+		[self _initAnimatingListOutlineView];
+	}
+	
+	return self;
+}
+
+- (void)dealloc
+{
+	[allAnimatingItemsDict release];
+	[super dealloc];
+}
+
+#pragma mark -
 /*
  * @brief Return the current rect for a row
  *
@@ -115,8 +147,6 @@
 	id oldItem;
 
 	NSDictionary *oldDict = [self indexesForItemAndChildren:item dict:nil];
-
-	if (!allAnimatingItemsDict) allAnimatingItemsDict  = [[NSMutableDictionary alloc] init];
 
 	enumerator = [oldDict keyEnumerator];
 	while ((oldItem = [enumerator nextObject])) {
