@@ -174,7 +174,8 @@ TrustLevel otrg_plugin_context_to_trust(ConnContext *context);
 * @brief Return an NSDictionary* describing a ConnContext.
  *
  *      Key				 :        Contents
- * @"Fingerprint"		 : NSString of the fingerprint's human-readable hash
+ * @"Their Fingerprint"	 : NSString of the contact's fingerprint's human-readable hash
+ * @"Our Fingerprint"	 : NSString of our fingerprint's human-readable hash
  * @"Incoming SessionID" : NSString of the incoming sessionID
  * @"Outgoing SessionID" : NSString of the outgoing sessionID
  * @"EncryptionStatus"	 : An AIEncryptionStatus
@@ -213,8 +214,12 @@ static NSDictionary* details_for_context(ConnContext *context)
 			break;
 	}
 	
-	char hash[45];
-    otrl_privkey_hash_to_human(hash, fprint->fingerprint);
+    char our_hash[45], their_hash[45];
+
+	otrl_privkey_fingerprint(otrg_get_userstate(), our_hash,
+							 context->accountname, context->protocol);
+	
+    otrl_privkey_hash_to_human(their_hash, fprint->fingerprint);
 
 	unsigned char *sessionid;
     char sess1[21], sess2[21];
@@ -229,7 +234,8 @@ static NSDictionary* details_for_context(ConnContext *context)
 	account = [[[AIObject sharedAdiumInstance] accountController] accountWithInternalObjectID:[NSString stringWithUTF8String:context->accountname]];
 
 	securityDetailsDict = [NSDictionary dictionaryWithObjectsAndKeys:
-		[NSString stringWithUTF8String:hash], @"Fingerprint",
+		[NSString stringWithUTF8String:their_hash], @"Their Fingerprint",
+		[NSString stringWithUTF8String:our_hash], @"Our Fingerprint",
 		[NSNumber numberWithInt:encryptionStatus], @"EncryptionStatus",
 		account, @"AIAccount",
 		[NSString stringWithUTF8String:context->username], @"who",
@@ -775,7 +781,7 @@ void update_security_details_for_chat(AIChat *inChat)
 			description = [NSString stringWithFormat:format,
 				AILocalizedString(@"Encrypted by Off-the-Record Messaging",nil),
 				[[inChat listObject] formattedUID],
-				[securityDetailsDict objectForKey:@"Fingerprint"],
+				[securityDetailsDict objectForKey:@"Their Fingerprint"],
 				AILocalizedString(@"Secure ID for this session:",nil),
 				AILocalizedString(@"Incoming:","This is shown before the Off-the-Record Session ID (a series of numbers and letters) sent by the other party with whom you are having an encrypted chat."),
 				[securityDetailsDict objectForKey:@"Incoming SessionID"],
