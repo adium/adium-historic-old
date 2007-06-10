@@ -82,10 +82,11 @@
 	NSEnumerator *containedObjectEnumerator = [[self containedObjects] objectEnumerator];
 	AIListObject *containedObject = nil;
 	
-	while ((containedObject = [containedObjectEnumerator nextObject]))
+	while ((containedObject = [containedObjectEnumerator nextObject])) {
 		if ([containedObject visible])
 			visibleCount++;
-	
+	}
+
 	[self setStatusObject:(visibleCount ? [NSNumber numberWithInt:visibleCount] : nil)
 				   forKey:@"VisibleObjectCount"
 				   notify:NotifyNow];
@@ -169,26 +170,30 @@
 	return object;
 }
 
-//Add an object to this group (PRIVATE: For contact controller only)
-//Returns YES if the object was added (that is, was not already present)
+/*!
+ * @brief Add an object to this group
+ *
+ * PRIVATE: For contact controller only. Sorting and visible count updating will be performed as needed.
+ *
+ * @result YES if the object was added (that is, was not already present)
+ */
 - (BOOL)addObject:(AIListObject *)inObject
 {
 	BOOL success = NO;
 	
 	if (![containedObjects containsObjectIdenticalTo:inObject]) {
-		//Update our visible count
-		if ([inObject visible]) {
-			[self _recomputeVisibleCount];
-		}
-		
 		//Add the object
 		[inObject setContainingObject:self];
 		[containedObjects addObject:inObject];
 		
-		//Sort this object on our own.  This always comes along with a content change, so calling contact controller's
-		//sort code would invoke an extra update that we don't need.  We can skip sorting if this object is not visible,
-		//since it will add to the bottom/non-visible section of our array.
+		/* Sort this object on our own.  This always comes along with a content change, so calling contact controller's
+		 * sort code would invoke an extra update that we don't need.  We can skip sorting if this object is not visible,
+		 * since it will add to the bottom/non-visible section of our array.
+		 */
 		if ([inObject visible]) {
+			//Update our visible count
+			[self _recomputeVisibleCount];
+
 			[self sortListObject:inObject
 				  sortController:[[adium contactController] activeSortController]];
 		}
