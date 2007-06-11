@@ -54,7 +54,7 @@
 	[super dealloc];
 }
 
-#pragma mark -
+#pragma mark Rect determination
 /*!
  * @brief Return the current rect for an item at a given row
  *
@@ -68,19 +68,10 @@
 	NSRect rect;
 
 	if (animDict) {
-		int oldIndex = [[animDict objectForKey:@"old index"] intValue];
 		float progress = [[animDict objectForKey:@"progress"] floatValue];
-		NSRect oldR = [self unanimatedRectOfRow:oldIndex];
+		NSRect oldR = [[animDict objectForKey:@"old rect"] rectValue];
 		NSRect newR = [self unanimatedRectOfRow:rowIndex];
-		
-		/* oldR will be NSZeroRect if the item was previously the last one and now is moving up.
-		 * create an old rect which is outside our actual bounds, beneath the new last item.
-		 */
-		if (NSIsEmptyRect(oldR)) {
-			oldR = [self unanimatedRectOfRow:[self numberOfRows]-1];
-			oldR.origin.y += (newR.size.height + [self intercellSpacing].height);
-		}
-		
+
 		//Calculate a rectangle between the original and the final rectangles.
 		rect = NSMakeRect(NSMinX(oldR) + (progress * (NSMinX(newR) - NSMinX(oldR))),
 						  NSMinY(oldR) + (progress * (NSMinY(newR) - NSMinY(oldR))),
@@ -111,6 +102,47 @@
 }
 
 /*!
+ * @brief What rows are in a given rect?
+ *
+ * When animating, the range has to be expanded to include rows which NSTableView would not expect to be in the rect
+ */
+- (NSRange)rowsInRect:(NSRect)inRect
+{
+	if (animations > 0) {
+		//The rows in a given rect aren't necessarily sequential while we're animating. Too bad this doesn't return an NSIndexSet.
+		int count = [self numberOfRows];
+		NSRange range = NSMakeRange(0, count);
+		BOOL foundLowest = NO;
+		
+		for (int i = 0; i < count; i++) {
+			NSRect rowRect = [self rectOfRow:i];
+
+			if (!foundLowest) {
+				if (NSIntersectsRect(rowRect, inRect)) {
+					foundLowest = YES;	
+				} else {
+					range.location += 1;
+					range.length -= 1;
+				}
+			} else {
+				//Looking for the highest
+				if (NSIntersectsRect(rowRect, inRect)) {
+					//We need to reach here
+					if ((range.location + range.length) < i) {
+						range.length = i - range.location;
+					}
+				}
+			}
+		}
+		
+		return range;
+
+	} else {
+		return [super rowsInRect:inRect];
+	}
+}
+
+/*!
  * @brief Rect of the row if we weren't animating
  *
  * @result The rect in which the row would be displayed were all animations complete.
@@ -119,6 +151,8 @@
 {
 	return [super rectOfRow:rowIndex];
 }
+
+#pragma mark Indexes, before and after
 
 /*
  * @brief Return a dictionary of indexes keyed by pointers to items for item and all children
@@ -169,6 +203,7 @@
 		[allAnimatingItemsDict setObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
 			oldIndex, @"old index",
 			oldIndex, @"new index", /* unchanged */
+			[NSValue valueWithRect:[self unanimatedRectOfRow:[oldIndex intValue]]], @"old rect",
 			[NSNumber numberWithFloat:0.0f], @"progress", nil]
 								  forKey:oldItem];			
 	}
@@ -188,13 +223,18 @@
  *
  * Finally, create and start an AIOutlineViewAnimation which will notify us as the animation progresses.
  */
-- (void)updateForNewIndexesFromOldIndexes:(NSDictionary *)oldDict forItem:(id)item
+- (void)updateForNewIndexesFromOldIndexes:(NSDictionary *)oldDict forItem:(id)item recalculateHedge:(BOOL)recalculateHedge duration:(NSTimeInterval)duration
 {
 	NSEnumerator *enumerator;
 	id oldItem;
 	NSDictionary *newDict = [self indexesForItemAndChildren:item dict:nil];
 	NSMutableDictionary *animatingRowsDict = [NSMutableDictionary dictionary];
 	
+	if (recalculateHedge) {
+		[self willChangeValueForKey:@"totalHeight"];
+		animationHedgeFactor = NSZeroSize;
+	}
+
 	//Compare differences
 	enumerator = [oldDict keyEnumerator];
 	while ((oldItem = [enumerator nextObject])) {
@@ -202,16 +242,21 @@
 		NSNumber *newIndex = [newDict objectForKey:oldItem];
 		if (newIndex) {
 			int oldIndexInt = [oldIndex intValue];
-			if (oldIndexInt != [newIndex intValue]) {
+			int newIndexInt = [newIndex intValue];
+			if (oldIndexInt != newIndexInt) {
 				[animatingRowsDict setObject:oldIndex
 									  forKey:oldItem];
 				
 				[[allAnimatingItemsDict objectForKey:oldItem] setObject:newIndex
 																 forKey:@"new index"];
 
-				//If we're animating a row which will be starting off outside our bounds, set the hedge factor
-				if (oldIndexInt == [self numberOfRows])
-					animationHedgeFactor = [self currentDisplayRectForItemPointer:oldItem atRow:[newIndex intValue]].size;
+				if (recalculateHedge) {
+					//If we're animating a row which will be starting off outside our bounds, set the hedge factor
+					if (oldIndexInt >= [self numberOfRows]) {
+						animationHedgeFactor.height += ([self currentDisplayRectForItemPointer:oldItem atRow:newIndexInt].size.height +
+														[self intercellSpacing].height);
+					}
+				}
 			} else {
 				[[allAnimatingItemsDict objectForKey:oldItem] setObject:[NSNumber numberWithFloat:1.0f]
 																 forKey:@"progress"];
@@ -225,7 +270,7 @@
 
 	if ([animatingRowsDict count]) {
 		AIOutlineViewAnimation *animation = [AIOutlineViewAnimation listObjectAnimationWithDictionary:animatingRowsDict delegate:self];
-		animations++;
+		[animation setDuration:duration];
 		[animation startAnimation];
 		//Will be released in animationDidEnd:
 		[animation retain];
@@ -233,9 +278,12 @@
 	} else {
 		animations--;
 	}
+	
+	if (recalculateHedge)
+		[self didChangeValueForKey:@"totalHeight"];
 }
 
-#pragma mark AIListObjectAnimation callbacks
+#pragma mark AIOutlineViewAnimation callbacks
 
 /*!
  * @brief The animation for some rows (animatingRowsDict) has progressed
@@ -246,20 +294,47 @@
 {
 	NSEnumerator *enumerator = [animatingRowsDict keyEnumerator];
 	NSValue *itemPointer;
-	
+	float maxRequiredY = 0;
+
+	[self willChangeValueForKey:@"totalHeight"];
+
+	//Update progress for each item in animatingRowsDict
 	while ((itemPointer = [enumerator nextObject])) {
 		NSMutableDictionary *animDict = [allAnimatingItemsDict objectForKey:itemPointer];
 		int newIndex = [[animDict objectForKey:@"new index"] intValue];
-		
+		NSRect oldFrame, newFrame;
+
 		//We'll need to redisplay the space we were in previously
-		[self setNeedsDisplayInRect:[self currentDisplayRectForItemPointer:itemPointer
-																	 atRow:newIndex]];
+		oldFrame = [self currentDisplayRectForItemPointer:itemPointer
+													atRow:newIndex];
+		[self setNeedsDisplayInRect:oldFrame];
+
+		//Update the actual progress
 		[animDict setObject:[NSNumber numberWithFloat:currentValue]
 					 forKey:@"progress"];
+
 		//We'll need to redisplay after updating to the new location
+		newFrame = [self currentDisplayRectForItemPointer:itemPointer
+													atRow:newIndex];
 		[self setNeedsDisplayInRect:[self currentDisplayRectForItemPointer:itemPointer
 																	 atRow:newIndex]];
+
+		//Track how much Y-space we're requiring at this point
+		if (NSMaxY(newFrame) > maxRequiredY) {
+			maxRequiredY = NSMaxY(newFrame);
+		}
 	}
+	
+	//The hedge factor can now be updated to be minimal for the animation
+	if (maxRequiredY > [self totalHeight]) {
+		animationHedgeFactor.height = maxRequiredY - [self totalHeight];
+	} else if (maxRequiredY > [super totalHeight]) {
+		animationHedgeFactor.height = maxRequiredY - [super totalHeight];
+	} else {
+		animationHedgeFactor.height = 0;
+	}
+
+	[self didChangeValueForKey:@"totalHeight"];
 }
 
 /*!
@@ -268,15 +343,13 @@
 - (void)animationDidEnd:(NSAnimation*)animation
 {
 	animations--;
-
-	if (animations == 0) animationHedgeFactor = NSZeroSize;
+	if (animations == 0) {
+		[self willChangeValueForKey:@"totalHeight"];
+		animationHedgeFactor = NSZeroSize;
+		[self didChangeValueForKey:@"totalHeight"];
+	}
 
 	[animation autorelease];
-}
-
-- (NSSize)animationHedgeFactor
-{
-	return animationHedgeFactor;
 }
 
 #pragma mark Intercepting changes so we can animate
@@ -284,22 +357,89 @@
 - (void)reloadData
 {
 	NSDictionary *oldDict = [self saveCurrentIndexesForItem:nil];
+	
+	//If items are expanded or collapsed during reload, we don't want to animate that
+	disableExpansionAnimation = YES;
 	[super reloadData];
-	[self updateForNewIndexesFromOldIndexes:oldDict forItem:nil];	
+	disableExpansionAnimation = NO;
+
+	[self updateForNewIndexesFromOldIndexes:oldDict forItem:nil recalculateHedge:YES duration:LIST_OBJECT_ANIMATION_DURATION];	
 }
 
 - (void)reloadItem:(id)item reloadChildren:(BOOL)reloadChildren
 {
 	NSDictionary *oldDict = [self saveCurrentIndexesForItem:item];
 	[super reloadItem:item reloadChildren:reloadChildren];
-	[self updateForNewIndexesFromOldIndexes:oldDict forItem:item];
+	[self updateForNewIndexesFromOldIndexes:oldDict forItem:item recalculateHedge:YES duration:LIST_OBJECT_ANIMATION_DURATION];
 }
 
 - (void)reloadItem:(id)item
 {
 	NSDictionary *oldDict = [self saveCurrentIndexesForItem:item];
 	[super reloadItem:item];
-	[self updateForNewIndexesFromOldIndexes:oldDict forItem:item];
+	[self updateForNewIndexesFromOldIndexes:oldDict forItem:item recalculateHedge:YES duration:LIST_OBJECT_ANIMATION_DURATION];
+}
+
+- (void)expandItem:(id)item
+{
+	if (!disableExpansionAnimation) {
+		NSDictionary *oldDict = [self saveCurrentIndexesForItem:nil];
+		[super expandItem:item];
+		
+		[self updateForNewIndexesFromOldIndexes:oldDict forItem:nil recalculateHedge:YES duration:EXPANSION_DURATION];
+	} else {
+		[super expandItem:item];		
+	}
+}
+
+/*!
+ * @brief Collapse an item
+ *
+ * This one is a bit tricker. If the window or view will resize (using -[self totalHeight] as a guide) when the item is collapsed,
+ * it will cut off our animating-upward items in rows beneath it unless we set animationHedgeFactor to include
+ * the height of each row within item.
+ *
+ * As we animate, animationHedgeFactor will be decreased back toward 0.
+ */
+- (void)collapseItem:(id)item
+{
+	if (!disableExpansionAnimation) {
+		NSDictionary *oldDict = [self saveCurrentIndexesForItem:nil];
+
+		[self willChangeValueForKey:@"totalHeight"];
+
+		//Maintain space for the animation to display
+		int numChildren = [[self dataSource] outlineView:self numberOfChildrenOfItem:item];
+
+		for (int i = 0; i < numChildren; i++) {
+			id thisChild = [[self dataSource] outlineView:self child:i ofItem:item];
+			animationHedgeFactor.height += [self currentDisplayRectForItemPointer:[NSValue valueWithPointer:thisChild]
+																			atRow:[self rowForItem:thisChild]].size.height + [self intercellSpacing].height;
+		}
+
+		//Actually collapse the item
+		[super collapseItem:item];
+
+		[self didChangeValueForKey:@"totalHeight"];
+
+		//Now animate the movement
+		[self updateForNewIndexesFromOldIndexes:oldDict forItem:nil recalculateHedge:NO duration:EXPANSION_DURATION];
+	} else {
+		[super collapseItem:item];
+	}
+}
+
+#pragma mark Total height
+
+/*
+ * @brief Total height required by this view
+ *
+ * This is the only point of overlap with AIListOutlineView; otherwise, we are just an NSOutlineView subclass.
+ * Add the current animationHedgeFactor's height to whatever super says.
+ */
+- (int)totalHeight
+{
+	return [super totalHeight] + animationHedgeFactor.height;
 }
 
 @end
