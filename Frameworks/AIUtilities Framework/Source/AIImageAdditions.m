@@ -538,11 +538,12 @@
 	if (len >= 4) {
 		if (!strncmp((char *)data, "GIF8", 4))
 			fileType = AIGIFFileType;
-		else if (!strncmp((char *)data, "\xff\xd8\xff\xe0", 4))
+		else if (!strncmp((char *)data, "\xff\xd8\xff", 3)) /* 4th may be e0 through ef */
 			fileType = AIJPEGFileType;
 		else if (!strncmp((char *)data, "\x89PNG", 4))
 			fileType = AIPNGFileType;
-		else if (!strncmp((char *)data, "MM", 2))
+		else if (!strncmp((char *)data, "MM", 2) ||
+				 !strncmp((char *)data, "II", 2))
 			fileType = AITIFFFileType;
 		else if (!strncmp((char *)data, "BM", 2))
 			fileType = AIBMPFileType;
