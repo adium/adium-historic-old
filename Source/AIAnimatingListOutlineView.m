@@ -14,10 +14,12 @@
 @end
 
 /*!
- * @class
+ * @class AIAnimatingListOutlineView
  * @brief An outline view which animates changes to its order
  *
  * Implementation inspired by Dan Wood's AnimatingTableView in TableTester, http://gigliwood.com/tabletester/
+ * Used with permission.  AIAnimatingListOutlineView is licensed under the GPL, like Adium itself; Dan's tabletester code
+ * is BSD, with explicit double-licensing as GPL the parts used in this class.
  */
 @implementation AIAnimatingListOutlineView
 
@@ -269,7 +271,7 @@
 
 	if (animations == 0) animationHedgeFactor = NSZeroSize;
 
-	[animation release];
+	[animation autorelease];
 }
 
 - (NSSize)animationHedgeFactor
