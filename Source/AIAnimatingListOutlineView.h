@@ -11,6 +11,9 @@
 @interface AIAnimatingListOutlineView : AIListOutlineView {
 	NSMutableDictionary *allAnimatingItemsDict;
 	int animations;
+	NSSize animationHedgeFactor;
 }
+
+- (NSSize)animationHedgeFactor;
 
 @end

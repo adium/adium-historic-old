@@ -25,6 +25,7 @@
 {
 	allAnimatingItemsDict  = [[NSMutableDictionary alloc] init];
 	animations = 0;
+	animationHedgeFactor = NSZeroSize;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -69,6 +70,14 @@
 		float progress = [[animDict objectForKey:@"progress"] floatValue];
 		NSRect oldR = [self unanimatedRectOfRow:oldIndex];
 		NSRect newR = [self unanimatedRectOfRow:rowIndex];
+		
+		/* oldR will be NSZeroRect if the item was previously the last one and now is moving up.
+		 * create an old rect which is outside our actual bounds, beneath the new last item.
+		 */
+		if (NSIsEmptyRect(oldR)) {
+			oldR = [self unanimatedRectOfRow:[self numberOfRows]-1];
+			oldR.origin.y += (newR.size.height + [self intercellSpacing].height);
+		}
 		
 		//Calculate a rectangle between the original and the final rectangles.
 		rect = NSMakeRect(NSMinX(oldR) + (progress * (NSMinX(newR) - NSMinX(oldR))),
@@ -183,30 +192,42 @@
 	id oldItem;
 	NSDictionary *newDict = [self indexesForItemAndChildren:item dict:nil];
 	NSMutableDictionary *animatingRowsDict = [NSMutableDictionary dictionary];
-
+	
 	//Compare differences
 	enumerator = [oldDict keyEnumerator];
 	while ((oldItem = [enumerator nextObject])) {
 		NSNumber *oldIndex = [oldDict objectForKey:oldItem];
 		NSNumber *newIndex = [newDict objectForKey:oldItem];
-		if (newIndex && ([oldIndex intValue] != [newIndex intValue])) {
-			[animatingRowsDict setObject:oldIndex
-								  forKey:oldItem];
+		if (newIndex) {
+			int oldIndexInt = [oldIndex intValue];
+			if (oldIndexInt != [newIndex intValue]) {
+				[animatingRowsDict setObject:oldIndex
+									  forKey:oldItem];
+				
+				[[allAnimatingItemsDict objectForKey:oldItem] setObject:newIndex
+																 forKey:@"new index"];
 
-			[[allAnimatingItemsDict objectForKey:oldItem] setObject:newIndex
-															 forKey:@"new index"];
+				//If we're animating a row which will be starting off outside our bounds, set the hedge factor
+				if (oldIndexInt == [self numberOfRows])
+					animationHedgeFactor = [self currentDisplayRectForItemPointer:oldItem atRow:[newIndex intValue]].size;
+			} else {
+				[[allAnimatingItemsDict objectForKey:oldItem] setObject:[NSNumber numberWithFloat:1.0f]
+																 forKey:@"progress"];
+			}
+
 		} else {
-			[[allAnimatingItemsDict objectForKey:oldItem] setObject:[NSNumber numberWithFloat:1.0f]
-															 forKey:@"progress"];
+			//The item is no longer in the outline view
+			[allAnimatingItemsDict removeObjectForKey:oldItem];
 		}
 	}
-	
+
 	if ([animatingRowsDict count]) {
 		AIOutlineViewAnimation *animation = [AIOutlineViewAnimation listObjectAnimationWithDictionary:animatingRowsDict delegate:self];
 		animations++;
 		[animation startAnimation];
 		//Will be released in animationDidEnd:
 		[animation retain];
+
 	} else {
 		animations--;
 	}
@@ -245,7 +266,15 @@
 - (void)animationDidEnd:(NSAnimation*)animation
 {
 	animations--;
+
+	if (animations == 0) animationHedgeFactor = NSZeroSize;
+
 	[animation release];
+}
+
+- (NSSize)animationHedgeFactor
+{
+	return animationHedgeFactor;
 }
 
 #pragma mark Intercepting changes so we can animate
