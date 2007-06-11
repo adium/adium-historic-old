@@ -29,7 +29,6 @@
 		dict = [inDict retain];
 
 		[self setDelegate:inDelegate];
-		[self setFrameRate:10];
 		[self setAnimationBlockingMode:NSAnimationNonblocking];
 	}
 	
