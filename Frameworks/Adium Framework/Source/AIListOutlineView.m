@@ -31,6 +31,13 @@
 
 @implementation AIListOutlineView
 
++ (void)initialize
+{
+	[self exposeBinding:@"desiredHeight"];
+	[self exposeBinding:@"totalHeight"];
+	[self setKeys:[NSArray arrayWithObject:@"totalHeight"] triggerChangeNotificationsForDependentKey:@"desiredHeight"];
+}
+
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     [super initWithCoder:aDecoder];
@@ -56,7 +63,7 @@
 	backgroundStyle = AINormalBackground;
 	
 	[self setDrawsGradientSelection:YES];
-	[self sizeLastColumnToFit];
+	[self sizeLastColumnToFit];	
 }
 
 - (void)dealloc
