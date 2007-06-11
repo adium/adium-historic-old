@@ -75,24 +75,13 @@ typedef enum {
     [[adium notificationCenter] addObserver:self selector:@selector(contactOrderChanged:)
 									   name:Contact_OrderChanged 
 									 object:nil];
-
-	//Observe group expansion for resizing
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(outlineViewUserDidExpandItem:)
-												 name:AIOutlineViewUserDidExpandItemNotification
-											   object:contactListView];
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(outlineViewUserDidCollapseItem:)
-												 name:AIOutlineViewUserDidCollapseItemNotification
-											   object:contactListView];
 	
-	//Observe list objects for visiblity changes
-	[[adium contactController] registerListObjectObserver:self];
-
 	//Recall how the contact list was docked last time Adium was open
 	dockToBottomOfScreen = [[[adium preferenceController] preferenceForKey:KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN
 																	group:PREF_GROUP_WINDOW_POSITIONS] intValue];
 
+	[contactListView addObserver:self forKeyPath:@"desiredHeight" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:NULL];
+	
 	[self contactListChanged:nil];
 
 	return self;
@@ -120,13 +109,14 @@ typedef enum {
     //Stop observing
     [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-	[[adium contactController] unregisterListObjectObserver:self];
-	
+
 	[self autorelease];
 }
 
 - (void)dealloc
 {
+	[contactListView removeObserver:self forKeyPath:@"desiredHeight"];
+	
 	[super dealloc];
 }
 
@@ -373,26 +363,6 @@ typedef enum {
 			[contactListView reloadItem:containingGroup reloadChildren:YES];
 		}
 	}
-
-	[self contactListDesiredSizeChanged];
-}
-
-/*!
- * @brief Update auto-resizing when object visibility changes
- */
-- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
-{
-	if ([inModifiedKeys containsObject:@"VisibleObjectCount"]) {
-		/* If the visible count changes, we'll need to resize our list - but we wait until the group is 
-		 * re-sorted, trigerring contactOrderChanged: below, to actually perform the resizing.  This prevents 
-		 * the scrollbar from flickering up and some issues with us resizing before the outlineview is aware that
-		 * the view has grown taller/shorter.
-		 */
-		needsAutoResize = YES;
-	}
-
-	//Modify no keys
-	return nil;
 }
 
 /*!
@@ -410,12 +380,6 @@ typedef enum {
 		[contactListView reloadData];
 	} else {
 		[contactListView reloadItem:object reloadChildren:YES];
-	}
-
-	//If we need a resize we can do that now that the outline view has been reloaded
-	if (needsAutoResize) {
-		[self contactListDesiredSizeChanged];
-		needsAutoResize = NO;
 	}
 }
 
@@ -619,15 +583,13 @@ typedef enum {
 	[context release]; //We are responsible for retaining & releasing the context dict
 }
 
-
-- (void)outlineViewUserDidExpandItem:(NSNotification *)notification
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-	[self contactListDesiredSizeChanged];
-}
-
-- (void)outlineViewUserDidCollapseItem:(NSNotification *)notification
-{
-	[self contactListDesiredSizeChanged];
+	if (object == contactListView && [keyPath isEqualToString:@"desiredHeight"]) {
+		if ([[change objectForKey:NSKeyValueChangeNewKey] intValue] != [[change objectForKey:NSKeyValueChangeOldKey] intValue])
+			[self contactListDesiredSizeChanged];
+		
+	}
 }
 
 #pragma mark Preferences
