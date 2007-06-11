@@ -132,10 +132,10 @@ static void *adiumPurpleNotifyUserinfo(PurpleConnection *gc, const char *who,
 		contact = contactLookupFromBuddy(buddy);
 		if (!contact) {
 			NSString *UID = [NSString stringWithUTF8String:purple_normalize(account, who)];
-			
+
 			contact = [accountLookup(account) contactWithUID:UID];
 		}
-		
+
 		[adiumAccount updateUserInfo:contact
 							withData:user_info];
 	}

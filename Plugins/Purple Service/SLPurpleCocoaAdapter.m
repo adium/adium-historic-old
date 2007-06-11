@@ -539,13 +539,13 @@ void* adium_purple_get_handle(void)
 
 #pragma mark Images
 
-static NSString* _messageImageCachePath(int imageID, AIAccount* adiumAccount)
+static NSString *_messageImageCachePathWithoutExtension(int imageID, AIAccount* adiumAccount)
 {
     NSString    *messageImageCacheFilename = [NSString stringWithFormat:@"TEMP-Image_%@_%i", [adiumAccount internalObjectID], imageID];
     return [[[AIObject sharedAdiumInstance] cachesPath] stringByAppendingPathComponent:messageImageCacheFilename];
 }
 
-NSString* processPurpleImages(NSString* inString, AIAccount* adiumAccount)
+NSString *processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 {
 	NSScanner			*scanner;
     NSString			*chunkString = nil;
@@ -568,7 +568,6 @@ NSString* processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 	
 	//Parse the incoming HTML
     while (![scanner isAtEnd]) {
-		
 		//Find the beginning of a purple IMG ID tag
 		if ([scanner scanUpToString:targetString intoString:&chunkString]) {
 			[newString appendString:chunkString];
@@ -593,7 +592,7 @@ NSString* processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 				NSString		*filename = (purple_imgstore_get_filename(purpleImage) ?
 											 [NSString stringWithUTF8String:purple_imgstore_get_filename(purpleImage)] :
 											 @"Image");
-				NSString		*imagePath = _messageImageCachePath(imageID, adiumAccount);
+				NSString		*imagePath = _messageImageCachePathWithoutExtension(imageID, adiumAccount);
 				
 				//First make an NSImage, then request a TIFFRepresentation to avoid an obscure bug in the PNG writing routines
 				//Exception: PNG writer requires compacted components (bits/component * components/pixel = bits/pixel)
@@ -613,11 +612,12 @@ NSString* processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 				}
 				
 				filename = [filename stringByAppendingPathExtension:extension];
-					
+				imagePath = [imagePath stringByAppendingPathExtension:extension];
+
 				//If writing the file is successful, write an <IMG SRC="filepath"> tag to our string; the 'scaledToFitImage' class lets us apply CSS to directIM images only
 				if ([data writeToFile:imagePath atomically:YES]) {
 					[newString appendString:[NSString stringWithFormat:@"<IMG CLASS=\"scaledToFitImage\" SRC=\"%@\" ALT=\"%@\">",
-						imagePath, filename]];					
+						imagePath, filename]];	
 				}
 
 			} else {
