@@ -52,6 +52,28 @@
 }
 
 #pragma mark -
+- (NSRect)currentDisplayRectForItemPointer:(NSValue *)itemPointer atRow:(int)rowIndex
+{
+	NSDictionary *animDict = [allAnimatingItemsDict objectForKey:itemPointer];
+	NSRect rect;
+
+	if (animDict) {
+		int oldIndex = [[animDict objectForKey:@"old index"] intValue];
+		float progress = [[animDict objectForKey:@"progress"] floatValue];
+		NSRect oldR = [self unanimatedRectOfRow:oldIndex];
+		NSRect newR = [self unanimatedRectOfRow:rowIndex];
+		
+		//Calculate a rectangle between the original and the final rectangles.
+		rect = NSMakeRect(NSMinX(oldR) + (progress * (NSMinX(newR) - NSMinX(oldR))),
+						  NSMinY(oldR) + (progress * (NSMinY(newR) - NSMinY(oldR))),
+						  NSWidth(newR), NSHeight(newR) );
+	} else {
+		rect = [self unanimatedRectOfRow:rowIndex];
+	}
+	
+	return rect;	
+}
+
 /*
  * @brief Return the current rect for a row
  *
@@ -61,23 +83,8 @@
 - (NSRect)rectOfRow:(int)rowIndex
 {
 	if (animations > 0) {
-		id thisItem = [self itemAtRow:rowIndex];
-		NSDictionary *animDict = [allAnimatingItemsDict objectForKey:[NSValue valueWithPointer:thisItem]];
-		if (animDict) {
-			int oldIndex = [[animDict objectForKey:@"old index"] intValue];
-			float progress = [[animDict objectForKey:@"progress"] floatValue];
-			NSRect oldR = [self unanimatedRectOfRow:oldIndex];
-			NSRect newR = [self unanimatedRectOfRow:rowIndex];
-			
-			//Calculate a rectangle between the original and the final rectangles.
-			NSRect newRect = NSMakeRect(NSMinX(oldR) + (progress * (NSMinX(newR) - NSMinX(oldR))),
-										NSMinY(oldR) + (progress * (NSMinY(newR) - NSMinY(oldR))),
-										NSWidth(newR), NSHeight(newR) );
-			return newRect;
+		return [self currentDisplayRectForItemPointer:[NSValue valueWithPointer:[self itemAtRow:rowIndex]] atRow:rowIndex];
 
-		} else {
-			return [super rectOfRow:rowIndex];			
-		}
 	} else {
 		return [super rectOfRow:rowIndex];
 	}
@@ -151,8 +158,9 @@
 	enumerator = [oldDict keyEnumerator];
 	while ((oldItem = [enumerator nextObject])) {
 		NSNumber *oldIndex = [oldDict objectForKey:oldItem];
-		[allAnimatingItemsDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:
+		[allAnimatingItemsDict setObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
 			oldIndex, @"old index",
+			oldIndex, @"new index", /* unchanged */
 			[NSNumber numberWithFloat:0.0f], @"progress", nil]
 								  forKey:oldItem];			
 	}
@@ -187,17 +195,12 @@
 		if (newIndex && ([oldIndex intValue] != [newIndex intValue])) {
 			[animatingRowsDict setObject:oldIndex
 								  forKey:oldItem];
-			/*
-			 [allAnimatingItemsDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:
-				 oldIndex, @"old index",
-				 [NSNumber numberWithFloat:0.0f], @"progress", nil]
-									   forKey:oldItem];
-			 */
+
+			[[allAnimatingItemsDict objectForKey:oldItem] setObject:newIndex
+															 forKey:@"new index"];
 		} else {
-			[allAnimatingItemsDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:
-				oldIndex, @"old index",
-				[NSNumber numberWithFloat:1.0f], @"progress", nil]
-									  forKey:oldItem];			
+			[[allAnimatingItemsDict objectForKey:oldItem] setObject:[NSNumber numberWithFloat:1.0f]
+															 forKey:@"progress"];
 		}
 	}
 	
@@ -214,28 +217,29 @@
 
 #pragma mark AIListObjectAnimation callbacks
 
-/*
+/*!
  * @brief The animation for some rows (animatingRowsDict) has progressed
  *
  * Update the progress for those rows as tracked in allAnimatingItemsDict, then display.
- *
- * XXX Possible efficiency: Only display the needed rect?
  */
 - (void)animation:(AIOutlineViewAnimation *)animation didSetCurrentValue:(float)currentValue forDict:(NSDictionary *)animatingRowsDict
 {
 	NSEnumerator *enumerator = [animatingRowsDict keyEnumerator];
-	id item;
+	NSValue *itemPointer;
 	
-	while ((item = [enumerator nextObject])) {
-		NSNumber *oldIndex = [[allAnimatingItemsDict objectForKey:item] objectForKey:@"old index"];
+	while ((itemPointer = [enumerator nextObject])) {
+		NSMutableDictionary *animDict = [allAnimatingItemsDict objectForKey:itemPointer];
+		int newIndex = [[animDict objectForKey:@"new index"] intValue];
 		
-		[allAnimatingItemsDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:
-			oldIndex, @"old index",
-			[NSNumber numberWithFloat:currentValue], @"progress", nil]
-								  forKey:item];
+		//We'll need to redisplay the space we were in previously
+		[self setNeedsDisplayInRect:[self currentDisplayRectForItemPointer:itemPointer
+																	 atRow:newIndex]];
+		[animDict setObject:[NSNumber numberWithFloat:currentValue]
+					 forKey:@"progress"];
+		//We'll need to redisplay after updating to the new location
+		[self setNeedsDisplayInRect:[self currentDisplayRectForItemPointer:itemPointer
+																	 atRow:newIndex]];
 	}
-	
-	[self display];
 }
 
 - (void)animationDidEnd:(NSAnimation*)animation
