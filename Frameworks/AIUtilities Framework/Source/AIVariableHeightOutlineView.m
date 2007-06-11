@@ -22,6 +22,13 @@
 
 @implementation AIVariableHeightOutlineView
 
++ (void)initialize
+{
+	if (self == [AIVariableHeightOutlineView class]) {
+		[self exposeBinding:@"totalHeight"];
+	}
+}
+
 //Adium always toggles expandable items on click.
 //This could become a preference via a set method for other implementations.
 //static BOOL expandOnClick = NO;
@@ -132,42 +139,40 @@
 	totalHeight = -1;
 }
 
-- (void)updateRowHeightCache
-{
-	if (totalHeight == -1) {
-		int	numberOfRows = [self numberOfRows];
-		NSSize	intercellSpacing = [self intercellSpacing];
-
-		for (int i = 0; i < numberOfRows; i++) {
-			totalHeight += ([self rectOfRow:i].size.height + intercellSpacing.height);
-		}
-	}
-}
-
 -(void)noteHeightOfRowsWithIndexesChanged:(NSIndexSet *)indexSet
 {
+	[self willChangeValueForKey:@"totalHeight"];
 	[self resetRowHeightCache];
 	[super noteHeightOfRowsWithIndexesChanged:indexSet];
+	[self didChangeValueForKey:@"totalHeight"];
 }
 
 - (void)noteNumberOfRowsChanged
 {
+	[self willChangeValueForKey:@"totalHeight"];
 	[self resetRowHeightCache];
 	[super noteNumberOfRowsChanged];	
+	[self didChangeValueForKey:@"totalHeight"];
 }
 
 - (void)reloadData
 {
+	[self willChangeValueForKey:@"totalHeight"];
 	[self resetRowHeightCache];
 	[super reloadData];
+	[self didChangeValueForKey:@"totalHeight"];
 }
 
 //On expand/collapse
 - (void)itemDidExpand:(NSNotification *)notification{
+	[self willChangeValueForKey:@"totalHeight"];
 	[self resetRowHeightCache];
+	[self didChangeValueForKey:@"totalHeight"];
 }
 - (void)itemDidCollapse:(NSNotification *)notification{
+	[self willChangeValueForKey:@"totalHeight"];
 	[self resetRowHeightCache];
+	[self didChangeValueForKey:@"totalHeight"];
 }
 
 
@@ -345,13 +350,19 @@
 	return image;
 }
 
-
 - (int)totalHeight
 {
-	[self updateRowHeightCache];
+	if (totalHeight == -1) {
+		int	numberOfRows = [self numberOfRows];
+		NSSize	intercellSpacing = [self intercellSpacing];
+		
+		for (int i = 0; i < numberOfRows; i++) {
+			totalHeight += ([self rectOfRow:i].size.height + intercellSpacing.height);
+		}
+	}
+	
 	return totalHeight;
 }
-
 
 //Custom highlight management
 - (void)setDrawHighlightOnlyWhenMain:(BOOL)inFlag
