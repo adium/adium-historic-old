@@ -67,7 +67,7 @@
 
 - (int)totalHeight
 {
-	return [super totalHeight] + 2;
+	return [super totalHeight] + 2 + [self animationHedgeFactor].height;
 }
 
 @end
