@@ -52,6 +52,13 @@
 }
 
 #pragma mark -
+/*!
+ * @brief Return the current rect for an item at a given row
+ *
+ * This is the same as rectOfRow but is slightly faster if an NSValue pointer for the item is already known.
+ *
+ * @result The rect in which the row is currently displayed
+ */
 - (NSRect)currentDisplayRectForItemPointer:(NSValue *)itemPointer atRow:(int)rowIndex
 {
 	NSDictionary *animDict = [allAnimatingItemsDict objectForKey:itemPointer];
@@ -79,6 +86,8 @@
  *
  * If we're animating, this is somewhere between (progress % between) the old and new rects.
  * If we're not, pass it to super.
+ *
+ * @result The rect in which the row is currently displayed
  */
 - (NSRect)rectOfRow:(int)rowIndex
 {
@@ -92,24 +101,12 @@
 
 /*!
  * @brief Rect of the row if we weren't animating
+ *
+ * @result The rect in which the row would be displayed were all animations complete.
  */
 - (NSRect)unanimatedRectOfRow:(int)rowIndex
 {
 	return [super rectOfRow:rowIndex];
-}
-
-/*
- * @brief If we're animating, all rows are within any given rect, since we don't know where they are.
- *
- * XXX Is this necessary?
- */
-- (NSRange)rowsInRect:(NSRect)inRect
-{
-	if (animations > 0) {
-		return NSMakeRange(0, [self numberOfRows]);		
-	} else {
-		return [super rowsInRect:inRect];
-	}
 }
 
 /*
@@ -242,6 +239,9 @@
 	}
 }
 
+/*!
+ * @brief Animation ended
+ */
 - (void)animationDidEnd:(NSAnimation*)animation
 {
 	animations--;
