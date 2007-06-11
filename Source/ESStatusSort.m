@@ -624,6 +624,7 @@ int statusSort(id objectA, id objectB, BOOL groups)
 						
 						case Mobile:
 							status = mobile[objectCounter];
+							definitelyFinishedIfSuccessful = YES;
 							break;
 						
 						case Away:
@@ -664,7 +665,7 @@ int statusSort(id objectA, id objectB, BOOL groups)
 					}
 				}
 			} //End for object loop
-			
+
 			if (sortIndex[0] > sortIndex[1]) {
 				return NSOrderedDescending;
 			} else if (sortIndex[1] > sortIndex[0]) {
