@@ -7,8 +7,6 @@
 
 #import "AIOutlineViewAnimation.h"
 
-#define LIST_OBJECT_ANIMATION_DURATION .5
-
 @interface NSObject (AIOutlineViewAnimationDelegate)
 - (void)animation:(AIOutlineViewAnimation *)animation didSetCurrentValue:(float)currentValue forDict:(NSDictionary *)animatingRowsDict;
 @end

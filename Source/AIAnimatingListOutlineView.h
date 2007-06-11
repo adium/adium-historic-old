@@ -12,8 +12,8 @@
 	NSMutableDictionary *allAnimatingItemsDict;
 	int animations;
 	NSSize animationHedgeFactor;
+	
+	BOOL disableExpansionAnimation;
 }
-
-- (NSSize)animationHedgeFactor;
 
 @end

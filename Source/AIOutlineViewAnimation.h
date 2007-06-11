@@ -7,6 +7,9 @@
 
 #import <Cocoa/Cocoa.h>
 
+#define LIST_OBJECT_ANIMATION_DURATION .5
+#define EXPANSION_DURATION .15
+
 @interface AIOutlineViewAnimation : NSAnimation {
 	NSDictionary *dict;
 	id delegate;
