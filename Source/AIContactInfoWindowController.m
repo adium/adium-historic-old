@@ -304,7 +304,8 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 	//Show the reset image button if a preference is set on this object, overriding its serverside icon
 	[imageView_userIcon setShowResetImageButton:([displayedObject preferenceForKey:KEY_USER_ICON
-																			 group:PREF_GROUP_USERICONS] != nil)];
+																			 group:PREF_GROUP_USERICONS
+															 ignoreInheritedValues:YES] != nil)];
 }
 
 //Change the list object
