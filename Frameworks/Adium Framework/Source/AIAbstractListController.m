@@ -317,6 +317,15 @@
 	pillowsOrPillowsFittedWindowStyle = (windowStyle == AIContactListWindowStyleContactBubbles || windowStyle == AIContactListWindowStyleContactBubbles_Fitted);
 	if (pillowsOrPillowsFittedWindowStyle) {
 		//Treat the padding as spacing
+		int contactSpacing = [[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue];
+		
+		/* If we're outline bubbles, insist upon the spacing being sufficient for the outlines. Otherwise, we
+		 * allow drawing glitches as one bubble overlaps the rect of another.
+		 */
+		BOOL	outlineBubble = [[prefDict objectForKey:KEY_LIST_LAYOUT_OUTLINE_BUBBLE] boolValue];
+		int		outlineBubbleLineWidth = [[prefDict objectForKey:KEY_LIST_LAYOUT_OUTLINE_BUBBLE_WIDTH] intValue];
+		if (outlineBubble && (outlineBubbleLineWidth > contactSpacing)) contactSpacing = outlineBubbleLineWidth;
+		
 		[contentCell setSplitVerticalSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
 		[contentCell setLeftSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT] intValue]];
 		[contentCell setRightSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_RIGHT_INDENT] intValue]];
