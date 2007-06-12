@@ -21,6 +21,8 @@
 
 #import "NSIPRecentPicture.h"
 
+#define RECENT_PICTURE_CLASS NSClassFromString(@"NSIPRecentPicture")
+
 #define FADE_INCREMENT	0.3
 #define FADE_TIME		.3
 
@@ -124,8 +126,8 @@
 {
 	NSImage		 *displayImage;
 
-	if (index < [[NSIPRecentPicture recentSmallIcons] count]) {
-		NSImage		 *image = [[NSIPRecentPicture recentSmallIcons] objectAtIndex:index];
+	if (index < [[RECENT_PICTURE_CLASS recentSmallIcons] count]) {
+		NSImage		 *image = [[RECENT_PICTURE_CLASS recentSmallIcons] objectAtIndex:index];
 		NSSize		size = [image size];
 		NSBezierPath *fullPath = [NSBezierPath bezierPathWithRect:NSMakeRect(0, 0, size.width, size.height)];
 		displayImage = [image copy];
@@ -172,7 +174,7 @@
 - (void)imageGridViewSelectionDidChange:(NSNotification *)notification
 {
 	int selectedIndex = [imageGridView selectedIndex];
-	NSArray *recentPictures = [NSIPRecentPicture recentPictures];
+	NSArray *recentPictures = [RECENT_PICTURE_CLASS recentPictures];
 	if (selectedIndex < [recentPictures count]) {
 		//Notify as if the image had been selected in the picker
 		[[picker delegate] imageViewWithImagePicker:picker
@@ -203,7 +205,7 @@
 
 - (void)clearRecentPictures:(id)sender
 {
-	[NSIPRecentPicture removeAllButCurrent];
+	[RECENT_PICTURE_CLASS removeAllButCurrent];
 	[imageGridView reloadData];
 }
 
