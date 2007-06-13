@@ -82,7 +82,7 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 - (BOOL)shouldSortForModifiedStatusKeys:(NSSet *)inModifiedKeys
 {
 	if (statusKeysRequiringResort) {
-		return [statusKeysRequiringResort intersectsSet:inModifiedKeys] != nil;
+		return [statusKeysRequiringResort intersectsSet:inModifiedKeys];
 	} else {
 		return NO;
 	}
@@ -97,7 +97,7 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 - (BOOL)shouldSortForModifiedAttributeKeys:(NSSet *)inModifiedKeys
 {
 	if (attributeKeysRequiringResort) {
-		return [attributeKeysRequiringResort intersectsSet:inModifiedKeys] != nil;
+		return [attributeKeysRequiringResort intersectsSet:inModifiedKeys];
 	} else {
 		return NO;
 	}
