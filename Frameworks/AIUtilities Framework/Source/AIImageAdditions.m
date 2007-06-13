@@ -457,57 +457,16 @@
 	return rect;
 }
 
-/* From GimmeGIF by Stone Design Software */
-
-//
-// We must "deepen" the cache to 24 bits for GIF's to be 
-// created correctly in RDR...
-// NOTE: MACH OPENSTEP, -DOS_API, knows not of this functionality
-//
-
-- (void)prepareCache:(NSImage *)aCache
-{
-	NSRect r = { { 0.,0.} ,{ 1.,1.}}; // just one pixel is all it takes!
-	
-	[aCache lockFocus];
-	[[NSColor colorWithDeviceCyan:.32 magenta:.76 yellow:.29 black:.04 alpha:.05] set];
-	NSRectFill(r);
-	[aCache unlockFocus];
-}
-
 - (NSBitmapImageRep *)getBitmap
 {
-	NSRect				r = NSMakeRect(0., 0., [self size].width, [self size].height);
-	NSBitmapImageRep	*bm = nil;
+	[self lockFocus];
 	
-	[[NSColor clearColor] set];
-	NSImage				*tiffCache = [[[NSImage allocWithZone:[self zone]] initWithSize:r.size] autorelease];
-	NSCachedImageRep	*rep = [[[NSCachedImageRep alloc] initWithSize:r.size depth:520 separate:YES alpha:YES] autorelease];
+	NSSize size = [self size];
+	NSRect rect = NSMakeRect(0.0, 0.0, size.width, size.height);
+	NSBitmapImageRep	*bm = [[[NSBitmapImageRep alloc] initWithFocusedViewRect:rect] autorelease];
+
+	[self unlockFocus];
 	
-	[tiffCache addRepresentation:rep];
-	[self prepareCache:tiffCache];	
-	
-	// if something should happen, AI_DURING/AI_HANDLER protects us!
-	@try
-	{
-		[tiffCache lockFocusOnRepresentation:rep];
-		[self compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
-		
-		// OK, now let's create an NSBitmapImageRep form the data.. 
-		bm =  [[[NSBitmapImageRep alloc] initWithFocusedViewRect:r] autorelease];
-		if (bm == nil)
-			bm = [NSBitmapImageRep imageRepWithData: [tiffCache TIFFRepresentation]];
-
-		[tiffCache unlockFocus];
-	}
-	@catch(id exc)
-	{
-		bm = nil;
-	}
-
-	if (bm == nil)
-		NSLog(@"in getBitMap : no NSBitmapImageRep of the right depth found");
-
 	return bm;
 }
 
