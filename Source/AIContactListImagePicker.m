@@ -13,6 +13,7 @@
 #import <Adium/AIContactControllerProtocol.h>
 #import "AIContactListRecentImagesWindowController.h"
 #import <AIUtilities/AIBezierPathAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 
 #define ARROW_WIDTH		8
 #define ARROW_HEIGHT	(ARROW_WIDTH/2.0)
@@ -131,13 +132,16 @@
 
 - (void)displayPicturePopUpForEvent:(NSEvent *)theEvent
 {
-	NSRect	myFrame = [self frame];
-	NSPoint	bottomRightPoint = NSMakePoint(NSMaxX(myFrame), NSMinY(myFrame));
-	bottomRightPoint = [[self window] convertBaseToScreen:[[self superview] convertPoint:bottomRightPoint toView:nil]];
-
-	[AIContactListRecentImagesWindowController showWindowFromPoint:bottomRightPoint
-													   imagePicker:self 
-											 recentPictureSelector:@selector(didSetImage:forAccount:)];
+	if(NSClassFromString(@"NSIPRecentPicture")) {
+		NSRect	myFrame = [self frame];
+		NSPoint	bottomRightPoint = NSMakePoint(NSMaxX(myFrame), NSMinY(myFrame));
+		bottomRightPoint = [[self window] convertBaseToScreen:[[self superview] convertPoint:bottomRightPoint toView:nil]];
+		[AIContactListRecentImagesWindowController showWindowFromPoint:bottomRightPoint
+														   imagePicker:self
+											     recentPictureSelector:@selector(didSetImage:forAccount:)];
+		
+	}
+				
 }
 
 //Custom mouse down tracking to display our menu and highlight
