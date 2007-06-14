@@ -46,7 +46,7 @@ static  NSWindow				*onWindow = nil;
 static	NSAttributedString      *tooltipBody;
 static	NSAttributedString      *tooltipTitle;
 static  NSImage                 *tooltipImage;
-static	NSTimer					*fadeOutTimer;
+static	NSViewAnimation			*fadeOutAnimation;
 static  NSSize                  imageSize;
 static  BOOL                    imageOnRight;
 static	NSPoint					tooltipPoint;
@@ -103,12 +103,8 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
    if ((inTitle && [inTitle length]) || (inBody && [inBody length]) || inImage) { //If passed something to display
        BOOL		newLocation = (!NSEqualPoints(inPoint,tooltipPoint) || (tooltipOrientation != inOrientation));
 	   
-	   BOOL fadingOut = (fadeOutTimer != nil);
-	   if (fadingOut) {
-		   [fadeOutTimer invalidate];
-		   [fadeOutTimer release];
-		   fadeOutTimer = nil;
-		}
+	   BOOL fadingOut = (fadeOutAnimation != nil && [fadeOutAnimation isAnimating]);
+	   if (fadingOut) [fadeOutAnimation stopAnimation];
 	   
 	   //Update point and orientation
         tooltipPoint = inPoint;
@@ -254,26 +250,24 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 
 + (void)_closeTooltip
 {
-	fadeOutTimer = [[NSTimer scheduledTimerWithTimeInterval:TOOLTIP_FADEOUT_INTERVAL 
-													 target:self
-												   selector:@selector(_performFade:)
-												   userInfo:nil 
-													repeats:YES] retain];
+	fadeOutAnimation = [[NSViewAnimation alloc] initWithViewAnimations:[NSArray arrayWithObject:[NSDictionary dictionaryWithObjectsAndKeys:
+		tooltipWindow, NSViewAnimationTargetKey,
+		NSViewAnimationFadeOutEffect, NSViewAnimationEffectKey,
+	nil]]];
+	[fadeOutAnimation setDelegate:self];
+	[fadeOutAnimation setDuration:0.25];
+	[fadeOutAnimation setAnimationCurve:NSAnimationLinear];
+	[fadeOutAnimation startAnimation];
 }
 
-+ (void)_performFade:(NSTimer *)timer
++ (void)animationDidEnd:(NSAnimation *)animation
 {
-	CGFloat alpha = [tooltipWindow alphaValue];
-	if (alpha > 0.0) {
-		[tooltipWindow setAlphaValue:alpha - TOOLTIP_FADOUT_STEP];
-	} else {
+	if (animation != nil && animation == fadeOutAnimation)
 		[self _reallyCloseTooltip];
-	}
 }
 
 + (void)_reallyCloseTooltip
 {
-    [tooltipWindow orderOut:nil];
     [textView_tooltipBody release];  textView_tooltipBody = nil;
     [textView_tooltipTitle release]; textView_tooltipTitle = nil;
 	[textStorage_tooltipBody release]; textStorage_tooltipBody = nil;
@@ -285,10 +279,7 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
     [tooltipImage release];          tooltipImage = nil;
     tooltipPoint = NSZeroPoint;
 	
-	[fadeOutTimer invalidate];
-	[fadeOutTimer release];
-	fadeOutTimer = nil;
-
+	[fadeOutAnimation release]; fadeOutAnimation = nil;
 }
 
 + (void)_sizeTooltip
