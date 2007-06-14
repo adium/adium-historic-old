@@ -21,11 +21,14 @@
 
 @interface AIMenuBarIcons : AIXtraInfo {
 	NSMutableDictionary *imageStates;
+	NSMutableDictionary *alternateImageStates;
 	NSDictionary		*iconInfo;
 }
 
 + (NSImage *)previewMenuImageForIconPackAtPath:(NSString *)inPath;
-- (NSImage *)imageOfType:(NSString *)type;
+- (NSImage *)imageOfType:(NSString *)imageType alternate:(BOOL)alternate;
 - (BOOL)showBadge;
+
+- (NSImage *)alternateImageForImage:(NSImage *)inImage;
 
 @end

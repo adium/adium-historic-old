@@ -16,6 +16,8 @@
  
 #import "AIMenuBarIcons.h"
 #import <AIXtraInfo.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import <QuartzCore/CoreImage.h>
 
 #define KEY_ICONS_DICT	@"Icons"
 
@@ -30,6 +32,7 @@
 {
 	if ((self = [super initWithURL:url])) {
 		imageStates = [[NSMutableDictionary alloc] init];
+		alternateImageStates = [[NSMutableDictionary alloc] init];
 		iconInfo = [xtraBundle objectForInfoDictionaryKey:KEY_ICONS_DICT];
 	}
 	return self;
@@ -40,7 +43,7 @@
 	return [[xtraBundle objectForInfoDictionaryKey:@"Show Badge"] boolValue];
 }
 
-- (NSImage *)imageOfType:(NSString *)imageType
+- (NSImage *)imageOfType:(NSString *)imageType alternate:(BOOL)alternate
 {
 	NSImage *image;
 
@@ -49,11 +52,17 @@
 		imageType = @"Online";
 	}
 
-	image = [imageStates objectForKey:imageType];
+	image = [(alternate ? alternateImageStates : imageStates) objectForKey:imageType];
 	if (!image) { // Image not already stored.
-		image = [self imageForKey:imageType];
-		if (image) { // Make sure the image exists.
-			[imageStates setObject:image forKey:imageType];
+		if (alternate) {
+			NSImage *normalImage = [self imageOfType:imageType alternate:NO];
+			image = [self alternateImageForImage:normalImage];
+			[alternateImageStates setObject:image forKey:imageType];
+		} else {
+			image = [self imageForKey:imageType];
+			if (image) { // Make sure the image exists.
+				[imageStates setObject:image forKey:imageType];
+			}
 		}
 	}
 	return image;
@@ -83,6 +92,7 @@
 - (void)dealloc
 {
 	[imageStates release];
+	[alternateImageStates release];
 	[super dealloc];
 }
 
@@ -152,6 +162,44 @@
 	}
 
 	return [image autorelease];
+}
+
+// Returns an inverted image.
+- (NSImage *)alternateImageForImage:(NSImage *)inImage
+{
+	NSImage				*altImage = [[NSImage alloc] initWithSize:[inImage size]];
+	NSBitmapImageRep	*srcImageRep = [inImage bitmapRep];
+
+	id monochromeFilter, invertFilter, alphaFilter;
+	
+	monochromeFilter = [CIFilter filterWithName:@"CIColorMonochrome"];
+	[monochromeFilter setValue:[[[CIImage alloc] initWithBitmapImageRep:srcImageRep] autorelease]
+						forKey:@"inputImage"]; 
+	[monochromeFilter setValue:[NSNumber numberWithFloat:1.0]
+						forKey:@"inputIntensity"];
+	[monochromeFilter setValue:[[[CIColor alloc] initWithColor:[NSColor blackColor]] autorelease]
+						forKey:@"inputColor"];
+	
+	//Now invert our greyscale image
+	invertFilter = [CIFilter filterWithName:@"CIColorInvert"];
+	[invertFilter setValue:[monochromeFilter valueForKey:@"outputImage"]
+					forKey:@"inputImage"]; 
+	
+	//And turn the parts that were previously white (are now black) into transparent
+	alphaFilter = [CIFilter filterWithName:@"CIMaskToAlpha"];
+	[alphaFilter setValue:[invertFilter valueForKey:@"outputImage"]
+				   forKey:@"inputImage"]; 
+	
+	[altImage lockFocus];
+	id context = [CIContext contextWithCGContext:[[NSGraphicsContext currentContext] graphicsPort] 
+									   options:nil];
+	id result = [alphaFilter valueForKey:@"outputImage"];
+	[context drawImage:result
+			   atPoint:CGPointZero
+			  fromRect:[result extent]];
+	[altImage unlockFocus];
+	
+	return [altImage autorelease];
 }
 
 @end
