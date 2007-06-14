@@ -47,7 +47,6 @@
 
 @implementation CBStatusMenuItemController
 
-//Returns the shared instance, possibly initializing and creating a new one.
 + (CBStatusMenuItemController *)statusMenuItemController
 {
 	return [[[self alloc] init] autorelease];
