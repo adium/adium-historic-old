@@ -67,7 +67,7 @@
 @end
 
 @interface AIImageViewWithImagePicker : NSImageView {
-	NSImagePickerController *pickerController;
+	id						pickerController;
 	NSString				*title;
 	
 	BOOL					useNSImagePickerController;
