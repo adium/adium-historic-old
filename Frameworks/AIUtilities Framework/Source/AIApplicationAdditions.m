@@ -12,6 +12,11 @@
 	#define NSAppKitVersionNumber10_3 743
 #endif
 
+//Make sure the version number defines exist; when compiling in 10.3, NSAppKitVersionNumber10_3 isn't defined
+#ifndef NSAppKitVersionNumber10_4
+	#define NSAppKitVersionNumber10_4 824
+#endif
+
 @implementation NSApplication (AIApplicationAdditions)
 
 + (BOOL)isOnTigerOrBetter
@@ -22,6 +27,11 @@
 - (BOOL)isOnTigerOrBetter
 {
 	return (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3);
+}
+
+- (BOOL)isOnLeopardOrBetter
+{
+	return (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_4);
 }
 
 - (BOOL)isWebKitAvailable
