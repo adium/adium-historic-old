@@ -698,12 +698,12 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
         fileDescription = AILocalizedString(@"Adium plugin",nil);
 		extension = @"AdiumPlugin";
 
-    } else if ([extension caseInsensitiveCompare:@"AdiumLibpurplePlugin"] == NSOrderedSame) {
+    } else if ([extension caseInsensitiveCompare:@"AdiumLibgaimPlugin"] == NSOrderedSame) {
         destination = [AISearchPathForDirectoriesInDomains(AIPluginsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
         //Plugins haven't been loaded yet if the application isn't done loading, so only request a restart if it has finished loading already 
         requiresRestart = completedApplicationLoad;
         fileDescription = AILocalizedString(@"Adium plugin",nil);
-		extension = @"AdiumLibpurplePlugin";
+		extension = @"AdiumLibgaimPlugin";
 
 	} else if ([extension caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIDockIconsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
