@@ -16,7 +16,6 @@
 
 #import <Adium/AIAbstractListController.h>
 #import <Adium/AIListCell.h>
-//#import <Adium/AIListLayoutWindowController.h>
 #import <AIUtilities/AIImageAdditions.h>
 
 //User Icon
@@ -30,6 +29,9 @@
 //Service icon
 #define SERVICE_ICON_LEFT_PAD		2
 #define SERVICE_ICON_RIGHT_PAD		2
+
+#define TEXT_WITH_IMAGES_LEFT_PAD   2
+#define TEXT_WITH_IMAGES_RIGHT_PAD  2
 
 @interface AIListContactCell : AIListCell {
 	BOOL				userIconVisible;
