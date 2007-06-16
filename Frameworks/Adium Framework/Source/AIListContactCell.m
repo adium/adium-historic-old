@@ -340,6 +340,21 @@
 	if (statusIconPosition == LIST_POSITION_RIGHT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_RIGHT];
 	if (serviceIconPosition == LIST_POSITION_RIGHT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_RIGHT];
 	
+	if ((userIconPosition == LIST_POSITION_FAR_LEFT || userIconPosition == LIST_POSITION_LEFT) ||
+		(serviceIconPosition == LIST_POSITION_FAR_LEFT || serviceIconPosition == LIST_POSITION_LEFT) ||
+		(statusIconPosition == LIST_POSITION_FAR_LEFT || statusIconPosition == LIST_POSITION_LEFT)) {
+		//Something is on the left. Give TEXT_WITH_IMAGES_LEFT_PAD between that and the display name
+		rect.origin.x += TEXT_WITH_IMAGES_LEFT_PAD;
+		rect.size.width -= TEXT_WITH_IMAGES_LEFT_PAD;
+	}
+
+	if ((userIconPosition == LIST_POSITION_FAR_RIGHT || userIconPosition == LIST_POSITION_RIGHT) ||
+		(serviceIconPosition == LIST_POSITION_FAR_RIGHT || serviceIconPosition == LIST_POSITION_RIGHT) ||
+		(statusIconPosition == LIST_POSITION_FAR_RIGHT || statusIconPosition == LIST_POSITION_RIGHT)) {
+		//Something is on the right. Give TEXT_WITH_IMAGES_LEFT_PAD between that and the display name
+		rect.size.width -= TEXT_WITH_IMAGES_RIGHT_PAD;
+	}
+
 	//Extended Status
 	if (extendedStatusIsBelowName) rect = [self drawUserExtendedStatusInRect:rect drawUnder:YES];
 	rect = [self drawDisplayNameWithFrame:rect];
@@ -401,7 +416,6 @@
 		}
 		
 		//If we're using space on the right, shrink the width so we won't be overlapped
-//		if (position == IMAGE_POSITION_RIGHT) rect.size.width -= USER_ICON_RIGHT_PAD;
 		if (position == IMAGE_POSITION_LEFT) rect.origin.x += USER_ICON_RIGHT_PAD;
 		rect.size.width -= USER_ICON_RIGHT_PAD;
 	}
