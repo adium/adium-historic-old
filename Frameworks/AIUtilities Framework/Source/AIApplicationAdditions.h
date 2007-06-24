@@ -10,7 +10,7 @@
 
 + (BOOL)isOnTigerOrBetter;
 - (BOOL)isOnTigerOrBetter;
-- (BOOL)isOnLeaopardOrBetter;
+- (BOOL)isOnLeopardOrBetter;
 
 - (BOOL)isWebKitAvailable;
 
