@@ -1723,7 +1723,7 @@
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_STYLE = DYNAMIC;
 				MACH_O_TYPE = mh_dylib;
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_CPLUSPLUSFLAGS = "-fconstant-cfstrings";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
@@ -1771,7 +1771,7 @@
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_STYLE = DYNAMIC;
 				MACH_O_TYPE = mh_dylib;
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_CPLUSPLUSFLAGS = "-fconstant-cfstrings";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
@@ -1824,7 +1824,7 @@
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_STYLE = DYNAMIC;
 				MACH_O_TYPE = mh_dylib;
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_CPLUSPLUSFLAGS = "-fconstant-cfstrings";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
@@ -1882,7 +1882,7 @@
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_STYLE = DYNAMIC;
 				MACH_O_TYPE = mh_dylib;
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_CPLUSPLUSFLAGS = "-fconstant-cfstrings";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
@@ -1918,7 +1918,7 @@
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_STYLE = DYNAMIC;
 				MACH_O_TYPE = mh_dylib;
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_CPLUSPLUSFLAGS = "-fconstant-cfstrings";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
