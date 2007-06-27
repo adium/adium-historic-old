@@ -122,7 +122,7 @@ Boolean GetMetadataForXMLLog(NSMutableDictionary *attributes, NSString *pathToFi
 	NSXMLDocument *xmlDoc;
 	NSError *err=nil;
 	NSURL *furl = [NSURL fileURLWithPath:(NSString *)pathToFile];
-	xmlDoc = [[NSClassFromString(@"NSXMLDocument") alloc] initWithContentsOfURL:furl
+	xmlDoc = [[NSXMLDocument alloc] initWithContentsOfURL:furl
 																		options:NSXMLNodePreserveCDATA
 																		  error:&err];    
 	
