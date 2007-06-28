@@ -97,7 +97,7 @@ AISearchPathForDirectoriesInDomains(unsigned directory, unsigned domainMask, BOO
 	}
 
 	// Internal directories.
-	if ((domainMask & AIInternalDomainMask) && internalRelativePath) {
+	if (((domainMask & AIInternalDomainMask) != 0) && internalRelativePath) {
 		NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
 		NSString *fullAppendPath = [NSString pathWithComponents:internalRelativePath];
 
@@ -125,7 +125,7 @@ AISearchPathForDirectoriesInDomains(unsigned directory, unsigned domainMask, BOO
 		 * may not be covered above if we are installed as Portable Adium
 		 */
 		if (adiumResourceName &&
-			(domainMask & NSUserDomainMask)) {
+			((domainMask & NSUserDomainMask) != 0)) {
 			NSString *path = [[[AIObject sharedAdiumInstance] applicationSupportDirectory] stringByAppendingPathComponent:adiumResourceName];
 
 			if (![dirs containsObject:path]) {
