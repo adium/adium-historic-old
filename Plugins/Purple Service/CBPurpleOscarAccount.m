@@ -426,7 +426,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 		if (userinfo &&
 			aim_sncmp(purple_account_get_username(account), contactUID) &&
 			[listObject online]) {
-			return (userinfo->capabilities & OSCAR_CAPABILITY_DIRECTIM);
+			return ((userinfo->capabilities & OSCAR_CAPABILITY_DIRECTIM) != 0);
 			
 		} else {
 			return NO;

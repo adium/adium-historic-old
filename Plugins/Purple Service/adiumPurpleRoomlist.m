@@ -21,14 +21,14 @@ static void adiumPurpleRoomlistDialogShowWithAccount(PurpleAccount *account)
 }
 static void adiumPurpleRoomlistNew(PurpleRoomlist *list)
 {
-	PurpleDebug (@"adiumPurpleRoomlistNew");
+	AILog(@"adiumPurpleRoomlistNew");
 }
 static void adiumPurpleRoomlistSetFields(PurpleRoomlist *list, GList *fields)
 {
 }
 static void adiumPurpleRoomlistAddRoom(PurpleRoomlist *list, PurpleRoomlistRoom *room)
 {
-	PurpleDebug (@"adiumPurpleRoomlistAddRoom");
+	AILog(@"adiumPurpleRoomlistAddRoom");
 }
 static void adiumPurpleRoomlistInProgress(PurpleRoomlist *list, gboolean flag)
 {

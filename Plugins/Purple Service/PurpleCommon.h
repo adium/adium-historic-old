@@ -22,12 +22,6 @@
 #define PURPLE_DEBUG FALSE
 #endif
 
-#if PURPLE_DEBUG
-	#define PurpleDebug(...) AILog(__VA_ARGS__)
-#else
-	#define PurpleDebug(...) /**/
-#endif
-
 //#define MEANWHILE_NOT_AVAILABLE
 
 //Purple includes

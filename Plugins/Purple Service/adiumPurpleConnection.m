@@ -19,7 +19,7 @@
 
 static void adiumPurpleConnConnectProgress(PurpleConnection *gc, const char *text, size_t step, size_t step_count)
 {
-    PurpleDebug (@"Connecting: gc=0x%x (%s) %i / %i", gc, text, step, step_count);
+    AILog(@"Connecting: gc=0x%x (%s) %i / %i", gc, text, step, step_count);
 	
 	/*
 	NSNumber	*connectionProgressPrecent = [NSNumber numberWithFloat:((float)step/(float)(step_count-1))];
@@ -31,14 +31,14 @@ static void adiumPurpleConnConnectProgress(PurpleConnection *gc, const char *tex
 
 static void adiumPurpleConnConnected(PurpleConnection *gc)
 {
-    PurpleDebug (@"Connected: gc=%x", gc);
+    AILog(@"Connected: gc=%x", gc);
 	
 	[accountLookup(gc->account) accountConnectionConnected];
 }
 
 static void adiumPurpleConnDisconnected(PurpleConnection *gc)
 {
-    PurpleDebug (@"Disconnected: gc=%x", gc);
+    AILog(@"Disconnected: gc=%x", gc);
 	//    if (_accountDict == nil) // if this has been destroyed, unloadPlugin has already been called
 	//        return;
     [accountLookup(gc->account) accountConnectionDisconnected];
@@ -46,7 +46,7 @@ static void adiumPurpleConnDisconnected(PurpleConnection *gc)
 
 static void adiumPurpleConnNotice(PurpleConnection *gc, const char *text)
 {
-    PurpleDebug (@"Connection Notice: gc=%x (%s)", gc, text);
+    AILog(@"Connection Notice: gc=%x (%s)", gc, text);
 	
 	NSString *connectionNotice = [NSString stringWithUTF8String:text];
 	[accountLookup(gc->account) accountConnectionNotice:connectionNotice];
@@ -54,7 +54,7 @@ static void adiumPurpleConnNotice(PurpleConnection *gc, const char *text)
 
 static void adiumPurpleConnReportDisconnect(PurpleConnection *gc, const char *text)
 {
-    PurpleDebug (@"Connection Disconnected: gc=%x (%s)", gc, text);
+    AILog(@"Connection Disconnected: gc=%x (%s)", gc, text);
 	
 	NSString	*disconnectError = (text ? [NSString stringWithUTF8String:text] : @"");
     [accountLookup(gc->account) accountConnectionReportDisconnect:disconnectError];

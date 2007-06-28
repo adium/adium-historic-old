@@ -152,7 +152,7 @@ static void adiumPurpleCoreDebugInit(void)
 /* The core is ready... finish configuring libpurple and its plugins */
 static void adiumPurpleCoreUiInit(void)
 {
-	PurpleDebug (@"adiumPurpleCoreUiInit");
+	AILog(@"adiumPurpleCoreUiInit");
 	//Initialize the core UI ops
     purple_blist_set_ui_ops(adium_purple_blist_get_ui_ops());
     purple_connections_set_ui_ops(adium_purple_connection_get_ui_ops());
@@ -193,7 +193,7 @@ static void adiumPurpleCoreUiInit(void)
 
 static void adiumPurpleCoreQuit(void)
 {
-    PurpleDebug (@"Core quit");
+    AILog(@"Core quit");
     exit(0);
 }
 

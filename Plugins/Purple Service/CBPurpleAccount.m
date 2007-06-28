@@ -93,7 +93,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	//Create a purple account if one does not already exist
 	if (!account) {
 		[self createNewPurpleAccount];
-		PurpleDebug(@"%x: created PurpleAccount 0x%x with UID %@, protocolPlugin %s", [NSRunLoop currentRunLoop],account, [self UID], [self protocolPlugin]);
+		AILog(@"%x: created PurpleAccount 0x%x with UID %@, protocolPlugin %s", [NSRunLoop currentRunLoop],account, [self UID], [self protocolPlugin]);
 	}
 	
     return account;
@@ -144,7 +144,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 		
 		[self gotGroupForContact:theContact];
 	} else {
-		PurpleDebug(@"Got %@ for %@ while not online",groupName,theContact);
+		AILog(@"Got %@ for %@ while not online",groupName,theContact);
 	}
 }
 
@@ -751,7 +751,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
  */
 - (BOOL)allowsNewlinesInMessages
 {
-	return (account && account->gc && (account->gc->flags & PURPLE_CONNECTION_NO_NEWLINES));
+	return (account && account->gc && ((account->gc->flags & PURPLE_CONNECTION_NO_NEWLINES) != 0));
 }
 
 //Return YES if we're available for sending the specified content or will be soon (are currently connecting).
@@ -796,7 +796,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 - (BOOL)supportsAutoReplies
 {
 	if (account && account->gc) {
-		return (account->gc->flags & PURPLE_CONNECTION_AUTO_RESP);
+		return ((account->gc->flags & PURPLE_CONNECTION_AUTO_RESP) != 0);
 	}
 	
 	return NO;
@@ -922,7 +922,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	int			i, count;
 	BOOL		isNewArrival = (newArrivals && [newArrivals boolValue]);
 
-	PurpleDebug(@"*** %@: addUsersArray:%@ toChat:%@",self,usersArray,chat);
+	AILog(@"*** %@: addUsersArray:%@ toChat:%@",self,usersArray,chat);
 
 	count = [usersArray count];
 	for (i = 0; i < count; i++) {
@@ -955,7 +955,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 		
 		[chat removeParticipatingListObject:contact];
 		
-		PurpleDebug(@"%@ removeUser:%@ fromChat:%@",self,contact,chat);
+		AILog(@"%@ removeUser:%@ fromChat:%@",self,contact,chat);
 	} else {
 		AILog(@"Could not remove %@ from %@ (contactWithUID: %@)",
 			  contactName,chat,[self contactWithUID:[self uidForContactWithUID:contactName inChat:chat]]);
@@ -1181,7 +1181,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
  */
 - (void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	PurpleDebug(@"File transfer request received: %@",fileTransfer);
+	AILog(@"File transfer request received: %@",fileTransfer);
 	[[adium fileTransferController] receiveRequestForFileTransfer:fileTransfer];
 }
 
@@ -1227,7 +1227,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 
 - (void)destroyFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	PurpleDebug(@"Destroy file transfer %@",fileTransfer);
+	AILog(@"Destroy file transfer %@",fileTransfer);
 	[fileTransfer release];
 }
 
@@ -1235,7 +1235,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 //Subsequently inform the fileTransferController that the fun has begun.
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
 {
-    PurpleDebug(@"Accepted file transfer %@",fileTransfer);
+    AILog(@"Accepted file transfer %@",fileTransfer);
 	
 	PurpleXfer		*xfer;
 	PurpleXferType	xferType;
@@ -1291,7 +1291,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	if (!account) {
 		//create a purple account if one does not already exist
 		[self createNewPurpleAccount];
-		PurpleDebug(@"created PurpleAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
+		AILog(@"created PurpleAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
 	}
 	
 	//Make sure our settings are correct
@@ -1315,7 +1315,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 		statusState = [[adium statusController] defaultInitialStatusState];
 	}
 
-	PurpleDebug(@"Adium: Connect: %@ initiating connection using status state %@ (%@).",[self UID],statusState,
+	AILog(@"Adium: Connect: %@ initiating connection using status state %@ (%@).",[self UID],statusState,
 			  [statusState statusMessageString]);
 
 	[self autoRefreshingOutgoingContentForStatusKey:@"StatusState"
@@ -1433,7 +1433,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 		purple_proxy_info_set_username(proxy_info, (char *)[[proxyConfig objectForKey:@"Username"] UTF8String]);
 		purple_proxy_info_set_password(proxy_info, (char *)[[proxyConfig objectForKey:@"Password"] UTF8String]);
 		
-		PurpleDebug(@"Connecting with proxy type %i and proxy host %@",proxyType, [proxyConfig objectForKey:@"Host"]);
+		AILog(@"Connecting with proxy type %i and proxy host %@",proxyType, [proxyConfig objectForKey:@"Host"]);
 	}
 
 	[invocation invoke];
@@ -1549,7 +1549,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	//We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:NotifyNow];
 	
-	PurpleDebug(@"%@ accountConnectionReportDisconnect: %@",self,lastDisconnectionError);
+	AILog(@"%@ accountConnectionReportDisconnect: %@",self,lastDisconnectionError);
 }
 
 - (void)accountConnectionNotice:(NSString *)connectionNotice
@@ -1607,7 +1607,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	}
 	
 	//Report that we disconnected
-	PurpleDebug(@"%@: Telling the core we disconnected", self);
+	AILog(@"%@: Telling the core we disconnected", self);
 	[self didDisconnect];
 }
 
@@ -1628,7 +1628,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	if (!account) {
 		//create a purple account if one does not already exist
 		[self createNewPurpleAccount];
-		PurpleDebug(@"Registering: created PurpleAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
+		AILog(@"Registering: created PurpleAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
 	}
 	
 	//We are connecting
@@ -1643,7 +1643,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	//Set password and connect
 	purple_account_set_password(account, [password UTF8String]);
 	
-	PurpleDebug(@"Adium: Register: %@ initiating connection.",[self UID]);
+	AILog(@"Adium: Register: %@ initiating connection.",[self UID]);
 	
 	[purpleThread registerAccount:self];
 }
@@ -1683,7 +1683,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	
     //Now look at keys which only make sense if we have an account
 	if (account) {
-		PurpleDebug(@"%@: Updating status for key: %@",self, key);
+		AILog(@"%@: Updating status for key: %@",self, key);
 
 		if ([key isEqualToString:@"IdleSince"]) {
 			NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
@@ -1909,7 +1909,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 												  PURPLE_PLUGIN_PROTOCOL_INFO(prpl) :
 												  NULL);
 
-			PurpleDebug(@"Original image of size %f %f",imageSize.width,imageSize.height);
+			AILog(@"Original image of size %f %f",imageSize.width,imageSize.height);
 
 			if (prpl_info && (prpl_info->icon_spec.format)) {
 				NSData		*buddyIconData = nil;
@@ -1937,7 +1937,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 
 					/* Our original data is no longer valid, since we had to scale to a different size */
 					originalData = nil;
-					PurpleDebug(@"%@: Scaled image to size %@", self, NSStringFromSize([image size]));
+					AILog(@"%@: Scaled image to size %@", self, NSStringFromSize([image size]));
 				}
 
 				if (!buddyIconData) {
@@ -1952,7 +1952,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 							if (strcmp(prpl_formats[i],"gif") == 0) {
 								/* Try to use our original data.  If we had to scale, originalData will have been set
 								* to nil and we'll continue below to convert the image. */
-								PurpleDebug(@"l33t script kiddie animated GIF!!111");
+								AILog(@"l33t script kiddie animated GIF!!111");
 								
 								buddyIconData = originalData;
 								if (buddyIconData)
@@ -2073,7 +2073,8 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 		if (act->data) {
 			dict = [NSDictionary dictionaryWithObjectsAndKeys:
 				[NSValue valueWithPointer:act->callback],@"PurpleMenuActionCallback",
-				[NSValue valueWithPointer:act->callback],@"PurpleMenuActionData",
+				/* act->data may be freed by purple_menu_action_free() before we use it, I'm afraid... */
+				[NSValue valueWithPointer:act->data],@"PurpleMenuActionData",
 				[NSValue valueWithPointer:buddy],@"PurpleBuddy",
 				nil];
 		} else {
@@ -2272,7 +2273,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 											  forGroup:GROUP_ACCOUNT_STATUS
 												object:self];
 	} else {
-		PurpleDebug(@"Failed to load defaults for %@",[NSString stringWithFormat:@"PurpleDefaults%@",[[self service] serviceID]]);
+		AILog(@"Failed to load defaults for %@",[NSString stringWithFormat:@"PurpleDefaults%@",[[self service] serviceID]]);
 	}
 	
 	//Defaults

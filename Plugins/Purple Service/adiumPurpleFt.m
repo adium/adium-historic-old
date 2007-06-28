@@ -48,14 +48,14 @@ static void adiumPurpleUpdateProgress(PurpleXfer *xfer, double percent)
 
 static void adiumPurpleCancelLocal(PurpleXfer *xfer)
 {
-	PurpleDebug (@"adiumPurpleCancelLocal");
+	AILog(@"adiumPurpleCancelLocal");
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
     [accountLookup(xfer->account) fileTransferCancelledLocally:fileTransfer];
 }
 
 static void adiumPurpleCancelRemote(PurpleXfer *xfer)
 {
-	PurpleDebug (@"adiumPurpleCancelRemote");
+	AILog(@"adiumPurpleCancelRemote");
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
     [accountLookup(xfer->account) fileTransferCancelledRemotely:fileTransfer];
 }

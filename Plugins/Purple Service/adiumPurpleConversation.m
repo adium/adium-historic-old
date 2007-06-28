@@ -110,7 +110,7 @@ static void adiumPurpleConvWriteIm(PurpleConversation *conv, const char *who,
 		messageString = [NSString stringWithUTF8String:message];
 		chat = imChatLookupFromConv(conv);
 
-		PurpleDebug (@"adiumPurpleConvWriteIm: Received %@ from %@", messageString, [[chat listObject] UID]);
+		AILog(@"adiumPurpleConvWriteIm: Received %@ from %@", messageString, [[chat listObject] UID]);
 
 		//Process any purple imgstore references into real HTML tags pointing to real images
 		messageString = processPurpleImages(messageString, adiumAccount);
@@ -128,7 +128,7 @@ static void adiumPurpleConvWriteConv(PurpleConversation *conv, const char *who, 
 								   const char *message, PurpleMessageFlags flags,
 								   time_t mtime)
 {
-	PurpleDebug (@"adiumPurpleConvWriteConv: Received %s from %s [%i]",message,who,flags);
+	AILog(@"adiumPurpleConvWriteConv: Received %s from %s [%i]",message,who,flags);
 
 	AIChat	*chat = nil;
 	if (purple_conversation_get_type(conv) == PURPLE_CONV_TYPE_CHAT) {
@@ -300,7 +300,7 @@ static void adiumPurpleConvWriteConv(PurpleConversation *conv, const char *who, 
 					}
 				}
 
-				PurpleDebug (@"*** Conversation error type %i (%@): %@",
+				AILog(@"*** Conversation error type %i (%@): %@",
 						   errorType,
 						   ([chat listObject] ? [[chat listObject] UID] : [chat name]),messageString);
 			}
@@ -331,14 +331,14 @@ static void adiumPurpleConvChatAddUsers(PurpleConversation *conv, GList *cbuddie
 											 toChat:existingChatLookupFromConv(conv)];
 		
 	} else {
-		PurpleDebug (@"adiumPurpleConvChatAddUsers: IM");
+		AILog(@"adiumPurpleConvChatAddUsers: IM");
 	}
 }
 
 static void adiumPurpleConvChatRenameUser(PurpleConversation *conv, const char *oldName,
 										const char *newName, const char *newAlias)
 {
-	PurpleDebug (@"adiumPurpleConvChatRenameUser: %s: oldName %s, newName %s, newAlias %s",
+	AILog(@"adiumPurpleConvChatRenameUser: %s: oldName %s, newName %s, newAlias %s",
 			   purple_conversation_get_name(conv),
 			   oldName, newName, newAlias);
 }
@@ -357,13 +357,13 @@ static void adiumPurpleConvChatRemoveUsers(PurpleConversation *conv, GList *user
 											  fromChat:existingChatLookupFromConv(conv)];
 
 	} else {
-		PurpleDebug (@"adiumPurpleConvChatRemoveUser: IM");
+		AILog(@"adiumPurpleConvChatRemoveUser: IM");
 	}
 }
 
 static void adiumPurpleConvUpdateUser(PurpleConversation *conv, const char *user)
 {
-	PurpleDebug (@"adiumPurpleConvUpdateUser: %s",user);
+	AILog(@"adiumPurpleConvUpdateUser: %s",user);
 }
 
 static void adiumPurpleConvPresent(PurpleConversation *conv)
@@ -395,10 +395,10 @@ static void adiumPurpleConvUpdated(PurpleConversation *conv, PurpleConvUpdateTyp
 														   nil)
 												  forChat:existingChatLookupFromConv(conv)];
 				
-				PurpleDebug (@"Update to title: %s",purple_conversation_get_title(conv));
+				AILog(@"Update to title: %s",purple_conversation_get_title(conv));
 				break;
 			case PURPLE_CONV_UPDATE_CHATLEFT:
-				PurpleDebug (@"Chat left! %s",purple_conversation_get_name(conv));
+				AILog(@"Chat left! %s",purple_conversation_get_name(conv));
 				break;
 			case PURPLE_CONV_UPDATE_ADD:
 			case PURPLE_CONV_UPDATE_REMOVE:
@@ -463,7 +463,7 @@ static void adiumPurpleConvUpdated(PurpleConversation *conv, PurpleConvUpdateTyp
 #pragma mark Custom smileys
 gboolean adiumPurpleConvCustomSmileyAdd(PurpleConversation *conv, const char *smile, gboolean remote)
 {
-	PurpleDebug (@"%s: Added Custom Smiley %s",purple_conversation_get_name(conv),smile);
+	AILog(@"%s: Added Custom Smiley %s",purple_conversation_get_name(conv),smile);
 	[accountLookup(conv->account) chat:chatLookupFromConv(conv)
 			 isWaitingOnCustomEmoticon:[NSString stringWithUTF8String:smile]];
 
@@ -473,7 +473,7 @@ gboolean adiumPurpleConvCustomSmileyAdd(PurpleConversation *conv, const char *sm
 void adiumPurpleConvCustomSmileyWrite(PurpleConversation *conv, const char *smile,
 									const guchar *data, gsize size)
 {
-	PurpleDebug (@"%s: Write Custom Smiley %s (%x %i)",purple_conversation_get_name(conv),smile,data,size);
+	AILog(@"%s: Write Custom Smiley %s (%x %i)",purple_conversation_get_name(conv),smile,data,size);
 
 	[accountLookup(conv->account) chat:chatLookupFromConv(conv)
 					 setCustomEmoticon:[NSString stringWithUTF8String:smile]
@@ -483,7 +483,7 @@ void adiumPurpleConvCustomSmileyWrite(PurpleConversation *conv, const char *smil
 
 void adiumPurpleConvCustomSmileyClose(PurpleConversation *conv, const char *smile)
 {
-	PurpleDebug (@"%s: Close Custom Smiley %s",purple_conversation_get_name(conv),smile);
+	AILog(@"%s: Close Custom Smiley %s",purple_conversation_get_name(conv),smile);
 
 	[accountLookup(conv->account) chat:chatLookupFromConv(conv)
 				  closedCustomEmoticon:[NSString stringWithUTF8String:smile]];

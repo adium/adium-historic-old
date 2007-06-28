@@ -111,7 +111,7 @@ static void *adiumPurpleRequestInput(
 	[infoDict setObject:[NSNumber numberWithBool:multiline] forKey:@"Multiline"];
 	[infoDict setObject:[NSNumber numberWithBool:masked] forKey:@"Masked"];
 	
-	PurpleDebug (@"adiumPurpleRequestInput: %@",infoDict);
+	AILog(@"adiumPurpleRequestInput: %@",infoDict);
 	
 	requestController = [ESPurpleRequestWindowController showInputWindowWithDict:infoDict];
 	
@@ -125,7 +125,7 @@ static void *adiumPurpleRequestChoice(const char *title, const char *primary,
 									PurpleAccount *account, const char *who, PurpleConversation *conv,
 									void *userData, va_list choices)
 {
-	PurpleDebug (@"adiumPurpleRequestChoice: %s\n%s\n%s ",
+	AILog(@"adiumPurpleRequestChoice: %s\n%s\n%s ",
 			   (title ? title : ""),
 			   (primary ? primary : ""),
 			   (secondary ? secondary : ""));
@@ -271,7 +271,7 @@ static void *adiumPurpleRequestFields(const char *title, const char *primary,
 		((PurpleRequestFieldsCb)okCb)(userData, fields);
 		
 	} else {		
-		PurpleDebug (@"adiumPurpleRequestFields: %s\n%s\n%s ",
+		AILog(@"adiumPurpleRequestFields: %s\n%s\n%s ",
 				   (title ? title : ""),
 				   (primary ? primary : ""),
 				   (secondary ? secondary : ""));
@@ -355,7 +355,7 @@ static void *adiumPurpleRequestFile(const char *title, const char *filename,
 			PurpleXferType xferType = purple_xfer_get_type(xfer);
 			
 			if (xferType == PURPLE_XFER_RECEIVE) {
-				PurpleDebug (@"File request: %s from %s on IP %s",xfer->filename,xfer->who,purple_xfer_get_remote_ip(xfer));
+				AILog(@"File request: %s from %s on IP %s",xfer->filename,xfer->who,purple_xfer_get_remote_ip(xfer));
 				
 				ESFileTransfer  *fileTransfer;
 				

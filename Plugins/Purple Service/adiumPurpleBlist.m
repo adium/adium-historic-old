@@ -121,7 +121,7 @@ static void adiumPurpleBlistRemove(PurpleBuddyList *list, PurpleBlistNode *node)
 		PurpleBuddy	*buddy = (PurpleBuddy*) node;
 		NSValue		*buddyValue = [NSValue valueWithPointer:buddy];
 
-//		PurpleDebug (@"adiumPurpleBlistRemove %s",buddy->name);
+//		AILog(@"adiumPurpleBlistRemove %s",buddy->name);
 		[accountLookup(buddy->account) removeContact:contactLookupFromBuddy(buddy)];
 
 		//Clear our dictionaries
@@ -136,12 +136,12 @@ static void adiumPurpleBlistRemove(PurpleBuddyList *list, PurpleBlistNode *node)
 static void adiumPurpleBlistDestroy(PurpleBuddyList *list)
 {
     //Here we're responsible for destroying what we placed in list's ui_data earlier
-    PurpleDebug (@"adiumPurpleBlistDestroy");
+    AILog(@"adiumPurpleBlistDestroy");
 }
 
 static void adiumPurpleBlistSetVisible(PurpleBuddyList *list, gboolean show)
 {
-    PurpleDebug (@"adiumPurpleBlistSetVisible: %i",show);
+    AILog(@"adiumPurpleBlistSetVisible: %i",show);
 }
 
 static void adiumPurpleBlistRequestAddBuddy(PurpleAccount *account, const char *username, const char *group, const char *alias)
@@ -151,12 +151,12 @@ static void adiumPurpleBlistRequestAddBuddy(PurpleAccount *account, const char *
 
 static void adiumPurpleBlistRequestAddChat(PurpleAccount *account, PurpleGroup *group, const char *alias, const char *name)
 {
-    PurpleDebug (@"adiumPurpleBlistRequestAddChat");
+    AILog(@"adiumPurpleBlistRequestAddChat");
 }
 
 static void adiumPurpleBlistRequestAddGroup(void)
 {
-    PurpleDebug (@"adiumPurpleBlistRequestAddGroup");
+    AILog(@"adiumPurpleBlistRequestAddGroup");
 }
 
 static PurpleBlistUiOps adiumPurpleBlistOps = {
