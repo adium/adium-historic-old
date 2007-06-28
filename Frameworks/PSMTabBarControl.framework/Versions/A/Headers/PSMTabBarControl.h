@@ -41,6 +41,11 @@ typedef enum {
 	PSMTabBarVerticalOrientation
 } PSMTabBarOrientation;
 
+typedef enum {
+	PSMTabBarTearOffAlphaWindow,
+	PSMTabBarTearOffMiniwindow
+} PSMTabBarTearOffStyle;
+
 enum {
     PSMTab_SelectedMask                 = 1 << 1,
     PSMTab_LeftIsSelectedMask       = 1 << 2,
@@ -69,10 +74,12 @@ enum {
     BOOL                        _sizeCellsToFit;
     BOOL                        _useOverflowMenu;
 	BOOL						_alwaysShowActiveTab;
+	BOOL						_allowsScrubbing;
 	int							_resizeAreaCompensation;
 	PSMTabBarOrientation		_orientation;
 	BOOL						_automaticallyAnimates;
 	NSTimer						*_animationTimer;
+	PSMTabBarTearOffStyle		_tearOffStyle;
 	
 	// behavior
 	BOOL						_allowsBackgroundTabClosing;
@@ -143,6 +150,10 @@ enum {
 - (void)setAutomaticallyAnimates:(BOOL)value;
 - (BOOL)alwaysShowActiveTab;
 - (void)setAlwaysShowActiveTab:(BOOL)value;
+- (BOOL)allowsScrubbing;
+- (void)setAllowsScrubbing:(BOOL)value;
+- (PSMTabBarTearOffStyle)tearOffStyle;
+- (void)setTearOffStyle:(PSMTabBarTearOffStyle)tearOffStyle;
 
 // accessors
 - (NSTabView *)tabView;
@@ -189,7 +200,9 @@ enum {
 //Drag and drop methods
 - (BOOL)tabView:(NSTabView *)aTabView shouldDragTabViewItem:(NSTabViewItem *)tabViewItem fromTabBar:(PSMTabBarControl *)tabBarControl;
 - (BOOL)tabView:(NSTabView *)aTabView shouldDropTabViewItem:(NSTabViewItem *)tabViewItem inTabBar:(PSMTabBarControl *)tabBarControl;
+- (BOOL)tabView:(NSTabView *)aTabView shouldAllowTabViewItem:(NSTabViewItem *)tabViewItem toLeaveTabBar:(PSMTabBarControl *)tabBarControl;
 - (void)tabView:(NSTabView*)aTabView didDropTabViewItem:(NSTabViewItem *)tabViewItem inTabBar:(PSMTabBarControl *)tabBarControl;
+
 
 //Tear-off tabs methods
 - (NSImage *)tabView:(NSTabView *)aTabView imageForTabViewItem:(NSTabViewItem *)tabViewItem offset:(NSSize *)offset styleMask:(unsigned int *)styleMask;
