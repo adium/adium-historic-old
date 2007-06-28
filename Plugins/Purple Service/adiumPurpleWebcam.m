@@ -21,7 +21,7 @@
 #pragma mark Webcam
 static void adiumPurpleWebcamNew(PurpleWebcam *gwc)
 {
-	PurpleDebug(@"adiumPurpleWebcamNew");
+	AILog(@"adiumPurpleWebcamNew");
 	//	PurpleGtkWebcam *c;
 	//	char *tmp;
 	//	
@@ -62,7 +62,7 @@ static void adiumPurpleWebcamUpdate(PurpleWebcam *gwc,
 								  const unsigned char *image, unsigned int size,
 								  unsigned int timestamp, unsigned int id)
 {
-	PurpleDebug(@"adiumPurpleWebcamUpdate (Frame %i , %i bytes)", id, size);
+	AILog(@"adiumPurpleWebcamUpdate (Frame %i , %i bytes)", id, size);
 	
 	if (!frameData) {
 		frameData = [[NSMutableData alloc] init];		
@@ -94,7 +94,7 @@ static void adiumPurpleWebcamUpdate(PurpleWebcam *gwc,
 
 static void adiumPurpleWebcamFrameFinished(PurpleWebcam *wc, unsigned int id)
 {
-	PurpleDebug(@"adiumPurpleWebcamFrameFinished");
+	AILog(@"adiumPurpleWebcamFrameFinished");
 	
 	NSBitmapImageRep *rep;
 	rep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:(unsigned char **)[frameData bytes]
@@ -108,7 +108,7 @@ static void adiumPurpleWebcamFrameFinished(PurpleWebcam *wc, unsigned int id)
 												 bytesPerRow:0
 												bitsPerPixel:0]; 
 	
-	PurpleDebug(@"rep = %@",rep);
+	AILog(@"rep = %@",rep);
 	
 	//	[[AIObject sharedAdiumInstance] performSelectorOnMainThread:@selector(showImage:) withObject:rep waitUntilDone:NO];
 	
@@ -127,7 +127,7 @@ static void adiumPurpleWebcamFrameFinished(PurpleWebcam *wc, unsigned int id)
 	
 	
 	
-	//	PurpleDebug(@"Bitmap?: %@",[NSImage initWithData:frameData]);
+	//	AILog(@"Bitmap?: %@",[NSImage initWithData:frameData]);
 	
 	//	PurpleGtkWebcam *cam;
 	//	WCFrame *f;
@@ -145,7 +145,7 @@ static void adiumPurpleWebcamFrameFinished(PurpleWebcam *wc, unsigned int id)
 
 static void adiumPurpleWebcamClose(PurpleWebcam *gwc)
 {
-	PurpleDebug(@"adiumPurpleWebcamClose");
+	AILog(@"adiumPurpleWebcamClose");
 	//	PurpleGtkWebcam *cam;
 	//	
 	//	cam = gwc->ui_data;
@@ -158,7 +158,7 @@ static void adiumPurpleWebcamClose(PurpleWebcam *gwc)
 
 static void adiumPurpleWebcamGotInvite(PurpleConnection *gc, const gchar *who)
 {
-	PurpleDebug(@"adiumPurpleWebcamGotInvite");
+	AILog(@"adiumPurpleWebcamGotInvite");
 	
 	purple_webcam_invite_accept(gc, who);
 	

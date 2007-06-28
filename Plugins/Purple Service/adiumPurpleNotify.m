@@ -22,7 +22,7 @@
 
 static void *adiumPurpleNotifyMessage(PurpleNotifyMsgType type, const char *title, const char *primary, const char *secondary)
 {
-	PurpleDebug (@"adiumPurpleNotifyMessage: type: %i\n%s\n%s\n%s ",
+	AILog(@"adiumPurpleNotifyMessage: type: %i\n%s\n%s\n%s ",
 			   type,
 			   (title ? title : ""),
 			   (primary ? primary : ""),
@@ -63,7 +63,7 @@ static void *adiumPurpleNotifyEmail(PurpleConnection *gc, const char *subject, c
 
 static void *adiumPurpleNotifyFormatted(const char *title, const char *primary, const char *secondary, const char *text)
 {
-	PurpleDebug (@"adiumPurpleNotifyFormatted: %s\n%s\n%s\n%s ",
+	AILog(@"adiumPurpleNotifyFormatted: %s\n%s\n%s\n%s ",
 			   (title ? title : ""),
 			   (primary ? primary : ""),
 			   (secondary ? secondary : ""),
@@ -155,7 +155,7 @@ static void *adiumPurpleNotifyUri(const char *uri)
 
 static void adiumPurpleNotifyClose(PurpleNotifyType type,void *uiHandle)
 {
-	PurpleDebug (@"adiumPurpleNotifyClose");
+	AILog(@"adiumPurpleNotifyClose");
 }
 
 static PurpleNotifyUiOps adiumPurpleNotifyOps = {

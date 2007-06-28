@@ -185,7 +185,7 @@ static void ZombieKiller_Signal(int i)
 	//Initialize the libpurple core; this will call back on the function specified in our core UI ops for us to finish configuring libpurple
 	if (!purple_core_init("Adium")) {
 		NSLog(@"*** FATAL ***: Failed to initialize purple core");
-		PurpleDebug (@"*** FATAL ***: Failed to initialize purple core");
+		AILog(@"*** FATAL ***: Failed to initialize purple core");
 	}
 	
 	//Libpurple's async DNS lookup tends to create zombies.
@@ -337,12 +337,12 @@ AIChat* imChatLookupFromConv(PurpleConversation *conv)
 		PurpleAccount		*account;
 		
 		account = conv->account;
-//		PurpleDebug (@"%x conv->name %s; normalizes to %s",account,conv->name,purple_normalize(account,conv->name));
+//		AILog(@"%x conv->name %s; normalizes to %s",account,conv->name,purple_normalize(account,conv->name));
 
 		//First, find the PurpleBuddy with whom we are conversing
 		buddy = purple_find_buddy(account, conv->name);
 		if (!buddy) {
-			PurpleDebug (@"imChatLookupFromConv: Creating %s %s",account->username,purple_normalize(account,conv->name));
+			AILog(@"imChatLookupFromConv: Creating %s %s",account->username,purple_normalize(account,conv->name));
 			//No purple_buddy corresponding to the conv->name is on our list, so create one
 			buddy = purple_buddy_new(account, purple_normalize(account, conv->name), NULL);	//create a PurpleBuddy
 		}
@@ -434,7 +434,7 @@ PurpleConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 						return NULL;
 					}
 					
-					PurpleDebug (@"Creating a chat.");
+					AILog(@"Creating a chat.");
 
 					GHashTable				*components;
 					
@@ -462,7 +462,7 @@ PurpleConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 							valueUTF8String = g_strdup([value UTF8String]);
 
 						} else {
-							PurpleDebug (@"Invalid value %@ for identifier %@",value,identifier);
+							AILog(@"Invalid value %@ for identifier %@",value,identifier);
 						}
 						
 						//Store our chatCreationInfo-supplied value in the compnents hash table
@@ -492,7 +492,7 @@ PurpleConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 								
 								NSString	*value = [chatCreationInfo objectForKey:[NSString stringWithUTF8String:identifier]];
 								if (!value) {
-									PurpleDebug (@"Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
+									AILog(@"Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
 								}
 							}
 						}
@@ -515,7 +515,7 @@ PurpleConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 
 					//Join the chat serverside - the GHsahTable components, couple with the originating PurpleConnect,
 					//now contains all the information the prpl will need to process our request.
-					PurpleDebug (@"In the event of an emergency, your GHashTable may be used as a flotation device...");
+					AILog(@"In the event of an emergency, your GHashTable may be used as a flotation device...");
 					serv_join_chat(gc, components);
 				}
 			}
@@ -879,7 +879,7 @@ NSString *processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 			}
 			
 			case PURPLE_CONV_TYPE_ANY:
-				PurpleDebug (@"What in the world? Got PURPLE_CONV_TYPE_ANY.");
+				AILog(@"What in the world? Got PURPLE_CONV_TYPE_ANY.");
 				break;
 
 			case PURPLE_CONV_TYPE_MISC:
@@ -887,7 +887,7 @@ NSString *processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 				break;
 		}
 	} else {
-		PurpleDebug (@"*** Error encoding %@ to UTF8",encodedMessage);
+		AILog(@"*** Error encoding %@ to UTF8",encodedMessage);
 	}
 }
 
@@ -937,7 +937,7 @@ NSString *processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 	buddy = purple_find_buddy(account, buddyUTF8String);
 	if (!buddy) buddy = purple_buddy_new(account, buddyUTF8String, NULL);
 
-	PurpleDebug (@"Adding buddy %s to group %s",buddy->name, group->name);
+	AILog(@"Adding buddy %s to group %s",buddy->name, group->name);
 
 	/* purple_blist_add_buddy() will move an existing contact serverside, but will not add a buddy serverside.
 	 * We're working with a new contact, hopefully, so we want to call serv_add_buddy() after modifying the purple list.
@@ -1094,7 +1094,7 @@ NSString *processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 	PurpleConvChat		*purpleChat;
 	AIAccount			*adiumAccount = [chat account];
 	
-	PurpleDebug (@"#### inviteContact:%@ toChat:%@",[listContact UID],[chat name]);
+	AILog(@"#### inviteContact:%@ toChat:%@",[listContact UID],[chat name]);
 	// dchoby98
 	if (([adiumAccount isKindOfClass:[CBPurpleAccount class]]) &&
 	   (conv = convLookupFromChat(chat, adiumAccount)) &&
@@ -1102,7 +1102,7 @@ NSString *processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 	   (purpleChat = purple_conversation_get_chat_data(conv))) {
 
 		//PurpleBuddy		*buddy = purple_find_buddy(account, [[listObject UID] UTF8String]);
-		PurpleDebug (@"#### addChatUser chat: %@ (%@) buddy: %@",[chat name], chat,[listContact UID]);
+		AILog(@"#### addChatUser chat: %@ (%@) buddy: %@",[chat name], chat,[listContact UID]);
 		serv_chat_invite(purple_conversation_get_gc(conv),
 						 purple_conv_chat_get_id(purpleChat),
 						 (inviteMessage ? [inviteMessage UTF8String] : ""),
@@ -1356,7 +1356,7 @@ NSString *processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 
 - (void)refreshedSecurityOfPurpleConversation:(PurpleConversation *)conv
 {
-	PurpleDebug (@"*** Refreshed security...");
+	AILog(@"*** Refreshed security...");
 }
 
 - (void)dealloc
