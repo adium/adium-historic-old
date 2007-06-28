@@ -83,6 +83,7 @@
 - (void)_cleanDirtyLogsThread;
 
 - (void)upgradeLogExtensions;
+- (void)reimportLogsToSpotlightIfNeeded;
 
 - (NSString *)keyForChat:(AIChat *)chat;
 - (AIXMLAppender *)existingAppenderForChat:(AIChat *)chat;
@@ -177,7 +178,8 @@ Class LogViewerWindowControllerClass = NULL;
 	[self initLogIndexing];
 	
 	[self upgradeLogExtensions];
-	
+	[self reimportLogsToSpotlightIfNeeded];
+
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(showLogNotification:)
 									   name:AIShowLogAtPathNotification
@@ -416,9 +418,9 @@ Class LogViewerWindowControllerClass = NULL;
 			if (actualObject) {
 				if ([contentType isEqualToString:CONTENT_STATUS_TYPE]) {
 					NSString *translatedStatus = [statusTranslation objectForKey:[(AIContentStatus *)content status]];
-					if(translatedStatus == nil)
+					if (translatedStatus == nil) {
 						AILog(@"AILogger: Don't know how to translate status: %@", [(AIContentStatus *)content status]);
-					else {
+					} else {
 						[[self appenderForChat:chat] addElementWithName:@"status"
 									  escapedContent:([(AIContentStatus *)content loggedMessage] ? [xhtmlDecoder encodeHTML:[(AIContentStatus *)content loggedMessage] imagesPath:nil] : nil)
 									   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
@@ -725,6 +727,30 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 	NSLog(@"Error: %@",errorInfo);
 	
 	return NO;
+}
+
+/*!
+ * @brief Instruct spotlight to reimport logs
+ *
+ * Adium 1.0.2 and earlier had a bug which made spotlight import not work properly.
+ * New logs are properly indexed, but previously created logs are not. On first launch of Adium 1.1,
+ * Adium will tell Spotlight to reimport those old logs.
+ */
+- (void)reimportLogsToSpotlightIfNeeded
+{
+	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"Adium 1.1:Reimported Spotlight Logs"]) {
+		NSArray *arguments;
+
+		arguments = [NSArray arrayWithObjects:
+			@"-r",
+			[[[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"Contents"] stringByAppendingPathComponent:@"Library"]
+				stringByAppendingPathComponent:@"Spotlight"] stringByAppendingPathComponent:[@"AdiumSpotlightImporter" stringByAppendingPathExtension:@"mdimporter"]],
+			nil];
+		[NSTask launchedTaskWithLaunchPath:@"/usr/bin/mdimport"	arguments:arguments];
+
+		[[NSUserDefaults standardUserDefaults] setBool:YES
+												forKey:@"Adium 1.1:Reimported Spotlight Logs"];
+	}
 }
 
 //Log Indexing ---------------------------------------------------------------------------------------------------------
