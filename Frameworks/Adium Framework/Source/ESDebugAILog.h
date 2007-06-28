@@ -16,8 +16,12 @@
 
 #ifdef DEBUG_BUILD
 /* For a debug build, declare the AILog() function */
+	void AILogWithPrefix (const char *signature, NSString *format, ...);
+	#define AILogWithSignature(fmt, args...) AILogWithPrefix(__PRETTY_FUNCTION__, fmt, ##args);
 	void AILog (NSString *format, ...);
 #else
 /* For a non-debug build, define it to be a comment so there is no overhead in using it liberally */
 	#define AILog(fmt, ...) /**/
+	#define AILogWithSignature(sig, fmt, ...) /**/
+	#define AILogWithPrefix(sig, fmt, ...) /**/
 #endif

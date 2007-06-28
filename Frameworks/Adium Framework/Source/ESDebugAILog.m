@@ -32,19 +32,11 @@ extern CFRunLoopRef CFRunLoopGetMain(void);
  * @param ... 0 or more arguments to the format string
  */
 #ifdef DEBUG_BUILD
-void AILog (NSString *format, ...) {
-	va_list		ap; /* Points to each unamed argument in turn */
-	NSString	*debugMessage, *actualMessage;
-	
-	va_start(ap, format); /* Make ap point to the first unnamed argument */
-	
-	debugMessage = [[NSString alloc] initWithFormat:format
-										  arguments:ap];
-	
-	actualMessage = [[[NSDate date] descriptionWithCalendarFormat:@"%H:%M:%S: "
-														 timeZone:nil
-														   locale:nil] stringByAppendingString:debugMessage];
-	[debugMessage release];
+void AIAddDebugMessage(NSString *debugMessage)
+{
+	NSString *actualMessage = [[[NSDate date] descriptionWithCalendarFormat:@"%H:%M:%S: "
+																   timeZone:nil
+																	 locale:nil] stringByAppendingString:debugMessage];
 	
 	/* Be careful; we should only modify debugLogArray and the windowController's view on the main thread. */
 	if (CFRunLoopGetCurrent() == CFRunLoopGetMain()) {
@@ -55,10 +47,39 @@ void AILog (NSString *format, ...) {
 																		   withObject:actualMessage
 																		waitUntilDone:NO];		
 	}
+}
+
+void AILog (NSString *format, ...) {
+	va_list		ap; /* Points to each unamed argument in turn */
+	NSString	*debugMessage;
+	
+	va_start(ap, format); /* Make ap point to the first unnamed argument */
+	
+	debugMessage = [[NSString alloc] initWithFormat:format
+										  arguments:ap];
+	AIAddDebugMessage(debugMessage);
+	[debugMessage release];
+
+	va_end(ap); /* clean up when done */
+}
+
+void AILogWithPrefix (const char *prefix, NSString *format, ...) {
+	va_list		ap; /* Points to each unamed argument in turn */
+	NSString	*debugMessage, *actualMessage;
+	
+	va_start(ap, format); /* Make ap point to the first unnamed argument */
+	
+	debugMessage = [[NSString alloc] initWithFormat:format
+										  arguments:ap];
+	actualMessage = [NSString stringWithFormat:@"%s: %@", prefix, debugMessage];
+	AIAddDebugMessage(actualMessage);
+	[debugMessage release];
+
 	va_end(ap); /* clean up when done */
 }
 #else
 //Insert a fake symbol so that plugins using AILog() don't crash.
 #undef AILog
 void AILog (NSString *format, ...) {};
+void AILogWithPrefix (char *sig, NSString *format, ...) {};
 #endif
