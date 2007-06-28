@@ -107,7 +107,7 @@
 	if (source == [inContent source] && [[self type] compare:[inContent type]] == 0) {
 		NSTimeInterval	timeInterval = [date timeIntervalSinceDate:[inContent date]];
 		
-		return timeInterval > -300 && timeInterval < 300;
+		return ((timeInterval > -300) && (timeInterval < 300));
 	}
 	
 	return NO;
