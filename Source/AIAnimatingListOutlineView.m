@@ -349,6 +349,7 @@
 		[self didChangeValueForKey:@"totalHeight"];
 	}
 
+	[animation stopAnimation];
 	[animation autorelease];
 }
 
