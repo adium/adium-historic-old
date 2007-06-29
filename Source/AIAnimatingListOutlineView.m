@@ -9,6 +9,8 @@
 #import "AIOutlineViewAnimation.h"
 #import <Adium/AIObject.h>
 
+#define ANIMATE_EXPAND_AND_COLLAPSE FALSE
+
 @interface AIAnimatingListOutlineView (PRIVATE)
 - (NSRect)unanimatedRectOfRow:(int)rowIndex;
 @end
@@ -381,6 +383,8 @@
 	[self updateForNewIndexesFromOldIndexes:oldDict forItem:item recalculateHedge:YES duration:LIST_OBJECT_ANIMATION_DURATION];
 }
 
+#if ANIMATE_EXPAND_AND_COLLAPSE
+
 - (void)expandItem:(id)item
 {
 	if (!disableExpansionAnimation) {
@@ -429,6 +433,8 @@
 		[super collapseItem:item];
 	}
 }
+
+#endif
 
 #pragma mark Total height
 
