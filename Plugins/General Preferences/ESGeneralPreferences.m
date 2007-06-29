@@ -33,6 +33,9 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 
+#define	PREF_GROUP_DUAL_WINDOW_INTERFACE	@"Dual Window Interface"
+#define KEY_TABBAR_POSITION					@"Tab Bar Position"
+
 @interface ESGeneralPreferences (PRIVATE)
 - (NSMenu *)tabChangeKeysMenu;
 - (NSMenu *)sendKeysMenu;
@@ -97,6 +100,8 @@
 	}
 
 	[popUp_tabPositionMenu setMenu:[self tabPositionMenu]];
+	[popUp_tabPositionMenu compatibleSelectItemWithTag:[[[adium preferenceController] preferenceForKey:KEY_TABBAR_POSITION
+																								 group:PREF_GROUP_DUAL_WINDOW_INTERFACE] intValue]];
 	
 	//Global hotkey
 	PTKeyCombo *keyCombo = [[[PTKeyCombo alloc] initWithPlistRepresentation:[[adium preferenceController] preferenceForKey:KEY_GENERAL_HOTKEY
