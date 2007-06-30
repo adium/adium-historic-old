@@ -25,3 +25,5 @@ testing my editor
 
 git-svn test.
 moo
+
+Checking trac sync
