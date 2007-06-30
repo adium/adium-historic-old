@@ -227,7 +227,7 @@
     }
 }
 
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
     if ((menuItem == menuItem_countOnlineObjects) || (menuItem == menuItem_countAllObjects)) {
 		return showingGroups;

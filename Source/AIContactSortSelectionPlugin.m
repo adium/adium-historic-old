@@ -224,7 +224,7 @@
  *
  * All memu items should always be enabled except for menuItem_configureSort, which may be disabled
  */
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	if (menuItem == menuItem_configureSort)
 		return enableConfigureSort;

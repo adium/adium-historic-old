@@ -1463,7 +1463,7 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
 }
 
 //Menu item validation
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	NSWindow	*keyWindow = [[NSApplication sharedApplication] keyWindow];
 	NSResponder *responder = [keyWindow firstResponder]; 

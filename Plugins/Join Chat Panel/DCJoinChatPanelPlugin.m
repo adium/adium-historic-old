@@ -66,7 +66,7 @@
  *
  * Disable the menu item if no online accounts could make use of it
  */
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	if (menuItem == joinChatMenuItem) {
 		NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];

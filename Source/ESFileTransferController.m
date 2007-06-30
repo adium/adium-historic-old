@@ -474,7 +474,7 @@ static ESFileTransferPreferences *preferences;
 	return shouldOpen;
 }
 
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	AIListContact   *listContact = nil;
 	

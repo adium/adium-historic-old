@@ -2227,7 +2227,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 	[printView release];
 }
 
-- (BOOL)validatePrintMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validatePrintMenuItem:(NSMenuItem *)menuItem
 {
 	return ([displayedLogArray count] > 0);
 }

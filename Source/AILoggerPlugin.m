@@ -302,7 +302,7 @@ Class LogViewerWindowControllerClass = NULL;
 }
 
 //Enable/Disable our view log menus
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
     if (menuItem == viewContactLogsMenuItem) {
         AIListObject	*selectedObject = [[adium interfaceController] selectedListObject];

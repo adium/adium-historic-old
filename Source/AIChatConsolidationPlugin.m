@@ -63,7 +63,7 @@
  *
  * Only enable the menu if more than one chat is open
  */
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	return [[[adium interfaceController] openChats] count] > 1;
 }

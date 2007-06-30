@@ -247,7 +247,7 @@
  *
  * Disable the emoticon menu if a text field is not active
  */
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	if (menuItem == quickMenuItem || menuItem == quickContextualMenuItem) {
 		BOOL	haveEmoticons = ([[[adium emoticonController] activeEmoticonPacks] count] != 0);
