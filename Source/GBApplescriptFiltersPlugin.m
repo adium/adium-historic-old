@@ -451,7 +451,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
  * @brief Validate menu item
  * Disable the insertion if a text field is not active
  */
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	if ((menuItem == scriptMenuItem) || (menuItem == contextualScriptMenuItem)) {
 		return YES; //Always keep the submenu enabled so users can see the available scripts

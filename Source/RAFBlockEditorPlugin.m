@@ -30,7 +30,7 @@
 	[blockEditorMenuItem release];
 }
 
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	BOOL		 retVal = NO;
 	AIAccount	 *account;

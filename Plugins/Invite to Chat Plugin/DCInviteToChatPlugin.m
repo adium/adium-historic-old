@@ -58,7 +58,7 @@
 }
 
 //Validate our menu items
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {                
 	if (menuItem == menuItem_inviteToChat) {		
 

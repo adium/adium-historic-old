@@ -27,6 +27,6 @@
 	NSImage				*notifyToolbarIcon;
 }
 
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem;
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem;
 - (BOOL)validateToolbarItem:(NSToolbarItem *)senderItem;
 @end

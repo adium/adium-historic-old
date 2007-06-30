@@ -220,7 +220,7 @@
 										  group:PREF_GROUP_CONTACT_LIST_DISPLAY];
 }
 
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	if (menuItem == menuItem_useOfflineGroup) {
 		return (useContactListGroups && showOfflineContacts);

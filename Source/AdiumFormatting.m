@@ -125,7 +125,7 @@
  *
  * The item should only be enabled if the current responder has typing attributes and those typing attributes are not the default attributes
  */
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	NSResponder *responder = [[NSApp mainWindow] firstResponder];
 

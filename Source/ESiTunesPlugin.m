@@ -849,7 +849,7 @@
  *
  * Depending on whether the responder is a textview and if it should be enabled when itunes isn't playing
  */
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	NSResponder					*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 	KGiTunesPluginMenuItemKind	tag = [menuItem tag];

@@ -243,7 +243,7 @@
  * Random note: stateMenuItemsAlreadyValidated will almost never have a count of 0 because separatorItems
  * get included but never get validated.
  */
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	if (![stateMenuItemsAlreadyValidated containsObject:menuItem]) {
 		NSDictionary	*dict = [menuItem representedObject];

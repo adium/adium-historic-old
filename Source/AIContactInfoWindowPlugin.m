@@ -136,7 +136,7 @@
 }
 
 //Always be able to show the inspector
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	if ((menuItem == menuItem_getInfo) || (menuItem == menuItem_getInfoAlternate)) {
 		return [[adium interfaceController] selectedListObject] != nil;
