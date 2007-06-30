@@ -69,6 +69,9 @@
 		117D6DC00BC5F0C40080D02B /* notify.png in Resources */ = {isa = PBXBuildFile; fileRef = 117D6DBF0BC5F0C40080D02B /* notify.png */; };
 		11AA1EFA0BCAE9C3003DDA66 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11AA1EF90BCAE9C3003DDA66 /* Quartz.framework */; };
 		11C7CAF30BB58F4100296D7F /* AINudgeBuzzHandlerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 11C7CAF10BB58F4100296D7F /* AINudgeBuzzHandlerPlugin.m */; };
+		11CA00100C35EC5100A6BB8D /* SS_PreferencePaneProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 344836910BC8510B0083723B /* SS_PreferencePaneProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		11CA00110C35EC5200A6BB8D /* SS_PrefsController.h in Headers */ = {isa = PBXBuildFile; fileRef = 344836920BC8510B0083723B /* SS_PrefsController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		11CA00120C35EC5200A6BB8D /* SS_PrefsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 344836900BC8510B0083723B /* SS_PrefsController.m */; };
 		11F145F00B546AC500CA91F6 /* Menu Bar Icons in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11F145C70B546A6D00CA91F6 /* Menu Bar Icons */; };
 		11F1460C0B546C1200CA91F6 /* AIMenuBarIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = 11F1460A0B546C1200CA91F6 /* AIMenuBarIcons.m */; };
 		3402D5A5080DBC91004E50B4 /* SortConfiguration.nib in Resources */ = {isa = PBXBuildFile; fileRef = 347E791D07CAA52300350507 /* SortConfiguration.nib */; };
@@ -192,9 +195,6 @@
 		344458F0070B5BEF00D8E932 /* ESDebugWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 344458EE070B5BEF00D8E932 /* ESDebugWindowController.m */; };
 		344499E90B23CA5D0054B761 /* adiumPurpleAccounts.h in Headers */ = {isa = PBXBuildFile; fileRef = 344499E70B23CA5D0054B761 /* adiumPurpleAccounts.h */; };
 		344499EA0B23CA5D0054B761 /* adiumPurpleAccounts.m in Sources */ = {isa = PBXBuildFile; fileRef = 344499E80B23CA5D0054B761 /* adiumPurpleAccounts.m */; };
-		344836930BC8510B0083723B /* SS_PrefsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 344836900BC8510B0083723B /* SS_PrefsController.m */; };
-		344836940BC8510B0083723B /* SS_PreferencePaneProtocol.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 344836910BC8510B0083723B /* SS_PreferencePaneProtocol.h */; };
-		344836950BC8510B0083723B /* SS_PrefsController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 344836920BC8510B0083723B /* SS_PrefsController.h */; };
 		344838690BC85EF70083723B /* AccountListPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4B8C3CE80825F60B004B9F45 /* AccountListPreferences.nib */; };
 		344838B50BC860770083723B /* AIAccountListPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8C3C980825EAF9004B9F45 /* AIAccountListPreferences.m */; };
 		344839380BC862780083723B /* pref-messages.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8336707CBD807006466F2 /* pref-messages.png */; };
@@ -1482,8 +1482,6 @@
 			files = (
 				F51BCE390A156312000FDC06 /* AdiumSpotlightImporter.mdimporter in CopyFiles */,
 				346935D50BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.h in CopyFiles */,
-				344836940BC8510B0083723B /* SS_PreferencePaneProtocol.h in CopyFiles */,
-				344836950BC8510B0083723B /* SS_PrefsController.h in CopyFiles */,
 				344839990BC8644C0083723B /* AIAdvancedPreferencesPlugin.h in CopyFiles */,
 				3448399F0BC864610083723B /* AIAdvancedPreferences.h in CopyFiles */,
 				346371070BCA0A5400AD57AD /* AIMessageTabSplitView.h in CopyFiles */,
@@ -2005,9 +2003,9 @@
 		344499E80B23CA5D0054B761 /* adiumPurpleAccounts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumPurpleAccounts.m; path = "Plugins/Purple Service/adiumPurpleAccounts.m"; sourceTree = "<group>"; };
 		3448054E07AC5151006A7F7B /* ESDebugAILog.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESDebugAILog.m; path = "Frameworks/Adium Framework/Source/ESDebugAILog.m"; sourceTree = "<group>"; };
 		3448054F07AC5151006A7F7B /* ESDebugAILog.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESDebugAILog.h; path = "Frameworks/Adium Framework/Source/ESDebugAILog.h"; sourceTree = "<group>"; };
-		344836900BC8510B0083723B /* SS_PrefsController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SS_PrefsController.m; path = Source/SS_PrefsController.m; sourceTree = "<group>"; };
-		344836910BC8510B0083723B /* SS_PreferencePaneProtocol.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SS_PreferencePaneProtocol.h; path = Source/SS_PreferencePaneProtocol.h; sourceTree = "<group>"; };
-		344836920BC8510B0083723B /* SS_PrefsController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SS_PrefsController.h; path = Source/SS_PrefsController.h; sourceTree = "<group>"; };
+		344836900BC8510B0083723B /* SS_PrefsController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SS_PrefsController.m; path = "Frameworks/Adium Framework/Source/SS_PrefsController.m"; sourceTree = "<group>"; };
+		344836910BC8510B0083723B /* SS_PreferencePaneProtocol.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SS_PreferencePaneProtocol.h; path = "Frameworks/Adium Framework/Source/SS_PreferencePaneProtocol.h"; sourceTree = "<group>"; };
+		344836920BC8510B0083723B /* SS_PrefsController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SS_PrefsController.h; path = "Frameworks/Adium Framework/Source/SS_PrefsController.h"; sourceTree = "<group>"; };
 		344836BD0BC851480083723B /* Accounts Preferences-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Accounts Preferences-Info.plist"; sourceTree = "<group>"; };
 		344839970BC8644C0083723B /* AIAdvancedPreferencesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAdvancedPreferencesPlugin.h; path = Source/AIAdvancedPreferencesPlugin.h; sourceTree = "<group>"; };
 		344839980BC8644C0083723B /* AIAdvancedPreferencesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAdvancedPreferencesPlugin.m; path = Source/AIAdvancedPreferencesPlugin.m; sourceTree = "<group>"; };
@@ -5138,9 +5136,6 @@
 			children = (
 				F57938F0033E745F01A8010A /* AIPreferenceWindowController.h */,
 				F57938BB033E739101A8010A /* AIPreferenceWindowController.m */,
-				344836910BC8510B0083723B /* SS_PreferencePaneProtocol.h */,
-				344836900BC8510B0083723B /* SS_PrefsController.m */,
-				344836920BC8510B0083723B /* SS_PrefsController.h */,
 				344839970BC8644C0083723B /* AIAdvancedPreferencesPlugin.h */,
 				344839980BC8644C0083723B /* AIAdvancedPreferencesPlugin.m */,
 				3448399D0BC864610083723B /* AIAdvancedPreferences.h */,
@@ -6850,6 +6845,9 @@
 		F5B89EFC033CA8CC01A8010A /* Panes */ = {
 			isa = PBXGroup;
 			children = (
+				344836910BC8510B0083723B /* SS_PreferencePaneProtocol.h */,
+				344836920BC8510B0083723B /* SS_PrefsController.h */,
+				344836900BC8510B0083723B /* SS_PrefsController.m */,
 				4BAA1B370632ED8B00D8B92C /* AIModularPane.h */,
 				4BAA1B380632ED8B00D8B92C /* AIModularPane.m */,
 				4BBF41ED066119A8001D31E1 /* AIContactInfoPane.h */,
@@ -7116,6 +7114,8 @@
 				38722DC90A9093CD002CC4F4 /* AIVideoConf.h in Headers */,
 				38399DCB0A95C9CF006C8EB1 /* AIVideoConfControllerProtocol.h in Headers */,
 				3470BF600BC6F18500388232 /* AIMessageHistoryPreferencesWindowController.h in Headers */,
+				11CA00100C35EC5100A6BB8D /* SS_PreferencePaneProtocol.h in Headers */,
+				11CA00110C35EC5200A6BB8D /* SS_PrefsController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8395,7 +8395,6 @@
 				11F1460C0B546C1200CA91F6 /* AIMenuBarIcons.m in Sources */,
 				346935D60BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.m in Sources */,
 				11C7CAF30BB58F4100296D7F /* AINudgeBuzzHandlerPlugin.m in Sources */,
-				344836930BC8510B0083723B /* SS_PrefsController.m in Sources */,
 				344838B50BC860770083723B /* AIAccountListPreferences.m in Sources */,
 				3448399A0BC8644C0083723B /* AIAdvancedPreferencesPlugin.m in Sources */,
 				344839A00BC864610083723B /* AIAdvancedPreferences.m in Sources */,
@@ -8502,6 +8501,7 @@
 				34F312F00ADC476300A4310E /* KNShelfSplitView.m in Sources */,
 				38722DCA0A9093CD002CC4F4 /* AIVideoConf.m in Sources */,
 				3470BF610BC6F18500388232 /* AIMessageHistoryPreferencesWindowController.m in Sources */,
+				11CA00120C35EC5200A6BB8D /* SS_PrefsController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

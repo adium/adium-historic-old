@@ -16,7 +16,7 @@
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
-#import "SS_PrefsController.h"
+#import <Adium/SS_PrefsController.h>
 
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIAccountControllerProtocol.h>
