@@ -117,7 +117,8 @@
 
 	if ([checkBox_addToList state] == NSOnState) {
 		[[adium contactController] requestAddContactWithUID:[infoDict objectForKey:@"Remote Name"]
-													service:[account service]];
+													service:[account service]
+													account:account];
 	}
 	
 	[infoDict release]; infoDict = nil;
