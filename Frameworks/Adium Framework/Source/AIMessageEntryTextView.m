@@ -982,6 +982,8 @@
 	NSString 		*type = [pasteboard availableTypeFromArray:FILES_AND_IMAGES_TYPES];
 	NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
 	
+	
+	
 	if (!type || superclassType) {
 		[super concludeDragOperation:sender];
 	}
@@ -1010,14 +1012,16 @@
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
-	NSString 		*type = [pasteboard availableTypeFromArray:FILES_AND_IMAGES_TYPES];
-	//NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY]; Unused after Drag-Image fix.
+	BOOL			success = NO;
 
-	BOOL	success = NO;
-	if (type) {
+	NSString *myType = [[pasteboard types] firstObjectCommonWithArray:FILES_AND_IMAGES_TYPES];
+	NSString *superclassType = [[pasteboard types] firstObjectCommonWithArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
+	
+	if (myType &&
+		(!superclassType || ([[pasteboard types] indexOfObject:myType] < [[pasteboard types] indexOfObject:superclassType]))) {
 		[self addAttachmentsFromPasteboard:pasteboard];
-
-		success = YES;
+		
+		success = YES;		
 	} else {
 		success = [super performDragOperation:sender];
 		
@@ -1064,15 +1068,38 @@
  */
 - (void)addAttachmentOfPath:(NSString *)inPath
 {
-	AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
-	[attachment setPath:inPath];
-	[attachment setString:[inPath lastPathComponent]];
-	[attachment setShouldSaveImageForLogging:YES];
+	if ([[inPath pathExtension] caseInsensitiveCompare:@"textClipping"] == NSOrderedSame) {
+		inPath = [inPath stringByAppendingString:@"/..namedfork/rsrc"];
 
-	//Insert an attributed string into the text at the current insertion point
-	[self insertText:[self attributedStringWithTextAttachmentExtension:attachment]];
-	
-	[attachment release];
+		NSData *data = [NSData dataWithContentsOfFile:inPath];
+		if (data) {
+			data = [data subdataWithRange:NSMakeRange(260, [data length] - 260)];
+			
+			NSAttributedString *clipping = [[[NSAttributedString alloc] initWithRTF:data documentAttributes:nil] autorelease];
+			if (clipping) {
+				NSDictionary	*attributes = [[self typingAttributes] copy];
+				
+				[self insertText:clipping];
+
+				if (attributes) {
+					[self setTypingAttributes:attributes];
+				}
+				
+				[attributes release];
+			}
+		}
+
+	} else {
+		AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
+		[attachment setPath:inPath];
+		[attachment setString:[inPath lastPathComponent]];
+		[attachment setShouldSaveImageForLogging:YES];
+		
+		//Insert an attributed string into the text at the current insertion point
+		[self insertText:[self attributedStringWithTextAttachmentExtension:attachment]];
+		
+		[attachment release];
+	}
 }
 
 /*!
