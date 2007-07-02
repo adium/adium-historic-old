@@ -52,7 +52,8 @@ int HTMLEquivalentForFontSize(int fontSize);
 		   toString:(NSMutableString *)string
 		   withName:(NSString *)inName 
 		 imageClass:(NSString *)imageClass
-		 imagesPath:(NSString *)imagesPath;
+		 imagesPath:(NSString *)imagesPath
+	  uniqueifyHTML:(BOOL)uniqueifyHTML;
 
 - (void)restoreAttributesFromDict:(NSDictionary *)inAttributes intoAttributes:(AITextAttributes *)textAttributes;
 @end
@@ -450,11 +451,13 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					/* If we have a path to which we want to save any images and either
 					 *		the attachment should save such images OR
 					 *		the attachment is a plain NSTextAttachment and so doesn't respond to shouldSaveImageForLogging
+					 *
+					 * If we should save the image, we'll also tell the appendImage method to uniquify the HTML so it'll load
+					 * from disk each time it's displayed, preventing a WebView from caching it.
 					 */						
 					BOOL shouldSaveImage = (imagesSavePath &&
 											((![attachment respondsToSelector:@selector(shouldSaveImageForLogging)] ||
 											  [attachment shouldSaveImageForLogging])));
-					
 					/* We want attachments as images where appropriate. We either want all images (we don't want only outgoing images) or
 					 * this attachment may be sent as an image rather than as text.
 					 */						
@@ -493,7 +496,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 													 toString:string
 													 withName:imageName
 												   imageClass:[attachment imageClass]
-												   imagesPath:(shouldIncludeImageWithoutSaving ? imagesSavePath : nil)];
+												   imagesPath:(shouldIncludeImageWithoutSaving ? imagesSavePath : nil)
+												uniqueifyHTML:shouldSaveImage];
 							
 							//We were succesful appending the image tag, so release this chunk
 							[chunk release]; chunk = nil;	
@@ -1801,6 +1805,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		   withName:(NSString *)inName 
 		 imageClass:(NSString *)imageClass
 		 imagesPath:(NSString *)imagesPath
+	  uniqueifyHTML:(BOOL)uniqueifyHTML
 {	
 	NSString	*shortFileName;
 	BOOL		success = NO;
@@ -1850,13 +1855,22 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		//Note the space at the end of the tag
 		NSString *imageClassTag = (imageClass ? [NSString stringWithFormat:@"class=\"%@\" ", imageClass] : @"");
 
+		NSLog(@"Uniquifying the html? %i",uniqueifyHTML);
+	
 		if (attachmentImage) {
 			//Include size information if possible
 			NSSize imageSize = [attachmentImage size];
-			[string appendFormat:@"<img %@src=\"%@\" alt=\"%@\" width=\"%i\" height=\"%i\">", imageClassTag, srcPath, altName, (int)imageSize.width, (int)imageSize.height];
+			[string appendFormat:@"<img %@src=\"%@%@\" alt=\"%@\" width=\"%i\" height=\"%i\">",
+				imageClassTag,
+				srcPath, (uniqueifyHTML ? [NSString stringWithFormat:@"?%i", [[NSDate date] timeIntervalSince1970]] : @""),
+				altName,
+				(int)imageSize.width, (int)imageSize.height];
 
 		} else {
-			[string appendFormat:@"<img %@src=\"%@\" alt=\"%@\">", imageClassTag, srcPath, altName];
+			[string appendFormat:@"<img %@src=\"%@%@\" alt=\"%@\">",
+				imageClassTag,
+				srcPath, (uniqueifyHTML ? [NSString stringWithFormat:@"?%i", [[NSDate date] timeIntervalSince1970]] : @""),
+				altName];
 		}
 	}
 

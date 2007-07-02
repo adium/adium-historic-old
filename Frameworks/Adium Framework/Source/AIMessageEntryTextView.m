@@ -1067,7 +1067,8 @@
 	AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
 	[attachment setPath:inPath];
 	[attachment setString:[inPath lastPathComponent]];
-	
+	[attachment setShouldSaveImageForLogging:YES];
+
 	//Insert an attributed string into the text at the current insertion point
 	[self insertText:[self attributedStringWithTextAttachmentExtension:attachment]];
 	
@@ -1149,7 +1150,8 @@
 				AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
 				[attachment setPath:destinationPath];
 				[attachment setString:preferredName];
-				
+				[attachment setShouldSaveImageForLogging:YES];
+
 				//Insert an attributed string into the text at the current insertion point
 				replacement = [self attributedStringWithTextAttachmentExtension:attachment];
 				[attachment release];
