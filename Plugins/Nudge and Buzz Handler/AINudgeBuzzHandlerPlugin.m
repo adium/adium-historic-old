@@ -281,7 +281,7 @@
 - (void)nudgeBuzzDidOccur:(NSNotification *)notification
 {
 	AIChat			*chat     = [notification object];
-	NSString		*description, *format, *type = [[notification userInfo] objectForKey:@"Type"];
+	NSString		*description, *format;
 	
 	format = AILocalizedString(@"%@ wants your attention!", "Message displayed when a contact sends a buzz/nudge/other notification");
 	
@@ -353,10 +353,10 @@
 	
 	if (includeSubject) {		
 		description = [NSString stringWithFormat:
-			AILocalizedString(@"%@ wants your attention!", "Message displayed when a contact sends a buzz/nudge/other notification");
+			AILocalizedString(@"%@ wants your attention!", "Message displayed when a contact sends a buzz/nudge/other notification"),
 			[listObject displayName]];
 	} else {
-		description = AILocalizedString(@"wants your attention!", "Phrase displayed when a contact sends a buzz/nudge/other notification. The contact's name will be shown above this phrase, as in a Growl notification."););
+		description = AILocalizedString(@"wants your attention!", "Phrase displayed when a contact sends a buzz/nudge/other notification. The contact's name will be shown above this phrase, as in a Growl notification.");
 	}
 	
 	return description;
