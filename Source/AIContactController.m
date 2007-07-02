@@ -1685,7 +1685,6 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	return contact;
 }
 
-#warning If this is necessary, SmackContacts should probably have their own implementatino of internalUniqueObjectIDForService:account:UID
 - (AIListContact *)existingContactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID usingClass:(Class)ContactClass
 {
 	if (inService && [inUID length]) {
@@ -2018,9 +2017,13 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	[self endListObjectNotificationsDelay];
 }
 
-- (void)requestAddContactWithUID:(NSString *)contactUID service:(AIService *)inService
+- (void)requestAddContactWithUID:(NSString *)contactUID service:(AIService *)inService account:(AIAccount *)inAccount
 {
-	NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:contactUID, UID_KEY, inService, @"service",nil];
+	NSMutableDictionary *userInfo = [NSMutableDictionary dictionaryWithObject:contactUID
+																	   forKey:UID_KEY];
+	if (inService) [userInfo setObject:inService forKey:@"AIService"];
+	if (inAccount) [userInfo setObject:inAccount forKey:@"AIAccount"];
+
 	[[adium notificationCenter] postNotificationName:Contact_AddNewContact
 											  object:nil
 											userInfo:userInfo];

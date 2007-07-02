@@ -219,7 +219,8 @@
 	
 	[AINewContactWindowController promptForNewContactOnWindow:inWindow
 														 name:(inListObject ? [inListObject UID] : nil)
-													  service:(inListObject ? [(AIListContact *)inListObject service] : nil)];
+													  service:(inListObject ? [(AIListContact *)inListObject service] : nil)
+													  account:nil];
 }
 
 /*!
@@ -234,7 +235,8 @@
 	if (userInfo) {
 		[AINewContactWindowController promptForNewContactOnWindow:nil
 															 name:[userInfo objectForKey:@"UID"]
-														  service:[userInfo objectForKey:@"service"]];
+														  service:[userInfo objectForKey:@"AIService"]
+														  account:[userInfo objectForKey:@"AIAccount"]];
 	}
 }
 

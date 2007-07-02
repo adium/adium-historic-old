@@ -395,7 +395,8 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 - (void)requestAddContactWithUID:(NSString *)contactUID
 {
 	[[adium contactController] requestAddContactWithUID:contactUID
-												service:[self _serviceForUID:contactUID]];
+												service:[self _serviceForUID:contactUID]
+												account:self];
 }
 
 - (AIService *)_serviceForUID:(NSString *)contactUID

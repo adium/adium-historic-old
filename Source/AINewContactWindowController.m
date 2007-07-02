@@ -37,7 +37,7 @@
 #define DEFAULT_GROUP_NAME		AILocalizedString(@"Contacts",nil)
 
 @interface AINewContactWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName contactName:(NSString *)inName service:(AIService *)inService;
+- (id)initWithWindowNibName:(NSString *)windowNibName contactName:(NSString *)inName service:(AIService *)inService  account:(AIAccount *)inAccount;
 - (void)buildGroupMenu;
 - (void)buildContactTypeMenu;
 - (void)configureForCurrentServiceType;
@@ -59,12 +59,13 @@
  * @param parentWindow Window on which to show the prompt as a sheet. Pass nil for a panel prompt. 
  * @param inName Initial value for the contact name field
  * @param inService <tt>AIService</tt> for determining the initial service type selection
+ * @param inAccount If non-nil, the one AIAccount which should be initially enabled for adding this contact
  */
-+ (void)promptForNewContactOnWindow:(NSWindow *)parentWindow name:(NSString *)inName service:(AIService *)inService
++ (void)promptForNewContactOnWindow:(NSWindow *)parentWindow name:(NSString *)inName service:(AIService *)inService account:(AIAccount *)inAccount
 {
 	AINewContactWindowController	*newContactWindow;
 	
-	newContactWindow = [[self alloc] initWithWindowNibName:ADD_CONTACT_PROMPT_NIB contactName:inName service:inService];
+	newContactWindow = [[self alloc] initWithWindowNibName:ADD_CONTACT_PROMPT_NIB contactName:inName service:inService account:inAccount];
 	
 	if (parentWindow) {
 		[parentWindow makeKeyAndOrderFront:nil];
@@ -84,11 +85,12 @@
 /*!
  * @brief Initialize
  */
-- (id)initWithWindowNibName:(NSString *)windowNibName contactName:(NSString *)inName service:(AIService *)inService
+- (id)initWithWindowNibName:(NSString *)windowNibName contactName:(NSString *)inName service:(AIService *)inService account:(AIAccount *)inAccount
 {
     self = [super initWithWindowNibName:windowNibName];
 
 	service = [inService retain];
+	initialAccount = [inAccount retain];
 	contactName = [inName retain];
 	uniqueID = nil;
 	
@@ -103,8 +105,10 @@
 	[accounts release];
 	[contactName release];
 	[service release];
+	[initialAccount release];
 	[uniqueID release];
-	
+	[checkedAccounts release];
+
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
     [super dealloc];
@@ -478,22 +482,27 @@
  */
 - (void)updateAccountList
 {	
-	NSEnumerator	*enumerator;
-	AIAccount		*account;
-	
 	[accounts release];
 	accounts = [[[adium accountController] accountsCompatibleWithService:service] retain];
 	
+	[checkedAccounts release];
+	checkedAccounts = [[NSMutableSet alloc] init];
+
 	//Select accounts by default
-	enumerator = [accounts objectEnumerator];
-	while ((account = [enumerator nextObject])) {
-		if (![account preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT]) {
-			[account setPreference:[NSNumber numberWithBool:YES]
-							forKey:KEY_ADD_CONTACT_TO 
-							 group:PREF_GROUP_ADD_CONTACT];			
+	if (initialAccount && [accounts containsObject:initialAccount]) {
+		[checkedAccounts addObject:initialAccount];
+
+	} else {
+		NSEnumerator	*enumerator;
+		AIAccount		*anAccount;
+
+		enumerator = [accounts objectEnumerator];
+		while ((anAccount = [enumerator nextObject])) {
+			if ([[anAccount preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT] boolValue])
+				[checkedAccounts addObject:anAccount];
 		}
 	}
-	
+
 	[tableView_accounts reloadData];
 }
 
@@ -514,8 +523,8 @@
 	
 	if ([identifier isEqualToString:@"check"]) {
 		return ([[accounts objectAtIndex:row] contactListEditable] ?
-			   [[accounts objectAtIndex:row] preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT] :
-			   [NSNumber numberWithBool:NO]);
+				[NSNumber numberWithBool:[checkedAccounts containsObject:[accounts objectAtIndex:row]]] :
+				[NSNumber numberWithBool:NO]);
 	
 	} else if ([identifier isEqualToString:@"account"]) {
 		return [[accounts objectAtIndex:row] explicitFormattedUID];
@@ -551,6 +560,11 @@
 		[[accounts objectAtIndex:row] setPreference:[NSNumber numberWithBool:[object boolValue]] 
 											 forKey:KEY_ADD_CONTACT_TO 
 											  group:PREF_GROUP_ADD_CONTACT];
+		if ([object boolValue]) {
+			[checkedAccounts addObject:[accounts objectAtIndex:row]];
+		} else {
+			[checkedAccounts removeObject:[accounts objectAtIndex:row]];			
+		}
 	}
 }
 

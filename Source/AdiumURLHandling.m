@@ -198,7 +198,8 @@
 				
 				if (name) {
 					[[sharedAdium contactController] requestAddContactWithUID:name
-																service:service];
+																service:service
+																	  account:nil];
 					
 				} else {
 					NSString		*listOfNames = [url queryArgumentForKey:@"listofscreennames"];
@@ -209,7 +210,8 @@
 					while ((name = [enumerator nextObject])) {
 						NSString	*decodedName = [[name stringByDecodingURLEscapes] compactedString];
 						[[sharedAdium contactController] requestAddContactWithUID:decodedName
-																	service:service];
+																	service:service
+																		  account:nil];
 					}
 				}
 
@@ -295,7 +297,8 @@
 
 				[AINewContactWindowController promptForNewContactOnWindow:nil
 				                                                     name:[NSString stringWithFormat:@"%@@%@", [url user], [url host]]
-				                                                  service:jabberService];
+				                                                  service:jabberService
+																  account:nil];
 			} else if ([query rangeOfString:@"remove"].location == 0
 			           || [query rangeOfString:@"unsubscribe"].location == 0) {
 				// xmpp:johndoe@jabber.org?remove
