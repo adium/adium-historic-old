@@ -283,13 +283,7 @@
 	AIChat			*chat     = [notification object];
 	NSString		*description, *format, *type = [[notification userInfo] objectForKey:@"Type"];
 	
-	if ([type isEqualToString:@"Buzz"]) {
-		format = AILocalizedString(@"%@ sent a Buzz!", "Contact sent a Buzz!");
-	} else if ([type isEqualToString:@"Nudge"]) {
-		format = AILocalizedString(@"%@ sent a Nudge!", "Contact sent a Nudge!");
-	} else if ([type isEqualToString:@"notification"]) {
-		format = AILocalizedString(@"%@ sent a notification!", "Contact sent a notification.");
-	}
+	format = AILocalizedString(@"%@ wants your attention!", "Message displayed when a contact sends a buzz/nudge/other notification");
 	
 	// Create the display text.
 	description = [NSString stringWithFormat:format, [[chat listObject] displayName]];
@@ -359,10 +353,10 @@
 	
 	if (includeSubject) {		
 		description = [NSString stringWithFormat:
-			AILocalizedString(@"%@ sent a notification","Contact sent a notification"),
+			AILocalizedString(@"%@ wants your attention!", "Message displayed when a contact sends a buzz/nudge/other notification");
 			[listObject displayName]];
 	} else {
-		description = AILocalizedString(@"Sent a notification", nil);
+		description = AILocalizedString(@"wants your attention!", "Phrase displayed when a contact sends a buzz/nudge/other notification. The contact's name will be shown above this phrase, as in a Growl notification."););
 	}
 	
 	return description;
