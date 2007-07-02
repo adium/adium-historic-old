@@ -90,7 +90,6 @@ typedef enum {
 	void manualWindowMoveToPoint(NSWindow *inWindow,
 								 NSPoint targetPoint,
 								 AIRectEdgeMask windowSlidOffScreenEdgeMask,
-								 AIListController *contactListController,
 								 BOOL keepOnScreen);
 
 @end

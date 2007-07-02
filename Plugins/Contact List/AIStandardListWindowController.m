@@ -703,7 +703,6 @@
 	manualWindowMoveToPoint([self window],
 							inPoint,
 							windowSlidOffScreenEdgeMask,
-							contactListController,
 							YES);
 	
 	if (windowSlidOffScreenEdgeMask == AINoEdges) {
