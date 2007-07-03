@@ -789,7 +789,7 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 	frame.origin = targetPoint;
 
 	if ([inWindow respondsToSelector:@selector(setDockingEnabled:)])
-		[inWindow setDockingEnabled:NO];
+		[(id)inWindow setDockingEnabled:NO];
 	
 	NSViewAnimation *animation = [[NSViewAnimation alloc] initWithViewAnimations:
 		[NSArray arrayWithObject:
@@ -804,7 +804,7 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 	[animation release];
 	 
 	if ([inWindow respondsToSelector:@selector(setDockingEnabled:)])
-		[inWindow setDockingEnabled:YES];
+		[(id)inWindow setDockingEnabled:YES];
 }
 
 /*!
