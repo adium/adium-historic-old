@@ -9,6 +9,7 @@
 #import "AIOutlineViewAnimation.h"
 #import <Adium/AIObject.h>
 
+#define DISABLE_ALL_ANIMATION		TRUE
 #define ANIMATE_EXPAND_AND_COLLAPSE FALSE
 
 @interface AIAnimatingListOutlineView (PRIVATE)
@@ -25,6 +26,8 @@
  */
 @implementation AIAnimatingListOutlineView
 
+#if !DISABLE_ALL_ANIMATION
+#warning Animation enabled
 - (void)_initAnimatingListOutlineView
 {
 	allAnimatingItemsDict  = [[NSMutableDictionary alloc] init];
@@ -448,5 +451,7 @@
 {
 	return [super totalHeight] + animationHedgeFactor.height;
 }
+
+#endif
 
 @end
