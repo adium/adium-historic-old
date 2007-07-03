@@ -111,7 +111,7 @@
 {	
     if ((self = [super initWithWindowNibName:inNibName])) {
 		preventHiding = NO;
-		previousAlpha = 0.0;
+		previousAlpha = 1.0;
 	}
 
     return self;
@@ -774,37 +774,43 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	return windowLastScreen;
 }
 
-void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdgeMask windowSlidOffScreenEdgeMask, BOOL keepOnScreen)
+- (BOOL)animationShouldStart:(NSAnimation *)animation
 {
-	NSScreen *windowScreen = [inWindow screen];
-	AIListWindowController *windowController = (AIListWindowController *)[inWindow windowController];
-	if (!windowScreen) windowScreen = [windowController windowLastScreen];
-	if (!windowScreen) windowScreen = [NSScreen mainScreen];
-
-	NSRect	frame = [inWindow frame];
-	float yOff = (targetPoint.y + NSHeight(frame)) - NSMaxY([windowScreen frame]);
-	if (windowScreen == [[NSScreen screens] objectAtIndex:0]) yOff -= [NSMenuView menuBarHeight];
-	if (yOff > 0) targetPoint.y -= yOff;
-
-	frame.origin = targetPoint;
-
-	if ([inWindow respondsToSelector:@selector(setDockingEnabled:)])
-		[(id)inWindow setDockingEnabled:NO];
+	//Whenever an animation starts, we should be using the normal shadow setting
+	[[self window] setHasShadow:listHasShadow];
 	
-	NSViewAnimation *animation = [[NSViewAnimation alloc] initWithViewAnimations:
-		[NSArray arrayWithObject:
-			[NSDictionary dictionaryWithObjectsAndKeys:
-				inWindow, NSViewAnimationTargetKey,
-				[NSValue valueWithRect:frame], NSViewAnimationEndFrameKey,
-				nil]]];
-	[animation setFrameRate:0.0];
-	[animation setDuration:0.25];
-	[animation setAnimationBlockingMode:NSAnimationBlocking];
-	[animation startAnimation];
-	[animation release];
-	 
-	if ([inWindow respondsToSelector:@selector(setDockingEnabled:)])
-		[(id)inWindow setDockingEnabled:YES];
+	//Don't let docking interfere with the animation
+	if ([[self window] respondsToSelector:@selector(setDockingEnabled:)])
+		[(id)[self window] setDockingEnabled:NO];
+	
+	if (windowSlidOffScreenEdgeMask == AINoEdges) {
+		[[self window] setAlphaValue:previousAlpha];
+	}
+
+	return YES;
+}
+
+- (void)animationDidEnd:(NSAnimation*)animation
+{
+	//Restore docking behavior	
+	if ([[self window] respondsToSelector:@selector(setDockingEnabled:)])
+		[(id)[self window] setDockingEnabled:YES];
+	
+	if (windowSlidOffScreenEdgeMask == AINoEdges) {
+		/* When the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
+		 * it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
+		 */
+		[contactListController contactListDesiredSizeChanged];
+
+	} else {
+		//Offscreen windows should be told not to cast a shadow
+		[[self window] setHasShadow:NO];	
+
+		previousAlpha = [[self window] alphaValue];
+		[[self window] setAlphaValue:0.0];
+	}
+	
+	[windowAnimation release]; windowAnimation = nil;
 }
 
 /*!
@@ -815,57 +821,51 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
  * A standard window (titlebar window) will crash if told to setFrame completely offscreen. Also, using our own movement we can more precisely
  * control the movement speed and acceleration.
  */
-- (void)slideWindowToPoint:(NSPoint)inPoint
+- (void)slideWindowToPoint:(NSPoint)targetPoint
 {	
-	NSWindow	*myWindow = [self window];
-	
-	if ((windowSlidOffScreenEdgeMask == AINoEdges) &&
-		(previousAlpha > 0.0)) {
-		//Before sliding onscreen, restore any previous alpha value
-		[myWindow setAlphaValue:previousAlpha];
-		previousAlpha = 0.0;
-	}
-	
-	manualWindowMoveToPoint([self window],
-							inPoint,
-							windowSlidOffScreenEdgeMask,
-							NO);
+	NSWindow				*myWindow = [self window];
+	NSScreen				*windowScreen;
 
-	if (windowSlidOffScreenEdgeMask == AINoEdges) {
-		/* When the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
-		* it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
-		*/
-		[contactListController contactListDesiredSizeChanged];			
-	} else {
-		//After sliding off screen, go to an alpha value of 0 to hide our 1 px remaining on screen
-		previousAlpha = [myWindow alphaValue];
-		[myWindow setAlphaValue:0.0];
+	windowScreen = [myWindow screen];
+	if (!windowScreen) windowScreen = [self windowLastScreen];
+	if (!windowScreen) windowScreen = [NSScreen mainScreen];
+	
+	NSRect	frame = [myWindow frame];
+	float yOff = (targetPoint.y + NSHeight(frame)) - NSMaxY([windowScreen frame]);
+	if (windowScreen == [[NSScreen screens] objectAtIndex:0]) yOff -= [NSMenuView menuBarHeight];
+	if (yOff > 0) targetPoint.y -= yOff;
+	
+	frame.origin = targetPoint;
+	
+	if (windowAnimation) {
+		[windowAnimation stopAnimation];
+		[windowAnimation release];
 	}
+
+	windowAnimation = [[NSViewAnimation alloc] initWithViewAnimations:
+		[NSArray arrayWithObject:
+			[NSDictionary dictionaryWithObjectsAndKeys:
+				myWindow, NSViewAnimationTargetKey,
+				[NSValue valueWithRect:frame], NSViewAnimationEndFrameKey,
+				nil]]];
+	[windowAnimation setFrameRate:0.0];
+	[windowAnimation setDuration:0.25];
+	[windowAnimation setDelegate:self];
+	[windowAnimation setAnimationBlockingMode:NSAnimationNonblocking];
+	[windowAnimation startAnimation];
 }
 
 - (void)moveWindowToPoint:(NSPoint)inOrigin
 {
-	NSWindow *win = [self window];
-
-	if ((windowSlidOffScreenEdgeMask == AINoEdges) &&
-		(previousAlpha > 0.0)) {
-		//Before sliding onscreen, restore any previous alpha value
-		[[self window] setAlphaValue:previousAlpha];
-		previousAlpha = 0.0;
-	}
-
-	[win setFrameOrigin:inOrigin];
+	[[self window] setFrameOrigin:inOrigin];
 
 	if (windowSlidOffScreenEdgeMask == AINoEdges) {
 		/* When the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
 		* it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
 		*/
 		[contactListController contactListDesiredSizeChanged];
-
-	} else {
-		//After sliding off screen, go to an alpha value of 0 to hide our 1 px remaining on screen
-		previousAlpha = [win alphaValue];
-		[win setAlphaValue:0.0];
+		
+		[[self window] setAlphaValue:previousAlpha];
 	}
 }
 
@@ -922,9 +922,6 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 	windowSlidOffScreenEdgeMask |= rectEdgeMask;
 		
 	[self slideWindowToPoint:newWindowFrame.origin];
-	
-	listHasShadow = [window hasShadow];
-	[window setHasShadow:NO];
 }
 
 - (void)slideWindowOnScreenWithAnimation:(BOOL)animate
@@ -937,8 +934,6 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 			[window orderFront:nil]; 
 			
 			windowSlidOffScreenEdgeMask = AINoEdges;
-			
-			[[self window] setHasShadow:listHasShadow];
 			
 			if (animate) {
 				[self slideWindowToPoint:oldFrame.origin];
