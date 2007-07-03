@@ -15,8 +15,7 @@
  */
 
 #import <Adium/AIPlugin.h>
-
-@protocol AIListObjectObserver;
+#import <Adium/AIContactControllerProtocol.h>
 
 @interface AIDockAccountStatusPlugin : AIPlugin <AIListObjectObserver> {
     

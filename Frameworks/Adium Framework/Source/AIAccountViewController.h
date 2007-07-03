@@ -15,8 +15,7 @@
  */
 
 #import <Adium/AIObject.h>
-
-@protocol AIListObjectObserver;
+#import <Adium/AIContactControllerProtocol.h>
 
 @class AIAccount;
 

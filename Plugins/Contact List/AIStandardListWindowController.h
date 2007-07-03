@@ -15,10 +15,11 @@
  */
 
 #import "AIListWindowController.h"
+#import <Adium/AIContactControllerProtocol.h>
 
 #define ALL_OTHER_ACCOUNTS AILocalizedString(@"All Other Accounts", nil)
 
-@protocol AIListObjectObserver, StateMenuPlugin;
+@protocol StateMenuPlugin;
 @class AIAccount, AIStatusMenu, AIHoveringPopUpButton, AIContactListNameButton, AIContactListImagePicker;
 
 typedef enum {

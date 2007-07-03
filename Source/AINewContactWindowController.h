@@ -15,12 +15,12 @@
  */
 
 #import <Adium/AIWindowController.h>
+#import <Adium/AIContactControllerProtocol.h>
 
 #define PREF_GROUP_ADD_CONTACT  @"Add Contact"
 #define KEY_ADD_CONTACT_TO		@"Add Contacts to account"
 
 @class AIAccount, AIService, AILocalizationButton, AILocalizationTextField;
-@protocol AIListObjectObserver;
 
 @interface AINewContactWindowController : AIWindowController <AIListObjectObserver> {
 	IBOutlet	NSPopUpButton				*popUp_contactType;

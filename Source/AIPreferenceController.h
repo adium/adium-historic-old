@@ -17,8 +17,6 @@
 #import <Adium/AIObject.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
 
-@protocol AIController;
-
 @interface AIPreferenceController : AIObject <AIPreferenceController> {
 	NSString				*userDirectory;
 	

@@ -15,8 +15,8 @@
  */
 
 #import <Adium/AIPlugin.h>
+#import <Adium/AIContactControllerProtocol.h>
 
-@protocol AIListObjectObserver;
 
 typedef enum {
 	AINameFormat_DisplayName = 1,
