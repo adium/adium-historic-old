@@ -19,8 +19,6 @@
 
 @class AdiumSound, AdiumSpeech, AdiumSoundSets;
 
-@protocol AIController;
-
 @interface AISoundController : AIObject <AISoundController> {
 	AdiumSound			*adiumSound;
 	AdiumSpeech 		*adiumSpeech;

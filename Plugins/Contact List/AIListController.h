@@ -15,9 +15,9 @@
  */
 
 #import <Adium/AIAbstractListController.h>
+#import <Adium/AIContactControllerProtocol.h>
 
 @class AIAbstractListController;
-@protocol AIListObjectObserver;
 
 @interface AIListController : AIAbstractListController {
     NSSize								minWindowSize;

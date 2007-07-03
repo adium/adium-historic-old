@@ -17,6 +17,7 @@
 #import "ESAddressBookIntegrationAdvancedPreferences.h"
 #import <AddressBook/AddressBook.h>
 #import <Adium/AIPlugin.h>
+#import <Adium/AIContactControllerProtocol.h>
 
 #define PREF_GROUP_ADDRESSBOOK					@"Address Book"
 #define KEY_AB_ENABLE_IMPORT					@"AB Enable Import"
@@ -32,7 +33,7 @@
 
 #define AB_DISPLAYFORMAT_DEFAULT_PREFS			@"AB Display Format Defaults"
 
-@protocol AIListObjectObserver, ABImageClient;
+@protocol ABImageClient;
 
 @class AIService;
 

@@ -15,9 +15,9 @@
  */
 
 #import <Adium/AIPlugin.h>
+#import <Adium/AIContactControllerProtocol.h>
 
 @class AIChat;
-@protocol AIListObjectObserver;
 
 @interface AIAutoReplyPlugin : AIPlugin<AIListObjectObserver> {
 	NSMutableSet	*receivedAutoReply;

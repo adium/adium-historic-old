@@ -15,8 +15,7 @@
  */
 
 #import <Adium/AIPlugin.h>
-
-@protocol AIListObjectObserver;
+#import <Adium/AIContactControllerProtocol.h>
 
 @interface AIStatusChangedMessagesPlugin : AIPlugin {
 	NSMutableDictionary *previousStatusChangedMessages;

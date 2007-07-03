@@ -15,8 +15,8 @@
  */
 
 #import <Adium/AIAbstractListObjectMenu.h>
+#import <Adium/AIContactControllerProtocol.h>
 
-@protocol AIListObjectObserver;
 @class AIAccount, AIStatusMenu;
 
 typedef enum {
