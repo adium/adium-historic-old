@@ -66,7 +66,7 @@ typedef enum {
 	NSScreen							*currentScreen;
 	NSRect								currentScreenFrame;
 	
-	NSTimer								*movementTimer;
+	NSViewAnimation						*windowAnimation;
 	float								previousAlpha;
 }
 
