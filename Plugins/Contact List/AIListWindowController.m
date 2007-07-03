@@ -32,6 +32,7 @@
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIUserIcons.h>
+#import <AIUtilities/AIDockingWindow.h>
 
 #define CONTACT_LIST_WINDOW_NIB				@"ContactListWindow"		//Filename of the contact list window nib
 #define CONTACT_LIST_WINDOW_TRANSPARENT_NIB @"ContactListWindowTransparent" //Filename of the minimalist transparent version
@@ -785,23 +786,10 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 	if (windowScreen == [[NSScreen screens] objectAtIndex:0]) yOff -= [NSMenuView menuBarHeight];
 	if (yOff > 0) targetPoint.y -= yOff;
 
-	
-	if (keepOnScreen && (windowSlidOffScreenEdgeMask != AINoEdges)) {
-		//If the window is sliding off screen, keep one pixel onscreen to avoid crashing (moving a titled window offscreen is a crash)
-		if (targetPoint.x < frame.origin.x) {
-			targetPoint.x += 1;
-		} else if (targetPoint.x > frame.origin.x) {
-			targetPoint.x -= 1;
-		}
-		
-		if (targetPoint.y < frame.origin.y) {
-			targetPoint.y += 1;
-		} else if (targetPoint.y > frame.origin.y) {
-			targetPoint.y -= 1;
-		}			
-	}
-	
 	frame.origin = targetPoint;
+
+	if ([inWindow respondsToSelector:@selector(setDockingEnabled:)])
+		[inWindow setDockingEnabled:NO];
 	
 	NSViewAnimation *animation = [[NSViewAnimation alloc] initWithViewAnimations:
 		[NSArray arrayWithObject:
@@ -814,6 +802,9 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 	[animation setAnimationBlockingMode:NSAnimationBlocking];
 	[animation startAnimation];
 	[animation release];
+	 
+	if ([inWindow respondsToSelector:@selector(setDockingEnabled:)])
+		[inWindow setDockingEnabled:YES];
 }
 
 /*!
@@ -825,25 +816,52 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
  * control the movement speed and acceleration.
  */
 - (void)slideWindowToPoint:(NSPoint)inPoint
-{
-	NSLog(@"Subclasses must override.");
+{	
+	NSWindow	*myWindow = [self window];
+	
+	if ((windowSlidOffScreenEdgeMask == AINoEdges) &&
+		(previousAlpha > 0.0)) {
+		//Before sliding onscreen, restore any previous alpha value
+		[myWindow setAlphaValue:previousAlpha];
+		previousAlpha = 0.0;
+	}
+	
+	manualWindowMoveToPoint([self window],
+							inPoint,
+							windowSlidOffScreenEdgeMask,
+							NO);
+
+	if (windowSlidOffScreenEdgeMask == AINoEdges) {
+		/* When the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
+		* it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
+		*/
+		[contactListController contactListDesiredSizeChanged];			
+	} else {
+		//After sliding off screen, go to an alpha value of 0 to hide our 1 px remaining on screen
+		previousAlpha = [myWindow alphaValue];
+		[myWindow setAlphaValue:0.0];
+	}
 }
 
 - (void)moveWindowToPoint:(NSPoint)inOrigin
 {
 	NSWindow *win = [self window];
+
+	if ((windowSlidOffScreenEdgeMask == AINoEdges) &&
+		(previousAlpha > 0.0)) {
+		//Before sliding onscreen, restore any previous alpha value
+		[[self window] setAlphaValue:previousAlpha];
+		previousAlpha = 0.0;
+	}
+
 	[win setFrameOrigin:inOrigin];
 
 	if (windowSlidOffScreenEdgeMask == AINoEdges) {
-		if(previousAlpha > 0.0) {
-			[win setAlphaValue:previousAlpha];
-			previousAlpha = 0.0;
-		}
-		
 		/* When the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
 		* it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
 		*/
 		[contactListController contactListDesiredSizeChanged];
+
 	} else {
 		//After sliding off screen, go to an alpha value of 0 to hide our 1 px remaining on screen
 		previousAlpha = [win alphaValue];

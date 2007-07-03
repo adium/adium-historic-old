@@ -23,6 +23,10 @@
 	unsigned int	resisted_XMotion;
 	unsigned int	resisted_YMotion;
 	BOOL 			alreadyMoving;
+	
+	BOOL			dockingEnabled;
 }
+
+- (void)setDockingEnabled:(BOOL)inEnabled;
 
 @end

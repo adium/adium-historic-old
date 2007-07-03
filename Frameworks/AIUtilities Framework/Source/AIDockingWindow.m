@@ -57,6 +57,7 @@
 	resisted_YMotion = 0;
 	oldWindowFrame = NSMakeRect(0,0,0,0);
 	alreadyMoving = NO;
+	dockingEnabled = YES;
 }
 
 //Stop observing movement
@@ -71,7 +72,8 @@
 //Watch the window move.  If it gets near an edge, dock it to that edge
 - (void)windowDidMove:(NSNotification *)notification
 {
-	if (!alreadyMoving) {  //Our setFrame call below will cause a re-entry into this function, we must guard against this
+	//Our setFrame call below will cause a re-entry into this function, we must guard against this
+	if (!alreadyMoving && dockingEnabled) {
 		alreadyMoving = YES;	
 		
 		//Attempt to dock this window the the visible frame first, and then to the screen frame
@@ -117,6 +119,7 @@
 				}
 			}
 			
+			NSLog(@"Grabbed it!");
 			[self setFrame:dockedWindowFrame display:YES animate:YES];
 			oldWindowFrame = dockedWindowFrame;
 			
@@ -180,6 +183,11 @@
 	
 	[[NSNotificationCenter defaultCenter] postNotificationName:AIWindowToolbarDidToggleVisibility
 														object:self];
+}
+
+- (void)setDockingEnabled:(BOOL)inEnabled
+{
+	dockingEnabled = inEnabled;
 }
 
 @end
