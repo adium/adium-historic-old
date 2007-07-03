@@ -121,8 +121,6 @@
 			</array>
 			<key>LSTypeIsPackage</key>
 			<true/>
-			<key>NSPersistentStoreTypeKey</key>
-			<string>Binary</string>
 		</dict>
 		<dict>
 			<key>CFBundleTypeExtensions</key>
@@ -714,6 +712,29 @@
 				<key>public.filename-extension</key>
 				<array>
 					<string>AdiumServiceIcons</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>com.adiumx.xtra</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Adium X menu bar icons pack</string>
+			<key>UTTypeIconFile</key>
+			<string>AdiumServiceIcons.icns</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.adiumx.menubaricons</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://xtras.adiumx.com</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>com.apple.ostype</key>
+				<string>AdMB</string>
+				<key>public.filename-extension</key>
+				<array>
+					<string>AdiumMenuBarIcons</string>
 				</array>
 			</dict>
 		</dict>
