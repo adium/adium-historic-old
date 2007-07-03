@@ -9,8 +9,8 @@
 #import "AIOutlineViewAnimation.h"
 #import <Adium/AIObject.h>
 
-#define DISABLE_ALL_ANIMATION		TRUE
-#define ANIMATE_EXPAND_AND_COLLAPSE FALSE
+#define DISABLE_ALL_ANIMATION				FALSE
+#define DISABLE_ANIMATE_EXPAND_AND_COLLAPSE	TRUE
 
 @interface AIAnimatingListOutlineView (PRIVATE)
 - (NSRect)unanimatedRectOfRow:(int)rowIndex;
@@ -27,7 +27,7 @@
 @implementation AIAnimatingListOutlineView
 
 #if !DISABLE_ALL_ANIMATION
-#warning Animation enabled
+
 - (void)_initAnimatingListOutlineView
 {
 	allAnimatingItemsDict  = [[NSMutableDictionary alloc] init];
@@ -386,7 +386,7 @@
 	[self updateForNewIndexesFromOldIndexes:oldDict forItem:item recalculateHedge:YES duration:LIST_OBJECT_ANIMATION_DURATION];
 }
 
-#if ANIMATE_EXPAND_AND_COLLAPSE
+#if !DISABLE_ANIMATE_EXPAND_AND_COLLAPSE
 
 - (void)expandItem:(id)item
 {
