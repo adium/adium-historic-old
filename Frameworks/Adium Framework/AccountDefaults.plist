@@ -8,5 +8,7 @@
 	<true/>
 	<key>AutoConnect</key>
 	<true/>
+	<key>Add Contacts to account</key>
+	<true/>
 </dict>
 </plist>
