@@ -278,22 +278,22 @@
 			[self performSelector:@selector(_speakNext)
 					   withObject:nil
 					   afterDelay:1.0];
-		} else {
+		} else {			
+			speaking = YES;
+
 			//Speak the next entry in our queue
 			NSMutableDictionary *dict = [speechArray objectAtIndex:0];
 			NSString 			*text = [dict objectForKey:TEXT_TO_SPEAK];
 			NSNumber 			*pitchNumber = [dict objectForKey:PITCH];
 			NSNumber 			*rateNumber = [dict objectForKey:RATE];
 			SUSpeaker 			*theSpeaker = [self _speakerForVoice:[dict objectForKey:VOICE] index:NULL];
-			
+
 			[theSpeaker setPitch:(pitchNumber ? [pitchNumber floatValue] : [self defaultPitch])];
 			[theSpeaker setRate:  (rateNumber ?  [rateNumber floatValue] : [self defaultRate])];
 			[theSpeaker setVolume:customVolume];
-			
+
 			[theSpeaker speakText:text];
 			[speechArray removeObjectAtIndex:0];
-
-			speaking = YES;
 		}
 	}
 }
