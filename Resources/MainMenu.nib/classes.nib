@@ -5,6 +5,7 @@
                 confirmQuit = id; 
                 contibutingToAdium = id; 
                 donate = id; 
+                importFromiChat = id; 
                 reportABug = id; 
                 sendFeedback = id; 
                 showAboutBox = id; 

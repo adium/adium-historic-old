@@ -61,6 +61,7 @@
 	NSString						*advancedPrefsName;	
 }
 
+- (IBAction)importFromiChat:(id)sender;
 - (IBAction)showAboutBox:(id)sender;
 - (IBAction)reportABug:(id)sender;
 - (IBAction)sendFeedback:(id)sender;

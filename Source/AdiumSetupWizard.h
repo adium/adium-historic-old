@@ -48,5 +48,6 @@
 - (IBAction)nextTab:(id)sender;
 - (IBAction)previousTab:(id)sender;
 - (IBAction)pressedAlternateButton:(id)sender;
+- (IBAction)promptForMultiples:(id)sender;
 
 @end

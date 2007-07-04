@@ -99,6 +99,35 @@ enum{
 	[super windowDidLoad];
 }
 
+- (IBAction)promptForMultiples:(id)sender
+{
+	// Since we have multiple dedicated importers in 1.1+ it's better to direct the user as needed
+	NSAlert *multipleImportPrompt = [NSAlert alertWithMessageText:@"Have you used other chat clients?"
+													defaultButton:@"Continue" 
+												  alternateButton:@"Import from Fire" 
+													  otherButton:@"Import from iChat" 
+										informativeTextWithFormat:@"Adium includes assistants to bring your accounts, settings, and transcripts over from other clients. If you would like to import from any of these choose a client below to open its assistant."];
+	[multipleImportPrompt beginSheetModalForWindow:[self window] 
+									 modalDelegate:self 
+									didEndSelector:@selector(multipleImportAlertDidEnd:returnCode:contextInfo:) 
+									   contextInfo:nil];	
+}
+
+- (void)multipleImportAlertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	if(returnCode == NSAlertOtherReturn)
+	{
+		[adium performSelector:@selector(importFromiChat:)
+					withObject:nil
+					afterDelay:0.5];
+		[[self window] close];
+	}
+	if(returnCode == NSAlertAlternateReturn)
+	{
+		// not yet supported, but should open the manual Fire importer
+	}
+}
+
 /*!
  * @brief Perform behaviors before the window closes
  *
