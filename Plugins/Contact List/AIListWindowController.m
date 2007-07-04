@@ -844,10 +844,21 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	
 	if ((windowSlidOffScreenEdgeMask != AINoEdges) &&
 		[self keepListOnScreenWhenSliding]) {
-		if (windowSlidOffScreenEdgeMask == AIMinXEdgeMaskframe)
-			frame.origin.x += 1;
-		else if (windowSlidOffScreenEdgeMask == AIMinXEdgeMaskframe)
-			frame.origin.x -= 1;
+		switch (windowSlidOffScreenEdgeMask) {
+			case AIMinXEdgeMask:
+				frame.origin.x += 1;
+				break;
+			case AIMaxXEdgeMask:
+				frame.origin.x -= 1;
+				break;
+			case AIMaxYEdgeMax:
+				frame.origin.y -= 1;
+				break;
+			case AIMinYEdgeMax:
+				frame.origin.y += 1;
+				break;
+			default:
+		}
 	}
 	
 	if (windowAnimation) {
