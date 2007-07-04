@@ -39,8 +39,8 @@
 	NSString	*messageString;
 	AIAccount	*account = [responseInfo objectForKey:@"AIAccount"];
 	NSString	*who = [responseInfo objectForKey:@"who"];
-	NSString	*ourHash = [responseInfo objectForKey:@"Outgoing SessionID"];
-	NSString	*theirHash = [responseInfo objectForKey:@"Incoming SessionID"];
+	NSString	*ourHash = [responseInfo objectForKey:@"Our Fingerprint"];
+	NSString	*theirHash = [responseInfo objectForKey:@"Their Fingerprint"];
 	
 	messageString = [NSString stringWithFormat:
 		AILocalizedString(@"%@ has sent you (%@) an unknown encryption fingerprint.\n\n"
@@ -64,8 +64,8 @@
 	NSString	*messageString;
 	AIAccount	*account = [responseInfo objectForKey:@"AIAccount"];
 	NSString	*who = [responseInfo objectForKey:@"who"];
-	NSString	*ourHash = [responseInfo objectForKey:@"Outgoing SessionID"];
-	NSString	*theirHash = [responseInfo objectForKey:@"Incoming SessionID"];
+	NSString	*ourHash = [responseInfo objectForKey:@"Our Fingerprint"];
+	NSString	*theirHash = [responseInfo objectForKey:@"Their Fingerprint"];
 
 	messageString = [NSString stringWithFormat:
 		AILocalizedString(@"Fingerprint for you (%@): %@\n\n"
@@ -119,7 +119,7 @@
 {
 	BOOL	shouldCloseWindow = YES;
 	
-	if (userInfo && [userInfo objectForKey:@"Fingerprint"]) {
+	if (userInfo && [userInfo objectForKey:@"Their Fingerprint"]) {
 		BOOL	fingerprintAccepted;
 		
 		if (returnCode == AITextAndButtonsOtherReturn) {
