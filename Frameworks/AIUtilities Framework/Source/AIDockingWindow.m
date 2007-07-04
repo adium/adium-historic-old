@@ -119,7 +119,6 @@
 				}
 			}
 			
-			NSLog(@"Grabbed it!");
 			[self setFrame:dockedWindowFrame display:YES animate:YES];
 			oldWindowFrame = dockedWindowFrame;
 			
