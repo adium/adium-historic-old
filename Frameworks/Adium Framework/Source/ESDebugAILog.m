@@ -81,5 +81,6 @@ void AILogWithPrefix (const char *prefix, NSString *format, ...) {
 //Insert a fake symbol so that plugins using AILog() don't crash.
 #undef AILog
 void AILog (NSString *format, ...) {};
+#undef AILogWithPrefix
 void AILogWithPrefix (char *sig, NSString *format, ...) {};
 #endif
