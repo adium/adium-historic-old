@@ -455,14 +455,25 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	NSString			*encodedString;
 	
 	if (inListObject) {
-		if ([self canSendImagesForChat:[inContentMessage chat]]) {
+		if ([[inContentMessage chat] isSecure] &&
+			aim_sn_is_icq([[[inContentMessage source] UID] UTF8String]) &&
+			aim_sn_is_icq([[inListObject UID] UTF8String])) {
+			/* If we're an ICQ account and they're an ICQ account, we need to strip HTML now since the 
+			 * encrypted message won't be able to be processed by libpurple */
+			encodedString = [[inAttributedString attributedStringByConvertingLinksToStrings] string];
+
+		} else if ([self canSendImagesForChat:[inContentMessage chat]]) {
 			//Encode to HTML and look for outgoing images if the chat supports it
 			encodedString = [encoderCloseFontTags encodeHTML:inAttributedString
 												  imagesPath:@"/tmp"];
 			
 			if ([encodedString rangeOfString:@"<IMG " options:NSCaseInsensitiveSearch].location != NSNotFound) {
-				//There's an image... we need to see about a Direct Connect, aborting the send attempt if none is established 
-				//and sending after it is if one is established
+				/* There's an image... we need to see about a Direct Connect, aborting the send attempt if none is established 
+				 * and sending after it is if one is established.
+				 *
+				 * Note that an encrypted session won't ever be able to succeed with a DirectIM at present, because
+				 * libpurple only sees the encrypted message :(
+				 */
 				
 				//Check for a PeerConnection for a direct IM currently open
 				PeerConnection	*conn;
