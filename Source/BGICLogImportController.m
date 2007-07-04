@@ -106,13 +106,13 @@
 	{
 		NSMutableArray *attributeKeys = [NSMutableArray arrayWithObjects:@"sender", @"time", nil];
 		NSMutableArray *attributeValues = [NSMutableArray arrayWithObjects:
-			([[[[rawChat objectAtIndex:2] objectAtIndex:i] sender] senderID] != nil ? [[[[rawChat objectAtIndex:2] objectAtIndex:i] sender] senderID] : @""), 
-			[[[[[rawChat objectAtIndex:2] objectAtIndex:i] date] dateWithCalendarFormat:nil timeZone:nil] ISO8601DateString], 
+			([[(InstantMessage *)[[rawChat objectAtIndex:2] objectAtIndex:i] sender] senderID] != nil ? [[(InstantMessage *)[[rawChat objectAtIndex:2] objectAtIndex:i] sender] senderID] : @""), 
+			[[[(InstantMessage *)[[rawChat objectAtIndex:2] objectAtIndex:i] date] dateWithCalendarFormat:nil timeZone:nil] ISO8601DateString], 
 			nil];
 		
 		NSMutableString *chatContents = [[[xhtmlDecoder encodeHTML:[[[rawChat objectAtIndex:2] objectAtIndex:i] text] imagesPath:nil] mutableCopy] autorelease];
 		
-		[appender addElementWithName:(![[[[[rawChat objectAtIndex:2] objectAtIndex:i] sender] senderID] isEqual:@""] ? @"message" : @"event")
+		[appender addElementWithName:(![[[(InstantMessage *)[[rawChat objectAtIndex:2] objectAtIndex:i] sender] senderID] isEqual:@""] ? @"message" : @"event")
 					  escapedContent:chatContents
 					   attributeKeys:([attributeValues count] == 2 ? attributeKeys : nil)
 					 attributeValues:([attributeValues count] == 2 ? attributeValues : nil)];
