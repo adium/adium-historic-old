@@ -208,7 +208,7 @@
 	[tabView_tabBar setSelectsTabsOnMouseDown:YES];
 	[tabView_tabBar setAutomaticallyAnimates:NO];
 	[tabView_tabBar setAllowsScrubbing:YES];
-	[tabView_tabBar setTearOffStyle:PSMTabBarTearOffMiniwindow];
+	[tabView_tabBar setTearOffStyle:PSMTabBarTearOffAlphaWindow];
 }
 
 //Frames
