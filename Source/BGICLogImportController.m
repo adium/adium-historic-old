@@ -17,9 +17,12 @@
 #import "BGICLogImportController.h"
 #import "AIXMLAppender.h"
 #import "AIHTMLDecoder.h"
+#import <Adium/AILoginControllerProtocol.h>
+#import <AIUtilities/NSCalendarDate+ISO8601Unparsing.h>
 
 // InstantMessage and other iChat transcript classes are from Spiny Software's Logorrhea, used with permission.
 #import "InstantMessage.h"
+#import "Presentity.h"
 
 // these defines were copied from AILoggerPlugin and should be shared between them
 #define XML_LOGGING_NAMESPACE		@"http://purl.org/net/ulf/ns/0.4-02"
