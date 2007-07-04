@@ -813,6 +813,11 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	[windowAnimation release]; windowAnimation = nil;
 }
 
+- (BOOL)keepListOnScreenWhenSliding
+{
+	return NO;
+}
+
 /*!
  * @brief Slide the window to a given point
  *
@@ -836,6 +841,14 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	if (yOff > 0) targetPoint.y -= yOff;
 	
 	frame.origin = targetPoint;
+	
+	if ((windowSlidOffScreenEdgeMask != AINoEdges) &&
+		[self keepListOnScreenWhenSliding]) {
+		if (windowSlidOffScreenEdgeMask == AIMinXEdgeMaskframe)
+			frame.origin.x += 1;
+		else if (windowSlidOffScreenEdgeMask == AIMinXEdgeMaskframe)
+			frame.origin.x -= 1;
+	}
 	
 	if (windowAnimation) {
 		[windowAnimation stopAnimation];
