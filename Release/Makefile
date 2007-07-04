@@ -9,7 +9,7 @@
 # - make all
 ###########
 
-VERSION=1.1svn
+VERSION=1.1b1
 BETA=TRUE
 
 ###########
