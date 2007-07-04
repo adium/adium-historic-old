@@ -1136,6 +1136,25 @@
 		B747E987058D144C00A9F037 /* AILaTeXPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B747E985058D144C00A9F037 /* AILaTeXPlugin.m */; };
 		B7FD6C170596550F000C4D9D /* SQLLogging.plist in Resources */ = {isa = PBXBuildFile; fileRef = B7FD6C160596550F000C4D9D /* SQLLogging.plist */; };
 		C44BA7830AAB696400C7504F /* SetupAssistantBoxBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C44BA7810AAB696400C7504F /* SetupAssistantBoxBackgroundView.m */; };
+		C4D29CB30C3C2E22001545A2 /* AddressBookUtils.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C4D29CA70C3C2E22001545A2 /* AddressBookUtils.h */; };
+		C4D29CB40C3C2E22001545A2 /* AddressBookUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D29CA80C3C2E22001545A2 /* AddressBookUtils.m */; };
+		C4D29CB50C3C2E22001545A2 /* Buddy.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C4D29CA90C3C2E22001545A2 /* Buddy.h */; };
+		C4D29CB60C3C2E22001545A2 /* Buddy.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D29CAA0C3C2E22001545A2 /* Buddy.m */; };
+		C4D29CB70C3C2E22001545A2 /* Chat.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C4D29CAB0C3C2E22001545A2 /* Chat.h */; };
+		C4D29CB80C3C2E22001545A2 /* Chat.mm in Sources */ = {isa = PBXBuildFile; fileRef = C4D29CAC0C3C2E22001545A2 /* Chat.mm */; };
+		C4D29CB90C3C2E22001545A2 /* InstantMessage.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C4D29CAD0C3C2E22001545A2 /* InstantMessage.h */; };
+		C4D29CBA0C3C2E22001545A2 /* InstantMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D29CAE0C3C2E22001545A2 /* InstantMessage.m */; };
+		C4D29CBB0C3C2E22001545A2 /* Person.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C4D29CAF0C3C2E22001545A2 /* Person.h */; };
+		C4D29CBC0C3C2E22001545A2 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D29CB00C3C2E22001545A2 /* Person.m */; };
+		C4D29CBD0C3C2E22001545A2 /* Presentity.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C4D29CB10C3C2E22001545A2 /* Presentity.h */; };
+		C4D29CBE0C3C2E22001545A2 /* Presentity.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D29CB20C3C2E22001545A2 /* Presentity.m */; };
+		C4D29CC30C3C2E3C001545A2 /* BGICImportController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C4D29CBF0C3C2E3C001545A2 /* BGICImportController.h */; };
+		C4D29CC40C3C2E3C001545A2 /* BGICImportController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D29CC00C3C2E3C001545A2 /* BGICImportController.m */; };
+		C4D29CC50C3C2E3C001545A2 /* BGICLogImportController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C4D29CC10C3C2E3C001545A2 /* BGICLogImportController.h */; };
+		C4D29CC60C3C2E3C001545A2 /* BGICLogImportController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D29CC20C3C2E3C001545A2 /* BGICLogImportController.m */; };
+		C4D29CC80C3C2E49001545A2 /* ICImport.nib in Resources */ = {isa = PBXBuildFile; fileRef = C4D29CC70C3C2E49001545A2 /* ICImport.nib */; };
+		C4D29FF30C3C2F61001545A2 /* FileAttributes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C4D29FF10C3C2F61001545A2 /* FileAttributes.h */; };
+		C4D29FF40C3C2F61001545A2 /* FileAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D29FF20C3C2F61001545A2 /* FileAttributes.m */; };
 		DA4B5CDF080FCC080017BF17 /* CoreComponents.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA4B5CDE080FCC080017BF17 /* CoreComponents.plist */; };
 		EE147A6D0896B18800A21377 /* ABSearch.png in Resources */ = {isa = PBXBuildFile; fileRef = EE147A6C0896B18700A21377 /* ABSearch.png */; };
 		EE147A790896B32400A21377 /* ABSearch.nib in Resources */ = {isa = PBXBuildFile; fileRef = EE147A780896B32400A21377 /* ABSearch.nib */; };
@@ -1490,6 +1509,15 @@
 				340C1E780BD59A0500D09235 /* GBImportPlugin.h in CopyFiles */,
 				348477130C1A5CE50019EF08 /* AIAnimatingListOutlineView.h in CopyFiles */,
 				34847ADD0C1A62C40019EF08 /* AIOutlineViewAnimation.h in CopyFiles */,
+				C4D29CB30C3C2E22001545A2 /* AddressBookUtils.h in CopyFiles */,
+				C4D29CB50C3C2E22001545A2 /* Buddy.h in CopyFiles */,
+				C4D29CB70C3C2E22001545A2 /* Chat.h in CopyFiles */,
+				C4D29CB90C3C2E22001545A2 /* InstantMessage.h in CopyFiles */,
+				C4D29CBB0C3C2E22001545A2 /* Person.h in CopyFiles */,
+				C4D29CBD0C3C2E22001545A2 /* Presentity.h in CopyFiles */,
+				C4D29CC30C3C2E3C001545A2 /* BGICImportController.h in CopyFiles */,
+				C4D29CC50C3C2E3C001545A2 /* BGICLogImportController.h in CopyFiles */,
+				C4D29FF30C3C2F61001545A2 /* FileAttributes.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3546,6 +3574,25 @@
 		C4243C930638E4EA007AD2D9 /* BGEmoticonMenuPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = BGEmoticonMenuPlugin.m; path = Source/BGEmoticonMenuPlugin.m; sourceTree = "<group>"; };
 		C44BA7800AAB696300C7504F /* SetupAssistantBoxBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SetupAssistantBoxBackgroundView.h; path = Source/SetupAssistantBoxBackgroundView.h; sourceTree = "<group>"; };
 		C44BA7810AAB696400C7504F /* SetupAssistantBoxBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SetupAssistantBoxBackgroundView.m; path = Source/SetupAssistantBoxBackgroundView.m; sourceTree = "<group>"; };
+		C4D29CA70C3C2E22001545A2 /* AddressBookUtils.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AddressBookUtils.h; sourceTree = "<group>"; };
+		C4D29CA80C3C2E22001545A2 /* AddressBookUtils.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = AddressBookUtils.m; sourceTree = "<group>"; };
+		C4D29CA90C3C2E22001545A2 /* Buddy.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Buddy.h; sourceTree = "<group>"; };
+		C4D29CAA0C3C2E22001545A2 /* Buddy.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = Buddy.m; sourceTree = "<group>"; };
+		C4D29CAB0C3C2E22001545A2 /* Chat.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Chat.h; sourceTree = "<group>"; };
+		C4D29CAC0C3C2E22001545A2 /* Chat.mm */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.cpp.objcpp; path = Chat.mm; sourceTree = "<group>"; };
+		C4D29CAD0C3C2E22001545A2 /* InstantMessage.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = InstantMessage.h; sourceTree = "<group>"; };
+		C4D29CAE0C3C2E22001545A2 /* InstantMessage.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = InstantMessage.m; sourceTree = "<group>"; };
+		C4D29CAF0C3C2E22001545A2 /* Person.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Person.h; sourceTree = "<group>"; };
+		C4D29CB00C3C2E22001545A2 /* Person.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = Person.m; sourceTree = "<group>"; };
+		C4D29CB10C3C2E22001545A2 /* Presentity.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = Presentity.h; sourceTree = "<group>"; };
+		C4D29CB20C3C2E22001545A2 /* Presentity.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = Presentity.m; sourceTree = "<group>"; };
+		C4D29CBF0C3C2E3C001545A2 /* BGICImportController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = BGICImportController.h; path = Source/BGICImportController.h; sourceTree = "<group>"; };
+		C4D29CC00C3C2E3C001545A2 /* BGICImportController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = BGICImportController.m; path = Source/BGICImportController.m; sourceTree = "<group>"; };
+		C4D29CC10C3C2E3C001545A2 /* BGICLogImportController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = BGICLogImportController.h; path = Source/BGICLogImportController.h; sourceTree = "<group>"; };
+		C4D29CC20C3C2E3C001545A2 /* BGICLogImportController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = BGICLogImportController.m; path = Source/BGICLogImportController.m; sourceTree = "<group>"; };
+		C4D29CC70C3C2E49001545A2 /* ICImport.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ICImport.nib; path = Resources/ICImport.nib; sourceTree = "<group>"; };
+		C4D29FF10C3C2F61001545A2 /* FileAttributes.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = FileAttributes.h; sourceTree = "<group>"; };
+		C4D29FF20C3C2F61001545A2 /* FileAttributes.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = FileAttributes.m; sourceTree = "<group>"; };
 		CA25AB3307B4296C00DDBD7E /* fire2adium.php */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.script.php; name = fire2adium.php; path = "Utilities/Log Importers/fire2adium.php"; sourceTree = SOURCE_ROOT; };
 		CA25AB3907B4297A00DDBD7E /* ichat2adium.pl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.script.perl; name = ichat2adium.pl; path = "Utilities/Log Importers/ichat2adium.pl"; sourceTree = SOURCE_ROOT; };
 		CA25AB3F07B4298600DDBD7E /* proteus2adium.pl */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.script.perl; name = proteus2adium.pl; path = "Utilities/Log Importers/proteus/proteus2adium.pl"; sourceTree = SOURCE_ROOT; };
@@ -3857,6 +3904,7 @@
 		29B97314FDCFA39411CA2CEA /* CocAIMe2 */ = {
 			isa = PBXGroup;
 			children = (
+				C4D29C9D0C3C2D90001545A2 /* iChat Importer */,
 				4BE9FFE7055981AB00359B15 /* Adium.pch */,
 				F59DB3D6033EA9CD01A8010A /* AIAdium.h */,
 				F59DB3D7033EA9CD01A8010A /* AIAdium.m */,
@@ -6521,6 +6569,40 @@
 			path = "Plugins/SQL Logger";
 			sourceTree = "<group>";
 		};
+		C4D29C9D0C3C2D90001545A2 /* iChat Importer */ = {
+			isa = PBXGroup;
+			children = (
+				C4D29CC70C3C2E49001545A2 /* ICImport.nib */,
+				C4D29CBF0C3C2E3C001545A2 /* BGICImportController.h */,
+				C4D29CC00C3C2E3C001545A2 /* BGICImportController.m */,
+				C4D29CC10C3C2E3C001545A2 /* BGICLogImportController.h */,
+				C4D29CC20C3C2E3C001545A2 /* BGICLogImportController.m */,
+				C4D29CA00C3C2D9C001545A2 /* From Logorrhea */,
+			);
+			name = "iChat Importer";
+			sourceTree = "<group>";
+		};
+		C4D29CA00C3C2D9C001545A2 /* From Logorrhea */ = {
+			isa = PBXGroup;
+			children = (
+				C4D29FF10C3C2F61001545A2 /* FileAttributes.h */,
+				C4D29FF20C3C2F61001545A2 /* FileAttributes.m */,
+				C4D29CA70C3C2E22001545A2 /* AddressBookUtils.h */,
+				C4D29CA80C3C2E22001545A2 /* AddressBookUtils.m */,
+				C4D29CA90C3C2E22001545A2 /* Buddy.h */,
+				C4D29CAA0C3C2E22001545A2 /* Buddy.m */,
+				C4D29CAB0C3C2E22001545A2 /* Chat.h */,
+				C4D29CAC0C3C2E22001545A2 /* Chat.mm */,
+				C4D29CAD0C3C2E22001545A2 /* InstantMessage.h */,
+				C4D29CAE0C3C2E22001545A2 /* InstantMessage.m */,
+				C4D29CAF0C3C2E22001545A2 /* Person.h */,
+				C4D29CB00C3C2E22001545A2 /* Person.m */,
+				C4D29CB10C3C2E22001545A2 /* Presentity.h */,
+				C4D29CB20C3C2E22001545A2 /* Presentity.m */,
+			);
+			name = "From Logorrhea";
+			sourceTree = "<group>";
+		};
 		CA25AABD07B428ED00DDBD7E /* iChat */ = {
 			isa = PBXGroup;
 			children = (
@@ -7827,6 +7909,7 @@
 				344839380BC862780083723B /* pref-messages.png in Resources */,
 				34483A990BC869680083723B /* AdvancedPreferences.nib in Resources */,
 				07C6EA890C06676400B79CBD /* AdiumHelp in Resources */,
+				C4D29CC80C3C2E49001545A2 /* ICImport.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8404,6 +8487,15 @@
 				340C1E770BD59A0500D09235 /* GBImportPlugin.m in Sources */,
 				348477140C1A5CE50019EF08 /* AIAnimatingListOutlineView.m in Sources */,
 				34847ADE0C1A62C40019EF08 /* AIOutlineViewAnimation.m in Sources */,
+				C4D29CB40C3C2E22001545A2 /* AddressBookUtils.m in Sources */,
+				C4D29CB60C3C2E22001545A2 /* Buddy.m in Sources */,
+				C4D29CB80C3C2E22001545A2 /* Chat.mm in Sources */,
+				C4D29CBA0C3C2E22001545A2 /* InstantMessage.m in Sources */,
+				C4D29CBC0C3C2E22001545A2 /* Person.m in Sources */,
+				C4D29CBE0C3C2E22001545A2 /* Presentity.m in Sources */,
+				C4D29CC40C3C2E3C001545A2 /* BGICImportController.m in Sources */,
+				C4D29CC60C3C2E3C001545A2 /* BGICLogImportController.m in Sources */,
+				C4D29FF40C3C2F61001545A2 /* FileAttributes.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -1,6 +1,5 @@
 {
     IBClasses = (
-        {CLASS = AILinkTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {
             CLASS = AILocalizationButton; 
             LANGUAGE = ObjC; 
@@ -23,7 +22,6 @@
             }; 
             SUPERCLASS = NSTextField; 
         }, 
-        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             ACTIONS = {closeWindow = id; }; 
             CLASS = AIWindowController; 
@@ -32,40 +30,43 @@
         }, 
         {
             ACTIONS = {
-                nextTab = id; 
-                pressedAlternateButton = id; 
-                previousTab = id; 
-                promptForMultiples = id; 
+                cancelLogImport = id; 
+                completeBonjourCreation = id; 
+                deleteLogs = id; 
+                goBack = id; 
+                openHelp = id; 
+                proceed = id; 
+                selectLogAccountDestination = id; 
             }; 
-            CLASS = AdiumSetupWizard; 
+            CLASS = BGICImportController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                accountSelectionLabel = NSTextField; 
+                accountSelectionPopup = NSPopUpButton; 
+                assistantPanes = NSTabView; 
+                backButton = NSButton; 
                 backgroundView = SetupWizardBackgroundView; 
-                "button_alternate" = NSButton; 
-                "button_continue" = NSButton; 
-                "button_goBack" = NSButton; 
-                "popUp_services" = NSPopUpButton; 
-                "progress_processing" = NSProgressIndicator; 
-                tabView = NSTabView; 
-                "textField_addAccount" = NSTextField; 
-                "textField_done" = NSTextField; 
-                "textField_import" = NSTextField; 
-                "textField_password" = NSTextField; 
-                "textField_passwordLabel" = NSTextField; 
-                "textField_serviceLabel" = NSTextField; 
-                "textField_username" = NSTextField; 
-                "textField_usernameLabel" = NSTextField; 
-                "textField_welcome" = NSTextField; 
-                "textView_addAccountMessage" = NSTextView; 
-                "textView_doneMessage" = NSTextView; 
-                "textView_importMessage" = NSTextView; 
-                "textView_welcomeMessage" = NSTextView; 
+                bonjourAccountNameField = NSTextField; 
+                bonjourNamePromptWindow = NSWindow; 
+                cancelImportButton = NSButton; 
+                createStatusGroupsButton = NSButton; 
+                deleteLogsButton = NSButton; 
+                importAccountsButton = NSButton; 
+                importAccountsDetails = NSTextField; 
+                importAccountsProgress = NSProgressIndicator; 
+                importDetails = NSTextField; 
+                importLogsButton = NSButton; 
+                importProgress = NSProgressIndicator; 
+                importStatusButton = NSButton; 
+                importStatusDetails = NSTextField; 
+                importStatusProgress = NSProgressIndicator; 
+                loggingPanes = NSTabView; 
+                proceedButton = NSButton; 
+                titleField = NSTextField; 
             }; 
             SUPERCLASS = AIWindowController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {CLASS = NSButton; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
-        {CLASS = NSTextField; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
         {
             CLASS = SetupAssistantBoxBackgroundView; 
             LANGUAGE = ObjC; 
