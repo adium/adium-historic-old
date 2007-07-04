@@ -28,6 +28,8 @@
 #import "DiskImageUtilities.h"
 #import "AuthorizedTaskManager.h"
 
+#define INSTALL_ADIUM_MANUALLY_MESSAGE	AILocalizedString(@"You will need to install Adium manually; please see Episode 0 at http://www.adiumx.com/screencasts/ for a video tutorial.", "Message shown if Adium can not install automatically. Don't localize the URL.")
+
 static NSString* const kHDIUtilPath = @"/usr/bin/hdiutil";
 
 @interface DiskImageUtilities (PrivateMethods_handleApplicationLaunchFromReadOnlyDiskImage)
@@ -172,11 +174,11 @@ static NSString* const kHDIUtilPath = @"/usr/bin/hdiutil";
       [NSApp activateIgnoringOtherApps:YES];
       
       NSString *displayName = [[NSFileManager defaultManager] displayNameAtPath:mainBundlePath];
-      NSString *msg1template = NSLocalizedString(@"Would you like to copy %@ to your computer's Applications folder and run it from there?", "%@ will be replaced with 'Adium'");
+      NSString *msg1template = AILocalizedString(@"Would you like to copy %@ to your computer's Applications folder and run it from there?", "%@ will be replaced with 'Adium'");
       NSString *msg1 = [NSString stringWithFormat:msg1template, displayName];
-      NSString *msg2 = NSLocalizedString(@"%@ is currently running from the installation disk image. It needs to be copied for full functionality. Copying may replace an older version in the Applications folder.", "%@ will be replaced with 'Adium'.");
-      NSString *btnOK = NSLocalizedString(@"Copy", "Button to copy Adium to the Applications folder from the disk image if needed");
-      NSString *btnCancel = NSLocalizedString(@"Don't Copy", "Button to proceed without copying Adium to the Applications folder");
+      NSString *msg2 = AILocalizedString(@"%@ is currently running from the installation disk image. It needs to be copied for full functionality. Copying may replace an older version in the Applications folder.", "%@ will be replaced with 'Adium'.");
+      NSString *btnOK = AILocalizedString(@"Copy", "Button to copy Adium to the Applications folder from the disk image if needed");
+      NSString *btnCancel = AILocalizedString(@"Don't Copy", "Button to proceed without copying Adium to the Applications folder");
       
       int result = NSRunAlertPanel(msg1, msg2, btnOK, btnCancel, NULL, displayName);
       if (result == NSAlertDefaultReturn) {
@@ -191,7 +193,14 @@ static NSString* const kHDIUtilPath = @"/usr/bin/hdiutil";
                        toDirectoryPath:[appsPaths objectAtIndex:0]];  
           // calls exit(0) on successful copy/launch
         } else {
-          NSLog(@"Cannot make applications folder path");
+			NSLog(@"Cannot make applications folder path");
+			NSRunAlertPanel(AILocalizedString(@"Could not find your Applications folder", "Title of alert displayed if Adium can not find the Applications folder to perform a copy"),
+							INSTALL_ADIUM_MANUALLY_MESSAGE,
+							nil,
+							nil,
+							nil);
+							
+									
         }
       }
     }
@@ -235,11 +244,23 @@ static NSString* const kHDIUtilPath = @"/usr/bin/hdiutil";
       if (err == noErr) {
         exit(0);
       } else {
+		  NSRunAlertPanel(AILocalizedString(@"Could not open Adium after installation", "Title of alert displayed if Adium can not launch after attempting an installation"),
+						  INSTALL_ADIUM_MANUALLY_MESSAGE,
+						  nil,
+						  nil,
+						  nil);
+		  
         NSLog(@"DiskImageUtilities: Error %d launching \"%@\"", err, pathInApps);
       }
     } else {
       // copying to /Applications failed 
       NSLog(@"DiskImageUtilities: Error copying to \"%@\"", pathInApps);     
+		NSRunAlertPanel(AILocalizedString(@"Could not copy to your Applications folder", "Title of alert displayed if Adium can not copy while attempting an installation"),
+						INSTALL_ADIUM_MANUALLY_MESSAGE,
+						nil,
+						nil,
+						nil);
+		
     }
   } else {
     // user cancelled admin auth 
