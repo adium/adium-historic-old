@@ -353,7 +353,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 
 	[plugin pauseIndexing];
 
-	[[self window] setTitle:AILocalizedString(@"Chat Transcripts Viewer",nil)];
+	[[self window] setTitle:AILocalizedString(@"Chat Transcript Viewer",nil)];
     [textField_progress setStringValue:@""];
 
 	//Autosave doesn't do anything yet
