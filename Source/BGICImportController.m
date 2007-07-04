@@ -145,7 +145,7 @@
 			NSString *accountName = [currentAccount objectForKey:@"LoginAs"];
 			
 			AIAccount *newAcct = [[adium accountController] createAccountWithService:
-				([serviceName isEqual:@"Jabber"] ? jabberService : ([accountName rangeOfString:@"mac.com"].length > 0 ? macService : aimService))
+				([serviceName isEqual:@"Jabber"] ? (AIService *)jabberService : ([accountName rangeOfString:@"mac.com"].length > 0 ? (AIService *)macService : (AIService *)aimService))
 																				 UID:accountName];
 			if(newAcct == nil)
 				continue;
@@ -336,7 +336,7 @@
 
 -(IBAction)openHelp:(id)sender
 {
-#pragma warning This help anchor is necessary and needs a corresponding page in the book + the index needs regenerated.
+#warning This help anchor is necessary and needs a corresponding page in the book + the index needs regenerated.
 	NSString *locBookName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleHelpBookName"];
 	[[NSHelpManager sharedHelpManager] openHelpAnchor:@"ichatImport"  inBook:locBookName];
 }
