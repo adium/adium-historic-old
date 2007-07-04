@@ -2091,7 +2091,7 @@ static SLPurpleCocoaAdapter *gaimThread = nil;
 		if (act->data) {
 			dict = [NSDictionary dictionaryWithObjectsAndKeys:
 				[NSValue valueWithPointer:act->callback],@"PurpleMenuActionCallback",
-				[NSValue valueWithPointer:act->callback],@"PurpleMenuActionData",
+				[NSValue valueWithPointer:act->data],@"PurpleMenuActionData",
 				[NSValue valueWithPointer:buddy],@"PurpleBuddy",
 				nil];
 		} else {
