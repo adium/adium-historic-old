@@ -862,10 +862,14 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 										(CFStringRef)@"Content", 
 										kSKIndexInverted,
 										(CFDictionaryRef)textAnalysisProperties);
-		AILog(@"Created a new log index %x at %@ with textAnalysisProperties %@",newIndex,logIndexPathURL,textAnalysisProperties);
-		//Clear the dirty log array in case it was loaded (this can happen if the user mucks with the cache directory)
-		[[NSFileManager defaultManager] removeFileAtPath:[self _dirtyLogArrayPath] handler:NULL];
-		[dirtyLogArray release]; dirtyLogArray = nil;
+		if (newIndex) {
+			AILog(@"Created a new log index %x at %@ with textAnalysisProperties %@",newIndex,logIndexPathURL,textAnalysisProperties);
+			//Clear the dirty log array in case it was loaded (this can happen if the user mucks with the cache directory)
+			[[NSFileManager defaultManager] removeFileAtPath:[self _dirtyLogArrayPath] handler:NULL];
+			[dirtyLogArray release]; dirtyLogArray = nil;
+		} else {
+			AILog(@"AILoggerPlugin warning: SKIndexCreateWithURL() returned NULL");
+		}
     }
 
 	return newIndex;
@@ -876,8 +880,10 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
     NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
 	[logAccessLock lock];
 	if (inIndex) {
+		AILog(@"**** Flushing index %p",inIndex);
 		SKIndexFlush(inIndex);
 		CFRelease(inIndex);
+		AILog(@"**** Finished flushing index %p, and released it",inIndex);
 	}
 	[logAccessLock unlock];
 	[pool release];
@@ -892,6 +898,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 								 toTarget:self
 							   withObject:(id)index_Content];
 		index_Content = nil;
+		AILog(@"**** index_Content is now nil", nil);
 	}
 	[logAccessLock unlock];
 }
@@ -929,8 +936,10 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 		if (logVersion >= CURRENT_LOG_VERSION) {
 			[dirtyLogLock lock];
 			dirtyLogArray = [[NSMutableArray alloc] initWithContentsOfFile:[self _dirtyLogArrayPath]];
+			AILog(@"Got dirty logs %@",dirtyLogArray);
 			[dirtyLogLock unlock];
 		} else {
+			AILog(@"**** Log version upgrade. Resetting");
 			[self resetLogIndex];
 			[[adium preferenceController] setPreference:[NSNumber numberWithInt:CURRENT_LOG_VERSION]
                                                              forKey:KEY_LOG_INDEX_VERSION
