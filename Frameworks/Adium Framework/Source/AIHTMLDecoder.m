@@ -1855,8 +1855,6 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		//Note the space at the end of the tag
 		NSString *imageClassTag = (imageClass ? [NSString stringWithFormat:@"class=\"%@\" ", imageClass] : @"");
 
-		NSLog(@"Uniquifying the html? %i",uniqueifyHTML);
-	
 		if (attachmentImage) {
 			//Include size information if possible
 			NSSize imageSize = [attachmentImage size];
