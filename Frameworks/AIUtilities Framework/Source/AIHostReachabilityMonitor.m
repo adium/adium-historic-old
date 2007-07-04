@@ -227,7 +227,9 @@ static AIHostReachabilityMonitor *singleton = nil;
  */
 static void hostReachabilityChangedCallback(SCNetworkReachabilityRef target, SCNetworkConnectionFlags flags, void *info)
 {
-	BOOL reachable = ((flags & kSCNetworkFlagsReachable) && !(flags & kSCNetworkFlagsConnectionRequired));
+	BOOL reachable =  (flags & kSCNetworkFlagsReachable)			&&
+					 !(flags & kSCNetworkFlagsConnectionRequired)	&&
+					 !(flags & kSCNetworkFlagsIsDirect);
 
 #if CONNECTIVITY_DEBUG
 	NSLog(@"*** hostReachabilityChangedCallback got flags: %c%c%c%c%c%c%c \n",  
