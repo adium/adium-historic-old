@@ -620,6 +620,13 @@
 	[nameView setTitle:alias];
 }
 
+#pragma mark Sliding
+
+- (BOOL)keepListOnScreenWhenSliding
+{
+	return YES;
+}
+
 //Toolbar --------------------------------------------------------------------------------------------------------------
 #pragma mark Toolbar
 //Install our toolbar
