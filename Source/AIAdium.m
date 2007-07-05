@@ -1145,10 +1145,12 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 #define BETA_UPDATE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"beta", @"value", @"Beta or Release Versions", @"visibleValue", nil]
 #define RELEASE_UPDATE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"release", @"value", @"Release Versions Only", @"visibleValue", nil]
 
-#if BETA_RELEASE == FALSE
-#define UPDATE_TYPE_DICT RELEASE_UPDATE_DICT
-#else
+#if BETA_RELEASE
+//For a beta release, always use the beta appcast
 #define UPDATE_TYPE_DICT BETA_UPDATE_DICT
+#else
+//For a release, use the beta appcast if AIAlwaysUpdateToBetas is enabled; otherwise, use the release appcast
+#define UPDATE_TYPE_DICT ([[NSUserDefaults standardUserDefaults] boolForKey:@"AIAlwaysUpdateToBetas"] ? BETA_UPDATE_DICT : RELEASE_UPDATE_DICT)
 #endif
 
 /* This method gives the delegate the opportunity to customize the information that will
@@ -1162,8 +1164,10 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 - (NSMutableArray *)updaterCustomizeProfileInfo:(NSMutableArray *)profileInfo
 {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	
+	//If we're not sending profile information, return just the type of update we're looking for
 	if (![[defaults objectForKey:SUSendProfileInfoKey] boolValue])
-		return [NSArray arrayWithObject:([defaults boolForKey:@"AIAlwaysUpdateToBetas"] ? BETA_UPDATE_DICT : UPDATE_TYPE_DICT)]; 
+		return [NSMutableArray arrayWithObject:UPDATE_TYPE_DICT]; 
 	
 	int now = [[NSCalendarDate date] dayOfCommonEra];
 
@@ -1181,7 +1185,7 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 		
 		[profileInfo addObject:entry];
 		
-		[profileInfo addObject:([defaults boolForKey:@"AIAlwaysUpdateToBetas"] ? BETA_UPDATE_DICT : UPDATE_TYPE_DICT)];
+		[profileInfo addObject:UPDATE_TYPE_DICT];
 		
 		[defaults setBool:YES forKey:@"AIHasSentSparkleProfileInfo"];
 		
@@ -1210,8 +1214,10 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 									nil];
 		[profileInfo addObject:entry];
 		return profileInfo;
+
+	} else {
+		return [NSMutableArray arrayWithObject:UPDATE_TYPE_DICT];
 	}
-	return [NSMutableArray arrayWithObject:UPDATE_TYPE_DICT];
 }
 
 - (NSComparisonResult) compareVersion:(NSString *)newVersion toVersion:(NSString *)currentVersion
