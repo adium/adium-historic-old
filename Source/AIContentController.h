@@ -16,8 +16,9 @@
 
 #import <Adium/AIObject.h>
 #import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
 
-@protocol AIContentController, AITextEntryView, AIEventHandler;
+@protocol AIContentController, AITextEntryView;
 
 @class AdiumMessageEvents, AdiumTyping, AdiumFormatting, AdiumContentFiltering;
 

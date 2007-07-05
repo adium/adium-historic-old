@@ -15,6 +15,7 @@
  */
 
 #import <Adium/AIPlugin.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
 
 #define KEY_ALERT_SOUND_PATH		@"SoundPath"
 
@@ -22,8 +23,6 @@
 #define OTHER_ELLIPSIS				[OTHER stringByAppendingEllipsis]
 
 @class AIEventSoundPreferences;
-
-@protocol AIActionHandler;
 
 @interface AIEventSoundsPlugin : AIPlugin <AIActionHandler> {
 

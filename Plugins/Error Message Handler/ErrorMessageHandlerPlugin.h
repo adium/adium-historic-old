@@ -15,9 +15,9 @@
  */
 
 #import <Adium/AIPlugin.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
 
 @class ErrorMessageWindowController;
-@protocol AIActionHandler, AIEventHandler;
 
 #define ERROR_MESSAGE_CONTACT_ALERT_IDENTIFIER		@"DisplayAlert"
 #define	KEY_ALERT_TEXT								@"AlertText"

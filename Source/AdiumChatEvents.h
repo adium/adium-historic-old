@@ -6,9 +6,9 @@
 //
 
 #import <Adium/AIObject.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
 
 @class AIChat, AIListContact;
-@protocol AIEventHandler;
 
 @interface AdiumChatEvents : AIObject <AIEventHandler> {
 
