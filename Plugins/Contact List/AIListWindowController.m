@@ -851,13 +851,12 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 			case AIMaxXEdgeMask:
 				frame.origin.x -= 1;
 				break;
-			case AIMaxYEdgeMax:
+			case AIMaxYEdgeMask:
 				frame.origin.y -= 1;
 				break;
-			case AIMinYEdgeMax:
+			case AIMinYEdgeMask:
 				frame.origin.y += 1;
 				break;
-			default:
 		}
 	}
 	
