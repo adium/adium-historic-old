@@ -413,10 +413,17 @@
 	}
 
 	//Inform the delegate if we haven't informed it yet
-	if (!notified && [delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]) {
-		[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
-					   withObject:self
-					   withObject:droppedImage];
+	if (!notified) {
+		if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
+			[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)
+						   withObject:self
+						   withObject:[droppedImage PNGRepresentation]];
+
+		} else if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]) {
+			[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
+						   withObject:self
+						   withObject:droppedImage];
+		}
 	}
 }
 
@@ -450,11 +457,10 @@
 		if (image) {
 			NSSize	imageSize = [image size];
 
-			BOOL resized = NO;
 			if ((maxSize.width > 0 && imageSize.width > maxSize.width) ||
 				(maxSize.height > 0 && imageSize.height > maxSize.height)) {
 				image = [image imageByScalingToSize:maxSize];
-				resized = YES;
+				imageData = [image PNGRepresentation];
 			}
 			
 			[self setImage:image];
@@ -465,8 +471,7 @@
 			
 			//Inform the delegate
 			if (delegate) {
-				if (!resized &&
-					[delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
+				if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
 					[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)
 								   withObject:self
 								   withObject:imageData];
@@ -578,11 +583,10 @@
 			image = (imageData ? [[[NSImage alloc] initWithData:imageData] autorelease] : nil);
 			imageSize = (image ? [image size] : NSZeroSize);
 
-			BOOL resized = NO;
 			if ((maxSize.width > 0 && imageSize.width > maxSize.width) ||
 				(maxSize.height > 0 && imageSize.height > maxSize.height)) {
 				image = [image imageByScalingToSize:maxSize];
-				resized = YES;
+				imageData = [image PNGRepresentation];
 			}
 			
 			//Update the image view
@@ -590,8 +594,7 @@
 			
 			//Inform the delegate
 			if (delegate) {
-				if (!resized &&
-					[delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
+				if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
 					[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)
 								   withObject:self
 								   withObject:imageData];
@@ -616,11 +619,9 @@
 {
 	NSSize imageSize = [image size];
 
-	BOOL resized = NO;
 	if ((maxSize.width > 0 && imageSize.width > maxSize.width) ||
 		(maxSize.height > 0 && imageSize.height > maxSize.height)) {
 		image = [image imageByScalingToSize:maxSize];
-		resized = YES;
 	}
 	
 	//Update the NSImageView
