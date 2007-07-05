@@ -40,6 +40,8 @@
             OUTLETS = {
                 "autohide_tabBar" = NSButton; 
                 "checkBox_allowInactiveClosing" = NSButton; 
+                "checkBox_animateDockIcon" = NSButton; 
+                "checkBox_badgeDockIcon" = NSButton; 
                 "checkBox_customNameFormatting" = NSButton; 
                 "checkBox_hide" = NSButton; 
                 "popUp_minimumFontSize" = NSPopUpButton; 
