@@ -168,8 +168,11 @@ static	NSDictionary	*statusTypeDict = nil;
 	enumerator = [inChats objectEnumerator];
 	while ((chat = [enumerator nextObject])) {
 		//Don't do anything if the message is the same as the last message displayed for this chat
-		if ([[previousStatusChangedMessages objectForKey:[chat uniqueChatID]] isEqualToString:message])
+		if ([[previousStatusChangedMessages objectForKey:[chat uniqueChatID]] isEqualToString:message]) {
+			AILog(@"---- We previously displayed for %@ (%@), so no [%@] -- %@.",chat,[chat uniqueChatID], message,
+				  previousStatusChangedMessages);
 			continue;
+		}
 
 		AIContentStatus	*content;
 		
@@ -192,6 +195,7 @@ static	NSDictionary	*statusTypeDict = nil;
 		}
 
 		//Add the object
+		AILog(@"Telling the content controller asbout %@",content);
 		[[adium contentController] receiveContentObject:content];
 		
 		//Keep track of this message for this chat so we don't display it again sequentially
