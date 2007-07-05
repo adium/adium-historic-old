@@ -15,11 +15,10 @@
  */
 
 #import <Adium/AIPlugin.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
 
 #define APPLESCRIPT_CONTACT_ALERT_IDENTIFIER		@"RunApplescript"
 #define KEY_APPLESCRIPT_TO_RUN						@"Applescript To Run"
-
-@protocol AIActionHandler;
 
 @interface ESApplescriptContactAlertPlugin : AIPlugin <AIActionHandler> {
 

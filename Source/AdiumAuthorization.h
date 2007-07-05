@@ -6,9 +6,9 @@
 //
 
 #import <Adium/AIObject.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
 
 @class AIAccount;
-@protocol AIEventHandler;
 
 @interface AdiumAuthorization : AIObject <AIEventHandler> {
 

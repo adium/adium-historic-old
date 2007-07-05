@@ -15,12 +15,10 @@
  */
 
 #import <Adium/AIPlugin.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
 
 #define SHOW_CONTACT_LIST_BEHAVIOR_ALERT_IDENTIFIER		@"Open Message"
 #define KEY_SECONDS_TO_SHOW_LIST	            		@"BehaviorType"
-
-
-@protocol AIActionHandler;
 
 @interface SMContactListShowBehaviorPlugin : AIPlugin <AIActionHandler> {
 

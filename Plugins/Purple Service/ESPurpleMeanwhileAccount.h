@@ -74,8 +74,6 @@ struct mwAwareIdBlock {
 	char *community;  /**< community id (NULL for same community) */
 };
 
-@protocol AIAccount_Files;
-
 @interface ESPurpleMeanwhileAccount : CBPurpleAccount <AIAccount_Files> {
 
 }

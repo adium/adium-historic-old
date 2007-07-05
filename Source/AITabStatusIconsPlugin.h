@@ -16,8 +16,7 @@
 
 #import <Adium/AIPlugin.h>
 #import <Adium/AIContactControllerProtocol.h>
-
-@protocol AIChatObserver;
+#import <Adium/AIChatControllerProtocol.h>
 
 @interface AITabStatusIconsPlugin : AIPlugin <AIListObjectObserver, AIChatObserver> {
 }

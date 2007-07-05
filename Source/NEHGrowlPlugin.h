@@ -15,10 +15,10 @@
  */
 
 #import <Adium/AIPlugin.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
 
 #define KEY_GROWL_ALERT_STICKY @"Growl Sticky"
 
-@protocol AIActionHandler;
 @protocol GrowlApplicationBridgeDelegate;
 
 @interface NEHGrowlPlugin : AIPlugin <AIActionHandler, GrowlApplicationBridgeDelegate> {

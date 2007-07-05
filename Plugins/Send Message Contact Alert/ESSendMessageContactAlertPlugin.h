@@ -15,13 +15,12 @@
  */
 
 #import <Adium/AIPlugin.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
 
 #define KEY_MESSAGE_SEND_TO			@"Destination ID"
 #define KEY_MESSAGE_SEND_FROM		@"Account ID"
 #define KEY_MESSAGE_OTHER_ACCOUNT	@"Allow Other"
 #define KEY_MESSAGE_SEND_MESSAGE	@"Message"
-
-@protocol AIActionHandler;
 
 @interface ESSendMessageContactAlertPlugin : AIPlugin <AIActionHandler> {
     NSDictionary *attributes;

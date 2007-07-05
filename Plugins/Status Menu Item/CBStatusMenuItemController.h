@@ -15,10 +15,10 @@
  */
 
 #import <Adium/AIObject.h>
+#import <Adium/AIChatControllerProtocol.h>
 #import "AIMenuBarIcons.h"
 
 @class AIAccountMenu, AIStatusMenu;
-@protocol AIChatObserver;
 
 @interface CBStatusMenuItemController : AIObject <AIChatObserver>
 {

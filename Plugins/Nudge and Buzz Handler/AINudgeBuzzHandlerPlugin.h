@@ -15,8 +15,7 @@
  */
 
 #import <Adium/AIPlugin.h>
-
-@protocol AIEventHandler;
+#import <Adium/AIContactAlertsControllerProtocol.h>
 
 #define Chat_NudgeBuzzOccured		@"Chat_NudgeBuzzOccured"
 
