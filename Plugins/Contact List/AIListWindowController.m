@@ -857,6 +857,9 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 			case AIMinYEdgeMask:
 				frame.origin.y += 1;
 				break;
+			case AINoEdges:
+				//We'll never get here
+				break;
 		}
 	}
 	
