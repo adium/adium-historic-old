@@ -5,10 +5,10 @@ namespaces/sparkle">
     <title>Adium Updates</title>
     <language>en</language>
     <item>
-        <title>Adium 1.0.4</title>
-        <pubDate>Sunday, May 20th, 2007 11:00:00 GMT-5</pubDate>
-        <sparkle:releaseNotesLink>http://www.adiumx.com/changelogs/1.0.4.html</sparkle:releaseNotesLink> 
-        <enclosure sparkle:md5Sum="0f182a2c88373e6d77c69fa15c910f08" sparkle:version="1.0.4" url="http://adiumx.cachefly.net/Adium_1.0.4.dmg" length="13814791" type="application/octet-stream"/>
+        <title>Adium 1.0.5b2</title>
+        <pubDate>Wednesday, July 4th, 2007 9:00:00 GMT-5</pubDate>
+        <sparkle:releaseNotesLink>http://www.adiumx.com/changelogs/1.0.5b2.html</sparkle:releaseNotesLink> 
+        <enclosure sparkle:md5Sum="ffe0c63d6cc123b223e41ba772813859" sparkle:version="1.0.5b2" url="http://adiumx.cachefly.net/Adium_1.0.4.dmg" length="16619344" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
