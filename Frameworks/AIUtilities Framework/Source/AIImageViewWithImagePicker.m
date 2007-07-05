@@ -11,6 +11,7 @@
 #import "AIImageAdditions.h"
 #import "AIStringUtilities.h"
 #import "AIFileManagerAdditions.h"
+#import "AIApplicationAdditions.h"
 
 #define DRAGGING_THRESHOLD 16.0
 
@@ -525,7 +526,7 @@
 			Class	imagePickerClass;
 			NSPoint	pickerPoint;
 			
-			//10.2 doesn't have NSImagePickerController, so find the class dynamically to avoid link errors if we want 10.2 compatibility
+			//10.2 and 10.5 don't have NSImagePickerController, so find the class dynamically to avoid link errors if we want 10.2/10.5 compatibility
 			imagePickerClass = NSClassFromString(@"NSImagePickerController");
 			pickerController = [[imagePickerClass sharedImagePickerControllerCreate:YES] retain];
 			[pickerController setDelegate:self];
@@ -604,7 +605,7 @@
 		}
 	}
 }
-
+																				  
 /*
  * @brief This gets called when the user selects OK on a new image
  *
@@ -625,24 +626,23 @@
 	//Update the NSImageView
 	[self setImage:image];
 	
-	if (imagePickerClassIsAvailable) {
-		//Inform the delegate
-		if (delegate) {
-			if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
-				[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)
-							   withObject:self
-							   withObject:[image PNGRepresentation]];
-				
-			} else if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]) {
-				[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
-							   withObject:self
-							   withObject:image];
-			}
+	//Inform the delegate, but only if NOT using NSOpenPanel
+	if (delegate && (imagePickerClassIsAvailable && useNSImagePickerController)) {
+		if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
+			[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)
+						   withObject:self
+						   withObject:[image PNGRepresentation]];
+			
+		} else if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]) {
+			[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
+						   withObject:self
+						   withObject:image];
 		}
-		
-		//Add the image to the list of recent images
-		
-		//10.2 doesn't have NSIPRecentPicture, so find the class dynamically to avoid link errors if we want 10.2 compatibility
+	}
+	
+	//Add the image to the list of recent images
+	if (imagePickerClassIsAvailable) {
+		//10.2 and 10.5 don't have NSIPRecentPicture, so find the class dynamically to avoid link errors if we want 10.2/10.5 compatibility
 		Class ipRecentPictureClass = NSClassFromString(@"NSIPRecentPicture");
 		id recentPicture = [[[ipRecentPictureClass alloc] initWithOriginalImage:image] autorelease];
 		[recentPicture setCurrent];
