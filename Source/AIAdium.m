@@ -1204,7 +1204,7 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 {
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	if (![[defaults objectForKey:SUSendProfileInfoKey] boolValue])
-		return [NSArray arrayWithObject:UPDATE_TYPE_DICT]; 
+		return [NSArray arrayWithObject:([defaults boolForKey:@"AIAlwaysUpdateToBetas"] ? BETA_UPDATE_DICT : UPDATE_TYPE_DICT)]; 
 	
 	int now = [[NSCalendarDate date] dayOfCommonEra];
 	
@@ -1222,7 +1222,7 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 		
 		[profileInfo addObject:entry];
 		
-		[profileInfo addObject:[defaults boolForKey:@"AIAlwaysUpdateToBetas"] ? BETA_UPDATE_DICT : UPDATE_TYPE_DICT];
+		[profileInfo addObject:([defaults boolForKey:@"AIAlwaysUpdateToBetas"] ? BETA_UPDATE_DICT : UPDATE_TYPE_DICT)];
 		
 		[defaults setBool:YES forKey:@"AIHasSentSparkleProfileInfo"];
 		
