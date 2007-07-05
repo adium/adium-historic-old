@@ -31,7 +31,9 @@
 	<key>Macmini1,1</key>
 	<string>Mac Mini (Core Solo/Duo)</string>
 	<key>MacPro1,1</key>
-	<string>Mac Pro (August 2006)</string>
+	<string>Mac Pro (four-core)</string>
+	<key>MacPro2,1</key>
+	<string>Mac Pro (eight-core)</string>
 	<key>PowerBook1,1</key>
 	<string>PowerBook G3</string>
 	<key>PowerBook2,1</key>

@@ -14,6 +14,7 @@ NSString *SUHostAppName();
 NSString *SUHostAppDisplayName();
 NSString *SUHostAppVersion();
 NSString *SUHostAppVersionString();
+NSString *SUCurrentSystemVersionString();
 
 NSComparisonResult SUStandardVersionComparison(NSString * versionA, NSString * versionB);
 
