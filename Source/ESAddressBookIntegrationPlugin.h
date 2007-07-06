@@ -33,8 +33,6 @@
 
 #define AB_DISPLAYFORMAT_DEFAULT_PREFS			@"AB Display Format Defaults"
 
-@protocol ABImageClient;
-
 @class AIService;
 
 typedef enum {

@@ -8,6 +8,7 @@
 
 #import <Adium/AIControllerProtocol.h>
 #import <Adium/AIListContact.h>
+#import <Adium/AIListObject.h>
 
 #define ListObject_AttributesChanged			@"ListObject_AttributesChanged"
 #define ListObject_StatusChanged				@"ListObject_StatusChanged"
@@ -41,7 +42,7 @@ typedef enum {
     AISortGroupAndSuperGroups
 } AISortMode;
 
-@protocol AIListObjectObserver, AIContainingObject;
+@protocol AIListObjectObserver;
 @class AIListGroup, AIListObject, AIListContact, AIMetaContact, AIService, AIAccount, AISortController;
 
 @protocol AIContactController <AIController>

@@ -15,9 +15,9 @@
  */
 
 #import <Adium/AIObject.h>
+#import <Adium/AIControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 
-@protocol AIController, AIListObjectObserver;
 @class AISortController, AdiumAuthorization;
 
 @interface AIContactController : AIObject <AIContactController, AIListObjectObserver> {

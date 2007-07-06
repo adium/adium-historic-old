@@ -15,8 +15,7 @@
  */
  
 #import <Adium/AIObject.h>
-
-@protocol AIAdium;
+#import <Adium/AIAdiumProtocol.h>
 
 @interface AIWindowController : NSWindowController {
 	NSObject<AIAdium>		*adium;

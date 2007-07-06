@@ -16,9 +16,9 @@
 
 #import <Adium/ESObjectWithStatus.h>
 #import <Adium/AIContentTyping.h>
+#import <Adium/AIListObject.h>
 
 @class AIAccount, AIListObject, AIListContact, AIContentObject, AIEmoticon;
-@protocol AIContainingObject;
 
 #define Chat_WillClose							@"Chat_WillClose"
 #define Chat_DidOpen							@"Chat_DidOpen"

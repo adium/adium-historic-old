@@ -15,8 +15,7 @@
  */
 
 #import <Adium/AIPlugin.h>
-
-@protocol AIContactListTooltipEntry;
+#import <Adium/AIInterfaceControllerProtocol.h>
 
 @interface ESContactClientPlugin : AIPlugin <AIContactListTooltipEntry> {
 	

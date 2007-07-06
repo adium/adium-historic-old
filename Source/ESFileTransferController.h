@@ -17,8 +17,7 @@
 #import <Adium/AIObject.h>
 #import <Adium/AIFileTransferControllerProtocol.h>
 #import <Adium/AIContactAlertsControllerProtocol.h>
-
-@protocol AIController;
+#import <Adium/AIControllerProtocol.h>
 
 //File transfers
 @interface ESFileTransferController : AIObject <AIFileTransferController, AIEventHandler> {
