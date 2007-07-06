@@ -412,7 +412,13 @@
 
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {
-	[self moveSelectedPacksToTrash]; 
+	//Prevent deleting included packs
+	NSRange range = [[selectedEmoticonPack path] rangeOfString:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Emoticons"]];
+	if (range.length > 0)
+		NSBeep();
+	else{
+		[self moveSelectedPacksToTrash];
+	}
 }
 
 -(void)moveSelectedPacksToTrash
