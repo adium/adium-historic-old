@@ -449,6 +449,12 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
     [self release];
 }
 
+- (void)makeActive:(id)sender
+{
+	[[self window] makeKeyAndOrderFront:self];
+}
+
+
 //Contact list brought to front
 - (void)windowDidBecomeKey:(NSNotification *)notification
 {
