@@ -15,7 +15,6 @@
  */
 
 #import <Adium/ESTextAndButtonsWindowController.h>
-//#import <Adium/AIDockController.h>
 
 #define TEXT_AND_BUTTONS_WINDOW_NIB   @"TextAndButtonsWindow"
 
