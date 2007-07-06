@@ -15,12 +15,11 @@
  */
 
 #import <Adium/AIObject.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 
 @class AIWebKitMessageViewPlugin, AIWebkitMessageViewStyle, AIContentObject, ESWebView, DOMDocument;
 @class AIChat, AIContentObject;
 @class AIWebKitDelegate;
-
-@protocol AIMessageDisplayController;
 
 /*!
  *	@class AIWebKitMessageViewController AIWebKitMessageViewController.h

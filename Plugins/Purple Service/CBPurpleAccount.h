@@ -17,7 +17,6 @@
 #import <Adium/AIAccount.h>
 #import <AdiumLibpurple/PurpleCommon.h>
 
-@protocol AIAccount_Privacy;
 @class SLPurpleCocoaAdapter, ESFileTransfer, AIService, AIContentMessage, AIStatus, AIWindowController;
 
 @interface CBPurpleAccount : AIAccount <AIAccount_Privacy>

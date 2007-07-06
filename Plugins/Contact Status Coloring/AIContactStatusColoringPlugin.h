@@ -16,8 +16,7 @@
 
 #import <Adium/AIPlugin.h>
 #import <Adium/AIContactControllerProtocol.h>
-
-@protocol AIFlashObserver;
+#import <Adium/AIInterfaceControllerProtocol.h>
 
 @interface AIContactStatusColoringPlugin : AIPlugin <AIListObjectObserver, AIFlashObserver> {
     NSMutableSet	*flashingListObjects;

@@ -16,8 +16,7 @@
 
 #import <Adium/AIObject.h>
 #import <Adium/AIDockControllerProtocol.h>
-
-@protocol AIDockController, AIFlashObserver;
+#import <Adium/AIInterfaceControllerProtocol.h>
 
 @interface AIDockController: AIObject <AIDockController, AIFlashObserver> {
     NSTimer 				*animationTimer;

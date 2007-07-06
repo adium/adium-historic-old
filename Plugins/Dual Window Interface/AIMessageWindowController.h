@@ -15,6 +15,7 @@
  */
 
 #import <Adium/AIWindowController.h>
+#import <AIUtilities/AIFlexibleToolbarItem.h>
 
 #define AIMessageWindow_ControllersChanged 		@"AIMessageWindow_ControllersChanged"
 #define AIMessageWindow_ControllerOrderChanged 		@"AIMessageWindow_ControllerOrderChanged"
@@ -30,7 +31,6 @@ typedef enum
 
 @class AIMessageSendingTextView, AIMessageTabViewItem, AIMessageViewController, AIDualWindowInterfacePlugin, AIMessageTabSplitView;
 @class PSMTabBarControl, PSMAdiumTabStyle;
-@protocol AIFlexibleToolbarItemDelegate;
 
 @interface AIMessageWindowController : AIWindowController<AIFlexibleToolbarItemDelegate> {
     IBOutlet	NSTabView			*tabView_messages;

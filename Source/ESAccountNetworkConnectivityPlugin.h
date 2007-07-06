@@ -16,8 +16,7 @@
 
 #import <Adium/AIPlugin.h>
 #import <Adium/AIContactControllerProtocol.h>
-
-@protocol AIHostReachabilityObserver;
+#import <AIUtilities/AIHostReachabilityMonitor.h>
 
 @interface ESAccountNetworkConnectivityPlugin : AIPlugin <AIListObjectObserver, AIHostReachabilityObserver> {
 	NSMutableSet			*knownHosts;

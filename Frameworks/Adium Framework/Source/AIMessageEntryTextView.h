@@ -15,11 +15,12 @@
  */
 
 #import <AIUtilities/AISendingTextView.h>
+#import <Adium/AIAdiumProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 
 #define	AIContinuousSpellCheckingWasToggledNotification	@"AIContinuousSpellCheckingWasToggledNotification"
 
 @class AIListContact, AIAccount, AIChat;
-@protocol AITextEntryView, AIAdium;
 
 @interface AIMessageEntryTextView : AISendingTextView <AITextEntryView> {
     NSObject<AIAdium>	*adium;

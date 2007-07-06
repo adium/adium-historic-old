@@ -15,9 +15,9 @@
  */
 
 #import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIAdiumProtocol.h>
 
 @class AIMenuController, AIChat, AIListObject;
-@protocol AIAdium;
 
 @interface AIInterfaceController : NSObject <AIInterfaceController> {
     IBOutlet	NSObject<AIAdium>	*adium;

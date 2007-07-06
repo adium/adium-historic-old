@@ -5,8 +5,7 @@
 //	Assigned to Kiel Gillard (Trac Ticket #316)
 	
 #import <Adium/AIPlugin.h>
-
-@protocol AIContentFilter;
+#import <Adium/AIContentControllerProtocol.h>
 
 typedef enum {
 	AUTODISABLES = 0,

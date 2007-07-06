@@ -14,14 +14,16 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import <Adium/AIAdiumProtocol.h>
+#import <Adium/AIDockControllerProtocol.h>
+#import <Adium/AIEmoticonControllerProtocol.h>
+
 @class  AICorePluginLoader, AICoreComponentLoader, SUUpdater;
 
-@protocol	AIAdium;
 @protocol	AIAccountController, AIChatController, AIContactAlertsController, AIDebugController,
 			AIPreferenceController, AIMenuController, AIApplescriptabilityController, AIStatusController,
-			AIContentController, AIToolbarController, AISoundController, AIDockController,
-			AIFileTransferController, AILoginController, AIInterfaceController, AIContactController,
-			AIEmoticonController;
+			AIContentController, AIToolbarController, AISoundController,
+			AIFileTransferController, AILoginController, AIInterfaceController, AIContactController;
 
 @interface AIAdium : NSObject <AIAdium> {
     IBOutlet	NSObject <AIMenuController>			*menuController;

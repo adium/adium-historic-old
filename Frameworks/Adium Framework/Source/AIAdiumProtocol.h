@@ -6,6 +6,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/AIEmoticonControllerProtocol.h>
 
 #define	BETA_RELEASE TRUE
 
@@ -14,8 +15,7 @@
 @protocol AIAccountController, AIChatController, AIContactAlertsController, AIDebugController,
 		  AIPreferenceController, AIMenuController, AIApplescriptabilityController, AIStatusController,
 		  AIContentController, AIToolbarController, AISoundController, AIDockController,
-		  AIFileTransferController, AILoginController, AIInterfaceController, AIContactController,
-		  AIEmoticonController;
+		  AIFileTransferController, AILoginController, AIInterfaceController, AIContactController;
 
 @protocol AIAdium <NSObject>
 - (NSObject <AIAccountController> *)accountController;

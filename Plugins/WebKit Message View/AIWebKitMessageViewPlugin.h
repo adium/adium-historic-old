@@ -16,6 +16,7 @@
 
 #import <Adium/AIPlugin.h>
 #import <WebKit/WebKit.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 
 /*!
  *	@brief Preference group for webkit display prefs
@@ -88,8 +89,6 @@
 #define NEW_CONTENT_RETRY_DELAY					0.01 
 
 @class ESWebKitMessageViewPreferences, AIChat;
-
-@protocol AIMessageDisplayPlugin, AIMessageDisplayController;
 
 /*!
  *	@class AIWebKitMessageViewPlugin AIWebKitMessageViewPlugin.h

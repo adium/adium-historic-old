@@ -15,6 +15,7 @@
  */
 
 #import <Adium/AIPlugin.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIAbstractListController.h"
 
 #define KEY_LIST_LAYOUT_NAME			@"List Layout Name"
@@ -23,7 +24,6 @@
 #define	CONTACT_LIST_DEFAULTS		@"ContactListDefaults"
 
 @class AIListWindowController, AICLPreferences, ESContactListAdvancedPreferences;
-@protocol AIContactListComponent;
 
 @interface AISCLViewPlugin : AIPlugin <AIContactListComponent> {	
 	AIListWindowController				*contactListWindowController;

@@ -15,10 +15,10 @@
  */
 
 #import "ESChatUserListController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 
 @class AIAccount, AIListContact, AIListObject, AIAccountSelectionView, AIMessageTabSplitView, AIMessageEntryTextView;
 @class AIMessageWindowController;
-@protocol AIMessageDisplayController;
 
 @interface AIMessageViewController : AIObject <AIListControllerDelegate> {
     IBOutlet	NSView					*view_contents;

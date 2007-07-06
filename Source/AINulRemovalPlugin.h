@@ -7,8 +7,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Adium/AIPlugin.h>
-
-@protocol AIContentFilter;
+#import <Adium/AIContentControllerProtocol.h>
 
 @interface AINulRemovalPlugin : AIPlugin <AIContentFilter> {
 

@@ -15,10 +15,10 @@
  */
 
 #import "AIListController.h"
+#import "AIDualWindowInterfacePlugin.h"
 #import <Adium/AIWindowController.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import <AIUtilities/AIFunctions.h>
-
-@protocol AIContactListViewController, AIInterfaceContainer;
 
 typedef enum {
 	AIContactListWindowHidingStyleNone = 0,

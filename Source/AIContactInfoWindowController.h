@@ -15,10 +15,10 @@
  */
  
 #import <Adium/AIWindowController.h>
+#import <Adium/AIAbstractListController.h>
 
 @class ESContactInfoListController, AIModularPaneCategoryView, AIContactInfoImageViewWithImagePicker, AIAutoScrollView,
 	   AIListOutlineView, AIListObject;
-@protocol AIListControllerDelegate;
 
 @interface AIContactInfoWindowController : AIWindowController <AIListControllerDelegate> {	
 	IBOutlet		NSTabView						*tabView_category;
