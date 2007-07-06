@@ -51,5 +51,6 @@ Wesley Underwood
 Zachary West
 Ofri Wolfus
 Brian Dickman
+Jordan Schelew
 
 If you have contributed to Adium and are not on this list, please contact us.
