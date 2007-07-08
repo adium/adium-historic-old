@@ -39,7 +39,7 @@ static AIGuestAccountWindowController *sharedGuestAccountWindowController = nil;
 
 - (void)awakeFromNib
 {
-	[[self window] setTitle:AILocalizedString(@"Connect Guest Account",nil)];
+	[[self window] setTitle:AILocalizedString(@"Connect Guest Account", "Title for the window shown when adding a guest (temporary) account")];
 }
 
 - (void)dealloc
