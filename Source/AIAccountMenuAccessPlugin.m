@@ -37,7 +37,7 @@
 {
 	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self submenuType:AIAccountOptionsSubmenu showTitleVerbs:YES] retain];
 	
-	NSMenuItem	*menuItem = [[NSMenuItem alloc] initWithTitle:[AILocalizedString(@"Connect a Guest Account", nil) stringByAppendingEllipsis]
+	NSMenuItem	*menuItem = [[NSMenuItem alloc] initWithTitle:[AILocalizedString(@"Connect a Guest Account", "Menu item title which opens the window for adding and connecting a guest (temporary) account") stringByAppendingEllipsis]
 													   target:self
 													   action:@selector(showGuestAccountWindow:)
 												keyEquivalent:@""];
