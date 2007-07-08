@@ -31,6 +31,13 @@
 
 @implementation AIAccountProxySettings
 
++ (void)initialize
+{
+	if (self == [AIAccountProxySettings class]) {
+		[self exposeBinding:@"showProxyDetailsControls"];
+	}
+}
+
 /*!
  * @brief Init our account proxy settings
  *
@@ -204,6 +211,16 @@
 	}
 }
 
+- (BOOL)showProxyDetailsControls
+{
+	AdiumProxyType	proxyType = [[popUpButton_proxy selectedItem] tag];
+	BOOL			usingSystemwide = (proxyType == Adium_Proxy_Default_SOCKS5 ||
+									   proxyType == Adium_Proxy_Default_HTTP || 
+									   proxyType == Adium_Proxy_Default_SOCKS4);
+
+	return !usingSystemwide;
+}
+
 /*!
  * @brief Configure dimming of proxy controls
  */
@@ -220,6 +237,9 @@
 	[textField_proxyPortNumber setEnabled:(proxyEnabled && !usingSystemwide)];
 	[textField_proxyUserName setEnabled:(proxyEnabled && !usingSystemwide)];
 	[textField_proxyPassword setEnabled:(proxyEnabled && !usingSystemwide)];
+	
+	[self willChangeValueForKey:@"showProxyDetailsControls"];
+	[self didChangeValueForKey:@"showProxyDetailsControls"];
 }
 
 
