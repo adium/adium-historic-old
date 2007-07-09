@@ -8,8 +8,6 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/AIEmoticonControllerProtocol.h>
 
-#define	BETA_RELEASE TRUE
-
 @class AICoreComponentLoader;
 
 @protocol AIAccountController, AIChatController, AIContactAlertsController, AIDebugController,

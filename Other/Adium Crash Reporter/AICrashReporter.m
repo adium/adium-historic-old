@@ -415,9 +415,11 @@
 							AILocalizedString(@"Cancel",nil),
 							nil) == NSAlertDefaultReturn) {
 			shouldRelaunchAdium = NO;
-			[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:(BETA_RELEASE ?
-																		 ADIUM_UPDATE_BETA_URL :
-																		 ADIUM_UPDATE_URL)]];
+#ifdef BETA_RELEASE
+			[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_UPDATE_BETA_URL]];
+#else
+			[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_UPDATE_URL]];
+#endif
 		}
 	}
 
@@ -463,10 +465,10 @@
 	[self finishWithAcceptableVersion:!isNewVersion newVersionString:versionString];
 }
 
-#if BETA_RELEASE == FALSE
-#define UPDATE_TYPE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"release", @"value", @"Release Versions Only", @"visibleValue", nil]
-#else
+#ifdef BETA_RELEASE
 #define UPDATE_TYPE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"beta", @"value", @"Beta or Release Versions", @"visibleValue", nil]
+#else
+#define UPDATE_TYPE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"release", @"value", @"Release Versions Only", @"visibleValue", nil]
 #endif
 
 /* This method gives the delegate the opportunity to customize the information that will
