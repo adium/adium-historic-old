@@ -90,7 +90,7 @@ static int nextChatNumber = 0;
 //Big image
 - (NSImage *)chatImage
 {
-	AIListObject 	*listObject = [self listObject];
+	AIListContact 	*listObject = [self listObject];
 	NSImage			*image = nil;
 
 	if (listObject) {
