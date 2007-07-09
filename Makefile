@@ -15,11 +15,7 @@ RM=rm
 .PHONY: all adium clean localizable-strings latest
 
 adium:
-	xcodebuild -project Adium.xcodeproj -configuration $(BUILDCONFIGURATION) build
-
-SQLLogger:
-	    xcodebuild -project Adium.xcodeproj -configuration $(BUILDCONFIGURATION) -target "SQL Logger" build
-	    cp -R "build/SQL Logger.adiumPlugin" ~/Library/Application\ Support/Adium\ 2.0/Plugins/
+	xcodebuild -project Adium.xcodeproj -configuration $(BUILDCONFIGURATION) CFLAGS="$(ADIUM_CFLAGS)" build
 
 #install:
 #	    cp -R build/Adium.app ~/Applications/
