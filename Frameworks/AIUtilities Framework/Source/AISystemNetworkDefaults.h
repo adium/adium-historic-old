@@ -10,7 +10,6 @@
 //  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
-//Proxy types
 /*
  * Proxy types for <tt>AISystemNetworkDefaults</tt>
  */
@@ -22,8 +21,7 @@ typedef enum
 	Proxy_SOCKS4	= 3, /**< SOCKS4 proxy */
 	Proxy_SOCKS5	= 4, /**< SOCKS5 proxy */
 	Proxy_FTP		= 5, /**< FTP proxy */
-	Proxy_RTSP		= 6, /**< RTSP proxy */
-	Proxy_Gopher	= 7 /**< Gopher proxy */
+	Proxy_RTSP		= 6  /**< RTSP proxy */
 } ProxyType;
 
 /*!

@@ -210,7 +210,8 @@ static AIKeychain *lastKnownDefaultKeychain = nil;
 	SecKeychainRef aKeychainRef = [self copyDefaultSecKeychainRef_error:outError];
 
 	if (aKeychainRef) {
-		if (aKeychainRef != [lastKnownDefaultKeychain keychainRef]) {
+		if (!lastKnownDefaultKeychain ||
+			([lastKnownDefaultKeychain keychainRef] && (aKeychainRef != [lastKnownDefaultKeychain keychainRef]))) {
 			[lastKnownDefaultKeychain release];
 			lastKnownDefaultKeychain = [[self alloc] init];
 		}
@@ -220,6 +221,7 @@ static AIKeychain *lastKnownDefaultKeychain = nil;
 		return [[lastKnownDefaultKeychain retain] autorelease];
 
 	} else {
+		NSLog(@"No default keychain!");
 		return nil;
 	}
 }
@@ -714,36 +716,44 @@ static AIKeychain *lastKnownDefaultKeychain = nil;
 	return password;
 }
 
-- (NSDictionary *)dictionaryFromKeychainForServer:(NSString *)server error:(out NSError **)outError
+- (NSDictionary *)dictionaryFromKeychainForServer:(NSString *)server protocol:(SecProtocolType)protocol error:(out NSError **)outError
 {
 	NSDictionary *result = nil;
 
 	//search for keychain items whose server is our key.
 	SecKeychainSearchRef search = NULL;
+
 	struct SecKeychainAttribute searchAttrs[] = {
 		{
 			.tag    = kSecServerItemAttr,
 			.length = [server length],
-			.data   = [server dataUsingEncoding:NSUTF8StringEncoding],
+			.data   = (void *)[server UTF8String],
+		},
+		{
+			.tag    = kSecProtocolItemAttr,
+			.length = sizeof(SecProtocolType),
+			.data   = &protocol,
 		}
 	};
 	struct SecKeychainAttributeList searchAttrList = {
-		.count = 1,
+		.count = 2,
 		.attr  = searchAttrs,
 	};
 	/* If keychainRef is NULL, the users's default keychain search list will be used */
 	OSStatus err = SecKeychainSearchCreateFromAttributes(keychainRef, kSecInternetPasswordItemClass, &searchAttrList, &search);
 	if (err == noErr) {
 		SecKeychainItemRef item = NULL;
+			
 		err = SecKeychainSearchCopyNext(search, &item);
 		if (err == errSecItemNotFound) {
+			//No matching server found
 		} else if (err == noErr) {
-			//output storage.
+			//Output storage.
 			struct SecKeychainAttributeList *attrList = NULL;
 			UInt32 passwordLength = 0U;
 			void  *passwordBytes = NULL;
 
-			//first, grab the username.
+			//First, grab the username.
 			UInt32    tags[] = { kSecAccountItemAttr };
 			UInt32 formats[] = { CSSM_DB_ATTRIBUTE_FORMAT_STRING };
 			struct SecKeychainAttributeInfo info = {
@@ -764,12 +774,20 @@ static AIKeychain *lastKnownDefaultKeychain = nil;
 					username, @"Username",
 					password, @"Password",
 					nil];
+			} else {
+				NSLog(@"Error extracting infomation from keychain item");
 			}
 
 			SecKeychainItemFreeAttributesAndData(attrList, passwordBytes);
-			CFRelease(item);
+			if (item) CFRelease(item);
+
+		} else {
+			NSLog(@"%@: Eror in SecKeychainSearchCopyNext(); err is %i",self,err);	
 		}
-		CFRelease(search);
+		if (search)	CFRelease(search);
+
+	} else {
+		NSLog(@"%@: Could not create search; err is %i",self,err);
 	}
 
 	return result;
