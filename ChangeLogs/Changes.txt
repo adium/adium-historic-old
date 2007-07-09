@@ -1,6 +1,6 @@
 				Adium X Version History
 				-----------------------
-Version 1.0.5
+Version 1.0.5 (7/9/2007)
  * Fixed inadvertent deletion of the chat transcript index after opening and closing the chat transcript viewer; this could lead to performing a full, slow re-index when next it was used (#7037)
  * Fixed retrieval of user name and password for systemwide proxy settings when the proxy requires authentication. (#6998)
  * Fixed display of the fingerprint when verifying an OTR fingerprint. (#7001)
