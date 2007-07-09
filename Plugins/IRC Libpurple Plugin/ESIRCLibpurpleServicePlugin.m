@@ -22,6 +22,11 @@ extern BOOL purple_init_irc_plugin(void);
 	purple_init_irc_plugin();
 }
 
+- (void)loadLibpurplePlugin
+{
+	//No action needed
+}
+
 - (void)dealloc
 {
 	[ircService release];
