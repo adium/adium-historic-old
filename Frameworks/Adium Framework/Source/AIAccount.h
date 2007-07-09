@@ -47,7 +47,7 @@
 //Proxy types
 typedef enum
 {
-	Adium_Proxy_HTTP,
+	Adium_Proxy_HTTP = 0,
 	Adium_Proxy_SOCKS4,
 	Adium_Proxy_SOCKS5,
 	Adium_Proxy_Default_HTTP,
