@@ -7,8 +7,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-#define	BETA_RELEASE FALSE
-
 @class AICoreComponentLoader;
 
 @protocol AIAccountController, AIChatController, AIContactAlertsController, AIDebugController,
