@@ -1145,7 +1145,7 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 #define BETA_UPDATE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"beta", @"value", @"Beta or Release Versions", @"visibleValue", nil]
 #define RELEASE_UPDATE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"release", @"value", @"Release Versions Only", @"visibleValue", nil]
 
-#if BETA_RELEASE
+#ifdef BETA_RELEASE
 //For a beta release, always use the beta appcast
 #define UPDATE_TYPE_DICT BETA_UPDATE_DICT
 #else
