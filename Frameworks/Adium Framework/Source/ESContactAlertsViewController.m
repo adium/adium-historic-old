@@ -62,6 +62,10 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 
 		//Edit, right justified and far enough away from Remove that it can't conceivably overlap
 		oldFrame = [button_edit frame];
+		
+		/* Note: This is using the "Buttons" table from the main bundle. The string gets into the strings file there from other parts of Adium;
+		 * this is incorrect but not particularly worth fixing.
+		 */
 		[button_edit setTitle:AILocalizedStringFromTable(@"Edit", @"Buttons", "Verb 'edit' on a button")];
 		[button_edit sizeToFit];
 		newFrame = [button_edit frame];
