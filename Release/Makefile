@@ -1,16 +1,22 @@
 ###########
 # What to do before running this script:
 # - openUp needs to be installed.
-# - Set VERSION and BETA below.
-#       The Adium plists will automatically updated to match these values.
-# - To enable beta, also edit Source/AIAdium.h, and set BETA_RELEASE to TRUE. Set it to FALSE when doing a final release.
+# - Set VERSION, BUILD_IN_DEBUG_MODE, and BETA below.
+#    * The Adium plists will automatically updated to match these values.
+#    * BETA should be TRUE for all beta builds and FALSE for all releases.
+#      It primarily affects the appcast used by Adium for detecting updates.
+#    * BUILD_IN_DEBUG_MODE should be set to FALSE for the last beta
+#      in addition to the release itself. If FALSE, debug logging is disabled
+#      and certain space optimizations for nibs and strings are done which
+#      also prevent modification.
 #
 # How to run this script:
 # - make all
 ###########
 
 VERSION=1.1b1
-BETA=TRUE
+BUILD_IN_DEBUG_MODE=FALSE
+BETA=FALSE
 
 ###########
 # To release!
@@ -29,27 +35,41 @@ BETA=TRUE
 # No need for changes below this point
 ###########
 
+###########
+# Variables
+###########
 SRC_DIR=..
 BUILD_DIR=build
 ART_DIR=Artwork
 ADIUM_DIR=$(BUILD_DIR)/Adium
 RELEASE_NAME=Adium_$(VERSION)
-ifeq ($(BETA),TRUE)
+
+ifeq ($(BUILD_IN_DEBUG_MODE),TRUE)
     BUILDSTYLE=Deployment-Debug
 else
     BUILDSTYLE=Deployment
 endif
+
 BUILDFLAGS="BUILDCONFIGURATION=$(BUILDSTYLE)"
+ifeq ($(BETA),TRUE)
+	BUILDFLAGS="$(BUILDFLAGS) CFLAGS=-DBETA_RELEASE"
+endif
+
 PRODUCT_DIR=$(shell defaults read com.apple.Xcode PBXProductDirectory 2> /dev/null)
+
 ifeq ($(strip $(PRODUCT_DIR)),)
 	ADIUM_BUILD_DIR=$(SRC_DIR)/build/$(BUILDSTYLE)
 else
 	TARGET_BUILD_DIR=$(PRODUCT_DIR)/$(BUILDSTYLE)
 	ADIUM_BUILD_DIR=$(TARGET_BUILD_DIR)
 endif
+
 PLIST_DIR=`pwd`/../Plists
 ADIUM_PLIST=$(PLIST_DIR)/Adium_2
 
+###########
+# Targets
+###########
 .PHONY: all all-withlocalchanges all-withlocalchanges-noclean update assertnochanges assertnoconflicts version compile clean release source prepare-release-bundle createfolder diskimage
 
 all: update assertnochanges version clean compile release
@@ -96,7 +116,7 @@ prepare-release-bundle:
 
 	@# delete unneeded nib files for non-beta builds
 	@echo Cleaning Adium.app for release
-ifeq ($(BETA),FALSE)
+ifeq ($(BUILD_IN_DEBUG_MODE),FALSE)
 	find $(BUILD_DIR) \( -name classes.nib -or -name info.nib \) -type f -delete
 endif
 	
