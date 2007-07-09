@@ -94,7 +94,7 @@ static int nextChatNumber = 0;
 	NSImage			*image = nil;
 
 	if (listObject) {
-		image = [listObject userIcon];
+		image = [[listObject parentContact] userIcon];
 		if (!image) image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconNormal];
 	} else {
 		image = [AIServiceIcons serviceIconForObject:[self account] type:AIServiceIconLarge direction:AIIconNormal];
