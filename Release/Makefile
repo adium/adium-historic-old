@@ -16,7 +16,7 @@
 
 VERSION=1.1b1
 BUILD_IN_DEBUG_MODE=TRUE
-BETA=FALSE
+BETA=TRUE
 
 ###########
 # To release!
