@@ -464,13 +464,14 @@
 
 /*!	@brief Retrieves an Internet password (dictionary method).
  *
- *	Wraps \c SecKeychainFindInternetPassword.
+ * This method returns a dictionary with both the username and password for connecting to the specified server/protocol
+ * combination.
  *
  *	@param server The server that the password can be used to log into.
  *	@param outError On return, a pointer to either \c nil (hopefully) or an \c NSError describing what went wrong.
  *	@return A dictionary containing two keys: @"Username" (account), @"Password". If no matching keychain item exists, \c nil is returned.
  */
-- (NSDictionary *)dictionaryFromKeychainForServer:(NSString *)server error:(out NSError **)outError;
+- (NSDictionary *)dictionaryFromKeychainForServer:(NSString *)server protocol:(SecProtocolType)protocol error:(out NSError **)outError;
 
 //------------------------------------------------------------------------------
 /*!	@brief Adds, changes, or deletes an Internet password.
