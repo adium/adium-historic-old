@@ -8,5 +8,7 @@
 	<true/>
 	<key>AutoConnect</key>
 	<true/>
+	<key>Proxy Type</key>
+	<real>4</real>
 </dict>
 </plist>
