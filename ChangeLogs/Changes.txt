@@ -1,6 +1,34 @@
 				Adium X Version History
 				-----------------------
-Version 1.0.4
+Version 1.0.5
+ * Fixed inadvertent deletion of the chat transcript index after opening and closing the chat transcript viewer; this could lead to performing a full, slow re-index when next it was used (#7037)
+ * Fixed retrieval of user name and password for systemwide proxy settings when the proxy requires authentication. (#6998)
+ * Fixed display of the fingerprint when verifying an OTR fingerprint. (#7001)
+ * Fixed a potential crash when doing text-to-speech
+ * Fixed a crash when selecting 'undo' after closing a message window
+ * Fixed display of ICQ to ICQ messages when utilizing OTR (#6901)
+ * Fixed installation of AdiumLibpurplePlugins
+ * Updated to libpurple 2.0.2 (from 2.0.0)
+   * Moving an ICQ buddy from one group to another no longer
+     re-requests authorization from that person
+   * Fixed SOCKS5 bug which caused Jabber file receiving to fail
+   * Remove MSN's random "Authorization Failed" dialogs
+   * Fix MSN to correctly detect incorrect passwords
+   * Get User Info on MSN is now more reliable & accurate
+   * Fix for some QQ authentication problems
+   * Prevent "Logged in:" times for AIM buddies being ridiculously high
+   * Improve ICQ encoding support for some non-latin languages
+   * Fix for buddy icons disappearing
+   * Don't escape html entities in Yahoo! system messages
+   * Receives notifications when XMPP buddies send "leaving chat"
+     messages
+   * Fix error messages when joining XMPP chats
+   * File transfer progress for transfers on MSN is now correctly displayed
+   * Fix Open Hotmail Inbox for MSN to work more reliably
+   * Google Talk accounts will not import buddies from your Gmail address
+     book
+
+Version 1.0.4 (5/20/2007)
  * Fixed a crash introduced in 1.0.3 which could occur when accounts disconnected or status changed
  * Fixed a crash introduced in 1.0.3 which could occur after a chat is closed
  * Fixed group chat when message history is enabled
