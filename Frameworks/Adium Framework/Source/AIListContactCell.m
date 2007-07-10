@@ -134,6 +134,20 @@
 		width += SERVICE_ICON_LEFT_PAD + SERVICE_ICON_RIGHT_PAD;
 	}
 	
+	if ((userIconVisible && (userIconPosition == LIST_POSITION_FAR_LEFT || userIconPosition == LIST_POSITION_LEFT)) ||
+		(serviceIconsVisible && (serviceIconPosition == LIST_POSITION_FAR_LEFT || serviceIconPosition == LIST_POSITION_LEFT)) ||
+		(statusIconsVisible && (statusIconPosition == LIST_POSITION_FAR_LEFT || statusIconPosition == LIST_POSITION_LEFT))) {
+		//Something is on the left. Give TEXT_WITH_IMAGES_LEFT_PAD between that and the display name
+		width += TEXT_WITH_IMAGES_LEFT_PAD;
+	}
+	
+	if ((userIconVisible && (userIconPosition == LIST_POSITION_FAR_RIGHT || userIconPosition == LIST_POSITION_RIGHT)) ||
+		(serviceIconsVisible && (serviceIconPosition == LIST_POSITION_FAR_RIGHT || serviceIconPosition == LIST_POSITION_RIGHT)) ||
+		(statusIconsVisible && (statusIconPosition == LIST_POSITION_FAR_RIGHT || statusIconPosition == LIST_POSITION_RIGHT))) {
+		//Something is on the right. Give TEXT_WITH_IMAGES_LEFT_PAD between that and the display name
+		width += TEXT_WITH_IMAGES_RIGHT_PAD;
+	}
+
 	return width + 1;
 }
 
@@ -340,17 +354,17 @@
 	if (statusIconPosition == LIST_POSITION_RIGHT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_RIGHT];
 	if (serviceIconPosition == LIST_POSITION_RIGHT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_RIGHT];
 	
-	if ((userIconPosition == LIST_POSITION_FAR_LEFT || userIconPosition == LIST_POSITION_LEFT) ||
-		(serviceIconPosition == LIST_POSITION_FAR_LEFT || serviceIconPosition == LIST_POSITION_LEFT) ||
-		(statusIconPosition == LIST_POSITION_FAR_LEFT || statusIconPosition == LIST_POSITION_LEFT)) {
+	if ((userIconVisible && (userIconPosition == LIST_POSITION_FAR_LEFT || userIconPosition == LIST_POSITION_LEFT)) ||
+		(serviceIconsVisible && (serviceIconPosition == LIST_POSITION_FAR_LEFT || serviceIconPosition == LIST_POSITION_LEFT)) ||
+		(statusIconsVisible && (statusIconPosition == LIST_POSITION_FAR_LEFT || statusIconPosition == LIST_POSITION_LEFT))) {
 		//Something is on the left. Give TEXT_WITH_IMAGES_LEFT_PAD between that and the display name
 		rect.origin.x += TEXT_WITH_IMAGES_LEFT_PAD;
 		rect.size.width -= TEXT_WITH_IMAGES_LEFT_PAD;
 	}
 
-	if ((userIconPosition == LIST_POSITION_FAR_RIGHT || userIconPosition == LIST_POSITION_RIGHT) ||
-		(serviceIconPosition == LIST_POSITION_FAR_RIGHT || serviceIconPosition == LIST_POSITION_RIGHT) ||
-		(statusIconPosition == LIST_POSITION_FAR_RIGHT || statusIconPosition == LIST_POSITION_RIGHT)) {
+	if ((userIconVisible && (userIconPosition == LIST_POSITION_FAR_RIGHT || userIconPosition == LIST_POSITION_RIGHT)) ||
+		(serviceIconsVisible && (serviceIconPosition == LIST_POSITION_FAR_RIGHT || serviceIconPosition == LIST_POSITION_RIGHT)) ||
+		(statusIconsVisible && (statusIconPosition == LIST_POSITION_FAR_RIGHT || statusIconPosition == LIST_POSITION_RIGHT))) {
 		//Something is on the right. Give TEXT_WITH_IMAGES_LEFT_PAD between that and the display name
 		rect.size.width -= TEXT_WITH_IMAGES_RIGHT_PAD;
 	}
