@@ -58,10 +58,12 @@ static void *adiumPurpleAccountRequestAuthorize(PurpleAccount *account, const ch
 	
 	if (message && strlen(message)) [infoDict setObject:[NSString stringWithUTF8String:message] forKey:@"Reason"];
 	
-	id authRequestWindow = [[[AIObject sharedAdiumInstance] contactController] showAuthorizationRequestWithDict:infoDict
-																									 forAccount:accountLookup(account)];
-	if (!authRequests) authRequests = [[NSMutableSet alloc] init];
-	[authRequests addObject:authRequestWindow];
+	id authRequestWindow = [accountLookup(account) authorizationRequestWithDict:infoDict];
+	
+	if(authRequestWindow) {
+		if (!authRequests) authRequests = [[NSMutableSet alloc] init];
+		[authRequests addObject:authRequestWindow];
+	}
 	
 	return authRequestWindow;
 }
@@ -83,6 +85,13 @@ static void adiumPurpleAccountRequestClose(void *ui_handle)
 		[authRequests release];
 		authRequests = nil;
 	}
+}
+
+void adiumPurpleAccountRegisterCb(PurpleAccount *account, gboolean succeeded, void *user_data) {
+	id ourHandle = user_data;
+	
+	if([ourHandle respondsToSelector:@selector(purpleAccountRegistered:)])
+		[ourHandle purpleAccountRegistered:succeeded?YES:NO];
 }
 
 static PurpleAccountUiOps adiumPurpleAccountOps = {

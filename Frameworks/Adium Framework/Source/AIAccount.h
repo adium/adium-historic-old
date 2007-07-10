@@ -187,6 +187,7 @@ typedef enum {
 
 //Account-specific menu items
 - (NSArray *)accountActionMenuItems;
+- (void)accountMenuDidUpdate:(NSMenuItem*)menuItem;
 
 //Secure messaging
 - (BOOL)allowSecureMessagingTogglingForChat:(AIChat *)inChat;

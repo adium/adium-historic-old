@@ -194,6 +194,14 @@
 	
 }
 
+- (void)setRoomName:(NSString*)roomName {
+	[textField_roomName setStringValue:roomName];
+}
+
+- (void)setServer:(NSString*)server {
+	[textField_server setStringValue:server];
+}
+
 #pragma mark Dragging Delegate
 
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender

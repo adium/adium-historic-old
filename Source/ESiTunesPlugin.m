@@ -154,6 +154,7 @@
  -(void)fireUpdateiTunesInfo
  {
      [[adium notificationCenter] postNotificationName:Adium_RequestImmediateDynamicContentUpdate object:nil];
+	 [[adium notificationCenter] postNotificationName:Adium_iTunesTrackChangedNotification object:iTunesCurrentInfo];
  }
 
 #pragma mark -
@@ -186,13 +187,13 @@
 															  object:nil];
 		
 		substitutionDict = [[NSDictionary alloc] initWithObjectsAndKeys:
-			@"Album", ALBUM_TRIGGER,
-			@"Artist", ARTIST_TRIGGER,
-			@"Composer", COMPOSER_TRIGGER,
-			@"Genre", GENRE_TRIGGER,
-			@"Player State", STATUS_TRIGGER,
-			@"Name", TRACK_TRIGGER,
-			@"Store URL", STORE_URL_TRIGGER,
+			ITUNES_ALBUM, ALBUM_TRIGGER,
+			ITUNES_ARTIST, ARTIST_TRIGGER,
+			ITUNES_COMPOSER, COMPOSER_TRIGGER,
+			ITUNES_GENRE, GENRE_TRIGGER,
+			ITUNES_PLAYER_STATE, STATUS_TRIGGER,
+			ITUNES_NAME, TRACK_TRIGGER,
+			ITUNES_STORE_URL, STORE_URL_TRIGGER,
 			nil];
 		
 		slashMusicDict = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -293,13 +294,13 @@
 		if ([iTunesValues count] == infoCount) {
 			//create the dictionary
 			[self setiTunesCurrentInfo:[NSDictionary dictionaryWithObjects:iTunesValues 
-																   forKeys:[NSArray arrayWithObjects:@"Album",
-																									 @"Artist",
-																									 @"Composer",
-																									 @"Genre",
-																									 PLAYER_STATE,
-																									 @"Name",
-																									 @"Store URL",
+																   forKeys:[NSArray arrayWithObjects:ITUNES_ALBUM,
+																									 ITUNES_ARTIST,
+																									 ITUNES_COMPOSER,
+																									 ITUNES_GENRE,
+																									 ITUNES_PLAYER_STATE,
+																									 ITUNES_NAME,
+																									 ITUNES_STORE_URL,
 																									 nil]]];
 		}
 		
@@ -538,23 +539,23 @@
 														 action:NULL
 												  keyEquivalent:@""];
 	
-	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(@"Album","Insert Current iTunes track album toolbar menu item.") 
+	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(ITUNES_ALBUM,"Insert Current iTunes track album toolbar menu item.") 
 												 action:@selector(insertFilteredString:)
 									  representedObject:ALBUM_TRIGGER
 												   kind:ENABLED_IF_ITUNES_PLAYING]];
-	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(@"Artist","Insert Current iTunes track artist toolbar menu item.") 
+	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(ITUNES_ARTIST,"Insert Current iTunes track artist toolbar menu item.") 
 												 action:@selector(insertFilteredString:) 
 									  representedObject:ARTIST_TRIGGER
 												   kind:ENABLED_IF_ITUNES_PLAYING]];
-	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(@"Composer","Insert Current iTunes track composer toolbar menu item.") 
+	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(ITUNES_COMPOSER,"Insert Current iTunes track composer toolbar menu item.") 
 												 action:@selector(insertFilteredString:)
 									  representedObject:COMPOSER_TRIGGER
 												   kind:ENABLED_IF_ITUNES_PLAYING]];
-	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(@"Genre","Insert Current iTunes track genre toolbar menu item.") 
+	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(ITUNES_GENRE,"Insert Current iTunes track genre toolbar menu item.") 
 												 action:@selector(insertFilteredString:)
 									  representedObject:GENRE_TRIGGER
 												   kind:ENABLED_IF_ITUNES_PLAYING]];
-	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(@"Name","Insert Current iTunes track name toolbar menu item.") 
+	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(ITUNES_NAME,"Insert Current iTunes track name toolbar menu item.") 
 												 action:@selector(insertFilteredString:)
 									  representedObject:TRACK_TRIGGER
 												   kind:ENABLED_IF_ITUNES_PLAYING]];

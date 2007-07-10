@@ -27,16 +27,22 @@
 #import <Adium/ESFileTransfer.h>
 #import <Adium/ESTextAndButtonsWindowController.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
-#include <Libpurple/buddy.h>
 #include <Libpurple/presence.h>
 #include <Libpurple/si.h>
+#include <SystemConfiguration/SystemConfiguration.h>
+#import "AMXMLConsoleController.h"
+#import "AMPurpleJabberMoodTooltip.h"
+#import "AMPurpleJabberServiceDiscoveryBrowsing.h"
+#import "ESPurpleJabberAccountViewController.h"
+#import "AMPurpleJabberAdHocServer.h"
+#import <Adium/AIService.h>
 
 #define DEFAULT_JABBER_HOST @"@jabber.org"
 
 extern void jabber_roster_request(JabberStream *js);
 
 @implementation ESPurpleJabberAccount
-	
+
 /*!
  * @brief The UID will be changed. The account has a chance to perform modifications
  *
@@ -97,12 +103,18 @@ extern void jabber_roster_request(JabberStream *js);
 	return supportedPropertyKeys;
 }
 
+- (void)accountConnectionStep:(NSString*)msg step:(int)step totalSteps:(int)step_count {
+	if(step == 6) { // Initializing SSL/TLS
+		hasEncryption = YES;
+	}
+}
+
 - (void)configurePurpleAccount
 {
 	[super configurePurpleAccount];
 	
 	NSString	*connectServer;
-	BOOL		forceOldSSL, allowPlaintext;
+	BOOL		forceOldSSL, allowPlaintext, requireTLS;
 
 	purple_account_set_username(account, [self purpleAccountName]);
 
@@ -119,6 +131,10 @@ extern void jabber_roster_request(JabberStream *js);
 	//Force old SSL usage? (off by default)
 	forceOldSSL = [[self preferenceForKey:KEY_JABBER_FORCE_OLD_SSL group:GROUP_ACCOUNT_STATUS] boolValue];
 	purple_account_set_bool(account, "old_ssl", forceOldSSL);
+
+	//Require SSL or TLS? (off by default)
+	requireTLS = [[self preferenceForKey:KEY_JABBER_REQUIRE_TLS group:GROUP_ACCOUNT_STATUS] boolValue];
+	purple_account_set_bool(account, "require_tls", requireTLS);
 
 	//Allow plaintext authorization over an unencrypted connection? Purple will prompt if this is NO and is needed.
 	allowPlaintext = [[self preferenceForKey:KEY_JABBER_ALLOW_PLAINTEXT group:GROUP_ACCOUNT_STATUS] boolValue];
@@ -139,7 +155,13 @@ extern void jabber_roster_request(JabberStream *js);
  */
 - (NSString *)resourceName
 {
-	return [self preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS];
+    NSString *resource = [self preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS];
+    
+    if(resource == nil || [resource length] == 0)
+        resource = [(NSString*)SCDynamicStoreCopyLocalHostName(NULL) autorelease];
+    
+    NSLog(@"Resource = %@", resource);
+	return resource;
 }
 
 - (const char *)purpleAccountName
@@ -251,6 +273,65 @@ extern void jabber_roster_request(JabberStream *js);
 	contactService = [[adium accountController] serviceWithUniqueID:contactServiceID];
 	
 	return contactService;
+}
+
+- (id)authorizationRequestWithDict:(NSDictionary*)dict {
+	id handle;
+	switch([[self preferenceForKey:KEY_JABBER_SUBSCRIPTION_BEHAVIOR group:GROUP_ACCOUNT_STATUS] intValue]) {
+		case 2: // always accept + add
+			// add
+			{
+				NSString *groupname = [self preferenceForKey:KEY_JABBER_SUBSCRIPTION_GROUP group:GROUP_ACCOUNT_STATUS];
+				if([groupname length] > 0) {
+					AIListContact *contact = [[adium contactController] contactWithService:[self service] account:self UID:[dict objectForKey:@"Remote Name"]];
+					AIListGroup *group = [[adium contactController] groupWithUID:groupname];
+					[[adium contactController] addContacts:[NSArray arrayWithObject:contact] toGroup:group];
+				}
+			}
+			// fallthrough
+		case 1: // always accept
+			[[self purpleThread] doAuthRequestCbValue:[[[dict objectForKey:@"authorizeCB"] retain] autorelease] withUserDataValue:[[[dict objectForKey:@"userData"] retain] autorelease]];
+			handle = [[NSObject alloc] init];
+			break;
+		case 3: // always deny
+			[[self purpleThread] doAuthRequestCbValue:[[[dict objectForKey:@"denyCB"] retain] autorelease] withUserDataValue:[[[dict objectForKey:@"userData"] retain] autorelease]];
+			handle = [[NSObject alloc] init];
+			break;
+		default: // ask (should be 0)
+			return [super authorizationRequestWithDict:dict];
+	}
+	
+	// we can't execute this immediately, since libpurple doesn't know about the handle yet
+	[self performSelector:@selector(closeAuthRequest:) withObject:handle afterDelay:0.0];
+	return handle;
+}
+
+- (void)closeAuthRequest:(id)handle {
+	purple_account_request_close(handle);
+}
+
+- (void)purpleAccountRegistered:(BOOL)success {
+	if(success && [[self service] accountViewController]) {
+		const char *usernamestr = account->username;
+		NSString *username;
+		if(usernamestr) {
+			NSString *userwithresource = [NSString stringWithUTF8String:usernamestr];
+			NSRange slashrange = [userwithresource rangeOfString:@"/"];
+			if(slashrange.location != NSNotFound)
+				username = [userwithresource substringToIndex:slashrange.location];
+			else
+				username = userwithresource;
+		} else
+			username = (id)[NSNull null];
+		NSString *pw = account->password?[NSString stringWithUTF8String:account->password]:[NSNull null];
+		
+		[[adium notificationCenter] postNotificationName:ESPurpleAccountUsernameAndPasswortRegisteredNotification
+												  object:self
+												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+													username, @"username",
+													pw, @"password",
+													nil]];
+	}
 }
 
 #pragma mark Contacts
@@ -580,6 +661,9 @@ extern void jabber_roster_request(JabberStream *js);
 	//Set our priority, which is actually set along with the status...Default is 0.
 	[arguments setObject:(priority ? priority : [NSNumber numberWithInt:0])
 				  forKey:@"priority"];
+	
+	NSNumber *disableBuzz = [self preferenceForKey:KEY_JABBER_DISABLE_BUZZ group:GROUP_ACCOUNT_STATUS];
+	[arguments setObject:[NSNumber numberWithBool:![disableBuzz boolValue]] forKey:@"buzz"];
 
 	//If we didn't get a purple status ID, request one from super
 	if (statusID == NULL) statusID = [super purpleStatusIDForStatus:statusState arguments:arguments];
@@ -591,7 +675,100 @@ extern void jabber_roster_request(JabberStream *js);
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
 	/* XXX All Jabber account actions depend upon adiumPurpleRequestFields */
+    return [NSString stringWithCString:label encoding:NSISOLatin1StringEncoding]; // only temporary
 	return nil;
+}
+
+- (void)accountMenuDidUpdate:(NSMenuItem*)menuItem {
+	if(hasEncryption) {
+		NSMutableAttributedString *title = [[NSMutableAttributedString alloc] initWithString:[menuItem title] attributes:[NSDictionary dictionaryWithObjectsAndKeys:
+			[NSFont menuFontOfSize:-1.0f], NSFontAttributeName, // for some reason, this seems to be slightly smaller than the real font, seems to be an AppKit bug
+			nil]];
+		NSFileWrapper *fwrap = [[NSFileWrapper alloc] initRegularFileWithContents:
+			[[NSImage imageNamed:@"Lock_Black"] TIFFRepresentation]];
+		[fwrap setFilename:@"Lock_Black.tif"];
+		[fwrap setPreferredFilename:@"Lock_Black.tif"];
+		
+		NSTextAttachment * ta = [[NSTextAttachment alloc] initWithFileWrapper:fwrap];
+		
+		[title appendAttributedString:[[[NSAttributedString alloc] initWithString:@"   "] autorelease]];
+		[title appendAttributedString:[NSAttributedString attributedStringWithAttachment:ta]];
+		
+		[ta release];
+		[fwrap release];
+
+		[menuItem setAttributedTitle:title];
+		[title release];
+	} else {
+		[menuItem setAttributedTitle:nil];
+	}
+}
+
+#pragma mark XML Console, Tooltip and AdHoc Server Integration
+
+- (void)didConnect {
+	if(adhocServer)
+		[adhocServer release];
+	adhocServer = [[AMPurpleJabberAdHocServer alloc] initWithAccount:self];
+	[adhocServer addCommand:@"ping" delegate:[AMPurpleJabberAdHocPing class] name:@"Ping"];
+	
+    [super didConnect];
+	
+    xmlConsoleController = [[AMXMLConsoleController alloc] initWithPurpleConnection:account->gc];
+	
+	moodTooltip = [[AMPurpleJabberMoodTooltip alloc] initWithAccount:self];
+
+	[[adium interfaceController] registerContactListTooltipEntry:moodTooltip secondaryEntry:YES];
+	discoveryBrowserController = [[AMPurpleJabberServiceDiscoveryBrowsing alloc] initWithAccount:self purpleConnection:purple_account_get_connection(account)];
+}
+
+- (void)didDisconnect {
+	hasEncryption = NO;
+    [xmlConsoleController release];
+    xmlConsoleController = nil;
+	[[adium interfaceController] unregisterContactListTooltipEntry:moodTooltip secondaryEntry:YES];
+	[moodTooltip release];
+	moodTooltip = nil;
+	[discoveryBrowserController release];
+	discoveryBrowserController = nil;
+	[adhocServer release];
+	adhocServer = nil;
+	[super didDisconnect];
+}
+
+- (IBAction)showXMLConsole:(id)sender {
+    if(xmlConsoleController)
+        [xmlConsoleController showWindow:sender];
+    else
+        NSBeep();
+}
+
+- (IBAction)showDiscoveryBrowser:(id)sender {
+	[discoveryBrowserController browse:sender];
+}
+
+- (NSArray *)accountActionMenuItems {
+    NSMutableArray *menu = [[super accountActionMenuItems] mutableCopy];
+    if(!menu)
+        menu = [[NSMutableArray alloc] init];
+    else
+        [menu addObject:[NSMenuItem separatorItem]];
+    
+    NSMenuItem *xmlConsoleMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"XML Console",nil) action:@selector(showXMLConsole:) keyEquivalent:@""];
+    [xmlConsoleMenuItem setTarget:self];
+    [menu addObject:xmlConsoleMenuItem];
+    [xmlConsoleMenuItem release];
+
+	NSMenuItem *discoveryBrowserMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Discovery Browser",nil) action:@selector(showDiscoveryBrowser:) keyEquivalent:@""];
+    [discoveryBrowserMenuItem setTarget:self];
+    [menu addObject:discoveryBrowserMenuItem];
+    [discoveryBrowserMenuItem release];
+	
+    return [menu autorelease];
+}
+
+- (AMPurpleJabberAdHocServer*)adhocServer {
+	return adhocServer;
 }
 
 @end

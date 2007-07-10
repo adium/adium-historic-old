@@ -21,10 +21,6 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * @see @ref plugin-signals
- * @see @ref plugin-ids
- * @see @ref plugin-i18n
  */
 #ifndef _PURPLE_PLUGIN_H_
 #define _PURPLE_PLUGIN_H_
@@ -188,6 +184,8 @@ struct _PurplePluginAction {
 	/** NULL for plugin actions menu, set to the PurpleConnection for
 	    account actions menu */
 	gpointer context;
+	
+	gpointer user_data;
 };
 
 #define PURPLE_PLUGIN_HAS_ACTIONS(plugin) \

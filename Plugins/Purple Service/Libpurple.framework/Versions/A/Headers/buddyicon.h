@@ -31,7 +31,6 @@ typedef struct _PurpleBuddyIcon PurpleBuddyIcon;
 #include "blist.h"
 #include "imgstore.h"
 #include "prpl.h"
-#include "util.h"
 
 #ifdef __cplusplus
 extern "C" {

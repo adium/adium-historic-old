@@ -46,6 +46,8 @@
 #import <AIUtilities/AIObjectAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AISystemNetworkDefaults.h>
+#import "ESiTunesPlugin.h"
+#import "AMPurpleTuneTooltip.h"
 
 #import "adiumPurpleRequest.h"
 
@@ -106,6 +108,14 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 
 // Subclasses must override this
 - (const char*)protocolPlugin { return NULL; }
+
+- (void)iTunesDidUpdate:(NSNotification*)notification {
+	[tuneinfo release];
+	tuneinfo = [[notification object] copy];
+	
+	// update info in prpl
+	[self setStatusState:[self statusState] usingStatusMessage:[self statusMessage]];
+}
 
 // Contacts ------------------------------------------------------------------------------------------------
 #pragma mark Contacts
@@ -498,6 +508,11 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 - (BOOL)contactListEditable
 {
     return [self online];
+}
+
+- (id)authorizationRequestWithDict:(NSDictionary*)dict {
+	return [[[AIObject sharedAdiumInstance] contactController] showAuthorizationRequestWithDict:dict
+																					 forAccount:self];
 }
 
 - (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict didAuthorize:(BOOL)inDidAuthorize
@@ -1465,6 +1480,14 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	AILog(@"************ %@ CONNECTED ***********",[self UID]);
 	
 	[self didConnect];
+
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(iTunesDidUpdate:)
+									   name:Adium_iTunesTrackChangedNotification
+									 object:nil];
+	//tooltip for tunes
+	tunetooltip = [[AMPurpleTuneTooltip alloc] initWithAccount:self];
+	[[adium interfaceController] registerContactListTooltipEntry:tunetooltip secondaryEntry:YES];
 	
     //Silence updates
     [self silenceAllContactUpdatesForInterval:18.0];
@@ -1488,6 +1511,11 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	[self notifyOfChangedStatusSilently:NO];
 	
 	AILog(@"************ %@ --step-- %i",[self UID],[step intValue]);
+}
+
+- (void)accountConnectionStep:(NSString*)msg step:(int)step totalSteps:(int)step_count
+{
+
 }
 
 /*!
@@ -1606,7 +1634,14 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 			 */
 		}
 	}
-	
+	[[adium interfaceController] unregisterContactListTooltipEntry:tunetooltip secondaryEntry:YES];
+	[tunetooltip release];
+	tunetooltip = nil;
+	[[adium notificationCenter] removeObserver:self
+										  name:Adium_iTunesTrackChangedNotification
+										object:nil];
+	[tuneinfo release];
+	tuneinfo = nil;
 	//Report that we disconnected
 	AILog(@"%@: Telling the core we disconnected", self);
 	[self didDisconnect];
@@ -1805,7 +1840,24 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 				[arguments setObject:itmsStoreLink
 							  forKey:@"itmsurl"];
 			}
-		}		
+		}
+	}
+	if(tuneinfo && [[tuneinfo objectForKey:ITUNES_PLAYER_STATE] isEqualToString:@"Playing"]) {
+		[arguments setObject:[tuneinfo objectForKey:ITUNES_ARTIST]?[tuneinfo objectForKey:ITUNES_ARTIST]:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_ARTIST]];
+		[arguments setObject:[tuneinfo objectForKey:ITUNES_NAME]?[tuneinfo objectForKey:ITUNES_NAME]:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_TITLE]];
+		[arguments setObject:[tuneinfo objectForKey:ITUNES_ALBUM]?[tuneinfo objectForKey:ITUNES_ALBUM]:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_ALBUM]];
+		[arguments setObject:[tuneinfo objectForKey:ITUNES_GENRE]?[tuneinfo objectForKey:ITUNES_GENRE]:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_GENRE]];
+		[arguments setObject:[tuneinfo objectForKey:ITUNES_TOTAL_TIME]?[tuneinfo objectForKey:ITUNES_TOTAL_TIME]:[NSNumber numberWithInt:-1] forKey:[NSString stringWithUTF8String:PURPLE_TUNE_TIME]];
+		[arguments setObject:[tuneinfo objectForKey:ITUNES_YEAR]?[tuneinfo objectForKey:ITUNES_YEAR]:[NSNumber numberWithInt:-1] forKey:[NSString stringWithUTF8String:PURPLE_TUNE_YEAR]];
+		[arguments setObject:[tuneinfo objectForKey:ITUNES_STORE_URL]?[tuneinfo objectForKey:ITUNES_STORE_URL]:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_URL]];
+	} else {
+		[arguments setObject:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_ARTIST]];
+		[arguments setObject:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_TITLE]];
+		[arguments setObject:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_ALBUM]];
+		[arguments setObject:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_GENRE]];
+		[arguments setObject:[NSNumber numberWithInt:-1] forKey:[NSString stringWithUTF8String:PURPLE_TUNE_TIME]];
+		[arguments setObject:[NSNumber numberWithInt:-1] forKey:[NSString stringWithUTF8String:PURPLE_TUNE_YEAR]];
+		[arguments setObject:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_URL]];
 	}
 	
 	//Encode the status message if we have one
@@ -2212,8 +2264,10 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 																						 target:self
 																						 action:@selector(performAccountMenuAction:)
 																				  keyEquivalent:@""] autorelease];
-						dict = [NSDictionary dictionaryWithObject:[NSValue valueWithPointer:action->callback]
-														   forKey:@"PurplePluginActionCallback"];
+						dict = [NSDictionary dictionaryWithObjectsAndKeys:
+							[NSValue valueWithPointer:action->callback], @"PurplePluginActionCallback",
+							[NSValue valueWithPointer:action->user_data], @"PurplePluginActionCallbackUserData",
+							nil];
 						
 						[menuItem setRepresentedObject:dict];
 						

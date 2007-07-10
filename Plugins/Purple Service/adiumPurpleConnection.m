@@ -27,6 +27,17 @@ static void adiumPurpleConnConnectProgress(PurpleConnection *gc, const char *tex
 										 withObject:[NSNumber numberWithInt:step]
 										 withObject:connectionProgressPrecent];
 	 */
+	CBPurpleAccount *account = accountLookup(gc->account);
+	NSString *msg = text?[NSString stringWithUTF8String:text]:NULL;
+	NSInvocation *inv = [NSInvocation invocationWithMethodSignature:[account methodSignatureForSelector:@selector(accountConnectionStep:step:totalSteps:)]];
+	[inv setTarget:account];
+	[inv setSelector:@selector(accountConnectionStep:step:totalSteps:)];
+	[inv setArgument:&msg atIndex:2];
+	[inv setArgument:&step atIndex:3];
+	[inv setArgument:&step_count atIndex:4];
+	[inv retainArguments];
+	
+	[inv performSelectorOnMainThread:@selector(invoke) withObject:nil waitUntilDone:NO];
 }
 
 static void adiumPurpleConnConnected(PurpleConnection *gc)

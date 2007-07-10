@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Jabber:Resource</key>
-	<string>Adium</string>
+	<string>$HOSTNAME</string>
 	<key>Connect Port</key>
 	<integer>5222</integer>
 </dict>

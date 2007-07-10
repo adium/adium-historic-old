@@ -28,6 +28,9 @@
 	IBOutlet		AICompletingTextField		*textField_inviteUsers;
 }
 
+- (void)setRoomName:(NSString*)roomName;
+- (void)setServer:(NSString*)server;
+
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender;
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender;
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender;
