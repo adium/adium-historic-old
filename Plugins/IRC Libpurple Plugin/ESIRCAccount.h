@@ -6,7 +6,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <AdiumLibpurple/CBpurpleAccount.h>
+#import <AdiumLibpurple/CBPurpleAccount.h>
 
 #define KEY_IRC_USE_SSL	@"IRC:Use SSL"
 
