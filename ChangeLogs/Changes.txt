@@ -1,5 +1,94 @@
 				Adium X Version History
 				-----------------------
+Version 1.1
+Note: Adium now requires Mac OS X 10.4.0 or later.
+
+== Summer of Code 2006 Changes ==
+ * Rewritten tabs using PSMTabBarControl (Kent Sutherland, mentored by David Smith)
+   * Tabs can now be oriented vertically or horizontally (#3372)
+   * Tabs handle overflow better, by showing a “chevron” (») pop-up menu (#12)
+   * Improved drag & drop behavior with tabs (#2555)
+   * Improved tab length calculation (#6775)
+ * Improved Accessibility Support (Chirag Shah, mentored by Peter Hosey)
+   * Adium now plays nicely with OS X accessibility functionality such as !VoiceOver (#1423)
+   * Commands to increase and decrease the text size in the message view for easier reading
+
+== Contact List ==
+ * Horizontal autosizing of the contact list is now more accurate (#6618)
+ * Added an animated transition for contact list sorting (#5633)
+ * Hi, LH.
+
+== Xtras ==
+ * StatusItem can now be customized via .AdiumMenuBarIcons AdiumXtras (#7237)
+ * Improved Adiumy emoticon text equivalents (#6327)
+ * Custom menu bar icons are now preserved when upgrading to a new version of Adium (#6972)
+ * Multi-state menu bar icon options (#4905)
+ * Detailed menu bar status is now optional via menu bar xtras (#4532)
+ * Added a `%messageClasses%` keyword to [wiki:AdiumMessageStyle message view styles], allowing greatly improved CSS selector targetting
+
+== User Interface ==
+ * Automatically remember buddy list positioning when plugging in external monitors (#5583)
+ * The menu bar icon now updates with a badge when a custom available message is selected (#4924)
+ * Added a "Show Contact List" item to StatusItem (#772)
+ * Corrected a slight visual misalignment in StatusItem (#4419)
+ * Added a separator line underneath "All" in transcript viewer (#5129)
+ * Toolbar button to send nudge/buzz (notification) (#6635)
+ * Added events for nudge/buzz (notification)
+ * Clarified UI to show that logging needs to be on for message history to work (#6682)
+ * Move Accounts to the left of the prefs window (#6190)
+
+== File Transfer ==
+ * Fixed resolving of aliases for [wiki:FileTransfer file transfers] (#6601)
+
+== Chat Transcripts ==
+ * Usernames are now shown in the chat transcript viewer (#6760, #6866)
+
+== Misc. ==
+ * There is no longer an invisible window when Exposé is active and the contact list is offscreen (#6397)
+ * Adium now handles disconnecting when !AirPort is turned off more gracefully (#6466)
+ * Improved determination of network availability when waking from sleep (#5678)
+ * Added an iChat importer (#6698)
+ * Improved display of idle times when somebody is ''really, really'' idle (#1347)
+ * The time zone now updates while Adium is running (#5383)
+ * Group chats no longer attempt to send files dropped on the message text field (#7133)
+ * Drag & drop of .textClipping files is now handled properly (#6929)
+ * When responding to an authorization request, adding the contact to your contact list now uses the correct account (#6977)
+ * Updated sound playing to be more likely to work on future versions of Mac OS X (#5636)
+ * Added grace period following closing of message window during which a new autoreply will not be sent if they message you again (#4849)
+ * The cursor now reappears when sending a message, as well as when moving the mouse (#5651)
+ * Attempting to delete multiple saved statuses at once only deletes one (#6608)
+ * Appearance preferences now include MenuBarIcons (#6335)
+ * When Adium is run from the installation disk image, we now offer to install it. Thanks to Google for donating the code for this feature.
+
+== Dock ==
+ * Dock icon (.AdiumIcon) Xtras now work correctly with case-sensitive HFS+ (#176)
+
+== Performance and Memory ==
+ * Fixed leaks in outgoing messages in DirectConnect chats (#6982)
+ * Temporary files are now deleted sooner than in 1.0.x (for example, when closing a chat) (#6732)
+ * Removed all remaining calls to !QuickDraw APIs, improving performance (#5770)
+ * Improved smoothness of ContactList hiding animation in the Regular Window style (#6396)
+
+== Service-specific Updates ==
+
+=== Oscar (AIM, ICQ and .Mac) ===
+ * Corrected handling of different inline images with the same name (#5493)
+ * Support embedded iTunes link when using the iTunes status on AIM (#3152)
+ * DirectConnect requests are now automatically accepted for contacts on your contact list (#700, #5934)
+ * Improved display of the error message when attempting to send a message that's too large for AIM (#6469)
+ * Fixed login with AIM for certain screennames which were previously AOL names (#2013)
+ * Fixed the "Unable to format screen name" error on ICQ (#6533)
+
+=== Jabber (includes Google Talk and !LiveJournal Talk) ===
+ * Added (some) support for xmpp: URIs (#6541)
+ * Fixed a crash when retrieving a user icon over XMPP (Jabber) (#7240)
+ * Quit yo Jibba Jabba
+ * Corrected client information (#7256)
+
+=== Bonjour ===
+ * Bonjour contacts are no longer marked as online after signing off (#5992)
+ 
+
 Version 1.0.5 (7/9/2007)
  * Fixed inadvertent deletion of the chat transcript index after opening and closing the chat transcript viewer; this could lead to performing a full, slow re-index when next it was used (#7037)
  * Fixed retrieval of user name and password for systemwide proxy settings when the proxy requires authentication. (#6998)
