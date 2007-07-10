@@ -7,11 +7,11 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Adium/AIPlugin.h>
-#import <AdiumLibgaim/AILibgaimPlugin.h>
+#import <AdiumLibpurple/AILibpurplePlugin.h>
 
 @class ESIRCService;
 
-@interface ESIRCLibgaimServicePlugin : AIPlugin <AILibgaimPlugin> {
+@interface ESIRCLibpurpleServicePlugin : AIPlugin <AILibpurplePlugin> {
 	ESIRCService *ircService;
 }
 
