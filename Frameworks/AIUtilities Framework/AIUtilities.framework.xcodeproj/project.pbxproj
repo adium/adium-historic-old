@@ -70,8 +70,6 @@
 		34486C6306D1DF0400DA778C /* AIFileManagerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B6306D1DF0300DA778C /* AIFileManagerAdditions.m */; };
 		34486C7806D1DF0400DA778C /* AIGradient.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B7806D1DF0300DA778C /* AIGradient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34486C7906D1DF0400DA778C /* AIGradient.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B7906D1DF0300DA778C /* AIGradient.m */; };
-		34486C7A06D1DF0400DA778C /* AIGradientCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B7A06D1DF0300DA778C /* AIGradientCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		34486C7B06D1DF0400DA778C /* AIGradientCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B7B06D1DF0300DA778C /* AIGradientCell.m */; };
 		34486C7E06D1DF0400DA778C /* AIImageTextCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B7E06D1DF0300DA778C /* AIImageTextCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34486C7F06D1DF0400DA778C /* AIImageTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B7F06D1DF0300DA778C /* AIImageTextCell.m */; };
 		34486C8006D1DF0400DA778C /* AIKeychain.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B8006D1DF0300DA778C /* AIKeychain.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -316,8 +314,6 @@
 		34486B6306D1DF0300DA778C /* AIFileManagerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIFileManagerAdditions.m; path = Source/AIFileManagerAdditions.m; sourceTree = "<group>"; };
 		34486B7806D1DF0300DA778C /* AIGradient.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIGradient.h; path = Source/AIGradient.h; sourceTree = "<group>"; };
 		34486B7906D1DF0300DA778C /* AIGradient.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIGradient.m; path = Source/AIGradient.m; sourceTree = "<group>"; };
-		34486B7A06D1DF0300DA778C /* AIGradientCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIGradientCell.h; path = Source/AIGradientCell.h; sourceTree = "<group>"; };
-		34486B7B06D1DF0300DA778C /* AIGradientCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIGradientCell.m; path = Source/AIGradientCell.m; sourceTree = "<group>"; };
 		34486B7E06D1DF0300DA778C /* AIImageTextCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIImageTextCell.h; path = Source/AIImageTextCell.h; sourceTree = "<group>"; };
 		34486B7F06D1DF0300DA778C /* AIImageTextCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIImageTextCell.m; path = Source/AIImageTextCell.m; sourceTree = "<group>"; };
 		34486B8006D1DF0300DA778C /* AIKeychain.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIKeychain.h; path = Source/AIKeychain.h; sourceTree = "<group>"; };
@@ -898,7 +894,6 @@
 			isa = PBXGroup;
 			children = (
 				070959BB07991A1400B140BD /* Any view */,
-				4BD1F46306D285B200B3975E /* Gradient Selection */,
 				4BD1F46906D285BF00B3975E /* Image and two lines of text */,
 				4BD1F46C06D285C500B3975E /* Scaled image display */,
 				4BD1F46606D285BA00B3975E /* Vertically centered text */,
@@ -1037,7 +1032,7 @@
 				4BD1EF3006D2631300B3975E /* "Plastic" aqua buttons */,
 				4BD1EF3606D2632300B3975E /* Resizing preference window */,
 				4B0091A207BA5EAE00F0272D /* Split View with thickness control */,
-				4BD1F40A06D2824000B3975E /* Table View with Delete Support */,
+				4BD1F40A06D2824000B3975E /* Table View with several improvements */,
 				6E03C8D007C68A2000EAA71E /* Text Field with dragging delegate */,
 				4BD1F41006D2825300B3975E /* Text view with placeholder text */,
 				0750FF2F073A0562000D8A1F /* Toolbar item whose validation delegate can be changed */,
@@ -1206,13 +1201,13 @@
 			name = "OutlineView with several improvements";
 			sourceTree = "<group>";
 		};
-		4BD1F40A06D2824000B3975E /* Table View with Delete Support */ = {
+		4BD1F40A06D2824000B3975E /* Table View with several improvements */ = {
 			isa = PBXGroup;
 			children = (
 				34486B3A06D1DF0300DA778C /* AIAlternatingRowTableView.h */,
 				34486B3B06D1DF0300DA778C /* AIAlternatingRowTableView.m */,
 			);
-			name = "Table View with Delete Support";
+			name = "Table View with several improvements";
 			sourceTree = "<group>";
 		};
 		4BD1F40D06D2824800B3975E /* Scrollbar auto-hiding */ = {
@@ -1287,15 +1282,6 @@
 				34D8359607CBEBEF006466F2 /* SmallPopUpRollover_Middle.png */,
 			);
 			name = Images;
-			sourceTree = "<group>";
-		};
-		4BD1F46306D285B200B3975E /* Gradient Selection */ = {
-			isa = PBXGroup;
-			children = (
-				34486B7A06D1DF0300DA778C /* AIGradientCell.h */,
-				34486B7B06D1DF0300DA778C /* AIGradientCell.m */,
-			);
-			name = "Gradient Selection";
 			sourceTree = "<group>";
 		};
 		4BD1F46606D285BA00B3975E /* Vertically centered text */ = {
@@ -1381,7 +1367,6 @@
 				34486C6006D1DF0400DA778C /* AIEventAdditions.h in Headers */,
 				34486C6206D1DF0400DA778C /* AIFileManagerAdditions.h in Headers */,
 				34486C7806D1DF0400DA778C /* AIGradient.h in Headers */,
-				34486C7A06D1DF0400DA778C /* AIGradientCell.h in Headers */,
 				34486C7E06D1DF0400DA778C /* AIImageTextCell.h in Headers */,
 				34486C8006D1DF0400DA778C /* AIKeychain.h in Headers */,
 				34486C8206D1DF0400DA778C /* AILinkTextView.h in Headers */,
@@ -1585,7 +1570,6 @@
 				34486C6306D1DF0400DA778C /* AIFileManagerAdditions.m in Sources */,
 				076CAD6D0785B62900250504 /* AIFunctions.m in Sources */,
 				34486C7906D1DF0400DA778C /* AIGradient.m in Sources */,
-				34486C7B06D1DF0400DA778C /* AIGradientCell.m in Sources */,
 				34486C7F06D1DF0400DA778C /* AIImageTextCell.m in Sources */,
 				34486C8106D1DF0400DA778C /* AIKeychain.m in Sources */,
 				34486C8306D1DF0400DA778C /* AILinkTextView.m in Sources */,

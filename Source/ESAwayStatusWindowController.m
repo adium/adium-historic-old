@@ -9,16 +9,17 @@
 #import "ESAwayStatusWindowController.h"
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
-#import "AIStatusController.h"
+#import <Adium/AIStatusControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIStatus.h>
 #import <Adium/AIStatusIcons.h>
 #import <Adium/AIServiceIcons.h>
+#import <AIUtilities/AIAlternatingRowTableView.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIImageTextCell.h>
 #import <AIUtilities/AITableViewAdditions.h>
-#import <AIUtilities/AIApplicationAdditions.h>
 
 
 #define AWAY_STATUS_WINDOW_NIB					@"AwayStatusWindow"
@@ -119,7 +120,7 @@ static BOOL							hideInBackground = NO;
     [textView_singleStatus setVerticallyResizable:YES];
     [textView_singleStatus setDrawsBackground:NO];
 	[textView_singleStatus setMinSize:NSZeroSize];
-    [scrollView_singleStatus setDrawsBackground:NO];
+    [[textView_singleStatus enclosingScrollView] setDrawsBackground:NO];
 
 	[self localizeButtons];
 	[self setupMultistatusTable];
@@ -335,12 +336,8 @@ static BOOL							hideInBackground = NO;
  */
 - (void)setupMultistatusTable
 {
-	AIImageTextCell	*imageTextCell;
-	
-	imageTextCell = [[AIImageTextCell alloc] init];
-	[imageTextCell setDrawsGradientHighlight:YES];
-	[[tableView_multiStatus tableColumnWithIdentifier:@"status"] setDataCell:imageTextCell];
-	[imageTextCell release];	
+	[tableView_multiStatus setDrawsGradientSelection:YES];
+	[[tableView_multiStatus tableColumnWithIdentifier:@"status"] setDataCell:[[[AIImageTextCell alloc] init] autorelease]];
 }
 
 #pragma mark Multiservice table view datasource
