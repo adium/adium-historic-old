@@ -171,8 +171,8 @@ typedef enum {
 	BOOL								inDrag;
 	NSArray								*dragItems;
 	
-	BOOL								alreadyDidDealloc;	
-	
+	BOOL								configuredViewsAndTooltips;
+
 	id									delegate;
 	
 	BOOL								showTooltips;
