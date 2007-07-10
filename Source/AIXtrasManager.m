@@ -23,7 +23,6 @@
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIAlternatingRowTableView.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
-#import <AIUtilities/AIGradientCell.h>
 #import <AIUtilities/AIImageTextCell.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
