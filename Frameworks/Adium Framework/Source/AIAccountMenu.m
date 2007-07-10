@@ -47,6 +47,8 @@
 - (NSMenu *)actionsMenuForAccount:(AIAccount *)inAccount;
 - (void)addStateMenuItems:(NSArray *)menuItemArray;
 - (void)removeStateMenuItems:(NSArray *)ignoredMenuItemArray;
+- (void)menuNeedsUpdate:(NSMenu*)menu;
+- (void)rebuildActionsSubmenu:(NSMenu*)actionsSubmenu withAccount:(AIAccount*)account;
 @end
 
 @implementation AIAccountMenu
@@ -294,7 +296,8 @@
 	if (account) {
 		[[menuItem menu] setMenuChangedMessagesEnabled:NO];
 		[menuItem setTitle:[self _titleForAccount:account]];
-		[menuItem setImage:[self imageForListObject:account]];		
+		[menuItem setImage:[self imageForListObject:account]];
+		[account accountMenuDidUpdate:menuItem];
 		[[menuItem menu] setMenuChangedMessagesEnabled:YES];
 	}
 }
@@ -415,10 +418,46 @@
  */
 - (NSMenu *)actionsMenuForAccount:(AIAccount *)inAccount
 {
-	NSArray		*accountActionMenuItems = ([inAccount online] ? [inAccount accountActionMenuItems] : nil);
 	NSMenu		*actionsSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
-	NSMenuItem	*menuItem;
+	
+	[actionsSubmenu setDelegate:self];
 
+	[self rebuildActionsSubmenu:actionsSubmenu withAccount:inAccount];
+	
+	return actionsSubmenu;
+}
+
+/*!
+ * @brief NSMenu delegate method to to update the account menu
+ *
+ * @param actionsSubmenu The menu to refresh
+ */
+- (void)menuNeedsUpdate:(NSMenu*)actionsSubmenu {
+	if([actionsSubmenu numberOfItems] == 0)
+		return;
+	// assume that the first item is "Edit Account" with the AIAccount object as the representedObject
+	NSMenuItem *editAccountMenuItem = [actionsSubmenu itemAtIndex:0];
+	AIAccount *account = [editAccountMenuItem representedObject];
+	if(!account || ![account isKindOfClass:[AIAccount class]]) // safety checks (should never fail)
+		return;
+	
+	// clean menu
+	while([actionsSubmenu numberOfItems] > 0) {
+		[actionsSubmenu removeItemAtIndex:0];
+	}
+	
+	[self rebuildActionsSubmenu:actionsSubmenu withAccount:account];
+}
+
+/*!
+* @brief Insert all action menu items into the given menu object
+ *
+ * @param actionsSubmenu The menu to build
+ * @param inAccount The account this menu belongs to
+ */
+- (void)rebuildActionsSubmenu:(NSMenu*)actionsSubmenu withAccount:(AIAccount*)inAccount {
+	NSArray		*accountActionMenuItems = ([inAccount online] ? [inAccount accountActionMenuItems] : nil);
+	NSMenuItem	*menuItem;
 	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Edit Account", nil)
 																	target:self
 																	action:@selector(editAccount:)
@@ -426,9 +465,9 @@
 														 representedObject:inAccount];
 	[actionsSubmenu addItem:menuItem];
 	[menuItem release];
-
+	
 	[actionsSubmenu addItem:[NSMenuItem separatorItem]];
-
+	
 	//Only build a menu if we have items
 	if (accountActionMenuItems && [accountActionMenuItems count]) {
 		//Build a menu containing all the items
@@ -438,7 +477,7 @@
 			[actionsSubmenu addItem:newMenuItem];
 			[newMenuItem release];
 		}
-
+		
 		//Separate the actions from our final menu items which apply to all accounts
 		[actionsSubmenu addItem:[NSMenuItem separatorItem]];
 	}
@@ -450,9 +489,7 @@
 														 representedObject:inAccount];
 	[actionsSubmenu addItem:menuItem];
 	[menuItem release];
-	
-	return actionsSubmenu;
-}	
+}
 
 /*!
  * @brief Edit an account

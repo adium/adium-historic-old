@@ -574,6 +574,16 @@
 }
 
 /*!
+ * @brief The account menu item was updated
+ *
+ * This method allows the opportunity to update the account menu item, e.g. to add information to it
+ */
+- (void)accountMenuDidUpdate:(NSMenuItem*)menuItem
+{
+
+}
+
+/*!
  * @brief Is a contact on the contact list intentionally listed?
  *
  * By default, it is assumed that any contact on the list is intended be there.

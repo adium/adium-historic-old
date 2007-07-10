@@ -205,12 +205,14 @@
 		// Loop through the various contacts.
 		while ((contact = [enumerator nextObject])) {
 			// If this contact is Yahoo or MSN, we're good to go.
-			if ([[[contact service] serviceID] isEqualToString:@"MSN"] || [[[contact service] serviceID] isEqualToString:@"Yahoo!"]) {
+			if ([[[contact service] serviceID] isEqualToString:@"MSN"] || [[[contact service] serviceID] isEqualToString:@"Yahoo!"] ||
+				[[[contact service] serviceID] isEqualToString:@"Jabber"]) {
 				return YES;
 			}
 		}
 		// Normal Contacts, if Yahoo or MSN, valid.
-	} else if ([[[object service] serviceID] isEqualToString:@"MSN"] || [[[object service] serviceID] isEqualToString:@"Yahoo!"]) {
+	} else if ([[[object service] serviceID] isEqualToString:@"MSN"] || [[[object service] serviceID] isEqualToString:@"Yahoo!"] ||
+			   [[[object service] serviceID] isEqualToString:@"Jabber"]) {
 		return YES;
 	}
 	
@@ -260,6 +262,9 @@
 	} else if ([[[sendChoice service] serviceID] isEqualToString:@"Yahoo!"]) {
 		// Yahoo - /buzz
 		notificationMessage = [[[NSAttributedString alloc] initWithString:@"/buzz"] autorelease];
+	} else if ([[[sendChoice service] serviceID] isEqualToString:@"Jabber"]) {
+		// Jabber - /buzz
+		notificationMessage = [[[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"/buzz %@",[sendChoice UID]]] autorelease];
 	} else {
 		// Wrong protocol?
 		return;

@@ -19,6 +19,7 @@
 #import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
 #import <AIUtilities/AIObjectAdditions.h>
 #import "ESPurpleMeanwhileContactAdditionController.h"
+#import "AMPurpleSearchResultsController.h"
 
 static void *adiumPurpleNotifyMessage(PurpleNotifyMsgType type, const char *title, const char *primary, const char *secondary)
 {
@@ -79,6 +80,14 @@ static void *adiumPurpleNotifySearchResults(PurpleConnection *gc, const char *ti
 										  const char *primary, const char *secondary,
 										  PurpleNotifySearchResults *results, gpointer user_data)
 {
+#if 1
+	return [[AMPurpleSearchResultsController alloc] initWithPurpleConnection:gc
+																	   title:title?[NSString stringWithUTF8String:title]:nil
+																 primaryText:primary?[NSString stringWithUTF8String:primary]:nil
+															   secondaryText:secondary?[NSString stringWithUTF8String:secondary]:nil
+															   searchResults:results
+																	userData:user_data];
+#else
 	NSString *primaryString = (primary ? [NSString stringWithUTF8String:primary] : nil);
 	if (primaryString &&
 		[primaryString rangeOfString:@"An ambiguous user ID was entered"].location != NSNotFound) {
@@ -109,15 +118,17 @@ static void *adiumPurpleNotifySearchResults(PurpleConnection *gc, const char *ti
 		
 		return requestController;
 	}
-		
 	return adium_purple_get_handle();
+#endif
 }
 
 static void adiumPurpleNotifySearchResultsNewRows(PurpleConnection *gc,
 												 PurpleNotifySearchResults *results,
 												 void *data)
 {
-
+	if([(id)data isKindOfClass:[AMPurpleSearchResultsController class]]) {
+		[(AMPurpleSearchResultsController*)data addResults:results];
+	}
 }
 
 static void *adiumPurpleNotifyUserinfo(PurpleConnection *gc, const char *who,
@@ -155,7 +166,15 @@ static void *adiumPurpleNotifyUri(const char *uri)
 
 static void adiumPurpleNotifyClose(PurpleNotifyType type,void *uiHandle)
 {
-	AILog(@"adiumPurpleNotifyClose");
+	id ourHandle = uiHandle;
+	if ([ourHandle respondsToSelector:@selector(purpleRequestClose)]) {
+		[ourHandle performSelector:@selector(purpleRequestClose)];
+		[ourHandle release];
+	} else if ([ourHandle respondsToSelector:@selector(closeWindow:)]) {
+		[ourHandle performSelector:@selector(closeWindow:)
+						withObject:nil];
+	}
+	AILog (@"adiumPurpleNotifyClose");
 }
 
 static PurpleNotifyUiOps adiumPurpleNotifyOps = {

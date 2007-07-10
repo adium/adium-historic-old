@@ -285,9 +285,9 @@ gboolean purple_request_fields_exists(const PurpleRequestFields *fields,
  *
  * @param fields The fields list.
  *
- * @constreturn The list of required fields.
+ * @return The list of required fields.
  */
-GList *purple_request_fields_get_required(const PurpleRequestFields *fields);
+const GList *purple_request_fields_get_required(const PurpleRequestFields *fields);
 
 /**
  * Returns whether or not a field with the specified ID is required.
@@ -917,10 +917,10 @@ void purple_request_field_list_clear_selected(PurpleRequestField *field);
  * Sets a list of selected items in a list field.
  *
  * @param field The field.
- * @param items The list of selected items, which is not modified or freed.
+ * @param items The list of selected items.
  */
 void purple_request_field_list_set_selected(PurpleRequestField *field,
-										  GList *items);
+										  const GList *items);
 
 /**
  * Returns whether or not a particular item is selected in a list field.
@@ -941,9 +941,9 @@ gboolean purple_request_field_list_is_selected(const PurpleRequestField *field,
  *
  * @param field The field.
  *
- * @constreturn The list of selected items.
+ * @return The list of selected items.
  */
-GList *purple_request_field_list_get_selected(
+const GList *purple_request_field_list_get_selected(
 	const PurpleRequestField *field);
 
 /**
@@ -951,9 +951,9 @@ GList *purple_request_field_list_get_selected(
  *
  * @param field The field.
  *
- * @constreturn The list of items.
+ * @return The list of items.
  */
-GList *purple_request_field_list_get_items(const PurpleRequestField *field);
+const GList *purple_request_field_list_get_items(const PurpleRequestField *field);
 
 /*@}*/
 
@@ -1228,7 +1228,7 @@ void *purple_request_choice(void *handle, const char *title,
 						  const char *ok_text, GCallback ok_cb,
 						  const char *cancel_text, GCallback cancel_cb,
 						  PurpleAccount *account, const char *who, PurpleConversation *conv,
-						  void *user_data, ...) G_GNUC_NULL_TERMINATED;
+						  void *user_data, ...);
 
 /**
  * Prompts the user for multiple-choice input.

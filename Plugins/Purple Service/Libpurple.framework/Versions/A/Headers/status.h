@@ -113,6 +113,16 @@ typedef enum
 #include "conversation.h"
 #include "value.h"
 
+#define PURPLE_TUNE_ARTIST	"tune_artist"
+#define PURPLE_TUNE_TITLE	"tune_title"
+#define PURPLE_TUNE_ALBUM	"tune_album"
+#define PURPLE_TUNE_GENRE	"tune_genre"
+#define PURPLE_TUNE_COMMENT	"tune_comment"
+#define PURPLE_TUNE_TRACK	"tune_track"
+#define PURPLE_TUNE_TIME	"tune_time"
+#define PURPLE_TUNE_YEAR	"tune_year"
+#define PURPLE_TUNE_URL	"tune_url"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -227,7 +237,7 @@ PurpleStatusType *purple_status_type_new_with_attrs(PurpleStatusPrimitive primit
 												gboolean independent,
 												const char *attr_id,
 												const char *attr_name,
-												PurpleValue *attr_value, ...) G_GNUC_NULL_TERMINATED;
+												PurpleValue *attr_value, ...);
 
 /**
  * Destroys a status type.
@@ -270,7 +280,7 @@ void purple_status_type_add_attr(PurpleStatusType *status_type, const char *id,
  * @param ...         Additional attribute information.
  */
 void purple_status_type_add_attrs(PurpleStatusType *status_type, const char *id,
-								const char *name, PurpleValue *value, ...) G_GNUC_NULL_TERMINATED;
+								const char *name, PurpleValue *value, ...);
 
 /**
  * Adds multiple attributes to a status type using a va_list.
@@ -387,9 +397,9 @@ PurpleStatusAttr *purple_status_type_get_attr(const PurpleStatusType *status_typ
  *
  * @param status_type The status type.
  *
- * @constreturn The list of attributes.
+ * @return The list of attributes.
  */
-GList *purple_status_type_get_attrs(const PurpleStatusType *status_type);
+const GList *purple_status_type_get_attrs(const PurpleStatusType *status_type);
 
 /**
  * Find the PurpleStatusType with the given id.
@@ -515,11 +525,10 @@ void purple_status_set_active_with_attrs(PurpleStatus *status, gboolean active,
  * @param active The active state.
  * @param attrs  A list of attributes to set on the status.  This list is
  *               composed of key/value pairs, where each key is a valid
- *               attribute name for this PurpleStatusType.  The list is
- *               not modified or freed by this function.
+ *               attribute name for this PurpleStatusType.
  */
 void purple_status_set_active_with_attrs_list(PurpleStatus *status, gboolean active,
-											GList *attrs);
+											const GList *attrs);
 
 /**
  * Sets the boolean value of an attribute in a status with the specified ID.
@@ -769,10 +778,9 @@ void purple_presence_add_status(PurplePresence *presence, PurpleStatus *status);
  * Adds a list of statuses to the presence.
  *
  * @param presence    The presence.
- * @param source_list The source list of statuses to add, which is not
- *                    modified or freed by this function.
+ * @param source_list The source list of statuses to add.
  */
-void purple_presence_add_list(PurplePresence *presence, GList *source_list);
+void purple_presence_add_list(PurplePresence *presence, const GList *source_list);
 
 /**
  * Sets the active state of a status in a presence.
@@ -871,9 +879,9 @@ PurpleBuddy *purple_presence_get_buddy(const PurplePresence *presence);
  *
  * @param presence The presence.
  *
- * @constreturn The statuses.
+ * @return The statuses.
  */
-GList *purple_presence_get_statuses(const PurplePresence *presence);
+const GList *purple_presence_get_statuses(const PurplePresence *presence);
 
 /**
  * Returns the status with the specified ID from a presence.

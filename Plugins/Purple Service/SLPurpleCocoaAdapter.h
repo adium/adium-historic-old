@@ -103,3 +103,9 @@ CBPurpleAccount *accountLookup(PurpleAccount *acct);
 
 //Images
 NSString* processPurpleImages(NSString* inString, AIAccount* adiumAccount);
+
+@interface NSObject (SLPurpleCocoaAdapterOptionalAccountMethods)
+
+- (void)purpleAccountRegistered:(BOOL)success;
+
+@end

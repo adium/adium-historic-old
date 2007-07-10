@@ -90,10 +90,10 @@ void purple_mime_document_write(PurpleMimeDocument *doc, GString *str);
  *
  * @param doc The MIME document.
  *
- * @constreturn A list of strings indicating the fields (but not the values
- *              of the fields) in the header of doc.
+ * @returns   A list of strings indicating the fields (but not the values of
+ *            the fields) in the header of doc.
  */
-GList *purple_mime_document_get_fields(PurpleMimeDocument *doc);
+const GList *purple_mime_document_get_fields(PurpleMimeDocument *doc);
 
 /**
  * Get the value of a specific field in the header of a document.
@@ -125,9 +125,9 @@ void purple_mime_document_set_field(PurpleMimeDocument *doc,
  *
  * @param doc The MIME document.
  *
- * @constreturn   List of PurpleMimePart contained within doc.
+ * @returns   List of PurpleMimePart contained within doc.
  */
-GList *purple_mime_document_get_parts(PurpleMimeDocument *doc);
+const GList *purple_mime_document_get_parts(PurpleMimeDocument *doc);
 
 /**
  * Create and insert a new part into a MIME document.
@@ -142,10 +142,10 @@ PurpleMimePart *purple_mime_part_new(PurpleMimeDocument *doc);
  *
  * @param part The MIME document part.
  *
- * @constreturn List of strings indicating the fields (but not the values
- *              of the fields) in the header of part.
+ * @returns    List of strings indicating the fields (but not the values
+ *             of the fields) in the header of part.
  */
-GList *purple_mime_part_get_fields(PurpleMimePart *part);
+const GList *purple_mime_part_get_fields(PurpleMimePart *part);
 
 
 /**

@@ -43,6 +43,10 @@
 #import "ESPurpleAIMAccount.h"
 #import "CBPurpleOscarAccount.h"
 
+#import "ESiTunesPlugin.h"
+
+#import "adiumPurpleAccounts.h"
+
 //Purple slash command interface
 #include <Libpurple/cmds.h>
 #include <Libpurple/oscar-adium.h>
@@ -787,6 +791,7 @@ NSString *processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 
 - (void)registerAccount:(id)adiumAccount
 {
+	purple_account_set_register_callback(accountLookupFromAdiumAccount(adiumAccount), adiumPurpleAccountRegisterCb, adiumAccount);
 	purple_account_register(accountLookupFromAdiumAccount(adiumAccount));
 }
 
@@ -1328,6 +1333,7 @@ NSString *processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 		if (act->callback) {
 			act->plugin = account->gc->prpl;
 			act->context = account->gc;
+			act->user_data = [[dict objectForKey:@"PurplePluginActionCallbackUserData"] pointerValue];
 			act->callback(act);
 		}
 		purple_plugin_action_free(act);

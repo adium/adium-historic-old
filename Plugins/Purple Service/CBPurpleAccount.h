@@ -17,7 +17,7 @@
 #import <Adium/AIAccount.h>
 #import <AdiumLibpurple/PurpleCommon.h>
 
-@class SLPurpleCocoaAdapter, ESFileTransfer, AIService, AIContentMessage, AIStatus, AIWindowController;
+@class SLPurpleCocoaAdapter, ESFileTransfer, AIService, AIContentMessage, AIStatus, AIWindowController, AMPurpleTuneTooltip;
 
 @interface CBPurpleAccount : AIAccount <AIAccount_Privacy>
 {   	
@@ -30,6 +30,9 @@
 	
 	NSMutableArray		*permittedContactsArray;
 	NSMutableArray		*deniedContactsArray;	
+	
+	NSDictionary		*tuneinfo;
+	AMPurpleTuneTooltip *tunetooltip;
 }
 
 - (const char*)protocolPlugin;
@@ -94,6 +97,7 @@
 - (void)accountConnectionNotice:(NSString *)text;
 - (void)accountConnectionDisconnected;
 - (void)accountConnectionProgressStep:(NSNumber *)step percentDone:(NSNumber *)connectionProgressPrecent;
+- (void)accountConnectionStep:(NSString*)msg step:(int)step totalSteps:(int)step_count;
 
 - (void)newContact:(AIListContact *)theContact withName:(NSString *)inName;
 - (void)updateContact:(AIListContact *)theContact
@@ -115,6 +119,8 @@
 - (void)updateMobileStatus:(AIListContact *)theContact withData:(BOOL)isMobile;
 
 - (void)removeContact:(AIListContact *)theContact;
+
+- (id)authorizationRequestWithDict:(NSDictionary*)dict;
 
 - (void)addChat:(AIChat *)chat;
 - (void)typingUpdateForIMChat:(AIChat *)chat typing:(NSNumber *)typing;

@@ -1,0 +1,24 @@
+{
+    IBClasses = (
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {changeServiceName = id; }; 
+            CLASS = AMPurpleJabberServiceDiscoveryBrowserController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                nodename = NSTextField; 
+                outlineview = NSOutlineView; 
+                servicename = NSTextField; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = AMPurpleJabberServiceDiscoveryOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSOutlineView; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

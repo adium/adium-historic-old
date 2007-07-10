@@ -22,6 +22,7 @@
 #import <Adium/NDRunLoopMessenger.h>
 #import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/ESFileTransfer.h>
+#import "AMPurpleRequestFieldsController.h"
 
 /*
  * Purple requires us to return a handle from each of the request functions.  This handle is passed back to use in 
@@ -270,12 +271,27 @@ static void *adiumPurpleRequestFields(const char *title, const char *primary,
 		 * And by that, I mean that we accept all the default empty values, since the username and password are preset for us. */
 		((PurpleRequestFieldsCb)okCb)(userData, fields);
 		
-	} else {		
+	} else {
 		AILog(@"adiumPurpleRequestFields: %s\n%s\n%s ",
 				   (title ? title : ""),
 				   (primary ? primary : ""),
 				   (secondary ? secondary : ""));
+        
+        id self = (CBPurpleAccount*)account->ui_data; // for AILocalizedString
 		
+        requestController = [[AMPurpleRequestFieldsController alloc] initWithTitle:title?[NSString stringWithUTF8String:title]:nil
+                                                                       primaryText:primary?[NSString stringWithUTF8String:primary]:nil
+                                                                     secondaryText:secondary?[NSString stringWithUTF8String:secondary]:nil
+                                                                     requestFields:fields
+                                                                            okText:okText?[NSString stringWithUTF8String:okText]:AILocalizedString(@"OK",nil)
+                                                                          callback:okCb
+                                                                        cancelText:cancelText?[NSString stringWithUTF8String:cancelText]:AILocalizedString(@"Cancel",nil)
+                                                                          callback:cancelCb
+                                                                           account:(CBPurpleAccount*)account->ui_data
+                                                                               who:who?[NSString stringWithUTF8String:who]:nil
+                                                                      conversation:conv
+                                                                          userData:userData];
+#if 0
 		GList					*gl, *fl, *field_list;
 		PurpleRequestFieldGroup	*group;
 
@@ -320,6 +336,7 @@ static void *adiumPurpleRequestFields(const char *title, const char *primary,
 			
 		}
 //		((PurpleRequestFieldsCb)okCb)(userData, fields);
+#endif
 	}
     
 	return (requestController ? requestController : [NSNull null]);

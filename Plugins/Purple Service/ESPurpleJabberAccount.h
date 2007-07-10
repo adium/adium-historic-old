@@ -22,13 +22,28 @@
 #define KEY_JABBER_RESOURCE				@"Jabber:Resource"
 #define KEY_JABBER_USE_TLS				@"Jabber:Use TLS"
 #define KEY_JABBER_FORCE_OLD_SSL		@"Jabber:Force Old SSL"
+#define KEY_JABBER_REQUIRE_TLS			@"Jabber:Require TLS"
 #define KEY_JABBER_ALLOW_PLAINTEXT		@"Jabber:Allow Plaintext Authentication"
+#define KEY_JABBER_DISABLE_BUZZ			@"Jabber:Disable Buzz"
+#define KEY_JABBER_SUBSCRIPTION_BEHAVIOR @"Jabber:Subscription Behavior"
+#define KEY_JABBER_SUBSCRIPTION_GROUP	@"Jabber:Default Subscription Group"
+
+#define ESPurpleAccountUsernameAndPasswortRegisteredNotification @"ESPurpleAccountUsernameAndPasswortRegisteredNotification"
+
+@class AMXMLConsoleController, AMPurpleJabberMoodTooltip, AMPurpleJabberServiceDiscoveryBrowsing, AMPurpleJabberAdHocServer;
 
 @interface ESPurpleJabberAccount : CBPurpleAccount <AIAccount_Files> {
-
+    AMXMLConsoleController *xmlConsoleController;
+	AMPurpleJabberMoodTooltip *moodTooltip;
+	AMPurpleJabberServiceDiscoveryBrowsing *discoveryBrowserController;
+	
+	AMPurpleJabberAdHocServer *adhocServer;
+	
+	BOOL hasEncryption;
 }
 
 - (NSString *)serverSuffix;
 - (NSString *)resourceName;
+- (AMPurpleJabberAdHocServer*)adhocServer;
 
 @end

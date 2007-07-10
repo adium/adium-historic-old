@@ -24,8 +24,24 @@
 	IBOutlet	NSTextField *textField_priorityAway;
 	IBOutlet	NSButton	*checkBox_useTLS;
 	IBOutlet	NSButton	*checkBox_forceOldSSL;
+	IBOutlet	NSButton	*checkBox_requireTLS;
 	IBOutlet	NSButton	*checkBox_allowPlaintext;
+	IBOutlet	NSTabView	*tabview_registration;
+	IBOutlet	NSTableView	*tableview_servers;
+	IBOutlet	NSTextField	*textField_registerServerName;
+	IBOutlet	NSTextField *textField_registerServerPort;
+	IBOutlet	NSButton	*checkBox_disableBuzz;
+	IBOutlet	NSPopUpButton *popup_subscriptionBehavior;
+	IBOutlet	NSTextField	*textField_subscriptionModeLabel;
+	IBOutlet	NSComboBox	*comboBox_subscriptionGroup;
+	
+	NSArray *servers;
 }
 
-@end
+- (IBAction)registerNewAccount:(id)sender;
+- (IBAction)registerGoBack:(id)sender;
+- (IBAction)registerRequestAccount:(id)sender;
 
+- (IBAction)subscriptionModeDidChange:(id)sender;
+
+@end
