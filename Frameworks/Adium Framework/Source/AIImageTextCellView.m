@@ -45,7 +45,6 @@
 {
 	cell = [[AIImageTextCell alloc] init];
     [cell setFont:[NSFont systemFontOfSize:12]];
-	[cell setIgnoresFocus:YES];
 }
 
 - (void)dealloc

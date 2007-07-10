@@ -78,9 +78,8 @@
     [table_emoticonPacks registerForDraggedTypes:[NSArray arrayWithObject:EMOTICON_PACK_DRAG_TYPE]];
 	
 	//Configure the outline view
-	AIGenericViewCell	*cell = [[[AIGenericViewCell alloc] init] autorelease];
-	[cell setDrawsGradientHighlight:YES];
-	[[table_emoticonPacks tableColumnWithIdentifier:@"Emoticons"] setDataCell:cell];
+	[table_emoticonPacks setDrawsGradientSelection:YES];
+	[[table_emoticonPacks tableColumnWithIdentifier:@"Emoticons"] setDataCell:[[[AIGenericViewCell alloc] init] autorelease]];
 	[table_emoticonPacks selectRow:0 byExtendingSelection:NO];
 	[table_emoticonPacks setToolTip:EMOTICON_PACKS_TOOLTIP];
 	[table_emoticonPacks setDelegate:self];

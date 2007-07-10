@@ -1,6 +1,11 @@
 {
     IBClasses = (
         {
+            CLASS = AIAlternatingRowTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTableView; 
+        }, 
+        {
             CLASS = AILocalizationButton; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -33,7 +38,8 @@
             SUPERCLASS = AIWindowController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {CLASS = NSButton; LANGUAGE = ObjC; SUPERCLASS = NSControl; }
+        {CLASS = NSButton; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }
