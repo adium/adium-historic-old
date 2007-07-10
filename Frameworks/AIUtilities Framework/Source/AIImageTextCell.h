@@ -13,15 +13,15 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import "AIGradientCell.h"
+#import <AppKit/NSCell.h>
 
 /*!
  * @class AIImageTextCell
  * @brief A cell which displays an image and one or two lines of text
  *
- * This <tt>AIGradientCell</tt> subclass displays in image on the left and one or two lines of text centered vertically in the space remaining for the cell
+ * This NSCell subclass displays in image on the left and one or two lines of text centered vertically in the space remaining for the cell
  */
-@interface AIImageTextCell : AIGradientCell {
+@interface AIImageTextCell : NSCell {
 	NSFont			*font;
     NSString		*subString;
 	float			maxImageWidth;
