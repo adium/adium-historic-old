@@ -38,9 +38,9 @@ void gaim_account_set_bool(void *account, const char *name,
 	return [(serverAppendedToUID ? myUID : [myUID stringByAppendingString:[self serverSuffix]]) UTF8String];
 }
 
-- (void)configureGaimAccount
+- (void)configurePurpleAccount
 {
-	[super configureGaimAccount];
+	[super configurePurpleAccount];
 
 	gaim_account_set_username([self gaimAccount], [self gaimAccountName]);
 	

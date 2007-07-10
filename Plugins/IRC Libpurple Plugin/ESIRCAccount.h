@@ -6,11 +6,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <AdiumLibgaim/CBGaimAccount.h>
+#import <AdiumLibpurple/CBPurpleAccount.h>
 
 #define KEY_IRC_USE_SSL	@"IRC:Use SSL"
 
-@interface ESIRCAccount : CBGaimAccount {
+@interface ESIRCAccount : CBPurpleAccount {
 
 }
 
