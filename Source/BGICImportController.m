@@ -327,7 +327,12 @@
 	tabViewFrame.origin.x -= backgroundViewFrame.origin.x;
 	tabViewFrame.origin.y -= backgroundViewFrame.origin.y;
 	[backgroundView setTransparentRect:tabViewFrame];	
-	
+
+	[importAccountsButton setState:NSOnState];
+	[importStatusButton setState:NSOnState];
+	[createStatusGroupsButton setState:NSOnState];
+	[importLogsButton setState:NSOnState];
+
 	[[self window] center];
 	
 	[assistantPanes selectTabViewItemWithIdentifier:@"start"];
