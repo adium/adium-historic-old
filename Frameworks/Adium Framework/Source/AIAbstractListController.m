@@ -67,8 +67,6 @@
 		showTooltipsInBackground = NO;
 		backgroundOpacity = 1.0;
 
-		[self configureViewsAndTooltips];
-		
 		//Watch for drags ending so we can clear any cached drag data
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(listControllerDragEnded:)
@@ -139,14 +137,18 @@
 	}
 }
 
-//Setup the window after it has loaded
+//Setup the window after it has loaded and our cells have been configured
 - (void)configureViewsAndTooltips
 {
 	//Configure the contact list view
 	tooltipTracker = [[AISmoothTooltipTracker smoothTooltipTrackerForView:scrollView_contactList
 															 withDelegate:self] retain];
 
-	[[[contactListView tableColumns] objectAtIndex:0] setDataCell:[[[AIListContactCell alloc] init] autorelease]];
+	/* The table column will want to interact with a cell. We use an AIMultiCellOutlineView subclass, though,
+	 * so the contentCell and groupCell set in updateLayoutFromPrefDict:andThemeFromPrefDict: will actually be
+	 * the primary actors.
+	 */
+	[[[contactListView tableColumns] objectAtIndex:0] setDataCell:[[[AIListCell alloc] init] autorelease]];
 	
 	//Targeting
     [contactListView setTarget:self];
@@ -164,6 +166,10 @@
 
 	//Dragging
 	[contactListView registerForDraggedTypes:[NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs", NSFilenamesPboardType, NSURLPboardType, NSStringPboardType, nil]];
+	
+	[contactListView reloadData];
+
+	configuredViewsAndTooltips = YES;
 }
 
 - (void)setContactListRoot:(ESObjectWithStatus<AIContainingObject> *)newContactListRoot
@@ -235,8 +241,6 @@
 			contentCell = [[AIListContactBubbleToFitCell alloc] init];
 		break;
 	}
-	[contactListView setGroupCell:groupCell];
-	[contactListView setContentCell:contentCell];
 	
 	//Re-apply opacity settings for the new cells
 	[self setBackgroundOpacity:backgroundOpacity];
@@ -393,8 +397,12 @@
 	//Outline View
 	[contactListView setGroupCell:groupCell];
 	[contactListView setContentCell:contentCell];
-	[contactListView setNeedsDisplay:YES];
 	
+	//We're now ready to be used; configure our views and tooltips if we haven't already
+	if (!configuredViewsAndTooltips) {
+		[self configureViewsAndTooltips];
+	}
+
 	[self contactListDesiredSizeChanged];
 }
 
@@ -576,9 +584,7 @@
 
 - (float)outlineView:(NSOutlineView *)outlineView heightOfRowByItem:(id)item
 {
-	float height = ([outlineView isExpandable:item] ? [groupCell cellSize].height : [contentCell cellSize].height);
-	
-	return (height > 0 ? height : 16.0);
+	return ([outlineView isExpandable:item] ? [groupCell cellSize].height : [contentCell cellSize].height);
 }
 
 #pragma mark Finder-style searching
