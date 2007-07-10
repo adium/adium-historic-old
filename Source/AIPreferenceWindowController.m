@@ -41,17 +41,6 @@
 //Localized strings
 #define PREFERENCE_WINDOW_TITLE					AILocalizedString(@"Preferences",nil)
 
-@interface AIPreferenceWindowController (PRIVATE)
-+ (AIPreferenceWindowController *)_preferenceWindowController;
-- (id)initWithWindowNibName:(NSString *)windowNibName;
-- (NSArray *)_panesInCategory:(AIPreferenceCategory)inCategory;
-- (void)_saveControlChanges;
-- (void)_configureAdvancedPreferencesTable;
-- (void)_configreTabViewItemLabels;
-- (NSString *)tabView:(NSTabView *)tabView labelForTabViewItem:(NSTabViewItem *)tabViewItem;
-- (void)sizeWindowForToolbar;
-@end
-
 static SS_PrefsController			*prefsController = nil;
 
 /*!
