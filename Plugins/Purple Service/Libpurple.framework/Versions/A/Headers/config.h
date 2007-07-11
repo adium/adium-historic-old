@@ -18,7 +18,7 @@
 /* OS X has OPEN_SSL */
 #define HAVE_OPENSSL TRUE
 /* but we prefer CDSA */
-/*#define HAVE_CDSA TRUE*/
+#define HAVE_CDSA TRUE
 
 /* OS X 10.2.x does not have poll() */
 /* Define to 1 if you have the `poll' function. */
