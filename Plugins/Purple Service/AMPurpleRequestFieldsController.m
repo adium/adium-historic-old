@@ -543,7 +543,10 @@
         [doc setCharacterEncoding:@"UTF-8"];
         [doc setDocumentContentKind:NSXMLDocumentXHTMLKind];
         
-        [[self window] setTitle:title];
+		if(title)
+			[[self window] setTitle:title];
+		else
+			[[self window] setTitle:AILocalizedString(@"Form","Generic fields request window title")];
         [(id)webview setDrawsBackground:NO]; // private method
         [self performSelector:@selector(loadForm:) withObject:doc afterDelay:0.0];
         
