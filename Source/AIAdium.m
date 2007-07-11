@@ -1266,7 +1266,16 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 	//Allow updating from betas to anything, and anything to non-betas
 	//Careful! a15 is fine, but A15 is not, because it would hit the A in Adium.
 	NSCharacterSet *guardCharacters = [NSCharacterSet characterSetWithCharactersInString:@"abBrcRC"];
-	if([currentVersion rangeOfCharacterFromSet:guardCharacters].location != NSNotFound || !([newVersion rangeOfCharacterFromSet:guardCharacters].location != NSNotFound))
+	
+	/*
+	 * Use AICustomVersionComparison() if:
+	 *	 - Current version is an alpha/beta/release candidate OR
+	 *   - New version is *not* an alpha/beta/release candidate OR
+	 *   - User has AIAlwaysUpdateToBetas enabled
+	 */
+	if(([currentVersion rangeOfCharacterFromSet:guardCharacters].location != NSNotFound) || 
+	   ([newVersion rangeOfCharacterFromSet:guardCharacters].location == NSNotFound) ||
+	   [[NSUserDefaults standardUserDefaults] boolForKey:@"AIAlwaysUpdateToBetas"])
 		return AICustomVersionComparison(newVersion, currentVersion); //handles rc > b > a properly
 	else 
 		return NSOrderedSame;
