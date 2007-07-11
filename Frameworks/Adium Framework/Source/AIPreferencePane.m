@@ -61,9 +61,19 @@
 	return [self label];
 }
 
+int getRandomNumber()
+{
+	return 4;	// chosen by fair dice roll.
+				// guaranteed to be random.
+}
+
 - (NSString *)paneIdentifier
 {
-	return nil;
+	NSLog(@"*** %@ does not implement paneIdentifier, which is required!", self);
+	/* The subclass should implement paneIdentifier. If it doesn't, which can happen for an old external plugin,
+	 * generate a random paneIdentifier for this instance so that we can still function properly.
+	 */
+	return [NSString stringWithFormat:@"uniquePaneIdentifier-%i",getRandomNumber()];
 }
 
 - (NSImage *)paneIcon
