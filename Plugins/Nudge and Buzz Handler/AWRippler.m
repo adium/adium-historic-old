@@ -43,6 +43,7 @@
 {
     return _windowNum;
 }
+
 - (void)scaleX:(double)x Y:(double)y {
         CGAffineTransform original;
         NSPoint scalePoint;
@@ -63,7 +64,7 @@
         original = CGAffineTransformScale(original, x, y);
         original = CGAffineTransformTranslate(original, -scalePoint.x, -scalePoint.y);
         
-        CGSSetWindowTransform(_CGSDefaultConnection(), _windowNum, original);
+        CGSSetWindowTransform(_CGSDefaultConnection(), (CGSWindowID)_windowNum, original);
 }
 
 @end
@@ -87,13 +88,13 @@
     unsigned int _filter_id;
 }
 
-+ (id)filterWithFilter:(CIFilter *)filter connectionID:(CGSConnection)cid;
-- (id)initWithFilter:(CIFilter *)filter connectionID:(CGSConnection)cid;
++ (id)filterWithFilter:(CIFilter *)filter connectionID:(CGSConnectionID)cid;
+- (id)initWithFilter:(CIFilter *)filter connectionID:(CGSConnectionID)cid;
 - (void)dealloc;
 - (void)setValue:(id)value forKey:(NSString *)key;
 - (void)setValuesForKeysWithDictionary:(NSDictionary *)dict;
-- (int)addToWindow:(CGSWindow)windowID flags:(unsigned int)flags;
-- (int)removeFromWindow:(CGSWindow)windowID;
+- (int)addToWindow:(CGSWindowID)windowID flags:(unsigned int)flags;
+- (int)removeFromWindow:(CGSWindowID)windowID;
 - (id)description;
 @end
 
@@ -127,7 +128,7 @@
 @end
 
 /* CoreGraphics private stuff */
-extern CGSConnection _CGSDefaultConnection(void);
+extern CGSConnectionID _CGSDefaultConnection(void);
 
 /* The magic rippler class */
 @implementation AWRippler
@@ -148,7 +149,7 @@ extern CGSConnection _CGSDefaultConnection(void);
 
 - (void)rippleWindow:(NSWindow *)rippleWindow
 {
-    CGSConnection cid = _CGSDefaultConnection();
+    CGSConnectionID cid = _CGSDefaultConnection();
     NSRect rect;
     NSRect rippleRect;
     NSRect screenRect;
@@ -202,7 +203,7 @@ extern CGSConnection _CGSDefaultConnection(void);
     windowFilter = [[CICGSFilter filterWithFilter:rippleFilter connectionID:cid] retain];
 	[windowFilter addToWindow:aWindowID flags:0x3001];
     
-    aWindowID = [win windowNum];
+    aWindowID = (CGSWindowID)[win windowNum];
     [self retain];
     
     [NSThread detachNewThreadSelector:@selector(animationLoop:) toTarget:self withObject:self];
@@ -211,13 +212,13 @@ extern CGSConnection _CGSDefaultConnection(void);
 - (void)animationLoop:(id)sender
 {
     NSAutoreleasePool *pool;
-	CGSConnection cid = _CGSDefaultConnection();
+	CGSConnectionID cid = _CGSDefaultConnection();
     CICGSFilter *oldFilter = windowFilter;
     double scale;
     CFAbsoluteTime time;
     CGAffineTransform originalTransform;
     
-    CGSGetWindowTransform(cid, [ripplingWindow windowNum], &originalTransform);
+    CGSGetWindowTransform(cid, (CGSWindowID)[ripplingWindow windowNum], &originalTransform);
     
     pool = [[NSAutoreleasePool alloc] init];
     
@@ -232,7 +233,7 @@ extern CGSConnection _CGSDefaultConnection(void);
         }
         else
         {
-            CGSSetWindowTransform(cid, [ripplingWindow windowNum], originalTransform);
+            CGSSetWindowTransform(cid, (CGSWindowID)[ripplingWindow windowNum], originalTransform);
         }
         
         [rippleFilter setValue:[NSNumber numberWithFloat:160*(time - startTime)] forKey:@"inputPhase"];
@@ -242,7 +243,7 @@ extern CGSConnection _CGSDefaultConnection(void);
         
         time = CFAbsoluteTimeGetCurrent();
     }
-    CGSSetWindowTransform(cid, [ripplingWindow windowNum], originalTransform);
+    CGSSetWindowTransform(cid, (CGSWindowID)[ripplingWindow windowNum], originalTransform);
 
     [windowFilter removeFromWindow:aWindowID];
     [rippleFilter release];

@@ -30,11 +30,7 @@
 
 #import <Foundation/Foundation.h>
 #import <QuartzCore/QuartzCore.h>
-
-@class CICGSFilter;
-
-typedef int CGSConnection;
-typedef int CGSWindow;
+#import <AIUtilities/AIWindowAdditions.h>
 
 @interface NSWindow(AWRipple)
 - (void)ripple;
@@ -43,7 +39,7 @@ typedef int CGSWindow;
 @interface AWRippler : NSObject {
     NSWindow        *win;
     NSWindow        *ripplingWindow;
-	CGSWindow       aWindowID;
+	CGSWindowID       aWindowID;
 	CIFilter        *rippleFilter;
 	CICGSFilter     *windowFilter;
     CFAbsoluteTime  startTime;
