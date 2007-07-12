@@ -631,7 +631,6 @@ static NSArray *draggedTypes = nil;
  */
 - (void)_processContentObject:(AIContentObject *)content willAddMoreContentObjects:(BOOL)willAddMoreContentObjects
 {
-	NSString		*dateMessage = nil;
 	AIContentEvent	*dateSeparator = nil;
 	
 	/*
@@ -640,7 +639,7 @@ static NSArray *draggedTypes = nil;
 	 */
 	if ((!previousContent && [content isKindOfClass:[AIContentContext class]]) ||
 	   (![content isFromSameDayAsContent:previousContent])) {
-		dateMessage = [[content date] descriptionWithCalendarFormat:[[NSDateFormatter localizedDateFormatter] dateFormat]
+		NSString *dateMessage = [[content date] descriptionWithCalendarFormat:[[NSDateFormatter localizedDateFormatter] dateFormat]
 														   timeZone:nil
 															 locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
 		dateSeparator = [AIContentEvent statusInChat:[content chat]
@@ -649,7 +648,7 @@ static NSArray *draggedTypes = nil;
 												date:[content date]
 											 message:[[[NSAttributedString alloc] initWithString:dateMessage
 																					  attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
-											withType:@"date_separator"];
+											withType:([content isKindOfClass:[AIContentContext class]] ? @"date_separator history" : @"date_separator"];
 		//Add the date header
 		[self _appendContent:dateSeparator 
 					 similar:NO
