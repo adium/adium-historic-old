@@ -57,8 +57,7 @@ PurpleDebugUiOps *adium_purple_debug_get_ui_ops(void)
 // Core ------------------------------------------------------------------------------------------------------
 
 extern gboolean purple_init_ssl_plugin(void);
-extern gboolean purple_init_ssl_cdsa_plugin(void);
-//extern gboolean purple_init_ssl_gnutls_plugin();
+extern gboolean purple_init_ssl_openssl_plugin();
 extern gboolean purple_init_gg_plugin(void);
 extern gboolean purple_init_jabber_plugin(void);
 extern gboolean purple_init_sametime_plugin(void);
@@ -77,9 +76,7 @@ static void init_all_plugins()
 
 	//First, initialize our built-in plugins
 	purple_init_ssl_plugin();
-//	purple_init_ssl_cdsa_plugin();
     purple_init_ssl_openssl_plugin();
-//	purple_init_ssl_gnutls_plugin();
 	purple_init_gg_plugin();
 	purple_init_jabber_plugin();
 	purple_init_sametime_plugin();
