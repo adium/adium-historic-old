@@ -704,9 +704,46 @@ extern void jabber_roster_request(JabberStream *js);
 	}
 }
 
-#pragma mark XML Console, Tooltip and AdHoc Server Integration
+#pragma mark Gateway Tracking
+
+- (void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName contactName:(NSString *)contactName {
+	NSRange atsign = [[theContact UID] rangeOfString:@"@"];
+	if(atsign.location != NSNotFound)
+		[super updateContact:theContact toGroupName:groupName contactName:contactName];
+	else {
+		NSEnumerator *e = [gateways objectEnumerator];
+		AIListContact *gateway;
+		// avoid duplicates!
+		while((gateway = [e nextObject])) {
+			if([[gateway UID] isEqualToString:[theContact UID]]) {
+				[gateways removeObjectIdenticalTo:gateway];
+				break;
+			}
+		}
+		[gateways addObject:theContact];
+	}
+}
+
+- (void)removeContact:(AIListContact *)theContact {
+	NSRange atsign = [[theContact UID] rangeOfString:@"@"];
+	if(atsign.location != NSNotFound)
+		[super removeContact:theContact];
+	else {
+		NSEnumerator *e = [gateways objectEnumerator];
+		AIListContact *gateway;
+		while((gateway = [e nextObject])) {
+			if([[gateway UID] isEqualToString:[theContact UID]]) {
+				[gateways removeObjectIdenticalTo:gateway];
+				break;
+			}
+		}
+	}
+}
+
+#pragma mark XML Console, Tooltip, AdHoc Server Integration and Gateway Integration
 
 - (void)didConnect {
+	gateways = [[NSMutableArray alloc] init];
 	if(adhocServer)
 		[adhocServer release];
 	adhocServer = [[AMPurpleJabberAdHocServer alloc] initWithAccount:self];
@@ -734,6 +771,8 @@ extern void jabber_roster_request(JabberStream *js);
 	[adhocServer release];
 	adhocServer = nil;
 	[super didDisconnect];
+	[gateways release];
+	gateways = nil;
 }
 
 - (IBAction)showXMLConsole:(id)sender {
@@ -748,12 +787,31 @@ extern void jabber_roster_request(JabberStream *js);
 }
 
 - (NSArray *)accountActionMenuItems {
-    NSMutableArray *menu = [[super accountActionMenuItems] mutableCopy];
-    if(!menu)
-        menu = [[NSMutableArray alloc] init];
-    else
+	NSMutableArray *menu = [[NSMutableArray alloc] init];
+	
+	if([gateways count] > 0) {
+		NSEnumerator *e = [gateways objectEnumerator];
+		AIListContact *gateway;
+		while((gateway = [e nextObject])) {
+			NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:[gateway UID] action:nil keyEquivalent:@""];
+			NSMenu *submenu = [[NSMenu alloc] initWithTitle:[gateway UID]];
+			[submenu setDelegate:self];
+			[mitem setSubmenu:submenu];
+			[submenu release];
+			[mitem setRepresentedObject:gateway];
+			[mitem setImage:[gateway displayArrayObjectForKey:@"Tab Status Icon"]];
+			[menu addObject:mitem];
+			[mitem release];
+		}
         [menu addObject:[NSMenuItem separatorItem]];
-    
+	}
+	
+    NSArray *supermenu = [super accountActionMenuItems];
+    if(supermenu) {
+		[menu addObjectsFromArray:supermenu];
+        [menu addObject:[NSMenuItem separatorItem]];
+	}
+    	
     NSMenuItem *xmlConsoleMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"XML Console",nil) action:@selector(showXMLConsole:) keyEquivalent:@""];
     [xmlConsoleMenuItem setTarget:self];
     [menu addObject:xmlConsoleMenuItem];
@@ -769,6 +827,27 @@ extern void jabber_roster_request(JabberStream *js);
 
 - (AMPurpleJabberAdHocServer*)adhocServer {
 	return adhocServer;
+}
+
+- (void)menuNeedsUpdate:(NSMenu*)menu {
+	// locate menu item in supermenu (why is this so complicated?)
+	NSMenuItem *mitem;
+	NSEnumerator *e = [[[menu supermenu] itemArray] objectEnumerator];
+	while((mitem = [e nextObject]))
+		if([mitem submenu] == menu)
+			break;
+	if(!mitem)
+		return; // can't happen
+	AIListContact *gateway = [mitem representedObject];
+	if(![gateway isKindOfClass:[AIListObject class]])
+		return;
+	// clear menu
+	while([menu numberOfItems] > 0)
+		[menu removeItemAtIndex:0];
+	NSArray *menuitemarray = [self menuItemsForContact:gateway];
+	e = [menuitemarray objectEnumerator];
+	while((mitem = [e nextObject]))
+		[menu addItem:mitem];
 }
 
 @end
