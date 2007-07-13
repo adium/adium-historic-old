@@ -113,8 +113,6 @@ typedef enum {
  * accounts, check out 'working with accounts' and 'creating service code'.
  */
 @interface AIAccount : AIListObject {
-	int							accountNumber;					//Unique integer that represents this account
-	
     NSString                    *password;
     BOOL                        silentAndDelayed;				//We are waiting for and processing our sign on updates
     BOOL						disconnectedByFastUserSwitch;	//We are offline because of a fast user switch
