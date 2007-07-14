@@ -162,7 +162,6 @@
 	id<AIPreferenceController> preferenceController = [adium preferenceController];
     //Observe preference changes
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
-	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 	
 	//Preference code below assumes layout is done before theme.
@@ -493,7 +492,12 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 	if ([[NSScreen screens] count] && 
 		(currentScreen == [[NSScreen screens] objectAtIndex:0])) {
 		currentScreenFrame.size.height -= [NSMenuView menuBarHeight];
-	}	
+	}
+
+	//Ensure the window is displaying at the proper level and exposé setting
+	AIWindowLevel	windowLevel = [[[adium preferenceController] preferenceForKey:KEY_CL_WINDOW_LEVEL
+																			group:PREF_GROUP_CONTACT_LIST] intValue];
+	[self setWindowLevel:levelForAIWindowLevel(windowLevel)];	
 }
 
 - (void)setSavedFrame:(NSRect)frame
