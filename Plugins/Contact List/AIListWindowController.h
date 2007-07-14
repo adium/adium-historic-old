@@ -30,7 +30,6 @@ typedef enum {
 #define KEY_CL_SLIDE_ONLY_IN_BACKGROUND		@"Hide By Sliding Only in Background"
 
 #define PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
-#define KEY_SCL_BORDERLESS					@"Borderless"
 #define KEY_DUAL_RESIZE_VERTICAL			@"Autoresize Vertical"
 #define KEY_DUAL_RESIZE_HORIZONTAL			@"Autoresize Horizontal"
 
