@@ -22,6 +22,12 @@
 	return self;
 }
 
+- (void)configureViewsAndTooltips
+{
+	[super configureViewsAndTooltips];
+	
+	[self contactOrderChanged:nil];
+}
 /*!
  * @brief When the contact order changes, check to ensure we have 1 or more visible rows
  *
