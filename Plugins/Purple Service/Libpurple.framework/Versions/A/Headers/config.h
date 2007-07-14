@@ -2,10 +2,10 @@
 #include <AvailabilityMacros.h>
 
 /* Version number of package */
-#define VERSION "2.0.0"
+#define VERSION "2.0.2"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libpurple 2.0.0"
+#define PACKAGE_STRING "libpurple 2.0.2"
 
 #define DATADIR ""
 
@@ -17,8 +17,6 @@
 
 /* OS X has OPEN_SSL */
 #define HAVE_OPENSSL TRUE
-/* but we prefer CDSA */
-#define HAVE_CDSA TRUE
 
 /* OS X 10.2.x does not have poll() */
 /* Define to 1 if you have the `poll' function. */
