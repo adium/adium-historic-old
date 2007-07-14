@@ -19,6 +19,7 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import "GBFireImporter.h"
 #import "GBFireLogImporter.h"
+#import "BGICImportController.h"
 
 @implementation GBImportPlugin
 
@@ -30,20 +31,28 @@
 										 keyEquivalent:@""];
 	[[adium menuController] addMenuItem:importMenuRoot toLocation:LOC_File_Additions];
 	
-	NSMenuItem *importFire = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Fire Accounts and Logs", nil)
-														target:self
-														action:@selector(importFire:)
-												 keyEquivalent:@""];
-	NSMenuItem *importFireLogs = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Fire Logs", nil)
-															target:self
-															action:@selector(importFireLogs:)
-													 keyEquivalent:@""];
 	NSMenu *subMenu = [[NSMenu alloc] init];
+
+	[subMenu addItemWithTitle:AILocalizedString(@"iChat Accounts, Statuses, and Transcripts", "Menu item title under the 'Import' submenu. iChat is another OS X instant messaging client.")
+					   target:self
+					   action:@selector(importIChat:)
+				keyEquivalent:@""];
+
+	[subMenu addItem:[NSMenuItem separatorItem]];
+
+	[subMenu addItemWithTitle:AILocalizedString(@"Fire Accounts and Logs", "Menu item title under the 'Import' submenu. Fire is another OS X instant messaging client.")
+					   target:self
+					   action:@selector(importFire:)
+				keyEquivalent:@""];	
+
+	[subMenu addItemWithTitle:AILocalizedString(@"Fire Logs", "Menu item title under the 'Import' submenu. Fire is another OS X instant messaging client.")
+					   target:self
+					   action:@selector(importFireLogs:)
+				keyEquivalent:@""];
+	
+	
 	[importMenuRoot setSubmenu:subMenu];
 	[subMenu release];
-	
-	[subMenu addItem:importFire];
-	[subMenu addItem:importFireLogs];
 }
 
 - (void)uninstallPlugin
@@ -61,4 +70,8 @@
 	[GBFireLogImporter importLogs];
 }
 
+- (void)importIChat:(id)sender
+{
+	[BGICImportController importIChatConfiguration];
+}
 @end

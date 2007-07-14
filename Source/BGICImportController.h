@@ -67,6 +67,8 @@
 	BOOL bonjourAutoLogin;
 }
 
++ (void)importIChatConfiguration;
+
 -(IBAction)goBack:(id)sender;
 -(IBAction)proceed:(id)sender;
 

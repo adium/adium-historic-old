@@ -317,6 +317,13 @@
 
 @implementation BGICImportController
 
++ (void)importIChatConfiguration
+{
+	//This is a leak.
+	BGICImportController *ichatCon = [[BGICImportController alloc] initWithWindowNibName:@"ICImport"];
+	[ichatCon showWindow:ichatCon];	
+}
+
 -(void)awakeFromNib {
 	currentStep = 0;
 	
