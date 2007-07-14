@@ -682,7 +682,7 @@ extern void jabber_roster_request(JabberStream *js);
 - (void)accountMenuDidUpdate:(NSMenuItem*)menuItem {
 	if(hasEncryption) {
 		NSMutableAttributedString *title = [[NSMutableAttributedString alloc] initWithString:[menuItem title] attributes:[NSDictionary dictionaryWithObjectsAndKeys:
-			[NSFont menuFontOfSize:-1.0f], NSFontAttributeName, // for some reason, this seems to be slightly smaller than the real font, seems to be an AppKit bug
+			[NSFont menuFontOfSize:14.0f], NSFontAttributeName, // for some reason, the default font size seems to be slightly smaller than the real font, seems to be an AppKit bug
 			nil]];
 		NSFileWrapper *fwrap = [[NSFileWrapper alloc] initRegularFileWithContents:
 			[[NSImage imageNamed:@"Lock_Black"] TIFFRepresentation]];
