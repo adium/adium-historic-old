@@ -89,7 +89,9 @@ enum {
 		//Set up our instance variables
 		rootElementName = nil;
 		filePath = [path copy];
-		
+		initialized = NO;
+		fullSyncAfterEachAppend = YES;
+
 		[self prepareFileHandle];
 	}
 
@@ -107,6 +109,7 @@ enum {
 	[super dealloc];
 }
 
+#pragma mark -
 
 /*!
  * @brief If the document is initialized.
@@ -140,6 +143,47 @@ enum {
 {
 	return rootElementName;
 }
+
+/*!
+ * @brief Set if a full sync to disk should be performed after each write
+ *
+ * A full sync is relatively costly but ensures that the data is immediately written. 
+ * If appending a single item, the default value of YES is appropriate.
+ *
+ * If many append operations will occur, such as in a loop, set this to NO, then call 
+ * -[AIXMLAppender performFullSync] when complete to perform the sync.
+ *
+ * Not calling performFullSync at all is only a problem in case of a power failure; the system will
+ * at some undetermined point in the future write data to disk in any case.
+ */
+- (void)setFullSyncAfterEachAppend:(BOOL)shouldFullSync
+{
+	fullSyncAfterEachAppend = shouldFullSync;
+}
+
+/*!
+ * @brief Should a full sync be performed whenever an addElement call is made?
+ *
+ * See setFullSyncAfterEachAppend: for information
+ */
+- (BOOL)fullSyncAfterEachAppend
+{
+	return fullSyncAfterEachAppend;
+}
+
+/*!
+ * @brief Perform a full sync immediately
+ *
+ * This is only useful if fullSyncAfterEachAppend is NO.
+ * fullSyncAfterEachAppend is YES by default.
+ */
+- (void)performFullSync
+{
+	if (initialized && file)
+		fcntl([file fileDescriptor], F_FULLFSYNC, /*arg*/ 0);
+}
+
+#pragma mark -
 
 - (void)prepareFileHandle
 {	
@@ -216,7 +260,9 @@ enum {
 	}
 
 	if (success) {
-		fcntl([file fileDescriptor], F_FULLFSYNC, /*arg*/ 0);
+		if (fullSyncAfterEachAppend)
+			fcntl([file fileDescriptor], F_FULLFSYNC, /*arg*/ 0);
+
 		@try {
 			[file seekToFileOffset:([file offsetInFile] - seekBackLength)];	
 			

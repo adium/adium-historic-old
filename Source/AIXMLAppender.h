@@ -38,11 +38,16 @@
 	NSString		*rootElementName;
 	
 	BOOL			initialized;
+	BOOL			fullSyncAfterEachAppend;
 }
 
 + (id)documentWithPath:(NSString *)path;
 
 - (id)initWithPath:(NSString *)path;
+
+- (void)setFullSyncAfterEachAppend:(BOOL)shouldFullSync;
+- (BOOL)fullSyncAfterEachAppend;
+- (void)performFullSync;
 
 - (BOOL)isInitialized;
 - (NSString *)path;
