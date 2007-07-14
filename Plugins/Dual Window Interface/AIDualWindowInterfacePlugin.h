@@ -41,9 +41,6 @@
 #define	KEY_WINDOW_LEVEL					@"Window Level"
 #define KEY_WINDOW_HIDE						@"Hide While in Background"
 
-#define PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
-#define KEY_SCL_BORDERLESS					@"Borderless"
-
 @protocol AIInterfaceContainer <NSObject>
 - (void)makeActive:(id)sender;	//Make the container active/front
 - (void)close:(id)sender;	//Close the container

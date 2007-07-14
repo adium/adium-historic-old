@@ -264,15 +264,6 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 		[contactListController setShowTooltips:[[prefDict objectForKey:KEY_CL_SHOW_TOOLTIPS] boolValue]];
 		[contactListController setShowTooltipsInBackground:[[prefDict objectForKey:KEY_CL_SHOW_TOOLTIPS_IN_BACKGROUND] boolValue]];
     }
-
-    if ([group isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]) {
-		if ([key isEqualToString:KEY_SCL_BORDERLESS]) {
-			[self retain];
-			[[adium interfaceController] closeContactList:nil];
-			[[adium interfaceController] showContactList:nil];
-			[self autorelease];
-		}
-	}
 	
 	//Auto-Resizing
 	if ([group isEqualToString:PREF_GROUP_APPEARANCE]) {
@@ -403,6 +394,7 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 	} else {
 		//Do a slide immediately if needed (to display as per our new preferneces)
 		[self slideWindowIfNeeded:nil];
+		
 	}
 }
 
@@ -896,7 +888,6 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		* it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
 		*/
 		[contactListController contactListDesiredSizeChanged];
-		
 		[[self window] setAlphaValue:previousAlpha];
 	}
 }
