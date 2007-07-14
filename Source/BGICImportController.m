@@ -186,8 +186,7 @@
 
 -(void)importLogs 
 {
-	if(dumpLoop == 0)
-	{
+	if (dumpLoop == 0) {
 		[importProgress setIndeterminate:NO];
 		[importProgress setMaxValue:dumpCount];
 		[importProgress setMinValue:0];
@@ -195,8 +194,7 @@
 		[cancelImportButton setHidden:NO];
 	}
 	
-	if(dumpLoop >= dumpCount)
-	{
+	if (dumpLoop >= dumpCount) {
 		[importProgress setIndeterminate:YES];
 		[importProgress stopAnimation:importProgress];
 		[importDetails setStringValue:@"Transcript importing complete."];
@@ -205,30 +203,26 @@
 		[deleteLogsButton setHidden:NO];
 		[backButton setEnabled:YES];
 		[cancelImportButton setHidden:YES];
-	}
-	else
-	{
+
+	} else {
 		NSString *logPath = [fullDump objectAtIndex:dumpLoop];
 		
-		if(logImporter == nil)
-			logImporter = [[BGICLogImportController alloc] initWithDestination:destinationAccount];
+		if (!logImporter) logImporter = [[BGICLogImportController alloc] initWithDestination:destinationAccount];
 		
 		[importProgress setDoubleValue:dumpLoop];
 		[importDetails setStringValue:[NSString stringWithFormat:@"Now importing transcript %i of %i - %@...", dumpLoop, dumpCount, [logPath stringByDeletingPathExtension]]];
 		
-		if([logPath rangeOfString:@"DS_Store"].length == 0)
-		{
+		if ([logPath rangeOfString:@"DS_Store"].location == NSNotFound) {
 			// pass the current log's path over and let the log conversion class do it's work
 			[logImporter createNewLogForPath:[[ICHAT_LOCATION stringByAppendingPathComponent:logPath] stringByExpandingTildeInPath]];
 		}
 	}
 
-	if(dumpLoop < dumpCount && cancelImport == NO) {
+	if (dumpLoop < dumpCount && cancelImport == NO) {
 		[self performSelector:@selector(importLogs) withObject:nil afterDelay:0.10];
 	}
 		
-	if(cancelImport)
-	{
+	if (cancelImport) {
 		[importDetails setStringValue:[NSString stringWithFormat:@"Transcript importing cancelled. %i of %i transcripts already imported.", dumpLoop, dumpCount]];
 		[importProgress setIndeterminate:YES];
 		[importProgress stopAnimation:importProgress];
