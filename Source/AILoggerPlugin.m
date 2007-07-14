@@ -65,7 +65,6 @@
 
 #define	LOG_VIEWER_IDENTIFIER		@"LogViewer"
 
-#define XML_LOGGING_NAMESPACE		@"http://purl.org/net/ulf/ns/0.4-02"
 #define NEW_LOGFILE_TIMEOUT			600		//10 minutes
 
 #define ENABLE_PROXIMITY_SEARCH		TRUE
