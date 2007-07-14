@@ -24,6 +24,8 @@
 
 #define PREF_KEYPATH_LOGGER_ENABLE		PREF_GROUP_LOGGING @"." KEY_LOGGER_ENABLE
 
+#define XML_LOGGING_NAMESPACE		@"http://purl.org/net/ulf/ns/0.4-02"
+
 @class AIAccount, AIHTMLDecoder, AIChat, AILoggerPreferences;
 
 @interface AILoggerPlugin : AIPlugin {

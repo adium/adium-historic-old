@@ -16,17 +16,15 @@
 
 #import "BGICLogImportController.h"
 #import "AIXMLAppender.h"
-#import "AIHTMLDecoder.h"
+#import "AILoggerPlugin.h"
+#import "AICoreComponentLoader.h"
+#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AILoginControllerProtocol.h>
 #import <AIUtilities/NSCalendarDate+ISO8601Unparsing.h>
 
 // InstantMessage and other iChat transcript classes are from Spiny Software's Logorrhea, used with permission.
 #import "InstantMessage.h"
 #import "Presentity.h"
-
-// these defines were copied from AILoggerPlugin and should be shared between them
-#define XML_LOGGING_NAMESPACE		@"http://purl.org/net/ulf/ns/0.4-02"
-#define PATH_LOGS                   @"/Logs"
 
 //#define LOG_TO_TEST
 #define TEST_LOGGING_LOCATION [@"~/Desktop/testLog" stringByExpandingTildeInPath]
@@ -48,26 +46,26 @@
 	[super dealloc];
 }
 
-/* returns whether a new log was created or not 
-   Note: this was formerly a class method as it operated as such, but accessing the user requires the adium instance variable, thus the change. */
 -(BOOL)createNewLogForPath:(NSString *)fullPath 
 {
-	AIHTMLDecoder *xhtmlDecoder = [[AIHTMLDecoder alloc]	initWithHeaders:NO
-																   fontTags:YES
-															  closeFontTags:YES
-																  colorTags:YES
-																  styleTags:YES
-															 encodeNonASCII:YES
-															   encodeSpaces:NO
-														  attachmentsAsText:YES
-												  onlyIncludeOutgoingImages:NO
-															 simpleTagsOnly:NO
-										   bodyBackground:NO];
+	AIHTMLDecoder *xhtmlDecoder = [[AIHTMLDecoder alloc] initWithHeaders:NO
+																fontTags:YES
+														   closeFontTags:YES
+															   colorTags:YES
+															   styleTags:YES
+														  encodeNonASCII:YES
+															encodeSpaces:NO
+													   attachmentsAsText:YES
+											   onlyIncludeOutgoingImages:NO
+														  simpleTagsOnly:NO
+														  bodyBackground:NO];
 	[xhtmlDecoder setGeneratesStrictXHTML:YES];
 	[xhtmlDecoder setUsesAttachmentTextEquivalents:YES];
 	
 	// read the raw file into an array for working against, two different formats have been employed by iChat, based on available classes
-	NSArray *rawChat =  ([[fullPath pathExtension] isEqual:@"ichat"] ? [NSKeyedUnarchiver unarchiveObjectWithFile:fullPath] : [NSUnarchiver unarchiveObjectWithFile:fullPath]);
+	NSArray *rawChat =  ([[fullPath pathExtension] isEqual:@"ichat"] ?
+						 [NSKeyedUnarchiver unarchiveObjectWithFile:fullPath] :
+						 [NSUnarchiver unarchiveObjectWithFile:fullPath]);
 	
 	NSString *preceedingPath = nil;
 	
@@ -89,7 +87,8 @@
 	// create a new xml parser for logs
 	NSString *documentPath = [parentPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@).chatlog", [[[rawChat objectAtIndex:3] objectAtIndex:0] senderID], [[[[rawChat objectAtIndex:2] objectAtIndex:0] date] dateWithCalendarFormat:@"%Y-%m-%dT%H.%M.%S%z" timeZone:nil]]];
 	AIXMLAppender *appender = [AIXMLAppender documentWithPath:documentPath];
-	
+	[appender setFullSyncAfterEachAppend:NO];
+
 	// set up the initial layout of the xml log
 	[appender initializeDocumentWithRootElementName:@"chat"
 									  attributeKeys:[NSArray arrayWithObjects:@"xmlns", @"account", @"service", nil]
@@ -118,7 +117,16 @@
 					 attributeValues:([attributeValues count] == 2 ? attributeValues : nil)];
 	}
 	
-	return [[NSFileManager defaultManager] fileExistsAtPath:documentPath];
+	//Force this log to disk immediately
+	[appender performFullSync];
+	
+	if ([[NSFileManager defaultManager] fileExistsAtPath:documentPath]) {
+		[(AILoggerPlugin *)[[adium componentLoader] pluginWithClassName:@"AILoggerPlugin"] markLogDirtyAtPath:documentPath];
+		return YES;
+
+	} else {
+		return NO;
+	}
 }
 
 @end
