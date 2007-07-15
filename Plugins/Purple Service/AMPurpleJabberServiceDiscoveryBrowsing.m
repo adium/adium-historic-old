@@ -562,12 +562,14 @@ static void AMPurpleJabberNode_received_data_cb(PurpleConnection *gc, xmlnode **
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView shouldSelectItem:(id)item
 {
-	return [item features] != NULL;
+	return [item identities] != NULL;
 }
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification {
 	if([outlineview selectedRow] != -1) {
 		AMPurpleJabberNode *selection = [outlineview itemAtRow:[outlineview selectedRow]];
+		if(![selection features])
+			[selection fetchInfo];
 		[servicename setStringValue:[selection jid]];
 		[nodename setStringValue:[selection node]?[selection node]:@""];
 	}
