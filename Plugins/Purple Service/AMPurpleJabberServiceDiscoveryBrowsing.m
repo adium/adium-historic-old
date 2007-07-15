@@ -176,7 +176,21 @@ static void AMPurpleJabberNode_received_data_cb(PurpleConnection *gc, xmlnode **
 						[newnode->delegates release];
 						newnode->delegates = [self->delegates retain];
 						[items addObject:newnode];
-						[newnode fetchInfo];
+						// check if we're a conference service
+						if([[self jid] rangeOfString:@"@"].location == NSNotFound) { // we can't be one when we have an @
+							NSEnumerator *e = [[self identities] objectEnumerator];
+							NSDictionary *identity;
+							while((identity = [e nextObject])) {
+								if([[identity objectForKey:@"category"] isEqualToString:@"conference"]) {
+									// since we're a conference service, assume that our children are conferences
+									newnode->identities = [[NSArray arrayWithObject:identity] retain];
+									break;
+								}
+							}
+							if(!identity)
+								[newnode fetchInfo];
+						} else
+							[newnode fetchInfo];
 						[newnode release];
 					}
 				}
