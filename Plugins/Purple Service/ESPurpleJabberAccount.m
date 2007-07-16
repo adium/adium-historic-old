@@ -795,7 +795,13 @@ extern void jabber_roster_request(JabberStream *js);
 		while((gateway = [e nextObject])) {
 			NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:[gateway UID] action:nil keyEquivalent:@""];
 			NSMenu *submenu = [[NSMenu alloc] initWithTitle:[gateway UID]];
-			[submenu setDelegate:self];
+			
+			NSArray *menuitemarray = [self menuItemsForContact:gateway];
+			NSEnumerator *e2 = [menuitemarray objectEnumerator];
+			NSMenuItem *m2item;
+			while((m2item = [e2 nextObject]))
+				[submenu addItem:m2item];
+			
 			[mitem setSubmenu:submenu];
 			[submenu release];
 			[mitem setRepresentedObject:gateway];
@@ -827,27 +833,6 @@ extern void jabber_roster_request(JabberStream *js);
 
 - (AMPurpleJabberAdHocServer*)adhocServer {
 	return adhocServer;
-}
-
-- (void)menuNeedsUpdate:(NSMenu*)menu {
-	// locate menu item in supermenu (why is this so complicated?)
-	NSMenuItem *mitem;
-	NSEnumerator *e = [[[menu supermenu] itemArray] objectEnumerator];
-	while((mitem = [e nextObject]))
-		if([mitem submenu] == menu)
-			break;
-	if(!mitem)
-		return; // can't happen
-	AIListContact *gateway = [mitem representedObject];
-	if(![gateway isKindOfClass:[AIListObject class]])
-		return;
-	// clear menu
-	while([menu numberOfItems] > 0)
-		[menu removeItemAtIndex:0];
-	NSArray *menuitemarray = [self menuItemsForContact:gateway];
-	e = [menuitemarray objectEnumerator];
-	while((mitem = [e nextObject]))
-		[menu addItem:mitem];
 }
 
 @end
