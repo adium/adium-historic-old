@@ -793,7 +793,7 @@ extern void jabber_roster_request(JabberStream *js);
 		NSEnumerator *e = [gateways objectEnumerator];
 		AIListContact *gateway;
 		while((gateway = [e nextObject])) {
-			NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:[gateway UID] action:nil keyEquivalent:@""];
+			NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:[gateway UID] action:@selector(registerGateway:) keyEquivalent:@""];
 			NSMenu *submenu = [[NSMenu alloc] initWithTitle:[gateway UID]];
 			
 			NSArray *menuitemarray = [self menuItemsForContact:gateway];
@@ -806,6 +806,7 @@ extern void jabber_roster_request(JabberStream *js);
 			[submenu release];
 			[mitem setRepresentedObject:gateway];
 			[mitem setImage:[gateway displayArrayObjectForKey:@"Tab Status Icon"]];
+			[mitem setTarget:self];
 			[menu addObject:mitem];
 			[mitem release];
 		}
@@ -829,6 +830,13 @@ extern void jabber_roster_request(JabberStream *js);
     [discoveryBrowserMenuItem release];
 	
     return [menu autorelease];
+}
+
+- (void)registerGateway:(NSMenuItem*)mitem {
+	if(mitem && [mitem representedObject])
+		jabber_register_gateway((JabberStream*)[self purpleAccount]->gc->proto_data, [[[mitem representedObject] UID] UTF8String]);
+	else
+		NSBeep();
 }
 
 - (AMPurpleJabberAdHocServer*)adhocServer {
