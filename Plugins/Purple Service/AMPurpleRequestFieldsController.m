@@ -120,6 +120,7 @@
 			[textinput addAttribute:[NSXMLNode attributeWithName:@"type" stringValue:isMasked?@"password":@"text"]];
 		else
 			[textinput addAttribute:[NSXMLNode attributeWithName:@"type" stringValue:@"hidden"]];
+		[textinput addAttribute:[NSXMLNode attributeWithName:@"size" stringValue:@"50"]];
 		if(defaultvalue)
 			[textinput addAttribute:[NSXMLNode attributeWithName:@"value" stringValue:[NSString stringWithUTF8String:defaultvalue]]];
 	}
