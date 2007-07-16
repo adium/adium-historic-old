@@ -818,11 +818,13 @@ extern void jabber_roster_request(JabberStream *js);
 		[menu addObjectsFromArray:supermenu];
         [menu addObject:[NSMenuItem separatorItem]];
 	}
-    	
-    NSMenuItem *xmlConsoleMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"XML Console",nil) action:@selector(showXMLConsole:) keyEquivalent:@""];
-    [xmlConsoleMenuItem setTarget:self];
-    [menu addObject:xmlConsoleMenuItem];
-    [xmlConsoleMenuItem release];
+    
+	if([[NSUserDefaults standardUserDefaults] boolForKey:@"AMXMPPShowAdvanced"]) {
+		NSMenuItem *xmlConsoleMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"XML Console",nil) action:@selector(showXMLConsole:) keyEquivalent:@""];
+		[xmlConsoleMenuItem setTarget:self];
+		[menu addObject:xmlConsoleMenuItem];
+		[xmlConsoleMenuItem release];
+	}
 
 	NSMenuItem *discoveryBrowserMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Discovery Browser",nil) action:@selector(showDiscoveryBrowser:) keyEquivalent:@""];
     [discoveryBrowserMenuItem setTarget:self];
