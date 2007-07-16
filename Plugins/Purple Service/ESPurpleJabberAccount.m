@@ -39,12 +39,6 @@
 
 #define DEFAULT_JABBER_HOST @"@jabber.org"
 
-@interface CBPurpleAccount (PRIVATE)
-// we need those, even when they're private
-- (NSString *)_mapIncomingGroupName:(NSString *)name;
-- (NSString *)_mapOutgoingGroupName:(NSString *)name;
-@end
-
 extern void jabber_roster_request(JabberStream *js);
 
 @implementation ESPurpleJabberAccount
@@ -727,19 +721,9 @@ extern void jabber_roster_request(JabberStream *js);
 			}
 		}
 
-		NSString *remoteGroup = nil;
-		// setting the group is required for being able to remove the gateway
-		if (groupName && [groupName isEqualToString:@PURPLE_ORPHANS_GROUP_NAME]) {
-			remoteGroup = AILocalizedString(@"Orphans","Name for the orphans group");
-		} else if (groupName && [groupName length] != 0) {
-			remoteGroup = [self _mapIncomingGroupName:groupName];
-		} else {
-			AILog(@"Got a nil group for %@",theContact);
-		}
-
 		[gateways addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 							 theContact, @"contact",
-							 remoteGroup, @"remoteGroup",
+							 groupName, @"remoteGroup",
 							 nil]];
 	}
 }
@@ -753,9 +737,7 @@ extern void jabber_roster_request(JabberStream *js);
 		NSDictionary *gatewaydict;
 		while((gatewaydict = [e nextObject])) {
 			if([[[gatewaydict objectForKey:@"contact"] UID] isEqualToString:[theContact UID]]) {
-				NSString	*groupName = [self _mapOutgoingGroupName:[gatewaydict objectForKey:@"remoteGroup"]];
-				
-				[[self purpleThread] removeUID:[theContact UID] onAccount:self fromGroup:groupName];
+				[[self purpleThread] removeUID:[theContact UID] onAccount:self fromGroup:[gatewaydict objectForKey:@"remoteGroup"]];
 				
 				[gateways removeObjectIdenticalTo:gatewaydict];
 				break;
