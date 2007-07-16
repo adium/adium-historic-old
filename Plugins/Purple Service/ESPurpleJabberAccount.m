@@ -39,6 +39,12 @@
 
 #define DEFAULT_JABBER_HOST @"@jabber.org"
 
+@interface CBPurpleAccount (PRIVATE)
+// we need those, even when they're private
+- (NSString *)_mapIncomingGroupName:(NSString *)name;
+- (NSString *)_mapOutgoingGroupName:(NSString *)name;
+@end
+
 extern void jabber_roster_request(JabberStream *js);
 
 @implementation ESPurpleJabberAccount
@@ -712,15 +718,29 @@ extern void jabber_roster_request(JabberStream *js);
 		[super updateContact:theContact toGroupName:groupName contactName:contactName];
 	else {
 		NSEnumerator *e = [gateways objectEnumerator];
-		AIListContact *gateway;
+		NSDictionary *gatewaydict;
 		// avoid duplicates!
-		while((gateway = [e nextObject])) {
-			if([[gateway UID] isEqualToString:[theContact UID]]) {
-				[gateways removeObjectIdenticalTo:gateway];
+		while((gatewaydict = [e nextObject])) {
+			if([[[gatewaydict objectForKey:@"contact"] UID] isEqualToString:[theContact UID]]) {
+				[gateways removeObjectIdenticalTo:gatewaydict];
 				break;
 			}
 		}
-		[gateways addObject:theContact];
+
+		NSString *remoteGroup = nil;
+		// setting the group is required for being able to remove the gateway
+		if (groupName && [groupName isEqualToString:@PURPLE_ORPHANS_GROUP_NAME]) {
+			remoteGroup = AILocalizedString(@"Orphans","Name for the orphans group");
+		} else if (groupName && [groupName length] != 0) {
+			remoteGroup = [self _mapIncomingGroupName:groupName];
+		} else {
+			AILog(@"Got a nil group for %@",theContact);
+		}
+
+		[gateways addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+							 theContact, @"contact",
+							 remoteGroup, @"remoteGroup",
+							 nil]];
 	}
 }
 
@@ -730,10 +750,14 @@ extern void jabber_roster_request(JabberStream *js);
 		[super removeContact:theContact];
 	else {
 		NSEnumerator *e = [gateways objectEnumerator];
-		AIListContact *gateway;
-		while((gateway = [e nextObject])) {
-			if([[gateway UID] isEqualToString:[theContact UID]]) {
-				[gateways removeObjectIdenticalTo:gateway];
+		NSDictionary *gatewaydict;
+		while((gatewaydict = [e nextObject])) {
+			if([[[gatewaydict objectForKey:@"contact"] UID] isEqualToString:[theContact UID]]) {
+				NSString	*groupName = [self _mapOutgoingGroupName:[gatewaydict objectForKey:@"remoteGroup"]];
+				
+				[[self purpleThread] removeUID:[theContact UID] onAccount:self fromGroup:groupName];
+				
+				[gateways removeObjectIdenticalTo:gatewaydict];
 				break;
 			}
 		}
@@ -791,8 +815,9 @@ extern void jabber_roster_request(JabberStream *js);
 	
 	if([gateways count] > 0) {
 		NSEnumerator *e = [gateways objectEnumerator];
-		AIListContact *gateway;
-		while((gateway = [e nextObject])) {
+		NSDictionary *gatewaydict;
+		while((gatewaydict = [e nextObject])) {
+			AIListContact *gateway = [gatewaydict objectForKey:@"contact"];
 			NSMenuItem *mitem = [[NSMenuItem alloc] initWithTitle:[gateway UID] action:@selector(registerGateway:) keyEquivalent:@""];
 			NSMenu *submenu = [[NSMenu alloc] initWithTitle:[gateway UID]];
 			
@@ -801,6 +826,15 @@ extern void jabber_roster_request(JabberStream *js);
 			NSMenuItem *m2item;
 			while((m2item = [e2 nextObject]))
 				[submenu addItem:m2item];
+			
+			if([submenu numberOfItems] > 0)
+				[submenu addItem:[NSMenuItem separatorItem]];
+
+			NSMenuItem *removeItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Remove gateway","gateway menu item") action:@selector(removeGateway:) keyEquivalent:@""];
+			[removeItem setTarget:self];
+			[removeItem setRepresentedObject:gateway];
+			[submenu addItem:removeItem];
+			[removeItem release];
 			
 			[mitem setSubmenu:submenu];
 			[submenu release];
@@ -839,6 +873,34 @@ extern void jabber_roster_request(JabberStream *js);
 		jabber_register_gateway((JabberStream*)[self purpleAccount]->gc->proto_data, [[[mitem representedObject] UID] UTF8String]);
 	else
 		NSBeep();
+}
+
+- (void)removeGateway:(NSMenuItem*)mitem {
+	AIListContact *gateway = [mitem representedObject];
+	if(![gateway isKindOfClass:[AIListContact class]])
+		return;
+	// since this is a potentially dangerous operation, get a confirmation from the user first
+	if([[NSAlert alertWithMessageText:AILocalizedString(@"Really remove gateway?",nil)
+					 defaultButton:AILocalizedString(@"Remove","alert default button")
+				   alternateButton:AILocalizedString(@"Cancel",nil)
+					   otherButton:nil
+					 informativeTextWithFormat:AILocalizedString(@"This operation would remove the gateway %@ itself and all contacts belonging to the gateway on your contact list. It cannot be undone.",nil), [gateway UID]] runModal] == NSAlertDefaultReturn) {
+		// first, locate all contacts on the roster that belong to this gateway
+		NSString *jid = [gateway UID];
+		NSString *pattern = [@"@" stringByAppendingString:jid];
+		NSMutableArray *gatewayContacts = [[NSMutableArray alloc] init];
+		NSEnumerator *e = [[[adium contactController] allContactsOnAccount:self] objectEnumerator];
+		AIListContact *contact;
+		while((contact = [e nextObject])) {
+			if([[contact UID] hasSuffix:pattern])
+				[gatewayContacts addObject:contact];
+		}
+		// now, remove them from the roster
+		[self removeContacts:gatewayContacts];
+		
+		// finally, remove the gateway itself
+		[self removeContact:gateway];
+	}
 }
 
 - (AMPurpleJabberAdHocServer*)adhocServer {
