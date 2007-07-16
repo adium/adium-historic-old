@@ -189,11 +189,12 @@
 									   children:[NSArray arrayWithObject:checkbox]
 									 attributes:[NSArray arrayWithObject:[NSXMLNode attributeWithName:@"class" stringValue:@"input"]]]];
 	
+	purple_request_field_bool_set_value(field, FALSE); // since we won't get an -applyValue: message when the checkbox isn't checked, assume false for now. This might be changed later.
     return result;
 }
 
 - (void)applyValue:(NSString*)value {
-	purple_request_field_int_set_value(field, [value intValue]);
+	purple_request_field_bool_set_value(field, TRUE);
 }
 
 @end
