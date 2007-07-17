@@ -1128,6 +1128,7 @@
 		7E824CE306387FAF00813072 /* SHLinkEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CD406387FAF00813072 /* SHLinkEditorWindowController.m */; };
 		7E824CEB06387FAF00813072 /* SHLinkManagementPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */; };
 		8163F99C0B318824002005EE /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
+		8173C5760C4C3DB800C9E64E /* downloadprogress.png in Resources */ = {isa = PBXBuildFile; fileRef = 8173C5750C4C3DB800C9E64E /* downloadprogress.png */; };
 		817BA2FD0C441F750098EEF0 /* Libpurple.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libpurple.framework */; };
 		8181E4FA0C29345B00E802F7 /* Lock_Black.tif in Resources */ = {isa = PBXBuildFile; fileRef = 8181E4F40C29342700E802F7 /* Lock_Black.tif */; };
 		8181EEBE0C30673E00E802F7 /* AMPurpleSearchResultsWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 8181EEBD0C30673E00E802F7 /* AMPurpleSearchResultsWindow.nib */; };
@@ -3570,6 +3571,7 @@
 		7E824CDB06387FAF00813072 /* SHLinkManagementPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SHLinkManagementPlugin.h; sourceTree = "<group>"; };
 		7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHLinkManagementPlugin.m; sourceTree = "<group>"; };
 		815D37460A765E83009338C2 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
+		8173C5750C4C3DB800C9E64E /* downloadprogress.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = downloadprogress.png; path = "Plugins/Purple Service/downloadprogress.png"; sourceTree = "<group>"; };
 		8181E4F40C29342700E802F7 /* Lock_Black.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Lock_Black.tif; path = Resources/Lock_Black.tif; sourceTree = "<group>"; };
 		8181EEBD0C30673E00E802F7 /* AMPurpleSearchResultsWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AMPurpleSearchResultsWindow.nib; path = "Plugins/Purple Service/AMPurpleSearchResultsWindow.nib"; sourceTree = "<group>"; };
 		8181EEC10C3067B500E802F7 /* AMPurpleSearchResultsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMPurpleSearchResultsController.h; path = "Plugins/Purple Service/AMPurpleSearchResultsController.h"; sourceTree = "<group>"; };
@@ -4314,6 +4316,7 @@
 				8181F6F80C32209100E802F7 /* AMPurpleJabberFormGenerator.m */,
 				8181F88C0C35B70F00E802F7 /* AMPurpleJabberAdHocServer.h */,
 				8181F88D0C35B70F00E802F7 /* AMPurpleJabberAdHocServer.m */,
+				8173C5750C4C3DB800C9E64E /* downloadprogress.png */,
 			);
 			name = Jabber;
 			sourceTree = "<group>";
@@ -7564,6 +7567,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
@@ -7607,6 +7611,7 @@
 					ProjectRef = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
 				},
 			);
+			projectRoot = "";
 			targets = (
 				34BD9CD1053146CC000AB133 /* Adium */,
 				4B7F78B40597F42400162728 /* Adium Crash Reporter */,
@@ -7740,6 +7745,7 @@
 				8184C5B80C1B812500CB53E7 /* AMPurpleRequestFieldsWindow.nib in Resources */,
 				81DAED1D0C26F44700780E4C /* AMPurpleJabberDiscoveryBrowser.nib in Resources */,
 				8181EEBE0C30673E00E802F7 /* AMPurpleSearchResultsWindow.nib in Resources */,
+				8173C5760C4C3DB800C9E64E /* downloadprogress.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
