@@ -160,7 +160,6 @@ extern void jabber_roster_request(JabberStream *js);
     if(resource == nil || [resource length] == 0)
         resource = [(NSString*)SCDynamicStoreCopyLocalHostName(NULL) autorelease];
     
-    NSLog(@"Resource = %@", resource);
 	return resource;
 }
 
