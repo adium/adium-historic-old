@@ -19,6 +19,9 @@
 void jabber_adhoc_execute(JabberStream *js, JabberAdHocCommands *cmd);
 
 static unsigned iqCounter = 0;
+static NSImage *downloadprogress = nil;
+static NSImage *det_triangle_opened = nil;
+static NSImage *det_triangle_closed = nil;
 
 @interface NSObject (AMPurpleJabberNodeDelegate)
 
@@ -73,7 +76,7 @@ static void AMPurpleJabberNode_received_data_cb(PurpleConnection *gc, xmlnode **
 	if(!(*packet)->name)
 		return;
 	const char *type = xmlnode_get_attrib(*packet, "type");
-	if(!type || strcmp(type, "result"))
+	if(!type || (strcmp(type, "result") && strcmp(type, "error")))
 		return;
 	if(strcmp((*packet)->name, "iq"))
 		return;
@@ -659,6 +662,72 @@ static void AMPurpleJabberNode_received_data_cb(PurpleConnection *gc, xmlnode **
 	if([result count] == 0)
 		[result addObject:AILocalizedString(@"This node does not provide any services accessible to this program.",nil)];
 	return [result componentsJoinedByString:@"\n"];
+}
+
+- (void)outlineView:(NSOutlineView *)outlineView willDisplayOutlineCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item {
+	BOOL expanded = [outlineView isItemExpanded:item];
+	if(expanded && [item items] == nil) {
+		if(!downloadprogress)
+			downloadprogress = [[NSImage alloc] initWithContentsOfFile:[[NSBundle bundleForClass:[self class]] pathForResource:@"downloadprogress" ofType:@"png"]];
+		NSSize imgsize = [downloadprogress size];
+		NSImage *img = [[NSImage alloc] initWithSize:imgsize];
+		NSAffineTransform *transform = [NSAffineTransform transform];
+		
+		[transform translateXBy:imgsize.width/2.0 yBy:imgsize.height/2.0];
+		NSTimeInterval intv = [NSDate timeIntervalSinceReferenceDate];
+		intv -= floor(intv); // only get the fractional part
+		[transform rotateByRadians:2.0*M_PI * (1.0-intv)];
+		[transform translateXBy:-imgsize.width/2.0 yBy:-imgsize.height/2.0];
+		
+		[img lockFocus];
+		[transform set];
+		[downloadprogress drawInRect:NSMakeRect(0.0,0.0,imgsize.width,imgsize.height) fromRect:NSMakeRect(0.0,0.0,imgsize.width,imgsize.height)
+											 operation:NSCompositeSourceOver fraction:1.0];
+		[[NSAffineTransform transform] set];
+		[img unlockFocus];
+		[cell setImage:img];
+		[img release];
+		NSInvocation *inv = [[NSInvocation invocationWithMethodSignature:[outlineView methodSignatureForSelector:@selector(setNeedsDisplayInRect:)]] retain];
+		[inv setSelector:@selector(setNeedsDisplayInRect:)];
+		NSRect rect = [outlineView rectOfRow:[outlineView rowForItem:item]];
+		[inv setArgument:&rect atIndex:2];
+		
+		[inv performSelector:@selector(invokeWithTarget:) withObject:outlineView afterDelay:0.1];
+	} else {
+		if(expanded) {
+			if(!det_triangle_opened) {
+				det_triangle_opened = [[NSImage alloc] initWithSize:NSMakeSize(13.0,13.0)];
+				NSButtonCell *triangleCell = [[NSButtonCell alloc] initImageCell:nil];
+				[triangleCell setButtonType:NSOnOffButton];
+				[triangleCell setBezelStyle:NSDisclosureBezelStyle];
+				[triangleCell setState:NSOnState];
+				
+				[det_triangle_opened lockFocus];
+				[triangleCell drawWithFrame:NSMakeRect(0.0,0.0,13.0,13.0) inView:outlineView];
+				[det_triangle_opened unlockFocus];
+				
+				[triangleCell release];
+			}
+				
+			[cell setImage:det_triangle_opened];
+		} else {
+			if(!det_triangle_closed) {
+				det_triangle_closed = [[NSImage alloc] initWithSize:NSMakeSize(13.0,13.0)];
+				NSButtonCell *triangleCell = [[NSButtonCell alloc] initImageCell:nil];
+				[triangleCell setButtonType:NSOnOffButton];
+				[triangleCell setBezelStyle:NSDisclosureBezelStyle];
+				[triangleCell setIntValue:NSOffState];
+				
+				[det_triangle_closed lockFocus];
+				[triangleCell drawWithFrame:NSMakeRect(0.0,0.0,13.0,13.0) inView:outlineView];
+				[det_triangle_closed unlockFocus];
+
+				[triangleCell release];
+			}
+			
+			[cell setImage:det_triangle_closed];
+		}
+	}
 }
 
 @end
