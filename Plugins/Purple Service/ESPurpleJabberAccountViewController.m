@@ -17,6 +17,7 @@
 #import "ESPurpleJabberAccountViewController.h"
 #import <Adium/AIAccount.h>
 #import "AIContactControllerProtocol.h"
+#include <SystemConfiguration/SystemConfiguration.h>
 
 #define SERVERFEEDRSSURL @"https://www.xmpp.net/servers/feed/rss"
 
@@ -59,7 +60,10 @@
 	[checkBox_allowPlaintext setState:[[account preferenceForKey:KEY_JABBER_ALLOW_PLAINTEXT group:GROUP_ACCOUNT_STATUS] boolValue]];
 	
 	//Resource
-	[textField_resource setStringValue:[account preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS]];
+	if([account preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS])
+		[textField_resource setStringValue:[account preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS]];
+	else
+		[textField_resource setStringValue:[(NSString*)SCDynamicStoreCopyLocalHostName(NULL) autorelease]];
 	
 	//Connect server
 	NSString *connectServer = [account preferenceForKey:KEY_JABBER_CONNECT_SERVER group:GROUP_ACCOUNT_STATUS];
