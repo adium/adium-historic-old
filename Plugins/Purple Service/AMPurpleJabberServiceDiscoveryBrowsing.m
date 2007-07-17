@@ -483,6 +483,15 @@ static void AMPurpleJabberNode_received_data_cb(PurpleConnection *gc, xmlnode **
 				}
 			} else if([[identity objectForKey:@"category"] isEqualToString:@"directory"]) {
 				jabber_user_search((JabberStream*)gc->proto_data, [[item jid] UTF8String]);
+			} else if([[identity objectForKey:@"category"] isEqualToString:@"automation"] &&
+					  [[identity objectForKey:@"type"] isEqualToString:@"command-node"]) {
+				JabberAdHocCommands cmd;
+				
+				cmd.jid = (char*)[[item jid] UTF8String];
+				cmd.node = (char*)[[item node] UTF8String];
+				cmd.name = (char*)[[item name] UTF8String];
+				
+				jabber_adhoc_execute(gc->proto_data, &cmd);
 			}
 		}
     }
@@ -656,6 +665,9 @@ static void AMPurpleJabberNode_received_data_cb(PurpleConnection *gc, xmlnode **
 			[result addObject:AILocalizedString(@"Conference service, double-click to join",nil)];
 		else if([[identity objectForKey:@"category"] isEqualToString:@"directory"])
 			[result addObject:AILocalizedString(@"Directory service, double-click to search",nil)];
+		else if([[identity objectForKey:@"category"] isEqualToString:@"automation"] &&
+				[[identity objectForKey:@"type"] isEqualToString:@"command-node"])
+			[result addObject:AILocalizedString(@"Ad-Hoc command, double-click to execute",nil)];
 	}
 	if([[item commands] count] > 0)
 		[result addObject:AILocalizedString(@"This node provides ad-hoc commands. Open the context menu to access them.",nil)];
