@@ -332,7 +332,8 @@ static NSArray *draggedTypes = nil;
 			//Ignore changes related to our background image cache.  These keys are used for storage only and aren't
 			//something we need to update in response to.  All other display changes we update our view for.
 			if (![key isEqualToString:@"BackgroundCacheUniqueID"] &&
-			   ![key isEqualToString:[plugin styleSpecificKey:@"BackgroundCachePath" forStyle:activeStyle]]) {
+			    ![key isEqualToString:[plugin styleSpecificKey:@"BackgroundCachePath" forStyle:activeStyle]] &&
+				![key isEqualToString:KEY_CURRENT_WEBKIT_STYLE_PATH]) {
 				[self _updateWebViewForCurrentPreferences];
 			}
 			
@@ -391,20 +392,18 @@ static NSArray *draggedTypes = nil;
  * @brief Updates our webview to the current preferences, priming the view
  */
 - (void)_updateWebViewForCurrentPreferences
-{
+{		
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	NSBundle		*styleBundle;
 	
 	//Cleanup first
-	[messageStyle release];
+	[messageStyle autorelease]; messageStyle = nil;
 	[activeStyle release];
 	[activeVariant release];
 	
 	//Load the message style
-	styleBundle = [plugin messageStyleBundleWithIdentifier:[prefDict objectForKey:KEY_WEBKIT_STYLE]];
-	activeStyle = [[styleBundle bundleIdentifier] retain];
+	messageStyle = [[plugin currentMessageStyle] retain];
+	activeStyle = [[[messageStyle bundle] bundleIdentifier] retain];
 
-	messageStyle = [[AIWebkitMessageViewStyle messageViewStyleFromBundle:styleBundle] retain];
 	[webView setPreferencesIdentifier:activeStyle];
 
 	//Get the prefered variant (or the default if a prefered is not available)
@@ -420,7 +419,7 @@ static NSArray *draggedTypes = nil;
 		}
 	}
 
-	//Update message style behavior
+	//Update message style behavior: XXX move this somewhere not per-chat
 	[messageStyle setShowUserIcons:[[prefDict objectForKey:KEY_WEBKIT_SHOW_USER_ICONS] boolValue]];
 	[messageStyle setShowHeader:[[prefDict objectForKey:KEY_WEBKIT_SHOW_HEADER] boolValue]];
 	[messageStyle setUseCustomNameFormat:[[prefDict objectForKey:KEY_WEBKIT_USE_NAME_FORMAT] boolValue]];

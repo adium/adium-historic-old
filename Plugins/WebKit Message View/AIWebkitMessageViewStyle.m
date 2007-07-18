@@ -88,6 +88,14 @@ static NSArray *validSenderColors;
 	return [[[self alloc] initWithBundle:inBundle] autorelease];
 }
 
++ (id)messageViewStyleFromPath:(NSString *)path
+{
+	NSBundle *styleBundle = [NSBundle bundleWithPath:path];
+	if(styleBundle)
+		return [[[self alloc] initWithBundle:styleBundle] autorelease];
+	return nil;
+}
+
 /*!
  *	@brief Initialize
  */
@@ -105,7 +113,7 @@ static NSArray *validSenderColors;
 		 * Version 0: Initial Webkit Version
 		 * Version 1: Template.html now handles all scroll-to-bottom functionality.  It is no longer required to call the
 		 *            scrollToBottom functions when inserting content.
-		 * Version 2: No signifiant changes
+		 * Version 2: No significant changes
 		 * Version 3: main.css is no longer a separate style, it now serves as the base stylesheet and is imported by default.
 		 *            The default variant is now a separate file in /variants like all other variants.
 		 *			  Template.html now includes appendMessageNoScroll() and appendNextMessageNoScroll() which behave
@@ -164,8 +172,16 @@ static NSArray *validSenderColors;
 	
 	[userIconMask release];
 	
+	[statusIconPathCache release];
+	
 	[super dealloc];
 }
+
+- (NSBundle *)bundle
+{
+	return styleBundle;
+}
+
 
 - (BOOL)isLegacy
 {

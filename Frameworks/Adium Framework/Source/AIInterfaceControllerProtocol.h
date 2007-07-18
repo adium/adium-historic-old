@@ -8,6 +8,7 @@
  */
 
 #import <Adium/AIControllerProtocol.h>
+#import <Adium/AIPlugin.h>
 
 #define Interface_ContactSelectionChanged			@"Interface_ContactSelectionChanged"
 #define Interface_SendEnteredMessage				@"Interface_SendEnteredMessage"
@@ -152,7 +153,7 @@ typedef enum {
  *
  * The WebKit display plugin is one example.
  */
-@protocol AIMessageDisplayPlugin <NSObject>	
+@protocol AIMessageDisplayPlugin <NSObject, AIPlugin>	
 - (id <AIMessageDisplayController>)messageDisplayControllerForChat:(AIChat *)inChat;
 @end
 
