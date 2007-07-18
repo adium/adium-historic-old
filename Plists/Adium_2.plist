@@ -718,7 +718,7 @@
 			<key>UTTypeDescription</key>
 			<string>Adium X menu bar icons pack</string>
 			<key>UTTypeIconFile</key>
-			<string>AdiumServiceIcons.icns</string>
+			<string>AdiumMenuBarIcons.icns</string>
 			<key>UTTypeIdentifier</key>
 			<string>com.adiumx.menubaricons</string>
 			<key>UTTypeReferenceURL</key>

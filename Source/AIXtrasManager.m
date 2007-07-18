@@ -181,6 +181,11 @@ int categorySort(id categoryA, id categoryB, void * context)
 		AILocalizedString(@"Service Icons", "AdiumXtras category name"), @"Name",
 		[NSImage imageNamed:@"AdiumServiceIcons"], @"Image", nil]];
 	
+	[categories addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+		[NSNumber numberWithInt:AIMenuBarIconsDirectory], @"Directory",
+		AILocalizedString(@"Menu Bar Icons", "AdiumXtras category name"), @"Name",
+		[NSImage imageNamed:@"AdiumMenuBarIcons"], @"Image", nil]];
+	
 	[categories sortUsingFunction:categorySort context:NULL];
 }
 
