@@ -39,7 +39,12 @@
 /*!
  *	@brief The bundle identifier of the style we revert to if the preferred style isn't available
  */
-#define WEBKIT_DEFAULT_STYLE					@"com.adiumx.mockie.style"
+#define WEBKIT_DEFAULT_STYLE					@"com.adiumx.stockholm.style"
+
+/*!
+ *	@brief The path to the currently selected message style
+ */
+#define KEY_CURRENT_WEBKIT_STYLE_PATH			@"Current Style Path"
 
 /*!
  *	@brief Key for the preference controlling whether we should show user icons in the message view
@@ -88,7 +93,7 @@
 
 #define NEW_CONTENT_RETRY_DELAY					0.01 
 
-@class ESWebKitMessageViewPreferences, AIChat;
+@class ESWebKitMessageViewPreferences, AIChat, AIWebkitMessageViewStyle;
 
 /*!
  *	@class AIWebKitMessageViewPlugin AIWebKitMessageViewPlugin.h
@@ -98,6 +103,7 @@
 @interface AIWebKitMessageViewPlugin : AIPlugin <AIMessageDisplayPlugin> {
 	ESWebKitMessageViewPreferences  *preferences;
 	NSMutableDictionary				*styleDictionary;
+	AIWebkitMessageViewStyle		*currentStyle;
 }
 
 /*!
@@ -124,5 +130,10 @@
  *	@param style The style name it will be specific to
  */
 - (NSString *)styleSpecificKey:(NSString *)key forStyle:(NSString *)style;
+
+/*!
+ *	@brief Returns the shared instance of the currently used message style
+ */
+- (AIWebkitMessageViewStyle *) currentMessageStyle;
 
 @end

@@ -126,6 +126,16 @@ typedef enum {
 + (id)messageViewStyleFromBundle:(NSBundle *)inBundle;
 
 /*!
+ *	@brief Create a message view style instance by loading the bundle at the passed path
+ */
++ (id)messageViewStyleFromPath:(NSString *)path;
+
+/*!
+ *	@brief The NSBundle for this style
+ */
+- (NSBundle *)bundle;
+
+/*!
  *	Returns YES if this style is considered legacy
  *
  *	Legacy/outdated styles may perform sub-optimally because they lack beneficial changes made in modern styles.
