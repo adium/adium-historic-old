@@ -66,6 +66,7 @@
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[styleDictionary release]; styleDictionary = nil;
 	[preferences release]; preferences = nil;
+	[currentStyle release]; currentStyle = nil;
 	[super uninstallPlugin];
 }
 
@@ -162,7 +163,7 @@
 						  forKey:KEY_CURRENT_WEBKIT_STYLE_PATH
 						   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		}
-			
+		[currentStyle retain];
 	}
 	
 	return currentStyle;
@@ -171,7 +172,7 @@
 - (void) resetStyles
 {
 	[styleDictionary release]; styleDictionary = nil;
-	currentStyle = nil;
+	[currentStyle release]; currentStyle = nil;
 	[[adium preferenceController] setPreference:nil
 										 forKey:KEY_CURRENT_WEBKIT_STYLE_PATH
 										  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];	
