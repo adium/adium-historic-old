@@ -131,6 +131,13 @@
 																					 keyEquivalent:@""
 																				 representedObject:listObject];
 				[self _updateMenuItem:menuItem];
+				if(![menuItem attributedTitle]) {
+					NSAttributedString *title = [[NSAttributedString alloc] initWithString:[menuItem title] attributes:[NSDictionary dictionaryWithObjectsAndKeys:
+						[NSFont menuFontOfSize:14.0f], NSFontAttributeName, // for some reason, the default font size seems to be slightly smaller than the real font, seems to be an AppKit bug
+						nil]];
+					[menuItem setAttributedTitle:title];
+					[title release];
+				}
 				[menuItemArray addObject:menuItem];
 				[menuItem release];
 			}
