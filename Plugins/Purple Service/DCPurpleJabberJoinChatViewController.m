@@ -97,6 +97,8 @@
 	NSString		*server = [textField_server stringValue];
 	NSString		*handle = [textField_handle stringValue];
 	NSString		*password = [textField_password stringValue];
+	NSArray			*invites = [[textField_inviteUsers stringValue] componentsSeparatedByString:@","];
+	NSString		*invitemsg = [textField_inviteMessage stringValue];
 	NSDictionary	*chatCreationInfo;
 			
 	if (!handle || ![handle length])
@@ -133,8 +135,8 @@
 	[self doJoinChatWithName:[NSString stringWithFormat:@"%@@%@",room,server]
 				   onAccount:inAccount
 			chatCreationInfo:chatCreationInfo
-			invitingContacts:nil
-	   withInvitationMessage:nil];
+			invitingContacts:([invites count]>0)?invites:nil
+	   withInvitationMessage:([invitemsg length]>0)?invitemsg:nil];
 }
 
 - (NSString *)nibName
