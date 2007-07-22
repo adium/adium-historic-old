@@ -32,7 +32,10 @@ sTLD		(com|edu|gov|int|mil|net|org|biz|info|name|pro)
 uTLD		(aero|coop|museum|mobi|cat|jobs|travel)
 
 domains		({ccTLD}|{sTLD}|{uTLD}|arpa|local)
-urlSpecifier	([[:alnum:]-]+\.)+{domains}(:[0-9]+)?(\/.*)?
+%{
+/*The Unicode standard, version 4.1, table 3-6, says that the highest byte that will occur in a valid UTF-8 sequence is 0xF4.*/
+%}
+urlSpecifier	([[:alnum:]\x80-\xf4-]+\.)+{domains}(:[0-9]+)?(\/.*)?
 ipURL		([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]+)?(\/.*)?
 mailSpecifier	[^:\/]+\@.+\.{domains}
 jabberSpec      xmpp:.*\@.+\.{domains}(\/.*)?
