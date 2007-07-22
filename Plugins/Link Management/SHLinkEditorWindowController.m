@@ -270,13 +270,22 @@
     [linkString addAttribute:NSLinkAttributeName value:linkURL range:NSMakeRange(0,[linkString length])];
     
 	//Insert it into the text view, replacing the current selection
+	[[inView undoManager] beginUndoGrouping];
+	[[[inView undoManager] prepareWithInvocationTarget:textStorage]
+				replaceCharactersInRange:NSMakeRange([inView selectedRange].location, [linkString length])
+					withAttributedString:[textStorage attributedSubstringFromRange:[inView selectedRange]]];
+
 	[textStorage replaceCharactersInRange:[inView selectedRange] withAttributedString:linkString];
-		
+
 	//If this link was inserted at the end of our text view, add a space and set the formatting back to normal
 	//This prevents the link attribute from bleeding into newly entered text
 	if (NSMaxRange([inView selectedRange]) == [textStorage length]) {
 		NSAttributedString	*tmpString = [[[NSAttributedString alloc] initWithString:@" "
 																		  attributes:typingAttributes] autorelease];
+		[[[inView undoManager] prepareWithInvocationTarget:textStorage]
+				replaceCharactersInRange:NSMakeRange(NSMaxRange([inView selectedRange]), 1)
+					withAttributedString:[[[NSAttributedString alloc] initWithString:@""
+																		  attributes:typingAttributes] autorelease]];
 		[textStorage appendAttributedString:tmpString];
 	}
 	
@@ -284,6 +293,8 @@
 	[[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification
 														object:inView
 													  userInfo:nil];
+	[[inView undoManager] setActionName:AILocalizedString(@"Add Link", nil)];
+	[[inView undoManager] endUndoGrouping];
 }
 
 //URL Validation and other Delegate Oddities ---------------------------------------------------------------------------
