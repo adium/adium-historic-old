@@ -87,6 +87,9 @@ Note: Adium now requires Mac OS X 10.4.0 or later.
 
 === Bonjour ===
  * Bonjour contacts are no longer marked as online after signing off (#5992)
+
+=== MSN ===
+ * Added support for right-to-left messages (#5431)
  
 
 Version 1.0.5 (7/9/2007)
