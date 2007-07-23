@@ -10,5 +10,12 @@
 	<string>REALM-VISIBLE</string>
 	<key>Zephyr:Encoding</key>
 	<string>ISO-8859-1</string>
+	<key>Zephyr:Launch zhm</key>
+	<true/>
+    <key>Zephyr:Servers</key>
+	<array>
+		<string>neskaya.mit.edu</string>
+		<string>arilinn.mit.edu</string>
+	</array>
 </dict>
 </plist>
