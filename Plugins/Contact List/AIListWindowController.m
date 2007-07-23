@@ -470,9 +470,6 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 	NSWindow	*window = [self window];
 	
 	if ([self windowSlidOffScreenEdgeMask] != AINoEdges) {
-		//Restore shadow and frame if we're appearing from having slide off-screen
-		[window setHasShadow:[[[adium preferenceController] preferenceForKey:KEY_CL_WINDOW_HAS_SHADOW
-																	   group:PREF_GROUP_CONTACT_LIST] boolValue]];
 		[self slideWindowOnScreenWithAnimation:NO];
 	}
 	
@@ -958,6 +955,9 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		NSRect		windowFrame = [window frame];
 		
 		if (!NSEqualRects(windowFrame, oldFrame)) {
+			//Restore shadow and frame if we're appearing from having slid off-screen
+			[window setHasShadow:[[[adium preferenceController] preferenceForKey:KEY_CL_WINDOW_HAS_SHADOW
+																		   group:PREF_GROUP_CONTACT_LIST] boolValue]];			
 			[window orderFront:nil]; 
 			
 			windowSlidOffScreenEdgeMask = AINoEdges;
