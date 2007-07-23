@@ -17,6 +17,8 @@
 #import "ESPurpleZephyrAccountViewController.h"
 #import "ESPurpleZephyrAccount.h"
 
+#define ZHM_NAME @"zhm"
+
 @implementation ESPurpleZephyrAccount
 
 gboolean purple_init_zephyr_plugin(void);
@@ -71,7 +73,7 @@ gboolean purple_init_zephyr_plugin(void);
 							arguments:(NSMutableDictionary *)arguments
 {
 	const char		*statusID = NULL;
-	
+
 	switch ([statusState statusType]) {
 		case AIAvailableStatusType:
 			break;
@@ -85,8 +87,81 @@ gboolean purple_init_zephyr_plugin(void);
 
 	//If we didn't get a purple status ID, request one from super
 	if (statusID == NULL) statusID = [super purpleStatusIDForStatus:statusState arguments:arguments];
-	
+
 	return statusID;
+}
+
+/*!
+ * @brief Kill any currently-running instances of the zhm program.
+ *
+ * Since we kill zhms that we didn't run, we're a slightly bad citizen.  However, this only gets called
+ * if the use internal host manager option is enabled, and there's no good way for multiple host
+ * managers to be running on the same machine.
+ *
+ * If no zhm is running, just return.
+ */
+- (void)killHostManagerInstances
+{
+    [[NSTask launchedTaskWithLaunchPath:@"/usr/bin/killall" arguments:[NSArray arrayWithObject:ZHM_NAME]] waitUntilExit];
+    // We assume that killall worked...
+}
+
+/*!
+ * @brief Make sure zhm is started when connecting a zephyr account
+ *
+ * Because of the way Zephyr works, we can't support multiple zephyr accounts on different servers
+ * (without reimplimenting zhm).  We fail and show an error box in the case that zhm is already
+ * running.  Theoretically, if zhm is already running, but on the right servers, we could share
+ * the zhm instance, but currently we have no good way of detecting whether that is the case.
+ */
+- (void)connect
+{
+    if ([[self preferenceForKey:KEY_ZEPHYR_LAUNCH_ZHM group:GROUP_ACCOUNT_STATUS] boolValue]) {
+        //Start zhm
+        NSTask		 *zhm = [[NSTask alloc] init];
+        NSPipe		 *newPipe = [NSPipe pipe];
+        NSFileHandle *readHandle = [newPipe fileHandleForReading];
+        NSData		 *inData;
+
+        [zhm setLaunchPath:[[NSBundle bundleForClass:[ESPurpleZephyrAccount class]] pathForResource:ZHM_NAME ofType:nil]];
+        [zhm setArguments:[self preferenceForKey:KEY_ZEPHYR_SERVERS group:GROUP_ACCOUNT_STATUS]];
+        [zhm setStandardOutput:newPipe];
+        [zhm setStandardError:newPipe];
+        [zhm launch];
+        inData = [readHandle readDataToEndOfFile];
+        [zhm waitUntilExit];
+
+        int status = [zhm terminationStatus];
+        if (status != 0 && status != -1) { 
+			//zhm returned an error (why is -1 also not an error???)
+            NSString *tempString = [[NSString alloc] initWithData:inData encoding:NSASCIIStringEncoding];
+
+            NSRunCriticalAlertPanel(@"zhm Failure", @"The Zephyr Host Manager reported an error #%d: %@", 
+                                    @"OK", nil, nil, status, tempString);
+
+            [tempString release];
+            //Should we stop here, or keep going, knowing we'll get another error message when we try to connect via libpurple?
+        }
+        [zhm release];
+    }
+
+    // Actually connect
+	[super connect];
+}
+
+/*!
+ * @brief When we have disconnected, kill our zhm process (if we started one).
+ */
+- (void)didDisconnect
+{
+    /* Only kill zhm if we launched zhm.  Never mess with zhm otherwise.
+     * If someone changed this preference while we were connected, we'll kill their zhm instance.
+     * However, that's not much of a problem.
+     */
+    if ([[self preferenceForKey:KEY_ZEPHYR_LAUNCH_ZHM group:GROUP_ACCOUNT_STATUS] boolValue])
+        [self killHostManagerInstances];
+
+    [super didDisconnect];
 }
 
 @end

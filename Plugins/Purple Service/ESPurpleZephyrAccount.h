@@ -20,6 +20,8 @@
 #define	KEY_ZEPHYR_EXPORT_SUBS		@"Zephyr:Export .zephyr.subs"
 #define	KEY_ZEPHYR_EXPOSURE			@"Zephyr:Exposure"
 #define	KEY_ZEPHYR_ENCODING			@"Zephyr:Encoding"
+#define	KEY_ZEPHYR_LAUNCH_ZHM		@"Zephyr:Launch zhm"
+#define	KEY_ZEPHYR_SERVERS			@"Zephyr:Servers"
 
 @interface ESPurpleZephyrAccount : CBPurpleAccount {
     

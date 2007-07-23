@@ -19,8 +19,14 @@
 @interface ESPurpleZephyrAccountViewController : AIAccountViewController {
 	IBOutlet	NSButton	*checkBox_exportAnyone;
 	IBOutlet	NSButton	*checkBox_exportSubs;
+	IBOutlet	NSButton	*checkBox_launchZhm;
 	IBOutlet	NSTextField	*textField_exposure;
 	IBOutlet	NSTextField	*textField_encoding;
+	IBOutlet	NSTableView	*tableView_servers;
+	IBOutlet	NSButton	*plus_servers;
+	IBOutlet	NSButton	*minus_servers;
 }
+- (IBAction)addRowToServerList:(id)sender;
+- (IBAction)removeSelectedRowFromServerList:(id)sender;
 
 @end

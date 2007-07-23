@@ -245,6 +245,7 @@
 		345ACC970811C20F008E4D22 /* AwayStatusWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 345ACC960811C20F008E4D22 /* AwayStatusWindow.nib */; };
 		345AFA690A5D76B400D7DA6F /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
 		345AFAEE0A5D9A5F00D7DA6F /* AINoisyTableColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 345AFAEC0A5D9A5F00D7DA6F /* AINoisyTableColumn.m */; };
+		345DD7680C54EAF2007D41F5 /* zhm in Resources */ = {isa = PBXBuildFile; fileRef = 77D903500B78CF1000B86C42 /* zhm */; };
 		345EE2DF0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 345EE2DD0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.m */; };
 		345F566B08178356001F733C /* AdiumServiceIcons.icns in Resources */ = {isa = PBXBuildFile; fileRef = 345F566A08178356001F733C /* AdiumServiceIcons.icns */; };
 		345F57400817FF80001F733C /* pref-contactList.png in Resources */ = {isa = PBXBuildFile; fileRef = 345F573F0817FF80001F733C /* pref-contactList.png */; };
@@ -2811,7 +2812,7 @@
 		34BC8F790ACA3AAC00562745 /* AIScannerDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIScannerDebug.m; path = Source/AIScannerDebug.m; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BEA0F109C4A481000787E4 /* AITranslatorRequestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AITranslatorRequestDelegate.h; path = Plugins/Translation/AITranslatorRequestDelegate.h; sourceTree = "<group>"; };
@@ -3563,6 +3564,7 @@
 		6EC1684B06C170A000F9FAD3 /* InviteToChatWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = InviteToChatWindow.nib; path = "Plugins/Invite to Chat Plugin/InviteToChatWindow.nib"; sourceTree = "<group>"; };
 		6ECFABC606223733001C7E93 /* AIContentContext.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContentContext.h; path = "Frameworks/Adium Framework/Source/AIContentContext.h"; sourceTree = "<group>"; };
 		6ECFABC706223733001C7E93 /* AIContentContext.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContentContext.m; path = "Frameworks/Adium Framework/Source/AIContentContext.m"; sourceTree = "<group>"; };
+		77D903500B78CF1000B86C42 /* zhm */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = zhm; path = "Plugins/Purple Service/zhm"; sourceTree = "<group>"; };
 		7E1E8176063A3EEC00EB00F7 /* AIContextMenuTextView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContextMenuTextView.h; path = "Frameworks/Adium Framework/Source/AIContextMenuTextView.h"; sourceTree = "<group>"; };
 		7E1E8177063A3EEC00EB00F7 /* AIContextMenuTextView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContextMenuTextView.m; path = "Frameworks/Adium Framework/Source/AIContextMenuTextView.m"; sourceTree = "<group>"; };
 		7E824CCE06387FAF00813072 /* LinkEditor.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = LinkEditor.nib; path = Resources/LinkEditor.nib; sourceTree = SOURCE_ROOT; };
@@ -4220,6 +4222,7 @@
 				81DAE8700C261E8A00780E4C /* AMPurpleTuneTooltip.h */,
 				81DAE8710C261E8A00780E4C /* AMPurpleTuneTooltip.m */,
 				347E39DB0A98AA4A00961B0E /* missing_image.png */,
+				77D903500B78CF1000B86C42 /* zhm */,
 				34416060059FC2450019246B /* Gadu-Gadu */,
 				34416053059FC2270019246B /* Jabber */,
 				343A7F2206935DAF00150CEC /* Meanwhile */,
@@ -7748,6 +7751,7 @@
 				81DAED1D0C26F44700780E4C /* AMPurpleJabberDiscoveryBrowser.nib in Resources */,
 				8181EEBE0C30673E00E802F7 /* AMPurpleSearchResultsWindow.nib in Resources */,
 				8173C5760C4C3DB800C9E64E /* downloadprogress.png in Resources */,
+				345DD7680C54EAF2007D41F5 /* zhm in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
