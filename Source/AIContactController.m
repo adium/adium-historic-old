@@ -1498,7 +1498,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Returns a flat array of all contacts (by calling through to -allContactsInObject:recurse:onAccount:)
 - (NSMutableArray *)allContacts
 {
-	return [self allContactsInObject:contactList recurse:YES onAccount:nil];
+	return (contactList ? [self allContactsInObject:contactList recurse:YES onAccount:nil] : nil);
 }
 
 //Returns a flat array of all contacts on a given account (by calling through to -allContactsInObject:recurse:onAccount:)
