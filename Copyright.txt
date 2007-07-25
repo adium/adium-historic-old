@@ -43,6 +43,7 @@ Xavid Pretzer
 Eric Richie
 Jesse Rusak
 Evan Schoenberg
+Adam Seering
 Chris Serino
 David Smith
 Greg Smith
