@@ -110,6 +110,7 @@
 		[tableview reloadData];
 		[tableview sizeToFit];
 		[self showWindow:nil];
+		[self tableViewSelectionDidChange:nil];
 	}
 	return [self retain]; // will be released in -purpleRequestClose when we're done
 }
@@ -147,6 +148,16 @@
 
 - (BOOL)tableView:(NSTableView *)tableView shouldEditTableColumn:(NSTableColumn *)tableColumn row:(int)row {
 	return NO;
+}
+
+- (void)tableViewSelectionDidChange:(NSNotification *)notification {
+	BOOL enabled = [tableview numberOfSelectedRows] > 0;
+	NSEnumerator *e = [searchButtons keyEnumerator];
+	NSValue *buttonval;
+	while((buttonval = [e nextObject])) {
+		NSButton *button = [buttonval nonretainedObjectValue];
+		[button setEnabled:enabled];
+	}
 }
 
 - (BOOL)windowShouldClose:(id)sender {
