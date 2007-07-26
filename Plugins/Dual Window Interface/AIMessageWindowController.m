@@ -293,9 +293,10 @@
 		[tabView_tabBar setHideForSingleTab:!alwaysShowTabs];
 		[tabView_tabBar setAllowsBackgroundTabClosing:YES];
 		[tabView_tabBar setUseOverflowMenu:YES];
-		//[[tabView_tabBar overflowPopUpButton] setAlternateImage:[AIStatusIcons statusIconForStatusName:@"content" statusType:AIAvailableStatusType iconType:AIStatusIconTab direction:AIIconNormal]];
-		NSImage *overflowImage = [[[NSImage alloc] initByReferencingFile:[[NSBundle mainBundle] pathForImageResource:@"overflow_overlay"]] autorelease];
-		[[tabView_tabBar overflowPopUpButton] setAlternateImage:overflowImage];
+		
+		[[tabView_tabBar overflowPopUpButton] setAlternateImage:[AIStatusIcons statusIconForStatusName:@"content" statusType:AIAvailableStatusType iconType:AIStatusIconTab direction:AIIconNormal]];
+		//NSImage *overflowImage = [[[NSImage alloc] initByReferencingFile:[[NSBundle mainBundle] pathForImageResource:@"overflow_overlay"]] autorelease];
+		//[[tabView_tabBar overflowPopUpButton] setAlternateImage:overflowImage];
 		
 		//change the frame of the tab bar according to the orientation
 		if (firstTime || [key isEqualToString:KEY_TABBAR_POSITION]) {
@@ -344,7 +345,7 @@
 						tabViewFrame.size.height = NSHeight(contentRect) - NSHeight(tabBarFrame) + 1;
 						[tabView_tabBar setAutoresizingMask:(NSViewMinYMargin | NSViewWidthSizable)];
 					}
-					[tabView_tabBar setCellMinWidth:80];
+					[tabView_tabBar setCellMinWidth:45];
 					[tabView_tabBar setCellMaxWidth:250];
 					
 					tabViewFrame.origin.x = -1;
@@ -433,6 +434,22 @@
     }
 }
 
+- (void)updateOverflowMenuUnviewedContentIcon
+{
+	BOOL someUnviewedContent = NO;
+	
+	int count = [[tabView_tabBar representedTabViewItems] count];
+	for (int i = [tabView_tabBar numberOfVisibleTabs]; i < count; i++) {
+		if ([[[[tabView_tabBar representedTabViewItems] objectAtIndex:i] chat] unviewedContentCount] > 0) {
+			someUnviewedContent = YES;
+			break;
+		}
+	}
+	
+	[[tabView_tabBar overflowPopUpButton] setAnimatingAlternateImage:someUnviewedContent];	
+}
+
+
 - (void)updateIconForTabViewItem:(AIMessageTabViewItem *)tabViewItem
 {
 	if (tabViewItem == [tabView_messages selectedTabViewItem]) {
@@ -440,7 +457,8 @@
 	}
 	
 	if ([[tabView_tabBar representedTabViewItems] indexOfObject:tabViewItem] >= [tabView_tabBar numberOfVisibleTabs]) {
-		[[tabView_tabBar overflowPopUpButton] setAnimatingAlternateImage:([[tabViewItem chat] unviewedContentCount] > 0)];
+		//The chat is in the overflow menu. If any chat has unviewed content, it should be animating to demonstrate that.
+		[self updateOverflowMenuUnviewedContentIcon];
 	}
 }
 
@@ -1021,6 +1039,14 @@
 	}
 	
 	return tooltip;
+}
+
+- (void)tabView:(NSTabView *)aTabView tabViewItem:(NSTabViewItem *)tabViewItem isInOverflowMenu:(BOOL)inOverflowMenu
+{
+	//Wait until the next run loop, then update the icons so the overflow menu will be updated appropriately
+	[self performSelector:@selector(updateOverflowMenuUnviewedContentIcon)
+			   withObject:nil
+			   afterDelay:0];
 }
 
 //Tab Bar Visibility --------------------------------------------------------------------------------------------------
