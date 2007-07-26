@@ -288,7 +288,8 @@ static void AMPurpleJabberNode_received_data_cb(PurpleConnection *gc, xmlnode **
 	
 	NSData *xmlData = [[iq XMLString] dataUsingEncoding:NSUTF8StringEncoding];
 	
-	jabber_prpl_send_raw(gc, [xmlData bytes], [xmlData length]);
+	if(PURPLE_PLUGIN_PROTOCOL_INFO(gc->prpl)->send_raw)
+		(PURPLE_PLUGIN_PROTOCOL_INFO(gc->prpl)->send_raw)(gc, [xmlData bytes], [xmlData length]);
 }
 
 - (void)fetchInfo {
@@ -315,7 +316,8 @@ static void AMPurpleJabberNode_received_data_cb(PurpleConnection *gc, xmlnode **
 	
 	NSData *xmlData = [[iq XMLString] dataUsingEncoding:NSUTF8StringEncoding];
 	
-	jabber_prpl_send_raw(gc, [xmlData bytes], [xmlData length]);
+	if(PURPLE_PLUGIN_PROTOCOL_INFO(gc->prpl)->send_raw)
+		(PURPLE_PLUGIN_PROTOCOL_INFO(gc->prpl)->send_raw)(gc, [xmlData bytes], [xmlData length]);
 }
 
 - (NSString*)name {
@@ -469,6 +471,7 @@ static void AMPurpleJabberNode_received_data_cb(PurpleConnection *gc, xmlnode **
 		
 		while((identity = [e nextObject])) {
 			if([[identity objectForKey:@"category"] isEqualToString:@"gateway"])
+#warning This should not be called outside libpurple!
 				jabber_register_gateway((JabberStream*)gc->proto_data, [[item jid] UTF8String]);
 			else if([[identity objectForKey:@"category"] isEqualToString:@"conference"]) {
                 DCJoinChatWindowController *jcwc = [DCJoinChatWindowController joinChatWindow];
@@ -482,6 +485,7 @@ static void AMPurpleJabberNode_received_data_cb(PurpleConnection *gc, xmlnode **
 					[(DCPurpleJabberJoinChatViewController*)[jcwc joinChatViewController] setRoomName:[[item jid] substringToIndex:atsign.location]];
 				}
 			} else if([[identity objectForKey:@"category"] isEqualToString:@"directory"]) {
+#warning This should not be called outside libpurple!
 				jabber_user_search((JabberStream*)gc->proto_data, [[item jid] UTF8String]);
 			} else if([[identity objectForKey:@"category"] isEqualToString:@"automation"] &&
 					  [[identity objectForKey:@"type"] isEqualToString:@"command-node"]) {
@@ -491,6 +495,7 @@ static void AMPurpleJabberNode_received_data_cb(PurpleConnection *gc, xmlnode **
 				cmd.node = (char*)[[item node] UTF8String];
 				cmd.name = (char*)[[item name] UTF8String];
 				
+#warning This should not be called outside libpurple!
 				jabber_adhoc_execute(gc->proto_data, &cmd);
 			}
 		}
@@ -506,6 +511,7 @@ static void AMPurpleJabberNode_received_data_cb(PurpleConnection *gc, xmlnode **
 	cmd.node = (char*)[[commandnode node] UTF8String];
 	cmd.name = (char*)[[commandnode name] UTF8String];
 	
+#warning This should not be called outside libpurple!
 	jabber_adhoc_execute(gc->proto_data, &cmd);
 }
 
