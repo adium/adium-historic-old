@@ -112,8 +112,6 @@
 
 - (void)_addMenuItemsFromArray:(NSArray *)contactArray toMenu:(NSMenu *)contactMenu target:(id)target offlineContacts:(BOOL)offlineContacts;
 
-- (void)_performChangeOfUseOfflineGroup;
-
 @end
 
 @implementation AIContactController
@@ -1264,8 +1262,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		[key isEqualToString:KEY_USE_OFFLINE_GROUP] ||
 		[key isEqualToString:KEY_SHOW_OFFLINE_CONTACTS]) {
 
-		[self setUseOfflineGroup:([[prefDict objectForKey:KEY_USE_OFFLINE_GROUP] boolValue] &&
-								  [[prefDict objectForKey:KEY_SHOW_OFFLINE_CONTACTS] boolValue])];
+		[self setUseOfflineGroup:([[prefDict objectForKey:KEY_USE_OFFLINE_GROUP] boolValue])];
 	}
 }
 
