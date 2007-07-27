@@ -611,8 +611,8 @@ static NSArray *validSenderColors;
 				  withString:[[content displayClasses] componentsJoinedByString:@" "]];
 	
 	if(!validSenderColors) {
-		NSString *path = [stylePath stringByAppendingPathComponent:@"Incoming/SenderColors.txt"];
-		if([[NSFileManager defaultManager] fileExistsAtPath:path])
+		NSString *path = [styleBundle pathForResource:@"SenderColors" ofType:@"txt"];
+		if(path)
 			validSenderColors = [[[NSString stringWithContentsOfFile:path] componentsSeparatedByString:@":"] retain];
 		if(!validSenderColors || [validSenderColors count] == 0)
 			validSenderColors = VALID_SENDER_COLORS_ARRAY;
