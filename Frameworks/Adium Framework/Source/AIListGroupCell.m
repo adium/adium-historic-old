@@ -141,7 +141,7 @@
 	nameSize = [displayName size];
 	[displayName release];
 		
-	return [super cellWidth] + [self flippyIndent] + nameSize.width + 1;
+	return [super cellWidth] + [self flippyIndent] + ceil(nameSize.width) + 1;
 }
 
 //Calculates the distance from left margin to our display name.  This is the indent caused by group nesting.
