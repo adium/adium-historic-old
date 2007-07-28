@@ -111,26 +111,26 @@
 	//Name
 	NSAttributedString	*displayName = [[NSAttributedString alloc] initWithString:[self labelString]
 																	   attributes:[self labelAttributes]];
-	width += [displayName size].width;
+	width += ceil([displayName size].width);
 	[displayName release];
 
 	//User icon
 	if (userIconVisible) {
-		width += userIconSize.width;
+		width += ceil(userIconSize.width);
 		width += USER_ICON_LEFT_PAD + USER_ICON_RIGHT_PAD;
 	}
 	
 	//Status icon
 	if (statusIconsVisible &&
 	   (statusIconPosition != LIST_POSITION_BADGE_LEFT && statusIconPosition != LIST_POSITION_BADGE_RIGHT)) {
-		width += [[self statusImage] size].width;
+		width += ceil([[self statusImage] size].width);
 		width += STATUS_ICON_LEFT_PAD + STATUS_ICON_RIGHT_PAD;
 	}
 
 	//Service icon
 	if (serviceIconsVisible &&
 	   (serviceIconPosition != LIST_POSITION_BADGE_LEFT && serviceIconPosition != LIST_POSITION_BADGE_RIGHT)) {
-		width += [[self serviceImage] size].width;
+		width += ceil([[self serviceImage] size].width);
 		width += SERVICE_ICON_LEFT_PAD + SERVICE_ICON_RIGHT_PAD;
 	}
 	
