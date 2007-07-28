@@ -25,23 +25,23 @@
 - (void)drawRow:(int)rowIndex clipRect:(NSRect)clipRect
 {
 	//Getting the object for this row
-	id item = [[self dataSource] outlineView:self child:rowIndex ofItem:nil];
-	AIDividerPosition dividerPosition = AIDividerPositionNone;
-	
+	AIDividerPosition dividerPosition;
+
 	//Does the dataSource know what we want to know?
 	if ([[self dataSource] respondsToSelector:@selector(outlineView:dividerPositionForItem:)]) {
 		//Position of the divider
-		dividerPosition = [[self dataSource] outlineView:self dividerPositionForItem:item];
+		dividerPosition = [[self dataSource] outlineView:self dividerPositionForItem:[self itemAtRow:rowIndex]];
+	} else {
+		dividerPosition = AIDividerPositionNone;
 	}
 	
 	if (dividerPosition != AIDividerPositionIsDivider) {
-		//Call [super drawRow:clipRect:]
+		//Call super's implementation if the row itself is not a divider
 		[super drawRow:rowIndex clipRect:clipRect];
 
-		if (dividerPosition == AIDividerPositionNone) {
-			//We don't need you here, anymore
+		//We're done if there's no divider to draw
+		if (dividerPosition == AIDividerPositionNone)
 			return;
-		}
 	}
 	
 	//Set-up context
@@ -75,7 +75,7 @@
 			break;
 			
 		case AIDividerPositionNone:
-			//This is not supposed to happen, but I dislike warnings
+			//We will never reach this point
 			break;
 	}
 	
