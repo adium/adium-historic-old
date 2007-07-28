@@ -291,7 +291,7 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 		[[self window] setShowsResizeIndicator:!(autoResizeVertically && autoResizeHorizontally)];
 		
 		/*
-		 Reset the minimum and maximum sizes in case [self contactListDesiredSizeChanged:nil]; doesn't cause a sizing change
+		 Reset the minimum and maximum sizes in case [self contactListDesiredSizeChanged]; doesn't cause a sizing change
 		 (and therefore the min and max sizes aren't set there).
 		 */
 		NSSize	thisMinimumSize = minWindowSize;
@@ -336,6 +336,7 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 		[contactListController setAutoresizeVertically:autoResizeVertically];
 		[contactListController setForcedWindowWidth:forcedWindowWidth];
 		[contactListController setMaxWindowWidth:maxWindowWidth];
+		
 		[contactListController contactListDesiredSizeChanged];
 		
 		if (!firstTime) {
@@ -756,7 +757,9 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	NSRectEdge screenEdge;
 	for (screenEdge = 0; screenEdge < 4; screenEdge++) {
 		if (windowSlidOffScreenEdgeMask & (1 << screenEdge)) {
-			float mouseOutsideSlideBoundaryRectDistance = AISignedExteriorDistanceRect_edge_toPoint_(screenSlideBoundaryRect, screenEdge, mouseLocation);
+			float mouseOutsideSlideBoundaryRectDistance = AISignedExteriorDistanceRect_edge_toPoint_(screenSlideBoundaryRect,
+																									 screenEdge,
+																									 mouseLocation);
 			if(mouseOutsideSlideBoundaryRectDistance < -MOUSE_EDGE_SLIDE_ON_DISTANCE) {
 				mouseNearSlideOffEdges = NO;
 			}
@@ -939,7 +942,10 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 
 	for (edge = 0; edge < 4; edge++) {
 		if (rectEdgeMask & (1 << edge)) {
-			newWindowFrame = AIRectByAligningRect_edge_toRect_edge_(newWindowFrame, AIOppositeRectEdge_(edge), screenSlideBoundaryRect, edge);
+			newWindowFrame = AIRectByAligningRect_edge_toRect_edge_(newWindowFrame,
+																	AIOppositeRectEdge_(edge),
+																	screenSlideBoundaryRect,
+																	edge);
 		}
 	}
 
