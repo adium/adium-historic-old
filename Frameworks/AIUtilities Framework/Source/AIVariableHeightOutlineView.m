@@ -57,11 +57,11 @@
 		
 	[[NSNotificationCenter defaultCenter] addObserver:self 
 											 selector:@selector(itemDidExpand:) 
-												 name:NSOutlineViewItemDidExpandNotification 
+												 name:AIOutlineViewUserDidExpandItemNotification 
 											   object:self];
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(itemDidCollapse:) 
-												 name:NSOutlineViewItemDidCollapseNotification 
+												 name:AIOutlineViewUserDidCollapseItemNotification 
 											   object:self];
 
 }
@@ -151,7 +151,7 @@
 {
 	[self willChangeValueForKey:@"totalHeight"];
 	[self resetRowHeightCache];
-	[super noteNumberOfRowsChanged];	
+	[super noteNumberOfRowsChanged];
 	[self didChangeValueForKey:@"totalHeight"];
 }
 
@@ -161,6 +161,14 @@
 	[self resetRowHeightCache];
 	[super reloadData];
 	[self didChangeValueForKey:@"totalHeight"];
+}
+
+- (void)reloadItem:(id)item reloadChildren:(BOOL)reloadChildren
+{
+	[self willChangeValueForKey:@"totalHeight"];
+	[self resetRowHeightCache];
+	[super reloadItem:item reloadChildren:reloadChildren];
+	[self didChangeValueForKey:@"totalHeight"];	
 }
 
 //On expand/collapse
