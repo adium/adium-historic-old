@@ -415,7 +415,7 @@ static NSArray *validSenderColors;
 	
 	//Fetch the correct template and substitute keywords for the passed content
 	newHTML = [[[self templateForContent:content similar:contentIsSimilar] mutableCopy] autorelease];
-	newHTML = [self fillKeywords:newHTML forContent:content];
+	newHTML = [self fillKeywords:newHTML forContent:content similar:contentIsSimilar];
 	
 	//BOM scripts vary by style version
 	if (styleVersion >= 3) {
@@ -540,7 +540,7 @@ static NSArray *validSenderColors;
 
 #pragma mark Keyword replacement
 
-- (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content
+- (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar
 {
 	NSDate			*date = nil;
 	NSRange			range;
@@ -606,9 +606,9 @@ static NSArray *validSenderColors;
 			}
 		}
 	} while (range.location != NSNotFound);
-	
+
 	[inString replaceKeyword:@"%messageClasses%"
-				  withString:[[content displayClasses] componentsJoinedByString:@" "]];
+				  withString:[(contentIsSimilar ? @"consecutive " : @"") stringByAppendingString:[[content displayClasses] componentsJoinedByString:@" "]]];
 	
 	if(!validSenderColors) {
 		NSString *path = [styleBundle pathForResource:@"SenderColors" ofType:@"txt"];
