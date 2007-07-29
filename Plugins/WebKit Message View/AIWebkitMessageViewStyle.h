@@ -295,7 +295,7 @@ typedef enum {
  *	We allow the message style to handle this since the behavior of keywords is dependent on the style and may change
  *	for future style versions
  */
-- (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar;
+- (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content;
 
 /*!
  *	@brief Substitute base keywords
