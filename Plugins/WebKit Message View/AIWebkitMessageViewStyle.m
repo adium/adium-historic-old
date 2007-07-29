@@ -72,6 +72,33 @@ static NSArray *validSenderColors;
 }
 @end
 
+//The old code built the paths itself, which follows the filesystem's case sensitivity, so some noobs named stuff wrong. 
+//NSBundle is always case sensitive, so those styles broke (they were already broken on case sensitive hfsx)
+//These methods only check for the all-lowercase variant, so are not suitable for general purpose use.
+@interface NSBundle (StupidCompatibilityHack)
+- (NSString *)semiCaseInsensitivePathForResource:(NSString *)res ofType:(NSString *)type;
+- (NSString *)semiCaseInsensitivePathForResource:(NSString *)res ofType:(NSString *)type inDirectory:(NSString *)dirpath;
+@end
+
+@implementation NSBundle (StupidCompatibilityHack)
+- (NSString *)semiCaseInsensitivePathForResource:(NSString *)res ofType:(NSString *)type
+{
+	NSString *path = [self pathForResource:res ofType:type];
+	if(!path)
+		path = [self pathForResource:[res lowercaseString] ofType:type];
+	return path;
+}
+
+- (NSString *)semiCaseInsensitivePathForResource:(NSString *)res ofType:(NSString *)type inDirectory:(NSString *)dirpath
+{
+	NSString *path = [self pathForResource:res ofType:type inDirectory:dirpath];
+	if(!path)
+		path = [self pathForResource:[res lowercaseString] ofType:type inDirectory:dirpath];
+	return path;
+}
+
+@end
+
 @interface AIWebkitMessageViewStyle (PRIVATE)
 - (id)initWithBundle:(NSBundle *)inBundle;
 - (void)_loadTemplates;
@@ -350,26 +377,26 @@ static NSArray *validSenderColors;
 	//Load the style's templates
 	//We can't use NSString's initWithContentsOfFile here.  HTML files are interpreted in the defaultCEncoding
 	//(which varies by system) when read that way.  We want to always interpret the files as UTF8.
-	headerHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"Header" ofType:@"html"]] retain];
-	footerHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"Footer" ofType:@"html"]] retain];
-	baseHTML = [NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"Template" ofType:@"html"]];
-
+	headerHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle semiCaseInsensitivePathForResource:@"Header" ofType:@"html"]] retain];
+	footerHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle semiCaseInsensitivePathForResource:@"Footer" ofType:@"html"]] retain];
+	baseHTML = [NSString stringWithContentsOfUTF8File:[styleBundle semiCaseInsensitivePathForResource:@"Template" ofType:@"html"]];
+	
 	//Starting with version 1, styles can choose to not include template.html.  If the template is not included 
 	//Adium's default will be used.  This is preferred since any future template updates will apply to the style
 	if ((!baseHTML || [baseHTML length] == 0) && styleVersion >= 1) {		
-		baseHTML = [NSString stringWithContentsOfUTF8File:[[NSBundle bundleForClass:[self class]] pathForResource:@"Template" ofType:@"html"]];
+		baseHTML = [NSString stringWithContentsOfUTF8File:[[NSBundle bundleForClass:[self class]] semiCaseInsensitivePathForResource:@"Template" ofType:@"html"]];
 		usingCustomBaseHTML = NO;
 	} else {
 		usingCustomBaseHTML = YES;
 	}
 	[baseHTML retain];
-
+	
 	//Content Templates
-	contentInHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"Content" ofType:@"html" inDirectory:@"Incoming"]] retain];
-	nextContentInHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"NextContent" ofType:@"html" inDirectory:@"Incoming"]] retain];
-	contentOutHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"Content" ofType:@"html" inDirectory:@"Outgoing"]] retain];
-	nextContentOutHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"NextContent" ofType:@"html" inDirectory:@"Outgoing"]] retain];
-
+	contentInHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle semiCaseInsensitivePathForResource:@"Content" ofType:@"html" inDirectory:@"Incoming"]] retain];
+	nextContentInHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle semiCaseInsensitivePathForResource:@"NextContent" ofType:@"html" inDirectory:@"Incoming"]] retain];
+	contentOutHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle semiCaseInsensitivePathForResource:@"Content" ofType:@"html" inDirectory:@"Outgoing"]] retain];
+	nextContentOutHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle semiCaseInsensitivePathForResource:@"NextContent" ofType:@"html" inDirectory:@"Outgoing"]] retain];
+	
 	//fall back to Content if NextContent doesn't need to use different HTML
 	if(!nextContentInHTML) nextContentInHTML = [contentInHTML retain];
 	
@@ -378,25 +405,25 @@ static NSArray *validSenderColors;
 	if(!nextContentOutHTML) nextContentOutHTML = [nextContentInHTML retain];
 		  
 	//Message history
-	contextInHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"Context" ofType:@"html" inDirectory:@"Incoming"]] retain];
-	nextContextInHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"NextContext" ofType:@"html" inDirectory:@"Incoming"]] retain];
-
+	contextInHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle semiCaseInsensitivePathForResource:@"Context" ofType:@"html" inDirectory:@"Incoming"]] retain];
+	nextContextInHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle semiCaseInsensitivePathForResource:@"NextContext" ofType:@"html" inDirectory:@"Incoming"]] retain];
+	
 	//Fall back to Content if Context isn't present
 	if (!contextInHTML) contextInHTML = [contentInHTML retain];
 	if (!nextContextInHTML) nextContextInHTML = [nextContentInHTML retain];
-
-	contextOutHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"Context" ofType:@"html" inDirectory:@"Outgoing"]] retain];
-	nextContextOutHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"NextContext" ofType:@"html" inDirectory:@"Outgoing"]] retain];
+	
+	contextOutHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle semiCaseInsensitivePathForResource:@"Context" ofType:@"html" inDirectory:@"Outgoing"]] retain];
+	nextContextOutHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle semiCaseInsensitivePathForResource:@"NextContext" ofType:@"html" inDirectory:@"Outgoing"]] retain];
 	
 	//Fall back to Content if Context isn't present
 	if (!contextOutHTML) contextOutHTML = [contentOutHTML retain];
 	if (!nextContextOutHTML) nextContextOutHTML = [nextContentOutHTML retain];
-
+	
 	//Status
-	statusHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"Status" ofType:@"html"]] retain];
+	statusHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle semiCaseInsensitivePathForResource:@"Status" ofType:@"html"]] retain];
 	
 	//TODO: make a generic Request message, rather than having this ft specific one
-	fileTransferHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle pathForResource:@"FileTransferRequest" ofType:@"html"]] retain];
+	fileTransferHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle semiCaseInsensitivePathForResource:@"FileTransferRequest" ofType:@"html"]] retain];
 	if(!fileTransferHTML) {
 		fileTransferHTML = [contentInHTML mutableCopy];
 		[(NSMutableString *)fileTransferHTML replaceKeyword:@"%message%"
@@ -415,7 +442,7 @@ static NSArray *validSenderColors;
 	
 	//Fetch the correct template and substitute keywords for the passed content
 	newHTML = [[[self templateForContent:content similar:contentIsSimilar] mutableCopy] autorelease];
-	newHTML = [self fillKeywords:newHTML forContent:content similar:contentIsSimilar];
+	newHTML = [self fillKeywords:newHTML forContent:content];
 	
 	//BOM scripts vary by style version
 	if (styleVersion >= 3) {
@@ -540,7 +567,7 @@ static NSArray *validSenderColors;
 
 #pragma mark Keyword replacement
 
-- (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar
+- (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content
 {
 	NSDate			*date = nil;
 	NSRange			range;
@@ -606,9 +633,9 @@ static NSArray *validSenderColors;
 			}
 		}
 	} while (range.location != NSNotFound);
-
+	
 	[inString replaceKeyword:@"%messageClasses%"
-				  withString:[(contentIsSimilar ? @"consecutive " : @"") stringByAppendingString:[[content displayClasses] componentsJoinedByString:@" "]]];
+				  withString:[[content displayClasses] componentsJoinedByString:@" "]];
 	
 	if(!validSenderColors) {
 		NSString *path = [styleBundle pathForResource:@"SenderColors" ofType:@"txt"];
