@@ -18,7 +18,7 @@
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import "AdiumSound.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import "QTSoundFilePlayer.h"
+#import <QTKit/QTKit.h>
 
 #define SOUND_DEFAULT_PREFS				@"SoundPrefs"
 #define MAX_CACHED_SOUNDS				4			//Max cached sounds
@@ -26,7 +26,7 @@
 @interface AdiumSound (PRIVATE)
 - (void)_stopAndReleaseAllSounds;
 - (void)_setVolumeOfAllSoundsTo:(float)inVolume;
-- (void)coreAudioPlaySound:(NSString *)inPath;
+- (void)cachedPlaySound:(NSString *)inPath;
 - (void)_uncacheLeastRecentlyUsedSound;
 @end
 
@@ -96,7 +96,7 @@
 - (void)playSoundAtPath:(NSString *)inPath
 {
 	if (inPath && customVolume != 0.0 && !soundsAreMuted) {
-		[self coreAudioPlaySound:inPath];
+		[self cachedPlaySound:inPath];
 	}
 }
 
@@ -133,40 +133,41 @@
 - (void)_setVolumeOfAllSoundsTo:(float)inVolume
 {
 	NSEnumerator 		*enumerator = [soundCacheDict objectEnumerator];
-	QTSoundFilePlayer	*player;
+	QTMovie *movie;
 
-	while((player = [enumerator nextObject])){
-		[player setVolume:inVolume];
+	while((movie = [enumerator nextObject])){
+		[movie setVolume:inVolume];
 	}
 }
 
 /*!
- * @brief Play a sound using CoreAudio via QTSoundFilePlayer
+ * @brief Play a QTMovie, possibly cached
  * 
  * @param inPath path to the sound file
  */
-- (void)coreAudioPlaySound:(NSString *)inPath
+- (void)cachedPlaySound:(NSString *)inPath
 {
-    QTSoundFilePlayer *existingPlayer = [soundCacheDict objectForKey:inPath];
+    QTMovie *movie = [soundCacheDict objectForKey:inPath];
 
 	//Load the sound if necessary
-    if (!existingPlayer) {
+    if (!movie) {
 		//If the cache is full, remove the least recently used cached sound
 		if ([soundCacheDict count] >= MAX_CACHED_SOUNDS) {
 			[self _uncacheLeastRecentlyUsedSound];
 		}
 
 		//Load and cache the sound
-		existingPlayer = [[QTSoundFilePlayer alloc] initWithContentsOfFile:inPath
-													usingSystemAlertDevice:YES];
-		if (existingPlayer) {
+		NSError *error = nil;
+		movie = [[QTMovie alloc] initWithFile:inPath
+		                                error:&error];
+		if (movie) {
 			//Insert the player at the front of our cache
 			[soundCacheArray insertObject:inPath atIndex:0];
-			[soundCacheDict setObject:existingPlayer forKey:inPath];
-			[existingPlayer release];
+			[soundCacheDict setObject:movie forKey:inPath];
+			[movie release];
 
 			//Set the volume (otherwise #2283 happens)
-			[existingPlayer setVolume:customVolume];
+			[movie setVolume:customVolume];
 		}
 
     } else {
@@ -176,13 +177,17 @@
     }
 
     //Engage!
-    if (existingPlayer) {
+    if (movie) {
 		//Ensure the sound is starting from the beginning; necessary for cached sounds that have already been played
-		[existingPlayer setPlaybackPosition:0];
+		QTTime startOfMovie = {
+			.timeValue = 0LL,
+			.timeScale = [[movie attributeForKey:QTMovieTimeScaleAttribute] longValue],
+			.flags = 0,
+		};
+		[movie setCurrentTime:startOfMovie];
 
-		//QTSoundFilePlayer won't play if the sound is already playing, but that's fine since we
-		//reset the playback position and it will start playing there in the next run loop.
-		[existingPlayer play];
+		//This only has an effect if the movie is not already playing. It won't stop it, and it won't start it over (the latter is what setCurrentTime: is for).
+		[movie play];
     }
 }
 
@@ -192,10 +197,10 @@
 - (void)_uncacheLeastRecentlyUsedSound
 {
 	NSString			*lastCachedPath = [soundCacheArray lastObject];
-	QTSoundFilePlayer   *existingPlayer = [soundCacheDict objectForKey:lastCachedPath];
+	QTMovie *movie = [soundCacheDict objectForKey:lastCachedPath];
 
-	if (![existingPlayer isPlaying]) {
-		[existingPlayer stop];
+	//If a movie is stopped, then its rate is zero. Thus, this tests whether the movie is playing. We remove it from the cache only if it is not playing.
+	if ([movie rate] == 0.0) {
 		[soundCacheDict removeObjectForKey:lastCachedPath];
 		[soundCacheArray removeLastObject];
 	}

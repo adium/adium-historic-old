@@ -76,6 +76,7 @@
 		11CA00120C35EC5200A6BB8D /* SS_PrefsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 344836900BC8510B0083723B /* SS_PrefsController.m */; };
 		11F145F00B546AC500CA91F6 /* Menu Bar Icons in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11F145C70B546A6D00CA91F6 /* Menu Bar Icons */; };
 		11F1460C0B546C1200CA91F6 /* AIMenuBarIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = 11F1460A0B546C1200CA91F6 /* AIMenuBarIcons.m */; };
+		31918ED80C5E486C00717F0A /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31918ED70C5E486C00717F0A /* QTKit.framework */; };
 		3402D5A5080DBC91004E50B4 /* SortConfiguration.nib in Resources */ = {isa = PBXBuildFile; fileRef = 347E791D07CAA52300350507 /* SortConfiguration.nib */; };
 		3402E01B07CB0CED0044F818 /* ESFileTransferProgressView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E01A07CB0CEC0044F818 /* ESFileTransferProgressView.nib */; };
 		3402E02407CB0D1B0044F818 /* ProxyPasswordPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E02307CB0D1B0044F818 /* ProxyPasswordPrompt.nib */; };
@@ -882,10 +883,6 @@
 		34DC8B020A7EEEF7003E1636 /* ESFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 348862CE05645E95003C9627 /* ESFileTransfer.m */; };
 		34DC8B030A7EEEF7003E1636 /* ESFileWrapperExtension.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F2E83907C2CDBD007EAAAB /* ESFileWrapperExtension.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34DC8B040A7EEEF7003E1636 /* ESFileWrapperExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F2E83807C2CDBD007EAAAB /* ESFileWrapperExtension.m */; };
-		34DC8B050A7EEEF7003E1636 /* VirtualRingBuffer.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D8346907CBE6F4006466F2 /* VirtualRingBuffer.m */; };
-		34DC8B060A7EEEF7003E1636 /* VirtualRingBuffer.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D8346A07CBE6F4006466F2 /* VirtualRingBuffer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		34DC8B070A7EEEF7003E1636 /* QTSoundFilePlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D8343907CBE6E1006466F2 /* QTSoundFilePlayer.m */; };
-		34DC8B080A7EEEF7003E1636 /* QTSoundFilePlayer.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D8343A07CBE6E1006466F2 /* QTSoundFilePlayer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34DC8B090A7EEEF7003E1636 /* JVFontPreviewField.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D8344C07CBE6E2006466F2 /* JVFontPreviewField.m */; };
 		34DC8B0A0A7EEEF7003E1636 /* JVFontPreviewField.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D8344D07CBE6E2006466F2 /* JVFontPreviewField.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34DC8B0B0A7EEEF7003E1636 /* KFTypeSelectTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A6FE7807D7E06A00972830 /* KFTypeSelectTableView.m */; };
@@ -1580,6 +1577,7 @@
 		11F145C70B546A6D00CA91F6 /* Menu Bar Icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Menu Bar Icons"; path = "Resources/Menu Bar Icons"; sourceTree = "<group>"; };
 		11F146090B546C1200CA91F6 /* AIMenuBarIcons.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMenuBarIcons.h; path = Source/AIMenuBarIcons.h; sourceTree = "<group>"; };
 		11F1460A0B546C1200CA91F6 /* AIMenuBarIcons.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMenuBarIcons.m; path = Source/AIMenuBarIcons.m; sourceTree = "<group>"; };
+		31918ED70C5E486C00717F0A /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		3402E01807CB0CE40044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		3402E01F07CB0D150044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		3402E02007CB0D150044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
@@ -3001,16 +2999,12 @@
 		34D8336B07CBD807006466F2 /* pref-ft.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pref-ft.png"; path = "Resources/pref-ft.png"; sourceTree = "<group>"; };
 		34D8336C07CBD807006466F2 /* pref-events.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pref-events.png"; path = "Resources/pref-events.png"; sourceTree = "<group>"; };
 		34D8336E07CBD807006466F2 /* pref-advanced.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pref-advanced.png"; path = "Resources/pref-advanced.png"; sourceTree = "<group>"; };
-		34D8343907CBE6E1006466F2 /* QTSoundFilePlayer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = QTSoundFilePlayer.m; path = "Frameworks/Adium Framework/Source/QTSoundFilePlayer.m"; sourceTree = "<group>"; };
-		34D8343A07CBE6E1006466F2 /* QTSoundFilePlayer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = QTSoundFilePlayer.h; path = "Frameworks/Adium Framework/Source/QTSoundFilePlayer.h"; sourceTree = "<group>"; };
 		34D8343F07CBE6E1006466F2 /* NSString+CarbonFSRefCreation.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = "NSString+CarbonFSRefCreation.m"; path = "Frameworks/Adium Framework/Source/NSString+CarbonFSRefCreation.m"; sourceTree = "<group>"; };
 		34D8344007CBE6E1006466F2 /* NSString+CarbonFSRefCreation.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = "NSString+CarbonFSRefCreation.h"; path = "Frameworks/Adium Framework/Source/NSString+CarbonFSRefCreation.h"; sourceTree = "<group>"; };
 		34D8344307CBE6E1006466F2 /* NDRunLoopMessenger.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = NDRunLoopMessenger.m; path = "Frameworks/Adium Framework/Source/NDRunLoopMessenger.m"; sourceTree = "<group>"; };
 		34D8344407CBE6E2006466F2 /* NDRunLoopMessenger.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = NDRunLoopMessenger.h; path = "Frameworks/Adium Framework/Source/NDRunLoopMessenger.h"; sourceTree = "<group>"; };
 		34D8344C07CBE6E2006466F2 /* JVFontPreviewField.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = JVFontPreviewField.m; path = "Frameworks/Adium Framework/Source/JVFontPreviewField.m"; sourceTree = "<group>"; };
 		34D8344D07CBE6E2006466F2 /* JVFontPreviewField.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = JVFontPreviewField.h; path = "Frameworks/Adium Framework/Source/JVFontPreviewField.h"; sourceTree = "<group>"; };
-		34D8346907CBE6F4006466F2 /* VirtualRingBuffer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = VirtualRingBuffer.m; path = "Frameworks/Adium Framework/Source/VirtualRingBuffer.m"; sourceTree = "<group>"; };
-		34D8346A07CBE6F4006466F2 /* VirtualRingBuffer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = VirtualRingBuffer.h; path = "Frameworks/Adium Framework/Source/VirtualRingBuffer.h"; sourceTree = "<group>"; };
 		34D8346B07CBE6F4006466F2 /* SUSpeaker.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SUSpeaker.m; path = "Frameworks/Adium Framework/Source/SUSpeaker.m"; sourceTree = "<group>"; };
 		34D8346C07CBE6F4006466F2 /* SUSpeaker.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SUSpeaker.h; path = "Frameworks/Adium Framework/Source/SUSpeaker.h"; sourceTree = "<group>"; };
 		34D8346D07CBE6F5006466F2 /* IconFamily.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = IconFamily.m; path = "Frameworks/Adium Framework/Source/IconFamily.m"; sourceTree = "<group>"; };
@@ -3823,6 +3817,7 @@
 				8163F99C0B318824002005EE /* Sparkle.framework in Frameworks */,
 				11AA1EFA0BCAE9C3003DDA66 /* Quartz.framework in Frameworks */,
 				340C1ABF0BD58FAB00D09235 /* Security.framework in Frameworks */,
+				31918ED80C5E486C00717F0A /* QTKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3993,6 +3988,7 @@
 		29B97323FDCFA39411CA2CEA /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				31918ED70C5E486C00717F0A /* QTKit.framework */,
 				11AA1EF90BCAE9C3003DDA66 /* Quartz.framework */,
 				377EC8930AE9525B00CB7BDF /* PSMTabBarControl.framework */,
 				9E1E1DFC0A96741500E16DFC /* LMX.framework */,
@@ -5039,7 +5035,6 @@
 		34D8342B07CBE6A4006466F2 /* External Sources */ = {
 			isa = PBXGroup;
 			children = (
-				34D834E207CBE7D5006466F2 /* Sound Playing */,
 				34D834CD07CBE7A3006466F2 /* Text field for previewing font preferences */,
 				34A6FE8007D7E07300972830 /* Type Select Table View */,
 				34D8346E07CBE6F5006466F2 /* IconFamily.h */,
@@ -5072,17 +5067,6 @@
 				34D834D207CBE7B2006466F2 /* AIUtilities.framework */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		34D834E207CBE7D5006466F2 /* Sound Playing */ = {
-			isa = PBXGroup;
-			children = (
-				34D8346907CBE6F4006466F2 /* VirtualRingBuffer.m */,
-				34D8346A07CBE6F4006466F2 /* VirtualRingBuffer.h */,
-				34D8343907CBE6E1006466F2 /* QTSoundFilePlayer.m */,
-				34D8343A07CBE6E1006466F2 /* QTSoundFilePlayer.h */,
-			);
-			name = "Sound Playing";
 			sourceTree = "<group>";
 		};
 		34DC842E0A7EA94C003E1636 /* Adium UI and Components */ = {
@@ -7259,8 +7243,6 @@
 				34DC8AFF0A7EEEF7003E1636 /* AIXMLElement.h in Headers */,
 				34DC8B010A7EEEF7003E1636 /* ESFileTransfer.h in Headers */,
 				34DC8B030A7EEEF7003E1636 /* ESFileWrapperExtension.h in Headers */,
-				34DC8B060A7EEEF7003E1636 /* VirtualRingBuffer.h in Headers */,
-				34DC8B080A7EEEF7003E1636 /* QTSoundFilePlayer.h in Headers */,
 				34DC8B0A0A7EEEF7003E1636 /* JVFontPreviewField.h in Headers */,
 				34DC8B0C0A7EEEF7003E1636 /* KFTypeSelectTableView.h in Headers */,
 				34DC8B0D0A7EEEF7003E1636 /* IconFamily.h in Headers */,
@@ -8677,8 +8659,6 @@
 				34DC8B000A7EEEF7003E1636 /* AIXMLElement.m in Sources */,
 				34DC8B020A7EEEF7003E1636 /* ESFileTransfer.m in Sources */,
 				34DC8B040A7EEEF7003E1636 /* ESFileWrapperExtension.m in Sources */,
-				34DC8B050A7EEEF7003E1636 /* VirtualRingBuffer.m in Sources */,
-				34DC8B070A7EEEF7003E1636 /* QTSoundFilePlayer.m in Sources */,
 				34DC8B090A7EEEF7003E1636 /* JVFontPreviewField.m in Sources */,
 				34DC8B0B0A7EEEF7003E1636 /* KFTypeSelectTableView.m in Sources */,
 				34DC8B0E0A7EEEF7003E1636 /* IconFamily.m in Sources */,
