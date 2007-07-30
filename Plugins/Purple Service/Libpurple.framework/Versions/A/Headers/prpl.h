@@ -325,7 +325,8 @@ struct _PurplePluginProtocolInfo
 	char *(*roomlist_room_serialize)(PurpleRoomlistRoom *room);
 
 	/* Remove the user from the server. (This is only at the bottom to keep binary compatibility.)
-	 * The account can either be connected or disconnected. After the removal is finished, the connection will be closed.
+	 * The account can either be connected or disconnected. After the removal is finished,
+	 * the connection will stay open and has to be closed!
 	 */
 	void (*unregister_user)(PurpleAccount *);
 	
