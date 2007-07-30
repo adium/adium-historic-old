@@ -21,9 +21,67 @@
 #import <Adium/AIService.h>
 #import <Adium/AIChat.h>
 #import <Adium/ESFileTransfer.h>
+#import "AdiumAccounts.h"
 
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
+
+#define NEW_ACCOUNT_DISPLAY_TEXT			AILocalizedString(@"<New Account>", "Placeholder displayed as the name of a new account")
+
+@interface AIAccountDeletionDialog : NSObject <AIAccountControllerRemoveConfirmationDialog> {
+	AIAccount *account;
+	NSAlert *alert;
+	id userdata;
+}
+
+- (id)initWithAccount:(AIAccount*)ac alert:(NSAlert*)al;
+
+- (void)setUserData:(id)ud;
+- (id)userData;
+
+- (void)alertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo;
+
+@end
+
+@implementation AIAccountDeletionDialog
+
+- (id)initWithAccount:(AIAccount*)ac alert:(NSAlert*)al {
+	if((self = [super init])) {
+		account = ac;
+		alert = [al retain];
+	}
+	return self;
+}
+
+- (void)dealloc {
+	[alert release];
+	[userdata release];
+	[super dealloc];
+}
+
+- (void)setUserData:(id)ud {
+	id old = userdata;
+	userdata = [ud retain];
+	[old release];
+}
+
+- (id)userData {
+	return [[userdata retain] autorelease];
+}
+
+- (void)runModal {
+	[self alertDidEnd:alert returnCode:[alert runModal] contextInfo:NULL];
+}
+
+- (void)beginSheetModalForWindow:(NSWindow*)window {
+	[alert beginSheetModalForWindow:window modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:NULL];
+}
+
+- (void)alertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo {
+	[account alertForAccountDeletion:self didReturn:returnCode];
+}
+
+@end
 
 /*!
  * @class AIAccount
@@ -116,6 +174,7 @@
  * @brief The account will be deleted
  *
  * The default implementation disconnects the account.  Subclasses should call super's implementation.
+ * If asynchronous behavior is required, the next three methods should be overridden instead.
  */
 - (void)willBeDeleted
 {
@@ -123,6 +182,46 @@
 
 	//Remove our contacts immediately.
 	[self removeAllContacts];
+}
+
+- (id<AIAccountControllerRemoveConfirmationDialog>)confirmationDialogForAccountDeletionForAccountsList:(AdiumAccounts*)accounts
+{
+	AIAccountDeletionDialog *result = [[AIAccountDeletionDialog alloc] initWithAccount:self alert:[self alertForAccountDeletion]];
+	[result setUserData:accounts];
+	return result;
+}
+
+/*!
+ * @brief The alert used for confirming the account deletion
+ *
+ * Meant for subclassers. By default, returns the dialog that asks the user if the account should really be deleted (and how).
+ */
+- (NSAlert*)alertForAccountDeletion
+{
+	return [NSAlert alertWithMessageText:AILocalizedString(@"Delete Account",nil)
+						   defaultButton:AILocalizedString(@"Delete",nil)
+						 alternateButton:AILocalizedString(@"Cancel",nil)
+							 otherButton:nil
+			   informativeTextWithFormat:AILocalizedString(@"Delete the account %@?",nil), ([[self formattedUID] length] ? [self formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT)];
+}
+
+/*!
+ * @brief The dialog asking for confirmation for deleting the account did return.
+ *
+ * @parameter dialog The dialog that has completed
+ * @parameter returnCode One of the regular NSAlert return codes
+ *
+ * This method should be overridden when alertForAccountDeletion: was overridden, and/or asynchronous behavior is required.
+ * This implementation disconnects and deletes the account from the accounts list when returnCode == NSAlertDefaultReturn.
+ * It must be called by subclassers (could be done asynchronously) with either NSAlertDefaultReturn or NSAlertAlternateReturn.
+ */
+- (void)alertForAccountDeletion:(id<AIAccountControllerRemoveConfirmationDialog>)dialog didReturn:(int)returnCode
+{
+	if(returnCode == NSAlertDefaultReturn) {
+		[self willBeDeleted];
+		[(AdiumAccounts*)[(AIAccountDeletionDialog*)dialog userData] deleteAccount:self];
+	}
+	[(AIAccountDeletionDialog*)dialog release];
 }
 
 /*!

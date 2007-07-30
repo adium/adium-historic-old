@@ -230,54 +230,9 @@
 {
     int index = [tableView_accountList selectedRow];
 
-    if (index != -1) {		
-		AIAccount	*targetAccount;
-		NSString    *accountFormattedUID;
-
-		targetAccount = [accountArray objectAtIndex:index];
-		accountFormattedUID = [targetAccount formattedUID];
-
-		//Confirm before deleting
-		NSBeginAlertSheet(AILocalizedString(@"Delete Account",nil),
-						  AILocalizedString(@"Delete",nil),
-						  AILocalizedString(@"Cancel",nil),
-						  @"",[[self view] window], self, 
-						  @selector(deleteAccountSheetDidEnd:returnCode:contextInfo:), nil, [targetAccount retain], 
-						  AILocalizedString(@"Delete the account %@?",nil), ([accountFormattedUID length] ? accountFormattedUID : NEW_ACCOUNT_DISPLAY_TEXT));
-	}
+    if (index != -1)
+		[[[adium accountController] deleteAccount:[accountArray objectAtIndex:index]] beginSheetModalForWindow:[[self view] window]];
 }
-
-/*!
- * @brief Finish account deletion
- *
- * Called when the sheet is closed
- *
- * @param returnCode NSAlertDefaultReturn indicates the account should be deleted
- */
-- (void)deleteAccountSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
-{
-    AIAccount 	*targetAccount = contextInfo;
-    int			index;
-    
-    NSParameterAssert(targetAccount != nil);
-	NSParameterAssert([targetAccount isKindOfClass:[AIAccount class]]);
-    
-    if (returnCode == NSAlertDefaultReturn) {
-        //Delete it
-        index = [accountArray indexOfObject:targetAccount];
-        [[adium accountController] deleteAccount:targetAccount];
-		
-        //If it was the last row, select the new last row (by default the selection will jump to the top, which is bad)
-        if (index >= [accountArray count]) {
-            index = [accountArray count]-1;
-            [tableView_accountList selectRow:index byExtendingSelection:NO];
-        }
-    }
-	
-	//targetAccount was retained in original NSBeginAlertSheet() call
-	[targetAccount release];
-}
-
 
 //Account List ---------------------------------------------------------------------------------------------------------
 #pragma mark Account List

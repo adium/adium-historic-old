@@ -13,6 +13,13 @@
 #define Account_ListChanged 					@"Account_ListChanged"
 #define Adium_RequestSetManualIdleTime			@"Adium_RequestSetManualIdleTime"
 
+@protocol AIAccountControllerRemoveConfirmationDialog
+
+- (void)runModal;
+- (void)beginSheetModalForWindow:(NSWindow*)window;
+
+@end
+
 @protocol AIAccountController <AIController>
 
 //Services
@@ -37,7 +44,7 @@
 - (AIAccount *)accountWithInternalObjectID:(NSString *)objectID;
 - (AIAccount *)createAccountWithService:(AIService *)service UID:(NSString *)inUID;
 - (void)addAccount:(AIAccount *)inAccount;
-- (void)deleteAccount:(AIAccount *)inAccount;
+- (id<AIAccountControllerRemoveConfirmationDialog>)deleteAccount:(AIAccount *)inAccount; // the dialog has to be executed for the operation to actually take place!
 - (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
 - (void)accountDidChangeUID:(AIAccount *)inAccount;
 
