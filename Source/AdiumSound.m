@@ -28,7 +28,7 @@
 - (void)_setVolumeOfAllSoundsTo:(float)inVolume;
 - (void)cachedPlaySound:(NSString *)inPath;
 - (void)_uncacheLeastRecentlyUsedSound;
-
+- (QTAudioContextRef)createAudioContextWithSystemOutputDevice;
 - (QTAudioContextRef) audioContext;
 - (void) setAudioContext:(QTAudioContextRef)newAudioContext;
 @end
@@ -180,28 +180,13 @@
 				NSAssert4(err == noErr, @"%s: Could not set audio context of movie %@ to %p: SetMovieAudioContext returned error %i", __PRETTY_FUNCTION__, movie, audioContext, err);
 			} else {
 				//No existing audio context, so create one, then set it in all our movies, including the new one.
-				QTAudioContextRef newAudioContext = NULL;
-				UInt32 dataSize;
-
-				//First, obtain the device itself.
-				AudioDeviceID systemOutputDevice = 0;
-				dataSize = sizeof(systemOutputDevice);
-				err = AudioHardwareGetProperty(kAudioHardwarePropertyDefaultSystemOutputDevice, &dataSize, &systemOutputDevice);
-				NSAssert2(err == noErr, @"%s: Could not get the system output device: AudioHardwareGetProperty returned error %i", __PRETTY_FUNCTION__, err);
-
-				//Now get its UID. We'll need to release this.
-				CFStringRef deviceUID = NULL;
-				dataSize = sizeof(deviceUID);
-				err = AudioDeviceGetProperty(systemOutputDevice, /*channel*/ 0, /*isInput*/ false, kAudioDevicePropertyDeviceUID, &dataSize, &deviceUID);
-				NSAssert3(err == noErr, @"%s: Could not get the device UID for device %p: AudioDeviceGetProperty returned error %i", __PRETTY_FUNCTION__, systemOutputDevice, err);
-				[(NSObject *)deviceUID autorelease];
-
-				//Create an audio context for this device so that our movies can play into it.
-				err = QTAudioContextCreateForAudioDevice(kCFAllocatorDefault, deviceUID, /*options*/ NULL, &newAudioContext);
-				NSAssert3(err == noErr, @"%s: QTAudioContextCreateForAudioDevice with device UID %@ returned error %i", __PRETTY_FUNCTION__, deviceUID, err);
+				QTAudioContextRef newAudioContext = [self createAudioContextWithSystemOutputDevice];
 
 				[self setAudioContext:newAudioContext];
 				//Note: Since we already cached the new movie, we don't need to set this context in it ourselves.
+
+				//We created it, so we must release it.
+				QTAudioContextRelease(newAudioContext);
 			}
 		}
 
@@ -239,6 +224,32 @@
 		[soundCacheDict removeObjectForKey:lastCachedPath];
 		[soundCacheArray removeLastObject];
 	}
+}
+
+- (QTAudioContextRef) createAudioContextWithSystemOutputDevice
+{
+	QTAudioContextRef newAudioContext = NULL;
+	OSStatus err;
+	UInt32 dataSize;
+
+	//First, obtain the device itself.
+	AudioDeviceID systemOutputDevice = 0;
+	dataSize = sizeof(systemOutputDevice);
+	err = AudioHardwareGetProperty(kAudioHardwarePropertyDefaultSystemOutputDevice, &dataSize, &systemOutputDevice);
+	NSAssert2(err == noErr, @"%s: Could not get the system output device: AudioHardwareGetProperty returned error %i", __PRETTY_FUNCTION__, err);
+
+	//Now get its UID. We'll need to release this.
+	CFStringRef deviceUID = NULL;
+	dataSize = sizeof(deviceUID);
+	err = AudioDeviceGetProperty(systemOutputDevice, /*channel*/ 0, /*isInput*/ false, kAudioDevicePropertyDeviceUID, &dataSize, &deviceUID);
+	NSAssert3(err == noErr, @"%s: Could not get the device UID for device %p: AudioDeviceGetProperty returned error %i", __PRETTY_FUNCTION__, systemOutputDevice, err);
+	[(NSObject *)deviceUID autorelease];
+
+	//Create an audio context for this device so that our movies can play into it.
+	err = QTAudioContextCreateForAudioDevice(kCFAllocatorDefault, deviceUID, /*options*/ NULL, &newAudioContext);
+	NSAssert3(err == noErr, @"%s: QTAudioContextCreateForAudioDevice with device UID %@ returned error %i", __PRETTY_FUNCTION__, deviceUID, err);
+
+	return newAudioContext;
 }
 
 - (QTAudioContextRef) audioContext
