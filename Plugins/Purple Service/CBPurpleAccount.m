@@ -59,6 +59,7 @@
 #define RECONNECTION_ATTEMPTS		4
 
 #define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
+#define NEW_ACCOUNT_DISPLAY_TEXT		AILocalizedString(@"<New Account>", "Placeholder displayed as the name of a new account")
 
 @interface CBPurpleAccount (PRIVATE)
 - (NSString *)_mapIncomingGroupName:(NSString *)name;
@@ -1498,6 +1499,9 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 
 	//Clear any previous disconnection error
 	[lastDisconnectionError release]; lastDisconnectionError = nil;
+	
+	if(deletionDialog)
+		[purpleThread unregisterAccount:self];
 }
 
 - (void)accountConnectionProgressStep:(NSNumber *)step percentDone:(NSNumber *)connectionProgressPrecent
@@ -1645,6 +1649,8 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	//Report that we disconnected
 	AILog(@"%@: Telling the core we disconnected", self);
 	[self didDisconnect];
+	if(willBeDeleted)
+		[super alertForAccountDeletion:deletionDialog didReturn:NSAlertDefaultReturn];
 }
 
 //By default, always attempt to reconnect.  Subclasses may override this to manage reconnect behavior.
@@ -2343,6 +2349,104 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 
 	//Observe preferences changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_ALIASES];
+}
+
+/*!
+ * @brief The account will be deleted, we should ask the user for confirmation. If the prpl supports it, we can also remove
+ * the account from the server (if the user wants us to do that)
+ */
+- (NSAlert*)alertForAccountDeletion
+{
+	PurplePlugin *prpl;
+	PurplePluginProtocolInfo *prpl_info;
+	
+	if (!purpleThread) {
+		purpleThread = [[SLPurpleCocoaAdapter sharedInstance] retain];	
+	}	
+	
+	prpl = purple_find_prpl([self protocolPlugin]);
+	if(!prpl)
+		return nil;
+	prpl_info = PURPLE_PLUGIN_PROTOCOL_INFO(prpl);
+	if(!prpl_info)
+		return nil;
+	if(prpl_info->unregister_user)
+		return [NSAlert alertWithMessageText:AILocalizedString(@"Delete Account",nil)
+							   defaultButton:AILocalizedString(@"Delete",nil)
+							 alternateButton:AILocalizedString(@"Cancel",nil)
+								 otherButton:AILocalizedString(@"Delete & Unregister",nil)
+				   informativeTextWithFormat:AILocalizedString(@"Delete the account %@? You can also optionally unregister the account on the server if possible.",nil), ([[self formattedUID] length] ? [self formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT)];
+	else
+		return [super alertForAccountDeletion];
+}
+
+- (void)alertForAccountDeletion:(id<AIAccountControllerRemoveConfirmationDialog>)dialog didReturn:(int)returnCode
+{
+	PurplePlugin *prpl;
+	PurplePluginProtocolInfo *prpl_info;
+	
+	if (!purpleThread) {
+		purpleThread = [[SLPurpleCocoaAdapter sharedInstance] retain];	
+	}	
+	
+	prpl = purple_find_prpl([self protocolPlugin]);
+	if(!prpl) {
+		[super alertForAccountDeletion:dialog didReturn:NSAlertAlternateReturn];
+		return;
+	}
+	prpl_info = PURPLE_PLUGIN_PROTOCOL_INFO(prpl);
+	if(!prpl_info) {
+		[super alertForAccountDeletion:dialog didReturn:NSAlertAlternateReturn];
+		return;
+	}
+	// if the user canceled, we can tell the superclass immediately
+	// if the deletion is in fact happening, we first have to unregister and disconnect
+	// this is an asynchronous process
+	if(prpl_info->unregister_user) {
+		switch(returnCode) {
+			case NSAlertOtherReturn: // delete & unregister
+				deletionDialog = dialog;
+				if(!account || !purple_account_is_connected(account)) {
+					password = [[[adium accountController] passwordForAccount:self] retain];
+					[self connect];
+				} else
+					[purpleThread unregisterAccount:self];
+				// further progress happens in -unregisteredAccount:
+				break;
+			case NSAlertDefaultReturn: // delete
+				willBeDeleted = YES;
+				deletionDialog = dialog;
+				[self setShouldBeOnline:NO];
+				// further progress happens in -accountConnectionDisconnected
+				break;
+			default: // cancel
+				[super alertForAccountDeletion:dialog didReturn:NSAlertAlternateReturn];
+		}
+	} else {
+		switch(returnCode) {
+			case NSAlertDefaultReturn:
+				willBeDeleted = YES;
+				deletionDialog = dialog;
+				[self setShouldBeOnline:NO];
+				// further progress happens in -accountConnectionDisconnected
+				break;
+			default:
+				[super alertForAccountDeletion:dialog didReturn:returnCode];
+		}
+	}
+}
+
+- (void)unregisteredAccount:(BOOL)success {
+	// we don't care whether it was successful (can't do much about it anyways)
+	// XXX should we cancel deleting the account when unregistration failed?
+	willBeDeleted = YES;
+	NSInvocation *inv = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:@selector(setShouldBeOnline:)]];
+	[inv setTarget:self];
+	[inv setSelector:@selector(setShouldBeOnline:)];
+	static BOOL nope = NO;
+	[inv setArgument:&nope atIndex:2];
+	[inv performSelector:@selector(invoke) withObject:nil afterDelay:0.0];
+	// further progress happens in -accountConnectionDisconnected
 }
 
 /*!
