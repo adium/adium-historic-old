@@ -241,10 +241,12 @@
 	}
 }
 
-- (QTAudioContextRef) audioContext {
+- (QTAudioContextRef) audioContext
+{
 	return audioContext;
 }
-- (void) setAudioContext:(QTAudioContextRef)newAudioContext {
+- (void) setAudioContext:(QTAudioContextRef)newAudioContext
+{
 	if (audioContext != newAudioContext) {
 		//Set this new audio context in every cached movie.
 		NSEnumerator *soundsEnum = [soundCacheArray objectEnumerator];
