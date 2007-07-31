@@ -16,13 +16,11 @@
 
 #import <Adium/AIObject.h>
 #import "AISoundController.h"
-#include <QuickTime/QuickTime.h>
 
 @interface AdiumSound : AIObject {
     NSMutableDictionary	*soundCacheDict;
     NSMutableArray		*soundCacheArray;
 	NSTimer				*soundCacheCleanupTimer;
-	QTAudioContextRef	audioContext;
 
     float				customVolume;
 	
