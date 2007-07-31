@@ -33,6 +33,8 @@
 - (void) setAudioContext:(QTAudioContextRef)newAudioContext;
 @end
 
+static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, void *refcon);
+
 @implementation AdiumSound
 
 /*!
@@ -58,6 +60,10 @@
 							selector:@selector(workspaceSessionDidResignActive:)
 								name:NSWorkspaceSessionDidResignActiveNotification
 							  object:nil];
+
+		//Sign up for notification when the user changes the system output device in the Sound pane of System Preferences.
+		OSStatus err = AudioHardwareAddPropertyListener(kAudioHardwarePropertyDefaultSystemOutputDevice, systemOutputDeviceDidChange, /*refcon*/ self);
+		NSAssert2(err == noErr, @"%s: Couldn't sign up for system-output-device-changed notification, because AudioHardwareAddPropertyListener returned %i", __PRETTY_FUNCTION__, err);
 	}
 
 	return self;
@@ -263,8 +269,13 @@
 		NSEnumerator *soundsEnum = [soundCacheArray objectEnumerator];
 		QTMovie *movie;
 		while ((movie = [soundCacheDict objectForKey:[soundsEnum nextObject]])) {
+			float savedRate = [movie rate];
+			[movie setRate:0.0];
+
 			OSStatus err = SetMovieAudioContext([movie quickTimeMovie], newAudioContext);
 			NSAssert4(err == noErr, @"%s: Could not set audio context of movie %@ to %p: SetMovieAudioContext returned error %i", __PRETTY_FUNCTION__, movie, newAudioContext, err);
+
+			[movie setRate:savedRate];
 		}
 
 		//Now throw away the old context and retain the new one, to set in future movies.
@@ -302,3 +313,22 @@
 }
 
 @end
+
+static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, void *refcon)
+{
+#pragma unused(property)
+	AdiumSound *self = (id)refcon;
+	NSCAssert1(self, @"AudioHardware property listener function %s called with nil refcon, which we expected to be the AdiumSound instance", __PRETTY_FUNCTION__);
+
+	//We only want to replace the audio context if there's one to replace. Otherwise, the change will be handled for free by AdiumSound's laziness in creating the context.
+	if ([self audioContext]) {
+		QTAudioContextRef newAudioContext = [self createAudioContextWithSystemOutputDevice];
+
+		[self setAudioContext:newAudioContext];
+
+		//We created it, so we must release it.
+		QTAudioContextRelease(newAudioContext);
+	}
+
+	return noErr;
+}
