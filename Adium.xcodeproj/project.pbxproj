@@ -77,6 +77,8 @@
 		11F145F00B546AC500CA91F6 /* Menu Bar Icons in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11F145C70B546A6D00CA91F6 /* Menu Bar Icons */; };
 		11F1460C0B546C1200CA91F6 /* AIMenuBarIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = 11F1460A0B546C1200CA91F6 /* AIMenuBarIcons.m */; };
 		31918ED80C5E486C00717F0A /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31918ED70C5E486C00717F0A /* QTKit.framework */; };
+		31E0CD580C5EEEFA00271DB1 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D836F307CBF960006466F2 /* QuickTime.framework */; };
+		31E0CD810C5EEF5200271DB1 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31E0CD800C5EEF5200271DB1 /* CoreAudio.framework */; };
 		3402D5A5080DBC91004E50B4 /* SortConfiguration.nib in Resources */ = {isa = PBXBuildFile; fileRef = 347E791D07CAA52300350507 /* SortConfiguration.nib */; };
 		3402E01B07CB0CED0044F818 /* ESFileTransferProgressView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E01A07CB0CEC0044F818 /* ESFileTransferProgressView.nib */; };
 		3402E02407CB0D1B0044F818 /* ProxyPasswordPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E02307CB0D1B0044F818 /* ProxyPasswordPrompt.nib */; };
@@ -1578,6 +1580,7 @@
 		11F146090B546C1200CA91F6 /* AIMenuBarIcons.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMenuBarIcons.h; path = Source/AIMenuBarIcons.h; sourceTree = "<group>"; };
 		11F1460A0B546C1200CA91F6 /* AIMenuBarIcons.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMenuBarIcons.m; path = Source/AIMenuBarIcons.m; sourceTree = "<group>"; };
 		31918ED70C5E486C00717F0A /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
+		31E0CD800C5EEF5200271DB1 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = /System/Library/Frameworks/CoreAudio.framework; sourceTree = "<absolute>"; };
 		3402E01807CB0CE40044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		3402E01F07CB0D150044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		3402E02007CB0D150044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
@@ -3818,6 +3821,8 @@
 				11AA1EFA0BCAE9C3003DDA66 /* Quartz.framework in Frameworks */,
 				340C1ABF0BD58FAB00D09235 /* Security.framework in Frameworks */,
 				31918ED80C5E486C00717F0A /* QTKit.framework in Frameworks */,
+				31E0CD580C5EEEFA00271DB1 /* QuickTime.framework in Frameworks */,
+				31E0CD810C5EEF5200271DB1 /* CoreAudio.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3988,6 +3993,7 @@
 		29B97323FDCFA39411CA2CEA /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				31E0CD800C5EEF5200271DB1 /* CoreAudio.framework */,
 				31918ED70C5E486C00717F0A /* QTKit.framework */,
 				11AA1EF90BCAE9C3003DDA66 /* Quartz.framework */,
 				377EC8930AE9525B00CB7BDF /* PSMTabBarControl.framework */,
