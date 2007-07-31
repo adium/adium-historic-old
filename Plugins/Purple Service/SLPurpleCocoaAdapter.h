@@ -61,6 +61,7 @@
 - (void)closeChat:(AIChat *)chat;
 - (void)disconnectAccount:(id)adiumAccount;
 - (void)registerAccount:(id)adiumAccount;
+- (void)unregisterAccount:(id)adiumAccount;
 - (void)xferRequest:(PurpleXfer *)xfer;
 - (void)xferRequestAccepted:(PurpleXfer *)xfer withFileName:(NSString *)xferFileName;
 - (void)xferRequestRejected:(PurpleXfer *)xfer;

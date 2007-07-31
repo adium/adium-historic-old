@@ -104,6 +104,9 @@ typedef enum {
 	-(AIPrivacyOption)privacyOptions;
 @end
 
+@class AdiumAccounts;
+@protocol AIAccountControllerRemoveConfirmationDialog;
+
 /*!
  * @class AIAccount
  * @abstract An account of ours (one we connect to and use to talk to handles)
@@ -140,6 +143,9 @@ typedef enum {
 - (NSString *)accountWillSetUID:(NSString *)proposedUID;
 - (void)didChangeUID;
 - (void)willBeDeleted;
+- (id<AIAccountControllerRemoveConfirmationDialog>)confirmationDialogForAccountDeletionForAccountsList:(AdiumAccounts*)accounts;
+- (NSAlert*)alertForAccountDeletion;
+- (void)alertForAccountDeletion:(id<AIAccountControllerRemoveConfirmationDialog>)dialog didReturn:(int)returnCode;
 - (NSString *)explicitFormattedUID;
 
 //Properties

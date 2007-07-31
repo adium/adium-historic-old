@@ -795,6 +795,15 @@ NSString *processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 	purple_account_register(accountLookupFromAdiumAccount(adiumAccount));
 }
 
+static void purpleUnregisterCb(PurpleAccount *account, gboolean success, void *user_data) {
+	[(CBPurpleAccount*)user_data unregisteredAccount:success?YES:NO];
+}
+
+- (void)unregisterAccount:(id)adiumAccount
+{
+	purple_account_unregister(accountLookupFromAdiumAccount(adiumAccount), purpleUnregisterCb, adiumAccount);
+}
+
 //Called on the purple thread, actually performs the specified command (it should have already been tested by 
 //attemptPurpleCommandOnMessage:... above.
 - (BOOL)doCommand:(NSString *)originalMessage

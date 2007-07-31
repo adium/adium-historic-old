@@ -18,6 +18,7 @@
 #import <AdiumLibpurple/PurpleCommon.h>
 
 @class SLPurpleCocoaAdapter, ESFileTransfer, AIService, AIContentMessage, AIStatus, AIWindowController, AMPurpleTuneTooltip;
+@protocol AIAccountControllerRemoveConfirmationDialog;
 
 @interface CBPurpleAccount : AIAccount <AIAccount_Privacy>
 {   	
@@ -33,6 +34,8 @@
 	
 	NSDictionary		*tuneinfo;
 	AMPurpleTuneTooltip *tunetooltip;
+	BOOL				willBeDeleted;
+	id<AIAccountControllerRemoveConfirmationDialog> deletionDialog;
 }
 
 - (const char*)protocolPlugin;
@@ -49,6 +52,7 @@
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError;
 - (BOOL)useDisplayNameAsStatusMessage;
 - (AIService *)_serviceForUID:(NSString *)contactUID;
+- (void)unregisteredAccount:(BOOL)success;
 
 /* CBPurpleAccount odes not implement AIAccount_Files; however, all subclasses which do use the same code.
 	The superclass therefore has the code and declares the methods here. */
