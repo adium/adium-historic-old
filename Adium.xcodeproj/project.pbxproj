@@ -93,13 +93,10 @@
 		340B9BD4069C735900FE1E57 /* WebKit Message View.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3499F45006309AC80035B468 /* WebKit Message View.AdiumPlugin */; };
 		340BA8D809EC5E35000EC441 /* Libpurple.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libpurple.framework */; };
 		340BAB1D09EC6E53000EC441 /* libirc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 340BAB1C09EC6E53000EC441 /* libirc.a */; };
-		340C1A350BD58F9000D09235 /* AuthorizedTaskManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 340C1A310BD58F9000D09235 /* AuthorizedTaskManager.h */; };
 		340C1A360BD58F9000D09235 /* DiskImageUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 340C1A320BD58F9000D09235 /* DiskImageUtilities.m */; };
-		340C1A370BD58F9000D09235 /* DiskImageUtilities.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 340C1A330BD58F9000D09235 /* DiskImageUtilities.h */; };
 		340C1A380BD58F9000D09235 /* AuthorizedTaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 340C1A340BD58F9000D09235 /* AuthorizedTaskManager.m */; };
 		340C1ABF0BD58FAB00D09235 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 340C1ABE0BD58FAB00D09235 /* Security.framework */; };
 		340C1E770BD59A0500D09235 /* GBImportPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 340C1E750BD59A0500D09235 /* GBImportPlugin.m */; };
-		340C1E780BD59A0500D09235 /* GBImportPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 340C1E760BD59A0500D09235 /* GBImportPlugin.h */; };
 		340D859B0ADC82D100D05B3F /* sourceListBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 340670790A55A044004E22AC /* sourceListBackground.png */; };
 		3410746009B6965700565C9E /* AIMDLogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3410745E09B6965700565C9E /* AIMDLogViewerWindowController.m */; };
 		34107B4C09E9923D001CC042 /* AIGuestAccountWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34107B4A09E9923D001CC042 /* AIGuestAccountWindowController.m */; };
@@ -203,9 +200,7 @@
 		344838690BC85EF70083723B /* AccountListPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4B8C3CE80825F60B004B9F45 /* AccountListPreferences.nib */; };
 		344838B50BC860770083723B /* AIAccountListPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8C3C980825EAF9004B9F45 /* AIAccountListPreferences.m */; };
 		344839380BC862780083723B /* pref-messages.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8336707CBD807006466F2 /* pref-messages.png */; };
-		344839990BC8644C0083723B /* AIAdvancedPreferencesPlugin.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 344839970BC8644C0083723B /* AIAdvancedPreferencesPlugin.h */; };
 		3448399A0BC8644C0083723B /* AIAdvancedPreferencesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 344839980BC8644C0083723B /* AIAdvancedPreferencesPlugin.m */; };
-		3448399F0BC864610083723B /* AIAdvancedPreferences.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3448399D0BC864610083723B /* AIAdvancedPreferences.h */; };
 		344839A00BC864610083723B /* AIAdvancedPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 3448399E0BC864610083723B /* AIAdvancedPreferences.m */; };
 		34483A990BC869680083723B /* AdvancedPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34483A980BC869680083723B /* AdvancedPreferences.nib */; };
 		3448758E06D1EBDF00DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
@@ -219,19 +214,12 @@
 		3448769A06D1EF7300DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		344C0F0D06B709AC00DA7200 /* Bonjour.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4947F5CB0655E85200B791E5 /* Bonjour.AdiumPlugin */; };
 		344D97470C3C442600498CA1 /* AddressBookUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 344D97390C3C442500498CA1 /* AddressBookUtils.m */; };
-		344D97480C3C442600498CA1 /* Buddy.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 344D973A0C3C442500498CA1 /* Buddy.h */; };
 		344D97490C3C442600498CA1 /* Buddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 344D973B0C3C442500498CA1 /* Buddy.m */; };
-		344D974A0C3C442600498CA1 /* Chat.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 344D973C0C3C442500498CA1 /* Chat.h */; };
 		344D974B0C3C442600498CA1 /* Chat.mm in Sources */ = {isa = PBXBuildFile; fileRef = 344D973D0C3C442500498CA1 /* Chat.mm */; };
-		344D974C0C3C442600498CA1 /* FileAttributes.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 344D973E0C3C442500498CA1 /* FileAttributes.h */; };
 		344D974D0C3C442600498CA1 /* FileAttributes.m in Sources */ = {isa = PBXBuildFile; fileRef = 344D973F0C3C442500498CA1 /* FileAttributes.m */; };
-		344D974E0C3C442600498CA1 /* InstantMessage.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 344D97400C3C442500498CA1 /* InstantMessage.h */; };
 		344D974F0C3C442600498CA1 /* InstantMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 344D97410C3C442500498CA1 /* InstantMessage.m */; };
-		344D97500C3C442600498CA1 /* Person.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 344D97420C3C442500498CA1 /* Person.h */; };
 		344D97510C3C442600498CA1 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 344D97430C3C442500498CA1 /* Person.m */; };
-		344D97520C3C442600498CA1 /* Presentity.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 344D97440C3C442600498CA1 /* Presentity.h */; };
 		344D97530C3C442600498CA1 /* Presentity.m in Sources */ = {isa = PBXBuildFile; fileRef = 344D97450C3C442600498CA1 /* Presentity.m */; };
-		344D97540C3C442600498CA1 /* AddressBookUtils.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 344D97460C3C442600498CA1 /* AddressBookUtils.h */; };
 		34500ED00A881F8500509225 /* PurpleDefaultsQQ.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3419E74B0A880C0900C3FC68 /* PurpleDefaultsQQ.plist */; };
 		3456231C0A3771D800E7FC97 /* ESRankingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3456231A0A3771D800E7FC97 /* ESRankingCell.m */; };
 		345623200A3771E100E7FC97 /* AIChatLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3456231E0A3771E100E7FC97 /* AIChatLog.m */; };
@@ -262,9 +250,7 @@
 		3461621406FB482D009181D8 /* UserList Theme.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3461621006FB482C009181D8 /* UserList Theme.plist */; };
 		3461621606FB482D009181D8 /* ESChatUserListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3461621206FB482C009181D8 /* ESChatUserListController.m */; };
 		3461621706FB482D009181D8 /* UserList Layout.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3461621306FB482D009181D8 /* UserList Layout.plist */; };
-		346371070BCA0A5400AD57AD /* AIMessageTabSplitView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 346371050BCA0A5400AD57AD /* AIMessageTabSplitView.h */; };
 		346371080BCA0A5400AD57AD /* AIMessageTabSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 346371060BCA0A5400AD57AD /* AIMessageTabSplitView.m */; };
-		346935D50BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 346935D30BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.h */; };
 		346935D60BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 346935D40BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.m */; };
 		346BA33F0774C27400628F06 /* ESGlobalEventsPreferencesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 346BA33D0774C27400628F06 /* ESGlobalEventsPreferencesPlugin.m */; };
 		346BA3450774C2D200628F06 /* ESGlobalEventsPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 346BA3430774C2D200628F06 /* ESGlobalEventsPreferences.m */; };
@@ -323,9 +309,7 @@
 		347F51850947449000CEF1FF /* AdiumAddressBookAction_SMS.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E8094743B100CEF1FF /* AdiumAddressBookAction_SMS.scpt */; };
 		347F51860947449000CEF1FF /* AdiumAddressBookAction_Jabber.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E9094743B100CEF1FF /* AdiumAddressBookAction_Jabber.scpt */; };
 		3482E0F50AB5064E00471992 /* AIAdiumProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 3482E0EB0AB5063300471992 /* AIAdiumProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		348477130C1A5CE50019EF08 /* AIAnimatingListOutlineView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 348477110C1A5CE50019EF08 /* AIAnimatingListOutlineView.h */; };
 		348477140C1A5CE50019EF08 /* AIAnimatingListOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 348477120C1A5CE50019EF08 /* AIAnimatingListOutlineView.m */; };
-		34847ADD0C1A62C40019EF08 /* AIOutlineViewAnimation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34847ADB0C1A62C40019EF08 /* AIOutlineViewAnimation.h */; };
 		34847ADE0C1A62C40019EF08 /* AIOutlineViewAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = 34847ADC0C1A62C40019EF08 /* AIOutlineViewAnimation.m */; };
 		3485D40409EB3FEA00232CC4 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		3485D5F409EB406000232CC4 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
@@ -1135,9 +1119,7 @@
 		8181EEBE0C30673E00E802F7 /* AMPurpleSearchResultsWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 8181EEBD0C30673E00E802F7 /* AMPurpleSearchResultsWindow.nib */; };
 		8181EEC30C3067B500E802F7 /* AMPurpleSearchResultsController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8181EEC10C3067B500E802F7 /* AMPurpleSearchResultsController.h */; };
 		8181EEC40C3067B500E802F7 /* AMPurpleSearchResultsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8181EEC20C3067B500E802F7 /* AMPurpleSearchResultsController.m */; };
-		8181F6B20C321D0600E802F7 /* AIWindowShaker.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8181F6B00C321D0600E802F7 /* AIWindowShaker.h */; };
 		8181F6B30C321D0600E802F7 /* AIWindowShaker.m in Sources */ = {isa = PBXBuildFile; fileRef = 8181F6B10C321D0600E802F7 /* AIWindowShaker.m */; };
-		8181F6D90C321DC400E802F7 /* AWRippler.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 8181F6D70C321DC400E802F7 /* AWRippler.h */; };
 		8181F6DA0C321DC400E802F7 /* AWRippler.m in Sources */ = {isa = PBXBuildFile; fileRef = 8181F6D80C321DC400E802F7 /* AWRippler.m */; };
 		8181F7480C32BD2500E802F7 /* AMPurpleJabberFormGenerator.m in Sources */ = {isa = PBXBuildFile; fileRef = 8181F6F80C32209100E802F7 /* AMPurpleJabberFormGenerator.m */; };
 		8181F7490C32BD2500E802F7 /* AMPurpleJabberFormGenerator.h in Headers */ = {isa = PBXBuildFile; fileRef = 8181F6F70C32209100E802F7 /* AMPurpleJabberFormGenerator.h */; };
@@ -1178,9 +1160,7 @@
 		B747E987058D144C00A9F037 /* AILaTeXPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B747E985058D144C00A9F037 /* AILaTeXPlugin.m */; };
 		B7FD6C170596550F000C4D9D /* SQLLogging.plist in Resources */ = {isa = PBXBuildFile; fileRef = B7FD6C160596550F000C4D9D /* SQLLogging.plist */; };
 		C44BA7830AAB696400C7504F /* SetupAssistantBoxBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C44BA7810AAB696400C7504F /* SetupAssistantBoxBackgroundView.m */; };
-		C4D29CC30C3C2E3C001545A2 /* BGICImportController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C4D29CBF0C3C2E3C001545A2 /* BGICImportController.h */; };
 		C4D29CC40C3C2E3C001545A2 /* BGICImportController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D29CC00C3C2E3C001545A2 /* BGICImportController.m */; };
-		C4D29CC50C3C2E3C001545A2 /* BGICLogImportController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C4D29CC10C3C2E3C001545A2 /* BGICLogImportController.h */; };
 		C4D29CC60C3C2E3C001545A2 /* BGICLogImportController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D29CC20C3C2E3C001545A2 /* BGICLogImportController.m */; };
 		C4D29CC80C3C2E49001545A2 /* ICImport.nib in Resources */ = {isa = PBXBuildFile; fileRef = C4D29CC70C3C2E49001545A2 /* ICImport.nib */; };
 		DA4B5CDF080FCC080017BF17 /* CoreComponents.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA4B5CDE080FCC080017BF17 /* CoreComponents.plist */; };
@@ -1528,26 +1508,6 @@
 			dstSubfolderSpec = 1;
 			files = (
 				F51BCE390A156312000FDC06 /* AdiumSpotlightImporter.mdimporter in CopyFiles */,
-				346935D50BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.h in CopyFiles */,
-				344839990BC8644C0083723B /* AIAdvancedPreferencesPlugin.h in CopyFiles */,
-				3448399F0BC864610083723B /* AIAdvancedPreferences.h in CopyFiles */,
-				346371070BCA0A5400AD57AD /* AIMessageTabSplitView.h in CopyFiles */,
-				340C1A350BD58F9000D09235 /* AuthorizedTaskManager.h in CopyFiles */,
-				340C1A370BD58F9000D09235 /* DiskImageUtilities.h in CopyFiles */,
-				340C1E780BD59A0500D09235 /* GBImportPlugin.h in CopyFiles */,
-				348477130C1A5CE50019EF08 /* AIAnimatingListOutlineView.h in CopyFiles */,
-				34847ADD0C1A62C40019EF08 /* AIOutlineViewAnimation.h in CopyFiles */,
-				C4D29CC30C3C2E3C001545A2 /* BGICImportController.h in CopyFiles */,
-				C4D29CC50C3C2E3C001545A2 /* BGICLogImportController.h in CopyFiles */,
-				344D97480C3C442600498CA1 /* Buddy.h in CopyFiles */,
-				344D974A0C3C442600498CA1 /* Chat.h in CopyFiles */,
-				344D974C0C3C442600498CA1 /* FileAttributes.h in CopyFiles */,
-				344D974E0C3C442600498CA1 /* InstantMessage.h in CopyFiles */,
-				344D97500C3C442600498CA1 /* Person.h in CopyFiles */,
-				344D97520C3C442600498CA1 /* Presentity.h in CopyFiles */,
-				344D97540C3C442600498CA1 /* AddressBookUtils.h in CopyFiles */,
-				8181F6B20C321D0600E802F7 /* AIWindowShaker.h in CopyFiles */,
-				8181F6D90C321DC400E802F7 /* AWRippler.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
