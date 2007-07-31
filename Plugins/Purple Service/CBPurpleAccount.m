@@ -2437,16 +2437,19 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 }
 
 - (void)unregisteredAccount:(BOOL)success {
-	// we don't care whether it was successful (can't do much about it anyways)
-	// XXX should we cancel deleting the account when unregistration failed?
-	willBeDeleted = YES;
-	NSInvocation *inv = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:@selector(setShouldBeOnline:)]];
-	[inv setTarget:self];
-	[inv setSelector:@selector(setShouldBeOnline:)];
-	static BOOL nope = NO;
-	[inv setArgument:&nope atIndex:2];
-	[inv performSelector:@selector(invoke) withObject:nil afterDelay:0.0];
-	// further progress happens in -accountConnectionDisconnected
+	if(success) {
+		willBeDeleted = YES;
+		NSInvocation *inv = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:@selector(setShouldBeOnline:)]];
+		[inv setTarget:self];
+		[inv setSelector:@selector(setShouldBeOnline:)];
+		static BOOL nope = NO;
+		[inv setArgument:&nope atIndex:2];
+		[inv performSelector:@selector(invoke) withObject:nil afterDelay:0.0];
+		// further progress happens in -accountConnectionDisconnected
+	} else {
+		[super alertForAccountDeletion:deletionDialog didReturn:NSAlertAlternateReturn];
+		deletionDialog = nil;
+	}
 }
 
 /*!
