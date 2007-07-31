@@ -264,12 +264,12 @@
 		QTMovie *movie;
 		while ((movie = [soundCacheDict objectForKey:[soundsEnum nextObject]])) {
 			OSStatus err = SetMovieAudioContext([movie quickTimeMovie], newAudioContext);
-			NSAssert4(err == noErr, @"%s: Could not set audio context of movie %@ to %p: SetMovieAudioContext returned error %i", __PRETTY_FUNCTION__, movie, audioContext, err);
+			NSAssert4(err == noErr, @"%s: Could not set audio context of movie %@ to %p: SetMovieAudioContext returned error %i", __PRETTY_FUNCTION__, movie, newAudioContext, err);
 		}
 
 		//Now throw away the old context and retain the new one, to set in future movies.
 		QTAudioContextRelease(audioContext);
-		audioContext = QTAudioContextRetain(audioContext);
+		audioContext = QTAudioContextRetain(newAudioContext);
 	}
 }
 
