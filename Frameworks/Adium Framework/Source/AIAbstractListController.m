@@ -199,6 +199,11 @@
 	[delegate performDefaultActionOnSelectedObject:selectedObject sender:sender];
 }
 
+- (void)performDefaultActionOnFirstItem
+{
+	[delegate performDefaultActionOnSelectedObject:[contactListView itemAtRow:1] sender:contactListView];
+}
+
 - (void)reloadData
 {
 	[contactListView reloadData];

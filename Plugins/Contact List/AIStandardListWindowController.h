@@ -46,7 +46,7 @@ typedef enum {
 }
 
 - (void)updateImagePicker;
-- (IBAction)filterUsingSearch:(id)sender;
+- (IBAction)activateFirstContact:(id)sender;
 
 + (AIAccount *)activeAccountForIconsGettingOnlineAccounts:(NSMutableSet *)onlineAccounts
 										  ownIconAccounts:(NSMutableSet *)ownIconAccounts;
