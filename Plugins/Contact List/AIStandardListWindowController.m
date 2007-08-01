@@ -720,7 +720,7 @@ static ESObjectWithStatus<AIContainingObject> *oldContactList = nil;
 				([[contact displayName] rangeOfString:queryString options:NSCaseInsensitiveSearch].location != NSNotFound || 
 				 [[contact UID] rangeOfString:queryString options:NSCaseInsensitiveSearch].location != NSNotFound))
 				[searchResults addObject:contact];
-		[contactListController setContactListRoot:[searchResults autorelease]];
+		[contactListController setContactListRoot:searchResults];
 		[contactListController setHideRoot:NO];
 	}
 }
