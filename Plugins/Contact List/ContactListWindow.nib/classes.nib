@@ -50,12 +50,14 @@
             SUPERCLASS = AIListOutlineView; 
         }, 
         {
+            ACTIONS = {filterUsingSearch = id; }; 
             CLASS = AIStandardListWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 imagePicker = AIContactListImagePicker; 
                 "imageView_status" = NSImageView; 
                 nameView = AIContactListNameButton; 
+                searchField = NSTextField; 
                 statusMenuView = AIHoveringPopUpButton; 
                 "view_nameAndStatusMenu" = NSView; 
                 "view_statusAndImage" = NSView; 

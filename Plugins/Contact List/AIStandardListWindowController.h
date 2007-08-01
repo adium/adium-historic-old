@@ -36,6 +36,9 @@ typedef enum {
 	IBOutlet	NSImageView					*imageView_status;
 
 	IBOutlet	AIContactListImagePicker	*imagePicker;
+	
+	IBOutlet	NSSearchField				*searchField;
+	
 	ContactListImagePickerPosition			imagePickerPosition;
 
 	NSDictionary				*toolbarItems;
@@ -43,6 +46,7 @@ typedef enum {
 }
 
 - (void)updateImagePicker;
+- (IBAction)filterUsingSearch:(id)sender;
 
 + (AIAccount *)activeAccountForIconsGettingOnlineAccounts:(NSMutableSet *)onlineAccounts
 										  ownIconAccounts:(NSMutableSet *)ownIconAccounts;
