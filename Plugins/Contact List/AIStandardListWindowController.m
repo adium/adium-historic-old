@@ -119,6 +119,8 @@
 	
 	//Set our minimum size here rather than in the nib to avoid conflicts with autosizing
 	[[self window] setMinSize:NSMakeSize(135, 60)];
+	
+	[searchField setDelegate:self];
 
 	[self _configureToolbar];
 }
@@ -129,6 +131,7 @@
 - (void)windowWillClose:(id)sender
 {
 	[[adium notificationCenter] removeObserver:self];
+	[searchField setDelegate:nil];
 	[statusMenu release];
 	
 	[super windowWillClose:sender];
@@ -691,9 +694,12 @@
 														 desiredHeight:YES];
 }
 
+#pragma mark Filtering
+
 static ESObjectWithStatus<AIContainingObject> *oldContactList = nil;
-- (IBAction)filterUsingSearch:(id)sender
+- (void)controlTextDidChange:(NSNotification *)aNotification
 {
+	NSSearchField *sender = [aNotification object];
 	NSString *queryString = [(NSSearchFieldCell *)[(NSTextField *)sender cell] stringValue];
 	if (!oldContactList) {
 		oldContactList = [contactListController contactListRoot];
@@ -714,9 +720,15 @@ static ESObjectWithStatus<AIContainingObject> *oldContactList = nil;
 				([[contact displayName] rangeOfString:queryString options:NSCaseInsensitiveSearch].location != NSNotFound || 
 				 [[contact UID] rangeOfString:queryString options:NSCaseInsensitiveSearch].location != NSNotFound))
 				[searchResults addObject:contact];
-		[contactListController setContactListRoot:searchResults];
+		[contactListController setContactListRoot:[searchResults autorelease]];
 		[contactListController setHideRoot:NO];
 	}
+}
+
+- (IBAction)activateFirstContact:(id)sender;
+{
+	if([[(NSSearchFieldCell *)[(NSTextField *)sender cell] stringValue] length] == 0) return;
+	[contactListController performDefaultActionOnFirstItem];
 }
 
 @end

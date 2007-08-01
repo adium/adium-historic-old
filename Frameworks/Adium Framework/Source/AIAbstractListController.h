@@ -213,4 +213,6 @@ typedef enum {
 - (void)setShowTooltips:(BOOL)inShowTooltips;
 - (void)setShowTooltipsInBackground:(BOOL)inShowTooltipsInBackground;
 
+- (void)performDefaultActionOnFirstItem;
+
 @end
