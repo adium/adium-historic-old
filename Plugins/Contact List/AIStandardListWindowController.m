@@ -14,20 +14,23 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIStandardListWindowController.h"
-#import <Adium/AIAccountControllerProtocol.h>
-#import <Adium/AIContactControllerProtocol.h>
-#import <Adium/AIPreferenceControllerProtocol.h>
-#import "AIStatusController.h"
-#import <Adium/AIToolbarControllerProtocol.h>
-#import <Adium/AIAccount.h>
-#import <Adium/AIListObject.h>
-#import <Adium/AIStatusMenu.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
+
+#import <Adium/AIListGroup.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIToolbarControllerProtocol.h>
+#import <Adium/AIAccount.h>
+#import <Adium/AIListObject.h>
+#import <Adium/AIStatusMenu.h>
+
+#import "AIStatusController.h"
+#import "AIStandardListWindowController.h"
 
 #import "AIHoveringPopUpButton.h"
 #import "AIContactListImagePicker.h"
@@ -686,6 +689,34 @@
 {
 	return [contactListController _desiredWindowFrameUsingDesiredWidth:YES
 														 desiredHeight:YES];
+}
+
+static ESObjectWithStatus<AIContainingObject> *oldContactList = nil;
+- (IBAction)filterUsingSearch:(id)sender
+{
+	NSString *queryString = [(NSSearchFieldCell *)[(NSTextField *)sender cell] stringValue];
+	if (!oldContactList) {
+		oldContactList = [contactListController contactListRoot];
+		[oldContactList retain];
+	}
+	if ([queryString isEqualToString:@""]) {
+		[contactListController setHideRoot:YES];
+		[contactListController setContactListRoot:oldContactList];
+		[oldContactList release];
+		oldContactList = nil;
+	} else {
+		AIListGroup *searchResults = [[AIListGroup alloc] initWithUID:AILocalizedString(@"Search Results", "Contact List Search Results")];
+		[searchResults setDisplayName:AILocalizedString(@"Search Results", "Contact List Search Results")];
+		NSEnumerator *contactEnumerator = [[[adium contactController] allContacts] objectEnumerator];
+		AIListContact *contact;
+		while ((contact = [contactEnumerator nextObject]))
+			if ([[contact account] online] && 
+				([[contact displayName] rangeOfString:queryString options:NSCaseInsensitiveSearch].location != NSNotFound || 
+				 [[contact UID] rangeOfString:queryString options:NSCaseInsensitiveSearch].location != NSNotFound))
+				[searchResults addObject:contact];
+		[contactListController setContactListRoot:searchResults];
+		[contactListController setHideRoot:NO];
+	}
 }
 
 @end
