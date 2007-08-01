@@ -27,16 +27,13 @@
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIMetaContact.h>
+#import "AIContactController.h"
 
-#define	PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
 #define SHOW_OFFLINE_MENU_TITLE				AILocalizedString(@"Show Offline Contacts",nil)
-#define KEY_SHOW_OFFLINE_CONTACTS			@"Show Offline Contacts"
 
 #define	USE_OFFLINE_GROUP_MENU_TITLE		AILocalizedString(@"Show Offline Group",nil)
-#define	KEY_USE_OFFLINE_GROUP				@"Use Offline Group"
 
 #define OFFLINE_CONTACTS_IDENTIFER			@"OfflineContacts"
-#define	KEY_HIDE_CONTACT_LIST_GROUPS		@"Hide Contact List Groups"
 
 /*!
  * @class AIOfflineContactHidingPlugin

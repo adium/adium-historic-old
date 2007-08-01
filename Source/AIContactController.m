@@ -66,12 +66,6 @@
 #define	SHOW_GROUPS_MENU_TITLE			AILocalizedString(@"Show Groups",nil)
 #define SHOW_GROUPS_IDENTIFER			@"ShowGroups"
 
-#define	KEY_HIDE_CONTACT_LIST_GROUPS	@"Hide Contact List Groups"
-#define	KEY_USE_OFFLINE_GROUP			@"Use Offline Group"
-#define KEY_SHOW_OFFLINE_CONTACTS		@"Show Offline Contacts"
-
-#define	PREF_GROUP_CONTACT_LIST_DISPLAY	@"Contact List Display"
-
 #define SERVICE_ID_KEY					@"ServiceID"
 #define UID_KEY							@"UID"
 
