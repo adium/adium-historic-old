@@ -216,7 +216,7 @@
 {
 	NSColor *darkerColor = [NSColor colorWithCalibratedWhite:0.90 alpha:1.0];
 	NSColor *lighterColor = [NSColor colorWithCalibratedWhite:0.92 alpha:1.0];
-	NSColor *leftColor, *rightColor;
+	NSColor *leftColor = nil, *rightColor = nil;
 
 	switch ([messageWindowController tabPosition]) {
 		case AdiumTabPositionBottom:
@@ -229,7 +229,7 @@
 			leftColor = darkerColor;
 			rightColor = lighterColor;
 			break;
-	}	
+	}
 
 	[view_accountSelection setLeftColor:leftColor rightColor:rightColor];
 	[splitView_textEntryHorizontal setLeftColor:leftColor rightColor:rightColor];

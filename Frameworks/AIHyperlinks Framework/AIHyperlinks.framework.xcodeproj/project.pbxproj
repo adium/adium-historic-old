@@ -234,6 +234,7 @@
 					"-seg1addr",
 					0x11000000,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = AIHyperlinks;
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = "-Wall";
@@ -271,6 +272,7 @@
 					"-seg1addr",
 					0x11000000,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = AIHyperlinks;
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = "-Wall";
@@ -314,6 +316,7 @@
 					"-seg1addr",
 					0x11000000,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = AIHyperlinks;
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = "-Wall";
@@ -362,6 +365,7 @@
 					"-seg1addr",
 					0x11000000,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = AIHyperlinks;
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = "-Wall";
@@ -390,6 +394,7 @@
 					"-seg1addr",
 					0x11000000,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = AIHyperlinks;
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = "-Wall";

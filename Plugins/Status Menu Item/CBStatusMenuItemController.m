@@ -160,7 +160,7 @@
 
 - (void)updateMenuIconsBundle
 {
-	NSString *menuIconPath, *menuIconName;
+	NSString *menuIconPath = nil, *menuIconName;
 	
 	menuIconName = [[adium preferenceController] preferenceForKey:KEY_MENU_BAR_ICONS
 															group:PREF_GROUP_APPEARANCE
