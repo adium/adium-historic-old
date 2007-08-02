@@ -224,7 +224,8 @@
 
 - (void)sendNotification:(AIListObject *)object
 {
-	AIListContact		*sendChoice;
+	// If object is a Normal contact, this is right. Otherwise, the correct selection will be made later in the code.
+	AIListContact		*sendChoice = (AIListContact *)object;
 	AIChat				*chat;
 	NSAttributedString	*notificationMessage;
 	AIContentMessage	*messageContent;
@@ -245,9 +246,7 @@
 				break;
 			}
 		}
-		// Normal contact. This one is our choice.
-	} else {
-		sendChoice = (AIListContact *)object;
+		
 	}
 	
 	// Pick the chat, or open a new one, with the contact.

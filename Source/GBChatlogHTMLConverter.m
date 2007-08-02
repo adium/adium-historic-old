@@ -237,7 +237,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				NSString *message = nil;
 				if(!empty)
 					message = [inputFileString substringWithRange:NSMakeRange(messageStart, end - messageStart - 11)];  // 10 for </message> and 1 for the index being off
-				NSString *shownSender;
+				NSString *shownSender = sender;
 				NSString *cssClass;
 				NSString *displayName = nil, *longDisplayName = nil;
 				
@@ -275,8 +275,6 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 							shownSender = sender;
 							break;	
 					}
-				} else {
-					shownSender = sender;					
 				}
 				
 				[output appendFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@%@: </span><pre class=\"message\">%@</pre></div>\n",
