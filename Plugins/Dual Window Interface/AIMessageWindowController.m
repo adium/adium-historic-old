@@ -345,7 +345,8 @@
 						tabViewFrame.size.height = NSHeight(contentRect) - NSHeight(tabBarFrame) + 1;
 						[tabView_tabBar setAutoresizingMask:(NSViewMinYMargin | NSViewWidthSizable)];
 					}
-					[tabView_tabBar setCellMinWidth:45];
+					/* If the cell is less than 60, icon + title + unread message count may overlap */
+					[tabView_tabBar setCellMinWidth:60];
 					[tabView_tabBar setCellMaxWidth:250];
 					
 					tabViewFrame.origin.x = -1;
