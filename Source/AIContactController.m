@@ -1929,7 +1929,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	if (!groupUID || ![groupUID length] || [groupUID isEqualToString:ADIUM_ROOT_GROUP_NAME])
 		return [self contactList];
 	
-	return [groupDict objectForKey:[groupUID lowercaseString]]];
+	return [groupDict objectForKey:[groupUID lowercaseString]];
 }
 
 //Contact list editing -------------------------------------------------------------------------------------------------
