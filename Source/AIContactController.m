@@ -1905,13 +1905,13 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		return [self contactList];
 
 	AIListGroup		*group = nil;
-	if (!(group = [groupDict objectForKey:groupUID])) {
+	if (!(group = [groupDict objectForKey:[groupUID lowercaseString]])) {
 		//Create
 		group = [[AIListGroup alloc] initWithUID:groupUID];
 
 		//Add
 		[self _updateAllAttributesOfObject:group];
-		[groupDict setObject:group forKey:groupUID];
+		[groupDict setObject:group forKey:[groupUID lowercaseString]];
 
 		//Add to the contact list
 		[contactList addObject:group];
@@ -1929,7 +1929,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	if (!groupUID || ![groupUID length] || [groupUID isEqualToString:ADIUM_ROOT_GROUP_NAME])
 		return [self contactList];
 	
-	return [groupDict objectForKey:groupUID];
+	return [groupDict objectForKey:[groupUID lowercaseString]]];
 }
 
 //Contact list editing -------------------------------------------------------------------------------------------------
@@ -1979,7 +1979,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			//Then, procede to delete the group
 			[listObject retain];
 			[containingObject removeObject:listObject];
-			[groupDict removeObjectForKey:[listObject UID]];
+			[groupDict removeObjectForKey:[[listObject UID] lowercaseString]];
 			[self _listChangedGroup:containingObject object:listObject];
 			[listObject release];
 
