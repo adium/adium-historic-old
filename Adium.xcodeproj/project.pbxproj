@@ -64,6 +64,7 @@
 		07632BF30949E10B00FFABD8 /* ListThemeSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB42B080870A200E27095 /* ListThemeSheet.nib */; };
 		0779934F08221D9700F698DC /* Service Icons in Resources */ = {isa = PBXBuildFile; fileRef = 4BAFD5E806E00D1700FF7FBC /* Service Icons */; };
 		07C6EA890C06676400B79CBD /* AdiumHelp in Resources */ = {isa = PBXBuildFile; fileRef = 07C6EA3C0C06676400B79CBD /* AdiumHelp */; };
+		07E179780C657B5E005DDA3D /* ConfirmationDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 07E179770C657B5E005DDA3D /* ConfirmationDefaults.plist */; };
 		110763F608676CC9005987A5 /* RAFBlockEditorPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */; };
 		110763F808676CC9005987A5 /* RAFBlockEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F408676CC9005987A5 /* RAFBlockEditorWindowController.m */; };
 		110763FA08676D05005987A5 /* BlockEditorWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 110763F908676D04005987A5 /* BlockEditorWindow.nib */; };
@@ -1525,6 +1526,7 @@
 		07B87BDE0A3A7CB300A38283 /* AIXMLElement.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIXMLElement.m; path = "Frameworks/Adium Framework/Source/AIXMLElement.m"; sourceTree = "<group>"; };
 		07B87D760A3A9FCF00A38283 /* AIStatusDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusDefines.h; path = "Frameworks/Adium Framework/Source/AIStatusDefines.h"; sourceTree = "<group>"; };
 		07C6EA3C0C06676400B79CBD /* AdiumHelp */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AdiumHelp; sourceTree = "<group>"; };
+		07E179770C657B5E005DDA3D /* ConfirmationDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = ConfirmationDefaults.plist; path = Resources/ConfirmationDefaults.plist; sourceTree = "<group>"; };
 		110763F108676CC9005987A5 /* RAFBlockEditorPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorPlugin.h; path = Source/RAFBlockEditorPlugin.h; sourceTree = "<group>"; };
 		110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFBlockEditorPlugin.m; path = Source/RAFBlockEditorPlugin.m; sourceTree = "<group>"; };
 		110763F308676CC9005987A5 /* RAFBlockEditorWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorWindowController.h; path = Source/RAFBlockEditorWindowController.h; sourceTree = "<group>"; };
@@ -3926,7 +3928,6 @@
 		29B97314FDCFA39411CA2CEA /* CocAIMe2 */ = {
 			isa = PBXGroup;
 			children = (
-				073475F00C4C9632009ACC43 /* AdiumMenuBarIcons.icns */,
 				4BE9FFE7055981AB00359B15 /* Adium.pch */,
 				F59DB3D6033EA9CD01A8010A /* AIAdium.h */,
 				F59DB3D7033EA9CD01A8010A /* AIAdium.m */,
@@ -6428,6 +6429,7 @@
 				4BB5B78107D2DC4900CFE06F /* pref-status.png */,
 				4BAE6C9407CF94C4007E2820 /* message.png */,
 				34D832A507CBD62B006466F2 /* AdiumEmoticonset.icns */,
+				073475F00C4C9632009ACC43 /* AdiumMenuBarIcons.icns */,
 				34D832A607CBD62B006466F2 /* AdiumScripts.icns */,
 				34D832A707CBD62B006466F2 /* AdiumMessageStyle.icns */,
 				34D832A807CBD62B006466F2 /* AdiumListTheme.icns */,
@@ -6710,6 +6712,7 @@
 				345F58F108199727001F733C /* togglegroups_transparent.png */,
 				345F58F208199727001F733C /* togglegroups.png */,
 				8181E4F40C29342700E802F7 /* Lock_Black.tif */,
+				07E179770C657B5E005DDA3D /* ConfirmationDefaults.plist */,
 				34D8326107CBD598006466F2 /* AccountPrefs.plist */,
 				34D8326207CBD598006466F2 /* DockPrefs.plist */,
 				34D8326607CBD598006466F2 /* ContactPrefs.plist */,
@@ -7944,6 +7947,7 @@
 				07C6EA890C06676400B79CBD /* AdiumHelp in Resources */,
 				C4D29CC80C3C2E49001545A2 /* ICImport.nib in Resources */,
 				8181E4FA0C29345B00E802F7 /* Lock_Black.tif in Resources */,
+				07E179780C657B5E005DDA3D /* ConfirmationDefaults.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
