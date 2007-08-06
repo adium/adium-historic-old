@@ -162,8 +162,9 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 			}
 		}
 
-	} else if (([[notification name] isEqualToString:NSWorkspaceSessionDidBecomeActiveNotification] && fastUserSwitchStatus) ||
-				([[notification name] isEqualToString:@"com.apple.screensaver.didstop"] && screenSaverStatus)) {
+	} else if (!notification ||
+			   (([[notification name] isEqualToString:NSWorkspaceSessionDidBecomeActiveNotification] && fastUserSwitchStatus) ||
+				([[notification name] isEqualToString:@"com.apple.screensaver.didstop"] && screenSaverStatus))) {
 		//Activation - return from away
 
 		//Remove the away status flag if we set it originally
