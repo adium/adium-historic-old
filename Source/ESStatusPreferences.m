@@ -546,6 +546,7 @@
 	[textField_autoAwayMinutes setDoubleValue:([[prefDict objectForKey:KEY_STATUS_AUTO_AWAY_INTERVAL] doubleValue] / 60.0)];
 
 	[checkBox_fastUserSwitching setState:[[prefDict objectForKey:KEY_STATUS_FUS] boolValue]];
+	[checkBox_screenSaver setState:[[prefDict objectForKey:KEY_STATUS_SS] boolValue]];
 
 	[checkBox_showStatusWindow setState:[[prefDict objectForKey:KEY_STATUS_SHOW_STATUS_WINDOW] boolValue]];
 
@@ -567,6 +568,9 @@
 	
 	statusStatesMenu = [AIStatusMenu staticStatusStatesMenuNotifyingTarget:self selector:@selector(changedFastUserSwitchingStatus:)];	
 	[popUp_fastUserSwitchingStatusState setMenu:[[statusStatesMenu copy] autorelease]];
+	
+	statusStatesMenu = [AIStatusMenu staticStatusStatesMenuNotifyingTarget:self selector:@selector(changedScreenSaverStatus:)];	
+	[popUp_screenSaverStatusState setMenu:[[statusStatesMenu copy] autorelease]];
 
 	//Now select the proper state, or deselect all items if there is no chosen state or the chosen state doesn't exist
 	targetUniqueStatusIDNumber = [[adium preferenceController] preferenceForKey:KEY_STATUS_AUTO_AWAY_STATUS_STATE_ID
@@ -576,6 +580,10 @@
 	targetUniqueStatusIDNumber = [[adium preferenceController] preferenceForKey:KEY_STATUS_FUS_STATUS_STATE_ID
 																		  group:PREF_GROUP_STATUS_PREFERENCES];
 	[self _selectStatusWithUniqueID:targetUniqueStatusIDNumber inPopUpButton:popUp_fastUserSwitchingStatusState];	
+	
+	targetUniqueStatusIDNumber = [[adium preferenceController] preferenceForKey:KEY_STATUS_SS_STATUS_STATE_ID
+																		  group:PREF_GROUP_STATUS_PREFERENCES];
+	[self _selectStatusWithUniqueID:targetUniqueStatusIDNumber inPopUpButton:popUp_screenSaverStatusState];	
 }
 
 /*!
@@ -646,6 +654,9 @@
 			} else if (inPopUpButton == popUp_fastUserSwitchingStatusState) {
 				showingSubmenuItemInFastUserSwitching = YES;
 				
+			} else if (inPopUpButton == popUp_screenSaverStatusState) {
+				showingSubmenuItemInScreenSaver = YES;
+				
 			}
 		}
 	}
@@ -668,6 +679,7 @@
 	[stepper_autoAwayMinutes setEnabled:autoAwayControlsEnabled];
 	
 	[popUp_fastUserSwitchingStatusState setEnabled:([checkBox_fastUserSwitching state] == NSOnState)];
+	[popUp_screenSaverStatusState setEnabled:([checkBox_screenSaver state] == NSOnState)];
 }
 
 /*!
@@ -697,6 +709,12 @@
 	} else if (sender == checkBox_fastUserSwitching) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_STATUS_FUS
+											  group:PREF_GROUP_STATUS_PREFERENCES];
+		[self configureControlDimming];
+		
+	} else if (sender == checkBox_screenSaver) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_STATUS_SS
 											  group:PREF_GROUP_STATUS_PREFERENCES];
 		[self configureControlDimming];
 		
@@ -763,6 +781,19 @@
 	showingSubmenuItemInFastUserSwitching = [self addItemIfNeeded:sender
 													toPopUpButton:popUp_fastUserSwitchingStatusState
 											 alreadyShowingAnItem:showingSubmenuItemInFastUserSwitching];
+}
+
+- (void)changedScreenSaverStatus:(id)sender
+{
+	AIStatus	*statusState = [[sender representedObject] objectForKey:@"AIStatus"];
+	
+	[[adium preferenceController] setPreference:[statusState uniqueStatusID]
+										 forKey:KEY_STATUS_SS_STATUS_STATE_ID
+										  group:PREF_GROUP_STATUS_PREFERENCES];
+	
+	showingSubmenuItemInScreenSaver = [self addItemIfNeeded:sender
+													toPopUpButton:popUp_screenSaverStatusState
+											 alreadyShowingAnItem:showingSubmenuItemInScreenSaver];
 }
 
 /*!

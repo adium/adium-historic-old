@@ -17,13 +17,14 @@
 #import <Adium/AIPlugin.h>
 
 @interface ESFastUserSwitchingSupportPlugin : AIPlugin {
-    BOOL setAwayThroughFastUserSwitch;
-	
-	BOOL		monitoringFastUserSwitch;
 	NSNumber	*fastUserSwitchStatusID;
+	NSNumber	*screenSaverStatusID;
 	
 	NSMutableDictionary	*previousStatusStateDict;
 	NSMutableSet		*accountsToReconnect;
+	
+	BOOL fastUserSwitchStatus;
+	BOOL screenSaverStatus;
 }
 
 @end
