@@ -599,6 +599,29 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 	}
 }
 
+- (void)confirmQuitQuestion:(NSNumber *)number userInfo:(id)info
+{
+	AITextAndButtonsReturnCode result = [number intValue];
+	switch(result)
+	{
+		case AITextAndButtonsDefaultReturn:
+			//Quit
+			[NSApp terminate:nil];
+			break;
+		case AITextAndButtonsOtherReturn:
+			//Don't Ask Again
+			[[self preferenceController] setPreference:[NSNumber numberWithBool:NO]
+												forKey:@"Confirm Quit"
+												 group:@"Confirmations"];
+			[NSApp terminate:nil];
+			break;
+		default:
+			//Cancel
+			break;
+	}
+}
+
+
 //Last call to perform actions before the app shuffles off its mortal coil and joins the bleeding choir invisible
 - (IBAction)confirmQuit:(id)sender
 {
@@ -644,6 +667,21 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 										otherButton:AILocalizedString(@"Don't ask again", nil)
 											 target:self
 										   selector:@selector(fileTransferQuitQuestion:userInfo:)
+										   userInfo:nil];
+		allowQuit = NO;
+	}
+	
+	if (allowQuit &&
+		[[preferenceController preferenceForKey:@"Confirm Quit"
+											group:@"Confirmations"]  boolValue]) {
+		[[self interfaceController] displayQuestion:AILocalizedString(@"Confirm Quit", nil)
+									withDescription:AILocalizedString(@"Are you sure you want to quit Adium?", nil)
+									withWindowTitle:nil
+									  defaultButton:AILocalizedString(@"Quit", nil)
+									alternateButton:AILocalizedString(@"Cancel", nil)
+										otherButton:AILocalizedString(@"Don't ask again", nil)
+											 target:self
+										   selector:@selector(confirmQuitQuestion:userInfo:)
 										   userInfo:nil];
 		allowQuit = NO;
 	}

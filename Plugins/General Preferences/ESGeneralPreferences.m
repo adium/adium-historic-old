@@ -103,6 +103,10 @@
 	[popUp_tabPositionMenu compatibleSelectItemWithTag:[[[adium preferenceController] preferenceForKey:KEY_TABBAR_POSITION
 																								 group:PREF_GROUP_DUAL_WINDOW_INTERFACE] intValue]];
 	
+	//Quit
+	//[checkBox_confirmOnQuit setState:[[[adium preferenceController] preferenceForKey:KEY_CONFIRM_QUIT
+	//																			group:PREF_GROUP_CONFIRMATIONS] boolValue]];
+	
 	//Global hotkey
 	PTKeyCombo *keyCombo = [[[PTKeyCombo alloc] initWithPlistRepresentation:[[adium preferenceController] preferenceForKey:KEY_GENERAL_HOTKEY
 																													 group:PREF_GROUP_GENERAL]] autorelease];
