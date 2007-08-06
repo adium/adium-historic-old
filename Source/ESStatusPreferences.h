@@ -36,6 +36,10 @@
 	IBOutlet	NSPopUpButton	*popUp_fastUserSwitchingStatusState;
 	BOOL						showingSubmenuItemInFastUserSwitching;
 
+	IBOutlet	NSButton		*checkBox_screenSaver;
+	IBOutlet	NSPopUpButton	*popUp_screenSaverStatusState;
+	BOOL						showingSubmenuItemInScreenSaver;
+	
 	IBOutlet	NSButton		*checkBox_showStatusWindow;
 }
 
