@@ -25,8 +25,16 @@ for the actions of others, following only the true, Aqua path to peace, justice,
 
 + (void)load
 {
-    //Anything you can do, I can do better...
-    [self poseAsClass:[NSWindow class]];
+	//Pose as NSWindow if not on Leopard.
+	//Leopard erases the distinction between BM and Aqua, so we don't need to do this after Leopard.
+	long version;
+	OSStatus err = Gestalt(gestaltSystemVersion, &version);
+	if (err != noErr) {
+		NSLog(@"Error determining whether to turn off brushed metal: Gestalt for %@ returned error %i: %s", NSFileTypeForHFSTypeCode(gestaltSystemVersion), err, GetMacOSStatusCommentString ? GetMacOSStatusCommentString(err) : NULL);
+	} else if (version < 0x1050) {
+    	//Anything you can do, I can do better...
+    	[self poseAsClass:[NSWindow class]];
+	}
 }
 
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(unsigned int)styleMask backing:(NSBackingStoreType)backingType defer:(BOOL)flag
