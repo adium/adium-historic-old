@@ -2415,9 +2415,13 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 				break;
 			case NSAlertDefaultReturn: // delete
 				willBeDeleted = YES;
-				deletionDialog = dialog;
-				[self setShouldBeOnline:NO];
-				// further progress happens in -accountConnectionDisconnected
+				if(!account || !purple_account_is_connected(account)) {
+					[super alertForAccountDeletion:dialog didReturn:NSAlertDefaultReturn];
+				} else {
+					deletionDialog = dialog;
+					[self setShouldBeOnline:NO];
+					// further progress happens in -accountConnectionDisconnected
+				}
 				break;
 			default: // cancel
 				[super alertForAccountDeletion:dialog didReturn:NSAlertAlternateReturn];
