@@ -30,7 +30,7 @@ for the actions of others, following only the true, Aqua path to peace, justice,
 	long version;
 	OSStatus err = Gestalt(gestaltSystemVersion, &version);
 	if (err != noErr) {
-		NSLog(@"Error determining whether to turn off brushed metal: Gestalt for %@ returned error %i: %s", NSFileTypeForHFSTypeCode(gestaltSystemVersion), err, GetMacOSStatusCommentString ? GetMacOSStatusCommentString(err) : NULL);
+		NSLog(@"Error determining whether to turn off brushed metal: Gestalt for %@ returned error %i: %s", NSFileTypeForHFSTypeCode(gestaltSystemVersion), err, GetMacOSStatusCommentString(err) ? GetMacOSStatusCommentString(err) : NULL);
 	} else if (version < 0x1050) {
     	//Anything you can do, I can do better...
     	[self poseAsClass:[NSWindow class]];
