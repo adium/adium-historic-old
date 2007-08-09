@@ -191,7 +191,7 @@
 /*!
  * @brief Set the local grouping for this object
  *
- * PRIVATE: This is only for use by AIListObjects conforming to the AIContaingObject protocol.
+ * PRIVATE: This is only for use by AIListObjects conforming to the AIContainingObject protocol.
  */
 - (void)setContainingObject:(AIListObject <AIContainingObject> *)inGroup
 {
