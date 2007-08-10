@@ -8,10 +8,12 @@
 
 @interface NSApplication (AIApplicationAdditions)
 
-+ (BOOL)isOnTigerOrBetter;
 - (BOOL)isOnTigerOrBetter;
 - (BOOL)isOnLeopardOrBetter;
+- (BOOL)isTiger;
+- (BOOL)isLeopard;
 
+- (BOOL)checkSystemVersionWithMajor:(int)majorVersion andMinor:(int)minorVersion andPoint:(int)pointVersion orBetter:(BOOL)higher;
 - (BOOL)isWebKitAvailable;
 
 - (NSString *)applicationVersion;
