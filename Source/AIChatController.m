@@ -380,6 +380,12 @@
 
 	if (identifier) {
 		chat = [self existingChatWithIdentifier:identifier onAccount:account];
+		if (!chat) {
+			//See if a chat was made with this name but which doesn't yet have an identifier. If so, take ownership!
+			chat = [self existingChatWithName:name onAccount:account];
+			if (chat && ![chat identifier]) [chat setIdentifier:identifier];
+		}
+
 	} else {
 		//If the caller doesn't care about the identifier, do a search based on name to avoid creating a new chat incorrectly
 		chat = [self existingChatWithName:name onAccount:account];
