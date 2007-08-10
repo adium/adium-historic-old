@@ -27,11 +27,8 @@ for the actions of others, following only the true, Aqua path to peace, justice,
 {
 	//Pose as NSWindow if not on Leopard.
 	//Leopard erases the distinction between BM and Aqua, so we don't need to do this after Leopard.
-	long version;
-	OSStatus err = Gestalt(gestaltSystemVersion, &version);
-	if (err != noErr) {
-		NSLog(@"Error determining whether to turn off brushed metal: Gestalt for %@ returned error %i: %s", NSFileTypeForHFSTypeCode(gestaltSystemVersion), err, GetMacOSStatusCommentString(err) ? GetMacOSStatusCommentString(err) : NULL);
-	} else if (version < 0x1050) {
+	//And since we don't support anything but Tiger and Leopard now, we can just check Tiger.
+	if ([NSApp isTiger]) {
     	//Anything you can do, I can do better...
     	[self poseAsClass:[NSWindow class]];
 	}
