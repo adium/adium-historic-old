@@ -41,10 +41,9 @@
 	int point = (count >= 3) ? [[array objectAtIndex:2] intValue] : 0;
 	
 	if(higher) {
-		if(major >= majorVersion && minor >= minorVersion && point >= pointVersion)
+		if(major >= majorVersion || (major >= majorVersion && minor >= minorVersion) || (major >= majorVersion && minor >= minorVersion && point >= pointVersion))
 			ret = YES;
 	}
-	
 	else {
 		if(major == majorVersion && minor == minorVersion && point == pointVersion)
 			ret = YES;
