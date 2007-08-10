@@ -43,8 +43,7 @@
 	if(higher) {
 		if(major >= majorVersion || (major >= majorVersion && minor >= minorVersion) || (major >= majorVersion && minor >= minorVersion && point >= pointVersion))
 			ret = YES;
-	}
-	else {
+	} else {
 		if(major == majorVersion && minor == minorVersion && point == pointVersion)
 			ret = YES;
 	}
