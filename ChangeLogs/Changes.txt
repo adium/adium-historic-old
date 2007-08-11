@@ -59,7 +59,8 @@ Note: Adium now requires Mac OS X 10.4.0 or later.
  * Attempting to delete multiple saved statuses at once only deletes one (#6608)
  * Appearance preferences now include MenuBarIcons (#6335)
  * When Adium is run from the installation disk image, we now offer to install it. Thanks to Google for donating the code for this feature.
-
+ * Updated to libpurple 2.1.0
+ 
 == Dock ==
  * Dock icon (.AdiumIcon) Xtras now work correctly with case-sensitive HFS+ (#176)
 
