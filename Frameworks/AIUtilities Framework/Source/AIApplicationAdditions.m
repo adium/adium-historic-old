@@ -9,48 +9,31 @@
 
 @implementation NSApplication (AIApplicationAdditions)
 
+//Make sure the version number defines exist; when compiling in 10.3, NSAppKitVersionNumber10_3 isn't defined 
+#ifndef NSAppKitVersionNumber10_3 
+#define NSAppKitVersionNumber10_3 743 
+#endif 
+	 	 
+//Make sure the version number defines exist; when compiling in 10.3, NSAppKitVersionNumber10_3 isn't defined 
+#ifndef NSAppKitVersionNumber10_4 
+#define NSAppKitVersionNumber10_4 824 
+#endif
+
+
 - (BOOL)isOnTigerOrBetter
 {
-	return [self checkSystemVersionWithMajor:10 andMinor:4 andPoint:0 orBetter:YES];
+	return (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3);
 }
 
 - (BOOL)isOnLeopardOrBetter
 {
-	return [self checkSystemVersionWithMajor:10 andMinor:5 andPoint:0 orBetter:YES];
+	return (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_4);
 }
 
 -(BOOL)isTiger
 {
-	return [self checkSystemVersionWithMajor:10 andMinor:4 andPoint:0 orBetter:NO];
+	return (floor(NSAppKitVersionNumber) == NSAppKitVersionNumber10_4);
 }
-
--(BOOL)isLeopard
-{
-	return [self checkSystemVersionWithMajor:10 andMinor:5 andPoint:0 orBetter:NO];
-}
-
--(BOOL)checkSystemVersionWithMajor:(int)majorVersion andMinor:(int)minorVersion andPoint:(int)pointVersion orBetter:(BOOL)higher
-{
-	BOOL ret = NO;
-	//Checks SystemVersion.plist for ProductVersion key.
-	NSString *versionString = [[NSDictionary dictionaryWithContentsOfFile:@"/System/Library/CoreServices/SystemVersion.plist"] objectForKey:@"ProductVersion"];
-	NSArray *array = [versionString componentsSeparatedByString:@"."];
-	int count = [array count];
-	int major = (count >= 1) ? [[array objectAtIndex:0] intValue] : 0;
-	int minor = (count >= 2) ? [[array objectAtIndex:1] intValue] : 0;
-	int point = (count >= 3) ? [[array objectAtIndex:2] intValue] : 0;
-	
-	if(higher) {
-		if(major >= majorVersion || (major >= majorVersion && minor >= minorVersion) || (major >= majorVersion && minor >= minorVersion && point >= pointVersion))
-			ret = YES;
-	} else {
-		if(major == majorVersion && minor == minorVersion && point == pointVersion)
-			ret = YES;
-	}
-			
-	return ret;
-}
-	
 
 - (BOOL)isWebKitAvailable
 {
