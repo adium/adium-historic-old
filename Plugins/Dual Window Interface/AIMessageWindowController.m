@@ -480,6 +480,11 @@
 //If silent is NO, the interface controller will be informed of the add
 - (void)addTabViewItem:(AIMessageTabViewItem *)inTabViewItem atIndex:(int)index silent:(BOOL)silent
 {
+	/* XXX This mirrors the hack in -[AIMessageTabViewItem initWithMessageView]. It may have been undone
+	 * in removeTabViewItem:silent: below if the tab was moving between windows.
+	 */
+	[inTabViewItem setIdentifier:inTabViewItem];
+
 	if (index == -1) {
 		[tabView_messages addTabViewItem:inTabViewItem];
 	} else {
