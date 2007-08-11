@@ -110,17 +110,6 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 // Subclasses must override this
 - (const char*)protocolPlugin { return NULL; }
 
-- (void)iTunesDidUpdate:(NSNotification*)notification {
-	if ([self shouldIncludeNowPlayingInformationInAllStatuses]) {
-		[tuneinfo release];
-		tuneinfo = [[notification object] retain];
-
-		// update info in prpl
-		if ([self online])
-			[self updateStatusForKey:@"StatusState"];
-	}
-}
-
 // Contacts ------------------------------------------------------------------------------------------------
 #pragma mark Contacts
 - (void)newContact:(AIListContact *)theContact withName:(NSString *)inName
@@ -1806,6 +1795,17 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 - (BOOL)shouldIncludeNowPlayingInformationInAllStatuses
 {
 	return NO;
+}
+
+- (void)iTunesDidUpdate:(NSNotification*)notification {
+	if ([self shouldIncludeNowPlayingInformationInAllStatuses]) {
+		[tuneinfo release];
+		tuneinfo = [[notification object] retain];
+		
+		// update info in prpl
+		if ([self online])
+			[self updateStatusForKey:@"StatusState"];
+	}
 }
 
 /*!
