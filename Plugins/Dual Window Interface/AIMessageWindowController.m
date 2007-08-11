@@ -1253,9 +1253,4 @@
 	[miniwindowImage release];
 }
 
-- (void)validateFlexibleToolbarItem:(AIFlexibleToolbarItem *)toolbarItem
-{
-#warning this function does nothing because this is 2 less warnings than we'd get otherwise - what should this even do? -RAF
-}
-
 @end
