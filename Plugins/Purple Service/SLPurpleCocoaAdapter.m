@@ -802,7 +802,7 @@ NSString *processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 	const char			*cmd;
 	BOOL				didCommand = NO;
 
-	if (!conv || ([cmd length] < 2)) return NO;
+	if (!conv || ([originalMessage length] < 2)) return NO;
 	
 	cmd = [originalMessage UTF8String];
 	
