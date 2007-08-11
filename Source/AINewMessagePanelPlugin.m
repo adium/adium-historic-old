@@ -14,16 +14,22 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIAccountControllerProtocol.h>
-#import <Adium/AIMenuControllerProtocol.h>
 #import "AINewMessagePanelPlugin.h"
 #import "AINewMessagePromptController.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIListObject.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 
 /*!
  * @class AINewMessagePanelPlugin
- * @brief Component to provide the New Message window, which allows messaging an arbitrary contact
+ * @brief Component to provide the New Message window, which allows messaging an arbitrary contact.
+ *
+ * Also provides a New Chat contextual menu item for contacts in situations which don't have immediate access
+ * to opening a chat window.
  */
 @implementation AINewMessagePanelPlugin
 
@@ -32,25 +38,56 @@
  */
 - (void)installPlugin
 {
-	newMessageMenuItem = [[NSMenuItem alloc] initWithTitle:[AILocalizedString(@"New Chat",nil) stringByAppendingEllipsis]
-													target:self 
-													action:@selector(newMessage:)
-											 keyEquivalent:@"n"];
+	NSMenuItem *newMessageMenuItem = [[[NSMenuItem alloc] initWithTitle:[AILocalizedString(@"New Chat",nil) stringByAppendingEllipsis]
+																 target:self 
+																 action:@selector(newMessage:)
+														  keyEquivalent:@"n"] autorelease];
 	[[adium menuController] addMenuItem:newMessageMenuItem toLocation:LOC_File_New];
+	
+	NSMenuItem *openChatMenuItem = [[[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Open Chat",nil)
+																  target:self 
+																  action:@selector(contextualOpenChat:)
+														   keyEquivalent:@""] autorelease]; 
+	[[adium menuController] addContextualMenuItem:openChatMenuItem toLocation:Context_Contact_Message];
 	
 }	
 
 /*!
  * @brief Show the prompt
  */
-- (IBAction)newMessage:(id)sender
+- (void)newMessage:(id)sender
 {
 	[AINewMessagePromptController showPrompt];
 }
 
 - (BOOL)validateMenuItem:(id)menuItem
 {
-	return [[adium accountController] oneOrMoreConnectedAccounts];
+	if ([menuItem action] == @selector(newMessage:)) {
+		return [[adium accountController] oneOrMoreConnectedAccounts];
+
+	} else if ([menuItem action] == @selector(contextualOpenChat:)) {
+		NSEnumerator *enumerator = [[[adium accountController] accountsCompatibleWithService:[[[adium menuController] currentContextMenuObject] service]] objectEnumerator];
+		AIAccount	 *account;
+		BOOL		 enable = NO;
+
+		while ((account = [enumerator nextObject])) {
+			if ([account online]) {
+				enable = YES;
+				break;
+			}
+		}
+
+		return enable;
+	}
+	
+	return YES;
+}
+
+- (void)contextualOpenChat:(id)sender
+{
+	//Open a new message with the contact
+	[[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:(AIListContact *)[[adium menuController] currentContextMenuObject]
+																		onPreferredAccount:YES]];
 }
 
 @end
