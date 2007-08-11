@@ -816,6 +816,8 @@ static void purpleUnregisterCb(PurpleAccount *account, gboolean success, void *u
 	const char			*cmd;
 	BOOL				didCommand = NO;
 
+	if (!conv || ([cmd length] < 2)) return NO;
+	
 	cmd = [originalMessage UTF8String];
 	
 	//cmd+1 will be the cmd without the leading character, which should be "/"
