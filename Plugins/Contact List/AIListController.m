@@ -36,8 +36,8 @@
 #import <AIUtilities/AIObjectAdditions.h>
 #import <AIUtilities/AIFunctions.h>
 
-#define EDGE_CATCH_X						40
-#define EDGE_CATCH_Y						40
+#define EDGE_CATCH_X						40.0f
+#define EDGE_CATCH_Y						40.0f
 
 #define	MENU_BAR_HEIGHT				22
 
@@ -194,7 +194,7 @@ typedef enum {
 	newWindowFrame = windowFrame;
 	viewFrame = [scrollView_contactList frame];
 	
-	if(!currentScreen) currentScreen = [NSScreen mainScreen];
+	if (!currentScreen) currentScreen = [NSScreen mainScreen];
 	
 	screenFrame = [currentScreen frame]; 
 	visibleScreenFrame = [currentScreen visibleFrame];
@@ -223,12 +223,12 @@ typedef enum {
 		}
 
 		//Anchor to the appropriate screen edge
-		anchorToRightEdge = ((currentScreen != nil) &&
-							(windowFrame.origin.x + windowFrame.size.width) + EDGE_CATCH_X >= (visibleScreenFrame.origin.x + visibleScreenFrame.size.width));
+		anchorToRightEdge = ((currentScreen && ((NSMaxX(windowFrame) + EDGE_CATCH_X) >= NSMaxX(visibleScreenFrame))) ||
+							 [(AIListWindowController *)[theWindow windowController] windowSlidOffScreenEdgeMask] == AIMaxXEdgeMask);
 		if (anchorToRightEdge) {
-			newWindowFrame.origin.x = (windowFrame.origin.x + windowFrame.size.width) - newWindowFrame.size.width;
+			newWindowFrame.origin.x = NSMaxX(windowFrame) - NSWidth(newWindowFrame);
 		} else {
-			newWindowFrame.origin.x = windowFrame.origin.x;
+			newWindowFrame.origin.x = NSMinX(windowFrame);
 		}
 	}
 
@@ -241,8 +241,8 @@ typedef enum {
 	 * Alternately, if the user docked to the total frame last, we can safely use the full screen even if we aren't
 	 * on the edge.
 	 */
-	BOOL windowOnEdge = ((newWindowFrame.origin.x < screenFrame.origin.x + EDGE_CATCH_X) ||
-						 ((newWindowFrame.origin.x + newWindowFrame.size.width) > (screenFrame.origin.x + screenFrame.size.width - EDGE_CATCH_X)));
+	BOOL windowOnEdge = ((NSMinX(newWindowFrame) < NSMinX(screenFrame) + EDGE_CATCH_X) ||
+						 (NSMaxX(newWindowFrame) > (NSMaxX(screenFrame) - EDGE_CATCH_X)));
 
 	if ((windowOnEdge && (dockToBottomOfScreen != AIDockToBottom_VisibleFrame)) ||
 	   (dockToBottomOfScreen == AIDockToBottom_TotalFrame)) {
@@ -270,18 +270,18 @@ typedef enum {
 		newWindowFrame.size.height += desiredHeight;
 
 		//Vertical positioning and size if we are placed on a screen
-		if (newWindowFrame.size.height >= boundingFrame.size.height) {
+		if (NSHeight(newWindowFrame) >= NSHeight(boundingFrame)) {
 			//If the window is bigger than the screen, keep it on the screen
-			newWindowFrame.size.height = boundingFrame.size.height;
-			newWindowFrame.origin.y = boundingFrame.origin.y;
+			newWindowFrame.size.height = NSHeight(boundingFrame);
+			newWindowFrame.origin.y = NSMinY(boundingFrame);
 		} else {
 			//A non-full height window is anchored to the appropriate screen edge
 			if (dockToBottomOfScreen == AIDockToBottom_No) {
 				//If the user did not dock to the bottom in any way last, the origin should move up
-				newWindowFrame.origin.y = (windowFrame.origin.y + windowFrame.size.height) - newWindowFrame.size.height;
+				newWindowFrame.origin.y = NSMaxY(windowFrame) - NSHeight(newWindowFrame);
 			} else {
 				//If the user did dock (either to the full screen or the visible screen), the origin should remain in place.
-				newWindowFrame.origin.y = windowFrame.origin.y;				
+				newWindowFrame.origin.y = NSMinY(windowFrame);				
 			}
 		}
 
@@ -298,7 +298,7 @@ typedef enum {
 		 * expand horizontally to take that into account.  The magic number 2 fixes this method for use with our borderless
 		 * windows... I'm not sure why it's needed, but it doesn't hurt anything.
 		 */
-		if (desiredHeight + (windowFrame.size.height - viewFrame.size.height) > newWindowFrame.size.height + 2) {
+		if (desiredHeight + (NSHeight(windowFrame) - NSHeight(viewFrame)) > NSHeight(newWindowFrame) + 2) {
 			float scrollerWidth = [NSScroller scrollerWidthForControlSize:[[scrollView_contactList verticalScroller] controlSize]];
 			newWindowFrame.size.width += scrollerWidth;
 			
@@ -311,7 +311,7 @@ typedef enum {
 		if (newWindowFrame.size.width == 0) newWindowFrame.size.width = 1;
 
 		//Keep the window from hanging off any X screen edge (This is optional and could be removed if this annoys people)
-		if (NSMaxX(newWindowFrame) > NSMaxX(boundingFrame)) newWindowFrame.origin.x = NSMaxX(boundingFrame) - newWindowFrame.size.width;
+		if (NSMaxX(newWindowFrame) > NSMaxX(boundingFrame)) newWindowFrame.origin.x = NSMaxX(boundingFrame) - NSWidth(newWindowFrame);
 		if (NSMinX(newWindowFrame) < NSMinX(boundingFrame)) newWindowFrame.origin.x = NSMinX(boundingFrame);
 	}
 

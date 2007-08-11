@@ -336,7 +336,7 @@ static NSArray *validSenderColors;
 
 	//Old styles may be using an old custom 4 parameter baseHTML.  Styles version 3 and higher should
 	//be using the bundled (or a custom) 5 parameter baseHTML.
-	if (styleVersion < 3 && usingCustomBaseHTML) {
+	if ((styleVersion < 3) && usingCustomBaseHTML) {
 		templateHTML = [NSMutableString stringWithFormat:baseHTML,						//Template
 			[[NSURL fileURLWithPath:stylePath] absoluteString],							//Base path
 			[self pathForVariant:variant],												//Variant path
