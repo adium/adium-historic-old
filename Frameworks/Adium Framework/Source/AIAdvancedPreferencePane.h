@@ -13,5 +13,6 @@
 }
 
 + (AIAdvancedPreferencePane *)preferencePane;
++ (AIAdvancedPreferencePane *)preferencePaneForPlugin:(id)inPlugin;
 
 @end

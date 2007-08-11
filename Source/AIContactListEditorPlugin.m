@@ -30,6 +30,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListGroup.h>
+#import <Adium/AIMetaContact.h>
 
 #define ADD_CONTACT							AILocalizedString(@"Add Contact",nil)
 #define ADD_CONTACT_ELLIPSIS				[ADD_CONTACT stringByAppendingEllipsis]

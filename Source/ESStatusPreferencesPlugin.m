@@ -7,6 +7,7 @@
 //
 
 #import "ESStatusPreferencesPlugin.h"
+#import "ESStatusAdvancedPreferences.h"
 #import "ESStatusPreferences.h"
 #import <Adium/AIMenuControllerProtocol.h>
 #import "AIStatusController.h"

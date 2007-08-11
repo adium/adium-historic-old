@@ -20,6 +20,7 @@
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIMetaContact.h>
 
 #define IDLE_UPDATE_INTERVAL	60.0
 
