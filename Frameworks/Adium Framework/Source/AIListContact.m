@@ -34,6 +34,8 @@
 #define KEY_BASE_WRITING_DIRECTION		@"Base Writing Direction"
 #define PREF_GROUP_WRITING_DIRECTION	@"Writing Direction"
 
+#define CONTACT_SIGN_ON_OR_OFF_PERSISTENCE_DELAY 15
+
 @implementation AIListContact
 
 //Init with an account
@@ -304,7 +306,7 @@
 						   notify:notify];
 			[self setStatusObject:nil
 						   forKey:(online ? @"Signed On" : @"Signed Off")
-					   afterDelay:15];
+					   afterDelay:CONTACT_SIGN_ON_OR_OFF_PERSISTENCE_DELAY];
 		}
 		
 		if (online) {
