@@ -111,11 +111,14 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 - (const char*)protocolPlugin { return NULL; }
 
 - (void)iTunesDidUpdate:(NSNotification*)notification {
-	[tuneinfo release];
-	tuneinfo = [[notification object] copy];
-	
-	// update info in prpl
-	[self setStatusState:[self statusState] usingStatusMessage:[self statusMessage]];
+	if ([self shouldIncludeNowPlayingInformationInAllStatuses]) {
+		[tuneinfo release];
+		tuneinfo = [[notification object] retain];
+
+		// update info in prpl
+		if ([self online])
+			[self updateStatusForKey:@"StatusState"];
+	}
 }
 
 // Contacts ------------------------------------------------------------------------------------------------
@@ -1800,6 +1803,11 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	return NO;
 }
 
+- (BOOL)shouldIncludeNowPlayingInformationInAllStatuses
+{
+	return NO;
+}
+
 /*!
  * @brief Perform the setting of a status state
  *
@@ -1848,24 +1856,27 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 			}
 		}
 	}
-	if(tuneinfo && [[tuneinfo objectForKey:ITUNES_PLAYER_STATE] isEqualToString:@"Playing"]) {
-		[arguments setObject:[tuneinfo objectForKey:ITUNES_ARTIST]?[tuneinfo objectForKey:ITUNES_ARTIST]:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_ARTIST]];
-		[arguments setObject:[tuneinfo objectForKey:ITUNES_NAME]?[tuneinfo objectForKey:ITUNES_NAME]:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_TITLE]];
-		[arguments setObject:[tuneinfo objectForKey:ITUNES_ALBUM]?[tuneinfo objectForKey:ITUNES_ALBUM]:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_ALBUM]];
-		[arguments setObject:[tuneinfo objectForKey:ITUNES_GENRE]?[tuneinfo objectForKey:ITUNES_GENRE]:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_GENRE]];
-		[arguments setObject:[tuneinfo objectForKey:ITUNES_TOTAL_TIME]?[tuneinfo objectForKey:ITUNES_TOTAL_TIME]:[NSNumber numberWithInt:-1] forKey:[NSString stringWithUTF8String:PURPLE_TUNE_TIME]];
-		[arguments setObject:[tuneinfo objectForKey:ITUNES_YEAR]?[tuneinfo objectForKey:ITUNES_YEAR]:[NSNumber numberWithInt:-1] forKey:[NSString stringWithUTF8String:PURPLE_TUNE_YEAR]];
-		[arguments setObject:[tuneinfo objectForKey:ITUNES_STORE_URL]?[tuneinfo objectForKey:ITUNES_STORE_URL]:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_URL]];
-	} else {
-		[arguments setObject:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_ARTIST]];
-		[arguments setObject:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_TITLE]];
-		[arguments setObject:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_ALBUM]];
-		[arguments setObject:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_GENRE]];
-		[arguments setObject:[NSNumber numberWithInt:-1] forKey:[NSString stringWithUTF8String:PURPLE_TUNE_TIME]];
-		[arguments setObject:[NSNumber numberWithInt:-1] forKey:[NSString stringWithUTF8String:PURPLE_TUNE_YEAR]];
-		[arguments setObject:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_URL]];
+
+	if ([self shouldIncludeNowPlayingInformationInAllStatuses]) {
+		if (tuneinfo && [[tuneinfo objectForKey:ITUNES_PLAYER_STATE] isEqualToString:@"Playing"]) {
+			[arguments setObject:([tuneinfo objectForKey:ITUNES_ARTIST] ? [tuneinfo objectForKey:ITUNES_ARTIST] : @"") forKey:[NSString stringWithUTF8String:PURPLE_TUNE_ARTIST]];
+			[arguments setObject:([tuneinfo objectForKey:ITUNES_NAME] ? [tuneinfo objectForKey:ITUNES_NAME] : @"") forKey:[NSString stringWithUTF8String:PURPLE_TUNE_TITLE]];
+			[arguments setObject:([tuneinfo objectForKey:ITUNES_ALBUM] ? [tuneinfo objectForKey:ITUNES_ALBUM] : @"") forKey:[NSString stringWithUTF8String:PURPLE_TUNE_ALBUM]];
+			[arguments setObject:([tuneinfo objectForKey:ITUNES_GENRE] ? [tuneinfo objectForKey:ITUNES_GENRE] : @"") forKey:[NSString stringWithUTF8String:PURPLE_TUNE_GENRE]];
+			[arguments setObject:([tuneinfo objectForKey:ITUNES_TOTAL_TIME] ? [tuneinfo objectForKey:ITUNES_TOTAL_TIME]:[NSNumber numberWithInt:-1]) forKey:[NSString stringWithUTF8String:PURPLE_TUNE_TIME]];
+			[arguments setObject:([tuneinfo objectForKey:ITUNES_YEAR] ? [tuneinfo objectForKey:ITUNES_YEAR]:[NSNumber numberWithInt:-1]) forKey:[NSString stringWithUTF8String:PURPLE_TUNE_YEAR]];
+			[arguments setObject:([tuneinfo objectForKey:ITUNES_STORE_URL] ? [tuneinfo objectForKey:ITUNES_STORE_URL] : @"") forKey:[NSString stringWithUTF8String:PURPLE_TUNE_URL]];
+		} else {
+			[arguments setObject:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_ARTIST]];
+			[arguments setObject:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_TITLE]];
+			[arguments setObject:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_ALBUM]];
+			[arguments setObject:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_GENRE]];
+			[arguments setObject:[NSNumber numberWithInt:-1] forKey:[NSString stringWithUTF8String:PURPLE_TUNE_TIME]];
+			[arguments setObject:[NSNumber numberWithInt:-1] forKey:[NSString stringWithUTF8String:PURPLE_TUNE_YEAR]];
+			[arguments setObject:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_URL]];
+		}
 	}
-	
+
 	//Encode the status message if we have one
 	encodedStatusMessage = (statusMessage ? 
 							[self encodedAttributedString:statusMessage
