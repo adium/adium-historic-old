@@ -802,6 +802,8 @@ NSString *processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 	const char			*cmd;
 	BOOL				didCommand = NO;
 
+	if (!conv || ([cmd length] < 2)) return NO;
+	
 	cmd = [originalMessage UTF8String];
 	
 	//cmd+1 will be the cmd without the leading character, which should be "/"
