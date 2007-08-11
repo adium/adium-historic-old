@@ -20,12 +20,25 @@
 
 @class AIChat;
 
+/*!	@class	AIContentMessage
+ *	@brief	A message in a chat.
+ *
+ *	@par	A content message is a type of content object that represents a message sent by one user to another user (except in the case of an autoreply, which is sent by the user's client).
+ *
+ *	@par	The content of the message is handled as an attributed string. This allows AIContentMessages to be used with all services, regardless of the format they use for text (HTML, XHTML, Markdown, etc.).
+ *
+ *	@par	A content message can be an autoreply. This happens when the message was sent automatically (or will be) in response to the sender receiving a previous message while away. Not all services support autoreplies; on those that don't, the AIContentMessage for an incoming autoreply will not have its \c autoreply flag set.
+ */
+
 @interface AIContentMessage : AIContentObject {
     BOOL		isAutoreply;
 	NSString	*encodedMessage;
 	id			encodedMessageAccountData;
 }
 
+/*!	@brief	Create and autorelease an AIContentMessage.
+ *	@return	An autoreleased AIContentMessage.
+ */
 + (id)messageInChat:(AIChat *)inChat
 		 withSource:(id)inSource
 		destination:(id)inDest
@@ -33,6 +46,12 @@
 			message:(NSAttributedString *)inMessage 
 		  autoreply:(BOOL)inAutoreply;
 
+/*!	@brief	Create an AIContentMessage.
+ *
+ *	@par	See <code>AIContentObject</code>'s <code>initWithChat:source:destination:date:message:</code> method for more information.
+ *
+ *	@return	An AIContentMessage.
+ */
 - (id)initWithChat:(AIChat *)inChat
 			source:(id)inSource
 	   destination:(id)inDest
@@ -40,13 +59,43 @@
 		   message:(NSAttributedString *)inMessage
 		 autoreply:(BOOL)inAutoreply;
 
+/*!	@brief	Change whether this message is an autoreply.
+ *	@param	inAutoreply	The new autoreply flag of the message.
+ */
 - (void)setIsAutoreply:(BOOL)inAutoreply;
+/*!	@brief	Returns whether this message is an autoreply.
+ *	@return	The autoreply flag of the message.
+ */
 - (BOOL)isAutoreply;
 
+/*!	@brief	Returns the encoded string for the contents of this content message.
+ *
+ *	@par	This is the string containing the same message that the content message was initialized with (which is unchangeable), in a format suitable for use by the service (e.g., to be transmitted over the wire or having been received over the wire).
+ *
+ *	@return	A string containing the message encoded to some sort of marked-up (or plain) source code, such as HTML source code.
+ */
 - (NSString *)encodedMessage;
+/*!	@brief	Changes the encoded string for the contents of this content message.
+ *
+ *	@par	Usually, the encoded string is obtained from the account by the content controller. In addition, it may be passed through one or more secondary encoders, such as an encrypter. Traditionally, the new string is set as the content message's encoded message using this method after every step.
+ *
+ *	@param	inEncodedMessage	The new encoded data.
+ */
 - (void)setEncodedMessage:(NSString *)inEncodedMessage;
 
+/*!	@brief	Returns the object associated with this method for an account's benefit.
+ *
+ *	@par	This property is intended for use by accounts that need to associate some private data with a message. It is not used by anything else.
+ *
+ *	@return	The object associated with this message.
+ */
 - (id)encodedMessageAccountData;
+/*!	@brief	Replaces the object associated with this method for an account's benefit.
+ *
+ *	@par	The object will be retained by the content message.
+ *
+ *	@param	inEncodedMessageAccountData	The new object associated with this message.
+ */
 - (void)setEncodedMessageAccountData:(id)inEncodedMessageAccountData;
 
 @end
