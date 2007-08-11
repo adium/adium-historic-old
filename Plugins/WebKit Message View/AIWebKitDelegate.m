@@ -111,7 +111,7 @@ static AIWebKitDelegate *AISharedWebKitDelegate;
 - (NSDragOperation)webView:(ESWebView *)sender draggingEntered:(id <NSDraggingInfo>)info
 {
 	AIWebKitMessageViewController *controller = [mapping objectForKey:[NSValue valueWithPointer:sender]];
-	NSLog(@"%@", controller);
+
 	return controller ? [controller draggingEntered:info] : NSDragOperationNone;
 }
 
