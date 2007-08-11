@@ -21,13 +21,15 @@
 @class AIChat;
 
 /*!	@class	AIContentMessage
- *	@brief	A message in a chat.
+ *	@brief	A message in a chat. Subclass of AIContentObject.
  *
  *	@par	A content message is a type of content object that represents a message sent by one user to another user (except in the case of an autoreply, which is sent by the user's client).
  *
  *	@par	The content of the message is handled as an attributed string. This allows AIContentMessages to be used with all services, regardless of the format they use for text (HTML, XHTML, Markdown, etc.).
  *
  *	@par	A content message can be an autoreply. This happens when the message was sent automatically (or will be) in response to the sender receiving a previous message while away. Not all services support autoreplies; on those that don't, the AIContentMessage for an incoming autoreply will not have its \c autoreply flag set.
+ *
+ *	@par	AIContentMessage is a concrete subclass of AIContentObject. All methods and properties of AIContentObject also work with AIContentMessage.
  */
 
 @interface AIContentMessage : AIContentObject {
