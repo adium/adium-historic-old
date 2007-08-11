@@ -19,7 +19,7 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIObjectAdditions.h>
 
-#define MAX_AVAILABLE_MESSAGE_LENGTH	58
+#define MAX_AVAILABLE_MESSAGE_LENGTH	249
 
 @interface ESPurpleAIMAccount (PRIVATE)
 - (NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding;
