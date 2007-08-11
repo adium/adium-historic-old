@@ -35,6 +35,7 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIListGroup.h>
 #import "ESFileTransfer.h"
 #import <Adium/AIWindowController.h>
 

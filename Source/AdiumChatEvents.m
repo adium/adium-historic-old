@@ -11,6 +11,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <Adium/AIListGroup.h>
 
 @implementation AdiumChatEvents
 

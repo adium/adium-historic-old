@@ -16,8 +16,7 @@
 
 #import <Adium/AIListObject.h>
 #import <Adium/AIAccount.h>
-
-@class AIAccount, AIContentObject, AIListContact, AIListGroup;
+#import <Adium/AIListGroup.h>
 
 @interface AIListContact : AIListObject {
 	AIAccount		*account;

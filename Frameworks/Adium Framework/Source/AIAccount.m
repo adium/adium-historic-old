@@ -25,6 +25,7 @@
 
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIAccountControllerProtocol.h>
 
 #define NEW_ACCOUNT_DISPLAY_TEXT			AILocalizedString(@"<New Account>", "Placeholder displayed as the name of a new account")
 
