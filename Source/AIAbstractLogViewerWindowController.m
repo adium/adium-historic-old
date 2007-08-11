@@ -6,16 +6,26 @@
 //
 
 #import "AIAbstractLogViewerWindowController.h"
-#import <Adium/AIAccountControllerProtocol.h>
 #import "AIChatLog.h"
-#import <Adium/AIContactControllerProtocol.h>
-#import <Adium/AIContentControllerProtocol.h>
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
 #import "AILoggerPlugin.h"
-#import <Adium/AIPreferenceControllerProtocol.h>
 #import "ESRankingCell.h" 
 #import "GBChatlogHTMLConverter.h"
+#import "AILogDateFormatter.h"
+
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIHTMLDecoder.h>
+#import <Adium/AIListContact.h>
+#import <Adium/AIMetaContact.h>
+#import <Adium/AIServiceIcons.h>
+#import <Adium/AIUserIcons.h>
+#import <Adium/KFTypeSelectTableView.h>
+#import <Adium/KNShelfSplitView.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
@@ -30,16 +40,6 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIDividedAlternatingRowOutlineView.h>
-#import <Adium/AIHTMLDecoder.h>
-#import <Adium/AIListContact.h>
-#import <Adium/AIMetaContact.h>
-#import <Adium/AIServiceIcons.h>
-#import <Adium/AIUserIcons.h>
-
-#import "AILogDateFormatter.h"
-
-#import "KFTypeSelectTableView.h"
-#import "KNShelfSplitView.h"
 
 #define KEY_LOG_VIEWER_WINDOW_FRAME		@"Log Viewer Frame"
 #define	PREF_GROUP_CONTACT_LIST			@"Contact List"
@@ -1819,6 +1819,55 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 	}
 	
 	[self startSearchingClearingCurrentResults:YES];
+}
+
+- (NSMenu *)outlineView:(NSOutlineView *)outlineView menuForEvent:(NSEvent *)theEvent;
+{
+	if (outlineView == outlineView_contacts) {
+		int clickedRow = [outlineView_contacts rowAtPoint:[outlineView_contacts convertPoint:[theEvent locationInWindow]
+																					fromView:nil]];
+		id item = [outlineView_contacts itemAtRow:clickedRow];
+
+		//If we have a To group, see if we can make a contact out of it
+		if ([item isKindOfClass:[AILogToGroup class]]) {
+			if ([(AILogToGroup *)item to] && [(AILogToGroup *)item serviceClass]) {
+				//We need a service with ther right service ID
+				AIService *service = [[adium accountController] firstServiceWithServiceID:[(AILogToGroup *)item serviceClass]];
+				if (service) {
+					NSEnumerator *enumerator = [[[adium accountController] accountsCompatibleWithService:service] objectEnumerator];
+					AIAccount	 *account;
+
+					//Next, we want an online account
+					while ((account = [enumerator nextObject])) {
+						if ([account online]) break;
+					}
+					
+					if (account) {
+						//Finally, make a contact
+						item = [[adium contactController] contactWithService:service
+																	 account:account
+																		 UID:[(AILogToGroup *)item to]];
+					}
+					
+				}
+			}
+		}
+
+		if ([item isKindOfClass:[AIListContact class]]) {
+			NSArray			*locationsArray = [NSArray arrayWithObjects:
+				[NSNumber numberWithInt:Context_Contact_Message],
+				[NSNumber numberWithInt:Context_Contact_Manage],
+				[NSNumber numberWithInt:Context_Contact_Action],
+				[NSNumber numberWithInt:Context_Contact_ListAction],
+				[NSNumber numberWithInt:Context_Contact_NegativeAction],
+				[NSNumber numberWithInt:Context_Contact_Additions], nil];
+
+			return [[adium menuController] contextualMenuWithLocations:locationsArray
+														 forListObject:(AIListContact *)item];
+		}
+	}
+	
+	return nil;
 }
 
 static int toArraySort(id itemA, id itemB, void *context)
