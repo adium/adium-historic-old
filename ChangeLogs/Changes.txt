@@ -1,6 +1,6 @@
 				Adium X Version History
 				-----------------------
-Version 1.1
+Version 1.1 (8/12/2007)
 Note: Adium now requires Mac OS X 10.4.0 or later.
 
 == Summer of Code 2006 Changes ==
