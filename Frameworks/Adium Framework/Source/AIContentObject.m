@@ -101,7 +101,7 @@
 
 //Comparing ------------------------------------------------------------------------------------------------------------
 #pragma mark Comparing
-//Content is similar if it's from the same source, of the same time, and sent within 5 minutes.
+//Content is similar if it's from the same source, of the same type, and sent within 5 minutes.
 - (BOOL)isSimilarToContent:(AIContentObject *)inContent
 {
 	if (source == [inContent source] && [[self type] compare:[inContent type]] == 0) {
