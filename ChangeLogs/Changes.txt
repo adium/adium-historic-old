@@ -1,6 +1,6 @@
 				Adium X Version History
 				-----------------------
-Version 1.1
+Version 1.1 (8/12/2007)
 Note: Adium now requires Mac OS X 10.4.0 or later.
 
 == Summer of Code 2006 Changes ==
@@ -9,9 +9,7 @@ Note: Adium now requires Mac OS X 10.4.0 or later.
    * Tabs handle overflow better, by showing a “chevron” (») pop-up menu (#12)
    * Improved drag & drop behavior with tabs (#2555)
    * Improved tab length calculation (#6775)
- * Improved Accessibility Support (Chirag Shah, mentored by Peter Hosey)
-   * Adium now plays nicely with OS X accessibility functionality such as !VoiceOver (#1423)
-   * Commands to increase and decrease the text size in the message view for easier reading
+   * Tabs can display the number of unread messages
 
 == Contact List ==
  * Horizontal autosizing of the contact list is now more accurate (#6618)
@@ -59,6 +57,7 @@ Note: Adium now requires Mac OS X 10.4.0 or later.
  * Attempting to delete multiple saved statuses at once only deletes one (#6608)
  * Appearance preferences now include MenuBarIcons (#6335)
  * When Adium is run from the installation disk image, we now offer to install it. Thanks to Google for donating the code for this feature.
+ * Updated to libpurple 2.1.0
 
 == Dock ==
  * Dock icon (.AdiumIcon) Xtras now work correctly with case-sensitive HFS+ (#176)
@@ -87,6 +86,9 @@ Note: Adium now requires Mac OS X 10.4.0 or later.
 
 === Bonjour ===
  * Bonjour contacts are no longer marked as online after signing off (#5992)
+
+=== MSN ===
+ * Added support for right-to-left messages (#5431)
  
 
 Version 1.0.5 (7/9/2007)
