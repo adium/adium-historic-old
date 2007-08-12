@@ -218,6 +218,7 @@
 		[containedObjects removeObject:inObject];
 		
 		//Update our visible count
+
 		[self _recomputeVisibleCount];
 
 		//

@@ -28,6 +28,7 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIStatusMenu.h>
+#import <Adium/AIListSmartGroup.h>
 
 #import "AIStatusController.h"
 #import "AIStandardListWindowController.h"
@@ -711,17 +712,35 @@ static ESObjectWithStatus<AIContainingObject> *oldContactList = nil;
 		[oldContactList release];
 		oldContactList = nil;
 	} else {
-		AIListGroup *searchResults = [[AIListGroup alloc] initWithUID:AILocalizedString(@"Search Results", "Contact List Search Results")];
+		AIListSmartGroup *searchResults = [[AIListGroup alloc] initWithUID:AILocalizedString(@"Search Results", "Contact List Search Results")];
 		[searchResults setDisplayName:AILocalizedString(@"Search Results", "Contact List Search Results")];
-		NSEnumerator *contactEnumerator = [[[adium contactController] allContacts] objectEnumerator];
 		AIListContact *contact;
-		while ((contact = [contactEnumerator nextObject]))
-			if ([[contact account] online] && 
-				([[contact displayName] rangeOfString:queryString options:NSCaseInsensitiveSearch].location != NSNotFound || 
-				 [[contact UID] rangeOfString:queryString options:NSCaseInsensitiveSearch].location != NSNotFound))
-				[searchResults addObject:contact];
+		// recursively walk the contact list, because if we enumerate over the contactController's -allContacts method we end up with weird
+		// duplicated contacts
+		NSMutableArray *enumeratorStack = [NSMutableArray arrayWithObject:[[oldContactList containedObjects] objectEnumerator]];
+		while ([enumeratorStack count] > 0) {
+			while (( contact = [[enumeratorStack objectAtIndex:0] nextObject])) {
+				if ([contact isKindOfClass:[AIMetaContact class]])
+					[enumeratorStack insertObject:[[(AIMetaContact *)contact containedObjects] objectEnumerator] atIndex:0];
+				else if ([contact isKindOfClass:[AIListGroup class]])
+					[enumeratorStack insertObject:[[(AIMetaContact *)contact containedObjects] objectEnumerator] atIndex:0];
+				else
+					if ([[contact account] online] && 
+					([[contact displayName] rangeOfString:queryString options:NSCaseInsensitiveSearch].location != NSNotFound || 
+					 [[contact UID] rangeOfString:queryString options:NSCaseInsensitiveSearch].location != NSNotFound)) {
+						if ([[contact containingObject] isKindOfClass:[AIListGroup class]])
+							[searchResults addObject:contact];
+						else if ([[contact containingObject] isKindOfClass:[AIMetaContact class]])
+							[searchResults addObject:[contact containingObject]];
+						break;
+					}
+			}
+			[enumeratorStack removeObjectAtIndex:0];
+		}
 		[contactListController setContactListRoot:searchResults];
 		[contactListController setHideRoot:NO];
+#warning this really should get autoreleased....
+//		[searchResults autorelease];
 	}
 }
 
