@@ -9,9 +9,7 @@ Note: Adium now requires Mac OS X 10.4.0 or later.
    * Tabs handle overflow better, by showing a “chevron” (») pop-up menu (#12)
    * Improved drag & drop behavior with tabs (#2555)
    * Improved tab length calculation (#6775)
- * Improved Accessibility Support (Chirag Shah, mentored by Peter Hosey)
-   * Adium now plays nicely with OS X accessibility functionality such as !VoiceOver (#1423)
-   * Commands to increase and decrease the text size in the message view for easier reading
+   * Tabs can display the number of unread messages
 
 == Contact List ==
  * Horizontal autosizing of the contact list is now more accurate (#6618)
