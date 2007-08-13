@@ -723,7 +723,7 @@ static ESObjectWithStatus<AIContainingObject> *oldContactList = nil;
 				if ([contact isKindOfClass:[AIMetaContact class]])
 					[enumeratorStack insertObject:[[(AIMetaContact *)contact containedObjects] objectEnumerator] atIndex:0];
 				else if ([contact isKindOfClass:[AIListGroup class]])
-					[enumeratorStack insertObject:[[(AIMetaContact *)contact containedObjects] objectEnumerator] atIndex:0];
+					[enumeratorStack insertObject:[[(AIListGroup *)contact containedObjects] objectEnumerator] atIndex:0];
 				else
 					if ([[contact account] online] && 
 					([[contact displayName] rangeOfString:queryString options:NSCaseInsensitiveSearch].location != NSNotFound || 
