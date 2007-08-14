@@ -55,10 +55,13 @@
 
 /* Define to 1 if your processor stores words with the most significant byte
 first (like Motorola and SPARC, unlike Intel and VAX). */
-//If compiling for 10.4, we're little endian since we are Intel. < 10.4, we are Mac. 
-#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_4
+#if (defined(__BIG_ENDIAN__) && __BIG_ENDIAN__)
 	#define WORDS_BIGENDIAN 1
+#else
+	#undef WORDS_BIGENDIAN
+#endif
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_4
 	/* socklen_t size */
 	#ifndef socklen_t
 		#define socklen_t int
