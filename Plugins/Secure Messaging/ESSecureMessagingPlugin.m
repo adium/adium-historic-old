@@ -256,9 +256,11 @@
 				type = @"encryptionEnded";
 			}
 
-			[[adium contentController] displayEvent:message
-											 ofType:type
-											 inChat:inChat];
+			if ([inChat isOpen]) {
+				[[adium contentController] displayEvent:message
+												 ofType:type
+												 inChat:inChat];
+			}
 		}
 	}
 
