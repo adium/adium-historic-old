@@ -1187,6 +1187,10 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 #define UPDATE_TYPE_DICT ([[NSUserDefaults standardUserDefaults] boolForKey:@"AIAlwaysUpdateToBetas"] ? BETA_UPDATE_DICT : RELEASE_UPDATE_DICT)
 #endif
 
+//The first generation ended with 1.0.5 and 1.1. Our Sparkle Plus up to that point had a bug that left it unable to properly handle the sparkle:minimumSystemVersion element.
+//The second generation began with 1.0.6 and 1.1.1, with a Sparkle Plus that can handle that element.
+#define UPDATE_GENERATION_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"generation", @"key", @"Appcast generation number", @"visibleKey", @"2", @"value", @"2", @"visibleValue", nil]
+
 /* This method gives the delegate the opportunity to customize the information that will
 * be included with update checks.  Add or remove items from the dictionary as desired.
 * Each entry in profileInfo is an NSDictionary with the following keys:
@@ -1200,58 +1204,55 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
 	
 	//If we're not sending profile information, return just the type of update we're looking for
-	if (![[defaults objectForKey:SUSendProfileInfoKey] boolValue])
-		return [NSMutableArray arrayWithObject:UPDATE_TYPE_DICT]; 
-	
-	int now = [[NSCalendarDate date] dayOfCommonEra];
-	
-	if (abs([defaults integerForKey:@"AILastSubmittedProfileDate2"] - now) >= 7) {
-		[defaults setInteger:now forKey:@"AILastSubmittedProfileDate2"];
-		
-		NSString *value = ([defaults boolForKey:@"AIHasSentSparkleProfileInfo"]) ? @"no" : @"yes";
-		
-		NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
-			@"FirstSubmission", @"key", 
-			@"First Time Submitting Profile Information", @"visibleKey",
-			value, @"value",
-			value, @"visibleValue",
-			nil];
-		
-		[profileInfo addObject:entry];
-		
-		[profileInfo addObject:UPDATE_TYPE_DICT];
-		
-		[defaults setBool:YES forKey:@"AIHasSentSparkleProfileInfo"];
-		
-		/*************** Include info about what IM services are used ************/
-		NSMutableString *accountInfo = [NSMutableString string];
-		NSCountedSet *condensedAccountInfo = [NSCountedSet set];
-		NSEnumerator *accountEnu = [[[self accountController] accounts] objectEnumerator];
-		AIAccount *account = nil;
-		while ((account = [accountEnu nextObject])) {
-			NSString *serviceID = [account serviceID];
-			[accountInfo appendFormat:@"%@, ", serviceID];
-			if([serviceID isEqualToString:@"Yahoo! Japan"]) serviceID = @"YJ";
-			[condensedAccountInfo addObject:[NSString stringWithFormat:@"%@", [serviceID substringToIndex:2]]]; 
-		}
-		
-		NSMutableString *accountInfoString = [NSMutableString string];
-		NSEnumerator *infoEnu = [[[condensedAccountInfo allObjects] sortedArrayUsingSelector:@selector(compare:)] objectEnumerator];
-		while ((value = [infoEnu nextObject]))
-			[accountInfoString appendFormat:@"%@%d", value, [condensedAccountInfo countForObject:value]];
-		
-		entry = [NSDictionary dictionaryWithObjectsAndKeys:
-			@"IMServices", @"key", 
-			@"IM Services Used", @"visibleKey",
-			accountInfoString, @"value",
-			accountInfo, @"visibleValue",
-			nil];
-		[profileInfo addObject:entry];
-		return profileInfo;
+	if ([[defaults objectForKey:SUSendProfileInfoKey] boolValue]) {
+		int now = [[NSCalendarDate date] dayOfCommonEra];
 
-	} else {
-		return [NSMutableArray arrayWithObject:UPDATE_TYPE_DICT];
+		if (abs([defaults integerForKey:@"AILastSubmittedProfileDate2"] - now) >= 7) {
+			[defaults setInteger:now forKey:@"AILastSubmittedProfileDate2"];
+			
+			NSString *value = ([defaults boolForKey:@"AIHasSentSparkleProfileInfo"]) ? @"no" : @"yes";
+			
+			NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
+				@"FirstSubmission", @"key", 
+				@"First Time Submitting Profile Information", @"visibleKey",
+				value, @"value",
+				value, @"visibleValue",
+				nil];
+			
+			[profileInfo addObject:entry];
+			
+			[defaults setBool:YES forKey:@"AIHasSentSparkleProfileInfo"];
+			
+			/*************** Include info about what IM services are used ************/
+			NSMutableString *accountInfo = [NSMutableString string];
+			NSCountedSet *condensedAccountInfo = [NSCountedSet set];
+			NSEnumerator *accountEnu = [[[self accountController] accounts] objectEnumerator];
+			AIAccount *account = nil;
+			while ((account = [accountEnu nextObject])) {
+				NSString *serviceID = [account serviceID];
+				[accountInfo appendFormat:@"%@, ", serviceID];
+				if([serviceID isEqualToString:@"Yahoo! Japan"]) serviceID = @"YJ";
+				[condensedAccountInfo addObject:[NSString stringWithFormat:@"%@", [serviceID substringToIndex:2]]]; 
+			}
+			
+			NSMutableString *accountInfoString = [NSMutableString string];
+			NSEnumerator *infoEnu = [[[condensedAccountInfo allObjects] sortedArrayUsingSelector:@selector(compare:)] objectEnumerator];
+			while ((value = [infoEnu nextObject]))
+				[accountInfoString appendFormat:@"%@%d", value, [condensedAccountInfo countForObject:value]];
+			
+			entry = [NSDictionary dictionaryWithObjectsAndKeys:
+				@"IMServices", @"key", 
+				@"IM Services Used", @"visibleKey",
+				accountInfoString, @"value",
+				accountInfo, @"visibleValue",
+				nil];
+			[profileInfo addObject:entry];
+		}
 	}
+
+	[profileInfo addObject:UPDATE_GENERATION_DICT];
+	[profileInfo addObject:UPDATE_TYPE_DICT];
+	return profileInfo;
 }
 
 - (NSComparisonResult) compareVersion:(NSString *)newVersion toVersion:(NSString *)currentVersion
