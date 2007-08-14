@@ -4,10 +4,18 @@
     <title>Adium Updates</title>
     <language>en</language>
     <item>
-        <title>Adium 1.0.5</title>
-        <pubDate>Monday, July 9th, 2007 11:00:00 GMT-5</pubDate>
-        <sparkle:releaseNotesLink>http://www.adiumx.com/changelogs/1.0.5.html</sparkle:releaseNotesLink> 
-        <enclosure sparkle:md5Sum="fe3fad5c6f0e99fa22a59c667993e754" sparkle:version="1.0.5" url="http://adiumx.cachefly.net/Adium_1.0.5.dmg" length="13856664" type="application/octet-stream"/>
+        <title>Adium 1.1.1</title>
+        <pubDate>Monday, August 13th, 2007 22:14:45 GMT-7</pubDate>
+        <sparkle:releaseNotesLink>http://www.adiumx.com/changelogs/1.1.1.html</sparkle:releaseNotesLink> 
+        <sparkle:minimumSystemVersion>10.4.0</sparkle:minimumSystemVersion>
+        <enclosure sparkle:md5Sum="7e28172e8a14b992450c7b035266f0e2" sparkle:version="1.1.1" url="http://adiumx.cachefly.net/Adium_1.1.1.dmg" length="14545760" type="application/octet-stream"/>
+    </item>
+    <item>
+        <title>Adium 1.0.6</title>
+        <pubDate>Monday, August 13th, 2007 22:12:45 GMT-7</pubDate>
+        <sparkle:releaseNotesLink>http://www.adiumx.com/changelogs/1.0.6.html</sparkle:releaseNotesLink> 
+        <sparkle:minimumSystemVersion>10.3.9</sparkle:minimumSystemVersion>
+        <enclosure sparkle:md5Sum="9e19c217f945b7fd82e46d0fa25a5a9b" sparkle:version="1.0.6" url="http://adiumx.cachefly.net/Adium_1.0.6.dmg" length="13795246" type="application/octet-stream"/>
     </item>
   </channel>
 </rss>
