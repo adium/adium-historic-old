@@ -148,11 +148,12 @@ Boolean GetMetadataForXMLLog(NSMutableDictionary *attributes, NSString *pathToFi
 			[attributes setObject:serviceString
 						   forKey:@"com_adiumX_service"];
 		
-		NSArray *children = [[xmlDoc rootElement] children];
+		NSArray			*children = [[xmlDoc rootElement] children];
+		NSCalendarDate	*startDate = nil, *endDate = nil;
+
 		if ([children count]) {
 			NSString		*dateStr;
-			NSCalendarDate	*startDate, *endDate;
-			
+
 			dateStr = [[(NSXMLElement *)[children objectAtIndex:0] attributeForName:@"time"] objectValue];
 			startDate = (dateStr ? [NSCalendarDate calendarDateWithString:dateStr] : nil);
 			if (startDate)
@@ -173,7 +174,7 @@ Boolean GetMetadataForXMLLog(NSMutableDictionary *attributes, NSString *pathToFi
 			NSMutableArray *otherAuthors = [authorsArray mutableCopy];
 			[otherAuthors removeObject:accountString];
 			//pick the first author for this.  likely a bad idea
-			if ([otherAuthors count]) {
+			if (startDate && [otherAuthors count]) {
 				NSString *toUID = [otherAuthors objectAtIndex:0];
 				[attributes setObject:[NSString stringWithFormat:@"%@ on %@",toUID,[startDate descriptionWithCalendarFormat:@"%y-%m-%d"
 																												   timeZone:nil
