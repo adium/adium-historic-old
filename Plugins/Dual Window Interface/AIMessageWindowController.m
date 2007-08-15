@@ -292,7 +292,8 @@
 		alwaysShowTabs = ![[prefDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
 		[tabView_tabBar setHideForSingleTab:!alwaysShowTabs];
 		[tabView_tabBar setAllowsBackgroundTabClosing:YES];
-		[tabView_tabBar setUseOverflowMenu:YES];
+		NSNumber *useOverflow = [prefDict objectForKey:KEY_TABBAR_OVERFLOW];
+		[tabView_tabBar setUseOverflowMenu:(useOverflow ? [useOverflow boolValue] : YES)];
 		
 		[[tabView_tabBar overflowPopUpButton] setAlternateImage:[AIStatusIcons statusIconForStatusName:@"content" statusType:AIAvailableStatusType iconType:AIStatusIconTab direction:AIIconNormal]];
 		//NSImage *overflowImage = [[[NSImage alloc] initByReferencingFile:[[NSBundle mainBundle] pathForImageResource:@"overflow_overlay"]] autorelease];
