@@ -148,32 +148,39 @@ Boolean GetMetadataForXMLLog(NSMutableDictionary *attributes, NSString *pathToFi
 			[attributes setObject:serviceString
 						   forKey:@"com_adiumX_service"];
 		
-		NSArray *children = [[xmlDoc rootElement] children];
-		NSString *dateStr = [[(NSXMLElement *)[children objectAtIndex:0] attributeForName:@"time"] objectValue];
-		NSCalendarDate *startDate = [NSCalendarDate calendarDateWithString:dateStr];
-		if(startDate != nil)
-			[(NSMutableDictionary *)attributes setObject:startDate
-												  forKey:(NSString *)kMDItemContentCreationDate];
+		NSArray			*children = [[xmlDoc rootElement] children];
+		NSCalendarDate	*startDate = nil, *endDate = nil;
 
-		dateStr = [[(NSXMLElement *)[children objectAtIndex:0] attributeForName:@"time"] objectValue];
-		NSCalendarDate *endDate = [NSCalendarDate calendarDateWithString:dateStr];
-		if(endDate != nil)
-			[(NSMutableDictionary *)attributes setObject:[NSNumber numberWithInt:[endDate timeIntervalSinceDate:startDate]]
-												  forKey:(NSString *)kMDItemDurationSeconds];
-		
+		if ([children count]) {
+			NSString		*dateStr;
+
+			dateStr = [[(NSXMLElement *)[children objectAtIndex:0] attributeForName:@"time"] objectValue];
+			startDate = (dateStr ? [NSCalendarDate calendarDateWithString:dateStr] : nil);
+			if (startDate)
+				[(NSMutableDictionary *)attributes setObject:startDate
+													  forKey:(NSString *)kMDItemContentCreationDate];
+
+			dateStr = [[(NSXMLElement *)[children objectAtIndex:0] attributeForName:@"time"] objectValue];
+			endDate = (dateStr ? [NSCalendarDate calendarDateWithString:dateStr] : nil);
+			if (endDate)
+				[(NSMutableDictionary *)attributes setObject:[NSNumber numberWithInt:[endDate timeIntervalSinceDate:startDate]]
+													  forKey:(NSString *)kMDItemDurationSeconds];
+		}
+
 		NSString *accountString = [[[xmlDoc rootElement] attributeForName:@"account"] objectValue];
-		if(accountString != nil)
-		{
+		if (accountString) {
 			[attributes setObject:accountString
 						   forKey:@"com_adiumX_chatSource"];
 			NSMutableArray *otherAuthors = [authorsArray mutableCopy];
 			[otherAuthors removeObject:accountString];
 			//pick the first author for this.  likely a bad idea
-			NSString *toUID = [otherAuthors objectAtIndex:0];
-			[attributes setObject:[NSString stringWithFormat:@"%@ on %@",toUID,[startDate descriptionWithCalendarFormat:@"%y-%m-%d"
-																											   timeZone:nil
-																												 locale:nil]]
-						   forKey:(NSString *)kMDItemDisplayName];
+			if (startDate && [otherAuthors count]) {
+				NSString *toUID = [otherAuthors objectAtIndex:0];
+				[attributes setObject:[NSString stringWithFormat:@"%@ on %@",toUID,[startDate descriptionWithCalendarFormat:@"%y-%m-%d"
+																												   timeZone:nil
+																													 locale:nil]]
+							   forKey:(NSString *)kMDItemDisplayName];
+			}
 			[otherAuthors release];
 			
 		}
