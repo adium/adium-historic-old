@@ -1,5 +1,3 @@
-/* TODO: Can we just replace this whole thing with a GCache */
-
 /**
  * @file stringref.h Reference-counted immutable strings
  * @ingroup core
