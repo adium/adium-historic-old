@@ -46,8 +46,9 @@ static void adiumPurpleAccountRequestAdd(PurpleAccount *account, const char *rem
  * @param user_data Data for the process; be sure to return it in the callback
  */
 static void *adiumPurpleAccountRequestAuthorize(PurpleAccount *account, const char *remote_user, const char *anId,
-									   const char *alias, const char *message, 
-									   gboolean on_list, GCallback authorize_cb, GCallback deny_cb, void *user_data)
+										const char *alias, const char *message, 
+										gboolean on_list, PurpleAccountRequestAuthorizationCb authorize_cb, PurpleAccountRequestAuthorizationCb deny_cb,
+										void *user_data)
 {
 	NSMutableDictionary	*infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 		[NSString stringWithUTF8String:remote_user], @"Remote Name",
