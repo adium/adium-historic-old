@@ -33,14 +33,14 @@
 #define CONTEXT_DISPLAY_DEFAULTS	@"MessageContextDisplayDefaults"
 
 // Possible Display Modes
-typedef enum {
+typedef enum AIMessageHistoryDisplayModes {
 	MODE_ALWAYS = 0,
 	MODE_HAVE_TALKED,
 	MODE_HAVE_NOT_TALKED
 } AIMessageHistoryDisplayModes;
 
 // Possible Units
-typedef enum {
+typedef enum AIMessageHistoryDisplayUnits {
 	UNIT_DAYS = 0,
 	UNIT_HOURS
 } AIMessageHistoryDisplayUnits;
