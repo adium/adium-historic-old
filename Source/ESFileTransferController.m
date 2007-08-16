@@ -209,8 +209,11 @@ static ESFileTransferPreferences *preferences;
 	   ((autoAcceptType == AutoAccept_FromContactList) && [listContact isIntentionallyNotAStranger])) {
 		NSString	*preferredDownloadFolder = [[adium preferenceController] userPreferredDownloadFolder];
 		NSString	*remoteFilename = [fileTransfer remoteFilename];
-		
-		//If we should autoaccept, determine the local filename  and proceed to accept the request
+
+		//If the incoming file would become hidden, prefix it with an underscore so it is visible.
+		if ([remoteFilename hasPrefix:@"."]) remoteFilename = [@"_" stringByAppendingString:remoteFilename ];
+
+		//If we should autoaccept, determine the local filename and proceed to accept the request.
 		localFilename = [preferredDownloadFolder stringByAppendingPathComponent:remoteFilename];
 		
 		[self _finishReceiveRequestForFileTransfer:fileTransfer
