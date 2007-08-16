@@ -196,9 +196,6 @@
     [prefsWindow setReleasedWhenClosed:YES];
     [prefsWindow setTitle:@"Preferences"]; // initial default title
 
-	//Disable the zoom button
-    [[prefsWindow standardWindowButton:NSWindowZoomButton] setEnabled:NO];
-		
     [self createPrefsToolbar];
 	[self sizeWindowForToolbar];
     [prefsWindow betterCenter];
@@ -395,6 +392,9 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     [defaults setObject:name forKey:Last_Pane_Defaults_Key];
     
+	//Disable the zoom button
+    [[prefsWindow standardWindowButton:NSWindowZoomButton] setEnabled:NO];
+
     return YES;
 }
 
