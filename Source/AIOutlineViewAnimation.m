@@ -15,6 +15,14 @@
 - (id)initWithDictionary:(NSDictionary *)inDict delegate:(id)inDelegate;
 @end
 
+/*!
+ * @class AIOutlineViewAnimation
+ * @brief NSAnimation subclass for AIOutlineView's animations
+ *
+ * This NSAnimation subclass is a simple subclass to let the outline view handle changes in progress
+ * along a non-blocking ease-in/ease-out animation. It retains its delegate (the AIOutlineView) for the duration
+ * of the animation. AIOutlineView should release the AIOutlineViewAnimation when the animation is complete.
+ */
 @implementation AIOutlineViewAnimation
 + (AIOutlineViewAnimation *)listObjectAnimationWithDictionary:(NSDictionary *)inDict delegate:(id)inDelegate
 {
@@ -25,8 +33,8 @@
 {
 	if ((self = [super initWithDuration:LIST_OBJECT_ANIMATION_DURATION animationCurve:NSAnimationEaseInOut])) {
 		dict = [inDict retain];
+		delegate = [inDelegate retain];
 
-		[self setDelegate:inDelegate];
 		[self setAnimationBlockingMode:NSAnimationNonblocking];
 	}
 	
@@ -36,7 +44,8 @@
 - (void)dealloc
 {
 	[dict release];
-	
+	[delegate release];
+
 	[super dealloc];
 }
 
@@ -55,7 +64,7 @@
 {
 	[super setCurrentProgress:progress];
 
-	[[self delegate] animation:self didSetCurrentValue:[self currentValue] forDict:dict];
+	[delegate animation:self didSetCurrentValue:[self currentValue] forDict:dict];
 }
 
 @end
