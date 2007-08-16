@@ -131,13 +131,6 @@
 																					 keyEquivalent:@""
 																				 representedObject:listObject];
 				[self _updateMenuItem:menuItem];
-				if(![menuItem attributedTitle]) {
-					NSAttributedString *title = [[NSAttributedString alloc] initWithString:[menuItem title] attributes:[NSDictionary dictionaryWithObjectsAndKeys:
-						[NSFont menuFontOfSize:14.0f], NSFontAttributeName, // for some reason, the default font size seems to be slightly smaller than the real font, seems to be an AppKit bug
-						nil]];
-					[menuItem setAttributedTitle:title];
-					[title release];
-				}
 				[menuItemArray addObject:menuItem];
 				[menuItem release];
 			}
@@ -156,8 +149,19 @@
 	
 	if (listObject) {
 		[[menuItem menu] setMenuChangedMessagesEnabled:NO];
-		[menuItem setTitle:[listObject UID]];
 		[menuItem setImage:[self imageForListObject:listObject]];		
+
+		static NSDictionary *titleAttributes = nil;
+		if (!titleAttributes) {
+			//The default font size seems to be slightly smaller than the real font; seems to be an AppKit bug
+			titleAttributes = [[NSDictionary dictionaryWithObject:[NSFont menuFontOfSize:14.0f]
+														   forKey:NSFontAttributeName] retain];
+		}
+		NSAttributedString *title = [[NSAttributedString alloc] initWithString:[listObject formattedUID]
+																	attributes:titleAttributes];
+		[menuItem setAttributedTitle:title];
+		[title release];		
+
 		[[menuItem menu] setMenuChangedMessagesEnabled:YES];
 	}
 }
