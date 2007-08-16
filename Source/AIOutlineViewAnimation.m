@@ -6,13 +6,14 @@
 //
 
 #import "AIOutlineViewAnimation.h"
+#import "AIAnimatingListOutlineView.h"
 
-@interface NSObject (AIOutlineViewAnimationDelegate)
+@interface AIAnimatingListOutlineView (AIOutlineViewAnimationDelegate)
 - (void)animation:(AIOutlineViewAnimation *)animation didSetCurrentValue:(float)currentValue forDict:(NSDictionary *)animatingRowsDict;
 @end
 
 @interface AIOutlineViewAnimation (PRIVATE)
-- (id)initWithDictionary:(NSDictionary *)inDict delegate:(id)inDelegate;
+- (id)initWithDictionary:(NSDictionary *)inDict outlineView:(AIAnimatingListOutlineView *)inOutlineView;
 @end
 
 /*!
@@ -20,20 +21,20 @@
  * @brief NSAnimation subclass for AIOutlineView's animations
  *
  * This NSAnimation subclass is a simple subclass to let the outline view handle changes in progress
- * along a non-blocking ease-in/ease-out animation. It retains its delegate (the AIOutlineView) for the duration
- * of the animation. AIOutlineView should release the AIOutlineViewAnimation when the animation is complete.
+ * along a non-blocking ease-in/ease-out animation.
+ * AIOutlineView should release the AIOutlineViewAnimation when the animation is complete.
  */
 @implementation AIOutlineViewAnimation
-+ (AIOutlineViewAnimation *)listObjectAnimationWithDictionary:(NSDictionary *)inDict delegate:(id)inDelegate
++ (AIOutlineViewAnimation *)listObjectAnimationWithDictionary:(NSDictionary *)inDict outlineView:(AIAnimatingListOutlineView *)inOutlineView
 {
-	return [[[self alloc] initWithDictionary:inDict delegate:inDelegate] autorelease];
+	return [[[self alloc] initWithDictionary:inDict outlineView:inOutlineView] autorelease];
 }
 
-- (id)initWithDictionary:(NSDictionary *)inDict delegate:(id)inDelegate
+- (id)initWithDictionary:(NSDictionary *)inDict outlineView:(AIAnimatingListOutlineView *)inOutlineView
 {
 	if ((self = [super initWithDuration:LIST_OBJECT_ANIMATION_DURATION animationCurve:NSAnimationEaseInOut])) {
 		dict = [inDict retain];
-		delegate = [inDelegate retain];
+		outlineView = [inOutlineView retain];
 
 		[self setAnimationBlockingMode:NSAnimationNonblocking];
 	}
@@ -44,7 +45,7 @@
 - (void)dealloc
 {
 	[dict release];
-	[delegate release];
+	[outlineView release];
 
 	[super dealloc];
 }
@@ -64,7 +65,7 @@
 {
 	[super setCurrentProgress:progress];
 
-	[delegate animation:self didSetCurrentValue:[self currentValue] forDict:dict];
+	[outlineView animation:self didSetCurrentValue:[self currentValue] forDict:dict];
 }
 
 @end
