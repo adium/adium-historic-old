@@ -16,6 +16,7 @@
 
 #import <Adium/AIListObject.h>
 #import <Adium/AIListSmartGroup.h>
+#import <AIUtilities/AIArrayAdditions.h>
 
 @implementation AIListSmartGroup
 
