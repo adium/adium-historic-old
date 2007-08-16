@@ -33,6 +33,7 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 - (id)init
 {
 	if ((self = [super init])) {
+		adium = [[AIObject sharedAdiumInstance] retain];
 		statusKeysRequiringResort = [[self statusKeysRequiringResort] retain];
 		attributeKeysRequiringResort = [[self attributeKeysRequiringResort] retain];
 		sortFunction = [self sortFunction];
@@ -50,6 +51,8 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
  */
 - (void)dealloc
 {
+	[adium release];
+
 	[statusKeysRequiringResort release];
 	[attributeKeysRequiringResort release];
 	
@@ -268,6 +271,18 @@ int basicGroupVisibilitySort(id objectA, id objectB, void *context)
 	} else {
 		return nil;
 	}
+}
+
+/*!
+ * @brief NSSortDescriptor override to perform sorting our way.
+ */
+- (NSComparisonResult)compareObject:(id)object1 toObject:(id)object2
+{
+	if (alwaysSortGroupsToTop) {
+		return basicGroupVisibilitySort(object1, object2, sortFunction);
+	} else {
+		return basicVisibilitySort(object1, object2, sortFunction);
+	}	
 }
 
 //For subclasses -------------------------------------------------------------------------------------------------------
