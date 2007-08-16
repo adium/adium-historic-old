@@ -31,7 +31,6 @@
     BOOL		awayAndIdleEnabled;
 	BOOL		offlineEnabled;
     
-	BOOL		transitionsEnabled;
 	BOOL		flashUnviewedContentEnabled;
 
     NSColor		*awayColor;
@@ -65,10 +64,7 @@
 	NSColor		*offlineLabelColor;
 	
     float		alpha;
-	BOOL		offlineImageFading;
-	
-	NSMutableDictionary	*opacityUpdateDict;
-	NSTimer				*opacityUpdateTimer;
+	BOOL		offlineImageFading;	
 }
 
 @end

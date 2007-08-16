@@ -15,7 +15,7 @@
     IBOutlet	NSButton		*checkBox_hideOnScreenEdgesOnlyInBackground;
 	
 	IBOutlet	NSButton		*checkBox_flash;
-	IBOutlet	NSButton		*checkBox_showTransitions;
+	IBOutlet	NSButton		*checkBox_animateChanges;
 	IBOutlet	NSButton		*checkBox_showTooltips;
 	IBOutlet	NSButton		*checkBox_showTooltipsInBackground;
 	IBOutlet	NSButton		*checkBox_windowHasShadow;

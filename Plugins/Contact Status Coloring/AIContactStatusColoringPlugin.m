@@ -34,9 +34,6 @@
 - (void)removeFromFlashSet:(AIListObject *)inObject;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_applyColorToContact:(AIListContact *)inObject;
-
-- (void)fadeContact:(AIListContact *)inObject fromOpacity:(float)startValue toOpacity:(float)endValue;
-- (void)stopFadeOfContact:(AIListContact *)inObject;
 @end
 
 @implementation AIContactStatusColoringPlugin
@@ -83,8 +80,6 @@
 	
 	offlineImageFading = NO;
 	
-	opacityUpdateDict = [[NSMutableDictionary alloc] init];
-
 	id<AIPreferenceController> preferenceController = [adium preferenceController];
 
     //Setup our preferences
@@ -102,16 +97,12 @@
 {
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[[adium    contactController] unregisterListObjectObserver:self];
-	[[adium  interfaceController] unregisterFlashObserver:self];
-	
-	[opacityUpdateTimer invalidate]; 
-	[opacityUpdateTimer release]; opacityUpdateTimer = nil;
+	[[adium  interfaceController] unregisterFlashObserver:self];	
 }
 
 - (void)dealloc
 {
 	[flashingListObjects release]; flashingListObjects = nil;
-	[opacityUpdateDict release]; opacityUpdateDict = nil;
 
 	[super dealloc];
 }
@@ -184,11 +175,7 @@
 			color = offlineColor;
 			invertedColor = offlineInvertedColor;
 			labelColor = offlineLabelColor;
-			if (offlineImageFading) opacity = OFFLINE_IMAGE_OPACITY;
-			
-			if (transitionsEnabled) {
-				[self stopFadeOfContact:inContact];
-			}
+			if (offlineImageFading) opacity = OFFLINE_IMAGE_OPACITY;			
 			
 		} else if (signedOffEnabled && ([inContact integerStatusObjectForKey:@"Signed Off"])) {
 
@@ -198,20 +185,12 @@
             labelColor = signedOffLabelColor;
 			isEvent = YES;
 
-			if (transitionsEnabled) {
-				[self fadeContact:inContact fromOpacity:1.0 toOpacity:0.8];
-			}
-			
         } else if (signedOnEnabled && [inContact integerStatusObjectForKey:@"Signed On"]) {
             
 			color = signedOnColor;
             invertedColor = signedOnInvertedColor;
             labelColor = signedOnLabelColor;
 			isEvent = YES;
-
-			if (transitionsEnabled) {
-				[self fadeContact:inContact fromOpacity:OFFLINE_IMAGE_OPACITY toOpacity:1.0];
-			}
 			
         } else if (typingEnabled && ([inContact integerStatusObjectForKey:KEY_TYPING] == AITyping)) {
             color = typingColor;
@@ -219,11 +198,7 @@
             labelColor = typingLabelColor;
 			isEvent = YES;
 			
-			[self stopFadeOfContact:inContact];
-			
-        } else {
-			[self stopFadeOfContact:inContact];	
-		}
+        }
     }
 
     if (!color) {
@@ -308,128 +283,6 @@
     if ([flashingListObjects count] == 0) {
         [[adium interfaceController] unregisterFlashObserver:self];
     }
-}
-
-- (void)fadeContact:(AIListContact *)listContact fromOpacity:(float)startValue toOpacity:(float)endValue
-{
-	if (![[listContact containingObject] isKindOfClass:[AIMetaContact class]]) {
-		NSDictionary		*tempDisplayOpacityDict;
-		AIMutableOwnerArray	*tempDisplayOpacityArray;
-		NSNumber			*initialDisplayOpacity;
-		
-		tempDisplayOpacityArray = [listContact displayArrayForKey:@"Temporary Display Opacity"];
-		
-		//We should start with the current value. If there isn't one, we start at startValue
-		if (!(initialDisplayOpacity= [tempDisplayOpacityArray objectValue])) {
-			initialDisplayOpacity = [NSNumber numberWithFloat:startValue];
-			[tempDisplayOpacityArray setObject:initialDisplayOpacity withOwner:self];
-		}
-		
-		tempDisplayOpacityDict = [NSDictionary dictionaryWithObjectsAndKeys:listContact, @"listContact",
-			initialDisplayOpacity, @"initialDisplayOpacity",
-			[NSNumber numberWithFloat:endValue], @"endingDisplayOpacity",
-			nil];
-		
-		[opacityUpdateDict setObject:tempDisplayOpacityDict
-							  forKey:[listContact internalUniqueObjectID]];
-
-		
-		if (!opacityUpdateTimer) {
-			opacityUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:OPACITY_REFRESH
-																   target:self
-																 selector:@selector(opacityRefresh:)
-																 userInfo:nil
-																  repeats:YES] retain];
-		}
-	}
-}
-
-//Update the 
-- (void)opacityRefresh:(NSTimer *)inTimer
-{
-	NSEnumerator	*enumerator;
-	NSDictionary	*opacityDict;
-	NSMutableArray	*keysToRemove = nil;
-		
-	enumerator = [opacityUpdateDict objectEnumerator];
-	while ((opacityDict = [enumerator nextObject])) {
-		AIListContact	*listContact;
-		float			displayOpacity, initialDisplayOpacity, targetDisplayOpacity;
-		
-		listContact = [opacityDict objectForKey:@"listContact"];
-		initialDisplayOpacity = [[opacityDict objectForKey:@"initialDisplayOpacity"] floatValue];
-		targetDisplayOpacity = [[opacityDict objectForKey:@"endingDisplayOpacity"] floatValue];
-		displayOpacity = [[listContact displayArrayObjectForKey:@"Temporary Display Opacity"] floatValue];
-		
-		//Move displayOpacity towards targetDisplayOpacity by a fraction of the difference between our destination and our origin opacities
-		displayOpacity = displayOpacity + ((targetDisplayOpacity - initialDisplayOpacity) / (2 / OPACITY_REFRESH));
-		
-		[[listContact displayArrayForKey:@"Temporary Display Opacity"] setObject:[NSNumber numberWithFloat:displayOpacity]
-																	  withOwner:self];
-		
-		//Force a redraw
-		[[adium notificationCenter] postNotificationName:ListObject_AttributesChanged 
-												  object:listContact
-												userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Temporary Display Opacity"] 
-																					 forKey:@"Keys"]];
-		
-		//If we are now above the target and the intitial was below, or we are below and the initial was above, stop the continual fading
-		//We don't want to remove the Temporary Display Opacity right now; we want to wait until stopFadeOfContact: is called when another status change occurs
-		if (((displayOpacity > targetDisplayOpacity) && (initialDisplayOpacity < targetDisplayOpacity)) ||
-			((displayOpacity < targetDisplayOpacity) && (initialDisplayOpacity > targetDisplayOpacity))) {
-
-			//Track what keys we need to remove later. We can't remove them now since we are in the middle of an enumeration.
-			if (!keysToRemove) keysToRemove = [NSMutableArray array];
-			[keysToRemove addObject:[listContact internalUniqueObjectID]];
-		}
-	}
-
-	//Remove any keys which have been marked as needing it.
-	if (keysToRemove) {
-		NSString		*key;
-		
-		enumerator = [keysToRemove objectEnumerator];
-		while ((key = [enumerator nextObject])) {
-			[opacityUpdateDict removeObjectForKey:key];
-		}
-		
-		//If we have no contacts we are still tracking, stop the timer.
-		if (![opacityUpdateDict count]) {
-			[opacityUpdateTimer invalidate]; 
-			[opacityUpdateTimer release]; opacityUpdateTimer = nil;
-		}
-	}
-}
-
-- (void)stopFadeOfContact:(AIListContact *)listContact
-{
-	AIMutableOwnerArray	*tempDisplayOpacityArray;
-	NSNumber			*opacityNumber;
-	
-	//Remove from our tracking dictionary
-	[opacityUpdateDict removeObjectForKey:[listContact internalUniqueObjectID]];
-	
-	//Clear any temporary display opacity we have set
-	if ((tempDisplayOpacityArray = [listContact displayArrayForKey:@"Temporary Display Opacity" create:NO]) &&
-	   (opacityNumber = [tempDisplayOpacityArray objectWithOwner:self])) {
-		float		opacity = [opacityNumber floatValue];
-
-		[tempDisplayOpacityArray setObject:nil withOwner:self];
-
-		//Force a redraw if the opacity did not end at 1.0 (fully opaque)
-		if (opacity < 1.0) {
-			[[adium notificationCenter] postNotificationName:ListObject_AttributesChanged 
-													  object:listContact
-													userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Temporary Display Opacity"] 
-																						 forKey:@"Keys"]];
-		}
-	}
-
-	//If we have no contacts we are still tracking, stop the timer.
-	if (![opacityUpdateDict count]) {
-		[opacityUpdateTimer invalidate]; 
-		[opacityUpdateTimer release]; opacityUpdateTimer = nil;
-	}
 }
 
 //
@@ -521,7 +374,6 @@
 	} else if ([group isEqualToString:PREF_GROUP_CONTACT_LIST]) {
 		BOOL oldFlashUnviewedContentEnabled = flashUnviewedContentEnabled;
 		
-		transitionsEnabled = [[prefDict objectForKey:KEY_CL_SHOW_TRANSITIONS] boolValue];
 		flashUnviewedContentEnabled = [[prefDict objectForKey:KEY_CL_FLASH_UNVIEWED_CONTENT] boolValue];
 
 		if (oldFlashUnviewedContentEnabled && !flashUnviewedContentEnabled) {
