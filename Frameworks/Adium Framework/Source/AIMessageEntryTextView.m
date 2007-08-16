@@ -268,7 +268,28 @@
 	[self _resetCacheAndPostSizeChanged];
 }
 
-//10.3+ only, called when the user presses escape - we'll clear our text view in response
+/*!
+ * @brief Clear any link attribute in the current typing attributes
+ *
+ * Any link attribute is removed. All other typing attributes are unchanged.
+ */
+- (void)clearLinkAttribute
+{
+	NSDictionary *typingAttributes = [self typingAttributes];
+
+	if ([typingAttributes objectForKey:NSLinkAttributeName]) {
+		NSMutableDictionary *newTypingAttributes = [typingAttributes mutableCopy];
+
+		[newTypingAttributes removeObjectForKey:NSLinkAttributeName];
+		[self setTypingAttributes:newTypingAttributes];
+
+		[newTypingAttributes release];
+	}
+}
+
+/*!
+ * @brief The user pressed escape: clear our text view in response
+ */
 - (void)cancelOperation:(id)sender
 {
 	if (clearOnEscape) {
@@ -279,6 +300,7 @@
 		[undoManager setActionName:AILocalizedString(@"Clear", nil)];
 
 		[self setString:@""];
+		[self clearLinkAttribute];		
 	}
 
 	if ([[self delegate] respondsToSelector:@selector(textViewDidCancel:)]) {
@@ -568,16 +590,7 @@
 	
 	//If we are now an empty string, and we still have a link active, clear the link
 	if ([[self textStorage] length] == 0) {
-		NSDictionary *typingAttributes = [self typingAttributes];
-		if ([typingAttributes objectForKey:NSLinkAttributeName]) {
-			
-			NSMutableDictionary *newTypingAttributes = [typingAttributes mutableCopy];
-			
-			[newTypingAttributes removeObjectForKey:NSLinkAttributeName];
-			[self setTypingAttributes:newTypingAttributes];
-			
-			[newTypingAttributes release];
-		}
+		[self clearLinkAttribute];
 	}
 }
 
