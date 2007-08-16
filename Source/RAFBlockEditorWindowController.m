@@ -306,20 +306,26 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 
 - (IBAction)removeSelection:(id)sender
 {
-	int selection = [[table selectedRowIndexes] firstIndex];
+	NSIndexSet		*selectedItems = [table selectedRowIndexes];
 	
-	if (selection != NSNotFound) {
-		AIListContact *contact = [listContents objectAtIndex:selection];
-
-		//Remove from our list
-		[listContents removeObject:contact];
+	// If there's anything selected..
+	if ([selectedItems count]) {
+		AIListContact	*contact;
+		
+		// Iterate through the selected rows (backwards)
+		for (int selection = [selectedItems lastIndex]; selection != NSNotFound; selection = [selectedItems indexLessThanIndex:selection]) {
+			contact = [listContents objectAtIndex:selection];
+			// Remove from the serverside list
+			[contact setIsOnPrivacyList:NO updateList:YES privacyType:(([self selectedPrivacyOption] == AIPrivacyOptionAllowUsers) ?
+																	   AIPrivacyTypePermit :
+																	   AIPrivacyTypeDeny)];
+			[listContents removeObject:contact];
+		}
+		
 		[table reloadData];
-
-		//Update serverside
-		[contact setIsOnPrivacyList:NO updateList:YES privacyType:(([self selectedPrivacyOption] == AIPrivacyOptionAllowUsers) ?
-																   AIPrivacyTypePermit :
-																   AIPrivacyTypeDeny)];
+		[table deselectAll:nil];
 	}
+
 }
 
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
