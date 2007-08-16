@@ -199,8 +199,8 @@ typedef enum {
 			[popUp_statusIcons selectItemWithTitle:[prefDict objectForKey:KEY_STATUS_ICON_PACK]];
 			
 			//If the prefDict's item isn't present, we're using the default, so select that one
-			if (![popUp_serviceIcons selectedItem]) {
-				[popUp_serviceIcons selectItemWithTitle:[[adium preferenceController] defaultPreferenceForKey:KEY_STATUS_ICON_PACK
+			if (![popUp_statusIcons selectedItem]) {
+				[popUp_statusIcons selectItemWithTitle:[[adium preferenceController] defaultPreferenceForKey:KEY_STATUS_ICON_PACK
 																										group:PREF_GROUP_APPEARANCE
 																									   object:nil]];
 			}			
@@ -973,7 +973,7 @@ typedef enum {
 
 //Status, Service and Menu Bar icons ---------------------------------------------------------------------------------------------
 #pragma mark Status, service and menu bar icons
-- (NSMenuItem *)meuItemForIconPackAtPath:(NSString *)packPath class:(Class)iconClass
+- (NSMenuItem *)menuItemForIconPackAtPath:(NSString *)packPath class:(Class)iconClass
 {
 	NSString	*name = [[packPath lastPathComponent] stringByDeletingPathExtension];
 	NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
@@ -999,7 +999,7 @@ typedef enum {
 	NSString		*packPath;
 
 	while ((packPath = [enumerator nextObject])) {
-		[menuItemArray addObject:[self meuItemForIconPackAtPath:packPath class:iconClass]];
+		[menuItemArray addObject:[self menuItemForIconPackAtPath:packPath class:iconClass]];
 	}
 	
 	[menuItemArray sortUsingSelector:@selector(titleCompare:)];
@@ -1016,6 +1016,7 @@ typedef enum {
 	iconPath = [adium pathOfPackWithName:activePackName
 							   extension:@"AdiumStatusIcons"
 					  resourceFolderName:@"Status Icons"];
+	
 	if (!iconPath) {
 		activePackName = [[adium preferenceController] defaultPreferenceForKey:KEY_STATUS_ICON_PACK
 																		 group:PREF_GROUP_APPEARANCE
@@ -1025,7 +1026,7 @@ typedef enum {
 								   extension:@"AdiumStatusIcons"
 						  resourceFolderName:@"Status Icons"];		
 	}
-	[tempMenu addItem:[self meuItemForIconPackAtPath:iconPath class:[AIStatusIcons class]]];
+	[tempMenu addItem:[self menuItemForIconPackAtPath:iconPath class:[AIStatusIcons class]]];
 	[tempMenu setDelegate:self];
 	[tempMenu setTitle:@"Temporary Status Icons Menu"];
 	
@@ -1052,7 +1053,7 @@ typedef enum {
 								   extension:@"AdiumServiceIcons"
 						  resourceFolderName:@"Service Icons"];		
 	}
-	[tempMenu addItem:[self meuItemForIconPackAtPath:iconPath class:[AIServiceIcons class]]];
+	[tempMenu addItem:[self menuItemForIconPackAtPath:iconPath class:[AIServiceIcons class]]];
 	[tempMenu setDelegate:self];
 	[tempMenu setTitle:@"Temporary Service Icons Menu"];
 	
@@ -1079,7 +1080,7 @@ typedef enum {
 								   extension:@"AdiumMenuBarIcons"
 						  resourceFolderName:@"Menu Bar Icons"];		
 	}
-	[tempMenu addItem:[self meuItemForIconPackAtPath:iconPath class:[AIMenuBarIcons class]]];
+	[tempMenu addItem:[self menuItemForIconPackAtPath:iconPath class:[AIMenuBarIcons class]]];
 	[tempMenu setDelegate:self];
 	[tempMenu setTitle:@"Temporary Menu Bar Icons Menu"];
 	
