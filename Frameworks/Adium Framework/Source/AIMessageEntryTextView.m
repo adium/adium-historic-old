@@ -276,13 +276,13 @@
 - (void)clearLinkAttribute
 {
 	NSDictionary *typingAttributes = [self typingAttributes];
+
 	if ([typingAttributes objectForKey:NSLinkAttributeName]) {
-		
 		NSMutableDictionary *newTypingAttributes = [typingAttributes mutableCopy];
-		
+
 		[newTypingAttributes removeObjectForKey:NSLinkAttributeName];
 		[self setTypingAttributes:newTypingAttributes];
-		
+
 		[newTypingAttributes release];
 	}
 }
