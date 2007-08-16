@@ -6,6 +6,7 @@
 //
 
 #import "AIDockingWindow.h"
+#import "AIEventAdditions.h"
 
 #define WINDOW_DOCKING_DISTANCE 	12	//Distance in pixels before the window is snapped to an edge
 #define IGNORED_X_RESISTS			3
@@ -73,7 +74,7 @@
 - (void)windowDidMove:(NSNotification *)notification
 {
 	//Our setFrame call below will cause a re-entry into this function, we must guard against this
-	if (!alreadyMoving && dockingEnabled && ![theEvent shiftKey]) {
+	if (!alreadyMoving && dockingEnabled && ![NSEvent shiftKey]) {
 		alreadyMoving = YES;	
 		
 		//Attempt to dock this window the the visible frame first, and then to the screen frame
