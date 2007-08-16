@@ -12,6 +12,8 @@
  *
  * An NSWindow subclass which docks to screen edges. It also posts AIWindowToolbarDidToggleVisibility to the default notification center
  * when its toolbar visibility is toggled with an object of the window.
+ *
+ * Docking is temporarily disabled if the shift key is held.
  */
 
 #define AIWindowToolbarDidToggleVisibility @"AIWindowToolbarDidToggleVisibility"
