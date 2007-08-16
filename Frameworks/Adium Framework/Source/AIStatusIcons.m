@@ -203,40 +203,38 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 	if(xtraBundle && ([[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] intValue] == 1))//This checks for a new-style xtra
 		inPath = [xtraBundle resourcePath];
 	
-	if (!statusIconBasePath || ![statusIconBasePath isEqualToString:inPath]) {
-		NSDictionary	*statusIconDict = [NSDictionary dictionaryWithContentsOfFile:[inPath stringByAppendingPathComponent:@"Icons.plist"]];
+	NSDictionary	*statusIconDict = [NSDictionary dictionaryWithContentsOfFile:[inPath stringByAppendingPathComponent:@"Icons.plist"]];
 		
-		if (statusIconDict && [[statusIconDict objectForKey:@"AdiumSetVersion"] intValue] == 1) {
-			[statusIconBasePath release];
-			statusIconBasePath = [inPath retain];
-			
-			[statusIconNames[AIStatusIconTab] release];
-			statusIconNames[AIStatusIconTab] = [[statusIconDict objectForKey:@"Tabs"] retain];
-			
-			[statusIconNames[AIStatusIconList] release];
-			statusIconNames[AIStatusIconList] = [[statusIconDict objectForKey:@"List"] retain];
+	if (statusIconDict && [[statusIconDict objectForKey:@"AdiumSetVersion"] intValue] == 1) {
+		[statusIconBasePath release];
+		statusIconBasePath = [inPath retain];
+		
+		[statusIconNames[AIStatusIconTab] release];
+		statusIconNames[AIStatusIconTab] = [[statusIconDict objectForKey:@"Tabs"] retain];
+		
+		[statusIconNames[AIStatusIconList] release];
+		statusIconNames[AIStatusIconList] = [[statusIconDict objectForKey:@"List"] retain];
 
-			[statusIconNames[AIStatusIconMenu] release];
-			statusIconNames[AIStatusIconMenu] = [statusIconNames[AIStatusIconList] retain];
+		[statusIconNames[AIStatusIconMenu] release];
+		statusIconNames[AIStatusIconMenu] = [statusIconNames[AIStatusIconList] retain];
 
-			//Clear out the status icon cache
-			for (unsigned i = 0; i < NUMBER_OF_STATUS_ICON_TYPES; i++) {
-				for (unsigned j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++) {
-					[statusIcons[i][j] removeAllObjects];
-				}
+		//Clear out the status icon cache
+		for (unsigned i = 0; i < NUMBER_OF_STATUS_ICON_TYPES; i++) {
+			for (unsigned j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++) {
+				[statusIcons[i][j] removeAllObjects];
 			}
-			
-			statusIconsReady = YES;
-
-			[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:AIStatusIconSetDidChangeNotification
-																			   object:nil];
-			
-			return YES;
-		} else {
-			statusIconsReady = NO;
-
-			return NO;
 		}
+		
+		statusIconsReady = YES;
+
+		[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:AIStatusIconSetDidChangeNotification
+																		   object:nil];
+		
+		return YES;
+	} else {
+		statusIconsReady = NO;
+
+		return NO;
 	}
 
 	return NO;
