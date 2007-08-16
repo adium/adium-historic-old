@@ -184,7 +184,7 @@
     }
     
     // Create prefs window
-    unsigned int styleMask = (NSClosableWindowMask | NSResizableWindowMask);
+    unsigned int styleMask = (NSClosableWindowMask | NSResizableWindowMask | NSMiniaturizableWindowMask);
     if (usesTexturedWindow) {
         styleMask = (styleMask | NSTexturedBackgroundWindowMask);
     }
@@ -195,7 +195,10 @@
     [prefsWindow setDelegate:self];
     [prefsWindow setReleasedWhenClosed:YES];
     [prefsWindow setTitle:@"Preferences"]; // initial default title
-    
+
+	//Disable the zoom button
+    [[prefsWindow standardWindowButton:NSWindowZoomButton] setEnabled:NO];
+		
     [self createPrefsToolbar];
 	[self sizeWindowForToolbar];
     [prefsWindow betterCenter];
