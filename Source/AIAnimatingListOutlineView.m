@@ -286,7 +286,8 @@
 	}
 
 	if ([animatingRowsDict count]) {
-		AIOutlineViewAnimation *animation = [AIOutlineViewAnimation listObjectAnimationWithDictionary:animatingRowsDict delegate:self];
+		AIOutlineViewAnimation *animation = [AIOutlineViewAnimation listObjectAnimationWithDictionary:animatingRowsDict
+																						  outlineView:self];
 		[animation setDuration:duration];
 		[animation startAnimation];
 		//Will be released in animationDidEnd:
