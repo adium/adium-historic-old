@@ -132,7 +132,7 @@
 - (int)desiredHeight
 {
 	int desiredHeight = [self totalHeight] + desiredHeightPadding;
-	return desiredHeight > MINIMUM_HEIGHT ? desiredHeight : MINIMUM_HEIGHT;
+	return ((desiredHeight > MINIMUM_HEIGHT || [self numberOfRows]) ? desiredHeight : MINIMUM_HEIGHT);
 }
 
 - (int)desiredWidth
