@@ -469,8 +469,9 @@ static NSArray *draggedTypes = nil;
 	} else {
 		[messageStyle setCustomBackgroundColor:nil];
 	}
-	[webView setDrawsBackground:![[self messageStyle] isBackgroundTransparent]];
 
+	[webView setTransparent:[[self messageStyle] isBackgroundTransparent]];
+	
 	//Update webview font settings
 	NSString	*fontFamily = [prefDict objectForKey:[plugin styleSpecificKey:@"FontFamily" forStyle:activeStyle]];
 	[webView setFontFamily:(fontFamily ? fontFamily : [messageStyle defaultFontFamily])];
