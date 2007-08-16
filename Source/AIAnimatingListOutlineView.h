@@ -9,11 +9,16 @@
 #import <Adium/AIListOutlineView.h>
 
 @interface AIAnimatingListOutlineView : AIListOutlineView {
+	BOOL	enableAnimation;
+	
 	NSMutableDictionary *allAnimatingItemsDict;
 	int animations;
 	NSSize animationHedgeFactor;
 	
 	BOOL disableExpansionAnimation;
 }
+
+- (void)setEnableAnimation:(BOOL)shouldEnable;
+- (BOOL)enableAnimation;
 
 @end
