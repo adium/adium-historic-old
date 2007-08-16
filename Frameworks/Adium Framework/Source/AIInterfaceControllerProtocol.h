@@ -30,7 +30,7 @@
 #define KEY_CL_HIDE							@"Hide While in Background"
 #define KEY_CL_EDGE_SLIDE					@"Hide On Screen Edges"
 #define KEY_CL_FLASH_UNVIEWED_CONTENT		@"Flash Unviewed Content"
-#define KEY_CL_SHOW_TRANSITIONS				@"Show Transitions"
+#define KEY_CL_ANIMATE_CHANGES				@"Animate Changes"
 #define KEY_CL_SHOW_TOOLTIPS				@"Show Tooltips"
 #define KEY_CL_SHOW_TOOLTIPS_IN_BACKGROUND	@"Show Tooltips in Background"
 #define KEY_CL_WINDOW_HAS_SHADOW			@"Window Has Shadow"

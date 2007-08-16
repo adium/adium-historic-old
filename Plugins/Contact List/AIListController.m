@@ -16,6 +16,7 @@
 
 #import "AIListController.h"
 #import "AIListWindowController.h"
+#import "AIAnimatingListOutlineView.h"
 #import <Adium/AIChat.h>
 #import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
@@ -84,6 +85,9 @@ typedef enum {
 	
 	[self contactListChanged:nil];
 
+    //Observe preference changes
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
+	
 	return self;
 }
 
@@ -109,6 +113,7 @@ typedef enum {
     //Stop observing
     [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 
 	[self autorelease];
 }
@@ -118,6 +123,16 @@ typedef enum {
 	[contactListView removeObserver:self forKeyPath:@"desiredHeight"];
 	
 	[super dealloc];
+}
+
+
+- (void)preferencesChangedForGroup:(NSString *)group 
+							   key:(NSString *)key
+							object:(AIListObject *)object 
+					preferenceDict:(NSDictionary *)prefDict 
+						 firstTime:(BOOL)firstTime
+{
+	[(AIAnimatingListOutlineView *)contactListView setEnableAnimation:[[prefDict objectForKey:KEY_CL_ANIMATE_CHANGES] boolValue]];
 }
 
 //Resizing And Positioning ---------------------------------------------------------------------------------------------

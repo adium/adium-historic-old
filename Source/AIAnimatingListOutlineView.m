@@ -33,6 +33,7 @@
 	allAnimatingItemsDict  = [[NSMutableDictionary alloc] init];
 	animations = 0;
 	animationHedgeFactor = NSZeroSize;
+	enableAnimation = YES;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
@@ -57,6 +58,17 @@
 {
 	[allAnimatingItemsDict release];
 	[super dealloc];
+}
+
+#pragma mark Enabling
+- (void)setEnableAnimation:(BOOL)shouldEnable
+{
+	enableAnimation = shouldEnable;
+}
+
+- (BOOL)enableAnimation
+{
+	return enableAnimation;
 }
 
 #pragma mark Rect determination
@@ -362,41 +374,61 @@
 
 - (void)reloadData
 {
-	NSDictionary *oldDict = [self saveCurrentIndexesForItem:nil];
-	
-	//If items are expanded or collapsed during reload, we don't want to animate that
-	disableExpansionAnimation = YES;
-	[super reloadData];
-	disableExpansionAnimation = NO;
+	if (enableAnimation) {
+		NSDictionary *oldDict = [self saveCurrentIndexesForItem:nil];
+		
+		//If items are expanded or collapsed during reload, we don't want to animate that
+		disableExpansionAnimation = YES;
+		[super reloadData];
+		disableExpansionAnimation = NO;
+		
+		[self updateForNewIndexesFromOldIndexes:oldDict forItem:nil recalculateHedge:YES duration:LIST_OBJECT_ANIMATION_DURATION];
 
-	[self updateForNewIndexesFromOldIndexes:oldDict forItem:nil recalculateHedge:YES duration:LIST_OBJECT_ANIMATION_DURATION];	
+	} else {
+		[super reloadData];		
+	}
 }
 
 - (void)reloadItem:(id)item reloadChildren:(BOOL)reloadChildren
 {
-	NSDictionary *oldDict = [self saveCurrentIndexesForItem:item];
-	[super reloadItem:item reloadChildren:reloadChildren];
-	[self updateForNewIndexesFromOldIndexes:oldDict forItem:item recalculateHedge:YES duration:LIST_OBJECT_ANIMATION_DURATION];
+	if (enableAnimation) {
+		NSDictionary *oldDict = [self saveCurrentIndexesForItem:item];
+		[super reloadItem:item reloadChildren:reloadChildren];
+		[self updateForNewIndexesFromOldIndexes:oldDict forItem:item recalculateHedge:YES duration:LIST_OBJECT_ANIMATION_DURATION];
+
+	} else {
+		[super reloadItem:item reloadChildren:reloadChildren];
+	}
 }
 
 - (void)reloadItem:(id)item
 {
-	NSDictionary *oldDict = [self saveCurrentIndexesForItem:item];
-	[super reloadItem:item];
-	[self updateForNewIndexesFromOldIndexes:oldDict forItem:item recalculateHedge:YES duration:LIST_OBJECT_ANIMATION_DURATION];
+	if (enableAnimation) {
+		NSDictionary *oldDict = [self saveCurrentIndexesForItem:item];
+		[super reloadItem:item];
+		[self updateForNewIndexesFromOldIndexes:oldDict forItem:item recalculateHedge:YES duration:LIST_OBJECT_ANIMATION_DURATION];
+
+	} else {
+		[super reloadItem:item];		
+	}
 }
 
 #if !DISABLE_ANIMATE_EXPAND_AND_COLLAPSE
 
 - (void)expandItem:(id)item
 {
-	if (!disableExpansionAnimation) {
-		NSDictionary *oldDict = [self saveCurrentIndexesForItem:nil];
-		[super expandItem:item];
-		
-		[self updateForNewIndexesFromOldIndexes:oldDict forItem:nil recalculateHedge:YES duration:EXPANSION_DURATION];
+	if (enableAnimation) {
+		if (!disableExpansionAnimation) {
+			NSDictionary *oldDict = [self saveCurrentIndexesForItem:nil];
+			[super expandItem:item];
+			
+			[self updateForNewIndexesFromOldIndexes:oldDict forItem:nil recalculateHedge:YES duration:EXPANSION_DURATION];
+		} else {
+			[super expandItem:item];		
+		}
+
 	} else {
-		[super expandItem:item];		
+		[super expandItem:item];
 	}
 }
 
@@ -411,27 +443,32 @@
  */
 - (void)collapseItem:(id)item
 {
-	if (!disableExpansionAnimation) {
-		NSDictionary *oldDict = [self saveCurrentIndexesForItem:nil];
-
-		[self willChangeValueForKey:@"totalHeight"];
-
-		//Maintain space for the animation to display
-		int numChildren = [[self dataSource] outlineView:self numberOfChildrenOfItem:item];
-
-		for (int i = 0; i < numChildren; i++) {
-			id thisChild = [[self dataSource] outlineView:self child:i ofItem:item];
-			animationHedgeFactor.height += [self currentDisplayRectForItemPointer:[NSValue valueWithPointer:thisChild]
-																			atRow:[self rowForItem:thisChild]].size.height + [self intercellSpacing].height;
+	if (enableAnimation) {
+		if (!disableExpansionAnimation) {
+			NSDictionary *oldDict = [self saveCurrentIndexesForItem:nil];
+			
+			[self willChangeValueForKey:@"totalHeight"];
+			
+			//Maintain space for the animation to display
+			int numChildren = [[self dataSource] outlineView:self numberOfChildrenOfItem:item];
+			
+			for (int i = 0; i < numChildren; i++) {
+				id thisChild = [[self dataSource] outlineView:self child:i ofItem:item];
+				animationHedgeFactor.height += [self currentDisplayRectForItemPointer:[NSValue valueWithPointer:thisChild]
+																				atRow:[self rowForItem:thisChild]].size.height + [self intercellSpacing].height;
+			}
+			
+			//Actually collapse the item
+			[super collapseItem:item];
+			
+			[self didChangeValueForKey:@"totalHeight"];
+			
+			//Now animate the movement
+			[self updateForNewIndexesFromOldIndexes:oldDict forItem:nil recalculateHedge:NO duration:EXPANSION_DURATION];
+		} else {
+			[super collapseItem:item];
 		}
 
-		//Actually collapse the item
-		[super collapseItem:item];
-
-		[self didChangeValueForKey:@"totalHeight"];
-
-		//Now animate the movement
-		[self updateForNewIndexesFromOldIndexes:oldDict forItem:nil recalculateHedge:NO duration:EXPANSION_DURATION];
 	} else {
 		[super collapseItem:item];
 	}
