@@ -567,17 +567,11 @@
 	
 	if ((isEvent && backgroundColorIsEvents) || (!isEvent && backgroundColorIsStatus)) {
 		NSColor		*labelColor = [listObject displayArrayObjectForKey:@"Label Color"];	
-		NSNumber	*opacityNumber;
 		float		colorOpacity = [labelColor alphaComponent];
 		float		targetOpacity = backgroundOpacity * colorOpacity;
 
-		//The backgroundOpacity is our eventual target; Temporary Display Opacity will be a fraction from 0 to 1 which
-		//should be applied to that target
-		if ((opacityNumber = [listObject displayArrayObjectForKey:@"Temporary Display Opacity"])) {
-			targetOpacity *= [opacityNumber floatValue];
-		}
-
 		return (targetOpacity != colorOpacity) ? [labelColor colorWithAlphaComponent:targetOpacity] : labelColor;
+
 	} else {
 		return nil;
 	}
@@ -622,12 +616,7 @@
 //
 - (float)imageOpacityForDrawing
 {
-	NSNumber	*opacityNumber;
-	if ((opacityNumber = [listObject displayArrayObjectForKey:@"Temporary Display Opacity"])) {
-		return [opacityNumber floatValue];
-	} else {
-		return [[listObject displayArrayObjectForKey:@"Image Opacity"] floatValue];
-	}
+	return [[listObject displayArrayObjectForKey:@"Image Opacity"] floatValue];
 }
 
 @end

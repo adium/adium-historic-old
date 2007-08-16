@@ -8,8 +8,8 @@
 	<false/>
 	<key>Flash Unviewed Content</key>
 	<false/>
-	<key>Show Transitions</key>
-	<false/>
+	<key>Animate Changes</key>
+	<true/>
 	<key>Show Tooltips</key>
 	<true/>
 	<key>Show Tooltips in Background</key>
