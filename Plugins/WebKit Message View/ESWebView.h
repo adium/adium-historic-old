@@ -26,12 +26,7 @@
 /*!
  *	@brief Sets background transparency on/off
  */
-- (void)setDrawsBackground:(BOOL)flag;
-
-/*!
- *	@return whether background transparency is on or off
- */
-- (BOOL)drawsBackground;
+- (void)setTransparent:(BOOL)flag;
 
 /*!
  *	@brief Sets the font family used in webkit's preferences for adium

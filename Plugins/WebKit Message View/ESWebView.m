@@ -18,7 +18,7 @@
 
 @interface WebView (PRIVATE)
 - (void)setDrawsBackground:(BOOL)flag;
-- (BOOL)drawsBackground;
+- (void)setBackgroundColor:(NSColor *)color;
 @end
 
 @interface ESWebView (PRIVATE)
@@ -33,7 +33,7 @@
 		draggingDelegate = nil;
 		allowsDragAndDrop = YES;
 		shouldForwardEvents = YES;
-		transparentBackground = (![self drawsBackground]);
+		transparentBackground = NO;
 	}
 	
 	return self;
@@ -60,19 +60,18 @@
 	[super viewDidEndLiveResize];
 }
 
-#pragma mark Background Drawing
-- (void)setDrawsBackground:(BOOL)flag
+#pragma mark Transparency
+- (void)setTransparent:(BOOL)flag
 {
-	if ([super respondsToSelector:@selector(setDrawsBackground:)]) {
-		[super setDrawsBackground:flag];
-		transparentBackground = !flag;
+	if ([self respondsToSelector:@selector(setBackgroundColor:)]) {
+		//As of Safari 3.0, we must call setBackgroundColor: to make the webview transparent
+		[self setBackgroundColor:(flag ? [NSColor clearColor] : [NSColor whiteColor])];
+		
+	} else {
+		[self setDrawsBackground:!flag];
 	}
-}
-- (BOOL)drawsBackground
-{
-	BOOL flag = YES;
-	if ([super respondsToSelector:@selector(drawsBackground)]) flag = [super drawsBackground];
-	return flag;
+	
+	transparentBackground = flag;
 }
 
 //Font Family ----------------------------------------------------------------------------------------------------------
