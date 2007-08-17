@@ -19,8 +19,7 @@
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
 	if (label && (strcmp(label, "Modify my information") == 0)) {
-		/* Modifying information depends upon adiumPurpleRequestFields */
-		return nil;
+		return AILocalizedString(@"Modify My Information", "Menu title for configuring the public information for a QQ account");
 	}
 	
 	return [super titleForAccountActionMenuLabel:label];
