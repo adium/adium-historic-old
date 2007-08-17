@@ -2338,12 +2338,10 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
 	if ((strcmp(label, "Change Password...") == 0) || (strcmp(label, "Change Password") == 0)) {
-		/* XXX This depends upon an implementation of adiumPurpleRequestFields in adiumPurpleRequest.m.
-		* Enable once that is done. */
-		return nil;
+		return [[NSString stringWithFormat:AILocalizedString(@"Change Password", "Menu item title for changing the password of an account")] stringByAppendingEllipsis];
+	} else {
+		return [NSString stringWithUTF8String:label];
 	}
-
-	return [NSString stringWithUTF8String:label];
 }
 
 /********************************/

@@ -680,9 +680,8 @@ extern void jabber_roster_request(JabberStream *js);
 #pragma mark Account Action Menu Items
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
-	/* XXX All Jabber account actions depend upon adiumPurpleRequestFields */
-    return [NSString stringWithCString:label encoding:NSISOLatin1StringEncoding]; // only temporary
-	return nil;
+	// only temporary - need to localize
+    return [NSString stringWithUTF8String:label];
 }
 
 - (void)accountMenuDidUpdate:(NSMenuItem*)menuItem {

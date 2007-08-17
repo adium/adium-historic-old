@@ -735,19 +735,22 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
 	if (strcmp(label, "Set User Info...") == 0) {
+		//Handled via Get Info
 		return nil;
 		
 	} else if (strcmp(label, "Edit Buddy Comment") == 0) {
+		//Handled via Get Info
 		return nil;
 	} else if (strcmp(label, "Show Buddies Awaiting Authorization") == 0) {
-		/* XXX Depends on adiumPurpleRequestFields() */
-		//AILocalizedString(@"Show Contacts Awaiting Authorization", "Account action menu item to show a list of contacts for whom this account is awaiting authorization to be able to show them in the contact list")
-		return nil;
+		//This is ugly and requires interactive, right-click enabled (??) request fields
+		//return AILocalizedString(@"Show Contacts Awaiting Authorization", "Account action menu item to show a list of contacts for whom this account is awaiting authorization to be able to show them in the contact list");
+
 	} else if (strcmp(label, "Configure IM Forwarding (URL)") == 0) {
 		return [AILocalizedString(@"Configure IM Forwarding", nil) stringByAppendingEllipsis];
 
 	} else if (strcmp(label, "Change Password (URL)") == 0) {
-		return [AILocalizedString(@"Change Password", nil) stringByAppendingEllipsis];
+		//There's no reason to have the URL version available - we have Change Password for in-app changing.
+		return nil;
 		
 	} else if (strcmp(label, "Display Currently Registered E-Mail Address") == 0) {
 		return AILocalizedString(@"Display Currently Registered Email Address", nil);
