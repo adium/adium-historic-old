@@ -20,6 +20,11 @@
 
 #define AIViewFrameDidChangeNotification	@"AIViewFrameDidChangeNotification"
 
+/*!	@brief	View for selecting the account and contact of a chat.
+ *
+ *	@par	This view contains two pop-up menus: One for accounts, and the other for contacts. It appears at the top of the chat window when the user double-clicks on a contact row in the contact list, and when the chat receives content from a different contact in the same metacontact as the existing current contact.
+ */
+
 @interface AIAccountSelectionView : NSView {
 	NSPopUpButton		*popUp_accounts;
 	NSTextField			*label_accounts;
