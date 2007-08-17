@@ -34,7 +34,8 @@
 //NSData archive of an NSAttributedString
 #define KEY_ACCOUNT_DISPLAY_NAME	@"FullNameAttr"
 
-#define	Adium_RequestImmediateDynamicContentUpdate	@"Adium_RequestImmediateDynamicContentUpdate"
+#define	Adium_RequestImmediateDynamicContentUpdate			@"Adium_RequestImmediateDynamicContentUpdate"
+#define AIAccountUsernameAndPasswordRegisteredNotification	@"AIAccountUsernameAndPasswordRegisteredNotification"
 
 //Proxy
 #define KEY_ACCOUNT_PROXY_ENABLED		@"Proxy Enabled"

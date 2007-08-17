@@ -39,16 +39,6 @@
 									 object:nil];
 }
 
-- (void)usernameAndPasswordRegistered:(NSNotification*)n {
-	[[textField_accountUID window] makeFirstResponder:nil];
-	id username = [[n userInfo] objectForKey:@"username"];
-	id password = [[n userInfo] objectForKey:@"password"];
-	if(username != [NSNull null])
-		[textField_accountUID setStringValue:username];
-	if(password != [NSNull null])
-		[textField_password setStringValue:password];
-}
-
 //Configure our controls
 - (void)configureForAccount:(AIAccount *)inAccount
 {
@@ -85,13 +75,8 @@
 	NSString *defaultGroup = [account preferenceForKey:KEY_JABBER_SUBSCRIPTION_GROUP group:GROUP_ACCOUNT_STATUS];
 	[comboBox_subscriptionGroup setStringValue:(defaultGroup ? defaultGroup : @"")];
 	
-	[self subscriptionModeDidChange:nil]; // set hidden flag of the default group combobox
-	
-	[[adium notificationCenter] removeObserver:self];
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(usernameAndPasswordRegistered:)
-									   name:ESPurpleAccountUsernameAndPasswordRegisteredNotification
-									 object:inAccount];
+	//Set hidden flag of the default group combobox
+	[self subscriptionModeDidChange:nil];
 }
 
 //Save controls

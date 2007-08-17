@@ -1688,6 +1688,21 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	[self configureAccountProxyNotifyingTarget:self selector:@selector(continueRegisterWithConfiguredProxy)];
 }
 
+- (void)purpleAccountRegistered:(BOOL)success
+{
+	if (success && [[self service] accountViewController]) {
+		NSString *username = (account->username ? [NSString stringWithUTF8String:account->username] : [NSNull null]);
+		NSString *pw = (account->password ? [NSString stringWithUTF8String:account->password] : [NSNull null]);
+
+		[[adium notificationCenter] postNotificationName:AIAccountUsernameAndPasswordRegisteredNotification
+												  object:self
+												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+													username, @"username",
+													pw, @"password",
+													nil]];
+	}
+}
+
 //Account Status ------------------------------------------------------------------------------------------------------
 #pragma mark Account Status
 //Status keys this account supports

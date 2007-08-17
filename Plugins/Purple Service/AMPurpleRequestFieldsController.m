@@ -10,6 +10,11 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 
+@interface WebView (PRIVATE)
+- (void)setDrawsBackground:(BOOL)flag;
+- (void)setBackgroundColor:(NSColor *)color;
+@end
+
 @interface AMPurpleRequestField : NSObject {
     PurpleRequestField *field;
     CBPurpleAccount *account;
@@ -610,7 +615,17 @@
 		else
 			[[self window] setTitle:AILocalizedString(@"Form","Generic fields request window title")];
 		
-        [(id)webview setDrawsBackground:NO]; // private method
+		/*
+		 //Code here originally made the webview transparent; the result is an all-black window. I don't think this is desired.
+		if ([webview respondsToSelector:@selector(setBackgroundColor:)]) {
+			//As of Safari 3.0, we must call setBackgroundColor: to make the webview transparent
+			[webview setBackgroundColor:[NSColor clearColor]];
+
+		} else {
+			[webview setDrawsBackground:NO];
+		}
+		 */
+		 
         [self performSelector:@selector(loadForm:) withObject:doc afterDelay:0.0];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
@@ -638,11 +653,11 @@
 - (void)webviewWindowWillClose:(NSNotification *)notification {
     [webview setPolicyDelegate:nil];
    
-    if(wasSubmitted) {
-        if(okcb)
+    if (wasSubmitted) {
+        if (okcb)
             ((PurpleRequestFieldsCb)okcb)(userData, fields);
     } else {
-        if(cancelcb)
+        if (cancelcb)
             ((PurpleRequestFieldsCb)cancelcb)(userData, fields);
     }
     
@@ -650,12 +665,13 @@
 }
 
 - (void)webView:(WebView *)webView decidePolicyForNavigationAction:(NSDictionary *)actionInformation
-        request:(NSURLRequest *)request
-          frame:(WebFrame *)frame
-                                                  decisionListener:(id<WebPolicyDecisionListener>)listener
+		request:(NSURLRequest *)request
+		  frame:(WebFrame *)frame
+	decisionListener:(id<WebPolicyDecisionListener>)listener
 {
     if ([[[request URL] scheme] isEqualToString:@"applewebdata"] || [[[request URL] scheme] isEqualToString:@"about"])
         [listener use];
+
     else {
         if ([[[request URL] absoluteString] isEqualToString:@"http://www.adiumx.com/XMPP/form"]) {
             NSString *info = [[NSString alloc] initWithData:[request HTTPBody] encoding:NSUTF8StringEncoding];
@@ -664,21 +680,26 @@
             
             NSEnumerator *e = [formfields objectEnumerator];
             NSString *field;
-            while((field = [e nextObject]))
-            {
+            while ((field = [e nextObject])) {
                 NSArray *keyvalue = [field componentsSeparatedByString:@"="];
                 if ([keyvalue count] != 2)
                     continue;
 				
                 NSString *key = [[[keyvalue objectAtIndex:0] mutableCopy] autorelease];
-                [(NSMutableString*)key replaceOccurrencesOfString:@"+" withString:@" " options:NSLiteralSearch range:NSMakeRange(0,[key length])];
+                [(NSMutableString *)key replaceOccurrencesOfString:@"+"
+														withString:@" " 
+														   options:NSLiteralSearch 
+															 range:NSMakeRange(0,[key length])];
                 
                 key = (NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(kCFAllocatorDefault,
                                                                                           (CFStringRef)key,
                                                                                           (CFStringRef)@"", kCFStringEncodingUTF8);
                 
                 NSString *value = [[[keyvalue objectAtIndex:1] mutableCopy] autorelease];
-                [(NSMutableString*)value replaceOccurrencesOfString:@"+" withString:@" " options:NSLiteralSearch range:NSMakeRange(0,[value length])];
+                [(NSMutableString *)value replaceOccurrencesOfString:@"+" 
+														  withString:@" " 
+															 options:NSLiteralSearch 
+															   range:NSMakeRange(0,[value length])];
                 
                 value = (NSString *)CFURLCreateStringByReplacingPercentEscapesUsingEncoding(kCFAllocatorDefault,
                                                                                             (CFStringRef)value,

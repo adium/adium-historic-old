@@ -246,6 +246,14 @@
 		//Encryption
 		[popUp_encryption compatibleSelectItemWithTag:[[account preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
 																		   group:GROUP_ENCRYPTION] intValue]];
+		
+		[[adium notificationCenter] removeObserver:self
+											  name:AIAccountUsernameAndPasswordRegisteredNotification
+											object:nil];
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(usernameAndPasswordRegistered:)
+										   name:AIAccountUsernameAndPasswordRegisteredNotification
+										 object:inAccount];
 	}
 }
 
@@ -370,6 +378,19 @@
 	}
 }
 
+#pragma mark Registration
+- (void)usernameAndPasswordRegistered:(NSNotification*)notification
+{
+	[[textField_accountUID window] makeFirstResponder:nil];
+
+	id username = [[notification userInfo] objectForKey:@"username"];
+	id password = [[notification userInfo] objectForKey:@"password"];
+
+	if (username != [NSNull null])
+		[textField_accountUID setStringValue:username];
+	if (password != [NSNull null])
+		[textField_password setStringValue:password];
+}
 
 #pragma mark Localization
 - (void)localizeStrings

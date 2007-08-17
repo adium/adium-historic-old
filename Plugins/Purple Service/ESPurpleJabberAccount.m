@@ -309,22 +309,24 @@ extern void jabber_roster_request(JabberStream *js);
 	purple_account_request_close(handle);
 }
 
-- (void)purpleAccountRegistered:(BOOL)success {
+- (void)purpleAccountRegistered:(BOOL)success
+{
 	if(success && [[self service] accountViewController]) {
 		const char *usernamestr = account->username;
 		NSString *username;
-		if(usernamestr) {
-			NSString *userwithresource = [NSString stringWithUTF8String:usernamestr];
-			NSRange slashrange = [userwithresource rangeOfString:@"/"];
+		if (usernamestr) {
+			NSString *userWithResource = [NSString stringWithUTF8String:usernamestr];
+			NSRange slashrange = [userWithResource rangeOfString:@"/"];
 			if(slashrange.location != NSNotFound)
-				username = [userwithresource substringToIndex:slashrange.location];
+				username = [userWithResource substringToIndex:slashrange.location];
 			else
-				username = userwithresource;
+				username = userWithResource;
 		} else
 			username = (id)[NSNull null];
-		NSString *pw = account->password?[NSString stringWithUTF8String:account->password]:[NSNull null];
+
+		NSString *pw = (account->password ? [NSString stringWithUTF8String:account->password] : [NSNull null]);
 		
-		[[adium notificationCenter] postNotificationName:ESPurpleAccountUsernameAndPasswordRegisteredNotification
+		[[adium notificationCenter] postNotificationName:AIAccountUsernameAndPasswordRegisteredNotification
 												  object:self
 												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
 													username, @"username",
