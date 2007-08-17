@@ -650,7 +650,7 @@ NSString *processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 	
 	if (primaryString) {
 		if (([primaryString rangeOfString:@"Already there"].location != NSNotFound)) {
-			return adium_purple_get_handle();
+			return NULL;
 		}
 	}
 
@@ -666,7 +666,7 @@ NSString *processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 			([secondaryString rangeOfString:@"Your buddy list was downloaded from the server."].location != NSNotFound) || /* Gadu-gadu */
 			([secondaryString rangeOfString:@"Your buddy list was stored on the server."].location != NSNotFound) /* Gadu-gadu */ ||
 			([secondaryString rangeOfString:@"Your contact is using Windows Live"].location != NSNotFound) /* Yahoo without MSN support */) {
-			return adium_purple_get_handle();
+			return NULL;
 		}
 	}
 
