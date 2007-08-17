@@ -324,7 +324,7 @@ extern void jabber_roster_request(JabberStream *js);
 			username = (id)[NSNull null];
 		NSString *pw = account->password?[NSString stringWithUTF8String:account->password]:[NSNull null];
 		
-		[[adium notificationCenter] postNotificationName:ESPurpleAccountUsernameAndPasswortRegisteredNotification
+		[[adium notificationCenter] postNotificationName:ESPurpleAccountUsernameAndPasswordRegisteredNotification
 												  object:self
 												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
 													username, @"username",

@@ -92,7 +92,7 @@ void adiumPurpleAccountRegisterCb(PurpleAccount *account, gboolean succeeded, vo
 	id ourHandle = user_data;
 	
 	if([ourHandle respondsToSelector:@selector(purpleAccountRegistered:)])
-		[ourHandle purpleAccountRegistered:succeeded?YES:NO];
+		[ourHandle purpleAccountRegistered:(succeeded ? YES : NO)];
 }
 
 static PurpleAccountUiOps adiumPurpleAccountOps = {

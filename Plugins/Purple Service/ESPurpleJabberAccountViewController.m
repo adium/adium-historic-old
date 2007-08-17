@@ -90,7 +90,7 @@
 	[[adium notificationCenter] removeObserver:self];
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(usernameAndPasswordRegistered:)
-									   name:ESPurpleAccountUsernameAndPasswortRegisteredNotification
+									   name:ESPurpleAccountUsernameAndPasswordRegisteredNotification
 									 object:inAccount];
 }
 
