@@ -20,4 +20,6 @@
     
 }
 
+- (IBAction)registerNewAccount:(id)sender;
+
 @end

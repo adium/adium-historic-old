@@ -7,6 +7,12 @@
             OUTLETS = {
                 "checkBox_checkMail" = NSButton; 
                 "checkBox_sendTyping" = NSButton; 
+                "label_alias" = NSTextField; 
+                "label_encryption" = NSTextField; 
+                "label_password" = NSTextField; 
+                "label_port" = NSTextField; 
+                "label_server" = NSTextField; 
+                "label_typing" = NSTextField; 
                 "popUp_encryption" = NSPopUpButton; 
                 "textField_accountUID" = NSTextField; 
                 "textField_accountUIDLabel" = NSTextField; 
@@ -36,11 +42,6 @@
         }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            CLASS = ESGaimGaduGaduAccountViewController; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = AIAccountViewController; 
-        }, 
-        {
             ACTIONS = {copy = id; paste = id; }; 
             CLASS = ESImageViewWithImagePicker; 
             LANGUAGE = ObjC; 
@@ -48,6 +49,7 @@
             SUPERCLASS = NSImageView; 
         }, 
         {
+            ACTIONS = {registerNewAccount = id; }; 
             CLASS = ESPurpleGaduGaduAccountViewController; 
             LANGUAGE = ObjC; 
             SUPERCLASS = AIAccountViewController; 

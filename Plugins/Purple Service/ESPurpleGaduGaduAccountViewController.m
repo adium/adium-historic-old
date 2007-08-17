@@ -27,4 +27,9 @@
     return @"ESPurpleGaduGaduAccountView";
 }
 
+- (IBAction)registerNewAccount:(id)sender;
+{
+	[account performRegisterWithPassword:nil];
+}
+
 @end
