@@ -41,7 +41,7 @@ static void *adiumPurpleNotifyEmails(PurpleConnection *gc, size_t count, gboolea
 	AIAccount	*account = (PURPLE_CONNECTION_IS_VALID(gc) ?
 							accountLookup(purple_connection_get_account(gc)) :
 							nil);
-			
+
     return [ESPurpleNotifyEmailController handleNotifyEmailsForAccount:account
 															   count:count 
 															detailed:detailed
@@ -80,14 +80,6 @@ static void *adiumPurpleNotifySearchResults(PurpleConnection *gc, const char *ti
 										  const char *primary, const char *secondary,
 										  PurpleNotifySearchResults *results, gpointer user_data)
 {
-#if 1
-	return [[AMPurpleSearchResultsController alloc] initWithPurpleConnection:gc
-																	   title:title?[NSString stringWithUTF8String:title]:nil
-																 primaryText:primary?[NSString stringWithUTF8String:primary]:nil
-															   secondaryText:secondary?[NSString stringWithUTF8String:secondary]:nil
-															   searchResults:results
-																	userData:user_data];
-#else
 	NSString *primaryString = (primary ? [NSString stringWithUTF8String:primary] : nil);
 	if (primaryString &&
 		[primaryString rangeOfString:@"An ambiguous user ID was entered"].location != NSNotFound) {
@@ -117,9 +109,16 @@ static void *adiumPurpleNotifySearchResults(PurpleConnection *gc, const char *ti
 		ESPurpleMeanwhileContactAdditionController *requestController = [ESPurpleMeanwhileContactAdditionController showContactAdditionListWithDict:infoDict];
 		
 		return requestController;
+
+	} else {
+		AILog(@"**** returning search results");
+		return [[[AMPurpleSearchResultsController alloc] initWithPurpleConnection:gc
+																			title:title?[NSString stringWithUTF8String:title]:nil
+																	  primaryText:primary?[NSString stringWithUTF8String:primary]:nil
+																	secondaryText:secondary?[NSString stringWithUTF8String:secondary]:nil
+																	searchResults:results
+																		 userData:user_data] autorelease];
 	}
-	return adium_purple_get_handle();
-#endif
 }
 
 static void adiumPurpleNotifySearchResultsNewRows(PurpleConnection *gc,
@@ -167,6 +166,8 @@ static void *adiumPurpleNotifyUri(const char *uri)
 static void adiumPurpleNotifyClose(PurpleNotifyType type,void *uiHandle)
 {
 	id ourHandle = uiHandle;
+	AILogWithSignature(@"Talking to %p",ourHandle);
+	AILogWithSignature(@"That is %@",ourHandle);
 	if ([ourHandle respondsToSelector:@selector(purpleRequestClose)]) {
 		[ourHandle performSelector:@selector(purpleRequestClose)];
 		[ourHandle release];
@@ -174,7 +175,8 @@ static void adiumPurpleNotifyClose(PurpleNotifyType type,void *uiHandle)
 		[ourHandle performSelector:@selector(closeWindow:)
 						withObject:nil];
 	}
-	AILog (@"adiumPurpleNotifyClose");
+
+	AILog(@"adiumPurpleNotifyClose");
 }
 
 static PurpleNotifyUiOps adiumPurpleNotifyOps = {
