@@ -28,7 +28,7 @@
 #define KEY_JABBER_SUBSCRIPTION_BEHAVIOR @"Jabber:Subscription Behavior"
 #define KEY_JABBER_SUBSCRIPTION_GROUP	@"Jabber:Default Subscription Group"
 
-#define ESPurpleAccountUsernameAndPasswortRegisteredNotification @"ESPurpleAccountUsernameAndPasswortRegisteredNotification"
+#define ESPurpleAccountUsernameAndPasswordRegisteredNotification @"ESPurpleAccountUsernameAndPasswordRegisteredNotification"
 
 @class AMXMLConsoleController, AMPurpleJabberMoodTooltip, AMPurpleJabberServiceDiscoveryBrowsing, AMPurpleJabberAdHocServer;
 
