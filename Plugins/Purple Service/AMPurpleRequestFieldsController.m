@@ -364,7 +364,7 @@
 	} else {
 		AILogWithSignature(@"Failed to write image to %@",imagePath);
 	}
-s
+
     return result;
 }
 
