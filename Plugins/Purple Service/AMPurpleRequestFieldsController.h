@@ -14,27 +14,27 @@
 @class CBPurpleAccount;
 
 @interface AMPurpleRequestFieldsController : ESPurpleRequestAbstractWindowController {
-    GCallback okcb;
-    GCallback cancelcb;
-    void *userData;
+    GCallback			okcb;
+    GCallback			cancelcb;
+    void				*userData;
     PurpleRequestFields *fields;
-    NSDictionary *fieldobjects;
-    BOOL wasSubmitted;
+    NSMutableDictionary *fieldobjects;
+    BOOL				wasSubmitted;
     
-    IBOutlet WebView *webview;
+    IBOutlet WebView	*webview;
 }
 
-- (id)initWithTitle:(NSString*)title
-        primaryText:(NSString*)primary
-      secondaryText:(NSString*)secondary
-      requestFields:(PurpleRequestFields*)_fields
-             okText:(NSString*)okText
+- (id)initWithTitle:(NSString *)title
+        primaryText:(NSString *)primary
+      secondaryText:(NSString *)secondary
+      requestFields:(PurpleRequestFields *)_fields
+             okText:(NSString *)okText
            callback:(GCallback)_okcb
-         cancelText:(NSString*)cancelText
+         cancelText:(NSString *)cancelText
            callback:(GCallback)_cancelcb
-            account:(CBPurpleAccount*)account
-                who:(NSString*)who
-       conversation:(PurpleConversation*)conv
-           userData:(void*)_userData;
+            account:(CBPurpleAccount *)account
+                who:(NSString *)who
+       conversation:(PurpleConversation *)conv
+           userData:(void *)_userData;
 
 @end

@@ -7,6 +7,8 @@
 //
 
 #import "AMPurpleRequestFieldsController.h"
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 
 @interface AMPurpleRequestField : NSObject {
     PurpleRequestField *field;
@@ -57,6 +59,11 @@
 
 @end
 
+@interface AMPurpleRequestFieldImage : AMPurpleRequestField {
+}
+
+@end
+
 @implementation AMPurpleRequestField
 
 - (id)initWithAccount:(CBPurpleAccount*)_account requestField:(PurpleRequestField*)_field {
@@ -101,10 +108,10 @@
 	NSXMLElement *result = [super xhtml];
 	
 	const char *defaultvalue = purple_request_field_string_get_default_value(field);
-	BOOL isMultiline = (purple_request_field_string_is_multiline(field) == TRUE)?YES:NO;
-	BOOL isEditable = (purple_request_field_string_is_editable(field) == TRUE)?YES:NO;
-	BOOL isMasked = (purple_request_field_string_is_masked(field) == TRUE)?YES:NO;
-	BOOL isVisible = (purple_request_field_is_visible(field) == TRUE)?YES:NO;
+	BOOL isMultiline = (purple_request_field_string_is_multiline(field) == TRUE) ? YES : NO;
+	BOOL isEditable = (purple_request_field_string_is_editable(field) == TRUE) ? YES : NO;
+	BOOL isMasked = (purple_request_field_string_is_masked(field) == TRUE) ? YES : NO;
+	BOOL isVisible = (purple_request_field_is_visible(field) == TRUE) ? YES : NO;
 	
 	NSXMLElement *textinput;
 	
@@ -116,7 +123,7 @@
 			[textinput setStringValue:[NSString stringWithUTF8String:defaultvalue]];
 	} else {
 		textinput = [NSXMLNode elementWithName:@"input"];
-		if(isVisible)
+		if (isVisible)
 			[textinput addAttribute:[NSXMLNode attributeWithName:@"type" stringValue:isMasked?@"password":@"text"]];
 		else
 			[textinput addAttribute:[NSXMLNode attributeWithName:@"type" stringValue:@"hidden"]];
@@ -128,7 +135,7 @@
 	if(!isEditable)
 		[textinput addAttribute:[NSXMLNode attributeWithName:@"readonly" stringValue:@"readonly"]];
 
-	if(isVisible)
+	if (isVisible)
 		[result addChild:[NSXMLNode elementWithName:@"div"
 										   children:[NSArray arrayWithObject:textinput]
 										 attributes:[NSArray arrayWithObject:[NSXMLNode attributeWithName:@"class" stringValue:@"input"]]]];
@@ -143,6 +150,7 @@
 }
 
 @end
+
 
 @implementation AMPurpleRequestFieldInteger
 
@@ -175,7 +183,7 @@
 - (NSXMLElement*)xhtml {
 	NSXMLElement *result = [super xhtml];
 	
-	BOOL defaultvalue = (purple_request_field_bool_get_default_value(field) == TRUE)?YES:NO;
+	BOOL defaultvalue = (purple_request_field_bool_get_default_value(field) == TRUE) ? YES : NO;
 	
 	NSXMLElement *checkbox = [NSXMLNode elementWithName:@"input"];
 	[checkbox addAttribute:[NSXMLNode attributeWithName:@"type" stringValue:@"checkbox"]];
@@ -266,7 +274,7 @@
 - (NSXMLElement*)xhtml {
 	NSXMLElement *result = [super xhtml];
 	
-	BOOL isMultiSelect = (purple_request_field_list_get_multi_select(field) == TRUE)?YES:NO;
+	BOOL isMultiSelect = (purple_request_field_list_get_multi_select(field) == TRUE) ? YES : NO;
 
 	NSXMLElement *list = [NSXMLNode elementWithName:@"select"];
 	[list addAttribute:[NSXMLNode attributeWithName:@"name" stringValue:[self key]]];
@@ -315,6 +323,52 @@
 
 @implementation AMPurpleRequestFieldAccount
 // this is not used by libpurple, so should I care about it?
+@end
+
+@implementation AMPurpleRequestFieldImage
+
+- (NSXMLElement*)xhtml {
+	NSXMLElement *result = [super xhtml];
+	
+	//unsigned int scale_x = purple_request_field_image_get_scale_x(field);
+	//unsigned int scale_y = purple_request_field_image_get_scale_y(field);
+		
+	//This could be base 64 encoded and embedded directly, but it seems like a heavy fix...
+	NSData *data = [NSData dataWithBytes:purple_request_field_image_get_buffer(field)
+								  length:purple_request_field_image_get_size(field)];
+				
+	NSString *extension = [NSImage extensionForBitmapImageFileType:[NSImage fileTypeOfData:data]];
+	if (!extension) {
+		//We don't know what it is; try to make a png out of it
+		NSImage				*image = [[NSImage alloc] initWithData:data];
+		NSData				*imageTIFFData = [image TIFFRepresentation];
+		NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
+		
+		data = [bitmapRep representationUsingType:NSPNGFileType properties:nil];
+		extension = @"png";
+		[image release];
+	}
+
+	NSString *filename = [[[NSString stringWithFormat:@"TEMP-Image_%@",[self key]] stringByAppendingPathExtension:extension] safeFilenameString];
+	NSString *imagePath = [[[AIObject sharedAdiumInstance] cachesPath] stringByAppendingPathComponent:filename];
+
+	NSXMLElement *imageElement = [NSXMLNode elementWithName:@"image"];
+
+	if ([data writeToFile:imagePath atomically:YES]) {
+		[imageElement addAttribute:[NSXMLNode attributeWithName:@"src" stringValue:[[NSURL fileURLWithPath:imagePath] absoluteString]]];
+		[imageElement addAttribute:[NSXMLNode attributeWithName:@"name" stringValue:[self key]]];
+
+		[result addChild:[NSXMLNode elementWithName:@"div"
+										   children:[NSArray arrayWithObject:imageElement]
+										 attributes:[NSArray arrayWithObject:[NSXMLNode attributeWithName:@"class" stringValue:@"image"]]]];		
+	} else {
+		AILogWithSignature(@"Failed to write image to %@",imagePath);
+	}
+s
+    return result;
+}
+
+
 @end
 
 @implementation AMPurpleRequestFieldsController
@@ -512,16 +566,22 @@
                     case PURPLE_REQUEST_FIELD_LABEL:
                         fieldobject = [[AMPurpleRequestFieldLabel alloc] initWithAccount:account requestField:field];
                         break;
-//                    case PURPLE_REQUEST_FIELD_ACCOUNT:
-//                        fieldobject = [[AMPurpleRequestFieldAccount alloc] initWithAccount:account requestField:field];
-//                        break;
+					case PURPLE_REQUEST_FIELD_IMAGE:
+						fieldobject = [[AMPurpleRequestFieldImage alloc] initWithAccount:account requestField:field];
+						break;
+						/*
+                    case PURPLE_REQUEST_FIELD_ACCOUNT:
+                        fieldobject = [[AMPurpleRequestFieldAccount alloc] initWithAccount:account requestField:field];
+                        break;
+						 */
                     default:
                         fieldobject = nil;
                 }
                 if(fieldobject) {
-                    // keep objects for later processing of the form
-                    [(NSMutableDictionary*)fieldobjects setObject:fieldobject forKey:[fieldobject key]];
-                    // insert the field into the XHTML document
+                    //Keep objects for later processing of the form
+                    [fieldobjects setObject:fieldobject forKey:[fieldobject key]];
+
+                    //Insert the field into the XHTML document
                     [fieldset addChild:[fieldobject xhtml]];
                     [fieldobject release];
                 }
@@ -549,6 +609,7 @@
 			[[self window] setTitle:title];
 		else
 			[[self window] setTitle:AILocalizedString(@"Form","Generic fields request window title")];
+		
         [(id)webview setDrawsBackground:NO]; // private method
         [self performSelector:@selector(loadForm:) withObject:doc afterDelay:0.0];
         
@@ -562,6 +623,7 @@
 
 - (void)dealloc {
     [fieldobjects release];
+
     [super dealloc];
 }
 
