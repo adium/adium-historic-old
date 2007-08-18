@@ -398,14 +398,15 @@
 	[menuItem_showFonts setTitle:AILocalizedString(@"Show Fonts",nil)];
 	[menuItem_showColors setTitle:AILocalizedString(@"Show Colors",nil)];
 	[menuItem_bigger setTitle:AILocalizedString(@"Bigger", "Menu item title for making the font size bigger")];
-	[menuItem_smaller setTitle:AILocalizedString(@"Smaller", "menu item title for making the font size smaller")];
+	[menuItem_smaller setTitle:AILocalizedString(@"Smaller", "Menu item title for making the font size smaller")];
 	[menuItem_copyStyle setTitle:AILocalizedString(@"Copy Style",nil)];
 	[menuItem_pasteStyle setTitle:AILocalizedString(@"Paste Style",nil)];
 	[menuItem_writingDirection setTitle:AILocalizedString(@"Writing Direction",nil)];
-	[menuItem_rightToLeft setTitle:AILocalizedString(@"Right to Left",nil)];
+	[menuItem_rightToLeft setTitle:AILocalizedString(@"Right to Left", "Menu item in a submenu under 'writing direction' for writing which goes from right to left")];
 	
 	//Window menu
-	[menuItem_minimize setTitle:AILocalizedString(@"Minimize",nil)];
+	[menuItem_minimize setTitle:AILocalizedString(@"Minimize", "Minimize menu item title int he Wndow menu")];
+	[menuItem_zoom setTitle:AILocalizedString(@"Zoom", "Zoom menu item title in the Window menu")];
 	[menuItem_bringAllToFront setTitle:AILocalizedString(@"Bring All to Front",nil)];
 
 	//Help menu
