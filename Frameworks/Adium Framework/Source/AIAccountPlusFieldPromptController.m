@@ -98,7 +98,7 @@
 	 */
     enumerator = [[[adium contactController] allContacts] objectEnumerator];
     while ((contact = [enumerator nextObject])) {
-		if ([contact service] == [account service] &&
+		if ([[contact service] serviceClass] == [[account service] serviceClass] &&
 			(![contact isKindOfClass:[AIMetaContact class]] || [[(AIMetaContact *)contact listContacts] count])) {
 			NSString *UID = [contact UID];
 			[textField_handle addCompletionString:[contact formattedUID] withImpliedCompletion:UID];
