@@ -731,17 +731,17 @@ static NSArray *draggedTypes = nil;
 	if (webViewMenuItems) {
 		NSEnumerator	*enumerator;
 		NSMenuItem		*menuItem;
-		
+
 		enumerator = [defaultMenuItems objectEnumerator];
 		while ((menuItem = [enumerator nextObject])) {
-			NSString	*menuItemTitle = [menuItem title];
-
-			if (menuItemTitle &&
-				(([menuItemTitle localizedCaseInsensitiveCompare:@"Open Image in New Window"] == NSOrderedSame) ||
-				 ([menuItemTitle localizedCaseInsensitiveCompare:@"Download Image"] == NSOrderedSame) ||
-				 ([menuItemTitle localizedCaseInsensitiveCompare:@"Reload"] == NSOrderedSame) ||
-				 ([menuItemTitle localizedCaseInsensitiveCompare:@"Open Link in New Window"] == NSOrderedSame) ||
-				 ([menuItemTitle localizedCaseInsensitiveCompare:@"Download Linked File"] == NSOrderedSame))) {
+			int tag = [menuItem tag];
+			if ((tag == WebMenuItemTagOpenLinkInNewWindow) ||
+				(tag == WebMenuItemTagDownloadLinkToDisk) ||
+				(tag == WebMenuItemTagOpenImageInNewWindow) ||
+				(tag == WebMenuItemTagDownloadImageToDisk) ||
+				(tag == WebMenuItemTagOpenFrameInNewWindow) ||
+				(tag == WebMenuItemTagStop) ||
+				(tag == WebMenuItemTagReload)) {
 				[webViewMenuItems removeObjectIdenticalTo:menuItem];
 			}			
 		}
