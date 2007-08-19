@@ -743,7 +743,12 @@ static NSArray *draggedTypes = nil;
 				(tag == WebMenuItemTagStop) ||
 				(tag == WebMenuItemTagReload)) {
 				[webViewMenuItems removeObjectIdenticalTo:menuItem];
-			}			
+			} else {
+				//This isn't as nice; there's no tag available. Use the localization from WebKit to look at the title.
+				if ((tag == WebMenuItemTagOther) &&
+					[[menuItem title] isEqualToString:NSLocalizedStringFromTableInBundle(@"Open Link", nil, [NSBundle bundleForClass:[WebView class]], nil)])
+					[webViewMenuItems removeObjectIdenticalTo:menuItem];					
+			}
 		}
 	}
 	
