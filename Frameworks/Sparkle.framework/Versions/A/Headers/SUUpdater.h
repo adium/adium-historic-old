@@ -6,7 +6,7 @@
 //  Copyright 2006 Andy Matuschak. All rights reserved.
 //
 // $Id: SUUpdater.h 87 2007-07-05 19:16:34Z evands $
-// $HeadURL: http://ironcoder.org/svn/SparklePlus/trunk/SUUpdater.h $
+// $HeadURL: http://sparkleplus.googlecode.com/svn/trunk/SUUpdater.h $
 
 #import <Cocoa/Cocoa.h>
 
