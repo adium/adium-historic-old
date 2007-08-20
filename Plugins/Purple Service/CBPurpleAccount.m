@@ -962,7 +962,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	if ((chat) && 
 		(contact = [self contactWithUID:[self uidForContactWithUID:contactName inChat:chat]])) {
 		
-		[chat removeParticipatingListObject:contact];
+		[chat removeObject:contact];
 		
 		AILog(@"%@ removeUser:%@ fromChat:%@",self,contact,chat);
 	} else {

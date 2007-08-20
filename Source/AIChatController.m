@@ -324,7 +324,7 @@
 
 		//Create a new chat
 		chat = [AIChat chatForAccount:account];
-		[chat addParticipatingListObject:targetContact];
+		[chat addObject:targetContact];
 		[openChats addObject:chat];
 		AILog(@"chatWithContact: Added <<%@>> [%@]",chat,openChats);
 
@@ -711,7 +711,7 @@
 	
 	while ((chat = [chatEnumerator nextObject])) {
 		if ([chat isGroupChat] &&
-			[[chat participatingListObjects] containsObjectIdenticalTo:listContact]) {
+			[chat containsObject:listContact]) {
 			
 			contactIsInGroupChat = YES;
 			break;

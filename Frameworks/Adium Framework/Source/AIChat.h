@@ -127,10 +127,7 @@ typedef enum {
 
 - (void)setDisplayName:(NSString *)inDisplayName;
 
-- (NSArray *)participatingListObjects;
 - (void)addParticipatingListObject:(AIListContact *)inObject notify:(BOOL)notify;
-- (void)addParticipatingListObject:(AIListContact *)inObject;
-- (void)removeParticipatingListObject:(AIListContact *)inObject;
 - (AIListContact *)listObject;
 - (void)setListObject:(AIListContact *)inObject;
 - (AIListContact *)preferredListObject;

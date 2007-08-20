@@ -852,7 +852,7 @@
 		}
 		
 		completions = [NSMutableArray array];
-		enumerator = [[[self chat] participatingListObjects] objectEnumerator];
+		enumerator = [[[self chat] containedObjects] objectEnumerator];
 		while ((listContact = [enumerator nextObject])) {
 			if ([[listContact displayName] rangeOfString:partialWord
 												 options:(NSLiteralSearch | NSAnchoredSearch)].location != NSNotFound) {
@@ -979,7 +979,7 @@
 {
     //We display the user list if it contains more than one user, or if someone has specified that it be visible
 	[self setUserListVisible:([chat integerStatusObjectForKey:@"AlwaysShowUserList"] ||
-							  [[chat participatingListObjects] count] > 1)];
+							  [chat containedObjectsCount] > 1)];
 	
     //Update the user list
     if ([self userListVisible]) {
@@ -998,7 +998,7 @@
 	if ([notification object] == userListView) {
 		int selectedIndex = [userListView selectedRow];
 		[chat setPreferredListObject:((selectedIndex != -1) ? 
-									  [[chat participatingListObjects] objectAtIndex:selectedIndex] :
+									  [[chat containedObjects] objectAtIndex:selectedIndex] :
 									  nil)];
 	}
 }

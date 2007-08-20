@@ -385,7 +385,7 @@
 		
 	}
 	
-	[groupChat addParticipatingListObject:[listObjectArray objectAtIndex:i]];
+	[groupChat addObject:[listObjectArray objectAtIndex:i]];
 	messageObject = [AIContentMessage messageInChat:groupChat
 										 withSource:[listObjectArray objectAtIndex:i]
 										destination:nil

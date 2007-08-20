@@ -560,7 +560,7 @@
 	type = [chatDict objectForKey:@"Type"];
 	if ([type isEqualToString:@"IM"]) {
 		if ((UID = [chatDict objectForKey:@"Destination UID"])) {
-			[inChat addParticipatingListObject:[participants objectForKey:UID]];
+			[inChat addObject:[participants objectForKey:UID]];
 		}
 		if ((UID = [chatDict objectForKey:@"Source UID"])) {
 			[inChat setAccount:(AIAccount *)[participants objectForKey:UID]];

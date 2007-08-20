@@ -1593,7 +1593,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		BOOL		needToCreateSubmenu;
 		BOOL		isGroup = [object isKindOfClass:[AIListGroup class]];
 		BOOL		isValidGroup = (isGroup &&
-									[[(AIListGroup *)object containedObjects] count]);
+									[(AIListGroup *)object containedObjectsCount]);
 
 		//We don't want to include empty groups
 		if (!isGroup || isValidGroup) {

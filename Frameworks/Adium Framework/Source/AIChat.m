@@ -294,10 +294,6 @@ static int nextChatNumber = 0;
 
 //Participating ListObjects --------------------------------------------------------------------------------------------
 #pragma mark Participating ListObjects
-- (NSArray *)participatingListObjects
-{
-    return participatingListObjects;
-}
 
 - (void)addParticipatingListObject:(AIListContact *)inObject notify:(BOOL)notify
 {
@@ -308,26 +304,11 @@ static int nextChatNumber = 0;
 		[[adium chatController] chat:self addedListContact:inObject notify:notify];
 	}
 }
-- (void)addParticipatingListObject:(AIListContact *)inObject
-{
-	[self addParticipatingListObject:inObject notify:YES];
-}
 
 // Invite a list object to join the chat. Returns YES if the chat joins, NO otherwise
 - (BOOL)inviteListContact:(AIListContact *)inContact withMessage:(NSString *)inviteMessage
 {
 	return ([[self account] inviteContact:inContact toChat:self withMessage:inviteMessage]);
-}
-
-//
-- (void)removeParticipatingListObject:(AIListContact *)inObject
-{
-	if ([participatingListObjects containsObjectIdenticalTo:inObject]) {
-		//Remove
-		[participatingListObjects removeObject:inObject];
-		
-		[[adium chatController] chat:self removedListContact:inObject];
-	}
 }
 
 - (void)setPreferredListObject:(AIListContact *)inObject
@@ -355,7 +336,7 @@ static int nextChatNumber = 0;
 		if ([participatingListObjects count]) {
 			[participatingListObjects removeObjectAtIndex:0];
 		}
-		[self addParticipatingListObject:inListObject];
+		[self addObject:inListObject];
 
 		//Clear any local caches relying on the list object
 		[self clearListObjectStatuses];
@@ -508,7 +489,7 @@ static int nextChatNumber = 0;
 	if (filePath && [filePath length]) {
 		AIAccount		*sourceAccount = [evaluatedArguments objectForKey:@"account"];
 
-		NSEnumerator	*enumerator = [[self participatingListObjects] objectEnumerator];
+		NSEnumerator	*enumerator = [[self containedObjects] objectEnumerator];
 		AIListContact	*listContact;
 		
 		while ((listContact = [enumerator nextObject])) {
@@ -536,7 +517,7 @@ static int nextChatNumber = 0;
 //AIContainingObject protocol
 - (NSArray *)containedObjects
 {
-	return [self participatingListObjects];
+	return participatingListObjects;
 }
 
 - (unsigned)containedObjectsCount
@@ -580,7 +561,7 @@ static int nextChatNumber = 0;
 - (BOOL)addObject:(AIListObject *)inObject
 {
 	if ([inObject isKindOfClass:[AIListContact class]]) {
-		[self addParticipatingListObject:(AIListContact *)inObject];
+		[self addParticipatingListObject:(AIListContact *)inObject notify:YES];
 		
 		return YES;
 	} else {
@@ -590,12 +571,18 @@ static int nextChatNumber = 0;
 
 - (void)removeObject:(AIListObject *)inObject
 {
-	if ([inObject isKindOfClass:[AIListContact class]]) {
-		[self removeParticipatingListObject:(AIListContact *)inObject];
+	if ([inObject isKindOfClass:[AIListContact class]] && [participatingListObjects containsObjectIdenticalTo:inObject]) {
+		[participatingListObjects removeObject:inObject];
+			
+		[[adium chatController] chat:self removedListContact:inObject];
 	}
 }
 
-- (void)removeAllObjects {};
+- (void)removeAllObjects 
+{
+	while([self containedObjectsCount] > 0)
+		[self removeObject:[self objectAtIndex:0]];
+}
 
 - (void)setExpanded:(BOOL)inExpanded
 {
