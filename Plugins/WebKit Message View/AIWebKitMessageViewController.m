@@ -965,7 +965,7 @@ static NSArray *draggedTypes = nil;
  */
 - (void)participatingListObjectsChanged:(NSNotification *)notification
 {
-	NSArray			*participatingListObjects = [chat participatingListObjects];
+	NSArray			*participatingListObjects = [chat containedObjects];
 	NSEnumerator	*enumerator;
 	AIListObject	*listObject;
 	
@@ -1043,7 +1043,7 @@ static NSArray *draggedTypes = nil;
 			NSEnumerator	*enumerator;
 			AIListContact	*participatingListObject;
 			
-			enumerator = [[chat participatingListObjects] objectEnumerator];
+			enumerator = [[chat containedObjects] objectEnumerator];
 			while ((participatingListObject = [enumerator nextObject])) {
 				if ([participatingListObject parentContact] == inObject) {
 					actualObject = participatingListObject;

@@ -425,7 +425,7 @@
 			//do the toolbars match?
 			if (windowToolbar == senderToolbar) {
 				activeChatInWindow = [[adium interfaceController] activeChatInWindow:currentWindow];
-				participants = [activeChatInWindow participatingListObjects];
+				participants = [activeChatInWindow containedObjects];
 				
 				//do the deed
 				[self setPrivacy:(![self areAllGivenContactsBlocked:participants]) forContacts:participants];
@@ -537,7 +537,7 @@
  */
 - (void)updateToolbarItem:(NSToolbarItem *)item forChat:(AIChat *)chat
 {
-	if ([self areAllGivenContactsBlocked:[chat participatingListObjects]]) {
+	if ([self areAllGivenContactsBlocked:[chat containedObjects]]) {
 		//assume unblock appearance
 		[item setLabel:UNBLOCK];
 		[item setPaletteLabel:UNBLOCK];

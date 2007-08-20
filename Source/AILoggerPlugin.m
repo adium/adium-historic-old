@@ -404,7 +404,7 @@ Class LogViewerWindowControllerClass = NULL;
 			AIListObject	*actualObject = nil;
 			AIListContact	*participatingListObject = nil;
 			
-			NSEnumerator	*enumerator = [[chat participatingListObjects] objectEnumerator];
+			NSEnumerator	*enumerator = [[chat containedObjects] objectEnumerator];
 			
 			while ((participatingListObject = [enumerator nextObject])) {
 				if ([participatingListObject parentContact] == retardedMetaObject) {
