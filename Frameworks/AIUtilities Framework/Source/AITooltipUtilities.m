@@ -250,6 +250,7 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 
 + (void)_closeTooltip
 {
+	NSAssert2(!fadeOutAnimation, @"%s: Trying to close tooltip while a tooltip is already fading out! Animation is %@", __PRETTY_FUNCTION__, fadeOutAnimation);
 	fadeOutAnimation = [[NSViewAnimation alloc] initWithViewAnimations:[NSArray arrayWithObject:[NSDictionary dictionaryWithObjectsAndKeys:
 		tooltipWindow, NSViewAnimationTargetKey,
 		NSViewAnimationFadeOutEffect, NSViewAnimationEffectKey,
@@ -260,6 +261,13 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 	[fadeOutAnimation startAnimation];
 }
 
+//This is called when we send stopAnimation to the animation from the showTooltipWithTitle:body:image:imageOnRight:onWindow:atPoint:orientation: method.
++ (void)animationDidStop:(NSAnimation *)animation
+{
+	if (animation != nil && animation == fadeOutAnimation)
+		[self _reallyCloseTooltip];
+}
+//This is called when the animation ends naturally.
 + (void)animationDidEnd:(NSAnimation *)animation
 {
 	if (animation != nil && animation == fadeOutAnimation)
