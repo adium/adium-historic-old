@@ -22,6 +22,6 @@
 #else
 /* For a non-debug build, define it to be a comment so there is no overhead in using it liberally */
 	#define AILog(fmt, ...) /**/
-	#define AILogWithSignature(sig, fmt, ...) /**/
+	#define AILogWithSignature(fmt, ...) /**/
 	#define AILogWithPrefix(sig, fmt, ...) /**/
 #endif
