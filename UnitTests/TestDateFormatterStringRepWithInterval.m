@@ -12,8 +12,7 @@
 		            hours:-0
 		          minutes:-0
 		          seconds:-10];
-	NSString *string = [NSDateFormatter stringForTimeIntervalSinceDate:date];
-	AISimplifiedAssertEqualObjects(string, @"10 seconds", @"Unexpected string for time interval");
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"10 seconds", @"Unexpected string for time interval");
 }
 - (void)testDateFormatterStringRepWithInterval_minutes {
 	NSDate *date = [[NSCalendarDate calendarDate]
