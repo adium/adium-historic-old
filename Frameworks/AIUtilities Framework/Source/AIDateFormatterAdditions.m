@@ -198,7 +198,6 @@ typedef enum {
 
 + (NSString *)stringForTimeInterval:(NSTimeInterval)interval showingSeconds:(BOOL)showSeconds abbreviated:(BOOL)abbreviate approximated:(BOOL)approximate
 {
-	NSString		*timeString = nil;
 	NSTimeInterval	workInterval = interval;
     int				weeks = 0, days = 0, hours = 0, minutes = 0;
 	NSTimeInterval	seconds = 0; 
@@ -246,36 +245,34 @@ typedef enum {
 	}
 	
 	//assemble the parts
+	NSMutableArray *parts = [NSMutableArray arrayWithCapacity:5];
 	if (approximate) {
+		//We want only one of these. For example, 5 weeks, 5 days, 5 hours, 5 minutes, and 5 seconds should just be “5 weeks”.
 		if (weeks)
-			timeString = weeksString;
+			[parts addObject:weeksString];
 		else if (days)
-			timeString = daysString;
+			[parts addObject:daysString];
 		else if (hours)
-			timeString = hoursString;
+			[parts addObject:hoursString];
 		else if (minutes)
-			timeString = minutesString;
-		else if (seconds && showSeconds)
-			timeString = secondsString;
+			[parts addObject:minutesString];
+		else if (showSeconds && (seconds >= 0.01))
+			[parts addObject:secondsString];
 	} else {
+		//We want all of these that aren't zero.
 		if (weeks)
-			timeString = [NSString stringWithFormat: @"%@ %@ %@ %@", weeksString, daysString, hoursString, minutesString];
-		else if (days)
-			timeString = [NSString stringWithFormat: @"%@ %@ %@", daysString, hoursString, minutesString];
-		else if (hours)
-			timeString = [NSString stringWithFormat: @"%@ %@ ", hoursString, minutesString];
-		else if (minutes)
-			timeString = minutesString;
-		
-		if (showSeconds) {
-			if (timeString)
-				timeString = [timeString stringByAppendingFormat: @" %@", secondsString];
-			else if (seconds)
-				timeString = secondsString;
-		}
+			[parts addObject:weeksString];
+		if (days)
+			[parts addObject:daysString];
+		if (hours)
+			[parts addObject:hoursString];
+		if (minutes)
+			[parts addObject:minutesString];
+		if (showSeconds && (seconds >= 0.01))
+			[parts addObject:secondsString];
 	}
 
-	return timeString ? timeString : @"";
+	return [parts componentsJoinedByString:@" "];
 }
 
 @end
