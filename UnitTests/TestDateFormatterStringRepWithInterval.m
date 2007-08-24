@@ -1,9 +1,6 @@
 #import "TestDateFormatterStringRepWithInterval.h"
 #import <AIUtilities/AIDateFormatterAdditions.h>
 
-#define AISimplifiedAssertEqualObjects(objectToTest, objectToExpect, message) \
-	STAssertEqualObjects((objectToTest), (objectToExpect), @"%s: %@: Expected %C%@%C; got %C%@%C", __PRETTY_FUNCTION__, message, /*open quote*/ 0x201C, (objectToExpect), /*close quote*/ 0x201D, /*open quote*/ 0x201C, (objectToTest), /*close quote*/ 0x201D);
-
 @implementation TestDateFormatterStringRepWithInterval
 
 //Note: All of these delta values that we pass to NSCalendarDate need to be NEGATIVE, because we're looking to get a string representation of the interval since some time in the past.
