@@ -1211,7 +1211,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AIUtilities;
 		};
 		340BA85509EC59AF000EC441 /* PBXContainerItemProxy */ = {
@@ -1565,6 +1565,7 @@
 		312ED3E30C7E8A4A00A6BDA9 /* UnitTests_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnitTests_Prefix.pch; path = UnitTests/UnitTests_Prefix.pch; sourceTree = "<group>"; };
 		31918ED70C5E486C00717F0A /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		31E0CD800C5EEF5200271DB1 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = /System/Library/Frameworks/CoreAudio.framework; sourceTree = "<absolute>"; };
+		31E84DF10C7F387800674BCA /* AIUnitTestUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIUnitTestUtilities.h; path = UnitTests/AIUnitTestUtilities.h; sourceTree = "<group>"; };
 		3402E01807CB0CE40044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		3402E01F07CB0D150044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		3402E02007CB0D150044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
@@ -4021,6 +4022,7 @@
 			children = (
 				312ED3E30C7E8A4A00A6BDA9 /* UnitTests_Prefix.pch */,
 				312ED3CB0C7E875B00A6BDA9 /* UnitTests-Info.plist */,
+				31E84DF10C7F387800674BCA /* AIUnitTestUtilities.h */,
 				312ED3E00C7E8A0700A6BDA9 /* TestDateFormatterStringRepWithInterval.h */,
 				312ED3E10C7E8A0700A6BDA9 /* TestDateFormatterStringRepWithInterval.m */,
 			);
