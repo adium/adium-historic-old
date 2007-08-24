@@ -246,7 +246,7 @@ typedef enum {
 		secondsString	= (seconds == 1)	? ONE_SECOND	: [NSString stringWithFormat:MULTIPLE_SECONDS, seconds];
 	}
 	
-	//assamble the parts
+	//assemble the parts
 	if (approximate) {
 		if (weeks)
 			timeString = weeksString;
