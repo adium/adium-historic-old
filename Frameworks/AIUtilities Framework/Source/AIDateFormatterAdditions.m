@@ -237,7 +237,7 @@ typedef enum {
 		daysString		= [NSString stringWithFormat: @"%id",days];
 		hoursString		= [NSString stringWithFormat: @"%ih",hours];
 		minutesString	= [NSString stringWithFormat: @"%im",minutes];
-		secondsString	= [NSString stringWithFormat: @"%im",seconds];
+		secondsString	= [NSString stringWithFormat: @"%is",seconds];
 	} else {
 		weeksString		= (weeks == 1)		? ONE_WEEK		: [NSString stringWithFormat:MULTIPLE_WEEKS, weeks];
 		daysString		= (days == 1)		? ONE_DAY		: [NSString stringWithFormat:MULTIPLE_DAYS, days];
