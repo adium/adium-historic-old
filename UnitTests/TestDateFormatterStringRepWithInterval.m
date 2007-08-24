@@ -315,4 +315,315 @@
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"5 weeks 5 days 10 hours 10 minutes 10 seconds", @"Unexpected string for time interval");
 }
 
+- (void)testDateFormatterStringRepWithInterval_seconds_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:-0
+		            hours:-0
+		          minutes:-0
+		          seconds:-10];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"10s", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_minutes_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:-0
+		            hours:-0
+		          minutes:-10
+		          seconds:-0];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"10m", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_minutesSeconds_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:-0
+		            hours:-0
+		          minutes:-10
+		          seconds:-10];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"10m 10s", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_hours_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:-0
+		            hours:-10
+		          minutes:-0
+		          seconds:-0];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"10h", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_hoursSeconds_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:-0
+		            hours:-10
+		          minutes:-0
+		          seconds:-10];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"10h 10s", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_hoursMinutes_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:-0
+		            hours:-10
+		          minutes:-10
+		          seconds:-0];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"10h 10m", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_hoursMinutesSeconds_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:-0
+		            hours:-10
+		          minutes:-10
+		          seconds:-10];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"10h 10m 10s", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_days_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:-5
+		            hours:-0
+		          minutes:-0
+		          seconds:-0];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5d", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_daysSeconds_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:-5
+		            hours:-0
+		          minutes:-0
+		          seconds:-10];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5d 10s", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_daysMinutes_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:-5
+		            hours:-0
+		          minutes:-10
+		          seconds:-0];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5d 10m", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_daysMinutesSeconds_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:-5
+		            hours:-0
+		          minutes:-10
+		          seconds:-0];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5d 10m 10s", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_daysHours_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:-5
+		            hours:-10
+		          minutes:-0
+		          seconds:-0];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5d 10h", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_daysHoursSeconds_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:-5
+		            hours:-10
+		          minutes:-0
+		          seconds:-10];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5d 10h 10s", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_daysHoursMinutes_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:-5
+		            hours:-10
+		          minutes:-10
+		          seconds:-0];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5d 10h 10m", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_daysHoursMinutesSeconds_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:-5
+		            hours:-10
+		          minutes:-0
+		          seconds:-10];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5d 10h 10m 10s", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_weeks_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:7 * -5
+		            hours:-0
+		          minutes:-0
+		          seconds:-0];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5w", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_weeksSeconds_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:7 * -5
+		            hours:-0
+		          minutes:-0
+		          seconds:-10];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5w 10s", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_weeksMinutes_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:7 * -5
+		            hours:-0
+		          minutes:-10
+		          seconds:-0];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5w 10m", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_weeksMinutesSeconds_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:7 * -5
+		            hours:-0
+		          minutes:-10
+		          seconds:-10];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5w 10m 10s", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_weeksHours_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:7 * -5
+		            hours:-10
+		          minutes:-0
+		          seconds:-0];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5w 10h", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_weeksHoursSeconds_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:7 * -5
+		            hours:-10
+		          minutes:-0
+		          seconds:-10];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5w 10h 10s", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_weeksHoursMinutes_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:7 * -5
+		            hours:-10
+		          minutes:-10
+		          seconds:-0];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5w 10h 10m", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_weeksHoursMinutesSeconds_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:7 * -5
+		            hours:-10
+		          minutes:-10
+		          seconds:-10];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5w 10h 10m 10s", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_weeksDays_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:7 * -5 + -5
+		            hours:-0
+		          minutes:-0
+		          seconds:-0];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5w 5d", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_weeksDaysSeconds_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:7 * -5 + -5
+		            hours:-0
+		          minutes:-0
+		          seconds:-10];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5w 5d 10s", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_weeksDaysMinutes_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:7 * -5 + -5
+		            hours:-0
+		          minutes:-10
+		          seconds:-0];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5w 5d 10m", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_weeksDaysMinutesSeconds_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:7 * -5 + -5
+		            hours:-0
+		          minutes:-10
+		          seconds:-0];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5w 5d 10m 10s", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_weeksDaysHours_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:7 * -5 + -5
+		            hours:-10
+		          minutes:-0
+		          seconds:-0];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5w 5d 10h", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_weeksDaysHoursSeconds_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:7 * -5 + -5
+		            hours:-10
+		          minutes:-0
+		          seconds:-10];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5w 5d 10h 10s", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_weeksDaysHoursMinutes_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:7 * -5 + -5
+		            hours:-10
+		          minutes:-10
+		          seconds:-0];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5w 5d 10h 10m", @"Unexpected string for time interval");
+}
+- (void)testDateFormatterStringRepWithInterval_weeksDaysHoursMinutesSeconds_abbreviated {
+	NSDate *date = [[NSCalendarDate calendarDate]
+		dateByAddingYears:-0
+		           months:-0
+		             days:7 * -5 + -5
+		            hours:-10
+		          minutes:-0
+		          seconds:-10];
+	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5w 5d 10h 10m 10s", @"Unexpected string for time interval");
+}
+
 @end
