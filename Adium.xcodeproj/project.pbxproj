@@ -79,6 +79,10 @@
 		11CA00120C35EC5200A6BB8D /* SS_PrefsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 344836900BC8510B0083723B /* SS_PrefsController.m */; };
 		11F145F00B546AC500CA91F6 /* Menu Bar Icons in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11F145C70B546A6D00CA91F6 /* Menu Bar Icons */; };
 		11F1460C0B546C1200CA91F6 /* AIMenuBarIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = 11F1460A0B546C1200CA91F6 /* AIMenuBarIcons.m */; };
+		312ED3D30C7E876E00A6BDA9 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
+		312ED3D50C7E878300A6BDA9 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 312ED3D40C7E878300A6BDA9 /* SenTestingKit.framework */; };
+		312ED3E20C7E8A0700A6BDA9 /* TestDateFormatterStringRepWithInterval.m in Sources */ = {isa = PBXBuildFile; fileRef = 312ED3E10C7E8A0700A6BDA9 /* TestDateFormatterStringRepWithInterval.m */; };
+		312ED41F0C7E963A00A6BDA9 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		31918ED80C5E486C00717F0A /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31918ED70C5E486C00717F0A /* QTKit.framework */; };
 		31E0CD580C5EEEFA00271DB1 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D836F307CBF960006466F2 /* QuickTime.framework */; };
 		31E0CD810C5EEF5200271DB1 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31E0CD800C5EEF5200271DB1 /* CoreAudio.framework */; };
@@ -1203,6 +1207,13 @@
 /* End PBXBuildRule section */
 
 /* Begin PBXContainerItemProxy section */
+		312ED4280C7E964400A6BDA9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
+			remoteInfo = AIUtilities;
+		};
 		340BA85509EC59AF000EC441 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -1546,6 +1557,12 @@
 		11F145C70B546A6D00CA91F6 /* Menu Bar Icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Menu Bar Icons"; path = "Resources/Menu Bar Icons"; sourceTree = "<group>"; };
 		11F146090B546C1200CA91F6 /* AIMenuBarIcons.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMenuBarIcons.h; path = Source/AIMenuBarIcons.h; sourceTree = "<group>"; };
 		11F1460A0B546C1200CA91F6 /* AIMenuBarIcons.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMenuBarIcons.m; path = Source/AIMenuBarIcons.m; sourceTree = "<group>"; };
+		312ED3CA0C7E875B00A6BDA9 /* Unit tests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Unit tests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		312ED3CB0C7E875B00A6BDA9 /* UnitTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "UnitTests-Info.plist"; path = "Plists/UnitTests-Info.plist"; sourceTree = "<group>"; };
+		312ED3D40C7E878300A6BDA9 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = /System/Library/Frameworks/SenTestingKit.framework; sourceTree = "<absolute>"; };
+		312ED3E00C7E8A0700A6BDA9 /* TestDateFormatterStringRepWithInterval.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestDateFormatterStringRepWithInterval.h; path = UnitTests/TestDateFormatterStringRepWithInterval.h; sourceTree = "<group>"; };
+		312ED3E10C7E8A0700A6BDA9 /* TestDateFormatterStringRepWithInterval.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestDateFormatterStringRepWithInterval.m; path = UnitTests/TestDateFormatterStringRepWithInterval.m; sourceTree = "<group>"; };
+		312ED3E30C7E8A4A00A6BDA9 /* UnitTests_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnitTests_Prefix.pch; path = UnitTests/UnitTests_Prefix.pch; sourceTree = "<group>"; };
 		31918ED70C5E486C00717F0A /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		31E0CD800C5EEF5200271DB1 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = /System/Library/Frameworks/CoreAudio.framework; sourceTree = "<absolute>"; };
 		3402E01807CB0CE40044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
@@ -3701,6 +3718,16 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		312ED3C70C7E875B00A6BDA9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				312ED3D30C7E876E00A6BDA9 /* Cocoa.framework in Frameworks */,
+				312ED41F0C7E963A00A6BDA9 /* AIUtilities.framework in Frameworks */,
+				312ED3D50C7E878300A6BDA9 /* SenTestingKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3417D25809C332B900FC413E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -3926,6 +3953,7 @@
 				3485D68009EB416300232CC4 /* AdiumLibpurple.framework */,
 				38D8FAE10A8A4F350078E442 /* QuickTime.AdiumPlugin */,
 				3495D92D0BBF627A000EE14C /* SQL Logger.AdiumPlugin */,
+				312ED3CA0C7E875B00A6BDA9 /* Unit tests.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3949,6 +3977,7 @@
 				340C1A210BD58E7E00D09235 /* Other */,
 				34611C7D09B6756D00870036 /* AdiumSpotlightImporter.xcodeproj */,
 				349C2F310867ACF7000BF883 /* ApplescriptRunner */,
+				312ED3D80C7E89CC00A6BDA9 /* Unit tests */,
 				29B97323FDCFA39411CA2CEA /* Linked Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 				344836BD0BC851480083723B /* Accounts Preferences-Info.plist */,
@@ -3959,6 +3988,7 @@
 		29B97323FDCFA39411CA2CEA /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				312ED3D40C7E878300A6BDA9 /* SenTestingKit.framework */,
 				31E0CD800C5EEF5200271DB1 /* CoreAudio.framework */,
 				31918ED70C5E486C00717F0A /* QTKit.framework */,
 				11AA1EF90BCAE9C3003DDA66 /* Quartz.framework */,
@@ -3984,6 +4014,17 @@
 				9C103FAE057127A500F3C158 /* WebKit.framework */,
 			);
 			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		312ED3D80C7E89CC00A6BDA9 /* Unit tests */ = {
+			isa = PBXGroup;
+			children = (
+				312ED3E30C7E8A4A00A6BDA9 /* UnitTests_Prefix.pch */,
+				312ED3CB0C7E875B00A6BDA9 /* UnitTests-Info.plist */,
+				312ED3E00C7E8A0700A6BDA9 /* TestDateFormatterStringRepWithInterval.h */,
+				312ED3E10C7E8A0700A6BDA9 /* TestDateFormatterStringRepWithInterval.m */,
+			);
+			name = "Unit tests";
 			sourceTree = "<group>";
 		};
 		34086A1005E5E17B00ABB759 /* User Icon Handling */ = {
@@ -7249,6 +7290,25 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		312ED3C90C7E875B00A6BDA9 /* Unit tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 312ED3CC0C7E875C00A6BDA9 /* Build configuration list for PBXNativeTarget "Unit tests" */;
+			buildPhases = (
+				312ED3C50C7E875B00A6BDA9 /* Resources */,
+				312ED3C60C7E875B00A6BDA9 /* Sources */,
+				312ED3C70C7E875B00A6BDA9 /* Frameworks */,
+				312ED3C80C7E875B00A6BDA9 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				312ED4290C7E964400A6BDA9 /* PBXTargetDependency */,
+			);
+			name = "Unit tests";
+			productName = "Unit tests";
+			productReference = 312ED3CA0C7E875B00A6BDA9 /* Unit tests.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
 		3417D25009C332B900FC413E /* Translator */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3417D25C09C332B900FC413E /* Build configuration list for PBXNativeTarget "Translator" */;
@@ -7596,6 +7656,7 @@
 				F53C25AE0A2F95F100F7B73D /* Setup Build Directory */,
 				3419F3A605314BE000C68BA3 /* SQL Logger */,
 				34F3B9510BDF15F40011AB34 /* Touch Framework Bundles to Executable Date */,
+				312ED3C90C7E875B00A6BDA9 /* Unit tests */,
 			);
 		};
 /* End PBXProject section */
@@ -7632,6 +7693,13 @@
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
+		312ED3C50C7E875B00A6BDA9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3417D25509C332B900FC413E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -8030,6 +8098,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		312ED3C80C7E875B00A6BDA9 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
 		340BABD409EC8C6C000EC441 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -8131,6 +8212,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		312ED3C60C7E875B00A6BDA9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				312ED3E20C7E8A0700A6BDA9 /* TestDateFormatterStringRepWithInterval.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		3417D25609C332B900FC413E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -8730,6 +8819,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		312ED4290C7E964400A6BDA9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIUtilities;
+			targetProxy = 312ED4280C7E964400A6BDA9 /* PBXContainerItemProxy */;
+		};
 		340BA85609EC59AF000EC441 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
@@ -9959,6 +10053,91 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		312ED3CD0C7E875C00A6BDA9 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = UnitTests/UnitTests_Prefix.pch;
+				INFOPLIST_FILE = "Plists/UnitTests-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_CFLAGS = (
+					"-DDEBUG_BUILD",
+					"-fconstant-cfstrings",
+					"-fms-extensions",
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "Unit tests";
+				WRAPPER_EXTENSION = octest;
+				ZERO_LINK = NO;
+			};
+			name = Development;
+		};
+		312ED3CE0C7E875C00A6BDA9 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = UnitTests/UnitTests_Prefix.pch;
+				INFOPLIST_FILE = "Plists/UnitTests-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				PREBINDING = NO;
+				PRODUCT_NAME = "Unit tests";
+				WRAPPER_EXTENSION = octest;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		312ED3CF0C7E875C00A6BDA9 /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = UnitTests/UnitTests_Prefix.pch;
+				INFOPLIST_FILE = "Plists/UnitTests-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_CFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = "Unit tests";
+				WRAPPER_EXTENSION = octest;
+				ZERO_LINK = NO;
+			};
+			name = "Deployment-Debug";
+		};
+		312ED3D00C7E875C00A6BDA9 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = UnitTests/UnitTests_Prefix.pch;
+				INFOPLIST_FILE = "Plists/UnitTests-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_CFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = "Unit tests";
+				WRAPPER_EXTENSION = octest;
+				ZERO_LINK = NO;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
 		3417D25D09C332B900FC413E /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -11556,6 +11735,17 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		312ED3CC0C7E875C00A6BDA9 /* Build configuration list for PBXNativeTarget "Unit tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				312ED3CD0C7E875C00A6BDA9 /* Development */,
+				312ED3CE0C7E875C00A6BDA9 /* Deployment */,
+				312ED3CF0C7E875C00A6BDA9 /* Deployment-Debug */,
+				312ED3D00C7E875C00A6BDA9 /* Deployment-Debug_PPC-Only */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
 		3417D25C09C332B900FC413E /* Build configuration list for PBXNativeTarget "Translator" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
