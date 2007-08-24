@@ -200,7 +200,8 @@ typedef enum {
 {
 	NSString		*timeString = nil;
 	NSTimeInterval	workInterval = interval;
-    int				weeks = 0, days = 0, hours = 0, minutes = 0, seconds = 0; 
+    int				weeks = 0, days = 0, hours = 0, minutes = 0;
+	NSTimeInterval	seconds = 0; 
 	NSString		*weeksString = nil, *daysString = nil, *hoursString = nil, *minutesString = nil, *secondsString = nil;
 
 	//Weeks
@@ -226,9 +227,7 @@ typedef enum {
     }
 	
 	//Seconds
-    if (workInterval) {
-        seconds = (int)(interval / 60);
-    }
+	seconds = workInterval;
 	
 	//build the strings for the parts
 	if (abbreviate) {
@@ -237,7 +236,7 @@ typedef enum {
 		daysString		= [NSString stringWithFormat: @"%id",days];
 		hoursString		= [NSString stringWithFormat: @"%ih",hours];
 		minutesString	= [NSString stringWithFormat: @"%im",minutes];
-		secondsString	= [NSString stringWithFormat: @"%is",seconds];
+		secondsString	= [NSString stringWithFormat: @"%.0fs",seconds];
 	} else {
 		weeksString		= (weeks == 1)		? ONE_WEEK		: [NSString stringWithFormat:MULTIPLE_WEEKS, weeks];
 		daysString		= (days == 1)		? ONE_DAY		: [NSString stringWithFormat:MULTIPLE_DAYS, days];
