@@ -146,7 +146,7 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 	struct CGAffineTransform transform = {
 		.a  = wscale, .b = 0.0,
 		.c  = 0.0,    .d = hscale,
-		.tx = -(inRect.origin.x), .ty = -(inRect.origin.y),
+		.tx = 0.0,    .ty = 0.0,
 	};
 	cgRect->size = CGSizeApplyAffineTransform(cgRect->size, transform);
 
@@ -196,19 +196,16 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 		if (cspace != NULL) {
 			CGPoint srcPt, dstPt;
 
-			//note that the comments in this section refer to the bounds of
-			//  the context, not the window. (e.g. 'top' means 'top of the
-			//  context', not 'top of the window'.)
 			if (direction == AIVertical) {
 				//draw the gradient from the bottom middle to the top middle.
-				srcPt.x = dstPt.x = width * 0.5f;
-				srcPt.y = 0.0f;
-				dstPt.y = height;
+				srcPt.x = dstPt.x = inRect.origin.x + width * 0.5f;
+				srcPt.y = inRect.origin.y;
+				dstPt.y = inRect.origin.y + height;
 			} else {
 				//draw the gradient from the middle left to the middle right.
-				srcPt.y = dstPt.y = height * 0.5f;
-				srcPt.x = 0.0f;
-				dstPt.x = width;
+				srcPt.y = dstPt.y = inRect.origin.y + height * 0.5f;
+				srcPt.x = inRect.origin.x;
+				dstPt.x = inRect.origin.x + width;
 			}
 
 			CGShadingRef shading = CGShadingCreateAxial(
