@@ -222,6 +222,7 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 
 			if (shading != NULL) {
 				CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+				CGContextSaveGState(context);
 
 				NSAssert2(context, @"%s: The Quartz graphics context that we obtained from the current NSGraphicsContext (%@) is NULL.", __PRETTY_FUNCTION__, context);
 				CGContextBeginPath(context);
@@ -236,6 +237,8 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 
 					CGPathRelease(pathToAdd);
 				} /* if (pathToAdd != NULL) */
+
+				CGContextRestoreGState(context);
 
 				CGShadingRelease(shading);
 			} /* if (shading) */
