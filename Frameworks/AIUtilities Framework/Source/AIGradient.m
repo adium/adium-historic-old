@@ -140,7 +140,7 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 	NSRect inRect = [inPath bounds];
 	CGRect *cgRect = (CGRect *)&inRect;
 
-	//Shifts the CGPath to origin 0,0 and scale it down to an integer width (and height).
+	//Scale the path down to an integer width (and height).
 	float wscale = (floorf(inRect.size.width))  / inRect.size.width;
 	float hscale = (floorf(inRect.size.height)) / inRect.size.height;
 	struct CGAffineTransform transform = {
