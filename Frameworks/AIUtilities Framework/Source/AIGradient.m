@@ -18,7 +18,6 @@
  */
 
 #import "AIGradient.h"
-#import "AIContextImageBridge.h"
 #import "AIColorAdditions.h"
 
 @interface AIGradient (PRIVATE)
@@ -222,30 +221,22 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 			);
 
 			if (shading != NULL) {
-				AIContextImageBridge *bridge = [AIContextImageBridge bridgeWithSize:inRect.size];
-				CGContextRef context = [bridge context];
+				CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
 
-				if (context != NULL) {
-					CGContextBeginPath(context);
+				NSAssert2(context, @"%s: The Quartz graphics context that we obtained from the current NSGraphicsContext (%@) is NULL.", __PRETTY_FUNCTION__, context);
+				CGContextBeginPath(context);
 
-					//Drawing stuff
-					CGPathRef pathToAdd = CreateCGPathWithNSBezierPath(&transform, inPath); //thanks boredzo :)
-					if (pathToAdd != NULL) {
-						CGContextAddPath(context, pathToAdd);
-						CGContextClip(context);
+				//Drawing stuff
+				CGPathRef pathToAdd = CreateCGPathWithNSBezierPath(&transform, inPath); //thanks boredzo :)
+				if (pathToAdd != NULL) {
+					CGContextAddPath(context, pathToAdd);
+					CGContextClip(context);
 
-						CGContextDrawShading(context, shading);
+					CGContextDrawShading(context, shading);
 
-						NSImage *image = [bridge image];
+					CGPathRelease(pathToAdd);
+				} /* if (pathToAdd != NULL) */
 
-						[image drawInRect:inRect
-								 fromRect:NSMakeRect(0.0f,0.0f, width, height) 
-								operation:NSCompositeSourceOver
-								 fraction:1.0f];
-						
-						CGPathRelease(pathToAdd);
-					} /* if (pathToAdd != NULL) */
-				} /* if (context) */
 				CGShadingRelease(shading);
 			} /* if (shading) */
 			CGColorSpaceRelease(cspace);
