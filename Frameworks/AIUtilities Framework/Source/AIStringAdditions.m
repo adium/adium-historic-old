@@ -189,16 +189,6 @@ static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *
 	return [outName autorelease];
 }
 
-- (int)intValueFromHex
-{
-    NSScanner	*scanner = [NSScanner scannerWithString:self];
-    unsigned	value;
-
-    [scanner scanHexInt:&value];
-
-    return value;
-}
-
 #define BUNDLE_STRING	@"$$BundlePath$$"
 //
 - (NSString *)stringByExpandingBundlePath

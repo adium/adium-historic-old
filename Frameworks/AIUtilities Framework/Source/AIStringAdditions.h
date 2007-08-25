@@ -29,8 +29,6 @@
 
 - (NSString *)compactedString;
 
-- (int)intValueFromHex;
-
 - (NSString *)stringByExpandingBundlePath;
 - (NSString *)stringByCollapsingBundlePath;
 
