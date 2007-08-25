@@ -80,7 +80,6 @@
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AIWiredData.h>
 #import <AIUtilities/AIWiredString.h>
-#import <AIUtilities/AIContextImageBridge.h>
 #import <AIUtilities/AIFontManagerAdditions.h>
 #import <AIUtilities/AIGenericViewCell.h>
 #import <AIUtilities/AIApplicationAdditions.h>

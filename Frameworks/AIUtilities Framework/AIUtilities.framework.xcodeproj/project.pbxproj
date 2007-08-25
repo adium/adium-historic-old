@@ -171,8 +171,6 @@
 		34F2E94107C2D264007EAAAB /* AITooltipUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F2E93F07C2D264007EAAAB /* AITooltipUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34F2EA4A07C304C0007EAAAB /* AIArrayAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F2EA4807C304C0007EAAAB /* AIArrayAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34F2EA4B07C304C0007EAAAB /* AIArrayAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F2EA4907C304C0007EAAAB /* AIArrayAdditions.m */; };
-		34FFB0EB087DEFD00000A517 /* AIContextImageBridge.h in Headers */ = {isa = PBXBuildFile; fileRef = 34FFB0E9087DEFCF0000A517 /* AIContextImageBridge.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		34FFB0EC087DEFD00000A517 /* AIContextImageBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FFB0EA087DEFCF0000A517 /* AIContextImageBridge.m */; };
 		34FFB15B087DEFDE0000A517 /* AIFloater.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FFB159087DEFDE0000A517 /* AIFloater.m */; };
 		34FFB15C087DEFDE0000A517 /* AIFloater.h in Headers */ = {isa = PBXBuildFile; fileRef = 34FFB15A087DEFDE0000A517 /* AIFloater.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34FFB173087DEFF00000A517 /* AISystemNetworkDefaults.h in Headers */ = {isa = PBXBuildFile; fileRef = 34FFB171087DEFF00000A517 /* AISystemNetworkDefaults.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -435,8 +433,6 @@
 		34F2E93F07C2D264007EAAAB /* AITooltipUtilities.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AITooltipUtilities.h; path = Source/AITooltipUtilities.h; sourceTree = "<group>"; };
 		34F2EA4807C304C0007EAAAB /* AIArrayAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIArrayAdditions.h; path = Source/AIArrayAdditions.h; sourceTree = "<group>"; };
 		34F2EA4907C304C0007EAAAB /* AIArrayAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIArrayAdditions.m; path = Source/AIArrayAdditions.m; sourceTree = "<group>"; };
-		34FFB0E9087DEFCF0000A517 /* AIContextImageBridge.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContextImageBridge.h; path = Source/AIContextImageBridge.h; sourceTree = "<group>"; };
-		34FFB0EA087DEFCF0000A517 /* AIContextImageBridge.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContextImageBridge.m; path = Source/AIContextImageBridge.m; sourceTree = "<group>"; };
 		34FFB159087DEFDE0000A517 /* AIFloater.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIFloater.m; path = Source/AIFloater.m; sourceTree = "<group>"; };
 		34FFB15A087DEFDE0000A517 /* AIFloater.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIFloater.h; path = Source/AIFloater.h; sourceTree = "<group>"; };
 		34FFB171087DEFF00000A517 /* AISystemNetworkDefaults.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AISystemNetworkDefaults.h; path = Source/AISystemNetworkDefaults.h; sourceTree = "<group>"; };
@@ -1070,7 +1066,6 @@
 			children = (
 				4BD1EFBF06D2662600B3975E /* Array that associates values with owners */,
 				4BD1F2AE06D2686200B3975E /* Creating toolbar items */,
-				4BD1F36506D26FF800B3975E /* Convert between Quartz and NSImage */,
 				078DF8B907C2948B00831ABF /* Data object that uses wired memory */,
 				4BD1F41306D2828000B3975E /* Drawing Gradients */,
 				4BD1F41606D2828700B3975E /* Floating Animations */,
@@ -1177,15 +1172,6 @@
 				34486B5F06D1DF0300DA778C /* AIDockingWindow.m */,
 			);
 			name = "Window that docks to screen edges";
-			sourceTree = "<group>";
-		};
-		4BD1F36506D26FF800B3975E /* Convert between Quartz and NSImage */ = {
-			isa = PBXGroup;
-			children = (
-				34FFB0E9087DEFCF0000A517 /* AIContextImageBridge.h */,
-				34FFB0EA087DEFCF0000A517 /* AIContextImageBridge.m */,
-			);
-			name = "Convert between Quartz and NSImage";
 			sourceTree = "<group>";
 		};
 		4BD1F38606D276DD00B3975E /* OutlineView with several improvements */ = {
@@ -1417,7 +1403,6 @@
 				3402D33107CB043F0044F818 /* AIUtilities.framework_Prefix.pch in Headers */,
 				34BFE58207E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.h in Headers */,
 				0798BF75086E9F6600CA8E17 /* AIDataAdditions.h in Headers */,
-				34FFB0EB087DEFD00000A517 /* AIContextImageBridge.h in Headers */,
 				34FFB15C087DEFDE0000A517 /* AIFloater.h in Headers */,
 				34FFB173087DEFF00000A517 /* AISystemNetworkDefaults.h in Headers */,
 				34FFB180087DEFFA0000A517 /* AIImageButton.h in Headers */,
@@ -1616,7 +1601,6 @@
 				6E03C8D407C68A5800EAA71E /* AITextFieldWithDraggingDelegate.m in Sources */,
 				34BFE58307E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.m in Sources */,
 				0798BF76086E9F6600CA8E17 /* AIDataAdditions.m in Sources */,
-				34FFB0EC087DEFD00000A517 /* AIContextImageBridge.m in Sources */,
 				34FFB15B087DEFDE0000A517 /* AIFloater.m in Sources */,
 				34FFB174087DEFF00000A517 /* AISystemNetworkDefaults.m in Sources */,
 				34FFB17F087DEFFA0000A517 /* AIImageButton.m in Sources */,
