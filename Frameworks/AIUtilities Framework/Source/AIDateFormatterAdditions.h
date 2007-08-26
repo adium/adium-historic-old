@@ -10,7 +10,7 @@
 
 + (NSDateFormatter *)localizedDateFormatter;
 + (NSDateFormatter *)localizedShortDateFormatter;
-+ (NSDateFormatter *)localizedDateFormaterShowingSeconds:(BOOL)seconds showingAMorPM:(BOOL)showAmPm;
++ (NSDateFormatter *)localizedDateFormatterShowingSeconds:(BOOL)seconds showingAMorPM:(BOOL)showAmPm;
 + (NSString *)localizedDateFormatStringShowingSeconds:(BOOL)seconds showingAMorPM:(BOOL)showAmPm;
 + (NSString *)stringForTimeIntervalSinceDate:(NSDate *)inDate;
 + (NSString *)stringForTimeIntervalSinceDate:(NSDate *)inDate showingSeconds:(BOOL)showSeconds abbreviated:(BOOL)abbreviate;
