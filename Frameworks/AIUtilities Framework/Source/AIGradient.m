@@ -138,18 +138,6 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 - (void)drawInBezierPath:(NSBezierPath *)inPath
 {   
 	NSRect inRect = [inPath bounds];
-	CGRect *cgRect = (CGRect *)&inRect;
-
-	//Scale the path down to an integer width (and height).
-	float wscale = (floorf(inRect.size.width))  / inRect.size.width;
-	float hscale = (floorf(inRect.size.height)) / inRect.size.height;
-	struct CGAffineTransform transform = {
-		.a  = wscale, .b = 0.0,
-		.c  = 0.0,    .d = hscale,
-		.tx = 0.0,    .ty = 0.0,
-	};
-	cgRect->size = CGSizeApplyAffineTransform(cgRect->size, transform);
-
 	float   width  = inRect.size.width;
 	float	height = inRect.size.height;
 
@@ -225,7 +213,7 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 				CGContextBeginPath(context);
 
 				//Drawing stuff
-				CGPathRef pathToAdd = CreateCGPathWithNSBezierPath(&transform, inPath); //thanks boredzo :)
+				CGPathRef pathToAdd = CreateCGPathWithNSBezierPath(/*transform*/ NULL, inPath); //thanks boredzo :)
 				if (pathToAdd != NULL) {
 					CGContextAddPath(context, pathToAdd);
 					CGContextClip(context);
