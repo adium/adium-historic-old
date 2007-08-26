@@ -160,10 +160,10 @@
 	NSMenu	*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""];
 	
 	//Generate all the available time stamp formats
-    NSDateFormatter	*noSecondsNoAMPM = [NSDateFormatter localizedDateFormaterShowingSeconds:NO showingAMorPM:NO];
-    NSDateFormatter	*noSecondsAMPM = [NSDateFormatter localizedDateFormaterShowingSeconds:NO showingAMorPM:YES];
-    NSDateFormatter	*secondsNoAMPM = [NSDateFormatter localizedDateFormaterShowingSeconds:YES showingAMorPM:NO];
-    NSDateFormatter	*secondsAMPM = [NSDateFormatter localizedDateFormaterShowingSeconds:YES showingAMorPM:YES];
+    NSDateFormatter	*noSecondsNoAMPM = [NSDateFormatter localizedDateFormatterShowingSeconds:NO showingAMorPM:NO];
+    NSDateFormatter	*noSecondsAMPM = [NSDateFormatter localizedDateFormatterShowingSeconds:NO showingAMorPM:YES];
+    NSDateFormatter	*secondsNoAMPM = [NSDateFormatter localizedDateFormatterShowingSeconds:YES showingAMorPM:NO];
+    NSDateFormatter	*secondsAMPM = [NSDateFormatter localizedDateFormatterShowingSeconds:YES showingAMorPM:YES];
 	
 	//If there is no difference between the time stamp with AM/PM and the one without, the localized time stamp must
 	//not include AM/PM.  Since these menu items would appear as duplicates we exclude them.

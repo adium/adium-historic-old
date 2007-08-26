@@ -40,7 +40,7 @@ typedef enum {
 								   allowNaturalLanguage:NO] autorelease];
 }
 
-+ (NSDateFormatter *)localizedDateFormaterShowingSeconds:(BOOL)seconds showingAMorPM:(BOOL)showAmPm
++ (NSDateFormatter *)localizedDateFormatterShowingSeconds:(BOOL)seconds showingAMorPM:(BOOL)showAmPm
 {
     NSString	*format = [self localizedDateFormatStringShowingSeconds:seconds showingAMorPM:showAmPm];
 	
