@@ -43,6 +43,8 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIImageViewWithImagePicker.h>
 
+#import "AIPreviewContentMessage.h"
+
 #define WEBKIT_PREVIEW_CONVERSATION_FILE	@"Preview"
 #define	PREF_GROUP_DISPLAYFORMAT			@"Display Format"  //To watch when the contact name display format changes
 
@@ -607,16 +609,16 @@
 
 			//The other person is always the one we're chatting with right now
 			dest = [participants objectForKey:to];
-			content = [AIContentMessage messageInChat:inChat
-										   withSource:source
-										  destination:dest
-												 date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
-											  message:message
-											autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];
+			content = [AIPreviewContentMessage messageInChat:inChat
+												  withSource:source
+												 destination:dest
+														date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
+													 message:message
+												   autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];
 
 			//AIContentMessage won't know whether the message is outgoing unless we tell it since neither our source
 			//nor our destination are AIAccount objects.
-			[content _setIsOutgoing:outgoing];
+			[(AIPreviewContentMessage *)content setIsOutgoing:outgoing];
 
 		} else if ([msgType isEqualToString:CONTENT_STATUS_TYPE]) {
 			//Create status content object
