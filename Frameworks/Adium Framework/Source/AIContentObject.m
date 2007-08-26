@@ -145,10 +145,6 @@
 {
     return outgoing;
 }
-- (void)_setIsOutgoing:(BOOL)inOutgoing
-{ //Hack for message view preferences
-	outgoing = inOutgoing;
-}
 
 //Chat containing this content
 - (void)setChat:(AIChat *)inChat
