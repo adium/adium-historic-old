@@ -736,6 +736,7 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 		characterNature['\a'] = whitespaceNature;
 		characterNature['\t'] = whitespaceNature;
 		characterNature['\n'] = whitespaceNature;
+		characterNature['\v'] = whitespaceNature;
 		characterNature['\f'] = whitespaceNature;
 		characterNature['\r'] = whitespaceNature;
 		characterNature[' ']  = whitespaceNature;
@@ -801,7 +802,7 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 				0,
 				't', //0x09 HT: '\t'
 				'n', //0x0a LF: '\n'
-				0,
+				'v', //0x0b VT: '\v'
 				'f', //0x0c FF: '\f'
 				'r', //0x0d CR: '\r'
 				0, 0, //0x0e-0x0f
