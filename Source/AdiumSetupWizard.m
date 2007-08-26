@@ -102,11 +102,11 @@ enum{
 - (IBAction)promptForMultiples:(id)sender
 {
 	// Since we have multiple dedicated importers in 1.1+ it's better to direct the user as needed
-	NSAlert *multipleImportPrompt = [NSAlert alertWithMessageText:@"Have you used other chat clients?"
-													defaultButton:@"Continue" 
-												  alternateButton:@"Import from Fire" 
-													  otherButton:@"Import from iChat" 
-										informativeTextWithFormat:@"Adium includes assistants to bring your accounts, settings, and transcripts over from other clients. If you would like to import from any of these choose a client below to open its assistant."];
+	NSAlert *multipleImportPrompt = [NSAlert alertWithMessageText:AILocalizedString(@"Have you used other chat clients?", "Title which introduces import assistants during setup")
+													defaultButton:AILocalizedStringFromTable(@"Continue", @"Buttons", nil)
+												  alternateButton:AILocalizedString(@"Import from Fire", "Fire is another OS X instant messaging client; the name probably should not be localized")
+													  otherButton:AILocalizedString(@"Import from iChat", "iChat is the OS X instant messaging client which ships with OS X; the name probably should not be localized")
+										informativeTextWithFormat:AILocalizedString(@"Adium includes assistants to import your accounts, settings, and transcripts from other clients. Choose a client below to open its assistant, or press Continue to skip importing.", nil)];
 	[multipleImportPrompt beginSheetModalForWindow:[self window] 
 									 modalDelegate:self 
 									didEndSelector:@selector(multipleImportAlertDidEnd:returnCode:contextInfo:) 
