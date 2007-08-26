@@ -152,8 +152,7 @@
 - (BOOL)isOutgoing;
 /*!	@brief	This method shouldn't even be declared here.
  */
-#warning Exposure of private methods can lead to them falling off unexpectedly.
-- (void)_setIsOutgoing:(BOOL)inOutgoing;
+
 /*!	@brief	The chat with which this content is associated.
  *
  *	@par	All content is associated with a chat, even if only incidentally. While the content may not be chat-oriented, all content may eventually end up displayed in a chat somewhere, either inline in the message view (status changes and file transfers) or in the tab or title bar (typing notification).
