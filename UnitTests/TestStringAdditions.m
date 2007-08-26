@@ -82,7 +82,6 @@
 }
 - (void)testEscapingForShell
 {
-#warning These should actually be tests.
 	//Whitespace should be replaced by '\' followed by a character (one of [atnfr] for most of them; space simply puts a \ in front of the space).
 	STAssertEqualObjects([@"\a" stringByEscapingForShell], @"\\a", @"stringByEscapingForShell didn't properly escape the alert (bell) character");
 	STAssertEqualObjects([@"\t" stringByEscapingForShell], @"\\t", @"stringByEscapingForShell didn't properly escape the horizontal tab character");
