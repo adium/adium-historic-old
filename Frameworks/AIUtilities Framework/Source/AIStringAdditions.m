@@ -213,16 +213,6 @@ static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *
 }
 
 
-- (NSString *)stringByTruncatingTailToWidth:(float)inWidth
-{
-    NSMutableString 	*string = [self mutableCopy];
-    
-    //Use carbon to truncate the string (this only works when drawing in the system font!)
-    TruncateThemeText((CFMutableStringRef)string, kThemeSmallSystemFont, kThemeStateActive, inWidth, truncEnd, NULL);
-    
-    return [string autorelease];
-}
-
 - (NSString *)stringWithEllipsisByTruncatingToLength:(unsigned int)length
 {
 	NSString *returnString;
