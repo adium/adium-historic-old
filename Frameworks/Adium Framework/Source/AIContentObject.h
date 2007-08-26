@@ -150,8 +150,6 @@
  *	@return	\c YES if the content is outgoing; \c NO if it is incoming.
  */
 - (BOOL)isOutgoing;
-/*!	@brief	This method shouldn't even be declared here.
- */
 
 /*!	@brief	The chat with which this content is associated.
  *
