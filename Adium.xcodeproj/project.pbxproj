@@ -941,6 +941,7 @@
 		34F46785080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46783080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.m */; };
 		34F849530A4AEFA00002A017 /* LogFileUpgrade.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34F849520A4AEFA00002A017 /* LogFileUpgrade.nib */; };
 		34F849590A4AF04D0002A017 /* AILogFileUpgradeWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */; };
+		34FA28110C820C3A00FEA944 /* AIPreviewContentMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FA28100C820C3A00FEA944 /* AIPreviewContentMessage.m */; };
 		377EC8940AE9525B00CB7BDF /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377EC8930AE9525B00CB7BDF /* PSMTabBarControl.framework */; };
 		377ED0220AE95D7D00CB7BDF /* PSMTabBarControl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 377EC8930AE9525B00CB7BDF /* PSMTabBarControl.framework */; };
 		38399DCB0A95C9CF006C8EB1 /* AIVideoConfControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 383984700A94F780006C8EB1 /* AIVideoConfControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -3140,6 +3141,8 @@
 		34F849520A4AEFA00002A017 /* LogFileUpgrade.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = LogFileUpgrade.nib; path = Resources/LogFileUpgrade.nib; sourceTree = "<group>"; };
 		34F849560A4AF04D0002A017 /* AILogFileUpgradeWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILogFileUpgradeWindowController.h; path = Source/AILogFileUpgradeWindowController.h; sourceTree = "<group>"; };
 		34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILogFileUpgradeWindowController.m; path = Source/AILogFileUpgradeWindowController.m; sourceTree = "<group>"; };
+		34FA280F0C820C3A00FEA944 /* AIPreviewContentMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIPreviewContentMessage.h; path = "Plugins/WebKit Message View/AIPreviewContentMessage.h"; sourceTree = "<group>"; };
+		34FA28100C820C3A00FEA944 /* AIPreviewContentMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIPreviewContentMessage.m; path = "Plugins/WebKit Message View/AIPreviewContentMessage.m"; sourceTree = "<group>"; };
 		34FB54DD05FEC73A00F0D7D7 /* ESWebFrameViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESWebFrameViewAdditions.m; path = "Plugins/WebKit Message View/ESWebFrameViewAdditions.m"; sourceTree = "<group>"; };
 		34FB54DE05FEC73A00F0D7D7 /* ESWebFrameViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESWebFrameViewAdditions.h; path = "Plugins/WebKit Message View/ESWebFrameViewAdditions.h"; sourceTree = "<group>"; };
 		34FD5BB007F1F85B00687C70 /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = Resources/it.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
@@ -6539,6 +6542,8 @@
 				3470663806015FB6004F0D20 /* WebKit Additions */,
 				34182F480AC2CA3B0067DEF3 /* AIPreviewChat.h */,
 				34182F490AC2CA3C0067DEF3 /* AIPreviewChat.m */,
+				34FA280F0C820C3A00FEA944 /* AIPreviewContentMessage.h */,
+				34FA28100C820C3A00FEA944 /* AIPreviewContentMessage.m */,
 			);
 			name = "WebKit Message View";
 			sourceTree = "<group>";
@@ -8264,6 +8269,7 @@
 				4BD62D8107CE8F240099EBA2 /* AIWebkitMessageViewStyle.m in Sources */,
 				34182F4B0AC2CA3C0067DEF3 /* AIPreviewChat.m in Sources */,
 				6360B25A0BF2EB93004CD99B /* AIWebKitDelegate.m in Sources */,
+				34FA28110C820C3A00FEA944 /* AIPreviewContentMessage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
