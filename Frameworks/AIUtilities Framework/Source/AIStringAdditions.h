@@ -64,13 +64,6 @@
 - (unichar)lastCharacter;
 - (unichar)nextToLastCharacter;
 - (UTF32Char)lastLongCharacter;
-- (NSString *) trimWhiteSpace;
-
-- (NSString *) stripHTML;
-
-- (NSString *) ellipsizeAfterNWords: (int) n;
-
-+ (BOOL) stringIsEmpty: (NSString *) s;
 
 + (NSString *)uuid;
 
