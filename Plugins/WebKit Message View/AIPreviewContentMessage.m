@@ -9,7 +9,7 @@
 
 @implementation AIPreviewContentMessage
 
-- (void)etIsOutgoing:(BOOL)inOutgoing
+- (void)setIsOutgoing:(BOOL)inOutgoing
 {
 	outgoing = inOutgoing;
 }
