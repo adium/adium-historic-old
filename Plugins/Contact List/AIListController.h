@@ -19,6 +19,12 @@
 
 @class AIAbstractListController;
 
+typedef enum {
+	AIDockToBottom_No = 0,
+    AIDockToBottom_VisibleFrame,
+	AIDockToBottom_TotalFrame
+} AIDockToBottomType;
+
 @interface AIListController : AIAbstractListController {
     NSSize								minWindowSize;
     BOOL								autoResizeVertically;
@@ -26,7 +32,7 @@
 	int									maxWindowWidth;
 	int									forcedWindowWidth;
 
-	int 								dockToBottomOfScreen;
+	AIDockToBottomType 					dockToBottomOfScreen;
 	
 	BOOL								needsAutoResize;
 }
