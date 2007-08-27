@@ -6,7 +6,7 @@ Version 1.1.2
  * Fixed a memory leak and potential visual glitch when viewing tooltips for contacts (#7585)
  * Fixed default showing of offline contacts, which was turned on in 1.1. As of 1.1.2, this is off by default, as it was in versions of Adium prior to 1.1.  This can always be changed from the View menu.
  * Fixed spring-loaded tabs to wait for a definitive hover before switching. The delay is the same as the Finder's delay for spring-loaded folders. As with Finder, space bar can be pressed to switch immediately. (#7588)
- * Fixed positioning of the message view in the chat window (1 pixel off)
+ * Fixed positioning of the message view in the chat window (1 point off)
  * Fixed Gadu-Gadu on PPC machines (#7556)
  * Fixed reopening of chat windows after using encryption (#6664)
  * Fixed an exception which could occur when Spotlight was importing chat transcripts
@@ -24,7 +24,7 @@ Version 1.1.2
  * Fixed multiple contact removal from the privacy list (#7106)
  * Fixed a crash when signing out of gadu-gadu
  * Fixed stray menu items which appeared in the contextual menu of message windows in languages besides English (#7667)
- * Fixed 24 hour time display in the Stockhold message style
+ * Fixed 24 hour time display in the Stockholm message style
  * .Mac names now autocomplete for AIM, and Jabber names autocomplete for GTalk, in the New Message dialogue (#4983)
  * zh_CN and Italian (#7490) updates
  * Updated to libpurple 2.1.1
