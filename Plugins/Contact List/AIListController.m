@@ -46,12 +46,6 @@
 
 #define PREF_GROUP_APPEARANCE		@"Appearance"
 
-typedef enum {
-	AIDockToBottom_No = 0,
-    AIDockToBottom_VisibleFrame,
-	AIDockToBottom_TotalFrame
-} DOCK_BOTTOM_TYPE;
-
 @interface AIListController (PRIVATE)
 - (void)contactListChanged:(NSNotification *)notification;
 @end
@@ -80,7 +74,6 @@ typedef enum {
 	//Recall how the contact list was docked last time Adium was open
 	dockToBottomOfScreen = [[[adium preferenceController] preferenceForKey:KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN
 																	group:PREF_GROUP_WINDOW_POSITIONS] intValue];
-
 	[contactListView addObserver:self forKeyPath:@"desiredHeight" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:NULL];
 	
 	[self contactListChanged:nil];
@@ -104,12 +97,7 @@ typedef enum {
 }
 
 - (void)close
-{
-	//Remember how the contact list is currently docked for next time
-	[[adium preferenceController] setPreference:[NSNumber numberWithInt:dockToBottomOfScreen]
-										 forKey:KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN
-										  group:PREF_GROUP_WINDOW_POSITIONS];
-	
+{	
     //Stop observing
     [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -181,6 +169,8 @@ typedef enum {
 	NSRect		boundingFrame = [theWindowScreen frame];
 	NSRect		visibleBoundingFrame = [theWindowScreen visibleFrame];
 	
+	AIDockToBottomType oldDockToBottom = dockToBottomOfScreen;
+
 	//First, see if they are now within EDGE_CATCH_Y of the total boundingFrame
 	if ((windowFrame.origin.y < boundingFrame.origin.y + EDGE_CATCH_Y) &&
 	   ((windowFrame.origin.y + windowFrame.size.height) < (boundingFrame.origin.y + boundingFrame.size.height - EDGE_CATCH_Y))) {
@@ -193,6 +183,13 @@ typedef enum {
 		} else {
 			dockToBottomOfScreen = AIDockToBottom_No;
 		}
+	}
+
+	//Remember how the contact list is currently docked for next time
+	if (oldDockToBottom != dockToBottomOfScreen) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:dockToBottomOfScreen]
+											 forKey:KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN
+											  group:PREF_GROUP_WINDOW_POSITIONS];
 	}
 }
 
@@ -296,7 +293,7 @@ typedef enum {
 				newWindowFrame.origin.y = NSMaxY(windowFrame) - NSHeight(newWindowFrame);
 			} else {
 				//If the user did dock (either to the full screen or the visible screen), the origin should remain in place.
-				newWindowFrame.origin.y = NSMinY(windowFrame);				
+				newWindowFrame.origin.y = NSMinY(windowFrame);	
 			}
 		}
 
