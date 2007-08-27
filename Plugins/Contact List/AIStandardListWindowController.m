@@ -27,6 +27,7 @@
 #import <Adium/AIToolbarControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIMetaContact.h>
 #import <Adium/AIStatusMenu.h>
 #import <Adium/AIListSmartGroup.h>
 
