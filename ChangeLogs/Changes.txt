@@ -1,5 +1,37 @@
 				Adium X Version History
 				-----------------------
+Version 1.1.2
+ * Added preference to turn off the contact list animations (Preferences->Advanced->Contact List)
+ * Option+Close now closes all other tabs (#7573)
+ * Fixed a memory leak and potential visual glitch when viewing tooltips for contacts (#7585)
+ * Fixed default showing of offline contacts, which was turned on in 1.1. As of 1.1.2, this is off by default, as it was in versions of Adium prior to 1.1.  This can always be changed from the View menu.
+ * Fixed spring-loaded tabs to wait for a definitive hover before switching. The delay is the same as the Finder's delay for spring-loaded folders. As with Finder, space bar can be pressed to switch immediately. (#7588)
+ * Fixed positioning of the message view in the chat window (1 pixel off)
+ * Fixed Gadu-Gadu on PPC machines (#7556)
+ * Fixed reopening of chat windows after using encryption (#6664)
+ * Fixed an exception which could occur when Spotlight was importing chat transcripts
+ * Fixed a one pixel border at the bottom of the borderless contact list
+ * Fixed a crash which occurred when the contact list was closed while an animation was in progress
+ * Fixed incorrect reporting of servers on the local network as unavailable (#7381)
+ * Snap-to-edges is now disabled in all contact list window types when holding the shift key
+ * Fixed minimize and zoom buttons in the Preferences window (#7612)
+ * Fixed improper minimum height for the borderless contact list
+ * Fixed a flickering scrollbar which could occur when the contact list's size was very close to the size at which it needed to show a scrollbar (#6725)
+ * Fixed transparency of message windows in Safari 3.0b (#7164)
+ * Fixed toggling of emoticons to and from their text equivalent in Safari 3.0b (#7148)
+ * Fixed a bug when changing status or service icons
+ * Fixed the link attribute hanging around after clear the message entry text area with the cursor inside  a link (#7365)
+ * Fixed multiple contact removal from the privacy list (#7106)
+ * Fixed a crash when signing out of gadu-gadu
+ * Fixed stray menu items which appeared in the contextual menu of message windows in languages besides English (#7667)
+ * Fixed 24 hour time display in the Stockhold message style
+ * .Mac names now autocomplete for AIM, and Jabber names autocomplete for GTalk, in the New Message dialogue (#4983)
+ * zh_CN and Italian (#7490) updates
+ * Updated to libpurple 2.1.1
+ 
+Version 1.1.1 (8/13/2007)
+ * Fixed a problem with the version checking system (Sparkle) which caused a crash when the minimum system requirements were specified in the appcast.
+
 Version 1.1 (8/12/2007)
 Note: Adium now requires Mac OS X 10.4.0 or later.
 
