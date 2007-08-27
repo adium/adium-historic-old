@@ -645,9 +645,9 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	PurpleMessageFlags		flags = [[messageDict objectForKey:@"PurpleMessageFlags"] intValue];
 	
 	if ((flags & PURPLE_MESSAGE_SEND) != 0) {
-        //Purple is telling us that our message was sent successfully.		
+        //Purple is telling us that our message was sent successfully.
 
-		//We can now tell the other side that we're done typing
+		//We would tell the other side that we're done typing, except that if we do this now, the typing notification icon in some clients (e.g., iChat) disappears before the message actually arrives.
 		//[purpleThread sendTyping:AINotTyping inChat:chat];
     } else {
 		NSAttributedString		*attributedMessage;
