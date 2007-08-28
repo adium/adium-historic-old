@@ -92,7 +92,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 	if (catchExceptions) {
 		NSString	*theReason = [exception reason];
 		NSString	*theName   = [exception name];
-		NSString	*backtrace;
+		NSString	*backtrace = nil;
 
 		//Ignore various known harmless or unavoidable exceptions (From the system or system hacks)
 		if ((!theReason) || //Harmless
@@ -120,7 +120,9 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		}
 		
 		//Check the stack trace for a third set of known offenders
-		backtrace = (shouldLaunchCrashReporter ? [exception decodedExceptionStackTrace] : nil);
+		if (shouldLaunchCrashReporter) {
+			backtrace = [exception decodedExceptionStackTrace];
+		}
 		if (!backtrace ||
 			[backtrace rangeOfString:@"-[NSFontPanel setPanelFont:isMultiple:] (in AppKit)"].location != NSNotFound || //NSFontPanel likes to create exceptions
 			[backtrace rangeOfString:@"-[NSScrollView(NSScrollViewAccessibility) accessibilityChildrenAttribute]"].location != NSNotFound || //Perhaps we aren't implementing an accessibility method properly? No idea what though :(
