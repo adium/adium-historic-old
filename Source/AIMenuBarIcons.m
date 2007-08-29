@@ -43,6 +43,11 @@
 	return [[xtraBundle objectForInfoDictionaryKey:@"Show Badge"] boolValue];
 }
 
+- (BOOL)showUnviewedContentCount
+{
+	return [[xtraBundle objectForInfoDictionaryKey:@"Show Unviewed Content Count"] boolValue];
+}
+
 - (NSImage *)imageOfType:(NSString *)imageType alternate:(BOOL)alternate
 {
 	NSImage *image;
