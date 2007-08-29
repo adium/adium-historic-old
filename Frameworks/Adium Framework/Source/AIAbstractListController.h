@@ -103,6 +103,7 @@ typedef enum {
 #define KEY_ONLINE_ENABLED			@"Online Enabled"
 #define KEY_IDLE_AWAY_ENABLED		@"Idle And Away Enabled"
 #define KEY_OFFLINE_ENABLED			@"Offline Enabled"
+#define KEY_MOBILE_ENABLED			@"Mobile Enabled"
 
 #define KEY_LABEL_AWAY_COLOR		@"Away Label Color"
 #define KEY_LABEL_IDLE_COLOR		@"Idle Label Color"
@@ -113,6 +114,7 @@ typedef enum {
 #define KEY_LABEL_ONLINE_COLOR		@"Online Label Color"
 #define KEY_LABEL_IDLE_AWAY_COLOR	@"Idle And Away Label Color"
 #define KEY_LABEL_OFFLINE_COLOR		@"Offline Label Color"
+#define KEY_LABEL_MOBILE_COLOR		@"Mobile Label Color"
 
 #define KEY_AWAY_COLOR				@"Away Color"
 #define KEY_IDLE_COLOR				@"Idle Color"
@@ -123,6 +125,7 @@ typedef enum {
 #define KEY_ONLINE_COLOR			@"Online Color"
 #define KEY_IDLE_AWAY_COLOR			@"Idle And Away Color"
 #define KEY_OFFLINE_COLOR			@"Offline Color"
+#define KEY_MOBILE_COLOR			@"Mobile Color"
 
 #define KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED		@"Use Background Image"
 #define KEY_LIST_THEME_BACKGROUND_IMAGE_PATH		@"Background Image Path"

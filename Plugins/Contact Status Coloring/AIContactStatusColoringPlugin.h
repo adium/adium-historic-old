@@ -30,7 +30,8 @@
     BOOL		onlineEnabled;
     BOOL		awayAndIdleEnabled;
 	BOOL		offlineEnabled;
-    
+    BOOL		mobileEnabled;
+
 	BOOL		flashUnviewedContentEnabled;
 
     NSColor		*awayColor;
@@ -42,6 +43,7 @@
     NSColor		*onlineColor;
     NSColor		*awayAndIdleColor;
 	NSColor		*offlineColor;
+	NSColor		*mobileColor;
     
     NSColor		*awayInvertedColor;
     NSColor		*idleInvertedColor;
@@ -52,6 +54,7 @@
     NSColor		*onlineInvertedColor;
     NSColor		*awayAndIdleInvertedColor;
 	NSColor		*offlineInvertedColor;
+	NSColor		*mobileInvertedColor;
 	
     NSColor		*awayLabelColor;
     NSColor		*idleLabelColor;
@@ -62,9 +65,12 @@
     NSColor		*onlineLabelColor;
     NSColor		*awayAndIdleLabelColor;
 	NSColor		*offlineLabelColor;
-	
+	NSColor		*mobileLabelColor;
+
     float		alpha;
 	BOOL		offlineImageFading;	
+	
+	NSSet		*interestedKeysSet;
 }
 
 @end
