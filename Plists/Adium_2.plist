@@ -484,11 +484,11 @@
 				<string>com.adiumx.xtra</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Adium X Libgaim plug-in</string>
+			<string>Adium X Libpurple plug-in</string>
 			<key>UTTypeIconFile</key>
 			<string>AdiumPlugin.icns</string>
 			<key>UTTypeIdentifier</key>
-			<string>com.adiumx.libgaimplugin</string>
+			<string>com.adiumx.libpurpleplugin</string>
 			<key>UTTypeReferenceURL</key>
 			<string>http://xtras.adiumx.com</string>
 			<key>UTTypeTagSpecification</key>
@@ -497,7 +497,7 @@
 				<string>AdIM</string>
 				<key>public.filename-extension</key>
 				<array>
-					<string>AdiumLibgaimPlugin</string>
+					<string>AdiumLibpurplePlugin</string>
 				</array>
 			</dict>
 		</dict>
