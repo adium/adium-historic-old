@@ -43,6 +43,7 @@
 - (NSImage *)badgeDuck:(NSImage *)duckImage withImage:(NSImage *)inImage;
 - (void)updateMenuIcons;
 - (void)updateMenuIconsBundle;
+- (void)updateUnreadCount;
 @end
 
 @implementation CBStatusMenuItemController
@@ -56,7 +57,7 @@
 {
 	if ((self = [super init])) {
 		//Create and set up the status item
-		statusItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength] retain];
+		statusItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength] retain];
 		[statusItem setHighlightMode:YES];
 		
 		unviewedContent = NO;
@@ -189,6 +190,24 @@
 	[self updateMenuIcons];
 }
 
+// Updates the unread count of the status item.
+- (void)updateUnreadCount
+{
+	// If this bundle wants us to show an unviewed count, do so.
+	if ([menuIcons showUnviewedContentCount]) {
+		// Use AIChatController's method instead of our our array of unread chats (unviewedObjectsArray)
+		// so we can get the true number of unread messages.
+		int unreadCount = [[adium chatController] unviewedContentCount];
+
+		// Only show if greater-than zero, otherwise set to nil.
+		if (unreadCount > 0) {
+			[statusItem setTitle:[NSString stringWithFormat:@"%i", unreadCount]];
+		} else {
+			[statusItem setTitle:@""];
+		}
+	}	
+}
+
 #define	IMAGE_TYPE_CONTENT		@"Content"
 #define	IMAGE_TYPE_AWAY			@"Away"
 #define IMAGE_TYPE_IDLE			@"Idle"
@@ -288,6 +307,8 @@
 	[statusItem setImage:[self badgeDuck:menuIcon withImage:badge]];
 	// Badge the highlight image and set it.
 	[statusItem setAlternateImage:[self badgeDuck:alternateMenuIcon withImage:badge]];
+	// Update our unread count.
+	[self updateUnreadCount];
 }
 
 - (NSImage *)badgeDuck:(NSImage *)duckImage withImage:(NSImage *)badgeImage 
@@ -435,12 +456,14 @@
 			unviewedContent = NO;
 			[self updateMenuIcons];
 		}
-		
 	} else {
 		//If this is the first contact with unviewed content, set our icon to unviewed content.
 		if (!unviewedContent) {
 			unviewedContent = YES;
 			[self updateMenuIcons];
+		} else {
+			// Update our unread count.
+			[self updateUnreadCount];
 		}
 	}
 	
