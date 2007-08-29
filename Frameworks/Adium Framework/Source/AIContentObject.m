@@ -180,7 +180,9 @@
 	return [AIHTMLDecoder encodeHTML:message encodeFullString:YES];
 }
 
-//Plaintext string message
+/*!
+ * @brief Set a string for this message using the default formatting attributes
+ */
 - (void)setMessageString:(NSString *)inMessageString
 {
 	[message release];
@@ -188,6 +190,14 @@
 											  attributes:[[adium contentController] defaultFormattingAttributes]];
 	
 }
+
+/*!
+ * @brief Retrieve the message string as plaintext.
+ *
+ * This existed for AppleScript support of obtaining the message string in 1.1 and below.  I don't believe it worked -eds.
+ * It will likely no longer be necessary with the GSoC 2007 Applescripting changes.  I've removed it from the public API
+ * but left it here for now. -eds
+ */
 - (NSString *)messageString
 {
 	return [message string];

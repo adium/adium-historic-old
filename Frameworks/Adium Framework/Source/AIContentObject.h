@@ -176,14 +176,6 @@
  *	@return	The current message.
  */
 - (NSAttributedString *)message;
-#warning Do we actually need this? What's so hard about [[contentObject message] string]?
-/*!	@brief	Obtain the plain text of the current message in the content.
- *
- *	@par	The current message is kept as an attributed string. The normal message accessors interact with the attributed string; this accessor allows you to easily access the plain text.
- *
- *	@return	The plain text of the current message.
- */
-- (NSString *)messageString;
 
 /*!	@brief	Get an array of CSS class names with which this content should be displayed.
  *
