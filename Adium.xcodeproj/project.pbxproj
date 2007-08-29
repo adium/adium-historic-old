@@ -278,6 +278,8 @@
 		347374BD0AA9206B00AD18E3 /* ShortcutRecorder.strings in Resources */ = {isa = PBXBuildFile; fileRef = 347374BB0AA9206B00AD18E3 /* ShortcutRecorder.strings */; };
 		3474E000082550FD00BF30F0 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 3474DFFF082550FD00BF30F0 /* Credits.rtf */; };
 		3474E0910825634300BF30F0 /* StatusPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3474E0900825634300BF30F0 /* StatusPreferences.nib */; };
+		347933F30C861017007ADCAA /* AIColorStringTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = 347933F10C861017007ADCAA /* AIColorStringTransformer.h */; };
+		347933F40C861017007ADCAA /* AIColorStringTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 347933F20C861017007ADCAA /* AIColorStringTransformer.m */; };
 		347C6943080C8F2B00E69674 /* ESAwayStatusWindowPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 347C6941080C8F2B00E69674 /* ESAwayStatusWindowPlugin.m */; };
 		347C6949080C8F3B00E69674 /* ESAwayStatusWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 347C6947080C8F3A00E69674 /* ESAwayStatusWindowController.m */; };
 		347E39DC0A98AA4A00961B0E /* missing_image.png in Resources */ = {isa = PBXBuildFile; fileRef = 347E39DB0A98AA4A00961B0E /* missing_image.png */; };
@@ -2407,6 +2409,8 @@
 		3474DD6F0824699D00BF30F0 /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = Resources/de.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		3474DFFC08254F3500BF30F0 /* Copyright.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Copyright.txt; sourceTree = "<group>"; };
 		3474DFFF082550FD00BF30F0 /* Credits.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = Credits.rtf; path = Resources/Credits.rtf; sourceTree = "<group>"; };
+		347933F10C861017007ADCAA /* AIColorStringTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIColorStringTransformer.h; path = "Frameworks/Adium Framework/Source/AIColorStringTransformer.h"; sourceTree = "<group>"; };
+		347933F20C861017007ADCAA /* AIColorStringTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIColorStringTransformer.m; path = "Frameworks/Adium Framework/Source/AIColorStringTransformer.m"; sourceTree = "<group>"; };
 		347AC44608AAA7C70043FB94 /* ca */ = {isa = PBXFileReference; lastKnownFileType = folder; name = ca; path = "Resources/ca.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
 		347C6940080C8F2B00E69674 /* ESAwayStatusWindowPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESAwayStatusWindowPlugin.h; path = Source/ESAwayStatusWindowPlugin.h; sourceTree = "<group>"; };
 		347C6941080C8F2B00E69674 /* ESAwayStatusWindowPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESAwayStatusWindowPlugin.m; path = Source/ESAwayStatusWindowPlugin.m; sourceTree = "<group>"; };
@@ -4416,6 +4420,8 @@
 				340BA84509EC593B000EC441 /* AICorePluginLoader.m */,
 				3448054F07AC5151006A7F7B /* ESDebugAILog.h */,
 				3448054E07AC5151006A7F7B /* ESDebugAILog.m */,
+				347933F10C861017007ADCAA /* AIColorStringTransformer.h */,
+				347933F20C861017007ADCAA /* AIColorStringTransformer.m */,
 				4BFC33DD058D4430008F7FA2 /* AIObject.h */,
 				4BFC33DE058D4430008F7FA2 /* AIObject.m */,
 				4BD548AE086086B5008DF3CB /* AISoundSet.h */,
@@ -7291,6 +7297,7 @@
 				11CA00110C35EC5200A6BB8D /* SS_PrefsController.h in Headers */,
 				113439F30C6EB1EF006C115D /* AIListSmartGroup.h in Headers */,
 				34A88E190C7A26E1006EB7D4 /* AIPasswordPromptController.h in Headers */,
+				347933F30C861017007ADCAA /* AIColorStringTransformer.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7608,6 +7615,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
@@ -8757,6 +8765,7 @@
 				11CA00120C35EC5200A6BB8D /* SS_PrefsController.m in Sources */,
 				1134399B0C6E870B006C115D /* AIListSmartGroup.m in Sources */,
 				34A88E180C7A26E0006EB7D4 /* AIPasswordPromptController.m in Sources */,
+				347933F40C861017007ADCAA /* AIColorStringTransformer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10075,6 +10084,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(value)",
+					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -10102,6 +10115,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				COPY_PHASE_STRIP = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(value)",
+					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -10121,6 +10138,10 @@
 		312ED3CF0C7E875C00A6BDA9 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(value)",
+					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -10140,6 +10161,10 @@
 		312ED3D00C7E875C00A6BDA9 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(value)",
+					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
