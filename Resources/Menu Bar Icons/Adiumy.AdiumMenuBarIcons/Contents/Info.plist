@@ -13,8 +13,6 @@
 	</dict>
 	<key>Show Badge</key>
 	<true/>
-	<key>Show Unviewed Content Count</key>
-	<true/>
 	<key>XtraBundleVersion</key>
 	<string>1</string>
 </dict>

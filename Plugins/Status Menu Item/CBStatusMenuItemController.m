@@ -193,19 +193,16 @@
 // Updates the unread count of the status item.
 - (void)updateUnreadCount
 {
-	// If this bundle wants us to show an unviewed count, do so.
-	if ([menuIcons showUnviewedContentCount]) {
-		// Use AIChatController's method instead of our our array of unread chats (unviewedObjectsArray)
-		// so we can get the true number of unread messages.
-		int unreadCount = [[adium chatController] unviewedContentCount];
+	// Use AIChatController's method instead of our our array of unread chats (unviewedObjectsArray)
+	// so we can get the true number of unread messages.
+	int unreadCount = [[adium chatController] unviewedContentCount];
 
-		// Only show if greater-than zero, otherwise set to nil.
-		if (unreadCount > 0) {
-			[statusItem setTitle:[NSString stringWithFormat:@"%i", unreadCount]];
-		} else {
-			[statusItem setTitle:@""];
-		}
-	}	
+	// Only show if greater-than zero, otherwise set to nil.
+	if (unreadCount > 0) {
+		[statusItem setTitle:[NSString stringWithFormat:@"%i", unreadCount]];
+	} else {
+		[statusItem setTitle:@""];
+	}
 }
 
 #define	IMAGE_TYPE_CONTENT		@"Content"
