@@ -40,8 +40,6 @@
 
 #define BUILT_IN_STATE_ARRAY		@"BuiltInStatusStates"
 
-#define TOP_STATUS_STATE_ID			@"TopStatusID"
-
 @interface AIStatusController (PRIVATE)
 - (NSArray *)builtInStateArray;
 
@@ -1000,26 +998,6 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	}
 	
 	return activeUnvailableStatuses;
-}
-
-
-/*!
- * @brief Next available unique status ID
- */
-- (NSNumber *)nextUniqueStatusID
-{
-	NSNumber	*nextUniqueStatusID;
-
-	//Retain and autorelease since we'll be replacing this value (and therefore releasing it) via the preferenceController.
-	nextUniqueStatusID = [[[[adium preferenceController] preferenceForKey:TOP_STATUS_STATE_ID
-																  group:PREF_GROUP_SAVED_STATUS] retain] autorelease];
-	if (!nextUniqueStatusID) nextUniqueStatusID = [NSNumber numberWithInt:1];
-
-	[[adium preferenceController] setPreference:[NSNumber numberWithInt:([nextUniqueStatusID intValue] + 1)]
-										 forKey:TOP_STATUS_STATE_ID
-										  group:PREF_GROUP_SAVED_STATUS];
-
-	return nextUniqueStatusID;
 }
 
 /*!
