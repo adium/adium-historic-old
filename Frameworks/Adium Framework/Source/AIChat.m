@@ -574,7 +574,7 @@ static int nextChatNumber = 0;
 	if ([inObject isKindOfClass:[AIListContact class]] && [participatingListObjects containsObjectIdenticalTo:inObject]) {
 		[participatingListObjects removeObject:inObject];
 			
-		[[adium chatController] chat:self removedListContact:inObject];
+		[[adium chatController] chat:self removedListContact:(AIListContact *)inObject];
 	}
 }
 
