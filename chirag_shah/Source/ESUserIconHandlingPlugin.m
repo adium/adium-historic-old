@@ -98,6 +98,7 @@
 			//Load the cached image file by reference into the display array;
 			//It will only be loaded into memory if needed
 			NSString			*cachedImagePath = [self _cachedImagePathForObject:inObject];
+
 			if ([[NSFileManager defaultManager] fileExistsAtPath:cachedImagePath]) {
 				NSImage				*cachedImage;
 
@@ -128,16 +129,17 @@
 			[inObject setDisplayUserIcon:statusUserIcon
 							   withOwner:self
 						   priorityLevel:Medium_Priority];
-			
+
 			//If the new objectValue is what we just set, notify and cache
 			userIcon = [inObject displayUserIcon];
-			
+
 			if (userIcon == statusUserIcon) {
 				//Cache using the raw data if possible, otherwise create a TIFF representation to cache
 				//Note: TIFF supports transparency but not animation
 				NSData  *userIconData = [inObject statusObjectForKey:@"UserIconData"];
+
 				[self _cacheUserIconData:(userIconData ? userIconData : [userIcon TIFFRepresentation]) forObject:inObject];
-				
+
 				[[adium contactController] listObjectAttributesChanged:inObject
 														  modifiedKeys:[NSSet setWithObject:KEY_USER_ICON]];
 				
@@ -221,8 +223,8 @@
 		return YES;
 	} else {
 		//If we had a preference set before (that is, there's an object set at Highest_Priority), clear it
-		if ([[inObject displayArrayForKey:KEY_USER_ICON create:NO] priorityOfObjectWithOwner:self] == Highest_Priority) {
-
+		if ([[inObject displayArrayForKey:KEY_USER_ICON create:NO] objectWithOwner:self] &&
+			([[inObject displayArrayForKey:KEY_USER_ICON create:NO] priorityOfObjectWithOwner:self] == Highest_Priority)) {
 			[inObject setDisplayUserIcon:nil
 							   withOwner:self
 						   priorityLevel:Highest_Priority];

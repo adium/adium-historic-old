@@ -40,8 +40,8 @@ extern NSString *AIFontStyleAttributeName;
  * Operation is identical to <tt>NSMutableString</tt>'s method of the same name.  The replacement string has the attributes of the string it replaced.
  * @param target The string to search for
  * @param replacement The string with which to replace <b>target</b>
- * @param options Search options, as with NSMutableString's method
- * @param range The range in which to search
+ * @param opts Search options, as with NSMutableString's method
+ * @param searchRange The range in which to search
  * @return Returns the number of replacements made
  */
 - (unsigned int)replaceOccurrencesOfString:(NSString *)target withString:(NSString*)replacement options:(unsigned)opts range:(NSRange)searchRange;
@@ -53,8 +53,8 @@ extern NSString *AIFontStyleAttributeName;
  * @param target The string to search for
  * @param replacement The string with which to replace <b>target</b>
  * @param attributes The attributes to apply to <b>replacement</b> for each replacement
- * @param options Search options, as with NSMutableString's method
- * @param range The range in which to search
+ * @param opts Search options, as with NSMutableString's method
+ * @param searchRange The range in which to search
  * @return Returns the number of replacements made
  */
 - (unsigned int)replaceOccurrencesOfString:(NSString *)target withString:(NSString*)replacement attributes:(NSDictionary*)attributes options:(unsigned)opts range:(NSRange)searchRange;
@@ -86,7 +86,7 @@ extern NSString *AIFontStyleAttributeName;
  * @brief Convert attachments to strings
  *
  * Generate an NSAttributedString without attachments by substituting their string value if possible
- * (if the attachment responds to @selector(string)), and if not, substituting a characteristic string.
+ * (if the attachment responds to &#64;selector(string)), and if not, substituting a characteristic string.
  * @param inPlaceholder The string to use in place of attachments if a string value can not be found
  */
 - (void)convertAttachmentsToStringsUsingPlaceholder:(NSString *)inPlaceholder;
@@ -127,9 +127,9 @@ extern NSString *AIFontStyleAttributeName;
 	-[NSFont   CSSRepresentation]: [Font weight, space, ]size, space, family(?) name (name in quotes if >1 words); example: @"12pt \"Lucida Grande\""
 
 	Not currently used:
-	-[NSURL    CSSRepresentation]: @url
-	-[NSString CSSRepresentation]: Quoted form, unless it's a URL, in which case @url
-	-[NSValue  CSSRepresentation]: If NSRect, @"top right bottom left". Else, nil.
+	-[NSURL    CSSRepresentation]: &#64;url
+	-[NSString CSSRepresentation]: Quoted form, unless it's a URL, in which case &#64;url
+	-[NSValue  CSSRepresentation]: If NSRect, &#64;"top right bottom left". Else, nil.
 
 	Note that NSLinkAttributeName and NSAttachmentAttributeName will not be included in the CSS. Those must be implemented as HTML (\<a\> and \<img\>).
 
@@ -177,7 +177,7 @@ extern NSString *AIFontStyleAttributeName;
  * @brief Obtain an <tt>NSAttributedString</tt> from encoded data
  *
  * Retrieves an <tt>NSAttributedString</tt> from <tt>NSData</tt> created with -[NSAttributedString dataRepresentation]
- * @param The source <tt>NSData</tt>
+ * @param inData The source <tt>NSData</tt>
  * @return The decoded <tt>NSAttributedString</tt>
  */
 + (NSAttributedString *)stringWithData:(NSData *)inData;
@@ -186,7 +186,7 @@ extern NSString *AIFontStyleAttributeName;
  * @brief Generate an NSAttributedString without attachments
  *
  * Generate an NSAttributedString without attachments by substituting their string value if possible
- * (if the attachment responds to @selector(string)), and if not, substituting a characteristic string.
+ * (if the attachment responds to &#64;selector(string)), and if not, substituting a characteristic string.
  * @return An <tt>NSAttributedString</tt> without attachments; it may be identical to the original object.
  */
 - (NSAttributedString *)attributedStringByConvertingAttachmentsToStrings;

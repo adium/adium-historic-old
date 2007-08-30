@@ -10,9 +10,6 @@
 //      David Dauer
 //      Jesper
 //      Jamie Kirkpatrick
-//
-//  Revisions:
-//      2006-03-12 Created.
 
 #import <Cocoa/Cocoa.h>
 #import "SRCommon.h"
@@ -56,6 +53,7 @@
 
 #pragma mark *** Responder Control ***
 
+- (BOOL)becomeFirstResponder;
 - (BOOL)resignFirstResponder;
  
 #pragma mark *** Key Combination Control ***

@@ -15,10 +15,9 @@
  */
 
 #import <Adium/AIPlugin.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
 
 #define CONTACT_ALERT_IDENTIFIER            @"Open Message"
-
-@protocol AIActionHandler;
 
 @interface ESOpenMessageWindowContactAlertPlugin : AIPlugin <AIActionHandler> {
 

@@ -15,8 +15,8 @@
  */
 
 #import <Adium/AIPlugin.h>
+#import <Adium/AIContactControllerProtocol.h>
 
-@protocol AIListObjectObserver;
 
 @interface AIExtendedStatusPlugin : AIPlugin <AIListObjectObserver> {
 	BOOL	showIdle;
@@ -25,6 +25,6 @@
 	NSCharacterSet	*whitespaceAndNewlineCharacterSet;
 }
 
-- (NSString *)idleStringForSeconds:(int)seconds;
+- (NSString *)idleStringForMinutes:(int)minutes;
 
 @end

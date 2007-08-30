@@ -15,10 +15,9 @@
  */
 
 #import <Adium/AIPlugin.h>
+#import <Adium/AIContentControllerProtocol.h>
 
 @class SHLinkEditorWindowController, SHLinkFavoritesPreferences;
-@protocol AIContentFilter;
-
 
 @interface SHLinkManagementPlugin : AIPlugin {
     NSToolbarItem   *toolbarItem;

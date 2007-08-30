@@ -21,7 +21,7 @@
 #import <ExceptionHandling/NSExceptionHandler.h>
 #include <unistd.h>
 
-/*
+/*!
  * @class AIExceptionController
  * @brief Catches application exceptions and forwards them to the crash reporter application
  *
@@ -59,7 +59,9 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			@"_sharedInstance is invalid.", //Address book framework is weird sometimes
 			@"No text was found", //ICeCoffEE is an APE haxie which would crash us whenever a user pasted, or something like that
 			@"No URL is selected", //ICeCoffEE also crashes us when clicking links. How obnoxious. Release software should not use NSAssert like this.
+#warning Error 1000 is kCGErrorFirst. This special case was added in r5425, so long ago that it's possible that this was really supposed to be 1007, and has been fixed since then.
 			@"Error (1000) creating CGSWindow", //This looks like an odd NSImage error... it occurs sporadically, seems harmless, and doesn't appear avoidable
+			@"Error (1007) creating CGSWindow", //kCGErrorRangeCheck: Raised by NSImage when we create one that's bigger than a window can hold. See <http://www.cocoabuilder.com/archive/message/cocoa/2004/2/5/96193>.
 			@"Access invalid attribute location 0 (length 0)", //The undo manager can throw this one when restoring a large amount of attributed text... doesn't appear avoidable
 			@"Invalid parameter not satisfying: (index >= 0) && (index < (_itemArray ? CFArrayGetCount(_itemArray) : 0))", //A couple AppKit methods, particularly NSSpellChecker, seem to expect this exception to be happily thrown in the normal course of operation. Lovely. Also needed for FontSight compatibility.
 			@"Invalid parameter not satisfying: (index >= 0) && (index <= (_itemArray ? CFArrayGetCount(_itemArray) : 0))", //Like the above, but <= instead of <
@@ -71,12 +73,14 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		safeExceptionNames = [[NSSet alloc] initWithObjects:
 			@"GIFReadingException", //GIF reader sucks
 			@"NSPortTimeoutException", //Harmless - it timed out for a reason
-			//@"NSAccessibilityException", //Harmless - one day we should figure out how we aren't accessible, but not today
+			@"NSInvalidReceivePortException", //Same story as NSPortTimeoutException
+			@"NSAccessibilityException", //Harmless - one day we should figure out how we aren't accessible, but not today
 			@"NSImageCacheException", //NSImage is silly
 			@"NSArchiverArchiveInconsistency", //Odd system hacks can lead to this one
 			@"NSUnknownKeyException", //No reason to crash on invalid Applescript syntax
 			@"NSObjectInaccessibleException", //We don't use DO, but spell checking does; AppleScript execution requires multiple run loops, and the HIToolbox can get confused and try to spellcheck in the applescript thread. Silly Apple.
 			@"NSCharacterConversionException", //We can't help it if a character can't be converted...
+			@"NSRTFException", //Better to ignore than to crash
 			nil];
 	}
 }
@@ -88,10 +92,8 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 	if (catchExceptions) {
 		NSString	*theReason = [exception reason];
 		NSString	*theName   = [exception name];
-		NSString	*backtrace = [exception decodedExceptionStackTrace];
+		NSString	*backtrace = nil;
 
-		NSLog(@"Caught exception: %@ - %@",theName,theReason);
-		
 		//Ignore various known harmless or unavoidable exceptions (From the system or system hacks)
 		if ((!theReason) || //Harmless
 			[safeExceptionReasons containsObject:theReason] || 
@@ -108,6 +110,8 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			[theReason rangeOfString:@"TSMProcessRawKeyCode failed"].location != NSNotFound || //May be raised by -[NSEvent charactersIgnoringModifiers]
 			[theReason rangeOfString:@"Invalid PMPrintSettings in print info"].location != NSNotFound || //Invalid saved print settings can make the print dialogue throw this
 			[theReason rangeOfString:@"-[NSConcreteTextStorage attribute:atIndex:effectiveRange:]: Range or index out of bounds"].location != NSNotFound || //Can't find the source of this, but it seems to happen randomly and not provide a stack trace.
+			[theReason rangeOfString:@"SketchUpColor"].location != NSNotFound || //NSColorSwatch addition which can yield an exception
+			[theReason rangeOfString:@"-[NSConcreteFileHandle dealloc]: Bad file descriptor"].location != NSNotFound || // NSFileHandle on an invalid file descriptor should log but not crash
 			(!theName) || //Harmless
 			[theName rangeOfString:@"RSS"].location != NSNotFound || //Sparkle's RSS handling whines sometimes, but we don't care.
 		   [safeExceptionNames containsObject:theName])
@@ -116,17 +120,21 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		}
 		
 		//Check the stack trace for a third set of known offenders
+		if (shouldLaunchCrashReporter) {
+			backtrace = [exception decodedExceptionStackTrace];
+		}
 		if (!backtrace ||
 			[backtrace rangeOfString:@"-[NSFontPanel setPanelFont:isMultiple:] (in AppKit)"].location != NSNotFound || //NSFontPanel likes to create exceptions
 			//[backtrace rangeOfString:@"-[NSScrollView(NSScrollViewAccessibility) accessibilityChildrenAttribute]"].location != NSNotFound || //Perhaps we aren't implementing an accessibility method properly? No idea what though :(
 			[backtrace rangeOfString:@"-[WebBridge objectLoadedFromCacheWithURL:response:data:]"].location != NSNotFound || //WebBridge throws this randomly it seems
 			[backtrace rangeOfString:@"-[NSTextView(NSSharing) _preflightSpellChecker:]"].location != NSNotFound || //Systemwide spell checker gets corrupted on some systems; other apps just end up logging to console, and we should do the same.
-			[backtrace rangeOfString:@"-[NSFontManager(NSFontManagerCollectionAdditions) _collectionsChanged:]"].location != NSNotFound //Deleting an empty collection in 10.4.3 (and possibly other versions) throws an NSRangeException with this in the backtrace.
+			[backtrace rangeOfString:@"-[NSFontManager(NSFontManagerCollectionAdditions) _collectionsChanged:]"].location != NSNotFound || //Deleting an empty collection in 10.4.3 (and possibly other versions) throws an NSRangeException with this in the backtrace.
+			[backtrace rangeOfString:@"[NSSpellChecker sharedSpellChecker]"].location != NSNotFound //The spell checker screws up and starts throwing an exception on every word on many people's systems.
 		   )
 		{
 			   shouldLaunchCrashReporter = NO;
 		}
-			   
+
 		if (shouldLaunchCrashReporter) {
 			NSString	*bundlePath = [[NSBundle mainBundle] bundlePath];
 			NSString	*crashReporterPath = [bundlePath stringByAppendingPathComponent:RELATIVE_PATH_TO_CRASH_REPORTER];
@@ -143,6 +151,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 
 			exit(-1);
 		} else {
+			/*
 			NSLog(@"The following unhandled exception was ignored: %@ (%@)\nStack trace:\n%@",
 				  theName,
 				  theReason,
@@ -151,6 +160,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 				  theName,
 				  theReason,
 				  (backtrace ? backtrace : @"(Unavailable)"));
+			 */
 		}
 	}
 

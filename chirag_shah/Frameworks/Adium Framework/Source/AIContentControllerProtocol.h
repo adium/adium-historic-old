@@ -28,14 +28,14 @@ typedef enum {
 	AIFilterDisplay,			// Changes only how non-message content is displayed locally (Profiles, aways, auto-replies, ...)
 	AIFilterMessageDisplay,  	// Changes only how messages are displayed locally
 	AIFilterTooltips,			// Changes only information displayed in contact tooltips
-	
+	AIFilterContactList,		// Changes only information in statuses displayed in the contact list
 	/* A special content mode for AIM auto-replies that will only apply to bounced away messages.  This allows us to
 	 * filter %n,%t,... just like the official client.  A small tumor in our otherwise beautiful filter system *cry*
 	 */
 	AIFilterAutoReplyContent
 	
 } AIFilterType;
-#define FILTER_TYPE_COUNT 5
+#define FILTER_TYPE_COUNT 6
 
 typedef enum {
 	AIFilterIncoming = 0,   // Content we are receiving

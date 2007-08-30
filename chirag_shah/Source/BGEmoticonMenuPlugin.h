@@ -21,13 +21,10 @@
 {
 	NSMenuItem			*quickMenuItem;
 	NSMenuItem			*quickContextualMenuItem;
-	BOOL				needToRebuildMenus;
 	
-	NSMenu				*emoticonMenu;			//Cached emoticon menu
 	NSMutableSet		*toolbarItems;
 }
 
-- (NSMenu *)emoticonMenu;
 - (NSMenu *)flatEmoticonMenuForPack:(AIEmoticonPack *)incomingPack;
 
 @end

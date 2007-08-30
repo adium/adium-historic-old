@@ -17,6 +17,7 @@
 #import "AIListThemePreviewCell.h"
 #import "AIListThemeWindowController.h"
 #import <AIUtilities/AIColorAdditions.h>
+#import <AIUtilities/AIGradient.h>
 #import <Adium/AIAbstractListController.h>
 
 @implementation AIListThemePreviewCell
@@ -108,6 +109,19 @@
 	[[NSColor blackColor] set];
 	[NSBezierPath strokeRect:NSOffsetRect(cellFrame, .5, .5)];
 	
+}
+
+//Draw with the selected-control colours.
+- (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+{
+	//Draw the gradient
+	AIGradient *gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
+	[gradient drawInRect:cellFrame];
+	
+	//Draw a line at the light side, to make it look a lot cleaner
+	cellFrame.size.height = 1;
+	[[NSColor alternateSelectedControlColor] set];
+	NSRectFillUsingOperation(cellFrame,NSCompositeSourceOver);
 }
 
 @end

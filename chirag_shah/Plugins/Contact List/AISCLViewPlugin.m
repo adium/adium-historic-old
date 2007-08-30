@@ -15,12 +15,13 @@
  */
 
 #import "AIBorderlessListWindowController.h"
-#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIListLayoutWindowController.h"
 #import "AIListThemeWindowController.h"
 #import "AISCLViewPlugin.h"
 #import "AIStandardListWindowController.h"
 #import "ESContactListAdvancedPreferences.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 
 #define PREF_GROUP_APPEARANCE		@"Appearance"
@@ -71,7 +72,7 @@
 //Contact List Controller ----------------------------------------------------------------------------------------------
 #pragma mark Contact List Controller
 
-/*
+/*!
  * @brief Retrieve the AIListWindowController in use
  */
 - (AIListWindowController *)contactListWindowController {
@@ -89,15 +90,21 @@
 		}
     }
 	
-	[contactListWindowController showWindowInFront:bringToFront];
+	[contactListWindowController showWindowInFrontIfAllowed:bringToFront];
 }
 
 //Returns YES if the contact list is visible and in front
 - (BOOL)contactListIsVisibleAndMain
 {
+	return ([self contactListIsVisible] &&
+			[[contactListWindowController window] isMainWindow]);
+}
+
+// Returns YES if hte contact list is visible
+- (BOOL)contactListIsVisible
+{
 	return (contactListWindowController &&
 			[[contactListWindowController window] isVisible] &&
-			[[contactListWindowController window] isMainWindow] &&
 			([contactListWindowController windowSlidOffScreenEdgeMask] == AINoEdges));
 }
 

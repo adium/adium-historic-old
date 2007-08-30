@@ -111,29 +111,43 @@
 	//Name
 	NSAttributedString	*displayName = [[NSAttributedString alloc] initWithString:[self labelString]
 																	   attributes:[self labelAttributes]];
-	width += [displayName size].width;
+	width += ceil([displayName size].width);
 	[displayName release];
 
 	//User icon
 	if (userIconVisible) {
-		width += userIconSize.width;
+		width += ceil(userIconSize.width);
 		width += USER_ICON_LEFT_PAD + USER_ICON_RIGHT_PAD;
 	}
 	
 	//Status icon
 	if (statusIconsVisible &&
 	   (statusIconPosition != LIST_POSITION_BADGE_LEFT && statusIconPosition != LIST_POSITION_BADGE_RIGHT)) {
-		width += [[self statusImage] size].width;
+		width += ceil([[self statusImage] size].width);
 		width += STATUS_ICON_LEFT_PAD + STATUS_ICON_RIGHT_PAD;
 	}
 
 	//Service icon
 	if (serviceIconsVisible &&
 	   (serviceIconPosition != LIST_POSITION_BADGE_LEFT && serviceIconPosition != LIST_POSITION_BADGE_RIGHT)) {
-		width += [[self serviceImage] size].width;
+		width += ceil([[self serviceImage] size].width);
 		width += SERVICE_ICON_LEFT_PAD + SERVICE_ICON_RIGHT_PAD;
 	}
 	
+	if ((userIconVisible && (userIconPosition == LIST_POSITION_FAR_LEFT || userIconPosition == LIST_POSITION_LEFT)) ||
+		(serviceIconsVisible && (serviceIconPosition == LIST_POSITION_FAR_LEFT || serviceIconPosition == LIST_POSITION_LEFT)) ||
+		(statusIconsVisible && (statusIconPosition == LIST_POSITION_FAR_LEFT || statusIconPosition == LIST_POSITION_LEFT))) {
+		//Something is on the left. Give TEXT_WITH_IMAGES_LEFT_PAD between that and the display name
+		width += TEXT_WITH_IMAGES_LEFT_PAD;
+	}
+	
+	if ((userIconVisible && (userIconPosition == LIST_POSITION_FAR_RIGHT || userIconPosition == LIST_POSITION_RIGHT)) ||
+		(serviceIconsVisible && (serviceIconPosition == LIST_POSITION_FAR_RIGHT || serviceIconPosition == LIST_POSITION_RIGHT)) ||
+		(statusIconsVisible && (statusIconPosition == LIST_POSITION_FAR_RIGHT || statusIconPosition == LIST_POSITION_RIGHT))) {
+		//Something is on the right. Give TEXT_WITH_IMAGES_LEFT_PAD between that and the display name
+		width += TEXT_WITH_IMAGES_RIGHT_PAD;
+	}
+
 	return width + 1;
 }
 
@@ -148,8 +162,7 @@
 		statusFont = [inFont retain];
 		
 		//Calculate and cache the height of this font
-		statusFontHeight = [NSAttributedString stringHeightForAttributes:[NSDictionary dictionaryWithObject:[self statusFont]
-																									 forKey:NSFontAttributeName]];
+		statusFontHeight = [[[[NSLayoutManager alloc] init] autorelease] defaultLineHeightForFont:[self statusFont]];
 		
 		//Flush the status attributes cache
 		[_statusAttributes release]; _statusAttributes = nil;
@@ -341,6 +354,21 @@
 	if (statusIconPosition == LIST_POSITION_RIGHT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_RIGHT];
 	if (serviceIconPosition == LIST_POSITION_RIGHT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_RIGHT];
 	
+	if ((userIconVisible && (userIconPosition == LIST_POSITION_FAR_LEFT || userIconPosition == LIST_POSITION_LEFT)) ||
+		(serviceIconsVisible && (serviceIconPosition == LIST_POSITION_FAR_LEFT || serviceIconPosition == LIST_POSITION_LEFT)) ||
+		(statusIconsVisible && (statusIconPosition == LIST_POSITION_FAR_LEFT || statusIconPosition == LIST_POSITION_LEFT))) {
+		//Something is on the left. Give TEXT_WITH_IMAGES_LEFT_PAD between that and the display name
+		rect.origin.x += TEXT_WITH_IMAGES_LEFT_PAD;
+		rect.size.width -= TEXT_WITH_IMAGES_LEFT_PAD;
+	}
+
+	if ((userIconVisible && (userIconPosition == LIST_POSITION_FAR_RIGHT || userIconPosition == LIST_POSITION_RIGHT)) ||
+		(serviceIconsVisible && (serviceIconPosition == LIST_POSITION_FAR_RIGHT || serviceIconPosition == LIST_POSITION_RIGHT)) ||
+		(statusIconsVisible && (statusIconPosition == LIST_POSITION_FAR_RIGHT || statusIconPosition == LIST_POSITION_RIGHT))) {
+		//Something is on the right. Give TEXT_WITH_IMAGES_LEFT_PAD between that and the display name
+		rect.size.width -= TEXT_WITH_IMAGES_RIGHT_PAD;
+	}
+
 	//Extended Status
 	if (extendedStatusIsBelowName) rect = [self drawUserExtendedStatusInRect:rect drawUnder:YES];
 	rect = [self drawDisplayNameWithFrame:rect];
@@ -362,11 +390,16 @@
 {
 	NSRect	rect = inRect;
 	if (userIconVisible) {
+		NSImageInterpolation	savedInterpolation = [[NSGraphicsContext currentContext] imageInterpolation];
 		NSImage *image;
 		NSRect	drawRect;
 		
 		image = [self userIconImage];
-		if (!image) image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconFlipped];
+		if (!image) {
+			// if using service icons, set the interpolation to high
+			[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
+			image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconFlipped];
+		}
 
 		//Rounded corners for our user images.
 		rect = [image drawRoundedInRect:rect
@@ -374,6 +407,7 @@
 							   position:position
 							   fraction:[self imageOpacityForDrawing]
 								 radius:userIconRoundingRadius];
+		[[NSGraphicsContext currentContext] setImageInterpolation: savedInterpolation];
 
 		//If we're using space on the left, shift the origin right
 		if (position == IMAGE_POSITION_LEFT) rect.origin.x += USER_ICON_LEFT_PAD;
@@ -396,7 +430,6 @@
 		}
 		
 		//If we're using space on the right, shrink the width so we won't be overlapped
-//		if (position == IMAGE_POSITION_RIGHT) rect.size.width -= USER_ICON_RIGHT_PAD;
 		if (position == IMAGE_POSITION_LEFT) rect.origin.x += USER_ICON_RIGHT_PAD;
 		rect.size.width -= USER_ICON_RIGHT_PAD;
 	}
@@ -534,17 +567,11 @@
 	
 	if ((isEvent && backgroundColorIsEvents) || (!isEvent && backgroundColorIsStatus)) {
 		NSColor		*labelColor = [listObject displayArrayObjectForKey:@"Label Color"];	
-		NSNumber	*opacityNumber;
 		float		colorOpacity = [labelColor alphaComponent];
 		float		targetOpacity = backgroundOpacity * colorOpacity;
 
-		//The backgroundOpacity is our eventual target; Temporary Display Opacity will be a fraction from 0 to 1 which
-		//should be applied to that target
-		if ((opacityNumber = [listObject displayArrayObjectForKey:@"Temporary Display Opacity"])) {
-			targetOpacity *= [opacityNumber floatValue];
-		}
-
 		return (targetOpacity != colorOpacity) ? [labelColor colorWithAlphaComponent:targetOpacity] : labelColor;
+
 	} else {
 		return nil;
 	}
@@ -586,21 +613,10 @@
 	return [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconList direction:AIIconFlipped];
 }
 
-//No need to the grid if we have a status color to draw
-- (BOOL)drawGridBehindCell
-{
-	return [self labelColor] == nil;
-}
-
 //
 - (float)imageOpacityForDrawing
 {
-	NSNumber	*opacityNumber;
-	if ((opacityNumber = [listObject displayArrayObjectForKey:@"Temporary Display Opacity"])) {
-		return [opacityNumber floatValue];
-	} else {
-		return [[listObject displayArrayObjectForKey:@"Image Opacity"] floatValue];
-	}
+	return [[listObject displayArrayObjectForKey:@"Image Opacity"] floatValue];
 }
 
 @end

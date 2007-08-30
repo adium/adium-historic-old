@@ -134,7 +134,11 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	[addContactButton setLocalizedString:AILocalizedString(@"Add Contact", nil)];
 	[addContactCancelButton setLocalizedString:AILocalizedString(@"Cancel", nil)];
 	
+	[imageView_contactIcon setMaxSize:NSMakeSize(256, 256)];
+
 	[self _configurePeoplePicker];
+
+	[[self window] selectKeyViewFollowingView:peoplePicker];
 }
 
 /*!
@@ -508,7 +512,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	NSString	*userNameLabel = [service userNameLabel];
 	
 	[label_contactID setStringValue:[(userNameLabel ? userNameLabel :
-									  AILocalizedString(@"Contact ID",nil)) stringByAppendingString:@":"]];
+									  AILocalizedString(@"Contact ID",nil)) stringByAppendingString:AILocalizedString(@":", "Colon which will be appended after a label such as 'User Name', before an input field")]];
 }
 
 /*!

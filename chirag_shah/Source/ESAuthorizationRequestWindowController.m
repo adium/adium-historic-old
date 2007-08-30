@@ -61,6 +61,14 @@
 	[button_authorize setLocalizedString:AILocalizedString(@"Authorize", nil)];
 	[button_deny setLocalizedString:AILocalizedString(@"Deny", nil)];
 
+	// Hide the "Add to my Contact List" checkbox if the contact already exists in the list
+	AIListContact *contact = [[adium contactController] existingContactWithService:[account service] account:account UID:[infoDict objectForKey:@"Remote Name"]];
+	if (contact && [contact isIntentionallyNotAStranger]) {
+		[checkBox_addToList setState:NSOffState];
+		[checkBox_addToList setEnabled:NO];
+		[checkBox_addToList setHidden:YES];
+	}
+
 	if ([infoDict objectForKey:@"Reason"]) {
 		message = [NSString stringWithFormat:
 			AILocalizedString(@"The contact %@ wants to add %@ to his or her contact list for the following reason:\n%@",nil),
@@ -109,7 +117,8 @@
 
 	if ([checkBox_addToList state] == NSOnState) {
 		[[adium contactController] requestAddContactWithUID:[infoDict objectForKey:@"Remote Name"]
-													service:[account service]];
+													service:[account service]
+													account:account];
 	}
 	
 	[infoDict release]; infoDict = nil;

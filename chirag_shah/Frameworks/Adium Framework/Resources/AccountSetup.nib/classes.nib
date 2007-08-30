@@ -7,6 +7,7 @@
             OUTLETS = {
                 "checkBox_checkMail" = NSButton; 
                 "checkBox_sendTyping" = NSButton; 
+                "label_alias" = NSTextField; 
                 "label_encryption" = NSTextField; 
                 "label_password" = NSTextField; 
                 "label_typing" = NSTextField; 

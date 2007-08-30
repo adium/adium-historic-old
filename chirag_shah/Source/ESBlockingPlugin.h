@@ -25,5 +25,5 @@
 }
 
 - (IBAction)blockContact:(id)sender;
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem;
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem;
 @end

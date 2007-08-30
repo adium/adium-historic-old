@@ -7,8 +7,8 @@
 //
 
 #import <Adium/AIPlugin.h>
+#import <Adium/AIContactControllerProtocol.h>
 
-@protocol AIListObjectObserver;
 
 @interface ESAwayStatusWindowPlugin : AIPlugin<AIListObjectObserver> {
 	BOOL			showStatusWindow;

@@ -45,7 +45,7 @@
 	return self;
 }
 
-/*
+/*!
  * @brief Inform observers on the NSDistributedNotificationCenter that the applesript runner is ready
  */
 - (void)applescriptRunnerIsReady
@@ -57,7 +57,7 @@
 													   deliverImmediately:NO];
 }
 
-/*
+/*!
  * @brief Observer method which responds to the @"AdiumApplescriptRunner_RespondIfReady" distributed notification
  *
  * This allows simple two-way communicatino from the host application to the daemon without setting up proxy or ports
@@ -67,7 +67,7 @@
 	[self applescriptRunnerIsReady];
 }
 
-/*
+/*!
  * @brief Execute an applescript
  *
  * @param inNotification An NSNotificatoin whose userInfo NSDictionary has @"funtion", @"arguments", @"path", and @"uniqueID" keys
@@ -155,7 +155,7 @@
 	[pool release];
 }
 
-/*
+/*!
  * @brief Quit, notifying via the NSDistributedNotificationCenter that we're quitting
  */
 - (void)quit:(NSNotification *)inNotification
@@ -170,9 +170,9 @@
 	[[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
 
 	exit(0);
-}
+}				
 
-/*
+/*!
  * @brief Reset the automatic quit timer, which will exit this program after SECONDS_INACTIVITY_BEFORE_AUTOMATIC_QUIT
  */
 - (void)resetAutomaticQuitTimer

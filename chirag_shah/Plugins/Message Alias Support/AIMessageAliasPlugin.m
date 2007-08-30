@@ -35,6 +35,8 @@
     //Register us as a filter
 	[[adium contentController] registerContentFilter:self ofType:AIFilterDisplay direction:AIFilterIncoming];
 	[[adium contentController] registerContentFilter:self ofType:AIFilterAutoReplyContent direction:AIFilterOutgoing];
+	[[adium contentController] registerContentFilter:self ofType:AIFilterTooltips direction:AIFilterIncoming];
+	[[adium contentController] registerContentFilter:self ofType:AIFilterContactList direction:AIFilterIncoming];
 }
 
 - (void)uninstallPlugin
@@ -77,11 +79,12 @@
 				if (result) {
 					NSURL		*newURL;
 					NSString	*escapedLinkURLString;
+					NSString	*charactersToLeaveUnescaped = @"#";
 					
 					if (!filteredMessage) filteredMessage = [[inAttributedString mutableCopy] autorelease];
 					escapedLinkURLString = (NSString *)CFURLCreateStringByAddingPercentEscapes(/* allocator */ kCFAllocatorDefault,
 																							   (CFStringRef)result,
-																							   /* characters to leave unescaped */ NULL,
+																							   (CFStringRef)charactersToLeaveUnescaped,
 																							   /* legal characters to escape */ NULL,
 																							   kCFStringEncodingUTF8);
 					newURL = [NSURL URLWithString:escapedLinkURLString];

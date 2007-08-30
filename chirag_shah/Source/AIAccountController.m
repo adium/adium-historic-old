@@ -146,8 +146,8 @@
 - (void)addAccount:(AIAccount *)inAccount {
 	[adiumAccounts addAccount:inAccount];
 }
-- (void)deleteAccount:(AIAccount *)inAccount {
-	[adiumAccounts deleteAccount:inAccount];
+- (id<AIAccountControllerRemoveConfirmationDialog>)deleteAccount:(AIAccount *)inAccount {
+	return [inAccount confirmationDialogForAccountDeletionForAccountsList:adiumAccounts];
 }
 - (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex {
 	return [adiumAccounts moveAccount:account toIndex:destIndex];

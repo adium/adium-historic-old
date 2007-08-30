@@ -10,10 +10,6 @@
 //      David Dauer
 //      Jesper
 //      Jamie Kirkpatrick
-//
-//  Revisions:
-//      2006-05-24 Created.
-//
 
 #import "SRCommon.h"
 #import "SRKeyCodeTransformer.h"
@@ -118,10 +114,11 @@ unsigned int SRCarbonToCocoaFlags( unsigned int carbonFlags )
 {
 	unsigned int cocoaFlags = ShortcutRecorderEmptyFlags;
 	
-	if (carbonFlags & cmdKey) cocoaFlags += NSCommandKeyMask;
-	if (carbonFlags & optionKey) cocoaFlags += NSAlternateKeyMask;
-	if (carbonFlags & controlKey) cocoaFlags += NSControlKeyMask;
-	if (carbonFlags & shiftKey) cocoaFlags += NSShiftKeyMask;
+	if (carbonFlags & cmdKey) cocoaFlags |= NSCommandKeyMask;
+	if (carbonFlags & optionKey) cocoaFlags |= NSAlternateKeyMask;
+	if (carbonFlags & controlKey) cocoaFlags |= NSControlKeyMask;
+	if (carbonFlags & shiftKey) cocoaFlags |= NSShiftKeyMask;
+	if (carbonFlags & NSFunctionKeyMask) cocoaFlags += NSFunctionKeyMask;
 	
 	return cocoaFlags;
 }
@@ -133,10 +130,11 @@ unsigned int SRCocoaToCarbonFlags( unsigned int cocoaFlags )
 {
 	unsigned int carbonFlags = ShortcutRecorderEmptyFlags;
 	
-	if (cocoaFlags & NSCommandKeyMask) carbonFlags += cmdKey;
-	if (cocoaFlags & NSAlternateKeyMask) carbonFlags += optionKey;
-	if (cocoaFlags & NSControlKeyMask) carbonFlags += controlKey;
-	if (cocoaFlags & NSShiftKeyMask) carbonFlags += shiftKey;
+	if (cocoaFlags & NSCommandKeyMask) carbonFlags |= cmdKey;
+	if (cocoaFlags & NSAlternateKeyMask) carbonFlags |= optionKey;
+	if (cocoaFlags & NSControlKeyMask) carbonFlags |= controlKey;
+	if (cocoaFlags & NSShiftKeyMask) carbonFlags |= shiftKey;
+	if (cocoaFlags & NSFunctionKeyMask) carbonFlags |= NSFunctionKeyMask;
 	
 	return carbonFlags;
 }
@@ -160,6 +158,30 @@ unsigned int SRCocoaToCarbonFlags( unsigned int cocoaFlags )
 	[path appendBezierPathWithArcWithCenter:NSMakePoint(NSMinX(rect), NSMaxY(rect)) radius:radius startAngle: 90.0 endAngle:180.0];
 	[path closePath];
 	return path;
+}
+
+@end
+
+@implementation NSError( SRAdditions )
+
+- (NSString *)localizedDescription
+{
+	return [[self userInfo] objectForKey:@"NSLocalizedDescriptionKey"];
+}
+
+- (NSString *)localizedFailureReason
+{
+	return [[self userInfo] objectForKey:@"NSLocalizedFailureReasonErrorKey"];
+}
+
+- (NSString *)localizedRecoverySuggestion
+{
+	return [[self userInfo] objectForKey:@"NSLocalizedRecoverySuggestionErrorKey"];	
+}
+
+- (NSArray *)localizedRecoveryOptions
+{
+	return [[self userInfo] objectForKey:@"NSLocalizedRecoveryOptionsKey"];
 }
 
 @end

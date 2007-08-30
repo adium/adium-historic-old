@@ -16,6 +16,7 @@
 
 #import "AIListController.h"
 #import "AIListWindowController.h"
+#import "AIAnimatingListOutlineView.h"
 #import <Adium/AIChat.h>
 #import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
@@ -36,20 +37,14 @@
 #import <AIUtilities/AIObjectAdditions.h>
 #import <AIUtilities/AIFunctions.h>
 
-#define EDGE_CATCH_X						40
-#define EDGE_CATCH_Y						40
+#define EDGE_CATCH_X						40.0f
+#define EDGE_CATCH_Y						40.0f
 
 #define	MENU_BAR_HEIGHT				22
 
 #define KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN		@"Contact List Docked To Bottom"
 
 #define PREF_GROUP_APPEARANCE		@"Appearance"
-
-typedef enum {
-	AIDockToBottom_No = 0,
-    AIDockToBottom_VisibleFrame,
-	AIDockToBottom_TotalFrame
-} DOCK_BOTTOM_TYPE;
 
 @interface AIListController (PRIVATE)
 - (void)contactListChanged:(NSNotification *)notification;
@@ -75,26 +70,17 @@ typedef enum {
     [[adium notificationCenter] addObserver:self selector:@selector(contactOrderChanged:)
 									   name:Contact_OrderChanged 
 									 object:nil];
-
-	//Observe group expansion for resizing
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(outlineViewUserDidExpandItem:)
-												 name:AIOutlineViewUserDidExpandItemNotification
-											   object:contactListView];
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(outlineViewUserDidCollapseItem:)
-												 name:AIOutlineViewUserDidCollapseItemNotification
-											   object:contactListView];
 	
-	//Observe list objects for visiblity changes
-	[[adium contactController] registerListObjectObserver:self];
-
 	//Recall how the contact list was docked last time Adium was open
 	dockToBottomOfScreen = [[[adium preferenceController] preferenceForKey:KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN
 																	group:PREF_GROUP_WINDOW_POSITIONS] intValue];
-
+	[contactListView addObserver:self forKeyPath:@"desiredHeight" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:NULL];
+	
 	[self contactListChanged:nil];
 
+    //Observe preference changes
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
+	
 	return self;
 }
 
@@ -111,23 +97,30 @@ typedef enum {
 }
 
 - (void)close
-{
-	//Remember how the contact list is currently docked for next time
-	[[adium preferenceController] setPreference:[NSNumber numberWithInt:dockToBottomOfScreen]
-										 forKey:KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN
-										  group:PREF_GROUP_WINDOW_POSITIONS];
-	
+{	
     //Stop observing
     [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-	[[adium contactController] unregisterListObjectObserver:self];
-	
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+
 	[self autorelease];
 }
 
 - (void)dealloc
 {
+	[contactListView removeObserver:self forKeyPath:@"desiredHeight"];
+	
 	[super dealloc];
+}
+
+
+- (void)preferencesChangedForGroup:(NSString *)group 
+							   key:(NSString *)key
+							object:(AIListObject *)object 
+					preferenceDict:(NSDictionary *)prefDict 
+						 firstTime:(BOOL)firstTime
+{
+	[(AIAnimatingListOutlineView *)contactListView setEnableAnimation:[[prefDict objectForKey:KEY_CL_ANIMATE_CHANGES] boolValue]];
 }
 
 //Resizing And Positioning ---------------------------------------------------------------------------------------------
@@ -176,6 +169,8 @@ typedef enum {
 	NSRect		boundingFrame = [theWindowScreen frame];
 	NSRect		visibleBoundingFrame = [theWindowScreen visibleFrame];
 	
+	AIDockToBottomType oldDockToBottom = dockToBottomOfScreen;
+
 	//First, see if they are now within EDGE_CATCH_Y of the total boundingFrame
 	if ((windowFrame.origin.y < boundingFrame.origin.y + EDGE_CATCH_Y) &&
 	   ((windowFrame.origin.y + windowFrame.size.height) < (boundingFrame.origin.y + boundingFrame.size.height - EDGE_CATCH_Y))) {
@@ -188,6 +183,13 @@ typedef enum {
 		} else {
 			dockToBottomOfScreen = AIDockToBottom_No;
 		}
+	}
+
+	//Remember how the contact list is currently docked for next time
+	if (oldDockToBottom != dockToBottomOfScreen) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:dockToBottomOfScreen]
+											 forKey:KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN
+											  group:PREF_GROUP_WINDOW_POSITIONS];
 	}
 }
 
@@ -204,40 +206,42 @@ typedef enum {
 	newWindowFrame = windowFrame;
 	viewFrame = [scrollView_contactList frame];
 	
-	if(!currentScreen) currentScreen = [NSScreen mainScreen];
+	if (!currentScreen) currentScreen = [NSScreen mainScreen];
 	
 	screenFrame = [currentScreen frame]; 
 	visibleScreenFrame = [currentScreen visibleFrame];
 	
-	//Width
+    //Width
 	if (useDesiredWidth) {
 		if (forcedWindowWidth != -1) {
 			//If auto-sizing is disabled, use the specified width
 			newWindowFrame.size.width = forcedWindowWidth;
 		} else {
-			//Subtract the current size of the view from our frame
+			/* Using horizontal auto-sizing, so find and determine our new width
+			 *
+			 * First, subtract the current size of the view from our frame
+			 */
 			newWindowFrame.size.width -= viewFrame.size.width;
 			
 			//Now, figure out how big the view wants to be and add that to our frame
 			newWindowFrame.size.width += [contactListView desiredWidth];
-
+			
 			//Don't get bigger than our maxWindowWidth
 			if (newWindowFrame.size.width > maxWindowWidth) {
 				newWindowFrame.size.width = maxWindowWidth;
 			} else if (newWindowFrame.size.width < 0) {
 				newWindowFrame.size.width = 0;	
 			}
+		}
 
-			//Anchor to the appropriate screen edge
-			anchorToRightEdge = ((currentScreen != nil) &&
-								 (windowFrame.origin.x + windowFrame.size.width) + EDGE_CATCH_X > (visibleScreenFrame.origin.x + visibleScreenFrame.size.width));
-			if (anchorToRightEdge) {
-				newWindowFrame.origin.x = (windowFrame.origin.x + windowFrame.size.width) - newWindowFrame.size.width;
-			} else {
-				newWindowFrame.origin.x = windowFrame.origin.x;
-
-			}
-		}		
+		//Anchor to the appropriate screen edge
+		anchorToRightEdge = ((currentScreen && ((NSMaxX(windowFrame) + EDGE_CATCH_X) >= NSMaxX(visibleScreenFrame))) ||
+							 [(AIListWindowController *)[theWindow windowController] windowSlidOffScreenEdgeMask] == AIMaxXEdgeMask);
+		if (anchorToRightEdge) {
+			newWindowFrame.origin.x = NSMaxX(windowFrame) - NSWidth(newWindowFrame);
+		} else {
+			newWindowFrame.origin.x = NSMinX(windowFrame);
+		}
 	}
 
 	/*
@@ -249,8 +253,8 @@ typedef enum {
 	 * Alternately, if the user docked to the total frame last, we can safely use the full screen even if we aren't
 	 * on the edge.
 	 */
-	BOOL windowOnEdge = ((newWindowFrame.origin.x < screenFrame.origin.x + EDGE_CATCH_X) ||
-						 ((newWindowFrame.origin.x + newWindowFrame.size.width) > (screenFrame.origin.x + screenFrame.size.width - EDGE_CATCH_X)));
+	BOOL windowOnEdge = ((NSMinX(newWindowFrame) < NSMinX(screenFrame) + EDGE_CATCH_X) ||
+						 (NSMaxX(newWindowFrame) > (NSMaxX(screenFrame) - EDGE_CATCH_X)));
 
 	if ((windowOnEdge && (dockToBottomOfScreen != AIDockToBottom_VisibleFrame)) ||
 	   (dockToBottomOfScreen == AIDockToBottom_TotalFrame)) {
@@ -278,18 +282,18 @@ typedef enum {
 		newWindowFrame.size.height += desiredHeight;
 
 		//Vertical positioning and size if we are placed on a screen
-		if (newWindowFrame.size.height >= boundingFrame.size.height) {
+		if (NSHeight(newWindowFrame) >= NSHeight(boundingFrame)) {
 			//If the window is bigger than the screen, keep it on the screen
-			newWindowFrame.size.height = boundingFrame.size.height;
-			newWindowFrame.origin.y = boundingFrame.origin.y;
+			newWindowFrame.size.height = NSHeight(boundingFrame);
+			newWindowFrame.origin.y = NSMinY(boundingFrame);
 		} else {
 			//A non-full height window is anchored to the appropriate screen edge
 			if (dockToBottomOfScreen == AIDockToBottom_No) {
 				//If the user did not dock to the bottom in any way last, the origin should move up
-				newWindowFrame.origin.y = (windowFrame.origin.y + windowFrame.size.height) - newWindowFrame.size.height;
+				newWindowFrame.origin.y = NSMaxY(windowFrame) - NSHeight(newWindowFrame);
 			} else {
 				//If the user did dock (either to the full screen or the visible screen), the origin should remain in place.
-				newWindowFrame.origin.y = windowFrame.origin.y;				
+				newWindowFrame.origin.y = NSMinY(windowFrame);	
 			}
 		}
 
@@ -306,7 +310,7 @@ typedef enum {
 		 * expand horizontally to take that into account.  The magic number 2 fixes this method for use with our borderless
 		 * windows... I'm not sure why it's needed, but it doesn't hurt anything.
 		 */
-		if (desiredHeight + (windowFrame.size.height - viewFrame.size.height) > newWindowFrame.size.height + 2) {
+		if (desiredHeight + (NSHeight(windowFrame) - NSHeight(viewFrame)) > NSHeight(newWindowFrame) + 2) {
 			float scrollerWidth = [NSScroller scrollerWidthForControlSize:[[scrollView_contactList verticalScroller] controlSize]];
 			newWindowFrame.size.width += scrollerWidth;
 			
@@ -319,7 +323,7 @@ typedef enum {
 		if (newWindowFrame.size.width == 0) newWindowFrame.size.width = 1;
 
 		//Keep the window from hanging off any X screen edge (This is optional and could be removed if this annoys people)
-		if (NSMaxX(newWindowFrame) > NSMaxX(boundingFrame)) newWindowFrame.origin.x = NSMaxX(boundingFrame) - newWindowFrame.size.width;
+		if (NSMaxX(newWindowFrame) > NSMaxX(boundingFrame)) newWindowFrame.origin.x = NSMaxX(boundingFrame) - NSWidth(newWindowFrame);
 		if (NSMinX(newWindowFrame) < NSMinX(boundingFrame)) newWindowFrame.origin.x = NSMinX(boundingFrame);
 	}
 
@@ -344,7 +348,7 @@ typedef enum {
 
 //Content Updating -----------------------------------------------------------------------------------------------------
 #pragma mark Content Updating
-/*
+/*!
  * @brief The entire contact list, or an entire group, changed
  *
  * This indicates that an entire group changed -- the contact list is just a giant group, so that includes the entire
@@ -371,29 +375,9 @@ typedef enum {
 			[contactListView reloadItem:containingGroup reloadChildren:YES];
 		}
 	}
-
-	[self contactListDesiredSizeChanged];
 }
 
-/*
- * @brief Update auto-resizing when object visibility changes
- */
-- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
-{
-	if ([inModifiedKeys containsObject:@"VisibleObjectCount"]) {
-		/* If the visible count changes, we'll need to resize our list - but we wait until the group is 
-		 * re-sorted, trigerring contactOrderChanged: below, to actually perform the resizing.  This prevents 
-		 * the scrollbar from flickering up and some issues with us resizing before the outlineview is aware that
-		 * the view has grown taller/shorter.
-		 */
-		needsAutoResize = YES;
-	}
-
-	//Modify no keys
-	return nil;
-}
-
-/*
+/*!
  * @brief Order of contacts changed
  *
  * The notification's object is the contact whose order changed.  
@@ -409,15 +393,9 @@ typedef enum {
 	} else {
 		[contactListView reloadItem:object reloadChildren:YES];
 	}
-
-	//If we need a resize we can do that now that the outline view has been reloaded
-	if (needsAutoResize) {
-		[self contactListDesiredSizeChanged];
-		needsAutoResize = NO;
-	}
 }
 
-/*
+/*!
  * @brief List object attributes changed
  *
  * Resize horizontally if desired and the display name changed
@@ -438,7 +416,7 @@ typedef enum {
     }
 }
 
-/*
+/*!
  * @brief The outline view selection changed
  *
  * On the next run loop, post Interface_ContactSelectionChanged.  Why wait for the next run loop?
@@ -520,7 +498,7 @@ typedef enum {
 		//Move the list object to its new location
 		if ([item isKindOfClass:[AIListGroup class]]) {
 			if (item != [[adium contactController] offlineGroup]) {
-				[[adium contactController] moveListObjects:dragItems toGroup:item index:index];
+				[[adium contactController] moveListObjects:dragItems intoObject:item index:index];
 			} else {
 				success = NO;
 			}
@@ -566,19 +544,13 @@ typedef enum {
 
 	} else if ([[[info draggingPasteboard] types] containsObject:NSRTFPboardType]) {
 		//Drag and drop text sending via the contact list.
-		AIListContact   *contact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
-																			  forListContact:item];
-		
-		if (contact) {
-			//XXX
-			//This is not the best method for doing this, but I can't figure out why the Message View
-			//won't let me add the text directly into it's text entry even if I expand AIWebKitMessageView.
-			
-			//Open the chat and send the dragged text.
+		if ([item isKindOfClass:[AIListContact class]]) {
+			/* This will send the message. Alternately, we could just insert it into the text view... */
 			AIChat							*chat;
 			AIContentMessage				*messageContent;
 			
-			chat = [[adium chatController] openChatWithContact:contact];
+			chat = [[adium chatController] openChatWithContact:(AIListContact *)item
+											onPreferredAccount:YES];
 			messageContent = [AIContentMessage messageInChat:chat
 												  withSource:[chat account]
 												 destination:[chat listObject]
@@ -614,7 +586,7 @@ typedef enum {
 		
 		//Position the metaContact in the group & index the drop point was before
 		[[adium contactController] moveListObjects:[NSArray arrayWithObject:metaContact]
-										   toGroup:oldContainingObject
+										intoObject:oldContainingObject
 											 index:oldIndex];
 		
 		[oldContainingObject release];
@@ -623,15 +595,13 @@ typedef enum {
 	[context release]; //We are responsible for retaining & releasing the context dict
 }
 
-
-- (void)outlineViewUserDidExpandItem:(NSNotification *)notification
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
-	[self contactListDesiredSizeChanged];
-}
-
-- (void)outlineViewUserDidCollapseItem:(NSNotification *)notification
-{
-	[self contactListDesiredSizeChanged];
+	if (object == contactListView && [keyPath isEqualToString:@"desiredHeight"]) {
+		if ([[change objectForKey:NSKeyValueChangeNewKey] intValue] != [[change objectForKey:NSKeyValueChangeOldKey] intValue])
+			[self contactListDesiredSizeChanged];
+		
+	}
 }
 
 #pragma mark Preferences

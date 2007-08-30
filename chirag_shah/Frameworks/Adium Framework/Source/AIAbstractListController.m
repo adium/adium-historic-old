@@ -48,7 +48,7 @@
 @end
 
 @implementation AIAbstractListController
-/*
+/*!
  * @brief Initialize
  *
  * Designated initializer for AIAbstractListController
@@ -67,8 +67,6 @@
 		showTooltipsInBackground = NO;
 		backgroundOpacity = 1.0;
 
-		[self configureViewsAndTooltips];
-		
 		//Watch for drags ending so we can clear any cached drag data
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(listControllerDragEnded:)
@@ -84,7 +82,7 @@
 	return self;
 }
 
-/*
+/*!
  * @brief Delegate
  */
 - (id)delegate
@@ -92,7 +90,7 @@
 	return delegate;
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -116,7 +114,7 @@
     [super dealloc];
 }
 
-/*
+/*!
  * @brief If the contact list will be removed but the window won't go away, call this before releasing.
  *
  * Note that for this to be useful for preventing Cocoa tracking rect oddity, it must be called
@@ -139,23 +137,28 @@
 	}
 }
 
-//Setup the window after it has loaded
+//Setup the window after it has loaded and our cells have been configured
 - (void)configureViewsAndTooltips
 {
 	//Configure the contact list view
 	tooltipTracker = [[AISmoothTooltipTracker smoothTooltipTrackerForView:scrollView_contactList
 															 withDelegate:self] retain];
 
-	[[[contactListView tableColumns] objectAtIndex:0] setDataCell:[[[AIListContactCell alloc] init] autorelease]];
+	/* The table column will want to interact with a cell. We use an AIMultiCellOutlineView subclass, though,
+	 * so the contentCell and groupCell set in updateLayoutFromPrefDict:andThemeFromPrefDict: will actually be
+	 * the primary actors.
+	 */
+	[[[contactListView tableColumns] objectAtIndex:0] setDataCell:[[[AIListCell alloc] init] autorelease]];
 	
 	//Targeting
     [contactListView setTarget:self];
     [contactListView setDelegate:self];	
 	[contactListView setDataSource:self];	
 	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedItem:)];
-	
+		
 	//We handle our own intercell spacing, so override the default (3.0, 2.0) to be (0.0, 0.0) instead.
 	[contactListView setIntercellSpacing:NSZeroSize];
+	[contactListView setIndentationPerLevel:0];
 	
 	[scrollView_contactList setDrawsBackground:NO];
     [scrollView_contactList setAutoScrollToBottom:NO];
@@ -163,6 +166,10 @@
 
 	//Dragging
 	[contactListView registerForDraggedTypes:[NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs", NSFilenamesPboardType, NSURLPboardType, NSStringPboardType, nil]];
+	
+	[contactListView reloadData];
+
+	configuredViewsAndTooltips = YES;
 }
 
 - (void)setContactListRoot:(ESObjectWithStatus<AIContainingObject> *)newContactListRoot
@@ -190,6 +197,11 @@
 {
     AIListObject	*selectedObject = [sender itemAtRow:[sender selectedRow]];
 	[delegate performDefaultActionOnSelectedObject:selectedObject sender:sender];
+}
+
+- (void)performDefaultActionOnFirstItem
+{
+	[delegate performDefaultActionOnSelectedObject:[contactListView itemAtRow:1] sender:contactListView];
 }
 
 - (void)reloadData
@@ -234,8 +246,6 @@
 			contentCell = [[AIListContactBubbleToFitCell alloc] init];
 		break;
 	}
-	[contactListView setGroupCell:groupCell];
-	[contactListView setContentCell:contentCell];
 	
 	//Re-apply opacity settings for the new cells
 	[self setBackgroundOpacity:backgroundOpacity];
@@ -316,6 +326,15 @@
 	pillowsOrPillowsFittedWindowStyle = (windowStyle == AIContactListWindowStyleContactBubbles || windowStyle == AIContactListWindowStyleContactBubbles_Fitted);
 	if (pillowsOrPillowsFittedWindowStyle) {
 		//Treat the padding as spacing
+		int contactSpacing = [[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue];
+		
+		/* If we're outline bubbles, insist upon the spacing being sufficient for the outlines. Otherwise, we
+		 * allow drawing glitches as one bubble overlaps the rect of another.
+		 */
+		BOOL	outlineBubble = [[prefDict objectForKey:KEY_LIST_LAYOUT_OUTLINE_BUBBLE] boolValue];
+		int		outlineBubbleLineWidth = [[prefDict objectForKey:KEY_LIST_LAYOUT_OUTLINE_BUBBLE_WIDTH] intValue];
+		if (outlineBubble && (outlineBubbleLineWidth > contactSpacing)) contactSpacing = outlineBubbleLineWidth;
+		
 		[contentCell setSplitVerticalSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
 		[contentCell setLeftSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT] intValue]];
 		[contentCell setRightSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_RIGHT_INDENT] intValue]];
@@ -383,8 +402,12 @@
 	//Outline View
 	[contactListView setGroupCell:groupCell];
 	[contactListView setContentCell:contentCell];
-	[contactListView setNeedsDisplay:YES];
 	
+	//We're now ready to be used; configure our views and tooltips if we haven't already
+	if (!configuredViewsAndTooltips) {
+		[self configureViewsAndTooltips];
+	}
+
 	[self contactListDesiredSizeChanged];
 }
 
@@ -442,7 +465,13 @@
     AIListObject	*object = [notification object];
 	
 	//Redraw the modified object (or the whole list, if object is nil)
-	[contactListView redisplayItem:object];	
+	[contactListView redisplayItem:object];
+	
+	/* Also redraw the modified object's parent contact if it exists and isn't the same
+	 * For example, when a contact changes, redraw the metacontact which represents it if appropriate.
+	 */
+	if (object && [object isKindOfClass:[AIListContact class]] && ([(AIListContact *)object parentContact] != object))
+		[contactListView redisplayItem:[(AIListContact *)object parentContact]];
 }
 
 
@@ -501,7 +530,7 @@
 //
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
-	return [item isKindOfClass:[AIListGroup class]];
+	return !item || [item isKindOfClass:[AIListGroup class]];
 }
 
 //
@@ -513,7 +542,7 @@
 //
 - (BOOL)outlineView:(NSOutlineView *)outlineView expandStateOfItem:(id)item
 {
-    return [item isExpanded];
+    return !item || [item isExpanded];
 }
 
 /*!
@@ -558,6 +587,11 @@
 	return [self contextualMenuForListObject:listObject];
 }
 
+- (float)outlineView:(NSOutlineView *)outlineView heightOfRowByItem:(id)item
+{
+	return ([outlineView isExpandable:item] ? [groupCell cellSize].height : [contentCell cellSize].height);
+}
+
 #pragma mark Finder-style searching
 
 /*!
@@ -565,10 +599,7 @@
  */
 - (void)configureTypeSelectTableView:(KFTypeSelectTableView *)tableView
 {
-    [tableView setSearchWraps:YES]; 
-
-	//Use substring matching so that last names and screen names (if displayed) can be search targets
-	[tableView setMatchAlgorithm:KFSubstringMatchAlgorithm];
+    [tableView setSearchWraps:YES];
 }
 
 /*!

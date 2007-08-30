@@ -15,7 +15,6 @@
  */
 
 #import <Adium/ESTextAndButtonsWindowController.h>
-//#import <Adium/AIDockController.h>
 
 #define TEXT_AND_BUTTONS_WINDOW_NIB   @"TextAndButtonsWindow"
 
@@ -397,9 +396,9 @@
 	
 	userClickedButton = YES;
 
-	if(sender == button_default)
+	if (sender == button_default)
 		returnCode = AITextAndButtonsDefaultReturn;
-	else if(sender == button_alternate)
+	else if (sender == button_alternate)
 		returnCode = AITextAndButtonsAlternateReturn;			
 	else if (sender == button_other)
 		returnCode = AITextAndButtonsOtherReturn;
@@ -416,6 +415,33 @@
 	}
 }
 
+/*!
+ * @brief If escape or return are pressed inside one of our text views, pass the action on to our buttons
+ */
+- (BOOL)textView:(NSTextView *)aTextView doCommandBySelector:(SEL)aSelector
+{
+	NSButton *equivalentButton = nil;
+
+	NSLog(@"%i %i",[[button_alternate keyEquivalent] isEqualToString:@"\E"],[[button_default keyEquivalent] isEqualToString:@"\n"]);
+
+	if (aSelector == @selector(cancelOperation:) &&
+		[[button_alternate keyEquivalent] isEqualToString:@"\E"]) {
+		equivalentButton = button_alternate;
+
+	} else if (((aSelector == @selector(insertNewline:)) || (aSelector == @selector(insertNewlineIgnoringFieldEditor:))) &&
+			   [[button_default keyEquivalent] isEqualToString:@"\n"]) {
+		equivalentButton = button_default;
+
+	}
+	
+	if (equivalentButton) {
+		[equivalentButton performClick:aTextView];
+		return YES;
+
+	} else {
+		return NO;
+	}
+}
 
 
 - (void)dealloc

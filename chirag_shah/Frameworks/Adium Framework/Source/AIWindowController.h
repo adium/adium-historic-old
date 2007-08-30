@@ -15,14 +15,16 @@
  */
  
 #import <Adium/AIObject.h>
+#import <Adium/AIAdiumProtocol.h>
 
 @interface AIWindowController : NSWindowController {
-    AIAdium		*adium;
+	NSObject<AIAdium>		*adium;
 }
 
 - (IBAction)closeWindow:(id)sender;
 - (NSString *)adiumFrameAutosaveName;
+- (NSString *)savedFrameString;
 - (NSRect)savedFrameFromString:(NSString *)frameString;
 - (void)windowDidLoad;
-
+- (void)showWindowInFrontIfAllowed:(BOOL)inFront;
 @end

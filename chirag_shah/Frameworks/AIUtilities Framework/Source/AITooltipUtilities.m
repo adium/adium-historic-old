@@ -20,12 +20,18 @@
 #define TOOLTIP_TITLE_BODY_MARGIN	10.0
 #define MAX_IMAGE_DIMENSION			96.0
 
+#define TOOLTIP_OPACITY				0.9
+#define TOOLTIP_FADEOUT_INTERVAL	0.025
+#define TOOLTIP_FADOUT_STEP			0.1
+
 @interface AITooltipUtilities (PRIVATE)
 + (void)_createTooltip;
 + (void)_closeTooltip;
 + (void)_sizeTooltip;
 + (void)_drawImage;
 + (NSPoint)_tooltipFrameOriginForSize:(NSSize)tooltipSize;
++ (void)_reallyCloseTooltip;
++ (void)_performFade:(NSTimer *)timer;
 @end
 
 @implementation AITooltipUtilities
@@ -40,6 +46,7 @@ static  NSWindow				*onWindow = nil;
 static	NSAttributedString      *tooltipBody;
 static	NSAttributedString      *tooltipTitle;
 static  NSImage                 *tooltipImage;
+static	NSViewAnimation			*fadeOutAnimation;
 static  NSSize                  imageSize;
 static  BOOL                    imageOnRight;
 static	NSPoint					tooltipPoint;
@@ -95,7 +102,10 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 {    
    if ((inTitle && [inTitle length]) || (inBody && [inBody length]) || inImage) { //If passed something to display
        BOOL		newLocation = (!NSEqualPoints(inPoint,tooltipPoint) || (tooltipOrientation != inOrientation));
-
+	   
+	   BOOL fadingOut = (fadeOutAnimation != nil && [fadeOutAnimation isAnimating]);
+	   if (fadingOut) [fadeOutAnimation stopAnimation];
+	   
 	   //Update point and orientation
         tooltipPoint = inPoint;
         tooltipOrientation = inOrientation;
@@ -148,11 +158,17 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 			} else {
 				imageSize = NSZeroSize;	
 			}
-
+			
+			//If we're fading out, hide the window before moving and then show it at normal opacity
+			if (fadingOut) [tooltipWindow setAlphaValue:0.0];
             [self _sizeTooltip];
+			if (fadingOut) [tooltipWindow setAlphaValue:TOOLTIP_OPACITY];
 				
         } else if (newLocation) { //Everything is the same but the location is different
+				//If we're fading out, hide the window before moving and then show it at normal opacity
+				if (fadingOut) [tooltipWindow setAlphaValue:0.0];
                 [tooltipWindow setFrameOrigin:[self _tooltipFrameOriginForSize:[[tooltipWindow contentView] frame].size]];
+				if (fadingOut) [tooltipWindow setAlphaValue:TOOLTIP_OPACITY];
         }
 
     } else { //If passed a nil string, hide any existing tooltip
@@ -178,7 +194,7 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 		[tooltipWindow setHidesOnDeactivate:NO];
 		[tooltipWindow setIgnoresMouseEvents:YES];
 		[tooltipWindow setBackgroundColor:[NSColor whiteColor]];
-		[tooltipWindow setAlphaValue:0.9];
+		[tooltipWindow setAlphaValue:TOOLTIP_OPACITY];
 		[tooltipWindow setHasShadow:YES];
 
 		//Just using the floating panel level is insufficient because the contact list can float, too
@@ -234,7 +250,32 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 
 + (void)_closeTooltip
 {
-    [tooltipWindow orderOut:nil];
+	NSAssert2(!fadeOutAnimation, @"%s: Trying to close tooltip while a tooltip is already fading out! Animation is %@", __PRETTY_FUNCTION__, fadeOutAnimation);
+	fadeOutAnimation = [[NSViewAnimation alloc] initWithViewAnimations:[NSArray arrayWithObject:[NSDictionary dictionaryWithObjectsAndKeys:
+		tooltipWindow, NSViewAnimationTargetKey,
+		NSViewAnimationFadeOutEffect, NSViewAnimationEffectKey,
+	nil]]];
+	[fadeOutAnimation setDelegate:self];
+	[fadeOutAnimation setDuration:0.25];
+	[fadeOutAnimation setAnimationCurve:NSAnimationLinear];
+	[fadeOutAnimation startAnimation];
+}
+
+//This is called when we send stopAnimation to the animation from the showTooltipWithTitle:body:image:imageOnRight:onWindow:atPoint:orientation: method.
++ (void)animationDidStop:(NSAnimation *)animation
+{
+	if (animation != nil && animation == fadeOutAnimation)
+		[self _reallyCloseTooltip];
+}
+//This is called when the animation ends naturally.
++ (void)animationDidEnd:(NSAnimation *)animation
+{
+	if (animation != nil && animation == fadeOutAnimation)
+		[self _reallyCloseTooltip];
+}
+
++ (void)_reallyCloseTooltip
+{
     [textView_tooltipBody release];  textView_tooltipBody = nil;
     [textView_tooltipTitle release]; textView_tooltipTitle = nil;
 	[textStorage_tooltipBody release]; textStorage_tooltipBody = nil;
@@ -245,6 +286,8 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
     [tooltipTitle release];          tooltipTitle = nil;
     [tooltipImage release];          tooltipImage = nil;
     tooltipPoint = NSZeroPoint;
+	
+	[fadeOutAnimation release]; fadeOutAnimation = nil;
 }
 
 + (void)_sizeTooltip

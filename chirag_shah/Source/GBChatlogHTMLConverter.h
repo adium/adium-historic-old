@@ -15,6 +15,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import "AIObject.h"
 
 typedef enum{
 	XML_STATE_NONE,
@@ -24,7 +25,18 @@ typedef enum{
 	XML_STATE_STATUS_MESSAGE
 } chatLogState;
 
-@interface GBChatlogHTMLConverter : NSObject {
+/*!
+ *	@brief Different ways of formatting display names
+ */
+typedef enum {
+	AIDefaultName = 0,
+	AIDisplayName = 1,
+	AIDisplayName_ScreenName = 2,
+	AIScreenName_DisplayName = 3,
+	AIScreenName = 4
+} AINameFormat;
+
+@interface GBChatlogHTMLConverter : AIObject {
 	CFXMLParserRef	parser;
 	NSString		*inputFileString;
 	NSDictionary	*eventTranslate;
@@ -32,6 +44,8 @@ typedef enum{
 	chatLogState	state;
 	NSString		*sender;
 	NSString		*mySN;
+	NSString		*service;
+	NSString		*myDisplayName;
 	NSCalendarDate	*date;
 	int				messageStart;
 	BOOL			autoResponse;
@@ -39,6 +53,8 @@ typedef enum{
 	
 	NSMutableString *output;
 	NSDictionary	*statusLookup;
+	
+	AINameFormat	nameFormat;
 }
 
 + (NSString *)readFile:(NSString *)filePath;

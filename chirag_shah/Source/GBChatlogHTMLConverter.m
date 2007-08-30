@@ -15,8 +15,20 @@
  */
 
 #import "GBChatlogHTMLConverter.h"
+#import "AIStandardListWindowController.h"
+#import <Adium/AIListContact.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/NSCalendarDate+ISO8601Parsing.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
+
+
+
+#define PREF_GROUP_WEBKIT_MESSAGE_DISPLAY		@"WebKit Message Display"
+#define KEY_WEBKIT_USE_NAME_FORMAT				@"Use Custom Name Format"
+#define KEY_WEBKIT_NAME_FORMAT					@"Name Format"
 
 static void *createStructure(CFXMLParserRef parser, CFXMLNodeRef node, void *context);
 static void addChild(CFXMLParserRef parser, void *parent, void *child, void *context);
@@ -43,6 +55,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	inputFileString = nil;
 	sender = nil;
 	mySN = nil;
+	myDisplayName = nil;
 	date = nil;
 	parser = NULL;
 	status = nil;
@@ -66,7 +79,14 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 		AILocalizedString(@"Stepped Out", nil), @"steppedOut",
 		nil];
 		
-	
+	if ([[[adium preferenceController] preferenceForKey:KEY_WEBKIT_USE_NAME_FORMAT
+												  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] boolValue]) {
+		nameFormat = [[[adium preferenceController] preferenceForKey:KEY_WEBKIT_NAME_FORMAT
+															   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] intValue];
+	} else {
+		nameFormat = AIDefaultName;
+	}
+
 	return self;
 }
 
@@ -76,6 +96,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	[eventTranslate release];
 	[sender release];
 	[mySN release];
+	[myDisplayName release];
+	[service release];
 	[date release];
 	[status release];
 	[output release];
@@ -126,7 +148,25 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 		case XML_STATE_NONE:
 			if([name isEqualToString:@"chat"])
 			{
+				[mySN release];
 				mySN = [[attributes objectForKey:@"account"] retain];
+				
+				[service release];
+				service = [[attributes objectForKey:@"service"] retain];
+				
+				[myDisplayName release];
+				myDisplayName = nil;
+				
+				NSEnumerator *enumerator = [[[adium accountController] accounts] objectEnumerator];
+				AIAccount	 *account;
+				
+				while ((account = [enumerator nextObject])) {
+					if ([[[account UID] compactedString] isEqualToString:[mySN compactedString]] &&
+						[[account serviceID] isEqualToString:service]) {
+						myDisplayName = [[account displayName] retain];
+					}
+				}
+
 				state = XML_STATE_CHAT;
 			}
 			break;
@@ -197,6 +237,45 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				NSString *message = nil;
 				if(!empty)
 					message = [inputFileString substringWithRange:NSMakeRange(messageStart, end - messageStart - 11)];  // 10 for </message> and 1 for the index being off
+				NSString *shownSender = sender;
+				NSString *cssClass;
+				NSString *displayName = nil, *longDisplayName = nil;
+				
+				if ([mySN isEqualToString:sender]) {
+					//Find an account if one exists, and use its name
+					displayName = (myDisplayName ? myDisplayName : sender);
+					cssClass = @"send";
+				} else {
+					AIListObject *listObject = [[adium contactController] existingListObjectWithUniqueID:[AIListObject internalObjectIDForServiceID:service UID:sender]];
+
+					cssClass = @"receive";
+					displayName = [listObject displayName];
+					longDisplayName = [listObject longDisplayName];
+				}
+
+				if (displayName && ![displayName isEqualToString:sender]) {
+					switch (nameFormat) {
+						case AIDefaultName:
+							shownSender = (longDisplayName ? longDisplayName : displayName);
+							break;
+
+						case AIDisplayName:
+							shownSender = displayName;
+							break;
+
+						case AIDisplayName_ScreenName:
+							shownSender = [NSString stringWithFormat:@"%@ (%@)",displayName,sender];
+							break;
+
+						case AIScreenName_DisplayName:
+							shownSender = [NSString stringWithFormat:@"%@ (%@)",sender,displayName];
+							break;
+
+						case AIScreenName:
+							shownSender = sender;
+							break;	
+					}
+				}
 				
 				[output appendFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@%@: </span><pre class=\"message\">%@</pre></div>\n",
 					([mySN isEqualToString:sender] ? @"send" : @"receive"), 
@@ -204,7 +283,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 																								   showingAMorPM:YES]
 											   timeZone:nil
 												 locale:nil],
-					sender, 
+					shownSender, 
 					(autoResponse ? AILocalizedString(@" (Autoreply)",nil) : @""),
 					message];
 				state = XML_STATE_CHAT;
@@ -223,12 +302,12 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				if([message length])
 				{
 					if([status length])
-						displayMessage = [NSString stringWithFormat:@"Changed status to %@: %@", [statusLookup objectForKey:status], message];
+						displayMessage = [NSString stringWithFormat:AILocalizedString(@"Changed status to %@: %@", nil), [statusLookup objectForKey:status], message];
 					else
-						displayMessage = [NSString stringWithFormat:@"Changed status to %@", message];
+						displayMessage = [NSString stringWithFormat:AILocalizedString(@"Changed status to %@", nil), message];
 				}
 				else if([status length])
-					displayMessage = [NSString stringWithFormat:@"Changed status to %@", [statusLookup objectForKey:status]];
+					displayMessage = [NSString stringWithFormat:AILocalizedString(@"Changed status to %@", nil), [statusLookup objectForKey:status]];
 
 				if([displayMessage length])
 					[output appendFormat:@"<div class=\"status\">%@ (%@)</div>\n",

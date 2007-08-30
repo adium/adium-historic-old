@@ -18,7 +18,6 @@
  */
 
 #import "AIGradient.h"
-#import "AIContextImageBridge.h"
 #import "AIColorAdditions.h"
 
 @interface AIGradient (PRIVATE)
@@ -139,18 +138,6 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 - (void)drawInBezierPath:(NSBezierPath *)inPath
 {   
 	NSRect inRect = [inPath bounds];
-	CGRect *cgRect = (CGRect *)&inRect;
-
-	//Shifts the CGPath to origin 0,0 and scale it down to an integer width (and height).
-	float wscale = (floorf(inRect.size.width))  / inRect.size.width;
-	float hscale = (floorf(inRect.size.height)) / inRect.size.height;
-	struct CGAffineTransform transform = {
-		.a  = wscale, .b = 0.0,
-		.c  = 0.0,    .d = hscale,
-		.tx = -(inRect.origin.x), .ty = -(inRect.origin.y),
-	};
-	cgRect->size = CGSizeApplyAffineTransform(cgRect->size, transform);
-
 	float   width  = inRect.size.width;
 	float	height = inRect.size.height;
 
@@ -197,19 +184,16 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 		if (cspace != NULL) {
 			CGPoint srcPt, dstPt;
 
-			//note that the comments in this section refer to the bounds of
-			//  the context, not the window. (e.g. 'top' means 'top of the
-			//  context', not 'top of the window'.)
 			if (direction == AIVertical) {
 				//draw the gradient from the bottom middle to the top middle.
-				srcPt.x = dstPt.x = width * 0.5f;
-				srcPt.y = 0.0f;
-				dstPt.y = height;
+				srcPt.x = dstPt.x = inRect.origin.x + width * 0.5f;
+				srcPt.y = inRect.origin.y;
+				dstPt.y = inRect.origin.y + height;
 			} else {
 				//draw the gradient from the middle left to the middle right.
-				srcPt.y = dstPt.y = height * 0.5f;
-				srcPt.x = 0.0f;
-				dstPt.x = width;
+				srcPt.y = dstPt.y = inRect.origin.y + height * 0.5f;
+				srcPt.x = inRect.origin.x;
+				dstPt.x = inRect.origin.x + width;
 			}
 
 			CGShadingRef shading = CGShadingCreateAxial(
@@ -222,30 +206,25 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 			);
 
 			if (shading != NULL) {
-				AIContextImageBridge *bridge = [AIContextImageBridge bridgeWithSize:inRect.size];
-				CGContextRef context = [bridge context];
+				CGContextRef context = [[NSGraphicsContext currentContext] graphicsPort];
+				CGContextSaveGState(context);
 
-				if (context != NULL) {
-					CGContextBeginPath(context);
+				NSAssert2(context, @"%s: The Quartz graphics context that we obtained from the current NSGraphicsContext (%@) is NULL.", __PRETTY_FUNCTION__, context);
+				CGContextBeginPath(context);
 
-					//Drawing stuff
-					CGPathRef pathToAdd = CreateCGPathWithNSBezierPath(&transform, inPath); //thanks boredzo :)
-					if (pathToAdd != NULL) {
-						CGContextAddPath(context, pathToAdd);
-						CGContextClip(context);
+				//Drawing stuff
+				CGPathRef pathToAdd = CreateCGPathWithNSBezierPath(/*transform*/ NULL, inPath); //thanks boredzo :)
+				if (pathToAdd != NULL) {
+					CGContextAddPath(context, pathToAdd);
+					CGContextClip(context);
 
-						CGContextDrawShading(context, shading);
+					CGContextDrawShading(context, shading);
 
-						NSImage *image = [bridge image];
+					CGPathRelease(pathToAdd);
+				} /* if (pathToAdd != NULL) */
 
-						[image drawInRect:inRect
-								 fromRect:NSMakeRect(0.0f,0.0f, width, height) 
-								operation:NSCompositeSourceOver
-								 fraction:1.0f];
-						
-						CGPathRelease(pathToAdd);
-					} /* if (pathToAdd != NULL) */
-				} /* if (context) */
+				CGContextRestoreGState(context);
+
 				CGShadingRelease(shading);
 			} /* if (shading) */
 			CGColorSpaceRelease(cspace);

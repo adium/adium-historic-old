@@ -20,6 +20,7 @@
 #import "AIMessageViewController.h"
 #import "AIMessageWindowController.h"
 #import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import "ESDualWindowMessageAdvancedPreferences.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <Adium/AIChat.h>
@@ -48,7 +49,6 @@
 										  forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
 	preferenceMessageAdvController = [[ESDualWindowMessageAdvancedPreferences preferencePane] retain];
-
 	
 	//Watch Adium hide and unhide (Used for better window opening behavior)
 	[[NSNotificationCenter defaultCenter] addObserver:self
@@ -90,7 +90,7 @@
 	//Create the messasge tab (if necessary)
 	if (!messageTab) {
 		container = [self openContainerWithID:containerID name:containerID];
-		messageView = [AIMessageViewController messageViewControllerForChat:chat];
+		messageView = [AIMessageViewController messageDisplayControllerForChat:chat];
 
 		//Add chat to container
 		messageTab = [AIMessageTabViewItem messageTabWithView:messageView];
@@ -106,13 +106,13 @@
 	//Open the container window.  We wait until after the chat has been added to the container
 	//before making it visible so window opening looks cleaner.
 	if (container && !applicationIsHidden && ![[container window] isVisible]) {
-		[container showWindowInFront:!([[adium interfaceController] activeChat])];
+		[container showWindowInFrontIfAllowed:!([[adium interfaceController] activeChat])];
 	}
 	
 	return messageTab;
 }
 
-/*
+/*!
  * @brief Close a chat
  *
  * First, tell the chatController to close the chat. If it returns YES, remove our interface to the chat.
@@ -123,7 +123,7 @@
 {
 	AIMessageTabViewItem		*messageTab = [chat statusObjectForKey:@"MessageTabViewItem"];
 	AIMessageWindowController	*container = [messageTab container];
-	
+
 	//Close the chat
 	[container removeTabViewItem:messageTab silent:NO];
 	[chat setStatusObject:nil
@@ -213,7 +213,7 @@
 	return [[containers objectForKey:containerID] containedChats];
 }
 
-/*
+/*!
  * @brief Find the window currently displaying a chat
  *
  * If the chat is not in any window, or is not visible in any window, returns nil
@@ -227,7 +227,7 @@
 			nil);
 }
 
-/*
+/*!
  * @brief Find the chat active in a window
  *
  * If the window does not have an active chat, nil is returned
@@ -288,7 +288,7 @@
 
 	//Open any containers that should have opened while we were hidden
 	enumerator = [delayedContainerShowArray objectEnumerator];
-	while ((container = [enumerator nextObject])) [container showWindowInFront:YES];
+	while ((container = [enumerator nextObject])) [container showWindowInFrontIfAllowed:YES];
 
 	[delayedContainerShowArray removeAllObjects];
 	applicationIsHidden = NO;
@@ -344,6 +344,13 @@
 		[tabViewItem release];
 	}
 	
+}
+
+- (id)openNewContainer
+{
+	AIMessageWindowController *controller = [self openContainerWithID:[NSString stringWithFormat:@"%@:%i", ADIUM_UNIQUE_CONTAINER, uniqueContainerNumber++]
+													name:AILocalizedString(@"Chat",nil)];
+	return controller;
 }
 
 @end

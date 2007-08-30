@@ -15,8 +15,7 @@
  */
 
 #import <Adium/AIPlugin.h>
-
-@protocol AIChatObserver;
+#import <Adium/AIChatControllerProtocol.h>
 
 @interface AIDockUnviewedContentPlugin : AIPlugin <AIChatObserver> {
     NSMutableArray		*unviewedObjectsArray;

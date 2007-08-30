@@ -15,9 +15,10 @@
  */
 
 #import <Adium/AIObject.h>
+#import <Adium/AIChatControllerProtocol.h>
+#import "AIMenuBarIcons.h"
 
 @class AIAccountMenu, AIStatusMenu;
-@protocol AIChatObserver;
 
 @interface CBStatusMenuItemController : AIObject <AIChatObserver>
 {
@@ -25,19 +26,16 @@
 	NSMenu                  *theMenu;
 	AIAccountMenu           *accountMenu;
 	AIStatusMenu			*statusMenu;
+	AIMenuBarIcons			*menuIcons;
 
 	NSMutableArray          *accountMenuItemsArray;
 	NSMutableArray          *stateMenuItemsArray;
 	NSMutableArray          *unviewedObjectsArray;
 	NSMutableArray          *openChatsArray;
 
-	NSImage                 *adiumOfflineImage; 
-	NSImage                 *adiumOfflineHighlightImage;
-	NSImage                 *adiumImage;
-	NSImage                 *adiumHighlightImage;
-
 	BOOL					unviewedContent;
 	BOOL                    needsUpdate;
+	BOOL					contactListOpen;
 }
 
 + (CBStatusMenuItemController *)statusMenuItemController;

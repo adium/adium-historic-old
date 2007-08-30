@@ -11,6 +11,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <Adium/AIListGroup.h>
 
 @implementation AdiumChatEvents
 
@@ -33,7 +34,7 @@
 										  globalOnly:NO];	
 }
 
-/*
+/*!
  * @brief A group chat added a contact
  */
 - (void)chat:(AIChat *)chat addedListContact:(AIListContact *)inContact
@@ -45,7 +46,7 @@
 					  previouslyPerformedActionIDs:nil];
 }
 
-/*
+/*!
  * @brief A group chat removed a contact
  */
 - (void)chat:(AIChat *)chat removedListContact:(AIListContact *)inContact

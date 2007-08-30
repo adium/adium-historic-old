@@ -36,6 +36,11 @@
         }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
+            CLASS = AIDividedAlternatingRowOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIAlternatingRowOutlineView; 
+        }, 
+        {
             CLASS = AILogViewerWindowController; 
             LANGUAGE = ObjC; 
             SUPERCLASS = AIAbstractLogViewerWindowController; 

@@ -16,8 +16,7 @@
 
 #import <Adium/AIListObject.h>
 #import <Adium/AIAccount.h>
-
-@class AIAccount, AIContentObject, AIListContact, AIListGroup;
+#import <Adium/AIListGroup.h>
 
 @interface AIListContact : AIListObject {
 	AIAccount		*account;
@@ -42,6 +41,11 @@
 - (NSString *)ownPhoneticName;
 - (NSString *)serversideDisplayName;
 
+- (BOOL)canContainOtherContacts;
+- (BOOL)containsMultipleContacts;
+
+- (BOOL)isIntentionallyNotAStranger;
+
 - (void)setIsMobile:(BOOL)isMobile notify:(NotifyTiming)notify;
 - (void)setOnline:(BOOL)online notify:(NotifyTiming)notify silently:(BOOL)silent;
 - (void)setSignonDate:(NSDate *)signonDate notify:(NotifyTiming)notify;
@@ -64,5 +68,8 @@
 				  silently:(BOOL)silent;
 
 - (NSAttributedString *)contactListStatusMessage;
+
+- (NSWritingDirection)baseWritingDirection;
+- (void)setBaseWritingDirection:(NSWritingDirection)direction;
 
 @end

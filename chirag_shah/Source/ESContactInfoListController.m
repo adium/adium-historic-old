@@ -30,22 +30,26 @@
     if (item == nil) {
 		if (hideRoot) {
 			if ([contactList isKindOfClass:[AIMetaContact class]]) {
-				return (index >= 0 && index < [(AIMetaContact *)contactList uniqueContainedObjectsCount] ?
-					   [(AIMetaContact *)contactList uniqueObjectAtIndex:index] : 
-					   nil);
+				return ((index >= 0) && (index < [(AIMetaContact *)contactList uniqueContainedObjectsCount]) ?
+						[(AIMetaContact *)contactList uniqueObjectAtIndex:index] : 
+						nil);
 			} else {
-				return (index >= 0 && index < [(AIListGroup *)contactList containedObjectsCount]) ? [contactList objectAtIndex:index] : nil;
+				return ((index >= 0) && (index < [(AIListGroup *)contactList containedObjectsCount]) ?
+						[contactList objectAtIndex:index] :
+						nil);
 			}
 		} else {
 			return contactList;
 		}
     } else {
 		if ([item isKindOfClass:[AIMetaContact class]]) {
-			return (index >= 0 && index < [(AIMetaContact *)item uniqueContainedObjectsCount] ? 
-				   [(AIMetaContact *)item uniqueObjectAtIndex:index] : 
-				   nil);
+			return ((index >= 0) && (index < [(AIMetaContact *)item uniqueContainedObjectsCount]) ? 
+					[(AIMetaContact *)item uniqueObjectAtIndex:index] : 
+					nil);
 		} else {
-			return (index >= 0 && index < [(AIListGroup *)item containedObjectsCount]) ? [item objectAtIndex:index] : nil;
+			return ((index >= 0) && (index < [(AIListGroup *)item containedObjectsCount]) ?
+					[item objectAtIndex:index] :
+					nil);
 		}
     }
 }
@@ -223,7 +227,7 @@
 				}
 			}
 			
-			[[adium contactController] moveListObjects:realDragItems toGroup:item index:index];
+			[[adium contactController] moveListObjects:realDragItems intoObject:item index:index];
 			[outlineView reloadData];
 		}
 	}

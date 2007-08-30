@@ -6,6 +6,7 @@
 //
 
 #import "AIDockingWindow.h"
+#import "AIEventAdditions.h"
 
 #define WINDOW_DOCKING_DISTANCE 	12	//Distance in pixels before the window is snapped to an edge
 #define IGNORED_X_RESISTS			3
@@ -57,6 +58,7 @@
 	resisted_YMotion = 0;
 	oldWindowFrame = NSMakeRect(0,0,0,0);
 	alreadyMoving = NO;
+	dockingEnabled = YES;
 }
 
 //Stop observing movement
@@ -71,7 +73,8 @@
 //Watch the window move.  If it gets near an edge, dock it to that edge
 - (void)windowDidMove:(NSNotification *)notification
 {
-	if (!alreadyMoving) {  //Our setFrame call below will cause a re-entry into this function, we must guard against this
+	//Our setFrame call below will cause a re-entry into this function, we must guard against this
+	if (!alreadyMoving && dockingEnabled && ![NSEvent shiftKey]) {
 		alreadyMoving = YES;	
 		
 		//Attempt to dock this window the the visible frame first, and then to the screen frame
@@ -164,6 +167,9 @@
 		[[self delegate] performSelector:@selector(windowDidToggleToolbarShown:)
 							  withObject:self];
 	}
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:AIWindowToolbarDidToggleVisibility
+														object:self];
 }
 
 - (void)_toolbarPillButtonClicked:(id)sender
@@ -174,6 +180,14 @@
 		[[self delegate] performSelector:@selector(windowDidToggleToolbarShown:)
 							  withObject:self];
 	}
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName:AIWindowToolbarDidToggleVisibility
+														object:self];
+}
+
+- (void)setDockingEnabled:(BOOL)inEnabled
+{
+	dockingEnabled = inEnabled;
 }
 
 @end

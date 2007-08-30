@@ -18,6 +18,7 @@
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIAccountPlusFieldPromptController.h>
 #import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
@@ -29,14 +30,13 @@
 - (void)_configureTextFieldForAccount:(AIAccount *)account;
 @end
 
+#define ACCOUNT_PLUS_FIELD_GROUP	@"AccountPlusFieldWindows"
+
 @implementation AIAccountPlusFieldPromptController
 
 + (id)sharedInstance {return nil;};
 + (id)createSharedInstance {return nil;};
 + (void)destroySharedInstance {};
-
-- (IBAction)okay:(id)sender {};
-
 
 + (void)showPrompt
 {
@@ -62,7 +62,7 @@
 {
 	AIListContact	*contact = nil;
 	NSString		*UID = nil;
-	AIAccount		*account = [[popUp_service selectedItem] representedObject];;
+	AIAccount		*account = [[popUp_service selectedItem] representedObject];
 
 	id impliedValue = [textField_handle impliedValue];
 	if ([impliedValue isKindOfClass:[AIMetaContact class]]) {
@@ -96,19 +96,51 @@
 	/* Configure the auto-complete view to autocomplete for contacts matching the selected account's service
 	 * Don't include meta contacts which don't currently contain any valid contacts
 	 */
-    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil] objectEnumerator];
+    enumerator = [[[adium contactController] allContacts] objectEnumerator];
     while ((contact = [enumerator nextObject])) {
-		if ([contact service] == [account service] &&
+		if ([[[contact service] serviceClass] isEqualToString:[[account service] serviceClass]] &&
 			(![contact isKindOfClass:[AIMetaContact class]] || [[(AIMetaContact *)contact listContacts] count])) {
 			NSString *UID = [contact UID];
 			[textField_handle addCompletionString:[contact formattedUID] withImpliedCompletion:UID];
 			[textField_handle addCompletionString:[contact displayName] withImpliedCompletion:contact];
 			[textField_handle addCompletionString:UID];
 		}
-    }
-	
+    }	
 }
 
+/*!
+ * @brief This is the key under which the last selected account is saved for this prompt
+ *
+ * Subclasses should override to get per-window-type saving behavior
+ */
+- (NSString *)lastAccountIDKey
+{
+	return @"General";
+}
+
+- (void)_restoreLastAccountIfPossible
+{
+	NSString *accountID = [[adium preferenceController] preferenceForKey:[NSString stringWithFormat:@"AccountPlusFieldLastAccountID:%@", [self lastAccountIDKey]]
+																   group:ACCOUNT_PLUS_FIELD_GROUP];
+	AIAccount *account = [[adium accountController] accountWithInternalObjectID:accountID];
+	int accountIndex = (account ? [[popUp_service menu] indexOfItemWithRepresentedObject:account] : -1);
+
+	if (accountIndex != -1) {
+		[popUp_service selectItemAtIndex:accountIndex];
+	}
+}
+
+- (void)_saveConfiguredAccount
+{
+	[[adium preferenceController] setPreference:[[[popUp_service selectedItem] representedObject] internalObjectID]
+										 forKey:[NSString stringWithFormat:@"AccountPlusFieldLastAccountID:%@", [self lastAccountIDKey]]
+											 group:ACCOUNT_PLUS_FIELD_GROUP];
+}
+
+- (IBAction)okay:(id)sender
+{
+	[self _saveConfiguredAccount];
+}
 
 // Private --------------------------------------------------------------------------------
 - (id)initWithWindowNibName:(NSString *)windowNibName
@@ -135,7 +167,7 @@
 	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self
 											  submenuType:AIAccountNoSubmenu
 										   showTitleVerbs:NO] retain];
-	
+	[self _restoreLastAccountIfPossible];
 	[self _configureTextFieldForAccount:[[popUp_service selectedItem] representedObject]];
 
     //Center the window

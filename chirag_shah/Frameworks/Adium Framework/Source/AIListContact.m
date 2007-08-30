@@ -29,6 +29,13 @@
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIMutableStringAdditions.h>
 
+#include <AvailabilityMacros.h>
+
+#define KEY_BASE_WRITING_DIRECTION		@"Base Writing Direction"
+#define PREF_GROUP_WRITING_DIRECTION	@"Writing Direction"
+
+#define CONTACT_SIGN_ON_OR_OFF_PERSISTENCE_DELAY 15
+
 @implementation AIListContact
 
 //Init with an account
@@ -69,7 +76,7 @@
 	return account;
 }
 
-/*
+/*!
  * @brief Set the UID of this contact
  *
  * The UID for an AIListContact generally shouldn't change... if the contact is actually renamed serverside, however,
@@ -169,7 +176,7 @@
 	return [super displayName];
 }
 
-/*
+/*!
  * @brief This contact's serverside display name, which is generally specificed by the contact remotely
  *
  * @result The serverside display name, or nil if none is set
@@ -177,6 +184,10 @@
 - (NSString *)serversideDisplayName
 {
 	return [self statusObjectForKey:@"Server Display Name"];	
+}
+
+- (BOOL)canContainOtherContacts {
+    return NO;
 }
 
 - (void)setServersideAlias:(NSString *)alias 
@@ -295,7 +306,7 @@
 						   notify:notify];
 			[self setStatusObject:nil
 						   forKey:(online ? @"Signed On" : @"Signed Off")
-					   afterDelay:15];
+					   afterDelay:CONTACT_SIGN_ON_OR_OFF_PERSISTENCE_DELAY];
 		}
 		
 		if (online) {
@@ -406,7 +417,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Warning level
  *
  * @result The warning level, an integer between 0 and 100
@@ -416,7 +427,7 @@
 	return [self integerStatusObjectForKey:@"Warning"];
 }
 
-/*
+/*!
  * @brief Set the profile
  */
 - (void)setProfile:(NSAttributedString *)profile notify:(NotifyTiming)notify
@@ -426,7 +437,7 @@
 				   notify:notify];
 }
 
-/*
+/*!
  * @brief Profile
  */
 - (NSAttributedString *)profile
@@ -442,6 +453,14 @@
 - (BOOL)isStranger
 {
 	return ![self integerStatusObjectForKey:@"NotAStranger"];
+}
+
+/*!
+ * @brief If this contact intentionally on the contact list?
+ */
+- (BOOL)isIntentionallyNotAStranger
+{
+	return ![self isStranger] && [[self account] isContactIntentionallyListed:self];
 }
 
 /*!
@@ -557,7 +576,7 @@
 	return contactListStatusMessage;	
 }
 
-/*
+/*!
  * @brief Are sounds for this contact muted?
  */
 - (BOOL)soundsAreMuted
@@ -566,7 +585,7 @@
 }
 
 #pragma mark Parents
-/*
+/*!
  * @brief This object's parent AIListGroup
  *
  * @result An AIListGroup which contains this object or the object containing this object, or nil if it is not in an AIListGroup.
@@ -582,25 +601,35 @@
 	}
 }
 
-/*
+/*!
  * @brief This object's parent AIListContact
  *
  * The parent AIListContact is the appropriate place to apply preferences specific to this contact so that such
  * preferences are also applied to other AIListContacts in the same meta contact, if necessary.
  *
- * @result Either this contact, if it is not in a metaContact, or the AIMetaContact which contains it.
+ * @result Either this contact or some more-encompassing contact which ultimately contains it.
  */
  - (AIListContact *)parentContact
  {
 	AIListContact	*parentContact = self;
 
-	if (containingObject && [containingObject isKindOfClass:[AIMetaContact class]]) {
-		parentContact = (AIMetaContact *)containingObject;		
+	while ([[parentContact containingObject] isKindOfClass:[AIListContact class]]) {
+		parentContact = (AIListContact *)[parentContact containingObject];
 	}
 
 	return parentContact;
  }
- 
+
+- (BOOL)containsObject:(AIListObject*)object
+{
+    return NO;
+}
+
+- (BOOL)containsMultipleContacts
+{
+    return NO;
+}
+
 #pragma mark Equality
 /*
 - (BOOL)isEqual:(id)anObject
@@ -642,7 +671,8 @@
 			targetAccount = [targetMessagingContact account];	
 		}
 		
-		chat = [[adium chatController] openChatWithContact:targetMessagingContact];
+		chat = [[adium chatController] openChatWithContact:targetMessagingContact
+										onPreferredAccount:NO];
 		
 		//Take the string and turn it into an attributed string (in case we were passed HTML)
 		NSAttributedString  *attributedMessage = [AIHTMLDecoder decodeHTML:message];
@@ -672,6 +702,40 @@
 	}
 		
 	return nil;
+}
+
+//Writing Direction ----------------------------------------------------------------------------------------------------------
+#pragma mark Writing Direction
+
+- (NSWritingDirection)baseWritingDirection {
+	NSNumber	*dir;
+
+	if ((dir = [self preferenceForKey:KEY_BASE_WRITING_DIRECTION group:PREF_GROUP_WRITING_DIRECTION])) {
+		//If we have a saved base direction, we'll return that.
+		return [dir intValue];
+
+	} else {
+		//Otherwise, we'll try to be smart and use the default writing direction of the language of the user's locale
+		//(and not the language of the active localization). By that, we assume most users are mostly talking to their local friends.
+		NSString	*lang = nil;
+
+#ifdef __LITTLE_ENDIAN__
+		//An Intel build need not care about anything before 10.4
+		lang = [[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode];
+#else
+		/* Rather than manually loading this symbol from the appkit bundle, we'll just hard code its value.
+		 * Worst case is we nil or irrelevant data back, at which point NSParagraphStyle will return the default locale's direction
+		 * anyways.
+		 */
+		lang = [[NSClassFromString(@"NSLocale") currentLocale] objectForKey:@"locale:language code"];
+#endif
+
+		return [NSParagraphStyle defaultWritingDirectionForLanguage:lang];
+	}
+}
+
+- (void)setBaseWritingDirection:(NSWritingDirection)direction {
+	[self setPreference:[NSNumber numberWithInt:direction] forKey:KEY_BASE_WRITING_DIRECTION group:PREF_GROUP_WRITING_DIRECTION];
 }
 
 @end

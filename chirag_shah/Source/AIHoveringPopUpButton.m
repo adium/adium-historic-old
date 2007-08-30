@@ -119,7 +119,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Only pass on a highlight message if we're highlighting on click or this is turning off a highlight
  */
 - (void)highlight:(BOOL)inFlag
@@ -154,7 +154,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Set the title
  */
 - (void)setTitle:(NSString *)inTitle

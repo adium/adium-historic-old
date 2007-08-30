@@ -63,8 +63,6 @@ static int nextChatNumber = 0;
 
 		pendingOutgoingContentObjects = [[NSMutableArray alloc] init];
 		
-		contentObjectArray = [[NSMutableArray alloc] init];
-
 		AILog(@"[AIChat: %x initForAccount]",self);
 	}
 
@@ -86,20 +84,20 @@ static int nextChatNumber = 0;
 	[uniqueChatID release]; uniqueChatID = nil;
 	[customEmoticons release]; customEmoticons = nil;
 
-	[contentObjectArray release]; contentObjectArray = nil;
-
 	[super dealloc];
 }
 
 //Big image
 - (NSImage *)chatImage
 {
-	AIListObject 	*listObject = [self listObject];
+	AIListContact 	*listObject = [self listObject];
 	NSImage			*image = nil;
-	
+
 	if (listObject) {
-		image = [listObject userIcon];
+		image = [[listObject parentContact] userIcon];
 		if (!image) image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconNormal];
+	} else {
+		image = [AIServiceIcons serviceIconForObject:[self account] type:AIServiceIconLarge direction:AIIconNormal];
 	}
 
 	return image;
@@ -143,14 +141,6 @@ static int nextChatNumber = 0;
 - (NSDate *)dateOpened
 {
 	return dateOpened;
-}
-
-- (void)setDateOpened:(NSDate *)inDate
-{
-	if (dateOpened != inDate) {
-	   [dateOpened release]; 
-	   dateOpened = [inDate retain];
-    }
 }
 
 - (BOOL)isOpen
@@ -260,7 +250,34 @@ static int nextChatNumber = 0;
 }
 - (void)setName:(NSString *)inName
 {
-	[name release]; name = [inName retain]; 
+	if (name != inName) {
+		[name release]; name = [inName retain]; 
+	}
+}
+
+/*!
+ * @brief Return an identifier which can be used to look up this chat later
+ *
+ * Use setIdentifier to specify an arbitrary identifier for this chat.
+ *
+ * Use uniqueChatID as a unique identifier for a contact-service combination.
+ */
+- (id)identifier
+{
+	return identifier;
+}
+
+/*!
+ * @brief Set an identifier for this chat
+ *
+ * Only an account which created a chat should specify the identifier; it has no useful menaing outside that context.
+ */
+- (void)setIdentifier:(id)inIdentifier
+{
+	if (identifier != inIdentifier) {
+		[identifier release];
+		identifier = [inIdentifier retain];
+	}
 }
 
 - (NSString *)displayName
@@ -277,10 +294,6 @@ static int nextChatNumber = 0;
 
 //Participating ListObjects --------------------------------------------------------------------------------------------
 #pragma mark Participating ListObjects
-- (NSArray *)participatingListObjects
-{
-    return participatingListObjects;
-}
 
 - (void)addParticipatingListObject:(AIListContact *)inObject notify:(BOOL)notify
 {
@@ -291,26 +304,11 @@ static int nextChatNumber = 0;
 		[[adium chatController] chat:self addedListContact:inObject notify:notify];
 	}
 }
-- (void)addParticipatingListObject:(AIListContact *)inObject
-{
-	[self addParticipatingListObject:inObject notify:YES];
-}
 
 // Invite a list object to join the chat. Returns YES if the chat joins, NO otherwise
 - (BOOL)inviteListContact:(AIListContact *)inContact withMessage:(NSString *)inviteMessage
 {
 	return ([[self account] inviteContact:inContact toChat:self withMessage:inviteMessage]);
-}
-
-//
-- (void)removeParticipatingListObject:(AIListContact *)inObject
-{
-	if ([participatingListObjects containsObjectIdenticalTo:inObject]) {
-		//Remove
-		[participatingListObjects removeObject:inObject];
-		
-		[[adium chatController] chat:self removedListContact:inObject];
-	}
 }
 
 - (void)setPreferredListObject:(AIListContact *)inObject
@@ -338,7 +336,7 @@ static int nextChatNumber = 0;
 		if ([participatingListObjects count]) {
 			[participatingListObjects removeObjectAtIndex:0];
 		}
-		[self addParticipatingListObject:inListObject];
+		[self addObject:inListObject];
 
 		//Clear any local caches relying on the list object
 		[self clearListObjectStatuses];
@@ -352,14 +350,18 @@ static int nextChatNumber = 0;
 - (NSString *)uniqueChatID
 {
 	if (!uniqueChatID) {
-		AIListObject	*listObject;
-		if ((listObject = [self listObject])) {
-			uniqueChatID = [[listObject internalObjectID] retain];
-		} else if (name) {
-			uniqueChatID = [[NSString alloc] initWithFormat:@"%@.%i",name,nextChatNumber++];
+		if ([self isGroupChat]) {
+			uniqueChatID = [[NSString alloc] initWithFormat:@"%@.%i",[self name],nextChatNumber++];
+		} else {			
+			uniqueChatID = [[[self listObject] internalObjectID] retain];
+		}
+
+		if (!uniqueChatID) {
+			uniqueChatID = [[NSString alloc] initWithFormat:@"UnknownChat.%i",nextChatNumber++];
+			NSLog(@"Warning: Unknown chat %p",self);
 		}
 	}
-	
+
 	return (uniqueChatID);
 }
 
@@ -371,7 +373,7 @@ static int nextChatNumber = 0;
 //Content --------------------------------------------------------------------------------------------------------------
 #pragma mark Content
 
-/*
+/*!
  * @brief Informs the chat that the core and the account are ready to begin filtering and sending a content object
  *
  * If there is only one object in pendingOutgoingContentObjects after adding inObject, we should send immedaitely.
@@ -394,7 +396,7 @@ static int nextChatNumber = 0;
 			(currentIndex == 0));
 }
 
-/*
+/*!
  * @brief Informs the chat that an outgoing content object was sent and dispalyed.
  *
  * It is no longer pending, so we remove it from that array.
@@ -411,24 +413,23 @@ static int nextChatNumber = 0;
 	}
 }
 
-//
-- (void)removeAllContent
-{
-    [contentObjectArray release]; contentObjectArray = [[NSMutableArray alloc] init];
-}
-
 - (BOOL)canSendMessages
 {
 	BOOL canSendMessages;
 	if ([self isGroupChat]) {
+		//XXX Liar!
 		canSendMessages = YES;
 
 	} else {
-		AIListContact *listObject = [self listObject];
-
-		canSendMessages = ([listObject online] ||
-						   [listObject isStranger] ||
-						   [[self account] canSendOfflineMessageToContact:listObject]);
+		if ([[self account] online]) {
+			AIListContact *listObject = [self listObject];
+			
+			canSendMessages = ([listObject online] ||
+							   [listObject isStranger] ||
+							   [[self account] canSendOfflineMessageToContact:listObject]);
+		} else {
+			canSendMessages = NO;
+		}
 	}
 	
 	return canSendMessages;
@@ -459,7 +460,7 @@ static int nextChatNumber = 0;
 
 //Applescript ----------------------------------------------------------------------------------------------------------
 #pragma mark Applescript
-/*
+/*!
  * @brief Applescript command to send a message in this chat
  */
 - (id)sendScriptCommand:(NSScriptCommand *)command {
@@ -488,7 +489,7 @@ static int nextChatNumber = 0;
 	if (filePath && [filePath length]) {
 		AIAccount		*sourceAccount = [evaluatedArguments objectForKey:@"account"];
 
-		NSEnumerator	*enumerator = [[self participatingListObjects] objectEnumerator];
+		NSEnumerator	*enumerator = [[self containedObjects] objectEnumerator];
 		AIListContact	*listContact;
 		
 		while ((listContact = [enumerator nextObject])) {
@@ -516,7 +517,7 @@ static int nextChatNumber = 0;
 //AIContainingObject protocol
 - (NSArray *)containedObjects
 {
-	return [self participatingListObjects];
+	return participatingListObjects;
 }
 
 - (unsigned)containedObjectsCount
@@ -560,7 +561,7 @@ static int nextChatNumber = 0;
 - (BOOL)addObject:(AIListObject *)inObject
 {
 	if ([inObject isKindOfClass:[AIListContact class]]) {
-		[self addParticipatingListObject:(AIListContact *)inObject];
+		[self addParticipatingListObject:(AIListContact *)inObject notify:YES];
 		
 		return YES;
 	} else {
@@ -570,12 +571,18 @@ static int nextChatNumber = 0;
 
 - (void)removeObject:(AIListObject *)inObject
 {
-	if ([inObject isKindOfClass:[AIListContact class]]) {
-		[self removeParticipatingListObject:(AIListContact *)inObject];
+	if ([inObject isKindOfClass:[AIListContact class]] && [participatingListObjects containsObjectIdenticalTo:inObject]) {
+		[participatingListObjects removeObject:inObject];
+			
+		[[adium chatController] chat:self removedListContact:(AIListContact *)inObject];
 	}
 }
 
-- (void)removeAllObjects {};
+- (void)removeAllObjects 
+{
+	while([self containedObjectsCount] > 0)
+		[self removeObject:[self objectAtIndex:0]];
+}
 
 - (void)setExpanded:(BOOL)inExpanded
 {
@@ -618,7 +625,7 @@ static int nextChatNumber = 0;
 	}	
 }
 
-/*
+/*!
  * @brief Is the passed object ignored?
  *
  * @param inContact The contact to check
@@ -670,7 +677,7 @@ static int nextChatNumber = 0;
 
 #pragma mark Errors
 
-/*
+/*!
  * @brief Inform the chat that an error occurred
  *
  * @param type An NSNumber containing an AIChatErrorType
@@ -682,17 +689,6 @@ static int nextChatNumber = 0;
 
 	//No need to continue to store the NSNumber
 	[self setStatusObject:nil forKey:KEY_CHAT_ERROR notify:NotifyNever];
-}
-
-#pragma mark Content array (deprecated?)
-- (NSArray *)contentObjectArray
-{
-    return(contentObjectArray);
-}
-
-- (void)addContentObject:(AIContentObject *)inObject
-{
-	[contentObjectArray insertObject:inObject atIndex:0];
 }
 
 @end

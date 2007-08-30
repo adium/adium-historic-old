@@ -16,6 +16,7 @@
 #import <Adium/AITextAttachmentExtension.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AITextAttachmentAdditions.h>
+#import <AIUtilities/AIFileManagerAdditions.h>
 
 #define ICON_WIDTH	64
 #define ICON_HEIGHT	64
@@ -57,7 +58,7 @@
 	return ret;
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -118,7 +119,7 @@
 	return self;
 }
 
-/*
+/*!
  * @brief Set the path represented by this text attachment
  *
  * If an image has not been set, and this path points to an image, [self image] will return the image, loading it from this path
@@ -133,10 +134,22 @@
 
 - (NSString *)path
 {
+	if (!path && image) {
+		/* If no path is available, an image *is* available, and we need a path to that image, write it out and return
+		 * the location of the written data.
+		 */
+		NSString *tmpDir = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSProcessInfo processInfo] globallyUniqueString]];
+		NSString *filename = [[self string] stringByAppendingPathExtension:@"png"];
+		[[NSFileManager defaultManager] createDirectoriesForPath:tmpDir];
+
+		[self setPath:[tmpDir stringByAppendingPathComponent:filename]];
+		[[image PNGRepresentation] writeToFile:path atomically:NO];
+	}
+
 	return path;
 }
 
-/*
+/*!
  * @brief Set the image represented by this text attachment
  */
 - (void)setImage:(NSImage *)inImage
@@ -147,7 +160,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Returns YES if this attachment is for an image
  */
 - (BOOL)attachesAnImage
@@ -175,7 +188,7 @@
 	return image;
 }
 
-/*
+/*!
  * @brief Return a 32x32 image representing this attachment
  */
 - (NSImage *)iconImage
@@ -193,7 +206,12 @@
 		}
 
 	} else {
-		iconImage = [[NSWorkspace sharedWorkspace] iconForFile:[self path]];
+		if ([self path]) {
+			iconImage = [[NSWorkspace sharedWorkspace] iconForFile:[self path]];
+		} else {
+			NSLog(@"-[%@ iconImage]: Warning, no path available", self);
+			iconImage = nil;
+		}
 	}
 	
 	return iconImage;
@@ -207,7 +225,7 @@
     }
 }
 
-/*
+/*!
  * @brief Return a fileWrapper for the file/image we represent, creating and caching it if necessary
  *
  * @result An NSFileWrapper
@@ -221,7 +239,8 @@
 			myFilewrapper = [[[NSFileWrapper alloc] initWithPath:[self path]] autorelease];
 
 		} else if ([self image]) {
-			myFilewrapper = [[[NSFileWrapper alloc] initWithSerializedRepresentation:[[self image] TIFFRepresentation]] autorelease];
+			myFilewrapper = [[[NSFileWrapper alloc] initWithSerializedRepresentation:[[self image] PNGRepresentation]] autorelease];
+			[myFilewrapper setPreferredFilename:[[[NSProcessInfo processInfo] globallyUniqueString] stringByAppendingPathExtension:@"png"]];
 		}
 
 		[self setFileWrapper:myFilewrapper];

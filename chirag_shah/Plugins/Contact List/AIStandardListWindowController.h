@@ -15,10 +15,11 @@
  */
 
 #import "AIListWindowController.h"
+#import <Adium/AIContactControllerProtocol.h>
 
 #define ALL_OTHER_ACCOUNTS AILocalizedString(@"All Other Accounts", nil)
 
-@protocol AIListObjectObserver, StateMenuPlugin;
+@protocol StateMenuPlugin;
 @class AIAccount, AIStatusMenu, AIHoveringPopUpButton, AIContactListNameButton, AIContactListImagePicker;
 
 typedef enum {
@@ -35,6 +36,9 @@ typedef enum {
 	IBOutlet	NSImageView					*imageView_status;
 
 	IBOutlet	AIContactListImagePicker	*imagePicker;
+	
+	IBOutlet	NSSearchField				*searchField;
+	
 	ContactListImagePickerPosition			imagePickerPosition;
 
 	NSDictionary				*toolbarItems;
@@ -42,6 +46,7 @@ typedef enum {
 }
 
 - (void)updateImagePicker;
+- (IBAction)activateFirstContact:(id)sender;
 
 + (AIAccount *)activeAccountForIconsGettingOnlineAccounts:(NSMutableSet *)onlineAccounts
 										  ownIconAccounts:(NSMutableSet *)ownIconAccounts;

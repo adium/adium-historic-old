@@ -14,9 +14,16 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import <Adium/AIAdiumProtocol.h>
+
 @class AIChat, AIAccountMenu, AIContactMenu;
 
 #define AIViewFrameDidChangeNotification	@"AIViewFrameDidChangeNotification"
+
+/*!	@brief	View for selecting the account and contact of a chat.
+ *
+ *	@par	This view contains two pop-up menus: One for accounts, and the other for contacts. It appears at the top of the chat window when the user double-clicks on a contact row in the contact list, and when the chat receives content from a different contact in the same metacontact as the existing current contact.
+ */
 
 @interface AIAccountSelectionView : NSView {
 	NSPopUpButton		*popUp_accounts;
@@ -29,12 +36,17 @@
 	
 	AIAccountMenu		*accountMenu;	
 	AIContactMenu		*contactMenu;	
-    AIAdium				*adium;
+    NSObject<AIAdium>	*adium;
 	AIChat				*chat;
+	
+	NSColor *leftColor;
+	NSColor *rightColor;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder;
 - (id)initWithFrame:(NSRect)frameRect;
 - (void)setChat:(AIChat *)inChat;
+
+- (void)setLeftColor:(NSColor *)inLeftColor rightColor:(NSColor *)inRightColor;
 
 @end

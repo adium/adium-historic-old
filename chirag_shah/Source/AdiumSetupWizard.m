@@ -37,7 +37,7 @@ enum{
  */
 @implementation AdiumSetupWizard
 
-/*
+/*!
  * @brief Run the wizard
  */
 + (void)runWizard
@@ -51,7 +51,7 @@ enum{
 	[[setupWizardWindowController window] orderFront:nil];
 }
 
-/*
+/*!
  * @brief Localized some common items' titles
  */
 - (void)localizeItems
@@ -63,12 +63,12 @@ enum{
 	[button_alternate setLocalizedString:AILocalizedString(@"Skip Import","button title for skipping the import of another client in the setup wizard")];
 }
 
-/*
+/*!
  * @brief The window loaded
  */
 - (void)windowDidLoad
 {
-	[[self window] setTitle:AILocalizedString(@"Adium",nil)];
+	[[self window] setTitle:AILocalizedString(@"Adium Setup Assistant",nil)];
 
 	//Ensure the first tab view item is selected
 	[tabView selectTabViewItemAtIndex:WIZARD_TAB_WELCOME];
@@ -99,6 +99,35 @@ enum{
 	[super windowDidLoad];
 }
 
+- (IBAction)promptForMultiples:(id)sender
+{
+	// Since we have multiple dedicated importers in 1.1+ it's better to direct the user as needed
+	NSAlert *multipleImportPrompt = [NSAlert alertWithMessageText:AILocalizedString(@"Have you used other chat clients?", "Title which introduces import assistants during setup")
+													defaultButton:AILocalizedStringFromTable(@"Continue", @"Buttons", nil)
+												  alternateButton:AILocalizedString(@"Import from Fire", "Fire is another OS X instant messaging client; the name probably should not be localized")
+													  otherButton:AILocalizedString(@"Import from iChat", "iChat is the OS X instant messaging client which ships with OS X; the name probably should not be localized")
+										informativeTextWithFormat:AILocalizedString(@"Adium includes assistants to import your accounts, settings, and transcripts from other clients. Choose a client below to open its assistant, or press Continue to skip importing.", nil)];
+	[multipleImportPrompt beginSheetModalForWindow:[self window] 
+									 modalDelegate:self 
+									didEndSelector:@selector(multipleImportAlertDidEnd:returnCode:contextInfo:) 
+									   contextInfo:nil];	
+}
+
+- (void)multipleImportAlertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	if(returnCode == NSAlertOtherReturn)
+	{
+		[adium performSelector:@selector(importFromiChat:)
+					withObject:nil
+					afterDelay:0.5];
+		[[self window] close];
+	}
+	if(returnCode == NSAlertAlternateReturn)
+	{
+		// not yet supported, but should open the manual Fire importer
+	}
+}
+
 /*!
  * @brief Perform behaviors before the window closes
  *
@@ -111,7 +140,7 @@ enum{
 	[self autorelease];
 }
 
-/*
+/*!
  * @brief Start the progress indicator to let the user we are processing
  */
 - (void)activateProgressIndicator
@@ -123,7 +152,7 @@ enum{
 	[progress_processing startAnimation:nil];
 }
 
-/*
+/*!
  * @brief A tab view item was completed; post-process any entered data
  */
 - (BOOL)didCompleteTabViewItemWithIdentifier:(NSString *)identifier
@@ -168,7 +197,7 @@ enum{
 	return success;
 }
 
-/*
+/*!
  * @brief The Continue button, which is also the Done button, was pressed
  */
 - (IBAction)nextTab:(id)sender
@@ -196,7 +225,7 @@ enum{
 	}
 }
 
-/*
+/*!
  * @brief The Back button was pressed
  */
 - (IBAction)previousTab:(id)sender
@@ -208,7 +237,7 @@ enum{
 		[tabView selectPreviousTabViewItem:self];
 }
 
-/*
+/*!
  * @brief The alternate (third) button was pressed; its behavior will vary by tab view item
  */
 - (IBAction)pressedAlternateButton:(id)sender
@@ -230,13 +259,13 @@ enum{
 	}
 }
 
-/*
+/*!
  * @brief Set up the Account Setup tab for a given service
  */
 - (void)configureAccountSetupForService:(AIService *)service
 {
 	//UID Label
-	[textField_usernameLabel setStringValue:[[service userNameLabel] stringByAppendingString:@":"]];
+	[textField_usernameLabel setStringValue:[[service userNameLabel] stringByAppendingString:AILocalizedString(@":", "Colon which will be appended after a label such as 'User Name', before an input field")]];
 
 	//UID formatter and placeholder
 	[textField_username setFormatter:
@@ -256,7 +285,7 @@ enum{
 	return [identifier isEqualToString:ACCOUNT_SETUP_IDENTIFIER] || [identifier isEqualToString:IMPORT_IDENTIFIER];	
 }
 
-/*
+/*!
  * @brief The tab view is about to select a tab view item
  */
 - (void)tabView:(NSTabView *)inTabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
@@ -279,7 +308,7 @@ enum{
 			[[textView_addAccountMessage enclosingScrollView] setDrawsBackground:NO];
 			
 			NSAttributedString *accountMessage = [AIHTMLDecoder decodeHTML:
-				AILocalizedString(@"<HTML>To chat with your friends, family, and coworkers, you must have an instant messaging account on the same service they do. Specify a service, name, and password below; if you don't have an account yet, click <A HREF=\"http://trac.adiumx.com/wiki/CreatingAnAccount#Sigingupforanaccount\">here</A> for more information.\n\nAdium supports as many accounts as you want to add; you can always add more in the Accounts pane of the Adium Preferences.</HTML>", nil)
+				AILocalizedString(@"<HTML>To chat with your friends, family, and coworkers, you must have an instant messaging account on the same service they do. Choose a service, name, and password below; if you don't have an account yet, click <A HREF=\"http://trac.adiumx.com/wiki/CreatingAnAccount#Sigingupforanaccount\">here</A> for more information.\n\nAdium supports as many accounts as you want to add; you can always add more in the Accounts pane of the Adium Preferences.</HTML>", nil)
 													 withDefaultAttributes:[[textView_addAccountMessage textStorage] attributesAtIndex:0
 																														effectiveRange:NULL]];
 			[[textView_addAccountMessage textStorage] setAttributedString:accountMessage];
@@ -331,13 +360,13 @@ enum{
 	} else if ([identifier isEqualToString:DONE_IDENTIFIER]) {
 		[textView_doneMessage setDrawsBackground:NO];
 		[[textView_doneMessage enclosingScrollView] setDrawsBackground:NO];
-		[textView_doneMessage setString:AILocalizedString(@"Adium is now ready for you. \n\nThe Status indicator at the top of your Contact List and in the Status menu lets you determine whether others see you as Available or Away or, alternately, if you are Offline. Select Custom to specify a status message.\n\nDouble-click a name in your Contact List to open a chat window and begin chatting.  You can add contacts to your Contact List via the Contact menu.\n\nWant to customize your Adium experience? Check out the Adium Preferences and AdiumXtras web site via the Adium menu.\n\nEnjoy! Click Done to begin using Adium.", nil)],
+		[textView_doneMessage setString:AILocalizedString(@"Adium is now ready for you. \n\nThe Status indicator at the top of your Contact List and in the Status menu lets you determine whether others see you as Available or Away or, alternately, if you are Offline. Select Custom to type your own status message.\n\nDouble-click a name in your Contact List to begin a conversation.  You can add contacts to your Contact List via the Contact menu.\n\nWant to customize your Adium experience? Check out the Adium Preferences and Xtras Manager via the Adium menu.\n\nEnjoy! Click Done to begin using Adium.", nil)],
 
 		[textField_done setStringValue:AILocalizedString(@"Congratulations!","Header line in the last pane of the Adium setup wizard")];
 	}
 
 	//Hide go back on the first tab
-	[button_goBack setHidden:([tabView indexOfTabViewItem:tabViewItem] == WIZARD_TAB_WELCOME)];
+	[button_goBack setEnabled:([tabView indexOfTabViewItem:tabViewItem] != WIZARD_TAB_WELCOME)];
 	
 	[button_alternate setHidden:![self showAlternateButtonForIdentifier:identifier]];
 
@@ -350,7 +379,7 @@ enum{
 	}
 }
 
-/*
+/*!
  * @brief The selected service in the account configuration tab view item was changed
  */
 - (void)selectServiceType:(id)sender

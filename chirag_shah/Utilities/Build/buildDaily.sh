@@ -55,9 +55,6 @@ should_update="yes"
 clean_build="yes"
 svn="svn"
 
-# Don't do this unless you are a developer and want to automatically upload the .dmg to adium.sourceforge.net
-copy_to_sourceforge="no"
-
 # Where all the daily build files are kept
 # adium/ is created by svn checkout beneath this dir
 adium_build_dir="$HOME/AdiumDaily"
@@ -121,10 +118,6 @@ if !([ -z "$2" ]) ; then
 	install_dir=$2
 fi
 
-if [ "$copy_to_sourceforge" == "yes" ] ; then
-       package="yes"
-fi
-
 if [ "$package" == "yes" ] ;  then
 	changelog="yes"
 	replace_running_adium="no"
@@ -174,7 +167,7 @@ if [ "$should_update" == "yes" ] ; then
 	if !([ -x $adium_co_dir ]) ; then
 		echo "$adium_co_dir does not exist. Beginning new checkout."
 		echo "Begin SVN Checkout in $adium_co_dir"
-		$svn co http://svn.adiumx.com/adium/trunk $adium_co_dir
+		$svn co svn://svn.adiumx.com/adium/trunk $adium_co_dir
 	else							# Update from SVN
 		echo "Begin SVN Update in $adium_co_dir"
 
@@ -253,27 +246,6 @@ if [ "$replace_running_adium" == "yes" ] && [ -x "$adium_co_dir/build/Deployment
 		"$install_dir/$adium_app_name.app/Contents/MacOS/Adium" $launch_options &
 else
 		cp -r "$adium_co_dir/build/Deployment/Adium.app" "$install_dir/$adium_app_name.app"
-fi
-
-if [ "$copy_to_sourceforge" == "yes" ] ; then
-       #Copy the files, setting them to be group writeable after copying
-       scp Adium_$prettydate.dmg $username@shell.sf.net:/home/groups/a/ad/adium/htdocs/downloads/
-       ssh shell.sf.net chmod 664 /home/groups/a/ad/adium/htdocs/downloads/Adium_$prettydate.dmg
-
-       scp CompleteChanges $username@shell.sf.net:/home/groups/a/ad/adium/htdocs/downloads/
-       ssh shell.sf.net chmod 664 /home/groups/a/ad/adium/htdocs/downloads/CompleteChanges
-
-       scp ChangeLog_$prettydate $username@shell.sf.net:/home/groups/a/ad/adium/htdocs/downloads/ChangeLogs
-       ssh shell.sf.net chmod 664 /home/groups/a/ad/adium/htdocs/downloads/ChangeLogs/ChangeLog_$prettydate
-
-       ssh shell.sf.net ln -fs \
-       /home/groups/a/ad/adium/htdocs/downloads/Adium_$prettydate.dmg \
-       /home/groups/a/ad/adium/htdocs/downloads/Adium2.dmg
-
- 	$adium_co_dir/Utilities/listToHTML.py $adium_co_dir/ToDoList.txt theList.html
-	scp theList.html $username@shell.sf.net:/home/groups/a/ad/adium/htdocs/theList.html
-
-	scp $adium_co_dir/build/version.plist  $username@shell.sf.net:/home/groups/a/ad/adium/htdocs/version.plist
 fi
 
 # Get rid of old lastbuild log

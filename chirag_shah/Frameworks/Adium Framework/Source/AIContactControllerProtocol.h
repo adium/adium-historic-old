@@ -8,6 +8,7 @@
 
 #import <Adium/AIControllerProtocol.h>
 #import <Adium/AIListContact.h>
+#import <Adium/AIListObject.h>
 
 #define ListObject_AttributesChanged			@"ListObject_AttributesChanged"
 #define ListObject_StatusChanged				@"ListObject_StatusChanged"
@@ -41,23 +42,28 @@ typedef enum {
     AISortGroupAndSuperGroups
 } AISortMode;
 
-@protocol AIListObjectObserver, AIContainingObject;
+@protocol AIListObjectObserver;
 @class AIListGroup, AIListObject, AIListContact, AIMetaContact, AIService, AIAccount, AISortController;
 
 @protocol AIContactController <AIController>
 //Contact list access
 - (AIListGroup *)contactList;
 - (AIListContact *)contactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID;
+- (AIListContact *)contactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID usingClass:(Class)ContactClass;
 - (AIListContact *)contactOnAccount:(AIAccount *)account fromListContact:(AIListContact *)inContact;
 - (AIListObject *)existingListObjectWithUniqueID:(NSString *)uniqueID;
 - (AIListContact *)existingContactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID;
+- (AIListContact *)existingContactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID usingClass:(Class)ContactClass;
 - (AIListGroup *)groupWithUID:(NSString *)groupUID;
 - (AIListGroup *)existingGroupWithUID:(NSString *)groupUID;
-- (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup subgroups:(BOOL)subGroups onAccount:(AIAccount *)inAccount;
+- (NSMutableArray *)allContacts;
+- (NSMutableArray *)allContactsOnAccount:(AIAccount *)inAccount;
+- (NSMutableArray *)allContactsInObject:(AIListObject<AIContainingObject> *)inGroup recurse:(BOOL)recurse onAccount:(AIAccount *)inAccount;
 - (NSMenu *)menuOfAllContactsInContainingObject:(AIListObject<AIContainingObject> *)inGroup withTarget:(id)target;
 - (NSMenu *)menuOfAllGroupsInGroup:(AIListGroup *)inGroup withTarget:(id)target;
 - (NSSet *)allContactsWithService:(AIService *)service UID:(NSString *)inUID existingOnly:(BOOL)existingOnly;
 - (AIListGroup *)offlineGroup;
+- (BOOL)useOfflineGroup;
 
 - (AIMetaContact *)groupUIDs:(NSArray *)UIDsArray forServices:(NSArray *)servicesArray;
 - (AIMetaContact *)groupListContacts:(NSArray *)contactsToGroupArray;
@@ -94,9 +100,9 @@ typedef enum {
 	//Editing
 - (void)addContacts:(NSArray *)contactArray toGroup:(AIListGroup *)group;
 - (void)removeListObjects:(NSArray *)objectArray;
-- (void)requestAddContactWithUID:(NSString *)contactUID service:(AIService *)inService;
-- (void)moveListObjects:(NSArray *)objectArray toGroup:(AIListObject<AIContainingObject> *)group index:(int)index;
-- (void)moveContact:(AIListContact *)listContact toGroup:(AIListObject<AIContainingObject> *)group;
+- (void)requestAddContactWithUID:(NSString *)contactUID service:(AIService *)inService account:(AIAccount *)inAccount;
+- (void)moveListObjects:(NSArray *)objectArray intoObject:(AIListObject<AIContainingObject> *)group index:(int)index;
+- (void)moveContact:(AIListContact *)listContact intoObject:(AIListObject<AIContainingObject> *)group;
 - (void)_moveContactLocally:(AIListContact *)listContact toGroup:(AIListGroup *)group;
 - (BOOL)useContactListGroups;
 

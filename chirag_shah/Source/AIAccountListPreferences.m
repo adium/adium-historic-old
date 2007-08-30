@@ -50,14 +50,19 @@
 /*!
  * @brief Preference pane properties
  */
-- (AIPreferenceCategory)category{
-    return AIPref_Accounts;
+- (NSString *)paneIdentifier
+{
+	return @"Accounts";
 }
-- (NSString *)label{
+- (NSString *)paneName{
     return AILocalizedString(@"Accounts","Accounts preferences label");
 }
 - (NSString *)nibName{
     return @"AccountListPreferences";
+}
+- (NSImage *)paneIcon
+{
+	return [NSImage imageNamed:@"pref-accounts" forClass:[self class]];
 }
 
 /*!
@@ -106,6 +111,15 @@
 {
 	[[adium contactController] unregisterListObjectObserver:self];
 	[[adium notificationCenter] removeObserver:self];
+	
+	[accountArray release]; accountArray = nil;
+}
+
+- (void)dealloc
+{
+	[accountArray release];
+
+	[super dealloc];
 }
 
 /*!
@@ -175,7 +189,7 @@
     }
 }
 
-/*
+/*!
  * @brief Handle a double click within our table
  *
  * Ignore double clicks on the enable/disable checkbox
@@ -216,51 +230,9 @@
 {
     int index = [tableView_accountList selectedRow];
 
-    if (index != -1) {		
-		AIAccount	*targetAccount;
-		NSString    *accountFormattedUID;
-
-		targetAccount = [accountArray objectAtIndex:index];
-		accountFormattedUID = [targetAccount formattedUID];
-
-		//Confirm before deleting
-		NSBeginAlertSheet(AILocalizedString(@"Delete Account",nil),
-						  AILocalizedString(@"Delete",nil),
-						  AILocalizedString(@"Cancel",nil),
-						  @"",[[self view] window], self, 
-						  @selector(deleteAccountSheetDidEnd:returnCode:contextInfo:), nil, targetAccount, 
-						  AILocalizedString(@"Delete the account %@?",nil), ([accountFormattedUID length] ? accountFormattedUID : NEW_ACCOUNT_DISPLAY_TEXT));
-	}
+    if (index != -1)
+		[[[adium accountController] deleteAccount:[accountArray objectAtIndex:index]] beginSheetModalForWindow:[[self view] window]];
 }
-
-/*!
- * @brief Finish account deletion
- *
- * Called when the sheet is closed
- *
- * @param returnCode NSAlertDefaultReturn indicates the account should be deleted
- */
-- (void)deleteAccountSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
-{
-    AIAccount 	*targetAccount = contextInfo;
-    int			index;
-    
-    NSParameterAssert(targetAccount != nil);
-	NSParameterAssert([targetAccount isKindOfClass:[AIAccount class]]);
-    
-    if (returnCode == NSAlertDefaultReturn) {
-        //Delete it
-        index = [accountArray indexOfObject:targetAccount];
-        [[adium accountController] deleteAccount:targetAccount];
-		
-        //If it was the last row, select the new last row (by default the selection will jump to the top, which is bad)
-        if (index >= [accountArray count]) {
-            index = [accountArray count]-1;
-            [tableView_accountList selectRow:index byExtendingSelection:NO];
-        }
-    }
-}
-
 
 //Account List ---------------------------------------------------------------------------------------------------------
 #pragma mark Account List
@@ -274,7 +246,7 @@
 	
 	//Setup our edit button, keeping its right side in the same location
 	oldFrame = [button_editAccount frame];
-	[button_editAccount setTitle:AILocalizedString(@"Edit",nil)];
+	[button_editAccount setTitle:AILocalizedStringFromTable(@"Edit", @"Buttons", "Verb 'edit' on a button")];
 	[button_editAccount sizeToFit];
 	newFrame = [button_editAccount frame];
 	if (newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
@@ -292,6 +264,7 @@
     //Custom vertically-centered text cell for account names
     cell = [[AIVerticallyCenteredTextCell alloc] init];
     [cell setFont:[NSFont boldSystemFontOfSize:13]];
+	[cell setLineBreakMode:NSLineBreakByTruncatingMiddle];
     [[tableView_accountList tableColumnWithIdentifier:@"name"] setDataCell:cell];
 	[cell release];
 
@@ -301,6 +274,8 @@
     [[tableView_accountList tableColumnWithIdentifier:@"status"] setDataCell:cell];
 	[cell release];
     
+	[tableView_accountList sizeToFit];
+
 	//Observe changes to the account list
     [[adium notificationCenter] addObserver:self
 								   selector:@selector(accountListChanged:) 

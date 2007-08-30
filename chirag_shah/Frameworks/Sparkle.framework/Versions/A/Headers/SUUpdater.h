@@ -5,8 +5,8 @@
 //  Created by Andy Matuschak on 1/4/06.
 //  Copyright 2006 Andy Matuschak. All rights reserved.
 //
-// $Id: SUUpdater.h 27 2006-06-16 22:53:50Z atomicbird $
-// $HeadURL: http://ironcoder.org/svn/SparklePlus/trunk/SUUpdater.h $
+// $Id: SUUpdater.h 87 2007-07-05 19:16:34Z evands $
+// $HeadURL: http://sparkleplus.googlecode.com/svn/trunk/SUUpdater.h $
 
 #import <Cocoa/Cocoa.h>
 
@@ -43,8 +43,6 @@
 	IBOutlet NSButton *profileMoreInfoButton;
 	IBOutlet NSTextField *checkForUpdatesText;
 	BOOL moreInfoVisible;
-	
-	NSString *currentSystemVersion;
 }
 
 // This IBAction is meant for a main menu item. Hook up any menu item to this action,
@@ -79,4 +77,6 @@
 // This method gives the delegate the opportunity to customize the information that will
 // be included with update checks.  Add or remove items from the dictionary as desired.
 - (NSMutableArray *)updaterCustomizeProfileInfo:(NSMutableArray *)profileInfo;
+// This method lets the delegate customize how versions are compared
+- (NSComparisonResult)compareVersion:(NSString *)appcastVersion toVersion:(NSString *)appVersion;
 @end

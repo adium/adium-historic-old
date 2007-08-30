@@ -129,4 +129,12 @@
 						afterDelay:0];
 }
 
+- (BOOL)shouldResignKeyWindowWithoutUserInput
+{
+	/* We override this to ensure that password windows
+	 * don't have their focus pulled away programmatically.
+	 */
+	return NO;
+}
+
 @end

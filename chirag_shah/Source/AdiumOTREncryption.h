@@ -8,8 +8,8 @@
 #import <Adium/AIObject.h>
 #import <OTR/context.h>
 #import <OTR/userstate.h>
+#import <Adium/AIContentControllerProtocol.h>
 
-@protocol AdiumMessageEncryptor;
 @class ESOTRPreferences, AIContentMessage, AIAccount, AIListContact, AIChat;
 
 typedef enum {

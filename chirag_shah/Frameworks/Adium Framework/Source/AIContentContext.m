@@ -30,4 +30,11 @@
     return CONTENT_CONTEXT_TYPE;
 }
 
+- (NSMutableArray *)displayClasses
+{
+	NSMutableArray *classes = [super displayClasses];
+	[classes addObject:@"history"];
+	return classes;
+}
+
 @end

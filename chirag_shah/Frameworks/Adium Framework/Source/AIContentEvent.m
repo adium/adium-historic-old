@@ -15,6 +15,13 @@
     return CONTENT_EVENT_TYPE;
 }
 
+- (NSMutableArray *)displayClasses
+{
+	NSMutableArray *classes = [super displayClasses];
+	[classes addObject:@"event"];
+	return classes;
+}
+
 - (NSAttributedString *)loggedMessage
 {
 	return [self message];

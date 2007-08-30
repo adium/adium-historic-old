@@ -18,6 +18,7 @@
 #import <Adium/AIEditStateWindowController.h>
 #import <Adium/AIStatus.h>
 #import <Adium/AIStatusControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
@@ -73,9 +74,13 @@ static	NSMutableDictionary	*controllerDict = nil;
 	NSNumber	*targetHash = [NSNumber numberWithUnsignedInt:[inTarget hash]];
 		
 	if ((controller = [controllerDict objectForKey:targetHash])) {
-		[controller setOriginalStatusState:inStatusState forType:inStatusType];
 		[controller setAccount:inAccount];
-		[controller configureForAccountAndWorkingStatusState];
+
+		if ([[controller currentConfiguration] statusType] != inStatusType) {
+			//It's not currently editing a status of the type requested; configure based on the passed status
+			[controller setOriginalStatusState:inStatusState forType:inStatusType];
+			[controller configureForAccountAndWorkingStatusState];
+		}
 
 	} else {
 		controller = [[self alloc] initWithWindowNibName:@"EditStateSheet" 
@@ -217,6 +222,9 @@ static	NSMutableDictionary	*controllerDict = nil;
 	[textField_idleMinutes setFormatter:intFormatter];
 	[intFormatter release];
 	*/
+	
+	[textView_statusMessage setTypingAttributes:[[adium contentController] defaultFormattingAttributes]];
+	[textView_autoReply setTypingAttributes:[[adium contentController] defaultFormattingAttributes]];
 
 	NSMutableCharacterSet *noNewlinesCharacterSet;
 	noNewlinesCharacterSet = [[[NSCharacterSet characterSetWithCharactersInString:@""] invertedSet] mutableCopy];
@@ -432,7 +440,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 	[self updateTitleDisplay];
 }
 
-/*
+/*!
  * @brief Override AIWindowController's stringWithSavedFrame to provide a custom saved frame
  *
  * We want our savedframe to match the way the window will load, which means it needs to be as if all controls were visible.
@@ -547,7 +555,7 @@ static	NSMutableDictionary	*controllerDict = nil;
  * @brief Configure the editor for a state
  *
  * Configured the editor's controls to represent the passed state dictionary.
- * @param state A NSDictionary containing status state keys and values
+ * @param statusState A NSDictionary containing status state keys and values
  */
 - (void)configureForState:(AIStatus *)statusState
 {
@@ -605,6 +613,10 @@ static	NSMutableDictionary	*controllerDict = nil;
 			[textView_statusMessage setBackgroundColor:[statusMessage attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil]];
 	}
 	
+	//Disallow an undo to before this point
+	[[textView_autoReply undoManager] removeAllActions];
+	[[textView_statusMessage undoManager] removeAllActions];
+
 	//Idle start
 	double	idleStart = [statusState forcedInitialIdleTime];
 	[textField_idleMinutes setIntValue:(int)((((int)idleStart)%3600)/60)];
@@ -637,6 +649,11 @@ static	NSMutableDictionary	*controllerDict = nil;
 	//Set the title if necessary
 	if (![[workingStatusState title] isEqualToString:[textField_title stringValue]]) {
 		[workingStatusState setTitle:[textField_title stringValue]];
+	}
+
+	//Do not allow the creation of a Now Playing status
+	if ([workingStatusState specialStatusType] == AINowPlayingSpecialStatusType) {
+		[workingStatusState setSpecialStatusType:AINoSpecialStatusType];
 	}
 
 	return workingStatusState;

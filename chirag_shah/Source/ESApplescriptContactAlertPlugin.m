@@ -20,8 +20,8 @@
 #import "ESApplescriptabilityController.h"
 #import <AIUtilities/AIImageAdditions.h>
 
-#define APPLESCRIPT_ALERT_SHORT AILocalizedString(@"Run an Applescript",nil)
-#define APPLESCRIPT_ALERT_LONG AILocalizedString(@"Run the Applescript \"%@\"","%@ will be replaced by the name of the applescript to run.")
+#define APPLESCRIPT_ALERT_SHORT AILocalizedString(@"Run an AppleScript",nil)
+#define APPLESCRIPT_ALERT_LONG AILocalizedString(@"Run the AppleScript \"%@\"","%@ will be replaced by the name of the AppleScript to run.")
 
 /*!
  * @class ESApplescriptContactAlertPlugin
@@ -85,9 +85,10 @@
  * @param eventID The eventID which triggered this action
  * @param userInfo Additional information associated with the event; userInfo's type will vary with the actionID.
  */
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
+- (BOOL)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
 	NSString		*path = [details objectForKey:KEY_APPLESCRIPT_TO_RUN];
+
 	if (path) {
 		[[adium applescriptabilityController] runApplescriptAtPath:path
 														  function:nil
@@ -96,6 +97,8 @@
 														  selector:NULL
 														  userInfo:nil];
 	}
+
+	return (path != nil);
 }
 
 /*!

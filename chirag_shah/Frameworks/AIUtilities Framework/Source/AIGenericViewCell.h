@@ -6,7 +6,7 @@
 //  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
-#import "AIGradientCell.h"
+#import <AppKit/NSCell.h>
 
 /*
  * @class AIGenericViewCell
@@ -15,7 +15,7 @@
  * This cell allows any view to be used in a table or outlineview.
  * Based on sample code from SubViewTableView by Joar Wingfors, http://www.joar.com/code/
  */
-@interface AIGenericViewCell : AIGradientCell
+@interface AIGenericViewCell : NSCell
 {
 	NSView	*embeddedView;
 }

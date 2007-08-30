@@ -38,17 +38,22 @@
 	NSString		*rootElementName;
 	
 	BOOL			initialized;
+	BOOL			fullSyncAfterEachAppend;
 }
 
 + (id)documentWithPath:(NSString *)path;
 
 - (id)initWithPath:(NSString *)path;
 
+- (void)setFullSyncAfterEachAppend:(BOOL)shouldFullSync;
+- (BOOL)fullSyncAfterEachAppend;
+- (void)performFullSync;
+
 - (BOOL)isInitialized;
 - (NSString *)path;
 - (NSString *)rootElement;
 
-- (void)initializeDocumentWithRootElementName:(NSString *)name attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values;
-- (void)addElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values;
-- (void)addElementWithName:(NSString *)name escapedContent:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values;
+- (BOOL)initializeDocumentWithRootElementName:(NSString *)name attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values;
+- (BOOL)addElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values;
+- (BOOL)addElementWithName:(NSString *)name escapedContent:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values;
 @end

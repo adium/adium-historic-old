@@ -27,10 +27,12 @@
 #import <Adium/AIDockControllerProtocol.h>
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AIFunctions.h>
+#import <AIUtilities/AIWindowControllerAdditions.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIUserIcons.h>
+#import <AIUtilities/AIDockingWindow.h>
 
 #define CONTACT_LIST_WINDOW_NIB				@"ContactListWindow"		//Filename of the contact list window nib
 #define CONTACT_LIST_WINDOW_TRANSPARENT_NIB @"ContactListWindowTransparent" //Filename of the minimalist transparent version
@@ -109,7 +111,7 @@
 {	
     if ((self = [super initWithWindowNibName:inNibName])) {
 		preventHiding = NO;
-		previousAlpha = 0.0;
+		previousAlpha = 1.0;
 	}
 
     return self;
@@ -160,7 +162,6 @@
 	id<AIPreferenceController> preferenceController = [adium preferenceController];
     //Observe preference changes
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
-	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 	
 	//Preference code below assumes layout is done before theme.
@@ -203,6 +204,26 @@
 	[adiumNotificationCenter postNotificationName:Interface_ContactListDidClose object:self];
 }
 
+int levelForAIWindowLevel(AIWindowLevel windowLevel)
+{
+	int				level;
+
+	switch (windowLevel) {
+		case AINormalWindowLevel: level = NSNormalWindowLevel; break;
+		case AIFloatingWindowLevel: level = NSFloatingWindowLevel; break;
+		case AIDesktopWindowLevel: level = kCGBackstopMenuLevel; break;
+		default: level = NSNormalWindowLevel; break;
+	}
+	
+	return level;
+}
+
+- (void)setWindowLevel:(int)level
+{
+	[[self window] setLevel:level];
+	[[self window] setIgnoresExpose:(level == kCGBackstopMenuLevel)]; //Ignore expose while on the desktop
+}
+
 //Preferences have changed
 - (void)preferencesChangedForGroup:(NSString *)group 
 							   key:(NSString *)key
@@ -214,16 +235,8 @@
 
     if ([group isEqualToString:PREF_GROUP_CONTACT_LIST]) {
 		AIWindowLevel	windowLevel = [[prefDict objectForKey:KEY_CL_WINDOW_LEVEL] intValue];
-		int				level = NSNormalWindowLevel;
 		
-		switch (windowLevel) {
-			case AINormalWindowLevel: level = NSNormalWindowLevel; break;
-			case AIFloatingWindowLevel: level = NSFloatingWindowLevel; break;
-			case AIDesktopWindowLevel: level = kCGDesktopWindowLevel; break;
-		}
-
-		[[self window] setLevel:level];
-		[[self window] setIgnoresExpose:(windowLevel == AIDesktopWindowLevel)]; //Ignore expose while on the desktop
+		[self setWindowLevel:levelForAIWindowLevel(windowLevel)];
 
 		listHasShadow = [[prefDict objectForKey:KEY_CL_WINDOW_HAS_SHADOW] boolValue];
 		[[self window] setHasShadow:listHasShadow];
@@ -250,15 +263,6 @@
 		[contactListController setShowTooltips:[[prefDict objectForKey:KEY_CL_SHOW_TOOLTIPS] boolValue]];
 		[contactListController setShowTooltipsInBackground:[[prefDict objectForKey:KEY_CL_SHOW_TOOLTIPS_IN_BACKGROUND] boolValue]];
     }
-
-    if ([group isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]) {
-		if ([key isEqualToString:KEY_SCL_BORDERLESS]) {
-			[self retain];
-			[[adium interfaceController] closeContactList:nil];
-			[[adium interfaceController] showContactList:nil];
-			[self autorelease];
-		}
-	}
 	
 	//Auto-Resizing
 	if ([group isEqualToString:PREF_GROUP_APPEARANCE]) {
@@ -287,7 +291,7 @@
 		[[self window] setShowsResizeIndicator:!(autoResizeVertically && autoResizeHorizontally)];
 		
 		/*
-		 Reset the minimum and maximum sizes in case [self contactListDesiredSizeChanged:nil]; doesn't cause a sizing change
+		 Reset the minimum and maximum sizes in case [self contactListDesiredSizeChanged]; doesn't cause a sizing change
 		 (and therefore the min and max sizes aren't set there).
 		 */
 		NSSize	thisMinimumSize = minWindowSize;
@@ -332,6 +336,7 @@
 		[contactListController setAutoresizeVertically:autoResizeVertically];
 		[contactListController setForcedWindowWidth:forcedWindowWidth];
 		[contactListController setMaxWindowWidth:maxWindowWidth];
+		
 		[contactListController contactListDesiredSizeChanged];
 		
 		if (!firstTime) {
@@ -389,6 +394,7 @@
 	} else {
 		//Do a slide immediately if needed (to display as per our new preferneces)
 		[self slideWindowIfNeeded:nil];
+		
 	}
 }
 
@@ -407,11 +413,16 @@
 		[contactListController hideTooltip];
 
 		//Open a new message with the contact
-		[[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:(AIListContact *)selectedObject]];
+		[[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:(AIListContact *)selectedObject
+																			onPreferredAccount:YES]];
 		
     }
 }
 
+- (BOOL) canCustomizeToolbar
+{
+	return NO;
+}
 
 //Interface Container --------------------------------------------------------------------------------------------------
 #pragma mark Interface Container
@@ -430,6 +441,12 @@
     [self release];
 }
 
+- (void)makeActive:(id)sender
+{
+	[[self window] makeKeyAndOrderFront:self];
+}
+
+
 //Contact list brought to front
 - (void)windowDidBecomeKey:(NSNotification *)notification
 {
@@ -443,22 +460,17 @@
 }
 
 //
-- (void)showWindowInFront:(BOOL)inFront
+- (void)showWindowInFrontIfAllowed:(BOOL)inFront
 {
 	//Always show for three seconds at least if we're told to show
 	[self delayWindowSlidingForInterval:3];
 
+	//Call super to actually do the showing
+	[super showWindowInFrontIfAllowed:inFront];
+	
 	NSWindow	*window = [self window];
-	if (inFront) {
-		[self showWindow:nil];
-	} else {
-		[window orderWindow:NSWindowBelow relativeTo:[[NSApp mainWindow] windowNumber]];
-	}
 	
 	if ([self windowSlidOffScreenEdgeMask] != AINoEdges) {
-		//Restore shadow and frame if we're appearing from having slide off-screen
-		[window setHasShadow:[[[adium preferenceController] preferenceForKey:KEY_CL_WINDOW_HAS_SHADOW
-																	   group:PREF_GROUP_CONTACT_LIST] boolValue]];
 		[self slideWindowOnScreenWithAnimation:NO];
 	}
 	
@@ -470,7 +482,12 @@
 	if ([[NSScreen screens] count] && 
 		(currentScreen == [[NSScreen screens] objectAtIndex:0])) {
 		currentScreenFrame.size.height -= [NSMenuView menuBarHeight];
-	}	
+	}
+
+	//Ensure the window is displaying at the proper level and exposé setting
+	AIWindowLevel	windowLevel = [[[adium preferenceController] preferenceForKey:KEY_CL_WINDOW_LEVEL
+																			group:PREF_GROUP_CONTACT_LIST] intValue];
+	[self setWindowLevel:levelForAIWindowLevel(windowLevel)];	
 }
 
 - (void)setSavedFrame:(NSRect)frame
@@ -555,7 +572,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	}
 }
 
-/*
+/*!
  * @brief Adium unhid
  *
  * If the contact list is open but not visible when we unhide, we should always display it; it should not, however, steal focus.
@@ -563,7 +580,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 - (void)applicationDidUnhide:(NSNotification *)notification
 {
 	if (![[self window] isVisible]) {
-		[self showWindowInFront:NO];
+		[self showWindowInFrontIfAllowed:NO];
 	}
 }
 
@@ -575,16 +592,44 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 - (void)slideWindowIfNeeded:(id)sender
 {
 	if ([self shouldSlideWindowOnScreen]) {
+		//If we're hiding the window (generally) but now sliding it on screen, make sure it's on top
+		if (windowHidingStyle == AIContactListWindowHidingStyleSliding) {
+			[self setWindowLevel:NSFloatingWindowLevel];
+			overrodeWindowLevel = YES;
+		}
+
 		[self slideWindowOnScreen];
 
 	} else if ([self shouldSlideWindowOffScreen]) {
 		AIRectEdgeMask adjacentEdges = [self slidableEdgesAdjacentToWindow];
-		
+
         if (adjacentEdges & (AIMinXEdgeMask | AIMaxXEdgeMask)) {
             [self slideWindowOffScreenEdges:(adjacentEdges & (AIMinXEdgeMask | AIMaxXEdgeMask))];
 		} else {
             [self slideWindowOffScreenEdges:adjacentEdges];
 		}
+
+		/* If we're hiding the window (generally) but now sliding it off screen, set it to kCGBackstopMenuLevel and don't
+		 * let it participate in expose.
+		 */
+		if (overrodeWindowLevel &&
+			windowHidingStyle == AIContactListWindowHidingStyleSliding) {
+			[self setWindowLevel:kCGBackstopMenuLevel];
+			overrodeWindowLevel = YES;
+		}
+		
+	} else if (overrodeWindowLevel &&
+			   ([self slidableEdgesAdjacentToWindow] == AINoEdges) &&
+			   ([self windowSlidOffScreenEdgeMask] == AINoEdges)) {
+		/* If the window level was overridden at some point and now we:
+		 *   1. Are on screen AND
+		 *   2. No longer have any edges eligible for sliding
+		 * we should restore our window level.
+		 */
+		AIWindowLevel	windowLevel = [[[adium preferenceController] preferenceForKey:KEY_CL_WINDOW_LEVEL
+																				group:PREF_GROUP_CONTACT_LIST] intValue];
+		[self setWindowLevel:levelForAIWindowLevel(windowLevel)];
+		overrodeWindowLevel = NO;
 	}
 }
 
@@ -616,7 +661,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	
 	if ((windowHidingStyle == AIContactListWindowHidingStyleSliding) &&
 		!preventHiding &&
-		![self windowSlidOffScreenEdgeMask] &&
+		([self windowSlidOffScreenEdgeMask] == AINoEdges) &&
 		(!(slideOnlyInBackground && [NSApp isActive]))) {
 		shouldSlide = [self shouldSlideWindowOffScreen_mousePositionStrategy];
 	}
@@ -712,7 +757,9 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	NSRectEdge screenEdge;
 	for (screenEdge = 0; screenEdge < 4; screenEdge++) {
 		if (windowSlidOffScreenEdgeMask & (1 << screenEdge)) {
-			float mouseOutsideSlideBoundaryRectDistance = AISignedExteriorDistanceRect_edge_toPoint_(screenSlideBoundaryRect, screenEdge, mouseLocation);
+			float mouseOutsideSlideBoundaryRectDistance = AISignedExteriorDistanceRect_edge_toPoint_(screenSlideBoundaryRect,
+																									 screenEdge,
+																									 mouseLocation);
 			if(mouseOutsideSlideBoundaryRectDistance < -MOUSE_EDGE_SLIDE_ON_DISTANCE) {
 				mouseNearSlideOffEdges = NO;
 			}
@@ -729,76 +776,51 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	return windowLastScreen;
 }
 
-void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdgeMask windowSlidOffScreenEdgeMask, AIListController *contactListController, BOOL keepOnScreen)
+- (BOOL)animationShouldStart:(NSAnimation *)animation
 {
-	NSScreen *windowScreen = [inWindow screen];
-	if (!windowScreen) windowScreen = [(AIListWindowController *)[inWindow windowController] windowLastScreen];
-	if (!windowScreen) windowScreen = [NSScreen mainScreen];
-
-	BOOL	finishedX = NO, finishedY = NO;
-	NSRect	frame = [inWindow frame];
-	float yOff = (targetPoint.y + NSHeight(frame)) - NSMaxY([windowScreen frame]);
-	if (windowScreen == [[NSScreen screens] objectAtIndex:0]) yOff -= [NSMenuView menuBarHeight];
-	if(yOff > 0) targetPoint.y -= yOff;
+	//Whenever an animation starts, we should be using the normal shadow setting
+	[[self window] setHasShadow:listHasShadow];
 	
-	do 
-	{
-		frame = [inWindow frame];
-#define INCREMENT 15
-		if (abs(targetPoint.x - frame.origin.x) <= INCREMENT) {
-			//Our target point is within INCREMENT of the current point on the x axis
-			
-			if (windowSlidOffScreenEdgeMask != AINoEdges) {
-				//If the window is sliding off screen, keep one pixel onscreen to avoid crashing (moving a titled window offscreen is a crash)
-				if (targetPoint.x < frame.origin.x) {
-					frame.origin.x = (keepOnScreen ? (targetPoint.x + 1) : targetPoint.x);
-				} else if (targetPoint.x > frame.origin.x) {
-					frame.origin.x = (keepOnScreen ? (targetPoint.x - 1) : targetPoint.x);
-				}
-				
-			} else {
-				//If the window is sliding on screen, go to the exact desired point
-				frame.origin.x = targetPoint.x;
-			}
-			
-			finishedX = YES;
-			
-		} else if (targetPoint.x < frame.origin.x) {
-			frame.origin.x -= INCREMENT;
-		} else if (targetPoint.x > frame.origin.x) {
-			frame.origin.x += INCREMENT;		
-		}
-		
-		if (abs(targetPoint.y - frame.origin.y) <= INCREMENT) {
-			//Our target point is within INCREMENT of the current point on the y axis
-			if (windowSlidOffScreenEdgeMask != AINoEdges) {
-				//If the window is sliding off screen, keep one pixel onscreen to avoid crashing (moving a titled window offscreen is a crash)
-				if (targetPoint.y < frame.origin.y) {
-					frame.origin.y = (keepOnScreen ? (targetPoint.y + 1) : targetPoint.y);
-				} else if (targetPoint.y > frame.origin.y) {
-					frame.origin.y = (keepOnScreen ? (targetPoint.y - 1) : targetPoint.y);
-				}
-				
-			} else {
-				//If the window is sliding on screen, go to the exact desired point
-				frame.origin.y = targetPoint.y;
-				
-			}
-			
-			finishedY = YES;
-			
-		} else if (targetPoint.y < frame.origin.y) {
-			frame.origin.y -= INCREMENT;
-		} else if (targetPoint.y > frame.origin.y) {
-			frame.origin.y += INCREMENT;		
-		}
-		
-		[inWindow setFrame:frame display:YES animate:NO];
+	//Don't let docking interfere with the animation
+	if ([[self window] respondsToSelector:@selector(setDockingEnabled:)])
+		[(id)[self window] setDockingEnabled:NO];
+	
+	if (windowSlidOffScreenEdgeMask == AINoEdges) {
+		[[self window] setAlphaValue:previousAlpha];
 	}
-	while(!finishedX || !finishedY);
+
+	return YES;
 }
 
-/*
+- (void)animationDidEnd:(NSAnimation*)animation
+{
+	//Restore docking behavior	
+	if ([[self window] respondsToSelector:@selector(setDockingEnabled:)])
+		[(id)[self window] setDockingEnabled:YES];
+	
+	if (windowSlidOffScreenEdgeMask == AINoEdges) {
+		/* When the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
+		 * it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
+		 */
+		[contactListController contactListDesiredSizeChanged];
+
+	} else {
+		//Offscreen windows should be told not to cast a shadow
+		[[self window] setHasShadow:NO];	
+
+		previousAlpha = [[self window] alphaValue];
+		[[self window] setAlphaValue:0.0];
+	}
+	
+	[windowAnimation release]; windowAnimation = nil;
+}
+
+- (BOOL)keepListOnScreenWhenSliding
+{
+	return NO;
+}
+
+/*!
  * @brief Slide the window to a given point
  *
  * windowSlidOffScreenEdgeMask must already be set to the resulting offscreen mask (or 0 if the window is sliding on screen)
@@ -806,9 +828,59 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
  * A standard window (titlebar window) will crash if told to setFrame completely offscreen. Also, using our own movement we can more precisely
  * control the movement speed and acceleration.
  */
-- (void)slideWindowToPoint:(NSPoint)inPoint
-{
-	NSLog(@"Subclasses must override.");
+- (void)slideWindowToPoint:(NSPoint)targetPoint
+{	
+	NSWindow				*myWindow = [self window];
+	NSScreen				*windowScreen;
+
+	windowScreen = [myWindow screen];
+	if (!windowScreen) windowScreen = [self windowLastScreen];
+	if (!windowScreen) windowScreen = [NSScreen mainScreen];
+	
+	NSRect	frame = [myWindow frame];
+	float yOff = (targetPoint.y + NSHeight(frame)) - NSMaxY([windowScreen frame]);
+	if (windowScreen == [[NSScreen screens] objectAtIndex:0]) yOff -= [NSMenuView menuBarHeight];
+	if (yOff > 0) targetPoint.y -= yOff;
+	
+	frame.origin = targetPoint;
+	
+	if ((windowSlidOffScreenEdgeMask != AINoEdges) &&
+		[self keepListOnScreenWhenSliding]) {
+		switch (windowSlidOffScreenEdgeMask) {
+			case AIMinXEdgeMask:
+				frame.origin.x += 1;
+				break;
+			case AIMaxXEdgeMask:
+				frame.origin.x -= 1;
+				break;
+			case AIMaxYEdgeMask:
+				frame.origin.y -= 1;
+				break;
+			case AIMinYEdgeMask:
+				frame.origin.y += 1;
+				break;
+			case AINoEdges:
+				//We'll never get here
+				break;
+		}
+	}
+	
+	if (windowAnimation) {
+		[windowAnimation stopAnimation];
+		[windowAnimation release];
+	}
+
+	windowAnimation = [[NSViewAnimation alloc] initWithViewAnimations:
+		[NSArray arrayWithObject:
+			[NSDictionary dictionaryWithObjectsAndKeys:
+				myWindow, NSViewAnimationTargetKey,
+				[NSValue valueWithRect:frame], NSViewAnimationEndFrameKey,
+				nil]]];
+	[windowAnimation setFrameRate:0.0];
+	[windowAnimation setDuration:0.25];
+	[windowAnimation setDelegate:self];
+	[windowAnimation setAnimationBlockingMode:NSAnimationNonblocking];
+	[windowAnimation startAnimation];
 }
 
 - (void)moveWindowToPoint:(NSPoint)inOrigin
@@ -820,10 +892,11 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 		* it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
 		*/
 		[contactListController contactListDesiredSizeChanged];
-	}	
+		[[self window] setAlphaValue:previousAlpha];
+	}
 }
 
-/*
+/*!
  * @brief Find the mask specifying what edges are potentially slidable for our window
  *
  * @result AIRectEdgeMask, which is 0 if no edges are slidable
@@ -869,16 +942,16 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 
 	for (edge = 0; edge < 4; edge++) {
 		if (rectEdgeMask & (1 << edge)) {
-			newWindowFrame = AIRectByAligningRect_edge_toRect_edge_(newWindowFrame, AIOppositeRectEdge_(edge), screenSlideBoundaryRect, edge);
+			newWindowFrame = AIRectByAligningRect_edge_toRect_edge_(newWindowFrame,
+																	AIOppositeRectEdge_(edge),
+																	screenSlideBoundaryRect,
+																	edge);
 		}
 	}
 
 	windowSlidOffScreenEdgeMask |= rectEdgeMask;
 		
 	[self slideWindowToPoint:newWindowFrame.origin];
-	
-	listHasShadow = [window hasShadow];
-	[window setHasShadow:NO];
 }
 
 - (void)slideWindowOnScreenWithAnimation:(BOOL)animate
@@ -888,11 +961,12 @@ void manualWindowMoveToPoint(NSWindow *inWindow, NSPoint targetPoint, AIRectEdge
 		NSRect		windowFrame = [window frame];
 		
 		if (!NSEqualRects(windowFrame, oldFrame)) {
+			//Restore shadow and frame if we're appearing from having slid off-screen
+			[window setHasShadow:[[[adium preferenceController] preferenceForKey:KEY_CL_WINDOW_HAS_SHADOW
+																		   group:PREF_GROUP_CONTACT_LIST] boolValue]];			
 			[window orderFront:nil]; 
 			
 			windowSlidOffScreenEdgeMask = AINoEdges;
-			
-			[[self window] setHasShadow:listHasShadow];
 			
 			if (animate) {
 				[self slideWindowToPoint:oldFrame.origin];

@@ -21,6 +21,8 @@
 
 #import "NSIPRecentPicture.h"
 
+#define RECENT_PICTURE_CLASS NSClassFromString(@"NSIPRecentPicture")
+
 #define FADE_INCREMENT	0.3
 #define FADE_TIME		.3
 
@@ -32,7 +34,7 @@
 @end
 
 @implementation AIContactListRecentImagesWindowController
-/*
+/*!
  * @brief Show the widow
  *
  * @param inPoint The bottom-right corner of our parent view
@@ -61,6 +63,11 @@
 	if ((self = [super initWithWindowNibName:inWindowNibName])) {
 		picker = [inPicker retain];
 		recentPictureSelector = inRecentPictureSelector;
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(parentWindowWillClose:)
+													 name:NSWindowWillCloseNotification
+												   object:[picker window]];
 	}
 	
 	return self;
@@ -68,6 +75,7 @@
 
 - (void)dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[picker release];
 	
 	[super dealloc];
@@ -77,6 +85,9 @@
 {
 	[imageGridView setImageSize:NSMakeSize(30, 30)];	
 	[coloredBox setColor:[NSColor windowBackgroundColor]];
+	
+	[picker setMaxSize:NSMakeSize(256, 256)];
+
 	currentHoveredIndex = -1;
 }
 
@@ -115,8 +126,8 @@
 {
 	NSImage		 *displayImage;
 
-	if (index < [[NSIPRecentPicture recentPictures] count]) {
-		NSImage		 *image = [[NSIPRecentPicture recentSmallIcons] objectAtIndex:index];
+	if (index < [[RECENT_PICTURE_CLASS recentSmallIcons] count]) {
+		NSImage		 *image = [[RECENT_PICTURE_CLASS recentSmallIcons] objectAtIndex:index];
 		NSSize		size = [image size];
 		NSBezierPath *fullPath = [NSBezierPath bezierPathWithRect:NSMakeRect(0, 0, size.width, size.height)];
 		displayImage = [image copy];
@@ -163,7 +174,7 @@
 - (void)imageGridViewSelectionDidChange:(NSNotification *)notification
 {
 	int selectedIndex = [imageGridView selectedIndex];
-	NSArray *recentPictures = [NSIPRecentPicture recentPictures];
+	NSArray *recentPictures = [RECENT_PICTURE_CLASS recentPictures];
 	if (selectedIndex < [recentPictures count]) {
 		//Notify as if the image had been selected in the picker
 		[[picker delegate] imageViewWithImagePicker:picker
@@ -194,7 +205,7 @@
 
 - (void)clearRecentPictures:(id)sender
 {
-	[NSIPRecentPicture removeAllButCurrent];
+	[RECENT_PICTURE_CLASS removeAllButCurrent];
 	[imageGridView reloadData];
 }
 
@@ -206,6 +217,12 @@
 - (void)windowDidResignKey:(NSNotification *)aNotification
 {
 	[self fadeOutAndClose];		
+}
+
+- (void)parentWindowWillClose:(NSNotification *)aNotification
+{
+	//Close, no fade, when our parent window closes
+	[self close];
 }
 
 #pragma mark Fading
@@ -306,7 +323,7 @@
 	[menu addItem:menuItem];
 	[menuItem release];
 
-	menuItem = [[NSMenuItem alloc] initWithTitle:[AILocalizedString(@"Clear Recent Pictures", nil) stringByAppendingEllipsis]
+	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Clear Recent Pictures", nil)
 										  target:self
 										  action:@selector(clearRecentPictures:)
 								   keyEquivalent:@""];

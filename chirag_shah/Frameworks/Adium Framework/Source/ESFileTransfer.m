@@ -27,14 +27,23 @@
 #define MAGIC_ARROW_TRANSLATE_Y 0.75
 
 @interface ESFileTransfer (PRIVATE)
-- (void) recreateMessage;
+- (id)initWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(AIFileTransferType)inType;
+- (void)recreateMessage;
 @end
 
 @implementation ESFileTransfer
+
+static NSMutableDictionary *fileTransferDict = nil;
+
 //Init
-+ (id)fileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(AIFileTransferType)t
++ (id)fileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(AIFileTransferType)inType
 {
-    return [[[self alloc] initWithContact:inContact forAccount:inAccount type:t] autorelease];    
+    return [[[self alloc] initWithContact:inContact forAccount:inAccount type:inType] autorelease];    
+}
+
++ (ESFileTransfer *)existingFileTransferWithID:(NSString *)fileTransferID
+{
+	return [[[[fileTransferDict objectForKey:fileTransferID] nonretainedObjectValue] retain] autorelease];
 }
 
 //Content Identifier
@@ -43,12 +52,13 @@
     return CONTENT_FILE_TRANSFER_TYPE;
 }
 
-- (id)initWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(AIFileTransferType)t
+- (id)initWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(AIFileTransferType)inType
 {
-	AIChat *c = [[[AIObject sharedAdiumInstance] chatController] openChatWithContact:inContact]; 
-	AIListObject *s, *d;
-	switch(t)
-	{
+	//Hack note: the adium ivar is not yet initialized, so we use AIObject's class method to access adium instead
+	AIChat			*aChat = [[[AIObject sharedAdiumInstance] chatController] chatWithContact:inContact];
+	AIListObject	*s, *d;
+
+	switch (inType) {
 		case Outgoing_FileTransfer:
 			s = inAccount;
 			d = inContact;
@@ -59,17 +69,21 @@
 			d = inAccount;
 			break;
 	}
-    if ((self = [super initWithChat:c
+    if ((self = [super initWithChat:aChat
 							 source:s
 						destination:d
 							   date:[NSDate date]
 							message:@""
-						  autoreply:NO]))
-	{
-		type = t;
+						  autoreply:NO])) {
+		type = inType;
 		status = Unknown_Status_FileTransfer;
 		delegate = nil;
+
 		[self recreateMessage];
+
+		if (!fileTransferDict) fileTransferDict = [[NSMutableDictionary alloc] init];
+		[fileTransferDict setObject:[NSValue valueWithNonretainedObject:self]
+							 forKey:[self uniqueID]];
 	}
 	
     return self;
@@ -77,10 +91,14 @@
 
 - (void)dealloc
 {
+	[fileTransferDict removeObjectForKey:[self uniqueID]];
+	[uniqueID release];
+
     [remoteFilename release];
     [localFilename release];
     [accountData release];
-    
+    [promptController release];
+
     [super dealloc];
 }
 
@@ -179,6 +197,11 @@
 		
 		if (delegate)
 			[delegate fileTransfer:self didSetStatus:status];
+		
+		//Once we're stopped, no further need for a request prompt
+		if ([self isStopped]) {
+			[self setFileTransferRequestPromptController:nil];
+		}
 	}
 }
 
@@ -187,7 +210,7 @@
 	return status;
 }
 
-/*
+/*!
  * @brief Report a progress update on the file transfer
  *
  * @param inPercent The percentage complete.  If 0, inBytesSent will be used to calculate the percent complete if possible.
@@ -367,7 +390,7 @@
 			(status == Failed_FileTransfer));
 }
 
-- (void) recreateMessage
+- (void)recreateMessage
 {
 	NSString			*filenameDisplay;
 	NSString			*rFilename = [self remoteFilename];
@@ -386,10 +409,60 @@
 	}
 	
 	[self setMessage:[NSAttributedString stringWithString:
-		[NSString stringWithFormat:AILocalizedString(@"%@ requests to send you %@",nil),
+		[NSString stringWithFormat:AILocalizedString(@"%@ requests to send you %@","This is displayed in the message window when prompting to receive a file. The first %@ is the sender; the second %@ is the filename of the file being sent. It will be followed by buttons such as 'Save' and 'Cancel'."),
 			[[self contact] formattedUID],
 			filenameDisplay]]];
 	
 }
 
+- (void)setFileTransferRequestPromptController:(ESFileTransferRequestPromptController *)inPromptController
+{
+	if (promptController != inPromptController) {
+		[promptController autorelease];
+		promptController = [inPromptController retain];
+	}
+}
+
+- (ESFileTransferRequestPromptController *)fileTransferRequestPromptController
+{
+	return promptController;
+}
+
+- (NSString *)uniqueID
+{
+	if (!uniqueID) {
+		static unsigned long long fileTransferID = 0;
+
+		uniqueID = [[NSString alloc] initWithFormat:@"FileTransfer-%qu",fileTransferID++];
+	}
+
+	return uniqueID;
+}
+
+#pragma mark AIContentObject
+/*!
+* @brief Is this content tracked with notifications?
+ *
+ * If NO, the content will not trigger message sent/message received events such as a sound playing.
+ */
+- (BOOL)trackContent
+{
+    return NO;
+}
+/*!
+ * @brief Is this content passed through content filters?
+ */
+- (BOOL)filterContent
+{
+	return NO;
+}
+/*!
+* @brief Post process this content?
+ *
+ * For example, this should be YES if the content is to be logged and NO if it is not.
+ */
+- (BOOL)postProcessContent
+{
+	return NO;
+}
 @end

@@ -11,6 +11,7 @@
 #import "AIImageAdditions.h"
 #import "AIStringUtilities.h"
 #import "AIFileManagerAdditions.h"
+#import "AIApplicationAdditions.h"
 
 #define DRAGGING_THRESHOLD 16.0
 
@@ -77,7 +78,8 @@
 	shouldDrawFocusRing = NO;
 
 	mouseDownPos = NSZeroPoint;
-	
+	maxSize = NSZeroSize;
+
 	useNSImagePickerController = YES;
 	
 	/* Determine if we can load the image picker controller class.  We might not be able to for a user with a corrupt AddressBook.framework,
@@ -174,6 +176,11 @@
 	useNSImagePickerController = inUseNSImagePickerController;
 }
 
+- (void)setMaxSize:(NSSize)inMaxSize
+{
+	maxSize = inMaxSize;
+}
+
 // Monitoring user interaction --------------------------------------------------------
 #pragma mark Monitoring user interaction
 
@@ -219,9 +226,10 @@
  */
 - (void)keyDown:(NSEvent *)theEvent
 {
-	unichar key = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
+	NSString *characters = [theEvent charactersIgnoringModifiers];
+	unichar key = ([characters length] ? [characters characterAtIndex:0] : 0);
 	
-	if (key == NSDeleteCharacter || key == NSBackspaceCharacter) {
+	if ((key == NSBackspaceCharacter) || (key == NSDeleteCharacter) || (key == NSDeleteFunctionKey) || (key == NSDeleteCharFunctionKey)) {
 		[self delete];
 	} else if (key == NSEnterCharacter || key == NSCarriageReturnCharacter) {
 		[self showPickerController];
@@ -362,16 +370,28 @@
  */
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
-	BOOL notified = NO;
-	
+	BOOL	notified = NO, resized = NO;
+	NSImage *droppedImage;
+	NSSize	droppedImageSize;
+
 	[super concludeDragOperation:sender];
-	
-	if (pickerController) {
+
+	droppedImage = [self image];
+	droppedImageSize = [droppedImage size];
+
+	if ((maxSize.width > 0 && droppedImageSize.width > maxSize.width) ||
+		(maxSize.height > 0 && droppedImageSize.height > maxSize.height)) {
+		droppedImage = [droppedImage imageByScalingToSize:maxSize];
+		//This will notify the picker controller that the selection changed, as well
+		[self setImage:droppedImage];
+		resized = YES;
+
+	} else if (pickerController) {
 		[pickerController selectionChanged];
 	}
-	
-	//Use the file's data if possible
-	if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
+
+	//Use the file's data if possible and the image wasn't too big
+	if (!resized && [delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
 		NSPasteboard	*pboard = [sender draggingPasteboard];
 
 		if ([[pboard types] containsObject:NSFilenamesPboardType]) {
@@ -393,10 +413,17 @@
 	}
 
 	//Inform the delegate if we haven't informed it yet
-	if (!notified && [delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]) {
-		[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
-					   withObject:self
-					   withObject:[self image]];
+	if (!notified) {
+		if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
+			[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)
+						   withObject:self
+						   withObject:[droppedImage PNGRepresentation]];
+
+		} else if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]) {
+			[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
+						   withObject:self
+						   withObject:droppedImage];
+		}
 	}
 }
 
@@ -428,8 +455,16 @@
 	if (imageData) {
 		NSImage *image = [[[NSImage alloc] initWithData:imageData] autorelease];
 		if (image) {
-			[self setImage:image];
+			NSSize	imageSize = [image size];
+
+			if ((maxSize.width > 0 && imageSize.width > maxSize.width) ||
+				(maxSize.height > 0 && imageSize.height > maxSize.height)) {
+				image = [image imageByScalingToSize:maxSize];
+				imageData = [image PNGRepresentation];
+			}
 			
+			[self setImage:image];
+							
 			if (pickerController) {
 				[pickerController selectionChanged];
 			}
@@ -496,7 +531,7 @@
 			Class	imagePickerClass;
 			NSPoint	pickerPoint;
 			
-			//10.2 doesn't have NSImagePickerController, so find the class dynamically to avoid link errors if we want 10.2 compatibility
+			//10.2 and 10.5 don't have NSImagePickerController, so find the class dynamically to avoid link errors if we want 10.2/10.5 compatibility
 			imagePickerClass = NSClassFromString(@"NSImagePickerController");
 			pickerController = [[imagePickerClass sharedImagePickerControllerCreate:YES] retain];
 			[pickerController setDelegate:self];
@@ -542,10 +577,18 @@
 		if ([openPanel runModalForDirectory:nil file:nil types:[NSImage imageFileTypes]] == NSOKButton) {
 			NSData	*imageData;
 			NSImage *image;
-			
+			NSSize	imageSize;
+
 			imageData = [NSData dataWithContentsOfFile:[openPanel filename]];
 			image = (imageData ? [[[NSImage alloc] initWithData:imageData] autorelease] : nil);
+			imageSize = (image ? [image size] : NSZeroSize);
 
+			if ((maxSize.width > 0 && imageSize.width > maxSize.width) ||
+				(maxSize.height > 0 && imageSize.height > maxSize.height)) {
+				image = [image imageByScalingToSize:maxSize];
+				imageData = [image PNGRepresentation];
+			}
+			
 			//Update the image view
 			[self setImage:image];
 			
@@ -565,7 +608,7 @@
 		}
 	}
 }
-
+																				  
 /*
  * @brief This gets called when the user selects OK on a new image
  *
@@ -574,27 +617,33 @@
  */
 - (void)imagePicker:(id)sender selectedImage:(NSImage *)image
 {
+	NSSize imageSize = [image size];
+
+	if ((maxSize.width > 0 && imageSize.width > maxSize.width) ||
+		(maxSize.height > 0 && imageSize.height > maxSize.height)) {
+		image = [image imageByScalingToSize:maxSize];
+	}
+	
 	//Update the NSImageView
 	[self setImage:image];
 	
-	if (imagePickerClassIsAvailable) {
-		//Inform the delegate
-		if (delegate) {
-			if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
-				[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)
-							   withObject:self
-							   withObject:[image PNGRepresentation]];
-				
-			} else if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]) {
-				[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
-							   withObject:self
-							   withObject:image];
-			}
+	//Inform the delegate, but only if NOT using NSOpenPanel
+	if (delegate && (imagePickerClassIsAvailable && useNSImagePickerController)) {
+		if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
+			[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)
+						   withObject:self
+						   withObject:[image PNGRepresentation]];
+			
+		} else if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]) {
+			[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
+						   withObject:self
+						   withObject:image];
 		}
-		
-		//Add the image to the list of recent images
-		
-		//10.2 doesn't have NSIPRecentPicture, so find the class dynamically to avoid link errors if we want 10.2 compatibility
+	}
+	
+	//Add the image to the list of recent images
+	if (imagePickerClassIsAvailable) {
+		//10.2 and 10.5 don't have NSIPRecentPicture, so find the class dynamically to avoid link errors if we want 10.2/10.5 compatibility
 		Class ipRecentPictureClass = NSClassFromString(@"NSIPRecentPicture");
 		id recentPicture = [[[ipRecentPictureClass alloc] initWithOriginalImage:image] autorelease];
 		[recentPicture setCurrent];

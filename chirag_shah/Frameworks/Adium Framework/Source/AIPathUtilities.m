@@ -35,6 +35,7 @@
 #define SERVICE_ICONS_DIRECTORY		@"Service Icons"
 #define SOUNDS_DIRECTORY			@"Sounds"
 #define STATUS_ICONS_DIRECTORY		@"Status Icons"
+#define MENU_BAR_ICONS_DIRECTORY	@"Menu Bar Icons"
 
 /*!
  * @brief Function to search for Adium resources
@@ -79,6 +80,8 @@ AISearchPathForDirectoriesInDomains(unsigned directory, unsigned domainMask, BOO
 		adiumResourceName = SOUNDS_DIRECTORY;
 	} else if (directory == AIStatusIconsDirectory) {
 		adiumResourceName = STATUS_ICONS_DIRECTORY;
+	} else if (directory == AIMenuBarIconsDirectory) {
+		adiumResourceName = MENU_BAR_ICONS_DIRECTORY;
 	}
 
 	if (adiumResourceName) {
@@ -94,7 +97,7 @@ AISearchPathForDirectoriesInDomains(unsigned directory, unsigned domainMask, BOO
 	}
 
 	// Internal directories.
-	if ((domainMask & AIInternalDomainMask) && internalRelativePath) {
+	if (((domainMask & AIInternalDomainMask) != 0) && internalRelativePath) {
 		NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
 		NSString *fullAppendPath = [NSString pathWithComponents:internalRelativePath];
 
@@ -122,7 +125,7 @@ AISearchPathForDirectoriesInDomains(unsigned directory, unsigned domainMask, BOO
 		 * may not be covered above if we are installed as Portable Adium
 		 */
 		if (adiumResourceName &&
-			(domainMask & NSUserDomainMask)) {
+			((domainMask & NSUserDomainMask) != 0)) {
 			NSString *path = [[[AIObject sharedAdiumInstance] applicationSupportDirectory] stringByAppendingPathComponent:adiumResourceName];
 
 			if (![dirs containsObject:path]) {

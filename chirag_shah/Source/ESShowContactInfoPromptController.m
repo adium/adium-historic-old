@@ -55,7 +55,7 @@ static ESShowContactInfoPromptController *sharedShowInfoPromptInstance = nil;
 {
 	[super windowDidLoad];
 	
-	[label_using setLocalizedString:AILocalizedString(@"Using:",nil)];
+	[label_using setLocalizedString:AILocalizedString(@"Using:","Label in front of an account drop-down selector to determine what account to use")];
 	[label_contact setLocalizedString:AILocalizedString(@"Contact:",nil)];
 
 	[button_okay setLocalizedString:GET_INFO];
@@ -70,11 +70,18 @@ static ESShowContactInfoPromptController *sharedShowInfoPromptInstance = nil;
 	AIListContact	*contact;
 
 	if ((contact = [self contactFromTextField])) {
+		[super okay:sender];
+
 		[AIContactInfoWindowController showInfoWindowForListObject:contact];
 
 		//Close the prompt
         [[self class] closeSharedInstance];
     }
+}
+
+- (NSString *)lastAccountIDKey
+{
+	return @"ShowContactInfo";
 }
 
 @end

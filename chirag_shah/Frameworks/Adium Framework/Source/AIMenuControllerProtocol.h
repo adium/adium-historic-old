@@ -29,7 +29,7 @@ typedef enum {
 
 typedef enum {
     Context_Group_Manage,Context_Contact_Manage, Context_Contact_Action, Context_Contact_NegativeAction,
-    Context_Contact_Additions, Context_Contact_ChatAction, Context_Contact_Stranger_ChatAction, Context_Contact_ListAction,
+    Context_Contact_Message, Context_Contact_Additions, Context_Contact_ChatAction, Context_Contact_Stranger_ChatAction, Context_Contact_ListAction,
 	Context_Contact_GroupChatAction,
 	Context_Tab_Action,
 	Context_TextView_LinkEditing, Context_TextView_Edit
@@ -41,6 +41,9 @@ typedef enum {
 //Custom menu items
 - (void)addMenuItem:(NSMenuItem *)newItem toLocation:(AIMenuLocation)location;
 - (void)removeMenuItem:(NSMenuItem *)targetItem;
+
+- (void)delayMenuItemPostProcessing;
+- (void)endDelayMenuItemPostProcessing;
 
 //Contextual menu items
 - (void)addContextualMenuItem:(NSMenuItem *)newItem toLocation:(AIContextMenuLocation)location;

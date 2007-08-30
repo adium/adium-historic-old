@@ -15,6 +15,7 @@
  */
 
 #import <Adium/AIPlugin.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
 
 #define ANNOUNCER_DEFAULT_PREFS 	@"AnnouncerDefaults"
 #define PREF_GROUP_ANNOUNCER		@"Announcer"
@@ -33,8 +34,6 @@
 #define SPEAK_EVENT_ALERT_IDENTIFIER	@"SpeakEvent"
 
 #define	SPEAK_EVENT_TIME				AILocalizedString(@"Speak Event Time",nil)
-
-@protocol AIActionHandler;
 
 @interface ESAnnouncerPlugin : AIPlugin <AIActionHandler> {
     NSString					*lastSenderString;

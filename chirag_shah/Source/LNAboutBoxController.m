@@ -148,7 +148,7 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
     if ((++numberOfBuildFieldClicks) % 2 == 0) {
         [button_buildButton setTitle:[self _applicationDate]];
     } else {
-		[button_buildButton setTitle:[AIAdium buildIdentifier]];
+		[button_buildButton setTitle:[[NSBundle mainBundle] objectForInfoDictionaryKey:@"AIBuildIdentifier"]];
     }
 }
 
@@ -162,7 +162,9 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 //Returns the formatted build date of Adium
 - (NSString *)_applicationDate
 {
-	return [[NSDateFormatter localizedDateFormatter] stringForObjectValue:[AIAdium buildDate]];
+	NSTimeInterval date = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"AIBuildDate"] doubleValue];
+
+	return [[NSDateFormatter localizedDateFormatter] stringForObjectValue:[NSDate dateWithTimeIntervalSince1970:date]];
 }
 
 

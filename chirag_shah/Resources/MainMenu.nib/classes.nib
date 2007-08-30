@@ -5,6 +5,7 @@
                 confirmQuit = id; 
                 contibutingToAdium = id; 
                 donate = id; 
+                importFromiChat = id; 
                 reportABug = id; 
                 sendFeedback = id; 
                 showAboutBox = id; 
@@ -27,17 +28,12 @@
                 adiumPrint = id; 
                 closeAllChats = id; 
                 closeChatMenu = id; 
-                closeContactList = id; 
                 closeMenu = id; 
-                nextMessage = id; 
                 paste = id; 
                 pasteAndMatchStyle = id; 
                 pasteWithImagesAndColors = id; 
-                previousMessage = id; 
                 runToolbarCustomizationPalette = id; 
                 setFontPanelSettingsAsDefaultFont = id; 
-                showChatWindow = id; 
-                showContactList = id; 
                 showContactListAndBringToFront = id; 
                 showPreferenceWindow = id; 
                 toggleContactList = id; 
@@ -53,7 +49,6 @@
                 contactListPlugin = id; 
                 fontPanelAccessoryView = NSView; 
                 interfacePlugin = id; 
-                menuController = AIMenuController; 
                 "menuItem_bold" = NSMenuItem; 
                 "menuItem_close" = NSMenuItem; 
                 "menuItem_closeAllChats" = NSMenuItem; 
@@ -62,6 +57,7 @@
                 "menuItem_italic" = NSMenuItem; 
                 "menuItem_paste" = NSMenuItem; 
                 "menuItem_pasteAndMatchStyle" = NSMenuItem; 
+                "menuItem_pasteWithImagesAndColors" = NSMenuItem; 
                 "menuItem_print" = NSMenuItem; 
                 "menuItem_showFonts" = NSMenuItem; 
                 "menuItem_showToolbar" = NSMenuItem; 
@@ -72,12 +68,13 @@
             CLASS = AIMenuController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                adium = AIAdium; 
+                adium = NSObject; 
                 "menuItem_Format_Italics" = id; 
                 "menuItem_aboutAdium" = NSMenuItem; 
                 "menuItem_adiumForums" = NSMenuItem; 
                 "menuItem_adiumHelp" = NSMenuItem; 
                 "menuItem_adiumXtras" = NSMenuItem; 
+                "menuItem_bigger" = NSMenuItem; 
                 "menuItem_bold" = NSMenuItem; 
                 "menuItem_bringAllToFront" = NSMenuItem; 
                 "menuItem_checkForUpdates" = NSMenuItem; 
@@ -123,6 +120,7 @@
                 "menuItem_showAll" = NSMenuItem; 
                 "menuItem_showColors" = NSMenuItem; 
                 "menuItem_showFonts" = NSMenuItem; 
+                "menuItem_smaller" = NSMenuItem; 
                 "menuItem_speech" = NSMenuItem; 
                 "menuItem_spelling" = NSMenuItem; 
                 "menuItem_spellingCheckSpelling" = NSMenuItem; 
@@ -135,6 +133,7 @@
                 "menuItem_view" = NSMenuItem; 
                 "menuItem_window" = NSMenuItem; 
                 "menuItem_writingDirection" = NSMenuItem; 
+                "menuItem_zoom" = NSMenuItem; 
                 "menu_Adium_About" = id; 
                 "menu_Adium_Other" = id; 
                 "menu_Adium_Preferences" = id; 

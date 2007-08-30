@@ -25,7 +25,9 @@
 #import <Adium/AIMenuControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIContentContext.h>
 
+#import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
@@ -104,7 +106,11 @@
 															selector:@selector(toggleMessageSending:)
 																name:@"AIChatDidChangeCanSendMessagesNotification"
 															  object:chat];
-	
+	[[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self 
+															selector:@selector(contentObjectAdded:) 
+																name:Content_ContentObjectAdded 
+															  object:nil];
+
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];	
 }
 
@@ -131,6 +137,9 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
+	[[[AIObject sharedAdiumInstance] notificationCenter] removeObserver:self];
+
+	[[self undoManager] removeAllActions];
 
     [chat release];
     [associatedView release];
@@ -229,13 +238,6 @@
 				}
 			}
 
-		} else if ([charactersIgnoringModifiers isEqualToString:@"\r"] == YES || inChar == NSEnterCharacter) {
-			if (flags & NSShiftKeyMask) {
-				[self insertText:@"\n"];
-			} else {
-				[super keyDown:inEvent];
-			}
-
 		} else if (inChar == NSTabCharacter) {
 			if ([[self delegate] respondsToSelector:@selector(textViewShouldTabComplete:)] &&
 				[[self delegate] textViewShouldTabComplete:self]) {
@@ -266,7 +268,28 @@
 	[self _resetCacheAndPostSizeChanged];
 }
 
-//10.3+ only, called when the user presses escape - we'll clear our text view in response
+/*!
+ * @brief Clear any link attribute in the current typing attributes
+ *
+ * Any link attribute is removed. All other typing attributes are unchanged.
+ */
+- (void)clearLinkAttribute
+{
+	NSDictionary *typingAttributes = [self typingAttributes];
+
+	if ([typingAttributes objectForKey:NSLinkAttributeName]) {
+		NSMutableDictionary *newTypingAttributes = [typingAttributes mutableCopy];
+
+		[newTypingAttributes removeObjectForKey:NSLinkAttributeName];
+		[self setTypingAttributes:newTypingAttributes];
+
+		[newTypingAttributes release];
+	}
+}
+
+/*!
+ * @brief The user pressed escape: clear our text view in response
+ */
 - (void)cancelOperation:(id)sender
 {
 	if (clearOnEscape) {
@@ -277,6 +300,7 @@
 		[undoManager setActionName:AILocalizedString(@"Clear", nil)];
 
 		[self setString:@""];
+		[self clearLinkAttribute];		
 	}
 
 	if ([[self delegate] respondsToSelector:@selector(textViewDidCancel:)]) {
@@ -331,7 +355,7 @@
 //Adium Text Entry -----------------------------------------------------------------------------------------------------
 #pragma mark Adium Text Entry
 
-/*
+/*!
  * @brief Toggle whether message sending is enabled based on a notification. The notification object is the AIChat of the appropriate message entry view
  */
 - (void)toggleMessageSending:(NSNotification *)not
@@ -340,7 +364,7 @@
 	[self setSendingEnabled:[[[not userInfo] objectForKey:@"TypingEnabled"] boolValue]];
 }
 
-/*
+/*!
  * @brief Are we available for sending?
  */
 - (BOOL)availableForSending
@@ -450,7 +474,36 @@
 		[type isEqualToString:NSRTFDPboardType] ||
 		[type isEqualToString:NSHTMLPboardType] ||
 		[type isEqualToString:NSStringPboardType]) {
-		NSData *data = [generalPasteboard dataForType:type];
+		NSData *data;
+		
+		@try {
+			data = [generalPasteboard dataForType:type];
+		} @catch (NSException *localException) {
+			data = nil;
+		}
+		
+		//Failed. Try again with the string type.
+		if (!data && ![type isEqualToString:NSStringPboardType]) {
+			if ([[[NSPasteboard generalPasteboard] types] containsObject:NSStringPboardType]) {
+				type = NSStringPboardType;
+				@try {
+					data = [generalPasteboard dataForType:type];
+				} @catch (NSException *localException) {
+					data = nil;
+				}
+			}
+		}
+		
+		if (!data) {
+			//We still didn't get valid data... maybe super can handle it
+			@try {
+				[self paste:sender];
+			} @catch (NSException *localException) {
+				NSBeep();
+				return;
+			}
+		}
+		
 		NSMutableAttributedString *attributedString;
 		
 		if ([type isEqualToString:NSStringPboardType]) {
@@ -460,17 +513,35 @@
 			[string release];
 			
 		} else {
-			if ([type isEqualToString:NSRTFPboardType]) {
-				attributedString = [[NSMutableAttributedString alloc] initWithRTF:data
-															   documentAttributes:NULL];
-			} else if ([type isEqualToString:NSRTFDPboardType]) {
-				attributedString = [[NSMutableAttributedString alloc] initWithRTFD:data
-																documentAttributes:NULL];
-			} else /* NSHTMLPboardType */ {
-				attributedString = [[NSMutableAttributedString alloc] initWithHTML:data
-																documentAttributes:NULL];
+			@try {
+				if ([type isEqualToString:NSRTFPboardType]) {
+					attributedString = [[NSMutableAttributedString alloc] initWithRTF:data
+																   documentAttributes:NULL];
+				} else if ([type isEqualToString:NSRTFDPboardType]) {
+					attributedString = [[NSMutableAttributedString alloc] initWithRTFD:data
+																	documentAttributes:NULL];
+				} else /* NSHTMLPboardType */ {
+					attributedString = [[NSMutableAttributedString alloc] initWithHTML:data
+																	documentAttributes:NULL];
+				}
+			} @catch (NSException *localException) {
+				//Error while reading the RTF or HTML data, which can happen. Fall back on plain text
+				if ([[[NSPasteboard generalPasteboard] types] containsObject:NSStringPboardType]) {
+					data = [generalPasteboard dataForType:NSStringPboardType];
+					NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+					attributedString = [[NSMutableAttributedString alloc] initWithString:string
+																			  attributes:[self typingAttributes]];
+					[string release];
+				} else {
+					attributedString = nil;
+				}
 			}
-			
+
+			if (!attributedString) {
+				NSBeep();
+				return;
+			}
+
 			[attributedString convertForPasteWithTraitsUsingAttributes:[self typingAttributes]];
 		}
 		
@@ -519,16 +590,7 @@
 	
 	//If we are now an empty string, and we still have a link active, clear the link
 	if ([[self textStorage] length] == 0) {
-		NSDictionary *typingAttributes = [self typingAttributes];
-		if ([typingAttributes objectForKey:NSLinkAttributeName]) {
-			
-			NSMutableDictionary *newTypingAttributes = [typingAttributes mutableCopy];
-			
-			[newTypingAttributes removeObjectForKey:NSLinkAttributeName];
-			[self setTypingAttributes:newTypingAttributes];
-			
-			[newTypingAttributes release];
-		}
+		[self clearLinkAttribute];
 	}
 }
 
@@ -688,6 +750,19 @@
 	[[self undoManager] removeAllActions];
 }
 
+//Populate the history with messages from the message history
+- (void)contentObjectAdded:(NSNotification *)notification
+{
+	AIContentObject *content = [[notification userInfo] objectForKey:@"AIContentObject"];
+
+	if (([self chat] == [content chat]) && ([[content type] isEqualToString:CONTENT_CONTEXT_TYPE]) && [content isOutgoing]) {
+		//Populate the history with messages from us
+		[historyArray insertObject:[content message] atIndex:1];
+		if ([historyArray count] > MAX_HISTORY) {
+			[historyArray removeLastObject];
+		}
+	}
+}
 
 //Push and Pop ---------------------------------------------------------------------------------------------------------
 #pragma mark Push and Pop
@@ -857,13 +932,12 @@
 		while ((menuItem = [enumerator nextObject])) {
 			//We're going to be copying; call menu needs update now since it won't be called later.
 			NSMenu	*submenu = [menuItem submenu];
-			if (submenu &&
-			   [submenu respondsToSelector:@selector(delegate)] &&
-			   [[submenu delegate] respondsToSelector:@selector(menuNeedsUpdate:)]) {
-				[[submenu delegate] menuNeedsUpdate:submenu];
+			NSMenuItem	*menuItemCopy = [[menuItem copy] autorelease];
+			if (submenu && [submenu respondsToSelector:@selector(delegate)]) {
+				[[menuItemCopy submenu] setDelegate:[submenu delegate]];
 			}
 
-			[contextualMenu insertItem:[[menuItem copy] autorelease] atIndex:i++];
+			[contextualMenu insertItem:menuItemCopy atIndex:i++];
 		}
 	}
 	
@@ -921,6 +995,8 @@
 	NSString 		*type = [pasteboard availableTypeFromArray:FILES_AND_IMAGES_TYPES];
 	NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
 	
+	
+	
 	if (!type || superclassType) {
 		[super concludeDragOperation:sender];
 	}
@@ -949,14 +1025,16 @@
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
-	NSString 		*type = [pasteboard availableTypeFromArray:FILES_AND_IMAGES_TYPES];
-	NSString		*superclassType = [pasteboard availableTypeFromArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
+	BOOL			success = NO;
 
-	BOOL	success = NO;
-	if (type && !superclassType) {
+	NSString *myType = [[pasteboard types] firstObjectCommonWithArray:FILES_AND_IMAGES_TYPES];
+	NSString *superclassType = [[pasteboard types] firstObjectCommonWithArray:PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY];
+	
+	if (myType &&
+		(!superclassType || ([[pasteboard types] indexOfObject:myType] < [[pasteboard types] indexOfObject:superclassType]))) {
 		[self addAttachmentsFromPasteboard:pasteboard];
-
-		success = YES;
+		
+		success = YES;		
 	} else {
 		success = [super performDragOperation:sender];
 		
@@ -981,25 +1059,63 @@
 										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 }
 
+#pragma mark Writing Direction
+- (void)toggleBaseWritingDirection:(id)sender
+{
+	if ([self baseWritingDirection] == NSWritingDirectionRightToLeft) {
+		[self setBaseWritingDirection:NSWritingDirectionLeftToRight];
+	} else {
+		[self setBaseWritingDirection:NSWritingDirectionRightToLeft];			
+	}
+	
+	//Apply it immediately
+	[self setBaseWritingDirection:[self baseWritingDirection]
+							range:NSMakeRange(0, [[self textStorage] length])];
+}
+
 #pragma mark Attachments
-/*
+/*!
  * @brief Add an attachment of the file at inPath at the current insertion point
  *
  * @param inPath The full path, whose contents will not be loaded into memory at this time
  */
 - (void)addAttachmentOfPath:(NSString *)inPath
 {
-	AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
-	[attachment setPath:inPath];
-	[attachment setString:[inPath lastPathComponent]];
-	
-	//Insert an attributed string into the text at the current insertion point
-	[self insertText:[self attributedStringWithTextAttachmentExtension:attachment]];
-	
-	[attachment release];
+	if ([[inPath pathExtension] caseInsensitiveCompare:@"textClipping"] == NSOrderedSame) {
+		inPath = [inPath stringByAppendingString:@"/..namedfork/rsrc"];
+
+		NSData *data = [NSData dataWithContentsOfFile:inPath];
+		if (data) {
+			data = [data subdataWithRange:NSMakeRange(260, [data length] - 260)];
+			
+			NSAttributedString *clipping = [[[NSAttributedString alloc] initWithRTF:data documentAttributes:nil] autorelease];
+			if (clipping) {
+				NSDictionary	*attributes = [[self typingAttributes] copy];
+				
+				[self insertText:clipping];
+
+				if (attributes) {
+					[self setTypingAttributes:attributes];
+				}
+				
+				[attributes release];
+			}
+		}
+
+	} else {
+		AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
+		[attachment setPath:inPath];
+		[attachment setString:[inPath lastPathComponent]];
+		[attachment setShouldSaveImageForLogging:YES];
+		
+		//Insert an attributed string into the text at the current insertion point
+		[self insertText:[self attributedStringWithTextAttachmentExtension:attachment]];
+		
+		[attachment release];
+	}
 }
 
-/*
+/*!
  * @brief Add an attachment of inImage at the current insertion point
  */
 - (void)addAttachmentOfImage:(NSImage *)inImage
@@ -1015,7 +1131,7 @@
 	[attachment release];
 }
 
-/*
+/*!
  * @brief Generate an NSAttributedString which contains attachment and displays it using attachment's iconImage
  */
 - (NSAttributedString *)attributedStringWithTextAttachmentExtension:(AITextAttachmentExtension *)attachment
@@ -1029,7 +1145,7 @@
 	return [NSAttributedString attributedStringWithAttachment:attachment];
 }
 
-/*
+/*!
  * @brief Given RTFD data, return an NSAttributedString whose attachments are all AITextAttachmentExtension objects
  */
 - (NSAttributedString *)attributedStringWithAITextAttachmentExtensionsFromRTFDData:(NSData *)data
@@ -1074,7 +1190,8 @@
 				AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
 				[attachment setPath:destinationPath];
 				[attachment setString:preferredName];
-				
+				[attachment setShouldSaveImageForLogging:YES];
+
 				//Insert an attributed string into the text at the current insertion point
 				replacement = [self attributedStringWithTextAttachmentExtension:attachment];
 				[attachment release];

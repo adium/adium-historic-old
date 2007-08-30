@@ -16,6 +16,7 @@
 
 #import <Adium/AIPlugin.h>
 #import <WebKit/WebKit.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 
 /*!
  *	@brief Preference group for webkit display prefs
@@ -38,7 +39,12 @@
 /*!
  *	@brief The bundle identifier of the style we revert to if the preferred style isn't available
  */
-#define WEBKIT_DEFAULT_STYLE					@"com.adiumx.mockie.style"
+#define WEBKIT_DEFAULT_STYLE					@"com.adiumx.stockholm.style"
+
+/*!
+ *	@brief The path to the currently selected message style
+ */
+#define KEY_CURRENT_WEBKIT_STYLE_PATH			@"Current Style Path"
 
 /*!
  *	@brief Key for the preference controlling whether we should show user icons in the message view
@@ -87,25 +93,24 @@
 
 #define NEW_CONTENT_RETRY_DELAY					0.01 
 
-@class ESWebKitMessageViewPreferences;
-
-@protocol AIMessageViewPlugin, AIMessageViewController;
+@class ESWebKitMessageViewPreferences, AIChat, AIWebkitMessageViewStyle;
 
 /*!
  *	@class AIWebKitMessageViewPlugin AIWebKitMessageViewPlugin.h
  *	@brief Handles loading the WKMV plugin into Adium
  *	@see AIWebKitMessageViewController
  */
-@interface AIWebKitMessageViewPlugin : AIPlugin <AIMessageViewPlugin> {
+@interface AIWebKitMessageViewPlugin : AIPlugin <AIMessageDisplayPlugin> {
 	ESWebKitMessageViewPreferences  *preferences;
 	NSMutableDictionary				*styleDictionary;
+	AIWebkitMessageViewStyle		*currentStyle;
 }
 
 /*!
  *	@return a new webkit message view controller initialized to display inChat
  *	@param inChat the chat that the message view will display
  */
-- (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat;
+- (id <AIMessageDisplayController>)messageDisplayControllerForChat:(AIChat *)inChat;
 
 /*!
  *	This method is fairly expensive the first time it's run; however, the first time will almost always been in a thread at startup, to preload the styles. This method is threadsafe.
@@ -125,5 +130,10 @@
  *	@param style The style name it will be specific to
  */
 - (NSString *)styleSpecificKey:(NSString *)key forStyle:(NSString *)style;
+
+/*!
+ *	@brief Returns the shared instance of the currently used message style
+ */
+- (AIWebkitMessageViewStyle *) currentMessageStyle;
 
 @end

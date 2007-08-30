@@ -15,10 +15,10 @@
  */
 
 #import "AIListController.h"
+#import "AIDualWindowInterfacePlugin.h"
 #import <Adium/AIWindowController.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import <AIUtilities/AIFunctions.h>
-
-@protocol AIContactListViewController, AIInterfaceContainer;
 
 typedef enum {
 	AIContactListWindowHidingStyleNone = 0,
@@ -30,7 +30,6 @@ typedef enum {
 #define KEY_CL_SLIDE_ONLY_IN_BACKGROUND		@"Hide By Sliding Only in Background"
 
 #define PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
-#define KEY_SCL_BORDERLESS					@"Borderless"
 #define KEY_DUAL_RESIZE_VERTICAL			@"Autoresize Vertical"
 #define KEY_DUAL_RESIZE_HORIZONTAL			@"Autoresize Horizontal"
 
@@ -51,7 +50,9 @@ typedef enum {
 	// used by the "show contact list" event behavior to prevent the contact list
 	// from hiding during the amount of time it is to be shown
 	BOOL								preventHiding;
-	
+	BOOL								overrodeWindowLevel;
+	int									previousWindowLevel;
+
 	//this needs to be stored because we turn the shadow off when the window slides offscreen
 	BOOL								listHasShadow; 
 	
@@ -64,14 +65,13 @@ typedef enum {
 	NSScreen							*currentScreen;
 	NSRect								currentScreenFrame;
 	
-	NSTimer								*movementTimer;
+	NSViewAnimation						*windowAnimation;
 	float								previousAlpha;
 }
 
 + (AIListWindowController *)listWindowController;
 + (NSString *)nibName;
 - (void)close:(id)sender;
-- (void)showWindowInFront:(BOOL)inFront;
 
 // Dock-like hiding
 - (void)slideWindowOnScreenWithAnimation:(BOOL)flag;
@@ -89,7 +89,6 @@ typedef enum {
 	void manualWindowMoveToPoint(NSWindow *inWindow,
 								 NSPoint targetPoint,
 								 AIRectEdgeMask windowSlidOffScreenEdgeMask,
-								 AIListController *contactListController,
 								 BOOL keepOnScreen);
 
 @end

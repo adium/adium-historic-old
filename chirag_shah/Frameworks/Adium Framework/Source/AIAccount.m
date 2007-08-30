@@ -20,9 +20,69 @@
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIService.h>
 #import <Adium/AIChat.h>
+#import <Adium/ESFileTransfer.h>
+#import "AdiumAccounts.h"
 
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIAccountControllerProtocol.h>
+
+#define NEW_ACCOUNT_DISPLAY_TEXT			AILocalizedString(@"<New Account>", "Placeholder displayed as the name of a new account")
+
+@interface AIAccountDeletionDialog : NSObject <AIAccountControllerRemoveConfirmationDialog> {
+	AIAccount *account;
+	NSAlert *alert;
+	id userdata;
+}
+
+- (id)initWithAccount:(AIAccount*)ac alert:(NSAlert*)al;
+
+- (void)setUserData:(id)ud;
+- (id)userData;
+
+- (void)alertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo;
+
+@end
+
+@implementation AIAccountDeletionDialog
+
+- (id)initWithAccount:(AIAccount*)ac alert:(NSAlert*)al {
+	if((self = [super init])) {
+		account = ac;
+		alert = [al retain];
+	}
+	return self;
+}
+
+- (void)dealloc {
+	[alert release];
+	[userdata release];
+	[super dealloc];
+}
+
+- (void)setUserData:(id)ud {
+	id old = userdata;
+	userdata = [ud retain];
+	[old release];
+}
+
+- (id)userData {
+	return [[userdata retain] autorelease];
+}
+
+- (void)runModal {
+	[self alertDidEnd:alert returnCode:[alert runModal] contextInfo:NULL];
+}
+
+- (void)beginSheetModalForWindow:(NSWindow*)window {
+	[alert beginSheetModalForWindow:window modalDelegate:self didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:) contextInfo:NULL];
+}
+
+- (void)alertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo {
+	[account alertForAccountDeletion:self didReturn:returnCode];
+}
+
+@end
 
 /*!
  * @class AIAccount
@@ -115,6 +175,7 @@
  * @brief The account will be deleted
  *
  * The default implementation disconnects the account.  Subclasses should call super's implementation.
+ * If asynchronous behavior is required, the next three methods should be overridden instead.
  */
 - (void)willBeDeleted
 {
@@ -124,7 +185,47 @@
 	[self removeAllContacts];
 }
 
-/*
+- (id<AIAccountControllerRemoveConfirmationDialog>)confirmationDialogForAccountDeletionForAccountsList:(AdiumAccounts*)accounts
+{
+	AIAccountDeletionDialog *result = [[AIAccountDeletionDialog alloc] initWithAccount:self alert:[self alertForAccountDeletion]];
+	[result setUserData:accounts];
+	return result;
+}
+
+/*!
+ * @brief The alert used for confirming the account deletion
+ *
+ * Meant for subclassers. By default, returns the dialog that asks the user if the account should really be deleted (and how).
+ */
+- (NSAlert*)alertForAccountDeletion
+{
+	return [NSAlert alertWithMessageText:AILocalizedString(@"Delete Account",nil)
+						   defaultButton:AILocalizedString(@"Delete",nil)
+						 alternateButton:AILocalizedString(@"Cancel",nil)
+							 otherButton:nil
+			   informativeTextWithFormat:AILocalizedString(@"Delete the account %@?",nil), ([[self formattedUID] length] ? [self formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT)];
+}
+
+/*!
+ * @brief The dialog asking for confirmation for deleting the account did return.
+ *
+ * @parameter dialog The dialog that has completed
+ * @parameter returnCode One of the regular NSAlert return codes
+ *
+ * This method should be overridden when alertForAccountDeletion: was overridden, and/or asynchronous behavior is required.
+ * This implementation disconnects and deletes the account from the accounts list when returnCode == NSAlertDefaultReturn.
+ * It must be called by subclassers (could be done asynchronously) with either NSAlertDefaultReturn or NSAlertAlternateReturn.
+ */
+- (void)alertForAccountDeletion:(id<AIAccountControllerRemoveConfirmationDialog>)dialog didReturn:(int)returnCode
+{
+	if(returnCode == NSAlertDefaultReturn) {
+		[self willBeDeleted];
+		[(AdiumAccounts*)[(AIAccountDeletionDialog*)dialog userData] deleteAccount:self];
+	}
+	[(AIAccountDeletionDialog*)dialog release];
+}
+
+/*!
  * @brief A formatted UID which may include additional necessary identifying information.
  *
  * For example, an AIM account (tekjew) and a .Mac account (tekjew@mac.com, entered only as tekjew) may appear identical
@@ -143,7 +244,7 @@
  * Subclass to alter the behavior of this account with regards to autoresponses.  Certain services expect the client to
  * auto-respond with away messages.  Adium will provide this behavior automatically if desired.
  */
-- (BOOL)shouldSendAutoresponsesWhileAway
+- (BOOL)supportsAutoReplies
 {
 	return NO;
 }
@@ -217,7 +318,7 @@
 	return NO;
 }
 
-/*
+/*!
  * @brief Called once the display name has been properly filtered
  *
  * Subclasses may override to pass this name on to the server if appropriate.
@@ -328,6 +429,18 @@
 	
 }
 
+/*!
+ * @brief Should the autorefreshing attributed string associated with a key be updated at the moment?
+ *
+ * The default implementation causes all dynamic strings which need updating to be updated if the account is
+ * online.  Subclasses may choose to implement more complex logic; for example, a nickname seen only in a chat
+ * might be updated only if a chat is open.
+ */
+- (BOOL)shouldUpdateAutorefreshingAttributedStringForKey:(NSString *)inKey
+{
+	return [self online];
+}
+
 //Messaging, Chatting, Strings -----------------------------------------------------------------------------------------
 #pragma mark Messaging, Chatting, Strings
 /*!
@@ -335,11 +448,24 @@
  *
  * Returns YES if the contact is available for receiving content of the specified type.  If contact is nil, instead
  * check for the availiability to send any content of the given type.
+ *
+ * The default implementation indicates the account, if online, can send messages to any online contact.
+ * It can also send files to any online contact if the account subclass conforms to the AIAccount_Files protocol.
+ *
  * @param inType A string content type
  * @param inContact The destination contact, or nil to check global availability
  */
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
+	if ([self online] && (!inContact || [inContact online])) {
+		if ([inType isEqualToString:CONTENT_MESSAGE_TYPE]) {
+			return YES;
+
+		} else if ([inType isEqualToString:CONTENT_FILE_TRANSFER_TYPE]) {
+			return [self conformsToProtocol:@protocol(AIAccount_Files)];
+		}
+	}
+
 	return NO;
 }
 
@@ -404,18 +530,18 @@
 	return NO;
 }
 
-/*
+/*!
  * @brief Send a typing object
  *
  * The content object contains all the necessary information for sending,
  * including the destination contact.
  */
-- (BOOL)sendTypingObject:(AIContentTyping *)inTypingObject
+- (void)sendTypingObject:(AIContentTyping *)inTypingObject
 {
-	return NO;
+
 }
 
-/*
+/*!
  * @brief Send a message
  *
  * The content object contains all the necessary information for sending,
@@ -547,6 +673,28 @@
 	return nil;
 }
 
+/*!
+ * @brief The account menu item was updated
+ *
+ * This method allows the opportunity to update the account menu item, e.g. to add information to it
+ */
+- (void)accountMenuDidUpdate:(NSMenuItem*)menuItem
+{
+
+}
+
+/*!
+ * @brief Is a contact on the contact list intentionally listed?
+ *
+ * By default, it is assumed that any contact on the list is intended be there.
+ * This is used by AIListContact to determine if the prescence of itself on the list is indicative of a degree
+ * of trust, for preferences such as "automatically accept files from contacts on my contact list".
+ */
+- (BOOL)isContactIntentionallyListed:(AIListContact *)contact
+{
+	return YES;
+}
+
 #pragma mark Secure messsaging
 
 /*!
@@ -577,12 +725,10 @@
 - (NSString *)aboutEncryption
 {
 	return [NSString stringWithFormat:
-		AILocalizedString(@"Adium provides encryption, authentication, deniability, and perfect forward secrecy over %@ via Off-the-Record Messaging (OTR). If your contact is not using an OTR-compatible messaging system, your contact will be sent a link to the OTR web site when you attempt to connect. For more information on OTR, visit http://www.cypherpunks.ca/otr/.",nil),
+		AILocalizedStringFromTableInBundle(@"Adium provides encryption, authentication, deniability, and perfect forward secrecy over %@ via Off-the-Record Messaging (OTR). If your contact is not using an OTR-compatible messaging system, your contact will be sent a link to the OTR web site when you attempt to connect. For more information on OTR, visit http://www.cypherpunks.ca/otr/.", nil, [NSBundle bundleForClass:[AIAccount class]], nil),
 		[[self service] shortDescription]];
 }
 
-/* Secure messaging */
-#pragma mark Secure Messaging
 /*!
  * @brief Start or stop secure messaging in a chat
  *
@@ -615,7 +761,7 @@
 }
 
 #pragma mark Authorization
-/*
+/*!
  * @brief An authorization prompt closed, granting or denying a contact's request for authorization
  *
  * @param inWindowController The window controller which closed; an account may have kept track of what windows were showing its authorization prompts

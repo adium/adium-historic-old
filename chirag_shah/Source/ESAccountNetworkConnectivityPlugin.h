@@ -15,13 +15,15 @@
  */
 
 #import <Adium/AIPlugin.h>
-
-@protocol AIListObjectObserver, AIHostReachabilityObserver;
+#import <Adium/AIContactControllerProtocol.h>
+#import <AIUtilities/AIHostReachabilityMonitor.h>
 
 @interface ESAccountNetworkConnectivityPlugin : AIPlugin <AIListObjectObserver, AIHostReachabilityObserver> {
 	NSMutableSet			*knownHosts;
 	NSMutableSet			*accountsToConnect;
 	NSMutableSet			*accountsToNotConnect;
+	
+	BOOL					waitingToSleep;
 }
 
 @end

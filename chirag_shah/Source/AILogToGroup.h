@@ -36,6 +36,6 @@
 - (NSString *)to;
 - (NSString *)serviceClass;
 - (AIChatLog *)logAtPath:(NSString *)path;
-- (void)trashLog:(AIChatLog *)aLog;
+- (BOOL)trashLog:(AIChatLog *)aLog;
 
 @end

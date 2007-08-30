@@ -9,6 +9,7 @@
 //the AISmoothTooltipTracker instance may remain around even after being released.
 
 #import "AISmoothTooltipTracker.h"
+#import "AIDockingWindow.h"
 
 #define TOOL_TIP_CHECK_INTERVAL	45.0	//Check for mouse X times a second
 #define TOOL_TIP_DELAY			35.0	//Number of check intervals of no movement before a tip is displayed
@@ -47,6 +48,11 @@
 												 selector:@selector(resetCursorTracking)
 													 name:NSViewFrameDidChangeNotification
 												   object:view];
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(resetCursorTracking)
+													 name:AIWindowToolbarDidToggleVisibility
+												   object:[view window]];
+
 		[self installCursorRect];
 	}
 	
@@ -85,6 +91,10 @@
  */
 - (void)viewWillBeRemovedFromWindow
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self
+													name:AIWindowToolbarDidToggleVisibility
+												  object:[view window]];
+	
 	[self removeCursorRect];
 	[self _stopTrackingMouse];
 }
@@ -94,6 +104,11 @@
  */
 - (void)viewWasAddedToWindow
 {
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(resetCursorTracking)
+												 name:AIWindowToolbarDidToggleVisibility
+											   object:[view window]];
+	
 	[self installCursorRect];
 }
 

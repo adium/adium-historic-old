@@ -1,17 +1,22 @@
 ###########
 # What to do before running this script:
 # - openUp needs to be installed.
-# - Set VERSION and BETA below.
-#       The Adium and Adium Crash Reporter plists will automatically
-#       updated to match these values.
-# - To enable beta, also edit Source/AIAdium.h, and set BETA_RELEASE to TRUE. Set it to FALSE when doing a final release.
+# - Set VERSION, BUILD_IN_DEBUG_MODE, and BETA below.
+#    * The Adium plists will automatically updated to match these values.
+#    * BETA should be TRUE for all beta builds and FALSE for all releases.
+#      It primarily affects the appcast used by Adium for detecting updates.
+#    * BUILD_IN_DEBUG_MODE should be set to FALSE for the last beta
+#      in addition to the release itself. If FALSE, debug logging is disabled
+#      and certain space optimizations for nibs and strings are done which
+#      also prevent modification.
 #
 # How to run this script:
 # - make all
 ###########
 
-VERSION=1.0b7
-BETA=TRUE
+VERSION=1.2svn
+BUILD_IN_DEBUG_MODE=TRUE
+BETA=FALSE
 
 ###########
 # To release!
@@ -30,45 +35,67 @@ BETA=TRUE
 # No need for changes below this point
 ###########
 
+###########
+# Variables
+###########
 SRC_DIR=..
 BUILD_DIR=build
 ART_DIR=Artwork
 ADIUM_DIR=$(BUILD_DIR)/Adium
-RELEASE_NAME=AdiumX_$(VERSION)
-ifeq ($(BETA),TRUE)
+RELEASE_NAME=Adium_$(VERSION)
+
+ifeq ($(BUILD_IN_DEBUG_MODE),TRUE)
     BUILDSTYLE=Deployment-Debug
 else
     BUILDSTYLE=Deployment
 endif
+
 BUILDFLAGS="BUILDCONFIGURATION=$(BUILDSTYLE)"
+ifeq ($(BETA),TRUE)
+	 BUILDFLAGS+="ADIUM_CFLAGS=-DBETA_RELEASE"
+endif
+
 PRODUCT_DIR=$(shell defaults read com.apple.Xcode PBXProductDirectory 2> /dev/null)
+
 ifeq ($(strip $(PRODUCT_DIR)),)
 	ADIUM_BUILD_DIR=$(SRC_DIR)/build/$(BUILDSTYLE)
 else
 	TARGET_BUILD_DIR=$(PRODUCT_DIR)/$(BUILDSTYLE)
 	ADIUM_BUILD_DIR=$(TARGET_BUILD_DIR)
 endif
+
 PLIST_DIR=`pwd`/../Plists
 ADIUM_PLIST=$(PLIST_DIR)/Adium_2
-CRASH_REPORTER_PLIST=$(PLIST_DIR)/Adium\ Crash\ Reporter-Info
 
-.PHONY: all update version compile clean release source prepare-release-bundle createfolder diskimage
+###########
+# Targets
+###########
+.PHONY: all all-withlocalchanges all-withlocalchanges-noclean update assertnochanges assertnoconflicts version compile clean release source prepare-release-bundle createfolder diskimage
 
-all: update version clean compile release
+all: update assertnochanges version clean compile release
+all-withlocalchanges: update assertnoconflicts version clean compile release
+all-withlocalchanges-noclean: update assertnoconflicts version compile release
 
 update:
 	svn update $(SRC_DIR)
 
+assertnochanges:
+	if [[ 0 -ne `svn st $(SRC_DIR) | grep --invert-match \? | wc -l` ]]; then \
+		echo 'You have local changes. Please do not build releases from an unclean checkout. You must revert the changes, commit them, or check out another working copy and build from that.' 1>&2; \
+		exit 1; \
+	fi
+assertnoconflicts:
+	if [[ 0 -ne `svn st $(SRC_DIR) | egrep '^C' | wc -l` ]]; then \
+		echo 'You have conflicts in your checkout. You will not be able to build until these are resolved. Also, remember that even after you have fixed all conflict marks, you must use "svn resolved"; otherwise, svn will still believe the files are conflicted.' 1>&2; \
+		exit 2; \
+	fi
+
 version:
 	@# update the plists
-	defaults write $(ADIUM_PLIST) CFBundleGetInfoString '$(VERSION), Copyright 2001-2006 The Adium Team'
+	defaults write $(ADIUM_PLIST) CFBundleGetInfoString '$(VERSION), Copyright 2001-2007 The Adium Team'
 	defaults write $(ADIUM_PLIST) CFBundleVersion '$(VERSION)'
 	defaults write $(ADIUM_PLIST) CFBundleShortVersionString '$(VERSION)'
-	defaults write $(CRASH_REPORTER_PLIST) CFBundleGetInfoString '$(VERSION), Copyright 2001-2006 The Adium Team'
-	defaults write $(CRASH_REPORTER_PLIST) CFBundleVersion '$(VERSION)'
-	defaults write $(CRASH_REPORTER_PLIST) CFBundleShortVersionString '$(VERSION)'
 	plutil -convert xml1 $(ADIUM_PLIST).plist
-	plutil -convert xml1 $(CRASH_REPORTER_PLIST).plist
 
 compile:
 	$(MAKE) $(BUILDFLAGS) -C $(SRC_DIR)
@@ -85,11 +112,11 @@ release: createfolder prepare-release-bundle diskimage
 prepare-release-bundle:
 	@# Convert all nibs to the smaller binary format
 	@echo Converting nibs to binary format...
-	find $(BUILD_DIR)/Adium.app -name keyedobjects.nib -print0 | xargs -0 plutil -convert binary1
+	find $(BUILD_DIR) -name keyedobjects.nib -print0 | xargs -0 plutil -convert binary1
 
 	@# delete unneeded nib files for non-beta builds
 	@echo Cleaning Adium.app for release
-ifeq ($(BETA),FALSE)
+ifeq ($(BUILD_IN_DEBUG_MODE),FALSE)
 	find $(BUILD_DIR) \( -name classes.nib -or -name info.nib \) -type f -delete
 endif
 	
@@ -109,11 +136,11 @@ createfolder:
 	cp -R $(ADIUM_BUILD_DIR)/Adium.app $(ADIUM_DIR)
 
 	@# copy the text files
-	cp $(SRC_DIR)/Changes.txt $(ADIUM_DIR)
+	cp $(SRC_DIR)/ChangeLogs/Changes.txt $(ADIUM_DIR)
 	cp $(SRC_DIR)/License.txt $(ADIUM_DIR)
 	
 	@# symlink /Applications
-	ln -s /Applications $(ADIUM_DIR)/Applications
+	./mkalias -r /Applications $(ADIUM_DIR)/Applications
 
 diskimage:
 	rm "$(BUILD_DIR)/$(RELEASE_NAME).dmg" || true
@@ -121,6 +148,8 @@ diskimage:
 	mkdir -p $(ADIUM_DIR)/.background
 	cp $(ART_DIR)/dmgBackground.png $(ADIUM_DIR)/.background
 
-	./make-diskimage.sh $(BUILD_DIR)/$(RELEASE_NAME).dmg $(ADIUM_DIR) "Adium X $(VERSION)" dmg_adium.scpt
+	./ensureCustomIconsExtracted $(ART_DIR)
+	./make-diskimage.sh $(BUILD_DIR)/$(RELEASE_NAME).dmg $(ADIUM_DIR) "Adium X $(VERSION)" dmg_adium.scpt $(ART_DIR)
 	
-	@echo Build finished
+	@echo Build finished. `md5 $(BUILD_DIR)/$(RELEASE_NAME).dmg`
+

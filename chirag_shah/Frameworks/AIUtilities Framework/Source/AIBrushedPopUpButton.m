@@ -81,7 +81,7 @@
         [self setNeedsDisplay:YES];
     }
 }
-- (void)selectItem:(id <NSMenuItem>)item
+- (void)selectItem:(NSMenuItem *)item
 {
     if (popUpTitle) {
         [popUpTitle release]; popUpTitle = nil;

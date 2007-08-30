@@ -84,7 +84,7 @@
 	[self closeWindow:nil];
 }
 
-/*
+/*!
  * @brief UID of the new group
  */
 - (NSString *)newGroupUID

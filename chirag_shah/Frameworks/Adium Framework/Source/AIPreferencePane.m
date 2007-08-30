@@ -43,34 +43,57 @@
 
 - (void)dealloc
 {
-	[restoreDict release];
-
 	[super dealloc];
 }
 
-//as far as I can tell, -[NSPreferencePane compare:] compares nib names.
-//this does the same thing, but case-insensitively.
-- (NSComparisonResult)caseInsensitiveCompare:(id)other
-{
-	NSString *nibName = [self label];
-	if ([other isKindOfClass:[NSString class]]) {
-		return [nibName caseInsensitiveCompare:other];
-	} else {
-		return [nibName caseInsensitiveCompare:[other label]];
-	}
-}
-
-//For subclasses -------------------------------------------------------------------------------
-//Preference category
-- (AIPreferenceCategory)category
-{
-	return AIPref_Advanced;
-}
-
-//Return an image for these preferences (advanced only)
-- (NSImage *)image
++ (NSArray *)preferencePanes
 {
 	return nil;
+}
+
+- (NSView *)paneView
+{
+	return [self view];
+}
+
+- (NSString *)paneName
+{
+	return [self label];
+}
+
+int getRandomNumber()
+{
+	return 4;	// chosen by fair dice roll.
+				// guaranteed to be random.
+}
+
+- (NSString *)paneIdentifier
+{
+	NSLog(@"*** %@ does not implement paneIdentifier, which is required!", self);
+	/* The subclass should implement paneIdentifier. If it doesn't, which can happen for an old external plugin,
+	 * generate a random paneIdentifier for this instance so that we can still function properly.
+	 */
+	return [NSString stringWithFormat:@"uniquePaneIdentifier-%i",getRandomNumber()];
+}
+
+- (NSImage *)paneIcon
+{
+	return nil;
+}
+
+- (NSString *)paneToolTip
+{
+	return nil;
+}
+
+- (BOOL)allowsHorizontalResizing
+{
+	return NO;	
+}
+
+- (BOOL)allowsVerticalResizing
+{
+	return NO;
 }
 
 @end

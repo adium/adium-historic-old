@@ -20,6 +20,7 @@
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIStatusControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
 #import <Adium/AIStatus.h>
@@ -89,12 +90,17 @@
 									   selector:@selector(requestImmediateDynamicContentUpdate:)
 										   name:Adium_RequestImmediateDynamicContentUpdate
 										 object:nil];	
-		
+
+		//Some actions must wait until Adium is finished loading so that all plugins are available
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(adiumDidLoad:)
+										   name:AIApplicationDidFinishLoadingNotification
+										 object:nil];
+
 		//Handle the preference changed monitoring (for account status) for our subclass
 		[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
 		
 		//Update our display name and formattedUID immediately
-		[self updateStatusForKey:KEY_ACCOUNT_DISPLAY_NAME];
 		[self updateStatusForKey:@"FormattedUID"];
 		
 		//Init the account
@@ -105,9 +111,6 @@
     return self;
 }
 
-/*!
- * @brief Dealloc
- */
 - (void)dealloc
 {
 	[delayedUpdateStatusTarget release];
@@ -126,6 +129,16 @@
 	
     [super dealloc];
 }
+
+- (void)adiumDidLoad:(NSNotification *)inNotification
+{
+	[self updateStatusForKey:KEY_ACCOUNT_DISPLAY_NAME];
+
+	[[adium notificationCenter] removeObserver:self 
+										  name:AIApplicationDidFinishLoadingNotification
+										object:nil];
+}
+   
 
 /*!
  * @brief Use our account number as internalObjectID
@@ -172,6 +185,9 @@
 		if (!userIconData && !isTemporary) {
 			userIconData = [self preferenceForKey:KEY_DEFAULT_USER_ICON group:GROUP_ACCOUNT_STATUS];
 		}
+	} else {
+		//Globally, we're not using an icon; however, the account may specify its own, overriding that.
+		userIconData = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:YES];		
 	}
 
 	return userIconData;
@@ -358,7 +374,7 @@
 	//Apply the display name for local display
 	[[self displayArrayForKey:@"Display Name"] setObject:displayName
 											   withOwner:self];
-	
+
 	//Note the actual value we've set in CurrentDisplayName so we can compare against it later
 	[self setStatusObject:displayName
 				   forKey:@"CurrentDisplayName"
@@ -369,7 +385,7 @@
 											  modifiedKeys:[NSSet setWithObject:@"Display Name"]];	
 }
 
-/*
+/*!
  * @brief Current display name, post filtering
  *
  * This might be used to see if a new display name needs to be sent to the server or if it is the same as the old one.
@@ -452,6 +468,11 @@
 
 #pragma mark Status States
 
+- (BOOL)handleOfflineAsStatusChange
+{
+	return NO;
+}
+
 /*!
  * @brief Set the account to a specified statusState
  *
@@ -459,7 +480,8 @@
  */
 - (void)setStatusState:(AIStatus *)statusState
 {
-	if ([statusState statusType] == AIOfflineStatusType) {
+	if (([statusState statusType] == AIOfflineStatusType) &&
+		![self handleOfflineAsStatusChange]) {
 		[self setShouldBeOnline:NO];
 		
 	} else {
@@ -560,7 +582,14 @@
 		
 		return statusState;
 	} else {
-		return [[adium statusController] offlineStatusState];
+		AIStatus	*statusState = [self statusObjectForKey:@"StatusState"];
+		if (statusState && [statusState statusType] == AIOfflineStatusType) {
+			//We're in an actual offline status; return it
+			return statusState;
+		} else {
+			//We're offline, but our status is keeping track of what we'll be when we sign back on. Return the generic offline status.
+			return [[adium statusController] offlineStatusState];
+		}
 	}
 }
 
@@ -587,7 +616,7 @@
 	return [[self statusState] statusMessage];
 }
 
-/*
+/*!
  * @brief Are sounds for this acount muted?
  */
 - (BOOL)soundsAreMuted
@@ -597,7 +626,7 @@
 
 #pragma mark Passwords
 
-/*
+/*!
  * @brief Store in memory (but nowhere else) the password for this account
  */
 - (void)setPasswordTemporarily:(NSString *)inPassword
@@ -659,7 +688,7 @@
 													  usingFilterType:AIFilterContent
 															direction:AIFilterOutgoing
 															  context:self];
-	
+
 	//Refresh periodically if the filtered string is different from the original one
 	if (originalValue && (![originalValueString isEqualToString:[filteredValue string]])) {
 		[self startAutoRefreshingStatusKey:key forOriginalValueString:originalValueString];
@@ -720,7 +749,14 @@
 	NSAttributedString	*originalValue;
 	
 	if ([key isEqualToString:@"StatusState"]) {
-		originalValue = [[self statusState] statusMessage];
+		AIStatus *statusState = [self actualStatusState];
+		/* -[AIAccount actualStatusState] won't set usinto an initial state if we don't have one yet,
+		 * unlike -[AIAccount statusState]. Although I expect that the default state will never have an associated
+		 * statusMessage,  it's good form to check it.
+		 */
+		if (!statusState) statusState = [[adium statusController] defaultInitialStatusState];
+
+		originalValue = [statusState statusMessage];
 
 	} else {
 		originalValue = [[self preferenceForKey:key group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:isTemporary] attributedString];				
@@ -860,7 +896,9 @@
     NSEnumerator    *keyEnumerator = [autoRefreshingKeys objectEnumerator];
     NSString        *key;
     while ((key = [keyEnumerator nextObject])) {
-		[self updateStatusForKey:key];
+		if ([self shouldUpdateAutorefreshingAttributedStringForKey:key]) {
+			[self updateStatusForKey:key];
+		}
     }
 }
 
@@ -893,9 +931,7 @@
  */
 - (NSArray *)contacts
 {
-	return [[adium contactController] allContactsInGroup:nil
-												subgroups:YES
-												onAccount:self];
+	return [[adium contactController] allContactsOnAccount:self];
 }
 
 /*!
@@ -965,6 +1001,20 @@
 }
 
 /*!
+ * @brief Should the account's status be updated as soon as it is connected?
+ *
+ * If YES, the StatusState and IdleSince status keys will be told to update as soon as the account connects.
+ * This will allow the account to send its status information to the server upon connecting.
+ *
+ * If this information is already known by the account at the time it connects and further prompting to send it is
+ * not desired, return NO.
+ */
+- (BOOL)updateStatusImmediatelyAfterConnecting
+{
+	return YES;
+}
+
+/*!
  * @brief The account did connect
  *
  * Subclasses should call this on self after connecting
@@ -972,17 +1022,33 @@
 - (void)didConnect
 {
     //We are now online
-    [self setStatusObject:nil forKey:@"Connecting" notify:NO];
-    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
-	[self setStatusObject:nil forKey:@"ConnectionProgressString" notify:NO];
-	[self setStatusObject:nil forKey:@"ConnectionProgressPercent" notify:NO];	
+    [self setStatusObject:nil forKey:@"Connecting" notify:NotifyLater];
+    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NotifyLater];
+	[self setStatusObject:nil forKey:@"ConnectionProgressString" notify:NotifyLater];
+	[self setStatusObject:nil forKey:@"ConnectionProgressPercent" notify:NotifyLater];	
 
 	//Apply any changes
 	[self notifyOfChangedStatusSilently:NO];
 
 	//Update our status and idle status to ensure our newly connected account is in the states we want it to be
-	[self updateStatusForKey:@"StatusState"];
-	[self updateStatusForKey:@"IdleSince"];	
+	if ([[self statusState] statusType] == AIOfflineStatusType) {
+		/* If our account thinks it's still in an offline status, that means it went offline previously via an offline status.
+		 * Set to the status being used by other accounts if possible; otherwise, set to our default initial status.
+		 */
+		AIStatus *newStatus = [[adium statusController] activeStatusState];
+		if ([newStatus statusType] == AIOfflineStatusType) {
+			newStatus = [[adium statusController] defaultInitialStatusState];
+		}
+		
+		[self setStatusState:newStatus];
+
+	} else {
+		if ([self updateStatusImmediatelyAfterConnecting]) {
+			[self updateStatusForKey:@"StatusState"];
+		}
+	}
+
+	[self updateStatusForKey:@"IdleSince"];
 }
 
 - (void)cancelAutoReconnect
@@ -1035,19 +1101,18 @@
 * @brief Remove all contacts owned by this account and clear their status objects set by this account
  */
 - (void)removeAllContacts
-{
-	NSEnumerator    *enumerator;
-	AIListContact	*listContact;
-	
+{	
 	[[adium contactController] delayListObjectNotifications];
 	
 	//Clear status flags on all contacts for this account, and set their remote group to nil
-	enumerator = [[[adium contactController] allContactsInGroup:nil
-													  subgroups:YES 
-													  onAccount:self] objectEnumerator];
+	NSEnumerator	*enumerator = [[self contacts] objectEnumerator];
+	AIListContact	*listContact;
+
 	while ((listContact = [enumerator nextObject])) {
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		[listContact setRemoteGroupName:nil];
 		[self removeStatusObjectsFromContact:listContact silently:YES];
+		[pool release];
 	}
 	
 	[[adium contactController] endListObjectNotificationsDelay];
@@ -1064,7 +1129,7 @@
 	
 	if (!_contactStatusObjectKeys)
 		_contactStatusObjectKeys = [[NSSet alloc] initWithObjects:@"Online",@"Warning",@"IdleSince",
-			@"Idle",@"IsIdle",@"Signon Date",@"StatusName",@"StatusType",@"StatusMessage",@"Client",nil];
+			@"Idle",@"IsIdle",@"Signon Date",@"StatusName",@"StatusType",@"StatusMessage",@"Client",KEY_TYPING,nil];
 	
 	return _contactStatusObjectKeys;
 }
@@ -1078,9 +1143,9 @@
 	[self removeAllContacts];
 	
 	//We are now offline
-    [self setStatusObject:nil forKey:@"Disconnecting" notify:NO];
-    [self setStatusObject:nil forKey:@"Connecting" notify:NO];
-    [self setStatusObject:nil forKey:@"Online" notify:NO];
+    [self setStatusObject:nil forKey:@"Disconnecting" notify:NotifyLater];
+    [self setStatusObject:nil forKey:@"Connecting" notify:NotifyLater];
+    [self setStatusObject:nil forKey:@"Online" notify:NotifyLater];
 	
 	//Stop all autorefreshing keys
 	[self stopAutoRefreshingStatusKey:nil];
@@ -1174,7 +1239,7 @@
 
 #pragma mark Proxy Configuration Retrieval
 
-/*
+/*!
  * @brief Retrieve the proxy configuration information for this account
  *
  * This should be used by the AIAccount subclass before initiating its connect process if it supports proxies.
@@ -1283,7 +1348,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Callback for the accountController's passwordForProxyServer:... method
  *
  * @param inPassword The retrieved password

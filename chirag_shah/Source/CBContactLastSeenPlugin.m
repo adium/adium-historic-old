@@ -155,18 +155,20 @@
 			//stringForTimeIntervalSinceDate may return @"" if it's too short of an interval.
 			timeElapsed = [NSDateFormatter stringForTimeIntervalSinceDate:lastSeenDate showingSeconds:NO abbreviated:NO];
 			if (timeElapsed && [timeElapsed length]) {
-				timeElapsedWithDesignation = [NSString stringWithFormat:@"%@ %@\n",
-					timeElapsed,
-					[[[NSUserDefaults standardUserDefaults] objectForKey:NSEarlierTimeDesignations] lastObject]];
+				timeElapsedWithDesignation = [NSString stringWithFormat:
+					AILocalizedString(@"%@ ago", "%@ will be replaced by an amount of time such as '1 day, 4 hours'. This string is used in the 'Last Seen:' information shown when hovering over an offline contact."),
+					timeElapsed];
 			} else {
 				timeElapsedWithDesignation = @"";
 			}
 			
+			
 			entry = [[NSAttributedString alloc] 
 						initWithString:[NSString stringWithFormat:
-							@"%@\n%@%@", 
+							@"%@\n%@%@%@", 
 							lastSeenStatus,
 							timeElapsedWithDesignation,
+							([timeElapsedWithDesignation length] ? @"\n" : @""),
 							[sinceDateFormatter stringForObjectValue:lastSeenDate]]]; 
 		}
 	}

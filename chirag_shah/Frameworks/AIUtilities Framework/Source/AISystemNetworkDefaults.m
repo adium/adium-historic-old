@@ -10,6 +10,7 @@
 #import "AISystemNetworkDefaults.h"
 #import "AIKeychain.h"
 #import "AIApplicationAdditions.h"
+#import "AIStringUtilities.h"
 
 @implementation AISystemNetworkDefaults
 
@@ -27,11 +28,14 @@
 	CFStringRef			proxyKey;
 	NSString			*hostString;
 
+	SecProtocolType		protocolType;
+
 	switch (proxyType) {
 		case Proxy_HTTP: {
 			enableKey = kSCPropNetProxiesHTTPEnable;
 			portKey   = kSCPropNetProxiesHTTPPort;
 			proxyKey  = kSCPropNetProxiesHTTPProxy;
+			protocolType = kSecProtocolTypeHTTPProxy;
 			break;
 		}
 		case Proxy_SOCKS4:
@@ -39,30 +43,28 @@
 			enableKey = kSCPropNetProxiesSOCKSEnable;
 			portKey   = kSCPropNetProxiesSOCKSPort;
 			proxyKey  = kSCPropNetProxiesSOCKSProxy;
+			protocolType = kSecProtocolTypeSOCKS;
 			break;
 		}
 		case Proxy_HTTPS: {
 			enableKey = kSCPropNetProxiesHTTPSEnable;
 			portKey   = kSCPropNetProxiesHTTPSPort;
 			proxyKey  = kSCPropNetProxiesHTTPSProxy;
+			protocolType = kSecProtocolTypeHTTPSProxy;
 			break;
 		}
 		case Proxy_FTP: {
 			enableKey = kSCPropNetProxiesFTPEnable;
 			portKey   = kSCPropNetProxiesFTPPort;
 			proxyKey  = kSCPropNetProxiesFTPProxy;
+			protocolType = kSecProtocolTypeFTPProxy;
 			break;
 		}
 		case Proxy_RTSP: {
 			enableKey = kSCPropNetProxiesRTSPEnable;
 			portKey   = kSCPropNetProxiesRTSPPort;
 			proxyKey  = kSCPropNetProxiesRTSPProxy;
-			break;
-		}
-		case Proxy_Gopher: {
-			enableKey = kSCPropNetProxiesGopherEnable;
-			portKey   = kSCPropNetProxiesGopherPort;
-			proxyKey  = kSCPropNetProxiesGopherProxy;
+			protocolType = kSecProtocolTypeRTSPProxy;
 			break;
 		}
 		default: {
@@ -92,13 +94,19 @@
 
 					//User name & password if applicable
 					NSError *error = nil;
-					authDict = [[AIKeychain defaultKeychain_error:&error] dictionaryFromKeychainForServer:hostString error:&error];
+					authDict = [[AIKeychain defaultKeychain_error:&error] dictionaryFromKeychainForServer:hostString 
+																								 protocol:protocolType
+																									error:&error];
 					if (authDict) {
 						[systemProxySettingsDictionary addEntriesFromDictionary:authDict];
 					}
+
 					if (error) {
 						NSDictionary *userInfo = [error userInfo];
-						NSLog(@"could not get username and password for proxy: %@ returned %i (%@)", [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
+						NSLog(@"Could not get username and password for proxy: %@ returned %i (%@)",
+							  [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME],
+							  [error code],
+							  [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
 					}
 				}
 			}
@@ -113,9 +121,9 @@
 					if (pacFile) {
 						//XXX can't use pac file
 						NSString *msg = [NSString stringWithFormat:
-							@"The systemwide proxy configuration specified via the Network System Preferences depends upon reading a PAC (Proxy Automatic Confiruation) file from %@.  This information can not be used at this time; to connect, please obtain proxy information from your network administrator and use it manually.",
+							AILocalizedString(@"The systemwide proxy configuration specified via the Network System Preferences depends upon reading a PAC (Proxy Automatic Confiruation) file from %@.  This information can not be used at this time; to connect, please obtain proxy information from your network administrator and use it manually.", nil),
 							pacFile];
-						NSRunCriticalAlertPanel(@"Unable to read proxy information",
+						NSRunCriticalAlertPanel(AILocalizedString(@"Unable to read proxy information", "Title of the alert shown when the system proxy configuration can not be determined"),
 												msg,
 												nil,
 												nil,

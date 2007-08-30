@@ -225,7 +225,7 @@ static int  sizeOfSortOrder;
 	return [NSSet setWithObject:@"Display Name"];
 }
 
-/*
+/*!
  * @brief Can the user manually reorder when this sort controller is active?
  *
  * The status sort can sort within status groupings either manually or alphabetically. Only the former should allow user reordering.
@@ -624,6 +624,7 @@ int statusSort(id objectA, id objectB, BOOL groups)
 						
 						case Mobile:
 							status = mobile[objectCounter];
+							definitelyFinishedIfSuccessful = YES;
 							break;
 						
 						case Away:
@@ -664,7 +665,7 @@ int statusSort(id objectA, id objectB, BOOL groups)
 					}
 				}
 			} //End for object loop
-			
+
 			if (sortIndex[0] > sortIndex[1]) {
 				return NSOrderedDescending;
 			} else if (sortIndex[1] > sortIndex[0]) {

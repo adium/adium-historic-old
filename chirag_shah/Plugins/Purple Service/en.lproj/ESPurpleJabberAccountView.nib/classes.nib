@@ -1,0 +1,56 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {changedPreference = id; }; 
+            CLASS = AIAccountViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_checkMail" = NSButton; 
+                "textField_accountUID" = NSTextField; 
+                "textField_accountUIDLabel" = NSTextField; 
+                "textField_alias" = NSTextField; 
+                "textField_connectHost" = NSTextField; 
+                "textField_connectPort" = NSTextField; 
+                "textField_password" = NSTextField; 
+                "view_auxiliaryTabView" = NSTabView; 
+                "view_options" = NSView; 
+                "view_profile" = NSView; 
+                "view_setup" = NSView; 
+            }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = ESDelayedTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
+        {
+            ACTIONS = {
+                registerGoBack = id; 
+                registerNewAccount = id; 
+                registerRequestAccount = id; 
+                subscriptionModeDidChange = id; 
+            }; 
+            CLASS = ESPurpleJabberAccountViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "checkBox_allowPlaintext" = NSButton; 
+                "checkBox_disableBuzz" = NSButton; 
+                "checkBox_forceOldSSL" = NSButton; 
+                "checkBox_requireTLS" = NSButton; 
+                "checkBox_useTLS" = NSButton; 
+                "comboBox_subscriptionGroup" = NSComboBox; 
+                "popup_subscriptionBehavior" = NSPopUpButton; 
+                "tableview_servers" = NSTableView; 
+                "tabview_registration" = NSTabView; 
+                "textField_connectServer" = NSTextField; 
+                "textField_priorityAvailable" = NSTextField; 
+                "textField_priorityAway" = NSTextField; 
+                "textField_registerServerName" = NSTextField; 
+                "textField_registerServerPort" = NSTextField; 
+                "textField_resource" = NSTextField; 
+                "textField_subscriptionModeLabel" = NSTextField; 
+            }; 
+            SUPERCLASS = AIAccountViewController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

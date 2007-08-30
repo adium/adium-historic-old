@@ -7,6 +7,7 @@
 //
 
 #import "ESStatusPreferencesPlugin.h"
+#import "ESStatusAdvancedPreferences.h"
 #import "ESStatusPreferences.h"
 #import <Adium/AIMenuControllerProtocol.h>
 #import "AIStatusController.h"
@@ -54,7 +55,7 @@
  */
 - (void)showStatusPreferences:(id)sender
 {
-	[[adium preferenceController] openPreferencesToCategoryWithIdentifier:@"status"];
+	[[adium preferenceController] openPreferencesToCategoryWithIdentifier:@"Status"];
 }
 
 @end

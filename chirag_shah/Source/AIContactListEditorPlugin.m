@@ -30,6 +30,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListGroup.h>
+#import <Adium/AIMetaContact.h>
 
 #define ADD_CONTACT							AILocalizedString(@"Add Contact",nil)
 #define ADD_CONTACT_ELLIPSIS				[ADD_CONTACT stringByAppendingEllipsis]
@@ -155,7 +156,7 @@
 /*!
  * @brief Validate our menu items
  */
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	if (menuItem == menuItem_delete) {
 		return [[adium interfaceController] selectedListObjectInContactList] != nil;
@@ -212,13 +213,15 @@
 - (void)promptForNewContactOnWindow:(NSWindow *)inWindow selectedListObject:(AIListObject *)inListObject
 {
 	//We only autofill if the selected list object is a contact and a stranger
-	if (![inListObject isKindOfClass:[AIListContact class]] || ![(AIListContact *)inListObject isStranger]) {
+	if (![inListObject isKindOfClass:[AIListContact class]] || [(AIListContact *)inListObject isIntentionallyNotAStranger] ||
+		[inListObject isKindOfClass:[AIMetaContact class]]) {
 		inListObject = nil;
 	}
 	
 	[AINewContactWindowController promptForNewContactOnWindow:inWindow
 														 name:(inListObject ? [inListObject UID] : nil)
-													  service:(inListObject ? [(AIListContact *)inListObject service] : nil)];
+													  service:(inListObject ? [(AIListContact *)inListObject service] : nil)
+													  account:nil];
 }
 
 /*!
@@ -233,7 +236,8 @@
 	if (userInfo) {
 		[AINewContactWindowController promptForNewContactOnWindow:nil
 															 name:[userInfo objectForKey:@"UID"]
-														  service:[userInfo objectForKey:@"service"]];
+														  service:[userInfo objectForKey:@"AIService"]
+														  account:[userInfo objectForKey:@"AIAccount"]];
 	}
 }
 

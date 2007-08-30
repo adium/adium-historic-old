@@ -44,6 +44,8 @@
 
 #define	SENDING_KEY_DEFAULT_PREFS	@"SendingKeyDefaults"
 
+#define CONFIRMATION_DEFAULT_PREFS	@"ConfirmationDefaults"
+
 @interface ESGeneralPreferencesPlugin (PRIVATE)
 - (void)_configureSendingKeysForObject:(id)inObject;
 @end
@@ -60,6 +62,10 @@
 	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SENDING_KEY_DEFAULT_PREFS
 																		forClass:[self class]]
 										  forGroup:PREF_GROUP_GENERAL];
+	
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONFIRMATION_DEFAULT_PREFS
+																		forClass:[self class]]
+                                          forGroup:PREF_GROUP_CONFIRMATIONS];
 	
 	//Install our preference view
 	preferences = [[ESGeneralPreferences preferencePaneForPlugin:self] retain];	

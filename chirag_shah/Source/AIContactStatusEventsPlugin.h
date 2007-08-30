@@ -15,8 +15,8 @@
  */
 
 #import <Adium/AIPlugin.h>
-
-@protocol AIListObjectObserver, AIEventHandler;
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
 
 @interface AIContactStatusEventsPlugin : AIPlugin <AIListObjectObserver, AIEventHandler> {
 	NSMutableDictionary		*onlineCache;

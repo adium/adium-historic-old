@@ -11,6 +11,7 @@
 #import <Adium/AIContactAlertsControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <Adium/AIListGroup.h>
 
 #define	CONTACT_REQUESTED_AUTHORIZATION @"Contact Requested Authorization"
 

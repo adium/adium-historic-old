@@ -20,12 +20,14 @@
 	NSString			*serviceClass;
 	NSString			*emoticonLocation;
     NSMutableArray		*emoticonArray;
+	NSMutableArray		*enabledEmoticonArray;
     BOOL				enabled;
 }
 
 + (id)emoticonPackFromPath:(NSString *)inPath;
 - (void)setDisabledEmoticons:(NSArray *)inArray;
 - (NSArray *)emoticons;
+- (NSArray *)enabledEmoticons;
 - (NSImage *)menuPreviewImage;
 - (NSString *)name;
 - (NSString *)path;

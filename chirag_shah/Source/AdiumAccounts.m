@@ -38,11 +38,14 @@
 - (void)upgradeAccounts;
 @end
 
+/*!
+ * @class AdiumAccounts
+ * @brief Class to handle AIAccount access and creation
+ *
+ * This is a private class used by AIAccountController, its public interface.
+ */
 @implementation AdiumAccounts
 
-/*!
- * @brief Init
- */
 - (id)init {
 	if ((self = [super init])) {
 		accounts = [[NSMutableArray alloc] init];
@@ -52,9 +55,6 @@
 	return self;
 }
 
-/*!
- * @brief Dealloc
- */
 - (void)dealloc {
     [accounts release];
 	[unloadableAccounts release];
@@ -65,8 +65,7 @@
 /*!
  * @brief Finish Initing
  *
- * Requires:
- * 1) All services have registered
+ * Requires the all AIServices have registered
  */
 - (void)controllerDidLoad
 {
@@ -78,7 +77,7 @@
 
 //Accounts -------------------------------------------------------------------------------------------------------
 #pragma mark Accounts
-/*
+/*!
  * @brief Returns an array of all available accounts
  *
  * @return NSArray of AIAccount instances
@@ -88,7 +87,7 @@
     return accounts;
 }
 
-/*
+/*!
  * @brief Returns an array of accounts compatible with a service
  *
  * @param service AIService for compatible accounts
@@ -142,7 +141,7 @@
 	return [service accountWithUID:inUID internalObjectID:[self _generateUniqueInternalObjectID]];
 }
 
-/*
+/*!
  * @brief Add an account
  *
  * @param inAccount AIAccount to add
@@ -153,7 +152,7 @@
 	[self _saveAccounts];
 }
 
-/*
+/*!
  * @brief Delete an account
  *
  * @param inAccount AIAccount to delete
@@ -170,7 +169,7 @@
 	[self _saveAccounts];
 }
 
-/*
+/*!
  * @brief Move an account
  *
  * @param inAccount AIAccount to move
@@ -184,7 +183,7 @@
 	return [accounts indexOfObject:account];
 }
 
-/*
+/*!
  * @brief An account's UID changed
  *
  * Save our account array, which stores the account's UID permanently
@@ -194,7 +193,7 @@
 	[self _saveAccounts];
 }
 
-/*
+/*!
  * @brief Generate a unique account InternalObjectID
  *
  * @return NSString unique InternalObjectID
@@ -215,7 +214,7 @@
 
 //Storage --------------------------------------------------------------------------------------------------------------
 #pragma mark Storage
-/*
+/*!
  * @brief Load accounts from disk
  */
 - (void)_loadAccounts
@@ -227,6 +226,7 @@
     //Create an instance of every saved account
 	enumerator = [accountList objectEnumerator];
 	while ((accountDict = [enumerator nextObject])) {
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		NSString		*serviceID = [self _upgradeServiceID:[accountDict objectForKey:ACCOUNT_TYPE] forAccountDict:accountDict];
         AIAccount		*newAccount;
 
@@ -234,22 +234,32 @@
 		AIService	*service = [[adium accountController] serviceWithUniqueID:serviceID];
 		NSString	*accountUID = [accountDict objectForKey:ACCOUNT_UID];
 		NSString	*internalObjectID = [accountDict objectForKey:ACCOUNT_OBJECT_ID];
-		
+
         //Create the account and add it to our array
         if (service && accountUID && [accountUID length]) {
 			if ((newAccount = [service accountWithUID:accountUID internalObjectID:internalObjectID])) {
                 [accounts addObject:newAccount];
             } else {
+				NSLog(@"Could not load account %@",accountDict);
 				[unloadableAccounts addObject:accountDict];
 			}
-        }
+        } else {
+			if ([accountUID length]) {
+				NSLog(@"Available services are %@: could not load account %@ on service %@ (service %@)",
+					  [[adium accountController] services], accountDict, serviceID, service);
+				[unloadableAccounts addObject:accountDict];
+			} else {
+				AILog(@"Ignored an account with a 0 length accountUID: %@", accountDict);
+			}
+		}
+		[pool release];
     }
 
 	//Broadcast an account list changed notification
     [[adium notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
 }
 
-/*
+/*!
  * @brief Temporary serviceID upgrade code (v0.63 -> v0.70 for libgaim, v0.70 -> v0.80 for bonjour)
  *
  * @param serviceID NSString service ID (old or new)
@@ -259,7 +269,15 @@
 - (NSString *)_upgradeServiceID:(NSString *)serviceID forAccountDict:(NSDictionary *)accountDict
 {
 	//Libgaim
-	if ([serviceID rangeOfString:@"LIBGAIM" options:(NSLiteralSearch | NSAnchoredSearch | NSBackwardsSearch)].location != NSNotFound) {
+	if ([serviceID rangeOfString:@"libgaim" options:(NSLiteralSearch | NSAnchoredSearch)].location != NSNotFound) {
+		NSMutableString *newServiceID = [serviceID mutableCopy];
+		[newServiceID replaceOccurrencesOfString:@"libgaim"
+									  withString:@"libpurple"
+										 options:(NSLiteralSearch | NSAnchoredSearch)
+										   range:NSMakeRange(0, [newServiceID length])];
+		serviceID = [newServiceID autorelease];
+
+	} else if ([serviceID rangeOfString:@"LIBGAIM" options:(NSLiteralSearch | NSAnchoredSearch | NSBackwardsSearch)].location != NSNotFound) {
 		if ([serviceID isEqualToString:@"AIM-LIBGAIM"]) {
 			NSString 	*uid = [accountDict objectForKey:ACCOUNT_UID];
 			if (uid && [uid length]) {
@@ -292,19 +310,15 @@
 		}
 	} else if ([serviceID isEqualToString:@"rvous-libezv"])
 		serviceID = @"bonjour-libezv";
-#ifdef JOSCAR_SUPERCEDE_LIBGAIM
-	else if ([serviceID isEqualToString:@"libgaim-oscar-AIM"])
-		serviceID = @"joscar-OSCAR-AIM";
-	else if ([serviceID isEqualToString:@"libgaim-oscar-ICQ"])
-		serviceID = @"joscar-OSCAR-ICQ";
-	else if ([serviceID isEqualToString:@"libgaim-oscar-Mac"])
-		serviceID = @"joscar-OSCAR-dotMac";
-#endif
+	else if ([serviceID isEqualToString:@"joscar-OSCAR-AIM"])
+		serviceID = @"libpurple-oscar-AIM";
+	else if ([serviceID isEqualToString:@"joscar-OSCAR-dotMac"])
+		serviceID = @"libpurple-oscar-Mac";
 	
 	return serviceID;
 }
 
-/*
+/*!
  * @brief Save accounts to disk
  */
 - (void)_saveAccounts
@@ -336,7 +350,7 @@
 	[[adium notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
 }
 
-/*
+/*!
  * @brief Perform upgrades for a new version
  *
  * 1.0: KEY_ACCOUNT_DISPLAY_NAME and @"TextProfile" cleared if @"" and moved to global if identical on all accounts

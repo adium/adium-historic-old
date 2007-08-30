@@ -171,7 +171,7 @@
  */
 - (NSString *)userNameLabel
 {
-    return AILocalizedString(@"User Name", nil);    
+    return AILocalizedStringFromTableInBundle(@"User Name", nil, [NSBundle bundleForClass:[AIService class]], nil);    
 }
 
 /*!
@@ -430,6 +430,13 @@
 - (NSComparisonResult)compareLongDescription:(AIService *)inService
 {
 	return [[self longDescription] compare:[inService longDescription]];
+}
+
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"<%@: serviceCodeUniqueID = %@; serviceID = %@; serviceClass = %@; longDescription = %@>",
+		NSStringFromClass([self class]), [self serviceCodeUniqueID], [self serviceID], [self serviceClass], [self longDescription]];
+	
 }
 
 @end

@@ -35,10 +35,11 @@
 - (NSString *)label;
 - (NSString *)nibName;
 - (void)viewDidLoad;
+- (void)localizePane;
 - (void)viewWillClose;
 - (IBAction)changePreference:(id)sender;
 - (void)configureControlDimming;
 - (BOOL)resizable;
-
+- (BOOL)resizableHorizontally;
 
 @end

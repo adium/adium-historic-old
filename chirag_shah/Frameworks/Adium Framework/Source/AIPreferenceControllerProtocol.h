@@ -23,23 +23,25 @@ typedef enum {
 	AIPref_Accounts,
 	AIPref_Personal,
 	AIPref_Appearance,
-    AIPref_Messages,
+	AIPref_Messages,
 	AIPref_Status,
 	AIPref_Events,
 	AIPref_FileTransfer,
-    AIPref_Advanced
+	AIPref_Advanced
 } AIPreferenceCategory;
 
-@class AIPreferencePane, AIAdium, AIListObject;
+@class AIAdium, AIListObject;
+@class AIPreferencePane, AIAdvancedPreferencePane;
 
 @protocol AIPreferenceController <AIController>
 //Preference Window
 - (IBAction)showPreferenceWindow:(id)sender;
 - (IBAction)closePreferenceWindow:(id)sender;
 - (void)openPreferencesToCategoryWithIdentifier:(NSString *)identifier;
-- (void)openPreferencesToAdvancedPane:(NSString *)paneName;
 - (void)addPreferencePane:(AIPreferencePane *)inPane;
 - (NSArray *)paneArray;
+- (void)addAdvancedPreferencePane:(AIAdvancedPreferencePane *)inPane;
+- (NSArray *)advancedPaneArray;
 
 //Observing
 - (void)registerPreferenceObserver:(id)observer forGroup:(NSString *)group;
@@ -51,6 +53,7 @@ typedef enum {
 - (void)setPreference:(id)value forKey:(NSString *)key group:(NSString *)group;
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)group object:(AIListObject *)object;
 - (void)setPreferences:(NSDictionary *)inPrefDict inGroup:(NSString *)group;
+- (void)setPreferences:(NSDictionary *)inPrefDict inGroup:(NSString *)group object:(AIListObject *)object;
 
 //Retrieving Preferences
 - (id)preferenceForKey:(NSString *)key group:(NSString *)group;

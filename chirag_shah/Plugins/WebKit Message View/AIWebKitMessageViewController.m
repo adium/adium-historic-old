@@ -34,16 +34,21 @@
 #import <Adium/AIService.h>
 #import <Adium/ESFileTransfer.h>
 #import <Adium/ESTextAndButtonsWindowController.h>
-#import <AIUtilities/AIColorAdditions.h>
-#import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
+#import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
-#import <AIUtilities/AIMutableStringAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIMutableStringAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
+
+#import "AIWebKitDelegate.h"
 
 #import "ESFileTransferRequestPromptController.h"
 
 #import "ESWebView.h"
+
+#define KEY_WEBKIT_CHATS_USING_CACHED_ICON @"WebKit:Chats Using Cached Icon"
 
 @interface AIWebKitMessageViewController (PRIVATE)
 - (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
@@ -54,13 +59,18 @@
 - (void)processQueuedContent;
 - (void)_processContentObject:(AIContentObject *)content willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
 - (void)_appendContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
-- (void)_updateUserIconForObject:(AIListObject *)inObject;
+
 - (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject;
+- (void)releaseCurrentWebKitUserIconForObject:(AIListObject *)inObject;
+- (void)releaseAllCachedIcons;
+- (void)updateUserIconForObject:(AIListObject *)inObject;
+- (void)userIconForObjectDidChange:(AIListObject *)inObject;
+
 - (void)participatingListObjectsChanged:(NSNotification *)notification;
 - (void)sourceOrDestinationChanged:(NSNotification *)notification;
 - (BOOL)shouldHandleDragWithPasteboard:(NSPasteboard *)pasteboard;
-- (void) enqueueContentObject:(AIContentObject *)contentObject;
-- (void) debugLog:(NSString *)message;
+- (void)enqueueContentObject:(AIContentObject *)contentObject;
+- (void)debugLog:(NSString *)message;
 - (void)processQueuedContent;
 - (NSString *)webviewSource;
 @end
@@ -69,7 +79,7 @@ static NSArray *draggedTypes = nil;
 
 @implementation AIWebKitMessageViewController
 
-+ (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
++ (AIWebKitMessageViewController *)messageDisplayControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
 {
     return [[[self alloc] initForChat:inChat withPlugin:inPlugin] autorelease];
 }
@@ -77,13 +87,16 @@ static NSArray *draggedTypes = nil;
 - (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
 {
     //init
-    if ((self = [super init]))
-	{		
+    if ((self = [super init])) {		
 		[self _initWebView];
-
+		
+		delegateProxy = [AIWebKitDelegate sharedWebKitDelegate];
+		
 		chat = [inChat retain];
 		plugin = [inPlugin retain];
 		contentQueue = [[NSMutableArray alloc] init];
+		objectIconPathDict = [[NSMutableDictionary alloc] init];
+		objectsWithUserIconsArray = [[NSMutableArray alloc] init];
 		shouldReflectPreferenceChanges = NO;
 		storedContentObjects = nil;
 
@@ -116,17 +129,7 @@ static NSArray *draggedTypes = nil;
 									   selector:@selector(chatDidFinishAddingUntrackedContent:)
 										   name:Content_ChatDidFinishAddingUntrackedContent 
 										 object:inChat];
-		
-		[[adium notificationCenter] addObserver:self
-									   selector:@selector(showFileTransferRequest:)
-										   name:@"FileTransferRequestReceived"
-										 object:nil];
-		
-		[[adium notificationCenter] addObserver:self
-									   selector:@selector(cancelFileTransferRequest:)
-										   name:FILE_TRANSFER_CANCELLED
-										 object:nil];
-		
+
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(customEmoticonUpdated:)
 										   name:@"AICustomEmoticonUpdated"
@@ -136,29 +139,40 @@ static NSArray *draggedTypes = nil;
     return self;
 }
 
+- (void)messageViewIsClosing
+{
+	[webView stopLoading:nil];
+	
+	//Stop observing the webview, since it may attempt callbacks shortly after we dealloc
+	[delegateProxy removeDelegate:self];
+	
+	/* The windowScriptObject retained self when we set it as the client in -[AIWebKitMessageViewController _initWebView]...
+	 * Unfortunately, (as of 10.4.9) it won't actually release self until the webView deallocates.  We'll do removeWebScriptKey:
+	 * now in case that works properly later, and do the release of webView here rather than in dealloc to work around the bug.
+	 */
+	[[webView windowScriptObject] removeWebScriptKey:@"client"];
+
+	//Release the web view
+	[webView release]; webView = nil;
+}
+
 /*!
  * @brief Deallocate
  */
 - (void)dealloc
 {
+	[self releaseAllCachedIcons];
+
 	[preferencesChangedDelegate release]; preferencesChangedDelegate = nil;
 	[plugin release]; plugin = nil;
 	[objectsWithUserIconsArray release]; objectsWithUserIconsArray = nil;
+	[objectIconPathDict release]; objectIconPathDict = nil;
 
 	//Stop any delayed requests and remove all observers
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 	
-	//Stop observing the webview, since it may attempt callbacks shortly after we dealloc
-	[webView setFrameLoadDelegate:nil];
-	[webView setPolicyDelegate:nil];
-	[webView setUIDelegate:nil];
-	[webView setDraggingDelegate:nil];
-	
-	//Release the web view
-	[webView release];
-
 	//Clean up style/variant info
 	[messageStyle release]; messageStyle = nil;
 	[activeStyle release]; activeStyle = nil;
@@ -171,8 +185,6 @@ static NSArray *draggedTypes = nil;
 
 	//Release the chat
 	[chat release]; chat = nil;
-		
-	[fileTransferRequestControllers release]; fileTransferRequestControllers = nil;
 
 	[super dealloc];
 }
@@ -320,7 +332,8 @@ static NSArray *draggedTypes = nil;
 			//Ignore changes related to our background image cache.  These keys are used for storage only and aren't
 			//something we need to update in response to.  All other display changes we update our view for.
 			if (![key isEqualToString:@"BackgroundCacheUniqueID"] &&
-			   ![key isEqualToString:[plugin styleSpecificKey:@"BackgroundCachePath" forStyle:activeStyle]]) {
+			    ![key isEqualToString:[plugin styleSpecificKey:@"BackgroundCachePath" forStyle:activeStyle]] &&
+				![key isEqualToString:KEY_CURRENT_WEBKIT_STYLE_PATH]) {
 				[self _updateWebViewForCurrentPreferences];
 			}
 			
@@ -354,9 +367,7 @@ static NSArray *draggedTypes = nil;
 									 frameName:nil
 									 groupName:nil];
 	[webView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
-	[webView setPolicyDelegate:self];
-	[webView setUIDelegate:self];
-	[webView setDraggingDelegate:self];
+	[delegateProxy addDelegate:self forView:webView];
 	[webView setMaintainsBackForwardList:NO];
 
 	if (!draggedTypes) {
@@ -381,27 +392,34 @@ static NSArray *draggedTypes = nil;
  * @brief Updates our webview to the current preferences, priming the view
  */
 - (void)_updateWebViewForCurrentPreferences
-{
+{		
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	NSBundle		*styleBundle;
 	
 	//Cleanup first
-	[messageStyle release];
+	[messageStyle autorelease]; messageStyle = nil;
 	[activeStyle release];
 	[activeVariant release];
 	
 	//Load the message style
-	styleBundle = [plugin messageStyleBundleWithIdentifier:[prefDict objectForKey:KEY_WEBKIT_STYLE]];
-	activeStyle = [[styleBundle bundleIdentifier] retain];
+	messageStyle = [[plugin currentMessageStyle] retain];
+	activeStyle = [[[messageStyle bundle] bundleIdentifier] retain];
 
-	messageStyle = [[AIWebkitMessageViewStyle messageViewStyleFromBundle:styleBundle] retain];
 	[webView setPreferencesIdentifier:activeStyle];
 
 	//Get the prefered variant (or the default if a prefered is not available)
 	activeVariant = [[prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:activeStyle]] retain];
 	if (!activeVariant) activeVariant = [[messageStyle defaultVariant] retain];
-	
-	//Update message style behavior
+	if (!activeVariant) {
+		/* If the message style doesn't specify a default variant, choose the first one.
+		 * Note: Old styles (styleVersion < 3) will always report a variant for defaultVariant.
+		 */
+		NSArray *availableVariants = [messageStyle availableVariants];
+		if ([availableVariants count]) {
+			activeVariant = [[availableVariants objectAtIndex:0] retain];
+		}
+	}
+
+	//Update message style behavior: XXX move this somewhere not per-chat
 	[messageStyle setShowUserIcons:[[prefDict objectForKey:KEY_WEBKIT_SHOW_USER_ICONS] boolValue]];
 	[messageStyle setShowHeader:[[prefDict objectForKey:KEY_WEBKIT_SHOW_HEADER] boolValue]];
 	[messageStyle setUseCustomNameFormat:[[prefDict objectForKey:KEY_WEBKIT_USE_NAME_FORMAT] boolValue]];
@@ -450,8 +468,9 @@ static NSArray *draggedTypes = nil;
 	} else {
 		[messageStyle setCustomBackgroundColor:nil];
 	}
-	[webView setDrawsBackground:![[self messageStyle] isBackgroundTransparent]];
 
+	[webView setTransparent:[[self messageStyle] isBackgroundTransparent]];
+	
 	//Update webview font settings
 	NSString	*fontFamily = [prefDict objectForKey:[plugin styleSpecificKey:@"FontFamily" forStyle:activeStyle]];
 	[webView setFontFamily:(fontFamily ? fontFamily : [messageStyle defaultFontFamily])];
@@ -492,7 +511,8 @@ static NSArray *draggedTypes = nil;
 {
 	webViewIsReady = NO;
 
-	[webView setFrameLoadDelegate:self];
+	//Hack: this will re-set us for all the delegates, but that shouldn't matter
+	[delegateProxy addDelegate:self forView:webView];
 	[[webView mainFrame] loadHTMLString:[messageStyle baseTemplateWithVariant:activeVariant chat:chat] baseURL:nil];
 
 	if (reprocessContent) {
@@ -533,7 +553,7 @@ static NSArray *draggedTypes = nil;
 	[self enqueueContentObject:contentObject];
 }
 
-- (void) enqueueContentObject:(AIContentObject *)contentObject
+- (void)enqueueContentObject:(AIContentObject *)contentObject
 {
 	[contentQueue addObject:contentObject];
 	
@@ -611,7 +631,6 @@ static NSArray *draggedTypes = nil;
  */
 - (void)_processContentObject:(AIContentObject *)content willAddMoreContentObjects:(BOOL)willAddMoreContentObjects
 {
-	NSString		*dateMessage = nil;
 	AIContentEvent	*dateSeparator = nil;
 	
 	/*
@@ -620,7 +639,7 @@ static NSArray *draggedTypes = nil;
 	 */
 	if ((!previousContent && [content isKindOfClass:[AIContentContext class]]) ||
 	   (![content isFromSameDayAsContent:previousContent])) {
-		dateMessage = [[content date] descriptionWithCalendarFormat:[[NSDateFormatter localizedDateFormatter] dateFormat]
+		NSString *dateMessage = [[content date] descriptionWithCalendarFormat:[[NSDateFormatter localizedDateFormatter] dateFormat]
 														   timeZone:nil
 															 locale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
 		dateSeparator = [AIContentEvent statusInChat:[content chat]
@@ -629,7 +648,7 @@ static NSArray *draggedTypes = nil;
 												date:[content date]
 											 message:[[[NSAttributedString alloc] initWithString:dateMessage
 																					  attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
-											withType:@"date_separator"];
+											withType:([content isKindOfClass:[AIContentContext class]] ? @"date_separator history" : @"date_separator")];
 		//Add the date header
 		[self _appendContent:dateSeparator 
 					 similar:NO
@@ -652,72 +671,18 @@ static NSArray *draggedTypes = nil;
  */
 - (void)_appendContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects
 {
-	WebScriptObject *wso = [webView windowScriptObject];
-	NSString *methodName;
-	NSArray *methodArgs;
-
-	methodName = [messageStyle methodNameToCheckIfScrollToBottomIsNeeded];
-	if (methodName) {
-		methodArgs = [messageStyle methodArgumentsToCheckIfScrollToBottomIsNeeded];
-		[wso callWebScriptMethod:methodName withArguments:methodArgs];
-	}
-
-	methodName = [messageStyle methodNameForAppendingContent:content
-	                                                 similar:contentIsSimilar
-	                               willAddMoreContentObjects:willAddMoreContentObjects];
-	methodArgs = [messageStyle methodArgumentsForAppendingContent:content
-	                                                 similar:contentIsSimilar
-	                               willAddMoreContentObjects:willAddMoreContentObjects];
-	[wso callWebScriptMethod:methodName withArguments:methodArgs];
-
-	methodName = [messageStyle methodNameToScrollToBottomIfNeeded];
-	if (methodName) {
-		methodArgs = [messageStyle methodArgumentsToScrollToBottomIfNeeded];
-		[wso callWebScriptMethod:methodName withArguments:methodArgs];
-	}
+	[webView stringByEvaluatingJavaScriptFromString:[messageStyle scriptForAppendingContent:content
+																					similar:contentIsSimilar
+																  willAddMoreContentObjects:willAddMoreContentObjects]];
 }
 
 
 //WebView Delegates ----------------------------------------------------------------------------------------------------
 #pragma mark Webview delegates
-/*!
- * @brief Invoked once the webview has loaded and is ready to accept content
- */
-- (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
-{
-	//Flag the view as ready (as soon as the current methods exit) so we know it's now safe to add content
-	[self performSelector:@selector(webViewIsReady) withObject:nil afterDelay:0.00001];
-	
-	//We don't care about any further didFinishLoad notifications
-	[webView setFrameLoadDelegate:nil];
-}
+
 - (void)webViewIsReady{
 	webViewIsReady = YES;
 	[self processQueuedContent];
-}
-
-/*!
- * @brief Prevent the webview from following external links.  We direct these to the user's web browser.
- */
-- (void)webView:(WebView *)sender
-    decidePolicyForNavigationAction:(NSDictionary *)actionInformation
-		request:(NSURLRequest *)request
-		  frame:(WebFrame *)frame
-    decisionListener:(id<WebPolicyDecisionListener>)listener
-{
-    int actionKey = [[actionInformation objectForKey: WebActionNavigationTypeKey] intValue];
-    if (actionKey == WebNavigationTypeOther) {
-		[listener use];
-    } else {
-		NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
-		
-		//Ignore file URLs, but open anything else
-		if (![url isFileURL]) {
-			[[NSWorkspace sharedWorkspace] openURL:url];
-		}
-		
-		[listener ignore];
-    }
 }
 
 - (void)openImage:(id)sender
@@ -765,19 +730,24 @@ static NSArray *draggedTypes = nil;
 	if (webViewMenuItems) {
 		NSEnumerator	*enumerator;
 		NSMenuItem		*menuItem;
-		
+
 		enumerator = [defaultMenuItems objectEnumerator];
 		while ((menuItem = [enumerator nextObject])) {
-			NSString	*menuItemTitle = [menuItem title];
-
-			if (menuItemTitle &&
-				(([menuItemTitle localizedCaseInsensitiveCompare:@"Open Image in New Window"] == NSOrderedSame) ||
-				 ([menuItemTitle localizedCaseInsensitiveCompare:@"Download Image"] == NSOrderedSame) ||
-				 ([menuItemTitle localizedCaseInsensitiveCompare:@"Reload"] == NSOrderedSame) ||
-				 ([menuItemTitle localizedCaseInsensitiveCompare:@"Open Link in New Window"] == NSOrderedSame) ||
-				 ([menuItemTitle localizedCaseInsensitiveCompare:@"Download Linked File"] == NSOrderedSame))) {
+			int tag = [menuItem tag];
+			if ((tag == WebMenuItemTagOpenLinkInNewWindow) ||
+				(tag == WebMenuItemTagDownloadLinkToDisk) ||
+				(tag == WebMenuItemTagOpenImageInNewWindow) ||
+				(tag == WebMenuItemTagDownloadImageToDisk) ||
+				(tag == WebMenuItemTagOpenFrameInNewWindow) ||
+				(tag == WebMenuItemTagStop) ||
+				(tag == WebMenuItemTagReload)) {
 				[webViewMenuItems removeObjectIdenticalTo:menuItem];
-			}			
+			} else {
+				//This isn't as nice; there's no tag available. Use the localization from WebKit to look at the title.
+				if ((tag == WebMenuItemTagOther) &&
+					[[menuItem title] isEqualToString:NSLocalizedStringFromTableInBundle(@"Open Link", nil, [NSBundle bundleForClass:[WebView class]], nil)])
+					[webViewMenuItems removeObjectIdenticalTo:menuItem];					
+			}
 		}
 	}
 	
@@ -829,13 +799,12 @@ static NSArray *draggedTypes = nil;
 		}
 		
 		NSArray *locations;
-		if ([chatListObject isStranger]) {
+		if ([chatListObject isIntentionallyNotAStranger]) {
 			locations = [NSArray arrayWithObjects:
 				[NSNumber numberWithInt:Context_Contact_Manage],
 				[NSNumber numberWithInt:Context_Contact_Action],
 				[NSNumber numberWithInt:Context_Contact_NegativeAction],
 				[NSNumber numberWithInt:Context_Contact_ChatAction],
-				[NSNumber numberWithInt:Context_Contact_Stranger_ChatAction],
 				[NSNumber numberWithInt:Context_Contact_Additions], nil];
 		} else {
 			locations = [NSArray arrayWithObjects:
@@ -843,6 +812,7 @@ static NSArray *draggedTypes = nil;
 				[NSNumber numberWithInt:Context_Contact_Action],
 				[NSNumber numberWithInt:Context_Contact_NegativeAction],
 				[NSNumber numberWithInt:Context_Contact_ChatAction],
+				[NSNumber numberWithInt:Context_Contact_Stranger_ChatAction],
 				[NSNumber numberWithInt:Context_Contact_Additions], nil];
 		}
 		
@@ -995,26 +965,28 @@ static NSArray *draggedTypes = nil;
  */
 - (void)participatingListObjectsChanged:(NSNotification *)notification
 {
-	NSArray			*participatingListObjects = [chat participatingListObjects];
+	NSArray			*participatingListObjects = [chat containedObjects];
 	NSEnumerator	*enumerator;
-	AIListContact	*listContact;
+	AIListObject	*listObject;
 	
 	[[adium notificationCenter] removeObserver:self
 										  name:ListObject_AttributesChanged
 										object:nil];
 	
 	enumerator = [participatingListObjects objectEnumerator];
-	while ((listContact = [enumerator nextObject])) {
+	while ((listObject = [enumerator nextObject])) {
 		//Update the mask for any user which just entered the chat
-		if (![objectsWithUserIconsArray containsObjectIdenticalTo:listContact]) {
-			[self _updateUserIconForObject:listContact];
+		if (![objectsWithUserIconsArray containsObjectIdenticalTo:listObject]) {
+			[self updateUserIconForObject:listObject];
 		}
 		
 		//In the future, watch for changes on the parent object, since that's the icon we display
-		[[adium notificationCenter] addObserver:self
-									   selector:@selector(listObjectAttributesChanged:) 
-										   name:ListObject_AttributesChanged
-										 object:[listContact parentContact]];
+		if ([listObject isKindOfClass:[AIListContact class]]) {
+			[[adium notificationCenter] addObserver:self
+										   selector:@selector(listObjectAttributesChanged:) 
+											   name:ListObject_AttributesChanged
+											 object:[(AIListContact *)listObject parentContact]];
+		}
 	}
 	
 	//Also observe our account
@@ -1024,9 +996,16 @@ static NSArray *draggedTypes = nil;
 										   name:ListObject_AttributesChanged
 										 object:[chat account]];
 	}
-	//We've now masked every user currently in the participating list objects
-	[objectsWithUserIconsArray release]; 
-	objectsWithUserIconsArray = [participatingListObjects mutableCopy];	
+
+	//Remove the cache for any object no longer in the chat
+	enumerator = [objectsWithUserIconsArray objectEnumerator];
+	while ((listObject = [enumerator nextObject])) {
+		if ((![listObject isKindOfClass:[AIMetaContact class]] || (![participatingListObjects firstObjectCommonWithArray:[(AIMetaContact *)listObject containedObjects]])) &&
+			(![listObject isKindOfClass:[AIListContact class]] || ![participatingListObjects containsObjectIdenticalTo:(AIListContact *)listObject]) &&
+			!(listObject == [chat account])) {
+			[self releaseCurrentWebKitUserIconForObject:listObject];
+		}
+	}
 }
 
 /*!
@@ -1034,14 +1013,15 @@ static NSArray *draggedTypes = nil;
  */
 - (void)sourceOrDestinationChanged:(NSNotification *)notification
 {
-	[objectsWithUserIconsArray release]; objectsWithUserIconsArray = nil;
+	//Update the participating contacts
 	[self participatingListObjectsChanged:nil];
 	
-	[self _updateUserIconForObject:[chat account]];
+	//And update the source account
+	[self updateUserIconForObject:[chat account]];
 }
 
 /*!
- * @brief Update icon masks when a list object's attributes change
+ * @brief Update the icon when a list object's icon attributes change
  */
 - (void)listObjectAttributesChanged:(NSNotification *)notification
 {
@@ -1063,7 +1043,7 @@ static NSArray *draggedTypes = nil;
 			NSEnumerator	*enumerator;
 			AIListContact	*participatingListObject;
 			
-			enumerator = [[chat participatingListObjects] objectEnumerator];
+			enumerator = [[chat containedObjects] objectEnumerator];
 			while ((participatingListObject = [enumerator nextObject])) {
 				if ([participatingListObject parentContact] == inObject) {
 					actualObject = participatingListObject;
@@ -1073,21 +1053,92 @@ static NSArray *draggedTypes = nil;
 		}
 		
 		if (actualObject) {
-			[self _updateUserIconForObject:actualObject];
+			[self userIconForObjectDidChange:actualObject];
 		}
+	}
+}
+
+- (void)userIconForObjectDidChange:(AIListObject *)inObject
+{
+	AIListObject	*iconSourceObject = ([inObject isKindOfClass:[AIListContact class]] ?
+										 [(AIListContact *)inObject parentContact] :
+										 inObject);
+	NSString		*currentIconPath = [objectIconPathDict objectForKey:[iconSourceObject internalObjectID]];
+	if (currentIconPath) {
+		NSString	*objectsKnownIconPath = [iconSourceObject statusObjectForKey:KEY_WEBKIT_USER_ICON];
+		if (objectsKnownIconPath &&
+			[currentIconPath isEqualToString:objectsKnownIconPath]) {
+			//We're the first one to get to this object!  We get to delete the old path and remove the reference to it
+			[[NSFileManager defaultManager] removeFileAtPath:currentIconPath handler:nil];
+			[iconSourceObject setStatusObject:nil
+									   forKey:KEY_WEBKIT_USER_ICON
+									   notify:NotifyNever];
+		} else {
+			/* Some other instance beat us to the punch. The object's KEY_WEBKIT_USER_ICON is right, since it doesn't match our
+			 * internally tracked path.
+			 */
+		}
+	}
+	
+	[self updateUserIconForObject:iconSourceObject];
+}
+
+/*!
+ * @brief Remove all references to *this* chat using cached icons for an object
+ *
+ * If this is the last chat utilizing the cached icon, it will be deleted.
+ *
+ * @param inObject The object
+ */
+- (void)releaseCurrentWebKitUserIconForObject:(AIListObject *)inObject
+{
+	AIListObject	*iconSourceObject = ([inObject isKindOfClass:[AIListContact class]] ?
+										 [(AIListContact *)inObject parentContact] :
+										 inObject);
+	NSString		*path;
+	
+	int chatsUsingCachedIcon = [[iconSourceObject statusObjectForKey:KEY_WEBKIT_CHATS_USING_CACHED_ICON] intValue];
+	chatsUsingCachedIcon--;
+	[iconSourceObject setStatusObject:[NSNumber numberWithInt:chatsUsingCachedIcon]
+					   forKey:KEY_WEBKIT_CHATS_USING_CACHED_ICON
+					   notify:NotifyNever];
+	[objectsWithUserIconsArray removeObjectIdenticalTo:iconSourceObject];
+
+	if ((chatsUsingCachedIcon <= 0) &&
+		(path = [iconSourceObject statusObjectForKey:KEY_WEBKIT_USER_ICON])) {
+		[[NSFileManager defaultManager] removeFileAtPath:path handler:nil];
+		[iconSourceObject setStatusObject:nil
+								   forKey:KEY_WEBKIT_USER_ICON
+								   notify:NotifyNever];
+	}
+
+	[objectIconPathDict removeObjectForKey:[iconSourceObject internalObjectID]];
+}
+
+/*!
+ * @brief Remove all references to *this* chat using cached icons for all involved objects
+ */
+- (void)releaseAllCachedIcons
+{
+	NSEnumerator *enumerator = [[[objectsWithUserIconsArray copy] autorelease] objectEnumerator];
+	AIListObject *listObject;
+
+	while ((listObject = [enumerator nextObject])) {
+		[self releaseCurrentWebKitUserIconForObject:listObject];
 	}
 }
 
 /*!
  * @brief Generate an updated masked user icon for the passed list object
  */
-- (void)_updateUserIconForObject:(AIListObject *)inObject
+- (void)updateUserIconForObject:(AIListObject *)inObject
 {
 	AIListObject		*iconSourceObject = ([inObject isKindOfClass:[AIListContact class]] ?
 											 [(AIListContact *)inObject parentContact] :
 											 inObject);
 	NSImage				*userIcon;
-	NSString			*webKitUserIconPath;
+	NSString			*oldWebKitUserIconPath = nil;
+	NSString			*webKitUserIconPath = nil;
 	NSImage				*webKitUserIcon;
 	
 	/*
@@ -1101,7 +1152,8 @@ static NSArray *draggedTypes = nil;
 
 	if (userIcon) {
 		if ([messageStyle userIconMask]) {
-			//Apply the mask is the style has one
+			//Apply the mask if the style has one
+			//XXX Using multiple styles at once, one of which has a user icon mask, would lead to odd behavior
 			webKitUserIcon = [[[messageStyle userIconMask] copy] autorelease];
 			[webKitUserIcon lockFocus];
 			[userIcon drawInRect:NSMakeRect(0,0,[webKitUserIcon size].width,[webKitUserIcon size].height)
@@ -1114,40 +1166,57 @@ static NSArray *draggedTypes = nil;
 			webKitUserIcon = userIcon;
 		}
 
-		/*
-		 * Writing the icon out is necessary for webkit to be able to use it; it also guarantees that there won't be
-		 * any animation, which is good since animation in the message view is slow and annoying.
-		 */
-		webKitUserIconPath = [self _webKitUserIconPathForObject:inObject];
-		if ([[webKitUserIcon TIFFRepresentation] writeToFile:webKitUserIconPath
-												  atomically:YES]) {
-			[inObject setStatusObject:webKitUserIconPath
-							   forKey:KEY_WEBKIT_USER_ICON
-							   notify:NO];
+		oldWebKitUserIconPath = [objectIconPathDict objectForKey:[iconSourceObject internalObjectID]];
+		webKitUserIconPath = [iconSourceObject statusObjectForKey:KEY_WEBKIT_USER_ICON];
 
-			//Make sure it's known that this user has been handled (this will rarely be a problem, if ever)
-			if (![objectsWithUserIconsArray containsObjectIdenticalTo:inObject]) {
-				[objectsWithUserIconsArray addObject:inObject];
-			}
-			
+		if (!webKitUserIconPath) {
+			/* If the image doesn't know a path to use, write it out and set it.
+			 *
+			 * Writing the icon out is necessary for webkit to be able to use it; it also guarantees that there won't be
+			 * any animation, which is good since animation in the message view is slow and annoying.
+			 *
+			 * Only write out the icon if the object doesn't already have one
+			 */				
+			webKitUserIconPath = [self _webKitUserIconPathForObject:iconSourceObject];
+			if ([[webKitUserIcon PNGRepresentation] writeToFile:webKitUserIconPath
+													 atomically:YES]) {
+				[iconSourceObject setStatusObject:webKitUserIconPath
+										   forKey:KEY_WEBKIT_USER_ICON
+										   notify:NO];				
+			}			
+		}
+
+		//Make sure it's known that this user has been handled
+		if (![objectsWithUserIconsArray containsObjectIdenticalTo:iconSourceObject]) {
+			[objectsWithUserIconsArray addObject:iconSourceObject];
+
+			//Keep track of this chat using the icon
+			[iconSourceObject setStatusObject:[NSNumber numberWithInt:([[iconSourceObject statusObjectForKey:KEY_WEBKIT_CHATS_USING_CACHED_ICON] intValue] + 1)]
+									   forKey:KEY_WEBKIT_CHATS_USING_CACHED_ICON
+									   notify:NotifyNever];
+		}
+		
+		if (!webKitUserIconPath) webKitUserIconPath = @"";
+
+		//Update existing images
+		if (oldWebKitUserIconPath &&
+			![oldWebKitUserIconPath isEqualToString:webKitUserIconPath]) {
 			DOMNodeList  *images = [[[webView mainFrame] DOMDocument] getElementsByTagName:@"img"];
 			unsigned int imagesCount = [images length];
 
-			if (imagesCount > 0) {
-				NSString	*internalObjectID = [inObject internalObjectID];
+			webKitUserIconPath = [[webKitUserIconPath copy] autorelease];
 
-				for (int i = 0; i < imagesCount; i++) {
-					DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
-					NSString *imgClass = [img className];
-					//being very careful to only get user icons... a better way would be to put a class "usericon" on the img, but I haven't worked out how to do that, so we test for the name of the person in the src, and that it's not an emoticon or direct connect image.
-					if([[img getAttribute:@"src"] rangeOfString:internalObjectID].location != NSNotFound &&
-					   [imgClass rangeOfString:@"emoticon"].location == NSNotFound &&
-					   [imgClass rangeOfString:@"fullSizeImage"].location == NSNotFound &&
-					   [imgClass rangeOfString:@"scaledToFitImage"].location == NSNotFound)
-						[img setSrc:webKitUserIconPath];
+			for (int i = 0; i < imagesCount; i++) {
+				DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
+				NSString *currentSrc = [img getAttribute:@"src"];
+				if (currentSrc && ([currentSrc rangeOfString:oldWebKitUserIconPath].location != NSNotFound)) {
+					[img setSrc:webKitUserIconPath];
 				}
 			}
 		}
+
+		[objectIconPathDict setObject:webKitUserIconPath
+							   forKey:[iconSourceObject internalObjectID]];
 	}
 }
 
@@ -1160,16 +1229,26 @@ static NSArray *draggedTypes = nil;
 		AIEmoticon	*emoticon = [[inNotification userInfo] objectForKey:@"AIEmoticon"];
 		NSString	*textEquivalent = [[emoticon textEquivalents] objectAtIndex:0];
 		NSString	*path = [emoticon path];
+		NSSize		emoticonSize = [[emoticon image] size];
+		BOOL		updatedImage = NO;
 		path = [[NSURL fileURLWithPath:path] absoluteString];
-		AILog(@"Trying to update %@ (%@)",emoticon,textEquivalent);
 		for (int i = 0; i < imagesCount; i++) {
 			DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
 			
 			if ([[img className] isEqualToString:@"emoticon"] &&
 				[[img getAttribute:@"alt"] isEqualToString:textEquivalent]) {
-				[img setSrc:path];				
+				[img setSrc:path];
+				[img setWidth:emoticonSize.width];
+				[img setHeight:emoticonSize.height];
+				updatedImage = YES;
 			}
 		}
+		NSNumber *shouldScroll = [[webView windowScriptObject] callWebScriptMethod:@"nearBottom"
+																	 withArguments:nil];
+		if (!shouldScroll) shouldScroll = [NSNumber numberWithBool:NO];
+
+		if (updatedImage) [[webView windowScriptObject] callWebScriptMethod:@"alignChat" 
+															  withArguments:[NSArray arrayWithObject:shouldScroll]];
 	}
 }
 
@@ -1178,38 +1257,18 @@ static NSArray *draggedTypes = nil;
  */
 - (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject
 {
-	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@.tiff", [inObject internalObjectID], [NSString randomStringOfLength:5]];
+	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@.png", [inObject internalObjectID], [NSString randomStringOfLength:5]];
 	return [[adium cachesPath] stringByAppendingPathComponent:filename];
 }
 
 #pragma mark File Transfer
 
-- (void)showFileTransferRequest:(NSNotification *)not
+- (void)handleAction:(NSString *)action forFileTransfer:(NSString *)fileTransferID
 {
-	ESFileTransferRequestPromptController *tc = (ESFileTransferRequestPromptController *)[[not userInfo] objectForKey:@"FileTransferRequestController"];
-	ESFileTransfer *transfer = [tc fileTransfer];
-
-	if (!fileTransferRequestControllers) fileTransferRequestControllers = [[NSMutableDictionary alloc] init];
-	[fileTransferRequestControllers setObject:tc forKey:[transfer remoteFilename]];
-
-	if ([transfer chat] == chat) {
-		[self enqueueContentObject:transfer];
-	}
-}
-
-- (void)cancelFileTransferRequest:(NSNotification *)not
-{
-	ESFileTransfer *e = (ESFileTransfer *)[not userInfo];
-	[fileTransferRequestControllers removeObjectForKey:[e remoteFilename]];
-}
-
-- (void)handleAction:(NSString *)action forFileTransfer:(NSString *)fileName
-{
-	ESFileTransferRequestPromptController *tc = [fileTransferRequestControllers objectForKey:fileName];
+	ESFileTransfer *fileTransfer = [ESFileTransfer existingFileTransferWithID:fileTransferID];
+	ESFileTransferRequestPromptController *tc = [fileTransfer fileTransferRequestPromptController];
 
 	if (tc) {
-		[fileTransferRequestControllers removeObjectForKey:fileName];
-		
 		AIFileTransferAction a;
 		if ([action isEqualToString:@"SaveAs"])
 			a = AISaveFileAs;

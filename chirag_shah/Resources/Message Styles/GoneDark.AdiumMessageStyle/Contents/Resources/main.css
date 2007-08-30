@@ -154,3 +154,5 @@ body {
 .context {
 	opacity: .6;
 }
+
+img.scaledToFitImage{ width:auto; }

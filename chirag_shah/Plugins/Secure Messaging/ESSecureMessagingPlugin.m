@@ -256,9 +256,11 @@
 				type = @"encryptionEnded";
 			}
 
-			[[adium contentController] displayEvent:message
-											 ofType:type
-											 inChat:inChat];
+			if ([inChat isOpen]) {
+				[[adium contentController] displayEvent:message
+												 ofType:type
+												 inChat:inChat];
+			}
 		}
 	}
 
@@ -343,7 +345,7 @@
 }
 
 //Disable the insertion if a text field is not active
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	AIChat					*chat = [[adium interfaceController] activeChat];
 

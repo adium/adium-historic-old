@@ -96,7 +96,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 	//Observe for installation of new emoticon sets
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(xtrasChanged:)
-									   name:Adium_Xtras_Changed
+									   name:AIXtrasDidChangeNotification
 									 object:nil];
 }
 
@@ -158,7 +158,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 	return LOW_FILTER_PRIORITY;
 }
 
-/*
+/*!
  * @brief Perform a single emoticon replacement
  *
  * This method may call itself recursively to perform additional adjacent emoticon replacements
@@ -175,6 +175,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 								serviceClassContext:(id)serviceClassContext
 						  emoticonStartCharacterSet:(NSCharacterSet *)emoticonStartCharacterSet
 									  emoticonIndex:(NSDictionary *)emoticonIndex
+										  isMessage:(BOOL)isMessage
 {
 	unsigned int	originalEmoticonLocation = NSNotFound;
 
@@ -268,23 +269,33 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 				if ((callingRecursively || (previousCharacter == ' ') || (previousCharacter == '\t') ||
 					 (previousCharacter == '\n') || (previousCharacter == '\r') || (previousCharacter == '.') || (previousCharacter == '?') || (previousCharacter == '!') ||
 					 (previousCharacter == '\"') || (previousCharacter == '\'') ||
+					 (previousCharacter == '(') ||
 					 (*newMessage && [*newMessage attribute:NSAttachmentAttributeName
 													atIndex:(emoticonRangeInNewMessage.location - 1) 
 											 effectiveRange:NULL])) &&
 
-					((nextCharacter == ' ') || (nextCharacter == '\t') || (nextCharacter == '\n') || 
-					 (nextCharacter == '\r') || (nextCharacter == '.') || (nextCharacter == '?') || (nextCharacter == '!') ||
+					((nextCharacter == ' ') || (nextCharacter == '\t') || (nextCharacter == '\n') || (nextCharacter == '\r') ||
+					 (nextCharacter == '.') || (nextCharacter == ',') || (nextCharacter == '?') || (nextCharacter == '!') ||
+					 (nextCharacter == ')') ||
 					 (nextCharacter == '\"') || (nextCharacter == '\''))) {
 					acceptable = YES;
 				}
 			}
 			if (!acceptable) {
-				/* If the emoticon would end the string except for whitespace or newlines at the end, or it begins the string after removing
-				 * whitespace or newlines at the beginning, it is acceptable even if the previous conditions weren't met.
+				/* If the emoticon would end the string except for whitespace, newlines, or punctionation at the end, or it begins the string after removing
+				 * whitespace, newlines, or punctuation at the beginning, it is acceptable even if the previous conditions weren't met.
 				 */
-				NSString	*trimmedString = [messageString stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+				static NSCharacterSet *endingTrimSet = nil;
+				if (!endingTrimSet) {
+					NSMutableCharacterSet *tempSet = [[NSCharacterSet punctuationCharacterSet] mutableCopy];
+					[tempSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+					endingTrimSet = [tempSet immutableCopy];
+					[tempSet release];
+				}
+
+				NSString	*trimmedString = [messageString stringByTrimmingCharactersInSet:endingTrimSet];
 				unsigned int trimmedLength = [trimmedString length];
-				if ([trimmedString length] == (originalEmoticonLocation + textLength)) {
+				if (trimmedLength == (originalEmoticonLocation + textLength)) {
 					acceptable = YES;
 				} else if ((originalEmoticonLocation - (messageStringLength - trimmedLength)) == 0) {
 					acceptable = YES;					
@@ -310,7 +321,8 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 															  callingRecursively:YES
 															 serviceClassContext:serviceClassContext
 													   emoticonStartCharacterSet:emoticonStartCharacterSet
-																   emoticonIndex:emoticonIndex];
+																   emoticonIndex:emoticonIndex
+																	   isMessage:isMessage];
 				if (nextEmoticonLocation != NSNotFound) {
 					if (nextEmoticonLocation == (*currentLocation + textLength)) {
 						/* The next emoticon is immediately after the candidate we're looking at right now. That means
@@ -333,7 +345,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 			}
 
 			if (acceptable) {
-				replacement = [emoticon attributedStringWithTextEquivalent:replacementString];
+				replacement = [emoticon attributedStringWithTextEquivalent:replacementString attachImages:!isMessage];
 				
 				//grab the original attributes, to ensure that the background is not lost in a message consisting only of an emoticon
 				[replacement addAttributes:[originalAttributedString attributesAtIndex:originalEmoticonLocation
@@ -376,9 +388,12 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     unsigned					currentLocation = 0, messageStringLength;
 	NSCharacterSet				*emoticonStartCharacterSet = [self emoticonStartCharacterSet];
 	NSDictionary				*emoticonIndex = [self emoticonIndex];
+	//we can avoid loading images if the emoticon is headed for the wkmv, since it will just load from the original path anyway
+	BOOL						isMessage = NO;  
 
 	//Determine our service class context
 	if ([context isKindOfClass:[AIContentObject class]]) {
+		isMessage = YES;
 		serviceClassContext = [[[(AIContentObject *)context destination] service] serviceClass];
 		//If there's no destination, try to use the source for context
 		if (!serviceClassContext) {
@@ -455,7 +470,8 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 							   callingRecursively:NO
 							  serviceClassContext:serviceClassContext
 						emoticonStartCharacterSet:emoticonStartCharacterSet
-									emoticonIndex:emoticonIndex];
+									emoticonIndex:emoticonIndex
+										isMessage:isMessage];
     }
 
     return (newMessage ? [newMessage autorelease] : inMessage);

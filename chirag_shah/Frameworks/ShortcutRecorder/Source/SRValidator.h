@@ -10,9 +10,6 @@
 //      David Dauer
 //      Jesper
 //      Jamie Kirkpatrick
-//
-//  Revisions:
-//      2006-05-24 Created.
 
 #import <Cocoa/Cocoa.h>
 

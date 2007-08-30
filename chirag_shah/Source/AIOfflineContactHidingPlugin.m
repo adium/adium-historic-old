@@ -27,16 +27,13 @@
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIMetaContact.h>
+#import "AIContactController.h"
 
-#define	PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
 #define SHOW_OFFLINE_MENU_TITLE				AILocalizedString(@"Show Offline Contacts",nil)
-#define KEY_SHOW_OFFLINE_CONTACTS			@"Show Offline Contacts"
 
 #define	USE_OFFLINE_GROUP_MENU_TITLE		AILocalizedString(@"Show Offline Group",nil)
-#define	KEY_USE_OFFLINE_GROUP				@"Use Offline Group"
 
 #define OFFLINE_CONTACTS_IDENTIFER			@"OfflineContacts"
-#define	KEY_HIDE_CONTACT_LIST_GROUPS		@"Hide Contact List Groups"
 
 /*!
  * @class AIOfflineContactHidingPlugin
@@ -118,7 +115,7 @@
 {
 	showOfflineContacts = [[prefDict objectForKey:KEY_SHOW_OFFLINE_CONTACTS] boolValue];
 	useContactListGroups = ![[prefDict objectForKey:KEY_HIDE_CONTACT_LIST_GROUPS] boolValue];
-	useOfflineGroup = [[prefDict objectForKey:KEY_USE_OFFLINE_GROUP] boolValue];
+	useOfflineGroup = (useContactListGroups && [[prefDict objectForKey:KEY_USE_OFFLINE_GROUP] boolValue]);
 
 	if (firstTime) {
 		//Observe contact and preference changes
@@ -189,10 +186,10 @@
 							   [inObject integerStatusObjectForKey:@"Signed Off"] ||
 							   [inObject integerStatusObjectForKey:@"New Object"]);
 
-			if ([inObject isKindOfClass:[AIMetaContact class]]) {
+			if ([inObject conformsToProtocol:@protocol(AIContainingObject)]) {
 				//A metaContact must meet the criteria for a contact to be visible and also have at least 1 contained contact
 				[inObject setVisible:(visible &&
-									  ([(AIMetaContact *)inObject visibleCount] > 0))];
+									  ([(AIListContact<AIContainingObject> *)inObject visibleCount] > 0))];
 				
 			} else {
 				[inObject setVisible:visible];
@@ -220,7 +217,7 @@
 										  group:PREF_GROUP_CONTACT_LIST_DISPLAY];
 }
 
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	if (menuItem == menuItem_useOfflineGroup) {
 		return (useContactListGroups && showOfflineContacts);

@@ -62,7 +62,11 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 
 		//Edit, right justified and far enough away from Remove that it can't conceivably overlap
 		oldFrame = [button_edit frame];
-		[button_edit setTitle:AILocalizedString(@"Edit", nil)];
+		
+		/* Note: This is using the "Buttons" table from the main bundle. The string gets into the strings file there from other parts of Adium;
+		 * this is incorrect but not particularly worth fixing.
+		 */
+		[button_edit setTitle:AILocalizedStringFromTable(@"Edit", @"Buttons", "Verb 'edit' on a button")];
 		[button_edit sizeToFit];
 		newFrame = [button_edit frame];
 		if (newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
@@ -302,7 +306,8 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 	[verticallyCenteredTextCell release];
 
 	[outlineView_summary setDrawsAlternatingRows:YES];
-	[outlineView_summary setIntercellSpacing:NSMakeSize(6.0,4.0)];
+	[outlineView_summary setIntercellSpacing:NSMakeSize(6.0,6.0)];
+	[outlineView_summary setIndentationPerLevel:0];
 	[outlineView_summary setTarget:self];
 	[outlineView_summary setDelegate:self];
 	[outlineView_summary setDataSource:self];
@@ -459,8 +464,7 @@ int actionSort(id objectA, id objectB, void *context)
 	[expandStateDict setObject:[NSNumber numberWithBool:state]
 						forKey:[contactAlertsEvents objectAtIndex:[contactAlertsActions indexOfObjectIdenticalTo:item]]];
 	
-	/* XXX this is because the variable height table view creates some display glitches...
-	 * hack for now to make it look okay. Mea culpa. -eds */
+	[outlineView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:[outlineView rowForItem:item]]];
 	[outlineView display];
 }
 
@@ -520,8 +524,8 @@ int actionSort(id objectA, id objectB, void *context)
 							NSString	*commaAndSpaceIfNeeded;
 
 							//If we have more than 2 actions, we'll be combining them with commas
-							if (count > 2) {
-								commaAndSpaceIfNeeded = @",";
+							if ((count > 2) && (i != (count - 1))) {
+								commaAndSpaceIfNeeded = AILocalizedString(@",", "comma between actions in the events list");
 							} else {
 								commaAndSpaceIfNeeded = @"";
 							}
@@ -533,18 +537,29 @@ int actionSort(id objectA, id objectB, void *context)
 								conjunctionIfNeeded = @"";
 							}
 							
-							//Construct the string to append, then append it
-							[actionDescription appendString:[NSString stringWithFormat:@"%@%@ %@%@",
-								commaAndSpaceIfNeeded,
-								conjunctionIfNeeded,
-								[[thisDescription substringToIndex:1] lowercaseString],
-								[thisDescription substringFromIndex:1]]];
+							/* Silly Localization hack: if Growl begins this phrase, don't make it lowercase, since it's
+							 * a proper noun.
+							 */
+							if ([thisDescription rangeOfString:@"Growl" options:(NSLiteralSearch | NSAnchoredSearch)].location == 0) {
+								[actionDescription appendString:[NSString stringWithFormat:@"%@%@ %@",
+									commaAndSpaceIfNeeded,
+									conjunctionIfNeeded,
+									thisDescription]];
+	
+							} else {
+								//Construct the string to append, then append it
+								[actionDescription appendString:[NSString stringWithFormat:@"%@%@ %@%@",
+									commaAndSpaceIfNeeded,
+									conjunctionIfNeeded,
+									[[thisDescription substringToIndex:1] lowercaseString],
+									[thisDescription substringFromIndex:1]]];
+							}
 							
 						} else {
 							/* We are on the first action.
-							*
-							* This is easy; just append the description.
-							*/
+							 *
+							 * This is easy; just append the description.
+							 */
 							[actionDescription appendString:thisDescription];
 							appended = YES;
 						}
@@ -586,9 +601,9 @@ int actionSort(id objectA, id objectB, void *context)
 }
 
 //Each row should be tall enough to fit its event and action descriptions as necessary
-- (int)outlineView:(NSOutlineView *)inOutlineView heightForItem:(id)item atRow:(int)row
+- (float)outlineView:(NSOutlineView *)inOutlineView heightOfRowByItem:(id)item
 {
-	int		necessaryHeight = 0;
+	float	necessaryHeight = 0;
 	BOOL	enforceMinimumHeight;
 	
 	if ([contactAlertsActions containsObjectIdenticalTo:item]) {
@@ -597,7 +612,7 @@ int actionSort(id objectA, id objectB, void *context)
 		NSTableColumn	*tableColumn;
 		BOOL			eventIsExtended = [self outlineView:inOutlineView
 										 extendToEdgeColumn:EVENT_COLUMN_INDEX
-													  ofRow:row];
+													  ofRow:[inOutlineView rowForItem:item]];
 		
 		enforceMinimumHeight = ([(NSArray *)item count] > 0);
 

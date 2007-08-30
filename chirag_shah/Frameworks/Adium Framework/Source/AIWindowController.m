@@ -17,6 +17,11 @@
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIWindowController.h>
 #import <AIUtilities/AIWindowAdditions.h>
+#import <AIUtilities/AIWindowControllerAdditions.h>
+
+@interface AIWindowController (PRIVATE)
++ (void)updateScreenBoundariesRect:(id)sender;
+@end
 
 /*!
  * @class AIWindowController
@@ -27,6 +32,35 @@
  * which every good window controller cannot be without.
  */
 @implementation AIWindowController
+
++ (void)initialize
+{
+	if ([self isEqual:[AIWindowController class]]) {
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(updateScreenBoundariesRect:) 
+													 name:NSApplicationDidChangeScreenParametersNotification 
+												   object:nil];
+		
+		[self updateScreenBoundariesRect:nil];
+	}
+}
+
+static NSRect screenBoundariesRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
++ (void)updateScreenBoundariesRect:(id)sender
+{
+	NSArray *screens = [NSScreen screens];
+	int numScreens = [screens count];
+	
+	if (numScreens > 0) {
+		//The menubar screen is a special case - the menubar is not a part of the rect we're interested in
+		NSScreen *menubarScreen = [screens objectAtIndex:0];
+		screenBoundariesRect = [menubarScreen frame];
+		screenBoundariesRect.size.height = NSMaxY([menubarScreen visibleFrame]) - NSMinY([menubarScreen frame]);
+		for (int i = 1; i < numScreens; i++) {
+			screenBoundariesRect = NSUnionRect(screenBoundariesRect, [[screens objectAtIndex:i] frame]);
+		}
+	}
+}
 
 /*!
  * @brief Initialize
@@ -40,6 +74,13 @@
     return self;
 }
 
+/*!
+ * @brief Create a frame from a saved string, taking into account the window's properties
+ *
+ * Maximum and minimum sizes are respected, the toolbar is taken into account, and the result has all integer values.
+ *
+ * @result The rect. If frameString would create an invalid rect (width <= 0 or height <= 0), NSZeroRect is returned.
+ */
 - (NSRect)savedFrameFromString:(NSString *)frameString
 {
 	NSRect		windowFrame = NSRectFromString(frameString);
@@ -58,8 +99,70 @@
 	if (contentFrame.size.height < [[self window] toolbarHeight]) {
 		windowFrame.size.height += [[self window] toolbarHeight] - contentFrame.size.height;
 	}
+	
+	//Make sure the window is visible on-screen
+	if (NSMaxX(windowFrame) < NSMinX(screenBoundariesRect)) windowFrame.origin.x = NSMinX(screenBoundariesRect);
+	if (NSMinX(windowFrame) > NSMaxX(screenBoundariesRect)) windowFrame.origin.x = NSMaxX(screenBoundariesRect) - NSWidth(windowFrame);
+	if (NSMaxY(windowFrame) < NSMinY(screenBoundariesRect)) windowFrame.origin.y = NSMinY(screenBoundariesRect);
+	if (NSMinY(windowFrame) > NSMaxY(screenBoundariesRect)) windowFrame.origin.y = NSMaxY(screenBoundariesRect) - NSHeight(windowFrame);
+	
+	
+	return NSIntegralRect(windowFrame);
+}
 
-	return windowFrame;
+/*!
+ * @brief Create a key which is specific for our current screen configuration
+ *
+ * The resulting key includes the starting key plus the size/orientation layout of all screens.
+ * This allows saving a separate, unique saved frame for each new combination of monitor resolutions and relative positions.
+ */
+- (NSString *)multiscreenKeyWithAutosaveName:(NSString *)key
+{
+	NSEnumerator	*enumerator = [[NSScreen screens] objectEnumerator];
+	NSMutableString	*multiscreenKey = [key mutableCopy];
+	NSScreen		*screen;
+	
+	while ((screen = [enumerator nextObject])) {
+		[multiscreenKey appendFormat:@"-%@", NSStringFromRect([screen frame])];
+	}
+	
+	return [multiscreenKey autorelease];
+}
+
+/*!
+ * @brief Return a string which represents the saved frame for this window
+ *
+ * This will use [self adiumFrameAutosaveName] and a window-configuration dependent identifier to determine the
+ * preference to be used.
+ *
+ * Subclasses have no business overriding this method.  See adiumFrameAutosaveName for the right place to determine the name
+ * under which the frame is stored.
+ *
+ * @result A string suitable for passing to -[self savedFrameFromString:], or nil if no preference has been stored
+ */
+- (NSString *)savedFrameString
+{
+	NSString	*key = [self adiumFrameAutosaveName];
+	NSString	*frameString = nil;
+
+	if (key) {
+		//Unique key for each number and size of screens
+		frameString = [[adium preferenceController] preferenceForKey:[self multiscreenKeyWithAutosaveName:key]
+															   group:PREF_GROUP_WINDOW_POSITIONS];
+
+		if (!frameString) {
+			//Fall back on the old number-of-screens key
+			frameString = [[adium preferenceController] preferenceForKey:[NSString stringWithFormat:@"%@-%i",key,[[NSScreen screens] count]]
+																   group:PREF_GROUP_WINDOW_POSITIONS];
+			if (!frameString) {
+				//Fall back on the single screen preference if necessary (this is effectively a preference upgrade).
+				frameString = [[adium preferenceController] preferenceForKey:key
+																	   group:PREF_GROUP_WINDOW_POSITIONS];
+			}
+		}
+	}
+	
+	return frameString;
 }
 
 /*!
@@ -69,32 +172,37 @@
  */
 - (void)windowDidLoad
 {
-	NSString	*key = [self adiumFrameAutosaveName];
-
-	if (key) {
-		NSString	*frameString;
-		int			numberOfScreens;
-
-		//Unique key for each number of screens
-		numberOfScreens = [[NSScreen screens] count];
-		
-		frameString = [[adium preferenceController] preferenceForKey:((numberOfScreens == 1) ? 
-																	  key :
-																	  [NSString stringWithFormat:@"%@-%i",key,numberOfScreens])
-															   group:PREF_GROUP_WINDOW_POSITIONS];
-
-		if (!frameString && (numberOfScreens > 1)) {
-			//Fall back on the single screen preference if necessary (this is effectively a preference upgrade).
-			frameString = [[adium preferenceController] preferenceForKey:key
-																   group:PREF_GROUP_WINDOW_POSITIONS];
-		}
-
-		if (frameString) {
-			//
-			[[self window] setFrame:[self savedFrameFromString:frameString] display:NO];
+	NSString *frameString = [self savedFrameString];
+	if (frameString) {
+		NSRect savedFrame = [self savedFrameFromString:frameString];
+		if (!NSIsEmptyRect(savedFrame)) {
+			[[self window] setFrame:savedFrame display:NO];
 		}
 	}
 }
+
+/*!
+ * @brief Show the window, possibly in front of other windows if inFront is YES
+ *
+ * Will not show the window in front if the currently-key window controller returns
+ * NO to <code>shouldResignKeyWindowWithoutUserInput</code>. 
+ * @see AIWindowControllerAdditions::shouldResignKeyWindowWithoutUserInput
+ */
+- (void)showWindowInFrontIfAllowed:(BOOL)inFront
+{
+	id currentKeyWindowController = [[NSApp keyWindow] windowController];
+	if (currentKeyWindowController && ![currentKeyWindowController shouldResignKeyWindowWithoutUserInput]) {
+		//Prevent window from showing in front if key window controller disallows it
+		inFront = NO;
+	}
+	if (inFront) {
+		[self showWindow:nil];
+	} else {
+		[[self window] orderWindow:NSWindowBelow relativeTo:[[NSApp mainWindow] windowNumber]];
+	}
+}
+
+
 
 /*!
  * @brief Close the window
@@ -137,15 +245,10 @@
 	NSString	*key = [self adiumFrameAutosaveName];
 
  	if (key) {
-		//Unique key for each number of screens
-		int	numberOfScreens = [[NSScreen screens] count];
-
+		//Unique key for each number and size of screens
 		[[adium preferenceController] setPreference:[self stringWithSavedFrame]
-											 forKey:((numberOfScreens == 1) ? 
-													 key :
-													 [NSString stringWithFormat:@"%@-%i",key,numberOfScreens])
-											  group:PREF_GROUP_WINDOW_POSITIONS];
-		
+											 forKey:[self multiscreenKeyWithAutosaveName:key]
+											  group:PREF_GROUP_WINDOW_POSITIONS];		
 	}
 }
 
@@ -160,7 +263,9 @@
 /*!
  * @brief Auto-saving window frame key
  *
- * This is the string used for saving this window's frame.  It should be unique to this window.
+ * This is the string used for saving this window's frame.  It should be unique to this window. 
+ * Subclasses should override this method.
+ *
  */
 - (NSString *)adiumFrameAutosaveName
 {

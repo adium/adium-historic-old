@@ -14,15 +14,14 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import <Adium/AIAccount.h>
 #import <Adium/AIObject.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIFileTransferControllerProtocol.h>
 
 #define CONTENT_FILE_TRANSFER_TYPE  @"File Transfer Type"
 
-@protocol AIAccount_Files;
-
-@class AIAccount, AIListObject, ESFileTransfer;
+@class AIAccount, AIListObject, ESFileTransfer, ESFileTransferRequestPromptController;
 
 @protocol FileTransferDelegate
 -(void)fileTransfer:(ESFileTransfer *)fileTransfer didSetType:(AIFileTransferType)type;
@@ -41,13 +40,16 @@
     unsigned long long			size;
     unsigned long long			bytesSent;
     AIFileTransferType			type;
-	AIFileTransferStatus			status;
+	AIFileTransferStatus		status;
 	
+	NSString					*uniqueID;
 	id <FileTransferDelegate>   delegate;
+	
+	ESFileTransferRequestPromptController *promptController;
 }
 
 + (id)fileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(AIFileTransferType)t;
-- (id)initWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount type:(AIFileTransferType)t;
++ (ESFileTransfer *)existingFileTransferWithID:(NSString *)fileTransferID;
 
 - (AIListContact *)contact;
 - (AIAccount<AIAccount_Files> *)account;
@@ -86,5 +88,10 @@
 - (void)openFile;
 
 - (NSImage *)iconImage;
+
+- (NSString *)uniqueID;
+
+- (void)setFileTransferRequestPromptController:(ESFileTransferRequestPromptController *)inPromptController;
+- (ESFileTransferRequestPromptController *)fileTransferRequestPromptController;
 
 @end

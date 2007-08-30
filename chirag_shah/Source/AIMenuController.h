@@ -15,11 +15,13 @@
  */
 
 #import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIAdiumProtocol.h>
 
 @class AIListObject, AIChat;
 
 @interface AIMenuController : NSObject <AIMenuController> {
-    IBOutlet	AIAdium		*adium;
+    IBOutlet	NSObject<AIAdium>	*adium;
+	int					menuItemProcessingDelays;
 	
     IBOutlet	id		nilMenuItem;
     IBOutlet	id		menu_Adium_About;
@@ -124,6 +126,8 @@
 	IBOutlet	NSMenuItem	*menuItem_underline;
 	IBOutlet	NSMenuItem	*menuItem_showFonts;
 	IBOutlet	NSMenuItem	*menuItem_showColors;
+	IBOutlet	NSMenuItem	*menuItem_bigger;
+	IBOutlet	NSMenuItem	*menuItem_smaller;
 	IBOutlet	NSMenuItem	*menuItem_copyStyle;
 	IBOutlet	NSMenuItem	*menuItem_pasteStyle;
 	IBOutlet	NSMenuItem	*menuItem_writingDirection;
@@ -131,6 +135,7 @@
 	
 	//Window menu
 	IBOutlet	NSMenuItem	*menuItem_minimize;
+	IBOutlet	NSMenuItem	*menuItem_zoom;
 	IBOutlet	NSMenuItem	*menuItem_bringAllToFront;
 
 	//Help menu

@@ -15,8 +15,8 @@
  */
 
 #import <Adium/AIPlugin.h>
-
-@protocol AIListObjectObserver, AIEventHandler;
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
 
 @interface ESAccountEvents : AIPlugin <AIListObjectObserver, AIEventHandler> {
 	NSTimer *accountConnectionStatusGroupingOnlineTimer;

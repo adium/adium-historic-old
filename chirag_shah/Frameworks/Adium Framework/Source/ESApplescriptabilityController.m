@@ -49,9 +49,7 @@
 }
 - (NSArray *)contacts
 {
-	return ([[adium contactController] allContactsInGroup:nil
-												subgroups:YES
-												onAccount:nil]);
+	return ([[adium contactController] allContacts]);
 }
 - (NSArray *)chats
 {
@@ -151,16 +149,16 @@
 
 	if (contact) {
 		//Open the chat and set it as active
-		chat = [[adium chatController] openChatWithContact:contact];
+		chat = [[adium chatController] openChatWithContact:contact onPreferredAccount:YES];
 		[[adium interfaceController] setActiveChat:chat];
 	}
-	
+
 	return chat;
 }
 
 #pragma mark Running applescripts
 
-/*
+/*!
  * @brief Run an AppleScript, optionally calling a function with arguments, and notifying a target/selector with its output when it is done.
  */
 - (void)runApplescriptAtPath:(NSString *)path function:(NSString *)function arguments:(NSArray *)arguments notifyingTarget:(id)target selector:(SEL)selector userInfo:(id)userInfo

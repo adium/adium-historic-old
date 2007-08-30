@@ -15,8 +15,8 @@
  */
 
 #import <Adium/AIObject.h>
-
-@protocol AIEventHandler, AIChatObserver;
+#import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
 
 @interface AdiumMessageEvents : AIObject <AIEventHandler, AIChatObserver> {
 

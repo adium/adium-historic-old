@@ -14,22 +14,22 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "NEHGrowlPlugin.h"
+#import "CBGrowlAlertDetailPane.h"
 #import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIContactAlertsControllerProtocol.h>
-#import <Adium/AIContactAlertsControllerProtocol.h>
-#import "NEHGrowlPlugin.h"
-#import "CBGrowlAlertDetailPane.h"
-#import <AIUtilities/AIApplicationAdditions.h>
-#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentObject.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIServiceIcons.h>
+#import <Adium/ESFileTransfer.h>
+#import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Growl-WithInstaller/Growl.h>
 
 //#define GROWL_DEBUG 1
@@ -46,6 +46,10 @@
 #define GROWL_TEXT_SIZE 11
 
 #define GROWL_EVENT_ALERT_IDENTIFIER		@"Growl"
+
+#define KEY_FILE_TRANSFER_ID	@"fileTransferUniqueID"
+#define KEY_CHAT_ID				@"uniqueChatID"
+#define KEY_LIST_OBJECT_ID		@"internalObjectID"
 
 //#define GROWL_0_8
 
@@ -71,7 +75,7 @@
 {
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(adiumFinishedLaunching:)
-									   name:Adium_CompletedApplicationLoad
+									   name:AIApplicationDidFinishLoadingNotification
 									 object:nil];
 }
 
@@ -96,7 +100,7 @@
 			   afterDelay:0.00001];
 
 	[[adium notificationCenter] removeObserver:self
-										  name:Adium_CompletedApplicationLoad
+										  name:AIApplicationDidFinishLoadingNotification
 										object:nil];
 }
 
@@ -166,15 +170,15 @@
  * @param eventID The ID of the event (e.g. new message, contact went away, etc)
  * @param userInfo Any additional information
  */
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
+- (BOOL)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
-	NSString			*title, *description;
-	NSDictionary		*clickContext = nil;
-	NSData				*iconData = nil;
-	AIChat				*chat = nil;
-	BOOL				isMessageEvent = [[adium contactAlertsController] isMessageEvent:eventID];
+	NSString				*title, *description;
+	NSMutableDictionary		*clickContext = [NSMutableDictionary dictionary];
+	NSData					*iconData = nil;
+	AIChat					*chat = nil;
+	BOOL					isMessageEvent = [[adium contactAlertsController] isMessageEvent:eventID];
 
-	//For a message event, listObject should become whomever sent the message
+	//For a message event, listObject should become whoever sent the message
 	if (isMessageEvent &&
 		[userInfo respondsToSelector:@selector(objectForKey:)]) {
 		AIContentObject	*contentObject = [userInfo objectForKey:@"AIContentObject"];
@@ -183,6 +187,9 @@
 
 		if (source) listObject = source;
 	}
+
+	[clickContext setObject:eventID
+					 forKey:@"eventID"];
 
 	if (listObject) {
 		if ([listObject isKindOfClass:[AIListContact class]]) {
@@ -202,27 +209,28 @@
 		}
 		
 		if (chat) {
-			clickContext = [NSDictionary dictionaryWithObjectsAndKeys:
-				[chat uniqueChatID], @"uniqueChatID",
-				eventID, @"eventID",
-				nil];
+			[clickContext setObject:[chat uniqueChatID]
+							 forKey:KEY_CHAT_ID];
 			
 		} else {
-			clickContext = [NSDictionary dictionaryWithObjectsAndKeys:
-				[listObject internalObjectID], @"internalObjectID",
-				eventID, @"eventID",
-				nil];
+			if ([userInfo isKindOfClass:[ESFileTransfer class]] &&
+				[eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
+				[clickContext setObject:[(ESFileTransfer *)userInfo uniqueID]
+								 forKey:KEY_FILE_TRANSFER_ID];
+
+			} else {
+				[clickContext setObject:[listObject internalObjectID]
+								 forKey:KEY_LIST_OBJECT_ID];
+			}
 		}
 
 	} else {
 		if (chat) {
 			title = [chat name];
 
-			clickContext = [NSDictionary dictionaryWithObjectsAndKeys:
-				[chat uniqueChatID], @"uniqueChatID",
-				eventID, @"eventID",
-				nil];
-			
+			[clickContext setObject:[chat uniqueChatID]
+							 forKey:KEY_CHAT_ID];
+
 			//If we have no listObject or we have a name, we are a group chat and
 			//should use the account's service icon
 			iconData = [[AIServiceIcons serviceIconForObject:[chat account]
@@ -258,6 +266,8 @@
 								   priority:0
 								   isSticky:[[details objectForKey:KEY_GROWL_ALERT_STICKY] boolValue]
 							   clickContext:clickContext];
+
+	return YES;
 }
 
 /*!
@@ -362,18 +372,19 @@
 	AIListObject	*listObject;
 	AIChat			*chat = nil;
 		
-	if ((internalObjectID = [clickContext objectForKey:@"internalObjectID"])) {
-		
+	if ((internalObjectID = [clickContext objectForKey:KEY_LIST_OBJECT_ID])) {
 		if ((listObject = [[adium contactController] existingListObjectWithUniqueID:internalObjectID]) &&
 			([listObject isKindOfClass:[AIListContact class]])) {
 			
 			//First look for an existing chat to avoid changing anything
 			if (!(chat = [[adium chatController] existingChatWithContact:(AIListContact *)listObject])) {
 				//If we don't find one, create one
-				chat = [[adium chatController] openChatWithContact:(AIListContact *)listObject];
+				chat = [[adium chatController] openChatWithContact:(AIListContact *)listObject
+												onPreferredAccount:YES];
 			}
 		}
-	} else if ((uniqueChatID = [clickContext objectForKey:@"uniqueChatID"])) {
+
+	} else if ((uniqueChatID = [clickContext objectForKey:KEY_CHAT_ID])) {
 		chat = [[adium chatController] existingChatWithUniqueChatID:uniqueChatID];
 		
 		//If we didn't find a chat, it may have closed since the notification was posted.
@@ -383,17 +394,24 @@
 			([listObject isKindOfClass:[AIListContact class]])) {
 		
 			//If the uniqueChatID led us to an existing contact, create a chat with it
-			chat = [[adium chatController] openChatWithContact:(AIListContact *)listObject];
+			chat = [[adium chatController] openChatWithContact:(AIListContact *)listObject
+											onPreferredAccount:YES];
 		}	
+	}
+
+	NSString *fileTransferID;
+	if ((fileTransferID = [clickContext objectForKey:KEY_FILE_TRANSFER_ID])) {
+		//If a file transfer notification is clicked, reveal the file
+		[[ESFileTransfer existingFileTransferWithID:fileTransferID] reveal];
 	}
 
 	if (chat) {
 		//Make the chat active
 		[[adium interfaceController] setActiveChat:chat];
-		
-		//And make Adium active (needed if, for example, our notification was clicked with another app active)
-		[NSApp activateIgnoringOtherApps:YES];
 	}
+
+	//Make Adium active (needed if, for example, our notification was clicked with another app active)
+	[NSApp activateIgnoringOtherApps:YES];	
 }
 
 /*!

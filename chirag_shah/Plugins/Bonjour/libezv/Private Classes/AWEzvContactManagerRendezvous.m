@@ -6,7 +6,7 @@
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
- * Copyright (C) 2004-2005 Andrew Wellington.
+ * Copyright (C) 2004-2007 Andrew Wellington.
  * All rights reserved.
  * 
  * Redistribution and use in source and binary forms, with or without
@@ -106,6 +106,11 @@ void av_resolve_reply (struct sockaddr	*interface,
 
 @implementation AWEzvContactManager (Rendezvous)
 #pragma mark Announcing Functions
+- (NSArray *)currentHostAddresses
+{
+	return [[[NSHost currentHost] addresses] retain];
+}
+
 - (void) login {
     /* used for Mach messaging version */
     CFRunLoopSourceRef	rls;
@@ -116,11 +121,11 @@ void av_resolve_reply (struct sockaddr	*interface,
     mach_port_t		mach_port;
     
     /* used for any version */
-    NSHost		*currentHost;
+    NSArray			*currentHostAddresses;
     NSMutableString	*instanceName;
     NSString		*avInstanceName;
-    NSEnumerator        *enumerator;
-    NSRange             range;
+    NSEnumerator	*enumerator;
+    NSRange			range;
     
     regCount = 0;
     
@@ -136,8 +141,16 @@ void av_resolve_reply (struct sockaddr	*interface,
     [self setStatus:[client status] withMessage:nil];
     
     /* calculate instance name */
-    currentHost = [NSHost currentHost];
-    enumerator = [[currentHost addresses] objectEnumerator];
+	@try {
+		//NSHost is not threadsafe; call it only from the main thread
+		currentHostAddresses = [self mainPerformSelector:@selector(currentHostAddresses)
+											 returnValue:YES];		
+	} @catch(NSException *e) {
+		currentHostAddresses = nil;
+		NSLog(@"Could not obtain current host addresses...");
+	}
+
+    enumerator = [currentHostAddresses objectEnumerator];
     while ((instanceName = [enumerator nextObject])) {
 		/* skip 127.0.0.1 */
         if ([instanceName isEqualToString:@"127.0.0.1"])
@@ -148,6 +161,8 @@ void av_resolve_reply (struct sockaddr	*interface,
             continue;
         break;
     }
+    
+    [currentHostAddresses release];
     
     if (instanceName == nil) {
 		[[client client] reportError:@"No available IPv4 interfaces" ofLevel:AWEzvError];
@@ -210,8 +225,8 @@ void av_resolve_reply (struct sockaddr	*interface,
 		computerName = CFUUIDCreateString(NULL, uuid);
 		CFRelease(uuid);		
 	}
-    avInstanceName = [NSString stringWithFormat:@"%@@%@", consoleUser, (computerName ? computerName : @"")];
-	CFRelease(consoleUser);
+    avInstanceName = [NSString stringWithFormat:@"%@@%@", (consoleUser ? consoleUser : @""), (computerName ? computerName : @"")];
+	if (consoleUser) CFRelease(consoleUser);
 	if (computerName) CFRelease(computerName);
     myavname = [avInstanceName retain];
     
@@ -650,6 +665,19 @@ NSData *decode_dns(char* buffer, unsigned int len )
 			     ofLevel:AWEzvError];
 	[self disconnect];
     }
+}
+
+/* stop looking for new rendezvous clients */
+- (void)stopBrowsing
+{
+	if (browseRef) {
+		DNSServiceDiscoveryDeallocate(browseRef);
+		browseRef = nil;
+	}
+	if (avBrowseRef) {
+		DNSServiceDiscoveryDeallocate(avBrowseRef);
+		avBrowseRef = nil;
+	}
 }
 
 /* handle a message from our browser */

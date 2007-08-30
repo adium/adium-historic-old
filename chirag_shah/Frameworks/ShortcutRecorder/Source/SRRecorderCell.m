@@ -10,9 +10,6 @@
 //      David Dauer
 //      Jesper
 //      Jamie Kirkpatrick
-//
-//  Revisions:
-//      2006-03-12 Created.
 
 #import "SRRecorderCell.h"
 #import "SRRecorderControl.h"
@@ -23,6 +20,9 @@
 @interface SRRecorderCell (Private)
 - (void)_privateInit;
 - (void)_createGradient;
+- (void)_startRecording;
+- (void)_endRecording;
+
 - (NSString *)_defaultsKeyForAutosaveName:(NSString *)name;
 - (void)_saveKeyCombo;
 - (void)_loadKeyCombo;
@@ -91,6 +91,8 @@
 		requiredFlags = [[aDecoder decodeObject] unsignedIntValue];
 	}
 	
+	allowedFlags |= NSFunctionKeyMask;
+
 	[self _loadKeyCombo];
 
 	return self;
@@ -174,7 +176,7 @@
 		}
 		
 		// Draw snapback image
-		NSImage *snapBackArrow = SRImage(@"Snapback");	
+		NSImage *snapBackArrow = SRImage(@"SRSnapback");	
 		[snapBackArrow dissolveToPoint:[self _snapbackRectForFrame: cellFrame].origin fraction:1.0];
 
 		// Because of the gradient and snapback image, the white rounded rect will be smaller
@@ -198,7 +200,7 @@
 		// If key combination is set and valid, draw remove image
 		if (![self _isEmpty] && [self isEnabled])
 		{
-			NSString *removeImageName = [NSString stringWithFormat: @"RemoveShortcut%@", (mouseInsideTrackingArea ? (mouseDown ? @"Pressed" : @"Rollover") : (mouseDown ? @"Rollover" : @""))];
+			NSString *removeImageName = [NSString stringWithFormat: @"SRRemoveShortcut%@", (mouseInsideTrackingArea ? (mouseDown ? @"Pressed" : @"Rollover") : (mouseDown ? @"Rollover" : @""))];
 			NSImage *removeImage = SRImage(removeImageName);
 			[removeImage dissolveToPoint:[self _removeButtonRectForFrame: cellFrame].origin fraction:1.0];
 		}
@@ -240,6 +242,12 @@
 		{
 			// Display currently pressed modifier keys
 			displayString = SRStringForCocoaModifierFlags( recordingFlags );
+			
+			// Fall back on 'Type shortcut' if we don't have modifier flags to display; this will happen for the fn key depressed
+			if (![displayString length])
+			{
+				displayString = SRLoc(@"Type shortcut");
+			}
 		}
 	}
 	else
@@ -265,6 +273,16 @@
 
 	// Finally draw it
 	[displayString drawInRect:textRect withAttributes:attributes];
+    
+    // draw a focus ring...?
+    if ( [self showsFirstResponder] && (!isRecording) )
+    {
+        [NSGraphicsContext saveGraphicsState];
+        NSSetFocusRingStyle(NSFocusRingOnly);
+        [[NSBezierPath bezierPathWithSRCRoundRectInRect:cellFrame //NSInsetRect(cellFrame,2,2)
+                                                 radius:NSHeight(cellFrame)/2.0] fill];
+        [NSGraphicsContext restoreGraphicsState];
+    }
 }
 
 #pragma mark *** Mouse Tracking ***
@@ -376,7 +394,7 @@
 					if (isRecording)
 					{
 						// Mouse was over snapback, just redraw
-						isRecording = NO;
+                        [self _endRecording];
 					}
 					else
 					{
@@ -388,10 +406,7 @@
 				{
 					if ([self isEnabled]) 
 					{
-						// Jump into recording mode if mouse was inside the control but not over any image
-						isRecording = YES;
-						// Reset recording flags and determine which are required
-						recordingFlags = [self _filteredCocoaFlags: ShortcutRecorderEmptyFlags];
+                        [self _startRecording];
 					}
 					/* maybe beep if not editable?
 					 else
@@ -431,9 +446,19 @@
 
 #pragma mark *** Responder Control ***
 
+- (BOOL) becomeFirstResponder;
+{
+    // reset tracking rects and redisplay
+    [self resetTrackingRects];
+    [[self controlView] display];
+    
+    return YES;
+}
+
 - (BOOL)resignFirstResponder;
 {
-    isRecording = NO;
+    [self _endRecording];
+    
     [self resetTrackingRects];
     [[self controlView] display];
     return YES;
@@ -447,6 +472,13 @@
 	NSNumber *keyCodeNumber = [NSNumber numberWithUnsignedShort: [theEvent keyCode]];
 	BOOL snapback = [cancelCharacterSet containsObject: keyCodeNumber];
 	BOOL validModifiers = [self _validModifierFlags: (snapback) ? [theEvent modifierFlags] : flags]; // Snapback key shouldn't interfer with required flags!
+    
+    // special case for the space key when we arent recording...
+    if (!isRecording && [[theEvent characters] isEqualToString:@" "])
+    {
+        [self _startRecording];
+        return YES;
+    }
 	
 	// Do something as long as we're in recording mode and a modifier key or cancel key is pressed
 	if (isRecording && (validModifiers || snapback))
@@ -498,12 +530,23 @@
 		
 		// reset values and redisplay
 		recordingFlags = ShortcutRecorderEmptyFlags;
-		isRecording = NO;
+        
+        [self _endRecording];
 		
 		[self resetTrackingRects];
 		[[self controlView] display];
 
 		return YES;
+	}
+	else
+	{
+		//Start recording when the spacebar is pressed while the control is first responder
+		if (([[[self controlView] window] firstResponder] == [self controlView]) &&
+			([[theEvent characters] length] && [[theEvent characters] characterAtIndex:0] == 32) &&
+			([self isEnabled]))
+		{
+			[self _startRecording];
+		}
 	}
 	
 	return NO;
@@ -680,6 +723,28 @@
 	[[self controlView] display];
 }
 
+- (void)_startRecording;
+{
+    // Jump into recording mode if mouse was inside the control but not over any image
+    isRecording = YES;
+    
+    // Reset recording flags and determine which are required
+    recordingFlags = [self _filteredCocoaFlags: ShortcutRecorderEmptyFlags];
+    
+    // invalidate the focus ring rect...
+    NSView *controlView = [self controlView];
+    [controlView setKeyboardFocusRingNeedsDisplayInRect:[controlView bounds]];
+}
+
+- (void)_endRecording;
+{
+    isRecording = NO;
+
+    // invalidate the focus ring rect...
+    NSView *controlView = [self controlView];
+    [controlView setKeyboardFocusRingNeedsDisplayInRect:[controlView bounds]];
+}
+
 #pragma mark *** Autosave ***
 
 - (NSString *)_defaultsKeyForAutosaveName:(NSString *)name
@@ -697,7 +762,7 @@
 		
 		NSDictionary *defaultsValue = [NSDictionary dictionaryWithObjectsAndKeys:
 			[NSNumber numberWithShort: keyCombo.code], @"keyCode",
-			[NSNumber numberWithInt: keyCombo.flags], @"modifierFlags",
+			[NSNumber numberWithUnsignedInt: keyCombo.flags], @"modifierFlags",
 			nil];
 		
 		[values setValue:defaultsValue forKey:[self _defaultsKeyForAutosaveName: defaultsKey]];
@@ -734,7 +799,7 @@
 	if ([self _isEmpty] || ![self isEnabled]) return NSZeroRect;
 	
 	NSRect removeButtonRect;
-	NSImage *removeImage = SRImage(@"RemoveShortcut");
+	NSImage *removeImage = SRImage(@"SRRemoveShortcut");
 	
 	removeButtonRect.origin = NSMakePoint(NSMaxX(cellFrame) - [removeImage size].width - 4, (NSMaxY(cellFrame) - [removeImage size].height)/2);
 	removeButtonRect.size = [removeImage size];
@@ -747,7 +812,7 @@
 	if (!isRecording) return NSZeroRect;
 
 	NSRect snapbackRect;
-	NSImage *snapbackImage = SRImage(@"Snapback");
+	NSImage *snapbackImage = SRImage(@"SRSnapback");
 	
 	snapbackRect.origin = NSMakePoint(NSMaxX(cellFrame) - [snapbackImage size].width - 2, (NSMaxY(cellFrame) - [snapbackImage size].height)/2 + 1);
 	snapbackRect.size = [snapbackImage size];
@@ -763,24 +828,27 @@
 	unsigned int a = allowedFlags;
 	unsigned int m = requiredFlags;
 
-	if (m & NSCommandKeyMask) filteredFlags += NSCommandKeyMask;
-	else if ((flags & NSCommandKeyMask) && (a & NSCommandKeyMask)) filteredFlags += NSCommandKeyMask;
+	if (m & NSCommandKeyMask) filteredFlags |= NSCommandKeyMask;
+	else if ((flags & NSCommandKeyMask) && (a & NSCommandKeyMask)) filteredFlags |= NSCommandKeyMask;
 	
-	if (m & NSAlternateKeyMask) filteredFlags += NSAlternateKeyMask;
-	else if ((flags & NSAlternateKeyMask) && (a & NSAlternateKeyMask)) filteredFlags += NSAlternateKeyMask;
+	if (m & NSAlternateKeyMask) filteredFlags |= NSAlternateKeyMask;
+	else if ((flags & NSAlternateKeyMask) && (a & NSAlternateKeyMask)) filteredFlags |= NSAlternateKeyMask;
 	
-	if ((m & NSControlKeyMask)) filteredFlags += NSControlKeyMask;
-	else if ((flags & NSControlKeyMask) && (a & NSControlKeyMask)) filteredFlags += NSControlKeyMask;
+	if ((m & NSControlKeyMask)) filteredFlags |= NSControlKeyMask;
+	else if ((flags & NSControlKeyMask) && (a & NSControlKeyMask)) filteredFlags |= NSControlKeyMask;
 	
-	if ((m & NSShiftKeyMask)) filteredFlags += NSShiftKeyMask;
-	else if ((flags & NSShiftKeyMask) && (a & NSShiftKeyMask)) filteredFlags += NSShiftKeyMask;
+	if ((m & NSShiftKeyMask)) filteredFlags |= NSShiftKeyMask;
+	else if ((flags & NSShiftKeyMask) && (a & NSShiftKeyMask)) filteredFlags |= NSShiftKeyMask;
+	
+	if ((m & NSFunctionKeyMask)) filteredFlags |= NSFunctionKeyMask;
+	else if ((flags & NSFunctionKeyMask) && (a & NSFunctionKeyMask)) filteredFlags |= NSFunctionKeyMask;
 	
 	return filteredFlags;
 }
 
 - (BOOL)_validModifierFlags:(unsigned int)flags
 {
-	return ((flags & NSCommandKeyMask) || (flags & NSAlternateKeyMask) || (flags & NSControlKeyMask) || (flags & NSShiftKeyMask)) ? YES : NO;	
+	return ((flags & NSCommandKeyMask) || (flags & NSAlternateKeyMask) || (flags & NSControlKeyMask) || (flags & NSShiftKeyMask) || (flags & NSFunctionKeyMask)) ? YES : NO;	
 }
 
 #pragma mark -
@@ -790,10 +858,13 @@
 	unsigned int carbonFlags = ShortcutRecorderEmptyFlags;
 	unsigned filteredFlags = [self _filteredCocoaFlags: cocoaFlags];
 	
-	if (filteredFlags & NSCommandKeyMask) carbonFlags += cmdKey;
-	if (filteredFlags & NSAlternateKeyMask) carbonFlags += optionKey;
-	if (filteredFlags & NSControlKeyMask) carbonFlags += controlKey;
-	if (filteredFlags & NSShiftKeyMask) carbonFlags += shiftKey;
+	if (filteredFlags & NSCommandKeyMask) carbonFlags |= cmdKey;
+	if (filteredFlags & NSAlternateKeyMask) carbonFlags |= optionKey;
+	if (filteredFlags & NSControlKeyMask) carbonFlags |= controlKey;
+	if (filteredFlags & NSShiftKeyMask) carbonFlags |= shiftKey;
+	
+	// I couldn't find out the equivalent constant in Carbon, but apparently it must use the same one as Cocoa. -AK
+	if (filteredFlags & NSFunctionKeyMask) carbonFlags |= NSFunctionKeyMask;
 	
 	return carbonFlags;
 }

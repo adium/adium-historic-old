@@ -3,6 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on 12/4/05.
+//  Copyright 2006 The Adium Team. All rights reserved.
 //
 
 #import "SetupWizardBackgroundView.h"
@@ -36,7 +37,7 @@
 	[self setNeedsDisplay:YES];
 }
 
-/*
+/*!
  * @brief Draw our background image
  *
  * The image is drawn faded behind our content view and solid elsewhere.
@@ -45,13 +46,11 @@
  * so you take into account the existing clip rect.
  */
 - (void)drawRect:(NSRect)rect {
-	NSRect		 imageDrawingRect = NSInsetRect([self bounds], 20, 0);
+	NSRect		 imageDrawingRect = NSInsetRect([self bounds], 3, 0);
 
 	if (backgroundImage && NSIntersectsRect(imageDrawingRect, rect)) {
 		NSSize		 imageSize = [backgroundImage size];
 		NSBezierPath *path;
-
-		imageDrawingRect.size.height -= 30;
 
 		//Clip to our content view and draw faded if we're supposed to draw in that area
 		path = [NSBezierPath bezierPathWithRect:transparentRect];

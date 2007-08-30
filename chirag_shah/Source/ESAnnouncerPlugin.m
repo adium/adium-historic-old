@@ -120,12 +120,12 @@
  * @param eventID The eventID which triggered this action
  * @param userInfo Additional information associated with the event; userInfo's type will vary with the actionID.
  */
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
+- (BOOL)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
 	NSString			*textToSpeak = nil;
 
 	//Do nothing if sounds are muted for this object
-	if ([listObject soundsAreMuted]) return;
+	if ([listObject soundsAreMuted]) return NO;
 
 	if ([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]) {
 		NSMutableString	*userText = [[[details objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK] mutableCopy] autorelease];
@@ -294,6 +294,8 @@
 									 pitch:(pitchNumber ? [pitchNumber floatValue] : 0.0)
 									  rate:(rateNumber ? [rateNumber floatValue] : 0.0)];
 	}
+	
+	return (textToSpeak != nil);
 }
 
 /*!

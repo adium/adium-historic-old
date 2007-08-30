@@ -27,6 +27,7 @@
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIStringFormatter.h>
 #import <AIUtilities/AITextFieldAdditions.h>
+#import <AIUtilities/AIStringUtilities.h>
 
 #define KEY_DISABLE_TYPING_NOTIFICATIONS		@"Disable Typing Notifications"
 
@@ -43,6 +44,13 @@
  * types
  */
 @implementation AIAccountViewController
+
++ (void)initialize
+{
+	if (self == [AIAccountViewController class]) {
+		[self exposeBinding:@"account"];
+	}
+}
 
 /*!
  * @brief Create a new account view controller
@@ -63,7 +71,8 @@
     if ((self = [super init]))
 	{
 		account = nil;
-		
+		changedPrefDict = [[NSMutableDictionary alloc] init];
+
 		//Load custom views for our subclass (If our subclass specifies a nib name)
 		if ([self nibName]) {
 			[NSBundle loadNibNamed:[self nibName] owner:self];
@@ -74,7 +83,7 @@
 		if (!view_profile) [ourBundle loadNibFile:@"AccountProfile" externalNameTable:nameTable withZone:nil];
 		if (!view_options) [ourBundle loadNibFile:@"AccountOptions" externalNameTable:nameTable withZone:nil];
 		if (!view_privacy) [ourBundle loadNibFile:@"AccountPrivacy" externalNameTable:nameTable withZone:nil];
-		
+
 		[self localizeStrings];
 	}
 
@@ -89,6 +98,7 @@
 	[view_setup release];
 	[view_profile release];
 	[view_options release];
+	[changedPrefDict release];
 
     [[adium notificationCenter] removeObserver:self];
     
@@ -180,11 +190,15 @@
 	if (account != inAccount) {
 		AIService *service;
 		
+		[self willChangeValueForKey:@"account"];
 		account = inAccount;
+		[self didChangeValueForKey:@"account"];
+		
 		service = [account service];
 
 		//UID Label
-		[textField_accountUIDLabel setStringValue:[[service userNameLabel] stringByAppendingString:@":"]];
+		//XXX: shouldn't this be just AILocalizedString? It searches the class's bundle first. Search for other uses of AILocalizedStringFromTableInBundle to find more of these.
+		[textField_accountUIDLabel setStringValue:[[service userNameLabel] stringByAppendingString:AILocalizedStringFromTableInBundle(@":", nil, [NSBundle bundleForClass:[AIAccountViewController class]], "Colon which will be appended after a label such as 'User Name', before an input field")]];
 
 		//UID
 		NSString	*formattedUID = [account formattedUID];
@@ -193,7 +207,7 @@
 			[AIStringFormatter stringFormatterAllowingCharacters:[service allowedCharactersForAccountName]
 														  length:[service allowedLengthForAccountName]
 												   caseSensitive:[service caseSensitive]
-													errorMessage:AILocalizedString(@"The characters you're entering are not valid for an account name on this service.", nil)]];
+													errorMessage:AILocalizedStringFromTableInBundle(@"The characters you're entering are not valid for an account name on this service.", nil, [NSBundle bundleForClass:[AIAccountViewController class]], nil)]];
 		[[textField_accountUID cell] setPlaceholderString:[service UIDPlaceholder]];
 
 		//Can't change the UID while the account is online
@@ -232,6 +246,14 @@
 		//Encryption
 		[popUp_encryption compatibleSelectItemWithTag:[[account preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
 																		   group:GROUP_ENCRYPTION] intValue]];
+		
+		[[adium notificationCenter] removeObserver:self
+											  name:AIAccountUsernameAndPasswordRegisteredNotification
+											object:nil];
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(usernameAndPasswordRegistered:)
+										   name:AIAccountUsernameAndPasswordRegisteredNotification
+										 object:inAccount];
 	}
 }
 
@@ -295,6 +317,10 @@
 	[account setPreference:[NSNumber numberWithInt:[[popUp_encryption selectedItem] tag]]
 					forKey:KEY_ENCRYPTED_CHAT_PREFERENCE
 					 group:GROUP_ENCRYPTION];
+	
+	//Set all preferences in the changedPrefDict
+	[account setPreferences:changedPrefDict
+					inGroup:GROUP_ACCOUNT_STATUS];
 }
 
 /*!
@@ -309,16 +335,73 @@
 	//Empty
 }
 
+/*!
+ * @brief Dictionary mapping Adium preference keys to exposed binding keys
+ *
+ * The objects of the dictionary should be Adium preference keys
+ * The keys of the dictionary should be exposed binding keys
+ *
+ * Subclasses must include the contents of super's dictionary in their return value.
+ *
+ * The contents of this dictionary will be used to automatically retrieve and save account-specific preferences
+ * in the GROUP_ACCOUNT_STATUS group to/from controls bound to the owner's keypath as keyed by the dictionary.
+ */
+- (NSDictionary *)keyToKeyDict
+{
+	return [NSDictionary dictionary];
+}
+
+- (void)setValue:(id)value forKey:(NSString *)key
+{
+	NSString *prefKey = [[self keyToKeyDict] objectForKey:key];
+	if (prefKey) {
+		//If this is a key for which we have an Adium preferences mapping, set the value for saving in saveConfiguration
+		[self willChangeValueForKey:key];
+		[changedPrefDict setValue:value forKey:prefKey];
+		[self didChangeValueForKey:key];
+
+	} else {
+		[super setValue:value forKey:key];
+	}
+}
+
+- (id)valueForKey:(NSString *)key
+{
+	NSString *prefKey = [[self keyToKeyDict] objectForKey:key];
+	if (prefKey) {
+		//If this is a key for which we have an Adium preferences mapping, retrieve the current value
+		id value = [changedPrefDict objectForKey:prefKey];
+		if (!value) value = [account preferenceForKey:prefKey group:GROUP_ACCOUNT_STATUS];
+		return value;
+	} else {
+		return [super valueForKey:key];
+	}
+}
+
+#pragma mark Registration
+- (void)usernameAndPasswordRegistered:(NSNotification*)notification
+{
+	[[textField_accountUID window] makeFirstResponder:nil];
+
+	id username = [[notification userInfo] objectForKey:@"username"];
+	id password = [[notification userInfo] objectForKey:@"password"];
+
+	if (username != [NSNull null])
+		[textField_accountUID setStringValue:username];
+	if (password != [NSNull null])
+		[textField_password setStringValue:password];
+}
+
 #pragma mark Localization
 - (void)localizeStrings
 {
-	[label_password setLocalizedString:AILocalizedString(@"Password:", "Label for the password field in the account preferences")];
-	[label_typing setLocalizedString:AILocalizedString(@"Typing:", "Label beside the 'let others know when you are typing' checkbox in the account preferences")];
-	[checkBox_sendTyping setLocalizedString:AILocalizedString(@"Let others know when you are typing", "Text of the typing preference checkbox in the account preferneces")];
-	[label_encryption setLocalizedString:AILocalizedString(@"Encryption:", "Label besides the encryption preference menu")];
-	
-	//Already present in the main bundle from the Contact Info window
-	[label_alias setLocalizedString:AILocalizedStringFromTable(@"Alias:", nil, nil)];
+	[label_password setLocalizedString:AILocalizedStringFromTableInBundle(@"Password:", nil, [NSBundle bundleForClass:[AIAccountViewController class]], "Label for the password field in the account preferences")];
+	[label_typing setLocalizedString:AILocalizedStringFromTableInBundle(@"Typing:", nil, [NSBundle bundleForClass:[AIAccountViewController class]], "Label beside the 'let others know when you are typing' checkbox in the account preferences")];
+	[checkBox_sendTyping setLocalizedString:AILocalizedStringFromTableInBundle(@"Let others know when you are typing", nil, [NSBundle bundleForClass:[AIAccountViewController class]], "Text of the typing preference checkbox in the account preferneces")];
+	[label_encryption setLocalizedString:AILocalizedStringFromTableInBundle(@"Encryption:", nil, [NSBundle bundleForClass:[AIAccountViewController class]], "Label besides the encryption preference menu")];
+	[label_alias setLocalizedString:AILocalizedStringFromTableInBundle(@"Alias:", nil, [NSBundle bundleForClass:[AIAccountViewController class]], nil)];
+	[label_port setLocalizedString:AILocalizedStringFromTableInBundle(@"Port:", nil, [NSBundle bundleForClass:[AIAccountViewController class]], "Label for the port field in the account preferences")];
+	[label_server setLocalizedString:AILocalizedStringFromTableInBundle(@"Login Server:", nil, [NSBundle bundleForClass:[AIAccountViewController class]], "Label for the login server field in the account preferences")];
 }
 
 @end

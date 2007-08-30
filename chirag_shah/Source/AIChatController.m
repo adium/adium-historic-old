@@ -71,7 +71,7 @@
 	
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(adiumWillTerminate:)
-									   name:Adium_WillTerminate
+									   name:AIAppWillTerminateNotification
 									 object:nil];
 
 	//Ignore menu item for contacts in group chats
@@ -229,14 +229,23 @@
  * @brief Opens a chat for communication with the contact, creating if necessary.
  *
  * The interface controller will then be asked to open the UI for the new chat.
+ *
+ * @param inContact The AIListContact on which to open a chat. If an AIMetaContact, an appropriate contained contact will be selected.
+ * @param onPreferredAccount If YES, Adium will determine the account on which the chat should be opened. If NO, [inContact account] will be used. Value is treated as YES for AIMetaContacts by the action of -[AIChatController chatWithContact:].
  */
-- (AIChat *)openChatWithContact:(AIListContact *)inContact
+- (AIChat *)openChatWithContact:(AIListContact *)inContact onPreferredAccount:(BOOL)onPreferredAccount
 {
-	AIChat	*chat = [self chatWithContact:inContact];
+	AIChat	*chat;
 
+	if (onPreferredAccount) {
+		inContact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
+															   forListContact:inContact];
+	}
+
+	chat = [self chatWithContact:inContact];
 	if (chat) [[adium interfaceController] openChat:chat]; 
 
-	return chat;	
+	return chat;
 }
 
 /*!
@@ -246,19 +255,24 @@
  * If a chat with this contact already exists, it is returned.
  * If a chat with a contact within the same metaContact at this contact exists, it is switched to this contact
  * and then returned.
+ *
+ * The passed contact, if an AIListContact, will be used exactly -- that is, [inContact account] is the account on which the chat will be opened.
+ * If the passed contact is an AIMetaContact, an appropriate contact/account pair will be automatically selected by this method.
+ *
+ * @param inContact The contact with which to open a chat. See description above.
  */
 - (AIChat *)chatWithContact:(AIListContact *)inContact
 {
 	NSEnumerator	*enumerator;
 	AIChat			*chat = nil;
 	AIListContact	*targetContact = inContact;
-		
+
 	/*
 	 If we're dealing with a meta contact, open a chat with the preferred contact for this meta contact
 	 It's a good idea for the caller to pick the preferred contact for us, since they know the content type
 	 being sent and more information - but we'll do it here as well just to be safe.
 	 */
-	if ([inContact isKindOfClass:[AIMetaContact class]]) {
+	if ([inContact containsMultipleContacts]) {
 		targetContact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
 																   forListContact:inContact];
 		
@@ -273,7 +287,14 @@
 	}
 	
 	//If we can't get a contact, we're not going to be able to get a chat... return nil
-	if (!targetContact) return nil;
+	if (!targetContact) {
+		AILog(@"Warning: -[AIChatController chatWithContact:%@] got a nil targetContact.",inContact);
+		NSLog(@"Warning: -[AIChatController chatWithContact:%@] got a nil targetContact.",inContact);
+		return nil;
+	}
+	
+	//XXX Temporary.. make sure that the fixes early in adium-1.1svn are right.
+	NSAssert1(![targetContact isMemberOfClass:[AIMetaContact class]], @"Should not get this far in chatWithContact: with an AIMetaContact (%@)!",targetContact);
 	
 	//Search for an existing chat we can switch instead of replacing
 	enumerator = [openChats objectEnumerator];
@@ -299,12 +320,11 @@
 	}
 
 	if (!chat) {
-		AIAccount	*account;
-		account = [targetContact account];
-		
+		AIAccount	*account = [targetContact account];
+
 		//Create a new chat
 		chat = [AIChat chatForAccount:account];
-		[chat addParticipatingListObject:targetContact];
+		[chat addObject:targetContact];
 		[openChats addObject:chat];
 		AILog(@"chatWithContact: Added <<%@>> [%@]",chat,openChats);
 
@@ -354,20 +374,32 @@
  * @param account The account on which to create the group chat
  * @param chatCreationInfo A dictionary of information which may be used by the account when joining the chat serverside
  */
-- (AIChat *)chatWithName:(NSString *)inName onAccount:(AIAccount *)account chatCreationInfo:(NSDictionary *)chatCreationInfo
+- (AIChat *)chatWithName:(NSString *)name identifier:(id)identifier onAccount:(AIAccount *)account chatCreationInfo:(NSDictionary *)chatCreationInfo
 {
 	AIChat			*chat = nil;
-	
-	//Search for an existing chat we can use instead of creating a new one
-	chat = [self existingChatWithName:inName onAccount:account];
-	AILog(@"chatWithName %@ existing --> %@",inName,chat);
+
+	if (identifier) {
+		chat = [self existingChatWithIdentifier:identifier onAccount:account];
+		if (!chat) {
+			//See if a chat was made with this name but which doesn't yet have an identifier. If so, take ownership!
+			chat = [self existingChatWithName:name onAccount:account];
+			if (chat && ![chat identifier]) [chat setIdentifier:identifier];
+		}
+
+	} else {
+		//If the caller doesn't care about the identifier, do a search based on name to avoid creating a new chat incorrectly
+		chat = [self existingChatWithName:name onAccount:account];
+	}
+
+	AILog(@"chatWithName %@ identifier %@ existing --> %@", name, identifier, chat);
 	if (!chat) {
 		//Create a new chat
 		chat = [AIChat chatForAccount:account];
-		[chat setName:inName];
+		[chat setName:name];
+		[chat setIdentifier:identifier];
 		[chat setIsGroupChat:YES];
 		[openChats addObject:chat];
-		AILog(@"chatWithName:%@ onAccount:%@ added <<%@>> [%@]",inName,account,chat,openChats);
+		AILog(@"chatWithName:%@ identifier:%@ onAccount:%@ added <<%@>> [%@]",name,identifier,account,chat,openChats);
 		
 		if (chatCreationInfo) [chat setStatusObject:chatCreationInfo
 											 forKey:@"ChatCreationInfo"
@@ -384,8 +416,30 @@
 			chat = nil;
 		}
 		
-		AILog(@"chatWithName %@ created --> %@",inName,chat);
+		AILog(@"chatWithName %@ created --> %@",name,chat);
 	}
+	return chat;
+}
+
+/*!
+* @brief Find an existing group chat
+ *
+ * @result The group AIChat, or nil if no such chat exists
+ */
+- (AIChat *)existingChatWithName:(NSString *)name onAccount:(AIAccount *)account
+{
+	NSEnumerator	*enumerator;
+	AIChat			*chat = nil;
+	
+	enumerator = [openChats objectEnumerator];
+	
+	while ((chat = [enumerator nextObject])) {
+		if (([chat account] == account) &&
+			([[chat name] isEqualToString:name])) {
+			break;
+		}
+	}	
+	
 	return chat;
 }
 
@@ -394,7 +448,7 @@
  *
  * @result The group AIChat, or nil if no such chat exists
  */
-- (AIChat *)existingChatWithName:(NSString *)inName onAccount:(AIAccount *)account
+- (AIChat *)existingChatWithIdentifier:(id)identifier onAccount:(AIAccount *)account
 {
 	NSEnumerator	*enumerator;
 	AIChat			*chat = nil;
@@ -403,7 +457,7 @@
 
 	while ((chat = [enumerator nextObject])) {
 		if (([chat account] == account) &&
-		   ([[chat name] isEqualToString:inName])) {
+		   ([[chat identifier] isEqual:identifier])) {
 			break;
 		}
 	}	
@@ -459,9 +513,6 @@
 	
 	//Send out the Chat_WillClose notification
 	[[adium notificationCenter] postNotificationName:Chat_WillClose object:inChat userInfo:nil];
-
-	//Remove the chat's content (it retains the chat, so this must be done separately)
-	[inChat removeAllContent];
 
 	//Remove the chat
 	if (shouldRemove) {
@@ -590,7 +641,7 @@
 			}
 		}
 	}
-	
+
     return foundChats;
 }
 
@@ -660,7 +711,7 @@
 	
 	while ((chat = [chatEnumerator nextObject])) {
 		if ([chat isGroupChat] &&
-			[[chat participatingListObjects] containsObjectIdenticalTo:listContact]) {
+			[chat containsObject:listContact]) {
 			
 			contactIsInGroupChat = YES;
 			break;

@@ -18,17 +18,30 @@
 
 #import "AIContentController.h"
 
+#import "AdiumTyping.h"
+#import "AdiumFormatting.h"
+#import "AdiumMessageEvents.h"
+#import "AdiumContentFiltering.h"
+
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
-#import "AdiumTyping.h"
-#import "AdiumFormatting.h"
-#import "AdiumMessageEvents.h"
-#import "AdiumContentFiltering.h"
 #import <Adium/AIContactAlertsControllerProtocol.h>
-#import "ESFileTransferController.h"
+#import <Adium/AIFileTransferControllerProtocol.h>
+#import <Adium/AIAccount.h>
+#import <Adium/AIChat.h>
+#import <Adium/AIContentMessage.h>
+#import <Adium/AIContentObject.h>
+#import <Adium/AIContentEvent.h>
+#import <Adium/AIHTMLDecoder.h>
+#import <Adium/AIListContact.h>
+#import <Adium/AIListGroup.h>
+#import <Adium/AIListObject.h>
+#import <Adium/AIMetaContact.h>
+#import <Adium/ESFileTransfer.h>
+#import <Adium/AITextAttachmentExtension.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
@@ -39,19 +52,6 @@
 #import <AIUtilities/AITextAttachmentAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIImageAdditions.h>
-#import <Adium/AIAccount.h>
-#import <Adium/AIChat.h>
-#import <Adium/AIContentMessage.h>
-#import <Adium/AIContentObject.h>
-#import "AIContentEvent.h"
-#import "AIHTMLDecoder.h"
-#import <Adium/AIListContact.h>
-#import <Adium/AIListGroup.h>
-#import <Adium/AIListObject.h>
-#import <Adium/AIMetaContact.h>
-#import "ESFileWrapperExtension.h"
-#import "NDRunLoopMessenger.h"
-#import "AITextAttachmentExtension.h"
 
 @interface AIContentController (PRIVATE)
 - (void)finishReceiveContentObject:(AIContentObject *)inObject;
@@ -61,7 +61,7 @@
 - (BOOL)processAndSendContentObject:(AIContentObject *)inContentObject;
 @end
 
-/*
+/*!
  * @class AIContentController
  * @brief Controller to manage incoming and outgoing content and chats.
  *
@@ -73,7 +73,7 @@
  */
 @implementation AIContentController
 
-/*
+/*!
  * @brief Initialize the controller
  */
 - (id)init
@@ -96,7 +96,7 @@
 	[adiumMessageEvents controllerDidLoad];
 }
 
-/*
+/*!
  * @brief Close the controller
  */
 - (void)controllerWillClose
@@ -104,7 +104,7 @@
 
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -118,7 +118,7 @@
     [super dealloc];
 }
 
-/*
+/*!
  * @brief Set the encryptor
  *
  * NB: We must _always_ have an encryptor.
@@ -133,7 +133,7 @@
 
 
 #pragma mark Typing
-/*
+/*!
  * @brief User is currently changing the content in a chat
  *
  * This should  be called by a text entry control like an NSTextView.
@@ -253,7 +253,7 @@
 }
 
 //Sending step 1: Entry point for any method in Adium which sends content
-/*
+/*!
  * @brief Send a content object
  *
  * Sending step 1: Public method to send a content object.
@@ -488,9 +488,6 @@
 
 		userInfo = [NSDictionary dictionaryWithObjectsAndKeys:chat, @"AIChat", inObject, @"AIContentObject", nil];
 
-		//XXX - old school message history support: Add this content to the chat
-		[chat addContentObject:inObject];
-
 		//Notify: Content Object Added
 		[[adium notificationCenter] postNotificationName:Content_ContentObjectAdded
 												  object:chat
@@ -530,7 +527,7 @@
 
 #pragma mark -
 
-/*
+/*!
  * @brief Send any NSTextAttachments embedded in inContentMessage's message
  *
  * This method will remove such attachments after requesting their files being sent.
@@ -540,6 +537,14 @@
  */
 - (void)handleFileSendsForContentMessage:(AIContentMessage *)inContentMessage
 {
+	if (![inContentMessage destination] ||
+		![[inContentMessage destination] isKindOfClass:[AIListContact class]] ||
+		![[[inContentMessage chat] account] availableForSendingContentType:CONTENT_FILE_TRANSFER_TYPE
+																 toContact:(AIListContact *)[inContentMessage destination]]) {
+		//Simply return if we can't do anything about file sends for this message.
+		return;
+	}
+	
 	NSMutableAttributedString	*newAttributedString = nil;
 	NSAttributedString			*attributedMessage = [inContentMessage message];
 	unsigned					length = [attributedMessage length];
@@ -580,7 +585,7 @@
 					NSString	*path;
 					if ([textAttachment isKindOfClass:[AITextAttachmentExtension class]]) {
 						path = [(AITextAttachmentExtension *)textAttachment path];
-						
+						AILog(@"Sending text attachment %@ which has path %@",textAttachment,path);
 					} else {
 						//Write out the file so we can send it if we have a standard NSTextAttachment to send
 						NSFileWrapper *fileWrapper = [textAttachment fileWrapper];
@@ -589,12 +594,27 @@
 						NSString *tmpDir = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSProcessInfo processInfo] globallyUniqueString]];
 						NSString *filename = [fileWrapper preferredFilename];
 						if (!filename) filename = [NSString randomStringOfLength:5];
-
+						
 						path = [tmpDir stringByAppendingPathComponent:filename];
-					}
 
-					[[adium fileTransferController] sendFile:path
-											   toListContact:(AIListContact *)[inContentMessage destination]];
+						if ([fileWrapper writeToFile:tmpDir atomically:YES updateFilenames:YES]) {
+							AILog(@"Wrote out the file to %@ for sending",path);
+						} else {
+							NSLog(@"Failed to write out the file to %@ for sending", path);
+							AILog(@"Failed to write out the file to %@ for sending", path);
+
+							//The transfer is not going to happen so clear path
+							path = nil;
+						}
+					}
+					if (path) {
+						[[adium fileTransferController] sendFile:path
+												   toListContact:(AIListContact *)[inContentMessage destination]];
+					} else {
+						NSLog(@"-[AIContentController handleFileSendsForContentMessage:]: Warning: Failed to have a path for sending an inline file!");
+						AILog(@"-[AIContentController handleFileSendsForContentMessage:]: Warning: Failed to have a path for sending an inline file for content message %@!",
+							  inContentMessage);
+					}
 
 					//Now remove the attachment
 					[newAttributedString removeAttribute:NSAttachmentAttributeName range:NSMakeRange(searchRange.location,
@@ -619,8 +639,15 @@
 	}
 }
 
-
-
+/*!
+ * @brief Handle sending a content object
+ *
+ * This method must return YES for the content to be displayed
+ *
+ * For a typing content object, the account is informed.
+ * For a message content object, the account is told to send the message; any imbedded file transfers will also be sent.
+ * For a file transfer content object, YES is always returned, as this is actually just for display purposes.
+ */
 - (BOOL)processAndSendContentObject:(AIContentObject *)inContentObject
 {
 	AIAccount	*sendingAccount = (AIAccount *)[inContentObject source];
@@ -628,7 +655,7 @@
 
 	if ([inContentObject isKindOfClass:[AIContentTyping class]]) {
 		/* Typing */
-		success = [sendingAccount sendTypingObject:(AIContentTyping *)inContentObject];
+		[sendingAccount sendTypingObject:(AIContentTyping *)inContentObject];
 	
 	} else if ([inContentObject isKindOfClass:[AIContentMessage class]]) {
 		/* Sending a message */
@@ -657,15 +684,20 @@
 			}
 		}
 
+	} else if ([inContentObject isKindOfClass:[ESFileTransfer class]]) {
+		success = YES;
+
 	} else {
 		/* Eating a tasty sandwich */
 		success = NO;
 	}
 
+	if (!success) AILog(@"Failed to send %@ (sendingAccount %@)",inContentObject,sendingAccount);
+
 	return success;
 }
 
-/*
+/*!
  * @brief Send a message as-specified without going through any filters or notifications
  */
 - (void)sendRawMessage:(NSString *)inString toContact:(AIListContact *)inContact
@@ -689,7 +721,7 @@
 	[account sendMessageObject:contentMessage];
 }
 
-/*
+/*!
  * @brief Given an incoming message, decrypt it.  It is likely not yet ready for display when returned, as it may still include HTML.
  */
 - (NSString *)decryptedIncomingMessage:(NSString *)inString fromContact:(AIListContact *)inListContact onAccount:(AIAccount *)inAccount
@@ -697,7 +729,7 @@
 	return [adiumEncryptor decryptIncomingMessage:inString fromContact:inListContact onAccount:inAccount];
 }
 
-/*
+/*!
  * @brief Given an incoming message, decrypt it if necessary then convert it to an NSAttributedString, processing HTML if possible
  */
 - (NSAttributedString *)decodedIncomingMessage:(NSString *)inString fromContact:(AIListContact *)inListContact onAccount:(AIAccount *)inAccount
@@ -719,7 +751,7 @@
 }
 
 #pragma mark -
-/*
+/*!
  * @brief Is the passed chat currently receiving content?
  *
  * Note: This may be irrelevent if threaded filtering is removed.
@@ -746,15 +778,14 @@
 	NSAttributedString	*attributedMessage;
 	
 	//Create our content object
-	attributedMessage = [[NSAttributedString alloc] initWithString:message
-														attributes:[self defaultFormattingAttributes]];
+	attributedMessage = [[AIHTMLDecoder decoder] decodeHTML:message withDefaultAttributes:[self defaultFormattingAttributes]];
+
 	content = [AIContentEvent statusInChat:inChat
 								withSource:[inChat listObject]
 							   destination:[inChat account]
 									  date:[NSDate date]
 								   message:attributedMessage
 								  withType:type];
-	[attributedMessage release];
 
 	//Add the object
 	[self receiveContentObject:content];

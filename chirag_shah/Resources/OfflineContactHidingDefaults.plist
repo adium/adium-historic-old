@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>Show Offline Contacts</key>
-	<true/>
+	<false/>
 	<key>Use Offline Group</key>
 	<false/>
 	<key>Hide Contact List Groups</key>

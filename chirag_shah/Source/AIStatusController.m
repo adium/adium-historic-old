@@ -40,8 +40,6 @@
 
 #define BUILT_IN_STATE_ARRAY		@"BuiltInStatusStates"
 
-#define TOP_STATUS_STATE_ID			@"TopStatusID"
-
 @interface AIStatusController (PRIVATE)
 - (NSArray *)builtInStateArray;
 
@@ -287,9 +285,6 @@ static 	NSMutableSet			*temporaryStateArray = nil;
  */
 - (NSArray *)_menuItemsForStatusesOfType:(AIStatusType)type forServiceCodeUniqueID:(NSString *)inServiceCodeUniqueID withTarget:(id)target
 {
-	//Quick efficiency: If asked for the offline status type, just return nil as we have no offline statuses at present.
-	if (type == AIOfflineStatusType) return nil;
-
 	NSMutableArray  *menuItems = [[NSMutableArray alloc] init];
 	NSMutableSet	*alreadyAddedTitles = [NSMutableSet set];
 
@@ -539,7 +534,8 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	if ([inObject isKindOfClass:[AIAccount class]]) {
 		if ([inModifiedKeys containsObject:@"Online"] ||
 			[inModifiedKeys containsObject:@"IdleSince"] ||
-			[inModifiedKeys containsObject:@"StatusState"]) {
+			[inModifiedKeys containsObject:@"StatusState"] ||
+			[inModifiedKeys containsObject:KEY_ENABLED]) {
 			
 			[self _resetActiveStatusState];
 		}
@@ -649,6 +645,13 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 			[temporaryStateArray removeObject:aStatusState];
 			shouldRebuild = YES;
 		}
+	}
+
+	//Add to our temporary status array if it's not in our state array
+	if (![[self flatStatusSet] containsObject:statusState] &&
+		![temporaryStateArray containsObject:statusState]) {
+		[temporaryStateArray addObject:statusState];
+		shouldRebuild = YES;
 	}
 
 	if (shouldRebuild) {
@@ -789,7 +792,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	return _sortedFullStateArray;
 }
 
-/*
+/*!
  * @brief Generate and return an array of AIStatus objects which are all known saved, temporary, and built-in statuses
  */
 - (NSArray *)flatStatusSet
@@ -825,7 +828,8 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 		AIAccount			*account;
 		AIStatus			*statusState;
 		unsigned			 highestCount = 0;
-		BOOL				 accountsAreOnline = [[adium accountController] oneOrMoreConnectedOrConnectingAccounts];
+		//This was "oneOrMoreConnectedOrConnectingAccounts" before... was there a good reason?
+		BOOL				 accountsAreOnline = [[adium accountController] oneOrMoreConnectedAccounts];
 
 		if (accountsAreOnline) {
 			AIStatus	*bestStatusState = nil;
@@ -848,7 +852,8 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 				}
 			}
 
-			_activeStatusState = [bestStatusState retain];
+			_activeStatusState = (bestStatusState ? [bestStatusState retain]: [offlineStatusState retain]);
+
 		} else {
 			_activeStatusState = [offlineStatusState retain];
 		}
@@ -857,7 +862,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	return _activeStatusState;
 }
 
-/*
+/*!
  * @brief Find the 'active' AIStatusType
  *
  * The active type is the one used by the largest number of accounts.  In case of a tie, the order of the AIStatusType
@@ -903,7 +908,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 /*!
  * @brief All active status states
  *
- * A status state is active if any online account is currently in that state.
+ * A status state is active if any enabled account is currently in that state.
  *
  * The return value of this method is cached.
  *
@@ -917,8 +922,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 		AIAccount			*account;
 
 		while ((account = [enumerator nextObject])) {
-			if ([account enabled] &&
-				([account online] || [account integerStatusObjectForKey:@"Connecting"])) {
+			if ([account enabled]) {
 				[_allActiveStatusStates addObject:[account statusState]];
 			}
 		}
@@ -994,26 +998,6 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	}
 	
 	return activeUnvailableStatuses;
-}
-
-
-/*!
- * @brief Next available unique status ID
- */
-- (NSNumber *)nextUniqueStatusID
-{
-	NSNumber	*nextUniqueStatusID;
-
-	//Retain and autorelease since we'll be replacing this value (and therefore releasing it) via the preferenceController.
-	nextUniqueStatusID = [[[[adium preferenceController] preferenceForKey:TOP_STATUS_STATE_ID
-																  group:PREF_GROUP_SAVED_STATUS] retain] autorelease];
-	if (!nextUniqueStatusID) nextUniqueStatusID = [NSNumber numberWithInt:1];
-
-	[[adium preferenceController] setPreference:[NSNumber numberWithInt:([nextUniqueStatusID intValue] + 1)]
-										 forKey:TOP_STATUS_STATE_ID
-										  group:PREF_GROUP_SAVED_STATUS];
-
-	return nextUniqueStatusID;
 }
 
 /*!
@@ -1128,7 +1112,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 - (BOOL)removeIfNecessaryTemporaryStatusState:(AIStatus *)originalState
 {
 	BOOL didRemove = NO;
-	
+
 	/* If the original (old) status state is in our temporary array and is not being used in more than 1 account, 
 	* then we should remove it.
 	*/
@@ -1143,7 +1127,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 				if (++count > 1) break;
 			}
 		}
-		
+
 		if (count <= 1) {
 			[temporaryStateArray removeObject:originalState];
 			didRemove = YES;
@@ -1153,6 +1137,21 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	return didRemove;
 }
 
+- (void)saveStatusAsLastUsed:(AIStatus *)statusState
+{
+	NSMutableDictionary *lastStatusStates;
+	
+	lastStatusStates = [[[adium preferenceController] preferenceForKey:@"LastStatusStates"
+																 group:PREF_GROUP_STATUS_PREFERENCES] mutableCopy];
+	if (!lastStatusStates) lastStatusStates = [NSMutableDictionary dictionary];
+	
+	[lastStatusStates setObject:[NSKeyedArchiver archivedDataWithRootObject:statusState]
+						 forKey:[NSNumber numberWithInt:[statusState statusType]]];
+	
+	[[adium preferenceController] setPreference:lastStatusStates
+										 forKey:@"LastStatusStates"
+										  group:PREF_GROUP_STATUS_PREFERENCES];	
+}
 //Status state menu support ---------------------------------------------------------------------------------------------------
 #pragma mark Status state menu support
 /*!
@@ -1165,6 +1164,10 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 {
 	BOOL shouldRebuild = NO;
 	
+	if ([newState mutabilityType] != AITemporaryEditableStatusState) {
+		[[adium statusController] addStatusState:newState];
+	}
+
 	if (account) {
 		shouldRebuild = [self removeIfNecessaryTemporaryStatusState:originalState];
 
@@ -1176,34 +1179,19 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 			[account setEnabled:YES];
 		}		
 
+		//Add to our temporary status array if it's not in our state array
+		if (shouldRebuild || (![[self flatStatusSet] containsObject:newState])) {
+			[temporaryStateArray addObject:newState];
+			
+			[self notifyOfChangedStatusArray];
+		}
+		
 	} else {
-		//Set the state for all accounts.  This will clear out the temporaryStatusArray as necessary.
+		//Set the state for all accounts.  This will clear out the temporaryStatusArray as necessary and update its contents.
 		[self setActiveStatusState:newState];
 	}
 
-	if ([newState mutabilityType] != AITemporaryEditableStatusState) {
-		[[adium statusController] addStatusState:newState];
-	}
-
-	NSMutableDictionary *lastStatusStates;
-
-	lastStatusStates = [[[adium preferenceController] preferenceForKey:@"LastStatusStates"
-																 group:PREF_GROUP_STATUS_PREFERENCES] mutableCopy];
-	if (!lastStatusStates) lastStatusStates = [NSMutableDictionary dictionary];
-
-	[lastStatusStates setObject:[NSKeyedArchiver archivedDataWithRootObject:newState]
-						 forKey:[NSNumber numberWithInt:[newState statusType]]];
-
-	[[adium preferenceController] setPreference:lastStatusStates
-										 forKey:@"LastStatusStates"
-										  group:PREF_GROUP_STATUS_PREFERENCES];
-
-	//Add to our temporary status array if it's not in our state array
-	if (shouldRebuild || (![[self flatStatusSet] containsObject:newState])) {
-		[temporaryStateArray addObject:newState];
-
-		[self notifyOfChangedStatusArray];
-	}
+	[self saveStatusAsLastUsed:newState];
 }
 
 
