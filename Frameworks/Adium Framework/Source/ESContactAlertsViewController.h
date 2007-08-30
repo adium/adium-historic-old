@@ -29,7 +29,8 @@
 	NSMutableArray				*contactAlertsActions;
 	
 	NSMutableDictionary			*expandStateDict;
-	
+	NSMutableDictionary			*requiredHeightDict;
+
 	IBOutlet	NSButton					*button_add;
     IBOutlet	NSButton					*button_delete;
     IBOutlet	NSButton					*button_edit;

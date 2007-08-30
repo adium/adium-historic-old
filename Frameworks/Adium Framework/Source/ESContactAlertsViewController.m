@@ -32,7 +32,7 @@
 #import <AIUtilities/AIAttributedStringAdditions.h>
 
 #define VERTICAL_ROW_PADDING	6
-#define MINIMUM_ROW_HEIGHT		30
+#define MINIMUM_ROW_HEIGHT		30.0f
 
 #define	EVENT_COLUMN_INDEX		1
 
@@ -41,6 +41,9 @@
 - (void)configureEventSummaryOutlineView;
 - (void)reloadSummaryData;
 - (void)deleteContactActionsInArray:(NSArray *)contactEventArray;
+
+- (void)calculateAllHeights;
+- (void)calculateHeightForItem:(id)item;
 @end
 
 int alertAlphabeticalSort(id objectA, id objectB, void *context);
@@ -52,6 +55,7 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 - (void)awakeFromNib
 {
 	[expandStateDict release]; expandStateDict = [[NSMutableDictionary alloc] init];
+	[requiredHeightDict release]; requiredHeightDict = [[NSMutableDictionary alloc] init];
 
 	//Configure Table view
 	[self configureEventSummaryOutlineView];
@@ -96,10 +100,14 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 
 - (void)dealloc
 {
+	[outlineView_summary setDelegate:nil];
+	[outlineView_summary setDataSource:nil];
+
 	[contactAlertsEvents release]; contactAlertsEvents = nil;
 	[contactAlertsActions release]; contactAlertsActions = nil;
 	[listObject release]; listObject = nil;
 	[expandStateDict release]; expandStateDict = nil;
+	[requiredHeightDict release]; requiredHeightDict = nil;
 
 	// I don't think this needs to be released, because the contact-specific
 	// alerts view does not appear to get released. But anyway...
@@ -225,17 +233,20 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 				[self deleteContactActionsInArray:contactEvents];
 			}
 
+			//Recalculate the height
+			[self calculateHeightForItem:item];
+
 		} else {
 			/* Deleting a single action */
 			[item retain];
-			
+
 			[[adium contactAlertsController] removeAlert:item
 										  fromListObject:listObject];
+
 			if (delegate) {
 				[delegate contactAlertsViewController:self
 										 deletedAlert:item];
 			}
-			
 			[item release];
 			
 			//The deletion changed our selection
@@ -275,6 +286,9 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 									 oldAlert:oldAlert];
 	}
 	
+	//Update all heights, since there's been a change
+	[self calculateAllHeights];
+
 	[oldAlert release];
 }
 
@@ -320,6 +334,79 @@ int actionSort(id objectA, id objectB, void *context)
 	return [(NSString *)[objectA objectForKey:KEY_ACTION_ID] compare:(NSString *)[objectB objectForKey:KEY_ACTION_ID]];
 }
 
+
+- (void)calculateHeightForItem:(id)item
+{
+	NSEnumerator	*enumerator;
+	NSTableColumn	*tableColumn;
+	BOOL			eventIsExtended = [self outlineView:outlineView_summary
+							extendToEdgeColumn:EVENT_COLUMN_INDEX
+										 ofRow:[outlineView_summary rowForItem:item]];
+	BOOL			enforceMinimumHeight = ([(NSArray *)item count] > 0);
+	float			necessaryHeight = 0;
+
+	//This pool seems to fix a crash. I don't know why.
+	enumerator = [[outlineView_summary tableColumns] objectEnumerator];
+	while ((tableColumn = [enumerator nextObject])) {
+		NSString	*identifier = [tableColumn identifier];
+		
+		if ([identifier isEqualToString:@"event"] || ([identifier isEqualToString:@"action"] && !eventIsExtended)) {
+			/* For the event column, and for the action column if the event is not extended, determine what height is needed */
+			NSCell *dataCell = [tableColumn dataCell];
+			[self outlineView:outlineView_summary willDisplayCell:dataCell forTableColumn:tableColumn item:item];
+			NSString		*objectValue = [self outlineView:outlineView_summary
+							 objectValueForTableColumn:tableColumn
+												byItem:item];
+			
+			float			thisHeight, tableColumnWidth;
+			NSFont			*font = [dataCell font];
+			NSDictionary	*attributes = nil;
+			
+			if (font) {
+				attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+							  font, NSFontAttributeName, nil];
+			}
+			
+			NSAttributedString	*attributedTitle = [[NSAttributedString alloc] initWithString:objectValue
+																				  attributes:attributes];
+			
+			if ([identifier isEqualToString:@"event"] && eventIsExtended) {
+				/* If this is the event column and it is extended, the available width will be from its origin
+				 * to the right edge of the frame. */
+				NSRect	frame = [outlineView_summary frame];
+				NSRect	columnRect = [outlineView_summary rectOfColumn:EVENT_COLUMN_INDEX];
+				
+				tableColumnWidth = frame.size.width - columnRect.origin.x;
+			} else {
+				/* Otherwise, it's the width as normal. */
+				tableColumnWidth = [tableColumn width];
+			}
+			
+			thisHeight = [attributedTitle heightWithWidth:tableColumnWidth];
+			if (thisHeight > necessaryHeight) necessaryHeight = thisHeight;
+			[attributedTitle release];
+		}
+	}
+	
+	necessaryHeight += VERTICAL_ROW_PADDING;	
+	
+	[requiredHeightDict setObject:[NSNumber numberWithFloat:(enforceMinimumHeight ? 
+															 ((necessaryHeight > MINIMUM_ROW_HEIGHT) ? necessaryHeight : MINIMUM_ROW_HEIGHT) :
+															 necessaryHeight)]
+						   forKey:[NSValue valueWithPointer:item]];	
+}
+
+- (void)calculateAllHeights
+{
+	[requiredHeightDict release]; requiredHeightDict = [[NSMutableDictionary alloc] init];
+
+	NSEnumerator *enumerator = [contactAlertsActions objectEnumerator];
+	id item;
+	while ((item = [enumerator nextObject])) {
+		[self calculateHeightForItem:item];
+	}
+}
+
 /*!
  * @brief Reload the information for our summary table, then update it
  */
@@ -337,11 +424,10 @@ int actionSort(id objectA, id objectB, void *context)
 		id item = [outlineView_summary itemAtRow:row];
 
 		if ([contactAlertsActions containsObjectIdenticalTo:item]) {
-			selectedEventID = [contactAlertsEvents objectAtIndex:[contactAlertsActions indexOfObjectIdenticalTo:item]];
-			[[selectedEventID retain] autorelease];
+			selectedEventID = [[contactAlertsEvents objectAtIndex:[contactAlertsActions indexOfObjectIdenticalTo:item]] retain];
 
 		} else {
-			selectedEventID = [[[item objectForKey:KEY_EVENT_ID] retain] autorelease];
+			selectedEventID = [[item objectForKey:KEY_EVENT_ID] retain];
 		}
 	}
 		
@@ -359,7 +445,7 @@ int actionSort(id objectA, id objectB, void *context)
 		[contactAlertsActions addObject:[[contactAlertsDict objectForKey:eventID] sortedArrayUsingFunction:actionSort
 																								   context:NULL]];
 	}
-	
+
 	//Now add events which have no actions at present
 	enumerator = [[[adium contactAlertsController] sortedArrayOfEventIDsFromArray:[[adium contactAlertsController] allEventIDs]] objectEnumerator];
 	while ((eventID = [enumerator nextObject])) {
@@ -370,9 +456,10 @@ int actionSort(id objectA, id objectB, void *context)
 			[contactAlertsActions addObject:[NSArray array]];
 		}
 	}
-	
+
+	[self calculateAllHeights];
 	[outlineView_summary reloadData];
-	
+
 	if (selectedEventID) {
 		int actionsIndex = [contactAlertsEvents indexOfObject:selectedEventID];
 		if (actionsIndex != NSNotFound) {
@@ -383,6 +470,8 @@ int actionSort(id objectA, id objectB, void *context)
 			[outlineView_summary selectRow:rowToSelect
 					  byExtendingSelection:NO];
 		}
+		
+		[selectedEventID release];
 	}
 }
 
@@ -463,9 +552,10 @@ int actionSort(id objectA, id objectB, void *context)
 {
 	[expandStateDict setObject:[NSNumber numberWithBool:state]
 						forKey:[contactAlertsEvents objectAtIndex:[contactAlertsActions indexOfObjectIdenticalTo:item]]];
-	
+
+	[self calculateHeightForItem:item];
 	[outlineView noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:[outlineView rowForItem:item]]];
-	[outlineView display];
+//	[outlineView display];
 }
 
 /*!
@@ -591,7 +681,7 @@ int actionSort(id objectA, id objectB, void *context)
 												 withDetails:[alert objectForKey:KEY_ACTION_DETAILS]];
 		} else if ([identifier isEqualToString:@"action"]) {
 			return @"";
-			
+
 		} else if ([identifier isEqualToString:@"image"]) {
 			return nil;
 		}
@@ -602,69 +692,19 @@ int actionSort(id objectA, id objectB, void *context)
 
 //Each row should be tall enough to fit its event and action descriptions as necessary
 - (float)outlineView:(NSOutlineView *)inOutlineView heightOfRowByItem:(id)item
-{
-	float	necessaryHeight = 0;
-	BOOL	enforceMinimumHeight;
-	
+{	
+	float	necessaryHeight;
+
 	if ([contactAlertsActions containsObjectIdenticalTo:item]) {
-		/* Only need variable height for events, not for individual actions */
-		NSEnumerator	*enumerator;
-		NSTableColumn	*tableColumn;
-		BOOL			eventIsExtended = [self outlineView:inOutlineView
-										 extendToEdgeColumn:EVENT_COLUMN_INDEX
-													  ofRow:[inOutlineView rowForItem:item]];
-		
-		enforceMinimumHeight = ([(NSArray *)item count] > 0);
+		NSNumber *cachedHeight = [requiredHeightDict objectForKey:[NSValue valueWithPointer:item]];
+		necessaryHeight = (cachedHeight ? [cachedHeight floatValue] : MINIMUM_ROW_HEIGHT);
 
-		enumerator = [[inOutlineView tableColumns] objectEnumerator];
-		while ((tableColumn = [enumerator nextObject])) {
-			NSString	*identifier = [tableColumn identifier];
-			
-			if ([identifier isEqualToString:@"event"] || ([identifier isEqualToString:@"action"] && !eventIsExtended)) {
-				/* For the event column, and for the action column if appropriate, determine what height is needed */
-				NSString		*objectValue = [self outlineView:inOutlineView 
-									   objectValueForTableColumn:tableColumn
-														  byItem:item];
-				float			thisHeight, tableColumnWidth;
-				NSFont			*font = [[tableColumn dataCell] font];
-				NSDictionary	*attributes = nil;
-				
-				if (font) {
-					attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-						font, NSFontAttributeName, nil];
-				}
-
-				NSAttributedString	*attributedTitle = [[NSAttributedString alloc] initWithString:objectValue
-																					   attributes:attributes];
-
-				if ([identifier isEqualToString:@"event"] && eventIsExtended) {
-					/* If this is the event column and it is extended, the available width will be from its origin
-					 * to the right edge of the frame. */
-					NSRect	frame = [inOutlineView frame];
-					NSRect	columnRect = [inOutlineView rectOfColumn:EVENT_COLUMN_INDEX];
-					
-					tableColumnWidth = frame.size.width - columnRect.origin.x;
-				} else {
-					/* Otherwise, it's the width as normal. */
-					tableColumnWidth = [tableColumn width];
-				}
-
-				thisHeight = [attributedTitle heightWithWidth:tableColumnWidth];
-				if (thisHeight > necessaryHeight) necessaryHeight = thisHeight;
-				[attributedTitle release];
-			}
-		}
-		
-		necessaryHeight += VERTICAL_ROW_PADDING;
-		
 	} else {
-		 enforceMinimumHeight = YES;
+		//This item isn't an action; use the minimum row height
+		necessaryHeight = MINIMUM_ROW_HEIGHT;
 	}
 
-	//If the event is extended, don't enforce a minimum height
-	return (enforceMinimumHeight ? 
-			((necessaryHeight > MINIMUM_ROW_HEIGHT) ? necessaryHeight : MINIMUM_ROW_HEIGHT) :
-			necessaryHeight);
+	return necessaryHeight;
 }
 
 - (BOOL)outlineView:(NSOutlineView *)inOutlineView extendToEdgeColumn:(int)column ofRow:(int)row
@@ -699,7 +739,7 @@ int actionSort(id objectA, id objectB, void *context)
 			} else {
 				font = [NSFont boldSystemFontOfSize:11];				
 			}
-			
+
 		} else {
 			NSDictionary			*alert = (NSDictionary *)item;
 			NSString				*actionID = [alert objectForKey:KEY_ACTION_ID];
