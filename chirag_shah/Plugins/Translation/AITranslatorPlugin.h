@@ -23,14 +23,12 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Adium/AIPlugin.h>
+#import <Adium/AIContentControllerProtocol.h>
+#import "TranslationEngine.h"
 
 #define TC_MESSAGE_KEY	@"msg"
 #define	TC_FROM_KEY	@"from"
 #define TC_TO_KEY	@"to"
-
-@class TranslationEngine;
-
-@protocol TranslationEngineInterface, AIDelayedContentFilter;
 
 @interface AITranslatorPlugin : AIPlugin <AIDelayedContentFilter>
 {

@@ -16,8 +16,6 @@
 
 #import <Adium/AIPlugin.h>
 
-@protocol AIMiniToolbarItemDelegate;
-
 @interface AIStandardToolbarItemsPlugin : AIPlugin {
 
 }

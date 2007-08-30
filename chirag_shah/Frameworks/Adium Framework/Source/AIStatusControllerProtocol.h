@@ -36,6 +36,8 @@
 #define KEY_STATUS_AUTO_AWAY_STATUS_STATE_ID	@"Auto Away Status State ID"
 #define KEY_STATUS_FUS							@"Fast User Switching Auto Away"
 #define KEY_STATUS_FUS_STATUS_STATE_ID			@"Fast User Switching Status State ID"
+#define KEY_STATUS_SS							@"ScreenSaver Auto Away"
+#define KEY_STATUS_SS_STATUS_STATE_ID			@"ScreenSaver Status State ID"
 #define KEY_STATUS_AUTO_AWAY_INTERVAL			@"Auto Away Interval"
 
 #define KEY_STATUS_SHOW_STATUS_WINDOW				@"Show Status Window"

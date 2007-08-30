@@ -19,6 +19,8 @@
 
 @interface SMContactListShowDetailsPane : AIActionDetailsPane {
 	IBOutlet NSSlider *slider_secondsToShow;
+	IBOutlet NSTextField *label_secondsToShow;
+	IBOutlet NSTextField *label_note;
 }
 
 @end

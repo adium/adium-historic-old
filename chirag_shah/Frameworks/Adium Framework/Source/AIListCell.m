@@ -118,7 +118,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	}
 
 	//Calculate and cache the height of this font
-	labelFontHeight = [NSAttributedString stringHeightForAttributes:[NSDictionary dictionaryWithObject:[self font] forKey:NSFontAttributeName]]; 
+	labelFontHeight = [[[[NSLayoutManager alloc] init] autorelease] defaultLineHeightForFont:[self font]]; 
 }
 - (NSFont *)font{
 	return font;
@@ -260,6 +260,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	}
 }
 
+#warning It's quite possible that we don't need to use this private method.
 //Custom highlighting (This is a private cell method we're overriding that handles selection drawing)
 - (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)inControlView
 {
@@ -429,7 +430,6 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	}
 }
 
-
 #pragma mark Accessibility
 
 -(BOOL)accessibilityIsIgnored {
@@ -477,7 +477,8 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	return value;
 }
 
-- (id)accessibilityFocusedUIElement:(NSPoint)point {
+- (id)accessibilityFocusedUIElement:(NSPoint)point 
+{
 	return NSAccessibilityUnignoredAncestor(self);
 }
 
@@ -497,6 +498,5 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 		[controlView performSelector:@selector(performDefaultActionOnSelectedItem:)];
 	}
 }
-
 
 @end

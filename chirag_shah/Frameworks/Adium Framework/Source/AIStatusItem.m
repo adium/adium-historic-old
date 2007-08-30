@@ -9,6 +9,7 @@
 #import <Adium/AIStatusGroup.h>
 #import <Adium/AIStatusIcons.h>
 #import <Adium/AIStatusControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIStringAdditions.h>
 
 @implementation AIStatusItem
@@ -184,6 +185,27 @@
 #pragma mark Unique status ID
 
 /*!
+ * @brief Next available unique status ID
+ *
+ * Each call to this method will return a new, incremented value.
+ */
+- (NSNumber *)nextUniqueStatusID
+{
+	NSNumber	*nextUniqueStatusID;
+
+	//Retain and autorelease since we'll be replacing this value (and therefore releasing it) via the preferenceController.
+	nextUniqueStatusID = [[[[adium preferenceController] preferenceForKey:@"TopStatusID"
+																	group:PREF_GROUP_SAVED_STATUS] retain] autorelease];
+	if (!nextUniqueStatusID) nextUniqueStatusID = [NSNumber numberWithInt:1];
+
+	[[adium preferenceController] setPreference:[NSNumber numberWithInt:([nextUniqueStatusID intValue] + 1)]
+										 forKey:@"TopStatusID"
+										  group:PREF_GROUP_SAVED_STATUS];
+
+	return nextUniqueStatusID;
+}
+
+/*!
 * @brief Return a unique ID for this status
  *
  * The unique ID will be assigned if necessary.
@@ -192,7 +214,7 @@
 {
 	NSNumber	*uniqueStatusID = [statusDict objectForKey:STATUS_UNIQUE_ID];
 	if (!uniqueStatusID) {
-		uniqueStatusID = [[adium statusController] nextUniqueStatusID];
+		uniqueStatusID = [self nextUniqueStatusID];
 		[self setUniqueStatusID:uniqueStatusID];
 	}
 	

@@ -63,9 +63,6 @@
 	[menuItem release];
 }
 
-/*!
- * @brief Dealloc
- */
 - (void)dealloc
 {
 	[[adium notificationCenter] removeObserver:self];
@@ -74,7 +71,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Returns the default formatting attributes
  *
  * These attributes should be used for new text entry views, messages, etc.
@@ -93,6 +90,7 @@
 		//Build formatting dict
 		_defaultAttributes = [[NSMutableDictionary dictionaryWithObject:font forKey:NSFontAttributeName] retain];
 		if (textColor && ![textColor equalToRGBColor:[NSColor textColor]]) {
+			AILog(@"TextColor is %@; -[NSColor textColor] gives %@",textColor,[NSColor textColor]);
 			[_defaultAttributes setObject:textColor forKey:NSForegroundColorAttributeName];	
 		}	
 		if (backgroundColor && ![backgroundColor equalToRGBColor:[NSColor textBackgroundColor]]) {
@@ -122,12 +120,12 @@
 	}
 }
 
-/*
+/*!
  * @brief Enable/disable our restore default formatting menu item
  *
  * The item should only be enabled if the current responder has typing attributes and those typing attributes are not the default attributes
  */
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	NSResponder *responder = [[NSApp mainWindow] firstResponder];
 

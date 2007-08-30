@@ -130,14 +130,14 @@ enum {
     kWindowExposeIsStickyTag = (1 << 11)
 };
 
-CGSWindow     GetNativeWindowFromWindowRef(WindowRef window);
-CGSConnection CGSGetDefaultConnection(void);
+CGSWindowID     GetNativeWindowFromWindowRef(WindowRef window);
+CGSConnectionID CGSGetDefaultConnection(void);
 
 
 OSStatus GetWindowTags(WindowRef theWindow, WindowTags *theTags)
-{   CGSConnection   cgConnection;
+{   CGSConnectionID   cgConnection;
     SInt32          sysVersion;
-    CGSWindow       cgWindow;
+    CGSWindowID       cgWindow;
     OSStatus        theErr;
 
     // Check the system
@@ -165,9 +165,9 @@ OSStatus GetWindowTags(WindowRef theWindow, WindowTags *theTags)
 
 
 OSStatus ChangeWindowTags(WindowRef theWindow, WindowTags setThese, WindowTags clearThese)
-{   CGSConnection   cgConnection;
+{   CGSConnectionID   cgConnection;
     SInt32          sysVersion;
-    CGSWindow       cgWindow;
+    CGSWindowID       cgWindow;
     OSStatus        theErr;
 
     // Check the system

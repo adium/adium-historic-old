@@ -9,6 +9,11 @@
 
 #import "NSCalendarDate+ISO8601Parsing.h"
 
+#ifndef DEFAULT_TIME_SEPARATOR
+#	define DEFAULT_TIME_SEPARATOR ':'
+#endif
+unichar ISO8601ParserDefaultTimeSeparatorCharacter = DEFAULT_TIME_SEPARATOR;
+
 static unsigned read_segment(const unsigned char *str, const unsigned char **next, unsigned *out_num_digits) {
 	unsigned num_digits = 0U;
 	unsigned value = 0U;
@@ -86,7 +91,7 @@ static double read_double(const unsigned char *str, const unsigned char **next) 
 		}
 		value = int_value;
 
-		if((*str == ',') || (*str == '.')) {
+		if(((*str == ',') || (*str == '.'))) {
 			++str;
 
 			register double multiplier, multiplier_multiplier;
@@ -160,13 +165,22 @@ static BOOL is_leap_year(unsigned year) {
  * //Day only of implied week
  *  -W-d
  */
-+ (NSCalendarDate *)calendarDateWithString:(NSString *)str strictly:(BOOL)strict getRange:(out NSRange *)outRange {
++ (NSCalendarDate *)calendarDateWithString:(NSString *)str strictly:(BOOL)strict timeSeparator:(unichar)timeSep getRange:(out NSRange *)outRange {
+	if (!str || ![str length]) {
+		if (outRange) {
+			outRange->location = NSNotFound;
+			outRange->length = 0U;
+		}		
+
+		return nil;
+	}
+	
 	NSCalendarDate *now = [NSCalendarDate calendarDate];
 	unsigned
 		//Date
-		year,
-		month_or_week,
-		day,
+		year = 0U,
+		month_or_week = 0U,
+		day = 0U,
 		//Time
 		hour = 0U;
 	NSTimeInterval
@@ -182,6 +196,9 @@ static BOOL is_leap_year(unsigned year) {
 		dateOnly
 	} dateSpecification = monthAndDate;
 
+	if(strict) timeSep = ISO8601ParserDefaultTimeSeparatorCharacter;
+	NSAssert(timeSep != '\0', @"Time separator must not be NUL.");
+
 	BOOL isValidDate = ([str length] > 0U);
 	NSTimeZone *timeZone = nil;
 	NSCalendarDate *date = nil;
@@ -189,8 +206,8 @@ static BOOL is_leap_year(unsigned year) {
 	const unsigned char *ch = (const unsigned char *)[str UTF8String];
 
 	NSRange range = { 0U, 0U };
-	const unsigned char *start_of_date;
-	if(strict && isspace(*ch)) {
+	const unsigned char *start_of_date = 0;
+	if (strict && isspace(*ch)) {
 		range.location = NSNotFound;
 		isValidDate = NO;
 	} else {
@@ -208,7 +225,7 @@ static BOOL is_leap_year(unsigned year) {
 		unsigned segment;
 		unsigned num_leading_hyphens = 0U, num_digits = 0U;
 
-		if(*ch == 'T') {
+		if (*ch == 'T') {
 			//There is no date here, only a time. Set the date to now; then we'll parse the time.
 			isValidDate = isdigit(*++ch);
 
@@ -224,7 +241,7 @@ static BOOL is_leap_year(unsigned year) {
 			}
 
 			segment = read_segment(ch, &ch, &num_digits);
-			switch(num_digits) {
+			switch (num_digits) {
 				case 0:
 					if(*ch == 'W') {
 						if((ch[1] == '-') && isdigit(ch[2]) && ((num_leading_hyphens == 1U) || ((num_leading_hyphens == 2U) && !strict))) {
@@ -487,20 +504,33 @@ static BOOL is_leap_year(unsigned year) {
 			}
 		}
 
-		if(isValidDate) {
-			if(isspace(*ch) || (*ch == 'T')) ++ch;
+		if (isValidDate) {
+			if (isspace(*ch) || (*ch == 'T')) ++ch;
 
-			if(isdigit(*ch)) {
+			if (isdigit(*ch)) {
 				hour = read_segment_2digits(ch, &ch);
-				if(*ch == ':') {
+				if(*ch == timeSep) {
 					++ch;
-					minute = read_double(ch, &ch);
-					second = modf(minute, &minute);
-					if(second > DBL_EPSILON)
-						second *= 60.0; //Convert fraction (e.g. .5) into seconds (e.g. 30).
-					else if(*ch == ':') {
-						++ch;
-						second = read_double(ch, &ch);
+					if((timeSep == ',') || (timeSep == '.')) {
+						//We can't do fractional minutes when '.' is the segment separator.
+						//Only allow whole minutes and whole seconds.
+						minute = read_segment_2digits(ch, &ch);
+						if(*ch == timeSep) {
+							++ch;
+							second = read_segment_2digits(ch, &ch);
+						}
+					} else {
+						//Allow a fractional minute.
+						//If we don't get a fraction, look for a seconds segment.
+						//Otherwise, the fraction of a minute is the seconds.
+						minute = read_double(ch, &ch);
+						second = modf(minute, &minute);
+						if(second > DBL_EPSILON)
+							second *= 60.0; //Convert fraction (e.g. .5) into seconds (e.g. 30).
+						else if(*ch == timeSep) {
+							++ch;
+							second = read_double(ch, &ch);
+						}
 					}
 				}
 
@@ -523,7 +553,7 @@ static BOOL is_leap_year(unsigned year) {
 							if(negative) tz_hour = -tz_hour;
 
 							//Optional separator.
-							if(*ch == ':') ++ch;
+							if(*ch == timeSep) ++ch;
 
 							if(isdigit(*ch)) {
 								//Read minute offset.
@@ -542,8 +572,8 @@ static BOOL is_leap_year(unsigned year) {
 			}
 		}
 
-		if(isValidDate) {
-			switch(dateSpecification) {
+		if (isValidDate) {
+			switch (dateSpecification) {
 				case monthAndDate:
 					date = [NSCalendarDate dateWithYear:year
 												  month:month_or_week
@@ -583,7 +613,7 @@ static BOOL is_leap_year(unsigned year) {
 					break;
 			}
 		}
-	} //if(!(strict && isdigit(ch[0])))
+	} //if (!(strict && isdigit(ch[0])))
 
 	if(outRange) {
 		if(isValidDate)
@@ -593,6 +623,7 @@ static BOOL is_leap_year(unsigned year) {
 
 		*outRange = range;
 	}
+
 	return date;
 }
 
@@ -602,9 +633,18 @@ static BOOL is_leap_year(unsigned year) {
 + (NSCalendarDate *)calendarDateWithString:(NSString *)str strictly:(BOOL)strict {
 	return [self calendarDateWithString:str strictly:strict getRange:NULL];
 }
++ (NSCalendarDate *)calendarDateWithString:(NSString *)str strictly:(BOOL)strict getRange:(out NSRange *)outRange {
+	return [self calendarDateWithString:str strictly:strict timeSeparator:ISO8601ParserDefaultTimeSeparatorCharacter getRange:NULL];
+}
 
++ (NSCalendarDate *)calendarDateWithString:(NSString *)str timeSeparator:(unichar)timeSep getRange:(out NSRange *)outRange {
+	return [self calendarDateWithString:str strictly:NO timeSeparator:timeSep getRange:outRange];
+}
++ (NSCalendarDate *)calendarDateWithString:(NSString *)str timeSeparator:(unichar)timeSep {
+	return [self calendarDateWithString:str strictly:NO timeSeparator:timeSep getRange:NULL];
+}
 + (NSCalendarDate *)calendarDateWithString:(NSString *)str getRange:(out NSRange *)outRange {
-	return [self calendarDateWithString:str strictly:NO getRange:outRange];
+	return [self calendarDateWithString:str strictly:NO timeSeparator:ISO8601ParserDefaultTimeSeparatorCharacter getRange:outRange];
 }
 
 @end

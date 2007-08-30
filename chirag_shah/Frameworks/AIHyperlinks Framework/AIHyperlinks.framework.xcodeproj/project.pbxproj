@@ -234,6 +234,7 @@
 					"-seg1addr",
 					0x11000000,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = AIHyperlinks;
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = "-Wall";
@@ -245,6 +246,8 @@
 		349F83A40A4375CF007EA1B1 /* Development-libgaim_oscar */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_ENABLE_SYMBOL_SEPARATION = NO;
 				SYMROOT = ../../build;
 			};
 			name = "Development-libgaim_oscar";
@@ -269,6 +272,7 @@
 					"-seg1addr",
 					0x11000000,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = AIHyperlinks;
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = "-Wall";
@@ -281,6 +285,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = ppc;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_ENABLE_SYMBOL_SEPARATION = NO;
 				GCC_VERSION = 4.0;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
@@ -310,6 +316,7 @@
 					"-seg1addr",
 					0x11000000,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = AIHyperlinks;
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = "-Wall";
@@ -325,6 +332,8 @@
 					ppc,
 					i386,
 				);
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_ENABLE_SYMBOL_SEPARATION = NO;
 				GCC_VERSION = 4.0;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
@@ -356,6 +365,7 @@
 					"-seg1addr",
 					0x11000000,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = AIHyperlinks;
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = "-Wall";
@@ -384,6 +394,7 @@
 					"-seg1addr",
 					0x11000000,
 				);
+				PREBINDING = NO;
 				PRODUCT_NAME = AIHyperlinks;
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = "-Wall";
@@ -395,6 +406,8 @@
 		DA8A8088085549EE00F24BB3 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_ENABLE_SYMBOL_SEPARATION = NO;
 				SYMROOT = ../../build;
 			};
 			name = Development;
@@ -406,6 +419,8 @@
 					ppc,
 					i386,
 				);
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				GCC_ENABLE_SYMBOL_SEPARATION = NO;
 				GCC_VERSION = 4.0;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;

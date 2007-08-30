@@ -14,9 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-@class ESFileTransferProgressRow, ESFileTransfer, AIRolloverButton;
+#import <AIUtilities/AIRolloverButton.h>
 
-@protocol AIRolloverButtonDelegate;
+@class ESFileTransferProgressRow, ESFileTransfer, AIRolloverButton;
 
 @interface ESFileTransferProgressView : NSView <AIRolloverButtonDelegate> {
 	IBOutlet ESFileTransferProgressRow	*owner;
@@ -75,6 +75,7 @@
 				   speedStatus:(NSString *)inTransferSpeedStatus;
 
 - (IBAction)toggleDetails:(id)sender;
+- (void)setShowsDetails:(BOOL)flag;
 
 - (void)setAllowsCancel:(BOOL)flag;
 

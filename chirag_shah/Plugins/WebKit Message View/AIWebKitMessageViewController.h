@@ -15,17 +15,20 @@
  */
 
 #import <Adium/AIObject.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIMetaContact.h>
 
 @class AIWebKitMessageViewPlugin, AIWebkitMessageViewStyle, AIContentObject, ESWebView, DOMDocument;
 @class AIChat, AIContentObject;
-
-@protocol AIMessageViewController;
+@class AIWebKitDelegate;
 
 /*!
  *	@class AIWebKitMessageViewController AIWebKitMessageViewController.h
  *	@brief Main class for the webkit message view. Most of the good stuff happens here
  */
-@interface AIWebKitMessageViewController : AIObject <AIMessageViewController> {
+@interface AIWebKitMessageViewController : AIObject <AIMessageDisplayController> {
+	AIWebKitDelegate			*delegateProxy;
+	
 	id							plugin;
 	ESWebView					*webView;
 	id							preferencesChangedDelegate;
@@ -46,15 +49,13 @@
 	//User icon masking
 	NSImage						*imageMask;
 	NSMutableArray				*objectsWithUserIconsArray;
-	
-	//for inline file transfer requests
-	NSMutableDictionary			*fileTransferRequestControllers;
+	NSMutableDictionary			*objectIconPathDict;
 }
 
 /*!
  *	@brief Create a new message view controller
  */
-+ (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
++ (AIWebKitMessageViewController *)messageDisplayControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
 
 /*!
  *	@brief Print the webview

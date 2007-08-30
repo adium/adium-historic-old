@@ -47,12 +47,6 @@
 - (void)updateAppBundleIcon;
 @end
 
-#ifndef MAC_OS_X_10_4
-@interface NSWorkspace (NewTigerMethod)
-- (BOOL)setIcon:(NSImage *)image forFile:(NSString *)fullPath options:(unsigned)options;
-@end
-#endif
-
 @implementation AIDockController
  
 //init and close
@@ -183,21 +177,9 @@
 	
 	image = [[[availableIconStateDict objectForKey:@"State"] objectForKey:@"Base"] image];
 	if (image) {
-		if ([NSApp isOnTigerOrBetter]) {
-			[[NSWorkspace sharedWorkspace] setIcon:image 
-										   forFile:[[NSBundle mainBundle] bundlePath]
-										   options:0];
-			
-		} else {
-			NSString		*icnsPath = [[NSBundle mainBundle] pathForResource:@"Adium" ofType:@"icns"];
-			IconFamily		*iconFamily;
-	
-			iconFamily = [IconFamily iconFamilyWithThumbnailsOfImage:image
-											 usingImageInterpolation:NSImageInterpolationLow];
-			[iconFamily setAsCustomIconForFile:[[NSBundle mainBundle] bundlePath]];
-			[iconFamily writeToFile:icnsPath];
-
-		}
+		[[NSWorkspace sharedWorkspace] setIcon:image 
+									   forFile:[[NSBundle mainBundle] bundlePath]
+									   options:0];
 		
 		//Finder won't update Adium's icon to match the new one until it is restarted if we don't
 		//tell NSWorkspace to note the change.
@@ -248,7 +230,7 @@
 	return [NSMutableDictionary dictionaryWithObjectsAndKeys:[iconPackDict objectForKey:@"Description"], @"Description", iconStateDict, @"State", nil];
 }
 
-/*
+/*!
  * @brief Get the name and preview steate for a dock icon pack
  *
  * @param outName Reference to an NSString, or NULL if this information is not needed
@@ -396,7 +378,7 @@
     }
 }
 
-/*
+/*!
  * @brief Does the current icon know how to display a given state?
  */
 - (BOOL)currentIconSupportsIconStateNamed:(NSString *)inName
@@ -526,7 +508,7 @@
     return dockScale;
 }
 
-/*
+/*!
  * @brief Return the dock icon image without any auxiliary states
  */
 - (NSImage *)baseApplicationIconImage
@@ -548,7 +530,7 @@
 //Bouncing -------------------------------------------------------------------------------------------------------------
 #pragma mark Bouncing
 
-/*
+/*!
  * @brief Perform a bouncing behavior
  *
  * @result YES if the behavior is ongoing; NO if it isn't (because it is immediately complete or some other, faster continuous behavior is in progress)
@@ -602,7 +584,7 @@
 	return desc;
 }
 
-/*
+/*!
  * @brief Start a delayed, repeated bounce
  *
  * @result YES if we are now bouncing more frequently than before; NO if this call had no effect
@@ -646,7 +628,7 @@
     }
 }
 
-/*
+/*!
  * @brief Bounce continuously via NSApp's NSCriticalRequest
  *
  * We will bounce until we become the active application or our dock icon is clicked

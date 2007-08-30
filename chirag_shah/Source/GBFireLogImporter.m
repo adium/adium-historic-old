@@ -15,15 +15,13 @@
  */
 
 #import "GBFireLogImporter.h"
+#import <Adium/AIAccount.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AILoginControllerProtocol.h>
+#import <Adium/ESTextAndButtonsWindowController.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/NSCalendarDate+ISO8601Unparsing.h>
-#import "AIAccount.h"
-#import <Adium/AIAccountControllerProtocol.h>
-#import "AIAdium.h"
-#import "AIInterfaceController.h"
-#import "AILoginController.h"
-//#import "AILoggerPlugin.h"
-#import "ESTextAndButtonsWindowController.h"
 
 #define PATH_LOGS                       @"/Logs"
 #define XML_MARKER @"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>"
@@ -136,6 +134,12 @@ NSString *quotes[] = {
 		
 		NSString *userAndService = [pathComponents objectAtIndex:[pathComponents count] - 2];
 		NSRange range = [userAndService rangeOfString:@"-" options:NSBackwardsSearch];
+		if (range.location == NSNotFound) {
+			NSLog(@"Warning: [%@ importFireLogs] could not find '-'.", self);
+			//Incorrect directory structure
+			[pool release];
+			continue;			
+		}
 		NSString *user = [userAndService substringToIndex:range.location];
 		NSString *service = [userAndService substringFromIndex:range.location + 1];
 		NSDate *date = [NSDate dateWithNaturalLanguageString:[[pathComponents lastObject] stringByDeletingPathExtension]];
@@ -227,6 +231,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 
 - (BOOL)readFile:(NSString *)inFile toFile:(NSString *)outFile account:(NSString * *)account;
 {
+	AILog(@"%@: readFile:%@ toFile:%@",NSStringFromClass([self class]), inFile, outFile);
+
 	BOOL success = YES;
 	NSData *inputData = [NSData dataWithContentsOfFile:inFile];
 	inputFileString = [[NSString alloc] initWithData:inputData encoding:NSUTF8StringEncoding];
@@ -251,7 +257,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	};
 	parser = CFXMLParserCreateWithDataFromURL(NULL, (CFURLRef)url, kCFXMLParserSkipMetaData | kCFXMLParserSkipWhitespace, kCFXMLNodeCurrentVersion, &callbacks, &context);
 	if (!CFXMLParserParse(parser)) {
-		printf("parse failed\n");
+		NSLog(@"Fire log import: Parse of %@ failed", inFile);
+		AILog(@"Fire log import: Parse of %@ failed", inFile);
 		success = NO;
 	}
 	CFRelease(parser);
@@ -269,6 +276,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	[outputFileHandle release];
 	[eventTranslate release];
 	[sender release];
+	[htmlMessage release];
 	[mySN release];
 	[date release];
 	[encryption release];
@@ -305,6 +313,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 					eventName = nil;
 				[sender release];
 				sender = nil;
+				[htmlMessage release];
+				htmlMessage = nil;
 				state = XML_STATE_EVENT;
 			}
 			else if([name isEqualToString:@"log"])
@@ -319,7 +329,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 						mySN = [[account substringFromIndex:range.location + 1] retain];
 						range = [mySN rangeOfString:@"@"];
 						NSRange revRange = [mySN rangeOfString:@"@" options:NSBackwardsSearch];
-						if(revRange.location != range.location)
+						if ((revRange.location != range.location) && (revRange.location != NSNotFound))
 						{
 							NSString *oldMySN = mySN;
 							mySN = [[mySN substringToIndex:revRange.location] retain];
@@ -383,6 +393,10 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 		case XML_STATE_SENDER:
 		case XML_STATE_MESSAGE:
 		case XML_STATE_EVENT:
+			if([name isEqualToString:@"Message"])
+			{
+				state = XML_STATE_EVENT_ATTRIBUTED_MESSAGE;
+			}
 			if([name isEqualToString:@"message"])
 			{
 				//Mark the location of the message...  same as above
@@ -393,6 +407,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 			{
 				state = XML_STATE_EVENT_NICKNAME;
 			}
+		case XML_STATE_EVENT_ATTRIBUTED_MESSAGE:
 		case XML_STATE_EVENT_MESSAGE:
 		case XML_STATE_EVENT_NICKNAME:
 			break;
@@ -469,6 +484,10 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 		case XML_STATE_EVENT:
 			if([name isEqualToString:@"event"])
 				state = XML_STATE_NONE;
+			break;
+		case XML_STATE_EVENT_ATTRIBUTED_MESSAGE:
+			if([name isEqualToString:@"Message"])
+				state = XML_STATE_EVENT;
 			break;
 		case XML_STATE_EVENT_MESSAGE:
 			if([name isEqualToString:@"message"])
@@ -557,8 +576,15 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 
 						NSString *subStr = nil;
 						if(colonIndex != NSNotFound && [message length] > colonIndex + 2)
+							//Eliminate the "has changed status to: " from the string
 							subStr = [message substringFromIndex:colonIndex + 2];
-						if([subStr length])
+						if(![subStr hasPrefix:@"<span"] && [subStr hasSuffix:@"</span>"])
+							//Eliminate the "</span>" at the end if it doesn't start with "<span"
+							subStr = [subStr substringToIndex:[subStr length] - 7];
+						if([htmlMessage length])
+							//Prefer the attributed message
+							[outMessage appendFormat:@">%@</status>\n", htmlMessage];
+						else if([subStr length])
 							[outMessage appendFormat:@">%@</status>\n", subStr];
 						else
 							[outMessage appendString:@"/>\n"];
@@ -635,9 +661,17 @@ typedef struct{
 		case XML_STATE_SENDER:
 			if(sender == nil)
 				sender = [text retain];
+			break;
 		case XML_STATE_EVENT_NICKNAME:
 			if(sender == nil)
 				sender = [text retain];
+			break;
+		case XML_STATE_EVENT_ATTRIBUTED_MESSAGE:
+			if(htmlMessage == nil)
+				htmlMessage = [text mutableCopy];
+			else
+				[htmlMessage appendString:text];
+			break;
 		case XML_STATE_NONE:
 		case XML_STATE_ENVELOPE:
 		case XML_STATE_MESSAGE:
@@ -670,11 +704,63 @@ void *createStructure(CFXMLParserRef parser, CFXMLNodeRef node, void *context)
         case kCFXMLNodeTypeProcessingInstruction:
         case kCFXMLNodeTypeComment:
 			break;
+        case kCFXMLNodeTypeEntityReference:
+		{
+			unichar entity = 0;
+			CFXMLEntityReferenceInfo *entityInfo = (CFXMLEntityReferenceInfo *)CFXMLNodeGetInfoPtr(node);
+			NSString *dataString = (NSString *)CFXMLNodeGetString(node);
+			if(entityInfo->entityType == kCFXMLEntityTypeCharacter)
+			{
+				if([dataString characterAtIndex:0] == '#')
+				{
+					BOOL hex = 0;
+					if([dataString characterAtIndex:1] == 'x')
+						hex = 1;
+					
+					int i;
+					for(i = hex + 1; i < [dataString length]; i++)
+					{
+						if(hex)
+						{
+							unichar encodedDigit = [dataString characterAtIndex:i];
+							if(encodedDigit <= '9' && encodedDigit >= '0')
+								entity = entity * 16 + (encodedDigit - '0');
+							else if(encodedDigit <= 'F' && encodedDigit >= 'A')
+								entity = entity * 16 + (encodedDigit - 'A' + 10);
+							else if(encodedDigit <= 'f' && encodedDigit >= 'a')
+								entity = entity * 16 + (encodedDigit - 'a' + 10);
+						}
+						else
+						{
+							entity = entity * 10 + ([dataString characterAtIndex:i] - '0');
+						}
+					}
+				}
+			}
+			else if(entityInfo->entityType == kCFXMLEntityTypeParsedInternal)
+			{
+				if ([dataString isEqualToString:@"lt"])
+					entity = 0x3C;
+				else if ([dataString isEqualToString:@"gt"])
+					entity = 0x3E;
+				else if ([dataString isEqualToString:@"quot"])
+					entity = 0x22;
+				else if ([dataString isEqualToString:@"amp"])
+					entity = 0x26;
+				else if ([dataString isEqualToString:@"apos"])
+					entity = 0x27;
+				else if ([dataString isEqualToString:@"ldquo"])
+					entity = 0x201c;
+				else if ([dataString isEqualToString:@"rdquo"])
+					entity = 0x201d;
+			}
+			[(GBFireXMLLogImporter *)context text:[[[NSString alloc] initWithCharacters:&entity length:1] autorelease]];
+            break;
+		}
         case kCFXMLNodeTypeText:
 			[(GBFireXMLLogImporter *)context text:[NSString stringWithString:(NSString *)CFXMLNodeGetString(node)]];
             break;
         case kCFXMLNodeTypeCDATASection:
-        case kCFXMLNodeTypeEntityReference:
         case kCFXMLNodeTypeDocumentType:
         case kCFXMLNodeTypeWhitespace:
         default:

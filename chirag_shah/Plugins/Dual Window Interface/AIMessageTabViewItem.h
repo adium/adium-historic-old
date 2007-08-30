@@ -14,13 +14,15 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-@class AIChat, AIMessageViewController, AIMessageWindowController;
-@protocol AIInterfaceContainer, AICustomTabViewItem;
+#import <Adium/AIAdiumProtocol.h>
+#import "AIDualWindowInterfacePlugin.h"
 
-@interface AIMessageTabViewItem : NSTabViewItem <AIInterfaceContainer, AICustomTabViewItem> {
+@class AIChat, AIMessageViewController, AIMessageWindowController;
+
+@interface AIMessageTabViewItem : NSTabViewItem <AIInterfaceContainer> {
 	AIMessageWindowController	*container;
     AIMessageViewController 	*messageViewController;
-    AIAdium						*adium;
+    NSObject<AIAdium>			*adium;
 	NSImage						*tabViewItemImage;
 }
 

@@ -6,11 +6,10 @@
 //
 
 #import <Adium/AIWindowController.h>
-#import <AIUtilities/AIAlternatingRowOutlineView.h>
+#import <AIUtilities/AIDividedAlternatingRowOutlineView.h>
 
 @class AIChatLog, AILoggerPlugin;
 
-#define	REFRESH_RESULTS_INTERVAL		0.5 //Interval between results refreshes while searching
 #define LOG_SEARCH_STATUS_INTERVAL		20	//1/60ths of a second to wait before refreshing search status
 
 #define LOG_CONTENT_SEARCH_MAX_RESULTS	10000	//Max results allowed from a search
@@ -56,7 +55,7 @@ typedef enum {
 	AIDateTypeAfter
 } AIDateType;
 
-@class AIListContact, AISplitView, ESSourceListResizer, KNShelfSplitView;
+@class AIListContact, AISplitView, KNShelfSplitView;
 
 @interface AIAbstractLogViewerWindowController : AIWindowController {
 	AILoggerPlugin				*plugin;
@@ -64,10 +63,9 @@ typedef enum {
 	IBOutlet	KNShelfSplitView	*shelf_splitView;
 	
 	IBOutlet	AISplitView			*splitView_contacts_results;
-	IBOutlet	AIAlternatingRowOutlineView	*outlineView_contacts;
+	IBOutlet	AIDividedAlternatingRowOutlineView	*outlineView_contacts;
 	IBOutlet	NSView				*containingView_contactsSourceList;
 	float							desiredContactsSourceListDeltaX;
-	IBOutlet	ESSourceListResizer	*sourceListResizer;
 
 	IBOutlet	NSView			*containingView_results;
 	IBOutlet	AISplitView		*splitView_results;
@@ -99,7 +97,9 @@ typedef enum {
     NSLock				*searchingLock;			//Locked when a search is in progress
     BOOL				searching;				//YES if a search is in progress
     NSString			*activeSearchString;	//Current search string
-	
+	BOOL				suppressSearchRequests;
+	BOOL				isOpeningForContact;
+
     BOOL				sortDirection;			//Direction to sort
 
 	NSTimer				*refreshResultsTimer;

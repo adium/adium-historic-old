@@ -22,15 +22,31 @@
 	NSFont			*theFont = nil;
 	NSFontManager	*fontManager = [NSFontManager sharedFontManager];
 
-	if (!(theFont = [fontManager fontWithFamily:name traits:fontTraitMask weight:weight size:size])) {
+	@try
+	{
+		theFont = [fontManager fontWithFamily:name traits:fontTraitMask weight:weight size:size];
+	}
+	@catch (NSException *localException)
+	{
+		theFont = nil;
+	}
+
+	if (!theFont) {
 		NSEnumerator	*fontEnum;
 		NSString		*thisName;
 
 		fontEnum = [[fontManager availableFontFamilies] objectEnumerator];
 		while ((thisName = [fontEnum nextObject])) {
 			if ([thisName caseInsensitiveCompare:name] == NSOrderedSame) {
-				theFont = [fontManager fontWithFamily:thisName traits:fontTraitMask weight:weight size:size];				
-				break;
+				@try
+				{
+					theFont = [fontManager fontWithFamily:thisName traits:fontTraitMask weight:weight size:size];				
+					break;
+				}
+				@catch (NSException *localException)
+				{
+					theFont = nil;
+				}
 			}
 		}
 	}

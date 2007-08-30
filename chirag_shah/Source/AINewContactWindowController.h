@@ -15,12 +15,12 @@
  */
 
 #import <Adium/AIWindowController.h>
+#import <Adium/AIContactControllerProtocol.h>
 
 #define PREF_GROUP_ADD_CONTACT  @"Add Contact"
 #define KEY_ADD_CONTACT_TO		@"Add Contacts to account"
 
-@class AIService, AILocalizationButton, AILocalizationTextField;
-@protocol AIListObjectObserver;
+@class AIAccount, AIService, AILocalizationButton, AILocalizationTextField;
 
 @interface AINewContactWindowController : AIWindowController <AIListObjectObserver> {
 	IBOutlet	NSPopUpButton				*popUp_contactType;
@@ -42,12 +42,14 @@
 	IBOutlet	AILocalizationTextField		*textField_searchInAB;
 
 	NSArray							*accounts;
+	NSMutableSet					*checkedAccounts;
 	NSString						*contactName;
 	AIService						*service;
+	AIAccount						*initialAccount;
 	NSString						*uniqueID;
 }
 
-+ (void)promptForNewContactOnWindow:(NSWindow *)parentWindow name:(NSString *)contact service:(AIService *)inService;
++ (void)promptForNewContactOnWindow:(NSWindow *)parentWindow name:(NSString *)contact service:(AIService *)inService  account:(AIAccount *)inAccount;
 - (IBAction)cancel:(id)sender;
 - (IBAction)addContact:(id)sender;
 - (IBAction)searchInAB:(id)sender;

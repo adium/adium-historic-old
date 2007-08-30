@@ -18,7 +18,7 @@
             ACTIONS = {closeWindow = id; toggleForceTabBarVisible = id; }; 
             CLASS = AIMessageWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"tabView_customTabs" = AICustomTabsView; "tabView_messages" = NSTabView; }; 
+            OUTLETS = {"tabView_messages" = NSTabView; "tabView_tabBar" = PSMTabBarControl; }; 
             SUPERCLASS = AIWindowController; 
         }, 
         {CLASS = AIMiniToolbar; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 

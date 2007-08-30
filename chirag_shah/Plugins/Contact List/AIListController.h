@@ -15,18 +15,24 @@
  */
 
 #import <Adium/AIAbstractListController.h>
+#import <Adium/AIContactControllerProtocol.h>
 
 @class AIAbstractListController;
-@protocol AIListObjectObserver;
 
-@interface AIListController : AIAbstractListController <AIListObjectObserver> {
+typedef enum {
+	AIDockToBottom_No = 0,
+    AIDockToBottom_VisibleFrame,
+	AIDockToBottom_TotalFrame
+} AIDockToBottomType;
+
+@interface AIListController : AIAbstractListController {
     NSSize								minWindowSize;
     BOOL								autoResizeVertically;
     BOOL								autoResizeHorizontally;
 	int									maxWindowWidth;
 	int									forcedWindowWidth;
 
-	int 								dockToBottomOfScreen;
+	AIDockToBottomType 					dockToBottomOfScreen;
 	
 	BOOL								needsAutoResize;
 }

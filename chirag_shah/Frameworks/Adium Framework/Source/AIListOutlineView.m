@@ -31,6 +31,13 @@
 
 @implementation AIListOutlineView
 
++ (void)initialize
+{
+	[self exposeBinding:@"desiredHeight"];
+	[self exposeBinding:@"totalHeight"];
+	[self setKeys:[NSArray arrayWithObject:@"totalHeight"] triggerChangeNotificationsForDependentKey:@"desiredHeight"];
+}
+
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     [super initWithCoder:aDecoder];
@@ -56,7 +63,7 @@
 	backgroundStyle = AINormalBackground;
 	
 	[self setDrawsGradientSelection:YES];
-	[self sizeLastColumnToFit];
+	[self sizeLastColumnToFit];	
 }
 
 - (void)dealloc
@@ -125,7 +132,7 @@
 - (int)desiredHeight
 {
 	int desiredHeight = [self totalHeight] + desiredHeightPadding;
-	return desiredHeight > MINIMUM_HEIGHT ? desiredHeight : MINIMUM_HEIGHT;
+	return ((desiredHeight > MINIMUM_HEIGHT || [self numberOfRows]) ? desiredHeight : MINIMUM_HEIGHT);
 }
 
 - (int)desiredWidth
@@ -178,7 +185,7 @@
 
 			switch (backgroundStyle) {
 				
-				case AINormalBackground:{
+				case AINormalBackground: {
 					//Background image normal
 					[backgroundImage drawInRect:NSMakeRect(visRect.origin.x, visRect.origin.y, imageSize.width, imageSize.height)
 									   fromRect:imageRect
@@ -186,7 +193,7 @@
 									   fraction:backgroundFade];
 					break;
 				}
-				case AIFillProportionatelyBackground:{
+				case AIFillProportionatelyBackground: {
 					//Background image proportional stretch
 					
 					//Make the width change by the same proportion as the height will change
@@ -202,7 +209,7 @@
 									   fraction:backgroundFade];
 					break;
 				}
-				case AIFillStretchBackground:{
+				case AIFillStretchBackground: {
 					//Background image stretch
 					[backgroundImage drawInRect:visRect
 									   fromRect:imageRect
@@ -210,7 +217,7 @@
 									   fraction:backgroundFade];
 					break;
 				}
-				case AITileBackground:{
+				case AITileBackground: {
 					//Tiling
 					NSPoint	currentOrigin;
 					currentOrigin = visRect.origin;
@@ -222,12 +229,15 @@
 						
 						//Draw as long as our origin is within the visible rect
 						while (currentOrigin.x < (visRect.origin.x + visRect.size.width)) {
-							//Draw at the current x and y at least once with the original size
-							[backgroundImage drawInRect:NSMakeRect(currentOrigin.x, currentOrigin.y, imageSize.width, imageSize.height)
-											   fromRect:imageRect
-											  operation:NSCompositeSourceOver
-											   fraction:backgroundFade];
-							
+							NSRect drawingRect = NSMakeRect(currentOrigin.x, currentOrigin.y, imageSize.width, imageSize.height);
+							if (NSIntersectsRect(drawingRect, clipRect)) {
+								//Draw at the current x and y at least once with the original size
+								[backgroundImage drawInRect:drawingRect
+												   fromRect:imageRect
+												  operation:NSCompositeSourceOver
+												   fraction:backgroundFade];
+							}
+
 							//Shift right for the next iteration
 							currentOrigin.x += imageSize.width;
 						}
@@ -276,10 +286,6 @@
 	[_backgroundColorWithOpacity release]; _backgroundColorWithOpacity = nil;
 	[_rowColorWithOpacity release]; _rowColorWithOpacity = nil;
 	
-	//Turn our shadow drawing hack on if they're going to be visible through the transparency
-	[self setUpdateShadowsWhileDrawing:((backgroundOpacity < 0.9) ||
-										(windowStyle == AIContactListWindowStyleContactBubbles_Fitted))];
-
 	//Mockie and pillow lists always require a non-opaque window, other lists only require a non-opaque window when
 	//the user has requested transparency.
 	if (windowStyle == AIContactListWindowStyleGroupBubbles || windowStyle == AIContactListWindowStyleContactBubbles || windowStyle == AIContactListWindowStyleContactBubbles_Fitted) {
@@ -287,6 +293,9 @@
 	} else {
 		[[self window] setOpaque:(backgroundOpacity == 1.0)];
 	}
+	
+	//Turn our shadow drawing hack on if they're going to be visible through the transparency
+	[self setUpdateShadowsWhileDrawing:(![[self window] isOpaque])];
 
 	[self setNeedsDisplay:YES];
 
@@ -382,12 +391,12 @@
 	[super drawRect:rect];
 
 	/*	#################### Crappy Code ###################
-	 *	10.3 compatibility:  10.3 does NOT invalidate the shadow
+	 *	10.4 compatibility:  10.4 does NOT invalidate the shadow
 	 *	of a transparent window correctly, forcing us to do it manually each
 	 *	time the window content is changed.  This is absolutely horrible for
-	 *	performance, but the only way to avoid shadow ghosting in 10.3 :(
+	 *	performance, but the only way to avoid shadow ghosting in 10.4 :(
 	 *
-	 *  XXX - ToDo: Check if this is still a problem in 10.4
+	 *  XXX - ToDo: Check if this is still a problem in 10.5
 	 */
 	if (updateShadowsWhileDrawing) [[self window] invalidateShadow];
 }
@@ -426,7 +435,7 @@
 	return [self arrayOfSelectedItems];
 }
 #pragma mark Drag & Drop Drawing
-/*
+/*!
  * @brief Called by NSOutineView to draw a drop highight
  *
  * Note: We are overriding a private method

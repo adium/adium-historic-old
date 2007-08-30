@@ -32,11 +32,14 @@
 
 #import "AIDictionaryDebug.h"
 
-@interface AIDictionaryDebug (PRIVATE)
 #ifdef DEBUG_BUILD
-	+ (IMP)replaceSelector:(SEL)sel ofClass:(Class)oldClass withClass:(Class)newClass;
-#endif
+#import <objc/objc-class.h>
+
+@interface AIDictionaryDebug (PRIVATE)
++ (IMP)replaceSelector:(SEL)sel ofClass:(Class)oldClass withClass:(Class)newClass;
 @end
+
+#endif
 
 @implementation AIDictionaryDebug
 
@@ -48,15 +51,7 @@ SetObjectForKeyIMP	originalSetObjectForKey = nil;
 typedef void (*RemoveObjectForKeyIMP)(id, SEL, id);
 RemoveObjectForKeyIMP	originalRemoveObjectForKey = nil;
 
-struct objc_method
-{
-	SEL method_name;
-	char * method_types;
-	IMP method_imp;
-};
-
-struct objc_method *class_getInstanceMethod(Class aClass, SEL aSelector);
-void _objc_flush_caches(Class);
+extern void _objc_flush_caches(Class);
 
 + (void)load
 {

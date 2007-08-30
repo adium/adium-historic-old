@@ -13,12 +13,14 @@
                 "checkBox_horizontalAutosizing" = NSButton; 
                 "checkBox_verticalAutosizing" = NSButton; 
                 "label_dockIcons" = NSTextField; 
+                "label_menuBarIcons" = NSTextField; 
                 "label_serviceIcons" = NSTextField; 
                 "label_statusIcons" = NSTextField; 
                 "popUp_colorTheme" = NSPopUpButton; 
                 "popUp_dockIcon" = NSPopUpButton; 
                 "popUp_emoticons" = NSPopUpButton; 
                 "popUp_listLayout" = NSPopUpButton; 
+                "popUp_menuBarIcons" = NSPopUpButton; 
                 "popUp_serviceIcons" = NSPopUpButton; 
                 "popUp_statusIcons" = NSPopUpButton; 
                 "popUp_windowStyle" = NSPopUpButton; 

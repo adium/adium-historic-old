@@ -12,7 +12,7 @@
  * @class AIMultiCellOutlineView
  * @brief An outline view with two different cells, one each for expandable and nonexpandable items
  *
- * This outline view is a subclass of <tt>AIVariableHeightOutlineView</tt> which simplifies its implementation into the case with two different cells, one for expandable items ("groups") and one for nonexpandable items ("content").
+ * This outline view is a subclass of <tt>AIAlternatingRowOutlineView</tt> which simplifies its implementation into the case with two different cells, one for expandable items ("groups") and one for nonexpandable items ("content").
  */
 @interface AIMultiCellOutlineView : AIVariableHeightOutlineView {
 	NSCell	*contentCell;

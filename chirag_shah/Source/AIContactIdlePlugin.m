@@ -18,7 +18,9 @@
 #import "AIContactIdlePlugin.h"
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import <AIUtilities/AIArrayAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIMetaContact.h>
 
 #define IDLE_UPDATE_INTERVAL	60.0
 
@@ -73,10 +75,13 @@
  * When the idleSince status key changes, we start or stop tracking the object as appropriate.
  * We track in order to have a simple number associated with the contact, updated once per minute, rather
  * than calculating the time from IdleSince until Now whenever we want to display the idle time.
+ *
+ * Don't calculate an idle time for a metacontact; its "idle time" should be determined dynamically based on its contained contacts.
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-    if (	inModifiedKeys == nil || [inModifiedKeys containsObject:@"IdleSince"]) {
+    if ((inModifiedKeys == nil || [inModifiedKeys containsObject:@"IdleSince"]) &&
+		![inObject isKindOfClass:[AIMetaContact class]]) {
 
         if ([inObject statusObjectForKey:@"IdleSince"] != nil) {
             //Track the handle
@@ -127,7 +132,9 @@
 	//Update everyone's idle time
     enumerator = [idleObjectArray objectEnumerator];
     while ((object = [enumerator nextObject])) {
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
         [self setIdleForObject:object silent:YES];
+		[pool release];
     }
 	
 	[[adium contactController] endListObjectNotificationsDelay];
@@ -189,33 +196,16 @@
  */
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
-    int 				idle = [inObject integerStatusObjectForKey:@"Idle"];
+    int 				idleMinutes = [inObject integerStatusObjectForKey:@"Idle"];
     NSAttributedString	*entry = nil;
-	
-    if ((idle > 599400) || (idle == -1)) { //Cap idle at 999 Hours (999*60*60 seconds)
+
+    if ((idleMinutes > 599400) || (idleMinutes == -1)) { //Cap idle at 999 Hours (999*60 minutes)
 		entry = [[NSAttributedString alloc] initWithString:AILocalizedString(@"Yes",nil)];
 		
-    } else if (idle != 0) {
-		int	hours = (int)(idle / 60);
-		int	minutes = (int)((int)idle % 60);
-		
-		NSString	*hoursString = nil, *minutesString;
-		
-		minutesString = ((minutes == 1) ? 
-						 AILocalizedString(@"1 minute",nil) :
-						 [NSString stringWithFormat:AILocalizedString(@"%i minutes",nil),minutes]);
-		if (hours) {
-			hoursString = ((hours == 1) ? 
-						   AILocalizedString(@"1 hour",nil) :
-						   [NSString stringWithFormat:AILocalizedString(@"%i hours",nil),hours]);
-		}
-		
-		entry = [[NSAttributedString alloc] initWithString:
-			(hoursString ?
-			 [NSString stringWithFormat:@"%@, %@",hoursString, minutesString] :
-			 minutesString)];
-    }
-	
+    } else if (idleMinutes != 0) {
+		entry = [[NSAttributedString alloc] initWithString:[NSDateFormatter stringForTimeInterval:(idleMinutes * 60.0)]];    
+	}
+
     return [entry autorelease];
 }
 

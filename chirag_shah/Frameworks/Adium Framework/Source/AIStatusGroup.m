@@ -120,17 +120,20 @@ int statusArraySort(id objectA, id objectB, void *context);
 - (AIStatus *)anyContainedStatus
 {
 	//Pick a random contained status item
-	AIStatusItem *anyStatus = [containedStatusItems objectAtIndex:(random() % [containedStatusItems count])];
+	AIStatusItem *anyStatus = ([containedStatusItems count] ?
+							   [containedStatusItems objectAtIndex:(random() % [containedStatusItems count])] :
+							   nil);
 	
 	//If it's a status group, recurse into it
 	if ([anyStatus isKindOfClass:[AIStatusGroup class]]) {
 		anyStatus = [(AIStatusGroup *)anyStatus anyContainedStatus];
+		//XXX if we found an empty status group, we should look elsewhere if possible, iterating through the list or something.
 	}
 	
 	return (AIStatus *)anyStatus;
 }
 
-/*
+/*!
  * @brief Returns an array of this AIStatusGroup's contents sorted via statusArraySort()
  */
 - (NSArray *)sortedContainedStatusItems
@@ -153,7 +156,7 @@ int statusArraySort(id objectA, id objectB, void *context);
 	return ([[self flatStatusSet] intersectsSet:inSet]);
 }
 
-/*
+/*!
  * @brief Create a menu of the items in this group
  *
  * This should not be used for the root group, as it doesn't include the temporary and built-in items or the Custom... items.
@@ -254,7 +257,7 @@ int statusArraySort(id objectA, id objectB, void *context);
 	}
 }
 
-/*
+/*!
  * @pragma mark Add a status item to this group
  *
  * @param inStatusItem The item to add

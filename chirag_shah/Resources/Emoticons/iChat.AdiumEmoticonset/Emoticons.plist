@@ -52,7 +52,7 @@
 				<string>:!</string>
 			</array>
 			<key>Name</key>
-			<string>Foot in mouth</string>
+			<string>Foot In Mouth</string>
 		</dict>
 		<key>frown.tiff</key>
 		<dict>
@@ -88,7 +88,7 @@
 				<string>:D</string>
 			</array>
 			<key>Name</key>
-			<string>Laugh</string>
+			<string>Grin</string>
 		</dict>
 		<key>innocent.tiff</key>
 		<dict>
@@ -97,7 +97,7 @@
 				<string>O:-)</string>
 			</array>
 			<key>Name</key>
-			<string>Innocent</string>
+			<string>Halo</string>
 		</dict>
 		<key>kiss.tiff</key>
 		<dict>
@@ -117,7 +117,7 @@
 				<string>:X</string>
 			</array>
 			<key>Name</key>
-			<string>Lips are sealed</string>
+			<string>Lips Are Sealed</string>
 		</dict>
 		<key>moneymouth.tiff</key>
 		<dict>
@@ -149,7 +149,7 @@
 				<string>:p</string>
 			</array>
 			<key>Name</key>
-			<string>Sticking out tongue</string>
+			<string>Sticking Out Tongue</string>
 		</dict>
 		<key>slant.tiff</key>
 		<dict>

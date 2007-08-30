@@ -34,7 +34,8 @@
 //NSData archive of an NSAttributedString
 #define KEY_ACCOUNT_DISPLAY_NAME	@"FullNameAttr"
 
-#define	Adium_RequestImmediateDynamicContentUpdate	@"Adium_RequestImmediateDynamicContentUpdate"
+#define	Adium_RequestImmediateDynamicContentUpdate			@"Adium_RequestImmediateDynamicContentUpdate"
+#define AIAccountUsernameAndPasswordRegisteredNotification	@"AIAccountUsernameAndPasswordRegisteredNotification"
 
 //Proxy
 #define KEY_ACCOUNT_PROXY_ENABLED		@"Proxy Enabled"
@@ -47,7 +48,7 @@
 //Proxy types
 typedef enum
 {
-	Adium_Proxy_HTTP,
+	Adium_Proxy_HTTP = 0,
 	Adium_Proxy_SOCKS4,
 	Adium_Proxy_SOCKS5,
 	Adium_Proxy_Default_HTTP,
@@ -98,13 +99,14 @@ typedef enum {
     -(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(AIPrivacyType)type;
 	//Return an array of AIListContacts on the specified privacy list.  Returns an empty array if no contacts are on the list.
 	-(NSArray *)listObjectsOnPrivacyList:(AIPrivacyType)type;
-	//Identical to the above method, except it returns an array of strings, not list objects
-	-(NSArray *)listObjectIDsOnPrivacyList:(AIPrivacyType)type;
     //Set the privacy options
     -(void)setPrivacyOptions:(AIPrivacyOption)option;
 	//Get the privacy options
 	-(AIPrivacyOption)privacyOptions;
 @end
+
+@class AdiumAccounts;
+@protocol AIAccountControllerRemoveConfirmationDialog;
 
 /*!
  * @class AIAccount
@@ -115,8 +117,6 @@ typedef enum {
  * accounts, check out 'working with accounts' and 'creating service code'.
  */
 @interface AIAccount : AIListObject {
-	int							accountNumber;					//Unique integer that represents this account
-	
     NSString                    *password;
     BOOL                        silentAndDelayed;				//We are waiting for and processing our sign on updates
     BOOL						disconnectedByFastUserSwitch;	//We are offline because of a fast user switch
@@ -144,10 +144,13 @@ typedef enum {
 - (NSString *)accountWillSetUID:(NSString *)proposedUID;
 - (void)didChangeUID;
 - (void)willBeDeleted;
+- (id<AIAccountControllerRemoveConfirmationDialog>)confirmationDialogForAccountDeletionForAccountsList:(AdiumAccounts*)accounts;
+- (NSAlert*)alertForAccountDeletion;
+- (void)alertForAccountDeletion:(id<AIAccountControllerRemoveConfirmationDialog>)dialog didReturn:(int)returnCode;
 - (NSString *)explicitFormattedUID;
 
 //Properties
-- (BOOL)shouldSendAutoresponsesWhileAway;
+- (BOOL)supportsAutoReplies;
 - (BOOL)disconnectOnFastUserSwitch;
 - (BOOL)connectivityBasedOnNetworkReachability;
 - (BOOL)suppressTypingNotificationChangesAfterSend;
@@ -162,6 +165,7 @@ typedef enum {
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact;
 - (float)delayedUpdateStatusInterval;
 - (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage;
+- (BOOL)shouldUpdateAutorefreshingAttributedStringForKey:(NSString *)inKey;
 
 //Messaging, Chatting, Strings
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact;
@@ -169,7 +173,7 @@ typedef enum {
 - (BOOL)closeChat:(AIChat *)chat;
 - (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
 - (BOOL)joinGroupChatNamed:(NSString *)name;
-- (BOOL)sendTypingObject:(AIContentTyping *)inTypingObject;
+- (void)sendTypingObject:(AIContentTyping *)inTypingObject;
 - (BOOL)sendMessageObject:(AIContentMessage *)inMessageObject;
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject;
 - (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage;
@@ -181,12 +185,14 @@ typedef enum {
 - (void)deleteGroup:(AIListGroup *)group;
 - (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group;
 - (void)renameGroup:(AIListGroup *)group to:(NSString *)newName;
+- (BOOL)isContactIntentionallyListed:(AIListContact *)contact;
 
 //Contact-specific menu items
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact;
 
 //Account-specific menu items
 - (NSArray *)accountActionMenuItems;
+- (void)accountMenuDidUpdate:(NSMenuItem*)menuItem;
 
 //Secure messaging
 - (BOOL)allowSecureMessagingTogglingForChat:(AIChat *)inChat;

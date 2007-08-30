@@ -26,16 +26,14 @@
 		<string>msn.png</string>
 		<key>Mac</key>
 		<string>dotmac.png</string>
-		<key>Napster</key>
-		<string>napster.png</string>
 		<key>QQ</key>
 		<string>qq.png</string>
 		<key>Sametime</key>
 		<string>sametime.png</string>
+		<key>SIMPLE</key>
+		<string>simple.png</string>
 		<key>Stress Test</key>
-		<string>yahoo.png</string>
-		<key>Trepia</key>
-		<string>trepia.png</string>
+		<string>zephyr.png</string>
 		<key>Yahoo!</key>
 		<string>yahoo.png</string>
 		<key>Yahoo! Japan</key>
@@ -65,16 +63,14 @@
 		<string>msn-small.png</string>
 		<key>Mac</key>
 		<string>dotmac-small.png</string>
-		<key>Napster</key>
-		<string>napster-small.png</string>
         <key>QQ</key>
 		<string>qq-small.png</string>
 		<key>Sametime</key>
 		<string>sametime-small.png</string>
+		<key>SIMPLE</key>
+		<string>simple-small.png</string>
 		<key>Stress Test</key>
-		<string>yahoo-small.png</string>
-		<key>Trepia</key>
-		<string>trepia-small.png</string>
+		<string>zephyr-small.png</string>
 		<key>Yahoo!</key>
 		<string>yahoo-small.png</string>
 		<key>Yahoo! Japan</key>
@@ -104,16 +100,14 @@
 		<string>msn-small.png</string>
 		<key>Mac</key>
 		<string>dotmac-small.png</string>
-		<key>Napster</key>
-		<string>napster-small.png</string>
         <key>QQ</key>
 		<string>qq-small.png</string>
 		<key>Sametime</key>
 		<string>sametime-small.png</string>
+		<key>SIMPLE</key>
+		<string>simple-small.png</string>
 		<key>Stress Test</key>
 		<string>yahoo-small.png</string>
-		<key>Trepia</key>
-		<string>trepia-small.png</string>
 		<key>Yahoo!</key>
 		<string>yahoo-small.png</string>
 		<key>Yahoo! Japan</key>

@@ -15,11 +15,11 @@
  */
 
 #import <Adium/AIPlugin.h>
-
-@protocol AIListObjectObserver, AIFlashObserver;
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 
 @interface AIContactStatusColoringPlugin : AIPlugin <AIListObjectObserver, AIFlashObserver> {
-    NSMutableArray	*flashingListObjectArray;
+    NSMutableSet	*flashingListObjects;
 
     BOOL		awayEnabled;
     BOOL		idleEnabled;
@@ -30,8 +30,8 @@
     BOOL		onlineEnabled;
     BOOL		awayAndIdleEnabled;
 	BOOL		offlineEnabled;
-    
-	BOOL		transitionsEnabled;
+    BOOL		mobileEnabled;
+
 	BOOL		flashUnviewedContentEnabled;
 
     NSColor		*awayColor;
@@ -43,6 +43,7 @@
     NSColor		*onlineColor;
     NSColor		*awayAndIdleColor;
 	NSColor		*offlineColor;
+	NSColor		*mobileColor;
     
     NSColor		*awayInvertedColor;
     NSColor		*idleInvertedColor;
@@ -53,6 +54,7 @@
     NSColor		*onlineInvertedColor;
     NSColor		*awayAndIdleInvertedColor;
 	NSColor		*offlineInvertedColor;
+	NSColor		*mobileInvertedColor;
 	
     NSColor		*awayLabelColor;
     NSColor		*idleLabelColor;
@@ -63,12 +65,12 @@
     NSColor		*onlineLabelColor;
     NSColor		*awayAndIdleLabelColor;
 	NSColor		*offlineLabelColor;
-	
+	NSColor		*mobileLabelColor;
+
     float		alpha;
-	BOOL		offlineImageFading;
+	BOOL		offlineImageFading;	
 	
-	NSMutableDictionary	*opacityUpdateDict;
-	NSTimer				*opacityUpdateTimer;
+	NSSet		*interestedKeysSet;
 }
 
 @end

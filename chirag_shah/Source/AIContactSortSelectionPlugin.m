@@ -61,7 +61,7 @@
 	//Wait for Adium to finish launching before we set up the sort controller
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(adiumFinishedLaunching:)
-									   name:Adium_CompletedApplicationLoad
+									   name:AIApplicationDidFinishLoadingNotification
 									 object:nil];
 	
 	[[adium contactController] registerListSortController:[[[AIAlphabeticalSort alloc] init] autorelease]];
@@ -224,7 +224,7 @@
  *
  * All memu items should always be enabled except for menuItem_configureSort, which may be disabled
  */
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	if (menuItem == menuItem_configureSort)
 		return enableConfigureSort;

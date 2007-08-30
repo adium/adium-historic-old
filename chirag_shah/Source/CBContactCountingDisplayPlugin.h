@@ -15,8 +15,7 @@
  */
 
 #import <Adium/AIPlugin.h>
-
-@protocol AIListObjectObserver;
+#import <Adium/AIContactControllerProtocol.h>
 
 @interface CBContactCountingDisplayPlugin : AIPlugin <AIListObjectObserver>
 {

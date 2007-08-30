@@ -73,69 +73,50 @@ static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *
  */
 + (NSString *)stringWithContentsOfUTF8File:(NSString *)path
 {
+	if (!path) return nil;
+
 	NSString	*string;
 	
-	if ([NSApp isOnTigerOrBetter]) {
-		NSError	*error = nil;
+	NSError	*error = nil;
 
-		string = [NSString stringWithContentsOfFile:path
-										   encoding:NSUTF8StringEncoding 
-											  error:&error];
+	string = [NSString stringWithContentsOfFile:path
+									   encoding:NSUTF8StringEncoding 
+										  error:&error];
 
-		if (error) {
-			BOOL	handled = NO;
+	if (error) {
+		BOOL	handled = NO;
 
-			if ([[error domain] isEqualToString:NSCocoaErrorDomain]) {
-				int		errorCode = [error code];
+		if ([[error domain] isEqualToString:NSCocoaErrorDomain]) {
+			int		errorCode = [error code];
 
-				//XXX - I'm sure these constants are defined somewhere, but I can't find them. -eds
-				if (errorCode == 260) {
-					//File not found.
-					string = nil;
+			//XXX - I'm sure these constants are defined somewhere, but I can't find them. -eds
+			if (errorCode == 260) {
+				//File not found.
+				string = nil;
+				handled = YES;
+
+			} else if (errorCode == 261) {
+				/* Reason: File could not be opened using text encoding Unicode (UTF-8).
+				 * Description: Text encoding Unicode (UTF-8) is not applicable.
+				 *
+				 * We couldn't read the file as UTF8.  Let the system try to determine the encoding.
+				 */
+				NSError				*newError = nil;
+
+				string = [NSString stringWithContentsOfFile:path
+												   encoding:NSASCIIStringEncoding
+													  error:&newError];
+
+				//If there isn't a new error, we recovered reasonably successfully...
+				if (!newError) {
 					handled = YES;
-
-				} else if (errorCode == 261) {
-					/* Reason: File could not be opened using text encoding Unicode (UTF-8).
-					 * Description: Text encoding Unicode (UTF-8) is not applicable.
-					 *
-					 * We couldn't read the file as UTF8.  Let the system try to determine the encoding.
-					 */
-					NSError				*newError = nil;
-
-					string = [NSString stringWithContentsOfFile:path
-													   encoding:NSASCIIStringEncoding
-														  error:&newError];
-
-					//If there isn't a new error, we recovered reasonably successfully...
-					if (!newError) {
-						handled = YES;
-					}
 				}
-			}
-
-			if (!handled) {
-				NSLog(@"Error reading %@:\n%@; %@.",path,
-					  [error localizedDescription], [error localizedFailureReason]);
 			}
 		}
 
-	} else {
-		NSData	*data = [NSData dataWithContentsOfFile:path];
-		
-		if (data) {
-			string = [[[NSString alloc] initWithData:data
-											encoding:NSUTF8StringEncoding] autorelease];
-			if (!string) {
-				string = [[[NSString alloc] initWithData:data
-												encoding:NSASCIIStringEncoding] autorelease];			
-			}
-			
-			if (!string) {
-				NSLog(@"Error reading %@",path);
-			}
-		} else {
-			//File not found
-			string = nil;
+		if (!handled) {
+			NSLog(@"Error reading %@:\n%@; %@.",path,
+				  [error localizedDescription], [error localizedFailureReason]);
 		}
 	}
 	
@@ -208,16 +189,6 @@ static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *
 	return [outName autorelease];
 }
 
-- (int)intValueFromHex
-{
-    NSScanner	*scanner = [NSScanner scannerWithString:self];
-    unsigned	value;
-
-    [scanner scanHexInt:&value];
-
-    return value;
-}
-
 #define BUNDLE_STRING	@"$$BundlePath$$"
 //
 - (NSString *)stringByExpandingBundlePath
@@ -242,16 +213,6 @@ static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *
 }
 
 
-- (NSString *)stringByTruncatingTailToWidth:(float)inWidth
-{
-    NSMutableString 	*string = [self mutableCopy];
-    
-    //Use carbon to truncate the string (this only works when drawing in the system font!)
-    TruncateThemeText((CFMutableStringRef)string, kThemeSmallSystemFont, kThemeStateActive, inWidth, truncEnd, NULL);
-    
-    return [string autorelease];
-}
-
 - (NSString *)stringWithEllipsisByTruncatingToLength:(unsigned int)length
 {
 	NSString *returnString;
@@ -269,53 +230,21 @@ static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *
 
 - (NSString *)safeFilenameString
 {
-	//create a translation table for fast substitution.
-	static UniChar table[USHRT_MAX + 1];
-	static BOOL tableInitialized = NO;
-	NSString *result;
-	if (!tableInitialized) {
-		for (register unsigned i = 0; i <= USHRT_MAX; ++i) {
-			table[i] = i;
-		}
-		table['/'] = '-';
-		tableInitialized = YES;
-	}
-
 	unsigned length = [self length];
+	
+	if (!length)
+		return self;
+
 	if (length > NAME_MAX) {
 		NSLog(@"-safeFilenameString called on a string longer than %u characters (it will be truncated): @\"%@\"", NAME_MAX, self);
 		length = NAME_MAX;
 	}
-	if (!length) {
-		//it will be an empty string anyway, so save the malloc and all the translation work.
-		result = [NSString string];
-	} else {
-		//there are characters here; translate them.
-		NSRange range = { 0, length };
-		UniChar *buf = malloc(length * sizeof(UniChar));
-		if (!buf) {
-			//can't malloc the memory - see if NSMutableString can do it
-			NSMutableString *string = [self mutableCopy];
-	
-			[string replaceOccurrencesOfString:@"/" withString:@"-" options:NSLiteralSearch range:range];
-	
-			result = [string autorelease];
-		} else {
-			CFStringGetCharacters((CFStringRef)self, *(CFRange *)&range, buf);
-	
-			register unsigned remaining = length;
-			register UniChar *ch = buf;
-			while (remaining--) {
-				*ch = table[*ch];
-				++ch;
-			}
-	
-			result = [NSString stringWithCharacters:buf length:length];
-			free(buf);
-		}
-	}
 
-	return result;
+	NSMutableString *string = [self mutableCopy];
+
+	[string replaceOccurrencesOfString:@"/" withString:@"-" options:NSLiteralSearch range:NSMakeRange(0, length)];
+
+	return [string autorelease];
 }
 
 //- (NSString *)stringByEncodingURLEscapes
@@ -658,13 +587,12 @@ static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *
 				} else if (inSurrogatePair) {
 					[result appendFormat:@"&#x%@;", UCGetUnicodeScalarValueForSurrogatePair(buf[j - 1], buf[j])];
 				} else {
-					/*A character (that doesn't require surrogates) must be escaped if it:
-					 *⁃	is 0x7f (DEL) or higher, or
-					 *⁃	is not printable.
+					/* A character that doesn't require surrogates must be escaped if it:
+					 *		- is 0x7f (DEL) or higher, or
+					 *		- is not printable.
 					 *
-					 *This includes whitespace. We escape whitespace so that it will not be collapsed by the parser.
+					 * This includes whitespace. We escape whitespace so that it will not be collapsed by the parser.
 					 */
-
 					if ((buf[j] > 0x7e) || !isprint(buf[j])) {
 						[result appendFormat:@"&#x%02x;", buf[j]];
 					} else {
@@ -808,6 +736,7 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 		characterNature['\a'] = whitespaceNature;
 		characterNature['\t'] = whitespaceNature;
 		characterNature['\n'] = whitespaceNature;
+		characterNature['\v'] = whitespaceNature;
 		characterNature['\f'] = whitespaceNature;
 		characterNature['\r'] = whitespaceNature;
 		characterNature[' ']  = whitespaceNature;
@@ -873,7 +802,7 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 				0,
 				't', //0x09 HT: '\t'
 				'n', //0x0a LF: '\n'
-				0,
+				'v', //0x0b VT: '\v'
 				'f', //0x0c FF: '\f'
 				'r', //0x0d CR: '\r'
 				0, 0, //0x0e-0x0f
@@ -942,79 +871,6 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 		return last;
 	}
 }
-
-- (NSString *) trimWhiteSpace {
-	
-	NSMutableString *s = [[self mutableCopy] autorelease];
-	
-	CFStringTrimWhitespace ((CFMutableStringRef) s);
-	
-	return (NSString *) [[s copy] autorelease];
-} /*trimWhiteSpace*/
-
-
-- (NSString *) ellipsizeAfterNWords: (int) n {
-	
-	NSArray *stringComponents = [self componentsSeparatedByString: @" "];
-	NSMutableArray *componentsCopy = [stringComponents mutableCopy];
-	int ix = n;
-	int len = [componentsCopy count];
-	
-	if (len < n)
-		ix = len;
-	
-	[componentsCopy removeObjectsInRange: NSMakeRange (ix, len - ix)];
-	
-	return [componentsCopy componentsJoinedByString: @" "];
-} /*ellipsizeAfterNWords*/
-
-
-- (NSString *) stripHTML {
-	
-	int len = [self length];
-	NSMutableString *s = [NSMutableString stringWithCapacity: len];
-	int i = 0, level = 0;
-	
-	for (i = 0; i < len; i++) {
-		
-		NSString *ch = [self substringWithRange: NSMakeRange (i, 1)];
-		
-		if ([ch isEqualTo: @"<"])
-			level++;
-		
-		else if ([ch isEqualTo: @">"]) {
-			
-			level--;
-			
-			if (level == 0)			
-				[s appendString: @" "];
-		} /*else if*/
-		
-		else if (level == 0)			
-			[s appendString: ch];
-	} /*for*/
-	
-	return (NSString *) [[s copy] autorelease];
-} /*stripHTML*/
-
-
-+ (BOOL) stringIsEmpty: (NSString *) s {
-	
-	NSString *copy;
-	
-	if (s == nil)
-		return (YES);
-	
-	if ([s isEqualTo: @""])
-		return (YES);
-	
-	copy = [[s copy] autorelease];
-	
-	if ([[copy trimWhiteSpace] isEqualTo: @""])
-		return (YES);
-	
-	return (NO);
-} /*stringIsEmpty*/
 
 + (NSString *)uuid
 {

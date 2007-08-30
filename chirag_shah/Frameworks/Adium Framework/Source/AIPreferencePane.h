@@ -16,21 +16,14 @@
 
 #import <Adium/AIModularPane.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/SS_PreferencePaneProtocol.h>
 
-@class AIPreferencePane;
 
-@interface NSObject(AIPreferencePaneDelegate)   //Will be removed, transition only
-- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane;
-- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane;
-@end
+@interface AIPreferencePane : AIModularPane <SS_PreferencePaneProtocol> {    
 
-@interface AIPreferencePane : AIModularPane {    
-	NSMutableDictionary *restoreDict;		// Dictionary of restorable defaults and their groups
 }
 
 + (AIPreferencePane *)preferencePane;
 + (AIPreferencePane *)preferencePaneForPlugin:(id)inPlugin;
-- (AIPreferenceCategory)category;
-- (NSImage *)image;
 
 @end

@@ -33,12 +33,10 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 
 /*!
  * @class ESFastUserSwitchingSupportPlugin
- * @brief Handle Fast User Switching with a changed status and sound muting
+ * @brief Handle Fast User Switching and Screen Savers with a changed status and sound muting
  *
- * When another user logs in via Fast User Switching (OS X 10.3 and above), this plugin sets a status state if an away
- * state is not already set.
- *
- * At present, this plugin uses a hardcoded away message.
+ * When the Screen Saver activates, or another user logs in via Fast User Switching (OS X 10.3 and above),
+ * this plugin sets a status state if an away state is not already set.
  */
 @implementation ESFastUserSwitchingSupportPlugin
 
@@ -47,9 +45,6 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
  */
 - (void)installPlugin
 {
-	setAwayThroughFastUserSwitch = NO;
-	monitoringFastUserSwitch = NO;
-
 	NSNotificationCenter *workspaceCenter = [[NSWorkspace sharedWorkspace] notificationCenter];
 	[workspaceCenter addObserver:self
 	                    selector:@selector(switchHandler:)
@@ -61,6 +56,16 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 	                        name:NSWorkspaceSessionDidResignActiveNotification
 	                      object:nil];
 
+	[[NSDistributedNotificationCenter defaultCenter] addObserver:self
+	                    selector:@selector(switchHandler:)
+	                        name:@"com.apple.screensaver.didstart"
+	                      object:nil];
+	
+	[[NSDistributedNotificationCenter defaultCenter] addObserver:self
+	                    selector:@selector(switchHandler:)
+	                        name:@"com.apple.screensaver.didstop"
+	                      object:nil];
+
 	//Observe preference changes for updating when and how we should automatically change our state
 	[[adium preferenceController] registerPreferenceObserver:self
 														forGroup:PREF_GROUP_STATUS_PREFERENCES];
@@ -69,16 +74,16 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 /*!
  * @brief Preferences changed
  *
- * Note whether we are supposed to change states on FUS.
+ * Note whether we are supposed to change states on FUS or SS.
  */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	fastUserSwitchStatusID = [prefDict objectForKey:KEY_STATUS_FUS_STATUS_STATE_ID];
-
-	monitoringFastUserSwitch = (fastUserSwitchStatusID ?
-								[[prefDict objectForKey:KEY_STATUS_FUS] boolValue] :
-								NO);
+	screenSaverStatusID    = [prefDict objectForKey:KEY_STATUS_SS_STATUS_STATE_ID];
+	
+	fastUserSwitchStatus = [[prefDict objectForKey:KEY_STATUS_FUS] boolValue];
+	screenSaverStatus = [[prefDict objectForKey:KEY_STATUS_SS] boolValue];
 }
 
 /*!
@@ -90,6 +95,7 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 	[self switchHandler:nil];
 
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
+	[[NSDistributedNotificationCenter defaultCenter] removeObserver:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
@@ -102,7 +108,7 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 }
 
 /*!
- * @brief Handle a fast user switch event
+ * @brief Handle a fast user switch or screen saver event
  *
  * Calling this with (notification == nil) is the same as when the user switches back.
  *
@@ -111,9 +117,9 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 -(void)switchHandler:(NSNotification*) notification
 {
 	if (notification &&
-		[[notification name] isEqualToString:NSWorkspaceSessionDidResignActiveNotification]) {
+		(([[notification name] isEqualToString:NSWorkspaceSessionDidResignActiveNotification] && fastUserSwitchStatus) ||
+			([[notification name] isEqualToString:@"com.apple.screensaver.didstart"] && screenSaverStatus))) {
 		//Deactivation - go away
-
 		//Go away if we aren't already away, noting the current status states for restoration later
 		NSEnumerator	*enumerator;
 		AIAccount		*account;
@@ -121,7 +127,10 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 
 		if (!previousStatusStateDict) previousStatusStateDict = [[NSMutableDictionary alloc] init];
 
-		targetStatusState = [[adium statusController] statusStateWithUniqueStatusID:fastUserSwitchStatusID];
+		if ([[notification name] isEqualToString:NSWorkspaceSessionDidResignActiveNotification])
+			targetStatusState = [[adium statusController] statusStateWithUniqueStatusID:fastUserSwitchStatusID];
+		else
+			targetStatusState = [[adium statusController] statusStateWithUniqueStatusID:screenSaverStatusID];
 		
 		if ([targetStatusState isKindOfClass:[AIStatusGroup class]]) {
 			targetStatusState = [(AIStatusGroup *)targetStatusState anyContainedStatus];
@@ -153,7 +162,9 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 			}
 		}
 
-	} else {
+	} else if (!notification ||
+			   (([[notification name] isEqualToString:NSWorkspaceSessionDidBecomeActiveNotification] && fastUserSwitchStatus) ||
+				([[notification name] isEqualToString:@"com.apple.screensaver.didstop"] && screenSaverStatus))) {
 		//Activation - return from away
 
 		//Remove the away status flag if we set it originally

@@ -14,15 +14,14 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIObject.h>
-
-@class AIListObject;
+@class AIListObject, AIAdium;
 
 typedef int(*sortfunc)(id, id, BOOL);
 
 #define PREF_GROUP_CONTACT_SORTING			@"Sorting"
 
-@interface AISortController : AIObject {
+@interface AISortController : NSSortDescriptor {
+	AIAdium					*adium;
 	NSSet					*statusKeysRequiringResort;
 	NSSet					*attributeKeysRequiringResort;
 	BOOL					alwaysSortGroupsToTop;

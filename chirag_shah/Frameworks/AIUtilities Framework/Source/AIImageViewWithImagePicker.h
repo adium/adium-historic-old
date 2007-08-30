@@ -33,7 +33,7 @@
  *
  * Notifies the delegate of a new image selected by the user (which may have been set in any of the ways explained in the class description).
  * @param picker The <tt>AIImageViewWithImagePicker</tt> which changed
- * @param image An <tt>NSData</tt> with data for the new image
+ * @param imageData An <tt>NSData</tt> with data for the new image
  */
 - (void)imageViewWithImagePicker:(AIImageViewWithImagePicker *)picker didChangeToImageData:(NSData *)imageData;
 
@@ -67,7 +67,7 @@
 @end
 
 @interface AIImageViewWithImagePicker : NSImageView {
-	NSImagePickerController *pickerController;
+	id						pickerController;
 	NSString				*title;
 	
 	BOOL					useNSImagePickerController;
@@ -79,6 +79,8 @@
 	NSResponder				*lastResp;
 	
 	NSPoint					mouseDownPos;
+	
+	NSSize					maxSize;
 }
 
 - (void)setDelegate:(id)inDelegate;
@@ -86,5 +88,6 @@
 - (void)setTitle:(NSString *)inTitle;
 - (IBAction)showImagePicker:(id)sender;
 - (void)setUseNSImagePickerController:(BOOL)inUseNSImagePickerController;
+- (void)setMaxSize:(NSSize)inMaxSize;
 
 @end

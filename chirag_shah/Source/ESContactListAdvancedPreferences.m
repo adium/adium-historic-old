@@ -8,9 +8,10 @@
 
 #import "ESContactListAdvancedPreferences.h"
 #import "AISCLViewPlugin.h"
-#import <Adium/AIInterfaceControllerProtocol.h>
 #import "AIPreferenceWindowController.h"
 #import "AIListWindowController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 
@@ -24,14 +25,6 @@
  * @brief Advanced contact list preferences
  */
 @implementation ESContactListAdvancedPreferences
-
-/*!
- * @brief Category
- */
-- (AIPreferenceCategory)category{
-    return AIPref_Advanced;
-}
-
 /*!
  * @brief Label
  */
@@ -75,7 +68,7 @@
 	[checkBox_hideOnScreenEdgesOnlyInBackground setLocalizedString:AILocalizedString(@"...only while Adium is in the background", "Checkbox under 'on screen edges' in the advanced contact list preferences")];
 		
 	[checkBox_flash setLocalizedString:AILocalizedString(@"Flash names with unviewed messages",nil)];
-	[checkBox_showTransitions setLocalizedString:AILocalizedString(@"Show transitions as contacts sign on and off","Transitions in this context means the names fading in as the contact signs on and out as the contact signs off")];
+	[checkBox_animateChanges setLocalizedString:AILocalizedString(@"Animate changes","This string is under the heading 'Contact List' and refers to changes such as sort order in the contact list being animated rather than occurring instantenously")];
 	[checkBox_showTooltips setLocalizedString:AILocalizedString(@"Show contact information tooltips",nil)];
 	[checkBox_showTooltipsInBackground setLocalizedString:WHILE_ADIUM_IS_IN_BACKGROUND];
 	[checkBox_windowHasShadow setLocalizedString:AILocalizedString(@"Show window shadow",nil)];

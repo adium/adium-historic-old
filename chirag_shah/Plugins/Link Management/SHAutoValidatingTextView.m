@@ -91,6 +91,7 @@
 {
 	NSString	*linkURL = [[self textStorage] string];
 	CFStringRef preprocessedString, escapedURLString;
+	CFStringRef charactersToLeaveUnescaped = CFSTR("#");
 
 	if ([linkURL rangeOfString:@"%n"].location != NSNotFound) {
 		NSMutableString	*newLinkURL = [linkURL mutableCopy];
@@ -111,7 +112,7 @@
 	if (preprocessedString) {
 		escapedURLString = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
 																   preprocessedString,
-																   /* charactersToLeaveUnescaped */ NULL,
+																   charactersToLeaveUnescaped,
 																   /* legalURLCharactersToBeEscaped */ NULL,
 																   kCFStringEncodingUTF8);
 		CFRelease(preprocessedString);

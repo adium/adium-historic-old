@@ -14,9 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIPreferencePane.h>
+#import <Adium/AIAdvancedPreferencePane.h>
 
-@interface JMSQLLoggerAdvancedPreferences: AIPreferencePane {
+@interface JMSQLLoggerAdvancedPreferences: AIAdvancedPreferencePane {
     IBOutlet    NSButton			*checkbox_enableSQLLogging;
 	IBOutlet	NSTextField			*text_Username;
 	IBOutlet	NSSecureTextField   *text_Password;

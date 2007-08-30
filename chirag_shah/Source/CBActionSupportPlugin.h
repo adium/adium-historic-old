@@ -15,8 +15,7 @@
  */
 
 #import <Adium/AIPlugin.h>
-
-@protocol AIContentFilter;
+#import <Adium/AIContentControllerProtocol.h>
 
 @interface CBActionSupportPlugin : AIPlugin <AIContentFilter>
 {

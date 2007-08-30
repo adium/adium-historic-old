@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIAccountControllerProtocol.h>
 #import "AIContactAccountsPane.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <AIUtilities/AIAlternatingRowTableView.h>
 #import <AIUtilities/AIMenuAdditions.h>
@@ -25,13 +25,15 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListGroup.h>
-#import "AILocalizationTextField.h"
+#import <Adium/AILocalizationTextField.h>
 #import <Adium/AIMetaContact.h>
 
 @interface AIContactAccountsPane (PRIVATE)
 - (void)updateAccountList;
 - (void)updateGroupList;
 @end
+
+static NSComparisonResult compareContactsByTheirAccounts(id firstContact, id secondContact, void *context);
 
 /*!
  * @class AIContactAccountsPane
@@ -70,7 +72,9 @@
 	[tableView_accounts setAcceptsFirstMouse:YES];
 
 	[[[tableView_accounts tableColumnWithIdentifier:@"account"] headerCell] setTitle:AILocalizedString(@"On Account",nil)];
+	[[[tableView_accounts tableColumnWithIdentifier:@"contact"] headerCell] setTitle:AILocalizedString(@"Individual Contact","This header for the table in the Accounts tab of the Get Info window indicates the name of the contact within a metacontact")];
 	[[[tableView_accounts tableColumnWithIdentifier:@"group"] headerCell] setTitle:AILocalizedString(@"In Group",nil)];
+	contactsColumnIsInAccountsTableView = YES; //It's in the table view in the nib.
 
 	//Observe contact list changes
 	[[adium notificationCenter] addObserver:self
@@ -85,6 +89,8 @@
 									   name:Account_ListChanged
 									 object:nil];
 	[self updateAccountList];
+	
+	[tableView_accounts sizeToFit];
 }
 
 /*!
@@ -93,6 +99,7 @@
 - (void)viewWillClose
 {
 	[accounts release]; accounts = nil;
+	[contacts release]; contacts = nil;
     [listObject release]; listObject = nil;
 	[[adium notificationCenter] removeObserver:self]; 
 }
@@ -103,13 +110,70 @@
 - (void)configureForListObject:(AIListObject *)inObject
 {
 	if (listObject != inObject) {
-		//New list object
+		//Update the table view to have or not have the "Individual Contact" column, as appropriate.
+		//It should have the column when our list object is a metacontact.
+		if ([inObject isKindOfClass:[AIMetaContact class]]) {
+			if (!contactsColumnIsInAccountsTableView) {
+				//Add the column.
+				[tableView_accounts addTableColumn:tableColumn_contacts];
+				//It was added as last; move to the middle.
+				[tableView_accounts moveColumn:2 toColumn:1];
+				//Set all of the table view's columns to be the same width.
+				float columnWidth = [tableView_accounts frame].size.width / 3.0;
+				[[tableView_accounts tableColumns] setValue:[NSNumber numberWithFloat:columnWidth] forKey:@"width"];
+				[tableView_accounts tile];
+				//We don't need it retained anymore.
+				[tableColumn_contacts release];
+
+				contactsColumnIsInAccountsTableView = YES;
+			}
+		} else if(contactsColumnIsInAccountsTableView) {
+			//Remove the column.
+			//Note that the column is in the table view in the nib, so it is in the table view before we have been configured for the first time.
+			//And be sure to retain it before removing it from the view.
+			[tableColumn_contacts retain];
+			[tableView_accounts removeTableColumn:tableColumn_contacts];
+			//Set both of the table view's columns to be the same width.
+			float columnWidth = [tableView_accounts frame].size.width / 2.0;
+			[[tableView_accounts tableColumns] setValue:[NSNumber numberWithFloat:columnWidth] forKey:@"width"];
+			[tableView_accounts tile];
+
+			contactsColumnIsInAccountsTableView = NO;
+		}
+
+		//Switch to the new list object.
 		[listObject release];
 		listObject = [inObject retain];
-		
-		//Rebuild our account list
+
+		//Rebuild our account list.
 		[self updateAccountList];
 	}
+}
+
+- (void)getAccounts:(NSArray **)outAccounts withContacts:(NSArray **)outContacts forListContact:(AIListContact *)listContact
+{
+	//Build a list of all accounts (compatible with the service of the input contact) that have the input contact's UID on their contact list.
+	AIService		*service = [listContact service];
+	NSString		*UID = [listContact UID];
+	
+	NSArray			*compatibleAccounts = [[adium accountController] accountsCompatibleWithService:service];
+	NSMutableArray	*foundAccounts = [[NSMutableArray alloc] initWithCapacity:[compatibleAccounts count]];
+	NSMutableArray	*contactTimesN = [[NSMutableArray alloc] initWithCapacity:[compatibleAccounts count]];
+
+	id <AIContactController> contactController = [adium contactController];
+	NSEnumerator *compatibleAccountsEnum = [compatibleAccounts objectEnumerator];
+	AIAccount *account;
+	while ((account = [compatibleAccountsEnum nextObject])) {
+		AIListContact *contactOnThisAccount;
+		if ((contactOnThisAccount = [contactController existingContactWithService:service account:account UID:UID]) &&
+			[contactOnThisAccount remoteGroupName]) {
+			[foundAccounts addObject:account];
+			[contactTimesN addObject:contactOnThisAccount];
+		}
+	}
+	
+	if (outAccounts) *outAccounts = [foundAccounts autorelease];
+	if (outContacts) *outContacts = [contactTimesN autorelease];
 }
 
 /*!
@@ -119,20 +183,38 @@
 {
 	//Get the new accounts
 	[accounts release];
-	
-	if ([listObject isKindOfClass:[AIMetaContact class]]) {
-		NSEnumerator	*enumerator = [[(AIMetaContact *)listObject servicesOfContainedObjects] objectEnumerator];
-		AIService		*service;
-		
-		accounts = [[NSMutableArray alloc] init];
+	[contacts release];
 
-		while ((service = [enumerator nextObject])) {
-			[(NSMutableArray *)accounts addObjectsFromArrayIgnoringDuplicates:
-				[[adium accountController] accountsCompatibleWithService:service]];
+	if ([listObject isKindOfClass:[AIMetaContact class]]) {
+		//Get all contacts of the metacontact.
+		//Sort them by account.
+		//Get the account of each contact.
+		//Finally, uniquify the accounts through a set.
+		NSMutableArray	*workingAccounts = [NSMutableArray array];
+		NSMutableArray	*workingContacts = [NSMutableArray array];
+		NSEnumerator	*enumerator;
+		AIListContact	*listContact;
+		enumerator = [[[(AIMetaContact *)listObject listContacts] sortedArrayUsingFunction:compareContactsByTheirAccounts
+																				   context:NULL] objectEnumerator];
+		while ((listContact = [enumerator nextObject])) {
+			NSArray *thisContactAccounts;
+			NSArray *thisContactContacts;
+			
+			[self getAccounts:&thisContactAccounts withContacts:&thisContactContacts forListContact:listContact];
+			[workingAccounts addObjectsFromArray:thisContactAccounts];
+			[workingContacts addObjectsFromArray:thisContactContacts];
 		}
-		
+
+		accounts = [workingAccounts retain];
+		contacts = [workingContacts retain];
+
+	} else if ([listObject isKindOfClass:[AIListContact class]]) {
+		[self getAccounts:&accounts withContacts:&contacts forListContact:(AIListContact *)listObject];
+		[accounts retain];
+		[contacts retain];
 	} else {
-		accounts = [[[adium accountController] accountsCompatibleWithService:[listObject service]] retain];
+		accounts = nil;
+		contacts = nil;
 	}
 	
 	//Refresh our table
@@ -146,13 +228,6 @@
 {
 	//Get the new groups
 	NSMenu		*groupMenu = [[adium contactController] menuOfAllGroupsInGroup:nil withTarget:self];
-	NSMenuItem	*unlistedItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"(Not Listed)",nil)
-																					  target:self
-																					  action:@selector(selectGroup:)
-																			   keyEquivalent:@""] autorelease];
-	[groupMenu insertItem:[NSMenuItem separatorItem] atIndex:0];
-	[groupMenu insertItem:unlistedItem atIndex:0];
-	
 	[[[tableView_accounts tableColumnWithIdentifier:@"group"] dataCell] setMenu:groupMenu];
 	
 	//Refresh our table
@@ -175,25 +250,30 @@
  */
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
+	id result = @"";
+
 	NSString		*identifier = [tableColumn identifier];
-	AIAccount		*account = [accounts objectAtIndex:row];
 
 	if ([identifier isEqualToString:@"account"]) {
+		AIAccount		*account = [accounts objectAtIndex:row];
 		NSString	*accountFormattedUID = [account formattedUID];
 		
 		if ([account online]) {
-			return accountFormattedUID;
+			result = accountFormattedUID;
 			
 		} else {
 			//Gray the names of offline accounts
 			NSDictionary		*attributes = [NSDictionary dictionaryWithObject:[NSColor grayColor] forKey:NSForegroundColorAttributeName];
 			NSAttributedString	*string = [[NSAttributedString alloc] initWithString:accountFormattedUID attributes:attributes];
-			return [string autorelease];
+			result = [string autorelease];
 		}
 		
+	} else if ([identifier isEqualToString:@"contact"]) {
+		AIListObject *contact = [contacts objectAtIndex:row];
+		result = [contact formattedUID];
 	}
 	
-	return @"";
+	return result;
 }
 
 /*!
@@ -207,11 +287,9 @@
 	BOOL			accountOnline;
 		
 	account =  [accounts objectAtIndex:row];
-
-	exactContact = [[adium contactController] existingContactWithService:[listObject service]
-																 account:account
-																	 UID:[listObject UID]];				
 	accountOnline = [account online];
+
+	exactContact = [contacts objectAtIndex:row];				
 
 	//Disable cells for offline accounts
 	[cell setEnabled:accountOnline];
@@ -271,7 +349,7 @@
 					if (exactContact && ([exactContact containingObject] ||
 										 [exactContact isKindOfClass:[AIMetaContact class]])) {
 						//Move contact
-						[[adium contactController] moveContact:exactContact toGroup:group];
+						[[adium contactController] moveContact:exactContact intoObject:group];
 						
 					} else {
 						//Add contact
@@ -296,3 +374,10 @@
 }
 
 @end
+
+static NSComparisonResult compareContactsByTheirAccounts(id firstContact, id secondContact, void *context) {
+	NSComparisonResult result = [[firstContact account] compare:[secondContact account]];
+	//If they have the same account, sort the contacts themselves within the account.
+	if(result == NSOrderedSame) result = [firstContact compare:secondContact];
+	return result;
+}

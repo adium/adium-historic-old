@@ -32,10 +32,10 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIObjectAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
-#import <AIUtilities/AIExceptionHandlingUtilities.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIListGroup.h>
 #import "ESFileTransfer.h"
 #import <Adium/AIWindowController.h>
 
@@ -102,7 +102,7 @@ static ESFileTransferPreferences *preferences;
     toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:SEND_FILE_IDENTIFIER
 														  label:SEND_FILE
 												   paletteLabel:SEND_FILE
-														toolTip:AILocalizedString(@"Send a file",nil)
+														toolTip:AILocalizedString(@"Send a file","Tooltip for the Send File toolbar item")
 														 target:self
 												settingSelector:@selector(setImage:)
 													itemContent:[NSImage imageNamed:@"sendfile" forClass:[self class]]
@@ -206,11 +206,14 @@ static ESFileTransferPreferences *preferences;
 					  previouslyPerformedActionIDs:nil];
 
 	if ((autoAcceptType == AutoAccept_All) ||
-	   ((autoAcceptType == AutoAccept_FromContactList) && (![listContact isStranger]))) {
+	   ((autoAcceptType == AutoAccept_FromContactList) && [listContact isIntentionallyNotAStranger])) {
 		NSString	*preferredDownloadFolder = [[adium preferenceController] userPreferredDownloadFolder];
 		NSString	*remoteFilename = [fileTransfer remoteFilename];
-		
-		//If we should autoaccept, determine the local filename  and proceed to accept the request
+
+		//If the incoming file would become hidden, prefix it with an underscore so it is visible.
+		if ([remoteFilename hasPrefix:@"."]) remoteFilename = [@"_" stringByAppendingString:remoteFilename ];
+
+		//If we should autoaccept, determine the local filename and proceed to accept the request.
 		localFilename = [preferredDownloadFolder stringByAppendingPathComponent:remoteFilename];
 		
 		[self _finishReceiveRequestForFileTransfer:fileTransfer
@@ -235,6 +238,8 @@ static ESFileTransferPreferences *preferences;
  */
 - (void)_finishReceiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer localFilename:(NSString *)localFilename
 {	
+	if([fileTransfer isStopped]) //if it's been canceled while we were busy asking the user stuff, ignore it
+		return;
 	if (localFilename) {
 		[fileTransfer setLocalFilename:localFilename];
 		[fileTransfer setStatus:Accepted_FileTransfer];
@@ -259,6 +264,7 @@ static ESFileTransferPreferences *preferences;
 	[openPanel setCanChooseDirectories:YES];
 	[openPanel setResolvesAliases:YES];
 	[openPanel setAllowsMultipleSelection:YES];
+	[openPanel setPrompt:AILocalizedStringFromTable(@"Send", @"Buttons", nil)];
 
 	if ([openPanel runModalForDirectory:nil file:nil types:nil] == NSOKButton) {
 		NSEnumerator *enumerator = [[openPanel filenames] objectEnumerator];
@@ -285,9 +291,9 @@ static ESFileTransferPreferences *preferences;
 		if ([defaultManager fileExistsAtPath:launchPath]) {
 			NSString	*folderName = [inPath lastPathComponent];
 			NSArray		*arguments;
-			NSTask		*zipTask;
+			NSTask		*zipTask = nil;
 			
-			BOOL		success = NO;
+			BOOL		success = YES;
 
 			//Ensure our temporary directory exists [it never will the first time this method is called]
 			[defaultManager createDirectoryAtPath:tmpDir attributes:nil];
@@ -301,22 +307,29 @@ static ESFileTransferPreferences *preferences;
 				pathToArchive,   //output to our destination name
 				folderName, //store the folder
 				nil];
-			
-			zipTask = [[NSTask alloc] init];
-			[zipTask setLaunchPath:launchPath];
-			[zipTask setArguments:arguments];
-			[zipTask setCurrentDirectoryPath:[inPath stringByDeletingLastPathComponent]];
-			
-			AI_DURING
+			AILog(@"-[ESFileTransferController pathToArchiveOfFolder:]: Will launch %@ with arguments %@ in directory %@",
+				  launchPath, arguments, [inPath stringByDeletingLastPathComponent]);
+			@try
+			{
+				zipTask = [[NSTask alloc] init];
+				[zipTask setLaunchPath:launchPath];
+				[zipTask setArguments:arguments];
+				[zipTask setCurrentDirectoryPath:[inPath stringByDeletingLastPathComponent]];
 				[zipTask launch];
 				[zipTask waitUntilExit];
-				success = ([zipTask terminationStatus] == 0);
-			AI_HANDLER
-				/* No exception handler needed */
-			AI_ENDHANDLER
-			[zipTask release];
-				
+			} 
+			@catch (id exc) {
+				success = NO;
+			}
+
+			if (success) {
+				success = (([zipTask terminationStatus] == -1) || ([zipTask terminationStatus] == 0));
+			}
+
 			if (!success) pathToArchive = nil;
+			AILog(@"-[ESFileTransferController pathToArchiveOfFolder:]: Success %i (%i), so pathToArchive is %@",
+				  success, [zipTask terminationStatus], pathToArchive);
+			[zipTask release];
 		}
 	}
 
@@ -330,9 +343,13 @@ static ESFileTransferPreferences *preferences;
 	ESFileTransfer	*fileTransfer;
 	
 	if ((account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_FILE_TRANSFER_TYPE
-																		  toContact:listContact])) {
+																		  toContact:listContact]) &&
+		[account conformsToProtocol:@protocol(AIAccount_Files)]) {
 		NSFileManager	*defaultManager = [NSFileManager defaultManager];
 		BOOL			isDir;
+		
+		//Resolve any alias we're passed if necessary
+		inPath = [defaultManager pathByResolvingAlias:inPath];
 		
 		//Set up a fileTransfer object
 		fileTransfer = [self newFileTransferWithContact:listContact
@@ -461,7 +478,7 @@ static ESFileTransferPreferences *preferences;
 	return shouldOpen;
 }
 
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	AIListContact   *listContact = nil;
 	
@@ -673,21 +690,21 @@ static ESFileTransferPreferences *preferences;
 		
 		if ([eventID isEqualToString:FILE_TRANSFER_REQUEST]) {
 			//Should only happen for an incoming transfer
-			format = AILocalizedString(@"%@ requests to send you %@",nil);
+			format = AILocalizedString(@"%@ requests to send you %@","A person is wanting to send you a file. The first %@ is a name; the second %@ is the filename of the file being sent.");
 			
 		} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
 			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
-				format = AILocalizedString(@"%@ began sending you %@",nil);
+				format = AILocalizedString(@"%@ began sending you %@","A person began sending you a file. The first %@ is a name; the second %@ is the filename of the file being sent.");
 			} else {
-				format = AILocalizedString(@"%@ began receiving %@",nil);	
+				format = AILocalizedString(@"%@ began receiving %@","A person began receiving a file from you. The first %@ is the recipient of the file; the second %@ is the filename of the file being sent.");
 			}
 		} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELLED]) {
-			format = AILocalizedString(@"%@ cancelled the transfer of %@",nil);
+			format = AILocalizedString(@"%@ cancelled the transfer of %@","The other contact cancelled a file transfer in progress. The first %@ is the recipient of the file; the second %@ is the filename of the file being sent.");
 		} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
 			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
-				format = AILocalizedString(@"%@ sent you %@",nil);
+				format = AILocalizedString(@"%@ sent you %@","First placeholder is a name; second is a filename");
 			} else {
-				format = AILocalizedString(@"%@ received %@",nil);	
+				format = AILocalizedString(@"%@ received %@","First placeholder is a name; second is a filename");
 			}
 		} else if ([eventID isEqualToString:FILE_TRANSFER_FAILED]) {
 			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
@@ -706,27 +723,27 @@ static ESFileTransferPreferences *preferences;
 		
 		if ([eventID isEqualToString:FILE_TRANSFER_REQUEST]) {
 			//Should only happen for an incoming transfer
-			format = AILocalizedString(@"requests to send you %@",nil);
+			format = AILocalizedString(@"requests to send you %@","%@ is a filename of a file being sent");
 			
 		} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
 			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
-				format = AILocalizedString(@"began sending you %@",nil);
+				format = AILocalizedString(@"began sending you %@","%@ is a filename of a file being sent");
 			} else {
-				format = AILocalizedString(@"began receiving %@",nil);	
+				format = AILocalizedString(@"began receiving %@","%@ is a filename of a file being sent");
 			}
 		} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELLED]) {
-			format = AILocalizedString(@"cancelled the transfer of %@",nil);
+			format = AILocalizedString(@"cancelled the transfer of %@","%@ is a filename of a file being sent");
 		} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
 			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
-				format = AILocalizedString(@"sent you %@",nil);
+				format = AILocalizedString(@"sent you %@","%@ is a filename of a file being sent");
 			} else {
-				format = AILocalizedString(@"received %@",nil);	
+				format = AILocalizedString(@"received %@","%@ is a filename of a file being sent");
 			}
 		} else if ([eventID isEqualToString:FILE_TRANSFER_FAILED]) {
 			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
-				format = AILocalizedString(@"failed to send you %@",nil);
+				format = AILocalizedString(@"failed to send you %@","%@ is a filename of a file being sent");
 			} else {
-				format = AILocalizedString(@"failed to receive %@",nil);	
+				format = AILocalizedString(@"failed to receive %@","%@ is a filename of a file being sent");
 			}
 		}
 

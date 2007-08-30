@@ -21,9 +21,23 @@ typedef enum {
 	IMAGE_POSITION_LOWER_RIGHT
 } IMAGE_POSITION;
 
+typedef enum {
+	AIUnknownFileType = -9999,
+	AITIFFFileType = NSTIFFFileType,
+    AIBMPFileType = NSBMPFileType,
+    AIGIFFileType = NSGIFFileType,
+    AIJPEGFileType = NSJPEGFileType,
+    AIPNGFileType = NSPNGFileType,
+    AIJPEG2000FileType = NSJPEG2000FileType
+} AIBitmapImageFileType;
+
 @interface NSImage (AIImageAdditions)
 
 + (NSImage *)imageNamed:(NSString *)name forClass:(Class)inClass;
+
++ (AIBitmapImageFileType)fileTypeOfData:(NSData *)inData;
++ (NSString *)extensionForBitmapImageFileType:(AIBitmapImageFileType)inFileType;
+
 - (NSData *)JPEGRepresentation;
 - (NSData *)JPEGRepresentationWithCompressionFactor:(float)compressionFactor;
 - (NSData *)PNGRepresentation;
@@ -33,10 +47,9 @@ typedef enum {
 - (NSImage *)imageByScalingToSize:(NSSize)size;
 - (NSImage *)imageByFadingToFraction:(float)delta;
 - (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta;
-- (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta flipImage:(BOOL)flipImage proportionally:(BOOL)proportionally;
-+ (NSImage *)imageFromGWorld:(GWorldPtr)gWorldPtr;
-+ (NSImage *)systemCloseButtonImageForState:(AICloseButtonState)state controlTint:(NSControlTint)inTint;
-+ (NSImage *)systemCheckmark;
+- (NSImage *)imageByScalingForMenuItem;
+- (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta flipImage:(BOOL)flipImage proportionally:(BOOL)proportionally allowAnimation:(BOOL)allowAnimation;
+//+ (NSImage *)imageFromGWorld:(GWorldPtr)gWorldPtr;
 - (NSRect)drawRoundedInRect:(NSRect)rect radius:(float)radius;
 - (NSRect)drawRoundedInRect:(NSRect)rect fraction:(float)fraction radius:(float)radius;
 - (NSRect)drawRoundedInRect:(NSRect)rect atSize:(NSSize)size position:(IMAGE_POSITION)position fraction:(float)fraction radius:(float)radius;

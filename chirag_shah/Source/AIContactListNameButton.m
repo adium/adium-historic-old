@@ -18,7 +18,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Begin editing a specified name
  */
 - (void)editName:(NSString *)startingString
@@ -56,7 +56,7 @@
 	}	
 }
 
-/*
+/*!
  * @brief The text finished editing
  */
 - (void)controlTextDidEndEditing:(NSNotification *)aNotification
@@ -72,7 +72,7 @@
 	[self resetCursorRects];
 }
 
-/*
+/*!
  * @brief Edit the name
  *
  * @param startingString The name to initially show in the editor. We don't use our title because the title might have been filtered

@@ -52,7 +52,9 @@ static	NSDictionary	*statusTypeDict = nil;
 		@"return_idle",CONTACT_STATUS_IDLE_NO,
 		@"away_message",CONTACT_STATUS_MESSAGE,
 		nil] retain];
-		
+	
+	previousStatusChangedMessages = [[NSMutableDictionary alloc] init];
+	
     //Observe contact status changes
     [[adium notificationCenter] addObserver:self selector:@selector(contactStatusChanged:) name:CONTACT_STATUS_ONLINE_YES object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(contactStatusChanged:) name:CONTACT_STATUS_ONLINE_NO object:nil];
@@ -62,6 +64,16 @@ static	NSDictionary	*statusTypeDict = nil;
 	[[adium notificationCenter] addObserver:self selector:@selector(contactAwayChanged:) name:CONTACT_STATUS_AWAY_YES object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(contactAwayChanged:) name:CONTACT_STATUS_AWAY_NO object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(contact_statusMessage:) name:CONTACT_STATUS_MESSAGE object:nil];
+	
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(chatWillClose:)
+									   name:Chat_WillClose
+									 object:nil];	
+}
+
+- (void)uninstallPlugin
+{
+	[previousStatusChangedMessages release];
 }
 
 /*!
@@ -155,6 +167,10 @@ static	NSDictionary	*statusTypeDict = nil;
 
 	enumerator = [inChats objectEnumerator];
 	while ((chat = [enumerator nextObject])) {
+		//Don't do anything if the message is the same as the last message displayed for this chat
+		if ([[previousStatusChangedMessages objectForKey:[chat uniqueChatID]] isEqualToString:message])
+			continue;
+
 		AIContentStatus	*content;
 		
 		//Create our content object
@@ -177,7 +193,17 @@ static	NSDictionary	*statusTypeDict = nil;
 
 		//Add the object
 		[[adium contentController] receiveContentObject:content];
+		
+		//Keep track of this message for this chat so we don't display it again sequentially
+		[previousStatusChangedMessages setObject:message
+										  forKey:[chat uniqueChatID]];
 	}
+}
+
+- (void)chatWillClose:(NSNotification *)inNotification
+{
+	AIChat *chat = [inNotification object];
+	[previousStatusChangedMessages removeObjectForKey:[chat uniqueChatID]];
 }
 
 @end

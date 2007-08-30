@@ -24,29 +24,19 @@
 
 - (NSRect)frameOfCellAtColumn:(int)column row:(int)row
 {
+	NSRect frameOfCell = [super frameOfCellAtColumn:column row:row];
 	if ([[self delegate] respondsToSelector:@selector(outlineView:extendToEdgeColumn:ofRow:)] &&
 	   [[self delegate] outlineView:self extendToEdgeColumn:column ofRow:row]) {
-		
-		NSRect	frame = [self frame];
-		NSRect	columnRect = [self rectOfColumn:column];
-		NSSize	intercellSpacing = [self intercellSpacing];
-		float	columnOriginX = columnRect.origin.x + round((intercellSpacing.width)/2);
-		
-		[self updateRowHeightCache];
-		return NSMakeRect(columnOriginX,
-						  rowOriginCache[row],
-						  frame.size.width - columnOriginX - floor((intercellSpacing.width)/2),
-						  rowHeightCache[row]);
-	} else {
-		return [super frameOfCellAtColumn:column row:row];
+		frameOfCell.size.width = [self frame].size.width - frameOfCell.origin.x - round(([self intercellSpacing].width)/2);
 	}
+	
+	return frameOfCell;
 }
 
 #pragma mark Drawing
 - (void)drawRow:(int)row clipRect:(NSRect)rect
 {
 	if (row >= 0 && row < [self numberOfRows]) { //Somebody keeps calling this method with row = numberOfRows, which is wrong.
-		
 		NSArray		*tableColumns = [self tableColumns];
 		id			item = [self itemAtRow:row];
 		unsigned	tableColumnIndex, count = [tableColumns count];
@@ -123,7 +113,6 @@
 			}
 			
 			//Draw the cell
-			if (selected) [cell _drawHighlightWithFrame:cellFrame inView:self];
 			[cell drawWithFrame:cellFrame inView:self];
 	
 			//Stop drawing if this column extends to the edge

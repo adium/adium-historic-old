@@ -17,12 +17,11 @@
 #import <Adium/AIObject.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
 
-@protocol AIController;
-
 @interface AIPreferenceController : AIObject <AIPreferenceController> {
 	NSString				*userDirectory;
 	
 	NSMutableArray			*paneArray;						//Loaded preference panes
+	NSMutableArray			*advancedPaneArray;
 	NSMutableDictionary		*observers;						//Preference change observers
 
 	NSMutableDictionary		*defaults;						//Preference defaults

@@ -6,15 +6,8 @@
 //
 
 #import "AIImageAdditions.h"
-#import "pxmLib.h"
 
-#import "AIExceptionHandlingUtilities.h"
 #import "AIBezierPathAdditions.h"
-
-#define RESOURCE_ID_CLOSE_BUTTON_AQUA       201
-#define RESOURCE_ID_CLOSE_BUTTON_GRAPHITE   10191
-#define RESOURCE_TYPE_CLOSE_BUTTON			'pxm#'
-#define RESOURCE_ID_CHECKMARK				260
 
 @interface NSImage (AIImageAdditions_PRIVATE)
 - (NSBitmapImageRep *)bitmapRep;
@@ -129,12 +122,13 @@
 		
 		if (size.width > 0 && size.height > 0) {
 			
-			AI_DURING
+			@try {
 				GIFRepresentation = [bm representationUsingType:NSGIFFileType
 													 properties:properties];
-			AI_HANDLER
+			}
+			@catch(id exc) {
 				GIFRepresentation = nil;	// must have failed
-			AI_ENDHANDLER
+			}
 		}
 	}
 
@@ -173,20 +167,29 @@
 
 - (NSImage *)imageByScalingToSize:(NSSize)size
 {
-	return ([self imageByScalingToSize:size fraction:1.0 flipImage:NO proportionally:YES]);
+	return ([self imageByScalingToSize:size fraction:1.0 flipImage:NO proportionally:YES allowAnimation:YES]);
 }
 
 - (NSImage *)imageByFadingToFraction:(float)delta
 {
-	return [self imageByScalingToSize:[self size] fraction:delta flipImage:NO proportionally:NO];
+	return [self imageByScalingToSize:[self size] fraction:delta flipImage:NO proportionally:NO allowAnimation:YES];
 }
 
 - (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta
 {
-	return [self imageByScalingToSize:size fraction:delta flipImage:NO proportionally:YES];
+	return [self imageByScalingToSize:size fraction:delta flipImage:NO proportionally:YES allowAnimation:YES];
 }
 
-- (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta flipImage:(BOOL)flipImage proportionally:(BOOL)proportionally
+- (NSImage *)imageByScalingForMenuItem
+{
+	return [self imageByScalingToSize:NSMakeSize(16,16)
+							 fraction:1.0
+							flipImage:NO
+					   proportionally:YES
+					   allowAnimation:NO];	
+}
+
+- (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta flipImage:(BOOL)flipImage proportionally:(BOOL)proportionally allowAnimation:(BOOL)allowAnimation
 {
 	NSSize  originalSize = [self size];
 	
@@ -214,8 +217,10 @@
 
 		if (flipImage) [newImage setFlipped:YES];		
 
-		NSImageRep	*bestRep = [self bestRepresentationForDevice:nil];
-		if ([bestRep isKindOfClass:[NSBitmapImageRep class]] && 
+		NSImageRep	*bestRep;
+		if (allowAnimation &&
+			(bestRep = [self bestRepresentationForDevice:nil]) &&
+			[bestRep isKindOfClass:[NSBitmapImageRep class]] && 
 			(delta == 1.0) &&
 			([[(NSBitmapImageRep *)bestRep valueForProperty:NSImageFrameCount] intValue] > 1) ) {
 			//We've got an animating file, and the current alpha is fine.  Just copy the representation.
@@ -237,7 +242,7 @@
 	}
 }
 
-+ (NSImage *)imageFromGWorld:(GWorldPtr)gworld
+/*+ (NSImage *)imageFromGWorld:(GWorldPtr)gworld
 {
     NSParameterAssert(gworld != NULL);
 	
@@ -314,89 +319,7 @@
         return image;
     }
     return nil;
-}
-
-//Returns the current theme's miniature panel close button
-+ (NSImage *)systemCloseButtonImageForState:(AICloseButtonState)state controlTint:(NSControlTint)inTint
-{
-    NSString    *theFilePath = @"/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/Resources/Extras.rsrc";
-    FSRef       ref;
-    NSImage     *closeImage = nil;
-    
-    if (FSPathMakeRef((unsigned char *)[theFilePath fileSystemRepresentation], &ref, NULL) == noErr) {
-		HFSUniStr255    forkName;
-		SInt16			refNum;
-		Handle			resource;
-		pxmRef			pixmap;
-		GWorldPtr       gWorld;
-		int				resourceID;
-		
-		if (inTint == NSBlueControlTint) {
-			resourceID = RESOURCE_ID_CLOSE_BUTTON_AQUA;
-		} else { //inTint == NSGraphiteControlTint
-			resourceID = RESOURCE_ID_CLOSE_BUTTON_GRAPHITE;
-		}
-		
-		//Extract the close button's pxm# resource for the close button
-		FSGetDataForkName(&forkName);
-		FSOpenResourceFile(&ref, forkName.length, forkName.unicode, fsRdPerm, &refNum);
-		resource = GetResource(RESOURCE_TYPE_CLOSE_BUTTON,resourceID);
-		
-		//Use the Sprocket pxm# code to extract the correct close button image
-		HLock(resource);
-		pixmap = pxmCreate(*resource, GetHandleSize(resource));
-		HUnlock(resource);
-		pxmMakeGWorld(pixmap, &gWorld);
-		pxmRenderImage(pixmap, state, gWorld);
-		
-		//Place this image into an NSImage, and return
-		closeImage = [NSImage imageFromGWorld:gWorld];
-		
-		//Close up
-		pxmDispose(pixmap);
-		CloseResFile(refNum);
-    }
-    
-    return closeImage;
-}
-
-//Returns the system check mark
-+ (NSImage *)systemCheckmark
-{
-    NSString    *theFilePath = @"/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/Resources/Extras.rsrc";
-    FSRef       ref;
-    NSImage     *closeImage = nil;
-    
-    if (FSPathMakeRef((unsigned char *)[theFilePath fileSystemRepresentation], &ref, NULL) == noErr) {
-		HFSUniStr255    forkName;
-		SInt16			refNum;
-		Handle			resource;
-		pxmRef			pixmap;
-		GWorldPtr       gWorld;
-		int				resourceID = RESOURCE_ID_CHECKMARK;
-		
-		//Extract the close button's pxm# resource for the close button
-		FSGetDataForkName(&forkName);
-		FSOpenResourceFile(&ref, forkName.length, forkName.unicode, fsRdPerm, &refNum);
-		resource = GetResource(RESOURCE_TYPE_CLOSE_BUTTON,resourceID);
-		
-		//Use the Sprocket pxm# code to extract the correct close button image
-		HLock(resource);
-		pixmap = pxmCreate(*resource, GetHandleSize(resource));
-		HUnlock(resource);
-		pxmMakeGWorld(pixmap, &gWorld);
-		pxmRenderImage(pixmap, 0, gWorld);
-		
-		//Place this image into an NSImage, and return
-		closeImage = [NSImage imageFromGWorld:gWorld];
-		
-		//Close up
-		pxmDispose(pixmap);
-		CloseResFile(refNum);
-    }
-    
-    return closeImage;
-}
+}*/
 
 //Fun drawing toys
 //Draw an image, altering and returning the available destination rect
@@ -478,13 +401,13 @@
 //General purpose draw image rounded in a NSRect.
 - (NSRect)drawRoundedInRect:(NSRect)rect radius:(float)radius
 {
-	return [self drawRoundedInRect:rect atSize:NSMakeSize(0,0) position:nil fraction:1.0 radius:radius];
+	return [self drawRoundedInRect:rect atSize:NSMakeSize(0,0) position:0 fraction:1.0 radius:radius];
 }
 
 //Perhaps if you desired to draw it rounded in the tooltip.
 - (NSRect)drawRoundedInRect:(NSRect)rect fraction:(float)fraction radius:(float)radius
 {
-	return [self drawRoundedInRect:rect atSize:NSMakeSize(0,0) position:nil fraction:fraction radius:radius];
+	return [self drawRoundedInRect:rect atSize:NSMakeSize(0,0) position:0 fraction:fraction radius:radius];
 }
 
 //Draw an image, round the corner. Meant to replace the method above.
@@ -534,54 +457,16 @@
 	return rect;
 }
 
-/* From GimmeGIF by Stone Design Software */
-
-//
-// We must "deepen" the cache to 24 bits for GIF's to be 
-// created correctly in RDR...
-// NOTE: MACH OPENSTEP, -DOS_API, knows not of this functionality
-//
-
-- (void)prepareCache:(NSImage *)aCache
-{
-	NSRect r = { { 0.,0.} ,{ 1.,1.}}; // just one pixel is all it takes!
-	
-	[aCache lockFocus];
-	[[NSColor colorWithDeviceCyan:.32 magenta:.76 yellow:.29 black:.04 alpha:.05] set];
-	NSRectFill(r);
-	[aCache unlockFocus];
-}
-
 - (NSBitmapImageRep *)getBitmap
 {
-	NSRect				r = NSMakeRect(0., 0., [self size].width, [self size].height);
-	NSBitmapImageRep	*bm = nil;
+	[self lockFocus];
 	
-	[[NSColor clearColor] set];
-	NSImage				*tiffCache = [[[NSImage allocWithZone:[self zone]] initWithSize:r.size] autorelease];
-	NSCachedImageRep	*rep = [[[NSCachedImageRep alloc] initWithSize:r.size depth:520 separate:YES alpha:YES] autorelease];
+	NSSize size = [self size];
+	NSRect rect = NSMakeRect(0.0, 0.0, size.width, size.height);
+	NSBitmapImageRep	*bm = [[[NSBitmapImageRep alloc] initWithFocusedViewRect:rect] autorelease];
+
+	[self unlockFocus];
 	
-	[tiffCache addRepresentation:rep];
-	[self prepareCache:tiffCache];	
-	
-	// if something should happen, AI_DURING/AI_HANDLER protects us!
-	AI_DURING
-		[tiffCache lockFocusOnRepresentation:rep];
-		[self compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
-		
-		// OK, now let's create an NSBitmapImageRep form the data.. 
-		bm =  [[[NSBitmapImageRep alloc] initWithFocusedViewRect:r] autorelease];
-		if (bm == nil)
-			bm = [NSBitmapImageRep imageRepWithData: [tiffCache TIFFRepresentation]];
-
-		[tiffCache unlockFocus];
-	AI_HANDLER
-		bm = nil;
-	AI_ENDHANDLER
-
-	if (bm == nil)
-		NSLog(@"in getBitMap : no NSBitmapImageRep of the right depth found");
-
 	return bm;
 }
 
@@ -601,6 +486,58 @@
 			return rep;
 	}
 	return [self getBitmap];
+}
+
++ (AIBitmapImageFileType)fileTypeOfData:(NSData *)inData
+{
+	const char *data = [inData bytes];
+	unsigned len = [inData length];
+	AIBitmapImageFileType fileType = AIUnknownFileType;
+
+	if (len >= 4) {
+		if (!strncmp((char *)data, "GIF8", 4))
+			fileType = AIGIFFileType;
+		else if (!strncmp((char *)data, "\xff\xd8\xff", 3)) /* 4th may be e0 through ef */
+			fileType = AIJPEGFileType;
+		else if (!strncmp((char *)data, "\x89PNG", 4))
+			fileType = AIPNGFileType;
+		else if (!strncmp((char *)data, "MM", 2) ||
+				 !strncmp((char *)data, "II", 2))
+			fileType = AITIFFFileType;
+		else if (!strncmp((char *)data, "BM", 2))
+			fileType = AIBMPFileType;
+	}
+	
+	return fileType;
+}
+
++ (NSString *)extensionForBitmapImageFileType:(AIBitmapImageFileType)inFileType
+{
+	NSString *extension = nil;
+	switch (inFileType) {
+		case AIUnknownFileType:
+			break;
+		case AITIFFFileType:
+			extension = @"tif";
+			break;
+		case AIBMPFileType:
+			extension = @"bmp";
+			break;
+		case AIGIFFileType:
+			extension = @"gif";
+			break;
+		case AIJPEGFileType:
+			extension = @"jpg";
+			break;
+		case AIPNGFileType:
+			extension = @"png";
+			break;
+		case AIJPEG2000FileType:
+			extension = @"jp2";
+			break;
+	}
+	
+	return extension;
 }
 
 @end

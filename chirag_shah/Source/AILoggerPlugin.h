@@ -24,6 +24,8 @@
 
 #define PREF_KEYPATH_LOGGER_ENABLE		PREF_GROUP_LOGGING @"." KEY_LOGGER_ENABLE
 
+#define XML_LOGGING_NAMESPACE		@"http://purl.org/net/ulf/ns/0.4-02"
+
 @class AIAccount, AIHTMLDecoder, AIChat, AILoggerPreferences;
 
 @interface AILoggerPlugin : AIPlugin {
@@ -34,7 +36,7 @@
     BOOL				logHTML;
 
 	NSMutableDictionary					*activeAppenders;
-	NSMutableDictionary					*activeTimers;
+	NSMutableDictionary					*appenderCloseTimers;
 	
 	AIHTMLDecoder						*xhtmlDecoder;
 	NSDictionary						*statusTranslation;
@@ -66,6 +68,7 @@
     //Indexing progress
     int					logsToIndex;
     int					logsIndexed;
+	int					logIndexingPauses;
     
 }
 
@@ -73,6 +76,9 @@
 + (NSString *)logBasePath;
 + (NSString *)relativePathForLogWithObject:(NSString *)object onAccount:(AIAccount *)account;
 + (NSString *)fileNameForLogWithObject:(NSString *)object onDate:(NSDate *)date;
+
+//Message History
++ (NSArray *)sortedArrayOfLogFilesForChat:(AIChat *)chat;
 
 //Log viewer
 - (void)showLogViewerToSelectedContact:(id)sender;
@@ -91,6 +97,8 @@
 - (void)stopIndexingThreads;
 - (void)dirtyAllLogs;
 - (void)cleanDirtyLogs;
+- (void)pauseIndexing;
+- (void)resumeIndexing;
 
 - (NSLock *)logAccessLock;
 - (void)removePathsFromIndex:(NSSet *)paths;

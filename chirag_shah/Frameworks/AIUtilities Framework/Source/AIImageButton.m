@@ -33,6 +33,7 @@
 
 - (void)dealloc
 {
+	[imageFloater close:nil];
 	[imageFloater release];
 
 	[super dealloc];

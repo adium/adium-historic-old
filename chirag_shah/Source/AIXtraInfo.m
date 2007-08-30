@@ -15,7 +15,7 @@
  */
 
 #import "AIXtraInfo.h"
-
+#import <Adium/AIDockControllerProtocol.h>
 
 @implementation AIXtraInfo
 
@@ -66,13 +66,23 @@
 				previewImage = [[NSImage alloc] initByReferencingFile:previewImagePath];
 		}
 		else {
+			if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+				[self autorelease];
+				return nil;
+			}
 			[self setName:[[path lastPathComponent] stringByDeletingPathExtension]];
 			resourcePath = [path copy];//root of the xtra
 		}	
 		if (!readMePath)
 			readMePath = [[[NSBundle mainBundle] pathForResource:@"DefaultXtraReadme" ofType:@"rtf"] retain];
-		if(!icon)
-			icon = [[[NSWorkspace sharedWorkspace] iconForFile:path]retain];
+		if (!icon) {
+			if ([[path pathExtension] caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame) {
+				icon = [[[[adium dockController] previewStateForIconPackAtPath:path] image] retain];
+
+			} else {
+				icon = [[[NSWorkspace sharedWorkspace] iconForFileType:[path pathExtension]] retain];
+			}
+		}
 		if(!previewImage)
 			previewImage = [icon retain];
 	}

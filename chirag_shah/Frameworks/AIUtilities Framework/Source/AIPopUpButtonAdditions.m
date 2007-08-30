@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIPopUpButtonAdditions.h"
+#import "AIApplicationAdditions.h"
 
 @implementation NSPopUpButton (AIPopUpButtonAdditions)
 
@@ -30,16 +31,40 @@
 
 	return NO;
 }
+
+- (BOOL)selectItemWithRepresentedObjectUsingCompare:(id)object
+{
+	BOOL selectedItem = NO;
+
+	if ([self numberOfItems] > 0) {
+		NSEnumerator *enumerator = [[self itemArray] objectEnumerator];
+		NSMenuItem	 *menuItem;
+		
+		while ((menuItem = [enumerator nextObject])) {
+			if ([[menuItem representedObject] compare:object] == NSOrderedSame) {
+				[self selectItem:menuItem];
+				selectedItem = YES;
+				break;
+			}
+		}
+	}
+	
+	return selectedItem;	
+}
+
 - (BOOL)compatibleSelectItemWithTag:(int)tag
 {
 	if ([self numberOfItems] > 0) {
+		/* As of 10.4.8, -[NSPopUpButton selectItemWithTag:] always returns YES. We therefore use our own implementation.
+		 * I reported this in radar #4854601 -evands
+		 */
 		int	index = [self indexOfItemWithTag:tag];
 		if (index != -1) {
 			[self selectItemAtIndex:index];
 			return YES;
 		}
 	}
-	
+
 	return NO;
 }
 - (void)autosizeAndCenterHorizontally

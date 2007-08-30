@@ -14,47 +14,15 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIWindowController.h>
-#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIObject.h>
 
-@class AIModularPaneCategoryView, AIAutoScrollView, AIColoredBoxView, AIPreferencePane, AIAlternatingRowTableView;
+//XXX rename me
+@interface AIPreferenceWindowController : AIObject {    
 
-@interface AIPreferenceWindowController : AIWindowController {
-    IBOutlet	NSTabView					*tabView_category;
-
-	IBOutlet	AIModularPaneCategoryView	*view_Accounts;
-	IBOutlet	AIModularPaneCategoryView	*view_General;
-	IBOutlet	AIModularPaneCategoryView	*view_Personal;
-	IBOutlet	AIModularPaneCategoryView	*view_Appearance;
-    IBOutlet	AIModularPaneCategoryView	*view_Messages;
-    IBOutlet	AIModularPaneCategoryView	*view_Status;
-	IBOutlet	AIModularPaneCategoryView	*view_Events;
-    IBOutlet 	AIModularPaneCategoryView	*view_FileTransfer;
-
-    IBOutlet	AIAlternatingRowTableView	*tableView_advanced;
-	IBOutlet	AIAutoScrollView			*scrollView_advanced;
-
-    IBOutlet	AIModularPaneCategoryView   *view_Advanced;
-    
-	NSArray				    *viewArray;
-    NSMutableArray		    *loadedPanes;
-    NSMutableArray		    *loadedAdvancedPanes;
-    NSMutableArray		    *_advancedCategoryArray;
-	
-	BOOL					shouldRestorePreviousSelectedPane;
 }
 
 + (void)openPreferenceWindow;
 + (void)openPreferenceWindowToCategoryWithIdentifier:(NSString *)identifier;
-+ (void)openPreferenceWindowToAdvancedPane:(NSString *)advancedPane;
 + (void)closePreferenceWindow;
-
-//Panes
-- (void)selectCategoryWithIdentifier:(NSString *)identifier;
-- (void)selectAdvancedPane:(NSString *)advancedPane;
-
-//Advanced Preferences
-- (void)configureAdvancedPreferencesForPane:(AIPreferencePane *)preferencePane;
-- (NSArray *)advancedCategoryArray;
 
 @end

@@ -6,15 +6,16 @@
 //
 
 #import "ESPersonalPreferences.h"
-#import <Adium/AIPreferenceControllerProtocol.h>
-#import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIAccount.h>
-#import <AIUtilities/AIAttributedStringAdditions.h>
-#import <AIUtilities/AIImageViewWithImagePicker.h>
-#import <AIUtilities/AIAutoScrollView.h>
-#import <AIUtilities/AIImageViewWithImagePicker.h>
-#import <AIUtilities/AIDelayedTextField.h>
+#import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIMessageEntryTextView.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIAutoScrollView.h>
+#import <AIUtilities/AIDelayedTextField.h>
+#import <AIUtilities/AIImageViewWithImagePicker.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageViewWithImagePicker.h>
 
 @interface ESPersonalPreferences (PRIVATE)
 - (void)fireProfileChangesImmediately;
@@ -28,14 +29,19 @@
 /*!
  * @brief Preference pane properties
  */
-- (AIPreferenceCategory)category{
-    return AIPref_Personal;
+- (NSString *)paneIdentifier
+{
+	return @"Personal";
 }
-- (NSString *)label{
+- (NSString *)paneName{
     return AILocalizedString(@"Personal","Personal preferences label");
 }
 - (NSString *)nibName{
     return @"PersonalPreferences";
+}
+- (NSImage *)paneIcon
+{
+	return [NSImage imageNamed:@"pref-personal" forClass:[self class]];
 }
 
 /*!
@@ -54,7 +60,6 @@
 	[[textField_displayName cell] setPlaceholderString:(defaultAlias ? defaultAlias : @"")];
 
 	[self configureProfile];
-	[self configureImageView];
 	[self configureTooltips];
 	
 	if ([[[adium preferenceController] preferenceForKey:KEY_USE_USER_ICON
@@ -66,11 +71,16 @@
 
 	[self configureControlDimming];
 
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
+
+	[imageView_userIcon setMaxSize:NSMakeSize(256, 256)];
+
 	[super viewDidLoad];
 }
 
 - (void)viewWillClose
 {
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[self fireProfileChangesImmediately];
 
 	[[NSFontPanel sharedFontPanel] setDelegate:nil];
@@ -118,6 +128,24 @@
 
 	[button_chooseIcon setEnabled:enableUserIcon];
 	[imageView_userIcon setEnabled:enableUserIcon];	
+}
+
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	if (object) return;
+
+	if ([key isEqualToString:KEY_ACCOUNT_DISPLAY_NAME]) {
+		NSString *displayName = [textField_displayName stringValue];
+		NSString *newDisplayName = [[[prefDict objectForKey:KEY_ACCOUNT_DISPLAY_NAME] attributedString] string];
+		if (![displayName isEqualToString:newDisplayName]) {
+			[textField_displayName setStringValue:newDisplayName];
+		}
+	}
+
+	if (firstTime || [key isEqualToString:KEY_USER_ICON] || [key isEqualToString:KEY_DEFAULT_USER_ICON]) {
+		[self configureImageView];
+	}
 }
 
 #pragma mark Profile

@@ -35,10 +35,6 @@
 #define ADIUM_UPDATE_URL			@"http://download.adiumx.com/"
 #define ADIUM_UPDATE_BETA_URL		@"http://beta.adiumx.com/"
 
-#define VERSION_PLIST_URL			@"http://www.adiumx.com/version.plist"
-#define VERSION_PLIST_KEY			@"adium-version"
-#define VERSION_BETA_PLIST_KEY		@"adium-beta-version"
-
 #define UNABLE_TO_SEND				AILocalizedString(@"Unable to send crash report",nil)
 
 @interface AICrashReporter (PRIVATE)
@@ -209,7 +205,7 @@
 
 #pragma mark Report sending
 
-/*
+/*!
  * @brief Disable the close button and begin spinning the indeterminate progress indicator
  */
 - (void)activateProgressIndicator
@@ -226,7 +222,7 @@
 	[progress_sending startAnimation:nil];
 }	
 
-/*
+/*!
  * @brief User wants to send the report
  */
 - (IBAction)send:(id)sender
@@ -248,11 +244,14 @@
 	}
 }
 
-/*
+/*!
  * @brief Build the crash report and associated information, then pass it to sendReport:
  */
 - (void)buildAndSendReport
 {
+	//If we already sent the crash log, do nothing and just return
+	if (sentCrashLog) return;
+
 	NSString	*shortDescription = [textField_description stringValue];
 	
 	//Truncate description field to 300 characters
@@ -265,7 +264,7 @@
 															 allowNaturalLanguage:NO] autorelease];
 	NSString		*buildDateAndInfo = [NSString stringWithFormat:@"%@	(%@)",
 		[dateFormatter stringForObjectValue:buildDate],
-		(buildUser ? buildUser : buildNumber)];
+		(buildUser ? [NSString stringWithFormat:@"%@.%@",buildNumber,buildUser] : buildNumber)];
 	
 	NSDictionary	*crashReport = [NSDictionary dictionaryWithObjectsAndKeys:
 		buildDateAndInfo, @"build",
@@ -280,7 +279,7 @@
 	[self sendReport:crashReport];
 }
 
-/*
+/*!
  * @brief Send a crash report to the crash reporter web site
  */
 - (void)sendReport:(NSDictionary *)crashReport
@@ -326,7 +325,9 @@
                                nil) == NSAlertAlternateReturn) {
                 break;
             }
-        }
+        } else {
+			sentCrashLog = YES;
+		}
     }
 }
 
@@ -414,9 +415,11 @@
 							AILocalizedString(@"Cancel",nil),
 							nil) == NSAlertDefaultReturn) {
 			shouldRelaunchAdium = NO;
-			[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:(BETA_RELEASE ?
-																		 ADIUM_UPDATE_BETA_URL :
-																		 ADIUM_UPDATE_URL)]];
+#ifdef BETA_RELEASE
+			[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_UPDATE_BETA_URL]];
+#else
+			[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_UPDATE_URL]];
+#endif
 		}
 	}
 
@@ -434,12 +437,20 @@
 }
 
 
+- (void)versionCheckingTimedOut
+{
+	[self statusChecker:nil foundVersion:nil isNewVersion:NO];
+}
+
 /*!
  * @brief Returns the date of the most recent Adium build (contacts adiumx.com asynchronously)
  */
 - (void)performVersionChecking
 {
 	statusChecker = [[SUStatusChecker statusCheckerForDelegate:self] retain];
+	[self performSelector:@selector(versionCheckingTimedOut)
+			   withObject:nil
+			   afterDelay:10.0];
 }
 
 - (void)statusChecker:(SUStatusChecker *)statusChecker foundVersion:(NSString *)versionString isNewVersion:(BOOL)isNewVersion
@@ -450,7 +461,27 @@
 		isNewVersion = NO;
 	}
 
+	[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(versionCheckingTimedOut) object:nil];
 	[self finishWithAcceptableVersion:!isNewVersion newVersionString:versionString];
+}
+
+#ifdef BETA_RELEASE
+#define UPDATE_TYPE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"beta", @"value", @"Beta or Release Versions", @"visibleValue", nil]
+#else
+#define UPDATE_TYPE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"release", @"value", @"Release Versions Only", @"visibleValue", nil]
+#endif
+
+/* This method gives the delegate the opportunity to customize the information that will
+* be included with update checks.  Add or remove items from the dictionary as desired.
+* Each entry in profileInfo is an NSDictionary with the following keys:
+*		key: 		The key to be used  when reporting data to the server
+*		visibleKey:	Alternate version of key to be used in UI displays of profile information
+*		value:		Value to be used when reporting data to the server
+*		visibleValue:	Alternate version of value to be used in UI displays of profile information.
+*/
+- (NSMutableArray *)updaterCustomizeProfileInfo:(NSMutableArray *)profileInfo
+{
+	return [NSMutableArray arrayWithObject:UPDATE_TYPE_DICT];	
 }
 
 @end

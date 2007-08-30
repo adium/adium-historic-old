@@ -52,6 +52,7 @@
 		name = [inName retain];
 		textEquivalents = [inTextEquivalents retain];
 		pack = [inPack retain];
+		imageLoaded = NO;
 		_cachedAttributedString = nil;	
     }
 
@@ -62,12 +63,10 @@
 - (void)dealloc
 {
     [path release];
-	[image release];
 	[name release];
     [textEquivalents release];
 	[pack release];
     [_cachedAttributedString release];
-    [_cachedImage release];
 
 	[super dealloc];
 }
@@ -85,14 +84,14 @@
 /*!
  * @brief Flush any cached data
  *
- * This releases emoticon images (and image attachment strings) which were cached by the emoticon. It is primarily used
+ * This releases image attachment strings which were cached by the emoticon. It is primarily used
  * after display previews of emoticon packs which are not enabled, since there is no reason to maintain a cache that
  * will not be used.
  */
 - (void)flushEmoticonImageCache
 {
+	imageLoaded = NO;
     [_cachedAttributedString release]; _cachedAttributedString = nil;
-    [_cachedImage release]; _cachedImage = nil;
 }
 
 /*!
@@ -136,7 +135,7 @@
     return [[[NSImage alloc] initWithContentsOfFile:path] autorelease];
 }
 
-/*
+/*!
  * @brief Change the path to the image for this emoticon
  */
 - (void)setPath:(NSString *)inPath
@@ -157,28 +156,32 @@
 /*!
  * @brief Returns an attributed string containing this emoticon
  *
- * The attributed string contains an <tt>AITextAttachmntExtension</tt> which has both the emoticon image
+ * The attributed string contains an <tt>AITextAttachmentExtension</tt> which has both the emoticon image
  * and the passed text equivalent available.  The hard work is cached, although each call results in a new
- * NSMutableAttribtedString being returned.
+ * NSMutableAttributedString being returned.
  *
  * @param textEquivalent The text equivalent for this attributed string 
  * @result The attributed string with the emoticon
  */
-- (NSMutableAttributedString *)attributedStringWithTextEquivalent:(NSString *)textEquivalent
+- (NSMutableAttributedString *)attributedStringWithTextEquivalent:(NSString *)textEquivalent attachImages:(BOOL)attach
 {
     NSMutableAttributedString   *attributedString;
     AITextAttachmentExtension   *attachment;
     
-    //Cache this attachment for ourself
-    if (!_cachedAttributedString) {
+    //Cache this attachment for ourself if we don't already have a cache, or if our cache needs to have an image attached
+    if (!_cachedAttributedString || (!imageLoaded && attach)) {
+		[_cachedAttributedString release]; //for the second half of the conditional
         AITextAttachmentExtension   *emoticonAttachment = [[[AITextAttachmentExtension alloc] init] autorelease];
-		NSTextAttachmentCell		*cell = [[NSTextAttachmentCell alloc] initImageCell:[self image]];
+		if(!path || attach) {
+			NSTextAttachmentCell		*cell = [[NSTextAttachmentCell alloc] initImageCell:[self image]];
+			[emoticonAttachment setAttachmentCell:cell];
+			[cell release];
+			imageLoaded = YES;
+		} 
 
 		[emoticonAttachment setPath:path];
 		[emoticonAttachment setHasAlternate:YES];
-		[emoticonAttachment setAttachmentCell:cell];
 		[emoticonAttachment setImageClass:@"emoticon"];
-		[cell release];
 
 		//Emoticons should not ever be sent out as images
 		[emoticonAttachment setShouldAlwaysSendAsText:YES];

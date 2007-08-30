@@ -16,6 +16,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "label_listedOnTheFollowingOfYourAccounts" = AILocalizationTextField; 
+                "tableColumn_contacts" = NSTableColumn; 
                 "tableView_accounts" = AIAlternatingRowTableView; 
             }; 
             SUPERCLASS = AIContactInfoPane; 

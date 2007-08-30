@@ -23,7 +23,6 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/MVMenuButton.h>
-#import <AIUtilities/AIExceptionHandlingUtilities.h>
 #import <Adium/AIContentObject.h>
 #import <Adium/AIHTMLDecoder.h>
 
@@ -112,7 +111,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 	//Observe for installation of new scripts
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(xtrasChanged:)
-									   name:Adium_Xtras_Changed
+									   name:AIXtrasDidChangeNotification
 									 object:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(toolbarWillAddItem:)
@@ -184,15 +183,18 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 	enumerator = [[adium allResourcesForName:@"Scripts" withExtensions:SCRIPT_BUNDLE_EXTENSION] objectEnumerator];
 	while ((filePath = [enumerator nextObject])) {
 		if ((scriptBundle = [NSBundle bundleWithPath:filePath])) {
-			
 			NSString		*scriptsSetName;
 			NSEnumerator	*scriptEnumerator;
 			NSDictionary	*scriptDict;
-			NSDictionary	*infoDict = [scriptBundle infoDictionary];
+			NSDictionary	*infoDict = [NSDictionary dictionaryWithContentsOfFile:[[scriptBundle bundlePath] stringByAppendingPathComponent:@"Info.plist"]];
+			if (!infoDict) infoDict= [scriptBundle infoDictionary];
+
+			NSDictionary	*localizedInfoDict = [scriptBundle localizedInfoDictionary];
 
 			//Get the name of the set these scripts will go into
-			scriptsSetName = [infoDict objectForKey:@"Set"];
-			
+			scriptsSetName = [localizedInfoDict objectForKey:@"Set"];
+			if (!scriptsSetName) scriptsSetName = [infoDict objectForKey:@"Set"];
+
 			//Now enumerate each script the bundle claims as its own
 			scriptEnumerator = [[infoDict objectForKey:@"Scripts"] objectEnumerator];
 			
@@ -207,7 +209,14 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 					
 					keyword = [scriptDict objectForKey:@"Keyword"];
 					title = [scriptDict objectForKey:@"Title"];
-					
+
+					//The keywords titles are keyed by their English version in the localized info dict
+					NSString *localizedKeyword = [localizedInfoDict objectForKey:keyword];
+					if (localizedKeyword) keyword = localizedKeyword;
+
+					NSString *localizedTitle = [localizedInfoDict objectForKey:title];
+					if (localizedTitle) title = localizedTitle;
+
 					if (keyword && [keyword length] && title && [title length]) {
 						NSMutableDictionary	*infoDict;
 						
@@ -241,7 +250,9 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 					}
 				}
 			}
-		}		
+		} else {
+			NSLog(@"Warning: Could not load Adium script bundle at %@",filePath);
+		}
 	}
 }
 
@@ -440,7 +451,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
  * @brief Validate menu item
  * Disable the insertion if a text field is not active
  */
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	if ((menuItem == scriptMenuItem) || (menuItem == contextualScriptMenuItem)) {
 		return YES; //Always keep the submenu enabled so users can see the available scripts
@@ -550,25 +561,16 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 			}
 			keywordEnd = [scanner scanLocation];		
 			
-			if (keywordStart != 0 && [inString characterAtIndex:keywordStart - 1] == '\\') {
-				//Ignore the script (It was escaped) and delete the escape character
-				//XXX This is broken now; escaping scripts is no longer possible. Do we care? I don't. -evands
-				[attributedString replaceCharactersInRange:NSMakeRange(keywordStart - 1, 1) withString:@""];
-				foundKeyword = YES;
-
-			} else {
-				//Run the script.
-				NSRange	keywordRange = NSMakeRange(keywordStart, keywordEnd - keywordStart);
-
-				[self _executeScript:infoDict 
-					   withArguments:argArray
-				 forAttributedString:attributedString
-						keywordRange:keywordRange
-							 context:context
-							uniqueID:uniqueID];
-
-				foundKeyword = YES;
-			}
+			//Run the script.
+			NSRange	keywordRange = NSMakeRange(keywordStart, keywordEnd - keywordStart);
+			[self _executeScript:infoDict 
+				   withArguments:argArray
+			 forAttributedString:attributedString
+					keywordRange:keywordRange
+						 context:context
+						uniqueID:uniqueID];
+			
+			foundKeyword = YES;
 		}
 	}
 }
@@ -601,7 +603,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 													  userInfo:userInfo];
 }
 
-/*
+/*!
  * @brief A script finished running
  */
 - (void)applescriptDidRun:(id)userInfo resultString:(NSString *)resultString

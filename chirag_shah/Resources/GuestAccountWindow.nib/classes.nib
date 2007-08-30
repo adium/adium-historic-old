@@ -21,9 +21,9 @@
                 "button_advanced" = NSButton; 
                 "button_cancel" = NSButton; 
                 "button_okay" = NSButton; 
-                "imageView_service" = NSImageView; 
                 "label_name" = NSTextField; 
                 "label_password" = NSTextField; 
+                "label_service" = NSTextField; 
                 "popUp_service" = NSPopUpButton; 
                 "textField_name" = NSTextField; 
                 "textField_password" = NSTextField; 

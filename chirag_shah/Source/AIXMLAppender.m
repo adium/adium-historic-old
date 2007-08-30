@@ -38,8 +38,10 @@
 
 
 #import "AIXMLAppender.h"
+#import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <sys/stat.h>
+#import <fcntl.h>
 
 #define XML_APPENDER_BLOCK_SIZE 4096
 
@@ -52,6 +54,7 @@ enum {
 @interface AIXMLAppender(PRIVATE)
 - (NSString *)createElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values;
 - (NSString *)rootElementNameForFileAtPath:(NSString *)path;
+- (void)prepareFileHandle;
 @end
 
 /*!
@@ -84,56 +87,12 @@ enum {
 {
 	if ((self = [super init])) {
 		//Set up our instance variables
-		initialized = NO;
 		rootElementName = nil;
 		filePath = [path copy];
-		
-		//Check if the file already exists
-		if ([[NSFileManager defaultManager] fileExistsAtPath:filePath]) {
-			//Get the root element name and set initialized
-			rootElementName = [[self rootElementNameForFileAtPath:filePath] retain];
-			initialized = (rootElementName != nil);				
-		//We may need to create the directory structure, so call this just in case
-		} else {
-			NSFileManager *mgr = [NSFileManager defaultManager];
+		initialized = NO;
+		fullSyncAfterEachAppend = YES;
 
-			//Save the current working directory, so we can change back to it.
-			NSString *savedWorkingDirectory = [mgr currentDirectoryPath];
-			//Change to the root.
-			[mgr changeCurrentDirectoryPath:@"/"];
-
-			/*Create each component of the path, then change into it.
-			 *E.g. /foo/bar/baz:
-			 *	cd /
-			 *	mkdir foo
-			 *	cd foo
-			 *	mkdir bar
-			 *	cd bar
-			 *	mkdir baz
-			 *	cd baz
-			 *	cd $savedWorkingDirectory
-			 */
-			NSArray *pathComponents = [[filePath stringByDeletingLastPathComponent] pathComponents];
-			NSEnumerator *pathComponentsEnum = [pathComponents objectEnumerator];
-			NSString *component;
-			while ((component = [pathComponentsEnum nextObject])) {
-				[mgr createDirectoryAtPath:component attributes:nil];
-				[mgr changeCurrentDirectoryPath:component];
-			}
-
-			[mgr changeCurrentDirectoryPath:savedWorkingDirectory];
-		}
-		
-		//Open our file handle and seek if necessary
-		const char *pathCString = [filePath fileSystemRepresentation];
-		int fd = open(pathCString, O_CREAT | O_WRONLY, 0644);
-		file = [[NSFileHandle alloc] initWithFileDescriptor:fd closeOnDealloc:YES];
-		if (initialized) {
-			struct stat sb;
-			fstat(fd, &sb);
-			int closingTagLength = [rootElementName length] + 4; //</rootElementName>
-			[file seekToFileOffset:sb.st_size - closingTagLength];
-		}
+		[self prepareFileHandle];
 	}
 
 	return self;
@@ -150,6 +109,7 @@ enum {
 	[super dealloc];
 }
 
+#pragma mark -
 
 /*!
  * @brief If the document is initialized.
@@ -185,16 +145,155 @@ enum {
 }
 
 /*!
+ * @brief Set if a full sync to disk should be performed after each write
+ *
+ * A full sync is relatively costly but ensures that the data is immediately written. 
+ * If appending a single item, the default value of YES is appropriate.
+ *
+ * If many append operations will occur, such as in a loop, set this to NO, then call 
+ * -[AIXMLAppender performFullSync] when complete to perform the sync.
+ *
+ * Not calling performFullSync at all is only a problem in case of a power failure; the system will
+ * at some undetermined point in the future write data to disk in any case.
+ */
+- (void)setFullSyncAfterEachAppend:(BOOL)shouldFullSync
+{
+	fullSyncAfterEachAppend = shouldFullSync;
+}
+
+/*!
+ * @brief Should a full sync be performed whenever an addElement call is made?
+ *
+ * See setFullSyncAfterEachAppend: for information
+ */
+- (BOOL)fullSyncAfterEachAppend
+{
+	return fullSyncAfterEachAppend;
+}
+
+/*!
+ * @brief Perform a full sync immediately
+ *
+ * This is only useful if fullSyncAfterEachAppend is NO.
+ * fullSyncAfterEachAppend is YES by default.
+ */
+- (void)performFullSync
+{
+	if (initialized && file)
+		fcntl([file fileDescriptor], F_FULLFSYNC, /*arg*/ 0);
+}
+
+#pragma mark -
+
+- (void)prepareFileHandle
+{	
+	NSFileManager *manager = [NSFileManager defaultManager];
+	
+	//Check if the file already exists
+	if ([manager fileExistsAtPath:filePath]) {
+		//Get the root element name and set initialized
+		rootElementName = [[self rootElementNameForFileAtPath:filePath] retain];
+		initialized = (rootElementName != nil);				
+		//We may need to create the directory structure, so call this just in case
+	} else {
+		[manager createDirectoriesForPath:[filePath stringByDeletingLastPathComponent]];
+		initialized = NO;
+	}
+	
+	//Open our file handle and seek if necessary
+	const char *pathCString = [filePath fileSystemRepresentation];
+	int fd = open(pathCString, O_CREAT | O_WRONLY, 0644);
+	if(fd == -1) {
+		AILog(@"Couldn't open log file %@ (%s - length %u) for writing!",
+			  filePath, pathCString, (pathCString ? strlen(pathCString) : 0));
+	} else {
+		file = [[NSFileHandle alloc] initWithFileDescriptor:fd closeOnDealloc:YES];
+		if (initialized) {
+			struct stat sb;
+			fstat(fd, &sb);
+			int closingTagLength = [rootElementName length] + 4; //</rootElementName>
+			[file seekToFileOffset:sb.st_size - closingTagLength];
+		}
+	}
+}
+
+- (BOOL)writeData:(NSData *)data seekBackLength:(int)seekBackLength
+{
+	BOOL success = YES;
+	
+	@try {
+		[file writeData:data];
+
+	} @catch (NSException *writingException) {
+		/* NSFileHandle raises an exception if:
+		 *    * the file descriptor is closed or is not valid - we should reopen the file and try again
+		 *    * if the receiver represents an unconnected pipe or socket endpoint - this should never happen
+		 *    * if no free space is left on the file system - this should be handled gracefully if possible.. but the user is probably in trouble.
+		 *    * if any other writing error occurs - as with lack of free space.
+		 */
+		if (initialized &&
+			[[writingException name] isEqualToString:NSFileHandleOperationException] &&
+			[[writingException reason] rangeOfString:@"Bad file descriptor"].location != NSNotFound) {
+			@try {
+				[file release]; file = nil;
+			} @catch (NSException *releaseException) {
+				//Don't need to do anything... but if we failed to write, we may fail to deallocate, too.
+				 file = nil;
+			}
+			
+			[self prepareFileHandle];
+			@try {
+				[file writeData:data];
+				success = YES;
+
+			} @catch (NSException *secondWritingException) {
+				NSLog(@"Exception while writing %@ log file %@: %@ (%@)",
+					  (initialized ? @"initialized" : @"uninitialized"), filePath, [secondWritingException name], [secondWritingException reason]);
+				success = NO;
+			}
+			
+		} else {
+			NSLog(@"Exception while writing %@ log file %@: %@ (%@)",
+				  (initialized ? @"initialized" : @"uninitialized"), filePath, [writingException name], [writingException reason]);
+			success = NO;
+		}
+	}
+
+	if (success) {
+		if (fullSyncAfterEachAppend)
+			fcntl([file fileDescriptor], F_FULLFSYNC, /*arg*/ 0);
+
+		@try {
+			[file seekToFileOffset:([file offsetInFile] - seekBackLength)];	
+			
+		} @catch (NSException *seekException) {
+			/* -[NSFileHandler seekToFileOffset:] raises an exception if
+			*    * the message is sent to an NSFileHandle object representing a pipe or socket
+			*    * if the file descriptor is closed
+			*    * if any other error occurs in seeking.
+			*/
+			NSLog(@"Exception while seeking in %@ log file %@: %@ (%@)",
+				  (initialized ? @"initialized" : @"uninitialized"), filePath, [seekException name], [seekException reason]);
+			success = NO;
+		}
+	}
+
+	return success;
+}
+
+/*!
  * @brief Sets up the document.
  *
  * @param name The name of the root element for this document.
- * @param attributeKeys An array of the attribute keys the element has.
- * @param attributeValues An array of the attribute values the element has.
+ * @param keys An array of the attribute keys the element has.
+ * @param values An array of the attribute values the element has.
  */
-- (void)initializeDocumentWithRootElementName:(NSString *)name attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
+- (BOOL)initializeDocumentWithRootElementName:(NSString *)name attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
 {
 	//Don't initialize twice
-	if (!initialized) {
+	BOOL success = NO;
+
+	if (!initialized && file) {
 		//Keep track of this for later
 		rootElementName = [name retain];
 
@@ -204,12 +303,12 @@ enum {
 		NSString *initialDocument = [NSString stringWithFormat:@"%@\n%@", XML_MARKER, rootElement];
 		
 		//Write the data, and then seek backwards
-		[file writeData:[initialDocument dataUsingEncoding:NSUTF8StringEncoding]];
-		[file synchronizeFile];
-		[file seekToFileOffset:([file offsetInFile] - closingTagLength)];
-		
+		success = [self writeData:[initialDocument dataUsingEncoding:NSUTF8StringEncoding] seekBackLength:closingTagLength];
+
 		initialized = YES;
 	}
+	
+	return success;
 }
 
 /*!
@@ -217,16 +316,16 @@ enum {
  *
  * @param name The name of the root element for this document.
  * @param content The stuff between the open and close tags. If nil, then the tag will be self closing.
- * @param attributeKeys An array of the attribute keys the element has.
- * @param attributeValues An array of the attribute values the element has.
+ * @param keys An array of the attribute keys the element has.
+ * @param values An array of the attribute values the element has.
  */
 
-- (void)addElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
+- (BOOL)addElementWithName:(NSString *)name content:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
 {
-	[self addElementWithName:name
-			  escapedContent:(content ? [content stringByEscapingForXMLWithEntities:nil] : nil)
-			   attributeKeys:keys
-			 attributeValues:values];
+	return [self addElementWithName:name
+					 escapedContent:(content ? [content stringByEscapingForXMLWithEntities:nil] : nil)
+					  attributeKeys:keys
+					attributeValues:values];
 }
 
 /*!
@@ -234,26 +333,28 @@ enum {
  *
  * @param name The name of the root element for this document.
  * @param content The stuff between the open and close tags. If nil, then the tag will be self closing. No escaping will be performed on the content.
- * @param attributeKeys An array of the attribute keys the element has.
- * @param attributeValues An array of the attribute values the element has.
+ * @param keys An array of the attribute keys the element has.
+ * @param values An array of the attribute values the element has.
  */
 
-- (void)addElementWithName:(NSString *)name escapedContent:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
+- (BOOL)addElementWithName:(NSString *)name escapedContent:(NSString *)content attributeKeys:(NSArray *)keys attributeValues:(NSArray *)values
 {
-	//Don't add if not initialized
-	if (initialized) {
+	BOOL success = NO;
+
+	//Don't add if not initialized, or if we couldn't open the file
+	if (initialized && file) {
 		//Create our strings
 		NSString *element = [self createElementWithName:name content:content attributeKeys:keys attributeValues:values];
 		NSString *closingTag = [NSString stringWithFormat:@"</%@>\n", rootElementName];
 		
-		if(element != nil)
-		{
+		if (element != nil) {
 			//Write the data, and then seek backwards
-			[file writeData:[[element stringByAppendingString:closingTag] dataUsingEncoding:NSUTF8StringEncoding]];
-			[file synchronizeFile];
-			[file seekToFileOffset:([file offsetInFile] - [closingTag length])];
+			success = [self writeData:[[element stringByAppendingString:closingTag] dataUsingEncoding:NSUTF8StringEncoding]
+					   seekBackLength:[closingTag length]];
 		}
 	}
+	
+	return success;
 }
 
 #pragma mark Private Methods
@@ -263,8 +364,8 @@ enum {
  *
  * @param name The name of the element.
  * @param content The stuff between the open and close tags. If nil, then the tag will be self closing. No escaping will be performed on the content.
- * @param attributeKeys An array of the attribute keys the element has.
- * @param attributeValues An array of the attribute values the element has.
+ * @param keys An array of the attribute keys the element has.
+ * @param values An array of the attribute values the element has.
  * @return An XML element, suitable for insertion into a document.
  *
  * The two attribute arrays must be of the same size, or the method will return nil.
@@ -306,31 +407,8 @@ enum {
 {
 	//Create a temporary file handle for validation, and read the marker
 	NSFileHandle *handle = [NSFileHandle fileHandleForReadingAtPath:path];
-	//Evan tried to add a UTF-8 BOM, but messed it up and ended up writing three high-ASCII characters instead (which came out as six bytes once converted from MacRoman through Unicode to UTF-8).
-	//So now we have to be ready to handle these, at least until the user opens the Transcript Viewer.
-#warning XXX This workaround should probably be removed before 1.0b8 (definitely before 1.0 final), since the bug that necessitated it was stamped out quickly and the transcript viewer will fix any broken logs. All logs in the world that were thus broken should be thereby fixed by either or both of the aforementioned versions.
-	NSMutableData *markerData = [[[handle readDataOfLength:xmlMarkerLength + failedUtf8BomLength] mutableCopy] autorelease];
-	NSRange markerRange = { 0, [markerData length] };
-	const unsigned char *markerBytes = [markerData bytes];
-	if ((markerRange.length >= failedUtf8BomLength)
-	&&  (markerBytes[0] == 0xC3)
-	&&  (markerBytes[1] == 0x94)
-	&&  (markerBytes[2] == 0xC2)
-	&&  (markerBytes[3] == 0xAA)
-	&&  (markerBytes[4] == 0xC3)
-	&&  (markerBytes[5] == 0xB8)
-	) {
-		markerRange.length = failedUtf8BomLength;
-		[markerData replaceBytesInRange:markerRange withBytes:"" length:0];
-	}
-
-	NSString *markerString = [[[NSString alloc] initWithData:markerData
-	                                                encoding:NSUTF8StringEncoding] autorelease];
-
-	if (![markerString isEqualToString:XML_MARKER]) {
-		[handle closeFile];
-		return nil;
-	}
+	
+	if(!handle) return nil;
 	
 	NSScanner *scanner = nil;
 	do {
@@ -377,7 +455,7 @@ enum {
 	
 	[handle closeFile];
 	
-	//We've obviously found the root element name, so return a nonmutble copy.
+	//We've obviously found the root element name, so return a nonmutable copy.
 	return [NSString stringWithString:accumulator];
 }
 

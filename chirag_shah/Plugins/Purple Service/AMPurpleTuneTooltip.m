@@ -1,0 +1,77 @@
+//
+//  AMPurpleTuneTooltip.m
+//  Adium
+//
+//  Created by Andreas Monitzer on 2007-06-12.
+//  Copyright 2007 Andreas Monitzer. All rights reserved.
+//
+
+#import "AMPurpleTuneTooltip.h"
+#import "AIListObject.h"
+#import "CBPurpleAccount.h"
+#import <Libpurple/blist.h>
+
+@implementation AMPurpleTuneTooltip
+
+- (id)initWithAccount:(CBPurpleAccount*)_account {
+	if((self = [super init])) {
+		account = _account;
+	}
+	return self;
+}
+
+- (NSString *)labelForObject:(AIListObject *)inObject {
+	if([inObject service] == [account service]) {
+		PurpleBuddy *buddy = purple_find_buddy([account purpleAccount],[[inObject UID] UTF8String]);
+		PurplePresence *presence = purple_buddy_get_presence(buddy);
+		PurpleStatus *status = purple_presence_get_active_status(presence);
+		PurpleValue *value = purple_status_get_attr_value(status, "tune_title");
+		
+		if(value && purple_value_get_type(value) == PURPLE_TYPE_STRING && purple_value_get_string(value))
+			return AILocalizedString(@"Tune","user tune tooltip title");
+	}
+	return nil;
+}
+
+- (NSAttributedString *)entryForObject:(AIListObject *)inObject {
+	if([inObject service] == [account service]) {
+		PurpleBuddy *buddy = purple_find_buddy([account purpleAccount],[[inObject UID] UTF8String]);
+		PurplePresence *presence = purple_buddy_get_presence(buddy);
+		PurpleStatus *status = purple_presence_get_active_status(presence);
+
+		PurpleValue *title = purple_status_get_attr_value(status, "tune_title");
+		PurpleValue *artist = purple_status_get_attr_value(status, "tune_artist");
+		PurpleValue *album = purple_status_get_attr_value(status, "tune_album");
+		PurpleValue *time = purple_status_get_attr_value(status, "tune_time");
+		
+		if(!title)
+			return nil;
+		
+		const char *titlestr = purple_value_get_string(title);
+		const char *artiststr = NULL;
+		const char *albumstr = NULL;
+		int timeval = -1;
+		if(!titlestr)
+			return nil;
+		if(artist)
+			artiststr = purple_value_get_string(artist);
+		if(album)
+			albumstr = purple_value_get_string(album);
+		if(time)
+			timeval = purple_value_get_int(time);
+		
+		NSMutableString *text = [NSMutableString string];
+		if(artiststr && artiststr[0] != '\0')
+			[text appendFormat:@"%@ - ", [NSString stringWithUTF8String:artiststr]];
+		[text appendString:[NSString stringWithUTF8String:titlestr]];
+		if(albumstr && albumstr[0] != '\0')
+			[text appendFormat:@" (%@)", [NSString stringWithUTF8String:albumstr]];
+		if(timeval > 0)
+			[text appendFormat:@" - [%d:%02d]", timeval / 60, timeval % 60];
+		
+		return [[[NSAttributedString alloc] initWithString:text attributes:nil] autorelease];
+	}
+	return nil;
+}
+
+@end

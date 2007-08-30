@@ -37,12 +37,12 @@
 		<dict>
 			<key>CFBundleTypeExtensions</key>
 			<array>
-				<string>AdiumLibgaimPlugin</string>
+				<string>AdiumLibpurplePlugin</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>AdiumPlugin.icns</string>
 			<key>CFBundleTypeName</key>
-			<string>Adium Libgaim Plugin</string>
+			<string>Adium Libpurple Plugin</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>AdIM</string>
@@ -51,7 +51,7 @@
 			<string>Viewer</string>
 			<key>LSItemContentTypes</key>
 			<array>
-				<string>com.adiumx.libgaimplugin</string>
+				<string>com.adiumx.libpurpleplugin</string>
 			</array>
 			<key>LSTypeIsPackage</key>
 			<true/>
@@ -96,6 +96,28 @@
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>com.adiumx.soundset</string>
+			</array>
+			<key>LSTypeIsPackage</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>AdiumMenuBarIcons</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>AdiumMenuBarIcons.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Adium Menu Bar Icons</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>AdMB</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adiumx.menubaricons</string>
 			</array>
 			<key>LSTypeIsPackage</key>
 			<true/>
@@ -256,13 +278,61 @@
 			<key>LSTypeIsPackage</key>
 			<true/>
 		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>AdiumHTMLLog</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>Adium.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Adium Chat Log</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>AILh</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adiumx.htmllog</string>
+			</array>
+			<key>LSTypeIsPackage</key>
+			<false/>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>Binary</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>chatlog</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>Adium.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Adium Chat Log</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>AILo</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>None</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adiumx.xmllog</string>
+			</array>
+			<key>LSTypeIsPackage</key>
+			<false/>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>Binary</string>
+		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>Adium</string>
 	<key>CFBundleGetInfoString</key>
-	<string>1.0b8, Copyright 2001-2006 The Adium Team</string>
+	<string>1.2svn, Copyright 2001-2007 The Adium Team</string>
 	<key>CFBundleHelpBookFolder</key>
-	<string>Adium Help</string>
+	<string>AdiumHelp</string>
 	<key>CFBundleHelpBookName</key>
 	<string>Adium Help</string>
 	<key>CFBundleIconFile</key>
@@ -276,7 +346,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0b8</string>
+	<string>1.2svn</string>
 	<key>CFBundleSignature</key>
 	<string>AdIM</string>
 	<key>CFBundleURLTypes</key>
@@ -345,19 +415,9 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>1.0b8</string>
-	<key>Java</key>
-	<dict>
-		<key>JVMVersion</key>
-		<string>1.4+</string>
-		<key>VMOptions</key>
-		<string>-enableassertions</string>
-	</dict>
-	<key>LSEnvironment</key>
-	<dict>
-		<key>MinimumSystemVersion</key>
-		<string>10.3.9</string>
-	</dict>
+	<string>1.2svn</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.4.0</string>
 	<key>LSRequiresNativeExecution</key>
 	<true/>
 	<key>NSAppleScriptEnabled</key>
@@ -365,17 +425,17 @@
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
-	<string>NSApplication</string>
+	<string>AIApplication</string>
 	<key>SUCheckAtStartup</key>
 	<true/>
 	<key>SUFeedURL</key>
-	<string>http://adiumx.com/sparkle/profileInfo.php</string>
+	<string>http://www.adiumx.com/sparkle/update.php</string>
 	<key>SUScheduledCheckInterval</key>
 	<integer>86400</integer>
 	<key>SmartCrashReports_CompanyName</key>
 	<string>Adium</string>
 	<key>SmartCrashReports_EmailTicket</key>
-	<string>SCR-4C60AF7BD3</string>
+	<string>SCR-2631F8982F</string>
 	<key>UTExportedTypeDeclarations</key>
 	<array>
 		<dict>
@@ -424,11 +484,11 @@
 				<string>com.adiumx.xtra</string>
 			</array>
 			<key>UTTypeDescription</key>
-			<string>Adium X Libgaim plug-in</string>
+			<string>Adium X Libpurple plug-in</string>
 			<key>UTTypeIconFile</key>
 			<string>AdiumPlugin.icns</string>
 			<key>UTTypeIdentifier</key>
-			<string>com.adiumx.libgaimplugin</string>
+			<string>com.adiumx.libpurpleplugin</string>
 			<key>UTTypeReferenceURL</key>
 			<string>http://xtras.adiumx.com</string>
 			<key>UTTypeTagSpecification</key>
@@ -437,7 +497,7 @@
 				<string>AdIM</string>
 				<key>public.filename-extension</key>
 				<array>
-					<string>AdiumLibgaimPlugin</string>
+					<string>AdiumLibpurplePlugin</string>
 				</array>
 			</dict>
 		</dict>
@@ -653,9 +713,34 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
+				<string>com.adiumx.xtra</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Adium X menu bar icons pack</string>
+			<key>UTTypeIconFile</key>
+			<string>AdiumMenuBarIcons.icns</string>
+			<key>UTTypeIdentifier</key>
+			<string>com.adiumx.menubaricons</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://xtras.adiumx.com</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>com.apple.ostype</key>
+				<string>AdMB</string>
+				<key>public.filename-extension</key>
+				<array>
+					<string>AdiumMenuBarIcons</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
 				<string>public.data</string>
 				<string>public.content</string>
+				<string>public.text</string>
 				<string>public.message</string>
+				<string>public.xml</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Adium X chat log</string>
@@ -678,6 +763,8 @@
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.data</string>
+				<string>public.html</string>
+				<string>public.text</string>
 				<string>public.content</string>
 				<string>public.message</string>
 			</array>

@@ -20,23 +20,32 @@
 #define AIMessageWindow_ControllerOrderChanged 		@"AIMessageWindow_ControllerOrderChanged"
 #define AIMessageWindow_SelectedControllerChanged 	@"AIMessageWindow_SelectedControllerChanged"
 
-@class AIMessageSendingTextView, AIMessageTabViewItem, AIMessageViewController, AICustomTabsView, AIDualWindowInterfacePlugin;
-@protocol AIFlexibleToolbarItemDelegate;
+typedef enum
+{
+	AdiumTabPositionBottom = 0,
+	AdiumTabPositionTop,
+	AdiumTabPositionLeft,
+	AdiumTabPositionRight,
+} AdiumTabPosition;
 
-@interface AIMessageWindowController : AIWindowController<AIFlexibleToolbarItemDelegate> {
+@class AIMessageSendingTextView, AIMessageTabViewItem, AIMessageViewController, AIDualWindowInterfacePlugin, AIMessageTabSplitView;
+@class PSMTabBarControl, PSMAdiumTabStyle;
+
+@interface AIMessageWindowController : AIWindowController {
     IBOutlet	NSTabView			*tabView_messages;
-    IBOutlet	AICustomTabsView	*tabView_customTabs;
+    IBOutlet	PSMTabBarControl	*tabView_tabBar;
+	PSMAdiumTabStyle				*tabView_tabStyle;
+	AIMessageTabSplitView			*tabView_splitView;
     AIDualWindowInterfacePlugin 	*interface;
 	NSString						*containerName;
 	NSString						*containerID;
 
 	BOOL			windowIsClosing;
-
-    BOOL			supressHiding;		//YSE to temporarily suppress hiding of the tabs (used for dragging)
 	BOOL			alwaysShowTabs;		//YES if the tabs should always be visible, even if there is only 1
-    float			tabBarHeight;		//Height of the tab bar, used to restore their visibility
-	BOOL			tabBarIsVisible;	//YES if the tab bar is currently visible
-	
+
+	AdiumTabPosition tabPosition;
+	float			 lastTabBarWidth;
+
 	NSDictionary	*toolbarItems;
 	NSMutableArray	*containedChats;
 	
@@ -48,9 +57,10 @@
 + (AIMessageWindowController *)messageWindowControllerForInterface:(AIDualWindowInterfacePlugin *)inInterface
 															withID:(NSString *)inContainerID
 															  name:(NSString *)inName;
-- (void)showWindowInFront:(BOOL)inFront;
 - (IBAction)closeWindow:(id)sender;
 - (NSString *)containerID;
+- (PSMTabBarControl *)tabBar;
+- (AdiumTabPosition)tabPosition;
 - (NSString *)name;
 - (AIChat *)activeChat;
 
@@ -63,8 +73,6 @@
 - (NSArray *)containedChats;
 
 //Tabs
-- (void)updateTabBarVisibilityAndAnimate:(BOOL)animate;
 - (void)updateIconForTabViewItem:(AIMessageTabViewItem *)tabViewItem;
 
 @end
-

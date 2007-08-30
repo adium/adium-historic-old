@@ -15,15 +15,16 @@
  */
 
 #import <AIUtilities/AISendingTextView.h>
+#import <Adium/AIAdiumProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 
 #define	AIContinuousSpellCheckingWasToggledNotification	@"AIContinuousSpellCheckingWasToggledNotification"
 
-@class AIListContact, AIAdium, AIAccount, AIChat;
-@protocol AITextEntryView;
+@class AIListContact, AIAccount, AIChat;
 
 @interface AIMessageEntryTextView : AISendingTextView <AITextEntryView> {
-    AIAdium             *adium;
-    AIChat              *chat;
+    NSObject<AIAdium>	*adium;
+    AIChat				*chat;
     
     BOOL                 clearOnEscape;
 	BOOL				 historyEnabled;
@@ -83,7 +84,7 @@
 @end
 
 @interface NSObject (AIMessageEntryTextViewDelegate)
-/*
+/*!
  * @brief Should the tab key trigger an autocomplete?
  *
  * Implementation is optional.

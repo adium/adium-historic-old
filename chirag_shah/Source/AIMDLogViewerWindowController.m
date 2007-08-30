@@ -16,6 +16,14 @@
 
 @implementation AIMDLogViewerWindowController
 
+- (id)initWithWindowNibName:(NSString *)windowNibName
+{
+	if ((self = [super initWithWindowNibName:windowNibName])) {
+		currentSearchLock = [[NSLock alloc] init];
+	}
+	return self;
+}
+
 - (void)windowDidLoad
 {
 	[super windowDidLoad];
@@ -24,7 +32,7 @@
 	[tableView_results setAutosaveTableColumns:YES];
 }
 
-/*
+/*!
  * @brief Perform a content search of the indexed logs
  *
  * This uses the 10.4+ asynchronous search functions.
@@ -37,6 +45,7 @@
     Boolean			more = true;
     UInt32			totalCount = 0;
 
+	[currentSearchLock lock];
 	if (currentSearch) {
 		SKSearchCancel(currentSearch);
 		CFRelease(currentSearch); currentSearch = NULL;
@@ -47,6 +56,7 @@
 								(CFStringRef)searchString,
 								kSKSearchOptionDefault);
 	currentSearch = (thisSearch ? (SKSearchRef)CFRetain(thisSearch) : NULL);
+	[currentSearchLock unlock];
 
 	//Retrieve matches as long as more are pending
     while (more && currentSearch) {
@@ -124,9 +134,9 @@
 				totalCount--;
 			}
 			
-			CFRelease(logPath);
-			CFRelease(url);
-			CFRelease(document);
+			if (logPath) CFRelease(logPath);
+			if (url) CFRelease(url);
+			if (document) CFRelease(document);
         }
 		
 		//Scale all logs' ranking values to the largest ranking value we've seen thus far
@@ -147,20 +157,24 @@
     }
 	
 	//Ensure current search isn't released in two places simultaneously
+	[currentSearchLock lock];
 	if (currentSearch) {
 		CFRelease(currentSearch);
 		currentSearch = NULL;
 	}
-	
-	CFRelease(thisSearch);
+	[currentSearchLock unlock];
+
+	if (thisSearch) CFRelease(thisSearch);
 }
 
 - (void)stopSearching
 {	
+	[currentSearchLock lock];
 	if (currentSearch) {
 		SKSearchCancel(currentSearch);
 		CFRelease(currentSearch); currentSearch = nil;
 	}
+	[currentSearchLock unlock];
 
 	[super stopSearching];
 }
@@ -201,7 +215,7 @@
 	return dateTypeMenu;
 }
 
-/*
+/*!
  * @brief A new date type was selected
  *
  * The date picker will be hidden/revealed as appropriate.
@@ -269,6 +283,7 @@
 - (void)dealloc
 {
 	[filterDate release]; filterDate = nil;
+	[currentSearchLock release]; currentSearchLock = nil;
 
 	[super dealloc];
 }

@@ -19,15 +19,19 @@
  *A full list of these extensions is in the README file.
  */
 
+//The default separator for time values. Currently, this is ':'.
+extern unichar ISO8601ParserDefaultTimeSeparatorCharacter;
+
 @interface NSCalendarDate(ISO8601Parsing)
 
 //This method is the one that does all the work. All the others are convenience methods.
 + (NSCalendarDate *)calendarDateWithString:(NSString *)str strictly:(BOOL)strict getRange:(out NSRange *)outRange;
-
 + (NSCalendarDate *)calendarDateWithString:(NSString *)str strictly:(BOOL)strict;
 
 //Strictly: NO.
-+ (NSCalendarDate *)calendarDateWithString:(NSString *)str;
++ (NSCalendarDate *)calendarDateWithString:(NSString *)str timeSeparator:(unichar)timeSep getRange:(out NSRange *)outRange;
++ (NSCalendarDate *)calendarDateWithString:(NSString *)str timeSeparator:(unichar)timeSep;
 + (NSCalendarDate *)calendarDateWithString:(NSString *)str getRange:(out NSRange *)outRange;
++ (NSCalendarDate *)calendarDateWithString:(NSString *)str;
 
 @end

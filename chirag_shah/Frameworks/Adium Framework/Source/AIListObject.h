@@ -94,6 +94,7 @@ typedef enum {
 //Grouping
 - (AIListObject <AIContainingObject> *)containingObject;
 - (float)orderIndex;
+- (BOOL)containsMultipleContacts;
 
 //Display
 - (NSString *)formattedUID;
@@ -102,6 +103,7 @@ typedef enum {
 
 //Prefs
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName;
+- (void)setPreferences:(NSDictionary *)prefs inGroup:(NSString *)group;
 - (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName ignoreInheritedValues:(BOOL)ignore;
 - (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName;
 - (NSString *)pathToPreferences;
@@ -139,6 +141,8 @@ typedef enum {
 - (NSString *)notes;
 - (void)setNotes:(NSString *)notes;
 
+- (NSNumber *)idleTime;
+
 - (NSImage *)userIcon;
 - (NSImage *)menuIcon;
 - (NSData *)userIconData;
@@ -149,5 +153,8 @@ typedef enum {
 
 //mutableOwnerArray delegate and methods
 - (void)listObject:(AIListObject *)listObject mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(AIListObject *)inOwner priorityLevel:(float)priority;
+
+//Comparison
+- (NSComparisonResult)compare:(AIListObject *)other;
 
 @end

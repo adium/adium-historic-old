@@ -105,19 +105,19 @@
  *	<p>Stores an object in the array with a specified owner at a given priority</p>
  *	@param anObject An object to store
  *	@param inOwner The owner of the object
- *  @param priority <p>priority is a float from 0.0 to 1.0, with 0.0 the highest-priority (earliest in the array). Possible preset values are:<br>
- *			- Highest_Priority<br>
- *			- High_Priority<br>
- *			- Medium_Priority<br>
- *			- Low_Priority<br>
- *			- Lowest_Priority<br>
+ *  @param priority priority is a float from 0.0 to 1.0, with 0.0 the highest-priority (earliest in the array). Possible preset values are:
+ *			- Highest_Priority
+ *			- High_Priority
+ *			- Medium_Priority
+ *			- Low_Priority
+ *			- Lowest_Priority
  */
 - (void)setObject:(id)anObject withOwner:(id)inOwner priorityLevel:(float)priority
 {
     int	ownerIndex;
 	//Keep priority in bounds
-	if (priority < Highest_Priority || priority > Lowest_Priority) priority = Medium_Priority;
-	
+	if ((priority < Highest_Priority) || (priority > Lowest_Priority)) priority = Medium_Priority;
+
 	//Remove any existing objects from this owner
 	ownerIndex = [ownerArray indexOfObject:inOwner];
 	if (ownerArray && (ownerIndex != NSNotFound)) {
@@ -318,7 +318,6 @@
  * @brief Retrieve object by owner
  *
  * Retrieve the object within the <tt>AIMutableOwnerArray</tt> owned by the specified owner.
- * @param inOwner An owner
  * @return  Returns the object owned by <i>inOwner</i>.
  */
 - (id)_objectWithHighestPriority

@@ -91,7 +91,8 @@
 			if(node.tagName == 'IMG' && !client.zoomImage(node) && node.alt) {
 				a = document.createElement('a');
 				a.setAttribute('onclick', 'imageSwap(this)');
-				a.setAttribute('src', node.src);
+				a.setAttribute('src', node.getAttribute('src'));
+				a.className = node.className;
 				text = document.createTextNode(node.alt);
 				a.appendChild(text);
 				node.parentNode.replaceChild(a, node);
@@ -103,8 +104,9 @@
 
 			//Swap the image/text
 			img = document.createElement('img');
-			img.setAttribute('src', node.src);
+			img.setAttribute('src', node.getAttribute('src'));
 			img.setAttribute('alt', node.firstChild.nodeValue);
+			img.className = node.className;
 			node.parentNode.replaceChild(img, node);
 			
 			alignChat(shouldScroll);
@@ -148,7 +150,7 @@
 	</style>
 
 </head>
-<body onload="alignchat(true);" style="==bodyBackground==">
+<body onload="alignChat(true);" style="==bodyBackground==">
 %@
 <div id="Chat">
 </div>

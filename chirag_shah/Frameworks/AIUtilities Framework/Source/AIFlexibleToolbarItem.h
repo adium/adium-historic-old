@@ -23,7 +23,7 @@
 /*!
  * @brief Set the validation delegate
  *
- * Set the validation delegate, which must implement the methods in <tt><a href="category_n_s_object(_e_s_flexible_toolbar_item_delegate).html">NSObject(AIFlexibleToolbarItemDelegate)</a></tt> and will receive validation messages.
+ * Set the validation delegate, which must implement the methods in <tt>AIFlexibleToolbarItemDelegate</tt> and will receive validation messages.
  * @param inDelegate The delegate
  */
 - (void)setValidationDelegate:(id)inDelegate;
@@ -31,12 +31,12 @@
 @end
 
 /*!
- * @category NSObject(AIFlexibleToolbarItemDelegate)
+ * @protocol AIFlexibleToolbarItemDelegate
  * @brief Required protocol for an AIFlexibleToolbarItem's validation delegate
  *
  * The delegate is sent - (void)validateFlexibleToolbarItem:(AIFlexibleToolbarItem *)toolbarItem, which must be efficient
  */
-@interface NSObject (AIFlexibleToolbarItemDelegate)
+@protocol AIFlexibleToolbarItemDelegate
 /*!
  * @brief Sent when the toolbar item is validated
  *

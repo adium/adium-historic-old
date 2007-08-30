@@ -29,6 +29,18 @@
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <Adium/AIAccountControllerProtocol.h>
 
+//omg crawsslinkz
+#import "AILoggerPlugin.h"
+
+//LMX
+#import <LMX/LMXParser.h>
+#import <Adium/AIXMLElement.h>
+#import <AIUtilities/AIStringAdditions.h>
+#import "unistd.h"
+#import <AIUtilities/NSCalendarDate+ISO8601Parsing.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIHTMLDecoder.h>
+
 /**
  * @class DCMessageContextDisplayPlugin
  * @brief Component to display in-window message history
@@ -36,12 +48,12 @@
  * The amount of history, and criteria of when to display history, are determined in the Advanced->Message History preferences.
  */
 @interface DCMessageContextDisplayPlugin (PRIVATE)
-- (void)preferencesChanged:(NSNotification *)notification;
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime;
+- (void)old_preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+								object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime;
 - (BOOL)contextShouldBeDisplayed:(NSCalendarDate *)inDate;
-
-- (void)setupOldSchoolHistory;
-- (NSArray *)context:(int)inLinesToDisplay inChat:(AIChat *)chat;
-- (NSDictionary *)savableContentObject:(AIContentObject *)content;
+- (NSArray *)contextForChat:(AIChat *)chat;
 @end
 
 @implementation DCMessageContextDisplayPlugin
@@ -57,12 +69,17 @@
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTEXT_DISPLAY_DEFAULTS
 																		forClass:[self class]] 
 										  forGroup:PREF_GROUP_CONTEXT_DISPLAY];
-    preferences = [[DCMessageContextDisplayPreferences preferencePane] retain];
+		
+	//Obtain the default preferences and use them - Adium 1.1 experiment to see if people use these prefs
+	[self old_preferencesChangedForGroup:PREF_GROUP_CONTEXT_DISPLAY
+								 key:nil
+							  object:nil
+					  preferenceDict:[NSDictionary dictionaryNamed:CONTEXT_DISPLAY_DEFAULTS
+														  forClass:[self class]]
+						   firstTime:YES];
 	
-    //Observe preference changes
+	//Observe preference changes for whether or not to display message history
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTEXT_DISPLAY];
-	
-	[self setupOldSchoolHistory];
 }
 
 /**
@@ -74,24 +91,11 @@
 	[[adium notificationCenter] removeObserver:self];
 }
 
-/**
- * @brief Preferences for when to display history changed
- *
- * Only change our preferences in response to global preference notifications; specific objects use this group as well.
- */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+								object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if (!object) {
-		haveTalkedDays = [[prefDict objectForKey:KEY_HAVE_TALKED_DAYS] intValue];
-		haveNotTalkedDays = [[prefDict objectForKey:KEY_HAVE_NOT_TALKED_DAYS] intValue];
-		displayMode = [[prefDict objectForKey:KEY_DISPLAY_MODE] intValue];
-		
-		haveTalkedUnits = [[prefDict objectForKey:KEY_HAVE_TALKED_UNITS] intValue];
-		haveNotTalkedUnits = [[prefDict objectForKey:KEY_HAVE_NOT_TALKED_UNITS] intValue];
-		
+	if (!object) {		
 		shouldDisplay = [[prefDict objectForKey:KEY_DISPLAY_CONTEXT] boolValue];
-		linesToDisplay = [[prefDict objectForKey:KEY_DISPLAY_LINES] intValue];
 		
 		if (shouldDisplay && linesToDisplay > 0 && !isObserving) {
 			//Observe new message windows only if we aren't already observing them
@@ -109,6 +113,26 @@
 		}
 	}
 }
+/**
+ * @brief Preferences for when to display history changed
+ *
+ * Only change our preferences in response to global preference notifications; specific objects use this group as well.
+ */
+- (void)old_preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	if (!object) {
+		haveTalkedDays = [[prefDict objectForKey:KEY_HAVE_TALKED_DAYS] intValue];
+		haveNotTalkedDays = [[prefDict objectForKey:KEY_HAVE_NOT_TALKED_DAYS] intValue];
+		displayMode = [[prefDict objectForKey:KEY_DISPLAY_MODE] intValue];
+		
+		haveTalkedUnits = [[prefDict objectForKey:KEY_HAVE_TALKED_UNITS] intValue];
+		haveNotTalkedUnits = [[prefDict objectForKey:KEY_HAVE_NOT_TALKED_UNITS] intValue];
+		
+		shouldDisplay = [[prefDict objectForKey:KEY_DISPLAY_CONTEXT] boolValue];
+		linesToDisplay = [[prefDict objectForKey:KEY_DISPLAY_LINES] intValue];
+	}
+}
 
 /**
  * @brief Retrieve and display in-window message history
@@ -118,19 +142,17 @@
 - (void)addContextDisplayToWindow:(NSNotification *)notification
 {
 	AIChat	*chat = (AIChat *)[notification object];
-
-	/*
-	if(!logger)
-		logger = (SMSQLiteLoggerPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"SMSQLiteLoggerPlugin"];
-	*/
-	//NSArray	*context = [logger context:linesToDisplay inChat:chat];
-	NSArray	*context = [self context:linesToDisplay inChat:chat];
 	
+	//Don't show context for group chats
+	if ([chat isGroupChat]) return;
+	
+	NSArray	*context = [self contextForChat:chat];
+
 	if (context && [context count] > 0 && shouldDisplay) {
 		//Check if the history fits the date restrictions
 		
 		//The most recent message is what determines whether we have "chatted in the last X days", "not chatted in the last X days", etc.
-		NSCalendarDate *mostRecentMessage = [[(AIContentContext *)[context objectAtIndex:[context count]-1] date] dateWithCalendarFormat:nil timeZone:nil];
+		NSCalendarDate *mostRecentMessage = [[(AIContentContext *)[context lastObject] date] dateWithCalendarFormat:nil timeZone:nil];
 		if ([self contextShouldBeDisplayed:mostRecentMessage]) {
 			NSEnumerator		*enumerator;
 			AIContentContext	*contextMessage;
@@ -146,9 +168,9 @@
 													immediately:YES];
 			}
 
-		//We finished adding untracked content
-		[[adium notificationCenter] postNotificationName:Content_ChatDidFinishAddingUntrackedContent
-												  object:chat];
+			//We finished adding untracked content
+			[[adium notificationCenter] postNotificationName:Content_ChatDidFinishAddingUntrackedContent
+												  	  object:chat];
 
 		}
 	}
@@ -198,193 +220,209 @@
 	return dateIsGood;
 }
 
-#pragma mark Old school
-/********
- * Everything below this point is 'old school' history.
- * It is saved when the chat closes to a per-object preference.
- * Once XML logging is up and running, this should be removed.  The call to context:inChat: should instead be directed to the logger.
+static int linesLeftToFind = 0;
+/*!
+ * @brief Retrieve the message history for a particular chat
+ *
+ * Asks AILoggerPlugin for the path to the right file, and then uses LMX to parse that file backwards.
  */
-- (void)setupOldSchoolHistory
+- (NSArray *)contextForChat:(AIChat *)chat
 {
-	//Observe chats closing
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(saveContextForObject:)
-									   name:Chat_WillClose
-									 object:nil];
-}
+	//If there's no log there, there's no message history. Bail out.
+	NSArray *logPaths = [AILoggerPlugin sortedArrayOfLogFilesForChat:chat];
+	if(!logPaths) return nil;
+		
+	NSString *logObjectUID = [chat name];
+	if (!logObjectUID) logObjectUID = [[chat listObject] UID];
+	logObjectUID = [logObjectUID safeFilenameString];
 
-// Save the last few lines of a conversation when it closes
-- (void)saveContextForObject:(NSNotification *)notification
-{
-	int					cnt, prevcnt;
-	AIContentObject		*content;
-	AIChat				*chat;
-	NSMutableDictionary *dict = nil;
-	NSDictionary		*contentDict;
-	NSDictionary		*previousDict;
-	NSEnumerator        *enumerator;
-	
-	chat = (AIChat *)[notification object];
-
-	//Ensure we only save context for one-on-one chats; there must be a [chat listObject] and no name.
-	if (chat && ![chat isGroupChat]) {
-		dict = [NSMutableDictionary dictionary];
-		
-		enumerator = [[chat contentObjectArray] objectEnumerator];
-		
-		//Is there already stored context for this person?
-		previousDict = [[chat listObject] preferenceForKey:KEY_MESSAGE_CONTEXT group:PREF_GROUP_CONTEXT_DISPLAY];
-		
-		cnt = 1;
-		
-		// Only save if we need to save more AND there is still unsaved content available
-		while ((cnt <= linesToDisplay) && (content = [enumerator nextObject])) {
-			// Only record actual messages, no status
-			if ([content isKindOfClass:[AIContentMessage class]] || [content isKindOfClass:[AIContentContext class]]) {
-				contentDict = [self savableContentObject:content];
-				[dict setObject:contentDict forKey:[[NSNumber numberWithInt:cnt] stringValue]];
-				cnt++;
-			}
+	NSString *baseLogPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:
+		[AILoggerPlugin relativePathForLogWithObject:logObjectUID onAccount:[chat account]]];
 			
-		}
-		
-		// If there's room left, append the old messages too
-		if (cnt <= linesToDisplay && previousDict) {
-			unsigned previousDictCount = [previousDict count];
-			prevcnt = 1;
-			
-			while( (cnt <= linesToDisplay+1) && (prevcnt <= previousDictCount) ) {
-				[dict setObject:[previousDict objectForKey:[[NSNumber numberWithInt:prevcnt] stringValue]]
-						 forKey:[[NSNumber numberWithInt:cnt] stringValue]];
-				prevcnt++;
-				cnt++;
-			}
-		}
-		
-	}
-	
-	//Did we find anything useful to save? If not, leave it untouched
-	if(dict && ([dict count] > 0)) {
-		[[chat listObject] setPreference:dict forKey:KEY_MESSAGE_CONTEXT group:PREF_GROUP_CONTEXT_DISPLAY];
-	}	
-}
+	//Initialize a place to store found messages
+	NSMutableArray *outerFoundContentContexts = [NSMutableArray arrayWithCapacity:linesToDisplay]; 
 
-//Returns a dictionary representation of a content object which can be written to disk
-//ONLY handles AIContentMessage and AIContentContext objects right now
-- (NSDictionary *)savableContentObject:(AIContentObject *)content
-{
-	NSMutableDictionary	*contentDict = nil;
-	AIChat				*chat = [content chat];
-	AIListContact		*listContact = [chat listObject];
-	
-	NSString			*objectID;
-	NSString			*accountNumber;
-	
-	contentDict = [NSMutableDictionary dictionary];
-	[contentDict setObject:[content type] forKey:@"Type"];
-	
-	objectID = [listContact internalUniqueObjectID];
-	accountNumber = [[chat account] internalObjectID];
-	
-	// Outgoing or incoming?
-	if ([content isOutgoing]){
-		[contentDict setObject:objectID forKey:@"To"];
-		[contentDict setObject:accountNumber forKey:@"From"];
-	}else{
-		[contentDict setObject:accountNumber forKey:@"To"];
-		[contentDict setObject:objectID forKey:@"From"];
-	}
-	
-	[contentDict setObject:[NSNumber numberWithBool:[content isOutgoing]] forKey:@"Outgoing"];
-	
-	// ONLY log AIContentMessage and AIContentContexts right now... no status messages
-	if ([(AIContentMessage *)content isAutoreply]) {
-		[contentDict setObject:[NSNumber numberWithBool:YES] forKey:@"Autoreply"];
-	}
-	[contentDict setObject:[[(AIContentMessage *)content date] description] forKey:@"Date"];
-	[contentDict setObject:[[[(AIContentMessage *)content message] attributedStringByConvertingAttachmentsToStrings] dataRepresentation] forKey:@"Message"];
+	//Set up the counter variable
+	linesLeftToFind = linesToDisplay;
 
-	return(contentDict);
-}
-
-
-- (NSArray *)context:(int)inLinesToDisplay inChat:(AIChat *)chat
-{
-	NSString			*type;
-	NSAttributedString  *message;
-	AIContentContext	*responseContent;
-	id					source;
-	id					dest;
-	NSMutableArray		*context = nil;
-
-	NSDictionary	*chatDict = [[chat listObject] preferenceForKey:KEY_MESSAGE_CONTEXT group:PREF_GROUP_CONTEXT_DISPLAY];
-	NSDictionary	*messageDict;
-	
-	if (chatDict && inLinesToDisplay > 0) {
-		//Max number of lines to display
-		int cnt = (([chatDict count] >= linesToDisplay) ? linesToDisplay : [chatDict count]);
-		
-		context = [NSMutableArray array];
-		//Add messages until: we add our max (linesToDisplay) OR we run out of saved messages
-		while ((messageDict = [chatDict objectForKey:[[NSNumber numberWithInt:cnt] stringValue]]) && cnt > 0) {
-			cnt--;
-			
-			type = [messageDict objectForKey:@"Type"];
-			
-			//Currently, we only add Message or Context content objects
-			if( [type isEqualToString:CONTENT_MESSAGE_TYPE] || [type isEqualToString:CONTENT_CONTEXT_TYPE] ) {
-				message = [NSAttributedString stringWithData:[messageDict objectForKey:@"Message"]];
+	//Iterate over the elements of the log path array.
+	NSEnumerator *pathsEnumerator = [logPaths objectEnumerator];
+	NSString *logPath = nil;
+	while (linesLeftToFind > 0 && (logPath = [pathsEnumerator nextObject])) {
+		//If it's not a .chatlog, ignore it.
+		if (![logPath hasSuffix:@".chatlog"])
+			continue;
 				
-				// The other person is always the one we're chatting with right now
-				if ([[messageDict objectForKey:@"Outgoing"] boolValue]) {
-					dest = [chat listObject];
-					
-					id from = [messageDict objectForKey:@"From"];
-					if (![from isKindOfClass:[NSString class]]){
-						if ([from respondsToSelector:@selector(stringValue)]){
-							from = [from stringValue];
-						}else{
-							from = nil;
-						}
-					}
-					
-					source = [[adium accountController] accountWithInternalObjectID:from];
-				} else {
-					source = [chat listObject];
-					
-					id to = [messageDict objectForKey:@"To"];
-					if (![to isKindOfClass:[NSString class]]){
-						if ([to respondsToSelector:@selector(stringValue)]){
-							to = [to stringValue];
-						}else{
-							to = nil;
-						}
-					}
-					
-					dest = [[adium accountController] accountWithInternalObjectID:to];
-				}
-				
-				// Make the message response if all is well
-				if(message && source && dest) {
-					responseContent = [AIContentContext messageInChat:chat
-														   withSource:source
-														  destination:dest
-																 date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
-															  message:message
-															autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];
-					if (responseContent){
-						[responseContent setTrackContent:NO];
-						[responseContent setPostProcessContent:NO];
+		//Stick the base path on to the beginning
+		logPath = [baseLogPath stringByAppendingPathComponent:logPath];
+		
+		//Initialize the found messages array and element stack for us-as-delegate
+		foundMessages = [NSMutableArray arrayWithCapacity:linesLeftToFind];
+		elementStack = [NSMutableArray array];
 
-						[context addObject:responseContent];
-					}
-				}
-			}
+		//Create the parser and set ourselves as the delegate
+		LMXParser *parser = [LMXParser parser];
+		[parser setDelegate:self];
+
+		//Set up info needed by elementStarted to create content objects.
+		NSMutableDictionary *contextInfo = nil;
+		{
+			//Get the service name from the path name
+			NSString *serviceName = [[[[[logPath stringByDeletingLastPathComponent] stringByDeletingLastPathComponent] lastPathComponent] componentsSeparatedByString:@"."] objectAtIndex:0U];
+
+			AIListObject *account = [chat account];
+			NSString	 *accountID = [NSString stringWithFormat:@"%@.%@", [account serviceID], [account UID]];
+
+			contextInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+				serviceName, @"Service name",
+				account, @"Account",
+				accountID, @"Account ID",
+				chat, @"Chat",
+				nil];
+			[parser setContextInfo:(void *)contextInfo];
 		}
+
+		//Open up the file we need to read from, and seek to the end (this is a *backwards* parser, after all :)
+		NSFileHandle *file = [NSFileHandle fileHandleForReadingAtPath:logPath];
+		[file seekToEndOfFile];
+		
+		//Set up some more doohickeys and then start the parse loop
+		int readSize = 4 * getpagesize(); //Read 4 pages at a time.
+		NSMutableData *chunk = [NSMutableData dataWithLength:readSize];
+		int fd = [file fileDescriptor];
+		char *buf = [chunk mutableBytes];
+		off_t offset = [file offsetInFile];
+		enum LMXParseResult result = LMXParsedIncomplete;
+
+		//We use NSValue because autorelease pools cannot be retained.
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+		NSValue *value = [NSValue valueWithNonretainedObject:pool];
+		[contextInfo setObject:value forKey:@"Autorelease pool"];
+
+		do {
+			//Calculate the new offset
+			offset = (offset <= readSize) ? 0 : offset - readSize;
+			
+			//Seek to it and read greedily until we hit readSize or run out of file.
+			int idx = 0;
+			for (ssize_t amountRead = 0; idx < readSize; idx += amountRead) { 
+				amountRead = pread(fd, buf + idx, readSize, offset + idx); 
+			   if (amountRead <= 0) break;
+			}
+			offset -= idx;
+			
+			//Parse
+			result = [parser parseChunk:chunk];
+			
+		//Continue to parse as long as we need more elements, we have data to read, and LMX doesn't think we're done.
+		} while ([foundMessages count] < linesLeftToFind && offset > 0 && result != LMXParsedCompletely);
+
+		//Pop our autorelease pool.
+		//It may be a different one from the one we started with, so get it from the dictionary.
+		value = [contextInfo objectForKey:@"Autorelease pool"];
+		[[value nonretainedObjectValue] release];
+
+		//Be a good citizen and close the file
+		[file closeFile];
+
+		//Add our locals to the outer array; we're probably looping again.
+		[outerFoundContentContexts replaceObjectsInRange:NSMakeRange(0, 0) withObjectsFromArray:foundMessages];
+		linesLeftToFind -= [outerFoundContentContexts count];
 	}
-	
-	return context;
+	return outerFoundContentContexts;
 }
 
+#pragma mark LMX delegate
+
+- (void)parser:(LMXParser *)parser elementEnded:(NSString *)elementName
+{
+	if ([elementName isEqualToString:@"message"]) {
+		[elementStack insertObject:[AIXMLElement elementWithName:elementName] atIndex:0U];
+	}
+	else if ([elementStack count]) {
+		AIXMLElement *element = [AIXMLElement elementWithName:elementName];
+		[(AIXMLElement *)[elementStack objectAtIndex:0U] insertObject:element atIndex:0U];
+		[elementStack insertObject:element atIndex:0U];
+	}
+}
+
+- (void)parser:(LMXParser *)parser foundCharacters:(NSString *)string
+{
+	if ([elementStack count])
+		[(AIXMLElement *)[elementStack objectAtIndex:0U] insertObject:string atIndex:0U];
+}
+
+- (void)parser:(LMXParser *)parser elementStarted:(NSString *)elementName attributes:(NSDictionary *)attributes
+{
+	if ([elementStack count]) {
+		AIXMLElement *element = [elementStack objectAtIndex:0U];
+		if (attributes) {
+			[element setAttributeNames:[attributes allKeys] values:[attributes allValues]];
+		}
+		
+		NSMutableDictionary *contextInfo = [parser contextInfo];
+
+		if ([elementName isEqualToString:@"message"]) {
+			//A message element has started!
+			//This means that we have all of this message now, and therefore can create a single content object from the AIXMLElement tree and then throw away that tree.
+			//This saves memory when a message element contains many elements (since each one is represented by an AIXMLElement sub-tree in the AIXMLElement tree, as opposed to a simple NSAttributeRun in the NSAttributedString of the content object).
+
+			NSString     *serviceName = [contextInfo objectForKey:@"Service name"];
+			AIListObject *account     = [contextInfo objectForKey:@"Account"];
+			NSString     *accountID   = [contextInfo objectForKey:@"Account ID"];
+			AIChat       *chat        = [contextInfo objectForKey:@"Chat"];
+
+			//Set up some doohickers.
+			NSDictionary	*attributes = [element attributes];
+			NSString		*timeString = [attributes objectForKey:@"time"];
+			//Create the context object
+			//http://www.visualdistortion.org/crash/view.jsp?crash=211821
+			if (timeString) {
+				NSCalendarDate *time = [NSCalendarDate calendarDateWithString:timeString];
+
+				NSString		*autoreplyAttribute = [attributes objectForKey:@"auto"];
+				NSString		*sender = [NSString stringWithFormat:@"%@.%@", serviceName, [attributes objectForKey:@"sender"]];
+				BOOL			sentByMe = ([sender isEqualToString:accountID]);
+				
+				/*don't fade the messages if they're within the last 5 minutes
+				 *since that will be resuming a conversation, not starting a new one.
+				 *Why the class trickery? Less code duplication, clearer what is actually different between the two cases.
+				 */
+				Class messageClass = (-[time timeIntervalSinceNow] > 300.0) ? [AIContentContext class] : [AIContentMessage class];
+				AIContentMessage *message = [messageClass messageInChat:chat 
+															 withSource:(sentByMe ? account : [chat listObject])
+															destination:(sentByMe ? [chat listObject] : account)
+																   date:time
+																message:[[AIHTMLDecoder decoder] decodeHTML:[element contentsAsXMLString]]
+															  autoreply:(autoreplyAttribute && [autoreplyAttribute caseInsensitiveCompare:@"true"] == NSOrderedSame)];
+				
+				//Don't log this object
+				[message setPostProcessContent:NO];
+				[message setTrackContent:NO];
+				
+				//Add it to the array (in front, since we're working backwards, and we want the array in forward order)
+				[foundMessages insertObject:message atIndex:0];
+			} else {
+				NSLog(@"Null message context display time for %@",element);
+			}
+		}
+
+		[elementStack removeObjectAtIndex:0U];
+		if ([foundMessages count] == linesLeftToFind) {
+			if ([elementStack count]) [elementStack removeAllObjects];
+			[parser abortParsing];
+		} else {
+			//We're still looking for more messages in this file.
+			//Pop the current autorelease pool and start a new one.
+			//This frees the most recent tree of autoreleased AIXMLElements.
+			//We use NSValue because autorelease pools cannot be retained.
+			NSValue *value = [contextInfo objectForKey:@"Autorelease pool"];
+			[[value nonretainedObjectValue] release];
+			NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+			value = [NSValue valueWithNonretainedObject:pool];
+			[contextInfo setObject:value forKey:@"Autorelease pool"];
+		}
+	}
+}
 
 @end

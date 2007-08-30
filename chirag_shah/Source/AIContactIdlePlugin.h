@@ -15,8 +15,8 @@
  */
 
 #import <Adium/AIPlugin.h>
-
-@protocol AIListObjectObserver, AIContactListTooltipEntry;
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 
 @interface AIContactIdlePlugin : AIPlugin <AIListObjectObserver, AIContactListTooltipEntry> {
 

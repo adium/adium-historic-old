@@ -21,12 +21,13 @@
 #import <Adium/AIAbstractListController.h>
 #import <Adium/AIStatusIcons.h>
 #import <Adium/AIServiceIcons.h>
+#import <AIMenuBarIcons.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import "AIXtrasManager.h"
 
-#define APPEARANCE_DEFAUT_PREFS 	@"AppearanceDefaults"
+#define APPEARANCE_DEFAULT_PREFS 	@"AppearanceDefaults"
 
 @implementation AIAppearancePreferencesPlugin
 
@@ -38,7 +39,7 @@
 	[adium createResourcePathForName:LIST_THEME_FOLDER];
 
 	//Prepare our preferences
-	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:APPEARANCE_DEFAUT_PREFS
+	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:APPEARANCE_DEFAULT_PREFS
 																forClass:[self class]] 
 	                              forGroup:PREF_GROUP_APPEARANCE];
 
@@ -92,18 +93,23 @@
 			NSString *path = [adium pathOfPackWithName:[prefDict objectForKey:KEY_STATUS_ICON_PACK]
 											 extension:@"AdiumStatusIcons"
 									resourceFolderName:@"Status Icons"];
+			BOOL success = NO;
 			
+			if (path) {
+				success = [AIStatusIcons setActiveStatusIconsFromPath:path];
+			}
+
 			//If the preferred pack isn't found (it was probably deleted while active), use the default one
-			if (!path) {
+			if (!success) {
 				NSString *name = [[adium preferenceController] defaultPreferenceForKey:KEY_STATUS_ICON_PACK
 																				 group:PREF_GROUP_APPEARANCE
 																				object:nil];
 				path = [adium pathOfPackWithName:name
 									   extension:@"AdiumStatusIcons"
 							  resourceFolderName:@"Status Icons"];
+				
+				[AIStatusIcons setActiveStatusIconsFromPath:path];
 			}
-			
-			[AIStatusIcons setActiveStatusIconsFromPath:path];
 		}
 		
 		//Service icons
@@ -111,18 +117,30 @@
 			NSString *path = [adium pathOfPackWithName:[prefDict objectForKey:KEY_SERVICE_ICON_PACK]
 											 extension:@"AdiumServiceIcons"
 									resourceFolderName:@"Service Icons"];
+			BOOL success = NO;
+			
+			if (path) {
+				success = [AIServiceIcons setActiveServiceIconsFromPath:path];
+			}
 			
 			//If the preferred pack isn't found (it was probably deleted while active), use the default one
-			if (!path) {
+			if (!success) {
 				NSString *name = [[adium preferenceController] defaultPreferenceForKey:KEY_SERVICE_ICON_PACK
 																				 group:PREF_GROUP_APPEARANCE
 																				object:nil];
 				path = [adium pathOfPackWithName:name
 									   extension:@"AdiumServiceIcons"
 							  resourceFolderName:@"Service Icons"];
+
+				[AIServiceIcons setActiveServiceIconsFromPath:path];
 			}
-			
-			[AIServiceIcons setActiveServiceIconsFromPath:path];
+		}
+		
+		// Menu Bar Icons
+		if (firstTime || [key isEqualToString:KEY_MENU_BAR_ICONS]) {
+			// Post a notification to update the menu bar icons.
+			[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:AIMenuBarIconsDidChangeNotification
+																			   object:nil];
 		}
 		
 		//Theme
@@ -152,7 +170,7 @@
 	}
 }
 
-/*
+/*!
  * @brief An invalid status set was activated
  *
  * Reset to the default by clearing our preference
@@ -225,8 +243,10 @@
 	}
 	
 	//Apply its values
-	[[adium preferenceController] setPreferences:setDictionary
-										 inGroup:preferenceGroup];
+	if (setDictionary) {
+		[[adium preferenceController] setPreferences:setDictionary
+											 inGroup:preferenceGroup];
+	}
 }
 
 //Create a layout or theme set
@@ -234,16 +254,14 @@
 {
 	NSString		*path;
 	NSString		*fileName = [[setName safeFilenameString] stringByAppendingPathExtension:extension];
-	AIAdium			*sharedAdiumInstance = adium;
 	
 	//If we don't find one, create a path to a bundle in the application support directory
 	path = [[[adium applicationSupportDirectory] stringByAppendingPathComponent:folder] stringByAppendingPathComponent:fileName];
 	if ([AIXtrasManager createXtraBundleAtPath:path])
 		path = [path stringByAppendingPathComponent:@"Contents/Resources/Data.plist"];
 	
-	if ([[[sharedAdiumInstance preferenceController] preferencesForGroup:preferenceGroup] writeToFile:path atomically:NO]) {
-		
-		[[sharedAdiumInstance notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
+	if ([[[adium preferenceController] preferencesForGroup:preferenceGroup] writeToFile:path atomically:NO]) {
+		[[adium notificationCenter] postNotificationName:AIXtrasDidChangeNotification object:extension];
 		
 		return YES;
 	} else {
@@ -269,7 +287,7 @@
 													   handler:nil];
 	
 	//The availability of an xtras just changed, since we deleted it... post a notification so we can update
-	[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
+	[[adium notificationCenter] postNotificationName:AIXtrasDidChangeNotification object:extension];
 	
 	return success;
 }
@@ -289,7 +307,7 @@
 											   handler:nil];
 	
 	//The availability of an xtras just changed, since we deleted it... post a notification so we can update
-	[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
+	[[adium notificationCenter] postNotificationName:AIXtrasDidChangeNotification object:extension];
 	
 	return success;
 }
@@ -310,7 +328,7 @@
 											   handler:nil];
 	
 	//The availability of an xtras just changed, since we deleted it... post a notification so we can update
-	[[adium notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
+	[[adium notificationCenter] postNotificationName:AIXtrasDidChangeNotification object:extension];
 	
 	return success;
 }

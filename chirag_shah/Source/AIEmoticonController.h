@@ -16,8 +16,8 @@
 
 #import <Adium/AIObject.h>
 #import <Adium/AIEmoticonControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
 
-@protocol AIEmoticonController, AIContentFilter;
 @class AIEmoticonPreferences;
 
 @interface AIEmoticonController : AIObject <AIEmoticonController, AIContentFilter> {

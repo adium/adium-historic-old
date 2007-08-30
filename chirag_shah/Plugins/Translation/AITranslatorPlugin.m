@@ -32,7 +32,7 @@
 #import "AIMenuController.h"
 #import "AIContactController.h"
 #import <Adium/AIContentObject.h>
-#import "AIAdium.h" 
+#import <Adium/AIAdiumProtocol.h>
 #import <AIUtilities/AIStringUtilities.h> 
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
@@ -46,7 +46,7 @@
 
 @implementation AITranslatorPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -69,7 +69,7 @@
 	[menuItem release];
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -167,7 +167,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Translate a message
  *
  * The message will be queued if appropriate; see -[self _handleNextMessage]
@@ -215,7 +215,7 @@
     [attributedString release];
 }
 
-/*
+/*!
  * @brief A translation error occurred
  *
  * This is the last message we will received regarding the translation.

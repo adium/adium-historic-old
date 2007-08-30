@@ -14,21 +14,21 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "ESAddressBookIntegrationPlugin.h"
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
-#import "ESAddressBookIntegrationPlugin.h"
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIAccount.h>
+#import <Adium/AIListObject.h>
+#import <Adium/AIMetaContact.h>
+#import <Adium/AIService.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/OWAddressBookAdditions.h>
-#import <AIUtilities/AIExceptionHandlingUtilities.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
-#import <Adium/AIAccount.h>
-#import <Adium/AIListObject.h>
-#import <Adium/AIMetaContact.h>
-#import <Adium/AIService.h>
 
 #define IMAGE_LOOKUP_INTERVAL   0.01
 #define SHOW_IN_AB_CONTEXTUAL_MENU_TITLE AILocalizedString(@"Show In Address Book", "Show In Address Book Contextual Menu")
@@ -139,7 +139,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 	//Wait for Adium to finish launching before we build the address book so the contact list will be ready
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(adiumFinishedLaunching:)
-									   name:Adium_CompletedApplicationLoad
+									   name:AIApplicationDidFinishLoadingNotification
 									 object:nil];
 	
 	//Update self immediately so the information is available to plugins and interface elements as they load
@@ -254,9 +254,10 @@ NSString* serviceIDForJabberUID(NSString *UID);
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	//Just stop here if we don't have an address book dict to work with
-	if (!addressBookDict) {
-		return nil;
-	}
+	if (!addressBookDict) return nil;
+	
+	//We handle accounts separately; doing updates here causes chaos in addition to being inefficient.
+	if ([inObject isKindOfClass:[AIAccount class]]) return nil;
 	
 	NSSet		*modifiedAttributes = nil;
 	
@@ -347,6 +348,13 @@ NSString* serviceIDForJabberUID(NSString *UID);
 				}
 				
 				[person setImageData:userIconData];
+				
+				[[sharedAddressBook class] cancelPreviousPerformRequestsWithTarget:sharedAddressBook
+																		  selector:@selector(save)
+																			object:nil];
+				[sharedAddressBook performSelector:@selector(save)
+										withObject:nil
+										afterDelay:5.0];
 			}
 		}
     }
@@ -452,17 +460,18 @@ NSString* serviceIDForJabberUID(NSString *UID);
 {
     if ([group isEqualToString:PREF_GROUP_ADDRESSBOOK]) {
 		BOOL			oldCreateMetaContacts = createMetaContacts;
+		NSNumber		*value;
 		
         //load new displayFormat
-		enableImport = [[prefDict objectForKey:KEY_AB_ENABLE_IMPORT] boolValue];
-        displayFormat = [[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue];
-        automaticSync = [[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue];
-        useNickName = [[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue];
-		useMiddleName = [[prefDict objectForKey:KEY_AB_USE_MIDDLE] boolValue];
-		preferAddressBookImages = [[prefDict objectForKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES] boolValue];
-		useABImages = [[prefDict objectForKey:KEY_AB_USE_IMAGES] boolValue];
+		if ((value = [prefDict objectForKey:KEY_AB_ENABLE_IMPORT])) enableImport = [value boolValue];
+        if ((value = [prefDict objectForKey:KEY_AB_DISPLAYFORMAT]))  displayFormat = [value intValue];
+        if ((value = [prefDict objectForKey:KEY_AB_IMAGE_SYNC])) automaticSync = [value boolValue];
+        if ((value = [prefDict objectForKey:KEY_AB_USE_NICKNAME])) useNickName = [value boolValue];
+		if ((value = [prefDict objectForKey:KEY_AB_USE_MIDDLE])) useMiddleName = [value boolValue];
+		if ((value = [prefDict objectForKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES])) preferAddressBookImages = [value boolValue];
+		if ((value = [prefDict objectForKey:KEY_AB_USE_IMAGES])) useABImages = [value boolValue];
 
-		createMetaContacts = [[prefDict objectForKey:KEY_AB_CREATE_METACONTACTS] boolValue];
+		if ((value = [prefDict objectForKey:KEY_AB_CREATE_METACONTACTS])) createMetaContacts = [value boolValue];
 		
 		if (firstTime) {
 			//Build the address book dictionary, which will also trigger metacontact grouping as appropriate
@@ -550,6 +559,8 @@ NSString* serviceIDForJabberUID(NSString *UID);
 	//Check for some special cases
 	if (!result) {
 		if ([serviceID isEqualToString:@"GTalk"]) {
+			result = kABJabberInstantProperty;
+		} else if ([serviceID isEqualToString:@"LiveJournal"]) {
 			result = kABJabberInstantProperty;
 		} else if ([serviceID isEqualToString:@"Mac"]) {
 			result = kABAIMInstantProperty;
@@ -656,7 +667,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
  * and image/data creation overhead.
  *
  * @param person The ABPerson to fetch the image from
- * @pram inObject The AIListObject with which to ultimately associate the image
+ * @param inObject The AIListObject with which to ultimately associate the image
  */
 - (void)queueDelayedFetchOfImageForPerson:(ABPerson *)person object:(AIListObject *)inObject
 {
@@ -772,6 +783,9 @@ NSString* serviceIDForJabberUID(NSString *UID);
 	} else if ([serviceID isEqualToString:@"GTalk"]) {
 		dict = [addressBookDict objectForKey:@"Jabber"];
 
+	} else if ([serviceID isEqualToString:@"LiveJournal"]) {
+		dict = [addressBookDict objectForKey:@"Jabber"];
+		
 	} else if ([serviceID isEqualToString:@"Yahoo! Japan"]) {
 		dict = [addressBookDict objectForKey:@"Yahoo!"];
 		
@@ -835,7 +849,8 @@ NSString* serviceIDForJabberUID(NSString *UID);
 		
 		BOOL					isOSCAR = ([serviceID isEqualToString:@"AIM"] || 
 										   [serviceID isEqualToString:@"ICQ"]);
-		BOOL					isJabber = [serviceID isEqualToString:@"Jabber"];
+		BOOL					isJabber = [serviceID isEqualToString:@"Jabber"] ||
+                                           [serviceID isEqualToString:@"XMPP"];
 		
 		for (i = 0 ; i < nameCount ; i++) {
 			NSString	*UID = [[names valueAtIndex:i] compactedString];
@@ -974,7 +989,8 @@ NSString* serviceIDForJabberUID(NSString *UID);
  */
 - (void)updateSelfIncludingIcon:(BOOL)includeIcon
 {
-	AI_DURING 
+	@try
+	{
         //Begin loading image data for the "me" address book entry, if one exists
         ABPerson *me;
         if ((me = [sharedAddressBook me])) {
@@ -1013,9 +1029,11 @@ NSString* serviceIDForJabberUID(NSString *UID);
 													  forGroup:GROUP_ACCOUNT_STATUS];
 			}
         }
-	AI_HANDLER
-		NSLog(@"ABIntegration: Caught %@: %@", [localException name], [localException reason]);
-	AI_ENDHANDLER
+	}
+	@catch(id exc)
+	{
+		NSLog(@"ABIntegration: Caught %@", exc);
+	}
 }
 
 #pragma mark Address book caching
@@ -1036,7 +1054,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 }
 
 
-/*
+/*!
  * @brief Service ID for an OSCAR UID
  *
  * If we are on an OSCAR service we need to resolve our serviceID into the appropriate string
@@ -1063,9 +1081,8 @@ NSString* serviceIDForOscarUID(NSString *UID)
 /*!
  * @brief Service ID for a Jabber UID
  *
- * If we are on the Jabber server, we need to distinguish between Google Talk (GTalk) and the
- * rest of the Jabber world. serviceID is already Jabber, so we only need to change if we
- * have a GTalk UID.
+ * If we are on the Jabber server, we need to distinguish between Google Talk (GTalk), LiveJournal, and the rest of the
+ * Jabber world. serviceID is already Jabber, so we only need to change if we have a special UID.
  */
 NSString* serviceIDForJabberUID(NSString *UID)
 {
@@ -1074,7 +1091,8 @@ NSString* serviceIDForJabberUID(NSString *UID)
 	if ([UID hasSuffix:@"@gmail.com"] ||
 		[UID hasSuffix:@"@googlemail.com"]) {
 		serviceID = @"GTalk";
-
+	} else if ([UID hasSuffix:@"@livejournal.com"]) {
+		serviceID = @"LiveJournal";
 	} else {
 		serviceID = @"Jabber";
 	}
@@ -1162,7 +1180,8 @@ NSString* serviceIDForJabberUID(NSString *UID)
 
 			BOOL					isOSCAR = ([serviceID isEqualToString:@"AIM"] || 
 											   [serviceID isEqualToString:@"ICQ"]);
-			BOOL					isJabber = [serviceID isEqualToString:@"Jabber"];
+			BOOL					isJabber = [serviceID isEqualToString:@"Jabber"] ||
+                                               [serviceID isEqualToString:@"XMPP"];
 
 			for (i = 0 ; i < nameCount ; i++) {
 				NSString	*UID = [[names valueAtIndex:i] compactedString];
@@ -1228,7 +1247,7 @@ NSString* serviceIDForJabberUID(NSString *UID)
 /*!
  * @brief Validate menu item
  */
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	BOOL	hasABEntry = ([self personForListObject:[[adium menuController] currentContextMenuObject]] != nil);
 	BOOL	result = NO;

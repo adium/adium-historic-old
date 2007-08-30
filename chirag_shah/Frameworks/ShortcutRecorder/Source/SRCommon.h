@@ -10,10 +10,6 @@
 //      David Dauer
 //      Jesper
 //      Jamie Kirkpatrick
-//
-//  Revisions:
-//      2006-05-24 Created.
-//
 
 #import <Cocoa/Cocoa.h>
 #import <Carbon/Carbon.h>
@@ -66,7 +62,7 @@ enum {
 
 // Localization macros, for use in any bundle
 #define SRLoc(key) SRLocalizedString(key, nil)
-#define SRLocalizedString(key, comment) NSLocalizedStringFromTableInBundle(key, nil, [NSBundle bundleForClass: [SRDummyClass class]], comment)
+#define SRLocalizedString(key, comment) NSLocalizedStringFromTableInBundle(key, @"ShortcutRecorder", [NSBundle bundleForClass: [SRDummyClass class]], comment)
 
 // Image macros, for use in any bundle
 #define SRImage(name) [[[NSImage alloc] initWithContentsOfFile: [[NSBundle bundleForClass: [self class]] pathForImageResource: name]] autorelease]
@@ -77,7 +73,7 @@ enum {
 
 // Some default values
 #define ShortcutRecorderEmptyFlags 0
-#define ShortcutRecorderAllFlags ShortcutRecorderEmptyFlags + (NSCommandKeyMask + NSAlternateKeyMask + NSControlKeyMask + NSShiftKeyMask)
+#define ShortcutRecorderAllFlags ShortcutRecorderEmptyFlags | (NSCommandKeyMask | NSAlternateKeyMask | NSControlKeyMask | NSShiftKeyMask | NSFunctionKeyMask)
 #define ShortcutRecorderEmptyCode -1
 
 // These keys will cancel the recoding mode if not pressed with any modifier
@@ -120,6 +116,12 @@ FOUNDATION_STATIC_INLINE KeyCombo SRMakeKeyCombo(signed short code, unsigned int
 //
 @interface NSBezierPath( SRAdditions )
 + (NSBezierPath*)bezierPathWithSRCRoundRectInRect:(NSRect)aRect radius:(float)radius;
+@end
+
+@interface NSError( SRAdditions )
+- (NSString *)localizedFailureReason;
+- (NSString *)localizedRecoverySuggestion;
+- (NSArray *)localizedRecoveryOptions;
 @end
 
 @interface NSAlert( SRAdditions )

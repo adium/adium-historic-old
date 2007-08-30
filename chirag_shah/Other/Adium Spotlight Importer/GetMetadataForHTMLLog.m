@@ -126,12 +126,14 @@ Boolean GetMetadataForHTMLLog(NSMutableDictionary *attributes, NSString *pathToF
 	*/
 	NSArray *pathComponents = [pathToFile pathComponents];
 	unsigned count = [pathComponents count];
-	NSString *toUID = [pathComponents objectAtIndex:(count - 2)];
-	NSString *sourceFolder = [pathComponents objectAtIndex:(count - 3)];
+	NSString *toUID = ((count >= 2) ? [pathComponents objectAtIndex:(count - 2)] : nil);
+	NSString *sourceFolder = ((count >= 3) ? [pathComponents objectAtIndex:(count - 3)] : nil);
 	NSString *serviceClass, *fromUID;
 	NSArray  *serviceAndFromUIDArray;
-	//Determine the service and fromUID - should be SERVICE.ACCOUNT_NAME
-	//Check against count to guard in case of old, malformed or otherwise odd folders & whatnot sitting in log base
+
+	/* Determine the service and fromUID - should be SERVICE.ACCOUNT_NAME
+	 * Check against count to guard in case of old, malformed or otherwise odd folders & whatnot sitting in log base
+	 */
 	serviceAndFromUIDArray = [sourceFolder componentsSeparatedByString:@"."];
 	
 	if ([serviceAndFromUIDArray count] >= 2) {
@@ -162,14 +164,20 @@ Boolean GetMetadataForHTMLLog(NSMutableDictionary *attributes, NSString *pathToF
 	
 	[attributes setObject:serviceClass
 				   forKey:@"com_adiumX_service"];
-	[attributes setObject:fromUID
-				   forKey:@"com_adiumX_chatSource"];
-	[attributes setObject:toUID
-				   forKey:@"com_adiumX_chatDestination"];
-	[attributes setObject:[NSString stringWithFormat:@"%@ on %@",toUID,[date descriptionWithCalendarFormat:@"%y-%m-%d"
-																								  timeZone:nil
-																									locale:nil]]
-				   forKey:(NSString *)kMDItemDisplayName];
+	if (fromUID) {
+		[attributes setObject:fromUID
+					   forKey:@"com_adiumX_chatSource"];
+	}
+
+	if (toUID) {
+		[attributes setObject:toUID
+					   forKey:@"com_adiumX_chatDestination"];
+		[attributes setObject:[NSString stringWithFormat:@"%@ on %@",toUID,[date descriptionWithCalendarFormat:@"%y-%m-%d"
+																									  timeZone:nil
+																										locale:nil]]
+					   forKey:(NSString *)kMDItemDisplayName];
+	}
+
 	[attributes setObject:@"Chat log"
 				   forKey:(NSString *)kMDItemKind];
 	return TRUE;
@@ -206,7 +214,11 @@ static char *strndup (const char *s, int n)
 }
 
 static char *gaim_unescape_html(const char *html) {
-	return strdup([[[NSString stringWithUTF8String:html] stringByUnescapingFromXMLWithEntities:nil] UTF8String]);
+	NSString *unescapedString = [[NSString stringWithUTF8String:html] stringByUnescapingFromXMLWithEntities:nil];
+	const char *unescapedStringUTF8String = [unescapedString UTF8String];
+	if (!unescapedStringUTF8String) NSLog(@"Warning: Could not unescape %s, or could not make a UTF8 string out of %@",html,unescapedString);
+
+	return (unescapedStringUTF8String ? strdup(unescapedStringUTF8String) : nil);
 }
 
 /* The following are probably reasonable changes:

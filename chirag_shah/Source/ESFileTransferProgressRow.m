@@ -23,8 +23,8 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 
-#define	BYTES_RECEIVED		[NSString stringWithFormat:AILocalizedString(@"%@ received","(a bytes string) received"),bytesString]
-#define	BYTES_SENT			[NSString stringWithFormat:AILocalizedString(@"%@ sent","(a bytes string) sent"),bytesString]
+#define	BYTES_RECEIVED		[NSString stringWithFormat:AILocalizedString(@"%@ received","%@ will be replaced by a string such as '5 MB' in the file transfer window"),bytesString]
+#define	BYTES_SENT			[NSString stringWithFormat:AILocalizedString(@"%@ sent","%@ will be replaced by a string such as '5 MB' in the file transfer window"),bytesString]
 #define	BUFFER_SIZE			25
 
 @interface ESFileTransferProgressRow (PRIVATE)
@@ -305,7 +305,7 @@
 			
 			if (rate > 0) {
 				unsigned long long secsRemaining = ((size - bytesSent) / rate);
-				transferRemainingStatus = [NSString stringWithFormat:AILocalizedString(@"%@ remaining",nil),[self readableTimeForSecs:secsRemaining inLongFormat:YES]];
+				transferRemainingStatus = [NSString stringWithFormat:AILocalizedString(@"%@ remaining","Time remaining for a file transfer to be completed phrase. %@ will be replaced by an amount of time such as '5 seconds' or '4 minutes and 30 seconds'."),[self readableTimeForSecs:secsRemaining inLongFormat:YES]];
 			} else {
 				transferRemainingStatus = AILocalizedString(@"Stalled","file transfer is stalled status message");
 			}

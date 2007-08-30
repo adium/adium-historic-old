@@ -15,16 +15,17 @@
  */
 
 #import "ESChatUserListController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 
-@class AIAccount, AIListContact, AIListObject, AIAccountSelectionView, AISplitView, AIMessageEntryTextView;
-@protocol AIMessageViewController;
+@class AIAccount, AIListContact, AIListObject, AIAccountSelectionView, AIMessageTabSplitView, AIMessageEntryTextView;
+@class AIMessageWindowController;
 
 @interface AIMessageViewController : AIObject <AIListControllerDelegate> {
     IBOutlet	NSView					*view_contents;
 	
 	//Split views
-	IBOutlet	AISplitView				*splitView_textEntryHorizontal;
-	IBOutlet	AISplitView				*splitView_messages;
+	IBOutlet	AIMessageTabSplitView	*splitView_textEntryHorizontal;
+	IBOutlet	AIMessageTabSplitView	*splitView_messages;
 
 	//Message Display
 	NSView								*controllerView_messages;
@@ -42,8 +43,9 @@
 	IBOutlet	AIMessageEntryTextView	*textView_outgoing;
 	
 	//
-    NSObject<AIMessageViewController>	*messageViewController;
-	AIAccountSelectionView				*view_accountSelection;
+    NSObject<AIMessageDisplayController>	*messageDisplayController;
+	AIAccountSelectionView					*view_accountSelection;
+	AIMessageWindowController				*messageWindowController;
 
     AIChat					*chat;
 	BOOL					suppressSendLaterPrompt;
@@ -51,9 +53,9 @@
 	int						userListMinWidth;
 }
 
-+ (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat;
-- (void)messageViewWillLeaveWindow:(NSWindow *)inWindow;
-- (void)messageViewAddedToWindow:(NSWindow *)inWindow;
++ (AIMessageViewController *)messageDisplayControllerForChat:(AIChat *)inChat;
+- (void)messageViewWillLeaveWindowController:(AIMessageWindowController *)inWindowController;
+- (void)messageViewAddedToWindowController:(AIMessageWindowController *)inWindowController;
 - (AIChat *)chat;
 
 - (AIListContact *)listObject;
@@ -76,6 +78,7 @@
 - (void)makeTextEntryViewFirstResponder;
 - (void)clearTextEntryView;
 - (void)addToTextEntryView:(NSAttributedString *)inString;
+- (void)addDraggedDataToTextEntryView:(id <NSDraggingInfo>)draggingInfo;
 
 //User List
 - (void)setUserListVisible:(BOOL)inVisible;

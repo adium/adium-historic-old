@@ -33,6 +33,7 @@
 
 #define PLAYER_STATE				@"Player State"
 #define	KEY_PLAYING					@"Playing"
+#define	KEY_PAUSED					@"Paused"
 #define	KEY_STOPPED					@"Stopped"
 #define CURRENT_TRACK_FORMAT_KEY	@"Current Track Format"
 #define ITMS_SEARCH_URL				@"itms://itunes.com/link?"
@@ -64,7 +65,7 @@
 @interface ESiTunesPlugin (PRIVATE)
 - (NSMenuItem *)menuItemWithTitle:(NSString *)title action:(SEL)action representedObject:(id)representedObject kind:(KGiTunesPluginMenuItemKind)itemKind;
 - (void)createiTunesCurrentTrackStatusState;
-- (void)createiTunesToolbarItem;
+- (void)createiTunesToolbarItemWithPath:(NSString *)path;
 - (void)createiTunesToolbarItemMenuItems:(NSMenu *)iTunesMenu;
 - (void)createTriggersMenu;
 - (void)filterAndInsertString:(NSString *)inString;
@@ -93,7 +94,7 @@
 	return iTunesIsStopped;
 }
 
-/*
+/*!
  * @brief Set if iTunes is stopped
  */
 - (void)setiTunesIsStopped:(BOOL)yesOrNo
@@ -101,7 +102,27 @@
 	iTunesIsStopped = yesOrNo;
 }
 
-/*
+/*!
+* @brief Is iTunes paused?
+ */
+- (BOOL)iTunesIsPaused
+{
+	//Get the info if we don't already have it
+	if (!iTunesCurrentInfo) [self loadiTunesCurrentInfoViaApplescript];
+	
+	return iTunesIsPaused;
+}
+
+/*!
+ * @brief Set if iTunes is paused
+ */
+- (void)setiTunesIsPaused:(BOOL)yesOrNo
+{
+  iTunesIsPaused = yesOrNo;
+}
+
+
+/*!
  * @brief Get current iTunes info dictionary
  */
 - (NSDictionary *)iTunesCurrentInfo
@@ -114,17 +135,27 @@
  * 
  * Retains new information, requests immediate content update and lets the plugin know what iTunes is doing.
  */
-- (void)setiTunesCurrentInfo:(NSDictionary *)newInfo
-{
-	if (newInfo != iTunesCurrentInfo) {
-		[iTunesCurrentInfo release];
-		iTunesCurrentInfo = [newInfo retain];
-		
-		[self setiTunesIsStopped:[[newInfo objectForKey:PLAYER_STATE] isEqualToString:KEY_STOPPED]];
+ - (void)setiTunesCurrentInfo:(NSDictionary *)newInfo
+ {
+ 	if (newInfo != iTunesCurrentInfo) {
+ 		[iTunesCurrentInfo release];
+ 		iTunesCurrentInfo = [newInfo retain];
 
-		[[adium notificationCenter] postNotificationName:Adium_RequestImmediateDynamicContentUpdate object:nil];
-	}
-}
+ 		[self setiTunesIsStopped:[[newInfo objectForKey:PLAYER_STATE] isEqualToString:KEY_STOPPED]];
+ 		[self setiTunesIsPaused:[[newInfo objectForKey:PLAYER_STATE] isEqualToString:KEY_PAUSED]];
+        
+        //Cancel any requests we had to fire updates.
+        [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(fireUpdateiTunesInfo) object:nil];
+        //fire an iTunes update in three seconds.
+        [self performSelector:@selector(fireUpdateiTunesInfo) withObject:nil afterDelay:3.0];
+ 	}
+ }
+
+ -(void)fireUpdateiTunesInfo
+ {
+     [[adium notificationCenter] postNotificationName:Adium_RequestImmediateDynamicContentUpdate object:nil];
+	 [[adium notificationCenter] postNotificationName:Adium_iTunesTrackChangedNotification object:iTunesCurrentInfo];
+ }
 
 #pragma mark -
 #pragma mark Plugin Methods
@@ -138,7 +169,7 @@
 	NSDictionary	*conditionalArtistTrackDict = nil;
 	NSString		*currentITunesTrackFormat = nil;
 	NSUserDefaults	*defaults = [NSUserDefaults standardUserDefaults];
-	NSString		*itunesPath = [[NSWorkspace sharedWorkspace] fullPathForApplication:@"iTunes.app"];
+	NSString		*itunesPath = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:@"com.apple.iTunes"];
 
 	iTunesCurrentInfo = nil;
 
@@ -156,13 +187,13 @@
 															  object:nil];
 		
 		substitutionDict = [[NSDictionary alloc] initWithObjectsAndKeys:
-			@"Album", ALBUM_TRIGGER,
-			@"Artist", ARTIST_TRIGGER,
-			@"Composer", COMPOSER_TRIGGER,
-			@"Genre", GENRE_TRIGGER,
-			@"Player State", STATUS_TRIGGER,
-			@"Name", TRACK_TRIGGER,
-			@"Store URL", STORE_URL_TRIGGER,
+			ITUNES_ALBUM, ALBUM_TRIGGER,
+			ITUNES_ARTIST, ARTIST_TRIGGER,
+			ITUNES_COMPOSER, COMPOSER_TRIGGER,
+			ITUNES_GENRE, GENRE_TRIGGER,
+			ITUNES_PLAYER_STATE, STATUS_TRIGGER,
+			ITUNES_NAME, TRACK_TRIGGER,
+			ITUNES_STORE_URL, STORE_URL_TRIGGER,
 			nil];
 		
 		slashMusicDict = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -208,7 +239,7 @@
 		[self createiTunesCurrentTrackStatusState];
 		
 		//Create the toolbar item
-		[self createiTunesToolbarItem];
+		[self createiTunesToolbarItemWithPath:itunesPath];
 		
 		//Create the Edit > Insert and contextual menus
 		[self createTriggersMenu];
@@ -263,13 +294,13 @@
 		if ([iTunesValues count] == infoCount) {
 			//create the dictionary
 			[self setiTunesCurrentInfo:[NSDictionary dictionaryWithObjects:iTunesValues 
-																   forKeys:[NSArray arrayWithObjects:@"Album",
-																									 @"Artist",
-																									 @"Composer",
-																									 @"Genre",
-																									 PLAYER_STATE,
-																									 @"Name",
-																									 @"Store URL",
+																   forKeys:[NSArray arrayWithObjects:ITUNES_ALBUM,
+																									 ITUNES_ARTIST,
+																									 ITUNES_COMPOSER,
+																									 ITUNES_GENRE,
+																									 ITUNES_PLAYER_STATE,
+																									 ITUNES_NAME,
+																									 ITUNES_STORE_URL,
 																									 nil]]];
 		}
 		
@@ -334,7 +365,7 @@
 		
 		while ((trigger = [enumerator nextObject])) {
 			//search for phrase in the string that needs to be filtered
-			if (([stringMessage rangeOfString:trigger options:NSCaseInsensitiveSearch].location != NSNotFound)) {
+			if (([stringMessage rangeOfString:trigger options:(NSLiteralSearch | NSCaseInsensitiveSearch)].location != NSNotFound)) {
 				NSDictionary	*replacementDict;
 				NSString		*replacement;
 				
@@ -342,7 +373,7 @@
 				replacementDict = [phraseSubstitutionDict objectForKey:trigger];
 								
 				//replacement of phrase should reflect iTunes player state
-				if (![self iTunesIsStopped]) {
+				if (![self iTunesIsStopped] && ![self iTunesIsPaused]) {
 					replacement = [replacementDict objectForKey:KEY_PLAYING];
 					
 					/* If the trigger is the trigger used for the Current iTunes Track status, we'll want to add a subtext of the store link
@@ -362,7 +393,7 @@
 				//Perform the replacement
 				[filteredMessage replaceOccurrencesOfString:trigger
 												 withString:replacement
-													options:NSLiteralSearch
+													options:(NSLiteralSearch | NSCaseInsensitiveSearch)
 													  range:NSMakeRange(0, [filteredMessage length])];
 			}
 		}
@@ -377,7 +408,7 @@
 		while ((trigger = [enumerator nextObject])) {
 			
 			//Find if the current trigger is in the string
-			if (([stringMessage rangeOfString:trigger options:NSCaseInsensitiveSearch].location != NSNotFound)) {
+			if (([stringMessage rangeOfString:trigger options:(NSLiteralSearch | NSCaseInsensitiveSearch)].location != NSNotFound)) {
 				NSString *replacement;
 				
 				//Get the info if we don't already have it
@@ -395,7 +426,7 @@
 				//Replace the current trigger with the value we found above
 				[filteredMessage replaceOccurrencesOfString:trigger
 												 withString:replacement
-													options:NSLiteralSearch
+													options:(NSLiteralSearch | NSCaseInsensitiveSearch)
 													  range:NSMakeRange(0, [filteredMessage length])];
 			}
 		}
@@ -435,7 +466,7 @@
 - (void)iTunesUpdate:(NSNotification *)aNotification
 {
 	NSDictionary *newInfo = [aNotification userInfo];
-	
+
 	[self setiTunesCurrentInfo:newInfo];
 }
 
@@ -447,15 +478,15 @@
  *
  * Create toolbar item and it's menu
  */
-- (void)createiTunesToolbarItem
+- (void)createiTunesToolbarItemWithPath:(NSString *)iTunesPath
 {
 	NSMenu		  *menu = [[NSMenu alloc] init];
 	MVMenuButton  *button = [[MVMenuButton alloc] initWithFrame:NSMakeRect(0,0,32,32)];
 
-	//configure the popup button and it's menu
-	[button setImage:[NSImage imageNamed:@"iTunes" forClass:[self class]]];
+	//configure the popup button and its menu
+	[button setImage:[[NSWorkspace sharedWorkspace] iconForFile:iTunesPath]];
 	[self createiTunesToolbarItemMenuItems:menu];
-	
+
 	NSToolbarItem * iTunesItem = [AIToolbarUtilities toolbarItemWithIdentifier:ITUNES_TOOLBAR_ITEM
 																		 label:TOOLBAR_LABEL
 																  paletteLabel:TOOLBAR_LABEL
@@ -470,6 +501,12 @@
 	[iTunesItem setMinSize:NSMakeSize(32,32)];
 	[iTunesItem setMaxSize:NSMakeSize(32,32)];
 	[button setToolbarItem:iTunesItem];
+	
+	//Add menu to toolbar item (for text mode)
+	NSMenuItem	*mItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] init] autorelease];
+	[mItem setSubmenu:menu];
+	[mItem setTitle:TOOLBAR_LABEL];
+	[iTunesItem setMenuFormRepresentation:mItem];
 	
 	//give it to adium to use
 	[[adium toolbarController] registerToolbarItem:iTunesItem forToolbarType:@"TextEntry"];
@@ -502,23 +539,23 @@
 														 action:NULL
 												  keyEquivalent:@""];
 	
-	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(@"Album","Insert Current iTunes track album toolbar menu item.") 
+	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(ITUNES_ALBUM,"Insert Current iTunes track album toolbar menu item.") 
 												 action:@selector(insertFilteredString:)
 									  representedObject:ALBUM_TRIGGER
 												   kind:ENABLED_IF_ITUNES_PLAYING]];
-	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(@"Artist","Insert Current iTunes track artist toolbar menu item.") 
+	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(ITUNES_ARTIST,"Insert Current iTunes track artist toolbar menu item.") 
 												 action:@selector(insertFilteredString:) 
 									  representedObject:ARTIST_TRIGGER
 												   kind:ENABLED_IF_ITUNES_PLAYING]];
-	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(@"Composer","Insert Current iTunes track composer toolbar menu item.") 
+	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(ITUNES_COMPOSER,"Insert Current iTunes track composer toolbar menu item.") 
 												 action:@selector(insertFilteredString:)
 									  representedObject:COMPOSER_TRIGGER
 												   kind:ENABLED_IF_ITUNES_PLAYING]];
-	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(@"Genre","Insert Current iTunes track genre toolbar menu item.") 
+	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(ITUNES_GENRE,"Insert Current iTunes track genre toolbar menu item.") 
 												 action:@selector(insertFilteredString:)
 									  representedObject:GENRE_TRIGGER
 												   kind:ENABLED_IF_ITUNES_PLAYING]];
-	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(@"Name","Insert Current iTunes track name toolbar menu item.") 
+	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(ITUNES_NAME,"Insert Current iTunes track name toolbar menu item.") 
 												 action:@selector(insertFilteredString:)
 									  representedObject:TRACK_TRIGGER
 												   kind:ENABLED_IF_ITUNES_PLAYING]];
@@ -558,6 +595,7 @@
 	[item setTarget:self];
 	[item setTag:itemKind];
 	[item setRepresentedObject:representedObject];
+	[item setEnabled:YES];
 
 	return [item autorelease];
 }
@@ -589,7 +627,7 @@
 	if (![url length]) {
 		
 		//if iTunes is playing or paused something
-		if (![self iTunesIsStopped]) {
+		if (![self iTunesIsStopped] || ![self iTunesIsPaused]) {
 			[url appendString:ITMS_SEARCH_URL];
 			
 			//if there is a name given to this song put it in the url
@@ -790,7 +828,7 @@
 /*!
  * @brief Create Edit and Contextual menus of iTunes triggers
  *
- * Users can then insert %_<token name> into any text view
+ * Users can then insert %_&lt;token name&gt; into any text view
  */
 - (void)createTriggersMenu
 {
@@ -812,7 +850,7 @@
  *
  * Depending on whether the responder is a textview and if it should be enabled when itunes isn't playing
  */
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	NSResponder					*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 	KGiTunesPluginMenuItemKind	tag = [menuItem tag];
@@ -822,7 +860,7 @@
 	if (responder && [responder isKindOfClass:[NSTextView class]]) {
 		
 		//some menu items are only enabled if itunes is playing something
-		if (([self iTunesIsStopped] && (tag == ENABLED_IF_ITUNES_PLAYING)) || (tag == RESPONDER_IS_WEBVIEW)) {
+		if ((([self iTunesIsStopped] || [self iTunesIsPaused]) && (tag == ENABLED_IF_ITUNES_PLAYING)) || (tag == RESPONDER_IS_WEBVIEW)) {
 			enable = NO;
 		} else {
 			enable = [(NSTextView *)responder isEditable];

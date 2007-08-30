@@ -14,13 +14,14 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIContactControllerProtocol.h>
 #import "ESAddressBookIntegrationAdvancedPreferences.h"
 #import "ESAddressBookIntegrationPlugin.h"
-#import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/AIImageAdditions.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AILocalizationTextField.h>
+#import <AIUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
 
 #define ADDRESS_BOOK_FIRST_OPTION					AILocalizedString(@"First","Address Book Name display style, e.g. Evan")
 #define ADDRESS_BOOK_FIRST_LAST_OPTION				AILocalizedString(@"First Last","Address Book Name display style, e.g. Evan Schoenberg")
@@ -43,12 +44,6 @@
  */
 @implementation ESAddressBookIntegrationAdvancedPreferences
 
-/*!
- * @brief Category
- */
-- (AIPreferenceCategory)category{
-    return AIPref_Advanced;
-}
 /*!
  * @brief Label
  */

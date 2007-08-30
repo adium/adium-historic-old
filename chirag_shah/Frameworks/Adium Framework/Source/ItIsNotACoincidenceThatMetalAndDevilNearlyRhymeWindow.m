@@ -25,8 +25,13 @@ for the actions of others, following only the true, Aqua path to peace, justice,
 
 + (void)load
 {
-    //Anything you can do, I can do better...
-    [self poseAsClass:[NSWindow class]];
+	//Pose as NSWindow if not on Leopard.
+	//Leopard erases the distinction between BM and Aqua, so we don't need to do this after Leopard.
+	//And since we don't support anything but Tiger and Leopard now, we can just check Tiger.
+	if ([NSApp isTiger]) {
+    	//Anything you can do, I can do better...
+    	[self poseAsClass:[NSWindow class]];
+	}
 }
 
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(unsigned int)styleMask backing:(NSBackingStoreType)backingType defer:(BOOL)flag

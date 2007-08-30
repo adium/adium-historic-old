@@ -14,21 +14,25 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIStandardListWindowController.h"
-#import <Adium/AIAccountControllerProtocol.h>
-#import <Adium/AIContactControllerProtocol.h>
-#import <Adium/AIPreferenceControllerProtocol.h>
-#import "AIStatusController.h"
-#import <Adium/AIToolbarControllerProtocol.h>
-#import <Adium/AIAccount.h>
-#import <Adium/AIListObject.h>
-#import <Adium/AIStatusMenu.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
-#import <AIUtilities/AIExceptionHandlingUtilities.h>
+
+#import <Adium/AIListGroup.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIToolbarControllerProtocol.h>
+#import <Adium/AIAccount.h>
+#import <Adium/AIListObject.h>
+#import <Adium/AIMetaContact.h>
+#import <Adium/AIStatusMenu.h>
+#import <Adium/AIListSmartGroup.h>
+
+#import "AIStatusController.h"
+#import "AIStandardListWindowController.h"
 
 #import "AIHoveringPopUpButton.h"
 #import "AIContactListImagePicker.h"
@@ -46,7 +50,7 @@
 
 @implementation AIStandardListWindowController
 
-/*
+/*!
  * @brief Initialize
  */
 - (id)initWithWindowNibName:(NSString *)inNibName
@@ -58,7 +62,7 @@
 	return self;
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -69,7 +73,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Nib name
  */
 + (NSString *)nibName
@@ -77,7 +81,7 @@
     return @"ContactListWindow";
 }
 
-/*
+/*!
  * @brief Window loaded
  */
 - (void)windowDidLoad
@@ -117,6 +121,8 @@
 	
 	//Set our minimum size here rather than in the nib to avoid conflicts with autosizing
 	[[self window] setMinSize:NSMakeSize(135, 60)];
+	
+	[searchField setDelegate:self];
 
 	[self _configureToolbar];
 }
@@ -127,6 +133,7 @@
 - (void)windowWillClose:(id)sender
 {
 	[[adium notificationCenter] removeObserver:self];
+	[searchField setDelegate:nil];
 	[statusMenu release];
 	
 	[super windowWillClose:sender];
@@ -196,7 +203,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Reposition the image picker to a desireed position
  *
  * This shifts the status picker view and the name view in the opposite direction, maintaining the same relative spacing relationships
@@ -240,19 +247,19 @@
 
 #pragma mark User icon changing
 
-/*
+/*!
  * @brief Determine the account which will be modified by a change to the image picker
  *
  * @result The 'active' account for image purposes, or nil if the global icon is active
  */
 + (AIAccount *)activeAccountForIconsGettingOnlineAccounts:(NSMutableSet *)onlineAccounts ownIconAccounts:(NSMutableSet *)ownIconAccounts
 {
-	AIAdium		  *sharedAdium = [AIObject sharedAdiumInstance];
-	AIAccount	  *account;
-	AIAccount	  *activeAccount = nil;
-	NSEnumerator  *enumerator;
-	BOOL		  atLeastOneOwnIconAccount = NO;
-	NSArray		  *accounts = [[sharedAdium accountController] accounts];
+	NSObject<AIAdium>	*sharedAdium = [AIObject sharedAdiumInstance];
+	AIAccount			*account;
+	AIAccount			*activeAccount = nil;
+	NSEnumerator		*enumerator;
+	BOOL				atLeastOneOwnIconAccount = NO;
+	NSArray				*accounts = [[sharedAdium accountController] accounts];
 
 	if (!onlineAccounts) onlineAccounts = [NSMutableSet set];
 	if (!ownIconAccounts) ownIconAccounts = [NSMutableSet set];
@@ -313,7 +320,7 @@
 	[imagePicker setImage:image];
 }
 
-/*
+/*!
  * @brief The image picker changed images
  */
 - (void)imageViewWithImagePicker:(AIImageViewWithImagePicker *)picker didChangeToImageData:(NSData *)imageData
@@ -380,7 +387,7 @@
 
 #pragma mark Name view
 
-/*
+/*!
  * @brief Determine the account which will be displayed / modified by the name view
  *
  * @param onlineAccounts If non-nil, the NSMutableSet will have all online accounts
@@ -390,12 +397,12 @@
  */
 + (AIAccount *)activeAccountForDisplayNameGettingOnlineAccounts:(NSMutableSet *)onlineAccounts ownDisplayNameAccounts:(NSMutableSet *)ownDisplayNameAccounts
 {
-	AIAdium		  *sharedAdium = [AIObject sharedAdiumInstance];
-	AIAccount	  *account;
-	AIAccount	  *activeAccount = nil;
-	NSEnumerator  *enumerator;
-	BOOL		  atLeastOneOwnDisplayNameAccount = NO;
-	NSArray		  *accounts = [[sharedAdium accountController] accounts];
+	NSObject<AIAdium>	*sharedAdium = [AIObject sharedAdiumInstance];
+	AIAccount			*account;
+	AIAccount			*activeAccount = nil;
+	NSEnumerator		*enumerator;
+	BOOL				atLeastOneOwnDisplayNameAccount = NO;
+	NSArray				*accounts = [[sharedAdium accountController] accounts];
 	
 	if (!onlineAccounts) onlineAccounts = [NSMutableSet set];
 	if (!ownDisplayNameAccounts) ownDisplayNameAccounts = [NSMutableSet set];
@@ -621,6 +628,13 @@
 	[nameView setTitle:alias];
 }
 
+#pragma mark Sliding
+
+- (BOOL)keepListOnScreenWhenSliding
+{
+	return YES;
+}
+
 //Toolbar --------------------------------------------------------------------------------------------------------------
 #pragma mark Toolbar
 //Install our toolbar
@@ -641,13 +655,14 @@
 	 * With the same window positioning information as a user for whom this happens consistently, I can't reproduce. Let's
 	 * fail to set the toolbar gracefully.
 	 */
-	AI_DURING
+	@try
+	{
 		[[self window] setToolbar:toolbar];
-	AI_HANDLER
-		NSLog(@"Warning: While setting the contact list's toolbar, exception %@ (%@) was thrown.",
-			  [localException name],
-			  [localException reason]);
-	AI_ENDHANDLER
+	}
+	@catch(id exc)
+	{
+		NSLog(@"Warning: While setting the contact list's toolbar, exception %@ was thrown.", exc);
+	}
 }
 
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
@@ -681,53 +696,59 @@
 														 desiredHeight:YES];
 }
 
-/*
- * @brief Slide the window to a given point
- *
- * windowSlidOffScreenEdgeMask must already be set to the resulting offscreen mask (or 0 if the window is sliding on screen)
- *
- * A standard window (titlebar window) will crash if told to setFrame completely offscreen. Also, using our own movement we can more precisely
- * control the movement speed and acceleration.
- */
-- (void)slideWindowToPoint:(NSPoint)inPoint
+#pragma mark Filtering
+
+static ESObjectWithStatus<AIContainingObject> *oldContactList = nil;
+- (void)controlTextDidChange:(NSNotification *)aNotification
 {
-	NSWindow	*myWindow = [self window];
-	
-	if ((windowSlidOffScreenEdgeMask == AINoEdges) &&
-		(previousAlpha > 0.0)) {
-		//Before sliding onscreen, restore any previous alpha value
-		[myWindow setAlphaValue:previousAlpha];
-		previousAlpha = 0.0;
+	NSSearchField *sender = [aNotification object];
+	NSString *queryString = [(NSSearchFieldCell *)[(NSTextField *)sender cell] stringValue];
+	if (!oldContactList) {
+		oldContactList = [contactListController contactListRoot];
+		[oldContactList retain];
 	}
-	
-	manualWindowMoveToPoint([self window],
-							inPoint,
-							windowSlidOffScreenEdgeMask,
-							contactListController,
-							YES);
-	
-	if (windowSlidOffScreenEdgeMask == AINoEdges) {
-		/* When the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
-		* it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
-		*/
-		[contactListController contactListDesiredSizeChanged];			
+	if ([queryString isEqualToString:@""]) {
+		[contactListController setHideRoot:YES];
+		[contactListController setContactListRoot:oldContactList];
+		[oldContactList release];
+		oldContactList = nil;
 	} else {
-		//After sliding off screen, go to an alpha value of 0 to hide our 1 px remaining on screen
-		previousAlpha = [myWindow alphaValue];
-		[myWindow setAlphaValue:0.0];
+		AIListSmartGroup *searchResults = [[AIListGroup alloc] initWithUID:AILocalizedString(@"Search Results", "Contact List Search Results")];
+		[searchResults setDisplayName:AILocalizedString(@"Search Results", "Contact List Search Results")];
+		AIListContact *contact;
+		// recursively walk the contact list, because if we enumerate over the contactController's -allContacts method we end up with weird
+		// duplicated contacts
+		NSMutableArray *enumeratorStack = [NSMutableArray arrayWithObject:[[oldContactList containedObjects] objectEnumerator]];
+		while ([enumeratorStack count] > 0) {
+			while (( contact = [[enumeratorStack objectAtIndex:0] nextObject])) {
+				if ([contact isKindOfClass:[AIMetaContact class]])
+					[enumeratorStack insertObject:[[(AIMetaContact *)contact containedObjects] objectEnumerator] atIndex:0];
+				else if ([contact isKindOfClass:[AIListGroup class]])
+					[enumeratorStack insertObject:[[(AIListGroup *)contact containedObjects] objectEnumerator] atIndex:0];
+				else
+					if ([[contact account] online] && 
+					([[contact displayName] rangeOfString:queryString options:NSCaseInsensitiveSearch].location != NSNotFound || 
+					 [[contact UID] rangeOfString:queryString options:NSCaseInsensitiveSearch].location != NSNotFound)) {
+						if ([[contact containingObject] isKindOfClass:[AIListGroup class]])
+							[searchResults addObject:contact];
+						else if ([[contact containingObject] isKindOfClass:[AIMetaContact class]])
+							[searchResults addObject:[contact containingObject]];
+						break;
+					}
+			}
+			[enumeratorStack removeObjectAtIndex:0];
+		}
+		[contactListController setContactListRoot:searchResults];
+		[contactListController setHideRoot:NO];
+#warning this really should get autoreleased....
+//		[searchResults autorelease];
 	}
 }
 
-- (void)moveWindowToPoint:(NSPoint)inOrigin
+- (IBAction)activateFirstContact:(id)sender;
 {
-	if ((windowSlidOffScreenEdgeMask == AINoEdges) &&
-		(previousAlpha > 0.0)) {
-		//Before sliding onscreen, restore any previous alpha value
-		[[self window] setAlphaValue:previousAlpha];
-		previousAlpha = 0.0;
-	}
-	
-	[super moveWindowToPoint:inOrigin];
+	if([[(NSSearchFieldCell *)[(NSTextField *)sender cell] stringValue] length] == 0) return;
+	[contactListController performDefaultActionOnFirstItem];
 }
 
 @end

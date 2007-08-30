@@ -14,13 +14,14 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AIExtendedStatusPlugin.h"
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
-#import "AIExtendedStatusPlugin.h"
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIMutableStringAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
 #import <Adium/AIAbstractListController.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListContact.h>
@@ -90,22 +91,35 @@
 {
 	NSSet		*modifiedAttributes = nil;
 
-	//Idle time
+	/* Work at the parent contact (metacontact, etc.) level for extended status, since that's what's displayed in the contact list.
+	 * We completely ignore status updates sent for an object which isn't the highest-level up (e.g. is within a metacontact).
+	 */
     if ((inModifiedKeys == nil || 
 		 (showIdle && [inModifiedKeys containsObject:@"Idle"]) ||
 		 (showStatus && ([inModifiedKeys containsObject:@"StatusMessage"] ||
 						 [inModifiedKeys containsObject:@"ContactListDisplayName"] ||
 						 [inModifiedKeys containsObject:@"StatusName"]))) &&
-		[inObject isKindOfClass:[AIListContact class]]){
+		[inObject isKindOfClass:[AIListContact class]] &&
+		([(AIListContact *)inObject parentContact] == inObject)) {
 		NSMutableString	*statusMessage = nil;
 		NSString		*finalMessage = nil;
 		int				idle;
-		
+
 		if (showStatus) {
-			statusMessage = [[[[[(AIListContact *)inObject contactListStatusMessage] string] stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet] mutableCopy] autorelease];
+			NSAttributedString *filteredMessage;
+
+			filteredMessage = [[adium contentController] filterAttributedString:[(AIListContact *)inObject contactListStatusMessage]
+																usingFilterType:AIFilterContactList
+																	  direction:AIFilterIncoming
+																		context:inObject];
+			statusMessage = [[[[filteredMessage string] stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet] mutableCopy] autorelease];
 
 			//Incredibly long status messages are slow to size, so we crop them to a reasonable length
-			if ([statusMessage length] > STATUS_MAX_LENGTH) {
+			int statusMessageLength = [statusMessage length];
+			if (statusMessageLength == 0) {
+				statusMessage = nil;
+
+			} else if (statusMessageLength > STATUS_MAX_LENGTH) {
 				[statusMessage deleteCharactersInRange:NSMakeRange(STATUS_MAX_LENGTH,
 																   [statusMessage length] - STATUS_MAX_LENGTH)];
 			}
@@ -118,9 +132,9 @@
 
 		//
 		if (idle > 0 && statusMessage) {
-			finalMessage = [NSString stringWithFormat:@"(%@) %@",[self idleStringForSeconds:idle], statusMessage];
+			finalMessage = [NSString stringWithFormat:@"(%@) %@",[self idleStringForMinutes:idle], statusMessage];
 		} else if (idle > 0) {
-			finalMessage = [NSString stringWithFormat:@"(%@)",[self idleStringForSeconds:idle]];
+			finalMessage = [NSString stringWithFormat:@"(%@)",[self idleStringForMinutes:idle]];
 		} else {
 			finalMessage = statusMessage;
 		}
@@ -136,25 +150,13 @@
 /*!
  * @brief Determine the idle string
  *
- * @param seconds Number of seconds idle
+ * @param minutes Number of minutes idle
  * @result A localized string to display for the idle time
  */
-- (NSString *)idleStringForSeconds:(int)seconds
+- (NSString *)idleStringForMinutes:(int)minutes //input is actualy minutes
 {
-	NSString	*idleString;
-	
-	//Create the idle string
-	if (seconds > 599400) {//Cap idle at 999 Hours (999*60*60 seconds)
-		idleString = AILocalizedString(@"Idle",nil);
-	} else if (seconds >= 600) {
-		idleString = [NSString stringWithFormat:@"%ih",seconds / 60];
-	} else if (seconds >= 60) {
-		idleString = [NSString stringWithFormat:@"%i:%02i",seconds / 60, seconds % 60];
-	} else {
-		idleString = [NSString stringWithFormat:@"%i",seconds];
-	}
-	
-	return idleString;
+	// Cap Idletime at 599400 minutes (999 hours)
+	return ((minutes > 599400) ? AILocalizedString(@"Idle",nil) : [NSDateFormatter stringForApproximateTimeInterval:(minutes * 60) abbreviated:YES]);
 }
 
 @end

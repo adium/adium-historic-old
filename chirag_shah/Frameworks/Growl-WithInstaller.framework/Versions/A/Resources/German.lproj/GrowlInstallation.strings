@@ -1,29 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>Growl Installation Recommended</key>
-	<string>Growl Installation Empfohlen</string>
+/* Button title for canceling installation of Growl */
+"Cancel" = "Abbrechen";
 
-	<key>Growl Update Available</key>
-	<string>Growl Update Verfügbar</string>
+/* Don't ask again checkbox title for installation of Growl */
+"Don't Ask Again" = "Nicht nochmal fragen";
 
-	<key>This program displays information via Growl, a centralized notification system.  Growl is not currently installed; to see Growl notifications from this and other applications, you must install it.  No download is required.</key>
-	<string>Dieses Programm benutzt Growl, ein zentrales Benachrichtigungssystem, um Informationen anzuzeigen.  Growl ist momentan nicht installiert; um Growl Benachrichtigungen von dieser und anderen Anwendungen zu erhalten, muss Growl installiert werden.  Kein Download wird benötigt.</string>
+/* Growl installation window title */
+"Growl Installation Recommended" = "Growl Installation Empfohlen";
 
-	<key>This program displays information via Growl, a centralized notification system.  A version of Growl is currently installed, but this program includes an updated version of Growl.  It is strongly recommended that you update now.  No download is required.</key>
-	<string>Dieses Programm benutzt Growl, ein zentrales Benachrichtigungssystem, um Informationen anzuzeigen.  Eine Version von Growl ist momentan installiert, aber dieses Programm enthält eine neuere Version von Growl.  Es wird dringend empfohlen, die neuere Version zu installieren.  Kein Download wird benötigt.</string>
+/* Growl update window title */
+"Growl Update Available" = "Growl Update Verfügbar";
 
-	<key>Install</key>
-	<string>Installieren</string>
+/* Button title for installing Growl */
+"Install" = "Install";
 
-	<key>Update</key>
-	<string>Aktualisieren</string>
+/* Default Growl update explanation */
+"This program displays information via Growl, a centralized notification system.  A version of Growl is currently installed, but this program includes an updated version of Growl.  It is strongly recommended that you update now.  No download is required." = "Dieses Programm benutzt Growl, ein zentrales Benachrichtigungssystem, um Informationen anzuzeigen.  Eine Version von Growl ist momentan installiert, aber dieses Programm enthält eine neuere Version von Growl.  Es wird dringend empfohlen, die neuere Version zu installieren.  Kein Download wird benötigt.";
 
-	<key>Cancel</key>
-	<string>Abbrechen</string>
+/* Default Growl installation explanation */
+"This program displays information via Growl, a centralized notification system.  Growl is not currently installed; to see Growl notifications from this and other applications, you must install it.  No download is required." = "Dieses Programm benutzt Growl, ein zentrales Benachrichtigungssystem, um Informationen anzuzeigen.  Growl ist momentan nicht installiert; um Growl Benachrichtigungen von dieser und anderen Anwendungen zu erhalten, muss Growl installiert werden.  Kein Download wird benötigt.";
 
-	<key>Don't Ask Again</key>
-	<string>Nicht nochmal fragen</string>
-</dict>
-</plist>
+/* Button title for updating Growl */
+"Update" = "Aktualisieren";

@@ -36,6 +36,11 @@
         }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
+            CLASS = AIFileTransferProgressOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIVariableHeightOutlineView; 
+        }, 
+        {
             ACTIONS = {pasteAsRichText = id; scrollPageDown = id; scrollPageUp = id; }; 
             CLASS = AIMessageEntryTextView; 
             LANGUAGE = ObjC; 

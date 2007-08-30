@@ -26,12 +26,7 @@
 /*!
  *	@brief Sets background transparency on/off
  */
-- (void)setDrawsBackground:(BOOL)flag;
-
-/*!
- *	@return whether background transparency is on or off
- */
-- (BOOL)drawsBackground;
+- (void)setTransparent:(BOOL)flag;
 
 /*!
  *	@brief Sets the font family used in webkit's preferences for adium
@@ -58,4 +53,14 @@
  */
 - (void)setShouldForwardEvents:(BOOL)flag;
 
+@end
+
+@interface NSObject (ESWebViewDragDelegate)
+- (NSDragOperation)webView:(ESWebView *)sender draggingEntered:(id <NSDraggingInfo>)info;
+- (NSDragOperation)webView:(ESWebView *)sender draggingUpdated:(id <NSDraggingInfo>)info;
+- (NSDragOperation)webView:(ESWebView *)sender draggingExited:(id <NSDraggingInfo>)info;
+- (BOOL)webView:(ESWebView *)sender performDragOperation:(id <NSDraggingInfo>)info;
+- (BOOL)webView:(ESWebView *)sender prepareForDragOperation:(id <NSDraggingInfo>)info;
+- (void)webView:(ESWebView *)sender concludeDragOperation:(id <NSDraggingInfo>)info;
+- (BOOL)webView:(ESWebView *)sender shouldHandleDragWithPasteboard:(NSPasteboard *)pasteboard;
 @end

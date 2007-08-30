@@ -11,7 +11,7 @@
 #import <Adium/AIServiceIcons.h>
 #import <AIUtilities/AIMenuAdditions.h>
 
-/*
+/*!
  * @class AIServiceMenu
  * @brief Class to provide a menu of services
  *
@@ -19,7 +19,7 @@
  */
 @implementation AIServiceMenu
 
-/*
+/*!
  * @brief Sort menu items by title
  */
 int titleSort(NSMenuItem *itemA, NSMenuItem *itemB, void *context)
@@ -27,7 +27,7 @@ int titleSort(NSMenuItem *itemA, NSMenuItem *itemB, void *context)
 	return [[itemA title] compare:[itemB title] options:NSLiteralSearch];
 }
 
-/*
+/*!
  * @brief Returns a menu of services.
  *
  * Each menu item's represented object is the AIService it represents.  Services are grouped by 'importance' and sorted alphabetically within groups.

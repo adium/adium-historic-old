@@ -69,6 +69,13 @@ typedef struct s_OtrlMessageAppOps {
      * state), this is called so the UI can be updated. */
     void (*update_context_list)(void *opdata);
 
+	/* Return a newly-allocated string containing a human-friendly name
+		* for the given accountname / protocol pair */
+    const char *(*account_display_name)(void *opdata, const char *accountname, const char *protocol);
+	
+    /* Deallocate a string allocated by protocol_name */
+    void (*account_display_name_free)(void *opdata, const char *protocol_name);
+	
     /* Return a newly-allocated string containing a human-friendly name
      * for the given protocol id */
     const char *(*protocol_name)(void *opdata, const char *protocol);

@@ -16,9 +16,9 @@
 
 #import <Adium/ESObjectWithStatus.h>
 #import <Adium/AIContentTyping.h>
+#import <Adium/AIListObject.h>
 
 @class AIAccount, AIListObject, AIListContact, AIContentObject, AIEmoticon;
-@protocol AIContainingObject;
 
 #define Chat_WillClose							@"Chat_WillClose"
 #define Chat_DidOpen							@"Chat_DidOpen"
@@ -97,6 +97,7 @@ typedef enum {
 	AIListContact		*preferredListObject;
 	NSString			*name;
 	NSString			*uniqueChatID;
+	id					identifier;
 	
 	NSMutableSet		*ignoredListContacts;
 	
@@ -105,8 +106,6 @@ typedef enum {
 	BOOL				enableTypingNotifications;
 	
 	NSMutableSet		*customEmoticons;
-	
-	NSMutableArray		*contentObjectArray;
 }
 
 + (id)chatForAccount:(AIAccount *)inAccount;
@@ -115,7 +114,6 @@ typedef enum {
 - (void)setAccount:(AIAccount *)inAccount;
 
 - (NSDate *)dateOpened;
-- (void)setDateOpened:(NSDate *)inDate;
 
 - (BOOL)isOpen;
 - (void)setIsOpen:(BOOL)flag;
@@ -129,10 +127,7 @@ typedef enum {
 
 - (void)setDisplayName:(NSString *)inDisplayName;
 
-- (NSArray *)participatingListObjects;
 - (void)addParticipatingListObject:(AIListContact *)inObject notify:(BOOL)notify;
-- (void)addParticipatingListObject:(AIListContact *)inObject;
-- (void)removeParticipatingListObject:(AIListContact *)inObject;
 - (AIListContact *)listObject;
 - (void)setListObject:(AIListContact *)inObject;
 - (AIListContact *)preferredListObject;
@@ -141,10 +136,12 @@ typedef enum {
 
 - (BOOL)willBeginSendingContentObject:(AIContentObject *)inObject;
 - (void)finishedSendingContentObject:(AIContentObject *)inObject;
-- (void)removeAllContent;
 
 - (NSString *)name;
 - (void)setName:(NSString *)inName;
+
+- (id)identifier;
+- (void)setIdentifier:(id)inIdentifier;
 
 - (NSString *)uniqueChatID;
 
@@ -170,8 +167,5 @@ typedef enum {
 - (NSSet *)customEmoticons;
 
 - (void)receivedError:(NSNumber *)type;
-
-- (NSArray *)contentObjectArray;
-- (void)addContentObject:(AIContentObject *)inObject;
 
 @end

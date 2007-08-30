@@ -70,18 +70,6 @@
     [sheet orderOut:nil];
 }
 
-
-//Preference pane properties
-//- (AIPreferenceCategory)category{
-//    return AIPref_Advanced;
-//}
-//- (NSString *)label{
-//    return AILocalizedString(@"Emoticons","Emoticons/Smilies");
-//}
-//- (NSString *)nibName{
-//    return @"EmoticonPrefs";
-//}
-
 //Configure the preference view
 //- (void)viewDidLoad
 - (void)windowDidLoad
@@ -90,9 +78,8 @@
     [table_emoticonPacks registerForDraggedTypes:[NSArray arrayWithObject:EMOTICON_PACK_DRAG_TYPE]];
 	
 	//Configure the outline view
-	AIGenericViewCell	*cell = [[[AIGenericViewCell alloc] init] autorelease];
-	[cell setDrawsGradientHighlight:YES];
-	[[table_emoticonPacks tableColumnWithIdentifier:@"Emoticons"] setDataCell:cell];
+	[table_emoticonPacks setDrawsGradientSelection:YES];
+	[[table_emoticonPacks tableColumnWithIdentifier:@"Emoticons"] setDataCell:[[[AIGenericViewCell alloc] init] autorelease]];
 	[table_emoticonPacks selectRow:0 byExtendingSelection:NO];
 	[table_emoticonPacks setToolTip:EMOTICON_PACKS_TOOLTIP];
 	[table_emoticonPacks setDelegate:self];
@@ -424,7 +411,13 @@
 
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {
-	[self moveSelectedPacksToTrash]; 
+	//Prevent deleting included packs
+	NSRange range = [[selectedEmoticonPack path] rangeOfString:[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"Emoticons"]];
+	if (range.length > 0)
+		NSBeep();
+	else{
+		[self moveSelectedPacksToTrash];
+	}
 }
 
 -(void)moveSelectedPacksToTrash

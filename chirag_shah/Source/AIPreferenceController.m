@@ -28,6 +28,7 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIListObject.h>
 #import "AIPreferencePane.h"
+#import "AIAdvancedPreferencePane.h"
 
 #define PREFS_DEFAULT_PREFS 	@"PrefsPrefs.plist"
 #define TITLE_OPEN_PREFERENCES	AILocalizedString(@"Open Preferences",nil)
@@ -56,7 +57,8 @@
 	if ((self = [super init])) {
 		//
 		paneArray = [[NSMutableArray alloc] init];
-		
+		advancedPaneArray = [[NSMutableArray alloc] init];
+
 		defaults = [[NSMutableDictionary alloc] init];
 		prefCache = [[NSMutableDictionary alloc] init];
 		prefWithDefaultsCache = [[NSMutableDictionary alloc] init];
@@ -142,17 +144,6 @@
 }
 
 /*!
- * @brief Show a specific category within the advanced pane of the preference window
- *
- * Opens the preference window if necessary
- *
- */
-- (void)openPreferencesToAdvancedPane:(NSString *)paneName
-{
-	[AIPreferenceWindowController openPreferenceWindowToAdvancedPane:paneName];
-}
-
-/*!
  * @brief Add a view to the preferences
  */
 - (void)addPreferencePane:(AIPreferencePane *)inPane
@@ -168,6 +159,18 @@
     return paneArray;
 }
 
+/*!
+* @brief Add a view to the preferences
+ */
+- (void)addAdvancedPreferencePane:(AIAdvancedPreferencePane *)inPane
+{
+    [advancedPaneArray addObject:inPane];
+}
+
+- (NSArray *)advancedPaneArray
+{
+	return advancedPaneArray;
+}
 
 //Observing ------------------------------------------------------------------------------------------------------------
 #pragma mark Observing
@@ -299,6 +302,20 @@
 }
 
 /*!
+* @brief Set multiple preferences at once
+ *
+ * @param inPrefDict An NSDictionary whose keys are preference keys and objects are the preferences for those keys. All must be plist-encodable.
+ * @param group An arbitrary NSString group
+ */
+- (void)setPreferences:(NSDictionary *)inPrefDict inGroup:(NSString *)group object:(AIListObject *)object
+{
+	NSMutableDictionary	*prefDict = [self cachedPreferencesForGroup:group object:object];
+	
+	[prefDict addEntriesFromDictionary:inPrefDict];
+	[self updatePreferences:prefDict forKey:nil group:group object:object];
+}
+
+/*!
  * @brief Set multiple global preferences at once
  *
  * @param inPrefDict An NSDictionary whose keys are preference keys and objects are the preferences for those keys. All must be plist-encodable.
@@ -306,11 +323,7 @@
  */
 - (void)setPreferences:(NSDictionary *)inPrefDict inGroup:(NSString *)group
 {
-	NSMutableDictionary	*prefDict = [self cachedPreferencesForGroup:group object:nil];
-
-	[prefDict addEntriesFromDictionary:inPrefDict];
-	
-	[self updatePreferences:prefDict forKey:nil group:group object:nil];
+	[self setPreferences:inPrefDict inGroup:group object:nil];
 }
 
 /*!
@@ -535,7 +548,7 @@
 	return [sourceDefaultsDict objectForKey:cacheKey];
 }
 
-/*
+/*!
  * @brief Locally update our cached prefrences, including defaults
  *
  * Must be called before preferences are accessed after preferences change for changes to be visible to the rest of Adium
@@ -624,6 +637,9 @@
  */
 - (void)updatePreferences:(NSMutableDictionary *)prefDict forKey:(NSString *)key group:(NSString *)group object:(AIListObject *)object
 {
+	//Upgrade code; message context isn't needed now that we draw from logs. This should be removed eventually.
+	[prefDict removeObjectForKey:@"Message Context"];
+	
 	NSString	*path = (object ? [userDirectory stringByAppendingPathComponent:[object pathToPreferences]] : userDirectory);
 	NSString	*name = (object ? [[object internalObjectID] safeFilenameString] : group);
 
@@ -724,7 +740,7 @@
 	return [self cachedPreferencesWithDefaultsForGroup:key object:nil];
 }
 
-/*
+/*!
  * @brief Set a dictionary of preferences for a group
  *
  * Note that while setPreferences:inGroup: adds the passed dictionary to the current one, this method replaces the dictionary entirely

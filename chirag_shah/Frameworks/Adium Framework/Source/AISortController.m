@@ -27,12 +27,13 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 
 @implementation AISortController
 
-/*
+/*!
  * @brief Initialize
  */
 - (id)init
 {
 	if ((self = [super init])) {
+		adium = [[AIObject sharedAdiumInstance] retain];
 		statusKeysRequiringResort = [[self statusKeysRequiringResort] retain];
 		attributeKeysRequiringResort = [[self attributeKeysRequiringResort] retain];
 		sortFunction = [self sortFunction];
@@ -45,11 +46,13 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 	return self;
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
 {
+	[adium release];
+
 	[statusKeysRequiringResort release];
 	[attributeKeysRequiringResort release];
 	
@@ -58,7 +61,7 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Configure our customization view
  */
 - (NSView *)configureView
@@ -73,7 +76,7 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 
 //Sort Logic -------------------------------------------------------------------------------------------------------
 #pragma mark Sort Logic
-/*
+/*!
  * @brief Should we resort for a set of changed status keys?
  *
  * @param inModifiedKeys NSSet of NSString keys to test
@@ -82,13 +85,13 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 - (BOOL)shouldSortForModifiedStatusKeys:(NSSet *)inModifiedKeys
 {
 	if (statusKeysRequiringResort) {
-		return [statusKeysRequiringResort intersectsSet:inModifiedKeys] != nil;
+		return [statusKeysRequiringResort intersectsSet:inModifiedKeys];
 	} else {
 		return NO;
 	}
 }
 
-/*
+/*!
  * @brief Should we resort for a set of changed attribute keys?
  *
  * @param inModifiedKeys NSSet of NSString keys to test
@@ -97,13 +100,13 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 - (BOOL)shouldSortForModifiedAttributeKeys:(NSSet *)inModifiedKeys
 {
 	if (attributeKeysRequiringResort) {
-		return [attributeKeysRequiringResort intersectsSet:inModifiedKeys] != nil;
+		return [attributeKeysRequiringResort intersectsSet:inModifiedKeys];
 	} else {
 		return NO;
 	}
 }
 
-/*
+/*!
  * @brief Always sort groups to the top by default?
  *
  * By default, manual sort ignores groups and sorts them alongside all other objects
@@ -114,7 +117,7 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 	return YES;
 }
 
-/*
+/*!
  * @brief Force ignoring of groups?
  *
  * @param shouldForce If YES, groups are ignored. If NO, default behavior for this sort is used.
@@ -128,7 +131,7 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 	}
 }
 
-/*
+/*!
  * @brief Can the user manually reorder when this sort controller is active?
  *
  * @result YES if we should allow manual sorting; NO if we should not.
@@ -139,7 +142,7 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 
 //Sorting -------------------------------------------------------------------------------------------------------
 #pragma mark Sorting
-/*
+/*!
  * @brief Index for inserting an object into an array
  *
  * @param inObject The AIListObject to be inserted object
@@ -181,7 +184,7 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 										  hint:[inObjects sortedArrayHint]];
 }
 
-/*
+/*!
  * @brief Primary sort when groups are sorted alongside contacts (alwaysSortGroupsToTop == FALSE)
  *
  * Visible contacts go above invisible ones.  For contacts which are both visible, use the sort function.
@@ -208,7 +211,7 @@ int basicVisibilitySort(id objectA, id objectB, void *context)
 	}
 }
 
-/*
+/*!
  * @brief Primary sort when groups are always sorted to the top
  *
  * Visible contacts go above invisible ones.  For contacts which are both visible, use the sort function.
@@ -268,6 +271,18 @@ int basicGroupVisibilitySort(id objectA, id objectB, void *context)
 	} else {
 		return nil;
 	}
+}
+
+/*!
+ * @brief NSSortDescriptor override to perform sorting our way.
+ */
+- (NSComparisonResult)compareObject:(id)object1 toObject:(id)object2
+{
+	if (alwaysSortGroupsToTop) {
+		return basicGroupVisibilitySort(object1, object2, sortFunction);
+	} else {
+		return basicVisibilitySort(object1, object2, sortFunction);
+	}	
 }
 
 //For subclasses -------------------------------------------------------------------------------------------------------

@@ -140,7 +140,7 @@
     return logDict;
 }
 
-/*
+/*!
  * @brief Get an AIChatLog within this AILogToGroup
  *
  * @param inPath A _relative_ path of the form SERVICE.ACCOUNT_NAME/TO_NAME/LogName.Extension
@@ -177,22 +177,25 @@
 	return theLog;
 }
 
-/*
+/*!
  * @brief Delete an AIChatLog within this AILogToGroup
  *
  * @param inPath A _relative_ path of the form SERVICE.ACCOUNT_NAME/TO_NAME/LogName.Extension
  */
-- (void)trashLog:(AIChatLog *)aLog
+- (BOOL)trashLog:(AIChatLog *)aLog
 {
 	NSString *logPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[aLog path]];
-	[[NSFileManager defaultManager] trashFileAtPath:logPath];
+	BOOL	 success;
+	success = [[NSFileManager defaultManager] trashFileAtPath:logPath];
 
 	//Remove from our dictionaries so we don't reference the removed log
 	[logDict removeObjectForKey:[aLog path]];
 	[partialLogDict removeObjectForKey:[aLog path]];
+	
+	return success;
 }
 
-/*
+/*!
  * @brief Partial isEqual implementation
  *
  * 'Partial' in the sense that it doesn't actually test equality.  If two AILogToGroup objects are for the same service/contact pair,

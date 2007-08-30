@@ -53,10 +53,30 @@
     if ((self = [super initWithChat:inChat source:inSource destination:inDest date:inDate message:inMessage])) {
 		isAutoreply = inAutoReply;
 		encodedMessage = nil;
+		encodedMessageAccountData = nil;
 	}
 
     return self;
 }
+
+- (void)dealloc
+{
+	if (encodedMessage)
+		[encodedMessage release];
+	if (encodedMessageAccountData)
+		[encodedMessageAccountData release];
+	
+	[super dealloc];
+}
+
+- (NSMutableArray *)displayClasses
+{
+	NSMutableArray *classes = [super displayClasses];
+	[classes addObject:@"message"];
+	if(isAutoreply) [classes addObject:@"autoreply"];
+	return classes;
+}
+
 
 //This message was automatically generated
 - (void)setIsAutoreply:(BOOL)inAutoreply{
@@ -66,7 +86,7 @@
     return isAutoreply;
 }
 
-/*
+/*!
  * @brief The AIAccount-generated contents of the message as a simple string
  *
  * This will often be an HTML string. It is the form in which the account wishes to send data to the other side.
@@ -85,7 +105,7 @@
 	}
 }
 
-/*
+/*!
  * @brief For AIAccount internal use: data associated with this message
  */
 - (id)encodedMessageAccountData
@@ -93,7 +113,7 @@
 	return encodedMessageAccountData;
 }
 
-/*
+/*!
  * @brief For AIAccount internal use: set data associated with this message
  */
 - (void)setEncodedMessageAccountData:(id)inEncodedMessageAccountData

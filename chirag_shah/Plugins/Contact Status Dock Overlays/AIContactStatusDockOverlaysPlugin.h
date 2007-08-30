@@ -15,6 +15,9 @@
  */
 
 #import <Adium/AIPlugin.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
 
 #define PREF_GROUP_DOCK_OVERLAYS		@"Dock Overlays"
 #define DOCK_OVERLAY_DEFAULT_PREFS		@"DockOverlayDefaults"
@@ -26,7 +29,6 @@
 #define DOCK_OVERLAY_ALERT_IDENTIFIER		@"DockOverlay"
 
 @class AIIconState;
-@protocol AIListObjectObserver, AIChatObserver, AIActionHandler;
 
 @interface AIContactStatusDockOverlaysPlugin : AIPlugin <AIListObjectObserver, AIChatObserver, AIActionHandler> {
     NSMutableArray				*overlayObjectsArray;

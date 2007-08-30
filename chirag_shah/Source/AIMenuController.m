@@ -88,6 +88,7 @@
 		destination--;
 		menuItem = [locationArray objectAtIndex:destination];
 	}
+
 	if ([menuItem isKindOfClass:[NSMenuItem class]]) {
 		//If attached to a menu item, insert below that item
 		targetMenu = [menuItem menu];
@@ -102,6 +103,7 @@
 	if (location != destination) {
 		[targetMenu insertItem:[NSMenuItem separatorItem] atIndex:++targetIndex];
 	}
+
 	[targetMenu insertItem:newItem atIndex:targetIndex+1];
 
 	//update the location array
@@ -117,6 +119,10 @@
 	int			targetIndex = [targetMenu indexOfItem:targetItem];
 	unsigned	loop, maxLoop;
 
+	if (!targetMenu) {
+		NSLog(@"Warning: Attempting to remove %@ (%@, target %@), but it has no menu",targetItem, [targetItem title], [targetItem target]);
+	}
+	
 	//Fix the pointer if this is one
 	for (loop = 0, maxLoop = [locationArray count]; loop < maxLoop; loop++) {
 		NSMenuItem	*menuItem = [locationArray objectAtIndex:loop];
@@ -141,17 +147,32 @@
 	//Remove the item
 	[targetMenu removeItem:targetItem];
 
-	//Remove any double dividers by removing the upper divier. Also, remove dividers at the top or bottom of the menu
-	for (loop = 0; loop < [targetMenu numberOfItems]; loop++) {
-		if (([[targetMenu itemAtIndex:loop] isSeparatorItem]) && 
-		   ((loop == [targetMenu numberOfItems] - 1) || (loop == 0) || ([[targetMenu itemAtIndex:loop-1] isSeparatorItem]))) {
-			AILog(@"(menuController): Removing double divider at %i from %@", loop, targetMenu);
-			[targetMenu removeItemAtIndex:loop];
-			loop--;//re-search the location
+	if (!menuItemProcessingDelays) {
+		//Remove any double dividers by removing the upper divier. Also, remove dividers at the top or bottom of the menu
+		for (loop = 0; loop < [targetMenu numberOfItems]; loop++) {
+			if (([[targetMenu itemAtIndex:loop] isSeparatorItem]) && 
+				((loop == [targetMenu numberOfItems] - 1) || (loop == 0) || ([[targetMenu itemAtIndex:loop-1] isSeparatorItem]))) {
+				[targetMenu removeItemAtIndex:loop];
+				loop--;//re-search the location
+			}
 		}
+		
+		/* XXX Note that this notification isn't being posted if triggerred while in menuItemProcessingDelays.
+		 * It's not currently needed in that situation so this is a very small performance hack... it could move outside the
+		 * conditional if necessary. -evands
+		 */
+		[[adium notificationCenter] postNotificationName:AIMenuDidChnge object:targetMenu userInfo:nil];
 	}
+}
 
-	[[adium notificationCenter] postNotificationName:AIMenuDidChnge object:targetMenu userInfo:nil];
+- (void)delayMenuItemPostProcessing
+{
+	menuItemProcessingDelays++;
+}
+
+- (void)endDelayMenuItemPostProcessing
+{
+	menuItemProcessingDelays--;	
 }
 
 - (void)addContextualMenuItem:(NSMenuItem *)newItem toLocation:(AIContextMenuLocation)location
@@ -309,14 +330,14 @@
 - (void)localizeMenuTitles
 {
 	//Menu items in MainMenu.nib for localization purposes
-	[menuItem_file setTitle:AILocalizedString(@"File",nil)];
-	[menuItem_edit setTitle:AILocalizedString(@"Edit",nil)];
-	[menuItem_view setTitle:AILocalizedString(@"View",nil)];
-	[menuItem_status setTitle:AILocalizedString(@"Status",nil)];
-	[menuItem_contact setTitle:AILocalizedString(@"Contact",nil)];
-	[menuItem_format setTitle:AILocalizedString(@"Format",nil)];
-	[menuItem_window setTitle:AILocalizedString(@"Window",nil)];
-	[menuItem_help setTitle:AILocalizedString(@"Help",nil)];
+	[menuItem_file setTitle:AILocalizedString(@"File","Title of the File menu")];
+	[menuItem_edit setTitle:AILocalizedString(@"Edit","Title of the Edit menu")];
+	[menuItem_view setTitle:AILocalizedString(@"View","Title of the View menu")];
+	[menuItem_status setTitle:AILocalizedString(@"Status","Title of the Status menu")];
+	[menuItem_contact setTitle:AILocalizedString(@"Contact","Title of the Contact menu")];
+	[menuItem_format setTitle:AILocalizedString(@"Format","Title of the Format menu")];
+	[menuItem_window setTitle:AILocalizedString(@"Window","Title of the Window menu")];
+	[menuItem_help setTitle:AILocalizedString(@"Help","Title of the Help menu")];
 
 	//Adium menu
 	[menuItem_aboutAdium setTitle:AILocalizedString(@"About Adium",nil)];
@@ -376,13 +397,16 @@
 	[menuItem_underline setTitle:AILocalizedString(@"Underline",nil)];
 	[menuItem_showFonts setTitle:AILocalizedString(@"Show Fonts",nil)];
 	[menuItem_showColors setTitle:AILocalizedString(@"Show Colors",nil)];
+	[menuItem_bigger setTitle:AILocalizedString(@"Bigger", "Menu item title for making the font size bigger")];
+	[menuItem_smaller setTitle:AILocalizedString(@"Smaller", "Menu item title for making the font size smaller")];
 	[menuItem_copyStyle setTitle:AILocalizedString(@"Copy Style",nil)];
 	[menuItem_pasteStyle setTitle:AILocalizedString(@"Paste Style",nil)];
 	[menuItem_writingDirection setTitle:AILocalizedString(@"Writing Direction",nil)];
-	[menuItem_rightToLeft setTitle:AILocalizedString(@"Right to Left",nil)];
+	[menuItem_rightToLeft setTitle:AILocalizedString(@"Right to Left", "Menu item in a submenu under 'writing direction' for writing which goes from right to left")];
 	
 	//Window menu
-	[menuItem_minimize setTitle:AILocalizedString(@"Minimize",nil)];
+	[menuItem_minimize setTitle:AILocalizedString(@"Minimize", "Minimize menu item title int he Wndow menu")];
+	[menuItem_zoom setTitle:AILocalizedString(@"Zoom", "Zoom menu item title in the Window menu")];
 	[menuItem_bringAllToFront setTitle:AILocalizedString(@"Bring All to Front",nil)];
 
 	//Help menu

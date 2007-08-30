@@ -31,7 +31,12 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {
-            ACTIONS = {nextTab = id; pressedAlternateButton = id; previousTab = id; }; 
+            ACTIONS = {
+                nextTab = id; 
+                pressedAlternateButton = id; 
+                previousTab = id; 
+                promptForMultiples = id; 
+            }; 
             CLASS = AdiumSetupWizard; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -61,6 +66,11 @@
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSButton; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
         {CLASS = NSTextField; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
+        {
+            CLASS = SetupAssistantBoxBackgroundView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSView; 
+        }, 
         {
             CLASS = SetupWizardBackgroundView; 
             LANGUAGE = ObjC; 

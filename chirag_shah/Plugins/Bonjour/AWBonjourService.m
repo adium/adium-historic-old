@@ -6,7 +6,7 @@
 //  Copyright (c) 2004-2006 The Adium Team. All rights reserved.
 //
 
-#import "AIStatusController.h"
+#import <Adium/AIStatusControllerProtocol.h>
 #import "AWBonjourAccount.h"
 #import "AWBonjourService.h"
 #import "ESBonjourAccountViewController.h"

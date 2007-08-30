@@ -71,6 +71,7 @@
 	NSString	 *className;
 
 	while ((className = [enumerator nextObject])) {
+		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		Class class;
 
 		if (className && (class = NSClassFromString(className))) {
@@ -83,6 +84,7 @@
 			[components setObject:object forKey:className];
 			[object release];
 		}
+		[pool release];
 	}
 }
 

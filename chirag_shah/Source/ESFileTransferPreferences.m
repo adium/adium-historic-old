@@ -29,14 +29,19 @@
 
 @implementation ESFileTransferPreferences
 //Preference pane properties
-- (AIPreferenceCategory)category{
-    return AIPref_FileTransfer;
+- (NSString *)paneIdentifier
+{
+	return @"File Transfer";
 }
-- (NSString *)label{
-    return @"a";
+- (NSString *)paneName{
+	return AILocalizedString(@"File Transfer", nil);
 }
 - (NSString *)nibName{
     return @"FileTransferPrefs";
+}
+- (NSImage *)paneIcon
+{
+	return [NSImage imageNamed:@"pref-ft" forClass:[self class]];
 }
 
 //Called in response to all preference controls, applies new settings
@@ -85,18 +90,21 @@
 			[checkBox_autoAcceptFiles setState:NSOnState];
 			[checkBox_autoAcceptOnlyFromCLList setState:NSOffState];
 			break;
-	}
-	
-	[label_whenReceivingFiles setLocalizedString:AILocalizedString(@"Receiving files:","FT Preferences")];
-	[label_defaultReceivingFolder setLocalizedString:AILocalizedString(@"Save files to:","FT Preferences")];
+	}	
+}
+
+- (void)localizePane
+{
+	[label_whenReceivingFiles setLocalizedString:AILocalizedString(@"Receiving files:","File Transfer preferences label")];
+	[label_defaultReceivingFolder setLocalizedString:AILocalizedString(@"Save files to:","File Transfer preferences label")];
 	[label_safeFilesDescription setLocalizedString:AILocalizedString(@"\"Safe\" files include movies, pictures,\nsounds, text documents, and archives.","Description of safe files (files which Adium can open automatically without danger to the user). This description should be on two lines; the lines are separated by \n.")];
-	[label_transferProgress setLocalizedString:AILocalizedString(@"Progress:","FT Preferences")];
+	[label_transferProgress setLocalizedString:AILocalizedString(@"Progress:","File Transfer preferences label")];
 	
-	[checkBox_autoAcceptFiles setLocalizedString:AILocalizedString(@"Automatically accept files...","FT Preferences")];
-	[checkBox_autoAcceptOnlyFromCLList setLocalizedString:AILocalizedString(@"only from contacts on my Contact List","FT Preferences")];
-	[checkBox_autoOpenFiles setLocalizedString:AILocalizedString(@"Open \"Safe\" files after receiving","FT Preferences")];
-	[checkBox_showProgress setLocalizedString:AILocalizedString(@"Show the File Transfers window automatically","FT Preferences")];
-	[checkBox_autoClearCompleted setLocalizedString:AILocalizedString(@"Clear completed transfers automatically","FT Preferences")];
+	[checkBox_autoAcceptFiles setLocalizedString:AILocalizedString(@"Automatically accept files...","File Transfer preferences")];
+	[checkBox_autoAcceptOnlyFromCLList setLocalizedString:AILocalizedString(@"only from contacts on my Contact List","File Transfer preferences")];
+	[checkBox_autoOpenFiles setLocalizedString:AILocalizedString(@"Open \"Safe\" files after receiving","File Transfer preferences")];
+	[checkBox_showProgress setLocalizedString:AILocalizedString(@"Show the File Transfers window automatically","File Transfer preferences")];
+	[checkBox_autoClearCompleted setLocalizedString:AILocalizedString(@"Clear completed transfers automatically","File Transfer preferences")];
 }
 
 - (void)buildDownloadLocationMenu
@@ -121,7 +129,7 @@
 																	 action:nil
 															  keyEquivalent:@""] autorelease];
 	[menuItem setRepresentedObject:userPreferredDownloadFolder];
-	[menuItem setImage:[[[NSWorkspace sharedWorkspace] iconForFile:userPreferredDownloadFolder] imageByScalingToSize:NSMakeSize(16,16)]];
+	[menuItem setImage:[[[NSWorkspace sharedWorkspace] iconForFile:userPreferredDownloadFolder] imageByScalingForMenuItem]];
 	[menu addItem:menuItem];
 	
 	[menu addItem:[NSMenuItem separatorItem]];

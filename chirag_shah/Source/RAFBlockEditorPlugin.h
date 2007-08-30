@@ -15,7 +15,7 @@
 	NSMenuItem  *blockEditorMenuItem;
 }
 
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem;
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem;
 - (IBAction)showEditor:(id)sender;
 
 @end

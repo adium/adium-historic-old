@@ -30,7 +30,7 @@
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Embarassed</string>
+			<string>Embarrassed</string>
 		</dict>
 		<key>Crying.tiff</key>
 		<dict>
@@ -40,7 +40,7 @@
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Crying</string>
+			<string>Cry</string>
 		</dict>
 		<key>Frown.tiff</key>
 		<dict>
@@ -58,18 +58,22 @@
 			<key>Equivalents</key>
 			<array>
 				<string>:-O</string>
+				<string>:-o</string>
 				<string>:o</string>
+				<string>:O</string>
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Surprised</string>
+			<string>Gasp</string>
 		</dict>
 		<key>Grin.tiff</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
 				<string>:-D</string>
+				<string>:-d</string>
 				<string>:d</string>
+				<string>:D</string>
 				<string></string>
 			</array>
 			<key>Name</key>
@@ -84,7 +88,7 @@
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Angel</string>
+			<string>Halo</string>
 		</dict>
 		<key>Kiss.tiff</key>
 		<dict>
@@ -105,14 +109,16 @@
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Don't tell anyone</string>
+			<string>Lips Are Sealed</string>
 		</dict>
 		<key>Money-mouth.tiff</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
 				<string>:-S</string>
+				<string>:-s</string>
 				<string>:s</string>
+				<string>:S</string>
 				<string></string>
 			</array>
 			<key>Name</key>
@@ -134,7 +140,9 @@
 			<key>Equivalents</key>
 			<array>
 				<string>:-P</string>
+				<string>:-p</string>
 				<string>:p</string>
+				<string>:P</string>
 				<string></string>
 			</array>
 			<key>Name</key>
@@ -149,7 +157,7 @@
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Hot</string>
+			<string>Cool</string>
 		</dict>
 		<key>Wink.tiff</key>
 		<dict>

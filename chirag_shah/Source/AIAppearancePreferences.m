@@ -16,7 +16,6 @@
 
 #import "AIAppearancePreferences.h"
 #import "AIAppearancePreferencesPlugin.h"
-#import "AIDockController.h"
 #import "AIDockIconSelectionSheet.h"
 #import "AIEmoticonPack.h"
 #import "AIEmoticonPreferences.h"
@@ -27,12 +26,16 @@
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <Adium/AIAbstractListController.h>
-#import <Adium/AIEmoticonController.h>
+#import <Adium/AIDockControllerProtocol.h>
+#import <Adium/AIEmoticonControllerProtocol.h>
 #import <Adium/AIIconState.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
 #import <Adium/ESPresetManagementController.h>
 #import <Adium/ESPresetNameSheetController.h>
+#import <AIMenuBarIcons.h>
+
+#define OLD_LIST_SETTINGS_PATH [[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:@"OldListXtras"]
 
 typedef enum {
 	AIEmoticonMenuNone = 1,
@@ -56,6 +59,7 @@ typedef enum {
 - (void)configureDockIconMenu;
 - (void)configureStatusIconsMenu;
 - (void)configureServiceIconsMenu;
+- (void)configureMenuBarIconsMenu;
 @end
 
 @implementation AIAppearancePreferences
@@ -63,14 +67,19 @@ typedef enum {
 /*!
  * @brief Preference pane properties
  */
-- (AIPreferenceCategory)category{
-    return AIPref_Appearance;
+- (NSString *)paneIdentifier
+{
+	return @"Appearance";
 }
-- (NSString *)label{
+- (NSString *)paneName{
     return AILocalizedString(@"Appearance","Appearance preferences label");
 }
 - (NSString *)nibName{
     return @"AppearancePrefs";
+}
+- (NSImage *)paneIcon
+{
+	return [NSImage imageNamed:@"pref-appearance" forClass:[self class]];
 }
 
 /*!
@@ -88,7 +97,7 @@ typedef enum {
 	//Observe xtras changes
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(xtrasChanged:)
-									   name:Adium_Xtras_Changed
+									   name:AIXtrasDidChangeNotification
 									 object:nil];	
 	[self xtrasChanged:nil];
 }
@@ -126,6 +135,10 @@ typedef enum {
 		[self configureStatusIconsMenu];
 	}
 	
+	if (!type || [type isEqualToString:@"adiummenubaricons"]) {
+		[self configureMenuBarIconsMenu];
+	}
+	
 	if (!type || [type isEqualToString:@"listtheme"]) {
 		[popUp_colorTheme setMenu:[self _colorThemeMenu]];
 		[popUp_colorTheme selectItemWithRepresentedObject:[[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME
@@ -148,7 +161,7 @@ typedef enum {
 					preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	//Emoticons
-	if ([group isEqualToString:PREF_GROUP_EMOTICONS]) {
+	if ([group isEqualToString:PREF_GROUP_EMOTICONS] && !firstTime) {
 		[self _rebuildEmoticonMenuAndSelectActivePack];
 	}
 	
@@ -186,8 +199,8 @@ typedef enum {
 			[popUp_statusIcons selectItemWithTitle:[prefDict objectForKey:KEY_STATUS_ICON_PACK]];
 			
 			//If the prefDict's item isn't present, we're using the default, so select that one
-			if (![popUp_serviceIcons selectedItem]) {
-				[popUp_serviceIcons selectItemWithTitle:[[adium preferenceController] defaultPreferenceForKey:KEY_STATUS_ICON_PACK
+			if (![popUp_statusIcons selectedItem]) {
+				[popUp_statusIcons selectItemWithTitle:[[adium preferenceController] defaultPreferenceForKey:KEY_STATUS_ICON_PACK
 																										group:PREF_GROUP_APPEARANCE
 																									   object:nil]];
 			}			
@@ -201,7 +214,17 @@ typedef enum {
 																										group:PREF_GROUP_APPEARANCE
 																									   object:nil]];
 			}
-		}		
+		}
+		if (firstTime || [key isEqualToString:KEY_MENU_BAR_ICONS]) {
+			[popUp_menuBarIcons selectItemWithTitle:[prefDict objectForKey:KEY_MENU_BAR_ICONS]];
+			
+			//If the prefDict's item isn't present, we're using the default, so select that one
+			if (![popUp_menuBarIcons selectedItem]) {
+				[popUp_menuBarIcons selectItemWithTitle:[[adium preferenceController] defaultPreferenceForKey:KEY_MENU_BAR_ICONS
+																										group:PREF_GROUP_APPEARANCE
+																									   object:nil]];
+			}
+		}
 		if (firstTime || [key isEqualToString:KEY_LIST_LAYOUT_NAME]) {
 			[popUp_listLayout selectItemWithRepresentedObject:[prefDict objectForKey:KEY_LIST_LAYOUT_NAME]];
 		}
@@ -256,7 +279,10 @@ typedef enum {
         [[adium preferenceController] setPreference:[[sender selectedItem] title]
                                              forKey:KEY_SERVICE_ICON_PACK
                                               group:PREF_GROUP_APPEARANCE];
-		
+	} else if (sender == popUp_menuBarIcons) {
+        [[adium preferenceController] setPreference:[[sender selectedItem] title]
+                                             forKey:KEY_MENU_BAR_ICONS
+                                              group:PREF_GROUP_APPEARANCE];	
 	} else if (sender == popUp_dockIcon) {
         [[adium preferenceController] setPreference:[[sender selectedItem] representedObject]
                                              forKey:KEY_ACTIVE_DOCK_ICON
@@ -435,6 +461,35 @@ typedef enum {
 
 //Contact list layout & theme ----------------------------------------------------------------------------------------
 #pragma mark Contact list layout & theme
+
++ (void) migrateOldListSettingsIfNeeded
+{
+	id<AIPreferenceController> prefController = [[AIObject sharedAdiumInstance] preferenceController];
+	NSFileManager *manager = [NSFileManager defaultManager];
+	NSString *theme = [NSString stringWithFormat:@"%@/%@/%@.%@", 
+							[[NSBundle mainBundle] resourcePath], 
+							LIST_THEME_FOLDER,
+							[prefController preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_APPEARANCE],
+							LIST_THEME_EXTENSION];
+	if(![manager fileExistsAtPath:theme])
+	{
+		NSString *oldTheme = [OLD_LIST_SETTINGS_PATH stringByAppendingPathComponent:[theme lastPathComponent]];
+		if([manager fileExistsAtPath:oldTheme])
+			[manager movePath:oldTheme toPath:theme handler:nil];
+	}
+	NSString *layout = [NSString stringWithFormat:@"%@/%@/%@.%@", 
+							[[NSBundle mainBundle] resourcePath], 
+							LIST_THEME_FOLDER, 
+							[prefController preferenceForKey:KEY_LIST_LAYOUT_NAME group:PREF_GROUP_APPEARANCE],
+							@"ListLayout"];
+	if(![manager fileExistsAtPath:layout])
+	{
+		NSString *oldLayout = [OLD_LIST_SETTINGS_PATH stringByAppendingPathComponent:[layout lastPathComponent]];
+		if([manager fileExistsAtPath:oldLayout])
+			[manager movePath:oldLayout toPath:layout handler:nil];
+	}
+}
+
 /*!
  * @brief Create a new theme
  */
@@ -846,7 +901,7 @@ typedef enum {
 	[AIDockIconSelectionSheet showDockIconSelectorOnWindow:[[self view] window]];
 }
 
-/*
+/*!
  * @brief Return the menu item for a dock icon
  */
 - (NSMenuItem *)meuItemForDockIconPackAtPath:(NSString *)packPath
@@ -869,7 +924,7 @@ typedef enum {
 																	 action:nil
 															  keyEquivalent:@""] autorelease];
 	[menuItem setRepresentedObject:packName];
-	[menuItem setImage:[[preview image] imageByScalingToSize:NSMakeSize(18, 18)]];
+	[menuItem setImage:[[preview image] imageByScalingForMenuItem]];
 	
 	return menuItem;
 }
@@ -893,7 +948,7 @@ typedef enum {
 	return menuItemArray;
 }
 
-/*
+/*!
  * @brief Configure the dock icon meu initially or after the xtras change
  *
  * Initially, the dock icon menu just has the currently selected icon; the others will be generated lazily if the icon is displayed, in menuNeedsUpdate:
@@ -916,9 +971,9 @@ typedef enum {
 	[popUp_dockIcon selectItemWithRepresentedObject:activePackName];
 }
 
-//Status and Service icons ---------------------------------------------------------------------------------------------
-#pragma mark Status and service icons
-- (NSMenuItem *)meuItemForIconPackAtPath:(NSString *)packPath class:(Class)iconClass
+//Status, Service and Menu Bar icons ---------------------------------------------------------------------------------------------
+#pragma mark Status, service and menu bar icons
+- (NSMenuItem *)menuItemForIconPackAtPath:(NSString *)packPath class:(Class)iconClass
 {
 	NSString	*name = [[packPath lastPathComponent] stringByDeletingPathExtension];
 	NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
@@ -944,7 +999,7 @@ typedef enum {
 	NSString		*packPath;
 
 	while ((packPath = [enumerator nextObject])) {
-		[menuItemArray addObject:[self meuItemForIconPackAtPath:packPath class:iconClass]];
+		[menuItemArray addObject:[self menuItemForIconPackAtPath:packPath class:iconClass]];
 	}
 	
 	[menuItemArray sortUsingSelector:@selector(titleCompare:)];
@@ -961,6 +1016,7 @@ typedef enum {
 	iconPath = [adium pathOfPackWithName:activePackName
 							   extension:@"AdiumStatusIcons"
 					  resourceFolderName:@"Status Icons"];
+	
 	if (!iconPath) {
 		activePackName = [[adium preferenceController] defaultPreferenceForKey:KEY_STATUS_ICON_PACK
 																		 group:PREF_GROUP_APPEARANCE
@@ -970,7 +1026,7 @@ typedef enum {
 								   extension:@"AdiumStatusIcons"
 						  resourceFolderName:@"Status Icons"];		
 	}
-	[tempMenu addItem:[self meuItemForIconPackAtPath:iconPath class:[AIStatusIcons class]]];
+	[tempMenu addItem:[self menuItemForIconPackAtPath:iconPath class:[AIStatusIcons class]]];
 	[tempMenu setDelegate:self];
 	[tempMenu setTitle:@"Temporary Status Icons Menu"];
 	
@@ -997,12 +1053,39 @@ typedef enum {
 								   extension:@"AdiumServiceIcons"
 						  resourceFolderName:@"Service Icons"];		
 	}
-	[tempMenu addItem:[self meuItemForIconPackAtPath:iconPath class:[AIServiceIcons class]]];
+	[tempMenu addItem:[self menuItemForIconPackAtPath:iconPath class:[AIServiceIcons class]]];
 	[tempMenu setDelegate:self];
 	[tempMenu setTitle:@"Temporary Service Icons Menu"];
 	
 	[popUp_serviceIcons setMenu:tempMenu];
 	[popUp_serviceIcons selectItemWithRepresentedObject:activePackName];
+}
+
+- (void)configureMenuBarIconsMenu
+{
+	NSMenu		*tempMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
+	NSString	*iconPath;
+	NSString	*activePackName = [[adium preferenceController] preferenceForKey:KEY_MENU_BAR_ICONS
+																		   group:PREF_GROUP_APPEARANCE];
+	iconPath = [adium pathOfPackWithName:activePackName
+							   extension:@"AdiumMenuBarIcons"
+					  resourceFolderName:@"Menu Bar Icons"];
+	
+	if (!iconPath) {
+		activePackName = [[adium preferenceController] defaultPreferenceForKey:KEY_MENU_BAR_ICONS
+																		 group:PREF_GROUP_APPEARANCE
+																		object:nil];
+		
+		iconPath = [adium pathOfPackWithName:activePackName
+								   extension:@"AdiumMenuBarIcons"
+						  resourceFolderName:@"Menu Bar Icons"];		
+	}
+	[tempMenu addItem:[self menuItemForIconPackAtPath:iconPath class:[AIMenuBarIcons class]]];
+	[tempMenu setDelegate:self];
+	[tempMenu setTitle:@"Temporary Menu Bar Icons Menu"];
+	
+	[popUp_menuBarIcons setMenu:tempMenu];
+	[popUp_menuBarIcons selectItemWithRepresentedObject:activePackName];
 }
 
 #pragma mark Menu delegate
@@ -1036,6 +1119,13 @@ typedef enum {
 															 group:PREF_GROUP_APPEARANCE];
 		popUpButton = popUp_serviceIcons;
 		
+	} else if ([title isEqualToString:@"Temporary Menu Bar Icons Menu"]) {
+		menuItemArray = [self _iconPackMenuArrayForPacks:[adium allResourcesForName:@"Menu Bar Icons" 
+																	 withExtensions:@"AdiumMenuBarIcons"] 
+												   class:[AIMenuBarIcons class]];
+		repObject = [[adium preferenceController] preferenceForKey:KEY_MENU_BAR_ICONS
+															 group:PREF_GROUP_APPEARANCE];
+		popUpButton = popUp_menuBarIcons;	
 	}
 	
 	if (menuItemArray) {

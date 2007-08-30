@@ -25,16 +25,19 @@
 #import "AdiumURLHandling.h"
 #import "XtrasInstaller.h"
 #import "ESTextAndButtonsWindowController.h"
+#import "AINewContactWindowController.h"
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIURLAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIService.h>
 
-#define URLHandlingGroup @"URL Handling Group"
-#define DONTPROMPTFORURL @"Don't Prompt for URL"
+#define GROUP_URL_HANDLING			@"URL Handling Group"
+#define KEY_DONT_PROMPT_FOR_URL		@"Don't Prompt for URL"
+#define KEY_COMPLETED_FIRST_LAUNCH	@"AdiumURLHandling:CompletedFirstLaunch"
 
 @interface AdiumURLHandling(PRIVATE)
++ (void)registerAsDefaultIMClient;
 + (void)_setHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst;
 + (BOOL)_checkHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst;
 + (void)_openChatToContactWithName:(NSString *)name onService:(NSString *)serviceIdentifier withMessage:(NSString *)body;
@@ -93,10 +96,48 @@
 	}
 }
 
++ (void)registerAsDefaultIMClient
+{
+				ICInstance ICInst;
+	OSErr Err = noErr;
+	
+	//Start Internet Config, passing it Adium's creator code
+	Err = ICStart(&ICInst, 'AdiM');
+	if (Err == noErr) {
+		//Bracket multiple calls with ICBegin() for efficiency as per documentation
+		ICBegin(ICInst, icReadWritePerm);
+		
+		//Configure the protocols we want.
+		[AdiumURLHandling _setHelperAppForKey:(kICHelper "aim") withInstance:ICInst]; //AIM, official
+		[AdiumURLHandling _setHelperAppForKey:(kICHelper "ymsgr") withInstance:ICInst]; //Yahoo!, official
+		[AdiumURLHandling _setHelperAppForKey:(kICHelper "yahoo") withInstance:ICInst]; //Yahoo!, unofficial
+		[AdiumURLHandling _setHelperAppForKey:(kICHelper "xmpp") withInstance:ICInst]; //Jabber, official
+		[AdiumURLHandling _setHelperAppForKey:(kICHelper "jabber") withInstance:ICInst]; //Jabber, unofficial
+		[AdiumURLHandling _setHelperAppForKey:(kICHelper "icq") withInstance:ICInst]; //ICQ, unofficial
+		[AdiumURLHandling _setHelperAppForKey:(kICHelper "msn") withInstance:ICInst]; //MSN, unofficial
+		
+		//Adium xtras
+		[AdiumURLHandling _setHelperAppForKey:(kICHelper "adiumxtra") withInstance:ICInst];
+		
+		//End whatever it was that ICBegin() began
+		ICEnd(ICInst);
+		
+		//We're done with Internet Config, so stop it
+		Err = ICStop(ICInst);
+		
+		//How there could be an error stopping Internet Config, I don't know.
+		if (Err != noErr) {
+			NSLog(@"Error stopping InternetConfig. Error code: %d", Err);
+		}
+	} else {
+		NSLog(@"Error starting InternetConfig. Error code: %d", Err);
+	}
+}
+
 + (void)handleURLEvent:(NSString *)eventString
 {
-	NSURL	*url = [NSURL URLWithString:eventString];
-	AIAdium *sharedAdium = [AIObject sharedAdiumInstance];
+	NSURL				*url = [NSURL URLWithString:eventString];
+	NSObject<AIAdium>	*sharedAdium = [AIObject sharedAdiumInstance];
 
 	if (url) {
 		NSString	*scheme, *newScheme;
@@ -138,6 +179,7 @@
 		
 		if ((serviceID = [schemeToServiceDict objectForKey:scheme])) {
 			NSString *host = [url host];
+			NSString *query = [url query];
 			if ([host caseInsensitiveCompare:@"goim"] == NSOrderedSame) {
 				// aim://goim?screenname=tekjew
 				NSString	*name = [[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] compactedString];
@@ -156,7 +198,8 @@
 				
 				if (name) {
 					[[sharedAdium contactController] requestAddContactWithUID:name
-																service:service];
+																service:service
+																	  account:nil];
 					
 				} else {
 					NSString		*listOfNames = [url queryArgumentForKey:@"listofscreennames"];
@@ -167,7 +210,8 @@
 					while ((name = [enumerator nextObject])) {
 						NSString	*decodedName = [[name stringByDecodingURLEscapes] compactedString];
 						[[sharedAdium contactController] requestAddContactWithUID:decodedName
-																	service:service];
+																	service:service
+																		  account:nil];
 					}
 				}
 
@@ -213,21 +257,67 @@
 										   onService:serviceID
 										 withMessage:nil];
 				}
+			} else if ([host caseInsensitiveCompare:@"BuddyIcon"] == NSOrderedSame) {
+				//aim:BuddyIcon?src=http://www.nbc.com//Heroes/images/wallpapers/heroes-downloads-icon-single-48x48-07.gif
+				NSString *urlString = [url queryArgumentForKey:@"src"];
+				if ([urlString length]) {
+					NSURL *urlToDownload = [[NSURL alloc] initWithString:urlString];
+					NSData *imageData = (urlToDownload ? [NSData dataWithContentsOfURL:urlToDownload] : nil);
+					[urlToDownload release];
+					
+					//Should prompt for where to apply the icon?
+					if (imageData &&
+						[[[NSImage alloc] initWithData:imageData] autorelease]) {
+						//If we successfully got image data, and that data makes a valid NSImage, set it as our global buddy icon
+						[[[AIObject sharedAdiumInstance] preferenceController] setPreference:imageData
+																					  forKey:KEY_USER_ICON
+																					   group:GROUP_ACCOUNT_STATUS];
+					}
+				}
+				
+			//Jabber additions
+			} else if ([query rangeOfString:@"message"].location == 0) {
+				//xmpp:johndoe@jabber.org?message;subject=Subject;body=Body
+				NSString *msg = [[url queryArgumentForKey:@"body"] stringByDecodingURLEscapes];
+				
+				[self _openChatToContactWithName:[NSString stringWithFormat:@"%@@%@", [url user], [url host]]
+				                       onService:serviceID
+				                     withMessage:msg];
+			} else if ([query rangeOfString:@"roster"].location == 0
+			           || [query rangeOfString:@"subscribe"].location == 0) {
+				//xmpp:johndoe@jabber.org?roster;name=John%20Doe;group=Friends
+				//xmpp:johndoe@jabber.org?subscribe
+				
+				//Group specification and name specification is currently ignored,
+				//due to limitations in the AINewContactWindowController API.
+
+				AIService *jabberService;
+
+				jabberService = [[[AIObject sharedAdiumInstance] accountController] firstServiceWithServiceID:@"Jabber"];
+
+				[AINewContactWindowController promptForNewContactOnWindow:nil
+				                                                     name:[NSString stringWithFormat:@"%@@%@", [url user], [url host]]
+				                                                  service:jabberService
+																  account:nil];
+			} else if ([query rangeOfString:@"remove"].location == 0
+			           || [query rangeOfString:@"unsubscribe"].location == 0) {
+				// xmpp:johndoe@jabber.org?remove
+				// xmpp:johndoe@jabber.org?unsubscribe
+				
 			} else {
 				//Default to opening the host as a name.
-
 				NSString	*user = [url user];
 				NSString	*host = [url host];
 				NSString	*name;
 				if (user && [user length]) {
-					// jabber://tekjew@jabber.org
-					// msn://jdoe@hotmail.com
+					//jabber://tekjew@jabber.org
+					//msn://jdoe@hotmail.com
 					name = [NSString stringWithFormat:@"%@@%@",[url user],[url host]];
 				} else {
-					// aim://tekjew
+					//aim://tekjew
 					name = host;
 				}
-				
+
 				[self _openChatToContactWithName:[name compactedString]
 									   onService:serviceID
 									 withMessage:nil];
@@ -282,15 +372,16 @@
 
 + (void)_openChatToContactWithName:(NSString *)UID onService:(NSString *)serviceID withMessage:(NSString *)message
 {
-	AIListContact   *contact;
-	AIAdium			*sharedAdium = [AIObject sharedAdiumInstance];
+	AIListContact		*contact;
+	NSObject<AIAdium>	*sharedAdium = [AIObject sharedAdiumInstance];
 	
 	contact = [[sharedAdium contactController] preferredContactWithUID:UID
-																			 andServiceID:serviceID 
-																	forSendingContentType:CONTENT_MESSAGE_TYPE];
+														  andServiceID:serviceID 
+												 forSendingContentType:CONTENT_MESSAGE_TYPE];
 	if (contact) {
 		//Open the chat and set it as active
-		[[sharedAdium interfaceController] setActiveChat:[[sharedAdium chatController] openChatWithContact:contact]];
+		[[sharedAdium interfaceController] setActiveChat:[[sharedAdium chatController] openChatWithContact:contact
+																						onPreferredAccount:YES]];
 		
 		//Insert the message text as if the user had typed it after opening the chat
 		NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
@@ -320,6 +411,7 @@
 	
 	if (roomname && account) {
 		[[[AIObject sharedAdiumInstance] chatController] chatWithName:roomname
+														   identifier:nil
 															onAccount:account
 													 chatCreationInfo:[NSDictionary dictionaryWithObjectsAndKeys:
 																		roomname, @"room",
@@ -336,46 +428,12 @@
 	switch(ret)
 	{
 		case AITextAndButtonsOtherReturn:
-			[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES] forKey:DONTPROMPTFORURL group:URLHandlingGroup];
+			[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES] forKey:KEY_DONT_PROMPT_FOR_URL group:GROUP_URL_HANDLING];
 			break;
 		case AITextAndButtonsDefaultReturn:
-		{
-			ICInstance ICInst;
-			OSErr Err = noErr;
-			
-			//Start Internet Config, passing it Adium's creator code
-			Err = ICStart(&ICInst, 'AdiM');
-			if (Err == noErr) {
-				//Bracket multiple calls with ICBegin() for efficiency as per documentation
-				ICBegin(ICInst, icReadWritePerm);
-				
-				//Configure the protocols we want.
-				[AdiumURLHandling _setHelperAppForKey:(kICHelper "aim") withInstance:ICInst]; //AIM, official
-				[AdiumURLHandling _setHelperAppForKey:(kICHelper "ymsgr") withInstance:ICInst]; //Yahoo!, official
-				[AdiumURLHandling _setHelperAppForKey:(kICHelper "yahoo") withInstance:ICInst]; //Yahoo!, unofficial
-				[AdiumURLHandling _setHelperAppForKey:(kICHelper "xmpp") withInstance:ICInst]; //Jabber, official
-				[AdiumURLHandling _setHelperAppForKey:(kICHelper "jabber") withInstance:ICInst]; //Jabber, unofficial
-				[AdiumURLHandling _setHelperAppForKey:(kICHelper "icq") withInstance:ICInst]; //ICQ, unofficial
-				[AdiumURLHandling _setHelperAppForKey:(kICHelper "msn") withInstance:ICInst]; //MSN, unofficial
-				
-				//Adium xtras
-				[AdiumURLHandling _setHelperAppForKey:(kICHelper "adiumxtra") withInstance:ICInst];
-				
-				//End whatever it was that ICBegin() began
-				ICEnd(ICInst);
-				
-				//We're done with Internet Config, so stop it
-				Err = ICStop(ICInst);
-				
-				//How there could be an error stopping Internet Config, I don't know.
-				if (Err != noErr) {
-					NSLog(@"Error stopping InternetConfig. Error code: %d", Err);
-				}
-			} else {
-				NSLog(@"Error starting InternetConfig. Error code: %d", Err);
-			}
+			[AdiumURLHandling registerAsDefaultIMClient];
 			break;
-		}
+		case AITextAndButtonsAlternateReturn:
 		default:
 			break;
 	}
@@ -383,16 +441,25 @@
 
 - (void)promptUser
 {
-	if(![[adium preferenceController] preferenceForKey:DONTPROMPTFORURL group:URLHandlingGroup])
-		[[adium interfaceController] displayQuestion:AILocalizedString(@"Change default messaging client?", nil)
-									 withDescription:AILocalizedString(@"Adium is not your default Instant Messaging client. The default client is loaded when you click messaging URLs in web pages. Would you like Adium to become the default?", nil)
-									 withWindowTitle:nil
-									   defaultButton:AILocalizedString(@"Yes", nil)
-									 alternateButton:AILocalizedString(@"No", nil)
-										 otherButton:AILocalizedString(@"Never", nil)
-											  target:self
-											selector:@selector(URLQuestion:info:)
-											userInfo:nil];
+	if ([[[adium preferenceController] preferenceForKey:KEY_COMPLETED_FIRST_LAUNCH group:GROUP_URL_HANDLING] boolValue]) {
+		if(![[adium preferenceController] preferenceForKey:KEY_DONT_PROMPT_FOR_URL group:GROUP_URL_HANDLING])
+			[[adium interfaceController] displayQuestion:AILocalizedString(@"Change default messaging client?", nil)
+										 withDescription:AILocalizedString(@"Adium is not your default Instant Messaging client. The default client is loaded when you click messaging URLs in web pages. Would you like Adium to become the default?", nil)
+										 withWindowTitle:nil
+										   defaultButton:AILocalizedString(@"Yes", nil)
+										 alternateButton:AILocalizedString(@"No", nil)
+											 otherButton:AILocalizedString(@"Never", nil)
+												  target:self
+												selector:@selector(URLQuestion:info:)
+												userInfo:nil];
+	} else {
+		//On the first launch, simply register. If the user uses another IM client which takes control of the protocols again, we'll prompt for what to do.
+		[AdiumURLHandling registerAsDefaultIMClient];
+		
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
+											 forKey:KEY_COMPLETED_FIRST_LAUNCH
+											  group:GROUP_URL_HANDLING];
+	}
 }
 
 @end

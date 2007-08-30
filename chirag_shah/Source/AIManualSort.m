@@ -46,7 +46,7 @@
 	return NO;
 }
 
-/*
+/*!
  * @brief Can the user manually reorder when this sort controller is active?
  *
  * By definition, the manual sort controller allows manual sorting

@@ -269,9 +269,15 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 																	UID:inUID];
 	chat = [[adium chatController] chatWithContact:listContact];
 	
-	attributedMessage = [[adium contentController] decodedIncomingMessage:html
-															  fromContact:listContact
-																onAccount:self];
+	if (html)
+		attributedMessage = [[adium contentController] decodedIncomingMessage:html
+																  fromContact:listContact
+																	onAccount:self];
+	else
+		attributedMessage = [[[NSAttributedString alloc] initWithString:
+			[[adium contentController] decryptedIncomingMessage:message
+													fromContact:listContact
+													  onAccount:self]] autorelease];
 	
     msgObj = [AIContentMessage messageInChat:chat
 								  withSource:listContact
@@ -318,7 +324,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 				   withObject:((typingStatus == AWEzvIsTyping) ? [NSNumber numberWithInt:AITyping] : nil)];
 }
 
-/*
+/*!
  * @brief A message could not be sent
  *
  * @param inContactUniqueID Unique ID of the contact to whom the message could not be sent
@@ -371,7 +377,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 #pragma mark AIAccount Messaging
 // AIAccount_Messaging ---------------------------------------------------------------------------
 // Send a content object
-- (BOOL)sendTypingObject:(AIContentTyping *)inContentTyping
+- (void)sendTypingObject:(AIContentTyping *)inContentTyping
 {
 	AIChat			*chat = [inContentTyping chat];
 	AIListObject    *listObject = [chat listObject];
@@ -379,8 +385,6 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 	
 	[[self libezvThreadProxy] sendTypingNotification:(([inContentTyping typingState] == AITyping) ? AWEzvIsTyping : AWEzvNotTyping)
 												  to:to];
-	
-	return YES;
 }
 
 - (BOOL)sendMessageObject:(AIContentMessage *)inContentMessage
@@ -392,7 +396,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 	return YES;
 }
 
-/*
+/*!
  * @brief Return the string encoded for sending to a remote contact
  *
  * We return nil if the string turns out to have been a / command.
@@ -413,17 +417,6 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 		   onlyIncludeOutgoingImages:NO
 					  simpleTagsOnly:NO
 					  bodyBackground:NO];
-}
-
-//Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
-- (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
-{
-	BOOL retVal = NO;
-    if ([inType isEqualToString:CONTENT_MESSAGE_TYPE] && [self online]) {
-		retVal = YES;
-    }
-    
-    return retVal;
 }
 
 //Initiate a new chat
@@ -593,7 +586,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 	[autoreleaseTimer invalidate]; [autoreleaseTimer release];
 }
 
-/*
+/*!
  * @brief The bonjour thread is about to exit for some reason...
  *
  * I have no idea why the thread might exit, but it does.  Messaging the libezvThreadProxy after it exits throws an

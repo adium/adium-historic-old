@@ -128,8 +128,10 @@ typedef enum {
  * @param details If set by the details pane when the action was created, the details dictionary for this particular action
  * @param eventID The eventID which triggered this action
  * @param userInfo Additional information associated with the event; userInfo's type will vary with the actionID.
+ *
+ * @result YES if the action was performed successfully.  If NO, other actions of the same type will be attempted even if allowMultipleActionsWithID: returns NO for eventID.
  */
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo;
+- (BOOL)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo;
 
 /*!
  * @brief Allow multiple actions?

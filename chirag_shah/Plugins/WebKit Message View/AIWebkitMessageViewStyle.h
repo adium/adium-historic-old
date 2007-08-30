@@ -49,6 +49,17 @@ typedef enum {
 } NameFormat;
 
 /*!
+ *	@brief Different ways of formatting display names
+ */
+typedef enum {
+	AIDefaultName = 0,
+	AIDisplayName = 1,
+	AIDisplayName_ScreenName = 2,
+	AIScreenName_DisplayName = 3,
+	AIScreenName = 4
+} AINameFormat;
+
+/*!
  *	@brief Different ways of displaying background images
  */
 typedef enum {
@@ -92,7 +103,7 @@ typedef enum {
 
 	//Behavior
 	NSDateFormatter		*timeStampFormatter;
-	NameFormat			nameFormat;
+	AINameFormat		nameFormat;
 	BOOL				useCustomNameFormat;
 	BOOL				showUserIcons;
 	BOOL				showHeader;
@@ -113,6 +124,16 @@ typedef enum {
  *	@brief Create a message view style instance for the passed style bundle
  */
 + (id)messageViewStyleFromBundle:(NSBundle *)inBundle;
+
+/*!
+ *	@brief Create a message view style instance by loading the bundle at the passed path
+ */
++ (id)messageViewStyleFromPath:(NSString *)path;
+
+/*!
+ *	@brief The NSBundle for this style
+ */
+- (NSBundle *)bundle;
 
 /*!
  *	Returns YES if this style is considered legacy
@@ -136,50 +157,6 @@ typedef enum {
  */
 - (NSString *)templateForContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar;
 
-/*!
- *	@brief The name of the JavaScript method to record whether we will need to scroll to bottom.
- *
- *	This method should be called with the \c methodArgumentsToCheckIfScrollToBottomIsNeeded before adding new content.
- *
- *	@return	In version-0 styles, returns a method name. In other-version styles, returns nil.
- */
-- (NSString *)methodNameToCheckIfScrollToBottomIsNeeded;
-/*!
- *	@brief The proper arguments to the JavaScript method to record whether we will need to scroll to bottom.
- *
- *	These arguments should be passed to a call to the \c methodNameToCheckIfScrollToBottomIsNeeded method before adding new content.
- *
- *	@return	In version-0 styles, returns an array of arguments. In other-version styles, returns nil.
- */
-- (NSArray *)methodArgumentsToCheckIfScrollToBottomIsNeeded;
-
-/*!
- *	@brief The name of the JavaScript method to scroll the web view to the bottom if needed.
- *
- *	This method should be called with the \c methodArgumentsToScrollToBottomIfNeeded before adding new content.
- *
- *	@return	In version-0 styles, returns a method name. In other-version styles, returns nil.
- */
-- (NSString *)methodNameToScrollToBottomIfNeeded;
-/*!
- *	@brief The proper arguments to the JavaScript method to scroll the web view to the bottom if needed.
- *
- *	These arguments should be passed to a call to the \c methodNameToScrollToBottomIfNeeded method before adding new content.
- *
- *	@return	In version-0 styles, returns an array of arguments. In other-version styles, returns nil.
- */
-- (NSArray *)methodArgumentsToScrollToBottomIfNeeded;
-
-/*!
- *	@brief Returns the BOM method name for appending content
- */
-- (NSString *)methodNameForAppendingContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
-/*!
- *	@brief Returns the BOM method arguments for appending content
- *
- *	Currently simply fills keywords in the provided content, returning an array of one string.
- */
-- (NSArray *)methodArgumentsForAppendingContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
 /*!
  *	@brief Returns the BOM script for appending content
  */
@@ -259,7 +236,7 @@ typedef enum {
 /*!
  *	@brief Set the custom name format being used
  */
-- (void)setNameFormat:(int)inValue;
+- (void)setNameFormat:(AINameFormat)inValue;
 
 /*!
  *	@brief Set visibility of message background colors
@@ -318,7 +295,7 @@ typedef enum {
  *	We allow the message style to handle this since the behavior of keywords is dependent on the style and may change
  *	for future style versions
  */
-- (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content;
+- (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar;
 
 /*!
  *	@brief Substitute base keywords

@@ -12,7 +12,7 @@
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>com.adiumx.htmllog</string>
-				<string>com.adiumx.log</string>
+				<string>com.adiumx.xmllog</string>
 			</array>
 		</dict>
 	</array>

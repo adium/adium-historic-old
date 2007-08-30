@@ -21,11 +21,6 @@
 - (NSImage *)_sampleImageForFont:(NSFont *)inFont;
 @end
 
-/*!
- * @class AIFontSelectionPopUpButton
- *
- * AIFontSelectionPopUpButton is an NSPopUpButton that displays preset font choices.
- */
 @implementation AIFontSelectionPopUpButton
 
 /*!
@@ -44,31 +39,16 @@
 		nil]];	
 }
 
-/*!
- * @brief Set the currently displayed font
- * 
- * If a preset exists for the font, it will be selected.  Otherwise, the custom option will be changed to this font
- * and selected
- * @param inFont NSFont to make active
- */
 - (void)setFont:(NSFont *)inFont
 {
 	[self setObjectValue:inFont];
 }
 
-/*!
- * @brief Returns the currently displayed font
- */
 - (NSFont *)font
 {
 	return [self objectValue];
 }
 
-/*!
- * @brief Set the pre-set font choices
- *
- * @param inFonts NSArray or font presets as alternating NSString label, NSFont font pairs
- */
 - (void)setAvailableFonts:(NSArray *)inFonts
 {
 	[self setPresetValues:inFonts];

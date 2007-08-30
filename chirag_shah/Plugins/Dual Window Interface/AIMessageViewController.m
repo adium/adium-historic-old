@@ -14,24 +14,14 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountSelectionView.h"
+#import "AIMessageViewController.h"
 #import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
-#import "AIContactInfoWindowController.h"
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
-#import "AIDualWindowInterfacePlugin.h"
 #import <Adium/AIInterfaceControllerProtocol.h>
-#import "AIMessageViewController.h"
-#import "AIMessageWindowController.h"
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIContactAlertsControllerProtocol.h>
-#import "ESGeneralPreferencesPlugin.h"
-#import <AIUtilities/AIApplicationAdditions.h>
-#import <AIUtilities/AIAttributedStringAdditions.h>
-#import <AIUtilities/AIAutoScrollView.h>
-#import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/AISplitView.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
@@ -40,6 +30,19 @@
 #import <Adium/AIListOutlineView.h>
 #import <Adium/AIMessageEntryTextView.h>
 #import <Adium/ESTextAndButtonsWindowController.h>
+#import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIAutoScrollView.h>
+#import <AIUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/AISplitView.h>
+#import "AIAccountSelectionView.h"
+#import "AIMessageWindowController.h"
+#import "ESGeneralPreferencesPlugin.h"
+#import "AIDualWindowInterfacePlugin.h"
+#import "AIContactInfoWindowController.h"
+#import "AIMessageTabSplitView.h"
+
+#import <PSMTabBarControl/NSBezierPath_AMShading.h>
 
 //Heights and Widths
 #define MESSAGE_VIEW_MIN_HEIGHT_RATIO		.50						//Mininum height ratio of the message view
@@ -81,7 +84,7 @@
 /*!
  * @brief Create a new message view controller
  */
-+ (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat
++ (AIMessageViewController *)messageDisplayControllerForChat:(AIChat *)inChat
 {
     return [[[self alloc] initForChat:inChat] autorelease];
 }
@@ -93,8 +96,11 @@
 {
     if ((self = [super init]))
 	{
+		AIListContact	*contact;
+		
 		//Init
 		chat = [inChat retain];
+		contact = [chat listObject];
 		view_accountSelection = nil;
 		userListController = nil;
 		suppressSendLaterPrompt = NO;
@@ -136,11 +142,14 @@
 		//Configure our views
 		[self _configureMessageDisplay];
 		[self _configureTextEntryView];
-		[self setAccountSelectionMenuVisibleIfNeeded:NO];
 		
 		//Update chat status and participating list objects to configure the user list if necessary
 		[self chatStatusChanged:nil];
 		[self chatParticipatingListObjectsChanged:nil];
+		
+		//Set our base writing direction
+		if (contact)
+			[textView_outgoing setBaseWritingDirection:[contact baseWritingDirection]];
 		
 		//Observe general preferences for sending keys
 		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GENERAL];
@@ -154,6 +163,8 @@
  */
 - (void)dealloc
 {   
+	AIListContact	*contact = [chat listObject];
+	
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 
 	//Store our minimum height for the text entry area, and minimim width for the user list
@@ -163,6 +174,10 @@
 	if (userListController) {
 		[self saveUserListMinimumSize];
 	}
+	
+	//Save the base writing direction
+	if (contact)
+		[contact setBaseWritingDirection:[textView_outgoing baseWritingDirection]];
 
 	[chat release]; chat = nil;
 
@@ -173,15 +188,15 @@
     //Account selection view
 	[self _destroyAccountSelectionView];
 	
-	//This is the controller for the actual view (not self, despite the naming oddness)
-    [messageViewController release];
+	[messageDisplayController messageViewIsClosing];
+    [messageDisplayController release];
 	[userListController release];
 
 	[controllerView_messages release];
 	
 	//Release view_contents, for which we are responsible because we loaded it via -[NSBundle loadNibNamed:owner]
 	[view_contents release];
-	
+
 	//Release the hidden user list view
 	if (retainingScrollViewUserList) {
 		[scrollView_userList release];
@@ -197,23 +212,56 @@
 										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 }
 
+- (void)updateGradientColors
+{
+	NSColor *darkerColor = [NSColor colorWithCalibratedWhite:0.90 alpha:1.0];
+	NSColor *lighterColor = [NSColor colorWithCalibratedWhite:0.92 alpha:1.0];
+	NSColor *leftColor = nil, *rightColor = nil;
+
+	switch ([messageWindowController tabPosition]) {
+		case AdiumTabPositionBottom:
+		case AdiumTabPositionTop:
+		case AdiumTabPositionLeft:
+			leftColor = lighterColor;
+			rightColor = darkerColor;
+			break;
+		case AdiumTabPositionRight:
+			leftColor = darkerColor;
+			rightColor = lighterColor;
+			break;
+	}
+
+	[view_accountSelection setLeftColor:leftColor rightColor:rightColor];
+	[splitView_textEntryHorizontal setLeftColor:leftColor rightColor:rightColor];
+	[splitView_messages setLeftColor:leftColor rightColor:rightColor];
+}
+
 /*!
  * @brief Invoked before the message view closes
  *
  * This method is invoked before our message view controller's message view leaves a window.
  * We need to clean up our user list to invalidate cursor tracking before the view closes.
  */
-- (void)messageViewWillLeaveWindow:(NSWindow *)inWindow
+- (void)messageViewWillLeaveWindowController:(AIMessageWindowController *)inWindowController
 {
-	if (inWindow) {
+	if (inWindowController) {
 		[userListController contactListWillBeRemovedFromWindow];
 	}
+	
+	[messageWindowController release]; messageWindowController = nil;
 }
 
-- (void)messageViewAddedToWindow:(NSWindow *)inWindow
+- (void)messageViewAddedToWindowController:(AIMessageWindowController *)inWindowController
 {
-	if (inWindow) {
+	if (inWindowController) {
 		[userListController contactListWasAddedBackToWindow];
+	}
+	
+	if (inWindowController != messageWindowController) {
+		[messageWindowController release];
+		messageWindowController = [inWindowController retain];
+		
+		[self updateGradientColors];
 	}
 }
 
@@ -274,13 +322,12 @@
 /*!
  * @brief Configure the message display view
  */
-//XXX - This is a mess because of the naming confusion between AIMessageViewController and <AIMessageViewController>, which are actually two completely separate things :x -ai
 - (void)_configureMessageDisplay
 {
 	//Create the message view
-	messageViewController = [[[adium interfaceController] messageViewControllerForChat:chat] retain];
+	messageDisplayController = [[[adium interfaceController] messageDisplayControllerForChat:chat] retain];
 	//Get the messageView from the controller
-	controllerView_messages = [[messageViewController messageView] retain];
+	controllerView_messages = [[messageDisplayController messageView] retain];
 	//scrollView_messages is originally a placeholder; replace it with controllerView_messages
 	[controllerView_messages setFrame:[scrollView_messages documentVisibleRect]];
 	[[customView_messages superview] replaceSubview:customView_messages with:controllerView_messages];
@@ -305,8 +352,8 @@
  */
 - (void)adiumPrint:(id)sender
 {
-	if ([messageViewController respondsToSelector:@selector(adiumPrint:)]) {
-		[messageViewController adiumPrint:sender];
+	if ([messageDisplayController respondsToSelector:@selector(adiumPrint:)]) {
+		[messageDisplayController adiumPrint:sender];
 	}
 }
 
@@ -323,6 +370,12 @@
 	//Only send if we have a non-zero-length string
     if ([attributedString length] != 0) { 
 		AIListObject				*listObject = [chat listObject];
+		
+		if ([chat isGroupChat] && ![[chat account] online]) {
+			//Refuse to do anything with a group chat for an offline account.
+			NSBeep();
+			return;
+		}
 		
 		if (!suppressSendLaterPrompt &&
 			![chat canSendMessages]) {
@@ -417,6 +470,9 @@
 {
     [self setAccountSelectionMenuVisibleIfNeeded:NO];
     [self clearTextEntryView];
+	
+	//Redisplay the cursor
+	[NSCursor setHiddenUntilMouseMoves:NO];
 }
 
 /*!
@@ -531,6 +587,8 @@
 
 		[view_accountSelection setAutoresizingMask:(NSViewWidthSizable | NSViewMinYMargin)];
 		
+		[self updateGradientColors];
+		
 		//Insert the account selection view at the top of our view
 		[view_contents addSubview:view_accountSelection];
 		[view_accountSelection setChat:chat];
@@ -573,10 +631,12 @@
 - (void)_updateAccountSelectionViewHeight
 {
 	int		contentsHeight = [view_contents frame].size.height;
-	int 	accountSelectionHeight = [view_accountSelection frame].size.height;
+	int 	accountSelectionHeight = (view_accountSelection ? [view_accountSelection frame].size.height : 0);
 	
-	[view_accountSelection setFrameOrigin:NSMakePoint([view_accountSelection frame].origin.x, 
-													  contentsHeight - accountSelectionHeight)];
+	if (view_accountSelection) {
+		[view_accountSelection setFrameOrigin:NSMakePoint([view_accountSelection frame].origin.x, 
+														  contentsHeight - accountSelectionHeight)];
+	}
 	[splitView_textEntryHorizontal setFrameSize:NSMakeSize([splitView_textEntryHorizontal frame].size.width,
 														   contentsHeight - accountSelectionHeight)];
 }	
@@ -620,7 +680,7 @@
 	
 	//Associate the view with our message view so it knows which view to scroll in response to page up/down
 	//and other special key-presses.
-	[textView_outgoing setAssociatedView:[messageViewController messageScrollView]];
+	[textView_outgoing setAssociatedView:[messageDisplayController messageScrollView]];
 	
 	//Associate the text entry view with our chat and inform Adium that it exists.
 	//This is necessary for text entry filters to work correctly.
@@ -647,21 +707,13 @@
 - (void)clearTextEntryView
 {
 	NSWritingDirection	writingDirection;
-	BOOL				tigerOrBetter = [NSApp isOnTigerOrBetter];
 
-	if (tigerOrBetter) {
-		writingDirection = [textView_outgoing baseWritingDirection];
-	} else {
-		//Just silencing gcc; this will
-		writingDirection = NSWritingDirectionLeftToRight;
-	}
+	writingDirection = [textView_outgoing baseWritingDirection];
 	
 	[textView_outgoing setString:@""];
 	[textView_outgoing setTypingAttributes:[[adium contentController] defaultFormattingAttributes]];
 	
-	if (tigerOrBetter) {
-		[textView_outgoing setBaseWritingDirection:writingDirection];	//Preserve the writing diraction
-	}
+	[textView_outgoing setBaseWritingDirection:writingDirection];	//Preserve the writing diraction
 
     [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification
 														object:textView_outgoing];
@@ -676,6 +728,18 @@
 - (void)addToTextEntryView:(NSAttributedString *)inString
 {
     [textView_outgoing insertText:inString];
+    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:textView_outgoing];
+}
+
+/*!
+ * @brief Add data to the message entry text view 
+ *
+ * Adds the passed pasteboard data to the entry text view at the insertion point.  If there is selected text in the
+ * view, it will be replaced.
+ */
+- (void)addDraggedDataToTextEntryView:(id <NSDraggingInfo>)draggingInfo
+{
+    [textView_outgoing performDragOperation:draggingInfo];
     [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:textView_outgoing];
 }
 
@@ -760,7 +824,7 @@
 }
 
 #pragma mark Autocompletion
-/*
+/*!
  * @brief Should the tab key cause an autocompletion if possible?
  *
  * We only tab to autocomplete for a group chat
@@ -788,7 +852,7 @@
 		}
 		
 		completions = [NSMutableArray array];
-		enumerator = [[[self chat] participatingListObjects] objectEnumerator];
+		enumerator = [[[self chat] containedObjects] objectEnumerator];
 		while ((listContact = [enumerator nextObject])) {
 			if ([[listContact displayName] rangeOfString:partialWord
 												 options:(NSLiteralSearch | NSAnchoredSearch)].location != NSNotFound) {
@@ -915,7 +979,7 @@
 {
     //We display the user list if it contains more than one user, or if someone has specified that it be visible
 	[self setUserListVisible:([chat integerStatusObjectForKey:@"AlwaysShowUserList"] ||
-							  [[chat participatingListObjects] count] > 1)];
+							  [chat containedObjectsCount] > 1)];
 	
     //Update the user list
     if ([self userListVisible]) {
@@ -934,7 +998,7 @@
 	if ([notification object] == userListView) {
 		int selectedIndex = [userListView selectedRow];
 		[chat setPreferredListObject:((selectedIndex != -1) ? 
-									  [[chat participatingListObjects] objectAtIndex:selectedIndex] :
+									  [[chat containedObjects] objectAtIndex:selectedIndex] :
 									  nil)];
 	}
 }

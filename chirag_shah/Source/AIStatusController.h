@@ -16,9 +16,9 @@
 
 #import <Adium/AIObject.h>
 #import <Adium/AIStatusControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
 
 @class AIStatus, AIService, AdiumIdleManager, AIStatusGroup;
-@protocol AIListObjectObserver;
 
 @interface AIStatusController : AIObject <AIStatusController, AIListObjectObserver> {
 	//Status states

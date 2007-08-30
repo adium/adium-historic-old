@@ -32,6 +32,7 @@ typedef enum{
 	XML_STATE_SENDER,
 	XML_STATE_MESSAGE,
 	XML_STATE_EVENT,
+	XML_STATE_EVENT_ATTRIBUTED_MESSAGE,
 	XML_STATE_EVENT_MESSAGE,
 	XML_STATE_EVENT_NICKNAME
 } xmlState;
@@ -44,6 +45,7 @@ typedef enum{
 	
 	xmlState		state;
 	NSString		*sender;
+	NSMutableString		*htmlMessage;
 	NSString		*mySN;
 	NSCalendarDate	*date;
 	int				messageStart;

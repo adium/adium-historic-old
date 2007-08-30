@@ -134,9 +134,8 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	}
 
 	//Configure the outline view
-	AIGenericViewCell	*cell = [[[AIGenericViewCell alloc] init] autorelease];
-	[cell setDrawsGradientHighlight:YES];
-	[[[outlineView tableColumns] objectAtIndex:0] setDataCell:cell];
+	[outlineView setDrawsGradientSelection:YES];
+	[[[outlineView tableColumns] objectAtIndex:0] setDataCell:[[[AIGenericViewCell alloc] init] autorelease]];
 
 	[outlineView sizeLastColumnToFit];
 	[outlineView setAutoresizesSubviews:YES];
@@ -447,7 +446,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 }
 
 //Each row should be the height of its item's view
-- (int)outlineView:(NSOutlineView *)inOutlineView heightForItem:(id)item atRow:(int)row
+- (float)outlineView:(NSOutlineView *)outlineView heightOfRowByItem:(id)item
 {
 	return [[(ESFileTransferProgressRow *)item view] frame].size.height;
 }

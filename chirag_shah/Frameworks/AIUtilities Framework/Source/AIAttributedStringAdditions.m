@@ -22,7 +22,6 @@
 #import "AITextAttributes.h"
 #import "AIApplicationAdditions.h"
 #import "AIStringUtilities.h"
-#import "AIExceptionHandlingUtilities.h"
 
 NSString *AIFontFamilyAttributeName = @"AIFontFamily";
 NSString *AIFontSizeAttributeName   = @"AIFontSize";
@@ -159,7 +158,7 @@ NSString *AIFontStyleAttributeName  = @"AIFontStyle";
 {
     int             index = 0;
     int             stringLength = [self length];
-    float           backgroundBrightness=nil, backgroundSum=nil;
+    float           backgroundBrightness=0.0f, backgroundSum=0.0f;
     NSColor         *backColor=nil;
     //--get the brightness of our background--
     if (backgroundColor) {
@@ -425,16 +424,11 @@ NSString *AIFontStyleAttributeName  = @"AIFontStyle";
 }
 
 - (float)heightWithWidth:(float)width
-{
-    NSTextStorage		*textStorage;
-    NSTextContainer 	*textContainer;
-    NSLayoutManager 	*layoutManager;
-	float				height;
-	
+{	
     //Setup the layout manager and text container
-    textStorage = [[NSTextStorage alloc] initWithAttributedString:self];
-    textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(width, 1e7)];
-    layoutManager = [[NSLayoutManager alloc] init];
+    NSTextStorage *textStorage = [[NSTextStorage alloc] initWithAttributedString:self];
+    NSTextContainer *textContainer = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(width, 1e7)];
+    NSLayoutManager *layoutManager = [[NSLayoutManager alloc] init];
 
     //Configure
     [textContainer setLineFragmentPadding:0.0];
@@ -444,8 +438,8 @@ NSString *AIFontStyleAttributeName  = @"AIFontStyle";
     //Force the layout manager to layout its text
     (void)[layoutManager glyphRangeForTextContainer:textContainer];
 
-	height = [layoutManager usedRectForTextContainer:textContainer].size.height;
-	
+	float height = [layoutManager usedRectForTextContainer:textContainer].size.height;
+
 	[textStorage release];
 	[textContainer release];
 	[layoutManager release];
@@ -466,7 +460,8 @@ NSString *AIFontStyleAttributeName  = @"AIFontStyle";
 	 *		-[NSPlaceholderDictionary initWithObjects_ex:forKeys:count:]: attempt to insert nil value
 	 * if we feed it invalid data.
 	 */
-	AI_DURING
+	@try
+	{
 		if (inData && [inData length]) {
 			//If inData (which must bt non-nil) is not valid archived data, this returns nil.
 			NSUnarchiver		*unarchiver = [[NSUnarchiver alloc] initForReadingWithData:inData];
@@ -490,8 +485,8 @@ NSString *AIFontStyleAttributeName  = @"AIFontStyle";
 			
 			[unarchiver release];
 		}
-	AI_HANDLER
-	AI_ENDHANDLER
+	}
+	@catch(id exc) {	}
 			
 	return returnValue;
 }

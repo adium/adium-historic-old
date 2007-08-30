@@ -47,6 +47,7 @@
         }, 
         {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {
+            ACTIONS = {configureMessageHistory = id; }; 
             CLASS = ESGeneralPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -58,6 +59,7 @@
                 "label_switchTabsWith" = NSTextField; 
                 "popUp_sendKeys" = NSPopUpButton; 
                 "popUp_tabKeys" = NSPopUpButton; 
+                "popUp_tabPositionMenu" = NSPopUpButton; 
                 shortcutRecorder = SRRecorderControl; 
             }; 
             SUPERCLASS = AIPreferencePane; 

@@ -15,10 +15,10 @@
  */
  
 #import <Adium/AIWindowController.h>
+#import <Adium/AIAbstractListController.h>
 
-@class ESContactInfoListController, AIModularPaneCategoryView, AIImageViewWithImagePicker, AIAutoScrollView,
+@class ESContactInfoListController, AIModularPaneCategoryView, AIContactInfoImageViewWithImagePicker, AIAutoScrollView,
 	   AIListOutlineView, AIListObject;
-@protocol AIListControllerDelegate;
 
 @interface AIContactInfoWindowController : AIWindowController <AIListControllerDelegate> {	
 	IBOutlet		NSTabView						*tabView_category;
@@ -27,9 +27,9 @@
 	IBOutlet		NSTabViewItem					*tabViewItem_accounts;
 	NSTabViewItem									*tabViewItem_lastSelectedForListContacts;
 
-	IBOutlet		AIImageViewWithImagePicker		*imageView_userIcon;
-	IBOutlet		NSTextField						*textField_accountName;
-	IBOutlet		NSTextField						*textField_service;
+	IBOutlet		AIContactInfoImageViewWithImagePicker	*imageView_userIcon;
+	IBOutlet		NSTextField								*textField_accountName;
+	IBOutlet		NSTextField								*textField_service;
 	
 	IBOutlet		AIModularPaneCategoryView		*view_Profile;
 	IBOutlet		AIModularPaneCategoryView		*view_Accounts;
@@ -43,9 +43,6 @@
 	IBOutlet		NSButton						*button_addContact;
 	IBOutlet		NSButton						*button_removeContact;
 	
-	IBOutlet		NSButton						*button_clearContactIcon;
-	IBOutlet		NSButton						*button_chooseContactIcon;
-	
 	AIListObject									*displayedObject;
 	NSMutableDictionary								*loadedPanes;
 
@@ -58,9 +55,6 @@
 
 - (IBAction)addContact:(id)sender;
 - (IBAction)removeContact:(id)sender;
-
-- (IBAction)chooseContactIcon:(id)sender;
-- (IBAction)clearContactIcon:(id)sender;
 
 //Internal use
 - (float)drawerTrailingOffset;

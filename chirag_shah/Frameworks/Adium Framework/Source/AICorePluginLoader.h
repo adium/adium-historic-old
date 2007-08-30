@@ -15,8 +15,8 @@
  */
 
 #import <Adium/AIObject.h>
+#import <Adium/AIControllerProtocol.h>
 
-@protocol AIController;
 
 @interface AICorePluginLoader : AIObject <AIController> {
     NSMutableArray			*pluginArray;

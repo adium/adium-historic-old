@@ -15,9 +15,14 @@
  */
 
 #import <Adium/AIObject.h>
+#import <Adium/AIControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 
-@protocol AIController, AIListObjectObserver;
+#define KEY_SHOW_OFFLINE_CONTACTS		@"Show Offline Contacts"
+#define	KEY_USE_OFFLINE_GROUP			@"Use Offline Group"
+#define	KEY_HIDE_CONTACT_LIST_GROUPS	@"Hide Contact List Groups"
+#define	PREF_GROUP_CONTACT_LIST_DISPLAY	@"Contact List Display"
+
 @class AISortController, AdiumAuthorization;
 
 @interface AIContactController : AIObject <AIContactController, AIListObjectObserver> {

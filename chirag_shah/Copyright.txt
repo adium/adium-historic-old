@@ -1,5 +1,5 @@
 Adium
-Copyright (C) 2001-2006 by the following:
+Copyright (C) 2001-2007 by the following:
 
 Adam Atlas
 Colin Barrett
@@ -9,22 +9,28 @@ Adam Betts
 Jorge Salvador Caffarena
 David Clark
 Nelson Elhage
+Michael Dippery
 Augie Fackler
 Ken Ferry
 Christopher Forsythe
 Brian Ganninger
+Ryan Govostes
 Arno Hautala
 Asher Haig
+Mohammed A. Haque
+Christopher Harms
 Jasper Hauser
 Stephen Holt
+Peter Hosey
 Adam Iser
+Daniel M. Jordan
 Severin Klaus
 Ian Krieg
 Thomas Kunze
 Scott Lamb
 Jack M.H. Lin
+Paul R. Livesey
 Sam McCandlish
-Mac-arena the Bored Zo
 Nicola Del Monaco
 Jeffrey Melloy
 David Munch
@@ -32,12 +38,20 @@ Roeland Nas
 Laura Natcher
 Daisuke Okada
 Stephen Poprocki
+Xavid Pretzer
+Eric Richie
+Jesse Rusak
 Evan Schoenberg
+Adam Seering
 Chris Serino
 David Smith
 Greg Smith
+Kent Sutherland
 Vinay Venkatesh
 Wesley Underwood
+Zachary West
 Ofri Wolfus
+Brian Dickman
+Jordan Schelew
 
 If you have contributed to Adium and are not on this list, please contact us.

@@ -10,7 +10,7 @@
  * of the Adium project.
  *
  ****
- Copyright © 2006 Peter Hosey
+ Copyright © 2006 Peter Hosey, Colin Barrett
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -21,12 +21,9 @@
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-//Get and set attribute values using -valueForKey: and -setValue:forKey:. Get and set them en masse using -attributes and -setAttributes:.
-//Note: Not KVO-compliant (at this time) for "attributes" or "contents", nor for any attribute.
-
+//FIXME: This class is not CodingStyle compliant.
 @interface AIXMLElement : NSObject <NSCopying> {
 	NSString *name;
-	NSMutableDictionary *attributes;
 	NSMutableArray *attributeNames;
 	NSMutableArray *attributeValues;
 	NSMutableArray *contents;
@@ -42,8 +39,12 @@
 
 - (NSString *) name;
 
-- (NSDictionary *) attributes;
-- (void) setAttributes:(NSDictionary *)newAttrs;
+- (unsigned)numberOfAttributes;
+- (NSDictionary *)attributes;
+- (void) setAttributeNames:(NSArray *)newAttrNames values:(NSArray *)newAttrVals;
+
+- (void)setValue:(NSString *)attrVal forAttribute:(NSString *)attrName;
+- (NSString *)valueForAttribute:(NSString *)attrName;
 
 - (BOOL) selfCloses;
 - (void) setSelfCloses:(BOOL)flag;
@@ -54,9 +55,11 @@
 //AIXMLElement: Sub-element (e.g. span in a p).
 - (void) addObject:(id)obj;
 - (void) addObjectsFromArray:(NSArray *)array;
+- (void) insertObject:(id)obj atIndex:(unsigned)idx;
 
 - (NSArray *)contents;
 - (void)setContents:(NSArray *)newContents;
+- (NSString *)contentsAsXMLString;
 
 #pragma mark XML representation
 

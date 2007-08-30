@@ -17,8 +17,11 @@
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
-#import "AIStatusController.h"
+#import <Adium/AIStatusControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIListObject.h>
 #import "CBStatusMenuItemController.h"
+#import "AIMenuBarIcons.h"
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
@@ -30,6 +33,7 @@
 #import <Adium/AIStatusMenu.h>
 #import <Adium/AIAccountMenu.h>
 #import <AIUtilities/AIColorAdditions.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 
 #define STATUS_ITEM_MARGIN 8
 
@@ -37,17 +41,13 @@
 - (void)activateAdium:(id)sender;
 - (void)setIconImage:(NSImage *)inImage;
 - (NSImage *)badgeDuck:(NSImage *)duckImage withImage:(NSImage *)inImage;
-- (NSImage *)badgeOnlineDuckWithImage:(NSImage *)inImage;
-- (NSImage *)badgeOnlineHighlightDuckWithImage:(NSImage *)inImage;
-- (void)setOfflineDuck;
-- (void)setOnlineDuckWithoutBadge;
-- (void)setOnlineDuckWithBadgeImage:(NSImage *)inImage;
-- (void)setOnlineDuck;
+- (void)updateMenuIcons;
+- (void)updateMenuIconsBundle;
+- (void)updateUnreadCount;
 @end
 
 @implementation CBStatusMenuItemController
 
-//Returns the shared instance, possibly initializing and creating a new one.
 + (CBStatusMenuItemController *)statusMenuItemController
 {
 	return [[[self alloc] init] autorelease];
@@ -57,30 +57,26 @@
 {
 	if ((self = [super init])) {
 		//Create and set up the status item
-		statusItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength] retain];
+		statusItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength] retain];
 		[statusItem setHighlightMode:YES];
-
+		
 		unviewedContent = NO;
-
-		if ([[adium accountController] oneOrMoreConnectedAccounts]) {
-			[self setOnlineDuck];
-		} else {
-			[self setOfflineDuck];
-		}
+		[self updateMenuIconsBundle];
 		
 		//Create and install the menu
 		theMenu = [[NSMenu alloc] init];
 		[theMenu setAutoenablesItems:YES];
 		[statusItem setMenu:theMenu];
 		[theMenu setDelegate:self];
-
+		
 		//Setup for open chats and unviewed content catching
 		accountMenuItemsArray = [[NSMutableArray alloc] init];
 		stateMenuItemsArray = [[NSMutableArray alloc] init];
 		unviewedObjectsArray = [[NSMutableArray alloc] init];
 		openChatsArray = [[NSMutableArray alloc] init];
 		needsUpdate = YES;
-
+		contactListOpen = [[adium interfaceController] contactListIsVisible];
+		
 		NSNotificationCenter *notificationCenter = [adium notificationCenter];
 		//Register to recieve chat opened and chat closed notifications
 		[notificationCenter addObserver:self
@@ -91,28 +87,45 @@
 		                       selector:@selector(chatClosed:)
 		                           name:Chat_WillClose
 		                         object:nil];
-
+		
 		[notificationCenter addObserver:self
 							   selector:@selector(statusIconSetDidChange:)
 								   name:AIStatusIconSetDidChangeNotification
 								 object:nil];
 		
+		// Register for contact list open and close notifications
+		[notificationCenter addObserver:self
+							   selector:@selector(contactListDidClose:)
+								   name:Interface_ContactListDidClose
+								 object:nil];
+		
+		[notificationCenter addObserver:self
+							   selector:@selector(contactListDidOpen:)
+								   name:Interface_ContactListDidBecomeMain
+								 object:nil];
+		
+		// Register for our menu bar icon set changing
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(menuBarIconsDidChange:)
+										   name:AIMenuBarIconsDidChangeNotification
+										 object:nil];
+		
 		//Register as a chat observer (So we can catch the unviewed content status flag)
 		[[adium chatController] registerChatObserver:self];
-
+		
 		//Register to recieve active state changed notifications
 		[notificationCenter addObserver:self
 		                       selector:@selector(accountStateChanged:)
 		                           name:AIStatusActiveStateChangedNotification
 		                         object:nil];
-
+		
 		//Register ourself for the status menu items
 		statusMenu = [[AIStatusMenu statusMenuWithDelegate:self] retain];
-
+		
 		//Account menu
 		accountMenu = [[AIAccountMenu accountMenuWithDelegate:self submenuType:AIAccountStatusSubmenu showTitleVerbs:NO] retain];
 	}
-
+	
 	return self;
 }
 
@@ -121,23 +134,19 @@
 	//Unregister ourself
 	[[adium chatController] unregisterChatObserver:self];
 	[[adium notificationCenter] removeObserver:self];
-
+	
 	//Release our objects
 	[[statusItem statusBar] removeStatusItem:statusItem];
-
+	
 	[theMenu release];
 	[unviewedObjectsArray release];
 	[accountMenu release];
 	[statusMenu release];
-
-	[adiumOfflineImage release]; 
-	[adiumOfflineHighlightImage release];
-	[adiumImage release];
-	[adiumHighlightImage release];
-
+	[menuIcons release];
+	
 	// Can't release this because it causes a crash on quit. rdar://4139755, rdar://4160625, and #743. --boredzo
 	// [statusItem release];
-
+	
 	//To the superclass, Robin!
 	[super dealloc];
 }
@@ -145,14 +154,169 @@
 //Icon State --------------------------------------------------------
 #pragma mark Icon State
 
-- (NSImage *)badgeDuck:(NSImage *)duckImage withImage:(NSImage *)badgeImage {
-	NSImage *image = duckImage;
+#define PREF_GROUP_APPEARANCE		@"Appearance"
+#define	KEY_MENU_BAR_ICONS			@"Menu Bar Icons"
+#define EXTENSION_MENU_BAR_ICONS	@"AdiumMenuBarIcons"
+#define	RESOURCE_MENU_BAR_ICONS		@"Menu Bar Icons"
 
+- (void)updateMenuIconsBundle
+{
+	NSString *menuIconPath = nil, *menuIconName;
+	
+	menuIconName = [[adium preferenceController] preferenceForKey:KEY_MENU_BAR_ICONS
+															group:PREF_GROUP_APPEARANCE
+														   object:nil];
+	
+	// Get the path of the pack if found.
+	if (menuIconName) {
+		menuIconPath = [adium pathOfPackWithName:menuIconName
+									   extension:EXTENSION_MENU_BAR_ICONS
+							  resourceFolderName:RESOURCE_MENU_BAR_ICONS];
+	}
+	
+	// If the pack is not found, get the default one.
+	if (!menuIconPath || !menuIconName) {
+		menuIconName = [[adium preferenceController] defaultPreferenceForKey:KEY_MENU_BAR_ICONS
+																	   group:PREF_GROUP_APPEARANCE
+																	  object:nil];																	  
+		menuIconPath = [adium pathOfPackWithName:menuIconName
+									   extension:EXTENSION_MENU_BAR_ICONS
+							  resourceFolderName:RESOURCE_MENU_BAR_ICONS];
+	}
+	
+	[menuIcons release];
+	menuIcons = [[AIMenuBarIcons alloc] initWithURL:[NSURL fileURLWithPath:menuIconPath]];
+	
+	[self updateMenuIcons];
+}
+
+// Updates the unread count of the status item.
+- (void)updateUnreadCount
+{
+	// Use AIChatController's method instead of our our array of unread chats (unviewedObjectsArray)
+	// so we can get the true number of unread messages.
+	int unreadCount = [[adium chatController] unviewedContentCount];
+
+	// Only show if greater-than zero, otherwise set to nil.
+	if (unreadCount > 0) {
+		[statusItem setTitle:[NSString stringWithFormat:@"%i", unreadCount]];
+	} else {
+		[statusItem setTitle:@""];
+	}
+}
+
+#define	IMAGE_TYPE_CONTENT		@"Content"
+#define	IMAGE_TYPE_AWAY			@"Away"
+#define IMAGE_TYPE_IDLE			@"Idle"
+#define	IMAGE_TYPE_INVISIBLE	@"Invisible"
+#define	IMAGE_TYPE_OFFLINE		@"Offline"
+#define	IMAGE_TYPE_ONLINE		@"Online"
+
+- (void)updateMenuIcons
+{
+	NSImage			*badge = nil;
+	BOOL			showBadge = [menuIcons showBadge], isIdle;
+	NSString		*imageName;
+	NSEnumerator	*enumerator;
+	AIAccount		*account;
+
+	// If there's content, set our badge to the "content" icon.
+	if (unviewedContent) {
+		if (showBadge) {
+			badge = [AIStatusIcons statusIconForStatusName:@"content"
+												statusType:AIAvailableStatusType
+											      iconType:AIStatusIconList
+												 direction:AIIconNormal];
+		}
+		
+		imageName = IMAGE_TYPE_CONTENT;
+	} else {
+		// Get the correct icon for our current state.
+		switch([[[adium statusController] activeStatusState] statusType]) {
+			case AIAwayStatusType:
+				if (showBadge) {
+					badge = [[[adium statusController] activeStatusState] icon];
+				}
+				
+				imageName = IMAGE_TYPE_AWAY;
+				break;
+			
+			case AIInvisibleStatusType:
+				if (showBadge) {
+					badge = [[[adium statusController] activeStatusState] icon];
+				}
+				
+				imageName = IMAGE_TYPE_INVISIBLE;
+				break;
+				
+			case AIOfflineStatusType:
+				imageName = IMAGE_TYPE_OFFLINE;
+				break;
+				
+			default:
+				// Check idle here, since it has less precedence than offline, invisible, or away.
+				isIdle = FALSE;
+				enumerator = [[[adium accountController] accounts] objectEnumerator];
+				
+				// Check each account for IdleSince
+				while ((account = [enumerator nextObject])) {
+					if ([account online] && [account statusObjectForKey:@"IdleSince"]) {
+						isIdle = TRUE;
+						break;
+					}
+				}
+				
+				// If any of the accounts were idle...
+				if (isIdle) {
+					if (showBadge) {
+						badge = [AIStatusIcons statusIconForStatusName:@"Idle"
+															statusType:AIAvailableStatusType
+															  iconType:AIStatusIconList
+															 direction:AIIconNormal];
+					}
+					
+					imageName = IMAGE_TYPE_IDLE;
+				} else {
+					// Show badge if an available message is set.
+					if (showBadge) {
+						enumerator = [[[adium accountController] accounts] objectEnumerator];
+						
+						while ((account = [enumerator nextObject])) {
+							// If the account has a status message...
+							if ([[account statusObjectForKey:@"StatusState"] statusMessage]) {
+								// Set the badge for the "available" status.
+								badge = [[[adium statusController] activeStatusState] icon];
+								break;
+							}
+						}
+					}
+				
+					imageName = IMAGE_TYPE_ONLINE;
+				}
+				break;
+		}
+	}
+	
+	NSImage *menuIcon = [menuIcons imageOfType:imageName alternate:NO];
+	NSImage *alternateMenuIcon = [menuIcons imageOfType:imageName alternate:YES];
+	
+	// Set our icon.
+	[statusItem setImage:[self badgeDuck:menuIcon withImage:badge]];
+	// Badge the highlight image and set it.
+	[statusItem setAlternateImage:[self badgeDuck:alternateMenuIcon withImage:badge]];
+	// Update our unread count.
+	[self updateUnreadCount];
+}
+
+- (NSImage *)badgeDuck:(NSImage *)duckImage withImage:(NSImage *)badgeImage 
+{
+	NSImage *image = duckImage;
+	
 	if (badgeImage) {
 		image = [[duckImage copy] autorelease];
-
+		
 		[image lockFocus];
-
+		
 		NSRect srcRect = { NSZeroPoint, [badgeImage size] };
 		//Draw in the lower-right quadrant.
 		NSRect destRect = {
@@ -161,7 +325,7 @@
 		};
 		destRect.size.width  *= 0.5;
 		destRect.size.height *= 0.5;
-
+		
 		//If the badge is bigger than that portion, resize proportionally. Otherwise, leave it alone and adjust the destination origin appropriately.
 		if ((srcRect.size.width > destRect.size.width) || (srcRect.size.height > destRect.size.height)) {
 			//Resize the dest rect.
@@ -171,79 +335,25 @@
 			} else {
 				scale = destRect.size.height / srcRect.size.height;
 			}
-
+			
 			destRect.size.width  = srcRect.size.width  * scale;
 			destRect.size.height = srcRect.size.height * scale;
-
+			
 			//Make sure we scale in a pretty manner.
 			[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
 		}
-
+		
 		//Move the drawing origin.
 		destRect.origin.x = [duckImage size].width - destRect.size.width;
-
+		
 		[badgeImage drawInRect:destRect
 					  fromRect:srcRect
 					 operation:NSCompositeSourceOver
 					  fraction:1.0];
 		[image unlockFocus];
 	}
-
+	
 	return image;
-}
-
-- (NSImage *)badgeOnlineDuckWithImage:(NSImage *)inImage
-{
-	if (!adiumImage) {
-		adiumImage = [[NSImage imageNamed:@"adium.png" forClass:[self class]] retain];
-	}
-	return [self badgeDuck:adiumImage withImage:inImage];
-}
-- (NSImage *)badgeOnlineHighlightDuckWithImage:(NSImage *)inImage
-{
-	if (!adiumHighlightImage) {
-		adiumHighlightImage = [[NSImage imageNamed:@"adiumHighlight.png" forClass:[self class]] retain];
-	}
-	return [self badgeDuck:adiumHighlightImage withImage:inImage];
-}
-
-- (void)setOfflineDuck
-{
-	if (!adiumOfflineImage) {
-		adiumOfflineImage = [[NSImage imageNamed:@"adiumOffline.png" forClass:[self class]] retain];
-	}
-	if (!adiumOfflineHighlightImage) {
-		adiumOfflineHighlightImage = [[NSImage imageNamed:@"adiumOfflineHighlight.png" forClass:[self class]] retain];
-	}
-
-	[statusItem setImage:adiumOfflineImage];
-	[statusItem setAlternateImage:adiumOfflineHighlightImage];
-}
-- (void)setOnlineDuckWithoutBadge
-{
-	[statusItem setImage:[self badgeOnlineDuckWithImage:nil]];
-	[statusItem setAlternateImage:[self badgeOnlineHighlightDuckWithImage:nil]];
-}
-- (void)setOnlineDuckWithBadgeImage:(NSImage *)inImage
-{	
-	if (!inImage) {
-		inImage = [[[adium statusController] activeStatusState] icon];
-	}
-
-	[statusItem setImage:[self badgeOnlineDuckWithImage:inImage]];
-
-	[statusItem setAlternateImage:[self badgeOnlineHighlightDuckWithImage:inImage]];
-}
-- (void)setOnlineDuck {
-	switch([[[adium statusController] activeStatusState] statusType]) {
-		case AIAvailableStatusType:
-		case AIOfflineStatusType:
-			[self setOnlineDuckWithoutBadge];
-			break;
-
-		default:
-			[self setOnlineDuckWithBadgeImage:nil];
-	}
 }
 
 //Account Menu --------------------------------------------------------
@@ -251,7 +361,7 @@
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems {
 	[accountMenuItemsArray release];
 	accountMenuItemsArray = [menuItems retain];
-
+	
 	//We need to update next time we're clicked
 	needsUpdate = YES;
 }
@@ -267,10 +377,10 @@
 {
 	//Pull 'em out!
 	[stateMenuItemsArray removeAllObjects];
-
+	
 	//Stick 'em in!
 	[stateMenuItemsArray addObjectsFromArray:menuItemArray];
-
+	
 	//We need to update next time we're clicked
 	needsUpdate = YES;
 }
@@ -287,7 +397,7 @@
 {
 	//Add it to the array
 	[openChatsArray addObject:[notification object]];
-
+	
 	//We need to update the menu next time we are clicked
 	needsUpdate = YES;
 }
@@ -297,12 +407,18 @@
 	AIChat	*chat = [notification object];
 	//Remove it from the array
 	[openChatsArray removeObjectIdenticalTo:chat];
-
+	
 	[unviewedObjectsArray removeObjectIdenticalTo:chat];
-
+	
 	int index = [theMenu indexOfItemWithRepresentedObject:chat];
 	if (index != -1) {
 		[theMenu removeItemAtIndex:index];
+		/* Check to see if we have no openChats left, in which case we
+		 * need to remove the extra menu seperator, which is now in the index'th spot.
+		 */
+		if (([openChatsArray count] == 0) && [[theMenu itemAtIndex:index] isSeparatorItem]) {
+			[theMenu removeItemAtIndex:index];
+		}
 	}
 }
 
@@ -319,7 +435,7 @@
 				//We need to update our menu
 				needsUpdate = YES;
 			}
-		//If they've viewed the content
+			//If they've viewed the content
 		} else {
 			//If we're tracking this object
 			if ([unviewedObjectsArray containsObjectIdenticalTo:inChat]) {
@@ -330,34 +446,29 @@
 			}
 		}
 	}
-
+	
 	if ([unviewedObjectsArray count] == 0) {
 		//If there are no more contacts with unviewed content, set our icon to normal.
 		if (unviewedContent) {
-			if ([[adium accountController] oneOrMoreConnectedAccounts]) {
-				[self setOnlineDuck];
-			} else {
-				[self setOfflineDuck];
-			}
 			unviewedContent = NO;
+			[self updateMenuIcons];
 		}
-
 	} else {
 		//If this is the first contact with unviewed content, set our icon to unviewed content.
 		if (!unviewedContent) {
 			unviewedContent = YES;
-			[self setOnlineDuckWithBadgeImage:[AIStatusIcons statusIconForStatusName:@"content"
-																		  statusType:AIAvailableStatusType
-																			iconType:AIStatusIconList
-																		   direction:AIIconNormal]];
+			[self updateMenuIcons];
+		} else {
+			// Update our unread count.
+			[self updateUnreadCount];
 		}
 	}
-
+	
 	//If they're typing, we also need to update because we show typing within the menu itself next to chats.
 	if ([inModifiedKeys containsObject:KEY_TYPING]) {
 		needsUpdate = YES;
 	}
-
+	
 	//We didn't modify attributes, so return nil
 	return nil;
 }
@@ -372,37 +483,37 @@
 		NSEnumerator    *enumerator;
 		NSMenuItem      *menuItem;
 		AIChat          *chat;
-
+		
 		//Clear out all the items, start from scratch
 		[menu removeAllItems];
-
+		
 		//Add the state menu items
 		enumerator = [stateMenuItemsArray objectEnumerator];
 		menuItem = nil;
 		while ((menuItem = [enumerator nextObject])) {
 			[menu addItem:menuItem];
-
+			
 			//Validate the menu items as they are added since they weren't previously validated when the menu was clicked
 			if ([[menuItem target] respondsToSelector:@selector(validateMenuItem:)]) {
 				[[menuItem target] validateMenuItem:menuItem];
 			}
 		}
-
+		
 		if ([accountMenuItemsArray count] > 0) {
 			[menu addItem:[NSMenuItem separatorItem]];
-
+			
 			//Add the account menu items
 			enumerator = [accountMenuItemsArray objectEnumerator];
 			while ((menuItem = [enumerator nextObject])) {
 				NSMenu	*submenu;
-
+				
 				[menu addItem:menuItem];
-
+				
 				//Validate the menu items as they are added since they weren't previously validated when the menu was clicked
 				if ([[menuItem target] respondsToSelector:@selector(validateMenuItem:)]) {
 					[[menuItem target] validateMenuItem:menuItem];
 				}
-
+				
 				submenu = [menuItem submenu];
 				if (submenu) {
 					NSEnumerator	*submenuEnumerator = [[submenu itemArray] objectEnumerator];
@@ -416,19 +527,19 @@
 				}
 			}
 		}
-
+		
 		//If there exist any open chats, add them
 		if ([openChatsArray count] > 0) {
 			enumerator = [openChatsArray objectEnumerator];
 			chat = nil;
-
+			
 			//Add a seperator
 			[menu addItem:[NSMenuItem separatorItem]];
-
+			
 			//Create and add the menu items
 			while ((chat = [enumerator nextObject])) {
 				NSImage *image = nil;
-
+				
 				//Create a menu item from the chat
 				menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[chat displayName]
 				                                                                 target:self
@@ -436,36 +547,67 @@
 				                                                          keyEquivalent:@""] autorelease];
 				//Set the represented object
 				[menuItem setRepresentedObject:chat];
-
+				
 				//If there is a chat status image, use that
-				if (!(image = [AIStatusIcons statusIconForChat:chat type:AIStatusIconTab direction:AIIconNormal])) {
+				if (!(image = [AIStatusIcons statusIconForChat:chat type:AIStatusIconMenu direction:AIIconNormal])) {
 					//Otherwise use the contact's status image
 					image = [AIStatusIcons statusIconForListObject:[chat listObject]
-					                                          type:AIStatusIconTab
+					                                          type:AIStatusIconMenu
 					                                     direction:AIIconNormal];
 				}
 				//Set the image
 				[menuItem setImage:image];
-
+				
 				//Add it to the menu
 				[menu addItem:menuItem];
 			}
 		}
-
+		
 		//Add our last two items
 		[menu addItem:[NSMenuItem separatorItem]];
+		
+		if (contactListOpen) {
+			[menu addItemWithTitle:AILocalizedString(@"Hide Contact List", nil)
+							target:self
+							action:@selector(hideContactList:)
+					 keyEquivalent:@""];
+		} else {
+			[menu addItemWithTitle:AILocalizedString(@"Show Contact List", nil)
+							target:self
+							action:@selector(activateContactList:)
+					 keyEquivalent:@""];
+		}
+		
 		[menu addItemWithTitle:AILocalizedString(@"Bring Adium to Front",nil)
 		                target:self
 		                action:@selector(activateAdium:)
 		         keyEquivalent:@""];
+
+		[menu addItem:[NSMenuItem separatorItem]];
+		
 		[menu addItemWithTitle:AILocalizedString(@"Quit Adium",nil)
 		                target:NSApp
 		                action:@selector(terminate:)
 		         keyEquivalent:@""];
-
+		
 		//Only update next time if we need to
 		needsUpdate = NO;
 	}
+}
+
+// Contact List Notifications
+
+#pragma mark Contact List Notifications
+- (void)contactListDidClose:(id)sender
+{
+	contactListOpen = NO;
+	needsUpdate = YES;
+}
+
+- (void)contactListDidOpen:(id)sender
+{
+	contactListOpen = YES;
+	needsUpdate = YES;
 }
 
 //Menu Actions --------------------------------------------------------
@@ -476,7 +618,7 @@
 	if (![NSApp isActive]) {
 		[self activateAdium:nil];
 	}
-
+	
 	[[adium interfaceController] setActiveChat:[sender representedObject]];
 }
 
@@ -486,33 +628,34 @@
 	[NSApp arrangeInFront:nil];
 }
 
+- (void)activateContactList:(id)sender
+{
+	[[adium interfaceController] showContactList:nil];
+	// Bring Adium to front if it's not the active app.
+	if (![NSApp isActive]) {
+		[self activateAdium:nil];
+	}
+}
+
+- (void)hideContactList:(id)sender
+{
+	[[adium interfaceController] closeContactList:nil];
+}
+
 #pragma mark -
 
 - (void)accountStateChanged:(NSNotification *)notification
 {
-	if (!unviewedContent) {
-		if ([[adium accountController] oneOrMoreConnectedAccounts]) {
-			[self setOnlineDuck];
-		} else {
-			[self setOfflineDuck];
-		}
-	}
+	[self updateMenuIcons];
 }
 
 - (void)statusIconSetDidChange:(NSNotification *)notification
 {
-	if (unviewedContent) {
-		[self setOnlineDuckWithBadgeImage:[AIStatusIcons statusIconForStatusName:@"content"
-																	  statusType:AIAvailableStatusType
-																		iconType:AIStatusIconList
-																	   direction:AIIconNormal]];
-	} else {
-		if ([[adium accountController] oneOrMoreConnectedAccounts]) {
-			[self setOnlineDuck];
-		} else {
-			[self setOfflineDuck];
-		}
-	}
+	[self updateMenuIcons];
 }
 
+- (void)menuBarIconsDidChange:(NSNotification *)notification
+{
+	[self updateMenuIconsBundle];
+}
 @end

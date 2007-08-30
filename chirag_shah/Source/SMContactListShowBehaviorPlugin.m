@@ -38,8 +38,6 @@
 {
 	//Install our contact alert
 	[[adium contactAlertsController] registerActionID:SHOW_CONTACT_LIST_BEHAVIOR_ALERT_IDENTIFIER withHandler:self];
-	
-	hideContactListTimer = nil;
 }
 
 /*!
@@ -89,25 +87,29 @@
  * @param eventID The eventID which triggered this action
  * @param userInfo Additional information associated with the event; userInfo's type will vary with the actionID.
  */
-- (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
+- (BOOL)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
 	NSTimeInterval secondsToShow = [[details objectForKey:KEY_SECONDS_TO_SHOW_LIST] doubleValue];
 	AISCLViewPlugin *contactListViewPlugin = (AISCLViewPlugin *)[[adium componentLoader] pluginWithClassName:@"AISCLViewPlugin"];
 	AIListWindowController *windowController = [contactListViewPlugin contactListWindowController];
+
 	[windowController setPreventHiding:YES];
 	
 	if ([windowController windowShouldHideOnDeactivate]) {
 		[[windowController window] setHidesOnDeactivate:NO];
 		[[windowController window] orderFront:self];
-	}
-	else {
+	} else {
 		[windowController slideWindowOnScreen];
 	}
-	if (hideContactListTimer) {
-		[hideContactListTimer invalidate];
-		[hideContactListTimer release];
-	}
-	hideContactListTimer = [[NSTimer scheduledTimerWithTimeInterval:secondsToShow target:self selector:@selector(hideContactList:) userInfo:nil repeats:NO] retain];
+
+	[NSObject cancelPreviousPerformRequestsWithTarget:self
+											 selector:@selector(hideContactList:)
+											   object:nil];
+	[self performSelector:@selector(hideContactList:)
+			   withObject:nil
+			   afterDelay:secondsToShow];
+	
+	return YES;
 }
 
 
@@ -115,16 +117,17 @@
  * @brief Show the contact list after the time specified has elapsed
  */
 - (void)hideContactList:(NSTimer *)timer {
-	AISCLViewPlugin *contactListViewPlugin = (AISCLViewPlugin *)[[adium componentLoader] pluginWithClassName:@"AISCLViewPlugin"];
-	AIListWindowController *windowController = [contactListViewPlugin contactListWindowController];
+	AISCLViewPlugin			*contactListViewPlugin = (AISCLViewPlugin *)[[adium componentLoader] pluginWithClassName:@"AISCLViewPlugin"];
+	AIListWindowController	*windowController = [contactListViewPlugin contactListWindowController];
 	
 	[windowController setPreventHiding:NO];
-	if ([windowController windowShouldHideOnDeactivate] && ![NSApp isActive])
+
+	if ([windowController windowShouldHideOnDeactivate] && ![NSApp isActive]) {
 		[[windowController window] orderOut:self];
-	else if ([windowController shouldSlideWindowOffScreen])
+
+	} else if ([windowController shouldSlideWindowOffScreen]) {
 		[windowController slideWindowOffScreenEdges:[windowController slidableEdgesAdjacentToWindow]];
-	[hideContactListTimer release];
-	hideContactListTimer = nil;
+	}
 }
 
 

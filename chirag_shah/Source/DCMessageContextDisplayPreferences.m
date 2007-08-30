@@ -156,25 +156,5 @@ typedef enum {
 	}
 }
 
-- (NSMenu *)intervalUnitsMenu
-{
-	NSMenu		*intervalUnitsMenu;
-	NSMenuItem	*menuItem;
-	
-	intervalUnitsMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
-	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Days",nil)
-																 target:nil
-																 action:nil
-														  keyEquivalent:@""] autorelease];
-	[intervalUnitsMenu addItem:menuItem];
-	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Hours",nil)
-																	 target:nil
-																	 action:nil
-															  keyEquivalent:@""] autorelease];
-	[intervalUnitsMenu addItem:menuItem];
 
-	return [intervalUnitsMenu autorelease];
-}
 @end

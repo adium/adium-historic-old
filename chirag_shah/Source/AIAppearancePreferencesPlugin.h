@@ -18,6 +18,7 @@
 
 #define	KEY_STATUS_ICON_PACK		@"Status Icon Pack"
 #define	KEY_SERVICE_ICON_PACK		@"Service Icon Pack"
+#define KEY_MENU_BAR_ICONS			@"Menu Bar Icons"
 
 #define KEY_LIST_LAYOUT_NAME		@"List Layout Name"
 #define KEY_LIST_THEME_NAME			@"List Theme Name"

@@ -38,7 +38,7 @@
 	[super windowDidLoad];
 }
 
-/*
+/*!
  * @brief Used by the interface controller to know that despite having no NSWindowCloseButton, our window can be closed
  */
 - (BOOL)windowPermitsClose
@@ -46,28 +46,5 @@
 	return YES;
 }
 
-/*
- * @brief Slide the window to a given point
- *
- * windowSlidOffScreenEdgeMask must already be set to the resulting offscreen mask (or 0 if the window is sliding on screen)
- *
- * A standard window (titlebar window) will crash if told to setFrame completely offscreen. Also, using our own movement we can more precisely
- * control the movement speed and acceleration.
- */
-- (void)slideWindowToPoint:(NSPoint)inPoint
-{	
-	manualWindowMoveToPoint([self window],
-							inPoint,
-							windowSlidOffScreenEdgeMask,
-							contactListController,
-							NO);
-	
-	if (windowSlidOffScreenEdgeMask == AINoEdges) {
-		/* When the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
-		* it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
-		*/
-		[contactListController contactListDesiredSizeChanged];			
-	}
-}
 
 @end

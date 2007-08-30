@@ -1,4 +1,5 @@
-/*---------------------------------------------------------------------------
+/*
+---------------------------------------------------------------------------
   PROJECT: 	Adium Message Style
 
 FILE NAME: 	minimal_mod.AdiumMessageStyle    
@@ -202,6 +203,8 @@ img
 }
 
 #Chat { overflow: hidden; }
+
+img.scaledToFitImage{ width:auto; }
 
 #header{ 
     position: fixed; 

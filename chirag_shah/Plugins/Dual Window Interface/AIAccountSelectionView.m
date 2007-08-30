@@ -28,8 +28,7 @@
 #import <Adium/AIAccountMenu.h>
 #import <Adium/AIContactMenu.h>
 #import <Adium/AIChat.h>
-
-#define ACCOUNT_SELECTION_NIB	@"AccountSelectionView"
+#import <PSMTabBarControl/NSBezierPath_AMShading.h>
 
 #define BOX_RECT	NSMakeRect(0, 0, 300, 28)
 #define LABEL_RECT	NSMakeRect(17, 7, 56, 17)
@@ -40,7 +39,6 @@
 - (void)chatMetaContactChanged;
 - (void)chatDestinationChanged:(NSNotification *)notification;
 - (void)chatSourceChanged:(NSNotification *)notification;
-- (AIMetaContact *)_chatMetaContact;
 - (BOOL)_accountIsAvailable:(AIAccount *)inAccount;
 - (void)_createAccountMenu;
 - (void)_createContactMenu;
@@ -88,16 +86,40 @@
 	return self;
 }
 
-/*!
- * @brief Dealloc
- */
 - (void)dealloc
 {
 	[self setChat:nil];
 
-    [super dealloc];
+	[leftColor release];
+	[rightColor release];
+	[super dealloc];
 }
 
+- (void)setLeftColor:(NSColor *)inLeftColor rightColor:(NSColor *)inRightColor
+{
+	if (leftColor != inLeftColor) {
+		[leftColor release];
+		leftColor = [inLeftColor retain];
+	}
+	
+	if (rightColor != inRightColor) {
+		[rightColor release];
+		rightColor = [inRightColor retain];
+	}
+	
+	[self setNeedsDisplay:YES];
+}
+
+-(void)drawRect:(NSRect)aRect
+{	
+	if (rightColor && leftColor) {
+		NSBezierPath *path = [NSBezierPath bezierPathWithRect:[self bounds]];
+		[path linearVerticalGradientFillWithStartColor:leftColor 
+											  endColor:rightColor];
+	}
+}
+
+#pragma mark Chat
 /*!
  * @brief Set the chat associated with this selection view
  *
@@ -161,11 +183,11 @@
 - (void)chatDestinationChanged:(NSNotification *)notification
 {
 	//Update selection in contact menu
-	[popUp_contacts selectItemWithRepresentedObject:[chat listObject]];
+	[popUp_contacts selectItemWithRepresentedObjectUsingCompare:[chat listObject]];
 
 	[self _destroyAccountMenu];
 	//Rebuild 'From' account menu
-	if([self choicesAvailableForAccount]){
+	if ([self choicesAvailableForAccount]){
 		[self _createAccountMenu];
 	}
 
@@ -217,7 +239,7 @@
 
 //Account Menu ---------------------------------------------------------------------------------------------------------
 #pragma mark Account Menu
-/*
+/*!
  * @brief Returns YES if a choice of source account is available
  */
 - (BOOL)choicesAvailableForAccount
@@ -235,7 +257,7 @@
 	return NO;
 }
 
-/*
+/*!
  * @brief Account Menu Delegate
  */
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems {
@@ -248,7 +270,7 @@
 	return [self _accountIsAvailable:inAccount];
 }
 
-/*
+/*!
  * @brief Check if an account is available for sending content
  *
  * An account is considered available if it's of the right service class and is currently online.
@@ -258,10 +280,10 @@
 - (BOOL)_accountIsAvailable:(AIAccount *)inAccount
 {
 	return ([[[[chat listObject] service] serviceClass] isEqualToString:[[inAccount service] serviceClass]] &&
-		   [inAccount integerStatusObjectForKey:@"Online"]);
+			[inAccount online]);
 }
 
-/*
+/*!
  * @brief Create the account menu and add it to our view
  */
 - (void)_createAccountMenu
@@ -273,7 +295,7 @@
 		popUp_accounts = [[self _popUpButtonWithFrame:POPUP_RECT] retain];
 		[box_accounts addSubview:popUp_accounts];
 		
-		label_accounts = [[self _textFieldLabelWithValue:@"From:" frame:LABEL_RECT] retain];
+		label_accounts = [[self _textFieldLabelWithValue:AILocalizedString(@"From:", "Label in front of the dropdown of accounts from which to send a message") frame:LABEL_RECT] retain];
 		[box_accounts addSubview:label_accounts];
 		
 		//Resize the contact box to fit our view and insert it
@@ -285,7 +307,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Destroy the account menu, removing it from our view
  */
 - (void)_destroyAccountMenu
@@ -302,14 +324,19 @@
 
 //Contact Menu ---------------------------------------------------------------------------------------------------------
 #pragma mark Contact Menu
-/*
+/*!
  * @brief Returns YES if a choice of destination contact is available
  */
 - (BOOL)choicesAvailableForContact{
-	return [[[self _chatMetaContact] listContacts] count] > 1;
+	AIListContact *parentContact = [[chat listObject] parentContact];
+	if ([parentContact conformsToProtocol:@protocol(AIContainingObject)]) {
+		return [[(AIListContact <AIContainingObject> *)parentContact listContacts] count] > 1;
+	} else {
+		return NO;
+	}
 }
 
-/*
+/*!
  * @brief Contact menu delegate
  */
 - (void)contactMenu:(AIContactMenu *)inContactMenu didRebuildMenuItems:(NSArray *)menuItems {
@@ -319,7 +346,7 @@
 	[[adium chatController] switchChat:chat toListContact:inContact usingContactAccount:YES];
 }
 
-/*
+/*!
  * @brief Create the contact menu and add it to our view
  */
 - (void)_createContactMenu
@@ -331,7 +358,7 @@
 		popUp_contacts = [[self _popUpButtonWithFrame:POPUP_RECT] retain];
 		[box_contacts addSubview:popUp_contacts];
 		
-		label_contacts = [[self _textFieldLabelWithValue:@"To:" frame:LABEL_RECT] retain];
+		label_contacts = [[self _textFieldLabelWithValue:AILocalizedString(@"To:", "Label in front of the dropdown for picking which contact to send a message to in the message window") frame:LABEL_RECT] retain];
 		[box_contacts addSubview:label_contacts];
 
 		//Resize the contact box to fit our view and insert it
@@ -339,11 +366,11 @@
 		[self addSubview:box_contacts];
 
 		//Configure the contact menu
-		contactMenu = [[AIContactMenu contactMenuWithDelegate:self forContactsInObject:[self _chatMetaContact]] retain];
+		contactMenu = [[AIContactMenu contactMenuWithDelegate:self forContactsInObject:[[chat listObject] parentContact]] retain];
 	}
 }
 
-/*
+/*!
  * @brief Destroy the contact menu, remove it from our view
  */
 - (void)_destroyContactMenu
@@ -360,15 +387,6 @@
 
 //Misc -----------------------------------------------------------------------------------------------------------------
 #pragma mark Misc
-/*!
- * @brief Returns the meta contact containing our current destination contact (If one exists)
- */
-- (AIMetaContact *)_chatMetaContact
-{
-	id 	containingObject = [[chat listObject] containingObject];
-	return [containingObject isKindOfClass:[AIMetaContact class]] ? containingObject : nil;
-}
-
 /*!
  * @brief
  */

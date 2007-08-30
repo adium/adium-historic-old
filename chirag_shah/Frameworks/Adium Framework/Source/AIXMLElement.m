@@ -10,7 +10,7 @@
  * of the Adium project.
  *
  ****
- Copyright © 2006 Peter Hosey
+ Copyright © 2006 Peter Hosey, Colin Barrett
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
@@ -49,10 +49,10 @@
 
 	if ((self = [super init])) {
 		name = [newName copy];
-		attributes = [[NSMutableDictionary alloc] init];
 		attributeNames  = [[NSMutableArray alloc] init];
 		attributeValues = [[NSMutableArray alloc] init];
 		contents = [[NSMutableArray alloc] init];
+		selfCloses = NO;
 	}
 	return self;
 }
@@ -67,7 +67,6 @@
 - (void) dealloc
 {
 	[name release];
-	[attributes release];
 	[attributeNames  release];
 	[attributeValues release];
 	[contents release];
@@ -77,10 +76,9 @@
 
 - (id) copyWithZone:(NSZone *)zone {
 	AIXMLElement *other = [[AIXMLElement allocWithZone:zone] initWithName:name];
-	other->attributes      = [attributes      mutableCopy];
 	other->attributeNames  = [attributeNames  mutableCopy];
 	other->attributeValues = [attributeValues mutableCopy];
-
+	other->selfCloses = selfCloses;
 	other->contents = [[NSMutableArray alloc] initWithCapacity:[contents count]];
 	NSEnumerator *contentsEnum = [contents objectEnumerator];
 	id obj;
@@ -97,13 +95,40 @@
 	return name;
 }
 
-- (NSDictionary *) attributes
+- (unsigned)numberOfAttributes
 {
-	return attributes;
+	return [attributeNames count];
 }
-- (void) setAttributes:(NSDictionary *)newAttrs
+- (NSDictionary *)attributes
 {
-	[attributes setDictionary:newAttrs];
+	return [NSDictionary dictionaryWithObjects:attributeValues forKeys:attributeNames];
+}
+- (void) setAttributeNames:(NSArray *)newAttrNames values:(NSArray *)newAttrVals
+{
+	NSAssert2([newAttrNames count] == [newAttrVals count], @"Attribute names and values have different lengths, %ui and %ui respectively", [newAttrNames count], [newAttrVals count]);
+	unsigned numberOfDuplicates = [newAttrNames count] - [[NSSet setWithArray:newAttrNames] count];
+	NSAssert1(numberOfDuplicates == 0, @"Duplicate attributes are not allowed; found %ui duplicate(s)",  numberOfDuplicates);
+	
+	[attributeNames setArray:newAttrNames];
+	[attributeValues setArray:newAttrVals];
+}
+
+- (void)setValue:(NSString *)attrVal forAttribute:(NSString *)attrName
+{
+	unsigned index = [attributeNames indexOfObject:attrName];
+	if (index != NSNotFound) {
+		[attributeValues replaceObjectAtIndex:index withObject:attrVal];
+	} else {
+		[attributeNames addObject:attrName];
+		[attributeValues addObject:attrVal];
+	}
+}
+- (NSString *)valueForAttribute:(NSString *)attrName
+{
+	unsigned index = [attributeNames indexOfObject:attrName];
+	if (index != NSNotFound)
+		return [attributeValues objectAtIndex:index];
+	return nil;
 }
 
 - (BOOL) selfCloses
@@ -122,7 +147,7 @@
 - (void) addObject:(id)obj
 {
 	BOOL isString = [obj isKindOfClass:[NSString class]];
-	NSParameterAssert(isString || [obj isKindOfClass:[AIXMLElement class]]);
+	NSAssert2((isString || [obj isKindOfClass:[AIXMLElement class]]), @"%@: addObject: %@ is of incorrect class",self,obj);
 
 	if(isString) {
 		obj = [obj stringByEscapingForXMLWithEntities:nil];
@@ -139,6 +164,17 @@
 		[self addObject:obj];
 	}
 }
+- (void) insertObject:(id)obj atIndex:(unsigned)idx
+{
+	BOOL isString = [obj isKindOfClass:[NSString class]];
+	NSParameterAssert(isString || [obj isKindOfClass:[AIXMLElement class]]);
+
+	if(isString) {
+		obj = [obj stringByEscapingForXMLWithEntities:nil];
+	}
+
+	[contents insertObject:obj atIndex:idx];
+}
 
 - (NSArray *)contents
 {
@@ -147,6 +183,20 @@
 - (void)setContents:(NSArray *)newContents
 {
 	[contents setArray:newContents];
+}
+
+- (NSString *)contentsAsXMLString
+{
+	NSMutableString *contentString = [NSMutableString string];
+	NSEnumerator *contentsEnumerator = [contents objectEnumerator];
+	id obj = nil;
+	while ((obj = [contentsEnumerator nextObject])) {
+		if ([obj isKindOfClass:[NSString class]])
+			[contentString appendString:obj];
+		else if ([obj isKindOfClass:[AIXMLElement class]])
+			[contentString appendString:[obj XMLString]];
+	}
+	return contentString;
 }
 
 #pragma mark -
@@ -159,7 +209,7 @@
 - (void) appendXMLStringtoString:(NSMutableString *)string
 {
 	[string appendFormat:@"<%@", name];
-	if ([attributes count]) {
+	if ([attributeNames count]) {
 		unsigned attributeIdx = 0U;
 		NSEnumerator *keysEnum = [attributeNames objectEnumerator];
 		NSString *key;
@@ -202,7 +252,7 @@
 - (void) appendUTF8XMLBytesToData:(NSMutableData *)data
 {
 	NSMutableString *startTag = [NSMutableString stringWithFormat:@"<%@", name];
-	if ([attributes count]) {
+	if ([self numberOfAttributes]) {
 		unsigned attributeIdx = 0U;
 		NSEnumerator *keysEnum = [attributeNames objectEnumerator];
 		NSString *key;
@@ -246,7 +296,7 @@
 - (NSString *)description
 {
 	NSMutableString *string = [NSMutableString stringWithFormat:@"<%@ AIXMLElement:id=\"%p\"", name, self];
-	if ([attributes count]) {
+	if ([attributeNames count] && [attributeValues count]) { //there's no way these could be different values, but whatever
 		unsigned attributeIdx = 0U;
 		NSEnumerator *keysEnum = [attributeNames objectEnumerator];
 		NSString *key;
@@ -265,13 +315,22 @@
 	return [NSString stringWithString:string];
 }
 
+
+
 #pragma mark KVC
 
+/*
+These aren't working. I recommend calling -objectForKey on the return value of -attributes.
+
+Adium[302:117] The following unhandled exception was ignored: NSUnknownKeyException ([<AIXMLElement 0xce582b0> valueForUndefinedKey:]: this class is not key value coding-compliant for the key auto.)
+
+*/
+/*
 - (id) valueForKey:(NSString *)key {
-	id obj = [attributes objectForKey:key];
-	if(!obj) obj = [super valueForKey:key];
-	return obj;
+	unsigned idx = [attributeNames indexOfObject:key];	
+	return (idx != NSNotFound) ? [attributeValues objectAtIndex:idx] : [super valueForKey:key];
 }
+//FIXME: this shouldn't clobber setObject:forKey: on NSObject.
 - (void) setValue:(id)obj forKey:(NSString *)key {
 	unsigned idx = [attributeNames indexOfObject:key];
 	if(idx == NSNotFound) {
@@ -280,7 +339,8 @@
 	} else {
 		[attributeValues replaceObjectAtIndex:idx withObject:obj];
 	}
-	[attributes setValue:obj forKey:key];
 }
+
+*/
 
 @end

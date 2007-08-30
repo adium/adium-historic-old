@@ -66,7 +66,7 @@ static AINewMessagePromptController *sharedNewMessageInstance = nil;
 	[label_from setLocalizedString:AILocalizedString(@"From:",nil)];
 	[label_to setLocalizedString:AILocalizedString(@"To:",nil)];
 	
-	[button_okay setLocalizedString:AILocalizedString(@"Message",nil)];
+	[button_okay setLocalizedString:AILocalizedStringFromTable(@"Message", @"Buttons", "Button title to open a message window the specific contact from the 'New Chat' window")];
 	
 	[[self window] setTitle:AILocalizedString(@"New Message",nil)];
 }
@@ -79,12 +79,20 @@ static AINewMessagePromptController *sharedNewMessageInstance = nil;
 	AIListContact	*contact;
 	
     if ((contact = [self contactFromTextField])) {
-        //Initiate the message
-        [[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:contact]];
+        //Initiate the message - the contact is on the right account
+		[super okay:sender];
+
+        [[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:contact
+																			onPreferredAccount:NO]];
 		
 		//Close the prompt
         [[self class] closeSharedInstance];
     }
+}
+
+- (NSString *)lastAccountIDKey
+{
+	return @"NewMessagePrompt";
 }
 
 @end

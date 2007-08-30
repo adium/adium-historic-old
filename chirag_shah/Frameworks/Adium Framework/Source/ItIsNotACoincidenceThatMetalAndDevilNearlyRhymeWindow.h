@@ -19,3 +19,7 @@
 }
 
 @end
+
+@interface NSApplication(AIApplicationAdditions)
+- (BOOL)isTiger;
+@end

@@ -8,8 +8,9 @@
 
 @interface NSApplication (AIApplicationAdditions)
 
-+ (BOOL)isOnTigerOrBetter;
 - (BOOL)isOnTigerOrBetter;
+- (BOOL)isOnLeopardOrBetter;
+- (BOOL)isTiger;
 
 - (BOOL)isWebKitAvailable;
 

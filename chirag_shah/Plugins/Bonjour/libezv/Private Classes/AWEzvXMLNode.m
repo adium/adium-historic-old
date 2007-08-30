@@ -127,4 +127,32 @@
     
     return [[string copy] autorelease];
 }
+
+- (NSString *)description
+{
+	NSMutableString *string, *key;
+	NSEnumerator	*enumerator;
+	AWEzvXMLNode	*node;
+	string = [NSMutableString stringWithString:@"<"];
+	[string appendString:name];
+	
+	enumerator = [attributes keyEnumerator];
+	while ((key = [enumerator nextObject])) {
+		[string appendFormat:@" %@=\"%@\"", key, [attributes objectForKey:key]];
+	}
+	
+	[string appendString:@">"];
+	
+	enumerator = [children objectEnumerator];
+	while ((node = [enumerator nextObject])) {
+		NSString	*xmlString;
+		if ((xmlString = [node xmlString])) {
+			[string appendString:xmlString];
+		}
+	}
+	
+	[string appendFormat:@"</%@>", name];
+
+	return [NSString stringWithFormat:@"<AWEzvXMLNode %x:type %i:\"%@\">",self,type,string];
+}
 @end

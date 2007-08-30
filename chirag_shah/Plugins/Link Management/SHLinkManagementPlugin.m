@@ -69,7 +69,7 @@
 }
 
 //Update our add/edit link menu item
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 	if (responder && [responder isKindOfClass:[NSTextView class]]) {

@@ -107,36 +107,34 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 //Set the active service icon pack
 + (BOOL)setActiveServiceIconsFromPath:(NSString *)inPath
 {
-	if (!serviceIconBasePath || ![serviceIconBasePath isEqualToString:inPath]) {
-		NSDictionary	*serviceIconDict = [NSDictionary dictionaryWithContentsOfFile:[inPath stringByAppendingPathComponent:@"Icons.plist"]];
+	NSDictionary	*serviceIconDict = [NSDictionary dictionaryWithContentsOfFile:[inPath stringByAppendingPathComponent:@"Icons.plist"]];
 
-		if (serviceIconDict && [[serviceIconDict objectForKey:@"AdiumSetVersion"] intValue] == 1) {
-			[serviceIconBasePath release];
-			serviceIconBasePath = [inPath retain];
+	if (serviceIconDict && [[serviceIconDict objectForKey:@"AdiumSetVersion"] intValue] == 1) {
+		[serviceIconBasePath release];
+		serviceIconBasePath = [inPath retain];
 
-			[serviceIconNames[AIServiceIconSmall] release];
-			serviceIconNames[AIServiceIconSmall] = [[serviceIconDict objectForKey:@"Interface-Small"] retain];
+		[serviceIconNames[AIServiceIconSmall] release];
+		serviceIconNames[AIServiceIconSmall] = [[serviceIconDict objectForKey:@"Interface-Small"] retain];
 
-			[serviceIconNames[AIServiceIconLarge] release];
-			serviceIconNames[AIServiceIconLarge] = [[serviceIconDict objectForKey:@"Interface-Large"] retain];
+		[serviceIconNames[AIServiceIconLarge] release];
+		serviceIconNames[AIServiceIconLarge] = [[serviceIconDict objectForKey:@"Interface-Large"] retain];
 
-			[serviceIconNames[AIServiceIconList] release];
-			serviceIconNames[AIServiceIconList] = [[serviceIconDict objectForKey:@"List"] retain];
+		[serviceIconNames[AIServiceIconList] release];
+		serviceIconNames[AIServiceIconList] = [[serviceIconDict objectForKey:@"List"] retain];
 
-			//Clear out the service icon cache
-			int i, j;
+		//Clear out the service icon cache
+		int i, j;
 
-			for (i = 0; i < NUMBER_OF_SERVICE_ICON_TYPES; i++) {
-				for (j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++) {
-					[serviceIcons[i][j] removeAllObjects];
-				}
+		for (i = 0; i < NUMBER_OF_SERVICE_ICON_TYPES; i++) {
+			for (j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++) {
+				[serviceIcons[i][j] removeAllObjects];
 			}
-
-			[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:AIServiceIconSetDidChangeNotification
-																			   object:nil];
-
-			return YES;
 		}
+
+		[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:AIServiceIconSetDidChangeNotification
+																		   object:nil];
+
+		return YES;
 	}
 
 	return NO;
@@ -206,10 +204,10 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 
 + (NSImage *)defaultServiceIconForType:(AIServiceIconType)type serviceID:(NSString *)serviceID
 {
-	AIAdium			*adium = [AIObject sharedAdiumInstance];
-	NSString		*defaultName, *defaultPath;
-	NSDictionary	*serviceIconDict;
-	NSImage			*defaultServiceIcon = nil;
+	NSObject<AIAdium>	*adium = [AIObject sharedAdiumInstance];
+	NSString			*defaultName, *defaultPath;
+	NSDictionary		*serviceIconDict;
+	NSImage				*defaultServiceIcon = nil;
 	
 	defaultName = [[adium preferenceController] defaultPreferenceForKey:KEY_SERVICE_ICON_PACK
 																   group:PREF_GROUP_APPEARANCE

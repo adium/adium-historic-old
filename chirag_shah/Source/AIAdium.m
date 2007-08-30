@@ -14,6 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AIAdium.h"
 #import "AdiumURLHandling.h"
 #import "AIAccountController.h"
 #import "AIChatController.h"
@@ -21,10 +22,10 @@
 #import "AIContentController.h"
 #import "AICoreComponentLoader.h"
 #import "AICorePluginLoader.h"
-#import "AICrashController.h"
+//#import "AICrashController.h"
 #import "AIDockController.h"
 #import "AIEmoticonController.h"
-#import "AIExceptionController.h"
+//#import "AIExceptionController.h"
 #import "AIInterfaceController.h"
 #import "AILoginController.h"
 #import "AIMenuController.h"
@@ -40,11 +41,21 @@
 #import "AIXtrasManager.h"
 #import "AdiumSetupWizard.h"
 #import "ESTextAndButtonsWindowController.h"
+#import "AIAppearancePreferences.h"
+#import "DiskImageUtilities.h"
+#import <Adium/AIAdiumProtocol.h>
+#import <Adium/AIPathUtilities.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
-#import <Adium/AIPathUtilities.h>
+#import <AIUtilities/AICalendarDateAdditions.h>
+#import <Sparkle/SUConstants.h>
+#import <Sparkle/SUUtilities.h>
+
+//For Apple Help
+#import <Carbon/Carbon.h>
 
 #define ADIUM_TRAC_PAGE						@"http://trac.adiumx.com/"
+#define ADIUM_REPORT_BUG_PAGE				@"http://trac.adiumx.com/wiki/ReportingBugs"
 #define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com/","Adium forums page. Localized only if a translated version exists.")
 #define ADIUM_FEEDBACK_PAGE					@"mailto:feedback@adiumx.com"
 
@@ -55,11 +66,159 @@
 
 static NSString	*prefsCategory;
 
+enum {
+    kNumberType,
+    kStringType,
+    kPeriodType
+};
+
+// The version comparison code here is courtesy of Kevin Ballard, adapted from MacPAD. Thanks, Kevin!
+
+int AIGetCharType(NSString *character)
+{
+    if ([character isEqualToString:@"."]) {
+        return kPeriodType;
+    } else if ([character isEqualToString:@"0"] || [character intValue] != 0) {
+        return kNumberType;
+    } else {
+        return kStringType;
+    }	
+}
+
+NSArray *AISplitVersionString(NSString *version)
+{
+    NSString *character;
+    NSMutableString *s;
+    int i, n, oldType, newType;
+    NSMutableArray *parts = [NSMutableArray array];
+    if ([version length] == 0) {
+        // Nothing to do here
+        return parts;
+    }
+    s = [[[version substringToIndex:1] mutableCopy] autorelease];
+    oldType = AIGetCharType(s);
+    n = [version length] - 1;
+    for (i = 1; i <= n; ++i) {
+        character = [version substringWithRange:NSMakeRange(i, 1)];
+        newType = AIGetCharType(character);
+        if (oldType != newType || oldType == kPeriodType) {
+            // We've reached a new segment
+			NSString *aPart = [[NSString alloc] initWithString:s];
+            [parts addObject:aPart];
+			[aPart release];
+            [s setString:character];
+        } else {
+            // Add character to string and continue
+            [s appendString:character];
+        }
+        oldType = newType;
+    }
+    
+    // Add the last part onto the array
+    [parts addObject:[NSString stringWithString:s]];
+    return parts;
+}
+
+//newVersion, currentVersion
+NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versionB)
+{
+	NSArray *partsA = AISplitVersionString(versionA);
+    NSArray *partsB = AISplitVersionString(versionB);
+    
+    NSString *partA, *partB;
+    int i, n, typeA, typeB, intA, intB;
+    
+    n = MIN([partsA count], [partsB count]);
+    for (i = 0; i < n; ++i) {
+        partA = [partsA objectAtIndex:i];
+        partB = [partsB objectAtIndex:i];
+        
+        typeA = AIGetCharType(partA);
+        typeB = AIGetCharType(partB);
+        
+        // Compare types
+        if (typeA == typeB) {
+            // Same type; we can compare
+            if (typeA == kNumberType) {
+                intA = [partA intValue];
+                intB = [partB intValue];
+                if (intA > intB) {
+                    return NSOrderedAscending;
+                } else if (intA < intB) {
+                    return NSOrderedDescending;
+                }
+            } else if (typeA == kStringType) {
+                NSComparisonResult result = [partA compare:partB];
+                if (result != NSOrderedSame) {
+					if ([partB isEqualToString:@"rc"])
+						return NSOrderedDescending;
+					if ([partA isEqualToString:@"rc"])
+						return NSOrderedAscending;
+					if ([partB isEqualToString:@"b"])
+						return NSOrderedDescending;
+					if ([partA isEqualToString:@"b"])
+						return NSOrderedAscending;
+					if ([partB isEqualToString:@"a"])
+						return NSOrderedDescending;
+					if ([partA isEqualToString:@"a"])
+						return NSOrderedAscending;
+                }
+            }
+        } else {
+            // Not the same type? Now we have to do some validity checking
+            if (typeA != kStringType && typeB == kStringType) {
+                // typeA wins
+                return NSOrderedAscending;
+            } else if (typeA == kStringType && typeB != kStringType) {
+                // typeB wins
+                return NSOrderedDescending;
+            } else {
+                // One is a number and the other is a period. The period is invalid
+                if (typeA == kNumberType) {
+                    return NSOrderedAscending;
+                } else {
+                    return NSOrderedDescending;
+                }
+            }
+        }
+    }
+    // The versions are equal up to the point where they both still have parts
+    // Lets check to see if one is larger than the other
+    if ([partsA count] != [partsB count]) {
+        // Yep. Lets get the next part of the larger
+        // n holds the value we want
+        NSString *missingPart;
+        int missingType, shorterResult, largerResult;
+        
+        if ([partsA count] > [partsB count]) {
+            missingPart = [partsA objectAtIndex:n];
+            shorterResult = NSOrderedDescending;
+            largerResult = NSOrderedAscending;
+        } else {
+            missingPart = [partsB objectAtIndex:n];
+            shorterResult = NSOrderedAscending;
+            largerResult = NSOrderedDescending;
+        }
+        
+        missingType = AIGetCharType(missingPart);
+        // Check the type
+        if (missingType == kStringType) {
+            // It's a string. Shorter version wins
+            return shorterResult;
+        } else {
+            // It's a number/period. Larger version wins
+            return largerResult;
+        }
+    }
+    
+    // The 2 strings are identical
+    return NSOrderedSame;
+}
+
 @interface AIAdium (PRIVATE)
-- (void)configureCrashReporter;
 - (void)completeLogin;
 - (void)openAppropriatePreferencesIfNeeded;
-
+- (void)configureHelp;
 - (void)deleteTemporaryFiles;
 @end
 
@@ -74,25 +233,6 @@ static NSString	*prefsCategory;
 
 	return self;
 }
-
-/*!
- * @brief Returns the identifier of this build
- */
-+ (NSString *)buildIdentifier
-{
-	return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AIBuildIdentifier"];
-}
-
-/*!
- * @brief Returns the date of this build
- */
-+ (NSDate *)buildDate
-{
-	NSTimeInterval date = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"AIBuildDate"] doubleValue];
-	
-	return [NSDate dateWithTimeIntervalSince1970:date];
-}
-
 
 //Core Controllers -----------------------------------------------------------------------------------------------------
 #pragma mark Core Controllers
@@ -181,14 +321,19 @@ static NSString	*prefsCategory;
 	queuedURLEvents = nil;
 	
 	//Load the crash reporter
+/*
 #ifdef CRASH_REPORTER
 #warning Crash reporter enabled.
     [AICrashController enableCrashCatching];
     [AIExceptionController enableExceptionCatching];
 #endif
+ */
     //Ignore SIGPIPE, which is a harmless error signal
     //sent when write() or similar function calls fail due to a broken pipe in the network connection
     signal(SIGPIPE, SIG_IGN);
+	
+	//Check if we're running from the disk image; if we are, offer to copy to /Applications
+	[DiskImageUtilities handleApplicationLaunchFromReadOnlyDiskImage];
 	
 	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self 
 												   andSelector:@selector(handleURLEvent:withReplyEvent:)
@@ -258,6 +403,8 @@ static NSString	*prefsCategory;
 	//Finish setting up the preference controller before the components and plugins load so they can read prefs 
 	[preferenceController controllerDidLoad];
 	[debugController controllerDidLoad];
+	//Safety for when we remove previously included list xtras
+	[AIAppearancePreferences migrateOldListSettingsIfNeeded];
 	[pool release];
 
 	//Plugins and components should always init last, since they rely on everything else.
@@ -310,14 +457,28 @@ static NSString	*prefsCategory;
 	
 	//If we were asked to open a log at launch, do it now
 	if (queuedLogPathToShow) {
-		[[self notificationCenter] postNotificationName:Adium_ShowLogAtPath
+		[[self notificationCenter] postNotificationName:AIShowLogAtPathNotification
 												 object:queuedLogPathToShow];
 		[queuedLogPathToShow release];
 	}
 	
 	completedApplicationLoad = YES;
 
-	[[self notificationCenter] postNotificationName:Adium_CompletedApplicationLoad object:nil];
+	[self configureHelp];
+	
+	[[NSDistributedNotificationCenter defaultCenter] addObserver:self
+														selector:@selector(systemTimeZoneDidChange:)
+															name:@"NSSystemTimeZoneDidChangeDistributedNotification"
+														  object:nil];
+	
+	//Broadcast our presence
+	NSConnection *connection = [NSConnection defaultConnection];
+	[connection setRootObject:self];
+	[connection registerName:@"com.adiumX.adiumX"];
+
+	[[self notificationCenter] postNotificationName:AIApplicationDidFinishLoadingNotification object:nil];
+	[[NSDistributedNotificationCenter defaultCenter]  postNotificationName:AIApplicationDidFinishLoadingNotification object:nil];
+
 	[pool release];
 }
 
@@ -327,7 +488,7 @@ static NSString	*prefsCategory;
 	//Take no action if we didn't complete the application load
 	if (!completedApplicationLoad) return;
 
-	[[self notificationCenter] postNotificationName:Adium_WillTerminate object:nil];
+	[[self notificationCenter] postNotificationName:AIAppWillTerminateNotification object:nil];
 	
 	//Close the preference window before we shut down the plugins that compose it
 	[preferenceController closePreferenceWindow:nil];
@@ -371,12 +532,8 @@ static NSString	*prefsCategory;
     [[LNAboutBoxController aboutBoxController] showWindow:nil];
 }
 
-//Show our help
-- (IBAction)showHelp:(id)sender{
-    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_TRAC_PAGE]];
-}
 - (IBAction)reportABug:(id)sender{
-    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_TRAC_PAGE]];
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_REPORT_BUG_PAGE]];
 }
 - (IBAction)sendFeedback:(id)sender{
     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_FEEDBACK_PAGE]];
@@ -442,8 +599,45 @@ static NSString	*prefsCategory;
 	}
 }
 
+- (void)confirmQuitQuestion:(NSNumber *)number userInfo:(id)info
+{
+	AITextAndButtonsReturnCode result = [number intValue];
+	switch(result)
+	{
+		case AITextAndButtonsDefaultReturn:
+			//Quit
+			[NSApp terminate:nil];
+			break;
+		case AITextAndButtonsOtherReturn:
+			//Don't Ask Again
+			[[self preferenceController] setPreference:[NSNumber numberWithBool:NO]
+												forKey:@"Confirm Quit"
+												 group:@"Confirmations"];
+			[NSApp terminate:nil];
+			break;
+		default:
+			//Cancel
+			break;
+	}
+}
+
+
 //Last call to perform actions before the app shuffles off its mortal coil and joins the bleeding choir invisible
 - (IBAction)confirmQuit:(id)sender
+{
+	/* We may have received a message or begun a file transfer while the menu was open, if this is reached via a menu item.
+	 * Wait one last run loop before beginning to quit so that activity can be registered, since menus run in
+	 * a different run loop mode, NSEventTrackingRunLoopMode.
+	 */
+	[NSObject cancelPreviousPerformRequestsWithTarget:self
+											 selector:@selector(reallyConfirmQuit)
+											   object:nil];
+	[self performSelector:@selector(reallyConfirmQuit)
+			   withObject:nil
+			   afterDelay:0];
+}
+
+- (void)reallyConfirmQuit
 {
 	BOOL allowQuit = YES;
 	if (([chatController unviewedContentCount] > 0) &&
@@ -477,6 +671,21 @@ static NSString	*prefsCategory;
 		allowQuit = NO;
 	}
 	
+	if (allowQuit &&
+		[[preferenceController preferenceForKey:@"Confirm Quit"
+											group:@"Confirmations"]  boolValue]) {
+		[[self interfaceController] displayQuestion:AILocalizedString(@"Confirm Quit", nil)
+									withDescription:AILocalizedString(@"Are you sure you want to quit Adium?", nil)
+									withWindowTitle:nil
+									  defaultButton:AILocalizedString(@"Quit", nil)
+									alternateButton:AILocalizedString(@"Cancel", nil)
+										otherButton:AILocalizedString(@"Don't ask again", nil)
+											 target:self
+										   selector:@selector(confirmQuitQuestion:userInfo:)
+										   userInfo:nil];
+		allowQuit = NO;
+	}
+	
 	if (allowQuit) {
 		[NSApp terminate:nil];
 	}
@@ -496,10 +705,11 @@ static NSString	*prefsCategory;
 	int					buttonPressed;
 	
 	if (([extension caseInsensitiveCompare:@"AdiumLog"] == NSOrderedSame) ||
-		([extension caseInsensitiveCompare:@"AdiumHtmlLog"] == NSOrderedSame)) {
+		([extension caseInsensitiveCompare:@"AdiumHtmlLog"] == NSOrderedSame) ||
+		([extension caseInsensitiveCompare:@"chatlog"] == NSOrderedSame)) {
 		if (completedApplicationLoad) {
 			//Request display of the log immediately if Adium is ready
-			[[self notificationCenter] postNotificationName:Adium_ShowLogAtPath
+			[[self notificationCenter] postNotificationName:AIShowLogAtPathNotification
 													 object:filename];
 		} else {
 			//Queue the request until Adium is done launching if Adium is not ready
@@ -515,59 +725,85 @@ static NSString	*prefsCategory;
 	[prefsCategory release]; prefsCategory = nil;
     [advancedPrefsName release]; advancedPrefsName = nil;
 
-    //Specify a file extension and a human-readable description of what the files of this type do
-    if (([extension caseInsensitiveCompare:@"AdiumPlugin"] == NSOrderedSame) ||
-		([extension caseInsensitiveCompare:@"AdiumLibgaimPlugin"] == NSOrderedSame)) {
+    /* Specify a file extension and a human-readable description of what the files of this type do
+	 * We reassign the extension so that regardless of its original case we end up with the case we want; this allows installation of
+	 * xtras to proceed properly on case-sensitive file systems.
+	 */
+    if ([extension caseInsensitiveCompare:@"AdiumPlugin"] == NSOrderedSame) {
         destination = [AISearchPathForDirectoriesInDomains(AIPluginsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
         //Plugins haven't been loaded yet if the application isn't done loading, so only request a restart if it has finished loading already 
         requiresRestart = completedApplicationLoad;
         fileDescription = AILocalizedString(@"Adium plugin",nil);
+		extension = @"AdiumPlugin";
 
-    } else if ([extension caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame) {
+    } else if ([extension caseInsensitiveCompare:@"AdiumLibpurplePlugin"] == NSOrderedSame) {
+        destination = [AISearchPathForDirectoriesInDomains(AIPluginsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
+        //Plugins haven't been loaded yet if the application isn't done loading, so only request a restart if it has finished loading already 
+        requiresRestart = completedApplicationLoad;
+        fileDescription = AILocalizedString(@"Adium plugin",nil);
+		extension = @"AdiumLibpurplePlugin";
+
+	} else if ([extension caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIDockIconsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
         fileDescription = AILocalizedString(@"dock icon set",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
-		prefsCategory = @"appearance";
+		prefsCategory = @"Appearance";
+		extension = @"AdiumIcon";
 
 	} else if ([extension caseInsensitiveCompare:@"AdiumSoundset"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AISoundsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"sound set",nil);
 		prefsButton = AILocalizedString(@"Open Event Prefs",nil);
-		prefsCategory = @"events";
+		prefsCategory = @"Events";
+		extension = @"AdiumSoundset";
 
 	} else if ([extension caseInsensitiveCompare:@"AdiumEmoticonset"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIEmoticonsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"emoticon set",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
-		prefsCategory = @"appearance";
-		
+		prefsCategory = @"Appearance";
+		extension = @"AdiumEmoticonset";
+
 	} else if ([extension caseInsensitiveCompare:@"AdiumScripts"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIScriptsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"AppleScript set",nil);
-		
+		extension = @"AdiumScripts";
+
 	} else if ([extension caseInsensitiveCompare:@"AdiumMessageStyle"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIMessageStylesDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"message style",nil);
 		prefsButton = AILocalizedString(@"Open Message Prefs",nil);
-		prefsCategory = @"messages";
+		prefsCategory = @"Messages";
+		extension = @"AdiumMessageStyle";
+
 	} else if ([extension caseInsensitiveCompare:@"ListLayout"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIContactListDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"contact list layout",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
-		prefsCategory = @"appearance";
-		
+		prefsCategory = @"Appearance";
+		extension = @"ListLayout";
+
 	} else if ([extension caseInsensitiveCompare:@"ListTheme"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIContactListDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"contact list theme",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
-		prefsCategory = @"appearance";
-		
+		prefsCategory = @"Appearance";
+		extension = @"ListTheme";
+
 	} else if ([extension caseInsensitiveCompare:@"AdiumServiceIcons"] == NSOrderedSame) {
 		destination = [AISearchPathForDirectoriesInDomains(AIServiceIconsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 		fileDescription = AILocalizedString(@"service icons",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
-		prefsCategory = @"appearance";
-		
+		prefsCategory = @"Appearance";
+		extension = @"AdiumServiceIcons";
+
+	} else if ([extension caseInsensitiveCompare:@"AdiumMenuBarIcons"] == NSOrderedSame) {
+		destination = [AISearchPathForDirectoriesInDomains(AIMenuBarIconsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
+		fileDescription = AILocalizedString(@"menu bar icons",nil);
+		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
+		prefsCategory = @"Appearance";
+		extension = @"AdiumMenuBarIcons";
+
 	} else if ([extension caseInsensitiveCompare:@"AdiumStatusIcons"] == NSOrderedSame) {
 		NSString	*packName = [[filename lastPathComponent] stringByDeletingPathExtension];
 /*
@@ -582,7 +818,9 @@ static NSString	*prefsCategory;
 			destination = [AISearchPathForDirectoriesInDomains(AIStatusIconsDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
 			fileDescription = AILocalizedString(@"status icons",nil);
 			prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
-			prefsCategory = @"appearance";
+			prefsCategory = @"Appearance";
+			extension = @"AdiumStatusIcons";
+
 		} else {
 			errorMessage = [NSString stringWithFormat:AILocalizedString(@"%@ is the name of the default status icon pack; this pack therefore can not be installed.",nil),
 				packName];
@@ -590,13 +828,15 @@ static NSString	*prefsCategory;
 	}
 
     if (destination) {
-        NSString    *destinationFilePath = [destination stringByAppendingPathComponent:[filename lastPathComponent]];
-        
+        NSString    *destinationFilePath;
+		destinationFilePath = [destination stringByAppendingPathComponent:[[filename lastPathComponent] stringByDeletingPathExtension]];
+		destinationFilePath = [destinationFilePath stringByAppendingPathExtension:extension];
+
         NSString	*alertTitle = nil;
         NSString	*alertMsg = nil;
 		NSString	*format;
 		
-		if ([filename isEqualToString:destinationFilePath]) {
+		if ([filename caseInsensitiveCompare:destinationFilePath] == NSOrderedSame) {
 			// Don't copy the file if it's already in the right place!!
 			alertTitle= AILocalizedString(@"Installation Successful","Title of installation successful window");
 			
@@ -639,7 +879,7 @@ static NSString	*prefsCategory;
 			}
 		}
 		
-		[[self notificationCenter] postNotificationName:Adium_Xtras_Changed
+		[[self notificationCenter] postNotificationName:AIXtrasDidChangeNotification
 												 object:[[filename lastPathComponent] pathExtension]];
 		
         buttonPressed = NSRunInformationalAlertPanel(alertTitle,alertMsg,nil,prefsButton,nil);
@@ -683,11 +923,7 @@ static NSString	*prefsCategory;
 - (void)openAppropriatePreferencesIfNeeded
 {
 	if (prefsCategory) {
-		if ([prefsCategory isEqualToString:@"advanced"]) {
-			[preferenceController openPreferencesToAdvancedPane:advancedPrefsName];
-		} else {
-			[preferenceController openPreferencesToCategoryWithIdentifier:prefsCategory];
-		}
+		[preferenceController openPreferencesToCategoryWithIdentifier:prefsCategory];
 		
 		[prefsCategory release]; prefsCategory = nil;
 	}
@@ -937,6 +1173,16 @@ static NSString	*prefsCategory;
     return nil;	
 }
 
+- (void)systemTimeZoneDidChange:(NSNotification *)inNotification
+{
+	[NSTimeZone resetSystemTimeZone];
+}
+
+- (NSApplication *)application
+{
+	return [NSApplication sharedApplication];
+}
+
 #pragma mark Scripting
 - (BOOL)application:(NSApplication *)sender delegateHandlesKey:(NSString *)key {
 	BOOL handleKey = NO;
@@ -950,20 +1196,122 @@ static NSString	*prefsCategory;
 	return handleKey;
 }
 
+#pragma mark Help
+- (void)configureHelp
+{
+	CFBundleRef myApplicationBundle;
+	CFURLRef myBundleURL;
+	FSRef myBundleRef;
+
+	if ((myApplicationBundle = CFBundleGetMainBundle())) {
+		myBundleURL = CFBundleCopyBundleURL(myApplicationBundle);
+
+		if (CFURLGetFSRef(myBundleURL, &myBundleRef)) {
+			AHRegisterHelpBook(&myBundleRef);
+		}
+	}
+}
+
 #pragma mark Sparkle Delegate Methods
 
+#define BETA_UPDATE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"beta", @"value", @"Beta or Release Versions", @"visibleValue", nil]
+#define RELEASE_UPDATE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"release", @"value", @"Release Versions Only", @"visibleValue", nil]
+
+#ifdef BETA_RELEASE
+//For a beta release, always use the beta appcast
+#define UPDATE_TYPE_DICT BETA_UPDATE_DICT
+#else
+//For a release, use the beta appcast if AIAlwaysUpdateToBetas is enabled; otherwise, use the release appcast
+#define UPDATE_TYPE_DICT ([[NSUserDefaults standardUserDefaults] boolForKey:@"AIAlwaysUpdateToBetas"] ? BETA_UPDATE_DICT : RELEASE_UPDATE_DICT)
+#endif
+
+//The first generation ended with 1.0.5 and 1.1. Our Sparkle Plus up to that point had a bug that left it unable to properly handle the sparkle:minimumSystemVersion element.
+//The second generation began with 1.0.6 and 1.1.1, with a Sparkle Plus that can handle that element.
+#define UPDATE_GENERATION_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"generation", @"key", @"Appcast generation number", @"visibleKey", @"2", @"value", @"2", @"visibleValue", nil]
+
 /* This method gives the delegate the opportunity to customize the information that will
- * be included with update checks.  Add or remove items from the dictionary as desired.
- * Each entry in profileInfo is an NSDictionary with the following keys:
- * ⁃ 	key: 		The key to be used  when reporting data to the server
- * ⁃ 	visibleKey:	Alternate version of key to be used in UI displays of profile information
- * ⁃ 	value:		Value to be used when reporting data to the server
- * ⁃ 	visibleValue:	Alternate version of value to be used in UI displays of profile information.
- */
-- (NSMutableDictionary *)updaterCustomizeProfileInfo:(NSMutableDictionary *)profileInfo
+* be included with update checks.  Add or remove items from the dictionary as desired.
+* Each entry in profileInfo is an NSDictionary with the following keys:
+*		key: 		The key to be used  when reporting data to the server
+*		visibleKey:	Alternate version of key to be used in UI displays of profile information
+*		value:		Value to be used when reporting data to the server
+*		visibleValue:	Alternate version of value to be used in UI displays of profile information.
+*/
+- (NSMutableArray *)updaterCustomizeProfileInfo:(NSMutableArray *)profileInfo
 {
-	//we can add/remove information to/from this as needed, for now we just return it intact
+	NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+	
+	//If we're not sending profile information, or if it hasn't been long enough since the last profile submission, return just the type of update we're looking for and the generation number.
+	BOOL sendProfileInfo = [[defaults objectForKey:SUSendProfileInfoKey] boolValue];
+	int now = [[NSCalendarDate date] dayOfCommonEra];
+	BOOL lastSubmissionWasLongEnoughAgo = (abs([defaults integerForKey:@"AILastSubmittedProfileDate2"] - now) >= 7);
+	if (!(sendProfileInfo && lastSubmissionWasLongEnoughAgo)) {
+		[profileInfo removeAllObjects];
+	} else {
+		[defaults setInteger:now forKey:@"AILastSubmittedProfileDate2"];
+		
+		NSString *value = ([defaults boolForKey:@"AIHasSentSparkleProfileInfo"]) ? @"no" : @"yes";
+
+		NSDictionary *entry = [NSDictionary dictionaryWithObjectsAndKeys:
+			@"FirstSubmission", @"key", 
+			@"First Time Submitting Profile Information", @"visibleKey",
+			value, @"value",
+			value, @"visibleValue",
+			nil];
+		
+		[profileInfo addObject:entry];
+		
+		[defaults setBool:YES forKey:@"AIHasSentSparkleProfileInfo"];
+		
+		/*************** Include info about what IM services are used ************/
+		NSMutableString *accountInfo = [NSMutableString string];
+		NSCountedSet *condensedAccountInfo = [NSCountedSet set];
+		NSEnumerator *accountEnu = [[[self accountController] accounts] objectEnumerator];
+		AIAccount *account = nil;
+		while ((account = [accountEnu nextObject])) {
+			NSString *serviceID = [account serviceID];
+			[accountInfo appendFormat:@"%@, ", serviceID];
+			if([serviceID isEqualToString:@"Yahoo! Japan"]) serviceID = @"YJ";
+			[condensedAccountInfo addObject:[NSString stringWithFormat:@"%@", [serviceID substringToIndex:2]]]; 
+		}
+		
+		NSMutableString *accountInfoString = [NSMutableString string];
+		NSEnumerator *infoEnu = [[[condensedAccountInfo allObjects] sortedArrayUsingSelector:@selector(compare:)] objectEnumerator];
+		while ((value = [infoEnu nextObject]))
+			[accountInfoString appendFormat:@"%@%d", value, [condensedAccountInfo countForObject:value]];
+		
+		entry = [NSDictionary dictionaryWithObjectsAndKeys:
+			@"IMServices", @"key", 
+			@"IM Services Used", @"visibleKey",
+			accountInfoString, @"value",
+			accountInfo, @"visibleValue",
+			nil];
+		[profileInfo addObject:entry];
+	}
+
+	[profileInfo addObject:UPDATE_GENERATION_DICT];
+	[profileInfo addObject:UPDATE_TYPE_DICT];
 	return profileInfo;
+}
+
+- (NSComparisonResult) compareVersion:(NSString *)newVersion toVersion:(NSString *)currentVersion
+{
+	//Allow updating from betas to anything, and anything to non-betas
+	//Careful! a15 is fine, but A15 is not, because it would hit the A in Adium.
+	NSCharacterSet *guardCharacters = [NSCharacterSet characterSetWithCharactersInString:@"abBrcRC"];
+	
+	/*
+	 * Use AICustomVersionComparison() if:
+	 *	 - Current version is an alpha/beta/release candidate OR
+	 *   - New version is *not* an alpha/beta/release candidate OR
+	 *   - User has AIAlwaysUpdateToBetas enabled
+	 */
+	if(([currentVersion rangeOfCharacterFromSet:guardCharacters].location != NSNotFound) || 
+	   ([newVersion rangeOfCharacterFromSet:guardCharacters].location == NSNotFound) ||
+	   [[NSUserDefaults standardUserDefaults] boolForKey:@"AIAlwaysUpdateToBetas"])
+		return AICustomVersionComparison(newVersion, currentVersion); //handles rc > b > a properly
+	else 
+		return NSOrderedSame;
 }
 
 @end

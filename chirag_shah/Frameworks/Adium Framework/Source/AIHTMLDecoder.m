@@ -19,6 +19,7 @@
 
 #import <Adium/AIHTMLDecoder.h>
 
+#import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
@@ -33,13 +34,17 @@
 #import <Adium/ESFileWrapperExtension.h>
 #import <Adium/AIXMLElement.h>
 
+#import <FriBidi/NSString-FBAdditions.h>
+
+#include <CoreServices/CoreServices.h>
+
 int HTMLEquivalentForFontSize(int fontSize);
 
 @interface AIHTMLDecoder (PRIVATE)
-- (void)processFontTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
+- (NSDictionary *)processFontTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (void)processBodyTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (void)processLinkTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
-- (void)processSpanTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
+- (NSDictionary *)processSpanTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (void)processDivTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (NSAttributedString *)processImgTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (BOOL)appendImage:(NSImage *)attachmentImage
@@ -47,7 +52,10 @@ int HTMLEquivalentForFontSize(int fontSize);
 		   toString:(NSMutableString *)string
 		   withName:(NSString *)inName 
 		 imageClass:(NSString *)imageClass
-		 imagesPath:(NSString *)imagesPath;
+		 imagesPath:(NSString *)imagesPath
+	  uniqueifyHTML:(BOOL)uniqueifyHTML;
+
+- (void)restoreAttributesFromDict:(NSDictionary *)inAttributes intoAttributes:(AITextAttributes *)textAttributes;
 @end
 
 @interface NSString (AIHTMLDecoderAdditions)
@@ -142,7 +150,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 #pragma mark Work methods
 
-/*
+/*!
  * @brief Parse arguments in a string
  *
  * The arguments are returned in an NSDictionary whose keys are all-lowercase
@@ -213,12 +221,26 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	//If the text is right-to-left, enclose all our HTML in an rtl DIV tag
 	BOOL	rightToLeft = NO;
 	if (!thingsToInclude.simpleTagsOnly) {
-		if ((messageLength > 0) &&
-			([[inMessage attribute:NSParagraphStyleAttributeName
-						   atIndex:0
-					effectiveRange:nil] baseWritingDirection] == NSWritingDirectionRightToLeft)) {
-			[string appendString:@"<DIV dir=\"rtl\">"];
-			rightToLeft = YES;
+		if (messageLength > 0) {
+			//First, attempt to figure the base writing direction of our message based on its content
+			NSWritingDirection	dir = [inMessageString baseWritingDirection];
+
+			//If that doesn't work, try using the writing direction of the input field
+			if (dir == NSWritingDirectionNatural) {
+				dir = [[inMessage attribute:NSParagraphStyleAttributeName
+									atIndex:0
+							 effectiveRange:nil] baseWritingDirection];
+				
+				//If the input field's writing direction is NSWritingDirectionNatural, we shall figure what it really means.
+				//The natural writing direction is determined by the system based on the current active localization of the app.
+				if (dir == NSWritingDirectionNatural)
+					dir = [NSParagraphStyle defaultWritingDirectionForLanguage:nil];
+			}
+			
+			if (dir == NSWritingDirectionRightToLeft) {
+				[string appendString:@"<DIV dir=\"rtl\">"];
+				rightToLeft = YES;
+			}
 		}
 	}	
 	
@@ -311,7 +333,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 			//Size
 			if (!thingsToInclude.simpleTagsOnly) {
-				[string appendString:[NSString stringWithFormat:@" ABSZ=\"%i\" SIZE=\"%i\"", (int)pointSize, HTMLEquivalentForFontSize((int)pointSize)]];
+				[string appendString:[NSString stringWithFormat:@" ABSZ=%i SIZE=%i", (int)pointSize, HTMLEquivalentForFontSize((int)pointSize)]];
 				currentSize = pointSize;
 			}
 
@@ -429,11 +451,13 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					/* If we have a path to which we want to save any images and either
 					 *		the attachment should save such images OR
 					 *		the attachment is a plain NSTextAttachment and so doesn't respond to shouldSaveImageForLogging
+					 *
+					 * If we should save the image, we'll also tell the appendImage method to uniquify the HTML so it'll load
+					 * from disk each time it's displayed, preventing a WebView from caching it.
 					 */						
 					BOOL shouldSaveImage = (imagesSavePath &&
 											((![attachment respondsToSelector:@selector(shouldSaveImageForLogging)] ||
 											  [attachment shouldSaveImageForLogging])));
-					
 					/* We want attachments as images where appropriate. We either want all images (we don't want only outgoing images) or
 					 * this attachment may be sent as an image rather than as text.
 					 */						
@@ -452,12 +476,18 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 										nil);
 						imageName = [attachment string];
 						
-						if ([attachment respondsToSelector:@selector(image)]) {
-							image = [attachment performSelector:@selector(image)];
-						} else if ([[attachment attachmentCell] respondsToSelector:@selector(image)]) {
-							image = [[attachment attachmentCell] performSelector:@selector(image)];
-						} else {
-							image = nil;
+						image = nil;
+
+						/*
+							Although PDFs are treated as images on OSX, they can cause issues on other platforms.
+							Also, moreso than most other images, they can be too large to display inline.
+						 */
+						if(!existingPath || ![[existingPath pathExtension] isEqualToString:@"pdf"])
+						{
+							if ([attachment respondsToSelector:@selector(image)])
+								image = [attachment performSelector:@selector(image)];
+							else if ([[attachment attachmentCell] respondsToSelector:@selector(image)])
+								image = [[attachment attachmentCell] performSelector:@selector(image)];
 						}
 
 						if (existingPath || image) {
@@ -466,7 +496,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 													 toString:string
 													 withName:imageName
 												   imageClass:[attachment imageClass]
-												   imagesPath:(shouldIncludeImageWithoutSaving ? imagesSavePath : nil)];
+												   imagesPath:(shouldIncludeImageWithoutSaving ? imagesSavePath : nil)
+												uniqueifyHTML:shouldSaveImage];
 							
 							//We were succesful appending the image tag, so release this chunk
 							[chunk release]; chunk = nil;	
@@ -492,7 +523,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 			//Escape special HTML characters.
 			fullRange = NSMakeRange(0, [chunk length]);
-			
+
 			replacements = [chunk replaceOccurrencesOfString:@"&" withString:@"&amp;"
 													 options:NSLiteralSearch range:fullRange];
 			fullRange.length += (replacements * 4);
@@ -544,13 +575,10 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			 * character, replacing any non-ascii characters with the designated SGML escape sequence.
 			 */
 			if (thingsToInclude.nonASCII) {
-				unsigned i;
 				unsigned length = [chunk length];
-				for (i = 0; i < length; i++) {
+				for (unsigned i = 0; i < length; i++) {
 					unichar currentChar = [chunk characterAtIndex:i];
-					if (currentChar > 127) {
-						[string appendFormat:@"&#%d;", currentChar];
-					} else if (currentChar == '\r') {
+					if (currentChar == '\r') {
 						/* \r\n is a single line break, so encode it as such. If we have an \r followed by a \n,
 						 * skip the \n
 						 */
@@ -561,7 +589,31 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 						
 					} else if (currentChar == '\n') {
 						[string appendString:@"<BR>"];
-						
+					} else if (currentChar < 32) {
+						//Control character.
+						[string appendFormat:@"&#x%x;", currentChar];
+
+					} else if (currentChar >= 127) {
+						if (!UCIsSurrogateHighCharacter(currentChar)) {
+							[string appendFormat:@"&#x%x;", currentChar];
+
+						} else {
+							//currentChar is the high character of a surrogate pair.
+							unichar lowSurrogate = 0xFFFF;
+							if ((i + 1) < length) {
+								lowSurrogate = [chunk characterAtIndex:++i];
+							}
+
+							if (!UCIsSurrogateLowCharacter(lowSurrogate)) {
+								//In case you're wondering: 0xFFFF is not a low surrogate. (Nor anything else, for that matter.)
+								AILog(@"AIHTMLDecoder: Got high surrogate of surrogate pair, but there's no low surrogate after it. This is at index %u of chunk with length %u. The chunk is: %@", i, length, chunk);
+
+							} else {
+								UnicodeScalarValue codePoint = UCGetUnicodeScalarValueForSurrogatePair(/*highSurrogate*/ currentChar, lowSurrogate);
+								[string appendFormat:@"&#x%x;", codePoint];
+							}
+						}
+
 					} else {
 						//unichar characters may have a length of up to 3; be careful to get the whole character
 						NSRange composedCharRange = [chunk rangeOfComposedCharacterSequenceAtIndex:i];
@@ -666,7 +718,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	BOOL addElementContentToTopElement = YES;
 	AIXMLElement *thisElement = moreThanJustAnImage ? [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:elementName] : nil;
 	if (linkValue) {
-		[thisElement setValue:linkValue forKey:@"href"];
+		[thisElement setValue:linkValue forAttribute:@"href"];
 	}
 
 	if (attachmentValue) {
@@ -690,18 +742,18 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 			NSTextAttachmentCell *cell = (NSTextAttachmentCell *)[attachmentValue attachmentCell];
 			NSSize size = [cell cellSize];
-			[imageElement setValue:[NSNumber numberWithFloat:size.width]  forKey:@"width"];
-			[imageElement setValue:[NSNumber numberWithFloat:size.height] forKey:@"height"];
+			[imageElement setValue:[NSNumber numberWithFloat:size.width] forAttribute:@"width"];
+			[imageElement setValue:[NSNumber numberWithFloat:size.height] forAttribute:@"height"];
 
 			NSString *path = [[attachmentValue fileWrapper] filename];
 			//XXX If !path, write the image to the save path passed to -encodeStrictXHTML:imagesPath:.
 			if (path) {
 				NSURL *fileURL = [NSURL fileURLWithPath:path];
-				[imageElement setValue:fileURL forKey:@"src"];
+				[imageElement setValue:fileURL forAttribute:@"src"];
 			}
 
 			if (elementContent && [elementContent length]) {
-				[imageElement setValue:elementContent forKey:@"alt"];
+				[imageElement setValue:elementContent forAttribute:@"alt"];
 			}
 
 			if (thisElement) {
@@ -717,7 +769,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 	NSString *CSSString = [NSAttributedString CSSStringForTextAttributes:attributes];
 	if (CSSString && [CSSString length]) {
-		[thisElement setValue:CSSString forKey:@"style"];
+		[thisElement setValue:CSSString forAttribute:@"style"];
 	}
 
 	if (outAddElementContentToTopElement) {
@@ -771,7 +823,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	NSMutableArray *elementStack = [NSMutableArray array];
 	NSMutableArray *attributeNamesStack = [NSMutableArray array];
 
-	//Root element: includeHeaders ? <html> : rightToLeft ? <div> : <p>
+	//Root element: includeHeaders ? <html> : <div>
 
 	if (thingsToInclude.headers) {
 		[elementStack addObject:[AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"html"]];
@@ -788,29 +840,24 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 									 atIndex:0
 							  effectiveRange:NULL]))
 		{
-			[bodyElement setValue:[@"background-color: " stringByAppendingString:[pageColor CSSRepresentation]] forKey:@"style"];
+			[bodyElement setValue:[@"background-color: " stringByAppendingString:[pageColor CSSRepresentation]] forAttribute:@"style"];
 		}
 	}
 
+	AIXMLElement *divElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"div"];
 	//If the text is right-to-left, enclose all our HTML in an rtl div tag
 	if ((messageLength > 0) &&
 		([[inMessage attribute:NSParagraphStyleAttributeName
 					   atIndex:0
 				effectiveRange:nil] baseWritingDirection] == NSWritingDirectionRightToLeft))
 	{
-		AIXMLElement *divElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"div"];
-		[divElement setValue:@"rtl" forKey:@"dir"];
-		[[elementStack lastObject] addObject:divElement];
-		[elementStack addObject:divElement];
-		[attributeNamesStack addObject:emptySet];
+		[divElement setValue:@"rtl" forAttribute:@"dir"];
 	}
-
-	AIXMLElement *paragraphElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"p"];
-	[[elementStack lastObject] addObject:paragraphElement];
-	[elementStack addObject:paragraphElement];
+	[[elementStack lastObject] addObject:divElement];
+	[elementStack addObject:divElement];
 	[attributeNamesStack addObject:emptySet];
 
-	NSMutableSet *CSSCapableAttributes = [[NSAttributedString CSSCapableAttributesSet] mutableCopy];
+	NSMutableSet *CSSCapableAttributes = [[[NSAttributedString CSSCapableAttributesSet] mutableCopy] autorelease];
 	[CSSCapableAttributes addObject:NSLinkAttributeName];
 	NSSet *CSSCapableAttributesWithNoAttachment = [NSSet setWithSet:CSSCapableAttributes];
 	[CSSCapableAttributes addObject:NSAttachmentAttributeName];
@@ -980,17 +1027,20 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 - (NSAttributedString *)decodeHTML:(NSString *)inMessage withDefaultAttributes:(NSDictionary *)inDefaultAttributes
 {
+	if (!inMessage) return [[[NSAttributedString alloc] init] autorelease];
+
 	NSScanner					*scanner;
 	static NSCharacterSet		*tagCharStart = nil, *tagEnd = nil, *charEnd = nil, *absoluteTagEnd = nil;
 	NSString					*chunkString, *tagOpen;
 	NSMutableAttributedString	*attrString;
 	AITextAttributes			*textAttributes;
-	
+	NSMutableArray				*spanTagChangedAttributesQueue = [NSMutableArray array];
+	NSMutableArray				*fontTagChangedAttributesQueue = [NSMutableArray array];
+
 	//Reset the div and span ivars
 	send = NO;
 	receive = NO;
 	inDiv = NO;
-	inLogSpan = NO;
 
     //set up
 	if (inDefaultAttributes) {
@@ -1082,6 +1132,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 						[scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
 
+						//XXX what's going on here?
 						[textAttributes setTextColor:[NSColor blackColor]];
 
 					//DIV
@@ -1097,8 +1148,6 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 					//LINK
 					} else if ([chunkString caseInsensitiveCompare:@"A"] == NSOrderedSame) {
-						//[textAttributes setUnderline:YES];
-						//[textAttributes setTextColor:[NSColor blueColor]];
 						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
 							[self processLinkTagArgs:[self parseArguments:chunkString] 
 										  attributes:textAttributes]; //Process the linktag's contents
@@ -1119,27 +1168,36 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					//Font
 					} else if ([chunkString caseInsensitiveCompare:@"FONT"] == NSOrderedSame) {
 						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
+							NSDictionary *changedAttributes;
+
 							//Process the font tag's contents
-							[self processFontTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
+							changedAttributes = [self processFontTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
+							[fontTagChangedAttributesQueue addObject:(changedAttributes ? changedAttributes : [NSDictionary dictionary])];
 						}
 
 					} else if ([chunkString caseInsensitiveCompare:@"/FONT"] == NSOrderedSame) {
-						[textAttributes resetFontAttributes];
+						int changedAttributesCount = [fontTagChangedAttributesQueue count];
+						if (changedAttributesCount) {
+							[self restoreAttributesFromDict:[fontTagChangedAttributesQueue lastObject] intoAttributes:textAttributes];
+							[fontTagChangedAttributesQueue removeObjectAtIndex:([fontTagChangedAttributesQueue count] - 1)];	
+						}
 						
 					//span
 					} else if ([chunkString caseInsensitiveCompare:@"SPAN"] == NSOrderedSame) {
 						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
-							[self processSpanTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
+							NSDictionary *changedAttributes;
+
+							changedAttributes = [self processSpanTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
+							[spanTagChangedAttributesQueue addObject:(changedAttributes ? changedAttributes : [NSDictionary dictionary])];
 						}
 
 					} else if ([chunkString caseInsensitiveCompare:@"/SPAN"] == NSOrderedSame) {
-						if (inLogSpan) {
-							[textAttributes setTextColor:[NSColor blackColor]];
-							[textAttributes setFontFamily:@"Helvetica"];
-							[textAttributes setFontSize:12];
-							inLogSpan = NO;
+						int changedAttributesCount = [spanTagChangedAttributesQueue count];
+						if (changedAttributesCount) {
+							[self restoreAttributesFromDict:[spanTagChangedAttributesQueue lastObject] intoAttributes:textAttributes];
+							[spanTagChangedAttributesQueue removeObjectAtIndex:([spanTagChangedAttributesQueue count] - 1)];	
 						}
-						
+
 					//Line Break
 					} else if ([chunkString caseInsensitiveCompare:@"BR"] == NSOrderedSame || 
 							 [chunkString caseInsensitiveCompare:@"BR/"] == NSOrderedSame ||
@@ -1210,7 +1268,9 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
 							NSAttributedString *attachString = [self processImgTagArgs:[self parseArguments:chunkString] 
 																			attributes:textAttributes];
-							[attrString appendAttributedString:attachString];
+							if (attachString) {
+								[attrString appendAttributedString:attachString];
+							}
 						}
 					} else if ([chunkString caseInsensitiveCompare:@"/IMG"] == NSOrderedSame) {
 						//just ignore </img> if we find it
@@ -1239,7 +1299,12 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					}
 				}
 
-				if (validTag) { //Skip over the end tag character '>'
+				//Skip over the end tag character '>' and any other characters we want to skip
+				if (validTag) {
+					//Get to the > if we're not there already, as will happen with XML namespacing...
+					[scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:NULL];
+
+					//And skip it
 					if (![scanner isAtEnd]) {
 						[scanner setScanLocation:[scanner scanLocation]+1];
 						
@@ -1249,7 +1314,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 							
 							charSetToSkip = [NSCharacterSet characterSetWithCharactersInString:charactersToSkipAfterThisTag];
 							[scanner scanCharactersFromSet:charSetToSkip
-												intoString:nil];
+												intoString:NULL];
 						}
 					}
 					
@@ -1351,15 +1416,34 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
  *  its specification to a text-attributes object.
  */
 
-//Process the contents of a font tag
-- (void)processFontTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
+- (void)restoreAttributesFromDict:(NSDictionary *)inAttributes intoAttributes:(AITextAttributes *)textAttributes
 {
-	NSEnumerator 	*enumerator;
-	NSString		*arg;
+	NSEnumerator *enumerator = [inAttributes keyEnumerator];
+	NSString	 *key;
+	
+	while ((key = [enumerator nextObject])) {
+		id value = [inAttributes objectForKey:key];
+		SEL selector = NSSelectorFromString(key);
+		if (value == [NSNull null]) value = nil;
+		
+		[textAttributes performSelector:selector
+							 withObject:value];
+	}
+}
+
+//Process the contents of a font tag
+- (NSDictionary *)processFontTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
+{
+	NSEnumerator		*enumerator;
+	NSString			*arg;
+	NSMutableDictionary	*originalAttributes = [NSMutableDictionary dictionary];
 
 	enumerator = [[inArgs allKeys] objectEnumerator];
 	while ((arg = [enumerator nextObject])) {
 		if ([arg caseInsensitiveCompare:@"face"] == NSOrderedSame) {
+			[originalAttributes setObject:([textAttributes fontFamily] ? (id)[textAttributes fontFamily] : (id)[NSNull null])
+								   forKey:@"setFontFamily:"];
+
 			[textAttributes setFontFamily:[inArgs objectForKey:arg]];
 
 		} else if ([arg caseInsensitiveCompare:@"size"] == NSOrderedSame) {
@@ -1369,33 +1453,56 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				static int pointSizes[] = { 9, 10, 12, 14, 18, 24, 48, 72 };
 				int size = (absSize <= 8 ? pointSizes[absSize-1] : 12);
 				
+				[originalAttributes setObject:[NSNumber numberWithInt:[textAttributes fontSize]]
+									   forKey:@"setFontSizeFromNumber:"];
+
 				[textAttributes setFontSize:size];
 			}
 
 		} else if ([arg caseInsensitiveCompare:@"absz"] == NSOrderedSame) {
+			[originalAttributes setObject:[NSNumber numberWithInt:[textAttributes fontSize]]
+								   forKey:@"setFontSizeFromNumber:"];
+
 			[textAttributes setFontSize:[[inArgs objectForKey:arg] intValue]];
 
 		} else if ([arg caseInsensitiveCompare:@"color"] == NSOrderedSame) {
+			[originalAttributes setObject:([textAttributes textColor] ? (id)[textAttributes textColor] : (id)[NSNull null])
+								   forKey:@"setTextColor:"];
+
 			[textAttributes setTextColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg] 
 														 defaultColor:[NSColor blackColor]]];
 
 		} else if ([arg caseInsensitiveCompare:@"back"] == NSOrderedSame) {
+			[originalAttributes setObject:([textAttributes textBackgroundColor] ? (id)[textAttributes textBackgroundColor] : (id)[NSNull null])
+								   forKey:@"setTextBackgroundColor:"];
+
 			[textAttributes setTextBackgroundColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg]
 																   defaultColor:[NSColor whiteColor]]];
 
 		} else if ([arg caseInsensitiveCompare:@"lang"] == NSOrderedSame) {
+			[originalAttributes setObject:([textAttributes languageValue] ? (id)[textAttributes languageValue] : (id)[NSNull null])
+								   forKey:@"setLanguageValue:"];
+
 			[textAttributes setLanguageValue:[inArgs objectForKey:arg]];
 
 		}  else if ([arg caseInsensitiveCompare:@"sender"] == NSOrderedSame) {
 			//Ghetto HTML log processing
 			if (inDiv && send) {
+				[originalAttributes setObject:([textAttributes textColor] ? (id)[textAttributes textColor] : (id)[NSNull null])
+					
+									   forKey:@"setTextColor:"];
 				[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.5 blue:0.0 alpha:1.0]];
+
 			} else if (inDiv && receive) {
+				[originalAttributes setObject:([textAttributes textColor] ? (id)[textAttributes textColor] : (id)[NSNull null])
+									   forKey:@"setTextColor:"];
+				
 				[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.0 blue:0.5 alpha:1.0]];
 			}
-		}
-		
+		}	
 	}
+
+	return originalAttributes;
 }
 
 - (void)processBodyTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
@@ -1407,16 +1514,16 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	while ((arg = [enumerator nextObject])) {
 		if ([arg caseInsensitiveCompare:@"bgcolor"] == NSOrderedSame) {
 			[textAttributes setBackgroundColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg] defaultColor:[NSColor whiteColor]]];
-
 		}	
 	}
 }
 
-- (void)processSpanTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
+- (NSDictionary *)processSpanTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
 {
-	NSEnumerator 	*enumerator;
-	NSString		*arg;
-	
+	NSEnumerator		*enumerator;
+	NSString			*arg;
+	NSMutableDictionary	*originalAttributes = [NSMutableDictionary dictionary];
+
 	enumerator = [[inArgs allKeys] objectEnumerator];
 	while ((arg = [enumerator nextObject])) {
 		if ([arg caseInsensitiveCompare:@"class"] == NSOrderedSame) {
@@ -1425,22 +1532,25 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 			if ([class caseInsensitiveCompare:@"sender"] == NSOrderedSame) {
 				if (inDiv && send) {
+					[originalAttributes setObject:([textAttributes textColor] ? (id)[textAttributes textColor] : (id)[NSNull null])
+										   forKey:@"setTextColor:"];
 					[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 
 																		   green:0.5
 																			blue:0.0 
 																		   alpha:1.0]];
-					inLogSpan = YES;
 				} else if (inDiv && receive) {
+					[originalAttributes setObject:([textAttributes textColor] ? (id)[textAttributes textColor] : (id)[NSNull null])
+										   forKey:@"setTextColor:"];
 					[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0
 																		   green:0.0
 																			blue:0.5 
 																		   alpha:1.0]];
-					inLogSpan = YES;
 				}
 
 			} else if ([class caseInsensitiveCompare:@"timestamp"] == NSOrderedSame) {
+				[originalAttributes setObject:([textAttributes textColor] ? (id)[textAttributes textColor] : (id)[NSNull null])
+									   forKey:@"setTextColor:"];
 				[textAttributes setTextColor:[NSColor grayColor]];
-				inLogSpan = YES;
 			}
 		} else if ([arg caseInsensitiveCompare:@"style"] == NSOrderedSame) {
 			NSString	*style = [inArgs objectForKey:arg];
@@ -1455,7 +1565,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				if (nextSemicolon.location != NSNotFound) {
 					NSString *fontFamily = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange),
 																				 nextSemicolon.location - NSMaxRange(attributeRange))];
-					
+					[originalAttributes setObject:([textAttributes fontFamily] ? (id)[textAttributes fontFamily] : (id)[NSNull null])
+										   forKey:@"setFontFamily:"];
 					[textAttributes setFontFamily:fontFamily];
 				}
 			}
@@ -1490,7 +1601,28 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 						size = stylePointSizes[5];
 					}
 					
+					[originalAttributes setObject:[NSNumber numberWithInt:[textAttributes fontSize]]
+										   forKey:@"setFontSizeFromNumber:"];
 					[textAttributes setFontSize:size];
+				}
+			}
+
+			attributeRange = [style rangeOfString:@"font-weight: " options:NSCaseInsensitiveSearch];
+			if (attributeRange.location != NSNotFound) {
+				NSRange	 nextSemicolon = [style rangeOfString:@";"
+													  options:NSLiteralSearch
+														range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
+				if (nextSemicolon.location != NSNotFound) {
+					NSString *fontWeight = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
+					[originalAttributes setObject:[NSNumber numberWithUnsignedInt:[textAttributes traits]]
+										   forKey:@"setTraits:"];
+					if (([fontWeight caseInsensitiveCompare:@"bold"] == NSOrderedSame) ||
+						([fontWeight caseInsensitiveCompare:@"bolder"] == NSOrderedSame) ||
+						([fontWeight intValue] > 400)) {
+						[textAttributes enableTrait:NSBoldFontMask];
+					} else {
+						[textAttributes disableTrait:NSBoldFontMask];						
+					}
 				}
 			}
 
@@ -1510,9 +1642,31 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
                     [fontStringScanner scanUpToString:@" " intoString:nil];
                     [fontStringScanner setScanLocation:[fontStringScanner scanLocation] + 1];
                     NSString *font = [fontString substringFromIndex:[fontStringScanner scanLocation]];
-                    if([font length])
+                    if ([font length]) {
+						[originalAttributes setObject:([textAttributes fontFamily] ? (id)[textAttributes fontFamily] : (id)[NSNull null])
+											   forKey:@"setFontFamily:"];
                         [textAttributes setFontFamily:font];
+					}
 				}
+			}
+
+			attributeRange = [style rangeOfString:@"background-color: " options:NSCaseInsensitiveSearch];
+			if (attributeRange.location != NSNotFound) {
+				NSRange	 nextSemicolon = [style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
+				if (nextSemicolon.location != NSNotFound) {
+					NSString *hexColor = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
+					
+					[originalAttributes setObject:([textAttributes backgroundColor] ? (id)[textAttributes backgroundColor] : (id)[NSNull null])
+										   forKey:@"setBackgroundColor:"];
+					[textAttributes setBackgroundColor:[NSColor colorWithHTMLString:hexColor
+																	   defaultColor:[NSColor blackColor]]];
+				}
+
+				//Take out the background-color attribute, so that the following search for color: does not match it.
+				NSMutableString *mStyle = [[style mutableCopy] autorelease];
+				[mStyle replaceCharactersInRange:attributeRange
+				                      withString:@"onpxtebhaq-pbybe: "]; //ROT13('background-color: ')
+				style = mStyle;
 			}
 
 			attributeRange = [style rangeOfString:@"color: " options:NSCaseInsensitiveSearch];
@@ -1521,23 +1675,16 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				if (nextSemicolon.location != NSNotFound) {
 					NSString *hexColor = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
 					
+					[originalAttributes setObject:([textAttributes textColor] ? (id)[textAttributes textColor] : (id)[NSNull null])
+										   forKey:@"setTextColor:"];
 					[textAttributes setTextColor:[NSColor colorWithHTMLString:hexColor
 																 defaultColor:[NSColor blackColor]]];
 				}
 			}
-
-            attributeRange = [style rangeOfString:@"background-color: " options:NSCaseInsensitiveSearch];
-			if (attributeRange.location != NSNotFound) {
-				NSRange	 nextSemicolon = [style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
-				if (nextSemicolon.location != NSNotFound) {
-					NSString *hexColor = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
-					
-					[textAttributes setBackgroundColor:[NSColor colorWithHTMLString:hexColor
-																	   defaultColor:[NSColor blackColor]]];
-				}
-			}
         }
 	}
+	
+	return originalAttributes;
 }
 
 - (void)processLinkTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
@@ -1637,12 +1784,16 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	//Otherwise, use an icon representing the image
 	if (!image) image = [attachment iconImage];
 
-	NSTextAttachmentCell *cell = [[NSTextAttachmentCell alloc] initImageCell:image];
-	[attachment setAttachmentCell:cell];
-	[cell release];
-
-	attachString = [NSAttributedString attributedStringWithAttachment:attachment];
-	[attachment release];
+	if (image) {
+		NSTextAttachmentCell *cell = [[NSTextAttachmentCell alloc] initImageCell:image];
+		[attachment setAttachmentCell:cell];
+		[cell release];
+		
+		attachString = [NSAttributedString attributedStringWithAttachment:attachment];
+		[attachment release];
+	} else {
+		attachString = nil;
+	}
 
 	return attachString;
 }
@@ -1654,6 +1805,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		   withName:(NSString *)inName 
 		 imageClass:(NSString *)imageClass
 		 imagesPath:(NSString *)imagesPath
+	  uniqueifyHTML:(BOOL)uniqueifyHTML
 {	
 	NSString	*shortFileName;
 	BOOL		success = NO;
@@ -1700,14 +1852,23 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		NSString *srcPath = [[[NSURL fileURLWithPath:inPath] absoluteString] stringByEscapingForXMLWithEntities:nil];
 		NSString *altName = (inName ? [inName stringByEscapingForXMLWithEntities:nil] : [srcPath lastPathComponent]);
 
+		//Note the space at the end of the tag
+		NSString *imageClassTag = (imageClass ? [NSString stringWithFormat:@"class=\"%@\" ", imageClass] : @"");
+
 		if (attachmentImage) {
 			//Include size information if possible
 			NSSize imageSize = [attachmentImage size];
-
-			[string appendFormat:@"<img class=\"%@\" src=\"%@\" alt=\"%@\" width=\"%i\" height=\"%i\">", imageClass, srcPath, altName, (int)imageSize.width, (int)imageSize.height];
+			[string appendFormat:@"<img %@src=\"%@%@\" alt=\"%@\" width=\"%i\" height=\"%i\">",
+				imageClassTag,
+				srcPath, (uniqueifyHTML ? [NSString stringWithFormat:@"?%i", [[NSDate date] timeIntervalSince1970]] : @""),
+				altName,
+				(int)imageSize.width, (int)imageSize.height];
 
 		} else {
-			[string appendFormat:@"<img class=\"%@\" src=\"%@\" alt=\"%@\">", imageClass, srcPath, altName];
+			[string appendFormat:@"<img %@src=\"%@%@\" alt=\"%@\">",
+				imageClassTag,
+				srcPath, (uniqueifyHTML ? [NSString stringWithFormat:@"?%i", [[NSDate date] timeIntervalSince1970]] : @""),
+				altName];
 		}
 	}
 
@@ -1827,11 +1988,11 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	thingsToInclude.simpleTagsOnly = newValue;
 }
 
-- (BOOL)bodyBackground
+- (BOOL)includesBodyBackground
 {
 	return thingsToInclude.bodyBackground;
 }
-- (void)bodyBackground:(BOOL)newValue
+- (void)setIncludesBodyBackground:(BOOL)newValue
 {
 	thingsToInclude.bodyBackground = newValue;
 }
@@ -1891,7 +2052,8 @@ static AIHTMLDecoder *classMethodInstance = nil;
 // encodeSpaces: YES to preserve spacing when displaying the HTML in a web browser by converting multiple spaces and tabs to &nbsp codes.
 // attachmentsAsText: YES to convert all attachments to their text equivalent if possible; NO to imbed <IMG SRC="...> tags
 // onlyIncludeOutgoingImages: YES to only convert attachments to <IMG SRC="...> tags which should be sent to another user. Only relevant if attachmentsAsText is NO.
-// simpleTagsOnly: YES to separate out FONT tags and include only the most basic HTML elements
+// simpleTagsOnly: YES to separate out FONT tags and include only the most basic HTML elements. Intended for protocols with minimal formatting support such as MSN
+// bodyBackground: YES to set an Adium-internal attribute, AIBodyColorAttributeName, if there's a background. Used only for the message view.
 + (NSString *)encodeHTML:(NSAttributedString *)inMessage
 				 headers:(BOOL)includeHeaders 
 				fontTags:(BOOL)includeFontTags
@@ -2048,7 +2210,7 @@ int HTMLEquivalentForFontSize(int fontSize)
 	return decodedString;	
 }
 
-/*
+/*!
  * @brief Convert Wingdings characters to their Unicode equivalents if possible
  *
  * This table extracted from http://www.alanwood.net/demos/wingdings.html attempts to convert

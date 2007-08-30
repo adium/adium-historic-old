@@ -61,6 +61,7 @@
         //Load and configure our view
         [NSBundle loadNibNamed:[self nibName] owner:self];
         [self viewDidLoad];
+		[self localizePane];
 		if (![self resizable]) [view setAutoresizingMask:(NSViewMaxYMargin)];
     }
     
@@ -96,6 +97,11 @@
     
 }
 
+- (void)localizePane
+{
+	
+}
+
 //Preference view is closing
 - (void)viewWillClose
 {
@@ -120,6 +126,9 @@
 	return NO;
 }
 
-
+- (BOOL)resizableHorizontally
+{
+	return NO;
+}
 
 @end

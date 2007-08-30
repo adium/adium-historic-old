@@ -185,13 +185,13 @@
  */
 - (AIListObject<AIContainingObject> *)containingObject
 {
-    return (AIListObject<AIContainingObject> *)containingObject;
+    return containingObject;
 }
 
 /*!
  * @brief Set the local grouping for this object
  *
- * PRIVATE: This is only for use by AIListObjects conforming to the AIContaingObject protocol.
+ * PRIVATE: This is only for use by AIListObjects conforming to the AIContainingObject protocol.
  */
 - (void)setContainingObject:(AIListObject <AIContainingObject> *)inGroup
 {
@@ -199,8 +199,7 @@
 	   [containingObject release];
 	   containingObject = [inGroup retain];
 
-	   //Always set the current orderIndex in the containingObject.  The above block may be clearing data after a 
-	   //disconnect/reconnect cycle?
+	   //Always set the current orderIndex in the containingObject.
 	   [(AIListObject<AIContainingObject> *)containingObject listObject:self 
 													   didSetOrderIndex:[self orderIndex]];
 	}
@@ -237,6 +236,10 @@
 	if (!orderIndex) {
 		[self setOrderIndex:([[self containingObject] largestOrder] + 1)];
 	}
+	
+	if (!orderIndex) {
+		AILog(@"WARNING: %@ could not determine its order index. Containing object: %@; preference yields %@",self,[self containingObject],orderIndexNumber);
+	}
 }
 
 /*!
@@ -256,6 +259,10 @@
 //	[[adium contactController] sortListObject:self];
 }
 
+- (BOOL)containsMultipleContacts
+{
+	return NO;
+}
 
 //Status objects ------------------------------------------------------------------------------------------------------
 #pragma mark Status objects
@@ -330,6 +337,11 @@
 {   
 	[[adium preferenceController] setPreference:value forKey:key group:group object:self];
 }
+- (void)setPreferences:(NSDictionary *)prefs inGroup:(NSString *)group
+{
+	[[adium preferenceController] setPreferences:prefs inGroup:group object:self];	
+}
+
 - (void)setFormattedUID:(NSString *)inFormattedUID notify:(NotifyTiming)notify
 {
 	[self setStatusObject:inFormattedUID
@@ -544,12 +556,6 @@
 	}
 }
 
-- (NSComparisonResult)compare:(id)otherObject
-{
-	return ([otherObject isKindOfClass:[self class]] &&
-			[[self internalObjectID] caseInsensitiveCompare:[otherObject internalObjectID]]);
-}
-
 #pragma mark Status states
 
 /*!
@@ -730,6 +736,7 @@
 	return NO;
 }
 
+#pragma mark Comparison
 /*
 - (BOOL)isEqual:(id)anObject
 {
@@ -737,6 +744,11 @@
 			[[(AIListObject *)anObject internalObjectID] isEqualToString:[self internalObjectID]]);
 }
 */
+
+- (NSComparisonResult)compare:(AIListObject *)other {
+	NSParameterAssert([other isKindOfClass:[AIListObject class]]);
+	return [[self internalObjectID] caseInsensitiveCompare:[other internalObjectID]];
+}
 
 #pragma mark Icons
 - (NSImage *)menuIcon
@@ -747,7 +759,7 @@
 #pragma mark Debugging
 - (NSString *)description
 {
-	return [NSString stringWithFormat:@"%@:%@",[super description],[self internalObjectID]];
+	return [NSString stringWithFormat:@"<%@:%x %@>",NSStringFromClass([self class]), self, [self internalObjectID]];
 }
 
 @end

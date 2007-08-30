@@ -22,21 +22,27 @@
 #import "PTHotKeyCenter.h"
 #import "PTHotKey.h"
 #import "SRRecorderControl.h"
-#import <AIUtilities/AIColorAdditions.h>
-#import <AIUtilities/AIFontAdditions.h>
-#import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/AIPopUpButtonAdditions.h>
+#import "PTHotKey.h"
+#import "AIMessageHistoryPreferencesWindowController.h"
+#import "AIMessageWindowController.h"
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
-#import "PTHotKey.h"
+#import <AIUtilities/AIColorAdditions.h>
+#import <AIUtilities/AIFontAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIPopUpButtonAdditions.h>
+
+#define	PREF_GROUP_DUAL_WINDOW_INTERFACE	@"Dual Window Interface"
+#define KEY_TABBAR_POSITION					@"Tab Bar Position"
 
 @interface ESGeneralPreferences (PRIVATE)
-- (NSMenu *)tabKeysMenu;
+- (NSMenu *)tabChangeKeysMenu;
 - (NSMenu *)sendKeysMenu;
+- (NSMenu *)tabPositionMenu;
 
 - (NSMenu *)statusIconsMenu;
 - (NSMenu *)serviceIconsMenu;
-
 - (NSArray *)_allPacksWithExtension:(NSString *)extension inFolder:(NSString *)inFolder;
 @end
 
@@ -47,14 +53,19 @@
 // This comes from http://wafflesoftware.net/shortcut/
 
 //Preference pane properties
-- (AIPreferenceCategory)category{
-    return AIPref_General;
+- (NSString *)paneIdentifier
+{
+	return @"General";
 }
-- (NSString *)label{
+- (NSString *)paneName{	
     return AILocalizedString(@"General","General preferences label");
 }
 - (NSString *)nibName{
     return @"GeneralPreferences";
+}
+- (NSImage *)paneIcon
+{
+	return [NSImage imageNamed:@"pref-general" forClass:[self class]];
 }
 
 //Configure the preference view
@@ -69,7 +80,7 @@
 																				group:PREF_GROUP_INTERFACE] boolValue]];
 
 	//Chat Cycling
-	[popUp_tabKeys setMenu:[self tabKeysMenu]];
+	[popUp_tabKeys setMenu:[self tabChangeKeysMenu]];
 	[popUp_tabKeys compatibleSelectItemWithTag:[[[adium preferenceController] preferenceForKey:KEY_TAB_SWITCH_KEYS
 																						 group:PREF_GROUP_CHAT_CYCLING] intValue]];
 
@@ -88,29 +99,25 @@
 		[popUp_sendKeys compatibleSelectItemWithTag:AISendOnReturn];
 	}
 
+	[popUp_tabPositionMenu setMenu:[self tabPositionMenu]];
+	[popUp_tabPositionMenu compatibleSelectItemWithTag:[[[adium preferenceController] preferenceForKey:KEY_TABBAR_POSITION
+																								 group:PREF_GROUP_DUAL_WINDOW_INTERFACE] intValue]];
+	
+	//Quit
+	//[checkBox_confirmOnQuit setState:[[[adium preferenceController] preferenceForKey:KEY_CONFIRM_QUIT
+	//																			group:PREF_GROUP_CONFIRMATIONS] boolValue]];
+	
 	//Global hotkey
 	PTKeyCombo *keyCombo = [[[PTKeyCombo alloc] initWithPlistRepresentation:[[adium preferenceController] preferenceForKey:KEY_GENERAL_HOTKEY
 																													 group:PREF_GROUP_GENERAL]] autorelease];
 	[shortcutRecorder setKeyCombo:SRMakeKeyCombo([keyCombo keyCode], [shortcutRecorder carbonToCocoaFlags:[keyCombo modifiers]])];
-
     [self configureControlDimming];
 }
 
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
-    if (sender == checkBox_messagesInTabs) {
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_TABBED_CHATTING
-                                              group:PREF_GROUP_INTERFACE];
-		[self configureControlDimming];
-		
-	} else if (sender == checkBox_arrangeByGroup) {
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-											 forKey:KEY_GROUP_CHATS_BY_GROUP
-											  group:PREF_GROUP_INTERFACE];
-		
-    } else if (sender == popUp_tabKeys) {
+    if (sender == popUp_tabKeys) {
 		AITabKeys keySelection = [[sender selectedItem] tag];
 
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:keySelection]
@@ -140,29 +147,33 @@
 /*!
  * @brief Construct our menu by hand for easy localization
  */
-- (NSMenu *)tabKeysMenu
+- (NSMenu *)tabChangeKeysMenu
 {
 	NSMenu		*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
-	
-	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Arrows (%@ and %@)","Directional arrow keys word"), [NSString stringWithUTF8String:"⌘←"], [NSString stringWithUTF8String:"⌘→"]]
+#define PLACE_OF_INTEREST_SIGN	"\u2318"
+#define LEFTWARDS_ARROW			"\u2190"
+#define RIGHTWARDS_ARROW		"\u2192"
+#define SHIFT_ARROW				"\u21E7"
+
+	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Arrows (%@ and %@)","Directional arrow keys word"), [NSString stringWithUTF8String:PLACE_OF_INTEREST_SIGN LEFTWARDS_ARROW], [NSString stringWithUTF8String:PLACE_OF_INTEREST_SIGN RIGHTWARDS_ARROW]]
 					target:nil
 					action:nil
 			 keyEquivalent:@""
 					   tag:AISwitchArrows];
 	
-	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Shift + Arrows (%@ and %@)","Shift key word + Directional arrow keys word"), [NSString stringWithUTF8String:"⇧⌘←"], [NSString stringWithUTF8String:"⇧⌘→"]]
+	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Shift + Arrows (%@ and %@)","Shift key word + Directional arrow keys word"), [NSString stringWithUTF8String:SHIFT_ARROW PLACE_OF_INTEREST_SIGN LEFTWARDS_ARROW], [NSString stringWithUTF8String:SHIFT_ARROW PLACE_OF_INTEREST_SIGN RIGHTWARDS_ARROW]]
 					target:nil
 					action:nil
 			 keyEquivalent:@""
 					   tag:AISwitchShiftArrows];
 	
-	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Brackets (%@ and %@)","Word for [ and ] keys"), [NSString stringWithUTF8String:"⌘["], [NSString stringWithUTF8String:"⌘]"]]
+	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Brackets (%@ and %@)","Word for [ and ] keys"), [NSString stringWithUTF8String:PLACE_OF_INTEREST_SIGN "["], [NSString stringWithUTF8String:PLACE_OF_INTEREST_SIGN "]"]]
 					target:nil
 					action:nil
 			 keyEquivalent:@""
 					   tag:AIBrackets];
 	
-	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Curly braces (%@ and %@)","Word for { and } keys"), [NSString stringWithUTF8String:"⌘{"], [NSString stringWithUTF8String:"⌘}"]]
+	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Curly braces (%@ and %@)","Word for { and } keys"), [NSString stringWithUTF8String:PLACE_OF_INTEREST_SIGN "{"], [NSString stringWithUTF8String:PLACE_OF_INTEREST_SIGN "}"]]
 					target:nil
 					action:nil
 			 keyEquivalent:@""
@@ -213,6 +224,43 @@
 					   tag:AISendOnBoth];
 
 	return [menu autorelease];		
+}
+
+- (NSMenu *)tabPositionMenu
+{
+	NSMenu		*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
+	
+	[menu addItemWithTitle:AILocalizedString(@"Top","Position menu item for tabs at the top of the message window")
+					target:nil
+					action:nil
+			 keyEquivalent:@""
+					   tag:AdiumTabPositionTop];
+	
+	[menu addItemWithTitle:AILocalizedString(@"Bottom","Position menu item for tabs at the bottom of the message window")
+					target:nil
+					action:nil
+			 keyEquivalent:@""
+					   tag:AdiumTabPositionBottom];
+	
+	[menu addItemWithTitle:AILocalizedString(@"Left","Position menu item for tabs at the left of the message window")
+					target:nil
+					action:nil
+			 keyEquivalent:@""
+					   tag:AdiumTabPositionLeft];
+
+	[menu addItemWithTitle:AILocalizedString(@"Right","Position menu item for tabs at the right of the message window")
+					target:nil
+					action:nil
+			 keyEquivalent:@""
+					   tag:AdiumTabPositionRight];
+	
+	return [menu autorelease];		
+}
+
+#pragma mark Message history
+- (IBAction)configureMessageHistory:(id)sender
+{
+	[AIMessageHistoryPreferencesWindowController configureMessageHistoryPreferencesOnWindow:[[self view] window]];
 }
 
 @end

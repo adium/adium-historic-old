@@ -27,10 +27,11 @@
 - (void)setAvailableFonts:(NSArray *)inFonts;
 
 /*!
- * @brief Set the selected font
- *
- * Set the selected font
- * @param inFont An <tt>NSFont</tt> of the new selected font
+ * @brief Set the currently displayed font
+ * 
+ * If a preset exists for the font, it will be selected.  Otherwise, the custom option will be changed to this font
+ * and selected
+ * @param inFont NSFont to make active
  */
 - (void)setFont:(NSFont *)inFont;
 

@@ -76,3 +76,5 @@ a, a:link {
 	border-top: 4px solid rgba(0,0,0,0.2);
 	padding-top: 5px;
 }
+
+img.scaledToFitImage{ width:auto; }

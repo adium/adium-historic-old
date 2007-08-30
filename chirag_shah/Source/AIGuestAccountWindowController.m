@@ -11,6 +11,7 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
 #import "AIServiceMenu.h"
+#import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIStringFormatter.h>
 #import <AIUtilities/AITextFieldAdditions.h>
 
@@ -38,7 +39,14 @@ static AIGuestAccountWindowController *sharedGuestAccountWindowController = nil;
 
 - (void)awakeFromNib
 {
-	[[self window] setTitle:AILocalizedString(@"Connect Guest Account",nil)];
+	[[self window] setTitle:AILocalizedString(@"Connect Guest Account", "Title for the window shown when adding a guest (temporary) account")];
+}
+
+- (void)dealloc
+{
+	[account release];
+	
+	[super dealloc];
 }
 
 - (void)windowDidLoad
@@ -50,6 +58,11 @@ static AIGuestAccountWindowController *sharedGuestAccountWindowController = nil;
 												   longDescription:YES
 															format:nil]];
 	[self selectServiceType:nil];
+	[label_password setLocalizedString:AILocalizedString(@"Password:", nil)];
+	[label_service setLocalizedString:AILocalizedString(@"Service:", nil)];
+	[button_okay setLocalizedString:AILocalizedString(@"Connect", nil)];
+	[button_cancel setLocalizedString:AILocalizedString(@"Cancel", nil)];
+	[button_advanced setLocalizedString:[AILocalizedString(@"Advanced", nil) stringByAppendingEllipsis]];
 }
 
 - (void)windowWillClose:(id)sender
@@ -84,8 +97,8 @@ static AIGuestAccountWindowController *sharedGuestAccountWindowController = nil;
 			(![[self UID] isEqualToString:[account UID]])) {
 			[account release];
 
-			account = [[adium accountController] createAccountWithService:[self service]
-																	  UID:[self UID]];
+			account = [[[adium accountController] createAccountWithService:[self service]
+																	   UID:[self UID]] retain];
 		}
 	}
 	
@@ -95,7 +108,7 @@ static AIGuestAccountWindowController *sharedGuestAccountWindowController = nil;
 - (void)selectServiceType:(id)sender
 {
 	AIService *service = [self service];
-	[label_name setStringValue:[[service userNameLabel] stringByAppendingString:@":"]];
+	[label_name setStringValue:[[service userNameLabel] stringByAppendingString:AILocalizedString(@":", "Colon which will be appended after a label such as 'User Name', before an input field")]];
 	
 	[textField_name setFormatter:
 		[AIStringFormatter stringFormatterAllowingCharacters:[service allowedCharactersForAccountName]

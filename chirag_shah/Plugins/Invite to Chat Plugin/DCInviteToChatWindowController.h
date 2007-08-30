@@ -16,7 +16,7 @@
  
 #import <Adium/AIWindowController.h>
 
-@class AIService, AIChat, AIListContact;
+@class AIService, AIChat, AIListContact, AIContactMenu;
 
 @interface DCInviteToChatWindowController : AIWindowController {	
 	IBOutlet	NSPopUpButton   *menu_contacts;
@@ -26,6 +26,7 @@
 	AIListContact				*contact;
 	AIService					*service;
 	AIChat						*chat;
+	AIContactMenu				*contactMenu;
 }
 
 + (void)inviteToChatWindowForChat:(AIChat *)inChat contact:(AIListContact *)inContact;

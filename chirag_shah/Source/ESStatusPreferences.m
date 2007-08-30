@@ -34,17 +34,17 @@
 
 @implementation ESStatusPreferences
 
-/*!
- * @brief Category
- */
-- (AIPreferenceCategory)category{
-    return AIPref_Status;
+- (NSString *)paneIdentifier
+{
+	return @"Status";
 }
-/*!
- * @brief Label
- */
-- (NSString *)label{
+- (NSString *)paneName
+{
     return AILocalizedString(@"Status",nil);
+}
+- (NSImage *)paneIcon
+{
+	return [NSImage imageNamed:@"pref-status" forClass:[self class]];
 }
 
 /*!
@@ -68,7 +68,7 @@
 		
 		//Edit, right justified and far enough away from Remove that it can't conceivably overlap
 		oldFrame = [button_editState frame];
-		[button_editState setTitle:AILocalizedString(@"Edit",nil)];
+		[button_editState setTitle:AILocalizedStringFromTable(@"Edit", @"Buttons", "Verb 'edit' on a button")];
 		[button_editState sizeToFit];
 		newFrame = [button_editState frame];
 		if (newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
@@ -82,6 +82,8 @@
 		[button_addGroup sizeToFit];
 		newFrame = [button_addGroup frame];
 		if (newFrame.size.height < oldFrame.size.height) newFrame.size.height = oldFrame.size.height;
+		if (newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
+		if (newFrame.size.width > oldFrame.size.width) newFrame.size.width += 8;
 		[button_addGroup setFrame:newFrame];
 	}
 	
@@ -242,7 +244,7 @@
 	[outlineView_stateList scrollRowToVisible:[outlineView_stateList rowForItem:newState]];
 }
 
-- (void)finishedSatusGroupEdit:(AIStatusGroup *)inStatusGroup
+- (void)finishedStatusGroupEdit:(AIStatusGroup *)inStatusGroup
 {
 	if (![inStatusGroup containingStatusGroup]) {
 		//Add it if it's not already in a group
@@ -264,49 +266,63 @@
  */
 - (IBAction)deleteState:(id)sender
 {
-	int			 selectedIndex = [outlineView_stateList selectedRow];
-	AIStatusItem *statusItem = [outlineView_stateList itemAtRow:selectedIndex];
-
-	if (statusItem) {
+	NSArray		 *selectedItems = [outlineView_stateList arrayOfSelectedItems];
+	
+	if ([selectedItems count]) {
 		//Confirm deletion of a status group with contents
-		if ([statusItem isKindOfClass:[AIStatusGroup class]] &&
-			[[(AIStatusGroup *)statusItem containedStatusItems] count]) {
-			unsigned count = [[(AIStatusGroup *)statusItem containedStatusItems] count];
-			NSString *message;
-			
-			if (count > 1) {
-				message = [NSString stringWithFormat:AILocalizedString(@"Are you sure you want to delete the group \"%@\" containing %i saved status items?",nil),
-					[statusItem title], count];
-				
-			} else {
-				message = [NSString stringWithFormat:AILocalizedString(@"Are you sure you want to delete the group \"%@\" containing 1 saved status item?",nil),
-					[statusItem title], count];				
-			}
+		NSEnumerator *enumerator;
+		AIStatusItem *statusItem;
+		int			 numberOfItems = 0;
 
+		enumerator = [selectedItems objectEnumerator];
+		while ((statusItem = [enumerator nextObject])) {
+			if ([statusItem isKindOfClass:[AIStatusGroup class]] &&
+				[[(AIStatusGroup *)statusItem flatStatusSet] count]) {
+				numberOfItems += [[(AIStatusGroup *)statusItem flatStatusSet] count];
+			} else {
+				numberOfItems++;
+			}
+		}
+
+		if (numberOfItems > 1) {
+			NSString *message = [NSString stringWithFormat:AILocalizedString(@"Are you sure you want to delete %i saved status items?",nil),
+				numberOfItems];
+			
 			//Warn if deleting a group containing status items
-			NSBeginAlertSheet(AILocalizedString(@"Status Group Deletion Confirmation",nil),
+			NSBeginAlertSheet(AILocalizedString(@"Status Deletion Confirmation",nil),
 							  AILocalizedString(@"Delete", nil),
 							  AILocalizedString(@"Cancel", nil), nil,
 							  [[self view] window], self,
 							  @selector(sheetDidEnd:returnCode:contextInfo:), NULL,
-							  statusItem,
-							  message);
-			
+							  [selectedItems retain],
+							  message);			
 		} else {
-			[[statusItem containingStatusGroup] removeStatusItem:statusItem];
+			//Use an enumerator because we could be deleting multiple empty groups
+			enumerator = [selectedItems objectEnumerator];
+			while ((statusItem = [enumerator nextObject])) {
+				[[statusItem containingStatusGroup] removeStatusItem:statusItem];
+			}
 		}
 	}
 }
 
-/*
+/*!
  * @brief Confirmed a status item deletion operation
  */
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
+	NSArray *selectedItems = (NSArray *)contextInfo;
 	if (returnCode == NSAlertDefaultReturn) {
-		AIStatusItem *statusItem = (AIStatusItem *)contextInfo;
-		[[statusItem containingStatusGroup] removeStatusItem:statusItem];
+		NSEnumerator *enumerator;
+		AIStatusItem *statusItem;
+
+		enumerator = [selectedItems objectEnumerator];
+		while ((statusItem = [enumerator nextObject])) {
+			[[statusItem containingStatusGroup] removeStatusItem:statusItem];
+		}
 	}	
+	
+	[selectedItems release];
 }
 
 /*!
@@ -530,6 +546,7 @@
 	[textField_autoAwayMinutes setDoubleValue:([[prefDict objectForKey:KEY_STATUS_AUTO_AWAY_INTERVAL] doubleValue] / 60.0)];
 
 	[checkBox_fastUserSwitching setState:[[prefDict objectForKey:KEY_STATUS_FUS] boolValue]];
+	[checkBox_screenSaver setState:[[prefDict objectForKey:KEY_STATUS_SS] boolValue]];
 
 	[checkBox_showStatusWindow setState:[[prefDict objectForKey:KEY_STATUS_SHOW_STATUS_WINDOW] boolValue]];
 
@@ -551,6 +568,9 @@
 	
 	statusStatesMenu = [AIStatusMenu staticStatusStatesMenuNotifyingTarget:self selector:@selector(changedFastUserSwitchingStatus:)];	
 	[popUp_fastUserSwitchingStatusState setMenu:[[statusStatesMenu copy] autorelease]];
+	
+	statusStatesMenu = [AIStatusMenu staticStatusStatesMenuNotifyingTarget:self selector:@selector(changedScreenSaverStatus:)];	
+	[popUp_screenSaverStatusState setMenu:[[statusStatesMenu copy] autorelease]];
 
 	//Now select the proper state, or deselect all items if there is no chosen state or the chosen state doesn't exist
 	targetUniqueStatusIDNumber = [[adium preferenceController] preferenceForKey:KEY_STATUS_AUTO_AWAY_STATUS_STATE_ID
@@ -560,6 +580,10 @@
 	targetUniqueStatusIDNumber = [[adium preferenceController] preferenceForKey:KEY_STATUS_FUS_STATUS_STATE_ID
 																		  group:PREF_GROUP_STATUS_PREFERENCES];
 	[self _selectStatusWithUniqueID:targetUniqueStatusIDNumber inPopUpButton:popUp_fastUserSwitchingStatusState];	
+	
+	targetUniqueStatusIDNumber = [[adium preferenceController] preferenceForKey:KEY_STATUS_SS_STATUS_STATE_ID
+																		  group:PREF_GROUP_STATUS_PREFERENCES];
+	[self _selectStatusWithUniqueID:targetUniqueStatusIDNumber inPopUpButton:popUp_screenSaverStatusState];	
 }
 
 /*!
@@ -630,6 +654,9 @@
 			} else if (inPopUpButton == popUp_fastUserSwitchingStatusState) {
 				showingSubmenuItemInFastUserSwitching = YES;
 				
+			} else if (inPopUpButton == popUp_screenSaverStatusState) {
+				showingSubmenuItemInScreenSaver = YES;
+				
 			}
 		}
 	}
@@ -652,6 +679,7 @@
 	[stepper_autoAwayMinutes setEnabled:autoAwayControlsEnabled];
 	
 	[popUp_fastUserSwitchingStatusState setEnabled:([checkBox_fastUserSwitching state] == NSOnState)];
+	[popUp_screenSaverStatusState setEnabled:([checkBox_screenSaver state] == NSOnState)];
 }
 
 /*!
@@ -681,6 +709,12 @@
 	} else if (sender == checkBox_fastUserSwitching) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_STATUS_FUS
+											  group:PREF_GROUP_STATUS_PREFERENCES];
+		[self configureControlDimming];
+		
+	} else if (sender == checkBox_screenSaver) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_STATUS_SS
 											  group:PREF_GROUP_STATUS_PREFERENCES];
 		[self configureControlDimming];
 		
@@ -747,6 +781,19 @@
 	showingSubmenuItemInFastUserSwitching = [self addItemIfNeeded:sender
 													toPopUpButton:popUp_fastUserSwitchingStatusState
 											 alreadyShowingAnItem:showingSubmenuItemInFastUserSwitching];
+}
+
+- (void)changedScreenSaverStatus:(id)sender
+{
+	AIStatus	*statusState = [[sender representedObject] objectForKey:@"AIStatus"];
+	
+	[[adium preferenceController] setPreference:[statusState uniqueStatusID]
+										 forKey:KEY_STATUS_SS_STATUS_STATE_ID
+										  group:PREF_GROUP_STATUS_PREFERENCES];
+	
+	showingSubmenuItemInScreenSaver = [self addItemIfNeeded:sender
+													toPopUpButton:popUp_screenSaverStatusState
+											 alreadyShowingAnItem:showingSubmenuItemInScreenSaver];
 }
 
 /*!

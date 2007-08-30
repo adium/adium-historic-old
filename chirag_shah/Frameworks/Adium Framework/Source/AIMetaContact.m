@@ -30,7 +30,7 @@
 @interface AIMetaContact (PRIVATE)
 - (void)_updateCachedStatusOfObject:(AIListObject *)inObject;
 - (void)_removeCachedStatusOfObject:(AIListObject *)inObject;
-- (BOOL)_cacheStatusValue:(id)inObject forObject:(id)inOwner key:(NSString *)key notify:(BOOL)notify;
+- (BOOL)_cacheStatusValue:(id)inObject forObject:(id)inOwner key:(NSString *)key notify:(BOOL)notify determineIfChanged:(BOOL)determineIfChanged;
 
 - (id)_statusObjectForKey:(NSString *)key containedObjectSelector:(SEL)containedObjectSelector;
 - (void)_determineIfWeShouldAppearToContainOnlyOneContact;
@@ -124,6 +124,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	//Save the change of containing object so it can be restored on launch next time if we are using groups.
 	//We don't save if we are not using groups as this set will be for the contact list root and probably not desired permanently.
 	if ([[adium contactController] useContactListGroups] &&
+		inGroupInternalObjectID &&
 		![inGroupInternalObjectID isEqualToString:[self preferenceForKey:KEY_CONTAINING_OBJECT_ID
 																   group:OBJECT_STATUS_CACHE
 												   ignoreInheritedValues:YES]] &&
@@ -137,49 +138,67 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	[super setContainingObject:inGroup];
 }
 
-//Restore the AIListGroup grouping into which this object was last manually placed
+/*!
+ * @brief Restore the AIListGroup grouping into which this object was last manually placed
+ *
+ * If the contact is offline and we are using the offline group, place it there.
+ * If no manual placement has been performed previously, use the first remote grouping of a contained contact.
+ */
 - (void)restoreGrouping
 {
-	BOOL			useContactListGroups;
-	
-	useContactListGroups = [[adium contactController] useContactListGroups];
+	if ([[adium contactController] useContactListGroups]) {
+		AIListGroup		*targetGroup = nil;
 
-	if (useContactListGroups) {
-		NSString		*oldContainingObjectID;
-		AIListObject	*oldContainingObject;
+		if (![self online] &&
+			[[adium contactController] useOfflineGroup]) {
+			targetGroup = [[adium contactController] offlineGroup];
 
-		oldContainingObjectID = [self preferenceForKey:KEY_CONTAINING_OBJECT_ID
-												 group:OBJECT_STATUS_CACHE];
-		//Get the group's UID out of the internal object ID by taking the substring after "Group."
-		oldContainingObject = ((oldContainingObjectID  && [oldContainingObjectID hasPrefix:@"Group."]) ?
-							   [[adium contactController] groupWithUID:[oldContainingObjectID substringFromIndex:6]] :
-							   nil);
-
-		if (oldContainingObject &&
-			[oldContainingObject isKindOfClass:[AIListGroup class]]) {
-			//A previous grouping is saved; restore it
-			[[adium contactController] _moveContactLocally:self
-												   toGroup:(AIListGroup *)oldContainingObject];
 		} else {
-			/* This metaContact doesn't have a group assigned to it... if any contained object has a group,
-			 * use that group as a best-guess for the proper destination.
-			 */
-			NSString		*bestGuessRemoteGroup = nil;
-			AIListContact	*containedContact;
-			NSEnumerator	*enumerator;
+			NSString		*oldContainingObjectID;
+			AIListObject	*oldContainingObject;
+
+			oldContainingObjectID = [self preferenceForKey:KEY_CONTAINING_OBJECT_ID
+													 group:OBJECT_STATUS_CACHE];
+			//Get the group's UID out of the internal object ID by taking the substring after "Group."
+			oldContainingObject = ((oldContainingObjectID  && [oldContainingObjectID hasPrefix:@"Group."]) ?
+								   [[adium contactController] groupWithUID:[oldContainingObjectID substringFromIndex:6]] :
+								   nil);
 			
-			enumerator = [[self listContacts] objectEnumerator];
-			
-			//Find the first contact with a group
-			while ((containedContact = [enumerator nextObject]) &&
-				   !(bestGuessRemoteGroup = [containedContact remoteGroupName]));
-			//Put this metacontact in that group
-			if (bestGuessRemoteGroup) {
-				[[adium contactController] _moveContactLocally:self
-													   toGroup:[[adium contactController] groupWithUID:bestGuessRemoteGroup]];
+			if (oldContainingObject &&
+				[oldContainingObject isKindOfClass:[AIListGroup class]] &&
+				oldContainingObject != [[adium contactController] contactList]) {
+				//A previous grouping (to a non-root group) is saved; restore it
+				targetGroup = (AIListGroup *)oldContainingObject;
+
+			} else {
+				/* This metaContact doesn't have a group assigned to it... if any contained object has a group,
+				* use that group as a best-guess for the proper destination.
+				*/
+				NSString		*bestGuessRemoteGroup = nil;
+				AIListContact	*containedContact;
+				NSEnumerator	*enumerator;
+				
+				enumerator = [[self listContacts] objectEnumerator];
+				
+				//Find the first contact with a group
+				while ((containedContact = [enumerator nextObject]) &&
+					   !(bestGuessRemoteGroup = [containedContact remoteGroupName]));
+				
+				//Put this metacontact in that group
+				if (bestGuessRemoteGroup) {
+					targetGroup = [[adium contactController] groupWithUID:bestGuessRemoteGroup];
+				}
 			}
 		}
-	}	
+
+		if (targetGroup) {
+			[[adium contactController] _moveContactLocally:self
+												   toGroup:targetGroup];
+		}
+	} else {
+		[[adium contactController] _moveContactLocally:self
+											   toGroup:[[adium contactController] contactList]];		
+	}
 }
 
 //A metaContact should never be a stranger
@@ -273,7 +292,12 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		
 		//Add the object from our status cache, notifying of the changes (silently) as appropriate
 		[self _updateCachedStatusOfObject:inObject];
-		
+
+		if ([inObject isKindOfClass:[AIListContact class]] && [(AIListContact *)inObject remoteGroupName]) {
+			//Force an immediate update of our listContacts list, which will also update our visible count
+			[self listContacts];
+		}
+
 		success = YES;
 	}
 	
@@ -314,6 +338,11 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 		//Remove all references to the object from our status cache; notifying of the changes as appropriate
 		[self _removeCachedStatusOfObject:inObject];
+
+		//If we remove our list object, don't continue to show up in the contact list
+		if ([containedObjects count] == 0) {
+			[self setContainingObject:nil];
+		}
 
 		[inObject release];
 	}
@@ -551,25 +580,33 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 		if (([listObject isKindOfClass:[AIListContact class]]) &&
 			([(AIListContact *)listObject remoteGroupName] || includeOfflineAccounts)) {
-			NSString	*listObjectInternalObjectID = [listObject internalObjectID];
-			unsigned int listContactIndex = [uniqueObjectIDs indexOfObject:listObjectInternalObjectID];
-			
-			if (listContactIndex == NSNotFound) {
-				//This contact isn't in the array yet, so add it
-				[listContacts addObject:listObject];
-				[uniqueObjectIDs addObject:listObjectInternalObjectID];
-				
-			} else {
-				/* If it is found, but it is offline and this contact is online, swap 'em out so our array
-				 * has the best possible listContacts (making display elsewhere more straightforward)
-				 */
-				if (![[listContacts objectAtIndex:listContactIndex] online] &&
-					[listObject online]) {
-					
-					[listContacts replaceObjectAtIndex:listContactIndex
-											withObject:listObject];
-				}
-			}
+			//We want to offer up a completely flat list, so recurse into each contact we contain which also contains contacts
+            NSEnumerator *enumerator = (([listObject conformsToProtocol:@protocol(AIContainingObject)] && [(AIListContact <AIContainingObject> *)listObject containsMultipleContacts]) ?
+										[[(AIListContact <AIContainingObject> *)listObject listContacts] objectEnumerator] :
+										[[NSArray arrayWithObject:listObject] objectEnumerator]); 
+            AIListObject *innerListObject; 
+
+            while ((innerListObject = [enumerator nextObject])) { 
+                NSString        *listObjectInternalObjectID = [innerListObject internalObjectID]; 
+                unsigned int listContactIndex = [uniqueObjectIDs indexOfObject:listObjectInternalObjectID]; 
+                
+                if (listContactIndex == NSNotFound) { 
+                    //This contact isn't in the array yet, so add it 
+                    [listContacts addObject:innerListObject]; 
+                    [uniqueObjectIDs addObject:listObjectInternalObjectID]; 
+                    
+                } else { 
+                    /* If it is found, but it is offline and this contact is online, swap 'em out so our array 
+                    * has the best possible listContacts (making display elsewhere more straightforward) 
+                    */ 
+                    if (![[listContacts objectAtIndex:listContactIndex] online] && 
+                        [innerListObject online]) { 
+                        
+                        [listContacts replaceObjectAtIndex:listContactIndex 
+                                                withObject:innerListObject]; 
+                    } 
+                } 
+            }
 		}
 	}
 	
@@ -602,6 +639,10 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return containsOnlyOneService;
 }
 
+- (BOOL)canContainOtherContacts {
+    return YES;
+}
+
 //When the listContacts array has a single member, we only contain one unique contact.
 - (void)_determineIfWeShouldAppearToContainOnlyOneContact
 {
@@ -623,11 +664,19 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 - (void)remoteGroupingOfContainedObject:(AIListObject *)inListObject changedTo:(NSString *)inRemoteGroupName
 {
+#ifdef META_GROUPING_DEBUG
 	AILog(@"AIMetaContact: Remote grouping of %@ changed to %@",inListObject,inRemoteGroupName);
-
+#endif
+	
 	//When a contact has its remote grouping changed, this may mean it is now listed on an online account.
 	//We therefore update our containsOnlyOneContact boolean.
 	[self _determineIfWeShouldAppearToContainOnlyOneContact];
+	
+	//It's possible we didn't know to be in a group before if all our contained contacts were also groupless.
+	if (![self containingObject] ||
+		(![[adium contactController] useContactListGroups] && ([self containingObject] != [[adium contactController] contactList]))) {
+		[self restoreGrouping];
+	}
 }
 
 //Status Object Handling -----------------------------------------------------------------------------------------------
@@ -655,8 +704,8 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	}
 	
 	/* Only tell super that we changed if _cacheStatusValue returns YES indicating we did or if our
-	 * preferred contact changed. */
-	if ([self _cacheStatusValue:value forObject:inObject key:key notify:notify] ||
+	 * preferred contact changed. Only deteremine if the cache changed if we're not already planning to notify. */
+	if ([self _cacheStatusValue:value forObject:inObject key:key notify:notify determineIfChanged:!shouldNotify] ||
 	   shouldNotify) {
 		[super object:self didSetStatusObject:value forKey:key notify:notify];
 	}
@@ -762,7 +811,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	if ((listObject != self) &&
 		(inArray == [listObject displayArrayForKey:@"Display Name" create:NO]) &&
 		(!anObject || ([anObject isEqualToString:[inArray objectValue]]))) {
-		/* One of our contained objects changed itself display name in such a  way that its Display Name array's objectValue changed. 
+		/* One of our contained objects changed its display name in such a  way that its Display Name array's objectValue changed. 
 		 * Our own display name may need to change in turn.
 		 * We used isEqualToString above because the Display Name array contains NSString objects.
 		 * 
@@ -797,7 +846,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		id value = [inObject statusObjectForKey:key];
 
 		//Only tell super that we changed if _cacheStatusValue returns YES indicating we did
-		if ([self _cacheStatusValue:value forObject:inObject key:key notify:NotifyLater]) {
+		if ([self _cacheStatusValue:value forObject:inObject key:key notify:NotifyLater determineIfChanged:YES]) {
 			[super object:self didSetStatusObject:value forKey:key notify:NotifyLater];
 		}
 	}
@@ -813,7 +862,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	
 	while ((key = [enumerator nextObject])) {
 		//Only tell super that we changed if _cacheStatusValue returns YES indicating we did
-		if ([self _cacheStatusValue:nil forObject:inObject key:key notify:NotifyLater]) {
+		if ([self _cacheStatusValue:nil forObject:inObject key:key notify:NotifyLater determineIfChanged:YES]) {
 			[super object:self didSetStatusObject:[self statusObjectForKey:key] forKey:key notify:NotifyLater];
 		}
 	}
@@ -822,7 +871,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 }
 
 //Update a value in our status cache
-- (BOOL)_cacheStatusValue:(id)inObject forObject:(id)inOwner key:(NSString *)key notify:(BOOL)notify
+- (BOOL)_cacheStatusValue:(id)inObject forObject:(id)inOwner key:(NSString *)key notify:(BOOL)notify determineIfChanged:(BOOL)determineIfChanged
 {
 	AIMutableOwnerArray *array = [statusCacheDict objectForKey:key];
 	id					previousObjectValue;
@@ -842,10 +891,13 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	[array setObject:inObject withOwner:inOwner];
 	
 	//Retrieve the new object value
-	newObjectValue = [array objectValue];
+	if (determineIfChanged) {
+		newObjectValue = [array objectWithOwner:[self preferredContact]];
+		if (!newObjectValue) newObjectValue = [array objectValue];
 
-	if (newObjectValue != previousObjectValue) {
-		changed = YES;
+		if (newObjectValue != previousObjectValue) {
+			changed = YES;
+		}
 	}
 	
 	[previousObjectValue release];
@@ -1079,6 +1131,20 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
     return [containedObjects count];
 }
 
+/*!
+ * @brief Are multiple contacts represented by this metacontact?
+ *
+ * A metacontact might represent only a single contact (waiting around for more contacts to be added to it, such as when another account connects).
+ * Alternately, it might represent multiple contacts (the usual case).
+ *
+ * If containedObjects only contains one AIListContact but that AIListContact then has multiple contacts within it -- for example, it's a SmackContact -- our
+ * metacontact actually *does* contain multiple contacts.  This is why [[self containedObjects] count] alone is not an accurate assessment.
+ */
+- (BOOL)containsMultipleContacts
+{
+    return (([containedObjects count] > 1) ? YES : [[containedObjects lastObject] containsMultipleContacts]);
+}
+
 //Test for the presence of an object in our group
 - (BOOL)containsObject:(AIListObject *)inObject
 {
@@ -1214,7 +1280,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	NSString *subobjectDescsDesc = [subobjectDescs description];
 	[subobjectDescs release];
 
-	return [NSString stringWithFormat:@"%@:%@:%@", [super description], [self internalObjectID], subobjectDescsDesc];
+	return [NSString stringWithFormat:@"<%@:%x %@: %@>",NSStringFromClass([self class]), self, [self internalObjectID], subobjectDescsDesc];
 }
 
 @end

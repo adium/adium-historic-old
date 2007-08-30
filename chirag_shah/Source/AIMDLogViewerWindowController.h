@@ -11,6 +11,7 @@
 	IBOutlet	NSDatePicker	*datePicker;
 	
 	SKSearchRef currentSearch;
+	NSLock		*currentSearchLock;
 }
 
 - (IBAction)selectDate:(id)sender;

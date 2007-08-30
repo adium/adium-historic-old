@@ -17,7 +17,6 @@
 #include "AIWindowController.h"
 
 @interface AIPasswordPromptController : AIWindowController {
-
 	IBOutlet	NSTextField	*textField_password;
 	IBOutlet	NSButton	*checkBox_savePassword;
 	IBOutlet	NSButton	*button_OK;

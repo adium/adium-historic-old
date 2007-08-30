@@ -33,19 +33,21 @@
 #define CONTEXT_DISPLAY_DEFAULTS	@"MessageContextDisplayDefaults"
 
 // Possible Display Modes
-#define MODE_ALWAYS					0
-#define MODE_HAVE_TALKED			1
-#define MODE_HAVE_NOT_TALKED		2
+typedef enum AIMessageHistoryDisplayModes {
+	MODE_ALWAYS = 0,
+	MODE_HAVE_TALKED,
+	MODE_HAVE_NOT_TALKED
+} AIMessageHistoryDisplayModes;
 
 // Possible Units
-#define UNIT_DAYS					0
-#define UNIT_HOURS					1
+typedef enum AIMessageHistoryDisplayUnits {
+	UNIT_DAYS = 0,
+	UNIT_HOURS
+} AIMessageHistoryDisplayUnits;
 
 @class DCMessageContextDisplayPreferences, SMSQLiteLoggerPlugin;
 
-@interface DCMessageContextDisplayPlugin : AIPlugin {
-	SMSQLiteLoggerPlugin			*logger;
-	
+@interface DCMessageContextDisplayPlugin : AIPlugin {	
 	BOOL							isObserving;
 	BOOL							shouldDisplay;
 	BOOL							dimRecentContext;
@@ -59,6 +61,9 @@
 	int								haveNotTalkedUnits;
 	
 	DCMessageContextDisplayPreferences  *preferences;
+	
+	NSMutableArray	*foundMessages;
+	NSMutableArray	*elementStack;
 }
 
 @end

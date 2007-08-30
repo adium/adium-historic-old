@@ -15,8 +15,7 @@
  */
 
 #import <Adium/AIPlugin.h>
-
-@protocol AIContactListTooltipEntry;
+#import <Adium/AIInterfaceControllerProtocol.h>
 
 @interface AIContactWarningLevelPlugin : AIPlugin <AIContactListTooltipEntry> {
 

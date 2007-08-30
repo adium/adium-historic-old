@@ -79,6 +79,13 @@
     return @"";
 }
 
+- (NSMutableArray *)displayClasses
+{
+	NSMutableArray *classes = [NSMutableArray array];
+	[classes addObject:(outgoing) ? @"outgoing" : @"incoming"];
+	return classes;
+}
+
 - (id)userInfo
 {
 	return userInfo;
@@ -94,13 +101,13 @@
 
 //Comparing ------------------------------------------------------------------------------------------------------------
 #pragma mark Comparing
-//Content is similar if it's from the same source, of the same time, and sent within 5 minutes.
+//Content is similar if it's from the same source, of the same type, and sent within 5 minutes.
 - (BOOL)isSimilarToContent:(AIContentObject *)inContent
 {
 	if (source == [inContent source] && [[self type] compare:[inContent type]] == 0) {
 		NSTimeInterval	timeInterval = [date timeIntervalSinceDate:[inContent date]];
 		
-		return timeInterval > -300 && timeInterval < 300;
+		return ((timeInterval > -300) && (timeInterval < 300));
 	}
 	
 	return NO;
@@ -138,10 +145,6 @@
 {
     return outgoing;
 }
-- (void)_setIsOutgoing:(BOOL)inOutgoing
-{ //Hack for message view preferences
-	outgoing = inOutgoing;
-}
 
 //Chat containing this content
 - (void)setChat:(AIChat *)inChat
@@ -177,7 +180,9 @@
 	return [AIHTMLDecoder encodeHTML:message encodeFullString:YES];
 }
 
-//Plaintext string message
+/*!
+ * @brief Set a string for this message using the default formatting attributes
+ */
 - (void)setMessageString:(NSString *)inMessageString
 {
 	[message release];
@@ -185,6 +190,14 @@
 											  attributes:[[adium contentController] defaultFormattingAttributes]];
 	
 }
+
+/*!
+ * @brief Retrieve the message string as plaintext.
+ *
+ * This existed for AppleScript support of obtaining the message string in 1.1 and below.  I don't believe it worked -eds.
+ * It will likely no longer be necessary with the GSoC 2007 Applescripting changes.  I've removed it from the public API
+ * but left it here for now. -eds
+ */
 - (NSString *)messageString
 {
 	return [message string];
@@ -193,98 +206,53 @@
 
 //Behavior -------------------------------------------------------------------------------------------------------------
 #pragma mark Behavior
-/*!
- * @brief Set if this content is passed through content filters
- */
 - (void)setFilterContent:(BOOL)inFilterContent
 {
 	filterContent = inFilterContent;
 }
-/*!
- * @brief Is this content passed through content filters?
- */
 - (BOOL)filterContent
 {
     return filterContent;
 }
 
-/*!
- * @brief Set if this content is tracked
- */
 - (void)setTrackContent:(BOOL)inTrackContent
 {
 	trackContent = inTrackContent;
 }
-/*!
- * @brief Is this content tracked with notifications?
- *
- * If NO, the content will not trigger message sent/message received events such as a sound playing.
- */
 - (BOOL)trackContent
 {
     return trackContent;
 }
 
-/*!
- * @brief Set if this content is displayed
- */
 - (void)setDisplayContent:(BOOL)inDisplayContent
 {
 	displayContent = inDisplayContent;
 }
-/*!
- * @brief Is this content displayed?
- *
- * This will be NO for a content object such as an AIContentTyping object which is sent but not displayed
- */
 - (BOOL)displayContent
 {
     return displayContent;
 }
 
-/*!
- * @brief Set if this content is displayed immediately
- */
 - (void)setDisplayContentImmediately:(BOOL)inDisplayContentImmediately
 {
 	displayContentImmediately = inDisplayContentImmediately;
 }
-/*!
- * @brief Should this content be displayed immediately?
- *
- * If NO, the object which created this content is responsible for posting Content_ChatDidFinishAddingUntrackedContent
- * with an object of the associated AIChat to [adium notificationCenter] at some point in the future to request display.
- */
 - (BOOL)displayContentImmediately
 {
 	return displayContentImmediately;
 }
 
-/*!
- * @brief Set if the content should be sent
- */
 - (void)setSendContent:(BOOL)inSendContent{
 	sendContent = inSendContent;
 }
-/*!
- * @brief Send the content?
- */
 - (BOOL)sendContent{
 	return sendContent;
 }
 
-/*!
- * @brief Set if this content is post processed
- */
 - (void)setPostProcessContent:(BOOL)inPostProcessContent
 {
 	postProcessContent = inPostProcessContent;
 }
-/*!
- * @brief Post process this content?
- *
- * For example, this should be YES if the content is to be logged and NO if it is not.
- */
 - (BOOL)postProcessContent
 {
 	return postProcessContent;

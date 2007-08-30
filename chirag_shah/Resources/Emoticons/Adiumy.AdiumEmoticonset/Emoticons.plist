@@ -24,6 +24,7 @@
 			<key>Equivalents</key>
 			<array>
 				<string>:-[</string>
+				<string>:[</string>
 			</array>
 			<key>Name</key>
 			<string>Blush</string>
@@ -43,6 +44,7 @@
 			<key>Equivalents</key>
 			<array>
 				<string>:-!</string>
+				<string>:!</string>
 			</array>
 			<key>Name</key>
 			<string>Scared</string>
@@ -92,6 +94,8 @@
 			<array>
 				<string>O:-)</string>
 				<string>o:-)</string>
+				<string>O:)</string>
+				<string>o:)</string>
 			</array>
 			<key>Name</key>
 			<string>Angel</string>
@@ -101,6 +105,7 @@
 			<key>Equivalents</key>
 			<array>
 				<string>:-*</string>
+				<string>:*</string>
 			</array>
 			<key>Name</key>
 			<string>Kiss</string>
@@ -111,9 +116,11 @@
 			<array>
 				<string>:-x</string>
 				<string>:-X</string>
+				<string>:x</string>
+				<string>:X</string>
 			</array>
 			<key>Name</key>
-			<string>Wub</string>
+			<string>Kiss</string>
 		</dict>
 		<key>money.png</key>
 		<dict>
@@ -122,7 +129,7 @@
 				<string>:-$</string>
 			</array>
 			<key>Name</key>
-			<string>Money</string>
+			<string>Money-mouth</string>
 		</dict>
 		<key>smile.png</key>
 		<dict>
@@ -146,7 +153,7 @@
 				<string></string>
 			</array>
 			<key>Name</key>
-			<string>Tongue</string>
+			<string>Sticking Out Tongue</string>
 		</dict>
 		<key>erm.png</key>
 		<dict>
@@ -166,7 +173,7 @@
 			<key>Equivalents</key>
 			<array>
 				<string>8-)</string>
-				<string></string>
+				<string>8)</string>
 			</array>
 			<key>Name</key>
 			<string>Cool</string>

@@ -33,6 +33,7 @@
 #import <AIUtilities/AITooltipUtilities.h>
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
+#import <AIUtilities/AIWindowControllerAdditions.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
@@ -234,7 +235,7 @@
     //of the Adium system menu will cause it to always be YES.  We won't use it below.
 
 	//If no windows are visible, show the contact list
-	if (![contactListPlugin contactListIsVisibleAndMain] && [[interfacePlugin openContainers] count] == 0) {
+	if (![self contactListIsVisibleAndMain] && [[interfacePlugin openContainers] count] == 0) {
 		[self showContactList:nil];
 	} else {
 		AIChat	*mostRecentUnviewedChat;
@@ -281,7 +282,7 @@
 //Toggle the contact list
 - (IBAction)toggleContactList:(id)sender
 {
-    if ([contactListPlugin contactListIsVisibleAndMain]) {
+    if ([self contactListIsVisibleAndMain]) {
 		[self closeContactList:nil];
     } else {
 		[self showContactList:nil];
@@ -307,6 +308,17 @@
 	[contactListPlugin closeContactList];
 }
 
+//Return if the contact list is open or not.
+- (BOOL)contactListIsVisibleAndMain
+{
+	return [contactListPlugin contactListIsVisibleAndMain];
+}
+
+- (BOOL)contactListIsVisible
+{
+	return [contactListPlugin contactListIsVisible];
+}
+
 
 //Messaging ------------------------------------------------------------------------------------------------------------
 //Methods for instructing the interface to provide a representation of chats, and to determine which chat has user focus
@@ -318,21 +330,26 @@
 	NSString	*containerID = nil;
 	
 	//Determine the correct container for this chat
-	if (groupChatsByContactGroup) {
-		AIListObject	*group = [[[inChat listObject] parentContact] containingObject];
-
-		//If the contact is in the contact list root, we don't have a group
-		if (group && (group != [[adium contactController] contactList])) {
-			containerID = [group displayName];
-		}
-	} 
 	
-	//XXX - Temporary setup for multiple windows
 	if (!tabbedChatting) {
+		//We're not using tabs; each chat starts in its own container, based on the destination object or the chat name
 		if ([inChat listObject]) {
 			containerID = [[inChat listObject] internalObjectID];
 		} else {
 			containerID = [inChat name];
+		}
+		
+	} else if (groupChatsByContactGroup) {
+		if ([inChat isGroupChat]) {
+			containerID = AILocalizedString(@"Group Chat",nil);
+			
+		} else {
+			AIListObject	*group = [[[inChat listObject] parentContact] containingObject];
+			
+			//If the contact is in the contact list root, we don't have a group
+			if (group && (group != [[adium contactController] contactList])) {
+				containerID = [group displayName];
+			}
 		}
 	}
 	
@@ -355,7 +372,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Close the interface for a chat
  *
  * Tell the interface plugin to close the chat.
@@ -499,7 +516,7 @@
 																				 forKey:@"NSWindow"]];
 }
 
-/*
+/*!
  * @brief Find the window currently displaying a chat
  *
  * If the chat is not in any window, or is not visible in any window, returns nil
@@ -509,7 +526,7 @@
 	return [interfacePlugin windowForChat:inChat];
 }
 
-/*
+/*!
  * @brief Find the chat active in a window
  *
  * If the window does not have an active chat, nil is returned
@@ -800,25 +817,25 @@
 //Message view is abstracted from the containing interface, since they're not directly related to eachother
 #pragma mark Message View
 //Registers a view to handle the contact list
-- (void)registerMessageViewPlugin:(id <AIMessageViewPlugin>)inPlugin
+- (void)registerMessageDisplayPlugin:(id <AIMessageDisplayPlugin>)inPlugin
 {
     [messageViewArray addObject:inPlugin];
 }
-- (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat
+- (id <AIMessageDisplayController>)messageDisplayControllerForChat:(AIChat *)inChat
 {
 	//Sometimes our users find it amusing to disable plugins that are located within the Adium bundle.  This error
 	//trap prevents us from crashing if they happen to disable all the available message view plugins.
 	//PUT THAT PLUGIN BACK IT WAS IMPORTANT!
 	if ([messageViewArray count] == 0) {
 		NSRunCriticalAlertPanel(@"No Message View Plugin Installed",
-								@"Adium cannot find its message view plugin, please re-install.  If you've manually disabled Adium's message view plugin, please re-enable it.",
+								@"Adium cannot find its message view plugin. Please re-install.  If you've manually disabled Adium's message view plugin, please re-enable it.",
 								@"Quit",
 								nil,
 								nil);
 		[NSApp terminate:nil];
 	}
 	
-	return [[messageViewArray objectAtIndex:0] messageViewControllerForChat:inChat];
+	return [[messageViewArray objectAtIndex:0] messageDisplayControllerForChat:inChat];
 }
 
 
@@ -953,6 +970,15 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
         [contactListTooltipSecondaryEntryArray addObject:inEntry];
     else
         [contactListTooltipEntryArray addObject:inEntry];
+}
+
+//Unregisters code to display tooltip info about a contact
+- (void)unregisterContactListTooltipEntry:(id <AIContactListTooltipEntry>)inEntry secondaryEntry:(BOOL)isSecondary
+{
+    if (isSecondary)
+        [contactListTooltipSecondaryEntryArray removeObject:inEntry];
+    else
+        [contactListTooltipEntryArray removeObject:inEntry];
 }
 
 //list object tooltips
@@ -1092,13 +1118,15 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
 	//Get the user's display name as an attributed string
     NSAttributedString                  *displayName = [[NSAttributedString alloc] initWithString:[object displayName]
 																					   attributes:titleDict];
-	NSAttributedString					*filtedDisplayName = [[adium contentController] filterAttributedString:displayName
-																							   usingFilterType:AIFilterTooltips
-																									 direction:AIFilterIncoming
-																									   context:nil];
+	NSAttributedString					*filteredDisplayName = [[adium contentController] filterAttributedString:displayName
+																								 usingFilterType:AIFilterTooltips
+																									   direction:AIFilterIncoming
+																										 context:nil];
 	
 	//Append the user's display name
-	[titleString appendAttributedString:filtedDisplayName];
+	if (filteredDisplayName) {
+		[titleString appendAttributedString:filteredDisplayName];
+	}
 	
 	//Append the user's formatted UID if there is one that's different to the display name
 	if (formattedUID && (!([[[displayName string] compactedString] isEqualToString:[formattedUID compactedString]]))) {
@@ -1308,7 +1336,7 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
 	[self _pasteWithPreferredSelector:@selector(pasteAsRichText:) sender:sender];	
 }
 
-/*
+/*!
  * @brief Send a paste message, using preferredSelector if possible and paste: if not
  *
  * Walks the responder chain looking for a responder which can handle pasting, skipping instances of
@@ -1437,7 +1465,7 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
 }
 
 //Menu item validation
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	NSWindow	*keyWindow = [[NSApplication sharedApplication] keyWindow];
 	NSResponder *responder = [keyWindow firstResponder]; 
@@ -1452,7 +1480,7 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
 		return NO;
 		
 	} else if (menuItem == menuItem_paste || menuItem == menuItem_pasteAndMatchStyle) {
-		return [[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSStringPboardType, NSRTFPboardType, NSTIFFPboardType, NSPICTPboardType, NSPDFPboardType, nil]] != nil;
+		return [[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSStringPboardType, NSRTFPboardType, NSTIFFPboardType, NSPICTPboardType, NSPDFPboardType, NSURLPboardType, NSFilenamesPboardType, NSFilesPromisePboardType, NSRTFDPboardType, nil]] != nil;
 	
 	} else if (menuItem == menuItem_showToolbar) {
 		[menuItem_showToolbar setTitle:([[keyWindow toolbar] isVisible] ? 
@@ -1461,7 +1489,7 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
 		return [keyWindow toolbar] != nil;
 	
 	} else if (menuItem == menuItem_customizeToolbar) {
-		return [keyWindow toolbar] != nil && [[keyWindow toolbar] isVisible];
+		return ([keyWindow toolbar] != nil && [[keyWindow toolbar] isVisible] && [[keyWindow windowController] canCustomizeToolbar]);
 
 	} else if (menuItem == menuItem_close) {
 		return (keyWindow && ([[keyWindow standardWindowButton:NSWindowCloseButton] isEnabled] ||

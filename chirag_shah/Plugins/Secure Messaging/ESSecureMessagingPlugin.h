@@ -15,10 +15,9 @@
  */
 
 #import <Adium/AIPlugin.h>
+#import <Adium/AIChatControllerProtocol.h>
 
 #define LOCK_IMAGE_ANIMATION_STEPS 15
-
-@protocol AIChatObserver;
 
 typedef enum {
 	AISecureMessagingMenu_Root = 1,

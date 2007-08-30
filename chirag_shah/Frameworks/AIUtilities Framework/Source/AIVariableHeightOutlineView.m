@@ -16,12 +16,18 @@
 @interface AIVariableHeightOutlineView (PRIVATE)
 - (void)_initVariableHeightOutlineView;
 
-- (int)heightForRow:(int)row;
 - (void)_drawRowSelectionInRect:(NSRect)rect;
 - (NSImage *)dragImageForRows:(unsigned int[])buf count:(unsigned int)count tableColumns:(NSArray *)tableColumns event:(NSEvent*)dragEvent offset:(NSPointPointer)dragImageOffset;
 @end
 
 @implementation AIVariableHeightOutlineView
+
++ (void)initialize
+{
+	if (self == [AIVariableHeightOutlineView class]) {
+		[self exposeBinding:@"totalHeight"];
+	}
+}
 
 //Adium always toggles expandable items on click.
 //This could become a preference via a set method for other implementations.
@@ -45,16 +51,19 @@
 
 - (void)_initVariableHeightOutlineView
 {
-	rowHeightCache = nil;
-	rowOriginCache = nil;
-	cacheSize = 2;
-	entriesInCache = 0;
-	totalHeight = 0;
+	totalHeight = -1;
 	drawHighlightOnlyWhenMain = NO;
 	drawsSelectedRowHighlight = YES;
+		
+	[[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(itemDidExpand:) 
+												 name:AIOutlineViewUserDidExpandItemNotification 
+											   object:self];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(itemDidCollapse:) 
+												 name:AIOutlineViewUserDidCollapseItemNotification 
+											   object:self];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpand:) name:NSOutlineViewItemDidExpandNotification object:self];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidCollapse:) name:NSOutlineViewItemDidCollapseNotification object:self];
 }
 
 - (void)dealloc
@@ -123,151 +132,61 @@
 //		[super mouseDown:theEvent];
 //	}
 }
-
-//Variable row heights -------------------------------------------------------------------------------------------------
-#pragma mark Variable row heights
-- (NSRect)frameOfCellAtColumn:(int)column row:(int)row
+//Row height cache -----------------------------------------------------------------------------------------------------
+#pragma mark Row height cache
+- (void)resetRowHeightCache
 {
-	NSRect	columnRect = [self rectOfColumn:column];
-	NSSize	intercellSpacing = [self intercellSpacing];
-
-	[self updateRowHeightCache];
-	return NSMakeRect(columnRect.origin.x + round((intercellSpacing.width)/2),
-					  rowOriginCache[row],
-					  columnRect.size.width - floor((intercellSpacing.width)/2),
-					  rowHeightCache[row]);
+	totalHeight = -1;
 }
 
-- (NSRect)rectOfRow:(int)row
+-(void)noteHeightOfRowsWithIndexesChanged:(NSIndexSet *)indexSet
 {
-	[self updateRowHeightCache];
-	return NSMakeRect(0, rowOriginCache[row], [self frame].size.width, rowHeightCache[row]);
+	[self willChangeValueForKey:@"totalHeight"];
+	[self resetRowHeightCache];
+	[super noteHeightOfRowsWithIndexesChanged:indexSet];
+	[self didChangeValueForKey:@"totalHeight"];
 }
 
-- (int)rowAtPoint:(NSPoint)point
+- (void)noteNumberOfRowsChanged
 {
-	[self updateRowHeightCache];
-
-	if (point.y < 0 || point.y > totalHeight) return -1;
-
-	//Find the top visible cell
-	int row = 0;
-	while (row < entriesInCache-1 && rowOriginCache[row+1] <= point.y) row++;
-	return row;
+	[self willChangeValueForKey:@"totalHeight"];
+	[self resetRowHeightCache];
+	[super noteNumberOfRowsChanged];
+	[self didChangeValueForKey:@"totalHeight"];
 }
 
-- (NSRange)rowsInRect:(NSRect)rect
+- (void)reloadData
 {
-	NSRange	range = NSMakeRange(0,0);
-	int 	row = 0;
-
-	[self updateRowHeightCache];
-
-	//Find the top visible cell
-	while (row < entriesInCache-1 && rowOriginCache[row+1] <= rect.origin.y) {
-		range.location++;
-		row++;
-	}
-
-	//Determine the number of additional visible cells
-	do{
-		range.length++;
-	}while (row < entriesInCache && rowOriginCache[row++] <= rect.origin.y + rect.size.height);
-
-	return range;
-}
-
-
-//Row height invalidation ----------------------------------------------------------------------------------------------
-#pragma mark Row height invalidation
-//On reload
-- (void)reloadData{
+	[self willChangeValueForKey:@"totalHeight"];
+	[self resetRowHeightCache];
 	[super reloadData];
-	[self resetRowHeightCache];
-	//XXX - I'm assuming that our table view's frame is updated from within reloadData.  At that point in time
-	//      however, we haven't yet reset our row height cache.  So the frame of our table view will be incorrect and
-	//      result in an incorrect scrollbar scaling.  This is easy to solve by setting the frame to our correct
-	//      dimensions manually after the reload and height calculations are complete.  This is probably not the
-	//      best solution to this problem, but I am unaware of a better one at this time. -ai
-	[self setFrameSize:NSMakeSize([self frame].size.width, [self totalHeight])];
+	[self didChangeValueForKey:@"totalHeight"];
 }
 
-//On delegate / datasource change
-- (void)setDataSource:(id)aSource{
-	[super setDataSource:aSource];
+- (void)reloadItem:(id)item reloadChildren:(BOOL)reloadChildren
+{
+	[self willChangeValueForKey:@"totalHeight"];
 	[self resetRowHeightCache];
-}
-- (void)setDelegate:(id)delegate{
-	[super setDelegate:delegate];
-	[self resetRowHeightCache];
+	[super reloadItem:item reloadChildren:reloadChildren];
+	[self didChangeValueForKey:@"totalHeight"];	
 }
 
 //On expand/collapse
 - (void)itemDidExpand:(NSNotification *)notification{
+	[self willChangeValueForKey:@"totalHeight"];
 	[self resetRowHeightCache];
+	[self didChangeValueForKey:@"totalHeight"];
 }
 - (void)itemDidCollapse:(NSNotification *)notification{
+	[self willChangeValueForKey:@"totalHeight"];
 	[self resetRowHeightCache];
+	[self didChangeValueForKey:@"totalHeight"];
 }
 
-
-//Row height cache -----------------------------------------------------------------------------------------------------
-#pragma mark Row height cache
-//Release existing
-- (void)resetRowHeightCache
-{
-	if (rowHeightCache) {
-		free(rowHeightCache);
-		rowHeightCache = nil;
-	}
-	if (rowOriginCache) {
-		free(rowOriginCache);
-		rowOriginCache = nil;
-	}
-	entriesInCache = 0;
-}
-
-- (void)updateRowHeightCache
-{
-	if (!rowHeightCache && !rowOriginCache) {
-		int	numberOfRows = [self numberOfRows];
-
-		//Expand
-		while (numberOfRows > cacheSize) {
-			cacheSize *= 2;
-		}
-
-		//New
-		rowHeightCache = malloc(cacheSize * sizeof(int));
-		rowOriginCache = malloc(cacheSize * sizeof(int));
-		entriesInCache = numberOfRows;
-
-		//
-		int		origin = 0;
-		int		i;
-		NSSize	intercellSpacing = [self intercellSpacing];
-
-		for (i = 0; i < entriesInCache; i++) {
-			int height = [self heightForRow:i];
-
-			rowHeightCache[i] = height;
-			rowOriginCache[i] = origin;
-
-			origin += height + intercellSpacing.height;
-		}
-
-		totalHeight = origin;
-	}
-}
 
 - (id)cellForTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
     return [tableColumn dataCell];
-}
-
-- (int)heightForRow:(int)row
-{
-	return [[self dataSource] outlineView:self heightForItem:[self itemAtRow:row] atRow:row];
 }
 
 #pragma mark Drawing
@@ -439,13 +358,19 @@
 	return image;
 }
 
-
 - (int)totalHeight
 {
-	[self updateRowHeightCache];
+	if (totalHeight == -1) {
+		int	numberOfRows = [self numberOfRows];
+		NSSize	intercellSpacing = [self intercellSpacing];
+		
+		for (int i = 0; i < numberOfRows; i++) {
+			totalHeight += ([self rectOfRow:i].size.height + intercellSpacing.height);
+		}
+	}
+	
 	return totalHeight;
 }
-
 
 //Custom highlight management
 - (void)setDrawHighlightOnlyWhenMain:(BOOL)inFlag

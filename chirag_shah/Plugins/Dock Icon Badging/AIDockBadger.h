@@ -15,10 +15,9 @@
  */
 
 #import <Adium/AIPlugin.h>
+#import <Adium/AIChatControllerProtocol.h>
 
 @class AIIconState;
-
-@protocol AIChatObserver;
 
 @interface AIDockBadger : AIPlugin <AIChatObserver> {
 	AIIconState					*overlayState;
