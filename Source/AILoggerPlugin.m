@@ -454,7 +454,7 @@ Class LogViewerWindowControllerClass = NULL;
 	//Don't log chats for temporary accounts
 	if ([[chat account] isTemporary]) return;	
 	
-	//Try reusing the appender opject
+	//Try reusing the appender object
 	AIXMLAppender *appender = [self existingAppenderForChat:chat];
 	
 	//If there is an appender, add the windowOpened event
