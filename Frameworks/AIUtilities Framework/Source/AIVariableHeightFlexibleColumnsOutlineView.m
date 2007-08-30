@@ -51,7 +51,8 @@
 			
 			tableColumn = [tableColumns objectAtIndex:tableColumnIndex];
 			cell = [self cellForTableColumn:tableColumn item:item];
-			
+			cellFrame = [self frameOfCellAtColumn:tableColumnIndex row:row];
+
 			[[self delegate] outlineView:self
 						 willDisplayCell:cell 
 						  forTableColumn:tableColumn
@@ -64,7 +65,7 @@
 									  objectValueForTableColumn:tableColumn
 														 byItem:item]];
 			
-			cellFrame = [self frameOfCellAtColumn:tableColumnIndex row:row];
+			
 			
 			if (tableColumnIndex == 0) {
 				//Draw flippy triangle
