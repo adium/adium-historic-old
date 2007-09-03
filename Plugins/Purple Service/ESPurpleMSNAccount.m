@@ -94,14 +94,15 @@
 	NSString *msg = [super encodedAttributedStringForSendingContentMessage:inContentMessage];
 	
 	if (msg) {
-		// If our message contains RTL string we shall surround it with a span tag
-		// with proper dir attribute so libpurple can apply the MSN writing direction
-		// flag. Note that we must check the string of the content message and not the
-		// one returned by our superclass as it appends its own html to the string.
-		// Only the content message can tell us the original direction.
-		return [[inContentMessage messageString] baseWritingDirection] == NSWritingDirectionRightToLeft
-						? [NSString stringWithFormat:@"<span dir=\"rtl\">%@</span>", msg]
-						: msg;
+		/* If our message contains RTL string we shall surround it with a span tag
+		 * with proper dir attribute so libpurple can apply the MSN writing direction
+		 * flag. Note that we must check the string of the content message and not the
+		 * one returned by our superclass as it appends its own html to the string.
+		 * Only the content message can tell us the original direction.
+		 */
+		return (([[[inContentMessage message] string] baseWritingDirection] == NSWritingDirectionRightToLeft)
+				? [NSString stringWithFormat:@"<span dir=\"rtl\">%@</span>", msg]
+				: msg);
 	} else {
 		return nil;
 	}
