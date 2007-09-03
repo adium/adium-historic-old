@@ -3,6 +3,7 @@ Copyright (C) 2001-2007 by the following:
 
 Adam Atlas
 Colin Barrett
+Reid Barton
 Erik J. Barzeski
 Max Bertrand
 Adam Betts
