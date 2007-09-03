@@ -92,6 +92,16 @@
 	return YES;
 }
 
+/*!
+ * @brief Should set aliases serverside?
+ *
+ * Yahoo supports serverside aliases.
+ */
+- (BOOL)shouldSetAliasesServerside
+{
+	return YES;
+}
+
 #pragma mark Connection
 - (NSString *)connectionStringForStep:(int)step
 {
