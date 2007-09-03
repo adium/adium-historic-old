@@ -1,12 +1,14 @@
 				Adium X Version History
 				-----------------------
-Version 1.1.2
+Version 1.1.2 (9/3/2007)
  * Added preference to turn off the contact list animations (Preferences->Advanced->Contact List)
  * Option+Close now closes all other tabs (#7573)
  * Fixed a memory leak and potential visual glitch when viewing tooltips for contacts (#7585)
+ * Fixed display of AIM contacts after they return from being mobile via 'forward to mobile'
+ * Fixed retention of the 'docked' status of the contact list across launches
+ * Fixed drawing glitches and improved performance in the Events preferences pane and Events tab of the Get Info window
  * Fixed default showing of offline contacts, which was turned on in 1.1. As of 1.1.2, this is off by default, as it was in versions of Adium prior to 1.1.  This can always be changed from the View menu.
  * Fixed spring-loaded tabs to wait for a definitive hover before switching. The delay is the same as the Finder's delay for spring-loaded folders. As with Finder, space bar can be pressed to switch immediately. (#7588)
- * Fixed positioning of the message view in the chat window (1 point off)
  * Fixed Gadu-Gadu on PPC machines (#7556)
  * Fixed reopening of chat windows after using encryption (#6664)
  * Fixed an exception which could occur when Spotlight was importing chat transcripts
@@ -27,8 +29,10 @@ Version 1.1.2
  * Fixed 24 hour time display in the Stockholm message style
  * .Mac names now autocomplete for AIM, and Jabber names autocomplete for GTalk, in the New Message dialogue (#4983)
  * zh_CN and Italian (#7490) updates
+ * Added help documentation for Show Offline Contacts
+ * Fixed display of AdiumLibpurplePlugins as bundles
  * Updated to libpurple 2.1.1
- 
+
 Version 1.1.1 (8/13/2007)
  * Fixed a problem with the version checking system (Sparkle) which caused a crash when the minimum system requirements were specified in the appcast.
 
