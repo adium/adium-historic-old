@@ -69,7 +69,11 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 - (void)dealloc
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	[libezvContacts release];
+	
+	/* Releasing libezv leads to the libezvContacts set being accessed;
+	 * if it has been released but not set to nil, this results in a crash.
+	 */
+	[libezvContacts release]; libezvContacts = nil;
 	[libezv release];
 
 	[super dealloc];
