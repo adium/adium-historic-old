@@ -260,7 +260,11 @@
 }
 
 /*!
- * @brief Temporary serviceID upgrade code (v0.63 -> v0.70 for libpurple, v0.70 -> v0.80 for bonjour)
+ * @brief ServiceID upgrade code (v0.63 -> v0.70 for libpurple, v0.70 -> v0.80 for bonjour, v1.0 -> v1.1 for libpurple)
+ *
+ * The changed name will only be saved if some other account change, such as adding an account, occurs,
+ * so this code should remain indefinitely to provide an upgrade path to people whose service IDs are in an
+ * old style.
  *
  * @param serviceID NSString service ID (old or new)
  * @param accountDict Dictionary of the saved account
