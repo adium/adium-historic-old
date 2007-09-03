@@ -674,6 +674,11 @@ static NSArray *draggedTypes = nil;
 	[webView stringByEvaluatingJavaScriptFromString:[messageStyle scriptForAppendingContent:content
 																					similar:contentIsSimilar
 																  willAddMoreContentObjects:willAddMoreContentObjects]];
+	if([[self messageStyle] isBackgroundTransparent]) {
+		[[webView window] performSelector:@selector(invalidateShadow)
+							   withObject:nil
+							   afterDelay:0.0];
+	}
 }
 
 
