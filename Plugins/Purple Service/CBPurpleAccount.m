@@ -55,7 +55,7 @@
 
 #define NO_GROUP						@"__NoGroup__"
 
-#define RECONNECT_BASE_TIME				1.8	//Reconnect time: base^(try) in seconds
+#define RECONNECT_BASE_TIME				1.75	//Reconnect time: base^(try) in seconds
 
 #define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
 #define NEW_ACCOUNT_DISPLAY_TEXT		AILocalizedString(@"<New Account>", "Placeholder displayed as the name of a new account")
@@ -1602,9 +1602,13 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	//connectionIsSuicidal == TRUE when Purple thinks we shouldn't attempt a reconnect.
 	if ([self shouldBeOnline] && lastDisconnectionError) {
 		if ([self shouldAttemptReconnectAfterDisconnectionError:&lastDisconnectionError] && !(connectionIsSuicidal)) {
+			// Set our retry time to RECONNECT_BASE_TIME^reconnectAttemptsPerformed or 10 minutes, whichever is smallest.
+			double reconnectDelay = MIN(600, pow(RECONNECT_BASE_TIME, (double)reconnectAttemptsPerformed));
+			
 			AILog(@"%@: Disconnected (%x: \"%@\"): Automatically reconnecting in %0f seconds (%i attempts performed)",
-				  self, (account ? account->gc : NULL), lastDisconnectionError, pow(RECONNECT_BASE_TIME, (double)reconnectAttemptsPerformed), reconnectAttemptsPerformed);
-			[self autoReconnectAfterDelay:pow(RECONNECT_BASE_TIME, (double)reconnectAttemptsPerformed)];
+				  self, (account ? account->gc : NULL), lastDisconnectionError, reconnectDelay, reconnectAttemptsPerformed);
+
+			[self autoReconnectAfterDelay:reconnectDelay];
 			reconnectAttemptsPerformed++;
 	
 		} else {
