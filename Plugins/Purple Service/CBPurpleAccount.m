@@ -1603,8 +1603,8 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	if ([self shouldBeOnline] && lastDisconnectionError) {
 		if ([self shouldAttemptReconnectAfterDisconnectionError:&lastDisconnectionError] && !(connectionIsSuicidal)) {
 			AILog(@"%@: Disconnected (%x: \"%@\"): Automatically reconnecting in %0f seconds (%i attempts performed)",
-				  self, (account ? account->gc : NULL), lastDisconnectionError, pow(RECONNECT_BASE_TIME, (float)reconnectAttemptsPerformed), reconnectAttemptsPerformed);
-			[self autoReconnectAfterDelay:pow(RECONNECT_BASE_TIME, (float)reconnectAttemptsPerformed)];
+				  self, (account ? account->gc : NULL), lastDisconnectionError, pow(RECONNECT_BASE_TIME, (double)reconnectAttemptsPerformed), reconnectAttemptsPerformed);
+			[self autoReconnectAfterDelay:pow(RECONNECT_BASE_TIME, (double)reconnectAttemptsPerformed)];
 			reconnectAttemptsPerformed++;
 	
 		} else {
