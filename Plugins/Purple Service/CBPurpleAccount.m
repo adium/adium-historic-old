@@ -55,8 +55,7 @@
 
 #define NO_GROUP						@"__NoGroup__"
 
-#define AUTO_RECONNECT_DELAY		2.0	//Delay in seconds
-#define RECONNECTION_ATTEMPTS		4
+#define RECONNECT_BASE_TIME				1.8	//Reconnect time: base^(try) in seconds
 
 #define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
 #define NEW_ACCOUNT_DISPLAY_TEXT		AILocalizedString(@"<New Account>", "Placeholder displayed as the name of a new account")
@@ -1487,7 +1486,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	[[adium contactController] delayListObjectNotificationsUntilInactivity];
 	
     //Reset reconnection attempts
-    reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
+    reconnectAttemptsPerformed = 0;
 
 	//Clear any previous disconnection error
 	[lastDisconnectionError release]; lastDisconnectionError = nil;
@@ -1602,12 +1601,11 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	//If we were disconnected unexpectedly, attempt a reconnect. Give subclasses a chance to handle the disconnection error.
 	//connectionIsSuicidal == TRUE when Purple thinks we shouldn't attempt a reconnect.
 	if ([self shouldBeOnline] && lastDisconnectionError) {
-		if (reconnectAttemptsRemaining && 
-			[self shouldAttemptReconnectAfterDisconnectionError:&lastDisconnectionError] && !(connectionIsSuicidal)) {
-			AILog(@"%@: Disconnected (%x: \"%@\"): Automatically reconnecting in %0f seconds (%i attempts remaining)",
-				  self, (account ? account->gc : NULL), lastDisconnectionError, AUTO_RECONNECT_DELAY, reconnectAttemptsRemaining);
-			[self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
-			reconnectAttemptsRemaining--;
+		if ([self shouldAttemptReconnectAfterDisconnectionError:&lastDisconnectionError] && !(connectionIsSuicidal)) {
+			AILog(@"%@: Disconnected (%x: \"%@\"): Automatically reconnecting in %0f seconds (%i attempts performed)",
+				  self, (account ? account->gc : NULL), lastDisconnectionError, RECONNECT_BASE_TIME^reconnectAttemptsPerformed, reconnectAttemptsPerformed);
+			[self autoReconnectAfterDelay:RECONNECT_BASE_TIME^reconnectAttemptsPerformed];
+			reconnectAttemptsPerformed++;
 	
 		} else {
 			if (lastDisconnectionError) {
@@ -1620,7 +1618,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 			}
 			
 			//Reset reconnection attempts
-			reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
+			reconnectAttemptsPerformed = 0;
 			
 			//Clear our desire to be online.
 			/*
@@ -2362,7 +2360,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	}
 	
 	//Defaults
-    reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
+    reconnectAttemptsPerformed = 0;
 	lastDisconnectionError = nil;
 	
 	permittedContactsArray = [[NSMutableArray alloc] init];
