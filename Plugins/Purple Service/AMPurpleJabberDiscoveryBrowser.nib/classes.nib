@@ -18,22 +18,27 @@
         },
                 {
             ACTIONS =             {
+                closeWindow = id;
+            };
+            CLASS = AIWindowController;
+            LANGUAGE = ObjC;
+            SUPERCLASS = NSWindowController;
+        },
+                {
+            ACTIONS =             {
                 changeServiceName = id;
+                openService = id;
             };
             CLASS = AMPurpleJabberServiceDiscoveryBrowserController;
             LANGUAGE = ObjC;
             OUTLETS =             {
+                "label_node" = NSTextField;
+                "label_service" = NSTextField;
                 nodename = NSTextField;
                 outlineview = NSOutlineView;
                 servicename = NSTextField;
-                window = NSWindow;
             };
-            SUPERCLASS = NSObject;
-        },
-                {
-            CLASS = AMPurpleJabberServiceDiscoveryOutlineView;
-            LANGUAGE = ObjC;
-            SUPERCLASS = NSOutlineView;
+            SUPERCLASS = AIWindowController;
         },
                 {
             CLASS = FirstResponder;
