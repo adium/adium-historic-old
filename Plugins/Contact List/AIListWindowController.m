@@ -484,7 +484,7 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 		currentScreenFrame.size.height -= [NSMenuView menuBarHeight];
 	}
 
-	//Ensure the window is displaying at the proper level and exposé setting
+	//Ensure the window is displaying at the proper level and expos√© setting
 	AIWindowLevel	windowLevel = [[[adium preferenceController] preferenceForKey:KEY_CL_WINDOW_LEVEL
 																			group:PREF_GROUP_CONTACT_LIST] intValue];
 	[self setWindowLevel:levelForAIWindowLevel(windowLevel)];	
