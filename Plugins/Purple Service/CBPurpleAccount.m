@@ -80,6 +80,7 @@
 - (void)continueConnectWithConfiguredPurpleAccount;
 - (void)continueConnectWithConfiguredProxy;
 - (void)continueRegisterWithConfiguredPurpleAccount;
+- (void)promptForHostBeforeConnecting;
 
 - (void)setAccountProfileTo:(NSAttributedString *)profile configurePurpleAccountContext:(NSInvocation *)inInvocation;
 
@@ -741,7 +742,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 - (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
 {
 	NSString	*encodedString;
-	BOOL		didCommand = [purpleThread attemptPurpleCommandOnMessage:[inContentMessage messageString]
+	BOOL		didCommand = [purpleThread attemptPurpleCommandOnMessage:[[inContentMessage message] string]
 														 fromAccount:(AIAccount *)[inContentMessage source]
 															  inChat:[inContentMessage chat]];	
 	
@@ -1300,12 +1301,51 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	if (!account) {
 		//create a purple account if one does not already exist
 		[self createNewPurpleAccount];
-		AILog(@"created PurpleAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
+		AILog(@"Created PurpleAccount 0x%x with UID %@ and protocolPlugin %s", account, [self UID], [self protocolPlugin]);
 	}
 	
 	//Make sure our settings are correct
-	[self configurePurpleAccountNotifyingTarget:self selector:@selector(continueConnectWithConfiguredPurpleAccount)];
+	if ([self connectivityBasedOnNetworkReachability] &&
+		![[self host] length]) {
+		//If we use the network for connectivity, and we don't have a host, we need to get ourselves one. Prompt for it!
+		[self promptForHostBeforeConnecting];
+	} else {
+		[self configurePurpleAccountNotifyingTarget:self selector:@selector(continueConnectWithConfiguredPurpleAccount)];
+	}
 }
+
+static void prompt_host_cancel_cb(CBPurpleAccount *self) {
+	[self disconnect];
+}
+
+
+static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
+	if(host && *host) {
+		[self setPreference:[NSString stringWithUTF8String:host]
+					 forKey:KEY_CONNECT_HOST
+					  group:GROUP_ACCOUNT_STATUS];	
+
+		[self configurePurpleAccountNotifyingTarget:self selector:@selector(continueConnectWithConfiguredPurpleAccount)];
+	} else {
+		prompt_host_cancel_cb(self);
+	}
+}
+
+- (void)promptForHostBeforeConnecting
+{
+	purple_request_input(NULL, [[NSString stringWithFormat:AILocalizedString(@"%@ (%@) Setup", "first %@ is an account name; second is a service. This is a title for a window"),
+								[self formattedUID], [[self service] shortDescription]] UTF8String],
+						 [AILocalizedString(@"No Server Specified", nil) UTF8String],
+						 [[NSString stringWithFormat:AILocalizedString(@"No server has been configured for the %@ account %@. Please enter one below to connect", nil),
+						   [[self service] longDescription], [self formattedUID]] UTF8String],
+						 /* default value */ "", /* multiline */ FALSE, /* masked */ FALSE, /* hint */ NULL,
+						 [AILocalizedString(@"Connect", "Button title to connect; this is a verb") UTF8String], G_CALLBACK(prompt_host_ok_cb),
+						 [AILocalizedString(@"Cancel", nil) UTF8String], G_CALLBACK(prompt_host_cancel_cb),
+						 /* account */ NULL, /* who */ NULL, /* conv */ NULL,
+						 self);
+						 
+}
+
 
 - (void)continueConnectWithConfiguredPurpleAccount
 {
