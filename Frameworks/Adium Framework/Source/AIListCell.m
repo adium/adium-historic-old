@@ -453,9 +453,11 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 			
 		} else if([listObject statusType] == AIIdleStatus) {
 			currentStatus = AILocalizedString(@"idle contact", /*comment*/ nil);
+		} else {
+			//XXX There should be a default here, I think, and this could be a switch statement -eds
 		}
 		
-		value = IS_CONTACT ? AILocalizedString(currentStatus, /*comment*/ nil) : AILocalizedString(@"contact list group", /*comment*/ nil);
+		value = (IS_CONTACT ? currentStatus : AILocalizedString(@"contact list group", /*comment*/ nil));
 		
 	} else if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
 		value = [self labelString];
