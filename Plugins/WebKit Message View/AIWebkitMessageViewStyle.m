@@ -640,9 +640,20 @@ static NSArray *validSenderColors;
 			if (endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
 				NSString *untranslated = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
 				
-				NSString *translated = AILocalizedStringFromTableInBundle(untranslated, nil, styleBundle, nil);
-				if(!translated || [translated length] == 0)
-					translated = AILocalizedString(untranslated, nil); //check if Adium knows about the string, since the style doesn't
+				NSString *translated = [styleBundle localizedStringForKey:untranslated
+																	value:untranslated
+																	table:nil];
+				if (!translated || [translated length] == 0) {
+					translated = [[NSBundle bundleForClass:[self class]] localizedStringForKey:untranslated
+																						 value:untranslated
+																						 table:nil];
+					if (!translated || [translated length] == 0) {
+						translated = [[NSBundle mainBundle] localizedStringForKey:untranslated
+																			value:untranslated
+																			table:nil];
+					}
+				}
+				
 				
 				[inString safeReplaceCharactersInRange:NSUnionRange(range, endRange) 
 											withString:translated];
