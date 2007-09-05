@@ -29,6 +29,5 @@
 
 - (IBAction)changeServiceName:(id)sender;
 - (IBAction)openService:(id)sender;
-- (void)close;
 
 @end

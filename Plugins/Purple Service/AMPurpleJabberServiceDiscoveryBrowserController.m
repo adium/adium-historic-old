@@ -35,7 +35,7 @@ static NSImage *det_triangle_closed = nil;
 		if (![node identities])
 			[node fetchInfo];
         
-        [window makeKeyAndOrderFront:nil];
+        [[self window] makeKeyAndOrderFront:nil];
 		
         [self retain];
         [outlineview setTarget:self];
@@ -47,7 +47,7 @@ static NSImage *det_triangle_closed = nil;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-	[window release];
+
 	[node release];
     [super dealloc];
 }

@@ -35,6 +35,7 @@
 #import "AMPurpleJabberServiceDiscoveryBrowsing.h"
 #import "ESPurpleJabberAccountViewController.h"
 #import "AMPurpleJabberAdHocServer.h"
+#import "AMPurpleJabberAdHocPing.h"
 #import <Adium/AIService.h>
 
 #define DEFAULT_JABBER_HOST @"@jabber.org"
