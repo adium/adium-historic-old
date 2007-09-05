@@ -21,16 +21,13 @@ static NSImage *det_triangle_closed = nil;
 
 - (id)initWithAccount:(AIAccount*)_account purpleConnection:(PurpleConnection *)_gc node:(AMPurpleJabberNode *)_node
 {
-    if ((self = [super init])) {
+    if ((self = [super initWithWindowNibName:@"AMPurpleJabberDiscoveryBrowser"])) {
 		account = _account;
         gc = _gc;
-        [NSBundle loadNibNamed:@"AMPurpleJabberDiscoveryBrowser" owner:self];
-        if (!window) {
-            NSLog(@"error loading AMPurpleJabberDiscoveryBrowser.nib!");
-            [self release];
-            return nil;
-        }
-		
+
+		//Load the window immediately
+		[self window];
+
 		node = [_node retain];
 		[node addDelegate:self];
 		if (![node items])
@@ -55,11 +52,29 @@ static NSImage *det_triangle_closed = nil;
     [super dealloc];
 }
 
+- (NSString *)adiumFrameAutosaveName
+{
+	return @"Jabber Service Discovery Browser";
+}
+
+- (void)windowDidLoad
+{
+	[[self window] setTitle:AILocalizedString(@"Service Discovery Browser", "Window title for the service discovery browser")];
+	[label_service setLocalizedString:AILocalizedString(@"Service:", nil)];
+	[label_node setLocalizedString:AILocalizedString(@"Node:", nil)];
+	
+	[[[outlineview tableColumnWithIdentifier:@"name"] headerCell] setStringValue:AILocalizedString(@"Name", "Name table column header for the service discovery browser")];
+	[[[outlineview tableColumnWithIdentifier:@"jid"] headerCell] setStringValue:AILocalizedString(@"JID", "JID (Jabber ID) table column header for the service discovery browser. This may not need to be localized.")];
+	[[[outlineview tableColumnWithIdentifier:@"category"] headerCell] setStringValue:AILocalizedString(@"Category", "Category table column header for the service discovery browser")];
+	
+	[super windowDidLoad];
+
+}
+
 - (IBAction)openService:(id)sender
 {
     int row = [outlineview clickedRow];
-    if (row != -1)
-    {
+    if (row != -1) {
 		AMPurpleJabberNode *item = [outlineview itemAtRow:row];
 		NSArray *identities = [item identities];
 		if (!identities)
@@ -151,13 +166,11 @@ static NSImage *det_triangle_closed = nil;
 	[outlineview reloadData];
 }
 
-- (void)close {
-	[window close];
-}
-
 - (void)windowWillClose:(NSNotification *)notification
 {
     [self release];
+	
+	[super windowWillClose:notification];
 }
 
 - (void)jabberNodeGotItems:(AMPurpleJabberNode*)node {
@@ -167,6 +180,8 @@ static NSImage *det_triangle_closed = nil;
 - (void)jabberNodeGotInfo:(AMPurpleJabberNode*)node {
     [outlineview reloadData];
 }
+
+#pragma mark Outline View
 
 - (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
 {
@@ -332,7 +347,7 @@ static NSImage *det_triangle_closed = nil;
 				
 				[triangleCell release];
 			}
-			
+
 			[cell setImage:det_triangle_opened];
 		} else {
 			if (!det_triangle_closed) {

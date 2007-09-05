@@ -5,22 +5,23 @@
 //  Created by Evan Schoenberg on 9/5/07.
 //
 
-#import <Adium/AIObject.h>
+#import <Adium/AIWindowController.h>
 #include <Libpurple/libpurple.h>
 
 @class AIAccount, AMPurpleJabberNode;
 
-// one instance for every discovery browser window
-@interface AMPurpleJabberServiceDiscoveryBrowserController : AIObject
+@interface AMPurpleJabberServiceDiscoveryBrowserController : AIWindowController
 {
 	AIAccount *account;
     PurpleConnection *gc;
 	
-    IBOutlet NSWindow *window;
     IBOutlet NSTextField *servicename;
     IBOutlet NSTextField *nodename;
     IBOutlet NSOutlineView *outlineview;
     
+	IBOutlet NSTextField *label_service;
+	IBOutlet NSTextField *label_node;
+	
 	AMPurpleJabberNode *node;
 }
 
