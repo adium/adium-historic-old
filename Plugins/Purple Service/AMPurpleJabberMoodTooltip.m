@@ -44,7 +44,8 @@
 			const char *mood = purple_value_get_string(value);
 			if(mood) {
 				NSString *str;
-								
+							
+#warning Localization
 				value = purple_status_get_attr_value(status, "moodtext");
 				if(value && purple_value_get_type(value) == PURPLE_TYPE_STRING && purple_value_get_string(value) && purple_value_get_string(value)[0] != '\0')
 					str = [NSString stringWithFormat:@"%@ (%@)",AILocalizedString([NSString stringWithUTF8String:mood],"This one won't work automatically. See XEP for all possible values"), [NSString stringWithUTF8String:purple_value_get_string(value)]];
