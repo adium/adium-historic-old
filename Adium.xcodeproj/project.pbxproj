@@ -260,6 +260,12 @@
 		3461621606FB482D009181D8 /* ESChatUserListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3461621206FB482C009181D8 /* ESChatUserListController.m */; };
 		3461621706FB482D009181D8 /* UserList Layout.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3461621306FB482D009181D8 /* UserList Layout.plist */; };
 		346371080BCA0A5400AD57AD /* AIMessageTabSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 346371060BCA0A5400AD57AD /* AIMessageTabSplitView.m */; };
+		346544DB0C8F686B0046ED68 /* AMPurpleJabberXMLConsole.nib in Resources */ = {isa = PBXBuildFile; fileRef = 346544D90C8F686B0046ED68 /* AMPurpleJabberXMLConsole.nib */; };
+		346544DC0C8F686B0046ED68 /* AMPurpleJabberDiscoveryBrowser.nib in Resources */ = {isa = PBXBuildFile; fileRef = 346544DA0C8F686B0046ED68 /* AMPurpleJabberDiscoveryBrowser.nib */; };
+		3465451C0C8F6A670046ED68 /* AMPurpleJabberServiceDiscoveryBrowserController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3465451A0C8F6A670046ED68 /* AMPurpleJabberServiceDiscoveryBrowserController.h */; };
+		3465451D0C8F6A670046ED68 /* AMPurpleJabberServiceDiscoveryBrowserController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3465451B0C8F6A670046ED68 /* AMPurpleJabberServiceDiscoveryBrowserController.m */; };
+		346545250C8F6AAD0046ED68 /* AMPurpleJabberNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 346545230C8F6AAD0046ED68 /* AMPurpleJabberNode.h */; };
+		346545260C8F6AAD0046ED68 /* AMPurpleJabberNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 346545240C8F6AAD0046ED68 /* AMPurpleJabberNode.m */; };
 		346935D60BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 346935D40BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.m */; };
 		346BA33F0774C27400628F06 /* ESGlobalEventsPreferencesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 346BA33D0774C27400628F06 /* ESGlobalEventsPreferencesPlugin.m */; };
 		346BA3450774C2D200628F06 /* ESGlobalEventsPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 346BA3430774C2D200628F06 /* ESGlobalEventsPreferences.m */; };
@@ -1143,12 +1149,10 @@
 		8184C5B80C1B812500CB53E7 /* AMPurpleRequestFieldsWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 8184C5B30C1B812500CB53E7 /* AMPurpleRequestFieldsWindow.nib */; };
 		8184CC350C1E3C3800CB53E7 /* AMPurpleJabberMoodTooltip.h in Headers */ = {isa = PBXBuildFile; fileRef = 8184CC330C1E3C3800CB53E7 /* AMPurpleJabberMoodTooltip.h */; };
 		8184CC360C1E3C3800CB53E7 /* AMPurpleJabberMoodTooltip.m in Sources */ = {isa = PBXBuildFile; fileRef = 8184CC340C1E3C3800CB53E7 /* AMPurpleJabberMoodTooltip.m */; };
-		818E96A00C16D40F007623BD /* AMPurpleJabberXMLConsole.nib in Resources */ = {isa = PBXBuildFile; fileRef = 818E969E0C16D40F007623BD /* AMPurpleJabberXMLConsole.nib */; };
 		818E96A30C16D443007623BD /* AMXMLConsoleController.h in Headers */ = {isa = PBXBuildFile; fileRef = 818E96A10C16D443007623BD /* AMXMLConsoleController.h */; };
 		818E96A40C16D443007623BD /* AMXMLConsoleController.m in Sources */ = {isa = PBXBuildFile; fileRef = 818E96A20C16D443007623BD /* AMXMLConsoleController.m */; };
 		81DAE8720C261E8A00780E4C /* AMPurpleTuneTooltip.h in Headers */ = {isa = PBXBuildFile; fileRef = 81DAE8700C261E8A00780E4C /* AMPurpleTuneTooltip.h */; };
 		81DAE8730C261E8A00780E4C /* AMPurpleTuneTooltip.m in Sources */ = {isa = PBXBuildFile; fileRef = 81DAE8710C261E8A00780E4C /* AMPurpleTuneTooltip.m */; };
-		81DAED1D0C26F44700780E4C /* AMPurpleJabberDiscoveryBrowser.nib in Resources */ = {isa = PBXBuildFile; fileRef = 81DAED170C26F44600780E4C /* AMPurpleJabberDiscoveryBrowser.nib */; };
 		81DAED520C26F4F700780E4C /* AMPurpleJabberServiceDiscoveryBrowsing.h in Headers */ = {isa = PBXBuildFile; fileRef = 81DAED500C26F4F700780E4C /* AMPurpleJabberServiceDiscoveryBrowsing.h */; };
 		81DAED530C26F4F700780E4C /* AMPurpleJabberServiceDiscoveryBrowsing.m in Sources */ = {isa = PBXBuildFile; fileRef = 81DAED510C26F4F700780E4C /* AMPurpleJabberServiceDiscoveryBrowsing.m */; };
 		81E45D760C15BFF800B7381B /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34E839050583207E00F2AADB /* SystemConfiguration.framework */; };
@@ -2367,6 +2371,12 @@
 		3465236508371A64009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = "Plugins/Purple Service/cs.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3465236608371A64009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = "Plugins/WebKit Message View/cs.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3465236808371A65009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = Resources/cs.lproj/Localizable.strings; sourceTree = "<group>"; };
+		346544D90C8F686B0046ED68 /* AMPurpleJabberXMLConsole.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AMPurpleJabberXMLConsole.nib; path = "Plugins/Purple Service/AMPurpleJabberXMLConsole.nib"; sourceTree = "<group>"; };
+		346544DA0C8F686B0046ED68 /* AMPurpleJabberDiscoveryBrowser.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AMPurpleJabberDiscoveryBrowser.nib; path = "Plugins/Purple Service/AMPurpleJabberDiscoveryBrowser.nib"; sourceTree = "<group>"; };
+		3465451A0C8F6A670046ED68 /* AMPurpleJabberServiceDiscoveryBrowserController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMPurpleJabberServiceDiscoveryBrowserController.h; path = "Plugins/Purple Service/AMPurpleJabberServiceDiscoveryBrowserController.h"; sourceTree = "<group>"; };
+		3465451B0C8F6A670046ED68 /* AMPurpleJabberServiceDiscoveryBrowserController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AMPurpleJabberServiceDiscoveryBrowserController.m; path = "Plugins/Purple Service/AMPurpleJabberServiceDiscoveryBrowserController.m"; sourceTree = "<group>"; };
+		346545230C8F6AAD0046ED68 /* AMPurpleJabberNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMPurpleJabberNode.h; path = "Plugins/Purple Service/AMPurpleJabberNode.h"; sourceTree = "<group>"; };
+		346545240C8F6AAD0046ED68 /* AMPurpleJabberNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AMPurpleJabberNode.m; path = "Plugins/Purple Service/AMPurpleJabberNode.m"; sourceTree = "<group>"; };
 		346935D30BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIFileTransferProgressOutlineView.h; path = Source/AIFileTransferProgressOutlineView.h; sourceTree = "<group>"; };
 		346935D40BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIFileTransferProgressOutlineView.m; path = Source/AIFileTransferProgressOutlineView.m; sourceTree = "<group>"; };
 		34695FA20A89BA2B00E3B0D0 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
@@ -3587,12 +3597,10 @@
 		8184C5B30C1B812500CB53E7 /* AMPurpleRequestFieldsWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AMPurpleRequestFieldsWindow.nib; path = "Plugins/Purple Service/AMPurpleRequestFieldsWindow.nib"; sourceTree = "<group>"; };
 		8184CC330C1E3C3800CB53E7 /* AMPurpleJabberMoodTooltip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMPurpleJabberMoodTooltip.h; path = "Plugins/Purple Service/AMPurpleJabberMoodTooltip.h"; sourceTree = "<group>"; };
 		8184CC340C1E3C3800CB53E7 /* AMPurpleJabberMoodTooltip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AMPurpleJabberMoodTooltip.m; path = "Plugins/Purple Service/AMPurpleJabberMoodTooltip.m"; sourceTree = "<group>"; };
-		818E969F0C16D40F007623BD /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Purple Service/en.lproj/AMPurpleJabberXMLConsole.nib"; sourceTree = "<group>"; };
 		818E96A10C16D443007623BD /* AMXMLConsoleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMXMLConsoleController.h; path = "Plugins/Purple Service/AMXMLConsoleController.h"; sourceTree = "<group>"; };
 		818E96A20C16D443007623BD /* AMXMLConsoleController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AMXMLConsoleController.m; path = "Plugins/Purple Service/AMXMLConsoleController.m"; sourceTree = "<group>"; };
 		81DAE8700C261E8A00780E4C /* AMPurpleTuneTooltip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMPurpleTuneTooltip.h; path = "Plugins/Purple Service/AMPurpleTuneTooltip.h"; sourceTree = "<group>"; };
 		81DAE8710C261E8A00780E4C /* AMPurpleTuneTooltip.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AMPurpleTuneTooltip.m; path = "Plugins/Purple Service/AMPurpleTuneTooltip.m"; sourceTree = "<group>"; };
-		81DAED180C26F44700780E4C /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Purple Service/en.lproj/AMPurpleJabberDiscoveryBrowser.nib"; sourceTree = "<group>"; };
 		81DAED500C26F4F700780E4C /* AMPurpleJabberServiceDiscoveryBrowsing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMPurpleJabberServiceDiscoveryBrowsing.h; path = "Plugins/Purple Service/AMPurpleJabberServiceDiscoveryBrowsing.h"; sourceTree = "<group>"; };
 		81DAED510C26F4F700780E4C /* AMPurpleJabberServiceDiscoveryBrowsing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AMPurpleJabberServiceDiscoveryBrowsing.m; path = "Plugins/Purple Service/AMPurpleJabberServiceDiscoveryBrowsing.m"; sourceTree = "<group>"; };
 		9C103FAE057127A500F3C158 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
@@ -4338,12 +4346,10 @@
 				A3C0405808D744B200B48CE1 /* Google Talk */,
 				818E96A10C16D443007623BD /* AMXMLConsoleController.h */,
 				818E96A20C16D443007623BD /* AMXMLConsoleController.m */,
-				818E969E0C16D40F007623BD /* AMPurpleJabberXMLConsole.nib */,
 				8184CC330C1E3C3800CB53E7 /* AMPurpleJabberMoodTooltip.h */,
 				8184CC340C1E3C3800CB53E7 /* AMPurpleJabberMoodTooltip.m */,
-				81DAED170C26F44600780E4C /* AMPurpleJabberDiscoveryBrowser.nib */,
-				81DAED500C26F4F700780E4C /* AMPurpleJabberServiceDiscoveryBrowsing.h */,
-				81DAED510C26F4F700780E4C /* AMPurpleJabberServiceDiscoveryBrowsing.m */,
+				346545090C8F69280046ED68 /* Discovery Browsing */,
+				346544D90C8F686B0046ED68 /* AMPurpleJabberXMLConsole.nib */,
 				8181F6F70C32209100E802F7 /* AMPurpleJabberFormGenerator.h */,
 				8181F6F80C32209100E802F7 /* AMPurpleJabberFormGenerator.m */,
 				8181F88C0C35B70F00E802F7 /* AMPurpleJabberAdHocServer.h */,
@@ -4506,6 +4512,20 @@
 				345AF7D40A5D559B00D7DA6F /* AISpotlightImporterTest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		346545090C8F69280046ED68 /* Discovery Browsing */ = {
+			isa = PBXGroup;
+			children = (
+				81DAED500C26F4F700780E4C /* AMPurpleJabberServiceDiscoveryBrowsing.h */,
+				81DAED510C26F4F700780E4C /* AMPurpleJabberServiceDiscoveryBrowsing.m */,
+				346544DA0C8F686B0046ED68 /* AMPurpleJabberDiscoveryBrowser.nib */,
+				3465451A0C8F6A670046ED68 /* AMPurpleJabberServiceDiscoveryBrowserController.h */,
+				3465451B0C8F6A670046ED68 /* AMPurpleJabberServiceDiscoveryBrowserController.m */,
+				346545230C8F6AAD0046ED68 /* AMPurpleJabberNode.h */,
+				346545240C8F6AAD0046ED68 /* AMPurpleJabberNode.m */,
+			);
+			name = "Discovery Browsing";
 			sourceTree = "<group>";
 		};
 		346BA3330774C21300628F06 /* Global Events Preferences */ = {
@@ -7174,6 +7194,8 @@
 				8181EEC30C3067B500E802F7 /* AMPurpleSearchResultsController.h in Headers */,
 				8181F7490C32BD2500E802F7 /* AMPurpleJabberFormGenerator.h in Headers */,
 				8181F88E0C35B70F00E802F7 /* AMPurpleJabberAdHocServer.h in Headers */,
+				3465451C0C8F6A670046ED68 /* AMPurpleJabberServiceDiscoveryBrowserController.h in Headers */,
+				346545250C8F6AAD0046ED68 /* AMPurpleJabberNode.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7798,12 +7820,12 @@
 				34D073D60B1E1A5000D63DF2 /* PurpleDefaultsMac.plist in Resources */,
 				34D073D70B1E1A5000D63DF2 /* PurpleDefaultsAIM.plist in Resources */,
 				34CAA3FB0BD3998E00AE92DC /* ESPurpleOscarAccountView.nib in Resources */,
-				818E96A00C16D40F007623BD /* AMPurpleJabberXMLConsole.nib in Resources */,
 				8184C5B80C1B812500CB53E7 /* AMPurpleRequestFieldsWindow.nib in Resources */,
-				81DAED1D0C26F44700780E4C /* AMPurpleJabberDiscoveryBrowser.nib in Resources */,
 				8181EEBE0C30673E00E802F7 /* AMPurpleSearchResultsWindow.nib in Resources */,
 				8173C5760C4C3DB800C9E64E /* downloadprogress.png in Resources */,
 				345DD7680C54EAF2007D41F5 /* zhm in Resources */,
+				346544DB0C8F686B0046ED68 /* AMPurpleJabberXMLConsole.nib in Resources */,
+				346544DC0C8F686B0046ED68 /* AMPurpleJabberDiscoveryBrowser.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8370,6 +8392,8 @@
 				8181EEC40C3067B500E802F7 /* AMPurpleSearchResultsController.m in Sources */,
 				8181F7480C32BD2500E802F7 /* AMPurpleJabberFormGenerator.m in Sources */,
 				8181F88F0C35B70F00E802F7 /* AMPurpleJabberAdHocServer.m in Sources */,
+				3465451D0C8F6A670046ED68 /* AMPurpleJabberServiceDiscoveryBrowserController.m in Sources */,
+				346545260C8F6AAD0046ED68 /* AMPurpleJabberNode.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10059,22 +10083,6 @@
 				34F144460BA8FF46000473DE /* en */,
 			);
 			name = EmoticonNames.strings;
-			sourceTree = "<group>";
-		};
-		818E969E0C16D40F007623BD /* AMPurpleJabberXMLConsole.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				818E969F0C16D40F007623BD /* en */,
-			);
-			name = AMPurpleJabberXMLConsole.nib;
-			sourceTree = "<group>";
-		};
-		81DAED170C26F44600780E4C /* AMPurpleJabberDiscoveryBrowser.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				81DAED180C26F44700780E4C /* en */,
-			);
-			name = AMPurpleJabberDiscoveryBrowser.nib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
