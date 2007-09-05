@@ -539,23 +539,23 @@
 														 action:NULL
 												  keyEquivalent:@""];
 	
-	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(ITUNES_ALBUM,"Insert Current iTunes track album toolbar menu item.") 
+	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(@"Album","Insert Current iTunes track album toolbar menu item.") 
 												 action:@selector(insertFilteredString:)
 									  representedObject:ALBUM_TRIGGER
 												   kind:ENABLED_IF_ITUNES_PLAYING]];
-	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(ITUNES_ARTIST,"Insert Current iTunes track artist toolbar menu item.") 
+	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(@"Artist","Insert Current iTunes track artist toolbar menu item.") 
 												 action:@selector(insertFilteredString:) 
 									  representedObject:ARTIST_TRIGGER
 												   kind:ENABLED_IF_ITUNES_PLAYING]];
-	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(ITUNES_COMPOSER,"Insert Current iTunes track composer toolbar menu item.") 
+	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(@"Composer","Insert Current iTunes track composer toolbar menu item.") 
 												 action:@selector(insertFilteredString:)
 									  representedObject:COMPOSER_TRIGGER
 												   kind:ENABLED_IF_ITUNES_PLAYING]];
-	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(ITUNES_GENRE,"Insert Current iTunes track genre toolbar menu item.") 
+	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(@"Genre","Insert Current iTunes track genre toolbar menu item.") 
 												 action:@selector(insertFilteredString:)
 									  representedObject:GENRE_TRIGGER
 												   kind:ENABLED_IF_ITUNES_PLAYING]];
-	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(ITUNES_NAME,"Insert Current iTunes track name toolbar menu item.") 
+	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(@"Name","Insert Current iTunes track name toolbar menu item.") 
 												 action:@selector(insertFilteredString:)
 									  representedObject:TRACK_TRIGGER
 												   kind:ENABLED_IF_ITUNES_PLAYING]];
