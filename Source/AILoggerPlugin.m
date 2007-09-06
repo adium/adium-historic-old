@@ -884,6 +884,13 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
     if ([[NSFileManager defaultManager] fileExistsAtPath:logIndexPath]) {
 		newIndex = SKIndexOpenWithURL((CFURLRef)logIndexPathURL, (CFStringRef)@"Content", true);
 		AILog(@"Opened index %x from %@",newIndex,logIndexPathURL);
+		
+		if (!newIndex) {
+			//It appears our index was somehow corrupt, since it exists but it could not be opened. Remove it so we can create a new one.
+			NSLog(@"*** Warning: The Chat Transcript searching index at %@ was corrupt. Removing it and starting fresh; transcripts will be re-indexed automatically.",
+				  logIndexPath);
+			[[NSFileManager defaultManager] removeFileAtPath:logIndexPath handler:NULL];
+		}
     }
     if (!newIndex) {
 		NSDictionary *textAnalysisProperties;
@@ -896,9 +903,9 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 #endif
 			nil];
 
-		//Create the index if one doesn't exist
+		//Create the index if one doesn't exist or it couldn't be opened.
 		[[NSFileManager defaultManager] createDirectoriesForPath:[logIndexPath stringByDeletingLastPathComponent]];
-		
+
 		newIndex = SKIndexCreateWithURL((CFURLRef)logIndexPathURL,
 										(CFStringRef)@"Content", 
 										kSKIndexInverted,
@@ -1162,7 +1169,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 	//Ensure log indexing (in an old thread) isn't already going on and just waiting to stop
 	[indexingThreadLock lock]; [indexingThreadLock unlock];
 
-	//If it was going on, we can just cancel
+	//If log indexing was already in progress, we can just cancel since it is now complete
 	if (logsToIndex == 0) {
 		AILog(@"Nothing to clean!");
 		[self performSelectorOnMainThread:@selector(didCleanDirtyLogs)
@@ -1172,9 +1179,15 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 		return;
 	}
 
+	if (!searchIndex) {
+		NSLog(@"*** Warning: Called -[%@ _cleanDirtyLogsThread:] with a NULL searchIndex. That shouldn't happen!", self);
+		[pool release];
+		return;
+	}
+
     [indexingThreadLock lock];
 	
-	if (searchIndex) CFRetain(searchIndex);
+	CFRetain(searchIndex);
 
     //Start cleaning (If we're still supposed to go)
     if (!stopIndexingThreads) {
@@ -1252,12 +1265,10 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 		}
 
 		[logAccessLock lock];
-		if (searchIndex) {
-			SKIndexFlush(searchIndex);
-			AILog(@"After cleaning dirty logs, the search index has a max ID of %i and a count of %i",
-				  SKIndexGetMaximumDocumentID(searchIndex),
-				  SKIndexGetDocumentCount(searchIndex));
-		}
+		SKIndexFlush(searchIndex);
+		AILog(@"After cleaning dirty logs, the search index has a max ID of %i and a count of %i",
+			  SKIndexGetMaximumDocumentID(searchIndex),
+			  SKIndexGetDocumentCount(searchIndex));
 		[logAccessLock unlock];
 		
 		
@@ -1266,7 +1277,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 							waitUntilDone:NO];
     }
 
-	if (searchIndex) CFRelease(searchIndex);
+	CFRelease(searchIndex);
 
 	[indexingThreadLock unlock];
 
