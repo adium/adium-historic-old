@@ -247,6 +247,20 @@
 																			   userInfo:userInfo
 																		 includeSubject:NO];
 
+	if (([eventID isEqualToString:CONTACT_STATUS_ONLINE_YES] ||
+	   [eventID isEqualToString:CONTACT_STATUS_ONLINE_NO] ||
+	   [eventID isEqualToString:CONTACT_STATUS_AWAY_YES] ||
+	   [eventID isEqualToString:CONTACT_STATUS_AWAY_NO] ||
+	   [eventID isEqualToString:CONTACT_STATUS_IDLE_YES] ||
+	   [eventID isEqualToString:CONTACT_STATUS_IDLE_NO] ||
+	   [eventID isEqualToString:CONTACT_SEEN_ONLINE_YES] ||
+	   [eventID isEqualToString:CONTACT_SEEN_ONLINE_NO]) && 
+		[(AIListContact *)listObject contactListStatusMessage]) {
+		description = [description stringByAppendingString:
+			[@": " stringByAppendingString:
+				[[(AIListContact *)listObject contactListStatusMessage] string]]];
+	}
+
 	NSAssert5((title || description),
 			  @"Growl notify error: EventID %@, listObject %@, userInfo %@\nGave Title \"%@\" description \"%@\"",
 			  eventID,
