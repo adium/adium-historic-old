@@ -150,7 +150,7 @@
 	[centeredParagraphStyle release];
 	[message release];
 	
-	return NULL /*adium_purple_get_handle()*/ ;
+	return NULL;
 }
 
 /*!
