@@ -1222,7 +1222,6 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 					 */
 					CFStringRef documentText = CopyTextContentForFile(NULL, (CFStringRef)logPath);
 					if (documentText) {
-						NSLog(@"Adding document %x with text:\n***\n%@\n***\nto index %x",document,documentText,searchIndex);
 						SKIndexAddDocumentWithText(searchIndex,
 												   document,
 												   documentText,
