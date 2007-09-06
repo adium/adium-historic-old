@@ -115,7 +115,8 @@
 		[AdiumURLHandling _setHelperAppForKey:(kICHelper "jabber") withInstance:ICInst]; //Jabber, unofficial
 		[AdiumURLHandling _setHelperAppForKey:(kICHelper "icq") withInstance:ICInst]; //ICQ, unofficial
 		[AdiumURLHandling _setHelperAppForKey:(kICHelper "msn") withInstance:ICInst]; //MSN, unofficial
-		
+		[AdiumURLHandling _setHelperAppForKey:(kICHelper "gtalk") withInstance:ICInst]; //Google Talk, official?
+
 		//Adium xtras
 		[AdiumURLHandling _setHelperAppForKey:(kICHelper "adiumxtra") withInstance:ICInst];
 		
@@ -172,6 +173,7 @@
 				@"AIM",    @"aim",
 				@"Yahoo!", @"ymsgr",
 				@"Jabber", @"xmpp",
+ 			    @"GTalk",  @"gtalk",
 				@"ICQ",    @"icq",
 				@"MSN",    @"msn",
 				nil];
@@ -257,6 +259,17 @@
 										   onService:serviceID
 										 withMessage:nil];
 				}
+	
+			} else if ([url queryArgumentForKey:@"openChatToScreenName"]) {
+				// gtalk:chat?jid=foo@gmail.com&from_jid=bar@gmail.com
+				NSString *name = [[[url queryArgumentForKey:@"jid"] stringByDecodingURLEscapes] compactedString];
+
+				if (name) {
+					[self _openChatToContactWithName:name
+										   onService:serviceID
+										 withMessage:nil];
+				}
+				
 			} else if ([host caseInsensitiveCompare:@"BuddyIcon"] == NSOrderedSame) {
 				//aim:BuddyIcon?src=http://www.nbc.com//Heroes/images/wallpapers/heroes-downloads-icon-single-48x48-07.gif
 				NSString *urlString = [url queryArgumentForKey:@"src"];
