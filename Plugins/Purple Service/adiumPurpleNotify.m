@@ -107,17 +107,19 @@ static void *adiumPurpleNotifySearchResults(PurpleConnection *gc, const char *ti
 			nil];
 		
 		ESPurpleMeanwhileContactAdditionController *requestController = [ESPurpleMeanwhileContactAdditionController showContactAdditionListWithDict:infoDict];
-		
+
+		//This will be released in adiumPurpleNotifyClose()
 		return requestController;
 
 	} else {
 		AILog(@"**** returning search results");
-		return [[[AMPurpleSearchResultsController alloc] initWithPurpleConnection:gc
-																			title:title?[NSString stringWithUTF8String:title]:nil
-																	  primaryText:primary?[NSString stringWithUTF8String:primary]:nil
-																	secondaryText:secondary?[NSString stringWithUTF8String:secondary]:nil
-																	searchResults:results
-																		 userData:user_data] autorelease];
+		//This will be released in adiumPurpleNotifyClose()
+		return [[AMPurpleSearchResultsController alloc] initWithPurpleConnection:gc
+																		   title:title?[NSString stringWithUTF8String:title]:nil
+																	 primaryText:primary?[NSString stringWithUTF8String:primary]:nil
+																   secondaryText:secondary?[NSString stringWithUTF8String:secondary]:nil
+																   searchResults:results
+																		userData:user_data];
 	}
 }
 
@@ -166,8 +168,8 @@ static void *adiumPurpleNotifyUri(const char *uri)
 static void adiumPurpleNotifyClose(PurpleNotifyType type,void *uiHandle)
 {
 	id ourHandle = uiHandle;
-	AILogWithSignature(@"Talking to %p",ourHandle);
-	AILogWithSignature(@"That is %@",ourHandle);
+	AILogWithSignature(@"Closing %p (%i)",ourHandle,type);
+
 	if ([ourHandle respondsToSelector:@selector(purpleRequestClose)]) {
 		[ourHandle performSelector:@selector(purpleRequestClose)];
 		[ourHandle release];
@@ -175,8 +177,6 @@ static void adiumPurpleNotifyClose(PurpleNotifyType type,void *uiHandle)
 		[ourHandle performSelector:@selector(closeWindow:)
 						withObject:nil];
 	}
-
-	AILog(@"adiumPurpleNotifyClose");
 }
 
 static PurpleNotifyUiOps adiumPurpleNotifyOps = {
