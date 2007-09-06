@@ -387,6 +387,16 @@
 			<key>CFBundleURLIconFile</key>
 			<string>generic</string>
 			<key>CFBundleURLName</key>
+			<string>Google Talk URL</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>gtalk</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLIconFile</key>
+			<string>generic</string>
+			<key>CFBundleURLName</key>
 			<string>ICQ URL</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
