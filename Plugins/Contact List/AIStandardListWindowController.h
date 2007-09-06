@@ -24,7 +24,9 @@
 
 typedef enum {
 	ContactListImagePickerOnLeft = 0,
-	ContactListImagePickerOnRight
+	ContactListImagePickerOnRight,
+	ContactListImagePickerHiddenOnLeft,
+	ContactListImagePickerHiddenOnRight,
 } ContactListImagePickerPosition;
 
 @interface AIStandardListWindowController : AIListWindowController {
