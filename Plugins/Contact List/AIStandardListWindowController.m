@@ -701,6 +701,9 @@
 static ESObjectWithStatus<AIContainingObject> *oldContactList = nil;
 - (void)controlTextDidChange:(NSNotification *)aNotification
 {
+	//XXX This is busted. I'm turning it off to protect the innocent. More considered removal should follow as discussed in #7832
+	return;
+	
 	NSSearchField *sender = [aNotification object];
 	NSString *queryString = [(NSSearchFieldCell *)[(NSTextField *)sender cell] stringValue];
 	if (!oldContactList) {
