@@ -1,64 +1,86 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>%.0lfk of %.0lfk</key>
-	<string>%1$.0lfk av %2$.0lfk</string>
-	<key>%@ %@ has been installed and will be ready to use next time %@ starts! Would you like to relaunch now?</key>
-	<string>%1$@ %2$@ har installerats och är redo att användas nästa gång du startar %3$@! Vill du starta om programmet nu?</string>
-	<key>%@ %@ is currently the newest version available.</key>
-	<string>%1$@ %2$@ är den senaste tillgängliga versionen.</string>
-	<key>%@ %@ is now available (you have %@). Would you like to download it now?</key>
-	<string>%1$@ %2$@ är nu tillgänglig (du har %3$@). Vill du ladda ner den nu?</string>
-	<key>%@ does not have permission to write to the application's directory! Are you running off a disk image? If not, ask your system administrator for help.</key>
-	<string>%@ har inte rättigheter att skriva till programmets mapp! Kör du programmet från en skivavbild? Om inte, be din systemadministratör om hjälp.</string>
-	<key>A new version of %@ has been installed!</key>
-	<string>En ny version av %@ har installerats!</string>
-	<key>A new version of %@ is available!</key>
-	<string>En ny version av %@ är tillgänglig!</string>
-	<key>An error occurred during installation. Please try again later.</key>
-	<string>Ett fel inträffade under installationen. Försök igen senare.</string>
-	<key>An error occurred in retrieving update information. Please try again later.</key>
-	<string>Ett fel inträffade när information om uppdateringen togs emot. Försök igen senare.</string>
-	<key>An error occurred in retrieving update information; are you connected to the internet? Please try again later.</key>
-	<string>Ett fel inträffade när information om uppdateringen togs emot. Är du uppkopplad mot internet? Vänligen försök igen senare.</string>
-	<key>An error occurred while extracting the archive. Please try again later.</key>
-	<string>Ett fel inträffade när programmet packades upp. Försök igen senare.</string>
-	<key>An error occurred while trying to download the file. Please try again later.</key>
-	<string>Ett fel inträffade när filen laddades ner. Försök igen senare.</string>
-	<key>An update is already in progress!</key>
-	<string>Programmet håller på att uppdateras!</string>
-	<key>Anonymous system profile information is used to help us plan future development work.</key>
-	<string>Anonym systeminformation används för att hjälpa oss att planera framtida utvecklingsarbete.</string>
-	<key>Cancel</key>
-	<string>Avbryt</string>
-	<key>Check for updates on startup?</key>
-	<string>Leta efter uppdateringar vid start</string>
-	<key>Downloading update...</key>
-	<string>Laddar ner ny version...</string>
-	<key>Extracting update...</key>
-	<string>Packar upp uppdatering...</string>
-	<key>Include anonymous system profile?</key>
-	<string>Skicka med anonym systeminformation?</string>
-	<key>Install and Relaunch</key>
-	<string>Installera och starta om programmet</string>
-	<key>Installing update...</key>
-	<string>Installerar uppdatering...</string>
-	<key>No</key>
-	<string>Nej</string>
-	<key>OK</key>
-	<string>OK</string>
-	<key>Ready to install!</key>
-	<string>Klar att installera!</string>
-	<key>Update Error!</key>
-	<string>Uppdateringsfel!</string>
-	<key>Updating %@</key>
-	<string>Uppdaterar %@</string>
-	<key>Would you like %@ to check for updates on startup? If not, you can initiate the check manually from the application menu.</key>
-	<string>Vill du att %@ letar efter uppdateringar när programmet startar? Annars kan du göra en manuell sökning från Adium-menyn.</string>
-	<key>Yes</key>
-	<string>Ja</string>
-	<key>You're up to date!</key>
-	<string>Du har senaste versionen!</string>
-</dict>
-</plist>
+﻿/* No comment provided by engineer. */
+"%.0lfk of %.0lfk" = "%1$.0lfk av %2$.0lfk";
+
+/* No comment provided by engineer. */
+"%@ %@ has been installed and will be ready to use next time %@ starts! Would you like to relaunch now?" = "%1$@ %2$@ har installerats och är klart att använda nästa gång %3$@ körs! Vill du starta om programmet nu?";
+
+/* No comment provided by engineer. */
+"%@ %@ is currently the newest version available." = "%1$@ %2$@ är för närvarande den nyaste versionen.";
+
+/* No comment provided by engineer. */
+"%@ %@ is now available (you have %@). Would you like to download it now?" = "%1$@ %2$@ finns tillgänglig (du har %3$@). Vill du ladda hem den nu?";
+
+/* No comment provided by engineer. */
+"%@ does not have permission to write to the application's directory! Are you running off a disk image? If not, ask your system administrator for help." = "%@ har inte skrivrättigheter i programmets katalog! Kör du från en skivavbild? Om inte, be din systemadministratör om hjälp.";
+
+/* No comment provided by engineer. */
+"A new version of %@ has been installed!" = "En ny version av %@ har installerats!";
+
+/* No comment provided by engineer. */
+"A new version of %@ is available!" = "En ny version av %@ finns tillgänglig!";
+
+/* No comment provided by engineer. */
+"An error occurred during installation. Please try again later." = "Ett fel uppstod vid installationen. Försök igen senare.";
+
+/* No comment provided by engineer. */
+"An error occurred in retrieving update information. Please try again later." = "Ett fel uppstod vid hämtning av uppdateringsinformation. Försök igen senare.";
+
+/* No comment provided by engineer. */
+"An error occurred in retrieving update information; are you connected to the internet? Please try again later." = "Ett fel uppstod vid hämtning av uppdateringsinformation. Är du ansluten till Internet? Försök igen senare.";
+
+/* No comment provided by engineer. */
+"An error occurred while extracting the archive. Please try again later." = "Ett fel uppstod vid uppackning av filarkivet. Försök igen senare.";
+
+/* No comment provided by engineer. */
+"An error occurred while trying to download the file. Please try again later." = "Ett fel uppstod vid nedladdning av filen. Försök igen senare.";
+
+/* No comment provided by engineer. */
+"An update is already in progress!" = "En uppdatering genomförs redan!";
+
+/* No comment provided by engineer. */
+"Anonymous system profile information is used to help us plan future development work." = "Anonym systeminformation används för att hjälpa oss planera framtida utvecklingsarbete.";
+
+/* No comment provided by engineer. */
+"Cancel" = "Avbryt";
+
+/* No comment provided by engineer. */
+"Check for updates on startup?" = "Sök efter uppdateringar vid start?";
+
+/* No comment provided by engineer. */
+"Downloading update..." = "Laddar hem uppdatering...";
+
+/* No comment provided by engineer. */
+"Extracting update..." = "Packar upp uppdatering...";
+
+/* No comment provided by engineer. */
+"Include anonymous system profile?" = "Inkludera anonym systeminformation?";
+
+/* No comment provided by engineer. */
+"Install and Relaunch" = "Installera och starta om";
+
+/* No comment provided by engineer. */
+"Installing update..." = "Installerar uppdatering...";
+
+/* No comment provided by engineer. */
+"No" = "Nej";
+
+/* No comment provided by engineer. */
+"OK" = "OK";
+
+/* No comment provided by engineer. */
+"Ready to install!" = "Klar att installera!";
+
+/* No comment provided by engineer. */
+"Update Error!" = "Uppdateringsfel!";
+
+/* No comment provided by engineer. */
+"Updating %@" = "Uppdaterar %@";
+
+/* No comment provided by engineer. */
+"Would you like %@ to check for updates on startup? If not, you can initiate the check manually from the application menu." = "Vill du att %@ ska söka efter uppdateringar vid start? Om inte så kan du starta sökningen manuellt i programmets meny.";
+
+/* No comment provided by engineer. */
+"Yes" = "Ja";
+
+/* No comment provided by engineer. */
+"You're up to date!" = "Du kör en aktuell version!";
