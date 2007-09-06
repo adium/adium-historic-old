@@ -139,6 +139,50 @@
 	[super windowWillClose:sender];
 }
 
+- (void)positionImagePickerIfNeeded
+{
+	LIST_POSITION					layoutUserIconPosition = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_USER_ICON_POSITION
+																						 group:PREF_GROUP_LIST_LAYOUT] intValue];
+	ContactListImagePickerPosition  desiredImagePickerPosition;
+	
+	//Determine where we want the image picker now
+	switch (layoutUserIconPosition) {
+		case LIST_POSITION_RIGHT:
+		case LIST_POSITION_FAR_RIGHT:
+		case LIST_POSITION_BADGE_RIGHT:
+			desiredImagePickerPosition = ContactListImagePickerOnRight;
+			break;
+		case LIST_POSITION_NA:
+		case LIST_POSITION_FAR_LEFT:
+		case LIST_POSITION_LEFT:
+		case LIST_POSITION_BADGE_LEFT:
+		default:
+			desiredImagePickerPosition = ContactListImagePickerOnLeft;
+			break;				
+	}
+	
+	
+	AIAccount *activeAccount = [[self class] activeAccountForIconsGettingOnlineAccounts:nil ownIconAccounts:nil];
+	BOOL imagePickerIsVisible;
+	
+	if (activeAccount) {
+		imagePickerIsVisible = ([activeAccount userIcon] != nil);
+	} else {
+		imagePickerIsVisible = [[[adium preferenceController] preferenceForKey:KEY_USE_USER_ICON group:GROUP_ACCOUNT_STATUS] boolValue];
+	}
+	
+	if (!imagePickerIsVisible) {
+		desiredImagePickerPosition = ((desiredImagePickerPosition == ContactListImagePickerOnLeft) ?
+									  ContactListImagePickerHiddenOnLeft :
+									  ContactListImagePickerHiddenOnRight);
+	}
+	
+	//Only proceed if this new position is different from the old one
+	if (desiredImagePickerPosition != imagePickerPosition) {
+		[self repositionImagePickerToPosition:desiredImagePickerPosition];
+	}
+}
+
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
@@ -149,6 +193,7 @@
 			[key isEqualToString:@"Active Icon Selection Account"] ||
 			firstTime) {
 			[self updateImagePicker];
+			[self positionImagePickerIfNeeded];
 		}
 		
 		if ([key isEqualToString:@"Active Display Name Account"] ||
@@ -161,29 +206,7 @@
 	 * We move our image picker to mirror the contact list's own layout
 	 */
 	if ([group isEqualToString:PREF_GROUP_LIST_LAYOUT]) {
-		LIST_POSITION					layoutUserIconPosition = [[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_POSITION] intValue];
-		ContactListImagePickerPosition  desiredImagePickerPosition;
-
-		//Determine where we want the image picker now
-		switch (layoutUserIconPosition) {
-			case LIST_POSITION_RIGHT:
-			case LIST_POSITION_FAR_RIGHT:
-			case LIST_POSITION_BADGE_RIGHT:
-				desiredImagePickerPosition = ContactListImagePickerOnRight;
-				break;
-			case LIST_POSITION_NA:
-			case LIST_POSITION_FAR_LEFT:
-			case LIST_POSITION_LEFT:
-			case LIST_POSITION_BADGE_LEFT:
-			default:
-				desiredImagePickerPosition = ContactListImagePickerOnLeft;
-				break;				
-		}
-
-		//Only proceed if this new position is different from the old one
-		if (desiredImagePickerPosition != imagePickerPosition) {
-			[self repositionImagePickerToPosition:desiredImagePickerPosition];
-		}
+		[self positionImagePickerIfNeeded];
 	}
 	
 	[super preferencesChangedForGroup:group
@@ -196,7 +219,7 @@
 - (void)listObjectAttributesChanged:(NSNotification *)inNotification
 {
     AIListObject	*object = [inNotification object];
-
+	
 	if ([object isKindOfClass:[AIAccount class]] &&
 		[[[inNotification userInfo] objectForKey:@"Keys"] containsObject:@"Display Name"]) {
 		[self updateNameView];
@@ -212,25 +235,74 @@
 {
 	NSRect nameAndStatusMenuFrame = [view_nameAndStatusMenu frame];
 	NSRect newNameAndStatusMenuFrame = nameAndStatusMenuFrame;
-		
+	
 	NSRect imagePickerFrame = [imagePicker frame];
 	NSRect newImagePickerFrame = imagePickerFrame;
 	
-	if (desiredImagePickerPosition == ContactListImagePickerOnLeft) {
-		//Image picker is on the right but we want it on the left
-		
-		newImagePickerFrame.origin.x = nameAndStatusMenuFrame.origin.x;	
-		newNameAndStatusMenuFrame.origin.x = NSMaxX(newImagePickerFrame);
+	switch (desiredImagePickerPosition)
+	{
+		case ContactListImagePickerOnLeft:
+		case ContactListImagePickerHiddenOnLeft:
+		{
+			if ((imagePickerPosition == ContactListImagePickerOnRight) ||
+				(imagePickerPosition == ContactListImagePickerHiddenOnRight)) {
+				//Image picker is on the right but we want it on the left
+				newImagePickerFrame.origin.x = NSMinX(nameAndStatusMenuFrame);	
+			}
 
-		[imagePicker setAutoresizingMask:(NSViewMaxXMargin | NSViewMinYMargin)];
+			if (desiredImagePickerPosition == ContactListImagePickerOnLeft) {
+				if ((imagePickerPosition == ContactListImagePickerHiddenOnLeft) ||
+					(imagePickerPosition == ContactListImagePickerHiddenOnRight)) {
+					//Image picker was hidden but not is visible; shrink the name/status menu
+					newNameAndStatusMenuFrame.size.width -= NSWidth(newImagePickerFrame);
+					newNameAndStatusMenuFrame.origin.x = NSMaxX(newImagePickerFrame);
+					[imagePicker setHidden:NO];
+				}
+			} else /* if (desiredImagePickerPosition == ContactListImagePickerHiddenOnLeft) */ {
+				if ((imagePickerPosition == ContactListImagePickerOnLeft) ||
+					(imagePickerPosition == ContactListImagePickerOnRight)) {
+					//Image picker was visible but now is hidden; expand the name/status menu
+					newNameAndStatusMenuFrame.size.width += NSWidth(newImagePickerFrame);
+					newNameAndStatusMenuFrame.origin.x = NSMinX(newImagePickerFrame);
+					[imagePicker setHidden:YES];
+				}
+			}
+			
+			[imagePicker setAutoresizingMask:(NSViewMaxXMargin | NSViewMinYMargin)];
 
-	} else {
-		//Image picker is on the left but we want it on the right		
-		newNameAndStatusMenuFrame.origin.x = imagePickerFrame.origin.x;
-		
-		newImagePickerFrame.origin.x = ([[imagePicker superview] frame].size.width - NSMaxX(imagePickerFrame));
+			break;
+		}
+		case ContactListImagePickerOnRight:
+		case ContactListImagePickerHiddenOnRight:
+		{
+			if (desiredImagePickerPosition == ContactListImagePickerOnRight) {
+				if ((imagePickerPosition == ContactListImagePickerHiddenOnLeft) ||
+					(imagePickerPosition == ContactListImagePickerHiddenOnRight)) {
+					//Image picker was hidden but not is visible; shrink the name/status menu
+					newNameAndStatusMenuFrame.size.width -= NSWidth(newImagePickerFrame);
+					[imagePicker setHidden:NO];	
+				}
+	
+			} else /* if (desiredImagePickerPosition == ContactListImagePickerHiddenOnLeft) */ {
+				if ((imagePickerPosition == ContactListImagePickerOnLeft) ||
+					(imagePickerPosition == ContactListImagePickerOnRight)) {
+					//Image picker was visible but now is hidden; expand the name/status menu
+					newNameAndStatusMenuFrame.size.width += NSWidth(newImagePickerFrame);
+					[imagePicker setHidden:YES];
+				}
+			}
+			
+			if ((imagePickerPosition == ContactListImagePickerOnLeft) ||
+				(imagePickerPosition == ContactListImagePickerHiddenOnLeft)) {
+				/* Image picker is on the left but we want it on the right. Positioning is frame relative, not name-and-status-menu relative,
+				 * so we can position it the same regardless of hidden status. */
+				newImagePickerFrame.origin.x = (NSWidth([[imagePicker superview] frame]) - NSMaxX(imagePickerFrame));
+				newNameAndStatusMenuFrame.origin.x = NSMinX(imagePickerFrame);
+			}
 
-		[imagePicker setAutoresizingMask:(NSViewMinXMargin | NSViewMinYMargin)];
+			[imagePicker setAutoresizingMask:(NSViewMinXMargin | NSViewMinYMargin)];
+			break;
+		}
 	}
 
 	[view_nameAndStatusMenu setFrame:newNameAndStatusMenuFrame];
