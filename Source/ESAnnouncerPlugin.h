@@ -27,7 +27,7 @@
 #define KEY_VOICE_STRING				@"Voice"
 #define KEY_PITCH						@"Pitch"
 #define KEY_RATE						@"Rate"
-#define KEY_PITCH_CUSTOM				@"Custom Rate"
+#define KEY_PITCH_CUSTOM				@"Custom Pitch"
 #define KEY_RATE_CUSTOM					@"Custom Rate"
 
 #define SPEAK_TEXT_ALERT_IDENTIFIER		@"SpeakText"
