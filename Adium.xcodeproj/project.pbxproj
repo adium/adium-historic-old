@@ -1131,6 +1131,13 @@
 		6EC1684D06C170A000F9FAD3 /* DCInviteToChatPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EC1684806C170A000F9FAD3 /* DCInviteToChatPlugin.m */; };
 		6EC1684F06C170A000F9FAD3 /* DCInviteToChatWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EC1684A06C170A000F9FAD3 /* DCInviteToChatWindowController.m */; };
 		6EC1685006C170A000F9FAD3 /* InviteToChatWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6EC1684B06C170A000F9FAD3 /* InviteToChatWindow.nib */; };
+		6FAFD7B30C4FD00100EDB3B8 /* EKEzvFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FAFD7B20C4FD00100EDB3B8 /* EKEzvFileTransfer.m */; };
+		6FB3309D0C7235AD00B001A8 /* AsyncSocket.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB330970C7235AD00B001A8 /* AsyncSocket.m */; };
+		6FB3309E0C7235AD00B001A8 /* HTTPAuthenticationRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB330990C7235AD00B001A8 /* HTTPAuthenticationRequest.m */; };
+		6FB3309F0C7235AD00B001A8 /* HTTPServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB3309B0C7235AD00B001A8 /* HTTPServer.m */; };
+		6FB330A00C7235AD00B001A8 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6FB3309C0C7235AD00B001A8 /* LICENSE.txt */; };
+		6FB330A50C7235BF00B001A8 /* EKEzvIncomingFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB330A20C7235BF00B001A8 /* EKEzvIncomingFileTransfer.m */; };
+		6FB330A60C7235BF00B001A8 /* EKEzvOutgoingFileTransfer.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FB330A40C7235BF00B001A8 /* EKEzvOutgoingFileTransfer.m */; };
 		7E824CDD06387FAF00813072 /* LinkEditor.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7E824CCE06387FAF00813072 /* LinkEditor.nib */; };
 		7E824CE106387FAF00813072 /* SHAutoValidatingTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CD206387FAF00813072 /* SHAutoValidatingTextView.m */; };
 		7E824CE306387FAF00813072 /* SHLinkEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CD406387FAF00813072 /* SHLinkEditorWindowController.m */; };
@@ -3575,6 +3582,19 @@
 		6EC1684B06C170A000F9FAD3 /* InviteToChatWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = InviteToChatWindow.nib; path = "Plugins/Invite to Chat Plugin/InviteToChatWindow.nib"; sourceTree = "<group>"; };
 		6ECFABC606223733001C7E93 /* AIContentContext.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContentContext.h; path = "Frameworks/Adium Framework/Source/AIContentContext.h"; sourceTree = "<group>"; };
 		6ECFABC706223733001C7E93 /* AIContentContext.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContentContext.m; path = "Frameworks/Adium Framework/Source/AIContentContext.m"; sourceTree = "<group>"; };
+		6FAFD7B10C4FD00100EDB3B8 /* EKEzvFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = EKEzvFileTransfer.h; sourceTree = "<group>"; };
+		6FAFD7B20C4FD00100EDB3B8 /* EKEzvFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = EKEzvFileTransfer.m; sourceTree = "<group>"; };
+		6FB330960C7235AD00B001A8 /* AsyncSocket.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AsyncSocket.h; path = "Plugins/Bonjour/libezv/Simple HTTP Server/AsyncSocket.h"; sourceTree = SOURCE_ROOT; };
+		6FB330970C7235AD00B001A8 /* AsyncSocket.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AsyncSocket.m; path = "Plugins/Bonjour/libezv/Simple HTTP Server/AsyncSocket.m"; sourceTree = SOURCE_ROOT; };
+		6FB330980C7235AD00B001A8 /* HTTPAuthenticationRequest.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = HTTPAuthenticationRequest.h; path = "Plugins/Bonjour/libezv/Simple HTTP Server/HTTPAuthenticationRequest.h"; sourceTree = SOURCE_ROOT; };
+		6FB330990C7235AD00B001A8 /* HTTPAuthenticationRequest.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = HTTPAuthenticationRequest.m; path = "Plugins/Bonjour/libezv/Simple HTTP Server/HTTPAuthenticationRequest.m"; sourceTree = SOURCE_ROOT; };
+		6FB3309A0C7235AD00B001A8 /* HTTPServer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = HTTPServer.h; path = "Plugins/Bonjour/libezv/Simple HTTP Server/HTTPServer.h"; sourceTree = SOURCE_ROOT; };
+		6FB3309B0C7235AD00B001A8 /* HTTPServer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = HTTPServer.m; path = "Plugins/Bonjour/libezv/Simple HTTP Server/HTTPServer.m"; sourceTree = SOURCE_ROOT; };
+		6FB3309C0C7235AD00B001A8 /* LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; name = LICENSE.txt; path = "Plugins/Bonjour/libezv/Simple HTTP Server/LICENSE.txt"; sourceTree = SOURCE_ROOT; };
+		6FB330A10C7235BF00B001A8 /* EKEzvIncomingFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = EKEzvIncomingFileTransfer.h; path = Plugins/Bonjour/libezv/Classes/EKEzvIncomingFileTransfer.h; sourceTree = SOURCE_ROOT; };
+		6FB330A20C7235BF00B001A8 /* EKEzvIncomingFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = EKEzvIncomingFileTransfer.m; path = Plugins/Bonjour/libezv/Classes/EKEzvIncomingFileTransfer.m; sourceTree = SOURCE_ROOT; };
+		6FB330A30C7235BF00B001A8 /* EKEzvOutgoingFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = EKEzvOutgoingFileTransfer.h; path = Plugins/Bonjour/libezv/Classes/EKEzvOutgoingFileTransfer.h; sourceTree = SOURCE_ROOT; };
+		6FB330A40C7235BF00B001A8 /* EKEzvOutgoingFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = EKEzvOutgoingFileTransfer.m; path = Plugins/Bonjour/libezv/Classes/EKEzvOutgoingFileTransfer.m; sourceTree = SOURCE_ROOT; };
 		77D903500B78CF1000B86C42 /* zhm */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = zhm; path = "Plugins/Purple Service/zhm"; sourceTree = "<group>"; };
 		7E1E8176063A3EEC00EB00F7 /* AIContextMenuTextView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContextMenuTextView.h; path = "Frameworks/Adium Framework/Source/AIContextMenuTextView.h"; sourceTree = "<group>"; };
 		7E1E8177063A3EEC00EB00F7 /* AIContextMenuTextView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContextMenuTextView.m; path = "Frameworks/Adium Framework/Source/AIContextMenuTextView.m"; sourceTree = "<group>"; };
@@ -5488,6 +5508,8 @@
 		4947F5D10655E90C00B791E5 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				6FAFD7B10C4FD00100EDB3B8 /* EKEzvFileTransfer.h */,
+				6FAFD7B20C4FD00100EDB3B8 /* EKEzvFileTransfer.m */,
 				4947F5D20655E90C00B791E5 /* AWEzv.h */,
 				4947F5D30655E90C00B791E5 /* AWEzv.m */,
 				4947F5D40655E90C00B791E5 /* AWEzvContact.h */,
@@ -5542,6 +5564,11 @@
 		4947F5F10655E90D00B791E5 /* Private Classes */ = {
 			isa = PBXGroup;
 			children = (
+				6FB330A10C7235BF00B001A8 /* EKEzvIncomingFileTransfer.h */,
+				6FB330A20C7235BF00B001A8 /* EKEzvIncomingFileTransfer.m */,
+				6FB330A30C7235BF00B001A8 /* EKEzvOutgoingFileTransfer.h */,
+				6FB330A40C7235BF00B001A8 /* EKEzvOutgoingFileTransfer.m */,
+				6FB330940C72359100B001A8 /* HTTP Server */,
 				4947F5F20655E90D00B791E5 /* AWEzvContactManager.h */,
 				4947F5F30655E90D00B791E5 /* AWEzvContactManager.m */,
 				4947F5F40655E90D00B791E5 /* AWEzvContactManagerListener.h */,
@@ -6452,6 +6479,20 @@
 				6EC1684B06C170A000F9FAD3 /* InviteToChatWindow.nib */,
 			);
 			name = "Invite to Chat";
+			sourceTree = "<group>";
+		};
+		6FB330940C72359100B001A8 /* HTTP Server */ = {
+			isa = PBXGroup;
+			children = (
+				6FB330960C7235AD00B001A8 /* AsyncSocket.h */,
+				6FB330970C7235AD00B001A8 /* AsyncSocket.m */,
+				6FB330980C7235AD00B001A8 /* HTTPAuthenticationRequest.h */,
+				6FB330990C7235AD00B001A8 /* HTTPAuthenticationRequest.m */,
+				6FB3309A0C7235AD00B001A8 /* HTTPServer.h */,
+				6FB3309B0C7235AD00B001A8 /* HTTPServer.m */,
+				6FB3309C0C7235AD00B001A8 /* LICENSE.txt */,
+			);
+			name = "HTTP Server";
 			sourceTree = "<group>";
 		};
 		7E824CCD06387FAF00813072 /* Link Management */ = {
@@ -7635,7 +7676,6 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
@@ -8118,6 +8158,7 @@
 			files = (
 				4947F60E0655E90D00B791E5 /* COPYING in Resources */,
 				34F46764080F46AC007800AB /* ESBonjourAccountView.nib in Resources */,
+				6FB330A00C7235AD00B001A8 /* LICENSE.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8839,6 +8880,12 @@
 				34F46760080F46AC007800AB /* AWBonjourPlugin.m in Sources */,
 				34F46762080F46AC007800AB /* AWBonjourAccount.m in Sources */,
 				34F46765080F46AC007800AB /* AWBonjourService.m in Sources */,
+				6FAFD7B30C4FD00100EDB3B8 /* EKEzvFileTransfer.m in Sources */,
+				6FB3309D0C7235AD00B001A8 /* AsyncSocket.m in Sources */,
+				6FB3309E0C7235AD00B001A8 /* HTTPAuthenticationRequest.m in Sources */,
+				6FB3309F0C7235AD00B001A8 /* HTTPServer.m in Sources */,
+				6FB330A50C7235BF00B001A8 /* EKEzvIncomingFileTransfer.m in Sources */,
+				6FB330A60C7235BF00B001A8 /* EKEzvOutgoingFileTransfer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

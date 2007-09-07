@@ -77,7 +77,7 @@
 									  ofType:AIAwayStatusType
 								  forService:self];
 }
-- (NSString *)defaultUserName { 
+- (NSString *)defaultUserName {
 	return NSFullUserName(); 
 }
 @end

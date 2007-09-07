@@ -39,9 +39,10 @@
     float						percentDone;
     unsigned long long			size;
     unsigned long long			bytesSent;
+	BOOL                        isDirectory;
     AIFileTransferType			type;
 	AIFileTransferStatus		status;
-	
+
 	NSString					*uniqueID;
 	id <FileTransferDelegate>   delegate;
 	
@@ -64,6 +65,9 @@
 
 - (void)setSize:(unsigned long long)inSize;
 - (unsigned long long)size;
+
+- (void)setIsDirectory:(BOOL)inIsDirectory;
+- (BOOL)isDirectory;
 
 - (void)setFileTransferType:(AIFileTransferType)inType;
 - (AIFileTransferType)fileTransferType;

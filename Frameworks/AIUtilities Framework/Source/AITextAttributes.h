@@ -111,6 +111,7 @@
  */
 - (void)setUnderline:(BOOL)inUnderline;
 
+- (BOOL)underline;
 /*!
  * @brief Set the strikethrough attribute
  *
@@ -119,6 +120,7 @@
  */
 - (void)setStrikethrough:(BOOL)inStrikethrough;
 
+- (BOOL)strikethrough;
 /*!
  * @brief Set the subscript attribute
  *

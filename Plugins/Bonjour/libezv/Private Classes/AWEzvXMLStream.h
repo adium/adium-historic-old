@@ -35,7 +35,7 @@
 #define XMLCALL
 #include <expat.h> 
 
-@class AWEzvStack, AWEzvXMLNode;
+@class AWEzvStack, AWEzvXMLNode, AWEzvContactManager;
 @protocol AWEzvXMLStreamProtocol;
 
 @interface AWEzvXMLStream : NSObject {
@@ -52,7 +52,7 @@
 - (void) sendData:(NSData *)data;
 - (void) sendString:(NSString *)string;
 - (void) closeFileHandle;
-
+- (void) endConnection;
 - (void) setDelegate:(id)delegate;
 - (id) delegate;
 
@@ -69,4 +69,6 @@
 @protocol AWEzvXMLStreamProtocol
 - (void) XMLConnectionClosed;
 - (void) XMLReceivedMessage:(AWEzvXMLNode *)root;
+- (NSString *) uniqueID;
+- (AWEzvContactManager *) manager;
 @end

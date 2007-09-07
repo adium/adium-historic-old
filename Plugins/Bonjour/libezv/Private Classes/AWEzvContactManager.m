@@ -49,7 +49,6 @@
 
 - (AWEzvContact *)contactForIdentifier:(NSString *)uniqueID {
     AWEzvContact *contact;
-    
     contact = [contacts objectForKey:uniqueID];
     /* try a case insensitive search if not found */
     if (contact == nil) {
@@ -61,6 +60,15 @@
 	}
     }
     return contact;
+}
+- (void)closeConnections{
+	NSEnumerator *enumerator = [contacts objectEnumerator];
+    AWEzvContact *contact;
+
+	while ((contact = [enumerator nextObject])) {
+		if ([contact stream] != NULL)
+			[[contact stream] endConnection];
+	}
 }
 
 - (AWEzv *)client {

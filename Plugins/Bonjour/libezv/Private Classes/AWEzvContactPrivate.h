@@ -37,6 +37,7 @@
 
 @interface AWEzvContact (Private)
 - (void) setStream:(AWEzvXMLStream *)stream;
+- (AWEzvXMLStream *)stream;
 - (void) setStatus:(AWEzvStatus) status;
 - (void) setIdleSinceDate:(NSDate *) idleSince;
 
@@ -52,10 +53,18 @@
 - (void) setManager:(AWEzvContactManager *)manager;
 - (AWEzvContactManager *) manager;
 
+- (void) setImageServiceController:(ServiceController *)controller;
+- (ServiceController *) imageServiceController;
+
+- (void) setAddressServiceController:(ServiceController *)controller;
+- (ServiceController *) addressServiceController;
+
 - (int) serial;
 
 - (void)createConnection;
 
 - (void) XMLReceivedMessage:(AWEzvXMLNode *)root;
 - (void) XMLCheckForEvent:(AWEzvXMLNode *)node;
+- (void) XMLCheckForOOB:(AWEzvXMLNode *)node;
+- (void)evaluteURLXML:(AWEzvXMLNode *)node;
 @end

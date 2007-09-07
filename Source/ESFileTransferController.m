@@ -85,6 +85,7 @@ static ESFileTransferPreferences *preferences;
 	//Register the events we generate
 	NSObject <AIContactAlertsController> *contactAlertsController = [adium contactAlertsController];
 	[contactAlertsController registerEventID:FILE_TRANSFER_REQUEST withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
+	[contactAlertsController registerEventID:FILE_TRANSFER_WAITING_REMOTE withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
 	[contactAlertsController registerEventID:FILE_TRANSFER_BEGAN withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
 	[contactAlertsController registerEventID:FILE_TRANSFER_CANCELLED withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
 	[contactAlertsController registerEventID:FILE_TRANSFER_COMPLETE withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
@@ -360,7 +361,7 @@ static ESFileTransferPreferences *preferences;
 		if ([defaultManager fileExistsAtPath:inPath isDirectory:&isDir]) {
 			//If we get a directory and the account we're sending from doesn't support folder transfers
 			if (isDir &&
-				![account supportsFolderTransfer]) {
+				![(AIAccount<AIAccount_Files> *)account canSendFolders]) {
 				inPath = [self pathToArchiveOfFolder:inPath];
 			}
 			
@@ -422,7 +423,17 @@ static ESFileTransferPreferences *preferences;
 				[self showProgressWindowIfNotOpen:nil];
 			}	
 			break;
-
+		case Waiting_on_Remote_User_FileTransfer:
+			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_WAITING_REMOTE
+											 forListObject:[fileTransfer contact]
+												  userInfo:fileTransfer
+							  previouslyPerformedActionIDs:nil];
+			
+			if (showProgressWindow) {
+				[self showProgressWindowIfNotOpen:nil];
+			}
+				
+				break;
 		case Accepted_FileTransfer:
 			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_BEGAN
 											 forListObject:[fileTransfer contact] 
@@ -582,6 +593,8 @@ static ESFileTransferPreferences *preferences;
 		description = AILocalizedString(@"File transfer requested",nil);
 	} else if ([eventID isEqualToString:FILE_TRANSFER_CHECKSUMMING]) {
 		description = AILocalizedString(@"File is checksummed before sending",nil);
+	} else if ([eventID isEqualToString:FILE_TRANSFER_WAITING_REMOTE]) {
+		description = AILocalizedString(@"File transfer being offered to other side",nil);
 	} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
 		description = AILocalizedString(@"File transfer begins",nil);
 	} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELLED]) {
@@ -608,7 +621,9 @@ static ESFileTransferPreferences *preferences;
 		description = @"File Transfer Request";
 	} else if ([eventID isEqualToString:FILE_TRANSFER_CHECKSUMMING]) {
 		description = @"File Checksumming for Sending";
-	} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
+	} else if ([eventID isEqualToString:FILE_TRANSFER_WAITING_REMOTE]) {
+		description = @"File Transfer Being Offered to Remote User";
+	}  else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
 		description = @"File Transfer Began";
 	} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELLED]) {
 		//Canceled, not Cancelled as we use elsewhere in Adium, for historical reasons. Both are valid spellings.
@@ -654,6 +669,8 @@ static ESFileTransferPreferences *preferences;
 			description = AILocalizedString(@"When a file transfer is requested",nil);
 		} else if ([eventID isEqualToString:FILE_TRANSFER_CHECKSUMMING]) {
 			description = AILocalizedString(@"When a file is checksummed prior to sending",nil);
+		} else if ([eventID isEqualToString:FILE_TRANSFER_WAITING_REMOTE]) {
+			description = AILocalizedString(@"When a file transfer is offerd to a remote user",nil);
 		} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
 			description = AILocalizedString(@"When a file transfer begins",nil);
 		} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELLED]) {
@@ -692,6 +709,10 @@ static ESFileTransferPreferences *preferences;
 			//Should only happen for an incoming transfer
 			format = AILocalizedString(@"%@ requests to send you %@","A person is wanting to send you a file. The first %@ is a name; the second %@ is the filename of the file being sent.");
 			
+		} else if ([eventID isEqualToString:FILE_TRANSFER_WAITING_REMOTE]) {
+			//Should only happen for outgoing file transfers
+			format = AILocalizedString(@"Offering to send %@ to %@","You are offering to send a file to a remote user. The first %@ is the filename of the file being sent; the second %@ is the recipient of the file being sent.");
+		
 		} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
 			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
 				format = AILocalizedString(@"%@ began sending you %@","A person began sending you a file. The first %@ is a name; the second %@ is the filename of the file being sent.");
@@ -725,6 +746,10 @@ static ESFileTransferPreferences *preferences;
 			//Should only happen for an incoming transfer
 			format = AILocalizedString(@"requests to send you %@","%@ is a filename of a file being sent");
 			
+		}else if ([eventID isEqualToString:FILE_TRANSFER_WAITING_REMOTE]) {
+			//Should only happen for an outgoing transfer
+			format = AILocalizedString(@"offers to send %@","%@ is a filename of a file being sent");
+		
 		} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
 			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
 				format = AILocalizedString(@"began sending you %@","%@ is a filename of a file being sent");

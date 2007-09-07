@@ -85,8 +85,8 @@ static NSMutableDictionary *fileTransferDict = nil;
 		[fileTransferDict setObject:[NSValue valueWithNonretainedObject:self]
 							 forKey:[self uniqueID]];
 	}
-	
-    return self;
+
+	return self;
 }
 
 - (void)dealloc
@@ -151,6 +151,10 @@ static NSMutableDictionary *fileTransferDict = nil;
 	return displayFilename;
 }
 
+- (void)setSizeWithNumber:(NSNumber *)newSize
+{
+	[self setSize:[newSize unsignedLongLongValue]];
+}
 - (void)setSize:(unsigned long long)inSize
 {
     size = inSize;
@@ -164,6 +168,19 @@ static NSMutableDictionary *fileTransferDict = nil;
 {
     return size;
 }
+
+- (NSNumber *)sizeNumber 
+{
+	return [NSNumber numberWithUnsignedLongLong:size];
+}
+
+- (void)setIsDirectory:(BOOL)inIsDirectory{
+	isDirectory = inIsDirectory;
+}
+- (BOOL)isDirectory{
+	return isDirectory;
+}
+
 
 - (void)setFileTransferType:(AIFileTransferType)inType
 {
@@ -217,7 +234,7 @@ static NSMutableDictionary *fileTransferDict = nil;
  * @param inBytesSent The number of bytes sent. If 0, inPercent will be used to calculate bytes sent if possible.
  */
 - (void)setPercentDone:(float)inPercent bytesSent:(unsigned long long)inBytesSent
-{
+{	
 	float oldPercentDone = percentDone;
 	unsigned long long oldBytesSent = bytesSent;
 
@@ -243,7 +260,6 @@ static NSMutableDictionary *fileTransferDict = nil;
 
         bytesSent = inBytesSent;
 	}
-	
 	if ((percentDone != oldPercentDone) || (bytesSent != oldBytesSent)) {
 		if (delegate) {
 			[delegate gotUpdateForFileTransfer:self];
@@ -255,6 +271,11 @@ static NSMutableDictionary *fileTransferDict = nil;
 			[self setStatus:In_Progress_FileTransfer];
 		}
 	}
+}
+-(void)setPercentDone:(NSNumber *)percent bytes:(NSNumber *)bytes
+{
+	[self setPercentDone:[percent floatValue] bytesSent:[bytes unsignedLongLongValue]];
+	
 }
 - (float)percentDone
 {
@@ -317,8 +338,11 @@ static NSMutableDictionary *fileTransferDict = nil;
 		systemIcon = [[NSWorkspace sharedWorkspace] iconForFileType:extension];
 
 	} else {
-		systemIcon = [[NSWorkspace sharedWorkspace] iconForFile:[self localFilename]];
-
+		if ([[self account] canSendFolders] && [self isDirectory]){
+			systemIcon = [[NSWorkspace sharedWorkspace] iconForFileType: NSFileTypeForHFSTypeCode(kGenericFolderIcon)];
+		} else {
+			systemIcon = [[NSWorkspace sharedWorkspace] iconForFile:[self localFilename]];
+		}
 	}
 
 	BOOL pointingDown = (type == Incoming_FileTransfer);

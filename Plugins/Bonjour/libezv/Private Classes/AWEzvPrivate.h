@@ -34,10 +34,7 @@
 #import <Foundation/Foundation.h>
 
 @interface AWEzv (Private)
-- (id <AWEzvClientProtocol, NSObject>) client;
-
 - (NSString *) name;
 - (AWEzvStatus) status;
 - (NSDate *) idleTime;
-
 @end

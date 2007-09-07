@@ -32,10 +32,11 @@
 
 #import <Foundation/Foundation.h>
 #import <AWEzvDefines.h>
+#import "EKEzvOutgoingFileTransfer.h"
 
 @protocol AWEzvClientProtocol;
 
-@class NSImage;
+// @class // NSImage;
 @class AWEzvContact, AWEzvContactManager;
 
 @interface AWEzv : NSObject {
@@ -51,18 +52,20 @@
 
 - (void) login;
 - (void) logout;
+- (id <AWEzvClientProtocol, NSObject>) client;
 - (void) sendMessage:(NSString *)message to:(NSString *)contact withHtml:(NSString *)html;
 - (void) sendTypingNotification:(AWEzvTyping)typingStatus to:(NSString*)contact;
 - (void) sendTypeAhead:(NSString *)message to:(NSString *)contact withHtml:(NSString *)html;
 - (void) setName:(NSString *)name;
 - (void) setStatus:(AWEzvStatus)status withMessage:(NSString *)message;
 - (void) setIdleTime:(NSDate *)date;
-- (void) setContactImage:(NSImage *)contactImage;
+- (void) setContactImage:(NSData *)contactImage;
 - (AWEzvContact *) contactForIdentifier:(NSString *)uniqueID;
 
 // This API is subject to change
 - (void) sendFile:(NSString *)filename to:(NSString *)contact size:(size_t)size;
 
+- (void) startOutgoingFileTransfer:(EKEzvOutgoingFileTransfer *)transfer;
 @end
 
 
@@ -75,8 +78,19 @@
 - (void) user:(AWEzvContact *)contact typingNotification:(AWEzvTyping)typingStatus;
 - (void) user:(AWEzvContact *)contact typeAhead:(NSString *)message withHtml:(NSString *)html;
 
-// This API is subject to change
-- (void) user:(AWEzvContact *)contact sentFile:(NSString *)filename size:(size_t)size cookie:(int)cookie;
+// File Transfer
+- (void) remoteUserFinishedDownload:(EKEzvFileTransfer *)fileTransfer;
+- (void)updateProgressForFileTransfer:(EKEzvFileTransfer *)fileTransfer percent:(NSNumber *)percent bytesSent:(NSNumber *)bytesSent;
+- (void)remoteCanceledFileTransfer:(EKEzvFileTransfer *)fileTransfer;
+- (void)transferFailed:(EKEzvFileTransfer *)fileTransfer;
+// Incoming File Transfer
+- (void)user:(AWEzvContact *)contact sentFile:(EKEzvFileTransfer *)fileTransfer;
+// Outgoing File Transfer
+- (void)remoteUserBeganDownload:(EKEzvOutgoingFileTransfer *)fileTransfer;
+- (void)remoteUserFinishedDownload:(EKEzvOutgoingFileTransfer *)fileTransfer;
+
+
+
 
 - (void) reportError:(NSString *)error ofLevel:(AWEzvErrorSeverity)severity;
 - (void) reportError:(NSString *)error ofLevel:(AWEzvErrorSeverity)severity forUser:(NSString *)contact;

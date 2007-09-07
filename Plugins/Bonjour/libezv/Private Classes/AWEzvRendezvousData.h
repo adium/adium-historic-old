@@ -32,7 +32,7 @@
 
 
 #import <Foundation/Foundation.h>
-
+#import <dns_sd.h>
 
 @interface AWEzvRendezvousData : NSObject {
     NSMutableDictionary *keys;
@@ -44,6 +44,7 @@
 - (AWEzvRendezvousData *) initWithPlist:(NSString *)plist;
 - (AWEzvRendezvousData *) initWithDictionary:(NSDictionary *)dictionary;
 - (AWEzvRendezvousData *) initWithAVTxt:(NSString *)txt;
+- (AWEzvRendezvousData *) initWithTXTRecordRef:(const char *) txtRecord length:(uint16_t)len;
 - (void) setField:(NSString *)fieldName content:(NSObject *)content;
 - (NSString *) getField:(NSString *)fieldName;
 - (BOOL) fieldExists:(NSString *)fieldName;
@@ -54,5 +55,6 @@
 - (NSString *) avDataAsDNSTXT;
 - (NSData *) dataAsPackedPString;
 - (NSData *) avDataAsPackedPString;
+- (TXTRecordRef)dataAsTXTRecordRef;
 
 @end
