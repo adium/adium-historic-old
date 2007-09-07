@@ -36,7 +36,7 @@
 
 #import <AppKit/AppKit.h>
 
-@class AWEzvXMLStream, AWEzvRendezvousData, AWEzvContactManager, NSImage;
+@class AWEzvXMLStream, AWEzvRendezvousData, AWEzvContactManager, NSImage, ServiceController, EKEzvOutgoingFileTransfer;
 
 @interface AWEzvContact : NSObject {
     NSString *_name;
@@ -47,8 +47,11 @@
     AWEzvXMLStream *_stream;
     AWEzvRendezvousData *_rendezvous;
     NSString *_ipAddr;
+	NSString *imageHash;
     u_int16_t _port;
     AWEzvContactManager *_manager;
+	ServiceController *_imageServiceController;
+	ServiceController *_addressServiceController;
 }
 
 - (NSString *)name;
@@ -57,6 +60,8 @@
 - (void)setUniqueID:(NSString *)uniqueID;
 
 - (NSImage *) contactImage;
+- (void)setImageHash:(NSString *)newHash;
+- (NSString *)imageHash;
 - (void)setContactImage:(NSImage *)contactImage;
 
 - (AWEzvStatus) status;
@@ -64,6 +69,7 @@
 - (NSDate *) idleSinceDate;
 
 - (void)sendMessage:(NSString *)message withHtml:(NSString *)html;
+- (NSString *) fixHTML:(NSString *)html;
 - (void) sendTypingNotification:(AWEzvTyping)typingStatus;
-
+- (void)sendOutgoingFileTransfer:(EKEzvOutgoingFileTransfer *)transfer;
 @end

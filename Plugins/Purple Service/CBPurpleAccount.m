@@ -1161,6 +1161,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 		 below.
 		 */
 		[purpleThread xferRequest:xfer];
+		[fileTransfer setStatus: Waiting_on_Remote_User_FileTransfer];
 	}
 }
 //By default, protocols can not create PurpleXfer objects

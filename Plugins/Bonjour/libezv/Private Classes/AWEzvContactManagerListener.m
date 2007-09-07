@@ -50,53 +50,55 @@
 /* start listening for incoming connections
    return value: port we're listening to */
 - (unsigned int)listen {
-    int			fd;		/* file descriptor for listening socket */
-    struct sockaddr_in	serverAddress;	/* server address structure             */
-    
-    int temp;         /* used to pass to routines that want a pointer to an int */
-    
-    port = 5298;      /* default iChat port */
-    
-    /* NSFileHandle's acceptConnectionInBackgroundAndNotify method expects a
-       socket that is bound and listening */
-    if((fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-		AWEzvLog(@"Could not create listening socket for iChat Bonjour");
-		return -1;
-    }
+	int			fd;		/* file descriptor for listening socket */
+	struct sockaddr_in	serverAddress;	/* server address structure             */
 	
-    /* setup server address structure */
-    memset(&serverAddress, 0, sizeof(serverAddress));
-    serverAddress.sin_family = AF_INET;
-    serverAddress.sin_addr.s_addr = htonl(INADDR_ANY);
-    serverAddress.sin_port = htons(port);
+	int temp;         /* used to pass to routines that want a pointer to an int */
+	
+	port = 5298;      /* default iChat port */
+	
+	/* NSFileHandle's acceptConnectionInBackgroundAndNotify method expects a
+	   socket that is bound and listening */
 
-    /* here we just keep trying to bind ports from the port number up. When one
-       succeeds we can go ahead and advertise using it. We still use SO_REUSEADDR
-       in the socket options however, as iChat appears to like it better if we use
-       port 5298 is possible */
-    temp = 1;
-    if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &temp, sizeof(temp)) < 0) {
-        AWEzvLog(@"Could not set socket to SO_REUSEADDR");
-    }
-    while(bind(fd, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0) {
-                port++;
-                serverAddress.sin_port = htons(port);
-    }
-    
-    /* now to create file handle to accept incoming connections */
-    if(listen(fd, MAXBACKLOG) == 0) {
-	listenSocket = [[NSFileHandle alloc] initWithFileDescriptor:fd closeOnDealloc:YES];
-    }
-    
-    /* and start to listen on the port */
-    [[NSNotificationCenter defaultCenter] addObserver:self
+	if((fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+		[[client client] reportError:@"Could not create listening socket for iChat Bonjour" ofLevel:AWEzvError];
+		return -1;
+	}
+
+	/* setup server address structure */
+	memset(&serverAddress, 0, sizeof(serverAddress));
+	serverAddress.sin_family = AF_INET;
+	serverAddress.sin_addr.s_addr = htonl(INADDR_ANY);
+	serverAddress.sin_port = htons(port);
+
+	/* here we just keep trying to bind ports from the port number up. When one
+	   succeeds we can go ahead and advertise using it. We still use SO_REUSEADDR
+	   in the socket options however, as iChat appears to like it better if we use
+	   port 5298 when possible */
+	temp = 1;
+	if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &temp, sizeof(temp)) < 0) {
+		[[client client] reportError:@"Could not set socket to SO_REUSEADDR" ofLevel:AWEzvWarning];
+
+	}
+	while(bind(fd, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0) {
+		port++;
+		serverAddress.sin_port = htons(port);
+	}
+
+	/* now to create file handle to accept incoming connections */
+	if(listen(fd, MAXBACKLOG) == 0) {
+		listenSocket = [[NSFileHandle alloc] initWithFileDescriptor:fd closeOnDealloc:YES];
+	}
+
+	/* and start to listen on the port */
+	[[NSNotificationCenter defaultCenter] addObserver:self
 					  selector:@selector(connectionReceived:)
 					  name:NSFileHandleConnectionAcceptedNotification
 					  object:listenSocket];
-    [listenSocket acceptConnectionInBackgroundAndNotify];
-    
-    /* return the port we're listening on */
-    return port;
+	[listenSocket acceptConnectionInBackgroundAndNotify];
+
+	/* return the port we're listening on */
+	return port;
 }
 
 - (void) stopListening {
@@ -109,61 +111,62 @@
 
 /* notification from listenSocket that we've got a connection to handle */
 - (void)connectionReceived:(NSNotification *)aNotification {
-    NSFileHandle 	*incomingConnection = [[aNotification userInfo] objectForKey:NSFileHandleNotificationFileHandleItem];
-    NSMutableString	*contactIdentifier;
-    int			fd;
+	NSFileHandle 	*incomingConnection = [[aNotification userInfo] objectForKey:NSFileHandleNotificationFileHandleItem];
+	NSMutableString	*contactIdentifier;
+	int			fd;
 	socklen_t	size;
-    struct sockaddr_in	remoteAddress;
-    AWEzvXMLStream      *stream;
-    AWEzvContact	*contact;
-    
-    /* get details of incoming connection */
-    fd = [incomingConnection fileDescriptor];
-    size = sizeof(remoteAddress);
-    if (getpeername(fd, (struct sockaddr *)&remoteAddress, &size) == -1) {
-		//AWEzvLog(@"Could not get socket name");
+	struct sockaddr_in	remoteAddress;
+	AWEzvXMLStream      *stream;
+	AWEzvContact	*contact;
+
+	/* get details of incoming connection */
+	fd = [incomingConnection fileDescriptor];
+	size = sizeof(remoteAddress);
+	if (getpeername(fd, (struct sockaddr *)&remoteAddress, &size) == -1) {
+		// [[client client] reportError:@"Could not get socket name" ofLevel:AWEzvError];
 		[incomingConnection closeFile];
 		return;
-    }
-    
-    /* we have to ask it to keep accepting connections now */
-    [[aNotification object] acceptConnectionInBackgroundAndNotify];
-    
-    contactIdentifier = [NSMutableString stringWithCString:inet_ntoa((&remoteAddress)->sin_addr)];
-    [contactIdentifier replaceOccurrencesOfString:@"."
+	}
+
+	/* we have to ask it to keep accepting connections now */
+	[[aNotification object] acceptConnectionInBackgroundAndNotify];
+
+	contactIdentifier = [NSMutableString stringWithCString:inet_ntoa((&remoteAddress)->sin_addr)];
+	[contactIdentifier replaceOccurrencesOfString:@"."
 		       withString:@"_"
 		       options:0
 		       range:NSMakeRange(0, [contactIdentifier length])];
 		       
-    contact = [contacts objectForKey:contactIdentifier];
-    /* Discover the appropriate record if required */
-    if ([contact rendezvous] == nil) {
-	NSEnumerator *enumerator = [contacts objectEnumerator];
-    
-	[contactIdentifier replaceOccurrencesOfString:@"_"
-			   withString:@"."
-			   options:0
-			   range:NSMakeRange(0, [contactIdentifier length])];
-	
-	while ((contact = [enumerator nextObject])) {
-	    if ([contact rendezvous] != nil && [[contact ipaddr] isEqualToString:contactIdentifier])
-			break;
+	contact = [contacts objectForKey:contactIdentifier];
+	/* Discover the appropriate record if required */
+	if ([contact rendezvous] == nil) {
+		NSEnumerator *enumerator = [contacts objectEnumerator];
+
+		[contactIdentifier replaceOccurrencesOfString:@"_"
+			withString:@"."
+			options:0
+			range:NSMakeRange(0, [contactIdentifier length])];
+
+		while ((contact = [enumerator nextObject])) {
+			if ([contact rendezvous] != nil && [[contact ipaddr] isEqualToString:contactIdentifier])
+				break;
+		}
 	}
-    }
-    
-    if (contact == nil) {
-		//AWEzvLog(@"Incoming connection from non-existent contact: %@", contactIdentifier);
+
+	if (contact == nil) {
+		[[client client] reportError:[NSString stringWithFormat:@"Incoming connection from non-existent contact %@.", contactIdentifier] ofLevel:AWEzvError];
+
 		[incomingConnection closeFile];
 		return;
-    }
-    
-    stream = [[AWEzvXMLStream alloc] initWithFileHandle:incomingConnection initiator:0];
-    [stream setDelegate:contact];
-    [contact setStream:stream];
-    [stream readAndParse];
+	}
+	
+	stream = [[AWEzvXMLStream alloc] initWithFileHandle:incomingConnection initiator:0];
+	[stream setDelegate:contact];
+	[contact setStream:stream];
+	[stream readAndParse];
 	[stream release];
 
-    return;
+	return;
 
 }
 

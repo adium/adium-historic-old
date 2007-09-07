@@ -47,6 +47,7 @@
 #import "AWEzvDefines.h"
 
 @interface AWEzvContactManager (Rendezvous)
+	
 - (void) login;
 - (void) logout;
 - (void) disconnect;
@@ -56,24 +57,46 @@
 - (void) updateAnnounceInfo;
 - (void) updatedName;
 - (void) updatedStatus;
-- (void)setImageData:(NSData *)JPEGData;
+- (void) setImageData:(NSData *)JPEGData;
+
+- (NSString *)myInstanceName;
 
 - (void) startBrowsing;
 - (void) stopBrowsing;
-- (void)browseResult:(DNSServiceBrowserReplyResultType)resultType
-	name:(const char *)replyName
+
+- (void)browseResultwithFlags:(DNSServiceFlags)flags
+	onInterface:(uint32_t) interfaceIndex
+ 	name:(const char *)replyName
 	type:(const char *)replyType
 	domain:(const char *)replyDomain
-	flags:(DNSServiceDiscoveryReplyFlags)flags
-		  av:(BOOL)av;
+	av:(BOOL) av;
+
 - (void)updateContact:(AWEzvContact *)iccontact
 	withData:(AWEzvRendezvousData *)rendezvousData
-	withAddress:(struct sockaddr *) address
+	withHost:(NSString *)host
+	withInterface:(uint32_t)interface
+	withPort:(uint16_t)recPort
 	av:(BOOL)av;
 
+- (void)findAddressForContact:(AWEzvContact *)contact
+	withHost:(NSString *)host
+	withInterface:(uint32_t)interface;
+
+- (void)updateAddressForContact:(AWEzvContact *)contact
+	addr:(const void *)buff 
+	addrLen:(uint16_t)addrLen 
+	host:(const char*) host 
+	interfaceIndex:(uint32_t)interface 
+	more:(boolean_t)moreToCome;
+
+- (void)updateImageForContact:(AWEzvContact *)contact
+	data:(const void *)buff 
+	dataLen:(uint16_t)addrLen
+	more:(boolean_t)moreToCome;
+
+- (void) updatePHSH;
 /* REALLY PRIVATE STUFF */
-- (NSString *)myname;
-- (NSString *)myavname;
+- (void)setInstanceName:(NSString *)newName;
 - (void) regCallBack:(int)errorCode;
 
 @end

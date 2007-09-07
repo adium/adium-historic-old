@@ -182,7 +182,10 @@ static void adiumPurpleConvWriteConv(PurpleConversation *conv, const char *who, 
 				} else if ((([messageString rangeOfString:@"Transfer of file"].location != NSNotFound) &&
 								([messageString rangeOfString:@"complete"].location != NSNotFound)) ||
 						   ([messageString rangeOfString:@"is offering to send file"].location != NSNotFound)) {
-								//These file transfer messages are hanlded in ESFileTransferMessagesPlugin; don't show libpurple's version
+								//These file transfer messages are handled in ESFileTransferMessagesPlugin; don't show libpurple's version
+					return;
+				} else if (([messageString rangeOfString:@"Offering to send"].location != NSNotFound)) {
+					//This file transfer messages is handled in ESFileTransferMessagesPlugin; don't show libpurple's version
 					return;
 				} else if (([messageString rangeOfString:@"The remote user has closed the connection."].location != NSNotFound) ||
 						   ([messageString rangeOfString:@"The remote user has declined your request."].location != NSNotFound) ||

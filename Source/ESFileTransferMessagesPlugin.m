@@ -50,8 +50,14 @@
 	
 	[[adium notificationCenter] addObserver:self 
 								   selector:@selector(handleFileTransferEvent:) 
+									   name:FILE_TRANSFER_WAITING_REMOTE 
+									 object:nil];
+	
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(handleFileTransferEvent:) 
 									   name:FILE_TRANSFER_BEGAN 
 									 object:nil];
+
 	[[adium notificationCenter] addObserver:self 
 								   selector:@selector(handleFileTransferEvent:) 
 									   name:FILE_TRANSFER_FAILED 
@@ -98,7 +104,6 @@
 			} else {
 				message = [NSString stringWithFormat:AILocalizedString(@"Successfully sent %@",nil),filename];			
 			}
-
 		} else if ([notificationName isEqualToString:FILE_TRANSFER_BEGAN]) {
 			type = @"fileTransferStarted";
 			if ([fileTransfer fileTransferType] == Incoming_FileTransfer) {
@@ -106,6 +111,10 @@
 			} else {
 				message = [NSString stringWithFormat:AILocalizedString(@"Began sending %@",nil),filename];			
 			}
+		} else if ([notificationName isEqualToString:FILE_TRANSFER_WAITING_REMOTE]) {
+			type = @"fileTransferWaitingRemote";
+			//We should only receive this notification upon sending a file
+			message = [NSString stringWithFormat:AILocalizedString(@"Offering to send %@ to %@",nil),filename,[listContact formattedUID]];
 		}
 
 		[self statusMessage:message forContact:listContact withType:type];

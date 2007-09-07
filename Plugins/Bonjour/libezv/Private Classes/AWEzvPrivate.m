@@ -33,9 +33,6 @@
 #import "AWEzvPrivate.h"
 
 @implementation AWEzv (Private)
-- (id <AWEzvClientProtocol, NSObject>) client {
-    return client;
-}
 
 - (NSString *) name {
     return name;
@@ -48,5 +45,4 @@
 - (NSDate *) idleTime {
     return idleTime;
 }
-
 @end

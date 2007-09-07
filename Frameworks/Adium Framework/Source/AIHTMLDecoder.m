@@ -1681,6 +1681,32 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 																 defaultColor:[NSColor blackColor]]];
 				}
 			}
+			
+			attributeRange = [style rangeOfString:@"text-decoration: " options:NSCaseInsensitiveSearch];
+			if (attributeRange.location != NSNotFound) {
+				NSRange	 nextSemicolon = [style rangeOfString:@";" options:NSLiteralSearch range:NSMakeRange(attributeRange.location, styleLength - attributeRange.location)];
+				if (nextSemicolon.location != NSNotFound) {
+					NSString *decoration = [style substringWithRange:NSMakeRange(NSMaxRange(attributeRange), nextSemicolon.location - NSMaxRange(attributeRange))];
+					
+					if ([decoration caseInsensitiveCompare:@"none"] == NSOrderedSame){
+						[originalAttributes setObject:([textAttributes underline] ? [NSNumber numberWithBool:[textAttributes underline]] : (id)[NSNull null]) forKey:@"setUnderline:"];
+						[textAttributes setUnderline: NO];
+						[originalAttributes setObject:([textAttributes strikethrough] ? [NSNumber numberWithBool:[textAttributes strikethrough]] : (id)[NSNull null]) forKey:@"setStrikethrough:"];
+						[textAttributes setStrikethrough: NO];
+						
+					} else if ([decoration caseInsensitiveCompare:@"underline"] == NSOrderedSame){
+						[originalAttributes setObject:([textAttributes underline] ? [NSNumber numberWithBool:[textAttributes underline]] : (id)[NSNull null]) forKey:@"setUnderline:"];
+						[textAttributes setUnderline: YES];
+					} else if ([decoration caseInsensitiveCompare:@"overline"] == NSOrderedSame){
+					
+					} else if ([decoration caseInsensitiveCompare:@"line-through"] == NSOrderedSame){
+						[originalAttributes setObject:([textAttributes strikethrough] ? [NSNumber numberWithBool:[textAttributes strikethrough]] : (id)[NSNull null]) forKey:@"setStrikethrough:"];
+						[textAttributes setStrikethrough: YES];
+					} else if ([decoration caseInsensitiveCompare:@"blink"] == NSOrderedSame){
+						
+					}
+				}
+			}
         }
 	}
 	

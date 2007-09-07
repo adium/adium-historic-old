@@ -232,6 +232,69 @@ NSString	*endn = @"\x00\x00\x00\x00";
     
     return self;
 }
+- (AWEzvRendezvousData *) initWithTXTRecordRef:(const char *) txtRecord length:(uint16_t)len{
+	
+	self = [self init];
+    
+	DNSServiceErrorType txtRecordError;
+	
+	int i, numKeys;
+	numKeys = TXTRecordGetCount(len, txtRecord);
+	for(i=0; i<numKeys; i++){
+		char key[256];
+		uint8_t valLen;
+		const void *value;
+		
+		txtRecordError = TXTRecordGetItemAtIndex (
+			/* length */ len,
+			/* txtrecord */ txtRecord,
+			/* index */ i,
+			/* keybuffer length */ sizeof(key), 
+		    /* key buffer */ key,
+			/* valueLength */ &valLen,
+			/* value pointer */ &value );
+		if (txtRecordError == kDNSServiceErr_NoError){
+			NSString *keyString = NULL;
+			NSString *data = NULL;
+			keyString = [NSString stringWithUTF8String: key];
+			
+			if (value){
+				data = [[NSString alloc] initWithBytes: value length: valLen encoding: NSUTF8StringEncoding];
+			}
+			
+			if (data != NULL && keyString != NULL){
+				[self setField:keyString content:data];
+			} else {
+				AWEzvLog(@"Creating TXTRecord: No data and No key");
+			}
+			
+			/* AWEzvLog(@"key:%@ value=%@", keyString, data); */
+		} else {
+			AWEzvLog(@"Error reading txt keys");
+		}
+		
+		
+		
+	}
+		
+//	// kind of a hack: munge txtRecord so it's human-readable
+//	if ( len > 0) {
+//		char	*readableText = (char*) malloc( len);
+//		if ( readableText != nil) {
+//			ByteCount   index, subStrLen;
+//			memcpy( readableText, txtRecord, len);
+//			for ( index=0; index < len - 1; index += subStrLen + 1) {
+//				subStrLen = readableText[ index];
+//				readableText[ index] = '\n';
+//			}
+//			//NSLog(@"%@\n\n",[NSString stringWithCString:&readableText[1] length:len - 1]);
+//			free( readableText);
+//		}
+//	}
+	
+	return self;
+	
+}
 
 /* deallocate, destroy our dictionary */
 - (void)dealloc
@@ -410,6 +473,56 @@ NSString	*endn = @"\x00\x00\x00\x00";
     return infoData;
 }
 
+-(TXTRecordRef)dataAsTXTRecordRef {
+	//AWEzvLog(@"dataAsTXTRecordRef called");
+	TXTRecordRef txtRecord;
+	DNSServiceErrorType txtRecordError;
+	NSString *key;
+	NSEnumerator *enumerator;
+	id value;
+	id valueToSet;
+	uint8_t valueSize;
+	TXTRecordCreate(/* TXTRecordRef */ &txtRecord, /* buffer length */ 0, /* buffer */ NULL);
+	
+	/* Enumerate through keys setting the txtrecordvalue */
+	enumerator = [keys keyEnumerator];
+    
+	while (key = [enumerator nextObject]){
+		
+		value = [keys objectForKey:key];
+		 //AWEzvLog(@"key=%@ value=%@", key, value);
+		
+		if ([value isKindOfClass: [NSData class]]) {
+		    /* convert binary to hex */
+		    char *hexdata = (char *)malloc([(NSData *)value length] * 2 + 1);
+		    int i;
+            
+		    for (i = 0; i < 20; i++) {
+			sprintf(hexdata + (i*2), "%.2x", ((unsigned char *)[(NSData *)value bytes])[i]);
+		    }
+		    hexdata[[(NSData *)value length] * 2] = '\0';
+			valueToSet = [[NSString stringWithCString:hexdata] UTF8String];
+			valueSize = strlen(valueToSet);
+			free(hexdata);
+		} else {
+		    valueToSet = [value UTF8String];
+			valueSize = strlen(valueToSet);
+		}
+		
+		txtRecordError = TXTRecordSetValue (
+			/* TXTRecord */ &txtRecord,
+			/* key */ [key UTF8String],
+			/* size, may be zero */ valueSize,
+			/* value, may be null */ valueToSet /* may be NULL */);
+		if (txtRecordError != kDNSServiceErr_NoError){
+			AWEzvLog(@"Error setting TXTRecord of key=%@ and value=%@", key, valueToSet);
+			
+		}
+		
+	}
+	
+	return txtRecord;
+}
 /*
  * Converts data: to packed PString format as required by the low level rendezvous
  * functions when passing an opaque RData structure

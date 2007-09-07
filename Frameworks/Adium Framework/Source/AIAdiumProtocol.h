@@ -73,6 +73,7 @@
 #define	ACCOUNT_RECEIVED_EMAIL				@"Account_NewMailReceived"
 #define FILE_TRANSFER_REQUEST				@"FileTransfer_Request"
 #define FILE_TRANSFER_CHECKSUMMING			@"FileTransfer_Checksumming"
+#define FILE_TRANSFER_WAITING_REMOTE		@"File_Transfer_WaitingRemote"
 #define FILE_TRANSFER_BEGAN					@"FileTransfer_Began"
 #define FILE_TRANSFER_CANCELLED				@"FileTransfer_Cancelled"
 #define FILE_TRANSFER_FAILED				@"FileTransfer_Failed"

@@ -33,30 +33,39 @@
 #import <Foundation/Foundation.h>
 
 #include <DNSServiceDiscovery/DNSServiceDiscovery.h>
+#include <dns_sd.h>
 
-@class AWEzv, AWEzvContact, AWEzvRendezvousData;
+
+@class AWEzv, AWEzvContact, AWEzvRendezvousData, ServiceController;
 
 @interface AWEzvContactManager : NSObject {
-    NSFileHandle	*listenSocket;
-    NSMutableDictionary *contacts;
+	NSFileHandle	*listenSocket;
+	NSMutableDictionary *contacts;
 
-    AWEzv		*client;
-    int			isConnected;
-    
-    /* Listener related instance variables */
-    unsigned int	port; /* port we're going to listen to*/
-    
-    /* Rendezvous related instance variables */
-    AWEzvRendezvousData		*userAnnounceData;
-    dns_service_discovery_ref	dnsRef;
-    dns_service_discovery_ref	avDnsRef;
-    dns_service_discovery_ref	browseRef;
-    dns_service_discovery_ref	avBrowseRef;
-    NSString			*myname;
-    NSString			*myavname;
-    DNSRecordReference		imageRef;
-    DNSRecordReference		avImageRef;
-    int				regCount;
+	AWEzv		*client;
+	int			isConnected;
+
+	/* Listener related instance variables */
+	unsigned int	port; /* port we're going to listen to*/
+	
+	/* Rendezvous related instance variables */
+	AWEzvRendezvousData		*userAnnounceData;
+
+	ServiceController			*fDomainBrowser;
+	ServiceController			*fServiceBrowser;
+	ServiceController			*fServiceResolver;
+	ServiceController			*fAddressResolver;
+	//ServiceController			*fImageResolver;
+	
+	
+	DNSServiceRef avDNSReference;
+	DNSServiceRef imageServiceRef;
+	DNSRecordRef imageRef;
+
+	NSString *avInstanceName;
+	NSData *imagehash;
+
+	int				regCount;
 }
 
 - (id) initWithClient:(AWEzv *)client;
@@ -65,4 +74,7 @@
 
 - (AWEzv *) client;
 
+- (void)closeConnections;
+
+- (NSString *)myInstanceName;
 @end

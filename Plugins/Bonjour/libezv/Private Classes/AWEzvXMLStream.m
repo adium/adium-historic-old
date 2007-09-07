@@ -185,38 +185,45 @@ void xml_char_data	(void *userData,
 }
 
 - (void) xmlEndElement:(const XML_Char *)name {
-    NSString	    *nodeName;
-    AWEzvXMLNode    *node;
-    
-    nodeName = [NSString stringWithUTF8String:name];
+	NSString	    *nodeName;
+	AWEzvXMLNode    *node;
 
-    if (([nodeStack size] > 0) && ([(AWEzvXMLNode *)[nodeStack top] type] == AWEzvXMLText)) {
-        node = [nodeStack pop];
-    }
+	nodeName = [NSString stringWithUTF8String:name];
+	if (([nodeStack size] > 0) && ([(AWEzvXMLNode *)[nodeStack top] type] == AWEzvXMLText)) {
+		node = [nodeStack pop];
+	}
+	else if ([nodeStack size] == 0 && [nodeName isEqualToString:@"stream:stream"]){
+		/* We have no stack but were sent stream:stream to end, therefore end connection */
+		[self endConnection];
+		return;
+	}
+	node = [nodeStack top];
+	
+	if (node != nil && [[node name] isEqualToString:nodeName]) {
+		[nodeStack pop];
+	} else if ([[node name] isEqualToString:@"stream:stream"]) {
+		// Wow, end of connection!
+		[self endConnection];
+		return;
+	} else {
+		AWEzvLog(@"Ending node that is not at top of stack");
+	}
     
-    node = [nodeStack top];
-    
-    if (node != nil && [[node name] isEqualToString:nodeName]) {
-        [nodeStack pop];
-    } else if ([[node name] isEqualToString:@"stream:stream"]) {
-	// Wow, end of connection!
+	if ([nodeStack size] == 0 && node != nil) {
+		if (delegate != nil)
+			[delegate XMLReceivedMessage:node];
+		else
+			AWEzvLog(@"Received message but no delegate to send it to");
+	}
+
+}
+- (void) endConnection{
 	[self sendString:@"</stream:stream>"];
 	[connection closeFile];
 	[connection release];
 	connection = nil;
 	[delegate XMLConnectionClosed];
-	return;
-    } else {
-        AWEzvLog(@"Ending node that is not at top of stack");
-    }
-    
-    if ([nodeStack size] == 0 && node != nil) {
-        if (delegate != nil)
-            [delegate XMLReceivedMessage:node];
-        else
-            AWEzvLog(@"Received message but no delegate to send it to");
-    }
-    
+	
 }
 
 - (void) xmlCharData:(const XML_Char *)data length:(int)len {
@@ -243,55 +250,58 @@ void xml_char_data	(void *userData,
 }
 
 - (void) sendNegotiationInitiator:(int)myInitiator {
-    NSString		*string;
-    NSMutableString	*mutableString;
-    NSMutableDictionary	*dict;
-    NSMutableArray	*array;
-    
-    CFXMLNodeRef	xmlNode;
-    CFXMLElementInfo	xmlElementInfo;
-    CFXMLTreeRef	xmlTree;
-    NSData		*data;
+	NSString		*string;
+	NSMutableString	*mutableString;
+	NSMutableDictionary	*dict;
+	NSMutableArray	*array;
 
-    /* spit out an XML header */
-    string = @"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
-    [connection writeData:[NSData dataWithBytes:[string UTF8String] length:[string length]]];
-    
-    /* now make the handshake initialisation output */
-    string = @"stream:stream";
-    
-    /* create elements for handshake */
-    dict = [NSMutableDictionary dictionary];
-    if (myInitiator)
-	[dict setObject:@"127.0.0.1" forKey:@"to"];
-    [dict setObject:@"jabber:client" forKey:@"xmlns"];
-    [dict setObject:@"http://etherx.jabber.org/streams" forKey:@"xmlns:stream"];
-    array = [NSMutableArray array];
-    [array insertObject:@"xmlns:stream" atIndex:0];
-    [array insertObject:@"xmlns" atIndex:0];
-    if (myInitiator)
+	CFXMLNodeRef	xmlNode;
+	CFXMLElementInfo	xmlElementInfo;
+	CFXMLTreeRef	xmlTree;
+	NSData		*data;
+
+	/* spit out an XML header */
+	string = @"<?xml version=\"1.0\" encoding=\"UTF-8\" ?>";
+	[connection writeData:[NSData dataWithBytes:[string UTF8String] length:[string length]]];
+
+	/* now make the handshake initialisation output */
+	string = @"stream:stream";
+
+	/* create elements for handshake */
+	dict = [NSMutableDictionary dictionary];
+	if ([delegate uniqueID]){
+		[dict setObject:[delegate uniqueID] forKey:@"to"];
+	} else {
+		[dict setObject:@"127.0.0.1" forKey:@"to"];
+	}
+	[dict setObject:[[delegate manager] myInstanceName] forKey:@"from"];
+	[dict setObject:@"jabber:client" forKey:@"xmlns"];
+	[dict setObject:@"http://etherx.jabber.org/streams" forKey:@"xmlns:stream"];
+	array = [NSMutableArray array];
+	[array insertObject:@"xmlns:stream" atIndex:0];
+	[array insertObject:@"xmlns" atIndex:0];
+	[array insertObject:@"from" atIndex:0];
 	[array insertObject:@"to" atIndex:0];
-    
-    /* and make an element info structure */
-    xmlElementInfo.attributes = (CFDictionaryRef)[[dict copy] autorelease];
-    xmlElementInfo.attributeOrder = (CFArrayRef)[[array copy] autorelease];
-    xmlElementInfo.isEmpty = YES;
-    
-    /* create node and tree, then convert to XML text */
-    xmlNode = CFXMLNodeCreate(NULL, kCFXMLNodeTypeElement, (CFStringRef)string, &xmlElementInfo, kCFXMLNodeCurrentVersion);
-    xmlTree = CFXMLTreeCreateWithNode(NULL, xmlNode);
-    data = (NSData *)CFXMLTreeCreateXMLData(NULL, xmlTree);
-    
-    /* now we create an NSString with our data */
-    mutableString = [[[NSMutableString alloc] initWithCString:[data bytes] length:[data length]] autorelease];
-    [mutableString deleteCharactersInRange:NSMakeRange([mutableString length] - 2, 1)];
-    
-    /* and we send it to the connection */
-    [connection writeData:[NSData dataWithBytes:[mutableString UTF8String] length:[mutableString length]]];
 
-    /* and set negoiated if we didn't initiate */
-    if (!myInitiator)
-        negotiated = 1;
+	/* and make an element info structure */
+	xmlElementInfo.attributes = (CFDictionaryRef)[[dict copy] autorelease];
+	xmlElementInfo.attributeOrder = (CFArrayRef)[[array copy] autorelease];
+	xmlElementInfo.isEmpty = YES;
+
+	/* create node and tree, then convert to XML text */
+	xmlNode = CFXMLNodeCreate(NULL, kCFXMLNodeTypeElement, (CFStringRef)string, &xmlElementInfo, kCFXMLNodeCurrentVersion);
+	xmlTree = CFXMLTreeCreateWithNode(NULL, xmlNode);
+	data = (NSData *)CFXMLTreeCreateXMLData(NULL, xmlTree);
+
+	/* now we create an NSString with our data */
+	mutableString = [[[NSMutableString alloc] initWithCString:[data bytes] length:[data length]] autorelease];
+	[mutableString deleteCharactersInRange:NSMakeRange([mutableString length] - 2, 1)];
+	/* and we send it to the connection */
+	[connection writeData:[NSData dataWithBytes:[mutableString UTF8String] length:[mutableString length]]];
+
+	/* and set negoiated if we didn't initiate */
+	if (!myInitiator)
+		negotiated = 1;
 }
 
 @end

@@ -27,7 +27,7 @@
 @protocol AWEzvClientProtocol;
 @class AWEzv;
 
-@interface AWBonjourAccount : AIAccount <AWEzvClientProtocol> {
+@interface AWBonjourAccount : AIAccount <AWEzvClientProtocol, AIAccount_Files> {
     AWEzv				*libezv;
     NSMutableSet		*libezvContacts;
     NSString			*savedAwayMessage;

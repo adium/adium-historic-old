@@ -34,6 +34,8 @@
 
 #import "AWEzvContact.h"
 
+#import "EKEzvFileTransfer.h"
+#import "EKEzvOutgoingFileTransfer.h"
 #import <AppKit/AppKit.h>
 
 /* Private classes - libezv use only */
@@ -64,11 +66,14 @@
 	[super dealloc];
 }
 
+- (id <AWEzvClientProtocol, NSObject>) client {
+    return client;
+}
+
 - (void) login {
     manager = [(AWEzvContactManager *)[AWEzvContactManager alloc] initWithClient:self];
     [manager listen];
     [manager login];
-    [manager startBrowsing];
 }
 
 - (void) setName:(NSString *)newName {
@@ -78,7 +83,6 @@
 		[manager updatedName];
 	}
 }
-
 - (void) setStatus:(AWEzvStatus)newStatus withMessage:(NSString *)message{
     status = newStatus;
     [manager setStatus:status withMessage:message];
@@ -102,43 +106,54 @@
     AWEzvContact *contact;
     
     contact = [manager contactForIdentifier:uniqueId];
-    [contact sendMessage:message withHtml:html];
+	[contact sendMessage:message withHtml:html];
 }
 
-- (void) setContactImage:(NSImage *)contactImage {
-    NSBitmapImageRep    *img; 
-    
-    if (contactImage == nil) {
-		[manager setImageData: nil];
-		return;
-    }
-        
-    img = [NSBitmapImageRep imageRepWithData: [contactImage TIFFRepresentation]];
-    [manager setImageData: [img representationUsingType:NSJPEGFileType properties:[NSDictionary dictionary]]];
+- (void) setContactImage:(NSData *)contactImage {
+	[manager setImageData: contactImage];
 }
 
 - (void) sendTypingNotification:(AWEzvTyping)typingStatus to:(NSString *)uniqueId {
     AWEzvContact *contact;
     
     contact = [manager contactForIdentifier:uniqueId];
-    if (contact != nil)
-	[contact sendTypingNotification:typingStatus];
+    if (contact != nil){
+		[contact sendTypingNotification:typingStatus];
+	}
 }
 
 - (void) sendTypeAhead:(NSString *)message to:(NSString *)contact withHtml:(NSString *)html {
     /* Not implemented yet */
 }
 
-- (void) logout {
-    [manager logout];
-    [manager stopListening];
-    [manager stopBrowsing];
-    
-    [client reportLoggedOut];
+- (void) logout
+{
+	[manager logout];
+	[manager stopListening];
+	[manager stopBrowsing];
+	[manager closeConnections];
+
+	[client reportLoggedOut];
 }
 
-- (void) sendFile:(NSString *)filename to:(NSString *)contact size:(size_t)size {
+- (void) sendFile:(NSString *)filename to:(NSString *)contact size:(size_t)size
+{
     /* Not implemented yet */
+}
+- (void) startOutgoingFileTransfer:(EKEzvOutgoingFileTransfer *)transfer
+{
+	[transfer setManager: manager];
+	[transfer startSending];
+}
+
+- (void) transferAccepted:(EKEzvFileTransfer *)transfer withFileName:(NSString *)fileName{
+	/* Tell the EKEZvFileTransfer object to download!! */
+	[transfer setLocalFilename: fileName];
+	[transfer begin];
+	
+}
+- (void)transferCancelled:(EKEzvFileTransfer *)transfer{
+	[transfer cancel];
 }
 
 - (AWEzvContact *)contactForIdentifier:(NSString *)uniqueID {
