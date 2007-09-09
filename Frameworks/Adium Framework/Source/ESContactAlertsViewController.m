@@ -210,6 +210,8 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 	if (selectedRow != -1) {
 		id	item = [outlineView_summary itemAtRow:selectedRow];
 		
+		[item retain];
+
 		if ([contactAlertsActions containsObjectIdenticalTo:item]) {
 			/* Deleting an entire event */
 			
@@ -233,13 +235,8 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 				[self deleteContactActionsInArray:contactEvents];
 			}
 
-			//Recalculate the height
-			[self calculateHeightForItem:item];
-
 		} else {
 			/* Deleting a single action */
-			[item retain];
-
 			[[adium contactAlertsController] removeAlert:item
 										  fromListObject:listObject];
 
@@ -247,11 +244,12 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 				[delegate contactAlertsViewController:self
 										 deletedAlert:item];
 			}
-			[item release];
 			
 			//The deletion changed our selection
 			[self outlineViewSelectionDidChange:nil];
 		}
+		[item release];
+
 	} else {
 		NSBeep();
 	}
@@ -349,11 +347,13 @@ int actionSort(id objectA, id objectB, void *context)
 	enumerator = [[outlineView_summary tableColumns] objectEnumerator];
 	while ((tableColumn = [enumerator nextObject])) {
 		NSString	*identifier = [tableColumn identifier];
-		
+
 		if ([identifier isEqualToString:@"event"] || ([identifier isEqualToString:@"action"] && !eventIsExtended)) {
 			/* For the event column, and for the action column if the event is not extended, determine what height is needed */
 			NSCell *dataCell = [tableColumn dataCell];
+
 			[self outlineView:outlineView_summary willDisplayCell:dataCell forTableColumn:tableColumn item:item];
+
 			NSString		*objectValue = [self outlineView:outlineView_summary
 							 objectValueForTableColumn:tableColumn
 												byItem:item];
@@ -389,7 +389,7 @@ int actionSort(id objectA, id objectB, void *context)
 	}
 	
 	necessaryHeight += VERTICAL_ROW_PADDING;	
-	
+
 	[requiredHeightDict setObject:[NSNumber numberWithFloat:(enforceMinimumHeight ? 
 															 ((necessaryHeight > MINIMUM_ROW_HEIGHT) ? necessaryHeight : MINIMUM_ROW_HEIGHT) :
 															 necessaryHeight)]
