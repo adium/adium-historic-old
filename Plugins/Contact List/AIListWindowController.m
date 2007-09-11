@@ -16,10 +16,8 @@
 
 #import "AIListWindowController.h"
 
-#import "AIListLayoutWindowController.h"
-#import "AIListOutlineView.h"
-#import "AIListThemeWindowController.h"
-
+#import "AISCLViewPlugin.h"
+#import	<Adium/AIListOutlineView.h>
 #import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
@@ -35,30 +33,33 @@
 #import <Adium/AIUserIcons.h>
 #import <AIUtilities/AIDockingWindow.h>
 
-#define CONTACT_LIST_WINDOW_NIB				@"ContactListWindow"		//Filename of the contact list window nib
-#define CONTACT_LIST_WINDOW_TRANSPARENT_NIB @"ContactListWindowTransparent" //Filename of the minimalist transparent version
-#define CONTACT_LIST_TOOLBAR				@"ContactList"				//ID of the contact list toolbar
-#define	KEY_DUAL_CONTACT_LIST_WINDOW_FRAME	@"Dual Contact List Frame 2"
+#define CONTACT_LIST_WINDOW_NIB					@"ContactListWindow"		//Filename of the contact list window nib
+#define CONTACT_LIST_WINDOW_TRANSPARENT_NIB		@"ContactListWindowTransparent" //Filename of the minimalist transparent version
+#define CONTACT_LIST_TOOLBAR					@"ContactList"				//ID of the contact list toolbar
+#define	KEY_DUAL_CONTACT_LIST_WINDOW_FRAME		@"Dual Contact List Frame 2"
 
-#define PREF_GROUP_CONTACT_LIST		@"Contact List"
-#define KEY_CLWH_WINDOW_POSITION	@"Contact Window Position"
-#define KEY_CLWH_HIDE				@"Hide While in Background"
+#define PREF_GROUP_CONTACT_LIST					@"Contact List"
+#define KEY_CLWH_WINDOW_POSITION				@"Contact Window Position"
+#define KEY_CLWH_HIDE							@"Hide While in Background"
 
-#define TOOL_TIP_CHECK_INTERVAL				45.0	//Check for mouse X times a second
-#define TOOL_TIP_DELAY						25.0	//Number of check intervals of no movement before a tip is displayed
+#define TOOL_TIP_CHECK_INTERVAL					45.0	//Check for mouse X times a second
+#define TOOL_TIP_DELAY							25.0	//Number of check intervals of no movement before a tip is displayed
 
-#define MAX_DISCLOSURE_HEIGHT				13		//Max height/width for our disclosure triangles
+#define MAX_DISCLOSURE_HEIGHT					13		//Max height/width for our disclosure triangles
 
-#define	PREF_GROUP_DUAL_WINDOW_INTERFACE	@"Dual Window Interface"
-#define KEY_DUAL_RESIZE_HORIZONTAL			@"Autoresize Horizontal"
+#define	PREF_GROUP_DUAL_WINDOW_INTERFACE		@"Dual Window Interface"
+#define KEY_DUAL_RESIZE_HORIZONTAL				@"Autoresize Horizontal"
 
-#define PREF_GROUP_CONTACT_STATUS_COLORING	@"Contact Status Coloring"
+#define PREF_GROUP_CONTACT_STATUS_COLORING		@"Contact Status Coloring"
 
 #define SLIDE_ALLOWED_RECT_EDGE_MASK			(AIMinXEdgeMask | AIMaxXEdgeMask)
 #define DOCK_HIDING_MOUSE_POLL_INTERVAL			0.1
 #define WINDOW_ALIGNMENT_TOLERANCE				2.0f
 #define MOUSE_EDGE_SLIDE_ON_DISTANCE			1.1f
 #define WINDOW_SLIDING_MOUSE_DISTANCE_TOLERANCE 3.0f
+
+#define KEY_LIST_SNAP							@"List Snap"
+#define SNAP_DISTANCE							15.0
 
 @interface AIListWindowController (PRIVATE)
 - (void)windowDidLoad;
@@ -90,10 +91,48 @@
 	}
 }
 
++ (AIListWindowController *)initWithContactList: (AIListObject<AIContainingObject> *)contactList
+{
+	return [[[self alloc] initWithNibName:[self nibName] withContactList:contactList] autorelease];
+}
+
+- (AIListWindowController *)initWithNibName:(NSString *)nibName withContactList:(AIListObject<AIContainingObject> *)contactList 
+{
+	if((self = [super initWithWindowNibName:nibName])) 
+	{
+		preventHiding = NO;
+		previousAlpha = 0;
+	}
+	[self setContactList:contactList];
+	return self;
+}
+
+- (AIListObject<AIContainingObject> *)contactList
+{
+	if(contactListRoot)
+		return contactListRoot;
+	return [contactListController contactList];
+}
+
+- (AIListController *) listController
+{
+	return contactListController;
+}
+
+- (AIListOutlineView *)contactListView
+{
+	return contactListView;
+}
+
 //Return a new contact list window controller
 + (AIListWindowController *)listWindowController
 {
     return [[[self alloc] initWithWindowNibName:[self nibName]] autorelease];
+}
+
+- (void)setContactList:(AIListObject<AIContainingObject> *)contactList
+{
+	contactListRoot = contactList;
 }
 
 //Our window nib name
@@ -140,7 +179,8 @@
 
 	contactListController = [[[self listControllerClass] alloc] initWithContactListView:contactListView
 																		   inScrollView:scrollView_contactList 
-																			   delegate:self];
+																			   delegate:self
+																	setContactListRoot:contactListRoot];
 	
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
@@ -168,7 +208,7 @@
 	//Preference code below assumes layout is done before theme.
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_LAYOUT];
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
-
+	
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(applicationDidUnhide:) 
 												 name:NSApplicationDidUnhideNotification 
@@ -1026,6 +1066,157 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 - (AIRectEdgeMask)windowSlidOffScreenEdgeMask
 {
 	return windowSlidOffScreenEdgeMask;
+}
+
+// Snap Groups Together------------------------------------------------------------------------------------------------
+#pragma mark Snap Groups Together
+
+/*!
+ * @brief If window did move and is not docked then snap it to other windows
+ */
+- (void)windowDidMove:(NSNotification *)notification
+{
+	unsigned allowSnapping = [[NSApp currentEvent] modifierFlags] & NSShiftKeyMask;
+	
+	attachToBottom = nil;
+	
+	if (windowSlidOffScreenEdgeMask == AINoEdges && !allowSnapping)
+		[self snapToOtherWindows];
+}
+
+/*!
+ * @brief Captures mouse up event to check that if the window snapped underneath
+ * another window they are merged together
+ */
+- (void)mouseUp:(NSEvent *)event {
+	if (attachToBottom) {
+		AIListGroup *from = (AIListGroup *)[self contactList];
+		AIListGroup *to = (AIListGroup *)[attachToBottom contactList];
+		
+		[from moveAllGroupsFrom:from to:to];
+		
+		[[adium notificationCenter] postNotificationName:DetachedContactListIsEmpty
+												  object:from
+												userInfo:nil];
+		[[adium notificationCenter] postNotificationName:@"Contact_ListChanged"
+												  object:to
+												userInfo:nil]; 
+	}
+}
+
+/*!
+ * @brief Snaps window to windows next to it
+ */
+- (void)snapToOtherWindows
+{	
+	// If window is not by edges of screen
+	if (![self slidableEdgesAdjacentToWindow]) {
+		NSArray *windows = [[NSApplication sharedApplication] windows];
+		NSEnumerator *enumerator = [windows objectEnumerator];
+		
+		NSWindow *window;
+
+		NSPoint suggested = NSMakePoint([[self window] frame].origin.x,[[self window] frame].origin.y);
+		NSRect current = [[self window] frame];
+		
+		// Check to snap to each guide
+		while ((window = [enumerator nextObject])) {
+			// No snapping to itself and it must be within a snapping distance to other windows
+			if ([window delegate] 
+			   && [[window delegate] conformsToProtocol:@protocol(AIInterfaceContainer)] 
+			   && [window screen]==[[self window] screen]) {
+				suggested = [self snapTo:window with:current saveTo:suggested];
+			}
+		}
+		[[self window] setFrameOrigin:suggested];
+	}
+}
+
+- (NSPoint)snapTo:(NSWindow*)neighborWindow with:(NSRect)window saveTo:(NSPoint)location{
+	NSRect neighbor = [neighborWindow frame];
+	NSPoint spacing = [self windowSpacing];
+	unsigned overlap = 0;
+	unsigned bottom = 0;
+	
+	if (!NSEqualRects(neighbor,window) && [self inRange:window of:neighbor]) {
+		// X Snapping
+		if ([self canSnap:NSMaxX(window) with:NSMinX(neighbor)]) {
+			location.x=NSMinX(neighbor)-NSWidth(window)-spacing.x;
+		}
+		else if ([self canSnap:NSMinX(window) with:NSMaxX(neighbor)]) {
+			location.x=NSMaxX(neighbor)+spacing.x;
+		}
+		else if ([self canSnap:NSMinX(window) with:NSMinX(neighbor)]) {
+			location.x=NSMinX(neighbor);
+			overlap++;
+			bottom++;
+		}
+
+		// Y Snapping
+		if ([self canSnap:NSMaxY(neighbor) with:NSMaxY(window)]) {
+			location.y=NSMaxY(neighbor)-NSHeight(window);
+			overlap++;
+		}
+		else if ([self canSnap:NSMinY(neighbor) with:NSMaxY(window)]) {
+			location.y=NSMinY(neighbor)-NSHeight(window)-spacing.y;
+			bottom++;
+		}
+		else if ([self canSnap:NSMaxY(neighbor) with:NSMinY(window)]) {
+			location.y=NSMaxY(neighbor)+spacing.y;
+		}
+		else if ([self canSnap:NSMinY(neighbor) with:NSMinY(window)]) {
+			location.y=NSMinY(neighbor);
+			overlap++;
+		}
+	}	
+	
+	// If we snapped on top of neighbord
+	if (overlap==2)
+		return window.origin;
+	// Save window that we could possible attach to
+	if (bottom==2)
+		attachToBottom = [neighborWindow delegate];
+	
+	return location;
+}
+
+/*!
+ * @brief Check if points are close enough to be snapped together
+ */
+- (BOOL)canSnap:(float)a with:(float)b{
+	return (a<(b+SNAP_DISTANCE) && a>(b-SNAP_DISTANCE));
+}
+
+/*!
+ * @brief Check that window is inside snappable region of other window
+ */
+- (BOOL)inRange:(NSRect)object of:(NSRect)ofObject{
+	ofObject.size.width+=2*SNAP_DISTANCE;
+	ofObject.size.height+=2*SNAP_DISTANCE;
+	ofObject.origin.x-=SNAP_DISTANCE;
+	ofObject.origin.y-=SNAP_DISTANCE;
+	return NSIntersectsRect(object,ofObject);
+}
+
+/*!
+ * @brief Gets space that windows should be apart by based on current window style
+ */
+- (NSPoint)windowSpacing {
+	AIContactListWindowStyle style = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
+														  group:PREF_GROUP_APPEARANCE] intValue];
+	int space = [[[adium preferenceController] preferenceForKey:@"Group Top Spacing" 
+														  group:@"List Layout"] intValue];
+	
+	switch (style) {
+		case AIContactListWindowStyleStandard:
+		case AIContactListWindowStyleBorderless:
+			return NSMakePoint(0,0);
+		case AIContactListWindowStyleGroupBubbles:
+		case AIContactListWindowStyleContactBubbles:
+		case AIContactListWindowStyleContactBubbles_Fitted:
+			return NSMakePoint(space,space-WINDOW_ALIGNMENT_TOLERANCE);
+	}
+	return NSMakePoint(0,0);
 }
 
 @end

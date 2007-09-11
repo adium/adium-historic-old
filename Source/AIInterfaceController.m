@@ -156,7 +156,7 @@
     [self showContactList:nil];
 
 	//Userlist show/hide item
-	menuItem_toggleUserlist = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@"Toggle Userlist"
+	menuItem_toggleUserlist = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Toggle User List", nil)
 																							 target:self
 																							 action:@selector(toggleUserlist:)
 																					  keyEquivalent:@""];
@@ -287,7 +287,9 @@
 
 //Contact List ---------------------------------------------------------------------------------------------------------
 #pragma mark Contact list
-//Toggle the contact list
+/*!
+ * @brief Toggles contact list between visible and hiden
+ */
 - (IBAction)toggleContactList:(id)sender
 {
     if ([self contactListIsVisibleAndMain]) {
@@ -297,41 +299,72 @@
     } 
 }
 
-//Show the contact list window
+/*!
+ * @brief Brings contact list to the front
+ */
 - (IBAction)showContactList:(id)sender
 {
 	[contactListPlugin showContactListAndBringToFront:YES];
 }
 
-//Show the contact list window and bring Adium to the front
+/*!
+ * @brief Show the contact list window and bring Adium to the front
+ */
 - (IBAction)showContactListAndBringToFront:(id)sender
 {
 	[contactListPlugin showContactListAndBringToFront:YES];
 	[[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
 }
 
-//Close the contact list window
+/*!
+ * @brief Close the contact list window
+ */
 - (IBAction)closeContactList:(id)sender
 {
 	[contactListPlugin closeContactList];
 }
 
-//Return if the contact list is open or not.
+/*!
+ * @returns YES if contact list is visible and selected, otherwise NO
+ */
 - (BOOL)contactListIsVisibleAndMain
 {
 	return [contactListPlugin contactListIsVisibleAndMain];
 }
 
+/*!
+* @returns YES if contact list is visible, otherwise NO
+ */
 - (BOOL)contactListIsVisible
 {
 	return [contactListPlugin contactListIsVisible];
+}
+
+//Detachable Contact List ----------------------------------------------------------------------------------------------
+#pragma mark Detachable Contact List
+
+/*!
+ * @returns YES if detachable groups are allowed, otherwise NO
+ */
+- (BOOL)allowDetachableGroups {
+	return [contactListPlugin allowDetachableContactList];
+}
+
+/*!
+ * @returns Created contact list controller for detached contact list
+ */
+- (AIListWindowController *)detachContactList:(AIListGroup *)aContactList {
+	return [contactListPlugin detachContactList:aContactList];
 }
 
 
 //Messaging ------------------------------------------------------------------------------------------------------------
 //Methods for instructing the interface to provide a representation of chats, and to determine which chat has user focus
 #pragma mark Messaging
-//Open a window for the chat
+
+/*!
+ * @brief Opens window for chat
+ */
 - (void)openChat:(AIChat *)inChat
 {
 	NSArray		*containers = [interfacePlugin openContainersAndChats];
@@ -450,7 +483,9 @@
 	}
 }
 
-//Consolidate chats into a single container
+/*!
+ * @brief Consolidate chats into a single container
+ */
 - (void)consolidateChats
 {
 	//We work with copies of these arrays, since moving chats may change their contents
@@ -480,28 +515,41 @@
 	[openContainers release];
 }
 
-//Active chat
+/*!
+ * @returns Active chat
+ */
 - (AIChat *)activeChat
 {
 	return activeChat;
 }
-//Set the active chat window
+
+/*!
+ * @brief Set the active chat window
+ */
 - (void)setActiveChat:(AIChat *)inChat
 {
 	[interfacePlugin setActiveChat:inChat];
 }
-//Last chat to be active (should only be nil if no chats are open)
+
+/*!
+ * @returns Last chat to be active, nil if not chat is open
+ */
 - (AIChat *)mostRecentActiveChat
 {
 	return mostRecentActiveChat;
 }
-//Solely for key-value pairing purposes
+
+/*!
+ * @brief Sets active chat window based on chat
+ */
 - (void)setMostRecentActiveChat:(AIChat *)inChat
 {
 	[self setActiveChat:inChat];
 }
 
-//Returns an array of open chats (cached, so call as frequently as desired)
+/*!
+ * @returns Array of open chats (cached, so call as frequently as desired)
+ */
 - (NSArray *)openChats
 {
 	if (!_cachedOpenChats) {
@@ -511,13 +559,19 @@
 	return _cachedOpenChats;
 }
 
-//
+/*!
+ * @param containerID ID for chat window
+ *
+ * @returns Array of all chats in chat window
+ */
 - (NSArray *)openChatsInContainerWithID:(NSString *)containerID
 {
 	return [interfacePlugin openChatsInContainerWithID:containerID];
 }
 
-//Resets the cache of open chats
+/*!
+ * @brief Resets the cache of open chats
+ */
 - (void)_resetOpenChatsCache
 {
 	[_cachedOpenChats release]; _cachedOpenChats = nil;
@@ -529,14 +583,22 @@
 //These methods are called by the interface to let us know what's going on.  We're informed of chats opening, closing,
 //changing order, etc.
 #pragma mark Interface plugin callbacks
-//A chat window did open: rebuild our window menu to show the new chat
+/*!
+ * @breif A chat window did open: rebuild our window menu to show the new chat
+ *
+ * @param inChat Newly created chat 
+ */
 - (void)chatDidOpen:(AIChat *)inChat
 {
 	[self _resetOpenChatsCache];
 	[self buildWindowMenu];
 }
 
-//A chat has become active: update our chat closing keys and flag this chat as selected in the window menu
+/*!
+ * @brief A chat has become active: update our chat closing keys and flag this chat as selected in the window menu
+ *
+ * @param inChat Chat which has become active
+ */
 - (void)chatDidBecomeActive:(AIChat *)inChat
 {
 	AIChat	*previouslyActiveChat = activeChat;
@@ -571,7 +633,12 @@
 	[previouslyActiveChat release];	
 }
 
-//A chat has become visible: send out a notification for components and plugins to take action
+/*!
+ * @brief A chat has become visible: send out a notification for components and plugins to take action
+ *
+ * @param inChat Chat that has become active
+ * @param nWindow Containing chat window
+ */
 - (void)chatDidBecomeVisible:(AIChat *)inChat inWindow:(NSWindow *)inWindow
 {
 	[[adium notificationCenter] postNotificationName:@"AIChatDidBecomeVisible"
@@ -583,7 +650,7 @@
 /*!
  * @brief Find the window currently displaying a chat
  *
- * If the chat is not in any window, or is not visible in any window, returns nil
+ * @returns Window for chat otherwise if the chat is not in any window, or is not visible in any window, returns nil
  */
 - (NSWindow *)windowForChat:(AIChat *)inChat
 {
@@ -600,7 +667,11 @@
 	return [interfacePlugin activeChatInWindow:window];
 }
 
-//A chat window did close: rebuild our window menu to remove the chat
+/*!
+ * @brief A chat window did close: rebuild our window menu to remove the chat
+ * 
+ * @param inChat Chat that closed
+ */
 - (void)chatDidClose:(AIChat *)inChat
 {
 	[self _resetOpenChatsCache];
@@ -616,7 +687,9 @@
 	}
 }
 
-//The order of chats has changed: rebuild our window menu to reflect the new order
+/*!
+ * @brief The order of chats has changed: rebuild our window menu to reflect the new order
+ */
 - (void)chatOrderDidChange
 {
 	[self _resetOpenChatsCache];
@@ -625,7 +698,9 @@
 
 #pragma mark Unviewed content
 
-//Content was received, increase the unviewed content count of the chat (if it's not currently active)
+/*!
+ * @breif Content was received, increase the unviewed content count of the chat (if it's not currently active)
+ */
 - (void)didReceiveContent:(NSNotification *)notification
 {
 	AIChat		*chat = [[notification userInfo] objectForKey:@"AIChat"];
@@ -638,24 +713,34 @@
 
 //Chat close menus -----------------------------------------------------------------------------------------------------
 #pragma mark Chat close menus
-//Close the active window
+
+/*!
+ * @brief Closes currently active window
+ */
 - (IBAction)closeMenu:(id)sender
 {
     [[[NSApplication sharedApplication] keyWindow] performClose:nil];
 }
 
-//Close the active chat
+/*!
+ * @brief Closes currently active chat (if there is an active chat)
+ */
 - (IBAction)closeChatMenu:(id)sender
 {
 	if (activeChat) [self closeChat:activeChat];
 }
 
+/*!
+ * @brief Closes currently selected chat based on current chat contextual menu
+ */
 - (IBAction)closeContextualChat:(id)sender
 {
 	[self closeChat:[[adium menuController] currentContextMenuChat]];
 }
 
-//Loop through open chats and close them
+/*!
+ * @brief Loop through open chats and close them
+ */
 - (IBAction)closeAllChats:(id)sender
 {
 	NSEnumerator	*containerEnumerator = [[[[interfacePlugin openChats] copy] autorelease] objectEnumerator];
@@ -666,7 +751,9 @@
 	}
 }
 
-//Updates the key equivalents on 'close' and 'close chat' (dynamically changed to make cmd-w less destructive)
+/*!
+ * @brief Updates the key equivalents on 'close' and 'close chat' (dynamically changed to make cmd-w less destructive)
+ */
 - (void)updateCloseMenuKeys
 {
 	if (activeChat && !closeMenuConfiguredForChat) {
@@ -683,14 +770,21 @@
 
 //Window Menu ----------------------------------------------------------------------------------------------------------
 #pragma mark Window Menu
-//Make a chat window active (Invoked by a selection in the window menu)
+
+/*!
+ * @brief Make a chat window active
+ * 
+ * Invoked by a selection in the window menu
+ */
 - (IBAction)showChatWindow:(id)sender
 {
 	[self setActiveChat:[sender representedObject]];
     [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
 }
 
-//Updates the 'check' icon so it's next to the active window
+/*!
+ * @brief Updates the 'check' icon so it's next to the active window
+ */
 - (void)updateActiveWindowMenuItem
 {
     NSEnumerator	*enumerator = [windowMenuArray objectEnumerator];
@@ -701,9 +795,12 @@
     }
 }
 
-//Builds the window menu
-//This function gets called whenever chats are opened, closed, or re-ordered - so improvements and optimizations here
-//would probably be helpful
+/*!
+ * @brief Builds the window menu
+ * 
+ * This function gets called whenever chats are opened, closed, or re-ordered - so improvements and optimizations here
+ * would probably be helpful
+ */
 - (void)buildWindowMenu
 {	
     NSMenuItem				*item;
@@ -767,7 +864,11 @@
 	[self updateActiveWindowMenuItem];
 }
 
-//Adds a menu item to the internal array, dock menu, and main menu
+/*!
+ * brief Adds a menu item to the internal array, dock menu, and main menu
+ *
+ * Should be used for adding a new window to the window menu (and dock menu)
+ */
 - (void)_addItemToMainMenuAndDock:(NSMenuItem *)item
 {
 	//Add to main menu first
@@ -785,7 +886,10 @@
 
 //Chat Cycling ---------------------------------------------------------------------------------------------------------
 #pragma mark Chat Cycling
-//Select the next message
+
+/*!
+ * @brief Cycles to the next active chat
+ */
 - (void)nextChat:(id)sender
 {
 	NSArray	*openChats = [self openChats];
@@ -800,7 +904,9 @@
 	}
 }
 
-//Select the previous message
+/*!
+ * @brief Cycles to the previus active chat
+ */
 - (void)previousChat:(id)sender
 {
 	NSArray	*openChats = [self openChats];
@@ -858,8 +964,10 @@
     return nil;
 }
 
-//Returns the "selected"(represented) contact (By finding the first responder that returns a contact)
-//If no listObject is found, try to find a list object selected in a group chat
+/*!
+ * @returns The "selected"(represented) contact (By finding the first responder that returns a contact)
+ * If no listObject is found, try to find a list object selected in a group chat
+ */
 - (AIListObject *)selectedListObject
 {
 	AIListObject *listObject = [self _performSelectorOnFirstAvailableResponder:@selector(listObject)];
@@ -868,6 +976,7 @@
 	}
 	return listObject;
 }
+
 - (AIListObject *)selectedListObjectInContactList
 {
 	return [self _performSelectorOnFirstAvailableResponder:@selector(listObject) conformingToProtocol:@protocol(ContactListOutlineView)];

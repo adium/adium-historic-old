@@ -116,12 +116,10 @@
 - (void)removeMenuItem:(NSMenuItem *)targetItem
 {
 	NSMenu		*targetMenu = [targetItem menu];
+	if (!targetMenu) return;
+
 	int			targetIndex = [targetMenu indexOfItem:targetItem];
 	unsigned	loop, maxLoop;
-
-	if (!targetMenu) {
-		NSLog(@"Warning: Attempting to remove %@ (%@, target %@), but it has no menu",targetItem, [targetItem title], [targetItem target]);
-	}
 	
 	//Fix the pointer if this is one
 	for (loop = 0, maxLoop = [locationArray count]; loop < maxLoop; loop++) {

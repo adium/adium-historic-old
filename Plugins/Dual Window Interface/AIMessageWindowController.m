@@ -1175,7 +1175,6 @@
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
 {
-	NSLog(@"toolbarAllowedItemIdent");
     return [[toolbarItems allKeys] arrayByAddingObjectsFromArray:
 		[NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier,
 			NSToolbarSpaceItemIdentifier,
@@ -1189,7 +1188,7 @@
 {
 
 	NSToolbarItem *item = [[notification userInfo] objectForKey:@"item"];
-		NSLog(@"toolbarWillAddItem: %@", item);
+
 	if ([[item itemIdentifier] isEqualToString:NSToolbarShowFontsItemIdentifier]) {
 		[item setTarget:[adium interfaceController]];
 		[item setAction:@selector(toggleFontPanel:)];
@@ -1198,7 +1197,6 @@
 
 -(void)removeToolbarItemWithIdentifier:(NSString*)identifier
 {
-	NSLog(@"removeToolbarItemWithIdentifier");
 	NSEnumerator* enumerator = [toolbarItems objectEnumerator];
 	id object;
 	int count;

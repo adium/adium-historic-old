@@ -35,6 +35,7 @@
 #define PREF_GROUP_CONTACT_LIST		@"Contact List"
 #define KEY_FLAT_METACONTACTS			@"FlatMetaContacts"		//Metacontact objectID storage
 
+#warning This class is incomplete
 
 @implementation AIBookmarkController
 -(id)init

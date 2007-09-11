@@ -67,7 +67,6 @@ static NSRect screenBoundariesRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
  */
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {
-	NSLog(@"initWithWindowNibName: %@",windowNibName);
 	if ((self = [super initWithWindowNibName:windowNibName])) {
 		adium = [AIObject sharedAdiumInstance];
 	}

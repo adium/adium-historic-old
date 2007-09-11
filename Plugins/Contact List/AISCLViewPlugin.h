@@ -15,30 +15,73 @@
  */
 
 #import <Adium/AIPlugin.h>
+#import <Adium/AIListContact.h>
+#import <Adium/AIAbstractListController.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
-#import "AIAbstractListController.h"
+
+#define PREF_DETACHED_GROUPS			@"Detached Groups"
 
 #define KEY_LIST_LAYOUT_NAME			@"List Layout Name"
 #define KEY_LIST_THEME_NAME				@"List Theme Name"
+#define KEY_LIST_DETACHABLE				@"List Detachable"
 
-#define	CONTACT_LIST_DEFAULTS		@"ContactListDefaults"
+#define	CONTACT_LIST_DEFAULTS			@"ContactListDefaults"
+
+#define DetachedContactListIsEmpty		@"DetachedContactListIsEmpty"
 
 @class AIListWindowController, AICLPreferences, ESContactListAdvancedPreferences;
 
-@interface AISCLViewPlugin : AIPlugin <AIContactListComponent> {	
-	AIListWindowController				*contactListWindowController;
-	AICLPreferences						*preferences;
-	ESContactListAdvancedPreferences	*advancedPreferences;
-	AIContactListWindowStyle					windowStyle;
+@protocol AIMultiContactListComponent;
+
+@interface AISCLViewPlugin : AIPlugin <AIMultiContactListComponent> {	
+	NSMutableArray							*contactLists;
+
+	AIContactListWindowStyle				windowStyle;
+	
+	AIListWindowController					*defaultController;
+	BOOL									hasLoaded;
+	
+	NSMenuItem								*menuItem_allowDetach;
+	
+	NSMenuItem								*menuItem_nextDetached;
+	NSMenuItem								*menuItem_previousDetached;
+	NSMenuItem								*menuItem_consolidate;
+	
+	NSDictionary							*contextMenuAttach;
+	NSMenuItem								*contextMenuDetach;
+	NSMenu									*contextSubmenuContent;
+	NSMenuItem								*contextSubmenu;
+
+	BOOL									detachable;
+	unsigned								detachedCycle;
 }
+
+//Manage multiple windows
+- (void)closeContactList:(AIListWindowController *)window;
+
+//Preferences
+- (void)loadPreferences;
+- (void)savePreferences;
+- (void)loadWindowPreferences:(NSDictionary *)windowPreferences;
+
+// Menu
+- (IBAction)consolidateContactLists:(id)sender;
+- (IBAction)contextMenuAction:(id)sender;
+
+- (BOOL)rebuildContextMenu;
+- (NSString *)formatContextMenu:(AIListObject<AIContainingObject> *)contactList;
+- (NSString *)formatContextMenu:(AIListObject<AIContainingObject> *)contactList showEmpty:(BOOL)empty;
 
 //Contact List Controller
 - (AIListWindowController *)contactListWindowController;
-- (void)contactListDidClose;
+- (void)contactListDidClose:(NSNotification *)notification;
 - (void)showContactListAndBringToFront:(BOOL)bringToFront;
 - (BOOL)contactListIsVisibleAndMain;
 - (BOOL)contactListIsVisible;
 - (void)closeContactList;
-- (void)contactListDidClose;
+- (void)closeDetachedContactLists;
+
+// 
+- (void)setWindowLocation:(AIListWindowController *)window at:(NSString *)location;
 
 @end

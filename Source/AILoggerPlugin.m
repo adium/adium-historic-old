@@ -522,12 +522,6 @@ Class LogViewerWindowControllerClass = NULL;
 {
 	AIAccount *account = [chat account];
 	NSString *chatID = ([chat isGroupChat] ? [chat identifier] : [[chat listObject] UID]);
-	/*
-	NSLog(@"Chat: %@",chat);
-	NSLog(@"service ID is %@",[account serviceID]);
-	NSLog(@"Account UID is %@",[account UID]);
-	NSLog(@"chat ID is %@",chatID);
-	*/
 
 	return [NSString stringWithFormat:@"%@.%@-%@", [account serviceID], [account UID], chatID];
 }

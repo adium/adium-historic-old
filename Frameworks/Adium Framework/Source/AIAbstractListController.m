@@ -41,6 +41,9 @@
 #import "AIMessageWindowController.h"
 #import "DCInviteToChatWindowController.h"
 #import "AIChatController.h"
+#import "AISCLViewPlugin.h"
+#import "AICoreComponentLoader.h"
+
 #define CONTENT_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
 #define STATUS_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
 #define GROUP_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
@@ -78,6 +81,11 @@
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(listObjectAttributesChanged:)
 										   name:ListObject_AttributesChanged
+										 object:nil];
+		
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(setDragItems:)
+										   name:@"AIListControllerDraggedItems"
 										 object:nil];
 	}
 
@@ -554,7 +562,8 @@
 - (NSMenu *)contextualMenuForListObject:(AIListObject *)listObject
 {
 	BOOL			isGroup = [listObject isKindOfClass:[AIListGroup class]];
-	NSArray			*locationsArray = [NSArray arrayWithObjects:
+	
+	NSMutableArray			*locationsArray = [NSArray arrayWithObjects:
 		[NSNumber numberWithInt:(isGroup ? Context_Group_Manage : Context_Contact_Manage)],
 		[NSNumber numberWithInt:Context_Contact_Action],
 		[NSNumber numberWithInt:Context_Contact_ListAction],
@@ -635,6 +644,23 @@
 
 #pragma mark Drag and drop
 /*!
+* @brief Sets items that are corrently being dragged (even if not over this list)
+ */
+- (void)setDragItems:(NSNotification *)notification
+{
+	NSArray *items = [notification object];
+	if(dragItems)
+		[dragItems release];
+	dragItems = [items retain];
+	
+	// Remove this contact list if from drag & drop operation took the last group away
+	if(![[contactList listContacts] count]){
+		[[adium notificationCenter] postNotificationName:DetachedContactListIsEmpty
+												  object:contactListView];
+	}
+}
+
+/*!
  * @brief Initiate drag and drop by writing items to the pasteboard
  *
  * We provide @"Private" for AIListObject, indicating we are using the private dragItems instance variable.
@@ -650,6 +676,9 @@
 		dragItems = [items retain];
 	}
 	[self setDraggedContacts:dragItems];
+	[[adium notificationCenter] postNotificationName:@"AIListControllerDraggedItems"
+											  object:dragItems];
+	
 	[pboard declareTypes:[NSArray arrayWithObjects:@"AIListObject",@"AIListObjectUniqueIDs",nil] owner:self];
 	[pboard setString:@"Private" forType:@"AIListObject"];
 	
@@ -658,7 +687,7 @@
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
-{
+{	
 	if(dragOperation == @"NSDragOperationMove") {
 		/*contact was dragged within the userlist -> re-sort userlist
 		 *reposition contact within the userlist
@@ -680,10 +709,13 @@
 	}
 	
 	if (dragItems) {
-		[dragItems release]; dragItems = nil;
+		[dragItems release]; 
+		dragItems = nil;
 	}
+
 	return YES;
 }
+
 - (NSDragOperation)outlineView:(NSOutlineView*)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
 {	
 	//cycle through participants list to find if we are adding or moving a contact
@@ -708,6 +740,11 @@
 
 - (void)listControllerDragEnded:(NSNotification *)notification
 {
+	//Check if this contact list is empty from drag operation
+	if(![contactList containedObjectsCount])
+		[[adium notificationCenter] postNotificationName:DetachedContactListIsEmpty 
+												  object:contactListView];
+	
 	if (dragItems) {
 		[dragItems release]; dragItems = nil;
 	}

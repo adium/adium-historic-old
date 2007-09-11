@@ -1,11 +1,6 @@
 {
     IBClasses = (
         {
-            CLASS = AIAdvancedPreferencePane; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = AIModularPane; 
-        }, 
-        {
             CLASS = AILocalizationButton; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -36,24 +31,39 @@
         }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
+            CLASS = AIPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                delegate = id; 
+                "textField_title" = NSTextField; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
+            }; 
+            SUPERCLASS = AIModularPane; 
+        }, 
+        {
             CLASS = ESContactListAdvancedPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "checkBox_animateChanges" = NSButton; 
+                "checkBox_detach" = NSButton; 
                 "checkBox_flash" = NSButton; 
                 "checkBox_hideOnScreenEdgesOnlyInBackground" = NSButton; 
                 "checkBox_showTooltips" = NSButton; 
                 "checkBox_showTooltipsInBackground" = NSButton; 
+                "checkBox_showTransitions" = NSButton; 
+                "checkBox_snap" = id; 
                 "checkBox_windowHasShadow" = NSButton; 
                 "label_appearance" = NSTextField; 
+                "label_detach" = NSTextField; 
                 "label_hide" = NSTextField; 
                 "label_orderTheContactList" = NSTextField; 
+                "label_snap" = NSTextField; 
                 "label_tooltips" = NSTextField; 
                 "label_windowHandling" = NSTextField; 
                 "matrix_hiding" = NSMatrix; 
                 "popUp_windowPosition" = NSPopUpButton; 
             }; 
-            SUPERCLASS = AIAdvancedPreferencePane; 
+            SUPERCLASS = AIPreferencePane; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSButton; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 

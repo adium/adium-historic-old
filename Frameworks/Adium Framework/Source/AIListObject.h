@@ -42,6 +42,7 @@ typedef enum {
 
 //Should list each list contact only once (for groups, this is the same as the objectEnumerator)
 - (NSArray *)listContacts;
+- (NSArray *)containedObjectIDs;
 
 - (BOOL)addObject:(AIListObject *)inObject;
 
@@ -68,6 +69,7 @@ typedef enum {
     NSString				*UID;
 	NSString				*internalObjectID;
 	BOOL					visible;				//Visibility of this object
+	BOOL					alwaysVisible;
 
 	//Grouping, Manual ordering
     id <AIContainingObject, AIListObject>	containingObject;		//The group/metacontact this object is in
@@ -90,6 +92,8 @@ typedef enum {
 //Visibility
 - (void)setVisible:(BOOL)inVisible;
 - (BOOL)visible;
+- (void)setAlwaysVisible:(BOOL)isVisible;
+- (BOOL)alwaysVisible;
 
 //Grouping
 - (AIListObject <AIContainingObject> *)containingObject;

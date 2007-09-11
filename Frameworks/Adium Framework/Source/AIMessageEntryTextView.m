@@ -281,6 +281,7 @@
     //Reset cache and resize
 	[self _resetCacheAndPostSizeChanged];
 	
+#warning Username completion
 	//set the current string - for username completion
 	[textString setString:[[self textStorage] string]];
 

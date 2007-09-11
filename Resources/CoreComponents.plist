@@ -88,5 +88,6 @@
 	<string>AINulRemovalPlugin</string>
 	<string>AIAdvancedPreferencesPlugin</string>
 	<string>GBImportPlugin</string>
+	<string>AIContactVisibilityPlugin</string>
 </array>
 </plist>

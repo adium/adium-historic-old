@@ -1111,7 +1111,7 @@
 	//Clear status flags on all contacts for this account, and set their remote group to nil
 	NSEnumerator	*enumerator = [[self contacts] objectEnumerator];
 	AIListContact	*listContact;
-
+	
 	while ((listContact = [enumerator nextObject])) {
 		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		[listContact setRemoteGroupName:nil];

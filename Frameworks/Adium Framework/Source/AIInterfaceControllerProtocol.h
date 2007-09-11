@@ -3,7 +3,6 @@
  *  Adium
  *
  *  Created by Evan Schoenberg on 7/31/06.
- *  Copyright 2006 __MyCompanyName__. All rights reserved.
  *
  */
 
@@ -51,7 +50,9 @@ typedef enum {
 @protocol AIInterfaceComponent, AIContactListComponent, AIMessageDisplayController, AIMessageDisplayPlugin;
 @protocol AIContactListTooltipEntry, AIFlashObserver;
 
-@class AIChat, AIListObject;
+@class AIListWindowController;
+
+@class AIChat, AIListObject, AIListGroup;
 
 @protocol AIInterfaceController <AIController>
 - (void)registerInterfaceController:(id <AIInterfaceComponent>)inController;
@@ -59,10 +60,17 @@ typedef enum {
 - (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows;
 
 //Contact List
+/*! @name Contact List */
+/* @{ */
 - (IBAction)showContactList:(id)sender;
 - (IBAction)closeContactList:(id)sender;
 - (BOOL)contactListIsVisibleAndMain;
 - (BOOL)contactListIsVisible;
+/*! @} */
+
+//Detachable Contact List
+- (BOOL)allowDetachableGroups;
+- (AIListWindowController *)detachContactList:(AIListGroup *)aContactList;
 
 //Messaging
 - (void)openChat:(AIChat *)inChat;
@@ -122,6 +130,7 @@ typedef enum {
 
 //Window levels menu
 - (NSMenu *)menuForWindowLevelsNotifyingTarget:(id)target;
+
 @end
 
 //Controls a contact list view
@@ -194,11 +203,24 @@ typedef enum {
 - (AIChat *)activeChatInWindow:(NSWindow *)window;
 @end
 
+@protocol AIInterfaceContainer <NSObject>
+- (void)makeActive:(id)sender;	//Make the container active/front
+- (void)close:(id)sender;	//Close the container
+@end
+
 @protocol AIContactListComponent <NSObject>
 - (void)showContactListAndBringToFront:(BOOL)bringToFront;
 - (BOOL)contactListIsVisibleAndMain;
 - (BOOL)contactListIsVisible;
 - (void)closeContactList;
+@end
+
+@protocol AIMultiContactListComponent <AIContactListComponent>
+- (id)detachContactList:(AIListGroup *)contactList;
+- (void)nextDetachedContactList;
+- (void)previousDetachedContactList;
+- (BOOL)allowDetachableContactList;
+- (unsigned)detachedContactListCount;
 @end
 
 //Custom printing informal protocol
