@@ -132,8 +132,6 @@
 	[manager stopListening];
 	[manager stopBrowsing];
 	[manager closeConnections];
-
-	[client reportLoggedOut];
 }
 
 - (void) sendFile:(NSString *)filename to:(NSString *)contact size:(size_t)size
