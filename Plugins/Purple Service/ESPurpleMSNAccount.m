@@ -158,6 +158,9 @@
 		if (([*disconnectionError rangeOfString:@"Type your e-mail address and password correctly"].location != NSNotFound) ||
 			([*disconnectionError rangeOfString:@"Unable to authenticate"].location != NSNotFound)) {
 			[self serverReportedInvalidPassword];
+			// Attempt to reconnect on invalid password. libPurple considers this to be a "suicidal" connection, but this allows
+			// us to prompt the user for a new password.
+			return YES;
 		} else if (([*disconnectionError rangeOfString:@"You have signed on from another location"].location != NSNotFound)) {
 			shouldAttemptReconnect = NO;
 		}

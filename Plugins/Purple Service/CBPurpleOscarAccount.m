@@ -168,7 +168,9 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 		if (([*disconnectionError rangeOfString:@"Incorrect password"].location != NSNotFound) ||
 			([*disconnectionError rangeOfString:@"Authentication failed"].location != NSNotFound)){
 			[self serverReportedInvalidPassword];
-
+			// Attempt to reconnect on invalid password. libPurple considers this to be a "suicidal" connection, but this allows
+			// us to prompt the user for a new password.
+			return YES;
 		} else if ([*disconnectionError rangeOfString:@"signed on with this screen name at another location"].location != NSNotFound) {
 			shouldAttemptReconnect = NO;
 		} else if ([*disconnectionError rangeOfString:@"too frequently"].location != NSNotFound) {
