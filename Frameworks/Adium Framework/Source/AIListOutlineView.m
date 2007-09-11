@@ -13,7 +13,9 @@
  * You should have received a copy of the GNU General Public License along with this program; if not,
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
+#import "AIContactController.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIListGroup.h>
 #import <Adium/AIListCell.h>
 #import <Adium/AIListOutlineView.h>
 #import <AIUtilities/AIWindowAdditions.h>
@@ -22,6 +24,7 @@
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIGradient.h>
 #import <AIUtilities/AIBezierPathAdditions.h>
+#import "AISCLViewPlugin.h"
 
 #define MINIMUM_HEIGHT				48
 
@@ -63,8 +66,16 @@
 	backgroundColor = nil;
 	backgroundStyle = AINormalBackground;
 	
+	unlockingGroup = NO;
+	dragContent = nil;
+	
 	[self setDrawsGradientSelection:YES];
 	[self sizeLastColumnToFit];	
+	
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(setUnlockGroup:)
+												 name:@"AIListOutlineViewUnlockGroup" 
+											   object:nil];
 }
 
 - (void)dealloc
@@ -72,6 +83,8 @@
 	[backgroundImage release];
 	[backgroundColor release];
 	[self unregisterDraggedTypes];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	
 	[super dealloc];
 }
 
@@ -257,8 +270,8 @@
 	}
 }
 
-//Background -----------------------------------------------------------------
-//
+#pragma mark Background
+
 - (void)setBackgroundImage:(NSImage *)inImage
 {
 	if (backgroundImage != inImage) {
@@ -470,19 +483,133 @@
 	[NSGraphicsContext restoreGraphicsState];
 }
 
+#pragma mark Attach & Detach Groups
 
--(NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
+- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {	
-	[[sender draggingDestinationWindow] makeKeyAndOrderFront:self];
-	return NSDragOperationEvery;
+	unlockingGroup = NO;
+	dragContent = nil;
 	
+	// Tell other windows that this is an internal drag & drop
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"AIListOutlineViewUnlockGroup"
+														object:[NSNumber numberWithBool:unlockingGroup]];
+	
+
+	//From previous implementation - still needed?
+	[[sender draggingDestinationWindow] makeKeyAndOrderFront:self];
+
+	return [super draggingEntered:sender];
 }
 
--(void)draggingExited:(id <NSDraggingInfo>)sender
+- (void)draggingExited:(id <NSDraggingInfo>)sender
 {
-	NSLog(@"dragging exited");
+	unlockingGroup = YES;
+	dragContent = [sender draggingPasteboard];
+	
+	// Tell other windows that something may be dropped in them
+	[[NSNotificationCenter defaultCenter] postNotificationName:@"AIListOutlineViewUnlockGroup"
+														object:[NSNumber numberWithBool:unlockingGroup]];
+	[super draggingExited:sender];
 }
 
+- (void)draggedImage:(NSImage *)anImage endedAt:(NSPoint)aPoint operation:(NSDragOperation)operation
+{
+	NSArray					*dragUniqueIDs = nil;	// Items being dragged
+	NSEnumerator			*idEnumerator = nil;	
+	NSString				*uID = nil;				// Current group being dragged ID
+	
+	AIListGroup				*newContactList = nil;	// New contact list to be created
+	AIListGroup				*currentGroup = nil;	// Current group being dragged
+	
+	id<AIInterfaceController>		interfaceController = [[AIObject sharedAdiumInstance] interfaceController];
+	id<AIContactController>			contactController = [[AIObject sharedAdiumInstance] contactController];
+
+	// If nothing is being dragged or we are not allowing to snap off groups-> quit
+	if(!dragContent || ![interfaceController allowDetachableGroups])
+		return;
+	
+	// Group being unlocked from current location
+	if(unlockingGroup && [[dragContent types] containsObject:@"AIListObjectUniqueIDs"])
+	{
+		dragUniqueIDs = [dragContent propertyListForType:@"AIListObjectUniqueIDs"];
+		idEnumerator = [dragUniqueIDs objectEnumerator];
+
+		while ((uID = [idEnumerator nextObject])) {
+			currentGroup = (AIListGroup  *)[contactController existingListObjectWithUniqueID:uID];
+			
+			if ([currentGroup isKindOfClass:[AIListGroup class]]) {
+				// If root of contact list was not yet created, create it now
+				if(!newContactList){
+					newContactList = [contactController createDetachedContactList];
+				}
+				
+				[self moveGroup:currentGroup to:newContactList];
+			}	
+		}
+		
+		// If new contact list was created
+		if(newContactList) {
+			// Update new contact list
+			[[NSNotificationCenter defaultCenter] postNotificationName:@"Contact_ListChanged"
+																object:newContactList
+															  userInfo:nil];
+			
+			// Create new contact list
+			[[[interfaceController detachContactList:newContactList] window] setFrameTopLeftPoint:aPoint];
+		}
+	}
+	
+	dragContent = nil;
+	
+	[[self dataSource] outlineView:self draggedImage:anImage endedAt:aPoint operation:operation]; 
+}
+
+- (void)dragImage:(NSImage *)anImage at:(NSPoint)viewLocation 
+		   offset:(NSSize)initialOffset event:(NSEvent *)event 
+	   pasteboard:(NSPasteboard *)pboard source:(id)sourceObj 
+		slideBack:(BOOL)slideFlag
+{ 
+	// In case drag&drop ends while we are still drawing
+	[pboard retain];
+	
+	// If we are dragging a group item then don't slide back
+	if([[pboard types] containsObject:@"AIListObjectUniqueIDs"]){
+		NSArray *objects = [pboard propertyListForType:@"AIListObjectUniqueIDs"];
+		AIListObject *item = [[[AIObject sharedAdiumInstance] contactController] existingListObjectWithUniqueID:[objects objectAtIndex:0]];
+		if([item isKindOfClass:[AIListGroup class]])
+			slideFlag = NO;
+	}
+		
+	[super dragImage:anImage
+				  at:viewLocation
+			  offset:initialOffset
+			   event:event
+		  pasteboard:pboard
+			  source:sourceObj
+		   slideBack:slideFlag];
+	
+	[pboard release];
+}
+
+- (void)setUnlockGroup:(NSNotification *)notification
+{
+	unlockingGroup = [[notification object] boolValue];
+}
+
+/*!
+ * @brief Moves group from one contact list to another
+ */
+- (BOOL)moveGroup:(AIListGroup *)group to:(AIListObject<AIContainingObject> *)list
+{
+	if(![group moveGroupFrom:[[self dataSource] contactList] to:list])
+		return NO;
+	
+	// Update contact list content and size
+	[[self dataSource] setContactListRoot:[[self dataSource] contactList]];
+	[[self dataSource] contactListDesiredSizeChanged];
+	
+	return YES;
+}
 
 @end
 

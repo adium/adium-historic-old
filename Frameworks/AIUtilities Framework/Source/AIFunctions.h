@@ -67,13 +67,13 @@ typedef enum AIRectEdgeMask {
 	//!No edges.
 	AINoEdges = 0,
 	//!Far right.
-	AIMaxXEdgeMask = (1 << NSMaxXEdge),
+	AIMaxXEdgeMask	= (1 << NSMaxXEdge),
 	//!Top.
-	AIMaxYEdgeMask = (1 << NSMaxYEdge),
+	AIMaxYEdgeMask	= (1 << NSMaxYEdge),
 	//!Far left.
-	AIMinXEdgeMask = (1 << NSMinXEdge),
+	AIMinXEdgeMask	= (1 << NSMinXEdge),
 	//!Bottom.
-	AIMinYEdgeMask = (1 << NSMinYEdge),
+	AIMinYEdgeMask	= (1 << NSMinYEdge)
 } AIRectEdgeMask;
 
 enum {

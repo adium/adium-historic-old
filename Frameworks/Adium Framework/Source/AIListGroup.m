@@ -83,11 +83,15 @@
 	NSEnumerator *containedObjectEnumerator = [[self containedObjects] objectEnumerator];
 	AIListObject *containedObject = nil;
 	
-	while ((containedObject = [containedObjectEnumerator nextObject])) {
-		if ([containedObject visible])
+	while ((containedObject = [containedObjectEnumerator nextObject])){
+		if ([containedObject visible]){
 			visibleCount++;
+		} else if ([containedObject isKindOfClass:[AIListGroup class]] && 
+				   ([[adium contactController] isGroupDetached:self] || [containedObject alwaysVisible])) {
+			visibleCount++;
+		}
 	}
-
+	
 	[self setStatusObject:(visibleCount ? [NSNumber numberWithInt:visibleCount] : nil)
 				   forKey:@"VisibleObjectCount"
 				   notify:NotifyNow];
@@ -103,13 +107,28 @@
 	[[adium contactController] sortListObject:inObject];
 }
 
-
 //Object Storage ---------------------------------------------------------------------------------------------
 #pragma mark Object Storage
 //Return our contained objects
 - (NSArray *)containedObjects
 {
 	return containedObjects;
+}
+
+/*!
+* @brief Creates list of IDs of the containing objects
+ */
+- (NSArray *)containedObjectIDs
+{
+	NSMutableArray *list = [[NSMutableArray alloc] init];
+	NSEnumerator *i = [[self containedObjects] objectEnumerator];
+	AIListObject *currentObject;
+	
+	while((currentObject = [i nextObject])){
+		[list addObject:[[NSString alloc] initWithString:[currentObject UID]]];
+	}
+	
+	return list;
 }
 
 //Number of containd objects
@@ -187,14 +206,14 @@
 		[inObject setContainingObject:self];
 		[containedObjects addObject:inObject];
 		
+		//Update our visible count
+		[self _recomputeVisibleCount];
+		
 		/* Sort this object on our own.  This always comes along with a content change, so calling contact controller's
 		 * sort code would invoke an extra update that we don't need.  We can skip sorting if this object is not visible,
 		 * since it will add to the bottom/non-visible section of our array.
 		 */
 		if ([inObject visible]) {
-			//Update our visible count
-			[self _recomputeVisibleCount];
-
 			[self sortListObject:inObject
 				  sortController:[[adium contactController] activeSortController]];
 		}
@@ -229,6 +248,34 @@
 	}
 }
 
+//Move group from one contact list to another
+- (BOOL)moveGroupTo:(AIListObject<AIContainingObject> *)list
+{
+	return [self moveGroupFrom:[self containingObject] to:list];
+}
+
+- (BOOL)moveGroupFrom:(AIListObject<AIContainingObject> *)fromList to:(AIListObject<AIContainingObject> *)toList
+{
+	// Check if group is not already there
+	if([toList containsObject:self])
+		return NO;
+	
+	[fromList removeObject:self];
+	[toList addObject:self];
+	[self setContainingObject:toList];
+	
+	return YES;
+}
+
+- (BOOL)moveAllGroupsFrom:(AIListGroup *)fromContactList to:(AIListGroup *)toContactList {
+	NSEnumerator *groups = [containedObjects objectEnumerator];
+	AIListGroup *group;
+	
+	while ((group = [groups nextObject]))
+		[group moveGroupTo:toContactList];
+	
+	return YES;
+}
 
 //Sorting --------------------------------------------------------------------------------------------------------------
 #pragma mark Sorting

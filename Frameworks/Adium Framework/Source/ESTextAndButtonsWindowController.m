@@ -422,7 +422,7 @@
 {
 	NSButton *equivalentButton = nil;
 
-	NSLog(@"%i %i",[[button_alternate keyEquivalent] isEqualToString:@"\E"],[[button_default keyEquivalent] isEqualToString:@"\n"]);
+	AILogWithSignature(@"escape? %i newline? %i",[[button_alternate keyEquivalent] isEqualToString:@"\E"],[[button_default keyEquivalent] isEqualToString:@"\n"]);
 
 	if (aSelector == @selector(cancelOperation:) &&
 		[[button_alternate keyEquivalent] isEqualToString:@"\E"]) {

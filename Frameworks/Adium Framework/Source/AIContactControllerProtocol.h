@@ -28,6 +28,7 @@
 #define KEY_USER_ICON							@"User Icon"
 #define PREF_GROUP_NOTES						@"Notes"			//Preference group to store notes in
 #define PREF_GROUP_ADDRESSBOOK                  @"Address Book"
+#define PREF_GROUP_ALWAYS_VISIBLE				@"Always Visible"
 
 typedef enum {
     AIInfo_Profile = 1, 
@@ -110,6 +111,13 @@ typedef enum {
 
 	//Contact info
 - (void)updateListContactStatus:(AIListContact *)inContact;
+
+	//Contact List 
+- (AIListGroup *)createDetachedContactList;
+- (void)removeDetachedContactList:(AIListGroup *)detachedList;
+- (BOOL)isGroupDetached:(AIListObject *)group;
+- (unsigned)contactListCount;
+
 @end
 
 //Observer which receives notifications of changes in list object status

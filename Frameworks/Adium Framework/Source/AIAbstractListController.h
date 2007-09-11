@@ -225,4 +225,7 @@ typedef enum {
 
 - (void)performDefaultActionOnFirstItem;
 
+//Drag & Drop
+- (void)setDragItems:(NSNotification *)notification;
+
 @end

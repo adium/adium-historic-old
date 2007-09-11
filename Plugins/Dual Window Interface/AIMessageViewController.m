@@ -903,8 +903,6 @@
 	//Configure the user list
 	[self _configureUserList];
 
-
-	
 	//Add the user list back to our window if it's missing
 	if (![self userListVisible]) {
 		[self _updateUserListViewWidth];
@@ -949,7 +947,6 @@
  */
 - (void)_configureUserList
 {
-	
 	if (!userListController) {
 		NSDictionary	*themeDict = [NSDictionary dictionaryNamed:USERLIST_THEME forClass:[self class]];
 		NSDictionary	*layoutDict = [NSDictionary dictionaryNamed:USERLIST_LAYOUT forClass:[self class]];
@@ -961,6 +958,8 @@
 		[userListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
 		[userListController setContactListRoot:chat];
 		[userListController setHideRoot:YES];
+		NSLog(@"%@ with root %@ - user list %@ in scroll view %@",userListController,chat,
+		userListView,scrollView_userList);
 
 		//User's choice of mininum width for their user list view
 		userListMinWidth = [[[adium preferenceController] preferenceForKey:KEY_ENTRY_USER_LIST_MIN_WIDTH
@@ -985,6 +984,7 @@
 							  [chat containedObjectsCount] > 1)];
 	
     //Update the user list
+	AILogWithSignature(@"%i, so %@",[self userListVisible], ([self userListVisible] ? @"reloading" : @"not reloading"));
     if ([self userListVisible]) {
         [userListController reloadData];
     }

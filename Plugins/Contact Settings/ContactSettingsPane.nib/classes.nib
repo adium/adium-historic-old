@@ -2,13 +2,20 @@
     IBClasses = (
         {CLASS = AIContactInfoPane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {
-            ACTIONS = {selectedEncryptionPreference = id; setAlias = id; setNotes = id; }; 
+            ACTIONS = {
+                selectedEncryptionPreference = id; 
+                setAlias = id; 
+                setNotes = id; 
+                setVisible = id; 
+            }; 
             CLASS = AIContactSettingsPane; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_visible" = NSButton; 
                 "label_alias" = NSTextField; 
                 "label_encryption" = NSTextField; 
                 "label_notes" = NSTextField; 
+                "label_visible" = NSTextField; 
                 "popUp_encryption" = NSPopUpButton; 
                 "textField_alias" = ESDelayedTextField; 
                 "textField_notes" = ESDelayedTextField; 

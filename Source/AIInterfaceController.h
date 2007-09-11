@@ -25,8 +25,6 @@
     IBOutlet	NSMenuItem		*menuItem_close;
     IBOutlet	NSMenuItem		*menuItem_closeChat;
 	IBOutlet	NSMenuItem		*menuItem_closeAllChats;
-	
-				NSMenuItem		*menuItem_toggleUserlist;
 
     IBOutlet	NSMenuItem		*menuItem_paste;
 	IBOutlet	NSMenuItem		*menuItem_pasteWithImagesAndColors;
@@ -40,14 +38,15 @@
 	IBOutlet    NSMenuItem      *menuItem_customizeToolbar;
 
 	IBOutlet	NSMenuItem		*menuItem_print;
-	
+
     NSMutableArray				*contactListViewArray;
-    NSMutableArray				*messageViewArray;
-    NSMutableArray				*interfaceArray;
+    NSMutableArray				*messageViewArray;		
+    NSMutableArray				*interfaceArray;	
     NSMutableArray				*contactListTooltipEntryArray;
     NSMutableArray              *contactListTooltipSecondaryEntryArray;
     float                       maxLabelWidth;
-    
+
+	
     NSMutableArray				*flashObserverArray;
     NSTimer						*flashTimer;
     int							flashState;
@@ -55,6 +54,7 @@
     NSMutableAttributedString   *tooltipBody;
     NSMutableAttributedString   *tooltipTitle;
     NSImage                     *tooltipImage;
+
 	
     NSString					*errorTitle;
     NSString					*errorDesc;
@@ -70,45 +70,37 @@
 	
 	BOOL						tabbedChatting;
 	
-	id <AIInterfaceComponent>	interfacePlugin;
-	id <AIContactListComponent>	contactListPlugin;
+	id <AIInterfaceComponent>			interfacePlugin;
+	id <AIMultiContactListComponent>	contactListPlugin;
 		
 	BOOL						groupChatsByContactGroup;
 	
+	NSMenuItem					*menuItem_toggleUserlist;
+
 	IBOutlet NSView				*fontPanelAccessoryView;
 	IBOutlet NSButton			*button_fontPanelSetAsDefault;
-	
 }
 
 - (IBAction)toggleContactList:(id)sender;
 - (IBAction)showContactListAndBringToFront:(id)sender;
 
-//Chat close menus
 - (IBAction)closeMenu:(id)sender;
 - (IBAction)closeChatMenu:(id)sender;
 - (IBAction)closeAllChats:(id)sender;
 
-//Custom pasting
 - (IBAction)paste:(id)sender;
 - (IBAction)pasteAndMatchStyle:(id)sender;
 - (IBAction)pasteWithImagesAndColors:(id)sender;
 
-//Custom printing
 - (IBAction)adiumPrint:(id)sender;
 
-//Font panel
 - (IBAction)toggleFontPanel:(id)sender;
 - (IBAction)setFontPanelSettingsAsDefaultFont:(id)sender;
 
-//Custom Dimming menu items
 - (IBAction)toggleFontTrait:(id)sender;
 - (void)toggleToolbarShown:(id)sender;
 - (void)runToolbarCustomizationPalette:(id)sender;
 
 - (IBAction)showPreferenceWindow:(id)sender;
-
-//user list show/hide
--(void)toggleUserlist:(id)sender;
--(void)setDelagate:(id)newDelegate;
 
 @end

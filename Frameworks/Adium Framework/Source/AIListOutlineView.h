@@ -45,7 +45,10 @@ typedef enum {
 	NSColor				*_rowColorWithOpacity;
 	
 	float				minimumDesiredWidth;
-	BOOL				desiredHeightPadding;
+	BOOL	 			desiredHeightPadding;
+	
+	BOOL				unlockingGroup;
+	NSPasteboard		*dragContent;
 	
 	NSArray				*draggedItems;
 }
@@ -79,6 +82,10 @@ typedef enum {
 - (NSColor *)highlightColor;
 - (void)setAlternatingRowColor:(NSColor *)color;
 - (NSColor *)alternatingRowColor;
+
+//Drag & Drop
+- (void)setUnlockGroup:(NSNotification *)notification;
+- (BOOL)moveGroup:(AIListGroup *)group to:(AIListObject<AIContainingObject> *)list;
 
 @end
 

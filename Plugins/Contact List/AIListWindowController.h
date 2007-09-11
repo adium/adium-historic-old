@@ -14,11 +14,17 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/*
+ *	NOTE TO FUTURE MERGE
+ *	Something was happening when the two commented out imports were left in place.
+ *	I took it out and added the @protocol line below and everything worked fine. This
+ *	will surely be a problem in the future merger though.
+ */
+
 #import "AIListController.h"
-#import "AIDualWindowInterfacePlugin.h"
 #import <Adium/AIWindowController.h>
-#import <Adium/AIInterfaceControllerProtocol.h>
 #import <AIUtilities/AIFunctions.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 
 typedef enum {
 	AIContactListWindowHidingStyleNone = 0,
@@ -33,6 +39,8 @@ typedef enum {
 #define KEY_DUAL_RESIZE_VERTICAL			@"Autoresize Vertical"
 #define KEY_DUAL_RESIZE_HORIZONTAL			@"Autoresize Horizontal"
 
+@protocol AIContactListViewController, AIInterfaceContainer;
+
 @interface AIListWindowController : AIWindowController <AIInterfaceContainer, AIListControllerDelegate> {
 	BOOL                                borderless;
 	
@@ -40,6 +48,7 @@ typedef enum {
 	IBOutlet	AIAutoScrollView		*scrollView_contactList;
     IBOutlet	AIListOutlineView		*contactListView;
 	AIListController					*contactListController;
+	AIListObject<AIContainingObject>	*contactListRoot;
 	
 	AIContactListWindowHidingStyle		windowHidingStyle;
 	BOOL								slideOnlyInBackground;
@@ -67,10 +76,20 @@ typedef enum {
 	
 	NSViewAnimation						*windowAnimation;
 	float								previousAlpha;
+	
+	AIListWindowController				*attachToBottom;
 }
 
+// Create additional windows
++ (AIListWindowController *)initWithContactList:(AIListObject<AIContainingObject> *)contactList;
+- (AIListWindowController *)initWithNibName:(NSString *)nibName withContactList:(AIListObject<AIContainingObject> *)contactList;
+
 + (AIListWindowController *)listWindowController;
+- (AIListController *)listController;
+- (AIListOutlineView *)contactListView;
+- (AIListObject<AIContainingObject> *) contactList;
 + (NSString *)nibName;
+- (void)setContactList:(AIListObject<AIContainingObject> *)contactList;
 - (void)close:(id)sender;
 
 // Dock-like hiding
@@ -85,6 +104,14 @@ typedef enum {
 - (BOOL)windowShouldHideOnDeactivate;
 - (AIRectEdgeMask)windowSlidOffScreenEdgeMask;
 - (void)moveWindowToPoint:(NSPoint)inOrigin;
+
+// Window snapping
+- (void)snapToOtherWindows;
+- (BOOL)canSnap:(float)a with:(float)b;
+- (NSPoint)snapTo:(NSWindow *)neighborWindow with:(NSRect)window saveTo:(NSPoint)location;
+- (BOOL)inRange:(NSRect)object of:(NSRect)ofObject;
+- (NSPoint)windowSpacing;
+
 
 	void manualWindowMoveToPoint(NSWindow *inWindow,
 								 NSPoint targetPoint,

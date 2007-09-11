@@ -38,6 +38,10 @@
 - (BOOL)addObject:(AIListObject *)inObject;
 - (void)removeObject:(AIListObject *)inObject;
 
+- (BOOL)moveGroupTo:(AIListObject<AIContainingObject> *)list;
+- (BOOL)moveGroupFrom:(AIListObject<AIContainingObject> *)fromList to:(AIListObject<AIContainingObject> *)toList;
+- (BOOL)moveAllGroupsFrom:(AIListGroup *)fromContactList to:(AIListGroup *)toContactList;
+
 //Sorting (PRIVATE: For contact controller only)
 - (void)sortListObject:(AIListObject *)inObject sortController:(AISortController *)sortController;
 - (void)sortGroupAndSubGroups:(BOOL)subGroups sortController:(AISortController *)sortController;

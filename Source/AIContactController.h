@@ -39,6 +39,9 @@
 	BOOL					useOfflineGroup;
 	NSMenuItem				*menuItem_useOfflineGroup;
 	
+	//Detached Contact Lists
+	NSMutableArray			*detachedContactLists;
+	
 	//Status and Attribute updates
     NSMutableSet			*contactObservers;
     NSTimer					*delayedUpdateTimer;
@@ -57,5 +60,8 @@
 	//Authorization
 	AdiumAuthorization		*adiumAuthorization;
 }
+
+- (void)sortAContactList:(AIListGroup *)group;
+- (void)loadContactList;
 
 @end

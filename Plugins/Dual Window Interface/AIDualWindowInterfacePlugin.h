@@ -17,8 +17,10 @@
 #import <Adium/AIPlugin.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
 
-@class AIContactListWindowController, AIDualWindowPreferences, AIMessageTabViewItem,
+@class AIContactListWindowController, AIDualWindowPreferences, AIMessageTabViewItem, 
 	AIMessageWindowController, ESDualWindowMessageAdvancedPreferences, AIChat;
+
+@protocol AIInterfaceComponent; 
 
 #define	PREF_GROUP_DUAL_WINDOW_INTERFACE	@"Dual Window Interface"
 
@@ -41,11 +43,6 @@
 #define KEY_ARRANGE_TABS_BY_GROUP			@"Arrange Tabs By Group"
 #define	KEY_WINDOW_LEVEL					@"Window Level"
 #define KEY_WINDOW_HIDE						@"Hide While in Background"
-
-@protocol AIInterfaceContainer <NSObject>
-- (void)makeActive:(id)sender;	//Make the container active/front
-- (void)close:(id)sender;	//Close the container
-@end
 
 @interface AIDualWindowInterfacePlugin : AIPlugin <AIInterfaceComponent> {
     

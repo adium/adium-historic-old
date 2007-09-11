@@ -15,8 +15,8 @@
  */
 
 #import "AIListController.h"
-#import "AIListWindowController.h"
 #import "AIAnimatingListOutlineView.h"
+#import "AIListWindowController.h"
 #import <Adium/AIChat.h>
 #import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
@@ -52,7 +52,7 @@
 
 @implementation AIListController
 
-- (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate
+- (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate  setContactListRoot:(AIListObject<AIContainingObject> *)aContactList
 {
 	[super initWithContactListView:inContactListView inScrollView:inScrollView_contactList delegate:inDelegate];
 	
@@ -74,8 +74,11 @@
 	//Recall how the contact list was docked last time Adium was open
 	dockToBottomOfScreen = [[[adium preferenceController] preferenceForKey:KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN
 																	group:PREF_GROUP_WINDOW_POSITIONS] intValue];
+
+	[self setContactList:aContactList];
+
 	[contactListView addObserver:self forKeyPath:@"desiredHeight" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:NULL];
-	
+
 	[self contactListChanged:nil];
 
     //Observe preference changes
@@ -129,6 +132,7 @@
 - (void)contactListDesiredSizeChanged
 {
 	NSWindow	*theWindow;
+
     if ((autoResizeVertically || autoResizeHorizontally) &&
 		(theWindow = [contactListView window]) &&
 		[(AIListWindowController *)[theWindow windowController] windowSlidOffScreenEdgeMask] == AINoEdges) {
@@ -174,7 +178,7 @@
 	if ((windowFrame.origin.y < boundingFrame.origin.y + EDGE_CATCH_Y) &&
 	   ((windowFrame.origin.y + windowFrame.size.height) < (boundingFrame.origin.y + boundingFrame.size.height - EDGE_CATCH_Y))) {
 		dockToBottomOfScreen = AIDockToBottom_TotalFrame;
-	} else {
+			} else {
 		//Then, check for the (possibly smaller) visibleBoundingFrame
 		if ((windowFrame.origin.y < visibleBoundingFrame.origin.y + EDGE_CATCH_Y) &&
 		   ((windowFrame.origin.y + windowFrame.size.height) < (visibleBoundingFrame.origin.y + visibleBoundingFrame.size.height - EDGE_CATCH_Y))) {
@@ -325,7 +329,7 @@
 		if (NSMaxX(newWindowFrame) > NSMaxX(boundingFrame)) newWindowFrame.origin.x = NSMaxX(boundingFrame) - NSWidth(newWindowFrame);
 		if (NSMinX(newWindowFrame) < NSMinX(boundingFrame)) newWindowFrame.origin.x = NSMinX(boundingFrame);
 	}
-
+	
 	return newWindowFrame;
 }
 
@@ -356,17 +360,20 @@
 - (void)contactListChanged:(NSNotification *)notification
 {
 	id		object = [notification object];
-
+	
+	if(!contactList)
+		contactList = [[adium contactController] contactList];
+	
 	//Redisplay and resize
 	if (!object || object == contactList) {
-		[self setContactListRoot:[[adium contactController] contactList]];
+		[self setContactListRoot:contactList];
 	} else {
 		NSDictionary	*userInfo = [notification userInfo];
 		AIListGroup		*containingGroup = [userInfo objectForKey:@"ContainingGroup"];
 
 		if (!containingGroup || containingGroup == contactList) {
 			//Reload the whole tree if the containing group is our root
-			[contactListView reloadData];
+			
 		} else {
 			/* We need to reload the contaning group since this notification is posted when adding and removing objects.
 			 * Reloading the actual object that changed will produce no results since it may not be on the list.
@@ -375,6 +382,30 @@
 		}
 	}
 }
+
+- (AIListObject<AIContainingObject> *)contactList
+{
+	return contactList;
+}
+
+- (AIListOutlineView *)contactListView
+{
+	return contactListView;
+}
+
+- (void)setContactList:(AIListObject<AIContainingObject> *)aContactList
+{
+	
+	if([self contactListRoot])
+		[self setContactListRoot: aContactList];
+	else
+			if(aContactList)
+				[self setContactListRoot: aContactList];
+			else
+				[self setContactListRoot: [[adium contactController] contactList]];
+	[self contactListChanged:nil];
+}
+
 
 /*!
  * @brief Order of contacts changed
@@ -424,7 +455,7 @@
  * everything will work as expected.
  */
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
-{    
+{   
 	[[adium notificationCenter] performSelector:@selector(postNotificationName:object:)
 									 withObject:Interface_ContactSelectionChanged
 									 withObject:nil
@@ -433,8 +464,6 @@
 
 /*! 
  * @brief Method to check if operations need to be performed
- *
- *
  */
 - (NSDragOperation)outlineView:(NSOutlineView*)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
 {
@@ -443,18 +472,22 @@
 	BOOL allowBetweenContactDrop = (index==NSOutlineViewDropOnItemIndex);
 	//No dropping into contacts
 	if ([types containsObject:@"AIListObject"]) {
+		//Don't drag if automatic sort is on
 		if (index != NSOutlineViewDropOnItemIndex && (![[[adium contactController] activeSortController] canSortManually])) {
 			//disable drop between for non-Manual Sort.
 			return NSDragOperationNone;
 		}
+		
 		id	primaryDragItem = [dragItems objectAtIndex:0];
 		
 		if ([primaryDragItem isKindOfClass:[AIListGroup class]]) {
 			//Disallow dragging groups into or onto other objects
 			if (item != nil) {
 				if ([item isKindOfClass:[AIListGroup class]]) {
+					// In between objects  
 					[outlineView setDropItem:nil dropChildIndex:[[item containingObject] indexOfObject:item]];
 				} else {
+					// On top of an object
 					[outlineView setDropItem:nil dropChildIndex:[[[item containingObject] containingObject] indexOfObject:[item containingObject]]];
 				}
 			}
@@ -466,8 +499,9 @@
 			}
 		}
 		
-		if (index == NSOutlineViewDropOnItemIndex && [item isKindOfClass:[AIListContact class]]) {
-			//Dropping into a contact: Copy
+		if (index == NSOutlineViewDropOnItemIndex && [item isKindOfClass:[AIListContact class]]
+			&& [info draggingSource] == [self contactListView]) {
+			//Dropping into a contact or attaching groups: Copy
 			retVal = NSDragOperationCopy;
 		
 		} else {
@@ -490,21 +524,30 @@
 	BOOL		success = YES;
 	NSString	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
 	
-    if ([availableType isEqualToString:@"AIListObject"]) {
+    if ([availableType isEqualToString:@"AIListObject"]) 
+	{
 		//Kill the selection now, (in a more finder-esque way)
 		[outlineView deselectAll:nil];
 		//The tree root is not associated with our root contact list group, so we need to make that association here
-		if (item == nil) item = contactList;
+		if (item == nil) 
+			item = contactList;
 
 		//Move the list object to its new location
-		if ([item isKindOfClass:[AIListGroup class]]) {
+		if ([item isKindOfClass:[AIListGroup class]]) 
+		{
 			if (item != [[adium contactController] offlineGroup]) {
 				[[adium contactController] moveListObjects:dragItems intoObject:item index:index];
+				
+				[[adium notificationCenter] postNotificationName:@"Contact_ListChanged"
+														  object:item
+														userInfo:nil];
 			} else {
 				success = NO;
 			}
 			
-		} else if ([item isKindOfClass:[AIListContact class]]) {
+		} 
+		else if ([item isKindOfClass:[AIListContact class]]) 
+		{
 			NSString	*promptTitle;
 			
 			//Appropriate prompt
@@ -531,7 +574,9 @@
 										   AILocalizedString(@"Once combined, Adium will treat these contacts as a single individual both on your contact list and when sending messages.\n\nYou may un-combine these contacts by getting info on the combined contact.","Explanation of metacontact creation"));
 		}
 
-	} else if ([[[info draggingPasteboard] types] containsObject:NSFilenamesPboardType]) {
+	} 
+	else if ([[[info draggingPasteboard] types] containsObject:NSFilenamesPboardType]) 
+	{
 		//Drag and Drop file transfer for the contact list.
 		NSString		*file;
 		NSArray			*files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
@@ -543,7 +588,9 @@
 			[[adium fileTransferController] sendFile:file toListContact:targetFileTransferContact];
 		}
 
-	} else if ([[[info draggingPasteboard] types] containsObject:NSRTFPboardType]) {
+	} 
+	else if ([[[info draggingPasteboard] types] containsObject:NSRTFPboardType]) 
+	{
 		//Drag and drop text sending via the contact list.
 		if ([item isKindOfClass:[AIListContact class]]) {
 			/* This will send the message. Alternately, we could just insert it into the text view... */
@@ -566,9 +613,12 @@
 	}
 	
 	[super outlineView:outlineView acceptDrop:info item:item childIndex:index];
+
+	[self contactListChanged:nil];
 	
     return success;
 }
+
 - (void)mergeContactSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
 	NSDictionary	*context = (NSDictionary *)contextInfo;
@@ -579,7 +629,7 @@
 		AIMetaContact	*metaContact;
 
 		//Keep track of where it was before
-		AIListObject<AIContainingObject> *oldContainingObject = [[item containingObject] retain];;
+		AIListObject<AIContainingObject> *oldContainingObject = [[item containingObject] retain];
 		float oldIndex = [item orderIndex];
 		
 		//Group the dragged items plus the destination into a metaContact

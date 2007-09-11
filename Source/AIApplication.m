@@ -46,7 +46,6 @@
 - (void)setOrderedWindows:(NSArray *)ow
 {
 	//for some reason, when I call make new window at end, this method is called
-	//NSLog(@"ClassDescription: %@",[[NSScriptSuiteRegistry sharedScriptSuiteRegistry] classDescriptionWithAppleEventCode:'capp']);
 	NSLog(@"setOrderedWindows: %@\n%@",[self orderedWindows],ow);
 	[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
 	[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't create window. At least, not like that."];

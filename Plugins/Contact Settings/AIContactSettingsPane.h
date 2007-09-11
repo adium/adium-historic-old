@@ -27,7 +27,7 @@
 	
 	IBOutlet	NSTextField				*label_encryption;
 	IBOutlet	NSPopUpButton			*popUp_encryption;
-
+	
 	AIListObject						*listObject;
 }
 

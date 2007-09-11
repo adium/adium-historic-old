@@ -45,7 +45,7 @@
 		stateMenuItemsAlreadyValidated = [[NSMutableSet alloc] init];
 
 		[self rebuildMenu];
-		
+
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(stateArrayChanged:)
 										   name:AIStatusStateArrayChangedNotification

@@ -161,7 +161,7 @@
 {	
 	if (visible != inVisible) {
 		visible = inVisible;
-
+		
 		if ([containingObject isKindOfClass:[AIListGroup class]]) {
 			//Let our containing group know about the visibility change
 			[(AIListGroup *)containingObject visibilityOfContainedObject:self changedTo:inVisible];			
@@ -177,6 +177,24 @@
 	return visible;
 }
 
+/*!
+ * @brief Sets if list object should always be visible
+ */
+- (void)setAlwaysVisible:(BOOL)isVisible {
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:isVisible] 
+										 forKey:@"Visible" 
+										  group:PREF_GROUP_ALWAYS_VISIBLE 
+										 object:self];
+}
+
+/*!
+ * @returns If object should always be visible
+ */
+- (BOOL)alwaysVisible {
+	return [[[adium preferenceController] preferenceForKey:@"Visible" 
+													 group:PREF_GROUP_ALWAYS_VISIBLE 
+													object:self] boolValue];
+}
 
 //Grouping / Ownership -------------------------------------------------------------------------------------------------
 #pragma mark Grouping / Ownership

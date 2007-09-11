@@ -37,6 +37,12 @@ typedef enum {
 	BOOL								needsAutoResize;
 }
 
+- (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate setContactListRoot:(AIListObject<AIContainingObject> *)aContactList;
+
+- (void)setContactList:(AIListObject<AIContainingObject> *)aContactList;
+- (AIListObject<AIContainingObject> *)contactList;
+- (AIListOutlineView *)contactListView;
+
 //Call to close down and release the listController
 - (void)close;
 
