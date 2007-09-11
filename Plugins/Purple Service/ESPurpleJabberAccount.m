@@ -410,8 +410,7 @@ extern void jabber_roster_request(JabberStream *js);
 
 			/* Automatic registration attempt */
 			//Display no error message
-			[*disconnectionError release];
-			*disconnectionError = nil;
+			[self setLastDisconnectionError:nil];
 
 			[[adium interfaceController] displayQuestion:AILocalizedString(@"Would you like to register a new Jabber account?", nil)
 										 withDescription:AILocalizedString(@"Jabber was unable to connect due to an invalid Jabber ID or password.  This may be because you do not yet have an account on this Jabber server.  Would you like to register now?",nil)

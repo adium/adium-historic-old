@@ -75,6 +75,9 @@ extern const char *mwServiceAware_getText(void *, void *);
 	if (disconnectionError && *disconnectionError) {
 		if ([*disconnectionError rangeOfString:@"Incorrect Username/Password"].location != NSNotFound) {
 			[self serverReportedInvalidPassword];
+			// Attempt to reconnect on invalid password. libPurple considers this to be a "suicidal" connection, but this allows
+			// us to prompt the user for a new password.
+			return YES;
 		}
 	}
 
