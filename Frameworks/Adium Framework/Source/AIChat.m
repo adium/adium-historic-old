@@ -36,6 +36,9 @@
 #import "AIInterfaceControllerProtocol.h"
 #import "AIWebKitMessageViewController.h"
 
+#warning Inappropiate import - use a protocol
+#import "AIMessageTabViewItem.h"
+
 @interface AIChat (PRIVATE)
 - (id)initForAccount:(AIAccount *)inAccount;
 - (void)clearUniqueChatID;
@@ -722,8 +725,8 @@ static int nextChatNumber = 0;
 - (AIMessageWindow *)window
 {
 	AIMessageTabViewItem *messageTab = [self statusObjectForKey:@"MessageTabViewItem"];
-	AIMessageWindowController *window = [messageTab container];
-	return [window window];
+	AIMessageWindowController *windowController = [messageTab container];
+	return (AIMessageWindow *)[windowController window];
 }
 
 - (id)handleCloseScriptCommand:(NSCloseCommand *)closeCommand

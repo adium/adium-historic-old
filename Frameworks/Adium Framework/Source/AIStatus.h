@@ -53,6 +53,7 @@ typedef enum {
 
 - (NSAttributedString *)autoReply;
 - (void)setAutoReply:(NSAttributedString *)autoReply;
+- (void)setAutoReplyString:(NSString *)autoReplyString;
 
 - (BOOL)hasAutoReply;
 - (void)setHasAutoReply:(BOOL)hasAutoReply;

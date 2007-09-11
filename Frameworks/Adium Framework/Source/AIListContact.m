@@ -738,7 +738,6 @@
 	[self setPreference:[NSNumber numberWithInt:direction] forKey:KEY_BASE_WRITING_DIRECTION group:PREF_GROUP_WRITING_DIRECTION];
 }
 
-#warning another change
 - (NSScriptObjectSpecifier *)objectSpecifier
 {
 	//get my account
