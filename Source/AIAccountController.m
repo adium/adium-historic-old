@@ -137,6 +137,16 @@
 - (NSArray *)accountsCompatibleWithService:(AIService *)service {
 	return [adiumAccounts accountsCompatibleWithService:service];
 }
+/**
+ @brief Returns a list of accounts with a given status.
+ This method returns a list of account that all share some specific status object. It
+ was created so that status objects of AppleScript might know who was using them, and
+ could dynamically change its properties. As it uses NSPredicate, it only works in 10.4
+ and above.
+ */
+- (NSArray *)accountsWithCurrentStatus:(AIStatus *)status {
+	return [[self accounts] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"status == %@", status]];
+}
 - (AIAccount *)accountWithInternalObjectID:(NSString *)objectID {
 	return [adiumAccounts accountWithInternalObjectID:objectID];
 }

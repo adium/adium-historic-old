@@ -31,6 +31,11 @@
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 
+#import "AIMessageWindowController.h"
+#import "AIMessageWindow.h"
+#import "AIInterfaceControllerProtocol.h"
+#import "AIWebKitMessageViewController.h"
+
 @interface AIChat (PRIVATE)
 - (id)initForAccount:(AIAccount *)inAccount;
 - (void)clearUniqueChatID;
@@ -466,12 +471,10 @@ static int nextChatNumber = 0;
 - (id)sendScriptCommand:(NSScriptCommand *)command {
 	NSDictionary	*evaluatedArguments = [command evaluatedArguments];
 	NSString		*message = [evaluatedArguments objectForKey:@"message"];
-	NSString		*filePath = [evaluatedArguments objectForKey:@"filePath"];
+	NSURL			*filePath = [evaluatedArguments objectForKey:@"withFile"];
 	
 	//Send any message we were told to send
 	if (message && [message length]) {
-		BOOL			autoreply = [[evaluatedArguments objectForKey:@"autoreply"] boolValue];
-
 		//Take the string and turn it into an attributed string (in case we were passed HTML)
 		NSAttributedString  *attributedMessage = [AIHTMLDecoder decodeHTML:message];
 		AIContentMessage	*messageContent;
@@ -480,33 +483,24 @@ static int nextChatNumber = 0;
 											 destination:[self listObject]
 													date:nil
 												 message:attributedMessage
-											   autoreply:autoreply];
+											   autoreply:NO];
 		
 		[[adium contentController] sendContentObject:messageContent];
 	}
 	
 	//Send any file we were told to send to every participating list object (anyone remember the AOL mass mailing zareW scene?)
-	if (filePath && [filePath length]) {
-		AIAccount		*sourceAccount = [evaluatedArguments objectForKey:@"account"];
-
+	if (filePath && [[filePath absoluteString] length]) {
 		NSEnumerator	*enumerator = [[self containedObjects] objectEnumerator];
 		AIListContact	*listContact;
 		
 		while ((listContact = [enumerator nextObject])) {
 			AIListContact   *targetFileTransferContact;
 			
-			if (sourceAccount) {
-				//If we were told to use a specific account, insist upon using it no matter what account the chat is on
-				targetFileTransferContact = [[adium contactController] contactOnAccount:sourceAccount
-																		fromListContact:listContact];
-			} else {
-				//Make sure we know where we are sending the file by finding the best contact for
-				//sending CONTENT_FILE_TRANSFER_TYPE.
-				targetFileTransferContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
+			//Make sure we know where we are sending the file by finding the best contact for
+			//sending CONTENT_FILE_TRANSFER_TYPE.
+			targetFileTransferContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
 																					   forListContact:listContact];
-			}
-			
-			[[adium fileTransferController] sendFile:filePath toListContact:targetFileTransferContact];
+			[[adium fileTransferController] sendFile:[filePath absoluteString] toListContact:targetFileTransferContact];
 		}
 	}
 	
@@ -691,4 +685,76 @@ static int nextChatNumber = 0;
 	[self setStatusObject:nil forKey:KEY_CHAT_ERROR notify:NotifyNever];
 }
 
+- (NSScriptObjectSpecifier *)objectSpecifier
+{
+	//the chat may not be in a window! Just reference it from the application...
+	//get my window
+	NSScriptClassDescription *containerClassDesc = (NSScriptClassDescription *)[NSScriptClassDescription classDescriptionForClass:[NSApp class]];
+	return [[[NSUniqueIDSpecifier allocWithZone:[self zone]]
+		initWithContainerClassDescription:containerClassDesc
+		containerSpecifier:nil key:@"chats" uniqueID:[self uniqueChatID]] autorelease];
+}
+
+- (unsigned int)index
+{
+	AIMessageTabViewItem *messageTab = [self statusObjectForKey:@"MessageTabViewItem"];
+	//what we're going to do is find this tab in the tab view's hierarchy, so as to get its index
+	AIMessageWindowController *window = [messageTab container];
+	NSArray *chats = [window containedChats];
+	for (unsigned int i=0;i<[chats count];i++) {
+		if ([chats objectAtIndex:i] == self)
+			return i+1; //one based
+	}
+	NSAssert(NO, @"This chat is weird.");
+	return 0;
+}
+/*- (void)setIndex:(unsigned int)index
+{
+	AIMessageTabViewItem *messageTab = [self statusObjectForKey:@"MessageTabViewItem"];
+	AIMessageWindowController *window = [messageTab container];
+	NSArray *chats = [window containedChats];
+	NSAssert (index-1 < [chats count], @"Don't let index be bigger than the count!");
+	NSLog(@"Trying to move %@ in %@ to %u",messageTab,window,index-1);
+	[window moveTabViewItem:messageTab toIndex:index-1]; //This is bad bad bad. Why?
+	
+}*/
+
+- (AIMessageWindow *)window
+{
+	AIMessageTabViewItem *messageTab = [self statusObjectForKey:@"MessageTabViewItem"];
+	AIMessageWindowController *window = [messageTab container];
+	return [window window];
+}
+
+- (id)handleCloseScriptCommand:(NSCloseCommand *)closeCommand
+{
+	[[[AIObject sharedAdiumInstance] interfaceController] closeChat:self];
+	return nil;
+}
+- (void)setUniqueChatID:(NSString *)str
+{
+	[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
+}
+- (AIAccount *)scriptingAccount
+{
+	return [self account];
+}
+- (void)setScriptingAccount:(AIAccount *)a
+{
+	[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
+	[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't set the account of a chat."];
+}
+- (NSString *)content
+{
+	/*AITranscriptLogEnumerator *e = [[[AITranscriptLogReader alloc] initWithChat:self] autorelease];
+	AIContentMessage *m;
+	NSMutableString *result = [[[NSMutableString alloc] init] autorelease];
+	while ((m = [e nextObject])) {
+		[result appendFormat:@"%@\n",[m messageString]];
+	}
+	return result;*/
+	[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
+	[[NSScriptCommand currentCommand] setScriptErrorString:@"Still unsupported."];
+	return nil;
+}
 @end

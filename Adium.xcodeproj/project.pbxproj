@@ -65,6 +65,11 @@
 		0779934F08221D9700F698DC /* Service Icons in Resources */ = {isa = PBXBuildFile; fileRef = 4BAFD5E806E00D1700FF7FBC /* Service Icons */; };
 		07C6EA890C06676400B79CBD /* AdiumHelp in Resources */ = {isa = PBXBuildFile; fileRef = 07C6EA3C0C06676400B79CBD /* AdiumHelp */; };
 		07E179780C657B5E005DDA3D /* ConfirmationDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 07E179770C657B5E005DDA3D /* ConfirmationDefaults.plist */; };
+		0C27C8650C75A23F002AA363 /* NSStringScriptingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C27C8640C75A23A002AA363 /* NSStringScriptingAdditions.m */; };
+		0C79A2D90C5E633F005AE6FA /* AIMoveCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C79A2D70C5E633F005AE6FA /* AIMoveCommand.m */; };
+		0CAC6A140C0C657A0090AE95 /* Adium.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 0CAC6A130C0C657A0090AE95 /* Adium.sdef */; };
+		0CD3C3AD0C43C8CC003E637C /* NSWindowScriptingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C3AB0C43C8CC003E637C /* NSWindowScriptingAdditions.m */; };
+		0CD41C710C2776550082F83B /* AICreateCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD41C6F0C2776550082F83B /* AICreateCommand.m */; };
 		110763F608676CC9005987A5 /* RAFBlockEditorPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */; };
 		110763F808676CC9005987A5 /* RAFBlockEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F408676CC9005987A5 /* RAFBlockEditorWindowController.m */; };
 		110763FA08676D05005987A5 /* BlockEditorWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 110763F908676D04005987A5 /* BlockEditorWindow.nib */; };
@@ -1561,6 +1566,15 @@
 		07B87D760A3A9FCF00A38283 /* AIStatusDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusDefines.h; path = "Frameworks/Adium Framework/Source/AIStatusDefines.h"; sourceTree = "<group>"; };
 		07C6EA3C0C06676400B79CBD /* AdiumHelp */ = {isa = PBXFileReference; lastKnownFileType = folder; path = AdiumHelp; sourceTree = "<group>"; };
 		07E179770C657B5E005DDA3D /* ConfirmationDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = ConfirmationDefaults.plist; path = Resources/ConfirmationDefaults.plist; sourceTree = "<group>"; };
+		0C27C8630C75A23A002AA363 /* NSStringScriptingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSStringScriptingAdditions.h; path = Source/NSStringScriptingAdditions.h; sourceTree = "<group>"; };
+		0C27C8640C75A23A002AA363 /* NSStringScriptingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSStringScriptingAdditions.m; path = Source/NSStringScriptingAdditions.m; sourceTree = "<group>"; };
+		0C79A2D60C5E633F005AE6FA /* AIMoveCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIMoveCommand.h; path = Source/AIMoveCommand.h; sourceTree = "<group>"; };
+		0C79A2D70C5E633F005AE6FA /* AIMoveCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIMoveCommand.m; path = Source/AIMoveCommand.m; sourceTree = "<group>"; };
+		0CAC6A130C0C657A0090AE95 /* Adium.sdef */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.sdef; name = Adium.sdef; path = Resources/Adium.sdef; sourceTree = "<group>"; };
+		0CD3C3AA0C43C8CC003E637C /* NSWindowScriptingAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSWindowScriptingAdditions.h; path = Source/NSWindowScriptingAdditions.h; sourceTree = "<group>"; };
+		0CD3C3AB0C43C8CC003E637C /* NSWindowScriptingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSWindowScriptingAdditions.m; path = Source/NSWindowScriptingAdditions.m; sourceTree = "<group>"; };
+		0CD41C6E0C2776540082F83B /* AICreateCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AICreateCommand.h; path = Source/AICreateCommand.h; sourceTree = "<group>"; };
+		0CD41C6F0C2776550082F83B /* AICreateCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AICreateCommand.m; path = Source/AICreateCommand.m; sourceTree = "<group>"; };
 		110763F108676CC9005987A5 /* RAFBlockEditorPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorPlugin.h; path = Source/RAFBlockEditorPlugin.h; sourceTree = "<group>"; };
 		110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFBlockEditorPlugin.m; path = Source/RAFBlockEditorPlugin.m; sourceTree = "<group>"; };
 		110763F308676CC9005987A5 /* RAFBlockEditorWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorWindowController.h; path = Source/RAFBlockEditorWindowController.h; sourceTree = "<group>"; };
@@ -4471,10 +4485,19 @@
 		344C0D4306B6D5E300DA7200 /* Applescriptability */ = {
 			isa = PBXGroup;
 			children = (
+				0CAC6A130C0C657A0090AE95 /* Adium.sdef */,
 				344C0D4F06B6D63800DA7200 /* ESApplescriptabilityController.h */,
 				344C0D4E06B6D63800DA7200 /* ESApplescriptabilityController.m */,
 				34D8329707CBD609006466F2 /* AdiumSuite.scriptTerminology */,
 				34D8329807CBD609006466F2 /* AdiumSuite.scriptSuite */,
+				0C79A2D60C5E633F005AE6FA /* AIMoveCommand.h */,
+				0C79A2D70C5E633F005AE6FA /* AIMoveCommand.m */,
+				0CD41C6E0C2776540082F83B /* AICreateCommand.h */,
+				0CD41C6F0C2776550082F83B /* AICreateCommand.m */,
+				0CD3C3AA0C43C8CC003E637C /* NSWindowScriptingAdditions.h */,
+				0CD3C3AB0C43C8CC003E637C /* NSWindowScriptingAdditions.m */,
+				0C27C8630C75A23A002AA363 /* NSStringScriptingAdditions.h */,
+				0C27C8640C75A23A002AA363 /* NSStringScriptingAdditions.m */,
 			);
 			name = Applescriptability;
 			sourceTree = "<group>";
@@ -7676,6 +7699,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
@@ -8106,6 +8130,7 @@
 				344839380BC862780083723B /* pref-messages.png in Resources */,
 				34483A990BC869680083723B /* AdvancedPreferences.nib in Resources */,
 				07C6EA890C06676400B79CBD /* AdiumHelp in Resources */,
+				0CAC6A140C0C657A0090AE95 /* Adium.sdef in Resources */,
 				C4D29CC80C3C2E49001545A2 /* ICImport.nib in Resources */,
 				8181E4FA0C29345B00E802F7 /* Lock_Black.tif in Resources */,
 				07E179780C657B5E005DDA3D /* ConfirmationDefaults.plist in Resources */,
@@ -8719,6 +8744,8 @@
 				340C1A360BD58F9000D09235 /* DiskImageUtilities.m in Sources */,
 				340C1A380BD58F9000D09235 /* AuthorizedTaskManager.m in Sources */,
 				340C1E770BD59A0500D09235 /* GBImportPlugin.m in Sources */,
+				0CD41C710C2776550082F83B /* AICreateCommand.m in Sources */,
+				0CD3C3AD0C43C8CC003E637C /* NSWindowScriptingAdditions.m in Sources */,
 				348477140C1A5CE50019EF08 /* AIAnimatingListOutlineView.m in Sources */,
 				34847ADE0C1A62C40019EF08 /* AIOutlineViewAnimation.m in Sources */,
 				C4D29CC40C3C2E3C001545A2 /* BGICImportController.m in Sources */,
@@ -8732,6 +8759,8 @@
 				344D97530C3C442600498CA1 /* Presentity.m in Sources */,
 				8181F6B30C321D0600E802F7 /* AIWindowShaker.m in Sources */,
 				8181F6DA0C321DC400E802F7 /* AWRippler.m in Sources */,
+				0C79A2D90C5E633F005AE6FA /* AIMoveCommand.m in Sources */,
+				0C27C8650C75A23F002AA363 /* NSStringScriptingAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

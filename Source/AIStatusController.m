@@ -497,13 +497,25 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 			   withObject:[[adium accountController] accounts]
 			   afterDelay:0];
 }
+/*!
+ * @brief Set the active status state for some account
+ *
+ * Sets the currently active status state for the specified account.
+ * This applies throughout Adium and to all accounts.  The state will become
+ * effective immediately.
+ */
+- (void)setActiveStatusState:(AIStatus *)state forAccount:(AIAccount *)account
+{
+	[self removeIfNecessaryTemporaryStatusState:[account statusState]];
+	[self applyState:state toAccounts:[NSArray arrayWithObject:account]];
+}
 
 /*!
  * @brief Return the <tt>AIStatus</tt> to be used by accounts as they are created
  */
 - (AIStatus *)defaultInitialStatusState
 {
-	return [[self builtInStateArray] objectAtIndex:0];
+	return [self availableStatus];
 }
 
 /*!
@@ -631,6 +643,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 				[account setStatusStateAndRemainOffline:statusState];			
 			}
 		}
+		shouldRebuild = YES;
 	}
 
 	//If this is not an offline status, we've now made use of accountsToConnect and should clear it so it isn't used again.
@@ -751,6 +764,37 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	[builtInStatusTypes[AIAwayStatusType] addObject:statusDict];
 }
 
+/**
+ * @brief Returns the built in available status
+ */
+- (AIStatus *)availableStatus
+{
+	return [[[self builtInStateArray] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"statusType == %i",AIAvailableStatusType]] objectAtIndex:0];
+}
+/**
+ * @brief Returns the built in away status
+ */
+- (AIStatus *)awayStatus
+{
+	return [[[self builtInStateArray] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"statusType == %i",AIAwayStatusType]] objectAtIndex:0];
+}
+/**
+ * @brief Returns the built in invisible status
+ */
+- (AIStatus *)invisibleStatus
+{
+	return [[[self builtInStateArray] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"statusType == %i",AIInvisibleStatusType]] objectAtIndex:0];
+}
+/**
+ * @brief Returns the built in offline status
+ *
+ * This method duplicates the functionality found in - [AIStatusController offlineStatusState].
+ * However, this has the same method signature format as the other statuses.
+ */
+- (AIStatus *)offlineStatus
+{
+	return [[[self builtInStateArray] filteredArrayUsingPredicate:[NSPredicate predicateWithFormat:@"statusType == %i",AIOfflineStatusType]] objectAtIndex:0];
+}
 
 - (AIStatus *)offlineStatusState
 {
@@ -795,10 +839,10 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 /*!
  * @brief Generate and return an array of AIStatus objects which are all known saved, temporary, and built-in statuses
  */
-- (NSArray *)flatStatusSet
+- (NSSet *)flatStatusSet
 {
 	if (!_flatStatusSet) {
-		NSMutableArray	*tempArray = [[[self rootStateGroup] flatStatusSet] mutableCopy];
+		NSMutableSet	*tempArray = [[[self rootStateGroup] flatStatusSet] mutableCopy];
 
 		//Add built in states
 		[tempArray addObjectsFromArray:[self builtInStateArray]];

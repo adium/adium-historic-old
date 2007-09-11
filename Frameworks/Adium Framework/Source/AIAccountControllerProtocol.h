@@ -8,7 +8,7 @@
 
 #import <Adium/AIControllerProtocol.h>
 
-@class AIService, AIAccount, AIListContact;
+@class AIService, AIAccount, AIListContact, AIStatus;
 
 #define Account_ListChanged 					@"Account_ListChanged"
 #define Adium_RequestSetManualIdleTime			@"Adium_RequestSetManualIdleTime"
@@ -41,6 +41,7 @@
 //Accounts
 - (NSArray *)accounts;
 - (NSArray *)accountsCompatibleWithService:(AIService *)service;
+- (NSArray *)accountsWithCurrentStatus:(AIStatus *)status;
 - (AIAccount *)accountWithInternalObjectID:(NSString *)objectID;
 - (AIAccount *)createAccountWithService:(AIService *)service UID:(NSString *)inUID;
 - (void)addAccount:(AIAccount *)inAccount;

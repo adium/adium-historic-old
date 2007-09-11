@@ -10,7 +10,7 @@
 #import <Adium/AIControllerProtocol.h>
 #import <Adium/AIStatus.h>
 
-@class AIStatus;
+@class AIStatus,AIAccount;
 
 //Status State Notifications
 #define AIStatusStateArrayChangedNotification	@"AIStatusStateArrayChangedNotification"
@@ -73,20 +73,43 @@
 #define STATE_SAVED_STATE					@"State"
 
 @protocol AIStatusController <AIController>
-- (NSNumber *)nextUniqueStatusID;
-
+/*!
+ * @brief Register a status for a service
+ *
+ * Implementation note: Each AIStatusType has its own NSMutableDictionary, statusDictsByServiceCodeUniqueID.
+ * statusDictsByServiceCodeUniqueID is keyed by serviceCodeUniqueID; each object is an NSMutableSet of NSDictionaries.
+ * Each of these dictionaries has KEY_STATUS_NAME, KEY_STATUS_DESCRIPTION, and KEY_STATUS_TYPE.
+ *
+ * @param statusName A name which will be passed back to accounts of this service.  Internal use only.  Use the AIStatusController.h #defines where appropriate.
+ * @param description A human-readable localized description which will be shown to the user.  Use the AIStatusController.h #defines where appropriate.
+ * @param type An AIStatusType, the general type of this status.
+ * @param service The AIService for which to register the status
+ */
 - (void)registerStatus:(NSString *)statusName
 	   withDescription:(NSString *)description
 				ofType:(AIStatusType)type 
 			forService:(AIService *)service;
+/*!
+ * @brief Generate and return a menu of status types (Away, Be right back, etc.)
+ *
+ * @param service The service for which to return a specific list of types, or nil to return all available types
+ * @param target The target for the menu items, which will have an action of @selector(selectStatus:)
+ *
+ * @result The menu of statuses, separated by available and away status types
+ */
 - (NSMenu *)menuOfStatusesForService:(AIService *)service withTarget:(id)target;
 
-- (NSArray *)flatStatusSet;
+- (NSSet *)flatStatusSet;
 - (NSArray *)sortedFullStateArray;
 - (AIStatus *)offlineStatusState;
+- (AIStatus *)availableStatus;
+- (AIStatus *)awayStatus;
+- (AIStatus *)invisibleStatus;
+- (AIStatus *)offlineStatus;
 - (AIStatus *)statusStateWithUniqueStatusID:(NSNumber *)uniqueStatusID;
 
 - (void)setActiveStatusState:(AIStatus *)state;
+- (void)setActiveStatusState:(AIStatus *)state forAccount:(AIAccount *)account;
 - (void)setDelayStatusMenuRebuilding:(BOOL)shouldDelay;
 - (void)applyState:(AIStatus *)statusState toAccounts:(NSArray *)accountArray;
 - (AIStatus *)activeStatusState;

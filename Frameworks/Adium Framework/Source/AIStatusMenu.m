@@ -300,7 +300,7 @@
 			} else {
 				//If it doesn't, check the tag to see if it should be on or off by looking for a matching custom state
 				NSEnumerator	*activeStatusStatesEnumerator = [allActiveStatusStates objectEnumerator];
-				NSArray			*flatStatusSet = [[adium statusController] flatStatusSet];
+				NSSet			*flatStatusSet = [[adium statusController] flatStatusSet];
 				AIStatus		*statusState;
 				BOOL			foundCorrectStatusState = NO;
 				
@@ -357,21 +357,7 @@
 		
 	} else {
 		if (account) {
-			BOOL shouldRebuild;
-			
-			shouldRebuild = [[adium statusController] removeIfNecessaryTemporaryStatusState:[account statusState]];
-			[account setStatusState:(AIStatus *)statusItem];
-
-			//Enable the account if it isn't currently enabled
-			if (![account enabled]) {
-				[account setEnabled:YES];
-			}
-			
-			if (shouldRebuild) {
-				//Rebuild our menus if there was a change
-				[[adium notificationCenter] postNotificationName:AIStatusStateArrayChangedNotification object:nil];
-			}
-			
+			[[adium statusController] setActiveStatusState:(AIStatus *)statusItem forAccount:account];
 		} else {
 			[[adium statusController] setActiveStatusState:(AIStatus *)statusItem];
 		}

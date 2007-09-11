@@ -136,25 +136,25 @@
 		@try
 		{
 			if ((pluginBundle = [NSBundle bundleWithPath:pluginPath])) {
-			Class principalClass = [pluginBundle principalClass];
-			if (principalClass) {
-				plugin = [[principalClass alloc] init];
+				Class principalClass = [pluginBundle principalClass];
+				if (principalClass) {
+					plugin = [[principalClass alloc] init];
+				} else {
+					NSLog(@"Failed to obtain principal class from plugin \"%@\" (\"%@\")! infoDictionary: %@",
+						  [pluginPath lastPathComponent],
+						  pluginPath,
+						  [pluginBundle infoDictionary]);
+				}
+				
+				if (plugin) {
+					[plugin installPlugin];
+					[inPluginArray addObject:plugin];
+					[plugin release];
+				} else {
+					NSLog(@"Failed to initialize Plugin \"%@\" (\"%@\")!",[pluginPath lastPathComponent],pluginPath);
+				}
 			} else {
-				NSLog(@"Failed to obtain principal class from plugin \"%@\" (\"%@\")! infoDictionary: %@",
-					  [pluginPath lastPathComponent],
-					  pluginPath,
-					  [pluginBundle infoDictionary]);
-			}
-			
-			if (plugin) {
-				[plugin installPlugin];
-				[inPluginArray addObject:plugin];
-				[plugin release];
-			} else {
-				NSLog(@"Failed to initialize Plugin \"%@\" (\"%@\")!",[pluginPath lastPathComponent],pluginPath);
-			}
-			} else {
-				NSLog(@"Failed to open Plugin \"%@\"!",[pluginPath lastPathComponent]);
+					NSLog(@"Failed to open Plugin \"%@\"!",[pluginPath lastPathComponent]);
 			}
 		}
 		@catch(id exc)

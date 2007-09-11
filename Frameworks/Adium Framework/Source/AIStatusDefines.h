@@ -16,10 +16,10 @@ typedef enum {
 } AIStatusMutabilityType;
 
 typedef enum {
-	AIAvailableStatusTypeAS = 'avaL',
-	AIAwayStatusTypeAS = 'awaY',
-	AIInvisibleStatusTypeAS = 'aSaI',
-	AIOfflineStatusTypeAS = 'offL'
+	AIAvailableStatusTypeAS = 'Sonl',
+	AIAwayStatusTypeAS = 'Sawy',
+	AIInvisibleStatusTypeAS = 'Sinv',
+	AIOfflineStatusTypeAS = 'Soff'
 } AIStatusTypeApplescript;
 
 #define STATUS_UNIQUE_ID					@"Unique ID"

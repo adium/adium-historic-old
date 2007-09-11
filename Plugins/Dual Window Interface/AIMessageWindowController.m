@@ -492,6 +492,9 @@
 		[tabView_messages insertTabViewItem:inTabViewItem atIndex:index];
 	}
 	
+#warning questionable
+	[self _reloadContainedChats]; //I'm not sure the right delegate method is getting called. This will make sure containedChats is up to date.
+	
 	if (!silent) [[adium interfaceController] chatDidOpen:[inTabViewItem chat]];
 }
 

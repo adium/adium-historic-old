@@ -738,4 +738,16 @@
 	[self setPreference:[NSNumber numberWithInt:direction] forKey:KEY_BASE_WRITING_DIRECTION group:PREF_GROUP_WRITING_DIRECTION];
 }
 
+#warning another change
+- (NSScriptObjectSpecifier *)objectSpecifier
+{
+	//get my account
+	AIAccount *theAccount = [self account];
+	
+	NSScriptObjectSpecifier *containerRef = [theAccount objectSpecifier];
+	return [[[NSNameSpecifier allocWithZone:[self zone]]
+		initWithContainerClassDescription:[containerRef keyClassDescription]
+		containerSpecifier:containerRef key:@"contacts" name:[self UID]] autorelease];
+}
+
 @end

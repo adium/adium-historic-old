@@ -676,6 +676,16 @@
 	}
 }
 
+- (NSString *)scriptingStatusMessage
+{
+	return [self statusMessageString];
+}
+- (void)setScriptingStatusMessage:(NSString *)message
+{
+	[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
+	[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't set the status of a contact."];
+}
+
 - (void)setBaseAvailableStatusAndNotify:(NotifyTiming)notify
 {
 	[self setStatusWithName:nil
@@ -760,6 +770,23 @@
 - (NSString *)description
 {
 	return [NSString stringWithFormat:@"<%@:%x %@>",NSStringFromClass([self class]), self, [self internalObjectID]];
+}
+
+
+- (int)scriptingStatusType
+{
+	AIStatusType statusType = [self statusType];
+	switch (statusType) {
+		case AIAvailableStatusType:
+			return AIAvailableStatusTypeAS;
+		case AIOfflineStatusType:
+			return AIOfflineStatusTypeAS;
+		case AIAwayStatusType:
+			return AIAwayStatusTypeAS;
+		case AIInvisibleStatusType:
+			return AIInvisibleStatusTypeAS;
+	}
+	return 0;
 }
 
 @end
