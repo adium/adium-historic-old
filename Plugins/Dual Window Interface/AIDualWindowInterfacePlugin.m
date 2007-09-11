@@ -249,6 +249,10 @@
 //Open a new container
 - (id)openContainerWithID:(NSString *)containerID name:(NSString *)containerName
 {
+	if (!containerID)
+		containerID = [NSString stringWithFormat:@"%@:%i", ADIUM_UNIQUE_CONTAINER, uniqueContainerNumber++];
+	if (!containerName)
+		containerName = [[containerID copy] autorelease];
 	AIMessageWindowController	*container = [containers objectForKey:containerID];
 	if (!container) {
 		container = [AIMessageWindowController messageWindowControllerForInterface:self withID:containerID name:containerName];

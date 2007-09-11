@@ -18,6 +18,7 @@
 #import <Adium/AIService.h>
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIAccountViewController.h>
+#import "AICreateCommand.h"
 
 /*!
  * @class AIService
@@ -437,6 +438,36 @@
 	return [NSString stringWithFormat:@"<%@: serviceCodeUniqueID = %@; serviceID = %@; serviceClass = %@; longDescription = %@>",
 		NSStringFromClass([self class]), [self serviceCodeUniqueID], [self serviceID], [self serviceClass], [self longDescription]];
 	
+}
+
+#pragma mark AppleScript
+
+/**
+ * @brief Returns a list of all accounts that use this service.
+ */
+- (NSArray *)accounts
+{
+	NSArray *accounts = [[[AIObject sharedAdiumInstance] accountController] accounts];
+	
+	NSMutableArray *accountsForThisService = [[[NSMutableArray alloc] init] autorelease];
+	for (int i=0;i<[accounts count];i++) {
+		AIAccount *account = [accounts objectAtIndex:i];
+		if ([account service] == self)
+			[accountsForThisService addObject:account];
+	}
+	return accountsForThisService;
+}
+
+/**
+ * @brief This class is specified using the 'services' key of AIApplication
+ */
+- (NSScriptObjectSpecifier *)objectSpecifier
+{
+	NSScriptClassDescription *containerClassDesc = (NSScriptClassDescription *)[NSScriptClassDescription classDescriptionForClass:[NSApp class]];
+	return [[[NSNameSpecifier alloc]
+		   initWithContainerClassDescription:containerClassDesc
+		   containerSpecifier:nil key:@"services"
+		   name:[self serviceID]] autorelease];
 }
 
 @end

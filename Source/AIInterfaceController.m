@@ -372,6 +372,62 @@
 	}
 }
 
+- (id)openChat:(AIChat *)inChat inContainerWithID:(NSString *)containerID atIndex:(int)index
+{
+	//at this point, I'm not sure if I should really be opening this chat in that container. I should double-check with my preferences to make sure that I'm not screwing something up
+	
+	NSArray		*containers = [interfacePlugin openContainersAndChats];
+	
+	if (!tabbedChatting) {
+		if ([inChat listObject]) {
+			NSAssert(containerID == [[inChat listObject] internalObjectID],@"Bad containerID!");
+		} else {
+			NSAssert(containerID == [inChat name],@"Bad containerID!");
+		}
+	} else if (groupChatsByContactGroup) {
+		if ([inChat isGroupChat]) {
+			NSAssert(containerID == AILocalizedString(@"Group Chat",nil),@"Bad containerID!");
+			
+		} else {
+			AIListObject	*group = [[[inChat listObject] parentContact] containingObject];
+			
+			//If the contact is in the contact list root, we don't have a group
+			if (group && (group != [[adium contactController] contactList])) {
+				NSAssert(containerID == [group displayName],@"Bad containerID!");
+			}
+		}
+	}
+
+	if (!containerID) {
+		//Open new chats into the first container (if not available, create a new one)
+		if ([containers count] > 0) {
+			containerID = [[containers objectAtIndex:0] objectForKey:@"ID"];
+		} else {
+			containerID = AILocalizedString(@"Chat",nil);
+		}
+	}
+
+	//Determine the correct placement for this chat within the container
+	id tabViewItem = [interfacePlugin openChat:inChat inContainerWithID:containerID atIndex:index];
+	if (![inChat isOpen]) {
+		[inChat setIsOpen:YES];
+		
+		//Post the notification last, so observers receive a chat whose isOpen flag is yes.
+		[[adium notificationCenter] postNotificationName:Chat_DidOpen object:inChat userInfo:nil];
+	}
+	return tabViewItem;
+}
+
+/**
+ * @brief Opens a container with a specific ID
+ *
+ * Asks the interfacePlugin to openContainerWithID:
+ */
+- (id)openContainerWithID:(NSString *)containerID name:(NSString *)containerName
+{
+	return [interfacePlugin openContainerWithID:containerID name:containerName];
+}
+
 /*!
  * @brief Close the interface for a chat
  *

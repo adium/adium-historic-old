@@ -27,6 +27,13 @@
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIAccountControllerProtocol.h>
 
+#import "DCJoinChatViewController.h"
+#import "AIChatControllerProtocol.h"
+#import "AIMessageWindowController.h"
+#import "AIMessageWindow.h"
+#import "AIInterfaceControllerProtocol.h"
+#import "AIStatusControllerProtocol.h"
+
 #define NEW_ACCOUNT_DISPLAY_TEXT			AILocalizedString(@"<New Account>", "Placeholder displayed as the name of a new account")
 
 @interface AIAccountDeletionDialog : NSObject <AIAccountControllerRemoveConfirmationDialog> {
@@ -759,4 +766,260 @@
 - (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict didAuthorize:(BOOL)inDidAuthorize
 {}
 
+#pragma mark AppleScript
+/**
+ * @brief The standard objectSpecifier for this model object.
+ *
+ * AIAccount is contained by AIService, using the 'accounts' key, and the UID of the account as a name.
+ * This method says that, but in code.
+ */
+- (NSScriptObjectSpecifier *)objectSpecifier
+{
+	//get my service
+	AIService *theService = [self service];
+	NSScriptObjectSpecifier *containerRef = [theService objectSpecifier];
+	
+	//create a reference to this object, by name
+	return [[[NSNameSpecifier allocWithZone:[self zone]]
+		initWithContainerClassDescription:[containerRef keyClassDescription]
+		containerSpecifier:containerRef key:@"accounts" name:[self UID]] autorelease];
+}
+
+/**
+ * @brief Returns the UID of this account.
+ */
+- (NSString *)scriptingUID
+{
+	return [self UID];
+}
+
+/**
+ * @brief Ensures that it's impossible to set the UID of an account.
+ *
+ * This makes sense for the services I'm familiar with, like AIM and GTalk. It may not make sense for other protocols.
+ * However, it still doesn't seem necessary to do from code.
+ */
+- (void)setScriptingUID:(NSString *)n
+{
+	[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
+	[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't dynamically change the UID of this account."];
+}
+
+/**
+ * @brief Creates a chat according to the given properties.
+ * @param resolvedKeyDictionary The dictionary of arguments to the 'make' command.
+ *
+ * This uses my own custom make<Key>WithProperties KVC method. :)
+ * The idea is that be default Cocoa-AS will try to make an object using the standard alloc/init routines
+ * However, you may not want that to be the case. If an AS model object implements this method, then when its the 
+ * target of a 'make' command, it will be called. The method should return a new object, already assigned to a
+ * container, as AICreateCommand will not do that for you.
+ */
+- (id)makeChatWithProperties:(NSDictionary *)resolvedKeyDictionary
+{
+	NSArray *participants = [resolvedKeyDictionary objectForKey:@"withContacts"];
+	if (!participants) {
+		[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
+		[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't create a chat without a contact!"];
+		return nil;
+	}
+	if (![resolvedKeyDictionary objectForKey:@"newChatWindow"] && ![resolvedKeyDictionary objectForKey:@"Location"]) {
+		[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
+		[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't create a chat without specifying its containing window."];
+	}
+	
+	if ([participants count] == 1) {
+		AIListContact *contact = [[participants objectAtIndex:0] objectsByEvaluatingSpecifier];
+		if (!contact) {
+			[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
+			[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't find that contact!"];
+		}
+		AIMessageWindowController *chatWindowController = nil;
+		int index = -1; //at end by default
+		if ([resolvedKeyDictionary objectForKey:@"newChatWindow"]) {
+			//I need to put this in a new chat window
+			chatWindowController = [[[AIObject sharedAdiumInstance] interfaceController] openContainerWithID:nil name:nil];
+		} else {
+			//I need to figure out to which chat window the location specifier is referring.
+			NSLog(@"Here is the info about the location specifier: %@",[resolvedKeyDictionary objectForKey:@"Location"]);
+			NSPositionalSpecifier *location = [resolvedKeyDictionary objectForKey:@"Location"];
+			AIMessageWindow *chatWindow = [location insertionContainer];
+			index = [location insertionIndex];
+			chatWindowController = (AIMessageWindowController *)[chatWindow windowController];
+		}
+		
+		if (!chatWindowController) {
+			[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
+			[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't create chat in that chat window."];
+		}
+		
+		AIChat *newChat = [[[AIObject sharedAdiumInstance] chatController] chatWithContact:contact];
+		NSLog(@"Making new chat %@ in chat window %@:%@",newChat,chatWindowController,[chatWindowController containerID]);
+		[[[AIObject sharedAdiumInstance] interfaceController] openChat:newChat inContainerWithID:[chatWindowController containerID] atIndex:index];
+		return newChat;
+	} else {
+		if (![[self service] canCreateGroupChats]) {
+			[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
+			[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't create a group chat with this service!"];
+			return nil;
+		}
+		NSString *name = [resolvedKeyDictionary objectForKey:@"name"];
+		if (!name) {
+			[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
+			[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't create a group chat without a name!"];
+			return nil;
+		}
+		//this can take a while...
+		NSMutableArray *newParticipants = [[NSMutableArray alloc] init];
+		for (int i=0;i<[participants count];i++) {
+			[newParticipants addObject:[[participants objectAtIndex:i] objectsByEvaluatingSpecifier]];
+		}
+		
+		//AIChat *newChat = [[[AIObject sharedAdiumInstance] chatController] chatWithName:name identifier:nil onAccount:self chatCreationInfo:nil];
+		DCJoinChatViewController *chatController = [DCJoinChatViewController joinChatView];
+		[chatController doJoinChatWithName:name onAccount:self chatCreationInfo:nil invitingContacts:newParticipants withInvitationMessage:@"Hey, wanna join my chat?"];
+		return [[[AIObject sharedAdiumInstance] chatController] existingChatWithName:name onAccount:self];
+	}
+}
+
+/**
+ * @brief Returns the current status type of this account.
+ */
+- (AIStatusTypeApplescript)scriptingStatusType
+{
+	return [[self statusState] statusTypeApplescript];
+}
+
+/**
+ * @brief Sets the type of the current status.
+ *
+ * If the current status is a temporary status, then we simply set it.
+ * Otherwise, we create a temporary copy of it, and set that.
+ */
+- (void)setScriptingStatusType:(AIStatusTypeApplescript)scriptingType
+{
+	AIStatusType type;
+	switch (scriptingType) {
+		case AIAvailableStatusTypeAS:
+			type = AIAvailableStatusType;
+			break;
+		case AIAwayStatusTypeAS:
+			type = AIAwayStatusType;
+			break;
+		case AIInvisibleStatusTypeAS:
+			type = AIInvisibleStatusType;
+			break;
+		case AIOfflineStatusTypeAS:
+		default:
+			type = AIOfflineStatusType;
+			break;
+	}
+	
+	AIStatus *currentStatus = [self statusState];
+	if ([currentStatus mutabilityType] == AILockedStatusState || [currentStatus mutabilityType] == AISecondaryLockedStatusState) {
+		switch (type) {
+			case AIAvailableStatusType:
+				currentStatus = [[adium statusController] availableStatus];
+				break;
+			case AIAwayStatusType:
+				currentStatus = [[adium statusController] awayStatus];
+				break;
+			case AIInvisibleStatusType:
+				currentStatus = [[adium statusController] invisibleStatus];
+				break;
+			case AIOfflineStatusType:
+				currentStatus = [[adium statusController] offlineStatus];
+				break;
+		}
+	} else {
+		if ([currentStatus mutabilityType] != AITemporaryEditableStatusState) {
+			currentStatus = [currentStatus mutableCopy];
+			[currentStatus setMutabilityType:AITemporaryEditableStatusState];
+		}
+		[currentStatus setStatusType:type];
+		[currentStatus setStatusName:[[[AIObject sharedAdiumInstance] statusController] defaultStatusNameForType:type]];
+	}
+	[[adium statusController] setActiveStatusState:currentStatus forAccount:self];
+}
+
+/**
+ * @brief Returns the current status message as rich text
+ */
+- (NSAttributedString *)scriptingStatusMessage
+{
+	return [[self statusState] statusMessage];
+}
+
+/**
+ * @brief Sets the current status message
+ *
+ * If the current status is built in, we create a temporary copy of the current status and set that.
+ */
+- (void)setScriptingStatusMessage:(NSAttributedString *)message
+{
+	AIStatus *currentStatus = [self statusState];
+	if ([currentStatus mutabilityType] != AITemporaryEditableStatusState) {
+		currentStatus = [currentStatus mutableCopy];
+		[currentStatus setMutabilityType:AITemporaryEditableStatusState];
+	}
+	if ([message isKindOfClass:[NSAttributedString class]])
+		[currentStatus setStatusMessage:message];
+	else
+		[currentStatus setStatusMessageString:(NSString *)message];
+	[[adium statusController] setActiveStatusState:currentStatus forAccount:self];
+}
+
+/**
+ * @brief Tells this account to be online, with an optional temporary status message.
+ */
+- (void)scriptingGoOnline:(NSScriptCommand *)c
+{
+	if ([self statusType] == AIOfflineStatusType || [self statusType] == AIInvisibleStatusType)
+		[self toggleOnline];
+
+	NSAttributedString *withMessage = [[c evaluatedArguments] objectForKey:@"WithMessage"];
+	if (withMessage)
+		[self setScriptingStatusMessage:withMessage];
+}
+
+/**
+ * @brief Tells this account to be available, with an optional temporary status message.
+ */
+- (void)scriptingGoAvailable:(NSScriptCommand *)c
+{
+	[[adium statusController] setActiveStatusState:[[adium statusController] availableStatus] forAccount:self];
+	NSAttributedString *withMessage = [[c evaluatedArguments] objectForKey:@"WithMessage"];
+	if (withMessage)
+		[self setScriptingStatusMessage:withMessage];
+}
+
+/**
+ * @brief Tells this account to be offline, with an optional temporary status message.
+ */
+- (void)scriptingGoOffline:(NSScriptCommand *)c
+{
+	[[adium statusController] setActiveStatusState:[[adium statusController] offlineStatus] forAccount:self];
+	NSAttributedString *withMessage = [[c evaluatedArguments] objectForKey:@"WithMessage"];
+	if (withMessage)
+		[self setScriptingStatusMessage:withMessage];
+}
+
+/**
+ * @brief Tells this account to be away, with an optional temporary status message.
+ */
+- (void)scriptingGoAway:(NSScriptCommand *)c
+{
+	[[adium statusController] setActiveStatusState:[[adium statusController] awayStatus] forAccount:self];
+	NSAttributedString *withMessage = [[c evaluatedArguments] objectForKey:@"WithMessage"];
+	if (withMessage)
+		[self setScriptingStatusMessage:withMessage];
+}
+
+/**
+ * @brief Tells this account to be invisible.
+ */
+- (void)scriptingGoInvisible:(NSScriptCommand *)c
+{
+	[[adium statusController] setActiveStatusState:[[adium statusController] invisibleStatus] forAccount:self];
+}
 @end

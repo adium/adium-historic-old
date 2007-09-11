@@ -8,7 +8,8 @@
 #import <AIUtilities/AIDockingWindow.h>
 
 @interface AIMessageWindow : AIDockingWindow {
-
+	NSArray *chats;
+	id rememberedScriptCommand;
 }
 
 @end

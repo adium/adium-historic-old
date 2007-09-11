@@ -615,6 +615,10 @@
 {
 	return [[self statusState] statusMessage];
 }
+- (NSString *)statusMessageString
+{
+	return [[self statusMessage] string];
+}
 
 /*!
  * @brief Are sounds for this acount muted?

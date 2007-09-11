@@ -21,6 +21,7 @@
 #import <Adium/AIHTMLDecoder.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
+#import "AIAccountController.h"
 
 @implementation AIStatus
 
@@ -436,4 +437,144 @@
 	return [[statusDict objectForKey:STATUS_SPECIAL_TYPE] intValue];
 }
 
+#pragma mark AppleScript
+
+/**
+ * @brief statuses are specified by name in the 'statuses' key of AIApplication
+ */
+- (NSScriptObjectSpecifier *)objectSpecifier
+{
+	NSScriptClassDescription *containerClassDesc = (NSScriptClassDescription *)[NSScriptClassDescription classDescriptionForClass:[NSApp class]];
+	return [[[NSNameSpecifier alloc]
+		   initWithContainerClassDescription:containerClassDesc
+		   containerSpecifier:nil key:@"statuses"
+		   name:[self title]] autorelease];
+}
+
+/**
+ * @brief Returns the title of this status.
+ */
+- (NSString *)scriptingTitle
+{
+	return [self title];
+}
+/**
+ * @brief Sets the title of this status to the given value.
+ *
+ * This may copy self, if self is not editable.
+ */
+- (void)setScriptingTitle:(NSString *)newTitle
+{
+	if ([self mutabilityType] == AIEditableStatusState || [self mutabilityType] == AITemporaryEditableStatusState) {
+		[self setTitle:newTitle];
+		[[adium statusController] savedStatusesChanged];
+		[[adium statusController] applyState:self toAccounts:[[adium accountController] accountsWithCurrentStatus:self]];
+	} else {
+		AIStatus *newStatus = [self mutableCopy];
+		[newStatus setMutabilityType:AITemporaryEditableStatusState];
+		[newStatus setTitle:newTitle];
+		[[adium statusController] savedStatusesChanged];		
+		[[adium statusController] applyState:newStatus toAccounts:[[adium accountController] accountsWithCurrentStatus:self]];
+	}
+}
+/**
+ * @brief Returns the message of this status as an NSTextStorage
+ */
+- (NSTextStorage *)scriptingMessage
+{
+	return [[[NSTextStorage alloc] initWithAttributedString:[self statusMessage]] autorelease];
+}
+- (void)setScriptingMessage:(NSTextStorage *)newMessage
+{
+	if ([self mutabilityType] == AIEditableStatusState || [self mutabilityType] == AITemporaryEditableStatusState) {
+		if ([newMessage isKindOfClass:[NSAttributedString class]])
+			[self setStatusMessage:newMessage];
+		else if ([newMessage isKindOfClass:[NSString class]])
+			[self setStatusMessageString:(NSString *)newMessage];
+		else {
+			[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
+			[[NSScriptCommand currentCommand] setScriptErrorString:@"Status message must be a string or an attributed string."];
+		}
+		[[adium statusController] savedStatusesChanged];
+		[[adium statusController] applyState:self toAccounts:[[adium accountController] accountsWithCurrentStatus:self]];
+	} else {
+		AIStatus *newStatus = [self mutableCopy];
+		[newStatus setMutabilityType:AITemporaryEditableStatusState];
+		if ([newMessage isKindOfClass:[NSAttributedString class]])
+			[newStatus setStatusMessage:newMessage];
+		else if ([newMessage isKindOfClass:[NSString class]])
+			[newStatus setStatusMessageString:(NSString *)newMessage];
+		else {
+			[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
+			[[NSScriptCommand currentCommand] setScriptErrorString:@"Status message must be a string or an attributed string."];
+		}
+		[[adium statusController] savedStatusesChanged];		
+		[[adium statusController] applyState:newStatus toAccounts:[[adium accountController] accountsWithCurrentStatus:self]];
+	}
+}
+- (NSTextStorage *)scriptingAutoreply
+{
+	return [[[NSTextStorage alloc] initWithAttributedString:[self autoReply]] autorelease];
+}
+- (void)setScriptingAutoreply:(NSTextStorage *)newAutoreply
+{
+	if ([self mutabilityType] == AIEditableStatusState || [self mutabilityType] == AITemporaryEditableStatusState) {
+		if ([newAutoreply isKindOfClass:[NSAttributedString class]])
+			[self setAutoReply:newAutoreply];
+		else if ([newAutoreply isKindOfClass:[NSString class]])
+			[self setAutoReplyString:(NSString *)newAutoreply];
+		else {
+			[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
+			[[NSScriptCommand currentCommand] setScriptErrorString:@"Autoreply message must be a string or an attributed string."];
+		}
+		[[adium statusController] savedStatusesChanged];
+		[[adium statusController] applyState:self toAccounts:[[adium accountController] accountsWithCurrentStatus:self]];
+	} else {
+		AIStatus *newStatus = [self mutableCopy];
+		[newStatus setMutabilityType:AITemporaryEditableStatusState];
+		if ([newAutoreply isKindOfClass:[NSAttributedString class]])
+			[newStatus setAutoReply:newAutoreply];
+		else if ([newAutoreply isKindOfClass:[NSString class]])
+			[newStatus setAutoReplyString:(NSString *)newAutoreply];
+		else {
+			[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
+			[[NSScriptCommand currentCommand] setScriptErrorString:@"Autoreply message must be a string or an attributed string."];
+		}
+		[[adium statusController] savedStatusesChanged];		
+		[[adium statusController] applyState:newStatus toAccounts:[[adium accountController] accountsWithCurrentStatus:self]];
+	}
+}
+
+- (void)setStatusTypeApplescript:(AIStatusTypeApplescript)statusTypeApplescript
+{
+	AIStatusType			statusType;
+	
+	switch (statusTypeApplescript) {
+		case AIAvailableStatusTypeAS:
+			statusType = AIAvailableStatusType;
+			break;
+		case AIAwayStatusTypeAS:
+			statusType = AIAwayStatusType;
+			break;
+		case AIInvisibleStatusTypeAS:
+			statusType = AIInvisibleStatusType;
+			break;
+		case AIOfflineStatusTypeAS:
+		default:
+			statusType = AIOfflineStatusType;
+			break;
+	}
+	if ([self mutabilityType] == AIEditableStatusState || [self mutabilityType] == AITemporaryEditableStatusState) {
+		[self setStatusType:statusType];
+		[[adium statusController] savedStatusesChanged];
+		[[adium statusController] applyState:self toAccounts:[[adium accountController] accountsWithCurrentStatus:self]];
+	} else {
+		AIStatus *newStatus = [self mutableCopy];
+		[newStatus setMutabilityType:AITemporaryEditableStatusState];
+		[newStatus setStatusType:statusType];
+		[newStatus setStatusName:[[adium statusController] defaultStatusNameForType:statusType]];
+		[[adium statusController] savedStatusesChanged];		
+		[[adium statusController] applyState:newStatus toAccounts:[[adium accountController] accountsWithCurrentStatus:self]];
+	}
+}
 @end

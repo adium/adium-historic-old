@@ -23,7 +23,7 @@
 @interface AIStatusController : AIObject <AIStatusController, AIListObjectObserver> {
 	//Status states
 	AIStatusGroup			*_rootStateGroup;
-	NSMutableArray			*_flatStatusSet;
+	NSMutableSet			*_flatStatusSet;
 	NSMutableArray			*builtInStateArray;
 
 	AIStatus				*offlineStatusState; //Shared state used to symbolize the offline 'status'

@@ -1,307 +1,402 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
-<dictionary>
-	<!--Standard suite, also known as the core suite-->
-	<suite name="Standard Suite" code="core" description="Common classes and commands for most applications.">
-		<command name="close" code="coreclos" description="Close an object.">
-			<direct-parameter type="reference" description="the object for the command"/>
-			<parameter name="saving" code="savo" type="savo" optional="yes" description="Specifies whether changes should be saved before closing."/>
-			<parameter name="saving in" code="kfil" type="alias" optional="yes" description="The file in which to save the object."/>
+<dictionary title="Adium Terminology">
+	<suite name="Adium Suite" code="Adum" description="AppleScript support for Adium">
+		<class name="application" code="capp" description="Adium's application class">
+			<cocoa class="AIApplication" />
+			<property name="name" code="pnam" type="text" access="r" description="The name of the application."/>
+			<property name="frontmost" code="pisf" type="boolean" access="r" description="Is this the frontmost (active) application?">
+				<cocoa key="isActive"/>
+			</property>
+			<property name="version" code="vers" type="text" access="r" description="The version of the application."/>
+			<property name="active chat" code="Pcht" type="chat" access="r" description="The frontmost chat."/>
+			
+			<element type="account" />
+			<element type="contact" />
+			<element type="service" />
+			<element type="window">
+				<cocoa key="orderedWindows" />
+			</element>
+			<element type="chat window" />
+			<element type="chat" />
+			<element type="status" />
+
+			<responds-to name="go online">
+				<cocoa method="scriptingGoOnline:"/>
+			</responds-to>
+			<responds-to name="go available">
+				<cocoa method="scriptingGoAvailable:"/>
+			</responds-to>
+			<responds-to name="go offline">
+				<cocoa method="scriptingGoOffline:"/>
+			</responds-to>
+			<responds-to name="go away">
+				<cocoa method="scriptingGoAway:"/>
+			</responds-to>
+			<responds-to name="go invisible">
+				<cocoa method="scriptingGoInvisible:"/>
+			</responds-to>
+		</class>
+		<class name="service" code="Csrv" description="An Adium service (a.k.a. chat protocol)">
+			<cocoa class="AIService" />
+			<property name="name" code="pnam" type="text" access="r" description="The name of the service.">
+				<cocoa key="shortDescription" />
+			</property>
+			<element type="account" />
+		</class>
+		<class name="window" code="cwin" description="A window in Adium">
+			<cocoa class="NSWindow" />
+			<property name="name" code="pnam" type="text" access="r" description="The title of this window">
+				<cocoa key="scriptingTitle" />
+			</property>
+			<property name="id" code="ID  " type="integer" access="r" description="The unique identifier of the window.">
+				<cocoa key="uniqueID"/>
+			</property>
+			<property name="index" code="pidx" type="integer" description="The index of the window, ordered front to back.">
+				<cocoa key="orderedIndex"/>
+			</property>
+			<property name="bounds" code="pbnd" type="rectangle" description="The bounding rectangle of the window.">
+				<cocoa key="boundsAsQDRect"/>
+			</property>
+			<property name="closeable" code="hclb" type="boolean" access="r" description="Whether the window has a close box.">
+				<cocoa key="hasCloseBox"/>
+			</property>
+			<property name="minimizable" code="ismn" type="boolean" access="r" description="Whether the window can be minimized.">
+				<cocoa key="isMiniaturizable"/>
+			</property>
+			<property name="minimized" code="pmnd" type="boolean" description="Whether the window is currently minimized.">
+				<cocoa key="isMiniaturized"/>
+			</property>
+			<property name="resizable" code="prsz" type="boolean" access="r" description="Whether the window can be resized.">
+				<cocoa key="isResizable"/>
+			</property>
+			<property name="visible" code="pvis" type="boolean" description="Whether the window is currently visible.">
+				<cocoa key="isVisible"/>
+			</property>
+			<property name="zoomable" code="iszm" type="boolean" access="r" description="Whether the window can be zoomed.">
+				<cocoa key="isZoomable"/>
+			</property>
+			<property name="zoomed" code="pzum" type="boolean" description="Whether the window is currently zoomed.">
+				<cocoa key="isZoomed"/>
+			</property>
+		</class>
+		<class name="chat window" code="Ctwn" description="A window that contains chats" inherits="window">
+			<cocoa class="AIMessageWindow" />
+			<element type="chat" />
+			<responds-to name="close">
+				<cocoa method="handleCloseScriptCommand:"/>
+			</responds-to>
+		</class>
+		<class name="chat" code="Chat" description="A chat in Adium">
+			<cocoa class="AIChat" />
+			<property name="name" code="pnam" type="text" access="r" description="The name of the chat" />
+			<property name="ID" code="ID  " type="text" access="r" description="The unique identifier of the chat.">
+				<cocoa key="uniqueChatID"/>
+			</property>
+			<property name="account" code="Cact" type="account" access="r" description="The account associated with this chat">
+				<cocoa key="scriptingAccount" />
+			</property>
+			<property name="index" code="pidx" type="integer" access="r" description="The index of this tab in the chat window" />
+			<property name="window" code="cwin" type="window" access="r" description="The window this chat is in" />
+			<element type="contact">
+				<cocoa key="containedObjects" />
+			</element>
+			
+			<responds-to name="close">
+				<cocoa method="handleCloseScriptCommand:"/>
+			</responds-to>
+			<responds-to name="send">
+				<cocoa method="sendScriptCommand:"/>
+			</responds-to>
+		</class>
+		<enumeration name="status type" code="Esta">
+			<enumerator name="offline" code="Soff" description="Account is offline."/>
+			<enumerator name="available" code="Sonl" description="Account is online."/>
+			<enumerator name="away" code="Sawy" description="Account is away."/>
+			<enumerator name="invisible" code="Sinv" description="Account is invisible."/>
+		</enumeration>
+		<class name="account" code="Cact" description="An account in Adium">
+			<cocoa class="AIAccount" />
+			<property name="id" code="ID  " type="integer" access="r" description="The unique ID associated with this account">
+				<cocoa key="accountNumber" />
+			</property>
+			<property name="name" code="pnam" type="text" access="r" description="The name of this account">
+				<cocoa key="scriptingUID" />
+			</property>
+			<property name="display name" code="Pdnm" type="text" access="rw" description="The display name of this account"/>
+			<property name="service" code="Psrv" type="service" access="r" description="The service this account is registered under" />
+			<property name="enabled" code="Penb" type="boolean" access="r" description="Whether or not this account is enabled" />
+			<property name="host" code="Phst" type="text" access="r" description="The host this account is connected to" />
+			<property name="port" code="Pprt" type="integer" access="r" description="The port this account is connected to" />
+			<property name="status" code="Csts" type="status" access="rw" description="The current status on the account.">
+				<cocoa key="statusState" />
+			</property>
+			<property name="status type" code="Past" type="status type" access="rw" description="The type of the current status. Setting this creates a temporary status.">
+				<cocoa key="scriptingStatusType" />
+			</property>
+			<property name="status message" code="Pasm" type="rich text" access="rw" description="The message associated with the current status. Setting this creates a temporary status.">
+				<cocoa key="scriptingStatusMessage" />
+			</property>
+			
+			<element type="contact" />
+			
+			<responds-to name="go online">
+				<cocoa method="scriptingGoOnline:"/>
+			</responds-to>
+			<responds-to name="go available">
+				<cocoa method="scriptingGoAvailable:"/>
+			</responds-to>
+			<responds-to name="go offline">
+				<cocoa method="scriptingGoOffline:"/>
+			</responds-to>
+			<responds-to name="go away">
+				<cocoa method="scriptingGoAway:"/>
+			</responds-to>
+			<responds-to name="go invisible">
+				<cocoa method="scriptingGoInvisible:"/>
+			</responds-to>
+		</class>
+		<class name="contact" code="Ccnt" description="A contact">
+			<cocoa class="AIListContact" />
+			<property name="account" code="Pacc" type="account" access="r" description="The account associated with this contact" />
+			<property name="name" code="pnam" type="text" access="r" description="The name of this contact">
+				<cocoa key="UID" />
+			</property>
+			<property name="display name" code="Pdnm" type="text" access="rw" description="The display name or alias associated with this contact." />
+			<property name="idle time" code="Pidl" type="integer" access="r" description="The duration this contact has been idle."/>
+			<property name="notes" code="Pnts" type="text" access="rw" description="The user-defined notes for this contact."/>
+			<property name="idle time" code="Pidl" type="integer" access="r" description="The time this contact has been idle." />
+			<property name="status type" code="Psts" type="status type" access="r" description="The current status of this contact">
+				<cocoa key="scriptingStatusType" />
+			</property>
+			<property name="status message" code="Pstm" type="rich text" access="r" description="The custom status message for this contact.">
+				<cocoa key="scriptingStatusMessage" />
+			</property>
+		</class>
+		<class name="status" plural="statuses" code="Csts" description="A saved status in Adium">
+			<cocoa class="AIStatus" />
+			<property name="title" code="pnam" type="text" access="r" description="The title of the status.">
+				<cocoa key="scriptingTitle" />
+			</property>
+			<property name="type" code="Psts" type="status type" access="r" description="The type of this status.">
+				<cocoa key="statusTypeApplescript"/>
+			</property>
+			<property name="message" code="Pstm" type="rich text" access="r" description="The custom status message.">
+				<cocoa key="scriptingMessage"/>
+			</property>
+			<property name="autoreply" code="Paut" type="rich text" access="r" description="The message to auto reply">
+				<cocoa key="scriptingAutoreply"/>
+			</property>
+		</class>
+		<command name="close" code="coreclos" description="Close a document.">
+			<cocoa class="NSCloseCommand"/>
+			<direct-parameter type="specifier" description="the document(s) or window(s) to close."/>
 		</command>
-		<command name="count" code="corecnte" description="Return the number of elements of a particular class within an object.">
-			<direct-parameter type="reference" description="the object for the command"/>
-			<parameter name="each" code="kocl" type="type class" optional="yes" description="The class of objects to be counted."/>
-			<result type="integer"/>
+
+		<command name="go online" code="Adumgoon" description="Changes the status of an account.">
+			<cocoa class="NSScriptCommand" />
+			<direct-parameter description="The account that should connect" type="account" />
+			<parameter name="with message" code="Pmsg" description="The custom status message." type="text" optional="yes">
+				<cocoa key="WithMessage"/>
+			</parameter>
+		</command>
+		<command name="go available" code="Adumgoav" description="Changes the status of an account.">
+			<cocoa class="NSScriptCommand" />
+			<direct-parameter description="The account that should become available" type="account" />
+			<parameter name="with message" code="Pmsg" description="The custom status message." type="text" optional="yes">
+				<cocoa key="WithMessage"/>
+			</parameter>
+		</command>
+		<command name="go offline" code="Adumgoof" description="Changes the status of an account.">
+			<cocoa class="NSScriptCommand" />
+			<direct-parameter description="The account that should disconnect" type="account" />
+			<parameter name="with message" code="Pmsg" description="The custom status message." type="text" optional="yes">
+				<cocoa key="WithMessage"/>
+			</parameter>
+		</command>
+		<command name="go away" code="Adumgoaw" description="Changes the status of an account.">
+			<cocoa class="NSScriptCommand" />
+			<direct-parameter description="The account that should go away" type="account" />
+			<parameter name="with message" code="Pmsg" description="The custom status message." type="text" optional="yes">
+				<cocoa key="WithMessage"/>
+			</parameter>
+		</command>
+		<command name="go invisible" code="Adumgoin" description="Changes the status of an account.">
+			<cocoa class="NSScriptCommand" />
+			<direct-parameter description="The account that should become invisible" type="account" />
+		</command>
+		<command name="count" code="corecnte" description="Return the number elements of a particular class within an object.">
+			<cocoa class="NSCountCommand"/>
+			<direct-parameter description="the object whose elements are to be counted" type="specifier"/>
+			<parameter name="each" code="kocl" description="The class of objects to be counted." type="type" optional="yes">
+				<cocoa key="ObjectClass"/>
+			</parameter>
+			<result description="the number of elements" type="integer"/>
 		</command>
 		<command name="delete" code="coredelo" description="Delete an object.">
-			<direct-parameter type="reference" description="the object for the command"/>
-		</command>
-		<command name="duplicate" code="coreclon" description="Copy object(s) and put the copies at a new location.">
-			<direct-parameter type="reference" description="the object for the command"/>
-			<parameter name="to" code="insh" type="location reference" description="The location for the new object(s)."/>
-			<parameter name="with properties" code="prdt" type="record" optional="yes" description="Properties to be set in the new duplicated object(s)."/>
+			<cocoa class="NSDeleteCommand"/>
+			<direct-parameter description="the object to delete" type="specifier"/>
 		</command>
 		<command name="exists" code="coredoex" description="Verify if an object exists.">
-			<direct-parameter type="reference" description="the object for the command"/>
-			<result type="boolean"/>
+			<cocoa class="NSExistsCommand"/>
+			<direct-parameter description="the object in question" type="specifier"/>
+			<result description="true if it exists, false if not" type="boolean"/>
 		</command>
-		<command name="get" code="coregetd" description="Get the data for an object.">
-			<direct-parameter type="reference" description="the object for the command"/>
-			<result type="anything"/>
+  		<command name="make" code="corecrel" description="Make a new object.">
+			<cocoa class="AICreateCommand"/>
+			<parameter name="new" code="kocl" description="The class of the new object." type="type">
+				<cocoa key="ObjectClass"/>
+			</parameter>
+			<parameter name="at" code="insh" description="The location at which to insert the object." type="location specifier" optional="yes">
+				<cocoa key="Location"/>
+			</parameter>
+			<parameter name="with data" code="data" description="The initial data for the object." type="any" optional="yes">
+				<cocoa key="ObjectData"/>
+			</parameter>
+			<parameter name="with properties" code="prdt" description="The initial values for properties of the object." type="record" optional="yes">
+				<cocoa key="KeyDictionary"/>
+			</parameter>
+			<parameter name="with contacts" code="Pwct" description="The contacts needed for creating a chat or group." type="list of contact" optional="yes">
+				<cocoa key="withContacts"/>
+			</parameter>
+			<parameter name="new chat window" code="Pncw" description="If this is true, then a new chat window will be created when creating a chat." type="boolean" optional="yes">
+				<cocoa key="newChatWindow"/>
+			</parameter>
+			<result description="to the new object" type="specifier"/>
 		</command>
-		<command name="make" code="corecrel" description="Make a new object.">
-			<parameter name="new" code="kocl" type="type class" description="The class of the new object."/>
-			<parameter name="at" code="insh" type="location reference" optional="yes" description="The location at which to insert the object."/>
-			<parameter name="with data" code="data" type="anything" optional="yes" description="The initial data for the object."/>
-			<parameter name="with properties" code="prdt" type="record" optional="yes" description="The initial values for properties of the object."/>
-			<result type="reference"/>
-		</command>
+		
 		<command name="move" code="coremove" description="Move object(s) to a new location.">
-			<direct-parameter type="reference" description="the object for the command"/>
-			<parameter name="to" code="insh" type="location reference" description="The new location for the object(s)."/>
+			<cocoa class="AIMoveCommand"/>
+			<direct-parameter type="specifier" description="the object(s) to move"/>
+			<parameter name="to" code="insh" type="location specifier" description="The new location for the object(s).">
+				<cocoa key="ToLocation"/>
+			</parameter>
+			<result type="specifier" description="the moved object(s)"/>
 		</command>
-		<command name="open" code="aevtodoc" description="Open an object.">
-			<direct-parameter type="alias" description="The file(s) to be opened."/>
+		
+		<command name="send" code="Adumsend" description="Send text or a file to some contact.">
+			<cocoa class="NSScriptCommand"/>
+			<direct-parameter type="chat" description="The chat that mimics the entry... ya da ya da"/>
+			<parameter name="message" code="Smsg" description="The message to send" type="text" optional="yes">
+				<cocoa key="message"/>
+			</parameter>
+			<parameter name="with file" code="Sfil" description="A file to attach" type="file" optional="yes">
+				<cocoa key="withFile"/>
+			</parameter>
 		</command>
-		<command name="print" code="aevtpdoc" description="Print an object.">
-			<direct-parameter type="alias" description="The file(s) or document(s) to be printed."/>
-			<parameter name="print dialog" code="pdlg" type="boolean" optional="yes" description="Should the application show the Print dialog?"/>
-			<parameter name="with properties" code="prdt" type="print settings" optional="yes" description="the print settings"/>
-		</command>
-		<command name="quit" code="aevtquit" description="Quit an application.">
-			<direct-parameter type="reference" description="the object for the command"/>
-			<parameter name="saving" code="savo" type="savo" optional="yes" description="Specifies whether changes should be saved before quitting."/>
-		</command>
-		<command name="save" code="coresave" description="Save an object.">
-			<direct-parameter type="reference" description="the object for the command"/>
-			<parameter name="as" code="fltp" type="Unicode text" optional="yes" description="The file type in which to save the data."/>
-			<parameter name="in" code="kfil" type="alias" optional="yes" description="The file in which to save the object."/>
-		</command>
-		<command name="set" code="coresetd" description="Set an object&apos;s data.">
-			<direct-parameter type="reference" description="the object for the command"/>
-			<parameter name="to" code="data" type="anything" description="The new value."/>
-		</command>
-		<class name="application" code="capp" description="An application&apos;s top level scripting object." inherits="item">
-			<element type="document"/>
-			<element type="window"/>
-			<property name="frontmost" code="pisf" type="boolean" access="r" description="Is this the frontmost (active) application?"/>
-			<property name="name" code="pnam" type="Unicode text" access="r" description="The name of the application."/>
-			<property name="version" code="vers" type="Unicode text" access="r" description="The version of the application."/>
-		</class>
-		<class name="color" code="colr" description="A color." inherits="item"/>
-		<class name="document" code="docu" description="A document." inherits="item">
-			<property name="modified" code="imod" type="boolean" access="r" description="Has the document been modified since the last save?"/>
-			<property name="name" code="pnam" type="Unicode text" description="The document&apos;s name."/>
-			<property name="path" code="ppth" type="Unicode text" description="The document&apos;s path."/>
-		</class>
-		<class name="item" code="cobj" description="A scriptable object.">
-			<property name="class" code="pcls" type="type class" access="r" description="The class of the object."/>
-			<property name="properties" code="pALL" type="record" description="All of the object&apos;s properties."/>
-		</class>
-		<class name="window" code="cwin" description="A window." inherits="item">
-			<property name="bounds" code="pbnd" type="bounding rectangle" description="The bounding rectangle of the window."/>
-			<property name="closeable" code="hclb" type="boolean" access="r" description="Whether the window has a close box."/>
-			<property name="document" code="docu" type="document" access="r" description="The document whose contents are being displayed in the window."/>
-			<property name="floating" code="isfl" type="boolean" access="r" description="Whether the window floats."/>
-			<property name="id" code="ID  " type="integer" access="r" description="The unique identifier of the window."/>
-			<property name="index" code="pidx" type="integer" description="The index of the window, ordered front to back."/>
-			<property name="miniaturizable" code="ismn" type="boolean" access="r" description="Whether the window can be miniaturized."/>
-			<property name="miniaturized" code="pmnd" type="boolean" description="Whether the window is currently miniaturized."/>
-			<property name="modal" code="pmod" type="boolean" access="r" description="Whether the window is the application&apos;s current modal window."/>
-			<property name="name" code="pnam" type="Unicode text" description="The full title of the window."/>
-			<property name="resizable" code="prsz" type="boolean" access="r" description="Whether the window can be resized."/>
-			<property name="titled" code="ptit" type="boolean" access="r" description="Whether the window has a title bar."/>
-			<property name="visible" code="pvis" type="boolean" description="Whether the window is currently visible."/>
-			<property name="zoomable" code="iszm" type="boolean" access="r" description="Whether the window can be zoomed."/>
-			<property name="zoomed" code="pzum" type="boolean" description="Whether the window is currently zoomed."/>
-		</class>
-		<enumeration name="savo" code="savo">
-			<enumerator name="ask" code="ask " description="Ask the user whether or not to save the file."/>
-			<enumerator name="no" code="no  " description="Do not save the file."/>
-			<enumerator name="yes" code="yes " description="Save the file."/>
-		</enumeration>
 	</suite>
-
+	
 	<suite name="Text Suite" code="TEXT" description="A set of basic classes for text processing.">
-		<class name="attachment" code="atts" description="Represents an inline text attachment.  This class is used mainly for make commands." inherits="text">
-			<element type="attachment"/>
-			<element type="attribute run"/>
+		<cocoa name="NSTextSuite"/>
+
+		<value-type name="color" code="cRGB">
+			<cocoa class="NSColor"/>
+		</value-type>
+
+		<class name="rich text" plural="rich text" code="ctxt" description="Rich (styled) text">
+			<cocoa class="NSTextStorage"/>
+			<!-- this "type" element and the ones that follow, while they
+				contradict the DTD, are NOT errors.	Cocoa Scripting in 10.4 uses them to accomplish certain type conversions. -->
+			<type type="text"/>
+			<property name="color" code="colr" type="color" description="The color of the first character.">
+				<cocoa key="foregroundColor"/>
+			</property>
+			<property name="font" code="font" type="text" description="The name of the font of the first character.">
+				<cocoa key="fontName"/>
+			</property>
+			<property name="size" code="ptsz" type="integer" description="The size in points of the first character.">
+				<cocoa key="fontSize"/>
+			</property>
 			<element type="character"/>
 			<element type="paragraph"/>
 			<element type="word"/>
-			<property name="file name" code="atfn" type="Unicode text" description="The path to the file for the attachment"/>
-		</class>
-		<class name="attribute run" code="catr" description="This subdivides the text into chunks that all have the same attributes." inherits="item">
-			<element type="attachment"/>
 			<element type="attribute run"/>
+			<element type="attachment"/>
+		</class>
+
+		<class name="character" code="cha " description="This subdivides the text into characters.">
+			<cocoa class="NSTextStorage"/>
+			<type type="text"/>
+			<property name="color" code="colr" type="color" description="The color of the first character.">
+				<cocoa key="foregroundColor"/>
+			</property>
+			<property name="font" code="font" type="text" description="The name of the font of the first character.">
+				<cocoa key="fontName"/>
+			</property>
+			<property name="size" code="ptsz" type="integer" description="The size in points of the first character.">
+				<cocoa key="fontSize"/>
+			</property>
 			<element type="character"/>
 			<element type="paragraph"/>
 			<element type="word"/>
-			<property name="color" code="colr" type="color" description="The color of the first character."/>
-			<property name="font" code="font" type="Unicode text" description="The name of the font of the first character."/>
-			<property name="size" code="ptsz" type="integer" description="The size in points of the first character."/>
-		</class>
-		<class name="character" code="cha " description="This subdivides the text into characters." inherits="item">
-			<element type="attachment"/>
 			<element type="attribute run"/>
+			<element type="attachment"/>
+		</class>
+
+		<class name="paragraph" code="cpar" description="This subdivides the text into paragraphs.">
+			<cocoa class="NSTextStorage"/>
+			<type type="text"/>
+			<property name="color" code="colr" type="color" description="The color of the first character.">
+				<cocoa key="foregroundColor"/>
+			</property>
+			<property name="font" code="font" type="text" description="The name of the font of the first character.">
+				<cocoa key="fontName"/>
+			</property>
+			<property name="size" code="ptsz" type="integer" description="The size in points of the first character.">
+				<cocoa key="fontSize"/>
+			</property>
 			<element type="character"/>
 			<element type="paragraph"/>
 			<element type="word"/>
-			<property name="color" code="colr" type="color" description="The color of the first character."/>
-			<property name="font" code="font" type="Unicode text" description="The name of the font of the first character."/>
-			<property name="size" code="ptsz" type="integer" description="The size in points of the first character."/>
-		</class>
-		<class name="paragraph" code="cpar" description="This subdivides the text into paragraphs." inherits="item">
-			<element type="attachment"/>
 			<element type="attribute run"/>
+			<element type="attachment"/>
+		</class>
+
+		<class name="word" code="cwor" description="This subdivides the text into words.">
+			<cocoa class="NSTextStorage"/>
+			<type type="text"/>
+			<property name="color" code="colr" type="color" description="The color of the first character.">
+				<cocoa key="foregroundColor"/>
+			</property>
+			<property name="font" code="font" type="text" description="The name of the font of the first character.">
+				<cocoa key="fontName"/>
+			</property>
+			<property name="size" code="ptsz" type="integer" description="The size in points of the first character.">
+				<cocoa key="fontSize"/>
+			</property>
 			<element type="character"/>
 			<element type="paragraph"/>
 			<element type="word"/>
-			<property name="color" code="colr" type="color" description="The color of the first character."/>
-			<property name="font" code="font" type="Unicode text" description="The name of the font of the first character."/>
-			<property name="size" code="ptsz" type="integer" description="The size in points of the first character."/>
-		</class>
-		<class name="text" code="ctxt" description="Rich (styled) text" inherits="item">
-			<element type="attachment"/>
 			<element type="attribute run"/>
+			<element type="attachment"/>
+		</class>
+
+		<class name="attribute run" code="catr" description="This subdivides the text into chunks that all have the same attributes.">
+			<cocoa class="NSTextStorage"/>
+			<type type="text"/>
+			<property name="color" code="colr" type="color" description="The color of the first character.">
+				<cocoa key="foregroundColor"/>
+			</property>
+			<property name="font" code="font" type="text" description="The name of the font of the first character.">
+				<cocoa key="fontName"/>
+			</property>
+			<property name="size" code="ptsz" type="integer" description="The size in points of the first character.">
+				<cocoa key="fontSize"/>
+			</property>
 			<element type="character"/>
 			<element type="paragraph"/>
 			<element type="word"/>
-			<property name="color" code="colr" type="color" description="The color of the first character."/>
-			<property name="font" code="font" type="Unicode text" description="The name of the font of the first character."/>
-			<property name="size" code="ptsz" type="integer" description="The size in points of the first character."/>
-		</class>
-		<class name="word" code="cwor" description="This subdivides the text into words." inherits="item">
-			<element type="attachment"/>
 			<element type="attribute run"/>
-			<element type="character"/>
-			<element type="paragraph"/>
-			<element type="word"/>
-			<property name="color" code="colr" type="color" description="The color of the first character."/>
-			<property name="font" code="font" type="Unicode text" description="The name of the font of the first character."/>
-			<property name="size" code="ptsz" type="integer" description="The size in points of the first character."/>
+			<element type="attachment"/>
 		</class>
+
+		<class name="attachment" code="atts" inherits="rich text" description="Represents an inline text attachment. This class is used mainly for make commands.">
+			<cocoa class="NSAttachmentTextStorage"/>
+			<property name="file name" code="atfn" type="text" description="The path to the file for the attachment">
+				<cocoa key="filename"/>
+			</property>
+		</class>
+
 	</suite>
 
-	<suite name="Adium Suite" code="AdIM" description="commands and classes for Adium scripting.">
-		<command name="connect" code="AdIMcnct" description="Request that an account connect to its service. If the account password is not in the keychain the user will be prompted to enter one.">
-			<direct-parameter type="account" description="an account"/>
-		</command>
-		<command name="create chat" code="AdIMcCdM" description="Create a new chat.">
-			<parameter name="on service" code="cCsI" type="Unicode text" description="The service ID (such as AIM, MSN, Yahoo, Jabber, ICQ) on which the chat should be initiated."/>
-			<parameter name="with contact" code="TO  " type="Unicode text" description="The screen name (UID) of the destination contact." hidden="yes"/>
-			<result type="chat"/>
-		</command>
-		<command name="create group chat" code="AdIMcR&uuml;m" description="Create a new chat.">
-			<direct-parameter type="Unicode text" description="The name of the group chat to join."/>
-			<parameter name="on service" code="cCsI" type="Unicode text" description="The service ID (such as AIM, MSN, Yahoo, Jabber, ICQ) on which the chat should be initiated."/>
-			<result type="chat"/>
-		</command>
-		<command name="disconnect" code="AdIMdcnt" description="Disconnect an account, or all accounts if no account is specified.">
-			<direct-parameter type="account" description="an account"/>
-		</command>
-		<command name="send" code="AdIMsndM" description="Send a message or file.">
-			<direct-parameter type="item" description="a contact or chat to which to send"/>
-			<parameter name="autoreply" code="sNd2" type="boolean" optional="yes" description="YES if the message should be tagged as an autoreply (if supported by the service - valid only if sending a textual message)."/>
-			<parameter name="file" code="ASfP" type="alias" optional="yes" description="Full path to a file to send.  Sending of directories is not supported at this time."/>
-			<parameter name="message" code="TO  " type="Unicode text" optional="yes" description="The message to send, which may be HTML-encoded."/>
-			<parameter name="on account" code="sNd3" type="account" optional="yes" description="An account with which to originate the message (if no account is specified, the best available account will be automatically determined)."/>
-		</command>
-		<class name="account" code="acct" description="A messaging account. Accounts inherit all capabilities of list objects." inherits="list object">
-			<element type="contact"/>
-			<property name="service image" code="AimG" type="TIFF picture" access="r" description="An image representing this account&apos;s service."/>
-		</class>
-		<class name="application" code="capp" description="The Adium X application. To access controllers besides the default subcontainer, put &quot;the first&quot; before the controller name even though there is only one." inherits="application">
-			<cocoa class="AIApplication" />
-			<element type="document"/>
-			<element type="window"/>
-			<element type="account"/>
-			<element type="chat" />
-			<element type="contact" />
-			<property name="active chat" code="AiAC" type="chat" description="The chat which most recently had focus." />
-			<property name="default image" code="AmaA" type="TIFF picture" description="The default image used for accounts&apos; user images if no other is specified."/>
-		</class>
-		<class name="chat" code="Acht" description="A chat." inherits="item">
-			<element type="contact"/>
-			<element type="content"/>
-			<property name="account" code="AchA" type="account" description="The account on which this chat is taking place."/>
-			<property name="chat image" code="AchI" type="TIFF picture" access="r" description="An image representing this chat."/>
-			<property name="chat name" code="AchN" type="Unicode text" access="r" description="The name of this chat (for a one-on-one chat, this is the same as the contact&apos;s display name."/>
-			<property name="date opened" code="AchD" type="date" access="r" description="The date this chat was opened."/>
-			<property name="ID" code="ID  " type="Unicode text" access="r" description="A unique identifier for this chat."/>
-			<property name="log file" code="Alog" type="alias" access="r" description="The log file for this chat."/>
-		</class>
-		<class name="contact" code="ltct" description="A contact (buddy).  Contacts inherit all capabilities of list objects." inherits="list object">
-			<property name="owning account" code="AcAC" type="account" access="r" description="The account on which this contact resides."/>
-			<property name="visible" code="AVsB" type="boolean" description="Is this contact visible in the contact list?"/>
-		</class>
-		<class name="content" code="AcoA" description="A basic unit of content. Includes messages, status changes, events, etc." inherits="item">
-			<property name="content chat" code="AcCh" type="chat" description="The chat in which this content resides."/>
-			<property name="content date" code="AcDa" type="date" access="r" description="The date this content was received."/>
-			<property name="destination" code="AcoD" type="list object" access="r" description="The destination of this content."/>
-			<property name="is outgoing" code="AcIO" type="boolean" access="r" description="Is this content outgoing?"/>
-			<property name="plain message" code="AcMs" type="Unicode text" description="The message of this content, in plain text (losing all formatting and embedded information)."/>
-				<synonym name="plainText message" />
-			</property>
-			<property name="HTML message" code="AcMh" type="Unicode text" description="The message of this content, as HTML source."/>
-			<property name="styled message" code="AcMr" type="styled Unicode text" description="The message of this content, as styled text. Preserves formatting, though obviously images and such will be stripped."/>
-			<property name="should display" code="AcDC" type="boolean" description="Should this message be displayed in its chat? (Useful when creating your own content objects.)"/>
-			<property name="should filter" code="AcFC" type="boolean" description="Should this message be filtered by message filters? (Useful when creating your own content objects.)"/>
-			<property name="should send" code="AcSC" type="boolean" description="Should this message be sent? This is relevant only if &ldquo;is outgoing&rdquo; is true. (Useful when creating your own content objects.)"/>
-			<property name="should track" code="AcTC" type="boolean" description="Should this message be tracked? For example, should Adium alert the user if it has not been viewed? (Useful when creating your own content objects.)"/>
-			<property name="source" code="AcoS" type="list object" access="r" description="The contact from whom this content originated."/>
-		</class>
-		<class name="content message" code="AcmA" description="A content object containing a message to or from a chat. Inherits from content." inherits="content">
-			<property name="is autoreply" code="AcAR" type="boolean" description="Is this message an automatic reply?"/>
-		</class>
-		<class name="list object" code="ltob" description="A contact or account." inherits="item">
-			<property name="display name" code="AdpN" type="Unicode text" description="The name, potentially specified by the user or via the address book, to display for this object."/>
-			<property name="ID" code="ID  " type="Unicode text" access="r" description="A unique identifier for this object."/>
-			<property name="idle time" code="Adtm" type="integer" access="r" description="How long, in seconds, this contact or account has been idle."/>
-			<property name="image" code="AusI" type="TIFF picture" description="An image for this contact or account."/>
-			<property name="long display name" code="ALdN" type="Unicode text" access="r" description="A possibly longer form of the name to display for this object, which has no length restrictions and may include the UID of this object."/>
-			<property name="notes" code="AnoT" type="Unicode text" description="Notes on this object."/>
-			<property name="online" code="AcOn" type="boolean" access="r" description="Is this account or contact online?"/>
-			<property name="service class" code="AsSC" type="Unicode text" access="r" description="Same as service ID in most cases; a general class of compatible protocols.  This is currently only different for AIM, ICQ, and .Mac, all of which have different service IDs but the same service class (AIM-compatible). For future compatibility, this is the recommended service identifier.">
-				<synonym name="serviceClass" />
-			</property>
-			<property name="service ID" code="AsID" type="Unicode text" access="r" description="Specific service (such as AIM, ICQ, or MSN) of this object. (See also service class.)">
-				<synonym name="serviceID" />
-			</property>
-			<property name="status message" code="Amsg" type="Unicode text" access="r" description="A message describing the status of this contact or account (&apos;away message&apos; in AIM terminology)."/>
-			<property name="status type" code="Atat" type="ACst" access="r" description="The status of this contact or account."/>
-			<property name="UID" code="AUID" type="Unicode text" access="r" description="UID (screenname, user ID, nick) of this object."/>
-		</class>
-		<class name="status" code="AISt" description="A status and all associated attributes which can be set on or retrieved from one or more accounts." inherits="item">
-			<property name="autoreply is status message" code="AAiS" type="boolean" description="Does this status treat its status message as an auto reply? If true, the value of the &ldquo;autoreply string&rdquo; attribute is ignored."/>
-			<property name="autoreply string" code="AARs" type="Unicode text" description="This status&apos;s auto reply; when setting, HTML may be optionally passed."/>
-			<property name="has an auto reply" code="AhAR" type="boolean" description="Does this status send an auto reply?"/>
-			<property name="icon" code="AISi" type="TIFF picture" access="r" description="An icon which represents this status to the user."/>
-			<property name="initial idle time" code="ASFt" type="real" description="Amount of time (in seconds) to set the user as idle when entering this status. Only used if &apos;should force initial idle time&apos; is YES."/>
-			<property name="should force idle" code="ASFi" type="boolean" description="Should this status force the user into an idle state regardless of computer activity?"/>
-			<property name="status message string" code="ASms" type="Unicode text" description="This status&apos;s status message; when setting, HTML may optionally be passed."/>
-			<property name="status name" code="ASSn" type="Unicode text" description="A specific name for this status; this further refines what is specified by the type.  This will be used by protocols as appropriate. For example, for AIM, the status name is irrelevant; all away statuses are a simple Away, all available statuses are a sim"/>
-			<property name="title" code="ASti" type="Unicode text" description="The title of this status. If not explicitly set, the title is automatically determined from the other attributes."/>
-			<property name="type" code="ASSy" type="AsSt" description="The AIStatusType of this status -- available, away, invisible, or offline."/>
-			<property name="unique status ID" code="ASID" type="Unicode text" access="r" description="A unique ID for this status"/>
-		</class>
-		<enumeration name="ACst" code="ACst">
-			<enumerator name="available" code="avaL"/>
-			<enumerator name="away" code="awaY"/>
-			<enumerator name="away and idle" code="aYiE"/>
-			<enumerator name="idle" code="idlE"/>
-			<enumerator name="offline" code="offL"/>
-			<enumerator name="unknown" code="unkN"/>
-		</enumeration>
-		<enumeration name="AOst" code="AOst">
-			<enumerator name="connected" code="conn"/>
-			<enumerator name="connecting" code="cong"/>
-			<enumerator name="disconnected" code="dcon"/>
-			<enumerator name="disconnecting" code="dcng"/>
-		</enumeration>
-		<enumeration name="AsSt" code="AsSt">
-			<enumerator name="available" code="avaL"/>
-			<enumerator name="away" code="awaY"/>
-			<enumerator name="invisible" code="aSaI"/>
-			<enumerator name="offline" code="offL"/>
-		</enumeration>
-	</suite>
-
-	<suite name="Type Definitions" code="tpdf" description="Records used in scripting Adium">
-		<class name="print settings" code="pset">
-			<property name="copies" code="lwcp" type="integer" description="the number of copies of a document to be printed"/>
-			<property name="collating" code="lwcl" type="boolean" description="Should printed copies be collated?"/>
-			<property name="starting page" code="lwfp" type="integer" description="the first page of the document to be printed"/>
-			<property name="ending page" code="lwlp" type="integer" description="the last page of the document to be printed"/>
-			<property name="pages across" code="lwla" type="integer" description="number of logical pages laid across a physical page"/>
-			<property name="pages down" code="lwld" type="integer" description="number of logical pages laid out down a physical page"/>
-			<property name="error handling" code="lweh" type="enum" description="how errors are handled"/>
-			<property name="fax number" code="faxn" type="string" description="for fax number"/>
-			<property name="target printer" code="trpr" type="string" description="for target printer"/>
-		</class>
-		<enumeration name="enum" code="enum">
-			<enumerator name="standard" code="lwst" description="Standard PostScript error handling"/>
-			<enumerator name="detailed" code="lwdt" description="print a detailed report of PostScript errors"/>
-		</enumeration>
-	</suite>
 </dictionary>

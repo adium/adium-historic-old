@@ -7,8 +7,12 @@
 
 #import <Cocoa/Cocoa.h>
 
+@class AIStatus;
+
 @interface AIApplication : NSApplication {
 
 }
-
+- (void)insertInStatuses:(AIStatus *)status atIndex:(unsigned int)i;
+- (void)removeFromStatusesAtIndex:(unsigned int)i;
+- (void)replaceInStatuses:(AIStatus *)status atIndex:(unsigned int)i;
 @end
