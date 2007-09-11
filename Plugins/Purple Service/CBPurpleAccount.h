@@ -26,9 +26,6 @@
 
 	NSMutableDictionary	*customEmoticonWaitingDict;
 
-	NSString			*lastDisconnectionError;
-    int                 reconnectAttemptsPerformed;
-	
 	NSMutableArray		*permittedContactsArray;
 	NSMutableArray		*deniedContactsArray;	
 	

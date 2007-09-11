@@ -179,7 +179,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 		}
 	}
 	
-	return shouldAttemptReconnect;
+	return ([super shouldAttemptReconnectAfterDisconnectionError:disconnectionError] && shouldAttemptReconnect);
 }
 
 - (NSString *)connectionStringForStep:(int)step

@@ -16,6 +16,7 @@
 
 #import <Adium/AIAbstractAccount.h>
 #import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIStatusControllerProtocol.h>
@@ -32,6 +33,10 @@
 #import <AIUtilities/AISystemNetworkDefaults.h>
 
 #define FILTERED_STRING_REFRESH    30.0    //delay in seconds between refresh of our attributed string statuses when needed
+
+#define RECONNECT_BASE_TIME				1.75	//Reconnect wait time is base^(try) in seconds
+#define RECONNECT_MIN_TIME				5.0		//Minimum time in seconds to wait between reconnect attempts
+#define RECONNECT_MAX_TIME				600.0	//Maximum time in seconds to wait between reconnect attempts
 
 #define	ACCOUNT_DEFAULTS			@"AccountDefaults"
 
@@ -83,6 +88,7 @@
 		delayedUpdateStatusTimer = nil;
 		delayedUpdateStatusTarget = nil;
 		silenceAllContactUpdatesTimer = nil;
+		lastDisconnectionError = nil;
 		disconnectedByFastUserSwitch = NO;
 
 		//Register to be notified of dynamic content updates
@@ -113,6 +119,7 @@
 
 - (void)dealloc
 {
+	[lastDisconnectionError release];
 	[delayedUpdateStatusTarget release];
 	[delayedUpdateStatusTimer invalidate]; [delayedUpdateStatusTimer release];
 
@@ -244,9 +251,17 @@
 	[self setPreference:[NSNumber numberWithBool:inEnabled]
 				 forKey:KEY_ENABLED
 				  group:GROUP_ACCOUNT_STATUS];
-	
+
+	if (!inEnabled) {
+		[self setLastDisconnectionError:nil];
+		[self cancelAutoReconnect];
+	}
+
 	//We don't update the display name unless we're enabled, so update it now
 	[self updateStatusForKey:KEY_ACCOUNT_DISPLAY_NAME];
+	
+    //Reset reconnection attempts
+    reconnectAttemptsPerformed = 0;
 }
 
 /*!
@@ -992,6 +1007,8 @@
 	 */
 	if (!shouldBeOnline) {
 		[self setPasswordTemporarily:nil];
+		[self setLastDisconnectionError:nil];
+		[self cancelAutoReconnect];
 	}
 }
 
@@ -999,9 +1016,10 @@
 {
 	BOOL    online = [self online];
 	BOOL	connecting = [[self statusObjectForKey:@"Connecting"] boolValue];
+	BOOL	reconnecting = ([self statusObjectForKey:@"Waiting to Reconnect"] != nil);
 	
 	//If online or connecting set the account offline, otherwise set it to online
-	[self setShouldBeOnline:!(online || connecting)]; 	
+	[self setShouldBeOnline:!(online || connecting || reconnecting)]; 	
 }
 
 /*!
@@ -1030,9 +1048,13 @@
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NotifyLater];
 	[self setStatusObject:nil forKey:@"ConnectionProgressString" notify:NotifyLater];
 	[self setStatusObject:nil forKey:@"ConnectionProgressPercent" notify:NotifyLater];	
+    [self setStatusObject:nil forKey:@"Waiting to Reconnect" notify:NotifyLater];
 
 	//Apply any changes
 	[self notifyOfChangedStatusSilently:NO];
+	
+    //Reset reconnection attempts
+    reconnectAttemptsPerformed = 0;
 
 	//Update our status and idle status to ensure our newly connected account is in the states we want it to be
 	if ([[self statusState] statusType] == AIOfflineStatusType) {
@@ -1057,6 +1079,7 @@
 
 - (void)cancelAutoReconnect
 {
+    [self setStatusObject:nil forKey:@"Waiting to Reconnect" notify:NotifyNow];
 	[NSObject cancelPreviousPerformRequestsWithTarget:self
 											 selector:@selector(performAutoreconnect)
 											   object:nil];
@@ -1070,6 +1093,7 @@
  */
 - (void)autoReconnectAfterDelay:(NSTimeInterval)delay
 {
+    [self setStatusObject:[NSDate dateWithTimeIntervalSinceNow:delay] forKey:@"Waiting to Reconnect" notify:NotifyNow];
 	[self performSelector:@selector(performAutoreconnect)
 			   withObject:nil
 			   afterDelay:delay];
@@ -1143,6 +1167,42 @@
  */
 - (void)didDisconnect
 {
+	//If we were disconnected unexpectedly, attempt a reconnect. Give subclasses a chance to handle the disconnection error.
+	if ([self shouldBeOnline] && lastDisconnectionError) {
+		if ([self shouldAttemptReconnectAfterDisconnectionError:&lastDisconnectionError]) {
+			// Set our retry time to RECONNECT_BASE_TIME^reconnectAttemptsPerformed
+			double reconnectDelay = pow(RECONNECT_BASE_TIME, (double)reconnectAttemptsPerformed);
+			
+			// Make sure we're not going too fast
+			if (reconnectDelay < RECONNECT_MIN_TIME)
+				reconnectDelay = RECONNECT_MIN_TIME;
+			// Or too slow
+			else if (reconnectDelay > RECONNECT_MAX_TIME)
+				reconnectDelay = RECONNECT_MAX_TIME;
+			
+			AILog(@"%@: Disconnected (\"%@\"): Automatically reconnecting in %0f seconds (%i attempts performed)",
+				  self, lastDisconnectionError, reconnectDelay, reconnectAttemptsPerformed);
+			
+			[self autoReconnectAfterDelay:reconnectDelay];
+			reconnectAttemptsPerformed++;
+			
+			// Output an error after we've tried a few times.
+			if (reconnectAttemptsPerformed == 4) {
+				[[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Error",[self UID],[[self service] shortDescription]]
+												withDescription:lastDisconnectionError];
+			}
+			
+		} else {
+			if (lastDisconnectionError) {
+				[[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Error",[self UID],[[self service] shortDescription]]
+												withDescription:lastDisconnectionError];
+			}
+			
+			//Reset reconnection attempts
+			reconnectAttemptsPerformed = 0;
+		}
+	}
+	
 	//Remove all contacts
 	[self removeAllContacts];
 	
@@ -1176,6 +1236,33 @@
 - (void)disconnectScriptCommand:(NSScriptCommand *)command
 {
 	[self setShouldBeOnline:NO];
+}
+
+/*!
+ * @brief Last disconnection error
+ */
+- (NSString *)lastDisconnectionError
+{
+	return lastDisconnectionError;
+}
+
+/*!
+ * @brief Set the last disconnection error
+ */
+- (void)setLastDisconnectionError:(NSString *)inError
+{
+	if (lastDisconnectionError != inError) {
+		[lastDisconnectionError release];
+		lastDisconnectionError = [inError retain];
+	}
+}
+
+/*!
+ * @brief By default, always attempt to reconnect.  Subclasses may override this to manage reconnect behavior.
+ */
+- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
+{
+	return YES;
 }
 
 //Fast user switch disconnecting ---------------------------------------------------------------------------------------

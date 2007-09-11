@@ -24,13 +24,18 @@
 #import <AIUtilities/AIVerticallyCenteredTextCell.h>
 #import <AIUtilities/AITableViewAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIMutableStringAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIService.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIServiceMenu.h>
 #import <Adium/AIStatusIcons.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
 #import "KFTypeSelectTableView.h"
+
+#define MINIMUM_ROW_HEIGHT				34
+#define MINIMUM_CELL_SPACING			 4
 
 #define	ACCOUNT_DRAG_TYPE				@"AIAccount"	    			//ID for an account drag
 
@@ -39,6 +44,9 @@
 @interface AIAccountListPreferences (PRIVATE)
 - (void)configureAccountList;
 - (void)accountListChanged:(NSNotification *)notification;
+
+- (void)calculateHeightForRow:(int)row;
+- (void)calculateAllHeights;
 @end
 
 /*!
@@ -74,6 +82,8 @@
 	[self configureAccountList];
 	[self updateAccountOverview];
 	
+	[requiredHeightDict release]; requiredHeightDict = [[NSMutableDictionary alloc] init];
+	
 	//Build the 'add account' menu of each available service
 	NSMenu	*serviceMenu = [AIServiceMenu menuOfServicesWithTarget:self 
 												activeServicesOnly:NO
@@ -99,8 +109,14 @@
 
 	//Observe status icon pack changes
 	[[adium notificationCenter] addObserver:self
-								   selector:@selector(statusIconsChanged:)
+								   selector:@selector(iconPackDidChange:)
 									   name:AIStatusIconSetDidChangeNotification
+									 object:nil];
+	
+	//Observe service icon pack changes
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(iconPackDidChange:)
+									   name:AIServiceIconSetDidChangeNotification
 									 object:nil];
 }
 
@@ -113,6 +129,7 @@
 	[[adium notificationCenter] removeObserver:self];
 	
 	[accountArray release]; accountArray = nil;
+	[requiredHeightDict release]; requiredHeightDict = nil;
 }
 
 - (void)dealloc
@@ -133,9 +150,10 @@
 		if ([inModifiedKeys containsObject:@"Online"] ||
 			[inModifiedKeys containsObject:@"Enabled"] ||
 		   [inModifiedKeys containsObject:@"Connecting"] ||
+		   [inModifiedKeys containsObject:@"Waiting to Reconnect"] ||
 		   [inModifiedKeys containsObject:@"Disconnecting"] ||
-//		   [inModifiedKeys containsObject:@"ConnectionProgressString"] ||
-//		   [inModifiedKeys containsObject:@"ConnectionProgressPercent"] ||
+		   [inModifiedKeys containsObject:@"ConnectionProgressString"] ||
+		   [inModifiedKeys containsObject:@"ConnectionProgressPercent"] ||
 		   [inModifiedKeys containsObject:@"IdleSince"] ||
 		   [inModifiedKeys containsObject:@"StatusState"]) {
 
@@ -143,6 +161,9 @@
 			int accountRow = [accountArray indexOfObject:inObject];
 			if (accountRow >= 0 && accountRow < [accountArray count]) {
 				[tableView_accountList setNeedsDisplayInRect:[tableView_accountList rectOfRow:accountRow]];
+				// Update the height of the row.
+				[self calculateHeightForRow:accountRow];
+				[tableView_accountList noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:accountRow]];
 			}
 			
 			//Update our account overview
@@ -230,7 +251,7 @@
 {
     int index = [tableView_accountList selectedRow];
 
-    if (index != -1)
+    if (index >= 0 && index < [accountArray count])
 		[[[adium accountController] deleteAccount:[accountArray objectAtIndex:index]] beginSheetModalForWindow:[[self view] window]];
 }
 
@@ -256,16 +277,16 @@
 	//Configure our table view
 	[tableView_accountList setTarget:self];
 	[tableView_accountList setDoubleAction:@selector(doubleClickInTableView:)];
-	[tableView_accountList setIntercellSpacing:NSMakeSize(4,4)];
+	[tableView_accountList setIntercellSpacing:NSMakeSize(MINIMUM_CELL_SPACING, MINIMUM_CELL_SPACING)];
 
 	//Enable dragging of accounts
 	[tableView_accountList registerForDraggedTypes:[NSArray arrayWithObjects:ACCOUNT_DRAG_TYPE,nil]];
 	
     //Custom vertically-centered text cell for account names
-    cell = [[AIVerticallyCenteredTextCell alloc] init];
+    cell = [[AIImageTextCell alloc] init];
     [cell setFont:[NSFont boldSystemFontOfSize:13]];
-	[cell setLineBreakMode:NSLineBreakByTruncatingMiddle];
     [[tableView_accountList tableColumnWithIdentifier:@"name"] setDataCell:cell];
+	[cell setLineBreakMode:NSLineBreakByWordWrapping];
 	[cell release];
 
     cell = [[AIVerticallyCenteredTextCell alloc] init];
@@ -300,12 +321,13 @@
 	[tableView_accountList reloadData];
 	[self updateControlAvailability];
 	[self updateAccountOverview];
+	[self calculateAllHeights];
 }
 
 /*!
  * @brief Status icons changed, refresh our table
  */
-- (void)statusIconsChanged:(NSNotification *)notification
+- (void)iconPackDidChange:(NSNotification *)notification
 {
 	[tableView_accountList reloadData];
 }
@@ -365,6 +387,96 @@
 	[button_deleteAccount setEnabled:selection];
 }
 
+/*!
+* @brief Returns the status string associated with the account
+ *
+ * Returns a connection status if connecting, or an error if disconnected with an error
+ */
+- (NSString *)statusMessageForAccount:(AIAccount *)account
+{
+	NSString *statusMessage = nil;
+	
+	if ([account statusObjectForKey:@"ConnectionProgressString"] && [[account statusObjectForKey:@"Connecting"] boolValue]) {
+		// Connection status if we're currently connecting, with the percent at the end
+		statusMessage = [[account statusObjectForKey:@"ConnectionProgressString"] stringByAppendingFormat:@" (%2.f%%)", [[account statusObjectForKey:@"ConnectionProgressPercent"] floatValue]*100.0];
+	} else if ([account lastDisconnectionError] && ![[account statusObjectForKey:@"Online"] boolValue] && ![[account statusObjectForKey:@"Connecting"] boolValue]) {
+		// If there's an error and we're not online and not connecting
+		NSMutableString *returnedMessage = [[[account lastDisconnectionError] mutableCopy] autorelease];
+		
+		// Replace the LibPurple error prefix
+		[returnedMessage replaceOccurrencesOfString:@"Could not establish a connection with the server:\n"
+										 withString:@"Error: "
+											options:NSLiteralSearch
+											  range:NSMakeRange(0, [returnedMessage length])];
+		// Remove newlines from the error message
+		[returnedMessage convertNewlinesToSlashes];
+		
+		statusMessage = returnedMessage;
+	}
+	
+	return statusMessage;
+}
+
+/*!
+* @brief Calculates the height of a given row and stores it
+ */
+- (void)calculateHeightForRow:(int)row
+{	
+	// Make sure this is a valid row.
+	if (row < 0 || row >= [accountArray count]) {
+		return;
+	}
+	
+	AIAccount		*account = [accountArray objectAtIndex:row];
+	float			necessaryHeight = MINIMUM_ROW_HEIGHT;
+	
+	// If there's a status message, let's try size to fit it.
+	if ([self statusMessageForAccount:account]) {
+		NSTableColumn		*tableColumn = [tableView_accountList tableColumnWithIdentifier:@"name"];
+		
+		[self tableView:tableView_accountList willDisplayCell:[tableColumn dataCell] forTableColumn:tableColumn row:row];
+		
+		// Main string (account name)
+		NSDictionary		*mainStringAttributes	= [NSDictionary dictionaryWithObjectsAndKeys:[NSFont boldSystemFontOfSize:13], NSFontAttributeName, nil];
+		NSAttributedString	*mainTitle = [[NSAttributedString alloc] initWithString:([[account formattedUID] length] ? [account formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT)
+																		 attributes:mainStringAttributes];
+		
+		// Substring (the status message)
+		NSDictionary		*subStringAttributes	= [NSDictionary dictionaryWithObjectsAndKeys:[NSFont systemFontOfSize:10], NSFontAttributeName, nil];
+		NSAttributedString	*subStringTitle = [[NSAttributedString alloc] initWithString:[self statusMessageForAccount:account]
+																			  attributes:subStringAttributes];
+		
+		// Both heights combined, with spacing in-between
+		float combinedHeight = [mainTitle heightWithWidth:[tableColumn width]] + [subStringTitle heightWithWidth:[tableColumn width]] + MINIMUM_CELL_SPACING;
+		
+		// Make sure we're not down-sizing
+		if (combinedHeight > necessaryHeight) {
+			necessaryHeight = combinedHeight;
+		}
+		
+		[subStringTitle release];
+		[mainTitle release];
+	}
+	
+	// Cache the height value
+	[requiredHeightDict setObject:[NSNumber numberWithFloat:necessaryHeight]
+						   forKey:[NSNumber numberWithInt:row]];
+}
+
+/*!
+* @brief Calculates the height of all rows
+ */
+- (void)calculateAllHeights
+{
+	int accountNumber;
+
+	[requiredHeightDict removeAllObjects];
+
+	for (accountNumber = 0; accountNumber < [accountArray count]; accountNumber++) {
+		[self calculateHeightForRow:accountNumber];
+	}
+}
+
 
 //Account List Table Delegate ------------------------------------------------------------------------------------------
 #pragma mark Account List (Table Delegate)
@@ -389,13 +501,17 @@
  */
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
+	if (row < 0 || row >= [accountArray count]) {
+		return nil;
+	}
+	
 	NSString 	*identifier = [tableColumn identifier];
 	AIAccount	*account = [accountArray objectAtIndex:row];
 	
 	if ([identifier isEqualToString:@"service"]) {
 		return [[AIServiceIcons serviceIconForObject:account
 												type:AIServiceIconLarge
-										   direction:AIIconNormal] imageByScalingToSize:NSMakeSize(24,24)
+										   direction:AIIconNormal] imageByScalingToSize:NSMakeSize(MINIMUM_ROW_HEIGHT-2, MINIMUM_ROW_HEIGHT-2)
 																			   fraction:([account enabled] ?
 																						 1.0 :
 																						 0.75)];
@@ -413,6 +529,8 @@
 				title = AILocalizedString(@"Disconnecting",nil);
 			} else if ([[account statusObjectForKey:@"Online"] boolValue]) {
 				title = AILocalizedString(@"Online",nil);
+			} else if ([account statusObjectForKey:@"Waiting to Reconnect"]) {
+				title = AILocalizedString(@"Reconnecting", @"Used when the account will perform an automatic reconnection after a certain period of time.");
 			} else {
 				title = [[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_OFFLINE];
 			}
@@ -430,12 +548,24 @@
 	} else if ([identifier isEqualToString:@"enabled"]) {
 		return nil;
 
-	} else if ([identifier isEqualToString:@"icon"]) {
-		return [[account userIcon] imageByScalingToSize:NSMakeSize(28,28)];
-		
 	}
 
 	return nil;
+}
+/*!
+ * @brief Configure the height of each account for error messages if necessary
+ */
+- (float)tableView:(NSTableView *)tableView heightOfRow:(int)row
+{
+	// We should probably have this value cached.
+	float necessaryHeight = MINIMUM_ROW_HEIGHT;
+	
+	NSNumber *cachedHeight = [requiredHeightDict objectForKey:[NSNumber numberWithInt:row]];
+	if (cachedHeight) {
+		necessaryHeight = [cachedHeight floatValue];
+	}
+	
+	return necessaryHeight;
 }
 
 /*!
@@ -443,6 +573,11 @@
  */
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
+	// Make sure this row actually exists
+	if (row < 0 || row >= [accountArray count]) {
+		return;
+	}
+
 	NSString 	*identifier = [tableColumn identifier];
 	AIAccount	*account = [accountArray objectAtIndex:row];
 	
@@ -452,8 +587,12 @@
 	} else if ([identifier isEqualToString:@"name"]) {
 		[cell setEnabled:[account enabled]];
 
+		// Update the subString with our current status message (if it exists);
+		[cell setSubString:[self statusMessageForAccount:account]];
+		
 	} else if ([identifier isEqualToString:@"status"]) {
 		[cell setEnabled:([[account statusObjectForKey:@"Connecting"] boolValue] ||
+						  [account statusObjectForKey:@"Waiting to Reconnect"] ||
 						  [[account statusObjectForKey:@"Disconnecting"] boolValue] ||
 						  [[account statusObjectForKey:@"Online"] boolValue])];
 	}
@@ -467,7 +606,7 @@
  */
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-	if ([[tableColumn identifier] isEqualToString:@"enabled"]) {
+	if (row >= 0 && row < [accountArray count] && [[tableColumn identifier] isEqualToString:@"enabled"]) {
 		[[accountArray objectAtIndex:row] setEnabled:[(NSNumber *)object boolValue]];
 	}
 }

@@ -56,17 +56,19 @@
 
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
+	BOOL shouldAttemptReconnect = YES;
+	
 	if (disconnectionError && *disconnectionError) {
 		if (([*disconnectionError rangeOfString:@"401"].location != NSNotFound) ||
 			([*disconnectionError rangeOfString:@"Authentication Failure"].location != NSNotFound) ||
 			([*disconnectionError rangeOfString:@"Not Authorized"].location != NSNotFound)) {
 			[self serverReportedInvalidPassword];
 			
-			return NO;
+			shouldAttemptReconnect = NO;
 		}
 	}
 
-	return [super shouldAttemptReconnectAfterDisconnectionError:disconnectionError];
+	return ([super shouldAttemptReconnectAfterDisconnectionError:disconnectionError] && shouldAttemptReconnect);
 }
 
 @end

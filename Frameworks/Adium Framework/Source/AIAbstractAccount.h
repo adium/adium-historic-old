@@ -70,6 +70,9 @@
 - (void)disconnectScriptCommand:(NSScriptCommand *)command;
 - (void)serverReportedInvalidPassword;
 - (void)getProxyConfigurationNotifyingTarget:(id)target selector:(SEL)selector context:(id)context;
+- (NSString *)lastDisconnectionError;
+- (void)setLastDisconnectionError:(NSString *)inError;
+- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError;
 
 //FUS Disconnecting
 - (void)autoReconnectAfterDelay:(NSTimeInterval)delay;

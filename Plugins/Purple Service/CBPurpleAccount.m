@@ -55,9 +55,6 @@
 
 #define NO_GROUP						@"__NoGroup__"
 
-#define RECONNECT_BASE_TIME				1.75	//Reconnect time: base^(try) in seconds
-#define RECONNECT_MAX_TIME				600		//Maximum time in seconds to wait to reconnect
-
 #define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
 #define NEW_ACCOUNT_DISPLAY_TEXT		AILocalizedString(@"<New Account>", "Placeholder displayed as the name of a new account")
 
@@ -73,7 +70,6 @@
 
 - (ESFileTransfer *)createFileTransferObjectForXfer:(PurpleXfer *)xfer;
 
-- (void)displayError:(NSString *)errorDesc;
 - (NSNumber *)shouldCheckMail;
 
 - (void)configurePurpleAccountNotifyingTarget:(id)target selector:(SEL)selector;
@@ -1543,11 +1539,8 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
     [self silenceAllContactUpdatesForInterval:18.0];
 	[[adium contactController] delayListObjectNotificationsUntilInactivity];
 	
-    //Reset reconnection attempts
-    reconnectAttemptsPerformed = 0;
-
 	//Clear any previous disconnection error
-	[lastDisconnectionError release]; lastDisconnectionError = nil;
+	[self setLastDisconnectionError:nil];
 	
 	if(deletionDialog)
 		[purpleThread unregisterAccount:self];
@@ -1622,11 +1615,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
  */
 - (void)accountConnectionReportDisconnect:(NSString *)text
 {
-	//Retain the error message locally for use in -[CBPurpleAccount accountConnectionDisconnected]
-	if (lastDisconnectionError != text) {
-		[lastDisconnectionError release];
-		lastDisconnectionError = [text retain];
-	}
+	[self setLastDisconnectionError:text];
 
 	//We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:NotifyNow];
@@ -1644,52 +1633,16 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 /*!
  * @brief Our account has disconnected
  *
- * This is called after the accoutn disconnects for any reason
+ * This is called after the account disconnects for any reason
  */
 - (void)accountConnectionDisconnected
 {
-	BOOL			connectionIsSuicidal = ((account && account->gc) ? account->gc->wants_to_die : NO);
-
 	//Clear status objects which don't make sense for a disconnected account
 	[self setStatusObject:nil forKey:@"TextProfile" notify:NO];
 
 	//Apply any changes
 	[self notifyOfChangedStatusSilently:NO];
 	
-	//If we were disconnected unexpectedly, attempt a reconnect. Give subclasses a chance to handle the disconnection error.
-	//connectionIsSuicidal == TRUE when Purple thinks we shouldn't attempt a reconnect.
-	if ([self shouldBeOnline] && lastDisconnectionError) {
-		if ([self shouldAttemptReconnectAfterDisconnectionError:&lastDisconnectionError] && !(connectionIsSuicidal)) {
-			// Set our retry time to RECONNECT_BASE_TIME^reconnectAttemptsPerformed or RECONNECT_MAX_TIME, whichever is smallest.
-			double reconnectDelay = MIN(RECONNECT_MAX_TIME, pow(RECONNECT_BASE_TIME, (double)reconnectAttemptsPerformed));
-			
-			AILog(@"%@: Disconnected (%x: \"%@\"): Automatically reconnecting in %0f seconds (%i attempts performed)",
-				  self, (account ? account->gc : NULL), lastDisconnectionError, reconnectDelay, reconnectAttemptsPerformed);
-
-			[self autoReconnectAfterDelay:reconnectDelay];
-			reconnectAttemptsPerformed++;
-	
-		} else {
-			if (lastDisconnectionError) {
-				//Display then clear the last disconnection error
-//				[[adium interfaceController] account:self disconnectedWithError:lastDisconnectionError];
-
-				[self displayError:lastDisconnectionError];
-
-				[lastDisconnectionError release]; lastDisconnectionError = nil;
-			}
-			
-			//Reset reconnection attempts
-			reconnectAttemptsPerformed = 0;
-			
-			//Clear our desire to be online.
-			/*
-			[self setPreference:nil
-						 forKey:@"Online"
-						  group:GROUP_ACCOUNT_STATUS];
-			 */
-		}
-	}
 	[[adium interfaceController] unregisterContactListTooltipEntry:tunetooltip secondaryEntry:YES];
 	[tunetooltip release];
 	tunetooltip = nil;
@@ -1705,10 +1658,12 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 		[super alertForAccountDeletion:deletionDialog didReturn:NSAlertDefaultReturn];
 }
 
-//By default, always attempt to reconnect.  Subclasses may override this to manage reconnect behavior.
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
-	return YES;
+	// If libPurple considers the connection suicidal, don't attempt to reconnect.
+	BOOL connectionIsSuicidal = ((account && account->gc) ? account->gc->wants_to_die : NO);
+	
+	return !connectionIsSuicidal;
 }
 
 #pragma mark Registering
@@ -2422,8 +2377,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	}
 	
 	//Defaults
-    reconnectAttemptsPerformed = 0;
-	lastDisconnectionError = nil;
+	[self setLastDisconnectionError:nil];
 	
 	permittedContactsArray = [[NSMutableArray alloc] init];
 	deniedContactsArray = [[NSMutableArray alloc] init];
@@ -2559,8 +2513,6 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 {	
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 
-	[lastDisconnectionError release]; lastDisconnectionError = nil;
-		
 	[permittedContactsArray release];
 	[deniedContactsArray release];
 	
@@ -2690,12 +2642,6 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 					   forKey:KEY_TYPING
 					   notify:NotifyNow];
     }
-}
-
-- (void)displayError:(NSString *)errorDesc
-{
-    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Error",[self UID],[[self service] shortDescription]]
-                                    withDescription:errorDesc];
 }
 
 - (NSNumber *)shouldCheckMail

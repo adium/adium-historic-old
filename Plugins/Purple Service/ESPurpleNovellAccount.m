@@ -39,7 +39,7 @@ gboolean purple_init_novell_plugin(void);
 		}
 	}
 	
-	return shouldAttemptReconnect;
+	return ([super shouldAttemptReconnectAfterDisconnectionError:disconnectionError] && shouldAttemptReconnect);
 }
 
 #pragma mark Status

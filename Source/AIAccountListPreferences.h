@@ -31,6 +31,8 @@
     //Account List
     NSArray							*accountArray;
     AIAccount						*tempDragAccount;
+
+	NSMutableDictionary				*requiredHeightDict;
 }
 
 - (IBAction)deleteAccount:(id)sender;
@@ -38,5 +40,6 @@
 - (IBAction)editSelectedAccount:(id)sender;
 - (void)updateAccountOverview;
 - (void)updateControlAvailability;
+- (NSString *)statusMessageForAccount:(AIAccount *)account;
 
 @end
