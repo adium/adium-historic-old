@@ -97,7 +97,6 @@
  */
 - (void)setStatusObject:(id)value forKey:(NSString *)key afterDelay:(NSTimeInterval)delay
 {
-	NSLog(@"------------------------------------------------------------------------------------------------------------------------------------value:%@ forKey:%@ afterDelay:%f",value,key,delay);
 	[self performSelector:@selector(_applyDelayedStatus:)
 			   withObject:[NSDictionary dictionaryWithObjectsAndKeys:
 				   key, KEY_KEY,
