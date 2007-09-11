@@ -140,7 +140,7 @@
 									   selector:@selector(toggleUserlist:)
 									   name:@"toggleUserlist"
 									   object:nil];
-		
+
 		[splitView_textEntryHorizontal setDividerThickness:6]; //Default is 9
 		[splitView_textEntryHorizontal setDrawsDivider:NO];
 		
