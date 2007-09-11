@@ -2468,9 +2468,13 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 		switch(returnCode) {
 			case NSAlertDefaultReturn:
 				willBeDeleted = YES;
-				deletionDialog = dialog;
-				[self setShouldBeOnline:NO];
-				// further progress happens in -accountConnectionDisconnected
+				if(!account || !purple_account_is_connected(account)) {
+					[super alertForAccountDeletion:dialog didReturn:NSAlertDefaultReturn];
+				} else {
+					deletionDialog = dialog;
+					[self setShouldBeOnline:NO];
+					// further progress happens in -accountConnectionDisconnected
+				}
 				break;
 			default:
 				[super alertForAccountDeletion:dialog didReturn:returnCode];
