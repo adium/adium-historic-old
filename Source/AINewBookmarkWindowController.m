@@ -2,6 +2,7 @@
 #import "AIBookmarkController.h"
 #import "AINewGroupWindowController.h"
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <Adium/AIServiceMenu.h>
 #import <AIInterfaceController.h>
