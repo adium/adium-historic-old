@@ -538,7 +538,7 @@
 		34A88E180C7A26E0006EB7D4 /* AIPasswordPromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = F55B416603AB8BFC01A8010A /* AIPasswordPromptController.m */; };
 		34A88E190C7A26E1006EB7D4 /* AIPasswordPromptController.h in Headers */ = {isa = PBXBuildFile; fileRef = F55B416E03AB8C3201A8010A /* AIPasswordPromptController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34A9705A0C965F2400F46006 /* AISideSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A970590C965F2400F46006 /* AISideSplitView.m */; };
-		34A970680C965F6900F46006 /* AINewBookmarkWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A970660C965F6900F46006 /* AINewBookmarkWindowController.m */; };
+		34A970680C965F6900F46006 /* AINewBookmarkWindowController.h in Sources */ = {isa = PBXBuildFile; fileRef = 34A970660C965F6900F46006 /* AINewBookmarkWindowController.h */; };
 		34A9706C0C965F8100F46006 /* AIBookmarkController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A9706A0C965F8100F46006 /* AIBookmarkController.m */; };
 		34A9706F0C965F8E00F46006 /* AIAddBookmarkPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A9706D0C965F8E00F46006 /* AIAddBookmarkPlugin.m */; };
 		34A970740C965FC800F46006 /* AddBookmark.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A970730C965FC800F46006 /* AddBookmark.nib */; };
@@ -2762,8 +2762,8 @@
 		34A96FF10C96564D00F46006 /* AIChatCommandsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIChatCommandsController.h; path = Source/AIChatCommandsController.h; sourceTree = "<group>"; };
 		34A970580C965F2400F46006 /* AISideSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AISideSplitView.h; path = "Plugins/Dual Window Interface/AISideSplitView.h"; sourceTree = "<group>"; };
 		34A970590C965F2400F46006 /* AISideSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AISideSplitView.m; path = "Plugins/Dual Window Interface/AISideSplitView.m"; sourceTree = "<group>"; };
-		34A970660C965F6900F46006 /* AINewBookmarkWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AINewBookmarkWindowController.m; path = "/Users/evands/adium-summer_of_code_2007/multi-user_chat/Source/AINewBookmarkWindowController.m"; sourceTree = "<absolute>"; };
-		34A970670C965F6900F46006 /* AINewBookmarkWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AINewBookmarkWindowController.h; path = "/Users/evands/adium-summer_of_code_2007/multi-user_chat/Source/AINewBookmarkWindowController.h"; sourceTree = "<absolute>"; };
+		34A970660C965F6900F46006 /* AINewBookmarkWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AINewBookmarkWindowController.h; path = Source/AINewBookmarkWindowController.h; sourceTree = "<group>"; };
+		34A970670C965F6900F46006 /* AINewBookmarkWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AINewBookmarkWindowController.m; path = Source/AINewBookmarkWindowController.m; sourceTree = "<group>"; };
 		34A9706A0C965F8100F46006 /* AIBookmarkController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIBookmarkController.m; path = Source/AIBookmarkController.m; sourceTree = "<group>"; };
 		34A9706B0C965F8100F46006 /* AIBookmarkController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIBookmarkController.h; path = Source/AIBookmarkController.h; sourceTree = "<group>"; };
 		34A9706D0C965F8E00F46006 /* AIAddBookmarkPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAddBookmarkPlugin.m; path = Source/AIAddBookmarkPlugin.m; sourceTree = "<group>"; };
@@ -4773,10 +4773,10 @@
 				11C157D904A88E04008E0C76 /* AIEmoticonController.m */,
 				34A9706A0C965F8100F46006 /* AIBookmarkController.m */,
 				34A9706B0C965F8100F46006 /* AIBookmarkController.h */,
-				34A970660C965F6900F46006 /* AINewBookmarkWindowController.m */,
-				34A970670C965F6900F46006 /* AINewBookmarkWindowController.h */,
-				34A9706D0C965F8E00F46006 /* AIAddBookmarkPlugin.m */,
+				34A970660C965F6900F46006 /* AINewBookmarkWindowController.h */,
+				34A970670C965F6900F46006 /* AINewBookmarkWindowController.m */,
 				34A9706E0C965F8E00F46006 /* AIAddBookmarkPlugin.h */,
+				34A9706D0C965F8E00F46006 /* AIAddBookmarkPlugin.m */,
 				34A970730C965FC800F46006 /* AddBookmark.nib */,
 				34A9707D0C96602200F46006 /* sidebarStatusAreaBackground.png */,
 				34A970750C965FE400F46006 /* sidebarResizeWidget.png */,
@@ -8818,7 +8818,7 @@
 				0C79A2D90C5E633F005AE6FA /* AIMoveCommand.m in Sources */,
 				0C27C8650C75A23F002AA363 /* NSStringScriptingAdditions.m in Sources */,
 				34A9705A0C965F2400F46006 /* AISideSplitView.m in Sources */,
-				34A970680C965F6900F46006 /* AINewBookmarkWindowController.m in Sources */,
+				34A970680C965F6900F46006 /* AINewBookmarkWindowController.h in Sources */,
 				34A9706C0C965F8100F46006 /* AIBookmarkController.m in Sources */,
 				34A9706F0C965F8E00F46006 /* AIAddBookmarkPlugin.m in Sources */,
 			);
