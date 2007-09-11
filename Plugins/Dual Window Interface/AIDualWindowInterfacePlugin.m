@@ -87,11 +87,13 @@
 	AIMessageWindowController	*container = nil;
 	AIMessageViewController 	*messageView = nil;
 	
-	//Create the messasge tab (if necessary)
+	//Create the message tab (if necessary)
 	if (!messageTab) {
 		container = [self openContainerWithID:containerID name:containerID];
 		messageView = [AIMessageViewController messageDisplayControllerForChat:chat];
-
+		
+		//
+		
 		//Add chat to container
 		messageTab = [AIMessageTabViewItem messageTabWithView:messageView];
 		[chat setStatusObject:messageTab

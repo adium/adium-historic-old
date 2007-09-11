@@ -296,9 +296,10 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 {
 	NSAttributedString	*displayName = [[NSAttributedString alloc] initWithString:[self labelString]
 																	   attributes:[self labelAttributes]];
+																	   
 	NSSize				nameSize = [displayName size];
 	NSRect				rect = inRect;
-	
+
 	if (nameSize.width > rect.size.width) nameSize.width = rect.size.width;
 	if (nameSize.height > rect.size.height) nameSize.height = rect.size.height;
 
@@ -364,6 +365,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 																	 [listObject longDisplayName])),
 			(rightText ? rightText : @"")];
 	}
+
 }
 
 - (void)setUseAliasesAsRequested:(BOOL)inFlag

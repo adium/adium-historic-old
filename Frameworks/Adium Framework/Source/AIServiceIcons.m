@@ -65,7 +65,6 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 			[serviceIcons[iconType][iconDirection] setObject:serviceIcon forKey:[service serviceID]];
 		}
 	}
-
 	return serviceIcon;
 }
 

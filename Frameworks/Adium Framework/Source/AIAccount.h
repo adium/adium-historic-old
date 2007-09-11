@@ -134,6 +134,8 @@ typedef enum {
 	NSTimer						*delayedUpdateStatusTimer;
 	AIListContact				*delayedUpdateStatusTarget;
 	NSTimer						*silenceAllContactUpdatesTimer;
+
+	id							delegate;						//delegate for chat commands
 }
 
 - (void)initAccount;
@@ -203,6 +205,15 @@ typedef enum {
 - (BOOL)canSendImagesForChat:(AIChat *)inChat;
 
 - (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict didAuthorize:(BOOL)inDidAuthorize;
+
+-(NSMenu*)actionsForChat:(AIChat*)chat;
+
+//delegate accessor methods
+-(id)delegate;
+-(void)setDelegate:(id)newDelegate;
+
+//chat actions
+-(void)verifyCommand:(NSString*)commandName forChat:(AIChat*)chat;
 
 @end
 

@@ -54,6 +54,7 @@ typedef enum
 	BOOL			hasShownDocumentButton;
 	
 	BOOL			toolbar_selectedTabChanged;
+	NSToolbar *toolbar;
 }
 
 + (AIMessageWindowController *)messageWindowControllerForInterface:(AIDualWindowInterfacePlugin *)inInterface
@@ -76,5 +77,8 @@ typedef enum
 
 //Tabs
 - (void)updateIconForTabViewItem:(AIMessageTabViewItem *)tabViewItem;
+
+//Toolbar
+-(void)removeToolbarItemWithIdentifier:(NSString*)identifier;
 
 @end

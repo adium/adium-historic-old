@@ -161,7 +161,7 @@
 				   [super displayName] :
 				   [parentContact displayName]);
 
-	//If a display name was found, return it; otherwise, return the formattedUID
+	//If a display name was found, return it; otherwise, return the formattedUID  
     return displayName ? displayName : [self formattedUID];
 }
 

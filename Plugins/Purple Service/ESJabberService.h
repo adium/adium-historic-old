@@ -17,7 +17,7 @@
 #import "PurpleService.h"
 
 @interface ESJabberService : PurpleService {
-    
+
 }
 
 @end

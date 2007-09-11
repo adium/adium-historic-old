@@ -16,6 +16,7 @@
 
 #import <Adium/AIWindowController.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIListContact.h>
 #import <AIUtilities/AISmoothTooltipTracker.h>
 
 @class AIAutoScrollView, AIListOutlineView, AIListContactCell, AIListGroupCell, ESObjectWithStatus, AIListObject, AIChat;
@@ -180,7 +181,10 @@ typedef enum {
 	
 	BOOL								showTooltips;
 	BOOL								showTooltipsInBackground;
-}
+
+	}
+	NSArray*							draggedContacts;
+	NSString*							dragOperation;
 
 - (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate;
 - (id)delegate;
@@ -215,6 +219,9 @@ typedef enum {
 
 - (void)setShowTooltips:(BOOL)inShowTooltips;
 - (void)setShowTooltipsInBackground:(BOOL)inShowTooltipsInBackground;
+- (void)setDraggedContacts:(NSArray*)contacts;
+- (NSArray*)draggedContacts;
+- (void)pasteboard:(NSPasteboard *)sender provideDataForType:(NSString *)type;
 
 - (void)performDefaultActionOnFirstItem;
 

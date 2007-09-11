@@ -20,9 +20,10 @@
 #import "DCJoinChatWindowController.h"
 #import <AIUtilities/AICompletingTextField.h>
 #import <Adium/AIListContact.h>
-
+#import <AIWindowController.h>
+#import "AdiumPurpleRoomlist.h"
 #define	KEY_DEFAULT_CONFERENCE_SERVER	@"DefaultConferenceServer"
-
+#define ROOM_LIST_NIB @"roomlistbrowser.nib"
 @interface DCPurpleJabberJoinChatViewController (PRIVATE)
 - (void)validateEnteredText;
 - (void)_configureTextField;
@@ -60,7 +61,7 @@
 }
 
 /*!
- * @brief Store a nwe default conference server
+ * @brief Store a new default conference server
  */
 - (void)setDefaultConferenceServer:(NSString *)inDefaultConferenceServer
 {
@@ -220,5 +221,8 @@
 {
 	return [super doDraggingEntered:sender];
 }
+
+
+
 
 @end

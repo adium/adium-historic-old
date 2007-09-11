@@ -57,6 +57,7 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 - (DCJoinChatViewController*)joinChatViewController
 { 
     return controller; 
+
 } 
 
 - (IBAction)joinChat:(id)sender
@@ -82,7 +83,8 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 	controller = [[[inAccount service] joinChatView] retain];
 	currentView = [controller view];
 	[controller setDelegate:self];
-
+	[controller setSharedChatInstance:self];
+	
 	//Resize the window to fit the new view
 	diff = [view_customView frame].size.height - [currentView frame].size.height;
 	windowFrame.size.height -= diff;
@@ -210,5 +212,6 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 		}
 	}
 }
+
 
 @end

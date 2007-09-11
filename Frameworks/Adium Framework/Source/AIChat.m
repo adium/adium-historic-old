@@ -13,7 +13,6 @@
  * You should have received a copy of the GNU General Public License along with this program; if not,
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
@@ -57,7 +56,11 @@ static int nextChatNumber = 0;
 - (id)initForAccount:(AIAccount *)inAccount
 {
     if ((self = [super init])) {
+	
 		name = nil;
+		handle = nil;
+		server = nil;
+		room = nil;
 		account = [inAccount retain];
 		participatingListObjects = [[NSMutableArray alloc] init];
 		dateOpened = [[NSDate date] retain];
@@ -68,12 +71,12 @@ static int nextChatNumber = 0;
 		expanded = YES;
 		customEmoticons = nil;
 		hasSentOrReceivedContent = NO;
-
 		pendingOutgoingContentObjects = [[NSMutableArray alloc] init];
-		
-		AILog(@"[AIChat: %x initForAccount]",self);
-	}
 
+		AILog(@"[AIChat: %x initForAccount]",self);
+}
+	
+	
     return self;
 }
 
@@ -92,6 +95,8 @@ static int nextChatNumber = 0;
 	[uniqueChatID release]; uniqueChatID = nil;
 	[customEmoticons release]; customEmoticons = nil;
 
+
+	
 	[super dealloc];
 }
 
@@ -144,6 +149,51 @@ static int nextChatNumber = 0;
 	}
 }
 
+
+//Associated Server
+- (NSString*)server
+{
+	return server;
+}
+
+-(void)setServer:(NSString*)newServer
+{
+	if(server != newServer) {
+		[server release];
+		server = [newServer retain];
+	}
+}
+
+//Associated Server
+- (NSString*)room
+{
+	return room;
+}
+
+-(void)setRoom:(NSString*)newRoom
+{
+	if(room != newRoom) {
+		[room release];
+		room = [newRoom retain];
+	}
+}
+
+//Associated Server
+- (NSString*)handle
+{
+	return handle;
+}
+
+-(void)setHandle:(NSString*)newHandle
+{
+	if(handle != newHandle) {
+		[handle release];
+		handle = [newHandle retain];
+	}
+
+}
+
+
 //Date Opened
 #pragma mark Date Opened
 - (NSDate *)dateOpened
@@ -181,6 +231,7 @@ static int nextChatNumber = 0;
 
 - (void)object:(id)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify
 {
+	NSLog(@"inObject: %@",inObject);
 	//If our unviewed content changes or typing status changes, and we have a single list object, 
 	//apply the change to that object as well so it can be cleanly reflected in the contact list.
 	if ([key isEqualToString:KEY_UNVIEWED_CONTENT] ||
@@ -601,7 +652,7 @@ static int nextChatNumber = 0;
 - (void)listObject:(AIListObject *)listObject didSetOrderIndex:(float)inOrderIndex {};
 
 
-#pragma mark Ignore list (group chat)
+#pragma mark	
 /*!
  * @brief Set the ignored state of a contact
  *
@@ -688,6 +739,12 @@ static int nextChatNumber = 0;
 	[self setStatusObject:nil forKey:KEY_CHAT_ERROR notify:NotifyNever];
 }
 
+#pragma mark Room commands
+-(NSMenu*)menuForChat
+{	
+	return [[self account] actionsForChat:self];
+}
+
 - (NSScriptObjectSpecifier *)objectSpecifier
 {
 	//the chat may not be in a window! Just reference it from the application...
@@ -734,19 +791,23 @@ static int nextChatNumber = 0;
 	[[[AIObject sharedAdiumInstance] interfaceController] closeChat:self];
 	return nil;
 }
+
 - (void)setUniqueChatID:(NSString *)str
 {
 	[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
 }
+
 - (AIAccount *)scriptingAccount
 {
 	return [self account];
 }
+
 - (void)setScriptingAccount:(AIAccount *)a
 {
 	[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
 	[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't set the account of a chat."];
 }
+
 - (NSString *)content
 {
 	/*AITranscriptLogEnumerator *e = [[[AITranscriptLogReader alloc] initWithChat:self] autorelease];
@@ -760,4 +821,5 @@ static int nextChatNumber = 0;
 	[[NSScriptCommand currentCommand] setScriptErrorString:@"Still unsupported."];
 	return nil;
 }
+
 @end

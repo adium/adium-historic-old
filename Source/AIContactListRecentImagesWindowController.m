@@ -35,7 +35,7 @@
 
 @implementation AIContactListRecentImagesWindowController
 /*!
- * @brief Show the widow
+ * @brief Show the window
  *
  * @param inPoint The bottom-right corner of our parent view
  */
@@ -180,7 +180,6 @@
 		[[picker delegate] imageViewWithImagePicker:picker
 							   didChangeToImageData:[NSData dataWithContentsOfFile:[[recentPictures objectAtIndex:selectedIndex] originalImagePath]]];
 	}
-
 	[self fadeOutAndClose];
 }
 

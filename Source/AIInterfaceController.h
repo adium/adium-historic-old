@@ -25,6 +25,8 @@
     IBOutlet	NSMenuItem		*menuItem_close;
     IBOutlet	NSMenuItem		*menuItem_closeChat;
 	IBOutlet	NSMenuItem		*menuItem_closeAllChats;
+	
+				NSMenuItem		*menuItem_toggleUserlist;
 
     IBOutlet	NSMenuItem		*menuItem_paste;
 	IBOutlet	NSMenuItem		*menuItem_pasteWithImagesAndColors;
@@ -75,6 +77,7 @@
 	
 	IBOutlet NSView				*fontPanelAccessoryView;
 	IBOutlet NSButton			*button_fontPanelSetAsDefault;
+	
 }
 
 - (IBAction)toggleContactList:(id)sender;
@@ -103,4 +106,9 @@
 - (void)runToolbarCustomizationPalette:(id)sender;
 
 - (IBAction)showPreferenceWindow:(id)sender;
+
+//user list show/hide
+-(void)toggleUserlist:(id)sender;
+-(void)setDelagate:(id)newDelegate;
+
 @end

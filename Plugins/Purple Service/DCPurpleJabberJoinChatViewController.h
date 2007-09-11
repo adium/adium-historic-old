@@ -18,7 +18,7 @@
 
 @class AIAccount, AICompletingTextField;
 
-@interface DCPurpleJabberJoinChatViewController : DCJoinChatViewController {
+@interface DCPurpleJabberJoinChatViewController  : DCJoinChatViewController {
 	IBOutlet		NSTextField		*textField_roomName;
 	IBOutlet		NSTextField		*textField_server;
 	IBOutlet		NSTextField		*textField_handle;
@@ -30,9 +30,11 @@
 
 - (void)setRoomName:(NSString*)roomName;
 - (void)setServer:(NSString*)server;
-
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender;
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender;
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender;
 
-@end
+@end 
+
+
+

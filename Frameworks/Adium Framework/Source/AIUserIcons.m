@@ -35,22 +35,22 @@ static NSSize				iconCacheSize;
 }
 
 //Retrieve a user icon sized for the contact list
-+ (NSImage *)listUserIconForContact:(AIListContact *)inContact size:(NSSize)size
++ (NSImage *)listUserIconForContact:(AIListObject *)inObject size:(NSSize)size
 {
 	BOOL	cache = NSEqualSizes(iconCacheSize, size);
 	NSImage *userIcon = nil;
 	
 	//Retrieve the icon from our cache
-	if (cache) userIcon = [iconCache objectForKey:[inContact internalObjectID]];
+	if (cache) userIcon = [iconCache objectForKey:[inObject internalObjectID]];
 
 	//Render the icon if it's not cached
 	if (!userIcon) {
-		userIcon = [[inContact userIcon] imageByScalingToSize:size 
+		userIcon = [[inObject userIcon] imageByScalingToSize:size 
 													 fraction:1.0
 													flipImage:YES
 											   proportionally:YES
 											   allowAnimation:YES];
-		if (userIcon && cache) [iconCache setObject:userIcon forKey:[inContact internalObjectID]];
+		if (userIcon && cache) [iconCache setObject:userIcon forKey:[inObject internalObjectID]];
 	}
 	
 	return userIcon;

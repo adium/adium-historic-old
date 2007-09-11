@@ -50,4 +50,5 @@
 												 forListObject:listObject
 														inChat:[[self delegate] chat]];
 }
+
 @end

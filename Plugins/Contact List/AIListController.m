@@ -129,7 +129,6 @@
 - (void)contactListDesiredSizeChanged
 {
 	NSWindow	*theWindow;
-
     if ((autoResizeVertically || autoResizeHorizontally) &&
 		(theWindow = [contactListView window]) &&
 		[(AIListWindowController *)[theWindow windowController] windowSlidOffScreenEdgeMask] == AINoEdges) {
@@ -432,15 +431,18 @@
 									 afterDelay:0];
 }
 
-//
+/*! 
+ * @brief Method to check if operations need to be performed
+ *
+ *
+ */
 - (NSDragOperation)outlineView:(NSOutlineView*)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
 {
     NSArray	*types = [[info draggingPasteboard] types];
 	NSDragOperation retVal = NSDragOperationNone;
 	BOOL allowBetweenContactDrop = (index==NSOutlineViewDropOnItemIndex);
-	
 	//No dropping into contacts
-    if ([types containsObject:@"AIListObject"]) {
+	if ([types containsObject:@"AIListObject"]) {
 		if (index != NSOutlineViewDropOnItemIndex && (![[[adium contactController] activeSortController] canSortManually])) {
 			//disable drop between for non-Manual Sort.
 			return NSDragOperationNone;
@@ -467,6 +469,7 @@
 		if (index == NSOutlineViewDropOnItemIndex && [item isKindOfClass:[AIListContact class]]) {
 			//Dropping into a contact: Copy
 			retVal = NSDragOperationCopy;
+		
 		} else {
 			//Otherwise, it's either a move into a group or a manual reordering
 			retVal = NSDragOperationPrivate;
@@ -479,11 +482,9 @@
 	} else if (!allowBetweenContactDrop) {
 		retVal = NSDragOperationNone;
 	}
-	
 	return retVal;
 }
 
-//
 - (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
 {
 	BOOL		success = YES;
@@ -612,5 +613,7 @@
 																			  group:PREF_GROUP_APPEARANCE];
 	return (windowStyleNumber ? [windowStyleNumber intValue] : AIContactListWindowStyleStandard);
 }
+
+
 
 @end

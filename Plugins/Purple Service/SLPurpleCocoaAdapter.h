@@ -87,6 +87,7 @@
 - (void)performAccountMenuActionFromDict:(NSDictionary *)dict forAccount:(id)adiumAccount;
 
 - (void)doAuthRequestCbValue:(NSValue *)inCallBackValue withUserDataValue:(NSValue *)inUserDataValue;
+- (BOOL)doCommand:(NSString *)originalMessage fromAccount:(id)sourceAccount inChat:(AIChat *)chat;
 @end
 
 //Lookup functions

@@ -38,7 +38,9 @@
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIOutlineViewAdditions.h>
 #import <Adium/KFTypeSelectTableView.h>
-
+#import "AIMessageWindowController.h"
+#import "DCInviteToChatWindowController.h"
+#import "AIChatController.h"
 #define CONTENT_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
 #define STATUS_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
 #define GROUP_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
@@ -511,7 +513,7 @@
  * @param outlineView The AIListOutlineView which is drawing
  * @param cell An AIListCell within the AIListOutlineView
  * @param tableColumn (Ignored)
- * @param item The AIListObject which well be drawn by the cell
+ * @param item The AIListObject which will be drawn by the cell
  */
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
@@ -640,26 +642,60 @@
  */
 - (BOOL)outlineView:(NSOutlineView *)outlineView writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
 {	
+	
 	//Begin the drag
 	if (dragItems != items) {
 		[dragItems release];
 		dragItems = [items retain];
 	}
-	
+	[self setDraggedContacts:dragItems];
 	[pboard declareTypes:[NSArray arrayWithObjects:@"AIListObject",@"AIListObjectUniqueIDs",nil] owner:self];
 	[pboard setString:@"Private" forType:@"AIListObject"];
-	[self setShowTooltips:NO];
 	
+	[self setShowTooltips:NO];
 	return YES;
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
 {
+	if(dragOperation == @"NSDragOperationMove") {
+		/*contact was dragged within the userlist -> re-sort userlist
+		 *reposition contact within the userlist
+		 */
+	
+		
+	} else {
+		/*contact was dragged from contactlist to the userlist -> add to userlist
+		 *add the dragged contact to the active chat
+		 */
+		AIChat* activeChat = [[adium interfaceController] activeChatInWindow:[info draggingDestinationWindow]];
+		AIListContact* contact = [[self draggedContacts] objectAtIndex:0];
+
+		//handle metacontacts
+		if([contact isKindOfClass:[AIMetaContact class]]) {
+			contact = [(AIMetaContact *)contact preferredContact];
+		}
+		[[activeChat account] inviteContact:contact toChat:activeChat withMessage:nil];	
+	}
+	
 	if (dragItems) {
 		[dragItems release]; dragItems = nil;
 	}
-	
 	return YES;
+}
+- (NSDragOperation)outlineView:(NSOutlineView*)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
+{	
+	//cycle through participants list to find if we are adding or moving a contact
+	AIListContact* draggedContact = [[self draggedContacts]objectAtIndex:0];
+	for(int i=0;i<[contactListView numberOfRows];i++)
+	{
+	if([contactListView itemAtRow:i] == draggedContact)
+		{
+			dragOperation = @"NSDragOperationMove";
+			return NSDragOperationMove;
+		}
+	}
+	return NSDragOperationCopy;
 }
 
 - (void)outlineView:(NSOutlineView *)outlineView draggedImage:(NSImage *)image endedAt:(NSPoint)screenPoint operation:(NSDragOperation)operation
@@ -694,6 +730,7 @@
 			}
 			
 			[sender setPropertyList:dragItemsArray forType:@"AIListObjectUniqueIDs"];
+
 		}
 	}
 }
@@ -767,5 +804,27 @@
 {
 	showTooltipsInBackground = inShowTooltipsInBackground;
 }
+
+
+/*!
+ *@brief accessor methods for draggedContactsArray
+ */
+ 
+-(void)setDraggedContacts:(NSArray*)contacts
+{
+	if(draggedContacts != contacts)
+	{
+		[draggedContacts release];
+		draggedContacts = contacts;
+	}
+	[draggedContacts retain];
+
+}
+
+-(NSArray*)draggedContacts
+{
+	return [[draggedContacts retain] autorelease];
+}
+
 
 @end

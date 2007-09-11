@@ -48,7 +48,6 @@
 		//Chat tracking
 		openChats = [[NSMutableSet alloc] init];
 	}
-	
 	return self;
 }
 
@@ -154,7 +153,7 @@
 {
 	NSSet			*modifiedAttributeKeys;
 	
-    //Let all observers know the contact's status has changed before performing any further notifications
+    //Let all observers know the chat's status has changed before performing any further notifications
 	modifiedAttributeKeys = [self _informObserversOfChatStatusChange:inChat withKeys:inModifiedKeys silent:silent];
 	
     //Post an attributes changed message (if necessary)
@@ -373,13 +372,14 @@
  * @param inName The name of the chat; in general, the chat room name
  * @param account The account on which to create the group chat
  * @param chatCreationInfo A dictionary of information which may be used by the account when joining the chat serverside
+ * @brief opens a chat with the above parameters. Assigns chatroom info to the created AIChat object.
  */
 - (AIChat *)chatWithName:(NSString *)name identifier:(id)identifier onAccount:(AIAccount *)account chatCreationInfo:(NSDictionary *)chatCreationInfo
 {
 	AIChat			*chat = nil;
 
-	if (identifier) {
-		chat = [self existingChatWithIdentifier:identifier onAccount:account];
+ 	if (identifier) {
+ 		chat = [self existingChatWithIdentifier:identifier onAccount:account];
 		if (!chat) {
 			//See if a chat was made with this name but which doesn't yet have an identifier. If so, take ownership!
 			chat = [self existingChatWithName:name onAccount:account];
@@ -398,17 +398,24 @@
 		[chat setName:name];
 		[chat setIdentifier:identifier];
 		[chat setIsGroupChat:YES];
+					
+		[chat setHandle:[chatCreationInfo objectForKey:@"handle"]];
+		[chat setRoom:[chatCreationInfo objectForKey:@"room"] ];
+		[chat setServer:[chatCreationInfo objectForKey:@"server"]];
+		
 		[openChats addObject:chat];
 		AILog(@"chatWithName:%@ identifier:%@ onAccount:%@ added <<%@>> [%@]",name,identifier,account,chat,openChats);
 		
-		if (chatCreationInfo) [chat setStatusObject:chatCreationInfo
-											 forKey:@"ChatCreationInfo"
-											 notify:NotifyNever];
 		
+		if (chatCreationInfo) {
+			[chat setStatusObject:chatCreationInfo
+						   forKey:@"ChatCreationInfo"
+					       notify:NotifyNever];
+				
 		[chat setStatusObject:[NSNumber numberWithBool:YES]
 					   forKey:@"AlwaysShowUserList"
 					   notify:NotifyNever];
-		
+		}
 		//Inform the account of its creation
 		if (![account openChat:chat]) {
 			[openChats removeObject:chat];
@@ -416,8 +423,14 @@
 			chat = nil;
 		}
 		
-		AILog(@"chatWithName %@ created --> %@",name,chat);
+	
+
 	}
+	
+
+
+
+	AILog(@"chatWithName %@ created --> %@",name,chat);
 	return chat;
 }
 

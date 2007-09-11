@@ -53,3 +53,4 @@ typedef enum {
 - (void)contactOrderChanged:(NSNotification *)notification;
 
 @end
+

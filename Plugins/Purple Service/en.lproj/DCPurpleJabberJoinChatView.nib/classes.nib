@@ -2,6 +2,7 @@
     IBClasses = (
         {CLASS = AICompletingTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
         {
+            ACTIONS = {browse = id; }; 
             CLASS = DCGaimJabberJoinChatViewController; 
             LANGUAGE = ObjC; 
             OUTLETS = {

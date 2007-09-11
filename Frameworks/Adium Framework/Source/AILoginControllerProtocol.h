@@ -23,3 +23,4 @@
 - (void)loginAsUser:(NSString *)userName;
 - (void)requestUserNotifyingTarget:(id)inTarget selector:(SEL)inSelector;
 @end
+

@@ -44,11 +44,8 @@
 #import <Adium/AISortController.h>
 #import <Adium/AIUserIcons.h>
 #import <Adium/AIServiceIcons.h>
-
 #import "AdiumAuthorization.h"
 
-
-#define PREF_GROUP_CONTACT_LIST			@"Contact List"			//Contact list preference group
 #define KEY_FLAT_GROUPS					@"FlatGroups"			//Group storage
 #define KEY_FLAT_CONTACTS				@"FlatContacts"			//Contact storage
 #define KEY_FLAT_METACONTACTS			@"FlatMetaContacts"		//Metacontact objectID storage
@@ -142,7 +139,7 @@
 	//Default contact preferences
 	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_DEFAULT_PREFS
 																		forClass:[self class]]
-										  forGroup:PREF_GROUP_CONTACT_LIST];
+																		forGroup:PREF_GROUP_CONTACT_LIST];
 	
 	contactList = [[AIListGroup alloc] initWithUID:ADIUM_ROOT_GROUP_NAME];
 	//Root is always "expanded"

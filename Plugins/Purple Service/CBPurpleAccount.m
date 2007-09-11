@@ -15,6 +15,7 @@
  */
 
 #import "CBPurpleAccount.h"
+#import <cmds.h>
 #import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
@@ -48,7 +49,6 @@
 #import <AIUtilities/AISystemNetworkDefaults.h>
 #import "ESiTunesPlugin.h"
 #import "AMPurpleTuneTooltip.h"
-
 #import "adiumPurpleRequest.h"
 
 #import "ESMSNService.h" //why oh why must the superclass know about MSN specific things!?
@@ -2595,6 +2595,70 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	}
 }
 
+#pragma mark Actions for chats
+
+/*
+ * @name Actions for chats
+ * @brief This method returns an NSMenu containing the 
+ * actions that are allowed for a given chat.
+ * @params An AIChat for which the commands are fetched
+ * @return NSMenu with the proper commands
+ */
+ 
+-(NSMenu*)actionsForChat:(AIChat*)chat
+{
+	NSMenu *actionsMenu = [[NSMenu alloc] initWithTitle:@"commandsmenu"];
+
+	PurpleConversation* conversation;
+	conversation = existingConvLookupFromChat(chat);
+
+	int i=0;
+	GList* l;
+	for(l=purple_cmd_list(conversation);l;l = l->next){
+		/*
+		 * this loop is to only get one instance of the command
+		 * and not four. Not sure what's causing this -eb.
+		 */
+		i++;
+		if(i==4) {
+			NSString *name = [[NSString alloc] initWithUTF8String:(char*)l->data];
+			NSDictionary* associatedObjects = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:chat,name,nil] forKeys:[NSArray arrayWithObjects:@"associatedChat",@"commandName",nil]];
+
+			NSMenuItem* aCommand = [[NSMenuItem alloc] initWithTitle:name action:@selector(doCommand:)  keyEquivalent:@""];			
+			[aCommand setTarget:self];
+			[aCommand setRepresentedObject:associatedObjects];
+			
+			[actionsMenu addItem:aCommand];
+
+			
+			[aCommand release];
+			[name release];
+		i=0;
+		}
+	} 
+	g_list_free(l);
+	return actionsMenu; 
+}
+
+-(void)doCommand:(id)sender
+{
+	[super verifyCommand:[sender title] forChat:[[sender representedObject] objectForKey:@"associatedChat"]];
+}
+-(void)executeCommandWithParameters:(NSMutableDictionary*)parameters
+{
+	BOOL result = [purpleThread doCommand:[parameters objectForKey:@"totalCommandString"] fromAccount:[parameters objectForKey:@"account"] inChat:[parameters objectForKey:@"chat"]];
+	if(result == FALSE)	{
+		int choice = NSRunAlertPanel(@"Command Failed!",@"command failed: %@ from Account: %@ in Chat: %@",@"Cancel",@"OK",nil,[parameters objectForKey:@"totalCommandString"],[parameters objectForKey:@"account"],[parameters objectForKey:@"chat"]); 
+	}
+}
+
+
+- (BOOL)validateMenuItem:(NSMenuItem *)item 
+{
+	return YES;
+}
+
+
 /***************************/
 /* Account private methods */
 /***************************/
@@ -2631,5 +2695,6 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 {
 	return [super internalObjectID];
 }
+
 
 @end
