@@ -83,16 +83,6 @@
 }
 
 /*!
- * @brief Supports offline messaging?
- *
- * Yahoo! supports offline messaging.
- */
-- (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact
-{
-	return YES;
-}
-
-/*!
  * @brief Should set aliases serverside?
  *
  * Yahoo supports serverside aliases.
