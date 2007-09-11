@@ -1614,7 +1614,7 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
 //Custom Dimming menu items --------------------------------------------------------------------------------------------
 #pragma mark Custom Dimming menu items
 //The standard ones do not dim correctly when unavailable
-- (IBAction)FontTrait:(id)sender
+- (IBAction)toggleFontTrait:(id)sender
 {
     NSFontManager	*fontManager = [NSFontManager sharedFontManager];
     
