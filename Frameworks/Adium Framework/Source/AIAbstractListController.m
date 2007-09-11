@@ -99,7 +99,8 @@
 {
 	[contactList release];
 	[contactListView setDelegate:nil];
-	
+	[contactListView setDataSource:nil];
+
 	[contactListView release]; contactListView = nil;
 	[scrollView_contactList release]; scrollView_contactList = nil;
 	
