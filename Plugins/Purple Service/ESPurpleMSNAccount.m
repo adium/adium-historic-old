@@ -163,7 +163,7 @@
 		}
 	}
 	
-	return shouldAttemptReconnect;
+	return ([super shouldAttemptReconnectAfterDisconnectionError:disconnectionError] && shouldAttemptReconnect);
 }
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject

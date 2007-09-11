@@ -144,6 +144,7 @@ static	NSAutoreleasePool   *currentAutoreleasePool = nil;
 - (void)mainThreadReportLoggedIn
 {
 	[self didConnect];
+	[self setLastDisconnectionError:nil];
 
 	//Silence updates
 	[self silenceAllContactUpdatesForInterval:18.0];
@@ -359,6 +360,9 @@ static	NSAutoreleasePool   *currentAutoreleasePool = nil;
 
 - (void)reportError:(NSString *)error ofLevel:(AWEzvErrorSeverity)severity
 {
+	if (severity == AWEzvError) {
+		[self setLastDisconnectionError:error];
+	}
 	NSLog(@"Bonjour Error (%i): %@", severity, error);
 	AILog(@"Bonjour Error (%i): %@", severity, error);
 }

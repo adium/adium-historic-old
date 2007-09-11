@@ -328,7 +328,7 @@
 	
 	if ([account enabled]) {
 		if (showTitleVerbs) {
-			if ([[account statusObjectForKey:@"Connecting"] boolValue]) {
+			if ([[account statusObjectForKey:@"Connecting"] boolValue] || [account statusObjectForKey:@"Waiting to Reconnect"]) {
 				titleFormat = ACCOUNT_CONNECTING_ACTION_MENU_TITLE;
 			} else if ([[account statusObjectForKey:@"Disconnecting"] boolValue]) {
 				titleFormat = ACCOUNT_DISCONNECTING_ACTION_MENU_TITLE;
@@ -367,6 +367,7 @@
 
 		} else if ([inModifiedKeys containsObject:@"Online"] ||
 				   [inModifiedKeys containsObject:@"Connecting"] ||
+				   [inModifiedKeys containsObject:@"Waiting to Reconnect"] ||
 				   [inModifiedKeys containsObject:@"Disconnecting"] ||
 				   [inModifiedKeys containsObject:@"IdleSince"] ||
 				   [inModifiedKeys containsObject:@"StatusState"]) {

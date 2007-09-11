@@ -253,7 +253,7 @@ void image_register_reply (
 		avDNSReference = nil;
 		imageServiceRef = nil;
 		
-		isConnected = NO;
+		[self setConnected:NO];
 		if (avInstanceName != nil) {
 			[avInstanceName release];
 			avInstanceName = nil;

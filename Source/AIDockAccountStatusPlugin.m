@@ -97,8 +97,8 @@
 			shouldUpdateStatus = YES;
 		}
 
-		if (inObject == nil || [inModifiedKeys containsObject:@"Connecting"]) {
-			if ([self _accountsWithBoolKey:@"Connecting"] > 0) {
+		if (inObject == nil || ([inModifiedKeys containsObject:@"Connecting"] || [inModifiedKeys containsObject:@"Waiting to Reconnect"])) {
+			if ([self _accountsWithBoolKey:@"Connecting"] > 0 || [self _accountsWithKey:@"Waiting to Reconnect"] > 0) {
 				[dockController setIconStateNamed:@"Connecting"];
 			} else {
 				[dockController removeIconStateNamed:@"Connecting"];

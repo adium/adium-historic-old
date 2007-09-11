@@ -20,13 +20,12 @@
 static void adiumPurpleConnConnectProgress(PurpleConnection *gc, const char *text, size_t step, size_t step_count)
 {
     AILog(@"Connecting: gc=0x%x (%s) %i / %i", gc, text, step, step_count);
-	
-	/*
+
 	NSNumber	*connectionProgressPrecent = [NSNumber numberWithFloat:((float)step/(float)(step_count-1))];
 	[accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionProgressStep:percentDone:)
 										 withObject:[NSNumber numberWithInt:step]
 										 withObject:connectionProgressPrecent];
-	 */
+
 	CBPurpleAccount *account = accountLookup(gc->account);
 	NSString *msg = text?[NSString stringWithUTF8String:text]:NULL;
 	NSInvocation *inv = [NSInvocation invocationWithMethodSignature:[account methodSignatureForSelector:@selector(accountConnectionStep:step:totalSteps:)]];

@@ -70,7 +70,7 @@ extern const char *mwServiceAware_getText(void *, void *);
 
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
-	BOOL shouldReconnect = YES;
+	BOOL shouldAttemptReconnect = YES;
 	
 	if (disconnectionError && *disconnectionError) {
 		if ([*disconnectionError rangeOfString:@"Incorrect Username/Password"].location != NSNotFound) {
@@ -78,7 +78,7 @@ extern const char *mwServiceAware_getText(void *, void *);
 		}
 	}
 
-	return shouldReconnect;
+	return ([super shouldAttemptReconnectAfterDisconnectionError:disconnectionError] && shouldAttemptReconnect);
 }
 
 #pragma mark Status

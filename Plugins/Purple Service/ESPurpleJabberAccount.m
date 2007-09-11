@@ -400,13 +400,13 @@ extern void jabber_roster_request(JabberStream *js);
 
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
-	BOOL shouldReconnect = YES;
+	BOOL shouldAttemptReconnect = YES;
 	
 	if (disconnectionError && *disconnectionError) {
 		if (([*disconnectionError rangeOfString:@"401"].location != NSNotFound) ||
 			([*disconnectionError rangeOfString:@"Authentication Failure"].location != NSNotFound) ||
 			([*disconnectionError rangeOfString:@"Not Authorized"].location != NSNotFound)) {
-			shouldReconnect = NO;
+			shouldAttemptReconnect = NO;
 
 			/* Automatic registration attempt */
 			//Display no error message
@@ -424,17 +424,17 @@ extern void jabber_roster_request(JabberStream *js);
 												userInfo:nil];
 
 		} else if ([*disconnectionError rangeOfString:@"Stream Error"].location != NSNotFound) {
-			shouldReconnect = NO;
+			shouldAttemptReconnect = NO;
 
 		} else if ([*disconnectionError rangeOfString:@"requires plaintext authentication over an unencrypted stream"].location != NSNotFound) {
-			shouldReconnect = NO;
+			shouldAttemptReconnect = NO;
 			
 		} else if ([*disconnectionError rangeOfString:@"Resource Conflict"].location != NSNotFound) {
-			shouldReconnect = NO;
+			shouldAttemptReconnect = NO;
 		}
 	}
 	
-	return shouldReconnect;
+	return ([super shouldAttemptReconnectAfterDisconnectionError:disconnectionError] && shouldAttemptReconnect);
 }
 
 - (BOOL)answeredShouldReigsterNewJabberAccount:(NSNumber *)returnCodeNumber userInfo:(id)userInfo

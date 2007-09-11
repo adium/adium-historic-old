@@ -125,6 +125,9 @@ typedef enum {
 
 	BOOL						enabled;
 	
+	int							reconnectAttemptsPerformed;
+	NSString					*lastDisconnectionError;
+
 	//Attributed string refreshing
     NSTimer                     *attributedRefreshTimer;
     NSMutableSet				*autoRefreshingKeys;

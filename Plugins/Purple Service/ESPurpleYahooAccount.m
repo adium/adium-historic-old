@@ -117,7 +117,7 @@
 		}
 	}
 	
-	return shouldAttemptReconnect;
+	return ([super shouldAttemptReconnectAfterDisconnectionError:disconnectionError] && shouldAttemptReconnect);
 }
 
 #pragma mark Encoding
