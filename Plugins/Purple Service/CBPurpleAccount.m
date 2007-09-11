@@ -812,6 +812,22 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	return NO;
 }
 
+- (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact
+{
+	PurplePluginProtocolInfo *prpl_info = NULL;
+
+	if (account && account->gc && account->gc->prpl)
+		prpl_info = PURPLE_PLUGIN_PROTOCOL_INFO(account->gc->prpl);
+	
+	if (prpl_info && prpl_info->offline_message) {
+		
+		return (prpl_info->offline_message(purple_find_buddy(account, [[inContact UID] UTF8String])));
+
+	} else
+		return NO;
+	
+}
+
 #pragma mark Custom emoticons
 - (void)chat:(AIChat *)inChat isWaitingOnCustomEmoticon:(NSString *)emoticonEquivalent
 {
@@ -2264,7 +2280,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 		PurpleBuddy				*buddy;
 		
 		//Find the PurpleBuddy
-		buddy = purple_find_buddy(account, purple_normalize(account, [[inContact UID] UTF8String]));
+		buddy = purple_find_buddy(account, [[inContact UID] UTF8String]);
 		
 		if (prpl_info && prpl_info->blist_node_menu && buddy) {
 			NSImage	*serviceIcon = [AIServiceIcons serviceIconForService:[self service]
@@ -2648,6 +2664,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 {
 	BOOL result = [purpleThread doCommand:[parameters objectForKey:@"totalCommandString"] fromAccount:[parameters objectForKey:@"account"] inChat:[parameters objectForKey:@"chat"]];
 	if(result == FALSE)	{
+#warning Incomplete
 		int choice = NSRunAlertPanel(@"Command Failed!",@"command failed: %@ from Account: %@ in Chat: %@",@"Cancel",@"OK",nil,[parameters objectForKey:@"totalCommandString"],[parameters objectForKey:@"account"],[parameters objectForKey:@"chat"]); 
 	}
 }

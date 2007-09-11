@@ -2,10 +2,10 @@
 #include <AvailabilityMacros.h>
 
 /* Version number of package */
-#define VERSION "2.0.0"
+#define VERSION "2.1.1"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libpurple 2.0.0"
+#define PACKAGE_STRING "libpurple 2.1.1"
 
 #define DATADIR ""
 
@@ -17,8 +17,6 @@
 
 /* OS X has OPEN_SSL */
 #define HAVE_OPENSSL TRUE
-/* but we prefer CDSA */
-#define HAVE_CDSA TRUE
 
 /* OS X 10.2.x does not have poll() */
 /* Define to 1 if you have the `poll' function. */
@@ -57,10 +55,13 @@
 
 /* Define to 1 if your processor stores words with the most significant byte
 first (like Motorola and SPARC, unlike Intel and VAX). */
-//If compiling for 10.4, we're little endian since we are Intel. < 10.4, we are Mac. 
-#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_4
+#if (defined(__BIG_ENDIAN__) && __BIG_ENDIAN__)
 	#define WORDS_BIGENDIAN 1
+#else
+	#undef WORDS_BIGENDIAN
+#endif
 
+#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_4
 	/* socklen_t size */
 	#ifndef socklen_t
 		#define socklen_t int

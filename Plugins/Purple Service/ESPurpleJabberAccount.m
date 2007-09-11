@@ -228,16 +228,6 @@ extern void jabber_roster_request(JabberStream *js);
 	return YES;
 }
 
-/*!
- * @brief Supports offline messaging?
- *
- * Jabber supports offline messaging.
- */
-- (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact
-{
-	return YES;
-}
-
 - (AIListContact *)contactWithUID:(NSString *)sourceUID
 {
 	AIListContact	*contact;
