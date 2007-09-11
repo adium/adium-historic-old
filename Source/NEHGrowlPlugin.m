@@ -250,7 +250,6 @@
 	if (([eventID isEqualToString:CONTACT_STATUS_ONLINE_YES] ||
 	   [eventID isEqualToString:CONTACT_STATUS_ONLINE_NO] ||
 	   [eventID isEqualToString:CONTACT_STATUS_AWAY_YES] ||
-	   [eventID isEqualToString:CONTACT_STATUS_AWAY_NO] ||
 	   [eventID isEqualToString:CONTACT_SEEN_ONLINE_YES] ||
 	   [eventID isEqualToString:CONTACT_SEEN_ONLINE_NO]) && 
 		[(AIListContact *)listObject contactListStatusMessage]) {
