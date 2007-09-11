@@ -195,6 +195,7 @@
 		34382CEA0A50386C004BF6A2 /* DCMessageContextDisplayPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34382CE60A50386C004BF6A2 /* DCMessageContextDisplayPlugin.m */; };
 		34382CEF0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34382CEE0A50387A004BF6A2 /* MessageContextDisplayDefaults.plist */; };
 		3439FDAA05794D1300B2E449 /* JMSQLLoggerAdvancedPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = B799BC8005793C1200338E54 /* JMSQLLoggerAdvancedPreferences.m */; };
+		343BB5020C96CB2000506F9B /* AINewBookmarkWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A970670C965F6900F46006 /* AINewBookmarkWindowController.m */; };
 		343EB3FE08086D2F00E27095 /* AccountProxy.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB3FD08086D2F00E27095 /* AccountProxy.nib */; };
 		343EB40208086D9000E27095 /* AppearancePrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB40108086D9000E27095 /* AppearancePrefs.nib */; };
 		343EB41708086D9100E27095 /* StatusSortConfiguration.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB41608086D9100E27095 /* StatusSortConfiguration.nib */; };
@@ -538,7 +539,6 @@
 		34A88E180C7A26E0006EB7D4 /* AIPasswordPromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = F55B416603AB8BFC01A8010A /* AIPasswordPromptController.m */; };
 		34A88E190C7A26E1006EB7D4 /* AIPasswordPromptController.h in Headers */ = {isa = PBXBuildFile; fileRef = F55B416E03AB8C3201A8010A /* AIPasswordPromptController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34A9705A0C965F2400F46006 /* AISideSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A970590C965F2400F46006 /* AISideSplitView.m */; };
-		34A970680C965F6900F46006 /* AINewBookmarkWindowController.h in Sources */ = {isa = PBXBuildFile; fileRef = 34A970660C965F6900F46006 /* AINewBookmarkWindowController.h */; };
 		34A9706C0C965F8100F46006 /* AIBookmarkController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A9706A0C965F8100F46006 /* AIBookmarkController.m */; };
 		34A9706F0C965F8E00F46006 /* AIAddBookmarkPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A9706D0C965F8E00F46006 /* AIAddBookmarkPlugin.m */; };
 		34A970740C965FC800F46006 /* AddBookmark.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A970730C965FC800F46006 /* AddBookmark.nib */; };
@@ -8818,9 +8818,9 @@
 				0C79A2D90C5E633F005AE6FA /* AIMoveCommand.m in Sources */,
 				0C27C8650C75A23F002AA363 /* NSStringScriptingAdditions.m in Sources */,
 				34A9705A0C965F2400F46006 /* AISideSplitView.m in Sources */,
-				34A970680C965F6900F46006 /* AINewBookmarkWindowController.h in Sources */,
 				34A9706C0C965F8100F46006 /* AIBookmarkController.m in Sources */,
 				34A9706F0C965F8E00F46006 /* AIAddBookmarkPlugin.m in Sources */,
+				343BB5020C96CB2000506F9B /* AINewBookmarkWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
