@@ -46,6 +46,11 @@
 	BOOL				 resizing;
     
     NSView              *associatedView;
+	
+	//string to hold current word user is typing
+	NSMutableString			*currentString;
+	NSMutableString			*textString;
+	AIListContact			*lastUser;
 }
 
 //Configure
@@ -80,6 +85,9 @@
 - (void)pushContent;
 - (void)popContent;
 - (void)swapContent;
+
+//username completion on tab
+- (NSString*)completeUserName;
 
 @end
 

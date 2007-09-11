@@ -125,7 +125,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 }
 
 /*!
- * @brief Set our original status state
+ * @brief Set our status state
  *
  * Also create the working state if we don't have one or the original status state is of the wrong statusType.
  * If showSaveCheckbox is YES, clear workingStatusState's title so it will autoupdate.

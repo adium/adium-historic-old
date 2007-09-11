@@ -409,6 +409,8 @@
 								 radius:userIconRoundingRadius];
 		[[NSGraphicsContext currentContext] setImageInterpolation: savedInterpolation];
 
+		
+		
 		//If we're using space on the left, shift the origin right
 		if (position == IMAGE_POSITION_LEFT) rect.origin.x += USER_ICON_LEFT_PAD;
 		rect.size.width -= USER_ICON_LEFT_PAD;

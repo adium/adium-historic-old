@@ -42,7 +42,7 @@ typedef enum {
 - (NSArray *)sortedArrayOfEventIDsFromArray:(NSArray *)inArray;
 - (NSSet *)generateEvent:(NSString *)eventID forListObject:(AIListObject *)listObject userInfo:(id)userInfo previouslyPerformedActionIDs:(NSSet *)previouslyPerformedActionIDs;
 - (NSString *)defaultEventID;
-- (NSString *)eventIDForEnglishDisplayName:(NSString *)displayName;
+- (NSString*)eventIDForEnglishDisplayName:(NSString *)displayName;
 - (NSString *)globalShortDescriptionForEventID:(NSString *)eventID;
 - (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject;
 - (NSString *)naturalLanguageDescriptionForEventID:(NSString *)eventID

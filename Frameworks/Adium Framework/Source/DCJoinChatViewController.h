@@ -24,6 +24,7 @@
 	AIAccount						*account;		// The account we're being configured for
 
 	id								delegate;		// Our delegate
+	id								sharedChatInstance;
 }
 
 + (DCJoinChatViewController *)joinChatView;
@@ -50,4 +51,9 @@
 - (void)setDelegate:(id)inDelegate;
 - (id)delegate;
 
+//roomlistWindowController delegate
+- (void)setSharedChatInstance:(id)newInstance;
+- (id)sharedChatInstance;
 @end
+
+

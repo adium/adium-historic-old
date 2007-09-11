@@ -51,6 +51,7 @@
 	<string>DCInviteToChatPlugin</string>
 	<string>DCJoinChatPanelPlugin</string>
 	<string>DCMessageContextDisplayPlugin</string>
+	<string>AIAddBookmarkPlugin</string>
 	<string>ESAccountEvents</string>
 	<string>ESAccountNetworkConnectivityPlugin</string>
 	<string>ESAnnouncerPlugin</string>

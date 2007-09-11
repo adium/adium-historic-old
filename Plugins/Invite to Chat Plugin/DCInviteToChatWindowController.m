@@ -32,8 +32,7 @@
 - (void)windowDidLoad;
 - (void)setChat:(AIChat *)inChat contact:(AIListContact *)inContact;
 - (void)setContact:(AIListContact *)inContact;
-@end
-
+@end 
 @implementation DCInviteToChatWindowController
 
 static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
@@ -102,8 +101,7 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 		}
 	}	
 	
-	[self closeWindow:nil];
-}
+	[self closeWindow:nil];}
 
 - (void)configureForChatAndContact
 {
@@ -179,4 +177,24 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 	return ([[inContact serviceClass] isEqualToString:[service serviceClass]] &&
 			(![contact online] || [inContact online]));
 }
+
+//
+-(void)inviteToChat:(AIListContact*)inContact
+{
+	// Sanity check: is there really a list object and a chat?
+	if (inContact && [inContact isKindOfClass:[AIListContact class]] && chat) {
+		
+		// Sanity check: is it a group chat?
+		if ([chat isGroupChat]) {
+			NSString *message = [textField_message stringValue];
+			if (!message || ![message length]) {
+				message = [[adium chatController] defaultInvitationMessageForRoom:[chat name] account:[chat account]];
+			}
+			[chat inviteListContact:inContact withMessage:message];
+		}
+	}	
+	
+	[self closeWindow:nil];
+}
+
 @end

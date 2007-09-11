@@ -15,7 +15,6 @@
  */
 
 #import <Adium/AIWindowController.h>
-
 @class AILocalizationTextField, AILocalizationButton, AIListContact, DCJoinChatViewController, AIAccountMenu;
 
 @interface DCJoinChatWindowController : AIWindowController {	
@@ -30,6 +29,8 @@
 	NSView							*currentView;				//
 	
 	AIAccountMenu 					*accountMenu;
+	
+
 }
 
 + (DCJoinChatWindowController *)joinChatWindow;
@@ -40,5 +41,4 @@
 
 - (void)setJoinChatEnabled:(BOOL)enabled;
 - (AIListContact *)contactFromText:(NSString *)text;
-
 @end

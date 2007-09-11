@@ -105,12 +105,19 @@
 		  invitingContacts:(NSArray *)contactsToInvite
 	 withInvitationMessage:(NSString *)invitationMessage
 {
+	
 	AILog(@"Creating chatWithName:%@ onAccount:%@ chatCreationInfo:%@",inName,inAccount,inInfo);
+	
+	
 	chat = [[adium chatController] chatWithName:inName
 									 identifier:nil
 									  onAccount:inAccount
 							   chatCreationInfo:inInfo];
+
 	
+	
+	
+
 	if ([contactsToInvite count]) {
 		[chat setStatusObject:contactsToInvite forKey:@"ContactsToInvite" notify:NotifyNever];
 		
@@ -120,7 +127,9 @@
 		
 		[[adium notificationCenter] addObserver:self selector:@selector(chatDidOpen:) name:Chat_DidOpen object:chat];
 	}
+	
 }
+
 
 //When the chat opens, we are ready to send out our invitations to join it
 - (void)chatDidOpen:(NSNotification *)notification
@@ -337,6 +346,18 @@
 - (id)delegate;
 {
 	return delegate;
+}
+
+#pragma mark Roomlist Delegate
+- (void)setSharedChatInstance:(id)newInstance
+{
+	NSLog(@"sharedChatInstance: %@",newInstance);
+	sharedChatInstance = newInstance;
+}
+
+-(id)sharedChatInstance
+{
+	return sharedChatInstance;
 }
 
 

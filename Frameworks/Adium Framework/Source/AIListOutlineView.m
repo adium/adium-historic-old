@@ -47,9 +47,10 @@
 
 - (id)initWithFrame:(NSRect)frame
 {
+	
 	[super initWithFrame:frame];
 	[self _initListOutlineView];
-	
+	[self registerForDraggedTypes:[NSArray arrayWithObjects:@"AIListContact",@"AIListObject",nil]];
 	return self;
 }
 
@@ -70,7 +71,7 @@
 {	
 	[backgroundImage release];
 	[backgroundColor release];
-	
+	[self unregisterDraggedTypes];
 	[super dealloc];
 }
 
@@ -151,7 +152,6 @@
 		int	width = [(AIListCell *)cell cellWidth];
 		if (width > widestCell) widestCell = width;
 	}
-
 	return ((widestCell > minimumDesiredWidth) ? widestCell : minimumDesiredWidth);
 }
 
@@ -434,6 +434,7 @@
 {
 	return [self arrayOfSelectedItems];
 }
+
 #pragma mark Drag & Drop Drawing
 /*!
  * @brief Called by NSOutineView to draw a drop highight
@@ -468,6 +469,20 @@
 	
 	[NSGraphicsContext restoreGraphicsState];
 }
+
+
+-(NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
+{	
+	[[sender draggingDestinationWindow] makeKeyAndOrderFront:self];
+	return NSDragOperationEvery;
+	
+}
+
+-(void)draggingExited:(id <NSDraggingInfo>)sender
+{
+	NSLog(@"dragging exited");
+}
+
 
 @end
 

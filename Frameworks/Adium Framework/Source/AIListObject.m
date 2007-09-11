@@ -37,7 +37,7 @@
 
 /*!
  * @class AIListObject
- * @brief Base class for all contacts, groups, and acounts
+ * @brief Base class for all contacts, groups, and accounts
  */
 @implementation AIListObject
 
@@ -319,7 +319,7 @@
 }
 
 /*!
- * @brief Another objct changed one of our mutable owner arrays
+ * @brief Another object changed one of our mutable owner arrays
  *
  * Empty implementation by default - we do not need to take any action when a mutable owner array changes
  */

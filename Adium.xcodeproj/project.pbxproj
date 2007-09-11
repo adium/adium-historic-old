@@ -496,6 +496,9 @@
 		348EE1B4080A57480015E0FC /* WebKitPreferencesView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 348EE1B3080A57480015E0FC /* WebKitPreferencesView.nib */; };
 		348F57940936F3CC00288E41 /* ESEditStatusGroupWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 348F57920936F3CC00288E41 /* ESEditStatusGroupWindowController.m */; };
 		348F579E0936FA6D00288E41 /* EditStatusGroup.nib in Resources */ = {isa = PBXBuildFile; fileRef = 348F579D0936FA6D00288E41 /* EditStatusGroup.nib */; };
+		349195580C96615C00595A04 /* AIChatCommandsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A96FF00C96564D00F46006 /* AIChatCommandsController.m */; };
+		349195660C9662AA00595A04 /* AIListBookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 349195640C9662AA00595A04 /* AIListBookmark.m */; };
+		349195670C9662AA00595A04 /* AIListBookmark.h in Headers */ = {isa = PBXBuildFile; fileRef = 349195650C9662AA00595A04 /* AIListBookmark.h */; };
 		3496A8C207CE6B880055BBAB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3496A8C107CE6B880055BBAB /* InfoPlist.strings */; };
 		349710DD096C4C7700699948 /* Buttons.strings in Resources */ = {isa = PBXBuildFile; fileRef = 349710DB096C4C7700699948 /* Buttons.strings */; };
 		3497CBB009BA0B5D00C0428E /* ESIRCJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3497CBAE09BA0B5D00C0428E /* ESIRCJoinChatViewController.m */; };
@@ -534,6 +537,16 @@
 		34A6FB2E07D6F98600972830 /* SoundFileIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 34A6FB2C07D6F98600972830 /* SoundFileIcon.png */; };
 		34A88E180C7A26E0006EB7D4 /* AIPasswordPromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = F55B416603AB8BFC01A8010A /* AIPasswordPromptController.m */; };
 		34A88E190C7A26E1006EB7D4 /* AIPasswordPromptController.h in Headers */ = {isa = PBXBuildFile; fileRef = F55B416E03AB8C3201A8010A /* AIPasswordPromptController.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		34A9705A0C965F2400F46006 /* AISideSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A970590C965F2400F46006 /* AISideSplitView.m */; };
+		34A970680C965F6900F46006 /* AINewBookmarkWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A970660C965F6900F46006 /* AINewBookmarkWindowController.m */; };
+		34A9706C0C965F8100F46006 /* AIBookmarkController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A9706A0C965F8100F46006 /* AIBookmarkController.m */; };
+		34A9706F0C965F8E00F46006 /* AIAddBookmarkPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A9706D0C965F8E00F46006 /* AIAddBookmarkPlugin.m */; };
+		34A970740C965FC800F46006 /* AddBookmark.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A970730C965FC800F46006 /* AddBookmark.nib */; };
+		34A970760C965FE400F46006 /* sidebarResizeWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = 34A970750C965FE400F46006 /* sidebarResizeWidget.png */; };
+		34A970780C965FF600F46006 /* MessagePrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A970770C965FF600F46006 /* MessagePrompt.nib */; };
+		34A9707A0C96600700F46006 /* ChatPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A970790C96600700F46006 /* ChatPrompt.nib */; };
+		34A9707C0C96601000F46006 /* BanPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A9707B0C96601000F46006 /* BanPrompt.nib */; };
+		34A9707E0C96602300F46006 /* sidebarStatusAreaBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 34A9707D0C96602200F46006 /* sidebarStatusAreaBackground.png */; };
 		34AE249E09BCCFA900A35B51 /* AIWindowDraggingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AE249C09BCCFA900A35B51 /* AIWindowDraggingView.m */; };
 		34B1268E0B924E28003B0451 /* adiumPurpleDnsRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B1268C0B924E28003B0451 /* adiumPurpleDnsRequest.h */; };
 		34B1268F0B924E28003B0451 /* adiumPurpleDnsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B1268D0B924E28003B0451 /* adiumPurpleDnsRequest.m */; };
@@ -2570,6 +2583,8 @@
 		348F579D0936FA6D00288E41 /* EditStatusGroup.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = EditStatusGroup.nib; path = Resources/EditStatusGroup.nib; sourceTree = "<group>"; };
 		348FF83E09128BEB00A942A8 /* CBPurpleAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBPurpleAccount.m; path = "Plugins/Purple Service/CBPurpleAccount.m"; sourceTree = "<group>"; };
 		348FF84909128D6300A942A8 /* AccountDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = AccountDefaults.plist; path = "Frameworks/Adium Framework/AccountDefaults.plist"; sourceTree = "<group>"; };
+		349195640C9662AA00595A04 /* AIListBookmark.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIListBookmark.m; path = Source/AIListBookmark.m; sourceTree = "<group>"; };
+		349195650C9662AA00595A04 /* AIListBookmark.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIListBookmark.h; path = Source/AIListBookmark.h; sourceTree = "<group>"; };
 		34943DEE07BAD918000F2A03 /* AccountPrivacy.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AccountPrivacy.nib; path = "Frameworks/Adium Framework/Resources/AccountPrivacy.nib"; sourceTree = "<group>"; };
 		349448C207BB29B2000F2A03 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Purple Service/en.lproj/ESPurpleGaduGaduAccountView.nib"; sourceTree = "<group>"; };
 		3495D92D0BBF627A000EE14C /* SQL Logger.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SQL Logger.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2743,6 +2758,22 @@
 		34A81DF0093CE96300B0E93D /* en_CA */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en_CA; path = Resources/en_CA.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		34A81DF5093CE98F00B0E93D /* en_CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_CA; path = Resources/en_CA.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34A81DFB093CE99F00B0E93D /* en_CA */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en_CA; path = "Plugins/WebKit Message View/en_CA.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
+		34A96FF00C96564D00F46006 /* AIChatCommandsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIChatCommandsController.m; path = Source/AIChatCommandsController.m; sourceTree = "<group>"; };
+		34A96FF10C96564D00F46006 /* AIChatCommandsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIChatCommandsController.h; path = Source/AIChatCommandsController.h; sourceTree = "<group>"; };
+		34A970580C965F2400F46006 /* AISideSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AISideSplitView.h; path = "Plugins/Dual Window Interface/AISideSplitView.h"; sourceTree = "<group>"; };
+		34A970590C965F2400F46006 /* AISideSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AISideSplitView.m; path = "Plugins/Dual Window Interface/AISideSplitView.m"; sourceTree = "<group>"; };
+		34A970660C965F6900F46006 /* AINewBookmarkWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AINewBookmarkWindowController.m; path = "/Users/evands/adium-summer_of_code_2007/multi-user_chat/Source/AINewBookmarkWindowController.m"; sourceTree = "<absolute>"; };
+		34A970670C965F6900F46006 /* AINewBookmarkWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AINewBookmarkWindowController.h; path = "/Users/evands/adium-summer_of_code_2007/multi-user_chat/Source/AINewBookmarkWindowController.h"; sourceTree = "<absolute>"; };
+		34A9706A0C965F8100F46006 /* AIBookmarkController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIBookmarkController.m; path = Source/AIBookmarkController.m; sourceTree = "<group>"; };
+		34A9706B0C965F8100F46006 /* AIBookmarkController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIBookmarkController.h; path = Source/AIBookmarkController.h; sourceTree = "<group>"; };
+		34A9706D0C965F8E00F46006 /* AIAddBookmarkPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAddBookmarkPlugin.m; path = Source/AIAddBookmarkPlugin.m; sourceTree = "<group>"; };
+		34A9706E0C965F8E00F46006 /* AIAddBookmarkPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAddBookmarkPlugin.h; path = Source/AIAddBookmarkPlugin.h; sourceTree = "<group>"; };
+		34A970730C965FC800F46006 /* AddBookmark.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AddBookmark.nib; path = Resources/AddBookmark.nib; sourceTree = "<group>"; };
+		34A970750C965FE400F46006 /* sidebarResizeWidget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sidebarResizeWidget.png; path = Resources/sidebarResizeWidget.png; sourceTree = "<group>"; };
+		34A970770C965FF600F46006 /* MessagePrompt.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = MessagePrompt.nib; path = Resources/MessagePrompt.nib; sourceTree = "<group>"; };
+		34A970790C96600700F46006 /* ChatPrompt.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ChatPrompt.nib; path = Resources/ChatPrompt.nib; sourceTree = "<group>"; };
+		34A9707B0C96601000F46006 /* BanPrompt.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = BanPrompt.nib; path = Resources/BanPrompt.nib; sourceTree = "<group>"; };
+		34A9707D0C96602200F46006 /* sidebarStatusAreaBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sidebarStatusAreaBackground.png; path = Resources/sidebarStatusAreaBackground.png; sourceTree = "<group>"; };
 		34AA35D9095CCA4D003B56DB /* AdiumDisconnectionErrorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumDisconnectionErrorController.h; path = Source/AdiumDisconnectionErrorController.h; sourceTree = "<group>"; };
 		34AA35DA095CCA4D003B56DB /* AdiumDisconnectionErrorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumDisconnectionErrorController.m; path = Source/AdiumDisconnectionErrorController.m; sourceTree = "<group>"; };
 		34AA366A095CE124003B56DB /* AIStatusDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusDefines.h; path = "Frameworks/Adium Framework/Source/AIStatusDefines.h"; sourceTree = "<group>"; };
@@ -4458,6 +4489,10 @@
 		3448055407AC5203006A7F7B /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				34A96FF10C96564D00F46006 /* AIChatCommandsController.h */,
+				34A96FF00C96564D00F46006 /* AIChatCommandsController.m */,
+				349195640C9662AA00595A04 /* AIListBookmark.m */,
+				349195650C9662AA00595A04 /* AIListBookmark.h */,
 				340BA84409EC593A000EC441 /* AICorePluginLoader.h */,
 				340BA84509EC593B000EC441 /* AICorePluginLoader.m */,
 				3448054F07AC5151006A7F7B /* ESDebugAILog.h */,
@@ -4736,6 +4771,18 @@
 				F55B415D03AB8B5601A8010A /* AIContentController.m */,
 				11C157D804A88E04008E0C76 /* AIEmoticonController.h */,
 				11C157D904A88E04008E0C76 /* AIEmoticonController.m */,
+				34A9706A0C965F8100F46006 /* AIBookmarkController.m */,
+				34A9706B0C965F8100F46006 /* AIBookmarkController.h */,
+				34A970660C965F6900F46006 /* AINewBookmarkWindowController.m */,
+				34A970670C965F6900F46006 /* AINewBookmarkWindowController.h */,
+				34A9706D0C965F8E00F46006 /* AIAddBookmarkPlugin.m */,
+				34A9706E0C965F8E00F46006 /* AIAddBookmarkPlugin.h */,
+				34A970730C965FC800F46006 /* AddBookmark.nib */,
+				34A9707D0C96602200F46006 /* sidebarStatusAreaBackground.png */,
+				34A970750C965FE400F46006 /* sidebarResizeWidget.png */,
+				34A970770C965FF600F46006 /* MessagePrompt.nib */,
+				34A970790C96600700F46006 /* ChatPrompt.nib */,
+				34A9707B0C96601000F46006 /* BanPrompt.nib */,
 				9E4CF9D104AA69B000415B22 /* Action Support */,
 				34F8A7FA05A8927F00577775 /* Applescript Filters */,
 				4BF4813B049A802E00A8010A /* Auto Linking */,
@@ -7018,6 +7065,8 @@
 				3461621306FB482D009181D8 /* UserList Layout.plist */,
 				346371050BCA0A5400AD57AD /* AIMessageTabSplitView.h */,
 				346371060BCA0A5400AD57AD /* AIMessageTabSplitView.m */,
+				34A970580C965F2400F46006 /* AISideSplitView.h */,
+				34A970590C965F2400F46006 /* AISideSplitView.m */,
 			);
 			name = Messages;
 			sourceTree = "<group>";
@@ -7382,6 +7431,7 @@
 				113439F30C6EB1EF006C115D /* AIListSmartGroup.h in Headers */,
 				34A88E190C7A26E1006EB7D4 /* AIPasswordPromptController.h in Headers */,
 				347933F30C861017007ADCAA /* AIColorStringTransformer.h in Headers */,
+				349195670C9662AA00595A04 /* AIListBookmark.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8134,6 +8184,12 @@
 				C4D29CC80C3C2E49001545A2 /* ICImport.nib in Resources */,
 				8181E4FA0C29345B00E802F7 /* Lock_Black.tif in Resources */,
 				07E179780C657B5E005DDA3D /* ConfirmationDefaults.plist in Resources */,
+				34A970740C965FC800F46006 /* AddBookmark.nib in Resources */,
+				34A970760C965FE400F46006 /* sidebarResizeWidget.png in Resources */,
+				34A970780C965FF600F46006 /* MessagePrompt.nib in Resources */,
+				34A9707A0C96600700F46006 /* ChatPrompt.nib in Resources */,
+				34A9707C0C96601000F46006 /* BanPrompt.nib in Resources */,
+				34A9707E0C96602300F46006 /* sidebarStatusAreaBackground.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8761,6 +8817,10 @@
 				8181F6DA0C321DC400E802F7 /* AWRippler.m in Sources */,
 				0C79A2D90C5E633F005AE6FA /* AIMoveCommand.m in Sources */,
 				0C27C8650C75A23F002AA363 /* NSStringScriptingAdditions.m in Sources */,
+				34A9705A0C965F2400F46006 /* AISideSplitView.m in Sources */,
+				34A970680C965F6900F46006 /* AINewBookmarkWindowController.m in Sources */,
+				34A9706C0C965F8100F46006 /* AIBookmarkController.m in Sources */,
+				34A9706F0C965F8E00F46006 /* AIAddBookmarkPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8860,6 +8920,8 @@
 				1134399B0C6E870B006C115D /* AIListSmartGroup.m in Sources */,
 				34A88E180C7A26E0006EB7D4 /* AIPasswordPromptController.m in Sources */,
 				347933F40C861017007ADCAA /* AIColorStringTransformer.m in Sources */,
+				349195580C96615C00595A04 /* AIChatCommandsController.m in Sources */,
+				349195660C9662AA00595A04 /* AIListBookmark.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

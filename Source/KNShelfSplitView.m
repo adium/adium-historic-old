@@ -40,6 +40,8 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIParagraphStyleAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIToolbarUtilities.h>
+#import <AIAdium.h>
 
 #define DEFAULT_SHELF_WIDTH 200
 #define CONTROL_HEIGHT 22
@@ -54,10 +56,13 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 #define CONTROL_PART_RESIZE_THUMB 3
 #define CONTROL_PART_RESIZE_BAR 4
 
+#define TOOLBAR_TOGGLESHELF_IDENTIFIER @"Toggle Shelf"
+#define TOGGLESHELF @"Toggle Shelf"
 @implementation KNShelfSplitView
 
--(IBAction)toggleShelf:(id)sender{
-#pragma unused(sender)
+-(IBAction)toggleShelf:(id)sender
+{
+	#pragma unused(sender)
 	[self setShelfIsVisible: ![self isShelfVisible]];
 	[self setNeedsDisplay: YES];
 }
@@ -70,7 +75,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	self = [super initWithFrame: aFrame];
 	if( self ){
 		
-		currentShelfWidth = DEFAULT_SHELF_WIDTH;
+		currentShelfWidth = DEFAULT_SHELF_WIDTH; //change this
 		isShelfVisible = YES;
 		shouldHilite = NO;
 		activeControlPart = CONTROL_PART_NONE;
@@ -88,12 +93,13 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 		[self setDelegate: nil];
 		target = nil;
 		action = nil;
-		
+	
 		[self setShelfView: aShelfView];
 		[self setContentView: aContentView];
 	}
 	return self;
 }
+
 
 -(void)dealloc{
 	if( autosaveName ){ [autosaveName release]; }
@@ -219,7 +225,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	}
 	
 	// The shelf can never be wider than half the entire view
-	float				maxShelf = [self frame].size.width / 2;
+	float maxShelf = [self frame].size.width / 2;
 	
 	if( newWidth > maxShelf ){
 		newWidth = maxShelf;
@@ -245,10 +251,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	return autosaveName;
 }
 
--(void)recalculateSizes{
-	shouldDrawActionButton = NO;
-	shouldDrawContextButton = NO;
-	
+-(void)recalculateSizes{	
 	if( isShelfVisible ){
 		controlRect = NSMakeRect( 0, 0, currentShelfWidth, CONTROL_HEIGHT );
 		
@@ -394,6 +397,9 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	[self setNeedsDisplayInRect: controlRect];
 
 	if( activeControlPart != CONTROL_PART_NONE ){
+		if([anEvent clickCount] == 2){
+			[self setShelfIsVisible: NO];
+		} else {
 		while( stillMouseDown ){
 			anEvent = [[self window] nextEventMatchingMask: NSLeftMouseUpMask | NSLeftMouseDraggedMask];
 			currentLocation = [self convertPoint: [anEvent locationInWindow] fromView: nil];
@@ -432,6 +438,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 					break;
 			}
 		}
+	}
 	}else{
 		[super mouseDown:anEvent];
 	}
@@ -439,22 +446,23 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 
 - (void)drawRect:(NSRect)rect {
 #pragma unused( rect )
-		
-	if( isShelfVisible ){
+	
+		if( isShelfVisible ){
 		//NSLog(@"Drawing Control( %f, %f) (%f, %f)", rect.origin.x, rect.origin.y, rect.size.width, rect.size.height);
 		
 		float remainderStart = 0.0;
 		
 		// action button
-		if( shouldDrawActionButton ){
+		if( shouldDrawActionButton  == YES){
 			[self drawControlBackgroundInRect: actionButtonRect
 				active: (activeControlPart == CONTROL_PART_ACTION_BUTTON) && shouldHilite
 			];
 			[[NSColor windowFrameColor] set];
-			NSRectFill( NSMakeRect( (actionButtonRect.origin.x + actionButtonRect.size.width) - 1, 0, 1, controlRect.size.height ) );
+		//	NSRectFill( NSMakeRect( (actionButtonRect.origin.x + actionButtonRect.size.width) - 1, 0, 1, controlRect.size.height ) );
 			remainderStart += actionButtonRect.size.width;
 			
 			if( actionButtonImage ){
+				
 				NSRect			targetRect = NSMakeRect(actionButtonRect.origin.x,
 														actionButtonRect.origin.y,
 														[actionButtonImage size].width, 
@@ -474,15 +482,15 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 					targetRect.origin.y += (actionButtonRect.size.height - targetRect.size.height) / 2.0;
 				}
 				
-				[actionButtonImage drawInRect: targetRect 
-					fromRect: NSMakeRect( 0, 0, [actionButtonImage size].width, [actionButtonImage size].height )
-					operation: NSCompositeSourceOver
-					fraction: 1.0f
-				];
+				[actionButtonImage compositeToPoint:NSMakePoint(actionButtonRect.origin.x,
+														actionButtonRect.origin.y) operation:NSCompositeDestinationAtop];
+
+	
 			}
 		}
 		
 		// context button
+		
 		if( shouldDrawContextButton ){
 			[self drawControlBackgroundInRect: contextButtonRect
 				active: (activeControlPart == CONTROL_PART_CONTEXT_BUTTON ) && shouldHilite
@@ -492,6 +500,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 			remainderStart += contextButtonRect.size.width;
 			
 			if( contextButtonImage ){
+		
 				NSRect			targetRect = NSMakeRect(contextButtonRect.origin.x,
 														contextButtonRect.origin.y,
 														[contextButtonImage size].width, 
@@ -514,7 +523,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 					fromRect: NSMakeRect( 0, 0, [contextButtonImage size].width, [contextButtonImage size].height )
 					operation: NSCompositeSourceOver
 					fraction: 1.0f
-				];
+				]; 
 			}
 		}
 		
@@ -553,7 +562,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 			NSRect	textRect = NSMakeRect(6, (NSHeight(controlRect) - stringHeight)/2, NSMinX(resizeThumbRect) - 8, stringHeight);
 			
 			[attributedStringValue drawInRect:textRect];
-		}		
+		} 
 	}
 }
 

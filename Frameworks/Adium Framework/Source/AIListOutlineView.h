@@ -46,6 +46,8 @@ typedef enum {
 	
 	float				minimumDesiredWidth;
 	BOOL				desiredHeightPadding;
+	
+	NSArray				*draggedItems;
 }
 
 - (void)setDelegate:(id)delegate;

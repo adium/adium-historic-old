@@ -28,6 +28,7 @@
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AIFunctions.h>
 #import <AIUtilities/AIWindowControllerAdditions.h>
+#import <AIListBookmark.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
@@ -408,15 +409,32 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
             [sender expandItem:selectedObject];
         }
 		
-    } else if ([selectedObject isKindOfClass:[AIListContact class]]) {
+  
+		} else if ([selectedObject isMemberOfClass:[AIListBookmark class]]) {
+			//hide tooltip
+			[contactListController hideTooltip];
+		
+			//open a new group chat (bookmarked chat)
+			AIChat *chat = [[adium chatController] chatWithName:[(AIListBookmark *)selectedObject name] 
+													 identifier:NULL 
+													  onAccount:[(AIListBookmark *)selectedObject account] 
+											   chatCreationInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+																 [(AIListBookmark *)selectedObject room], @"room",
+																 [(AIListBookmark *)selectedObject server], @"server",
+																 [(AIListBookmark *)selectedObject handle], @"handle",
+																 nil]];
+#warning Incomplete
+		} else if ([selectedObject isKindOfClass:[AIListContact class]]) {
 		//Hide any tooltip the contactListController is currently showing
 		[contactListController hideTooltip];
 
 		//Open a new message with the contact
-		[[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:(AIListContact *)selectedObject
-																			onPreferredAccount:YES]];
+		[[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:(AIListContact *)selectedObject onPreferredAccount:YES]];
+
+																				
+    } 
 		
-    }
+		
 }
 
 - (BOOL) canCustomizeToolbar

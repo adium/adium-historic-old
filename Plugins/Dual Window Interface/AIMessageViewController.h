@@ -15,6 +15,8 @@
  */
 
 #import "ESChatUserListController.h"
+#import "AISideSplitView.h"
+#import "KNShelfSplitView.h"
 #import <Adium/AIInterfaceControllerProtocol.h>
 
 @class AIAccount, AIListContact, AIListObject, AIAccountSelectionView, AIMessageTabSplitView, AIMessageEntryTextView;
@@ -25,7 +27,7 @@
 	
 	//Split views
 	IBOutlet	AIMessageTabSplitView	*splitView_textEntryHorizontal;
-	IBOutlet	AIMessageTabSplitView	*splitView_messages;
+	
 
 	//Message Display
 	NSView								*controllerView_messages;
@@ -47,6 +49,13 @@
 	AIAccountSelectionView					*view_accountSelection;
 	AIMessageWindowController				*messageWindowController;
 
+
+	//widgetstrip
+	IBOutlet				KNShelfSplitView				*shelfView;
+	
+	//menuitem
+	NSMenuItem *						showHide;
+	
     AIChat					*chat;
 	BOOL					suppressSendLaterPrompt;
 	int						entryMinHeight;
@@ -83,6 +92,13 @@
 //User List
 - (void)setUserListVisible:(BOOL)inVisible;
 - (BOOL)userListVisible;
+
+//splitview
+ -(void)setupShelfView;
+// -(void)collapseShelfView;
+ -(void)toggleUserlist:(id)sender;
+ 
+
 
 
 @end

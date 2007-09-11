@@ -21,7 +21,7 @@
 	<key>Group Cell Style</key>
 	<integer>0</integer>
 	<key>Group Font</key>
-	<string>LucidaGrande-Bold,12</string>
+	<string>LucidaGrande-Bold,16</string>
 	<key>Group Text Alignment</key>
 	<integer>0</integer>
 	<key>Group Top Spacing</key>
@@ -29,29 +29,29 @@
 	<key>Horizontal Autosizing</key>
 	<false/>
 	<key>Service Icon Position</key>
-	<integer>3</integer>
+	<integer>1</integer>
 	<key>Show Extended Status</key>
-	<false/>
+	<true/>
 	<key>Show Service Icons</key>
 	<false/>
 	<key>Show Status Icons</key>
-	<false/>
+	<true/>
 	<key>Show User Icon</key>
 	<true/>
 	<key>Status Font</key>
-	<string>LucidaGrande,11</string>
+	<string>LucidaGrande,16</string>
 	<key>Status Icon Position</key>
-	<integer>5</integer>
+	<integer>3</integer>
 	<key>User Icon Position</key>
 	<integer>1</integer>
 	<key>User Icon Size</key>
-	<integer>14</integer>
+	<integer>40</integer>
 	<key>Vertical Autosizing</key>
 	<false/>
 	<key>Window Shadowed</key>
 	<true/>
 	<key>Window Style</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>Window Transparency</key>
 	<real>1</real>
 </dict>

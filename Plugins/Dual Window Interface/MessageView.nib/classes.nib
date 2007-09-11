@@ -1,245 +1,113 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<plist version="1.0">
-<dict>
-	<key>IBClasses</key>
-	<array>
-		<dict>
-			<key>CLASS</key>
-			<string>AIAlternatingRowOutlineView</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>lastSelectedRowIndexes</key>
-				<string>id</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>AIOutlineView</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>NSApplication</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSResponder</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key>sendContent</key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>AISendingTextView</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>target</key>
-				<string>id</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSTextView</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key>adiumPrint</key>
-				<string>id</string>
-				<key>prefsWindowWillClose</key>
-				<string>SS_PrefsController</string>
-			</dict>
-			<key>CLASS</key>
-			<string>NSObject</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>NSScrollView</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSView</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>AIMultiCellOutlineView</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>contentCell</key>
-				<string>id</string>
-				<key>groupCell</key>
-				<string>id</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>AIAlternatingRowOutlineView</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key>pasteAsRichText</key>
-				<string>id</string>
-				<key>scrollPageDown</key>
-				<string>id</string>
-				<key>scrollPageUp</key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>AIMessageEntryTextView</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>AISendingTextView</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key>adiumPrint</key>
-				<string>id</string>
-				<key>didSendMessage</key>
-				<string>id</string>
-				<key>sendMessage</key>
-				<string>id</string>
-				<key>sendMessageLater</key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>AIMessageViewController</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>customView_messages</key>
-				<string>NSView</string>
-				<key>scrollView_messages</key>
-				<string>NSScrollView</string>
-				<key>scrollView_outgoing</key>
-				<string>NSScrollView</string>
-				<key>scrollView_userList</key>
-				<string>AIAutoScrollView</string>
-				<key>splitView_messages</key>
-				<string>AIMessageTabSplitView</string>
-				<key>splitView_textEntryHorizontal</key>
-				<string>AIMessageTabSplitView</string>
-				<key>textView_outgoing</key>
-				<string>AIMessageEntryTextView</string>
-				<key>userListView</key>
-				<string>AIListOutlineView</string>
-				<key>view_accountSelection</key>
-				<string>AIAccountSelectionView</string>
-				<key>view_contents</key>
-				<string>NSView</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>AIObject</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>FirstResponder</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>AIListOutlineView</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>AIMultiCellOutlineView</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>NSButton</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSControl</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>AIMessageTabSplitView</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>AISplitView</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>AIObject</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>AIAccountSelectionView</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>box_accounts</key>
-				<string>NSBox</string>
-				<key>box_contacts</key>
-				<string>NSBox</string>
-				<key>delegate</key>
-				<string>id</string>
-				<key>popUp_accounts</key>
-				<string>NSPopUpButton</string>
-				<key>popUp_contacts</key>
-				<string>NSPopUpButton</string>
-				<key>view_contents</key>
-				<string>NSView</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSView</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>AIOutlineView</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSOutlineView</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>AISplitView</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSSplitView</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>SS_PrefsController</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>delegate</key>
-				<string>id</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>AIAutoScrollView</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSScrollView</string>
-		</dict>
-	</array>
-	<key>IBVersion</key>
-	<string>1</string>
-</dict>
-</plist>
+{
+    IBClasses = (
+        {
+            CLASS = AIAccountSelectionView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "box_accounts" = NSBox; 
+                "box_contacts" = NSBox; 
+                delegate = id; 
+                "popUp_accounts" = NSPopUpButton; 
+                "popUp_contacts" = NSPopUpButton; 
+                "view_contents" = NSView; 
+            }; 
+            SUPERCLASS = NSView; 
+        }, 
+        {
+            CLASS = AIAlternatingRowOutlineView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {lastSelectedRowIndexes = id; }; 
+            SUPERCLASS = AIOutlineView; 
+        }, 
+        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
+        {CLASS = AIColoredBoxView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {CLASS = AICompletingTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
+        {
+            CLASS = AIListOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIMultiCellOutlineView; 
+        }, 
+        {
+            ACTIONS = {pasteAsRichText = id; scrollPageDown = id; scrollPageUp = id; }; 
+            CLASS = AIMessageEntryTextView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AISendingTextView; 
+        }, 
+        {CLASS = AIMessageTabSplitView; LANGUAGE = ObjC; SUPERCLASS = AISplitView; }, 
+        {
+            ACTIONS = {
+                adiumPrint = id; 
+                didSendMessage = id; 
+                sendMessage = id; 
+                sendMessageLater = id; 
+            }; 
+            CLASS = AIMessageViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "customView_messages" = AIWidgetStrip; 
+                "scrollView_messages" = NSScrollView; 
+                "scrollView_outgoing" = NSScrollView; 
+                "scrollView_userList" = AIAutoScrollView; 
+                shelfView = id; 
+                "splitView_messages" = AISideSplitView; 
+                "splitView_textEntryHorizontal" = AISplitView; 
+                "textView_outgoing" = AIMessageEntryTextView; 
+                userListView = AIListOutlineView; 
+                "view_accountSelection" = AIAccountSelectionView; 
+                "view_contents" = NSView; 
+            }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {
+            ACTIONS = {sendMessage = id; }; 
+            CLASS = AIMessageWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "scrollView_messageView" = NSScrollView; 
+                "textView_outgoing" = AIMessageSendingTextView; 
+                toolbar = AIMiniToolbar; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            CLASS = AIMiniToolbar; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {representedObject = id; }; 
+            SUPERCLASS = NSView; 
+        }, 
+        {
+            CLASS = AIMultiCellOutlineView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {contentCell = id; groupCell = id; }; 
+            SUPERCLASS = AIAlternatingRowOutlineView; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
+        {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
+        {
+            ACTIONS = {sendContent = id; }; 
+            CLASS = AISendingTextView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {target = id; }; 
+            SUPERCLASS = NSTextView; 
+        }, 
+        {CLASS = AISideSplitView; LANGUAGE = ObjC; SUPERCLASS = AISplitView; }, 
+        {CLASS = AISplitView; LANGUAGE = ObjC; SUPERCLASS = NSSplitView; }, 
+        {
+            CLASS = AIWidgetStripView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {sideSplitView = id; splitView = id; }; 
+            SUPERCLASS = NSView; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {toggleShelf = id; }; 
+            CLASS = KNShelfSplitView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {contentView = NSView; delegate = id; shelfView = NSView; target = id; }; 
+            SUPERCLASS = NSView; 
+        }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
+    ); 
+    IBVersion = 1; 
+}

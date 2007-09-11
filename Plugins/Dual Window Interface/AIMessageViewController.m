@@ -41,9 +41,12 @@
 #import "AIDualWindowInterfacePlugin.h"
 #import "AIContactInfoWindowController.h"
 #import "AIMessageTabSplitView.h"
-
 #import <PSMTabBarControl/NSBezierPath_AMShading.h>
-
+#import <KNShelfSplitView.h>
+#import "ESChatUserListController.h"
+#import <AIMenuControllerProtocol.h>
+#import <AIBookmarkController.h>
+#import <AIToolbarControllerProtocol.h>
 //Heights and Widths
 #define MESSAGE_VIEW_MIN_HEIGHT_RATIO		.50						//Mininum height ratio of the message view
 #define MESSAGE_VIEW_MIN_WIDTH_RATIO		.50						//Mininum width ratio of the message view
@@ -75,7 +78,6 @@
 - (void)_updateUserListViewWidth;
 - (int)_userListViewProperWidthIgnoringUserMininum:(BOOL)ignoreUserMininum;
 - (void)_updateAccountSelectionViewHeight;
-
 - (void)saveUserListMinimumSize;
 @end
 
@@ -89,6 +91,7 @@
     return [[[self alloc] initForChat:inChat] autorelease];
 }
 
+
 /*!
  * @brief Initialize
  */
@@ -97,7 +100,6 @@
     if ((self = [super init]))
 	{
 		AIListContact	*contact;
-		
 		//Init
 		chat = [inChat retain];
 		contact = [chat listObject];
@@ -134,8 +136,11 @@
 									   selector:@selector(redisplaySourceAndDestinationSelector:) 
 										   name:Chat_DestinationChanged
 										 object:chat];
-
-		//
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(toggleUserlist:)
+									   name:@"toggleUserlist"
+									   object:nil];
+		
 		[splitView_textEntryHorizontal setDividerThickness:6]; //Default is 9
 		[splitView_textEntryHorizontal setDrawsDivider:NO];
 		
@@ -150,12 +155,10 @@
 		//Set our base writing direction
 		if (contact)
 			[textView_outgoing setBaseWritingDirection:[contact baseWritingDirection]];
-		
+		}
 		//Observe general preferences for sending keys
 		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GENERAL];
-	}
-
-    return self;
+	    return self;
 }
 
 /*!
@@ -201,7 +204,8 @@
 	if (retainingScrollViewUserList) {
 		[scrollView_userList release];
 	}
-	
+	//release menuItem
+	[showHide release];
     [super dealloc];
 }
 
@@ -231,9 +235,10 @@
 			break;
 	}
 
+	//CHANGE STUFF HERE!! - eb
 	[view_accountSelection setLeftColor:leftColor rightColor:rightColor];
-	[splitView_textEntryHorizontal setLeftColor:leftColor rightColor:rightColor];
-	[splitView_messages setLeftColor:leftColor rightColor:rightColor];
+//	[splitView_textEntryHorizontal setLeftColor:leftColor rightColor:rightColor];
+//	[splitView_messages setLeftColor:leftColor rightColor:rightColor];
 }
 
 /*!
@@ -294,8 +299,9 @@
  */
 - (AIListObject *)preferredListObject
 {
-	if ( [[splitView_messages subviews] containsObject:scrollView_userList] && ([userListView selectedRow] != -1)) {
-		return [userListView itemAtRow:[userListView selectedRow]];
+	if ( userListView != nil) { //[[shelfView subviews] containsObject:scrollView_userList] && ([userListView selectedRow] != -1)
+			NSLog(@"userlistview itemAtRow: %@", [userListView itemAtRow:[userListView selectedRow]]);
+			return [userListView itemAtRow:[userListView selectedRow]];
 	}
 	
 	return nil;
@@ -760,7 +766,6 @@
 - (void)_updateTextEntryViewHeight
 {
 	int		height = [self _textEntryViewProperHeightIgnoringUserMininum:NO];
-	int		heightWithDivider = [splitView_textEntryHorizontal dividerThickness] + height;
 	NSRect	tempFrame, newFrame;
 	BOOL	changed = NO;
 	
@@ -776,18 +781,6 @@
 	if (!NSEqualRects(tempFrame, newFrame)) {
 		[scrollView_outgoing setFrame:newFrame];
 		[scrollView_outgoing setNeedsDisplay:YES];
-		changed = YES;
-	}
-
-	//Size the message split view to fill the remaining space
-	tempFrame = [splitView_messages frame];
-	newFrame = NSMakeRect(tempFrame.origin.x,
-						  tempFrame.origin.y,
-						  tempFrame.size.width,
-						  [splitView_textEntryHorizontal frame].size.height - heightWithDivider);
-	if (!NSEqualRects(tempFrame, newFrame)) {
-		[splitView_messages setFrame:newFrame];
-		[splitView_messages setNeedsDisplay:YES];
 		changed = YES;
 	}
 
@@ -899,7 +892,7 @@
  */
 - (BOOL)userListVisible
 {
-	return [[splitView_messages subviews] containsObject:scrollView_userList];
+	return [shelfView isShelfVisible];
 }
 
 /*!
@@ -910,9 +903,10 @@
 	//Configure the user list
 	[self _configureUserList];
 
+
+	
 	//Add the user list back to our window if it's missing
 	if (![self userListVisible]) {
-		[splitView_messages addSubview:scrollView_userList];
 		[self _updateUserListViewWidth];
 		
 		if (retainingScrollViewUserList) {
@@ -920,6 +914,8 @@
 			retainingScrollViewUserList = NO;
 		}
 	}
+	
+	[self setupShelfView];
 }
 
 /*!
@@ -935,8 +931,13 @@
 		retainingScrollViewUserList = YES;
 		
 		[self saveUserListMinimumSize];
-
-		[userListController release]; userListController = nil;
+		[userListController release];
+		userListController = nil;
+	
+		//need to collapse the splitview
+		[shelfView setShelfIsVisible:NO];
+		//set remaining views to fill up the space
+		[splitView_textEntryHorizontal setFrame:[[shelfView superview]frame]];
 	}
 }
 
@@ -948,6 +949,7 @@
  */
 - (void)_configureUserList
 {
+	
 	if (!userListController) {
 		NSDictionary	*themeDict = [NSDictionary dictionaryNamed:USERLIST_THEME forClass:[self class]];
 		NSDictionary	*layoutDict = [NSDictionary dictionaryNamed:USERLIST_LAYOUT forClass:[self class]];
@@ -964,9 +966,10 @@
 		userListMinWidth = [[[adium preferenceController] preferenceForKey:KEY_ENTRY_USER_LIST_MIN_WIDTH
 																	 group:PREF_GROUP_DUAL_WINDOW_INTERFACE] intValue];
 		if (userListMinWidth < USER_LIST_MIN_WIDTH) userListMinWidth = USER_LIST_DEFAULT_WIDTH;
-		
-		
+		[shelfView setShelfWidth:[userListView bounds].size.width];
+
 	}
+
 }
 
 /*!
@@ -1023,12 +1026,12 @@
 - (void)_updateUserListViewWidth
 {
 	int		width = [self _userListViewProperWidthIgnoringUserMininum:NO];
-	int		widthWithDivider = [splitView_messages dividerThickness] + width;
+	int		widthWithDivider = 1 + width;	//resize bar effective width  
 	NSRect	tempFrame;
 
 	//Size the user list view to the desired width
 	tempFrame = [scrollView_userList frame];
-	[scrollView_userList setFrame:NSMakeRect([splitView_messages frame].size.width - width,
+	[scrollView_userList setFrame:NSMakeRect([shelfView frame].size.width - width,
 											 tempFrame.origin.y,
 											 width,
 											 tempFrame.size.height)];
@@ -1037,11 +1040,11 @@
 	tempFrame = [scrollView_messages frame];
 	[scrollView_messages setFrame:NSMakeRect(tempFrame.origin.x,
 											 tempFrame.origin.y,
-											 [splitView_messages frame].size.width - widthWithDivider,
+											 [shelfView frame].size.width - widthWithDivider,
 											 tempFrame.size.height)];
 
 	//Redisplay both views and the divider
-	[splitView_messages setNeedsDisplay:YES];
+	[shelfView setNeedsDisplay:YES];
 }
 
 /*!
@@ -1054,8 +1057,8 @@
  */
 - (int)_userListViewProperWidthIgnoringUserMininum:(BOOL)ignoreUserMininum
 {
-	int dividerThickness = [splitView_messages dividerThickness];
-	int allowedWidth = ([splitView_messages frame].size.width / 2.0) - dividerThickness;
+	int dividerThickness = 1; //[shelfView dividerThickness];
+	int allowedWidth = ([shelfView frame].size.width / 2.0) - dividerThickness;
 	int	width = USER_LIST_MIN_WIDTH;
 	
 	//We must never fall below the user's prefered mininum or above the allowed width
@@ -1144,7 +1147,7 @@
  * for our split panes.
  */
 - (void)splitView:(NSSplitView *)sender resizeSubviewsWithOldSize:(NSSize)oldSize
-{
+{		
 	if ([[sender subviews] count] == 2) {
 		NSView	*view1 = [[sender subviews] objectAtIndex:0];
 		NSView	*view2 = [[sender subviews] objectAtIndex:1];
@@ -1156,20 +1159,23 @@
 
 		//Behavior varies depending on which split view is resizing
 		if (sender == splitView_textEntryHorizontal) {
+		
 			//Adjust the height of both views
 			[self _updateTextEntryViewHeight];
-			
+
 			//Adjust the width of both views to fill remaining space
 			[view1 setFrameSize:NSMakeSize(newSize.width + dWidth, [view1 frame].size.height)];
 			[view2 setFrameSize:NSMakeSize(newSize.width + dWidth, [view2 frame].size.height)];
 			
 		} else /*if (sender == splitView_messages)*/{
-			//Adjust the width of both views
-			[self _updateUserListViewWidth];
 
-			//Adjust the height of both views to fill remaining space
+
+			[self _updateUserListViewWidth];
+			
+			//Adjust the height of all splitviews
 			[view1 setFrameSize:NSMakeSize([view1 frame].size.width, newSize.height + dHeight)];
 			[view2 setFrameSize:NSMakeSize([view2 frame].size.width, newSize.height + dHeight)];
+			
 		}
 		
 	} else if ([[sender subviews] count] == 1) {
@@ -1177,6 +1183,34 @@
 		
 	}
 }
+#pragma mark Shelfview
+/* @name	setupShelfView
+ * @brief	sets up shelfsplitview containing userlist & contentviews
+ */
+ -(void)setupShelfView
+ {
+ 	[shelfView setFrame:[[shelfView superview] frame]];
+	[shelfView setContentView:splitView_textEntryHorizontal];
+	[shelfView setShelfView:scrollView_userList];
+	[shelfView setShelfWidth:200];
+	
+	if([[[self chat] menuForChat] numberOfItems] > 0) {
+		[shelfView setContextButtonMenu:[[self chat] menuForChat]];
+		[shelfView setContextButtonImage:[NSImage imageNamed:@"sidebarActionWidget.png"]];
+	}
+	[shelfView setShelfIsVisible:YES];
+}
+
+/* @name	toggleUserlist
+ * @brief	toggles the state of the userlist shelf
+ */
+-(void)toggleUserlist:(id)sender
+{	
+		[shelfView setShelfIsVisible:![shelfView isShelfVisible]];
+}	
+
+
+
 
 @end
 

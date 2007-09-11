@@ -805,7 +805,7 @@ static void purpleUnregisterCb(PurpleAccount *account, gboolean success, void *u
 }
 
 //Called on the purple thread, actually performs the specified command (it should have already been tested by 
-//attemptPurpleCommandOnMessage:... above.
+//attemptPurpleCommandOnMessage:... below.
 - (BOOL)doCommand:(NSString *)originalMessage
 			fromAccount:(id)sourceAccount
 				 inChat:(AIChat *)chat
@@ -859,6 +859,7 @@ static void purpleUnregisterCb(PurpleAccount *account, gboolean success, void *u
  */
 - (BOOL)attemptPurpleCommandOnMessage:(NSString *)originalMessage fromAccount:(AIAccount *)sourceAccount inChat:(AIChat *)chat
 {
+	NSLog(@"attempPurpleCommandOnMessage");
 	BOOL				didCommand = NO;
 	
 	if ([originalMessage hasPrefix:@"/"]) {	

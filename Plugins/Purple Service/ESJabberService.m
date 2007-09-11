@@ -20,8 +20,17 @@
 #import "ESPurpleJabberAccountViewController.h"
 #import "ESJabberService.h"
 #import <AIUtilities/AICharacterSetAdditions.h>
-
+#import <libpurple/jabber.h>
 @implementation ESJabberService
+
+
+//initialization
+-(id)init
+{
+	self = [super init];	
+	jabber_register_commands();
+	return self;
+}
 
 //Account Creation
 - (Class)accountClass{

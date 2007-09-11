@@ -43,6 +43,7 @@
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AISortController.h>
 #import "KFTypeSelectTableView.h"
+#import <KNShelfSplitview.h>
 
 #define ERROR_MESSAGE_WINDOW_TITLE		AILocalizedString(@"Adium : Error","Error message window title")
 #define LABEL_ENTRY_SPACING				4.0
@@ -154,15 +155,22 @@
 	//Open the contact list window
     [self showContactList:nil];
 
-	//Contact list menu tem
-    NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Contact List","Name of the window which lists contacts")
+	//Userlist show/hide item
+	menuItem_toggleUserlist = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@"Toggle Userlist"
+																							 target:self
+																							 action:@selector(toggleUserlist:)
+																					  keyEquivalent:@""];
+	[[adium menuController] addMenuItem:menuItem_toggleUserlist toLocation:LOC_View_General];
+																			  
+	//Contact list menu item
+	NSMenuItem* menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Contact List","Name of the window which lists contacts")
 																				target:self
 																				action:@selector(toggleContactList:)
 																		 keyEquivalent:@"/"];
 	[[adium menuController] addMenuItem:menuItem toLocation:LOC_Window_Fixed];
 	[[adium menuController] addMenuItem:[[menuItem copy] autorelease] toLocation:LOC_Dock_Status];
 	[menuItem release];
-
+	
 	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Close Chat","Title for the close chat menu item")
 																	target:self
 																	action:@selector(closeContextualChat:)
@@ -1497,7 +1505,7 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
 //Custom Dimming menu items --------------------------------------------------------------------------------------------
 #pragma mark Custom Dimming menu items
 //The standard ones do not dim correctly when unavailable
-- (IBAction)toggleFontTrait:(id)sender
+- (IBAction)FontTrait:(id)sender
 {
     NSFontManager	*fontManager = [NSFontManager sharedFontManager];
     
@@ -1523,9 +1531,10 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
 //Menu item validation
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
+	
 	NSWindow	*keyWindow = [[NSApplication sharedApplication] keyWindow];
 	NSResponder *responder = [keyWindow firstResponder]; 
-
+	
     if (menuItem == menuItem_bold || menuItem == menuItem_italic) {
 		NSFont			*selectedFont = [[NSFontManager sharedFontManager] selectedFont];
 		
@@ -1570,6 +1579,8 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
 									  AILocalizedString(@"Hide Fonts",nil) :
 									  AILocalizedString(@"Show Fonts",nil))];
 		return YES;
+	} else if (menuItem == menuItem_toggleUserlist) {
+			return [[self activeChat] isGroupChat];
 	} else {
 		return YES;
 	}
@@ -1612,5 +1623,12 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
 
 	return [windowPositionMenu autorelease];
 }
+
+-(void)toggleUserlist:(id)sender
+{
+	NSLog(@"toggle userlist in interfaceController");
+	[[adium notificationCenter] postNotificationName:@"toggleUserlist" object:nil];
+}	
+
 
 @end

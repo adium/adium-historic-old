@@ -50,6 +50,7 @@
 
 - (void)unregisterToolbarItem:(NSToolbarItem *)item forToolbarType:(NSString *)type
 {
+	NSLog(@"unregitem: %@ forbar: %@",item,type);
 	NSMutableDictionary		*itemDict = [toolbarItems objectForKey:type];
 	[itemDict removeObjectForKey:[item itemIdentifier]];
 }

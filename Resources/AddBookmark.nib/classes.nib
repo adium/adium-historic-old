@@ -1,0 +1,13 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {add = id; cancel = id; }; 
+            CLASS = AINewBookmarkWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"popUp_group" = id; "textField_name" = id; }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

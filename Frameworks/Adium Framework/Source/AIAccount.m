@@ -23,6 +23,7 @@
 #import <Adium/ESFileTransfer.h>
 #import "AdiumAccounts.h"
 
+#import <AIChatCommandsController.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIAccountControllerProtocol.h>
@@ -106,7 +107,6 @@
  */
 - (void)initAccount
 {
-	
 }
 
 /*!
@@ -507,6 +507,7 @@
  */
 - (BOOL)inviteContact:(AIListObject *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage
 {
+	NSLog(@"invite contact to chat with message");
 	return NO;
 }
 
@@ -766,6 +767,43 @@
 - (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict didAuthorize:(BOOL)inDidAuthorize
 {}
 
+#pragma mark Chat Commands
+-(NSMenu*)actionsForChat:(AIChat*)chat
+{
+#warning breakage
+	return nil;
+	//add stuff
+}
+
+-(void)verifyCommand:(NSString*)commandName forChat:(AIChat*)chat
+{
+	[self setDelegate:[AIChatCommandsController init]];
+	[[self delegate] verifyCommand:commandName forChat:chat];
+	[[self delegate] setDelegate:self];
+}
+
+-(void)executeCommandWithParameters:(NSDictionary*)parameters
+{
+	//add stuff
+}
+
+
+
+#pragma mark delegate accessor methods
+//delegate accessor methods
+-(id)delegate
+{
+	return delegate;
+}
+
+-(void)setDelegate:(id)newDelegate;
+{
+	if(delegate != newDelegate)
+	{
+		[delegate release];
+		delegate = [newDelegate retain];
+	}
+}
 #pragma mark AppleScript
 /**
  * @brief The standard objectSpecifier for this model object.
@@ -1022,4 +1060,5 @@
 {
 	[[adium statusController] setActiveStatusState:[[adium statusController] invisibleStatus] forAccount:self];
 }
+
 @end

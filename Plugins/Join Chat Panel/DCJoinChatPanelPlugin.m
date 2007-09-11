@@ -58,7 +58,8 @@
  */
 - (IBAction)joinChat:(id)sender
 {	
-	[DCJoinChatWindowController joinChatWindow];
+#warning What is here
+	DCJoinChatWindowController* sharedChatInstance = [DCJoinChatWindowController joinChatWindow];
 }
 
 /*!
