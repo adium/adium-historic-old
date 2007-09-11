@@ -288,7 +288,6 @@
 	
 	if([textString length] > 0) {
 		NSString* enteredCharacters = [[NSString alloc] initWithString:[textString substringFromIndex:([textString length]  -1)]];
-		NSLog(@"enterdchars: %@", enteredCharacters);
 		if([enteredCharacters isEqualTo:@" "] || [enteredCharacters isEqualTo:@"	"]) {
 			[currentString setString:@""];
 		} else {
