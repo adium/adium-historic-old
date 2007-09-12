@@ -82,8 +82,6 @@
 	[self configureAccountList];
 	[self updateAccountOverview];
 	
-	[requiredHeightDict release]; requiredHeightDict = [[NSMutableDictionary alloc] init];
-	
 	//Build the 'add account' menu of each available service
 	NSMenu	*serviceMenu = [AIServiceMenu menuOfServicesWithTarget:self 
 												activeServicesOnly:NO
@@ -470,7 +468,7 @@
 {
 	int accountNumber;
 
-	[requiredHeightDict removeAllObjects];
+	[requiredHeightDict release]; requiredHeightDict = [[NSMutableDictionary alloc] init];
 
 	for (accountNumber = 0; accountNumber < [accountArray count]; accountNumber++) {
 		[self calculateHeightForRow:accountNumber];
