@@ -327,11 +327,11 @@
 	[groupCell setFont:(theFont ? theFont : GROUP_FONT_IF_FONT_NOT_FOUND)];
 
 	//Standard special cases.  Add an extra line of padding to the bottom of the standard window.
-	if (windowStyle == AIContactListWindowStyleStandard) {
-		[contactListView setDesiredHeightPadding:2];   //1 pixel border at the top and bottom + extra line at bottom
-	} else {
-		[contactListView setDesiredHeightPadding:2];   //Accounts for the 1 pixel border at the top and bottom
-	}
+	//if (windowStyle == AIContactListWindowStyleStandard) {
+	//	[contactListView setDesiredHeightPadding:3];   //1 pixel border at the top and bottom + extra line at bottom
+	//} else {
+	[contactListView setDesiredHeightPadding:2];   //Accounts for the 1 pixel border at the top and bottom
+	//}
 	
 	//Bubbles special cases
 	pillowsOrPillowsFittedWindowStyle = (windowStyle == AIContactListWindowStyleContactBubbles || windowStyle == AIContactListWindowStyleContactBubbles_Fitted);
@@ -359,13 +359,13 @@
 	//Mockie special cases.  For all other layouts we use fixed group spacing
 	if (windowStyle == AIContactListWindowStyleGroupBubbles) {
 		[groupCell setTopSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING] intValue]];
-	} else if (windowStyle == AIContactListWindowStyleStandard) {
-		//Force some spacing and draw a bordeer around our groups (This doesn't look good in borderless)
-		//[groupCell setTopSpacing:1];
-		//[groupCell setLeftSpacing:1];
-		//[groupCell setRightSpacing:1];
-		//[groupCell setDrawsGradientEdges:YES];
-	}
+	} /*else if (windowStyle == AIContactListWindowStyleStandard) {
+		Force some spacing and draw a bordeer around our groups (This doesn't look good in borderless)
+		[groupCell setTopSpacing:1];
+		[groupCell setLeftSpacing:1];
+		[groupCell setRightSpacing:1];
+		[groupCell setDrawsGradientEdges:YES];
+	}*/
 	
 	//Disable square row highlighting for bubble lists - the bubble cells handle this on their own
 	if (windowStyle == AIContactListWindowStyleGroupBubbles ||
