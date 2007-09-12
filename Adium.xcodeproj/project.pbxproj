@@ -625,8 +625,6 @@
 		34D0FF8509569FE500DCB678 /* PersonalPreferencesDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D0FF8409569FE500DCB678 /* PersonalPreferencesDefaults.plist */; };
 		34D8329007CBD5E2006466F2 /* Contact Info List Theme.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8328E07CBD5E2006466F2 /* Contact Info List Theme.plist */; };
 		34D8329107CBD5E2006466F2 /* Contact Info List Layout.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8328F07CBD5E2006466F2 /* Contact Info List Layout.plist */; };
-		34D8329907CBD609006466F2 /* AdiumSuite.scriptTerminology in Resources */ = {isa = PBXBuildFile; fileRef = 34D8329707CBD609006466F2 /* AdiumSuite.scriptTerminology */; };
-		34D8329A07CBD609006466F2 /* AdiumSuite.scriptSuite in Resources */ = {isa = PBXBuildFile; fileRef = 34D8329807CBD609006466F2 /* AdiumSuite.scriptSuite */; };
 		34D832A007CBD61A006466F2 /* ContactListDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8329F07CBD61A006466F2 /* ContactListDefaults.plist */; };
 		34D832AE07CBD62C006466F2 /* AdiumEmoticonset.icns in Resources */ = {isa = PBXBuildFile; fileRef = 34D832A507CBD62B006466F2 /* AdiumEmoticonset.icns */; };
 		34D832AF07CBD62C006466F2 /* AdiumScripts.icns in Resources */ = {isa = PBXBuildFile; fileRef = 34D832A607CBD62B006466F2 /* AdiumScripts.icns */; };
@@ -2895,7 +2893,7 @@
 		34BC8F790ACA3AAC00562745 /* AIScannerDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIScannerDebug.m; path = Source/AIScannerDebug.m; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BEA0F109C4A481000787E4 /* AITranslatorRequestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AITranslatorRequestDelegate.h; path = Plugins/Translation/AITranslatorRequestDelegate.h; sourceTree = "<group>"; };
@@ -3060,8 +3058,6 @@
 		34D8328807CBD5D2006466F2 /* keys.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = keys.png; path = Resources/keys.png; sourceTree = "<group>"; };
 		34D8328E07CBD5E2006466F2 /* Contact Info List Theme.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = "Contact Info List Theme.plist"; path = "Resources/Contact Info List Theme.plist"; sourceTree = "<group>"; };
 		34D8328F07CBD5E2006466F2 /* Contact Info List Layout.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = "Contact Info List Layout.plist"; path = "Resources/Contact Info List Layout.plist"; sourceTree = "<group>"; };
-		34D8329707CBD609006466F2 /* AdiumSuite.scriptTerminology */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = AdiumSuite.scriptTerminology; path = Resources/AdiumSuite.scriptTerminology; sourceTree = "<group>"; };
-		34D8329807CBD609006466F2 /* AdiumSuite.scriptSuite */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = AdiumSuite.scriptSuite; path = Resources/AdiumSuite.scriptSuite; sourceTree = "<group>"; };
 		34D8329F07CBD61A006466F2 /* ContactListDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = ContactListDefaults.plist; path = Resources/ContactListDefaults.plist; sourceTree = "<group>"; };
 		34D832A507CBD62B006466F2 /* AdiumEmoticonset.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = AdiumEmoticonset.icns; path = Resources/AdiumEmoticonset.icns; sourceTree = "<group>"; };
 		34D832A607CBD62B006466F2 /* AdiumScripts.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = AdiumScripts.icns; path = Resources/AdiumScripts.icns; sourceTree = "<group>"; };
@@ -4558,8 +4554,6 @@
 				0CAC6A130C0C657A0090AE95 /* Adium.sdef */,
 				344C0D4F06B6D63800DA7200 /* ESApplescriptabilityController.h */,
 				344C0D4E06B6D63800DA7200 /* ESApplescriptabilityController.m */,
-				34D8329707CBD609006466F2 /* AdiumSuite.scriptTerminology */,
-				34D8329807CBD609006466F2 /* AdiumSuite.scriptSuite */,
 				0C79A2D60C5E633F005AE6FA /* AIMoveCommand.h */,
 				0C79A2D70C5E633F005AE6FA /* AIMoveCommand.m */,
 				0CD41C6E0C2776540082F83B /* AICreateCommand.h */,
@@ -7787,7 +7781,6 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
@@ -8024,8 +8017,6 @@
 				34575E3907CBA88E004A4FFF /* MainMenu.nib in Resources */,
 				34D8329007CBD5E2006466F2 /* Contact Info List Theme.plist in Resources */,
 				34D8329107CBD5E2006466F2 /* Contact Info List Layout.plist in Resources */,
-				34D8329907CBD609006466F2 /* AdiumSuite.scriptTerminology in Resources */,
-				34D8329A07CBD609006466F2 /* AdiumSuite.scriptSuite in Resources */,
 				34D832A007CBD61A006466F2 /* ContactListDefaults.plist in Resources */,
 				34D832AE07CBD62C006466F2 /* AdiumEmoticonset.icns in Resources */,
 				34D832AF07CBD62C006466F2 /* AdiumScripts.icns in Resources */,
