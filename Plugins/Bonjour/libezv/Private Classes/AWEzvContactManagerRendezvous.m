@@ -873,7 +873,7 @@ static void	ProcessSockData( CFSocketRef s, CFSocketCallBackType type, CFDataRef
 	DNSServiceRef		serviceRef = (DNSServiceRef) info;
 	DNSServiceErrorType err = DNSServiceProcessResult( serviceRef);
 	if ( err != kDNSServiceErr_NoError){
-		printf( "DNSServiceProcessResult() for socket descriptor %d returned an error! %d with CFSocketCallBackType %d and data %s\n", DNSServiceRefSockFD(info), err, type, data);
+		//printf( "DNSServiceProcessResult() for socket descriptor %d returned an error! %d with CFSocketCallBackType %d and data %s\n", DNSServiceRefSockFD(info), err, type, data);
 	}
 }
 
