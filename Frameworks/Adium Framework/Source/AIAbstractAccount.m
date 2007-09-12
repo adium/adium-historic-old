@@ -248,14 +248,14 @@
 {
 	enabled = inEnabled;
 
-	[self setPreference:[NSNumber numberWithBool:inEnabled]
-				 forKey:KEY_ENABLED
-				  group:GROUP_ACCOUNT_STATUS];
-
 	if (!inEnabled) {
 		[self setLastDisconnectionError:nil];
 		[self cancelAutoReconnect];
 	}
+
+	[self setPreference:[NSNumber numberWithBool:inEnabled]
+				 forKey:KEY_ENABLED
+				  group:GROUP_ACCOUNT_STATUS];
 
 	//We don't update the display name unless we're enabled, so update it now
 	[self updateStatusForKey:KEY_ACCOUNT_DISPLAY_NAME];
