@@ -21,6 +21,7 @@
 #import <Adium/AIAccount.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
+#import "AMPurpleTuneTooltip.h"
 
 @implementation CBPurpleServicePlugin
 
@@ -57,6 +58,10 @@
 #endif
 	
 	[SLPurpleCocoaAdapter pluginDidLoad];
+	
+	//tooltip for tunes
+	tunetooltip = [[AMPurpleTuneTooltip alloc] init];
+	[[adium interfaceController] registerContactListTooltipEntry:tunetooltip secondaryEntry:YES];
 }
 
 - (void)uninstallPlugin
@@ -80,6 +85,10 @@
 #ifndef MEANWHILE_NOT_AVAILABLE
 	[MeanwhileService release]; MeanwhileService = nil;
 #endif
+	
+	[[adium interfaceController] unregisterContactListTooltipEntry:tunetooltip secondaryEntry:YES];
+	[tunetooltip release];
+	tunetooltip = nil;	
 }
 
 @end

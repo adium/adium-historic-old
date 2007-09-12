@@ -16,6 +16,8 @@
 
 #import <Adium/AIPlugin.h>
 
+@class AMPurpleTuneTooltip;
+
 @interface CBPurpleServicePlugin : AIPlugin{
     id  AIMService;
     id  DotMacService;
@@ -32,6 +34,8 @@
     id  YahooService;
 	id  YahooJapanService;
 	id	ZephyrService;
+	
+	AMPurpleTuneTooltip *tunetooltip;
 }
 
 @end

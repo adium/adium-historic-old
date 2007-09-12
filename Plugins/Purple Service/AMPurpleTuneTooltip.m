@@ -7,70 +7,73 @@
 //
 
 #import "AMPurpleTuneTooltip.h"
-#import "AIListObject.h"
+#import <Adium/AIListObject.h>
+#import <Adium/AIListContact.h>
 #import "CBPurpleAccount.h"
 #import <Libpurple/blist.h>
 
 @implementation AMPurpleTuneTooltip
 
-- (id)initWithAccount:(CBPurpleAccount*)_account {
-	if((self = [super init])) {
-		account = _account;
-	}
-	return self;
-}
-
 - (NSString *)labelForObject:(AIListObject *)inObject {
-	if([inObject service] == [account service]) {
-		PurpleBuddy *buddy = purple_find_buddy([account purpleAccount],[[inObject UID] UTF8String]);
-		PurplePresence *presence = purple_buddy_get_presence(buddy);
-		PurpleStatus *status = purple_presence_get_active_status(presence);
-		PurpleValue *value = purple_status_get_attr_value(status, "tune_title");
+	if ([inObject isKindOfClass:[AIListContact class]] &&
+		[[(AIListContact *)inObject account] isKindOfClass:[CBPurpleAccount class]]) {
+		PurpleAccount *account = [(CBPurpleAccount *)[(AIListContact *)inObject account] purpleAccount];
+		PurpleBuddy *buddy = (account ? purple_find_buddy(account, [[inObject UID] UTF8String]) : nil);
+		PurplePresence *presence = (buddy ? purple_buddy_get_presence(buddy) : nil);
+		PurpleStatus *status = (presence ? purple_presence_get_active_status(presence) : nil);
+		PurpleValue *value = (status ? purple_status_get_attr_value(status, "tune_title") : nil);
 		
-		if(value && purple_value_get_type(value) == PURPLE_TYPE_STRING && purple_value_get_string(value))
+		if (value && purple_value_get_type(value) == PURPLE_TYPE_STRING && purple_value_get_string(value))
 			return AILocalizedString(@"Tune","user tune tooltip title");
 	}
+	
 	return nil;
 }
 
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject {
-	if([inObject service] == [account service]) {
-		PurpleBuddy *buddy = purple_find_buddy([account purpleAccount],[[inObject UID] UTF8String]);
-		PurplePresence *presence = purple_buddy_get_presence(buddy);
-		PurpleStatus *status = purple_presence_get_active_status(presence);
+	if ([inObject isKindOfClass:[AIListContact class]] &&
+		[[(AIListContact *)inObject account] isKindOfClass:[CBPurpleAccount class]]) {
+		PurpleAccount *account = [(CBPurpleAccount *)[(AIListContact *)inObject account] purpleAccount];
+		PurpleBuddy *buddy = (account ? purple_find_buddy(account, [[inObject UID] UTF8String]) : nil);
+		PurplePresence *presence = (buddy ? purple_buddy_get_presence(buddy) : nil);
+		PurpleStatus *status = (presence ? purple_presence_get_active_status(presence) : nil);
+		
+		if (!status) return nil;
 
 		PurpleValue *title = purple_status_get_attr_value(status, "tune_title");
+
+		if (!title) return nil;
+		
 		PurpleValue *artist = purple_status_get_attr_value(status, "tune_artist");
 		PurpleValue *album = purple_status_get_attr_value(status, "tune_album");
 		PurpleValue *time = purple_status_get_attr_value(status, "tune_time");
 		
-		if(!title)
-			return nil;
 		
 		const char *titlestr = purple_value_get_string(title);
 		const char *artiststr = NULL;
 		const char *albumstr = NULL;
 		int timeval = -1;
-		if(!titlestr)
+		if (!titlestr)
 			return nil;
-		if(artist)
+		if (artist)
 			artiststr = purple_value_get_string(artist);
-		if(album)
+		if (album)
 			albumstr = purple_value_get_string(album);
-		if(time)
+		if (time)
 			timeval = purple_value_get_int(time);
 		
 		NSMutableString *text = [NSMutableString string];
-		if(artiststr && artiststr[0] != '\0')
+		if (artiststr && artiststr[0] != '\0')
 			[text appendFormat:@"%@ - ", [NSString stringWithUTF8String:artiststr]];
 		[text appendString:[NSString stringWithUTF8String:titlestr]];
-		if(albumstr && albumstr[0] != '\0')
+		if (albumstr && albumstr[0] != '\0')
 			[text appendFormat:@" (%@)", [NSString stringWithUTF8String:albumstr]];
-		if(timeval > 0)
+		if (timeval > 0)
 			[text appendFormat:@" - [%d:%02d]", timeval / 60, timeval % 60];
 		
 		return [[[NSAttributedString alloc] initWithString:text attributes:nil] autorelease];
 	}
+
 	return nil;
 }
 

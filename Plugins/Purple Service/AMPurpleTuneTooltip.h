@@ -12,9 +12,7 @@
 @class CBPurpleAccount;
 
 @interface AMPurpleTuneTooltip : NSObject <AIContactListTooltipEntry> {
-	CBPurpleAccount *account;
-}
 
-- (id)initWithAccount:(CBPurpleAccount*)_account;
+}
 
 @end
