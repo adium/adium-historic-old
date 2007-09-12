@@ -17,7 +17,7 @@
 #import <Adium/AIAccount.h>
 #import <AdiumLibpurple/PurpleCommon.h>
 
-@class SLPurpleCocoaAdapter, ESFileTransfer, AIService, AIContentMessage, AIStatus, AIWindowController, AMPurpleTuneTooltip;
+@class SLPurpleCocoaAdapter, ESFileTransfer, AIService, AIContentMessage, AIStatus, AIWindowController;
 @protocol AIAccountControllerRemoveConfirmationDialog;
 
 @interface CBPurpleAccount : AIAccount <AIAccount_Privacy>
@@ -30,7 +30,6 @@
 	NSMutableArray		*deniedContactsArray;	
 	
 	NSDictionary		*tuneinfo;
-	AMPurpleTuneTooltip *tunetooltip;
 	BOOL				willBeDeleted;
 	id<AIAccountControllerRemoveConfirmationDialog> deletionDialog;
 }

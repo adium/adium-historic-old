@@ -1531,9 +1531,6 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 								   selector:@selector(iTunesDidUpdate:)
 									   name:Adium_iTunesTrackChangedNotification
 									 object:nil];
-	//tooltip for tunes
-	tunetooltip = [[AMPurpleTuneTooltip alloc] initWithAccount:self];
-	[[adium interfaceController] registerContactListTooltipEntry:tunetooltip secondaryEntry:YES];
 	
     //Silence updates
     [self silenceAllContactUpdatesForInterval:18.0];
@@ -1643,9 +1640,6 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	//Apply any changes
 	[self notifyOfChangedStatusSilently:NO];
 	
-	[[adium interfaceController] unregisterContactListTooltipEntry:tunetooltip secondaryEntry:YES];
-	[tunetooltip release];
-	tunetooltip = nil;
 	[[adium notificationCenter] removeObserver:self
 										  name:Adium_iTunesTrackChangedNotification
 										object:nil];
