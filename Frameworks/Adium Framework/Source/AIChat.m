@@ -231,7 +231,6 @@ static int nextChatNumber = 0;
 
 - (void)object:(id)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify
 {
-	NSLog(@"inObject: %@",inObject);
 	//If our unviewed content changes or typing status changes, and we have a single list object, 
 	//apply the change to that object as well so it can be cleanly reflected in the contact list.
 	if ([key isEqualToString:KEY_UNVIEWED_CONTENT] ||
