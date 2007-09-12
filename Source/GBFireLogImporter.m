@@ -71,7 +71,7 @@
 }
 
 NSString *quotes[] = {
-	@"\"I have gotten into the habit of recording important mettings\"",
+	@"\"I have gotten into the habit of recording important meetings\"",
 	@"\"One never knows when an inconvenient truth will fall between the cracks and vanish\"",
 	@"- Londo Mollari"
 };
