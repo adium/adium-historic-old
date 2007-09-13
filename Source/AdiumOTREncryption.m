@@ -1169,13 +1169,17 @@ OtrlUserState otrg_get_userstate(void)
 		NSString *privateKey = [self upgradedPrivateKeyFromFile:[sourcePath stringByAppendingPathComponent:@"otr.private_key"]];
 		if (privateKey && [privateKey length]) {
 			[privateKey writeToFile:[destinationPath stringByAppendingPathComponent:@"otr.private_key"]
-						 atomically:NO];
+						 atomically:NO
+						   encoding:NSUTF8StringEncoding
+							  error:NULL];
 		}
 
 		NSString *fingerprints = [self upgradedFingerprintsFromFile:[sourcePath stringByAppendingPathComponent:@"otr.fingerprints"]];
 		if (fingerprints && [fingerprints length]) {
 			[fingerprints writeToFile:[destinationPath stringByAppendingPathComponent:@"otr.fingerprints"]
-						   atomically:NO];
+						   atomically:NO
+							 encoding:NSUTF8StringEncoding
+								error:NULL];
 		}
 
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
@@ -1195,7 +1199,10 @@ OtrlUserState otrg_get_userstate(void)
 									 withString:@"libpurple"
 										options:NSLiteralSearch
 										  range:NSMakeRange(0, [privateKeys length])];
-		[privateKeys writeToFile:privateKeyPath atomically:YES];
+		[privateKeys writeToFile:privateKeyPath
+					  atomically:YES
+						encoding:NSUTF8StringEncoding
+						   error:NULL];
 		[privateKeys release];
 
 		NSMutableString *fingerprints = [[NSString stringWithContentsOfUTF8File:fingerprintsPath] mutableCopy];
@@ -1203,7 +1210,10 @@ OtrlUserState otrg_get_userstate(void)
 									 withString:@"libpurple"
 										options:NSLiteralSearch
 										  range:NSMakeRange(0, [fingerprints length])];
-		[fingerprints writeToFile:fingerprintsPath atomically:YES];
+		[fingerprints writeToFile:fingerprintsPath
+					   atomically:YES
+						 encoding:NSUTF8StringEncoding
+							error:NULL];
 		[fingerprints release];
 
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
