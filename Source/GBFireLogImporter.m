@@ -195,6 +195,7 @@ NSString *quotes[] = {
 static void *createStructure(CFXMLParserRef parser, CFXMLNodeRef node, void *context);
 static void addChild(CFXMLParserRef parser, void *parent, void *child, void *context);
 static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
+static Boolean errorStructure (CFXMLParserRef parser, CFXMLParserStatusCode error, void *info);
 
 @implementation GBFireXMLLogImporter
 
@@ -238,7 +239,6 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	inputFileString = [[NSString alloc] initWithData:inputData encoding:NSUTF8StringEncoding];
 	int outfd = open([outFile fileSystemRepresentation], O_CREAT | O_WRONLY, 0644);
 	outputFileHandle = [[NSFileHandle alloc] initWithFileDescriptor:outfd closeOnDealloc:YES];
-	NSURL *url = [[NSURL alloc] initFileURLWithPath:inFile];
 	
 	CFXMLParserCallBacks callbacks = {
 		0,
@@ -246,7 +246,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 		addChild,
 		endStructure,
 		NULL,
-		NULL
+		errorStructure
 	};
 	CFXMLParserContext context = {
 		0,
@@ -255,7 +255,19 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 		CFRelease,
 		NULL
 	};
-	parser = CFXMLParserCreateWithDataFromURL(NULL, (CFURLRef)url, kCFXMLParserSkipMetaData | kCFXMLParserSkipWhitespace, kCFXMLNodeCurrentVersion, &callbacks, &context);
+	NSMutableString *newStr = [NSMutableString stringWithContentsOfFile:inFile];
+	int endOffset = [newStr rangeOfString:@">" options:NSBackwardsSearch].location;
+	int startOffset = [newStr rangeOfString:@"<" options:NSBackwardsSearch].location;
+	if((endOffset == NSNotFound || endOffset < startOffset) && startOffset != NSNotFound)
+	{
+		//Broken XML can crash the importer, attempt a repair, but most likely the parse will fail
+		[newStr appendString:@">"];
+		AILog(@"Fire log import: %@ has broken XML, you should fix this and re-import it", inFile);
+		NSLog(@"Fire log import: %@ has broken XML, you should fix this and re-import it", inFile);
+#warning Surely we shouldn't log both, but this should be rare.  Maybe put up a dialog?, thoughts?  Same for below too
+	}
+	NSData *data = [newStr dataUsingEncoding:NSUTF8StringEncoding];
+	parser = CFXMLParserCreate(NULL, (CFDataRef)data, NULL,kCFXMLParserSkipMetaData | kCFXMLParserSkipWhitespace, kCFXMLNodeCurrentVersion, &callbacks, &context);
 	if (!CFXMLParserParse(parser)) {
 		NSLog(@"Fire log import: Parse of %@ failed", inFile);
 		AILog(@"Fire log import: Parse of %@ failed", inFile);
@@ -263,7 +275,6 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	}
 	CFRelease(parser);
 	parser = nil;
-	[url release];
 	[outputFileHandle closeFile];
 	
 	*account = [[mySN retain] autorelease];
@@ -683,7 +694,7 @@ typedef struct{
 
 @end
 
-void *createStructure(CFXMLParserRef parser, CFXMLNodeRef node, void *context)
+static void *createStructure(CFXMLParserRef parser, CFXMLNodeRef node, void *context)
 {
 	element *ret = nil;
 	
@@ -772,11 +783,11 @@ void *createStructure(CFXMLParserRef parser, CFXMLNodeRef node, void *context)
     return (void *) ret;
 }
 
-void addChild(CFXMLParserRef parser, void *parent, void *child, void *context)
+static void addChild(CFXMLParserRef parser, void *parent, void *child, void *context)
 {
 }
 
-void endStructure(CFXMLParserRef parser, void *xmlType, void *context)
+static void endStructure(CFXMLParserRef parser, void *xmlType, void *context)
 {
 	NSString *name = nil;
 	BOOL empty = NO;
@@ -791,4 +802,9 @@ void endStructure(CFXMLParserRef parser, void *xmlType, void *context)
 		[((element *)xmlType)->name release];
 		free(xmlType);
 	}
+}
+
+static Boolean errorStructure (CFXMLParserRef parser, CFXMLParserStatusCode error, void *info)
+{
+	return NO;
 }
