@@ -341,7 +341,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 
 		//Request ICQ contacts' info to get the nickname
 		const char *contactUIDUTF8String = [[theContact UID] UTF8String];
-		if (aim_sn_is_icq(contactUIDUTF8String)) {
+		if (aim_snvalid_icq(contactUIDUTF8String)) {
 			OscarData			*od;
 
 			if ((purple_account_is_connected(account)) &&
@@ -450,8 +450,8 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	
 	if (inListObject) {
 		if ([[inContentMessage chat] isSecure] &&
-			aim_sn_is_icq([[[inContentMessage source] UID] UTF8String]) &&
-			aim_sn_is_icq([[inListObject UID] UTF8String])) {
+			aim_snvalid_icq([[[inContentMessage source] UID] UTF8String]) &&
+			aim_snvalid_icq([[inListObject UID] UTF8String])) {
 			/* If we're an ICQ account and they're an ICQ account, we need to strip HTML now since the 
 			 * encrypted message won't be able to be processed by libpurple */
 			encodedString = [[inAttributedString attributedStringByConvertingLinksToStrings] string];
@@ -774,7 +774,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 {
 	NSString		*statusName = nil;
 	
-	if (aim_sn_is_icq(buddy->name)) {
+	if (aim_snvalid_icq(buddy->name)) {
 		PurplePresence	*presence = purple_buddy_get_presence(buddy);
 		PurpleStatus *status = purple_presence_get_active_status(presence);
 		const char *purpleStatusID = purple_status_get_id(status);
