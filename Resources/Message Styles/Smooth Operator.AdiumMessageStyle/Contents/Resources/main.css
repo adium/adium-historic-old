@@ -29,8 +29,11 @@ body {
     font-weight: bold;
     text-transform: lowercase;
     text-shadow: 1px 1px 3px #ccc;
-    padding: 13px 0 0 56px;
+    padding: 13px 5px 0 56px;
     margin-bottom: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
 
 .context .sender {
