@@ -119,7 +119,7 @@ static void *adiumPurpleRequestInput(
 }
 
 static void *adiumPurpleRequestChoice(const char *title, const char *primary,
-									const char *secondary, unsigned int defaultValue,
+									const char *secondary, int defaultValue,
 									const char *okText, GCallback okCb,
 									const char *cancelText, GCallback cancelCb,
 									PurpleAccount *account, const char *who, PurpleConversation *conv,
@@ -135,7 +135,7 @@ static void *adiumPurpleRequestChoice(const char *title, const char *primary,
 
 //Purple requests the user take an action such as accept or deny a buddy's attempt to add us to her list 
 static void *adiumPurpleRequestAction(const char *title, const char *primary,
-									const char *secondary, unsigned int default_action,
+									const char *secondary, int default_action,
 									PurpleAccount *account, const char *who, PurpleConversation *conv,
 									void *userData,
 									size_t actionCount, va_list actions)
