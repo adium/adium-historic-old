@@ -1,5 +1,26 @@
 				Adium X Version History
 				-----------------------
+Version 1.1.3
+ * Fixed a crash when canceling addition of a Bonjour account (#7523)
+ * Added support for serverside aliases in Yahoo
+ * Fixed an issue in which accounts which were created with Adium 0.6x would disappear when upgrading to Adium 1.1.x
+ * Fixed display of hidden message windows after clicking the Adium dock icon (#6101)
+ * Fixed a crash which could occur when opening the transcript viewer (#7791)
+ * Fixed the Custom Pitch setting for the Speak Event action
+ * Fixed a crash after deleting events in the Events preferences (#7841)
+ * Fixed a crash when importing certain Fire chat transcripts with invalid XML (#6655)
+ * Improved display of long names in the Smooth Operator message style
+ * Fixed a visual glitch after clicking the Add button in the Accounts preferences (#7539)
+ * Updated to [http://growl.info Growl 1.1.1].  You will be prompted to upgrade your Growl installation when Growl is first used.
+ * Updated to [http://pidgin.im Libpurple 2.2.0].
+   * Added MySpaceIM Service
+   * Some of the XMPP improvements by Andy Monitzer from this year's Google Smmer of Code. Most will follow in Adium 1.2.
+   * Fixed sending messages when using the MSN HTTP method
+   * Fixed Yahoo! group chats
+   * Improved AIM file transfer
+   * Fixed an issue with idle status and time for AIM and ICQ accounts
+ * Swedish updates
+ 
 Version 1.1.2 (9/3/2007)
  * Added preference to turn off the contact list animations (Preferences->Advanced->Contact List)
  * Option+Close now closes all other tabs (#7573)
