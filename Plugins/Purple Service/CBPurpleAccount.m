@@ -803,6 +803,22 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	return NO;
 }
 
+- (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact
+{
+	PurplePluginProtocolInfo *prpl_info = NULL;
+	
+	if (account && account->gc && account->gc->prpl)
+		prpl_info = PURPLE_PLUGIN_PROTOCOL_INFO(account->gc->prpl);
+	
+	if (prpl_info && prpl_info->offline_message) {
+		
+		return (prpl_info->offline_message(purple_find_buddy(account, [[inContact UID] UTF8String])));
+		
+	} else
+		return NO;
+	
+}
+
 #pragma mark Custom emoticons
 - (void)chat:(AIChat *)inChat isWaitingOnCustomEmoticon:(NSString *)emoticonEquivalent
 {
