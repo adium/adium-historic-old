@@ -27,6 +27,7 @@
 	id  LiveJournalService;
     id  JabberService;
 	id  MeanwhileService;
+	id	MySpaceService;
 	id  MSNService;
 	id	QQService;
 	id  SimpleService;
