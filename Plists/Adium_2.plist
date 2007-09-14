@@ -397,16 +397,6 @@
 			<key>CFBundleURLIconFile</key>
 			<string>generic</string>
 			<key>CFBundleURLName</key>
-			<string>ICQ URL</string>
-			<key>CFBundleURLSchemes</key>
-			<array>
-				<string>icq</string>
-			</array>
-		</dict>
-		<dict>
-			<key>CFBundleURLIconFile</key>
-			<string>generic</string>
-			<key>CFBundleURLName</key>
 			<string>Microsoft Network URL</string>
 			<key>CFBundleURLSchemes</key>
 			<array>

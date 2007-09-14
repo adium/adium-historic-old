@@ -68,7 +68,6 @@
 		alreadySet &= [self _checkHelperAppForKey:(kICHelper "yahoo") withInstance:ICInst]; //Yahoo!, unofficial
 		alreadySet &= [self _checkHelperAppForKey:(kICHelper "xmpp") withInstance:ICInst]; //Jabber, official
 		alreadySet &= [self _checkHelperAppForKey:(kICHelper "jabber") withInstance:ICInst]; //Jabber, unofficial
-		alreadySet &= [self _checkHelperAppForKey:(kICHelper "icq") withInstance:ICInst]; //ICQ, unofficial
 		alreadySet &= [self _checkHelperAppForKey:(kICHelper "msn") withInstance:ICInst]; //MSN, unofficial
 	 
 		if(!alreadySet)
@@ -113,7 +112,6 @@
 		[AdiumURLHandling _setHelperAppForKey:(kICHelper "yahoo") withInstance:ICInst]; //Yahoo!, unofficial
 		[AdiumURLHandling _setHelperAppForKey:(kICHelper "xmpp") withInstance:ICInst]; //Jabber, official
 		[AdiumURLHandling _setHelperAppForKey:(kICHelper "jabber") withInstance:ICInst]; //Jabber, unofficial
-		[AdiumURLHandling _setHelperAppForKey:(kICHelper "icq") withInstance:ICInst]; //ICQ, unofficial
 		[AdiumURLHandling _setHelperAppForKey:(kICHelper "msn") withInstance:ICInst]; //MSN, unofficial
 		[AdiumURLHandling _setHelperAppForKey:(kICHelper "gtalk") withInstance:ICInst]; //Google Talk, official?
 
@@ -174,7 +172,6 @@
 				@"Yahoo!", @"ymsgr",
 				@"Jabber", @"xmpp",
  			    @"GTalk",  @"gtalk",
-				@"ICQ",    @"icq",
 				@"MSN",    @"msn",
 				nil];
 		}
