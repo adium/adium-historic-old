@@ -63,7 +63,8 @@
 	if (![self menu]) {
 		[super mouseDown:theEvent];
 	} else {
-		if ([self isEnabled]) {
+		if ([self isEnabled] &&
+			NSPointInRect([self convertPoint:[theEvent locationInWindow] fromView:nil], [self bounds])) {
 			[self highlight:YES];
 
 			//2 pt down, 1 pt to the left.
@@ -81,8 +82,6 @@
 											  clickCount:[theEvent clickCount]
 												pressure:[theEvent pressure]];
 			[NSMenu popUpContextMenu:[self menu] withEvent:event forView:self];
-			
-			[self mouseUp:[[NSApplication sharedApplication] currentEvent]];
 		}
 	}
 }
