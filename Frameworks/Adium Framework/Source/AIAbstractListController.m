@@ -32,9 +32,11 @@
 #import <Adium/AIListOutlineView.h>
 #import <Adium/AIMenuControllerProtocol.h>
 #import <Adium/AIMetaContact.h>
+#import <Adium/AIService.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIFontAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIOutlineViewAdditions.h>
 #import <Adium/KFTypeSelectTableView.h>
@@ -47,6 +49,11 @@
 #define CONTENT_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
 #define STATUS_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
 #define GROUP_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]
+
+#define LINK_TITLE_FORMAT @"%@ (%@)"
+
+//We put our prefix on this, just in case WebKit exports it publicly in the future.
+static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 
 @interface AIAbstractListController (PRIVATE)
 - (LIST_POSITION)pillowsFittedIconPositionForIconPosition:(LIST_POSITION)iconPosition contentCellAlignment:(NSTextAlignment)contentCellAlignment;
@@ -668,20 +675,71 @@
  * the drag items array.
  */
 - (BOOL)outlineView:(NSOutlineView *)outlineView writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
-{	
-	
-	//Begin the drag
-	if (dragItems != items) {
-		[dragItems release];
-		dragItems = [items retain];
+{
+	if (pboard == [NSPasteboard pasteboardWithName:NSDragPboard]) {
+		//Begin the drag
+		if (dragItems != items) {
+			[dragItems release];
+			dragItems = [items retain];
+		}
+		[self setDraggedContacts:dragItems];
+		[[adium notificationCenter] postNotificationName:@"AIListControllerDraggedItems"
+											  	  object:dragItems];
 	}
-	[self setDraggedContacts:dragItems];
-	[[adium notificationCenter] postNotificationName:@"AIListControllerDraggedItems"
-											  object:dragItems];
 	
-	[pboard declareTypes:[NSArray arrayWithObjects:@"AIListObject",@"AIListObjectUniqueIDs",nil] owner:self];
+	[pboard declareTypes:[NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs", NSURLPboardType, NSStringPboardType, AIWebURLsWithTitlesPboardType, nil] owner:self];
+
 	[pboard setString:@"Private" forType:@"AIListObject"];
 	
+	//Copy URLs for all the selected contacts that we can make URLs for.
+	{
+		NSMutableArray *URLStrings = [NSMutableArray arrayWithCapacity:[items count]];
+		NSMutableArray *linkTitles = [NSMutableArray arrayWithCapacity:[items count]];
+
+		//XXX This should be read in from a plist file at some point.
+		NSDictionary *URLFormats = [NSDictionary dictionaryWithObjectsAndKeys:
+			@"aim://goim?screenname=%@", @"AIM",
+			@"aim://goim?screenname=%@", @"Mac", //.Mac
+			@"xmpp:%@?message", @"Jabber",
+			@"xmpp:%@?message", @"GTalk",
+			@"xmpp:%@?message", @"LiveJournal",
+			@"xmpp:%@?message", @"Gizmo",
+			@"msn://%@", @"MSN",
+			@"ymsgr://im?to=%@", @"Yahoo!",
+			@"ymsgr://im?to=%@", @"Yahoo! Japan",
+			nil];
+
+		NSEnumerator *itemsEnum = [items objectEnumerator];
+		for (AIListContact *contact = [itemsEnum nextObject]; contact; contact = [itemsEnum nextObject]) {
+			NSString *format;
+
+			//Check AIMetaContact first, because it is a kind of AIListContact. The else, thus, serves to implicitly say “is a list contact +and is not a metacontact+”.
+			if ([contact isKindOfClass:[AIMetaContact class]]) {
+				NSEnumerator *containedObjectsEnum = [[contact containedObjects] objectEnumerator];
+				//Process each contact in the metacontact.
+				for (AIListContact *subcontact = [containedObjectsEnum nextObject]; subcontact; subcontact = [containedObjectsEnum nextObject]) {
+					format = [URLFormats objectForKey:[subcontact serviceID]];
+					[URLStrings addObject:[NSString stringWithFormat:format, [[subcontact UID] stringByEncodingURLEscapes]]];
+					[linkTitles addObject:[NSString stringWithFormat:LINK_TITLE_FORMAT, [subcontact UID], [[subcontact service] longDescription]]];
+				}
+			} else if ([contact isKindOfClass:[AIListContact class]]) {
+				format = [URLFormats objectForKey:[contact serviceID]];
+				if (!format) {
+#warning Present a sheet
+					NSLog(@"Can't copy contact of service %@ because there's no URL scheme associated with that service - skipping", [contact serviceID]);
+				} else {
+					[URLStrings addObject:[NSString stringWithFormat:format, [[contact UID] stringByEncodingURLEscapes]]];
+					[linkTitles addObject:[NSString stringWithFormat:LINK_TITLE_FORMAT, [contact UID], [[contact service] longDescription]]];
+				}
+			}
+			//We ignore groups.
+		}
+
+		[pboard setPropertyList:URLStrings forType:NSURLPboardType];
+		[pboard setPropertyList:[NSArray arrayWithObjects:URLStrings, linkTitles, nil] forType:AIWebURLsWithTitlesPboardType];
+		[pboard setString:[URLStrings componentsJoinedByString:@"\n"] forType:NSStringPboardType];
+	}
+
 	[self setShowTooltips:NO];
 	return YES;
 }

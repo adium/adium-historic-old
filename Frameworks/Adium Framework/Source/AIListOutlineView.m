@@ -611,5 +611,24 @@
 	return YES;
 }
 
+- (IBAction)copy:(id)sender
+{
+	id dataSource = [self dataSource];
+
+	if (dataSource) {
+		NSIndexSet *selection = [self selectedRowIndexes];
+		NSLog(@"%s: selection has count %u and is %@", __PRETTY_FUNCTION__, [selection count], selection);
+
+		NSMutableArray *items = [NSMutableArray arrayWithCapacity:[selection count]];
+		for (unsigned idx = [selection firstIndex]; idx <= [selection lastIndex]; idx = [selection indexGreaterThanIndex:idx]) {
+			[items addObject:[self itemAtRow:idx]];
+		}
+
+		[dataSource outlineView:self
+	                 writeItems:items
+	               toPasteboard:[NSPasteboard generalPasteboard]];
+	}
+}
+
 @end
 
