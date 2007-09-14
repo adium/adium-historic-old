@@ -65,16 +65,6 @@
 	return nil;
 }
 
-/*!
- * @brief Supports offline messaging?
- *
- * Gadu-Gadu supports offline messaging.
- */
-- (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact
-{
-	return YES;
-}
-
 - (void)uploadContactListToServer
 {
 	char *buddylist = ggp_buddylist_dump(account);

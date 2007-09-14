@@ -57,14 +57,6 @@
 	return NO;
 }
 
-/*!
- * @brief ICQ supports offline messaging
- */
-- (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact
-{
-	return YES;
-}
-
 #pragma mark Contact updates
 
 - (const char *)purpleStatusIDForStatus:(AIStatus *)statusState
