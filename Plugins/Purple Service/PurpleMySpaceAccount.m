@@ -1,14 +1,14 @@
 //
-//  PurpleMyspaceAccount.m
+//  PurpleMySpaceAccount.m
 //  Adium
 //
 //  Created by Evan Schoenberg on 9/11/07.
 //
 
-#import "PurpleMyspaceAccount.h"
+#import "PurpleMySpaceAccount.h"
 #import <Adium/AIHTMLDecoder.h>
 
-@implementation PurpleMyspaceAccount
+@implementation PurpleMySpaceAccount
 
 - (const char*)protocolPlugin
 {
