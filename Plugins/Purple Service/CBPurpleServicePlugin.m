@@ -44,6 +44,7 @@
 	GTalkService		= [[AIGTalkService alloc] init];
 	LiveJournalService  = [[AILiveJournalService alloc] init];
 	MSNService			= [[ESMSNService alloc] init];
+	MySpaceService		= [[PurpleMySpaceService alloc] init];
 	QQService			= [[ESQQService alloc] init];
 	SimpleService		= [[ESSimpleService alloc] init];
 	NovellService		= [[ESNovellService alloc] init];
@@ -70,6 +71,7 @@
 	[LiveJournalService release]; LiveJournalService = nil;
 	[JabberService release]; JabberService = nil;
 	[MSNService release]; MSNService = nil;
+	[MySpaceService release]; MySpaceService = nil;
 	[SimpleService release]; SimpleService = nil;
 	[QQService release]; QQService = nil;
 	[YahooService release]; YahooService = nil;

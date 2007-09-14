@@ -1,25 +1,25 @@
 //
-//  PurpleMyspaceService.m
+//  PurpleMySpaceService.m
 //  Adium
 //
 //  Created by Evan Schoenberg on 9/11/07.
 //
 
-#import "PurpleMyspaceService.h"
-#import "PurpleMyspaceAccount.h"
-#import "PurpleMyspaceAccountViewController.h"
+#import "PurpleMySpaceService.h"
+#import "PurpleMySpaceAccount.h"
+#import "PurpleMySpaceAccountViewController.h"
 #import <Adium/AIStatusControllerProtocol.h>
 #import <AIUtilities/AIImageAdditions.h>
 
-@implementation PurpleMyspaceService
+@implementation PurpleMySpaceService
 
 //Account Creation
 - (Class)accountClass{
-	return [PurpleMyspaceAccount class];
+	return [PurpleMySpaceAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return [PurpleMyspaceAccountViewController accountViewController];
+    return [PurpleMySpaceAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
@@ -28,19 +28,19 @@
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return @"libpurple-Myspace";
+	return @"libpurple-MySpace";
 }
 - (NSString *)serviceID{
-	return @"Myspace";
+	return @"MySpace";
 }
 - (NSString *)serviceClass{
-	return @"Myspace";
+	return @"MySpace";
 }
 - (NSString *)shortDescription{
-	return @"Myspace";
+	return @"MySpace";
 }
 - (NSString *)longDescription{
-	return @"MyspaceIM";
+	return @"MySpaceIM";
 }
 - (NSCharacterSet *)allowedCharacters{
 	return [NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._-"];
