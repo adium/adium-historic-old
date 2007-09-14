@@ -13,6 +13,7 @@ Version 1.1.3
  * Fixed a visual glitch after clicking the Add button in the Accounts preferences (#7539)
  * Updated to [http://growl.info Growl 1.1.1].  You will be prompted to upgrade your Growl installation when Growl is first used.
  * Updated to [http://pidgin.im Libpurple 2.2.0].
+   * Added MySpaceIM Service
    * Some of the XMPP improvements by Andy Monitzer from this year's Google Smmer of Code. Most will follow in Adium 1.2.
    * Fixed sending messages when using the MSN HTTP method
    * Fixed Yahoo! group chats
