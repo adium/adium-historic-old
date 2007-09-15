@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIMenuAdditions.h"
-#import <Carbon/Carbon.h>
 
 @implementation NSMenu (ItemCreationAdditions)
 
@@ -130,66 +129,6 @@
 	return [[self title] caseInsensitiveCompare:[inMenuItem title]];
 }
 
-@end
-
-//Note: AdditionsFromCarbonMenuManager require the menu item already be added to a menu. 
-@interface NSMenuItem (AdditionsFromCarbonMenuManagerPRIVATE)
-- (void)_setCarbonMenuItemAttributes:(MenuItemAttributes)attributes enabled:(BOOL)enabled;
-- (BOOL)_hasCarbonMenuItemAttributes:(MenuItemAttributes)inAttributes;
-@end
-
-@implementation NSMenuItem (AdditionsFromCarbonMenuManager)
-
-extern MenuRef _NSGetCarbonMenu(NSMenu *);
-
-// Must be called after NSApp delegate's applicationDidFinishLaunching and after the menuItem is added to a menu
-- (void)setDynamic:(BOOL)dynamic
-{	
-	[self _setCarbonMenuItemAttributes:kMenuItemAttrDynamic enabled:dynamic];
-}
-- (BOOL)isDynamic
-{
-    return ([self _hasCarbonMenuItemAttributes:kMenuItemAttrDynamic]);
-}
-
-// Must be called after NSApp delegate's applicationDidFinishLaunching and after the menuItem is added to a menu
-- (void)setHidden:(BOOL)hidden
-{
-	[self _setCarbonMenuItemAttributes:kMenuItemAttrHidden enabled:hidden];
-}
-- (BOOL)isHidden
-{
-    return ([self _hasCarbonMenuItemAttributes:kMenuItemAttrHidden]);	
-}
-
-- (void)_setCarbonMenuItemAttributes:(MenuItemAttributes)attributes enabled:(BOOL)enabled
-{
-	MenuRef 	carbonMenu;
-    int			itemIndex;
-	
-    //Get the carbon menu
-    carbonMenu = _NSGetCarbonMenu([self menu]);
-    itemIndex = [[self menu] indexOfItem:self] + 1;
-	
-    //Set its attributes
-    if (enabled) {
-        ChangeMenuItemAttributes(carbonMenu, itemIndex, attributes, 0);
-    } else {
-        ChangeMenuItemAttributes(carbonMenu, itemIndex, 0, attributes);
-    }
-}
-- (BOOL)_hasCarbonMenuItemAttributes:(MenuItemAttributes)inAttributes
-{
-    MenuItemAttributes 	menuItemAttributes;
-    int					itemIndex;
-	
-    //Get the attributes
-    itemIndex = [[self menu] indexOfItem:self] + 1;
-    GetMenuItemAttributes(_NSGetCarbonMenu([self menu]), itemIndex, &menuItemAttributes);
-	
-    //	
-	return (menuItemAttributes & inAttributes);
-}
 @end
 
 @implementation NSMenu (AIMenuAdditions)
