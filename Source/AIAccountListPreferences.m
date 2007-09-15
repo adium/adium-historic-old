@@ -35,7 +35,7 @@
 #import "KFTypeSelectTableView.h"
 
 #define MINIMUM_ROW_HEIGHT				34
-#define MINIMUM_CELL_SPACING			 3
+#define MINIMUM_CELL_SPACING			 4
 
 #define	ACCOUNT_DRAG_TYPE				@"AIAccount"	    			//ID for an account drag
 
@@ -448,7 +448,7 @@
 																			  attributes:subStringAttributes];
 		
 		// Both heights combined, with spacing in-between
-		float combinedHeight = [mainTitle heightWithWidth:[tableColumn width]] + [subStringTitle heightWithWidth:[tableColumn width]] + MINIMUM_CELL_SPACING*2;
+		float combinedHeight = [mainTitle heightWithWidth:[tableColumn width]] + [subStringTitle heightWithWidth:[tableColumn width]] + MINIMUM_CELL_SPACING;
 		
 		// Make sure we're not down-sizing
 		if (combinedHeight > necessaryHeight) {
