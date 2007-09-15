@@ -152,16 +152,6 @@ extern MenuRef _NSGetCarbonMenu(NSMenu *);
     return ([self _hasCarbonMenuItemAttributes:kMenuItemAttrDynamic]);
 }
 
-// Must be called after NSApp delegate's applicationDidFinishLaunching and after the menuItem is added to a menu
-- (void)setHidden:(BOOL)hidden
-{
-	[self _setCarbonMenuItemAttributes:kMenuItemAttrHidden enabled:hidden];
-}
-- (BOOL)isHidden
-{
-    return ([self _hasCarbonMenuItemAttributes:kMenuItemAttrHidden]);	
-}
-
 - (void)_setCarbonMenuItemAttributes:(MenuItemAttributes)attributes enabled:(BOOL)enabled
 {
 	MenuRef 	carbonMenu;

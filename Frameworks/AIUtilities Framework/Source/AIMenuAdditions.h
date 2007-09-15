@@ -51,6 +51,4 @@
 @interface NSMenuItem (AdditionsFromCarbonMenuManager)
 - (void)setDynamic:(BOOL)dynamic;
 - (BOOL)isDynamic;
-- (void)setHidden:(BOOL)hidden;
-- (BOOL)isHidden;
 @end
