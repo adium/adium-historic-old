@@ -445,7 +445,7 @@
 																			  attributes:subStringAttributes];
 		
 		// Both heights combined, with spacing in-between
-		float combinedHeight = [mainTitle heightWithWidth:[tableColumn width]] + [subStringTitle heightWithWidth:[tableColumn width]] + MINIMUM_CELL_SPACING;
+		float combinedHeight = [mainTitle heightWithWidth:[tableColumn width]] + [subStringTitle heightWithWidth:[tableColumn width]] + MINIMUM_CELL_SPACING*2;
 		
 		// Make sure we're not down-sizing
 		if (combinedHeight > necessaryHeight) {

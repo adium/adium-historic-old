@@ -273,10 +273,10 @@
 	
 	//Draw the cell's text
 	if (title != nil) {
-		NSAttributedString	*attributedString;
-		NSColor				*textColor;
-		NSDictionary		*attributes;
-		float				stringHeight = 0.0;
+		NSAttributedString	*attributedMainString, *attributedSubString;
+		NSColor				*mainTextColor, *subStringTextColor;
+		NSDictionary		*mainAttributes, *subStringAttributes;
+		float				mainStringHeight = 0.0, subStringHeight = 0.0, textSpacing = 0.0;
 
 		//Determine the correct text color
 		NSWindow			*window;
@@ -284,91 +284,105 @@
 		//If we don't have a control view, or we do and it's the first responder, draw the text in the alternateSelectedControl text color (white)
 		if (highlighted && ((window = [controlView window]) &&
 							([window isKeyWindow] && ([window firstResponder] == controlView)))) {
-			textColor = [NSColor alternateSelectedControlTextColor]; //Draw the text inverted
+			// Draw the text inverted
+			mainTextColor = [NSColor alternateSelectedControlTextColor];
+			subStringTextColor = [NSColor alternateSelectedControlTextColor];
 		} else {
 			if ([self isEnabled]) {
-				textColor = [NSColor controlTextColor]; //Draw the text regular
+				// Draw the text regular
+				mainTextColor = [NSColor controlTextColor];
+				subStringTextColor = [NSColor colorWithCalibratedWhite:0.4 alpha:1.0];
 			} else {
-				textColor = [NSColor grayColor]; //Draw the text disabled
+				// Draw the text disabled
+				mainTextColor = [NSColor grayColor];
+				subStringTextColor = [NSColor colorWithCalibratedWhite:0.8 alpha:1.0];
 			}
 		}
 		
-		//Adjust if a substring is present
-		if (subString) cellFrame.size.height /= 2;
-
 		/* Padding: Origin goes right by our padding amount, and the width decreases by twice it
 		 * (for left and right padding).
 		 */
-		cellFrame.origin.x += imageTextPadding;
-		cellFrame.size.width -= imageTextPadding * 2;
+		if (image != nil) {
+			cellFrame.origin.x += imageTextPadding;
+			cellFrame.size.width -= imageTextPadding * 2;
+		}
 
 		//Paragraph style
 		NSParagraphStyle	*paragraphStyle = [NSParagraphStyle styleWithAlignment:[self alignment]
 																	 lineBreakMode:lineBreakMode];		
 		//
 		if ([self font]) {
-			attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+			mainAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
 				paragraphStyle, NSParagraphStyleAttributeName,
 				[self font], NSFontAttributeName,
-				textColor, NSForegroundColorAttributeName,
+				mainTextColor, NSForegroundColorAttributeName,
 				nil];
 		} else {
-			attributes = [NSDictionary dictionaryWithObjectsAndKeys:
+			mainAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
 				paragraphStyle, NSParagraphStyleAttributeName,
-				textColor, NSForegroundColorAttributeName,
+				mainTextColor, NSForegroundColorAttributeName,
 				nil];
 		}
 		
-		attributedString = [[NSAttributedString alloc] initWithString:title
-														   attributes:attributes];
+		attributedMainString = [[NSAttributedString alloc] initWithString:title
+															   attributes:mainAttributes];
+		
+		if (subString) {
+			// Keep the mainString NSDictionary attributes in case we're
+			// using NSLineBreakByTruncatingMiddle line breaking (see below).
+			subStringAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+				paragraphStyle, NSParagraphStyleAttributeName,
+				[NSFont systemFontOfSize:10], NSFontAttributeName,
+				subStringTextColor, NSForegroundColorAttributeName,
+				nil];
+			
+			attributedSubString = [[NSAttributedString alloc] initWithString:subString
+																  attributes:subStringAttributes];
+		}
+
 		switch (lineBreakMode) {
 			case NSLineBreakByWordWrapping:
 			case NSLineBreakByCharWrapping:
-				stringHeight = [attributedString heightWithWidth:cellFrame.size.width];
+				mainStringHeight = [attributedMainString heightWithWidth:cellFrame.size.width];
+				if (subString) {
+					subStringHeight = [attributedSubString heightWithWidth:cellFrame.size.width];
+				}
 				break;
 			case NSLineBreakByClipping:
 			case NSLineBreakByTruncatingHead:
 			case NSLineBreakByTruncatingTail:
 			case NSLineBreakByTruncatingMiddle:
-				stringHeight = [title sizeWithAttributes:attributes].height;
+				mainStringHeight = [title sizeWithAttributes:mainAttributes].height;
+				if (subString) {
+					subStringHeight = [subString sizeWithAttributes:subStringAttributes].height;
+				}
 				break;
 		}
 
 		//Calculate the centered rect
-		if (stringHeight < cellFrame.size.height) {
-			cellFrame.origin.y += (cellFrame.size.height - stringHeight) / 2.0;
+		if (!subString && mainStringHeight < cellFrame.size.height) {
+			// Space out the main string evenly
+			cellFrame.origin.y += (cellFrame.size.height - mainStringHeight) / 2.0;
+		} else if (subString) {
+			// Space out our extra space evenly
+			textSpacing = (cellFrame.size.height - mainStringHeight - subStringHeight) / 3.0;
+			// In case we don't have enough height..
+			if (textSpacing < 0.0)
+				textSpacing = 0.0;
+			cellFrame.origin.y += textSpacing;
 		}
 
 		//Draw the string
-		[attributedString drawInRect:cellFrame];
-		[attributedString release];
+		[attributedMainString drawInRect:cellFrame];
+		[attributedMainString release];
 		
 		//Draw the substring
 		if (subString) {
-			//Determine the correct text color
-			if (highlighted) {
-				textColor = [NSColor alternateSelectedControlTextColor]; //Draw the text inverted
-			} else {
-				if ([self isEnabled]) {
-					textColor = [NSColor colorWithCalibratedWhite:0.4 alpha:1.0]; //Draw the text regular
-				} else {
-					textColor = [NSColor colorWithCalibratedWhite:0.8 alpha:1.0]; //Draw the text disabled
-				}
-			}
-
-			cellFrame.origin.y += (cellFrame.size.height);
-
-			attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-				paragraphStyle, NSParagraphStyleAttributeName,
-				[NSFont systemFontOfSize:10], NSFontAttributeName,
-				textColor, NSForegroundColorAttributeName,
-				nil];
-			attributedString = [[NSAttributedString alloc] initWithString:subString
-															   attributes:attributes];
+			cellFrame.origin.y += mainStringHeight + textSpacing;
 			
 			//Draw the substring
-			[attributedString drawInRect:cellFrame];
-			[attributedString release];
+			[attributedSubString drawInRect:cellFrame];
+			[attributedSubString release];
 		}
 	}
 }
