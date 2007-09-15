@@ -46,9 +46,3 @@
 - (void)removeKeyEquivalent;
 
 @end
-
-//Note: AdditionsFromCarbonMenuManager require the menu item already be added to a menu. 
-@interface NSMenuItem (AdditionsFromCarbonMenuManager)
-- (void)setDynamic:(BOOL)dynamic;
-- (BOOL)isDynamic;
-@end
