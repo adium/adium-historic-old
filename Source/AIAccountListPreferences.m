@@ -35,7 +35,7 @@
 #import "KFTypeSelectTableView.h"
 
 #define MINIMUM_ROW_HEIGHT				34
-#define MINIMUM_CELL_SPACING			 4
+#define MINIMUM_CELL_SPACING			 3
 
 #define	ACCOUNT_DRAG_TYPE				@"AIAccount"	    			//ID for an account drag
 
@@ -406,8 +406,11 @@
 										 withString:@"Error: "
 											options:NSLiteralSearch
 											  range:NSMakeRange(0, [returnedMessage length])];
-		// Remove newlines from the error message
-		[returnedMessage convertNewlinesToSlashes];
+		// Remove newlines from the error message, replace them with spaces
+		[returnedMessage replaceOccurrencesOfString:@"\n"
+										 withString:@" "
+											options:NSLiteralSearch
+											  range:NSMakeRange(0, [returnedMessage length])];
 		
 		statusMessage = returnedMessage;
 	}
