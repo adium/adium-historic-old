@@ -116,9 +116,9 @@ static NSMutableDictionary	*proxyPasswordPromptControllerDict = nil;
  * Called with nil when Save Password becomes unchecked, or called with the password when it is checked as the window
  * closes after the user presses Okay.
  */
-- (void)savePassword:(NSString *)password
+- (void)savePassword:(NSString *)inPassword
 {
-	[[adium accountController] setPassword:password forProxyServer:server userName:userName];
+	[[adium accountController] setPassword:inPassword forProxyServer:server userName:userName];
 }
 
 
