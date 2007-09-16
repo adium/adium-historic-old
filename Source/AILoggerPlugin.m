@@ -978,7 +978,6 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 		if (logVersion >= CURRENT_LOG_VERSION) {
 			[dirtyLogLock lock];
 			dirtyLogArray = [[NSMutableArray alloc] initWithContentsOfFile:[self _dirtyLogArrayPath]];
-			AILog(@"Got dirty logs %@",dirtyLogArray);
 			[dirtyLogLock unlock];
 		} else {
 			AILog(@"**** Log version upgrade. Resetting");
