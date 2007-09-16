@@ -31,23 +31,13 @@ typedef enum {
 
 + (NSDateFormatter *)localizedDateFormatter
 {
-	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-	[dateFormatter setFormatterBehavior:NSDateFormatterBehavior10_4];
-	[dateFormatter setDateStyle:NSDateFormatterLongStyle];
-	[dateFormatter setTimeStyle:NSDateFormatterNoStyle];
-	[dateFormatter setLocale:[NSLocale currentLocale]];
-
-	return [dateFormatter autorelease];
+	return [[[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSDateFormatString] 
+								   allowNaturalLanguage:NO] autorelease];
 }
-
 + (NSDateFormatter *)localizedShortDateFormatter
 {
-	NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-	[dateFormatter setDateStyle:NSDateFormatterShortStyle];
-	[dateFormatter setTimeStyle:NSDateFormatterNoStyle];
-	[dateFormatter setLocale:[NSLocale currentLocale]];
-	
-	return [dateFormatter autorelease];
+	return [[[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString] 
+								   allowNaturalLanguage:NO] autorelease];
 }
 
 + (NSDateFormatter *)localizedDateFormatterShowingSeconds:(BOOL)seconds showingAMorPM:(BOOL)showAmPm
