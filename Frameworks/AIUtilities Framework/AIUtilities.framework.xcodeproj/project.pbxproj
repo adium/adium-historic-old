@@ -40,10 +40,6 @@
 		34486C3906D1DF0400DA778C /* AIAlternatingRowOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B3906D1DF0300DA778C /* AIAlternatingRowOutlineView.m */; };
 		34486C3A06D1DF0400DA778C /* AIAlternatingRowTableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B3A06D1DF0300DA778C /* AIAlternatingRowTableView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34486C3B06D1DF0400DA778C /* AIAlternatingRowTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B3B06D1DF0300DA778C /* AIAlternatingRowTableView.m */; };
-		34486C3C06D1DF0400DA778C /* AIAnimatedFloater.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B3C06D1DF0300DA778C /* AIAnimatedFloater.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		34486C3D06D1DF0400DA778C /* AIAnimatedFloater.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B3D06D1DF0300DA778C /* AIAnimatedFloater.m */; };
-		34486C3E06D1DF0400DA778C /* AIAnimatedView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B3E06D1DF0300DA778C /* AIAnimatedView.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		34486C3F06D1DF0400DA778C /* AIAnimatedView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B3F06D1DF0300DA778C /* AIAnimatedView.m */; };
 		34486C4006D1DF0400DA778C /* AIAppleScriptAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B4006D1DF0300DA778C /* AIAppleScriptAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34486C4106D1DF0400DA778C /* AIAppleScriptAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B4106D1DF0300DA778C /* AIAppleScriptAdditions.m */; };
 		34486C4206D1DF0400DA778C /* AIAttributedStringAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B4206D1DF0300DA778C /* AIAttributedStringAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -690,6 +686,11 @@
 		34CA282509BE2FAD000C8A55 /* Code Currently Unused in Adium */ = {
 			isa = PBXGroup;
 			children = (
+				4BC5A5BE0764F6CB0080ECF7 /* Video capture (From FW using QT) */,
+				34486B3E06D1DF0300DA778C /* AIAnimatedView.h */,
+				34486B3F06D1DF0300DA778C /* AIAnimatedView.m */,
+				34486B3C06D1DF0300DA778C /* AIAnimatedFloater.h */,
+				34486B3D06D1DF0300DA778C /* AIAnimatedFloater.m */,
 				4BD1EF3306D2631E00B3975E /* Color & font selection menu */,
 				07B7AF9A0797A7A7003B71E1 /* Tree (wrapper of CFTree) */,
 				4BD1EEE706D25FFF00B3975E /* Socket low level access */,
@@ -1078,7 +1079,6 @@
 				0795642507C3555300F9A88F /* String object that uses wired memory */,
 				4BD1EF7D06D2638A00B3975E /* System network and proxy settings */,
 				34F2E93A07C2D247007EAAAB /* Tooltip Display */,
-				4BC5A5BE0764F6CB0080ECF7 /* Video capture (From FW using QT) */,
 			);
 			name = "Fun New Classes";
 			sourceTree = "<group>";
@@ -1226,10 +1226,6 @@
 		4BD1F41606D2828700B3975E /* Floating Animations */ = {
 			isa = PBXGroup;
 			children = (
-				34486B3C06D1DF0300DA778C /* AIAnimatedFloater.h */,
-				34486B3D06D1DF0300DA778C /* AIAnimatedFloater.m */,
-				34486B3E06D1DF0300DA778C /* AIAnimatedView.h */,
-				34486B3F06D1DF0300DA778C /* AIAnimatedView.m */,
 				34FFB159087DEFDE0000A517 /* AIFloater.m */,
 				34FFB15A087DEFDE0000A517 /* AIFloater.h */,
 			);
@@ -1338,8 +1334,6 @@
 				076CAD6F0785B64000250504 /* AIFunctions.h in Headers */,
 				34486C3806D1DF0400DA778C /* AIAlternatingRowOutlineView.h in Headers */,
 				34486C3A06D1DF0400DA778C /* AIAlternatingRowTableView.h in Headers */,
-				34486C3C06D1DF0400DA778C /* AIAnimatedFloater.h in Headers */,
-				34486C3E06D1DF0400DA778C /* AIAnimatedView.h in Headers */,
 				34486C4006D1DF0400DA778C /* AIAppleScriptAdditions.h in Headers */,
 				34486C4206D1DF0400DA778C /* AIAttributedStringAdditions.h in Headers */,
 				34486C4406D1DF0400DA778C /* AIAutoScrollView.h in Headers */,
@@ -1466,7 +1460,6 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DA8A805C08553B3800F24BB3 /* Build configuration list for PBXProject "AIUtilities.framework" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
@@ -1540,8 +1533,6 @@
 			files = (
 				34486C3906D1DF0400DA778C /* AIAlternatingRowOutlineView.m in Sources */,
 				34486C3B06D1DF0400DA778C /* AIAlternatingRowTableView.m in Sources */,
-				34486C3D06D1DF0400DA778C /* AIAnimatedFloater.m in Sources */,
-				34486C3F06D1DF0400DA778C /* AIAnimatedView.m in Sources */,
 				34486C4106D1DF0400DA778C /* AIAppleScriptAdditions.m in Sources */,
 				34486C4306D1DF0400DA778C /* AIAttributedStringAdditions.m in Sources */,
 				34486C4506D1DF0400DA778C /* AIAutoScrollView.m in Sources */,
