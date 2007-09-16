@@ -144,7 +144,8 @@
 									   name:AIServiceIconSetDidChangeNotification
 									 object:nil];
 	
-	updatingReconnectTime = NO;
+	// Start updating the reconnect time if an account is already reconnecting.	
+	[self updateReconnectTime];
 }
 
 /*!
@@ -158,6 +159,11 @@
 	[accountArray release]; accountArray = nil;
 	[requiredHeightDict release]; requiredHeightDict = nil;
 	[accountMenu release]; accountMenu = nil;
+	
+	// Cancel our auto-refreshing reconnect countdown.
+	[NSObject cancelPreviousPerformRequestsWithTarget:self
+											 selector:@selector(updateReconnectTime)
+											   object:nil];
 }
 
 - (void)dealloc
