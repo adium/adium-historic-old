@@ -62,6 +62,7 @@ extern gboolean purple_init_gg_plugin(void);
 extern gboolean purple_init_jabber_plugin(void);
 extern gboolean purple_init_sametime_plugin(void);
 extern gboolean purple_init_msn_plugin(void);
+extern gboolean purple_init_myspace_plugin(void);
 extern gboolean purple_init_novell_plugin(void);
 extern gboolean purple_init_qq_plugin(void);
 extern gboolean purple_init_simple_plugin(void);
@@ -82,6 +83,7 @@ static void init_all_plugins()
 	purple_init_sametime_plugin();
 	purple_init_novell_plugin();
 	purple_init_msn_plugin();
+	purple_init_myspace_plugin();
 	purple_init_qq_plugin();
 	purple_init_simple_plugin();
 	purple_init_yahoo_plugin();
