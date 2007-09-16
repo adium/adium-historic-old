@@ -1088,6 +1088,9 @@
 - (void)cancelAutoReconnect
 {
     [self setStatusObject:nil forKey:@"Waiting to Reconnect" notify:NotifyNow];
+
+	reconnectAttemptsPerformed = 0;
+
 	[NSObject cancelPreviousPerformRequestsWithTarget:self
 											 selector:@selector(performAutoreconnect)
 											   object:nil];
