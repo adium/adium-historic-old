@@ -36,7 +36,7 @@
 	
 	NSMutableDictionary				*requiredHeightDict;
 	
-	BOOL							updatingReconnectTime;
+	NSTimer							*reconnectTimeUpdater;
 }
 
 - (IBAction)deleteAccount:(id)sender;
