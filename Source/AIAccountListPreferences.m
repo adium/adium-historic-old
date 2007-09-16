@@ -25,7 +25,9 @@
 #import <AIUtilities/AITableViewAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIMutableStringAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
 #import <Adium/AIAccount.h>
+#import <Adium/AIAccountMenu.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIService.h>
 #import <Adium/AIServiceIcons.h>
@@ -47,6 +49,26 @@
 
 - (void)calculateHeightForRow:(int)row;
 - (void)calculateAllHeights;
+
+- (void)updateReconnectTime;
+@end
+
+@implementation NSTableView (rightClickMenu)
+
+// Override the menuForEvent so we can generate one.
+- (NSMenu *) menuForEvent: (NSEvent *)event
+{
+	if ([event type] == NSRightMouseDown) {
+		int row = [self rowAtPoint:[self convertPoint:[event locationInWindow] toView:nil]];
+		// Select the row.
+		[self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+		// Return our delegate's menu for this row.
+		return [(AIAccountListPreferences *)[self dataSource] menuForRow:row];
+	}
+	
+	return nil;
+}
+
 @end
 
 /*!
@@ -104,6 +126,11 @@
 	
 	//Assign the menu
 	[button_newAccount setMenu:serviceMenu];
+	
+	//Set ourselves up for Account Menus
+	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self
+											  submenuType:AIAccountStatusSubmenu
+											showTitleVerbs:NO] retain];
 
 	//Observe status icon pack changes
 	[[adium notificationCenter] addObserver:self
@@ -116,6 +143,8 @@
 								   selector:@selector(iconPackDidChange:)
 									   name:AIServiceIconSetDidChangeNotification
 									 object:nil];
+	
+	updatingReconnectTime = NO;
 }
 
 /*!
@@ -133,7 +162,8 @@
 - (void)dealloc
 {
 	[accountArray release];
-
+	[requiredHeightDict release];
+	
 	[super dealloc];
 }
 
@@ -162,6 +192,11 @@
 				// Update the height of the row.
 				[self calculateHeightForRow:accountRow];
 				[tableView_accountList noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:accountRow]];
+
+				// If necessary, update our reconnection display time.
+				if (!updatingReconnectTime) {
+					[self updateReconnectTime];
+				}
 			}
 			
 			//Update our account overview
@@ -287,7 +322,7 @@
 	[cell setLineBreakMode:NSLineBreakByWordWrapping];
 	[cell release];
 
-    cell = [[AIVerticallyCenteredTextCell alloc] init];
+    cell = [[AIImageTextCell alloc] init];
     [cell setFont:[NSFont systemFontOfSize:13]];
     [cell setAlignment:NSRightTextAlignment];
     [[tableView_accountList tableColumnWithIdentifier:@"status"] setDataCell:cell];
@@ -320,6 +355,51 @@
 	[self updateControlAvailability];
 	[self updateAccountOverview];
 	[self calculateAllHeights];
+}
+
+
+/*!
+* @brief AIAccountMenu deligate method
+ */
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems {
+	return;
+}	
+
+/*!
+* @brief Returns the status menu associated with a particular row
+ */
+- (NSMenu *)menuForRow:(int)row
+{
+	if (row >= 0 && row < [accountArray count]) {
+		return [[accountMenu menuItemForAccount:[accountArray objectAtIndex:row]] submenu];
+	}
+	
+	return nil;
+}
+
+/*!
+ * @brief Updates reconnecting time where necessary.
+ */
+- (void)updateReconnectTime
+{
+	int				accountRow;
+	BOOL			moreUpdatesNeeded = NO;
+
+	for (accountRow = 0; accountRow < [accountArray count]; accountRow++) {
+		if ([[accountArray objectAtIndex:accountRow] statusObjectForKey:@"Waiting to Reconnect"] != nil) {
+			[tableView_accountList setNeedsDisplayInRect:[tableView_accountList rectOfRow:accountRow]];
+			moreUpdatesNeeded = YES;
+		}
+	}
+
+	if (moreUpdatesNeeded) {
+		updatingReconnectTime = YES;
+		[self performSelector:@selector(updateReconnectTime)
+				   withObject:nil
+				   afterDelay:1.0];
+	} else {
+		updatingReconnectTime = NO;
+	}
 }
 
 /*!
@@ -592,6 +672,17 @@
 		[cell setSubString:[self statusMessageForAccount:account]];
 		
 	} else if ([identifier isEqualToString:@"status"]) {
+		if ([account enabled] && ![[account statusObjectForKey:@"Connecting"] boolValue] && [account statusObjectForKey:@"Waiting to Reconnect"]) {
+			NSString *format = [NSDateFormatter stringForTimeInterval:[[account statusObjectForKey:@"Waiting to Reconnect"] timeIntervalSinceNow]
+													   showingSeconds:YES
+														  abbreviated:YES
+														 approximated:NO];
+			
+			[cell setSubString:[NSString stringWithFormat:AILocalizedString(@"...in %@", @"The amount of time until a reconnect occurs. %@ is the formatted time remaining."), format]];
+		} else {
+			[cell setSubString:nil];
+		}
+		
 		[cell setEnabled:([[account statusObjectForKey:@"Connecting"] boolValue] ||
 						  [account statusObjectForKey:@"Waiting to Reconnect"] ||
 						  [[account statusObjectForKey:@"Disconnecting"] boolValue] ||
