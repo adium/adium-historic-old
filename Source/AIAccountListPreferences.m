@@ -50,7 +50,7 @@
 - (void)calculateHeightForRow:(int)row;
 - (void)calculateAllHeights;
 
-- (void)updateReconnectTime;
+- (void)updateReconnectTime:(NSTimer *)timer;
 @end
 
 @implementation NSTableView (rightClickMenu)
@@ -145,7 +145,7 @@
 									 object:nil];
 	
 	// Start updating the reconnect time if an account is already reconnecting.	
-	[self updateReconnectTime];
+	[self updateReconnectTime:nil];
 }
 
 /*!
@@ -161,9 +161,8 @@
 	[accountMenu release]; accountMenu = nil;
 	
 	// Cancel our auto-refreshing reconnect countdown.
-	[NSObject cancelPreviousPerformRequestsWithTarget:self
-											 selector:@selector(updateReconnectTime)
-											   object:nil];
+	[reconnectTimeUpdater invalidate];
+	[reconnectTimeUpdater release]; reconnectTimeUpdater = nil;
 }
 
 - (void)dealloc
@@ -199,8 +198,8 @@
 				[tableView_accountList noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndex:accountRow]];
 
 				// If necessary, update our reconnection display time.
-				if (!updatingReconnectTime) {
-					[self updateReconnectTime];
+				if (!reconnectTimeUpdater) {
+					[self updateReconnectTime:nil];
 				}
 			}
 			
@@ -385,7 +384,7 @@
 /*!
  * @brief Updates reconnecting time where necessary.
  */
-- (void)updateReconnectTime
+- (void)updateReconnectTime:(NSTimer *)timer
 {
 	int				accountRow;
 	BOOL			moreUpdatesNeeded = NO;
@@ -397,13 +396,15 @@
 		}
 	}
 
-	if (moreUpdatesNeeded) {
-		updatingReconnectTime = YES;
-		[self performSelector:@selector(updateReconnectTime)
-				   withObject:nil
-				   afterDelay:1.0];
-	} else {
-		updatingReconnectTime = NO;
+	if (moreUpdatesNeeded && reconnectTimeUpdater == nil) {
+		reconnectTimeUpdater = [[NSTimer scheduledTimerWithTimeInterval:1.0
+																 target:self 
+															   selector:@selector(updateReconnectTime:) 
+															   userInfo:nil
+																repeats:YES] retain];
+	} else if (!moreUpdatesNeeded && reconnectTimeUpdater != nil) {
+		[reconnectTimeUpdater invalidate];
+		[reconnectTimeUpdater release]; reconnectTimeUpdater = nil;
 	}
 }
 
