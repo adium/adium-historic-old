@@ -193,7 +193,7 @@ static void ZombieKiller_Signal(int i)
 	}
 
 	//Set the caches path after initialization is complete
-	purple_buddy_icons_set_cache_dir([[[adium cachesPath] stringByExpandingTildeInPath] UTF8String];
+	purple_buddy_icons_set_cache_dir([[[adium cachesPath] stringByExpandingTildeInPath] UTF8String]);
 
 	//Libpurple's async DNS lookup tends to create zombies.
 	{
