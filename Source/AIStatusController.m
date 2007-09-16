@@ -612,7 +612,9 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 
 		enumerator = [accountArray objectEnumerator];
 		while ((account = [enumerator nextObject])) {
-			if ([account online]) [accountsToConnect addObject:account];
+			// Save the account if we're online or trying to be online.
+			if ([account online] || [[account statusObjectForKey:@"Connecting"] boolValue] || [account statusObjectForKey:@"Waiting to Reconnect"])
+				[accountsToConnect addObject:account];
 		}
 	}
 
