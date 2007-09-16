@@ -38,11 +38,14 @@ xmlnode_sent_cb(PurpleConnection *gc, char **packet, gpointer this)
 {
     AMXMLConsoleController *self = (AMXMLConsoleController *)this;
 	xmlnode *node;
-    
-    if(!this || [self gc] != gc)
+
+    if (!this || [self gc] != gc)
         return;
-	node = xmlnode_from_str(*packet, -1);
-    
+
+	node = ((*packet && strlen(*packet) && ((*packet)[0] == '<')) ?
+			xmlnode_from_str(*packet, -1) :
+			NULL);
+
 	if (!node)
 		return;
 	
