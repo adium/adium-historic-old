@@ -46,6 +46,7 @@
 #define GENRE_TRIGGER				AILocalizedString(@"%_genre","Trigger for the genre of the currently playing iTunes song")
 #define STATUS_TRIGGER				AILocalizedString(@"%_status","Trigger for the genre of the currently playing iTunes song")
 #define TRACK_TRIGGER				AILocalizedString(@"%_track","Trigger for the name of the currently playing iTunes song")
+#define YEAR_TRIGGER				AILocalizedString(@"%_year","Trigger for the year of the currently playing iTunes song")
 #define	STORE_URL_TRIGGER			AILocalizedString(@"%_iTMS","Trigger for an iTunes Music Store link to the currently playing iTunes song")
 #define MUSIC_TRIGGER				AILocalizedString(@"%_music","Command which triggers *is listening to %_track by %_artist*")
 #define CURRENT_TRACK_TRIGGER		AILocalizedString(@"%_iTunes","Trigger for the song - artist of the currently playing iTunes song")
@@ -193,6 +194,7 @@
 			ITUNES_GENRE, GENRE_TRIGGER,
 			ITUNES_PLAYER_STATE, STATUS_TRIGGER,
 			ITUNES_NAME, TRACK_TRIGGER,
+			ITUNES_YEAR, YEAR_TRIGGER,
 			ITUNES_STORE_URL, STORE_URL_TRIGGER,
 			nil];
 		
@@ -558,6 +560,10 @@
 	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(@"Name","Insert Current iTunes track name toolbar menu item.") 
 												 action:@selector(insertFilteredString:)
 									  representedObject:TRACK_TRIGGER
+												   kind:ENABLED_IF_ITUNES_PLAYING]];
+	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(@"Year","Insert Current iTunes track year toolbar menu item.") 
+												 action:@selector(insertFilteredString:)
+									  representedObject:YEAR_TRIGGER
 												   kind:ENABLED_IF_ITUNES_PLAYING]];
 	
 	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(@"iTunes Music Store Link","Insert Current iTunes track store link toolbar menu item.") 
