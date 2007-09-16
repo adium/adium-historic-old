@@ -17,12 +17,14 @@
 
 #import "AIBorderlessListWindowController.h"
 #import "AIStandardListWindowController.h"
+#import "AIListOutlineView.h"
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIMenuControllerProtocol.h>
 #import <Adium/AIListGroup.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 
 #define PREF_GROUP_APPEARANCE		@"Appearance"
 
@@ -52,34 +54,27 @@
 	contactLists = [[NSMutableArray alloc] init];
 	
     [[adium interfaceController] registerContactListController:self];
-	
-	//Add View menu item
-	menuItem_allowDetach = [[NSMenuItem alloc] initWithTitle:@"Show Detached Groups"
-												 target:self
-												action:@selector(consolidateContactLists:)
-										  keyEquivalent:@""];
-	[[adium menuController] addMenuItem:menuItem_allowDetach toLocation:LOC_View_Toggles];
-	
+		
 	//Context submenu
-	contextSubmenu = [[NSMenuItem alloc] initWithTitle:@"Attach/Detach" 
+	contextSubmenu = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Attach / Detach", "Menu item for attaching and detatching groups")
 												target:self
-												action:@selector(contextMenuAction:)
+												action:@selector(detachOrAttachMenuAction:)
 										 keyEquivalent:@""];
 	[[adium menuController] addContextualMenuItem:contextSubmenu toLocation:Context_Group_Manage];
 
 	//Control detached groups menu
 	[[adium menuController] addMenuItem:[NSMenuItem separatorItem] toLocation:LOC_Window_Commands];
-	menuItem_consolidate = [[NSMenuItem alloc] initWithTitle:@"Consolidate Detached Groups"
+	menuItem_consolidate = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Consolidate Detached Groups", "menu item title")
 													  target:self
 													  action:@selector(closeDetachedContactLists) 
 											   keyEquivalent:@""];
 	[[adium menuController] addMenuItem:menuItem_consolidate toLocation:LOC_Window_Commands];
-	menuItem_nextDetached = [[NSMenuItem alloc] initWithTitle:@"Next Detached Group"
+	menuItem_nextDetached = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Next Detached Group", "menu item title")
 													   target:self
 													   action:@selector(nextDetachedContactList) 
 												keyEquivalent:@""];
 	[[adium menuController] addMenuItem:menuItem_nextDetached toLocation:LOC_Window_Commands];
-	menuItem_previousDetached = [[NSMenuItem alloc] initWithTitle:@"Previous Detached Group"
+	menuItem_previousDetached = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Previous Detached Group", "menu item title")
 														   target:self
 														   action:@selector(previousDetachedContactList) 
 													keyEquivalent:@""];
@@ -104,14 +99,11 @@
 											  
 	//Observe window style changes 
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_DETACHED_GROUPS];
-	
-	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryWithObjectsAndKeys:KEY_LIST_DETACHABLE,[NSNumber numberWithBool:YES],nil]
-											forGroup:PREF_GROUP_CONTACT_LIST];
-	
+
 	//Detached state
 	hasLoaded = NO;
 	detachedCycle = 0;
+	detachable = YES;
 }
 
 - (void)uninstallPlugin
@@ -331,30 +323,6 @@
 		[[contactLists objectAtIndex:detachedCycle--] showWindowInFrontIfAllowed:YES];
 }
 
-/*!
- * @brief Sets if windows are allowed to be detached. If it is disabled, all 
- * detached groups are consolidated.
- */
-- (IBAction)consolidateContactLists:(id)sender{
-	[[adium preferenceController] setPreference:[NSNumber numberWithBool:!detachable]
-										 forKey:KEY_LIST_DETACHABLE 
-										  group:PREF_DETACHED_GROUPS];
-	if (!detachable) {
-		[self savePreferences];
-		[self closeDetachedContactLists];
-		[[adium notificationCenter] postNotificationName:@"Contact_ListChanged"
-												  object:[[adium contactController] contactList]
-												userInfo:nil];
-		[self showContactListAndBringToFront:YES];
-	} else {
-		hasLoaded = NO;
-		[self loadPreferences];
-		[[adium notificationCenter] postNotificationName:@"Contact_ListChanged"
-												  object:[[adium contactController] contactList]
-												userInfo:nil];
-	}
-}
-
 //Context menu ---------------------------------------------------------------------------------------------------------
 #pragma mark Context menu
 
@@ -363,7 +331,7 @@
  * 
  * @param sender Menu item selected, either to detach or attach group selected
  */
-- (IBAction)contextMenuAction:(id)sender{
+- (IBAction)detachOrAttachMenuAction:(id)sender{
 	AIListGroup		*group;		// Group to be moved
 	AIListGroup		*destContactList;		// Possible new contact list that will be created
 	AIListGroup		*origContactList;	// Contact list group was in originaly
@@ -440,7 +408,7 @@
 			NSMenuItem *item = [[NSMenuItem allocWithZone:[NSMenu menuZone]] 
 											initWithTitle:desc
 												   target:self
-												   action:@selector(contextMenuAction:)
+												   action:@selector(detachOrAttachMenuAction:)
 											keyEquivalent:@""];
 
 			[attachMenu setObject:[window contactList] forKey:[NSValue valueWithPointer:item]];
@@ -451,9 +419,9 @@
 	}
 	
 	// Attach to main window -- if using the standard window
-	NSMenuItem *toMain = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@"Attach to main window"
+	NSMenuItem *toMain = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Attach to Main Contact List", nil)
 																			target:self
-																			action:@selector(contextMenuAction:)
+																			action:@selector(detachOrAttachMenuAction:)
 																	 keyEquivalent:@""];
 	AIListObject<AIContainingObject> *mainContactList = [[adium contactController] contactList];
 	[attachMenu setObject:mainContactList
@@ -474,9 +442,9 @@
 	// Detach option
 	if (contextMenuDetach == nil) {
 		contextMenuDetach = [[NSMenuItem allocWithZone:[NSMenu menuZone]]
-				initWithTitle:@"Detach"
+				initWithTitle:AILocalizedString(@"Detach", "menu item title for detaching a group from the contact list")
 					   target:self
-					   action:@selector(contextMenuAction:)
+					   action:@selector(detachOrAttachMenuAction:)
 				keyEquivalent:@""];
 	}
 	[contextSubmenuContent addItem:[NSMenuItem separatorItem]];
@@ -514,14 +482,15 @@
 	for (unsigned i=0;count<3 && i<[groups count]; i++) {
 		if ([[groups objectAtIndex:i] visible] || empty) {
 			if (count)
-				desc = [desc stringByAppendingFormat:@", %@",[[groups objectAtIndex:i] UID]];
+				desc = [desc stringByAppendingFormat:@", %@",[[groups objectAtIndex:i] displayName]];
 			else 
-				desc = [desc stringByAppendingFormat:@"Attach to %@",[[groups objectAtIndex:i] UID]];
+				desc = [desc stringByAppendingFormat:AILocalizedString(@"Attach to %@", "Menu item for attaching one contact list group to another window. %@ will be a group name"),
+						[[groups objectAtIndex:i] displayName]];
 			count++;
 		}
 	}
 	if (count>2 && [groups count]>3)
-		desc = [desc stringByAppendingString:@"..."];
+		desc = [desc stringByAppendingEllipsis];
 	
 	if (!count) 
 		return  nil;
@@ -557,9 +526,6 @@
 				}
 			}
 		}
-	} else if ([group isEqualToString:PREF_DETACHED_GROUPS]) {
-		detachable = [[prefDict objectForKey:KEY_LIST_DETACHABLE] boolValue];
-		[menuItem_allowDetach setState:detachable];
 	}
 }
 
