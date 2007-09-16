@@ -64,10 +64,6 @@
 - (void)savePreferences;
 - (void)loadWindowPreferences:(NSDictionary *)windowPreferences;
 
-// Menu
-- (IBAction)consolidateContactLists:(id)sender;
-- (IBAction)contextMenuAction:(id)sender;
-
 - (BOOL)rebuildContextMenu;
 - (NSString *)formatContextMenu:(AIListObject<AIContainingObject> *)contactList;
 - (NSString *)formatContextMenu:(AIListObject<AIContainingObject> *)contactList showEmpty:(BOOL)empty;
