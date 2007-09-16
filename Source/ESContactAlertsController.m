@@ -876,4 +876,17 @@ int eventIDSort(id objectA, id objectB, void *context) {
 		   ([globalOnlyEventHandlersByGroup[AIMessageEventHandlerGroup] objectForKey:eventID] != nil));
 }
 
+/*!
+ * @brief Is the passed event a contact status event?
+ *
+ * Examples of messages events are "contact signed on" and "contact went away."
+ *
+ * @result YES if it is a contact status event
+ */
+- (BOOL)isContactStatusEvent:(NSString *)eventID
+{
+	return ([eventHandlersByGroup[AIContactsEventHandlerGroup] objectForKey:eventID] != nil ||
+			([globalOnlyEventHandlersByGroup[AIContactsEventHandlerGroup] objectForKey:eventID] != nil));
+}
+
 @end
