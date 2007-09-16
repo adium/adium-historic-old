@@ -140,11 +140,28 @@
  {
  	if (newInfo != iTunesCurrentInfo) {
  		[iTunesCurrentInfo release];
- 		iTunesCurrentInfo = [newInfo retain];
+ 		NSMutableDictionary *mutableNewInfo = [newInfo mutableCopy];
 
- 		[self setiTunesIsStopped:[[newInfo objectForKey:PLAYER_STATE] isEqualToString:KEY_STOPPED]];
- 		[self setiTunesIsPaused:[[newInfo objectForKey:PLAYER_STATE] isEqualToString:KEY_PAUSED]];
-        
+		NSEnumerator *enumerator = [newInfo keyEnumerator];
+		NSString *key;
+		while ((key = [enumerator nextObject])) {
+			//Some versions of iTunes may send numbers as numbers rather than strings. Change these to numbers for our use.
+			id value = [newInfo objectForKey:key];
+			if (![value isKindOfClass:[NSString class]]) {
+				if ([value respondsToSelector:@selector(stringValue)]) {
+					[mutableNewInfo setObject:[value stringValue]
+									   forKey:key];
+				} else {
+					//A future version might send some other data entirely.  Drop it rather than having non-strings in the dict.
+					[mutableNewInfo removeObjectForKey:key];
+				}
+			}
+		}
+
+		iTunesCurrentInfo = mutableNewInfo;
+ 		[self setiTunesIsStopped:[[iTunesCurrentInfo objectForKey:PLAYER_STATE] isEqualToString:KEY_STOPPED]];
+ 		[self setiTunesIsPaused:[[iTunesCurrentInfo objectForKey:PLAYER_STATE] isEqualToString:KEY_PAUSED]];
+
         //Cancel any requests we had to fire updates.
         [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(fireUpdateiTunesInfo) object:nil];
         //fire an iTunes update in three seconds.
@@ -283,7 +300,7 @@
 	//execute the script and get the results as a string
     NSAppleEventDescriptor	*result = [playingScript executeAndReturnError:&errors];
 	NSString				*concatenatediTunesData = [result stringValue];
-	
+
 	//if the player was playing when the script was executed
 	if (![concatenatediTunesData isEqualToString:@"None"]) {
 		
@@ -295,15 +312,20 @@
 		//if the two are properly matched (which they always will be, but just in case)
 		if ([iTunesValues count] == infoCount) {
 			//create the dictionary
-			[self setiTunesCurrentInfo:[NSDictionary dictionaryWithObjects:iTunesValues 
-																   forKeys:[NSArray arrayWithObjects:ITUNES_ALBUM,
-																									 ITUNES_ARTIST,
-																									 ITUNES_COMPOSER,
-																									 ITUNES_GENRE,
-																									 ITUNES_PLAYER_STATE,
-																									 ITUNES_NAME,
-																									 ITUNES_STORE_URL,
-																									 nil]]];
+			[self setiTunesCurrentInfo:[NSDictionary dictionaryWithObjects:iTunesValues
+																   forKeys:[NSArray arrayWithObjects:
+																			ITUNES_ALBUM,
+																			ITUNES_ARTIST,
+																			ITUNES_COMPOSER,
+																			ITUNES_GENRE,
+																			ITUNES_PLAYER_STATE,
+																			ITUNES_NAME,
+																			ITUNES_YEAR,
+																			ITUNES_STORE_URL,
+																			nil]]];
+		} else {
+			NSLog(@"iTunesValues was %@ (%i items), but I was expecting %i. Perhaps CurrentTunes is not updated to match ESiTunesPlugin?",
+				  iTunesValues, [iTunesValues count], infoCount);
 		}
 		
 	} else {
