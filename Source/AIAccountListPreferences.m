@@ -157,13 +157,12 @@
 	
 	[accountArray release]; accountArray = nil;
 	[requiredHeightDict release]; requiredHeightDict = nil;
+	[accountMenu release]; accountMenu = nil;
 }
 
 - (void)dealloc
 {
 	[accountArray release];
-	[requiredHeightDict release];
-	
 	[super dealloc];
 }
 
