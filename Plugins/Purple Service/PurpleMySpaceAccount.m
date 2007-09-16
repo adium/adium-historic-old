@@ -53,4 +53,16 @@
 					  bodyBackground:NO];
 }
 
+- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
+{	
+	if (disconnectionError && *disconnectionError) {
+		if ([*disconnectionError rangeOfString:@"The password provided is incorrect"].location != NSNotFound) {
+			[self serverReportedInvalidPassword];
+			return YES;
+		}
+	}
+	
+	return [super shouldAttemptReconnectAfterDisconnectionError:disconnectionError];
+}
+
 @end
