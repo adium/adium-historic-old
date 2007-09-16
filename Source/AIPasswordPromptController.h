@@ -16,10 +16,18 @@
 
 #include "AIWindowController.h"
 
+/*!
+ * @class AIPasswordPromptController
+ * 
+ * This abstract superclass simplifies displaying a password prompt and notifying a target when the
+ * password is entered.
+ */
 @interface AIPasswordPromptController : AIWindowController {
 	IBOutlet	NSTextField	*textField_password;
 	IBOutlet	NSButton	*checkBox_savePassword;
 	IBOutlet	NSButton	*button_OK;
+
+	NSString	*password;
 
 	SEL 		selector;
 	id			target;
@@ -27,7 +35,18 @@
 	id			context;
 }
 
-- (id)initWithWindowNibName:(NSString *)windowNibName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
+/*!
+ * @brief Designated initializer for AIPasswordPromptController
+ *
+ * @param windowNibName Nib name.
+ * @param password Iniital password to put in the password field. If nil, the field will be empty.
+ * @param inTarget Target to notify when the prompt window is closed
+ * @param inSelector Selector on target. Signature is - (void)passwordReturnedForConnect:(NSString *)inPassword context:(id)inContext
+ * @param context Context to pass back when notifying the target.
+ *
+ * @result An AIPasswordPromptController
+ */
+- (id)initWithWindowNibName:(NSString *)windowNibName password:(NSString *)password notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
 - (IBAction)cancel:(id)sender;
 - (IBAction)okay:(id)sender;
 - (IBAction)togglePasswordSaved:(id)sender;
