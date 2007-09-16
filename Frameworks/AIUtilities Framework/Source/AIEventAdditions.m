@@ -14,15 +14,11 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIEventAdditions.h"
-
-#ifdef MAC_OS_X_VERSION_10_0
 #import <Carbon/Carbon.h>
-#endif
 
 @implementation NSEvent (AIEventAdditions)
 
 //There seems to be a bug in OS X which causes cocoa calls for the current modifier key to fail during application launch, so we use the carbon calls.
-#ifdef MAC_OS_X_VERSION_10_0
 + (BOOL)cmdKey{
     return (((GetCurrentKeyModifiers() & (cmdKey)) != 0) ? YES : NO);
 }
@@ -38,24 +34,6 @@
 + (BOOL)controlKey{
     return (((GetCurrentKeyModifiers() & (controlKey | rightControlKey)) != 0) ? YES : NO);
 }
-//Here are the cocoa calls, though, for cross-compatibility.
-#else
-+ (BOOL)cmdKey{
-    return ( ([[NSApp currentEvent] modifierFlags] & NSCommandKeyMask) != 0 );
-}
-
-+ (BOOL)shiftKey{
-    return ( ([[NSApp currentEvent] modifierFlags] & NSShiftKeyMask) != 0 );
-}
-
-+ (BOOL)optionKey{
-    return ( ([[NSApp currentEvent] modifierFlags] & NSAlternateKeyMask) != 0 );
-}
-
-+ (BOOL)controlKey{
-    return ( ([[NSApp currentEvent] modifierFlags] & NSControlKeyMask) != 0 );
-}
-#endif
 
 - (BOOL)cmdKey{
     return ( ([self modifierFlags] & NSCommandKeyMask) != 0 );
