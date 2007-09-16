@@ -191,7 +191,10 @@ static void ZombieKiller_Signal(int i)
 		NSLog(@"*** FATAL ***: Failed to initialize purple core");
 		AILog(@"*** FATAL ***: Failed to initialize purple core");
 	}
-	
+
+	//Set the caches path after initialization is complete
+	purple_buddy_icons_set_cache_dir([[[adium cachesPath] stringByExpandingTildeInPath] UTF8String];
+
 	//Libpurple's async DNS lookup tends to create zombies.
 	{
 		struct sigaction act;
