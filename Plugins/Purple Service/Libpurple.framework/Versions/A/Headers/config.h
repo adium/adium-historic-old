@@ -2,10 +2,10 @@
 #include <AvailabilityMacros.h>
 
 /* Version number of package */
-#define VERSION "2.1.1"
+#define VERSION "2.2.0"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libpurple 2.1.1"
+#define PACKAGE_STRING "libpurple 2.2.0"
 
 #define DATADIR ""
 
