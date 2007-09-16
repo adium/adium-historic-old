@@ -17,7 +17,7 @@
 #import <Adium/AIPreferencePane.h>
 #import <Adium/AIContactControllerProtocol.h>
 
-@class AIAccountController, AIAccount, AIAutoScrollView, AIImageViewWithImagePicker;
+@class AIAccountController, AIAccount, AIAutoScrollView, AIImageViewWithImagePicker, AIAccountMenu;
 
 @interface AIAccountListPreferences : AIPreferencePane <AIListObjectObserver> {
 	//Account list
@@ -32,7 +32,11 @@
     NSArray							*accountArray;
     AIAccount						*tempDragAccount;
 
+	AIAccountMenu					*accountMenu;
+	
 	NSMutableDictionary				*requiredHeightDict;
+	
+	BOOL							updatingReconnectTime;
 }
 
 - (IBAction)deleteAccount:(id)sender;
@@ -41,5 +45,6 @@
 - (void)updateAccountOverview;
 - (void)updateControlAvailability;
 - (NSString *)statusMessageForAccount:(AIAccount *)account;
+- (NSMenu *)menuForRow:(int) row;
 
 @end
