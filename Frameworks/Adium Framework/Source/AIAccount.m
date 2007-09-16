@@ -555,7 +555,7 @@
  * special encoding on strings should do that work here.  For example, HTML based accounts should convert the 
  * NSAttributedString to HTML appropriate for their protocol (Adium can help with this).
  * @param inAttributedString String to encode
- * @param inListObject List object associated with the string
+ * @param inListObject List object associated with the string; nil if the string is not associated with a particular list object, which is the case if encoding for a status message or a group chat message.
  * @return NSString result from encoding
  */
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
