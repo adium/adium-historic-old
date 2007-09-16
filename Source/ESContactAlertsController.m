@@ -22,6 +22,8 @@
 #import <AIUtilities/AIImageAdditions.h>
 
 @interface ESContactAlertsController (PRIVATE)
+- (NSArray *)arrayOfMenuItemsForEventsWithTarget:(id)target forGlobalMenu:(BOOL)global;
+
 - (NSMutableArray *)appendEventsForObject:(AIListObject *)listObject eventID:(NSString *)eventID toArray:(NSMutableArray *)events;
 - (void)addMenuItemsForEventHandlers:(NSDictionary *)inEventHandlers toArray:(NSMutableArray *)menuItemArray withTarget:(id)target forGlobalMenu:(BOOL)global;
 - (void)removeAllAlertsFromListObject:(AIListObject *)listObject;
@@ -134,9 +136,15 @@ static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_
 	return [handler longDescriptionForEventID:eventID forListObject:listObject];
 }
 
-//Returns a menu of all events
-//- Selector called on event selection is selectEvent:
-//- A menu item's represented object is the dictionary describing the event it represents
+/*!
+ * @brief Returns a menu of all events
+ * 
+ * A menu item's represented object is the dictionary describing the event it represents
+ *
+ * @param target The target on which @selector(selectEvent:) will be called on selection.
+ * @param global If YES, the events listed will include global ones (such as Error Occurred) in addition to contact-specific ones.
+ * @result An NSMenu of the events
+ */
 - (NSMenu *)menuOfEventsWithTarget:(id)target forGlobalMenu:(BOOL)global
 {
 	NSEnumerator		*enumerator;
@@ -494,7 +502,7 @@ int eventIDSort(id objectA, id objectB, void *context) {
 }
 
 /*!
- * @brief Return all available actions
+ * @brief Return a dictionary whose keys are action IDs and whose objects are objects conforming to AIActionHandler
  */
 - (NSDictionary *)actionHandlers
 {

@@ -65,7 +65,8 @@
 {
     [target release];
 	[context release];
-	
+	[password release];
+
     [super dealloc];
 }
 
@@ -92,17 +93,17 @@
 
 - (IBAction)okay:(id)sender
 {
-	NSString	*password = [textField_password secureStringValue];
+	NSString	*thePassword = [textField_password secureStringValue];
 	BOOL	savePassword = [checkBox_savePassword state];
 
 	//save password?
-	if (savePassword && password && [password length]) {
-		[self savePassword:password];
+	if (savePassword && thePassword && [thePassword length]) {
+		[self savePassword:thePassword];
 	}
 
 	//close up and notify our caller
 	[self closeWindow:nil];    
-	[target performSelector:selector withObject:password withObject:context];
+	[target performSelector:selector withObject:thePassword withObject:context];
 }
 
 - (IBAction)togglePasswordSaved:(id)sender

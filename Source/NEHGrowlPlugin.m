@@ -51,8 +51,6 @@
 #define KEY_CHAT_ID				@"uniqueChatID"
 #define KEY_LIST_OBJECT_ID		@"internalObjectID"
 
-//#define GROWL_0_8
-
 @interface NEHGrowlPlugin (PRIVATE)
 - (NSDictionary *)growlRegistrationDict;
 - (NSAttributedString *)_growlInformationForUpdate:(BOOL)isUpdate;
@@ -172,14 +170,14 @@
  */
 - (BOOL)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
-	NSString				*title, *description;
-	NSMutableDictionary		*clickContext = [NSMutableDictionary dictionary];
-	NSData					*iconData = nil;
-	AIChat					*chat = nil;
-	BOOL					isMessageEvent = [[adium contactAlertsController] isMessageEvent:eventID];
+	NSString			*title, *description;
+	AIChat				*chat = nil;
+	NSData				*iconData = nil;
+	NSMutableDictionary	*clickContext = [NSMutableDictionary dictionary];
+	NSString			*identifier = nil;
 
 	//For a message event, listObject should become whoever sent the message
-	if (isMessageEvent &&
+	if ([[adium contactAlertsController] isMessageEvent:eventID] &&
 		[userInfo respondsToSelector:@selector(objectForKey:)]) {
 		AIContentObject	*contentObject = [userInfo objectForKey:@"AIContentObject"];
 		AIListObject	*source = [contentObject source];
@@ -257,6 +255,10 @@
 			[@": " stringByAppendingString:
 				[[(AIListContact *)listObject contactListStatusMessage] string]]];
 	}
+	
+	if (listObject && [[adium contactAlertsController] isContactStatusEvent:eventID]) {
+		identifier = [listObject internalObjectID];
+	}
 
 	NSAssert5((title || description),
 			  @"Growl notify error: EventID %@, listObject %@, userInfo %@\nGave Title \"%@\" description \"%@\"",
@@ -268,15 +270,12 @@
 	
 	[GrowlApplicationBridge notifyWithTitle:title
 								description:description
-#ifdef GROWL_0_8
 						   notificationName:eventID
-#else
-						   notificationName:[[adium contactAlertsController] globalShortDescriptionForEventID:eventID]
-#endif
 								   iconData:iconData
 								   priority:0
 								   isSticky:[[details objectForKey:KEY_GROWL_ALERT_STICKY] boolValue]
-							   clickContext:clickContext];
+							   clickContext:clickContext
+								 identifier:identifier];
 
 	return YES;
 }
@@ -319,9 +318,7 @@
 	id <AIContactAlertsController> contactAlertsController = [adium contactAlertsController];
 	NSArray						*allNotes = [contactAlertsController allEventIDs];
 	NSMutableDictionary			*humanReadableNames = [NSMutableDictionary dictionary];
-#ifdef GROWL_0_8
 	NSMutableDictionary			*descriptions = [NSMutableDictionary dictionary];
-#endif
 	NSEnumerator				*enumerator;
 	NSString					*eventID;
 	
@@ -330,29 +327,17 @@
 		[humanReadableNames setObject:[contactAlertsController globalShortDescriptionForEventID:eventID]
 							   forKey:eventID];
 		
-#ifdef GROWL_0_8
 		[descriptions setObject:[contactAlertsController longDescriptionForEventID:eventID 
 																	 forListObject:nil]
-						 forKey:eventID];
-#endif
-		
+						 forKey:eventID];		
 	}
 
-#ifdef GROWL_0_8
 	NSDictionary	*growlReg = [NSDictionary dictionaryWithObjectsAndKeys:
 		allNotes, GROWL_NOTIFICATIONS_ALL,
 		allNotes, GROWL_NOTIFICATIONS_DEFAULT,
 		humanReadableNames, GROWL_NOTIFICATIONS_HUMAN_READABLE_NAMES,
 		descriptions, GROWL_NOTIFICATIONS_DESCRIPTIONS,
 		nil];
-#else
-	//While we're still in Growl 0.7, use the human readable name as the notification name
-	allNotes = [humanReadableNames allValues];
-	NSDictionary	*growlReg = [NSDictionary dictionaryWithObjectsAndKeys:
-		allNotes, GROWL_NOTIFICATIONS_ALL,
-		allNotes, GROWL_NOTIFICATIONS_DEFAULT,
-		nil];
-#endif
 
 	return growlReg;
 }
