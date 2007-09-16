@@ -715,7 +715,7 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 
 			//Check AIMetaContact first, because it is a kind of AIListContact. The else, thus, serves to implicitly say “is a list contact +and is not a metacontact+”.
 			if ([contact isKindOfClass:[AIMetaContact class]]) {
-				NSEnumerator *containedObjectsEnum = [[contact containedObjects] objectEnumerator];
+				NSEnumerator *containedObjectsEnum = [[(AIMetaContact *)contact containedObjects] objectEnumerator];
 				//Process each contact in the metacontact.
 				for (AIListContact *subcontact = [containedObjectsEnum nextObject]; subcontact; subcontact = [containedObjectsEnum nextObject]) {
 					format = [URLFormats objectForKey:[subcontact serviceID]];
