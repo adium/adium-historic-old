@@ -8,25 +8,31 @@
 
 #import "AMXMLConsoleController.h"
 #include <Libpurple/jabber.h>
+#import <AIUtilities/AIAutoScrollView.h>
 
-static NSString *xmlprefix = @"<?xml version='1.0' encoding='UTF-8' ?>\n";
+#define XML_PREFIX @"<?xml version='1.0' encoding='UTF-8' ?>\n"
+
+@interface AMXMLConsoleController (PRIVATE)
+- (void)appendToLog:(NSAttributedString *)astr;
+- (PurpleConnection *)gc;
+@end;
 
 static void
 xmlnode_received_cb(PurpleConnection *gc, xmlnode **packet, gpointer this)
 {
     AMXMLConsoleController *self = (AMXMLConsoleController *)this;
     
-    if(!this || [self gc] != gc)
+    if (!this || [self gc] != gc)
         return;
     
 	char *str = xmlnode_to_formatted_str(*packet, NULL);
     NSString *sstr = [NSString stringWithUTF8String:str];
     
-    if([sstr hasPrefix:xmlprefix])
-        sstr = [sstr substringFromIndex:[xmlprefix length]];
+    if ([sstr hasPrefix:XML_PREFIX])
+        sstr = [sstr substringFromIndex:[XML_PREFIX length]];
     
     NSAttributedString *astr = [[NSAttributedString alloc] initWithString:sstr
-                                                               attributes:[NSDictionary dictionaryWithObject:[NSColor blackColor] forKey:NSForegroundColorAttributeName]];
+                                                               attributes:nil];
     [self appendToLog:astr];
     [astr release];
     
@@ -52,8 +58,8 @@ xmlnode_sent_cb(PurpleConnection *gc, char **packet, gpointer this)
 	char *str = xmlnode_to_formatted_str(node, NULL);
     NSString *sstr = [NSString stringWithUTF8String:str];
     
-    if([sstr hasPrefix:xmlprefix])
-        sstr = [sstr substringFromIndex:[xmlprefix length]];
+    if ([sstr hasPrefix:XML_PREFIX])
+        sstr = [sstr substringFromIndex:[XML_PREFIX length]];
 
     NSAttributedString *astr = [[NSAttributedString alloc] initWithString:sstr
                                                                attributes:[NSDictionary dictionaryWithObject:[NSColor blueColor] forKey:NSForegroundColorAttributeName]];
@@ -66,41 +72,16 @@ xmlnode_sent_cb(PurpleConnection *gc, char **packet, gpointer this)
 
 @implementation AMXMLConsoleController
 
-- (id)initWithPurpleConnection:(PurpleConnection*)_gc; {
-    if((self = [super init])) {
-        gc = _gc;
-        [NSBundle loadNibNamed:@"AMPurpleJabberXMLConsole" owner:self];
-        if(!xmlConsoleWindow) {
-            AILog(@"Unable to load AMPurpleJabberXMLConsole!");
-            [self release];
-            return nil;
-        }
-        
-        PurplePlugin *jabber = purple_find_prpl("prpl-jabber");
-        if (!jabber) {
-            AILog(@"Unable to locate jabber prpl");
-            [self release];
-            return nil;
-        }
-        
-        purple_signal_connect(jabber, "jabber-receiving-xmlnode", self,
-                              PURPLE_CALLBACK(xmlnode_received_cb), self);
-        purple_signal_connect(jabber, "jabber-sending-text", self,
-                              PURPLE_CALLBACK(xmlnode_sent_cb), self);
-    }
-    return self;
-}
-
 - (void)dealloc {
     purple_signals_disconnect_by_handle(self);
     
-    [xmlConsoleWindow release];
     [super dealloc];
 }
 
 - (IBAction)sendXML:(id)sender {
     NSData *rawXMLData = [[xmlInjectView string] dataUsingEncoding:NSUTF8StringEncoding];
     jabber_prpl_send_raw(gc, [rawXMLData bytes], [rawXMLData length]);
+
     // remove from text field
     [xmlInjectView setString:@""];
 }
@@ -110,20 +91,51 @@ xmlnode_sent_cb(PurpleConnection *gc, char **packet, gpointer this)
 }
 
 - (IBAction)showWindow:(id)sender {
+	if (!xmlConsoleWindow) {
+		//Load the window if it's not already loaded
+		[NSBundle loadNibNamed:@"AMPurpleJabberXMLConsole" owner:self];
+		if (!xmlConsoleWindow) AILog(@"Unable to load AMPurpleJabberXMLConsole!");
+		
+		
+		//Connect to the signals for updating the window
+		PurplePlugin *jabber = purple_find_prpl("prpl-jabber");
+		if (!jabber) AILog(@"Unable to locate jabber prpl");
+		
+		purple_signal_connect(jabber, "jabber-receiving-xmlnode", self,
+							  PURPLE_CALLBACK(xmlnode_received_cb), self);
+		purple_signal_connect(jabber, "jabber-sending-text", self,
+							  PURPLE_CALLBACK(xmlnode_sent_cb), self);
+	}
+	
     [xmlConsoleWindow makeKeyAndOrderFront:sender];
+	[(AIAutoScrollView *)[xmlLogView enclosingScrollView] setAutoScrollToBottom:YES];
 }
 
+- (void)windowWillClose:(NSNotification *)notification
+{
+	xmlConsoleWindow = nil;
+
+	//We don't need to watch the signals with the window closed
+	purple_signals_disconnect_by_handle(self);
+}
+
+- (void)close
+{
+	[xmlConsoleWindow close];
+}
+
+
 - (void)appendToLog:(NSAttributedString*)astr {
-    if([enabledButton intValue]) {
-        [self->xmlLogView replaceCharactersInRange:NSMakeRange([[self->xmlLogView string] length],0)
-                                           withRTF:[astr RTFFromRange:NSMakeRange(0,[astr length])
-                                                   documentAttributes:nil]];
-        [self->xmlLogView scrollRangeToVisible:NSMakeRange([[self->xmlLogView string] length],0)];
-    }
+	[[xmlLogView textStorage] appendAttributedString:astr];
 }
 
 - (PurpleConnection*)gc {
     return gc;
+}
+
+- (void)setPurpleConnection:(PurpleConnection *)inGc
+{
+	gc = inGc;
 }
 
 @end

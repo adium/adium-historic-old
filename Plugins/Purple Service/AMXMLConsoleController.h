@@ -13,21 +13,14 @@
     IBOutlet NSWindow *xmlConsoleWindow;
     IBOutlet NSTextView *xmlLogView;
     IBOutlet NSTextView *xmlInjectView;
-    IBOutlet NSButton *sendButton;
-    IBOutlet NSButton *enabledButton;
     
     PurpleConnection *gc;
 }
 
-- (id)initWithPurpleConnection:(PurpleConnection*)_gc;
-
 - (IBAction)sendXML:(id)sender;
 - (IBAction)clearLog:(id)sender;
-
 - (IBAction)showWindow:(id)sender;
+- (void)close;
 
-- (void)appendToLog:(NSAttributedString*)astr;
-
-- (PurpleConnection*)gc;
-
+- (void)setPurpleConnection:(PurpleConnection *)gc;
 @end
