@@ -66,9 +66,10 @@ typedef enum {
 
     //if the time format string changed, clear the cache, then save the current one
     if (![currentTimeFormatString isEqualToString:oldTimeFormatString]) {
-        int i;
-        for (i=0;i<4;i++)
-            cache[i]=nil;
+        for (unsigned i = 0; i < 4; i++) {
+			[cache[i] release];
+			cache[i]=nil;
+		}
         
         [oldTimeFormatString release];
         oldTimeFormatString = [currentTimeFormatString retain];
@@ -82,38 +83,36 @@ typedef enum {
     else if (!seconds & showAmPm) type = AMPM;
     else type = BOTH;
 
-    //Check the cache for this string, return if found
-    if (cache[type]) {
-        return cache[type];
-    }
+    //Cache the string if it's not already cached
+    if (!cache[type]) {	
+		//use system-wide defaults for date format
+		NSMutableString *localizedDateFormatString = [currentTimeFormatString mutableCopy];
 
-    //use system-wide defaults for date format
-    NSMutableString *localizedDateFormatString = [currentTimeFormatString mutableCopy];
+		if (!showAmPm) { 
+			//potentially could use stringForKey:NSAMPMDesignation as space isn't always the separator between time and %p
+			[localizedDateFormatString replaceOccurrencesOfString:@" %p" 
+													withString:@"" 
+													options:NSLiteralSearch 
+													range:NSMakeRange(0,[localizedDateFormatString length])];
+		}
 
-    if (!showAmPm) { 
-        //potentially could use stringForKey:NSAMPMDesignation as space isn't always the separator between time and %p
-        [localizedDateFormatString replaceOccurrencesOfString:@" %p" 
-                                                withString:@"" 
-                                                options:NSLiteralSearch 
-                                                range:NSMakeRange(0,[localizedDateFormatString length])];
-    }
+		if (!seconds) {
+			int secondSeparatorIndex = [localizedDateFormatString rangeOfString:@"%S" options:NSBackwardsSearch].location;
+			
+			if ( (secondSeparatorIndex != NSNotFound) && (secondSeparatorIndex > 0) ) {
+				NSString *secondsSeparator = [localizedDateFormatString substringWithRange:NSMakeRange(secondSeparatorIndex-1,1)];
+				[localizedDateFormatString replaceOccurrencesOfString:[NSString stringWithFormat:@"%@%@",secondsSeparator,@"%S"] 
+													withString:@""
+													options:NSLiteralSearch
+													range:NSMakeRange(0,[localizedDateFormatString length])];
+			}
+		}
 
-    if (!seconds) {
-        int secondSeparatorIndex = [localizedDateFormatString rangeOfString:@"%S" options:NSBackwardsSearch].location;
-        
-        if ( (secondSeparatorIndex != NSNotFound) && (secondSeparatorIndex > 0) ) {
-            NSString *secondsSeparator = [localizedDateFormatString substringWithRange:NSMakeRange(secondSeparatorIndex-1,1)];
-            [localizedDateFormatString replaceOccurrencesOfString:[NSString stringWithFormat:@"%@%@",secondsSeparator,@"%S"] 
-                                                withString:@""
-                                                options:NSLiteralSearch
-                                                range:NSMakeRange(0,[localizedDateFormatString length])];
-        }
-    }
+		//Cache the result
+		cache[type] = [[localizedDateFormatString autorelease] copy];
+	}
 
-    //Cache the result
-    cache[type] = [localizedDateFormatString retain];
-
-    return [localizedDateFormatString autorelease];
+    return cache[type];
 }
 
 
