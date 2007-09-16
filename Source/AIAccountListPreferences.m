@@ -487,18 +487,23 @@
 		// If there's an error and we're not online and not connecting
 		NSMutableString *returnedMessage = [[[account lastDisconnectionError] mutableCopy] autorelease];
 		
-		// Replace the LibPurple error prefix
+		// Replace the LibPurple error prefixes
 		[returnedMessage replaceOccurrencesOfString:@"Could not establish a connection with the server:\n"
-										 withString:@"Error: "
+										 withString:@""
 											options:NSLiteralSearch
 											  range:NSMakeRange(0, [returnedMessage length])];
+		[returnedMessage replaceOccurrencesOfString:@"Connection error from Notification server:\n"
+										 withString:@""
+											options:NSLiteralSearch
+											  range:NSMakeRange(0, [returnedMessage length])];
+
 		// Remove newlines from the error message, replace them with spaces
 		[returnedMessage replaceOccurrencesOfString:@"\n"
 										 withString:@" "
 											options:NSLiteralSearch
 											  range:NSMakeRange(0, [returnedMessage length])];
 		
-		statusMessage = returnedMessage;
+		statusMessage = [@"Error: " stringByAppendingString:returnedMessage];
 	}
 	
 	return statusMessage;
