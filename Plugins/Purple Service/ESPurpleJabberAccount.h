@@ -28,11 +28,10 @@
 #define KEY_JABBER_SUBSCRIPTION_BEHAVIOR @"Jabber:Subscription Behavior"
 #define KEY_JABBER_SUBSCRIPTION_GROUP	@"Jabber:Default Subscription Group"
 
-@class AMXMLConsoleController, AMPurpleJabberMoodTooltip, AMPurpleJabberServiceDiscoveryBrowsing, AMPurpleJabberAdHocServer;
+@class AMXMLConsoleController, AMPurpleJabberServiceDiscoveryBrowsing, AMPurpleJabberAdHocServer;
 
 @interface ESPurpleJabberAccount : CBPurpleAccount <AIAccount_Files> {
     AMXMLConsoleController *xmlConsoleController;
-	AMPurpleJabberMoodTooltip *moodTooltip;
 	AMPurpleJabberServiceDiscoveryBrowsing *discoveryBrowserController;
 	
 	AMPurpleJabberAdHocServer *adhocServer;

@@ -31,7 +31,6 @@
 #include <Libpurple/si.h>
 #include <SystemConfiguration/SystemConfiguration.h>
 #import "AMXMLConsoleController.h"
-#import "AMPurpleJabberMoodTooltip.h"
 #import "AMPurpleJabberServiceDiscoveryBrowsing.h"
 #import "ESPurpleJabberAccountViewController.h"
 #import "AMPurpleJabberAdHocServer.h"
@@ -754,26 +753,19 @@ extern void jabber_roster_request(JabberStream *js);
 	
     xmlConsoleController = [[AMXMLConsoleController alloc] initWithPurpleConnection:account->gc];
 	
-	moodTooltip = [[AMPurpleJabberMoodTooltip alloc] initWithAccount:self];
-
-	[[adium interfaceController] registerContactListTooltipEntry:moodTooltip secondaryEntry:YES];
 	discoveryBrowserController = [[AMPurpleJabberServiceDiscoveryBrowsing alloc] initWithAccount:self purpleConnection:purple_account_get_connection(account)];
 }
 
 - (void)didDisconnect {
 	hasEncryption = NO;
-    [xmlConsoleController release];
-    xmlConsoleController = nil;
-	[[adium interfaceController] unregisterContactListTooltipEntry:moodTooltip secondaryEntry:YES];
-	[moodTooltip release];
-	moodTooltip = nil;
-	[discoveryBrowserController release];
-	discoveryBrowserController = nil;
-	[adhocServer release];
-	adhocServer = nil;
+    [xmlConsoleController release]; xmlConsoleController = nil;
+	
+	[discoveryBrowserController release]; discoveryBrowserController = nil;
+	[adhocServer release]; adhocServer = nil;
+
 	[super didDisconnect];
-	[gateways release];
-	gateways = nil;
+
+	[gateways release]; gateways = nil;
 }
 
 - (IBAction)showXMLConsole:(id)sender {
