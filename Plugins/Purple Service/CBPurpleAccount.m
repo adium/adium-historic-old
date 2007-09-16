@@ -2578,31 +2578,24 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	PurpleConversation* conversation;
 	conversation = existingConvLookupFromChat(chat);
 
-	int i=0;
-	GList* l;
-	for(l=purple_cmd_list(conversation);l;l = l->next){
-		/*
-		 * this loop is to only get one instance of the command
-		 * and not four. Not sure what's causing this -eb.
-		 */
-		i++;
-		if(i==4) {
-			NSString *name = [[NSString alloc] initWithUTF8String:(char*)l->data];
-			NSDictionary* associatedObjects = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:chat,name,nil] forKeys:[NSArray arrayWithObjects:@"associatedChat",@"commandName",nil]];
+	GList *l, *ll;
 
-			NSMenuItem* aCommand = [[NSMenuItem alloc] initWithTitle:name action:@selector(doCommand:)  keyEquivalent:@""];			
-			[aCommand setTarget:self];
-			[aCommand setRepresentedObject:associatedObjects];
-			
-			[actionsMenu addItem:aCommand];
-
-			
-			[aCommand release];
-			[name release];
-		i=0;
-		}
+	for (l = ll = purple_cmd_list(conversation); l; l = l->next) {
+		NSString *name = [[NSString alloc] initWithUTF8String:(char*)l->data];
+		NSDictionary* associatedObjects = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:chat,name,nil] forKeys:[NSArray arrayWithObjects:@"associatedChat",@"commandName",nil]];
+		
+		NSMenuItem* aCommand = [[NSMenuItem alloc] initWithTitle:name action:@selector(doCommand:)  keyEquivalent:@""];			
+		[aCommand setTarget:self];
+		[aCommand setRepresentedObject:associatedObjects];
+		
+		[actionsMenu addItem:aCommand];
+	
+		[aCommand release];
+		[name release];
 	} 
-	g_list_free(l);
+
+	g_list_free(ll);
+
 	return actionsMenu; 
 }
 

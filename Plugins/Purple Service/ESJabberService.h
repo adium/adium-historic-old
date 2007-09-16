@@ -16,8 +16,10 @@
 
 #import "PurpleService.h"
 
-@interface ESJabberService : PurpleService {
+@class AMPurpleJabberMoodTooltip;
 
+@interface ESJabberService : PurpleService {
+	AMPurpleJabberMoodTooltip *moodTooltip;
 }
 
 @end

@@ -12,9 +12,7 @@
 @class ESPurpleJabberAccount;
 
 @interface AMPurpleJabberMoodTooltip : NSObject <AIContactListTooltipEntry> {
-	ESPurpleJabberAccount *account;
-}
 
-- (id)initWithAccount:(ESPurpleJabberAccount*)_account;
+}
 
 @end

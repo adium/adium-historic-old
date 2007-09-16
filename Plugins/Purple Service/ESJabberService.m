@@ -19,17 +19,30 @@
 #import "ESPurpleJabberAccount.h"
 #import "ESPurpleJabberAccountViewController.h"
 #import "ESJabberService.h"
+#import "AMPurpleJabberMoodTooltip.h"
 #import <AIUtilities/AICharacterSetAdditions.h>
 #import <libpurple/jabber.h>
+
 @implementation ESJabberService
 
-
-//initialization
--(id)init
+- (id)init
 {
-	self = [super init];	
-	jabber_register_commands();
+	if ((self = [super init])) {
+		jabber_register_commands();
+		
+		moodTooltip = [[AMPurpleJabberMoodTooltip alloc] init];
+		[[adium interfaceController] registerContactListTooltipEntry:moodTooltip secondaryEntry:YES];
+	}
+
 	return self;
+}
+
+- (void)dealloc
+{
+	[[adium interfaceController] unregisterContactListTooltipEntry:moodTooltip secondaryEntry:YES];
+	[moodTooltip release]; moodTooltip = nil;
+	
+	[super dealloc];
 }
 
 //Account Creation
