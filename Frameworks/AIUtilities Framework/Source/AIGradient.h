@@ -39,7 +39,7 @@ enum AIDirection {
 }
 
 /*!
- * @brief Create a horiztonal or vertical gradient between two colors
+ * @brief Create a horizontal or vertical gradient between two colors
  *
  * @param inColor1 The starting NSColor
  * @param inColor2 The ending NSColor

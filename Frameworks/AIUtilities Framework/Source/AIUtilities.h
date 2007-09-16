@@ -19,8 +19,6 @@
 
 #import <AIUtilities/AIAlternatingRowOutlineView.h>
 #import <AIUtilities/AIAlternatingRowTableView.h>
-#import <AIUtilities/AIAnimatedFloater.h>
-#import <AIUtilities/AIAnimatedView.h>
 #import <AIUtilities/AIAppleScriptAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AISplitView.h>
