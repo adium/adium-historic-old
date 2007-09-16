@@ -41,6 +41,10 @@
 
 extern void jabber_roster_request(JabberStream *js);
 
+@interface ESPurpleJabberAccount (PRIVATE)
+- (BOOL)enableXMLConsole;
+@end
+
 @implementation ESPurpleJabberAccount
 
 /*!
@@ -86,6 +90,14 @@ extern void jabber_roster_request(JabberStream *js);
 - (const char*)protocolPlugin
 {
    return "prpl-jabber";
+}
+
+- (void)dealloc
+{
+	[xmlConsoleController close];
+	[xmlConsoleController release];
+
+	[super dealloc];
 }
 
 - (NSSet *)supportedPropertyKeys
@@ -744,6 +756,7 @@ extern void jabber_roster_request(JabberStream *js);
 
 - (void)didConnect {
 	gateways = [[NSMutableArray alloc] init];
+
 	if(adhocServer)
 		[adhocServer release];
 	adhocServer = [[AMPurpleJabberAdHocServer alloc] initWithAccount:self];
@@ -751,14 +764,19 @@ extern void jabber_roster_request(JabberStream *js);
 	
     [super didConnect];
 	
-    xmlConsoleController = [[AMXMLConsoleController alloc] initWithPurpleConnection:account->gc];
-	
-	discoveryBrowserController = [[AMPurpleJabberServiceDiscoveryBrowsing alloc] initWithAccount:self purpleConnection:purple_account_get_connection(account)];
+	if ([self enableXMLConsole]) {
+		if (!xmlConsoleController) xmlConsoleController = [[AMXMLConsoleController alloc] init];
+		[xmlConsoleController setPurpleConnection:purple_account_get_connection(account)];
+	}
+
+	discoveryBrowserController = [[AMPurpleJabberServiceDiscoveryBrowsing alloc] initWithAccount:self
+																				purpleConnection:purple_account_get_connection(account)];
 }
 
 - (void)didDisconnect {
 	hasEncryption = NO;
-    [xmlConsoleController release]; xmlConsoleController = nil;
+
+	[xmlConsoleController setPurpleConnection:NULL];
 	
 	[discoveryBrowserController release]; discoveryBrowserController = nil;
 	[adhocServer release]; adhocServer = nil;
@@ -773,6 +791,20 @@ extern void jabber_roster_request(JabberStream *js);
         [xmlConsoleController showWindow:sender];
     else
         NSBeep();
+}
+
+- (BOOL)enableXMLConsole
+{
+	BOOL enableConsole;
+#ifdef DEBUG_BUILD
+	//Always enable the XML console for debug builds
+	enableConsole = YES;
+#else
+	//For non-debug builds, only enable it if the preference is set
+	enableConsole = [[NSUserDefaults standardUserDefaults] boolForKey:@"AMXMPPShowAdvanced"];
+#endif
+	
+	return enableConsole;
 }
 
 - (IBAction)showDiscoveryBrowser:(id)sender {
@@ -821,15 +853,19 @@ extern void jabber_roster_request(JabberStream *js);
 		[menu addObjectsFromArray:supermenu];
         [menu addObject:[NSMenuItem separatorItem]];
 	}
-    
-	if([[NSUserDefaults standardUserDefaults] boolForKey:@"AMXMPPShowAdvanced"]) {
-		NSMenuItem *xmlConsoleMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"XML Console",nil) action:@selector(showXMLConsole:) keyEquivalent:@""];
+
+	if ([self enableXMLConsole]) {
+		NSMenuItem *xmlConsoleMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"XML Console",nil)
+																	action:@selector(showXMLConsole:) 
+															 keyEquivalent:@""];
 		[xmlConsoleMenuItem setTarget:self];
 		[menu addObject:xmlConsoleMenuItem];
 		[xmlConsoleMenuItem release];
 	}
 
-	NSMenuItem *discoveryBrowserMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Discovery Browser",nil) action:@selector(showDiscoveryBrowser:) keyEquivalent:@""];
+	NSMenuItem *discoveryBrowserMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Discovery Browser",nil)
+																	  action:@selector(showDiscoveryBrowser:) 
+															   keyEquivalent:@""];
     [discoveryBrowserMenuItem setTarget:self];
     [menu addObject:discoveryBrowserMenuItem];
     [discoveryBrowserMenuItem release];
