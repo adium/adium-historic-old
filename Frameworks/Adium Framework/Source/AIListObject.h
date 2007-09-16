@@ -36,13 +36,14 @@ typedef enum {
 - (unsigned)containedObjectsCount;
 - (BOOL)containsObject:(AIListObject *)inObject;
 
+- (NSString *)contentsBasedIdentifier;
+
 - (id)objectAtIndex:(unsigned)index;
 - (int)indexOfObject:(AIListObject *)inObject;
 - (AIListObject *)objectWithService:(AIService *)inService UID:(NSString *)inUID;
 
 //Should list each list contact only once (for groups, this is the same as the objectEnumerator)
 - (NSArray *)listContacts;
-- (NSArray *)containedObjectIDs;
 
 - (BOOL)addObject:(AIListObject *)inObject;
 

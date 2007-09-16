@@ -1184,6 +1184,11 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return object;
 }
 
+- (NSString *)contentsBasedIdentifier
+{
+	return [self internalObjectID];
+}
+
 //Expanded State -------------------------------------------------------------------------------------------------------
 #pragma mark Expanded State
 //Set the expanded/collapsed state of this group (PRIVATE: For the contact list view to let us know our state)

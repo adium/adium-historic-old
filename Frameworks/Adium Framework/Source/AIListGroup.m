@@ -62,6 +62,27 @@
 	return internalObjectID;
 }
 
+/*!
+ * @brief Generate a special identifier for this group based upon its contents
+ *
+ * This is useful for storing preferences which are related not to the name of this group (which might be arbitrary) but
+ * rather to its contents. The contact list root always returns its own UID, but other groups will have a different 
+ * contentsBasedIdentifier depending upon what other objects they contain.
+ */
+- (NSString *)contentsBasedIdentifier
+{
+	NSString *contentsBasedIdentifier;
+	if (self == [[adium contactController] contactList]) {
+		contentsBasedIdentifier = [self UID];
+
+	} else {		
+		NSArray *UIDArray = [[containedObjects valueForKey:@"UID"] sortedArrayUsingSelector:@selector(compare:)];
+		contentsBasedIdentifier = [UIDArray componentsJoinedByString:@";"];
+		if (![contentsBasedIdentifier length]) contentsBasedIdentifier = [self UID];
+	}
+	
+	return contentsBasedIdentifier;
+}
 
 //Visibility -----------------------------------------------------------------------------------------------------------
 #pragma mark Visibility
@@ -113,22 +134,6 @@
 - (NSArray *)containedObjects
 {
 	return containedObjects;
-}
-
-/*!
-* @brief Creates list of IDs of the containing objects
- */
-- (NSArray *)containedObjectIDs
-{
-	NSMutableArray *list = [[NSMutableArray alloc] init];
-	NSEnumerator *i = [[self containedObjects] objectEnumerator];
-	AIListObject *currentObject;
-	
-	while((currentObject = [i nextObject])){
-		[list addObject:[[NSString alloc] initWithString:[currentObject UID]]];
-	}
-	
-	return list;
 }
 
 //Number of containd objects

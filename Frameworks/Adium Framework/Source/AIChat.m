@@ -645,6 +645,12 @@ static int nextChatNumber = 0;
 	return [self containedObjectsCount];
 }
 
+- (NSString *)contentsBasedIdentifier
+{
+	return [NSString stringWithFormat:@"%@-%@.%@",[self name], [[self account] serviceID], [[self account] UID]];
+
+}
+
 //Not used
 - (float)smallestOrder { return 0; }
 - (float)largestOrder { return 1E10; }
