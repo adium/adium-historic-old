@@ -24,7 +24,7 @@
 #define	ACCOUNT_PASSWORD_REQUIRED		AILocalizedString(@"Connecting Account","Password prompt window title")
 
 @interface ESAccountPasswordPromptController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
+- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount password:(NSString *)password notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
 @end
 
 /*!
@@ -41,7 +41,7 @@
 
 static NSMutableDictionary	*passwordPromptControllerDict = nil;
 
-+ (void)showPasswordPromptForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
++ (void)showPasswordPromptForAccount:(AIAccount *)inAccount password:(NSString *)inPassword notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {	
 	ESAccountPasswordPromptController	*controller = nil;
 	NSString							*identifier = [inAccount internalObjectID];
@@ -55,6 +55,7 @@ static NSMutableDictionary	*passwordPromptControllerDict = nil;
 	} else {
 		if ((controller = [[self alloc] initWithWindowNibName:ACCOUNT_PASSWORD_PROMPT_NIB 
 												   forAccount:inAccount 
+													 password:inPassword
 											  notifyingTarget:inTarget
 													 selector:inSelector
 													  context:inContext])) {
@@ -67,9 +68,13 @@ static NSMutableDictionary	*passwordPromptControllerDict = nil;
 	[controller showWindowInFrontIfAllowed:YES];
 }
 
-- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
+- (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount password:(NSString *)inPassword notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
-    if ((self = [super initWithWindowNibName:windowNibName notifyingTarget:inTarget selector:inSelector context:inContext])) {
+    if ((self = [super initWithWindowNibName:windowNibName
+									password:inPassword
+							 notifyingTarget:inTarget
+									selector:inSelector
+									 context:inContext])) {
 		account = [inAccount retain];
 	}
 

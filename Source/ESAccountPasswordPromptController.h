@@ -23,6 +23,6 @@
     AIAccount					*account;
 }
 
-+ (void)showPasswordPromptForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
++ (void)showPasswordPromptForAccount:(AIAccount *)inAccount password:(NSString *)password notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
 
 @end

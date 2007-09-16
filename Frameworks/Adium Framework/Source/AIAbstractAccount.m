@@ -426,9 +426,11 @@
         if ([self shouldBeOnline] &&
 			[self enabled]) {
             if (!areOnline && ![[self statusObjectForKey:@"Connecting"] boolValue]) {
-				if ([[self service] requiresPassword] && !password) {
+				if ([[self service] requiresPassword] && (!password ||
+														  [[self statusObjectForKey:@"Prompt For Password On Next Connect"] boolValue])) {
 					//Retrieve the user's password and then call connect
 					[[adium accountController] passwordForAccount:self 
+											   forcePromptDisplay:[[self statusObjectForKey:@"Prompt For Password On Next Connect"] boolValue]
 												  notifyingTarget:self
 														 selector:@selector(passwordReturnedForConnect:context:)
 														  context:nil];
@@ -679,7 +681,9 @@
 
 - (void)serverReportedInvalidPassword
 {
-	[[adium accountController] forgetPasswordForAccount:self];
+	[self setStatusObject:[NSNumber numberWithBool:YES]
+				   forKey:@"Prompt For Password On Next Connect"
+				   notify:NotifyNever];
 	[self setPasswordTemporarily:nil];
 }
 
@@ -1075,6 +1079,10 @@
 	}
 
 	[self updateStatusForKey:@"IdleSince"];
+
+	[self setStatusObject:nil
+				   forKey:@"Prompt For Password On Next Connect"
+				   notify:NotifyNever];
 }
 
 - (void)cancelAutoReconnect
