@@ -62,7 +62,9 @@
 /*!
  * @brief Returns an array of all active services
  *
- * Active services are those for which the user has an enabled account (or enabled compatible account)
+ * "Active" services are those for which the user has an enabled account.
+ * @param includeCompatible Include services which are compatible with an enabled account but not specifically active.
+ *        For example, if an AIM account is enabled, the ICQ service will be included if this is YES.
  * @return NSArray of AIService instances
  */
 - (NSSet *)activeServicesIncludingCompatibleServices:(BOOL)includeCompatible
@@ -105,6 +107,7 @@
 /*!
  * @brief Retrieves a service by its unique ID
  *
+ * Unique IDs are returned by -[AIService serviceCodeUniqueID]. An example is @"libpurple-oscar-AIM".
  * @param uniqueID The serviceCodeUniqueID of the desired service
  * @return AIService if found, nil if not found
  */
@@ -113,8 +116,13 @@
     return [services objectForKey:uniqueID];
 }
 
-
-//XXX - Re-evaluate this method and its presence in the core
+/*!
+ * @brief Retrieves a service by service ID.
+ *
+ * Service IDs may be shared by multiple services if the same service is provided by two different plugins.
+ * -[AIService serviceID] returns serviceIDs. An example is @"AIM".
+ * @return The first service with the matching service ID, or nil if none is found.
+ */
 - (AIService *)firstServiceWithServiceID:(NSString *)serviceID
 {
 	NSEnumerator	*enumerator = [services objectEnumerator];
