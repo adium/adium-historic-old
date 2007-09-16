@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 #import "AISCLViewPlugin.h"
-
+#import "ESContactListAdvancedPreferences.h"
 #import "AIBorderlessListWindowController.h"
 #import "AIStandardListWindowController.h"
 #import "AIListOutlineView.h"
@@ -54,7 +54,10 @@
 	contactLists = [[NSMutableArray alloc] init];
 	
     [[adium interfaceController] registerContactListController:self];
-		
+	
+	//Install our preference view
+	advancedPreferences = [[ESContactListAdvancedPreferences preferencePane] retain];
+
 	//Context submenu
 	contextSubmenu = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Attach / Detach", "Menu item for attaching and detatching groups")
 												target:self

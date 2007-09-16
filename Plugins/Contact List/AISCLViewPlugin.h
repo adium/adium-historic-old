@@ -36,6 +36,8 @@
 @interface AISCLViewPlugin : AIPlugin <AIMultiContactListComponent> {	
 	NSMutableArray							*contactLists;
 
+	ESContactListAdvancedPreferences		*advancedPreferences;
+
 	AIContactListWindowStyle				windowStyle;
 	
 	AIListWindowController					*defaultController;
