@@ -1185,7 +1185,7 @@
 			double reconnectDelay = pow(RECONNECT_BASE_TIME, (double)reconnectAttemptsPerformed);
 			
 			// Make sure we're not going too fast
-			if (reconnectDelay < RECONNECT_MIN_TIME)
+			if (reconnectDelay < RECONNECT_MIN_TIME && reconnectAttemptsPerformed > 0)
 				reconnectDelay = RECONNECT_MIN_TIME;
 			// Or too slow
 			else if (reconnectDelay > RECONNECT_MAX_TIME)
@@ -1198,7 +1198,7 @@
 			reconnectAttemptsPerformed++;
 			
 			// Output an error after we've tried a few times.
-			if (reconnectAttemptsPerformed == 4) {
+			if (reconnectAttemptsPerformed == 5) {
 				[[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Error",[self UID],[[self service] shortDescription]]
 												withDescription:lastDisconnectionError];
 			}
