@@ -191,7 +191,7 @@
 	//Add a menuitem for each enabled account the delegate allows (or all enabled accounts if it doesn't specify)
 	enumerator = [accounts objectEnumerator];
 	while ((account = [enumerator nextObject])) {
-		if ([account enabled] ||
+		if (([account enabled] && !delegateRespondsToShouldIncludeAccount) ||
 			(delegateRespondsToShouldIncludeAccount && [delegate accountMenu:self shouldIncludeAccount:account])) {
 			NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@""
 																						target:self
