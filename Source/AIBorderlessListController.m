@@ -10,11 +10,15 @@
 
 @implementation AIBorderlessListController
 
-- (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate
+- (id)initWithContactList:(AIListObject<AIContainingObject> *)aContactList
+			inOutlineView:(AIListOutlineView *)inContactListView
+			 inScrollView:(AIAutoScrollView *)inScrollView_contactList
+				 delegate:(id<AIListControllerDelegate>)inDelegate
 {
-	if ((self = [super initWithContactListView:inContactListView
-								  inScrollView:inScrollView_contactList
-									  delegate:inDelegate])) {
+	if ((self = [super initWithContactList:aContactList
+							 inOutlineView:inContactListView
+							  inScrollView:inScrollView_contactList
+								  delegate:inDelegate])) {
 		emptyListHiding = NO;
 		[self contactOrderChanged:nil];
 	}
