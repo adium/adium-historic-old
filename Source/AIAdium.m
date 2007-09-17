@@ -482,6 +482,58 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 	[pool release];
 }
 
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
+{
+	NSApplicationTerminateReply allowQuit = NSTerminateNow;
+	if (([chatController unviewedContentCount] > 0) &&
+		(![[preferenceController preferenceForKey:@"Suppress Quit Confirmation for Unread Messages"
+											group:@"Confirmations"] boolValue])) {
+		[[self interfaceController] displayQuestion:AILocalizedString(@"Confirm Quit", nil)
+									withDescription:AILocalizedString(@"You have unread messages.\nAre you sure you want to quit?", nil)
+									withWindowTitle:nil
+									  defaultButton:AILocalizedString(@"Quit", nil)
+									alternateButton:AILocalizedString(@"Cancel", nil)
+										otherButton:AILocalizedString(@"Don't ask again", nil)
+											 target:self
+										   selector:@selector(unreadQuitQuestion:userInfo:)
+										   userInfo:nil];
+		allowQuit = NSTerminateLater;
+	} 
+	
+	if (allowQuit == NSTerminateNow &&
+		([fileTransferController activeTransferCount] > 0) &&
+		(![[preferenceController preferenceForKey:@"Suppress Quit Confirmation for File Transfers"
+											group:@"Confirmations"]  boolValue])) {
+		[[self interfaceController] displayQuestion:AILocalizedString(@"Confirm Quit", nil)
+									withDescription:AILocalizedString(@"You have file transfers in progress.\nAre you sure you want to quit?", nil)
+									withWindowTitle:nil
+									  defaultButton:AILocalizedString(@"Quit", nil)
+									alternateButton:AILocalizedString(@"Cancel", nil)
+										otherButton:AILocalizedString(@"Don't ask again", nil)
+											 target:self
+										   selector:@selector(fileTransferQuitQuestion:userInfo:)
+										   userInfo:nil];
+		allowQuit = NSTerminateLater;
+	}
+	
+	if (allowQuit == NSTerminateNow &&
+		[[preferenceController preferenceForKey:@"Confirm Quit"
+										  group:@"Confirmations"]  boolValue]) {
+		[[self interfaceController] displayQuestion:AILocalizedString(@"Confirm Quit", nil)
+									withDescription:AILocalizedString(@"Are you sure you want to quit Adium?", nil)
+									withWindowTitle:nil
+									  defaultButton:AILocalizedString(@"Quit", nil)
+									alternateButton:AILocalizedString(@"Cancel", nil)
+										otherButton:AILocalizedString(@"Don't ask again", nil)
+											 target:self
+										   selector:@selector(confirmQuitQuestion:userInfo:)
+										   userInfo:nil];
+		allowQuit = NSTerminateLater;
+	}
+	
+	return allowQuit;
+}
+
 //Give all the controllers a chance to close down
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
@@ -562,17 +614,18 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 		case AITextAndButtonsDefaultReturn:
 			//Quit
 			//Should we ask about File Transfers here?????
-			[NSApp terminate:nil];
+			[NSApp replyToApplicationShouldTerminate:NSTerminateNow];
 			break;
 		case AITextAndButtonsOtherReturn:
 			//Don't Ask Again
 			[[self preferenceController] setPreference:[NSNumber numberWithBool:YES]
 												 forKey:@"Suppress Quit Confirmation for Unread Messages"
 												  group:@"Confirmations"];
-			[NSApp terminate:nil];
+			[NSApp replyToApplicationShouldTerminate:NSTerminateNow];
 			break;
 		default:
 			//Cancel
+			[NSApp replyToApplicationShouldTerminate:NSTerminateCancel];
 			break;
 	}
 }
@@ -584,17 +637,18 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 	{
 		case AITextAndButtonsDefaultReturn:
 			//Quit
-			[NSApp terminate:nil];
+			[NSApp replyToApplicationShouldTerminate:NSTerminateNow];
 			break;
 		case AITextAndButtonsOtherReturn:
 			//Don't Ask Again
 			[[self preferenceController] setPreference:[NSNumber numberWithBool:YES]
 												 forKey:@"Suppress Quit Confirmation for File Transfers"
 												  group:@"Confirmations"];
-			[NSApp terminate:nil];
+			[NSApp replyToApplicationShouldTerminate:NSTerminateNow];
 			break;
 		default:
 			//Cancel
+			[NSApp replyToApplicationShouldTerminate:NSTerminateCancel];
 			break;
 	}
 }
@@ -606,17 +660,18 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 	{
 		case AITextAndButtonsDefaultReturn:
 			//Quit
-			[NSApp terminate:nil];
+			[NSApp replyToApplicationShouldTerminate:NSTerminateNow];
 			break;
 		case AITextAndButtonsOtherReturn:
 			//Don't Ask Again
 			[[self preferenceController] setPreference:[NSNumber numberWithBool:NO]
 												forKey:@"Confirm Quit"
 												 group:@"Confirmations"];
-			[NSApp terminate:nil];
+			[NSApp replyToApplicationShouldTerminate:NSTerminateNow];
 			break;
 		default:
 			//Cancel
+			[NSApp replyToApplicationShouldTerminate:NSTerminateCancel];
 			break;
 	}
 }
@@ -629,66 +684,12 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 	 * Wait one last run loop before beginning to quit so that activity can be registered, since menus run in
 	 * a different run loop mode, NSEventTrackingRunLoopMode.
 	 */
-	[NSObject cancelPreviousPerformRequestsWithTarget:self
-											 selector:@selector(reallyConfirmQuit)
+	[NSObject cancelPreviousPerformRequestsWithTarget:NSApp
+											 selector:@selector(terminate:)
 											   object:nil];
-	[self performSelector:@selector(reallyConfirmQuit)
+	[NSApp performSelector:@selector(terminate:)
 			   withObject:nil
 			   afterDelay:0];
-}
-
-- (void)reallyConfirmQuit
-{
-	BOOL allowQuit = YES;
-	if (([chatController unviewedContentCount] > 0) &&
-		(![[preferenceController preferenceForKey:@"Suppress Quit Confirmation for Unread Messages"
-											group:@"Confirmations"] boolValue])) {
-		[[self interfaceController] displayQuestion:AILocalizedString(@"Confirm Quit", nil)
-									withDescription:AILocalizedString(@"You have unread messages.\nAre you sure you want to quit?", nil)
-									withWindowTitle:nil
-									  defaultButton:AILocalizedString(@"Quit", nil)
-									alternateButton:AILocalizedString(@"Cancel", nil)
-										otherButton:AILocalizedString(@"Don't ask again", nil)
-											 target:self
-										   selector:@selector(unreadQuitQuestion:userInfo:)
-										   userInfo:nil];
-		allowQuit = NO;
-	} 
-	
-	if (allowQuit &&
-		([fileTransferController activeTransferCount] > 0) &&
-		(![[preferenceController preferenceForKey:@"Suppress Quit Confirmation for File Transfers"
-											group:@"Confirmations"]  boolValue])) {
-		[[self interfaceController] displayQuestion:AILocalizedString(@"Confirm Quit", nil)
-									withDescription:AILocalizedString(@"You have file transfers in progress.\nAre you sure you want to quit?", nil)
-									withWindowTitle:nil
-									  defaultButton:AILocalizedString(@"Quit", nil)
-									alternateButton:AILocalizedString(@"Cancel", nil)
-										otherButton:AILocalizedString(@"Don't ask again", nil)
-											 target:self
-										   selector:@selector(fileTransferQuitQuestion:userInfo:)
-										   userInfo:nil];
-		allowQuit = NO;
-	}
-	
-	if (allowQuit &&
-		[[preferenceController preferenceForKey:@"Confirm Quit"
-											group:@"Confirmations"]  boolValue]) {
-		[[self interfaceController] displayQuestion:AILocalizedString(@"Confirm Quit", nil)
-									withDescription:AILocalizedString(@"Are you sure you want to quit Adium?", nil)
-									withWindowTitle:nil
-									  defaultButton:AILocalizedString(@"Quit", nil)
-									alternateButton:AILocalizedString(@"Cancel", nil)
-										otherButton:AILocalizedString(@"Don't ask again", nil)
-											 target:self
-										   selector:@selector(confirmQuitQuestion:userInfo:)
-										   userInfo:nil];
-		allowQuit = NO;
-	}
-	
-	if (allowQuit) {
-		[NSApp terminate:nil];
-	}
 }
 
 //Other -------------------------------------------------------------------------------------------------------
