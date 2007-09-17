@@ -51,18 +51,6 @@
 @implementation AIStandardListWindowController
 
 /*!
- * @brief Initialize
- */
-- (id)initWithWindowNibName:(NSString *)inNibName
-{	
-    if ((self = [super initWithWindowNibName:inNibName])) {
-
-	}
-
-	return self;
-}
-
-/*!
  * @brief Deallocate
  */
 - (void)dealloc

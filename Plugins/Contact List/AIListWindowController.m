@@ -32,25 +32,9 @@
 #import <Adium/AIListObject.h>
 #import <Adium/AIUserIcons.h>
 #import <AIUtilities/AIDockingWindow.h>
-
-#define CONTACT_LIST_WINDOW_NIB					@"ContactListWindow"		//Filename of the contact list window nib
-#define CONTACT_LIST_WINDOW_TRANSPARENT_NIB		@"ContactListWindowTransparent" //Filename of the minimalist transparent version
-#define CONTACT_LIST_TOOLBAR					@"ContactList"				//ID of the contact list toolbar
-#define	KEY_DUAL_CONTACT_LIST_WINDOW_FRAME		@"Dual Contact List Frame 2"
+#import <AIUtilities/AIEventAdditions.h>
 
 #define PREF_GROUP_CONTACT_LIST					@"Contact List"
-#define KEY_CLWH_WINDOW_POSITION				@"Contact Window Position"
-#define KEY_CLWH_HIDE							@"Hide While in Background"
-
-#define TOOL_TIP_CHECK_INTERVAL					45.0	//Check for mouse X times a second
-#define TOOL_TIP_DELAY							25.0	//Number of check intervals of no movement before a tip is displayed
-
-#define MAX_DISCLOSURE_HEIGHT					13		//Max height/width for our disclosure triangles
-
-#define	PREF_GROUP_DUAL_WINDOW_INTERFACE		@"Dual Window Interface"
-#define KEY_DUAL_RESIZE_HORIZONTAL				@"Autoresize Horizontal"
-
-#define PREF_GROUP_CONTACT_STATUS_COLORING		@"Contact Status Coloring"
 
 #define SLIDE_ALLOWED_RECT_EDGE_MASK			(AIMinXEdgeMask | AIMaxXEdgeMask)
 #define DOCK_HIDING_MOUSE_POLL_INTERVAL			0.1
@@ -58,11 +42,12 @@
 #define MOUSE_EDGE_SLIDE_ON_DISTANCE			1.1f
 #define WINDOW_SLIDING_MOUSE_DISTANCE_TOLERANCE 3.0f
 
-#define KEY_LIST_SNAP							@"List Snap"
 #define SNAP_DISTANCE							15.0
 
 @interface AIListWindowController (PRIVATE)
-- (void)windowDidLoad;
+- (id)initWithContactList:(AIListObject<AIContainingObject> *)contactList;
++ (NSString *)nibName;
+
 - (void)_configureAutoResizing;
 - (void)_configureToolbar;
 + (void)updateScreenSlideBoundaryRect:(id)sender;
@@ -91,27 +76,31 @@
 	}
 }
 
-+ (AIListWindowController *)initWithContactList: (AIListObject<AIContainingObject> *)contactList
+//Return a new contact list window controller
++ (AIListWindowController *)listWindowController
 {
-	return [[[self alloc] initWithNibName:[self nibName] withContactList:contactList] autorelease];
+    return [[[self alloc] initWithContactList:nil] autorelease];
 }
 
-- (AIListWindowController *)initWithNibName:(NSString *)nibName withContactList:(AIListObject<AIContainingObject> *)contactList 
++ (AIListWindowController *)listWindowControllerForContactList:(AIListObject<AIContainingObject> *)contactList
 {
-	if((self = [super initWithWindowNibName:nibName])) 
-	{
+	return [[[self alloc] initWithContactList:contactList] autorelease];
+}
+
+- (id)initWithContactList:(AIListObject<AIContainingObject> *)contactList
+{
+	if ((self = [self initWithWindowNibName:[[self class] nibName]])) {
 		preventHiding = NO;
 		previousAlpha = 0;
+		[self setContactList:contactList];
 	}
-	[self setContactList:contactList];
-	return self;
+	
+	return self;	
 }
 
 - (AIListObject<AIContainingObject> *)contactList
 {
-	if(contactListRoot)
-		return contactListRoot;
-	return [contactListController contactList];
+	return (contactListRoot ? contactListRoot : [contactListController contactList]);
 }
 
 - (AIListController *) listController
@@ -124,15 +113,14 @@
 	return contactListView;
 }
 
-//Return a new contact list window controller
-+ (AIListWindowController *)listWindowController
+- (void)setContactList:(AIListObject<AIContainingObject> *)inContactList
 {
-    return [[[self alloc] initWithWindowNibName:[self nibName]] autorelease];
-}
-
-- (void)setContactList:(AIListObject<AIContainingObject> *)contactList
-{
-	contactListRoot = contactList;
+	if (inContactList != contactListRoot) {
+		[contactListRoot release];
+		contactListRoot = [inContactList retain];
+		
+		NSLog(@"Contact list was set to %@",contactListRoot);
+	}
 }
 
 //Our window nib name
@@ -146,17 +134,6 @@
 	return [AIListController class];
 }
 
-//Init
-- (id)initWithWindowNibName:(NSString *)inNibName
-{	
-    if ((self = [super initWithWindowNibName:inNibName])) {
-		preventHiding = NO;
-		previousAlpha = 1.0;
-	}
-
-    return self;
-}
-
 - (void)dealloc
 {
 	[contactListController close];
@@ -165,23 +142,24 @@
 	[super dealloc];
 }
 
-
 //
 - (NSString *)adiumFrameAutosaveName
 {
-	return KEY_DUAL_CONTACT_LIST_WINDOW_FRAME;
+	AILogWithSignature(@"My autosave name is %@",[NSString stringWithFormat:@"Contact List:%@", [[self contactList] contentsBasedIdentifier]]);
+	return [NSString stringWithFormat:@"Contact List:%@", [[self contactList] contentsBasedIdentifier]];
 }
 
 //Setup the window after it has loaded
 - (void)windowDidLoad
-{
+{	
+	contactListController = [[[self listControllerClass] alloc] initWithContactList:[self contactList]
+																	  inOutlineView:contactListView
+																	   inScrollView:scrollView_contactList 
+																		   delegate:self];
+
+	//super's windowDidLoad will restore our location, which is based upon the contactListRoot
 	[super windowDidLoad];
 
-	contactListController = [[[self listControllerClass] alloc] initWithContactListView:contactListView
-																		   inScrollView:scrollView_contactList 
-																			   delegate:self
-																	setContactListRoot:contactListRoot];
-	
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
 	[[self window] useOptimizedDrawing:YES];
@@ -1076,11 +1054,11 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
  */
 - (void)windowDidMove:(NSNotification *)notification
 {
-	unsigned allowSnapping = [[NSApp currentEvent] modifierFlags] & NSShiftKeyMask;
-	
+	BOOL suppressSnapping = [NSEvent shiftKey];
+
 	attachToBottom = nil;
-	
-	if (windowSlidOffScreenEdgeMask == AINoEdges && !allowSnapping)
+
+	if (windowSlidOffScreenEdgeMask == AINoEdges && !suppressSnapping)
 		[self snapToOtherWindows];
 }
 
@@ -1109,94 +1087,89 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
  */
 - (void)snapToOtherWindows
 {	
-	// If window is not by edges of screen
-	if (![self slidableEdgesAdjacentToWindow]) {
-		NSArray *windows = [[NSApplication sharedApplication] windows];
-		NSEnumerator *enumerator = [windows objectEnumerator];
-		
-		NSWindow *window;
-
-		NSPoint suggested = NSMakePoint([[self window] frame].origin.x,[[self window] frame].origin.y);
-		NSRect current = [[self window] frame];
-		
-		// Check to snap to each guide
-		while ((window = [enumerator nextObject])) {
-			// No snapping to itself and it must be within a snapping distance to other windows
-			if ([window delegate] 
-			   && [[window delegate] conformsToProtocol:@protocol(AIInterfaceContainer)] 
-			   && [window screen]==[[self window] screen]) {
-				suggested = [self snapTo:window with:current saveTo:suggested];
-			}
+	NSWindow *myWindow = [self window];
+	NSArray *windows = [[NSApplication sharedApplication] windows];
+	NSEnumerator *enumerator = [windows objectEnumerator];
+	
+	NSWindow *window;
+	
+	NSRect currentFrame = [myWindow frame];
+	NSPoint suggested = currentFrame.origin;
+	
+	// Check to snap to each guide
+	while ((window = [enumerator nextObject])) {
+		// No snapping to itself and it must be within a snapping distance to other windows
+		if ((window != myWindow) &&
+			[window delegate] && [[window delegate] conformsToProtocol:@protocol(AIInterfaceContainer)]) {
+			suggested = [self snapTo:window with:currentFrame saveTo:suggested];
 		}
-		[[self window] setFrameOrigin:suggested];
 	}
+
+	[[self window] setFrameOrigin:suggested];
 }
 
-- (NSPoint)snapTo:(NSWindow*)neighborWindow with:(NSRect)window saveTo:(NSPoint)location{
-	NSRect neighbor = [neighborWindow frame];
-	NSPoint spacing = [self windowSpacing];
-	unsigned overlap = 0;
-	unsigned bottom = 0;
-	
-	if (!NSEqualRects(neighbor,window) && [self inRange:window of:neighbor]) {
-		// X Snapping
-		if ([self canSnap:NSMaxX(window) with:NSMinX(neighbor)]) {
-			location.x=NSMinX(neighbor)-NSWidth(window)-spacing.x;
-		}
-		else if ([self canSnap:NSMinX(window) with:NSMaxX(neighbor)]) {
-			location.x=NSMaxX(neighbor)+spacing.x;
-		}
-		else if ([self canSnap:NSMinX(window) with:NSMinX(neighbor)]) {
-			location.x=NSMinX(neighbor);
-			overlap++;
-			bottom++;
-		}
 
-		// Y Snapping
-		if ([self canSnap:NSMaxY(neighbor) with:NSMaxY(window)]) {
-			location.y=NSMaxY(neighbor)-NSHeight(window);
-			overlap++;
-		}
-		else if ([self canSnap:NSMinY(neighbor) with:NSMaxY(window)]) {
-			location.y=NSMinY(neighbor)-NSHeight(window)-spacing.y;
-			bottom++;
-		}
-		else if ([self canSnap:NSMaxY(neighbor) with:NSMinY(window)]) {
-			location.y=NSMaxY(neighbor)+spacing.y;
-		}
-		else if ([self canSnap:NSMinY(neighbor) with:NSMinY(window)]) {
-			location.y=NSMinY(neighbor);
-			overlap++;
-		}
-	}	
-	
-	// If we snapped on top of neighbord
-	if (overlap==2)
-		return window.origin;
-	// Save window that we could possible attach to
-	if (bottom==2)
-		attachToBottom = [neighborWindow delegate];
-	
-	return location;
+/*!
+ * @brief Check that window is inside snappable region of other window
+ */
+static BOOL isInRangeOfRect(NSRect sourceRect, NSRect targetRect)
+{
+	return NSIntersectsRect(NSInsetRect(sourceRect, -SNAP_DISTANCE, -SNAP_DISTANCE), targetRect);
 }
 
 /*!
  * @brief Check if points are close enough to be snapped together
  */
-- (BOOL)canSnap:(float)a with:(float)b{
-	return (a<(b+SNAP_DISTANCE) && a>(b-SNAP_DISTANCE));
+static BOOL canSnap(float a, float b)
+{
+	return (abs(a - b) <= SNAP_DISTANCE);
 }
 
-/*!
- * @brief Check that window is inside snappable region of other window
- */
-- (BOOL)inRange:(NSRect)object of:(NSRect)ofObject{
-	ofObject.size.width+=2*SNAP_DISTANCE;
-	ofObject.size.height+=2*SNAP_DISTANCE;
-	ofObject.origin.x-=SNAP_DISTANCE;
-	ofObject.origin.y-=SNAP_DISTANCE;
-	return NSIntersectsRect(object,ofObject);
+- (NSPoint)snapTo:(NSWindow*)neighborWindow with:(NSRect)currentRect saveTo:(NSPoint)location{
+	NSRect neighbor = [neighborWindow frame];
+	NSPoint spacing = [self windowSpacing];
+	unsigned overlap = 0;
+	unsigned bottom = 0;
+	
+	if (!NSEqualRects(neighbor,currentRect) && isInRangeOfRect(currentRect, neighbor)) {
+		// X Snapping
+		if (canSnap(NSMaxX(currentRect), NSMinX(neighbor))) {
+			location.x = NSMinX(neighbor) - NSWidth(currentRect) - spacing.x;
+		} else if (canSnap(NSMinX(currentRect), NSMaxX(neighbor))) {
+			location.x = NSMaxX(neighbor) + spacing.x;
+		} else if (canSnap(NSMinX(currentRect), NSMinX(neighbor))) {
+			location.x = NSMinX(neighbor);
+			overlap++;
+			bottom++;
+		}
+		
+		// Y Snapping
+		if (canSnap(NSMaxY(neighbor), NSMaxY(currentRect))) {
+			location.y = NSMaxY(neighbor) - NSHeight(currentRect);
+			overlap++;
+		} else if (canSnap(NSMinY(neighbor), NSMaxY(currentRect))) {
+			location.y = NSMinY(neighbor) - NSHeight(currentRect) - spacing.y;
+			bottom++;
+		} else if (canSnap(NSMaxY(neighbor), NSMinY(currentRect))) {
+			location.y = NSMaxY(neighbor) + spacing.y;
+		} else if (canSnap(NSMinY(neighbor), NSMinY(currentRect))) {
+			location.y = NSMinY(neighbor);
+			overlap++;
+		}
+		
+	}	
+	
+	// If we snapped on top of neighbor
+	if (overlap == 2)
+		return currentRect.origin;
+
+	// Save window that we could possible attach to
+	if (bottom == 2)
+		attachToBottom = [neighborWindow delegate];
+	
+	return location;
 }
+
 
 /*!
  * @brief Gets space that windows should be apart by based on current window style

@@ -42,7 +42,7 @@
 
 #define	MENU_BAR_HEIGHT				22
 
-#define KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN		@"Contact List Docked To Bottom"
+#define KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN	[NSString stringWithFormat:@"Contact List Docked To Bottom:%@", [[self contactList] contentsBasedIdentifier]]
 
 #define PREF_GROUP_APPEARANCE		@"Appearance"
 
@@ -52,38 +52,43 @@
 
 @implementation AIListController
 
-- (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate  setContactListRoot:(AIListObject<AIContainingObject> *)aContactList
+
+- (id)initWithContactList:(AIListObject<AIContainingObject> *)aContactList
+			inOutlineView:(AIListOutlineView *)inContactListView
+			 inScrollView:(AIAutoScrollView *)inScrollView_contactList
+				 delegate:(id<AIListControllerDelegate>)inDelegate
 {
-	[super initWithContactListView:inContactListView inScrollView:inScrollView_contactList delegate:inDelegate];
-	
-	[contactListView setDrawHighlightOnlyWhenMain:YES];
+	if ((self = [self initWithContactListView:inContactListView inScrollView:inScrollView_contactList delegate:inDelegate])) {
+		[contactListView setDrawHighlightOnlyWhenMain:YES];
+		
+		autoResizeVertically = NO;
+		autoResizeHorizontally = NO;
+		maxWindowWidth = 10000;
+		forcedWindowWidth = -1;
+		
+		//Observe contact list content and display changes
+		[[adium notificationCenter] addObserver:self selector:@selector(contactListChanged:) 
+										   name:Contact_ListChanged
+										 object:nil];
+		[[adium notificationCenter] addObserver:self selector:@selector(contactOrderChanged:)
+										   name:Contact_OrderChanged 
+										 object:nil];
+		
+		[contactListView addObserver:self
+						  forKeyPath:@"desiredHeight" 
+							 options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) 
+							 context:NULL];
+		
+		[self setContactListRoot:(aContactList ? aContactList : [[adium contactController] contactList])];
 
-    autoResizeVertically = NO;
-    autoResizeHorizontally = NO;
-	maxWindowWidth = 10000;
-	forcedWindowWidth = -1;
-	
-	//Observe contact list content and display changes
-	[[adium notificationCenter] addObserver:self selector:@selector(contactListChanged:) 
-									   name:Contact_ListChanged
-									 object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(contactOrderChanged:)
-									   name:Contact_OrderChanged 
-									 object:nil];
-	
-	//Recall how the contact list was docked last time Adium was open
-	dockToBottomOfScreen = [[[adium preferenceController] preferenceForKey:KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN
-																	group:PREF_GROUP_WINDOW_POSITIONS] intValue];
+		//Recall how the contact list was docked last time Adium was open
+		dockToBottomOfScreen = [[[adium preferenceController] preferenceForKey:KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN
+																		 group:PREF_GROUP_WINDOW_POSITIONS] intValue];
+		
+		//Observe preference changes
+		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
+	}
 
-	[self setContactList:aContactList];
-
-	[contactListView addObserver:self forKeyPath:@"desiredHeight" options:(NSKeyValueObservingOptionOld | NSKeyValueObservingOptionNew) context:NULL];
-
-	[self contactListChanged:nil];
-
-    //Observe preference changes
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
-	
 	return self;
 }
 
@@ -360,13 +365,11 @@
 - (void)contactListChanged:(NSNotification *)notification
 {
 	id		object = [notification object];
-	
-	if(!contactList)
-		contactList = [[adium contactController] contactList];
-	
+
 	//Redisplay and resize
 	if (!object || object == contactList) {
-		[self setContactListRoot:contactList];
+		[contactListView reloadData];
+
 	} else {
 		NSDictionary	*userInfo = [notification userInfo];
 		AIListGroup		*containingGroup = [userInfo objectForKey:@"ContainingGroup"];
@@ -392,20 +395,6 @@
 {
 	return contactListView;
 }
-
-- (void)setContactList:(AIListObject<AIContainingObject> *)aContactList
-{
-	
-	if([self contactListRoot])
-		[self setContactListRoot: aContactList];
-	else
-			if(aContactList)
-				[self setContactListRoot: aContactList];
-			else
-				[self setContactListRoot: [[adium contactController] contactList]];
-	[self contactListChanged:nil];
-}
-
 
 /*!
  * @brief Order of contacts changed
