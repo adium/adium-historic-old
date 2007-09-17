@@ -57,17 +57,13 @@
 @implementation NSTableView (rightClickMenu)
 
 // Override the menuForEvent so we can generate one.
-- (NSMenu *) menuForEvent: (NSEvent *)event
+- (NSMenu *)menuForEvent: (NSEvent *)event
 {
-	if ([event type] == NSRightMouseDown) {
-		int row = [self rowAtPoint:[self convertPoint:[event locationInWindow] toView:nil]];
-		// Select the row.
-		[self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
-		// Return our delegate's menu for this row.
-		return [(AIAccountListPreferences *)[self dataSource] menuForRow:row];
-	}
-	
-	return nil;
+	int row = [self rowAtPoint:[self convertPoint:[event locationInWindow] toView:nil]];
+	// Select the row.
+	[self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
+	// Return our delegate's menu for this row.
+	return [(AIAccountListPreferences *)[self dataSource] menuForRow:row];
 }
 
 @end
@@ -130,8 +126,8 @@
 	
 	//Set ourselves up for Account Menus
 	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self
-											  submenuType:AIAccountStatusSubmenu
-											showTitleVerbs:NO] retain];
+											  submenuType:AIAccountOptionsSubmenu
+										   showTitleVerbs:NO] retain];
 
 	//Observe status icon pack changes
 	[[adium notificationCenter] addObserver:self
@@ -364,11 +360,19 @@
 
 
 /*!
-* @brief AIAccountMenu deligate method
+ * @brief AIAccountMenu deligate method
  */
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems {
 	return;
-}	
+}
+
+/*!
+* @brief AIAccountMenu deligate method -- this allows disabled items to have menus.
+ */
+- (BOOL)accountMenu:(AIAccountMenu *)inAccountMenu shouldIncludeAccount:(AIAccount *)inAccount
+{
+	return YES;
+}
 
 /*!
 * @brief Returns the status menu associated with a particular row
