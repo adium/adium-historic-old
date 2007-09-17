@@ -620,14 +620,16 @@ NSMenu *statusMenuForAccountMenuItem(NSArray *menuItemArray, NSMenuItem *account
 		updateRepresentedObjectForSubmenusOfMenuItem(actualMenuItem, account);
 	}
 	
+	NSMenuItem *enableDisableItem;
+	
 	if ([account enabled]) {
-		NSMenuItem	*disableItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Disable", nil)
+		enableDisableItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Disable", nil)
 																						target:self
 																						action:@selector(toggleAccountEnabled:)
 																				 keyEquivalent:@""
 																			 representedObject:account];
 	} else {
-		NSMenuItem	*disableItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Enable", nil)
+		enableDisableItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Enable", nil)
 																						target:self
 																						action:@selector(toggleAccountEnabled:)
 																				 keyEquivalent:@""
@@ -635,8 +637,8 @@ NSMenu *statusMenuForAccountMenuItem(NSArray *menuItemArray, NSMenuItem *account
 	}
 	
 	[accountSubmenu addItem:[NSMenuItem separatorItem]];
-	[accountSubmenu addItem:disableItem];
-	[disableItem release];
+	[accountSubmenu addItem:enableDisableItem];
+	[enableDisableItem release];
 	
 	[accountSubmenu setMenuChangedMessagesEnabled:YES];
 	
