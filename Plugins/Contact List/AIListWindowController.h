@@ -81,14 +81,12 @@ typedef enum {
 }
 
 // Create additional windows
-+ (AIListWindowController *)initWithContactList:(AIListObject<AIContainingObject> *)contactList;
-- (AIListWindowController *)initWithNibName:(NSString *)nibName withContactList:(AIListObject<AIContainingObject> *)contactList;
-
++ (AIListWindowController *)listWindowControllerForContactList:(AIListObject<AIContainingObject> *)contactList;
 + (AIListWindowController *)listWindowController;
+
 - (AIListController *)listController;
 - (AIListOutlineView *)contactListView;
 - (AIListObject<AIContainingObject> *) contactList;
-+ (NSString *)nibName;
 - (void)setContactList:(AIListObject<AIContainingObject> *)contactList;
 - (void)close:(id)sender;
 
@@ -107,9 +105,7 @@ typedef enum {
 
 // Window snapping
 - (void)snapToOtherWindows;
-- (BOOL)canSnap:(float)a with:(float)b;
 - (NSPoint)snapTo:(NSWindow *)neighborWindow with:(NSRect)window saveTo:(NSPoint)location;
-- (BOOL)inRange:(NSRect)object of:(NSRect)ofObject;
 - (NSPoint)windowSpacing;
 
 

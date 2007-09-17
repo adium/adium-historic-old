@@ -33,6 +33,16 @@
 #define DETACHED_WINDOW_GROUPS			@"Groups"
 #define DETACHED_WINDOW_LOCATION		@"Location"
 
+@interface AISCLViewPlugin (PRIVATE)
+- (void)loadDetachedGroups;
+- (void)loadWindowPreferences:(NSDictionary *)windowPreferences;
+- (void)saveAndCloseDetachedGroups;
+
+- (BOOL)rebuildContextMenu;
+- (NSString *)formatContextMenu:(AIListObject<AIContainingObject> *)contactList;
+- (NSString *)formatContextMenu:(AIListObject<AIContainingObject> *)contactList showEmpty:(BOOL)empty;
+@end
+
 /*!
  * @class AISCLViewPlugin
  * @brief This component plugin is responsible for controlling the main contact list and detached contact lists window and view.
@@ -136,7 +146,7 @@
 - (id)detachContactList:(AIListGroup *)contactList 
 {
 	if ([contactList isKindOfClass:[AIListGroup class]]) { 
-		AIListWindowController  *newContactList = [AIBorderlessListWindowController initWithContactList:contactList];
+		AIListWindowController  *newContactList = [AIBorderlessListWindowController listWindowControllerForContactList:contactList];
 	
 		[contactLists addObject:[newContactList retain]];
 		[newContactList showWindowInFrontIfAllowed:YES];
@@ -200,7 +210,7 @@
 {
 	// Check that main contact list has been created
     if (!defaultController) {
-		[self loadPreferences];
+		[self loadDetachedGroups];
     }
 	
 	[defaultController showWindowInFrontIfAllowed:bringToFront];
@@ -211,11 +221,6 @@
  */
 - (BOOL)contactListIsVisibleAndMain
 {
-	// Check that main contact list has been created
-	if (!defaultController) {
-		[self loadPreferences];
-    }
-	
 	return ([self contactListIsVisible] &&
 			[[defaultController window] isMainWindow]);
 }
@@ -235,7 +240,7 @@
  */
 - (void)closeContactList
 {	
-	[self savePreferences];
+	[self saveAndCloseDetachedGroups];
 
 	// Close main window
     if (defaultController)
@@ -378,9 +383,11 @@
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem {
 	// If not the main context menu item assume its active
 	if (menuItem == menuItem_nextDetached || menuItem == menuItem_previousDetached || menuItem == menuItem_consolidate)
-		return ([self detachedContactListCount]!=0);
-	else if (menuItem == contextSubmenu)
+		return ([self detachedContactListCount] != 0);
+	else if (menuItem == contextSubmenu) {
+#warning Unacceptable and broken
 		return [self rebuildContextMenu];
+	}
 	return YES;
 }
 
@@ -539,9 +546,15 @@
  */
 - (void)closeAndReopencontactList
 {
-	[self savePreferences];
+	BOOL isVisibleAndMain = [self contactListIsVisibleAndMain];
+
+	[self saveAndCloseDetachedGroups];
+
 	hasLoaded = NO;
-	[self loadPreferences];
+	[defaultController close];
+	[defaultController release]; defaultController = nil;
+
+	[self showContactListAndBringToFront:isVisibleAndMain];
 }
 
 // Preferences --------------------------------------------------------------------------------------------------------
@@ -549,32 +562,23 @@
 /*!
  * @brief Saves location of contact list and information about the detached groups
  */
-- (void)savePreferences
-{	
-	// Save default contact list location
-	[[adium preferenceController] setPreference:[[defaultController window] stringWithSavedFrame] 
-										 forKey:DETACHED_DEFAULT_WINDOW
-										  group:PREF_DETACHED_GROUPS];
-	
-	NSMutableArray *windows = [[NSMutableArray alloc] init];
-	NSEnumerator *i = [contactLists objectEnumerator];
-	AIListWindowController *currWindow;
-	while ((currWindow = [i nextObject])) {
-		NSMutableDictionary *win = [[NSMutableDictionary alloc] init];
-		
-		[win setObject:[[currWindow contactList] containedObjectIDs] 
-				forKey:DETACHED_WINDOW_GROUPS];
-		[win setObject:[[currWindow window] stringWithSavedFrame] 
-				forKey:DETACHED_WINDOW_LOCATION];
-		
-		[windows addObject:win];
-		
-		[self closeContactList:currWindow];
+- (void)saveAndCloseDetachedGroups
+{		
+	NSMutableArray *detachedWindowsDicts = [[NSMutableArray alloc] init];
+	NSEnumerator *enumerator = [[[contactLists copy] autorelease] objectEnumerator];
+	AIListWindowController *windowController;
+
+	while ((windowController = [enumerator nextObject])) {
+		NSMutableDictionary *dict = [NSDictionary dictionaryWithObject:[[[windowController contactList] containedObjects] valueForKey:@"UID"]
+																forKey:DETACHED_WINDOW_GROUPS];
+		[detachedWindowsDicts addObject:dict];
+		[self closeContactList:windowController];
 	}
-	
-	[[adium preferenceController] setPreference:[NSArray arrayWithArray:windows]
+
+	[[adium preferenceController] setPreference:detachedWindowsDicts
 										 forKey:DETACHED_WINDOWS
 										  group:PREF_DETACHED_GROUPS];
+	[detachedWindowsDicts release];
 }
 
 /*!
@@ -582,7 +586,7 @@
  * is the first time that that we are loading the contact list we detached
  * groups and place them in the correct location
  */
-- (void)loadPreferences
+- (void)loadDetachedGroups
 {
 	if (!defaultController && windowStyle == AIContactListWindowStyleStandard) {
 		defaultController = [[AIStandardListWindowController listWindowController] retain];
@@ -591,15 +595,13 @@
 	}
 	
 	if (!hasLoaded && detachable) {
-		[self setWindowLocation:defaultController 
-							 at:[[[adium preferenceController] preferencesForGroup:PREF_DETACHED_GROUPS] objectForKey:DETACHED_DEFAULT_WINDOW]];
+		NSArray *detachedWindowsDict = [[adium preferenceController] preferenceForKey:DETACHED_WINDOWS
+																				group:PREF_DETACHED_GROUPS];
+		NSEnumerator *enumerator = [detachedWindowsDict objectEnumerator];
+		NSDictionary *windowPreferenceDict;
 		
-		NSArray *windows = [[[adium preferenceController] preferencesForGroup:PREF_DETACHED_GROUPS] objectForKey:DETACHED_WINDOWS];
-		NSEnumerator *window = [windows objectEnumerator];
-		NSDictionary *data;
-		
-		while ((data = [window nextObject])) {
-			[self loadWindowPreferences:data];
+		while ((windowPreferenceDict = [enumerator nextObject])) {
+			[self loadWindowPreferences:windowPreferenceDict];
 		}
 		
 		hasLoaded = YES;
@@ -612,40 +614,23 @@
  */
 - (void)loadWindowPreferences:(NSDictionary *)windowPreferences
 {
-	AIListGroup							*contactList = nil;
-	NSString							*ID;
-	NSArray								*groups = [windowPreferences objectForKey:DETACHED_WINDOW_GROUPS];
-	NSEnumerator						*i = [groups objectEnumerator];
-	AIListGroup							*group; 
-	
+	AIListGroup		*contactList = nil;
+	NSArray			*groups = [windowPreferences objectForKey:DETACHED_WINDOW_GROUPS];
+	NSString		*groupUID;
+	NSEnumerator	*enumerator;
 
 	if (![groups count])
 		return;
-	
+
 	contactList = [[adium contactController] createDetachedContactList];
-	
-	while ((ID = [i nextObject])) {
-		group = [[adium contactController] groupWithUID:ID];
+
+	enumerator = [groups objectEnumerator];
+	while ((groupUID = [enumerator nextObject])) {
+		AIListGroup		*group = [[adium contactController] groupWithUID:groupUID];
 		[group moveGroupTo:contactList];
 	}
-	AIListWindowController *window = [self detachContactList:contactList];
 	
-	[self setWindowLocation:window 
-						 at:[windowPreferences objectForKey:DETACHED_WINDOW_LOCATION]];
-	
-}
-
-/*!
- * @brief Sets window's top left corner position based on saved string
- *
- * @param window Window to be repositioned
- * @param location String containing new window location
- */
-- (void)setWindowLocation:(AIListWindowController *)window at:(NSString *)location
-{
-	NSRect loc = NSRectFromString(location);
-	loc.origin.y+=loc.size.height;
-	[[window window] setFrameTopLeftPoint:loc.origin];	
+	[self detachContactList:contactList];
 }
 
 @end

@@ -61,15 +61,6 @@
 //Manage multiple windows
 - (void)closeContactList:(AIListWindowController *)window;
 
-//Preferences
-- (void)loadPreferences;
-- (void)savePreferences;
-- (void)loadWindowPreferences:(NSDictionary *)windowPreferences;
-
-- (BOOL)rebuildContextMenu;
-- (NSString *)formatContextMenu:(AIListObject<AIContainingObject> *)contactList;
-- (NSString *)formatContextMenu:(AIListObject<AIContainingObject> *)contactList showEmpty:(BOOL)empty;
-
 //Contact List Controller
 - (AIListWindowController *)contactListWindowController;
 - (void)contactListDidClose:(NSNotification *)notification;
@@ -78,8 +69,5 @@
 - (BOOL)contactListIsVisible;
 - (void)closeContactList;
 - (void)closeDetachedContactLists;
-
-// 
-- (void)setWindowLocation:(AIListWindowController *)window at:(NSString *)location;
 
 @end
