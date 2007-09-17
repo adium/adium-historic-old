@@ -191,8 +191,8 @@
 	//Add a menuitem for each enabled account the delegate allows (or all enabled accounts if it doesn't specify)
 	enumerator = [accounts objectEnumerator];
 	while ((account = [enumerator nextObject])) {
-		if ([account enabled] &&
-			(!delegateRespondsToShouldIncludeAccount || [delegate accountMenu:self shouldIncludeAccount:account])) {
+		if ([account enabled] ||
+			(delegateRespondsToShouldIncludeAccount && [delegate accountMenu:self shouldIncludeAccount:account])) {
 			NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@""
 																						target:self
 																						action:@selector(selectAccountMenuItem:)
@@ -496,11 +496,19 @@
 		[actionsSubmenu addItem:[NSMenuItem separatorItem]];
 	}
 	
-	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Disable", nil)
+	if ([inAccount enabled]) {
+		menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Disable", nil)
 																	target:self
 																	action:@selector(toggleAccountEnabled:)
 															 keyEquivalent:@""
 														 representedObject:inAccount];
+	} else {
+		menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Enable", nil)
+																		target:self
+																		action:@selector(toggleAccountEnabled:)
+																 keyEquivalent:@""
+															 representedObject:inAccount];
+	}
 	[actionsSubmenu addItem:menuItem];
 	[menuItem release];
 }
@@ -618,10 +626,17 @@ NSMenu *statusMenuForAccountMenuItem(NSArray *menuItemArray, NSMenuItem *account
 																						action:@selector(toggleAccountEnabled:)
 																				 keyEquivalent:@""
 																			 representedObject:account];
-		[accountSubmenu addItem:[NSMenuItem separatorItem]];
-		[accountSubmenu addItem:disableItem];
-		[disableItem release];
+	} else {
+		NSMenuItem	*disableItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Enable", nil)
+																						target:self
+																						action:@selector(toggleAccountEnabled:)
+																				 keyEquivalent:@""
+																			 representedObject:account];
 	}
+	
+	[accountSubmenu addItem:[NSMenuItem separatorItem]];
+	[accountSubmenu addItem:disableItem];
+	[disableItem release];
 	
 	[accountSubmenu setMenuChangedMessagesEnabled:YES];
 	
