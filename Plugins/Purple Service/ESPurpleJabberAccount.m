@@ -409,17 +409,18 @@ extern void jabber_roster_request(JabberStream *js);
 	return nil;
 }
 
-- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
+- (AIReconnectDelayType)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
-	BOOL shouldAttemptReconnect = YES;
+	AIReconnectDelayType shouldAttemptReconnect = [super shouldAttemptReconnectAfterDisconnectionError:disconnectionError];
 	
 	if (disconnectionError && *disconnectionError) {
 		if (([*disconnectionError rangeOfString:@"401"].location != NSNotFound) ||
 			([*disconnectionError rangeOfString:@"Authentication Failure"].location != NSNotFound) ||
 			([*disconnectionError rangeOfString:@"Not Authorized"].location != NSNotFound)) {
-			shouldAttemptReconnect = NO;
+			[self serverReportedInvalidPassword];
+			shouldAttemptReconnect = AIReconnectImmediately;
 
-			/* Automatic registration attempt */
+			/* Automatic registration attempt
 			//Display no error message
 			[self setLastDisconnectionError:nil];
 
@@ -431,20 +432,19 @@ extern void jabber_roster_request(JabberStream *js);
 											 otherButton:nil
 												  target:self
 												selector:@selector(answeredShouldReigsterNewJabberAccount:userInfo:)
-												userInfo:nil];
-
+												userInfo:nil];*/
 		} else if ([*disconnectionError rangeOfString:@"Stream Error"].location != NSNotFound) {
-			shouldAttemptReconnect = NO;
+			shouldAttemptReconnect = AIReconnectNever;
 
 		} else if ([*disconnectionError rangeOfString:@"requires plaintext authentication over an unencrypted stream"].location != NSNotFound) {
-			shouldAttemptReconnect = NO;
+			shouldAttemptReconnect = AIReconnectNever;
 			
 		} else if ([*disconnectionError rangeOfString:@"Resource Conflict"].location != NSNotFound) {
-			shouldAttemptReconnect = NO;
+			shouldAttemptReconnect = AIReconnectNever;
 		}
 	}
 	
-	return ([super shouldAttemptReconnectAfterDisconnectionError:disconnectionError] && shouldAttemptReconnect);
+	return shouldAttemptReconnect;
 }
 
 - (BOOL)answeredShouldReigsterNewJabberAccount:(NSNumber *)returnCodeNumber userInfo:(id)userInfo

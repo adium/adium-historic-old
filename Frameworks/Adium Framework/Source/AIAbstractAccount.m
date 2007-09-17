@@ -1178,42 +1178,6 @@
  */
 - (void)didDisconnect
 {
-	//If we were disconnected unexpectedly, attempt a reconnect. Give subclasses a chance to handle the disconnection error.
-	if ([self shouldBeOnline] && lastDisconnectionError) {
-		if ([self shouldAttemptReconnectAfterDisconnectionError:&lastDisconnectionError]) {
-			// Set our retry time to RECONNECT_BASE_TIME^reconnectAttemptsPerformed
-			double reconnectDelay = pow(RECONNECT_BASE_TIME, (double)reconnectAttemptsPerformed);
-			
-			// Make sure we're not going too fast
-			if (reconnectDelay < RECONNECT_MIN_TIME && reconnectAttemptsPerformed > 0)
-				reconnectDelay = RECONNECT_MIN_TIME;
-			// Or too slow
-			else if (reconnectDelay > RECONNECT_MAX_TIME)
-				reconnectDelay = RECONNECT_MAX_TIME;
-			
-			AILog(@"%@: Disconnected (\"%@\"): Automatically reconnecting in %0f seconds (%i attempts performed)",
-				  self, lastDisconnectionError, reconnectDelay, reconnectAttemptsPerformed);
-			
-			[self autoReconnectAfterDelay:reconnectDelay];
-			reconnectAttemptsPerformed++;
-			
-			// Output an error after we've tried a few times.
-			if (reconnectAttemptsPerformed == 5) {
-				[[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Error",[self UID],[[self service] shortDescription]]
-												withDescription:lastDisconnectionError];
-			}
-			
-		} else {
-			if (lastDisconnectionError) {
-				[[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Error",[self UID],[[self service] shortDescription]]
-												withDescription:lastDisconnectionError];
-			}
-			
-			//Reset reconnection attempts
-			reconnectAttemptsPerformed = 0;
-		}
-	}
-	
 	//Remove all contacts
 	[self removeAllContacts];
 	
@@ -1227,6 +1191,39 @@
 	
 	//Apply any changes
     [self notifyOfChangedStatusSilently:NO];
+	
+	//If we were disconnected unexpectedly, attempt a reconnect. Give subclasses a chance to handle the disconnection error.
+	if ([self shouldBeOnline] && lastDisconnectionError) {
+		AIReconnectDelayType shouldReconnect = [self shouldAttemptReconnectAfterDisconnectionError:&lastDisconnectionError];
+		if (shouldReconnect == AIReconnectNormally) {
+			// Set our retry time to RECONNECT_BASE_TIME^reconnectAttemptsPerformed
+			double reconnectDelay = pow(RECONNECT_BASE_TIME, (double)reconnectAttemptsPerformed);
+			
+			// Make sure we're not going too fast
+			if (reconnectDelay < RECONNECT_MIN_TIME)
+				reconnectDelay = RECONNECT_MIN_TIME;
+			// Or too slow
+			else if (reconnectDelay > RECONNECT_MAX_TIME)
+				reconnectDelay = RECONNECT_MAX_TIME;
+			
+			AILog(@"%@: Disconnected (\"%@\"): Automatically reconnecting in %0f seconds (%i attempts performed)",
+				  self, lastDisconnectionError, reconnectDelay, reconnectAttemptsPerformed);
+			
+			[self autoReconnectAfterDelay:reconnectDelay];
+			reconnectAttemptsPerformed++;
+		} else if (shouldReconnect == AIReconnectImmediately) {
+			AILog(@"%@: Disconnected (\"%@\"): Automatically reconnecting immediately", self, lastDisconnectionError);
+			[self performAutoreconnect];
+		} else {
+			if (lastDisconnectionError) {
+				[[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Error",[self UID],[[self service] shortDescription]]
+												withDescription:lastDisconnectionError];
+			}
+			
+			//Reset reconnection attempts
+			reconnectAttemptsPerformed = 0;
+		}
+	}
 }
 
 /*!
@@ -1270,10 +1267,13 @@
 
 /*!
  * @brief By default, always attempt to reconnect.  Subclasses may override this to manage reconnect behavior.
+ *
+ * Subclasses should return AIReconnectImmediately for invalid passwords or situations where immediate reconnect is possible,
+ * AIReconnectNormally to use the builtin exponential reconnect delay, and AIReconnectNever on unrecoverable errors.
  */
-- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
+- (AIReconnectDelayType)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
-	return YES;
+	return AIReconnectNormally;
 }
 
 //Fast user switch disconnecting ---------------------------------------------------------------------------------------

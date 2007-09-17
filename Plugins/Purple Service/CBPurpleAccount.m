@@ -1652,12 +1652,14 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 		[super alertForAccountDeletion:deletionDialog didReturn:NSAlertDefaultReturn];
 }
 
-- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
+- (AIReconnectDelayType)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
 	// If libPurple considers the connection suicidal, don't attempt to reconnect.
-	BOOL connectionIsSuicidal = ((account && account->gc) ? account->gc->wants_to_die : NO);
-	
-	return !connectionIsSuicidal;
+	if ((account && account->gc) ? account->gc->wants_to_die : NO) {
+		return AIReconnectNever;
+	} else {
+		return AIReconnectNormally;
+	}
 }
 
 #pragma mark Registering

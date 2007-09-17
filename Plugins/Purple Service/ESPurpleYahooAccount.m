@@ -104,23 +104,21 @@
 	return nil;
 }
 
-- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
+- (AIReconnectDelayType)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
-	BOOL shouldAttemptReconnect = YES;
+	AIReconnectDelayType shouldAttemptReconnect = [super shouldAttemptReconnectAfterDisconnectionError:disconnectionError];
 	
 	if (disconnectionError && *disconnectionError) {
 		if ([*disconnectionError rangeOfString:@"Incorrect password"].location != NSNotFound) {
 			[self serverReportedInvalidPassword];
-			// Attempt to reconnect on invalid password. libPurple considers this to be a "suicidal" connection, but this allows
-			// us to prompt the user for a new password.
-			return YES;
+			shouldAttemptReconnect = AIReconnectImmediately;
 		} else if (([*disconnectionError rangeOfString:@"You have signed on from another location"].location != NSNotFound) ||
 				   ([*disconnectionError rangeOfString:@"logged in on a different machine or device"].location != NSNotFound)) {
-			shouldAttemptReconnect = NO;
+			shouldAttemptReconnect = AIReconnectNever;
 		}
 	}
 	
-	return ([super shouldAttemptReconnectAfterDisconnectionError:disconnectionError] && shouldAttemptReconnect);
+	return shouldAttemptReconnect;
 }
 
 #pragma mark Encoding
