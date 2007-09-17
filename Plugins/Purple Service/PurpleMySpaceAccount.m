@@ -53,16 +53,18 @@
 					  bodyBackground:NO];
 }
 
-- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
-{	
+- (AIReconnectDelayType)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
+{
+	AIReconnectDelayType shouldAttemptReconnect = [super shouldAttemptReconnectAfterDisconnectionError:disconnectionError];
+
 	if (disconnectionError && *disconnectionError) {
 		if ([*disconnectionError rangeOfString:@"The password provided is incorrect"].location != NSNotFound) {
 			[self serverReportedInvalidPassword];
-			return YES;
+			shouldAttemptReconnect = AIReconnectImmediately;
 		}
 	}
 	
-	return [super shouldAttemptReconnectAfterDisconnectionError:disconnectionError];
+	return shouldAttemptReconnect;
 }
 
 @end

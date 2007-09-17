@@ -45,7 +45,6 @@
 - (void)updateStatusForKey:(NSString *)key;
 - (NSDictionary *)defaultProperties;
 - (NSString *)unknownGroupName;
-- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError;
 - (BOOL)useDisplayNameAsStatusMessage;
 - (AIService *)_serviceForUID:(NSString *)contactUID;
 - (void)unregisteredAccount:(BOOL)success;

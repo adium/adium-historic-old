@@ -16,6 +16,12 @@
 
 #import <Adium/AIAccount.h>
 
+typedef enum {
+	AIReconnectNever = 0,
+	AIReconnectImmediately,
+	AIReconnectNormally
+} AIReconnectDelayType;
+
 @interface AIAccount (Abstract)
 
 - (id)initWithUID:(NSString *)inUID internalObjectID:(NSString *)inInternalObjectID service:(AIService *)inService;
@@ -72,7 +78,7 @@
 - (void)getProxyConfigurationNotifyingTarget:(id)target selector:(SEL)selector context:(id)context;
 - (NSString *)lastDisconnectionError;
 - (void)setLastDisconnectionError:(NSString *)inError;
-- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError;
+- (AIReconnectDelayType)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError;
 
 //FUS Disconnecting
 - (void)autoReconnectAfterDelay:(NSTimeInterval)delay;

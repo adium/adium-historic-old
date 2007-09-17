@@ -160,28 +160,26 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	
 #pragma mark Account Connection
 
-- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
+- (AIReconnectDelayType)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
-	BOOL shouldAttemptReconnect = YES;
+	AIReconnectDelayType shouldAttemptReconnect = [super shouldAttemptReconnectAfterDisconnectionError:disconnectionError];
 
 	if (disconnectionError && *disconnectionError) {
 		if (([*disconnectionError rangeOfString:@"Incorrect password"].location != NSNotFound) ||
 			([*disconnectionError rangeOfString:@"Authentication failed"].location != NSNotFound)){
 			[self serverReportedInvalidPassword];
-			// Attempt to reconnect on invalid password. libPurple considers this to be a "suicidal" connection, but this allows
-			// us to prompt the user for a new password.
-			return YES;
+			shouldAttemptReconnect = AIReconnectImmediately;
 		} else if ([*disconnectionError rangeOfString:@"signed on with this screen name at another location"].location != NSNotFound) {
-			shouldAttemptReconnect = NO;
+			shouldAttemptReconnect = AIReconnectNever;
 		} else if ([*disconnectionError rangeOfString:@"too frequently"].location != NSNotFound) {
-			shouldAttemptReconnect = NO;	
+			shouldAttemptReconnect = AIReconnectNever;	
 		} else if ([*disconnectionError rangeOfString:@"Invalid screen name"].location != NSNotFound) {
-			shouldAttemptReconnect = NO;
+			shouldAttemptReconnect = AIReconnectNever;
 			*disconnectionError = AILocalizedString(@"The screen name you entered is not registered. Check to ensure you typed it correctly. If it is a new name, you must register it at www.aim.com before you can use it.", "Invalid name on AIM");
 		}
 	}
 	
-	return ([super shouldAttemptReconnectAfterDisconnectionError:disconnectionError] && shouldAttemptReconnect);
+	return shouldAttemptReconnect;
 }
 
 - (NSString *)connectionStringForStep:(int)step

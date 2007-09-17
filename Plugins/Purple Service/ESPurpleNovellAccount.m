@@ -27,22 +27,20 @@ gboolean purple_init_novell_plugin(void);
     return "prpl-novell";
 }
 
-- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
+- (AIReconnectDelayType)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
-	BOOL shouldAttemptReconnect = YES;
+	AIReconnectDelayType shouldAttemptReconnect = [super shouldAttemptReconnectAfterDisconnectionError:disconnectionError];
 	
 	if (disconnectionError && *disconnectionError) {
 		if ([*disconnectionError rangeOfString:@"Invalid username or password"].location != NSNotFound) {
 			[self serverReportedInvalidPassword];
-			// Attempt to reconnect on invalid password. libPurple considers this to be a "suicidal" connection, but this allows
-			// us to prompt the user for a new password.
-			return YES;
+			shouldAttemptReconnect = AIReconnectImmediately;
 		} else if ([*disconnectionError rangeOfString:@"you logged in at another workstation"].location != NSNotFound) {
-			shouldAttemptReconnect = NO;
+			shouldAttemptReconnect = AIReconnectNever;
 		}
 	}
 	
-	return ([super shouldAttemptReconnectAfterDisconnectionError:disconnectionError] && shouldAttemptReconnect);
+	return shouldAttemptReconnect;
 }
 
 #pragma mark Status
