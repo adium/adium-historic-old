@@ -25,6 +25,7 @@
 #import <AIUtilities/AITableViewAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIMutableStringAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIAccountMenu.h>
@@ -503,7 +504,7 @@
 											options:NSLiteralSearch
 											  range:NSMakeRange(0, [returnedMessage length])];
 		
-		statusMessage = [@"Error: " stringByAppendingString:returnedMessage];
+		statusMessage = [NSString stringWithFormat:@"%@: %@", AILocalizedString(@"Error", "Prefix to error messages in the Account List."), returnedMessage];
 	}
 	
 	return statusMessage;
