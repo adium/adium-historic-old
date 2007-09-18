@@ -611,6 +611,16 @@
 							   keychainItem:(out SecKeychainItemRef *)outKeychainItem
 									  error:(out NSError **)outError;
 
+/*!	@brief Deletes a Generic password (convenience version).
+ *
+ *	@param service The service that the password can be used to log into.
+ *	@param account The username of the account.
+
+ *	@param outError On return, a pointer to either \c nil (hopefully) or an \c NSError describing what went wrong.
+ */
+- (void)deleteGenericPasswordForService:(NSString *)service
+								account:(NSString *)account
+								  error:(out NSError **)outError;
 #pragma mark -
 
 /*!	@brief Returns the Keychain Services object that backs the \c AIKeychain.

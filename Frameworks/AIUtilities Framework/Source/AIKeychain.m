@@ -1063,6 +1063,44 @@ static AIKeychain *lastKnownDefaultKeychain = nil;
 	return passwordString;	
 }
 
+- (void)deleteGenericPasswordForService:(NSString *)service
+								account:(NSString *)account
+								  error:(out NSError **)outError
+{
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
+	SecKeychainItemRef keychainItem = NULL;
+	NSError *error = nil;
+
+	[self findGenericPasswordForService:service
+								account:account
+						   keychainItem:&keychainItem
+								  error:&error];
+	
+	if (keychainItem) {
+		OSStatus err = SecKeychainItemDelete(keychainItem);
+		if (outError) {
+			if (err == noErr) error = nil;
+			else if (!error) {
+				NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+										  [NSValue valueWithPointer:SecKeychainFindGenericPassword], AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTION,
+										  @"SecKeychainFindGenerictPassword", AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME,
+										  AI_LOCALIZED_SECURITY_ERROR_DESCRIPTION(err), AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION,
+										  service,  AIKEYCHAIN_ERROR_USERINFO_SERVICE,
+										  account, AIKEYCHAIN_ERROR_USERINFO_ACCOUNT,
+										  NSFileTypeForHFSTypeCode(kSecAuthenticationTypeDefault), AIKEYCHAIN_ERROR_USERINFO_AUTHENTICATIONTYPE,
+										  keychainRef, AIKEYCHAIN_ERROR_USERINFO_KEYCHAIN,
+										  nil];
+				error = [NSError errorWithDomain:AIKEYCHAIN_ERROR_DOMAIN code:err userInfo:userInfo];
+			}
+			*outError = error;
+		}
+	}
+	
+	if (keychainItem) CFRelease(keychainItem);
+	
+	[pool release];
+}
 
 #pragma mark -
 
