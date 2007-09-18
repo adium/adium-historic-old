@@ -398,6 +398,14 @@
 														 keyEquivalent:@""];
 			//We can't put the submenu into our menu directly or otherwise modify the accountMenu_status, as we may want to use it again
 			[statusMenuItem setSubmenu:[[[[accountMenu_status menuItemForAccount:account] submenu] copy] autorelease]];
+			
+			if ([[statusMenuItem submenu] numberOfItems] >= 2) {
+				//Remove the 'Disable' item
+				[[statusMenuItem submenu] removeItemAtIndex:([[statusMenuItem submenu] numberOfItems] - 1)];
+				
+				//And remove the separator above it
+				[[statusMenuItem submenu] removeItemAtIndex:([[statusMenuItem submenu] numberOfItems] - 1)];
+			}
 		}
 		
 		//Add a separator if we have any items shown so far
