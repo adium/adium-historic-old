@@ -106,6 +106,15 @@ static AIWebKitDelegate *AISharedWebKitDelegate;
 }
 
 /*!
+* @brief Announce when the window script object is available for modification
+ */
+- (void)webView:(WebView *)sender windowScriptObjectAvailable:(WebScriptObject *)windowScriptObject {
+    AIWebKitMessageViewController *controller = [mapping objectForKey:[NSValue valueWithPointer:sender]];
+	if(controller)
+        [controller webView:sender windowScriptObjectAvailable:windowScriptObject];
+}
+
+/*!
 * @brief Dragging entered
  */
 - (NSDragOperation)webView:(ESWebView *)sender draggingEntered:(id <NSDraggingInfo>)info
