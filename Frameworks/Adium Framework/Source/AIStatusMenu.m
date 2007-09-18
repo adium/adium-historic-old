@@ -357,7 +357,21 @@
 		
 	} else {
 		if (account) {
-			[[adium statusController] setActiveStatusState:(AIStatus *)statusItem forAccount:account];
+			BOOL shouldRebuild;
+			
+			shouldRebuild = [[adium statusController] removeIfNecessaryTemporaryStatusState:[account statusState]];
+			[account setStatusState:(AIStatus *)statusItem];
+			
+			//Enable the account if it isn't currently enabled
+			if (![account enabled]) {
+				[account setEnabled:YES];
+			}
+			
+			if (shouldRebuild) {
+				//Rebuild our menus if there was a change
+				[[adium notificationCenter] postNotificationName:AIStatusStateArrayChangedNotification object:nil];
+			}
+			
 		} else {
 			[[adium statusController] setActiveStatusState:(AIStatus *)statusItem];
 		}
