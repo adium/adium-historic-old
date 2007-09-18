@@ -8118,7 +8118,6 @@
 				343EC6B30809DEEB00E27095 /* ContactAlerts.nib in Resources */,
 				3402D5A5080DBC91004E50B4 /* SortConfiguration.nib in Resources */,
 				34F4677A080F49C5007800AB /* Safari.scpt in Resources */,
-
 				34F4677B080F49C5007800AB /* Safari.png in Resources */,
 				345ACC970811C20F008E4D22 /* AwayStatusWindow.nib in Resources */,
 				345F566B08178356001F733C /* AdiumServiceIcons.icns in Resources */,
