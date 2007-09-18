@@ -387,29 +387,30 @@
 {
 	if (row >= 0 && row < [accountArray count]) {
 		AIAccount		*account = [accountArray objectAtIndex:row];
-		NSMenu			*optionsMenu = [[accountMenu_options menuItemForAccount:account] submenu];
-		// If this account is enabled, add a "Set Status" menu item.
+		NSMenu			*optionsMenu = [[[NSMenu alloc] init] autorelease];
+		NSMenu			*accountOptionsMenu = [[accountMenu_options menuItemForAccount:account] submenu];
 
 		if ([account enabled]) {
-			/*NSMenuItem		*statusMenuItem = [optionsMenu addItemWithTitle:AILocalizedString(@"Set Status", "Used in the context menu for the accounts list for the sub menu to set status in.")
-																	 target:
-																	 action:@selector(dummyAction:)
-															  keyEquivalent:@""];*/
-			
+			// If this account is enabled, add a "Set Status" menu item.
 			NSMenuItem *statusMenuItem = [optionsMenu addItemWithTitle:AILocalizedString(@"Set Status", "Used in the context menu for the accounts list for the sub menu to set status in.")
 																target:nil
 																action:nil
 														 keyEquivalent:@""];
-				
-			if (statusMenuItem != nil) {
-				// Grab the status menu
-				NSMenu *statusMenu = [[[accountMenu_status menuItemForAccount:account] submenu] retain];
-				[[accountMenu_status menuItemForAccount:account] setSubmenu:nil];
-
-				// Add the status menu onto the options menu list.
-				[statusMenuItem setSubmenu:statusMenu];
-				[statusMenu release];
-			}
+			//We can't put the submenu into our menu directly or otherwise modify the accountMenu_status, as we may want to use it again
+			[statusMenuItem setSubmenu:[[[[accountMenu_status menuItemForAccount:account] submenu] copy] autorelease]];
+		}
+		
+		//Add a separator if we have any items shown so far
+		if ([optionsMenu numberOfItems]) {
+			[optionsMenu addItem:[NSMenuItem separatorItem]];
+		}
+		
+		//Add account options
+		NSMenuItem *menuItem;
+		NSEnumerator *enumerator = [[accountOptionsMenu itemArray] objectEnumerator];
+		while ((menuItem = [enumerator nextObject])) {
+			//Use copies of the menu items rather than moving the actual items, as we may want to use them again
+			[optionsMenu addItem:[[menuItem copy] autorelease]];
 		}
 
 		return optionsMenu;
