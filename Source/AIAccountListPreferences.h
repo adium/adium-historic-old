@@ -32,7 +32,8 @@
     NSArray							*accountArray;
     AIAccount						*tempDragAccount;
 
-	AIAccountMenu					*accountMenu;
+	AIAccountMenu					*accountMenu_options;
+	AIAccountMenu					*accountMenu_status;
 	
 	NSMutableDictionary				*requiredHeightDict;
 	

@@ -27,6 +27,7 @@
 #import <AIUtilities/AIMutableStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIAccountMenu.h>
 #import <Adium/AIListObject.h>
@@ -125,9 +126,13 @@
 	[button_newAccount setMenu:serviceMenu];
 	
 	//Set ourselves up for Account Menus
-	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self
-											  submenuType:AIAccountOptionsSubmenu
-										   showTitleVerbs:NO] retain];
+	accountMenu_options = [[AIAccountMenu accountMenuWithDelegate:self
+													  submenuType:AIAccountOptionsSubmenu
+												   showTitleVerbs:NO] retain];
+	
+	accountMenu_status = [[AIAccountMenu accountMenuWithDelegate:self
+													 submenuType:AIAccountStatusSubmenu
+												  showTitleVerbs:NO] retain];
 
 	//Observe status icon pack changes
 	[[adium notificationCenter] addObserver:self
@@ -155,7 +160,8 @@
 	
 	[accountArray release]; accountArray = nil;
 	[requiredHeightDict release]; requiredHeightDict = nil;
-	[accountMenu release]; accountMenu = nil;
+	[accountMenu_options release]; accountMenu_options = nil;
+	[accountMenu_status release]; accountMenu_status = nil;
 	
 	// Cancel our auto-refreshing reconnect countdown.
 	[reconnectTimeUpdater invalidate];
@@ -380,7 +386,33 @@
 - (NSMenu *)menuForRow:(int)row
 {
 	if (row >= 0 && row < [accountArray count]) {
-		return [[accountMenu menuItemForAccount:[accountArray objectAtIndex:row]] submenu];
+		AIAccount		*account = [accountArray objectAtIndex:row];
+		NSMenu			*optionsMenu = [[accountMenu_options menuItemForAccount:account] submenu];
+		// If this account is enabled, add a "Set Status" menu item.
+
+		if ([account enabled]) {
+			/*NSMenuItem		*statusMenuItem = [optionsMenu addItemWithTitle:AILocalizedString(@"Set Status", "Used in the context menu for the accounts list for the sub menu to set status in.")
+																	 target:
+																	 action:@selector(dummyAction:)
+															  keyEquivalent:@""];*/
+			
+			NSMenuItem *statusMenuItem = [optionsMenu addItemWithTitle:AILocalizedString(@"Set Status", "Used in the context menu for the accounts list for the sub menu to set status in.")
+																target:nil
+																action:nil
+														 keyEquivalent:@""];
+				
+			if (statusMenuItem != nil) {
+				// Grab the status menu
+				NSMenu *statusMenu = [[[accountMenu_status menuItemForAccount:account] submenu] retain];
+				[[accountMenu_status menuItemForAccount:account] setSubmenu:nil];
+
+				// Add the status menu onto the options menu list.
+				[statusMenuItem setSubmenu:statusMenu];
+				[statusMenu release];
+			}
+		}
+
+		return optionsMenu;
 	}
 	
 	return nil;
