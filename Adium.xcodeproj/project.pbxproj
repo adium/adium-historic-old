@@ -973,7 +973,7 @@
 		34F46762080F46AC007800AB /* AWBonjourAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46759080F46AB007800AB /* AWBonjourAccount.m */; };
 		34F46764080F46AC007800AB /* ESBonjourAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34F4675B080F46AC007800AB /* ESBonjourAccountView.nib */; };
 		34F46765080F46AC007800AB /* AWBonjourService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F4675C080F46AC007800AB /* AWBonjourService.m */; };
-		34F4677A080F49C5007800AB /* Safari.applescript in Sources */ = {isa = PBXBuildFile; fileRef = 34F46778080F49C5007800AB /* Safari.applescript */; };
+		34F4677A080F49C5007800AB /* Safari.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 34F46778080F49C5007800AB /* Safari.scpt */; };
 		34F4677B080F49C5007800AB /* Safari.png in Resources */ = {isa = PBXBuildFile; fileRef = 34F46779080F49C5007800AB /* Safari.png */; };
 		34F46785080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46783080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.m */; };
 		34F849530A4AEFA00002A017 /* LogFileUpgrade.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34F849520A4AEFA00002A017 /* LogFileUpgrade.nib */; };
@@ -3212,7 +3212,7 @@
 		34F4675B080F46AC007800AB /* ESBonjourAccountView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = ESBonjourAccountView.nib; sourceTree = "<group>"; };
 		34F4675C080F46AC007800AB /* AWBonjourService.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = AWBonjourService.m; sourceTree = "<group>"; };
 		34F4675D080F46AC007800AB /* AWBonjourService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AWBonjourService.h; sourceTree = "<group>"; };
-		34F46778080F49C5007800AB /* Safari.applescript */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.applescript; name = Safari.applescript; path = Resources/Safari.applescript; sourceTree = "<group>"; };
+		34F46778080F49C5007800AB /* Safari.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; name = Safari.scpt; path = Resources/Safari.scpt; sourceTree = "<group>"; };
 		34F46779080F49C5007800AB /* Safari.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Safari.png; path = Resources/Safari.png; sourceTree = "<group>"; };
 		34F46783080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESSafariLinkToolbarItemPlugin.m; path = Source/ESSafariLinkToolbarItemPlugin.m; sourceTree = "<group>"; };
 		34F46784080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESSafariLinkToolbarItemPlugin.h; path = Source/ESSafariLinkToolbarItemPlugin.h; sourceTree = "<group>"; };
@@ -4979,7 +4979,7 @@
 			children = (
 				34F46784080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.h */,
 				34F46783080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.m */,
-				34F46778080F49C5007800AB /* Safari.applescript */,
+				34F46778080F49C5007800AB /* Safari.scpt */,
 				34F46779080F49C5007800AB /* Safari.png */,
 			);
 			name = "Safari Link Toolbar Item";
@@ -8117,6 +8117,8 @@
 				343EC6920809DD3400E27095 /* ListLayoutSheet.nib in Resources */,
 				343EC6B30809DEEB00E27095 /* ContactAlerts.nib in Resources */,
 				3402D5A5080DBC91004E50B4 /* SortConfiguration.nib in Resources */,
+				34F4677A080F49C5007800AB /* Safari.scpt in Resources */,
+
 				34F4677B080F49C5007800AB /* Safari.png in Resources */,
 				345ACC970811C20F008E4D22 /* AwayStatusWindow.nib in Resources */,
 				345F566B08178356001F733C /* AdiumServiceIcons.icns in Resources */,
@@ -8860,7 +8862,6 @@
 				34A9706F0C965F8E00F46006 /* AIAddBookmarkPlugin.m in Sources */,
 				343BB5020C96CB2000506F9B /* AINewBookmarkWindowController.m in Sources */,
 				346F5D3208A43E7B0055C610 /* CurrentTunes.applescript in Sources */,
-				34F4677A080F49C5007800AB /* Safari.applescript in Sources */,
 				347F51810947449000CEF1FF /* AdiumAddressBookAction_Yahoo.applescript in Sources */,
 				347F51820947449000CEF1FF /* AdiumAddressBookAction_AIM.applescript in Sources */,
 				347F51830947449000CEF1FF /* AdiumAddressBookAction_ICQ.applescript in Sources */,
