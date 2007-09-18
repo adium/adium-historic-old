@@ -1943,7 +1943,6 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 					
 				prplScales = (prpl_info->icon_spec.scale_rules & PURPLE_ICON_SCALE_SEND) || (prpl_info->icon_spec.scale_rules & PURPLE_ICON_SCALE_DISPLAY);
 
-#if 1
 				if (prplScales && !smallEnough) {
 					int width = imageSize.width;
 					int height = imageSize.height;
@@ -1985,15 +1984,8 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 								if (buddyIconData)
 									break;
 								
-							} else if ((strcmp(prpl_formats[i],"jpeg") == 0) || (strcmp(prpl_formats[i],"jpg") == 0)) {
-								/* OS X 10.4's JPEG representation does much better than 10.3's.  Unfortunately, that also
-								* means larger file sizes... which for our only JPEG-based protocol, AIM, means the buddy
-								* icon doesn't get sent.  AIM max is 8 kilobytes; 10.4 produces 12 kb images.  0.90 is
-								* large indistinguishable from 1.0 anyways.
-								*/
-								float compressionFactor = 0.9;
-								
-								buddyIconData = [image JPEGRepresentationWithCompressionFactor:compressionFactor];
+							} else if ((strcmp(prpl_formats[i],"jpeg") == 0) || (strcmp(prpl_formats[i],"jpg") == 0)) {								
+								buddyIconData = [image JPEGRepresentationWithCompressionFactor:1.0];
 								if (buddyIconData)
 									break;
 								
@@ -2020,7 +2012,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 							AILog(@"Image %i is larger than %i!",[buddyIconData length],maxSize);
 							for (i = 0; prpl_formats[i]; i++) {
 								if ((strcmp(prpl_formats[i],"jpeg") == 0) || (strcmp(prpl_formats[i],"jpg") == 0)) {
-									for (float compressionFactor = 0.9; compressionFactor > 0.4; compressionFactor -= 0.05) {
+									for (float compressionFactor = 0.99; compressionFactor > 0.4; compressionFactor -= 0.01) {
 										buddyIconData = [image JPEGRepresentationWithCompressionFactor:compressionFactor];
 										
 										if (buddyIconData && ([buddyIconData length] <= maxSize)) {
@@ -2035,9 +2027,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 					//Cleanup
 					g_strfreev(prpl_formats);
 				}
-#else
-				buddyIconData = originalData;
-#endif				
+
 				[purpleThread setBuddyIcon:buddyIconData onAccount:self];
 			}
 		}
