@@ -1217,6 +1217,7 @@ static void purpleUnregisterCb(PurpleAccount *account, gboolean success, void *u
 	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (account) {
 		unsigned len = [buddyImageData length];
+		/* purple_buddy_icons_set_account_icon() takes responsibility for the buddy icon memory */
 		purple_buddy_icons_set_account_icon(account, g_memdup([buddyImageData bytes], len), len);
 	}
 }
