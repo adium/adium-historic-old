@@ -383,8 +383,6 @@ static NSArray *draggedTypes = nil;
 			nil];
 	}
 	[webView registerForDraggedTypes:draggedTypes];
-		
-	[[webView windowScriptObject] setValue:self forKey:@"client"];
 }
 
 /*!
@@ -836,6 +834,13 @@ static NSArray *draggedTypes = nil;
 	return webViewMenuItems;
 }
 
+/*!
+ * @brief Add ourself to the window script object bridge when it's safe to do so
+ */
+- (void)webView:(WebView *)sender windowScriptObjectAvailable:(WebScriptObject *)windowScriptObject
+{
+    [[webView windowScriptObject] setValue:self forKey:@"client"];
+}
 
 //Dragging delegate ----------------------------------------------------------------------------------------------------
 #pragma mark Dragging delegate
