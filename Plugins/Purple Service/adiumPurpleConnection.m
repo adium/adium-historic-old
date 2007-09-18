@@ -75,7 +75,9 @@ static PurpleConnectionUiOps adiumPurpleConnectionOps = {
     adiumPurpleConnConnected,
     adiumPurpleConnDisconnected,
     adiumPurpleConnNotice,
-    adiumPurpleConnReportDisconnect
+    adiumPurpleConnReportDisconnect,
+	/* network_connected */ NULL,
+	/* network_disconnected */ NULL
 };
 
 PurpleConnectionUiOps *adium_purple_connection_get_ui_ops(void)
