@@ -13,7 +13,7 @@
 	</array>
 	<key>Emoticons</key>
 	<dict>
-		<key>angry.tiff</key>
+		<key>angry</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -25,7 +25,7 @@
 			<key>Name</key>
 			<string>Angry</string>
 		</dict>
-		<key>embarrassed.tiff</key>
+		<key>embarrassed</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -35,7 +35,7 @@
 			<key>Name</key>
 			<string>Embarrassed</string>
 		</dict>
-		<key>cry.tiff</key>
+		<key>cry</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -44,7 +44,7 @@
 			<key>Name</key>
 			<string>Cry</string>
 		</dict>
-		<key>footinmouth.tiff</key>
+		<key>footinmouth</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -54,7 +54,7 @@
 			<key>Name</key>
 			<string>Foot In Mouth</string>
 		</dict>
-		<key>frown.tiff</key>
+		<key>frown</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -64,7 +64,7 @@
 			<key>Name</key>
 			<string>Frown</string>
 		</dict>
-		<key>gasp.tiff</key>
+		<key>gasp</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -80,7 +80,7 @@
 			<key>Name</key>
 			<string>Gasp</string>
 		</dict>
-		<key>laugh.tiff</key>
+		<key>laugh</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -90,7 +90,7 @@
 			<key>Name</key>
 			<string>Grin</string>
 		</dict>
-		<key>innocent.tiff</key>
+		<key>innocent</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -99,7 +99,7 @@
 			<key>Name</key>
 			<string>Halo</string>
 		</dict>
-		<key>kiss.tiff</key>
+		<key>kiss</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -109,7 +109,7 @@
 			<key>Name</key>
 			<string>Kiss</string>
 		</dict>
-		<key>sealed.tiff</key>
+		<key>sealed</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -119,7 +119,7 @@
 			<key>Name</key>
 			<string>Lips Are Sealed</string>
 		</dict>
-		<key>moneymouth.tiff</key>
+		<key>moneymouth</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -129,7 +129,7 @@
 			<key>Name</key>
 			<string>Money-mouth</string>
 		</dict>
-		<key>smile.tiff</key>
+		<key>smile</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -139,7 +139,7 @@
 			<key>Name</key>
 			<string>Smile</string>
 		</dict>
-		<key>yuck.tiff</key>
+		<key>yuck</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -151,7 +151,7 @@
 			<key>Name</key>
 			<string>Sticking Out Tongue</string>
 		</dict>
-		<key>slant.tiff</key>
+		<key>slant</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -163,7 +163,7 @@
 			<key>Name</key>
 			<string>Undecided</string>
 		</dict>
-		<key>cool.tiff</key>
+		<key>cool</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -173,7 +173,7 @@
 			<key>Name</key>
 			<string>Cool</string>
 		</dict>
-		<key>wink.tiff</key>
+		<key>wink</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
