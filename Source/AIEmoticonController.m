@@ -31,6 +31,8 @@
 #import <AIUtilities/AICharacterSetAdditions.h>
 #import <Adium/AIChat.h>
 
+#import <AIUtilities/AIApplicationAdditions.h>
+
 #define EMOTICON_DEFAULT_PREFS				@"EmoticonDefaults"
 #define EMOTICONS_PATH_NAME					@"Emoticons"
 
@@ -684,6 +686,9 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 			AIEmoticonPack  *pack = [AIEmoticonPack emoticonPackFromPath:path];
 			
 			if ([[pack emoticons] count]) {
+#warning NDA: fix this better
+				if([NSApp isOnLeopardOrBetter] && [[pack name] isEqualToString:@"iChat"])
+					continue;
 				[_availableEmoticonPacks addObject:pack];
 				[pack setDisabledEmoticons:[self disabledEmoticonsInPack:pack]];
 			}
