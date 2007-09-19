@@ -473,7 +473,7 @@
 			//Disallow dragging groups into or onto other objects
 			if (item != nil) {
 				if ([item isKindOfClass:[AIListGroup class]]) {
-					// In between objects  
+					// In between objects
 					[outlineView setDropItem:nil dropChildIndex:[[item containingObject] indexOfObject:item]];
 				} else {
 					// On top of an object
