@@ -15,6 +15,7 @@
  */
 
 @interface AIEmoticonPack : NSObject<NSCopying> {
+	NSBundle			*bundle;
     NSString			*path;
     NSString			*name;
 	NSString			*serviceClass;
