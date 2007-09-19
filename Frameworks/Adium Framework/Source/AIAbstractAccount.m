@@ -1193,7 +1193,11 @@
     [self notifyOfChangedStatusSilently:NO];
 	
 	//If we were disconnected unexpectedly, attempt a reconnect. Give subclasses a chance to handle the disconnection error.
-	if ([self shouldBeOnline] && lastDisconnectionError) {
+	if (reconnectAttemptsPerformed > 1 && [[self statusObjectForKey:@"Waiting for Network"] boolValue]) {
+		// If we know this connection is waiting for the network to return, don't bother continuing to reconnect.
+		// Let it try for 2 times and then cancel and wait for the network to return.
+		[self cancelAutoReconnect];
+	} else if ([self shouldBeOnline] && lastDisconnectionError) {
 		AIReconnectDelayType shouldReconnect = [self shouldAttemptReconnectAfterDisconnectionError:&lastDisconnectionError];
 		if (shouldReconnect == AIReconnectNormally) {
 			// Set our retry time to RECONNECT_BASE_TIME^reconnectAttemptsPerformed
