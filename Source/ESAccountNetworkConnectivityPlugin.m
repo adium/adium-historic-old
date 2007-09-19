@@ -324,7 +324,6 @@
 				if (!enabledAccountUsingThisHost) {
 					AIHostReachabilityMonitor *monitor = [AIHostReachabilityMonitor defaultMonitor];
 					[monitor removeObserver:self forHost:thisHost];
-					[account setStatusObject:nil forKey:@"Waiting for Network" notify:NotifyLater];
 				}
 			}
 		}
