@@ -147,7 +147,7 @@
     AIAccount       *account;
 
     while ((account = [enumerator nextObject])) {
-		if ([account integerStatusObjectForKey:inKey]) return YES;
+		if ([account integerStatusObjectForKey:inKey] && [account enabled]) return YES;
     }
 
     return NO;
@@ -165,7 +165,7 @@
     AIAccount       *account;
 
     while ((account = [enumerator nextObject])) {
-		if ([account statusObjectForKey:inKey]) return YES;
+		if ([account statusObjectForKey:inKey] && [account enabled]) return YES;
     }
 
     return NO;
