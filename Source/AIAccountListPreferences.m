@@ -189,6 +189,7 @@
 		   [inModifiedKeys containsObject:@"Disconnecting"] ||
 		   [inModifiedKeys containsObject:@"ConnectionProgressString"] ||
 		   [inModifiedKeys containsObject:@"ConnectionProgressPercent"] ||
+		   [inModifiedKeys containsObject:@"Waiting for Network"] ||
 		   [inModifiedKeys containsObject:@"IdleSince"] ||
 		   [inModifiedKeys containsObject:@"StatusState"]) {
 
@@ -332,6 +333,7 @@
     cell = [[AIImageTextCell alloc] init];
     [cell setFont:[NSFont systemFontOfSize:13]];
     [cell setAlignment:NSRightTextAlignment];
+	[cell setLineBreakMode:NSLineBreakByWordWrapping];
     [[tableView_accountList tableColumnWithIdentifier:@"status"] setDataCell:cell];
 	[cell release];
     
@@ -542,6 +544,10 @@
 										 withString:@""
 											options:NSLiteralSearch
 											  range:NSMakeRange(0, [returnedMessage length])];
+		[returnedMessage replaceOccurrencesOfString:@"Could not connect to authentication server:\n"
+										 withString:@""
+											options:NSLiteralSearch
+											  range:NSMakeRange(0, [returnedMessage length])];
 
 		// Remove newlines from the error message, replace them with spaces
 		[returnedMessage replaceOccurrencesOfString:@"\n"
@@ -669,6 +675,8 @@
 				title = AILocalizedString(@"Online",nil);
 			} else if ([account statusObjectForKey:@"Waiting to Reconnect"]) {
 				title = AILocalizedString(@"Reconnecting", @"Used when the account will perform an automatic reconnection after a certain period of time.");
+			} else if ([[account statusObjectForKey:@"Waiting for Network"] boolValue]) {
+				title = AILocalizedString(@"Network Offline", @"Used when the account will connect once the network returns.");
 			} else {
 				title = [[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_OFFLINE];
 			}

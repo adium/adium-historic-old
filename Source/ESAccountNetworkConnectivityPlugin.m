@@ -127,6 +127,7 @@
 			//If this is an account we should auto-connect, remove it from accountsToNotConnect so that we auto-connect it.
 			if (connectAccount) {
 				[accountsToNotConnect removeObject:account];
+				[account setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Waiting for Network" notify:NotifyLater];
 				continue; //prevent the account from being removed from accountsToConnect.
 			}
 			
@@ -216,6 +217,7 @@
 		if ([accountsToConnect containsObject:account]) {
 			if (![account online] &&
 				![account integerStatusObjectForKey:@"Connecting"]) {
+				[account setStatusObject:nil forKey:@"Waiting for Network" notify:NotifyLater];
 				[account setShouldBeOnline:YES];
 				[accountsToConnect removeObject:account];
 			}
@@ -225,6 +227,7 @@
 		if (([account online] ||
 			 [account integerStatusObjectForKey:@"Connecting"]) &&
 			![account integerStatusObjectForKey:@"Disconnecting"]) {
+			[account setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Waiting for Network" notify:NotifyLater];
 			[account disconnectFromDroppedNetworkConnection];
 			[accountsToConnect addObject:account];
 		}
@@ -249,6 +252,7 @@
 				//Disconnect the account and add it to our list to reconnect
 				[account disconnect];
 				[accountsToConnect addObject:account];
+				[account setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Waiting for Network" notify:NotifyLater];
 			}
 		}
 	}
@@ -291,6 +295,7 @@
 					NSString *host = [account host];
 					AIHostReachabilityMonitor *monitor = [AIHostReachabilityMonitor defaultMonitor];
 	
+					[account setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Waiting for Network" notify:NotifyLater];
 					if (host &&
 						![monitor observer:self isObservingHost:host]) {
 						[monitor addObserver:self forHost:host];
@@ -319,6 +324,7 @@
 				if (!enabledAccountUsingThisHost) {
 					AIHostReachabilityMonitor *monitor = [AIHostReachabilityMonitor defaultMonitor];
 					[monitor removeObserver:self forHost:thisHost];
+					[account setStatusObject:nil forKey:@"Waiting for Network" notify:NotifyLater];
 				}
 			}
 		}
@@ -390,6 +396,7 @@
 			
 			if (host &&
 				![monitor observer:self isObservingHost:host]) {
+				[account setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Waiting for Network" notify:NotifyLater];
 				[monitor addObserver:self forHost:host];
 			}
 		}
