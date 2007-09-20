@@ -73,18 +73,19 @@
     if ((self = [super init])) {
 		path = [inPath retain];
 
-		NSBundle *xtraBundle = [NSBundle bundleWithPath:path];
+		bundle = [[NSBundle bundleWithPath:path] retain];
+
+		/*
 		if (xtraBundle && ([[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] intValue] == 1)) {
 			//This checks for a new-style xtra
 			//New style xtras store the same info, but it's in Contents/Resources/ so that we can have an info.plist file and use NSBundle.
 			emoticonLocation = [[xtraBundle resourcePath] retain];
-		} else {
-			emoticonLocation = [path retain];
-		}
-		
+		} 
+		 */
+
 		NSString *localizedName;
 		name = [[path lastPathComponent] stringByDeletingPathExtension];
-		if ((localizedName = [[xtraBundle localizedInfoDictionary] objectForKey:name])) {
+		if ((localizedName = [[bundle localizedInfoDictionary] objectForKey:name])) {
 			name = localizedName;
 		}
 		[name retain];
@@ -102,10 +103,10 @@
 - (void)dealloc
 {
     [path release];
+	[bundle release];
     [name release];
     [emoticonArray release];
 	[enabledEmoticonArray release];
-    [emoticonLocation release];
 	[serviceClass release];
 
     [super dealloc];
@@ -241,8 +242,8 @@
 	newPack->emoticonArray = [emoticonArray mutableCopy];
 	newPack->serviceClass = [serviceClass retain];
 	newPack->path = [path retain];
+	newPack->bundle = [bundle retain];
 	newPack->name = [name retain];
-	newPack->emoticonLocation = [emoticonLocation retain];
 
     return newPack;
 }
@@ -260,7 +261,7 @@
 	[serviceClass release]; serviceClass = nil;
 
 	//
-	NSString		*infoDictPath = [emoticonLocation stringByAppendingPathComponent:EMOTICON_PLIST_FILENAME];
+	NSString		*infoDictPath = [[bundle resourcePath] stringByAppendingPathComponent:EMOTICON_PLIST_FILENAME];
 	NSDictionary	*infoDict = [NSDictionary dictionaryWithContentsOfFile:infoDictPath];
 	NSDictionary	*localizedInfoDict = [[NSBundle bundleWithPath:path] localizedInfoDictionary];
 
@@ -268,6 +269,7 @@
 	if (!infoDict) {
 		[self _upgradeEmoticonPack:path];
 		infoDict = [NSDictionary dictionaryWithContentsOfFile:infoDictPath];
+		[bundle release]; bundle = [[NSBundle bundleWithPath:path] retain];
 	}
 
 	//Load the emoticons
@@ -312,8 +314,8 @@
 				 */
 				BOOL isDir;
 				if ([[NSFileManager defaultManager] fileExistsAtPath:possiblePath isDirectory:&isDir] && isDir) {
-					[emoticonLocation release];
-					emoticonLocation = [possiblePath retain];
+					[bundle release];
+					bundle = [[NSBundle bundleWithPath:possiblePath] retain];
 					break;
 				}
 			}
@@ -352,7 +354,7 @@
 {
 	NSEnumerator	*enumerator = [emoticons keyEnumerator];
 	NSString		*fileName;
-	NSBundle		*bundle = (!localizationDict ? [NSBundle bundleForClass:[self class]] : nil);
+	NSBundle		*myBundle = (!localizationDict ? [NSBundle bundleForClass:[self class]] : nil);
 
 	while ((fileName = [enumerator nextObject])) {
 		id	dict = [emoticons objectForKey:fileName];
@@ -369,16 +371,16 @@
 				
 				if (!localizedEmoticonName) {
 					//Otherwise, look at our list of default translations (generated at the bottom of this file)
-					localizedEmoticonName = [bundle localizedStringForKey:emoticonName
-																	value:emoticonName
-																	table:@"EmoticonNames"];
+					localizedEmoticonName = [myBundle localizedStringForKey:emoticonName
+																	  value:emoticonName
+																	  table:@"EmoticonNames"];
 				}
 				
 				if (localizedEmoticonName)
 					emoticonName = localizedEmoticonName;
 			}
 
-			[emoticonArray addObject:[AIEmoticon emoticonWithIconPath:[emoticonLocation stringByAppendingPathComponent:fileName]
+			[emoticonArray addObject:[AIEmoticon emoticonWithIconPath:[bundle pathForImageResource:fileName]
 														  equivalents:[(NSDictionary *)dict objectForKey:EMOTICON_EQUIVALENTS]
 																 name:emoticonName
 																 pack:self]];
@@ -397,7 +399,7 @@
 	while ((fileName = [enumerator nextObject])) {
 		NSDictionary	*dict = [emoticons objectForKey:fileName];
 		
-		[emoticonArray addObject:[AIEmoticon emoticonWithIconPath:[emoticonLocation stringByAppendingPathComponent:fileName]
+		[emoticonArray addObject:[AIEmoticon emoticonWithIconPath:[bundle pathForImageResource:fileName]
 													  equivalents:[dict objectForKey:@"String Representations"]
 															 name:[dict objectForKey:@"Meaning"]
 															 pack:self]];
