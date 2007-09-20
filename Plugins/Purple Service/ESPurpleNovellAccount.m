@@ -44,6 +44,25 @@ gboolean purple_init_novell_plugin(void);
 }
 
 #pragma mark Status
+- (NSString *)connectionStringForStep:(int)step
+{
+	switch (step)
+	{
+		case 1:
+			return AILocalizedString(@"Connecting",nil);
+			break;
+		case 2:
+			return AILocalizedString(@"Authenticating",nil);
+			break;
+		case 3:
+			return AILocalizedString(@"Waiting for Response",nil);
+			break;			
+	}
+	
+	return nil;
+}
+
+
 /*!
  * @brief Return the purple status ID to be used for a status
  *
