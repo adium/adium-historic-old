@@ -127,7 +127,7 @@
 			//If this is an account we should auto-connect, remove it from accountsToNotConnect so that we auto-connect it.
 			if (connectAccount) {
 				[accountsToNotConnect removeObject:account];
-				[account setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Waiting for Network" notify:NotifyLater];
+				[account setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Waiting for Network" notify:NotifyNow];
 				continue; //prevent the account from being removed from accountsToConnect.
 			}
 			
@@ -214,20 +214,20 @@
 	if (reachable) {
 		//If we are now online and are waiting to connect this account, do it if the account hasn't already
 		//been taken care of.
+		[account setStatusObject:nil forKey:@"Waiting for Network" notify:NotifyNow];
 		if ([accountsToConnect containsObject:account]) {
 			if (![account online] &&
 				![account integerStatusObjectForKey:@"Connecting"]) {
-				[account setStatusObject:nil forKey:@"Waiting for Network" notify:NotifyLater];
 				[account setShouldBeOnline:YES];
 				[accountsToConnect removeObject:account];
 			}
 		}
 	} else {
 		//If we are no longer online and this account is connected, disconnect it.
+		[account setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Waiting for Network" notify:NotifyNow];
 		if (([account online] ||
 			 [account integerStatusObjectForKey:@"Connecting"]) &&
 			![account integerStatusObjectForKey:@"Disconnecting"]) {
-			[account setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Waiting for Network" notify:NotifyLater];
 			[account disconnectFromDroppedNetworkConnection];
 			[accountsToConnect addObject:account];
 		}
@@ -252,7 +252,6 @@
 				//Disconnect the account and add it to our list to reconnect
 				[account disconnect];
 				[accountsToConnect addObject:account];
-				[account setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Waiting for Network" notify:NotifyLater];
 			}
 		}
 	}
@@ -295,7 +294,7 @@
 					NSString *host = [account host];
 					AIHostReachabilityMonitor *monitor = [AIHostReachabilityMonitor defaultMonitor];
 	
-					[account setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Waiting for Network" notify:NotifyLater];
+					[account setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Waiting for Network" notify:NotifyNow];
 					if (host &&
 						![monitor observer:self isObservingHost:host]) {
 						[monitor addObserver:self forHost:host];
@@ -307,6 +306,8 @@
 				AIAccount		*anAccount;
 				BOOL			enabledAccountUsingThisHost = NO;
 				NSString		*thisHost = [account host];
+				
+				[account setStatusObject:nil forKey:@"Waiting for Network" notify:NotifyNow];
 
 				//Check if any enabled accounts are still using this now-disabled account's host
 				enumerator = [[[adium accountController] accounts] objectEnumerator];	
@@ -372,6 +373,8 @@
 		if (![account connectivityBasedOnNetworkReachability] && [accountsToConnect containsObject:account]) {
 			[account setShouldBeOnline:YES];
 			[accountsToConnect removeObject:account];
+		} else if ([accountsToConnect containsObject:account]) {
+			[account setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Waiting for Network" notify:NotifyNow];
 		}
 	}
 }
@@ -395,7 +398,6 @@
 			
 			if (host &&
 				![monitor observer:self isObservingHost:host]) {
-				[account setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Waiting for Network" notify:NotifyLater];
 				[monitor addObserver:self forHost:host];
 			}
 		}
