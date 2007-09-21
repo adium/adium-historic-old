@@ -1278,7 +1278,7 @@
 	if([currentString length] > 0) {
 		//complete name of user from userlist
 		//cycle through the array of users in the chat, and find the first possible match
-		NSArray* userlist = [[NSArray alloc] initWithArray:[[self chat] participatingListObjects]];
+		NSArray* userlist = [[NSArray alloc] initWithArray:[[self chat] containedObjects]];
 		NSEnumerator *userEnumerator = [userlist objectEnumerator];
 		AIListContact* currentUser;
 		int index;

@@ -19,6 +19,11 @@
 #import <Adium/AIContactControllerProtocol.h>
 #import <AIUtilities/AIArrayAdditions.h>
 
+
+@interface AIListSmartGroup (PRIVATE)
+- (void)_recomputeVisibleCount;
+@end
+
 @implementation AIListSmartGroup
 
 - (void)dealloc
@@ -78,5 +83,9 @@
 	}
 }
 
+- (void)_recomputeVisibleCount
+{
+	[super _recomputeVisibleCount];
+}
 
 @end
