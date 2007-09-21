@@ -59,6 +59,7 @@
 
 	if (disconnectionError && *disconnectionError) {
 		if ([*disconnectionError rangeOfString:@"The password provided is incorrect"].location != NSNotFound) {
+			[self setLastDisconnectionError:AILocalizedString(@"Incorrect username or password","Error message displayed when the server reports username or password as being incorrect.")];
 			[self serverReportedInvalidPassword];
 			shouldAttemptReconnect = AIReconnectImmediately;
 		}

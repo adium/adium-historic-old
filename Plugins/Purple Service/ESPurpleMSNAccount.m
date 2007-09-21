@@ -157,6 +157,7 @@
 	if (disconnectionError && *disconnectionError) {
 		if (([*disconnectionError rangeOfString:@"Type your e-mail address and password correctly"].location != NSNotFound) ||
 			([*disconnectionError rangeOfString:@"Unable to authenticate"].location != NSNotFound)) {
+			[self setLastDisconnectionError:AILocalizedString(@"Incorrect username or password","Error message displayed when the server reports username or password as being incorrect.")];
 			[self serverReportedInvalidPassword];
 			shouldAttemptReconnect = AIReconnectImmediately;
 		} else if (([*disconnectionError rangeOfString:@"You have signed on from another location"].location != NSNotFound)) {

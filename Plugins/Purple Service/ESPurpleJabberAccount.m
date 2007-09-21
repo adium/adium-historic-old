@@ -417,6 +417,7 @@ extern void jabber_roster_request(JabberStream *js);
 		if (([*disconnectionError rangeOfString:@"401"].location != NSNotFound) ||
 			([*disconnectionError rangeOfString:@"Authentication Failure"].location != NSNotFound) ||
 			([*disconnectionError rangeOfString:@"Not Authorized"].location != NSNotFound)) {
+			[self setLastDisconnectionError:AILocalizedString(@"Incorrect username or password","Error message displayed when the server reports username or password as being incorrect.")];
 			[self serverReportedInvalidPassword];
 			shouldAttemptReconnect = AIReconnectImmediately;
 
