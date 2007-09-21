@@ -432,7 +432,7 @@ extern void jabber_roster_request(JabberStream *js);
 										 alternateButton:AILocalizedString(@"Cancel",nil)
 											 otherButton:nil
 												  target:self
-												selector:@selector(answeredShouldReigsterNewJabberAccount:userInfo:)
+												selector:@selector(answeredShouldRegisterNewJabberAccount:userInfo:)
 												userInfo:nil];*/
 		} else if ([*disconnectionError rangeOfString:@"Stream Error"].location != NSNotFound) {
 			shouldAttemptReconnect = AIReconnectNever;
@@ -447,8 +447,8 @@ extern void jabber_roster_request(JabberStream *js);
 	
 	return shouldAttemptReconnect;
 }
-
-- (BOOL)answeredShouldReigsterNewJabberAccount:(NSNumber *)returnCodeNumber userInfo:(id)userInfo
+/*
+- (BOOL)answeredShouldRegisterNewJabberAccount:(NSNumber *)returnCodeNumber userInfo:(id)userInfo
 {
 	AITextAndButtonsReturnCode returnCode = [returnCodeNumber intValue];
 
@@ -467,7 +467,7 @@ extern void jabber_roster_request(JabberStream *js);
 	}
 	
 	return YES;
-}
+}*/
 
 - (void)disconnectFromDroppedNetworkConnection
 {
