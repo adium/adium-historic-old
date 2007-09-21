@@ -45,7 +45,6 @@
 -(void)setBookmarkIsVisible:(AIListBookmark*)bookmark:(BOOL)visible;
 
 -(void)promptForNewBookmark;
--(BOOL)verifyToolbarButtonForChat:(AIChat*)inChat;
 
 //setting chat info (name,group)
 -(void)createBookmarkWithInfo:(NSDictionary*)chatInfo;
