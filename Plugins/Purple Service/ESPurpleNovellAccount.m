@@ -33,6 +33,7 @@ gboolean purple_init_novell_plugin(void);
 	
 	if (disconnectionError && *disconnectionError) {
 		if ([*disconnectionError rangeOfString:@"Invalid username or password"].location != NSNotFound) {
+			[self setLastDisconnectionError:AILocalizedString(@"Incorrect username or password","Error message displayed when the server reports username or password as being incorrect.")];
 			[self serverReportedInvalidPassword];
 			shouldAttemptReconnect = AIReconnectImmediately;
 		} else if ([*disconnectionError rangeOfString:@"you logged in at another workstation"].location != NSNotFound) {
