@@ -666,6 +666,10 @@
 {
     //If a password was returned, and we're still waiting to connect
     if (inPassword && [inPassword length] != 0) {
+		[self setStatusObject:nil
+					   forKey:@"Prompt For Password On Next Connect"
+					   notify:NotifyNever];
+
 		if (![[self statusObjectForKey:@"Online"] boolValue] &&
 		   ![[self statusObjectForKey:@"Connecting"] boolValue]) {
 			[self setPasswordTemporarily:inPassword];
@@ -1079,10 +1083,6 @@
 	}
 
 	[self updateStatusForKey:@"IdleSince"];
-
-	[self setStatusObject:nil
-				   forKey:@"Prompt For Password On Next Connect"
-				   notify:NotifyNever];
 }
 
 - (void)cancelAutoReconnect
