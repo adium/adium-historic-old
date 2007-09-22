@@ -296,6 +296,23 @@
 		[[[adium accountController] deleteAccount:[accountArray objectAtIndex:index]] beginSheetModalForWindow:[[self view] window]];
 }
 
+#pragma mark AIAccountMenu Delegates
+
+/*!
+* @brief AIAccountMenu delieate method
+ */
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems {
+	return;
+}
+
+/*!
+* @brief AIAccountMenu delegate method -- this allows disabled items to have menus.
+ */
+- (BOOL)accountMenu:(AIAccountMenu *)inAccountMenu shouldIncludeAccount:(AIAccount *)inAccount
+{
+	return YES;
+}
+
 //Account List ---------------------------------------------------------------------------------------------------------
 #pragma mark Account List
 /*!
@@ -364,22 +381,6 @@
 	[self updateControlAvailability];
 	[self updateAccountOverview];
 	[self calculateAllHeights];
-}
-
-
-/*!
- * @brief AIAccountMenu deligate method
- */
-- (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems {
-	return;
-}
-
-/*!
-* @brief AIAccountMenu deligate method -- this allows disabled items to have menus.
- */
-- (BOOL)accountMenu:(AIAccountMenu *)inAccountMenu shouldIncludeAccount:(AIAccount *)inAccount
-{
-	return YES;
 }
 
 /*!
