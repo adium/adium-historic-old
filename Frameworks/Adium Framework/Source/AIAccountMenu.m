@@ -150,6 +150,9 @@
 
 	includeDisabledAccountsMenu = ([delegate respondsToSelector:@selector(accountMenuShouldIncludeDisabledAccountsMenu:)] &&
 								   [delegate accountMenuShouldIncludeDisabledAccountsMenu:self]);
+	
+	includeConnectAllMenuItem = ([delegate respondsToSelector:@selector(accountMenuShouldIncludeConnectAllMenuItem:)] &&
+								 [delegate accountMenuShouldIncludeConnectAllMenuItem:self]);
 }
 - (id)delegate
 {
@@ -175,6 +178,21 @@
 	}
 }
 
+/*!
+ * @brief Connects all offline, enabled acounts
+ */
+- (void)connectAllAccounts:(NSMenuItem *)menuItem
+{
+	NSEnumerator		*enumerator = [[[adium accountController] accounts] objectEnumerator];
+	AIAccount			*account;
+	
+	while ((account = [enumerator nextObject])) {
+		if ([account enabled] && ![account online]) {
+			[account setShouldBeOnline:YES];
+		}
+	}
+}
+
 
 //Account Menu ---------------------------------------------------------------------------------------------------------
 #pragma mark Account Menu
@@ -187,6 +205,17 @@
 	NSArray			*accounts = [[adium accountController] accounts];
 	NSEnumerator	*enumerator;
 	AIAccount		*account;
+	
+	if (includeConnectAllMenuItem) {
+		NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Connect All Accounts",nil)
+																					target:self
+																					action:@selector(connectAllAccounts:)
+																			 keyEquivalent:@"R"];
+		[menuItem setKeyEquivalentModifierMask:NSCommandKeyMask];
+		[menuItemArray addObject:menuItem];
+		[menuItemArray addObject:[NSMenuItem separatorItem]];
+		[menuItem release];
+	}
 	
 	//Add a menuitem for each enabled account the delegate allows (or all enabled accounts if it doesn't specify)
 	enumerator = [accounts objectEnumerator];

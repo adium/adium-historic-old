@@ -95,6 +95,11 @@
 	return YES;
 }
 
+- (BOOL)accountMenuShouldIncludeConnectAllMenuItem:(AIAccountMenu *)inAccountMenu
+{
+	return YES;
+}
+
 #pragma mark Guest account access
 - (void)showGuestAccountWindow:(id)sender
 {
