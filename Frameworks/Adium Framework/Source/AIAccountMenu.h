@@ -34,6 +34,7 @@ typedef enum {
 	BOOL			showTitleVerbs;
 	BOOL			includeDisabledAccountsMenu;
 	BOOL			includeAddAccountsMenu;
+	BOOL			includeConnectAllMenuItem;
 
 	AIStatusMenu	*statusMenu;
 }
@@ -56,6 +57,9 @@ typedef enum {
 
 //Should the account menu include a submenu of services for adding accounts?
 - (BOOL)accountMenuShouldIncludeAddAccountsMenu:(AIAccountMenu *)inAccountMenu;			//Optional
+
+//Should the account menu include a "connect all" menu item?
+- (BOOL)accountMenuShouldIncludeConnectAllMenuItem:(AIAccountMenu *)inAccountMenu;			//Optional
 
 //Should the account menu include a submenu of 'disabled accounts'?
 - (BOOL)accountMenuShouldIncludeDisabledAccountsMenu:(AIAccountMenu *)inAccountMenu;			//Optional
