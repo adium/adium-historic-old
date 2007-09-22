@@ -89,7 +89,7 @@
 		BOOL					shouldUpdateStatus = NO;
 		
 		if (inObject == nil || [inModifiedKeys containsObject:@"Online"]) {
-			if ([self _accountsWithBoolKey:@"Online"] > 0) {
+			if ([self _accountsWithBoolKey:@"Online"]) {
 				[dockController setIconStateNamed:@"Online"];
 			} else {
 				[dockController removeIconStateNamed:@"Online"];
@@ -98,7 +98,7 @@
 		}
 
 		if (inObject == nil || ([inModifiedKeys containsObject:@"Connecting"] || [inModifiedKeys containsObject:@"Waiting to Reconnect"])) {
-			if ([self _accountsWithBoolKey:@"Connecting"] > 0 || [self _accountsWithKey:@"Waiting to Reconnect"] > 0) {
+			if ([self _accountsWithBoolKey:@"Connecting"] || [self _accountsWithKey:@"Waiting to Reconnect"]) {
 				[dockController setIconStateNamed:@"Connecting"];
 			} else {
 				[dockController removeIconStateNamed:@"Connecting"];
@@ -107,7 +107,7 @@
 		}
 		
 		if (inObject == nil || [inModifiedKeys containsObject:@"IdleSince"]) {
-			if ([self _accountsWithKey:@"IdleSince"] > 0) {
+			if ([self _accountsWithKey:@"IdleSince"]) {
 				[dockController setIconStateNamed:@"Idle"];
 			} else {
 				[dockController removeIconStateNamed:@"Idle"];
