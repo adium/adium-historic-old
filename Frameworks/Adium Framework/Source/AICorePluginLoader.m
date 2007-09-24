@@ -181,7 +181,8 @@
 	BOOL	loadPlugin = YES;
 	NSArray	*confirmed = [[NSUserDefaults standardUserDefaults] objectForKey:CONFIRMED_PLUGINS];
 
-	if (!confirmed || ![confirmed containsObject:[pluginPath lastPathComponent]]) {
+	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"AIAutoConfirmExternalPlugins"]  &&
+		(!confirmed || ![confirmed containsObject:[pluginPath lastPathComponent]])) {
 		if (NSRunInformationalAlertPanel([NSString stringWithFormat:@"Disable %@?",[[pluginPath lastPathComponent] stringByDeletingPathExtension]],
 										@"External plugins may cause crashes and odd behavior after updating Adium.  Disable this plugin if you experience any issues.",
 										@"Disable", 
