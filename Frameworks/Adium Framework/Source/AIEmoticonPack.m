@@ -261,12 +261,13 @@
 	[serviceClass release]; serviceClass = nil;
 
 	//
-	NSString		*infoDictPath = [[bundle resourcePath] stringByAppendingPathComponent:EMOTICON_PLIST_FILENAME];
+	NSString		*infoDictPath = [bundle pathForResource:EMOTICON_PLIST_FILENAME ofType:nil];
 	NSDictionary	*infoDict = [NSDictionary dictionaryWithContentsOfFile:infoDictPath];
-	NSDictionary	*localizedInfoDict = [[NSBundle bundleWithPath:path] localizedInfoDictionary];
+	NSDictionary	*localizedInfoDict = [bundle localizedInfoDictionary];
 
 	//If no info dict was found, assume that this is an old emoticon pack and try to upgrade it
 	if (!infoDict) {
+		AILog(@"Upgrading Emoticon Pack %@ at %@...", self, bundle);
 		[self _upgradeEmoticonPack:path];
 		infoDict = [NSDictionary dictionaryWithContentsOfFile:infoDictPath];
 		[bundle release]; bundle = [[NSBundle bundleWithPath:path] retain];
