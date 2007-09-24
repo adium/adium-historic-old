@@ -83,6 +83,7 @@
 												pressure:[theEvent pressure]];
 			[NSMenu popUpContextMenu:[self menu] withEvent:event forView:self];
 			
+			//In the case of the Add Account pop-up button (which is an instance of this class), if the user cancels the Account Editor immediately after it appears for the new account, we stay highlighted, which is a bug (#7955). Sending ourselves mouseUp fixes that.
 			[self mouseUp:[[NSApplication sharedApplication] currentEvent]];
 		}
 	}
