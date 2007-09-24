@@ -82,6 +82,8 @@
 											  clickCount:[theEvent clickCount]
 												pressure:[theEvent pressure]];
 			[NSMenu popUpContextMenu:[self menu] withEvent:event forView:self];
+			
+			[self mouseUp:[[NSApplication sharedApplication] currentEvent]];
 		}
 	}
 }
