@@ -235,8 +235,12 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 			{
 				CFIndex end = CFXMLParserGetLocation(parser);
 				NSString *message = nil;
-				if(!empty)
-					message = [inputFileString substringWithRange:NSMakeRange(messageStart, end - messageStart - 11)];  // 10 for </message> and 1 for the index being off
+				if (!empty) {
+					NSString *unescapedMessage = [inputFileString substringWithRange:NSMakeRange(messageStart, end - messageStart - 11)];  // 10 for </message> and 1 for the index being off
+					// Need to unescape entities ourself. & wasn't getting unescaped for some reason. See #6850.
+					message = (NSString *)CFXMLCreateStringByUnescapingEntities(kCFAllocatorDefault, (CFStringRef)unescapedMessage, NULL);
+					[message autorelease];
+				}
 				NSString *shownSender;
 				NSString *cssClass;
 				NSString *displayName = nil, *longDisplayName = nil;
