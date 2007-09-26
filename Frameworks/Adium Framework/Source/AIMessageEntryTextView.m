@@ -193,7 +193,7 @@
 				//Pass the associatedView a keyDown event equivalent equal to inEvent except without the modifier flags
 				[associatedView keyDown:[NSEvent keyEventWithType:[inEvent type]
 														 location:[inEvent locationInWindow]
-													modifierFlags:nil
+													modifierFlags:0
 														timestamp:[inEvent timestamp]
 													 windowNumber:[inEvent windowNumber]
 														  context:[inEvent context]
