@@ -36,7 +36,7 @@
 #import <Adium/AIStatus.h>
 
 //State menu
-#define STATUS_TITLE_OFFLINE		AILocalizedString(@"Offline",nil)
+#define STATUS_TITLE_OFFLINE		AILocalizedStringFromTable(@"Offline", @"Statuses", "Name of a status")
 
 #define BUILT_IN_STATE_ARRAY		@"BuiltInStatusStates"
 
@@ -393,26 +393,26 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	static NSDictionary	*coreLocalizedStatusDescriptions = nil;
 	if(!coreLocalizedStatusDescriptions){
 		coreLocalizedStatusDescriptions = [[NSDictionary dictionaryWithObjectsAndKeys:
-			AILocalizedString(@"Available", nil), STATUS_NAME_AVAILABLE,
-			AILocalizedString(@"Free for chat", nil), STATUS_NAME_FREE_FOR_CHAT,
-			AILocalizedString(@"Available for friends only",nil), STATUS_NAME_AVAILABLE_FRIENDS_ONLY,
-			AILocalizedString(@"Away", nil), STATUS_NAME_AWAY,
-			AILocalizedString(@"Extended away",nil), STATUS_NAME_EXTENDED_AWAY,
-			AILocalizedString(@"Away for friends only",nil), STATUS_NAME_AWAY_FRIENDS_ONLY,
-			AILocalizedString(@"Do not disturb", nil), STATUS_NAME_DND,
-			AILocalizedString(@"Not available", nil), STATUS_NAME_NOT_AVAILABLE,
-			AILocalizedString(@"Occupied", nil), STATUS_NAME_OCCUPIED,
-			AILocalizedString(@"Be right back",nil), STATUS_NAME_BRB,
-			AILocalizedString(@"Busy",nil), STATUS_NAME_BUSY,
-			AILocalizedString(@"On the phone",nil), STATUS_NAME_PHONE,
-			AILocalizedString(@"Out to lunch",nil), STATUS_NAME_LUNCH,
-			AILocalizedString(@"Not at home",nil), STATUS_NAME_NOT_AT_HOME,
-			AILocalizedString(@"Not at my desk",nil), STATUS_NAME_NOT_AT_DESK,
-			AILocalizedString(@"Not in the office",nil), STATUS_NAME_NOT_IN_OFFICE,
-			AILocalizedString(@"On vacation",nil), STATUS_NAME_VACATION,
-			AILocalizedString(@"Stepped out",nil), STATUS_NAME_STEPPED_OUT,
-			AILocalizedString(@"Invisible",nil), STATUS_NAME_INVISIBLE,
-			AILocalizedString(@"Offline",nil), STATUS_NAME_OFFLINE,
+			AILocalizedStringFromTable(@"Available", @"Statuses", "Name of a status"), STATUS_NAME_AVAILABLE,
+			AILocalizedStringFromTable(@"Free for chat", @"Statuses", "Name of a status"), STATUS_NAME_FREE_FOR_CHAT,
+			AILocalizedStringFromTable(@"Available for friends only", @"Statuses", "Name of a status"), STATUS_NAME_AVAILABLE_FRIENDS_ONLY,
+			AILocalizedStringFromTable(@"Away", @"Statuses", "Name of a status"), STATUS_NAME_AWAY,
+			AILocalizedStringFromTable(@"Extended away", @"Statuses", "Name of a status"), STATUS_NAME_EXTENDED_AWAY,
+			AILocalizedStringFromTable(@"Away for friends only", @"Statuses", "Name of a status"), STATUS_NAME_AWAY_FRIENDS_ONLY,
+			AILocalizedStringFromTable(@"Do not disturb", @"Statuses", "Name of a status"), STATUS_NAME_DND,
+			AILocalizedStringFromTable(@"Not available", @"Statuses", "Name of a status"), STATUS_NAME_NOT_AVAILABLE,
+			AILocalizedStringFromTable(@"Occupied", @"Statuses", "Name of a status"), STATUS_NAME_OCCUPIED,
+			AILocalizedStringFromTable(@"Be right back", @"Statuses", "Name of a status"), STATUS_NAME_BRB,
+			AILocalizedStringFromTable(@"Busy", @"Statuses", "Name of a status"), STATUS_NAME_BUSY,
+			AILocalizedStringFromTable(@"On the phone", @"Statuses", "Name of a status"), STATUS_NAME_PHONE,
+			AILocalizedStringFromTable(@"Out to lunch", @"Statuses", "Name of a status"), STATUS_NAME_LUNCH,
+			AILocalizedStringFromTable(@"Not at home", @"Statuses", "Name of a status"), STATUS_NAME_NOT_AT_HOME,
+			AILocalizedStringFromTable(@"Not at my desk", @"Statuses", "Name of a status"), STATUS_NAME_NOT_AT_DESK,
+			AILocalizedStringFromTable(@"Not in the office", @"Statuses", "Name of a status"), STATUS_NAME_NOT_IN_OFFICE,
+			AILocalizedStringFromTable(@"On vacation", @"Statuses", "Name of a status"), STATUS_NAME_VACATION,
+			AILocalizedStringFromTable(@"Stepped out", @"Statuses", "Name of a status"), STATUS_NAME_STEPPED_OUT,
+			AILocalizedStringFromTable(@"Invisible", @"Statuses", "Name of a status"), STATUS_NAME_INVISIBLE,
+			AILocalizedStringFromTable(@"Offline", @"Statuses", "Name of a status"), STATUS_NAME_OFFLINE,
 			nil] retain];
 	}
 	
