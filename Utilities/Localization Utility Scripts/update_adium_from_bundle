@@ -75,9 +75,11 @@ update_language()
 		echo "Emoticons"
 		silent_pushd Emoticons
 			silent_pushd Default.AdiumEmoticonset
-				silent_pushd Resources/$LANG
+				if [ -e  "Resources/$LANG" ] ; then
+				    silent_pushd Resources/$LANG
 					cp InfoPlist.strings "$REPO/Resources/Emoticons/Default.AdiumEmoticonSet/Resources/$LANG"
-				silent_popd
+				    silent_popd
+				fi
 			silent_popd
 		silent_popd
 	
@@ -98,9 +100,11 @@ update_language()
 		
 	silent_pushd Frameworks
 	   echo "Adium Framework"
-		silent_pushd Adium.framework/Versions/A/Resources/$LANG
-			loc_copy "$REPO/Frameworks/Adium Framework/Resources/$LANG"
-		silent_popd
+	       if [ -e  "Adium.framework/Versions/A/Resources/$LANG" ] ; then
+		      silent_pushd Adium.framework/Versions/A/Resources/$LANG
+			     loc_copy "$REPO/Frameworks/Adium Framework/Resources/$LANG"
+		      silent_popd
+		fi
 		
 		#No localized resources
 		#silent_pushd AIHyperlinks.framework/Versions/A/Resources/$LANG
@@ -108,10 +112,12 @@ update_language()
 		#silent_popd
 		
 		echo "AIUtilities.framework"
-		silent_pushd AIUtilities.framework/Versions/A/Resources/$LANG
+        if [ -e  "AIUtilities.framework/Versions/A/Resources/$LANG" ] ; then
+		  silent_pushd AIUtilities.framework/Versions/A/Resources/$LANG
 			loc_copy "$REPO/Frameworks/AIUtilities Framework/Resources/$LANG"
-		silent_popd
-
+		  silent_popd
+        fi
+        
 #warning: This needs to go upstream...
         if [ -e  "Growl-WithInstaller.framework/Versions/A/Resources/$LANG" ] ; then
     		silent_pushd Growl-WithInstaller.framework/Versions/A/Resources/$LANG
@@ -131,37 +137,44 @@ update_language()
 	
 	# Plugins
 	silent_pushd PlugIns
+		if [ -e  "Purple.AdiumPlugin/Contents/Frameworks/AdiumLibpurple.framework/Versions/A/Resources/$LANG" ] ; then
 		silent_pushd Purple.AdiumPlugin/Contents/Frameworks/AdiumLibpurple.framework/Versions/A/Resources/$LANG
 			loc_copy "$REPO/Plugins/Purple Service/$LANG"
 		silent_popd
+		fi
 		
+		if [ -e "WebKit Message View.AdiumPlugin/Contents/Resources/$LANG" ] ; then
 		silent_pushd "WebKit Message View.AdiumPlugin/Contents/Resources/$LANG"
 			loc_copy "$REPO/Plugins/WebKit Message View/$LANG"
 		silent_popd
+		fi
+		
 	silent_popd
     
 	#back to Contents
 
 	silent_pushd Library/Spotlight
-		silent_pushd AdiumSpotlightImporter.mdimporter/Contents/Resources/$LANG
-			loc_copy "$REPO/Other/Adium Spotlight Importer/$LANG"
-		silent_popd
+        if [ -e  "AdiumSpotlightImporter.mdimporter/Contents/Resources/$LANG" ] ; then
+		  silent_pushd AdiumSpotlightImporter.mdimporter/Contents/Resources/$LANG
+			 loc_copy "$REPO/Other/Adium Spotlight Importer/$LANG"
+		  silent_popd
+		fi
 	silent_popd
 }
 
 if [ "$2" = "all" ]  ; then
+# fr_CA not included
+
     for lang in \
         ca \
         cs \
         da \
         de \
-        en \
         en_AU \
         en_CA \
         es \
         fi \
         fr \
-        fr_CA \
         is \
         it \
         ja \
