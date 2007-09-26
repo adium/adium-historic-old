@@ -20,6 +20,7 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
+#import <Adium/AIContentNotification.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
@@ -714,18 +715,32 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	}
 }
 
+- (BOOL)supportsSendingNotifications
+{
+	return (account ? ((PURPLE_PLUGIN_PROTOCOL_INFO(purple_find_prpl(purple_account_get_protocol_id(account)))->send_attention) != NULL) : NO);
+}
+
 - (BOOL)sendMessageObject:(AIContentMessage *)inContentMessage
 {
 	PurpleMessageFlags		flags = PURPLE_MESSAGE_RAW;
 	
-	if ([inContentMessage isAutoreply]) {
-		flags |= PURPLE_MESSAGE_AUTO_RESP;
-	}
+	if ([inContentMessage isKindOfClass:[AIContentNotification class]] &&
+		[self supportsSendingNotifications]) {
+		//Send a notification directly if possible
+		[purpleThread sendNotificationOfType:[(AIContentNotification *)inContentMessage notificationType]
+								 fromAccount:self
+									  inChat:[inContentMessage chat]];
 
-	[purpleThread sendEncodedMessage:[inContentMessage encodedMessage]
-					   fromAccount:self
-							inChat:[inContentMessage chat]
-						 withFlags:flags];
+	} else {
+		if ([inContentMessage isAutoreply]) {
+			flags |= PURPLE_MESSAGE_AUTO_RESP;
+		}
+				
+		[purpleThread sendEncodedMessage:[inContentMessage encodedMessage]
+							 fromAccount:self
+								  inChat:[inContentMessage chat]
+							   withFlags:flags];
+	}
 	
 	return YES;
 }
@@ -766,7 +781,8 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 {
     BOOL	weAreOnline = [self online];
 	
-    if ([inType isEqualToString:CONTENT_MESSAGE_TYPE]) {
+    if ([inType isEqualToString:CONTENT_MESSAGE_TYPE] ||
+		[inType isEqualToString:CONTENT_NOTIFICATION_TYPE]) {
         if ((weAreOnline && (inContact == nil || [inContact online])) ||
 			([self integerStatusObjectForKey:@"Connecting"])) {  //XXX - Why do we lie if we're connecting? -ai
 			return YES;
@@ -2107,7 +2123,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 					g_strfreev(prpl_formats);
 				}
 
-				[purpleThread setBuddyIcon:buddyIconData onAccount:self];
+ 				[purpleThread setBuddyIcon:buddyIconData onAccount:self];
 			}
 		}
 	}
