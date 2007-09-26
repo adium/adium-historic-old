@@ -109,7 +109,8 @@
     AIContentMessage 	*content = [[notification userInfo] objectForKey:@"AIContentObject"];
 
     //Message Content
-    if ([[content type] isEqualToString:CONTENT_MESSAGE_TYPE] && [content postProcessContent]) {
+    if (([[content type] isEqualToString:CONTENT_MESSAGE_TYPE] ||  ||
+		 [[content type] isEqualToString:CONTENT_NOTIFICATION_TYPE]) && [content postProcessContent]) {
         AIChat		*chat = [notification object];
         AIListObject	*source = [content source];
         AIListObject	*destination = [content destination];

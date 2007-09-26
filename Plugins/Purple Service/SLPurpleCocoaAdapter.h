@@ -16,6 +16,7 @@
 
 #include <Libpurple/libpurple.h>
 #import <Adium/AIContentTyping.h>
+#import <Adium/AIContentNotification.h>
 #import <AdiumLibpurple/PurpleCommon.h>
 #import <AdiumLibpurple/CBPurpleAccount.h>
 
@@ -37,6 +38,10 @@
 
 - (void)addAdiumAccount:(CBPurpleAccount *)adiumAccount;
 - (void)removeAdiumAccount:(CBPurpleAccount *)adiumAccount;
+
+- (void)sendNotificationOfType:(AINotificationType)type
+				   fromAccount:(id)sourceAccount
+						inChat:(AIChat *)chat;
 - (void)sendEncodedMessage:(NSString *)encodedMessage
 			   fromAccount:(id)sourceAccount
 					inChat:(AIChat *)chat

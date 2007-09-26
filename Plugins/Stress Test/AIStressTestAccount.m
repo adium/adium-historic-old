@@ -406,7 +406,8 @@
 //Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
-	if ([inType isEqualToString:CONTENT_MESSAGE_TYPE]) {
+	if ([inType isEqualToString:CONTENT_MESSAGE_TYPE] ||
+		[inType isEqualToString:CONTENT_NOTIFICATION_TYPE]) {
 		return YES;
 	} else {
 		return NO;

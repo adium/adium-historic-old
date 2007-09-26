@@ -856,6 +856,27 @@ NSString *processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 	return didCommand;
 }
 
+/*!
+ * @brief Send a notification over a service which supports that
+ *
+ * This should not be called for an account whose service doesn't support sending notifications (check before calling).
+ * Doing so will return without displaying an error; the message should be sent as a normal message in this case.
+ *
+ * @param type An AINotificationType.
+ * @param sourceAccount The account from which to send
+ * @param chat The chat in which to send the notification
+ */
+- (void)sendNotificationOfType:(AINotificationType)type
+				   fromAccount:(id)sourceAccount
+						inChat:(AIChat *)chat
+{
+	PurpleConversation	*conv = convLookupFromChat(chat,sourceAccount);
+
+	serv_send_attention(purple_conversation_get_gc(conv),
+						purple_conversation_get_name(conv),
+						type);
+}
+
 //Returns YES if the message was sent (and should therefore be displayed).  Returns NO if it was not sent or was otherwise used.
 - (void)sendEncodedMessage:(NSString *)encodedMessage
 			   fromAccount:(id)sourceAccount
