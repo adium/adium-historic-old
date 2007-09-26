@@ -36,7 +36,6 @@ loc_copy()
     find . '(' -name "*.nib" ')' -prune -execdir cp "{}/objects.xib" "$1/{}" ';'
 
     for file in * ; do
-		echo "\"$file\" to $1"
         if [ -f  "$file" ] ; then
             cp "$file" "$1"
         fi
@@ -45,7 +44,6 @@ loc_copy()
 
 silent_pushd()
 {
-	echo "`pwd`"
     pushd "$1" >/dev/null
 }
 
@@ -74,6 +72,7 @@ update_language()
 		silent_popd
     
 		# Emoticons
+		echo "Emoticons"
 		silent_pushd Emoticons
 			silent_pushd Default.AdiumEmoticonset
 				silent_pushd Resources/$LANG
@@ -83,11 +82,14 @@ update_language()
 		silent_popd
 	
 		# Scripts
+		echo "Scripts"
 		silent_pushd Scripts
 			silent_pushd "System Statistics.AdiumScripts"
-				silent_pushd Resources/$LANG
-					cp InfoPlist.strings "$REPO/Resources/Scripts/System Statistics.AdiumScripts/Resources/$LANG"
-				silent_popd
+		        if [ -e  "Resources/$LANG" ] ; then
+    				silent_pushd Resources/$LANG
+	   				    cp InfoPlist.strings "$REPO/Resources/Scripts/System Statistics.AdiumScripts/Resources/$LANG"
+				    silent_popd
+				fi
 			silent_popd
 		silent_popd
 	silent_popd
@@ -95,6 +97,7 @@ update_language()
 	#back to Contents
 		
 	silent_pushd Frameworks
+	   echo "Adium Framework"
 		silent_pushd Adium.framework/Versions/A/Resources/$LANG
 			loc_copy "$REPO/Frameworks/Adium Framework/Resources/$LANG"
 		silent_popd
@@ -104,24 +107,24 @@ update_language()
 		#	loc_copy "$REPO/Frameworks/AIHyperlinks Framework/Resources/$LANG"
 		#silent_popd
 		
-		
-		silent_pushd AIUtilities.framework/Versions/A/Resources/$LANG
-			loc_copy "$REPO/Frameworks/AIUtilities Framework/Resources/$LANG"
-		silent_popd
-
+		echo "AIUtilities.framework"
 		silent_pushd AIUtilities.framework/Versions/A/Resources/$LANG
 			loc_copy "$REPO/Frameworks/AIUtilities Framework/Resources/$LANG"
 		silent_popd
 
 #warning: This needs to go upstream...
-		silent_pushd Growl-WithInstaller.framework/Versions/A/Resources/$LANG
-			loc_copy "$REPO/Frameworks/Growl-WithInstaller.framework/Resources/$LANG"
-		silent_popd
+        if [ -e  "Growl-WithInstaller.framework/Versions/A/Resources/$LANG" ] ; then
+    		silent_pushd Growl-WithInstaller.framework/Versions/A/Resources/$LANG
+	   		  loc_copy "$REPO/Frameworks/Growl-WithInstaller.framework/Resources/$LANG"
+		    silent_popd
+        fi
 
 #warning: This needs to go upstream...		
-		silent_pushd Sparkle.framework/Versions/A/Resources/$LANG
-			loc_copy "$REPO/Frameworks/Sparkle.framework/Resources/$LANG"
-		silent_popd
+        if [ -e  "Sparkle.framework/Versions/A/Resources/$LANG" ] ; then
+    		silent_pushd Sparkle.framework/Versions/A/Resources/$LANG
+	   		  loc_copy "$REPO/Frameworks/Sparkle.framework/Resources/$LANG"
+    		silent_popd
+		fi
 	silent_popd
 
 	#back to Contents
