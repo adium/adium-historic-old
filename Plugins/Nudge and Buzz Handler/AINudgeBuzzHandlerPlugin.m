@@ -23,6 +23,7 @@
 
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
+#import <Adium/AIContentNotification.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AIMetaContact.h>
 
@@ -224,8 +225,6 @@
 {
 	AIListContact		*sendChoice;
 	AIChat				*chat;
-	NSAttributedString	*notificationMessage;
-	AIContentMessage	*messageContent;
 	
 	// Don't handle groups.
 	if (![object isKindOfClass:[AIListContact class]]) {
@@ -252,46 +251,30 @@
 	if (!(chat = [[adium chatController] existingChatWithContact:sendChoice])) {
 		chat = [[adium chatController] chatWithContact:sendChoice];
 	}
-	
-	// Establish the message we're going to send.	
-	if ([[[sendChoice service] serviceID] isEqualToString:@"MSN"]) {
-		// MSN - /nudge
-		notificationMessage = [[[NSAttributedString alloc] initWithString:@"/nudge"] autorelease];
-	} else if ([[[sendChoice service] serviceID] isEqualToString:@"Yahoo!"]) {
-		// Yahoo - /buzz
-		notificationMessage = [[[NSAttributedString alloc] initWithString:@"/buzz"] autorelease];
-	} else {
-		// Wrong protocol?
-		return;
-	}
-	
-	// Create the content message.
-	messageContent = [AIContentMessage messageInChat:chat
-										  withSource:[sendChoice account]
-										 destination:sendChoice
-												date:nil
-											 message:notificationMessage
-										   autoreply:NO];
+
+	AIContentNotification *contentNotification = [AIContentNotification notificationInChat:chat
+																				withSource:[chat account]
+																			   destination:[chat listObject]
+																					  date:[NSDate date]
+																		  notificationType:AIDefaultNotificationType];
 	
 	// Send the message.
-	[[adium contentController] sendContentObject:messageContent];
+	[[adium contentController] sendContentObject:contentNotification];
 }
 
 // Echoes the buzz event to the window and generates the event.
 - (void)nudgeBuzzDidOccur:(NSNotification *)notification
 {
-	AIChat			*chat     = [notification object];
-	NSString		*description, *format;
-	
-	format = AILocalizedString(@"%@ wants your attention!", "Message displayed when a contact sends a buzz/nudge/other notification");
-	
-	// Create the display text.
-	description = [NSString stringWithFormat:format, [[chat listObject] displayName]];
-	
+	AIChat			*chat = [notification object];
+
+	AIContentNotification *contentNotification = [AIContentNotification notificationInChat:chat
+																				withSource:[chat listObject]
+																			   destination:[chat account]
+																					  date:[NSDate date]
+																		  notificationType:AIDefaultNotificationType];
+
 	// Print the text to the window.
-	[[adium contentController] displayEvent:description
-									 ofType:@"notificationOccured"
-									 inChat:chat];
+	[[adium contentController] receiveContentObject:contentNotification];
 	
 	// Fire off the event
 	[[adium contactAlertsController] generateEvent:CONTENT_NUDGE_BUZZ_OCCURED

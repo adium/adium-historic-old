@@ -30,6 +30,7 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
+#import <Adium/AIContentNotification.h>
 #import <Adium/AIContentStatus.h>
 #import <Adium/AIContentEvent.h>
 #import <Adium/AIHTMLDecoder.h>
@@ -431,7 +432,8 @@ Class LogViewerWindowControllerClass = NULL;
 						dirty = YES;
 					}
 
-				} else if ([contentType isEqualToString:CONTENT_EVENT_TYPE]) {
+				} else if ([contentType isEqualToString:CONTENT_EVENT_TYPE] ||
+						   [contentType isEqualToString:CONTENT_NOTIFICATION_TYPE]) {
 					[[self appenderForChat:chat] addElementWithName:@"event"
 								  escapedContent:[xhtmlDecoder encodeHTML:[content message] imagesPath:nil]
 								   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
@@ -827,7 +829,10 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 		//Add to dirty array (Lock to ensure that no one changes its content while we are)
 		[dirtyLogLock lock];
 		if (path != nil) {
-			if (!dirtyLogArray) dirtyLogArray = [[NSMutableArray alloc] init];
+			if (!dirtyLogArray) {
+				dirtyLogArray = [[NSMutableArray alloc] init];
+				AILogWithSignature(@"Initialized a new dirty log array");
+			}
 
 			if (![dirtyLogArray containsObject:path]) {
 				[dirtyLogArray addObject:path];
@@ -849,8 +854,11 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 {
 	if(!path) return;
 	[dirtyLogLock lock];
-	if (!dirtyLogArray) dirtyLogArray = [[NSMutableArray alloc] init];
-
+	if (!dirtyLogArray) {
+		dirtyLogArray = [[NSMutableArray alloc] init];
+		AILogWithSignature(@"Initialized a new dirty log array");
+	}
+	
 	if (![dirtyLogArray containsObject:path]) {
 		[dirtyLogArray addObject:path];
 	}
@@ -911,7 +919,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 										kSKIndexInverted,
 										(CFDictionaryRef)textAnalysisProperties);
 		if (newIndex) {
-			AILog(@"Created a new log index %x at %@ with textAnalysisProperties %@",newIndex,logIndexPathURL,textAnalysisProperties);
+			AILog(@"Created a new log index %x at %@ with textAnalysisProperties %@. Will reindex all logs.",newIndex,logIndexPathURL,textAnalysisProperties);
 			//Clear the dirty log array in case it was loaded (this can happen if the user mucks with the cache directory)
 			[[NSFileManager defaultManager] removeFileAtPath:[self _dirtyLogArrayPath] handler:NULL];
 			[dirtyLogArray release]; dirtyLogArray = nil;
@@ -1026,6 +1034,8 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 //THREAD: Flag every log as dirty (Do this when there is no log index)
 - (void)dirtyAllLogs
 {
+	AILogWithSignature(@"Dirtying all logs.");
+	
     //Reset and rebuild the dirty array
     [dirtyLogArray release]; dirtyLogArray = [[NSMutableArray alloc] init];
 	//[self _dirtyAllLogsThread];
@@ -1046,6 +1056,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
     //Create a fresh dirty log array
     [dirtyLogLock lock];
     [dirtyLogArray release]; dirtyLogArray = [[NSMutableArray alloc] init];
+	AILogWithSignature(@"Dirtying all logs.");
     [dirtyLogLock unlock];
 	
     //Process each from folder

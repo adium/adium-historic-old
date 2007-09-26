@@ -102,25 +102,46 @@ static void adiumPurpleConvWriteIm(PurpleConversation *conv, const char *who,
 {
 	//We only care about this if it does not have the PURPLE_MESSAGE_SEND flag, which is set if Purple is sending a sent message back to us
 	if ((flags & PURPLE_MESSAGE_SEND) == 0) {
-		NSDictionary		*messageDict;
-		CBPurpleAccount		*adiumAccount = accountLookup(conv->account);
-		NSString			*messageString;
-		AIChat				*chat;
+		if (flags & PURPLE_MESSAGE_NOTIFY) {
+			// We received a notification (nudge or buzz). Send a notification of such.
+			NSString *type, *messageString = [NSString stringWithUTF8String:message];
 
-		messageString = [NSString stringWithUTF8String:message];
-		chat = imChatLookupFromConv(conv);
+			// Determine what we're actually notifying about.
+			if ([messageString rangeOfString:@"nudge" options:(NSCaseInsensitiveSearch | NSLiteralSearch)].location != NSNotFound) {
+				type = @"Nudge";
+			} else if ([messageString rangeOfString:@"buzz" options:(NSCaseInsensitiveSearch | NSLiteralSearch)].location != NSNotFound) {
+				type = @"Buzz";
+			} else {
+				// Just call an unknown type a "notification"
+				type = @"notification";
+			}
 
-		AILog(@"adiumPurpleConvWriteIm: Received %@ from %@", messageString, [[chat listObject] UID]);
-
-		//Process any purple imgstore references into real HTML tags pointing to real images
-		messageString = processPurpleImages(messageString, adiumAccount);
-
-		messageDict = [NSDictionary dictionaryWithObjectsAndKeys:messageString,@"Message",
-			[NSNumber numberWithInt:flags],@"PurpleMessageFlags",
-			[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
-
-		[adiumAccount receivedIMChatMessage:messageDict
-									 inChat:chat];
+			[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:Chat_NudgeBuzzOccured
+																			   object:imChatLookupFromConv(conv)
+																			 userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+																					   type, @"Type",
+																					   nil]];
+		} else {
+			NSDictionary		*messageDict;
+			CBPurpleAccount		*adiumAccount = accountLookup(conv->account);
+			NSString			*messageString;
+			AIChat				*chat;
+			
+			messageString = [NSString stringWithUTF8String:message];
+			chat = imChatLookupFromConv(conv);
+			
+			AILog(@"adiumPurpleConvWriteIm: Received %@ from %@", messageString, [[chat listObject] UID]);
+			
+			//Process any purple imgstore references into real HTML tags pointing to real images
+			messageString = processPurpleImages(messageString, adiumAccount);
+			
+			messageDict = [NSDictionary dictionaryWithObjectsAndKeys:messageString,@"Message",
+						   [NSNumber numberWithInt:flags],@"PurpleMessageFlags",
+						   [NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
+			
+			[adiumAccount receivedIMChatMessage:messageDict
+										 inChat:chat];
+		}
 	}
 }
 
@@ -138,29 +159,7 @@ static void adiumPurpleConvWriteConv(PurpleConversation *conv, const char *who, 
 	}
 
 	if (chat) {
-		if (flags & PURPLE_MESSAGE_NOTIFY) {
-			// We received a notification (nudge or buzz). Send a notification of such.
-
-			NSString *type, *messageString = [NSString stringWithUTF8String:message];
-			NSDictionary *userInfo;
-			
-			// Determine what we're actually notifying about.
-			if ([messageString rangeOfString:@"Nudge"].location != NSNotFound) {
-				type = @"Nudge";
-			} else if ([messageString rangeOfString:@"Buzz"].location != NSNotFound) {
-				type = @"Buzz";
-			} else {
-				// Just call an unknown type a "notification"
-				type = @"notification";
-			}
-			
-			userInfo = [NSDictionary dictionaryWithObjectsAndKeys:type,@"Type", nil];
-			
-			[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:Chat_NudgeBuzzOccured
-																			   object:chat
-																			 userInfo:userInfo];
-						
-		} else if (flags & PURPLE_MESSAGE_SYSTEM) {
+		if (flags & PURPLE_MESSAGE_SYSTEM) {
 			NSString			*messageString = [NSString stringWithUTF8String:message];
 			if (messageString) {
 				AIChatUpdateType	updateType = -1;
