@@ -18,6 +18,7 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIContentMessage.h>
+#import <Adium/AIContentNotification.h>
 #import <Adium/AIService.h>
 #import <Adium/AIChat.h>
 #import <Adium/ESFileTransfer.h>
@@ -453,7 +454,8 @@
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
 	if ([self online] && (!inContact || [inContact online])) {
-		if ([inType isEqualToString:CONTENT_MESSAGE_TYPE]) {
+		if ([inType isEqualToString:CONTENT_MESSAGE_TYPE] ||
+			[inType isEqualToString:CONTENT_NOTIFICATION_TYPE]) {
 			return YES;
 
 		} else if ([inType isEqualToString:CONTENT_FILE_TRANSFER_TYPE]) {
