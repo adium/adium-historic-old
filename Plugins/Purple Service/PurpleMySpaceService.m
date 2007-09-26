@@ -91,7 +91,7 @@
  */
 - (NSImage *)defaultServiceIconOfType:(AIServiceIconType)iconType
 {
-	return [NSImage imageNamed:((iconType == AIServiceIconSmall) ? @"myspace-small" : @"myspace-small")
+	return [NSImage imageNamed:((iconType == AIServiceIconSmall) ? @"MySpace-small" : @"MySpace-large")
 					  forClass:[self class]];
 }
 
