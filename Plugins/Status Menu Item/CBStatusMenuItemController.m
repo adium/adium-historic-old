@@ -538,7 +538,7 @@
 		}
 		
 		
-		if ([accountMenuItemsArray count] > 0) {
+		if ([accountMenuItemsArray count] > 1) {
 			NSMenu *accountsMenu = [[[NSMenu alloc] init] autorelease];
 			NSMenuItem	*accountMenuItem;
 			
