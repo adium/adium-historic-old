@@ -13,7 +13,7 @@
 
 static BOOL isOnLeopardOrBetter = NO;
 
-+ (void)load
++ (void)initialize
 {
 	if (self == [AILogDateFormatter class]) {
 		isOnLeopardOrBetter = [[NSApplication sharedApplication] isOnLeopardOrBetter];
