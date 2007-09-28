@@ -85,7 +85,7 @@
  */
 - (NSImage *)defaultServiceIconOfType:(AIServiceIconType)iconType
 {
-	NSImage *baseImage = [NSImage imageNamed:@"irc" forClass:[self class]];
+	NSImage *baseImage = [NSImage imageNamed:@"irc" forClass:[self class] loadLazily:YES];
 
 	if (iconType == AIServiceIconSmall) {
 		baseImage = [baseImage imageByScalingToSize:NSMakeSize(16, 16)];

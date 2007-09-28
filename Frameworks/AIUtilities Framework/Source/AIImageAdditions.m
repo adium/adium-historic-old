@@ -15,10 +15,9 @@
 
 @implementation NSImage (AIImageAdditions)
 
-// Returns an image from the owners bundle with the specified name
-+ (NSImage *)imageNamed:(NSString *)name forClass:(Class)inClass
++ (NSImage *)imageNamed:(NSString *)name forClass:(Class)inClass loadLazily:(BOOL)flag
 {
-    NSBundle	*ownerBundle;
+	NSBundle	*ownerBundle;
     NSString	*imagePath;
     NSImage		*image;
 	
@@ -26,10 +25,19 @@
     ownerBundle = [NSBundle bundleForClass:inClass];
 	
     //Open the image
-    imagePath = [ownerBundle pathForImageResource:name];    
-    image = [[NSImage alloc] initWithContentsOfFile:imagePath];
+    imagePath = [ownerBundle pathForImageResource:name];   
+	if(flag)
+		image = [[NSImage alloc] initByReferencingFile:imagePath];
+	else
+		image = [[NSImage alloc] initWithContentsOfFile:imagePath];
 	
-    return [image autorelease];
+    return [image autorelease];	
+}
+
+// Returns an image from the owners bundle with the specified name
++ (NSImage *)imageNamed:(NSString *)name forClass:(Class)inClass
+{	
+	return [self imageNamed:name forClass:inClass loadLazily:NO];
 }
 
 //Create and return an opaque bitmap image rep, replacing transparency with [NSColor whiteColor]

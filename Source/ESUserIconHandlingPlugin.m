@@ -337,7 +337,7 @@
 	[toolbarItem setMinSize:NSMakeSize(32,32)];
 	[toolbarItem setMaxSize:NSMakeSize(32,32)];
 	[button setToolbarItem:toolbarItem];
-	[button setImage:[NSImage imageNamed:@"userIconToolbar" forClass:[self class]]];
+	[button setImage:[NSImage imageNamed:@"userIconToolbar" forClass:[self class] loadLazily:YES]];
 	[button release];
 
 	//Register our toolbar item
