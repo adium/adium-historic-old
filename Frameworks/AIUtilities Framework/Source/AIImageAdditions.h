@@ -34,6 +34,7 @@ typedef enum {
 @interface NSImage (AIImageAdditions)
 
 + (NSImage *)imageNamed:(NSString *)name forClass:(Class)inClass;
++ (NSImage *)imageNamed:(NSString *)name forClass:(Class)inClass loadLazily:(BOOL)flag;
 
 + (AIBitmapImageFileType)fileTypeOfData:(NSData *)inData;
 + (NSString *)extensionForBitmapImageFileType:(AIBitmapImageFileType)inFileType;

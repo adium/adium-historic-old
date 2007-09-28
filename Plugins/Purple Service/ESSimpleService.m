@@ -86,7 +86,7 @@
  */
 - (NSImage *)defaultServiceIconOfType:(AIServiceIconType)iconType
 {
-	return [NSImage imageNamed:@"simple" forClass:[self class]];
+	return [NSImage imageNamed:@"simple" forClass:[self class] loadLazily:YES];
 }
 
 @end

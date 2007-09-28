@@ -143,7 +143,7 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 		} else {
 			if ([statusName isEqualToString:@"Blocked"]) {
 				//We want a blocked icon but the status set does not give us one
-				statusIcon = [NSImage imageNamed:@"DefaultBlockedStatusIcon" forClass:[self class]];
+				statusIcon = [NSImage imageNamed:@"DefaultBlockedStatusIcon" forClass:[self class] loadLazily:YES];
 				
 				if (statusIcon) {
 					if (iconDirection == AIIconFlipped) [statusIcon setFlipped:YES];

@@ -92,7 +92,7 @@
 - (NSImage *)defaultServiceIconOfType:(AIServiceIconType)iconType
 {
 	return [NSImage imageNamed:((iconType == AIServiceIconSmall) ? @"MySpace-small" : @"MySpace-large")
-					  forClass:[self class]];
+					  forClass:[self class] loadLazily:YES];
 }
 
 @end

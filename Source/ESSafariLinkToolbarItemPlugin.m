@@ -75,7 +75,7 @@
 	if (!browserName || !browserImage) {
 		//Fall back on Safari and the image stored within our bundle if necessary
 		browserName = @"Safari";
-		browserImage = [NSImage imageNamed:@"Safari" forClass:[self class]];
+		browserImage = [NSImage imageNamed:@"Safari" forClass:[self class] loadLazily:YES];
 	}	
 
 	//Remote the path extension if there is one (.app if the Finder is set to show extensions; no change otherwise)

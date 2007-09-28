@@ -703,7 +703,8 @@
 													itemContent:[NSImage imageNamed:(useContactListGroups ?
 																					 @"togglegroups_transparent" :
 																					 @"togglegroups")
-																		   forClass:[self class]]
+																		   forClass:[self class]
+																		 loadLazily:YES]
 														 action:@selector(toggleShowGroupsToolbar:)
 														   menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ContactList"];

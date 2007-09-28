@@ -161,7 +161,7 @@ Class LogViewerWindowControllerClass = NULL;
 	                                                    toolTip:AILocalizedString(@"View previous conversations with this contact or chat",nil)
 	                                                     target:self
 	                                            settingSelector:@selector(setImage:)
-	                                                itemContent:[NSImage imageNamed:@"LogViewer" forClass:[self class]]
+	                                                itemContent:[NSImage imageNamed:@"LogViewer" forClass:[self class] loadLazily:YES]
 	                                                     action:@selector(showLogViewerToSelectedContact:)
 	                                                       menu:nil];
 	[[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];

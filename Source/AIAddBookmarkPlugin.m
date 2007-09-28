@@ -30,9 +30,9 @@
 																		toolTip:@"Bookmark the current chat"
 																  		 target:self
 																settingSelector:@selector(setImage:)
-																	itemContent:[NSImage imageNamed:@"AddressBook" forClass:[self class]]
-																		action:@selector(addBookmark:)
-																		  menu:nil];
+																	itemContent:[NSImage imageNamed:@"AddressBook" forClass:[self class] loadLazily:YES]
+																		 action:@selector(addBookmark:)
+																		   menu:nil];
 	
 	[[adium toolbarController] registerToolbarItem:chatItem forToolbarType:@"MessageWindow"];
 	
