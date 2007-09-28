@@ -403,11 +403,16 @@
 			//Update menu items to reflect status changes
 
 			//Update the changed menu item (or rebuild the entire menu if this item should be removed or added)
-			if (delegateRespondsToShouldIncludeAccount &&
-			   ([delegate accountMenu:self shouldIncludeAccount:(AIAccount *)inObject] != (menuItem == nil))) {
-				[self rebuildMenu];
-				rebuilt = YES;
-
+			if (delegateRespondsToShouldIncludeAccount) {
+				BOOL shouldIncludeAccount = [delegate accountMenu:self shouldIncludeAccount:(AIAccount *)inObject];
+				BOOL menuItemExists		  = (menuItem != nil);
+				//If we disagree on item inclusion and existance, rebuild the menu.
+				if (shouldIncludeAccount != menuItemExists) {
+					[self rebuildMenu];
+					rebuilt = YES;
+				} else { 
+					[self _updateMenuItem:menuItem];
+				}
 			} else {
 				[self _updateMenuItem:menuItem];
 			}
