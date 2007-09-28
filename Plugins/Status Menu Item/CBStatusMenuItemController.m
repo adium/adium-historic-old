@@ -32,6 +32,7 @@
 #import <Adium/AIStatusIcons.h>
 #import <Adium/AIStatusMenu.h>
 #import <Adium/AIAccountMenu.h>
+#import <Adium/AIContactMenu.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
 
@@ -68,6 +69,8 @@
 		[theMenu setAutoenablesItems:YES];
 		[statusItem setMenu:theMenu];
 		[theMenu setDelegate:self];
+
+		theContactsMenu = [[NSMenu alloc] init];
 		
 		//Setup for open chats and unviewed content catching
 		accountMenuItemsArray = [[NSMutableArray alloc] init];
@@ -123,7 +126,13 @@
 		statusMenu = [[AIStatusMenu statusMenuWithDelegate:self] retain];
 		
 		//Account menu
-		accountMenu = [[AIAccountMenu accountMenuWithDelegate:self submenuType:AIAccountStatusSubmenu showTitleVerbs:NO] retain];
+		accountMenu = [[AIAccountMenu accountMenuWithDelegate:self
+												  submenuType:AIAccountStatusSubmenu
+											   showTitleVerbs:NO] retain];
+		
+		//Contact menu
+		contactMenu = [[AIContactMenu contactMenuWithDelegate:self
+										  forContactsInObject:[[adium contactController] contactList]] retain];
 	}
 	
 	return self;
@@ -139,6 +148,7 @@
 	[[statusItem statusBar] removeStatusItem:statusItem];
 	
 	[theMenu release];
+	[theContactsMenu release];
 	[unviewedObjectsArray release];
 	[accountMenu release];
 	[statusMenu release];
@@ -473,13 +483,41 @@
 	return nil;
 }
 
-//Menu Delegate --------------------------------------------------------
-#pragma mark Menu Delegate
+//Delegates --------------------------------------------------------
+#pragma mark Delegates
+- (void)contactMenu:(AIContactMenu *)inContactMenu didRebuildMenuItems:(NSArray *)menuItems
+{
+	needsUpdate = YES;
+
+	[theContactsMenu removeAllItems];
+
+	//Add contacts menu
+	NSMenuItem *menuItem;
+	NSEnumerator *enumerator = [menuItems objectEnumerator];
+	while ((menuItem = [enumerator nextObject])) {
+		//Use copies of the menu items rather than moving the actual items, as we may want to use them again
+		[theContactsMenu addItem:[[menuItem copy] autorelease]];
+	}
+	
+}
+
+- (void)contactMenu:(AIContactMenu *)inContactMenu didSelectContact:(AIListContact *)inContact
+{
+	[[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:inContact
+							 onPreferredAccount:YES]];
+	[self activateAdium:nil];
+}
+
+- (BOOL)contactMenu:(AIContactMenu *)inContactMenu shouldIncludeContact:(AIListContact *)inContact
+{
+	// Show only online contacts.
+	return [inContact online];
+}
 
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
 	//If something has changed
-	if (needsUpdate) {
+	if (needsUpdate && menu == theMenu) {
 		NSEnumerator    *enumerator;
 		NSMenuItem      *menuItem;
 		AIChat          *chat;
@@ -499,22 +537,31 @@
 			}
 		}
 		
+		
 		if ([accountMenuItemsArray count] > 0) {
+			NSMenu *accountsMenu = [[[NSMenu alloc] init] autorelease];
+			NSMenuItem	*accountMenuItem;
+			
 			[menu addItem:[NSMenuItem separatorItem]];
+			
+			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Accounts",nil)
+																			 target:self
+																			 action:nil
+																	  keyEquivalent:@""] autorelease];
 			
 			//Add the account menu items
 			enumerator = [accountMenuItemsArray objectEnumerator];
-			while ((menuItem = [enumerator nextObject])) {
+			while ((accountMenuItem = [enumerator nextObject])) {
 				NSMenu	*submenu;
 				
-				[menu addItem:menuItem];
+				[accountsMenu addItem:accountMenuItem];
 				
 				//Validate the menu items as they are added since they weren't previously validated when the menu was clicked
-				if ([[menuItem target] respondsToSelector:@selector(validateMenuItem:)]) {
-					[[menuItem target] validateMenuItem:menuItem];
+				if ([[accountMenuItem target] respondsToSelector:@selector(validateMenuItem:)]) {
+					[[accountMenuItem target] validateMenuItem:accountMenuItem];
 				}
 				
-				submenu = [menuItem submenu];
+				submenu = [accountMenuItem submenu];
 				if (submenu) {
 					NSEnumerator	*submenuEnumerator = [[submenu itemArray] objectEnumerator];
 					NSMenuItem		*submenuItem;
@@ -526,6 +573,9 @@
 					}
 				}
 			}
+			
+			[menuItem setSubmenu:accountsMenu];
+			[menu addItem:menuItem];
 		}
 		
 		//If there exist any open chats, add them
@@ -561,6 +611,18 @@
 				//Add it to the menu
 				[menu addItem:menuItem];
 			}
+		}
+		
+		if (theContactsMenu) {
+			[menu addItem:[NSMenuItem separatorItem]];
+			
+			// Add contacts
+			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Contacts",nil)
+																			 target:self
+																			 action:nil
+																	  keyEquivalent:@""] autorelease];
+			[menuItem setSubmenu:theContactsMenu];
+			[menu addItem:menuItem];
 		}
 		
 		//Add our last two items
