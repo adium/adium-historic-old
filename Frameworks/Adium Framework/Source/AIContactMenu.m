@@ -192,9 +192,15 @@
 		   [inModifiedKeys containsObject:@"StatusType"]) {
 			
 			//Update the changed menu item (or rebuild the entire menu if this item should be removed or added)
-			if (delegateRespondsToShouldIncludeContact &&
-			   ([delegate contactMenu:self shouldIncludeContact:(AIListContact *)inObject] != (menuItem != nil))) {
-				[self rebuildMenu];
+			if (delegateRespondsToShouldIncludeContact) {
+				BOOL shouldIncludeContact = [delegate contactMenu:self shouldIncludeContact:(AIListContact *)inObject];
+				BOOL menuItemExists		  = (menuItem != nil);
+				//If we disagree on item inclusion and existance, rebuild the menu.
+				if (shouldIncludeContact != menuItemExists) {
+					[self rebuildMenu];
+				} else { 
+					[self _updateMenuItem:menuItem];
+				}
 			} else {
 				[self _updateMenuItem:menuItem];
 			}
