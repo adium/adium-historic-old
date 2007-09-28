@@ -406,7 +406,7 @@
 			if (delegateRespondsToShouldIncludeAccount) {
 				BOOL shouldIncludeAccount = [delegate accountMenu:self shouldIncludeAccount:(AIAccount *)inObject];
 				BOOL menuItemExists		  = (menuItem != nil);
-				//If we disagree on item inclusion and existance, rebuild the menu.
+				//If we disagree on item inclusion and existence, rebuild the menu.
 				if (shouldIncludeAccount != menuItemExists) {
 					[self rebuildMenu];
 					rebuilt = YES;

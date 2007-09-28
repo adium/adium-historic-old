@@ -228,7 +228,7 @@
 			if (delegateRespondsToShouldIncludeContact) {
 				BOOL shouldIncludeContact = [delegate contactMenu:self shouldIncludeContact:(AIListContact *)inObject];
 				BOOL menuItemExists		  = (menuItem != nil);
-				//If we disagree on item inclusion and existance, rebuild the menu.
+				//If we disagree on item inclusion and existence, rebuild the menu.
 				if (shouldIncludeContact != menuItemExists) {
 					[self rebuildMenu];
 				} else { 
