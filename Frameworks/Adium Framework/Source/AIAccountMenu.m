@@ -217,7 +217,7 @@
 		[menuItem release];
 	}
 	
-	//Add a menuitem for each enabled account the delegate allows (or all enabled accounts if it doesn't specify)
+	//Add a menuitem for each enabled account or accounts which the delegate allows
 	enumerator = [accounts objectEnumerator];
 	while ((account = [enumerator nextObject])) {
 		if (([account enabled] && !delegateRespondsToShouldIncludeAccount) ||
