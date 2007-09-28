@@ -7,6 +7,7 @@
 //
 
 #import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AISortController.h>
 #import <Adium/AIContactMenu.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <Adium/AIListContact.h>
@@ -15,6 +16,7 @@
 @interface AIContactMenu (PRIVATE)
 - (id)initWithDelegate:(id)inDelegate forContactsInObject:(AIListObject *)inContainingObject;
 - (NSArray *)contactMenusForListObjects:(NSArray *)listObjects;
+- (NSArray *)listObjectsForContainedObjects:(NSArray *)listObjects;
 - (void)_updateMenuItem:(NSMenuItem *)menuItem;
 @end
 
@@ -41,7 +43,14 @@
 		[self setDelegate:inDelegate];
 		containingObject = [inContainingObject retain];
 
+		// Register as a list observer
 		[[adium contactController] registerListObjectObserver:self];
+		
+		// Register for contact list order notifications (so we can update our sorting)
+		[[adium notificationCenter] addObserver:self
+								   selector:@selector(rebuildMenu)
+									   name:Contact_OrderChanged
+									 object:nil];
 
 		[self rebuildMenu];
 	}
@@ -52,6 +61,7 @@
 - (void)dealloc
 {
 	[[adium contactController] unregisterListObjectObserver:self];
+	[[adium notificationCenter] removeObserver:self];
 
 	[containingObject release]; containingObject = nil;
 	delegate = nil;
@@ -117,13 +127,42 @@
  */
 - (NSArray *)buildMenuItems
 {
-	NSArray *listObjects = ([containingObject conformsToProtocol:@protocol(AIContainingObject)] ?
+	NSArray *listObjects = [self listObjectsForContainedObjects:([containingObject conformsToProtocol:@protocol(AIContainingObject)] ?
 						   [(AIListObject<AIContainingObject> *)containingObject listContacts] :
-						   [NSArray arrayWithObject:containingObject]);
+						   [NSArray arrayWithObject:containingObject])];
 	
+	// Sort the list objects
+	listObjects = [[[adium contactController] activeSortController] sortListObjects:listObjects];
+	
+	// Create menus for them
 	return [self contactMenusForListObjects:listObjects];
 }
 
+/*!
+* @brief Creates an array of list objects which should be presented in the menu, expanding any containing objects
+ */
+- (NSArray *)listObjectsForContainedObjects:(NSArray *)listObjects
+{
+	NSMutableArray	*listObjectArray = [NSMutableArray array];
+	NSEnumerator	*enumerator = [listObjects objectEnumerator];
+	AIListObject	*listObject;
+	
+	while ((listObject = [enumerator nextObject])) {
+		if ([listObject isKindOfClass:[AIListContact class]]) {
+			if (!delegateRespondsToShouldIncludeContact || [delegate contactMenu:self shouldIncludeContact:(AIListContact *)listObject]) {
+				[listObjectArray addObject:listObject];
+			}
+		} else if ([listObject conformsToProtocol:@protocol(AIContainingObject)]) {
+			[listObjectArray addObjectsFromArray:[self listObjectsForContainedObjects:[(AIListObject<AIContainingObject> *)listObject listContacts]]];
+		}
+	}
+	
+	return listObjectArray;
+}
+
+/*!
+* @brief Creates an array of NSMenuItems for each AIListObject
+ */
 - (NSArray *)contactMenusForListObjects:(NSArray *)listObjects
 {
 	NSMutableArray	*menuItemArray = [NSMutableArray array];
@@ -131,20 +170,14 @@
 	AIListObject	*listObject;
 	
 	while ((listObject = [enumerator nextObject])) {
-		if ([listObject isKindOfClass:[AIListContact class]]) {
-			if (!delegateRespondsToShouldIncludeContact || [delegate contactMenu:self shouldIncludeContact:(AIListContact *)listObject]) {
-				NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@""
-																							target:self
-																							action:@selector(selectContactMenuItem:)
-																					 keyEquivalent:@""
-																				 representedObject:listObject];
-				[self _updateMenuItem:menuItem];
-				[menuItemArray addObject:menuItem];
-				[menuItem release];
-			}
-		} else if ([listObject conformsToProtocol:@protocol(AIContainingObject)]) {
-			[menuItemArray addObjectsFromArray:[self contactMenusForListObjects:[(AIListObject<AIContainingObject> *)listObject listContacts]]];
-		}
+		NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@""
+																					target:self
+																					action:@selector(selectContactMenuItem:)
+																			 keyEquivalent:@""
+																		 representedObject:listObject];
+		[self _updateMenuItem:menuItem];
+		[menuItemArray addObject:menuItem];
+		[menuItem release];
 	}
 	
 	return menuItemArray;
