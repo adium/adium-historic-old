@@ -18,12 +18,15 @@
 #import <Adium/AIChatControllerProtocol.h>
 #import "AIMenuBarIcons.h"
 
-@class AIAccountMenu, AIStatusMenu;
+@class AIAccountMenu, AIStatusMenu, AIContactMenu;
 
 @interface CBStatusMenuItemController : AIObject <AIChatObserver>
 {
 	NSStatusItem            *statusItem;
 	NSMenu                  *theMenu;
+	NSMenu					*theContactsMenu;
+
+	AIContactMenu			*contactMenu;
 	AIAccountMenu           *accountMenu;
 	AIStatusMenu			*statusMenu;
 	AIMenuBarIcons			*menuIcons;

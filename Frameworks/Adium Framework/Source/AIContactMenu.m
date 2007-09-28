@@ -14,6 +14,7 @@
 
 @interface AIContactMenu (PRIVATE)
 - (id)initWithDelegate:(id)inDelegate forContactsInObject:(AIListObject *)inContainingObject;
+- (NSArray *)contactMenusForListObjects:(NSArray *)listObjects;
 - (void)_updateMenuItem:(NSMenuItem *)menuItem;
 @end
 
@@ -116,10 +117,17 @@
  */
 - (NSArray *)buildMenuItems
 {
+	NSArray *listObjects = ([containingObject conformsToProtocol:@protocol(AIContainingObject)] ?
+						   [(AIListObject<AIContainingObject> *)containingObject listContacts] :
+						   [NSArray arrayWithObject:containingObject]);
+	
+	return [self contactMenusForListObjects:listObjects];
+}
+
+- (NSArray *)contactMenusForListObjects:(NSArray *)listObjects
+{
 	NSMutableArray	*menuItemArray = [NSMutableArray array];
-	NSEnumerator	*enumerator = ([containingObject conformsToProtocol:@protocol(AIContainingObject)] ?
-								   [[(AIListObject<AIContainingObject> *)containingObject listContacts] objectEnumerator] :
-								   [[NSArray arrayWithObject:containingObject] objectEnumerator]);
+	NSEnumerator	*enumerator = [listObjects objectEnumerator];
 	AIListObject	*listObject;
 	
 	while ((listObject = [enumerator nextObject])) {
@@ -134,6 +142,8 @@
 				[menuItemArray addObject:menuItem];
 				[menuItem release];
 			}
+		} else if ([listObject conformsToProtocol:@protocol(AIContainingObject)]) {
+			[menuItemArray addObjectsFromArray:[self contactMenusForListObjects:[(AIListObject<AIContainingObject> *)listObject listContacts]]];
 		}
 	}
 	
@@ -157,7 +167,7 @@
 			titleAttributes = [[NSDictionary dictionaryWithObject:[NSFont menuFontOfSize:14.0f]
 														   forKey:NSFontAttributeName] retain];
 		}
-		NSAttributedString *title = [[NSAttributedString alloc] initWithString:[listObject formattedUID]
+		NSAttributedString *title = [[NSAttributedString alloc] initWithString:[listObject displayName]
 																	attributes:titleAttributes];
 		[menuItem setAttributedTitle:title];
 		[title release];		
@@ -183,7 +193,7 @@
 			
 			//Update the changed menu item (or rebuild the entire menu if this item should be removed or added)
 			if (delegateRespondsToShouldIncludeContact &&
-			   ([delegate contactMenu:self shouldIncludeContact:(AIListContact *)inObject] != (menuItem == nil))) {
+			   ([delegate contactMenu:self shouldIncludeContact:(AIListContact *)inObject] != (menuItem != nil))) {
 				[self rebuildMenu];
 			} else {
 				[self _updateMenuItem:menuItem];
