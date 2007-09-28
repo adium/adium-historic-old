@@ -151,6 +151,7 @@
 	[theContactsMenu release];
 	[unviewedObjectsArray release];
 	[accountMenu release];
+	[contactMenu release];
 	[statusMenu release];
 	[menuIcons release];
 	
