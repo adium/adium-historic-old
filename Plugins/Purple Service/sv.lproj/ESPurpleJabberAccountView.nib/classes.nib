@@ -29,6 +29,8 @@
                 "checkBox_forceOldSSL" = NSButton; 
                 "checkBox_useTLS" = NSButton; 
                 "textField_connectServer" = NSTextField; 
+                "textField_priorityAvailable" = NSTextField; 
+                "textField_priorityAway" = NSTextField; 
                 "textField_resource" = NSTextField; 
             }; 
             SUPERCLASS = AIAccountViewController; 
