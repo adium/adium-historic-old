@@ -47,6 +47,11 @@
             OUTLETS = {delegate = id; }; 
             SUPERCLASS = NSImageView; 
         }, 
+        {
+            CLASS = ESPurpleGaduGaduAccountViewController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIAccountViewController; 
+        }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSTextField; LANGUAGE = ObjC; SUPERCLASS = NSControl; }
     ); 
