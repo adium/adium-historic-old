@@ -191,7 +191,15 @@
     //loop through each emoticon and add a menu item for each
     while ((anEmoticon = [emoteEnum nextObject])) {
         if ([anEmoticon isEnabled] == YES) {
-            NSMenuItem *newItem = [[NSMenuItem alloc] initWithTitle:[anEmoticon name]
+			NSArray *textEquivalents = [anEmoticon textEquivalents];
+			NSString *textEquivalent;
+			if ([textEquivalents count]) {
+				textEquivalent = [textEquivalents objectAtIndex:0];
+			} else {
+				textEquivalent = @"";
+			}
+			NSString *menuTitle = [NSString stringWithFormat:@"%@ %@",[anEmoticon name],textEquivalent];
+			NSMenuItem *newItem = [[NSMenuItem alloc] initWithTitle:menuTitle
                                                              target:self
                                                              action:@selector(insertEmoticon:)
                                                       keyEquivalent:@""];
