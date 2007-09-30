@@ -81,8 +81,6 @@
 	historyArray = [[NSMutableArray alloc] initWithObjects:@"",nil];
 	pushArray = [[NSMutableArray alloc] init];
 	currentHistoryLocation = 0;
-	currentString = [[NSMutableString alloc] init];
-	textString = [[NSMutableString alloc] init];
 	[self setDrawsBackground:YES];
 	_desiredSizeCached = NSMakeSize(0,0);
 	
@@ -146,9 +144,6 @@
     [associatedView release];
     [historyArray release]; historyArray = nil;
     [pushArray release]; pushArray = nil;
-	[currentString release];
-	[textString release];
-	[lastUser release];
 
     [super dealloc];
 }
@@ -243,24 +238,13 @@
 			}
 
 		} else if (inChar == NSTabCharacter) {
-			//autocomplete username
-			if([self completeUserName] == @"") {
-				if ([[self delegate] respondsToSelector:@selector(textViewShouldTabComplete:)] &&
-					[[self delegate] textViewShouldTabComplete:self]) {
-					[self complete:nil];
-				} else {
-					[super keyDown:inEvent];				
-				} 
+			if ([[self delegate] respondsToSelector:@selector(textViewShouldTabComplete:)] &&
+				[[self delegate] textViewShouldTabComplete:self]) {
+				[self complete:nil];
 			} else {
-				//erase last word & add username
-				if([self selectedRange].length > 0) {
-					[[self textStorage]replaceCharactersInRange:NSMakeRange([[[self textStorage] string] length] - [self selectedRange].length,[self selectedRange].length) withString:[self completeUserName]];
-					[self setSelectedRange:NSMakeRange([[[self textStorage] string] length] - [[self completeUserName] length], [[self completeUserName] length])];
-				} else {
-					[[self textStorage]replaceCharactersInRange:NSMakeRange([[[self textStorage] string] length] - [currentString length], [currentString length]) withString:[self completeUserName]];
-					[self setSelectedRange:NSMakeRange([[[self textStorage] string] length] - [[self completeUserName] length], [[self completeUserName] length])];
-				}
-			}
+				[super keyDown:inEvent];				
+			} 
+
 		} else {
 			[super keyDown:inEvent];
 		}
@@ -279,24 +263,7 @@
 	}
 
     //Reset cache and resize
-	[self _resetCacheAndPostSizeChanged];
-	
-#warning Username completion
-	//set the current string - for username completion
-	[textString setString:[[self textStorage] string]];
-
-	
-	if([textString length] > 0) {
-		NSString* enteredCharacters = [[NSString alloc] initWithString:[textString substringFromIndex:([textString length]  -1)]];
-		if([enteredCharacters isEqualTo:@" "] || [enteredCharacters isEqualTo:@"	"]) {
-			[currentString setString:@""];
-		} else {
-			[currentString appendString:enteredCharacters];
-		}
-	} else {
-		[currentString setString:@""];
-	}
-
+	[self _resetCacheAndPostSizeChanged];	
 }
 
 /*!
@@ -1271,49 +1238,6 @@
 				changeInLength:0];
 }
 
-#pragma mark tab completion
--(NSString*)completeUserName
-{
-#warning Duplicative - equivalent code is also in AIMessageViewController
-	if([currentString length] > 0) {
-		//complete name of user from userlist
-		//cycle through the array of users in the chat, and find the first possible match
-		NSArray* userlist = [[NSArray alloc] initWithArray:[[self chat] containedObjects]];
-		NSEnumerator *userEnumerator = [userlist objectEnumerator];
-		AIListContact* currentUser;
-		int index;
-		int count=0;
-		int startAtIndex = 0;
-		
-		//look for the last completed user
-		if(lastUser) {
-			while((currentUser = [userEnumerator nextObject])) {
-				count++;
-				if([currentUser isEqualTo:lastUser]) {
-					if([[self chat] isGroupChat] == YES) {
-						startAtIndex = count; 
-					} else {
-						startAtIndex = (count-1);
-					}
-				}
-			}
-		}
-
-		//start from index of last completed user
-		if(startAtIndex == [userlist count]) {
-			startAtIndex = 0;
-		}
-		
-		for(index=startAtIndex; index < [userlist count] ; index++) {
-			if([[[[userlist objectAtIndex:index] displayName] substringToIndex:[currentString length]] isEqualTo:currentString]) {
-				lastUser = [userlist objectAtIndex:index];
-
-				return [[[userlist objectAtIndex:index] displayName] stringByAppendingString:@":"];
-			}
-		}
-	}
-	return @"";
-}
 @end
 
 @implementation NSMutableAttributedString (AIMessageEntryTextViewAdditions)

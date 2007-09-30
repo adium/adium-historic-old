@@ -46,11 +46,6 @@
 	BOOL				 resizing;
     
     NSView              *associatedView;
-	
-	//string to hold current word user is typing
-	NSMutableString			*currentString;
-	NSMutableString			*textString;
-	AIListContact			*lastUser;
 }
 
 //Configure
