@@ -1654,7 +1654,18 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
 		return NO;
 		
 	} else if (menuItem == menuItem_paste || menuItem == menuItem_pasteAndMatchStyle || menuItem == menuItem_pasteWithImagesAndColors) {
-		return [[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSStringPboardType, NSRTFPboardType, NSTIFFPboardType, NSPICTPboardType, NSPDFPboardType, NSURLPboardType, NSFilenamesPboardType, NSFilesPromisePboardType, NSRTFDPboardType, nil]] != nil;
+
+		//The user can paste if the pasteboard contains an image, some text, one or more files, or one or more URLs.
+		NSPasteboard *pboard = [NSPasteboard generalPasteboard];
+		NSArray *nonImageTypes = [NSArray arrayWithObjects:
+			NSStringPboardType,
+			NSRTFPboardType,
+			NSURLPboardType,
+			NSFilenamesPboardType,
+			NSFilesPromisePboardType,
+			NSRTFDPboardType,
+			nil];
+		return ([pboard availableTypeFromArray:nonImageTypes] != nil) || [NSImage canInitWithPasteboard:pboard];
 	
 	} else if (menuItem == menuItem_showToolbar) {
 		[menuItem_showToolbar setTitle:([[keyWindow toolbar] isVisible] ? 
