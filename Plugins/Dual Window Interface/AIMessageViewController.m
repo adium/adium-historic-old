@@ -243,9 +243,6 @@
 
 	[view_accountSelection setLeftColor:leftColor rightColor:rightColor];
 	[splitView_textEntryHorizontal setLeftColor:leftColor rightColor:rightColor];
-
-	//XXX CHANGE STUFF HERE!! - eb
-	//	[splitView_messages setLeftColor:leftColor rightColor:rightColor];
 }
 
 /*!
@@ -689,8 +686,8 @@
 	entryMinHeight = [[[adium preferenceController] preferenceForKey:KEY_ENTRY_TEXTVIEW_MIN_HEIGHT
 															   group:PREF_GROUP_DUAL_WINDOW_INTERFACE] intValue];
 	if (entryMinHeight < ENTRY_TEXTVIEW_MIN_HEIGHT) entryMinHeight = ENTRY_TEXTVIEW_MIN_HEIGHT;
+	AILogWithSignature(@"entryMinHeight is %i",entryMinHeight);
 
-	
 	//Associate the view with our message view so it knows which view to scroll in response to page up/down
 	//and other special key-presses.
 	[textView_outgoing setAssociatedView:[messageDisplayController messageScrollView]];
@@ -704,6 +701,8 @@
 											 selector:@selector(outgoingTextViewDesiredSizeDidChange:)
 												 name:AIViewDesiredSizeDidChangeNotification 
 											   object:textView_outgoing];
+
+	[self _updateTextEntryViewHeight];
 }
 
 /*!
@@ -791,11 +790,8 @@
 		changed = YES;
 	}
 
-	if (changed) {		
-		//Redisplay the window on the next run loop
-		[[splitView_textEntryHorizontal window] performSelector:@selector(display)
-													 withObject:nil
-													 afterDelay:0];
+	if (changed) {
+		[splitView_textEntryHorizontal adjustSubviews];
 	}
 }
 
@@ -1085,10 +1081,9 @@
 		return ([sender frame].size.height - ([self _textEntryViewProperHeightIgnoringUserMininum:YES] +
 											 [sender dividerThickness]));
 
-	} else /*if (sender == splitView_messages)*/ {
-		return ([sender frame].size.width - ([self _userListViewProperWidthIgnoringUserMininum:YES] +
-											[sender dividerThickness]));
-		
+	} else {
+		NSLog(@"Unknown split view %@",sender);
+		return 0;
 	}
 }
 
@@ -1102,9 +1097,9 @@
 	if (sender == splitView_textEntryHorizontal) {
 		return (int)([sender frame].size.height * MESSAGE_VIEW_MIN_HEIGHT_RATIO);
 		
-	} else /*if (sender == splitView_messages)*/ {
-		return (int)([sender frame].size.width * MESSAGE_VIEW_MIN_WIDTH_RATIO);
-		
+	} else {
+		NSLog(@"Unknown split view %@",sender);
+		return 0;
 	}
 }
 
@@ -1113,14 +1108,14 @@
  *
  * Remember the user's choice of text entry view height.
  */
-- (float)splitView:(NSSplitView *)splitView constrainSplitPosition:(float)proposedPosition ofSubviewAt:(int)index
+- (float)splitView:(NSSplitView *)sender constrainSplitPosition:(float)proposedPosition ofSubviewAt:(int)index
 {
-	if (splitView == splitView_textEntryHorizontal) {
-		entryMinHeight = (int)([splitView frame].size.height - (proposedPosition + [splitView dividerThickness]));
-		
-	} else /*if (splitView == splitView_messages)*/ {
-		userListMinWidth = (int)([splitView frame].size.width - (proposedPosition + [splitView dividerThickness]));
-
+	if (sender == splitView_textEntryHorizontal) {
+		entryMinHeight = (int)([sender frame].size.height - (proposedPosition + [sender dividerThickness]));
+		AILogWithSignature(@"entryMinHeight is now %i",entryMinHeight);
+	} else {
+		NSLog(@"Unknown split view %@",sender);
+		return 0;
 	}
 	
 	return proposedPosition;
@@ -1134,55 +1129,9 @@
 	if (sender == splitView_textEntryHorizontal) {
 		return NO;
 		
-	} else /*if (sender == splitView_messages)*/ {
-		return subview == scrollView_userList;
-		
-	}
-}
-
-/* 
- * @brief Manually adjust the split views during resize
- *
- * The default resizing behavior does an absolutely horrible job of maintaining proportionality when the
- * window is resized in odd increments.  To combat this and provide nice behavior such as not changing the
- * height of the text entry area unless necessary while resizing, we use completely custom view sizing code
- * for our split panes.
- */
-- (void)splitView:(NSSplitView *)sender resizeSubviewsWithOldSize:(NSSize)oldSize
-{		
-	if ([[sender subviews] count] == 2) {
-		NSView	*view1 = [[sender subviews] objectAtIndex:0];
-		NSView	*view2 = [[sender subviews] objectAtIndex:1];
-		
-		//Change in width and height
-		NSSize	newSize = [sender frame].size;
-		int		dWidth  = newSize.width - oldSize.width;
-		int		dHeight = newSize.height - oldSize.height;
-
-		//Behavior varies depending on which split view is resizing
-		if (sender == splitView_textEntryHorizontal) {
-		
-			//Adjust the height of both views
-			[self _updateTextEntryViewHeight];
-
-			//Adjust the width of both views to fill remaining space
-			[view1 setFrameSize:NSMakeSize(newSize.width + dWidth, [view1 frame].size.height)];
-			[view2 setFrameSize:NSMakeSize(newSize.width + dWidth, [view2 frame].size.height)];
-			
-		} else /*if (sender == splitView_messages)*/{
-
-
-			[self _updateUserListViewWidth];
-			
-			//Adjust the height of all splitviews
-			[view1 setFrameSize:NSMakeSize([view1 frame].size.width, newSize.height + dHeight)];
-			[view2 setFrameSize:NSMakeSize([view2 frame].size.width, newSize.height + dHeight)];
-			
-		}
-		
-	} else if ([[sender subviews] count] == 1) {
-		[[[sender subviews] objectAtIndex:0] setFrame:[sender frame]];
-		
+	} else {
+		NSLog(@"Unknown split view %@",sender);
+		return 0;
 	}
 }
 
