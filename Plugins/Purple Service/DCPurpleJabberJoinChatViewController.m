@@ -99,15 +99,12 @@
 	NSString		*handle = [textField_handle stringValue];
 	NSString		*password = [textField_password stringValue];
 	NSString		*invitemsg = [textField_inviteMessage stringValue];
-	NSDictionary	*chatCreationInfo;
+	NSMutableDictionary	*chatCreationInfo;
 			
-	if (!handle || ![handle length])
-		handle = [inAccount UID];
+	if (![handle length]) handle = [inAccount formattedUID];
+	if (![password length]) password = nil;
 	
-	if (![password length])
-		password = nil;
-	
-	if (!server || ![server length]) {
+	if (![server length]) {
 		//If no server is specified, use the default, which may be visible to the user as a placeholder string
 		server = [self defaultConferenceServer];
 
@@ -118,18 +115,15 @@
 		}
 	}
 	
+	chatCreationInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+						room, @"room",
+						server, @"server",
+						handle, @"handle",
+						nil];
+	
 	if (password) {
-		chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-			room, @"room",
-			server, @"server",
-			handle, @"handle",
-			password, @"password",nil];
-
-	} else {
-		chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-			room, @"room",
-			server, @"server",
-			handle, @"handle",nil];
+		[chatCreationInfo setObject:password
+							 forKey:@"password"];
 	}
 
 	[self doJoinChatWithName:[NSString stringWithFormat:@"%@@%@",room,server]
