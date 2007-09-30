@@ -33,7 +33,6 @@
 *   returns the shared instance of AIErrorController
 */
 static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
-//static NSDictionary					*boldErrorTitleAttributes = nil;
 
 + (id)errorMessageWindowController
 {
@@ -96,14 +95,6 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
     //init
     [super initWithWindowNibName:windowNibName];
 
-	/*
-	if (!boldErrorTitleAttributes) {
-		boldErrorTitleAttributes = [[NSDictionary dictionaryWithObject:[[NSFontManager defaultManager] convertFont:[NSFont systemFontOfSize:0] 
-																									   toHaveTrait:NSBoldFontMask]
-																forKey:NSFontAttributeName] retain];
-	}
-	*/
-	
     errorTitleArray = [[NSMutableArray alloc] init];
     errorDescArray =  [[NSMutableArray alloc] init];
     errorWindowTitleArray = [[NSMutableArray alloc] init];
