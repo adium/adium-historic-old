@@ -295,10 +295,10 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 
 -(void)setShelfIsVisible:(BOOL)visible{
 	if( shelfView ){
-		if( isShelfVisible ){
+		if( isShelfVisible && !visible ){
 			[shelfView retain];
 			[shelfView removeFromSuperview];
-		}else{
+		} else if( !isShelfVisible && visible ){
 			[self addSubview: shelfView];
 			[shelfView release];
 		}
