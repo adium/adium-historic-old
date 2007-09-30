@@ -411,10 +411,6 @@
 			[chat setStatusObject:chatCreationInfo
 						   forKey:@"ChatCreationInfo"
 					       notify:NotifyNever];
-				
-		[chat setStatusObject:[NSNumber numberWithBool:YES]
-					   forKey:@"AlwaysShowUserList"
-					   notify:NotifyNever];
 		}
 		//Inform the account of its creation
 		if (![account openChat:chat]) {
