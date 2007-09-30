@@ -603,6 +603,7 @@
 		34C899AC07E51B18009357F6 /* BuiltInEventPresets.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34C899AB07E51B18009357F6 /* BuiltInEventPresets.plist */; };
 		34C91BBB0CA8909700740974 /* AIContentNotification.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C91BB90CA8909700740974 /* AIContentNotification.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34C91BBC0CA8909700740974 /* AIContentNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C91BBA0CA8909700740974 /* AIContentNotification.m */; };
+		34CA15530CAFDFB2009AA5E3 /* sidebarActionWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = 34CA15520CAFDFB2009AA5E3 /* sidebarActionWidget.png */; };
 		34CA22300A671BEF00B11032 /* PersonalPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34CA222F0A671BEF00B11032 /* PersonalPreferences.nib */; };
 		34CAA3FB0BD3998E00AE92DC /* ESPurpleOscarAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB41C08086D9100E27095 /* ESPurpleOscarAccountView.nib */; };
 		34CEBE6306F117DF00A89DDE /* ESContactInfoListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */; };
@@ -2999,6 +3000,7 @@
 		34C9A6370822930D004F912C /* ESPurpleMeanwhileContactAdditionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESPurpleMeanwhileContactAdditionController.m; path = "Plugins/Purple Service/ESPurpleMeanwhileContactAdditionController.m"; sourceTree = "<group>"; };
 		34C9A64408229348004F912C /* PurpleMeanwhileContactAdditionWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = PurpleMeanwhileContactAdditionWindow.nib; path = "Plugins/Purple Service/PurpleMeanwhileContactAdditionWindow.nib"; sourceTree = "<group>"; };
 		34C9EC40099FA2A8007ECAB3 /* DefaultBlockedStatusIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DefaultBlockedStatusIcon.png; path = "Frameworks/Adium Framework/DefaultBlockedStatusIcon.png"; sourceTree = "<group>"; };
+		34CA15520CAFDFB2009AA5E3 /* sidebarActionWidget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sidebarActionWidget.png; path = Resources/sidebarActionWidget.png; sourceTree = "<group>"; };
 		34CA23990A671E0E00B11032 /* ca */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ca; path = Resources/ca.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
 		34CA239A0A671E1500B11032 /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
 		34CA239B0A671E2100B11032 /* da */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = da; path = Resources/da.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
@@ -4832,6 +4834,7 @@
 				34A9706E0C965F8E00F46006 /* AIAddBookmarkPlugin.h */,
 				34A9706D0C965F8E00F46006 /* AIAddBookmarkPlugin.m */,
 				34A970730C965FC800F46006 /* AddBookmark.nib */,
+				34CA15520CAFDFB2009AA5E3 /* sidebarActionWidget.png */,
 				34A9707D0C96602200F46006 /* sidebarStatusAreaBackground.png */,
 				34A970750C965FE400F46006 /* sidebarResizeWidget.png */,
 				34A970770C965FF600F46006 /* MessagePrompt.nib */,
@@ -8253,6 +8256,7 @@
 				34A9707C0C96601000F46006 /* BanPrompt.nib in Resources */,
 				34A9707E0C96602300F46006 /* sidebarStatusAreaBackground.png in Resources */,
 				345DA0680CA09AD0009F1989 /* Statuses.strings in Resources */,
+				34CA15530CAFDFB2009AA5E3 /* sidebarActionWidget.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
