@@ -114,10 +114,6 @@
 									  onAccount:inAccount
 							   chatCreationInfo:inInfo];
 
-	
-	
-	
-
 	if ([contactsToInvite count]) {
 		[chat setStatusObject:contactsToInvite forKey:@"ContactsToInvite" notify:NotifyNever];
 		
