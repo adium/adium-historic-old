@@ -157,9 +157,47 @@ static void *adiumPurpleNotifyUserinfo(PurpleConnection *gc, const char *who,
 
 static void *adiumPurpleNotifyUri(const char *uri)
 {
+	AILogWithSignature(@"Opening URI %s",uri);
+
 	if (uri) {
-		NSURL   *notifyURI = [NSURL URLWithString:[NSString stringWithUTF8String:uri]];
-		[[NSWorkspace sharedWorkspace] openURL:notifyURI];
+		NSString *passedURI = [NSString stringWithUTF8String:uri];
+
+		if ([passedURI hasPrefix:[NSString stringWithUTF8String:g_get_tmp_dir()]] ||
+			[passedURI hasPrefix:NSTemporaryDirectory()]) {
+			NSString *actualURI = passedURI;
+
+			if (![[passedURI pathExtension] length]) {
+				actualURI = [passedURI stringByAppendingPathExtension:@"htm"];
+				[[NSFileManager defaultManager] copyPath:passedURI
+												  toPath:actualURI
+												 handler:nil];
+			}
+		
+			FSRef appRef;
+			
+			//Open the HTML file with a web browser, not with an HTML editor
+			if (LSGetApplicationForURL((CFURLRef)[NSURL URLWithString:@"http://google.com"],
+									   kLSRolesViewer,
+									   &appRef,
+									   NULL) != kLSApplicationNotFoundErr) {
+				FSRef urlRef;
+
+				if (FSPathMakeRef((UInt8 *)[actualURI fileSystemRepresentation], &urlRef, NULL) == noErr) {
+					LSLaunchFSRefSpec spec;
+					
+					spec.appRef = &appRef;
+					spec.numDocs = 1;
+					spec.itemRefs = &urlRef;
+					spec.passThruParams = NULL;
+					spec.launchFlags = kLSLaunchDontAddToRecents | kLSLaunchAsync;
+					spec.asyncRefCon = NULL;
+					
+					LSOpenFromRefSpec(&spec, NULL);				
+				}
+			}
+		} else {
+			[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:passedURI]];
+		}
 	}
 	
     return NULL;
