@@ -141,6 +141,7 @@
 	 *
 	 * Something is wrong elsewhere that this could be necessary, but this doesn't hurt I don't believe.
 	 */
+	[[self window] setDelegate:nil];
 	[self setWindow:nil];
 
     [tabView_tabBar setDelegate:nil];
