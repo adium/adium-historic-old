@@ -62,7 +62,7 @@ static NSMutableDictionary	*proxyPasswordPromptControllerDict = nil;
 
 - (id)initWithWindowNibName:(NSString *)windowNibName forProxyServer:(NSString *)inServer userName:(NSString *)inUserName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
-	if ((self = [super initWithWindowNibName:windowNibName notifyingTarget:inTarget selector:inSelector context:inContext])) {
+	if ((self = [super initWithWindowNibName:windowNibName password:nil notifyingTarget:inTarget selector:inSelector context:inContext])) {
 		server   = [inServer   retain];
 		userName = [inUserName retain];
 	}

@@ -119,11 +119,12 @@
  * @brief Retrieve the password of an account, prompting the user if necessary
  *
  * @param inAccount account whose password is desired
+ * @param forceDisplay If YES, a password prompt will be shown even if a stored password is available. If NO, it will only be displayed if no password is stored.
  * @param inTarget target to notify when password is available
  * @param inSelector selector to notify when password is available
  * @param inContext context passed to target
  */
-- (void)passwordForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
+- (void)passwordForAccount:(AIAccount *)inAccount forcePromptDisplay:(BOOL)forceDisplay notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
 	NSError		*error    = nil;
 	AIKeychain	*keychain = [AIKeychain defaultKeychain_error:&error];
@@ -142,12 +143,13 @@
 		}
 	}
 	
-	if (password && [password length] != 0) {
+	if (password && [password length] && !forceDisplay) {
 		//Invoke the target right away
 		[inTarget performSelector:inSelector withObject:password withObject:inContext afterDelay:0.0001];
 	} else {
 		//Prompt the user for their password
 		[ESAccountPasswordPromptController showPasswordPromptForAccount:inAccount
+															   password:password
 														notifyingTarget:inTarget
 															   selector:inSelector
 																context:inContext];
