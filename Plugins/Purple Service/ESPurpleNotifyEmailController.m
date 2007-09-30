@@ -98,8 +98,8 @@
 			
 			fieldFont =  [fontManager convertFont:messageFont
 									  toHaveTrait:NSBoldFontMask];
-			fieldAttributed = [NSDictionary dictionaryWithObjectsAndKeys:fieldFont,NSFontAttributeName,nil];
-			infoAttributed = [NSDictionary dictionaryWithObjectsAndKeys:messageFont,NSFontAttributeName,nil];
+			fieldAttributed = [NSDictionary dictionaryWithObject:fieldFont forKey:NSFontAttributeName];
+			infoAttributed = [NSDictionary dictionaryWithObject:messageFont forKey:NSFontAttributeName];
 			
 			//Skip a line
 			[[message mutableString] appendString:@"\n\n"];

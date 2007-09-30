@@ -1280,13 +1280,14 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
     //Configure fonts and attributes
     NSFontManager                       *fontManager = [NSFontManager sharedFontManager];
     NSFont                              *toolTipsFont = [NSFont toolTipsFontOfSize:10];
-    NSMutableDictionary                 *titleDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-        [fontManager convertFont:[NSFont toolTipsFontOfSize:12] toHaveTrait:NSBoldFontMask],NSFontAttributeName, nil];
-    NSMutableDictionary                 *labelDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-        [fontManager convertFont:[NSFont toolTipsFontOfSize:9] toHaveTrait:NSBoldFontMask], NSFontAttributeName, nil];
-    NSMutableDictionary                 *labelEndLineDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:2] , NSFontAttributeName, nil];
-    NSMutableDictionary                 *entryDict =[NSMutableDictionary dictionaryWithObjectsAndKeys:
-        toolTipsFont, NSFontAttributeName, nil];
+    NSMutableDictionary                 *titleDict = [NSMutableDictionary dictionaryWithObject:[fontManager convertFont:[NSFont toolTipsFontOfSize:12] toHaveTrait:NSBoldFontMask]
+	                                                                                    forKey:NSFontAttributeName];
+    NSMutableDictionary                 *labelDict = [NSMutableDictionary dictionaryWithObject:[fontManager convertFont:[NSFont toolTipsFontOfSize:9] toHaveTrait:NSBoldFontMask]
+	                                                                                    forKey:NSFontAttributeName];
+    NSMutableDictionary                 *labelEndLineDict = [NSMutableDictionary dictionaryWithObject:[NSFont toolTipsFontOfSize:2]
+	                                                                                           forKey:NSFontAttributeName];
+    NSMutableDictionary                 *entryDict = [NSMutableDictionary dictionaryWithObject:toolTipsFont
+	                                                                                    forKey:NSFontAttributeName];
 	
 	//Get the user's display name as an attributed string
     NSAttributedString                  *displayName = [[NSAttributedString alloc] initWithString:[object displayName]
@@ -1400,11 +1401,12 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
     //Configure fonts and attributes
     NSFontManager                   *fontManager = [NSFontManager sharedFontManager];
     NSFont                          *toolTipsFont = [NSFont toolTipsFontOfSize:10];
-    NSMutableDictionary             *labelDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-        [fontManager convertFont:[NSFont toolTipsFontOfSize:9] toHaveTrait:NSBoldFontMask], NSFontAttributeName, nil];
-    NSMutableDictionary             *labelEndLineDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:1], NSFontAttributeName, nil];
-    NSMutableDictionary             *entryDict =[NSMutableDictionary dictionaryWithObjectsAndKeys:
-        toolTipsFont, NSFontAttributeName, nil];
+    NSMutableDictionary             *labelDict = [NSMutableDictionary dictionaryWithObject:[fontManager convertFont:[NSFont toolTipsFontOfSize:9] toHaveTrait:NSBoldFontMask]
+	                                                                                forKey:NSFontAttributeName];
+    NSMutableDictionary             *labelEndLineDict = [NSMutableDictionary dictionaryWithObject:[NSFont toolTipsFontOfSize:1]
+	                                                                                       forKey:NSFontAttributeName];
+    NSMutableDictionary             *entryDict = [NSMutableDictionary dictionaryWithObject:toolTipsFont
+	                                                                                forKey:NSFontAttributeName];
     
     //Entries from plugins
     id <AIContactListTooltipEntry>  tooltipEntry;
