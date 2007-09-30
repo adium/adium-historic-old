@@ -14,9 +14,9 @@
 # - make all
 ###########
 
-VERSION=1.1.3b5
-BUILD_IN_DEBUG_MODE=TRUE
-BETA=TRUE
+VERSION=1.1.3
+BUILD_IN_DEBUG_MODE=FALSE
+BETA=FALSE
 
 ###########
 # To release!
