@@ -22,12 +22,17 @@
 #define 	PASSWORD_PROMPT_NIB 		@"PasswordPrompt"
 #define		KEY_PASSWORD_WINDOW_FRAME	@"Password Prompt Frame"
 
+@interface AIPasswordPromptController (PRIVATE)
+- (void)setPassword:(NSString *)password;
+@end
+
 @implementation AIPasswordPromptController
 
-- (id)initWithWindowNibName:(NSString *)windowNibName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
+- (id)initWithWindowNibName:(NSString *)windowNibName password:(NSString *)inPassword notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
     if ((self = [super initWithWindowNibName:windowNibName])) {
 		[self setTarget:inTarget selector:inSelector context:inContext];
+		[self setPassword:inPassword];
 	}
 
     return self;
@@ -48,6 +53,13 @@
 	}
 }
 
+- (void)setPassword:(NSString *)inPassword
+{
+	if (password != inPassword) {
+		[password release];
+		password = [inPassword copy];
+	}
+}
 
 - (void)dealloc
 {
@@ -60,7 +72,9 @@
 - (void)windowDidLoad
 {
 	[[self window] center];
-	
+
+	[textField_password setStringValue:(password ? password : @"")];
+
 	[super windowDidLoad];
 }
 
