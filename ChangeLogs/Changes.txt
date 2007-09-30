@@ -1,6 +1,6 @@
 				Adium X Version History
 				-----------------------
-Version 1.1.3
+Version 1.1.3 (9/30/2007)
  * Fixed a crash when canceling addition of a Bonjour account (#7523)
  * Added support for serverside aliases in Yahoo
  * Fixed an issue in which accounts which were created with Adium 0.6x would disappear when upgrading to Adium 1.1.x
@@ -11,15 +11,17 @@ Version 1.1.3
  * Fixed a crash when importing certain Fire chat transcripts with invalid XML (#6655)
  * Improved display of long names in the Smooth Operator message style
  * Fixed a visual glitch after clicking the Add button in the Accounts preferences (#7539)
- * Updated to [http://growl.info Growl 1.1.1].  You will be prompted to upgrade your Growl installation when Growl is first used.
- * Updated to [http://pidgin.im Libpurple 2.2.0].
+ * Fixed the iChat Emoticon set in Mac OS X 10.5
+ * Updated to [http://pidgin.im Libpurple 2.2.1].
    * Added MySpaceIM Service
-   * Some of the XMPP improvements by Andy Monitzer from this year's Google Smmer of Code. Most will follow in Adium 1.2.
+   * Some of the XMPP improvements by Andy Monitzer from this year's Google Smmer of Code. Others will follow in Adium 1.2.
    * Fixed sending messages when using the MSN HTTP method
    * Fixed Yahoo! group chats
    * Improved AIM file transfer
+   * Fixed an erroneous size display for MSN file transfers. (galt)
+   * Fixed multiple memory leaks
    * Fixed an issue with idle status and time for AIM and ICQ accounts
- * Swedish updates
+ * French, Dutch, and Swedish updates
  
 Version 1.1.2 (9/3/2007)
  * Added preference to turn off the contact list animations (Preferences->Advanced->Contact List)
