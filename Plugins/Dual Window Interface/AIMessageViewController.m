@@ -97,8 +97,7 @@
  */
 - (id)initForChat:(AIChat *)inChat
 {
-    if ((self = [super init]))
-	{
+    if ((self = [super init])) {
 		AIListContact	*contact;
 		//Init
 		chat = [inChat retain];
@@ -138,27 +137,34 @@
 										 object:chat];
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(toggleUserlist:)
-									   name:@"toggleUserlist"
-									   object:nil];
-
-		[splitView_textEntryHorizontal setDividerThickness:6]; //Default is 9
+										   name:@"toggleUserlist"
+										 object:nil];
+		
+		[splitView_textEntryHorizontal setDividerThickness:3]; //Default is 9
 		[splitView_textEntryHorizontal setDrawsDivider:NO];
+		
+		//Observe general preferences for sending keys
+		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GENERAL];
+
+		/* Update chat status and participating list objects to configure the user list if necessary
+		 * Call chatParticipatingListObjectsChanged first, which will set up the user list. This allows other sizing to match.
+		 */
+		[self setUserListVisible:[chat isGroupChat]];
+		
+		[self chatParticipatingListObjectsChanged:nil];
+		[self chatStatusChanged:nil];
 		
 		//Configure our views
 		[self _configureMessageDisplay];
 		[self _configureTextEntryView];
-		
-		//Update chat status and participating list objects to configure the user list if necessary
-		[self chatStatusChanged:nil];
-		[self chatParticipatingListObjectsChanged:nil];
-		
+
 		//Set our base writing direction
-		if (contact)
+		if (contact) {
 			[textView_outgoing setBaseWritingDirection:[contact baseWritingDirection]];
 		}
-		//Observe general preferences for sending keys
-		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GENERAL];
-	    return self;
+	}
+
+	return self;
 }
 
 /*!
@@ -235,10 +241,11 @@
 			break;
 	}
 
-	//CHANGE STUFF HERE!! - eb
 	[view_accountSelection setLeftColor:leftColor rightColor:rightColor];
-//	[splitView_textEntryHorizontal setLeftColor:leftColor rightColor:rightColor];
-//	[splitView_messages setLeftColor:leftColor rightColor:rightColor];
+	[splitView_textEntryHorizontal setLeftColor:leftColor rightColor:rightColor];
+
+	//XXX CHANGE STUFF HERE!! - eb
+	//	[splitView_messages setLeftColor:leftColor rightColor:rightColor];
 }
 
 /*!
@@ -668,8 +675,8 @@
 	//Configure the text entry view
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
 
-	//XXX This is necessary for tab completion, but Strange Things Happen. Probably reveals a dormant bug elsewhere.
-	//[textView_outgoing setDelegate:self];
+	//This is necessary for tab completion.
+	[textView_outgoing setDelegate:self];
     
 	[textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
     if ([textView_outgoing respondsToSelector:@selector(setUsesFindPanel:)]) {
@@ -899,7 +906,9 @@
  * @brief Show the user list
  */
 - (void)_showUserListView
-{
+{	
+	[self setupShelfView];
+
 	//Configure the user list
 	[self _configureUserList];
 
@@ -912,8 +921,6 @@
 			retainingScrollViewUserList = NO;
 		}
 	}
-	
-	[self setupShelfView];
 }
 
 /*!
@@ -934,8 +941,6 @@
 	
 		//need to collapse the splitview
 		[shelfView setShelfIsVisible:NO];
-		//set remaining views to fill up the space
-		[splitView_textEntryHorizontal setFrame:[[shelfView superview]frame]];
 	}
 }
 
@@ -958,8 +963,8 @@
 		[userListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
 		[userListController setContactListRoot:chat];
 		[userListController setHideRoot:YES];
-		NSLog(@"%@ with root %@ - user list %@ in scroll view %@",userListController,chat,
-		userListView,scrollView_userList);
+		AILogWithSignature(@"%@ with root %@ - user list %@ in scroll view %@",userListController,chat,
+						   userListView,scrollView_userList);
 
 		//User's choice of mininum width for their user list view
 		userListMinWidth = [[[adium preferenceController] preferenceForKey:KEY_ENTRY_USER_LIST_MIN_WIDTH
@@ -979,12 +984,9 @@
  */
 - (void)chatParticipatingListObjectsChanged:(NSNotification *)notification
 {
-    //We display the user list if it contains more than one user, or if someone has specified that it be visible
-	[self setUserListVisible:([chat integerStatusObjectForKey:@"AlwaysShowUserList"] ||
-							  [chat containedObjectsCount] > 1)];
-	
     //Update the user list
-	AILogWithSignature(@"%i, so %@",[self userListVisible], ([self userListVisible] ? @"reloading" : @"not reloading"));
+	AILogWithSignature(@"%i, so %@ %@",[self userListVisible], ([self userListVisible] ? @"reloading" : @"not reloading"),
+					   userListController);
     if ([self userListVisible]) {
         [userListController reloadData];
     }
@@ -1183,19 +1185,25 @@
 		
 	}
 }
+
 #pragma mark Shelfview
 /* @name	setupShelfView
  * @brief	sets up shelfsplitview containing userlist & contentviews
  */
  -(void)setupShelfView
  {
- 	[shelfView setFrame:[[shelfView superview] frame]];
 	[shelfView setContentView:splitView_textEntryHorizontal];
 	[shelfView setShelfView:scrollView_userList];
 	[shelfView setShelfWidth:200];
-	
-	if([[[self chat] menuForChat] numberOfItems] > 0) {
-		[shelfView setContextButtonMenu:[[self chat] menuForChat]];
+
+	 AILogWithSignature(@"ShelfView %@ --> superview %@, in window %@; frame %@; content view %@ shelf view %@ in window %@",
+						shelfView, [shelfView superview], [shelfView window], NSStringFromRect([[shelfView superview] frame]),
+						splitView_textEntryHorizontal,
+						scrollView_userList, [scrollView_userList window]);
+	 
+	 NSMenu *menu = [[self chat] menuForChat];
+	if([menu numberOfItems] > 0) {
+		[shelfView setContextButtonMenu:menu];
 		[shelfView setContextButtonImage:[NSImage imageNamed:@"sidebarActionWidget.png"]];
 	}
 	[shelfView setShelfIsVisible:YES];
@@ -1206,11 +1214,7 @@
  */
 -(void)toggleUserlist:(id)sender
 {	
-		[shelfView setShelfIsVisible:![shelfView isShelfVisible]];
+	[shelfView setShelfIsVisible:![shelfView isShelfVisible]];
 }	
 
-
-
-
 @end
-
