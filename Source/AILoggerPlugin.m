@@ -831,7 +831,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 		if (path != nil) {
 			if (!dirtyLogArray) {
 				dirtyLogArray = [[NSMutableArray alloc] init];
-				AILogWithSignature(@"Initialized a new dirty log array");
+				AILog(@"Initialized a new dirty log array");
 			}
 
 			if (![dirtyLogArray containsObject:path]) {
@@ -856,7 +856,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 	[dirtyLogLock lock];
 	if (!dirtyLogArray) {
 		dirtyLogArray = [[NSMutableArray alloc] init];
-		AILogWithSignature(@"Initialized a new dirty log array");
+		AILog(@"Initialized a new dirty log array");
 	}
 	
 	if (![dirtyLogArray containsObject:path]) {
@@ -1034,7 +1034,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 //THREAD: Flag every log as dirty (Do this when there is no log index)
 - (void)dirtyAllLogs
 {
-	AILogWithSignature(@"Dirtying all logs.");
+	AILog(@"Dirtying all logs.");
 	
     //Reset and rebuild the dirty array
     [dirtyLogArray release]; dirtyLogArray = [[NSMutableArray alloc] init];
@@ -1056,7 +1056,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
     //Create a fresh dirty log array
     [dirtyLogLock lock];
     [dirtyLogArray release]; dirtyLogArray = [[NSMutableArray alloc] init];
-	AILogWithSignature(@"Dirtying all logs.");
+	AILog(@"Dirtying all logs.");
     [dirtyLogLock unlock];
 	
     //Process each from folder
