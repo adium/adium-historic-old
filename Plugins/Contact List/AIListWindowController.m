@@ -1057,7 +1057,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	BOOL suppressSnapping = [NSEvent shiftKey];
 
 	attachToBottom = nil;
-
+	
 	if (windowSlidOffScreenEdgeMask == AINoEdges && !suppressSnapping)
 		[self snapToOtherWindows];
 }
