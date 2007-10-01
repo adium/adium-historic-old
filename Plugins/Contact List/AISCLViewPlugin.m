@@ -358,12 +358,17 @@
 	// Determine where to move selected group to
 	if (sender == contextMenuDetach) {
 		destContactList = [[adium contactController] createDetachedContactList];
-		[[[self detachContactList:destContactList] window] setFrameTopLeftPoint:[NSEvent mouseLocation]];
 	} else {
 		destContactList = [contextMenuAttach objectForKey:[NSValue valueWithPointer:sender]];
 	}
 	
 	[group moveGroupTo:destContactList];
+	
+	// If detaching group, create new window
+	if(sender == contextMenuDetach)
+		[[[self detachContactList:destContactList] window] setFrameTopLeftPoint:[NSEvent mouseLocation]];
+
+	// Update contact list
 	[[adium notificationCenter] postNotificationName:@"Contact_ListChanged"
 														object:destContactList
 													  userInfo:nil];
