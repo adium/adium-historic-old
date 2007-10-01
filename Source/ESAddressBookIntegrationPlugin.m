@@ -963,6 +963,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 	
 	//Stop delaying list object notifications since we are done
 	[[adium contactController] endListObjectNotificationsDelay];
+	[allModifiedPeople release];
 }
 
 /*!
