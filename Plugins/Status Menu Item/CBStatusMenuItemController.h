@@ -36,6 +36,9 @@
 	NSMutableArray          *unviewedObjectsArray;
 	NSMutableArray          *openChatsArray;
 
+	NSTimer					*unviewedContentFlash;
+	
+	BOOL					currentlyIgnoringUnviewed;
 	BOOL					unviewedContent;
 	BOOL                    needsUpdate;
 	BOOL					contactListOpen;

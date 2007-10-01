@@ -155,6 +155,9 @@
 	[statusMenu release];
 	[menuIcons release];
 	
+	[unviewedContentFlash invalidate];
+	[unviewedContentFlash release];
+
 	// Can't release this because it causes a crash on quit. rdar://4139755, rdar://4160625, and #743. --boredzo
 	// [statusItem release];
 	
@@ -216,6 +219,15 @@
 	}
 }
 
+// Flashes unviewed content.
+- (void)updateUnviewedContentFlash:(NSTimer *)timer
+{
+	// Invert our current setting
+	currentlyIgnoringUnviewed = !currentlyIgnoringUnviewed;
+	// Update our current menu icon
+	[self updateMenuIcons];
+}
+
 #define	IMAGE_TYPE_CONTENT		@"Content"
 #define	IMAGE_TYPE_AWAY			@"Away"
 #define IMAGE_TYPE_IDLE			@"Idle"
@@ -232,7 +244,7 @@
 	AIAccount		*account;
 
 	// If there's content, set our badge to the "content" icon.
-	if (unviewedContent) {
+	if (unviewedContent && !currentlyIgnoringUnviewed) {
 		if (showBadge) {
 			badge = [AIStatusIcons statusIconForStatusName:@"content"
 												statusType:AIAvailableStatusType
@@ -461,12 +473,23 @@
 	if ([unviewedObjectsArray count] == 0) {
 		//If there are no more contacts with unviewed content, set our icon to normal.
 		if (unviewedContent) {
+			[unviewedContentFlash invalidate];
+			[unviewedContentFlash release]; unviewedContentFlash = nil;
+			currentlyIgnoringUnviewed = NO;
 			unviewedContent = NO;
 			[self updateMenuIcons];
 		}
 	} else {
 		//If this is the first contact with unviewed content, set our icon to unviewed content.
 		if (!unviewedContent) {
+			if ([menuIcons flashUnviewed]) {
+				currentlyIgnoringUnviewed = NO;
+				unviewedContentFlash = [[NSTimer scheduledTimerWithTimeInterval:1.0
+																		 target:self
+																	   selector:@selector(updateUnviewedContentFlash:)
+																	   userInfo:nil
+																		repeats:YES] retain];
+			}
 			unviewedContent = YES;
 			[self updateMenuIcons];
 		} else {
