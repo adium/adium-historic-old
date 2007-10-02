@@ -190,7 +190,7 @@ typedef enum {
  *@param interval NSTimeInterval to format
  *@param showSeconds switch to determine if seconds should be shown
  *@param abbreviate switch to chose if w/d/h/ or weeks/days/hours/minutes is used to indicate the unit
- *@param approximate switch to chose if all parts should be shown or only the largest available part
+ *@param approximate switch to chose if all parts should be shown or only the largest available part. If Hours is the largest available part, Minutes are also shown if applicable.
  *
  *@result a localized NSString conaining the Interval formated according to the switches
  */ 
@@ -226,7 +226,7 @@ typedef enum {
 	
 	//Seconds
 	seconds = workInterval;
-	
+
 	//build the strings for the parts
 	if (abbreviate) {
 		//Note: after checking with a linguistics student, it appears that we're fine leaving it as w, h, etc... rather than localizing.
@@ -242,17 +242,22 @@ typedef enum {
 		minutesString	= (minutes == 1)	? ONE_MINUTE	: [NSString stringWithFormat:MULTIPLE_MINUTES, minutes];
 		secondsString	= (seconds == 1)	? ONE_SECOND	: [NSString stringWithFormat:MULTIPLE_SECONDS, seconds];
 	}
-	
+
 	//assemble the parts
 	NSMutableArray *parts = [NSMutableArray arrayWithCapacity:5];
 	if (approximate) {
-		//We want only one of these. For example, 5 weeks, 5 days, 5 hours, 5 minutes, and 5 seconds should just be “5 weeks”.
+		/* We want only one of these. For example, 5 weeks, 5 days, 5 hours, 5 minutes, and 5 seconds should just be "5 weeks".
+		 * Exception: Hours should display hours and minutes. 5 hours, 5 minutes, and 5 seconds is "5 hours and 5 minutes".
+		 */
 		if (weeks)
 			[parts addObject:weeksString];
 		else if (days)
 			[parts addObject:daysString];
-		else if (hours)
+		else if (hours) {
 			[parts addObject:hoursString];
+			if (minutes)
+				[parts addObject:minutesString];
+		}
 		else if (minutes)
 			[parts addObject:minutesString];
 		else if (showSeconds && (seconds >= 0.01))
