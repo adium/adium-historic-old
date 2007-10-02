@@ -14,10 +14,9 @@
 
 @interface AIOutlineViewAnimation : NSAnimation {
 	NSDictionary *dict;
-	AIAnimatingListOutlineView *outlineView;
 }
 
 + (AIOutlineViewAnimation *)listObjectAnimationWithDictionary:(NSDictionary *)inDict
-												  outlineView:(AIAnimatingListOutlineView *)inOutlineView;
+													 delegate:(AIAnimatingListOutlineView *)inOutlineView;
 
 @end

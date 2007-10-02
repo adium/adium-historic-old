@@ -31,7 +31,8 @@
 - (void)_initAnimatingListOutlineView
 {
 	allAnimatingItemsDict  = [[NSMutableDictionary alloc] init];
-	animations = 0;
+	animationsCount = 0;
+	animations = [[NSMutableSet alloc] init];
 	animationHedgeFactor = NSZeroSize;
 	enableAnimation = YES;
 }
@@ -56,6 +57,9 @@
 
 - (void)dealloc
 {
+	[animations makeObjectsPerformSelector:@selector(stopAnimation)];
+	[animations release];
+
 	[allAnimatingItemsDict release];
 	[super dealloc];
 }
@@ -110,7 +114,7 @@
  */
 - (NSRect)rectOfRow:(int)rowIndex
 {
-	if (animations > 0) {
+	if (animationsCount > 0) {
 		return [self currentDisplayRectForItemPointer:[NSValue valueWithPointer:[self itemAtRow:rowIndex]] atRow:rowIndex];
 
 	} else {
@@ -125,7 +129,7 @@
  */
 - (NSRange)rowsInRect:(NSRect)inRect
 {
-	if (animations > 0) {
+	if (animationsCount > 0) {
 		//The rows in a given rect aren't necessarily sequential while we're animating. Too bad this doesn't return an NSIndexSet.
 		int count = [self numberOfRows];
 		NSRange range = NSMakeRange(0, count);
@@ -225,7 +229,7 @@
 								  forKey:oldItem];			
 	}
 	
-	animations++;
+	animationsCount++;
 
 	return oldDict;
 }
@@ -287,15 +291,14 @@
 
 	if ([animatingRowsDict count]) {
 		AIOutlineViewAnimation *animation = [AIOutlineViewAnimation listObjectAnimationWithDictionary:animatingRowsDict
-																						  outlineView:self];
-		[animation setDelegate:self];
+																							 delegate:self];
 		[animation setDuration:duration];
 		[animation startAnimation];
-		//Will be released in animationDidEnd:
-		[animation retain];
+		[animations addObject:animation];
 
 	} else {
-		animations--;
+		//This was incremented in saveCurrentIndexesForItem:, but we didn't end up actually creating an animation for it
+		animationsCount--;
 	}
 	
 	if (recalculateHedge)
@@ -361,15 +364,15 @@
  */
 - (void)animationDidEnd:(NSAnimation*)animation
 {
-	animations--;
-	if (animations == 0) {
+	animationsCount--;
+	if (animationsCount == 0) {
 		[self willChangeValueForKey:@"totalHeight"];
 		animationHedgeFactor = NSZeroSize;
 		[self didChangeValueForKey:@"totalHeight"];
 	}
 
 	[animation stopAnimation];
-	[animation autorelease];
+	[animations removeObject:animation];
 }
 
 #pragma mark Intercepting changes so we can animate
