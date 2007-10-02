@@ -480,9 +480,15 @@ static int display_otr_message(const char *accountname, const char *protocol,
 											 withUsername:formattedUID
 								   isWorthOpeningANewChat:&isWorthOpeningANewChat];
 
-		//Create a new chat if necessary
-		if (isWorthOpeningANewChat && !chat) {
-			chat = [[sharedAdium chatController] chatWithContact:listContact];
+		if (isWorthOpeningANewChat) {
+			//Create a new chat if we don't already have one and this message is worth it
+			if (!chat)
+				chat = [[sharedAdium chatController] chatWithContact:listContact];
+		} else {
+			/* It's not worth opening a new chat. If we found a chat but it's not open, which can happen if the chat is still
+			 * being used by some delayed process, don't display a message thereby opening it.
+			 */
+			if (![chat isOpen]) chat = nil;
 		}
 
 		if (chat) {
