@@ -670,7 +670,7 @@ static ESFileTransferPreferences *preferences;
 		} else if ([eventID isEqualToString:FILE_TRANSFER_CHECKSUMMING]) {
 			description = AILocalizedString(@"When a file is checksummed prior to sending",nil);
 		} else if ([eventID isEqualToString:FILE_TRANSFER_WAITING_REMOTE]) {
-			description = AILocalizedString(@"When a file transfer is offerd to a remote user",nil);
+			description = AILocalizedString(@"When a file transfer is offered to a remote user",nil);
 		} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
 			description = AILocalizedString(@"When a file transfer begins",nil);
 		} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELLED]) {
