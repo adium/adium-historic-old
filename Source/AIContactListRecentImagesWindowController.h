@@ -13,7 +13,8 @@
 	IBOutlet	AIImageGridView	 *imageGridView;
 	IBOutlet	AIColoredBoxView *coloredBox;
 	IBOutlet	AIMenuItemView	 *menuItemView;
-
+	IBOutlet	NSTextField		 *label_recentIcons;
+	
 	AIContactListImagePicker *picker;
 	SEL						 recentPictureSelector;
 
