@@ -6,7 +6,7 @@
 //  Copyright 2006 Andy Matuschak. All rights reserved.
 //
 // $Id: SUConstants.h 56 2006-07-29 21:49:55Z atomicbird $
-// $HeadURL: http://sparkleplus.googlecode.com/svn/trunk/SUConstants.h $
+// $HeadURL: https://sparkleplus.googlecode.com/svn/trunk/SUConstants.h $
 
 extern NSString *SUUpdaterWillRestartNotification;
 

@@ -1256,6 +1256,11 @@ NSComparisonResult AICustomVersionComparison(NSString *versionA, NSString *versi
 	return profileInfo;
 }
 
+- (NSArray *)updaterInfoWithoutProfile
+{
+	return [NSArray arrayWithObjects:UPDATE_GENERATION_DICT, UPDATE_TYPE_DICT, nil];
+}
+
 - (NSComparisonResult) compareVersion:(NSString *)newVersion toVersion:(NSString *)currentVersion
 {
 	//Allow updating from betas to anything, and anything to non-betas

@@ -18,7 +18,7 @@
 	<string>iMac (Core 2 Duo, 24 inch, SuperDrive)</string>
 	<key>MacBook1,1</key>
 	<string>MacBook (Core Duo)</string>
-	<key>MacBook1,2</key>
+	<key>MacBook2,1</key>
 	<string>MacBook (Core 2 Duo)</string>
 	<key>MacBookPro1,1</key>
 	<string>MacBook Pro Core Duo (15-inch)</string>
@@ -28,6 +28,10 @@
 	<string>MacBook Pro Core 2 Duo (17-inch)</string>
 	<key>MacBookPro2,2</key>
 	<string>MacBook Pro Core 2 Duo (15-inch)</string>
+	<key>MacBookPro3,1</key>
+	<string>MacBook Pro Core 2 Duo (15-inch LED, Core 2 Duo)</string>
+	<key>MacBookPro3,2</key>
+	<string>MacBook Pro Core 2 Duo (17-inch HD, Core 2 Duo)</string>
 	<key>Macmini1,1</key>
 	<string>Mac Mini (Core Solo/Duo)</string>
 	<key>MacPro1,1</key>
@@ -153,6 +157,6 @@
 	<key>RackMac3,1</key>
 	<string>Xserve G5</string>
 	<key>Xserve1,1</key>
-	<string>Xserve</string>
+	<string>Xserve (Intel Xeon)</string>
 </dict>
 </plist>
