@@ -214,7 +214,7 @@
 	
     enumerator = [[self accounts] objectEnumerator];
     while ((account = [enumerator nextObject])) {
-        if ([account online] || [account integerStatusObjectForKey:@"Connecting"] || [account integerStatusObjectForKey:@"Waiting to Reconnect"]) {
+        if ([account online] || [account integerStatusObjectForKey:@"Connecting"] || [account statusObjectForKey:@"Waiting to Reconnect"]) {
 			return YES;
         }
     }	
