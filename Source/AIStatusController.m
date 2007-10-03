@@ -600,14 +600,13 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	AIAccount		*account;
 	AIStatus		*aStatusState;
 	BOOL			shouldRebuild = NO;
-	BOOL			noConnectedAccounts = ![[adium accountController] oneOrMoreConnectedOrConnectingAccounts];
 	BOOL			isOfflineStatus = ([statusState statusType] == AIOfflineStatusType);
 	[self setDelayActiveStatusUpdates:YES];
 	
-	/* If we're going offline, determine what accounts are currently online, first, so that we can restore that when an online state
-	 * is chosen later.
+	/* If we're going offline, determine what accounts are currently online or connecting/reconnect, first,
+	 * so that we can restore that when an online state is chosen later.
 	 */
-	if  (isOfflineStatus && !noConnectedAccounts) {
+	if  (isOfflineStatus && [[adium accountController] oneOrMoreConnectedOrConnectingAccounts]) {
 		[accountsToConnect removeAllObjects];
 
 		enumerator = [accountArray objectEnumerator];
@@ -618,7 +617,8 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 		}
 	}
 
-	if (noConnectedAccounts) {
+	// Don't consider "connecting" accounts when connecting previously offline.
+	if (![[adium accountController] oneOrMoreConnectedAccounts]) {
 		/* No connected accounts: Connect all enabled accounts which were set offline previously.
 		 * If we have no such list of accounts, connect 'em all.
 		 */
