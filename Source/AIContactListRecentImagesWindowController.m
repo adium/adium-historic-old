@@ -85,7 +85,8 @@
 {
 	[imageGridView setImageSize:NSMakeSize(30, 30)];	
 	[coloredBox setColor:[NSColor windowBackgroundColor]];
-	
+	[label_recentIcons setLocalizedString:AILocalizedString(@"Recent Icons:", "Label at the top of the recent icons picker shown in the contact list")];
+
 	[picker setMaxSize:NSMakeSize(256, 256)];
 
 	currentHoveredIndex = -1;
