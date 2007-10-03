@@ -603,7 +603,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	BOOL			isOfflineStatus = ([statusState statusType] == AIOfflineStatusType);
 	[self setDelayActiveStatusUpdates:YES];
 	
-	/* If we're going offline, determine what accounts are currently online or connecting/reconnect, first,
+	/* If we're going offline, determine what accounts are currently online or connecting/reconnecting, first,
 	 * so that we can restore that when an online state is chosen later.
 	 */
 	if  (isOfflineStatus && [[adium accountController] oneOrMoreConnectedOrConnectingAccounts]) {
