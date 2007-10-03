@@ -185,7 +185,7 @@
 		(!confirmed || ![confirmed containsObject:[pluginPath lastPathComponent]])) {
 		if (NSRunInformationalAlertPanel([NSString stringWithFormat:AILocalizedString(@"Disable %@?", "%@ will be the name of a plugin. This is the title of the dialogue shown when an unknown plugin is loaded"),[[pluginPath lastPathComponent] stringByDeletingPathExtension]],
 										AILocalizedString(@"External plugins may cause crashes and odd behavior after updating Adium.  Disable this plugin if you experience any issues.", nil),
-										AILocalizedString(@"Disable", nil)
+										AILocalizedString(@"Disable", nil),
 										AILocalizedString(@"Continue", nil),
 										nil) == NSAlertDefaultReturn) {
 			//Disable this plugin
