@@ -69,14 +69,13 @@
 		[theMenu setAutoenablesItems:YES];
 		[statusItem setMenu:theMenu];
 		[theMenu setDelegate:self];
-
-		theContactsMenu = [[NSMenu alloc] init];
 		
 		//Setup for open chats and unviewed content catching
 		accountMenuItemsArray = [[NSMutableArray alloc] init];
 		stateMenuItemsArray = [[NSMutableArray alloc] init];
 		unviewedObjectsArray = [[NSMutableArray alloc] init];
 		openChatsArray = [[NSMutableArray alloc] init];
+		contactMenuItemsArray = [[NSMutableArray alloc] init];
 		needsUpdate = YES;
 		contactListOpen = [[adium interfaceController] contactListIsVisible];
 		
@@ -146,15 +145,26 @@
 	
 	//Release our objects
 	[[statusItem statusBar] removeStatusItem:statusItem];
-	
-	[theMenu release];
-	[theContactsMenu release];
+
+	// All the temporary NSMutableArrays we store
+	[accountMenuItemsArray release];
+	[stateMenuItemsArray release];
 	[unviewedObjectsArray release];
+	[openChatsArray release];
+	[contactMenuItemsArray release];
+	
+	// The main menu
+	[theMenu release];
+	
+	// Release our various menus.
 	[accountMenu release];
 	[contactMenu release];
 	[statusMenu release];
+	
+	// Release our AIMenuBarIcons bundle
 	[menuIcons release];
 	
+	// Invalidate and release the unviewed content flash NSTimer
 	[unviewedContentFlash invalidate];
 	[unviewedContentFlash release];
 
@@ -511,18 +521,11 @@
 #pragma mark Delegates
 - (void)contactMenu:(AIContactMenu *)inContactMenu didRebuildMenuItems:(NSArray *)menuItems
 {
+	[contactMenuItemsArray release];
+	contactMenuItemsArray = [menuItems retain];
+
+	// Update the next time we're clicked.
 	needsUpdate = YES;
-
-	[theContactsMenu removeAllItems];
-
-	//Add contacts menu
-	NSMenuItem *menuItem;
-	NSEnumerator *enumerator = [menuItems objectEnumerator];
-	while ((menuItem = [enumerator nextObject])) {
-		//Use copies of the menu items rather than moving the actual items, as we may want to use them again
-		[theContactsMenu addItem:[[menuItem copy] autorelease]];
-	}
-	
 }
 
 - (void)contactMenu:(AIContactMenu *)inContactMenu didSelectContact:(AIListContact *)inContact
@@ -638,7 +641,11 @@
 		}
 		
 		// Show the contacts menu if we have any contacts to display
-		if ([theContactsMenu numberOfItems] > 0) {
+		if ([contactMenuItemsArray count] > 0) {
+			NSMenu			*contactsMenu = [[[NSMenu alloc] init] autorelease];
+			NSEnumerator	*enumerator = [contactMenuItemsArray objectEnumerator];
+			NSMenuItem		*contactMenuItem;
+			
 			[menu addItem:[NSMenuItem separatorItem]];
 			
 			// Add contacts
@@ -646,7 +653,17 @@
 																			 target:self
 																			 action:nil
 																	  keyEquivalent:@""] autorelease];
-			[menuItem setSubmenu:theContactsMenu];
+
+			while ((contactMenuItem = [enumerator nextObject])) {
+				[contactsMenu addItem:contactMenuItem];
+				
+				//Validate the menu items as they are added since they weren't previously validated when the menu was clicked
+				if ([[contactMenuItem target] respondsToSelector:@selector(validateMenuItem:)]) {
+					[[contactMenuItem target] validateMenuItem:contactMenuItem];
+				}
+			}
+			
+			[menuItem setSubmenu:contactsMenu];
 			[menu addItem:menuItem];
 		}
 		

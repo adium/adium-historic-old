@@ -24,7 +24,6 @@
 {
 	NSStatusItem            *statusItem;
 	NSMenu                  *theMenu;
-	NSMenu					*theContactsMenu;
 
 	AIContactMenu			*contactMenu;
 	AIAccountMenu           *accountMenu;
@@ -33,6 +32,7 @@
 
 	NSMutableArray          *accountMenuItemsArray;
 	NSMutableArray          *stateMenuItemsArray;
+	NSMutableArray			*contactMenuItemsArray;
 	NSMutableArray          *unviewedObjectsArray;
 	NSMutableArray          *openChatsArray;
 
