@@ -6,7 +6,7 @@
 //  Copyright 2006 Andy Matuschak. All rights reserved.
 //
 // $Id: SUUpdater.h 87 2007-07-05 19:16:34Z evands $
-// $HeadURL: http://sparkleplus.googlecode.com/svn/trunk/SUUpdater.h $
+// $HeadURL: https://sparkleplus.googlecode.com/svn/trunk/SUUpdater.h $
 
 #import <Cocoa/Cocoa.h>
 
@@ -77,6 +77,12 @@
 // This method gives the delegate the opportunity to customize the information that will
 // be included with update checks.  Add or remove items from the dictionary as desired.
 - (NSMutableArray *)updaterCustomizeProfileInfo:(NSMutableArray *)profileInfo;
+// This method gives the delegate to include information which should be in all update checks.
+// This should not include any usage data, anonymous or otherwise. It may be useful if you are,
+// for example, passing a version to a php script to provide the appropriate appcast. It will
+// not be called when sending profile info, so its values should probably be added in 
+// updaterCustomerProfileInfo, as wel.
+- (NSArray *)updaterInfoWithoutProfile;
 // This method lets the delegate customize how versions are compared
 - (NSComparisonResult)compareVersion:(NSString *)appcastVersion toVersion:(NSString *)appVersion;
 @end
