@@ -561,7 +561,7 @@
 			}
 		}
 		
-		
+		// If there's more than one account, show the accounts menu
 		if ([accountMenuItemsArray count] > 1) {
 			NSMenu *accountsMenu = [[[NSMenu alloc] init] autorelease];
 			NSMenuItem	*accountMenuItem;
@@ -637,7 +637,8 @@
 			}
 		}
 		
-		if (theContactsMenu) {
+		// Show the contacts menu if we have any contacts to display
+		if ([theContactsMenu numberOfItems] > 0) {
 			[menu addItem:[NSMenuItem separatorItem]];
 			
 			// Add contacts
