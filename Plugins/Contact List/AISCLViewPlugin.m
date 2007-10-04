@@ -213,6 +213,12 @@
 		[self loadDetachedGroups];
     }
 	
+	// Bring all detached windows to front as well
+	NSEnumerator *i = [contactLists objectEnumerator];
+	AIListWindowController *window;
+	while((window = [i nextObject]))
+		[window showWindowInFrontIfAllowed:bringToFront];
+	
 	[defaultController showWindowInFrontIfAllowed:bringToFront];
 }
 
@@ -245,6 +251,9 @@
 	// Close main window
     if (defaultController)
         [[defaultController window] performClose:nil];
+	
+	// So that in the future detached windows will reopen as well
+	hasLoaded = NO;
 }
 
 /*!

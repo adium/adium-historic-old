@@ -118,8 +118,6 @@
 	if (inContactList != contactListRoot) {
 		[contactListRoot release];
 		contactListRoot = [inContactList retain];
-		
-		NSLog(@"Contact list was set to %@",contactListRoot);
 	}
 }
 
