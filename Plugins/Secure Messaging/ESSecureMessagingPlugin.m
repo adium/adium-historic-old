@@ -200,6 +200,7 @@
 {
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
 	if ([toolbarItems containsObject:item]) {
+		[item setView:nil];
 		[toolbarItems removeObject:item];
 		[validatedItems removeObject:item];
 
