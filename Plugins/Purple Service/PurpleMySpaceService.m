@@ -91,7 +91,8 @@
  */
 - (NSImage *)defaultServiceIconOfType:(AIServiceIconType)iconType
 {
-	return [NSImage imageNamed:((iconType == AIServiceIconSmall) ? @"MySpace-small" : @"MySpace-large")
+	//If we're going to do it this way, we've got to return the small icon for both AIServiceIconSmall and the AIServiceIconList icons. 
+	return [NSImage imageNamed:((iconType == AIServiceIconSmall || iconType == AIServiceIconList) ? @"MySpace-small" : @"MySpace-large")
 					  forClass:[self class] loadLazily:YES];
 }
 
