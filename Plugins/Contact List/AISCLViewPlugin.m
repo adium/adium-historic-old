@@ -245,12 +245,12 @@
  * @brief Close contact list
  */
 - (void)closeContactList
-{	
-	[self saveAndCloseDetachedGroups];
-
+{
 	// Close main window
     if (defaultController)
-        [[defaultController window] performClose:nil];
+		[[defaultController window] performClose:nil];
+	
+	[self saveAndCloseDetachedGroups];
 	
 	// So that in the future detached windows will reopen as well
 	hasLoaded = NO;
