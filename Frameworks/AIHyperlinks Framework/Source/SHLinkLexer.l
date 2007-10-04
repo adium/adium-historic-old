@@ -37,6 +37,7 @@ domains		({ccTLD}|{sTLD}|{uTLD}|arpa|local)
 %}
 urlSpecifier	([[:alnum:]\x80-\xf4-]+\.)+{domains}(:[0-9]+)?(\/.*)?
 ipURL		([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]+)?(\/.*)?
+singleDomain [[:alnum:]\x80-\xf4-]+
 mailSpecifier	[^:\/]+\@.+\.{domains}
 jabberSpec      xmpp:.*\@.+\.{domains}(\/.*)?
 aolIMSpec       aim:goim\?screenname=[^\ \t\n&]+(&message=.+)?
@@ -52,8 +53,7 @@ rdarSpec	rdar:\/\/(problems?\/)?[0-9]+(&[0-9]+)*
 
 <CANONICAL>{urlSpecifier}   {SHStringOffset += SHleng; SHleng += SHValidShift; BEGIN INITIAL; return SH_URL_VALID;}
 <CANONICAL>{ipURL}          {SHStringOffset += SHleng; SHleng += SHValidShift; BEGIN INITIAL; return SH_URL_VALID;}
-<CANONICAL>localhost(\/.*)? {SHStringOffset += SHleng; SHleng += SHValidShift; BEGIN INITIAL; return SH_URL_VALID;}
-sip:{mailSpecifier}         {SHStringOffset += SHleng; SHleng += SHValidShift; BEGIN INITIAL; return SH_URL_VALID;}
+<CANONICAL>{singleDomain}(\/.*)? {SHStringOffset += SHleng; SHleng += SHValidShift; BEGIN INITIAL; return SH_URL_VALID;}
 <CANONICAL>.*		    {SHStringOffset += SHleng; BEGIN INITIAL; return SH_URL_INVALID;}
 
 file:\/\/\/.*		    {SHStringOffset += SHleng; return SH_FILE_VALID;}
@@ -78,6 +78,8 @@ svn(\+ssh)?:\/\/	|
 notes:\/\/		|
 gopher:\/\/		    {SHStringOffset += SHleng; SHValidShift = SHleng; BEGIN CANONICAL;}
 
+sip:{mailSpecifier}         {SHStringOffset += SHleng; SHleng += SHValidShift; BEGIN INITIAL; return SH_URL_VALID;}
+
 mailto:{mailSpecifier}      {SHStringOffset += SHleng; return SH_MAILTO_VALID;}
 {mailSpecifier}		    {SHStringOffset += SHleng; return SH_MAILTO_DEGENERATE;}
 
@@ -89,8 +91,6 @@ mailto:{mailSpecifier}      {SHStringOffset += SHleng; return SH_MAILTO_VALID;}
 {aolChatSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
 {yahooIMSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
 {rdarSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
-
-https?:\/\/[^.]+\/	    {SHStringOffset += SHleng; return SH_URL_VALID;}
 
 .			    {return SH_URL_INVALID;}
 %%
