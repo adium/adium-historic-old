@@ -1,3 +1,17 @@
+(* Read Me.
+
+This is the unit test runner for AppleScript. In order to run them from the command line, in adium/ folder, use
+osascript unittest runner.applescript 
+piped to 
+ tr '\r' '\n'
+
+For some reason, Script Editor doesn't like the pipe character...
+
+Anyway, this will compile and run the AppleScripts in ASUnitTests and report the results. The tr translates the old Mac CR to Unix LF. You should see Adium leap about while this is happening. Every unit test should clean up after itself, so that no windows are left lying around, extra accounts existing, etc.
+
+The runner will report if any tests failed and the error number and message. It will also summarize with a number succeeded out of the total number.
+*)
+
 property unitTestDir : "ASUnitTests/"
 
 script HandyAdiumScripts
@@ -8,7 +22,7 @@ script HandyAdiumScripts
 	on makeTemporaryAccount()
 		tell application "Adium"
 			tell service defaultService
-				return make new account with properties {name:"test"}
+				return make new account with properties {title:"test"}
 			end tell
 		end tell
 	end makeTemporaryAccount
