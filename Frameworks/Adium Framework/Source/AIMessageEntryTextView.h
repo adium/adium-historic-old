@@ -81,9 +81,6 @@
 - (void)popContent;
 - (void)swapContent;
 
-//username completion on tab
-- (NSString*)completeUserName;
-
 @end
 
 @interface NSObject (AIMessageEntryTextViewDelegate)
