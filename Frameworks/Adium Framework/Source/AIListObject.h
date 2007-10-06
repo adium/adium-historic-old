@@ -150,6 +150,7 @@ typedef enum {
 
 - (NSImage *)userIcon;
 - (NSImage *)menuIcon;
+- (NSImage *)statusIcon;
 - (NSData *)userIconData;
 - (void)setUserIconData:(NSData *)inData;
 - (NSImage *)displayUserIcon;
