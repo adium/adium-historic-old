@@ -83,9 +83,4 @@
 	}
 }
 
-- (void)_recomputeVisibleCount
-{
-	[super _recomputeVisibleCount];
-}
-
 @end
