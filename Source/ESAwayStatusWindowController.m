@@ -306,9 +306,9 @@ static BOOL							hideInBackground = NO;
 
 	if ([[selectedTabViewItem identifier] isEqualToString:@"singlestatus"]) {
 		//Put all accounts in the Available status state
-		[[adium statusController] applyState:availableStatusState
-								  toAccounts:[self awayAccounts]];
-
+		//We can perform this on all accounts without fear of bringing them online;
+		//Those that are offline will remain offline since -setActiveStatusState considers this.
+		[[adium statusController] setActiveStatusState:availableStatusState];
 	} else {
 		//Multistatus
 		NSArray	*selectedAccounts;
@@ -321,8 +321,8 @@ static BOOL							hideInBackground = NO;
 									  toAccounts:selectedAccounts];
 		} else {
 			//No selection: Put all accounts in the Available status state
-			[[adium statusController] applyState:availableStatusState
-									  toAccounts:[self awayAccounts]];
+			//Like above, we can just call -setActiveStatusState and it will handle all accounts.
+			[[adium statusController] setActiveStatusState:availableStatusState];
 		}
 
 		[selectedAccounts release];
