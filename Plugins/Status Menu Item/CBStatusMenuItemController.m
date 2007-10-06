@@ -316,7 +316,7 @@
 						
 						while ((account = [enumerator nextObject])) {
 							// If the account has a status message...
-							if ([[account statusObjectForKey:@"StatusState"] statusMessage]) {
+							if ([account online] && [[account statusObjectForKey:@"StatusState"] statusMessage]) {
 								// Set the badge for the "available" status.
 								badge = [[[adium statusController] activeStatusState] icon];
 								break;
