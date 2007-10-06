@@ -784,6 +784,15 @@
 	return [AIUserIcons menuUserIconForObject:self];
 }
 
+- (NSImage *)statusIcon
+{
+	NSImage *statusIcon = [self displayArrayObjectForKey:@"List State Icon"];
+	if (!statusIcon) statusIcon = [self displayArrayObjectForKey:@"List Status Icon"];
+	if (!statusIcon) statusIcon = [AIStatusIcons statusIconForUnknownStatusWithIconType:AIStatusIconList
+																			 direction:AIIconNormal];
+	return statusIcon;
+}
+
 #pragma mark Debugging
 - (NSString *)description
 {
