@@ -390,7 +390,7 @@
 {
 	NSRect	rect = inRect;
 	if (userIconVisible) {
-		NSImageInterpolation	savedInterpolation = [[NSGraphicsContext currentContext] imageInterpolation];
+		NSImageInterpolation savedInterpolation = [[NSGraphicsContext currentContext] imageInterpolation];
 		NSImage *image;
 		NSRect	drawRect;
 		
@@ -408,29 +408,30 @@
 							   fraction:[self imageOpacityForDrawing]
 								 radius:userIconRoundingRadius];
 		[[NSGraphicsContext currentContext] setImageInterpolation: savedInterpolation];
-
-		
 		
 		//If we're using space on the left, shift the origin right
 		if (position == IMAGE_POSITION_LEFT) rect.origin.x += USER_ICON_LEFT_PAD;
 		rect.size.width -= USER_ICON_LEFT_PAD;
 		
 		//Badges
-		drawRect = [image rectForDrawingInRect:inRect
-										atSize:userIconSize
-									  position:position];
-		if (statusIconPosition == LIST_POSITION_BADGE_LEFT) {
-			[self drawStatusIconInRect:drawRect position:IMAGE_POSITION_LOWER_LEFT];
-		} else if (statusIconPosition == LIST_POSITION_BADGE_RIGHT) {
-			[self drawStatusIconInRect:drawRect position:IMAGE_POSITION_LOWER_RIGHT];
+		if ((statusIconPosition == LIST_POSITION_BADGE_LEFT) || (statusIconPosition == LIST_POSITION_BADGE_RIGHT) ||
+			(serviceIconPosition == LIST_POSITION_BADGE_LEFT) || (serviceIconPosition == LIST_POSITION_BADGE_RIGHT)) {
+			drawRect = [image rectForDrawingInRect:inRect
+											atSize:userIconSize
+										  position:position];
+			if (statusIconPosition == LIST_POSITION_BADGE_LEFT) {
+				[self drawStatusIconInRect:drawRect position:IMAGE_POSITION_LOWER_LEFT];
+			} else if (statusIconPosition == LIST_POSITION_BADGE_RIGHT) {
+				[self drawStatusIconInRect:drawRect position:IMAGE_POSITION_LOWER_RIGHT];
+			}
+			
+			if (serviceIconPosition == LIST_POSITION_BADGE_LEFT) {
+				[self drawServiceIconInRect:drawRect position:IMAGE_POSITION_LOWER_LEFT];
+			} else if (serviceIconPosition == LIST_POSITION_BADGE_RIGHT) {
+				[self drawServiceIconInRect:drawRect position:IMAGE_POSITION_LOWER_RIGHT];
+			}
 		}
-		
-		if (serviceIconPosition == LIST_POSITION_BADGE_LEFT) {
-			[self drawServiceIconInRect:drawRect position:IMAGE_POSITION_LOWER_LEFT];
-		} else if (serviceIconPosition == LIST_POSITION_BADGE_RIGHT) {
-			[self drawServiceIconInRect:drawRect position:IMAGE_POSITION_LOWER_RIGHT];
-		}
-		
+
 		//If we're using space on the right, shrink the width so we won't be overlapped
 		if (position == IMAGE_POSITION_LEFT) rect.origin.x += USER_ICON_RIGHT_PAD;
 		rect.size.width -= USER_ICON_RIGHT_PAD;
@@ -604,9 +605,7 @@
 //Contact state or status image
 - (NSImage *)statusImage
 {
-	NSImage *stateIcon = [listObject displayArrayObjectForKey:@"List State Icon"];
-	if (!stateIcon) stateIcon = [listObject displayArrayObjectForKey:@"List Status Icon"];
-	return stateIcon;
+	return [listObject statusIcon];
 }
 
 //Contact service image
