@@ -15,13 +15,22 @@
  */
 
 #import "AIMessageViewController.h"
+#import "AIAccountSelectionView.h"
+#import "AIMessageWindowController.h"
+#import "ESGeneralPreferencesPlugin.h"
+#import "AIDualWindowInterfacePlugin.h"
+#import "AIContactInfoWindowController.h"
+#import "AIMessageTabSplitView.h"
+
 #import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIMenuControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
-#import <Adium/AIContactAlertsControllerProtocol.h>
+#import <Adium/AIToolbarControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
@@ -30,23 +39,17 @@
 #import <Adium/AIListOutlineView.h>
 #import <Adium/AIMessageEntryTextView.h>
 #import <Adium/ESTextAndButtonsWindowController.h>
+
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AISplitView.h>
-#import "AIAccountSelectionView.h"
-#import "AIMessageWindowController.h"
-#import "ESGeneralPreferencesPlugin.h"
-#import "AIDualWindowInterfacePlugin.h"
-#import "AIContactInfoWindowController.h"
-#import "AIMessageTabSplitView.h"
+
 #import <PSMTabBarControl/NSBezierPath_AMShading.h>
-#import <KNShelfSplitView.h>
+#import "KNShelfSplitView.h"
 #import "ESChatUserListController.h"
-#import <AIMenuControllerProtocol.h>
-#import <AIBookmarkController.h>
-#import <AIToolbarControllerProtocol.h>
+
 //Heights and Widths
 #define MESSAGE_VIEW_MIN_HEIGHT_RATIO		.50						//Mininum height ratio of the message view
 #define MESSAGE_VIEW_MIN_WIDTH_RATIO		.50						//Mininum width ratio of the message view
