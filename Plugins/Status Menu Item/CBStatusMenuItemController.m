@@ -510,12 +510,13 @@
 			}
 		}
 		
+		if ([accountMenuItemsArray count] > 1 || [contactMenuItemsArray count] > 0)
+			[menu addItem:[NSMenuItem separatorItem]];
+		
 		// If there's more than one account, show the accounts menu
 		if ([accountMenuItemsArray count] > 1) {
 			NSMenu *accountsMenu = [[[NSMenu alloc] init] autorelease];
 			NSMenuItem	*accountMenuItem;
-			
-			[menu addItem:[NSMenuItem separatorItem]];
 			
 			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Accounts",nil)
 																			 target:self
