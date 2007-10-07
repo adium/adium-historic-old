@@ -524,7 +524,7 @@
 			
 			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Accounts",nil)
 																			 target:self
-																			 action:nil
+																			action:@selector(activateAccountList:)
 																	  keyEquivalent:@""];
 			
 			//Add the account menu items
@@ -566,7 +566,7 @@
 			// Add contacts
 			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Contacts",nil)
 																			 target:self
-																			 action:nil
+																			action:@selector(activateContactList:)
 																	  keyEquivalent:@""];
 
 			while ((contactMenuItem = [enumerator nextObject])) {
@@ -654,6 +654,12 @@
 {
 	[self activateAdium:nil];
 	[[adium interfaceController] showContactList:nil];
+}
+
+- (void)activateAccountList:(id)sender
+{
+	[[adium preferenceController] openPreferencesToCategoryWithIdentifier:@"Accounts"];
+	[self activateAdium:nil];
 }
 
 - (void)activateAdium:(id)sender
