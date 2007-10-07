@@ -393,8 +393,8 @@
 }
 
 
-//StateMenuPlugin --------------------------------------------------------
-#pragma mark StateMenuPlugin
+//Status Menu --------------------------------------------------------
+#pragma mark Status Menu
 - (void)statusMenu:(AIStatusMenu *)inStatusMenu didRebuildStatusMenuItems:(NSArray *)menuItemArray
 {
 	[stateMenuItemsArray release];
@@ -404,10 +404,30 @@
 	needsUpdate = YES;
 }
 
-- (BOOL)showStatusSubmenu
+//Contact Menu --------------------------------------------------------
+#pragma mark Contact Menu
+- (void)contactMenu:(AIContactMenu *)inContactMenu didRebuildMenuItems:(NSArray *)menuItems
 {
-	return YES;
+	[contactMenuItemsArray release];
+	contactMenuItemsArray = [menuItems retain];
+	
+	// Update the next time we're clicked.
+	needsUpdate = YES;
 }
+
+- (void)contactMenu:(AIContactMenu *)inContactMenu didSelectContact:(AIListContact *)inContact
+{
+	[[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:inContact
+																		onPreferredAccount:YES]];
+	[self activateAdium:nil];
+}
+
+- (BOOL)contactMenu:(AIContactMenu *)inContactMenu shouldIncludeContact:(AIListContact *)inContact
+{
+	// Show only online contacts.
+	return [inContact online];
+}
+
 
 //Chat Observer --------------------------------------------------------
 #pragma mark Chat Observer
@@ -442,6 +462,7 @@
 		[self updateMenuIcons];
 	// We think there's no unviewed content, and there is.
 	} else if (!unviewedContent && unviewedContentCount > 0) {
+		// If this particular Xtra wants us to flash unviewed content, start the timer up
 		if ([menuIcons flashUnviewed]) {
 			currentlyIgnoringUnviewed = NO;
 			unviewedContentFlash = [[NSTimer scheduledTimerWithTimeInterval:1.0
@@ -453,6 +474,8 @@
 		
 		// Update unviewed content
 		unviewedContent = YES;
+		
+		// Update our menu icons
 		[self updateMenuIcons];
 	// If we already know there's unviewed content, just update the count.
 	} else if (unviewedContent && unviewedContentCount > 0) {
@@ -462,30 +485,8 @@
 	needsUpdate = YES;	
 }
 
-//Delegates --------------------------------------------------------
-#pragma mark Delegates
-- (void)contactMenu:(AIContactMenu *)inContactMenu didRebuildMenuItems:(NSArray *)menuItems
-{
-	[contactMenuItemsArray release];
-	contactMenuItemsArray = [menuItems retain];
-
-	// Update the next time we're clicked.
-	needsUpdate = YES;
-}
-
-- (void)contactMenu:(AIContactMenu *)inContactMenu didSelectContact:(AIListContact *)inContact
-{
-	[[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:inContact
-																		onPreferredAccount:YES]];
-	[self activateAdium:nil];
-}
-
-- (BOOL)contactMenu:(AIContactMenu *)inContactMenu shouldIncludeContact:(AIListContact *)inContact
-{
-	// Show only online contacts.
-	return [inContact online];
-}
-
+//Menu Delegates/Actions --------------------------------------------------------
+#pragma mark Menu Delegates/Actions
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
 	//If something has changed
@@ -551,50 +552,11 @@
 			[menuItem release];
 		}
 		
-		//If there exist any open chats, add them
-		if ([openChatsArray count] > 0) {
-			enumerator = [openChatsArray objectEnumerator];
-			chat = nil;
-			
-			//Add a seperator
-			[menu addItem:[NSMenuItem separatorItem]];
-			
-			//Create and add the menu items
-			while ((chat = [enumerator nextObject])) {
-				NSImage *image = nil;
-				//Create a menu item from the chat
-				menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[chat displayName]
-				                                                                 target:self
-				                                                                 action:@selector(switchToChat:)
-				                                                          keyEquivalent:@""];
-				//Set the represented object
-				[menuItem setRepresentedObject:chat];
-
-				//Set the image
-				
-				//If there is a chat status image, use that
-				image = [AIStatusIcons statusIconForChat:chat type:AIStatusIconMenu direction:AIIconNormal];
-				//Otherwise use the chat's -chatMenuImage
-				if (!image) {
-					image = [chat chatMenuImage];
-				}
-				
-				[menuItem setImage:image];
-				
-				//Add it to the menu
-				[menu addItem:menuItem];
-
-				[menuItem release];
-			}
-		}
-		
 		// Show the contacts menu if we have any contacts to display
 		if ([contactMenuItemsArray count] > 0) {
 			NSMenu			*contactsMenu = [[[NSMenu alloc] init] autorelease];
 			NSEnumerator	*enumerator = [contactMenuItemsArray objectEnumerator];
 			NSMenuItem		*contactMenuItem;
-			
-			[menu addItem:[NSMenuItem separatorItem]];
 			
 			// Add contacts
 			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Contacts",nil)
@@ -616,7 +578,43 @@
 			[menuItem release];
 		}
 		
-		//Add our last two items
+		//If there exist any open chats, add them
+		if ([openChatsArray count] > 0) {
+			enumerator = [openChatsArray objectEnumerator];
+			chat = nil;
+			
+			//Add a seperator
+			[menu addItem:[NSMenuItem separatorItem]];
+			
+			//Create and add the menu items
+			while ((chat = [enumerator nextObject])) {
+				NSImage *image = nil;
+				//Create a menu item from the chat
+				menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[chat displayName]
+																				target:self
+																				action:@selector(switchToChat:)
+																		 keyEquivalent:@""];
+				//Set the represented object
+				[menuItem setRepresentedObject:chat];
+				
+				//Set the image
+				
+				//If there is a chat status image, use that
+				image = [AIStatusIcons statusIconForChat:chat type:AIStatusIconMenu direction:AIIconNormal];
+				//Otherwise use the chat's -chatMenuImage
+				if (!image) {
+					image = [chat chatMenuImage];
+				}
+				
+				[menuItem setImage:image];
+				
+				//Add it to the menu
+				[menu addItem:menuItem];
+				[menuItem release];
+			}
+		}
+		
+		//Add our last few items
 		[menu addItem:[NSMenuItem separatorItem]];
 		
 		[menu addItemWithTitle:AILocalizedString(@"Contact List", nil)
@@ -641,30 +639,23 @@
 	}
 }
 
-//Menu Actions --------------------------------------------------------
-#pragma mark Menu Actions
 - (void)switchToChat:(id)sender
 {
-	//If we're not the active app, activate
-	if (![NSApp isActive]) {
-		[self activateAdium:nil];
-	}
-	
+	[self activateAdium:nil];
 	[[adium interfaceController] setActiveChat:[sender representedObject]];
-}
-
-- (void)activateAdium:(id)sender
-{
-	[NSApp activateIgnoringOtherApps:YES];
-	[NSApp arrangeInFront:nil];
 }
 
 - (void)activateContactList:(id)sender
 {
+	[self activateAdium:nil];
 	[[adium interfaceController] showContactList:nil];
-	// Bring Adium to front if it's not the active app.
+}
+
+- (void)activateAdium:(id)sender
+{
 	if (![NSApp isActive]) {
-		[self activateAdium:nil];
+		[NSApp activateIgnoringOtherApps:YES];
+		[NSApp arrangeInFront:nil];
 	}
 }
 
