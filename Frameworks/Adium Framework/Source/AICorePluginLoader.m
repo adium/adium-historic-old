@@ -60,9 +60,10 @@
 	//Init
 	[adium createResourcePathForName:EXTERNAL_PLUGIN_FOLDER];
 
-	//If the Adium version has changed since our last run, warn the user that their external plugins may no longer work
+	//If the Adium version has increased since our last run, warn the user that their external plugins may no longer work
 	NSString	*lastVersion = [[NSUserDefaults standardUserDefaults] objectForKey:CONFIRMED_PLUGINS_VERSION];
-	if (![[NSApp applicationVersion] isEqualToString:lastVersion]) {
+	if (!lastVersion ||
+		[adium compareVersion:lastVersion toVersion:[NSApp applicationVersion]] == NSOrderedAscending) {
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:CONFIRMED_PLUGINS];
 		[[NSUserDefaults standardUserDefaults] setObject:[NSApp applicationVersion] forKey:CONFIRMED_PLUGINS_VERSION];
 	}
