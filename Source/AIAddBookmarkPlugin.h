@@ -7,15 +7,10 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#import <AIBookmarkController.h>
+
 #import <Adium/AIPlugin.h>
 @interface AIAddBookmarkPlugin : AIPlugin {
-		id			delegate;
-		AIBookmarkController *bookmarkController;
+
 }
 
--(void)installPlugin;
--(void)uninstallPlugin;
--(void)setDelegate:(id)newDelegate;
--(id)delegate;
 @end

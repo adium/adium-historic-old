@@ -85,10 +85,6 @@ typedef enum {
 } AIChatErrorType;
 
 @interface AIChat : ESObjectWithStatus <AIContainingObject> {
-	NSString			*server;
-	NSString			*room;
-	NSString			*handle;
-
     AIAccount			*account;
 	NSDate				*dateOpened;
 	BOOL				isOpen;
@@ -120,6 +116,8 @@ typedef enum {
 - (void)setAccount:(AIAccount *)inAccount;
 
 - (NSDate *)dateOpened;
+- (NSDictionary *)chatCreationDictionary;
+- (void)setChatCreationDictionary:(NSDictionary *)inDict;
 
 - (BOOL)isOpen;
 - (void)setIsOpen:(BOOL)flag;
@@ -174,18 +172,9 @@ typedef enum {
 
 - (void)receivedError:(NSNumber *)type;
 
+- (NSWindow *)window;
+
 //menu stuff
 -(NSMenu*)menuForChat;
-
-//associated info
-- (NSString*)server; 
--(void)setServer:(NSString*)newServer;
-
-- (NSString*)room;
--(void)setRoom:(NSString*)newRoom;
-
-- (NSString*)handle;
--(void)setHandle:(NSString*)newHandle;
-
 
 @end

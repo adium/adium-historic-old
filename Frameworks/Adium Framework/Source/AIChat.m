@@ -58,9 +58,6 @@ static int nextChatNumber = 0;
     if ((self = [super init])) {
 	
 		name = nil;
-		handle = nil;
-		server = nil;
-		room = nil;
 		account = [inAccount retain];
 		participatingListObjects = [[NSMutableArray alloc] init];
 		dateOpened = [[NSDate date] retain];
@@ -149,50 +146,17 @@ static int nextChatNumber = 0;
 	}
 }
 
-
-//Associated Server
-- (NSString*)server
+- (NSDictionary *)chatCreationDictionary
 {
-	return server;
+	return [self statusObjectForKey:@"ChatCreationInfo"];
 }
 
--(void)setServer:(NSString*)newServer
+- (void)setChatCreationDictionary:(NSDictionary *)inDict
 {
-	if(server != newServer) {
-		[server release];
-		server = [newServer retain];
-	}
+	[self setStatusObject:inDict
+				   forKey:@"ChatCreationInfo"
+				   notify:NotifyNever];
 }
-
-//Associated Server
-- (NSString*)room
-{
-	return room;
-}
-
--(void)setRoom:(NSString*)newRoom
-{
-	if(room != newRoom) {
-		[room release];
-		room = [newRoom retain];
-	}
-}
-
-//Associated Server
-- (NSString*)handle
-{
-	return handle;
-}
-
--(void)setHandle:(NSString*)newHandle
-{
-	if(handle != newHandle) {
-		[handle release];
-		handle = [newHandle retain];
-	}
-
-}
-
 
 //Date Opened
 #pragma mark Date Opened
@@ -784,11 +748,11 @@ static int nextChatNumber = 0;
 	
 }*/
 
-- (AIMessageWindow *)window
+- (NSWindow *)window
 {
 	AIMessageTabViewItem *messageTab = [self statusObjectForKey:@"MessageTabViewItem"];
 	AIMessageWindowController *windowController = [messageTab container];
-	return (AIMessageWindow *)[windowController window];
+	return [windowController window];
 }
 
 - (id)handleCloseScriptCommand:(NSCloseCommand *)closeCommand

@@ -7,9 +7,14 @@
 //
 
 #import "AIAddBookmarkPlugin.h"
+#import "AINewBookmarkWindowController.h"
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <Adium/AIToolbarControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <Adium/AIChat.h>
+#import <Adium/AIListBookmark.h>
 
 #define TOOLBAR_ITEM_IDENTIFIER		@"AddBookmark"
 #define ADD_BOOKMARK				@"Add Bookmark"
@@ -19,10 +24,8 @@
  * @name installPlugin
  * @brief initializes the plugin - installs toolbaritem
  */
--(void)installPlugin
+- (void)installPlugin
 {
-	bookmarkController = [[AIBookmarkController alloc] init];
-	[self setDelegate:bookmarkController];
 	
 	NSToolbarItem	*chatItem = [AIToolbarUtilities toolbarItemWithIdentifier:TOOLBAR_ITEM_IDENTIFIER
 																		  label:ADD_BOOKMARK
@@ -37,18 +40,8 @@
 	[[adium toolbarController] registerToolbarItem:chatItem forToolbarType:@"MessageWindow"];
 	
 }
-/*!
- * @name dealloc
- * @brief cleanup
- */
--(void)dealloc
-{
-	[bookmarkController release];
-	[super dealloc];
-}
 
-
--(void)uninstallPlugin
+- (void)uninstallPlugin
 {
 }
 
@@ -56,33 +49,21 @@
  * @name addBookmark
  * @brief ask delegate to prompt the user with a create bookmark window
  */
--(void)addBookmark:(id)sender
+- (void)addBookmark:(id)sender
 {
-	[delegate promptForNewBookmark];
+	[AINewBookmarkWindowController promptForNewBookmarkForChat:[[adium interfaceController] activeChat]
+													  onWindow:[[[adium interfaceController] activeChat] window]
+												notifyingTarget:self];
 }
 
-/*!
- * @name setDelegate
- * @brief sets delegate object
- */
-
--(void)setDelegate:(id)newDelegate
+- (void)createBookmarkForChat:(AIChat *)chat withName:(NSString *)name inGroup:(AIListGroup *)group
 {
-	if(newDelegate != delegate)
-	{
-		[delegate release];
-		delegate = [newDelegate retain];
-	}
-}
-
-/*! 
- * @name delegate
- * @brief returns delegate object
- */
--(id)delegate
-{
-	return delegate;
-}
+	AIListBookmark *bookmark = [[adium contactController] bookmarkForChat:chat];
+	[bookmark setDisplayName:name];
 	
+	[[adium contactController] moveContact:bookmark
+								intoObject:group];
+	[bookmark setVisible:YES];
+}
 
 @end

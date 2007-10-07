@@ -424,6 +424,8 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 			[tabViewItem_info release];
 		}			
 	}
+	
+#warning need to hide panes for bookmarks
 }
 
 #pragma mark AIImageViewWithImagePicker Delegate

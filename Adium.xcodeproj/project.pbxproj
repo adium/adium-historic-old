@@ -509,7 +509,7 @@
 		348F579E0936FA6D00288E41 /* EditStatusGroup.nib in Resources */ = {isa = PBXBuildFile; fileRef = 348F579D0936FA6D00288E41 /* EditStatusGroup.nib */; };
 		349195580C96615C00595A04 /* AIChatCommandsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A96FF00C96564D00F46006 /* AIChatCommandsController.m */; };
 		349195660C9662AA00595A04 /* AIListBookmark.m in Sources */ = {isa = PBXBuildFile; fileRef = 349195640C9662AA00595A04 /* AIListBookmark.m */; };
-		349195670C9662AA00595A04 /* AIListBookmark.h in Headers */ = {isa = PBXBuildFile; fileRef = 349195650C9662AA00595A04 /* AIListBookmark.h */; };
+		349195670C9662AA00595A04 /* AIListBookmark.h in Headers */ = {isa = PBXBuildFile; fileRef = 349195650C9662AA00595A04 /* AIListBookmark.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3496A8C207CE6B880055BBAB /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3496A8C107CE6B880055BBAB /* InfoPlist.strings */; };
 		349710DD096C4C7700699948 /* Buttons.strings in Resources */ = {isa = PBXBuildFile; fileRef = 349710DB096C4C7700699948 /* Buttons.strings */; };
 		3497CBB009BA0B5D00C0428E /* ESIRCJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3497CBAE09BA0B5D00C0428E /* ESIRCJoinChatViewController.m */; };
@@ -549,7 +549,6 @@
 		34A88E180C7A26E0006EB7D4 /* AIPasswordPromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = F55B416603AB8BFC01A8010A /* AIPasswordPromptController.m */; };
 		34A88E190C7A26E1006EB7D4 /* AIPasswordPromptController.h in Headers */ = {isa = PBXBuildFile; fileRef = F55B416E03AB8C3201A8010A /* AIPasswordPromptController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34A9705A0C965F2400F46006 /* AISideSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A970590C965F2400F46006 /* AISideSplitView.m */; };
-		34A9706C0C965F8100F46006 /* AIBookmarkController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A9706A0C965F8100F46006 /* AIBookmarkController.m */; };
 		34A9706F0C965F8E00F46006 /* AIAddBookmarkPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A9706D0C965F8E00F46006 /* AIAddBookmarkPlugin.m */; };
 		34A970740C965FC800F46006 /* AddBookmark.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A970730C965FC800F46006 /* AddBookmark.nib */; };
 		34A970760C965FE400F46006 /* sidebarResizeWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = 34A970750C965FE400F46006 /* sidebarResizeWidget.png */; };
@@ -2804,8 +2803,6 @@
 		34A970590C965F2400F46006 /* AISideSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AISideSplitView.m; path = "Plugins/Dual Window Interface/AISideSplitView.m"; sourceTree = "<group>"; };
 		34A970660C965F6900F46006 /* AINewBookmarkWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AINewBookmarkWindowController.h; path = Source/AINewBookmarkWindowController.h; sourceTree = "<group>"; };
 		34A970670C965F6900F46006 /* AINewBookmarkWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AINewBookmarkWindowController.m; path = Source/AINewBookmarkWindowController.m; sourceTree = "<group>"; };
-		34A9706A0C965F8100F46006 /* AIBookmarkController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIBookmarkController.m; path = Source/AIBookmarkController.m; sourceTree = "<group>"; };
-		34A9706B0C965F8100F46006 /* AIBookmarkController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIBookmarkController.h; path = Source/AIBookmarkController.h; sourceTree = "<group>"; };
 		34A9706D0C965F8E00F46006 /* AIAddBookmarkPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAddBookmarkPlugin.m; path = Source/AIAddBookmarkPlugin.m; sourceTree = "<group>"; };
 		34A9706E0C965F8E00F46006 /* AIAddBookmarkPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAddBookmarkPlugin.h; path = Source/AIAddBookmarkPlugin.h; sourceTree = "<group>"; };
 		34A970730C965FC800F46006 /* AddBookmark.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AddBookmark.nib; path = Resources/AddBookmark.nib; sourceTree = "<group>"; };
@@ -4295,6 +4292,18 @@
 			name = "Removal of NULs in Messages";
 			sourceTree = "<group>";
 		};
+		3436CD940CB5AB5B003A026E /* Bookmarking */ = {
+			isa = PBXGroup;
+			children = (
+				34A970660C965F6900F46006 /* AINewBookmarkWindowController.h */,
+				34A970670C965F6900F46006 /* AINewBookmarkWindowController.m */,
+				34A9706E0C965F8E00F46006 /* AIAddBookmarkPlugin.h */,
+				34A9706D0C965F8E00F46006 /* AIAddBookmarkPlugin.m */,
+				34A970730C965FC800F46006 /* AddBookmark.nib */,
+			);
+			name = Bookmarking;
+			sourceTree = "<group>";
+		};
 		343A7F2206935DAF00150CEC /* Meanwhile */ = {
 			isa = PBXGroup;
 			children = (
@@ -4827,13 +4836,6 @@
 				F55B415D03AB8B5601A8010A /* AIContentController.m */,
 				11C157D804A88E04008E0C76 /* AIEmoticonController.h */,
 				11C157D904A88E04008E0C76 /* AIEmoticonController.m */,
-				34A9706A0C965F8100F46006 /* AIBookmarkController.m */,
-				34A9706B0C965F8100F46006 /* AIBookmarkController.h */,
-				34A970660C965F6900F46006 /* AINewBookmarkWindowController.h */,
-				34A970670C965F6900F46006 /* AINewBookmarkWindowController.m */,
-				34A9706E0C965F8E00F46006 /* AIAddBookmarkPlugin.h */,
-				34A9706D0C965F8E00F46006 /* AIAddBookmarkPlugin.m */,
-				34A970730C965FC800F46006 /* AddBookmark.nib */,
 				34CA15520CAFDFB2009AA5E3 /* sidebarActionWidget.png */,
 				34A9707D0C96602200F46006 /* sidebarStatusAreaBackground.png */,
 				34A970750C965FE400F46006 /* sidebarResizeWidget.png */,
@@ -4843,6 +4845,7 @@
 				9E4CF9D104AA69B000415B22 /* Action Support */,
 				34F8A7FA05A8927F00577775 /* Applescript Filters */,
 				4BF4813B049A802E00A8010A /* Auto Linking */,
+				3436CD940CB5AB5B003A026E /* Bookmarking */,
 				636AB7EC087E2A2E00A87670 /* Dock Icon Badging */,
 				4B1332130459B98E00A8010A /* Dock Unviewed Content */,
 				11C157D504A88DE0008E0C76 /* Emoticons */,
@@ -7812,6 +7815,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
@@ -8887,7 +8891,6 @@
 				0C79A2D90C5E633F005AE6FA /* AIMoveCommand.m in Sources */,
 				0C27C8650C75A23F002AA363 /* NSStringScriptingAdditions.m in Sources */,
 				34A9705A0C965F2400F46006 /* AISideSplitView.m in Sources */,
-				34A9706C0C965F8100F46006 /* AIBookmarkController.m in Sources */,
 				34A9706F0C965F8E00F46006 /* AIAddBookmarkPlugin.m in Sources */,
 				343BB5020C96CB2000506F9B /* AINewBookmarkWindowController.m in Sources */,
 			);

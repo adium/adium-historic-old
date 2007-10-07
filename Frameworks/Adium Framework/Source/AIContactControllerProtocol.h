@@ -44,7 +44,7 @@ typedef enum {
 } AISortMode;
 
 @protocol AIListObjectObserver;
-@class AIListGroup, AIListObject, AIListContact, AIMetaContact, AIService, AIAccount, AISortController;
+@class AIListGroup, AIListObject, AIListContact, AIMetaContact, AIService, AIAccount, AISortController, AIListBookmark;
 
 @protocol AIContactController <AIController>
 //Contact list access
@@ -65,6 +65,8 @@ typedef enum {
 - (NSSet *)allContactsWithService:(AIService *)service UID:(NSString *)inUID existingOnly:(BOOL)existingOnly;
 - (AIListGroup *)offlineGroup;
 - (BOOL)useOfflineGroup;
+
+- (AIListBookmark *)bookmarkForChat:(AIChat *)inChat;
 
 - (AIMetaContact *)groupUIDs:(NSArray *)UIDsArray forServices:(NSArray *)servicesArray;
 - (AIMetaContact *)groupListContacts:(NSArray *)contactsToGroupArray;

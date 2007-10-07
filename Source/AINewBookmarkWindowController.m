@@ -1,31 +1,39 @@
 #import "AINewBookmarkWindowController.h"
-#import "AIBookmarkController.h"
 #import "AINewGroupWindowController.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIListGroup.h>
+#import <Adium/AIServiceMenu.h>
+
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
-#import <Adium/AIServiceMenu.h>
-#import <AIInterfaceController.h>
-#import <AIAccountController.h>
 
 #define		ADD_BOOKMARK_NIB		@"AddBookmark"
 #define		DEFAULT_GROUP_NAME		AILocalizedString(@"Contacts",nil)
-@implementation AINewBookmarkWindowController
 
+@interface AINewBookmarkWindowController (PRIVATE)
+- (id)initWithWindowNibName:(NSString *)nibName forChat:(AIChat *)inChat notifyingTarget:(id)inTarget;
+- (void)buildGroupMenu;
+@end
+
+@implementation AINewBookmarkWindowController
 /*!
  * @brief Prompt for a new bookmark.
  *
  * @param parentWindow Window on which to show as a sheet. Pass nil for a panel prompt.
  */
-+(AINewBookmarkWindowController *)promptForNewBookmarkOnWindow:(NSWindow*)parentWindow
++ (AINewBookmarkWindowController *)promptForNewBookmarkForChat:(AIChat *)inChat onWindow:(NSWindow*)parentWindow notifyingTarget:(id)inTarget
 {
-	AINewBookmarkWindowController *newBookmarkWindowController;
-	newBookmarkWindowController= [[self alloc] initWithWindowNibName:ADD_BOOKMARK_NIB];
+	AINewBookmarkWindowController *newBookmarkWindowController = [[self alloc] initWithWindowNibName:ADD_BOOKMARK_NIB
+																							 forChat:inChat
+																					 notifyingTarget:inTarget];
 
 	if(parentWindow) {
 	   [NSApp beginSheet:[newBookmarkWindowController window]
 		  modalForWindow:parentWindow
-	   	   modalDelegate:self
+	   	   modalDelegate:newBookmarkWindowController
 		  didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
 			 contextInfo:nil];
 	} else {
@@ -34,6 +42,24 @@
 	}
 	
 	return newBookmarkWindowController;
+}
+
+- (id)initWithWindowNibName:(NSString *)nibName forChat:(AIChat *)inChat notifyingTarget:(id)inTarget
+{
+	if ((self = [super initWithWindowNibName:nibName])) {
+		chat = [inChat retain];
+		target = [inTarget retain];
+	}
+	
+	return self;
+}
+
+- (void)dealloc
+{
+	[chat release];
+	[target release];
+	
+	[super dealloc];
 }
 
 /*!
@@ -51,6 +77,11 @@
 -(void)windowDidLoad
 {
 	[self buildGroupMenu];
+	
+	[label_name setLocalizedString:AILocalizedString(@"Name:", nil)];
+	[label_group setLocalizedString:AILocalizedString(@"Group:", nil)];
+	[button_add setLocalizedString:AILocalizedStringFromTable(@"Add", @"Buttons", nil)];
+	[button_cancel setLocalizedString:AILocalizedStringFromTable(@"Cancel", @"Buttons", nil)];
 }
 
 /*!
@@ -60,8 +91,10 @@
  */
 - (IBAction)add:(id)sender
 {
+	[target createBookmarkForChat:chat
+						 withName:[textField_name stringValue]
+						  inGroup:[[popUp_group selectedItem] representedObject]];
 
-	[delegate createBookmarkWithInfo:[NSDictionary dictionaryWithObjectsAndKeys:[textField_name stringValue],@"bookmark name",[[popUp_group selectedItem] representedObject],@"bookmark group",nil]];
 	[self closeWindow:nil];
 }
 
@@ -71,19 +104,6 @@
 - (IBAction)cancel:(id)sender
 {
 	[self closeWindow:nil];
-}
-
--(void)setDelegate:(id)newDelegate
-{
-	if(delegate != newDelegate) {
-		[delegate release];
-		delegate = [newDelegate retain];
-	}
-}
-
--(id)delegate
-{
-	return delegate;
 }
 
 //Add to Group ---------------------------------------------------------------------------------------------------------
@@ -96,12 +116,12 @@
 	AIListObject	*selectedObject;
 	NSMenu			*menu;
 	//Rebuild the menu
-	menu = [[adium contactController] menuOfAllGroupsInGroup:nil withTarget:self];
+	menu = [[adium contactController] menuOfAllGroupsInGroup:nil withTarget:nil];
 
 	//Add a default group name to the menu if there are no groups listed
 	if ([menu numberOfItems] == 0) {
 		[menu addItemWithTitle:DEFAULT_GROUP_NAME
-						target:self
+						target:nil
 						action:nil
 				 keyEquivalent:@""];
 	}
@@ -157,7 +177,7 @@
 	NSWindow	*window = [inNotification object];
 
 	if ([[window windowController] isKindOfClass:[AINewGroupWindowController class]]) {
-		NSString	*newGroupUID = [[window windowController] newGroupUID];
+		NSString	*newGroupUID = [(AINewGroupWindowController *)[window windowController] newGroupUID];
 		AIListGroup *group = [[adium contactController] existingGroupWithUID:newGroupUID];
 
 		//Rebuild the group menu
@@ -179,21 +199,6 @@
 	[[adium notificationCenter] removeObserver:self
 										  name:@"NewGroupWindowControllerDidEnd" 
 										object:window];
-}
-
-/*
- * Validate a menu item
- */
-- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
-{
-	NSEnumerator	*enumerator = [[[adium accountController] accountsCompatibleWithService:[menuItem representedObject]] objectEnumerator];
-	AIAccount		*account;
-	
-	while ((account = [enumerator nextObject])) {
-		if ([account contactListEditable]) return YES;
-	}
-	
-	return NO;
 }
 
 @end

@@ -7,91 +7,68 @@
 //
 
 #import "AIListBookmark.h"
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIUserIcons.h>
-#import <AIService.h>
+#import <Adium/AIService.h>
+#import <Adium/AIChat.h>
 
 #warning Wrong file location
 
 @implementation AIListBookmark
--(id)init
+-(id)initWithChat:(AIChat *)inChat
 {
-	if((self = [super init])) {
-		account = [[AIAccount alloc] init];
-		handle = [[NSString alloc] init];
+	if ((self = [self initWithUID:[NSString stringWithFormat:@"Bookmark:%@",[inChat uniqueChatID]]
+						   account:[inChat account]
+						   service:[[inChat account] service]])) {
+		chatCreationDictionary = [[inChat chatCreationDictionary] copy];
+		name = [[inChat name] copy];
+		AILog(@"Created AIListBookmark %@", self);
 	}
 	return self;
 }
--(NSString*)name
+
+- (id)initWithCoder:(NSCoder *)decoder
+{
+	if ((self = [self initWithUID:[decoder decodeObjectForKey:@"UID"]
+						  account:[[adium accountController] accountWithInternalObjectID:[decoder decodeObjectForKey:@"AccountInternalObjectID"]]
+						  service:[[adium accountController] firstServiceWithServiceID:[decoder decodeObjectForKey:@"ServiceID"]]])) {
+		chatCreationDictionary = [[decoder decodeObjectForKey:@"chatCreationDictionary"] retain];
+		name = [[decoder decodeObjectForKey:@"name"] retain];
+
+		AILog(@"Created AIListBookmark from coder with dict %@",chatCreationDictionary);
+	}
+	
+	return self;
+}
+
+- (void)encodeWithCoder:(NSCoder *)encoder
+{
+	[encoder encodeObject:[self UID] forKey:@"UID"];
+	[encoder encodeObject:[[self account] internalObjectID] forKey:@"AccountInternalObjectID"];
+	[encoder encodeObject:[[self service] serviceID] forKey:@"ServiceID"];
+	[encoder encodeObject:[self chatCreationDictionary] forKey:@"chatCreationDictionary"];
+	[encoder encodeObject:name forKey:@"name"];
+}
+
+- (NSString *)formattedUID
+{
+	//XXX should query chat for its name if we're in it
+	return name;
+}
+
+- (NSDictionary *)chatCreationDictionary
+{
+	return chatCreationDictionary;
+}
+
+- (NSString *)name
 {
 	return name;
 }
 
--(void)setName:(NSString*)newName
-{
-	if(name != newName) {
-		[name release];
-		name = [newName retain];
-	}
-}
-
-- (AIAccount *)account
-{
-    return account;
-}
-
-- (void)setAccount:(AIAccount *)inAccount
-{
-	if (inAccount != account) {
-		[account release];
-		account = [inAccount retain];
-		
-	}
-}
-
-//Associated Server
-- (NSString*)server
-{
-	return server;
-}
-
--(void)setServer:(NSString*)newServer
-{
-	if(server != newServer) {
-		[server release];
-		server = [newServer retain];
-	}
-}
-
-//Associated Server
-- (NSString*)room
-{
-	return room;
-}
-
--(void)setRoom:(NSString*)newRoom
-{
-	if(room != newRoom) {
-		[room release];
-		room = [newRoom retain];
-	}
-}
-
-//Associated Server
-- (NSString*)handle
-{
-	return handle;
-}
-
--(void)setHandle:(NSString*)newHandle
-{
-	if(handle != newHandle) {
-		[handle release];
-		handle = [newHandle retain];
-	}
-}
-
-
-//the password associated with this contact
+//XXX how to handle passwords
 -(NSString*)password
 {
 	return password;
@@ -104,29 +81,44 @@
 		password = [newPassword retain];
 	}
 }
-- (NSImage*)userIcon
+
+- (NSImage *)userIcon
 {
-	return [NSImage imageNamed:@"AddressBook"];
+	NSLog(@"returning %@, ", [super userIcon]);
+	return [super userIcon];
+}
+//Only visible if our account is online
+- (BOOL)visible
+{
+	return ([super visible] && [[self account] online]);
 }
 
-- (AIListGroup*)inGroup
+- (BOOL)online
 {
-	return group;
+	return [[self account] online];
 }
 
-- (void)setInGroup:(AIListGroup*)newGroup
+- (void)openChat
 {
-	if(newGroup != group) {
-		[group release];
-		group = [newGroup retain];
-		}
-}
+	AIChat *chat = [[adium chatController] existingChatWithName:[self name]
+													  onAccount:[self account]];
+	if (chat && [[chat chatCreationDictionary] isEqualToDictionary:
+				 [self chatCreationDictionary]]) {
+		//An existing open chat matches this bookmark. Switch to it!
+		[[adium interfaceController] setActiveChat:chat];
+		
+	} else {
+		//Open a new group chat (bookmarked chat)
+		[[adium chatController] chatWithName:[self name]
+								  identifier:NULL 
+								   onAccount:[self account] 
+							chatCreationInfo:[self chatCreationDictionary]];
+	}	
+}	
 
--(NSDictionary*)info
+- (NSString *)description
 {
-	NSLog(@"handle: %@ server: %@ group: %@ account: %@ room: %@",handle, server,group, account,room);
-	return [NSDictionary dictionaryWithObjectsAndKeys:handle,@"handle",server,@"server",group,@"group",account,@"account",room,@"room"];
+	return [NSString stringWithFormat:@"<%@:%x %@ - %@>",NSStringFromClass([self class]), self, [self formattedUID], [self chatCreationDictionary]];
 }
-
 
 @end
