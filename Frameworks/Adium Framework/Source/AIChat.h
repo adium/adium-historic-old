@@ -20,6 +20,7 @@
 
 @class AIAccount, AIListObject, AIListContact, AIContentObject, AIEmoticon;
 
+#define Chat_OrderDidChange						@"Chat_OrderDidChange"
 #define Chat_WillClose							@"Chat_WillClose"
 #define Chat_DidOpen							@"Chat_DidOpen"
 #define Chat_BecameActive						@"Chat_BecameActive"

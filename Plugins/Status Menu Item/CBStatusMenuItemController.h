@@ -33,7 +33,6 @@
 	NSMutableArray          *accountMenuItemsArray;
 	NSMutableArray          *stateMenuItemsArray;
 	NSMutableArray			*contactMenuItemsArray;
-	NSMutableArray          *unviewedObjectsArray;
 	NSMutableArray          *openChatsArray;
 
 	NSTimer					*unviewedContentFlash;

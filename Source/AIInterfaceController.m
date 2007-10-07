@@ -694,6 +694,8 @@
 {
 	[self _resetOpenChatsCache];
 	[self buildWindowMenu];
+	[[adium notificationCenter] postNotificationName:Chat_OrderDidChange object:nil userInfo:nil];
+	
 }
 
 #pragma mark Unviewed content
