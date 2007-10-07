@@ -46,6 +46,8 @@
 #import <Adium/AISortController.h>
 #import <Adium/AIUserIcons.h>
 #import <Adium/AIServiceIcons.h>
+#import <Adium/AIListBookmark.h>
+
 #import "AdiumAuthorization.h"
 
 #define KEY_FLAT_GROUPS					@"FlatGroups"			//Group storage
@@ -1714,6 +1716,16 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	return contact;
 }
 
+- (AIListBookmark *)bookmarkForChat:(AIChat *)inChat
+{
+	AIListBookmark *bookmark = [[AIListBookmark alloc] initWithChat:inChat];
+
+	//Do the update thing
+	[self _updateAllAttributesOfObject:bookmark];
+
+	return [bookmark autorelease];
+}
+
 - (AIListContact *)existingContactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID usingClass:(Class)ContactClass
 {
 	if (inService && [inUID length]) {
@@ -2100,7 +2112,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	
 	if ([group isKindOfClass:[AIListGroup class]]) {
 		//Move a contact into a new group
-		if ([listContact isKindOfClass:[AIMetaContact class]]) {
+		if ([listContact isKindOfClass:[AIListBookmark class]]) {
+			[self _moveContactLocally:listContact toGroup:(AIListGroup *)group];
+
+		} else if ([listContact isKindOfClass:[AIMetaContact class]]) {
 			//Move the meta contact to this new group
 			[self _moveContactLocally:listContact toGroup:(AIListGroup *)group];
 
@@ -2118,11 +2133,11 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		} else if ([listContact isKindOfClass:[AIListContact class]]) {
 			//Move the object
 			[self _moveObjectServerside:listContact toGroup:(AIListGroup *)group];
-		}
-		else
-		{
+		} else if ([listContact isKindOfClass:[AIListGroup class]]) {
 			// Move contact from one contact list to another
-			[(AIListGroup *)listContact moveGroupFrom:[listContact containingObject] to:group];
+			[(AIListGroup *)listContact moveGroupFrom:[(AIListGroup *)listContact containingObject] to:group];
+		} else {
+			AILogWithSignature(@"I don't know what to do with %@",listContact);
 		}
 	} else if ([group isKindOfClass:[AIMetaContact class]]) {
 		//Moving a contact into a meta contact

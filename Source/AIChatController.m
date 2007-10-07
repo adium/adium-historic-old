@@ -398,33 +398,19 @@
 		[chat setName:name];
 		[chat setIdentifier:identifier];
 		[chat setIsGroupChat:YES];
+		[chat setChatCreationDictionary:chatCreationInfo];
 					
-		[chat setHandle:[chatCreationInfo objectForKey:@"handle"]];
-		[chat setRoom:[chatCreationInfo objectForKey:@"room"] ];
-		[chat setServer:[chatCreationInfo objectForKey:@"server"]];
-		
 		[openChats addObject:chat];
 		AILog(@"chatWithName:%@ identifier:%@ onAccount:%@ added <<%@>> [%@]",name,identifier,account,chat,openChats);
-		
-		
-		if (chatCreationInfo) {
-			[chat setStatusObject:chatCreationInfo
-						   forKey:@"ChatCreationInfo"
-					       notify:NotifyNever];
-		}
+
+
 		//Inform the account of its creation
 		if (![account openChat:chat]) {
 			[openChats removeObject:chat];
 			AILog(@"chatWithName: Immediately removed <<%@>> [%@]",chat,openChats);
 			chat = nil;
 		}
-		
-	
-
 	}
-	
-
-
 
 	AILog(@"chatWithName %@ created --> %@",name,chat);
 	return chat;

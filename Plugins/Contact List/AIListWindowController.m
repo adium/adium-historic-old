@@ -424,30 +424,20 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
         } else {
             [sender expandItem:selectedObject];
         }
-		
-  
-		} else if ([selectedObject isMemberOfClass:[AIListBookmark class]]) {
-			//hide tooltip
-			[contactListController hideTooltip];
-		
-			//open a new group chat (bookmarked chat)
-			AIChat *chat = [[adium chatController] chatWithName:[(AIListBookmark *)selectedObject name] 
-													 identifier:NULL 
-													  onAccount:[(AIListBookmark *)selectedObject account] 
-											   chatCreationInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-																 [(AIListBookmark *)selectedObject room], @"room",
-																 [(AIListBookmark *)selectedObject server], @"server",
-																 [(AIListBookmark *)selectedObject handle], @"handle",
-																 nil]];
-#warning Incomplete
-		} else if ([selectedObject isKindOfClass:[AIListContact class]]) {
+
+	} else if ([selectedObject isMemberOfClass:[AIListBookmark class]]) {
+		//Hide any tooltip the contactListController is currently showing
+		[contactListController hideTooltip];
+
+		[(AIListBookmark *)selectedObject openChat];
+
+	} else if ([selectedObject isKindOfClass:[AIListContact class]]) {
 		//Hide any tooltip the contactListController is currently showing
 		[contactListController hideTooltip];
 
 		//Open a new message with the contact
-		[[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:(AIListContact *)selectedObject onPreferredAccount:YES]];
-
-																				
+		[[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:(AIListContact *)selectedObject
+																			onPreferredAccount:YES]];
     } 
 		
 		

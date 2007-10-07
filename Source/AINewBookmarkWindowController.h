@@ -1,21 +1,32 @@
 /* AINewBookmarkWindowController */
 
 #import <Cocoa/Cocoa.h>
-#import <AIWindowController.h>
-#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIWindowController.h>
 
-@interface AINewBookmarkWindowController : AIWindowController
-{
-    IBOutlet id myOutlet;
-    IBOutlet id popUp_group;
-    IBOutlet id textField_name;
-			 id delegate;
+@class AIChat, AIListGroup;
+
+@interface AINewBookmarkWindowController : AIWindowController {
+    IBOutlet NSPopUpButton	*popUp_group;
+    IBOutlet NSTextField	*textField_name;
+	
+	IBOutlet NSTextField	*label_name;
+	IBOutlet NSTextField	*label_group;
+	IBOutlet NSButton		*button_add;
+	IBOutlet NSButton		*button_cancel;
+	
+	id			target;
+	AIChat		*chat;
 }
-+(AINewBookmarkWindowController *)promptForNewBookmarkOnWindow:(NSWindow*)parentWindow;
+
++ (AINewBookmarkWindowController *)promptForNewBookmarkForChat:(AIChat *)inChat
+													  onWindow:(NSWindow*)parentWindow
+											   notifyingTarget:(id)inTarget;
+
 - (IBAction)add:(id)sender;
 - (IBAction)cancel:(id)sender;
--(void)setDelegate:(id)newDelegate;
--(id)delegate;
-- (void)buildGroupMenu;
 
+@end
+
+@interface NSObject (AINewBookmarkWindowControllerTarget)
+- (void)createBookmarkForChat:(AIChat *)chat withName:(NSString *)name inGroup:(AIListGroup *)group;
 @end
