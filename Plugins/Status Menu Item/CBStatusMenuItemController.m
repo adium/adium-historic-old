@@ -45,6 +45,7 @@
 - (void)updateMenuIcons;
 - (void)updateMenuIconsBundle;
 - (void)updateUnreadCount;
+- (void)updateOpenChats;
 @end
 
 @implementation CBStatusMenuItemController
@@ -73,7 +74,6 @@
 		//Setup for open chats and unviewed content catching
 		accountMenuItemsArray = [[NSMutableArray alloc] init];
 		stateMenuItemsArray = [[NSMutableArray alloc] init];
-		unviewedObjectsArray = [[NSMutableArray alloc] init];
 		openChatsArray = [[NSMutableArray alloc] init];
 		contactMenuItemsArray = [[NSMutableArray alloc] init];
 		needsUpdate = YES;
@@ -82,16 +82,20 @@
 		NSNotificationCenter *notificationCenter = [adium notificationCenter];
 		//Register to recieve chat opened and chat closed notifications
 		[notificationCenter addObserver:self
-		                       selector:@selector(chatOpened:)
+		                       selector:@selector(updateOpenChats)
 		                           name:Chat_DidOpen
 		                         object:nil];
 		[notificationCenter addObserver:self
-		                       selector:@selector(chatClosed:)
+		                       selector:@selector(updateOpenChats)
 		                           name:Chat_WillClose
 		                         object:nil];
+		[notificationCenter addObserver:self
+		                       selector:@selector(updateOpenChats)
+		                           name:Chat_OrderDidChange
+		                         object:nil];		
 		
 		[notificationCenter addObserver:self
-							   selector:@selector(statusIconSetDidChange:)
+							   selector:@selector(updateMenuIcons)
 								   name:AIStatusIconSetDidChangeNotification
 								 object:nil];
 		
@@ -117,7 +121,7 @@
 		
 		//Register to recieve active state changed notifications
 		[notificationCenter addObserver:self
-		                       selector:@selector(accountStateChanged:)
+		                       selector:@selector(updateMenuIcons)
 		                           name:AIStatusActiveStateChangedNotification
 		                         object:nil];
 		
@@ -149,7 +153,6 @@
 	// All the temporary NSMutableArrays we store
 	[accountMenuItemsArray release];
 	[stateMenuItemsArray release];
-	[unviewedObjectsArray release];
 	[openChatsArray release];
 	[contactMenuItemsArray release];
 	
@@ -217,8 +220,6 @@
 // Updates the unread count of the status item.
 - (void)updateUnreadCount
 {
-	// Use AIChatController's method instead of our our array of unread chats (unviewedObjectsArray)
-	// so we can get the true number of unread messages.
 	int unreadCount = [[adium chatController] unviewedContentCount];
 
 	// Only show if greater-than zero, otherwise set to nil.
@@ -408,11 +409,8 @@
 #pragma mark StateMenuPlugin
 - (void)statusMenu:(AIStatusMenu *)inStatusMenu didRebuildStatusMenuItems:(NSArray *)menuItemArray
 {
-	//Pull 'em out!
-	[stateMenuItemsArray removeAllObjects];
-	
-	//Stick 'em in!
-	[stateMenuItemsArray addObjectsFromArray:menuItemArray];
+	[stateMenuItemsArray release];
+	stateMenuItemsArray = [menuItemArray retain];
 	
 	//We need to update next time we're clicked
 	needsUpdate = YES;
@@ -426,95 +424,54 @@
 //Chat Observer --------------------------------------------------------
 #pragma mark Chat Observer
 
-- (void)chatOpened:(NSNotification *)notification
-{
-	//Add it to the array
-	[openChatsArray addObject:[notification object]];
-	
-	//We need to update the menu next time we are clicked
-	needsUpdate = YES;
-}
-
-- (void)chatClosed:(NSNotification *)notification
-{
-	AIChat	*chat = [notification object];
-	//Remove it from the array
-	[openChatsArray removeObjectIdenticalTo:chat];
-	
-	[unviewedObjectsArray removeObjectIdenticalTo:chat];
-	
-	int index = [theMenu indexOfItemWithRepresentedObject:chat];
-	if (index != -1) {
-		[theMenu removeItemAtIndex:index];
-		/* Check to see if we have no openChats left, in which case we
-		 * need to remove the extra menu seperator, which is now in the index'th spot.
-		 */
-		if (([openChatsArray count] == 0) && [[theMenu itemAtIndex:index] isSeparatorItem]) {
-			[theMenu removeItemAtIndex:index];
-		}
-	}
-}
-
 - (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	//If the contact's unviewed content state has changed
-	if (inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]) {
-		//If there is new unviewed content
-		if ([inChat unviewedContentCount]) {
-			//If we're not already watching it
-			if (![unviewedObjectsArray containsObjectIdenticalTo:inChat]) {
-				//Add it, we're watching it now
-				[unviewedObjectsArray addObject:inChat];
-				//We need to update our menu
-				needsUpdate = YES;
-			}
-			//If they've viewed the content
-		} else {
-			//If we're tracking this object
-			if ([unviewedObjectsArray containsObjectIdenticalTo:inChat]) {
-				//Remove it, it's not unviewed anymore
-				[unviewedObjectsArray removeObjectIdenticalTo:inChat];
-				//We need to update our menu
-				needsUpdate = YES;
-			}
-		}
-	}
+	[self updateOpenChats];
 	
-	if ([unviewedObjectsArray count] == 0) {
-		//If there are no more contacts with unviewed content, set our icon to normal.
-		if (unviewedContent) {
-			[unviewedContentFlash invalidate];
-			[unviewedContentFlash release]; unviewedContentFlash = nil;
-			currentlyIgnoringUnviewed = NO;
-			unviewedContent = NO;
-			[self updateMenuIcons];
-		}
-	} else {
-		//If this is the first contact with unviewed content, set our icon to unviewed content.
-		if (!unviewedContent) {
-			if ([menuIcons flashUnviewed]) {
-				currentlyIgnoringUnviewed = NO;
-				unviewedContentFlash = [[NSTimer scheduledTimerWithTimeInterval:1.0
-																		 target:self
-																	   selector:@selector(updateUnviewedContentFlash:)
-																	   userInfo:nil
-																		repeats:YES] retain];
-			}
-			unviewedContent = YES;
-			[self updateMenuIcons];
-		} else {
-			// Update our unread count.
-			[self updateUnreadCount];
-		}
-	}
-	
-	//If they're typing, we also need to update because we show typing within the menu itself next to chats.
-	if ([inModifiedKeys containsObject:KEY_TYPING]) {
-		needsUpdate = YES;
-	}
-	
-	//We didn't modify attributes, so return nil
+	// We didn't modify anything; return nil.
 	return nil;
+}
+
+- (void)updateOpenChats
+{
+	int unviewedContentCount = [[adium chatController] unviewedContentCount];
+
+	// Update our open chats
+	[openChatsArray release];
+	openChatsArray = [[[adium interfaceController] openChats] retain];
+	
+	// We think there's unviewed content, but there's not.
+	if (unviewedContent && unviewedContentCount == 0) {
+		// Invalidate and release the unviewed content flash timer
+		[unviewedContentFlash invalidate];
+		[unviewedContentFlash release]; unviewedContentFlash = nil;
+		currentlyIgnoringUnviewed = NO;
+		
+		// Update unviewed content
+		unviewedContent = NO;
+		
+		// Update our menu icons
+		[self updateMenuIcons];
+	// We think there's no unviewed content, and there is.
+	} else if (!unviewedContent && unviewedContentCount > 0) {
+		if ([menuIcons flashUnviewed]) {
+			currentlyIgnoringUnviewed = NO;
+			unviewedContentFlash = [[NSTimer scheduledTimerWithTimeInterval:1.0
+																	 target:self
+																   selector:@selector(updateUnviewedContentFlash:)
+																   userInfo:nil
+																	repeats:YES] retain];
+		}
+		
+		// Update unviewed content
+		unviewedContent = YES;
+		[self updateMenuIcons];
+	// If we already know there's unviewed content, just update the count.
+	} else if (unviewedContent && unviewedContentCount > 0) {
+		[self updateUnreadCount];
+	}
+
+	needsUpdate = YES;	
 }
 
 //Delegates --------------------------------------------------------
@@ -531,7 +488,7 @@
 - (void)contactMenu:(AIContactMenu *)inContactMenu didSelectContact:(AIListContact *)inContact
 {
 	[[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:inContact
-							 onPreferredAccount:YES]];
+																		onPreferredAccount:YES]];
 	[self activateAdium:nil];
 }
 
@@ -571,10 +528,10 @@
 			
 			[menu addItem:[NSMenuItem separatorItem]];
 			
-			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Accounts",nil)
+			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Accounts",nil)
 																			 target:self
 																			 action:nil
-																	  keyEquivalent:@""] autorelease];
+																	  keyEquivalent:@""];
 			
 			//Add the account menu items
 			enumerator = [accountMenuItemsArray objectEnumerator];
@@ -603,6 +560,7 @@
 			
 			[menuItem setSubmenu:accountsMenu];
 			[menu addItem:menuItem];
+			[menuItem release];
 		}
 		
 		//If there exist any open chats, add them
@@ -616,27 +574,29 @@
 			//Create and add the menu items
 			while ((chat = [enumerator nextObject])) {
 				NSImage *image = nil;
-				
 				//Create a menu item from the chat
-				menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[chat displayName]
+				menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[chat displayName]
 				                                                                 target:self
 				                                                                 action:@selector(switchToChat:)
-				                                                          keyEquivalent:@""] autorelease];
+				                                                          keyEquivalent:@""];
 				//Set the represented object
 				[menuItem setRepresentedObject:chat];
+
+				//Set the image
 				
 				//If there is a chat status image, use that
-				if (!(image = [AIStatusIcons statusIconForChat:chat type:AIStatusIconMenu direction:AIIconNormal])) {
-					//Otherwise use the contact's status image
-					image = [AIStatusIcons statusIconForListObject:[chat listObject]
-					                                          type:AIStatusIconMenu
-					                                     direction:AIIconNormal];
+				image = [AIStatusIcons statusIconForChat:chat type:AIStatusIconMenu direction:AIIconNormal];
+				//Otherwise use the chat's -chatMenuImage
+				if (!image) {
+					image = [chat chatMenuImage];
 				}
-				//Set the image
+				
 				[menuItem setImage:image];
 				
 				//Add it to the menu
 				[menu addItem:menuItem];
+
+				[menuItem release];
 			}
 		}
 		
@@ -649,10 +609,10 @@
 			[menu addItem:[NSMenuItem separatorItem]];
 			
 			// Add contacts
-			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Contacts",nil)
+			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Contacts",nil)
 																			 target:self
 																			 action:nil
-																	  keyEquivalent:@""] autorelease];
+																	  keyEquivalent:@""];
 
 			while ((contactMenuItem = [enumerator nextObject])) {
 				[contactsMenu addItem:contactMenuItem];
@@ -665,6 +625,7 @@
 			
 			[menuItem setSubmenu:contactsMenu];
 			[menu addItem:menuItem];
+			[menuItem release];
 		}
 		
 		//Add our last two items
@@ -747,16 +708,6 @@
 }
 
 #pragma mark -
-
-- (void)accountStateChanged:(NSNotification *)notification
-{
-	[self updateMenuIcons];
-}
-
-- (void)statusIconSetDidChange:(NSNotification *)notification
-{
-	[self updateMenuIcons];
-}
 
 - (void)menuBarIconsDidChange:(NSNotification *)notification
 {
