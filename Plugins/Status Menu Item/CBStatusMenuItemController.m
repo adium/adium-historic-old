@@ -77,7 +77,6 @@
 		openChatsArray = [[NSMutableArray alloc] init];
 		contactMenuItemsArray = [[NSMutableArray alloc] init];
 		needsUpdate = YES;
-		contactListOpen = [[adium interfaceController] contactListIsVisible];
 		
 		NSNotificationCenter *notificationCenter = [adium notificationCenter];
 		//Register to recieve chat opened and chat closed notifications
@@ -97,17 +96,6 @@
 		[notificationCenter addObserver:self
 							   selector:@selector(updateMenuIcons)
 								   name:AIStatusIconSetDidChangeNotification
-								 object:nil];
-		
-		// Register for contact list open and close notifications
-		[notificationCenter addObserver:self
-							   selector:@selector(contactListDidClose:)
-								   name:Interface_ContactListDidClose
-								 object:nil];
-		
-		[notificationCenter addObserver:self
-							   selector:@selector(contactListDidOpen:)
-								   name:Interface_ContactListDidBecomeMain
 								 object:nil];
 		
 		// Register for our menu bar icon set changing
@@ -631,17 +619,10 @@
 		//Add our last two items
 		[menu addItem:[NSMenuItem separatorItem]];
 		
-		if (contactListOpen) {
-			[menu addItemWithTitle:AILocalizedString(@"Hide Contact List", nil)
-							target:self
-							action:@selector(hideContactList:)
-					 keyEquivalent:@""];
-		} else {
-			[menu addItemWithTitle:AILocalizedString(@"Show Contact List", nil)
-							target:self
-							action:@selector(activateContactList:)
-					 keyEquivalent:@""];
-		}
+		[menu addItemWithTitle:AILocalizedString(@"Contact List", nil)
+						target:self
+						action:@selector(activateContactList:)
+				 keyEquivalent:@""];
 		
 		[menu addItemWithTitle:AILocalizedString(@"Bring Adium to Front",nil)
 		                target:self
@@ -658,21 +639,6 @@
 		//Only update next time if we need to
 		needsUpdate = NO;
 	}
-}
-
-// Contact List Notifications
-
-#pragma mark Contact List Notifications
-- (void)contactListDidClose:(id)sender
-{
-	contactListOpen = NO;
-	needsUpdate = YES;
-}
-
-- (void)contactListDidOpen:(id)sender
-{
-	contactListOpen = YES;
-	needsUpdate = YES;
 }
 
 //Menu Actions --------------------------------------------------------
@@ -700,11 +666,6 @@
 	if (![NSApp isActive]) {
 		[self activateAdium:nil];
 	}
-}
-
-- (void)hideContactList:(id)sender
-{
-	[[adium interfaceController] closeContactList:nil];
 }
 
 #pragma mark -
