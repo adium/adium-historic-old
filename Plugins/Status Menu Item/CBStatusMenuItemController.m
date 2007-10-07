@@ -428,6 +428,10 @@
 	return [inContact online];
 }
 
+- (BOOL)contactMenuShouldUseDisplayName:(AIContactMenu *)inContactMenu
+{
+	return YES;
+}
 
 //Chat Observer --------------------------------------------------------
 #pragma mark Chat Observer

@@ -93,7 +93,10 @@
 	//Ensure the the delegate implements all required selectors and remember which optional selectors it supports.
 	NSParameterAssert([inDelegate respondsToSelector:@selector(contactMenu:didRebuildMenuItems:)]);
 	delegateRespondsToDidSelectContact = [inDelegate respondsToSelector:@selector(contactMenu:didSelectContact:)];
-	delegateRespondsToShouldIncludeContact = [inDelegate respondsToSelector:@selector(contactMenu:shouldIncludeContact:)];	
+	delegateRespondsToShouldIncludeContact = [inDelegate respondsToSelector:@selector(contactMenu:shouldIncludeContact:)];
+
+	shouldUseDisplayName = ([delegate respondsToSelector:@selector(contactMenuShouldUseDisplayName:)] &&
+							  [delegate contactMenuShouldUseDisplayName:self]);
 }
 - (id)delegate
 {
@@ -191,6 +194,8 @@
 	AIListObject	*listObject = [menuItem representedObject];
 	
 	if (listObject) {
+		NSAttributedString		*title = nil;
+		
 		[[menuItem menu] setMenuChangedMessagesEnabled:NO];
 		[menuItem setImage:[self imageForListObject:listObject]];		
 
@@ -200,8 +205,15 @@
 			titleAttributes = [[NSDictionary dictionaryWithObject:[NSFont menuFontOfSize:14.0f]
 														   forKey:NSFontAttributeName] retain];
 		}
-		NSAttributedString *title = [[NSAttributedString alloc] initWithString:[listObject displayName]
-																	attributes:titleAttributes];
+		
+		if (shouldUseDisplayName) {
+			title = [[NSAttributedString alloc] initWithString:[listObject displayName]
+													attributes:titleAttributes];
+		} else {
+			title = [[NSAttributedString alloc] initWithString:[listObject formattedUID]
+													attributes:titleAttributes];			
+		}
+
 		[menuItem setAttributedTitle:title];
 		[title release];		
 
