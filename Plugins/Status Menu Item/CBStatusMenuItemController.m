@@ -106,6 +106,12 @@
 										   name:AIMenuBarIconsDidChangeNotification
 										 object:nil];
 		
+		// Register as an observer of the preference group so we can update our "show offline contacts" option
+		[[adium preferenceController] registerPreferenceObserver:self
+														forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
+		
+		showOfflineContacts = NO;
+		
 		//Register as a chat observer (So we can catch the unviewed content status flag)
 		[[adium chatController] registerChatObserver:self];
 		
@@ -136,6 +142,7 @@
 	//Unregister ourself
 	[[adium chatController] unregisterChatObserver:self];
 	[[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 	
 	//Release our objects
 	[[statusItem statusBar] removeStatusItem:statusItem];
@@ -426,10 +433,8 @@
 
 - (BOOL)contactMenu:(AIContactMenu *)inContactMenu shouldIncludeContact:(AIListContact *)inContact
 {
-	BOOL showOfflineContacts = [[[adium preferenceController] preferenceForKey:KEY_SHOW_OFFLINE_CONTACTS
-																		 group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
-	// Show contacts based on the "show offline contacts" preference.
-	return (showOfflineContacts || (!showOfflineContacts && [inContact online]));
+	// Show this contact if we're showing offline contacts or if this contact is online.
+	return (showOfflineContacts || [inContact online]);
 }
 
 - (BOOL)contactMenuShouldUseDisplayName:(AIContactMenu *)inContactMenu
@@ -650,14 +655,14 @@
 
 - (void)switchToChat:(id)sender
 {
-	[self activateAdium:nil];
 	[[adium interfaceController] setActiveChat:[sender representedObject]];
+	[self activateAdium:nil];
 }
 
 - (void)activateContactList:(id)sender
 {
-	[self activateAdium:nil];
 	[[adium interfaceController] showContactList:nil];
+	[self activateAdium:nil];
 }
 
 - (void)activateAccountList:(id)sender
@@ -671,6 +676,15 @@
 	if (![NSApp isActive]) {
 		[NSApp activateIgnoringOtherApps:YES];
 		[NSApp arrangeInFront:nil];
+	}
+}
+
+#pragma mark Preferences Observer
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	if ([key isEqualToString:KEY_SHOW_OFFLINE_CONTACTS]) {
+		showOfflineContacts = [[prefDict objectForKey:KEY_SHOW_OFFLINE_CONTACTS] boolValue];
 	}
 }
 

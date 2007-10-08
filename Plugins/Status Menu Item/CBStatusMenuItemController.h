@@ -39,6 +39,7 @@
 	
 	BOOL					currentlyIgnoringUnviewed;
 	BOOL					unviewedContent;
+	BOOL					showOfflineContacts;
 	BOOL                    needsUpdate;
 }
 
