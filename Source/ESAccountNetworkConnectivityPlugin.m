@@ -249,7 +249,7 @@
 		
 		while ((account = [enumerator nextObject])) {
 			if ([account online] ||
-				[account statusObjectForKey:@"Connecting"] ||
+				[[account statusObjectForKey:@"Connecting"] boolValue] ||
 				[account statusObjectForKey:@"Waiting to Reconnect"]) {
 
 				// Disconnect the account if it's online
@@ -268,6 +268,7 @@
 	//While some accounts disconnect immediately, others may need a second or two to finish the process.  For
 	//these accounts we'll want to hold system sleep until they are ready.  We monitor account status changes
 	//and will lift the hold once all accounts are finished.
+	//Don't delay sleep for connecting or reconnecting accounts
 	if ([self _accountsAreOnlineOrDisconnecting:NO]) {
 		AILog(@"Posting AISystemHoldSleep_Notification...");
 		[[NSNotificationCenter defaultCenter] postNotificationName:AISystemHoldSleep_Notification object:nil];
@@ -285,6 +286,7 @@
 	if ([inObject isKindOfClass:[AIAccount class]]) {
 		if (waitingToSleep &&
 			[inModifiedKeys containsObject:@"Online"]) {
+			//Don't delay sleep for connecting or reconnecting accounts
 			if (![self _accountsAreOnlineOrDisconnecting:NO]) {
 				AILog(@"Posting AISystemContinueSleep_Notification...");
 				[[NSNotificationCenter defaultCenter] postNotificationName:AISystemContinueSleep_Notification object:nil];
