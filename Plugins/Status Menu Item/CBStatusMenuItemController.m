@@ -35,6 +35,8 @@
 #import <Adium/AIContactMenu.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
+// For the KEY_SHOW_OFFLINE_CONTACTS and PREF_GROUP_CONTACT_LIST_DISPLAY
+#import "AIContactController.h"
 
 #define STATUS_ITEM_MARGIN 8
 
@@ -424,8 +426,10 @@
 
 - (BOOL)contactMenu:(AIContactMenu *)inContactMenu shouldIncludeContact:(AIListContact *)inContact
 {
-	// Show only online contacts.
-	return [inContact online];
+	BOOL showOfflineContacts = [[[adium preferenceController] preferenceForKey:KEY_SHOW_OFFLINE_CONTACTS
+																		 group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
+	// Show contacts based on the "show offline contacts" preference.
+	return (showOfflineContacts || (!showOfflineContacts && [inContact online]));
 }
 
 - (BOOL)contactMenuShouldUseDisplayName:(AIContactMenu *)inContactMenu
