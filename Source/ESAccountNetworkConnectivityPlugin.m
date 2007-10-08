@@ -25,7 +25,7 @@
 
 @interface ESAccountNetworkConnectivityPlugin (PRIVATE)
 - (void)handleConnectivityForAccount:(AIAccount *)account reachable:(BOOL)reachable;
-- (BOOL)_accountsAreOnlineOrDisconnecting;
+- (BOOL)_accountsAreOnlineOrDisconnecting:(BOOL)considerConnecting;
 @end
 
 /*!
@@ -242,15 +242,24 @@
 - (void)systemWillSleep:(NSNotification *)notification
 {
 	AILog(@"***** System sleeping...");
-	//Disconnect all online accounts
-	if ([self _accountsAreOnlineOrDisconnecting]) {
+	//Disconnect all online or connecting accounts
+	if ([self _accountsAreOnlineOrDisconnecting:YES]) {
 		NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
 		AIAccount		*account;
 		
 		while ((account = [enumerator nextObject])) {
-			if ([account online]) {
-				//Disconnect the account and add it to our list to reconnect
-				[account disconnect];
+			if ([account online] ||
+				[account statusObjectForKey:@"Connecting"] ||
+				[account statusObjectForKey:@"Waiting to Reconnect"]) {
+
+				// Disconnect the account if it's online
+				if ([account online]) {
+					[account disconnect];
+				// Cancel any reconnect attempts
+				} else if ([account statusObjectForKey:@"Waiting to Reconnect"]) {
+					[account cancelAutoReconnect];
+				}
+				// Add it to our list to reconnect
 				[accountsToConnect addObject:account];
 			}
 		}
@@ -259,7 +268,7 @@
 	//While some accounts disconnect immediately, others may need a second or two to finish the process.  For
 	//these accounts we'll want to hold system sleep until they are ready.  We monitor account status changes
 	//and will lift the hold once all accounts are finished.
-	if ([self _accountsAreOnlineOrDisconnecting]) {
+	if ([self _accountsAreOnlineOrDisconnecting:NO]) {
 		AILog(@"Posting AISystemHoldSleep_Notification...");
 		[[NSNotificationCenter defaultCenter] postNotificationName:AISystemHoldSleep_Notification object:nil];
 		waitingToSleep = YES;
@@ -276,7 +285,7 @@
 	if ([inObject isKindOfClass:[AIAccount class]]) {
 		if (waitingToSleep &&
 			[inModifiedKeys containsObject:@"Online"]) {
-			if (![self _accountsAreOnlineOrDisconnecting]) {
+			if (![self _accountsAreOnlineOrDisconnecting:NO]) {
 				AILog(@"Posting AISystemContinueSleep_Notification...");
 				[[NSNotificationCenter defaultCenter] postNotificationName:AISystemContinueSleep_Notification object:nil];
 				waitingToSleep = NO;
@@ -335,8 +344,10 @@
 
 /*!
  * @brief Returns YES if any accounts are currently in the process of disconnecting
+ *
+ * @param considerConnecting Consider accounts which are connecting or waiting to reconnect
  */
-- (BOOL)_accountsAreOnlineOrDisconnecting
+- (BOOL)_accountsAreOnlineOrDisconnecting:(BOOL)considerConnecting
 {
     NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
 	AIAccount		*account;
@@ -345,6 +356,10 @@
 		if ([account online] ||
 		   [[account statusObjectForKey:@"Disconnecting"] boolValue]) {
 			AILog(@"%@ (and possibly others) is still %@",account, ([account online] ? @"online" : @"disconnecting"));
+			return YES;
+		} else if (considerConnecting &&
+				   ([[account statusObjectForKey:@"Connecting"] boolValue] ||
+					[account statusObjectForKey:@"Waiting to Reconnect"])) {
 			return YES;
 		}
 	}
