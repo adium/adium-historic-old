@@ -57,6 +57,9 @@
 - (AIServiceImportance)serviceImportance{
 	return AIServiceSecondary;
 }
+- (NSString *)userNameLabel{
+    return AILocalizedString(@"Email","MySpaceIM's user name.");
+}
 
 - (void)registerStatuses{
 	[[adium statusController] registerStatus:STATUS_NAME_AVAILABLE
