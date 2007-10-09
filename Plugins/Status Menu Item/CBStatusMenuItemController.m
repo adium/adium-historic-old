@@ -685,6 +685,7 @@
 {
 	if ([key isEqualToString:KEY_SHOW_OFFLINE_CONTACTS]) {
 		showOfflineContacts = [[prefDict objectForKey:KEY_SHOW_OFFLINE_CONTACTS] boolValue];
+		[contactMenu rebuildMenu];
 	}
 }
 
