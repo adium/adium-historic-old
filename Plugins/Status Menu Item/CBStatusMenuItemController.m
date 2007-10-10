@@ -631,7 +631,7 @@
 		//Add our last few items
 		[menu addItem:[NSMenuItem separatorItem]];
 		
-		[menu addItemWithTitle:AILocalizedString(@"Contact List", nil)
+		[menu addItemWithTitle:AILocalizedString(@"Open Contact List", nil)
 						target:self
 						action:@selector(activateContactList:)
 				 keyEquivalent:@""];
