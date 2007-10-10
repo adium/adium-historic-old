@@ -34,6 +34,7 @@
 #import <Adium/AIAccountMenu.h>
 #import <Adium/AIContactMenu.h>
 #import <AIUtilities/AIColorAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
 // For the KEY_SHOW_OFFLINE_CONTACTS and PREF_GROUP_CONTACT_LIST_DISPLAY
 #import "AIContactController.h"
@@ -525,7 +526,7 @@
 				[[menuItem target] validateMenuItem:menuItem];
 			}
 		}
-		
+
 		if ([accountMenuItemsArray count] > 1 || [contactMenuItemsArray count] > 0)
 			[menu addItem:[NSMenuItem separatorItem]];
 		
@@ -581,6 +582,13 @@
 																			action:@selector(activateContactList:)
 																	  keyEquivalent:@""];
 
+			[contactsMenu addItemWithTitle:[AILocalizedString(@"Contact List", nil) stringByAppendingEllipsis]
+									target:self
+									action:@selector(activateContactList:)
+							 keyEquivalent:@""];
+			
+			[contactsMenu addItem:[NSMenuItem separatorItem]];
+			
 			while ((contactMenuItem = [enumerator nextObject])) {
 				[contactsMenu addItem:contactMenuItem];
 				
@@ -593,6 +601,11 @@
 			[menuItem setSubmenu:contactsMenu];
 			[menu addItem:menuItem];
 			[menuItem release];
+		} else {
+			[menu addItemWithTitle:[AILocalizedString(@"Contact List", nil) stringByAppendingEllipsis]
+							target:self
+							action:@selector(activateContactList:)
+					 keyEquivalent:@""];
 		}
 		
 		//If there exist any open chats, add them
@@ -630,26 +643,6 @@
 				[menuItem release];
 			}
 		}
-		
-		//Add our last few items
-		[menu addItem:[NSMenuItem separatorItem]];
-		
-		[menu addItemWithTitle:AILocalizedString(@"Open Contact List", nil)
-						target:self
-						action:@selector(activateContactList:)
-				 keyEquivalent:@""];
-		
-		[menu addItemWithTitle:AILocalizedString(@"Bring Adium to Front",nil)
-		                target:self
-		                action:@selector(activateAdium:)
-		         keyEquivalent:@""];
-
-		[menu addItem:[NSMenuItem separatorItem]];
-		
-		[menu addItemWithTitle:AILocalizedString(@"Quit Adium",nil)
-		                target:NSApp
-		                action:@selector(terminate:)
-		         keyEquivalent:@""];
 		
 		//Only update next time if we need to
 		needsUpdate = NO;
