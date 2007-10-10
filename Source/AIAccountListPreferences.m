@@ -280,7 +280,16 @@
 		
 		//Put new accounts online by default
 		[inAccount setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-	}
+	} else if (existingAccount && successful && [inAccount enabled]) {
+		//If the user edited an account that is "reconnecting" or "connecting", disconnect it and try to reconnect.
+		if ([[inAccount statusObjectForKey:@"Connecting"] boolValue] ||
+			[inAccount statusObjectForKey:@"Waiting to Reconnect"]) {
+			// Stop connecting or stop waiting to reconnect.
+			[inAccount setShouldBeOnline:NO];
+			// Connect it.
+			[inAccount setShouldBeOnline:YES];
+		}
+	}	
 }
 
 /*!
