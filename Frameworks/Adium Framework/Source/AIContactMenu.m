@@ -94,9 +94,12 @@
 	NSParameterAssert([inDelegate respondsToSelector:@selector(contactMenu:didRebuildMenuItems:)]);
 	delegateRespondsToDidSelectContact = [inDelegate respondsToSelector:@selector(contactMenu:didSelectContact:)];
 	delegateRespondsToShouldIncludeContact = [inDelegate respondsToSelector:@selector(contactMenu:shouldIncludeContact:)];
-
-	shouldUseDisplayName = ([delegate respondsToSelector:@selector(contactMenuShouldUseDisplayName:)] &&
-							  [delegate contactMenuShouldUseDisplayName:self]);
+	
+	shouldUseDisplayName = ([inDelegate respondsToSelector:@selector(contactMenuShouldUseDisplayName:)] &&
+							[inDelegate contactMenuShouldUseDisplayName:self]);
+	
+	shouldDisplayGroupHeaders = ([inDelegate respondsToSelector:@selector(contactMenuShouldDisplayGroupHeaders:)] &&
+								 [inDelegate contactMenuShouldDisplayGroupHeaders:self]);
 }
 - (id)delegate
 {
@@ -109,6 +112,14 @@
 - (void)rebuildMenu
 {
 	[super rebuildMenu];
+	
+	// Update our values for display name and group header options.
+	shouldUseDisplayName = ([delegate respondsToSelector:@selector(contactMenuShouldUseDisplayName:)] &&
+							[delegate contactMenuShouldUseDisplayName:self]);
+	
+	shouldDisplayGroupHeaders = ([delegate respondsToSelector:@selector(contactMenuShouldDisplayGroupHeaders:)] &&
+								 [delegate contactMenuShouldDisplayGroupHeaders:self]);
+	
 	[delegate contactMenu:self didRebuildMenuItems:[self menuItems]];
 }	
 
@@ -130,9 +141,14 @@
  */
 - (NSArray *)buildMenuItems
 {
-	NSArray *listObjects = [self listObjectsForContainedObjects:([containingObject conformsToProtocol:@protocol(AIContainingObject)] ?
+	NSArray *listObjects = ([containingObject conformsToProtocol:@protocol(AIContainingObject)] ?
 						   [(AIListObject<AIContainingObject> *)containingObject listContacts] :
-						   [NSArray arrayWithObject:containingObject])];
+						   [NSArray arrayWithObject:containingObject]);
+
+	// If we're not showing groups, just recurse and gather up all the contacts.
+	if (!shouldDisplayGroupHeaders) {
+		listObjects = [self listObjectsForContainedObjects:listObjects];
+	}
 	
 	// Sort the list objects
 	listObjects = [[[adium contactController] activeSortController] sortListObjects:listObjects];
@@ -173,14 +189,45 @@
 	AIListObject	*listObject;
 	
 	while ((listObject = [enumerator nextObject])) {
-		NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@""
-																					target:self
-																					action:@selector(selectContactMenuItem:)
-																			 keyEquivalent:@""
-																		 representedObject:listObject];
-		[self _updateMenuItem:menuItem];
-		[menuItemArray addObject:menuItem];
-		[menuItem release];
+		// Display groups inline
+		if ([listObject isKindOfClass:[AIListGroup class]] && [listObject conformsToProtocol:@protocol(AIContainingObject)]) {
+			NSArray			*containedListObjects = [self listObjectsForContainedObjects:[(AIListObject<AIContainingObject> *)listObject listContacts]];
+			
+			// If there's any contained list objects, add ourself as a group and add the contained objects.
+			if ([containedListObjects count] > 0) {
+				// Create our menu item
+				NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@""
+																							target:self
+																							action:nil
+																					 keyEquivalent:@""
+																				 representedObject:listObject];
+				
+			
+				// Sort the list contained objects.
+				containedListObjects = [[[adium contactController] activeSortController] sortListObjects:containedListObjects];
+				
+				// The group isn't clickable.
+				[menuItem setEnabled:NO];
+				[self _updateMenuItem:menuItem];
+				
+				// Add the group and contained objects to the array.
+				[menuItemArray addObject:menuItem];
+				[menuItemArray addObjectsFromArray:[self contactMenusForListObjects:containedListObjects]];
+				
+				[menuItem release];
+			}
+		} else {
+			// Just add the menu item.
+			NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@""
+																						target:self
+																						action:@selector(selectContactMenuItem:)
+																				 keyEquivalent:@""
+																			 representedObject:listObject];
+			[self _updateMenuItem:menuItem];
+			[menuItemArray addObject:menuItem];
+			[menuItem release];
+		}
+
 	}
 	
 	return menuItemArray;
@@ -197,7 +244,10 @@
 		NSAttributedString		*title = nil;
 		
 		[[menuItem menu] setMenuChangedMessagesEnabled:NO];
-		[menuItem setImage:[self imageForListObject:listObject]];		
+
+		if ([listObject isKindOfClass:[AIListContact class]]) {
+			[menuItem setImage:[self imageForListObject:listObject]];
+		}
 
 		static NSDictionary *titleAttributes = nil;
 		if (!titleAttributes) {

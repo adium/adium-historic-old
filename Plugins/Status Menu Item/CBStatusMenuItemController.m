@@ -110,8 +110,6 @@
 		[[adium preferenceController] registerPreferenceObserver:self
 														forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 		
-		showOfflineContacts = NO;
-		
 		//Register as a chat observer (So we can catch the unviewed content status flag)
 		[[adium chatController] registerChatObserver:self];
 		
@@ -437,6 +435,11 @@
 	return (showOfflineContacts || [inContact online]);
 }
 
+- (BOOL)contactMenuShouldDisplayGroupHeaders:(AIContactMenu *)inContactMenu
+{
+	return showContactGroups;
+}
+
 - (BOOL)contactMenuShouldUseDisplayName:(AIContactMenu *)inContactMenu
 {
 	return YES;
@@ -683,8 +686,9 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if ([key isEqualToString:KEY_SHOW_OFFLINE_CONTACTS]) {
+	if ([group isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]) {
 		showOfflineContacts = [[prefDict objectForKey:KEY_SHOW_OFFLINE_CONTACTS] boolValue];
+		showContactGroups = ![[prefDict objectForKey:KEY_HIDE_CONTACT_LIST_GROUPS] boolValue];
 		[contactMenu rebuildMenu];
 	}
 }
