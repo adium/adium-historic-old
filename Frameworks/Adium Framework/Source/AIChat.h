@@ -175,7 +175,5 @@ typedef enum {
 
 - (NSWindow *)window;
 
-//menu stuff
--(NSMenu*)menuForChat;
-
+- (NSMenu*)menuForChat;
 @end

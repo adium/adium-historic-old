@@ -68,7 +68,7 @@
     
     //Containers
     AIContactListWindowController 	*contactListWindowController;
-    id <AIInterfaceContainer>		activeContainer;
+    id <AIChatContainer>		activeContainer;
 
     //messageWindow stuff
     NSMutableArray			*messageWindowControllerArray;

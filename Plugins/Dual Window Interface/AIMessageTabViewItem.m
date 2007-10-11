@@ -57,7 +57,7 @@
 	if ((self = [super initWithIdentifier:self])) {
 		messageViewController = [inMessageViewController retain];
 		adium = [AIObject sharedAdiumInstance];
-		container = nil;
+		windowController = nil;
 
 		//Configure ourself for the message view
 		[[adium notificationCenter] addObserver:self selector:@selector(chatStatusChanged:)
@@ -85,7 +85,7 @@
 
 	[tabViewItemImage release]; tabViewItemImage = nil;
     [messageViewController release]; messageViewController = nil;
-	[container release]; container = nil;
+	[windowController release]; windowController = nil;
 
     [super dealloc];
 }
@@ -103,19 +103,19 @@
 }
 
 //Our containing window
-- (void)setContainer:(AIMessageWindowController *)inContainer{
-	if (inContainer != container) {
-		[messageViewController messageViewWillLeaveWindowController:container];
+- (void)setWindowController:(AIMessageWindowController *)inWindowController{
+	if (inWindowController != windowController) {
+		[messageViewController messageViewWillLeaveWindowController:windowController];
 
-		[container release];
-		container = [inContainer retain];
+		[windowController release];
+		windowController = [inWindowController retain];
 
-		[messageViewController messageViewAddedToWindowController:container];
+		[messageViewController messageViewAddedToWindowController:windowController];
 	}
 }
 
-- (AIMessageWindowController *)container{
-	return container;
+- (AIMessageWindowController *)windowController{
+	return windowController;
 }
 
 //Message View Delegate ----------------------------------------------------------------------
@@ -169,7 +169,7 @@
 	
 	//Redraw if the icon has changed
 	if (keys == nil || [keys containsObject:@"Tab State Icon"]) {
-		[[self container] updateIconForTabViewItem:self];
+		[[self windowController] updateIconForTabViewItem:self];
 		[self setValue:nil forKeyPath:@"icon"];
 	}
 }
@@ -184,7 +184,7 @@
 		
 		//Redraw if the icon has changed
 		if (!keys || [keys containsObject:@"Tab Status Icon"]) {
-			[[self container] updateIconForTabViewItem:self];
+			[[self windowController] updateIconForTabViewItem:self];
 			[self setValue:nil forKeyPath:@"icon"];
 		}
 		

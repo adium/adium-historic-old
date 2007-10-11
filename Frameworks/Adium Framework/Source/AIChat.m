@@ -25,6 +25,7 @@
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
 
 #import <AIUtilities/AIArrayAdditions.h>
@@ -35,8 +36,6 @@
 #import "AIInterfaceControllerProtocol.h"
 #import "AIWebKitMessageViewController.h"
 
-#warning Inappropiate import - use a protocol
-#import "AIMessageTabViewItem.h"
 
 @interface AIChat (PRIVATE)
 - (id)initForAccount:(AIAccount *)inAccount;
@@ -726,10 +725,11 @@ static int nextChatNumber = 0;
 
 - (unsigned int)index
 {
-	AIMessageTabViewItem *messageTab = [self statusObjectForKey:@"MessageTabViewItem"];
+	id<AIChatContainer> messageTab = [self statusObjectForKey:@"MessageTabViewItem"];
 	//what we're going to do is find this tab in the tab view's hierarchy, so as to get its index
-	AIMessageWindowController *window = [messageTab container];
-	NSArray *chats = [window containedChats];
+	id<AIChatWindowController> windowController = [messageTab windowController];
+
+	NSArray *chats = [windowController containedChats];
 	for (unsigned int i=0;i<[chats count];i++) {
 		if ([chats objectAtIndex:i] == self)
 			return i+1; //one based
@@ -739,19 +739,19 @@ static int nextChatNumber = 0;
 }
 /*- (void)setIndex:(unsigned int)index
 {
-	AIMessageTabViewItem *messageTab = [self statusObjectForKey:@"MessageTabViewItem"];
-	AIMessageWindowController *window = [messageTab container];
-	NSArray *chats = [window containedChats];
+	id<AIChatContainer> messageTab = [self statusObjectForKey:@"MessageTabViewItem"];
+	id<AIChatWindowController> windowController = [messageTab windowController];
+	NSArray *chats = [windowController containedChats];
 	NSAssert (index-1 < [chats count], @"Don't let index be bigger than the count!");
 	NSLog(@"Trying to move %@ in %@ to %u",messageTab,window,index-1);
-	[window moveTabViewItem:messageTab toIndex:index-1]; //This is bad bad bad. Why?
+	[windowController moveTabViewItem:messageTab toIndex:index-1]; //This is bad bad bad. Why?
 	
 }*/
 
 - (NSWindow *)window
 {
-	AIMessageTabViewItem *messageTab = [self statusObjectForKey:@"MessageTabViewItem"];
-	AIMessageWindowController *windowController = [messageTab container];
+	id<AIChatContainer> messageTab = [self statusObjectForKey:@"MessageTabViewItem"];
+	id<AIChatWindowController> windowController = [messageTab windowController];
 	return [windowController window];
 }
 

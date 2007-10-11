@@ -124,7 +124,7 @@
 - (void)closeChat:(AIChat *)chat
 {
 	AIMessageTabViewItem		*messageTab = [chat statusObjectForKey:@"MessageTabViewItem"];
-	AIMessageWindowController	*container = [messageTab container];
+	AIMessageWindowController	*container = [messageTab windowController];
 
 	//Close the chat
 	[container removeTabViewItem:messageTab silent:NO];
@@ -144,20 +144,20 @@
 - (void)moveChat:(AIChat *)chat toContainerWithID:(NSString *)containerID index:(int)index
 {
 	AIMessageTabViewItem		*messageTab = [chat statusObjectForKey:@"MessageTabViewItem"];
-	AIMessageWindowController	*container = [containers objectForKey:containerID];
+	AIMessageWindowController	*windowController = [containers objectForKey:containerID];
 
-	if ([messageTab container] == container) {
-		[container moveTabViewItem:messageTab toIndex:index];
+	if ([messageTab windowController] == windowController) {
+		[windowController moveTabViewItem:messageTab toIndex:index];
 	} else {
 		[messageTab retain];
-		[[messageTab container] removeTabViewItem:messageTab silent:YES];
+		[[messageTab windowController] removeTabViewItem:messageTab silent:YES];
 
 		//Create the container if necessary
-		if (!container) {
-			container = [self openContainerWithID:containerID name:containerID];
+		if (!windowController) {
+			windowController = [self openContainerWithID:containerID name:containerID];
 		}
 
-		[container addTabViewItem:messageTab atIndex:index silent:YES];
+		[windowController addTabViewItem:messageTab atIndex:index silent:YES];
 		[messageTab release];
 	}
 }
@@ -206,7 +206,7 @@
 //Returns the ID of the container containing the chat
 - (NSString *)containerIDForChat:(AIChat *)chat
 {
-	return [[[chat statusObjectForKey:@"MessageTabViewItem"] container] containerID];
+	return [[[chat statusObjectForKey:@"MessageTabViewItem"] windowController] containerID];
 }
 
 //Returns an array of all the chats in a container
@@ -222,7 +222,7 @@
  */
 - (NSWindow *)windowForChat:(AIChat *)chat
 {
-	AIMessageWindowController	*windowController = [[chat statusObjectForKey:@"MessageTabViewItem"] container];
+	AIMessageWindowController	*windowController = [[chat statusObjectForKey:@"MessageTabViewItem"] windowController];
 	
 	return (([windowController activeChat] == chat) ?
 			[windowController window] :
@@ -255,16 +255,16 @@
 		containerID = [NSString stringWithFormat:@"%@:%i", ADIUM_UNIQUE_CONTAINER, uniqueContainerNumber++];
 	if (!containerName)
 		containerName = [[containerID copy] autorelease];
-	AIMessageWindowController	*container = [containers objectForKey:containerID];
-	if (!container) {
-		container = [AIMessageWindowController messageWindowControllerForInterface:self withID:containerID name:containerName];
-		[containers setObject:container forKey:containerID];
+	AIMessageWindowController	*windowController = [containers objectForKey:containerID];
+	if (!windowController) {
+		windowController = [AIMessageWindowController messageWindowControllerForInterface:self withID:containerID name:containerName];
+		[containers setObject:windowController forKey:containerID];
 		
 		//If Adium is hidden, remember to open this container later
-		if (applicationIsHidden) [delayedContainerShowArray addObject:container];
+		if (applicationIsHidden) [delayedContainerShowArray addObject:windowController];
 	}
 	
-	return container;
+	return windowController;
 }
 
 //Close a continer
@@ -309,7 +309,7 @@
 				   atIndex:(int)index
 		 withTabBarAtPoint:(NSPoint)screenPoint
 {
-	AIMessageWindowController 	*oldMessageWindow = [tabViewItem container];
+	AIMessageWindowController 	*oldMessageWindow = [tabViewItem windowController];
 	
 	if (oldMessageWindow != newMessageWindow) {
 		//Get the frame of the source window (We must do this before removing the tab, since removing a tab may
