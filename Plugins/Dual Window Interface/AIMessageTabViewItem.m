@@ -85,7 +85,6 @@
 
 	[tabViewItemImage release]; tabViewItemImage = nil;
     [messageViewController release]; messageViewController = nil;
-	[windowController release]; windowController = nil;
 
     [super dealloc];
 }
@@ -107,8 +106,7 @@
 	if (inWindowController != windowController) {
 		[messageViewController messageViewWillLeaveWindowController:windowController];
 
-		[windowController release];
-		windowController = [inWindowController retain];
+		windowController = inWindowController;
 
 		[messageViewController messageViewAddedToWindowController:windowController];
 	}
