@@ -19,8 +19,8 @@
 
 @class AIChat, AIMessageViewController, AIMessageWindowController;
 
-@interface AIMessageTabViewItem : NSTabViewItem <AIInterfaceContainer> {
-	AIMessageWindowController	*container;
+@interface AIMessageTabViewItem : NSTabViewItem <AIChatContainer> {
+	AIMessageWindowController	*windowController;
     AIMessageViewController 	*messageViewController;
     NSObject<AIAdium>			*adium;
 	NSImage						*tabViewItemImage;
@@ -37,7 +37,7 @@
 - (NSImage *)image;
 - (AIMessageViewController *)messageViewController;
 - (void)tabViewItemWasSelected;
-- (void)setContainer:(AIMessageWindowController *)inContainer;
-- (AIMessageWindowController *)container;
+- (void)setWindowController:(AIMessageWindowController *)inWindowController;
+- (AIMessageWindowController *)windowController;
 
 @end

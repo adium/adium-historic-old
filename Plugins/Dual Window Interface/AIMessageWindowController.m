@@ -513,13 +513,13 @@
 		[tabView_messages selectTabViewItem:inTabViewItem];
 		
 		//The tab view item needs to know that this window controller no longer contains it
-		[inTabViewItem setContainer:nil];	
+		[inTabViewItem setWindowController:nil];	
 
 		[tabView_messages selectTabViewItem:oldTabViewItem];
 
 	} else {
 		//The tab view item needs to know that this window controller no longer contains it
-		[inTabViewItem setContainer:nil];
+		[inTabViewItem setWindowController:nil];
 	}
 	
 
@@ -584,7 +584,7 @@
 	enumerator = [[tabView_messages tabViewItems] objectEnumerator];
 	
 	while ((tabViewItem = [enumerator nextObject])) {
-		[tabViewItem setContainer:self];
+		[tabViewItem setWindowController:self];
 		[containedChats addObject:[tabViewItem chat]];
 	}
 }

@@ -203,9 +203,39 @@ typedef enum {
 - (AIChat *)activeChatInWindow:(NSWindow *)window;
 @end
 
+/*!
+ * @protocol AIInterfaceContainer
+ * @brief This protocol is for a general interface element such as the contact list or the container of a chat
+ */
 @protocol AIInterfaceContainer <NSObject>
 - (void)makeActive:(id)sender;	//Make the container active/front
 - (void)close:(id)sender;	//Close the container
+@end
+
+/*!
+ * @brief AIChatWindow defines the protocol for an object which contains one or more AIChatContainers
+ */
+@protocol AIChatWindowController <NSObject>
+/*
+ * @brief Get an array of all the chats within this window controller's window.
+ */
+- (NSArray *)containedChats;
+
+/*
+ * @brief The window
+ */
+- (NSWindow *)window;
+@end
+
+/*!
+ * @protocol AIChatContainer
+ * @brief This protocol is for an object which displays a single chat (e.g. a tab in a chat window)
+ */
+@protocol AIChatContainer <AIInterfaceContainer>
+/*
+ * @brief Get the window controller which holds this AIChatContainer
+ */
+- (id <AIChatWindowController>)windowController;
 @end
 
 @protocol AIContactListComponent <NSObject>
