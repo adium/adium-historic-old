@@ -22,6 +22,6 @@
 
 //For Subclassers
 - (NSArray *)buildMenuItems;
-- (NSImage *)imageForListObject:(AIListObject *)listObject;
+- (NSImage *)imageForListObject:(AIListObject *)listObject usingUserIcon:(BOOL)useUserIcon;
 
 @end

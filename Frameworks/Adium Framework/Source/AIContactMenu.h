@@ -18,6 +18,7 @@
 	BOOL					delegateRespondsToShouldIncludeContact;	
 	BOOL					shouldUseDisplayName;
 	BOOL					shouldDisplayGroupHeaders;
+	BOOL					shouldUseUserIcon;
 }
 
 + (id)contactMenuWithDelegate:(id)inDelegate forContactsInObject:(AIListObject *)inContainingObject;
@@ -31,6 +32,8 @@
 - (void)contactMenu:(AIContactMenu *)inContactMenu didRebuildMenuItems:(NSArray *)menuItems;
 - (void)contactMenu:(AIContactMenu *)inContactMenu didSelectContact:(AIListContact *)inContact; //Optional
 - (BOOL)contactMenu:(AIContactMenu *)inContactMenu shouldIncludeContact:(AIListContact *)inContact; //Optional
+- (BOOL)contactMenuShouldUseUserIcon:(AIContactMenu *)inContactMenu; //Optional
+// Called on each rebuild:
 - (BOOL)contactMenuShouldDisplayGroupHeaders:(AIContactMenu *)inContactMenu; //Optional; only applies to contained groups
 - (BOOL)contactMenuShouldUseDisplayName:(AIContactMenu *)inContactMenu; //Optional
 @end

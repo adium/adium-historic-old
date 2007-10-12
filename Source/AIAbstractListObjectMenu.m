@@ -11,6 +11,7 @@
 #import <Adium/AIListObject.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
+#import <Adium/AIUserIcons.h>
 
 @interface AIAbstractListObjectMenu (PRIVATE)
 - (void)_destroyMenuItems;
@@ -144,28 +145,33 @@
 /*!
  * @brief Returns a menu image for the account
  */
-- (NSImage *)imageForListObject:(AIListObject *)listObject
+- (NSImage *)imageForListObject:(AIListObject *)listObject usingUserIcon:(BOOL)useUserIcon
 {
-	NSImage	*statusIcon, *serviceIcon;
-	NSSize	statusSize, serviceSize, compositeSize;
+	NSImage	*statusIcon, *secondaryIcon;
+	NSSize	statusSize, secondarySize, compositeSize;
 	NSRect	compositeRect;
 	
 	//Get the service and status icons
 	statusIcon = [AIStatusIcons statusIconForListObject:listObject type:AIStatusIconList direction:AIIconNormal];
 	statusSize = [statusIcon size];
-	serviceIcon = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconSmall direction:AIIconNormal];	
-	serviceSize = [serviceIcon size];
+	if (useUserIcon) {
+		//menuUserIconForObject
+		secondaryIcon = [AIUserIcons menuUserIconForObject:listObject];
+	} else {
+		secondaryIcon = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconSmall direction:AIIconNormal];	
+	}
+	secondarySize = [secondaryIcon size];		
 	
 	//Composite them side by side (since we're only allowed one image in a menu and we want to see both)
-	compositeSize = NSMakeSize(statusSize.width + serviceSize.width + 1,
-							   statusSize.height > serviceSize.height ? statusSize.height : serviceSize.height);
+	compositeSize = NSMakeSize(statusSize.width + secondarySize.width + 1,
+							   statusSize.height > secondarySize.height ? statusSize.height : secondarySize.height);
 	compositeRect = NSMakeRect(0, 0, compositeSize.width, compositeSize.height);
 	
 	//Render the image
 	NSImage	*composite = [[NSImage alloc] initWithSize:compositeSize];
 	[composite lockFocus];
 	[statusIcon drawInRect:compositeRect atSize:[statusIcon size] position:IMAGE_POSITION_LEFT fraction:1.0];
-	[serviceIcon drawInRect:compositeRect atSize:[serviceIcon size] position:IMAGE_POSITION_RIGHT fraction:1.0];
+	[secondaryIcon drawInRect:compositeRect atSize:[secondaryIcon size] position:IMAGE_POSITION_RIGHT fraction:1.0];
 	[composite unlockFocus];
 	
 	return [composite autorelease];

@@ -95,6 +95,9 @@
 	delegateRespondsToDidSelectContact = [inDelegate respondsToSelector:@selector(contactMenu:didSelectContact:)];
 	delegateRespondsToShouldIncludeContact = [inDelegate respondsToSelector:@selector(contactMenu:shouldIncludeContact:)];
 	
+	shouldUseUserIcon = ([inDelegate respondsToSelector:@selector(contactMenuShouldUseUserIcon:)] &&
+								 [inDelegate contactMenuShouldUseUserIcon:self]);
+	
 	shouldUseDisplayName = ([inDelegate respondsToSelector:@selector(contactMenuShouldUseDisplayName:)] &&
 							[inDelegate contactMenuShouldUseDisplayName:self]);
 	
@@ -246,7 +249,7 @@
 		[[menuItem menu] setMenuChangedMessagesEnabled:NO];
 
 		if ([listObject isKindOfClass:[AIListContact class]]) {
-			[menuItem setImage:[self imageForListObject:listObject]];
+			[menuItem setImage:[self imageForListObject:listObject usingUserIcon:shouldUseUserIcon]];
 		}
 
 		static NSDictionary *titleAttributes = nil;
