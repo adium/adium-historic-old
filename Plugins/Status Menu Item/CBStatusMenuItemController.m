@@ -446,6 +446,11 @@
 	return YES;
 }
 
+- (BOOL)contactMenuShouldUseUserIcon:(AIContactMenu *)inContactMenu
+{
+	return YES;
+}
+
 //Chat Observer --------------------------------------------------------
 #pragma mark Chat Observer
 

@@ -304,14 +304,14 @@
 /*!
 * @brief Returns a menu image for the account
  */
-- (NSImage *)imageForListObject:(AIListObject *)listObject
+- (NSImage *)imageForListObject:(AIListObject *)listObject usingUserIcon:(BOOL)useUserIcon
 {
 	if ([listObject isKindOfClass:[AIAccount class]] &&
 		![(AIAccount *)listObject enabled]) {
 		return [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconSmall direction:AIIconNormal];	
 
 	} else {
-		return [super imageForListObject:listObject];
+		return [super imageForListObject:listObject usingUserIcon:useUserIcon];
 	}
 }
 
@@ -325,7 +325,7 @@
 	if (account) {
 		[[menuItem menu] setMenuChangedMessagesEnabled:NO];
 
-		[menuItem setImage:[self imageForListObject:account]];
+		[menuItem setImage:[self imageForListObject:account usingUserIcon:NO]];
 
 		static NSDictionary *titleAttributes = nil;
 		if (!titleAttributes) {
