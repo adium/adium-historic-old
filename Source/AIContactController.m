@@ -53,6 +53,7 @@
 #define KEY_FLAT_GROUPS					@"FlatGroups"			//Group storage
 #define KEY_FLAT_CONTACTS				@"FlatContacts"			//Contact storage
 #define KEY_FLAT_METACONTACTS			@"FlatMetaContacts"		//Metacontact objectID storage
+#define KEY_BOOKMARKS					@"Bookmarks"
 
 #define	OBJECT_STATUS_CACHE				@"Object Status Cache"
 
@@ -84,6 +85,8 @@
 
 - (NSArray *)_arrayRepresentationOfListObjects:(NSArray *)listObjects;
 - (void)_loadGroupsFromArray:(NSArray *)array;
+
+- (void)_loadBookmarks;
 
 - (void)_listChangedGroup:(AIListObject *)group object:(AIListObject *)object;
 - (void)prepareShowHideGroups;
@@ -234,6 +237,7 @@
 	//We must load all the groups before loading contacts for the ordering system to work correctly.
 	[self _loadMetaContactsFromArray:[[adium preferenceController] preferenceForKey:KEY_FLAT_METACONTACTS
 																			  group:PREF_GROUP_CONTACT_LIST]];
+	[self _loadBookmarks];
 }
 
 //Save the contact list
@@ -247,6 +251,29 @@
 						  forKey:@"IsExpanded"
 						   group:PREF_GROUP_CONTACT_LIST];
 	}
+	
+	NSMutableArray *bookmarks = [NSMutableArray array];
+	AIListObject *listObject;
+	enumerator = [[self allContacts] objectEnumerator];
+	while ((listObject = [enumerator nextObject])) {
+		if ([listObject isKindOfClass:[AIListBookmark class]]) {
+			[bookmarks addObject:[NSKeyedArchiver archivedDataWithRootObject:listObject]];
+		}
+	}
+
+	[[adium preferenceController] setPreference:bookmarks
+										 forKey:KEY_BOOKMARKS
+										  group:PREF_GROUP_CONTACT_LIST];
+}
+
+- (void)_loadBookmarks
+{
+	NSEnumerator	*enumerator = [[[adium preferenceController] preferenceForKey:KEY_BOOKMARKS
+																		 group:PREF_GROUP_CONTACT_LIST] objectEnumerator];
+	AIListBookmark	*bookmark;
+
+	//As a bookmark is initialized, it will add itself to the contact list in the right place
+	while ((bookmark = [NSKeyedUnarchiver unarchiveObjectWithData:[enumerator nextObject]]));
 }
 
 - (void)_loadMetaContactsFromArray:(NSArray *)array
