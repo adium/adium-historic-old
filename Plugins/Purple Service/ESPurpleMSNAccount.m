@@ -296,8 +296,6 @@
 	}
 }
 
-extern void msn_set_friendly_name(PurpleConnection *gc, const char *entry);
-
 - (void)doQueuedSetServersideDisplayName
 {
 	[self setServersideDisplayName:queuedFriendlyName];
@@ -335,7 +333,7 @@ extern void msn_set_friendly_name(PurpleConnection *gc, const char *entry);
 				friendlyNameUTF8String = [friendlyName UTF8String];
 				currentMaxNumberOfPreEncodedCharacters -= 10;
 			}
-			msn_set_friendly_name(purple_account_get_connection(account), friendlyNameUTF8String);
+			msn_act_id(purple_account_get_connection(account), friendlyNameUTF8String);
 
 			[lastFriendlyNameChange release];
 			lastFriendlyNameChange = [now retain];
