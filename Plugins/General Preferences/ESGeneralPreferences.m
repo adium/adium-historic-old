@@ -48,8 +48,8 @@
 
 @implementation ESGeneralPreferences
 
-// XXX in order to use shortcutrecorder you need a palette
-// grab http://brok3n.org/shortcutrecorder/ShortcutRecorder-pre-dist.zip and the updated http://brok3n.org/shortcutrecorder/ShortcutRecorderCell.m in order for this to work for you. Compile the palette and install.
+// XXX in order to edit the nib, you need the ShortcutReporter palette
+// You can download it at http://evands.penguinmilitia.net/ShortcutRecorder.palette.zip
 // This comes from http://wafflesoftware.net/shortcut/
 
 //Preference pane properties
@@ -78,6 +78,11 @@
 																				group:PREF_GROUP_INTERFACE] boolValue]];
 	[checkBox_arrangeByGroup setState:[[[adium preferenceController] preferenceForKey:KEY_GROUP_CHATS_BY_GROUP
 																				group:PREF_GROUP_INTERFACE] boolValue]];
+	
+	// Update Checking
+	[checkBox_updatesAutomatic setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"SUCheckAtStartup"]];
+	[checkBox_updatesProfileInfo setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"SUIncludeProfile"]];
+	[checkBox_updatesIncludeBetas setState:[[NSUserDefaults standardUserDefaults] boolForKey:@"AIAlwaysUpdateToBetas"]];
 
 	//Chat Cycling
 	[popUp_tabKeys setMenu:[self tabChangeKeysMenu]];
@@ -135,6 +140,13 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:sendOnReturn]
 											 forKey:SEND_ON_RETURN
                                               group:PREF_GROUP_GENERAL];
+	} else if (sender == checkBox_updatesAutomatic) {
+		[[NSUserDefaults standardUserDefaults] setBool:[sender state] forKey:@"SUCheckAtStartup"];
+		[self configureControlDimming];
+	} else if (sender == checkBox_updatesProfileInfo) {
+		[[NSUserDefaults standardUserDefaults] setBool:[sender state] forKey:@"SUIncludeProfile"];
+	} else if (sender == checkBox_updatesIncludeBetas) {
+		[[NSUserDefaults standardUserDefaults] setBool:[sender state] forKey:@"AIAlwaysUpdateToBetas"];
 	}
 }
 
@@ -142,6 +154,8 @@
 - (void)configureControlDimming
 {
 	[checkBox_arrangeByGroup setEnabled:[checkBox_messagesInTabs state]];
+	[checkBox_updatesProfileInfo setEnabled:[checkBox_updatesAutomatic state]];
+	[checkBox_updatesIncludeBetas setEnabled:[checkBox_updatesAutomatic state]];
 }
 
 /*!

@@ -53,6 +53,9 @@
             OUTLETS = {
                 "checkBox_arrangeByGroup" = NSButton; 
                 "checkBox_messagesInTabs" = NSButton; 
+                "checkBox_updatesAutomatic" = NSButton; 
+                "checkBox_updatesIncludeBetas" = NSButton; 
+                "checkBox_updatesProfileInfo" = NSButton; 
                 "label_logging" = NSTextField; 
                 "label_messagesSendOn" = NSTextField; 
                 "label_messagesTabs" = NSTextField; 
