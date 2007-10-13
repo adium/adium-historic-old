@@ -45,7 +45,6 @@
 - (NSString *)pathOfPackWithName:(NSString *)name extension:(NSString *)extension resourceFolderName:(NSString *)folderName;
 - (NSString *)cachesPath;
 
-- (NSComparisonResult)compareVersion:(NSString *)newVersion toVersion:(NSString *)currentVersion;
 @end
 
 //Adium events
