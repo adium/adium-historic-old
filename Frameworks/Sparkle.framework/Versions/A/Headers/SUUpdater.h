@@ -5,7 +5,7 @@
 //  Created by Andy Matuschak on 1/4/06.
 //  Copyright 2006 Andy Matuschak. All rights reserved.
 //
-// $Id: SUUpdater.h 87 2007-07-05 19:16:34Z evands $
+// $Id: SUUpdater.h 103 2007-10-03 02:39:57Z tekjew $
 // $HeadURL: https://sparkleplus.googlecode.com/svn/trunk/SUUpdater.h $
 
 #import <Cocoa/Cocoa.h>
