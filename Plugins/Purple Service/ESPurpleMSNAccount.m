@@ -125,24 +125,27 @@
 			return AILocalizedString(@"Connecting",nil);
 			break;
 		case 1:
-			return AILocalizedString(@"Connecting",nil);
-			break;
-		case 2:
-			return AILocalizedString(@"Syncing with server",nil);
+			return AILocalizedString(@"Handshaking",nil);
 			break;			
+		case 2:
+			return AILocalizedString(@"Transferring",nil);
+			break;
 		case 3:
-			return AILocalizedString(@"Requesting to send password",nil);
+			return AILocalizedString(@"Handshaking",nil);
 			break;
 		case 4:
-			return AILocalizedString(@"Syncing with server",nil);
+			return AILocalizedString(@"Starting authentication",nil);
 			break;
 		case 5:
-			return AILocalizedString(@"Requesting to send password",nil);
+			return AILocalizedString(@"Getting Cookie",nil);
 			break;
 		case 6:
-			return AILocalizedString(@"Password sent",nil);
+			return AILocalizedString(@"Authenticating",nil);
 			break;
 		case 7:
+			return AILocalizedString(@"Sending Cookie",nil);
+			break;
+		case 8:
 			return AILocalizedString(@"Retrieving buddy list",nil);
 			break;
 			
