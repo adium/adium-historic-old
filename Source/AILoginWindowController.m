@@ -151,11 +151,8 @@
     [userArray release]; userArray = nil;
     userArray = [[owner userArray] retain];
 
-    //Refresh the tables (if the window is loaded)
-    if (tableView_userList != nil && tableView_editableUserList != nil) {
-        [tableView_userList reloadData];
-        [tableView_editableUserList reloadData];
-    }
+	[tableView_editableUserList reloadData];
+	[tableView_userList reloadData];
 }
 
 // Add a new user
@@ -253,6 +250,8 @@
 
 	[tableView_userList setDelegate:self];
 	[tableView_userList setDataSource:self];
+	
+	[self updateUserList];
 
 }
 
