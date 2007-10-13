@@ -106,7 +106,7 @@ first (like Motorola and SPARC, unlike Intel and VAX). */
 #define HAVE_CONNECT 1
 
 /* Define to 1 if Cyrus SASL is present */
-//#define HAVE_CYRUS_SASL 1
+#define HAVE_CYRUS_SASL 1
 
 /* Define if you have the external 'daylight' variable. */
 #define HAVE_DAYLIGHT 1
