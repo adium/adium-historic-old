@@ -352,6 +352,8 @@ NSString	*endn = @"\x00\x00\x00\x00";
     NSString	    *error;		/* error from creation of plist */
     UInt32	    keycount;		/* a 32-bit integer, count of keys in data */
     UInt16	    fieldlen;		/* a 16-bit integer, length of field being added to data */
+    UInt16	    fieldlenBE;		/* fieldlen as converted to network byte order */
+    UInt32      serialBE = htonl(serial); /* serial as converted to network byte order */
     NSEnumerator    *enumerator;	/* enumerator to loop dict */
 
     /* allocate NSData to create data in */
@@ -359,10 +361,11 @@ NSString	*endn = @"\x00\x00\x00\x00";
     [data autorelease];
     /* add the subnegotiation string */
     [data appendBytes:[subn UTF8String] length:[subn length]];
-    [data appendBytes:&serial length:4];
+    [data appendBytes:&serialBE length:4];
     [data appendBytes:[endn UTF8String] length:[endn length]];
     /* add a field containing the number of fields for the rest of the data */
     keycount = [keys count] + 1; /* +1 for slumming field */
+    keycount = htonl(keycount);
     [data appendBytes:&keycount length:4];
 
     /* enumerator to loop through fields for announcement */
@@ -374,7 +377,8 @@ NSString	*endn = @"\x00\x00\x00\x00";
 		const char *field;
 		field = [key UTF8String];
 		fieldlen = strlen(field);
-        [data appendBytes:&fieldlen length:2];
+		fieldlenBE = htons(fieldlen);
+		[data appendBytes:&fieldlenBE length:2];
 		[data appendBytes:field length:fieldlen];
 		
         /* add length of field data, then field data */
@@ -387,7 +391,8 @@ NSString	*endn = @"\x00\x00\x00\x00";
 			field = [value UTF8String];
 			fieldlen = strlen(field);
 		}
-        [data appendBytes:&fieldlen length:2];
+		fieldlenBE = htons(fieldlen);
+        [data appendBytes:&fieldlenBE length:2];
         if ([value isKindOfClass: [NSData class]]) {
 			fieldlen = [(NSData *)value length];
 		}
@@ -397,10 +402,12 @@ NSString	*endn = @"\x00\x00\x00\x00";
     /* we're slumming it in iChat-land */
     key = @"slumming";
     fieldlen = [key length];
+    fieldlenBE = htons(fieldlen);
     [data appendBytes:&fieldlen length:2];
     [data appendBytes:[key UTF8String] length:[key length]];
     value = @"1";
     fieldlen = [(NSData *)value length];
+    fieldlenBE = htons(fieldlen);
     [data appendBytes:&fieldlen length:2];
     [data appendBytes:[value UTF8String] length:[(NSData *)value length]];
     
