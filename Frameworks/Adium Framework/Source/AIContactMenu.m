@@ -148,13 +148,13 @@
 						   [(AIListObject<AIContainingObject> *)containingObject listContacts] :
 						   [NSArray arrayWithObject:containingObject]);
 
-	// If we're not showing groups, just recurse and gather up all the contacts.
 	if (!shouldDisplayGroupHeaders) {
+		// If we're not showing groups, just recurse and gather up all the contacts.
 		listObjects = [self listObjectsForContainedObjects:listObjects];
+		// Sort the list objects since we're potentially combining multiple groups
+		listObjects = [[[adium contactController] activeSortController] sortListObjects:listObjects];
 	}
 	
-	// Sort the list objects
-	listObjects = [[[adium contactController] activeSortController] sortListObjects:listObjects];
 	
 	// Create menus for them
 	return [self contactMenusForListObjects:listObjects];
@@ -171,10 +171,12 @@
 	
 	while ((listObject = [enumerator nextObject])) {
 		if ([listObject isKindOfClass:[AIListContact class]]) {
+			// Include if the delegate doesn't specify, or if the delegate approves the contact.
 			if (!delegateRespondsToShouldIncludeContact || [delegate contactMenu:self shouldIncludeContact:(AIListContact *)listObject]) {
 				[listObjectArray addObject:listObject];
 			}
-		} else if ([listObject conformsToProtocol:@protocol(AIContainingObject)]) {
+		// Only recurse through groups; meta contacts can stay as meta contacts.
+		} else if ([listObject isKindOfClass:[AIListGroup class]] && [listObject conformsToProtocol:@protocol(AIContainingObject)]) {
 			[listObjectArray addObjectsFromArray:[self listObjectsForContainedObjects:[(AIListObject<AIContainingObject> *)listObject listContacts]]];
 		}
 	}
@@ -204,11 +206,7 @@
 																							action:nil
 																					 keyEquivalent:@""
 																				 representedObject:listObject];
-				
-			
-				// Sort the list contained objects.
-				containedListObjects = [[[adium contactController] activeSortController] sortListObjects:containedListObjects];
-				
+
 				// The group isn't clickable.
 				[menuItem setEnabled:NO];
 				[self _updateMenuItem:menuItem];
