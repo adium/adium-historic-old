@@ -80,6 +80,7 @@ NSString	*endn = @"\x00\x00\x00\x00";
     range.location = 4;
     range.length = 4;
     [data getBytes:&version range:range];
+    version = ntohl(version);
     if (version != 1) {
 	AWEzvLog(@"Invalid rendezvous announcement: incorrect version: %u", version);
 		[self autorelease];
@@ -90,11 +91,13 @@ NSString	*endn = @"\x00\x00\x00\x00";
     range.location = 8;
     range.length = 4;
     [data getBytes:&serial range:range];
+    serial = ntohl(serial);
     
     /* get field count of data */
     range.location = 16;
     range.length = 4;
     [data getBytes:&fieldCount range:range];
+    fieldCount = ntohl(fieldCount);
     
     /* read fields from data */
     for (i = [subn length] + 4 + [endn length] + 4; i < [data length];) {
@@ -109,6 +112,7 @@ NSString	*endn = @"\x00\x00\x00\x00";
 	range.location = i;
 	range.length = 2;
 	[data getBytes:&fieldLen range:range];
+	fieldLen = ntohs(fieldLen);
 	fieldLen = fieldLen & 0x7FFF;
         i = i + 2;
         
@@ -131,6 +135,7 @@ NSString	*endn = @"\x00\x00\x00\x00";
 	range.location = i;
 	range.length = 2;
 	[data getBytes:&fieldLen range:range];
+	fieldLen = ntohs(fieldLen);
 	/* most significant bit in fieldLen is a binary data flag */
 	if ((fieldLen & 0x7FFF) != fieldLen)
 	    binFlag = 1;
