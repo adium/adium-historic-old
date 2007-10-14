@@ -44,6 +44,7 @@
 - (NSArray *)allResourcesForName:(NSString *)name withExtensions:(id)extensions;
 - (NSString *)pathOfPackWithName:(NSString *)name extension:(NSString *)extension resourceFolderName:(NSString *)folderName;
 - (NSString *)cachesPath;
+- (NSComparisonResult)compareVersionString:(NSString *)versionA toVersionString:(NSString *)versionB;
 
 @end
 

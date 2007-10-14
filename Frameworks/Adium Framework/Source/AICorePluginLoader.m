@@ -26,7 +26,6 @@
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <Adium/AIPlugin.h>
-#import <Sparkle/SUUtilities.h>
 
 #define DIRECTORY_INTERNAL_PLUGINS		[@"Contents" stringByAppendingPathComponent:@"PlugIns"]	//Path to the internal plugins
 #define EXTERNAL_PLUGIN_FOLDER			@"PlugIns"				//Folder name of external plugins
@@ -64,7 +63,7 @@
 	//If the Adium version has increased since our last run, warn the user that their external plugins may no longer work
 	NSString	*lastVersion = [[NSUserDefaults standardUserDefaults] objectForKey:CONFIRMED_PLUGINS_VERSION];
 	if (!lastVersion ||
-		SUStandardVersionComparison(lastVersion, [NSApp applicationVersion]) == NSOrderedAscending) {
+		[adium compareVersionString:lastVersion toVersionString:[NSApp applicationVersion]] == NSOrderedAscending) {
 		[[NSUserDefaults standardUserDefaults] removeObjectForKey:CONFIRMED_PLUGINS];
 		[[NSUserDefaults standardUserDefaults] setObject:[NSApp applicationVersion] forKey:CONFIRMED_PLUGINS_VERSION];
 	}

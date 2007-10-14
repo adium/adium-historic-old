@@ -1035,6 +1035,11 @@ static NSString	*prefsCategory;
 	return [NSApplication sharedApplication];
 }
 
+- (NSComparisonResult)compareVersionString:(NSString *)versionA toVersionString:(NSString *)versionB
+{
+	return SUStandardVersionComparison(versionA, versionB);
+}
+
 #pragma mark Scripting
 - (BOOL)application:(NSApplication *)sender delegateHandlesKey:(NSString *)key {
 	BOOL handleKey = NO;
