@@ -532,8 +532,7 @@
 			}
 		}
 
-		if ([accountMenuItemsArray count] > 1 || [contactMenuItemsArray count] > 0)
-			[menu addItem:[NSMenuItem separatorItem]];
+		[menu addItem:[NSMenuItem separatorItem]];
 		
 		// If there's more than one account, show the accounts menu
 		if ([accountMenuItemsArray count] > 1) {
@@ -542,8 +541,15 @@
 			
 			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Accounts",nil)
 																			 target:self
-																			action:@selector(activateAccountList:)
+																			action:nil
 																	  keyEquivalent:@""];
+			
+			[accountsMenu addItemWithTitle:[AILocalizedString(@"Account List", nil) stringByAppendingEllipsis]
+									target:self
+									action:@selector(activateAccountList:)
+							 keyEquivalent:@""];
+			
+			[accountsMenu addItem:[NSMenuItem separatorItem]];
 			
 			//Add the account menu items
 			enumerator = [accountMenuItemsArray objectEnumerator];
@@ -584,7 +590,7 @@
 			// Add contacts
 			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Contacts",nil)
 																			 target:self
-																			action:@selector(activateContactList:)
+																			action:nil
 																	  keyEquivalent:@""];
 
 			[contactsMenu addItemWithTitle:[AILocalizedString(@"Contact List", nil) stringByAppendingEllipsis]
