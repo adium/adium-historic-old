@@ -1871,8 +1871,10 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 
 	if (![statusMessage length] &&
 		([statusState statusType] == AIAwayStatusType) &&
-		([statusState statusName])) {
-		/* If we don't have a status message, and the status type is away for a non-default away such as "Do Not Disturb", get a default
+		[statusState statusName] &&
+		!statusID || (strcmp(statusID, "away") == 0)) {
+		/* If we don't have a status message, and the status type is away for a non-default away such as "Do Not Disturb", and we're only setting
+		 * a default away state becuse we don't know a better one for this service, get a default
 		 * description of this away state. This allows, for example, an AIM user to set the "Do Not Disturb" type provided by her ICQ account
 		 * and have the away message be set appropriately.
 		 */
