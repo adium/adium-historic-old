@@ -111,6 +111,7 @@
 
 /* notification from listenSocket that we've got a connection to handle */
 - (void)connectionReceived:(NSNotification *)aNotification {
+	AILog(@"%s: Got notification with name %@; userInfo is:\n%@", __PRETTY_FUNCTION__, [aNotification name], [aNotification userInfo]);
 	NSFileHandle 	*incomingConnection = [[aNotification userInfo] objectForKey:NSFileHandleNotificationFileHandleItem];
 	NSMutableString	*contactIdentifier;
 	int			fd;
@@ -132,12 +133,14 @@
 	[[aNotification object] acceptConnectionInBackgroundAndNotify];
 
 	contactIdentifier = [NSMutableString stringWithCString:inet_ntoa((&remoteAddress)->sin_addr)];
+	AILog(@"%s: Remote IP address (basis of contactIdentifier) is %@", __PRETTY_FUNCTION__, contactIdentifier);
 	[contactIdentifier replaceOccurrencesOfString:@"."
 		       withString:@"_"
 		       options:0
 		       range:NSMakeRange(0, [contactIdentifier length])];
 		       
 	contact = [contacts objectForKey:contactIdentifier];
+	AILog(@"%s: Looked in contacts for contactIdentifier %@; got %@", __PRETTY_FUNCTION__, contactIdentifier, contact);
 	/* Discover the appropriate record if required */
 	if ([contact rendezvous] == nil) {
 		NSEnumerator *enumerator = [contacts objectEnumerator];
@@ -146,8 +149,10 @@
 			withString:@"."
 			options:0
 			range:NSMakeRange(0, [contactIdentifier length])];
+		AILog(@"%s: Changed contactIdentifier back to an IP address; it is now %@", __PRETTY_FUNCTION__, contactIdentifier);
 
 		while ((contact = [enumerator nextObject])) {
+			AILog(@"%s: Searching contacts; rendezvous is %@ and ipaddr is %@", __PRETTY_FUNCTION__, [contact rendezvous], [contact ipaddr]);
 			if ([contact rendezvous] != nil && [[contact ipaddr] isEqualToString:contactIdentifier])
 				break;
 		}
