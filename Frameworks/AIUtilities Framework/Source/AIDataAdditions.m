@@ -18,8 +18,7 @@
 @implementation NSData(AIDataAdditions)
 
 - (NSData *)subdataFromIndex:(unsigned)start {
-	NSRange range = { start, [self length] };
-	range.length -= start;
+	NSRange range = { start, [self length] - start };
 	return [self subdataWithRange:range];
 }
 - (NSData *)subdataToIndex:(unsigned)stop {
