@@ -92,13 +92,4 @@
 	[self replaceObjectAtIndex:index withObject:object];
 }
 
-- (void)removeObjectsAtIndexes:(NSIndexSet *)indexes
-{
-	int count = [indexes count];
-	unsigned int* buffer = (unsigned int *)malloc(count * sizeof(unsigned));
-	[indexes getIndexes:(unsigned int *)buffer maxCount:count inIndexRange:nil];
-	[self removeObjectsFromIndices:buffer numIndices:count];
-	free(buffer);
-}
-
 @end
