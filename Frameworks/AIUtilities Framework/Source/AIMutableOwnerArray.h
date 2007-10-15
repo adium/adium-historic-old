@@ -21,7 +21,7 @@
 
 @class AIMutableOwnerArray;
 
-//Delegate protocol for documentation purposes; it is not necessasry to declare conformance to this protocol.
+//Delegate protocol for documentation purposes; it is not necessary to declare conformance to this protocol.
 @protocol AIMutableOwnerArrayDelegate
 - (void)mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(id)inOwner priorityLevel:(float)priority;
 @end
