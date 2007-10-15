@@ -25,7 +25,7 @@
     //Get the bundle
     ownerBundle = [NSBundle bundleForClass:inClass];
     
-    //Open the image
+    //Open the plist file
     arrayPath = [ownerBundle pathForResource:name ofType:@"plist"];    
     array = [[NSArray alloc] initWithContentsOfFile:arrayPath];
     
