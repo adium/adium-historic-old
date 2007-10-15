@@ -20,16 +20,14 @@
 {
     NSBundle		*ownerBundle;
     NSString		*arrayPath;
-    NSDictionary	*array;
     
     //Get the bundle
     ownerBundle = [NSBundle bundleForClass:inClass];
     
     //Open the plist file
     arrayPath = [ownerBundle pathForResource:name ofType:@"plist"];    
-    array = [[NSArray alloc] initWithContentsOfFile:arrayPath];
-    
-    return [array autorelease];
+
+    return [[[NSArray alloc] initWithContentsOfFile:arrayPath] autorelease];
 }
 
 - (NSComparisonResult)compare:(NSArray *)other
