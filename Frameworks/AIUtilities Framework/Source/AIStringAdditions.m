@@ -515,196 +515,28 @@ static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *
 	static const unichar nbsp = 0xa0;
 	NSDictionary *realEntities = entities;
 
-	if ([NSApp isOnTigerOrBetter]) {
-		//We can use CF here.
-		if (!entities) {
-			realEntities = [NSDictionary dictionaryWithObjectsAndKeys:
-				@"amp",  @"&",
-				@"lt",   @"<",
-				@"gt",   @">",
-				@"quot", @"\"",
-				@"apos", @"'",
-				@"nbsp", [NSString stringWithCharacters:&nbsp length:1],
-				//Also escape whitespace. CF doesn't do this by default.
-				@"#x09", @"\t",
-				@"#x0a", @"\n",
-				@"#x0b", @"\v",
-				@"#x0c", @"\f",
-				@"#x0d", @"\r",
-				nil];
-		}
-
-		return [(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)self, (CFDictionaryRef)realEntities) autorelease];
-	} else {
-		//COMPAT 10.3
-		//CFXMLCreateStringByEscapingEntities is broken on 10.3.x. We must reinvent the wheel.
-
-		if (entities) {
-			//CF expects name=>expansion (the same as the unescape function). We do too, for compatibility with CF, but this is inconvenient to us (we look up entity names by characters, not the other way around).
-			//So, we flip the dictionary around so that keys are objects and objects are keys. This way, keys will be characters and objects will be entity names.
-			realEntities = [NSDictionary dictionaryWithObjects:[entities allKeys] forKeys:[entities allValues]];
-		} else {
-			realEntities = [NSDictionary dictionaryWithObjectsAndKeys:
-				@"amp",  @"&",
-				@"lt",   @"<",
-				@"gt",   @">",
-				@"quot", @"\"",
-				@"apos", @"'",
-				@"nbsp", [NSString stringWithCharacters:&nbsp length:1],
-				nil];
-		}
-
-		NSMutableString *result = [NSMutableString stringWithCapacity:[self length]];
-
-		NSZone *zone = [self zone];
-		unsigned i = 0, len = [self length];
-		unsigned bufsize = sizeof(unichar) * (len < 4096 ? len : 4096);
-		unichar *buf = NSZoneMalloc(zone, bufsize);
-		NSAssert1(buf, @"(in stringByEscapingForXMLWithEntities:) Could not allocate %u bytes", bufsize);
-		BOOL inSurrogatePair = NO;
-		unichar highSurrogateFromPrevBuf = 0;
-		while (len) {
-			if (len < bufsize)
-				bufsize = len;
-
-			[self getCharacters:buf range:(NSRange){ i, bufsize }];
-
-			if (highSurrogateFromPrevBuf) {
-				[result appendFormat:@"&#x%@;", UCGetUnicodeScalarValueForSurrogatePair(highSurrogateFromPrevBuf, buf[0])];
-			}
-
-			NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-			for (unsigned j = (highSurrogateFromPrevBuf != 0); j < bufsize; ++j) {
-				if ((!inSurrogatePair) && (UCIsSurrogateHighCharacter(buf[j]))) {
-					inSurrogatePair = YES;
-					continue;
-				}
-
-				NSString *str = [NSString stringWithCharacters:&buf[j - inSurrogatePair] length:1 + inSurrogatePair];
-				NSString *entityName = [realEntities objectForKey:str];
-				if (entityName) {
-					[result appendFormat:@"&%@;", entityName];
-				} else if (inSurrogatePair) {
-					[result appendFormat:@"&#x%@;", UCGetUnicodeScalarValueForSurrogatePair(buf[j - 1], buf[j])];
-				} else {
-					/* A character that doesn't require surrogates must be escaped if it:
-					 *		- is 0x7f (DEL) or higher, or
-					 *		- is not printable.
-					 *
-					 * This includes whitespace. We escape whitespace so that it will not be collapsed by the parser.
-					 */
-					if ((buf[j] > 0x7e) || !isprint(buf[j])) {
-						[result appendFormat:@"&#x%02x;", buf[j]];
-					} else {
-						[result appendString:str];
-					}
-				}
-			}
-			[pool release];
-
-			if (inSurrogatePair) {
-				highSurrogateFromPrevBuf = buf[bufsize - 1];
-			} else {
-				highSurrogateFromPrevBuf = 0;
-			}
-
-			len -= bufsize;
-		}
-		NSZoneFree(zone, buf);
-
-		return [NSString stringWithString:result];
+	if (!entities) {
+		realEntities = [NSDictionary dictionaryWithObjectsAndKeys:
+			@"amp",  @"&",
+			@"lt",   @"<",
+			@"gt",   @">",
+			@"quot", @"\"",
+			@"apos", @"'",
+			@"nbsp", [NSString stringWithCharacters:&nbsp length:1],
+			//Also escape whitespace. CF doesn't do this by default.
+			@"#x09", @"\t",
+			@"#x0a", @"\n",
+			@"#x0b", @"\v",
+			@"#x0c", @"\f",
+			@"#x0d", @"\r",
+			nil];
 	}
+
+	return [(NSString *)CFXMLCreateStringByEscapingEntities(kCFAllocatorDefault, (CFStringRef)self, (CFDictionaryRef)realEntities) autorelease];
 }
 - (NSString *)stringByUnescapingFromXMLWithEntities:(NSDictionary *)entities
 {
-	if ([NSApp isOnTigerOrBetter]) {
-		return [(NSString *)CFXMLCreateStringByUnescapingEntities(kCFAllocatorDefault, (CFStringRef)self, (CFDictionaryRef)entities) autorelease];
-	} else {
-		//COMPAT 10.3
-
-		if (!entities) {
-			static const unichar nbsp = 0xa0;
-			entities = [NSDictionary dictionaryWithObjectsAndKeys:
-				@"&",  @"amp",
-				@"<",  @"lt",
-				@">",  @"gt",
-				@"\"", @"quot",
-				@"'",  @"apos",
-				[NSString stringWithCharacters:&nbsp length:1], @"nbsp",
-				nil];
-		}
-
-		unsigned len = [self length];
-		NSMutableString *result = [NSMutableString stringWithCapacity:len];
-		NSScanner *scanner = [NSScanner scannerWithString:self];
-		[scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithRange:(NSRange){ 0, 0 }]];
-
-		NSString *chunk = nil;
-		while (YES) { //Actual condition is below.
-			chunk = nil;
-			if ([scanner scanUpToString:@"&" intoString:&chunk]) {
-				[result appendString:chunk];
-			}
-			[scanner scanString:@"&" intoString:NULL];
-
-			//Condition is here.
-			if ([scanner scanLocation] >= len)
-				break;
-
-			if ([scanner scanString:@"#" intoString:NULL]) {
-				NSString *hexIdentifier = nil;
-				if ([scanner scanString:@"x" intoString:&hexIdentifier] || [scanner scanString:@"X" intoString:&hexIdentifier]) {
-					//Probably hex.
-					unsigned unichar32 = 0xffff;
-					if (![scanner scanHexInt:&unichar32]) {
-						[result appendFormat:@"&#%@", hexIdentifier];
-					} else if (![scanner scanString:@";" intoString:NULL]) {
-						[result appendFormat:@"&#%@%u", hexIdentifier, unichar32];
-					} else {
-						unichar high, low;
-						if (getSurrogatesForUnicodeScalarValue(unichar32, &high, &low)) {
-							[result appendFormat:@"%C%C", high, low];
-						} else {
-							[result appendFormat:@"%C", low];
-						}
-					}
-				} else {
-					//Not hex. Hopefully decimal.
-					int unichar32 = 65535; //== 0xffff
-					if (![scanner scanInt:&unichar32]) {
-						[result appendString:@"&#"];
-					} else if (![scanner scanString:@";" intoString:NULL]) {
-						[result appendFormat:@"&#%i", unichar32];
-					} else {
-						unichar high, low;
-						if (getSurrogatesForUnicodeScalarValue(unichar32, &high, &low)) {
-							[result appendFormat:@"%C%C", high, low];
-						} else {
-							[result appendFormat:@"%C", low];
-						}
-					}
-				}
-			} else {
-				//Not a numeric entity. Should be a named entity.
-				NSString *entityName = nil;
-				if (![scanner scanUpToString:@";" intoString:&entityName]) {
-					[result appendString:@"&"];
-				} else {
-					//Strip the semicolon.
-					NSString *entity = [entities objectForKey:entityName];
-					if (entity) {
-						[result appendString:entity];
-
-					} else {
-						NSLog(@"-[NSString(AIStringAdditions) stringByUnescapingFromXMLWithEntities]: Named entity %@ unknown.", entityName);
-					}
-					[scanner scanString:@";" intoString:NULL];
-				}
-			}
-		}
-
-		return [NSString stringWithString:result];
-	}
+	return [(NSString *)CFXMLCreateStringByUnescapingEntities(kCFAllocatorDefault, (CFStringRef)self, (CFDictionaryRef)entities) autorelease];
 }
 
 #ifndef BSD_LICENSE_ONLY
