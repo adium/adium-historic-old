@@ -31,16 +31,18 @@
 - (BOOL)trashFileAtPath:(NSString *)sourcePath
 {
     NSParameterAssert(sourcePath != nil && [sourcePath length] != 0);
+
+	BOOL status = NO;
 	
 	if ([self fileExistsAtPath:sourcePath]) {
-        [[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation
-                                                     source:[sourcePath stringByDeletingLastPathComponent]
-                                                destination:@""
-                                                      files:[NSArray arrayWithObject:[sourcePath lastPathComponent]]
-                                                        tag:NULL];
+        status = [[NSWorkspace sharedWorkspace] performFileOperation:NSWorkspaceRecycleOperation
+                                                              source:[sourcePath stringByDeletingLastPathComponent]
+                                                         destination:@""
+                                                               files:[NSArray arrayWithObject:[sourcePath lastPathComponent]]
+                                                                 tag:NULL];
 	}
     
-	return YES;
+	return status;
 }
 
 - (void)removeFilesInDirectory:(NSString *)dirPath withPrefix:(NSString *)prefix movingToTrash:(BOOL)moveToTrash
