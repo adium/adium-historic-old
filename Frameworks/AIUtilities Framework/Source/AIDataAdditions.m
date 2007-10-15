@@ -18,12 +18,10 @@
 @implementation NSData(AIDataAdditions)
 
 - (NSData *)subdataFromIndex:(unsigned)start {
-	NSRange range = { start, [self length] - start };
-	return [self subdataWithRange:range];
+	return [self subdataWithRange:NSMakeRange(start, [self length] - start)];
 }
 - (NSData *)subdataToIndex:(unsigned)stop {
-	NSRange range = { 0, stop };
-	return [self subdataWithRange:range];
+	return [self subdataWithRange:NSMakeRange(0, stop)];
 }
 
 @end
