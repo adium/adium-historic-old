@@ -1106,9 +1106,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 //Set the active search mode (Does not invoke a search)
 - (void)setSearchMode:(LogSearchMode)inMode
 {
-	//Get the NSTextFieldCell and use it only if it responds to setPlaceholderString: (10.3 and above)
 	NSTextFieldCell	*cell = [searchField_logs cell];
-	if (![cell respondsToSelector:@selector(setPlaceholderString:)]) cell = nil;
 	
     searchMode = inMode;
 	
