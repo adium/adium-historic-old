@@ -14,7 +14,7 @@
 #define NSAppKitVersionNumber10_3 743 
 #endif 
 	 	 
-//Make sure the version number defines exist; when compiling in 10.3, NSAppKitVersionNumber10_3 isn't defined 
+//Make sure the version number defines exist; when compiling in 10.4, NSAppKitVersionNumber10_4 isn't defined 
 #ifndef NSAppKitVersionNumber10_4 
 #define NSAppKitVersionNumber10_4 824 
 #endif
