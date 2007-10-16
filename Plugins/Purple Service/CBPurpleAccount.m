@@ -1872,7 +1872,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	if (![statusMessage length] &&
 		([statusState statusType] == AIAwayStatusType) &&
 		[statusState statusName] &&
-		!statusID || (strcmp(statusID, "away") == 0)) {
+		(!statusID || (strcmp(statusID, "away") == 0))) {
 		/* If we don't have a status message, and the status type is away for a non-default away such as "Do Not Disturb", and we're only setting
 		 * a default away state becuse we don't know a better one for this service, get a default
 		 * description of this away state. This allows, for example, an AIM user to set the "Do Not Disturb" type provided by her ICQ account
@@ -1903,13 +1903,20 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 
 	if ([self shouldIncludeNowPlayingInformationInAllStatuses]) {
 		if (tuneinfo && [[tuneinfo objectForKey:ITUNES_PLAYER_STATE] isEqualToString:@"Playing"]) {
-			[arguments setObject:([tuneinfo objectForKey:ITUNES_ARTIST] ? [tuneinfo objectForKey:ITUNES_ARTIST] : @"") forKey:[NSString stringWithUTF8String:PURPLE_TUNE_ARTIST]];
-			[arguments setObject:([tuneinfo objectForKey:ITUNES_NAME] ? [tuneinfo objectForKey:ITUNES_NAME] : @"") forKey:[NSString stringWithUTF8String:PURPLE_TUNE_TITLE]];
+			NSString *artist = [tuneinfo objectForKey:ITUNES_ARTIST];
+			NSString *name = [tuneinfo objectForKey:ITUNES_NAME];
+
+			[arguments setObject:(artist ? artist : @"") forKey:[NSString stringWithUTF8String:PURPLE_TUNE_ARTIST]];
+			[arguments setObject:(name ? name : @"") forKey:[NSString stringWithUTF8String:PURPLE_TUNE_TITLE]];
 			[arguments setObject:([tuneinfo objectForKey:ITUNES_ALBUM] ? [tuneinfo objectForKey:ITUNES_ALBUM] : @"") forKey:[NSString stringWithUTF8String:PURPLE_TUNE_ALBUM]];
 			[arguments setObject:([tuneinfo objectForKey:ITUNES_GENRE] ? [tuneinfo objectForKey:ITUNES_GENRE] : @"") forKey:[NSString stringWithUTF8String:PURPLE_TUNE_GENRE]];
 			[arguments setObject:([tuneinfo objectForKey:ITUNES_TOTAL_TIME] ? [tuneinfo objectForKey:ITUNES_TOTAL_TIME]:[NSNumber numberWithInt:-1]) forKey:[NSString stringWithUTF8String:PURPLE_TUNE_TIME]];
 			[arguments setObject:([tuneinfo objectForKey:ITUNES_YEAR] ? [tuneinfo objectForKey:ITUNES_YEAR]:[NSNumber numberWithInt:-1]) forKey:[NSString stringWithUTF8String:PURPLE_TUNE_YEAR]];
 			[arguments setObject:([tuneinfo objectForKey:ITUNES_STORE_URL] ? [tuneinfo objectForKey:ITUNES_STORE_URL] : @"") forKey:[NSString stringWithUTF8String:PURPLE_TUNE_URL]];
+			
+			[arguments setObject:[NSString stringWithFormat:@"%@%@%@", (name ? name : @""), (name && artist ? @" - " : @""), (artist ? artist : @"")]
+						  forKey:[NSString stringWithUTF8String:PURPLE_TUNE_FULL]];
+			
 		} else {
 			[arguments setObject:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_ARTIST]];
 			[arguments setObject:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_TITLE]];
@@ -1918,6 +1925,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 			[arguments setObject:[NSNumber numberWithInt:-1] forKey:[NSString stringWithUTF8String:PURPLE_TUNE_TIME]];
 			[arguments setObject:[NSNumber numberWithInt:-1] forKey:[NSString stringWithUTF8String:PURPLE_TUNE_YEAR]];
 			[arguments setObject:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_URL]];
+			[arguments setObject:@"" forKey:[NSString stringWithUTF8String:PURPLE_TUNE_FULL]];
 		}
 	}
 
