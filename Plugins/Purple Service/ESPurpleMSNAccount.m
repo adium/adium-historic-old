@@ -388,6 +388,11 @@
 	//No-op
 }
 
+- (BOOL)shouldIncludeNowPlayingInformationInAllStatuses
+{
+	return YES;
+}
+
 #pragma mark File transfer
 - (BOOL)canSendFolders
 {
