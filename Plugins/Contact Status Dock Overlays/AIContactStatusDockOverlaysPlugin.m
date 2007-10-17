@@ -70,6 +70,7 @@
 	
     //Prefs
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 	
     //
     image1 = [[NSImage alloc] initWithSize:NSMakeSize(128,128)];
@@ -220,16 +221,30 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {	
-	//Grab colors from status coloring plugin's prefs    
-	[self flushPreferenceColorCache];
-	signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
-	signedOnColor = [[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor] retain];
-	unviewedContentColor = [[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor] retain];
-	
-	backSignedOffColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor] retain];
-	backSignedOnColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor] retain];
-	backUnviewedContentColor = [[[prefDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor] retain];
+	if ([group isEqualToString:PREF_GROUP_LIST_THEME]) {
+		//Grab colors from status coloring plugin's prefs    
+		[self flushPreferenceColorCache];
+		signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];
+		signedOnColor = [[[prefDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor] retain];
+		unviewedContentColor = [[[prefDict objectForKey:KEY_UNVIEWED_COLOR] representedColor] retain];
+		
+		backSignedOffColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_OFF_COLOR] representedColor] retain];
+		backSignedOnColor = [[[prefDict objectForKey:KEY_LABEL_SIGNED_ON_COLOR] representedColor] retain];
+		backUnviewedContentColor = [[[prefDict objectForKey:KEY_LABEL_UNVIEWED_COLOR] representedColor] retain];
+
+	} else if ([group isEqualToString:PREF_GROUP_APPEARANCE]) {
+		if (!key || [key isEqualToString:KEY_ANIMATE_DOCK_ICON]) {
+			BOOL newShouldAnimate = [[prefDict objectForKey:KEY_ANIMATE_DOCK_ICON] boolValue];
+			if (newShouldAnimate != shouldAnimate) {
+				shouldAnimate = newShouldAnimate;
+
+				//Redo our overlay to respect our new preference
+				if (!firstTime) [self _setOverlay];
+			}
+		}
+	}
 }
+
 
 - (void)flushPreferenceColorCache
 {
@@ -295,7 +310,7 @@
     }
 
     //Create & set the new overlay state
-    if ([overlayObjectsArray count] != 0) {
+    if ([overlayObjectsArray count] != 0 && shouldAnimate) {
         //Set the state
 		if ([[[adium preferenceController] preferenceForKey:KEY_ANIMATE_DOCK_ICON
 													  group:PREF_GROUP_APPEARANCE] boolValue]) {
