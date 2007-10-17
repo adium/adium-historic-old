@@ -741,6 +741,14 @@
 		[cell setState:([account enabled] ? NSOnState : NSOffState)];
 
 	} else if ([identifier isEqualToString:@"name"]) {
+		if ([account encrypted]) {
+			[cell setImage:[NSImage imageNamed:@"Lock_Black.tif"]];
+		} else {
+			[cell setImage:nil];
+		}
+
+		[cell setImageTextPadding:MINIMUM_CELL_SPACING/2.0];
+		
 		[cell setEnabled:[account enabled]];
 
 		// Update the subString with our current status message (if it exists);

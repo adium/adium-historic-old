@@ -79,6 +79,7 @@ typedef enum {
 - (NSString *)lastDisconnectionError;
 - (void)setLastDisconnectionError:(NSString *)inError;
 - (AIReconnectDelayType)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError;
+- (BOOL)encrypted;
 
 //FUS Disconnecting
 - (void)autoReconnectAfterDelay:(NSTimeInterval)delay;
