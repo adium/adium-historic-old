@@ -24,6 +24,7 @@
 #import "AIMenuBarIcons.h"
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIEventAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIAccount.h>
@@ -511,8 +512,33 @@
 #pragma mark Menu Delegates/Actions
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
-	//If something has changed
-	if (needsUpdate && menu == theMenu) {
+	// If the option key is held down, just show the contact list.
+	if ([NSEvent optionKey]) {
+		NSEnumerator    *enumerator = [contactMenuItemsArray objectEnumerator];
+		NSMenuItem      *menuItem;
+
+		// Remove previous menu items.
+		[menu removeAllItems];
+		
+		[menu addItemWithTitle:[AILocalizedString(@"Contact List", nil) stringByAppendingEllipsis]
+								target:self
+								action:@selector(activateContactList:)
+						 keyEquivalent:@""];
+		
+		if ([contactMenuItemsArray count] > 0)
+			[menu addItem:[NSMenuItem separatorItem]];
+		
+		while ((menuItem = [enumerator nextObject])) {
+			[menu addItem:menuItem];
+			
+			//Validate the menu items as they are added since they weren't previously validated when the menu was clicked
+			if ([[menuItem target] respondsToSelector:@selector(validateMenuItem:)]) {
+				[[menuItem target] validateMenuItem:menuItem];
+			}
+		}
+		
+		needsUpdate = YES;
+	} else if (needsUpdate) { // Only update if something has changed.
 		NSEnumerator    *enumerator;
 		NSMenuItem      *menuItem;
 		AIChat          *chat;
