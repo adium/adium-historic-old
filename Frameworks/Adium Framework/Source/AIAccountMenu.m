@@ -20,6 +20,7 @@
 #import <Adium/AIStatusControllerProtocol.h>
 #import <Adium/AIStatusMenu.h>
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
 #import <Adium/AIServiceMenu.h>
@@ -333,10 +334,33 @@
 			titleAttributes = [[NSDictionary dictionaryWithObject:[NSFont menuFontOfSize:14.0f]
 														   forKey:NSFontAttributeName] retain];
 		}
-		NSAttributedString *title = [[NSAttributedString alloc] initWithString:[self _titleForAccount:account]
-																	attributes:titleAttributes];
-		[menuItem setAttributedTitle:title];
-		[title release];
+		NSAttributedString *plainTitle = [[NSAttributedString alloc] initWithString:[self _titleForAccount:account]
+																		 attributes:titleAttributes];
+
+		if ([account encrypted]) {
+			NSFileWrapper				*fileWrapper = nil;
+			NSTextAttachment			*textAttachment = nil;
+			NSMutableAttributedString	*title = nil;
+			
+			fileWrapper = [[NSFileWrapper alloc] initRegularFileWithContents:[[NSImage imageNamed:@"Lock_Black"] TIFFRepresentation]];
+			[fileWrapper setFilename:@"Lock_Black.tif"];
+			[fileWrapper setPreferredFilename:@"Lock_Black.tif"];
+			
+			textAttachment = [[NSTextAttachment alloc] initWithFileWrapper:fileWrapper];
+
+			title = [plainTitle mutableCopy];
+			[title appendAttributedString:[NSAttributedString attributedStringWithAttachment:textAttachment]];
+
+			[menuItem setAttributedTitle:title];
+			
+			[title release];
+			[textAttachment release];
+			[fileWrapper release];
+		} else {
+			[menuItem setAttributedTitle:plainTitle];
+		}
+		
+		[plainTitle release];
 
 		[account accountMenuDidUpdate:menuItem];
 

@@ -116,9 +116,7 @@ extern void jabber_roster_request(JabberStream *js);
 }
 
 - (void)accountConnectionStep:(NSString*)msg step:(int)step totalSteps:(int)step_count {
-	if(step == 6) { // Initializing SSL/TLS
-		hasEncryption = YES;
-	}
+
 }
 
 - (void)configurePurpleAccount
@@ -420,20 +418,6 @@ extern void jabber_roster_request(JabberStream *js);
 			[self setLastDisconnectionError:AILocalizedString(@"Incorrect username or password","Error message displayed when the server reports username or password as being incorrect.")];
 			[self serverReportedInvalidPassword];
 			shouldAttemptReconnect = AIReconnectImmediately;
-
-			/* Automatic registration attempt
-			//Display no error message
-			[self setLastDisconnectionError:nil];
-
-			[[adium interfaceController] displayQuestion:AILocalizedString(@"Would you like to register a new Jabber account?", nil)
-										 withDescription:AILocalizedString(@"Jabber was unable to connect due to an invalid Jabber ID or password.  This may be because you do not yet have an account on this Jabber server.  Would you like to register now?",nil)
-										 withWindowTitle:AILocalizedString(@"Invalid Jabber ID or Password",nil)
-										   defaultButton:AILocalizedString(@"Register",nil)
-										 alternateButton:AILocalizedString(@"Cancel",nil)
-											 otherButton:nil
-												  target:self
-												selector:@selector(answeredShouldRegisterNewJabberAccount:userInfo:)
-												userInfo:nil];*/
 		} else if ([*disconnectionError rangeOfString:@"Stream Error"].location != NSNotFound) {
 			shouldAttemptReconnect = AIReconnectNever;
 
@@ -447,27 +431,6 @@ extern void jabber_roster_request(JabberStream *js);
 	
 	return shouldAttemptReconnect;
 }
-/*
-- (BOOL)answeredShouldRegisterNewJabberAccount:(NSNumber *)returnCodeNumber userInfo:(id)userInfo
-{
-	AITextAndButtonsReturnCode returnCode = [returnCodeNumber intValue];
-
-	switch (returnCode) {
-		case AITextAndButtonsDefaultReturn:
-			[self performSelector:@selector(performRegisterWithPassword:)
-					   withObject:password
-					   afterDelay:1];
-			break;
-
-		case AITextAndButtonsAlternateReturn:
-		case AITextAndButtonsOtherReturn:
-		case AITextAndButtonsClosedWithoutResponse:
-			[self serverReportedInvalidPassword];
-			break;
-	}
-	
-	return YES;
-}*/
 
 - (void)disconnectFromDroppedNetworkConnection
 {
@@ -679,38 +642,6 @@ extern void jabber_roster_request(JabberStream *js);
 	return statusID;
 }
 
-#pragma mark Account Action Menu Items
-- (NSString *)titleForAccountActionMenuLabel:(const char *)label
-{
-	// only temporary - need to localize
-    return [NSString stringWithUTF8String:label];
-}
-
-- (void)accountMenuDidUpdate:(NSMenuItem*)menuItem {
-	if(hasEncryption) {
-		NSMutableAttributedString *title = [[NSMutableAttributedString alloc] initWithString:[menuItem title] attributes:[NSDictionary dictionaryWithObjectsAndKeys:
-			[NSFont menuFontOfSize:14.0f], NSFontAttributeName, // for some reason, the default font size seems to be slightly smaller than the real font, seems to be an AppKit bug
-			nil]];
-		NSFileWrapper *fwrap = [[NSFileWrapper alloc] initRegularFileWithContents:
-			[[NSImage imageNamed:@"Lock_Black"] TIFFRepresentation]];
-		[fwrap setFilename:@"Lock_Black.tif"];
-		[fwrap setPreferredFilename:@"Lock_Black.tif"];
-		
-		NSTextAttachment * ta = [[NSTextAttachment alloc] initWithFileWrapper:fwrap];
-		
-		[title appendAttributedString:[[[NSAttributedString alloc] initWithString:@"   "] autorelease]];
-		[title appendAttributedString:[NSAttributedString attributedStringWithAttachment:ta]];
-		
-		[ta release];
-		[fwrap release];
-
-		[menuItem setAttributedTitle:title];
-		[title release];
-	} else {
-		[menuItem setAttributedTitle:nil];
-	}
-}
-
 #pragma mark Gateway Tracking
 
 - (void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName contactName:(NSString *)contactName {
@@ -755,6 +686,14 @@ extern void jabber_roster_request(JabberStream *js);
 
 #pragma mark XML Console, Tooltip, AdHoc Server Integration and Gateway Integration
 
+/*!
+* @brief Returns whether or not this account is connected via an encrypted connection.
+ */
+- (BOOL)encrypted
+{
+	return ([self online] && ((JabberStream*)[self purpleAccount]->gc->proto_data)->gsc);
+}
+
 - (void)didConnect {
 	gateways = [[NSMutableArray alloc] init];
 
@@ -775,8 +714,6 @@ extern void jabber_roster_request(JabberStream *js);
 }
 
 - (void)didDisconnect {
-	hasEncryption = NO;
-
 	[xmlConsoleController setPurpleConnection:NULL];
 	
 	[discoveryBrowserController release]; discoveryBrowserController = nil;

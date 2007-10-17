@@ -1280,6 +1280,14 @@
 	return AIReconnectNormally;
 }
 
+/*!
+ * @brief Returns whether or not this account is connected via an encrypted connection.
+ */
+- (BOOL)encrypted
+{
+	return NO;
+}
+
 //Fast user switch disconnecting ---------------------------------------------------------------------------------------
 #pragma mark Fast user switch disconnecting
 /*!

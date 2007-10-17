@@ -37,8 +37,6 @@
 	AMPurpleJabberAdHocServer *adhocServer;
 	
 	NSMutableArray *gateways;
-	
-	BOOL hasEncryption;
 }
 
 - (NSString *)serverSuffix;
