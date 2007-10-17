@@ -45,6 +45,7 @@
     BOOL	showStatus;
     BOOL	showContent;
     BOOL	overlayPosition;
+	BOOL	shouldAnimate;
 
     NSImage	*image1;
     NSImage	*image2;
