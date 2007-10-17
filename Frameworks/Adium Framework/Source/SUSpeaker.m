@@ -265,7 +265,9 @@ Note that extreme value can make your app crash..."  */
 	OSErr error;
 
 	if (_speechChannel) {
-		[self stopSpeaking];
+		if ([self isSpeaking]) {
+			[self stopSpeaking];
+		}
 		DisposeSpeechChannel(_speechChannel);
 		_speechChannel = NULL;
 	}
