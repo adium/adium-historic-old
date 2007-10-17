@@ -1198,14 +1198,14 @@
 
 - (void)removeToolbarItemWithIdentifier:(NSString*)identifier
 {
-	NSArray			*itemArray = [toolbar items]
+	NSArray			*itemArray = [toolbar items];
 	NSEnumerator	*enumerator = [itemArray objectEnumerator];
 	NSToolbarItem	*item;
 	int				index = NSNotFound;
 
 	while ((item = [enumerator nextObject])) {
-		if ([[item identifier] isEqualToString:identifier]) {
-			index = [itemsArray indexOfObject:item];
+		if ([[item itemIdentifier] isEqualToString:identifier]) {
+			index = [itemArray indexOfObject:item];
 			break;
 		}
 	}
