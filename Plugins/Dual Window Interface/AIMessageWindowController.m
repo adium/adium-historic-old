@@ -1196,19 +1196,23 @@
 	}
 }
 
--(void)removeToolbarItemWithIdentifier:(NSString*)identifier
+- (void)removeToolbarItemWithIdentifier:(NSString*)identifier
 {
-	NSEnumerator* enumerator = [toolbarItems objectEnumerator];
-	id object;
-	int count;
-	int index;
-	while((object = [enumerator nextObject])) {
-		count++;
-		if(object == [toolbarItems objectForKey:identifier]){
-			index = count;
+	NSArray			*itemArray = [toolbar items]
+	NSEnumerator	*enumerator = [itemArray objectEnumerator];
+	NSToolbarItem	*item;
+	int				index = NSNotFound;
+
+	while ((item = [enumerator nextObject])) {
+		if ([[item identifier] isEqualToString:identifier]) {
+			index = [itemsArray indexOfObject:item];
+			break;
 		}
 	}
-	[toolbar removeItemAtIndex:count];
+
+	if (index != NSNotFound) {
+		[toolbar removeItemAtIndex:index];
+	}
 }
 
 #pragma mark Miniaturization
