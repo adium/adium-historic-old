@@ -24,6 +24,8 @@
 
 @interface ESPurpleNotifyEmailController (PRIVATE)
 + (void)openURLString:(NSString *)urlString;
++ (void)startMailApplication;
++ (NSString *)mailApplicationName;
 @end
 
 @implementation ESPurpleNotifyEmailController
@@ -164,12 +166,15 @@
  */
 + (void)showNotifyEmailWindowForAccount:(AIAccount *)account withMessage:(NSAttributedString *)inMessage URLString:(NSString *)inURLString
 {	
+	NSString *mailApplicationName = [self mailApplicationName];
 	[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:AILocalizedString(@"New Mail",nil)
 														  defaultButton:nil
 														alternateButton:(inURLString ? 
-																		 AILocalizedString(@"Open Mail",nil) :
+																		 AILocalizedString(@"Open Mail in Browser",nil) :
 																		 nil)
-															otherButton:nil
+															otherButton:((mailApplicationName && [mailApplicationName length]) ?
+																		 [NSString stringWithFormat:AILocalizedString(@"Launch %@", nil), mailApplicationName] :
+																		 nil)
 															   onWindow:nil
 													  withMessageHeader:nil
 															 andMessage:inMessage
@@ -194,13 +199,29 @@
 			break;
 
 		case AITextAndButtonsDefaultReturn:
+			break;
+			
 		case AITextAndButtonsOtherReturn:
+			if (userInfo) [self startMailApplication];
+			break;
+			
 		case AITextAndButtonsClosedWithoutResponse:
 			//No action needed
 			break;
 	}
 	
 	return YES;
+}
+
+/*!
+ * @brief Start mail application from the new mail window
+ *
+ * Launch the user's mail application instead of opening the webmail-page
+ */ 
++ (void)startMailApplication {
+	if ([[NSWorkspace sharedWorkspace] launchApplication:[self mailApplicationName]] == NO) {
+		NSLog(@"Could not launch mail application '%@'", [self mailApplicationName]);
+	}
 }
 
 /*!
@@ -248,6 +269,22 @@
 		emailURL = [NSURL URLWithString:urlString];
 		[[NSWorkspace sharedWorkspace] openURL:emailURL];
 	}
+}
+
+/*!
+ * @brief Returns the name of the user's mail application
+ *
+ * Use the LaunchServices to identify the user's mail application and return it's name
+ * @return NSString with the application's name
+ */ 
++ (NSString *)mailApplicationName {
+	NSString *appName;
+	FSRef myAppRef;
+	
+	LSGetApplicationForURL((CFURLRef)[NSURL URLWithString:@"mailto://"], kLSRolesAll, &myAppRef, NULL);
+	LSCopyDisplayNameForRef(&myAppRef, (CFStringRef *)&appName);
+	
+	return [appName autorelease];
 }
 
 @end
