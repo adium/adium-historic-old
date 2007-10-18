@@ -310,10 +310,9 @@
     }
 
     //Create & set the new overlay state
-    if ([overlayObjectsArray count] != 0 && shouldAnimate) {
+    if ([overlayObjectsArray count] != 0) {
         //Set the state
-		if ([[[adium preferenceController] preferenceForKey:KEY_ANIMATE_DOCK_ICON
-													  group:PREF_GROUP_APPEARANCE] boolValue]) {
+		if (shouldAnimate) {
 			overlayState = [[AIIconState alloc] initWithImages:[NSArray arrayWithObjects:[self overlayImageFlash:NO], [self overlayImageFlash:YES], nil]
 														 delay:0.5
 												       looping:YES 
@@ -322,6 +321,7 @@
 			overlayState = [[AIIconState alloc] initWithImage:[self overlayImageFlash:NO]
 													  overlay:YES];
 		}
+
         [[adium dockController] setIconState:overlayState named:@"ContactStatusOverlay"];
     }   
 }
