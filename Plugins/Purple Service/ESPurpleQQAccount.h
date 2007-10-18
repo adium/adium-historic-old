@@ -7,6 +7,8 @@
 
 #import "CBPurpleAccount.h"
 
+#define KEY_QQ_USE_TCP @"QQ:Use TCP"
+
 @interface ESPurpleQQAccount : CBPurpleAccount {
 
 }

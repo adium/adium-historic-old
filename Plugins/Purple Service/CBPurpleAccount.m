@@ -1423,6 +1423,16 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 											context:contextInvocation];
 }
 
+/*!
+ * @brief The server name to be passed to libpurple
+ * By default, this is the host as seen by the rest of Adium.  Subclasses may choose to override this if
+ * some trickery is desired between what is told to libpurple and what the rest of Adium sees.
+ */
+- (NSString *)hostForPurple
+{
+	return [self host];
+}
+
 //Synchronous purple account configuration activites, always performed after an account is created.
 //This is a definite subclassing point so prpls can apply their own account settings.
 - (void)configurePurpleAccount
@@ -1431,7 +1441,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	int			portNumber;
 
 	//Host (server)
-	hostName = [self host];
+	hostName = [self hostForPurple];
 	if (hostName && [hostName length]) {
 		purple_account_set_string(account, "server", [hostName UTF8String]);
 	}
