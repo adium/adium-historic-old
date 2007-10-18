@@ -1175,7 +1175,6 @@
 		8163F99C0B318824002005EE /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
 		8173C5760C4C3DB800C9E64E /* downloadprogress.png in Resources */ = {isa = PBXBuildFile; fileRef = 8173C5750C4C3DB800C9E64E /* downloadprogress.png */; };
 		817BA2FD0C441F750098EEF0 /* Libpurple.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libpurple.framework */; };
-		8181E4FA0C29345B00E802F7 /* Lock_Black.tif in Resources */ = {isa = PBXBuildFile; fileRef = 8181E4F40C29342700E802F7 /* Lock_Black.tif */; };
 		8181EEBE0C30673E00E802F7 /* AMPurpleSearchResultsWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 8181EEBD0C30673E00E802F7 /* AMPurpleSearchResultsWindow.nib */; };
 		8181EEC30C3067B500E802F7 /* AMPurpleSearchResultsController.h in Headers */ = {isa = PBXBuildFile; fileRef = 8181EEC10C3067B500E802F7 /* AMPurpleSearchResultsController.h */; };
 		8181EEC40C3067B500E802F7 /* AMPurpleSearchResultsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8181EEC20C3067B500E802F7 /* AMPurpleSearchResultsController.m */; };
@@ -3695,7 +3694,6 @@
 		7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHLinkManagementPlugin.m; sourceTree = "<group>"; };
 		815D37460A765E83009338C2 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		8173C5750C4C3DB800C9E64E /* downloadprogress.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = downloadprogress.png; path = "Plugins/Purple Service/downloadprogress.png"; sourceTree = "<group>"; };
-		8181E4F40C29342700E802F7 /* Lock_Black.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = Lock_Black.tif; path = Resources/Lock_Black.tif; sourceTree = "<group>"; };
 		8181EEBD0C30673E00E802F7 /* AMPurpleSearchResultsWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AMPurpleSearchResultsWindow.nib; path = "Plugins/Purple Service/AMPurpleSearchResultsWindow.nib"; sourceTree = "<group>"; };
 		8181EEC10C3067B500E802F7 /* AMPurpleSearchResultsController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMPurpleSearchResultsController.h; path = "Plugins/Purple Service/AMPurpleSearchResultsController.h"; sourceTree = "<group>"; };
 		8181EEC20C3067B500E802F7 /* AMPurpleSearchResultsController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AMPurpleSearchResultsController.m; path = "Plugins/Purple Service/AMPurpleSearchResultsController.m"; sourceTree = "<group>"; };
@@ -6983,7 +6981,6 @@
 				34D8326507CBD598006466F2 /* info.png */,
 				3496A8C107CE6B880055BBAB /* InfoPlist.strings */,
 				3402E04107CB0E4D0044F818 /* Localizable.strings */,
-				8181E4F40C29342700E802F7 /* Lock_Black.tif */,
 				F59DB6AD033EB74801A8010A /* main.m */,
 				34575E3807CBA88E004A4FFF /* MainMenu.nib */,
 				63AF91C80AA80FE300B88299 /* OldListXtras */,
@@ -7823,7 +7820,6 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
@@ -8259,7 +8255,6 @@
 				07C6EA890C06676400B79CBD /* AdiumHelp in Resources */,
 				0CAC6A140C0C657A0090AE95 /* Adium.sdef in Resources */,
 				C4D29CC80C3C2E49001545A2 /* ICImport.nib in Resources */,
-				8181E4FA0C29345B00E802F7 /* Lock_Black.tif in Resources */,
 				07E179780C657B5E005DDA3D /* ConfirmationDefaults.plist in Resources */,
 				34A970740C965FC800F46006 /* AddBookmark.nib in Resources */,
 				34A970760C965FE400F46006 /* sidebarResizeWidget.png in Resources */,
