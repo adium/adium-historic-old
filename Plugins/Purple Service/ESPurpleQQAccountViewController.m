@@ -6,7 +6,7 @@
 //
 
 #import "ESPurpleQQAccountViewController.h"
-
+#import "ESPurpleQQAccount.h"
 
 @implementation ESPurpleQQAccountViewController
 - (NSString *)nibName{
