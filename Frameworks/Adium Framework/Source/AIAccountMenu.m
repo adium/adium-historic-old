@@ -21,6 +21,7 @@
 #import <Adium/AIStatusMenu.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
 #import <Adium/AIServiceMenu.h>
@@ -338,7 +339,10 @@
 																		 attributes:titleAttributes];
 
 		if ([account encrypted]) {
-			NSString					*path = [[NSBundle mainBundle] pathForImageResource:@"Lock_Black"];
+			NSBundle *securityInterfaceFramework = [NSBundle bundleWithIdentifier:@"com.apple.securityinterface"];
+			if (!securityInterfaceFramework) securityInterfaceFramework = [NSBundle bundleWithPath:@"/System/Library/Frameworks/SecurityInterface.framework"];
+
+			NSString					*path = [securityInterfaceFramework pathForImageResource:@"CertSmallStd"];
 			NSFileWrapper				*fileWrapper = nil;
 			NSTextAttachment			*textAttachment = nil;
 			NSMutableAttributedString	*title = nil;

@@ -40,6 +40,18 @@
 	return [self imageNamed:name forClass:inClass loadLazily:NO];
 }
 
++ (NSImage *)imageForSSL
+{
+	static NSImage *SSLIcon = nil;
+	if (!SSLIcon) {
+		NSBundle *securityInterfaceFramework = [NSBundle bundleWithIdentifier:@"com.apple.securityinterface"];
+		if (!securityInterfaceFramework) securityInterfaceFramework = [NSBundle bundleWithPath:@"/System/Library/Frameworks/SecurityInterface.framework"];
+
+		SSLIcon = [[NSImage alloc] initByReferencingFile:[securityInterfaceFramework pathForImageResource:@"CertSmallStd"]];
+	}
+	return SSLIcon;
+}
+
 //Create and return an opaque bitmap image rep, replacing transparency with [NSColor whiteColor]
 - (NSBitmapImageRep *)opaqueBitmapImageRep
 {

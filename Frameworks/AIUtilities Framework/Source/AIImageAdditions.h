@@ -36,6 +36,8 @@ typedef enum {
 + (NSImage *)imageNamed:(NSString *)name forClass:(Class)inClass;
 + (NSImage *)imageNamed:(NSString *)name forClass:(Class)inClass loadLazily:(BOOL)flag;
 
++ (NSImage *)imageForSSL;
+
 + (AIBitmapImageFileType)fileTypeOfData:(NSData *)inData;
 + (NSString *)extensionForBitmapImageFileType:(AIBitmapImageFileType)inFileType;
 

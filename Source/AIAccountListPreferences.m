@@ -742,7 +742,7 @@
 
 	} else if ([identifier isEqualToString:@"name"]) {
 		if ([account encrypted]) {
-			[cell setImage:[NSImage imageNamed:@"Lock_Black"]];
+			[cell setImage:[NSImage imageForSSL]];
 		} else {
 			[cell setImage:nil];
 		}
