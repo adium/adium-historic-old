@@ -351,6 +351,8 @@
 			textAttachment = [[NSTextAttachment alloc] initWithFileWrapper:fileWrapper];
 
 			title = [plainTitle mutableCopy];
+			//Put a space between the title and the SSL icon.
+			[[title mutableString] appendString:@" "];
 			[title appendAttributedString:[NSAttributedString attributedStringWithAttachment:textAttachment]];
 
 			[menuItem setAttributedTitle:title];
