@@ -1261,8 +1261,7 @@ static void purpleUnregisterCb(PurpleAccount *account, gboolean success, void *u
 {
 	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (purple_account_is_connected(account)) {
-		
-		serv_get_info(account->gc, [inUID UTF8String]);
+		serv_get_info(account->gc, purple_normalize(account, [inUID UTF8String]));
 	}
 }
 
