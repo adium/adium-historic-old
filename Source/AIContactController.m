@@ -87,6 +87,7 @@
 - (void)_loadGroupsFromArray:(NSArray *)array;
 
 - (void)_loadBookmarks;
+- (NSArray *)allBookmarks;
 
 - (void)_listChangedGroup:(AIListObject *)group object:(AIListObject *)object;
 - (void)prepareShowHideGroups;
@@ -254,7 +255,7 @@
 	
 	NSMutableArray *bookmarks = [NSMutableArray array];
 	AIListObject *listObject;
-	enumerator = [[self allContacts] objectEnumerator];
+	enumerator = [[self allBookmarks] objectEnumerator];
 	while ((listObject = [enumerator nextObject])) {
 		if ([listObject isKindOfClass:[AIListBookmark class]]) {
 			[bookmarks addObject:[NSKeyedArchiver archivedDataWithRootObject:listObject]];
@@ -269,11 +270,16 @@
 - (void)_loadBookmarks
 {
 	NSEnumerator	*enumerator = [[[adium preferenceController] preferenceForKey:KEY_BOOKMARKS
-																		 group:PREF_GROUP_CONTACT_LIST] objectEnumerator];
-	AIListBookmark	*bookmark;
+																			group:PREF_GROUP_CONTACT_LIST] objectEnumerator];
+	NSData *data;
+	while ((data = [enumerator nextObject])) {
+		AIListBookmark	*bookmark;
+		//As a bookmark is initialized, it will add itself to the contact list in the right place
+		bookmark = [NSKeyedUnarchiver unarchiveObjectWithData:data];	
 
-	//As a bookmark is initialized, it will add itself to the contact list in the right place
-	while ((bookmark = [NSKeyedUnarchiver unarchiveObjectWithData:[enumerator nextObject]]));
+		//It's a newly created object, so set its initial attributes
+		[self _updateAllAttributesOfObject:bookmark];
+	}
 }
 
 - (void)_loadMetaContactsFromArray:(NSArray *)array
@@ -581,24 +587,26 @@
 		[self _listChangedGroup:(AIListGroup *)containingObject object:listContact];
 	}
 
-	if ((existingObject = [localGroup objectWithService:[listContact service] UID:[listContact UID]])) {
-		//If an object exists in this group with the same UID and serviceID, create a MetaContact
-		//for the two.
-		[self groupListContacts:[NSArray arrayWithObjects:listContact,existingObject,nil]];
-		performedGrouping = YES;
-
-	} else {
-		AIMetaContact	*metaContact;
-
-		//If no object exists in this group which matches, we should check if there is already
-		//a MetaContact holding a matching ListContact, since we should include this contact in it
-		//If we found a metaContact to which we should add, do it.
-		if ((metaContact = [contactToMetaContactLookupDict objectForKey:[listContact internalObjectID]])) {
-			//XXX
-//			AILog(@"Found an existing metacontact; adding %@ to %@",listContact,metaContact);
-
-			[self addListObject:listContact toMetaContact:metaContact];
+	if ([listContact canJoinMetaContacts]) {
+		if ((existingObject = [localGroup objectWithService:[listContact service] UID:[listContact UID]])) {
+			//If an object exists in this group with the same UID and serviceID, create a MetaContact
+			//for the two.
+			[self groupListContacts:[NSArray arrayWithObjects:listContact,existingObject,nil]];
 			performedGrouping = YES;
+			
+		} else {
+			AIMetaContact	*metaContact;
+			
+			//If no object exists in this group which matches, we should check if there is already
+			//a MetaContact holding a matching ListContact, since we should include this contact in it
+			//If we found a metaContact to which we should add, do it.
+			if ((metaContact = [contactToMetaContactLookupDict objectForKey:[listContact internalObjectID]])) {
+				//XXX
+				//			AILog(@"Found an existing metacontact; adding %@ to %@",listContact,metaContact);
+				
+				[self addListObject:listContact toMetaContact:metaContact];
+				performedGrouping = YES;
+			}
 		}
 	}
 
@@ -1568,12 +1576,47 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			[contactArray addObjectsFromArray:[self allContactsInObject:(AIListObject<AIContainingObject> *)object
 																recurse:recurse
 															  onAccount:inAccount]];
-		} 
-		else if ([object isMemberOfClass:[AIListContact class]] && (!inAccount || ([(AIListContact *)object account] == inAccount)))
+		} else if ([object isMemberOfClass:[AIListContact class]] && (!inAccount || ([(AIListContact *)object account] == inAccount)))
 			[contactArray addObject:object];
 	}
 
 	return contactArray;
+}
+
+//Return a flat array of all the bookmarks in a group on an account (and all subgroups, if desired)
+- (NSMutableArray *)allBookmarksInObject:(AIListObject<AIContainingObject> *)inGroup recurse:(BOOL)recurse onAccount:(AIAccount *)inAccount
+{
+	NSParameterAssert(inGroup != nil);
+	
+	NSMutableArray	*bookmarkArray = [NSMutableArray array];    
+	
+	NSEnumerator *enumerator = [[inGroup containedObjects] objectEnumerator];
+	AIListObject *object;
+    while ((object = [enumerator nextObject])) {
+        if (recurse && [object conformsToProtocol:@protocol(AIContainingObject)]) {
+			[bookmarkArray addObjectsFromArray:[self allBookmarksInObject:(AIListObject<AIContainingObject> *)object
+																  recurse:recurse
+																onAccount:inAccount]];
+		} else if ([object isMemberOfClass:[AIListBookmark class]] && (!inAccount || ([(AIListBookmark *)object account] == inAccount))) {
+			[bookmarkArray addObject:object];
+		}
+	}
+
+	return bookmarkArray;
+}
+
+- (NSArray *)allBookmarks
+{
+	NSMutableArray *result = [self allBookmarksInObject:contactList recurse:YES onAccount:nil];
+	
+	/** Could be perfected I'm sure */
+	NSEnumerator *enumerator = [detachedContactLists objectEnumerator];
+	AIListGroup *detached;
+	while((detached = [enumerator nextObject])){
+		[result addObjectsFromArray:[self allBookmarksInObject:detached recurse:YES onAccount:nil]];
+	}
+	
+	return result;	
 }
 
 //Contact List Menus- --------------------------------------------------------------------------------------------------
