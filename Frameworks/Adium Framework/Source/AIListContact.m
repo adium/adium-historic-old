@@ -630,6 +630,14 @@
     return NO;
 }
 
+/*!
+ * @brief Can this object be part of a metacontact?
+ */
+- (BOOL)canJoinMetaContacts
+{
+	return YES;
+}
+
 #pragma mark Equality
 /*
 - (BOOL)isEqual:(id)anObject
