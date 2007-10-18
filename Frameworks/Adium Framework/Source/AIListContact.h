@@ -43,6 +43,7 @@
 
 - (BOOL)canContainOtherContacts;
 - (BOOL)containsMultipleContacts;
+- (BOOL)canJoinMetaContacts;
 
 - (BOOL)isIntentionallyNotAStranger;
 
