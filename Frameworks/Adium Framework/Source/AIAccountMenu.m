@@ -338,14 +338,12 @@
 																		 attributes:titleAttributes];
 
 		if ([account encrypted]) {
+			NSString					*path = [[NSBundle mainBundle] pathForImageResource:@"Lock_Black"];
 			NSFileWrapper				*fileWrapper = nil;
 			NSTextAttachment			*textAttachment = nil;
 			NSMutableAttributedString	*title = nil;
 			
-			fileWrapper = [[NSFileWrapper alloc] initRegularFileWithContents:[[NSImage imageNamed:@"Lock_Black"] TIFFRepresentation]];
-			[fileWrapper setFilename:@"Lock_Black.tif"];
-			[fileWrapper setPreferredFilename:@"Lock_Black.tif"];
-			
+			fileWrapper = [[NSFileWrapper alloc] initWithPath:path];
 			textAttachment = [[NSTextAttachment alloc] initWithFileWrapper:fileWrapper];
 
 			title = [plainTitle mutableCopy];
