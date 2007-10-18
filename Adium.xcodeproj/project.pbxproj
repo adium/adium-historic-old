@@ -980,6 +980,7 @@
 		34F4677A080F49C5007800AB /* Safari.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 34F46778080F49C5007800AB /* Safari.scpt */; };
 		34F4677B080F49C5007800AB /* Safari.png in Resources */ = {isa = PBXBuildFile; fileRef = 34F46779080F49C5007800AB /* Safari.png */; };
 		34F46785080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46783080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.m */; };
+		34F5207E0CC6F821008D9135 /* PurpleQQAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34F5207D0CC6F821008D9135 /* PurpleQQAccountView.nib */; };
 		34F849530A4AEFA00002A017 /* LogFileUpgrade.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34F849520A4AEFA00002A017 /* LogFileUpgrade.nib */; };
 		34F849590A4AF04D0002A017 /* AILogFileUpgradeWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */; };
 		34FA28110C820C3A00FEA944 /* AIPreviewContentMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FA28100C820C3A00FEA944 /* AIPreviewContentMessage.m */; };
@@ -3247,6 +3248,7 @@
 		34F468EB080FA987007800AB /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = "Plugins/Purple Service/de.lproj/ESPurpleYahooAccountView.nib"; sourceTree = "<group>"; };
 		34F468EC080FA988007800AB /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = "Plugins/Purple Service/de.lproj/DCPurpleZephyrJoinChatView.nib"; sourceTree = "<group>"; };
 		34F468ED080FA988007800AB /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = "Plugins/Purple Service/de.lproj/ESPurpleZephyrAccountView.nib"; sourceTree = "<group>"; };
+		34F5207D0CC6F821008D9135 /* PurpleQQAccountView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = PurpleQQAccountView.nib; path = "Plugins/Purple Service/PurpleQQAccountView.nib"; sourceTree = "<group>"; };
 		34F52BCB06E2AFBC00887BE2 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Purple Service/en.lproj/ESPurpleICQAccountView.nib"; sourceTree = "<group>"; };
 		34F52BCF06E2AFF700887BE2 /* ESPurpleICQAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESPurpleICQAccountViewController.h; path = "Plugins/Purple Service/ESPurpleICQAccountViewController.h"; sourceTree = "<group>"; };
 		34F52BD006E2AFF700887BE2 /* ESPurpleICQAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESPurpleICQAccountViewController.m; path = "Plugins/Purple Service/ESPurpleICQAccountViewController.m"; sourceTree = "<group>"; };
@@ -4220,9 +4222,10 @@
 				3419E73E0A880B2C00C3FC68 /* ESQQService.m */,
 				3419E7370A880AD300C3FC68 /* ESPurpleQQAccount.h */,
 				3419E7380A880AD400C3FC68 /* ESPurpleQQAccount.m */,
-				3419E74B0A880C0900C3FC68 /* PurpleDefaultsQQ.plist */,
+				34F5207D0CC6F821008D9135 /* PurpleQQAccountView.nib */,
 				3419E7670A880CD900C3FC68 /* ESPurpleQQAccountViewController.h */,
 				3419E7680A880CD900C3FC68 /* ESPurpleQQAccountViewController.m */,
+				3419E74B0A880C0900C3FC68 /* PurpleDefaultsQQ.plist */,
 			);
 			name = QQ;
 			sourceTree = "<group>";
@@ -7820,6 +7823,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
@@ -8012,6 +8016,7 @@
 				343BB5C40C96D57900506F9B /* PurpleDefaultsMySpace.plist in Resources */,
 				343BB63B0C96DC1100506F9B /* MySpace-small.png in Resources */,
 				343BB63C0C96DC1100506F9B /* MySpace-large.png in Resources */,
+				34F5207E0CC6F821008D9135 /* PurpleQQAccountView.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11951,6 +11956,7 @@
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
 				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT_ppc = /Developer/SDKs/MacOSX10.4u.sdk;
 				STRIP_INSTALLED_PRODUCT = NO;
 				WARNING_CFLAGS = "-Wall";
 				ZERO_LINK = NO;

@@ -9,7 +9,8 @@
 #import <Adium/AIAccountViewController.h>
 
 @interface ESPurpleQQAccountViewController : AIAccountViewController {
-
+	IBOutlet	NSButton	*checkBox_useTCP;
+	IBOutlet	NSTextField *label_connection;
 }
 
 @end
