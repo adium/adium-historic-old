@@ -70,7 +70,8 @@
 {
 	if (key) {
 		BOOL changedStatusDict = YES;
-		
+
+		[self willChangeValueForKey:key];
 		if (value) {
 			[statusDictionary setObject:value forKey:key];
 		} else {
@@ -85,6 +86,7 @@
 		if (changedStatusDict) {
 			[self object:self didSetStatusObject:value forKey:key notify:notify];
 		}
+		[self didChangeValueForKey:key];
 	}
 }
 
@@ -103,6 +105,11 @@
 				   value, KEY_VALUE,
 				   nil]
 			   afterDelay:delay];
+}
+
+- (id)valueForUndefinedKey:(NSString *)inKey
+{
+	return [self statusObjectForKey:inKey];
 }
 
 /*!
