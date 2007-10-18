@@ -20,6 +20,8 @@
 #define	KEY_CONTAINING_OBJECT_ID	@"ContainingObjectInternalObjectID"
 #define	OBJECT_STATUS_CACHE			@"Object Status Cache"
 
+#define KEY_ACCOUNT_INTERNAL_ID		@"AccountInternalObjectID"
+
 @interface AIListBookmark (PRIVATE)
 - (void)restoreGrouping;
 @end
@@ -27,8 +29,11 @@
 @implementation AIListBookmark
 - (void)_initListBookmark
 {
-	[self setVisible:YES];
-	[self restoreGrouping];
+	[[self account] addObserver:self
+					 forKeyPath:@"Online"
+						options:NSKeyValueObservingOptionNew
+						context:NULL];
+	[self observeValueForKeyPath:@"Online" ofObject:[self account] change:nil context:NULL];
 }
 
 -(id)initWithChat:(AIChat *)inChat
@@ -46,13 +51,22 @@
 
 - (id)initWithCoder:(NSCoder *)decoder
 {
+	//Be sure to use [AIObject sharedAdiumInstance] rather than the adium ivar since that isn't set until super's init is called.
+	AIAccount *myAccount = [[[AIObject sharedAdiumInstance] accountController] accountWithInternalObjectID:[decoder decodeObjectForKey:KEY_ACCOUNT_INTERNAL_ID]];
+	if (!myAccount) {
+		[self release];
+		return nil;
+	}
+
 	if ((self = [self initWithUID:[decoder decodeObjectForKey:@"UID"]
-						  account:[[adium accountController] accountWithInternalObjectID:[decoder decodeObjectForKey:@"AccountInternalObjectID"]]
-						  service:[[adium accountController] firstServiceWithServiceID:[decoder decodeObjectForKey:@"ServiceID"]]])) {
+						  account:myAccount
+						  service:[[[AIObject sharedAdiumInstance] accountController] firstServiceWithServiceID:[decoder decodeObjectForKey:@"ServiceID"]]])) {
 		chatCreationDictionary = [[decoder decodeObjectForKey:@"chatCreationDictionary"] retain];
 		name = [[decoder decodeObjectForKey:@"name"] retain];
 		[self _initListBookmark];
 		AILog(@"Created AIListBookmark from coder with dict %@",chatCreationDictionary);
+		[self restoreGrouping];
+		
 	}
 	
 	return self;
@@ -61,12 +75,18 @@
 - (void)encodeWithCoder:(NSCoder *)encoder
 {
 	[encoder encodeObject:[self UID] forKey:@"UID"];
-	[encoder encodeObject:[[self account] internalObjectID] forKey:@"AccountInternalObjectID"];
+	[encoder encodeObject:[[self account] internalObjectID] forKey:KEY_ACCOUNT_INTERNAL_ID];
 	[encoder encodeObject:[[self service] serviceID] forKey:@"ServiceID"];
 	[encoder encodeObject:[self chatCreationDictionary] forKey:@"chatCreationDictionary"];
 	[encoder encodeObject:name forKey:@"name"];
 }
 
+- (void)dealloc
+{
+	[[self account] removeObserver:self forKeyPath:@"Online"];
+
+	[super dealloc];
+}
 - (NSString *)formattedUID
 {
 	//XXX should query chat for its name if we're in it
@@ -101,7 +121,7 @@
 - (void)setContainingObject:(AIListObject <AIContainingObject> *)inGroup
 {
 	NSString	*inGroupInternalObjectID = [inGroup internalObjectID];
-	
+
 	//Save the change of containing object so it can be restored on launch next time if we are using groups.
 	//We don't save if we are not using groups as this set will be for the contact list root and probably not desired permanently.
 	if ([[adium contactController] useContactListGroups] &&
@@ -110,7 +130,6 @@
 																   group:OBJECT_STATUS_CACHE
 												   ignoreInheritedValues:YES]] &&
 		(inGroup != [[adium contactController] offlineGroup])) {
-		
 		[self setPreference:inGroupInternalObjectID
 					 forKey:KEY_CONTAINING_OBJECT_ID
 					  group:OBJECT_STATUS_CACHE];
@@ -146,18 +165,7 @@
 	}
 
 	[[adium contactController] _moveContactLocally:self
-										   toGroup:(targetGroup ? [[adium contactController] contactList] : nil)];
-}
-
-//Only visible if our account is online
-- (BOOL)visible
-{
-	return ([super visible] && [[self account] online]);
-}
-
-- (BOOL)online
-{
-	return [[self account] online];
+										   toGroup:(targetGroup ? targetGroup : [[adium contactController] contactList])];
 }
 
 - (void)openChat
@@ -176,8 +184,29 @@
 								   onAccount:[self account] 
 							chatCreationInfo:[self chatCreationDictionary]];
 	}	
-}	
+}
 
+/*!
+ * @brief Can this object be part of a metacontact?
+ *
+ * It makes no sense for a bookmark to be in a metacontact, I think.
+ */
+- (BOOL)canJoinMetaContacts
+{
+	return NO;
+}
+
+#pragma mark -
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if ([keyPath isEqualToString:@"Online"] && (object == [self account])) {
+		BOOL online = [[self account] online];
+		[self setVisible:online];
+		[self setOnline:online notify:NotifyNow silently:YES];
+	}
+}
+
+#pragma mark -
 - (NSString *)description
 {
 	return [NSString stringWithFormat:@"<%@:%x %@ - %@>",NSStringFromClass([self class]), self, [self formattedUID], [self chatCreationDictionary]];
