@@ -20,9 +20,11 @@
 
 @interface AIOfflineContactHidingPlugin : AIPlugin <AIListObjectObserver> {
 	NSMenuItem		*menuItem_showOffline;
+	NSMenuItem		*menuItem_showIdle;
 	NSMenuItem		*menuItem_useOfflineGroup;
 
 	BOOL			showOfflineContacts;
+	BOOL			showIdleContacts;
 	BOOL			useContactListGroups;
 	BOOL			useOfflineGroup;
 }
