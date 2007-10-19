@@ -434,7 +434,7 @@
 - (BOOL)contactMenu:(AIContactMenu *)inContactMenu shouldIncludeContact:(AIListContact *)inContact
 {
 	// Show this contact if we're showing offline contacts or if this contact is online.
-	return (showOfflineContacts || [inContact online]);
+	return [inContact visible];
 }
 
 - (BOOL)contactMenuShouldDisplayGroupHeaders:(AIContactMenu *)inContactMenu
@@ -717,7 +717,6 @@
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	if ([group isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]) {
-		showOfflineContacts = [[prefDict objectForKey:KEY_SHOW_OFFLINE_CONTACTS] boolValue];
 		showContactGroups = ![[prefDict objectForKey:KEY_HIDE_CONTACT_LIST_GROUPS] boolValue];
 		[contactMenu rebuildMenu];
 	}
