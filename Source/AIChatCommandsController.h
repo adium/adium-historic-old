@@ -10,7 +10,7 @@
 #import <AIAccount.h>
 #import "AIChat.h"
 #import "AIWindowController.h"
-#import "AIUtilities/AICompletingTextfield.h"
+#import "AIUtilities/AICompletingTextField.h"
 #import "AIMetaContact.h"
 
 @interface AIChatCommandsController : AIWindowController 
