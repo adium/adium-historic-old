@@ -122,7 +122,13 @@
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	showOfflineContacts = [[prefDict objectForKey:KEY_SHOW_OFFLINE_CONTACTS] boolValue];
-	showIdleContacts = [[prefDict objectForKey:KEY_SHOW_IDLE_CONTACTS] boolValue];
+
+	// Only hide idle contacts when not showing offline contacts.
+	if (!showOfflineContacts)
+		showIdleContacts = [[prefDict objectForKey:KEY_SHOW_IDLE_CONTACTS] boolValue];
+	else
+		showIdleContacts = YES;
+
 	useContactListGroups = ![[prefDict objectForKey:KEY_HIDE_CONTACT_LIST_GROUPS] boolValue];
 	useOfflineGroup = (useContactListGroups && [[prefDict objectForKey:KEY_USE_OFFLINE_GROUP] boolValue]);
 
@@ -246,6 +252,8 @@
 {
 	if (menuItem == menuItem_useOfflineGroup) {
 		return (useContactListGroups && showOfflineContacts);
+	} else if (menuItem == menuItem_showIdle) {
+		return (!showOfflineContacts);
 	}
 	
 	return YES;
