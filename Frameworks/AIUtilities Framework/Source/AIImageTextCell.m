@@ -207,6 +207,61 @@
 	return cellSize;
 }
 
+/*!	@brief	Draw an image on the behalf of <code>drawInteriorWithFrame:</code>.
+ *
+ *	@par	This is a private method. It should not be called from outside this class. It is intended only for use by drawInteriorWithFrame:.
+ *
+ *	@par	If the image is taller than the height of \a cellFrame, the image will be drawn scaled down. If the image is shorter, it will be vertically centered.
+ *
+ *	@return	The size drawn into, which is not necessarily the same size as the imageÑit may be larger or smaller.
+ */
+- (NSSize)drawImage:(NSImage *)image withFrame:(NSRect)cellFrame
+{
+	NSSize	size = [image size];
+	NSRect	destRect = { cellFrame.origin, size };
+	
+	//Adjust the rects
+	destRect.origin.y += 1;
+	destRect.origin.x += imageTextPadding;
+	
+	//Center image vertically, or scale as needed
+	if (destRect.size.height > cellFrame.size.height) {
+		 float proportionChange = cellFrame.size.height / size.height;
+		 destRect.size.height = cellFrame.size.height;
+		 destRect.size.width = size.width * proportionChange;
+	 }
+	 
+	 if (destRect.size.width > maxImageWidth) {
+		 float proportionChange = maxImageWidth / destRect.size.width;
+		 destRect.size.width = maxImageWidth;
+		 destRect.size.height = destRect.size.height * proportionChange;
+	 }
+	 
+	if (destRect.size.height < cellFrame.size.height) {
+		destRect.origin.y += (cellFrame.size.height - destRect.size.height) / 2.0;
+	} 
+	
+	BOOL flippedIt = NO;
+	if (![image isFlipped]) {
+		[image setFlipped:YES];
+		flippedIt = YES;
+	}
+	
+	[NSGraphicsContext saveGraphicsState];
+	[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
+	[image drawInRect:destRect
+			 fromRect:NSMakeRect(0,0,size.width,size.height)
+			operation:NSCompositeSourceOver
+			 fraction:1.0];
+	[NSGraphicsContext restoreGraphicsState];
+
+	if (flippedIt) {
+		[image setFlipped:NO];
+	}
+
+	return destRect.size;
+}
+
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
 	[NSGraphicsContext saveGraphicsState];
@@ -217,54 +272,14 @@
 
 	//Draw the cell's image
 	if (image != nil) {
-		NSSize	size = [image size];
-		NSRect	destRect = { cellFrame.origin, size };
-		
-		//Adjust the rects
-		destRect.origin.y += 1;
-		destRect.origin.x += imageTextPadding;
-		
-		//Center image vertically, or scale as needed
-		if (destRect.size.height > cellFrame.size.height) {
-			 float proportionChange = cellFrame.size.height / size.height;
-			 destRect.size.height = cellFrame.size.height;
-			 destRect.size.width = size.width * proportionChange;
-		 }
-		 
-		 if (destRect.size.width > maxImageWidth) {
-			 float proportionChange = maxImageWidth / destRect.size.width;
-			 destRect.size.width = maxImageWidth;
-			 destRect.size.height = destRect.size.height * proportionChange;
-		 }
-		 
-		if (destRect.size.height < cellFrame.size.height) {
-			destRect.origin.y += (cellFrame.size.height - destRect.size.height) / 2.0;
-		} 
-		
-		BOOL flippedIt = NO;
-		if (![image isFlipped]) {
-			[image setFlipped:YES];
-			flippedIt = YES;
-		}
-		
-		[NSGraphicsContext saveGraphicsState];
-		[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-		[image drawInRect:destRect
-				 fromRect:NSMakeRect(0,0,size.width,size.height)
-				operation:NSCompositeSourceOver
-				 fraction:1.0];
-		[NSGraphicsContext restoreGraphicsState];
-
-		if (flippedIt) {
-			[image setFlipped:NO];
-		}
+		NSSize drawnImageSize = [self drawImage:image withFrame:cellFrame];
 
 		//Decrease the cell width by the width of the image we drew and its left padding
-		cellFrame.size.width -= imageTextPadding + destRect.size.width;
+		cellFrame.size.width -= imageTextPadding + drawnImageSize.width;
 		
 		//Shift the origin over to the right edge of the image we just drew
 		NSAffineTransform *imageTranslation = [NSAffineTransform transform];
-		[imageTranslation translateXBy:(imageTextPadding + destRect.size.width) yBy:0.0];
+		[imageTranslation translateXBy:(imageTextPadding + drawnImageSize.width) yBy:0.0];
 		[imageTranslation concat];
 	}
 	
