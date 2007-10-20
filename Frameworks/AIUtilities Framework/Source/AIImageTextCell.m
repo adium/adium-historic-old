@@ -211,14 +211,6 @@
 	NSImage		*image = [self image];
 	BOOL		highlighted = [self isHighlighted];
 
-//	[super drawInteriorWithFrame:cellFrame inView:controlView];
-	
-	/*
-	if (highlighted) {
-		[self _drawHighlightWithFrame:cellFrame inView:controlView];
-	}
-	 */
-
 	//Draw the cell's image
 	if (image != nil) {
 		NSSize	size = [image size];
