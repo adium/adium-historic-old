@@ -30,7 +30,7 @@
 
     //Account List
     NSArray							*accountArray;
-    AIAccount						*tempDragAccount;
+    NSArray							*tempDragAccounts;
 
 	AIAccountMenu					*accountMenu_options;
 	AIAccountMenu					*accountMenu_status;
