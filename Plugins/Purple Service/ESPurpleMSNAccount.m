@@ -189,6 +189,12 @@
 					  bodyBackground:NO];
 }
 
+- (BOOL)encrypted
+{
+	//MSN can only connect via SSL.
+	return [self online];
+}
+
 #pragma mark Status
 //Update our full name on connect
 - (oneway void)accountConnectionConnected
