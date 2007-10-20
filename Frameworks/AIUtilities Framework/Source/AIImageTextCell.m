@@ -216,35 +216,34 @@
 	//Draw the cell's image
 	if (image != nil) {
 		NSSize	size = [image size];
-		NSSize  destSize = size;
-		NSPoint	destPoint = cellFrame.origin;
+		NSRect	destRect = { cellFrame.origin, size };
 		
 		//Adjust the rects
-		destPoint.y += 1;
-		destPoint.x += imageTextPadding;
+		destRect.origin.y += 1;
+		destRect.origin.x += imageTextPadding;
 		
 		//Center image vertically, or scale as needed
-		if (destSize.height > cellFrame.size.height) {
+		if (destRect.size.height > cellFrame.size.height) {
 			 float proportionChange = cellFrame.size.height / size.height;
-			 destSize.height = cellFrame.size.height;
-			 destSize.width = size.width * proportionChange;
+			 destRect.size.height = cellFrame.size.height;
+			 destRect.size.width = size.width * proportionChange;
 		 }
 		 
-		 if (destSize.width > maxImageWidth) {
-			 float proportionChange = maxImageWidth / destSize.width;
-			 destSize.width = maxImageWidth;
-			 destSize.height = destSize.height * proportionChange;
+		 if (destRect.size.width > maxImageWidth) {
+			 float proportionChange = maxImageWidth / destRect.size.width;
+			 destRect.size.width = maxImageWidth;
+			 destRect.size.height = destRect.size.height * proportionChange;
 		 }
 		 
-		if (destSize.height < cellFrame.size.height) {
-			destPoint.y += (cellFrame.size.height - destSize.height) / 2.0;
+		if (destRect.size.height < cellFrame.size.height) {
+			destRect.origin.y += (cellFrame.size.height - destRect.size.height) / 2.0;
 		} 
 
 		//Decrease the cell width by the width of the image we drew and its left padding
-		cellFrame.size.width -= imageTextPadding + destSize.width;
+		cellFrame.size.width -= imageTextPadding + destRect.size.width;
 		
 		//Shift the origin over to the right edge of the image we just drew
-		cellFrame.origin.x += imageTextPadding + destSize.width;
+		cellFrame.size.width += imageTextPadding + destRect.size.width;
 		
 		BOOL flippedIt = NO;
 		if (![image isFlipped]) {
@@ -254,7 +253,7 @@
 		
 		[NSGraphicsContext saveGraphicsState];
 		[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-		[image drawInRect:NSMakeRect(destPoint.x,destPoint.y,destSize.width,destSize.height)
+		[image drawInRect:destRect
 				 fromRect:NSMakeRect(0,0,size.width,size.height)
 				operation:NSCompositeSourceOver
 				 fraction:1.0];
