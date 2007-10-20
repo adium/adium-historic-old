@@ -373,6 +373,7 @@
     //Custom vertically-centered text cell for account names
     cell = [[AIImageTextCell alloc] init];
     [cell setFont:[NSFont boldSystemFontOfSize:13]];
+	[cell setDrawsImageAfterMainString:YES];
     [[tableView_accountList tableColumnWithIdentifier:@"name"] setDataCell:cell];
 	[cell setLineBreakMode:NSLineBreakByWordWrapping];
 	[cell release];
