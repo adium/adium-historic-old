@@ -209,6 +209,8 @@
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
+	[NSGraphicsContext saveGraphicsState];
+
 	NSString	*title = [self stringValue];
 	NSImage		*image = [self image];
 	BOOL		highlighted = [self isHighlighted];
@@ -238,12 +240,6 @@
 		if (destRect.size.height < cellFrame.size.height) {
 			destRect.origin.y += (cellFrame.size.height - destRect.size.height) / 2.0;
 		} 
-
-		//Decrease the cell width by the width of the image we drew and its left padding
-		cellFrame.size.width -= imageTextPadding + destRect.size.width;
-		
-		//Shift the origin over to the right edge of the image we just drew
-		cellFrame.size.width += imageTextPadding + destRect.size.width;
 		
 		BOOL flippedIt = NO;
 		if (![image isFlipped]) {
@@ -262,6 +258,14 @@
 		if (flippedIt) {
 			[image setFlipped:NO];
 		}
+
+		//Decrease the cell width by the width of the image we drew and its left padding
+		cellFrame.size.width -= imageTextPadding + destRect.size.width;
+		
+		//Shift the origin over to the right edge of the image we just drew
+		NSAffineTransform *imageTranslation = [NSAffineTransform transform];
+		[imageTranslation translateXBy:(imageTextPadding + destRect.size.width) yBy:0.0];
+		[imageTranslation concat];
 	}
 	
 	//Draw the cell's text
@@ -378,6 +382,8 @@
 			[attributedSubString release];
 		}
 	}
+
+	[NSGraphicsContext restoreGraphicsState];
 }
 
 #pragma mark Accessibility
