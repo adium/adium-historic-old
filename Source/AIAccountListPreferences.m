@@ -319,7 +319,11 @@
  */
 - (void)toggleShouldBeOnline:(id)sender
 {
-	[[sender representedObject] toggleOnline];
+	AIAccount		*account = [sender representedObject];
+	if (![account enabled])
+		[account setEnabled:YES];
+	else
+		[account toggleOnline];
 }
 
 #pragma mark AIAccountMenu Delegates
@@ -443,27 +447,39 @@
 	[statusMenuItem setSubmenu:statusMenu];
 	
 	//If any accounts are offline, present the option to connect them all.
-	if (!atLeastOneDisabledAccount) {
-		[optionsMenu addItemWithTitle:(atLeastOneOfflineAccount ?
-									   AILocalizedString(@"Connect",nil) : 
-									   AILocalizedString(@"Disconnect",nil))
+	if (atLeastOneOfflineAccount) {
+		[optionsMenu addItemWithTitle:AILocalizedString(@"Connect",nil)
 							   target:self
 							   action:@selector(toggleOnlineForAccounts:)
 						keyEquivalent:@""
 					representedObject:[NSDictionary dictionaryWithObjectsAndKeys:accounts,@"Accounts",
-						[NSNumber numberWithBool:atLeastOneOfflineAccount],@"AtLeastOneOffline",nil]];
+						[NSNumber numberWithBool:YES],@"Connect",nil]];
 	}
+	[optionsMenu addItemWithTitle:AILocalizedString(@"Disconnect",nil)
+						   target:self
+						   action:@selector(toggleOnlineForAccounts:)
+					keyEquivalent:@""
+				representedObject:[NSDictionary dictionaryWithObjectsAndKeys:accounts,@"Accounts",
+					[NSNumber numberWithBool:NO],@"Connect",nil]];
 	
 	[optionsMenu addItem:[NSMenuItem separatorItem]];
 	
-	[optionsMenu addItemWithTitle:(atLeastOneDisabledAccount ?
-								   AILocalizedString(@"Enable",nil) :
-								   AILocalizedString(@"Disable",nil))
+	// If any accounts are disable,d show the option to enable them.
+	if (atLeastOneDisabledAccount) {
+		[optionsMenu addItemWithTitle:AILocalizedString(@"Enable",nil)
+							   target:self
+							   action:@selector(toggleEnabledForAccounts:)
+						keyEquivalent:@""
+					representedObject:[NSDictionary dictionaryWithObjectsAndKeys:accounts,@"Accounts",
+						[NSNumber numberWithBool:YES],@"Enable",nil]];
+		
+	}
+	[optionsMenu addItemWithTitle:AILocalizedString(@"Disable",nil)
 						   target:self
 						   action:@selector(toggleEnabledForAccounts:)
 					keyEquivalent:@""
 				representedObject:[NSDictionary dictionaryWithObjectsAndKeys:accounts,@"Accounts",
-					[NSNumber numberWithBool:atLeastOneDisabledAccount],@"AtLeastOneDisabled",nil]];
+					[NSNumber numberWithBool:NO],@"Enable",nil]];
 	
 	return optionsMenu;
 }
@@ -475,11 +491,13 @@
 {
 	NSDictionary		*dict		= [sender representedObject];
 	NSEnumerator		*enumerator	= [[dict objectForKey:@"Accounts"] objectEnumerator];
-	BOOL				atLeastOneOfflineAccount = [[dict objectForKey:@"AtLeastOneOffline"] boolValue];
+	BOOL				connect		= [[dict objectForKey:@"Connect"] boolValue];
 	AIAccount			*account;
 
 	while ((account = [enumerator nextObject])) {
-		[account setShouldBeOnline:atLeastOneOfflineAccount];
+		if (![account enabled] && connect)
+			[account setEnabled:YES];
+		[account setShouldBeOnline:connect];
 	}
 }
 
@@ -490,11 +508,11 @@
 {
 	NSDictionary		*dict		= [sender representedObject];
 	NSEnumerator		*enumerator	= [[dict objectForKey:@"Accounts"] objectEnumerator];
-	BOOL				atLeastOneDisabledAccount = [[dict objectForKey:@"AtLeastOneDisabled"] boolValue];
+	BOOL				enable		= [[dict objectForKey:@"Enable"] boolValue];
 	AIAccount			*account;
 
 	while ((account = [enumerator nextObject])) {
-		[account setEnabled:atLeastOneDisabledAccount];
+		[account setEnabled:enable];
 	}	
 }
 
@@ -505,11 +523,10 @@
 	AIAccount		*account;
 	
 	while ((account = [enumerator nextObject])) {
-		[[adium statusController] removeIfNecessaryTemporaryStatusState:[account statusState]];
 		[account setStatusState:status];
 		
-		//Enable the account if it isn't currently enabled
-		if (![account enabled]) {
+		//Enable the account if it isn't currently enabled and this isn't an offline status
+		if (![account enabled] && [status statusType] != AIOfflineStatusType) {
 			[account setEnabled:YES];
 		}
 	}
@@ -541,17 +558,15 @@
 			[[statusMenuItem submenu] removeItemAtIndex:([[statusMenuItem submenu] numberOfItems] - 1)];
 		}
 		
-		if ([account enabled]) {
-			//Connect or disconnect the account. Enabling a disabled account will connect it, so this is only valid for non-disabled accounts.
-			//Only online & connecting can be "Disconnected"; those offline or waiting to reconnect can be "Connected"
-			[optionsMenu addItemWithTitle:(([account online] || [[account statusObjectForKey:@"Connecting"] boolValue]) ?
-										   AILocalizedString(@"Disconnect",nil) :
-										   AILocalizedString(@"Connect",nil))
-								   target:self
-								   action:@selector(toggleShouldBeOnline:)
-							keyEquivalent:@""
-						representedObject:account];
-		}
+		//Connect or disconnect the account. Enabling a disabled account will connect it, so this is only valid for non-disabled accounts.
+		//Only online & connecting can be "Disconnected"; those offline or waiting to reconnect can be "Connected"
+		[optionsMenu addItemWithTitle:(([account online] || [[account statusObjectForKey:@"Connecting"] boolValue]) ?
+									   AILocalizedString(@"Disconnect",nil) :
+									   AILocalizedString(@"Connect",nil))
+							   target:self
+							   action:@selector(toggleShouldBeOnline:)
+						keyEquivalent:@""
+					representedObject:account];
 				
 		//Add a separator if we have any items shown so far
 		[optionsMenu addItem:[NSMenuItem separatorItem]];
