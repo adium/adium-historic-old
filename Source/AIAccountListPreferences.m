@@ -500,9 +500,19 @@
 
 - (void)updateAccountsForStatus:(id)sender
 {
-	NSArray			*accounts = [accountArray objectsAtIndexes:[tableView_accountList selectedRowIndexes]];
+	NSEnumerator	*enumerator	= [[accountArray objectsAtIndexes:[tableView_accountList selectedRowIndexes]] objectEnumerator];
+	AIStatus		*status		= [[sender representedObject] objectForKey:@"AIStatus"];
+	AIAccount		*account;
 	
-	[[adium statusController] applyState:[[sender representedObject] objectForKey:@"AIStatus"] toAccounts:accounts];
+	while ((account = [enumerator nextObject])) {
+		[[adium statusController] removeIfNecessaryTemporaryStatusState:[account statusState]];
+		[account setStatusState:status];
+		
+		//Enable the account if it isn't currently enabled
+		if (![account enabled]) {
+			[account setEnabled:YES];
+		}
+	}
 }
 
 /*!
