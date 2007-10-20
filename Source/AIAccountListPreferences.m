@@ -517,6 +517,9 @@
 	}	
 }
 
+/*!
+ * @brief Callback for the Set Status menu item in a multiple-account selection
+ */
 - (void)updateAccountsForStatus:(id)sender
 {
 	NSEnumerator	*enumerator	= [[accountArray objectsAtIndexes:[tableView_accountList selectedRowIndexes]] objectEnumerator];
@@ -531,6 +534,19 @@
 			[account setEnabled:YES];
 		}
 	}
+}
+
+/*!
+* @brief Callback for the Copy Error Message menu item for an account
+ */
+- (void)copyStatusMessage:(id)sender
+{
+	NSPasteboard		*generalPasteboard = [NSPasteboard generalPasteboard];
+	
+	[generalPasteboard declareTypes:[NSArray arrayWithObject:NSStringPboardType]
+							  owner:nil];
+	[generalPasteboard setString:[self statusMessageForAccount:[sender representedObject]]
+						 forType:NSStringPboardType];
 }
 
 /*!
@@ -550,6 +566,14 @@
 
 		//We can't put the submenu into our menu directly or otherwise modify the accountMenu_status, as we may want to use it again
 		[statusMenuItem setSubmenu:[[[[accountMenu_status menuItemForAccount:account] submenu] copy] autorelease]];
+		
+		if (![account online] && ![[account statusObjectForKey:@"Connecting"] boolValue] && [self statusMessageForAccount:account]) {
+			[optionsMenu addItemWithTitle:AILocalizedString(@"Copy Error Message","Menu Item for the context menu of an account in the accounts list")
+								   target:self
+								   action:@selector(copyStatusMessage:)
+							keyEquivalent:@""
+						representedObject:account];
+		}
 		
 		if ([[statusMenuItem submenu] numberOfItems] >= 2) {
 			//Remove the 'Disable' item
