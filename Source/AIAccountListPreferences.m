@@ -936,10 +936,10 @@
 /*!
  * @brief Drag start
  */
-- (BOOL)tableView:(NSTableView *)tv writeRows:(NSArray*)rows toPasteboard:(NSPasteboard*)pboard
+- (BOOL)tableView:(NSTableView *)tv writeRowsWithIndexes:(NSIndexSet*)rows toPasteboard:(NSPasteboard*)pboard
 {
-    tempDragAccount = [accountArray objectAtIndex:[[rows objectAtIndex:0] intValue]];
-	
+    tempDragAccounts = [accountArray objectsAtIndexes:rows];
+
     [pboard declareTypes:[NSArray arrayWithObject:ACCOUNT_DRAG_TYPE] owner:self];
     [pboard setString:@"Account" forType:ACCOUNT_DRAG_TYPE];
     
@@ -963,12 +963,29 @@
  */
 - (BOOL)tableView:(NSTableView*)tv acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)op
 {
-    NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:ACCOUNT_DRAG_TYPE]];
+    NSString		*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:ACCOUNT_DRAG_TYPE]];
 	
     if ([avaliableType isEqualToString:@"AIAccount"]) {
-        int newIndex = [[adium accountController] moveAccount:tempDragAccount toIndex:row];
-        [tableView_accountList selectRow:newIndex byExtendingSelection:NO];
+		NSEnumerator	*enumerator;
+		AIAccount		*account;
+
+		//Indexes are shifting as we're doing this, so we have to iterate in the right order
+		//If we're moving accounts to an earlier point in the list, we've got to insert backwards
+		if ([accountArray indexOfObject:[tempDragAccounts objectAtIndex:0]] >= row) 
+			enumerator = [tempDragAccounts reverseObjectEnumerator];
+		else //If we're inserting into a later part of the list, we've got to insert forwards
+			enumerator = [tempDragAccounts objectEnumerator];
 		
+		[tableView_accountList deselectAll:nil];
+		
+		while ((account = [enumerator nextObject])) {
+			[[adium accountController] moveAccount:account toIndex:row];
+		}
+		
+		//Re-select our now-moved accounts
+		[tableView_accountList selectRowIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange([accountArray indexOfObject:[tempDragAccounts objectAtIndex:0]], [tempDragAccounts count])]
+						   byExtendingSelection:NO];
+
         return YES;
     } else {
         return NO;
