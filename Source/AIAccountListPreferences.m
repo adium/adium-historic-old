@@ -305,6 +305,14 @@
 		[[[adium accountController] deleteAccount:[accountArray objectAtIndex:index]] beginSheetModalForWindow:[[self view] window]];
 }
 
+/*!
+* @brief Toggles an account online or offline.
+ */
+- (void)toggleShouldBeOnline:(id)sender
+{
+	[[sender representedObject] toggleOnline];
+}
+
 #pragma mark AIAccountMenu Delegates
 
 /*!
@@ -403,8 +411,8 @@
 		NSMenu			*accountOptionsMenu = [[accountMenu_options menuItemForAccount:account] submenu];
 
 		if ([account enabled]) {
-			// If this account is enabled, add a "Set Status" menu item.
-			NSMenuItem *statusMenuItem = [optionsMenu addItemWithTitle:AILocalizedString(@"Set Status", "Used in the context menu for the accounts list for the sub menu to set status in.")
+			// If this account is enabled, add a "Set Status" menu item and a Connect/Disconnect menu item
+			NSMenuItem	*statusMenuItem = [optionsMenu addItemWithTitle:AILocalizedString(@"Set Status", "Used in the context menu for the accounts list for the sub menu to set status in.")
 																target:nil
 																action:nil
 														 keyEquivalent:@""];
@@ -418,6 +426,17 @@
 				//And remove the separator above it
 				[[statusMenuItem submenu] removeItemAtIndex:([[statusMenuItem submenu] numberOfItems] - 1)];
 			}
+			
+			//Connect or disconnect the account. Enabling a disabled account will connect it, so this is only valid for non-disabled accounts.
+			//Only online & connecting can be "Disconnected"; those offline or waiting to reconnect can be "Connected"
+			[optionsMenu addItemWithTitle:(([account online] || [[account statusObjectForKey:@"Connecting"] boolValue]) ?
+												AILocalizedString(@"Disconnect",nil) :
+												AILocalizedString(@"Connect",nil))
+								   target:self
+								   action:@selector(toggleShouldBeOnline:)
+							keyEquivalent:@""
+						representedObject:account];
+				
 		}
 		
 		//Add a separator if we have any items shown so far
