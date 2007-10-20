@@ -32,6 +32,7 @@
 #import <Adium/AIAccountMenu.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIService.h>
+#import <Adium/AIStatusMenu.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIServiceMenu.h>
 #import <Adium/AIStatusIcons.h>
@@ -60,11 +61,19 @@
 // Override the menuForEvent so we can generate one.
 - (NSMenu *)menuForEvent: (NSEvent *)event
 {
-	int row = [self rowAtPoint:[self convertPoint:[event locationInWindow] toView:nil]];
-	// Select the row.
-	[self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO];
-	// Return our delegate's menu for this row.
-	return [(AIAccountListPreferences *)[self dataSource] menuForRow:row];
+	NSIndexSet	*selectedIndexes	= [self selectedRowIndexes];
+	int			mouseRow			= [self rowAtPoint:[self convertPoint:[event locationInWindow] toView:nil]];
+	
+	//Multiple rows selected where the right-clicked row is in the selection
+	if ([selectedIndexes count] > 1 && [selectedIndexes containsIndex:mouseRow]) {
+		//Display a multi-selection menu
+		return [(AIAccountListPreferences *)[self dataSource] menuForRowIndexes:selectedIndexes];
+	} else {
+		// Otherwise, select our new row and provide a menu for it.
+		[self selectRowIndexes:[NSIndexSet indexSetWithIndex:mouseRow] byExtendingSelection:NO];
+		// Return our delegate's menu for this row.
+		return [(AIAccountListPreferences *)[self dataSource] menuForRow:mouseRow];
+	}
 }
 
 @end
@@ -246,7 +255,7 @@
 - (IBAction)editSelectedAccount:(id)sender
 {
     int	selectedRow = [tableView_accountList selectedRow];
-	if (selectedRow >= 0 && selectedRow < [accountArray count]) {
+	if ([tableView_accountList numberOfSelectedRows] == 1 && selectedRow >= 0 && selectedRow < [accountArray count]) {
 		[self editAccount:[accountArray objectAtIndex:selectedRow]];
     }
 }
@@ -301,7 +310,7 @@
 {
     int index = [tableView_accountList selectedRow];
 
-    if (index >= 0 && index < [accountArray count])
+    if ([tableView_accountList numberOfSelectedRows] == 1 && index >= 0 && index < [accountArray count])
 		[[[adium accountController] deleteAccount:[accountArray objectAtIndex:index]] beginSheetModalForWindow:[[self view] window]];
 }
 
@@ -401,7 +410,103 @@
 }
 
 /*!
-* @brief Returns the status menu associated with a particular row
+ * @brief Returns the status menu associated with several rows
+ */
+- (NSMenu *)menuForRowIndexes:(NSIndexSet *)indexes
+{
+	NSMenu			*statusMenu = nil, *optionsMenu = [[[NSMenu alloc] init] autorelease];
+	NSMenuItem		*statusMenuItem = nil;
+	NSArray			*accounts = [accountArray objectsAtIndexes:indexes];
+	AIAccount		*account;
+	NSEnumerator	*enumerator = [accounts objectEnumerator];
+	BOOL			atLeastOneDisabledAccount = NO, atLeastOneOfflineAccount = NO;
+	
+	// Check the accounts' enabled/disabled and online/offline status.
+	while ((account = [enumerator nextObject])) {
+		if (![account enabled])
+			atLeastOneDisabledAccount = YES;
+		
+		if (![account online] && ![[account statusObjectForKey:@"Connecting"] boolValue])
+			atLeastOneOfflineAccount = YES;
+		
+		if (atLeastOneOfflineAccount && atLeastOneDisabledAccount)
+			break;
+	}
+	
+	statusMenuItem = [optionsMenu addItemWithTitle:AILocalizedString(@"Set Status", "Used in the context menu for the accounts list for the sub menu to set status in.")
+											target:nil
+											action:nil
+									 keyEquivalent:@""];
+
+	statusMenu = [AIStatusMenu staticStatusStatesMenuNotifyingTarget:self
+														selector:@selector(updateAccountsForStatus:)];
+	[statusMenuItem setSubmenu:statusMenu];
+	
+	//If any accounts are offline, present the option to connect them all.
+	if (!atLeastOneDisabledAccount) {
+		[optionsMenu addItemWithTitle:(atLeastOneOfflineAccount ?
+									   AILocalizedString(@"Connect",nil) : 
+									   AILocalizedString(@"Disconnect",nil))
+							   target:self
+							   action:@selector(toggleOnlineForAccounts:)
+						keyEquivalent:@""
+					representedObject:[NSDictionary dictionaryWithObjectsAndKeys:accounts,@"Accounts",
+						[NSNumber numberWithBool:atLeastOneOfflineAccount],@"AtLeastOneOffline",nil]];
+	}
+	
+	[optionsMenu addItem:[NSMenuItem separatorItem]];
+	
+	[optionsMenu addItemWithTitle:(atLeastOneDisabledAccount ?
+								   AILocalizedString(@"Enable",nil) :
+								   AILocalizedString(@"Disable",nil))
+						   target:self
+						   action:@selector(toggleEnabledForAccounts:)
+					keyEquivalent:@""
+				representedObject:[NSDictionary dictionaryWithObjectsAndKeys:accounts,@"Accounts",
+					[NSNumber numberWithBool:atLeastOneDisabledAccount],@"AtLeastOneDisabled",nil]];
+	
+	return optionsMenu;
+}
+
+/*!
+ * @brief Callback for the Connect/Disconnect menu item in a multiple account selection
+ */
+- (void)toggleOnlineForAccounts:(id)sender
+{
+	NSDictionary		*dict		= [sender representedObject];
+	NSEnumerator		*enumerator	= [[dict objectForKey:@"Accounts"] objectEnumerator];
+	BOOL				atLeastOneOfflineAccount = [[dict objectForKey:@"AtLeastOneOffline"] boolValue];
+	AIAccount			*account;
+
+	while ((account = [enumerator nextObject])) {
+		[account setShouldBeOnline:atLeastOneOfflineAccount];
+	}
+}
+
+/*!
+ * @brief Callback for the Enable/Disable menu item in a multiple account selection
+ */
+- (void)toggleEnabledForAccounts:(id)sender
+{
+	NSDictionary		*dict		= [sender representedObject];
+	NSEnumerator		*enumerator	= [[dict objectForKey:@"Accounts"] objectEnumerator];
+	BOOL				atLeastOneDisabledAccount = [[dict objectForKey:@"AtLeastOneDisabled"] boolValue];
+	AIAccount			*account;
+
+	while ((account = [enumerator nextObject])) {
+		[account setEnabled:atLeastOneDisabledAccount];
+	}	
+}
+
+- (void)updateAccountsForStatus:(id)sender
+{
+	NSArray			*accounts = [accountArray objectsAtIndexes:[tableView_accountList selectedRowIndexes]];
+	
+	[[adium statusController] applyState:[[sender representedObject] objectForKey:@"AIStatus"] toAccounts:accounts];
+}
+
+/*!
+ * @brief Returns the status menu associated with a particular row
  */
 - (NSMenu *)menuForRow:(int)row
 {
@@ -410,39 +515,36 @@
 		NSMenu			*optionsMenu = [[[NSMenu alloc] init] autorelease];
 		NSMenu			*accountOptionsMenu = [[accountMenu_options menuItemForAccount:account] submenu];
 
+		NSMenuItem	*statusMenuItem = [optionsMenu addItemWithTitle:AILocalizedString(@"Set Status", "Used in the context menu for the accounts list for the sub menu to set status in.")
+															 target:nil
+															 action:nil
+													  keyEquivalent:@""];
+
+		//We can't put the submenu into our menu directly or otherwise modify the accountMenu_status, as we may want to use it again
+		[statusMenuItem setSubmenu:[[[[accountMenu_status menuItemForAccount:account] submenu] copy] autorelease]];
+		
+		if ([[statusMenuItem submenu] numberOfItems] >= 2) {
+			//Remove the 'Disable' item
+			[[statusMenuItem submenu] removeItemAtIndex:([[statusMenuItem submenu] numberOfItems] - 1)];
+			
+			//And remove the separator above it
+			[[statusMenuItem submenu] removeItemAtIndex:([[statusMenuItem submenu] numberOfItems] - 1)];
+		}
+		
 		if ([account enabled]) {
-			// If this account is enabled, add a "Set Status" menu item and a Connect/Disconnect menu item
-			NSMenuItem	*statusMenuItem = [optionsMenu addItemWithTitle:AILocalizedString(@"Set Status", "Used in the context menu for the accounts list for the sub menu to set status in.")
-																target:nil
-																action:nil
-														 keyEquivalent:@""];
-			//We can't put the submenu into our menu directly or otherwise modify the accountMenu_status, as we may want to use it again
-			[statusMenuItem setSubmenu:[[[[accountMenu_status menuItemForAccount:account] submenu] copy] autorelease]];
-			
-			if ([[statusMenuItem submenu] numberOfItems] >= 2) {
-				//Remove the 'Disable' item
-				[[statusMenuItem submenu] removeItemAtIndex:([[statusMenuItem submenu] numberOfItems] - 1)];
-				
-				//And remove the separator above it
-				[[statusMenuItem submenu] removeItemAtIndex:([[statusMenuItem submenu] numberOfItems] - 1)];
-			}
-			
 			//Connect or disconnect the account. Enabling a disabled account will connect it, so this is only valid for non-disabled accounts.
 			//Only online & connecting can be "Disconnected"; those offline or waiting to reconnect can be "Connected"
 			[optionsMenu addItemWithTitle:(([account online] || [[account statusObjectForKey:@"Connecting"] boolValue]) ?
-												AILocalizedString(@"Disconnect",nil) :
-												AILocalizedString(@"Connect",nil))
+										   AILocalizedString(@"Disconnect",nil) :
+										   AILocalizedString(@"Connect",nil))
 								   target:self
 								   action:@selector(toggleShouldBeOnline:)
 							keyEquivalent:@""
 						representedObject:account];
+		}
 				
-		}
-		
 		//Add a separator if we have any items shown so far
-		if ([optionsMenu numberOfItems]) {
-			[optionsMenu addItem:[NSMenuItem separatorItem]];
-		}
+		[optionsMenu addItem:[NSMenuItem separatorItem]];
 		
 		//Add account options
 		NSMenuItem *menuItem;
@@ -542,7 +644,7 @@
  */
 - (void)updateControlAvailability
 {
-	BOOL	selection = ([tableView_accountList selectedRow] != -1);
+	BOOL	selection = ([tableView_accountList numberOfSelectedRows] == 1 && [tableView_accountList selectedRow] != -1);
 
 	[button_editAccount setEnabled:selection];
 	[button_deleteAccount setEnabled:selection];
