@@ -21,7 +21,7 @@
 #import "ESJabberService.h"
 #import "AMPurpleJabberMoodTooltip.h"
 #import <AIUtilities/AICharacterSetAdditions.h>
-#import <libpurple/jabber.h>
+#import <Libpurple/jabber.h>
 
 @implementation ESJabberService
 
