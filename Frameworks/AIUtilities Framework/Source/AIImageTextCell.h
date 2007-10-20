@@ -27,6 +27,7 @@
 	float			maxImageWidth;
 	float			imageTextPadding;
 	NSLineBreakMode lineBreakMode;
+	BOOL	imageAfterMainString;
 }
 
 /*
@@ -50,6 +51,21 @@
  * Half this distance will be the padding from the right edge of the image or text and the right cell edge.
  */
 - (void)setImageTextPadding:(float)inImageTextPadding;
+
+/*!	@brief	Ask whether the image goes before both strings, or after the main string.
+ *
+ *	@par	If \c YES, the image is drawn after with main string, with \c imageTextPadding points between them. If \c NO, the image is drawn before both strings (if there is a \c subString, the image won't be placed on the baseline of the main string).
+ *
+ *	@return	\c YES if the image will be drawn after the main string; \c NO if the image will be drawn before both strings.
+ */
+- (BOOL) drawsImageAfterMainString;
+/*!	@brief	Set whether the image goes before both strings, or after the main string.
+ *
+ *	@par	If \c YES, the image is drawn after with main string, with \c imageTextPadding points between them. If \c NO, the image is drawn before both strings (if there is a \c subString, the image won't be placed on the baseline of the main string).
+ *
+ *	@param	flag	\c YES if you want the image to be drawn after the main string; \c NO if you want the image to be drawn before both strings.
+ */
+- (void) setDrawsImageAfterMainString:(BOOL)flag;
 
 - (void)setLineBreakMode:(NSLineBreakMode)inLineBreakMode;
 

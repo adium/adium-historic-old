@@ -116,6 +116,13 @@
 	imageTextPadding = inImageTextPadding;
 }
 
+- (BOOL) drawsImageAfterMainString {
+	return imageAfterMainString;
+}
+- (void) setDrawsImageAfterMainString:(BOOL)flag {
+	imageAfterMainString = flag;
+}
+
 - (void)setLineBreakMode:(NSLineBreakMode)inLineBreakMode
 {
 	lineBreakMode = inLineBreakMode;
@@ -271,7 +278,7 @@
 	BOOL		highlighted = [self isHighlighted];
 
 	//Draw the cell's image
-	if (image != nil) {
+	if ((!imageAfterMainString) && (image != nil)) {
 		NSSize drawnImageSize = [self drawImage:image withFrame:cellFrame];
 
 		//Decrease the cell width by the width of the image we drew and its left padding
@@ -386,8 +393,25 @@
 
 		//Draw the string
 		[attributedMainString drawInRect:cellFrame];
+
+		//If we're supposed to draw the cell's image after the main string, this is when we do it.
+		if (imageAfterMainString && (image != nil)) {
+			[NSGraphicsContext saveGraphicsState];
+
+			//Note that measuring the size of the attributedMainString should happen here, because we don't want to measure the string (which is expensive) if there isn't an image or we don't need to draw it here.
+			NSSize attributedMainStringSize = [attributedMainString size];
+
+			NSAffineTransform *spacingTranslation = [NSAffineTransform transform];
+			[spacingTranslation translateXBy:(imageTextPadding + attributedMainStringSize.width) yBy:-(attributedMainStringSize.height / 2.0)];
+			[spacingTranslation concat];
+
+			[self drawImage:image withFrame:cellFrame];
+
+			[NSGraphicsContext restoreGraphicsState];
+		}
+
 		[attributedMainString release];
-		
+
 		//Draw the substring
 		if (subString) {
 			NSAffineTransform *subStringTranslation = [NSAffineTransform transform];
