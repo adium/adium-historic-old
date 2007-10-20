@@ -862,7 +862,6 @@ static void purpleUnregisterCb(PurpleAccount *account, gboolean success, void *u
  */
 - (BOOL)attemptPurpleCommandOnMessage:(NSString *)originalMessage fromAccount:(AIAccount *)sourceAccount inChat:(AIChat *)chat
 {
-	NSLog(@"attempPurpleCommandOnMessage");
 	BOOL				didCommand = NO;
 	
 	if ([originalMessage hasPrefix:@"/"]) {	
