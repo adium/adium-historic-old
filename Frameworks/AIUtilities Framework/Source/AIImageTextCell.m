@@ -69,6 +69,8 @@
 	return newCell;
 }
 
+#pragma mark Accessors
+
 /*
  * @brief Set the string value
  *
@@ -124,6 +126,7 @@
 	return lineBreakMode;
 }
 
+#pragma mark Drawing
 
 - (NSSize)cellSizeForBounds:(NSRect)cellFrame
 {
@@ -204,7 +207,6 @@
 	return cellSize;
 }
 
-//Draw
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
 	NSString	*title = [self stringValue];
