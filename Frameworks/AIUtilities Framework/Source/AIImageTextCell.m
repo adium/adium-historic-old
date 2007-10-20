@@ -321,7 +321,7 @@
 		/* Padding: Origin goes right by our padding amount, and the width decreases by twice it
 		 * (for left and right padding).
 		 */
-		if (image != nil) {
+		if ((!imageAfterMainString) && (image != nil)) {
 			cellFrame.origin.x += imageTextPadding;
 			cellFrame.size.width -= imageTextPadding * 2;
 		}
