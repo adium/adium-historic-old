@@ -375,7 +375,9 @@
 		
 		//Draw the substring
 		if (subString) {
-			cellFrame.origin.y += mainStringHeight + textSpacing;
+			NSAffineTransform *subStringTranslation = [NSAffineTransform transform];
+			[subStringTranslation translateXBy:0.0 yBy:mainStringHeight + textSpacing];
+			[subStringTranslation concat];
 			
 			//Draw the substring
 			[attributedSubString drawInRect:cellFrame];
