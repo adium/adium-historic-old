@@ -38,8 +38,11 @@
             CLASS = ESStatusAdvancedPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "checkBox_statusMenuItemBadge" = NSButton; 
+                "checkBox_statusMenuItemFlash" = NSButton; 
                 "checkBox_statusWindowAlwaysOnTop" = NSButton; 
                 "checkBox_statusWindowHideInBackground" = NSButton; 
+                "label_statusMenuItem" = NSTextField; 
                 "label_statusWindow" = NSTextField; 
             }; 
             SUPERCLASS = AIPreferencePane; 

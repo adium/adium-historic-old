@@ -43,15 +43,8 @@
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {
 	//Observe for preference changes, initially loading our status menu item controller
-	[[adium preferenceController] addObserver:self
-	                 forKeyPath:PREF_KEYPATH_STATUS_MENU_ITEM_ENABLED
-	                    options:NSKeyValueObservingOptionNew
-	                    context:NULL];
-	[self observeValueForKeyPath:PREF_KEYPATH_STATUS_MENU_ITEM_ENABLED
-	                    ofObject:[adium preferenceController]
-	                      change:nil
-	                     context:NULL];
-
+	[[adium preferenceController] registerPreferenceObserver:self
+													forGroup:PREF_GROUP_STATUS_MENU_ITEM];
 	[[adium notificationCenter] removeObserver:self
 										  name:AIApplicationDidFinishLoadingNotification
 										object:nil];
@@ -59,18 +52,21 @@
 
 - (void)uninstallPlugin
 {
-	[[adium preferenceController] removeObserver:self forKeyPath:PREF_KEYPATH_STATUS_MENU_ITEM_ENABLED];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[itemController release]; itemController = nil;
 }
 
-- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+- (void)preferencesChangedForGroup:(NSString *)group
+							   key:(NSString *)key
+							object:(AIListObject *)object
+					preferenceDict:(NSDictionary *)prefDict
+						 firstTime:(BOOL)firstTime
 {
-	if ([[object valueForKeyPath:keyPath] boolValue]) {
+	if ([[prefDict objectForKey:KEY_STATUS_MENU_ITEM_ENABLED] boolValue]) {
 		//If it hasn't been created yet, create it. It will be created visible.
 		if (!itemController) {
 			itemController = [[CBStatusMenuItemController statusMenuItemController] retain];
-		}
-
+		}		
 	} else {
 		[itemController release]; itemController = nil;
 	}

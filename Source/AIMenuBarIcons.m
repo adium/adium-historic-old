@@ -38,16 +38,6 @@
 	return self;
 }
 
-- (BOOL)showBadge
-{
-	return [[xtraBundle objectForInfoDictionaryKey:@"Show Badge"] boolValue];
-}
-
-- (BOOL)flashUnviewed
-{
-	return [[xtraBundle objectForInfoDictionaryKey:@"Flash Unviewed"] boolValue];
-}
-
 - (NSImage *)imageOfType:(NSString *)imageType alternate:(BOOL)alternate
 {
 	NSImage *image;
