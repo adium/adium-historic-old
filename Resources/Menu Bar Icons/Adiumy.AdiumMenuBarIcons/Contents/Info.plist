@@ -11,8 +11,6 @@
 		<key>Online</key>
 		<string>online.png</string>
 	</dict>
-	<key>Show Badge</key>
-	<true/>
 	<key>XtraBundleVersion</key>
 	<string>1</string>
 </dict>

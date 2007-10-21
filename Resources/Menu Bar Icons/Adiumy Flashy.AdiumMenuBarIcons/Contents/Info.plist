@@ -7,10 +7,6 @@
 	<string>Adiumy Flashy</string>
 	<key>XtraBundleVersion</key>
 	<string>1</string>
-	<key>Show Badge</key>
-	<false/>
-	<key>Flash Unviewed</key>
-	<true/>
 	<key>Icons</key>
 	<dict>
 		<key>Away</key>
