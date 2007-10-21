@@ -11,6 +11,10 @@
 	IBOutlet	NSTextField	*label_statusWindow;
 	IBOutlet	NSButton	*checkBox_statusWindowHideInBackground;
 	IBOutlet	NSButton	*checkBox_statusWindowAlwaysOnTop;	
+	
+	IBOutlet	NSTextField *label_statusMenuItem;
+	IBOutlet	NSButton	*checkBox_statusMenuItemBadge;
+	IBOutlet	NSButton	*checkBox_statusMenuItemFlash;
 }
 
 @end

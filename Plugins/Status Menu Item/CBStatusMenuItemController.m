@@ -20,6 +20,7 @@
 #import <Adium/AIStatusControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIListObject.h>
+#import "CBStatusMenuItemPlugin.h"
 #import "CBStatusMenuItemController.h"
 #import "AIMenuBarIcons.h"
 #import <AIUtilities/AIApplicationAdditions.h>
@@ -111,6 +112,10 @@
 		// Register as an observer of the preference group so we can update our "show offline contacts" option
 		[[adium preferenceController] registerPreferenceObserver:self
 														forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
+		
+		// Register as an observer of our own preference group
+		[[adium preferenceController] registerPreferenceObserver:self
+														forGroup:PREF_GROUP_STATUS_MENU_ITEM];		
 		
 		//Register as a chat observer (So we can catch the unviewed content status flag)
 		[[adium chatController] registerChatObserver:self];
@@ -246,7 +251,7 @@
 - (void)updateMenuIcons
 {
 	NSImage			*badge = nil;
-	BOOL			showBadge = [menuIcons showBadge], isIdle;
+	BOOL			isIdle;
 	NSString		*imageName;
 	NSEnumerator	*enumerator;
 	AIAccount		*account;
@@ -486,7 +491,7 @@
 	// We think there's no unviewed content, and there is.
 	} else if (!unviewedContent && unviewedContentCount > 0) {
 		// If this particular Xtra wants us to flash unviewed content, start the timer up
-		if ([menuIcons flashUnviewed]) {
+		if (flashUnviewed) {
 			currentlyIgnoringUnviewed = NO;
 			unviewedContentFlash = [[NSTimer scheduledTimerWithTimeInterval:1.0
 																	 target:self
@@ -719,6 +724,12 @@
 	if ([group isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]) {
 		showContactGroups = ![[prefDict objectForKey:KEY_HIDE_CONTACT_LIST_GROUPS] boolValue];
 		[contactMenu rebuildMenu];
+	}
+	
+	if ([group isEqualToString:PREF_GROUP_STATUS_MENU_ITEM]) {
+		showBadge = [[prefDict objectForKey:KEY_STATUS_MENU_ITEM_BADGE] boolValue];
+		flashUnviewed = [[prefDict objectForKey:KEY_STATUS_MENU_ITEM_FLASH] boolValue];
+		[self updateMenuIcons];
 	}
 }
 

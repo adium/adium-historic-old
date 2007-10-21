@@ -27,8 +27,6 @@
 
 + (NSImage *)previewMenuImageForIconPackAtPath:(NSString *)inPath;
 - (NSImage *)imageOfType:(NSString *)imageType alternate:(BOOL)alternate;
-- (BOOL)showBadge;
-- (BOOL)flashUnviewed;
 
 - (NSImage *)alternateImageForImage:(NSImage *)inImage;
 

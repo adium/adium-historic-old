@@ -37,6 +37,8 @@
 
 	NSTimer					*unviewedContentFlash;
 	
+	BOOL					showBadge;
+	BOOL					flashUnviewed;
 	BOOL					currentlyIgnoringUnviewed;
 	BOOL					unviewedContent;
 	BOOL					showContactGroups;
