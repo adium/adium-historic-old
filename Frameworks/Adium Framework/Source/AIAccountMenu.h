@@ -36,6 +36,8 @@ typedef enum {
 	BOOL			includeAddAccountsMenu;
 	BOOL			includeConnectAllMenuItem;
 
+	NSControlSize	controlSize;
+
 	AIStatusMenu	*statusMenu;
 }
 
@@ -54,6 +56,13 @@ typedef enum {
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems;
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount; 	//Optional
 - (BOOL)accountMenu:(AIAccountMenu *)inAccountMenu shouldIncludeAccount:(AIAccount *)inAccount; //Optional
+
+/*!
+ * @brief At what size will this menu be used?
+ *
+ * If not implemented, the default is NSRegularControlSize. NSMiniControlSize is not supported.
+ */
+- (NSControlSize)controlSizeForAccountMenu:(AIAccountMenu *)inAccountMenu; //Optional
 
 //Should the account menu include a submenu of services for adding accounts?
 - (BOOL)accountMenuShouldIncludeAddAccountsMenu:(AIAccountMenu *)inAccountMenu;			//Optional
