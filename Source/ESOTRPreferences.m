@@ -281,8 +281,14 @@
 	[popUp_accounts setEnabled:hasItems];
 	[button_generate setEnabled:hasItems];
 }
+
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount {
 	[self updatePrivateKeyList];
+}
+
+- (NSControlSize)controlSizeForAccountMenu:(AIAccountMenu *)inAccountMenu
+{
+	return NSSmallControlSize;
 }
 
 @end

@@ -22,6 +22,7 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIParagraphStyleAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
 #import <Adium/AIServiceMenu.h>
@@ -85,6 +86,12 @@
 		showTitleVerbs = inShowTitleVerbs;
 
 		[self setDelegate:inDelegate];
+
+		if ([[self delegate] respondsToSelector:@selector(controlSizeForAccountMenu:)]) {
+			controlSize = [[self delegate] controlSizeForAccountMenu:self];
+		} else {
+			controlSize = NSRegularControlSize;
+		}
 		
 		//Rebuild our account menu when accounts or icon sets change
 		[[adium notificationCenter] addObserver:self
@@ -329,12 +336,31 @@
 
 		[menuItem setImage:[self imageForListObject:account usingUserIcon:NO]];
 
-		static NSDictionary *titleAttributes = nil;
-		if (!titleAttributes) {
-			 //The default font size seems to be slightly smaller than the real font; seems to be an AppKit bug
-			titleAttributes = [[NSDictionary dictionaryWithObject:[NSFont menuFontOfSize:14.0f]
-														   forKey:NSFontAttributeName] retain];
+		NSDictionary *titleAttributes;
+		if (controlSize == NSSmallControlSize) {
+			static NSDictionary *smallTitleAttributes = nil;
+			if (!smallTitleAttributes) {
+				smallTitleAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
+										[NSFont menuFontOfSize:11.0f], NSFontAttributeName,
+										[NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
+															   lineBreakMode:NSLineBreakByTruncatingTail], NSParagraphStyleAttributeName,
+										nil];	
+			}
+			titleAttributes = smallTitleAttributes;
+	
+		} else {
+			static NSDictionary *largeTitleAttributes = nil;
+			if (!largeTitleAttributes) {
+				//The default font size seems to be slightly smaller than the real font; seems to be an AppKit bug
+				largeTitleAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
+										[NSFont menuFontOfSize:14.0f], NSFontAttributeName,
+										[NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
+															   lineBreakMode:NSLineBreakByTruncatingTail], NSParagraphStyleAttributeName,
+										nil];	
+			}
+			titleAttributes = largeTitleAttributes;
 		}
+
 		NSAttributedString *plainTitle = [[NSAttributedString alloc] initWithString:[self _titleForAccount:account]
 																		 attributes:titleAttributes];
 
