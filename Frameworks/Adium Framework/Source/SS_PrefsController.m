@@ -252,8 +252,13 @@
 
 - (void)destroyPreferencesWindow
 {
+	//Closing the window could release us; make sure we get to the end of the method to avoid double-releases
+	[self retain];
+
 	[prefsWindow close];
     prefsWindow = nil;
+
+	[self release];
 }
 
 - (void)windowWillClose:(NSNotification *)aNotification
