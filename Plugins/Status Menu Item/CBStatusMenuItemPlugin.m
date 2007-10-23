@@ -68,6 +68,8 @@
 			itemController = [[CBStatusMenuItemController statusMenuItemController] retain];
 		}		
 	} else {
+		// NSTimer retains its target, so we need to invalidate any timers the controller has going on.
+		[itemController invalidateTimers];
 		[itemController autorelease]; itemController = nil;
 	}
 }
