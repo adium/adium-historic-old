@@ -241,6 +241,13 @@
 	[self updateMenuIcons];
 }
 
+- (void)invalidateTimers
+{
+	currentlyIgnoringUnviewed = NO;
+	[unviewedContentFlash invalidate];
+	[unviewedContentFlash release]; unviewedContentFlash = nil;
+}
+
 #define	IMAGE_TYPE_CONTENT		@"Content"
 #define	IMAGE_TYPE_AWAY			@"Away"
 #define IMAGE_TYPE_IDLE			@"Idle"

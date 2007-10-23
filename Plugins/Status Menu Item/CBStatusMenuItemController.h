@@ -46,5 +46,6 @@
 }
 
 + (CBStatusMenuItemController *)statusMenuItemController;
+- (void)invalidateTimers;
 
 @end
