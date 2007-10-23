@@ -68,7 +68,7 @@
 			itemController = [[CBStatusMenuItemController statusMenuItemController] retain];
 		}		
 	} else {
-		[itemController release]; itemController = nil;
+		[itemController autorelease]; itemController = nil;
 	}
 }
 
