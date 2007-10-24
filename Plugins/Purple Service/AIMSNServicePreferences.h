@@ -17,10 +17,6 @@
 #import <Adium/AIAdvancedPreferencePane.h>
 
 @interface AIMSNServicePreferences : AIAdvancedPreferencePane {
-	IBOutlet		NSButton		*checkBox_treatDisplayNamesAsStatus;
-
-	IBOutlet		NSTextField		*label_displayNames;
-	IBOutlet		NSTextField		*label_displayNamesWarning;
 	IBOutlet		NSButton		*checkBox_displayCustomEmoticons;
 }
 
