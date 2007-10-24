@@ -71,13 +71,9 @@
 {
 	[super initAccount];
 	lastFriendlyNameChange = nil;
-
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_MSN_SERVICE];
 }
 
 - (void)dealloc {
-	[[adium preferenceController] unregisterPreferenceObserver:self];
-	
 	[lastFriendlyNameChange release];
 	[queuedFriendlyName release];
 
@@ -384,11 +380,6 @@
 	[super gotFilteredDisplayName:attributedDisplayName];
 }
 
-- (BOOL)useDisplayNameAsStatusMessage
-{
-	return displayNamesAsStatus;
-}
-
 - (void)updateMobileStatus:(AIListContact *)theContact withData:(BOOL)isMobile
 {
 	//No-op
@@ -423,16 +414,6 @@
 - (void)cancelFileTransfer:(ESFileTransfer *)fileTransfer
 {
 	[super cancelFileTransfer:fileTransfer];
-}
-
-- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
-{
-	[super preferencesChangedForGroup:group key:key object:object preferenceDict:prefDict firstTime:firstTime];
-	
-	if ([group isEqualToString:PREF_GROUP_MSN_SERVICE]) {
-		displayNamesAsStatus = [[prefDict objectForKey:KEY_MSN_DISPLAY_NAMES_AS_STATUS] boolValue];
-	}
 }
 
 #pragma mark Status messages

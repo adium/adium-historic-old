@@ -24,8 +24,6 @@
 @interface ESPurpleMSNAccount : CBPurpleAccount <AIAccount_Files>{
 	NSDate		*lastFriendlyNameChange;
 	NSString	*queuedFriendlyName;
-
-	BOOL		displayNamesAsStatus;
 }
 
 @end
