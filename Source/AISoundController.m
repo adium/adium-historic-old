@@ -48,6 +48,10 @@
 - (void)playSoundAtPath:(NSString *)inPath{
 	[adiumSound playSoundAtPath:inPath];
 }
+- (void)stopPlayingSoundAtPath:(NSString *)inPath
+{
+	[adiumSound stopPlayingSoundAtPath:inPath];
+}
 
 //Speech
 - (NSArray *)voices{

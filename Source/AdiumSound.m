@@ -109,6 +109,21 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 }
 
 /*!
+ * @brief Stop playing a sound
+ *
+ * @par	Playback must have been started through \c AdiumSound; otherwise, the results are undefined.
+ * 
+ * @param inPath path to the sound file
+ */
+- (void)stopPlayingSoundAtPath:(NSString *)inPath
+{
+    QTMovie *movie = [soundCacheDict objectForKey:inPath];
+    if (movie) {
+		[movie stop];
+	}
+}
+
+/*!
  * @brief Preferences changed, adjust to the new values
  */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key

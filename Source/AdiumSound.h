@@ -29,6 +29,7 @@
 
 - (void)controllerDidLoad;
 - (void)playSoundAtPath:(NSString *)inPath;
+- (void)stopPlayingSoundAtPath:(NSString *)inPath;
 - (void)setSoundsAreMuted:(BOOL)mute;
 
 @end
