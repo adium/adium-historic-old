@@ -67,6 +67,10 @@
  */
 - (void)viewWillClose
 {
+	//The user probably does not want the sound to continue playing (especially if it's long), so stop it.
+	NSString		*soundPath = [[popUp_actionDetails selectedItem] representedObject];
+	[[adium soundController] stopPlayingSoundAtPath:soundPath];
+
 	[soundFileIcon release]; soundFileIcon = nil;
 	[super viewWillClose];
 }
