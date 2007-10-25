@@ -68,12 +68,6 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 	return self;
 }
 
-/*!
- * @brief Finish Initing
- *
- * Requires:
- * 1) Preference controller is ready
- */
 - (void)controllerDidLoad
 {
 	//Register our default preferences and observe changes
@@ -96,11 +90,6 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 	[super dealloc];
 }
 
-/*!
- * @brief Play a sound
- * 
- * @param inPath path to the sound file
- */
 - (void)playSoundAtPath:(NSString *)inPath
 {
 	if (inPath && customVolume != 0.0 && !soundsAreMuted) {
@@ -108,13 +97,6 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 	}
 }
 
-/*!
- * @brief Stop playing a sound
- *
- * @par	Playback must have been started through \c AdiumSound; otherwise, the results are undefined.
- * 
- * @param inPath path to the sound file
- */
 - (void)stopPlayingSoundAtPath:(NSString *)inPath
 {
     QTMovie *movie = [soundCacheDict objectForKey:inPath];
