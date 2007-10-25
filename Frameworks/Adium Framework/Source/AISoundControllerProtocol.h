@@ -14,6 +14,7 @@
 @protocol AISoundController <AIController>
 //Sound
 - (void)playSoundAtPath:(NSString *)inPath;
+- (void)stopPlayingSoundAtPath:(NSString *)inPath;
 
 //Speech
 - (NSArray *)voices;
