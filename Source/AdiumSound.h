@@ -27,9 +27,35 @@
 	unsigned			soundsAreMuted;
 }
 
+/*!
+ * @brief Finish Initing
+ *
+ * Requires:
+ * 1) Preference controller is ready
+ */
 - (void)controllerDidLoad;
+
+/*!
+ * @brief Play a sound
+ * 
+ * @param inPath path to the sound file
+ */
 - (void)playSoundAtPath:(NSString *)inPath;
+/*!
+ * @brief Stop playing a sound
+ *
+ * @par	Playback must have been started through \c AdiumSound; otherwise, the results are undefined.
+ * 
+ * @param inPath path to the sound file
+ */
 - (void)stopPlayingSoundAtPath:(NSString *)inPath;
+
+/*!	@brief	Mute or unmute sounds.
+ *
+ *	@par	Calls to this method nest: If you call this method twice with \c YES, you must then call it twice with \c NO, or sounds will not be unmuted.
+ *
+ *	@param	mute	\c YES if you want sounds muted; \c NO if you want sounds unmuted.
+ */
 - (void)setSoundsAreMuted:(BOOL)mute;
 
 @end
