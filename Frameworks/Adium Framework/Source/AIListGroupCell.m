@@ -34,7 +34,8 @@
 	newCell->backgroundColor = [backgroundColor retain];
 	newCell->gradientColor = [gradientColor retain];
 	newCell->_gradient = [_gradient retain];
-	drawsGradientEdges = NO;
+	newCell->layoutManager = [layoutManager retain];
+	newCell->drawsGradientEdges = drawsGradientEdges;
 	
 	return newCell;
 }
@@ -47,6 +48,8 @@
 		backgroundColor = nil;
 		gradientColor = nil;
 		_gradient = nil;
+		drawsGradientEdges = NO;
+		layoutManager = [[NSLayoutManager alloc] init]
 	}
 	
 	return self;
@@ -58,6 +61,7 @@
 	[shadowColor release];
 	[backgroundColor release];
 	[gradientColor release];
+	[layoutManager release];
 
 	[self flushGradientCache];
 	[super dealloc];
@@ -128,7 +132,7 @@
 - (NSSize)cellSize
 {
 	NSSize	size = [super cellSize];
-	return NSMakeSize(0, [[[NSLayoutManager alloc] init] defaultLineHeightForFont:[self font]] + size.height);
+	return NSMakeSize(0, [layoutManager defaultLineHeightForFont:[self font]] + size.height);
 }
 - (int)cellWidth
 {
