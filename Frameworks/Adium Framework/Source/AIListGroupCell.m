@@ -128,8 +128,7 @@
 - (NSSize)cellSize
 {
 	NSSize	size = [super cellSize];
-
-	return NSMakeSize(0, [[self font] defaultLineHeightForFont] + size.height);
+	return NSMakeSize(0, [[[NSLayoutManager alloc] init] defaultLineHeightForFont:[self font]] + size.height);
 }
 - (int)cellWidth
 {
