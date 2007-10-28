@@ -30,6 +30,12 @@ typedef unsigned int NSUInteger;
 
 #define NSINTEGER_DEFINED 1
 
+#else
+
+#if !defined(NS_REQUIRES_NIL_TERMINATION)
+#define NS_REQUIRES_NIL_TERMINATION __attribute__((sentinel))
+#endif
+
 #endif //MAC_OS_X_VERSION_10_5
 
 #endif //AITigerCompatibility
