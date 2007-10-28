@@ -47,7 +47,6 @@
 #import <Adium/AIPathUtilities.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
-#import <AIUtilities/AICalendarDateAdditions.h>
 #import <Sparkle/SUConstants.h>
 #import <Sparkle/SUUtilities.h>
 
