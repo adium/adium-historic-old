@@ -169,7 +169,7 @@
  * String to use for describing the UID/username of this service.  This value varies by service, but should be something
  * along the lines of "User name", "Account name", "Screen name", "Member name", etc.
  *
- * This will be used for the account preferences to inidicate the field for the account's user name.  By default, contactUserNameLabel
+ * This will be used for the account preferences to indicate the field for the account's user name.  By default, contactUserNameLabel
  * will return this value, as well.
  *
  * @return NSString label for username
