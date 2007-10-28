@@ -49,7 +49,7 @@
 		gradientColor = nil;
 		_gradient = nil;
 		drawsGradientEdges = NO;
-		layoutManager = [[NSLayoutManager alloc] init]
+		layoutManager = [[NSLayoutManager alloc] init];
 	}
 	
 	return self;
