@@ -6,6 +6,8 @@
 //  Copyright (c) 2003-2005 The Adium Team. All rights reserved.
 //
 
+#import "AITigerCompatibility.h"
+
 @interface NSObject (HashingAdditions)
 - (unsigned int)hash;
 @end
