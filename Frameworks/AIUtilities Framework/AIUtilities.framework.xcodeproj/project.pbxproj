@@ -212,7 +212,7 @@
 		4BD1F3D906D27F3100B3975E /* AIScaledImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD1F3D706D27F3100B3975E /* AIScaledImageCell.m */; };
 		4BD1F5D106D28D2E00B3975E /* AIColoredBoxView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B4C06D1DF0300DA778C /* AIColoredBoxView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BD1F5D206D28D2E00B3975E /* AIColoredBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B4D06D1DF0300DA778C /* AIColoredBoxView.m */; };
-		638447B40CD4DA7A00BB878F /* AITigerCompatibility.h in Headers */ = {isa = PBXBuildFile; fileRef = 638447B30CD4DA7A00BB878F /* AITigerCompatibility.h */; };
+		638447B40CD4DA7A00BB878F /* AITigerCompatibility.h in Headers */ = {isa = PBXBuildFile; fileRef = 638447B30CD4DA7A00BB878F /* AITigerCompatibility.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		639B3CA80ABC708700D618E9 /* AIWindowControllerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 639B3CA60ABC708700D618E9 /* AIWindowControllerAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		639B3CA90ABC708700D618E9 /* AIWindowControllerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 639B3CA70ABC708700D618E9 /* AIWindowControllerAdditions.m */; };
 		6E03C8D307C68A5800EAA71E /* AITextFieldWithDraggingDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E03C8D107C68A5800EAA71E /* AITextFieldWithDraggingDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
