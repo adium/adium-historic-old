@@ -316,7 +316,7 @@
  */
 - (void)configureForCurrentServiceType
 {
-	NSString	*userNameLabel = [service userNameLabel];
+	NSString	*userNameLabel = [service contactUserNameLabel];
 	
 	//Update the service icon
 	[imageView_service setImage:[AIServiceIcons serviceIconForService:service
