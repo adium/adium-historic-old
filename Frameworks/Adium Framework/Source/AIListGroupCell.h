@@ -24,6 +24,7 @@
 	NSColor		*gradientColor;
 	BOOL		drawsBackground;
 	BOOL		drawsGradientEdges;
+	NSLayoutManager	*layoutManager;
 	
 	NSImage		*_gradient;
 	NSSize		_gradientSize;
