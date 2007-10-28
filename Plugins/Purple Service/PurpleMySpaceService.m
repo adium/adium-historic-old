@@ -58,9 +58,11 @@
 	return AIServiceSecondary;
 }
 - (NSString *)userNameLabel{
-    return AILocalizedString(@"Email","MySpaceIM's user name.");
+    return AILocalizedString(@"Email", "Used as a label for a username specified by email address");
 }
-
+- (NSString *)contactUserNameLabel{
+	return AILocalizedString(@"MySpace ID", "Label for the username for a MySpace contact");
+}
 - (void)registerStatuses{
 	[[adium statusController] registerStatus:STATUS_NAME_AVAILABLE
 							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_AVAILABLE]
