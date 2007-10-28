@@ -6,6 +6,9 @@
  *  Copyright 2007 The Adium Team. All rights reserved.
  *
  */
+#ifndef AITigerCompatibility
+
+#define AITigerCompatibility
 
 #import <AvailabilityMacros.h>
 
@@ -28,3 +31,5 @@ typedef unsigned int NSUInteger;
 #define NSINTEGER_DEFINED 1
 
 #endif //MAC_OS_X_VERSION_10_5
+
+#endif //AITigerCompatibility
