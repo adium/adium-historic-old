@@ -164,15 +164,34 @@
 }
 
 /*!
- * @brief Label for user name
+ * @brief Label for user name (general)
  *
  * String to use for describing the UID/username of this service.  This value varies by service, but should be something
  * along the lines of "User name", "Account name", "Screen name", "Member name", etc.
+ *
+ * This will be used for the account preferences to inidicate the field for the account's user name.  By default, contactUserNameLabel
+ * will return this value, as well.
+ *
  * @return NSString label for username
  */
 - (NSString *)userNameLabel
 {
     return AILocalizedStringFromTableInBundle(@"User Name", nil, [NSBundle bundleForClass:[AIService class]], nil);    
+}
+
+/*!
+ * @brief Label for user name
+ *
+ * String to use for describing the UID/username of contacts for this service.  This value varies by service, but should be something
+ * along the lines of "User name", "Account name", "Screen name", "Member name", etc.
+ *
+ * By default, this returns -[self userNameLabel]; only override this method if contacts are named differently than own-account usernames.
+ *
+ * @return NSString label for username
+ */
+- (NSString *)contactUserNameLabel
+{
+	return [self userNameLabel];
 }
 
 /*!
