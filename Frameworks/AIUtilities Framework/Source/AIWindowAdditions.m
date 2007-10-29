@@ -123,6 +123,8 @@
 }
 
 #pragma mark Expose ignoring
+#if 0
+//This code appears to break Spaces interaction in 10.5. It remains in hopes that someone will fix it :)
 enum {
     kWindowNoTags            = 0,
     kWindowExposeWillMoveTag = (1 <<  0),
@@ -202,5 +204,6 @@ OSStatus ChangeWindowTags(WindowRef theWindow, WindowTags setThese, WindowTags c
 					 (flag ? kWindowExposeIsStickyTag : kWindowNoTags),
 					 (!flag ? kWindowExposeIsStickyTag : kWindowNoTags)); 
 }
+#endif
 
 @end
