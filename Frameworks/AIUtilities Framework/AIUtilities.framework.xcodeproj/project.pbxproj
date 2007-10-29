@@ -163,6 +163,8 @@
 		34D835A707CBEBEF006466F2 /* PopUpRollover_Middle.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8359B07CBEBEF006466F2 /* PopUpRollover_Middle.png */; };
 		34D835A807CBEBEF006466F2 /* PopUpRollover_Caps.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8359C07CBEBEF006466F2 /* PopUpRollover_Caps.png */; };
 		34D835A907CBEBEF006466F2 /* PopUpArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 34D8359D07CBEBEF006466F2 /* PopUpArrow.png */; };
+		34E1D8050CD5C4FA0071836E /* IKPictureTakerForTiger.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E1D8030CD5C4FA0071836E /* IKPictureTakerForTiger.m */; };
+		34E1D8060CD5C4FA0071836E /* IKPictureTakerForTiger.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E1D8040CD5C4FA0071836E /* IKPictureTakerForTiger.h */; };
 		34E4692A075681AE004C3A42 /* AIVariableHeightOutlineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E46928075681AE004C3A42 /* AIVariableHeightOutlineView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34E4692B075681AE004C3A42 /* AIVariableHeightOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E46929075681AE004C3A42 /* AIVariableHeightOutlineView.m */; };
 		34F2E92D07C2D1E7007EAAAB /* AIFlexibleLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F2E92B07C2D1E7007EAAAB /* AIFlexibleLink.m */; };
@@ -426,6 +428,8 @@
 		34D8359B07CBEBEF006466F2 /* PopUpRollover_Middle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PopUpRollover_Middle.png; path = Resources/PopUpRollover_Middle.png; sourceTree = "<group>"; };
 		34D8359C07CBEBEF006466F2 /* PopUpRollover_Caps.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PopUpRollover_Caps.png; path = Resources/PopUpRollover_Caps.png; sourceTree = "<group>"; };
 		34D8359D07CBEBEF006466F2 /* PopUpArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PopUpArrow.png; path = Resources/PopUpArrow.png; sourceTree = "<group>"; };
+		34E1D8030CD5C4FA0071836E /* IKPictureTakerForTiger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = IKPictureTakerForTiger.m; path = Source/IKPictureTakerForTiger.m; sourceTree = "<group>"; };
+		34E1D8040CD5C4FA0071836E /* IKPictureTakerForTiger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IKPictureTakerForTiger.h; path = Source/IKPictureTakerForTiger.h; sourceTree = "<group>"; };
 		34E46928075681AE004C3A42 /* AIVariableHeightOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIVariableHeightOutlineView.h; path = Source/AIVariableHeightOutlineView.h; sourceTree = "<group>"; };
 		34E46929075681AE004C3A42 /* AIVariableHeightOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIVariableHeightOutlineView.m; path = Source/AIVariableHeightOutlineView.m; sourceTree = "<group>"; };
 		34F13FA50BA6D5E4000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt_BR; path = Resources/pt_BR.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1166,6 +1170,8 @@
 				34486C2D06D1DF0400DA778C /* NSImagePicker.h */,
 				34FFB221087DF02A0000A517 /* AIImageViewWithImagePicker.h */,
 				34FFB222087DF02A0000A517 /* AIImageViewWithImagePicker.m */,
+				34E1D8030CD5C4FA0071836E /* IKPictureTakerForTiger.m */,
+				34E1D8040CD5C4FA0071836E /* IKPictureTakerForTiger.h */,
 			);
 			name = "Image view with image picker from AB/iChat";
 			sourceTree = "<group>";
@@ -1450,6 +1456,7 @@
 				639B3CA80ABC708700D618E9 /* AIWindowControllerAdditions.h in Headers */,
 				631BE7CF0AD2C56700F3B896 /* AICalendarDateAdditions.h in Headers */,
 				8D1D4DE90BD62FDB0091C3CE /* AIDividedAlternatingRowOutlineView.h in Headers */,
+				34E1D8060CD5C4FA0071836E /* IKPictureTakerForTiger.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1650,6 +1657,7 @@
 				639B3CA90ABC708700D618E9 /* AIWindowControllerAdditions.m in Sources */,
 				631BE7D00AD2C56700F3B896 /* AICalendarDateAdditions.m in Sources */,
 				8D1D4DEA0BD62FDB0091C3CE /* AIDividedAlternatingRowOutlineView.m in Sources */,
+				34E1D8050CD5C4FA0071836E /* IKPictureTakerForTiger.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

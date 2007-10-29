@@ -7,21 +7,26 @@
 //
 
 #import "AIImageViewWithImagePicker.h"
-#import "NSImagePicker.h"
+#import <Quartz/Quartz.h>
+
 #import "AIImageAdditions.h"
-#import "AIStringUtilities.h"
 #import "AIFileManagerAdditions.h"
 #import "AIApplicationAdditions.h"
+#import "AIStringUtilities.h"
+#import "IKPictureTakerForTiger.h"
 
 #define DRAGGING_THRESHOLD 16.0
 
 @interface AIImageViewWithImagePicker (PRIVATE)
 - (void)_initImageViewWithImagePicker;
-- (void)showPickerController;
+- (void)showPictureTaker;
 - (void)copy:(id)sender;
 - (void)paste:(id)sender;
 - (void)delete;
 @end
+
+
+#define IKPictureTakerClass ([NSApp isOnLeopardOrBetter] ? NSClassFromString(@"IKPictureTaker") : NSClassFromString(@"IKPictureTakerForTiger"))
 
 /*
  * @class AIImageViewWithImagePicker
@@ -70,7 +75,7 @@
  */
 - (void)_initImageViewWithImagePicker
 {
-	pickerController = nil;
+	pictureTaker = nil;
 	title = nil;
 	delegate = nil;
 	
@@ -80,12 +85,7 @@
 	mouseDownPos = NSZeroPoint;
 	maxSize = NSZeroSize;
 
-	useNSImagePickerController = YES;
-	
-	/* Determine if we can load the image picker controller class.  We might not be able to for a user with a corrupt AddressBook.framework,
-	 * for example... we certainly wouldn't be able to on version of Mac OS X before 10.3.0.
-	 */
-	imagePickerClassIsAvailable = (NSClassFromString(@"NSImagePickerController") != nil);
+	usePictureTaker = YES;
 }
 
 /*
@@ -93,9 +93,9 @@
  */
 - (void)dealloc
 {
-	if (pickerController) {
-		[[pickerController window] close];
-		[pickerController release]; pickerController = nil;
+	if (pictureTaker) {
+		[pictureTaker close];
+		[pictureTaker release]; pictureTaker = nil;
 	}
 	
 	delegate = nil;
@@ -137,8 +137,8 @@
 	[super setImage:inImage];
 	
 	//Inform the picker controller of a changed selection if it is open, for live updating
-	if (pickerController) {
-		[pickerController selectionChanged];
+	if (pictureTaker) {
+		[pictureTaker setInputImage:inImage];
 	}
 }
 
@@ -152,8 +152,8 @@
 {
 	if (title != inTitle) {
 		[title release]; title = [inTitle retain];
-		if (pickerController) {
-			[pickerController selectionChanged];
+		if (pictureTaker) {
+			[pictureTaker setTitle:title];
 		}
 	}
 }
@@ -163,7 +163,7 @@
  */
 - (NSString *)title
 {
-	return title;
+	return (title ? title : AILocalizedStringFromTableInBundle(@"Image Picker", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], nil));
 }
 
 /*!
@@ -171,14 +171,29 @@
  *
  * If NO, a standard Open panel is used instead.
  */
-- (void)setUseNSImagePickerController:(BOOL)inUseNSImagePickerController
+- (void)setUsePictureTaker:(BOOL)inUsePictureTaker
 {
-	useNSImagePickerController = inUseNSImagePickerController;
+	usePictureTaker = inUsePictureTaker;
+}
+
+- (void)setPresentPictureTakerAsSheet:(BOOL)inPresentPictureTakerAsSheet
+{
+	presentPictureTakerAsSheet  = inPresentPictureTakerAsSheet;
+}
+
+- (BOOL)presentPictureTakerAsSheet
+{
+	return presentPictureTakerAsSheet;
 }
 
 - (void)setMaxSize:(NSSize)inMaxSize
 {
 	maxSize = inMaxSize;
+}
+
+- (NSSize)maxSize
+{
+	return maxSize;
 }
 
 // Monitoring user interaction --------------------------------------------------------
@@ -211,7 +226,7 @@
 		}
 		
 		if ([theEvent clickCount] == 2) {
-			[self showPickerController];
+			[self showPictureTaker];
 		}
 
 	} else {
@@ -232,7 +247,7 @@
 	if ((key == NSBackspaceCharacter) || (key == NSDeleteCharacter) || (key == NSDeleteFunctionKey) || (key == NSDeleteCharFunctionKey)) {
 		[self delete];
 	} else if (key == NSEnterCharacter || key == NSCarriageReturnCharacter) {
-		[self showPickerController];
+		[self showPictureTaker];
 	} else {
 		[super keyDown:theEvent];
 	}
@@ -364,7 +379,7 @@
  * @brief Conclude a drag operation
  *
  * A new image was dragged into our view.  -[super concludeDragOperation:] will change [self image] to match it.
- * We then want to update our pickerController's selection if it is open.
+ * We then want to update our pictureTaker's selection if it is open.
  * Also, if we're dropped a promised file, use its data directly as it may be better than what NSImageView's natural
  * loading retrieves... this way we can get transparency or animation data, for example.
  */
@@ -386,8 +401,8 @@
 		[self setImage:droppedImage];
 		resized = YES;
 
-	} else if (pickerController) {
-		[pickerController selectionChanged];
+	} else if (pictureTaker) {
+		[pictureTaker setInputImage:droppedImage];
 	}
 
 	//Use the file's data if possible and the image wasn't too big
@@ -465,8 +480,8 @@
 			
 			[self setImage:image];
 							
-			if (pickerController) {
-				[pickerController selectionChanged];
+			if (pictureTaker) {
+				[pictureTaker setInputImage:image];
 			}
 			
 			//Inform the delegate
@@ -514,59 +529,71 @@
 // NSImagePicker Access and Delegate ----------------------------------------------------------------
 #pragma mark NSImagePicker Access and Delegate
 /*!
- * @brief Action to call -[self showPickerController]
+ * @brief Action to call -[self showPictureTaker]
  */ 
 - (IBAction)showImagePicker:(id)sender
 {
-	[self showPickerController];
+	[self showPictureTaker];
+}
+
+- (void)pictureTakerDidEnd:(id)inPictureTaker returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo
+{	
+	if (returnCode == NSOKButton) {
+		NSImage *image = [inPictureTaker outputImage];
+		
+		//Update the NSImageView
+		[self setImage:image];
+		
+		//Inform the delegate, but only if NOT using NSOpenPanel
+		if (delegate && usePictureTaker) {
+			if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
+				[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)
+							   withObject:self
+							   withObject:[image PNGRepresentation]];
+				
+			} else if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]) {
+				[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
+							   withObject:self
+							   withObject:image];
+			}
+		}
+	}
 }
 
 /*
  * @brief Show the image picker controller
  */
-- (void)showPickerController
+- (void)showPictureTaker
 {
-	if (imagePickerClassIsAvailable && useNSImagePickerController) {
-		if (!pickerController) {
-			Class	imagePickerClass;
-			NSPoint	pickerPoint;
-			
-			//10.2 and 10.5 don't have NSImagePickerController, so find the class dynamically to avoid link errors if we want 10.2/10.5 compatibility
-			imagePickerClass = NSClassFromString(@"NSImagePickerController");
-			pickerController = [[imagePickerClass sharedImagePickerControllerCreate:YES] retain];
-			[pickerController setDelegate:self];
-			
-			pickerPoint = [NSEvent mouseLocation];
-			//Determine the screen of this mouse location
-			NSScreen		*currentScreen;
-			NSEnumerator	*enumerator = [[NSScreen screens] objectEnumerator];
-			while ((currentScreen = [enumerator nextObject])) {
-				if (NSPointInRect(pickerPoint, [currentScreen frame])) {
-					break;
-				}
-			}
-			NSRect pickerControllerFrame = [[pickerController window] frame];
-			pickerPoint.y -= NSHeight(pickerControllerFrame);
-			
-			//Constrain the picker to the screen if possible
-			if (currentScreen) {
-				NSRect targetRect = [currentScreen visibleFrame];
-				if (pickerPoint.y < NSMinY(targetRect)) pickerPoint.y = NSMinY(targetRect);
-				if ((pickerPoint.y + NSHeight(pickerControllerFrame)) > NSMaxY(targetRect))
-					pickerPoint.y = NSMaxY(targetRect) - NSHeight(pickerControllerFrame);
-				
-				if (pickerPoint.x < NSMinX(targetRect)) pickerPoint.x = NSMinX(targetRect);
-				if (pickerPoint.x + NSWidth(pickerControllerFrame) > NSMaxX(targetRect))
-					pickerPoint.x = NSMaxX(targetRect) - NSWidth(pickerControllerFrame);
-			}
-			
-			[pickerController initAtPoint:pickerPoint inWindow:nil];
-			[pickerController setHasChanged:NO];
+	if (usePictureTaker) {
+		if (!pictureTaker) {	
+			pictureTaker = [[IKPictureTakerClass pictureTaker] retain];
+			[pictureTaker setDelegate:self];
+			[pictureTaker setTitle:title];
+		}
+			 
+		NSImage	*theImage = nil;
+			 
+		//Give the delegate an opportunity to supply an image which differs from the NSImageView's image
+		if (delegate && [delegate respondsToSelector:@selector(imageForImageViewWithImagePicker:)]) {
+			theImage = [delegate imageForImageViewWithImagePicker:self];
 		}
 		
-		[pickerController selectionChanged];
-		[[pickerController window] makeKeyAndOrderFront: nil];
+		[pictureTaker setInputImage:(theImage ? theImage : [self image])];
+		[pictureTaker setValue:[NSValue valueWithSize:[self maxSize]]
+						forKey:IKPictureTakerOutputImageMaxSizeKey];
 
+		if ([self presentPictureTakerAsSheet]) {
+			[pictureTaker beginPictureTakerSheetForWindow:[self window] 
+											 withDelegate:self
+										   didEndSelector:@selector(pictureTakerDidEnd:returnCode:contextInfo:)
+											  contextInfo:nil];
+		} else {
+			[pictureTaker beginPictureTakerWithDelegate:self
+										 didEndSelector:@selector(pictureTakerDidEnd:returnCode:contextInfo:)
+											contextInfo:nil];
+		}
+			 
 	} else {
 		/* If we aren't using or can't use the image picker, use an open panel  */
 		NSOpenPanel *openPanel;
@@ -609,91 +636,6 @@
 	}
 }
 																				  
-/*
- * @brief This gets called when the user selects OK on a new image
- *
- * @param sender The Image Picker
- * @param image The image which was selected
- */
-- (void)imagePicker:(id)sender selectedImage:(NSImage *)image
-{
-	NSSize imageSize = [image size];
-
-	if ((maxSize.width > 0 && imageSize.width > maxSize.width) ||
-		(maxSize.height > 0 && imageSize.height > maxSize.height)) {
-		image = [image imageByScalingToSize:maxSize];
-	}
-	
-	//Update the NSImageView
-	[self setImage:image];
-	
-	//Inform the delegate, but only if NOT using NSOpenPanel
-	if (delegate && (imagePickerClassIsAvailable && useNSImagePickerController)) {
-		if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
-			[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)
-						   withObject:self
-						   withObject:[image PNGRepresentation]];
-			
-		} else if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]) {
-			[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
-						   withObject:self
-						   withObject:image];
-		}
-	}
-	
-	//Add the image to the list of recent images
-	if (imagePickerClassIsAvailable) {
-		//10.2 and 10.5 don't have NSIPRecentPicture, so find the class dynamically to avoid link errors if we want 10.2/10.5 compatibility
-		Class ipRecentPictureClass = NSClassFromString(@"NSIPRecentPicture");
-		id recentPicture = [[[ipRecentPictureClass alloc] initWithOriginalImage:image] autorelease];
-		[recentPicture setCurrent];
-		[ipRecentPictureClass _saveChanges]; //Saves to ~/Library/Images/iChat Recent Pictures
-
-		//Picker controller is closing
-		[pickerController release]; pickerController = nil;
-	}
-}
-
-/*
- * @brief This is called if the user cancels an image selection
- */
-- (void)imagePickerCanceled: (id) sender
-{
-	[[pickerController window] close];
-
-	//Picker controller is closing
-	[pickerController release]; pickerController = nil;
-}
-
-/*
- * @brief Provide the image to be shown in the image picker
- *
- * This is called to provide an image when the delegate is first set and following selectionChanged messages to the controller.
- * The junk on the end seems to be the selector name for the method itself.
- */
-- (NSImage *)displayImageInPicker: junk
-{
-	NSImage	*theImage = nil;
-	
-	//Give the delegate an opportunity to supply an image which differs from the NSImageView's image
-	if (delegate && [delegate respondsToSelector:@selector(imageForImageViewWithImagePicker:)]) {
-		theImage = [delegate imageForImageViewWithImagePicker:self];
-	}
-	
-	return (theImage ? theImage : [self image]);
-}
-
-/*
- * @brief Provide the title for the picker
- *
- * Note that you must not return nil or the window gets upset
- */
-- (NSString *)displayTitleInPicker: junk
-{
-	return (title ? title : AILocalizedStringFromTableInBundle(@"Image Picker", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], nil));
-}
-
-
 // Drawing ------------------------------------------------------------------------
 #pragma mark Drawing
 /*
