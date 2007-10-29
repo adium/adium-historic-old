@@ -7,6 +7,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
+#import "AITigerCompatibility.h"
 
 /* Define constants if building without them available */
 #ifndef IKPictureTakerAllowsVideoCaptureKey
@@ -104,5 +105,5 @@
 @end
 
 @interface NSObject (IKPictureTakerForTigerDelegate)
-- (void)pictureTakerDidEnd:(id)inPictureTaker returnCode:(int)returnCode contextInfo:(void *)contextInfo;
+- (void)pictureTakerDidEnd:(id)inPictureTaker returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo;
 @end
