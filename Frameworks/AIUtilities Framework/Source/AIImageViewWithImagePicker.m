@@ -6,6 +6,8 @@
 //  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
+#import "AITigerCompatibility.h"
+
 #import "AIImageViewWithImagePicker.h"
 #import <Quartz/Quartz.h>
 

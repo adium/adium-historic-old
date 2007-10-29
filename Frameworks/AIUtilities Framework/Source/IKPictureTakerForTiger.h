@@ -7,6 +7,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Quartz/Quartz.h>
+#import "AITigerCompatibility.h"
 
 /* Define constants if building without them available */
 #ifndef IKPictureTakerAllowsVideoCaptureKey
