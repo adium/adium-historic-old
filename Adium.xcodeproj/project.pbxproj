@@ -933,6 +933,7 @@
 		34E0EA0F07CC53FE00A82198 /* AINewMessagePanelPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E0EA0B07CC53FE00A82198 /* AINewMessagePanelPlugin.m */; };
 		34E0EA1007CC53FE00A82198 /* AINewMessagePromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E0EA0C07CC53FE00A82198 /* AINewMessagePromptController.m */; };
 		34E0EA4007CC55B100A82198 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
+		34E1D8F90CD5CE5C0071836E /* AIRecentImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E1D8F80CD5CE5C0071836E /* AIRecentImage.m */; };
 		34E2A0BC07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A0BA07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.m */; };
 		34E2A0C307AF593B006735BC /* AIAccountMenuAccessPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A0C107AF593B006735BC /* AIAccountMenuAccessPlugin.m */; };
 		34E2A1CD07AF635A006735BC /* ESFastUserSwitchingSupportPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A1CB07AF635A006735BC /* ESFastUserSwitchingSupportPlugin.m */; };
@@ -3049,6 +3050,8 @@
 		34E0EA0E07CC53FE00A82198 /* AINewMessagePromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AINewMessagePromptController.h; path = Source/AINewMessagePromptController.h; sourceTree = "<group>"; };
 		34E0EB8D07CD349200A82198 /* ESPurpleAIMAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESPurpleAIMAccount.h; path = "Plugins/Purple Service/ESPurpleAIMAccount.h"; sourceTree = "<group>"; };
 		34E0EB8E07CD349200A82198 /* ESPurpleAIMAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESPurpleAIMAccount.m; path = "Plugins/Purple Service/ESPurpleAIMAccount.m"; sourceTree = "<group>"; };
+		34E1D8F70CD5CE5C0071836E /* AIRecentImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIRecentImage.h; path = Source/AIRecentImage.h; sourceTree = "<group>"; };
+		34E1D8F80CD5CE5C0071836E /* AIRecentImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIRecentImage.m; path = Source/AIRecentImage.m; sourceTree = "<group>"; };
 		34E1EDF30A045AA2003C14F1 /* AdiumApplescriptRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumApplescriptRunner.h; path = Source/AdiumApplescriptRunner.h; sourceTree = "<group>"; };
 		34E1EDF40A045AA2003C14F1 /* AdiumApplescriptRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumApplescriptRunner.m; path = Source/AdiumApplescriptRunner.m; sourceTree = "<group>"; };
 		34E2A0B907AF5924006735BC /* ESAccountNetworkConnectivityPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESAccountNetworkConnectivityPlugin.h; path = Source/ESAccountNetworkConnectivityPlugin.h; sourceTree = "<group>"; };
@@ -4449,6 +4452,8 @@
 				34D007DA095966E200DCB678 /* AIContactListRecentImagesWindowController.h */,
 				34D007D9095966E200DCB678 /* AIContactListRecentImagesWindowController.m */,
 				34D000C50957918000DCB678 /* ContactListRecentImages.nib */,
+				34E1D8F70CD5CE5C0071836E /* AIRecentImage.h */,
+				34E1D8F80CD5CE5C0071836E /* AIRecentImage.m */,
 			);
 			name = "User Icon Changing";
 			sourceTree = "<group>";
@@ -8557,6 +8562,7 @@
 				344D974F0C3C442600498CA1 /* InstantMessage.m in Sources */,
 				344D97510C3C442600498CA1 /* Person.m in Sources */,
 				344D97530C3C442600498CA1 /* Presentity.m in Sources */,
+				34E1D8F90CD5CE5C0071836E /* AIRecentImage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

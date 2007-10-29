@@ -1,5 +1,5 @@
 // Note: This is a header file for the private, undocumented NSImagePickerController used in iChat and Address Book
-// Its use requires the target to include the AddressBook framework, and it probably only works on 10.3 or greater.
+// Its use requires the target to include the AddressBook framework, and it only on 10.3 and 10.4 (but not 10.5 or greater).
 
 /*
    *     Derrived from the output of class-dump (version 2.1.5) by Nicko van Someren.
