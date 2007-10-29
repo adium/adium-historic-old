@@ -214,5 +214,6 @@
 {
 	return [AIObject sharedAdiumInstance];
 }
+
 @end
 
