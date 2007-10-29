@@ -680,7 +680,7 @@
 			if (safariDownloadsPath) {
 				//This should return a CFStringRef... we're using another app's prefs, so make sure.
 				if (CFGetTypeID(safariDownloadsPath) == CFStringGetTypeID()) {
-					userPreferredDownloadFolder = (NSString *)safariDownloadsPath;
+					userPreferredDownloadFolder = [(NSString *)safariDownloadsPath stringByExpandingTildeInPath];
 				}
 				
 				[(NSObject *)safariDownloadsPath autorelease];
