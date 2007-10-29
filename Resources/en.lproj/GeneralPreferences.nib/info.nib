@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>IBDocumentLocation</key>
-	<string>105 366 356 240 0 0 1920 1178 </string>
+	<string>73 249 356 240 0 0 1440 877 </string>
 	<key>IBEditorPositions</key>
 	<dict>
 		<key>5</key>
-		<string>656 562 560 442 0 0 1920 1178 </string>
+		<string>348 282 560 442 0 0 1440 877 </string>
 	</dict>
 	<key>IBFramework Version</key>
 	<string>482.0</string>
@@ -20,13 +20,13 @@
 		</array>
 	</dict>
 	<key>IBLastGroupID</key>
-	<string>5</string>
+	<string>6</string>
 	<key>IBOpenObjects</key>
 	<array>
 		<integer>5</integer>
 	</array>
 	<key>IBSystem Version</key>
-	<string>8R2218</string>
+	<string>9A528d</string>
 	<key>IBUsesTextArchiving</key>
 	<true/>
 </dict>

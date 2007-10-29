@@ -96,7 +96,8 @@
 {
 	if (!object) {		
 		shouldDisplay = [[prefDict objectForKey:KEY_DISPLAY_CONTEXT] boolValue];
-		
+		linesToDisplay = [[prefDict objectForKey:KEY_DISPLAY_LINES] intValue];
+
 		if (shouldDisplay && linesToDisplay > 0 && !isObserving) {
 			//Observe new message windows only if we aren't already observing them
 			isObserving = YES;
@@ -127,10 +128,7 @@
 		displayMode = [[prefDict objectForKey:KEY_DISPLAY_MODE] intValue];
 		
 		haveTalkedUnits = [[prefDict objectForKey:KEY_HAVE_TALKED_UNITS] intValue];
-		haveNotTalkedUnits = [[prefDict objectForKey:KEY_HAVE_NOT_TALKED_UNITS] intValue];
-		
-		shouldDisplay = [[prefDict objectForKey:KEY_DISPLAY_CONTEXT] boolValue];
-		linesToDisplay = [[prefDict objectForKey:KEY_DISPLAY_LINES] intValue];
+		haveNotTalkedUnits = [[prefDict objectForKey:KEY_HAVE_NOT_TALKED_UNITS] intValue];		
 	}
 }
 
