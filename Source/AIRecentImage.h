@@ -12,7 +12,7 @@
 	NSString	*path;
 }
 
-+ (AIRecentImage *)recentImageWithImage:(NSString *)inImage path:(NSString *)inPath;
++ (AIRecentImage *)recentImageWithImage:(NSImage *)inImage path:(NSString *)inPath;
 - (NSImage *)image;
 - (NSString *)originalImagePath;
 @end
