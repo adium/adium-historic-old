@@ -458,6 +458,11 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	return ([displayedObject userIcon]);
 }
 
+- (NSImage *)emptyPictureImageForImageViewWithImagePicker:(AIImageViewWithImagePicker *)picker
+{
+	return [AIServiceIcons serviceIconForObject:displayedObject type:AIServiceIconLarge direction:AIIconNormal];
+}
+
 - (NSString *)fileNameForImageInImagePicker:(AIImageViewWithImagePicker *)picker
 {
 	return [[displayedObject displayName] safeFilenameString];
