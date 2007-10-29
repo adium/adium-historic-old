@@ -407,7 +407,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	ESFileTransferProgressRow	*row;
 	
 	shouldScrollToNewFileTransfer = NO;
-	enumerator = [progressRows objectEnumerator];
+	enumerator = [[[progressRows copy] autorelease] objectEnumerator];
 	while ((row = [enumerator nextObject])) {
 		if ([[row fileTransfer] isStopped]) [self _removeFileTransferRow:row];
 	}	
