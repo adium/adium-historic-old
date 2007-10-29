@@ -235,6 +235,8 @@ void image_register_reply (
 
 /* this causes an actual disconnect */
 - (void) disconnect {
+	AILogWithSignature(@"Disconnecting");
+
 	if ( fServiceResolver != nil) {
 		[fServiceResolver release];
 		fServiceResolver = nil;
@@ -247,6 +249,7 @@ void image_register_reply (
 	
 	/* Remove Resolvers, this also deallocates the DNSServiceReferences */
 	if ( fDomainBrowser != nil) {
+		AILogWithSignature(@"Releasing %@",fDomainBrowser);
 		[fDomainBrowser release];
 				
 		fDomainBrowser = nil;
@@ -457,6 +460,7 @@ void image_register_reply (
 
 /* stop looking for new rendezvous clients */
 - (void)stopBrowsing{
+	AILogWithSignature(@"fServiceBrowser is %@ (retain count %i)", fServiceBrowser, [fServiceBrowser retainCount]);
 	if ( fServiceBrowser != nil) {
 		[fServiceBrowser release];
 		fServiceBrowser = nil;
@@ -913,6 +917,7 @@ static void	ProcessSockData( CFSocketRef s, CFSocketCallBackType type, CFDataRef
 - (void) dealloc
 /* Remove service from runloop, deallocate service and associated resources */
 {
+	AILogWithSignature(@"");
 	if ( fSocketRef != nil) {
 		CFSocketInvalidate( fSocketRef);		// Note: Also closes the underlying socket
 		CFRelease( fSocketRef);

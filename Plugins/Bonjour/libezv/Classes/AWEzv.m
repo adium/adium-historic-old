@@ -128,6 +128,7 @@
 
 - (void) logout
 {
+	AILogWithSignature(@"Manager is %@", manager);
 	[manager logout];
 	[manager stopListening];
 	[manager stopBrowsing];
