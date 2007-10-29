@@ -104,5 +104,5 @@
 @end
 
 @interface NSObject (IKPictureTakerForTigerDelegate)
-- (void)pictureTakerDidEnd:(id)inPictureTaker returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo;
+- (void)pictureTakerDidEnd:(id)inPictureTaker returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 @end
