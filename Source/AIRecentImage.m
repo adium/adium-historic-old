@@ -8,17 +8,17 @@
 #import "AIRecentImage.h"
 
 @interface AIRecentImage (PRIVATE)
-- (id)initWithImage:(NSString *)inImage path:(NSString *)inPath;
+- (id)initWithImage:(NSImage *)inImage path:(NSString *)inPath;
 @end
 
 @implementation AIRecentImage
 
-+ (AIRecentImage *)recentImageWithImage:(NSString *)inImage path:(NSString *)inPath
++ (AIRecentImage *)recentImageWithImage:(NSImage *)inImage path:(NSString *)inPath
 {
 	return [[[self alloc] initWithImage:inImage path:inPath] autorelease];
 }
 
-- (id)initWithImage:(NSString *)inImage path:(NSString *)inPath
+- (id)initWithImage:(NSImage *)inImage path:(NSString *)inPath
 {
 	if ((self = [super init])) {
 		image = [inImage retain];
