@@ -687,7 +687,7 @@
 			}
 
 			if (!userPreferredDownloadFolder) {
-				userPreferredDownloadFolder = @"~/Downloads";
+				userPreferredDownloadFolder = [NSHomeDirectory() stringByAppendingPathComponent:@"Downloads"];
 			}
 
 		} else {
@@ -712,20 +712,18 @@
 			}
 			
 			if (!userPreferredDownloadFolder) {
-				userPreferredDownloadFolder = @"~/Desktop";
+				userPreferredDownloadFolder = [NSHomeDirectory() stringByAppendingPathComponent:@"Desktop"];
 			}
 		}
 	}
 
-	userPreferredDownloadFolder = [userPreferredDownloadFolder stringByExpandingTildeInPath];
-	
 	/* If we can't write to the specified folder, fall back to the desktop and then to the home directory;
 	 * if neither are writable the user has worse problems then an IM download to worry about.
 	 */
 	if (![[NSFileManager defaultManager] isWritableFileAtPath:userPreferredDownloadFolder]) {
 		NSString *originalFolder = userPreferredDownloadFolder;
 
-		userPreferredDownloadFolder = [@"~/Desktop" stringByExpandingTildeInPath];
+		userPreferredDownloadFolder = [NSHomeDirectory() stringByAppendingPathComponent:@"Desktop"];
 
 		if (![[NSFileManager defaultManager] isWritableFileAtPath:userPreferredDownloadFolder]) {
 			userPreferredDownloadFolder = NSHomeDirectory();
