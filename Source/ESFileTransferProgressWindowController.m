@@ -448,7 +448,9 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 //Each row should be the height of its item's view
 - (float)outlineView:(NSOutlineView *)outlineView heightOfRowByItem:(id)item
 {
-	return [[(ESFileTransferProgressRow *)item view] frame].size.height;
+	NSView *view = [(ESFileTransferProgressRow *)item view];
+	
+	return (view ? [view frame].size.height : 0);
 }
 
 //Before a cell is display, set its embedded view
