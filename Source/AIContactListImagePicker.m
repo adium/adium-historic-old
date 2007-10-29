@@ -31,7 +31,9 @@
 	[self setPostsFrameChangedNotifications:YES];
 	
 	trackingTag = -1;
-	[self resetCursorRects];			
+	[self resetCursorRects];
+	
+	[self setPresentPictureTakerAsSheet:NO];
 }
 
 - (id)initWithFrame:(NSRect)inFrame
@@ -132,16 +134,13 @@
 
 - (void)displayPicturePopUpForEvent:(NSEvent *)theEvent
 {
-	if(NSClassFromString(@"NSIPRecentPicture")) {
-		NSRect	myFrame = [self frame];
-		NSPoint	bottomRightPoint = NSMakePoint(NSMaxX(myFrame), NSMinY(myFrame));
-		bottomRightPoint = [[self window] convertBaseToScreen:[[self superview] convertPoint:bottomRightPoint toView:nil]];
-		[AIContactListRecentImagesWindowController showWindowFromPoint:bottomRightPoint
-														   imagePicker:self
-											     recentPictureSelector:@selector(didSetImage:forAccount:)];
-		
-	}
-				
+	NSRect	myFrame = [self frame];
+	NSPoint	bottomRightPoint = NSMakePoint(NSMaxX(myFrame), NSMinY(myFrame));
+	bottomRightPoint = [[self window] convertBaseToScreen:[[self superview] convertPoint:bottomRightPoint toView:nil]];
+
+	[AIContactListRecentImagesWindowController showWindowFromPoint:bottomRightPoint
+													   imagePicker:self
+											 recentPictureSelector:@selector(didSetImage:forAccount:)];
 }
 
 //Custom mouse down tracking to display our menu and highlight

@@ -13,12 +13,15 @@
 #import "AIContactListImagePicker.h"
 #import "AIMenuItemView.h"
 #import <Adium/AIAccount.h>
-#import <AIUtilities/AIImageGridView.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIBorderlessWindow.h>
+#import <AIUtilities/AIColoredBoxView.h>
+#import <AIUtilities/AIImageGridView.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import <AIUtilities/AIColoredBoxView.h>
 
+#import "AIRecentImage.h"
 #import "NSIPRecentPicture.h"
 
 #define RECENT_PICTURE_CLASS NSClassFromString(@"NSIPRecentPicture")
@@ -123,12 +126,54 @@
 	return 10;
 }
 
+- (NSArray *)recentPictures
+{
+	if ([NSApp isOnLeopardOrBetter]) {
+		NSMutableArray	*recentIcons = [NSMutableArray array];
+		NSString		*recentPicsDir = [[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"]
+										   stringByAppendingPathComponent:@"Images"]
+										  stringByAppendingPathComponent:@"iChat Recent Pictures"]; 
+		NSEnumerator	*enumerator = [[NSFileManager defaultManager] enumeratorAtPath:recentPicsDir];
+		NSString		*imageName;
+
+		while ((imageName = [enumerator nextObject])) {
+			NSString *path = [recentPicsDir stringByAppendingPathComponent:imageName];
+			NSImage *image;
+			if ((image = [[[NSImage alloc] initWithContentsOfFile:path] autorelease])) {
+				[image setFlipped:YES];
+				[recentIcons addObject:[AIRecentImage recentImageWithImage:image
+																	  path:path]];
+			}
+		}
+		return recentIcons;
+		
+	} else {
+		return [RECENT_PICTURE_CLASS recentPictures];
+	}
+}
+
+- (NSArray *)recentSmallIcons
+{
+	if ([NSApp isOnLeopardOrBetter]) {
+		NSMutableArray *recentSmallIcons = [NSMutableArray array];
+		NSEnumerator *enumerator = [[self recentPictures] objectEnumerator];
+		AIRecentImage *recentImage;
+		while ((recentImage = [enumerator nextObject])) { 
+			[recentSmallIcons addObject:[[recentImage image] imageByScalingToSize:NSMakeSize(24, 24)]];
+		}
+		
+		return recentSmallIcons;
+	} else {
+		return [RECENT_PICTURE_CLASS recentSmallIcons];
+	}
+}
+
 - (NSImage *)imageGridView:(AIImageGridView *)imageGridView imageAtIndex:(int)index
 {
-	NSImage		 *displayImage;
-
-	if (index < [[RECENT_PICTURE_CLASS recentSmallIcons] count]) {
-		NSImage		 *image = [[RECENT_PICTURE_CLASS recentSmallIcons] objectAtIndex:index];
+	NSImage		*displayImage;
+	NSArray		*recentSmallIcons = [self recentSmallIcons];
+	if (index < [recentSmallIcons count]) {
+		NSImage		 *image = [recentSmallIcons objectAtIndex:index];
 		NSSize		size = [image size];
 		NSBezierPath *fullPath = [NSBezierPath bezierPathWithRect:NSMakeRect(0, 0, size.width, size.height)];
 		displayImage = [image copy];
@@ -175,7 +220,7 @@
 - (void)imageGridViewSelectionDidChange:(NSNotification *)notification
 {
 	int selectedIndex = [imageGridView selectedIndex];
-	NSArray *recentPictures = [RECENT_PICTURE_CLASS recentPictures];
+	NSArray *recentPictures = [self recentPictures];
 	if (selectedIndex < [recentPictures count]) {
 		//Notify as if the image had been selected in the picker
 		[[picker delegate] imageViewWithImagePicker:picker
