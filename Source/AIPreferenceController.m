@@ -670,20 +670,21 @@
 	
 	userPreferredDownloadFolder = [self preferenceForKey:@"UserPreferredDownloadFolder"
 												   group:PREF_GROUP_GENERAL];
-
+	
 	if (!userPreferredDownloadFolder) {
 		if ([NSApp isOnLeopardOrBetter]) {
 			//10.5: ICGetPref() for kICDownloadFolder is useless
 			CFURLRef	urlToDefaultBrowser = NULL;
-			NSString	*browserName = nil;
-			NSImage		*browserImage = nil;
 			
 			//Use Safari's preference as a default if it's the default browser and it is set
 			if (LSGetApplicationForURL((CFURLRef)[NSURL URLWithString:@"http://google.com"],
 									   kLSRolesViewer,
 									   NULL /*outAppRef*/,
 									   &urlToDefaultBrowser) != kLSApplicationNotFoundErr) {
-				defaultBrowserName = [[NSFileManager defaultManager] displayNameAtPath:defaultBrowserPath];
+				NSString	*defaultBrowserName = nil;
+				
+				defaultBrowserName = [[NSFileManager defaultManager] displayNameAtPath:[(NSURL *)urlToDefaultBrowser path]];
+				
 				if ([defaultBrowserName rangeOfString:@"Safari"].location != NSNotFound) {
 					/* ICGetPref() for kICDownloadFolder returns any previously set preference, not the default ~/Downloads or the current
 					 * Safari setting, in 10.5.0, with Safari the default browser
@@ -697,13 +698,14 @@
 						
 						[(NSObject *)safariDownloadsPath autorelease];
 					}					
+				}
 			}
 			
 			//Failing that, find the Downloads folder
 #ifndef NSDownloadsDirectory
 	#define NSDownloadsDirectory 15
 #endif
-			NArray *searchPaths = NSSearchPathForDirectoriesInDomains(NSDownloadsDirectory, NSUserDomainMask, YES));
+			NSArray *searchPaths = NSSearchPathForDirectoriesInDomains(NSDownloadsDirectory, NSUserDomainMask, YES);
 			if ([searchPaths count]) {
 				userPreferredDownloadFolder = [searchPaths objectAtIndex:0];
 			}
