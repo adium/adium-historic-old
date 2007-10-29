@@ -354,6 +354,7 @@
 	//Disable square row highlighting for bubble lists - the bubble cells handle this on their own
 	if (windowStyle == AIContactListWindowStyleGroupBubbles ||
 	   pillowsOrPillowsFittedWindowStyle) {
+#warning row highlight
 		[contactListView setDrawsSelectedRowHighlight:NO];
 	}
 	
