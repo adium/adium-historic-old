@@ -21,6 +21,7 @@
 #import <Adium/AIToolbarControllerProtocol.h>
 
 #import "AIPreferenceWindowController.h"
+#import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
@@ -669,31 +670,51 @@
 	
 	userPreferredDownloadFolder = [self preferenceForKey:@"UserPreferredDownloadFolder"
 												   group:PREF_GROUP_GENERAL];
-	
+
 	if (!userPreferredDownloadFolder) {
-		OSStatus		err = noErr;
-		ICInstance		inst = NULL;
-		ICFileSpec		folder;
-		long			length = kICFileSpecHeaderSize;
-		FSRef			ref;
-		char			path[1024];
-		
-		memset( path, 0, 1024 ); //clear path's memory range
-		
-		if ((err = ICStart(&inst, 'AdiM')) == noErr) {
-			ICGetPref( inst, kICDownloadFolder, NULL, &folder, &length );
-			ICStop( inst );
+		if ([NSApp isOnLeopardOrBetter]) {
+			/* ICGetPref() for kICDownloadFolder returns any previously set preference, not the default ~/Downloads or the current
+			 * Safari setting, in 10.5.0.
+			 */
+			CFPropertyListRef safariDownloadsPath = CFPreferencesCopyAppValue(CFSTR("DownloadsPath"),CFSTR("com.apple.Safari"));
+			if (safariDownloadsPath) {
+				//This should return a CFStringRef... we're using another app's prefs, so make sure.
+				if (CFGetTypeID(safariDownloadsPath) == CFStringGetTypeID()) {
+					userPreferredDownloadFolder = (NSString *)safariDownloadsPath;
+				}
+				
+				[(NSObject *)safariDownloadsPath autorelease];
+			}
+
+			if (!userPreferredDownloadFolder) {
+				userPreferredDownloadFolder = @"~/Downloads";
+			}
+
+		} else {
+			OSStatus		err = noErr;
+			ICInstance		inst = NULL;
+			ICFileSpec		folder;
+			long			length = kICFileSpecHeaderSize;
+			FSRef			ref;
+			char			path[1024];
 			
-			if (((err = FSpMakeFSRef(&folder.fss, &ref)) == noErr) &&
-			   ((err = FSRefMakePath(&ref, (unsigned char *)path, 1024)) == noErr) &&
-			   ((path != NULL) && (strlen(path) > 0))) {
-				userPreferredDownloadFolder = [NSString stringWithUTF8String:path];
+			memset( path, 0, 1024 ); //clear path's memory range
+			
+			if ((err = ICStart(&inst, 'AdiM')) == noErr) {
+				ICGetPref( inst, kICDownloadFolder, NULL, &folder, &length );
+				ICStop( inst );
+				
+				if (((err = FSpMakeFSRef(&folder.fss, &ref)) == noErr) &&
+					((err = FSRefMakePath(&ref, (unsigned char *)path, 1024)) == noErr) &&
+					((path != NULL) && (strlen(path) > 0))) {
+					userPreferredDownloadFolder = [NSString stringWithUTF8String:path];
+				}
+			}
+			
+			if (!userPreferredDownloadFolder) {
+				userPreferredDownloadFolder = @"~/Desktop";
 			}
 		}
-	}
-	
-	if (!userPreferredDownloadFolder) {
-		userPreferredDownloadFolder = @"~/Desktop";
 	}
 
 	userPreferredDownloadFolder = [userPreferredDownloadFolder stringByExpandingTildeInPath];
