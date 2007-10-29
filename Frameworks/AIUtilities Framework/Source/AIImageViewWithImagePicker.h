@@ -57,6 +57,12 @@
 - (NSImage *)imageForImageViewWithImagePicker:(AIImageViewWithImagePicker *)picker;
 
 /*!
+ * imageForImageViewWithImagePicker:
+ * @brief Requests the image to display in the recents popup to mean 'no image'
+ */ 
+- (NSImage *)emptyPictureImageForImageViewWithImagePicker:(AIImageViewWithImagePicker *)picker;
+
+/*!
  * fileNameForImageInImagePicker
  * @brief Requests the name under which to save a file dragged from the image picker to the Finder or another destination
  *

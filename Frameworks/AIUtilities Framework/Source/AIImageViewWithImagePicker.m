@@ -571,9 +571,8 @@
 		if (!pictureTaker) {	
 			pictureTaker = [[IKPictureTakerClass pictureTaker] retain];
 			[pictureTaker setDelegate:self];
-			[pictureTaker setTitle:title];
 		}
-			 
+		
 		NSImage	*theImage = nil;
 			 
 		//Give the delegate an opportunity to supply an image which differs from the NSImageView's image
@@ -582,8 +581,17 @@
 		}
 		
 		[pictureTaker setInputImage:(theImage ? theImage : [self image])];
+		[pictureTaker setTitle:([self title] ? [self title] : AILocalizedStringFromTableInBundle(@"Image Picker", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], nil))];
 		[pictureTaker setValue:[NSValue valueWithSize:[self maxSize]]
 						forKey:IKPictureTakerOutputImageMaxSizeKey];
+		[pictureTaker setValue:[NSNumber numberWithBool:YES]
+						forKey:IKPictureTakerShowEffectsKey];
+		[pictureTaker setValue:[NSNumber numberWithBool:YES]
+						forKey:IKPictureTakerShowAddressBookPictureKey];
+		if (delegate && [delegate respondsToSelector:@selector(emptyPictureImageForImageViewWithImagePicker:)]) {
+			[pictureTaker setValue:[delegate emptyPictureImageForImageViewWithImagePicker:self]
+							forKey:IKPictureTakerShowEmptyPictureKey];
+		}
 
 		if ([self presentPictureTakerAsSheet]) {
 			[pictureTaker beginPictureTakerSheetForWindow:[self window] 
