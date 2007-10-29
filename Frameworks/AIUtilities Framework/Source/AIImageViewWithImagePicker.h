@@ -67,11 +67,11 @@
 @end
 
 @interface AIImageViewWithImagePicker : NSImageView {
-	id						pickerController;
 	NSString				*title;
+	id						pictureTaker;
 	
-	BOOL					useNSImagePickerController;
-	BOOL					imagePickerClassIsAvailable;
+	BOOL					usePictureTaker;
+	BOOL					presentPictureTakerAsSheet;
 
 	IBOutlet	id			delegate;
 	
@@ -87,7 +87,8 @@
 - (id)delegate;
 - (void)setTitle:(NSString *)inTitle;
 - (IBAction)showImagePicker:(id)sender;
-- (void)setUseNSImagePickerController:(BOOL)inUseNSImagePickerController;
+- (void)setUsePictureTaker:(BOOL)inUsePictureTaker;
+- (void)setPresentPictureTakerAsSheet:(BOOL)inPresentPictureTakerAsSheet;
 - (void)setMaxSize:(NSSize)inMaxSize;
 
 @end
