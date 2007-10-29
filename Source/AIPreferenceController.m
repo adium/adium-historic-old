@@ -720,9 +720,9 @@
 			ICFileSpec		*folder;
 			long			length = 0;
 			FSRef			ref;
-			char			path[1024];
+			char			path[PATH_MAX];
 			
-			memset( path, 0, 1024 ); //clear path's memory range
+			memset( path, 0, PATH_MAX ); //clear path's memory range
 			
 			if ((err = ICStart(&inst, 'AdiM')) == noErr) {
 				//Get the size first…
@@ -746,7 +746,7 @@
 				}
 
 				//If we now have an FSRef, make a path string out of it.
-				if (((err = FSRefMakePath(&ref, (unsigned char *)path, 1024)) == noErr) &&
+				if (((err = FSRefMakePath(&ref, (unsigned char *)path, PATH_MAX)) == noErr) &&
 					((path != NULL) && (strlen(path) > 0))) {
 					userPreferredDownloadFolder = [NSString stringWithUTF8String:path];
 				}
