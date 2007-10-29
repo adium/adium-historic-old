@@ -374,4 +374,9 @@
 	return [[account displayName] safeFilenameString];
 }
 
+- (NSImage *)emptyPictureImageForImageViewWithImagePicker:(AIImageViewWithImagePicker *)picker
+{
+	return [AIServiceIcons serviceIconForObject:account type:AIServiceIconLarge direction:AIIconNormal];
+}
+
 @end
