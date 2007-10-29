@@ -670,8 +670,8 @@
 {
 	NSString	*userPreferredDownloadFolder;
 	
-	userPreferredDownloadFolder = [self preferenceForKey:@"UserPreferredDownloadFolder"
-												   group:PREF_GROUP_GENERAL];
+	userPreferredDownloadFolder = [[self preferenceForKey:@"UserPreferredDownloadFolder"
+													group:PREF_GROUP_GENERAL] stringByExpandingTildeInPath];
 	
 	if (!userPreferredDownloadFolder) {
 		if ([NSApp isOnLeopardOrBetter]) {
