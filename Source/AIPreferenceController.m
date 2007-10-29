@@ -714,23 +714,41 @@
 			//10.3 and 10.4: ICGetPref() remains reliable
 			OSStatus		err = noErr;
 			ICInstance		inst = NULL;
-			ICFileSpec		folder;
-			long			length = kICFileSpecHeaderSize;
+			ICFileSpec		*folder;
+			long			length = 0;
 			FSRef			ref;
 			char			path[1024];
 			
 			memset( path, 0, 1024 ); //clear path's memory range
 			
 			if ((err = ICStart(&inst, 'AdiM')) == noErr) {
-				ICGetPref( inst, kICDownloadFolder, NULL, &folder, &length );
+				//Get the size first…
+				ICGetPref( inst, kICDownloadFolder, NULL, NULL, &length );
+				//Then allocate the memory…
+				folder = malloc(length);
+				NSAssert2(folder, @"%s: Could not allocate %u bytes for Downloads-folder record", __PRETTY_FUNCTION__, length);
+				//Then get the actual data.
+				ICGetPref( inst, kICDownloadFolder, NULL, folder, &length );
+
 				ICStop( inst );
 				
-				//Note that FSSpect is deprecated as of 10.5...
-				if (((err = FSpMakeFSRef(&folder.fss, &ref)) == noErr) &&
-					((err = FSRefMakePath(&ref, (unsigned char *)path, 1024)) == noErr) &&
+				Boolean wasChanged;
+				AliasHandle aliasHandle = NULL;
+				err = PtrToHand(&(folder->alias), (Handle *)&aliasHandle, length - kICFileSpecHeaderSize);
+				NSAssert4(err == noErr, @"%s: PtrToHand (trying to create an AliasHandle of %u bytes for the Downloads folder) returned %i (%s)", __PRETTY_FUNCTION__, length, err, GetMacOSStatusCommentString(err));
+
+				//FSSpec is deprecated as of 10.5. For that reason, use the alias if we can; use FSSpec only if that fails.
+				if (!((err = FSResolveAlias(/* fromFile */ NULL, aliasHandle, &ref, &wasChanged)) == noErr)) {
+					err = FSpMakeFSRef(&(folder->fss), &ref);
+				}
+
+				//If we now have an FSRef, make a path string out of it.
+				if (((err = FSRefMakePath(&ref, (unsigned char *)path, 1024)) == noErr) &&
 					((path != NULL) && (strlen(path) > 0))) {
 					userPreferredDownloadFolder = [NSString stringWithUTF8String:path];
 				}
+
+				free(folder);
 			}
 			
 			if (!userPreferredDownloadFolder) {
