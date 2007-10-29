@@ -134,6 +134,15 @@
 	return YES;
 }
 
+/*!
+ * @brief Should we add a musical note when indicating a now playing status?
+ * The note doesn't come out properly on Gadu-Gadu, presumably due to encoding issues.
+ */
+- (BOOL)shouldAddMusicalNoteToNowPlayingStatus
+{
+	return NO;
+}
+
 #pragma mark Contact status
 
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
