@@ -351,12 +351,6 @@
 
 // AIImageViewWithImagePicker Delegate ---------------------------------------------------------------------
 #pragma mark AIImageViewWithImagePicker Delegate
-- (void)imageViewWithImagePicker:(AIImageViewWithImagePicker *)sender didChangeToImageData:(NSData *)imageData
-{
-	[userIconData release];
-	userIconData = [imageData retain];
-}
-
 - (void)deleteInImageViewWithImagePicker:(AIImageViewWithImagePicker *)sender
 {
 	[userIconData release]; userIconData = nil;
@@ -367,6 +361,17 @@
 	
 	//We're now using the global icon
 	[matrix_userIcon selectCellWithTag:0];
+}
+
+- (void)imageViewWithImagePicker:(AIImageViewWithImagePicker *)sender didChangeToImageData:(NSData *)imageData
+{
+	[userIconData release];
+	userIconData = [imageData retain];
+	
+	if (!userIconData) {
+		//If we got a nil user icon, that means the icon was deleted
+		[self deleteInImageViewWithImagePicker:sender];
+	}
 }
 
 - (NSString *)fileNameForImageInImagePicker:(AIImageViewWithImagePicker *)picker
