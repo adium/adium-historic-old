@@ -431,7 +431,7 @@
 			case AIDesktopWindowLevel: level = kCGDesktopWindowLevel; break;
 		}
 		[window setLevel:level];
-		[window setIgnoresExpose:(windowLevel == AIDesktopWindowLevel)]; //Ignore expose while on the desktop
+		//[window setIgnoresExpose:(windowLevel == AIDesktopWindowLevel)]; //Ignore expose while on the desktop
 		[window setHidesOnDeactivate:[[prefDict objectForKey:KEY_WINDOW_HIDE] boolValue]];
     }
 }
@@ -1259,9 +1259,9 @@
 	[miniwindowImage release];
 }
 
-- (void)validateFlexibleToolbarItem:(AIFlexibleToolbarItem *)toolbarItem
+- (BOOL)window:(NSWindow *)sender shouldDragDocumentWithEvent:(NSEvent *)mouseEvent from:(NSPoint)startPoint withPasteboard:(NSPasteboard *)pasteboard
 {
-#warning this function does nothing because this is 2 less warnings than we'd get otherwise - what should this even do? -RAF
+	return NO;
 }
 
 @end

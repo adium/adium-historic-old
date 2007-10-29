@@ -32,7 +32,7 @@ typedef enum
 @class AIMessageSendingTextView, AIMessageTabViewItem, AIMessageViewController, AIDualWindowInterfacePlugin, AIMessageTabSplitView;
 @class PSMTabBarControl, PSMAdiumTabStyle;
 
-@interface AIMessageWindowController : AIWindowController<AIFlexibleToolbarItemDelegate> {
+@interface AIMessageWindowController : AIWindowController {
     IBOutlet	NSTabView			*tabView_messages;
     IBOutlet	PSMTabBarControl	*tabView_tabBar;
 	PSMAdiumTabStyle				*tabView_tabStyle;
