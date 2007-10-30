@@ -703,12 +703,7 @@
 					}					
 				}
 			}
-			
-			//Failing that, find the Downloads folder
-#if MAC_OS_X_VERSION_10_5 > MAC_OS_X_VERSION_MAX_ALLOWED
-	//Only present in the enum if we're using the 10.5 or greater headers
-	#define NSDownloadsDirectory 15
-#endif
+
 			NSArray *searchPaths = NSSearchPathForDirectoriesInDomains(NSDownloadsDirectory, NSUserDomainMask, YES);
 			if ([searchPaths count]) {
 				userPreferredDownloadFolder = [searchPaths objectAtIndex:0];
