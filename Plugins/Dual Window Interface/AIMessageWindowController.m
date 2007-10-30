@@ -492,6 +492,8 @@
 		[tabView_messages insertTabViewItem:inTabViewItem atIndex:index];
 	}
 	
+	if (![tabView_messages selectedTabViewItem]) [tabView_messages selectNextTabViewItem:nil];
+	
 	if (!silent) [[adium interfaceController] chatDidOpen:[inTabViewItem chat]];
 }
 
@@ -622,8 +624,9 @@
 		}
 		hasShownDocumentButton = YES;
 	}
-	
+
 	button = [window standardWindowButton:NSWindowDocumentIconButton];
+		  
 	if ([tabView_tabBar isTabBarHidden]) {
 		NSImage *image = [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] stateIcon];
 		if (image != [button image]) {
