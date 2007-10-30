@@ -140,6 +140,7 @@
 		344870EE06D1E3DF00DA778C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 344870EC06D1E3DF00DA778C /* AudioToolbox.framework */; };
 		34BFE58207E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BFE58007E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34BFE58307E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BFE58107E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.m */; };
+		34CB9FF50CD7C04700A8ECD7 /* AITigerCompatibility.h in Headers */ = {isa = PBXBuildFile; fileRef = 34CB9FF40CD7C04700A8ECD7 /* AITigerCompatibility.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34D18392075FC2390075A380 /* AIRolloverButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D18390075FC2390075A380 /* AIRolloverButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34D18393075FC2390075A380 /* AIRolloverButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D18391075FC2390075A380 /* AIRolloverButton.m */; };
 		34D833AC07CBE355006466F2 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 34D833AB07CBE355006466F2 /* Localizable.strings */; };
@@ -405,6 +406,7 @@
 		34BFE58007E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIVariableHeightFlexibleColumnsOutlineView.h; path = Source/AIVariableHeightFlexibleColumnsOutlineView.h; sourceTree = "<group>"; };
 		34BFE58107E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIVariableHeightFlexibleColumnsOutlineView.m; path = Source/AIVariableHeightFlexibleColumnsOutlineView.m; sourceTree = "<group>"; };
 		34C2A4540821797100F3363F /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = Resources/da.lproj/Localizable.strings; sourceTree = "<group>"; };
+		34CB9FF40CD7C04700A8ECD7 /* AITigerCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AITigerCompatibility.h; path = Source/AITigerCompatibility.h; sourceTree = "<group>"; };
 		34D18390075FC2390075A380 /* AIRolloverButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIRolloverButton.h; path = Source/AIRolloverButton.h; sourceTree = "<group>"; };
 		34D18391075FC2390075A380 /* AIRolloverButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIRolloverButton.m; path = Source/AIRolloverButton.m; sourceTree = "<group>"; };
 		34D833A907CBE34B006466F2 /* en */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -627,6 +629,7 @@
 			children = (
 				34486BC906D1DF0400DA778C /* AIUtilities.h */,
 				4B5CBF7607BC1887007E4075 /* AIStringUtilities.h */,
+				34CB9FF40CD7C04700A8ECD7 /* AITigerCompatibility.h */,
 				076CAD720785B64600250504 /* Functions */,
 				4BD1EFBC06D2661200B3975E /* Fun New Classes */,
 				4BD1EFA506D264AC00B3975E /* Fun New Controls */,
@@ -1457,6 +1460,7 @@
 				631BE7CF0AD2C56700F3B896 /* AICalendarDateAdditions.h in Headers */,
 				8D1D4DE90BD62FDB0091C3CE /* AIDividedAlternatingRowOutlineView.h in Headers */,
 				34E1D8060CD5C4FA0071836E /* IKPictureTakerForTiger.h in Headers */,
+				34CB9FF50CD7C04700A8ECD7 /* AITigerCompatibility.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
