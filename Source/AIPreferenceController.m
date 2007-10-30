@@ -31,7 +31,6 @@
 #import "AIPreferencePane.h"
 #import "AIAdvancedPreferencePane.h"
 
-#include <AvailabilityMacros.h>
 #import <AIUtilities/AITigerCompatibility.h>
 
 #define PREFS_DEFAULT_PREFS 	@"PrefsPrefs.plist"
