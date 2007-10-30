@@ -32,6 +32,7 @@
 #import "AIAdvancedPreferencePane.h"
 
 #include <AvailabilityMacros.h>
+#import <AIUtilities/AITigerCompatibility.h>
 
 #define PREFS_DEFAULT_PREFS 	@"PrefsPrefs.plist"
 #define TITLE_OPEN_PREFERENCES	AILocalizedString(@"Open Preferences",nil)
