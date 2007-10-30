@@ -30,6 +30,8 @@ typedef unsigned int NSUInteger;
 
 #		define NSINTEGER_DEFINED 1
 
+#		define NSDownloadsDirectory 15
+
 #	else
 
 #		if !defined(NS_REQUIRES_NIL_TERMINATION)
