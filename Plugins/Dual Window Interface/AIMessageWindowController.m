@@ -496,6 +496,8 @@
 #warning questionable
 	[self _reloadContainedChats]; //I'm not sure the right delegate method is getting called. This will make sure containedChats is up to date.
 	
+	if (![tabView_messages selectedTabViewItem]) [tabView_messages selectNextTabViewItem:nil];
+	
 	if (!silent) [[adium interfaceController] chatDidOpen:[inTabViewItem chat]];
 }
 
@@ -626,8 +628,9 @@
 		}
 		hasShownDocumentButton = YES;
 	}
-	
+
 	button = [window standardWindowButton:NSWindowDocumentIconButton];
+		  
 	if ([tabView_tabBar isTabBarHidden]) {
 		NSImage *image = [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] stateIcon];
 		if (image != [button image]) {
