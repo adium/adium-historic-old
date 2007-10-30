@@ -49,11 +49,6 @@ static	NDRunLoopMessenger  *bonjourThreadMessenger = nil;
 static	AWEzv               *_libezvThreadProxy = nil;
 static	NSAutoreleasePool   *currentAutoreleasePool = nil;
 
-typedef enum {
-	AIThreadPreparing = 0,
-	AIThreadReady
-};
-
 #define	AUTORELEASE_POOL_REFRESH	5.0
 
 @interface AWBonjourAccount (PRIVATE)
@@ -101,7 +96,7 @@ typedef enum {
 {
 	if (!_libezvThreadProxy) {
 		//Obtain the lock
-		threadPreparednessLock = [[NSConditionLock alloc] initWithCondition:AIThreadPreparing];
+		threadPreparednessLock = [[NSConditionLock alloc] init];
 
 		//Detach the thread, which will unlock threadPreparednessLock when it is ready
 		[NSThread detachNewThreadSelector:@selector(prepareBonjourThread)
@@ -109,7 +104,7 @@ typedef enum {
 		                       withObject:nil];
 
 		//Obtain the lock - this will spinlock until the thread is ready
-		[threadPreparednessLock lockWhenCondition:AIThreadReady];
+		[threadPreparednessLock lock];
 		[threadPreparednessLock unlock];
 		[threadPreparednessLock release]; threadPreparednessLock = nil;
 	}
@@ -748,7 +743,7 @@ typedef enum {
 	                                           object:[NSThread currentThread]];
 
 	//We're good to go; release that lock
-	[threadPreparednessLock unlockWithCondition:AIThreadReady];
+	[threadPreparednessLock unlock];
 	CFRunLoopRun();
 
 	[self clearBonjourThreadInfo];
