@@ -304,6 +304,8 @@
 		
 		//Configure the contact menu
 		accountMenu = [[AIAccountMenu accountMenuWithDelegate:self submenuType:AIAccountNoSubmenu showTitleVerbs:NO] retain];
+		[accountMenu setUseSystemFont:YES];
+		[accountMenu rebuildMenu];
 	}
 }
 
@@ -413,6 +415,7 @@
 	NSPopUpButton *popUp = [[NSPopUpButton alloc] initWithFrame:inFrame];
 
 	[popUp setAutoresizingMask:(NSViewWidthSizable)];
+	[popUp setFont:[NSFont systemFontOfSize:0.0f]];
 	
 	return [popUp autorelease];
 }

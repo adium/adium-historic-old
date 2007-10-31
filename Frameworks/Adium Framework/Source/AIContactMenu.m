@@ -10,6 +10,7 @@
 #import <Adium/AISortController.h>
 #import <Adium/AIContactMenu.h>
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIParagraphStyleAdditions.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
 
@@ -252,9 +253,10 @@
 
 		static NSDictionary *titleAttributes = nil;
 		if (!titleAttributes) {
-			//The default font size seems to be slightly smaller than the real font; seems to be an AppKit bug
-			titleAttributes = [[NSDictionary dictionaryWithObject:[NSFont menuFontOfSize:14.0f]
-														   forKey:NSFontAttributeName] retain];
+			titleAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
+				[NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
+				                       lineBreakMode:NSLineBreakByTruncatingTail], NSParagraphStyleAttributeName,
+				nil];
 		}
 		
 		if (shouldUseDisplayName) {
