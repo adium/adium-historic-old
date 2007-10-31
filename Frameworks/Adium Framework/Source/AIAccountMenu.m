@@ -355,6 +355,7 @@
 		NSAttributedString *plainTitle = [[NSAttributedString alloc] initWithString:[self _titleForAccount:account]
 																		 attributes:titleAttributes];
 
+		//Add an SSL icon if the account is encrypted.
 		if ([account encrypted]) {
 			NSBundle *securityInterfaceFramework = [NSBundle bundleWithIdentifier:@"com.apple.securityinterface"];
 			if (!securityInterfaceFramework) securityInterfaceFramework = [NSBundle bundleWithPath:@"/System/Library/Frameworks/SecurityInterface.framework"];
