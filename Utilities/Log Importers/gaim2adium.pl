@@ -18,7 +18,7 @@ my %Protocols = (		#Map gaim protocol IDs to Adium ones
 				"icq"	=>	"ICQ",
 				"yahoo"	=>	"Yahoo!",
 				"msn"	=>	"MSN",
-				"jabber"=>      "Jabber",  # both jabber and gtalk
+				"jabber"=>	"Jabber",  # both jabber and gtalk
 				#Add the rest here, or tell me what they are, someone who uses other protocols
 				);
 
