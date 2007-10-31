@@ -139,6 +139,15 @@
 	return [self menuItemWithRepresentedObject:account];
 }
 
+//Accessors ------------------------------------------------------------------------------------------------------------
+#pragma mark Accessors
+
+- (BOOL) useSystemFont {
+	return useSystemFont;
+}
+- (void) setUseSystemFont:(BOOL)flag {
+	useSystemFont = flag;
+}
 
 //Delegate -------------------------------------------------------------------------------------------------------------
 #pragma mark Delegate
@@ -336,30 +345,12 @@
 
 		[menuItem setImage:[self imageForListObject:account usingUserIcon:NO]];
 
-		NSDictionary *titleAttributes;
-		if (controlSize == NSSmallControlSize) {
-			static NSDictionary *smallTitleAttributes = nil;
-			if (!smallTitleAttributes) {
-				smallTitleAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
-										[NSFont menuFontOfSize:11.0f], NSFontAttributeName,
-										[NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
-															   lineBreakMode:NSLineBreakByTruncatingTail], NSParagraphStyleAttributeName,
-										nil];	
-			}
-			titleAttributes = smallTitleAttributes;
-	
-		} else {
-			static NSDictionary *largeTitleAttributes = nil;
-			if (!largeTitleAttributes) {
-				//The default font size seems to be slightly smaller than the real font; seems to be an AppKit bug
-				largeTitleAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
-										[NSFont menuFontOfSize:14.0f], NSFontAttributeName,
-										[NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
-															   lineBreakMode:NSLineBreakByTruncatingTail], NSParagraphStyleAttributeName,
-										nil];	
-			}
-			titleAttributes = largeTitleAttributes;
-		}
+		//The default font size for menu items in the main menu seems to be 1 pt larger than the font size produced by [NSFont menuFontOfSize:0.0f]Ñspecifically, as of Mac OS X 10.4.10, it is 14 pt. This seems to be an AppKit bug.
+		NSDictionary *titleAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
+			[NSFont menuFontOfSize:useSystemFont ? [NSFont systemFontSizeForControlSize:controlSize] : 14.0f], NSFontAttributeName,
+			[NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
+								   lineBreakMode:NSLineBreakByTruncatingTail], NSParagraphStyleAttributeName,
+			nil];	
 
 		NSAttributedString *plainTitle = [[NSAttributedString alloc] initWithString:[self _titleForAccount:account]
 																		 attributes:titleAttributes];
