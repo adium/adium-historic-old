@@ -415,6 +415,7 @@
 	NSPopUpButton *popUp = [[NSPopUpButton alloc] initWithFrame:inFrame];
 
 	[popUp setAutoresizingMask:(NSViewWidthSizable)];
+	//If we don't explicitly set the font of the pop-up button, menu items without a font of their own get displayed at 14 pt (as of Mac OS X 10.4.10), which is too big—the text gets clipped. If you uncomment this line, you can notice this problem in descenders (such as that of the letter 'g') in the recipient pop-up.
 	[popUp setFont:[NSFont systemFontOfSize:0.0f]];
 	
 	return [popUp autorelease];
