@@ -192,7 +192,7 @@
 											   object:nil];
 
 	if ([[NSApplication sharedApplication] isOnLeopardOrBetter] && [[preferenceController preferenceForKey:KEY_CL_ALL_SPACES
-																									group:PREF_GROUP_CONTACT_LIST] booleanValue])
+																									group:PREF_GROUP_CONTACT_LIST] boolValue])
 		[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
 	//Save our frame immediately for sliding purposes
 	[self setSavedFrame:[[self window] frame]];
