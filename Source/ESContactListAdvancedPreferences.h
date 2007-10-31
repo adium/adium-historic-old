@@ -19,6 +19,7 @@
 	IBOutlet	NSButton		*checkBox_showTooltips;
 	IBOutlet	NSButton		*checkBox_showTooltipsInBackground;
 	IBOutlet	NSButton		*checkBox_windowHasShadow;
+	IBOutlet	NSButton		*checkBox_showOnAllSpaces;
 
 	IBOutlet	NSTextField		*label_appearance;
 	IBOutlet	NSTextField		*label_tooltips;

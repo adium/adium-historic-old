@@ -39,6 +39,8 @@ typedef enum {
 #define KEY_DUAL_RESIZE_VERTICAL			@"Autoresize Vertical"
 #define KEY_DUAL_RESIZE_HORIZONTAL			@"Autoresize Horizontal"
 
+#define KEY_CL_ALL_SPACES					@"Show Contact List On All Spaces"
+
 @protocol AIContactListViewController, AIInterfaceContainer;
 
 @interface AIListWindowController : AIWindowController <AIInterfaceContainer, AIListControllerDelegate> {

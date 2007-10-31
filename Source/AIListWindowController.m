@@ -26,6 +26,7 @@
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AIFunctions.h>
 #import <AIUtilities/AIWindowControllerAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 #import <AIListBookmark.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
@@ -189,7 +190,10 @@
 											 selector:@selector(applicationDidUnhide:) 
 												 name:NSApplicationDidUnhideNotification 
 											   object:nil];
-	
+
+	if ([[NSApplication sharedApplication] isOnLeopardOrBetter] && [[preferenceController preferenceForKey:KEY_CL_ALL_SPACES
+																									group:PREF_GROUP_CONTACT_LIST] booleanValue])
+		[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
 	//Save our frame immediately for sliding purposes
 	[self setSavedFrame:[[self window] frame]];
 }
@@ -262,6 +266,13 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 		slideOnlyInBackground = [[prefDict objectForKey:KEY_CL_SLIDE_ONLY_IN_BACKGROUND] boolValue];
 		
 		[[self window] setHidesOnDeactivate:(windowHidingStyle == AIContactListWindowHidingStyleBackground)];
+		
+		if ([[NSApplication sharedApplication] isOnLeopardOrBetter]) {
+			if ([[prefDict objectForKey:KEY_CL_ALL_SPACES] boolValue])
+				[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
+			else
+				[[self window] setCollectionBehavior:NSWindowCollectionBehaviorDefault];
+		}
 
 		if (windowHidingStyle == AIContactListWindowHidingStyleSliding) {
 			if (!slideWindowIfNeededTimer) {
