@@ -73,6 +73,7 @@
 	[checkBox_showTooltipsInBackground setLocalizedString:WHILE_ADIUM_IS_IN_BACKGROUND];
 	[checkBox_windowHasShadow setLocalizedString:AILocalizedString(@"Show window shadow",nil)];
 	[checkBox_windowHasShadow setToolTip:@"Stay close to the Vorlon."];
+	[checkBox_showOnAllSpaces setLocalizedString:AILocalizedString(@"Show on all spaces", nil)];
 
 	[label_appearance setLocalizedString:AILocalizedString(@"Appearance",nil)];
 	[label_tooltips setLocalizedString:AILocalizedString(@"Tooltips",nil)];
