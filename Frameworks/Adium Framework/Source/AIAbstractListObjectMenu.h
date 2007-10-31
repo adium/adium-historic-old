@@ -1,5 +1,5 @@
 //
-//  AIListObjectMenu.h
+//  AIAbstractListObjectMenu.h
 //  Adium
 //
 //  Created by Adam Iser on 5/31/05.

@@ -3362,8 +3362,8 @@
 		4B191D880611C10800E8A4E7 /* License.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = License.txt; sourceTree = "<group>"; };
 		4B191D890611C10800E8A4E7 /* ReadMe.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = ReadMe.rtf; sourceTree = "<group>"; };
 		4B215DBD0598A71400305B3C /* crashDuck.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = crashDuck.icns; path = "Adium Crash Reporter/crashDuck.icns"; sourceTree = "<group>"; };
-		4B22E15C085CAE2E001864DE /* AIAbstractListObjectMenu.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAbstractListObjectMenu.h; path = Source/AIAbstractListObjectMenu.h; sourceTree = "<group>"; };
-		4B22E15D085CAE2F001864DE /* AIAbstractListObjectMenu.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAbstractListObjectMenu.m; path = Source/AIAbstractListObjectMenu.m; sourceTree = "<group>"; };
+		4B22E15C085CAE2E001864DE /* AIAbstractListObjectMenu.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAbstractListObjectMenu.h; path = "Frameworks/Adium Framework/Source/AIAbstractListObjectMenu.h"; sourceTree = "<group>"; };
+		4B22E15D085CAE2F001864DE /* AIAbstractListObjectMenu.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAbstractListObjectMenu.m; path = "Frameworks/Adium Framework/Source/AIAbstractListObjectMenu.m"; sourceTree = "<group>"; };
 		4B25494603F6A32700A8010A /* AIAccountSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountSelectionView.h; path = "Plugins/Dual Window Interface/AIAccountSelectionView.h"; sourceTree = "<group>"; };
 		4B25494703F6A32700A8010A /* AIAccountSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountSelectionView.m; path = "Plugins/Dual Window Interface/AIAccountSelectionView.m"; sourceTree = "<group>"; };
 		4B28DDAB0599FED200343093 /* AIAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountViewController.h; path = "Frameworks/Adium Framework/Source/AIAccountViewController.h"; sourceTree = "<group>"; };
@@ -7824,7 +7824,6 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
