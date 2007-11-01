@@ -23,7 +23,9 @@
 @interface CBStatusMenuItemController : AIObject <AIChatObserver>
 {
 	NSStatusItem            *statusItem;
-	NSMenu                  *theMenu;
+	NSMenu                  *mainMenu;
+	NSMenu					*mainAccountsMenu;
+	NSMenu					*mainContactsMenu;
 
 	AIContactMenu			*contactMenu;
 	AIAccountMenu           *accountMenu;
@@ -42,7 +44,10 @@
 	BOOL					currentlyIgnoringUnviewed;
 	BOOL					unviewedContent;
 	BOOL					showContactGroups;
-	BOOL                    needsUpdate;
+
+	BOOL                    accountsMenuNeedsUpdate;
+	BOOL					contactsMenuNeedsUpdate;
+	BOOL					mainMenuNeedsUpdate;
 }
 
 + (CBStatusMenuItemController *)statusMenuItemController;
