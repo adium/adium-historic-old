@@ -17,6 +17,8 @@
 #import "AIStringUtilities.h"
 #import "IKPictureTakerForTiger.h"
 
+#import "AITigerCompatibility.h"
+
 #define DRAGGING_THRESHOLD 16.0
 
 @interface AIImageViewWithImagePicker (PRIVATE)

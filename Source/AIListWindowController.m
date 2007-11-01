@@ -35,6 +35,8 @@
 #import <AIUtilities/AIDockingWindow.h>
 #import <AIUtilities/AIEventAdditions.h>
 
+#import <AIUtilities/AITigerCompatibility.h>
+
 #define PREF_GROUP_CONTACT_LIST					@"Contact List"
 
 #define SLIDE_ALLOWED_RECT_EDGE_MASK			(AIMinXEdgeMask | AIMaxXEdgeMask)

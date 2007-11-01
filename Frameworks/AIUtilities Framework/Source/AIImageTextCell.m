@@ -292,9 +292,9 @@
 	
 	//Draw the cell's text
 	if (title != nil) {
-		NSAttributedString	*attributedMainString, *attributedSubString;
+		NSAttributedString	*attributedMainString = nil, *attributedSubString = nil;
 		NSColor				*mainTextColor, *subStringTextColor;
-		NSDictionary		*mainAttributes, *subStringAttributes;
+		NSDictionary		*mainAttributes = nil, *subStringAttributes = nil;
 		float				mainStringHeight = 0.0, subStringHeight = 0.0, textSpacing = 0.0;
 
 		//Determine the correct text color
