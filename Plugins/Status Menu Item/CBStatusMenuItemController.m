@@ -147,7 +147,7 @@
 		
 		//Contact menu
 		contactMenu = [[AIContactMenu contactMenuWithDelegate:self
-										  forContactsInObject:[[adium contactController] contactList]] retain];
+										  forContactsInObject:nil] retain];
 	}
 	
 	return self;

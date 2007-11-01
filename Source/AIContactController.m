@@ -184,7 +184,19 @@
 
     [contactList release];
     [contactObservers release]; contactObservers = nil;
+	
+	[sortControllerArray release];
+	[delayedModifiedStatusKeys release];
+	[delayedModifiedAttributeKeys release];
 
+	[contactDict release];
+	[groupDict release];
+	[metaContactDict release];
+	[contactToMetaContactLookupDict release];
+	[detachedContactLists release];
+	
+	[adiumAuthorization release];
+	
     [super dealloc];
 }
 
@@ -1539,6 +1551,26 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (AIListGroup *)contactList
 {
     return contactList;
+}
+
+/*!
+ * @brief Return an array of all contact list groups, detached or not
+ */
+- (NSMutableArray *)allGroups
+{
+	NSEnumerator		*enumerator = [detachedContactLists objectEnumerator];
+	NSMutableArray		*groups = [NSMutableArray array];
+	AIListGroup			*detachedGroup;
+
+	// Main contact list
+	[groups addObjectsFromArray:[contactList containedObjects]];
+	
+	// Detached groups
+	while ((detachedGroup = [enumerator nextObject])) {
+		[groups addObjectsFromArray:[detachedGroup containedObjects]];
+	}
+	
+	return groups;
 }
 
 //Returns a flat array of all contacts (by calling through to -allContactsInObject:recurse:onAccount:)
