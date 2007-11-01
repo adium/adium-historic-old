@@ -571,13 +571,15 @@ static int toArraySort(id itemA, id itemB, void *context);
 		//If we are searching by content, we should re-search without clearing our current results so the
 		//the newly-indexed logs can be added without blanking the current table contents.
 		if (searchMode == LOG_SEARCH_CONTENT && (activeSearchString && [activeSearchString length])) {
-			//if (searching) {
+			if (searching) {
 				//We're already searching; reattempt when done
 				searchIDToReattemptWhenComplete = activeSearchID;
-			//} else {
-				//We're not searching - restart the search immediately
-			//	[self startSearchingClearingCurrentResults:NO];
-			//}
+			} else {
+				//We're not searching - restart the search immediately every 10 updates to utilize the newly indexed logs
+				indexingUpdatesReceivedWhileSearching++;
+				if ((indexingUpdatesReceivedWhileSearching % 10) == 0)
+					[self startSearchingClearingCurrentResults:NO];
+			}
 		}
 	}
 }
@@ -1078,6 +1080,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 	}
 
 	searching = YES;
+	indexingUpdatesReceivedWhileSearching = 0;
     searchDict = [NSDictionary dictionaryWithObjectsAndKeys:
 		[NSNumber numberWithInt:activeSearchID], @"ID",
 		[NSNumber numberWithInt:searchMode], @"Mode",
@@ -1385,8 +1388,8 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 		
 		//Refresh
 		searching = NO;
-		[self performSelectorOnMainThread:@selector(searchComplete) withObject:nil waitUntilDone:NO];
 		[plugin resumeIndexing];
+		[self performSelectorOnMainThread:@selector(searchComplete) withObject:nil waitUntilDone:NO];
 		AILog(@"filterLogsWithSearch (search ID %i): finished",searchID);
     }
 	
