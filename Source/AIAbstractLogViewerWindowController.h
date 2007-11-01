@@ -99,6 +99,7 @@ typedef enum {
     NSString			*activeSearchString;	//Current search string
 	BOOL				suppressSearchRequests;
 	BOOL				isOpeningForContact;
+	int					indexingUpdatesReceivedWhileSearching; //Number of times indexing has updated during the current search
 
     BOOL				sortDirection;			//Direction to sort
 
