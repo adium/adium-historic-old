@@ -29,8 +29,9 @@
 #import <Adium/AIMetaContact.h>
 #import "AIContactController.h"
 
-#define SHOW_OFFLINE_MENU_TITLE				AILocalizedString(@"Show Offline Contacts",nil)
-#define SHOW_IDLE_MENU_TITLE				AILocalizedString(@"Show Idle Contacts",nil)
+#define HIDE_CONTACTS_MENU_TITLE			AILocalizedString(@"Hide Certain Contacts",nil)
+#define HIDE_OFFLINE_MENU_TITLE				AILocalizedString(@"Hide Offline Contacts",nil)
+#define HIDE_IDLE_MENU_TITLE				AILocalizedString(@"Hide Idle Contacts",nil)
 #define	USE_OFFLINE_GROUP_MENU_TITLE		AILocalizedString(@"Show Offline Group",nil)
 
 #define OFFLINE_CONTACTS_IDENTIFER			@"OfflineContacts"
@@ -50,24 +51,35 @@
 	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:@"OfflineContactHidingDefaults" forClass:[self class]]
 										  forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 	
+	//"Hide Contacts" menu item
+	menuItem_hideContacts = [[NSMenuItem alloc] initWithTitle:HIDE_CONTACTS_MENU_TITLE
+													  target:self
+													  action:@selector(toggleHideContacts:)
+											   keyEquivalent:@"H"];
+	[[adium menuController] addMenuItem:menuItem_hideContacts toLocation:LOC_View_Toggles];		
+	
+	
 	//Show offline contacts menu item
-    menuItem_showOffline = [[NSMenuItem alloc] initWithTitle:SHOW_OFFLINE_MENU_TITLE
+    menuItem_hideOffline = [[NSMenuItem alloc] initWithTitle:HIDE_OFFLINE_MENU_TITLE
 													 target:self
 													 action:@selector(toggleOfflineContactsMenu:)
-											  keyEquivalent:@"H"];
-	[[adium menuController] addMenuItem:menuItem_showOffline toLocation:LOC_View_Toggles];		
+											  keyEquivalent:@""];
+	[menuItem_hideOffline setIndentationLevel:1];
+	[[adium menuController] addMenuItem:menuItem_hideOffline toLocation:LOC_View_Toggles];		
+	
+    menuItem_hideIdle = [[NSMenuItem alloc] initWithTitle:HIDE_IDLE_MENU_TITLE
+												   target:self
+												   action:@selector(toggleIdleContactsMenu:)
+											keyEquivalent:@""];
+	[menuItem_hideIdle setIndentationLevel:1];
+	[[adium menuController] addMenuItem:menuItem_hideIdle toLocation:LOC_View_Toggles];	
 
 	menuItem_useOfflineGroup = [[NSMenuItem alloc] initWithTitle:USE_OFFLINE_GROUP_MENU_TITLE
 														  target:self
 														  action:@selector(toggleUseOfflineGroup:)
 												   keyEquivalent:@""];
 	[[adium menuController] addMenuItem:menuItem_useOfflineGroup toLocation:LOC_View_Toggles];
-	
-    menuItem_showIdle = [[NSMenuItem alloc] initWithTitle:SHOW_IDLE_MENU_TITLE
-													  target:self
-													  action:@selector(toggleIdleContactsMenu:)
-											   keyEquivalent:@""];
-	[[adium menuController] addMenuItem:menuItem_showIdle toLocation:LOC_View_Toggles];	
+
 	
 	//Register preference observer first so values will be correct for the following calls
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
@@ -107,8 +119,8 @@
  */
 - (void)dealloc
 {
-	[menuItem_showOffline release]; menuItem_showOffline = nil;
-	[menuItem_showIdle release]; menuItem_showIdle = nil;
+	[menuItem_hideOffline release]; menuItem_hideOffline = nil;
+	[menuItem_hideIdle release]; menuItem_hideIdle = nil;
 	[menuItem_useOfflineGroup release]; menuItem_useOfflineGroup = nil;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
@@ -121,13 +133,9 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
+	hideContacts = [[prefDict objectForKey:KEY_HIDE_CONTACTS] boolValue];
 	showOfflineContacts = [[prefDict objectForKey:KEY_SHOW_OFFLINE_CONTACTS] boolValue];
-
-	// Only hide idle contacts when not showing offline contacts.
-	if (!showOfflineContacts)
-		showIdleContacts = [[prefDict objectForKey:KEY_SHOW_IDLE_CONTACTS] boolValue];
-	else
-		showIdleContacts = YES;
+	showIdleContacts = [[prefDict objectForKey:KEY_SHOW_IDLE_CONTACTS] boolValue];
 
 	useContactListGroups = ![[prefDict objectForKey:KEY_HIDE_CONTACT_LIST_GROUPS] boolValue];
 	useOfflineGroup = (useContactListGroups && [[prefDict objectForKey:KEY_USE_OFFLINE_GROUP] boolValue]);
@@ -145,10 +153,22 @@
 	}
 
 	//Update our menu to reflect the current preferences
-	[menuItem_showOffline setState:showOfflineContacts];
-	[menuItem_showIdle setState:showIdleContacts];
+	[menuItem_hideContacts setState:hideContacts];
+	[menuItem_hideOffline setState:!showOfflineContacts];
+	[menuItem_hideIdle setState:!showIdleContacts];
 	[menuItem_useOfflineGroup setState:useOfflineGroup];
 }
+
+/*!
+ * @brief Toggle contact hiding
+ */
+- (IBAction)toggleHideContacts:(id)sender
+{
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:!hideContacts]
+										 forKey:KEY_HIDE_CONTACTS
+										  group:PREF_GROUP_CONTACT_LIST_DISPLAY];
+}
+
 
 /*!
  * @brief Toggle the display of offline contacts
@@ -205,16 +225,16 @@
 		[inModifiedKeys containsObject:@"VisibleObjectCount"]) {
 
 		if ([inObject isKindOfClass:[AIListContact class]]) {
-			BOOL visible = NO;
-
-			// If user isn't idle or we're not hiding idle contacts
-			// and if we're showing offline contacts or this user is just signing off or new
-			if (!(!showIdleContacts && [inObject statusObjectForKey:@"IdleSince"]) &&
-				(showOfflineContacts || 
-				 [inObject online] ||
-				 [inObject integerStatusObjectForKey:@"Signed Off"] ||
-				 [inObject integerStatusObjectForKey:@"New Object"])) {
-				visible = YES;
+			BOOL visible = YES;
+			
+			// If we're hiding contacts, and these meet a criteria for hiding
+			if (hideContacts && (([inObject statusObjectForKey:@"IdleSince"] &&
+								  !showIdleContacts) ||
+								 (!showOfflineContacts &&
+								  ![inObject online] &&
+								  ![inObject integerStatusObjectForKey:@"Signed Off"] &&
+								  ![inObject integerStatusObjectForKey:@"New Object"]))) {
+				visible = NO;
 			}
 
 			if ([inObject conformsToProtocol:@protocol(AIContainingObject)]) {
@@ -251,9 +271,9 @@
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	if (menuItem == menuItem_useOfflineGroup) {
-		return (useContactListGroups && showOfflineContacts);
-	} else if (menuItem == menuItem_showIdle) {
-		return (!showOfflineContacts);
+		return useContactListGroups;
+	} else if (menuItem == menuItem_hideOffline || menuItem == menuItem_hideIdle) {
+		return hideContacts;
 	}
 	
 	return YES;
