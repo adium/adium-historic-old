@@ -12,7 +12,7 @@
 
 #	import <AvailabilityMacros.h>
 
-#	ifndef MAC_OS_X_VERSION_10_5
+#	if MAC_OS_X_VERSION_10_5 > MAC_OS_X_VERSION_MAX_ALLOWED
 
 #		define NS_REQUIRES_NIL_TERMINATION
 
