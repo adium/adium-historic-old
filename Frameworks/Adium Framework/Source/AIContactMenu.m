@@ -26,7 +26,7 @@
 /*!
  * @brief Create a new contact menu
  * @param inDelegate Delegate in charge of adding menu items
- * @param inContainingObject Containing contact whose contents will be displayed in the menu
+ * @param inContainingObject Containing contact whose contents will be displayed in the menu, nil for all contacts/groups
  */
 + (id)contactMenuWithDelegate:(id)inDelegate forContactsInObject:(AIListObject *)inContainingObject
 {
@@ -36,7 +36,7 @@
 /*!
  * @brief Init
  * @param inDelegate Delegate in charge of adding menu items
- * @param inContainingObject Containing contact whose contents will be displayed in the menu
+ * @param inContainingObject Containing contact whose contents will be displayed in the menu, nil for all contacts/groups
  */
 - (id)initWithDelegate:(id)inDelegate forContactsInObject:(AIListObject *)inContainingObject
 {
@@ -145,17 +145,28 @@
  */
 - (NSArray *)buildMenuItems
 {
-	NSArray *listObjects = ([containingObject conformsToProtocol:@protocol(AIContainingObject)] ?
-						   [(AIListObject<AIContainingObject> *)containingObject listContacts] :
-						   [NSArray arrayWithObject:containingObject]);
-
-	if (!shouldDisplayGroupHeaders) {
-		// If we're not showing groups, just recurse and gather up all the contacts.
-		listObjects = [self listObjectsForContainedObjects:listObjects];
-		// Sort the list objects since we're potentially combining multiple groups
-		listObjects = [[[adium contactController] activeSortController] sortListObjects:listObjects];
-	}
+	NSArray *listObjects = nil;
 	
+	// If we're not given a containing object, use all the groups/contacts.
+	if (containingObject == nil) {
+		listObjects = [[adium contactController] allGroups];
+
+		/* The contact controller's -allContacts gives us an array with meta contacts expanded
+		 * Let's put together our own list if we need to. This also gives our delegate an opportunity
+		 * to decide if the contact should be included.
+		 */
+		if (!shouldDisplayGroupHeaders) {
+			listObjects = [self listObjectsForContainedObjects:listObjects];
+		}
+
+		// Sort what we're given
+		listObjects = [[[adium contactController] activeSortController] sortListObjects:listObjects];
+	} else {
+		// We can assume these are already sorted
+		listObjects = ([containingObject conformsToProtocol:@protocol(AIContainingObject)] ?
+					   [(AIListObject<AIContainingObject> *)containingObject listContacts] :
+					   [NSArray arrayWithObject:containingObject]);
+	}
 	
 	// Create menus for them
 	return [self contactMenusForListObjects:listObjects];
