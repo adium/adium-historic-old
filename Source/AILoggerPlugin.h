@@ -59,7 +59,7 @@
 	 Locked by the plugin while the index is being modified.
 	 Locked by the logViewerWindowController when content searching is running.
 	 */
-	NSLock				*logAccessLock;
+	NSConditionLock		*logAccessLock;
     
     //Array of dirty logs / Logs that need re-indexing.  (Locked access)
     NSMutableArray		*dirtyLogArray;
@@ -100,7 +100,6 @@
 - (void)pauseIndexing;
 - (void)resumeIndexing;
 
-- (NSLock *)logAccessLock;
 - (void)removePathsFromIndex:(NSSet *)paths;
 
 @end
