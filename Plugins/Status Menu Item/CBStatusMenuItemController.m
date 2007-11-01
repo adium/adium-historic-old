@@ -70,18 +70,29 @@
 		unviewedContent = NO;
 		[self updateMenuIconsBundle];
 		
-		//Create and install the menu
-		theMenu = [[NSMenu alloc] init];
-		[theMenu setAutoenablesItems:YES];
-		[statusItem setMenu:theMenu];
-		[theMenu setDelegate:self];
+		// Create our menus
+		mainMenu = [[NSMenu alloc] init];
+		[mainMenu setDelegate:self];
+
+		mainContactsMenu = [[NSMenu alloc] init];
+		[mainContactsMenu setDelegate:self];
+
+		mainAccountsMenu = [[NSMenu alloc] init];
+		[mainAccountsMenu setDelegate:self];
+
+		// Set the main menu as the status item's menu
+		[statusItem setMenu:mainMenu];
 		
-		//Setup for open chats and unviewed content catching
+		// Create the caches for our menu items
 		accountMenuItemsArray = [[NSMutableArray alloc] init];
 		stateMenuItemsArray = [[NSMutableArray alloc] init];
 		openChatsArray = [[NSMutableArray alloc] init];
 		contactMenuItemsArray = [[NSMutableArray alloc] init];
-		needsUpdate = YES;
+
+		// Flag all the menus as needing updates
+		mainMenuNeedsUpdate = YES;
+		contactsMenuNeedsUpdate = YES;
+		accountsMenuNeedsUpdate = YES;
 		
 		NSNotificationCenter *notificationCenter = [adium notificationCenter];
 		//Register to recieve chat opened and chat closed notifications
@@ -158,8 +169,10 @@
 	[openChatsArray release];
 	[contactMenuItemsArray release];
 	
-	// The main menu
-	[theMenu release];
+	// The menus
+	[mainMenu release];
+	[mainContactsMenu release];
+	[mainAccountsMenu release];
 	
 	// Release our various menus.
 	[accountMenu release];
@@ -228,7 +241,7 @@
 	if (unreadCount > 0) {
 		[statusItem setTitle:[NSString stringWithFormat:@"%i", unreadCount]];
 	} else {
-		[statusItem setTitle:@""];
+		[statusItem setTitle:nil];
 	}
 }
 
@@ -402,11 +415,16 @@
 //Account Menu --------------------------------------------------------
 #pragma mark Account Menu
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems {
+	// Going from or to 1 account requires a main menu update
+	if ([accountMenuItemsArray count] == 1 || [menuItems count] == 1)
+		mainMenuNeedsUpdate = YES;
+	
+	
 	[accountMenuItemsArray release];
 	accountMenuItemsArray = [menuItems retain];
 	
 	//We need to update next time we're clicked
-	needsUpdate = YES;
+	accountsMenuNeedsUpdate = YES;
 }
 
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount {
@@ -422,18 +440,22 @@
 	stateMenuItemsArray = [menuItemArray retain];
 	
 	//We need to update next time we're clicked
-	needsUpdate = YES;
+	mainMenuNeedsUpdate = YES;
 }
 
 //Contact Menu --------------------------------------------------------
 #pragma mark Contact Menu
 - (void)contactMenu:(AIContactMenu *)inContactMenu didRebuildMenuItems:(NSArray *)menuItems
 {
+	// Going from or to 0 contacts requires a main menu update
+	if ([contactMenuItemsArray count] == 0 || [menuItems count] == 0)
+		mainMenuNeedsUpdate = YES;
+
 	[contactMenuItemsArray release];
 	contactMenuItemsArray = [menuItems retain];
 	
 	// Update the next time we're clicked.
-	needsUpdate = YES;
+	contactsMenuNeedsUpdate = YES;
 }
 
 - (void)contactMenu:(AIContactMenu *)inContactMenu didSelectContact:(AIListContact *)inContact
@@ -517,47 +539,21 @@
 		[self updateUnreadCount];
 	}
 
-	needsUpdate = YES;	
+	mainMenuNeedsUpdate = YES;	
 }
 
 //Menu Delegates/Actions --------------------------------------------------------
 #pragma mark Menu Delegates/Actions
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
-	// If the option key is held down, just show the contact list.
-	if ([NSEvent optionKey]) {
-		NSEnumerator    *enumerator = [contactMenuItemsArray objectEnumerator];
-		NSMenuItem      *menuItem;
-
-		// Remove previous menu items.
-		[menu removeAllItems];
-		
-		[menu addItemWithTitle:[AILocalizedString(@"Contact List", nil) stringByAppendingEllipsis]
-								target:self
-								action:@selector(activateContactList:)
-						 keyEquivalent:@""];
-		
-		if ([contactMenuItemsArray count] > 0)
-			[menu addItem:[NSMenuItem separatorItem]];
-		
-		while ((menuItem = [enumerator nextObject])) {
-			[menu addItem:menuItem];
-			
-			//Validate the menu items as they are added since they weren't previously validated when the menu was clicked
-			if ([[menuItem target] respondsToSelector:@selector(validateMenuItem:)]) {
-				[[menuItem target] validateMenuItem:menuItem];
-			}
-		}
-		
-		needsUpdate = YES;
-	} else if (needsUpdate) { // Only update if something has changed.
+	// Main menu if not holding option key
+	if (![NSEvent optionKey] && (menu == mainMenu && mainMenuNeedsUpdate)) {
 		NSEnumerator    *enumerator;
 		NSMenuItem      *menuItem;
-		AIChat          *chat;
 		
 		//Clear out all the items, start from scratch
 		[menu removeAllItems];
-		
+
 		//Add the state menu items
 		enumerator = [stateMenuItemsArray objectEnumerator];
 		menuItem = nil;
@@ -574,83 +570,29 @@
 		
 		// If there's more than one account, show the accounts menu
 		if ([accountMenuItemsArray count] > 1) {
-			NSMenu *accountsMenu = [[[NSMenu alloc] init] autorelease];
-			NSMenuItem	*accountMenuItem;
-			
 			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Accounts",nil)
 																			 target:self
 																			action:nil
 																	  keyEquivalent:@""];
 			
-			[accountsMenu addItemWithTitle:[AILocalizedString(@"Account List", nil) stringByAppendingEllipsis]
-									target:self
-									action:@selector(activateAccountList:)
-							 keyEquivalent:@""];
-			
-			[accountsMenu addItem:[NSMenuItem separatorItem]];
-			
-			//Add the account menu items
-			enumerator = [accountMenuItemsArray objectEnumerator];
-			while ((accountMenuItem = [enumerator nextObject])) {
-				NSMenu	*submenu;
-				
-				[accountsMenu addItem:accountMenuItem];
-				
-				//Validate the menu items as they are added since they weren't previously validated when the menu was clicked
-				if ([[accountMenuItem target] respondsToSelector:@selector(validateMenuItem:)]) {
-					[[accountMenuItem target] validateMenuItem:accountMenuItem];
-				}
-				
-				submenu = [accountMenuItem submenu];
-				if (submenu) {
-					NSEnumerator	*submenuEnumerator = [[submenu itemArray] objectEnumerator];
-					NSMenuItem		*submenuItem;
-					while ((submenuItem = [submenuEnumerator nextObject])) {
-						//Validate the submenu items as they are added since they weren't previously validated when the menu was clicked
-						if ([[submenuItem target] respondsToSelector:@selector(validateMenuItem:)]) {
-							[[submenuItem target] validateMenuItem:submenuItem];
-						}
-					}
-				}
-			}
-			
-			[menuItem setSubmenu:accountsMenu];
+			[menuItem setSubmenu:mainAccountsMenu];
 			[menu addItem:menuItem];
 			[menuItem release];
 		}
 		
 		// Show the contacts menu if we have any contacts to display
 		if ([contactMenuItemsArray count] > 0) {
-			NSMenu			*contactsMenu = [[[NSMenu alloc] init] autorelease];
-			NSEnumerator	*enumerator = [contactMenuItemsArray objectEnumerator];
-			NSMenuItem		*contactMenuItem;
-			
 			// Add contacts
 			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Contacts",nil)
 																			 target:self
 																			action:nil
 																	  keyEquivalent:@""];
 
-			[contactsMenu addItemWithTitle:[AILocalizedString(@"Contact List", nil) stringByAppendingEllipsis]
-									target:self
-									action:@selector(activateContactList:)
-							 keyEquivalent:@""];
-			
-			[contactsMenu addItem:[NSMenuItem separatorItem]];
-			
-			while ((contactMenuItem = [enumerator nextObject])) {
-				[contactsMenu addItem:contactMenuItem];
-				
-				//Validate the menu items as they are added since they weren't previously validated when the menu was clicked
-				if ([[contactMenuItem target] respondsToSelector:@selector(validateMenuItem:)]) {
-					[[contactMenuItem target] validateMenuItem:contactMenuItem];
-				}
-			}
-			
-			[menuItem setSubmenu:contactsMenu];
+			[menuItem setSubmenu:mainContactsMenu];
 			[menu addItem:menuItem];
 			[menuItem release];
 		} else {
+			NSLog(@"Count of %d", [contactMenuItemsArray count]);
 			[menu addItemWithTitle:[AILocalizedString(@"Contact List", nil) stringByAppendingEllipsis]
 							target:self
 							action:@selector(activateContactList:)
@@ -659,8 +601,9 @@
 		
 		//If there exist any open chats, add them
 		if ([openChatsArray count] > 0) {
+			AIChat          *chat = nil;
+
 			enumerator = [openChatsArray objectEnumerator];
-			chat = nil;
 			
 			//Add a seperator
 			[menu addItem:[NSMenuItem separatorItem]];
@@ -694,7 +637,82 @@
 		}
 		
 		//Only update next time if we need to
-		needsUpdate = NO;
+		mainMenuNeedsUpdate = NO;
+	// Contacts menu - or, override the main menu with option held down
+	} else if ([NSEvent optionKey] || (menu == mainContactsMenu && contactsMenuNeedsUpdate)) {
+		NSEnumerator    *enumerator = [contactMenuItemsArray objectEnumerator];
+		NSMenuItem      *menuItem;
+		
+		// Remove previous menu items.
+		[menu removeAllItems];
+		
+		// If this is the contact menu being pushed into the main one, force an update next time
+		if ([NSEvent optionKey]) {
+			// Remove contact menu items from the old menu
+			[mainContactsMenu removeAllItems];
+			// Have both menus update next time
+			mainMenuNeedsUpdate = YES;
+			contactsMenuNeedsUpdate = YES;
+		} else {
+			contactsMenuNeedsUpdate = NO;
+		}
+		
+		[menu addItemWithTitle:[AILocalizedString(@"Contact List", nil) stringByAppendingEllipsis]
+						target:self
+						action:@selector(activateContactList:)
+				 keyEquivalent:@""];
+		
+		if ([contactMenuItemsArray count] > 0)
+			[menu addItem:[NSMenuItem separatorItem]];
+		
+		while ((menuItem = [enumerator nextObject])) {
+			[menu addItem:menuItem];
+			
+			//Validate the menu items as they are added since they weren't previously validated when the menu was clicked
+			if ([[menuItem target] respondsToSelector:@selector(validateMenuItem:)]) {
+				[[menuItem target] validateMenuItem:menuItem];
+			}
+		}
+	// Accounts menu
+	} else if (menu == mainAccountsMenu && accountsMenuNeedsUpdate) {
+		NSEnumerator    *enumerator = [accountMenuItemsArray objectEnumerator];
+		NSMenuItem      *menuItem;
+		
+		[menu removeAllItems];
+		
+		[menu addItemWithTitle:[AILocalizedString(@"Account List", nil) stringByAppendingEllipsis]
+									target:self
+									action:@selector(activateAccountList:)
+							 keyEquivalent:@""];
+		
+		[menu addItem:[NSMenuItem separatorItem]];
+		
+		//Add the account menu items
+		enumerator = [accountMenuItemsArray objectEnumerator];
+		while ((menuItem = [enumerator nextObject])) {
+			NSMenu	*submenu;
+			
+			[menu addItem:menuItem];
+			
+			//Validate the menu items as they are added since they weren't previously validated when the menu was clicked
+			if ([[menuItem target] respondsToSelector:@selector(validateMenuItem:)]) {
+				[[menuItem target] validateMenuItem:menuItem];
+			}
+			
+			submenu = [menuItem submenu];
+			if (submenu) {
+				NSEnumerator	*submenuEnumerator = [[submenu itemArray] objectEnumerator];
+				NSMenuItem		*submenuItem;
+				while ((submenuItem = [submenuEnumerator nextObject])) {
+					//Validate the submenu items as they are added since they weren't previously validated when the menu was clicked
+					if ([[submenuItem target] respondsToSelector:@selector(validateMenuItem:)]) {
+						[[submenuItem target] validateMenuItem:submenuItem];
+					}
+				}
+			}
+		}
+		
+		accountsMenuNeedsUpdate = NO;
 	}
 }
 
