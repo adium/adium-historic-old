@@ -32,6 +32,8 @@ typedef unsigned int NSUInteger;
 
 #		define NSDownloadsDirectory 15
 
+#		define NSCellHitContentArea 1 << 0
+
 #	else
 
 #		if !defined(NS_REQUIRES_NIL_TERMINATION)

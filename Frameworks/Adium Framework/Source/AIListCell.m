@@ -22,6 +22,8 @@
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIParagraphStyleAdditions.h>
 
+#import <AIUtilities/AITigerCompatibility.h>
+
 //#define	ORDERING_DEBUG
 
 @implementation AIListCell
@@ -106,6 +108,11 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	controlView = inControlView;
 }
 
+//Return that this cell is draggable
+- (NSUInteger)hitTestForEvent:(NSEvent *)event inRect:(NSRect)cellFrame ofView:(NSView *)controlView
+{
+	return NSCellHitContentArea;
+}
 
 //Display options ------------------------------------------------------------------------------------------------------
 #pragma mark Display options
