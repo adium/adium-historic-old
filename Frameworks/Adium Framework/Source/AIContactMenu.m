@@ -243,32 +243,13 @@
 	AIListObject	*listObject = [menuItem representedObject];
 	
 	if (listObject) {
-		NSAttributedString		*title = nil;
-		
 		[[menuItem menu] setMenuChangedMessagesEnabled:NO];
 
 		if ([listObject isKindOfClass:[AIListContact class]]) {
 			[menuItem setImage:[self imageForListObject:listObject usingUserIcon:shouldUseUserIcon]];
 		}
-
-		static NSDictionary *titleAttributes = nil;
-		if (!titleAttributes) {
-			titleAttributes = [[NSDictionary alloc] initWithObjectsAndKeys:
-				[NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
-				                       lineBreakMode:NSLineBreakByTruncatingTail], NSParagraphStyleAttributeName,
-				nil];
-		}
 		
-		if (shouldUseDisplayName) {
-			title = [[NSAttributedString alloc] initWithString:[listObject displayName]
-													attributes:titleAttributes];
-		} else {
-			title = [[NSAttributedString alloc] initWithString:[listObject formattedUID]
-													attributes:titleAttributes];			
-		}
-
-		[menuItem setAttributedTitle:title];
-		[title release];		
+		[menuItem setTitle:(shouldUseDisplayName ? [listObject displayName] : [listObject formattedUID])];
 
 		[[menuItem menu] setMenuChangedMessagesEnabled:YES];
 	}
