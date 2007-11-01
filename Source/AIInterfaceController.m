@@ -295,6 +295,7 @@
     if ([self contactListIsVisibleAndMain]) {
 		[self closeContactList:nil];
     } else {
+		[[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
 		[self showContactList:nil];
     } 
 }
