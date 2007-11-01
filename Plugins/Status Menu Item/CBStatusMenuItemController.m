@@ -592,7 +592,6 @@
 			[menu addItem:menuItem];
 			[menuItem release];
 		} else {
-			NSLog(@"Count of %d", [contactMenuItemsArray count]);
 			[menu addItemWithTitle:[AILocalizedString(@"Contact List", nil) stringByAppendingEllipsis]
 							target:self
 							action:@selector(activateContactList:)
