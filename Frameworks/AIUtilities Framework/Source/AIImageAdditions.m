@@ -467,7 +467,6 @@
 		   operation:NSCompositeSourceOver
 			fraction:fraction];
 	
-	[clipPath removeAllPoints];
 	[NSGraphicsContext restoreGraphicsState];
 	//Shift the origin if needed, and decrease the available destination rect width, by the passed size
 	//(which may exceed the actual image dimensions)
