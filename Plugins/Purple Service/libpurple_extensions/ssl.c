@@ -92,7 +92,7 @@ static PurplePluginInfo info =
 
 	SSL_PLUGIN_ID,                                    /**< id             */
 	N_("SSL"),                                        /**< name           */
-	"Adium",                                          /**< version        */
+	"1.0",                                          /**< version        */
 	                                                  /**  summary        */
 	N_("Provides a wrapper around SSL support libraries."),
 	                                                  /**  description    */

@@ -75,6 +75,7 @@
 		110763FA08676D05005987A5 /* BlockEditorWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 110763F908676D04005987A5 /* BlockEditorWindow.nib */; };
 		1134399B0C6E870B006C115D /* AIListSmartGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 113439990C6E870B006C115D /* AIListSmartGroup.m */; };
 		113439F30C6EB1EF006C115D /* AIListSmartGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 113439980C6E870B006C115D /* AIListSmartGroup.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		117289080CDD1BF4007F03B1 /* libssl.dylib in Resources */ = {isa = PBXBuildFile; fileRef = 117289070CDD1BF4007F03B1 /* libssl.dylib */; };
 		1172FBCB0CDAA8D400B8E233 /* libglib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC30CDAA8D400B8E233 /* libglib.framework */; };
 		1172FBCC0CDAA8D400B8E233 /* libgmodule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC40CDAA8D400B8E233 /* libgmodule.framework */; };
 		1172FBCD0CDAA8D400B8E233 /* libgobject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC50CDAA8D400B8E233 /* libgobject.framework */; };
@@ -1638,6 +1639,7 @@
 		110763F908676D04005987A5 /* BlockEditorWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = BlockEditorWindow.nib; path = Resources/BlockEditorWindow.nib; sourceTree = "<group>"; };
 		113439980C6E870B006C115D /* AIListSmartGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIListSmartGroup.h; path = "Frameworks/Adium Framework/Source/AIListSmartGroup.h"; sourceTree = "<group>"; };
 		113439990C6E870B006C115D /* AIListSmartGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIListSmartGroup.m; path = "Frameworks/Adium Framework/Source/AIListSmartGroup.m"; sourceTree = "<group>"; };
+		117289070CDD1BF4007F03B1 /* libssl.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o"; name = libssl.dylib; path = SDKs/MacOSX10.5.sdk/usr/lib/libssl.dylib; sourceTree = SYSTEM_DEVELOPER_DIR; };
 		1172FBC30CDAA8D400B8E233 /* libglib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libglib.framework; path = Frameworks/libglib.framework; sourceTree = "<group>"; };
 		1172FBC40CDAA8D400B8E233 /* libgmodule.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmodule.framework; path = Frameworks/libgmodule.framework; sourceTree = "<group>"; };
 		1172FBC50CDAA8D400B8E233 /* libgobject.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgobject.framework; path = Frameworks/libgobject.framework; sourceTree = "<group>"; };
@@ -4203,6 +4205,7 @@
 		29B97323FDCFA39411CA2CEA /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				117289070CDD1BF4007F03B1 /* libssl.dylib */,
 				312ED3D40C7E878300A6BDA9 /* SenTestingKit.framework */,
 				31E0CD800C5EEF5200271DB1 /* CoreAudio.framework */,
 				31918ED70C5E486C00717F0A /* QTKit.framework */,
@@ -8102,6 +8105,7 @@
 				343BB63B0C96DC1100506F9B /* MySpace-small.png in Resources */,
 				343BB63C0C96DC1100506F9B /* MySpace-large.png in Resources */,
 				34F5207E0CC6F821008D9135 /* PurpleQQAccountView.nib in Resources */,
+				117289080CDD1BF4007F03B1 /* libssl.dylib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
