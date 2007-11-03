@@ -79,6 +79,7 @@ enum {
 - (void)configureMenuItems;
 - (SKIndexRef)createLogIndex;
 - (void)closeLogIndex;
+- (void)cancelClosingLogIndex;
 - (void)resetLogIndex;
 - (NSString *)_logIndexPath;
 - (void)loadDirtyLogArray;
