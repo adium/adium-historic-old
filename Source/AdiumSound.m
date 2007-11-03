@@ -285,6 +285,8 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, void *refcon)
 {
 #pragma unused(property)
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
 	AdiumSound *self = (id)refcon;
 	NSCAssert1(self, @"AudioHardware property listener function %s called with nil refcon, which we expected to be the AdiumSound instance", __PRETTY_FUNCTION__);
 
@@ -307,6 +309,8 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 		//Resume playback, now on the new device.
 		[movie setRate:savedRate];
 	}
+
+	[pool release];
 	
 	return noErr;
 }
