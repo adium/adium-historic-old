@@ -42,7 +42,8 @@ static void AMPurpleJabberNode_received_data_cb(PurpleConnection *gc, xmlnode **
 		NSMutableArray *identities = [[NSMutableArray alloc] init];
 		NSMutableSet *features = [[NSMutableSet alloc] init];
 		
-		for(xmlnode *item = query->child; item; item = item->next) {
+		xmlnode *item;
+		for(item = query->child; item; item = item->next) {
 			if (item->type == XMLNODE_TYPE_TAG) {
 				if (!strcmp(item->name, "identity")) {
 					const char *category = xmlnode_get_attrib(item,"category");
@@ -108,7 +109,8 @@ static void AMPurpleJabberNode_received_data_cb(PurpleConnection *gc, xmlnode **
 		
 		// it's us, create the subnodes
 		NSMutableArray *items = [[NSMutableArray alloc] init];
-		for(xmlnode *item = query->child; item; item = item->next) {
+		xmlnode *item;
+		for(item = query->child; item; item = item->next) {
 			if (item->type == XMLNODE_TYPE_TAG) {
 				if (!strcmp(item->name, "item")) {
 					const char *jid = xmlnode_get_attrib(item,"jid");

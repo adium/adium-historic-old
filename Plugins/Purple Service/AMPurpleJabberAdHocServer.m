@@ -2,7 +2,7 @@
 #import "ESPurpleJabberAccount.h"
 #import "AMPurpleJabberFormGenerator.h"
 #import "AMPurpleJabberAdHocCommand.h"
-#include <Libpurple/jabber.h>
+#include <libpurple/jabber.h>
 
 @interface AMPurpleJabberAdHocServer (PRIVATE)
 - (BOOL)receivedCommand:(xmlnode*)command from:(NSString*)jid iqid:(NSString*)iqid;

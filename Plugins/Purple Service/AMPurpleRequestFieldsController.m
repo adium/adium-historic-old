@@ -227,7 +227,8 @@
 		NSXMLElement *popup = [NSXMLNode elementWithName:@"select"];
 		[popup addAttribute:[NSXMLNode attributeWithName:@"name" stringValue:[self key]]];
 		int i=0;
-		for(GList *label = labels; label; label = g_list_next(label), ++i) {
+		GList *label;
+		for(label = labels; label; label = g_list_next(label), ++i) {
 			const char *labelstr = label->data;
 			if(!labelstr)
 				continue;
@@ -244,7 +245,8 @@
 	} else {
 		int i=0;
 		NSMutableArray *radios = [NSMutableArray array];
-		for(GList *label = labels; label; label = g_list_next(label), ++i) {
+		GList *label;
+		for(label = labels; label; label = g_list_next(label), ++i) {
 			const char *labelstr = label->data;
 			if(!labelstr)
 				continue;
@@ -293,7 +295,8 @@
 	// show all items up to 10
 	[list addAttribute:[NSXMLNode attributeWithName:@"size" stringValue:[NSString stringWithFormat:@"%u",(len>10)?10:len]]];
 	
-	for(const GList *item = items; item; item = g_list_next(item)) {
+	const GList *item;
+	for(item = items; item; item = g_list_next(item)) {
 		const char *labelstr = item->data;
 		if(!labelstr)
 			continue;

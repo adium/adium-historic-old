@@ -15,7 +15,7 @@
  */
 
 #import "CBPurpleAccount.h"
-#import <cmds.h>
+#import <libpurple/cmds.h>
 #import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
@@ -2127,7 +2127,8 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 							AILog(@"Image %i is larger than %i!",[buddyIconData length],maxSize);
 							for (i = 0; prpl_formats[i]; i++) {
 								if ((strcmp(prpl_formats[i],"jpeg") == 0) || (strcmp(prpl_formats[i],"jpg") == 0)) {
-									for (float compressionFactor = 0.99; compressionFactor > 0.4; compressionFactor -= 0.01) {
+									float compressionFactor;
+									for (compressionFactor = 0.99; compressionFactor > 0.4; compressionFactor -= 0.01) {
 										buddyIconData = [image JPEGRepresentationWithCompressionFactor:compressionFactor];
 										
 										if (buddyIconData && ([buddyIconData length] <= maxSize)) {

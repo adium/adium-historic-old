@@ -7,6 +7,11 @@
 
 #import "adiumPurpleDnsRequest.h"
 
+#include <libpurple/internal.h>
+
+#include <sys/socket.h>
+#include <netdb.h>
+
 @interface AdiumPurpleDnsRequest : NSObject {
 	PurpleDnsQueryData *query_data;
 	PurpleDnsQueryResolvedCallback resolved_cb;

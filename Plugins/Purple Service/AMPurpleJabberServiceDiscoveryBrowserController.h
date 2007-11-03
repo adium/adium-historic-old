@@ -6,7 +6,7 @@
 //
 
 #import <Adium/AIWindowController.h>
-#include <Libpurple/libpurple.h>
+#include <libpurple/libpurple.h>
 
 @class AIAccount, AMPurpleJabberNode;
 

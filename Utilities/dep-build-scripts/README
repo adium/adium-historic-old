@@ -1,0 +1,9 @@
+The current build process is this:
+./dep_make.sh
+./purple_make.sh
+# this next step will die soon, it's here because of the churn on the procedure
+# for building libpurple
+./current_step.sh
+./universalize.sh
+
+which will leave you with frameworks in build/Frameworks

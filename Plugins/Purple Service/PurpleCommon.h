@@ -25,7 +25,7 @@
 //#define MEANWHILE_NOT_AVAILABLE
 
 //Purple includes
-#include <Libpurple/libpurple.h>
+#include <libpurple/libpurple.h>
 
 
 #define PURPLE_ORPHANS_GROUP_NAME				"__AdiumOrphansUE9FHUE7I"  //A group name no sane user would have

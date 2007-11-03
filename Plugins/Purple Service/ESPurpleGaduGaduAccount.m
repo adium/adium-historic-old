@@ -20,8 +20,8 @@
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
-#import <Libpurple/gg.h>
-#import <Libpurple/buddylist.h>
+#import <libpurple/gg.h>
+#import <libpurple/buddylist.h>
 
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>

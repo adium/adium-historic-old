@@ -6,7 +6,7 @@
 //
 
 #import <Cocoa/Cocoa.h>
-#include <Libpurple/libpurple.h>
+#include <libpurple/libpurple.h>
 
 @class AMPurpleJabberNode;
 

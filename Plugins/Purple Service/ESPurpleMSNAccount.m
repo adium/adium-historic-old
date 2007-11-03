@@ -16,7 +16,7 @@
 
 #import "ESPurpleMSNAccount.h"
 
-#import <Libpurple/state.h>
+#import <libpurple/state.h>
 
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
