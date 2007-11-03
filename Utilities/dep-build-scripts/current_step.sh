@@ -47,8 +47,6 @@ for patch in "$PATCHDIR/libpurple_openssl.diff" \
 done
 popd
 
-exit 1;
-
 for ARCH in ppc i386 ; do
     case $ARCH in
 		ppc) export HOST=powerpc-apple-darwin9
