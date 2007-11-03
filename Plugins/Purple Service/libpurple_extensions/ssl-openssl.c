@@ -343,7 +343,7 @@ static PurplePluginInfo info = {
 
 	SSL_OPENSSL_PLUGIN_ID,				/* id */
 	N_("OpenSSL"),					/* name */
-	"Adium",					/* version */
+	"1.0",					/* version */
 
 	N_("Provides SSL support through OpenSSL."),	/* description */
 	N_("Provides SSL support through OpenSSL."),
