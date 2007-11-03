@@ -418,12 +418,6 @@
 	return drawRect;
 }
 
-- (NSSize)sizeInPixels
-{
-	NSImageRep *rep = [self bestRepresentationForDevice:nil];
-	return (NSSize){ [rep pixelsWide], [rep pixelsHigh] };
-}
-
 //General purpose draw image rounded in a NSRect.
 - (NSRect)drawRoundedInRect:(NSRect)rect radius:(float)radius
 {
@@ -442,8 +436,7 @@
 	NSRect	drawRect;
 	
 	//We use our own size for drawing purposes no matter the passed size to avoid distorting the image via stretching
-	//We use the size in pixels in order to ignore the resolution of the image. Otherwise, the image may come out larger or smaller than the target size.
-	NSSize	ownSize = [self sizeInPixels];
+	NSSize	ownSize = [self size];
 	
 	//If we're passed a 0,0 size, use the image's size for the area taken up by the image 
 	//(which may exceed the actual image dimensions)
