@@ -373,11 +373,12 @@
 			//Put a space between the title and the SSL icon.
 			[[title mutableString] appendString:@" "];
 
-			NSMutableAttributedString *SSLIconText = [NSMutableAttributedString attributedStringWithAttachment:textAttachment];
+			NSMutableAttributedString *SSLIconText = [[NSAttributedString attributedStringWithAttachment:textAttachment] mutableCopy];
 			//Shift the image down a little bit; otherwise, it rides too high.
 			[SSLIconText addAttribute:NSBaselineOffsetAttributeName value:[NSNumber numberWithFloat:-3.0f] range:NSMakeRange(0, [SSLIconText length])];
 
 			[title appendAttributedString:SSLIconText];
+			[SSLIconText release];
 
 			[menuItem setAttributedTitle:title];
 			
