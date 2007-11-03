@@ -153,7 +153,8 @@
 - (unsigned int)comboBox:(NSComboBox *)aComboBox indexOfItemWithStringValue:(NSString *)string {
 	AIListGroup *list = [[adium contactController] contactList];
 	NSArray *groups = [list containedObjects];
-	for(unsigned i=0;i < [groups count];++i) {
+	unsigned i;
+	for(i=0;i < [groups count];++i) {
 		AIListGroup *group = [groups objectAtIndex:i];
 		if([[group formattedUID] isEqualToString:string])
 			return i;
@@ -164,7 +165,8 @@
 - (NSString *)comboBox:(NSComboBox *)aComboBox completedString:(NSString *)string {
 	AIListGroup *list = [[adium contactController] contactList];
 	NSArray *groups = [list containedObjects];
-	for(unsigned i=0;i < [groups count];++i) {
+	unsigned i;
+	for(i=0;i < [groups count];++i) {
 		AIListGroup *group = [groups objectAtIndex:i];
 		if([[group formattedUID] hasPrefix:string])
 			return [group formattedUID];

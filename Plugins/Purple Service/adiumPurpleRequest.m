@@ -33,7 +33,7 @@
  */
  
 //Jabber registration
-#include <Libpurple/jabber.h>
+#include <libpurple/jabber.h>
 
 /* resolved id for Meanwhile */
 struct resolved_id {

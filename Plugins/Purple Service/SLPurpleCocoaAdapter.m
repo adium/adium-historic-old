@@ -36,7 +36,7 @@
 
 #import <CoreFoundation/CFRunLoop.h>
 #import <CoreFoundation/CFSocket.h>
-#include <Libpurple/libpurple.h>
+#include <libpurple/libpurple.h>
 #include <glib.h>
 #include <stdlib.h>
 
@@ -48,8 +48,8 @@
 #import "adiumPurpleAccounts.h"
 
 //Purple slash command interface
-#include <Libpurple/cmds.h>
-#include <Libpurple/oscar-adium.h>
+#include <libpurple/cmds.h>
+#include <libpurple/oscar-adium.h>
 
 @interface SLPurpleCocoaAdapter (PRIVATE)
 - (void)initLibPurple;

@@ -11,7 +11,7 @@
 #import "AMPurpleJabberServiceDiscoveryBrowserController.h"
 
 #import <Adium/AIAccount.h>
-#include <Libpurple/jabber.h>
+#include <libpurple/jabber.h>
 
 #import "AIAdium.h"
 #import <AIUtilities/AIStringUtilities.h>

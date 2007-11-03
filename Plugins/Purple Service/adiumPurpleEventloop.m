@@ -17,6 +17,7 @@
 #import "adiumPurpleEventloop.h"
 #import <AIUtilities/AIApplicationAdditions.h>
 #include <poll.h>
+#include <sys/socket.h>
 
 //#define PURPLE_SOCKET_DEBUG
 

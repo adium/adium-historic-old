@@ -15,7 +15,7 @@
  */
 
 #import "CBPurpleAccount.h"
-#import <Libpurple/oscar.h>
+#import <libpurple/oscar.h>
 
 //From oscar.c
 #define OSCAR_STATUS_ID_INVISIBLE	"invisible"

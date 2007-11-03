@@ -27,8 +27,8 @@
 #import <Adium/ESFileTransfer.h>
 #import <Adium/ESTextAndButtonsWindowController.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
-#include <Libpurple/presence.h>
-#include <Libpurple/si.h>
+#include <libpurple/presence.h>
+#include <libpurple/si.h>
 #include <SystemConfiguration/SystemConfiguration.h>
 #import "AMXMLConsoleController.h"
 #import "AMPurpleJabberServiceDiscoveryBrowsing.h"

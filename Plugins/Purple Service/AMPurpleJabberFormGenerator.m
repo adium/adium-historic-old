@@ -252,7 +252,8 @@
 - (id)initWithXML:(xmlnode*)xml {
 	if((self = [super initWithXML:xml])) {
 		NSMutableArray *values = [NSMutableArray array];
-		for(xmlnode *valuenode = xml->child; valuenode; valuenode = valuenode->next) {
+		xmlnode *valuenode;
+		for(valuenode = xml->child; valuenode; valuenode = valuenode->next) {
 			if(valuenode->type == XMLNODE_TYPE_TAG && !strcmp(valuenode->name, "value")) {
 				const char *content = xmlnode_get_data(valuenode);
 				if(content)
@@ -341,7 +342,8 @@
 - (id)initWithXML:(xmlnode*)xml {
 	if((self = [super initWithXML:xml])) {
 		NSMutableArray *newvalues = [NSMutableArray array];
-		for(xmlnode *valuenode = xml->child; valuenode; valuenode = valuenode->next) {
+		xmlnode *valuenode;
+		for(valuenode = xml->child; valuenode; valuenode = valuenode->next) {
 			if(valuenode->type == XMLNODE_TYPE_TAG && !strcmp(valuenode->name, "value")) {
 				const char *content = xmlnode_get_data(valuenode);
 				if(content)
@@ -351,7 +353,8 @@
 		[self setStringValues:newvalues];
 
 		NSMutableArray *newoptions = [NSMutableArray array];
-		for(xmlnode *option = xml->child; option; option = option->next) {
+		xmlnode *option;
+		for(option = xml->child; option; option = option->next) {
 			if(option->type == XMLNODE_TYPE_TAG && !strcmp(option->name, "option")) {
 				const char *labelstr = xmlnode_get_attrib(option,"label");
 				xmlnode *valuenode = xmlnode_get_child(option,"value");
@@ -437,7 +440,8 @@
 		}
 		
 		NSMutableArray *newoptions = [NSMutableArray array];
-		for(xmlnode *option = xml->child; option; option = option->next) {
+		xmlnode *option;
+		for(option = xml->child; option; option = option->next) {
 			if(option->type == XMLNODE_TYPE_TAG && !strcmp(option->name, "option")) {
 				const char *labelstr = xmlnode_get_attrib(option,"label");
 				xmlnode *valuenode = xmlnode_get_child(option,"value");
@@ -514,7 +518,8 @@
 - (id)initWithXML:(xmlnode*)xml {
 	if((self = [super initWithXML:xml])) {
 		NSMutableArray *values = [NSMutableArray array];
-		for(xmlnode *valuenode = xml->child; valuenode; valuenode = valuenode->next) {
+		xmlnode *valuenode;
+		for(valuenode = xml->child; valuenode; valuenode = valuenode->next) {
 			if(valuenode->type == XMLNODE_TYPE_TAG && !strcmp(valuenode->name, "value")) {
 				const char *content = xmlnode_get_data(valuenode);
 				if(content)
@@ -697,7 +702,8 @@
 		
 		// get fields
 		fields = [[NSMutableArray alloc] init];
-		for(xmlnode *field = xml->child; field; field = field->next) {
+		xmlnode *field;
+		for(field = xml->child; field; field = field->next) {
 			if(field->type == XMLNODE_TYPE_TAG && !strcmp(field->name,"field")) {
 				AMPurpleJabberFormField *fieldobj = [AMPurpleJabberFormField fieldForXML:field];
 				if(fieldobj)

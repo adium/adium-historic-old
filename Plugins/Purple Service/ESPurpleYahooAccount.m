@@ -23,8 +23,8 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
 #import <Adium/ESFileTransfer.h>
-#import <Libpurple/yahoo.h>
-#import <Libpurple/yahoo_friend.h>
+#import <libpurple/yahoo.h>
+#import <libpurple/yahoo_friend.h>
 
 @implementation ESPurpleYahooAccount
 

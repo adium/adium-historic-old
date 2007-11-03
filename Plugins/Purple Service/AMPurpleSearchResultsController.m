@@ -23,7 +23,8 @@
 		// add the action buttons
 		float offset = [buttonview frame].size.width - 20.0f;
 		searchButtons = [[NSMutableDictionary alloc] init];
-		for(GList *but = results->buttons; but; but = g_list_next(but)) {
+		GList *but;
+		for(but = results->buttons; but; but = g_list_next(but)) {
 			PurpleNotifySearchButton *button = but->data;
 			NSString *title = nil;
 			switch(button->type) {
@@ -82,7 +83,8 @@
 		
 		// add the ones we need
 		unsigned index = 0;
-		for(GList *column = results->columns; column; column = g_list_next(column)) {
+		GList *column;
+		for(column = results->columns; column; column = g_list_next(column)) {
 			PurpleNotifySearchColumn *scol = column->data;
 			NSTableColumn *tcol = [[NSTableColumn alloc] initWithIdentifier:[NSNumber numberWithUnsignedInt:index++]];
 			
@@ -95,11 +97,13 @@
 		// convert the rows
 		searchResults = [[NSMutableArray alloc] init];
 		
-		for(GList *row = results->rows; row; row = g_list_next(row)) {
+		GList *row;
+		for(row = results->rows; row; row = g_list_next(row)) {
 			NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
 			unsigned col = 0;
 			[searchResults addObject:dict];
-			for(GList *cell = row->data; cell; cell = g_list_next(cell)) {
+			GList *cell;
+			for(cell = row->data; cell; cell = g_list_next(cell)) {
 				const char *text = cell->data;
 				if(text)
 					[dict setObject:[NSString stringWithUTF8String:text] forKey:[NSNumber numberWithUnsignedInt:col++]];
@@ -122,11 +126,13 @@
 }
 
 - (void)addResults:(PurpleNotifySearchResults*)results {
-	for(GList *row = results->rows; row; row = g_list_next(row)) {
+	GList *row;
+	for(row = results->rows; row; row = g_list_next(row)) {
 		NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
 		unsigned col = 0;
 		[searchResults addObject:dict];
-		for(GList *cell = row->data; cell; cell = g_list_next(cell)) {
+		GList *cell;
+		for(cell = row->data; cell; cell = g_list_next(cell)) {
 			const char *text = cell->data;
 			if(text)
 				[dict setObject:[NSString stringWithUTF8String:text] forKey:[NSNumber numberWithUnsignedInt:col++]];
