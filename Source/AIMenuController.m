@@ -338,7 +338,17 @@
 	[menuItem_format setTitle:AILocalizedString(@"Format","Title of the Format menu")];
 	[menuItem_window setTitle:AILocalizedString(@"Window","Title of the Window menu")];
 	[menuItem_help setTitle:AILocalizedString(@"Help","Title of the Help menu")];
-
+	
+	//Also set the title of their submenus (Leopard requires this)
+	[[menuItem_file submenu] setTitle:AILocalizedString(@"File","Title of the File menu")];
+	[[menuItem_edit submenu] setTitle:AILocalizedString(@"Edit","Title of the Edit menu")];
+	[[menuItem_view submenu] setTitle:AILocalizedString(@"View","Title of the View menu")];
+	[[menuItem_status submenu] setTitle:AILocalizedString(@"Status","Title of the Status menu")];
+	[[menuItem_contact submenu] setTitle:AILocalizedString(@"Contact","Title of the Contact menu")];
+	[[menuItem_format submenu] setTitle:AILocalizedString(@"Format","Title of the Format menu")];
+	[[menuItem_window submenu] setTitle:AILocalizedString(@"Window","Title of the Window menu")];
+	[[menuItem_help submenu] setTitle:AILocalizedString(@"Help","Title of the Help menu")];
+	
 	//Adium menu
 	[menuItem_aboutAdium setTitle:AILocalizedString(@"About Adium",nil)];
 	[menuItem_adiumXtras setTitle:AILocalizedString(@"Xtras Manager",nil)];
