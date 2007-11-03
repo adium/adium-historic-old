@@ -55,7 +55,7 @@
 /*!
  * @brief Cell corresponding to table column.
  *
- * Mostly useful for subclassing; by default, this is simple [tableColumn dataCell]
+ * Mostly useful for subclassing; by default, this is simply [tableColumn dataCell]
  * @return NSCell object corresponding to the given table column.
  */
 - (id)cellForTableColumn:(NSTableColumn *)tableColumn item:(id)item;
