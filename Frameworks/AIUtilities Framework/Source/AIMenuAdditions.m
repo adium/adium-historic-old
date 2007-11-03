@@ -17,7 +17,7 @@
 
 @implementation NSMenu (ItemCreationAdditions)
 
-- (id <NSMenuItem>)addItemWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode
+- (NSMenuItem *)addItemWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode
 {
     NSMenuItem	*theMenuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:aString action:aSelector keyEquivalent:charCode];
     [theMenuItem setTarget:target];
@@ -27,7 +27,7 @@
     return [theMenuItem autorelease];
 }
 
-- (id <NSMenuItem>)addItemWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode tag:(int)tag
+- (NSMenuItem *)addItemWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode tag:(int)tag
 {
     NSMenuItem	*theMenuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:aString action:aSelector keyEquivalent:charCode];
     [theMenuItem setTarget:target];
@@ -38,7 +38,7 @@
     return [theMenuItem autorelease];
 }
 
-- (id <NSMenuItem>)addItemWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode representedObject:(id)object
+- (NSMenuItem *)addItemWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode representedObject:(id)object
 {
     NSMenuItem	*theMenuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:aString action:aSelector keyEquivalent:charCode];
     [theMenuItem setTarget:target];
