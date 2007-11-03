@@ -4,8 +4,8 @@ GADU=libgadu-1.7.1
 SASL=cyrus-sasl-2.1.21
 INTLTOOL=intltool-0.36.2
 
-BASE_CFLAGS="-isysroot /Developer/SDKs/MacOSX10.5.sdk"
-BASE_LDFLAGS="-headerpad_max_install_names -Wl,-syslibroot,/Developer/SDKs/MacOSX10.5.sdk"
+BASE_CFLAGS="-mmacosx-version-min=10.4 -isysroot /Developer/SDKs/MacOSX10.4u.sdk"
+BASE_LDFLAGS="-mmacosx-version-min=10.4 -headerpad_max_install_names -Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk"
 
 NUMBER_OF_CORES=`sysctl -n hw.activecpu`
 
@@ -35,7 +35,7 @@ for ARCH in ppc i386 ; do
     ../../$MEANWHILE/configure --prefix=$TARGET_DIR --enable-static\
       --enable-shared --disable-doxygen --disable-mailme
     # We edit libtool before we run make. This is evil and makes me sad.
-    cat libtool | sed 's%archive_cmds="\\\$CC%archive_cmds="\\\$CC -Wl,-syslibroot,/Developer/SDKs/MacOSX10.5.sdk -arch '$ARCH'%' > libtool.tmp
+    cat libtool | sed 's%archive_cmds="\\\$CC%archive_cmds="\\\$CC -mmacosx-version-min=10.4 -Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk -arch '$ARCH'%' > libtool.tmp
     mv libtool.tmp libtool
     make -j $NUMBER_OF_CORES && make install
     cd ..
@@ -88,7 +88,7 @@ for ARCH in ppc i386 ; do
       --enable-shared --disable-macos-framework --host=$HOST
     # EVIL HACK ALERT: http://www.theronge.com/2006/04/15/how-to-compile-cyrus-sasl-as-universal/
     # We edit libtool before we run make. This is evil and makes me sad.
-    cat libtool | sed 's%archive_cmds="\\\$CC%archive_cmds="\\\$CC -Wl,-syslibroot,/Developer/SDKs/MacOSX10.5.sdk -arch '$ARCH'%' > libtool.tmp
+    cat libtool | sed 's%archive_cmds="\\\$CC%archive_cmds="\\\$CC -mmacosx-version-min=10.4 -Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk -arch '$ARCH'%' > libtool.tmp
     mv libtool.tmp libtool
     make -j $NUMBER_OF_CORES && make install
     cd ..
