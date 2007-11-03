@@ -6,8 +6,8 @@ PKGCONFIG=pkg-config-0.22
 GETTEXT=gettext-0.16.1
 GLIB=glib-2.14.1
 
-BASE_CFLAGS="-isysroot /Developer/SDKs/MacOSX10.5.sdk"
-BASE_LDFLAGS="-headerpad_max_install_names -Wl,-syslibroot,/Developer/SDKs/MacOSX10.5.sdk"
+BASE_CFLAGS="-mmacosx-version-min=10.4 -isysroot /Developer/SDKs/MacOSX10.4u.sdk"
+BASE_LDFLAGS="-mmacosx-version-min=10.4 -headerpad_max_install_names -Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk"
 
 NUMBER_OF_CORES=`sysctl -n hw.activecpu`
 

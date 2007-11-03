@@ -12,8 +12,8 @@ if [ "x$PIDGIN_SOURCE" == "x" ] ; then
 	exit 1
 fi
 
-BASE_CFLAGS="-isysroot /Developer/SDKs/MacOSX10.5.sdk"
-BASE_LDFLAGS="-headerpad_max_install_names -Wl,-syslibroot,/Developer/SDKs/MacOSX10.5.sdk"
+BASE_CFLAGS="-mmacosx-version-min=10.4 -isysroot /Developer/SDKs/MacOSX10.4u.sdk"
+BASE_LDFLAGS="-mmacosx-version-min=10.4 -headerpad_max_install_names -Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk"
 
 NUMBER_OF_CORES=`sysctl -n hw.activecpu`
 
@@ -86,8 +86,7 @@ for ARCH in ppc i386 ; do
                --enable-cyrus-sasl
     cd libpurple
     echo 'inspect sources (edit them?) and then make && make install'
-    bash
-    #make -j $NUMBER_OF_CORES && make install
+    make -j $NUMBER_OF_CORES && make install
     # HACK ALERT! We use the following internal-only headers:
     cp $PIDGIN_SOURCE/libpurple/protocols/oscar/oscar.h \
        $PIDGIN_SOURCE/libpurple/protocols/oscar/oscar-adium.h \
