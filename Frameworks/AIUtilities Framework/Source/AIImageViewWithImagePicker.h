@@ -6,7 +6,8 @@
 //  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
-@class NSImagePickerController, AIImageViewWithImagePicker;
+@class AIImageViewWithImagePicker;
+@class IKPictureTakerRecentPicture; //Private 10.5 class
 @class NSImage, NSString, NSResponder;
 
 /*!
@@ -75,7 +76,8 @@
 @interface AIImageViewWithImagePicker : NSImageView {
 	NSString				*title;
 	id						pictureTaker;
-	
+	id						activeRecentPicture;
+
 	BOOL					usePictureTaker;
 	BOOL					presentPictureTakerAsSheet;
 
@@ -94,7 +96,10 @@
 - (void)setTitle:(NSString *)inTitle;
 - (IBAction)showImagePicker:(id)sender;
 - (void)setUsePictureTaker:(BOOL)inUsePictureTaker;
+- (id)pictureTaker;
 - (void)setPresentPictureTakerAsSheet:(BOOL)inPresentPictureTakerAsSheet;
 - (void)setMaxSize:(NSSize)inMaxSize;
+
+- (void)setRecentPictureAsImageInput:(IKPictureTakerRecentPicture *)recentPicture;
 
 @end

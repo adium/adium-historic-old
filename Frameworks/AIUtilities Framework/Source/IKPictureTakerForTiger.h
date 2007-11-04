@@ -39,6 +39,7 @@
 - (NSImage*) outputImage;
 - (void)close;
 - (void)setTitle:(NSString *)title;
+
 /*
  * didEndSelector - (void)pictureTakerDidEnd:(IKPictureTakerForTiger *)pictureTaker returnCode:(NSInteger)returnCode contextInfo:(void *)contextInfo;
  */
