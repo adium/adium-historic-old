@@ -21,8 +21,12 @@
 #include <libpurple/plugin.h>
 #include <libpurple/sslconn.h>
 #include <libpurple/version.h>
+#include <libpurple/signals.h>
 
 #define SSL_CDSA_PLUGIN_ID "ssl-cdsa"
+
+//#define HAVE_CDSA
+//#warning Move this define to the xcode settinge BEFORE committing
 
 #ifdef HAVE_CDSA
 
@@ -36,6 +40,25 @@ typedef struct
 } PurpleSslCDSAData;
 
 #define PURPLE_SSL_CDSA_DATA(gsc) ((PurpleSslCDSAData *)gsc->private_data)
+
+/*
+ * query_cert_chain - callback for letting the user review the certificate before accepting it
+ *
+ * err: one of the following:
+ *  errSSLUnknownRootCert—The peer has a valid certificate chain, but the root of the chain is not a known anchor certificate.
+ *  errSSLNoRootCert—The peer's certificate chain was not verifiable to a root certificate.
+ *  errSSLCertExpired—The peer's certificate chain has one or more expired certificates.
+ *  errSSLXCertChainInvalid—The peer has an invalid certificate chain; for example, signature verification within the chain failed, or no certificates were found.
+ * hostname: The name of the host to be verified (for display purposes)
+ * certs: an array of values of type SecCertificateRef representing the peer certificate and the certificate chain used to validate it. The certificate at index 0 of the returned array is the peer certificate; the root certificate (or the closest certificate to it) is at the end of the returned array.
+ * accept_cert: the callback to be called when the user chooses to trust this certificate chain
+ * reject_cert: the callback to be called when the user does not trust this certificate chain
+ * userdata: opaque pointer which has to be passed to the callbacks
+ */
+typedef
+void (*query_cert_chain)(OSStatus err, const char *hostname, CFArrayRef certs, void (*accept_cert)(void *userdata), void (*reject_cert)(void *userdata), void *userdata);
+
+static query_cert_chain *certificate_ui_cb = NULL;
 
 /*
  * ssl_cdsa_init
@@ -52,6 +75,55 @@ ssl_cdsa_init(void)
 static void
 ssl_cdsa_uninit(void)
 {
+}
+
+struct query_cert_userdata {
+	CFArrayRef certs;
+	char *hostname;
+	PurpleSslConnection *gsc;
+	PurpleInputCondition cond;
+};
+
+static void
+ssl_cdsa_handshake_cb(gpointer data, gint source, PurpleInputCondition cond);
+
+static void query_cert_ok(void *userdata) {
+	OSStatus err;
+	struct query_cert_userdata *ud = (struct query_cert_userdata*)userdata;
+	PurpleSslCDSAData *cdsa_data = PURPLE_SSL_CDSA_DATA(ud->gsc);
+	
+	CFRelease(ud->certs);
+	free(ud->hostname);
+	
+	err = SSLSetEnableCertVerify(cdsa_data->ssl_ctx, false);
+    if (err != noErr) {
+		purple_debug_error("cdsa", "SSLSetEnableCertVerify failed\n");
+		
+		if (ud->gsc->error_cb != NULL)
+			ud->gsc->error_cb(ud->gsc, PURPLE_SSL_CERTIFICATE_INVALID,
+							  ud->gsc->connect_cb_data);
+		
+		purple_ssl_close(ud->gsc);
+	}
+    else
+		ssl_cdsa_handshake_cb(ud->gsc, ud->gsc->fd, ud->cond); // try again with cert checking off
+	
+	free(ud);
+}
+
+static void query_cert_cancel(void *userdata) {
+	struct query_cert_userdata *ud = (struct query_cert_userdata*)userdata;
+	
+	CFRelease(ud->certs);
+	free(ud->hostname);
+	
+	if (ud->gsc->error_cb != NULL)
+		ud->gsc->error_cb(ud->gsc, PURPLE_SSL_CERTIFICATE_INVALID,
+						  ud->gsc->connect_cb_data);
+	
+	purple_ssl_close(ud->gsc);
+	
+	free(ud);
 }
 
 /*
@@ -74,13 +146,27 @@ ssl_cdsa_handshake_cb(gpointer data, gint source, PurpleInputCondition cond)
     if(err != noErr) {
         if(err == errSSLWouldBlock)
             return;
-        fprintf(stderr,"cdsa: SSLHandshake failed with error %d\n",err);
-		purple_debug_error("cdsa", "SSLHandshake failed with error %d\n",err);
-		if (gsc->error_cb != NULL)
-			gsc->error_cb(gsc, PURPLE_SSL_HANDSHAKE_FAILED,
-                          gsc->connect_cb_data);
-        
-		purple_ssl_close(gsc);
+		if(certificate_ui_cb && (err == errSSLUnknownRootCert || err == errSSLNoRootCert || err == errSSLCertExpired || err == errSSLXCertChainInvalid)) {
+			struct query_cert_userdata *userdata = (struct query_cert_userdata*)malloc(sizeof(struct query_cert_userdata));
+			size_t hostnamelen = 0;
+			
+			SSLGetPeerDomainNameLength(cdsa_data->ssl_ctx, &hostnamelen);
+			userdata->hostname = (char*)malloc(hostnamelen+1);
+			SSLGetPeerDomainName(cdsa_data->ssl_ctx, userdata->hostname, &hostnamelen);
+			userdata->hostname[hostnamelen] = '\0'; // just make sure it's zero-terminated
+			
+			SSLCopyPeerCertificates(cdsa_data->ssl_ctx, &userdata->certs);
+			
+			(*certificate_ui_cb)(err, userdata->hostname, userdata->certs, query_cert_ok, query_cert_cancel, userdata);
+		} else {
+			fprintf(stderr,"cdsa: SSLHandshake failed with error %d\n",(int)err);
+			purple_debug_error("cdsa", "SSLHandshake failed with error %d\n",(int)err);
+			if (gsc->error_cb != NULL)
+				gsc->error_cb(gsc, PURPLE_SSL_HANDSHAKE_FAILED,
+							  gsc->connect_cb_data);
+			
+			purple_ssl_close(gsc);
+		}
 		return;
     }
 	    
@@ -151,7 +237,7 @@ static OSStatus SocketRead(
     }
     *dataLength = initLen - bytesToGo;
     if(rtn != noErr && rtn != errSSLWouldBlock)
-        fprintf(stderr,"SocketRead err = %d\n", rtn);
+        fprintf(stderr,"SocketRead err = %d\n", (int)rtn);
     
     return rtn;
 }
@@ -292,7 +378,7 @@ ssl_cdsa_connect(PurpleSslConnection *gsc)
      * Disable verifying the certificate chain.
      * WARNING: This should be changed when there's a flag for that.
      */
-    err = SSLSetEnableCertVerify(cdsa_data->ssl_ctx, false);
+    err = SSLSetEnableCertVerify(cdsa_data->ssl_ctx, certificate_ui_cb != NULL);
     if (err != noErr) {
 		purple_debug_error("cdsa", "SSLSetEnableCertVerify failed\n");
         /* error is not fatal */
@@ -364,8 +450,6 @@ ssl_cdsa_write(PurpleSslConnection *gsc, const void *data, size_t len)
 	PurpleSslCDSAData *cdsa_data = PURPLE_SSL_CDSA_DATA(gsc);
 	size_t s = 0;
     OSStatus err;
-	
-	fprintf(stderr,"%s",data);
 
 	if (cdsa_data != NULL) {
         err = SSLWrite(cdsa_data->ssl_ctx, data, len, &s);
@@ -381,6 +465,12 @@ ssl_cdsa_write(PurpleSslConnection *gsc, const void *data, size_t len)
     }
     
     return s;
+}
+
+static gboolean register_certificate_ui_cb(query_cert_chain *cb) {
+	certificate_ui_cb = cb;
+	
+	return true;
 }
 
 static PurpleSslOps ssl_ops = {
@@ -400,6 +490,13 @@ plugin_load(PurplePlugin *plugin)
 #ifdef HAVE_CDSA
 	if (!purple_ssl_get_ops())
 		purple_ssl_set_ops(&ssl_ops);
+	
+	purple_plugin_ipc_register(plugin,
+							   "register_certificate_ui_cb",
+							   PURPLE_CALLBACK(register_certificate_ui_cb),
+							   purple_marshal_BOOLEAN__POINTER,
+							   purple_value_new(PURPLE_TYPE_BOOLEAN),
+							   1, purple_value_new(PURPLE_TYPE_POINTER));
 
 	return (TRUE);
 #else
@@ -413,6 +510,8 @@ plugin_unload(PurplePlugin *plugin)
 #ifdef HAVE_CDSA
 	if (purple_ssl_get_ops() == &ssl_ops)
 		purple_ssl_set_ops(NULL);
+	
+	purple_plugin_ipc_unregister_all(plugin);
 #endif
 
 	return (TRUE);
