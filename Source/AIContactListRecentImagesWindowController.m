@@ -21,10 +21,8 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 
-#import "AIRecentImage.h"
-#import "NSIPRecentPicture.h"
-
-#define RECENT_PICTURE_CLASS NSClassFromString(@"NSIPRecentPicture")
+#import "NSIPRecentPicture.h" //10.4, private
+#import "IKRecentPicture.h" //10.5+, private
 
 #define FADE_INCREMENT	0.3
 #define FADE_TIME		.3
@@ -129,42 +127,20 @@
 - (NSArray *)recentPictures
 {
 	if ([NSApp isOnLeopardOrBetter]) {
-		NSMutableArray	*recentIcons = [NSMutableArray array];
-		NSString		*recentPicsDir = [[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"]
-										   stringByAppendingPathComponent:@"Images"]
-										  stringByAppendingPathComponent:@"iChat Recent Pictures"]; 
-		NSEnumerator	*enumerator = [[NSFileManager defaultManager] enumeratorAtPath:recentPicsDir];
-		NSString		*imageName;
-
-		while ((imageName = [enumerator nextObject])) {
-			NSString *path = [recentPicsDir stringByAppendingPathComponent:imageName];
-			NSImage *image;
-			if ((image = [[[NSImage alloc] initWithContentsOfFile:path] autorelease])) {
-				[image setFlipped:YES];
-				[recentIcons addObject:[AIRecentImage recentImageWithImage:image
-																	  path:path]];
-			}
-		}
-		return recentIcons;
+		return [(IKPictureTakerRecentPictureRepository *)[NSClassFromString(@"IKPictureTakerRecentPictureRepository") recentRepository] recentPictures];
 		
 	} else {
-		return [RECENT_PICTURE_CLASS recentPictures];
+		return [NSClassFromString(@"NSIPRecentPicture") recentPictures];
 	}
 }
 
 - (NSArray *)recentSmallIcons
 {
 	if ([NSApp isOnLeopardOrBetter]) {
-		NSMutableArray *recentSmallIcons = [NSMutableArray array];
-		NSEnumerator *enumerator = [[self recentPictures] objectEnumerator];
-		AIRecentImage *recentImage;
-		while ((recentImage = [enumerator nextObject])) { 
-			[recentSmallIcons addObject:[[recentImage image] imageByScalingToSize:NSMakeSize(24, 24)]];
-		}
-		
-		return recentSmallIcons;
+		return [[(IKPictureTakerRecentPictureRepository *)[NSClassFromString(@"IKPictureTakerRecentPictureRepository") recentRepository] recentPictures] valueForKey:@"smallIcon"];
+
 	} else {
-		return [RECENT_PICTURE_CLASS recentSmallIcons];
+		return [NSClassFromString(@"NSIPRecentPicture") recentSmallIcons];
 	}
 }
 
@@ -224,7 +200,8 @@
 	if (selectedIndex < [recentPictures count]) {
 		//Notify as if the image had been selected in the picker
 		[[picker delegate] imageViewWithImagePicker:picker
-							   didChangeToImageData:[NSData dataWithContentsOfFile:[[recentPictures objectAtIndex:selectedIndex] originalImagePath]]];
+							   didChangeToImageData:[[[recentPictures objectAtIndex:selectedIndex] editedImage] PNGRepresentation]];
+		[picker setRecentPictureAsImageInput:[recentPictures objectAtIndex:selectedIndex]];
 	}
 
 	[self fadeOutAndClose];
@@ -251,7 +228,12 @@
 
 - (void)clearRecentPictures:(id)sender
 {
-	[RECENT_PICTURE_CLASS removeAllButCurrent];
+	if ([NSApp isOnLeopardOrBetter]) {
+		[[NSClassFromString(@"IKPictureTakerRecentPictureRepository") recentRepository] clearRecents:nil];
+
+	} else {
+		[NSClassFromString(@"NSIPRecentPicture") removeAllButCurrent];
+	}
 	[imageGridView reloadData];
 }
 
