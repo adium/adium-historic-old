@@ -10612,15 +10612,7 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(FRAMEWORK_SEARCH_PATHS)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_4)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_5)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "Plugins/Purple\\ Service";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/Frameworks\"";
@@ -10634,11 +10626,8 @@
 					CRASH_REPORTER,
 				);
 				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
+					"$(SRCROOT)/Frameworks/libpurple.framework/Headers",
+					"$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0",
 					"$(SDK_ROOT)/usr/include/libxml2",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Purple\\ Service/Include/glib";
@@ -10670,15 +10659,7 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(FRAMEWORK_SEARCH_PATHS)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_4)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_5)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "Plugins/Purple\\ Service";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_5 = "$(SRCROOT)/Plugins/Purple\\ Service";
@@ -10692,7 +10673,7 @@
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Frameworks/libpurple.framework/Headers",
-					"$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0/",
+					"$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0",
 					"$(SDK_ROOT)/usr/include/libxml2",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_5 = "Plugins/Purple\\ Service/Libpurple.framework/Headers";
@@ -10720,15 +10701,7 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(FRAMEWORK_SEARCH_PATHS)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_3)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_4)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_5)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "Plugins/Purple\\ Service";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_3 = "\"$(SRCROOT)/Frameworks\"";
@@ -10743,11 +10716,8 @@
 					DEBUG_BUILD,
 				);
 				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
+					"$(SRCROOT)/Frameworks/libpurple.framework/Headers",
+					"$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0",
 					"$(SDK_ROOT)/usr/include/libxml2",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Purple\\ Service/Include/glib";
