@@ -30,9 +30,6 @@
 
 #include <wctype.h>
 
-//From LMX. Included under the BSD license. http://trac.adiumx.com/wiki/LMXParser
-static BOOL getSurrogatesForUnicodeScalarValue(const UTF32Char scalar, unichar *outHigh, unichar *outLow);
-
 @implementation NSString (AIStringAdditions)
 
 #ifndef BSD_LICENSE_ONLY
