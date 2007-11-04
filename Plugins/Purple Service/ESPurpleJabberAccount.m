@@ -37,6 +37,10 @@
 #import "AMPurpleJabberAdHocPing.h"
 #import <Adium/AIService.h>
 
+#ifdef HAVE_CDSA
+#import "AIPurpleCertificateViewer.h"
+#endif
+
 #define DEFAULT_JABBER_HOST @"@jabber.org"
 
 extern void jabber_roster_request(JabberStream *js);
@@ -749,6 +753,15 @@ extern void jabber_roster_request(JabberStream *js);
 	[discoveryBrowserController browse:sender];
 }
 
+#ifdef HAVE_CDSA
+- (IBAction)showServerCertificate:(id)sender {
+	CFArrayRef certificates = [[self purpleThread] copyServerCertificates:((JabberStream*)[self purpleAccount]->gc->proto_data)->gsc];
+	
+	[AIPurpleCertificateViewer displayCertificateChain:certificates];
+	CFRelease(certificates);
+}
+#endif
+
 - (NSArray *)accountActionMenuItems {
 	NSMutableArray *menu = [[NSMutableArray alloc] init];
 	
@@ -807,6 +820,17 @@ extern void jabber_roster_request(JabberStream *js);
     [discoveryBrowserMenuItem setTarget:self];
     [menu addObject:discoveryBrowserMenuItem];
     [discoveryBrowserMenuItem release];
+	
+#ifdef HAVE_CDSA
+	if([self encrypted]) {
+		NSMenuItem *showCertificateMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Show Server Certificate",nil)
+																		  action:@selector(showServerCertificate:) 
+																   keyEquivalent:@""];
+		[showCertificateMenuItem setTarget:self];
+		[menu addObject:showCertificateMenuItem];
+		[showCertificateMenuItem release];
+	}
+#endif
 	
     return [menu autorelease];
 }

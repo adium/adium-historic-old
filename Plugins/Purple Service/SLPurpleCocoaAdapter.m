@@ -1407,6 +1407,19 @@ static void purpleUnregisterCb(PurpleAccount *account, gboolean success, void *u
 	[super dealloc];
 }
 
+#ifdef HAVE_CDSA
+- (CFArrayRef)copyServerCertificates:(PurpleSslConnection*)gsc {
+	PurplePlugin *cdsa_plugin = purple_plugins_find_with_name("CDSA");
+	if(!cdsa_plugin)
+		return nil;
+	CFArrayRef result;
+	gboolean ok = NO;
+	purple_plugin_ipc_call(cdsa_plugin, "copy_certificate_chain", &ok, gsc, &result);
+	
+	return result;
+}
+#endif
+
 /*
  //This doesn't work for several reasons.  The biggest: libpurple expects strings to be translated immediately;
  //substitutions have already occurred, as of concatenations, because we see them.

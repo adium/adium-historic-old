@@ -93,6 +93,10 @@
 
 - (void)doAuthRequestCbValue:(NSValue *)inCallBackValue withUserDataValue:(NSValue *)inUserDataValue;
 - (BOOL)doCommand:(NSString *)originalMessage fromAccount:(id)sourceAccount inChat:(AIChat *)chat;
+
+#ifdef HAVE_CDSA
+- (CFArrayRef)copyServerCertificates:(PurpleSslConnection*)gsc;
+#endif
 @end
 
 //Lookup functions
