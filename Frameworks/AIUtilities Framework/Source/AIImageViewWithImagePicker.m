@@ -28,7 +28,7 @@
 @end
 
 @class IKPictureTakerRecentPicture;
-@interface IKPictureTaker (SecretsAdiumKnows)
+@interface NSObject (IKPictureTaker_SecretsAdiumKnows)
 - (void)setRecentPictureAsImageInput:(IKPictureTakerRecentPicture *)picture;
 @end
 
