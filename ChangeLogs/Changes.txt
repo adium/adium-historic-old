@@ -23,6 +23,7 @@ Version 1.1.4
  * Fixed searching logs while indexing is in progress (#8223)
  * Fixed a bug that resulted in some logs not being indexed
  * Localization updates
+ * Updated to Growl 1.1.2 (http://growl.info)
 
 Version 1.1.3 (9/30/2007)
  * Fixed a crash when canceling addition of a Bonjour account (#7523)
