@@ -1198,6 +1198,7 @@
 		7E824CE106387FAF00813072 /* SHAutoValidatingTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CD206387FAF00813072 /* SHAutoValidatingTextView.m */; };
 		7E824CE306387FAF00813072 /* SHLinkEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CD406387FAF00813072 /* SHLinkEditorWindowController.m */; };
 		7E824CEB06387FAF00813072 /* SHLinkManagementPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */; };
+		811033510CDE170B00EC6038 /* ssl-cdsa.c in Sources */ = {isa = PBXBuildFile; fileRef = 811033500CDE170B00EC6038 /* ssl-cdsa.c */; };
 		8163F99C0B318824002005EE /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
 		8173C5760C4C3DB800C9E64E /* downloadprogress.png in Resources */ = {isa = PBXBuildFile; fileRef = 8173C5750C4C3DB800C9E64E /* downloadprogress.png */; };
 		8181EEBE0C30673E00E802F7 /* AMPurpleSearchResultsWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 8181EEBD0C30673E00E802F7 /* AMPurpleSearchResultsWindow.nib */; };
@@ -3737,6 +3738,8 @@
 		7E824CD406387FAF00813072 /* SHLinkEditorWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHLinkEditorWindowController.m; sourceTree = "<group>"; };
 		7E824CDB06387FAF00813072 /* SHLinkManagementPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SHLinkManagementPlugin.h; sourceTree = "<group>"; };
 		7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHLinkManagementPlugin.m; sourceTree = "<group>"; };
+		811033500CDE170B00EC6038 /* ssl-cdsa.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "ssl-cdsa.c"; sourceTree = "<group>"; };
+		811033BA0CDE1DC300EC6038 /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o"; name = libcrypto.dylib; path = SDKs/MacOSX10.4u.sdk/usr/lib/libcrypto.dylib; sourceTree = SYSTEM_DEVELOPER_DIR; };
 		815D37460A765E83009338C2 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		8173C5750C4C3DB800C9E64E /* downloadprogress.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = downloadprogress.png; path = "Plugins/Purple Service/downloadprogress.png"; sourceTree = "<group>"; };
 		8181EEBD0C30673E00E802F7 /* AMPurpleSearchResultsWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AMPurpleSearchResultsWindow.nib; path = "Plugins/Purple Service/AMPurpleSearchResultsWindow.nib"; sourceTree = "<group>"; };
@@ -4144,6 +4147,7 @@
 			children = (
 				11EE1B490CDCFAF40097F246 /* oscar-adium.c */,
 				11EE1B4A0CDCFAF40097F246 /* oscar-adium.h */,
+				811033500CDE170B00EC6038 /* ssl-cdsa.c */,
 				11EE1B4B0CDCFAF40097F246 /* ssl-openssl.c */,
 				11EE1B4C0CDCFAF40097F246 /* ssl.c */,
 			);
@@ -4203,6 +4207,7 @@
 		29B97323FDCFA39411CA2CEA /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				811033BA0CDE1DC300EC6038 /* libcrypto.dylib */,
 				117289070CDD1BF4007F03B1 /* libssl.dylib */,
 				312ED3D40C7E878300A6BDA9 /* SenTestingKit.framework */,
 				31E0CD800C5EEF5200271DB1 /* CoreAudio.framework */,
@@ -8687,6 +8692,7 @@
 				11EE1B4D0CDCFAF40097F246 /* oscar-adium.c in Sources */,
 				11EE1B4F0CDCFAF40097F246 /* ssl-openssl.c in Sources */,
 				11EE1B500CDCFAF40097F246 /* ssl.c in Sources */,
+				811033510CDE170B00EC6038 /* ssl-cdsa.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10569,6 +10575,10 @@
 				FRAMEWORK_SEARCH_PATHS = "$(FRAMEWORK_SEARCH_PATHS)";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu89;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_OPENSSL,
+					DEBUG_BUILD,
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Frameworks/libpurple.framework/Headers",
 					"$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0",
@@ -10580,6 +10590,15 @@
 				HEADER_SEARCH_PATHS_QUOTED_4 = "Plugins/Purple\\ Service/Include/";
 				INFOPLIST_FILE = Plists/AdiumLibpurple.plist;
 				INSTALL_PATH = "@executable_path/../PlugIns/Purple.AdiumPlugin/Contents/Frameworks/";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/usr/lib\"";
+				OTHER_LDFLAGS = (
+					"-lssl",
+					"-lcrypto",
+				);
 				PRODUCT_NAME = AdiumLibpurple;
 				WARNING_CFLAGS = (
 					"-Wall",
@@ -10610,6 +10629,10 @@
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Plugins/Purple Service/Frameworks\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu89;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_OPENSSL,
+					CRASH_REPORTER,
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
@@ -10625,6 +10648,15 @@
 				HEADER_SEARCH_PATHS_QUOTED_5 = "Plugins/Purple\\ Service/Libpurple.framework/Headers";
 				INFOPLIST_FILE = Plists/AdiumLibpurple.plist;
 				INSTALL_PATH = "@executable_path/../PlugIns/Purple.AdiumPlugin/Contents/Frameworks/";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/usr/lib\"";
+				OTHER_LDFLAGS = (
+					"-lssl",
+					"-lcrypto",
+				);
 				PRODUCT_NAME = AdiumLibpurple;
 				WARNING_CFLAGS = (
 					"-Wall",
@@ -10653,6 +10685,11 @@
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Plugins/Purple Service/Frameworks\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu89;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_OPENSSL,
+					CRASH_REPORTER,
+					DEBUG_BUILD,
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Frameworks/libpurple.framework/Headers",
 					"$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0/",
@@ -10661,6 +10698,15 @@
 				HEADER_SEARCH_PATHS_QUOTED_5 = "Plugins/Purple\\ Service/Libpurple.framework/Headers";
 				INFOPLIST_FILE = Plists/AdiumLibpurple.plist;
 				INSTALL_PATH = "@executable_path/../PlugIns/Purple.AdiumPlugin/Contents/Frameworks/";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/usr/lib\"";
+				OTHER_LDFLAGS = (
+					"-lssl",
+					"-lcrypto",
+				);
 				PRODUCT_NAME = AdiumLibpurple;
 				WARNING_CFLAGS = (
 					"-Wall",
@@ -10691,6 +10737,11 @@
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Plugins/Purple Service/Frameworks\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu89;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_OPENSSL,
+					CRASH_REPORTER,
+					DEBUG_BUILD,
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
@@ -10706,6 +10757,15 @@
 				HEADER_SEARCH_PATHS_QUOTED_5 = "Plugins/Purple\\ Service/Libpurple.framework/Headers";
 				INFOPLIST_FILE = Plists/AdiumLibpurple.plist;
 				INSTALL_PATH = "@executable_path/../PlugIns/Purple.AdiumPlugin/Contents/Frameworks/";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/usr/lib\"";
+				OTHER_LDFLAGS = (
+					"-lssl",
+					"-lcrypto",
+				);
 				PRODUCT_NAME = AdiumLibpurple;
 				WARNING_CFLAGS = (
 					"-Wall",
