@@ -25,9 +25,6 @@
 
 #define SSL_CDSA_PLUGIN_ID "ssl-cdsa"
 
-//#define HAVE_CDSA
-//#warning Move this define to the xcode settinge BEFORE committing
-
 #ifdef HAVE_CDSA
 
 #include <Security/Security.h>
@@ -473,6 +470,11 @@ static gboolean register_certificate_ui_cb(query_cert_chain *cb) {
 	return true;
 }
 
+static gboolean copy_certificate_chain(PurpleSslConnection *gsc /* IN */, CFArrayRef *result /* OUT */) {
+	PurpleSslCDSAData *cdsa_data = PURPLE_SSL_CDSA_DATA(gsc);
+	return SSLCopyPeerCertificates(cdsa_data->ssl_ctx, result) == noErr;
+}
+
 static PurpleSslOps ssl_ops = {
 	ssl_cdsa_init,
 	ssl_cdsa_uninit,
@@ -498,6 +500,13 @@ plugin_load(PurplePlugin *plugin)
 							   purple_value_new(PURPLE_TYPE_BOOLEAN),
 							   1, purple_value_new(PURPLE_TYPE_POINTER));
 
+	purple_plugin_ipc_register(plugin,
+							   "copy_certificate_chain",
+							   PURPLE_CALLBACK(copy_certificate_chain),
+							   purple_marshal_BOOLEAN__POINTER_POINTER,
+							   purple_value_new(PURPLE_TYPE_BOOLEAN),
+							   2, purple_value_new(PURPLE_TYPE_POINTER), purple_value_new(PURPLE_TYPE_POINTER));
+	
 	return (TRUE);
 #else
 	return (FALSE);

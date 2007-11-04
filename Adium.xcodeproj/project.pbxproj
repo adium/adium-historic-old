@@ -1199,6 +1199,11 @@
 		7E824CE306387FAF00813072 /* SHLinkEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CD406387FAF00813072 /* SHLinkEditorWindowController.m */; };
 		7E824CEB06387FAF00813072 /* SHLinkManagementPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */; };
 		811033510CDE170B00EC6038 /* ssl-cdsa.c in Sources */ = {isa = PBXBuildFile; fileRef = 811033500CDE170B00EC6038 /* ssl-cdsa.c */; };
+		811034050CDE216F00EC6038 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 340C1ABE0BD58FAB00D09235 /* Security.framework */; };
+		811035180CDE783800EC6038 /* SecurityInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 811035170CDE783800EC6038 /* SecurityInterface.framework */; };
+		8110354A0CDE7EFA00EC6038 /* AICertificateViewer.nib in Resources */ = {isa = PBXBuildFile; fileRef = 811035490CDE7EFA00EC6038 /* AICertificateViewer.nib */; };
+		811036180CDE8A2500EC6038 /* AIPurpleCertificateViewer.h in Headers */ = {isa = PBXBuildFile; fileRef = 811036160CDE8A2500EC6038 /* AIPurpleCertificateViewer.h */; };
+		811036190CDE8A2500EC6038 /* AIPurpleCertificateViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = 811036170CDE8A2500EC6038 /* AIPurpleCertificateViewer.m */; };
 		8163F99C0B318824002005EE /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
 		8173C5760C4C3DB800C9E64E /* downloadprogress.png in Resources */ = {isa = PBXBuildFile; fileRef = 8173C5750C4C3DB800C9E64E /* downloadprogress.png */; };
 		8181EEBE0C30673E00E802F7 /* AMPurpleSearchResultsWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 8181EEBD0C30673E00E802F7 /* AMPurpleSearchResultsWindow.nib */; };
@@ -3740,6 +3745,10 @@
 		7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHLinkManagementPlugin.m; sourceTree = "<group>"; };
 		811033500CDE170B00EC6038 /* ssl-cdsa.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "ssl-cdsa.c"; sourceTree = "<group>"; };
 		811033BA0CDE1DC300EC6038 /* libcrypto.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o"; name = libcrypto.dylib; path = SDKs/MacOSX10.4u.sdk/usr/lib/libcrypto.dylib; sourceTree = SYSTEM_DEVELOPER_DIR; };
+		811035170CDE783800EC6038 /* SecurityInterface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SecurityInterface.framework; path = /System/Library/Frameworks/SecurityInterface.framework; sourceTree = "<absolute>"; };
+		811035490CDE7EFA00EC6038 /* AICertificateViewer.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AICertificateViewer.nib; path = "Plugins/Purple Service/AICertificateViewer.nib"; sourceTree = "<group>"; };
+		811036160CDE8A2500EC6038 /* AIPurpleCertificateViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIPurpleCertificateViewer.h; path = "Plugins/Purple Service/AIPurpleCertificateViewer.h"; sourceTree = "<group>"; };
+		811036170CDE8A2500EC6038 /* AIPurpleCertificateViewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIPurpleCertificateViewer.m; path = "Plugins/Purple Service/AIPurpleCertificateViewer.m"; sourceTree = "<group>"; };
 		815D37460A765E83009338C2 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		8173C5750C4C3DB800C9E64E /* downloadprogress.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = downloadprogress.png; path = "Plugins/Purple Service/downloadprogress.png"; sourceTree = "<group>"; };
 		8181EEBD0C30673E00E802F7 /* AMPurpleSearchResultsWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AMPurpleSearchResultsWindow.nib; path = "Plugins/Purple Service/AMPurpleSearchResultsWindow.nib"; sourceTree = "<group>"; };
@@ -3942,6 +3951,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				811034050CDE216F00EC6038 /* Security.framework in Frameworks */,
 				81E45D760C15BFF800B7381B /* SystemConfiguration.framework in Frameworks */,
 				3485D8EA09EB446900232CC4 /* Cocoa.framework in Frameworks */,
 				3485D8EB09EB446900232CC4 /* Adium.framework in Frameworks */,
@@ -3955,6 +3965,7 @@
 				1172FBD00CDAA8D400B8E233 /* libmeanwhile.framework in Frameworks */,
 				1172FBD10CDAA8D400B8E233 /* libpurple.framework in Frameworks */,
 				1172FBD20CDAA8D400B8E233 /* libsasl.framework in Frameworks */,
+				811035180CDE783800EC6038 /* SecurityInterface.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4229,6 +4240,7 @@
 				3448758D06D1EBDF00DA778C /* Cocoa.framework */,
 				349C2FEF0867AD65000BF883 /* Foundation.framework */,
 				340C1ABE0BD58FAB00D09235 /* Security.framework */,
+				811035170CDE783800EC6038 /* SecurityInterface.framework */,
 				34B588A0058D833A00E7EF0D /* ExceptionHandling.framework */,
 				34D836F307CBF960006466F2 /* QuickTime.framework */,
 				34E839050583207E00F2AADB /* SystemConfiguration.framework */,
@@ -5299,6 +5311,7 @@
 		34C7C62109EC4E480060FB4A /* AdiumLibpurple */ = {
 			isa = PBXGroup;
 			children = (
+				8110354B0CDE7EFF00EC6038 /* Certificate Viewer */,
 				34415880059F8F050019246B /* Services */,
 				34F59B760667A33900F01E8C /* Notify UI */,
 				34C2CF8F0633405C0018E5D2 /* Request UI */,
@@ -6740,6 +6753,16 @@
 			path = "Plugins/Link Management";
 			sourceTree = "<group>";
 		};
+		8110354B0CDE7EFF00EC6038 /* Certificate Viewer */ = {
+			isa = PBXGroup;
+			children = (
+				811035490CDE7EFA00EC6038 /* AICertificateViewer.nib */,
+				811036160CDE8A2500EC6038 /* AIPurpleCertificateViewer.h */,
+				811036170CDE8A2500EC6038 /* AIPurpleCertificateViewer.m */,
+			);
+			name = "Certificate Viewer";
+			sourceTree = "<group>";
+		};
 		83B920F809E70778008D8436 /* Hot Key */ = {
 			isa = PBXGroup;
 			children = (
@@ -7470,6 +7493,7 @@
 				343BB5BD0C96D55400506F9B /* PurpleMySpaceAccount.h in Headers */,
 				343BB5C10C96D56B00506F9B /* PurpleMySpaceAccountViewController.h in Headers */,
 				11EE1B4E0CDCFAF40097F246 /* oscar-adium.h in Headers */,
+				811036180CDE8A2500EC6038 /* AIPurpleCertificateViewer.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8108,6 +8132,7 @@
 				343BB63C0C96DC1100506F9B /* MySpace-large.png in Resources */,
 				34F5207E0CC6F821008D9135 /* PurpleQQAccountView.nib in Resources */,
 				117289080CDD1BF4007F03B1 /* libssl.dylib in Resources */,
+				8110354A0CDE7EFA00EC6038 /* AICertificateViewer.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8693,6 +8718,7 @@
 				11EE1B4F0CDCFAF40097F246 /* ssl-openssl.c in Sources */,
 				11EE1B500CDCFAF40097F246 /* ssl.c in Sources */,
 				811033510CDE170B00EC6038 /* ssl-cdsa.c in Sources */,
+				811036190CDE8A2500EC6038 /* AIPurpleCertificateViewer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10576,6 +10602,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu89;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CDSA,
 					HAVE_OPENSSL,
 					DEBUG_BUILD,
 				);
@@ -10624,6 +10651,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					HAVE_OPENSSL,
 					CRASH_REPORTER,
+					HAVE_CDSA,
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(SRCROOT)/Frameworks/libpurple.framework/Headers",
@@ -10667,6 +10695,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu89;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CDSA,
 					HAVE_OPENSSL,
 					CRASH_REPORTER,
 					DEBUG_BUILD,
@@ -10711,6 +10740,7 @@
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu89;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					HAVE_CDSA,
 					HAVE_OPENSSL,
 					CRASH_REPORTER,
 					DEBUG_BUILD,
