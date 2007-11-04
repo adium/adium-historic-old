@@ -198,10 +198,21 @@
 	int selectedIndex = [imageGridView selectedIndex];
 	NSArray *recentPictures = [self recentPictures];
 	if (selectedIndex < [recentPictures count]) {
+		id		recentPicture = [recentPictures objectAtIndex:selectedIndex];
+		NSData	*imageData = nil;
+		if ([recentPicture respondsToSelector:@selector(editedImage)])
+			imageData = [[recentPicture editedImage] PNGRepresentation];
+		else if ([recentPicture respondsToSelector:@selector(croppedImage)])
+			imageData = [[recentPicture croppedImage] PNGRepresentation];
+		else if ([recentPicture respondsToSelector:@selector(originalImagePath)])
+			imageData = [NSData dataWithContentsOfFile:[recentPicture originalImagePath]];
+
 		//Notify as if the image had been selected in the picker
 		[[picker delegate] imageViewWithImagePicker:picker
-							   didChangeToImageData:[[[recentPictures objectAtIndex:selectedIndex] editedImage] PNGRepresentation]];
-		[picker setRecentPictureAsImageInput:[recentPictures objectAtIndex:selectedIndex]];
+							   didChangeToImageData:imageData];
+
+		//Now pass on the actual recent picture for use if possible
+		[picker setRecentPictureAsImageInput:recentPicture];
 	}
 
 	[self fadeOutAndClose];
