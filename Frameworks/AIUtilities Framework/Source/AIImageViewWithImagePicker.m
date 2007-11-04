@@ -29,6 +29,10 @@
 - (void)delete;
 @end
 
+@class IKPictureTakerRecentPicture;
+@interface IKPictureTaker (SecretsAdiumKnows)
+- (void)setRecentPictureAsImageInput:(IKPictureTakerRecentPicture *)picture;
+@end
 
 #define IKPictureTakerClass ([NSApp isOnLeopardOrBetter] ? NSClassFromString(@"IKPictureTaker") : NSClassFromString(@"IKPictureTakerForTiger"))
 
@@ -82,6 +86,7 @@
 	pictureTaker = nil;
 	title = nil;
 	delegate = nil;
+	activeRecentPicture = nil;
 	
 	lastResp = nil;
 	shouldDrawFocusRing = NO;
@@ -97,6 +102,8 @@
  */
 - (void)dealloc
 {
+	[activeRecentPicture release];
+
 	if (pictureTaker) {
 		[pictureTaker close];
 		[pictureTaker release]; pictureTaker = nil;
@@ -144,6 +151,8 @@
 	if (pictureTaker) {
 		[pictureTaker setInputImage:inImage];
 	}
+	
+	[activeRecentPicture release]; activeRecentPicture = nil;
 }
 
 /*!
@@ -582,7 +591,11 @@
 			theImage = [delegate imageForImageViewWithImagePicker:self];
 		}
 		
-		[pictureTaker setInputImage:(theImage ? theImage : [self image])];
+		if (activeRecentPicture && [pictureTaker respondsToSelector:@selector(setRecentPictureAsImageInput:)])
+			[pictureTaker setRecentPictureAsImageInput:activeRecentPicture];
+		else
+			[pictureTaker setInputImage:(theImage ? theImage : [self image])];
+
 		[pictureTaker setTitle:([self title] ? [self title] : AILocalizedStringFromTableInBundle(@"Image Picker", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], nil))];
 		[pictureTaker setValue:[NSValue valueWithSize:[self maxSize]]
 						forKey:IKPictureTakerOutputImageMaxSizeKey];
@@ -647,7 +660,24 @@
 		}
 	}
 }
-																				  
+
+- (id)pictureTaker
+{
+	return pictureTaker;
+}
+
+- (void)setRecentPictureAsImageInput:(IKPictureTakerRecentPicture *)recentPicture
+{
+	if (activeRecentPicture != recentPicture) {
+		[activeRecentPicture release]; activeRecentPicture = [recentPicture retain];
+	}
+	
+	//Update any open picture taker immediately.
+	if (pictureTaker && activeRecentPicture && [pictureTaker respondsToSelector:@selector(setRecentPictureAsImageInput:)]) {
+		[pictureTaker setRecentPictureAsImageInput:activeRecentPicture];
+	}
+}
+
 // Drawing ------------------------------------------------------------------------
 #pragma mark Drawing
 /*

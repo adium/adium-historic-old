@@ -982,7 +982,6 @@
 		34E0EA0F07CC53FE00A82198 /* AINewMessagePanelPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E0EA0B07CC53FE00A82198 /* AINewMessagePanelPlugin.m */; };
 		34E0EA1007CC53FE00A82198 /* AINewMessagePromptController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E0EA0C07CC53FE00A82198 /* AINewMessagePromptController.m */; };
 		34E0EA4007CC55B100A82198 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
-		34E1D8F90CD5CE5C0071836E /* AIRecentImage.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E1D8F80CD5CE5C0071836E /* AIRecentImage.m */; };
 		34E2A0BC07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A0BA07AF5924006735BC /* ESAccountNetworkConnectivityPlugin.m */; };
 		34E2A0C307AF593B006735BC /* AIAccountMenuAccessPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A0C107AF593B006735BC /* AIAccountMenuAccessPlugin.m */; };
 		34E2A1CD07AF635A006735BC /* ESFastUserSwitchingSupportPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A1CB07AF635A006735BC /* ESFastUserSwitchingSupportPlugin.m */; };
@@ -2648,6 +2647,7 @@
 		348839210BB0E7BB009C3F7C /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = Resources/zh_CN.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		348862CD05645E94003C9627 /* ESFileTransfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransfer.h; path = "Frameworks/Adium Framework/Source/ESFileTransfer.h"; sourceTree = "<group>"; };
 		348862CE05645E95003C9627 /* ESFileTransfer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransfer.m; path = "Frameworks/Adium Framework/Source/ESFileTransfer.m"; sourceTree = "<group>"; };
+		3489506A0CDE0CC5002FEB4D /* IKRecentPicture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IKRecentPicture.h; path = Source/IKRecentPicture.h; sourceTree = "<group>"; };
 		348A8A190629A68C00FC6E03 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Purple Service/en.lproj/ESPurpleJabberAccountView.nib"; sourceTree = "<group>"; };
 		348A901A062A13AB00FC6E03 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Purple Service/en.lproj/ESPurpleYahooAccountView.nib"; sourceTree = "<group>"; };
 		348B250A0A50A1C900B2B972 /* ESSourceListBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESSourceListBackgroundView.h; path = Source/ESSourceListBackgroundView.h; sourceTree = "<group>"; };
@@ -3184,8 +3184,6 @@
 		34E0EA0E07CC53FE00A82198 /* AINewMessagePromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AINewMessagePromptController.h; path = Source/AINewMessagePromptController.h; sourceTree = "<group>"; };
 		34E0EB8D07CD349200A82198 /* ESPurpleAIMAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESPurpleAIMAccount.h; path = "Plugins/Purple Service/ESPurpleAIMAccount.h"; sourceTree = "<group>"; };
 		34E0EB8E07CD349200A82198 /* ESPurpleAIMAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESPurpleAIMAccount.m; path = "Plugins/Purple Service/ESPurpleAIMAccount.m"; sourceTree = "<group>"; };
-		34E1D8F70CD5CE5C0071836E /* AIRecentImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIRecentImage.h; path = Source/AIRecentImage.h; sourceTree = "<group>"; };
-		34E1D8F80CD5CE5C0071836E /* AIRecentImage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIRecentImage.m; path = Source/AIRecentImage.m; sourceTree = "<group>"; };
 		34E1EDF30A045AA2003C14F1 /* AdiumApplescriptRunner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumApplescriptRunner.h; path = Source/AdiumApplescriptRunner.h; sourceTree = "<group>"; };
 		34E1EDF40A045AA2003C14F1 /* AdiumApplescriptRunner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumApplescriptRunner.m; path = Source/AdiumApplescriptRunner.m; sourceTree = "<group>"; };
 		34E2A0B907AF5924006735BC /* ESAccountNetworkConnectivityPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESAccountNetworkConnectivityPlugin.h; path = Source/ESAccountNetworkConnectivityPlugin.h; sourceTree = "<group>"; };
@@ -4735,13 +4733,12 @@
 			isa = PBXGroup;
 			children = (
 				34D007B0095964EF00DCB678 /* NSIPRecentPicture.h */,
+				3489506A0CDE0CC5002FEB4D /* IKRecentPicture.h */,
 				34D0F9C80954E70100DCB678 /* AIContactListImagePicker.h */,
 				34D0F9C90954E70100DCB678 /* AIContactListImagePicker.m */,
 				34D007DA095966E200DCB678 /* AIContactListRecentImagesWindowController.h */,
 				34D007D9095966E200DCB678 /* AIContactListRecentImagesWindowController.m */,
 				34D000C50957918000DCB678 /* ContactListRecentImages.nib */,
-				34E1D8F70CD5CE5C0071836E /* AIRecentImage.h */,
-				34E1D8F80CD5CE5C0071836E /* AIRecentImage.m */,
 			);
 			name = "User Icon Changing";
 			sourceTree = "<group>";
@@ -8994,7 +8991,6 @@
 				34A9705A0C965F2400F46006 /* AISideSplitView.m in Sources */,
 				34A9706F0C965F8E00F46006 /* AIAddBookmarkPlugin.m in Sources */,
 				343BB5020C96CB2000506F9B /* AINewBookmarkWindowController.m in Sources */,
-				34E1D8F90CD5CE5C0071836E /* AIRecentImage.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
