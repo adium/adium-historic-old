@@ -32,6 +32,9 @@ typedef unsigned int NSUInteger;
 
 #		define NSDownloadsDirectory 15
 
+#		define NSWindowCollectionBehaviorDefault 0
+#		define NSWindowCollectionBehaviorCanJoinAllSpaces 1 << 0
+
 #		define NSCellHitContentArea 1 << 0
 
 #	else

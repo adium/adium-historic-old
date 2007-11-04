@@ -33,6 +33,9 @@
 #import <Adium/AIListObject.h>
 #import <Adium/AIUserIcons.h>
 #import <AIUtilities/AIDockingWindow.h>
+#import <AIUtilities/AIApplicationAdditions.h>
+
+#import <AIUtilities/AITigerCompatibility.h>
 
 #define CONTACT_LIST_WINDOW_NIB				@"ContactListWindow"		//Filename of the contact list window nib
 #define CONTACT_LIST_WINDOW_TRANSPARENT_NIB @"ContactListWindowTransparent" //Filename of the minimalist transparent version
@@ -245,6 +248,13 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 		slideOnlyInBackground = [[prefDict objectForKey:KEY_CL_SLIDE_ONLY_IN_BACKGROUND] boolValue];
 		
 		[[self window] setHidesOnDeactivate:(windowHidingStyle == AIContactListWindowHidingStyleBackground)];
+		
+		if ([[NSApplication sharedApplication] isOnLeopardOrBetter]) {
+			if (windowHidingStyle == AIContactListWindowHidingStyleSliding)
+				[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
+			else
+				[[self window] setCollectionBehavior:NSWindowCollectionBehaviorDefault];
+		}
 
 		if (windowHidingStyle == AIContactListWindowHidingStyleSliding) {
 			if (!slideWindowIfNeededTimer) {
