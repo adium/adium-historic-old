@@ -193,9 +193,6 @@
 												 name:NSApplicationDidUnhideNotification 
 											   object:nil];
 
-	if ([[NSApplication sharedApplication] isOnLeopardOrBetter] && [[preferenceController preferenceForKey:KEY_CL_ALL_SPACES
-																									group:PREF_GROUP_CONTACT_LIST] boolValue])
-		[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
 	//Save our frame immediately for sliding purposes
 	[self setSavedFrame:[[self window] frame]];
 }
@@ -270,7 +267,7 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 		[[self window] setHidesOnDeactivate:(windowHidingStyle == AIContactListWindowHidingStyleBackground)];
 		
 		if ([[NSApplication sharedApplication] isOnLeopardOrBetter]) {
-			if ([[prefDict objectForKey:KEY_CL_ALL_SPACES] boolValue])
+			if (windowHidingStyle == AIContactListWindowHidingStyleSliding || [[prefDict objectForKey:KEY_CL_ALL_SPACES] boolValue])
 				[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
 			else
 				[[self window] setCollectionBehavior:NSWindowCollectionBehaviorDefault];
