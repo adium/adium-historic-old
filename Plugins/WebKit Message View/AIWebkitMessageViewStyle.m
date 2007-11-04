@@ -465,8 +465,6 @@ static NSArray *validSenderColors;
 
 - (NSString *)scriptForChangingVariant:(NSString *)variant
 {
-	AILogWithSignature(@"%@",[NSString stringWithFormat:@"setStylesheet(\"mainStyle\",\"%@\");",[self pathForVariant:variant]]);
-
 	return [NSString stringWithFormat:@"setStylesheet(\"mainStyle\",\"%@\");",[self pathForVariant:variant]];
 }
 

@@ -19,9 +19,6 @@
 #import "AIWebKitMessageViewPlugin.h"
 #import "ESWebFrameViewAdditions.h"
 #import "ESWebKitMessageViewPreferences.h"
-#import "AIWebKitDelegate.h"
-#import "ESFileTransferRequestPromptController.h"
-#import "ESWebView.h"
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIMenuControllerProtocol.h>
@@ -44,6 +41,12 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIMutableStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
+
+#import "AIWebKitDelegate.h"
+
+#import "ESFileTransferRequestPromptController.h"
+
+#import "ESWebView.h"
 
 #define KEY_WEBKIT_CHATS_USING_CACHED_ICON @"WebKit:Chats Using Cached Icon"
 
@@ -319,10 +322,10 @@ static NSArray *draggedTypes = nil;
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object
 					preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
+	NSString		*variantKey = [plugin styleSpecificKey:@"Variant" forStyle:activeStyle];
 	
-	if ([group isEqualToString:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]) {
 #if USE_FASTER_BUT_BUGGY_WEBKIT_PREFERENCE_CHANGE_HANDLING
-		NSString		*variantKey = [plugin styleSpecificKey:@"Variant" forStyle:activeStyle];
+	if ([group isEqualToString:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]) {
 		//Variant changes we can apply immediately.  All other changes require us to reload the view
 		if (!firstTime && [key isEqualToString:variantKey]) {
 			[activeVariant release]; activeVariant = [[prefDict objectForKey:variantKey] retain];
@@ -335,20 +338,19 @@ static NSArray *draggedTypes = nil;
 			   ![key isEqualToString:[plugin styleSpecificKey:@"BackgroundCachePath" forStyle:activeStyle]]) {
 				[self _updateWebViewForCurrentPreferences];
 			}
+			
 		}
-#else
-		if (firstTime || shouldReflectPreferenceChanges) {
-			//Ignore changes related to our background image cache.  These keys are used for storage only and aren't
-			//something we need to update in response to.  All other display changes we update our view for.
-			if (![key isEqualToString:@"BackgroundCacheUniqueID"] &&
-			    ![key isEqualToString:[plugin styleSpecificKey:@"BackgroundCachePath" forStyle:activeStyle]] &&
-				(![key isEqualToString:KEY_CURRENT_WEBKIT_STYLE_PATH] || shouldReflectPreferenceChanges)) {
-				[self _updateWebViewForCurrentPreferences];
-			}
-		}
-#endif
 	}
-	
+#else
+	if (firstTime || shouldReflectPreferenceChanges) {
+		//Ignore changes related to our background image cache.  These keys are used for storage only and aren't
+		//something we need to update in response to.  All other display changes we update our view for.
+		if (![key isEqualToString:@"BackgroundCacheUniqueID"] &&
+			![key isEqualToString:[plugin styleSpecificKey:@"BackgroundCachePath" forStyle:activeStyle]]) {
+			[self _updateWebViewForCurrentPreferences];
+		}
+	}
+#endif
 	if (([group isEqualToString:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES] && shouldReflectPreferenceChanges)) {
 		//If the background image changes, wipe the cache and update for the new image
 		[[adium preferenceController] setPreference:nil
@@ -402,7 +404,7 @@ static NSArray *draggedTypes = nil;
 {
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	NSBundle		*styleBundle;
-
+	
 	//Cleanup first
 	[messageStyle release];
 	[activeStyle release];
