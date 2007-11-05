@@ -8,6 +8,7 @@
 
 #import "AIPurpleCertificateTrustWarningAlert.h"
 #import <SecurityInterface/SFCertificateTrustPanel.h>
+#import <Security/SecureTransport.h>
 
 @interface AIPurpleCertificateTrustWarningAlert (privateMethods)
 

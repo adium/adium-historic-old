@@ -22,6 +22,8 @@
 #include <libpurple/sslconn.h>
 #include <libpurple/version.h>
 #include <libpurple/signals.h>
+#include <AvailabilityMacros.h>
+
 
 #define SSL_CDSA_PLUGIN_ID "ssl-cdsa"
 
@@ -160,8 +162,12 @@ ssl_cdsa_handshake_cb(gpointer data, gint source, PurpleInputCondition cond)
 			userdata->hostname[hostnamelen] = '\0'; // just make sure it's zero-terminated
 			userdata->cond = cond;
 			userdata->gsc = gsc;
-			
+#if MAC_OS_X_VERSION_10_5 > MAC_OS_X_VERSION_MAX_ALLOWED
+			// this function was declared deprecated in 10.5
+			SSLGetPeerCertificates(cdsa_data->ssl_ctx, &userdata->certs);
+#else
 			SSLCopyPeerCertificates(cdsa_data->ssl_ctx, &userdata->certs);
+#endif
 			
 			certificate_ui_cb(err, userdata->hostname, userdata->certs, query_cert_ok, query_cert_cancel, userdata);
 
@@ -488,7 +494,12 @@ static gboolean register_certificate_ui_cb(query_cert_chain cb) {
 
 static gboolean copy_certificate_chain(PurpleSslConnection *gsc /* IN */, CFArrayRef *result /* OUT */) {
 	PurpleSslCDSAData *cdsa_data = PURPLE_SSL_CDSA_DATA(gsc);
+#if MAC_OS_X_VERSION_10_5 > MAC_OS_X_VERSION_MAX_ALLOWED
+	// this function was declared deprecated in 10.5
+	return SSLGetPeerCertificates(cdsa_data->ssl_ctx, result) == noErr;
+#else
 	return SSLCopyPeerCertificates(cdsa_data->ssl_ctx, result) == noErr;
+#endif
 }
 
 static PurpleSslOps ssl_ops = {
