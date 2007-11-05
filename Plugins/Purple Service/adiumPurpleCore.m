@@ -29,6 +29,7 @@
 #import "adiumPurpleRoomlist.h"
 #import "adiumPurpleSignals.h"
 #import "adiumPurpleWebcam.h"
+#import "adiumPurpleCertificateTrustWarning.h"
 
 #import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
 #import "AILibpurplePlugin.h"
@@ -105,6 +106,18 @@ static void init_all_plugins()
 			[plugin installLibpurplePlugin];
 		}
 	}
+#if 0
+	// FIXME
+#ifdef HAVE_CDSA
+	{
+		PurplePlugin *cdsa_plugin = purple_plugins_find_with_name("CDSA");
+		if(cdsa_plugin) {
+			gboolean ok = NO;
+			purple_plugin_ipc_call(cdsa_plugin, "register_certificate_ui_cb", &ok, adium_query_cert_chain);
+		}
+	}
+#endif
+#endif
 }
 
 static void load_external_plugins(void)
