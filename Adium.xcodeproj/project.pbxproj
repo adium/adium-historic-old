@@ -7949,7 +7949,6 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
@@ -10642,7 +10641,7 @@
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/usr/lib\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
 				PRODUCT_NAME = AdiumLibpurple;
 				WARNING_CFLAGS = (
 					"-Wall",
@@ -10685,7 +10684,7 @@
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/usr/lib\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
 				PRODUCT_NAME = AdiumLibpurple;
 				WARNING_CFLAGS = (
 					"-Wall",
@@ -10723,7 +10722,7 @@
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/usr/lib\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
 				PRODUCT_NAME = AdiumLibpurple;
 				WARNING_CFLAGS = (
 					"-Wall",
@@ -10767,7 +10766,7 @@
 					"$(inherited)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_DIR)/SDKs/MacOSX10.4u.sdk/usr/lib\"";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
 				PRODUCT_NAME = AdiumLibpurple;
 				WARNING_CFLAGS = (
 					"-Wall",
