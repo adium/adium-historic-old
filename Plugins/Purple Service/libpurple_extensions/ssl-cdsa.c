@@ -55,7 +55,7 @@ typedef struct
 typedef
 void (*query_cert_chain)(OSStatus err, const char *hostname, CFArrayRef certs, void (*accept_cert)(void *userdata), void (*reject_cert)(void *userdata), void *userdata);
 
-static query_cert_chain *certificate_ui_cb = NULL;
+static query_cert_chain certificate_ui_cb = NULL;
 
 /*
  * ssl_cdsa_init
@@ -81,8 +81,8 @@ struct query_cert_userdata {
 	PurpleInputCondition cond;
 };
 
-static void
-ssl_cdsa_handshake_cb(gpointer data, gint source, PurpleInputCondition cond);
+static void ssl_cdsa_close(PurpleSslConnection *gsc);
+static void ssl_cdsa_connect_verify(PurpleSslConnection *gsc, gboolean doVerify);
 
 static void query_cert_ok(void *userdata) {
 	OSStatus err;
@@ -102,8 +102,15 @@ static void query_cert_ok(void *userdata) {
 		
 		purple_ssl_close(ud->gsc);
 	}
-    else
-		ssl_cdsa_handshake_cb(ud->gsc, ud->gsc->fd, ud->cond); // try again with cert checking off
+    else {
+		/* SSL connected now */
+		ud->gsc->connect_cb(ud->gsc->connect_cb_data, ud->gsc, ud->cond);
+#if 0
+		// try again with cert checking off
+		ssl_cdsa_close(ud->gsc);
+		ssl_cdsa_connect_verify(ud->gsc, false);
+#endif
+	}
 	
 	free(ud);
 }
@@ -132,17 +139,17 @@ ssl_cdsa_handshake_cb(gpointer data, gint source, PurpleInputCondition cond)
 	PurpleSslConnection *gsc = (PurpleSslConnection *)data;
 	PurpleSslCDSAData *cdsa_data = PURPLE_SSL_CDSA_DATA(gsc);
     OSStatus err;
-    
+	
 	purple_debug_info("cdsa", "Connecting\n");
-    
+	
 	/*
 	 * do the negotiation that sets up the SSL connection between
 	 * here and there.
 	 */
-    err = SSLHandshake(cdsa_data->ssl_ctx);
-    if(err != noErr) {
-        if(err == errSSLWouldBlock)
-            return;
+	err = SSLHandshake(cdsa_data->ssl_ctx);
+	if(err != noErr) {
+		if(err == errSSLWouldBlock)
+			return;
 		if(certificate_ui_cb && (err == errSSLUnknownRootCert || err == errSSLNoRootCert || err == errSSLCertExpired || err == errSSLXCertChainInvalid)) {
 			struct query_cert_userdata *userdata = (struct query_cert_userdata*)malloc(sizeof(struct query_cert_userdata));
 			size_t hostnamelen = 0;
@@ -151,10 +158,15 @@ ssl_cdsa_handshake_cb(gpointer data, gint source, PurpleInputCondition cond)
 			userdata->hostname = (char*)malloc(hostnamelen+1);
 			SSLGetPeerDomainName(cdsa_data->ssl_ctx, userdata->hostname, &hostnamelen);
 			userdata->hostname[hostnamelen] = '\0'; // just make sure it's zero-terminated
+			userdata->cond = cond;
+			userdata->gsc = gsc;
 			
 			SSLCopyPeerCertificates(cdsa_data->ssl_ctx, &userdata->certs);
 			
-			(*certificate_ui_cb)(err, userdata->hostname, userdata->certs, query_cert_ok, query_cert_cancel, userdata);
+			certificate_ui_cb(err, userdata->hostname, userdata->certs, query_cert_ok, query_cert_cancel, userdata);
+
+			purple_input_remove(cdsa_data->handshake_handler); // no more callbacks until we get an answer from the user
+			cdsa_data->handshake_handler = 0;
 		} else {
 			fprintf(stderr,"cdsa: SSLHandshake failed with error %d\n",(int)err);
 			purple_debug_error("cdsa", "SSLHandshake failed with error %d\n",(int)err);
@@ -165,13 +177,13 @@ ssl_cdsa_handshake_cb(gpointer data, gint source, PurpleInputCondition cond)
 			purple_ssl_close(gsc);
 		}
 		return;
-    }
-	    
+	}
+		
 	purple_input_remove(cdsa_data->handshake_handler);
 	cdsa_data->handshake_handler = 0;
-    
+	
 	purple_debug_info("cdsa", "SSL_connect complete\n");
-    
+	
 	/* SSL connected now */
 	gsc->connect_cb(gsc->connect_cb_data, gsc, cond);
 }
@@ -294,14 +306,8 @@ static OSStatus SocketWrite(
     return ortn;
 }
 
-/*
- * ssl_cdsa_connect
- *
- * given a socket, put an cdsa connection around it.
- */
 static void
-ssl_cdsa_connect(PurpleSslConnection *gsc)
-{
+ssl_cdsa_connect_verify(PurpleSslConnection *gsc, gboolean doVerify) {
 	PurpleSslCDSAData *cdsa_data;
     OSStatus err;
 
@@ -372,10 +378,9 @@ ssl_cdsa_connect(PurpleSslConnection *gsc)
     }
     
     /*
-     * Disable verifying the certificate chain.
-     * WARNING: This should be changed when there's a flag for that.
+     * Disable/enable verifying the certificate chain.
      */
-    err = SSLSetEnableCertVerify(cdsa_data->ssl_ctx, certificate_ui_cb != NULL);
+    err = SSLSetEnableCertVerify(cdsa_data->ssl_ctx, doVerify);
     if (err != noErr) {
 		purple_debug_error("cdsa", "SSLSetEnableCertVerify failed\n");
         /* error is not fatal */
@@ -384,6 +389,17 @@ ssl_cdsa_connect(PurpleSslConnection *gsc)
     cdsa_data->handshake_handler = purple_input_add(gsc->fd, PURPLE_INPUT_READ, ssl_cdsa_handshake_cb, gsc);
 
     ssl_cdsa_handshake_cb(gsc, gsc->fd, PURPLE_INPUT_READ);
+}
+
+/*
+ * ssl_cdsa_connect
+ *
+ * given a socket, put an cdsa connection around it.
+ */
+static void
+ssl_cdsa_connect(PurpleSslConnection *gsc)
+{
+	ssl_cdsa_connect_verify(gsc, certificate_ui_cb != NULL);
 }
 
 static void
@@ -464,7 +480,7 @@ ssl_cdsa_write(PurpleSslConnection *gsc, const void *data, size_t len)
     return s;
 }
 
-static gboolean register_certificate_ui_cb(query_cert_chain *cb) {
+static gboolean register_certificate_ui_cb(query_cert_chain cb) {
 	certificate_ui_cb = cb;
 	
 	return true;
