@@ -1,27 +1,28 @@
 				Adium X Version History
 				-----------------------
-Version 1.1.4
+Version 1.1.4 (11/5/2007)
  * Compatibility updates for Mac OS X 10.5:
-   * Using Bonjour no longer causes a warning message in the system logs
    * Removed the ability for the contact list to ignore exposé, fixing a number of issues with Spaces (#7862)
    * Fixed contact dragging (#8202)
    * Fixed the image picker for buddy icons (#8180, #8184)
    * Fixed translation issues in the menubar (#8211)
    * Fixed the typing notification icon in the message window
+   * Fixed Contact List autohiding's interaction with Spaces. When hiding on screen edges, it will respond on all Spaces.
+   * (Bonjour) Fixed an issue causing a warning message in the system logs
  * Improved the logic used for picking the folder to download file transfers to (#8145)
  * Changed the invalid password dialog to not clear the existing password from the keychain (#4627)
  * OTR encryption no longer causes chats to spontaneously reopen (#6664)
  * Possibly fixed a crash when receiving file transfers
- * Clarified that MyspaceIM uses the email address for login, not the username (#8085, #8147)
- * Fixed hotmail mail checking (#7610)
  * Fixed update checking for people with profile submission turned off
  * Fixed an issue in which toolbar icons could remain on screen after the window closed (#8042)
- * Fixed overlapping buttons in the German localization (#6143)
  * Fixed a crash when quitting Adium while the preferences window is open
- * Fixed status messages on gadu-gadu while using the iTunes status
  * Fixed clearing the file transfer window
  * Fixed searching logs while indexing is in progress (#8223)
  * Fixed a bug that resulted in some logs not being indexed
+ * (MySpace) Clarified that MySpace uses the email address for login, not the username (#8085, #8147)
+ * (MSN) Fixed Hotmail mail checking (#7610)
+ * (Gadu-Gadu) Fixed status messages while using the iTunes status
+ * Fixed overlapping buttons in the German localization (#6143)
  * Localization updates
  * Updated to Growl 1.1.2 (http://growl.info)
 
