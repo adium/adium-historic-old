@@ -9,7 +9,6 @@
 #import "AIPurpleCertificateViewer.h"
 #import <SecurityInterface/SFCertificateView.h>
 #import <AIUtilities/AITigerCompatibility.h>
-#import <AvailabilityMacros.h>
 #include <Security/cssmapi.h>
 #include <Security/oidscert.h>
 #include <Security/oidsattr.h>
