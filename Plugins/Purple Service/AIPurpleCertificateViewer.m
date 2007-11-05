@@ -8,6 +8,7 @@
 
 #import "AIPurpleCertificateViewer.h"
 #import <SecurityInterface/SFCertificateView.h>
+#import <AIUtilities/AITigerCompatibility.h>
 
 @interface AIPurpleCertificateViewer (privateMethods)
 
