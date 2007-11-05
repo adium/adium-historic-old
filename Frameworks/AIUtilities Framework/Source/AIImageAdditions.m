@@ -387,7 +387,22 @@
 	//If we're passed a 0,0 size, use the image's size
 	if (size.width == 0 || size.height == 0) size = [self size];
 	
-	//Adjust
+	if ((NSWidth(rect) < size.width) || (NSHeight(rect) < size.height)) {
+		//The size is larger than our available rect. Decrease the size.
+
+		//Adjust the width to be our rect's width and the height to be proportionate
+		if (NSWidth(rect) < size.width) {
+			size.height = size.height * (NSWidth(rect) / size.width);
+			size.width = NSWidth(rect);
+		}
+		
+		if (NSHeight(rect) < size.height) {
+			size.width = size.width * (NSHeight(rect) / size.height);
+			size.height = NSHeight(rect);
+		}
+	}
+
+	//Adjust the positioning
 	switch (position) {
 		case IMAGE_POSITION_LEFT:
 			drawRect = NSMakeRect(rect.origin.x,
