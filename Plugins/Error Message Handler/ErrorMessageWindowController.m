@@ -158,7 +158,7 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
 
     }
 
-    [[self window] makeKeyAndOrderFront:nil];
+    [[self window] orderFront:nil];
 }
 
 // called after the about window loads, so we can set up the window before it's displayed
