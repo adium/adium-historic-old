@@ -25,6 +25,7 @@
 	IBOutlet	NSButton	*checkBox_useTLS;
 	IBOutlet	NSButton	*checkBox_forceOldSSL;
 	IBOutlet	NSButton	*checkBox_requireTLS;
+	IBOutlet	NSButton	*checkBox_checkCertificates;
 	IBOutlet	NSButton	*checkBox_allowPlaintext;
 	IBOutlet	NSTabView	*tabview_registration;
 	IBOutlet	NSTableView	*tableview_servers;

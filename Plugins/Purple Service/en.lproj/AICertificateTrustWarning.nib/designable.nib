@@ -45,12 +45,12 @@
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSMutableArray" key="set.sortedObjects">
 									<bool key="EncodedWithXMLCoder">YES</bool>
-									<string>Apple PDF pasteboard type</string>
-									<string>Apple PICT pasteboard type</string>
-									<string>Apple PNG pasteboard type</string>
-									<string>NSFilenamesPboardType</string>
-									<string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
-									<string>NeXT TIFF v4.0 pasteboard type</string>
+									<string id="773916160">Apple PDF pasteboard type</string>
+									<string id="320451613">Apple PICT pasteboard type</string>
+									<string id="884245991">Apple PNG pasteboard type</string>
+									<string id="21730275">NSFilenamesPboardType</string>
+									<string id="139169124">NeXT Encapsulated PostScript v1.2 pasteboard type</string>
+									<string id="102654326">NeXT TIFF v4.0 pasteboard type</string>
 								</object>
 							</object>
 							<string key="NSFrame">{{17, 81}, {64, 64}}</string>
@@ -61,7 +61,7 @@
 								<int key="NSCellFlags">130560</int>
 								<int key="NSCellFlags2">33554432</int>
 								<object class="NSCustomResource" key="NSContents">
-									<string key="NSClassName" id="787119880">NSImage</string>
+									<string key="NSClassName" id="602996887">NSImage</string>
 									<string key="NSResourceName">Adium</string>
 								</object>
 								<int key="NSAlign">0</int>
@@ -81,7 +81,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="33550343">
 								<int key="NSCellFlags">67239488</int>
 								<int key="NSCellFlags2">272630784</int>
-								<string type="base64-UTF8" key="NSContents">PDxkbyBub3QgbG9jYWxpemU+Pg</string>
+								<string type="base64-UTF8" key="NSContents" id="853918102">PDxkbyBub3QgbG9jYWxpemU+Pg</string>
 								<object class="NSFont" key="NSSupport" id="690103839">
 									<string key="NSName" id="236580334">LucidaGrande</string>
 									<double key="NSSize">1.300000e+01</double>
@@ -90,7 +90,7 @@
 								<reference key="NSControlView" ref="880020448"/>
 								<object class="NSColor" key="NSBackgroundColor" id="596907434">
 									<int key="NSColorSpace">6</int>
-									<string key="NSCatalogName" id="196864467">System</string>
+									<string key="NSCatalogName" id="212751579">System</string>
 									<string key="NSColorName">controlColor</string>
 									<object class="NSColor" key="NSColor">
 										<int key="NSColorSpace">3</int>
@@ -99,7 +99,7 @@
 								</object>
 								<object class="NSColor" key="NSTextColor" id="842767439">
 									<int key="NSColorSpace">6</int>
-									<reference key="NSCatalogName" ref="196864467"/>
+									<reference key="NSCatalogName" ref="212751579"/>
 									<string key="NSColorName">controlTextColor</string>
 									<object class="NSColor" key="NSColor">
 										<int key="NSColorSpace">3</int>
@@ -118,7 +118,7 @@
 							<object class="NSTextFieldCell" key="NSCell" id="848603987">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">272629760</int>
-								<string type="base64-UTF8" key="NSContents">PDxkbyBub3QgbG9jYWxpemU+Pg</string>
+								<reference key="NSContents" ref="853918102"/>
 								<object class="NSFont" key="NSSupport">
 									<reference key="NSName" ref="236580334"/>
 									<double key="NSSize">1.000000e+01</double>
@@ -132,14 +132,14 @@
 						<object class="NSButton" id="336417928">
 							<reference key="NSNextResponder" ref="1006"/>
 							<int key="NSvFlags">268</int>
-							<string key="NSFrame">{{432, 12}, {96, 32}}</string>
+							<string key="NSFrame">{{409, 12}, {122, 32}}</string>
 							<reference key="NSSuperview" ref="1006"/>
 							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="72043210">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">134217728</int>
-								<string key="NSContents">Allow</string>
+								<string key="NSContents">Always Allow</string>
 								<reference key="NSSupport" ref="690103839"/>
 								<reference key="NSControlView" ref="336417928"/>
 								<int key="NSButtonFlags">-2038284033</int>
@@ -153,7 +153,7 @@
 						<object class="NSButton" id="342353330">
 							<reference key="NSNextResponder" ref="1006"/>
 							<int key="NSvFlags">268</int>
-							<string key="NSFrame">{{336, 12}, {96, 32}}</string>
+							<string key="NSFrame">{{313, 12}, {96, 32}}</string>
 							<reference key="NSSuperview" ref="1006"/>
 							<reference key="NSWindow"/>
 							<bool key="NSEnabled">YES</bool>
@@ -199,12 +199,12 @@
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSMutableArray" key="set.sortedObjects">
 									<bool key="EncodedWithXMLCoder">YES</bool>
-									<string>Apple PDF pasteboard type</string>
-									<string>Apple PICT pasteboard type</string>
-									<string>Apple PNG pasteboard type</string>
-									<string>NSFilenamesPboardType</string>
-									<string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
-									<string>NeXT TIFF v4.0 pasteboard type</string>
+									<reference ref="773916160"/>
+									<reference ref="320451613"/>
+									<reference ref="884245991"/>
+									<reference ref="21730275"/>
+									<reference ref="139169124"/>
+									<reference ref="102654326"/>
 								</object>
 							</object>
 							<string key="NSFrame">{{49, 78}, {32, 32}}</string>
@@ -215,7 +215,7 @@
 								<int key="NSCellFlags">130560</int>
 								<int key="NSCellFlags2">33554432</int>
 								<object class="NSCustomResource" key="NSContents">
-									<reference key="NSClassName" ref="787119880"/>
+									<reference key="NSClassName" ref="602996887"/>
 									<string key="NSResourceName">ErrorAlert</string>
 								</object>
 								<int key="NSAlign">0</int>
@@ -478,10 +478,10 @@
 					<reference ref="928786346"/>
 					<reference ref="928786346"/>
 					<reference ref="928786346"/>
-					<string>{{550, 846}, {542, 162}}</string>
+					<string id="357472789">{{550, 846}, {542, 162}}</string>
 					<integer value="1"/>
 					<string>{196, 240}</string>
-					<string>{{550, 846}, {542, 162}}</string>
+					<reference ref="357472789"/>
 					<reference ref="928786346"/>
 					<reference ref="928786346"/>
 					<reference ref="928786346"/>
@@ -523,7 +523,7 @@
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<object class="IBPartialClassDescription">
-					<string key="className" id="284592444">NSTextField</string>
+					<string key="className">NSButton</string>
 					<nil key="superclassName"/>
 					<object class="NSMutableDictionary" key="actions">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -544,46 +544,8 @@
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey" id="548237528">IBProjectSource</string>
-						<string key="minorKey">Frameworks/Adium Framework/Source/AILocalizationTextField.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">AIPurpleCertificateTrustWarningAlert</string>
-					<string key="superclassName">AIObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSMutableArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>panelCancel:</string>
-							<string>panelOK:</string>
-							<string>panelShowCertificate:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string id="234225047">id</string>
-							<reference ref="234225047"/>
-							<reference ref="234225047"/>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSMutableArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>alertInformativeText</string>
-							<string>alertTitle</string>
-							<string>panel</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<reference ref="284592444"/>
-							<reference ref="284592444"/>
-							<string>NSPanel</string>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Plugins/Purple Service/AIPurpleCertificateTrustWarningAlert.h</string>
+						<string key="majorKey" id="251457897">IBProjectSource</string>
+						<string key="minorKey">Frameworks/Adium Framework/Source/AILocalizationButton.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -608,8 +570,8 @@
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Source/NSWindowScriptingAdditions.h</string>
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Plugins/Nudge and Buzz Handler/AWRippler.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -634,8 +596,72 @@
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Plugins/Nudge and Buzz Handler/AWRippler.h</string>
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Source/NSWindowScriptingAdditions.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">AIObject</string>
+					<string key="superclassName" id="554054778">NSObject</string>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Frameworks/Adium Framework/Source/AIObject.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">AIPurpleCertificateTrustWarningAlert</string>
+					<string key="superclassName">AIObject</string>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSMutableArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>panelCancel:</string>
+							<string>panelOK:</string>
+							<string>panelShowCertificate:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string id="696186577">id</string>
+							<reference ref="696186577"/>
+							<reference ref="696186577"/>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSMutableArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>alertInformativeText</string>
+							<string>alertTitle</string>
+							<string>panel</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string id="284592444">NSTextField</string>
+							<reference ref="284592444"/>
+							<string>NSPanel</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Plugins/Purple Service/AIPurpleCertificateTrustWarningAlert.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -660,63 +686,11 @@
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
+						<reference key="majorKey" ref="251457897"/>
 						<string key="minorKey">Frameworks/Adium Framework/Source/ItIsNotACoincidenceThatMetalAndDevilNearlyRhymeWindow.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">NSButton</string>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Frameworks/Adium Framework/Source/AILocalizationButton.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className" id="554054778">NSObject</string>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Plugins/Purple Service/AMPurpleJabberNode.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
 					<reference key="className" ref="554054778"/>
 					<nil key="superclassName"/>
 					<object class="NSMutableDictionary" key="actions">
@@ -738,132 +712,7 @@
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Frameworks/Adium Framework/Source/ESPresetManagementController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Frameworks/Adium Framework/Source/AIAccountMenu.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">adiumPrint:</string>
-						<reference key="NS.object.0" ref="234225047"/>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Frameworks/Adium Framework/Source/AIInterfaceControllerProtocol.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Plugins/Purple Service/AMPurpleJabberAdHocServer.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Frameworks/Adium Framework/Source/AIPreferenceControllerProtocol.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
+						<reference key="majorKey" ref="251457897"/>
 						<string key="minorKey">Frameworks/Adium Framework/Source/SUSpeaker.h</string>
 					</object>
 				</object>
@@ -889,574 +738,7 @@
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Frameworks/Adium Framework/Source/ESPresetNameSheetController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Frameworks/Adium Framework/Source/AIMessageEntryTextView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Source/AIMenuItemView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Frameworks/Adium Framework/Source/AIEditStateWindowController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Plugins/WebKit Message View/ESWebView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Source/OWABSearchWindowController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Source/AIListThemeWindowController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Source/KNShelfSplitView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Frameworks/Adium Framework/Source/AIListOutlineView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Plugins/Bonjour/libezv/Simple HTTP Server/AsyncSocket.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<string key="NS.key.0">prefsWindowWillClose:</string>
-						<string key="NS.object.0">SS_PrefsController</string>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Frameworks/Adium Framework/Source/SS_PrefsController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Frameworks/Adium Framework/Source/KFTypeSelectTableView.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Frameworks/Adium Framework/Source/AIContactMenu.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Plugins/Purple Service/SLPurpleCocoaAdapter.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Source/AIListLayoutWindowController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Frameworks/Adium Framework/Source/AIStatusMenu.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Frameworks/ShortcutRecorder/Source/SRValidator.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Source/AIEditAccountWindowController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Frameworks/Adium Framework/Source/ESContactAlertsViewController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Source/AIChatCommandsController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Frameworks/Adium Framework/Source/AILocalizationAssistance.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Frameworks/Adium Framework/Source/JVFontPreviewField.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<reference key="className" ref="554054778"/>
-					<nil key="superclassName"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
+						<reference key="majorKey" ref="251457897"/>
 						<string key="minorKey">Source/AINewBookmarkWindowController.h</string>
 					</object>
 				</object>
@@ -1482,7 +764,314 @@
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Plugins/WebKit Message View/ESWebView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Frameworks/ShortcutRecorder/Source/SRRecorderControl.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Frameworks/Adium Framework/Source/AIAccountMenu.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Source/AIListThemeWindowController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Frameworks/Adium Framework/Source/AIContactMenu.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Frameworks/Adium Framework/Source/ESPresetManagementController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Source/KNShelfSplitView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Frameworks/Adium Framework/Source/AILocalizationAssistance.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">prefsWindowWillClose:</string>
+						<string key="NS.object.0">SS_PrefsController</string>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Frameworks/Adium Framework/Source/SS_PrefsController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Frameworks/Adium Framework/Source/ESContactAlertsViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Frameworks/Adium Framework/Source/ESPresetNameSheetController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Source/AIMenuItemView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
 						<string key="minorKey">Frameworks/Adium Framework/Source/ESTextAndButtonsWindowController.h</string>
 					</object>
 				</object>
@@ -1508,7 +1097,215 @@
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Frameworks/Adium Framework/Source/AIListOutlineView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Frameworks/Adium Framework/Source/AIMessageEntryTextView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Source/AIListLayoutWindowController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Plugins/Purple Service/AMPurpleJabberAdHocServer.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Source/OWABSearchWindowController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Frameworks/Adium Framework/Source/AIStatusMenu.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Source/AIChatCommandsController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Frameworks/ShortcutRecorder/Source/SRValidator.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
 						<string key="minorKey">Frameworks/ShortcutRecorder/Source/SRRecorderCell.h</string>
 					</object>
 				</object>
@@ -1534,8 +1331,258 @@
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Frameworks/ShortcutRecorder/Source/SRRecorderControl.h</string>
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Frameworks/Adium Framework/Source/AIPreferenceControllerProtocol.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">adiumPrint:</string>
+						<reference key="NS.object.0" ref="696186577"/>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Frameworks/Adium Framework/Source/AIInterfaceControllerProtocol.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Plugins/Purple Service/AMPurpleJabberNode.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Frameworks/Adium Framework/Source/KFTypeSelectTableView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Source/AIEditAccountWindowController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Frameworks/Adium Framework/Source/JVFontPreviewField.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Frameworks/Adium Framework/Source/AIEditStateWindowController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Plugins/Purple Service/SLPurpleCocoaAdapter.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="554054778"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Plugins/Bonjour/libezv/Simple HTTP Server/AsyncSocket.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">SS_PrefsController</string>
+					<reference key="superclassName" ref="554054778"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<reference key="NS.key.0" ref="398337515"/>
+						<reference key="NS.object.0" ref="696186577"/>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Frameworks/Adium Framework/Source/SS_PrefsController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<reference key="className" ref="284592444"/>
+					<nil key="superclassName"/>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<reference key="majorKey" ref="251457897"/>
+						<string key="minorKey">Frameworks/Adium Framework/Source/AILocalizationTextField.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -1560,55 +1607,8 @@
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
+						<reference key="majorKey" ref="251457897"/>
 						<string key="minorKey">Frameworks/Adium Framework/Source/AILocalizationButtonCell.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">SS_PrefsController</string>
-					<reference key="superclassName" ref="554054778"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<reference key="NS.key.0" ref="398337515"/>
-						<reference key="NS.object.0" ref="234225047"/>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Frameworks/Adium Framework/Source/SS_PrefsController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">AIObject</string>
-					<reference key="superclassName" ref="554054778"/>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-						</object>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<reference key="majorKey" ref="548237528"/>
-						<string key="minorKey">Frameworks/Adium Framework/Source/AIObject.h</string>
 					</object>
 				</object>
 			</object>
@@ -1618,118 +1618,118 @@
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<object class="NSMutableData" key="IBDocument.RunnableNib">
 			<bytes key="NS.bytes">YnBsaXN0MDDUAAEAAgADAAQABQAGAAkAClgkdmVyc2lvblQkdG9wWSRhcmNoaXZlclgkb2JqZWN0cxIA
-AYag0QAHAAhdSUIub2JqZWN0ZGF0YYABXxAPTlNLZXllZEFyY2hpdmVyrxCjAAsADAAxADUANgA8AD0A
+AYag0QAHAAhdSUIub2JqZWN0ZGF0YYABXxAPTlNLZXllZEFyY2hpdmVyrxCcAAsADAAxADUANgA8AD0A
 QgBWAFcAWABZAAsAZwBxAIEAigCLAIwAjQCOAI8AkACUAJUAowCoAKkAqgCtALAAtgC+AL8AzADNANUA
-1gDZAOMA5ADlAOoA7ADxAPIA9QD5APwBBAEFAMwBDgETARsBHAEtAS4BLwEwATMBNgE+AT8BRgFHAUgB
-UAFRAVgBWQFjAI4AigCPAIsAjACNAWwBbQFxAXUBdgF6AAsBewF9AX4BgQGLAZMBlAGYAZ0BngGhAaYB
-pwGsAa0BsgGzAbgBuQG+Ab8B0wHWAdcB2QHtAgICFwIYAhkCGgIbAhwCHQIeAh8CIAIhAiICIwIkAiUC
-JgInAigCKQIsAi8CSwJnAmgCaQBUAmoCawJsAm0BEgJuAm8CcADoAOACcQJyAnMCdAJ1AnYCdwJ4AFMC
-eQJ6AnsCfgKBAoRVJG51bGzfEBIADQAOAA8AEAARABIAEwAUABUAFgAXABgAGQAaABsAHAAdAB4AHwAg
-ACEAIgAjACQAJQAmACcAKAApACoAKwAsAC0ALgAvADBWTlNSb290ViRjbGFzc11OU09iamVjdHNLZXlz
-XxAPTlNDbGFzc2VzVmFsdWVzXxAZTlNBY2Nlc3NpYmlsaXR5T2lkc1ZhbHVlc11OU0Nvbm5lY3Rpb25z
-W05TTmFtZXNLZXlzW05TRnJhbWV3b3JrXU5TQ2xhc3Nlc0tleXNaTlNPaWRzS2V5c11OU05hbWVzVmFs
-dWVzXxAZTlNBY2Nlc3NpYmlsaXR5Q29ubmVjdG9yc11OU0ZvbnRNYW5hZ2VyXxAQTlNWaXNpYmxlV2lu
-ZG93c18QD05TT2JqZWN0c1ZhbHVlc18QF05TQWNjZXNzaWJpbGl0eU9pZHNLZXlzWU5TTmV4dE9pZFxO
-U09pZHNWYWx1ZXOAAoCigGmAg4ChgFiAboAFgIKAhIBvgJ+AAIAGgG2AoBAZgIXSAA4AMgAzADRbTlND
-bGFzc05hbWWABIADXxAkQUlQdXJwbGVDZXJ0aWZpY2F0ZVRydXN0V2FybmluZ0FsZXJ00gA3ADgAOQA6
-WCRjbGFzc2VzWiRjbGFzc25hbWWiADoAO15OU0N1c3RvbU9iamVjdFhOU09iamVjdF8QEElCQ29jb2FG
-cmFtZXdvcmvSAA4APgA/AEBaTlMub2JqZWN0c4AWoQBBgAfaAEMADgBEAEUARgBHAEgASQBKAEsATABN
-AE4ATwBQAFEAUgBTAFQAK1xOU1dpbmRvd1ZpZXdcTlNTY3JlZW5SZWN0XU5TV2luZG93VGl0bGVZTlNX
-VEZsYWdzXU5TV2luZG93Q2xhc3NcTlNXaW5kb3dSZWN0XxAPTlNXaW5kb3dCYWNraW5nXxARTlNXaW5k
-b3dTdHlsZU1hc2tbTlNWaWV3Q2xhc3OAC4BXgFaACRIgAAAAgAqACBACEAGAAF8QGHt7MTk2LCAzNDh9
-LCB7NTQyLCAxNjJ9fV8QE0NlcnRpZmljYXRlIFdhcm5pbmdXTlNQYW5lbNcAWgAOAFsAXABdAF4AXwBg
-AGEAYgBjAGQAYABmXxAPTlNOZXh0UmVzcG9uZGVyWk5TU3Vidmlld3NYTlN2RmxhZ3NbTlNGcmFtZVNp
-emVYTlNXaW5kb3dbTlNTdXBlcnZpZXeADIBVgA0RAQCAU4AMgFTSAA4APgBoAGmAUqcAagBrAGwAbQBu
-AG8AcIAOgB+AMIA1gD2AQoBG2gBaAA4AcgBzAHQAdQBcAHYAXgBfAEwAeAB5AHoAewB8AH0AegBgAExX
-TlNGcmFtZVpOU0VkaXRhYmxlVk5TQ2VsbFtOU0RyYWdUeXBlc1lOU0VuYWJsZWSAC4AegBcJgBiADxEB
-DAmADIAL0gAOAD4APwCDgBamAIQAhQCGAIcAiACJgBCAEYASgBOAFIAVXxAZQXBwbGUgUERGIHBhc3Rl
-Ym9hcmQgdHlwZV8QGUFwcGxlIFBORyBwYXN0ZWJvYXJkIHR5cGVfEBVOU0ZpbGVuYW1lc1Bib2FyZFR5
-cGVfEDFOZVhUIEVuY2Fwc3VsYXRlZCBQb3N0U2NyaXB0IHYxLjIgcGFzdGVib2FyZCB0eXBlXxAeTmVY
-VCBUSUZGIHY0LjAgcGFzdGVib2FyZCB0eXBlXxAaQXBwbGUgUElDVCBwYXN0ZWJvYXJkIHR5cGXSADcA
-OACRAJKjAJIAkwA7XE5TTXV0YWJsZVNldFVOU1NldF8QFHt7MTcsIDgxfSwgezY0LCA2NH192ACWAA4A
-lwCYAJkAmgCbAJwAnQCeAJ8AoACfAJ8AoQCiW05TQ2VsbEZsYWdzV05TU3R5bGVaTlNDb250ZW50c1dO
-U0FsaWduV05TU2NhbGVcTlNDZWxsRmxhZ3MyWk5TQW5pbWF0ZXMSAAH+AIAdEACAGRICAAAACNMADgAy
-AKQApQCmAKdeTlNSZXNvdXJjZU5hbWWAHIAagBtXTlNJbWFnZVVBZGl1bdIANwA4AKsArKIArAA7XxAQ
-TlNDdXN0b21SZXNvdXJjZdIANwA4AK4Ar6MArwB0ADtbTlNJbWFnZUNlbGzSADcAOACxALKlALIAswC0
-ALUAO1tOU0ltYWdlVmlld1lOU0NvbnRyb2xWTlNWaWV3W05TUmVzcG9uZGVy2ABaAA4AcgB0AFwAdgBe
-AF8ATAC4ALkAugB9AHoAYABMgAuAL4AggCEJgAyAC18QFnt7ODYsIDEzN30sIHs0MzksIDE3fX3YAJYA
-DgDAAJgAwQDCAJsAwwDEAMUAxgDHAMgAawDKAMtfEBFOU0JhY2tncm91bmRDb2xvcllOU1N1cHBvcnRd
-TlNDb250cm9sVmlld1tOU1RleHRDb2xvchIEAf5AgC6AJoAigCOAHxIQQAQAgCtfEBM8PGRvIG5vdCBs
-b2NhbGl6ZT4+1AAOAM4AzwDQANEA0gDTANRWTlNTaXplVk5TTmFtZVhOU2ZGbGFnc4AlI0AqAAAAAAAA
-gCQRBBRcTHVjaWRhR3JhbmRl0gA3ADgA1wDYogDYADtWTlNGb2501QAOANoA2wDcAN0A3gDfAOAA4QDi
-V05TQ29sb3JcTlNDb2xvclNwYWNlW05TQ29sb3JOYW1lXU5TQ2F0YWxvZ05hbWWAKoApEAaAKIAnVlN5
-c3RlbVxjb250cm9sQ29sb3LTAA4A2wDmAN4A6ADpV05TV2hpdGWAKhADSzAuNjY2NjY2NjkA0gA3ADgA
-6wDaogDaADvVAA4A2gDbANwA3QDeAO4A4ADvAOKAKoAtgCyAJ18QEGNvbnRyb2xUZXh0Q29sb3LTAA4A
-2wDmAN4A6AD0gCpCMADSADcAOAD2APekAPcA+AB0ADtfEA9OU1RleHRGaWVsZENlbGxcTlNBY3Rpb25D
-ZWxs0gA3ADgA+gD7pQD7ALMAtAC1ADtbTlNUZXh0RmllbGTYAFoADgByAHQAXAB2AF4AXwBMALgA/wEA
-AH0AegBgAEyAC4AvgDGAMgmADIALXxAVe3s4NiwgNjB9LCB7NDM5LCA2OX192ACWAA4AwACYAMEAwgCb
-AMMBBgDFAMYBCQEKAGwBDADLEgQB/gCALoAmgDOANIAwEhBAAACAK9QADgDOAM8A0ADRARAA0wESgCUj
-QCQAAAAAAACAJBAQ2ABaAA4AcgB0AFwAdgBeAF8ATAEVARYBFwB9AHoAYABMgAuAPIA2gDcJgAyAC18Q
-FXt7NDMyLCAxMn0sIHs5NiwgMzJ9fdwAlgAOAR0BHgEfASAAmADBAMIBIQCbASIBBgEjASQALwElASYB
-JwDIAG0BKgErASxfEBNOU0FsdGVybmF0ZUNvbnRlbnRzXxASTlNQZXJpb2RpY0ludGVydmFsXk5TQnV0
-dG9uRmxhZ3MyXxAPTlNLZXlFcXVpdmFsZW50XxAPTlNQZXJpb2RpY0RlbGF5XU5TQnV0dG9uRmxhZ3OA
-O4A5EIGAOoA4gCOANRDIEggAAAAT/////4aCQP9VQWxsb3dQUQ3SADcAOAExATKkATIA+AB0ADtcTlNC
-dXR0b25DZWxs0gA3ADgBNAE1pQE1ALMAtAC1ADtYTlNCdXR0b27YAFoADgByAHQAXAB2AF4AXwBMARUB
-OQE6AH0AegBgAEyAC4A8gD6APwmADIALXxAVe3szMzYsIDEyfSwgezk2LCAzMn193ACWAA4BHQEeAR8B
-IACYAMEAwgEhAJsBIgEGASMBJAAvASUBQgFDAMgAbgEqASsBLIA7gDmAQYBAgCOAPVVBYm9ydFEb2ABa
-AA4AcgB0AFwAdgBeAF8ATAEVAUsBTAB9AHoAYABMgAuAPIBDgEQJgAyAC18QFXt7MTQsIDEyfSwgezE0
-MiwgMzJ9fdwAlgAOAR0BHgEfASAAmADBAMIBIQCbASIBBgEjASQALwElASQBVQDIAG8BKgErASyAO4A5
-gDmARYAjgEJfEBBTaG93IENlcnRpZmljYXRl2gBaAA4AcgBzAHQAdQBcAHYAXgBfAEwAeAFcAHoBXgFf
-AGMAegBgAEyAC4AegE4JgE+ARwmADIAL0gAOAD4APwFlgBamAWYBZwFoAWkBagFrgEiASYBKgEuATIBN
-XxAUe3s0OSwgNzh9LCB7MzIsIDMyfX3YAJYADgCXAJgAmQCaAJsAnACdAJ4AnwFvAJ8AVAChAHqAHYBQ
-CdMADgAyAKQApQCmAXSAHIAagFFaRXJyb3JBbGVydNIANwA4AXcBeKMBeAF5ADteTlNNdXRhYmxlQXJy
-YXlXTlNBcnJheVp7NTQyLCAxNjJ90gA3ADgBfAC0owC0ALUAO18QFnt7MCwgMH0sIHsxOTIwLCAxMTc4
-fX3SADcAOAF/AYCiAYAAO18QEE5TV2luZG93VGVtcGxhdGXSAA4APgBoAYOAUqcBhAGFAYYBhwGIAYkB
-ioBZgFyAX4BhgGOAZYBn1AAOAYwBjQGOAY8AHwBtAZJdTlNEZXN0aW5hdGlvblhOU1NvdXJjZVdOU0xh
-YmVsgFuAAoA1gFpYcGFuZWxPSzrSADcAOAGVAZajAZYBlwA7XxAVTlNOaWJDb250cm9sQ29ubmVjdG9y
-Xk5TTmliQ29ubmVjdG9y1AAOAYwBjQGOAZkAbAAfAZyAXoAwgAKAXV8QFGFsZXJ0SW5mb3JtYXRpdmVU
-ZXh00gA3ADgBnwGgowGgAZcAO18QFE5TTmliT3V0bGV0Q29ubmVjdG9y1AAOAYwBjQGOAZkAawAfAaWA
-XoAfgAKAYFphbGVydFRpdGxl1AAOAYwBjQGOAZkAQQAfAauAXoAHgAKAYlVwYW5lbNQADgGMAY0BjgGP
-AB8AbgGxgFuAAoA9gGRccGFuZWxDYW5jZWw61AAOAYwBjQGOAZkAHwBBAbeAXoACgAeAZlhkZWxlZ2F0
-ZdQADgGMAY0BjgGPAB8AbwG9gFuAAoBCgGhfEBVwYW5lbFNob3dDZXJ0aWZpY2F0ZTrSAA4APgHAAcGA
-bK8QEQBrAToBAABqAEEAugFMAHABygFeAG4AewBsAG0BFwBMAG+AH4A/gDKADoAHgCGARIBGgGqAT4A9
-gBiAMIA1gDeAC4BC0gAOADIAMwHVgASAa11OU0FwcGxpY2F0aW9u0gA3ADgB2AF5ogF5ADvSAA4APgHA
-AduAbK8QEQBMAG4AbABMAB8AawBvAEwAHwBwAEwAagBMAEwAbQBBAEyAC4A9gDCAC4ACgB+AQoALgAKA
-RoALgA6AC4ALgDWAB4AL0gAOAD4BwAHvgGyvEBIAawE6AQAAagBBALoBTABwAcoBXgBuAHsAbAAfAG0B
-FwBMAG+AH4A/gDKADoAHgCGARIBGgGqAT4A9gBiAMIACgDWAN4ALgELSAA4APgHAAgSAbK8QEgIFAgYC
-BwIIAgkCCgILAgwCDQIOAg8CEAIRAhICEwIUAhUCFoBwgHGAcoBzgHSAdYB2gHeAeIB5gHqAe4B8gH2A
-foB/gICAgV8QIVN0YXRpYyBUZXh0ICg8PGRvIG5vdCBsb2NhbGl6ZT4+KV8QE0J1dHRvbiBDZWxsIChB
-Ym9ydClfECdUZXh0IEZpZWxkIENlbGwgKDw8ZG8gbm90IGxvY2FsaXplPj4pLTFfEBJJbWFnZSBWaWV3
-IChBZGl1bSlfEBtQYW5lbCAoQ2VydGlmaWNhdGUgV2FybmluZylfECVUZXh0IEZpZWxkIENlbGwgKDw8
-ZG8gbm90IGxvY2FsaXplPj4pXxAeQnV0dG9uIENlbGwgKFNob3cgQ2VydGlmaWNhdGUpXxAXSW1hZ2Ug
-VmlldyAoRXJyb3JBbGVydClbQXBwbGljYXRpb25fEBdJbWFnZSBDZWxsIChFcnJvckFsZXJ0KV8QE1B1
-c2ggQnV0dG9uIChBYm9ydClfEBJJbWFnZSBDZWxsIChBZGl1bSlfECNTdGF0aWMgVGV4dCAoPDxkbyBu
-b3QgbG9jYWxpemU+PiktMVxGaWxlJ3MgT3duZXJfEBNQdXNoIEJ1dHRvbiAoQWxsb3cpXxATQnV0dG9u
-IENlbGwgKEFsbG93KVxDb250ZW50IFZpZXdfEB5QdXNoIEJ1dHRvbiAoU2hvdyBDZXJ0aWZpY2F0ZSnS
-AA4APgHAAiuAbKDSAA4APgHAAi6AbKDSAA4APgHAAjGAbK8QGQBrAToBAABBAYcAcAGFAcoBXgB7AGwB
-igBqALoBTAGEAG4BhgAfAG0BiAEXAEwBiQBvgB+AP4AygAeAYYBGgFyAaoBPgBiAMIBngA6AIYBEgFmA
-PYBfgAKANYBjgDeAC4BlgELSAA4APgHAAk2AbK8QGQJOAk8CUAJRAlICUwJUAlUCVgJXAlgCWQJaAlsC
-XAJdAl4CXwJgAmECYgJjAmQCZQJmgIaAh4CIgImAioCLgIyAjYCOgI+AkICRgJKAk4CUgJWAloCXgJiA
-mYCagJuAnICdgJ4QBRAMEAgQERAPEBMT//////////0QBBAHEBQQDhAWEAsQEhAYEAkQFRAKEBcQDdIA
-DgA+AGgCfYBSoNIADgA+AcACgIBsoNIADgA+AcACg4BsoNIANwA4AoUChqIChgA7Xk5TSUJPYmplY3RE
-YXRhAAgAGQAiACcAMQA6AD8ARABSAFQAZgGvAbUCAAIHAg4CHAIuAkoCWAJkAnACfgKJApcCswLBAtQC
-5gMAAwoDFwMZAxsDHQMfAyEDIwMlAycDKQMrAy0DLwMxAzMDNQM3AzkDOwNEA1ADUgNUA3sDhAONA5gD
-nQOsA7UDyAPRA9wD3gPhA+MEDAQZBCYENAQ+BEwEWQRrBH8EiwSNBI8EkQSTBJgEmgScBJ4EoASiBL0E
-0wTbBPgFCgUVBR4FKgUzBT8FQQVDBUUFSAVKBUwFTgVXBVkFaAVqBWwFbgVwBXIFdAV2BZ8FpwWyBbkF
-xQXPBdEF0wXVBdYF2AXaBd0F3gXgBeIF6wXtBfoF/AX+BgAGAgYEBgYGIgY+BlYGigarBsgG0QbYBuUG
-6wcCByMHLwc3B0IHSgdSB18HagdvB3EHcwd1B3oHeweIB5cHmQebB50HpQerB7QHuQfMB9UH3AfoB/EH
-/AgICBIIGQglCEYISAhKCEwITghPCFEIUwhsCI0IoQirCLkIxQjKCMwIzgjQCNII1AjZCNsI8QkCCQkJ
-EAkZCRsJJAkmCSkJNgk/CUQJSwlgCWgJdQmBCY8JkQmTCZUJlwmZCaAJrQm6CcIJxAnGCdIJ2wngCfUJ
-9wn5CfsJ/QoQCh0KHwoiCisKNApGClMKXApnCnMKlAqWCpgKmgqcCp0KnwqhCrkK2grfCuEK4wrlCucK
-6QruCvALAQsDCwwLDgsQCzELMws1CzcLOQs6CzwLPgtWC4cLnQuyC8EL0wvlC/ML9Qv3C/kL+wv9C/8M
-AQwDDAgMEQwXDBgMGgwjDCwMOQxCDE0MVgx3DHkMewx9DH8MgAyCDIQMnAzNDM8M0QzTDNUM1wzZDN8M
-4Q0CDQQNBg0IDQoNCw0NDQ8NJw1YDVoNXA1eDWANYg1kDXcNoA2iDaQNpg2nDakNqw2sDa4NsA25DbsN
-yA3KDcwNzg3QDdIN1A3rDgwODg4QDhEOHg4gDiIOJA4vDjgOPw5ODlYOYQ5qDnEOig6TDpgOqw60DrYO
-xQ7HDskOyw7NDs8O0Q7TDuQO8g77DwMPBQ8HDwkPCw8UDx0PJA88D0sPXA9eD2APYg9kD3sPhA+LD6IP
-sw+1D7cPuQ+7D8YP1w/ZD9sP3Q/fD+UP9g/4D/oP/A/+EAsQHBAeECAQIhAkEC0QPhBAEEIQRBBGEF4Q
-ZxBpEI4QkBCSEJQQlhCYEJoQnBCeEKAQohCkEKYQqBCqEKwQrhCwELkQuxC9EMsQ1BDZEOIQ5BEJEQsR
-DREPERERExEVERcRGREbER0RHxEhESMRJREnESkRKxE0ETYRXRFfEWERYxFlEWcRaRFrEW0RbxFxEXMR
-dRF3EXkRexF9EX8RgRGKEYwRsxG1EbcRuRG7Eb0RvxHBEcMRxRHHEckRyxHNEc8R0RHTEdUR1xH7EhES
-OxJQEm4SlhK3EtES3RL3Ew0TIhNIE1UTaxOBE44TrxO4E7oTuxPEE8YTxxPQE9IUBxQJFAsUDRQPFBEU
-ExQVFBcUGRQbFB0UHxQhFCMUJRQnFCkUKxQtFC8UMRQzFDUUNxQ5FEIURBR5FHsUfRR/FIEUgxSFFIcU
-iRSLFI0UjxSRFJMUlRSXFJkUmxSdFJ8UoRSjFKUUpxSpFKsUrRSvFLEUsxS1FLcUwBTCFMQUxhTIFMoU
-zBTOFNAU0hTUFNYU2BTaFOMU5RTmFO8U8RTyFPsU/RT+FQcVDAAAAAAAAAICAAAAAAAAAocAAAAAAAAA
-AAAAAAAAABUbA</bytes>
+1gDZAOMA5ADlAOoA7ADxAPIA9QD5APwBBAEFAQ4BEwEbARwBLQEuAS8BMAEzATYBPgE/AUYBRwFIAVAB
+UQFYAVkBYwFsAW0BcQF1AXYBegALAXsBfQF+AYEBiwGTAZQBmAGdAZ4BowGkAacBrAGtAbIBswG4AbkB
+vgG/AdMB1gHXAdkB7QICAhcCGAIZAhoCGwIcAh0CHgIfAiACIQIiAiMCJAIlAiYCJwIoAikCLAIvAksC
+ZwJoAmkCagBUAmsCbAJtAm4BEgJvAnACcQJyAnMCdAJ1AFMCdgJ3AngA6ADgAnkCegJ7An4CgQKEVSRu
+dWxs3xASAA0ADgAPABAAEQASABMAFAAVABYAFwAYABkAGgAbABwAHQAeAB8AIAAhACIAIwAkACUAJgAn
+ACgAKQAqACsALAAtAC4ALwAwVk5TUm9vdFYkY2xhc3NdTlNPYmplY3RzS2V5c18QD05TQ2xhc3Nlc1Zh
+bHVlc18QGU5TQWNjZXNzaWJpbGl0eU9pZHNWYWx1ZXNdTlNDb25uZWN0aW9uc1tOU05hbWVzS2V5c1tO
+U0ZyYW1ld29ya11OU0NsYXNzZXNLZXlzWk5TT2lkc0tleXNdTlNOYW1lc1ZhbHVlc18QGU5TQWNjZXNz
+aWJpbGl0eUNvbm5lY3RvcnNdTlNGb250TWFuYWdlcl8QEE5TVmlzaWJsZVdpbmRvd3NfEA9OU09iamVj
+dHNWYWx1ZXNfEBdOU0FjY2Vzc2liaWxpdHlPaWRzS2V5c1lOU05leHRPaWRcTlNPaWRzVmFsdWVzgAKA
+m4BigHyAmoBRgGeABYB7gH2AaICYgACABoBmgJkQGYB+0gAOADIAMwA0W05TQ2xhc3NOYW1lgASAA18Q
+JEFJUHVycGxlQ2VydGlmaWNhdGVUcnVzdFdhcm5pbmdBbGVydNIANwA4ADkAOlgkY2xhc3Nlc1okY2xh
+c3NuYW1logA6ADteTlNDdXN0b21PYmplY3RYTlNPYmplY3RfEBBJQkNvY29hRnJhbWV3b3Jr0gAOAD4A
+PwBAWk5TLm9iamVjdHOAFqEAQYAH2gBDAA4ARABFAEYARwBIAEkASgBLAEwATQBOAE8AUABRAFIAUwBU
+ACtcTlNXaW5kb3dWaWV3XE5TU2NyZWVuUmVjdF1OU1dpbmRvd1RpdGxlWU5TV1RGbGFnc11OU1dpbmRv
+d0NsYXNzXE5TV2luZG93UmVjdF8QD05TV2luZG93QmFja2luZ18QEU5TV2luZG93U3R5bGVNYXNrW05T
+Vmlld0NsYXNzgAuAUIBPgAkSIAAAAIAKgAgQAhABgABfEBh7ezE5NiwgMzQ4fSwgezU0MiwgMTYyfX1f
+EBNDZXJ0aWZpY2F0ZSBXYXJuaW5nV05TUGFuZWzXAFoADgBbAFwAXQBeAF8AYABhAGIAYwBkAGAAZl8Q
+D05TTmV4dFJlc3BvbmRlclpOU1N1YnZpZXdzWE5TdkZsYWdzW05TRnJhbWVTaXplWE5TV2luZG93W05T
+U3VwZXJ2aWV3gAyAToANEQEAgEyADIBN0gAOAD4AaABpgEunAGoAawBsAG0AbgBvAHCADoAfgDCANIA8
+gEGARdoAWgAOAHIAcwB0AHUAXAB2AF4AXwBMAHgAeQB6AHsAfAB9AHoAYABMV05TRnJhbWVaTlNFZGl0
+YWJsZVZOU0NlbGxbTlNEcmFnVHlwZXNZTlNFbmFibGVkgAuAHoAXCYAYgA8RAQwJgAyAC9IADgA+AD8A
+g4AWpgCEAIUAhgCHAIgAiYAQgBGAEoATgBSAFV8QGUFwcGxlIFBERiBwYXN0ZWJvYXJkIHR5cGVfEBlB
+cHBsZSBQTkcgcGFzdGVib2FyZCB0eXBlXxAVTlNGaWxlbmFtZXNQYm9hcmRUeXBlXxAxTmVYVCBFbmNh
+cHN1bGF0ZWQgUG9zdFNjcmlwdCB2MS4yIHBhc3RlYm9hcmQgdHlwZV8QHk5lWFQgVElGRiB2NC4wIHBh
+c3RlYm9hcmQgdHlwZV8QGkFwcGxlIFBJQ1QgcGFzdGVib2FyZCB0eXBl0gA3ADgAkQCSowCSAJMAO1xO
+U011dGFibGVTZXRVTlNTZXRfEBR7ezE3LCA4MX0sIHs2NCwgNjR9fdgAlgAOAJcAmACZAJoAmwCcAJ0A
+ngCfAKAAnwCfAKEAoltOU0NlbGxGbGFnc1dOU1N0eWxlWk5TQ29udGVudHNXTlNBbGlnbldOU1NjYWxl
+XE5TQ2VsbEZsYWdzMlpOU0FuaW1hdGVzEgAB/gCAHRAAgBkSAgAAAAjTAA4AMgCkAKUApgCnXk5TUmVz
+b3VyY2VOYW1lgByAGoAbV05TSW1hZ2VVQWRpdW3SADcAOACrAKyiAKwAO18QEE5TQ3VzdG9tUmVzb3Vy
+Y2XSADcAOACuAK+jAK8AdAA7W05TSW1hZ2VDZWxs0gA3ADgAsQCypQCyALMAtAC1ADtbTlNJbWFnZVZp
+ZXdZTlNDb250cm9sVk5TVmlld1tOU1Jlc3BvbmRlctgAWgAOAHIAdABcAHYAXgBfAEwAuAC5ALoAfQB6
+AGAATIALgC+AIIAhCYAMgAtfEBZ7ezg2LCAxMzd9LCB7NDM5LCAxN3192ACWAA4AwACYAMEAwgCbAMMA
+xADFAMYAxwDIAGsAygDLXxARTlNCYWNrZ3JvdW5kQ29sb3JZTlNTdXBwb3J0XU5TQ29udHJvbFZpZXdb
+TlNUZXh0Q29sb3ISBAH+QIAugCaAIoAjgB8SEEAEAIArXxATPDxkbyBub3QgbG9jYWxpemU+PtQADgDO
+AM8A0ADRANIA0wDUVk5TU2l6ZVZOU05hbWVYTlNmRmxhZ3OAJSNAKgAAAAAAAIAkEQQUXEx1Y2lkYUdy
+YW5kZdIANwA4ANcA2KIA2AA7Vk5TRm9udNUADgDaANsA3ADdAN4A3wDgAOEA4ldOU0NvbG9yXE5TQ29s
+b3JTcGFjZVtOU0NvbG9yTmFtZV1OU0NhdGFsb2dOYW1lgCqAKRAGgCiAJ1ZTeXN0ZW1cY29udHJvbENv
+bG9y0wAOANsA5gDeAOgA6VdOU1doaXRlgCoQA0swLjY2NjY2NjY5ANIANwA4AOsA2qIA2gA71QAOANoA
+2wDcAN0A3gDuAOAA7wDigCqALYAsgCdfEBBjb250cm9sVGV4dENvbG9y0wAOANsA5gDeAOgA9IAqQjAA
+0gA3ADgA9gD3pAD3APgAdAA7XxAPTlNUZXh0RmllbGRDZWxsXE5TQWN0aW9uQ2VsbNIANwA4APoA+6UA
++wCzALQAtQA7W05TVGV4dEZpZWxk2ABaAA4AcgB0AFwAdgBeAF8ATAC4AP8BAAB9AHoAYABMgAuAL4Ax
+gDIJgAyAC18QFXt7ODYsIDYwfSwgezQzOSwgNjl9fdgAlgAOAMAAmADBAMIAmwDDAQYAxQDGAMcBCgBs
+AQwAyxIEAf4AgC6AJoAigDOAMBIQQAAAgCvUAA4AzgDPANAA0QEQANMBEoAlI0AkAAAAAAAAgCQQENgA
+WgAOAHIAdABcAHYAXgBfAEwBFQEWARcAfQB6AGAATIALgDuANYA2CYAMgAtfEBZ7ezQwOSwgMTJ9LCB7
+MTIyLCAzMn193ACWAA4BHQEeAR8BIACYAMEAwgEhAJsBIgEGASMBJAAvASUBJgEnAMgAbQEqASsBLF8Q
+E05TQWx0ZXJuYXRlQ29udGVudHNfEBJOU1BlcmlvZGljSW50ZXJ2YWxeTlNCdXR0b25GbGFnczJfEA9O
+U0tleUVxdWl2YWxlbnRfEA9OU1BlcmlvZGljRGVsYXldTlNCdXR0b25GbGFnc4A6gDgQgYA5gDeAI4A0
+EMgSCAAAABP/////hoJA/1xBbHdheXMgQWxsb3dQUQ3SADcAOAExATKkATIA+AB0ADtcTlNCdXR0b25D
+ZWxs0gA3ADgBNAE1pQE1ALMAtAC1ADtYTlNCdXR0b27YAFoADgByAHQAXAB2AF4AXwBMARUBOQE6AH0A
+egBgAEyAC4A7gD2APgmADIALXxAVe3szMTMsIDEyfSwgezk2LCAzMn193ACWAA4BHQEeAR8BIACYAMEA
+wgEhAJsBIgEGASMBJAAvASUBQgFDAMgAbgEqASsBLIA6gDiAQIA/gCOAPFVBYm9ydFEb2ABaAA4AcgB0
+AFwAdgBeAF8ATAEVAUsBTAB9AHoAYABMgAuAO4BCgEMJgAyAC18QFXt7MTQsIDEyfSwgezE0MiwgMzJ9
+fdwAlgAOAR0BHgEfASAAmADBAMIBIQCbASIBBgEjASQALwElASQBVQDIAG8BKgErASyAOoA4gDiARIAj
+gEFfEBBTaG93IENlcnRpZmljYXRl2gBaAA4AcgBzAHQAdQBcAHYAXgBfAEwAeAFcAHoBXgFfAGMAegBg
+AEyAC4AegEcJgEiARgmADIAL0gAOAD4APwFlgBamAIQAhQCGAIcAiACJgBCAEYASgBOAFIAVXxAUe3s0
+OSwgNzh9LCB7MzIsIDMyfX3YAJYADgCXAJgAmQCaAJsAnACdAJ4AnwFvAJ8AVAChAHqAHYBJCdMADgAy
+AKQApQCmAXSAHIAagEpaRXJyb3JBbGVydNIANwA4AXcBeKMBeAF5ADteTlNNdXRhYmxlQXJyYXlXTlNB
+cnJheVp7NTQyLCAxNjJ90gA3ADgBfAC0owC0ALUAO18QFnt7MCwgMH0sIHsxOTIwLCAxMTc4fX3SADcA
+OAF/AYCiAYAAO18QEE5TV2luZG93VGVtcGxhdGXSAA4APgBoAYOAS6cBhAGFAYYBhwGIAYkBioBSgFWA
+V4BagFyAXoBg1AAOAYwBjQGOAY8AHwBvAZJdTlNEZXN0aW5hdGlvblhOU1NvdXJjZVdOU0xhYmVsgFSA
+AoBBgFNfEBVwYW5lbFNob3dDZXJ0aWZpY2F0ZTrSADcAOAGVAZajAZYBlwA7XxAVTlNOaWJDb250cm9s
+Q29ubmVjdG9yXk5TTmliQ29ubmVjdG9y1AAOAYwBjQGOAY8AHwBtAZyAVIACgDSAVlhwYW5lbE9LOtQA
+DgGMAY0BjgGfAB8AQQGigFmAAoAHgFhYZGVsZWdhdGXSADcAOAGlAaajAaYBlwA7XxAUTlNOaWJPdXRs
+ZXRDb25uZWN0b3LUAA4BjAGNAY4BjwAfAG4Bq4BUgAKAPIBbXHBhbmVsQ2FuY2VsOtQADgGMAY0BjgGf
+AGwAHwGxgFmAMIACgF1fEBRhbGVydEluZm9ybWF0aXZlVGV4dNQADgGMAY0BjgGfAEEAHwG3gFmAB4AC
+gF9VcGFuZWzUAA4BjAGNAY4BnwBrAB8BvYBZgB+AAoBhWmFsZXJ0VGl0bGXSAA4APgHAAcGAZa8QEQBr
+AG8BOgBuAHsBFwBMAGwAQQEAAGoAugFMAHABXgHRAG2AH4BBgD6APIAYgDaAC4AwgAeAMoAOgCGAQ4BF
+gEiAY4A00gAOADIAMwHVgASAZF1OU0FwcGxpY2F0aW9u0gA3ADgB2AF5ogF5ADvSAA4APgHAAduAZa8Q
+EQBMAEwAbgBMAGoAbQBBAEwAHwBsAEwAawBvAEwAcAAfAEyAC4ALgDyAC4AOgDSAB4ALgAKAMIALgB+A
+QYALgEWAAoAL0gAOAD4BwAHvgGWvEBIAawBvAToAbgB7ARcATABsAEEBTAAfAGoAugBwAQABXgHRAG2A
+H4BBgD6APIAYgDaAC4AwgAeAQ4ACgA6AIYBFgDKASIBjgDTSAA4APgHAAgSAZa8QEgIFAgYCBwIIAgkC
+CgILAgwCDQIOAg8CEAIRAhICEwIUAhUCFoBpgGqAa4BsgG2AboBvgHCAcYBygHOAdIB1gHaAd4B4gHmA
+el8QIVN0YXRpYyBUZXh0ICg8PGRvIG5vdCBsb2NhbGl6ZT4+KV8QHlB1c2ggQnV0dG9uIChTaG93IENl
+cnRpZmljYXRlKV8QE0J1dHRvbiBDZWxsIChBYm9ydClfEBNQdXNoIEJ1dHRvbiAoQWJvcnQpXxASSW1h
+Z2UgQ2VsbCAoQWRpdW0pXxAaQnV0dG9uIENlbGwgKEFsd2F5cyBBbGxvdylcQ29udGVudCBWaWV3XxAj
+U3RhdGljIFRleHQgKDw8ZG8gbm90IGxvY2FsaXplPj4pLTFfEBtQYW5lbCAoQ2VydGlmaWNhdGUgV2Fy
+bmluZylfEB5CdXR0b24gQ2VsbCAoU2hvdyBDZXJ0aWZpY2F0ZSlcRmlsZSdzIE93bmVyXxASSW1hZ2Ug
+VmlldyAoQWRpdW0pXxAlVGV4dCBGaWVsZCBDZWxsICg8PGRvIG5vdCBsb2NhbGl6ZT4+KV8QF0ltYWdl
+IFZpZXcgKEVycm9yQWxlcnQpXxAnVGV4dCBGaWVsZCBDZWxsICg8PGRvIG5vdCBsb2NhbGl6ZT4+KS0x
+XxAXSW1hZ2UgQ2VsbCAoRXJyb3JBbGVydClbQXBwbGljYXRpb25fEBpQdXNoIEJ1dHRvbiAoQWx3YXlz
+IEFsbG93KdIADgA+AcACK4BloNIADgA+AcACLoBloNIADgA+AcACMYBlrxAZAG8AewGIAGwAQQFMAB8B
+hwBwAV4B0QBrAYkBOgBuARcBigBMAYQBhgEAAGoAugBtAYWAQYAYgFyAMIAHgEOAAoBagEWASIBjgB+A
+XoA+gDyANoBggAuAUoBXgDKADoAhgDSAVdIADgA+AcACTYBlrxAZAk4CTwJQAlECUgJTAlQCVQJWAlcC
+WAJZAloCWwJcAl0CXgJfAmACYQJiAmMCZAJlAmaAf4CAgIGAgoCDgISAhYCGgIeAiICJgIqAi4CMgI2A
+joCPgJCAkYCSgJOAlICVgJaAlxANEAQQExAHEA4QGBAVEA8T//////////0QBRAREAwQCxAKEBIQFBAX
+EAgQCRAW0gAOAD4AaAJ9gEug0gAOAD4BwAKAgGWg0gAOAD4BwAKDgGWg0gA3ADgChQKGogKGADteTlNJ
+Qk9iamVjdERhdGEACAAZACIAJwAxADoAPwBEAFIAVABmAaEBpwHyAfkCAAIOAiACPAJKAlYCYgJwAnsC
+iQKlArMCxgLYAvIC/AMJAwsDDQMPAxEDEwMVAxcDGQMbAx0DHwMhAyMDJQMnAykDKwMtAzYDQgNEA0YD
+bQN2A38DigOPA54DpwO6A8MDzgPQA9MD1QP+BAsEGAQmBDAEPgRLBF0EcQR9BH8EgQSDBIUEigSMBI4E
+kASSBJQErwTFBM0E6gT8BQcFEAUcBSUFMQUzBTUFNwU6BTwFPgVABUkFSwVaBVwFXgVgBWIFZAVmBWgF
+kQWZBaQFqwW3BcEFwwXFBccFyAXKBcwFzwXQBdIF1AXdBd8F7AXuBfAF8gX0BfYF+AYUBjAGSAZ8Bp0G
+ugbDBsoG1wbdBvQHFQchBykHNAc8B0QHUQdcB2EHYwdlB2cHbAdtB3oHiQeLB40HjweXB50HpgerB74H
+xwfOB9oH4wfuB/oIBAgLCBcIOAg6CDwIPghACEEIQwhFCF4IfwiTCJ0Iqwi3CLwIvgjACMIIxAjGCMsI
+zQjjCPQI+wkCCQsJDQkWCRgJGwkoCTEJNgk9CVIJWglnCXMJgQmDCYUJhwmJCYsJkgmfCawJtAm2CbgJ
+xAnNCdIJ5wnpCesJ7QnvCgIKDwoRChQKHQomCjgKRQpOClkKZQqGCogKigqMCo4KjwqRCpMKqwrMCtEK
+0wrVCtcK2QrbCuAK4grzCvUK/gsACwILIwslCycLKQsrCywLLgswC0kLeguQC6ULtAvGC9gL5gvoC+oL
+7AvuC/AL8gv0C/YL+wwEDBEMEgwUDB0MJgwzDDwMRwxQDHEMcwx1DHcMeQx6DHwMfgyWDMcMyQzLDM0M
+zwzRDNMM2QzbDPwM/g0ADQINBA0FDQcNCQ0hDVINVA1WDVgNWg1cDV4NcQ2aDZwNng2gDaENow2lDaYN
+qA2qDbMNtQ3CDcQNxg3IDcoNzA3ODeUOBg4IDgoOCw4YDhoOHA4eDikOMg45DkgOUA5bDmQOaw6EDo0O
+kg6lDq4OsA6/DsEOww7FDscOyQ7LDs0O3g7sDvUO/Q7/DwEPAw8FDx0PJg8tD0UPVA9lD2cPaQ9rD20P
+dg+HD4kPiw+ND48PmA+hD6gPvw/QD9IP1A/WD9gP5Q/2D/gP+g/8D/4QFRAmECgQKhAsEC4QNBBFEEcQ
+SRBLEE0QWBBhEGMQiBCKEIwQjhCQEJIQlBCWEJgQmhCcEJ4QoBCiEKQQphCoEKoQsxC1ELcQxRDOENMQ
+3BDeEQMRBREHEQkRCxENEQ8RERETERURFxEZERsRHREfESERIxElES4RMBFXEVkRWxFdEV8RYRFjEWUR
+ZxFpEWsRbRFvEXERcxF1EXcReRF7EYQRhhGtEa8RsRGzEbURtxG5EbsRvRG/EcERwxHFEccRyRHLEc0R
+zxHREfUSFhIsEkISVxJ0EoESpxLFEuYS8xMIEzATShN0E44TmhO3E8ATwhPDE8wTzhPPE9gT2hQPFBEU
+ExQVFBcUGRQbFB0UHxQhFCMUJRQnFCkUKxQtFC8UMRQzFDUUNxQ5FDsUPRQ/FEEUShRMFIEUgxSFFIcU
+iRSLFI0UjxSRFJMUlRSXFJkUmxSdFJ8UoRSjFKUUpxSpFKsUrRSvFLEUsxS1FLcUuRS7FL0UvxTBFMMU
+zBTOFNAU0hTUFNYU2BTaFNwU3hTgFOIU6xTtFO4U9xT5FPoVAxUFFQYVDxUUAAAAAAAAAgIAAAAAAAAC
+hwAAAAAAAAAAAAAAAAAAFSM</bytes>
 		</object>
 	</data>
 </archive>
