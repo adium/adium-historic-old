@@ -128,9 +128,6 @@
 		[[adium preferenceController] registerPreferenceObserver:self
 														forGroup:PREF_GROUP_STATUS_MENU_ITEM];		
 		
-		//Register as a chat observer (So we can catch the unviewed content status flag)
-		[[adium chatController] registerChatObserver:self];
-		
 		//Register to recieve active state changed notifications
 		[notificationCenter addObserver:self
 		                       selector:@selector(updateMenuIcons)
@@ -155,8 +152,10 @@
 
 - (void)dealloc
 {
+	// Invalidate and release our timers
+	[self invalidateTimers];
+	
 	//Unregister ourself
-	[[adium chatController] unregisterChatObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	
@@ -182,10 +181,6 @@
 	// Release our AIMenuBarIcons bundle
 	[menuIcons release];
 	
-	// Invalidate and release the unviewed content flash NSTimer
-	[unviewedContentFlash invalidate];
-	[unviewedContentFlash release];
-
 	// Can't release this because it causes a crash on quit. rdar://4139755, rdar://4160625, and #743. --boredzo
 	// [statusItem release];
 	
@@ -499,6 +494,8 @@
 
 - (void)updateOpenChats
 {
+	[self retain];
+	
 	int unviewedContentCount = [[adium chatController] unviewedContentCount];
 
 	// Update our open chats
@@ -540,6 +537,8 @@
 	}
 
 	mainMenuNeedsUpdate = YES;	
+	
+	[self release];
 }
 
 //Menu Delegates/Actions --------------------------------------------------------
