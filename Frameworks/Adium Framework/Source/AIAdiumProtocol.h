@@ -11,8 +11,7 @@
 @class AICoreComponentLoader;
 
 typedef enum {
-	AIQuitConfirmNever = 0,
-	AIQuitConfirmAlways,
+	AIQuitConfirmAlways = 0,
 	AIQuitConfirmSelective
 } AIQuitConfirmationType;
 
