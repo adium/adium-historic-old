@@ -94,14 +94,14 @@
 			<string>ObjC</string>
 			<key>OUTLETS</key>
 			<dict>
+				<key>button_dismissAll</key>
+				<string>NSButton</string>
 				<key>button_okay</key>
 				<string>NSButton</string>
 				<key>scrollView_errorInfo</key>
 				<string>NSScrollView</string>
 				<key>scrollView_errorTitle</key>
 				<string>NSScrollView</string>
-				<key>tabView_multipleErrors</key>
-				<string>NSTabView</string>
 				<key>textView_errorInfo</key>
 				<string>NSTextView</string>
 				<key>textView_errorTitle</key>
