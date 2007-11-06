@@ -58,11 +58,12 @@
 	[label_quitConfirmation setLocalizedString:AILocalizedString(@"Quit Confirmation", @"Preference")];
 	[checkBox_quitConfirmFT setLocalizedString:AILocalizedString(@"When file transfers are in progress", @"Quit Confirmation preference")];
 	[checkBox_quitConfirmUnread setLocalizedString:AILocalizedString(@"When there are unread messages", @"Quit Confirmation preference")];
+	[checkBox_quitConfirmOpenChats setLocalizedString:AILocalizedString(@"When there are open chat windows", @"Quit Confirmation preference")];
 	
-	[label_quitConfirmationSentence setLocalizedString:AILocalizedString(@"When quitting Adium:", nil)];
-	[[matrix_quitConfirmation cellWithTag:AIQuitConfirmNever] setTitle:AILocalizedString(@"Never confirm",@"Quit Confirmation preference")];
-	[[matrix_quitConfirmation cellWithTag:AIQuitConfirmAlways] setTitle:AILocalizedString(@"Always confirm",@"Quit Confirmation preference")];
-	[[matrix_quitConfirmation cellWithTag:AIQuitConfirmSelective] setTitle:AILocalizedString(@"Sometimes confirm",@"Quit Confirmation preference")];
+	[label_quitConfirmationSentence setLocalizedString:AILocalizedString(@"Confirm before quitting Adium:", nil)];
+	[[matrix_quitConfirmation cellWithTag:AIQuitConfirmNever] setTitle:AILocalizedString(@"Never",@"Quit Confirmation preference")];
+	[[matrix_quitConfirmation cellWithTag:AIQuitConfirmAlways] setTitle:AILocalizedString(@"Always",@"Quit Confirmation preference")];
+	[[matrix_quitConfirmation cellWithTag:AIQuitConfirmSelective] setTitle:AILocalizedString(@"Sometimes",@"Quit Confirmation preference")];
 	
 	[self configureControlDimming];
 	
