@@ -62,7 +62,7 @@
 	int				i = 0;
 	
 	while ((object = [enumerator nextObject])) {
-		[desc appendFormat:@"(%@:%@)%@", [ownerArray objectAtIndex:i], object, (object == [contentArray lastObject] ? @"" : @", ")];
+		[desc appendFormat:@"(%@:%@:%@)%@", [ownerArray objectAtIndex:i], object, [priorityArray objectAtIndex:i], (object == [contentArray lastObject] ? @"" : @", ")];
 		i++;
 	}
 	[desc appendString:@">"];
