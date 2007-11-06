@@ -5,11 +5,11 @@
 	<key>Confirm Quit</key>
 	<true/>
 	<key>Confirm Quit Type</key>
-	<integer>0</integer>
+	<integer>1</integer>
 	<key>Suppress Quit Confirmation for File Transfers</key>
 	<false/>
 	<key>Suppress Quit Confirmation for Open Chats</key>
-	<false/>
+	<true/>
 	<key>Suppress Quit Confirmation for Unread Messages</key>
 	<false/>
 </dict>
