@@ -334,6 +334,11 @@ static NSString	*prefsCategory;
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
 {
+	if (![[preferenceController preferenceForKey:@"Confirm Quit"
+										   group:@"Confirmations"] boolValue]) {
+		return NSTerminateNow;
+	}
+	
 	AIQuitConfirmationType		confirmationType = [[preferenceController preferenceForKey:@"Confirm Quit Type"
 																							group:@"Confirmations"] intValue];
 	BOOL confirmUnreadMessages	= ![[preferenceController preferenceForKey:@"Suppress Quit Confirmation for Unread Messages"
@@ -349,10 +354,6 @@ static NSString	*prefsCategory;
 	NSApplicationTerminateReply allowQuit = NSTerminateNow;
 	
 	switch (confirmationType) {
-		case AIQuitConfirmNever:
-			allowQuit = NSTerminateNow;		
-			break;
-			
 		case AIQuitConfirmAlways:
 			questionSelector = @selector(confirmQuitQuestion:userInfo:);
 			
@@ -548,8 +549,8 @@ static NSString	*prefsCategory;
 			break;
 		case AITextAndButtonsOtherReturn:
 			//Don't Ask Again
-			[[self preferenceController] setPreference:[NSNumber numberWithInt:AIQuitConfirmSelective]
-												forKey:@"Confirm Quit Type"
+			[[self preferenceController] setPreference:[NSNumber numberWithBool:NO]
+												forKey:@"Confirm Quit"
 												 group:@"Confirmations"];
 			[NSApp replyToApplicationShouldTerminate:NSTerminateNow];
 			break;

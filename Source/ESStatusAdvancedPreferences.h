@@ -17,8 +17,8 @@
 	IBOutlet	NSButton	*checkBox_statusMenuItemFlash;
 	
 	IBOutlet	NSTextField	*label_quitConfirmation;
-	IBOutlet	NSTextField	*label_quitConfirmationSentence;
 
+	IBOutlet	NSButton	*checkBox_quitConfirmEnabled;
 	IBOutlet	NSMatrix	*matrix_quitConfirmation;
 	IBOutlet	NSButton	*checkBox_quitConfirmFT;
 	IBOutlet	NSButton	*checkBox_quitConfirmUnread;
