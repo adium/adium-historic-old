@@ -1,4 +1,15 @@
-The current build process is this:
+To set up the build environment (fetch the source trees):
+python download.py `cat urls.txt`
+
+Also get a copy of the pidgin sources:
+http://developer.pidgin.im/wiki/UsingPidginMonotone
+
+When you set up your pidgin working copy, set the environment variable
+PIDGIN_SOURCE to be the path to your WC. current_step.sh needs this to work.
+In bash/zsh: export PIDGIN_SOURCE="/path/to/im.pidgin.pidgin"
+In csh/tcsh: setenv PIDGIN_SOURCE "/path/to/im.pidgin.pidgin"
+
+Then, once you have the source trees, the current build process is this:
 ./dep_make.sh
 ./purple_make.sh
 # this next step will die soon, it's here because of the churn on the procedure
@@ -6,4 +17,4 @@ The current build process is this:
 ./current_step.sh
 ./universalize.sh
 
-which will leave you with frameworks in build/Frameworks
+which will leave you with frameworks in build/Frameworks.
