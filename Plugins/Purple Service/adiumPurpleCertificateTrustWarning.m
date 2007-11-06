@@ -10,6 +10,35 @@
 #import "adiumPurpleCertificateTrustWarning.h"
 #import "AIPurpleCertificateTrustWarningAlert.h"
 
-void adium_query_cert_chain(OSStatus err, const char *hostname, CFArrayRef certs, void (*accept_cert)(void *userdata), void (*reject_cert)(void *userdata), void *userdata) {
-	[AIPurpleCertificateTrustWarningAlert displayTrustWarningAlertWithHostname:[NSString stringWithUTF8String:hostname] error:err certificates:certs acceptCallback:accept_cert rejectCallback:reject_cert userData:userdata];
+#import <Adium/AIObject.h>
+#import <Adium/AIAccount.h>
+#import <Adium/AIAccountControllerProtocol.h>
+#import "ESPurpleJabberAccount.h"
+
+void adium_query_cert_chain(PurpleSslConnection *gsc, OSStatus err, const char *hostname, CFArrayRef certs, void (*cert_cleanup)(void *userdata), void *userdata) {
+	NSObject<AIAccountController> *accountController = [[AIObject sharedAdiumInstance] accountController];
+	// only the jabber service supports this right now
+	NSEnumerator *e = [[accountController accountsCompatibleWithService:[accountController firstServiceWithServiceID:@"Jabber"]] objectEnumerator];
+	ESPurpleJabberAccount *account;
+	
+	while((account = [e nextObject])) {
+		if([account secureConnection] == gsc) {
+			[AIPurpleCertificateTrustWarningAlert displayTrustWarningAlertWithAccount:account hostname:[NSString stringWithUTF8String:hostname] error:err certificates:certs cleanupCallback:cert_cleanup userData:userdata];
+			break;
+		}
+	}
+}
+
+gboolean adium_cert_shouldverify(PurpleSslConnection *gsc) {
+	NSObject<AIAccountController> *accountController = [[AIObject sharedAdiumInstance] accountController];
+	// only the jabber service supports this right now
+	NSEnumerator *e = [[accountController accountsCompatibleWithService:[accountController firstServiceWithServiceID:@"Jabber"]] objectEnumerator];
+	ESPurpleJabberAccount *account;
+	
+	while((account = [e nextObject])) {
+		if([account secureConnection] == gsc) {
+			return [account shouldVerifyCertificates];
+		}
+	}
+	return false;
 }

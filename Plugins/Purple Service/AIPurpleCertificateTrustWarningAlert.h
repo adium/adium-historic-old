@@ -8,6 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import <Adium/AIObject.h>
+#import <Adium/AIAccount.h>
 
 @interface AIPurpleCertificateTrustWarningAlert : AIObject {
 	IBOutlet NSPanel *panel;
@@ -15,13 +16,13 @@
 	IBOutlet NSTextField *alertInformativeText;
 	
 	CFArrayRef certificates;
+	AIAccount *account;
 	
-	void (*accept_cert)(void *userdata);
-	void (*reject_cert)(void *userdata);
+	void (*cert_cleanup)(void *userdata);
 	void *userdata;
 }
 
-+ (void)displayTrustWarningAlertWithHostname:(NSString*)hostname error:(OSStatus)err certificates:(CFArrayRef)certs acceptCallback:(void (*)(void *userdata))_accept_cert rejectCallback:(void (*)(void *userdata))_reject_cert userData:(void*)ud;
++ (void)displayTrustWarningAlertWithAccount:(AIAccount*)account hostname:(NSString*)hostname error:(OSStatus)err certificates:(CFArrayRef)certs cleanupCallback:(void (*)(void *userdata))_cert_cleanup userData:(void*)ud;
 
 - (IBAction)panelOK:(id)sender;
 - (IBAction)panelCancel:(id)sender;

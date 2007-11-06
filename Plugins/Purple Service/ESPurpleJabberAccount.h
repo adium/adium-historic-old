@@ -27,6 +27,7 @@
 #define KEY_JABBER_DISABLE_BUZZ			@"Jabber:Disable Buzz"
 #define KEY_JABBER_SUBSCRIPTION_BEHAVIOR @"Jabber:Subscription Behavior"
 #define KEY_JABBER_SUBSCRIPTION_GROUP	@"Jabber:Default Subscription Group"
+#define KEY_JABBER_VERIFY_CERTS         @"Jabber:Verify Certificates"
 
 @class AMXMLConsoleController, AMPurpleJabberServiceDiscoveryBrowsing, AMPurpleJabberAdHocServer;
 
@@ -42,5 +43,8 @@
 - (NSString *)serverSuffix;
 - (NSString *)resourceName;
 - (AMPurpleJabberAdHocServer*)adhocServer;
+- (PurpleSslConnection*)secureConnection;
+- (void)setShouldVerifyCertificates:(BOOL)yesOrNo;
+- (BOOL)shouldVerifyCertificates;
 
 @end

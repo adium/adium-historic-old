@@ -427,9 +427,11 @@ extern void jabber_roster_request(JabberStream *js);
 
 		} else if ([*disconnectionError rangeOfString:@"requires plaintext authentication over an unencrypted stream"].location != NSNotFound) {
 			shouldAttemptReconnect = AIReconnectNever;
-			
 		} else if ([*disconnectionError rangeOfString:@"Resource Conflict"].location != NSNotFound) {
 			shouldAttemptReconnect = AIReconnectNever;
+		} else if ([*disconnectionError rangeOfString:@"SSL peer presented an invalid certificate"].location != NSNotFound) {
+			if([self shouldVerifyCertificates])
+				shouldAttemptReconnect = AIReconnectNever;
 		}
 	}
 	
@@ -695,7 +697,7 @@ extern void jabber_roster_request(JabberStream *js);
  */
 - (BOOL)encrypted
 {
-	return ([self online] && ((JabberStream*)[self purpleAccount]->gc->proto_data)->gsc);
+	return ([self online] && [self secureConnection]);
 }
 
 - (void)didConnect {
@@ -753,9 +755,24 @@ extern void jabber_roster_request(JabberStream *js);
 	[discoveryBrowserController browse:sender];
 }
 
+- (PurpleSslConnection*)secureConnection {
+	// this is really ugly
+	if([self purpleAccount]->gc && [self purpleAccount]->gc->proto_data)
+		return ((JabberStream*)[self purpleAccount]->gc->proto_data)->gsc;
+	return NULL;
+}
+
+- (void)setShouldVerifyCertificates:(BOOL)yesOrNo {
+	[self setPreference:[NSNumber numberWithBool:yesOrNo] forKey:KEY_JABBER_VERIFY_CERTS group:GROUP_ACCOUNT_STATUS];
+}
+
+- (BOOL)shouldVerifyCertificates {
+	return ([self preferenceForKey:KEY_JABBER_VERIFY_CERTS group:GROUP_ACCOUNT_STATUS]==nil) || [[self preferenceForKey:KEY_JABBER_VERIFY_CERTS group:GROUP_ACCOUNT_STATUS] boolValue];
+}
+
 #ifdef HAVE_CDSA
 - (IBAction)showServerCertificate:(id)sender {
-	CFArrayRef certificates = [[self purpleThread] copyServerCertificates:((JabberStream*)[self purpleAccount]->gc->proto_data)->gsc];
+	CFArrayRef certificates = [[self purpleThread] copyServerCertificates:[self secureConnection]];
 	
 	[AIPurpleCertificateViewer displayCertificateChain:certificates];
 	CFRelease(certificates);
