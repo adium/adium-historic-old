@@ -30,46 +30,41 @@
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
-	if (sender == checkBox_statusWindowHideInBackground) {
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-											 forKey:KEY_STATUS_STATUS_WINDOW_HIDE_IN_BACKGROUND
-											  group:PREF_GROUP_STATUS_PREFERENCES];		
-		
-	} else if (sender == checkBox_statusWindowAlwaysOnTop) {
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-											 forKey:KEY_STATUS_STATUS_WINDOW_ON_TOP
-											  group:PREF_GROUP_STATUS_PREFERENCES];
-	} else if (sender == checkBox_statusMenuItemBadge) {
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-											 forKey:KEY_STATUS_MENU_ITEM_BADGE
-											  group:PREF_GROUP_STATUS_MENU_ITEM];
-	} else if (sender == checkBox_statusMenuItemFlash) {
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-											 forKey:KEY_STATUS_MENU_ITEM_FLASH
-											  group:PREF_GROUP_STATUS_MENU_ITEM];		
+	if (sender == matrix_quitConfirmation) {
+		[self configureControlDimming];
 	}
+}
+
+- (void)configureControlDimming
+{
+	BOOL		enableSpecificConfirmations = ([[matrix_quitConfirmation selectedCell] tag] == AIQuitConfirmSelective);
+	
+	[checkBox_quitConfirmFT			setEnabled:enableSpecificConfirmations];
+	[checkBox_quitConfirmUnread		setEnabled:enableSpecificConfirmations];
+	[checkBox_quitConfirmOpenChats	setEnabled:enableSpecificConfirmations];
 }
 
 //Configure the preference view
 - (void)viewDidLoad
 {
-    NSDictionary	*prefDict;
-	
-	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STATUS_PREFERENCES];
-	[checkBox_statusWindowHideInBackground setState:[[prefDict objectForKey:KEY_STATUS_STATUS_WINDOW_HIDE_IN_BACKGROUND] boolValue]];
-	[checkBox_statusWindowAlwaysOnTop setState:[[prefDict objectForKey:KEY_STATUS_STATUS_WINDOW_ON_TOP] boolValue]];
-	
 	[label_statusWindow setLocalizedString:AILocalizedString(@"Away Status Window", nil)];
 	[checkBox_statusWindowHideInBackground setLocalizedString:AILocalizedString(@"Hide the status window when Adium is not active", nil)];
 	[checkBox_statusWindowAlwaysOnTop setLocalizedString:AILocalizedString(@"Show the status window above other windows", nil)];
 	
-	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STATUS_MENU_ITEM];
-	[checkBox_statusMenuItemBadge setState:[[prefDict objectForKey:KEY_STATUS_MENU_ITEM_BADGE] boolValue]];
-	[checkBox_statusMenuItemFlash setState:[[prefDict objectForKey:KEY_STATUS_MENU_ITEM_FLASH] boolValue]];
-	
 	[label_statusMenuItem setLocalizedString:AILocalizedString(@"Status Menu Item", nil)];
 	[checkBox_statusMenuItemBadge setLocalizedString:AILocalizedString(@"Badge the menu item with current status", nil)];
 	[checkBox_statusMenuItemFlash setLocalizedString:AILocalizedString(@"Flash when there are unread messages", nil)];
+	
+	[label_quitConfirmation setLocalizedString:AILocalizedString(@"Quit Confirmation", @"Preference")];
+	[checkBox_quitConfirmFT setLocalizedString:AILocalizedString(@"When file transfers are in progress", @"Quit Confirmation preference")];
+	[checkBox_quitConfirmUnread setLocalizedString:AILocalizedString(@"When there are unread messages", @"Quit Confirmation preference")];
+	
+	[label_quitConfirmationSentence setLocalizedString:AILocalizedString(@"When quitting Adium:", nil)];
+	[[matrix_quitConfirmation cellWithTag:AIQuitConfirmNever] setTitle:AILocalizedString(@"Never confirm",@"Quit Confirmation preference")];
+	[[matrix_quitConfirmation cellWithTag:AIQuitConfirmAlways] setTitle:AILocalizedString(@"Always confirm",@"Quit Confirmation preference")];
+	[[matrix_quitConfirmation cellWithTag:AIQuitConfirmSelective] setTitle:AILocalizedString(@"Sometimes confirm",@"Quit Confirmation preference")];
+	
+	[self configureControlDimming];
 	
 	[super viewDidLoad];
 }

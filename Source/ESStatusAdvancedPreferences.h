@@ -15,6 +15,14 @@
 	IBOutlet	NSTextField *label_statusMenuItem;
 	IBOutlet	NSButton	*checkBox_statusMenuItemBadge;
 	IBOutlet	NSButton	*checkBox_statusMenuItemFlash;
+	
+	IBOutlet	NSTextField	*label_quitConfirmation;
+	IBOutlet	NSTextField	*label_quitConfirmationSentence;
+
+	IBOutlet	NSMatrix	*matrix_quitConfirmation;
+	IBOutlet	NSButton	*checkBox_quitConfirmFT;
+	IBOutlet	NSButton	*checkBox_quitConfirmUnread;
+	IBOutlet	NSButton	*checkBox_quitConfirmOpenChats;
 }
 
 @end

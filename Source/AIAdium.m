@@ -334,53 +334,63 @@ static NSString	*prefsCategory;
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
 {
+	AIQuitConfirmationType		confirmationType = [[preferenceController preferenceForKey:@"Confirm Quit Type"
+																							group:@"Confirmations"] intValue];
+	BOOL confirmUnreadMessages	= ![[preferenceController preferenceForKey:@"Suppress Quit Confirmation for Unread Messages"
+																	group:@"Confirmations"] boolValue];
+	BOOL confirmFileTransfers	= ![[preferenceController preferenceForKey:@"Suppress Quit Confirmation for File Transfers"
+																	group:@"Confirmations"] boolValue];
+	BOOL confirmOpenChats		= ![[preferenceController preferenceForKey:@"Suppress Quit Confirmation for Open Chats"
+																	group:@"Confirmations"] boolValue];
+	
+	NSString	*questionToAsk = [NSString string];
+	SEL			questionSelector = nil;
+
 	NSApplicationTerminateReply allowQuit = NSTerminateNow;
-	if (([chatController unviewedContentCount] > 0) &&
-		(![[preferenceController preferenceForKey:@"Suppress Quit Confirmation for Unread Messages"
-											group:@"Confirmations"] boolValue])) {
-		[[self interfaceController] displayQuestion:AILocalizedString(@"Confirm Quit", nil)
-									withDescription:AILocalizedString(@"You have unread messages.\nAre you sure you want to quit?", nil)
-									withWindowTitle:nil
-									  defaultButton:AILocalizedString(@"Quit", nil)
-									alternateButton:AILocalizedString(@"Cancel", nil)
-										otherButton:AILocalizedString(@"Don't ask again", nil)
-											 target:self
-										   selector:@selector(unreadQuitQuestion:userInfo:)
-										   userInfo:nil];
-		allowQuit = NSTerminateLater;
-	} 
 	
-	if (allowQuit == NSTerminateNow &&
-		([fileTransferController activeTransferCount] > 0) &&
-		(![[preferenceController preferenceForKey:@"Suppress Quit Confirmation for File Transfers"
-											group:@"Confirmations"]  boolValue])) {
-		[[self interfaceController] displayQuestion:AILocalizedString(@"Confirm Quit", nil)
-									withDescription:AILocalizedString(@"You have file transfers in progress.\nAre you sure you want to quit?", nil)
-									withWindowTitle:nil
-									  defaultButton:AILocalizedString(@"Quit", nil)
-									alternateButton:AILocalizedString(@"Cancel", nil)
-										otherButton:AILocalizedString(@"Don't ask again", nil)
-											 target:self
-										   selector:@selector(fileTransferQuitQuestion:userInfo:)
-										   userInfo:nil];
-		allowQuit = NSTerminateLater;
+	switch (confirmationType) {
+		case AIQuitConfirmNever:
+			allowQuit = NSTerminateNow;		
+			break;
+			
+		case AIQuitConfirmAlways:
+			questionSelector = @selector(confirmQuitQuestion:userInfo:);
+			
+			allowQuit = NSTerminateLater;
+			break;
+			
+		case AIQuitConfirmSelective:
+			if ([chatController unviewedContentCount] > 0 && confirmUnreadMessages) {
+				questionToAsk = AILocalizedString(@"You have unread messages.",@"Quit Confirmation");
+				questionSelector = @selector(unreadQuitQuestion:userInfo:);
+				allowQuit = NSTerminateLater;
+			} else if ([fileTransferController activeTransferCount] > 0 && confirmFileTransfers) {
+				questionToAsk = AILocalizedString(@"You have file transfers in progress.",@"Quit Confirmation");
+				questionSelector = @selector(fileTransferQuitQuestion:userInfo:);
+				allowQuit = NSTerminateLater;
+			} else if ([[chatController openChats] count] > 0 && confirmOpenChats) {
+				questionToAsk = AILocalizedString(@"You have open chats.",@"Quit Confirmation");
+				questionSelector = @selector(openChatQuitQuestion:userInfo:);
+				allowQuit = NSTerminateLater;
+			}
+
+			break;
 	}
 	
-	if (allowQuit == NSTerminateNow &&
-		[[preferenceController preferenceForKey:@"Confirm Quit"
-										  group:@"Confirmations"]  boolValue]) {
+	if (allowQuit == NSTerminateLater) {
 		[[self interfaceController] displayQuestion:AILocalizedString(@"Confirm Quit", nil)
-									withDescription:AILocalizedString(@"Are you sure you want to quit Adium?", nil)
+									withDescription:[questionToAsk stringByAppendingFormat:@"%@%@",
+														([questionToAsk length] > 0 ? @"\n" : @""),
+														AILocalizedString(@"Are you sure you want to quit Adium?",@"Quit Confirmation")]
 									withWindowTitle:nil
 									  defaultButton:AILocalizedString(@"Quit", nil)
 									alternateButton:AILocalizedString(@"Cancel", nil)
 										otherButton:AILocalizedString(@"Don't ask again", nil)
 											 target:self
-										   selector:@selector(confirmQuitQuestion:userInfo:)
+										   selector:questionSelector
 										   userInfo:nil];
-		allowQuit = NSTerminateLater;
 	}
-	
+
 	return allowQuit;
 }
 
@@ -480,6 +490,30 @@ static NSString	*prefsCategory;
 	}
 }
 
+- (void)openChatQuitQuestion:(NSNumber *)number userInfo:(id)info
+{
+	AITextAndButtonsReturnCode result = [number intValue];
+	switch(result)
+	{
+		case AITextAndButtonsDefaultReturn:
+			//Quit
+			//Should we ask about File Transfers here?????
+			[NSApp replyToApplicationShouldTerminate:NSTerminateNow];
+			break;
+		case AITextAndButtonsOtherReturn:
+			//Don't Ask Again
+			[[self preferenceController] setPreference:[NSNumber numberWithBool:YES]
+												forKey:@"Suppress Quit Confirmation for Open Chats"
+												 group:@"Confirmations"];
+			[NSApp replyToApplicationShouldTerminate:NSTerminateNow];
+			break;
+		default:
+			//Cancel
+			[NSApp replyToApplicationShouldTerminate:NSTerminateCancel];
+			break;
+	}
+}
+
 - (void)fileTransferQuitQuestion:(NSNumber *)number userInfo:(id)info
 {
 	AITextAndButtonsReturnCode result = [number intValue];
@@ -514,8 +548,8 @@ static NSString	*prefsCategory;
 			break;
 		case AITextAndButtonsOtherReturn:
 			//Don't Ask Again
-			[[self preferenceController] setPreference:[NSNumber numberWithBool:NO]
-												forKey:@"Confirm Quit"
+			[[self preferenceController] setPreference:[NSNumber numberWithInt:AIQuitConfirmSelective]
+												forKey:@"Confirm Quit Type"
 												 group:@"Confirmations"];
 			[NSApp replyToApplicationShouldTerminate:NSTerminateNow];
 			break;

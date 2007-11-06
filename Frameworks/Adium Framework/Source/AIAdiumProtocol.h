@@ -10,6 +10,12 @@
 
 @class AICoreComponentLoader;
 
+typedef enum {
+	AIQuitConfirmNever = 0,
+	AIQuitConfirmAlways,
+	AIQuitConfirmSelective
+} AIQuitConfirmationType;
+
 @protocol AIAccountController, AIChatController, AIContactAlertsController, AIDebugController,
 		  AIPreferenceController, AIMenuController, AIApplescriptabilityController, AIStatusController,
 		  AIContentController, AIToolbarController, AISoundController, AIDockController,
