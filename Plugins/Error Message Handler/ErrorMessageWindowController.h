@@ -26,8 +26,8 @@
     IBOutlet	NSTextView		*textView_errorInfo;
     IBOutlet	NSScrollView	*scrollView_errorInfo;
     
-	IBOutlet	NSTabView		*tabView_multipleErrors;
     IBOutlet	NSButton		*button_okay;
+	IBOutlet	NSButton		*button_dismissAll;
 
     NSMutableArray				*errorTitleArray;
     NSMutableArray				*errorDescArray;

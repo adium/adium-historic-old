@@ -147,15 +147,14 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
 
     //Display the current error count
     if ([errorTitleArray count] == 1) {
-        [tabView_multipleErrors selectTabViewItemAtIndex:0]; //hide the 'okay all' button and error count
+		[button_dismissAll setHidden:YES];
         [[self window] setTitle:[errorWindowTitleArray objectAtIndex:0]];
         [button_okay setTitle:@"OK"];
-
     } else {
-        [tabView_multipleErrors selectTabViewItemAtIndex:1]; //show the 'okay all' button and error count
+		[button_dismissAll setHidden:NO];
         [[self window] setTitle:[NSString stringWithFormat:@"%@ (x%i)",[errorWindowTitleArray objectAtIndex:0],[errorTitleArray count]]];
-        [button_okay setTitle:@"Next"];
-
+        [button_okay setTitle:AILocalizedString(@"Next",nil)];
+		[button_dismissAll setTitle:AILocalizedString(@"Dismiss All", @"Used in the error window; closes all open errors.")];
     }
 
     [[self window] orderFront:nil];
