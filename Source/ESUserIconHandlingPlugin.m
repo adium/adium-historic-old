@@ -102,7 +102,8 @@
 			if ([[NSFileManager defaultManager] fileExistsAtPath:cachedImagePath]) {
 				NSImage				*cachedImage;
 
-				cachedImage = [[NSImage alloc] initByReferencingFile:cachedImagePath];
+				cachedImage = [[NSImage alloc] initWithContentsOfFile:cachedImagePath];
+				[cachedImage setDataRetained:YES];
 
 				if (cachedImage) {
 					//A cache image is used at lowest priority, since it is outdated data
