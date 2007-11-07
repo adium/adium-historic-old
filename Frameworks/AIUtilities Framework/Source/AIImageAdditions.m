@@ -232,8 +232,6 @@
 			}
 		}
 
-		NSImage *imageToDraw = [self copy];
-
 		newRect = NSMakeRect(0,0,size.width,size.height);
 		newImage = [[NSImage alloc] initWithSize:size];
 
@@ -241,7 +239,7 @@
 
 		NSImageRep	*bestRep;
 		if (allowAnimation &&
-			(bestRep = [imageToDraw bestRepresentationForDevice:nil]) &&
+			(bestRep = [self bestRepresentationForDevice:nil]) &&
 			[bestRep isKindOfClass:[NSBitmapImageRep class]] && 
 			(delta == 1.0) &&
 			([[(NSBitmapImageRep *)bestRep valueForProperty:NSImageFrameCount] intValue] > 1) ) {
@@ -252,15 +250,13 @@
 			[newImage lockFocus];
 			//Highest quality interpolation
 			[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-			[imageToDraw drawInRect:newRect
+			[self drawInRect:newRect
 			               fromRect:NSMakeRect(0,0,originalSize.width,originalSize.height)
 			              operation:NSCompositeCopy
 			               fraction:delta];
 			
 			[newImage unlockFocus];
 		}
-
-		[imageToDraw release];
 
 		return [newImage autorelease];
 	}
