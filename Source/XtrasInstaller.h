@@ -17,11 +17,12 @@
 @interface XtrasInstaller : NSObject {
 	IBOutlet NSWindow				*window;
 	IBOutlet NSProgressIndicator	*progressBar;
-	IBOutlet NSTextField			*percentText;
+	IBOutlet NSTextField			*infoText;
 	IBOutlet NSButton				*cancelButton;
 	
 	NSURLDownload					*download;
 	NSString						*dest;
+	NSString						*xtraName;
 
 	long long downloadSize;
 	long long amountDownloaded;

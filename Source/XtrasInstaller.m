@@ -24,6 +24,7 @@
 
 @interface XtrasInstaller (PRIVATE)
 - (void)closeInstaller;
+- (void)updateInfoText;
 @end
 
 /*!
@@ -80,10 +81,16 @@
 		[NSBundle loadNibNamed:@"XtraProgressWindow" owner:self];
 		[progressBar setUsesThreadedAnimation:YES];
 		
+		xtraName = nil;
+		amountDownloaded = 0;
+		downloadSize = 0;
+		
 		[progressBar setDoubleValue:0];
-		[percentText setStringValue:@"0%"];
 		[cancelButton setLocalizedString:AILocalizedString(@"Cancel",nil)];
-		[window setTitle:AILocalizedString(@"Xtra Download",nil)];
+		[window setTitle:AILocalizedString(@"Xtra Install",nil)];
+
+		[self updateInfoText];
+
 		[window makeKeyAndOrderFront:self];
 
 		urlToDownload = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@://%@/%@?%@", @"http", [url host], [url path], [url query]]];
@@ -103,12 +110,22 @@
 	}
 }
 
-- (void)download:(NSURLDownload *)connection didReceiveResponse:(NSURLResponse *)response
+- (void)updateInfoText
 {
+	int				percentComplete = (downloadSize > 0 ? (int)(((double)amountDownloaded / (double)downloadSize) * 100.0) : 0);
+	NSString		*installText = [NSString stringWithFormat:AILocalizedString(@"Installing %@", @"Install an Xtra; %@ is the name of the Xtra."), (xtraName ? xtraName : @"")];
+	
+	[infoText setStringValue:[NSString stringWithFormat:@"%@ (%d%%)", installText, percentComplete]];
+}
+
+- (void)download:(NSURLDownload *)connection didReceiveResponse:(NSHTTPURLResponse *)response
+{	
+	xtraName = [[response allHeaderFields] objectForKey:@"X-Xtraname"];
 	amountDownloaded = 0;
 	downloadSize = [response expectedContentLength];
 	[progressBar setMaxValue:(long long)downloadSize];
 	[progressBar setDoubleValue:0.0];
+	[self updateInfoText];
 }
 
 - (void)download:(NSURLDownload *)connection decideDestinationWithSuggestedFilename:(NSString *)filename
@@ -124,7 +141,7 @@
 	amountDownloaded += (long long)length;
 	if (downloadSize != NSURLResponseUnknownLength) {
 		[progressBar setDoubleValue:(double)amountDownloaded];
-		[percentText setStringValue:[NSString stringWithFormat:@"%f%",(double)((amountDownloaded / (double)downloadSize) * 100)]];
+		[self updateInfoText];
 	}
 	else
 		[progressBar setIndeterminate:YES];
