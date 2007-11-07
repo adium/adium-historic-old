@@ -123,7 +123,7 @@
 }
 
 #pragma mark Expose ignoring
-#if 0
+
 //This code appears to break Spaces interaction in 10.5. It remains in hopes that someone will fix it :)
 enum {
     kWindowNoTags            = 0,
@@ -200,10 +200,13 @@ OSStatus ChangeWindowTags(WindowRef theWindow, WindowTags setThese, WindowTags c
 
 - (void)setIgnoresExpose:(BOOL)flag
 {
+	if ([NSApp isOnLeopardOrBetter]) {
+		NSLog(@"%s called! You should not use this method on Leopard until this warning is removed.", __PRETTY_FUNCTION__);
+	}
+	NSLog(@"setIgnoresExpose:%@ called; changing stickiness of window %@", flag ? @"YES" : @"NO", self);
 	ChangeWindowTags([self windowRef],
 					 (flag ? kWindowExposeIsStickyTag : kWindowNoTags),
 					 (!flag ? kWindowExposeIsStickyTag : kWindowNoTags)); 
 }
-#endif
 
 @end

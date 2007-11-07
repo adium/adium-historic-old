@@ -241,7 +241,9 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 - (void)setWindowLevel:(int)level
 {
 	[[self window] setLevel:level];
-	//[[self window] setIgnoresExpose:(level == kCGBackstopMenuLevel)]; //Ignore expose while on the desktop
+	if (![NSApp isOnLeopardOrBetter]) {
+		[[self window] setIgnoresExpose:(level == kCGBackstopMenuLevel)]; //Ignore expose while on the desktop
+	}
 }
 
 //Preferences have changed
