@@ -499,25 +499,42 @@
 
 			if (![chat hasSentOrReceivedContent]) {
 				//If the chat wasn't open before, generate CONTENT_MESSAGE_RECEIVED_FIRST
-				previouslyPerformedActionIDs = [[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_RECEIVED_FIRST
+				if (![chat isGroupChat]) {
+					previouslyPerformedActionIDs = [[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_RECEIVED_FIRST
 																				forListObject:listObject
 																					 userInfo:userInfo
 																 previouslyPerformedActionIDs:nil];
+				}
 				[chat setHasSentOrReceivedContent:YES];
 			}
 			
 			if (chat != [[adium interfaceController] activeChat]) {
 				//If the chat is not currently active, generate CONTENT_MESSAGE_RECEIVED_BACKGROUND
-				previouslyPerformedActionIDs = [[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_RECEIVED_BACKGROUND
-																				forListObject:listObject
-																					 userInfo:userInfo
-																 previouslyPerformedActionIDs:previouslyPerformedActionIDs];
+				if ([chat isGroupChat]) {
+					previouslyPerformedActionIDs = [[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_RECEIVED_BACKGROUND_GROUP
+																					forListObject:listObject
+																						 userInfo:userInfo
+																	 previouslyPerformedActionIDs:previouslyPerformedActionIDs];					
+					
+				} else {
+					previouslyPerformedActionIDs = [[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_RECEIVED_BACKGROUND
+																					forListObject:listObject
+																						 userInfo:userInfo
+																	 previouslyPerformedActionIDs:previouslyPerformedActionIDs];
+				}
 			}
 			
-			[[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_RECEIVED
-											 forListObject:listObject
-												  userInfo:userInfo
-							  previouslyPerformedActionIDs:previouslyPerformedActionIDs];
+			if ([chat isGroupChat]) {
+				[[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_RECEIVED_GROUP
+												 forListObject:listObject
+													  userInfo:userInfo
+								  previouslyPerformedActionIDs:previouslyPerformedActionIDs];				
+			} else {
+				[[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_RECEIVED
+												 forListObject:listObject
+													  userInfo:userInfo
+								  previouslyPerformedActionIDs:previouslyPerformedActionIDs];				
+			}
 		}		
     }
 
