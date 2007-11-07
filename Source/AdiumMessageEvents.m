@@ -43,6 +43,8 @@
 	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_RECEIVED withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
 	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_RECEIVED_FIRST withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
 	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_RECEIVED_BACKGROUND withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
+	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_RECEIVED_GROUP withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
+	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_RECEIVED_BACKGROUND_GROUP withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
 	
 	//Observe chat changes
 	[[adium chatController] registerChatObserver:self];
@@ -165,6 +167,10 @@
 		description = AILocalizedString(@"Sends an initial message",nil);
 	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]) {
 		description = AILocalizedString(@"Sends a message in a background chat",nil);
+	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_GROUP]) {
+		description = AILocalizedString(@"Sends a message in a group chat",nil);
+	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND_GROUP]) {
+		description = AILocalizedString(@"Sends a message in a background group chat",nil);
 	} else {
 		description = @"";
 	}
@@ -183,7 +189,11 @@
 	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]) {
 		description = AILocalizedString(@"Message received (Initial)",nil);
 	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]) {
-		description = AILocalizedString(@"Message received (Background chat)",nil);
+		description = AILocalizedString(@"Message received (Background Chat)",nil);
+	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_GROUP]) {
+		description = AILocalizedString(@"Message received (Group Chat)",nil);
+	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND_GROUP]) {
+		description = AILocalizedString(@"Message received (Background Group Chat)",nil);
 	} else {
 		description = @"";
 	}
@@ -205,6 +215,10 @@
 		description = @"Message Received (New)";
 	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]) {
 		description = @"Message Received (Background Chat)";
+	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_GROUP]) {
+		description = @"Message Received (Group Chat)";
+	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND_GROUP]) {
+		description = @"Message Received (Background Group Chat)";
 	} else {
 		description = @"";
 	}
@@ -228,6 +242,10 @@
 			format = AILocalizedString(@"When %@ sends an initial message to you",nil);
 		} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]) {
 			format = AILocalizedString(@"When %@ sends a message to you in a background chat",nil);
+		} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_GROUP]) {
+			format = AILocalizedString(@"When %@ sends a message to you in a group chat",nil);
+		} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND_GROUP]) {
+			format = AILocalizedString(@"When %@ sends a message to you in a background group chat",nil);
 		} else {
 			format = nil;
 		}
@@ -249,6 +267,10 @@
 			description = AILocalizedString(@"When you receive an initial message",nil);
 		} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]) {
 			description = AILocalizedString(@"When you receive a message in a background chat",nil);
+		} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_GROUP]) {
+			description = AILocalizedString(@"When you receive a message in a group chat",nil);
+		} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND_GROUP]) {
+			description = AILocalizedString(@"When you receive a message in a background group chat",nil);
 		} else {
 			description = @"";
 		}
@@ -313,7 +335,9 @@
 		} else {
 			if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED] ||
 				[eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST] ||
-				[eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]) {
+				[eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND] ||
+				[eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_GROUP] ||
+				[eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND_GROUP]) {
 				//Use the message received text for all message received events if we don't have a message
 				description = [self globalShortDescriptionForEventID:CONTENT_MESSAGE_RECEIVED];
 			} else {
