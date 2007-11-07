@@ -87,7 +87,7 @@
 		
 		[progressBar setDoubleValue:0];
 		[cancelButton setLocalizedString:AILocalizedString(@"Cancel",nil)];
-		[window setTitle:AILocalizedString(@"Xtra Install",nil)];
+		[window setTitle:AILocalizedString(@"Xtra Download",nil)];
 
 		[self updateInfoText];
 
@@ -113,7 +113,7 @@
 - (void)updateInfoText
 {
 	int				percentComplete = (downloadSize > 0 ? (int)(((double)amountDownloaded / (double)downloadSize) * 100.0) : 0);
-	NSString		*installText = [NSString stringWithFormat:AILocalizedString(@"Installing %@", @"Install an Xtra; %@ is the name of the Xtra."), (xtraName ? xtraName : @"")];
+	NSString		*installText = [NSString stringWithFormat:AILocalizedString(@"Downloading %@", @"Install an Xtra; %@ is the name of the Xtra."), (xtraName ? xtraName : @"")];
 	
 	[infoText setStringValue:[NSString stringWithFormat:@"%@ (%d%%)", installText, percentComplete]];
 }
