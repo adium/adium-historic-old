@@ -143,7 +143,7 @@ static void *adiumPurpleRequestAction(const char *title, const char *primary,
 									size_t actionCount, va_list actions)
 {
     NSString			*titleString = (title ? [NSString stringWithUTF8String:title] : @"");
-	NSString			*primaryString = (primary ?  [NSString stringWithUTF8String:primary] : nil);
+	NSString			*primaryString = (primary ? [NSString stringWithUTF8String:primary] : nil);
 	id					requestController = nil;
 	int					i;
 	BOOL				handled = NO;
@@ -209,14 +209,10 @@ static void *adiumPurpleRequestAction(const char *title, const char *primary,
 	}
 
 	if (!handled) {
-		NSString	    *msg = [NSString stringWithFormat:@"%s%s%s",
-			(primary ? primary : ""),
-			((primary && secondary) ? "\n\n" : ""),
-			(secondary ? secondary : "")];
-		
+		NSString		*secondaryString = (secondary ? [NSString stringWithUTF8String:secondary] : nil);
 		NSMutableArray	*buttonNamesArray = [NSMutableArray arrayWithCapacity:actionCount];
 		GCallback		*callBacks = g_new0(GCallback, actionCount);
-    	
+		
 		//Generate the actions names and callbacks into useable forms
 		for (i = 0; i < actionCount; i += 1) {
 			char *buttonName;
@@ -243,11 +239,12 @@ static void *adiumPurpleRequestAction(const char *title, const char *primary,
 		}
 		
 		NSMutableDictionary	*infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-			buttonNamesArray,@"Button Names",
-			[NSValue valueWithPointer:callBacks],@"callBacks",
-			[NSValue valueWithPointer:userData],@"userData",
-			titleString,@"Title String",
-			msg,@"Message",nil];
+										 buttonNamesArray,@"Button Names",
+										 [NSValue valueWithPointer:callBacks],@"callBacks",
+										 [NSValue valueWithPointer:userData],@"userData",
+										 titleString,@"TitleString",
+										 (secondaryString ? primaryString : nil),@"MessageHeader",
+										 (secondaryString ? secondaryString : primaryString),@"Message",nil];
 		
 		AIAccount *adiumAccount = accountLookup(account);
 		if (adiumAccount) [infoDict setObject:adiumAccount forKey:@"AIAccount"];

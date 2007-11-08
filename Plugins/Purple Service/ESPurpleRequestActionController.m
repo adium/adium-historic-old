@@ -21,6 +21,7 @@
 #import "ESTextAndButtonsWindowController.h"
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/NDRunLoopMessenger.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
 
 @interface ESPurpleRequestActionController (PRIVATE)
 - (id)initWithDict:(NSDictionary *)infoDict;
@@ -46,19 +47,28 @@
 - (id)initWithDict:(NSDictionary *)infoDict
 {
 	if ((self = [super init])) {
-		NSAttributedString	*attributedMessage;
+		NSAttributedString	*attributedMessage = nil;
 		NSArray				*buttonNamesArray;
-		NSString			*title, *message;
-		NSString			*defaultButton, *alternateButton = nil, *otherButton = nil;
+		NSString			*title = nil, *message = nil;
+		NSString			*messageHeader = nil, *defaultButton = nil, *alternateButton = nil, *otherButton = nil;
 		unsigned			buttonNamesArrayCount;
 		
 		infoDict = [self translatedInfoDict:infoDict];
 		
 		title = [infoDict objectForKey:@"TitleString"];
 		
-		//message may be in HTML. If it's plain text, we'll just be getting an attributed string out of this.
+		//Message or message header may be in HTML. If it's plain text, we'll just be getting an attributed string out of this.
 		message = [infoDict objectForKey:@"Message"];
 		attributedMessage = (message ? [AIHTMLDecoder decodeHTML:message] : nil);
+		
+		// Decode the message header's HTML, and get the string value.
+		messageHeader = [[AIHTMLDecoder decodeHTML:[infoDict objectForKey:@"MessageHeader"]] string];
+		
+		// If we're not give an attributed message, use the title as a message.
+		if (!attributedMessage) {
+			attributedMessage = [NSAttributedString stringWithString:title];
+			title = nil;
+		}
 		
 		buttonNamesArray = [infoDict objectForKey:@"Button Names"];
 		buttonNamesArrayCount = [buttonNamesArray count];
@@ -77,12 +87,12 @@
 		 * If we have an attribMsg and a titleString, use the titleString as the window title.
 		 * If we just have the titleString (and no attribMsg), it is our message, and the window has no title.
 		 */
-		requestController = [[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:(attributedMessage ? title : nil)
+		requestController = [[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:title
 																				   defaultButton:defaultButton
 																				 alternateButton:alternateButton
 																					 otherButton:otherButton
 																						onWindow:nil
-																			   withMessageHeader:(!attributedMessage ? title : nil)
+																			   withMessageHeader:messageHeader
 																					  andMessage:attributedMessage
 																						  target:self
 																						userInfo:infoDict] retain];
