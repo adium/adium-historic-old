@@ -19,6 +19,7 @@
 	
 	void (*query_cert_cb)(gboolean trusted, void *userdata);
 	void *userdata;
+	NSString *hostname;
 }
 
 + (void)displayTrustWarningAlertWithAccount:(AIAccount*)account hostname:(NSString*)hostname certificates:(CFArrayRef)certs resultCallback:(void (*)(gboolean trusted, void *userdata))_query_cert_cb userData:(void*)ud;

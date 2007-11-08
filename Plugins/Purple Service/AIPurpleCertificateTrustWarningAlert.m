@@ -29,7 +29,7 @@
 	[alert release];
 }
 
-- (id)initWithAccount:(AIAccount*)_account hostname:(NSString*)hostname certificates:(CFArrayRef)certs resultCallback:(void (*)(gboolean trusted, void *userdata))_query_cert_cb userData:(void*)ud {
+- (id)initWithAccount:(AIAccount*)_account hostname:(NSString*)_hostname certificates:(CFArrayRef)certs resultCallback:(void (*)(gboolean trusted, void *userdata))_query_cert_cb userData:(void*)ud {
 	if((self = [super init])) {
 		query_cert_cb = _query_cert_cb;
 		
@@ -37,6 +37,7 @@
 		CFRetain(certificates);
 		
 		account = _account;
+		hostname = [_hostname copy];
 		
 		userdata = ud;
 	}
@@ -45,6 +46,7 @@
 
 - (void)dealloc {
 	CFRelease(certificates);
+	[hostname release];
 	[super dealloc];
 }
 
@@ -114,7 +116,7 @@
 	//	CSSM_TP_APPLE_EVIDENCE_INFO *statusChain;
 	//	err = SecTrustGetResult(trustRef, &result, &certChain, &statusChain);
 
-	[trustpanel beginSheetForWindow:window modalDelegate:self didEndSelector:@selector(certificateTrustSheetDidEnd:returnCode:contextInfo:) contextInfo:window trust:trustRef message:AILocalizedString(@"The server's certificate is not trusted, and so, the server's idenitity can not be verified. Do you want to continue connecting?\nFor more information, click \"Show Certificate\".",nil)];
+	[trustpanel beginSheetForWindow:window modalDelegate:self didEndSelector:@selector(certificateTrustSheetDidEnd:returnCode:contextInfo:) contextInfo:window trust:trustRef message:[NSString stringWithFormat:AILocalizedString(@"The certificate of the server %@ is not trusted, and so, the server's idenitity can not be verified. Do you want to continue connecting?\nFor more information, click \"Show Certificate\".",nil),hostname]];
 }
 																					  
 - (void)certificateTrustSheetDidEnd:(SFCertificateTrustPanel *)trustpanel returnCode:(int)returnCode contextInfo:(void *)contextInfo {
