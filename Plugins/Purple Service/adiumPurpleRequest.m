@@ -20,6 +20,7 @@
 #import "ESPurpleFileReceiveRequestController.h"
 #import "ESPurpleMeanwhileContactAdditionController.h"
 #import <Adium/NDRunLoopMessenger.h>
+#import <Adium/AIContactAlertsControllerProtocol.h>
 #import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/ESFileTransfer.h>
 #import "AMPurpleRequestFieldsController.h"
@@ -199,6 +200,12 @@ static void *adiumPurpleRequestAction(const char *title, const char *primary,
 			
 			handled = YES;
 		}
+	} else if (primaryString && ([primaryString rangeOfString:@"Accept chat invitation"].location != NSNotFound)) {
+		AIListContact *contact = contactLookupFromBuddy(purple_find_buddy(account, who));
+		[[[AIObject sharedAdiumInstance] contactAlertsController] generateEvent:CONTENT_GROUP_CHAT_INVITE
+										 forListObject:contact
+											  userInfo:[NSDictionary dictionary]
+						  previouslyPerformedActionIDs:nil];	
 	}
 
 	if (!handled) {

@@ -76,6 +76,7 @@ typedef enum {
 #define CONTENT_NUDGE_BUZZ_OCCURED			@"Content_NudgeBuzzOccured"
 #define CONTENT_CONTACT_JOINED_CHAT			@"Content_ContactJoinedChat"
 #define CONTENT_CONTACT_LEFT_CHAT			@"Content_ContactLeftChat"
+#define CONTENT_GROUP_CHAT_INVITE			@"Content_GroupChatInvite"
 #define INTERFACE_ERROR_MESSAGE				@"Interface_ErrorMessageReceived"
 #define ACCOUNT_CONNECTED					@"Account_Connected"
 #define ACCOUNT_DISCONNECTED				@"Account_Disconnected"
