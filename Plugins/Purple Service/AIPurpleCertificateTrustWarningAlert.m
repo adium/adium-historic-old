@@ -136,7 +136,7 @@
 	                 didEndSelector:@selector(certificateTrustSheetDidEnd:returnCode:contextInfo:)
 	                    contextInfo:window
 	                          trust:trustRef
-	                        message:[NSString stringWithFormat:AILocalizedString(@"The certificate of the server %@ is not trusted, and so, the server's idenitity can not be verified. Do you want to continue connecting?\nFor more information, click \"Show Certificate\".",nil),hostname]];
+	                        message:[NSString stringWithFormat:AILocalizedString(@"The certificate of the server %@ is not trusted, and so, the server's identity can not be verified. Do you want to continue connecting?\nFor more information, click \"Show Certificate\".",nil),hostname]];
 }
 																					  
 - (void)certificateTrustSheetDidEnd:(SFCertificateTrustPanel *)trustpanel returnCode:(int)returnCode contextInfo:(void *)contextInfo {
