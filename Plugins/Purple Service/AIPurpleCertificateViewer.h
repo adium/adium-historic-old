@@ -8,17 +8,14 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class SFCertificateView;
+@class AIAccount;
 
 @interface AIPurpleCertificateViewer : NSObject {
 	CFArrayRef certificatechain;
 	
-	IBOutlet SFCertificateView *certificateview;
-	IBOutlet NSTableView *chaintable;
-	IBOutlet NSWindow *window;
-	IBOutlet NSSplitView *splitview;
+	AIAccount *account;
 }
 
-+ (void)displayCertificateChain:(CFArrayRef)cc;
++ (void)displayCertificateChain:(CFArrayRef)cc forAccount:(AIAccount*)account;
 
 @end

@@ -774,7 +774,7 @@ extern void jabber_roster_request(JabberStream *js);
 - (IBAction)showServerCertificate:(id)sender {
 	CFArrayRef certificates = [[self purpleThread] copyServerCertificates:[self secureConnection]];
 	
-	[AIPurpleCertificateViewer displayCertificateChain:certificates];
+	[AIPurpleCertificateViewer displayCertificateChain:certificates forAccount:self];
 	CFRelease(certificates);
 }
 #endif
