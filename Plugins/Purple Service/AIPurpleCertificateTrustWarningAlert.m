@@ -87,6 +87,7 @@
 			case kSecTrustResultConfirm:
 			case kSecTrustResultDeny: // good idea?
 			case kSecTrustResultRecoverableTrustFailure:
+			case kSecTrustResultUnspecified:
 				[NSClassFromString(@"AIEditAccountWindowController") editAccount:account onWindow:nil notifyingTarget:self];
 				break;
 			default:
