@@ -230,7 +230,7 @@ static void *adiumPurpleRequestAction(const char *title, const char *primary,
 		}
 		
 		//Make default_action the last one
-		if (default_action < actionCount && default_action != actionCount) {
+		if (default_action < (int)actionCount-1 && default_action != (int)actionCount-1) {
 			// If there's no default_action, assume the first one is, and move it to the end.
 			if (default_action == -1)
 				default_action = 0;
