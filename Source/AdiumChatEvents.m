@@ -108,7 +108,7 @@
 	} else if ([eventID isEqualToString:CONTENT_CONTACT_LEFT_CHAT]) {
 		description = @"Contact Leaves";
 	} else if ([eventID isEqualToString:CONTENT_GROUP_CHAT_INVITE]) {
-		description = @"Contact Invites you to Chat";
+		description = @"Contact Invites You to Chat";
 	} else {
 		description = @"";
 	}
@@ -129,7 +129,7 @@
 		} else if ([eventID isEqualToString:CONTENT_CONTACT_LEFT_CHAT]) {
 			format = AILocalizedString(@"When %@ leaves a group chat",nil);
 		} else if ([eventID isEqualToString:CONTENT_GROUP_CHAT_INVITE]) {
-			format = AILocalizedString(@"When %@ leaves invites you to a group chat",nil);
+			format = AILocalizedString(@"When %@ invites you to a group chat",nil);
 		} else {
 			format = nil;
 		}
