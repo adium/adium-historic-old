@@ -316,7 +316,7 @@
 				<string>AILo</string>
 			</array>
 			<key>CFBundleTypeRole</key>
-			<string>None</string>
+			<string>Editor</string>
 			<key>LSItemContentTypes</key>
 			<array>
 				<string>com.adiumx.xmllog</string>
@@ -426,6 +426,8 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>AIApplication</string>
+	<key>OSAScriptingDefinition</key>
+	<string>Adium.sdef</string>
 	<key>SUCheckAtStartup</key>
 	<true/>
 	<key>SUFeedURL</key>
