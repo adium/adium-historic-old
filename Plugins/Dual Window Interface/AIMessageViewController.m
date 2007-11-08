@@ -393,35 +393,38 @@
 		if (!suppressSendLaterPrompt &&
 			![chat canSendMessages]) {
 			
-			NSString							*messageHeader;
-			NSAttributedString					*message;
 			NSString							*formattedUID = [listObject formattedUID];
-			ESTextAndButtonsWindowController	*sendLaterWindowController;
-			
-			messageHeader = [NSString stringWithFormat:AILocalizedString(@"%@ appears to be offline. How do you want to send this message?", nil),
-				formattedUID];
-			message = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:
-				AILocalizedString(@"Send Later will send the message the next time both you and %@ are online. Send Now may work if %@ is invisible or is not on your contact list and so only appears to be offline.", "Send Later dialogue explanation text"),
-				formattedUID, formattedUID, formattedUID]
-													  attributes:[NSDictionary dictionaryWithObject:[NSFont systemFontOfSize:10]
-																							 forKey:NSFontAttributeName]];
 
-			sendLaterWindowController = [ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:nil
-																							  defaultButton:AILocalizedString(@"Send Now", nil)
-																							alternateButton:AILocalizedString(@"Don't Send", nil)
-																								otherButton:AILocalizedString(@"Send Later", nil)
-																								   onWindow:[view_contents window]
-																						  withMessageHeader:messageHeader
-																								 andMessage:message
-																									  image:([listObject userIcon] ? [listObject userIcon] : [AIServiceIcons serviceIconForObject:listObject
-																																															 type:AIServiceIconLarge
-																																														direction:AIIconNormal])
-																									 target:self
-																								   userInfo:nil];
-			[sendLaterWindowController setKeyEquivalent:@"l"
-										   modifierMask:0
-											  forButton:AITextAndButtonsWindowButtonOther];
-			[message release];
+			NSAlert *alert = [[NSAlert alloc] init];
+			[alert setMessageText:[NSString stringWithFormat:AILocalizedString(@"%@ appears to be offline. How do you want to send this message?", nil),
+								   formattedUID]];
+			[alert setInformativeText:[NSString stringWithFormat:
+									   AILocalizedString(@"Send Later will send the message the next time both you and %@ are online. Send Now may work if %@ is invisible or is not on your contact list and so only appears to be offline.", "Send Later dialogue explanation text"),
+									   formattedUID, formattedUID, formattedUID]];
+			[alert addButtonWithTitle:AILocalizedString(@"Send Now", nil)];
+
+			[alert addButtonWithTitle:AILocalizedString(@"Send Later", nil)];
+			[[[alert buttons] objectAtIndex:1] setKeyEquivalent:@"l"];
+			[[[alert buttons] objectAtIndex:1] setKeyEquivalentModifierMask:0];
+
+			[alert addButtonWithTitle:AILocalizedString(@"Don't Send", nil)];			 
+			[[[alert buttons] objectAtIndex:2] setKeyEquivalent:@"\E"];
+			[[[alert buttons] objectAtIndex:2] setKeyEquivalentModifierMask:0];
+
+			NSImage *icon = ([listObject userIcon] ? [listObject userIcon] : [AIServiceIcons serviceIconForObject:listObject
+																											 type:AIServiceIconLarge
+																										direction:AIIconNormal]);
+			icon = [[icon copy] autorelease];
+			[icon setScalesWhenResized:NO];
+			[alert setIcon:icon];
+			[alert setAlertStyle:NSInformationalAlertStyle];
+
+			[alert beginSheetModalForWindow:[view_contents window]
+							  modalDelegate:self
+							 didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:)
+								contextInfo:NULL];
+			[alert release];
+
 
 		} else {
 			AIContentMessage		*message;
@@ -451,27 +454,22 @@
 }
 
 /*!
-* @brief Send Later button was pressed
-*
-* @result YES to allow the close
-*/
-- (BOOL)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
+ * @brief Send Later button was pressed
+ */ 
+- (void)alertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
 	switch (returnCode) {
-		case AITextAndButtonsDefaultReturn:
+		case NSAlertFirstButtonReturn: /* Send Now */
 			suppressSendLaterPrompt = YES;
 			[self sendMessage:nil];
 			break;
-
-		case AITextAndButtonsOtherReturn:
+			
+		case NSAlertSecondButtonReturn: /* Send Later */
 			[self sendMessageLater:nil];
 			break;
-		case AITextAndButtonsAlternateReturn:
-		case AITextAndButtonsClosedWithoutResponse:
+		case NSAlertThirdButtonReturn: /* Don't Send */
 			break;		
 	}
-	
-	return YES;
 }
 
 /*!
