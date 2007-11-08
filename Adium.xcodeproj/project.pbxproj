@@ -1207,7 +1207,6 @@
 		811036260CDE8C2100EC6038 /* adiumPurpleCertificateTrustWarning.m in Sources */ = {isa = PBXBuildFile; fileRef = 811036240CDE8C2100EC6038 /* adiumPurpleCertificateTrustWarning.m */; };
 		8110362C0CDE8F5800EC6038 /* AIPurpleCertificateTrustWarningAlert.h in Headers */ = {isa = PBXBuildFile; fileRef = 8110362A0CDE8F5800EC6038 /* AIPurpleCertificateTrustWarningAlert.h */; };
 		8110362D0CDE8F5800EC6038 /* AIPurpleCertificateTrustWarningAlert.m in Sources */ = {isa = PBXBuildFile; fileRef = 8110362B0CDE8F5800EC6038 /* AIPurpleCertificateTrustWarningAlert.m */; };
-		811036300CDE904200EC6038 /* AICertificateTrustWarning.nib in Resources */ = {isa = PBXBuildFile; fileRef = 8110362E0CDE904200EC6038 /* AICertificateTrustWarning.nib */; };
 		8163F99C0B318824002005EE /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
 		8173C5760C4C3DB800C9E64E /* downloadprogress.png in Resources */ = {isa = PBXBuildFile; fileRef = 8173C5750C4C3DB800C9E64E /* downloadprogress.png */; };
 		8181EEBE0C30673E00E802F7 /* AMPurpleSearchResultsWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 8181EEBD0C30673E00E802F7 /* AMPurpleSearchResultsWindow.nib */; };
@@ -3755,7 +3754,6 @@
 		811036240CDE8C2100EC6038 /* adiumPurpleCertificateTrustWarning.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumPurpleCertificateTrustWarning.m; path = "Plugins/Purple Service/adiumPurpleCertificateTrustWarning.m"; sourceTree = "<group>"; };
 		8110362A0CDE8F5800EC6038 /* AIPurpleCertificateTrustWarningAlert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIPurpleCertificateTrustWarningAlert.h; path = "Plugins/Purple Service/AIPurpleCertificateTrustWarningAlert.h"; sourceTree = "<group>"; };
 		8110362B0CDE8F5800EC6038 /* AIPurpleCertificateTrustWarningAlert.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIPurpleCertificateTrustWarningAlert.m; path = "Plugins/Purple Service/AIPurpleCertificateTrustWarningAlert.m"; sourceTree = "<group>"; };
-		8110362F0CDE904200EC6038 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = "Plugins/Purple Service/en.lproj/AICertificateTrustWarning.nib"; sourceTree = "<group>"; };
 		815D37460A765E83009338C2 /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = /System/Library/Frameworks/CoreServices.framework; sourceTree = "<absolute>"; };
 		8173C5750C4C3DB800C9E64E /* downloadprogress.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = downloadprogress.png; path = "Plugins/Purple Service/downloadprogress.png"; sourceTree = "<group>"; };
 		8181EEBD0C30673E00E802F7 /* AMPurpleSearchResultsWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AMPurpleSearchResultsWindow.nib; path = "Plugins/Purple Service/AMPurpleSearchResultsWindow.nib"; sourceTree = "<group>"; };
@@ -6766,7 +6764,6 @@
 				811035490CDE7EFA00EC6038 /* AICertificateViewer.nib */,
 				811036160CDE8A2500EC6038 /* AIPurpleCertificateViewer.h */,
 				811036170CDE8A2500EC6038 /* AIPurpleCertificateViewer.m */,
-				8110362E0CDE904200EC6038 /* AICertificateTrustWarning.nib */,
 				8110362A0CDE8F5800EC6038 /* AIPurpleCertificateTrustWarningAlert.h */,
 				8110362B0CDE8F5800EC6038 /* AIPurpleCertificateTrustWarningAlert.m */,
 			);
@@ -8144,7 +8141,6 @@
 				343BB63C0C96DC1100506F9B /* MySpace-large.png in Resources */,
 				34F5207E0CC6F821008D9135 /* PurpleQQAccountView.nib in Resources */,
 				8110354A0CDE7EFA00EC6038 /* AICertificateViewer.nib in Resources */,
-				811036300CDE904200EC6038 /* AICertificateTrustWarning.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10465,14 +10461,6 @@
 				34F144460BA8FF46000473DE /* en */,
 			);
 			name = EmoticonNames.strings;
-			sourceTree = "<group>";
-		};
-		8110362E0CDE904200EC6038 /* AICertificateTrustWarning.nib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				8110362F0CDE904200EC6038 /* en */,
-			);
-			name = AICertificateTrustWarning.nib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

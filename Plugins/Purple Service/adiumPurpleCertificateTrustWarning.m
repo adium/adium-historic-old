@@ -15,7 +15,7 @@
 #import <Adium/AIAccountControllerProtocol.h>
 #import "ESPurpleJabberAccount.h"
 
-void adium_query_cert_chain(PurpleSslConnection *gsc, OSStatus err, const char *hostname, CFArrayRef certs, void (*cert_cleanup)(void *userdata), void *userdata) {
+void adium_query_cert_chain(PurpleSslConnection *gsc, const char *hostname, CFArrayRef certs, void (*query_cert_cb)(gboolean trusted, void *userdata), void *userdata) {
 	NSObject<AIAccountController> *accountController = [[AIObject sharedAdiumInstance] accountController];
 	// only the jabber service supports this right now
 	NSEnumerator *e = [[accountController accountsCompatibleWithService:[accountController firstServiceWithServiceID:@"Jabber"]] objectEnumerator];
@@ -23,22 +23,13 @@ void adium_query_cert_chain(PurpleSslConnection *gsc, OSStatus err, const char *
 	
 	while((account = [e nextObject])) {
 		if([account secureConnection] == gsc) {
-			[AIPurpleCertificateTrustWarningAlert displayTrustWarningAlertWithAccount:account hostname:[NSString stringWithUTF8String:hostname] error:err certificates:certs cleanupCallback:cert_cleanup userData:userdata];
-			break;
+			if([account shouldVerifyCertificates])
+				[AIPurpleCertificateTrustWarningAlert displayTrustWarningAlertWithAccount:account hostname:[NSString stringWithUTF8String:hostname] certificates:certs resultCallback:query_cert_cb userData:userdata];
+			else
+				query_cert_cb(true, userdata);
+			return;
 		}
 	}
-}
-
-gboolean adium_cert_shouldverify(PurpleSslConnection *gsc) {
-	NSObject<AIAccountController> *accountController = [[AIObject sharedAdiumInstance] accountController];
-	// only the jabber service supports this right now
-	NSEnumerator *e = [[accountController accountsCompatibleWithService:[accountController firstServiceWithServiceID:@"Jabber"]] objectEnumerator];
-	ESPurpleJabberAccount *account;
-	
-	while((account = [e nextObject])) {
-		if([account secureConnection] == gsc) {
-			return [account shouldVerifyCertificates];
-		}
-	}
-	return false;
+	// default fallback
+	query_cert_cb(true, userdata);
 }

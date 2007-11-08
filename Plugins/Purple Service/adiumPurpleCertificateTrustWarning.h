@@ -10,6 +10,4 @@
 #include <CoreFoundation/CFArray.h>
 #include <libpurple/libpurple.h>
 
-void adium_query_cert_chain(PurpleSslConnection *gsc, OSStatus err, const char *hostname, CFArrayRef certs, void (*cert_cleanup)(void *userdata), void *userdata);
-
-gboolean adium_cert_shouldverify(PurpleSslConnection *gsc);
+void adium_query_cert_chain(PurpleSslConnection *gsc, const char *hostname, CFArrayRef certs, void (*query_cert_cb)(gboolean trusted, void *userdata), void *userdata);

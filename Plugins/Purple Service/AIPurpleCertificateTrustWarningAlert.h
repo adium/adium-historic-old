@@ -9,23 +9,18 @@
 #import <Cocoa/Cocoa.h>
 #import <Adium/AIObject.h>
 #import <Adium/AIAccount.h>
+#include <Security/SecTrust.h>
+#include <libpurple/libpurple.h>
 
 @interface AIPurpleCertificateTrustWarningAlert : AIObject {
-	IBOutlet NSPanel *panel;
-	IBOutlet NSTextField *alertTitle;
-	IBOutlet NSTextField *alertInformativeText;
-	
 	CFArrayRef certificates;
+	SecTrustRef trustRef;
 	AIAccount *account;
 	
-	void (*cert_cleanup)(void *userdata);
+	void (*query_cert_cb)(gboolean trusted, void *userdata);
 	void *userdata;
 }
 
-+ (void)displayTrustWarningAlertWithAccount:(AIAccount*)account hostname:(NSString*)hostname error:(OSStatus)err certificates:(CFArrayRef)certs cleanupCallback:(void (*)(void *userdata))_cert_cleanup userData:(void*)ud;
-
-- (IBAction)panelOK:(id)sender;
-- (IBAction)panelCancel:(id)sender;
-- (IBAction)panelShowCertificate:(id)sender;
++ (void)displayTrustWarningAlertWithAccount:(AIAccount*)account hostname:(NSString*)hostname certificates:(CFArrayRef)certs resultCallback:(void (*)(gboolean trusted, void *userdata))_query_cert_cb userData:(void*)ud;
 
 @end

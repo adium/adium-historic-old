@@ -145,6 +145,12 @@
 	[self configureControlDimming];
 }
 
+- (IBAction)showWindow:(id)sender {
+	[super showWindow:sender];
+	if([notifyTarget respondsToSelector:@selector(editAccountWindow:didOpenForAccount:)])
+		[notifyTarget editAccountWindow:[self window] didOpenForAccount:account];
+}
+
 /*!
  * @brief Window is closing
  */
