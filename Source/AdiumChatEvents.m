@@ -32,6 +32,10 @@
 										 withHandler:self 
 											 inGroup:AIMessageEventHandlerGroup
 										  globalOnly:NO];	
+	[[adium contactAlertsController] registerEventID:CONTENT_GROUP_CHAT_INVITE
+										 withHandler:self 
+											 inGroup:AIMessageEventHandlerGroup
+										  globalOnly:NO];	
 }
 
 /*!
@@ -67,6 +71,8 @@
 		description = AILocalizedString(@"Joins a group chat",nil);
 	} else if ([eventID isEqualToString:CONTENT_CONTACT_LEFT_CHAT]) {
 		description = AILocalizedString(@"Leaves a group chat",nil);
+	} else if ([eventID isEqualToString:CONTENT_GROUP_CHAT_INVITE]) {
+		description = AILocalizedString(@"Invites you to a group chat",nil);
 	} else {
 		description = @"";
 	}
@@ -82,6 +88,8 @@
 		description = AILocalizedString(@"Contact joins a group chat",nil);
 	} else if ([eventID isEqualToString:CONTENT_CONTACT_LEFT_CHAT]) {
 		description = AILocalizedString(@"Contact leaves a group chat",nil);
+	} else if ([eventID isEqualToString:CONTENT_GROUP_CHAT_INVITE]) {
+		description = AILocalizedString(@"Contact invites you to a group chat",nil);
 	} else {
 		description = @"";
 	}
@@ -99,6 +107,8 @@
 		description = @"Contact Joins";
 	} else if ([eventID isEqualToString:CONTENT_CONTACT_LEFT_CHAT]) {
 		description = @"Contact Leaves";
+	} else if ([eventID isEqualToString:CONTENT_GROUP_CHAT_INVITE]) {
+		description = @"Contact Invites you to Chat";
 	} else {
 		description = @"";
 	}
@@ -118,6 +128,8 @@
 			format = AILocalizedString(@"When %@ joins a group chat",nil);
 		} else if ([eventID isEqualToString:CONTENT_CONTACT_LEFT_CHAT]) {
 			format = AILocalizedString(@"When %@ leaves a group chat",nil);
+		} else if ([eventID isEqualToString:CONTENT_GROUP_CHAT_INVITE]) {
+			format = AILocalizedString(@"When %@ leaves invites you to a group chat",nil);
 		} else {
 			format = nil;
 		}
@@ -135,6 +147,8 @@
 			description = AILocalizedString(@"When a contact joins a group chat",nil);
 		} else if ([eventID isEqualToString:CONTENT_CONTACT_LEFT_CHAT]) {
 			description = AILocalizedString(@"When a contact leaves a group chat",nil);
+		} else if ([eventID isEqualToString:CONTENT_GROUP_CHAT_INVITE]) {
+			description = AILocalizedString(@"When a contact invites you to a group chat",nil);
 		}
 	}
 	
@@ -165,6 +179,16 @@
 				AILocalizedString(@"%@ left %@","Contact left Chat Name"),
 				[listObject displayName],
 				[chat displayName]];
+		} else if ([eventID isEqualToString:CONTENT_CONTACT_LEFT_CHAT]) {
+			description = [NSString stringWithFormat:
+						   AILocalizedString(@"%@ left %@","Contact left Chat Name"),
+						   [listObject displayName],
+						   [chat displayName]];
+		} else if ([eventID isEqualToString:CONTENT_CONTACT_LEFT_CHAT]) {
+			description = [NSString stringWithFormat:
+						   AILocalizedString(@"%@ invites you to a group chat","Contact invites you to a group chat"),
+						   [listObject displayName],
+						   [chat displayName]];
 		}	
 		
 	} else {
@@ -177,8 +201,11 @@
 			description = [NSString stringWithFormat:
 				AILocalizedString(@"left %@","Contact left Chat Name"),
 				[chat displayName]];
-		}	
-	}
+		} else if ([eventID isEqualToString:CONTENT_GROUP_CHAT_INVITE]) {
+			description = [NSString stringWithFormat:
+						   AILocalizedString(@"invites you to a group chat","Contact left Chat Name"),
+						   [chat displayName]];
+		}		}
 	
 	return description;
 }
