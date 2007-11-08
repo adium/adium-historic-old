@@ -127,14 +127,24 @@ Boolean GetMetadataForXMLLog(NSMutableDictionary *attributes, NSString *pathToFi
 																		  error:&err];    
 	
 	if (xmlDoc)
-	{        
-		NSArray *authorsArray = [xmlDoc nodesForXPath:@"//message/@sender"
+	{   
+		NSArray *senderNodes = [xmlDoc nodesForXPath:@"//message/@sender"
 												error:&err];
-		NSSet *duplicatesRemover = [NSSet setWithArray: authorsArray];
-		authorsArray = [duplicatesRemover allObjects];
+		NSSet *duplicatesRemover = [NSSet setWithArray: senderNodes];
+		// XPath returns an array of NSXMLNodes. Must convert them to strings containing just the attribute value.
+		NSMutableArray *authorsArray = [NSMutableArray arrayWithCapacity:[duplicatesRemover count]];
+		NSEnumerator *enumerator = [duplicatesRemover objectEnumerator];
+		NSXMLNode *senderNode = nil;
+		
+		while( ( senderNode = [enumerator nextObject] ) ) {
+			[authorsArray addObject:[senderNode objectValue]];
+		}
 		
 		[(NSMutableDictionary *)attributes setObject:authorsArray
 											  forKey:(NSString *)kMDItemAuthors];
+
+		[(NSMutableDictionary *)attributes setObject:authorsArray
+											  forKey:(NSString *)kMDItemInstantMessageAddresses];
 		
 		NSArray *contentArray = [xmlDoc nodesForXPath:@"//message//text()"
 												error:&err];
@@ -160,7 +170,7 @@ Boolean GetMetadataForXMLLog(NSMutableDictionary *attributes, NSString *pathToFi
 				[(NSMutableDictionary *)attributes setObject:startDate
 													  forKey:(NSString *)kMDItemContentCreationDate];
 
-			dateStr = [[(NSXMLElement *)[children objectAtIndex:0] attributeForName:@"time"] objectValue];
+			dateStr = [[(NSXMLElement *)[children lastObject] attributeForName:@"time"] objectValue];
 			endDate = (dateStr ? [NSCalendarDate calendarDateWithString:dateStr] : nil);
 			if (endDate)
 				[(NSMutableDictionary *)attributes setObject:[NSNumber numberWithInt:[endDate timeIntervalSinceDate:startDate]]
@@ -173,10 +183,12 @@ Boolean GetMetadataForXMLLog(NSMutableDictionary *attributes, NSString *pathToFi
 						   forKey:@"com_adiumX_chatSource"];
 			NSMutableArray *otherAuthors = [authorsArray mutableCopy];
 			[otherAuthors removeObject:accountString];
+			[attributes setObject:otherAuthors
+						   forKey:@"com_adiumX_chatDestinations"];
 			//pick the first author for this.  likely a bad idea
 			if (startDate && [otherAuthors count]) {
 				NSString *toUID = [otherAuthors objectAtIndex:0];
-				[attributes setObject:[NSString stringWithFormat:@"%@ on %@",toUID,[startDate descriptionWithCalendarFormat:@"%y-%m-%d"
+				[attributes setObject:[NSString stringWithFormat:@"%@ on %@",toUID,[startDate descriptionWithCalendarFormat:@"%Y-%m-%d"
 																												   timeZone:nil
 																													 locale:nil]]
 							   forKey:(NSString *)kMDItemDisplayName];
@@ -186,6 +198,8 @@ Boolean GetMetadataForXMLLog(NSMutableDictionary *attributes, NSString *pathToFi
 		}
 		[attributes setObject:@"Chat log"
 					   forKey:(NSString *)kMDItemKind];
+		[attributes setObject:@"Adium"
+					   forKey:(NSString *)kMDItemCreator];
 		
 		[xmlDoc release];
 	}
