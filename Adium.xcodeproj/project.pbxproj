@@ -1200,7 +1200,6 @@
 		811033510CDE170B00EC6038 /* ssl-cdsa.c in Sources */ = {isa = PBXBuildFile; fileRef = 811033500CDE170B00EC6038 /* ssl-cdsa.c */; };
 		811034050CDE216F00EC6038 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 340C1ABE0BD58FAB00D09235 /* Security.framework */; };
 		811035180CDE783800EC6038 /* SecurityInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 811035170CDE783800EC6038 /* SecurityInterface.framework */; };
-		8110354A0CDE7EFA00EC6038 /* AICertificateViewer.nib in Resources */ = {isa = PBXBuildFile; fileRef = 811035490CDE7EFA00EC6038 /* AICertificateViewer.nib */; };
 		811036180CDE8A2500EC6038 /* AIPurpleCertificateViewer.h in Headers */ = {isa = PBXBuildFile; fileRef = 811036160CDE8A2500EC6038 /* AIPurpleCertificateViewer.h */; };
 		811036190CDE8A2500EC6038 /* AIPurpleCertificateViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = 811036170CDE8A2500EC6038 /* AIPurpleCertificateViewer.m */; };
 		811036250CDE8C2100EC6038 /* adiumPurpleCertificateTrustWarning.h in Headers */ = {isa = PBXBuildFile; fileRef = 811036230CDE8C2100EC6038 /* adiumPurpleCertificateTrustWarning.h */; };
@@ -3747,7 +3746,6 @@
 		7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHLinkManagementPlugin.m; sourceTree = "<group>"; };
 		811033500CDE170B00EC6038 /* ssl-cdsa.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "ssl-cdsa.c"; sourceTree = "<group>"; };
 		811035170CDE783800EC6038 /* SecurityInterface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SecurityInterface.framework; path = /System/Library/Frameworks/SecurityInterface.framework; sourceTree = "<absolute>"; };
-		811035490CDE7EFA00EC6038 /* AICertificateViewer.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AICertificateViewer.nib; path = "Plugins/Purple Service/AICertificateViewer.nib"; sourceTree = "<group>"; };
 		811036160CDE8A2500EC6038 /* AIPurpleCertificateViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIPurpleCertificateViewer.h; path = "Plugins/Purple Service/AIPurpleCertificateViewer.h"; sourceTree = "<group>"; };
 		811036170CDE8A2500EC6038 /* AIPurpleCertificateViewer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIPurpleCertificateViewer.m; path = "Plugins/Purple Service/AIPurpleCertificateViewer.m"; sourceTree = "<group>"; };
 		811036230CDE8C2100EC6038 /* adiumPurpleCertificateTrustWarning.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = adiumPurpleCertificateTrustWarning.h; path = "Plugins/Purple Service/adiumPurpleCertificateTrustWarning.h"; sourceTree = "<group>"; };
@@ -6761,7 +6759,6 @@
 		8110354B0CDE7EFF00EC6038 /* Certificate Viewer */ = {
 			isa = PBXGroup;
 			children = (
-				811035490CDE7EFA00EC6038 /* AICertificateViewer.nib */,
 				811036160CDE8A2500EC6038 /* AIPurpleCertificateViewer.h */,
 				811036170CDE8A2500EC6038 /* AIPurpleCertificateViewer.m */,
 				8110362A0CDE8F5800EC6038 /* AIPurpleCertificateTrustWarningAlert.h */,
@@ -8140,7 +8137,6 @@
 				343BB63B0C96DC1100506F9B /* MySpace-small.png in Resources */,
 				343BB63C0C96DC1100506F9B /* MySpace-large.png in Resources */,
 				34F5207E0CC6F821008D9135 /* PurpleQQAccountView.nib in Resources */,
-				8110354A0CDE7EFA00EC6038 /* AICertificateViewer.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
