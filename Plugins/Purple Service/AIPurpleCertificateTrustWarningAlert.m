@@ -12,48 +12,26 @@
 #import <Security/SecPolicySearch.h>
 #import <Security/oidsalg.h>
 #import "ESPurpleJabberAccount.h"
+#import "AIEditAccountWindowController.h"
 
 @interface AIPurpleCertificateTrustWarningAlert (privateMethods)
 
-- (id)initWithAccount:(AIAccount*)account hostname:(NSString*)hostname error:(OSStatus)err certificates:(CFArrayRef)certs cleanupCallback:(void (*)(void *userdata))_cert_cleanup userData:(void*)ud;
+- (id)initWithAccount:(AIAccount*)account hostname:(NSString*)hostname certificates:(CFArrayRef)certs resultCallback:(void (*)(gboolean trusted, void *userdata))_query_cert_cb userData:(void*)ud;
 - (IBAction)showWindow:(id)sender;
 
 @end
 
 @implementation AIPurpleCertificateTrustWarningAlert
 
-+ (void)displayTrustWarningAlertWithAccount:(AIAccount*)account hostname:(NSString*)hostname error:(OSStatus)err certificates:(CFArrayRef)certs cleanupCallback:(void (*)(void *userdata))_cert_cleanup userData:(void*)ud {
-	AIPurpleCertificateTrustWarningAlert *alert = [[self alloc] initWithAccount:account hostname:hostname error:err certificates:certs cleanupCallback:_cert_cleanup userData:ud];
++ (void)displayTrustWarningAlertWithAccount:(AIAccount*)account hostname:(NSString*)hostname certificates:(CFArrayRef)certs resultCallback:(void (*)(gboolean trusted, void *userdata))_query_cert_cb userData:(void*)ud {
+	AIPurpleCertificateTrustWarningAlert *alert = [[self alloc] initWithAccount:account hostname:hostname certificates:certs resultCallback:_query_cert_cb userData:ud];
 	[alert showWindow:nil];
 	[alert release];
 }
 
-- (id)initWithAccount:(AIAccount*)_account hostname:(NSString*)hostname error:(OSStatus)err certificates:(CFArrayRef)certs cleanupCallback:(void (*)(void *userdata))_cert_cleanup userData:(void*)ud {
+- (id)initWithAccount:(AIAccount*)_account hostname:(NSString*)hostname certificates:(CFArrayRef)certs resultCallback:(void (*)(gboolean trusted, void *userdata))_query_cert_cb userData:(void*)ud {
 	if((self = [super init])) {
-		[NSBundle loadNibNamed:@"AICertificateTrustWarning" owner:self];
-		NSString *informativeText;
-		
-		switch(err) {
-			case errSSLUnknownRootCert:
-				informativeText = AILocalizedString(@"The peer has a valid certificate chain, but the root of the chain is not a known anchor certificate.",nil);
-				break;
-			case errSSLNoRootCert:
-				informativeText = AILocalizedString(@"The peer's certificate chain was not verifiable to a root certificate.",nil);
-				break;
-			case errSSLCertExpired:
-				informativeText = AILocalizedString(@"The peer's certificate chain has one or more expired certificates.",nil);
-				break;
-			case errSSLXCertChainInvalid:
-				informativeText = AILocalizedString(@"The peer has an invalid certificate chain; for example, signature verification within the chain failed, or no certificates were found.",nil);
-				break;
-			default:
-				informativeText = AILocalizedString(@"Unknown certificate error.",nil);
-				break;
-		}
-		[alertInformativeText setStringValue:informativeText];
-		[alertTitle setStringValue:[NSString stringWithFormat:AILocalizedString(@"Unable to verify the certificate received from %@.",nil), hostname]];
-		
-		cert_cleanup = _cert_cleanup;
+		query_cert_cb = _query_cert_cb;
 		
 		certificates = certs;
 		CFRetain(certificates);
@@ -71,32 +49,11 @@
 }
 
 - (IBAction)showWindow:(id)sender {
-	[panel center];
-	[panel makeKeyAndOrderFront:nil];
-}
-
-- (IBAction)panelOK:(id)sender {
-	if([account respondsToSelector:@selector(setShouldVerifyCertificates:)])
-		[(ESPurpleJabberAccount*)account setShouldVerifyCertificates:NO];
-	
-	[panel close];
-	cert_cleanup(userdata);
-	[self release];
-}
-
-- (IBAction)panelCancel:(id)sender {
-	[panel close];
-	cert_cleanup(userdata);
-	[self release];
-}
-
-- (IBAction)panelShowCertificate:(id)sender {
-	SecTrustRef trustRef;
 	OSStatus err;
 	SecPolicySearchRef searchRef = NULL;
 	SecPolicyRef policyRef;
 	
-	err = SecPolicySearchCreate(CSSM_CERT_X_509v3, &CSSMOID_APPLE_X509_BASIC, NULL, &searchRef);
+	err = SecPolicySearchCreate(CSSM_CERT_X_509v3, &CSSMOID_APPLE_TP_SSL, NULL, &searchRef);
 	if(err != noErr) {
 		NSBeep();
 		return;
@@ -116,28 +73,60 @@
 		return;
 	}
 	
-	SFCertificateTrustPanel *trustpanel = [[SFCertificateTrustPanel alloc] init];
-	
-	[trustpanel beginSheetForWindow:panel modalDelegate:self didEndSelector:@selector(certificateTrustSheetDidEnd:returnCode:contextInfo:) contextInfo:trustRef trust:trustRef message:AILocalizedString(@"Please verify the certificate chain.",nil)];
-	
+	// test whether we aren't already trusting this certificate
+	SecTrustResultType result;
+	err = SecTrustEvaluate(trustRef, &result);
+	if(err == noErr) {
+		switch(result) {
+			case kSecTrustResultProceed:
+				query_cert_cb(true, userdata);
+				[self release];
+				break;
+			case kSecTrustResultConfirm:
+			case kSecTrustResultDeny: // good idea?
+			case kSecTrustResultRecoverableTrustFailure:
+				[NSClassFromString(@"AIEditAccountWindowController") editAccount:account onWindow:nil notifyingTarget:self];
+				break;
+			default:
+				query_cert_cb(false, userdata);
+				[self release];
+				break;
+		}
+	} else if(err == kSecTrustResultUnspecified) {
+		// we don't know about the trust, so just ask the user
+		[NSClassFromString(@"AIEditAccountWindowController") editAccount:account onWindow:nil notifyingTarget:self];
+	} else {
+		query_cert_cb(false, userdata);
+		[self release];
+	}
+
 	CFRelease(searchRef);
 	CFRelease(policyRef);
 }
+
+- (void)editAccountWindow:(NSWindow*)window didOpenForAccount:(AIAccount *)inAccount {
+	SFCertificateTrustPanel *trustpanel = [[SFCertificateTrustPanel alloc] init];
+	
+	[trustpanel setAlternateButtonTitle:AILocalizedString(@"Cancel",nil)];
+
+	// this could probably be used for a more detailed message:
+	//	CFArrayRef certChain;
+	//	CSSM_TP_APPLE_EVIDENCE_INFO *statusChain;
+	//	err = SecTrustGetResult(trustRef, &result, &certChain, &statusChain);
+
+	[trustpanel beginSheetForWindow:window modalDelegate:self didEndSelector:@selector(certificateTrustSheetDidEnd:returnCode:contextInfo:) contextInfo:window trust:trustRef message:AILocalizedString(@"The server's certificate is not trusted, and so, the server's idenitity can not be verified. Do you want to continue connecting?\nFor more information, click \"Show Certificate\".",nil)];
+}
 																					  
 - (void)certificateTrustSheetDidEnd:(SFCertificateTrustPanel *)trustpanel returnCode:(int)returnCode contextInfo:(void *)contextInfo {
-	SecTrustRef trustRef = (SecTrustRef)contextInfo;
-	if(returnCode == NSOKButton) {
-		SecTrustResultType result;
-		CFArrayRef certChain;
-		CSSM_TP_APPLE_EVIDENCE_INFO *statusChain;
-		OSStatus err = SecTrustGetResult(trustRef, &result, &certChain, &statusChain);
-		if(err == noErr) {
-			if(result == kSecTrustResultProceed)
-				[self performSelector:@selector(panelOK:) withObject:nil afterDelay:0.0];
-		}
-	}
+	NSWindow *win = (NSWindow*)contextInfo;
+	query_cert_cb(returnCode == NSOKButton, userdata);
+
 	[trustpanel release];
 	CFRelease(trustRef);
+	
+	[win performSelector:@selector(performClose:) withObject:nil afterDelay:0.0];
+	
+	[self release];
 }
 
 @end

@@ -56,5 +56,6 @@
 @end
 
 @interface NSObject (AIEditAccountWindowControllerTarget)
+- (void)editAccountWindow:(NSWindow*)window didOpenForAccount:(AIAccount *)inAccount;
 - (void)editAccountSheetDidEndForAccount:(AIAccount *)inAccount withSuccess:(BOOL)successful;
 @end

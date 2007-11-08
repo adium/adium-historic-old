@@ -112,7 +112,6 @@ static void init_all_plugins()
 		if(cdsa_plugin) {
 			gboolean ok = NO;
 			purple_plugin_ipc_call(cdsa_plugin, "register_certificate_ui_cb", &ok, adium_query_cert_chain);
-			purple_plugin_ipc_call(cdsa_plugin, "register_certificate_shouldverify_cb", &ok, adium_cert_shouldverify);
 		}
 	}
 #endif
