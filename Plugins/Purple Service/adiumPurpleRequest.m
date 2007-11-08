@@ -242,16 +242,26 @@ static void *adiumPurpleRequestAction(const char *title, const char *primary,
 										 buttonNamesArray,@"Button Names",
 										 [NSValue valueWithPointer:callBacks],@"callBacks",
 										 [NSValue valueWithPointer:userData],@"userData",
-										 titleString,@"TitleString",
-										 (secondaryString ? primaryString : nil),@"MessageHeader",
-										 (secondaryString ? secondaryString : primaryString),@"Message",nil];
+										 titleString,@"TitleString",nil];
+		
+		// If we have both a primary and secondary string, use the primary as a header.
+		if (secondaryString) {
+			[infoDict setObject:primaryString forKey:@"MessageHeader"];
+			[infoDict setObject:secondaryString forKey:@"Message"];
+		} else {
+			[infoDict setObject:primaryString forKey:@"Message"];
+		}
 		
 		AIAccount *adiumAccount = accountLookup(account);
-		if (adiumAccount) [infoDict setObject:adiumAccount forKey:@"AIAccount"];
+		if (adiumAccount) {
+			[infoDict setObject:adiumAccount forKey:@"AIAccount"];
+		}
 		
 		if (who) {
 			AIListContact *adiumContact = contactLookupFromBuddy(purple_find_buddy(account, who));
-			if (adiumContact) [infoDict setObject:adiumContact forKey:@"AIListContact"];
+			if (adiumContact) {
+				[infoDict setObject:adiumContact forKey:@"AIListContact"];
+			}
 			
 			[infoDict setObject:[NSString stringWithUTF8String:who] forKey:@"who"];
 		}

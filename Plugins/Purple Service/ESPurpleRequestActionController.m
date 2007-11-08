@@ -62,7 +62,11 @@
 		attributedMessage = (message ? [AIHTMLDecoder decodeHTML:message] : nil);
 		
 		// Decode the message header's HTML, and get the string value.
-		messageHeader = [[AIHTMLDecoder decodeHTML:[infoDict objectForKey:@"MessageHeader"]] string];
+		messageHeader = [infoDict objectForKey:@"MessageHeader"];
+
+		if (messageHeader) {
+			messageHeader = [[AIHTMLDecoder decodeHTML:messageHeader] string];
+		}
 		
 		// If we're not give an attributed message, use the title as a message.
 		if (!attributedMessage) {
