@@ -75,6 +75,9 @@ ADIUM_PLIST=$(PLIST_DIR)/Adium_2
 all: update assertnochanges version clean compile release
 all-withlocalchanges: update assertnoconflicts version clean compile release
 all-withlocalchanges-noclean: update assertnoconflicts version compile release
+
+#doesn't bother putting things in a dmg
+#useful for builds not intended for distribution
 all-nopackage-noclean: update assertnoconflicts version compile createfolder
 
 update:
