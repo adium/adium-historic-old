@@ -410,7 +410,7 @@ ssl_cdsa_read(PurpleSslConnection *gsc, void *data, size_t len)
     if(err != noErr) {
         if(err == errSSLWouldBlock) {
             errno = EAGAIN;
-            return -1;
+            return (s>0)?s:-1;
         }
 		purple_debug_error("cdsa", "receive failed (%d): %s\n", err, strerror(errno));
         return -1;
