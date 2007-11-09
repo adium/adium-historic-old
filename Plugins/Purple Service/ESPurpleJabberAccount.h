@@ -24,7 +24,6 @@
 #define KEY_JABBER_FORCE_OLD_SSL		@"Jabber:Force Old SSL"
 #define KEY_JABBER_REQUIRE_TLS			@"Jabber:Require TLS"
 #define KEY_JABBER_ALLOW_PLAINTEXT		@"Jabber:Allow Plaintext Authentication"
-#define KEY_JABBER_DISABLE_BUZZ			@"Jabber:Disable Buzz"
 #define KEY_JABBER_SUBSCRIPTION_BEHAVIOR @"Jabber:Subscription Behavior"
 #define KEY_JABBER_SUBSCRIPTION_GROUP	@"Jabber:Default Subscription Group"
 #define KEY_JABBER_VERIFY_CERTS         @"Jabber:Verify Certificates"
