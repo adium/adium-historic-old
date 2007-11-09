@@ -65,11 +65,7 @@
 	[textField_priorityAvailable setStringValue:(priority ? [priority stringValue] : @"")];
 	priority = [account preferenceForKey:KEY_JABBER_PRIORITY_AWAY group:GROUP_ACCOUNT_STATUS];
 	[textField_priorityAway setStringValue:(priority ? [priority stringValue] : @"")];
-	
-	//Privacy
-	BOOL disableBuzz = [[account preferenceForKey:KEY_JABBER_DISABLE_BUZZ group:GROUP_ACCOUNT_STATUS] boolValue];
-	[checkBox_disableBuzz setIntValue:disableBuzz?YES:NO];
-	
+		
 	//Subscription behavior
 	int subbeh = [[account preferenceForKey:KEY_JABBER_SUBSCRIPTION_BEHAVIOR group:GROUP_ACCOUNT_STATUS] intValue];
 	[popup_subscriptionBehavior selectItemWithTag:subbeh];
@@ -109,11 +105,6 @@
 					 group:GROUP_ACCOUNT_STATUS];
 	[account setPreference:([textField_priorityAway intValue] ? [NSNumber numberWithInt:[textField_priorityAway intValue]] : nil)
 					forKey:KEY_JABBER_PRIORITY_AWAY
-					 group:GROUP_ACCOUNT_STATUS];
-	
-	//Privacy
-	[account setPreference:([checkBox_disableBuzz intValue] ? [NSNumber numberWithInt:[checkBox_disableBuzz intValue]] : nil)
-					forKey:KEY_JABBER_DISABLE_BUZZ
 					 group:GROUP_ACCOUNT_STATUS];
 
 	//Subscription Behavior

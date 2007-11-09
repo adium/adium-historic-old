@@ -639,8 +639,8 @@ extern void jabber_roster_request(JabberStream *js);
 	[arguments setObject:(priority ? priority : [NSNumber numberWithInt:0])
 				  forKey:@"priority"];
 	
-	NSNumber *disableBuzz = [self preferenceForKey:KEY_JABBER_DISABLE_BUZZ group:GROUP_ACCOUNT_STATUS];
-	[arguments setObject:[NSNumber numberWithBool:![disableBuzz boolValue]] forKey:@"buzz"];
+	//We could potentially set buzz on a per-status basis. We have no UI for this, however.
+	[arguments setObject:[NSNumber numberWithBool:YES] forKey:@"buzz"];
 
 	//If we didn't get a purple status ID, request one from super
 	if (statusID == NULL) statusID = [super purpleStatusIDForStatus:statusState arguments:arguments];
