@@ -5,9 +5,9 @@
 //  Created by Evan Schoenberg on 9/11/07.
 //
 
-#import "AIAccountViewController.h"
+#import "PurpleAccountViewController.h"
 
-@interface PurpleMySpaceAccountViewController : AIAccountViewController {
+@interface PurpleMySpaceAccountViewController : PurpleAccountViewController {
 
 }
 

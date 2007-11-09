@@ -5,9 +5,9 @@
 //  Created by Evan Schoenberg on 12/17/05.
 //
 
-#import <Adium/AIAccountViewController.h>
+#import "PurpleAccountViewController.h"
 
-@interface ESPurpleSimpleAccountViewController : AIAccountViewController {
+@interface ESPurpleSimpleAccountViewController : PurpleAccountViewController {
 
 }
 
