@@ -6,7 +6,7 @@
 //
 
 #import "PurpleAccountViewController.h"
-
+#import "CBPurpleAccount.h"
 
 @implementation PurpleAccountViewController
 
