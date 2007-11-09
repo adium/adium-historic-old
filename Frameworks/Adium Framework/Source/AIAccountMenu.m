@@ -89,6 +89,9 @@
 
 		if ([[self delegate] respondsToSelector:@selector(controlSizeForAccountMenu:)]) {
 			controlSize = [[self delegate] controlSizeForAccountMenu:self];
+			//If the delegate specifes a control size, it's implicitly a control; use the right size for it
+			[self setUseSystemFont:YES];
+
 		} else {
 			controlSize = NSRegularControlSize;
 		}
@@ -345,9 +348,11 @@
 
 		[menuItem setImage:[self imageForListObject:account usingUserIcon:NO]];
 
-		//The default font size for menu items in the main menu seems to be 1 pt larger than the font size produced by [NSFont menuFontOfSize:0.0f]Ñspecifically, as of Mac OS X 10.4.10, it is 14 pt. This seems to be an AppKit bug.
+		/* The default font size for menu items in the main menu seems to be 1 pt larger than the font size produced by [NSFont menuFontOfSize:0.0f]:
+		 * specifically, as of Mac OS X 10.4.10, it is 14 pt. This seems to be an AppKit bug.
+		 */
 		NSDictionary *titleAttributes = [NSDictionary dictionaryWithObjectsAndKeys:
-			[NSFont menuFontOfSize:useSystemFont ? [NSFont systemFontSizeForControlSize:controlSize] : 14.0f], NSFontAttributeName,
+			[NSFont menuFontOfSize:(useSystemFont ? [NSFont systemFontSizeForControlSize:controlSize] : 14.0f)], NSFontAttributeName,
 			[NSParagraphStyle styleWithAlignment:NSLeftTextAlignment
 								   lineBreakMode:NSLineBreakByTruncatingTail], NSParagraphStyleAttributeName,
 			nil];	
