@@ -351,9 +351,11 @@
 					[tabView_tabBar setCellMinWidth:60];
 					[tabView_tabBar setCellMaxWidth:250];
 					
-					tabViewFrame.origin.x = -1;
 					tabBarFrame.origin.x = 0;
-					tabViewFrame.size.width = NSWidth(contentRect) + 1;
+					
+					//Items within the tabview draw frames, so be sure to clip the left and right edges.
+					tabViewFrame.origin.x = -1;
+					tabViewFrame.size.width = NSWidth(contentRect) + 2;
 					break;
 				}
 				case PSMTabBarVerticalOrientation:
