@@ -14,9 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIAccountViewController.h>
+#import "PurpleAccountViewController.h"
 
-@interface ESPurpleZephyrAccountViewController : AIAccountViewController {
+@interface ESPurpleZephyrAccountViewController : PurpleAccountViewController {
 	IBOutlet	NSButton	*checkBox_exportAnyone;
 	IBOutlet	NSButton	*checkBox_exportSubs;
 	IBOutlet	NSButton	*checkBox_launchZhm;

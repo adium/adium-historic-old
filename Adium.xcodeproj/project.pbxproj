@@ -589,6 +589,8 @@
 		34B3244009B9FFE800029361 /* ESIRCLibpurpleServicePlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B3243E09B9FFE800029361 /* ESIRCLibpurpleServicePlugin.m */; };
 		34B3245409BA00E700029361 /* ESIRCAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B3245209BA00E700029361 /* ESIRCAccount.m */; };
 		34B3245A09BA00FB00029361 /* ESIRCService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B3245809BA00FB00029361 /* ESIRCService.m */; };
+		34B3247A0CE4CCF400158D5F /* PurpleAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B324780CE4CCF400158D5F /* PurpleAccountViewController.h */; };
+		34B3247B0CE4CCF400158D5F /* PurpleAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B324790CE4CCF400158D5F /* PurpleAccountViewController.m */; };
 		34B4B5A40708B049002C4C6D /* ESDebugController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B4B5A20708B049002C4C6D /* ESDebugController.m */; };
 		34B588A1058D833A00E7EF0D /* ExceptionHandling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34B588A0058D833A00E7EF0D /* ExceptionHandling.framework */; };
 		34B5E2600A7C94D3005186E6 /* AILogDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B5E25E0A7C94D3005186E6 /* AILogDateFormatter.m */; };
@@ -2921,6 +2923,8 @@
 		34B3245209BA00E700029361 /* ESIRCAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESIRCAccount.m; path = "Plugins/IRC Libpurple Plugin/ESIRCAccount.m"; sourceTree = "<group>"; };
 		34B3245709BA00FA00029361 /* ESIRCService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESIRCService.h; path = "Plugins/IRC Libpurple Plugin/ESIRCService.h"; sourceTree = "<group>"; };
 		34B3245809BA00FB00029361 /* ESIRCService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESIRCService.m; path = "Plugins/IRC Libpurple Plugin/ESIRCService.m"; sourceTree = "<group>"; };
+		34B324780CE4CCF400158D5F /* PurpleAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PurpleAccountViewController.h; path = "Plugins/Purple Service/PurpleAccountViewController.h"; sourceTree = "<group>"; };
+		34B324790CE4CCF400158D5F /* PurpleAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PurpleAccountViewController.m; path = "Plugins/Purple Service/PurpleAccountViewController.m"; sourceTree = "<group>"; };
 		34B4B5A10708B049002C4C6D /* ESDebugController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESDebugController.h; path = Source/ESDebugController.h; sourceTree = "<group>"; };
 		34B4B5A20708B049002C4C6D /* ESDebugController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESDebugController.m; path = Source/ESDebugController.m; sourceTree = "<group>"; };
 		34B588A0058D833A00E7EF0D /* ExceptionHandling.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExceptionHandling.framework; path = /System/Library/Frameworks/ExceptionHandling.framework; sourceTree = "<absolute>"; };
@@ -4497,6 +4501,8 @@
 				34415A64059F9B9B0019246B /* PurpleService.m */,
 				4B7F278705440C8D00CDFC90 /* CBPurpleAccount.h */,
 				348FF83E09128BEB00A942A8 /* CBPurpleAccount.m */,
+				34B324780CE4CCF400158D5F /* PurpleAccountViewController.h */,
+				34B324790CE4CCF400158D5F /* PurpleAccountViewController.m */,
 				81DAE8700C261E8A00780E4C /* AMPurpleTuneTooltip.h */,
 				81DAE8710C261E8A00780E4C /* AMPurpleTuneTooltip.m */,
 				347E39DB0A98AA4A00961B0E /* missing_image.png */,
@@ -7500,6 +7506,7 @@
 				811036180CDE8A2500EC6038 /* AIPurpleCertificateViewer.h in Headers */,
 				811036250CDE8C2100EC6038 /* adiumPurpleCertificateTrustWarning.h in Headers */,
 				8110362C0CDE8F5800EC6038 /* AIPurpleCertificateTrustWarningAlert.h in Headers */,
+				34B3247A0CE4CCF400158D5F /* PurpleAccountViewController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8725,6 +8732,7 @@
 				811036190CDE8A2500EC6038 /* AIPurpleCertificateViewer.m in Sources */,
 				811036260CDE8C2100EC6038 /* adiumPurpleCertificateTrustWarning.m in Sources */,
 				8110362D0CDE8F5800EC6038 /* AIPurpleCertificateTrustWarningAlert.m in Sources */,
+				34B3247B0CE4CCF400158D5F /* PurpleAccountViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

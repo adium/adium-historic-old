@@ -14,10 +14,10 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIAccountViewController.h"
+#import "PurpleAccountViewController.h"
 #import "ESPurpleJabberAccount.h"
 
-@interface ESPurpleJabberAccountViewController : AIAccountViewController {
+@interface ESPurpleJabberAccountViewController : PurpleAccountViewController {
     IBOutlet	NSTextField *textField_connectServer;
 	IBOutlet	NSTextField *textField_resource;
 	IBOutlet	NSTextField *textField_priorityAvailable;
