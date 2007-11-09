@@ -1891,7 +1891,8 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 		statusMessage = [NSAttributedString stringWithString:[[adium statusController] descriptionForStateOfStatus:statusState]];
 	}
 
-	if ([statusMessage length]	&& ([statusState specialStatusType] == AINowPlayingSpecialStatusType)) {
+	BOOL isNowPlayingStatus = ([statusState specialStatusType] == AINowPlayingSpecialStatusType);
+	if (isNowPlayingStatus && [statusMessage length]) {
 		if ([self shouldAddMusicalNoteToNowPlayingStatus]) {
 #define MUSICAL_NOTE_AND_SPACE [NSString stringWithUTF8String:"\xe2\x99\xab "]
 			NSMutableAttributedString *temporaryStatusMessage;
@@ -1911,7 +1912,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 		}
 	}
 
-	if ([self shouldIncludeNowPlayingInformationInAllStatuses]) {
+	if (isNowPlayingStatus || [self shouldIncludeNowPlayingInformationInAllStatuses]) {
 		if (tuneinfo && [[tuneinfo objectForKey:ITUNES_PLAYER_STATE] isEqualToString:@"Playing"]) {
 			NSString *artist = [tuneinfo objectForKey:ITUNES_ARTIST];
 			NSString *name = [tuneinfo objectForKey:ITUNES_NAME];

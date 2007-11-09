@@ -456,7 +456,7 @@ extern void jabber_roster_request(JabberStream *js);
 
 - (BOOL)shouldIncludeNowPlayingInformationInAllStatuses
 {
-	return YES;
+	return [[self preferenceForKey:KEY_BROADCAST_MUSIC_INFO group:GROUP_ACCOUNT_STATUS] boolValue];
 }
 
 #pragma mark File transfer
