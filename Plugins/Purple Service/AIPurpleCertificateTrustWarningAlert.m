@@ -93,25 +93,28 @@
 	SecTrustResultType result;
 	err = SecTrustEvaluate(trustRef, &result);
 	if(err == noErr) {
+		// with help from http://lists.apple.com/archives/Apple-cdsa/2006/Apr/msg00013.html
 		switch(result) {
-			case kSecTrustResultProceed:
+			case kSecTrustResultProceed: // trust ok, go right ahead
+			case kSecTrustResultUnspecified: // trust ok, user has no particular opinion about this
 				query_cert_cb(true, userdata);
 				[self release];
 				break;
-			case kSecTrustResultConfirm:
-			case kSecTrustResultDeny: // good idea?
-			case kSecTrustResultRecoverableTrustFailure:
-			case kSecTrustResultUnspecified:
+			case kSecTrustResultConfirm: // trust ok, but user asked (earlier) that you check with him before proceeding
+			case kSecTrustResultDeny: // trust ok, but user previously said not to trust it anyway
+			case kSecTrustResultRecoverableTrustFailure: // trust broken, perhaps argue with the user
 				[NSClassFromString(@"AIEditAccountWindowController") editAccount:account onWindow:nil notifyingTarget:self];
 				break;
 			default:
+				/*
+				 * kSecTrustResultFatalTrustFailure -> trust broken, user can't fix it
+				 * kSecTrustResultOtherError -> something failed weirdly, abort operation
+				 * kSecTrustResultInvalid -> logic error; fix your program (SecTrust was used incorrectly
+				 */
 				query_cert_cb(false, userdata);
 				[self release];
 				break;
 		}
-	} else if(err == kSecTrustResultUnspecified) {
-		// we don't know about the trust, so just ask the user
-		[NSClassFromString(@"AIEditAccountWindowController") editAccount:account onWindow:nil notifyingTarget:self];
 	} else {
 		query_cert_cb(false, userdata);
 		[self release];
@@ -142,6 +145,7 @@
 - (void)certificateTrustSheetDidEnd:(SFCertificateTrustPanel *)trustpanel returnCode:(int)returnCode contextInfo:(void *)contextInfo {
 	NSWindow *win = (NSWindow*)contextInfo;
 	query_cert_cb(returnCode == NSOKButton, userdata);
+	// TODO: if the user confirmed this cert, we should store this information at least until the app is closed
 
 	[trustpanel release];
 	CFRelease(trustRef);
