@@ -17,6 +17,8 @@
 #import <Adium/AIAccount.h>
 #import <AdiumLibpurple/PurpleCommon.h>
 
+#define KEY_BROADCAST_MUSIC_INFO @"Broadcast Music Information"
+
 @class SLPurpleCocoaAdapter, ESFileTransfer, AIService, AIContentMessage, AIStatus, AIWindowController;
 @protocol AIAccountControllerRemoveConfirmationDialog;
 
