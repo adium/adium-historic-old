@@ -33,7 +33,7 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <FriBidi/NSString-FBAdditions.h>
 
-#import <Libpurple/msn.h>
+#import <libpurple/msn.h>
 
 #define DEFAULT_MSN_PASSPORT_DOMAIN				@"@hotmail.com"
 #define SECONDS_BETWEEN_FRIENDLY_NAME_CHANGES	10

@@ -10,7 +10,7 @@
 #import <Adium/AIListObject.h>
 #import <Adium/AIListContact.h>
 #import "CBPurpleAccount.h"
-#import <Libpurple/blist.h>
+#import <libpurple/blist.h>
 
 @implementation AMPurpleTuneTooltip
 
