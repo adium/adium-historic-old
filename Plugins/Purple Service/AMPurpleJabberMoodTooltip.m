@@ -9,7 +9,7 @@
 #import "AMPurpleJabberMoodTooltip.h"
 #import "ESPurpleJabberAccount.h"
 #import <Adium/AIListContact.h>
-#import <Libpurple/blist.h>
+#import <libpurple/blist.h>
 
 @implementation AMPurpleJabberMoodTooltip
 
