@@ -75,6 +75,7 @@ ADIUM_PLIST=$(PLIST_DIR)/Adium_2
 all: update assertnochanges version clean compile release
 all-withlocalchanges: update assertnoconflicts version clean compile release
 all-withlocalchanges-noclean: update assertnoconflicts version compile release
+all-nopackage-noclean: update assertnoconflicts version compile createfolder
 
 update:
 	svn update $(SRC_DIR)
