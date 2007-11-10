@@ -43,7 +43,7 @@ for patch in "$PATCHDIR/libpurple_openssl.diff" \
              "$PATCHDIR/libpurple_myspace_hack.diff" \
              "$PATCHDIR/libpurple_oscar_adium.diff" ; do
     echo "Applying $patch"
-	cat $patch | patch -p0
+	cat $patch | patch --forward -p0
 done
 popd
 
@@ -80,10 +80,15 @@ for ARCH in ppc i386 ; do
 	export GADU_LIBS="-lgadu"
 	export MEANWHILE_CFLAGS="-I$TARGET_DIR/include/meanwhile -I$TARGET_DIR/include/glib-2.0 -I$TARGET_DIR/lib/glib-2.0/include"
 	export MEANWHILE_LIBS="-lmeanwhile -lglib-2.0 -liconv"
-	$PIDGIN_SOURCE/configure --disable-gtkui --disable-consoleui \
-               --disable-perl --disable-static --enable-shared --host=$HOST \
-               --prefix=$TARGET_DIR --with-static-prpls="$PROTOCOLS" \
-               --enable-cyrus-sasl
+	$PIDGIN_SOURCE/configure \
+	        --disable-gtkui --disable-consoleui \
+            --disable-perl \
+            --enable-debug \
+            --disable-static --enable-shared \
+            --prefix=$TARGET_DIR \
+            --with-static-prpls="$PROTOCOLS" \
+            --enable-cyrus-sasl \
+            --host=$HOST
     cd libpurple
     echo 'inspect sources (edit them?) and then make && make install'
     make -j $NUMBER_OF_CORES && make install
