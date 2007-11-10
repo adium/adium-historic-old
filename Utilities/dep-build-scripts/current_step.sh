@@ -113,10 +113,8 @@ for ARCH in ppc i386 ; do
 done
 
 pushd $PIDGIN_SOURCE
-for patch in "$PATCHDIR/libpurple_openssl.diff" \
-             "$PATCHDIR/libpurple_sasl_hack.diff" \
-             "$PATCHDIR/libpurple_myspace_hack.diff" \
-             "$PATCHDIR/libpurple_oscar_adium.diff" ; do
+for patch in "$PATCHDIR/libpurple_sasl_hack.diff" \
+             "$PATCHDIR/libpurple_myspace_hack.diff"; do
 	patch -R -p0 < $patch
 done
 popd
