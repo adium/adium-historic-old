@@ -14,6 +14,8 @@
 #import "ESPurpleJabberAccount.h"
 #import "AIEditAccountWindowController.h"
 
+static NSMutableSet *acceptedCertificates = nil;
+
 @interface AIPurpleCertificateTrustWarningAlert (privateMethods)
 
 - (id)initWithAccount:(AIAccount*)account
@@ -45,6 +47,8 @@
 			 userData:(void*)ud
 {
 	if((self = [super init])) {
+		if(!acceptedCertificates)
+			acceptedCertificates = [[NSMutableSet alloc] init];
 		query_cert_cb = _query_cert_cb;
 		
 		certificates = certs;
@@ -72,9 +76,27 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 	SecPolicySearchRef searchRef = NULL;
 	SecPolicyRef policyRef;
 	
+	CSSM_DATA data;
+	err = SecCertificateGetData((SecCertificateRef)CFArrayGetValueAtIndex(certificates, 0), &data);
+	if(err == noErr) {
+		// Did we ask the user to confirm this certificate before?
+		// Note that this information is not stored on the disk, which is on purpose.
+		NSData *certdata = [[NSData alloc] initWithBytesNoCopy:data.Data length:data.Length freeWhenDone:NO];
+		BOOL ok = [acceptedCertificates containsObject:certdata];
+		[certdata release];
+		
+		if(ok) {
+			query_cert_cb(true, userdata);
+			[self release];
+			return;
+		}
+	}
+		
+	
 	err = SecPolicySearchCreate(CSSM_CERT_X_509v3, &CSSMOID_APPLE_TP_SSL, NULL, &searchRef);
 	if(err != noErr) {
 		NSBeep();
+		[self release];
 		return;
 	}
 	
@@ -82,6 +104,7 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 	if(err != noErr) {
 		CFRelease(searchRef);
 		NSBeep();
+		[self release];
 		return;
 	}
 
@@ -105,6 +128,7 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 		CFRelease(searchRef);
 		CFRelease(policyRef);
 		NSBeep();
+		[self release];
 		return;
 	}
 		
@@ -164,7 +188,12 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 - (void)certificateTrustSheetDidEnd:(SFCertificateTrustPanel *)trustpanel returnCode:(int)returnCode contextInfo:(void *)contextInfo {
 	NSWindow *win = (NSWindow*)contextInfo;
 	query_cert_cb(returnCode == NSOKButton, userdata);
-	// TODO: if the user confirmed this cert, we should store this information at least until the app is closed
+	// if the user confirmed this cert, we store this information until the app is closed so the user doesn't have to re-confirm it every time
+	// (this might be particularily annoying on auto-reconnect)
+	CSSM_DATA certdata;
+	OSStatus err = SecCertificateGetData((SecCertificateRef)CFArrayGetValueAtIndex(certificates, 0), &certdata);
+	if(err == noErr)
+		[acceptedCertificates addObject:[NSData dataWithBytes:certdata.Data length:certdata.Length]];
 
 	[trustpanel release];
 	CFRelease(trustRef);
