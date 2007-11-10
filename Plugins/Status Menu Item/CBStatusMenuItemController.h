@@ -19,8 +19,9 @@
 #import "AIMenuBarIcons.h"
 
 @class AIAccountMenu, AIStatusMenu, AIContactMenu;
+@protocol AIListObjectObserver;
 
-@interface CBStatusMenuItemController : AIObject <AIChatObserver>
+@interface CBStatusMenuItemController : AIObject <AIChatObserver, AIListObjectObserver>
 {
 	NSStatusItem            *statusItem;
 	NSMenu                  *mainMenu;

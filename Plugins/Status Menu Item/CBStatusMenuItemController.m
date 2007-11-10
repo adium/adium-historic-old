@@ -123,6 +123,9 @@
 		// Register as a chat observer so we can know the status of unread messages
 		[[adium chatController] registerChatObserver:self];
 		
+		// Register as a list object observer so we can know when accounts need to show reconnecting
+	    [[adium contactController] registerListObjectObserver:self];
+		
 		// Register as an observer of the preference group so we can update our "show offline contacts" option
 		[[adium preferenceController] registerPreferenceObserver:self
 														forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
@@ -159,6 +162,7 @@
 	[self invalidateTimers];
 	
 	//Unregister ourself
+	[[adium contactController] unregisterListObjectObserver:self];
 	[[adium chatController] unregisterChatObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
@@ -270,7 +274,7 @@
 - (void)updateMenuIcons
 {
 	NSImage			*badge = nil;
-	BOOL			isIdle;
+	BOOL			anyAccountHasStatusMessage;
 	NSString		*imageName;
 	NSEnumerator	*enumerator;
 	AIAccount		*account;
@@ -309,45 +313,47 @@
 				break;
 				
 			default:
-				// Check idle here, since it has less precedence than offline, invisible, or away.
-				isIdle = FALSE;
-				enumerator = [[[adium accountController] accounts] objectEnumerator];
+				// Online badging order of presence: idle > reconnecting account > status message
 				
-				// Check each account for IdleSince
+				// Assuming we're using an online image unless proven otherwise
+				imageName = IMAGE_TYPE_ONLINE;
+
+				// Check idle here, since it has less precedence than offline, invisible, or away.
+				anyAccountHasStatusMessage = NO;
+				enumerator = [[[adium accountController] accounts] objectEnumerator];
+
+				// Check each account for IdleSince, a StatusState status message, or "Waiting to Reconnect"
 				while ((account = [enumerator nextObject])) {
 					if ([account online] && [account statusObjectForKey:@"IdleSince"]) {
-						isIdle = TRUE;
+						if (showBadge) {
+							badge = [AIStatusIcons statusIconForStatusName:@"Idle"
+																statusType:AIAvailableStatusType
+																  iconType:AIStatusIconList
+																 direction:AIIconNormal];
+						}
+						
+						imageName = IMAGE_TYPE_IDLE;
+						
+						// We don't need to check anymore; idle has high precedence than offline or available with a status message.
 						break;
-					}
-				}
-				
-				// If any of the accounts were idle...
-				if (isIdle) {
-					if (showBadge) {
-						badge = [AIStatusIcons statusIconForStatusName:@"Idle"
-															statusType:AIAvailableStatusType
+					} else if (showBadge &&
+							   ([account statusObjectForKey:@"Waiting to Reconnect"] ||
+								[[account statusObjectForKey:@"Connecting"] boolValue])) {
+						badge = [AIStatusIcons statusIconForStatusName:@"Offline"
+															statusType:AIOfflineStatusType
 															  iconType:AIStatusIconList
 															 direction:AIIconNormal];
+					} else if ([account online] && [[account statusObjectForKey:@"StatusState"] statusMessage]) {
+						anyAccountHasStatusMessage = YES;
 					}
-					
-					imageName = IMAGE_TYPE_IDLE;
-				} else {
-					// Show badge if an available message is set.
-					if (showBadge) {
-						enumerator = [[[adium accountController] accounts] objectEnumerator];
-						
-						while ((account = [enumerator nextObject])) {
-							// If the account has a status message...
-							if ([account online] && [[account statusObjectForKey:@"StatusState"] statusMessage]) {
-								// Set the badge for the "available" status.
-								badge = [[[adium statusController] activeStatusState] icon];
-								break;
-							}
-						}
-					}
-				
-					imageName = IMAGE_TYPE_ONLINE;
 				}
+				
+				// If we already haven't chosen a badge (for example, offline for a reconnecting account)
+				// and we have a status message set on any online account, use an online badge
+				if (showBadge && !badge && anyAccountHasStatusMessage) {
+					badge = [[[adium statusController] activeStatusState] icon];
+				}
+
 				break;
 		}
 	}
@@ -483,6 +489,20 @@
 - (BOOL)contactMenuShouldUseUserIcon:(AIContactMenu *)inContactMenu
 {
 	return YES;
+}
+
+//List Object Observer -------------------------------------------------
+#pragma mark List Object Observer
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
+{
+	if ([inObject isKindOfClass:[AIAccount class]]) {
+		if ([inModifiedKeys containsObject:@"Connecting"] ||
+			[inModifiedKeys containsObject:@"Waiting to Reconnect"]) {
+			[self updateMenuIcons];
+		}
+	}
+	
+	return nil;
 }
 
 //Chat Observer --------------------------------------------------------
