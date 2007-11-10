@@ -18,10 +18,8 @@
 #import <Adium/AIMenuControllerProtocol.h>
 #import "AIOfflineContactHidingPlugin.h"
 #import <Adium/AIPreferenceControllerProtocol.h>
-#import <Adium/AIToolbarControllerProtocol.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <Adium/AIListGroup.h>
@@ -91,26 +89,6 @@
 	
 	//Register preference observer first so values will be correct for the following calls
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
-	
-	//Toolbar
-	NSToolbarItem	*toolbarItem;
-    toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:OFFLINE_CONTACTS_IDENTIFER
-														  label:AILocalizedString(@"Offline Contacts",nil)
-												   paletteLabel:AILocalizedString(@"Toggle Offline Contacts",nil)
-														toolTip:AILocalizedString(@"Toggle display of offline contacts",nil)
-														 target:self
-												settingSelector:@selector(setImage:)
-													itemContent:[NSImage imageNamed:@"offlinecontacts"
-																		   forClass:[self class]]
-														 action:@selector(toggleOfflineContactsToolbar:)
-														   menu:nil];
-    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ContactList"];
-	
-	//Toolbar item registration
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(toolbarWillAddItem:)
-												 name:NSToolbarWillAddItemNotification
-											   object:nil];
 }
 
 /*!
@@ -194,21 +172,6 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:!useOfflineGroup]
 											 forKey:KEY_USE_OFFLINE_GROUP
 											  group:PREF_GROUP_CONTACT_LIST_DISPLAY];
-	}
-}
-
-/*!
-* @brief After the toolbar has added the item we can set up the submenus
- */
-- (void)toolbarWillAddItem:(NSNotification *)notification
-{
-	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
-	
-	if ([[item itemIdentifier] isEqualToString:OFFLINE_CONTACTS_IDENTIFER]) {
-		[item setImage:[NSImage imageNamed:(showOfflineContacts ?
-											@"offlinecontacts_transparent" :
-											@"offlinecontacts")
-								  forClass:[self class]]];
 	}
 }
 
