@@ -99,7 +99,6 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 	
 	err = SecPolicySetValue(policyRef, &theCssmData);
 	// don't care about the error
-	NSLog(@"SecPolicySetValue returned %i", err);
 	
 	err = SecTrustCreateWithCertificates(certificates, policyRef, &trustRef);
 	if(err != noErr) {
