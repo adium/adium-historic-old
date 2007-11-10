@@ -120,6 +120,9 @@
 										   name:AIMenuBarIconsDidChangeNotification
 										 object:nil];
 		
+		// Register as a chat observer so we can know the status of unread messages
+		[[adium chatController] registerChatObserver:self];
+		
 		// Register as an observer of the preference group so we can update our "show offline contacts" option
 		[[adium preferenceController] registerPreferenceObserver:self
 														forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
@@ -156,6 +159,7 @@
 	[self invalidateTimers];
 	
 	//Unregister ourself
+	[[adium chatController] unregisterChatObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	
