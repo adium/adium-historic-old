@@ -52,6 +52,12 @@ typedef unsigned int NSUInteger;
 			- (void)setCollectionBehavior:(NSWindowCollectionBehavior)behavior;
 		@end
 
+		@interface NSTextView (NSTextViewTigerMethods)
+			- (void)setGrammarCheckingEnabled:(BOOL)flag;
+			- (BOOL)isGrammarCheckingEnabled;
+			- (void)toggleGrammarChecking:(id)sender;
+		@end
+
 #	endif //MAC_OS_X_VERSION_10_5
 
 #endif //AITigerCompatibility

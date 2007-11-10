@@ -18,8 +18,6 @@
 #import <Adium/AIAdiumProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
 
-#define	AIContinuousSpellCheckingWasToggledNotification	@"AIContinuousSpellCheckingWasToggledNotification"
-
 @class AIListContact, AIAccount, AIChat;
 
 @interface AIMessageEntryTextView : AISendingTextView <AITextEntryView> {

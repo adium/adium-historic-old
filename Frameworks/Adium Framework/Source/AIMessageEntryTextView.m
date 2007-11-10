@@ -34,12 +34,15 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 
+#import <AIUtilities/AITigerCompatibility.h>
+
 #define MAX_HISTORY					25		//Number of messages to remember in history
 #define ENTRY_TEXTVIEW_PADDING		6		//Padding for auto-sizing
 
 #define KEY_DISABLE_TYPING_NOTIFICATIONS		@"Disable Typing Notifications"
 
 #define KEY_SPELL_CHECKING						@"Spell Checking Enabled"
+#define KEY_GRAMMAR_CHECKING					@"Grammar Checking Enabled"
 #define	PREF_GROUP_DUAL_WINDOW_INTERFACE		@"Dual Window Interface"
 
 #define FILES_AND_IMAGES_TYPES [NSArray arrayWithObjects: \
@@ -347,6 +350,14 @@
 		[group isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE] &&
 		(!key || [key isEqualToString:KEY_SPELL_CHECKING])) {
 		[self setContinuousSpellCheckingEnabled:[[prefDict objectForKey:KEY_SPELL_CHECKING] boolValue]];
+	}
+
+	if ([NSApp isOnLeopardOrBetter]) {
+		if (!object &&
+			[group isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE] &&
+			(!key || [key isEqualToString:KEY_GRAMMAR_CHECKING])) {
+			[self setGrammarCheckingEnabled:[[prefDict objectForKey:KEY_GRAMMAR_CHECKING] boolValue]];
+		}
 	}
 }
 
@@ -1056,6 +1067,21 @@
 										 forKey:KEY_SPELL_CHECKING
 										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 }
+
+/*!
+ * @brief Grammar checking was toggled
+ *
+ * Set our preference, as we toggle grammar checking globally when it is changed locally
+ */
+- (void)toggleGrammarChecking:(id)sender
+{
+	[super toggleGrammarChecking:sender];
+	
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:[self isGrammarCheckingEnabled]]
+										 forKey:KEY_GRAMMAR_CHECKING
+										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+}
+
 
 #pragma mark Writing Direction
 - (void)toggleBaseWritingDirection:(id)sender
