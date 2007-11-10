@@ -8,6 +8,8 @@
 	<true/>
 	<key>Show Idle Contacts</key>
 	<true/>
+	<key>Show Mobile Contacts</key>
+	<true/>
 	<key>Show Offline Contacts</key>
 	<false/>
 	<key>Use Offline Group</key>
