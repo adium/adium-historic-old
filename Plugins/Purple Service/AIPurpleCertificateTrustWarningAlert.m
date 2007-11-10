@@ -64,6 +64,9 @@
 	[super dealloc];
 }
 
+// seems to be absent from the headers
+OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
+
 - (IBAction)showWindow:(id)sender {
 	OSStatus err;
 	SecPolicySearchRef searchRef = NULL;
@@ -74,12 +77,29 @@
 		NSBeep();
 		return;
 	}
+	
 	err = SecPolicySearchCopyNext(searchRef, &policyRef);
 	if(err != noErr) {
 		CFRelease(searchRef);
 		NSBeep();
 		return;
 	}
+
+	CSSM_APPLE_TP_SSL_OPTIONS ssloptions = {
+		.Version = CSSM_APPLE_TP_SSL_OPTS_VERSION,
+		.ServerNameLen = [hostname length]+1,
+		.ServerName = [hostname cStringUsingEncoding:NSASCIIStringEncoding],
+		.Flags = CSSM_APPLE_TP_SSL_CLIENT
+	};
+	
+	CSSM_DATA theCssmData = {
+		.Length = sizeof(ssloptions),
+		.Data = (uint8*)&ssloptions 
+	};
+	
+	err = SecPolicySetValue(policyRef, &theCssmData);
+	// don't care about the error
+	NSLog(@"SecPolicySetValue returned %i", err);
 	
 	err = SecTrustCreateWithCertificates(certificates, policyRef, &trustRef);
 	if(err != noErr) {
@@ -88,7 +108,7 @@
 		NSBeep();
 		return;
 	}
-	
+		
 	// test whether we aren't already trusting this certificate
 	SecTrustResultType result;
 	err = SecTrustEvaluate(trustRef, &result);
