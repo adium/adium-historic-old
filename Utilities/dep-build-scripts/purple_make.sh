@@ -80,6 +80,7 @@ popd
 for ARCH in ppc i386 ; do
     export CFLAGS="$BASE_CFLAGS -arch $ARCH"
 	export LDFLAGS="$BASE_LDFLAGS -arch $ARCH"
+	export SASL_PATH=" "
     mkdir cyrus-sasl-$ARCH || true
     cd cyrus-sasl-$ARCH
     case $ARCH in
@@ -91,11 +92,10 @@ for ARCH in ppc i386 ; do
     # In my experience, --enable-static horks things. Not sure why. Be careful
     # if you turn it back on. Check things with a completely clean build.
     ../../$SASL/configure --prefix=$TARGET_DIR \
-        --disable-static --enable-shared \
-#        --with-staticsasl --disable-shared \
         --disable-macos-framework \
-#        --with-openssl=/Developer/SDKs/MacOSX10.4u/sdk/usr/lib \
-#        --disable-digest --enable-krb4 \
+        --with-openssl=/Developer/SDKs/MacOSX10.4u/sdk/usr/lib \
+        --disable-digest \
+        --enable-static=cram,otp,gssapi,plain,anon \
         --host=$HOST
     # EVIL HACK ALERT: http://www.theronge.com/2006/04/15/how-to-compile-cyrus-sasl-as-universal/
     # We edit libtool before we run make. This is evil and makes me sad.
