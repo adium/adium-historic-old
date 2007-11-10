@@ -36,6 +36,7 @@ typedef unsigned int NSUInteger;
 
 #		define NSDownloadsDirectory 15
 
+		typedef NSUInteger NSWindowCollectionBehavior;
 #		define NSWindowCollectionBehaviorDefault 0
 #		define NSWindowCollectionBehaviorCanJoinAllSpaces 1 << 0
 
@@ -46,6 +47,10 @@ typedef unsigned int NSUInteger;
 #		if !defined(NS_REQUIRES_NIL_TERMINATION)
 #			define NS_REQUIRES_NIL_TERMINATION __attribute__((sentinel))
 #		endif
+
+		@interface NSWindow (NSWindowTigerMethods)
+			- (void)setCollectionBehavior:(NSWindowCollectionBehavior)behavior;
+		@end
 
 #	endif //MAC_OS_X_VERSION_10_5
 
