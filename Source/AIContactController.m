@@ -1307,12 +1307,9 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if (firstTime ||
-		[key isEqualToString:KEY_USE_OFFLINE_GROUP] ||
-		[key isEqualToString:KEY_SHOW_OFFLINE_CONTACTS]) {
-
-		[self setUseOfflineGroup:([[prefDict objectForKey:KEY_USE_OFFLINE_GROUP] boolValue])];
-	}
+	[self setUseOfflineGroup:((![[prefDict objectForKey:KEY_HIDE_CONTACTS] boolValue] ||
+							  [[prefDict objectForKey:KEY_SHOW_OFFLINE_CONTACTS] boolValue]) &&
+							  [[prefDict objectForKey:KEY_USE_OFFLINE_GROUP] boolValue])];
 }
 
 /*!
