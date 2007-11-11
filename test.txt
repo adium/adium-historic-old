@@ -28,4 +28,4 @@ moo
 
 Checking trac sync
 
-Testing buildbot hook.
+Testing buildbot hook
