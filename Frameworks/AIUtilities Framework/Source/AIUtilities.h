@@ -26,6 +26,7 @@
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIBezierPathAdditions.h>
+#import <AIUtilities/AICalendarDateAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIColoredBoxView.h>
 #import <AIUtilities/AICompletingTextField.h>
