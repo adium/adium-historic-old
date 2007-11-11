@@ -12,10 +12,14 @@ BUILDCONFIGURATION?=$(DEFAULT_BUILDCONFIGURATION)
 CP=ditto --rsrc
 RM=rm
 
-.PHONY: all adium clean localizable-strings latest
+.PHONY: all adium clean localizable-strings latest test
 
 adium:
 	xcodebuild -project Adium.xcodeproj -configuration $(BUILDCONFIGURATION) CFLAGS="$(ADIUM_CFLAGS)" build
+
+test:
+	xcodebuild -project Adium.xcodeproj -configuration $(BUILDCONFIGURATION) CFLAGS="$(ADIUM_CFLAGS)" -target "Unit tests" build
+	osascript unittest\ runner.applescript | tr '\r' '\n'
 
 #install:
 #	    cp -R build/Adium.app ~/Applications/
@@ -23,7 +27,6 @@ adium:
 
 clean:
 	xcodebuild -project Adium.xcodeproj -configuration $(BUILDCONFIGURATION)  clean
-
 
 localizable-strings:
 	mkdir tmp || true
