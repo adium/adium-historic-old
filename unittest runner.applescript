@@ -1,7 +1,7 @@
 (* Read Me.
 
 This is the unit test runner for AppleScript. In order to run them from the command line, in adium/ folder, use
-osascript unittest runner.applescript 
+osascript unittest\ runner.applescript 
 piped to 
  tr '\r' '\n'
 
