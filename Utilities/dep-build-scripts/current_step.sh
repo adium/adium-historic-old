@@ -86,7 +86,8 @@ for ARCH in ppc i386 ; do
             --prefix=$TARGET_DIR \
             --with-static-prpls="$PROTOCOLS" \
             --enable-cyrus-sasl \
-            --host=$HOST
+            --host=$HOST \
+            --enable-gnutls=no --enable-nss=no --enable-openssl=no $@
     cd libpurple
     echo 'inspect sources (edit them?) and then make && make install'
     make -j $NUMBER_OF_CORES && make install
