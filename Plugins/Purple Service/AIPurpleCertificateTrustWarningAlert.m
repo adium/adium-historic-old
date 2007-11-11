@@ -14,7 +14,7 @@
 #import "ESPurpleJabberAccount.h"
 #import "AIEditAccountWindowController.h"
 
-static NSMutableSet *acceptedCertificates = nil;
+static NSMutableDictionary *acceptedCertificates = nil;
 
 @interface AIPurpleCertificateTrustWarningAlert (privateMethods)
 
@@ -48,7 +48,7 @@ static NSMutableSet *acceptedCertificates = nil;
 {
 	if((self = [super init])) {
 		if(!acceptedCertificates)
-			acceptedCertificates = [[NSMutableSet alloc] init];
+			acceptedCertificates = [[NSMutableDictionary alloc] init];
 		query_cert_cb = _query_cert_cb;
 		
 		certificates = certs;
@@ -82,7 +82,8 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 		// Did we ask the user to confirm this certificate before?
 		// Note that this information is not stored on the disk, which is on purpose.
 		NSData *certdata = [[NSData alloc] initWithBytesNoCopy:data.Data length:data.Length freeWhenDone:NO];
-		BOOL ok = [acceptedCertificates containsObject:certdata];
+		NSData *oldcert = [acceptedCertificates objectForKey:hostname];
+		BOOL ok = oldcert?[certdata isEqualToData:oldcert]:NO;
 		[certdata release];
 		
 		if(ok) {
@@ -184,7 +185,7 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 	                          trust:trustRef
 	                        message:[NSString stringWithFormat:AILocalizedString(@"The certificate of the server %@ is not trusted, which means that the server's identity cannot be automatically verified. Do you want to continue connecting?\nFor more information, click \"Show Certificate\".",nil),hostname]];
 }
-																					  
+
 - (void)certificateTrustSheetDidEnd:(SFCertificateTrustPanel *)trustpanel returnCode:(int)returnCode contextInfo:(void *)contextInfo {
 	NSWindow *win = (NSWindow*)contextInfo;
 	query_cert_cb(returnCode == NSOKButton, userdata);
@@ -193,7 +194,7 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 	CSSM_DATA certdata;
 	OSStatus err = SecCertificateGetData((SecCertificateRef)CFArrayGetValueAtIndex(certificates, 0), &certdata);
 	if(err == noErr)
-		[acceptedCertificates addObject:[NSData dataWithBytes:certdata.Data length:certdata.Length]];
+		[acceptedCertificates setObject:[NSData dataWithBytes:certdata.Data length:certdata.Length] forKey:hostname];
 
 	[trustpanel release];
 	CFRelease(trustRef);
