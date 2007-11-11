@@ -33,6 +33,7 @@
 #import <AIUtilities/AICustomTabCell.h>
 #import <AIUtilities/AICustomTabDragging.h>
 #import <AIUtilities/AICustomTabsView.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIDockingWindow.h>
 #import <AIUtilities/AIEventAdditions.h>
