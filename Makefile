@@ -12,13 +12,14 @@ BUILDCONFIGURATION?=$(DEFAULT_BUILDCONFIGURATION)
 CP=ditto --rsrc
 RM=rm
 
-.PHONY: all adium clean localizable-strings latest test
+.PHONY: all adium clean localizable-strings latest test astest
 
 adium:
 	xcodebuild -project Adium.xcodeproj -configuration $(BUILDCONFIGURATION) CFLAGS="$(ADIUM_CFLAGS)" build
 
 test:
 	xcodebuild -project Adium.xcodeproj -configuration $(BUILDCONFIGURATION) CFLAGS="$(ADIUM_CFLAGS)" -target "Unit tests" build
+astest:
 	osascript unittest\ runner.applescript | tr '\r' '\n'
 
 #install:
