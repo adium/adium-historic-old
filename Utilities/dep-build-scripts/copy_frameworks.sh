@@ -1,19 +1,8 @@
-#!/bin/sh
-#if this path has spaces, please review the script; it hasn't been tested with a path with spaces
-ADIUM=~/adium
+#!/bin/sh 
+ADIUM="`dirname $0`/../.."
 
-pushd build/Frameworks
-tar cf frameworks.tar *.framework
-mv frameworks.tar $ADIUM/Frameworks
-popd
+cp -r "`dirname $0`"/build/Frameworks/*.framework "$ADIUM/Frameworks/"
 
-pushd $ADIUM/Frameworks
-tar xf frameworks.tar
-rm frameworks.tar
-popd
-
-pushd $ADIUM
-pushd build
-rm -rf */AdiumLibpurple.framework
-popd
+pushd "$ADIUM/build"
+rm -rf */AdiumLibpurple.framework 
 popd
