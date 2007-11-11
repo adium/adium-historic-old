@@ -27,3 +27,5 @@ git-svn test.
 moo
 
 Checking trac sync
+
+Testing buildbot hook.
