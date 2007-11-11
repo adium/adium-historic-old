@@ -83,7 +83,7 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 		// Note that this information is not stored on the disk, which is on purpose.
 		NSData *certdata = [[NSData alloc] initWithBytesNoCopy:data.Data length:data.Length freeWhenDone:NO];
 		NSData *oldcert = [acceptedCertificates objectForKey:hostname];
-		BOOL ok = oldcert?[certdata isEqualToData:oldcert]:NO;
+		BOOL ok = oldcert ? [certdata isEqualToData:oldcert] : NO;
 		[certdata release];
 		
 		if(ok) {
