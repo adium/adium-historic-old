@@ -27,8 +27,8 @@
 		07BB5A0E07C48340008996A0 /* AIWiredData.m in Sources */ = {isa = PBXBuildFile; fileRef = 078DF8AF07C2948200831ABF /* AIWiredData.m */; };
 		07C52D4707BD2F97006BE37C /* AIHostReachabilityMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 07C52D4507BD2F97006BE37C /* AIHostReachabilityMonitor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		07C52D4807BD2F97006BE37C /* AIHostReachabilityMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 07C52D4607BD2F97006BE37C /* AIHostReachabilityMonitor.m */; };
-		319EF07F0CE787E40070D159 /* Source/AICalendarDateAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 319EF07D0CE787E40070D159 /* Source/AICalendarDateAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		319EF0800CE787E40070D159 /* Source/AICalendarDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 319EF07E0CE787E40070D159 /* Source/AICalendarDateAdditions.m */; };
+		319EF07F0CE787E40070D159 /* AICalendarDateAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 319EF07D0CE787E40070D159 /* AICalendarDateAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		319EF0800CE787E40070D159 /* AICalendarDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 319EF07E0CE787E40070D159 /* AICalendarDateAdditions.m */; };
 		3402D33107CB043F0044F818 /* AIUtilities.framework_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 3402D33007CB043F0044F818 /* AIUtilities.framework_Prefix.pch */; settings = {ATTRIBUTES = (); }; };
 		34057BD6087DF73F00664D64 /* AIFlexibleToolbarItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 34057BD4087DF73F00664D64 /* AIFlexibleToolbarItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34057BD7087DF73F00664D64 /* AIFlexibleToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 34057BD5087DF73F00664D64 /* AIFlexibleToolbarItem.m */; };
@@ -261,8 +261,8 @@
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		0867D6A5FE840307C02AAC07 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
-		319EF07D0CE787E40070D159 /* Source/AICalendarDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Source/AICalendarDateAdditions.h; sourceTree = "<group>"; };
-		319EF07E0CE787E40070D159 /* Source/AICalendarDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Source/AICalendarDateAdditions.m; sourceTree = "<group>"; };
+		319EF07D0CE787E40070D159 /* AICalendarDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AICalendarDateAdditions.h; path = Source/AICalendarDateAdditions.h; sourceTree = "<group>"; };
+		319EF07E0CE787E40070D159 /* AICalendarDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AICalendarDateAdditions.m; path = Source/AICalendarDateAdditions.m; sourceTree = "<group>"; };
 		3402D33007CB043F0044F818 /* AIUtilities.framework_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AIUtilities.framework_Prefix.pch; sourceTree = "<group>"; };
 		34057BD4087DF73F00664D64 /* AIFlexibleToolbarItem.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIFlexibleToolbarItem.h; path = Source/AIFlexibleToolbarItem.h; sourceTree = "<group>"; };
 		34057BD5087DF73F00664D64 /* AIFlexibleToolbarItem.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIFlexibleToolbarItem.m; path = Source/AIFlexibleToolbarItem.m; sourceTree = "<group>"; };
@@ -801,8 +801,8 @@
 				34486B4706D1DF0300DA778C /* AIBezierPathAdditions.m */,
 				34FFB288087DF1300000A517 /* AIBundleAdditions.h */,
 				34FFB28F087DF1300000A517 /* AIBundleAdditions.m */,
-				319EF07D0CE787E40070D159 /* Source/AICalendarDateAdditions.h */,
-				319EF07E0CE787E40070D159 /* Source/AICalendarDateAdditions.m */,
+				319EF07D0CE787E40070D159 /* AICalendarDateAdditions.h */,
+				319EF07E0CE787E40070D159 /* AICalendarDateAdditions.m */,
 				34235A6909D7B370009FF634 /* AICharacterSetAdditions.h */,
 				34235A6A09D7B370009FF634 /* AICharacterSetAdditions.m */,
 				34486B4A06D1DF0300DA778C /* AIColorAdditions.h */,
@@ -1439,7 +1439,7 @@
 				8D1D4DE90BD62FDB0091C3CE /* AIDividedAlternatingRowOutlineView.h in Headers */,
 				638447B40CD4DA7A00BB878F /* AITigerCompatibility.h in Headers */,
 				34E1D8060CD5C4FA0071836E /* IKPictureTakerForTiger.h in Headers */,
-				319EF07F0CE787E40070D159 /* Source/AICalendarDateAdditions.h in Headers */,
+				319EF07F0CE787E40070D159 /* AICalendarDateAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1637,7 +1637,7 @@
 				639B3CA90ABC708700D618E9 /* AIWindowControllerAdditions.m in Sources */,
 				8D1D4DEA0BD62FDB0091C3CE /* AIDividedAlternatingRowOutlineView.m in Sources */,
 				34E1D8050CD5C4FA0071836E /* IKPictureTakerForTiger.m in Sources */,
-				319EF0800CE787E40070D159 /* Source/AICalendarDateAdditions.m in Sources */,
+				319EF0800CE787E40070D159 /* AICalendarDateAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
