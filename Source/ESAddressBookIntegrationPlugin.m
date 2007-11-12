@@ -598,7 +598,8 @@ NSString* serviceIDForJabberUID(NSString *UID);
 		
 		//Apply the image to the appropriate listObject
 		image = (inData ? [[[NSImage alloc] initWithData:inData] autorelease] : nil);
-		
+		[image setDataRetained:YES];
+
 		//Get the object from our tracking dictionary
 		setOrObject = [trackingDict objectForKey:tagNumber];
 		
