@@ -389,6 +389,7 @@
 	
 	//Set the User Icon as an NSImage
 	NSImage *userIcon = [[NSImage alloc] initWithData:iconData];
+	[userIcon setDataRetained:YES];
 	[self setStatusObject:userIcon forKey:KEY_USER_ICON notify:NotifyLater];
 	[userIcon release];
 	
