@@ -10,7 +10,8 @@
 
 @implementation NSCalendarDate (AICalendarDateAdditions)
 
-- (NSCalendarDate *)dateByMatchingDSTOfDate:(NSDate *)otherDate {
+- (NSCalendarDate *)dateByMatchingDSTOfDate:(NSDate *)otherDate
+{
 	NSCalendarDate *result = self;
 
 	NSTimeZone *tz = [self timeZone];
