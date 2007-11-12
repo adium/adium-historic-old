@@ -7,6 +7,7 @@
 
 #import "AIDateFormatterAdditions.h"
 #import "AIApplicationAdditions.h"
+#import "AIDateAdditions.h"
 #import "AIStringUtilities.h"
 
 #define ONE_WEEK AILocalizedStringFromTableInBundle(@"1 week", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], nil)
@@ -197,35 +198,16 @@ typedef enum {
 
 + (NSString *)stringForTimeInterval:(NSTimeInterval)interval showingSeconds:(BOOL)showSeconds abbreviated:(BOOL)abbreviate approximated:(BOOL)approximate
 {
-	NSTimeInterval	workInterval = interval;
     int				weeks = 0, days = 0, hours = 0, minutes = 0;
 	NSTimeInterval	seconds = 0; 
 	NSString		*weeksString = nil, *daysString = nil, *hoursString = nil, *minutesString = nil, *secondsString = nil;
 
-	//Weeks
-	weeks = (int)((workInterval / 86400) / 7);
-	workInterval -= weeks * 86400 * 7;
-
-	//Days
-	if (workInterval) {
-		days = (int)(workInterval / 86400);
-		workInterval -= days * 86400;
-	}
-	
-	//Hours
-    if (workInterval) {
-        hours = (int)(workInterval / 3600);
-        workInterval -= hours * 3600;
-    }
-	
-	//Minutes
-    if (workInterval) {
-        minutes = (int)(workInterval / 60);
-        workInterval -= minutes * 60;
-    }
-	
-	//Seconds
-	seconds = workInterval;
+	[NSDate convertTimeInterval:interval
+	                    toWeeks:&weeks
+	                       days:&days
+	                      hours:&hours
+	                    minutes:&minutes
+	                    seconds:&seconds];
 
 	//build the strings for the parts
 	if (abbreviate) {
