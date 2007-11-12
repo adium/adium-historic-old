@@ -14,10 +14,11 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AdiumSound.h"
 #import "AISoundController.h"
 #import <Adium/AIPreferenceControllerProtocol.h>
-#import "AdiumSound.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/AISleepNotification.h>
 #import <QTKit/QTKit.h>
 
 #define SOUND_DEFAULT_PREFS				@"SoundPrefs"
@@ -60,6 +61,12 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 								name:NSWorkspaceSessionDidResignActiveNotification
 							  object:nil];
 
+		//Monitor system sleep so we can stop sounds before sleeping; otherwise, we may crash while waking
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(systemWillSleep:)
+													 name:AISystemWillSleep_Notification
+												   object:nil];
+		
 		//Sign up for notification when the user changes the system output device in the Sound pane of System Preferences.
 		OSStatus err = AudioHardwareAddPropertyListener(kAudioHardwarePropertyDefaultSystemOutputDevice, systemOutputDeviceDidChange, /*refcon*/ self);
 		NSAssert2(err == noErr, @"%s: Couldn't sign up for system-output-device-changed notification, because AudioHardwareAddPropertyListener returned %i", __PRETTY_FUNCTION__, err);
@@ -80,6 +87,7 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 {
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[self _stopAndReleaseAllSounds];
 
@@ -266,6 +274,11 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 - (void)workspaceSessionDidResignActive:(NSNotification *)notification
 {
 	[self setSoundsAreMuted:YES];
+}
+
+- (void)systemWillSleep:(NSNotification *)notification
+{
+	[self _stopAndReleaseAllSounds];
 }
 
 - (void)setSoundsAreMuted:(BOOL)mute
