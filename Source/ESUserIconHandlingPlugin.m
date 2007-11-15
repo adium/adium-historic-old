@@ -213,6 +213,7 @@
 		NSImage	*image;
 
 		image = [[NSImage alloc] initWithData:imageData];
+		[image setDataRetained:YES];
 
 		[inObject setDisplayUserIcon:image
 						   withOwner:self
