@@ -38,9 +38,6 @@
 
 - (void)installPlugin
 {
-	
-	shouldRebuildChatList = YES;
-	
 	//Invite to Chat menu item
 	menuItem_inviteToChat = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:INVITE_CONTACT
 																				  target:self
@@ -60,34 +57,50 @@
 //Validate our menu items
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {                
-	if (menuItem == menuItem_inviteToChat) {		
-
-		AIListObject *object = [[adium interfaceController] selectedListObjectInContactList];
-
-		if ([object isKindOfClass:[AIListContact class]]) {
-			if ( shouldRebuildChatList ) {
-				[menuItem_inviteToChat setSubmenu:[self groupChatMenuForContact:(AIListContact *)object]];
-			}
-                     
-			return ([[menuItem_inviteToChat submenu] numberOfItems] > 0);
-		} else {
-                        [menuItem_inviteToChat setTitle:INVITE_CONTACT]; // hit the reset button
-			return NO;
-		}
-		
-	} else if ( menuItem == menuItem_inviteToChatContext ) {
-		
-		if ( shouldRebuildChatList ) {
-			AIListObject *object = [[adium menuController] currentContextMenuObject];
-			if ([object isKindOfClass:[AIListContact class]]) {
-				[menuItem_inviteToChatContext setSubmenu:[self groupChatMenuForContact:(AIListContact *)object]];
-			}
-		}
-		return ([[menuItem_inviteToChatContext submenu] numberOfItems] > 0);
-
-	}
+	NSMenuItem	*targetMenuItem;
 	
-	return YES;
+	if (menuItem == menuItem_inviteToChat)
+		targetMenuItem = menuItem_inviteToChat;
+	else if (menuItem == menuItem_inviteToChatContext)
+		targetMenuItem = menuItem_inviteToChatContext;
+	else
+		targetMenuItem = nil;
+	
+	return (targetMenuItem ? ([[targetMenuItem submenu] numberOfItems] > 0) : YES);
+}
+
+- (void)menu:(NSMenu *)menu needsUpdateForMenuItem:(NSMenuItem *)menuItem
+{
+	NSMenuItem	*targetMenuItem;
+
+	if (menuItem == menuItem_inviteToChat)
+		targetMenuItem = menuItem_inviteToChat;
+	else if (menuItem == menuItem_inviteToChatContext)
+		targetMenuItem = menuItem_inviteToChatContext;
+	else
+		targetMenuItem = nil;
+	
+	if (targetMenuItem) {
+		AIListObject *listObject = ((targetMenuItem == menuItem_inviteToChat) ? 
+									[[adium interfaceController] selectedListObjectInContactList] :
+									[[adium menuController] currentContextMenuObject]);
+
+		if ([listObject isKindOfClass:[AIListContact class]]) {
+			[targetMenuItem setSubmenu:[self groupChatMenuForContact:(AIListContact *)listObject]];
+
+		} else {
+			//Generic title, no submenu
+			[targetMenuItem setTitle:INVITE_CONTACT];
+			[targetMenuItem setSubmenu:nil];
+		}
+
+		//Don't include it at all if this is a contextual menu and it has no items
+		if ((targetMenuItem == menuItem_inviteToChatContext) && ([[targetMenuItem submenu] numberOfItems] == 0)) {
+			[targetMenuItem retain];
+			[[targetMenuItem menu] removeItem:menuItem_inviteToChatContext];
+			[targetMenuItem autorelease];
+		}
+	}
 }
 
 - (IBAction)inviteToChat:(id)sender
