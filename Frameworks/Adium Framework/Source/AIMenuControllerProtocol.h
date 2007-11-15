@@ -59,3 +59,8 @@ typedef enum {
 - (void)removeItalicsKeyEquivalent;
 - (void)restoreItalicsKeyEquivalent;
 @end
+
+@interface NSObject (MenuItemUpdating)
+- (void)menu:(NSMenu *)menu needsUpdateForMenuItem:(NSMenuItem *)menuItem;
+@end
+
