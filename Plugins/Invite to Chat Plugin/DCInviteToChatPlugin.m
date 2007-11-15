@@ -96,9 +96,7 @@
 
 		//Don't include it at all if this is a contextual menu and it has no items
 		if ((targetMenuItem == menuItem_inviteToChatContext) && ([[targetMenuItem submenu] numberOfItems] == 0)) {
-			[targetMenuItem retain];
 			[[targetMenuItem menu] removeItem:menuItem_inviteToChatContext];
-			[targetMenuItem autorelease];
 		}
 	}
 }
@@ -117,25 +115,23 @@
 - (NSMenu *)groupChatMenuForContact:(AIListContact *)contact
 {
 	NSArray			*openChats = [[adium interfaceController] openChats];
-	AIChat			*chat;
 	NSMenu			*menu_chatMenu = nil;
-	NSDictionary	*serviceDict;
-	NSString		*serviceClass;
 	
 	if (contact && ![contact isKindOfClass:[AIListGroup class]]) {
-		NSEnumerator *enumerator;
-		unsigned	currentNumberOfItems, numberOfMenuItems = 0;
-		
+		NSEnumerator	*enumerator;
+		NSString		*serviceClass;
+		NSDictionary	*serviceDict;
+		NSMutableSet	*addedChats = nil;
+		unsigned		currentNumberOfItems, numberOfMenuItems = 0;
+
 		// Get a dictionary of (service class, contacts in that service)
 		serviceDict = ([contact isKindOfClass:[AIMetaContact class]] ?
 					   [(AIMetaContact *)contact dictionaryOfServiceClassesAndListContacts] :
 					   [NSDictionary dictionaryWithObject:contact forKey:[[contact service] serviceClass]]);
 
-		[menu_chatMenu setMenuChangedMessagesEnabled:NO];
-
+		//Iterate on each service. For an AIListMetacontact, this may be multiple services; for an AIListContact, this will just be a single iteration.
 		enumerator = [serviceDict keyEnumerator];
 		while ((serviceClass = [enumerator nextObject])) {
-			
 			//Each iteration, if we have more menu items now than before, add a separator item
 			currentNumberOfItems = [menu_chatMenu numberOfItems];
 			if (currentNumberOfItems > numberOfMenuItems) {
@@ -143,29 +139,28 @@
 				numberOfMenuItems = currentNumberOfItems + 1;
 			}
 			
-			// Loop through all chats
-			for (int i = 0; i < [openChats count]; i++) {
-				chat = [openChats objectAtIndex:i];
-				
-				// Is this the same serviceClass as this contact?				
-				if ( [[[[chat account] service] serviceClass] isEqualToString:serviceClass] ) {
+			//Loop through all chats
+			NSEnumerator *chatEnumerator = [openChats objectEnumerator];
+			AIChat		*chat;
+			while ((chat = [chatEnumerator nextObject])) {				
+				//Is this the same serviceClass as this contact?				
+				if ([chat isGroupChat] &&
+					[[[[chat account] service] serviceClass] isEqualToString:serviceClass]) {
 					
-					// Is this a group chat?
-					if ([chat isGroupChat]) {
-						if (!menu_chatMenu) {
-							menu_chatMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""] autorelease];
-						}
+					if (!menu_chatMenu) {
+						menu_chatMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""] autorelease];
+						[menu_chatMenu setMenuChangedMessagesEnabled:NO];
+					}
+					
+					if (![addedChats containsObject:chat]) {
+						[menu_chatMenu addItemWithTitle:[chat displayName]
+												 target:self
+												 action:@selector(inviteToChat:)
+										  keyEquivalent:@""
+									  representedObject:[NSArray arrayWithObjects:chat, contact, nil]];
 						
-						if ( [menu_chatMenu indexOfItemWithTitle:[chat name]] == -1 ) {
-							NSMenuItem *menuItem;
-							menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[chat name]
-																							target:self
-																							action:@selector(inviteToChat:)
-																					 keyEquivalent:@""];
-							[menuItem setRepresentedObject:[NSArray arrayWithObjects:chat,contact,nil]];
-							[menu_chatMenu addItem:menuItem];
-							[menuItem release];
-						}
+						if (!addedChats) addedChats = [NSMutableSet set];
+						[addedChats addObject:chat];
 					}
 				}
 			}
