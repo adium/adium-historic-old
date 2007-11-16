@@ -597,6 +597,8 @@ NSComparisonResult groupSort(id left, id right, void *context)
 										   selector:@selector(accountConnected:)
 											   name:ACCOUNT_CONNECTED
 											 object:newAcct];
+			//Retain for each account
+			[self retain];
 			[newAcct setShouldBeOnline:YES];
 		}
 	}
