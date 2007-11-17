@@ -30,6 +30,7 @@
 						  hours:&hours
 						minutes:&minutes
 						seconds:&seconds];
+	NSLog(@"%s: seconds is %.15f", __PRETTY_FUNCTION__, seconds);
 	STAssertEquals(weeks, 1, @"Expected the difference between now and 7 days ago to be 1 week; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals( days, 0, @"Expected the difference between now and 7 days ago to be 1 week, 0 days; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals(hours, 0, @"Expected the difference between now and 7 days ago to be 1 week, 0 hours; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
@@ -46,6 +47,7 @@
 						  hours:&hours
 						minutes:&minutes
 						seconds:&seconds];
+	NSLog(@"%s: seconds is %.15f", __PRETTY_FUNCTION__, seconds);
 	STAssertEquals(weeks, 1, @"Expected the difference between now and 8 days ago to be 1 week, 1 day; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals( days, 1, @"Expected the difference between now and 8 days ago to be 1 week, 1 day; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals(hours, 0, @"Expected the difference between now and 8 days ago to be 1 week, 1 day, 0 hours; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
@@ -62,6 +64,7 @@
 						  hours:&hours
 						minutes:&minutes
 						seconds:&seconds];
+	NSLog(@"%s: seconds is %.15f", __PRETTY_FUNCTION__, seconds);
 	STAssertEquals(weeks, 0, @"Expected the difference between now and 6 days ago to be 0 weeks, 6 days; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals( days, 6, @"Expected the difference between now and 8 days ago to be 6 days; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals(hours, 0, @"Expected the difference between now and 8 days ago to be 6 days, 0 hours; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
@@ -86,6 +89,7 @@
 						  hours:&hours
 						minutes:&minutes
 						seconds:&seconds];
+	NSLog(@"%s: seconds is %.15f", __PRETTY_FUNCTION__, seconds);
 	STAssertEquals(weeks, 0, @"Expected the difference between now and 1 day ago to be 0 weeks, 1 day; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals( days, 1, @"Expected the difference between now and 1 day ago to be 1 day; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals(hours, 0, @"Expected the difference between now and 1 day ago to be 1 day, 0 hours; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
@@ -102,6 +106,7 @@
 						  hours:&hours
 						minutes:&minutes
 						seconds:&seconds];
+	NSLog(@"%s: seconds is %.15f", __PRETTY_FUNCTION__, seconds);
 	STAssertEquals(weeks, 0, @"Expected the difference between now and 1 day ago to be 0 weeks, 1 day; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals( days, 1, @"Expected the difference between now and 1 day ago to be 1 day; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals(hours, 0, @"Expected the difference between now and 1 day ago to be 1 day, 0 hours; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
@@ -118,6 +123,7 @@
 						  hours:&hours
 						minutes:&minutes
 						seconds:&seconds];
+	NSLog(@"%s: seconds is %.15f", __PRETTY_FUNCTION__, seconds);
 	STAssertEquals(weeks, 0, @"Expected the difference between now and 1 day ago to be 0 weeks, 1 day; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals( days, 1, @"Expected the difference between now and 1 day ago to be 1 day; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals(hours, 0, @"Expected the difference between now and 1 day ago to be 1 day, 0 hours; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
@@ -142,6 +148,7 @@
 						  hours:&hours
 						minutes:&minutes
 						seconds:&seconds];
+	NSLog(@"%s: seconds is %.15f", __PRETTY_FUNCTION__, seconds);
 	STAssertEquals(weeks, 0, @"Expected the difference between now and 1 hour ago to be 0 weeks, 1 hour; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals( days, 0, @"Expected the difference between now and 1 hour ago to be 0 days, 1 hour; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals(hours, 1, @"Expected the difference between now and 1 hour ago to be 1 hour; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
@@ -158,6 +165,7 @@
 						  hours:&hours
 						minutes:&minutes
 						seconds:&seconds];
+	NSLog(@"%s: seconds is %.15f", __PRETTY_FUNCTION__, seconds);
 	STAssertEquals(weeks, 0, @"Expected the difference between now and 1 hour ago to be 0 weeks, 1 hour; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals( days, 0, @"Expected the difference between now and 1 hour ago to be 0 days, 1 hour; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals(hours, 1, @"Expected the difference between now and 1 hour ago to be 1 hour; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
@@ -174,6 +182,7 @@
 						  hours:&hours
 						minutes:&minutes
 						seconds:&seconds];
+	NSLog(@"%s: seconds is %.15f", __PRETTY_FUNCTION__, seconds);
 	STAssertEquals(weeks, 0, @"Expected the difference between now and 59 minutes ago to be 0 weeks, 59 minutes; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals( days, 0, @"Expected the difference between now and 59 minutes ago to be 0 days, 59 minutes; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals(hours, 0, @"Expected the difference between now and 59 minutes ago to be 0 hours, 59 minutes; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
@@ -198,6 +207,7 @@
 						  hours:&hours
 						minutes:&minutes
 						seconds:&seconds];
+	NSLog(@"%s: seconds is %.15f", __PRETTY_FUNCTION__, seconds);
 	STAssertEquals(weeks, 0, @"Expected the difference between now and 1 minute ago to be 0 weeks, 1 minute; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals( days, 0, @"Expected the difference between now and 1 minute ago to be 0 days, 1 minute; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals(hours, 0, @"Expected the difference between now and 1 minute ago to be 0 hours, 1 minute; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
@@ -214,6 +224,7 @@
 						  hours:&hours
 						minutes:&minutes
 						seconds:&seconds];
+	NSLog(@"%s: seconds is %.15f", __PRETTY_FUNCTION__, seconds);
 	STAssertEquals(weeks, 0, @"Expected the difference between now and 59 seconds ago to be 0 weeks, 59 seconds; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals( days, 0, @"Expected the difference between now and 59 seconds ago to be 0 days, 59 seconds; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals(hours, 0, @"Expected the difference between now and 59 seconds ago to be 0 hours, 59 seconds; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
@@ -238,6 +249,7 @@
 						  hours:&hours
 						minutes:&minutes
 						seconds:&seconds];
+	NSLog(@"%s: seconds is %.15f", __PRETTY_FUNCTION__, seconds);
 	STAssertEquals(weeks, 0, @"Expected the difference between now and 1 second ago to be 0 weeks, 1 second; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals( days, 0, @"Expected the difference between now and 1 second ago to be 0 days, 1 second; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals(hours, 0, @"Expected the difference between now and 1 second ago to be 0 hours, 1 second; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
