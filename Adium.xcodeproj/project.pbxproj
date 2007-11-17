@@ -680,8 +680,6 @@
 		34D835D907CBED8F006466F2 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		34D836E507CBF593006466F2 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F531836F019E40BB01A80165 /* Carbon.framework */; };
 		34D836F407CBF960006466F2 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D836F307CBF960006466F2 /* QuickTime.framework */; };
-		34D8370107CBF97A006466F2 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D836FF07CBF979006466F2 /* AudioUnit.framework */; };
-		34D8370207CBF97A006466F2 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D8370007CBF97A006466F2 /* AudioToolbox.framework */; };
 		34D8374E07CC2F2E006466F2 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		34D8375407CC2FA3006466F2 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		34D8378307CC31B9006466F2 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
@@ -3178,8 +3176,6 @@
 		34D8346D07CBE6F5006466F2 /* IconFamily.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = IconFamily.m; path = "Frameworks/Adium Framework/Source/IconFamily.m"; sourceTree = "<group>"; };
 		34D8346E07CBE6F5006466F2 /* IconFamily.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = IconFamily.h; path = "Frameworks/Adium Framework/Source/IconFamily.h"; sourceTree = "<group>"; };
 		34D836F307CBF960006466F2 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
-		34D836FF07CBF979006466F2 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = /System/Library/Frameworks/AudioUnit.framework; sourceTree = "<absolute>"; };
-		34D8370007CBF97A006466F2 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
 		34DC84280A7EA012003E1636 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = Resources/nl.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		34DFF46007A5EABF00B92233 /* ESSecureMessagingPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESSecureMessagingPlugin.h; path = "Plugins/Secure Messaging/ESSecureMessagingPlugin.h"; sourceTree = "<group>"; };
 		34DFF46107A5EABF00B92233 /* ESSecureMessagingPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESSecureMessagingPlugin.m; path = "Plugins/Secure Messaging/ESSecureMessagingPlugin.m"; sourceTree = "<group>"; };
@@ -4035,8 +4031,6 @@
 				34D836E507CBF593006466F2 /* Carbon.framework in Frameworks */,
 				3448761406D1EC0C00DA778C /* Cocoa.framework in Frameworks */,
 				34D836F407CBF960006466F2 /* QuickTime.framework in Frameworks */,
-				34D8370107CBF97A006466F2 /* AudioUnit.framework in Frameworks */,
-				34D8370207CBF97A006466F2 /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4242,8 +4236,6 @@
 				341BDBBA0968BC9A00CF83F5 /* OTR.framework */,
 				348E5ACA06D2A74C004C051C /* AddressBook.framework */,
 				F5819CE9032124CE01A8010A /* AppKit.framework */,
-				34D8370007CBF97A006466F2 /* AudioToolbox.framework */,
-				34D836FF07CBF979006466F2 /* AudioUnit.framework */,
 				F531836F019E40BB01A80165 /* Carbon.framework */,
 				3448758D06D1EBDF00DA778C /* Cocoa.framework */,
 				349C2FEF0867AD65000BF883 /* Foundation.framework */,
