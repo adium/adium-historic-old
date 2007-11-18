@@ -47,7 +47,7 @@
 + (NSString *)internalObjectIDFromObjectID:(NSNumber *)inObjectID;
 
 - (AIListContact *)preferredContact;
-- (AIListContact *)preferredContactWithService:(AIService *)inService;
+- (AIListContact *)preferredContactWithCompatibleService:(AIService *)inService;
 
 - (void)remoteGroupingOfContainedObject:(AIListObject *)inListObject changedTo:(NSString *)inRemoteGroupName;
 
