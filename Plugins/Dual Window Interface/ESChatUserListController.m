@@ -16,6 +16,7 @@
 
 #import "ESChatUserListController.h"
 #import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIMetaContact.h>
 #import "AIMessageTabViewItem.h"
 
 @implementation ESChatUserListController
@@ -30,6 +31,68 @@
 - (BOOL)shouldUseContactTextColors{
 	return NO;
 }
+
+#pragma mark Drag & drop
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
+{
+	//Invite the dragged contact(s) to the chat
+	BOOL			success = NO;
+	AIChat			*activeChat = [[adium interfaceController] activeChatInWindow:[info draggingDestinationWindow]];
+	AIAccount		*activeChatAccount = [activeChat account];
+	NSEnumerator	*enumerator = [[self draggedContacts] objectEnumerator];
+	AIListObject	*listObject;
+	
+	while ((listObject = [enumerator nextObject])) {
+		if ([listObject isKindOfClass:[AIMetaContact class]]) {
+			listObject = [(AIMetaContact *)listObject preferredContactWithCompatibleService:[activeChatAccount service]];
+		}
+
+		if ([listObject isKindOfClass:[AIListContact class]] &&
+			[[listObject serviceClass] isEqualToString:[activeChatAccount serviceClass]]) {
+			[activeChatAccount inviteContact:(AIListObject *)listObject toChat:activeChat withMessage:nil];
+			success = YES;
+		}
+	}
+
+	success = [super outlineView:outlineView acceptDrop:info item:item childIndex:index] && success;
+	
+	return success;
+}
+
+/*!
+ * @brief Validate a drop
+ *
+ * We can use setDropItem:dropChildIndex: to reposition the drop.
+ *
+ * @param outlineView The outline view which will receive the drop
+ * @param info The NSDraggingInfo
+ * @param item The item into which the drag would currently drop
+ * @param index The index within item into which the drag would currently drop. It may be a 0-based index inside item or may be NSOutlineViewDropOnItemIndex.
+ * @result The drag operation we will allow
+ */
+- (NSDragOperation)outlineView:(NSOutlineView*)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
+{
+	NSEnumerator	*enumerator = [[self draggedContacts] objectEnumerator];
+	AIListObject	*listObject;
+	AIChat			*activeChat = [[adium interfaceController] activeChatInWindow:[info draggingDestinationWindow]];
+	AIAccount		*activeChatAccount = [activeChat account];
+
+	while ((listObject = [enumerator nextObject])) {
+		if ([listObject isKindOfClass:[AIMetaContact class]]) {
+			listObject = [(AIMetaContact *)listObject preferredContactWithCompatibleService:[activeChatAccount service]];
+		}
+
+		if ([listObject isKindOfClass:[AIListContact class]] &&
+			[[listObject serviceClass] isEqualToString:[activeChatAccount serviceClass]]) {
+			return NSDragOperationCopy;
+		}
+	}
+	
+	return NSDragOperationNone;
+}
+
+#pragma mark Contextual menu
 
 /*!
  * @brief Return the contextual menu for a passed list object
