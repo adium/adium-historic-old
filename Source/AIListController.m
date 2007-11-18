@@ -451,21 +451,39 @@
 									 afterDelay:0];
 }
 
+#pragma mark Drag & Drop
+
 /*! 
  * @brief Method to check if operations need to be performed
  */
 - (NSDragOperation)outlineView:(NSOutlineView*)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
 {
-    NSArray	*types = [[info draggingPasteboard] types];
+    NSArray			*types = [[info draggingPasteboard] types];
 	NSDragOperation retVal = NSDragOperationNone;
-	BOOL allowBetweenContactDrop = (index==NSOutlineViewDropOnItemIndex);
+
 	//No dropping into contacts
+	BOOL allowBetweenContactDrop = (index == NSOutlineViewDropOnItemIndex);
+
 	if ([types containsObject:@"AIListObject"]) {
-		//Don't drag if automatic sort is on
 		if (index != NSOutlineViewDropOnItemIndex && (![[[adium contactController] activeSortController] canSortManually])) {
+			//Don't drag if automatic sort is on
 			//disable drop between for non-Manual Sort.
 			return NSDragOperationNone;
 		}
+		
+		NSEnumerator *enumerator = [dragItems objectEnumerator];
+		id			 dragItem;
+		BOOL		 hasGroup = NO, hasNonGroup = NO;
+		while ((dragItem = [enumerator nextObject])) {
+			if ([dragItem isKindOfClass:[AIListGroup class]])
+				hasGroup = YES;
+			if (![dragItem isKindOfClass:[AIListGroup class]])
+				hasNonGroup = YES;
+			if (hasGroup && hasNonGroup) break;
+		}
+		
+		//Don't allow a drop within the contact list or within a group if we contain a mixture of groups and non-groups (e.g. contacts)
+		if (hasGroup && hasNonGroup) return NSDragOperationNone;
 		
 		id	primaryDragItem = [dragItems objectAtIndex:0];
 		
@@ -482,19 +500,54 @@
 			}
 			
 		} else {
-			//Disallow dragging contacts onto anything besides a group
-			if (allowBetweenContactDrop == YES && ![item isKindOfClass:[AIListGroup class]]) {
-				[outlineView setDropItem:item dropChildIndex:NSOutlineViewDropOnItemIndex];
+			//We have one or more contacts. Don't allow them to drop on the contact list itself
+			if (!item) {
+				/* The user is hovering on the contact list itself.  This actually means that, assuming we have any items in the list at all, she is hovering just below
+				 * a group or an item in a group.  Let's do this right by shifting the drop to object above.
+				 */
+				id itemAboveProposedIndex = [outlineView itemAtRow:(index - 1)];
+				if (!itemAboveProposedIndex) {
+					//At the very end, presumably
+					itemAboveProposedIndex = [outlineView itemAtRow:([outlineView numberOfRows] - 1)];
+				}
+				
+				if ([itemAboveProposedIndex isKindOfClass:[AIListGroup class]]) {
+					[outlineView setDropItem:itemAboveProposedIndex dropChildIndex:NSOutlineViewDropOnItemIndex];
+				} else {
+					[outlineView setDropItem:[itemAboveProposedIndex containingObject] dropChildIndex:NSOutlineViewDropOnItemIndex];					
+				}
+				
 			}
 		}
 		
-		if (index == NSOutlineViewDropOnItemIndex && [item isKindOfClass:[AIListContact class]]
-			&& [info draggingSource] == [self contactListView]) {
+		if ((index == NSOutlineViewDropOnItemIndex) && [item isKindOfClass:[AIListContact class]] && ([info draggingSource] == [self contactListView])) {
 			//Dropping into a contact or attaching groups: Copy
-			retVal = NSDragOperationCopy;
+			if (([contactListView rowForItem:primaryDragItem] == -1) ||
+				[primaryDragItem isKindOfClass:[AIListContact class]]) {
+				retVal = NSDragOperationCopy;
+			} else {
+				retVal = NSDragOperationMove;
+			}
 		
 		} else {
 			//Otherwise, it's either a move into a group or a manual reordering
+			if (!item || [outlineView isExpandable:item]) {
+				//Figure out where we would insert the dragged item if the sort controller manages the location and it's going into an expandable item
+				AISortController *sortController = [[adium contactController] activeSortController];
+				//XXX If we can sort manually but the sort controller also has some control (e.g. status sort with manual ordering), we should get a hint and make use of it.
+				if (![sortController canSortManually]) {
+					int indexForInserting = [sortController indexForInserting:[dragItems objectAtIndex:0]
+																  intoObjects:(item ? [item containedObjects] : [[[adium contactController] contactList] containedObjects])];
+					/*
+					 For example, to specify a drop on an item I, you specify item as 1 and index as NSOutlineViewDropOnItemIndex.
+					 To specify a drop between child 2 and 3 of item I, you specify item as I and index as 3 (children are a zero-based index).
+					 To specify a drop on an unexpandable item 1, you specify item as I and index as NSOutlineViewDropOnItemIndex.
+					 */
+					[outlineView setDropItem:item dropChildIndex:indexForInserting];
+				}
+			}
+			
+			
 			retVal = NSDragOperationPrivate;
 		}
 
@@ -505,6 +558,7 @@
 	} else if (!allowBetweenContactDrop) {
 		retVal = NSDragOperationNone;
 	}
+
 	return retVal;
 }
 
@@ -513,17 +567,16 @@
 	BOOL		success = YES;
 	NSString	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
 	
-    if ([availableType isEqualToString:@"AIListObject"]) 
-	{
+    if ([availableType isEqualToString:@"AIListObject"]) {
 		//Kill the selection now, (in a more finder-esque way)
 		[outlineView deselectAll:nil];
+
 		//The tree root is not associated with our root contact list group, so we need to make that association here
 		if (item == nil) 
 			item = contactList;
 
 		//Move the list object to its new location
-		if ([item isKindOfClass:[AIListGroup class]]) 
-		{
+		if ([item isKindOfClass:[AIListGroup class]]) {
 			if (item != [[adium contactController] offlineGroup]) {
 				[[adium contactController] moveListObjects:dragItems intoObject:item index:index];
 				
@@ -534,9 +587,7 @@
 				success = NO;
 			}
 			
-		} 
-		else if ([item isKindOfClass:[AIListContact class]]) 
-		{
+		} else if ([item isKindOfClass:[AIListContact class]]) {
 			NSString	*promptTitle;
 			
 			//Appropriate prompt
@@ -562,10 +613,7 @@
 										   [context retain], //we're responsible for retaining the content object
 										   AILocalizedString(@"Once combined, Adium will treat these contacts as a single individual both on your contact list and when sending messages.\n\nYou may un-combine these contacts by getting info on the combined contact.","Explanation of metacontact creation"));
 		}
-
-	} 
-	else if ([[[info draggingPasteboard] types] containsObject:NSFilenamesPboardType]) 
-	{
+	} else if ([[[info draggingPasteboard] types] containsObject:NSFilenamesPboardType]) {
 		//Drag and Drop file transfer for the contact list.
 		NSString		*file;
 		NSArray			*files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
@@ -577,9 +625,7 @@
 			[[adium fileTransferController] sendFile:file toListContact:targetFileTransferContact];
 		}
 
-	} 
-	else if ([[[info draggingPasteboard] types] containsObject:NSRTFPboardType]) 
-	{
+	} else if ([[[info draggingPasteboard] types] containsObject:NSRTFPboardType]) {
 		//Drag and drop text sending via the contact list.
 		if ([item isKindOfClass:[AIListContact class]]) {
 			/* This will send the message. Alternately, we could just insert it into the text view... */
@@ -596,6 +642,7 @@
 												   autoreply:NO];
 			
 			[[adium contentController] sendContentObject:messageContent];
+
 		} else {
 			success = NO;
 		}
@@ -603,6 +650,7 @@
 	
 	[super outlineView:outlineView acceptDrop:info item:item childIndex:index];
 
+	//XXX Is this actually needed?
 	[self contactListChanged:nil];
 	
     return success;
@@ -621,9 +669,9 @@
 		AIListObject<AIContainingObject> *oldContainingObject = [[item containingObject] retain];
 		float oldIndex = [item orderIndex];
 		
-		//Group the dragged items plus the destination into a metaContact
-		metaContact = [[adium contactController] groupListContacts:[draggedItems arrayByAddingObject:item]];
-		
+		//Group the destination and then the dragged items into a metaContact
+		metaContact = [[adium contactController] groupListContacts:[[NSArray arrayWithObject:item] arrayByAddingObjectsFromArray:draggedItems]];
+
 		//Position the metaContact in the group & index the drop point was before
 		[[adium contactController] moveListObjects:[NSArray arrayWithObject:metaContact]
 										intoObject:oldContainingObject
@@ -634,6 +682,8 @@
 
 	[context release]; //We are responsible for retaining & releasing the context dict
 }
+
+#pragma mark KVO
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
