@@ -35,6 +35,11 @@
 #define CONFIRMED_PLUGINS				@"Confirmed Plugins"
 #define CONFIRMED_PLUGINS_VERSION		@"Confirmed Plugin Version"
 
+//#define PLUGIN_LOAD_TIMING
+#ifdef PLUGIN_LOAD_TIMING
+NSTimeInterval aggregatePluginLoadingTime = 0.0;
+#endif
+
 @interface AICorePluginLoader (PRIVATE)
 - (void)loadPlugins;
 + (BOOL)confirmPluginAtPath:(NSString *)pluginPath;
@@ -86,6 +91,7 @@
 							confirmLoading:NO
 							   pluginArray:pluginArray];
 	}
+	AILog(@"Total time spent loading plugins: %f", aggregatePluginLoadingTime);
 }
 
 - (void)controllerDidLoad
@@ -122,58 +128,61 @@
  */
 + (void)loadPluginAtPath:(NSString *)pluginPath confirmLoading:(BOOL)confirmLoading pluginArray:(NSMutableArray *)inPluginArray
 {
-	BOOL			loadPlugin = YES;
-	
+#ifdef PLUGIN_LOAD_TIMING
+	NSDate *start = [NSDate date];
+#endif	
 	//Confirm the presence of external plugins with the user
-	if (confirmLoading) {
-		loadPlugin = [self confirmPluginAtPath:pluginPath];
-	}
+	if (confirmLoading && ![self confirmPluginAtPath:pluginPath])
+			return;
 		
 	//Load the plugin
-	if (loadPlugin) {
-		NSBundle		*pluginBundle;
-		id <AIPlugin>	plugin = nil;
+	NSBundle		*pluginBundle;
+	id <AIPlugin>	plugin = nil;
 
-		@try
-		{
-			if ((pluginBundle = [NSBundle bundleWithPath:pluginPath])) {
-				Class principalClass = [pluginBundle principalClass];
-				if (principalClass) {
-					plugin = [[principalClass alloc] init];
-				} else {
-					NSLog(@"Failed to obtain principal class from plugin \"%@\" (\"%@\")! infoDictionary: %@",
-						  [pluginPath lastPathComponent],
-						  pluginPath,
-						  [pluginBundle infoDictionary]);
-				}
-				
-				if (plugin) {
-					[plugin installPlugin];
-					[inPluginArray addObject:plugin];
-					[plugin release];
-				} else {
-					NSLog(@"Failed to initialize Plugin \"%@\" (\"%@\")!",[pluginPath lastPathComponent],pluginPath);
-				}
+	@try
+	{
+		if ((pluginBundle = [NSBundle bundleWithPath:pluginPath])) {
+			Class principalClass = [pluginBundle principalClass];
+			if (principalClass) {
+				plugin = [[principalClass alloc] init];
 			} else {
-					NSLog(@"Failed to open Plugin \"%@\"!",[pluginPath lastPathComponent]);
+				NSLog(@"Failed to obtain principal class from plugin \"%@\" (\"%@\")! infoDictionary: %@",
+					  [pluginPath lastPathComponent],
+					  pluginPath,
+					  [pluginBundle infoDictionary]);
 			}
-		}
-		@catch(id exc)
-		{
-			if (confirmLoading) {
-				//The plugin encountered an exception while it was loading.  There is no reason to leave this old
-				//or poorly coded plugin enabled so that it can cause more problems, so disable it and inform
-				//the user that they'll need to restart.
-				[self disablePlugin:pluginPath];
-				NSRunCriticalAlertPanel([NSString stringWithFormat:@"Error loading %@",[[pluginPath lastPathComponent] stringByDeletingPathExtension]],
-										@"An external plugin failed to load and has been disabled.  Please relaunch Adium",
-										@"Quit",
-										nil,
-										nil);
-				[NSApp terminate:nil];					
+			
+			if (plugin) {
+				[plugin installPlugin];
+				[inPluginArray addObject:plugin];
+				[plugin release];
+			} else {
+				NSLog(@"Failed to initialize Plugin \"%@\" (\"%@\")!",[pluginPath lastPathComponent],pluginPath);
 			}
+		} else {
+				NSLog(@"Failed to open Plugin \"%@\"!",[pluginPath lastPathComponent]);
 		}
 	}
+	@catch(id exc)
+	{
+		if (confirmLoading) {
+			//The plugin encountered an exception while it was loading.  There is no reason to leave this old
+			//or poorly coded plugin enabled so that it can cause more problems, so disable it and inform
+			//the user that they'll need to restart.
+			[self disablePlugin:pluginPath];
+			NSRunCriticalAlertPanel([NSString stringWithFormat:@"Error loading %@",[[pluginPath lastPathComponent] stringByDeletingPathExtension]],
+									@"An external plugin failed to load and has been disabled.  Please relaunch Adium",
+									@"Quit",
+									nil,
+									nil);
+			[NSApp terminate:nil];					
+		}
+	}
+#ifdef PLUGIN_LOAD_TIMING
+	NSTimeInterval t = -[start timeIntervalSinceNow];
+	aggregatePluginLoadingTime += t;
+	AILog(@"Loaded plugin: %@ in %f seconds", [pluginBundle bundleIdentifier], t);
+#endif
 }
 
 //Confirm the presence of an external plugin with the user.  Returns YES if the plugin should be loaded.
