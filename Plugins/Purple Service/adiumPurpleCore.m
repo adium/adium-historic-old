@@ -84,18 +84,6 @@ static void init_all_plugins()
 #else
 	purple_init_ssl_cdsa_plugin();
 #endif
-	purple_init_gg_plugin();
-	purple_init_jabber_plugin();
-	purple_init_sametime_plugin();
-	purple_init_novell_plugin();
-	purple_init_msn_plugin();
-	purple_init_myspace_plugin();
-	purple_init_qq_plugin();
-	purple_init_simple_plugin();
-	purple_init_yahoo_plugin();
-	purple_init_zephyr_plugin();
-	purple_init_aim_plugin();
-	purple_init_icq_plugin();
 
 	//Load each plugin
 	NSEnumerator			*enumerator = [[SLPurpleCocoaAdapter libpurplePluginArray] objectEnumerator];
@@ -166,7 +154,7 @@ static void adiumPurpleCoreDebugInit(void)
 
 /* The core is ready... finish configuring libpurple and its plugins */
 static void adiumPurpleCoreUiInit(void)
-{
+{		
 	AILog(@"adiumPurpleCoreUiInit");
 	//Initialize the core UI ops
     purple_blist_set_ui_ops(adium_purple_blist_get_ui_ops());
