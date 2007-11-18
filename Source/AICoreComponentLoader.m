@@ -99,7 +99,9 @@ NSTimeInterval aggregateComponentLoadingTime = 0.0;
 		AILog(@"Loaded component: %@ in %f seconds", className, t);
 #endif
 	}
+#ifdef COMPONENT_LOAD_TIMING
 	AILog(@"Total time spent loading components: %f", aggregateComponentLoadingTime);
+#endif
 }
 
 - (void)controllerDidLoad
