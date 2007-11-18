@@ -242,7 +242,7 @@
 	
 	if ( listObject ) {
 		if ( [listObject isKindOfClass:[AIMetaContact class]] ) {
-			listContact = [(AIMetaContact *)listObject preferredContactWithService:service];
+			listContact = [(AIMetaContact *)listObject preferredContactWithCompatibleService:service];
 		} else if ( [listObject isKindOfClass:[AIListContact class]] ) {
 			if ([[listObject service] isEqualTo:service]) {
 				listContact = (AIListContact *)listObject;

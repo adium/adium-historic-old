@@ -750,26 +750,6 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
 {	
-	if(dragOperation == @"NSDragOperationMove") {
-		/*contact was dragged within the userlist -> re-sort userlist
-		 *reposition contact within the userlist
-		 */
-	
-		
-	} else {
-		/*contact was dragged from contactlist to the userlist -> add to userlist
-		 *add the dragged contact to the active chat
-		 */
-		AIChat* activeChat = [[adium interfaceController] activeChatInWindow:[info draggingDestinationWindow]];
-		AIListContact* contact = [[self draggedContacts] objectAtIndex:0];
-
-		//handle metacontacts
-		if([contact isKindOfClass:[AIMetaContact class]]) {
-			contact = [(AIMetaContact *)contact preferredContact];
-		}
-		[[activeChat account] inviteContact:contact toChat:activeChat withMessage:nil];	
-	}
-	
 	if (dragItems) {
 		[dragItems release]; 
 		dragItems = nil;
@@ -778,19 +758,20 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	return YES;
 }
 
+/*!
+ * @brief Validate a drop
+ *
+ * We can use setDropItem:dropChildIndex: to reposition the drop.
+ *
+ * @param outlineView The outline view which will receive the drop
+ * @param info The NSDraggingInfo
+ * @param item The item into which the drag would currently drop
+ * @param index The index within item into which the drag would currently drop. It may be a 0-based index inside item or may be NSOutlineViewDropOnItemIndex.
+ * @result The drag operation we will allow
+ */
 - (NSDragOperation)outlineView:(NSOutlineView*)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
 {	
-	//cycle through participants list to find if we are adding or moving a contact
-	AIListContact* draggedContact = [[self draggedContacts]objectAtIndex:0];
-	for(int i=0;i<[contactListView numberOfRows];i++)
-	{
-	if([contactListView itemAtRow:i] == draggedContact)
-		{
-			dragOperation = @"NSDragOperationMove";
-			return NSDragOperationMove;
-		}
-	}
-	return NSDragOperationCopy;
+	return NSDragOperationMove;
 }
 
 - (void)outlineView:(NSOutlineView *)outlineView draggedImage:(NSImage *)image endedAt:(NSPoint)screenPoint operation:(NSDragOperation)operation
