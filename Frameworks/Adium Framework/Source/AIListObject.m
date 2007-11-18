@@ -285,7 +285,10 @@
 //Status objects ------------------------------------------------------------------------------------------------------
 #pragma mark Status objects
 /*!
- * @brief Call after status keys have been modified; informs the contact controller, silently.
+ * @brief Called after status keys have been modified; informs the contact controller.
+ *
+ * @param keys The keys
+ * @param silent YES indicates that this should not trigger 'noisy' notifications - it is appropriate for notifications as an account signs on and notes tons of contacts.
  */
 - (void)didModifyStatusKeys:(NSSet *)keys silent:(BOOL)silent
 {
@@ -294,10 +297,12 @@
 												silent:silent];
 }
 /*!
- * @brief Queue notifications of status changes? 
+ * @brief Called after status changes have been modified and notifications posted
  *
- * When we notify of queued status changes, our containing group should as well as it stays in sync with
+ * When we notify of queued status changes, our containing group should notify as well so it can stay in sync with
  * any changes it may have made in object:didSetStatusObject:forKey:notify:
+ *
+ * @param silent YES indicates that this should not trigger 'noisy' notifications - it is appropriate for notifications as an account signs on and notes tons of contacts.
  */
 - (void)didNotifyOfChangedStatusSilently:(BOOL)silent
 {
