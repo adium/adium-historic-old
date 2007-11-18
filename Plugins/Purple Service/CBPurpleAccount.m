@@ -1675,7 +1675,8 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	//Report that we disconnected
 	AILog(@"%@: Telling the core we disconnected", self);
 	[self didDisconnect];
-	if(willBeDeleted)
+
+	if (willBeDeleted)
 		[super alertForAccountDeletion:deletionDialog didReturn:NSAlertDefaultReturn];
 }
 
@@ -2457,14 +2458,17 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 		[super alertForAccountDeletion:dialog didReturn:NSAlertAlternateReturn];
 		return;
 	}
+
 	prpl_info = PURPLE_PLUGIN_PROTOCOL_INFO(prpl);
 	if(!prpl_info) {
 		[super alertForAccountDeletion:dialog didReturn:NSAlertAlternateReturn];
 		return;
 	}
-	// if the user canceled, we can tell the superclass immediately
-	// if the deletion is in fact happening, we first have to unregister and disconnect
-	// this is an asynchronous process
+
+	/* If the user canceled, we can tell the superclass immediately.
+	 * If the deletion is in fact happening, we first have to unregister and disconnect.
+	 * This is an asynchronous process.
+	 */
 	if(prpl_info->unregister_user) {
 		switch(returnCode) {
 			case NSAlertOtherReturn: // delete & unregister
@@ -2489,11 +2493,12 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 			default: // cancel
 				[super alertForAccountDeletion:dialog didReturn:NSAlertAlternateReturn];
 		}
+
 	} else {
 		switch(returnCode) {
 			case NSAlertDefaultReturn:
 				willBeDeleted = YES;
-				if(!account || !purple_account_is_connected(account)) {
+				if (!account || !purple_account_is_connected(account)) {
 					[super alertForAccountDeletion:dialog didReturn:NSAlertDefaultReturn];
 				} else {
 					deletionDialog = dialog;
@@ -2517,6 +2522,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 		[inv setArgument:&nope atIndex:2];
 		[inv performSelector:@selector(invoke) withObject:nil afterDelay:0.0];
 		// further progress happens in -accountConnectionDisconnected
+
 	} else {
 		[super alertForAccountDeletion:deletionDialog didReturn:NSAlertAlternateReturn];
 		deletionDialog = nil;
