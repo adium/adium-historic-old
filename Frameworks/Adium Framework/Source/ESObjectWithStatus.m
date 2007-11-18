@@ -25,7 +25,10 @@
  * @brief Abstract superclass for objects with a system of status objects and display arrays
  *
  * Status objects are an abstracted NSMutableDictionary implementation with notification of changed
- * keys and optional delayed, grouped notification.
+ * keys and optional delayed, grouped notification.  They allow storage of arbitrary information associate with
+ * an ESObjectWithStatus subclass. Such information is not persistent across sessions.
+ *
+ * Status objects are KVO compliant.
  *
  * Display arrays utilize AIMutableOwnerArray.  See its documentation in AIUtilities.framework.
  */
@@ -159,6 +162,7 @@
 
 /*!
  * @brief Status object for key
+ * @result The status object associated with the passed key, or nil if none has been set.
  */
 - (id)statusObjectForKey:(NSString *)key
 {
@@ -212,29 +216,56 @@
 			nil);
 }
 
-//---- fromAnyContainedObject status object behavior ----
-//If fromAnyContainedObject is YES, return the best value from any contained object if the preferred object returns nil.
-//If it is NO, only look at the preferred object.
-//For the superclass, the fromAnyContainedObject argument has no effect
-//General status object
+/*!
+ * @brief Retrieve the status object value for a key
+ *
+ * Note that fromAnyContainedObject is useful for subclasses; this default implementation ignores it.
+ *
+ * @param key The key
+ * @param fromAnyContainedObject If YES, return the best value from any contained object if the preferred object returns nil. If NO, only look at the preferred object.
+ */
 - (id)statusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
 	return [self statusObjectForKey:key];
 }
 
-//NSDate
+/*!
+ * @brief Earliest date status object for key
+ *
+ * Note that fromAnyContainedObject is useful for subclasses; this default implementation ignores it.
+ *
+ * @param key The key
+ * @param fromAnyContainedObject If YES, return the best value from any contained object if the preferred object returns nil. If NO, only look at the preferred object.
+ * @result The earliest NSDate associated with this key.
+ */
 - (NSDate *)earliestDateStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
 	return [self earliestDateStatusObjectForKey:key];
 }
 
-//NSNumber
+/*!
+ * @brief Number status object for key
+ *
+ * Note that fromAnyContainedObject is useful for subclasses; this default implementation ignores it.
+ *
+ * @param key The key
+ * @param fromAnyContainedObject If YES, return the best value from any contained object if the preferred object returns nil. If NO, only look at the preferred object. 
+ * @result The NSNumber for this key, or nil if no such key is set or the value is not an NSNumber
+ */
 - (NSNumber *)numberStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
 	return [self numberStatusObjectForKey:key];
 }
 
-//Integer (uses numberStatusObjectForKey:)
+/*!
+ * @brief Integer status object for key
+ *
+ * Note that fromAnyContainedObject is useful for subclasses; this default implementation ignores it.
+ *
+ * @param key The key
+ * @param fromAnyContainedObject If YES, return the best value from any contained object if the preferred object returns nil. If NO, only look at the preferred object. 
+ * @result int value for key, or 0 if no object is set for key
+ */
 - (int)integerStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
 	NSNumber *returnValue = [self numberStatusObjectForKey:key];
@@ -242,7 +273,15 @@
     return returnValue ? [returnValue intValue] : 0;
 }
 
-//String from attributed string (uses statusObjectForKey:)
+/*!
+ * @brief String from a key which stores an attributed string
+ *
+ * Note that fromAnyContainedObject is useful for subclasses; this default implementation ignores it.
+ *
+ * @param key The key
+ * @param fromAnyContainedObject If YES, return the best value from any contained object if the preferred object returns nil. If NO, only look at the preferred object. 
+ * @result The NSString contents of an NSAttributedString for this key
+ */
 - (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
 	return [self stringFromAttributedStringStatusObjectForKey:key];
@@ -251,11 +290,19 @@
 //For Subclasses -------------------------------------------------------------------------------------------------------
 #pragma mark For Subclasses
 
-//Sublcasses should implement this method to take action when a status object changes
+/*!
+ * @brief Sublcasses should implement this method to take action when a status object changes for this object or a contained one
+ *
+ * @param inObject An object, which may be this object or any object contained by this one
+ * @param value The new value
+ * @param key The key
+ * @param notify A NotifyTiming value determining when notification is desired
+ */
 - (void)object:(id)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify 
 {
-	//If the status object changed for the same object receiving this method, notification is called for.
-	//Otherwise, it's just an informative message which shouldn't be triggering notification.
+	/* If the status object changed for the same object receiving this method, we should send out a notification or note it for later.
+	 * If we get passed another object, it's just an informative message which shouldn't be triggering notification.
+	 */
 	if (inObject == self) {
 		switch (notify) {
 			case NotifyNow: {
@@ -275,7 +322,23 @@
 	}
 }
 
+/*!
+ * @brief Subclasses should implement this method to respond to a change of status keys.
+ *
+ * The subclass should post appropriate notifications at this time.
+ *
+ * @param keys The keys
+ * @param silent YES indicates that this should not trigger 'noisy' notifications - it is appropriate for notifications as an account signs on and notes tons of contacts.
+ */
 - (void)didModifyStatusKeys:(NSSet *)keys silent:(BOOL)silent {};
+
+
+/*!
+ * @brief Subclasses should implement this method to respond to a change of status keys after notifications have been posted.
+ *
+ * @param keys The keys
+ * @param silent YES indicates that this should not trigger 'noisy' notifications - it is appropriate for notifications as an account signs on and notes tons of contacts.
+ */
 - (void)didNotifyOfChangedStatusSilently:(BOOL)silent {};
 
 //Dynamic Display------------------------------------------------------------------------------------------------------
