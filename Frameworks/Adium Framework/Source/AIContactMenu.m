@@ -287,7 +287,15 @@
 				BOOL menuItemExists		  = (menuItem != nil);
 				//If we disagree on item inclusion and existence, rebuild the menu.
 				if (shouldIncludeContact != menuItemExists) {
-					[self rebuildMenu];
+					[NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(rebuildMenu) object:nil];
+
+					if (silent) {
+						//If it's silent, wait for a pause before performing the actual rebuild
+						[self performSelector:@selector(rebuildMenu) withObject:nil afterDelay:1.0];
+
+					} else {
+						[self rebuildMenu];
+					}
 				} else { 
 					[self _updateMenuItem:menuItem];
 				}
