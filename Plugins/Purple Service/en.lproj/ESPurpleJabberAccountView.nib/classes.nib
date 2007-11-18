@@ -59,7 +59,7 @@
         },
                 {
             ACTIONS =             {
-                registerGoBack = id;
+                registerCancel = id;
                 registerNewAccount = id;
                 registerRequestAccount = id;
                 subscriptionModeDidChange = id;
@@ -69,14 +69,12 @@
             OUTLETS =             {
                 "checkBox_allowPlaintext" = NSButton;
                 "checkBox_checkCertificates" = NSButton;
-                "checkBox_disableBuzz" = NSButton;
                 "checkBox_forceOldSSL" = NSButton;
                 "checkBox_requireTLS" = NSButton;
                 "checkBox_useTLS" = NSButton;
                 "comboBox_subscriptionGroup" = NSComboBox;
                 "popup_subscriptionBehavior" = NSPopUpButton;
                 "tableview_servers" = NSTableView;
-                "tabview_registration" = NSTabView;
                 "textField_connectServer" = NSTextField;
                 "textField_priorityAvailable" = NSTextField;
                 "textField_priorityAway" = NSTextField;
@@ -84,6 +82,7 @@
                 "textField_registerServerPort" = NSTextField;
                 "textField_resource" = NSTextField;
                 "textField_subscriptionModeLabel" = NSTextField;
+                "window_registerServer" = NSPanel;
             };
             SUPERCLASS = PurpleAccountViewController;
         },

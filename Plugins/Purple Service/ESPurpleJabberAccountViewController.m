@@ -124,7 +124,9 @@
 
 - (void)dealloc {
 	[[adium notificationCenter] removeObserver:self];
+	[window_registerServer release];
 	[servers release];
+
 	[super dealloc];
 }
 
@@ -236,9 +238,10 @@ static int compareByDistance(id one, id two, void*context) {
 					
 					id distance = [NSNull null];
 					if (latitudeNode && longitudeNode) {
-						// Calculate the distance between the computer and the xmpp server in km
-						// Note that this assumes that the earth is a perfect sphere
-						// If it turns out to be flat or doughnut-shaped, this will not work!
+						/* Calculate the distance between the computer and the xmpp server in km
+						 * Note that this assumes that the earth is a perfect sphere
+						 * If it turns out to be flat or doughnut-shaped, this will not work!
+						 */
 						
 						float latitude2 = [[latitudeNode stringValue] floatValue] * (M_PI/180.0f);
 						float longitude2 = [[longitudeNode stringValue] floatValue] * (M_PI/180.0f);
@@ -267,8 +270,17 @@ static int compareByDistance(id one, id two, void*context) {
 			}
 		}
 	}
-		
-	[tabview_registration selectTabViewItemWithIdentifier:@"locateserver"];
+	
+	[NSApp beginSheet:window_registerServer
+	   modalForWindow:[sender window]
+		modalDelegate:self
+	   didEndSelector:@selector(registrationSheetDidEnd:returnCode:contextInfo:)
+		  contextInfo:NULL];
+}
+
+- (void)registrationSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	
 }
 
 - (int)numberOfRowsInTableView:(NSTableView *)tableView {
@@ -285,8 +297,9 @@ static int compareByDistance(id one, id two, void*context) {
 	[textField_registerServerPort setStringValue:@""];
 }
 
-- (IBAction)registerGoBack:(id)sender {
-	[tabview_registration selectTabViewItemWithIdentifier:@"settings"];
+- (IBAction)registerCancel:(id)sender {
+	[window_registerServer orderOut:nil];
+	[window_registerServer close];
 }
 
 - (IBAction)registerRequestAccount:(id)sender {
@@ -300,11 +313,24 @@ static int compareByDistance(id one, id two, void*context) {
 					forKey:KEY_JABBER_CONNECT_SERVER group:GROUP_ACCOUNT_STATUS];
 	[account setPreference:[NSNumber numberWithInt:[textField_registerServerPort intValue]]
 					forKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS];
-	[account filterAndSetUID:[NSString stringWithFormat:@"nobody@%@",[textField_registerServerName stringValue]]];
-	
-	[account performRegisterWithPassword:@""];
 
-	[tabview_registration selectTabViewItemWithIdentifier:@"settings"];
+	NSString *newUID;
+	if ([[textField_accountUID stringValue] length]) {
+		NSRange atLocation = [[textField_accountUID stringValue] rangeOfString:@"@" options:NSLiteralSearch];
+		if (atLocation.location == NSNotFound)
+			newUID = [NSString stringWithFormat:@"%@@%@",[textField_accountUID stringValue], [textField_registerServerName stringValue]];
+		else
+			newUID = [NSString stringWithFormat:@"%@@%@",[[textField_accountUID stringValue] substringToIndex:atLocation.location], [textField_registerServerName stringValue]];
+	} else {
+		newUID = [NSString stringWithFormat:@"nobody@%@",[textField_registerServerName stringValue]];
+	}
+
+	[account filterAndSetUID:newUID];
+	
+	[window_registerServer orderOut:nil];
+	[window_registerServer close];
+	
+	[account performRegisterWithPassword:[textField_password stringValue]];
 }
 
 @end
