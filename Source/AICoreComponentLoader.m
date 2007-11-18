@@ -25,6 +25,11 @@
 #import <Adium/AIObject.h>
 #import "AIPlugin.h"
 
+//#define COMPONENT_LOAD_TIMING
+#ifdef COMPONENT_LOAD_TIMING
+NSTimeInterval aggregateComponentLoadingTime = 0.0;
+#endif
+
 @interface AICoreComponentLoader (PRIVATE)
 - (void)loadComponents;
 @end
@@ -71,6 +76,9 @@
 	NSString	 *className;
 
 	while ((className = [enumerator nextObject])) {
+#ifdef COMPONENT_LOAD_TIMING
+		NSDate *start = [NSDate date];
+#endif
 		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		Class class;
 
@@ -85,7 +93,13 @@
 			[object release];
 		}
 		[pool release];
+#ifdef COMPONENT_LOAD_TIMING
+		NSTimeInterval t = -[start timeIntervalSinceNow];
+		aggregateComponentLoadingTime += t;
+		AILog(@"Loaded component: %@ in %f seconds", className, t);
+#endif
 	}
+	AILog(@"Total time spent loading components: %f", aggregateComponentLoadingTime);
 }
 
 - (void)controllerDidLoad
