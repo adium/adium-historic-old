@@ -3,7 +3,7 @@ MEANWHILE=meanwhile-1.0.2
 GADU=libgadu-1.7.1
 SASL=cyrus-sasl-2.1.21
 INTLTOOL=intltool-0.36.2
-PROTOCOLS="gg irc jabber msn myspace novell oscar qq sametime simple yahoo zephyr"
+PROTOCOLS="gg irc jabber msnp9 myspace novell oscar qq sametime simple yahoo zephyr"
 PATCHDIR="$PWD"
 
 if [ "x$PIDGIN_SOURCE" == "x" ] ; then
@@ -99,7 +99,7 @@ for ARCH in ppc i386 ; do
        $PIDGIN_SOURCE/libpurple/protocols/oscar/peer.h \
        $PIDGIN_SOURCE/libpurple/cmds.h \
        $PIDGIN_SOURCE/libpurple/internal.h \
-       $PIDGIN_SOURCE/libpurple/protocols/msn/*.h \
+       $PIDGIN_SOURCE/libpurple/protocols/msnp9/*.h \
        $PIDGIN_SOURCE/libpurple/protocols/yahoo/*.h \
        $PIDGIN_SOURCE/libpurple/protocols/gg/buddylist.h \
        $PIDGIN_SOURCE/libpurple/protocols/gg/gg.h \
