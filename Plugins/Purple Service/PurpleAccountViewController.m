@@ -23,7 +23,7 @@
 {
     [super saveConfiguration];
 	
-	[account setPreference:[checkBox_broadcastMusic state]
+	[account setPreference:[NSNumber numberWithBool:[checkBox_broadcastMusic state]]
 					forKey:KEY_BROADCAST_MUSIC_INFO
 					 group:GROUP_ACCOUNT_STATUS];
 }
