@@ -62,12 +62,25 @@ static void adiumPurpleConnNotice(PurpleConnection *gc, const char *text)
 	[accountLookup(gc->account) accountConnectionNotice:connectionNotice];
 }
 
-static void adiumPurpleConnReportDisconnect(PurpleConnection *gc, const char *text)
+/** Called when an error causes a connection to be disconnected.
+ *  Called before #disconnected.  This op is intended to replace
+ *  #report_disconnect.  If both are implemented, this will be called
+ *  first; however, there's no real reason to implement both.
+ *  @param reason  why the connection ended, if known, or
+ *                 #PURPLE_CONNECTION_ERROR_OTHER_ERROR, if not.
+ *  @param text  a localized message describing the disconnection
+ *               in more detail to the user.
+ *  @see #purple_connection_error_reason
+ *  @since 2.3.0
+ */
+void adiumPurpleConnReportDisconnectReason(PurpleConnection *gc,
+										   PurpleConnectionError reason,
+										   const char *text)
 {
-    AILog(@"Connection Disconnected: gc=%x (%s)", gc, text);
+	AILog(@"Connection Disconnected: gc=%x (%s)", gc, text);
 	
 	NSString	*disconnectError = (text ? [NSString stringWithUTF8String:text] : @"");
-    [accountLookup(gc->account) accountConnectionReportDisconnect:disconnectError];
+    [accountLookup(gc->account) accountConnectionReportDisconnect:disconnectError withReason:reason];
 }
 
 static PurpleConnectionUiOps adiumPurpleConnectionOps = {
@@ -75,9 +88,10 @@ static PurpleConnectionUiOps adiumPurpleConnectionOps = {
     adiumPurpleConnConnected,
     adiumPurpleConnDisconnected,
     adiumPurpleConnNotice,
-    adiumPurpleConnReportDisconnect,
+    /* report_disconnect */ NULL,
 	/* network_connected */ NULL,
-	/* network_disconnected */ NULL
+	/* network_disconnected */ NULL,
+	adiumPurpleConnReportDisconnectReason
 };
 
 PurpleConnectionUiOps *adium_purple_connection_get_ui_ops(void)

@@ -583,6 +583,8 @@
 		34A9707A0C96600700F46006 /* ChatPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A970790C96600700F46006 /* ChatPrompt.nib */; };
 		34A9707C0C96601000F46006 /* BanPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A9707B0C96601000F46006 /* BanPrompt.nib */; };
 		34A9707E0C96602300F46006 /* sidebarStatusAreaBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 34A9707D0C96602200F46006 /* sidebarStatusAreaBackground.png */; };
+		34AB43020CEFDAF300F76493 /* msn-adium.h in Headers */ = {isa = PBXBuildFile; fileRef = 34AB43000CEFDAF300F76493 /* msn-adium.h */; };
+		34AB43030CEFDAF300F76493 /* msn-adium.c in Sources */ = {isa = PBXBuildFile; fileRef = 34AB43010CEFDAF300F76493 /* msn-adium.c */; };
 		34AE249E09BCCFA900A35B51 /* AIWindowDraggingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AE249C09BCCFA900A35B51 /* AIWindowDraggingView.m */; };
 		34B1268E0B924E28003B0451 /* adiumPurpleDnsRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B1268C0B924E28003B0451 /* adiumPurpleDnsRequest.h */; };
 		34B1268F0B924E28003B0451 /* adiumPurpleDnsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B1268D0B924E28003B0451 /* adiumPurpleDnsRequest.m */; };
@@ -2873,6 +2875,8 @@
 		34AA35D9095CCA4D003B56DB /* AdiumDisconnectionErrorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumDisconnectionErrorController.h; path = Source/AdiumDisconnectionErrorController.h; sourceTree = "<group>"; };
 		34AA35DA095CCA4D003B56DB /* AdiumDisconnectionErrorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumDisconnectionErrorController.m; path = Source/AdiumDisconnectionErrorController.m; sourceTree = "<group>"; };
 		34AA366A095CE124003B56DB /* AIStatusDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusDefines.h; path = "Frameworks/Adium Framework/Source/AIStatusDefines.h"; sourceTree = "<group>"; };
+		34AB43000CEFDAF300F76493 /* msn-adium.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "msn-adium.h"; path = "Plugins/Purple Service/msn-adium.h"; sourceTree = SOURCE_ROOT; };
+		34AB43010CEFDAF300F76493 /* msn-adium.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "msn-adium.c"; path = "Plugins/Purple Service/msn-adium.c"; sourceTree = SOURCE_ROOT; };
 		34AC2E9F0934FAE100393D7A /* AIStatusMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusMenu.h; path = "Frameworks/Adium Framework/Source/AIStatusMenu.h"; sourceTree = "<group>"; };
 		34AC2EA00934FAE100393D7A /* AIStatusMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIStatusMenu.m; path = "Frameworks/Adium Framework/Source/AIStatusMenu.m"; sourceTree = "<group>"; };
 		34AC2FA509352C2400393D7A /* AIStatusGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusGroup.h; path = "Frameworks/Adium Framework/Source/AIStatusGroup.h"; sourceTree = "<group>"; };
@@ -4162,6 +4166,8 @@
 			children = (
 				11EE1B490CDCFAF40097F246 /* oscar-adium.c */,
 				11EE1B4A0CDCFAF40097F246 /* oscar-adium.h */,
+				34AB43000CEFDAF300F76493 /* msn-adium.h */,
+				34AB43010CEFDAF300F76493 /* msn-adium.c */,
 				811033500CDE170B00EC6038 /* ssl-cdsa.c */,
 				11EE1B4B0CDCFAF40097F246 /* ssl-openssl.c */,
 				11EE1B4C0CDCFAF40097F246 /* ssl.c */,
@@ -6057,6 +6063,10 @@
 		4B587CA507ABFEFD001832A9 /* Happy Framework */ = {
 			isa = PBXGroup;
 			children = (
+				DA9CF854080F9784000C5249 /* AIPathUtilities.h */,
+				DA9CF855080F9784000C5249 /* AIPathUtilities.m */,
+				4B422C0905ACB248005E720B /* AISortController.h */,
+				4B422C0A05ACB248005E720B /* AISortController.m */,
 				34BFD7ED07E6A1FB00AD984D /* Preset Manager */,
 				4B4F5B2D042D645F00A8010A /* Accounts & Services */,
 				34E6CEFC0A793E870076D7F0 /* Emoticons */,
@@ -6072,10 +6082,6 @@
 		4B587CA807ABFF02001832A9 /* Sad Framework */ = {
 			isa = PBXGroup;
 			children = (
-				DA9CF854080F9784000C5249 /* AIPathUtilities.h */,
-				DA9CF855080F9784000C5249 /* AIPathUtilities.m */,
-				4B422C0905ACB248005E720B /* AISortController.h */,
-				4B422C0A05ACB248005E720B /* AISortController.m */,
 				F5300A2B032F760B01A8010A /* Contacts & Chats */,
 				34B70349076EDB410016E8BA /* Contact Alerts */,
 				340F444F06D87A830072E2FA /* Contact List */,
@@ -7504,6 +7510,7 @@
 				811036250CDE8C2100EC6038 /* adiumPurpleCertificateTrustWarning.h in Headers */,
 				8110362C0CDE8F5800EC6038 /* AIPurpleCertificateTrustWarningAlert.h in Headers */,
 				34B3247A0CE4CCF400158D5F /* PurpleAccountViewController.h in Headers */,
+				34AB43020CEFDAF300F76493 /* msn-adium.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7946,6 +7953,9 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = NO;
+			};
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
 			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
@@ -8731,6 +8741,7 @@
 				811036260CDE8C2100EC6038 /* adiumPurpleCertificateTrustWarning.m in Sources */,
 				8110362D0CDE8F5800EC6038 /* AIPurpleCertificateTrustWarningAlert.m in Sources */,
 				34B3247B0CE4CCF400158D5F /* PurpleAccountViewController.m in Sources */,
+				34AB43030CEFDAF300F76493 /* msn-adium.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

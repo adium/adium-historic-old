@@ -1636,8 +1636,9 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 /*!
  * @brief Our account was unexpectedly disconnected with an error message
  */
-- (void)accountConnectionReportDisconnect:(NSString *)text
+- (void)accountConnectionReportDisconnect:(NSString *)text withReason:(PurpleConnectionError)reason
 {
+#warning Should make use of reason
 	[self setLastDisconnectionError:text];
 
 	//We are disconnecting

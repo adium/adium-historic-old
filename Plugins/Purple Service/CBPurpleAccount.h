@@ -94,7 +94,7 @@
 
 #pragma mark Purple callback handling methods
 - (void)accountConnectionConnected;
-- (void)accountConnectionReportDisconnect:(NSString *)text;
+- (void)accountConnectionReportDisconnect:(NSString *)text withReason:(PurpleConnectionError)reason;
 - (void)accountConnectionNotice:(NSString *)text;
 - (void)accountConnectionDisconnected;
 - (void)accountConnectionProgressStep:(NSNumber *)step percentDone:(NSNumber *)connectionProgressPrecent;
