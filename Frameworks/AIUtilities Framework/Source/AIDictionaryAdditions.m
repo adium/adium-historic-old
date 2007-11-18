@@ -42,21 +42,10 @@
 // returns the dictionary from the specified path
 + (NSDictionary *)dictionaryAtPath:(NSString *)path withName:(NSString *)name create:(BOOL)create
 {
-    NSDictionary	*dictionary;
-
     NSParameterAssert(path != nil); NSParameterAssert([path length] != 0);
     NSParameterAssert(name != nil); NSParameterAssert([name length] != 0);
-
-	NSData *plistData;
-	NSString *error;
-
-	plistData = [[NSData alloc] initWithContentsOfFile:[[path stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"plist"]];
 	
-	dictionary = [NSPropertyListSerialization propertyListFromData:plistData
-												  mutabilityOption:NSPropertyListImmutable
-															format:NULL
-												  errorDescription:&error];
-	[plistData release];
+	NSDictionary	*dictionary = [NSDictionary dictionaryWithContentsOfFile:[[path stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"plist"]];
 
 	if (!dictionary && create) dictionary = [NSDictionary dictionary];
 
