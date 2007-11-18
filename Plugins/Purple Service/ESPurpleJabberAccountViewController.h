@@ -18,29 +18,29 @@
 #import "ESPurpleJabberAccount.h"
 
 @interface ESPurpleJabberAccountViewController : PurpleAccountViewController {
-    IBOutlet	NSTextField *textField_connectServer;
-	IBOutlet	NSTextField *textField_resource;
-	IBOutlet	NSTextField *textField_priorityAvailable;
-	IBOutlet	NSTextField *textField_priorityAway;
-	IBOutlet	NSButton	*checkBox_useTLS;
-	IBOutlet	NSButton	*checkBox_forceOldSSL;
-	IBOutlet	NSButton	*checkBox_requireTLS;
-	IBOutlet	NSButton	*checkBox_checkCertificates;
-	IBOutlet	NSButton	*checkBox_allowPlaintext;
-	IBOutlet	NSTabView	*tabview_registration;
-	IBOutlet	NSTableView	*tableview_servers;
-	IBOutlet	NSTextField	*textField_registerServerName;
-	IBOutlet	NSTextField *textField_registerServerPort;
-	IBOutlet	NSButton	*checkBox_disableBuzz;
-	IBOutlet	NSPopUpButton *popup_subscriptionBehavior;
-	IBOutlet	NSTextField	*textField_subscriptionModeLabel;
-	IBOutlet	NSComboBox	*comboBox_subscriptionGroup;
-	
+    IBOutlet	NSTextField		*textField_connectServer;
+	IBOutlet	NSTextField		*textField_resource;
+	IBOutlet	NSTextField		*textField_priorityAvailable;
+	IBOutlet	NSTextField		*textField_priorityAway;
+	IBOutlet	NSButton		*checkBox_useTLS;
+	IBOutlet	NSButton		*checkBox_forceOldSSL;
+	IBOutlet	NSButton		*checkBox_requireTLS;
+	IBOutlet	NSButton		*checkBox_checkCertificates;
+	IBOutlet	NSButton		*checkBox_allowPlaintext;
+	IBOutlet	NSPopUpButton	*popup_subscriptionBehavior;
+	IBOutlet	NSTextField		*textField_subscriptionModeLabel;
+	IBOutlet	NSComboBox		*comboBox_subscriptionGroup;
+
+	IBOutlet	NSPanel			*window_registerServer;
+	IBOutlet	NSTableView		*tableview_servers;
+	IBOutlet	NSTextField		*textField_registerServerName;
+	IBOutlet	NSTextField		*textField_registerServerPort;
+
 	NSArray *servers;
 }
 
 - (IBAction)registerNewAccount:(id)sender;
-- (IBAction)registerGoBack:(id)sender;
+- (IBAction)registerCancel:(id)sender;
 - (IBAction)registerRequestAccount:(id)sender;
 
 - (IBAction)subscriptionModeDidChange:(id)sender;
