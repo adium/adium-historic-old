@@ -115,7 +115,7 @@
 	//availableForSendingContentType: will return NO incorrectly.
 	//######### The core should really handle this for us. #########
 	if ([contact isKindOfClass:[AIMetaContact class]]) {
-		contact = [(AIMetaContact *)contact preferredContactWithService:[account service]];
+		contact = [(AIMetaContact *)contact preferredContactWithCompatibleService:[account service]];
 		
 	} else if ([contact isKindOfClass:[AIListContact class]]) {
 		contact = [[adium contactController] contactWithService:[contact service]
@@ -132,7 +132,7 @@
 																			 toContact:contact];
 			//Repeat the refinement process using the newly retrieved account
 			if ([contact isKindOfClass:[AIMetaContact class]]) {
-				contact = [(AIMetaContact *)contact preferredContactWithService:[account service]];
+				contact = [(AIMetaContact *)contact preferredContactWithCompatibleService:[account service]];
 				
 			} else if ([contact isKindOfClass:[AIListContact class]]) {
 				contact = [[adium contactController] contactWithService:[contact service]
