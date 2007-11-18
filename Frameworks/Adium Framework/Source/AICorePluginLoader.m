@@ -91,7 +91,9 @@ NSTimeInterval aggregatePluginLoadingTime = 0.0;
 							confirmLoading:NO
 							   pluginArray:pluginArray];
 	}
+#ifdef PLUGIN_LOAD_TIMING
 	AILog(@"Total time spent loading plugins: %f", aggregatePluginLoadingTime);
+#endif
 }
 
 - (void)controllerDidLoad
