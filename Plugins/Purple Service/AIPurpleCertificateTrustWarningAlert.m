@@ -183,7 +183,7 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 	                 didEndSelector:@selector(certificateTrustSheetDidEnd:returnCode:contextInfo:)
 	                    contextInfo:window
 	                          trust:trustRef
-	                        message:[NSString stringWithFormat:AILocalizedString(@"The certificate of the server %@ is not trusted, which means that the server's identity cannot be automatically verified. Do you want to continue connecting?\nFor more information, click \"Show Certificate\".",nil),hostname]];
+	                        message:[NSString stringWithFormat:AILocalizedString(@"The certificate of the server %@ is not trusted, which means that the server's identity cannot be automatically verified. Do you want to continue connecting?\n\nFor more information, click \"Show Certificate\".",nil),hostname]];
 }
 
 - (void)certificateTrustSheetDidEnd:(SFCertificateTrustPanel *)trustpanel returnCode:(int)returnCode contextInfo:(void *)contextInfo {
