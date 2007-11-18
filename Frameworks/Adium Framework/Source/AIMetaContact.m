@@ -413,11 +413,12 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
  *
  * Same as [self preferredContact] but only looks at contacts on the specified service
  */
-- (AIListContact *)preferredContactWithService:(AIService *)inService
+- (AIListContact *)preferredContactWithCompatibleService:(AIService *)inService
 {
 	AIListContact   *returnContact = nil;
 	
 	if (inService) {
+		NSString		*serviceClass = [inService serviceClass];
 		NSArray			*listContactsArray = [self listContacts];
 		AIListContact   *thisContact;
 		unsigned		index;
@@ -426,7 +427,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		//Search for an available contact who is not mobile
 		for (index = 0; index < count; index++) {
 			thisContact = [listContactsArray objectAtIndex:index];
-			if (([thisContact service] == inService) &&
+			if (([[[thisContact service] serviceClass] isEqualToString:serviceClass]) &&
 				([thisContact statusSummary] == AIAvailableStatus) &&
 				(![thisContact isMobile])) {
 				returnContact = thisContact;
@@ -439,7 +440,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 			for (index = 0; index < count; index++) {
 				thisContact = [listContactsArray objectAtIndex:index];
 				if (([thisContact online]) && 
-					([thisContact service] == inService)) {
+					([[thisContact serviceClass] isEqualToString:serviceClass])) {
 					returnContact = thisContact;
 					break;
 				}
@@ -449,7 +450,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		if (!returnContact) {
 			for (index = 0; index < count; index++) {
 				thisContact = [listContactsArray objectAtIndex:index];
-				if ([thisContact service] == inService) {
+				if ([[thisContact serviceClass] isEqualToString:serviceClass]) {
 					returnContact = thisContact;
 					break;
 				}
