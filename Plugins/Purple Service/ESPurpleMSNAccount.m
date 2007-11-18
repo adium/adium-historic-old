@@ -37,6 +37,9 @@
 
 #define DEFAULT_MSN_PASSPORT_DOMAIN				@"@hotmail.com"
 #define SECONDS_BETWEEN_FRIENDLY_NAME_CHANGES	10
+#define	NEW_MSN									FALSE
+
+extern void msn_set_friendly_name(PurpleConnection *gc, const char *entry);
 
 @interface ESPurpleMSNAccount (PRIVATE)
 - (void)updateFriendlyNameAfterConnect;
@@ -338,7 +341,11 @@
 				friendlyNameUTF8String = [friendlyName UTF8String];
 				currentMaxNumberOfPreEncodedCharacters -= 10;
 			}
+#if NEW_MSN
 			msn_act_id(purple_account_get_connection(account), friendlyNameUTF8String);
+#else
+			msn_set_friendly_name(purple_account_get_connection(account), friendlyNameUTF8String);
+#endif
 
 			[lastFriendlyNameChange release];
 			lastFriendlyNameChange = [now retain];
