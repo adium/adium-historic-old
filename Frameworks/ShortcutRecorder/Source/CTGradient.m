@@ -28,10 +28,6 @@ void transformRGB_HSV(float *components);
 void transformHSV_RGB(float *components);
 void resolveHSV(float *color1, float *color2);
 
-//Make sure the version number defines exist; when compiling in 10.3, NSAppKitVersionNumber10_3 isn't defined
-#ifndef NSAppKitVersionNumber10_3
-	#define NSAppKitVersionNumber10_3 743
-#endif
 
 @implementation CTGradient
 /////////////////////////////////////Initialization Type Stuff
@@ -691,24 +687,19 @@ void resolveHSV(float *color1, float *color2);
   //Calls to CoreGraphics
   CGContextRef currentContext = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
   CGContextSaveGState(currentContext);
-  CGColorSpaceRef colorspace;
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_4	
-  if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3) {
-	  colorspace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
-  } else {
-	  colorspace = CGColorSpaceCreateDeviceRGB();
-  }
-#else
-	colorspace = CGColorSpaceCreateDeviceRGB();
-#endif
+	  #if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_4
+		CGColorSpaceRef colorspace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
+	  #else
+		CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+	  #endif
 	  
-  CGShadingRef myCGShading = CGShadingCreateAxial(colorspace, startPoint, endPoint, gradientFunction, false, false);
-  
-  CGContextClipToRect(currentContext , *(CGRect *)&rect);	//This is where the action happens
-  CGContextDrawShading(currentContext, myCGShading);
-  
-  CGShadingRelease   (myCGShading);
-  CGColorSpaceRelease(colorspace );
+	  CGShadingRef myCGShading = CGShadingCreateAxial(colorspace, startPoint, endPoint, gradientFunction, false, false);
+	  
+	  CGContextClipToRect(currentContext , *(CGRect *)&rect);	//This is where the action happens
+	  CGContextDrawShading(currentContext, myCGShading);
+	  
+	  CGShadingRelease   (myCGShading);
+	  CGColorSpaceRelease(colorspace );
   CGContextRestoreGState(currentContext);
   }
 
@@ -729,25 +720,19 @@ void resolveHSV(float *color1, float *color2);
   //Calls to CoreGraphics
   CGContextRef currentContext = (CGContextRef)[[NSGraphicsContext currentContext] graphicsPort];
   CGContextSaveGState(currentContext);
-  CGColorSpaceRef colorspace;
+	  #if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_4
+		CGColorSpaceRef colorspace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
+	  #else
+		CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+	  #endif
 
-#if MAC_OS_X_VERSION_MAX_ALLOWED >= MAC_OS_X_VERSION_10_4
-  if (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3) {
-	  colorspace = CGColorSpaceCreateWithName(kCGColorSpaceGenericRGB);
-  } else {
-	  colorspace = CGColorSpaceCreateDeviceRGB();
-  }
-#else
-  colorspace = CGColorSpaceCreateDeviceRGB();
-#endif
-
-  CGShadingRef myCGShading = CGShadingCreateRadial(colorspace, startPoint, startRadius, endPoint, endRadius, gradientFunction, true, true);
-  
-  CGContextClipToRect (currentContext , *(CGRect *)&rect);
-  CGContextDrawShading(currentContext , myCGShading);		//This is where the action happens
-  
-  CGShadingRelease    (myCGShading);
-  CGColorSpaceRelease (colorspace);
+	  CGShadingRef myCGShading = CGShadingCreateRadial(colorspace, startPoint, startRadius, endPoint, endRadius, gradientFunction, true, true);
+	  
+	  CGContextClipToRect (currentContext , *(CGRect *)&rect);
+	  CGContextDrawShading(currentContext , myCGShading);		//This is where the action happens
+	  
+	  CGShadingRelease    (myCGShading);
+	  CGColorSpaceRelease (colorspace);
   CGContextRestoreGState(currentContext);
   }
 
