@@ -241,19 +241,22 @@
 			if (desiredImagePickerPosition == ContactListImagePickerOnLeft) {
 				if ((imagePickerPosition == ContactListImagePickerHiddenOnLeft) ||
 					(imagePickerPosition == ContactListImagePickerHiddenOnRight)) {
-					//Image picker was hidden but not is visible; shrink the name/status menu
+					//Image picker was hidden but now is visible; shrink the name/status menu
 					newNameAndStatusMenuFrame.size.width -= NSWidth(newImagePickerFrame);
-					newNameAndStatusMenuFrame.origin.x = NSMaxX(newImagePickerFrame);
 					[imagePicker setHidden:NO];
 				}
+
+				newNameAndStatusMenuFrame.origin.x = NSMaxX(newImagePickerFrame);
+
 			} else /* if (desiredImagePickerPosition == ContactListImagePickerHiddenOnLeft) */ {
 				if ((imagePickerPosition == ContactListImagePickerOnLeft) ||
 					(imagePickerPosition == ContactListImagePickerOnRight)) {
 					//Image picker was visible but now is hidden; expand the name/status menu
 					newNameAndStatusMenuFrame.size.width += NSWidth(newImagePickerFrame);
-					newNameAndStatusMenuFrame.origin.x = NSMinX(newImagePickerFrame);
 					[imagePicker setHidden:YES];
 				}
+
+				newNameAndStatusMenuFrame.origin.x = NSMinX(newImagePickerFrame);
 			}
 			
 			[imagePicker setAutoresizingMask:(NSViewMaxXMargin | NSViewMinYMargin)];
