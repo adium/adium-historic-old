@@ -299,7 +299,7 @@ static int compareByDistance(id one, id two, void*context) {
 
 - (IBAction)registerCancel:(id)sender {
 	[window_registerServer orderOut:nil];
-	[window_registerServer close];
+	[NSApp endSheet:window_registerServer];
 }
 
 - (IBAction)registerRequestAccount:(id)sender {
@@ -328,7 +328,7 @@ static int compareByDistance(id one, id two, void*context) {
 	[account filterAndSetUID:newUID];
 	
 	[window_registerServer orderOut:nil];
-	[window_registerServer close];
+	[NSApp endSheet:window_registerServer];
 	
 	[account performRegisterWithPassword:[textField_password stringValue]];
 }
