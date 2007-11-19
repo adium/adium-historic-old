@@ -1,9 +1,8 @@
 GLIB=glib-2.14.1
 MEANWHILE=meanwhile-1.0.2
 GADU=libgadu-1.7.1
-SASL=cyrus-sasl-2.1.21
 INTLTOOL=intltool-0.36.2
-PROTOCOLS="gg irc jabber msnp9 myspace novell oscar qq sametime simple yahoo zephyr"
+PROTOCOLS="gg irc jabber msn myspace novell oscar qq sametime simple yahoo zephyr"
 PATCHDIR="$PWD"
 
 if [ "x$PIDGIN_SOURCE" == "x" ] ; then
@@ -12,8 +11,9 @@ if [ "x$PIDGIN_SOURCE" == "x" ] ; then
 	exit 1
 fi
 
-BASE_CFLAGS="-mmacosx-version-min=10.4 -isysroot /Developer/SDKs/MacOSX10.4u.sdk"
-BASE_LDFLAGS="-mmacosx-version-min=10.4 -headerpad_max_install_names -Wl,-syslibroot,/Developer/SDKs/MacOSX10.4u.sdk"
+SDK_ROOT="/Developer/SDKs/MacOSX10.4u.sdk"
+BASE_CFLAGS="-mmacosx-version-min=10.4 -isysroot $SDK_ROOT"
+BASE_LDFLAGS="-mmacosx-version-min=10.4 -headerpad_max_install_names -Wl,-syslibroot,$SDK_ROOT"
 
 NUMBER_OF_CORES=`sysctl -n hw.activecpu`
 
@@ -58,7 +58,7 @@ for ARCH in ppc i386 ; do
 			  export PKG_CONFIG_PATH="$TARGET_DIR_I386/lib/pkgconfig"
 			  TARGET_DIR=$TARGET_DIR_I386;;
 	esac
-    export CFLAGS="$BASE_CFLAGS -arch $ARCH -I$TARGET_DIR/include -DHAVE_SSL"
+    export CFLAGS="$BASE_CFLAGS -arch $ARCH -I$TARGET_DIR/include -I$SDK_ROOT/usr/include/kerberosIV -DHAVE_SSL "
 	export LDFLAGS="$BASE_LDFLAGS -L$TARGET_DIR/lib -arch $ARCH"
     mkdir libpurple-$ARCH || true
     cd libpurple-$ARCH
@@ -84,9 +84,10 @@ for ARCH in ppc i386 ; do
             --enable-debug \
             --disable-static --enable-shared \
             --disable-dependency-tracking \
+            --enable-krb4 \
             --prefix=$TARGET_DIR \
-            --with-static-prpls="$PROTOCOLS" --disable-plugins \
             --enable-cyrus-sasl \
+            --with-static-prpls="$PROTOCOLS" --disable-plugins \
             --host=$HOST \
             --enable-gnutls=no --enable-nss=no --enable-openssl=no $@
     cd libpurple
