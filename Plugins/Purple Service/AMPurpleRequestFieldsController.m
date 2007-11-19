@@ -393,7 +393,7 @@
                 who:(NSString*)who
        conversation:(PurpleConversation*)conv
            userData:(void*)_userData {
-    if((self = [super initWithWindowNibName:@"AMPurpleRequestFieldsWindow"])) {
+    if ((self = [super initWithWindowNibName:@"AMPurpleRequestFieldsWindow"])) {
         // we only need to store these fields
         fields = _fields;
         okcb = _okcb;
@@ -636,6 +636,7 @@
                                                      name:NSWindowWillCloseNotification
                                                    object:[self window]];
     }
+
     return [self retain]; // keep us as long as the form is open
 }
 
@@ -648,7 +649,22 @@
 - (void)loadForm:(NSXMLDocument*)doc {
     NSData *formdata = [doc XMLDataWithOptions:NSXMLDocumentTidyHTML | NSXMLDocumentIncludeContentTypeDeclaration];
     [[webview mainFrame] loadData:formdata MIMEType:@"application/xhtml+xml" textEncodingName:@"UTF-8" baseURL:nil];
+
     [self showWindow:nil];
+}
+
+/*!
+ * @brief libpurple has been made aware we closed or has informed us we should close
+ *
+ * If we haven't trigerred a callback yet, we shouldn't now; the data in question is likely invalid
+ * and will crash if used since purple is closing our request at the source
+ */
+- (void)purpleRequestClose
+{
+	okcb = NULL;
+	cancelcb = NULL;
+
+	[super purpleRequestClose];
 }
 
 #pragma mark WebView Delegate Methods
