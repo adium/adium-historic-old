@@ -1,17 +1,19 @@
 #create universal libraries for AdiumDeps.
 # "top-level" deps
-LIBINTL=libintl.8.dylib
-LIBGLIB=libglib-2.0.0.dylib
-LIBGOBJECT=libgobject-2.0.0.dylib
-LIBGTHREAD=libgthread-2.0.0.dylib
-LIBGMODULE=libgmodule-2.0.0.dylib
+LIBINTL=libintl.8
+LIBGLIB=libglib-2.0.0
+LIBGOBJECT=libgobject-2.0.0
+LIBGTHREAD=libgthread-2.0.0
+LIBGMODULE=libgmodule-2.0.0
 
 # "purple" deps
-MEANWHILE=libmeanwhile.1.dylib
-GADU=libgadu.3.7.0.dylib
-SASL=libsasl2.2.dylib
-PURPLE=libpurple.0.2.3.dylib
+MEANWHILE=libmeanwhile.1
+GADU=libgadu.3.7.0
+SASL=libsasl2.2
+PURPLE_VERSION=0.3.0
 
+LIBPURPLE=libpurple.$PURPLE_VERSION
+PURPLE_FOLDER=libpurple-$PURPLE_VERSION
 
 SCRIPT_DIR=$PWD
 
@@ -53,23 +55,23 @@ mkdir libgthread-2.0.0 || true
 # no headers to copy, make an empty file so that rtool isn't sad
 touch libgthread-2.0.0/no_headers_here.txt
 
-rm -rf $UNIVERSAL_DIR/include/libpurple-0.2.3
-cp -R $TARGET_DIR_I386/include/libpurple $UNIVERSAL_DIR/include/libpurple-0.2.3
+rm -rf $UNIVERSAL_DIR/include/$PURPLE_FOLDER
+cp -R $TARGET_DIR_I386/include/libpurple $UNIVERSAL_DIR/include/$PURPLE_FOLDER
 # Another hack: we need libgadu.h
-cp $TARGET_DIR_I386/include/libgadu.h $UNIVERSAL_DIR/include/libpurple-0.2.3/libgadu-i386.h
-cp $TARGET_DIR_PPC/include/libgadu.h $UNIVERSAL_DIR/include/libpurple-0.2.3/libgadu-ppc.h
-cp $SCRIPT_DIR/libgadu.h $UNIVERSAL_DIR/include/libpurple-0.2.3/
+cp $TARGET_DIR_I386/include/libgadu.h $UNIVERSAL_DIR/include/$PURPLE_FOLDER/libgadu-i386.h
+cp $TARGET_DIR_PPC/include/libgadu.h $UNIVERSAL_DIR/include/$PURPLE_FOLDER/libgadu-ppc.h
+cp $SCRIPT_DIR/libgadu.h $UNIVERSAL_DIR/include/$PURPLE_FOLDER/
 cd ..
 
 cd $UNIVERSAL_DIR
 
 for lib in $LIBINTL $LIBGLIB $LIBGOBJECT $LIBGTHREAD $LIBGMODULE $MEANWHILE \
-           $GADU $SASL $PURPLE; do
+           $GADU $SASL $LIBPURPLE; do
 	echo "Making $lib universal..."
 	python  $SCRIPT_DIR/framework_maker/universalize.py \
-	  i386:$TARGET_DIR_I386/lib/$lib \
-	  ppc:$TARGET_DIR_PPC/lib/$lib \
-	  $UNIVERSAL_DIR/$lib \
+	  i386:$TARGET_DIR_I386/lib/$lib.dylib \
+	  ppc:$TARGET_DIR_PPC/lib/$lib.dylib \
+	  $UNIVERSAL_DIR/$lib.dylib \
 	  $TARGET_DIR_PPC/lib:$UNIVERSAL_DIR \
       $TARGET_DIR_I386/lib:$UNIVERSAL_DIR
 done
@@ -77,8 +79,8 @@ done
 cd ..
 
 export PATH="$PATH:$SCRIPT_DIR/rtool_trunk"
-echo "Making a framework for $PURPLE and all dependencies..."
-python $SCRIPT_DIR/framework_maker/frameworkize.py $UNIVERSAL_DIR/libpurple.0.2.3.dylib $PWD/Frameworks
+echo "Making a framework for $PURPLE_FOLDER and all dependencies..."
+python $SCRIPT_DIR/framework_maker/frameworkize.py $UNIVERSAL_DIR/$LIBPURPLE.dylib $PWD/Frameworks
 
 echo "Adding the Adium framework header."
 cp $SCRIPT_DIR/libpurple-full.h \
