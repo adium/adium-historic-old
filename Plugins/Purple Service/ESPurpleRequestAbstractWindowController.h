@@ -11,4 +11,6 @@
 	BOOL						windowIsClosing;
 }
 
+- (void)purpleRequestClose;
+
 @end

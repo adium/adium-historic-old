@@ -379,6 +379,13 @@
 }
 
 #pragma mark Registration
+- (void)didBeginRegistration
+{
+	[progressIndicator_registering setHidden:NO];
+	[progressIndicator_registering startAnimation:self];
+	[textField_registering setHidden:NO];
+}
+
 - (void)usernameAndPasswordRegistered:(NSNotification*)notification
 {
 	[[textField_accountUID window] makeFirstResponder:nil];
@@ -390,6 +397,10 @@
 		[textField_accountUID setStringValue:username];
 	if (password != [NSNull null])
 		[textField_password setStringValue:password];
+	
+	[progressIndicator_registering stopAnimation:self];
+	[progressIndicator_registering setHidden:YES];
+	[textField_registering setHidden:YES];
 }
 
 #pragma mark Localization

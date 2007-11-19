@@ -214,7 +214,8 @@ static int compareByDistance(id one, id two, void*context) {
 								 defaultButton:AILocalizedString(@"OK",nil)
 							   alternateButton:nil
 								   otherButton:nil
-					 informativeTextWithFormat:AILocalizedString(@"Unable to parse the server list at " SERVERFEEDRSSURL @". Please try again later.",nil)] runModal];
+					 informativeTextWithFormat:[NSString stringWithFormat:
+												AILocalizedString(@"Unable to parse the server list at %@. Please try again later.",nil), SERVERFEEDRSSURL]] runModal];
 			} else {
 				float longitude, latitude;
 				
@@ -257,7 +258,7 @@ static int compareByDistance(id one, id two, void*context) {
 					
 					[(NSMutableArray*)servers addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 						[title stringValue], @"servername",
-						description?(id)[description stringValue]:(id)[NSNull null], @"description",
+						(description ? (id)[description stringValue] : (id)[NSNull null]), @"description",
 						distance, @"distance",
 						nil]];
 				}
@@ -288,7 +289,8 @@ static int compareByDistance(id one, id two, void*context) {
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row {
-	return [[servers objectAtIndex:row] objectForKey:[tableColumn identifier]];
+	id objectValue = [[servers objectAtIndex:row] objectForKey:[tableColumn identifier]];
+	return ((objectValue && ![objectValue isKindOfClass:[NSNull class]]) ? objectValue : @"");
 }
 
 - (void)tableViewSelectionDidChange:(NSNotification *)notification {
@@ -331,6 +333,7 @@ static int compareByDistance(id one, id two, void*context) {
 	[NSApp endSheet:window_registerServer];
 	
 	[account performRegisterWithPassword:[textField_password stringValue]];
+	[self didBeginRegistration];
 }
 
 @end
