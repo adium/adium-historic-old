@@ -50,6 +50,9 @@
 	IBOutlet	NSTextField		*label_encryption;				//Label for the encryption preference
 	IBOutlet	NSPopUpButton	*popUp_encryption;				//Encryption preference
 	
+	IBOutlet	NSProgressIndicator *progressIndicator_registering;
+	IBOutlet	NSTextField			*textField_registering;
+	
 	//Instance variables
     AIAccount			*account;
 	NSMutableDictionary	*changedPrefDict;
@@ -65,6 +68,9 @@
 - (IBAction)changedPreference:(id)sender;
 - (NSString *)nibName;
 - (void)saveConfiguration;
+
+- (void)didBeginRegistration;
+- (void)usernameAndPasswordRegistered:(NSNotification*)notification;
 
 //For subclasses
 - (NSDictionary *)keyToKeyDict;
