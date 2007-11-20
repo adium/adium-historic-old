@@ -20,6 +20,8 @@
 
 @interface ESPurpleRequestActionController : AIObject {
 	ESTextAndButtonsWindowController	*requestController;
+	
+	NSDictionary *theInfoDict;
 }
 
 + (ESPurpleRequestActionController *)showActionWindowWithDict:(NSDictionary *)infoDict;
