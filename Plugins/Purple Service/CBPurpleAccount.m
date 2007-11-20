@@ -544,7 +544,9 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 - (void)addChat:(AIChat *)chat
 {
 	//Open the chat
-	[[adium interfaceController] openChat:chat]; 
+	[[adium interfaceController] openChat:chat];
+	
+	[chat accountDidJoinChat];
 }
 
 //Open a chat for Adium
@@ -2600,46 +2602,54 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 
 #pragma mark Actions for chats
 
-/*
+/*!
  * @name Actions for chats
  * @brief This method returns an NSMenu containing the 
  * actions that are allowed for a given chat.
  * @params An AIChat for which the commands are fetched
  * @return NSMenu with the proper commands
  */
- 
--(NSMenu*)actionsForChat:(AIChat*)chat
+- (NSMenu*)actionsForChat:(AIChat*)chat
 {
 	NSMenu *actionsMenu = [[NSMenu alloc] initWithTitle:@"commandsmenu"];
+	PurpleConversation *conv = existingConvLookupFromChat(chat);
 
-	PurpleConversation* conversation;
-	conversation = existingConvLookupFromChat(chat);
+	GList *list = purple_cmd_list(conv);
+	GList *l;
 
-	GList *l, *ll;
+	for (l = list; l != NULL; l = l->next) {
+		const char  *cmdName = l->data;
 
-	for (l = ll = purple_cmd_list(conversation); l; l = l->next) {
-		NSString *name = [[NSString alloc] initWithUTF8String:(char*)l->data];
-		NSDictionary* associatedObjects = [[NSDictionary alloc] initWithObjects:[NSArray arrayWithObjects:chat,name,nil] forKeys:[NSArray arrayWithObjects:@"associatedChat",@"commandName",nil]];
-		
-		NSMenuItem* aCommand = [[NSMenuItem alloc] initWithTitle:name action:@selector(doCommand:)  keyEquivalent:@""];			
-		[aCommand setTarget:self];
-		[aCommand setRepresentedObject:associatedObjects];
-		
-		[actionsMenu addItem:aCommand];
-	
-		[aCommand release];
-		[name release];
+		GList		*cmdDescription = purple_cmd_help(conv, cmdName);
+		NSString	*name = [NSString stringWithUTF8String:cmdName];
+		NSString *menuTitle;
+		if (cmdDescription && cmdDescription->data)
+			menuTitle = [[AIHTMLDecoder decodeHTML:[NSString stringWithUTF8String:cmdDescription->data]] string];
+		else
+			menuTitle = name;
+
+		[actionsMenu addItemWithTitle:menuTitle
+							   target:self
+							   action:@selector(doCommand:)
+						keyEquivalent:@""
+					representedObject:[NSDictionary dictionaryWithObjectsAndKeys:
+									   chat, @"associatedChat",
+									   name, @"commandName",
+									   nil]];
 	} 
 
-	g_list_free(ll);
+	g_list_free(list);
 
-	return actionsMenu; 
+	return [actionsMenu autorelease]; 
 }
 
 -(void)doCommand:(id)sender
 {
-	[super verifyCommand:[sender title] forChat:[[sender representedObject] objectForKey:@"associatedChat"]];
+	NSDictionary *dict = [sender representedObject];
+	[self verifyCommand:[dict objectForKey:@"commandName"]
+				forChat:[dict objectForKey:@"associatedChat"]];
 }
+
 -(void)executeCommandWithParameters:(NSMutableDictionary*)parameters
 {
 	BOOL result = [purpleThread doCommand:[parameters objectForKey:@"totalCommandString"] fromAccount:[parameters objectForKey:@"account"] inChat:[parameters objectForKey:@"chat"]];
