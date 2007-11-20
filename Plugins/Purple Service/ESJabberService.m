@@ -28,8 +28,6 @@
 - (id)init
 {
 	if ((self = [super init])) {
-		jabber_register_commands();
-		
 		moodTooltip = [[AMPurpleJabberMoodTooltip alloc] init];
 		[[adium interfaceController] registerContactListTooltipEntry:moodTooltip secondaryEntry:YES];
 	}
