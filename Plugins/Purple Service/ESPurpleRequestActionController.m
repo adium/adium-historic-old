@@ -52,9 +52,11 @@
 		NSString			*title = nil, *message = nil;
 		NSString			*messageHeader = nil, *defaultButton = nil, *alternateButton = nil, *otherButton = nil;
 		unsigned			buttonNamesArrayCount;
-		
+
 		infoDict = [self translatedInfoDict:infoDict];
-		
+
+		theInfoDict = [infoDict retain];
+
 		title = [infoDict objectForKey:@"TitleString"];
 		
 		//Message or message header may be in HTML. If it's plain text, we'll just be getting an attributed string out of this.
@@ -109,7 +111,8 @@
 - (void)dealloc
 {
 	[requestController release]; requestController = nil;
-	
+	[theInfoDict release];
+
 	[super dealloc];
 }
 
@@ -163,6 +166,8 @@
 			 withUserDataValue:(NSValue *)userDataValue 
 				 callBackIndex:(NSNumber *)callBackIndexNumber
 {
+	AILogWithSignature(@"");
+
 	PurpleRequestActionCb callBack = [callBackValue pointerValue];
 	if (callBack) {
 		callBack([userDataValue pointerValue],[callBackIndexNumber intValue]);
@@ -176,6 +181,8 @@
  */
 - (void)purpleRequestClose
 {
+	AILogWithSignature(@"");
+
 	if (requestController) {
 		[[requestController window] orderOut:self];
 		[requestController close];
@@ -255,6 +262,11 @@
 					   forKey:@"Button Names"];
 
 	return [translatedDict autorelease];
+}
+
+- (NSString *)description
+{
+	return [NSString stringWithFormat:@"<%@: %@>",[super description], theInfoDict];
 }
 
 @end
