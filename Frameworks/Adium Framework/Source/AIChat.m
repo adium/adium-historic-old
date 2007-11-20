@@ -55,7 +55,6 @@ static int nextChatNumber = 0;
 - (id)initForAccount:(AIAccount *)inAccount
 {
     if ((self = [super init])) {
-	
 		name = nil;
 		account = [inAccount retain];
 		participatingListObjects = [[NSMutableArray alloc] init];
@@ -70,9 +69,8 @@ static int nextChatNumber = 0;
 		pendingOutgoingContentObjects = [[NSMutableArray alloc] init];
 
 		AILog(@"[AIChat: %x initForAccount]",self);
-}
-	
-	
+	}
+
     return self;
 }
 
@@ -91,8 +89,6 @@ static int nextChatNumber = 0;
 	[uniqueChatID release]; uniqueChatID = nil;
 	[customEmoticons release]; customEmoticons = nil;
 
-
-	
 	[super dealloc];
 }
 
@@ -155,6 +151,12 @@ static int nextChatNumber = 0;
 	[self setStatusObject:inDict
 				   forKey:@"ChatCreationInfo"
 				   notify:NotifyNever];
+}
+
+- (void)accountDidJoinChat
+{
+	[self willChangeValueForKey:@"actionMenu"];
+	[self didChangeValueForKey:@"actionMenu"];
 }
 
 //Date Opened
@@ -479,50 +481,6 @@ static int nextChatNumber = 0;
 	[self setStatusObject:nil forKey:KEY_UNVIEWED_CONTENT notify:NotifyNow];
 }
 
-//Applescript ----------------------------------------------------------------------------------------------------------
-#pragma mark Applescript
-/*!
- * @brief Applescript command to send a message in this chat
- */
-- (id)sendScriptCommand:(NSScriptCommand *)command {
-	NSDictionary	*evaluatedArguments = [command evaluatedArguments];
-	NSString		*message = [evaluatedArguments objectForKey:@"message"];
-	NSURL			*filePath = [evaluatedArguments objectForKey:@"withFile"];
-	
-	//Send any message we were told to send
-	if (message && [message length]) {
-		//Take the string and turn it into an attributed string (in case we were passed HTML)
-		NSAttributedString  *attributedMessage = [AIHTMLDecoder decodeHTML:message];
-		AIContentMessage	*messageContent;
-		messageContent = [AIContentMessage messageInChat:self
-											  withSource:[self account]
-											 destination:[self listObject]
-													date:nil
-												 message:attributedMessage
-											   autoreply:NO];
-		
-		[[adium contentController] sendContentObject:messageContent];
-	}
-	
-	//Send any file we were told to send to every participating list object (anyone remember the AOL mass mailing zareW scene?)
-	if (filePath && [[filePath absoluteString] length]) {
-		NSEnumerator	*enumerator = [[self containedObjects] objectEnumerator];
-		AIListContact	*listContact;
-		
-		while ((listContact = [enumerator nextObject])) {
-			AIListContact   *targetFileTransferContact;
-			
-			//Make sure we know where we are sending the file by finding the best contact for
-			//sending CONTENT_FILE_TRANSFER_TYPE.
-			targetFileTransferContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
-																					   forListContact:listContact];
-			[[adium fileTransferController] sendFile:[filePath absoluteString] toListContact:targetFileTransferContact];
-		}
-	}
-	
-	return nil;
-}
-
 #pragma mark AIContainingObject protocol
 //AIContainingObject protocol
 - (NSArray *)containedObjects
@@ -708,10 +666,13 @@ static int nextChatNumber = 0;
 }
 
 #pragma mark Room commands
--(NSMenu*)menuForChat
+- (NSMenu *)actionMenu
 {	
 	return [[self account] actionsForChat:self];
 }
+- (void)setActionMenu:(NSMenu *)inMenu {};
+
+#pragma mark Applescirpt
 
 - (NSScriptObjectSpecifier *)objectSpecifier
 {
@@ -788,6 +749,48 @@ static int nextChatNumber = 0;
 	return result;*/
 	[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
 	[[NSScriptCommand currentCommand] setScriptErrorString:@"Still unsupported."];
+	return nil;
+}
+
+/*!
+ * @brief Applescript command to send a message in this chat
+ */
+- (id)sendScriptCommand:(NSScriptCommand *)command {
+	NSDictionary	*evaluatedArguments = [command evaluatedArguments];
+	NSString		*message = [evaluatedArguments objectForKey:@"message"];
+	NSURL			*filePath = [evaluatedArguments objectForKey:@"withFile"];
+	
+	//Send any message we were told to send
+	if (message && [message length]) {
+		//Take the string and turn it into an attributed string (in case we were passed HTML)
+		NSAttributedString  *attributedMessage = [AIHTMLDecoder decodeHTML:message];
+		AIContentMessage	*messageContent;
+		messageContent = [AIContentMessage messageInChat:self
+											  withSource:[self account]
+											 destination:[self listObject]
+													date:nil
+												 message:attributedMessage
+											   autoreply:NO];
+		
+		[[adium contentController] sendContentObject:messageContent];
+	}
+	
+	//Send any file we were told to send to every participating list object (anyone remember the AOL mass mailing zareW scene?)
+	if (filePath && [[filePath absoluteString] length]) {
+		NSEnumerator	*enumerator = [[self containedObjects] objectEnumerator];
+		AIListContact	*listContact;
+		
+		while ((listContact = [enumerator nextObject])) {
+			AIListContact   *targetFileTransferContact;
+			
+			//Make sure we know where we are sending the file by finding the best contact for
+			//sending CONTENT_FILE_TRANSFER_TYPE.
+			targetFileTransferContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
+																				   forListContact:listContact];
+			[[adium fileTransferController] sendFile:[filePath absoluteString] toListContact:targetFileTransferContact];
+		}
+	}
+	
 	return nil;
 }
 
