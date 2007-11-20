@@ -34,12 +34,6 @@ typedef struct _MsnMessage MsnMessage;
 
 typedef void (*MsnMsgCb)(MsnMessage *, void *data);
 
-#define MSG_BODY_DEM	"\r\n\r\n"
-#define MSG_LINE_DEM	"\r\n"
-
-#define MSG_OIM_BODY_DEM	"\n\n"
-#define MSG_OIM_LINE_DEM	"\n"
-
 /*
 typedef enum
 {
@@ -186,8 +180,7 @@ MsnMessage *msn_message_new_from_cmd(MsnSession *session, MsnCommand *cmd);
  * @param payload_len The length of the payload.
  */
 void msn_message_parse_payload(MsnMessage *msg, const char *payload,
-							   size_t payload_len,
-						  const char *line_dem,const char *body_dem);
+							   size_t payload_len);
 
 /**
  * Destroys a message.

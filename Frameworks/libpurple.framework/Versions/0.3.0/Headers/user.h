@@ -31,27 +31,6 @@ typedef struct _MsnUser  MsnUser;
 
 #include "userlist.h"
 
-typedef enum
-{
-	MSN_USER_TYPE_UNKNOWN  = 0x00,
-	MSN_USER_TYPE_PASSPORT = 0x01,
-	MSN_USER_TYPE_UNKNOWN1 = 0x02,
-	MSN_USER_TYPE_MOBILE   = 0x04,
-	MSN_USER_TYPE_UNKNOWN2 = 0x08,
-	MSN_USER_TYPE_UNKNOWN3 = 0x10,
-	MSN_USER_TYPE_YAHOO    = 0x20
-} MsnUserType;
-
-/**
- * Current media.
- */
-typedef struct _CurrentMedia
-{
-	char *artist;   /**< Artist. */
-	char *album;    /**< Album.  */
-	char *title;    /**< Title.  */
-} CurrentMedia;
-
 /**
  * A user.
  */
@@ -63,15 +42,9 @@ struct _MsnUser
 	MsnUserList *userlist;
 
 	char *passport;         /**< The passport account.          */
-	char *store_name;       /**< The name stored in the server. */
 	char *friendly_name;    /**< The friendly name.             */
 
-	char * uid;				/*< User Id							*/
-
 	const char *status;     /**< The state of the user.         */
-	char *statusline;       /**< The state of the user.         */	
-	CurrentMedia media;     /**< Current media of the user.     */
-
 	gboolean idle;          /**< The idle state of the user.    */
 
 	struct
@@ -91,12 +64,7 @@ struct _MsnUser
 
 	GHashTable *clientcaps; /**< The client's capabilities.     */
 
-	MsnUserType type;       /**< The user type                  */
-
-	int list_op;            /**< Which lists the user is in     */
-
-	guint membership_id[5];	/**< The membershipId sent by the contacts server,
-				     indexed by the list it belongs to		*/
+	int list_op;
 };
 
 /**************************************************************************/
@@ -114,7 +82,7 @@ struct _MsnUser
  * @return A new user structure.
  */
 MsnUser *msn_user_new(MsnUserList *userlist, const char *passport,
-					  const char *store_name);
+					  const char *friendly_name);
 
 /**
  * Destroys a user structure.
@@ -132,22 +100,6 @@ void msn_user_destroy(MsnUser *user);
  * @param user The user to update.
  */
 void msn_user_update(MsnUser *user);
-
- /**
-  *  Sets the new statusline of user.
-  * 
-  *  @param user The user.
-  *  @param state The statusline string.
-  */
-void msn_user_set_statusline(MsnUser *user, const char *statusline);
-
- /**
-  *  Sets the current media of user.
-  * 
-  *  @param user   The user.
-  *  @param cmedia Current media.
-  */
-void msn_user_set_currentmedia(MsnUser *user, const CurrentMedia *cmedia);
 
 /**
  * Sets the new state of user.
@@ -174,14 +126,6 @@ void msn_user_set_passport(MsnUser *user, const char *passport);
 void msn_user_set_friendly_name(MsnUser *user, const char *name);
 
 /**
- * Sets the store name for a user.
- *
- * @param user The user.
- * @param name The store name.
- */
-void msn_user_set_store_name(MsnUser *user, const char *name);
-
-/**
  * Sets the buddy icon for a local user.
  *
  * @param user     The user.
@@ -203,7 +147,7 @@ void msn_user_set_group_ids(MsnUser *user, GList *ids);
  * @param user The user.
  * @param id   The group ID.
  */
-void msn_user_add_group_id(MsnUser *user, const char * id);
+void msn_user_add_group_id(MsnUser *user, int id);
 
 /**
  * Removes the group ID from a user.
@@ -211,7 +155,7 @@ void msn_user_add_group_id(MsnUser *user, const char * id);
  * @param user The user.
  * @param id   The group ID.
  */
-void msn_user_remove_group_id(MsnUser *user, const char * id);
+void msn_user_remove_group_id(MsnUser *user, int id);
 
 /**
  * Sets the home phone number for a user.
@@ -228,9 +172,6 @@ void msn_user_set_home_phone(MsnUser *user, const char *number);
  * @param number The work phone number.
  */
 void msn_user_set_work_phone(MsnUser *user, const char *number);
-
-void msn_user_set_uid(MsnUser *user, const char *uid);
-void msn_user_set_type(MsnUser *user, MsnUserType type);
 
 /**
  * Sets the mobile phone number for a user.
@@ -274,15 +215,6 @@ const char *msn_user_get_passport(const MsnUser *user);
  * @return The friendly name.
  */
 const char *msn_user_get_friendly_name(const MsnUser *user);
-
-/**
- * Returns the store name for a user.
- *
- * @param user The user.
- *
- * @return The store name.
- */
-const char *msn_user_get_store_name(const MsnUser *user);
 
 /**
  * Returns the home phone number for a user.
@@ -329,22 +261,6 @@ MsnObject *msn_user_get_object(const MsnUser *user);
  */
 GHashTable *msn_user_get_client_caps(const MsnUser *user);
 
-/**
- * check to see if user is online
- */
-gboolean
-msn_user_is_online(PurpleAccount *account, const char *name);
-
-/**
- * check to see if user is Yahoo User
- */
-gboolean
-msn_user_is_yahoo(PurpleAccount *account ,const char *name);
-
-void msn_user_set_op(MsnUser *user, int list_op);
-void msn_user_unset_op(MsnUser *user, int list_op);
-
 /*@}*/
-
 
 #endif /* _MSN_USER_H_ */
