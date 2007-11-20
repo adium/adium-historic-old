@@ -60,6 +60,14 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 #define TOGGLESHELF @"Toggle Shelf"
 @implementation KNShelfSplitView
 
++ (void)initialize
+{
+	if ((self == [KNShelfSplitView class])) {
+		[self exposeBinding:@"contextButtonMenu"];
+	}
+}
+
+
 -(IBAction)toggleShelf:(id)sender
 {
 	#pragma unused(sender)
@@ -107,6 +115,9 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	if( actionButtonImage ){ [actionButtonImage release]; }
 	if( shelfBackgroundColor ){ [shelfBackgroundColor release]; }
 	if( contextButtonMenu ){ [contextButtonMenu release]; }
+	
+	[self unbind:@"contextButtonMenu"];
+
 	[super dealloc];
 }
 
@@ -160,6 +171,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 			object: contextButtonMenu
 		];
 	}
+
 	[self recalculateSizes];
 }
 
