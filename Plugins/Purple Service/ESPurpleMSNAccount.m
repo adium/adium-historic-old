@@ -39,7 +39,9 @@
 #define SECONDS_BETWEEN_FRIENDLY_NAME_CHANGES	10
 #define	NEW_MSN									FALSE
 
-extern void msn_set_friendly_name(PurpleConnection *gc, const char *entry);
+#if !NEW_MSN
+	extern void msn_set_friendly_name(PurpleConnection *gc, const char *entry);
+#endif
 
 @interface ESPurpleMSNAccount (PRIVATE)
 - (void)updateFriendlyNameAfterConnect;
