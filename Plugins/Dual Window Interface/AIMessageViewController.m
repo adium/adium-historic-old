@@ -1141,21 +1141,23 @@
  * @brief	sets up shelfsplitview containing userlist & contentviews
  */
  -(void)setupShelfView
- {
+{
 	[shelfView setContentView:splitView_textEntryHorizontal];
 	[shelfView setShelfView:scrollView_userList];
 	[shelfView setShelfWidth:200];
 
-	 AILogWithSignature(@"ShelfView %@ --> superview %@, in window %@; frame %@; content view %@ shelf view %@ in window %@",
-						shelfView, [shelfView superview], [shelfView window], NSStringFromRect([[shelfView superview] frame]),
-						splitView_textEntryHorizontal,
-						scrollView_userList, [scrollView_userList window]);
-	 
-	 NSMenu *menu = [[self chat] menuForChat];
-	if([menu numberOfItems] > 0) {
-		[shelfView setContextButtonMenu:menu];
-		[shelfView setContextButtonImage:[NSImage imageNamed:@"sidebarActionWidget.png"]];
-	}
+	AILogWithSignature(@"ShelfView %@ --> superview %@, in window %@; frame %@; content view %@ shelf view %@ in window %@",
+					   shelfView, [shelfView superview], [shelfView window], NSStringFromRect([[shelfView superview] frame]),
+					   splitView_textEntryHorizontal,
+					   scrollView_userList, [scrollView_userList window]);
+
+	[shelfView bind:@"contextButtonMenu" toObject:[self chat] withKeyPath:@"actionMenu"
+			options:[NSDictionary dictionaryWithObjectsAndKeys:
+					 [NSNumber numberWithBool:YES], NSAllowsNullArgumentBindingOption,
+					 [NSNumber numberWithBool:YES], NSValidatesImmediatelyBindingOption,
+					 nil]];
+	[shelfView setContextButtonImage:[NSImage imageNamed:@"sidebarActionWidget.png"]];
+
 	[shelfView setShelfIsVisible:YES];
 }
 
