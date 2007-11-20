@@ -771,6 +771,9 @@
 			} else {
 				[menuItem setTitle:AILocalizedString(@"Ignore","Ignore means no longer receive messages from this contact in a chat")];
 			}
+		} else {
+			[menuItem setTitle:AILocalizedString(@"Ignore","Ignore means no longer receive messages from this contact in a chat")];
+			return NO;
 		}
 	}
 	
