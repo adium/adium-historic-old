@@ -31,6 +31,8 @@
 #define ADDRESS_BOOK_FIRST_MIDDLE_LAST_OPTION		AILocalizedString(@"First Middle Last", "Address Book Name display style, e.g. Evan Dreskin Schoenberg")
 #define ADDRESS_BOOK_LAST_FIRST_MIDDLE_OPTION		AILocalizedString(@"Last, First Middle", "Address Book Name display style, e.g. Schoenberg, Evan Dreskin")
 #define ADDRESS_BOOK_LAST_FIRST_MIDDLE_NO_COMMA_OPTION	AILocalizedString(@"Last First Middle", "Address Book Name display style, e.g. Schoenberg Evan Dreskin")
+#define ADDRESS_BOOK_FIRST_LAST_INITIAL				AILocalizedString(@"First Last-Initial", "Address Book Name display style, e.g. Evan S")
+#define ADDRESS_BOOK_FIRST_MIDDLE_LAST_INITIAL		AILocalizedString(@"First Middle Last-Initial", "Address Book Name display style, e.g. Evan Dreskin S")
 
 @interface ESAddressBookIntegrationAdvancedPreferences (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -146,7 +148,7 @@
 {
     NSMenu			*choicesMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
     NSMenuItem		*menuItem;
-	NSString		*firstTitle, *firstLastTitle, *lastFirstTitle, *lastFirstNoCommaTitle;
+	NSString		*firstTitle, *firstLastTitle, *lastFirstTitle, *lastFirstNoCommaTitle, *firstLastInitial;
 	
 	BOOL			useMiddleName = [[[adium preferenceController] preferenceForKey:KEY_AB_USE_MIDDLE
 																			  group:PREF_GROUP_ADDRESSBOOK] boolValue];
@@ -157,14 +159,15 @@
 		firstLastTitle = ADDRESS_BOOK_FIRST_MIDDLE_LAST_OPTION;
 		lastFirstTitle = ADDRESS_BOOK_LAST_FIRST_MIDDLE_OPTION;
 		lastFirstNoCommaTitle = ADDRESS_BOOK_LAST_FIRST_MIDDLE_NO_COMMA_OPTION;
-		
+		firstLastInitial = ADDRESS_BOOK_FIRST_MIDDLE_LAST_INITIAL;
+
 	//Otherwise we use the standard menu titles
 	} else {
 		firstTitle = ADDRESS_BOOK_FIRST_OPTION;
 		firstLastTitle = ADDRESS_BOOK_FIRST_LAST_OPTION;
 		lastFirstTitle = ADDRESS_BOOK_LAST_FIRST_OPTION;
 		lastFirstNoCommaTitle = ADDRESS_BOOK_LAST_FIRST_NO_COMMA_OPTION;
-		
+		firstLastInitial = ADDRESS_BOOK_FIRST_LAST_INITIAL;
 	}
 	
 	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:firstTitle
@@ -194,7 +197,14 @@
 															  keyEquivalent:@""] autorelease];
 	[menuItem setTag:LastFirstNoComma];
 	[choicesMenu addItem:menuItem];
-	
+
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:firstLastInitial
+																	 target:self
+																	 action:@selector(changeFormat:)
+															  keyEquivalent:@""] autorelease];
+	[menuItem setTag:FirstLastInitial];
+	[choicesMenu addItem:menuItem];
+
     [popUp_formatMenu setMenu:choicesMenu];
 	
     NSRect oldFrame = [popUp_formatMenu frame];
