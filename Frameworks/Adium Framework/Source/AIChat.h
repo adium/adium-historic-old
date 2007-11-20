@@ -115,6 +115,7 @@ typedef enum {
 
 - (AIAccount *)account;
 - (void)setAccount:(AIAccount *)inAccount;
+- (void)accountDidJoinChat;
 
 - (NSDate *)dateOpened;
 - (NSDictionary *)chatCreationDictionary;
@@ -175,5 +176,6 @@ typedef enum {
 
 - (NSWindow *)window;
 
-- (NSMenu*)menuForChat;
+- (NSMenu *)actionMenu;
+
 @end
