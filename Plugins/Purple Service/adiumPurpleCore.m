@@ -60,18 +60,6 @@ PurpleDebugUiOps *adium_purple_debug_get_ui_ops(void)
 extern gboolean purple_init_ssl_plugin(void);
 extern gboolean purple_init_ssl_openssl_plugin(void);
 extern gboolean purple_init_ssl_cdsa_plugin(void);
-extern gboolean purple_init_gg_plugin(void);
-extern gboolean purple_init_jabber_plugin(void);
-extern gboolean purple_init_sametime_plugin(void);
-extern gboolean purple_init_msn_plugin(void);
-extern gboolean purple_init_myspace_plugin(void);
-extern gboolean purple_init_novell_plugin(void);
-extern gboolean purple_init_qq_plugin(void);
-extern gboolean purple_init_simple_plugin(void);
-extern gboolean purple_init_yahoo_plugin(void);
-extern gboolean purple_init_zephyr_plugin(void);
-extern gboolean purple_init_aim_plugin(void);
-extern gboolean purple_init_icq_plugin(void);
 
 static void init_all_plugins()
 {
@@ -148,7 +136,7 @@ static void adiumPurpleCoreDebugInit(void)
     purple_debug_set_ui_ops(adium_purple_debug_get_ui_ops());
 #endif
 	
-	//Initialize all plugins. This could be done in STATIC_PROTO_INIT in libpurple's config.h at build time, but doing it here allows easier changes.
+	//Initialize all external plugins.
 	init_all_plugins();
 }
 
