@@ -80,7 +80,7 @@
 - (void)_configureUserList;
 - (void)_updateUserListViewWidth;
 - (int)_userListViewProperWidthIgnoringUserMininum:(BOOL)ignoreUserMininum;
-- (void)_updateAccountSelectionViewHeight;
+- (void)updateFramesForAccountSelectionView;
 - (void)saveUserListMinimumSize;
 @end
 
@@ -558,7 +558,7 @@
  */
 - (void)accountSelectionViewFrameDidChange:(NSNotification *)notification
 {
-	[self _updateAccountSelectionViewHeight];
+	[self updateFramesForAccountSelectionView];
 }
 
 /*!
@@ -601,7 +601,7 @@
 		[self updateGradientColors];
 		
 		//Insert the account selection view at the top of our view
-		[view_contents addSubview:view_accountSelection];
+		[[shelfView contentView] addSubview:view_accountSelection];
 		[view_accountSelection setChat:chat];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self
@@ -609,10 +609,10 @@
 													 name:AIViewFrameDidChangeNotification
 												   object:view_accountSelection];
 		
-		[self _updateAccountSelectionViewHeight];
+		[self updateFramesForAccountSelectionView];
 			
 		//Redisplay everything
-		[view_contents setNeedsDisplay:YES];
+		[[shelfView contentView] setNeedsDisplay:YES];
 	}
 }
 
@@ -632,24 +632,26 @@
 		[view_accountSelection release]; view_accountSelection = nil;
 
 		//Redisplay everything
-		[self _updateAccountSelectionViewHeight];
+		[self updateFramesForAccountSelectionView];
 	}
 }
 
 /*!
- * @brief 
+ * @brief Position the account selection view, if it is present, and the messages/text entry splitview appropriately
  */
-- (void)_updateAccountSelectionViewHeight
+- (void)updateFramesForAccountSelectionView
 {
-	int		contentsHeight = [view_contents frame].size.height;
+	int		contentsHeight = [[shelfView contentView] frame].size.height;
 	int 	accountSelectionHeight = (view_accountSelection ? [view_accountSelection frame].size.height : 0);
-	
+	int		intersectionPoint = ([[shelfView contentView] isFlipped] ? accountSelectionHeight : (contentsHeight - accountSelectionHeight));
+
 	if (view_accountSelection) {
-		[view_accountSelection setFrameOrigin:NSMakePoint([view_accountSelection frame].origin.x, 
-														  contentsHeight - accountSelectionHeight)];
+		[view_accountSelection setFrameOrigin:NSMakePoint(NSMinX([view_accountSelection frame]), intersectionPoint)];
+		[view_accountSelection setNeedsDisplay:YES];
 	}
-	[splitView_textEntryHorizontal setFrameSize:NSMakeSize([splitView_textEntryHorizontal frame].size.width,
-														   contentsHeight - accountSelectionHeight)];
+
+	[splitView_textEntryHorizontal setFrameSize:NSMakeSize(NSWidth([splitView_textEntryHorizontal frame]), intersectionPoint)];
+	[splitView_textEntryHorizontal setNeedsDisplay:YES];
 }	
 
 
@@ -1142,12 +1144,10 @@
  */
  -(void)setupShelfView
 {
-	[shelfView setContentView:splitView_textEntryHorizontal];
-	[shelfView setShelfView:scrollView_userList];
 	[shelfView setShelfWidth:200];
 
-	AILogWithSignature(@"ShelfView %@ --> superview %@, in window %@; frame %@; content view %@ shelf view %@ in window %@",
-					   shelfView, [shelfView superview], [shelfView window], NSStringFromRect([[shelfView superview] frame]),
+	AILogWithSignature(@"ShelfView %@ (content view is %@) --> superview %@, in window %@; frame %@; content view %@ shelf view %@ in window %@",
+					   shelfView, [shelfView contentView], [shelfView superview], [shelfView window], NSStringFromRect([[shelfView superview] frame]),
 					   splitView_textEntryHorizontal,
 					   scrollView_userList, [scrollView_userList window]);
 
