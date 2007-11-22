@@ -1,0 +1,104 @@
+#
+# old_revision [cc8513f94aa94550d600cd8a5d42475dbf7249c0]
+#
+# patch "libpurple/protocols/jabber/auth.c"
+#  from [12caf62ded6c3314a811a59f8730fc801420cd8c]
+#    to [cbe7870dfd5c94b200be130d18d5f4e23b36f53d]
+# 
+# patch "libpurple/protocols/jabber/libxmpp.c"
+#  from [e90c78b600e55ee816eae95ffc4c0fd69fdd785b]
+#    to [589db9e206bb677d6252063048d96aafa79e7347]
+#
+============================================================
+--- libpurple/protocols/jabber/auth.c	12caf62ded6c3314a811a59f8730fc801420cd8c
++++ libpurple/protocols/jabber/auth.c	cbe7870dfd5c94b200be130d18d5f4e23b36f53d
+@@ -452,9 +452,11 @@ jabber_auth_start(JabberStream *js, xmln
+ void
+ jabber_auth_start(JabberStream *js, xmlnode *packet)
+ {
+-#ifndef HAVE_CYRUS_SASL
++	/* Adium changes: If the avoid_sasl_for_plain_and_digest_md5_auth pref is TRUE, use built-in digest-md5 and plain if possible.
++	 * This is a workaround since PLAIN is broken on Mac OS X 10.4's sasl installation; digest-md5 is retained to minimize the delta versus
++	 * im.pidgin.pidgin. This block of code now *depends upon* compiling with --enable-cyrus, as #ifdef HAVE_CYRUS_SASL has been removed.
++	 */
+ 	gboolean digest_md5 = FALSE, plain=FALSE;
+-#endif
+ 
+ 	xmlnode *mechs, *mechnode;
+ 
+@@ -473,34 +475,33 @@ jabber_auth_start(JabberStream *js, xmln
+ 		return;
+ 	}
+ 
+-#ifdef HAVE_CYRUS_SASL
+ 	js->sasl_mechs = g_string_new("");
+-#endif
+ 
+ 	for(mechnode = xmlnode_get_child(mechs, "mechanism"); mechnode;
+ 			mechnode = xmlnode_get_next_twin(mechnode))
+ 	{
+ 		char *mech_name = xmlnode_get_data(mechnode);
+-#ifdef HAVE_CYRUS_SASL
++
+ 		g_string_append(js->sasl_mechs, mech_name);
+ 		g_string_append_c(js->sasl_mechs, ' ');
+-#else
++
+ 		if(mech_name && !strcmp(mech_name, "DIGEST-MD5"))
+ 			digest_md5 = TRUE;
+ 		else if(mech_name && !strcmp(mech_name, "PLAIN"))
+ 			plain = TRUE;
+-#endif
+ 		g_free(mech_name);
+ 	}
+ 
+-#ifdef HAVE_CYRUS_SASL
++if (!purple_prefs_get_bool("/plugins/prpl/jabber/avoid_sasl_for_plain_and_digest_md5_auth"))
++{
+ 	js->auth_type = JABBER_AUTH_CYRUS;
+ 
+ 	jabber_sasl_build_callbacks(js);
+ 
+ 	jabber_auth_start_cyrus(js);
+-#else
+-
++}
++else
++{
+ 	if(digest_md5) {
+ 		xmlnode *auth;
+ 
+@@ -529,12 +530,15 @@ jabber_auth_start(JabberStream *js, xmln
+ 		}
+ 		finish_plaintext_authentication(js);
+ 	} else {
+-		purple_connection_error_reason (js->gc,
+-				PURPLE_CONNECTION_ERROR_AUTHENTICATION_IMPOSSIBLE,
+-				_("Server does not use any supported authentication method"));
++		/* digest_md5 and plain are not options; proceed to attempt cyrus-sasl */
++		js->auth_type = JABBER_AUTH_CYRUS;
++	
++		jabber_sasl_build_callbacks(js);
++	
++		jabber_auth_start_cyrus(js);
+ 	}
+-#endif
+ }
++}
+ 
+ static void auth_old_result_cb(JabberStream *js, xmlnode *packet, gpointer data)
+ {
+============================================================
+--- libpurple/protocols/jabber/libxmpp.c	e90c78b600e55ee816eae95ffc4c0fd69fdd785b
++++ libpurple/protocols/jabber/libxmpp.c	589db9e206bb677d6252063048d96aafa79e7347
+@@ -256,6 +256,10 @@ init_plugin(PurplePlugin *plugin)
+ 	if ((ret = sasl_client_init(NULL)) != SASL_OK) {
+ 		purple_debug_error("xmpp", "Error (%d) initializing SASL.\n", ret);
+ 	}
++	
++	/* Adium hack for Mac OS X 10.4 support */
++	purple_prefs_add_none("/plugins/prpl/jabber");
++	purple_prefs_add_bool("/plugins/prpl/jabber/avoid_sasl_for_plain_and_digest_md5_auth", FALSE);
+ #endif
+ 	jabber_register_commands();
+ 	

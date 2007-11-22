@@ -38,7 +38,9 @@ ln -s /usr/bin/glibtoolize $TARGET_DIR_I386/bin/libtoolize
 # support. This is OK because OpenSSL is part of the base system on OS X.
 
 pushd $PIDGIN_SOURCE
+#  "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff"
 for patch in "$PATCHDIR/libpurple_sasl_hack.diff" \
+ "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
              "$PATCHDIR/libpurple_myspace_hack.diff" ; do
     echo "Applying $patch"
 	cat $patch | patch --forward -p0
