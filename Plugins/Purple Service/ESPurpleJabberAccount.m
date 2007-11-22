@@ -26,6 +26,8 @@
 #import <Adium/AIStatus.h>
 #import <Adium/ESFileTransfer.h>
 #import <Adium/ESTextAndButtonsWindowController.h>
+#import <Adium/AIService.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #include <libpurple/presence.h>
 #include <libpurple/si.h>
@@ -35,15 +37,12 @@
 #import "ESPurpleJabberAccountViewController.h"
 #import "AMPurpleJabberAdHocServer.h"
 #import "AMPurpleJabberAdHocPing.h"
-#import <Adium/AIService.h>
 
 #ifdef HAVE_CDSA
 #import "AIPurpleCertificateViewer.h"
 #endif
 
 #define DEFAULT_JABBER_HOST @"@jabber.org"
-
-extern void jabber_roster_request(JabberStream *js);
 
 @interface ESPurpleJabberAccount (PRIVATE)
 - (BOOL)enableXMLConsole;
@@ -153,6 +152,14 @@ extern void jabber_roster_request(JabberStream *js);
 	//Allow plaintext authorization over an unencrypted connection? Purple will prompt if this is NO and is needed.
 	allowPlaintext = [[self preferenceForKey:KEY_JABBER_ALLOW_PLAINTEXT group:GROUP_ACCOUNT_STATUS] boolValue];
 	purple_account_set_bool(account, "auth_plain_in_clear", allowPlaintext);
+	
+	/* Mac OS X 10.4's cyrus-sasl gives us problems.  Is it a bug in the installed library, a bug in its compilation, or a bug
+	 * in our linkage against it? I don't know. In any case, work around it as much as possible by utilizing libpurple's own implementation
+	 * of PLAIN and DIGEST-MD5 on 10.4. We can safely use cyrus-sasl in all its authenticating awesomeness for all methods on 10.5. -evands
+	 *
+	 * This preference is added via the "libpurple_jabber_avoid_sasl_option_hack.diff" patch we apply during the build process.
+	 */
+	purple_prefs_set_bool("/plugins/prpl/jabber/avoid_sasl_for_plain_and_digest_md5_auth", [NSApp isTiger]);
 }
 
 - (NSString *)serverSuffix
@@ -780,6 +787,7 @@ extern void jabber_roster_request(JabberStream *js);
 #endif
 
 - (NSArray *)accountActionMenuItems {
+	AILog(@"Getting accountActionMenuItems for %@",self);
 	NSMutableArray *menu = [[NSMutableArray alloc] init];
 	
 	if([gateways count] > 0) {
