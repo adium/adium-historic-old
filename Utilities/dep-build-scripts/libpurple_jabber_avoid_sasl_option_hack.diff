@@ -3,7 +3,7 @@
 #
 # patch "libpurple/protocols/jabber/auth.c"
 #  from [12caf62ded6c3314a811a59f8730fc801420cd8c]
-#    to [cbe7870dfd5c94b200be130d18d5f4e23b36f53d]
+#    to [20fd03058edccd5427281a791af4d4a70cc70f4e]
 # 
 # patch "libpurple/protocols/jabber/libxmpp.c"
 #  from [e90c78b600e55ee816eae95ffc4c0fd69fdd785b]
@@ -11,7 +11,7 @@
 #
 ============================================================
 --- libpurple/protocols/jabber/auth.c	12caf62ded6c3314a811a59f8730fc801420cd8c
-+++ libpurple/protocols/jabber/auth.c	cbe7870dfd5c94b200be130d18d5f4e23b36f53d
++++ libpurple/protocols/jabber/auth.c	20fd03058edccd5427281a791af4d4a70cc70f4e
 @@ -452,9 +452,11 @@ jabber_auth_start(JabberStream *js, xmln
  void
  jabber_auth_start(JabberStream *js, xmlnode *packet)
@@ -26,7 +26,7 @@
  
  	xmlnode *mechs, *mechnode;
  
-@@ -473,34 +475,33 @@ jabber_auth_start(JabberStream *js, xmln
+@@ -473,46 +475,49 @@ jabber_auth_start(JabberStream *js, xmln
  		return;
  	}
  
@@ -61,15 +61,34 @@
  
  	jabber_auth_start_cyrus(js);
 -#else
--
 +}
 +else
 +{
++	purple_debug_info("jabber", "avoiding sasl for plain/digest md5");
+ 
  	if(digest_md5) {
  		xmlnode *auth;
  
-@@ -529,12 +530,15 @@ jabber_auth_start(JabberStream *js, xmln
+ 		js->auth_type = JABBER_AUTH_DIGEST_MD5;
++		js->sasl_state = SASL_OK;
+ 		auth = xmlnode_new("auth");
+ 		xmlnode_set_namespace(auth, "urn:ietf:params:xml:ns:xmpp-sasl");
+ 		xmlnode_set_attrib(auth, "mechanism", "DIGEST-MD5");
+-
++		
+ 		jabber_send(js, auth);
+ 		xmlnode_free(auth);
+ 	} else if(plain) {
+ 		js->auth_type = JABBER_AUTH_PLAIN;
++		js->sasl_state = SASL_OK;
+ 
+ 		if(js->gsc == NULL && !purple_account_get_bool(js->gc->account, "auth_plain_in_clear", FALSE)) {
+ 			char *msg = g_strdup_printf(_("%s requires plaintext authentication over an unencrypted connection.  Allow this and continue authentication?"),
+@@ -527,14 +532,18 @@ jabber_auth_start(JabberStream *js, xmln
+ 			g_free(msg);
+ 			return;
  		}
++
  		finish_plaintext_authentication(js);
  	} else {
 -		purple_connection_error_reason (js->gc,
