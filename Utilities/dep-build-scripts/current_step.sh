@@ -80,6 +80,7 @@ for ARCH in ppc i386 ; do
 	export GADU_LIBS="-lgadu"
 	export MEANWHILE_CFLAGS="-I$TARGET_DIR/include/meanwhile -I$TARGET_DIR/include/glib-2.0 -I$TARGET_DIR/lib/glib-2.0/include"
 	export MEANWHILE_LIBS="-lmeanwhile -lglib-2.0 -liconv"
+	#            --enable-cyrus-sasl \
 	$PIDGIN_SOURCE/configure \
 	        --disable-gtkui --disable-consoleui \
             --disable-perl \
@@ -88,7 +89,6 @@ for ARCH in ppc i386 ; do
             --disable-dependency-tracking \
             --enable-krb4 \
             --prefix=$TARGET_DIR \
-            --enable-cyrus-sasl \
             --with-static-prpls="$PROTOCOLS" --disable-plugins \
             --host=$HOST \
             --enable-gnutls=no --enable-nss=no --enable-openssl=no $@
