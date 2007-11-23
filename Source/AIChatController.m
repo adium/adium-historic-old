@@ -63,6 +63,11 @@
 									   name:CONTENT_MESSAGE_RECEIVED
 									 object:nil];
 	
+    [[adium notificationCenter] addObserver:self 
+								   selector:@selector(didExchangeContent:) 
+									   name:CONTENT_MESSAGE_RECEIVED_GROUP
+									 object:nil];
+	
 	[[adium notificationCenter] addObserver:self 
 								   selector:@selector(didExchangeContent:) 
 									   name:CONTENT_MESSAGE_SENT
