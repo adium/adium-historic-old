@@ -1051,7 +1051,19 @@
  */
 - (void)didConnect
 {
-    //We are now online
+	//Display a status message in all open chats for this account.
+	AIChat			*chat = nil;
+	NSEnumerator	*enumerator = [[[adium interfaceController] openChats] objectEnumerator];
+	
+	while ((chat = [enumerator nextObject])) {
+		if ([chat account] == self && [chat isOpen]) {
+			[[adium contentController] displayEvent:AILocalizedString(@"You have connected","Displayed in an open chat when its account has been connected")
+											 ofType:@"connected"
+											 inChat:chat];
+		}
+	}
+    
+	//We are now online
     [self setStatusObject:nil forKey:@"Connecting" notify:NotifyLater];
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NotifyLater];
 	[self setStatusObject:nil forKey:@"ConnectionProgressString" notify:NotifyLater];
@@ -1063,7 +1075,7 @@
 	
     //Reset reconnection attempts
     reconnectAttemptsPerformed = 0;
-
+	
 	//Update our status and idle status to ensure our newly connected account is in the states we want it to be
 	if ([[self statusState] statusType] == AIOfflineStatusType) {
 		/* If our account thinks it's still in an offline status, that means it went offline previously via an offline status.
@@ -1178,9 +1190,23 @@
  */
 - (void)didDisconnect
 {
+	//If we were online, display a status message in all of our open chats noting our disconnection
+	if ([[self statusObjectForKey:@"Online"] boolValue]) {
+		AIChat			*chat = nil;
+		NSEnumerator	*enumerator = [[[adium interfaceController] openChats] objectEnumerator];
+		
+		while ((chat = [enumerator nextObject])) {
+			if ([chat account] == self && [chat isOpen]) {
+				[[adium contentController] displayEvent:AILocalizedString(@"You have disconnected","Displayed in an open chat when its account has been disconnected.")
+												 ofType:@"disconnected"
+												 inChat:chat];
+			}
+		}
+	}
+	
 	//Remove all contacts
 	[self removeAllContacts];
-	
+
 	//We are now offline
     [self setStatusObject:nil forKey:@"Disconnecting" notify:NotifyLater];
     [self setStatusObject:nil forKey:@"Connecting" notify:NotifyLater];
@@ -1197,6 +1223,9 @@
 		// If we know this connection is waiting for the network to return, don't bother continuing to reconnect.
 		// Let it try for 2 times and then cancel and wait for the network to return.
 		[self cancelAutoReconnect];
+
+		AILog(@"%@: Disconnected (\"%@\"): Waiting until network returns.", self, lastDisconnectionError);
+
 	} else if ([self shouldBeOnline] && lastDisconnectionError) {
 		AIReconnectDelayType shouldReconnect = [self shouldAttemptReconnectAfterDisconnectionError:&lastDisconnectionError];
 		if (shouldReconnect == AIReconnectNormally) {
