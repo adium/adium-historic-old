@@ -826,7 +826,7 @@
 	if ([chat isGroupChat]) {
 		[adiumChatEvents chat:chat removedListContact:inContact];
 		
-		[[adium contentController] displayEvent:[NSString stringWithFormat:AILocalizedString(@"%@ left the chat.",nil),[inContact displayName]]
+		[[adium contentController] displayEvent:[NSString stringWithFormat:AILocalizedString(@"%@ left the chat",nil),[inContact displayName]]
 										 ofType:@"contact_left"
 										 inChat:chat];		
 	}
