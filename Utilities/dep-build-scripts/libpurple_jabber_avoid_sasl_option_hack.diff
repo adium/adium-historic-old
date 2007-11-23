@@ -1,17 +1,37 @@
 #
 # old_revision [cc8513f94aa94550d600cd8a5d42475dbf7249c0]
 #
+# patch "libpurple/Makefile.am"
+#  from [2112ccec7c2eda63afa57cf4f0c7bbff8347dc42]
+#    to [aab882736bf9035cd4f5394c48a171b8f2b1475e]
+# 
 # patch "libpurple/protocols/jabber/auth.c"
 #  from [12caf62ded6c3314a811a59f8730fc801420cd8c]
-#    to [20fd03058edccd5427281a791af4d4a70cc70f4e]
+#    to [1f4804cf7f182a201a16343a14fe6c56b9a476d5]
 # 
 # patch "libpurple/protocols/jabber/libxmpp.c"
 #  from [e90c78b600e55ee816eae95ffc4c0fd69fdd785b]
 #    to [589db9e206bb677d6252063048d96aafa79e7347]
+# 
+# patch "libpurple/protocols/myspace/myspace.h"
+#  from [3ff7642b4fa1325f420abb169ac45be9d51bdef5]
+#    to [e2dde079de3df378e3bdb2aa3e91921788d7862f]
 #
 ============================================================
+--- libpurple/Makefile.am	2112ccec7c2eda63afa57cf4f0c7bbff8347dc42
++++ libpurple/Makefile.am	aab882736bf9035cd4f5394c48a171b8f2b1475e
+@@ -237,6 +237,8 @@ libpurple_la_LIBADD = \
+ 	$(LIBXML_LIBS) \
+ 	$(LIBNM_LIBS) \
+ 	$(INTLLIBS) \
++	$(SASL_LIBS) \
++	$(MEANWHILE_LIBS) \
+ 	-lm
+ 
+ AM_CPPFLAGS = \
+============================================================
 --- libpurple/protocols/jabber/auth.c	12caf62ded6c3314a811a59f8730fc801420cd8c
-+++ libpurple/protocols/jabber/auth.c	20fd03058edccd5427281a791af4d4a70cc70f4e
++++ libpurple/protocols/jabber/auth.c	1f4804cf7f182a201a16343a14fe6c56b9a476d5
 @@ -452,9 +452,11 @@ jabber_auth_start(JabberStream *js, xmln
  void
  jabber_auth_start(JabberStream *js, xmlnode *packet)
@@ -19,14 +39,14 @@
 -#ifndef HAVE_CYRUS_SASL
 +	/* Adium changes: If the avoid_sasl_for_plain_and_digest_md5_auth pref is TRUE, use built-in digest-md5 and plain if possible.
 +	 * This is a workaround since PLAIN is broken on Mac OS X 10.4's sasl installation; digest-md5 is retained to minimize the delta versus
-+	 * im.pidgin.pidgin. This block of code now *depends upon* compiling with --enable-cyrus, as #ifdef HAVE_CYRUS_SASL has been removed.
++	 * im.pidgin.pidgin.
 +	 */
  	gboolean digest_md5 = FALSE, plain=FALSE;
 -#endif
  
  	xmlnode *mechs, *mechnode;
  
-@@ -473,46 +475,49 @@ jabber_auth_start(JabberStream *js, xmln
+@@ -473,47 +475,57 @@ jabber_auth_start(JabberStream *js, xmln
  		return;
  	}
  
@@ -52,9 +72,11 @@
  		g_free(mech_name);
  	}
  
--#ifdef HAVE_CYRUS_SASL
+ #ifdef HAVE_CYRUS_SASL
 +if (!purple_prefs_get_bool("/plugins/prpl/jabber/avoid_sasl_for_plain_and_digest_md5_auth"))
 +{
++	purple_debug_info("jabber", "using sasl");
++
  	js->auth_type = JABBER_AUTH_CYRUS;
  
  	jabber_sasl_build_callbacks(js);
@@ -63,6 +85,7 @@
 -#else
 +}
 +else
++#endif
 +{
 +	purple_debug_info("jabber", "avoiding sasl for plain/digest md5");
  
@@ -70,7 +93,9 @@
  		xmlnode *auth;
  
  		js->auth_type = JABBER_AUTH_DIGEST_MD5;
++#ifdef HAVE_CYRUS_SASL
 +		js->sasl_state = SASL_OK;
++#endif
  		auth = xmlnode_new("auth");
  		xmlnode_set_namespace(auth, "urn:ietf:params:xml:ns:xmpp-sasl");
  		xmlnode_set_attrib(auth, "mechanism", "DIGEST-MD5");
@@ -80,26 +105,37 @@
  		xmlnode_free(auth);
  	} else if(plain) {
  		js->auth_type = JABBER_AUTH_PLAIN;
+-
++#ifdef HAVE_CYRUS_SASL
 +		js->sasl_state = SASL_OK;
- 
++#endif
  		if(js->gsc == NULL && !purple_account_get_bool(js->gc->account, "auth_plain_in_clear", FALSE)) {
  			char *msg = g_strdup_printf(_("%s requires plaintext authentication over an unencrypted connection.  Allow this and continue authentication?"),
-@@ -527,14 +532,18 @@ jabber_auth_start(JabberStream *js, xmln
+ 					js->gc->account->username);
+@@ -527,14 +539,27 @@ jabber_auth_start(JabberStream *js, xmln
  			g_free(msg);
  			return;
  		}
 +
  		finish_plaintext_authentication(js);
  	} else {
--		purple_connection_error_reason (js->gc,
--				PURPLE_CONNECTION_ERROR_AUTHENTICATION_IMPOSSIBLE,
--				_("Server does not use any supported authentication method"));
++#ifdef HAVE_CYRUS_SASL
 +		/* digest_md5 and plain are not options; proceed to attempt cyrus-sasl */
++		purple_debug_info("jabber", "using sasl even though we were avoiding it because no DIGEST_MD5 or PLAIN for this server");
++
 +		js->auth_type = JABBER_AUTH_CYRUS;
 +	
 +		jabber_sasl_build_callbacks(js);
 +	
 +		jabber_auth_start_cyrus(js);
++#else
+ 		purple_connection_error_reason (js->gc,
+-				PURPLE_CONNECTION_ERROR_AUTHENTICATION_IMPOSSIBLE,
+-				_("Server does not use any supported authentication method"));
++										PURPLE_CONNECTION_ERROR_AUTHENTICATION_IMPOSSIBLE,
++										_("Server does not use any supported authentication method"));
++		
++#endif
  	}
 -#endif
  }
@@ -121,3 +157,15 @@
  #endif
  	jabber_register_commands();
  	
+============================================================
+--- libpurple/protocols/myspace/myspace.h	3ff7642b4fa1325f420abb169ac45be9d51bdef5
++++ libpurple/protocols/myspace/myspace.h	e2dde079de3df378e3bdb2aa3e91921788d7862f
+@@ -41,7 +41,7 @@
+ #include "notify.h"
+ #include "plugin.h"
+ #include "accountopt.h"
+-#include "version.h"
++#include "libpurple/version.h"
+ #include "cipher.h"     /* for SHA-1 */
+ #include "util.h"       /* for base64 */
+ #include "debug.h"      /* for purple_debug_info */
