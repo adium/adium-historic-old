@@ -579,9 +579,9 @@
 		34A9707A0C96600700F46006 /* ChatPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A970790C96600700F46006 /* ChatPrompt.nib */; };
 		34A9707C0C96601000F46006 /* BanPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A9707B0C96601000F46006 /* BanPrompt.nib */; };
 		34A9707E0C96602300F46006 /* sidebarStatusAreaBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = 34A9707D0C96602200F46006 /* sidebarStatusAreaBackground.png */; };
-		34AB43020CEFDAF300F76493 /* msn-adium.h in Headers */ = {isa = PBXBuildFile; fileRef = 34AB43000CEFDAF300F76493 /* msn-adium.h */; };
-		34AB43030CEFDAF300F76493 /* msn-adium.c in Sources */ = {isa = PBXBuildFile; fileRef = 34AB43010CEFDAF300F76493 /* msn-adium.c */; };
 		34AE249E09BCCFA900A35B51 /* AIWindowDraggingView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AE249C09BCCFA900A35B51 /* AIWindowDraggingView.m */; };
+		34B08C590CF2130700A6190C /* msn-adium.h in Headers */ = {isa = PBXBuildFile; fileRef = 34AB43000CEFDAF300F76493 /* msn-adium.h */; };
+		34B08C5A0CF2130700A6190C /* msn-adium.c in Sources */ = {isa = PBXBuildFile; fileRef = 34AB43010CEFDAF300F76493 /* msn-adium.c */; };
 		34B1268E0B924E28003B0451 /* adiumPurpleDnsRequest.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B1268C0B924E28003B0451 /* adiumPurpleDnsRequest.h */; };
 		34B1268F0B924E28003B0451 /* adiumPurpleDnsRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B1268D0B924E28003B0451 /* adiumPurpleDnsRequest.m */; };
 		34B323B809B9FEAC00029361 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
@@ -1007,6 +1007,7 @@
 		34F5207E0CC6F821008D9135 /* PurpleQQAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34F5207D0CC6F821008D9135 /* PurpleQQAccountView.nib */; };
 		34F849530A4AEFA00002A017 /* LogFileUpgrade.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34F849520A4AEFA00002A017 /* LogFileUpgrade.nib */; };
 		34F849590A4AF04D0002A017 /* AILogFileUpgradeWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */; };
+		34F8D2AE0CF68FEB00F62536 /* AIUserListOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F8D2AD0CF68FEB00F62536 /* AIUserListOutlineView.m */; };
 		34FA28110C820C3A00FEA944 /* AIPreviewContentMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FA28100C820C3A00FEA944 /* AIPreviewContentMessage.m */; };
 		377EC8940AE9525B00CB7BDF /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377EC8930AE9525B00CB7BDF /* PSMTabBarControl.framework */; };
 		377ED0220AE95D7D00CB7BDF /* PSMTabBarControl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 377EC8930AE9525B00CB7BDF /* PSMTabBarControl.framework */; };
@@ -3308,6 +3309,8 @@
 		34F849520A4AEFA00002A017 /* LogFileUpgrade.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = LogFileUpgrade.nib; path = Resources/LogFileUpgrade.nib; sourceTree = "<group>"; };
 		34F849560A4AF04D0002A017 /* AILogFileUpgradeWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILogFileUpgradeWindowController.h; path = Source/AILogFileUpgradeWindowController.h; sourceTree = "<group>"; };
 		34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILogFileUpgradeWindowController.m; path = Source/AILogFileUpgradeWindowController.m; sourceTree = "<group>"; };
+		34F8D2AC0CF68FEB00F62536 /* AIUserListOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIUserListOutlineView.h; path = Source/AIUserListOutlineView.h; sourceTree = "<group>"; };
+		34F8D2AD0CF68FEB00F62536 /* AIUserListOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIUserListOutlineView.m; path = Source/AIUserListOutlineView.m; sourceTree = "<group>"; };
 		34FA280F0C820C3A00FEA944 /* AIPreviewContentMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIPreviewContentMessage.h; path = "Plugins/WebKit Message View/AIPreviewContentMessage.h"; sourceTree = "<group>"; };
 		34FA28100C820C3A00FEA944 /* AIPreviewContentMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIPreviewContentMessage.m; path = "Plugins/WebKit Message View/AIPreviewContentMessage.m"; sourceTree = "<group>"; };
 		34FB54DD05FEC73A00F0D7D7 /* ESWebFrameViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESWebFrameViewAdditions.m; path = "Plugins/WebKit Message View/ESWebFrameViewAdditions.m"; sourceTree = "<group>"; };
@@ -7242,6 +7245,8 @@
 				346371060BCA0A5400AD57AD /* AIMessageTabSplitView.m */,
 				34A970580C965F2400F46006 /* AISideSplitView.h */,
 				34A970590C965F2400F46006 /* AISideSplitView.m */,
+				34F8D2AC0CF68FEB00F62536 /* AIUserListOutlineView.h */,
+				34F8D2AD0CF68FEB00F62536 /* AIUserListOutlineView.m */,
 			);
 			name = Messages;
 			sourceTree = "<group>";
@@ -7490,7 +7495,7 @@
 				811036250CDE8C2100EC6038 /* adiumPurpleCertificateTrustWarning.h in Headers */,
 				8110362C0CDE8F5800EC6038 /* AIPurpleCertificateTrustWarningAlert.h in Headers */,
 				34B3247A0CE4CCF400158D5F /* PurpleAccountViewController.h in Headers */,
-				34AB43020CEFDAF300F76493 /* msn-adium.h in Headers */,
+				34B08C590CF2130700A6190C /* msn-adium.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8717,7 +8722,7 @@
 				811036260CDE8C2100EC6038 /* adiumPurpleCertificateTrustWarning.m in Sources */,
 				8110362D0CDE8F5800EC6038 /* AIPurpleCertificateTrustWarningAlert.m in Sources */,
 				34B3247B0CE4CCF400158D5F /* PurpleAccountViewController.m in Sources */,
-				34AB43030CEFDAF300F76493 /* msn-adium.c in Sources */,
+				34B08C5A0CF2130700A6190C /* msn-adium.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9022,6 +9027,7 @@
 				34A9705A0C965F2400F46006 /* AISideSplitView.m in Sources */,
 				34A9706F0C965F8E00F46006 /* AIAddBookmarkPlugin.m in Sources */,
 				343BB5020C96CB2000506F9B /* AINewBookmarkWindowController.m in Sources */,
+				34F8D2AE0CF68FEB00F62536 /* AIUserListOutlineView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

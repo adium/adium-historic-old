@@ -58,6 +58,16 @@
     }
 }
 
+/*!
+ * @brief Should we perform type select next/previous on find?
+ *
+ * @return YES to switch between type-select results. NO to to switch within the responder chain.
+ */
+- (BOOL)tabPerformsTypeSelectFind
+{
+	return NO;
+}
+
 //Navigate outline view with the keyboard, send select actions to delegate
 - (void)keyDown:(NSEvent *)theEvent
 {
@@ -94,18 +104,21 @@
             }
 
         } else if ((pressedChar == '\031') && // backtab
-				 ([self respondsToSelector:@selector(findPrevious:)])) {
+				   [self respondsToSelector:@selector(findPrevious:)] &&
+				   [self tabPerformsTypeSelectFind]) {
 			/* KFTypeSelectTableView supports findPrevious; backtab is added to AIOutlineView as a find previous action
 			 * if KFTypeSelectTableView is being used via posing */
 			[self findPrevious:self];
 			
 		} else if ((pressedChar == '\t') &&
-				 ([self respondsToSelector:@selector(findNext:)])) {
+				   [self respondsToSelector:@selector(findNext:)] &&
+				   [self tabPerformsTypeSelectFind]) {
 			/* KFTypeSelectTableView supports findNext; tab is added to AIOutlineView as a find next action
 			* if KFTypeSelectTableView is being used via posing */
 			[self findNext:self];
 
 		} else {
+			NSLog(@"keyDown %@",theEvent);
 			[super keyDown:theEvent];
 		}
 	} else {
