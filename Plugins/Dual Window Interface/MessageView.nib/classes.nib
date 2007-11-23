@@ -146,6 +146,11 @@
             SUPERCLASS = NSSplitView;
         },
                 {
+            CLASS = AIUserListOutlineView;
+            LANGUAGE = ObjC;
+            SUPERCLASS = AIListOutlineView;
+        },
+                {
             CLASS = AIWidgetStripView;
             LANGUAGE = ObjC;
             OUTLETS =             {

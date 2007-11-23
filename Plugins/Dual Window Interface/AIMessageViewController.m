@@ -971,6 +971,7 @@
 		if (userListMinWidth < USER_LIST_MIN_WIDTH) userListMinWidth = USER_LIST_DEFAULT_WIDTH;
 		[shelfView setShelfWidth:[userListView bounds].size.width];
 
+		[[userListView enclosingScrollView] setNextResponder:textView_outgoing];
 	}
 
 }

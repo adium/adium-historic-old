@@ -14,8 +14,6 @@
 	<string>255,255,255</string>
 	<key>Background Fade</key>
 	<real>0.80708658695220947</real>
-	<key>Background Image Path</key>
-	<string>/Users/adamiser/Code/adium/elisha.png</string>
 	<key>Contact Status Text Color</key>
 	<string>165,165,165</string>
 	<key>Grid Color</key>
