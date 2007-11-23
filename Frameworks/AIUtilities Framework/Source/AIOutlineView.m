@@ -118,7 +118,6 @@
 			[self findNext:self];
 
 		} else {
-			NSLog(@"keyDown %@",theEvent);
 			[super keyDown:theEvent];
 		}
 	} else {
