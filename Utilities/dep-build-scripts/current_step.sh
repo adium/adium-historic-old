@@ -86,8 +86,8 @@ for ARCH in ppc i386 ; do
             --disable-perl \
             --enable-debug \
             --disable-static --enable-shared \
-            --disable-dependency-tracking \
             --enable-krb4 \
+            --enable-cyrus-sasl \
             --prefix=$TARGET_DIR \
             --with-static-prpls="$PROTOCOLS" --disable-plugins \
             --host=$HOST \
