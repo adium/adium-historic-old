@@ -239,12 +239,8 @@
 //Handle a reopen/dock icon click
 - (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows
 {
-    /* The 'visibleWindows' variable passed by the system is unreliable, since the presence
-     * of the Adium system menu will cause it to always be YES.  We won't use it below.
-	 */
-
-	//If no windows are visible, show the contact list
-	if (![self contactListIsVisibleAndMain] && [[interfacePlugin openContainers] count] == 0) {
+	if (!visibleWindows) {
+		//The Contact List is hidden, and there are no chat windows, so unhide the Contact List.
 		[self showContactList:nil];
 	} else {
 		AIChat	*mostRecentUnviewedChat;
@@ -280,11 +276,8 @@
 			}
 		}
 	}
-	
-	[NSApp unhide:nil];
 
-	//We handled the reopen; return NO so NSApp does nothing.
-    return NO; 
+	return YES; 
 }
 
 //Contact List ---------------------------------------------------------------------------------------------------------
