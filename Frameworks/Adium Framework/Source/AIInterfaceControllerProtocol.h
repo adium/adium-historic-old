@@ -57,6 +57,22 @@ typedef enum {
 @protocol AIInterfaceController <AIController>
 - (void)registerInterfaceController:(id <AIInterfaceComponent>)inController;
 - (void)registerContactListController:(id <AIContactListComponent>)inController;
+
+/*!	@brief	Implement handling of the reopen Apple Event.
+ *
+ *	@par	The reopen handler should respond by making sure that at least one of Adium's windows is visible.
+ *
+ *	@par	Adium.app's implementation handles this event this way:
+ *
+ *	@li	If there are no chat windows, shows the Contact List.
+ *	@li	Else, if the foremost chat window and chat tab has unviewed content, make sure it stays foremost (bringing it forward of the Contact List, if necessary).
+ *	@li	Else, if any chat window has unviewed content, bring foremost the chat window and chat tab with the most recent unviewed content.
+ *	@li	Else, if all chat windows are minimized, unminimize one of them.
+ *	@li	If the application is hidden, unhide it.
+ *
+ *	@return	A value suitable for returning from the \c NSApplication delegate method <code>applicationShouldHandleReopen:hasVisibleWindows:
+</code>. Specifically: \c YES if AppKit should perform its usual response to the event; \c NO if AppKit should do nothing.
+ */
 - (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows;
 
 //Contact List
