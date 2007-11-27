@@ -68,6 +68,12 @@
  */ 
 - (void)setDelegate:(id<AISmoothTooltipTrackerDelegate>)inDelegate;
 
+/*!	@brief	Retrieve the view that this object tracks
+ *
+ *	@return	The view that was originally passed to <code>+smoothTooltipTrackerForView:withDelegate:</code>.
+ */
+- (NSView *)view;
+
 /*
  * @brief This should be called when the view for which we are tracking will be removed from its window without the window closing
  *
