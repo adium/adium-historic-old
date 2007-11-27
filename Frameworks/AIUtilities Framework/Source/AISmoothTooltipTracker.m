@@ -84,6 +84,11 @@
 	}
 }
 
+- (NSView *)view
+{
+	return view;
+}
+
 /*
  * @brief This should be called when the view for which we are tracking will be removed from its window without the window closing
  *
