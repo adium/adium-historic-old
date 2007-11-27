@@ -38,7 +38,7 @@
  * <p>An <tt>AISmoothTooltipTracker</tt> is created for a specific view.  It informs its delegate when the mouse hovers over the view for about a second.</p>
  * <p>The delegate will be informed of the mouse hover even if the application is not currently active (so long as the view is visible to the user).</p>
  * The delegate is updated as the mouse moves (via showTooltipAtPoint:), and is informed when the mouse leaves or the view is obscured or hidden (via hideTooltip)</p>
- * <p>Note: The delegate is not retained.  For maximum stability, the delegate should call setDelete:nil some time before it deallocs. Not all implementations will -need- this, but it is recommended.</p>
+ * <p>Note: The delegate is not retained.  For maximum stability, the delegate should call setDelegate:nil some time before it deallocs. Not all implementations will -need- this, but it is recommended.</p>
  */
 @interface AISmoothTooltipTracker : NSObject {
 	NSView										*view;		//View we are tracking tooltips for
