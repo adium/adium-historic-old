@@ -29,6 +29,15 @@
 - (void)_startTrackingMouse;
 - (void)_stopTrackingMouse;
 - (void)_hideTooltip;
+
+//10.4: We use these to access our instance variables from the Carbon Event handler without making them @public. When we switch to NSTrackingArea, they should go away along with the handler.
+- (void)getPrivateVariablesTooltipDelayTimer:(out NSTimer **)outTooltipDelayTimer
+						   lastMouseLocation:(out NSPoint *)outLastMouseLocation
+							 tooltipLocation:(out NSPoint *)outTooltipLocation
+									delegate:(out id *)outDelegate;
+- (void)setPrivateVariablesLastMouseLocation:(NSPoint)newLastMouseLocation
+							 tooltipLocation:(NSPoint)newTooltipLocation
+									delegate:(id)newDelegate;
 @end
 
 //10.4: This handler responds to kEventMouseMoved. For Leopard-only, switch to NSTrackingArea.
@@ -261,6 +270,24 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 	}
 }
 
+- (void)getPrivateVariablesTooltipDelayTimer:(out NSTimer **)outTooltipDelayTimer
+						   lastMouseLocation:(out NSPoint *)outLastMouseLocation
+							 tooltipLocation:(out NSPoint *)outTooltipLocation
+									delegate:(out id *)outDelegate
+{
+	if (outTooltipDelayTimer) *outTooltipDelayTimer = tooltipDelayTimer;
+	if (outLastMouseLocation) *outLastMouseLocation = lastMouseLocation;
+	if (outTooltipLocation)   *outTooltipLocation   = tooltipLocation;
+	if (outDelegate)          *outDelegate          = delegate;
+}
+- (void)setPrivateVariablesLastMouseLocation:(NSPoint)newLastMouseLocation
+							 tooltipLocation:(NSPoint)newTooltipLocation
+									delegate:(id)newDelegate
+{
+	lastMouseLocation = newLastMouseLocation;
+	tooltipLocation = newTooltipLocation;
+	delegate = newDelegate;
+}
 
 @end
 
@@ -270,6 +297,15 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 	AISmoothTooltipTracker *self = (id)refcon;
 	NSView *view = [self view];
 	NSWindow *theWindow = [view window];
+
+	id delegate;
+    NSTimer *tooltipDelayTimer;
+	NSPoint lastMouseLocation;
+	NSPoint tooltipLocation;
+	[self getPrivateVariablesTooltipDelayTimer:&tooltipDelayTimer
+							 lastMouseLocation:&lastMouseLocation
+							   tooltipLocation:&tooltipLocation
+									  delegate:&delegate];
 
 	//Check whether kEventParamWindowRef is the window we're tracking.
 	WindowRef eventWindow = NULL;
@@ -324,6 +360,10 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 #endif
 		[self _hideTooltip];
 	}
+
+	[self setPrivateVariablesLastMouseLocation:lastMouseLocation
+							   tooltipLocation:tooltipLocation
+									  delegate:delegate];
 
 	return err;
 }
