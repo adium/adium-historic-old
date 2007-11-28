@@ -96,6 +96,9 @@ for ARCH in ppc i386 ; do
         --disable-macos-framework \
         --with-openssl=$SDK_ROOT/usr/lib \
         --disable-digest \
+	--without-dbpath \
+	--without-dblib \
+	--disable-auth-sasldb \
         --enable-static=cram,otp,gssapi,plain,anon \
         --host=$HOST
     # EVIL HACK ALERT: http://www.theronge.com/2006/04/15/how-to-compile-cyrus-sasl-as-universal/
