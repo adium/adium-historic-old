@@ -48,7 +48,9 @@
 	NSTimer				*tooltipMouseLocationTimer;		//Checks for mouse movement
 	NSPoint				tooltipLocation;				//Last tooltip location we told our delegate about
     NSTrackingRectTag	tooltipTrackingTag;				//Tag for our tracking rect
-    int 				tooltipCount;					//Used to determine how long before a tooltip appears
+    NSTimer				*tooltipDelayTimer;				//Used to determine how long before a tooltip appears
+
+	EventHandlerRef		mouseMovedHandler;				//Carbon Event handler for mouse-moved events; only exists during tracking
 }
 
 /*!
