@@ -11,6 +11,8 @@
 #import "AISmoothTooltipTracker.h"
 #import "AIDockingWindow.h"
 
+#include <Carbon/Carbon.h>
+
 #define TOOL_TIP_DELAY			35.0 * (1.0 / 45.0)	//Interval of no movement before a tip is displayed
 
 #define MOUSE_LOCATION_KEY		@"MouseLocation"
