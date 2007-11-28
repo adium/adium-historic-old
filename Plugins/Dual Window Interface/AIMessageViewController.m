@@ -306,9 +306,8 @@
  */
 - (AIListObject *)preferredListObject
 {
-	if ( userListView != nil) { //[[shelfView subviews] containsObject:scrollView_userList] && ([userListView selectedRow] != -1)
-			NSLog(@"userlistview itemAtRow: %@", [userListView itemAtRow:[userListView selectedRow]]);
-			return [userListView itemAtRow:[userListView selectedRow]];
+	if (userListView) { //[[shelfView subviews] containsObject:scrollView_userList] && ([userListView selectedRow] != -1)
+		return [userListView itemAtRow:[userListView selectedRow]];
 	}
 	
 	return nil;
@@ -962,18 +961,13 @@
 		[userListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
 		[userListController setContactListRoot:chat];
 		[userListController setHideRoot:YES];
-		AILogWithSignature(@"%@ with root %@ - user list %@ in scroll view %@",userListController,chat,
-						   userListView,scrollView_userList);
 
 		//User's choice of mininum width for their user list view
 		userListMinWidth = [[[adium preferenceController] preferenceForKey:KEY_ENTRY_USER_LIST_MIN_WIDTH
 																	 group:PREF_GROUP_DUAL_WINDOW_INTERFACE] intValue];
 		if (userListMinWidth < USER_LIST_MIN_WIDTH) userListMinWidth = USER_LIST_DEFAULT_WIDTH;
 		[shelfView setShelfWidth:[userListView bounds].size.width];
-
-		[[userListView enclosingScrollView] setNextResponder:textView_outgoing];
 	}
-
 }
 
 /*!
