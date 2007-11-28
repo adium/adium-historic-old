@@ -1,5 +1,8 @@
-# Be sure to change this to FALSE for 10.4! 
-IS_ON_10_5 = TRUE
+if [ `sw_vers -productVersion | cut -f 1,2 -d '.'` == 10.4 ] ; then
+    IS_ON_10_4=TRUE
+else
+    IS_ON_10_4=FALSE
+fi
 
 GLIB=glib-2.14.1
 MEANWHILE=meanwhile-1.0.2
@@ -30,11 +33,11 @@ TARGET_DIR_BASE="$PWD/root"
 export PATH_PPC="$TARGET_DIR_PPC/bin:$PATH"
 export PATH_I386="$TARGET_DIR_I386/bin:$PATH"
 
-# On 10.5, we need glibtoolize to be libtoolize for pidgin, their silly
+# On 10.5+, we need glibtoolize to be libtoolize for pidgin, their silly
 # autogen.sh expects it to be that way right now. In the future I'm hoping 
 # to offer a patch to pidgin so that it'll check and see if glibtoolize
 # exists if it doesn't find libtoolize.
-if [ "$IS_ON_10_5" == "TRUE" ] ; then
+if [ "$IS_ON_10_4" == "FALSE" ] ; then
     ln -s /usr/bin/glibtoolize $TARGET_DIR_PPC/bin/libtoolize
     ln -s /usr/bin/glibtoolize $TARGET_DIR_I386/bin/libtoolize
 fi
