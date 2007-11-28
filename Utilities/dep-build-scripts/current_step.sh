@@ -1,3 +1,6 @@
+# Be sure to change this to FALSE for 10.4! 
+IS_ON_10_5 = TRUE
+
 GLIB=glib-2.14.1
 MEANWHILE=meanwhile-1.0.2
 GADU=libgadu-1.7.1
@@ -27,12 +30,14 @@ TARGET_DIR_BASE="$PWD/root"
 export PATH_PPC="$TARGET_DIR_PPC/bin:$PATH"
 export PATH_I386="$TARGET_DIR_I386/bin:$PATH"
 
-# we need glibtoolize to be libtoolize for pidgin, their silly autogen.sh
-# it to be that way right now. In the future I'm hoping to offer a patch to
-# pidgin so that it'll check and see if glibtoolize exists if it doesn't find
-# libtoolize.
-ln -s /usr/bin/glibtoolize $TARGET_DIR_PPC/bin/libtoolize
-ln -s /usr/bin/glibtoolize $TARGET_DIR_I386/bin/libtoolize
+# On 10.5, we need glibtoolize to be libtoolize for pidgin, their silly
+# autogen.sh expects it to be that way right now. In the future I'm hoping 
+# to offer a patch to pidgin so that it'll check and see if glibtoolize
+# exists if it doesn't find libtoolize.
+if [ "$IS_ON_10_5" == "TRUE" ] ; then
+    ln -s /usr/bin/glibtoolize $TARGET_DIR_PPC/bin/libtoolize
+    ln -s /usr/bin/glibtoolize $TARGET_DIR_I386/bin/libtoolize
+fi
 
 # Apply our openssl patch - enables using OpenSSL and allows libgadu with SSL
 # support. This is OK because OpenSSL is part of the base system on OS X.
@@ -60,8 +65,8 @@ for ARCH in ppc i386 ; do
 			  export PKG_CONFIG_PATH="$TARGET_DIR_I386/lib/pkgconfig"
 			  TARGET_DIR=$TARGET_DIR_I386;;
 	esac
-    export CFLAGS="$BASE_CFLAGS -arch $ARCH -I$TARGET_DIR/include -I$SDK_ROOT/usr/include/kerberosIV -DHAVE_SSL "
-	export LDFLAGS="$BASE_LDFLAGS -L$TARGET_DIR/lib -arch $ARCH"
+    export CFLAGS="$BASE_CFLAGS -arch $ARCH -I$TARGET_DIR/include -I$SDK_ROOT/usr/include/kerberosIV -DHAVE_SSL -fno-common"
+    export LDFLAGS="$BASE_LDFLAGS -L$TARGET_DIR/lib -arch $ARCH"
     mkdir libpurple-$ARCH || true
     cd libpurple-$ARCH
 	export ARCH
