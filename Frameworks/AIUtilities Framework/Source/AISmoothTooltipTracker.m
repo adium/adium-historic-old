@@ -209,7 +209,7 @@ static OSStatus handleMouseMovedCarbonEvent(EventRef event, EventHandlerCallRef 
 		struct EventTypeSpec typeSpecs[numTypeSpecs] = {
 			{ kEventClassMouse, kEventMouseMoved }
 		};
-		OSStatus err = InstallWindowEventHandler([[view window] windowRef], handleMouseMovedCarbonEvent, numTypeSpecs, typeSpecs, /*refcon*/ (void *)self, &mouseMovedHandler);
+		OSStatus err = InstallWindowEventHandler([[view window] windowRef], handleMouseMovedCarbonEvent, numTypeSpecs, typeSpecs, /*refcon*/ (void *)self, &(EventHandlerRef *)mouseMovedHandler);
 		NSAssert3(err == noErr, @"%s: InstallWindowEventHandler returned %i (%s)", __PRETTY_FUNCTION__, err, GetMacOSStatusCommentString(err));
 
 		NSValue *initialMouseLocation = [NSValue valueWithPoint:[NSEvent mouseLocation]];
@@ -230,7 +230,7 @@ static OSStatus handleMouseMovedCarbonEvent(EventRef event, EventHandlerCallRef 
 		//and we want to communicate with the delegate before a potential call to dealloc.
 		[self _hideTooltip];
 		
-		RemoveEventHandler(mouseMovedHandler);
+		RemoveEventHandler((EventHandlerRef)mouseMovedHandler);
 	}
 }
 
