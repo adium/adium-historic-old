@@ -1,5 +1,5 @@
 #
-# old_revision [cc8513f94aa94550d600cd8a5d42475dbf7249c0]
+# old_revision [2c3b326b7734ae5211bccc072469632b5b560151]
 #
 # patch "libpurple/Makefile.am"
 #  from [2112ccec7c2eda63afa57cf4f0c7bbff8347dc42]
@@ -7,7 +7,7 @@
 # 
 # patch "libpurple/protocols/jabber/auth.c"
 #  from [12caf62ded6c3314a811a59f8730fc801420cd8c]
-#    to [1f4804cf7f182a201a16343a14fe6c56b9a476d5]
+#    to [af9cdbcd4db2ea575d647fb72166d270ccf7b7d0]
 # 
 # patch "libpurple/protocols/jabber/libxmpp.c"
 #  from [e90c78b600e55ee816eae95ffc4c0fd69fdd785b]
@@ -31,7 +31,7 @@
  AM_CPPFLAGS = \
 ============================================================
 --- libpurple/protocols/jabber/auth.c	12caf62ded6c3314a811a59f8730fc801420cd8c
-+++ libpurple/protocols/jabber/auth.c	1f4804cf7f182a201a16343a14fe6c56b9a476d5
++++ libpurple/protocols/jabber/auth.c	af9cdbcd4db2ea575d647fb72166d270ccf7b7d0
 @@ -452,9 +452,11 @@ jabber_auth_start(JabberStream *js, xmln
  void
  jabber_auth_start(JabberStream *js, xmlnode *packet)
@@ -143,6 +143,26 @@
  
  static void auth_old_result_cb(JabberStream *js, xmlnode *packet, gpointer data)
  {
+@@ -971,11 +996,15 @@ void jabber_auth_handle_success(JabberSt
+ 				_("Invalid response from server."));
+ 		}
+ 	}
++
++	
+ 	/* If we've negotiated a security layer, we need to enable it */
+-	sasl_getprop(js->sasl, SASL_SSF, &x);
+-	if (*(int *)x > 0) {
+-		sasl_getprop(js->sasl, SASL_MAXOUTBUF, &x);
+-		js->sasl_maxbuf = *(int *)x;
++	if (js->sasl) {
++		sasl_getprop(js->sasl, SASL_SSF, &x);
++		if (*(int *)x > 0) {
++			sasl_getprop(js->sasl, SASL_MAXOUTBUF, &x);
++			js->sasl_maxbuf = *(int *)x;
++		}
+ 	}
+ #endif
+ 
 ============================================================
 --- libpurple/protocols/jabber/libxmpp.c	e90c78b600e55ee816eae95ffc4c0fd69fdd785b
 +++ libpurple/protocols/jabber/libxmpp.c	589db9e206bb677d6252063048d96aafa79e7347
