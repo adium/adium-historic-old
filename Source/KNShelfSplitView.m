@@ -278,7 +278,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 			availableSpace -= BUTTON_WIDTH;
 		}
 		
-		if( contextButtonMenu && (availableSpace > BUTTON_WIDTH) ){
+		if( contextButtonMenu && [contextButtonMenu numberOfItems] && (availableSpace > BUTTON_WIDTH) ){
 			shouldDrawContextButton = YES;
 			contextButtonRect = NSMakeRect(controlRect.size.width - (THUMB_WIDTH + availableSpace), 0, BUTTON_WIDTH, CONTROL_HEIGHT);
 		}
