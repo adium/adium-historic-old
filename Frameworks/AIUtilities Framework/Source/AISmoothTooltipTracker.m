@@ -145,7 +145,7 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 		trackingRect = [view frame];
 		trackingRect.origin = NSMakePoint(0,0);
 		
-		mouseInside = NSPointInRect([view convertPoint:[[view window] convertScreenToBase:[NSEvent mouseLocation]] fromView:[[view window] contentView]],
+		mouseInside = NSPointInRect([view convertPoint:[[view window] mouseLocationOutsideOfEventStream] fromView:[[view window] contentView]],
 									trackingRect);
 		tooltipTrackingTag = [view addTrackingRect:trackingRect owner:self userData:nil assumeInside:mouseInside];
 		
