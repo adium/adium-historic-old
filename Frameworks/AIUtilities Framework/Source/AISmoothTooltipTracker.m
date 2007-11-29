@@ -17,7 +17,7 @@
 
 #define MOUSE_LOCATION_KEY		@"MouseLocation"
 
-#define	LOG_TRACKING_INFO		FALSE
+#define	LOG_TRACKING_INFO		1
 
 @interface AISmoothTooltipTracker (PRIVATE)
 - (AISmoothTooltipTracker *)initForView:(NSView *)inView withDelegate:(id)inDelegate;
