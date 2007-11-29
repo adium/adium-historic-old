@@ -11598,15 +11598,19 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0",
-					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
-					"$(SDK_ROOT)/usr/include/libxml2",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"Plugins/Purple Service/Include/glib\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"Plugins/Purple Service/Include\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SDK_ROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"Plugins/Purple Service/Include\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SDK_ROOT)/usr/include/libxml2\"";
 				INFOPLIST_FILE = Plists/Purple_Service.plist;
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
