@@ -146,7 +146,6 @@ static NSArray *validSenderColors;
 		 *            The default variant is now a separate file in /variants like all other variants.
 		 *			  Template.html now includes appendMessageNoScroll() and appendNextMessageNoScroll() which behave
 		 *				the same as appendMessage() and appendNextMessage() in Versions 1 and 2 but without scrolling.
-		 *
 		 */
 		styleVersion = [[styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_VERSION] intValue];
 
@@ -515,10 +514,10 @@ static NSArray *validSenderColors;
 										 options:NSLiteralSearch range:range];
 	range.length -= delta;
 
-	delta = [inString replaceOccurrencesOfString:@"\r" withString:@"<br />" 
+	delta = [inString replaceOccurrencesOfString:@"\r" withString:@"<br>" 
 										 options:NSLiteralSearch range:range];
-	enum { lengthOfBRString = 6 };
-	range.length += delta * lengthOfBRString;
+	//4 is the length of <br>
+	range.length += delta * 4;
 
 	return inString;
 }
@@ -618,7 +617,8 @@ static NSArray *validSenderColors;
 												  attachmentsAsText:NO
 										  onlyIncludeOutgoingImages:NO
 													 simpleTagsOnly:NO
-													 bodyBackground:NO];
+													 bodyBackground:NO
+										        allowJavascriptURLs:NO];
 		
 		
 	//date
@@ -834,7 +834,8 @@ static NSArray *validSenderColors;
 														 attachmentsAsText:NO
 												 onlyIncludeOutgoingImages:NO
 															simpleTagsOnly:NO
-															bodyBackground:YES];
+															bodyBackground:YES
+													   allowJavascriptURLs:NO];
 						hexcode = [NSScanner scannerWithString:thisIsATemporaryString];
 						[hexcode  scanHexInt:&rgb];
 						if (![thisIsATemporaryString length] && rgb == 0) {
@@ -865,7 +866,8 @@ static NSArray *validSenderColors;
 														 attachmentsAsText:NO
 												 onlyIncludeOutgoingImages:NO
 															simpleTagsOnly:NO
-															bodyBackground:YES];
+															bodyBackground:YES
+													   allowJavascriptURLs:NO];
 						[inString safeReplaceCharactersInRange:NSUnionRange(range, endRange) 
 													withString:[NSString stringWithFormat:@"#%@", thisIsATemporaryString]];
 					} else {
@@ -954,7 +956,8 @@ static NSArray *validSenderColors;
 										attachmentsAsText:NO
 								onlyIncludeOutgoingImages:NO
 										   simpleTagsOnly:NO
-										   bodyBackground:NO];
+										   bodyBackground:NO
+									  allowJavascriptURLs:NO];
 			}
 			
 			[inString safeReplaceCharactersInRange:range withString:messageString];

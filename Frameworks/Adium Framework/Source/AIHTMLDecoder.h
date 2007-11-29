@@ -19,9 +19,11 @@
 	NSString *XMLNamespace;
 
 	struct AIHTMLDecoderOptionsBitField {
-		unsigned reserved: 19;
+		unsigned reserved: 18;
 
 		unsigned generateStrictXHTML: 1;
+		
+		unsigned allowJavascriptURLs: 1;
 
 		//these next ten members are derived from the arguments to
 		//  +encodeHTML:::::::::::: in the old AIHTMLDecoder.
@@ -67,7 +69,8 @@
 	attachmentsAsText:(BOOL)attachmentsAsText
 onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	   simpleTagsOnly:(BOOL)simpleOnly
-	   bodyBackground:(BOOL)bodyBackground;
+	   bodyBackground:(BOOL)bodyBackground
+  allowJavascriptURLs:(BOOL)allowJS;
 
 + (AIHTMLDecoder *)decoderWithHeaders:(BOOL)includeHeaders
 							 fontTags:(BOOL)includeFontTags
@@ -79,7 +82,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					attachmentsAsText:(BOOL)attachmentsAsText
 			onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					   simpleTagsOnly:(BOOL)simpleOnly
-					   bodyBackground:(BOOL)bodyBackground;
+					   bodyBackground:(BOOL)bodyBackground
+                  allowJavascriptURLs:(BOOL)allowJS;
 
 #pragma mark Work methods
 
@@ -151,6 +155,9 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 - (BOOL)allowAIMsubprofileLinks;
 - (void)setAllowAIMsubprofileLinks:(BOOL)newValue;
 
+- (BOOL)allowJavascriptURLs;
+- (void)setAllowJavascriptURLs:(BOOL)newValue;
+
 @end
 
 @interface AIHTMLDecoder (ClassMethodCompatibility)
@@ -176,7 +183,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	   attachmentsAsText:(BOOL)attachmentsAsText
 onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		  simpleTagsOnly:(BOOL)simpleOnly
-		  bodyBackground:(BOOL)bodyBackground;
+		  bodyBackground:(BOOL)bodyBackground
+     allowJavascriptURLs:(BOOL)allowJS;
 
 + (NSAttributedString *)decodeHTML:(NSString *)inMessage;
 + (NSAttributedString *)decodeHTML:(NSString *)inMessage withDefaultAttributes:(NSDictionary *)inDefaultAttributes;

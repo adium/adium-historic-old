@@ -424,7 +424,8 @@ typedef enum {
 	                                    attachmentsAsText:YES
 	                            onlyIncludeOutgoingImages:NO
 	                                       simpleTagsOnly:NO
-	                                       bodyBackground:NO];
+	                                       bodyBackground:NO
+									  allowJavascriptURLs:YES];
 
 	[XHTMLDecoder setGeneratesStrictXHTML:YES];
 	[XHTMLDecoder setClosesFontTags:YES];

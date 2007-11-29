@@ -69,6 +69,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 		[encoderCloseFontTagsAttachmentsAsText setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
 		[encoderCloseFontTagsAttachmentsAsText setOnlyUsesSimpleTags:NO];
 		[encoderCloseFontTagsAttachmentsAsText setAllowAIMsubprofileLinks:YES];
+		[encoderCloseFontTagsAttachmentsAsText setAllowJavascriptURLs:YES];
 		
 		encoderCloseFontTags = [[AIHTMLDecoder alloc] init];
 		[encoderCloseFontTags setIncludesHeaders:YES];
@@ -82,6 +83,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 		[encoderCloseFontTags setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
 		[encoderCloseFontTags setOnlyUsesSimpleTags:NO];
 		[encoderCloseFontTags setAllowAIMsubprofileLinks:YES];
+		[encoderCloseFontTags setAllowJavascriptURLs:YES];
 		
 		encoderAttachmentsAsText = [[AIHTMLDecoder alloc] init];
 		[encoderAttachmentsAsText setIncludesHeaders:YES];
@@ -95,6 +97,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 		[encoderAttachmentsAsText setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
 		[encoderAttachmentsAsText setOnlyUsesSimpleTags:NO];
 		[encoderAttachmentsAsText setAllowAIMsubprofileLinks:YES];
+		[encoderAttachmentsAsText setAllowJavascriptURLs:YES];
 		
 		encoderGroupChat = [[AIHTMLDecoder alloc] init];
 		[encoderGroupChat setIncludesHeaders:NO];
@@ -108,6 +111,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 		[encoderGroupChat setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
 		[encoderGroupChat setOnlyUsesSimpleTags:YES];
 		[encoderGroupChat setAllowAIMsubprofileLinks:YES];
+		[encoderGroupChat setAllowJavascriptURLs:YES];
 		
 		createdEncoders = YES;
 	}	

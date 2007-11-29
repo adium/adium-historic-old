@@ -125,7 +125,8 @@ Class LogViewerWindowControllerClass = NULL;
 										attachmentsAsText:YES
 								onlyIncludeOutgoingImages:NO
 										   simpleTagsOnly:NO
-										   bodyBackground:NO];
+										   bodyBackground:NO
+									  allowJavascriptURLs:YES];
 	[xhtmlDecoder setGeneratesStrictXHTML:YES];
 	[xhtmlDecoder setUsesAttachmentTextEquivalents:YES];
 	
