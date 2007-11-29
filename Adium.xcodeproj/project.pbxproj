@@ -10699,15 +10699,16 @@
 					DEBUG_BUILD,
 				);
 				HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/Frameworks/libpurple.framework/Headers",
-					"$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0",
-					"$(SDK_ROOT)/usr/include/libxml2",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
 				);
-				HEADER_SEARCH_PATHS_QUOTED_1 = "\"Plugins/Purple Service/Include/glib\"";
-				HEADER_SEARCH_PATHS_QUOTED_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
-				HEADER_SEARCH_PATHS_QUOTED_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
-				HEADER_SEARCH_PATHS_QUOTED_4 = "\"Plugins/Purple Service/Include\"";
-				HEADER_SEARCH_PATHS_QUOTED_5 = "\"Plugins/Purple Service/Libpurple.framework/Headers\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"Plugins/Purple Service/Include/glib\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"Plugins/Purple Service/Include\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"Plugins/Purple Service/Libpurple.framework/Headers\"";
 				INFOPLIST_FILE = Plists/AdiumLibpurple.plist;
 				INSTALL_PATH = "@executable_path/../PlugIns/Purple.AdiumPlugin/Contents/Frameworks/";
 				LIBRARY_SEARCH_PATHS = (
@@ -11572,6 +11573,10 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Plugins/Purple Service/Frameworks\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -11581,11 +11586,11 @@
 					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
 					"$(SDK_ROOT)/usr/include/libxml2",
 				);
-				HEADER_SEARCH_PATHS_QUOTED_1 = "\"Plugins/Purple Service/Include/glib\"";
-				HEADER_SEARCH_PATHS_QUOTED_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
-				HEADER_SEARCH_PATHS_QUOTED_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
-				HEADER_SEARCH_PATHS_QUOTED_4 = "\"Plugins/Purple Service/Include\"";
-				HEADER_SEARCH_PATHS_QUOTED_5 = "\"Plugins/Purple Service/Libpurple.framework/Headers\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"Plugins/Purple Service/Include/glib\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"Plugins/Purple Service/Include\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"Plugins/Purple Service/Libpurple.framework/Headers\"";
 				INFOPLIST_FILE = Plists/Purple_Service.plist;
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
