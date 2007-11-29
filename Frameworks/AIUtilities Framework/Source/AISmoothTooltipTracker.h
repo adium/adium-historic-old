@@ -50,6 +50,7 @@
     NSTrackingRectTag	tooltipTrackingTag;				//Tag for our tracking rect
     NSTimer				*tooltipDelayTimer;				//Used to determine how long before a tooltip appears
 
+	void				*mouseMovedHandlerUPP;			//By void *, I mean EventHandlerUPP.
 	void				*mouseMovedHandler;				//Carbon Event handler for mouse-moved events; only exists during tracking. By void *, I mean EventHandlerRef.
 }
 
