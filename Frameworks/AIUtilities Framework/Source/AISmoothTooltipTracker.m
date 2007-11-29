@@ -161,7 +161,7 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 		NSLog(@"[%@ installCursorRect] addTrackingRect %@ on %@ in %@: tag = %i",self,NSStringFromRect(trackingRect),view,[view window],tooltipTrackingTag);
 #endif
 		//If the mouse is already inside, begin tracking the mouse immediately
-		if (mouseInside) [self _startTrackingMouse];
+		if ([[view window] isVisible] && mouseInside) [self _startTrackingMouse];
 	}
 }
 
