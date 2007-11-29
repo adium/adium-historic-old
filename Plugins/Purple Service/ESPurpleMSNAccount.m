@@ -213,7 +213,8 @@
 				   attachmentsAsText:YES
 		   onlyIncludeOutgoingImages:NO
 					  simpleTagsOnly:YES
-					  bodyBackground:NO];
+					  bodyBackground:NO
+				 allowJavascriptURLs:YES];
 }
 
 - (BOOL)encrypted

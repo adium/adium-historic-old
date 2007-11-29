@@ -103,6 +103,7 @@ static NSString			*horizontalRule = nil;
 onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	   simpleTagsOnly:(BOOL)simpleOnly
 	   bodyBackground:(BOOL)bodyBackground
+  allowJavascriptURLs:(BOOL)allowJS
 {
 	if ((self = [self init])) {
 		thingsToInclude.headers							= includeHeaders;
@@ -116,6 +117,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		thingsToInclude.onlyIncludeOutgoingImages	= onlyIncludeOutgoingImages;
 		thingsToInclude.simpleTagsOnly					= simpleOnly;
 		thingsToInclude.bodyBackground					= bodyBackground;
+		thingsToInclude.allowJavascriptURLs				= allowJS;
 		
 		thingsToInclude.allowAIMsubprofileLinks			= NO;
 	}
@@ -131,9 +133,10 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					   encodeNonASCII:(BOOL)encodeNonASCII
 						 encodeSpaces:(BOOL)encodeSpaces
 					attachmentsAsText:(BOOL)attachmentsAsText
-	   onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
+			onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					   simpleTagsOnly:(BOOL)simpleOnly
 					   bodyBackground:(BOOL)bodyBackground
+                  allowJavascriptURLs:(BOOL)allowJS
 {
 	return [[[self alloc] initWithHeaders:includeHeaders
 								 fontTags:includeFontTags
@@ -145,7 +148,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 						attachmentsAsText:attachmentsAsText
 		   onlyIncludeOutgoingImages:onlyIncludeOutgoingImages
 						   simpleTagsOnly:simpleOnly
-						   bodyBackground:bodyBackground] autorelease];
+						   bodyBackground:bodyBackground
+					  allowJavascriptURLs:allowJS] autorelease];
 }
 
 #pragma mark Work methods
@@ -405,31 +409,39 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		if (!oldLink && link && [link length] != 0) {
 			NSString	*linkString = ([link isKindOfClass:[NSURL class]] ? [(NSURL *)link absoluteString] : link);
 
-			[string appendString:@"<a href=\""];
-			
-			/* AIM can handle %n in links, which is highly invalid for a real URL.
-			 * If thingsToInclude.allowAIMsubprofileLinks is YES, and a %25n is in the link, replace the escaped version
-			 * which was used within Adium [so that NSURL didn't balk] with %n, which is what other AIM clients will
-			 * be expecting.
+			/* For incoming messages, javascript urls are both dangerous and useless.
+			 * If thingsToInclude.allowJavascriptURLs is NO, we refuse to create <a> tags for links starting with javascript.
+			 * This probably should be set to NO for outgoing messages, to avoid MSN-style-censorship accusations.
 			 */
-			if (thingsToInclude.allowAIMsubprofileLinks && 
-			   ([linkString rangeOfString:@"%25n"].location != NSNotFound)) {
-				NSMutableString	*fixedLinkString = [[linkString mutableCopy] autorelease];
-				[fixedLinkString replaceOccurrencesOfString:@"%25n"
-												 withString:@"%n"
-													options:NSLiteralSearch
-													  range:NSMakeRange(0, [fixedLinkString length])];
-				linkString = fixedLinkString;
-			}
+			if (thingsToInclude.allowJavascriptURLs || [linkString rangeOfString:@"javascript"].location > 0) {
 			
-			[string appendString:linkString];
-			if (!thingsToInclude.simpleTagsOnly) {
-				[string appendString:@"\" title=\""];
+				[string appendString:@"<a href=\""];
+				
+				/* AIM can handle %n in links, which is highly invalid for a real URL.
+				 * If thingsToInclude.allowAIMsubprofileLinks is YES, and a %25n is in the link, replace the escaped version
+				 * which was used within Adium [so that NSURL didn't balk] with %n, which is what other AIM clients will
+				 * be expecting.
+				 */
+				if (thingsToInclude.allowAIMsubprofileLinks && 
+				   ([linkString rangeOfString:@"%25n"].location != NSNotFound)) {
+					NSMutableString	*fixedLinkString = [[linkString mutableCopy] autorelease];
+					[fixedLinkString replaceOccurrencesOfString:@"%25n"
+													 withString:@"%n"
+														options:NSLiteralSearch
+														  range:NSMakeRange(0, [fixedLinkString length])];
+					linkString = fixedLinkString;
+				}
+				
 				[string appendString:linkString];
+				if (!thingsToInclude.simpleTagsOnly) {
+					[string appendString:@"\" title=\""];
+					[string appendString:linkString];
+				}
+				[string appendString:@"\">"];
+				
+				oldLink = linkString;
+				
 			}
-			[string appendString:@"\">"];
-			
-			oldLink = linkString;
 		}
 
 		//Image Attachments
@@ -2032,6 +2044,15 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	thingsToInclude.allowAIMsubprofileLinks = newValue;
 }
 
+- (BOOL)allowJavascriptURLs
+{
+	return thingsToInclude.allowJavascriptURLs;
+}
+- (void)setAllowJavascriptURLs:(BOOL)newValue
+{
+	thingsToInclude.allowJavascriptURLs = newValue;
+}
+
 @end
 
 static AIHTMLDecoder *classMethodInstance = nil;
@@ -2080,13 +2101,14 @@ static AIHTMLDecoder *classMethodInstance = nil;
 // onlyIncludeOutgoingImages: YES to only convert attachments to <IMG SRC="...> tags which should be sent to another user. Only relevant if attachmentsAsText is NO.
 // simpleTagsOnly: YES to separate out FONT tags and include only the most basic HTML elements. Intended for protocols with minimal formatting support such as MSN
 // bodyBackground: YES to set an Adium-internal attribute, AIBodyColorAttributeName, if there's a background. Used only for the message view.
+// allowJavascriptURLs: NO to strip all URLs using the javascript: scheme so as to avoid people sending malicious links
 + (NSString *)encodeHTML:(NSAttributedString *)inMessage
 				 headers:(BOOL)includeHeaders 
 				fontTags:(BOOL)includeFontTags
 	  includingColorTags:(BOOL)includeColorTags 
 		   closeFontTags:(BOOL)closeFontTags
 			   styleTags:(BOOL)includeStyleTags
- closeStyleTagsOnFontChange:(BOOL)closeStyleTagsOnFontChange 
+closeStyleTagsOnFontChange:(BOOL)closeStyleTagsOnFontChange 
 		  encodeNonASCII:(BOOL)encodeNonASCII
 			encodeSpaces:(BOOL)encodeSpaces
 			  imagesPath:(NSString *)imagesPath
@@ -2094,6 +2116,7 @@ static AIHTMLDecoder *classMethodInstance = nil;
 onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		  simpleTagsOnly:(BOOL)simpleOnly
 		  bodyBackground:(BOOL)bodyBackground
+     allowJavascriptURLs:(BOOL)allowJS
 {
 #pragma unused(closeStyleTagsOnFontChange)
 	[self classMethodInstance];
@@ -2109,6 +2132,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	classMethodInstance->thingsToInclude.simpleTagsOnly = simpleOnly;
 	classMethodInstance->thingsToInclude.bodyBackground = bodyBackground;
 	classMethodInstance->thingsToInclude.allowAIMsubprofileLinks = NO;
+	classMethodInstance->thingsToInclude.allowJavascriptURLs = allowJS;
 
 	return [classMethodInstance encodeHTML:inMessage imagesPath:imagesPath];
 }

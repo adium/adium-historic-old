@@ -187,7 +187,8 @@
 																		 imagesPath:nil
 																  attachmentsAsText:YES onlyIncludeOutgoingImages:NO
 																	 simpleTagsOnly:NO
-																	 bodyBackground:NO]];
+																	 bodyBackground:NO
+																allowJavascriptURLs:YES]];
 
     char	escapeMessage[[escapeHTMLMessage length] * 2 + 1];
     char	escapeSender[[sourceName length] * 2 + 1];
