@@ -69,6 +69,8 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 												   object:[view window]];
 
 		[self installCursorRect];
+
+		mouseMovedHandlerUPP = NewEventHandlerUPP(handleMouseMovedCarbonEvent);
 	}
 
 	return self;
@@ -79,6 +81,9 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 #if LOG_TRACKING_INFO
 	NSLog(@"[%@ dealloc]",self);
 #endif
+
+	RemoveEventHandler(mouseMovedHandler);
+	DisposeEventHandlerUPP(mouseMovedHandlerUPP);
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
@@ -227,7 +232,7 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 		};
 		WindowRef theWindow = [[view window] windowRef];
 
-		OSStatus err = InstallWindowEventHandler(theWindow, handleMouseMovedCarbonEvent, numTypeSpecs, typeSpecs, /*refcon*/ (void *)self, (EventHandlerRef *)&mouseMovedHandler);
+		OSStatus err = InstallWindowEventHandler(theWindow, mouseMovedHandlerUPP, numTypeSpecs, typeSpecs, /*refcon*/ (void *)self, (EventHandlerRef *)&mouseMovedHandler);
 		NSAssert3(err == noErr, @"%s: InstallWindowEventHandler returned %i (%s)", __PRETTY_FUNCTION__, err, GetMacOSStatusCommentString(err));
 #if LOG_TRACKING_INFO
 		NSLog(@"%s: Installed window event handler on %p (%p)", __PRETTY_FUNCTION__, theWindow, [[view window] windowRef]);
@@ -286,10 +291,12 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 #endif
 	[delegate showTooltipAtPoint:[[[timer userInfo] objectForKey:MOUSE_LOCATION_KEY] pointValue]];
 
+	/*
 #if LOG_TRACKING_INFO
 	NSLog(@"%s: Removing event handler %p", __PRETTY_FUNCTION__, mouseMovedHandler);
 #endif
 	RemoveEventHandler((EventHandlerRef)mouseMovedHandler);
+	 */
 
 #if LOG_TRACKING_INFO
 	NSLog(@"%s: Invalidating and releasing timer %@", __PRETTY_FUNCTION__, tooltipDelayTimer);
@@ -301,6 +308,9 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 
 - (void)_hideTooltip
 {
+#if LOG_TRACKING_INFO
+	NSLog(@"%s: tooltipLocation is %@; delegate is %@", __PRETTY_FUNCTION__, NSStringFromPoint(tooltipLocation), delegate);
+#endif
 	//If the tooltip was being shown before, hide it
 	if (!NSEqualPoints(tooltipLocation,NSZeroPoint)) {
 		lastMouseLocation = NSZeroPoint;
