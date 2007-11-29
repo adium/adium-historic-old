@@ -70,7 +70,7 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 
 		[self installCursorRect];
 	}
-	
+
 	return self;
 }
 
@@ -86,7 +86,7 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 	[self _stopTrackingMouse];
 
 	[view release]; view = nil;
-	
+
 	[super dealloc];
 }
 
@@ -94,7 +94,7 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 {
 	if (delegate != inDelegate) {
 		[self _stopTrackingMouse];
-		
+
 		delegate = inDelegate;
 	}
 }
@@ -114,7 +114,7 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 	[[NSNotificationCenter defaultCenter] removeObserver:self
 													name:AIWindowToolbarDidToggleVisibility
 												  object:[view window]];
-	
+
 	[self removeCursorRect];
 	[self _stopTrackingMouse];
 }
@@ -128,7 +128,7 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 											 selector:@selector(resetCursorTracking)
 												 name:AIWindowToolbarDidToggleVisibility
 											   object:[view window]];
-	
+
 	[self installCursorRect];
 }
 
@@ -140,15 +140,15 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 	if (tooltipTrackingTag == -1) {
 		NSRect	 		trackingRect;
 		BOOL			mouseInside;
-		
+
 		//Add a new tracking rect
 		trackingRect = [view frame];
 		trackingRect.origin = NSMakePoint(0,0);
-		
+
 		mouseInside = NSPointInRect([view convertPoint:[[view window] mouseLocationOutsideOfEventStream] fromView:[[view window] contentView]],
 									trackingRect);
 		tooltipTrackingTag = [view addTrackingRect:trackingRect owner:self userData:nil assumeInside:mouseInside];
-		
+
 #if LOG_TRACKING_INFO
 		NSLog(@"[%@ installCursorRect] addTrackingRect %@ on %@ in %@: tag = %i",self,NSStringFromRect(trackingRect),view,[view window],tooltipTrackingTag);
 #endif
@@ -171,7 +171,7 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 	if (tooltipTrackingTag != -1) {
 		[view removeTrackingRect:tooltipTrackingTag];
 		tooltipTrackingTag = -1;
-		[self _stopTrackingMouse];		
+		[self _stopTrackingMouse];
 	}
 }
 
@@ -238,9 +238,9 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 		//Hide the tooltip before releasing the timer, as the timer may be the last object retaining self
 		//and we want to communicate with the delegate before a potential call to dealloc.
 		[self _hideTooltip];
-		
+
 		RemoveEventHandler((EventHandlerRef)mouseMovedHandler);
-		
+
 		[tooltipDelayTimer invalidate];
 		[tooltipDelayTimer release];
 		tooltipDelayTimer = nil;
@@ -264,7 +264,7 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 	if (!NSEqualPoints(tooltipLocation,NSZeroPoint)) {
 		lastMouseLocation = NSZeroPoint;
 		tooltipLocation = NSZeroPoint;
-		
+
 		//Hide tooltip
 		[delegate hideTooltip];
 	}
@@ -341,7 +341,7 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 				[[tooltipDelayTimer userInfo] setObject:[NSValue valueWithPoint:mouseLocation] forKey:MOUSE_LOCATION_KEY];
 				[tooltipDelayTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:TOOL_TIP_DELAY]];
 			}
-			
+
 		//If the tooltip is on screen already, and the mouse has moved, then move the tooltip.
 		} else {
 			if (!NSEqualPoints(tooltipLocation, mouseLocation)) {
