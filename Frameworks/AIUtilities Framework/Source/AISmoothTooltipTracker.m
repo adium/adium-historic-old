@@ -26,6 +26,8 @@
 - (void)removeCursorRect;
 - (void)resetCursorTracking;
 
+- (void)cancelTooltipDelayTimer;
+
 - (void)_hideTooltip;
 
 - (void)mouseEntered:(NSEvent *)event;
@@ -53,6 +55,10 @@
 												 selector:@selector(resetCursorTracking)
 													 name:NSViewFrameDidChangeNotification
 												   object:view];
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(_hideTooltip)
+													 name:NSApplicationDidHideNotification
+												   object:NSApp];
 		[[NSNotificationCenter defaultCenter] addObserver:self
 												 selector:@selector(resetCursorTracking)
 													 name:AIWindowToolbarDidToggleVisibility
@@ -267,7 +273,14 @@
 	NSLog(@"--- [%@: mouseExited]", self);
 #endif
 
+	[self cancelTooltipDelayTimer];
 	[self _hideTooltip];
+}
+
+- (void)cancelTooltipDelayTimer {
+	[tooltipDelayTimer invalidate];
+	[tooltipDelayTimer release];
+	tooltipDelayTimer = nil;
 }
 
 - (void)delayedShowTooltip:(NSTimer *)timer
@@ -287,9 +300,7 @@
 #if LOG_TRACKING_INFO
 	NSLog(@"%s: Invalidating and releasing timer %@", __PRETTY_FUNCTION__, tooltipDelayTimer);
 #endif
-	[tooltipDelayTimer invalidate];
-	[tooltipDelayTimer release];
-	tooltipDelayTimer = nil;
+	[self cancelTooltipDelayTimer];
 }
 
 - (void)_hideTooltip
@@ -305,6 +316,9 @@
 		//Hide tooltip
 		[delegate hideTooltip];
 	}
+
+	//If it hasn't been shown yet, prevent it from being shown.
+	[self cancelTooltipDelayTimer];
 }
 
 @end
