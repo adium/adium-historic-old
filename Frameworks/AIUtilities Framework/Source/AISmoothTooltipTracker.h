@@ -45,13 +45,9 @@
 	id<AISmoothTooltipTrackerDelegate>			delegate;	//Our delegate
 
 	NSPoint				lastMouseLocation;				//Last known location of the mouse, used for movement tracking
-	NSTimer				*tooltipMouseLocationTimer;		//Checks for mouse movement
 	NSPoint				tooltipLocation;				//Last tooltip location we told our delegate about
-    NSTrackingRectTag	tooltipTrackingTag;				//Tag for our tracking rect
+    NSTrackingArea		*trackingArea;					//Tracking area to watch the view for mouse entry, movement, and exit
     NSTimer				*tooltipDelayTimer;				//Used to determine how long before a tooltip appears
-
-	void				*mouseMovedHandlerUPP;			//By void *, I mean EventHandlerUPP.
-	void				*mouseMovedHandler;				//Carbon Event handler for mouse-moved events; only exists during tracking. By void *, I mean EventHandlerRef.
 }
 
 /*!

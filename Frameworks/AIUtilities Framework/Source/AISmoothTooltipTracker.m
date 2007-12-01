@@ -26,22 +26,13 @@
 - (void)removeCursorRect;
 - (void)resetCursorTracking;
 
-- (void)_startTrackingMouse;
-- (void)_stopTrackingMouse;
 - (void)_hideTooltip;
 
-//10.4: We use these to access our instance variables from the Carbon Event handler without making them @public. When we switch to NSTrackingArea, they should go away along with the handler.
-- (void)getPrivateVariablesTooltipDelayTimer:(out NSTimer **)outTooltipDelayTimer
-						   lastMouseLocation:(out NSPoint *)outLastMouseLocation
-							 tooltipLocation:(out NSPoint *)outTooltipLocation
-									delegate:(out id *)outDelegate;
-- (void)setPrivateVariablesLastMouseLocation:(NSPoint)newLastMouseLocation
-							 tooltipLocation:(NSPoint)newTooltipLocation
-									delegate:(id)newDelegate;
-@end
+- (void)mouseEntered:(NSEvent *)event;
+- (void)mouseMoved:(NSEvent *)event;
+- (void)mouseExited:(NSEvent *)event;
 
-//10.4: This handler responds to kEventMouseMoved. For Leopard-only, switch to NSTrackingArea.
-static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, EventRef event, void *refcon);
+@end
 
 @implementation AISmoothTooltipTracker
 
@@ -55,7 +46,6 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 	if ((self = [super init])) {
 		view = [inView retain];
 		delegate = inDelegate;
-		tooltipTrackingTag = -1;
 		tooltipLocation = NSZeroPoint;
 
 		//Reset cursor tracking when the view's frame changes
@@ -69,8 +59,6 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 												   object:[view window]];
 
 		[self installCursorRect];
-
-		mouseMovedHandlerUPP = NewEventHandlerUPP(handleMouseMovedCarbonEvent);
 	}
 
 	return self;
@@ -82,13 +70,9 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 	NSLog(@"[%@ dealloc]",self);
 #endif
 
-	RemoveEventHandler(mouseMovedHandler);
-	DisposeEventHandlerUPP(mouseMovedHandlerUPP);
-
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[self removeCursorRect];
-	[self _stopTrackingMouse];
 
 	[view release]; view = nil;
 
@@ -98,8 +82,6 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 - (void)setDelegate:(id <AISmoothTooltipTrackerDelegate>)inDelegate
 {
 	if (delegate != inDelegate) {
-		[self _stopTrackingMouse];
-
 		delegate = inDelegate;
 	}
 }
@@ -121,7 +103,6 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 												  object:[view window]];
 
 	[self removeCursorRect];
-	[self _stopTrackingMouse];
 }
 
 /*
@@ -142,26 +123,44 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 //Install the cursor rect for our enclosing scrollview
 - (void)installCursorRect
 {
-	if (tooltipTrackingTag == -1) {
+	if (!trackingArea) {
 		NSRect	 		trackingRect;
+		NSPoint			mouseLocation = [[view window] mouseLocationOutsideOfEventStream];
 		BOOL			mouseInside;
 
 		//Add a new tracking rect
 		trackingRect = [view frame];
 		trackingRect.origin = NSMakePoint(0,0);
 
-		mouseInside = NSPointInRect([view convertPoint:[[view window] mouseLocationOutsideOfEventStream] fromView:[[view window] contentView]],
+		mouseInside = NSPointInRect([view convertPoint:mouseLocation fromView:[[view window] contentView]],
 									trackingRect);
+
+		trackingArea = [[NSTrackingArea alloc] initWithRect:trackingRect
+													options:(NSTrackingMouseEnteredAndExited | NSTrackingMouseMoved) | NSTrackingActiveAlways | NSTrackingInVisibleRect
+													  owner:self
+												   userInfo:nil];
+		[view addTrackingArea:trackingArea];
+
 #if LOG_TRACKING_INFO
 		NSLog(@"%s: mouse location: %@; trackingRect: %@; mouseInside: %@", __PRETTY_FUNCTION__, NSStringFromPoint([view convertPoint:[[view window] mouseLocationOutsideOfEventStream] fromView:[[view window] contentView]]), NSStringFromRect(trackingRect), mouseInside ? @"YES" : @"NO");
 #endif
-		tooltipTrackingTag = [view addTrackingRect:trackingRect owner:self userData:nil assumeInside:mouseInside];
 
-#if LOG_TRACKING_INFO
-		NSLog(@"[%@ installCursorRect] addTrackingRect %@ on %@ in %@: tag = %i",self,NSStringFromRect(trackingRect),view,[view window],tooltipTrackingTag);
-#endif
-		//If the mouse is already inside, begin tracking the mouse immediately
-		if ([[view window] isVisible] && mouseInside) [self _startTrackingMouse];
+		//If the mouse is already inside, NSTrackingArea won't send us a mouse-entered event, so we need to forge one.
+		if ([[view window] isVisible] && mouseInside) {
+			struct UnsignedWide microsecondsSinceStartup;
+			Microseconds(&microsecondsSinceStartup);
+			
+			NSEvent *event = [NSEvent mouseEventWithType:NSMouseEntered
+												location:mouseLocation
+										   modifierFlags:0
+											   timestamp:UnsignedWideToUInt64(microsecondsSinceStartup)
+											windowNumber:[[view window] windowNumber]
+												 context:[NSGraphicsContext currentContext]
+											 eventNumber:0
+											  clickCount:0
+												pressure:0.0f];
+			[self mouseEntered:event];
+		}
 	}
 }
 
@@ -169,17 +168,16 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 - (void)removeCursorRect
 {
 #if LOG_TRACKING_INFO
-	if (tooltipTrackingTag != -1) {
-		NSLog(@"[%@ removeCursorRect] Remove rect from %@ in %@ : tag = %i",self,view,[view window],tooltipTrackingTag);
+	if (trackingArea) {
+		NSLog(@"[%@ removeCursorRect] Remove rect from %@ in %@ : tracking area = %i",self,view,[view window], trackingArea);
 	} else {
 		NSLog(@"[%@ removeCursorRect] No rect to remove",self);
 	}
 #endif
 
-	if (tooltipTrackingTag != -1) {
-		[view removeTrackingRect:tooltipTrackingTag];
-		tooltipTrackingTag = -1;
-		[self _stopTrackingMouse];
+	if (trackingArea) {
+		[view removeTrackingArea:trackingArea];
+		trackingArea = nil;
 	}
 }
 
@@ -200,88 +198,79 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 // - Webkit eats mouseMoved: events, even when those events occur elsewhere on the screen
 // - mouseMoved: events do not work when Adium is in the background
 #pragma mark Tooltips (Cursor movement)
-//Mouse entered our list, begin tracking it's movement
+
+//Mouse entered our list. Start the delay timer that will show the tooltip.
 - (void)mouseEntered:(NSEvent *)theEvent
 {
 #if LOG_TRACKING_INFO
 	NSLog(@"+++ [%@: mouseEntered]", self);
 #endif
-	[self _startTrackingMouse];
+
+	NSValue *initialMouseLocation = [NSValue valueWithPoint:[NSEvent mouseLocation]];
+	tooltipDelayTimer = [[NSTimer scheduledTimerWithTimeInterval:TOOL_TIP_DELAY
+														  target:self
+														selector:@selector(delayedShowTooltip:)
+														userInfo:[NSMutableDictionary dictionaryWithObject:initialMouseLocation forKey:MOUSE_LOCATION_KEY]
+														 repeats:NO] retain];
+#if LOG_TRACKING_INFO
+	NSLog(@"%s: Scheduled timer %@ for %f seconds from now", __PRETTY_FUNCTION__, tooltipDelayTimer, TOOL_TIP_DELAY);
+#endif
 }
 
-//Mouse left our list, cease tracking
+- (void)mouseMoved:(NSEvent *)event
+{
+	NSPoint mouseLocation = [event locationInWindow];
+	NSWindow *theWindow = [event window];
+
+#warning Assumes that (a) view is the content view of this window and (b) content-relative co-ordinates are the same as frame-relative co-ordinates.
+	if ([theWindow isVisible] &&
+		NSPointInRect(mouseLocation, [view frame])
+	) {
+		//Convert our mouse location from window-relative (for comparison) to screen-relative (for real use).
+		mouseLocation = [theWindow convertBaseToScreen:mouseLocation];
+
+		//If the tooltip is not yet on screen, and the mouse has moved, then reset the delay.
+		if (tooltipDelayTimer) {
+			if (!NSEqualPoints(mouseLocation,lastMouseLocation)) {
+				lastMouseLocation = mouseLocation;
+				[[tooltipDelayTimer userInfo] setObject:[NSValue valueWithPoint:mouseLocation] forKey:MOUSE_LOCATION_KEY];
+#if LOG_TRACKING_INFO
+				NSLog(@"%s: Postponing timer until %@", __PRETTY_FUNCTION__, [NSDate dateWithTimeIntervalSinceNow:TOOL_TIP_DELAY]);
+#endif
+				[tooltipDelayTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:TOOL_TIP_DELAY]];
+			}
+
+		//If the tooltip is on screen already, and the mouse has moved, then move the tooltip.
+		} else {
+			if (!NSEqualPoints(tooltipLocation, mouseLocation)) {
+#if LOG_TRACKING_INFO
+				NSLog(@"%s: Re-showing tooltip at %@", __PRETTY_FUNCTION__, NSStringFromPoint(mouseLocation));
+#endif
+				//Move the tooltip.
+				//XXX This should be a separate method that doesn't re-order-front the tooltip.
+				[delegate showTooltipAtPoint:mouseLocation];
+				tooltipLocation = mouseLocation;
+			}
+		}
+	} else {
+		//If the cursor has left our frame or the window is no longer visible, manually hide the tooltip.
+		//This protects us in the cases where we do not receive a mouse exited message; we don't stop tracking
+		//because we could reenter the tracking area without receiving a mouseEntered: message.
+#if LOG_TRACKING_INFO
+		NSLog(@"%@: Mouse moved out; hiding the tooltip.", self);
+#endif
+		[self _hideTooltip];
+	}
+}
+
+//Mouse left our list. Hide the tooltip.
 - (void)mouseExited:(NSEvent *)theEvent
 {
 #if LOG_TRACKING_INFO
 	NSLog(@"--- [%@: mouseExited]", self);
 #endif
-	[self _stopTrackingMouse];
-}
 
-//Start tracking mouse movement
-- (void)_startTrackingMouse
-{
-#if LOG_TRACKING_INFO
-	NSLog(@"%s called; mouseMovedHandler is %p", __PRETTY_FUNCTION__, mouseMovedHandler);
-#endif
-
-	if (!mouseMovedHandler) {
-		enum { numTypeSpecs = 1 };
-		struct EventTypeSpec typeSpecs[numTypeSpecs] = {
-			{ kEventClassMouse, kEventMouseMoved }
-		};
-		WindowRef theWindow = [[view window] windowRef];
-
-		OSStatus err = InstallWindowEventHandler(theWindow, mouseMovedHandlerUPP, numTypeSpecs, typeSpecs, /*refcon*/ (void *)self, (EventHandlerRef *)&mouseMovedHandler);
-		NSAssert3(err == noErr, @"%s: InstallWindowEventHandler returned %i (%s)", __PRETTY_FUNCTION__, err, GetMacOSStatusCommentString(err));
-#if LOG_TRACKING_INFO
-		NSLog(@"%s: Installed window event handler on %p (%p)", __PRETTY_FUNCTION__, theWindow, [[view window] windowRef]);
-#endif
-
-		NSValue *initialMouseLocation = [NSValue valueWithPoint:[NSEvent mouseLocation]];
-		tooltipDelayTimer = [[NSTimer scheduledTimerWithTimeInterval:TOOL_TIP_DELAY
-															  target:self
-															selector:@selector(delayedShowTooltip:)
-															userInfo:[NSMutableDictionary dictionaryWithObject:initialMouseLocation forKey:MOUSE_LOCATION_KEY]
-															 repeats:NO] retain];
-#if LOG_TRACKING_INFO
-		NSLog(@"%s: Scheduled timer %@ for %f seconds from now", __PRETTY_FUNCTION__, tooltipDelayTimer, TOOL_TIP_DELAY);
-#endif
-	}
-}
-
-//Stop tracking mouse movement
-- (void)_stopTrackingMouse
-{
-#if LOG_TRACKING_INFO
-	NSLog(@"%s called; mouseMovedHandler is %p", __PRETTY_FUNCTION__, mouseMovedHandler);
-#endif
-
-	//Invalidate tracking
-	if (mouseMovedHandler) {
-#if LOG_TRACKING_INFO
-		NSLog(@"%s: Hiding tooltip! delegate is %@", __PRETTY_FUNCTION__, delegate);
-#endif
-		//Hide the tooltip before releasing the timer, as the timer may be the last object retaining self
-		//and we want to communicate with the delegate before a potential call to dealloc.
-		[self _hideTooltip];
-
-#if LOG_TRACKING_INFO
-		NSLog(@"%s: Removing event handler!", __PRETTY_FUNCTION__);
-#endif
-		RemoveEventHandler((EventHandlerRef)mouseMovedHandler);
-
-#if LOG_TRACKING_INFO
-		NSLog(@"%s: Invalidating and releasing tooltip delay timer %@!", __PRETTY_FUNCTION__, tooltipDelayTimer);
-#endif
-		[tooltipDelayTimer invalidate];
-		[tooltipDelayTimer release];
-		tooltipDelayTimer = nil;
-
-#if LOG_TRACKING_INFO
-		NSLog(@"%s: Using up surplus exclamation marks!", __PRETTY_FUNCTION__);
-#endif
-	}
+	[self _hideTooltip];
 }
 
 - (void)delayedShowTooltip:(NSTimer *)timer
@@ -321,115 +310,4 @@ static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, Eve
 	}
 }
 
-- (void)getPrivateVariablesTooltipDelayTimer:(out NSTimer **)outTooltipDelayTimer
-						   lastMouseLocation:(out NSPoint *)outLastMouseLocation
-							 tooltipLocation:(out NSPoint *)outTooltipLocation
-									delegate:(out id *)outDelegate
-{
-	if (outTooltipDelayTimer) *outTooltipDelayTimer = tooltipDelayTimer;
-	if (outLastMouseLocation) *outLastMouseLocation = lastMouseLocation;
-	if (outTooltipLocation)   *outTooltipLocation   = tooltipLocation;
-	if (outDelegate)          *outDelegate          = delegate;
-}
-- (void)setPrivateVariablesLastMouseLocation:(NSPoint)newLastMouseLocation
-							 tooltipLocation:(NSPoint)newTooltipLocation
-									delegate:(id)newDelegate
-{
-	lastMouseLocation = newLastMouseLocation;
-	tooltipLocation = newTooltipLocation;
-	delegate = newDelegate;
-}
-
 @end
-
-static OSStatus handleMouseMovedCarbonEvent(EventHandlerCallRef nextHandler, EventRef event, void *refcon) {
-#if LOG_TRACKING_INFO
-	NSLog(@"%s called!", __PRETTY_FUNCTION__);
-#endif
-	OSStatus err;
-
-	AISmoothTooltipTracker *self = (id)refcon;
-	NSView *view = [self view];
-	NSWindow *theWindow = [view window];
-
-	id delegate;
-    NSTimer *tooltipDelayTimer;
-	NSPoint lastMouseLocation;
-	NSPoint tooltipLocation;
-	[self getPrivateVariablesTooltipDelayTimer:&tooltipDelayTimer
-							 lastMouseLocation:&lastMouseLocation
-							   tooltipLocation:&tooltipLocation
-									  delegate:&delegate];
-
-	//Check whether kEventParamWindowRef is the window we're tracking.
-	WindowRef eventWindow = NULL;
-	err = GetEventParameter(event, kEventParamWindowRef, typeWindowRef, /*outActualType*/ NULL, sizeof(eventWindow), /*outActualSize*/ NULL, &eventWindow);
-#if LOG_TRACKING_INFO
-	NSLog(@"%s: GetEventParameter, for kEventParamWindowRef, returned window %p and error %i (%s)", __PRETTY_FUNCTION__, eventWindow, err, GetMacOSStatusCommentString(err));
-#endif
-	NSCAssert3(err == noErr, @"%s: GetEventParameter, retrieving kEventParamWindowRef, returned error %i (%s)", __PRETTY_FUNCTION__, err, GetMacOSStatusCommentString(err));
-	if (eventWindow != [theWindow windowRef]) {
-		return eventNotHandledErr;
-	}
-
-	//Check whether kEventParamWindowMouseLocation is within the frame of the view we're tracking.
-	HIPoint mouseLocationInWindow;
-	err = GetEventParameter(event, kEventParamWindowMouseLocation, typeHIPoint, /*outActualType*/ NULL, sizeof(mouseLocationInWindow), /*outActualSize*/ NULL, &mouseLocationInWindow);
-#if LOG_TRACKING_INFO
-	NSLog(@"%s: GetEventParameter, for kEventParamWindowMouseLocation, returned point %@ and error %i (%s)", __PRETTY_FUNCTION__, NSStringFromPoint(NSPointFromCGPoint(mouseLocationInWindow)), err, GetMacOSStatusCommentString(err));
-#endif
-	NSCAssert3(err == noErr, @"%s: GetEventParameter, retrieving kEventParamWindowMouseLocation, returned error %i (%s)", __PRETTY_FUNCTION__, err, GetMacOSStatusCommentString(err));
-
-	//Convert from HIToolbox's top-left origin to Cocoa's bottom-left origin.
-	NSPoint mouseLocation = { mouseLocationInWindow.x, (mouseLocationInWindow.y + [theWindow frame].size.height) * -1.0 };
-
-#if LOG_TRACKING_INFO
-	NSLog(@"%@: Visible: %i ; Point %@ in %@ = %i", self,
-		  [theWindow isVisible],
-		  NSStringFromPoint(mouseLocation),
-		  NSStringFromRect([view frame]),
-		  NSPointInRect(mouseLocation, [view frame]));
-#endif
-
-	if ([theWindow isVisible] &&
-		NSPointInRect(mouseLocation, [view frame])
-	) {
-		//If the tooltip is not yet on screen, and the mouse has moved, then reset the delay.
-		if (tooltipDelayTimer) {
-			if (!NSEqualPoints(mouseLocation,lastMouseLocation)) {
-				lastMouseLocation = mouseLocation;
-				[[tooltipDelayTimer userInfo] setObject:[NSValue valueWithPoint:mouseLocation] forKey:MOUSE_LOCATION_KEY];
-#if LOG_TRACKING_INFO
-				NSLog(@"%s: Postponing timer until %@", __PRETTY_FUNCTION__, [NSDate dateWithTimeIntervalSinceNow:TOOL_TIP_DELAY]);
-#endif
-				[tooltipDelayTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:TOOL_TIP_DELAY]];
-			}
-
-		//If the tooltip is on screen already, and the mouse has moved, then move the tooltip.
-		} else {
-			if (!NSEqualPoints(tooltipLocation, mouseLocation)) {
-#if LOG_TRACKING_INFO
-				NSLog(@"%s: Re-showing tooltip at %@", __PRETTY_FUNCTION__, NSStringFromPoint(mouseLocation));
-#endif
-				//Move the tooltip.
-				//XXX This should be a separate method that doesn't re-order-front the tooltip.
-				[delegate showTooltipAtPoint:mouseLocation];
-				tooltipLocation = mouseLocation;
-			}
-		}
-	} else {
-		//If the cursor has left our frame or the window is no longer visible, manually hide the tooltip.
-		//This protects us in the cases where we do not receive a mouse exited message; we don't stop tracking
-		//because we could reenter the tracking area without receiving a mouseEntered: message.
-#if LOG_TRACKING_INFO
-		NSLog(@"%@: Mouse moved out; hiding the tooltip.", self);
-#endif
-		[self _hideTooltip];
-	}
-
-	[self setPrivateVariablesLastMouseLocation:lastMouseLocation
-							   tooltipLocation:tooltipLocation
-									  delegate:delegate];
-
-	return err;
-}
