@@ -194,9 +194,6 @@
 
 
 //Tooltips (Cursor movement) -------------------------------------------------------------------------------------------
-//We use a timer to poll the location of the mouse.  Why do this instead of using mouseMoved: events?
-// - Webkit eats mouseMoved: events, even when those events occur elsewhere on the screen
-// - mouseMoved: events do not work when Adium is in the background
 #pragma mark Tooltips (Cursor movement)
 
 //Mouse entered our list. Start the delay timer that will show the tooltip.
