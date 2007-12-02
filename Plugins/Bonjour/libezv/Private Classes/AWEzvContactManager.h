@@ -53,7 +53,7 @@
 
 	ServiceController			*fDomainBrowser;
 	ServiceController			*fServiceBrowser;
-	ServiceController			*fServiceResolver;
+	NSMutableDictionary			*serviceResolvers; //Dict of ServiceControllers keyed by contact uniqueID
 	ServiceController			*fAddressResolver;
 	//ServiceController			*fImageResolver;
 	

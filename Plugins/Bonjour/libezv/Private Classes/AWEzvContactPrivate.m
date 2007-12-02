@@ -49,6 +49,8 @@
 
 - (void)dealloc
 {
+	[_manager stopResolvingForContact:self];
+
 	[_stream release];
     [_idleSinceDate release];
 	[_name release];
