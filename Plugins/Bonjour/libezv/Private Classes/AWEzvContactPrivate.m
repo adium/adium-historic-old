@@ -226,8 +226,7 @@
 					NSMutableString *mutableHtml = [html mutableCopy];
 					[mutableHtml replaceOccurrencesOfString:@"<br></br>" withString:@"<br />" 
 						options:NSCaseInsensitiveSearch range:NSMakeRange(0, [mutableHtml length])];
-					html = [mutableHtml copy];
-					[mutableHtml release];
+					html = [mutableHtml autorelease];
 				}
 
 				if (([node type] == AWEzvXMLElement) && ([[node name] isEqualToString:@"x"])) {
