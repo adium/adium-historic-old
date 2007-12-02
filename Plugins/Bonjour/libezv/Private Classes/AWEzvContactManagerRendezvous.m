@@ -228,25 +228,18 @@ void image_register_reply (
 
 	[serviceResolvers release]; serviceResolvers = nil;
 	
-	if ( fServiceBrowser != nil) {
-		[fServiceBrowser release];
-		fServiceBrowser = nil;
-	}
-	
+	[fServiceBrowser release]; fServiceBrowser = nil;
+
 	/* Remove Resolvers, this also deallocates the DNSServiceReferences */
-	if ( fDomainBrowser != nil) {
+	if (fDomainBrowser != nil) {
 		AILogWithSignature(@"Releasing %@",fDomainBrowser);
-		[fDomainBrowser release];
-				
-		fDomainBrowser = nil;
+		[fDomainBrowser release]; fDomainBrowser = nil;
+
 		avDNSReference = nil;
 		imageServiceRef = nil;
 		
 		[self setConnected:NO];
-		if (avInstanceName != nil) {
-			[avInstanceName release];
-			avInstanceName = nil;
-		}
+		[avInstanceName release]; avInstanceName = nil;
 	}
 }
 
@@ -447,10 +440,7 @@ void image_register_reply (
 /* stop looking for new rendezvous clients */
 - (void)stopBrowsing{
 	AILogWithSignature(@"fServiceBrowser is %@ (retain count %i)", fServiceBrowser, [fServiceBrowser retainCount]);
-	if ( fServiceBrowser != nil) {
-		[fServiceBrowser release];
-		fServiceBrowser = nil;
-	}
+	[fServiceBrowser release]; fServiceBrowser = nil;
 }
 
 /* handle a message from our browser */
@@ -929,12 +919,12 @@ static void	ProcessSockData( CFSocketRef s, CFSocketCallBackType type, CFDataRef
 /* Remove service from runloop, deallocate service and associated resources */
 {
 	AILogWithSignature(@"");
-	if ( fSocketRef != nil) {
+	if (fSocketRef != nil) {
 		CFSocketInvalidate( fSocketRef);		// Note: Also closes the underlying socket
 		CFRelease( fSocketRef);
 	}
 
-	if ( fRunloopSrc != nil) {
+	if (fRunloopSrc != nil) {
 		CFRunLoopRemoveSource( CFRunLoopGetCurrent(), fRunloopSrc, kCFRunLoopDefaultMode);
 		CFRelease( fRunloopSrc);
 	}
