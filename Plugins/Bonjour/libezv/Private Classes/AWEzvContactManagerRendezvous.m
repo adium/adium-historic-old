@@ -490,6 +490,7 @@ void image_register_reply (
 		[contact setManager:self];
 		/* save contact in dictionary */
 		[contacts setObject:contact forKey:replyNameString];
+		[contact autorelease];
 
 		/* and resolve contact */
 		DNSServiceRef resolveRef;
@@ -561,6 +562,8 @@ void image_register_reply (
 			[contact setManager:self];
 			/* save contact in dictionary */
 			[contacts setObject:contact forKey:[contact uniqueID]];
+			[contact autorelease];
+
 		} else {
 			[[client client] reportError:@"Contact to update not in dictionary and has bad identifier" ofLevel:AWEzvError];
 		}
@@ -632,6 +635,7 @@ void image_register_reply (
 			[contact setManager:self];
 			/* save contact in dictionary */
 			[contacts setObject:contact forKey:[contact uniqueID]];
+			[contact autorelease];
 		} else {
 			[[client client] reportError:@"Contact to update not in dictionary and has bad identifier" ofLevel:AWEzvError];
 		}
