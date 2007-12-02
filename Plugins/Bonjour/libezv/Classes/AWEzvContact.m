@@ -180,7 +180,6 @@
 		[messageNode release];
 		[messageExtraEscapedString release];
 		[htmlFiltered release];
-		[fixedHTML release];
 
 	} else {
 		[self setStatus: AWEzvUndefined];
@@ -194,11 +193,10 @@
 {
 	/* ABSZ and SIZE are set to integers without quotes which doesn't work with iChat so lets add quotes */
 	NSMutableString *mutableHTML;
-	
-	mutableHTML = [html mutableCopy];
-	
 	NSRange findRange;
-	
+
+	mutableHTML = [html mutableCopy];
+
 	findRange = [mutableHTML rangeOfString:@"ABSZ="];
 	if (findRange.location != NSNotFound && findRange.length == 5){
 		/* We have a correct ABSZ= string */
@@ -209,7 +207,7 @@
 		}
 		[mutableHTML insertString:@"\"" atIndex: i];
 	}
-	
+
 	findRange = [mutableHTML rangeOfString:@"SIZE="];
 	if (findRange.location != NSNotFound && findRange.length == 5){
 		/* We have a correct SIZE= string */
@@ -220,6 +218,7 @@
 		}
 		[mutableHTML insertString:@"\"" atIndex: i];
 	}
+
 	/* iChat display pt sized fonts larger than the NSTextView, however, using px makes the sizes the same */
 	findRange = [mutableHTML rangeOfString:@"font-size"];
 	if (findRange.location != NSNotFound) {
@@ -229,7 +228,8 @@
 												range:NSMakeRange(findRange.location, [mutableHTML length] - findRange.location)];
 		[mutableHTML replaceOccurrencesOfString:@"pt" withString:@"px" options:NSCaseInsensitiveSearch range:NSMakeRange(findRange.location, NSMaxRange(nextSemicolon) - findRange.location)];
 	}
-	return [mutableHTML copy];
+
+	return [mutableHTML autorelease];
 }
 
 #pragma mark Send Typing Notification
