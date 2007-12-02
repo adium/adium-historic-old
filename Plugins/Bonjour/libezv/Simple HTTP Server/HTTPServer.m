@@ -340,8 +340,7 @@
 	// Check the HTTP version
 	// If it's anything but HTTP version 1.1, we don't support it
 	NSString *version = [(NSString *)CFHTTPMessageCopyVersion(request) autorelease];
-    if(!version || ![version isEqualToString:(NSString *)kCFHTTPVersion1_1])
-	{
+    if (!version || ![version isEqualToString:(NSString *)kCFHTTPVersion1_1]) {
 		//NSLog(@"HTTP Server: Error 505 - Version Not Supported");
 		
 		// Status Code 505 - Version Not Supported
@@ -351,13 +350,13 @@
 		[asyncSocket writeData:responseData withTimeout:WRITE_ERROR_TIMEOUT tag:HTTP_RESPONSE];
 		CFRelease(response);
 		[[server transfer] userFailedDownload];
-		return;    }
+		return;
+	}
 	
 	// Check HTTP method
 	// If no method was passed, issue a Bad Request response
     NSString *method = [(NSString *)CFHTTPMessageCopyRequestMethod(request) autorelease];
-    if(!method)
-	{
+    if (!method) {
 		//NSLog(@"HTTP Server: Error 400 - Bad Request");
 		
 		// Status Code 400 - Bad Request
@@ -373,10 +372,8 @@
 	// Extract requested URI
 	NSURL *uri = [(NSURL *)CFHTTPMessageCopyRequestURL(request) autorelease];
 	
-	
 	// Respond properly to HTTP 'GET' and 'HEAD' commands
-    if([method isEqualToString:@"GET"] || [method isEqualToString:@"HEAD"])
-	{
+    if ([method isEqualToString:@"GET"] || [method isEqualToString:@"HEAD"]) {
 		// AWEzvLog(@"responding to get/head");
 		NSData *data = [self dataForURI:[uri relativeString] appleSingle:isAppleSingle];
 		
@@ -403,9 +400,7 @@
 		{
 			NSData *responseData = [(NSData *)CFHTTPMessageCopySerializedMessage(response) autorelease];
 			[asyncSocket writeData:responseData withTimeout:WRITE_HEAD_TIMEOUT tag:HTTP_RESPONSE];
-        }
-		else
-		{
+        } else {
 			// Previously, we would use the CFHTTPMessageSetBody method here.
 			// This caused problems, however, if the data was large.
 			// For example, if the data represented a 500 MB movie on the disk, this method would thrash the OS!
@@ -426,7 +421,9 @@
     NSData *responseData = [(NSData *)CFHTTPMessageCopySerializedMessage(response) autorelease];
 	[asyncSocket writeData:responseData withTimeout:WRITE_ERROR_TIMEOUT tag:HTTP_RESPONSE];
     CFRelease(response);
+
 	[[server transfer] userFailedDownload];
+
 	return;
 }
 
