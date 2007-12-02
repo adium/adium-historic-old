@@ -50,7 +50,8 @@
 	LIST_POSITION		statusIconPosition;
 	LIST_POSITION		serviceIconPosition;
 	BOOL				extendedStatusIsBelowName;
-	
+	BOOL				useStatusMessageAsExtendedStatus;
+
 	float				backgroundOpacity;
 
 	NSFont				*statusFont;
@@ -89,6 +90,7 @@
 - (void)setBackgroundColorIsStatus:(BOOL)isStatus;
 - (void)setBackgroundColorIsEvents:(BOOL)isEvents;
 - (void)setShouldUseContactTextColors:(BOOL)flag;
+- (void)setUseStatusMessageAsExtendedStatus:(BOOL)flag;
 
 //Drawing
 - (void)drawContentWithFrame:(NSRect)rect;
