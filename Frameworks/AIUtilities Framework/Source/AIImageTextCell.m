@@ -220,7 +220,7 @@
  *
  *	@par	If the image is taller than the height of \a cellFrame, the image will be drawn scaled down. If the image is shorter, it will be vertically centered.
  *
- *	@return	The size drawn into, which is not necessarily the same size as the image—it may be larger or smaller.
+ *	@return	The size drawn into, which is not necessarily the same size as the image (it may be larger or smaller).
  */
 - (NSSize)drawImage:(NSImage *)image withFrame:(NSRect)cellFrame
 {
