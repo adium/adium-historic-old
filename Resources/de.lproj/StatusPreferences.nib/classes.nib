@@ -100,10 +100,12 @@
                 "checkBox_autoAway" = NSButton;
                 "checkBox_fastUserSwitching" = NSButton;
                 "checkBox_idle" = NSButton;
+                "checkBox_screenSaver" = NSButton;
                 "checkBox_showStatusWindow" = NSButton;
                 "outlineView_stateList" = NSOutlineView;
                 "popUp_autoAwayStatusState" = NSPopUpButton;
                 "popUp_fastUserSwitchingStatusState" = NSPopUpButton;
+                "popUp_screenSaverStatusState" = NSPopUpButton;
                 "scrollView_stateList" = AIAutoScrollView;
                 "stepper_autoAwayMinutes" = NSStepper;
                 "stepper_idleMinutes" = NSStepper;
