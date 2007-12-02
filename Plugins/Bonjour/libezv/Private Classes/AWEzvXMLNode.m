@@ -39,8 +39,7 @@
 
 - (id) initWithType:(int)theType name:(NSString *)theName 
 {
-    if((self = [super init]))
-	{
+    if ((self = [super init])) {
 		type = theType;
 		name = [theName copy];
 		children = [[NSMutableArray alloc] initWithCapacity:DEFAULT_CAPACITY];

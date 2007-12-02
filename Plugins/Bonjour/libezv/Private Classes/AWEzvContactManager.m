@@ -37,8 +37,7 @@
 
 - (id)initWithClient:(AWEzv *)newClient 
 {
-    if((self = [super init]))
-	{
+    if ((self = [super init])) {
 		contacts = [[NSMutableDictionary alloc] init];
 		client = newClient;
 		isConnected = NO;

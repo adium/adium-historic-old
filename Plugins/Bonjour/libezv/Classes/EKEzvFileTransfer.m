@@ -4,8 +4,7 @@
 @implementation EKEzvFileTransfer
 - (id)init
 {
-	if((self = [super init]))
-	{	
+	if ((self = [super init])) {	
 	}
 	return self;
 }
@@ -250,10 +249,10 @@
 #pragma mark Process File Transfers
 - (void) begin
 {
-	if (direction == EKEzvIncomingTransfer){
+	if (direction == EKEzvIncomingTransfer) {
 		EKEzvIncomingFileTransfer *incoming = (EKEzvIncomingFileTransfer *)self;
 		[incoming startDownload];
-	} else if (direction == EKEzvOutgoingTransfer){
+	} else if (direction == EKEzvOutgoingTransfer) {
 		EKEzvOutgoingFileTransfer *outgoing = (EKEzvOutgoingFileTransfer *)self;
 		[outgoing startSending];
 	} else {
@@ -263,10 +262,10 @@
 
 - (void) cancel
 {
-	if (direction == EKEzvIncomingTransfer){
+	if (direction == EKEzvIncomingTransfer) {
 		EKEzvIncomingFileTransfer *incoming = (EKEzvIncomingFileTransfer *)self;
 		[incoming cancelDownload];
-	} else if (direction == EKEzvOutgoingTransfer){
+	} else if (direction == EKEzvOutgoingTransfer) {
 		EKEzvOutgoingFileTransfer *outgoing = (EKEzvOutgoingFileTransfer *)self;
 		[outgoing cancelTransfer];
 	} else {

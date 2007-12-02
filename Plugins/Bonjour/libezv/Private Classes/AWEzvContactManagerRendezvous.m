@@ -301,7 +301,7 @@ void image_register_reply (
 	}
 
 	/* check for idle */
-	if ([client idleTime]){
+	if ([client idleTime]) {
 		[userAnnounceData setField:@"away" content:[NSString stringWithFormat:@"%f", [[client idleTime] timeIntervalSinceReferenceDate]]];
 	} else {
 		[userAnnounceData deleteField:@"away"];
@@ -320,7 +320,7 @@ void image_register_reply (
 	if (!isConnected)
 		return;
 
-	if(avDNSReference == NULL){
+	if (avDNSReference == NULL) {
 		[[client client] reportError:@"avDNSReference is null when trying to update the TXT Record" ofLevel:AWEzvWarning];
 		return;
 	}
@@ -334,7 +334,7 @@ void image_register_reply (
 		/* length */ TXTRecordGetLength(&txtRecord),
 		/* data */ TXTRecordGetBytesPtr(&txtRecord),
 		/* time to live */ 0 );
-	if (updateError != kDNSServiceErr_NoError){		
+	if (updateError != kDNSServiceErr_NoError) {		
 		[[client client] reportError:@"Error updating TXT Record" ofLevel:AWEzvError];
 		[self disconnect];
 	}
@@ -365,7 +365,7 @@ void image_register_reply (
 		    /* service reference */ avDNSReference, 
 		    /* record reference */ imageRef, 
 		    /* flags, ignored */ 0);
-		if (error == kDNSServiceErr_NoError){
+		if (error == kDNSServiceErr_NoError) {
 			imageRef = nil;
 			[userAnnounceData deleteField:@"phsh"];
 			[self updateAnnounceInfo];
@@ -382,7 +382,7 @@ void image_register_reply (
 		    /* service reference */ /*imageServiceRef*/avDNSReference, 
 		    /* record reference */ imageRef, 
 			/* flags, ignored */ 1);
-		if (error != kDNSServiceErr_NoError){
+		if (error != kDNSServiceErr_NoError) {
 			[[client client] reportError:@"Error removing old image before setting new image" ofLevel:AWEzvWarning];
 			return;
 		} else {
@@ -399,7 +399,7 @@ void image_register_reply (
 	                             /* data */ [JPEGData bytes], 
 	                             /* time to live */ 0);
 
-	if (error == kDNSServiceErr_NoError){
+	if (error == kDNSServiceErr_NoError) {
 		/* Let's create the hash */
 		SHA1Init(&ctx);
 		SHA1Update(&ctx, [JPEGData bytes], [JPEGData length]);
@@ -413,7 +413,7 @@ void image_register_reply (
 }
 
 - (void) updatePHSH {
-	if (imagehash != nil){
+	if (imagehash != nil) {
 		[userAnnounceData setField:@"phsh" content:imagehash];
 		/* announce to network */
 		[self updateAnnounceInfo];
@@ -449,7 +449,7 @@ void image_register_reply (
 	                                  /* callBack function */ handle_av_browse_reply,
 	                                  /* context, may be null */ self);
 
-	if (avBrowseError == kDNSServiceErr_NoError){
+	if (avBrowseError == kDNSServiceErr_NoError) {
 		fServiceBrowser = [[ServiceController alloc] initWithServiceRef:browsRef];
 		[fServiceBrowser addToCurrentRunLoop];
 	} else {
@@ -476,13 +476,13 @@ void image_register_reply (
 	av:(BOOL) av {
 	
 	AWEzvContact *contact;
-	if(!replyName)
+	if (!replyName)
 		return;
 
 	NSString *replyNameString = [NSString stringWithUTF8String:replyName];
 	if (!replyNameString)
 		return;
-	if (flags == (kDNSServiceFlagsAdd) || flags == (kDNSServiceFlagsMoreComing | kDNSServiceFlagsAdd)){
+	if (flags == (kDNSServiceFlagsAdd) || flags == (kDNSServiceFlagsMoreComing | kDNSServiceFlagsAdd)) {
 		/* Add this contact */
 		/* initialise contact */
 		contact = [[AWEzvContact alloc] init];
@@ -506,7 +506,7 @@ void image_register_reply (
 			/* callback */ resolve_reply,
 			/* contxt, may be NULL */ contact);
 
-		if (resolveRefError == kDNSServiceErr_NoError){			
+		if (resolveRefError == kDNSServiceErr_NoError) {			
 			fServiceResolver = [[ServiceController alloc] initWithServiceRef:resolveRef];
 			[fServiceResolver addToCurrentRunLoop];
 		} else {
@@ -587,7 +587,7 @@ void image_register_reply (
 		[contact setStatus: AWEzvUndefined];
 	}
 
-	if (!moreToCome){
+	if (!moreToCome) {
 		[contact setAddressServiceController: nil];
 	}
 }
@@ -597,10 +597,10 @@ void image_register_reply (
 	dataLen:(uint16_t)dataLen
 	more:(boolean_t)moreToCome{
 
-	if (!moreToCome){
+	if (!moreToCome) {
 		[contact setImageServiceController: nil];
 	}
-	if (dataLen != 0 ){
+	if (dataLen != 0 ) {
 		/* We have an image */
 		/* parse raw Data */
 		NSImage *image = [[NSImage alloc] initWithData:[NSData dataWithBytes:data length:dataLen]];
@@ -697,7 +697,7 @@ void image_register_reply (
 		/* We should check to see if this is a new phsh */
 		NSString *hash = [contact imageHash];
 		NSString *newHash = [rendezvousData getField:@"phsh"];
-		if(hash == NULL || [newHash compare: hash] != NSOrderedSame){
+		if (hash == NULL || [newHash compare: hash] != NSOrderedSame) {
 			[contact setImageHash: newHash];	
 			/* The two hashes are different or there was no image before so there is an image to be downloaded */
 			/* Download the image using DNSServiceQueryRecord */
@@ -779,7 +779,7 @@ void image_register_reply (
 #pragma mark mDNS callbacks
 
 #pragma mark mDNS Register Callbacks
-void register_reply (DNSServiceRef sdRef, DNSServiceFlags flags, DNSServiceErrorType errorCode, const char *name, const char *regtype, const char *domain, void *context ){
+void register_reply (DNSServiceRef sdRef, DNSServiceFlags flags, DNSServiceErrorType errorCode, const char *name, const char *regtype, const char *domain, void *context ) {
 	AWEzvContactManager *self = context;
 	[self setInstanceName:[NSString stringWithUTF8String:name]];
 	[self regCallBack:errorCode];
@@ -790,8 +790,8 @@ void image_register_reply (
 	DNSRecordRef RecordRef, 
 	DNSServiceFlags flags, 
 	DNSServiceErrorType errorCode, 
-	void *context ){
-	if (errorCode != kDNSServiceErr_NoError){
+	void *context ) {
+	if (errorCode != kDNSServiceErr_NoError) {
 		AWEzvLog(@"error %d registering image record", errorCode);
 	} else {
 		AWEzvContactManager *self = context;
@@ -807,9 +807,9 @@ void handle_av_browse_reply (DNSServiceRef sdRef,
 		const char *serviceName,
 		const char *regtype,
 		const char *replyDomain,
-		void *context ){
+		void *context ) {
 	/* Received a browser reply from DNSServiceBrowse for av, now must handle processing the list of results */
-	if (errorCode == kDNSServiceErr_NoError){
+	if (errorCode == kDNSServiceErr_NoError) {
 		AWEzvContactManager *self = context;
 	    if (![[self myInstanceName] isEqualToString:[NSString stringWithUTF8String:serviceName]])
 			[self browseResultwithFlags:flags onInterface:interfaceIndex name:serviceName type:regtype domain:replyDomain av:YES];
@@ -829,8 +829,8 @@ void resolve_reply (
 	uint16_t port, 
 	uint16_t txtLen, 
 	const char *txtRecord, 
-	void *context ){
-		if (errorCode == kDNSServiceErr_NoError){
+	void *context ) {
+		if (errorCode == kDNSServiceErr_NoError) {
 			/* use TXTRecord methods to resolve this */
 			AWEzvContact	*contact = context;
 			AWEzvContactManager *self = [contact manager];
@@ -867,8 +867,8 @@ void ImageQueryRecordReply( DNSServiceRef DNSServiceRef, DNSServiceFlags flags, 
 {
 	AWEzvContact	*contact = context;
 	AWEzvContactManager *self = [contact manager];
-	if (errorCode == kDNSServiceErr_NoError){
-		if(flags & kDNSServiceFlagsAdd)
+	if (errorCode == kDNSServiceErr_NoError) {
+		if (flags & kDNSServiceFlagsAdd)
 			[self updateImageForContact:contact data:rdata dataLen:rdlen more:((flags & kDNSServiceFlagsMoreComing) != 0)];
 	}
 }
@@ -880,7 +880,7 @@ static void	ProcessSockData( CFSocketRef s, CFSocketCallBackType type, CFDataRef
 {
 	DNSServiceRef		serviceRef = (DNSServiceRef) info;
 	DNSServiceErrorType err = DNSServiceProcessResult( serviceRef);
-	if ( err != kDNSServiceErr_NoError){
+	if ( err != kDNSServiceErr_NoError) {
 		//printf( "DNSServiceProcessResult() for socket descriptor %d returned an error! %d with CFSocketCallBackType %d and data %s\n", DNSServiceRefSockFD(info), err, type, data);
 	}
 }

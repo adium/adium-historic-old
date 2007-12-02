@@ -53,8 +53,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 @implementation EKEzvOutgoingFileTransfer
 - (id)init
 {
-	if((self = [super init]))
-	{
+	if ((self = [super init])) {
 		urlSizes = [[NSMutableDictionary alloc] initWithCapacity:10];
 		validURLS = [[NSMutableArray alloc] initWithCapacity:10];
 		urlData = [[NSMutableDictionary alloc] initWithCapacity:10];
@@ -84,7 +83,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 
 - (void) setContactUID:(NSString *)newUID
 {
-	if (contactUID != newUID){
+	if (contactUID != newUID) {
 		[contactUID release];
 		contactUID = [newUID retain];
 	}
@@ -97,20 +96,20 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 	[self setContact:[[self manager] contactForIdentifier:contactUID]];
 
 	success = [self processTransfer];
-	if (!success){
+	if (!success) {
 		[[[[self manager] client] client] transferFailed:self];
 		return;
 	}
 
 	success = [self getData];
-	if (!success){
+	if (!success) {
 		[[[[self manager] client] client] transferFailed:self];
 		return;
 	}
 
 	/*We need to start the server*/
 	success = [self startHTTPServer];
-	if (!success){
+	if (!success) {
 		[[[[self manager] client] client] transferFailed:self];
 		return;
 	}
@@ -125,18 +124,18 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 	NSString *path = [self localFilename];
 	BOOL directory = NO;
 	BOOL exists = [manager fileExistsAtPath:path isDirectory:&directory];
-	if (!exists){
+	if (!exists) {
 		[self cancelTransfer];
 		return NO;
 	}
-	if (directory){
+	if (directory) {
 		isDirectory = YES;
 	}
 
 	[self setMimeType: [self mimeTypeForPath:path]];
 	posixflags = [self posixFlagsForPath:path];
 
-	if (posixflags == nil){
+	if (posixflags == nil) {
 		return NO;
 	}
 	return YES;
@@ -145,7 +144,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 - (bool)getData
 {
 	/*Let's load the data from disk into the urlData dictionary */
-	if (!isDirectory){
+	if (!isDirectory) {
 		/*Only one file so let's add the path */
 
 		[urlData setObject:[self localFilename] forKey:[[self localFilename] lastPathComponent]];
@@ -161,23 +160,23 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 		NSDirectoryEnumerator *enumerator = [manager enumeratorAtPath:[self localFilename]];
 		NSString *file;
 		NSString *basePath = [[self localFilename] stringByAppendingString:@"/"];
-		while (file = [enumerator nextObject]){
+		while (file = [enumerator nextObject]) {
 			NSString *fullPath = [basePath stringByAppendingString:file];
 
 			BOOL exists = NO;
 			BOOL directory = NO;
 			exists = [manager fileExistsAtPath:fullPath isDirectory:&directory];
-			if (!exists){
+			if (!exists) {
 				[[[[self manager] client] client] reportError:@"File to transfer no longer exists." ofLevel:AWEzvError];
 
 				return nil;
 			}
-			if (!directory && ![file hasPrefix:@".DS_Store"]){
+			if (!directory && ![file hasPrefix:@".DS_Store"]) {
 				NSString *subPath = [[[[self localFilename] lastPathComponent] stringByAppendingString:@"/"] stringByAppendingString: file];
 
 				/*Reset the size */
 				NSNumber *sizeNumber = [self sizeNumberForPath:fullPath];
-				if (sizeNumber){
+				if (sizeNumber) {
 					[urlSizes setObject:sizeNumber forKey:subPath];
 					[self setSize:[self size] + [sizeNumber unsignedLongLongValue]];
 				}
@@ -196,7 +195,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 	NSError *error;
 	BOOL success = [server start:&error];
 
-	if(!success)
+	if (!success)
 	{
 		[[[[self manager] client] client] reportError:@"Could not start HTTP Server." ofLevel:AWEzvError];
 		return NO;
@@ -227,7 +226,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 	/*Create the dir */
 	NSXMLElement *root = [[NSXMLElement alloc] initWithName:@"dir"];
 	NSString *posixFlags = [self posixFlagsForPath: newPath];
-	if (posixFlags != nil){
+	if (posixFlags != nil) {
 		[root addAttribute:[NSXMLNode attributeWithName:@"posixflags" stringValue:posixFlags]];
 	}
 
@@ -238,7 +237,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 
 	NSEnumerator *enumerator = [children objectEnumerator];
 	NSXMLElement *child;
-	while (child = [enumerator nextObject]){
+	while (child = [enumerator nextObject]) {
 		[root addChild:child];
 	}
 
@@ -266,19 +265,19 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 		bool exists = NO;
 		bool directory = NO;
 		exists = [manager fileExistsAtPath:newPath isDirectory:&directory];
-		if (!exists){
+		if (!exists) {
 			[[[[self manager] client] client] reportError:@"File to transfer no longer exists." ofLevel:AWEzvError];
 			return nil;
 		}
-		if ([file hasPrefix:@".DS_Store"]){
+		if ([file hasPrefix:@".DS_Store"]) {
 			continue;
 		}
 
-		if (directory){
+		if (directory) {
 			// handle the creation of the directory xml
 			NSXMLElement *directory = [[NSXMLElement alloc] initWithName:@"dir"];
 			NSString *posixFlags = [self posixFlagsForPath: newPath];
-			if (posixFlags != nil){
+			if (posixFlags != nil) {
 				[directory addAttribute:[NSXMLNode attributeWithName:@"posixflags" stringValue:posixFlags]];
 			}
 
@@ -289,7 +288,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 
 			NSEnumerator *dirEnumerator = [dirChildren objectEnumerator];
 			NSXMLElement *child;
-			while (child = [dirEnumerator nextObject]){
+			while (child = [dirEnumerator nextObject]) {
 				[directory addChild:child];
 			}
 
@@ -298,16 +297,16 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 			// create the file xml
 			NSXMLElement *fileXML = [[NSXMLElement alloc] initWithName:@"file"];
 			NSString *mimeTypeString = [self mimeTypeForPath:newPath];
-			if (mimeType != nil){
+			if (mimeType != nil) {
 				[fileXML addAttribute:[NSXMLNode attributeWithName:@"mimetype" stringValue:mimeTypeString]];
 			}
 
 			NSString *posixFlags = [self posixFlagsForPath:newPath];
-			if (posixFlags != nil){
+			if (posixFlags != nil) {
 				[fileXML addAttribute:[NSXMLNode attributeWithName:@"posixflags" stringValue:posixFlags]];
 			}
 			NSString *sizeString = [self sizeForPath:newPath];
-			if (size != nil){
+			if (size != nil) {
 				[fileXML addAttribute:[NSXMLNode attributeWithName:@"size" stringValue:sizeString]];
 			}
 
@@ -344,9 +343,9 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 - (BOOL)isBaseURIForDirectoryTransfer:(NSString *)URI
 {
 	BOOL isBase = NO;
-	if ([URI hasPrefix:randomString] && ([URI length] > [randomString length])){
+	if ([URI hasPrefix:randomString] && ([URI length] > [randomString length])) {
 		NSString *path = [URI substringFromIndex:[randomString length]];
-		if ([path isEqualToString:[[[self localFilename] lastPathComponent] stringByAppendingString:@"/"]]){
+		if ([path isEqualToString:[[[self localFilename] lastPathComponent] stringByAppendingString:@"/"]]) {
 			isBase = YES;
 		}
 	}
@@ -356,7 +355,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 {
 	bool isValid = NO;
 	isValid = [validURLS containsObject:URI];
-	if (!isValid){
+	if (!isValid) {
 		[[[[self manager] client] client] reportError:@"Client requested an invalid file." ofLevel:AWEzvError];
 	}
 	return isValid;
@@ -366,7 +365,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 {
 	NSString *filePath = nil;
 	NSNumber *singleSize = nil;
-	if ([URI hasPrefix:randomString] && ([URI length] > [randomString length])){
+	if ([URI hasPrefix:randomString] && ([URI length] > [randomString length])) {
 		NSString *path = [URI substringFromIndex:[randomString length]];
 		filePath = [[[self localFilename] stringByDeletingLastPathComponent] stringByAppendingPathComponent: path];
 		singleSize = [urlSizes valueForKey:path];
@@ -397,7 +396,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 	OSStatus err;
 	BOOL itemIsDirectory = NO;
 	err = FSPathMakeRef((const UInt8 *)[filePath fileSystemRepresentation], &ref, &itemIsDirectory);
-	if (err != noErr){
+	if (err != noErr) {
 		[[[[self manager] client] client] reportError:@"AppleSingle: Error creating FSRef" ofLevel:AWEzvError];
 		return nil;
 	}
@@ -407,7 +406,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 	                        /*HFSUniStr255 * outName*/ NULL,
 	                        /*FSSpec * fsSpec*/ NULL,
 	                        /*FSRef * parentRef*/ NULL);
-	if (err != noErr){
+	if (err != noErr) {
 		[[[[self manager] client] client] reportError:@"AppleSingle: Error creating FSRef" ofLevel:AWEzvError];
 		return nil;
 	}
@@ -439,7 +438,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 
 	offset += nameLength;
 	unsigned long long newSize;
-	if ([self isDirectory]){
+	if ([self isDirectory]) {
 		newSize = [singleSize unsignedLongLongValue];
 	} else {
 		newSize = [self size];
@@ -461,7 +460,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 - (NSString *)fileDataForURI:(NSString *)URI
 {
 	NSString *data = nil;
-	if ([URI hasPrefix:randomString] && ([URI length] > [randomString length])){
+	if ([URI hasPrefix:randomString] && ([URI length] > [randomString length])) {
 		NSString *path = [URI substringFromIndex:[randomString length]];
 		data = [(NSString *)[urlData valueForKey:path] retain];
 		[urlData removeObjectForKey:path];
@@ -474,7 +473,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 	NSString *posixFlags = nil;
 	NSFileManager *manager = [NSFileManager defaultManager];
 	NSDictionary *attributes = [manager fileAttributesAtPath:filePath traverseLink:NO];
-	if (attributes && [attributes objectForKey:NSFilePosixPermissions]){
+	if (attributes && [attributes objectForKey:NSFilePosixPermissions]) {
 		NSNumber *posixInfo = [attributes objectForKey:NSFilePosixPermissions];
 		posixFlags = [NSString stringWithFormat:@"%X", [posixInfo longValue]];
 	}
@@ -501,7 +500,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 	NSString *fileSize = nil;
 	NSFileManager *manager = [NSFileManager defaultManager];
 	NSDictionary *attributes = [manager fileAttributesAtPath:filePath traverseLink:NO];
-	if (attributes && [attributes objectForKey:NSFileSize]){
+	if (attributes && [attributes objectForKey:NSFileSize]) {
 		NSNumber *fileSizeNumber = [attributes objectForKey:NSFileSize];
 		fileSize = [NSString stringWithFormat:@"%qu", [fileSizeNumber unsignedLongLongValue]];
 	}
@@ -514,7 +513,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 	NSNumber *fileSize = nil;
 	NSFileManager *manager = [NSFileManager defaultManager];
 	NSDictionary *attributes = [manager fileAttributesAtPath:filePath traverseLink:NO];
-	if (attributes && [attributes objectForKey:NSFileSize]){
+	if (attributes && [attributes objectForKey:NSFileSize]) {
 		fileSize = [attributes objectForKey:NSFileSize];
 	}
 
@@ -558,7 +557,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 {
 	bytesSent = bytesSent+length;
 	percentComplete=((float)bytesSent/(float)[[self sizeNumber] floatValue]);
-	if (percentComplete < 1.0){
+	if (percentComplete < 1.0) {
 		[[[manager client] client] updateProgressForFileTransfer:self percent:[NSNumber numberWithFloat:percentComplete] bytesSent:[NSNumber numberWithLongLong:bytesSent]];
 	}
 }
