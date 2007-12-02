@@ -54,6 +54,8 @@
 
 #define MESSAGES_WINDOW_MENU_TITLE		AILocalizedString(@"Chats","Title for the messages window menu item")
 
+//#define	LOG_RESPONDER_CHAIN
+
 @interface AIInterfaceController (PRIVATE)
 - (void)_resetOpenChatsCache;
 - (void)_addItemToMainMenuAndDock:(NSMenuItem *)item;
@@ -119,12 +121,16 @@
 		flashState = 0;
 		
 		windowMenuArray = nil;
+		
+#ifdef LOG_RESPONDER_CHAIN
+		[NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(reportResponderChain:) userInfo:nil repeats:YES];
+#endif
 	}
 	
 	return self;
 }
 
-#if 0
+#ifdef LOG_RESPONDER_CHAIN
 //Can be called by a timer to periodically log the responder chain
 //[NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(reportResponderChain:) userInfo:nil repeats:YES];
 - (void)reportResponderChain:(NSTimer *)inTimer
