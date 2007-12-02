@@ -757,6 +757,8 @@ void image_register_reply (
 - (void)stopResolvingForContact:(AWEzvContact *)contact
 {
 	[serviceResolvers removeObjectForKey:[contact uniqueID]];
+	
+	[[client client] userLoggedOut:contact];
 }
 
 
