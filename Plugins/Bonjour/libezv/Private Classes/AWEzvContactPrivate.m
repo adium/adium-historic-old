@@ -358,7 +358,7 @@
 	NSString		*key;
 	
 	
-	/* We have a url so lets diagnose what type it is */
+	/* We have a url, so let's determine what type it is */
 	NSString *type = nil, *sizeString = nil, *nfiles = nil, *posixflags = nil, *mimeType = nil;
 	objs = [[node attributes] keyEnumerator];
 	while ((key = [objs nextObject])){
@@ -410,7 +410,8 @@
 		[fileTransfer setType:EKEzvFile_Transfer];
 	}
 	
-	[[[[self manager] client] client] user:self sentFile:(EKEzvFileTransfer *)fileTransfer];
-	
+	[[[[self manager] client] client] user:self sentFile:fileTransfer];
+	[fileTransfer release];
 }
+
 @end
