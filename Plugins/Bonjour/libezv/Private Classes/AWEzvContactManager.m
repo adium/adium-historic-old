@@ -39,7 +39,7 @@
 {
     if((self = [super init]))
 	{
-		contacts = [[NSMutableDictionary dictionary] retain];
+		contacts = [[NSMutableDictionary alloc] init];
 		client = newClient;
 		isConnected = NO;
 	}
@@ -78,7 +78,8 @@
 - (void)dealloc {
 	/* AWEzvContactManagerListener adds an observer; remove it */
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	
+	[userAnnounceData release];
+
 	[super dealloc];
 }
 
