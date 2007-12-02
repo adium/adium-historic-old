@@ -95,11 +95,11 @@
     if (type == AWEzvXMLText) {
         string = [[name mutableCopy] autorelease];
         [string replaceOccurrencesOfString:@"&" withString:@"&amp;" 
-								   options:0 range:NSMakeRange(0, [string length])];
+								   options:NSLiteralSearch range:NSMakeRange(0, [string length])];
         [string replaceOccurrencesOfString:@"<" withString:@"&lt;" 
-								   options:0 range:NSMakeRange(0, [string length])];
+								   options:NSLiteralSearch range:NSMakeRange(0, [string length])];
         [string replaceOccurrencesOfString:@">" withString:@"&gt;" 
-								   options:0 range:NSMakeRange(0, [string length])];
+								   options:NSLiteralSearch range:NSMakeRange(0, [string length])];
         return [[string copy] autorelease];
 
     } else if (type == AWEzvXMLRaw) {

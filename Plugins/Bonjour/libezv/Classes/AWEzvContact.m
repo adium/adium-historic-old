@@ -126,11 +126,11 @@
 		[mutableString replaceOccurrencesOfString:@"<br>" withString:@"<br />"
 			options:NSCaseInsensitiveSearch range:NSMakeRange(0, [mutableString length])];
 		[mutableString replaceOccurrencesOfString:@"&" withString:@"&amp;"
-			options:0 range:NSMakeRange(0, [mutableString length])];
+			options:NSLiteralSearch range:NSMakeRange(0, [mutableString length])];
 		[mutableString replaceOccurrencesOfString:@"<" withString:@"&lt;"
-			options:0 range:NSMakeRange(0, [mutableString length])];
+			options:NSLiteralSearch range:NSMakeRange(0, [mutableString length])];
 		[mutableString replaceOccurrencesOfString:@">" withString:@"&gt;"
-			options:0 range:NSMakeRange(0, [mutableString length])];
+			options:NSLiteralSearch range:NSMakeRange(0, [mutableString length])];
 		messageExtraEscapedString = [mutableString copy];
 		[mutableString release];
 
