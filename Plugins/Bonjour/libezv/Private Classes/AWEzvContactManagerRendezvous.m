@@ -491,7 +491,7 @@ void image_register_reply (
 			/* registration type */ "_presence._tcp" /* replyType */,
 			/* domain */ replyDomain,
 			/* callback */ resolve_reply,
-			/* contxt, may be NULL */ [contact retain]);
+			/* contxt, may be NULL */ contact);
 
 		if (resolveRefError == kDNSServiceErr_NoError) {			
 			fServiceResolver = [[ServiceController alloc] initWithServiceRef:resolveRef];
@@ -811,6 +811,11 @@ void handle_av_browse_reply (DNSServiceRef sdRef,
 }
 
 #pragma mark mDNS Resolve Callback
+/*!
+* @brief DNSServiceResolve callback
+ *
+ * This may be called multiple times for a single use of DNSServiceResolve().
+ */
 void resolve_reply (DNSServiceRef sdRef, 
 					DNSServiceFlags flags, 
 					uint32_t interfaceIndex, 
@@ -822,7 +827,6 @@ void resolve_reply (DNSServiceRef sdRef,
 					const char *txtRecord, 
 					void *context)
 {
-
 	if (errorCode == kDNSServiceErr_NoError) {
 		/* use TXTRecord methods to resolve this */
 		AWEzvContact	*contact = context;
@@ -835,10 +839,7 @@ void resolve_reply (DNSServiceRef sdRef,
 
 	} else {
 		AWEzvLog(@"Error resolving records");
-	}
-	
-	/* we retained context when initiating the resolve */
-	[(AWEzvContact *)context release];
+	}	
 }
 
 #pragma mark mDNS Address Callback
