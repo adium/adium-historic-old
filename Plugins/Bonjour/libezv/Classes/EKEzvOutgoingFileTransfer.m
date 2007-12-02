@@ -63,14 +63,11 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 }
 - (void) dealloc
 {
-	if (urlSizes)
-		[urlSizes release];
-	if (validURLS)
-		[validURLS release];
-	if (urlData)
-		[urlData release];
-	if (randomString)
-		[randomString release];
+	[urlSizes release];
+	[validURLS release];
+	[urlData release];
+	[randomString release];
+	[server release];
 
 	[super dealloc];
 }
