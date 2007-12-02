@@ -60,7 +60,7 @@
 	/* NSFileHandle's acceptConnectionInBackgroundAndNotify method expects a
 	   socket that is bound and listening */
 
-	if((fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+	if ((fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
 		[[client client] reportError:@"Could not create listening socket for iChat Bonjour" ofLevel:AWEzvError];
 		return -1;
 	}
@@ -80,13 +80,13 @@
 		[[client client] reportError:@"Could not set socket to SO_REUSEADDR" ofLevel:AWEzvWarning];
 
 	}
-	while(bind(fd, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0) {
+	while (bind(fd, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0) {
 		port++;
 		serverAddress.sin_port = htons(port);
 	}
 
 	/* now to create file handle to accept incoming connections */
-	if(listen(fd, MAXBACKLOG) == 0) {
+	if (listen(fd, MAXBACKLOG) == 0) {
 		listenSocket = [[NSFileHandle alloc] initWithFileDescriptor:fd closeOnDealloc:YES];
 	}
 

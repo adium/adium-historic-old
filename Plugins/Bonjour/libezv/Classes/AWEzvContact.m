@@ -78,7 +78,7 @@
 
 - (void) setContactImage:(NSImage *)contactImage
 {
-    if (_contactImage != nil){
+    if (_contactImage != nil) {
 		[_contactImage autorelease];
 	}
     _contactImage = [contactImage retain];
@@ -198,22 +198,22 @@
 	mutableHTML = [html mutableCopy];
 
 	findRange = [mutableHTML rangeOfString:@"ABSZ="];
-	if (findRange.location != NSNotFound && findRange.length == 5){
+	if (findRange.location != NSNotFound && findRange.length == 5) {
 		/* We have a correct ABSZ= string */
 		[mutableHTML insertString:@"\"" atIndex:(findRange.location + findRange.length)];
 		int i = (findRange.location + findRange.length);
-		while(([mutableHTML characterAtIndex:i] != ' ') && ([mutableHTML characterAtIndex:i] != '>')){
+		while (([mutableHTML characterAtIndex:i] != ' ') && ([mutableHTML characterAtIndex:i] != '>')) {
 			i++;
 		}
 		[mutableHTML insertString:@"\"" atIndex: i];
 	}
 
 	findRange = [mutableHTML rangeOfString:@"SIZE="];
-	if (findRange.location != NSNotFound && findRange.length == 5){
+	if (findRange.location != NSNotFound && findRange.length == 5) {
 		/* We have a correct SIZE= string */
 		[mutableHTML insertString:@"\"" atIndex:(findRange.location + findRange.length)];
 		int i = (findRange.location + findRange.length);
-		while(([mutableHTML characterAtIndex:i] != ' ') && ([mutableHTML characterAtIndex:i] != '>')){
+		while (([mutableHTML characterAtIndex:i] != ' ') && ([mutableHTML characterAtIndex:i] != '>')) {
 			i++;
 		}
 		[mutableHTML insertString:@"\"" atIndex: i];
@@ -238,7 +238,7 @@
 {
 	AWEzvXMLNode *messageNode, *bodyNode, *htmlNode, *xNode, *composingNode = nil, *idNode = nil;
 
-	if(_ipAddr != nil) {
+	if (_ipAddr != nil) {
 
 		messageNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"message"];
 		[messageNode addAttribute:@"to" withValue:[self uniqueID]];
@@ -321,7 +321,7 @@
 
 		urlNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"url"];
 		/*directory transfers*/
-		if ([transfer isDirectory]){
+		if ([transfer isDirectory]) {
 			[urlNode addAttribute:@"type" withValue:@"directory"];
 		} else {
 			[urlNode addAttribute:@"type" withValue:@"file"];

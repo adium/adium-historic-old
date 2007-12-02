@@ -168,7 +168,7 @@
 	if (_stream != nil || (_ipAddr == nil))
 		return;
 
-	if((fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+	if ((fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
 		[[[[self manager] client] client] reportError:@"Could not create socket to connect to contact for iChat Bonjour" ofLevel:AWEzvError];
 		return;
 	}
@@ -250,7 +250,7 @@
 		if ([plaintext length] > 0)
 			[[[[self manager] client] client] user:self sentMessage:plaintext withHtml:html];
 
-	} else if (([root type] == AWEzvXMLElement) && ([[root name] isEqualToString:@"iq"])){
+	} else if (([root type] == AWEzvXMLElement) && ([[root name] isEqualToString:@"iq"])) {
 		/* We can also receive items such as 
 		 * <iq id="iChat_887C7BB4" type="set" to="erichjkr@erkreutzer">
 		 *   <query xmlns="jabber:iq:oob">
@@ -333,7 +333,7 @@
 		}
 	}
 	
-	if(!urlFlag)
+	if (!urlFlag)
 		return;
 		
 	[self evaluteURLXML:obj];
@@ -360,16 +360,16 @@
 	/* We have a url, so let's determine what type it is */
 	NSString *type = nil, *sizeString = nil, *nfiles = nil, *posixflags = nil, *mimeType = nil;
 	objs = [[node attributes] keyEnumerator];
-	while ((key = [objs nextObject])){
-		if ([key isEqualToString:@"type"]){
+	while ((key = [objs nextObject])) {
+		if ([key isEqualToString:@"type"]) {
 			type = [[node attributes] objectForKey:key];
-		} else if ([key isEqualToString:@"size"]){
+		} else if ([key isEqualToString:@"size"]) {
 			sizeString = [[node attributes] objectForKey:key]; 
-		} else if ([key isEqualToString:@"nfiles"]){
+		} else if ([key isEqualToString:@"nfiles"]) {
 			nfiles = [[node attributes] objectForKey:key]; 
-		} else if ([key isEqualToString:@"posixflags"]){
+		} else if ([key isEqualToString:@"posixflags"]) {
 			posixflags = [[node attributes] objectForKey:key]; 
-		} else if ([key isEqualToString:@"mimeType"]){
+		} else if ([key isEqualToString:@"mimeType"]) {
 			mimeType = [[node attributes] objectForKey:key]; 
 		}
 	}
@@ -403,9 +403,9 @@
 	[fileTransfer setDirection: EKEzvIncomingTransfer];
 	[fileTransfer setUrl: url];
 	[fileTransfer setRemoteFilename: name];
-	if ([type isEqualToString:@"directory"]){
+	if ([type isEqualToString:@"directory"]) {
 		[fileTransfer setType:EKEzvDirectory_Transfer];
-	} else if ([type isEqualToString:@"file"]){
+	} else if ([type isEqualToString:@"file"]) {
 		[fileTransfer setType:EKEzvFile_Transfer];
 	}
 	
