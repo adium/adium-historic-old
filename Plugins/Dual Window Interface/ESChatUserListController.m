@@ -21,19 +21,46 @@
 
 @implementation ESChatUserListController
 
+/*!
+ * @brief Notify our delegate when the selection changes.
+ */
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
+	if ([[super class] instancesRespondToSelector:@selector(outlineViewSelectionDidChange:)]) {
+		[super outlineViewSelectionDidChange:notification];
+	}
+
 	[[self delegate] performSelector:@selector(outlineViewSelectionDidChange:)
 						  withObject:notification];
 }
 
-//We don't want to change text colors based on the user's status or state
-- (BOOL)shouldUseContactTextColors{
+/*!
+ * @brief We don't want to change text colors based on the user's status or state
+ *
+ * This is called by our superclass during configuration.
+ */
+- (BOOL)shouldUseContactTextColors
+{
 	return NO;
+}
+
+/*!
+ * @brief Use the status message for a contact, not its calculated extended status, in the group chat user list
+ *
+ * This is called by our superclass during configuration.
+ */
+- (BOOL)useStatusMessageAsExtendedStatus
+{
+	return YES;
 }
 
 #pragma mark Drag & drop
 
+/*!
+ * @brief Accept a drop
+ *
+ * When a drop of a contact is performed onto the user list, invite the contact to the chat
+ */
 - (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
 {
 	//Invite the dragged contact(s) to the chat
