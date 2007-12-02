@@ -117,19 +117,6 @@ void handle_av_browse_reply (
     const char *replyDomain, 
     void *context );
 
-void av_resolve_reply ( 
-    DNSServiceRef DNSServiceRef, 
-    DNSServiceFlags flags, 
-    uint32_t interfaceIndex, 
-    DNSServiceErrorType errorCode, 
-    const char *fullname, 
-    uint16_t rrtype, 
-    uint16_t rrclass, 
-    uint16_t rdlen, 
-    const void *rdata, 
-    uint32_t ttl, 
-    void *context );
-
 void resolve_reply ( 
     DNSServiceRef sdRef, 
     DNSServiceFlags flags, 
@@ -447,7 +434,7 @@ void image_register_reply (
 	                                  /* registration type */ "_presence._tcp",
 	                                  /* domain, may be null for default */ NULL,
 	                                  /* callBack function */ handle_av_browse_reply,
-	                                  /* context, may be null */ self);
+	                                  /* context, may be null */ [self retain]);
 
 	if (avBrowseError == kDNSServiceErr_NoError) {
 		fServiceBrowser = [[ServiceController alloc] initWithServiceRef:browsRef];
@@ -504,7 +491,7 @@ void image_register_reply (
 			/* registration type */ "_presence._tcp" /* replyType */,
 			/* domain */ replyDomain,
 			/* callback */ resolve_reply,
-			/* contxt, may be NULL */ contact);
+			/* contxt, may be NULL */ [contact retain]);
 
 		if (resolveRefError == kDNSServiceErr_NoError) {			
 			fServiceResolver = [[ServiceController alloc] initWithServiceRef:resolveRef];
@@ -816,32 +803,40 @@ void handle_av_browse_reply (DNSServiceRef sdRef,
 	} else {
 		AWEzvLog(@"Error browsing");
 	}
+	
+	/* We retained context when initiating the av_browse */
+	[(AWEzvContactManager *)context release];
 }
 
 #pragma mark mDNS Resolve Callback
-void resolve_reply ( 
-	DNSServiceRef sdRef, 
-	DNSServiceFlags flags, 
-	uint32_t interfaceIndex, 
-	DNSServiceErrorType errorCode, 
-	const char *fullname, 
-	const char *hosttarget, 
-	uint16_t port, 
-	uint16_t txtLen, 
-	const char *txtRecord, 
-	void *context ) {
-		if (errorCode == kDNSServiceErr_NoError) {
-			/* use TXTRecord methods to resolve this */
-			AWEzvContact	*contact = context;
-			AWEzvContactManager *self = [contact manager];
-			//AWEzvLog(@"Would update contact");
-			AWEzvRendezvousData *data;
-			data = [[[AWEzvRendezvousData alloc] initWithTXTRecordRef:txtRecord length:txtLen] autorelease];
-			[self findAddressForContact:contact withHost:[NSString stringWithUTF8String:hosttarget] withInterface:interfaceIndex];
-			[self updateContact:contact withData:data withHost:[NSString stringWithUTF8String:hosttarget] withInterface:interfaceIndex withPort:ntohs(port) av:YES];
-		} else {
-			AWEzvLog(@"Error resolving  records");
-		}
+void resolve_reply (DNSServiceRef sdRef, 
+					DNSServiceFlags flags, 
+					uint32_t interfaceIndex, 
+					DNSServiceErrorType errorCode, 
+					const char *fullname, 
+					const char *hosttarget, 
+					uint16_t port, 
+					uint16_t txtLen, 
+					const char *txtRecord, 
+					void *context)
+{
+
+	if (errorCode == kDNSServiceErr_NoError) {
+		/* use TXTRecord methods to resolve this */
+		AWEzvContact	*contact = context;
+		AWEzvContactManager *self = [contact manager];
+		//AWEzvLog(@"Would update contact");
+		AWEzvRendezvousData *data;
+		data = [[[AWEzvRendezvousData alloc] initWithTXTRecordRef:txtRecord length:txtLen] autorelease];
+		[self findAddressForContact:contact withHost:[NSString stringWithUTF8String:hosttarget] withInterface:interfaceIndex];
+		[self updateContact:contact withData:data withHost:[NSString stringWithUTF8String:hosttarget] withInterface:interfaceIndex withPort:ntohs(port) av:YES];
+
+	} else {
+		AWEzvLog(@"Error resolving records");
+	}
+	
+	/* we retained context when initiating the resolve */
+	[(AWEzvContact *)context release];
 }
 
 #pragma mark mDNS Address Callback
