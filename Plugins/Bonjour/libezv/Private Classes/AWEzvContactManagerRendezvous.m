@@ -434,7 +434,7 @@ void image_register_reply (
 	                                  /* registration type */ "_presence._tcp",
 	                                  /* domain, may be null for default */ NULL,
 	                                  /* callBack function */ handle_av_browse_reply,
-	                                  /* context, may be null */ [self retain]);
+	                                  /* context, may be null */ self);
 
 	if (avBrowseError == kDNSServiceErr_NoError) {
 		fServiceBrowser = [[ServiceController alloc] initWithServiceRef:browsRef];
@@ -787,6 +787,11 @@ void image_register_reply (
 }
 #pragma mark mDNS Browse Callback
 
+/*!
+ * @brief DNSServiceBrowse callback
+ *
+ * This may be called multiple times for a single use of DNSServiceBrowse().
+ */
 void handle_av_browse_reply (DNSServiceRef sdRef,
 		DNSServiceFlags flags,
 		uint32_t interfaceIndex,
@@ -803,9 +808,6 @@ void handle_av_browse_reply (DNSServiceRef sdRef,
 	} else {
 		AWEzvLog(@"Error browsing");
 	}
-	
-	/* We retained context when initiating the av_browse */
-	[(AWEzvContactManager *)context release];
 }
 
 #pragma mark mDNS Resolve Callback
