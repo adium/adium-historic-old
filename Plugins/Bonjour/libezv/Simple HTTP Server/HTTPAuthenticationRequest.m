@@ -118,7 +118,7 @@
 	int postStartRangeLength = [header length] - postStartRangeLocation;
 	NSRange postStartRange = NSMakeRange(postStartRangeLocation, postStartRangeLength);
 	
-	NSRange endRange = [header rangeOfString:@"\"" options:0 range:postStartRange];
+	NSRange endRange = [header rangeOfString:@"\"" options:NSLiteralSearch range:postStartRange];
 	if(endRange.location == NSNotFound)
 	{
 		// The ending double-quote was not found anywhere in the header
@@ -150,13 +150,13 @@
 	int postStartRangeLength = [header length] - postStartRangeLocation;
 	NSRange postStartRange = NSMakeRange(postStartRangeLocation, postStartRangeLength);
 	
-	NSRange endRange = [header rangeOfString:@"," options:0 range:postStartRange];
+	NSRange endRange = [header rangeOfString:@"," options:NSLiteralSearch range:postStartRange];
 	if(endRange.location == NSNotFound)
 	{
 		// The ending comma was not found anywhere in the header
 		// However, if the nonquoted param is at the end of the string, there would be no comma
 		// This is only possible if there are no spaces anywhere
-		NSRange endRange2 = [header rangeOfString:@" " options:0 range:postStartRange];
+		NSRange endRange2 = [header rangeOfString:@" " options:NSLiteralSearch range:postStartRange];
 		if(endRange2.location != NSNotFound)
 		{
 			return nil;
