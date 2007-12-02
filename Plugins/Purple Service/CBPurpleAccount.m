@@ -543,6 +543,8 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
  */
 - (void)addChat:(AIChat *)chat
 {
+	AILogWithSignature(@"");
+
 	//Open the chat
 	[[adium interfaceController] openChat:chat];
 	
@@ -608,6 +610,15 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 {
 
 }
+
+/*!
+ * @brief Called when we are informed that we left a multiuser chat
+ */
+- (void)leftChat:(AIChat *)chat
+{
+	AILogWithSignature(@"Chat left - something should happen here!");
+}
+
 - (void)updateTopic:(NSString *)inTopic forChat:(AIChat *)chat
 {
 	

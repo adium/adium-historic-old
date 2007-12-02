@@ -408,7 +408,7 @@ static void adiumPurpleConvUpdated(PurpleConversation *conv, PurpleConvUpdateTyp
 				AILog(@"Update to title: %s",purple_conversation_get_title(conv));
 				break;
 			case PURPLE_CONV_UPDATE_CHATLEFT:
-				AILog(@"Chat left! %s",purple_conversation_get_name(conv));
+				[accountLookup(conv->account) leftChat:existingChatLookupFromConv(conv)];
 				break;
 			case PURPLE_CONV_UPDATE_ADD:
 			case PURPLE_CONV_UPDATE_REMOVE:
