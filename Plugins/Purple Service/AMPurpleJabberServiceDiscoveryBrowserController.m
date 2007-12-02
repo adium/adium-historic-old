@@ -287,14 +287,14 @@ static NSImage *det_triangle_closed = nil;
 	
 	while ((identity = [e nextObject])) {
 		if ([[identity objectForKey:@"category"] isEqualToString:@"gateway"])
-			[result addObject:[NSString stringWithFormat:AILocalizedString(@"%@, double-click to register.","XMPP service discovery browser gateway tooltip"),[identity objectForKey:@"name"]]];
+			[result addObject:[NSString stringWithFormat:AILocalizedString(@"%@; double-click to register.","XMPP service discovery browser gateway tooltip"),[identity objectForKey:@"name"]]];
 		else if ([[identity objectForKey:@"category"] isEqualToString:@"conference"])
-			[result addObject:AILocalizedString(@"Conference service, double-click to join",nil)];
+			[result addObject:AILocalizedString(@"Conference service; double-click to join",nil)];
 		else if ([[identity objectForKey:@"category"] isEqualToString:@"directory"])
-			[result addObject:AILocalizedString(@"Directory service, double-click to search",nil)];
+			[result addObject:AILocalizedString(@"Directory service; double-click to search",nil)];
 		else if ([[identity objectForKey:@"category"] isEqualToString:@"automation"] &&
 				 [[identity objectForKey:@"type"] isEqualToString:@"command-node"])
-			[result addObject:AILocalizedString(@"Ad-Hoc command, double-click to execute",nil)];
+			[result addObject:AILocalizedString(@"Ad-Hoc command; double-click to execute",nil)];
 	}
 	if ([[item commands] count] > 0)
 		[result addObject:AILocalizedString(@"This node provides ad-hoc commands. Open the context menu to access them.",nil)];
