@@ -16,6 +16,9 @@
 
 #import <Adium/AIAbstractListController.h>
 
-@interface ESChatUserListController : AIAbstractListController { }
+@interface ESChatUserListController : AIAbstractListController
+{
+
+}
 
 @end
