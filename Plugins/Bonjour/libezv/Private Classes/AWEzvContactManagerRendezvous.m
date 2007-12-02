@@ -149,6 +149,8 @@ void image_register_reply (
 - (void) login {
 	regCount = 0;
 
+	serviceResolvers = [[NSMutableDictionary alloc] init];
+
 	/* create data structure we'll advertise with */
 	userAnnounceData = [[AWEzvRendezvousData alloc] init];
 	/* set field contents of the data */
@@ -224,10 +226,7 @@ void image_register_reply (
 - (void) disconnect {
 	AILogWithSignature(@"Disconnecting");
 
-	if ( fServiceResolver != nil) {
-		[fServiceResolver release];
-		fServiceResolver = nil;
-	}
+	[serviceResolvers release]; serviceResolvers = nil;
 	
 	if ( fServiceBrowser != nil) {
 		[fServiceBrowser release];
@@ -493,9 +492,12 @@ void image_register_reply (
 			/* callback */ resolve_reply,
 			/* contxt, may be NULL */ contact);
 
-		if (resolveRefError == kDNSServiceErr_NoError) {			
-			fServiceResolver = [[ServiceController alloc] initWithServiceRef:resolveRef];
-			[fServiceResolver addToCurrentRunLoop];
+		if (resolveRefError == kDNSServiceErr_NoError) {
+			ServiceController *serviceResolver = [[ServiceController alloc] initWithServiceRef:resolveRef];
+			[serviceResolver addToCurrentRunLoop];
+			[serviceResolvers setObject:serviceResolver forKey:[contact uniqueID]];
+			[serviceResolver release];
+
 		} else {
 			[[client client] reportError:@"Could not search for TXT records" ofLevel:AWEzvError];
 			[self disconnect];
@@ -761,6 +763,13 @@ void image_register_reply (
 	}
 
 }
+
+- (void)stopResolvingForContact:(AWEzvContact *)contact
+{
+	[serviceResolvers removeObjectForKey:[contact uniqueID]];
+}
+
+
 @end
 
 #pragma mark mDNS callbacks
