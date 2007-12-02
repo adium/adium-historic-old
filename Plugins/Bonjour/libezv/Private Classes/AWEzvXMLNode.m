@@ -80,9 +80,10 @@
 }
 
 - (void) setName:(NSString *)theName {
-    if (name != nil)
-        [name autorelease];
-    name = [theName retain];
+	if (name != theName) {
+        [name release];
+		name = [theName retain];
+	}
 }
 
 - (NSString *)xmlString {

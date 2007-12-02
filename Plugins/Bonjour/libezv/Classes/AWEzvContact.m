@@ -71,17 +71,18 @@
 
 - (void) setUniqueID:(NSString *)uniqueID
 {
-    if (_uniqueID != nil)
-        [_uniqueID autorelease];
-    _uniqueID = [uniqueID retain];
+    if (_uniqueID != uniqueID) {
+        [_uniqueID release];
+		_uniqueID = [uniqueID retain];
+	}
 }
 
 - (void) setContactImage:(NSImage *)contactImage
 {
-    if (_contactImage != nil) {
-		[_contactImage autorelease];
+    if (_contactImage != contactImage) {
+		[_contactImage release];
+		_contactImage = [contactImage retain];
 	}
-    _contactImage = [contactImage retain];
 }
 
 - (NSImage *) contactImage
@@ -239,7 +240,6 @@
 	AWEzvXMLNode *messageNode, *bodyNode, *htmlNode, *xNode, *composingNode = nil, *idNode = nil;
 
 	if (_ipAddr != nil) {
-
 		messageNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"message"];
 		[messageNode addAttribute:@"to" withValue:[self uniqueID]];
 		[messageNode addAttribute:@"from" withValue:[_manager myInstanceName]];
@@ -268,8 +268,7 @@
 
 		/* release messages */
 		[idNode release];
-		if (composingNode != nil)
-			[composingNode release];
+		[composingNode release];
 		[xNode release];
 		[htmlNode release];
 		[bodyNode release];
@@ -299,7 +298,6 @@
 	**/	
 	AWEzvXMLNode *messageNode, *bodyNode, *htmlNode, *xNode, *urlNode, *urlValue;
 	if (_ipAddr != nil) {
-
 		if (_stream == nil) {
 			[self createConnection];
 		}

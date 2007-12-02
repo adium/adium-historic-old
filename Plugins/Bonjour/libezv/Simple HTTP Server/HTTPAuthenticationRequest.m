@@ -10,12 +10,10 @@
 
 - (id)initWithRequest:(CFHTTPMessageRef)request
 {
-	if (self = [super init])
-	{
+	if (self = [super init]) {
 		NSString *authInfo = (NSString *)CFHTTPMessageCopyHeaderFieldValue(request, CFSTR("Authorization"));
 		
-		if (authInfo != nil)
-		{
+		if (authInfo != nil) {
 			username = [[self quotedSubHeaderFieldValue:@"username" fromHeaderFieldValue:authInfo] retain];
 			realm    = [[self quotedSubHeaderFieldValue:@"realm" fromHeaderFieldValue:authInfo] retain];
 			nonce    = [[self quotedSubHeaderFieldValue:@"nonce" fromHeaderFieldValue:authInfo] retain];
@@ -25,8 +23,7 @@
 			// Tests show that Firefox performs this way, but Safari does not
 			// Thus we'll attempt to retrieve the value as nonquoted, but we'll verify it doesn't start with a quote
 			qop      = [self nonquotedSubHeaderFieldValue:@"qop" fromHeaderFieldValue:authInfo];
-			if (qop && ([qop characterAtIndex:0] == '"'))
-			{
+			if (qop && ([qop characterAtIndex:0] == '"')) {
 				qop  = [self quotedSubHeaderFieldValue:@"qop" fromHeaderFieldValue:authInfo];
 			}
 			[qop retain];
@@ -36,9 +33,7 @@
 			response = [[self quotedSubHeaderFieldValue:@"response" fromHeaderFieldValue:authInfo] retain];
 			
 			CFRelease(authInfo);
-		}
-		else
-		{
+		} else {
 			// Setup a default value for any non-pointer types
 			nc = 0;
 		}
