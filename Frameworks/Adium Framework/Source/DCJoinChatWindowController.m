@@ -23,6 +23,7 @@
 #import <Adium/DCJoinChatViewController.h>
 #import <Adium/DCJoinChatWindowController.h>
 #import <Adium/AIAccountMenu.h>
+#import <AIUtilities/AIPopUpButtonAdditions.h>
 
 #define JOIN_CHAT_NIB		@"JoinChatWindow"
 
@@ -74,41 +75,34 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 {
 	NSRect 	windowFrame = [[self window] frame];
 	int		diff;
-	
+
 	//Remove the previous view controller's view
 	[currentView removeFromSuperview];
 	[currentView release]; currentView = nil;
-	
+
 	//Get a view controller for this account if there is one
 	controller = [[[inAccount service] joinChatView] retain];
 	currentView = [controller view];
 	[controller setDelegate:self];
 	[controller setSharedChatInstance:self];
-	
+
 	//Resize the window to fit the new view
-	diff = [view_customView frame].size.height - [currentView frame].size.height;
+	diff = NSHeight([view_customView frame]) - NSHeight([currentView frame]);
 	windowFrame.size.height -= diff;
 	windowFrame.origin.y += diff;
+
+	diff = NSWidth([view_customView frame]) - NSWidth([currentView frame]);
+	windowFrame.size.width -= diff;
+
 	[[self window] setFrame:windowFrame display:YES animate:YES];
 
 	if (controller && currentView) {
 		[view_customView addSubview:currentView];
 		[controller configureForAccount:inAccount];
 	}
-    
-    // look for the account we should be configuring for, and select it
-    NSEnumerator *e = [[popUp_service itemArray] objectEnumerator];
-    NSMenuItem *mitem;
-    
-    while((mitem = [e nextObject]))
-    {
-        if([mitem representedObject] == inAccount)
-        {
-            [popUp_service selectItem:mitem];
-            break;
-        }
-    }
-	
+
+    [popUp_service selectItemWithRepresentedObject:inAccount];
+
 	if ([[self window] respondsToSelector:@selector(recalculateKeyViewLoop)]) {
 		[[self window] recalculateKeyViewLoop];
 	}
