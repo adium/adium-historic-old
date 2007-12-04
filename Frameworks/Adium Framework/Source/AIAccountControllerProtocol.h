@@ -14,10 +14,16 @@
 #define Adium_RequestSetManualIdleTime			@"Adium_RequestSetManualIdleTime"
 
 @protocol AIAccountControllerRemoveConfirmationDialog
-
 - (void)runModal;
 - (void)beginSheetModalForWindow:(NSWindow*)window;
+@end
 
+@interface NSObject (AIEditAccountWindowControllerTarget)
+//Optional
+- (void)editAccountWindow:(NSWindow*)window didOpenForAccount:(AIAccount *)inAccount;
+
+//Required
+- (void)editAccountSheetDidEndForAccount:(AIAccount *)inAccount withSuccess:(BOOL)successful;
 @end
 
 @protocol AIAccountController <AIController>
@@ -130,7 +136,7 @@
  */
 - (void)passwordForProxyServer:(NSString *)server userName:(NSString *)userName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
 
-//Accounts
+#pragma mark Accounts
 - (NSArray *)accounts;
 - (NSArray *)accountsCompatibleWithService:(AIService *)service;
 - (NSArray *)accountsWithCurrentStatus:(AIStatus *)status;
@@ -150,5 +156,14 @@
 - (void)disconnectAllAccounts;
 - (BOOL)oneOrMoreConnectedAccounts;
 - (BOOL)oneOrMoreConnectedOrConnectingAccounts;
+
+/*!
+ * @brief Display account configuration for an account
+ *
+ * @param account The account to edit. Must not be nil.
+ * @param window The window on which to attach the configuration as a sheet. If nil, the editor is shown as a free-standing window.
+ * @param target The target to notify when editing is complete. See the AIEditAccountWindowControllerTarget informal protocol.
+ */
+- (void)editAccount:(AIAccount *)account onWindow:(NSWindow *)window notifyingTarget:(id)target;
 
 @end
