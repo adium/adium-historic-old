@@ -280,7 +280,6 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	[contentCell setUserIconSize:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_SIZE] intValue]];
 
 	if (windowStyle != AIContactListWindowStyleContactBubbles_Fitted) {
-		NSLog(@"%@ -> show extended status %i",contentCell,[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue]);
 		[contentCell setUserIconVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]];
 		[contentCell setExtendedStatusVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue]];
 		[contentCell setStatusIconsVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS] boolValue]];
@@ -297,7 +296,6 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 		[contentCell setUserIconVisible:(allowIcons ? [[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue] : NO)];
 		[contentCell setStatusIconsVisible:(allowIcons ? [[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS] boolValue] : NO)];
 		[contentCell setServiceIconsVisible:(allowIcons ? [[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS] boolValue] : NO)];
-		NSLog(@"NEIN");
 		[contentCell setExtendedStatusVisible:NO /*(allowIcons ? [[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue] : NO)*/];
 
 		if (allowIcons) {
