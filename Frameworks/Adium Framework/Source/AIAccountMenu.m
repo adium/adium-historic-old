@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIAccountMenu.h>
+#import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIStatusControllerProtocol.h>
 #import <Adium/AIStatusMenu.h>
@@ -26,7 +26,8 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
 #import <Adium/AIServiceMenu.h>
-#import "AIEditAccountWindowController.h"
+
+#import <AIUtilities/AITigerCompatibility.h>
 
 //Menu titles
 #define	ACCOUNT_CONNECT_ACTION_MENU_TITLE			AILocalizedString(@"Connect: %@", "Connect account prefix")
@@ -494,10 +495,9 @@
 	AIService	*service = [sender representedObject];
 	AIAccount	*account = [[adium accountController] createAccountWithService:service
 																		   UID:[service defaultUserName]];
-    //XXX UGLY
-	[NSClassFromString(@"AIEditAccountWindowController") editAccount:account
-                                                            onWindow:nil
-                                                     notifyingTarget:self];
+	[[adium accountController] editAccount:account
+								  onWindow:nil
+						   notifyingTarget:self];
 }
 
 /*!
@@ -538,9 +538,10 @@
  *
  * @param actionsSubmenu The menu to refresh
  */
-- (void)menuNeedsUpdate:(NSMenu*)actionsSubmenu {
-	if([actionsSubmenu numberOfItems] == 0)
+- (void)menuNeedsUpdate:(NSMenu *)actionsSubmenu {
+	if ([actionsSubmenu numberOfItems] == 0)
 		return;
+
 	// assume that the first item is "Edit Account" with the AIAccount object as the representedObject
 	NSMenuItem *editAccountMenuItem = [actionsSubmenu itemAtIndex:0];
 	AIAccount *account = [editAccountMenuItem representedObject];
@@ -548,11 +549,13 @@
 		return;
 	
 	// clean menu
+	[actionsSubmenu setMenuChangedMessagesEnabled:NO];
 	while([actionsSubmenu numberOfItems] > 0) {
 		[actionsSubmenu removeItemAtIndex:0];
 	}
 	
 	[self rebuildActionsSubmenu:actionsSubmenu withAccount:account];
+	[actionsSubmenu setMenuChangedMessagesEnabled:YES];
 }
 
 /*!
