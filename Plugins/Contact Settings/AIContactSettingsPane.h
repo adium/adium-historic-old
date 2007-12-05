@@ -28,6 +28,9 @@
 	IBOutlet	NSTextField				*label_encryption;
 	IBOutlet	NSPopUpButton			*popUp_encryption;
 	
+	IBOutlet	NSTextField				*label_visibility;
+	IBOutlet	NSButton				*checkBox_visibility;
+	
 	AIListObject						*listObject;
 }
 
