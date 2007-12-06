@@ -48,12 +48,14 @@ fi
 pushd $PIDGIN_SOURCE
 #  "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff"
 for patch in "$PATCHDIR/libpurple_sasl_hack.diff" \
- "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
+             "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" \
+             "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
              "$PATCHDIR/libpurple_myspace_hack.diff" ; do
     echo "Applying $patch"
 	cat $patch | patch --forward -p0
 done
 popd
+
 
 for ARCH in ppc i386 ; do
     case $ARCH in
@@ -68,6 +70,11 @@ for ARCH in ppc i386 ; do
 			  export PKG_CONFIG_PATH="$TARGET_DIR_I386/lib/pkgconfig"
 			  TARGET_DIR=$TARGET_DIR_I386;;
 	esac
+	
+	#Get access to the sasl headers
+    mkdir -p $TARGET_DIR/include/sasl || true
+	cp $PATCHDIR/cyrus-sasl-2.1.18/include/*.h $TARGET_DIR/include/sasl
+
     export CFLAGS="$BASE_CFLAGS -arch $ARCH -I$TARGET_DIR/include -I$SDK_ROOT/usr/include/kerberosIV -DHAVE_SSL -fno-common"
     export LDFLAGS="$BASE_LDFLAGS -L$TARGET_DIR/lib -arch $ARCH"
     mkdir libpurple-$ARCH || true
@@ -88,7 +95,6 @@ for ARCH in ppc i386 ; do
 	export GADU_LIBS="-lgadu"
 	export MEANWHILE_CFLAGS="-I$TARGET_DIR/include/meanwhile -I$TARGET_DIR/include/glib-2.0 -I$TARGET_DIR/lib/glib-2.0/include"
 	export MEANWHILE_LIBS="-lmeanwhile -lglib-2.0 -liconv"
-	#            --enable-cyrus-sasl \
 	$PIDGIN_SOURCE/configure \
 	        --disable-gtkui --disable-consoleui \
             --disable-perl \
@@ -101,7 +107,6 @@ for ARCH in ppc i386 ; do
             --host=$HOST \
             --enable-gnutls=no --enable-nss=no --enable-openssl=no $@
     cd libpurple
-    echo 'inspect sources (edit them?) and then make && make install'
     make -j $NUMBER_OF_CORES && make install
     # HACK ALERT! We use the following internal-only headers:
     cp $PIDGIN_SOURCE/libpurple/protocols/oscar/oscar.h \
