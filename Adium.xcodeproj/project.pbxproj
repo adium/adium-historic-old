@@ -90,7 +90,6 @@
 		1172FBD70CDAA8D400B8E233 /* libintl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC70CDAA8D400B8E233 /* libintl.framework */; };
 		1172FBD80CDAA8D400B8E233 /* libmeanwhile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC80CDAA8D400B8E233 /* libmeanwhile.framework */; };
 		1172FBD90CDAA8D400B8E233 /* libpurple.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC90CDAA8D400B8E233 /* libpurple.framework */; };
-		1172FBDA0CDAA8D400B8E233 /* libsasl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBCA0CDAA8D400B8E233 /* libsasl.framework */; };
 		117D6DC00BC5F0C40080D02B /* notify.png in Resources */ = {isa = PBXBuildFile; fileRef = 117D6DBF0BC5F0C40080D02B /* notify.png */; };
 		11AA1EFA0BCAE9C3003DDA66 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11AA1EF90BCAE9C3003DDA66 /* Quartz.framework */; };
 		11C7CAF30BB58F4100296D7F /* AINudgeBuzzHandlerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 11C7CAF10BB58F4100296D7F /* AINudgeBuzzHandlerPlugin.m */; };
@@ -108,7 +107,6 @@
 		11EE1CD30CDD01120097F246 /* libintl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1172FBC70CDAA8D400B8E233 /* libintl.framework */; };
 		11EE1CD40CDD01120097F246 /* libmeanwhile.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1172FBC80CDAA8D400B8E233 /* libmeanwhile.framework */; };
 		11EE1CD50CDD01120097F246 /* libpurple.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1172FBC90CDAA8D400B8E233 /* libpurple.framework */; };
-		11EE1CD60CDD01120097F246 /* libsasl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1172FBCA0CDAA8D400B8E233 /* libsasl.framework */; };
 		11F145F00B546AC500CA91F6 /* Menu Bar Icons in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11F145C70B546A6D00CA91F6 /* Menu Bar Icons */; };
 		11F1460C0B546C1200CA91F6 /* AIMenuBarIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = 11F1460A0B546C1200CA91F6 /* AIMenuBarIcons.m */; };
 		31034EFF0C8142680003F5AA /* TestStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 31034EFE0C8142680003F5AA /* TestStringAdditions.m */; };
@@ -1526,7 +1524,6 @@
 				11EE1CD30CDD01120097F246 /* libintl.framework in CopyFiles */,
 				11EE1CD40CDD01120097F246 /* libmeanwhile.framework in CopyFiles */,
 				11EE1CD50CDD01120097F246 /* libpurple.framework in CopyFiles */,
-				11EE1CD60CDD01120097F246 /* libsasl.framework in CopyFiles */,
 				EE5754ED0B3D7A7A00100989 /* Sparkle.framework in CopyFiles */,
 				377ED0220AE95D7D00CB7BDF /* PSMTabBarControl.framework in CopyFiles */,
 				9E1E1E270A96770C00E16DFC /* LMX.framework in CopyFiles */,
@@ -3417,7 +3414,7 @@
 		4B22E15C085CAE2E001864DE /* AIAbstractListObjectMenu.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAbstractListObjectMenu.h; path = "Frameworks/Adium Framework/Source/AIAbstractListObjectMenu.h"; sourceTree = "<group>"; };
 		4B22E15D085CAE2F001864DE /* AIAbstractListObjectMenu.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAbstractListObjectMenu.m; path = "Frameworks/Adium Framework/Source/AIAbstractListObjectMenu.m"; sourceTree = "<group>"; };
 		4B25494603F6A32700A8010A /* AIAccountSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountSelectionView.h; path = "Plugins/Dual Window Interface/AIAccountSelectionView.h"; sourceTree = "<group>"; };
-		4B25494703F6A32700A8010A /* AIAccountSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountSelectionView.m; path = "Plugins/Dual Window Interface/AIAccountSelectionView.m"; sourceTree = "<group>"; };
+		4B25494703F6A32700A8010A /* AIAccountSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAccountSelectionView.m; path = "Plugins/Dual Window Interface/AIAccountSelectionView.m"; sourceTree = "<group>"; };
 		4B28DDAB0599FED200343093 /* AIAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountViewController.h; path = "Frameworks/Adium Framework/Source/AIAccountViewController.h"; sourceTree = "<group>"; };
 		4B28DDAC0599FED200343093 /* AIAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountViewController.m; path = "Frameworks/Adium Framework/Source/AIAccountViewController.m"; sourceTree = "<group>"; };
 		4B292D3007A9C8E100C5F882 /* AIStatusController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIStatusController.h; path = Source/AIStatusController.h; sourceTree = "<group>"; };
@@ -4081,7 +4078,6 @@
 				1172FBD70CDAA8D400B8E233 /* libintl.framework in Frameworks */,
 				1172FBD80CDAA8D400B8E233 /* libmeanwhile.framework in Frameworks */,
 				1172FBD90CDAA8D400B8E233 /* libpurple.framework in Frameworks */,
-				1172FBDA0CDAA8D400B8E233 /* libsasl.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11057,6 +11053,7 @@
 					"-flat_namespace",
 					"-undefined",
 					suppress,
+					"-lsasl2",
 				);
 				PRODUCT_NAME = Purple;
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -11534,6 +11531,7 @@
 					"-flat_namespace",
 					"-undefined",
 					suppress,
+					"-lsasl2",
 				);
 				PRODUCT_NAME = Purple;
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -11570,6 +11568,7 @@
 					"-flat_namespace",
 					"-undefined",
 					suppress,
+					"-lsasl2",
 				);
 				PRODUCT_NAME = Purple;
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -11606,6 +11605,7 @@
 					"-flat_namespace",
 					"-undefined",
 					suppress,
+					"-lsasl2",
 				);
 				PRODUCT_NAME = Purple;
 				WRAPPER_EXTENSION = AdiumPlugin;
