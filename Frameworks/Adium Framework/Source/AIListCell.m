@@ -477,7 +477,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 			
 			value = [[name mutableCopy] autorelease];
 			if (statusDescription) [value appendFormat:@"; %@", statusDescription];
-			if (statusMessage) [value appendFormat:@"; status message %@", statusMessage];
+			if (statusMessage) [value appendFormat:AILocalizedString(@"; status message %@", "please keep the semicolon at the start of the line. %@ will be replaced by a status message. This is used when reading an entry in the contact list aloud, such as 'Evan Schoenberg; status message I am bouncing up and down'"), statusMessage];
 		}
 
 	} else if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
