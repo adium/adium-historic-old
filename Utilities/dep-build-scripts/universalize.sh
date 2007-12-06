@@ -66,7 +66,7 @@ cd ..
 cd $UNIVERSAL_DIR
 
 for lib in $LIBINTL $LIBGLIB $LIBGOBJECT $LIBGTHREAD $LIBGMODULE $MEANWHILE \
-           $GADU $SASL $LIBPURPLE; do
+           $GADU $LIBPURPLE; do
 	echo "Making $lib universal..."
 	python  $SCRIPT_DIR/framework_maker/universalize.py \
 	  i386:$TARGET_DIR_I386/lib/$lib.dylib \
