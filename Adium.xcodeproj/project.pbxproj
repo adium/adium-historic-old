@@ -82,7 +82,6 @@
 		1172FBCF0CDAA8D400B8E233 /* libintl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC70CDAA8D400B8E233 /* libintl.framework */; };
 		1172FBD00CDAA8D400B8E233 /* libmeanwhile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC80CDAA8D400B8E233 /* libmeanwhile.framework */; };
 		1172FBD10CDAA8D400B8E233 /* libpurple.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC90CDAA8D400B8E233 /* libpurple.framework */; };
-		1172FBD20CDAA8D400B8E233 /* libsasl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBCA0CDAA8D400B8E233 /* libsasl.framework */; };
 		1172FBD30CDAA8D400B8E233 /* libglib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC30CDAA8D400B8E233 /* libglib.framework */; };
 		1172FBD40CDAA8D400B8E233 /* libgmodule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC40CDAA8D400B8E233 /* libgmodule.framework */; };
 		1172FBD50CDAA8D400B8E233 /* libgobject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC50CDAA8D400B8E233 /* libgobject.framework */; };
@@ -3966,7 +3965,6 @@
 				1172FBCF0CDAA8D400B8E233 /* libintl.framework in Frameworks */,
 				1172FBD00CDAA8D400B8E233 /* libmeanwhile.framework in Frameworks */,
 				1172FBD10CDAA8D400B8E233 /* libpurple.framework in Frameworks */,
-				1172FBD20CDAA8D400B8E233 /* libsasl.framework in Frameworks */,
 				811035180CDE783800EC6038 /* SecurityInterface.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10630,6 +10628,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
+				OTHER_LDFLAGS = "-lsasl2";
 				PRODUCT_NAME = AdiumLibpurple;
 				WARNING_CFLAGS = (
 					"-Wall",
@@ -10674,6 +10673,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
+				OTHER_LDFLAGS = "-lsasl2";
 				PRODUCT_NAME = AdiumLibpurple;
 				WARNING_CFLAGS = (
 					"-Wall",
@@ -10719,6 +10719,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
+				OTHER_LDFLAGS = "-lsasl2";
 				PRODUCT_NAME = AdiumLibpurple;
 				WARNING_CFLAGS = (
 					"-Wall",
@@ -10764,6 +10765,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
+				OTHER_LDFLAGS = "-lsasl2";
 				PRODUCT_NAME = AdiumLibpurple;
 				WARNING_CFLAGS = (
 					"-Wall",
