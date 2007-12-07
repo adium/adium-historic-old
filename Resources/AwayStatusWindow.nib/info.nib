@@ -7,10 +7,10 @@
 	<key>IBLastKnownRelativeProjectPath</key>
 	<string>../../Adium.xcodeproj</string>
 	<key>IBOldestOS</key>
-	<integer>5</integer>
+	<integer>4</integer>
 	<key>IBOpenObjects</key>
 	<array>
-		<integer>13</integer>
+		<integer>5</integer>
 	</array>
 	<key>IBSystem Version</key>
 	<string>9B18</string>
