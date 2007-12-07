@@ -1,0 +1,42 @@
+Adium 1.2
+
+Selected major changes:
+ * Improved XMPP support
+   * Added support for fields-based dialogues
+   * Added support for server and contact actions
+   * Added SSL certificate verification and trust control
+ * Improved Bonjour support
+   * Major improvements to reliability and performance
+   * Modernized Bonjour for Mac OS X 10.4+
+   * Implemented file transfer (including folder transfer) when talking to Adium and iChat users
+ * Completely overhauled AppleScript support
+ * Implemented detachable Contact List groups
+ * Improved Group (Conference) Chat interface and options, including ability to add chats to the Contact List
+ * Improved the status menu item
+ * Improved the Accounts preferences, allowing control of account status and reporting of connectivity information
+ * Major improvements to reconnection behavior
+ * Tons and tons and tons of bug fixes
+
+Changes:
+ * Implemented chat bookmarks
+ * Improved Group Chat interface
+   * Improved the user list (#192, #2973)
+   * Implemented chat bookmarks in the contact list (#331)
+   * Added separate events for messages received in group chats (#2260)
+   * Various minor bug fixes (#447)
+ * Added options for showing/hiding mobile contacts, away contacts, and idle contacts as could be done with offline contacts previously (#3242)
+ * Mobile contacts can now have a customized color in the contact list (#215)
+ * Improved Bonjour support
+   * Implemented file transfer support (#1257)
+   * Fixed improper display of Bonjour contacts after disconnecting (#272)
+   * Fixed sending messages with line breaks (#2427)
+   * Fixed a crash when messaging invalid contacts (#2480)
+   * Various minor bug fixes (#710)
+ * Improved XMPP support
+   * Fixed importing of groups (#2795)
+ * Improved Applescript support
+   * Fixed status handling (#2347, #2348)
+ * Added drag & drop of contacts to places besides the contact list (#3097)
+ * The status message is now displayed by Growl notifications for status changes (#758)
+ 
+ * Got David a gerbil (#7278)
