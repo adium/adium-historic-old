@@ -467,7 +467,6 @@ NSString* serviceIDForJabberUID(NSString *UID);
 {
     if ([group isEqualToString:PREF_GROUP_ADDRESSBOOK]) {
 		BOOL			oldCreateMetaContacts = createMetaContacts;
-		NSNumber		*value;
 		
         //load new displayFormat
 		enableImport = [[prefDict objectForKey:KEY_AB_ENABLE_IMPORT] boolValue];
