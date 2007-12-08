@@ -37,7 +37,6 @@
 
 #define DEFAULT_MSN_PASSPORT_DOMAIN				@"@hotmail.com"
 #define SECONDS_BETWEEN_FRIENDLY_NAME_CHANGES	10
-#define	NEW_MSN									FALSE
 
 #if !NEW_MSN
 	extern void msn_set_friendly_name(PurpleConnection *gc, const char *entry);
