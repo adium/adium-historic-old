@@ -99,7 +99,7 @@ extern const char *mwServiceAware_getText(void *, void *);
 			return AILocalizedString(@"Waiting for Handshake Acknowledgement",nil);
 			break;			
 		case 4:
-			return AILocalizedString(@"Handshake Acknowledged, Sending Login",nil);
+			return AILocalizedString(@"Handshake Acknowledged; Sending Login",nil);
 			break;
 		case 5:
 			return AILocalizedString(@"Waiting for Login Acknowledgement",nil);
