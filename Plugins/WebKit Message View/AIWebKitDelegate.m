@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by David Smith on 5/9/07.
-//  Copyright 2007 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIWebKitDelegate.h"
@@ -14,13 +13,19 @@ static AIWebKitDelegate *AISharedWebKitDelegate;
 
 @implementation AIWebKitDelegate
 
-- (id) init 
+- (id)init 
 {
-	if((self = [super init])) 
-	{
+	if ((self = [super init]))  {
 		mapping = [[NSMutableDictionary alloc] init];
 	}
 	return self;
+}
+
+- (void)dealloc
+{
+	[mapping release];
+
+	[super dealloc];
 }
 
 + (AIWebKitDelegate *)sharedWebKitDelegate
