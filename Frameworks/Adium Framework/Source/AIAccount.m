@@ -772,14 +772,13 @@
 #pragma mark Chat Commands
 -(NSMenu*)actionsForChat:(AIChat*)chat
 {
-#warning breakage
 	return nil;
-	//add stuff
 }
 
 -(void)verifyCommand:(NSString*)commandName forChat:(AIChat*)chat
 {
-	[self setDelegate:[AIChatCommandsController init]];
+#warning Huh
+	[self setDelegate:[[AIChatCommandsController alloc] init]];
 	[[self delegate] verifyCommand:commandName forChat:chat];
 	[[self delegate] setDelegate:self];
 }
