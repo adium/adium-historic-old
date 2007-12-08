@@ -55,11 +55,8 @@
     BOOL				suspendDirtyArraySave;  //YES to prevent saving of the dirty index	
     NSLock				*indexingThreadLock;	//Locked by the plugin when a dirty all or clean thread is running
 
-	/*
-	 Locked by the plugin while the index is being modified.
-	 Locked by the logViewerWindowController when content searching is running.
-	 */
-	NSConditionLock		*logAccessLock;
+	//Locked by the plugin while the index is being modified
+	NSConditionLock		*logWritingLock;
     
     //Array of dirty logs / Logs that need re-indexing.  (Locked access)
     NSMutableArray		*dirtyLogArray;
