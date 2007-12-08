@@ -18,25 +18,35 @@ Selected major changes:
  * Tons and tons and tons of bug fixes
 
 Changes:
- * Implemented chat bookmarks
  * Improved Group Chat interface
    * Improved the user list (#192, #2973)
    * Implemented chat bookmarks in the contact list (#331)
    * Added separate events for messages received in group chats (#2260)
    * Added an event for chat invitations (#80)
+   * Added Drag & Drop contact invitations
+   * The Tab key now autocompletes names in group chats
    * Various minor bug fixes (#447)
- * Added options for showing/hiding mobile contacts, away contacts, and idle contacts as could be done with offline contacts previously (#3242)
- * Mobile contacts can now have a customized color in the contact list (#215)
  * Improved Bonjour support
    * Implemented file transfer support (#1257)
    * Fixed improper display of Bonjour contacts after disconnecting (#272)
    * Fixed sending messages with line breaks (#2427)
    * Fixed a crash when messaging invalid contacts (#2480)
-   * Various minor bug fixes (#710)
+   * Major improvements to reliability and performance
+   * Modernized Bonjour for Mac OS X 10.4+
+   * Various minor bug fixes
  * Improved XMPP support
    * Fixed importing of groups (#2795)
- * Improved Applescript support
-   * Fixed status handling (#2347, #2348)
+   * Added support for fields-based dialogues, which allows many serverside functions to work
+   * Added support for server and contact actions
+   * Added SSL certificate verification and trust control
+   * Improved new account registration 
+   * Fixed connectivity to servers which require GSSAPI/Kerberos 5 and some other forms of authentication
+   * XMPP can now broadcast information about the current iTunes track
+   * Fixed a long-standing crash after disconnecting from a server which uses SSL (#7461)
+ * Rewrote almost all of Applescript support, fixing numerous problems and expanding its capabilities
+ * Implemented detachable Contact List groups (drag a group off the contact list to create a free-floating window). Known issue: Detached contact lists don't play as nicely as we would like with Spaces
+ * Added options for showing/hiding mobile contacts, away contacts, and idle contacts as could be done with offline contacts previously (#3242)
+ * Mobile contacts can now have a customized color in the contact list (#215)
  * Added drag & drop of contacts to places besides the contact list (#3097)
  * The status message is now displayed by Growl notifications for status changes (#758)
  * Improved Account Preferences
@@ -57,8 +67,25 @@ Changes:
  * Added an option to change status when a screensaver is activated (#5069)
  * Added options for update checking to the General preferences (#7059)
  * Added an option to show always show a contact in the contact list regardless of status (offline, idle, etc.) (#7203)
+ * The Contact List is now accessible via VoiceOver
+ * Chats now display a message when your account goes offline or online
  * Improved handling of grammar checking across multiple windows (#8364)
  * Improved quit confirmation and added an advanced preference to control it (#4231)
  * Error dialogs and authorization windows no longer steal focus (#7747, #7923)
- 
+ * Fixed linkification of single-world domain names (#3540)
+ * Fixed pixelated contact icon appearance in 10.5
+ * Disabled javascript: urls in the message view, fixing a potential security concern
+ * Improved how Spotlight displays chat transcripts on 10.4 (Known issue: 10.5 is still ignoring Spotlight results from chat transcripts because they are within ~/Library) (#8160)
+ * Added 'First Last Initial' as an option for names from the Address Book (#3673)
+ * Improved first-run experience when using services which require a server to be specified (#7685)
+ * Empty status messages are no longer forced to read the status's name (#7985)
+ * The 'New Email' dialogue can now launch Mail.app rather than loading a webpage
+ * Fixed a crash which could occur during file transfers
+ * Re-added the ability to customize the number of lines of history to show in new chats
+ * Fixed bugs in the Stockholm and Smooth Operator message styles (#2997)
+ * Fixed contact presence and file transfer problems with Sametime on recent server versions
+ * Restored ignoring Exposé when the contact list is set to below other windows on 10.4; this behavior breaks Spaces so can not be done on 10.5.
+ * Updated Adiumy icons to 512x512 for Leopard
+ * Updated to libpurple 2.3.1
  * Got David a gerbil (#7278)
+ * Localization updates
