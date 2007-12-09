@@ -29,6 +29,7 @@
 #import <Adium/AIService.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #include <libpurple/presence.h>
 #include <libpurple/si.h>
 #include <SystemConfiguration/SystemConfiguration.h>
@@ -574,6 +575,23 @@
 	return [super titleForContactMenuLabel:label forContact:inContact];
 }
 
+- (NSString *)titleForAccountActionMenuLabel:(const char *)label
+{	
+	if (strcmp(label, "Set User Info...") == 0) {
+		return [AILocalizedString(@"Set User Info", nil) stringByAppendingEllipsis];
+		
+	} else 	if (strcmp(label, "Search for Users...") == 0) {
+		return [AILocalizedString(@"Search for Users", nil) stringByAppendingEllipsis];
+		
+	} else 	if (strcmp(label, "Set Mood...") == 0) {
+		return [AILocalizedString(@"Set Mood", nil) stringByAppendingEllipsis];
+		
+	} else 	if (strcmp(label, "Set Nickname...") == 0) {
+		return [AILocalizedString(@"Set Nickname", nil) stringByAppendingEllipsis];
+	} 
+	
+	return [super titleForContactMenuLabel:label];
+}
 #pragma mark Multiuser chat
 
 //Multiuser chats come in with just the contact's name as contactName, but we want to actually do it right.
