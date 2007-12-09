@@ -11,6 +11,7 @@
 #import <Security/SecureTransport.h>
 #import <Security/SecPolicySearch.h>
 #import <Security/oidsalg.h>
+#import <Adium/AIAccountControllerProtocol.h>
 #import "ESPurpleJabberAccount.h"
 
 static NSMutableDictionary *acceptedCertificates = nil;
