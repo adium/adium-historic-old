@@ -156,7 +156,7 @@
     unviewedContent = [inContact integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
 
     //Unviewed content
-    if (!color && (unviewedContentEnabled && unviewedContent)) {
+    if ((!color && !labelColor) && (unviewedContentEnabled && unviewedContent)) {
 		/* Use the unviewed content settings if:
 		 *	- we aren't flashing or
 		 *  - every other flash. */
@@ -169,7 +169,7 @@
     }
 
     //Offline, Signed off, signed on, or typing
-    if (!color/* && (!unviewedContentEnabled || !unviewedContent)*/) {
+    if ((!color && !labelColor)) {
 		if (offlineEnabled && (![inContact online] &&
 							  ![inContact integerStatusObjectForKey:@"Signed Off"])) {
 			color = offlineColor;
@@ -198,13 +198,13 @@
         }
     }
 
-	if (!color && mobileEnabled && [inContact isMobile]) {
+	if ((!color && !labelColor) && mobileEnabled && [inContact isMobile]) {
 		color = mobileColor;
 		invertedColor = mobileInvertedColor;
 		labelColor = mobileLabelColor;		
 	}
 
-    if (!color) {
+    if ((!color && !labelColor)) {
 		AIStatusSummary statusSummary = [inContact statusSummary];
 
         //Prefetch these values, we need them multiple times below
@@ -228,7 +228,7 @@
     }
 
     //Online
-    if (!color && onlineEnabled && [inContact online]) {
+    if ((!color && !labelColor) && onlineEnabled && [inContact online]) {
         color = onlineColor;
         invertedColor = onlineInvertedColor;
         labelColor = onlineLabelColor;
