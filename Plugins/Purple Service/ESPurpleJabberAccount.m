@@ -590,8 +590,9 @@
 		return [AILocalizedString(@"Set Nickname", nil) stringByAppendingEllipsis];
 	} 
 	
-	return [super titleForContactMenuLabel:label];
+	return [super titleForAccountActionMenuLabel:label];
 }
+
 #pragma mark Multiuser chat
 
 //Multiuser chats come in with just the contact's name as contactName, but we want to actually do it right.
