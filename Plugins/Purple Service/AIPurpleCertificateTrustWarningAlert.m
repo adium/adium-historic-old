@@ -12,7 +12,6 @@
 #import <Security/SecPolicySearch.h>
 #import <Security/oidsalg.h>
 #import "ESPurpleJabberAccount.h"
-#import "AIEditAccountWindowController.h"
 
 static NSMutableDictionary *acceptedCertificates = nil;
 
@@ -147,7 +146,7 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 			case kSecTrustResultConfirm: // trust ok, but user asked (earlier) that you check with him before proceeding
 			case kSecTrustResultDeny: // trust ok, but user previously said not to trust it anyway
 			case kSecTrustResultRecoverableTrustFailure: // trust broken, perhaps argue with the user
-				[NSClassFromString(@"AIEditAccountWindowController") editAccount:account onWindow:nil notifyingTarget:self];
+				[[adium accountController] editAccount:account onWindow:nil notifyingTarget:self];
 				break;
 			default:
 				/*
