@@ -747,8 +747,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 		//Handled via Get Info
 		return nil;
 	} else if (strcmp(label, "Show Buddies Awaiting Authorization") == 0) {
-		//This is ugly and requires interactive, right-click enabled (??) request fields
-		//return AILocalizedString(@"Show Contacts Awaiting Authorization", "Account action menu item to show a list of contacts for whom this account is awaiting authorization to be able to show them in the contact list");
+		return AILocalizedString(@"Show Contacts Awaiting Authorization", "Account action menu item to show a list of contacts for whom this account is awaiting authorization to be able to show them in the contact list");
 
 	} else if (strcmp(label, "Configure IM Forwarding (URL)") == 0) {
 		return [AILocalizedString(@"Configure IM Forwarding", nil) stringByAppendingEllipsis];
