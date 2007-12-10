@@ -9,7 +9,7 @@
 #import "AIPurpleCertificateViewer.h"
 #import <SecurityInterface/SFCertificatePanel.h>
 #import <AIUtilities/AITigerCompatibility.h>
-#import <Adium/AIAccountController.h>
+#import <Adium/AIAccountControllerProtocol.h>
 
 @interface AIPurpleCertificateViewer (privateMethods)
 

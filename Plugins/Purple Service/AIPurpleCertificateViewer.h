@@ -7,10 +7,11 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/AIObject.h>
 
 @class AIAccount;
 
-@interface AIPurpleCertificateViewer : NSObject {
+@interface AIPurpleCertificateViewer : AIObject {
 	CFArrayRef certificatechain;
 	
 	AIAccount *account;
