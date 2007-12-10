@@ -137,6 +137,8 @@
 
 - (void)dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
 	[contactListController close];
 	[windowLastScreen release];
 
