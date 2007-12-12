@@ -34,6 +34,8 @@
 	NSDictionary		*tuneinfo;
 	BOOL				willBeDeleted;
 	id<AIAccountControllerRemoveConfirmationDialog> deletionDialog;
+	
+	PurpleConnectionError lastDisconnectionReason;
 }
 
 - (const char*)protocolPlugin;
@@ -73,6 +75,7 @@
 - (void)connect;
 - (void)configureAccountProxyNotifyingTarget:(id)target selector:(SEL)selector;
 - (void)disconnect;
+- (PurpleConnectionError)lastDisconnectionReason;
 - (NSString *)connectionStringForStep:(int)step;
 - (void)configurePurpleAccount;
 
