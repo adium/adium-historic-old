@@ -78,6 +78,9 @@
 - (void)handleFileTransferEvent:(NSNotification *)notification
 {
 	ESFileTransfer	*fileTransfer = (ESFileTransfer *)[notification userInfo];
+
+	if ([[fileTransfer account] accountDisplaysFileTransferMessages]) return;
+
 	AIListContact	*listContact = [notification object];
 	NSString		*notificationName = [notification name];
 	NSString		*filename;
