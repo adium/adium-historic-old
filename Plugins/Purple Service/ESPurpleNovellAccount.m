@@ -27,23 +27,6 @@ gboolean purple_init_novell_plugin(void);
     return "prpl-novell";
 }
 
-- (AIReconnectDelayType)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
-{
-	AIReconnectDelayType shouldAttemptReconnect = [super shouldAttemptReconnectAfterDisconnectionError:disconnectionError];
-	
-	if (disconnectionError && *disconnectionError) {
-		if ([*disconnectionError rangeOfString:@"Invalid username or password"].location != NSNotFound) {
-			[self setLastDisconnectionError:AILocalizedString(@"Incorrect username or password","Error message displayed when the server reports username or password as being incorrect.")];
-			[self serverReportedInvalidPassword];
-			shouldAttemptReconnect = AIReconnectImmediately;
-		} else if ([*disconnectionError rangeOfString:@"you logged in at another workstation"].location != NSNotFound) {
-			shouldAttemptReconnect = AIReconnectNever;
-		}
-	}
-	
-	return shouldAttemptReconnect;
-}
-
 #pragma mark Status
 - (NSString *)connectionStringForStep:(int)step
 {

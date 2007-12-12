@@ -168,20 +168,9 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 {
 	AIReconnectDelayType shouldAttemptReconnect = [super shouldAttemptReconnectAfterDisconnectionError:disconnectionError];
 
-	if (disconnectionError && *disconnectionError) {
-		if (([*disconnectionError rangeOfString:@"Incorrect password"].location != NSNotFound) ||
-			([*disconnectionError rangeOfString:@"Authentication failed"].location != NSNotFound)){
-			[self setLastDisconnectionError:AILocalizedString(@"Incorrect username or password","Error message displayed when the server reports username or password as being incorrect.")];
-			[self serverReportedInvalidPassword];
-			shouldAttemptReconnect = AIReconnectImmediately;
-		} else if ([*disconnectionError rangeOfString:@"signed on with this screen name at another location"].location != NSNotFound) {
-			shouldAttemptReconnect = AIReconnectNever;
-		} else if ([*disconnectionError rangeOfString:@"too frequently"].location != NSNotFound) {
-			shouldAttemptReconnect = AIReconnectNever;	
-		} else if ([*disconnectionError rangeOfString:@"Invalid screen name"].location != NSNotFound) {
+	if ([self lastDisconnectionReason] == PURPLE_CONNECTION_ERROR_INVALID_USERNAME) {
 			shouldAttemptReconnect = AIReconnectNever;
 			*disconnectionError = AILocalizedString(@"The screen name you entered is not registered. Check to ensure you typed it correctly. If it is a new name, you must register it at www.aim.com before you can use it.", "Invalid name on AIM");
-		}
 	}
 	
 	return shouldAttemptReconnect;
@@ -720,16 +709,16 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 #pragma mark Contact List Menu Items
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
-	if (strcmp(label, "Edit Buddy Comment") == 0) {
+	if (strcmp(label, _("Edit Buddy Comment")) == 0) {
 		return nil;
 
-	} else if (strcmp(label, "Re-request Authorization") == 0) {
+	} else if (strcmp(label, _("Re-request Authorization")) == 0) {
 		return [NSString stringWithFormat:AILocalizedString(@"Re-request Authorization from %@",nil),[inContact formattedUID]];
 		
-	} else 	if (strcmp(label, "Get AIM Info") == 0) {
+	} else 	if (strcmp(label, _("Get AIM Info")) == 0) {
 		return [NSString stringWithFormat:AILocalizedString(@"Get AIM information for %@",nil),[inContact formattedUID]];
 
-	} else if (strcmp(label, "Direct IM") == 0) {
+	} else if (strcmp(label, _("Direct IM")) == 0) {
 		return [NSString stringWithFormat:AILocalizedString(@"Initiate Direct IM with %@",nil),[inContact formattedUID]];
 	}
 
@@ -739,36 +728,36 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 #pragma mark Account Action Menu Items
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
-	if (strcmp(label, "Set User Info...") == 0) {
+	if (strcmp(label, _("Set User Info...")) == 0) {
 		//Handled via Get Info
 		return nil;
 		
-	} else if (strcmp(label, "Edit Buddy Comment") == 0) {
+	} else if (strcmp(label, _("Edit Buddy Comment")) == 0) {
 		//Handled via Get Info
 		return nil;
-	} else if (strcmp(label, "Show Buddies Awaiting Authorization") == 0) {
+	} else if (strcmp(label, _("Show Buddies Awaiting Authorization")) == 0) {
 		return AILocalizedString(@"Show Contacts Awaiting Authorization", "Account action menu item to show a list of contacts for whom this account is awaiting authorization to be able to show them in the contact list");
 
-	} else if (strcmp(label, "Configure IM Forwarding (URL)") == 0) {
+	} else if (strcmp(label, _("Configure IM Forwarding (URL)")) == 0) {
 		return [AILocalizedString(@"Configure IM Forwarding", nil) stringByAppendingEllipsis];
 
-	} else if (strcmp(label, "Change Password (URL)") == 0) {
+	} else if (strcmp(label, _("Change Password (URL)")) == 0) {
 		//There's no reason to have the URL version available - we have Change Password for in-app changing.
 		return nil;
 		
-	} else if (strcmp(label, "Display Currently Registered E-Mail Address") == 0) {
+	} else if (strcmp(label, _("Display Currently Registered E-Mail Address")) == 0) {
 		return AILocalizedString(@"Display Currently Registered Email Address", nil);
 		
-	} else if (strcmp(label, "Change Currently Registered E-Mail Address...") == 0) {
+	} else if (strcmp(label, _("Change Currently Registered E-Mail Address...")) == 0) {
 		return [AILocalizedString(@"Change Currently Registered Email Address", nil) stringByAppendingEllipsis];
 		
-	} else if (strcmp(label, "Search for Buddy by E-Mail Address...") == 0) {
+	} else if (strcmp(label, _("Search for Buddy by E-Mail Address...")) == 0) {
 		return [AILocalizedString(@"Search for Contact By Email Address", nil) stringByAppendingEllipsis];		
 
-	} else if (strcmp(label, "Set User Info (URL)...") == 0) {
+	} else if (strcmp(label, _("Set User Info (URL)...")) == 0) {
 		return [AILocalizedString(@"Set User Info", nil) stringByAppendingEllipsis];
 
-	} else if (strcmp(label, "Set Privacy Options...") == 0) {
+	} else if (strcmp(label, _("Set Privacy Options...")) == 0) {
 		return [AILocalizedString(@"Set Privacy Options", nil) stringByAppendingEllipsis];
 	}
 	

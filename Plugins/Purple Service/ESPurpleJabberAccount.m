@@ -422,27 +422,12 @@
 - (AIReconnectDelayType)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
 	AIReconnectDelayType shouldAttemptReconnect = [super shouldAttemptReconnectAfterDisconnectionError:disconnectionError];
-	
-	if (disconnectionError && *disconnectionError) {
-		if (([*disconnectionError rangeOfString:@"401"].location != NSNotFound) ||
-			([*disconnectionError rangeOfString:@"Authentication Failure"].location != NSNotFound) ||
-			([*disconnectionError rangeOfString:@"Not Authorized"].location != NSNotFound)) {
-			[self setLastDisconnectionError:AILocalizedString(@"Incorrect username or password","Error message displayed when the server reports username or password as being incorrect.")];
-			[self serverReportedInvalidPassword];
-			shouldAttemptReconnect = AIReconnectImmediately;
-		} else if ([*disconnectionError rangeOfString:@"Stream Error"].location != NSNotFound) {
-			shouldAttemptReconnect = AIReconnectNever;
 
-		} else if ([*disconnectionError rangeOfString:@"requires plaintext authentication over an unencrypted stream"].location != NSNotFound) {
-			shouldAttemptReconnect = AIReconnectNever;
-		} else if ([*disconnectionError rangeOfString:@"Resource Conflict"].location != NSNotFound) {
-			shouldAttemptReconnect = AIReconnectNever;
-		} else if ([*disconnectionError rangeOfString:@"SSL peer presented an invalid certificate"].location != NSNotFound) {
-			if([self shouldVerifyCertificates])
-				shouldAttemptReconnect = AIReconnectNever;
-		}
+	if (([self lastDisconnectionReason] == PURPLE_CONNECTION_ERROR_CERT_OTHER_ERROR) &&
+		([self shouldVerifyCertificates])) {
+		shouldAttemptReconnect = AIReconnectNever;
 	}
-	
+
 	return shouldAttemptReconnect;
 }
 

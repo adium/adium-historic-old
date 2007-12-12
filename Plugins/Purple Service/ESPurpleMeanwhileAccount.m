@@ -68,21 +68,6 @@ extern const char *mwServiceAware_getText(void *, void *);
 	return statusMessage;
 }
 
-- (AIReconnectDelayType)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
-{
-	AIReconnectDelayType shouldAttemptReconnect = [super shouldAttemptReconnectAfterDisconnectionError:disconnectionError];
-	
-	if (disconnectionError && *disconnectionError) {
-		if ([*disconnectionError rangeOfString:@"Incorrect Username/Password"].location != NSNotFound) {
-			[self setLastDisconnectionError:AILocalizedString(@"Incorrect username or password","Error message displayed when the server reports username or password as being incorrect.")];
-			[self serverReportedInvalidPassword];
-			shouldAttemptReconnect = AIReconnectImmediately;
-		}
-	}
-
-	return shouldAttemptReconnect;
-}
-
 #pragma mark Status
 
 - (NSString *)connectionStringForStep:(int)step
