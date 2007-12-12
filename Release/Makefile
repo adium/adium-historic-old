@@ -14,7 +14,7 @@
 # - make all
 ###########
 
-VERSION=1.2b1
+VERSION=1.2b2
 BUILD_IN_DEBUG_MODE=TRUE
 BETA=TRUE
 
