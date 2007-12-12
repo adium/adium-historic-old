@@ -13,6 +13,6 @@
 	<key>CFBundleVersion</key>
 	<string>0.0.1d1</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.adiumX.libpurple</string>
+	<string>im.pidgin.libpurple</string>
 </dict>
 </plist>
