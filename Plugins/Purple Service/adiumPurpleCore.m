@@ -143,6 +143,18 @@ static void adiumPurpleCoreDebugInit(void)
 /* The core is ready... finish configuring libpurple and its plugins */
 static void adiumPurpleCoreUiInit(void)
 {		
+	bindtextdomain("pidgin", [[[NSBundle bundleWithIdentifier:@"im.pidgin.libpurple"] resourcePath] UTF8String]);
+	bind_textdomain_codeset("pidgin", "UTF-8");
+	textdomain("pidgin");
+	
+	const char *preferredLocale = [[[[NSBundle bundleForClass:[SLPurpleCocoaAdapter class]] preferredLocalizations] objectAtIndex:0] UTF8String];
+	//We should be able to just do setlocale()... but it always returns NULL, which indicates failure
+	/* setlocale(LC_MESSAGES, preferredLocale); */
+
+	//So we'll set the environment variable for this process, which does work
+	setenv("LC_ALL", preferredLocale, /* overwrite? */ 1);
+	setenv("LC_MESSAGES", preferredLocale, /* overwrite? */ 1);
+
 	AILog(@"adiumPurpleCoreUiInit");
 	//Initialize the core UI ops
     purple_blist_set_ui_ops(adium_purple_blist_get_ui_ops());
