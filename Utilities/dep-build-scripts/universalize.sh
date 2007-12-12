@@ -10,6 +10,7 @@ LIBGMODULE=libgmodule-2.0.0
 MEANWHILE=libmeanwhile.1
 GADU=libgadu.3.7.0
 SASL=libsasl2.2
+
 PURPLE_VERSION=0.3.1
 
 LIBPURPLE=libpurple.$PURPLE_VERSION
@@ -85,3 +86,5 @@ python $SCRIPT_DIR/framework_maker/frameworkize.py $UNIVERSAL_DIR/$LIBPURPLE.dyl
 echo "Adding the Adium framework header."
 cp $SCRIPT_DIR/libpurple-full.h \
    $PWD/Frameworks/libpurple.framework/Headers/libpurple.h
+
+cp $SCRIPT_DIR/Libpurple-Info.plist $PWD/Frameworks/libpurple.framework/Resources/Info.plist
