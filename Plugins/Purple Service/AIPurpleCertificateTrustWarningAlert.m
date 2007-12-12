@@ -113,7 +113,7 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 		.Version = CSSM_APPLE_TP_SSL_OPTS_VERSION,
 		.ServerNameLen = [hostname length]+1,
 		.ServerName = [hostname cStringUsingEncoding:NSASCIIStringEncoding],
-		.Flags = CSSM_APPLE_TP_SSL_CLIENT
+		.Flags = 0
 	};
 	
 	CSSM_DATA theCssmData = {
@@ -144,6 +144,7 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 				query_cert_cb(true, userdata);
 				[self release];
 				break;
+				
 			case kSecTrustResultConfirm: // trust ok, but user asked (earlier) that you check with him before proceeding
 			case kSecTrustResultDeny: // trust ok, but user previously said not to trust it anyway
 			case kSecTrustResultRecoverableTrustFailure: // trust broken, perhaps argue with the user
