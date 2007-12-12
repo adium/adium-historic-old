@@ -803,10 +803,6 @@
 		 */
 		if (![[[inContact account] UID] isEqualToString:[inContact UID]]) {
 			[adiumChatEvents chat:chat addedListContact:inContact];
-
-			[[adium contentController] displayEvent:[NSString stringWithFormat:AILocalizedString(@"%@ joined the chat",nil),[inContact displayName]]
-											 ofType:@"contact_joined"
-											 inChat:chat];
 		}
 	}
 
@@ -825,10 +821,6 @@
 {
 	if ([chat isGroupChat]) {
 		[adiumChatEvents chat:chat removedListContact:inContact];
-		
-		[[adium contentController] displayEvent:[NSString stringWithFormat:AILocalizedString(@"%@ left the chat",nil),[inContact displayName]]
-										 ofType:@"contact_left"
-										 inChat:chat];		
 	}
 
 	[[adium notificationCenter] postNotificationName:Chat_ParticipatingListObjectsChanged
