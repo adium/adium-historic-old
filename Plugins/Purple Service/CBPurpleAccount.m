@@ -789,6 +789,14 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	return (account && account->gc && ((account->gc->flags & PURPLE_CONNECTION_NO_NEWLINES) != 0));
 }
 
+/*!
+ * @brief Libpurple prints file transfer messages to the chat window. The Adium core therefore shouldn't.
+ */
+- (BOOL)accountDisplaysFileTransferMessages
+{
+	return YES;
+}
+
 //Return YES if we're available for sending the specified content or will be soon (are currently connecting).
 //If inListObject is nil, we can return YES if we will 'most likely' be able to send the content.
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact

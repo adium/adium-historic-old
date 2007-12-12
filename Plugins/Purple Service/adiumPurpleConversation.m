@@ -162,146 +162,89 @@ static void adiumPurpleConvWriteConv(PurpleConversation *conv, const char *who, 
 		if (flags & PURPLE_MESSAGE_SYSTEM) {
 			NSString			*messageString = [NSString stringWithUTF8String:message];
 			if (messageString) {
-				AIChatUpdateType	updateType = -1;
-
-				if ([messageString rangeOfString:@"timed out"].location != NSNotFound) {
-					updateType = AIChatTimedOut;
-				} else if ([messageString rangeOfString:@"closed the conversation"].location != NSNotFound) {
-					updateType = AIChatClosedWindow;
-				} else if ([messageString rangeOfString:@"Direct IM established"].location != NSNotFound) {
-					//Should reorganize.. this is silly, grafted on top of the previous system which added a signal to Purple
+				BOOL				shouldDisplayMessage = TRUE;
+				if (strcmp(message, _("Direct IM established")) == 0) {
 					[accountLookup(conv->account) updateContact:[chat listObject]
 													   forEvent:[NSNumber numberWithInt:PURPLE_BUDDY_DIRECTIM_CONNECTED]];
-
-				} else if ([messageString rangeOfString:@" entered the room"].location != NSNotFound ||
-						   [messageString rangeOfString:@" left the room"].location != NSNotFound) {
-					//We handle entered/left messages directly via the conversation UI ops; don't display this system message
-					return;
-
-				} else if ((([messageString rangeOfString:@"Transfer of file"].location != NSNotFound) &&
-								([messageString rangeOfString:@"complete"].location != NSNotFound)) ||
-						   ([messageString rangeOfString:@"is offering to send file"].location != NSNotFound)) {
-								//These file transfer messages are handled in ESFileTransferMessagesPlugin; don't show libpurple's version
-					return;
-				} else if (([messageString rangeOfString:@"Offering to send"].location != NSNotFound)) {
-					//This file transfer messages is handled in ESFileTransferMessagesPlugin; don't show libpurple's version
-					return;
-				} else if (([messageString rangeOfString:@"The remote user has closed the connection."].location != NSNotFound) ||
-						   ([messageString rangeOfString:@"The remote user has declined your request."].location != NSNotFound) ||
-						   ([messageString rangeOfString:@"Lost connection with the remote user:"].location != NSNotFound) ||
-						   ([messageString rangeOfString:@"Received invalid data on connection with remote user"].location != NSNotFound) ||
-						   ([messageString rangeOfString:@"Could not establish a connection with the remote user."].location != NSNotFound)) {
-					//Display the message if it's not just the one for the other guy closing it...note that this needs to be localized
-					if ([messageString rangeOfString:@"The remote user has closed the connection."].location == NSNotFound) {
-						[[[AIObject sharedAdiumInstance] contentController] displayEvent:messageString
-																				  ofType:@"directIMDisconnected"
-																				  inChat:chat];
+					shouldDisplayMessage = FALSE;
+					
+				} else {
+					BOOL isClosingDirectIM = FALSE;
+					if ((strcmp(message, _("The remote user has closed the connection.")) == 0) ||
+						(strcmp(message, _("The remote user has declined your request.")) == 0) ||
+						(strcmp(message, _("Received invalid data on connection with remote user.")) == 0) ||
+						(strcmp(message, _("Could not establish a connection with the remote user.")) == 0)) {
+						isClosingDirectIM = TRUE;
 					}
 					
-					[accountLookup(conv->account) updateContact:[chat listObject]
-													   forEvent:[NSNumber numberWithInt:PURPLE_BUDDY_DIRECTIM_DISCONNECTED]];	
+					if (!isClosingDirectIM) {
+						//Only works in English - XXX fix me!
+						if ([messageString rangeOfString:@"Lost connection with the remote user:"].location != NSNotFound) {
+							isClosingDirectIM = TRUE;
+						}
+					}
+					
+					if (isClosingDirectIM) {
+						if (strcmp(message, _("The remote user has closed the connection.")) != 0) {
+							//Display the message if it's not just the one for the other guy closing it...
+							[[[AIObject sharedAdiumInstance] contentController] displayEvent:messageString
+																					  ofType:@"directIMDisconnected"
+																					  inChat:chat];
+						}
+						
+						[accountLookup(conv->account) updateContact:[chat listObject] forEvent:[NSNumber numberWithInt:PURPLE_BUDDY_DIRECTIM_DISCONNECTED]];
+						shouldDisplayMessage = FALSE;
+					}
 				}
 
-				if (updateType != -1) {
-					[accountLookup(conv->account) updateForChat:chat
-														   type:[NSNumber numberWithInt:updateType]];
-				} else {
-					//If we don't know what to do with this message, display it!
+				if (shouldDisplayMessage) {
 					[[[AIObject sharedAdiumInstance] contentController] displayEvent:messageString
 																			  ofType:@"libpurpleMessage"
 																			  inChat:chat];
-				}					
+				}
 			}
+	
 		} else if (flags & PURPLE_MESSAGE_ERROR) {
 			NSString			*messageString = [NSString stringWithUTF8String:message];
+
 			if (messageString) {
-				AIChatErrorType	errorType = -1;
+			    if (![messageString rangeOfString:@"User information not available"].location != NSNotFound) {
+					//Ignore user information errors; they are irrelevent
+					//XXX The user info check only works in English; libpurple should be modified to be better about this useless information spamming
 
-				if ([messageString rangeOfString:@"Unable to send message"].location != NSNotFound) {
-					/* Unable to send message = generic and AIM errors */
-					if (([messageString rangeOfString:@"Not logged in"].location != NSNotFound) ||
-					   ([messageString rangeOfString:@"is not online"].location != NSNotFound)) {
+					AIChatErrorType	errorType = AIChatUnknownError;
+					
+					if (([messageString rangeOfString:[NSString stringWithUTF8String:_("Not logged in")]].location != NSNotFound) || 
+						([messageString rangeOfString:[NSString stringWithUTF8String:_("User temporarily unavailable")]].location != NSNotFound)) {
 						errorType = AIChatMessageSendingUserNotAvailable;
-
-					} else if ([messageString rangeOfString:@"In local permit/deny"].location != NSNotFound) {
+					} else if ([messageString rangeOfString:[NSString stringWithUTF8String:_("In local permit/deny")]].location != NSNotFound) {
 						errorType = AIChatMessageSendingUserIsBlocked;
-
-					} else if (([messageString rangeOfString:@"Refused by client"].location != NSNotFound) ||
-							 ([messageString rangeOfString:@"message is too large"].location != NSNotFound)) {
+					} else if (([messageString rangeOfString:[NSString stringWithUTF8String:_("Refused by client")]].location != NSNotFound) ||
+						([messageString rangeOfString:[NSString stringWithUTF8String:_("Reply too big")]].location != NSNotFound) ||
+						([messageString rangeOfString:@"message is too large"].location != NSNotFound)) {
 						//XXX - there may be other conditions, but this seems the most common so that's how we'll classify it
 						errorType = AIChatMessageSendingTooLarge;
-					}
-
-				} else if (([messageString rangeOfString:@"Message could not be sent"].location != NSNotFound) ||
-						 ([messageString rangeOfString:@"Message may have not been sent"].location != NSNotFound)) {
-					/* Message could not be sent = MSN errors */
-					if (([messageString rangeOfString:@"because a time out occurred"].location != NSNotFound) ||
-						([messageString rangeOfString:@"because a timeout occurred"].location != NSNotFound)) {
-						errorType = AIChatMessageSendingTimeOutOccurred;
-
-					} else if ([messageString rangeOfString:@"because the user is offline"].location != NSNotFound) {
-						errorType = AIChatMessageSendingUserNotAvailable;
-						
-					} else if ([messageString rangeOfString:@"not allowed while invisible"].location != NSNotFound) {
-						errorType = AIChatMessageSendingNotAllowedWhileInvisible;
-						
-					} else if (([messageString rangeOfString:@"because a connection error occurred"].location != NSNotFound) ||
-							 ([messageString rangeOfString:@"because an error with the switchboard"].location != NSNotFound)) {
-						errorType = AIChatMessageSendingConnectionError;
-					}
-
-				} else if ([messageString rangeOfString:@"You missed"].location != NSNotFound) {
-					if (([messageString rangeOfString:@"because they were too large"].location != NSNotFound) ||
-						([messageString rangeOfString:@"because it was too large"].location != NSNotFound)) {
-						//The actual message when on AIM via libpurple is "You missed 2 messages" but this is a lie.
-						errorType = AIChatMessageReceivingMissedTooLarge;
-
-					} else if (([messageString rangeOfString:@"because it was invalid"].location != NSNotFound) ||
-							 ([messageString rangeOfString:@"because they were invalid"].location != NSNotFound)) {
-						errorType = AIChatMessageReceivingMissedInvalid;
-
-					} else if ([messageString rangeOfString:@"because the rate limit has been exceeded"].location != NSNotFound) {
-						errorType = AIChatMessageReceivingMissedRateLimitExceeded;
-
-					} else if ([messageString rangeOfString:@"because he/she was too evil"].location != NSNotFound) {
+					} else if ([messageString rangeOfString:[NSString stringWithUTF8String:_("Command failed")]].location != NSNotFound) {
+						errorType = AIChatCommandFailed;
+					} else if ([messageString rangeOfString:[NSString stringWithUTF8String:_("Wrong number of arguments")]].location != NSNotFound) {
+						errorType = AIChatInvalidNumberOfArguments;
+					} else if ([messageString rangeOfString:[NSString stringWithUTF8String:_("Rate")]].location != NSNotFound) {
+						//XXX Is 'Rate' really a standalone translated string?
+						errorType = AIChatMessageSendingMissedRateLimitExceeded;
+					} else if ([messageString rangeOfString:[NSString stringWithUTF8String:_("Too evil")]].location != NSNotFound) {
 						errorType = AIChatMessageReceivingMissedRemoteIsTooEvil;
-
-					} else if ([messageString rangeOfString:@"because you are too evil"].location != NSNotFound) {
-						errorType = AIChatMessageReceivingMissedLocalIsTooEvil;
-
 					}
 
-				} else if ([messageString isEqualToString:@"Command failed"]) {
-					errorType = AIChatCommandFailed;
-
-				} else if ([messageString isEqualToString:@"Wrong number of arguments"]) {
-					errorType = AIChatInvalidNumberOfArguments;
-
-				} else if ([messageString rangeOfString:@"transfer"].location != NSNotFound) {
-					//Ignore the transfer errors; we will handle them locally
-					errorType = -2;
-
-				} else if ([messageString rangeOfString:@"User information not available"].location != NSNotFound) {
-					//Ignore user information errors; they are irrelevent
-					errorType = -2;
-				}
-
-				if (errorType == -1) {
-					errorType = AIChatUnknownError;
-				}
-
-				if (errorType != -2) {
 					/* We will wait until the next run loop, in case this error message was generated by
 					 * the sending of a message. This allows the results of sending the message to be displayed
 					 * first.
 					 */
 					if (errorType != AIChatUnknownError) {
-						[accountLookup(conv->account) performSelector:@selector(errorForChat:type:)
-														   withObject:chat
-														   withObject:[NSNumber numberWithInt:errorType]
-														   afterDelay:0];
+												[accountLookup(conv->account) performSelector:@selector(errorForChat:type:)
+												 										   withObject:chat
+												 										   withObject:[NSNumber numberWithInt:errorType]
+												 										   afterDelay:0];
 					} else {
-						//If we don't know what to do with this message, display it!
 						[[[AIObject sharedAdiumInstance] contentController] performSelector:@selector(displayEvent:ofType:inChat:)
 																				 withObject:messageString
 																				 withObject:@"libpurpleMessage"
@@ -309,11 +252,9 @@ static void adiumPurpleConvWriteConv(PurpleConversation *conv, const char *who, 
 																				 afterDelay:0];
 					}
 				}
-
-				AILog(@"*** Conversation error type %i (%@): %@",
-						   errorType,
-						   ([chat listObject] ? [[chat listObject] UID] : [chat name]),messageString);
 			}
+
+			AILog(@"*** Conversation error %@: %@", chat, messageString);
 		}
 	}
 }

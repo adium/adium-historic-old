@@ -45,7 +45,7 @@
 #pragma mark Account Action Menu Items
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
-	if (label && (strcmp(label, "Modify my information") == 0)) {
+	if (label && (strcmp(label, _("Modify my information")) == 0)) {
 		return AILocalizedString(@"Modify My Information", "Menu title for configuring the public information for a QQ account");
 	}
 	

@@ -143,23 +143,6 @@
 	return NO;
 }
 
-#pragma mark Contact status
-
-- (AIReconnectDelayType)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
-{
-	AIReconnectDelayType shouldAttemptReconnect = [super shouldAttemptReconnectAfterDisconnectionError:disconnectionError];
-	
-	if (disconnectionError && *disconnectionError) {
-		if ([*disconnectionError rangeOfString:@"Authentication failed"].location != NSNotFound) {
-			[self setLastDisconnectionError:AILocalizedString(@"Incorrect username or password","Error message displayed when the server reports username or password as being incorrect.")];
-			[self serverReportedInvalidPassword];
-			shouldAttemptReconnect = AIReconnectImmediately;
-		}
-	}
-	
-	return shouldAttemptReconnect;
-}
-
 #pragma mark Menu Actions
 
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label

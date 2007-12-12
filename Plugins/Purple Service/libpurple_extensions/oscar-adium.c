@@ -10,8 +10,5 @@ void oscar_reformat_screenname(PurpleConnection *gc, const char *nick) {
 		} else {
 			aim_admin_setnick(od, flap_connection_getbytype(od, SNAC_FAMILY_ADMIN), nick);
 		}
-	} else {
-		purple_notify_error(gc, NULL, _("The new formatting is invalid."),
-							_("Screen name formatting can change only capitalization and whitespace."));
-	}	
+	}
 }
