@@ -326,6 +326,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	return (returnString ? returnString : inString);
 }
 
+
 - (void)updateUserInfo:(AIListContact *)theContact withData:(PurpleNotifyUserInfo *)user_info
 {
 	char *user_info_text = purple_notify_user_info_get_text_with_newline(user_info, "<BR />");
@@ -1646,13 +1647,26 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	}
 }
 
+- (void)setLastDisconnectionReason:(PurpleConnectionError)reason
+{
+	lastDisconnectionReason = reason;
+}
+
+- (PurpleConnectionError)lastDisconnectionReason
+{
+	return lastDisconnectionReason;
+}
+
 /*!
  * @brief Our account was unexpectedly disconnected with an error message
  */
 - (void)accountConnectionReportDisconnect:(NSString *)text withReason:(PurpleConnectionError)reason
 {
-#warning Should make use of reason
 	[self setLastDisconnectionError:text];
+	[self setLastDisconnectionReason:reason];
+
+	if (reason == PURPLE_CONNECTION_ERROR_AUTHENTICATION_FAILED)
+		[self serverReportedInvalidPassword];
 
 	//We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:NotifyNow];
@@ -1695,12 +1709,25 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 
 - (AIReconnectDelayType)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
-	// If libPurple considers the connection suicidal, don't attempt to reconnect.
-	if ((account && account->gc) ? account->gc->wants_to_die : NO) {
-		return AIReconnectNever;
+	AIReconnectDelayType reconnectDelayType;
+
+	if ([self lastDisconnectionReason] == PURPLE_CONNECTION_ERROR_AUTHENTICATION_FAILED) {
+		[self setLastDisconnectionError:AILocalizedString(@"Incorrect username or password","Error message displayed when the server reports username or password as being incorrect.")];
+		reconnectDelayType = AIReconnectImmediately;
+
+	} else if ([self lastDisconnectionReason] == PURPLE_CONNECTION_ERROR_INVALID_USERNAME) {
+		reconnectDelayType = AIReconnectNever;
+		//Enable this after Adium 1.2, which is in string freeze as it is added.
+		/* *disconnectionError = AILocalizedString(@"The name you entered is not registered. Check to ensure you typed it correctly.", nil); */
+
+	} else if (purple_connection_error_is_fatal([self lastDisconnectionReason])) {
+		reconnectDelayType = AIReconnectNever;
+
 	} else {
-		return AIReconnectNormally;
+		reconnectDelayType = AIReconnectNormally;
 	}
+
+	return reconnectDelayType;
 }
 
 #pragma mark Registering
@@ -2391,7 +2418,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 //Subclasses may override to provide a localized label and/or prevent a specified label from being shown
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
-	if ((strcmp(label, "Change Password...") == 0) || (strcmp(label, "Change Password") == 0)) {
+	if ((strcmp(label, _("Change Password...")) == 0) || (strcmp(label, _("Change Password")) == 0)) {
 		return [[NSString stringWithFormat:AILocalizedString(@"Change Password", "Menu item title for changing the password of an account")] stringByAppendingEllipsis];
 	} else {
 		return [NSString stringWithUTF8String:label];
