@@ -245,9 +245,10 @@
 //Handle a reopen/dock icon click
 - (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows
 {
-	if (!visibleWindows) {
-		//The Contact List is hidden, and there are no chat windows, so unhide the Contact List.
+	if (![self contactListIsVisibleAndMain] && [[interfacePlugin openContainers] count] == 0) {
+		//The contact list is not visible, and there are no chat windows. Make the contact list visible.
 		[self showContactList:nil];
+
 	} else {
 		AIChat	*mostRecentUnviewedChat;
 
