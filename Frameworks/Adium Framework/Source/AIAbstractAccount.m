@@ -1057,7 +1057,7 @@
 	
 	while ((chat = [enumerator nextObject])) {
 		if ([chat account] == self && [chat isOpen]) {
-			[[adium contentController] displayEvent:AILocalizedString(@"You have connected","Displayed in an open chat when its account has been connected")
+			[[adium contentController] displayEvent:AILocalizedStringFromTableInBundle(@"You have connected", nil, [NSBundle bundleForClass:[AIAccount class]], "Displayed in an open chat when its account has been connected")
 											 ofType:@"connected"
 											 inChat:chat];
 		}
@@ -1197,7 +1197,7 @@
 		
 		while ((chat = [enumerator nextObject])) {
 			if ([chat account] == self && [chat isOpen]) {
-				[[adium contentController] displayEvent:AILocalizedString(@"You have disconnected","Displayed in an open chat when its account has been disconnected.")
+				[[adium contentController] displayEvent:AILocalizedStringFromTableInBundle(@"You have disconnected", nil, [NSBundle bundleForClass:[AIAccount class]], "Displayed in an open chat when its account has been disconnected.")
 												 ofType:@"disconnected"
 												 inChat:chat];
 			}
