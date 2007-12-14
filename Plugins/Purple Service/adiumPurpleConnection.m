@@ -19,31 +19,21 @@
 
 static void adiumPurpleConnConnectProgress(PurpleConnection *gc, const char *text, size_t step, size_t step_count)
 {
+	if (!PURPLE_CONNECTION_IS_VALID(gc)) return;
+
     AILog(@"Connecting: gc=0x%x (%s) %i / %i", gc, text, step, step_count);
 
-	NSNumber	*connectionProgressPrecent = [NSNumber numberWithFloat:((float)step/(float)(step_count-1))];
-	[accountLookup(gc->account) mainPerformSelector:@selector(accountConnectionProgressStep:percentDone:)
+	NSNumber	*connectionProgressPrecent = [NSNumber numberWithFloat:((float)step / (float)(step_count-1))];
+	[accountLookup(purple_connection_get_account(gc)) mainPerformSelector:@selector(accountConnectionProgressStep:percentDone:)
 										 withObject:[NSNumber numberWithInt:step]
 										 withObject:connectionProgressPrecent];
-
-	CBPurpleAccount *account = accountLookup(gc->account);
-	NSString *msg = text?[NSString stringWithUTF8String:text]:NULL;
-	NSInvocation *inv = [NSInvocation invocationWithMethodSignature:[account methodSignatureForSelector:@selector(accountConnectionStep:step:totalSteps:)]];
-	[inv setTarget:account];
-	[inv setSelector:@selector(accountConnectionStep:step:totalSteps:)];
-	[inv setArgument:&msg atIndex:2];
-	[inv setArgument:&step atIndex:3];
-	[inv setArgument:&step_count atIndex:4];
-	[inv retainArguments];
-	
-	[inv performSelectorOnMainThread:@selector(invoke) withObject:nil waitUntilDone:NO];
 }
 
 static void adiumPurpleConnConnected(PurpleConnection *gc)
 {
     AILog(@"Connected: gc=%x", gc);
 	
-	[accountLookup(gc->account) accountConnectionConnected];
+	[accountLookup(purple_connection_get_account(gc)) accountConnectionConnected];
 }
 
 static void adiumPurpleConnDisconnected(PurpleConnection *gc)
@@ -51,7 +41,7 @@ static void adiumPurpleConnDisconnected(PurpleConnection *gc)
     AILog(@"Disconnected: gc=%x", gc);
 	//    if (_accountDict == nil) // if this has been destroyed, unloadPlugin has already been called
 	//        return;
-    [accountLookup(gc->account) accountConnectionDisconnected];
+    [accountLookup(purple_connection_get_account(gc)) accountConnectionDisconnected];
 }
 
 static void adiumPurpleConnNotice(PurpleConnection *gc, const char *text)
@@ -59,7 +49,7 @@ static void adiumPurpleConnNotice(PurpleConnection *gc, const char *text)
     AILog(@"Connection Notice: gc=%x (%s)", gc, text);
 	
 	NSString *connectionNotice = [NSString stringWithUTF8String:text];
-	[accountLookup(gc->account) accountConnectionNotice:connectionNotice];
+	[accountLookup(purple_connection_get_account(gc)) accountConnectionNotice:connectionNotice];
 }
 
 /** Called when an error causes a connection to be disconnected.
@@ -80,7 +70,7 @@ void adiumPurpleConnReportDisconnectReason(PurpleConnection *gc,
 	AILog(@"Connection Disconnected: gc=%x (%s)", gc, text);
 	
 	NSString	*disconnectError = (text ? [NSString stringWithUTF8String:text] : @"");
-    [accountLookup(gc->account) accountConnectionReportDisconnect:disconnectError withReason:reason];
+    [accountLookup(purple_connection_get_account(gc)) accountConnectionReportDisconnect:disconnectError withReason:reason];
 }
 
 static PurpleConnectionUiOps adiumPurpleConnectionOps = {
