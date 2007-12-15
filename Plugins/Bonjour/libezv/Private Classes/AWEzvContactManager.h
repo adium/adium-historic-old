@@ -51,11 +51,8 @@
 	/* Rendezvous related instance variables */
 	AWEzvRendezvousData		*userAnnounceData;
 
-	ServiceController			*fDomainBrowser;
-	ServiceController			*fServiceBrowser;
-	NSMutableDictionary			*serviceResolvers; //Dict of ServiceControllers keyed by contact uniqueID
-	ServiceController			*fAddressResolver;
-	//ServiceController			*fImageResolver;
+	ServiceController		*fDomainBrowser;
+	ServiceController		*fServiceBrowser;
 	
 	
 	DNSServiceRef avDNSReference;

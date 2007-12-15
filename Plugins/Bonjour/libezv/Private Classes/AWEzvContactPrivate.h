@@ -53,6 +53,9 @@
 - (void) setManager:(AWEzvContactManager *)manager;
 - (AWEzvContactManager *) manager;
 
+- (void) setResolveServiceController:(ServiceController *)controller;
+- (ServiceController *) resolveServiceController;
+
 - (void) setImageServiceController:(ServiceController *)controller;
 - (ServiceController *) imageServiceController;
 

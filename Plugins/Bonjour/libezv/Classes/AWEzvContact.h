@@ -50,6 +50,7 @@
 	NSString *imageHash;
     u_int16_t _port;
     AWEzvContactManager *_manager;
+	ServiceController *_resolveServiceController;
 	ServiceController *_imageServiceController;
 	ServiceController *_addressServiceController;
 }

@@ -99,6 +99,6 @@
 - (void)setInstanceName:(NSString *)newName;
 - (void) regCallBack:(int)errorCode;
 
-- (void)stopResolvingForContact:(AWEzvContact *)contact;
+- (void)contactWillDeallocate:(AWEzvContact *)contact;
 
 @end
