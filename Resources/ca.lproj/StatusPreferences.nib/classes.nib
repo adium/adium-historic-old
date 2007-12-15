@@ -5,6 +5,11 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = AIOutlineView; 
         }, 
+        {
+            CLASS = AIAlternatingRowTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTableView; 
+        }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
             CLASS = AILocalizationButton; 
