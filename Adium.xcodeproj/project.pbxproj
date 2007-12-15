@@ -3197,6 +3197,27 @@
 		34E2A2EF07B018B2006735BC /* ESAddressBookIntegrationAdvancedPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESAddressBookIntegrationAdvancedPreferences.m; path = Source/ESAddressBookIntegrationAdvancedPreferences.m; sourceTree = "<group>"; };
 		34E2A3E507B08CC9006735BC /* AIAliasSupportPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAliasSupportPlugin.m; path = Source/AIAliasSupportPlugin.m; sourceTree = "<group>"; };
 		34E2A3E607B08CC9006735BC /* AIAliasSupportPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAliasSupportPlugin.h; path = Source/AIAliasSupportPlugin.h; sourceTree = "<group>"; };
+		34E354ED0D10AC5E009FC9DE /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = "Frameworks/Adium Framework/Resources/nl.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E354F80D10AC63009FC9DE /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "Frameworks/Adium Framework/Resources/de.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355030D10AC66009FC9DE /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = "Frameworks/Adium Framework/Resources/zh_TW.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E3550C0D10AC68009FC9DE /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = "Frameworks/Adium Framework/Resources/ja.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E3550D0D10AC6B009FC9DE /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "Frameworks/Adium Framework/Resources/it.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E3550E0D10AC6E009FC9DE /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = "Frameworks/Adium Framework/Resources/fr.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355190D10AC70009FC9DE /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = "Frameworks/Adium Framework/Resources/da.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355240D10AC73009FC9DE /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = "Frameworks/Adium Framework/Resources/nb.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E3552F0D10AC76009FC9DE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = "Frameworks/Adium Framework/Resources/zh_CN.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355300D10AC78009FC9DE /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = "Frameworks/Adium Framework/Resources/cs.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355310D10AC7A009FC9DE /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = "Frameworks/Adium Framework/Resources/is.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355320D10AC7D009FC9DE /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = "Frameworks/Adium Framework/Resources/sv.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355330D10AC7F009FC9DE /* ca */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ca; path = "Frameworks/Adium Framework/Resources/ca.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355340D10AC81009FC9DE /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = "Frameworks/Adium Framework/Resources/ru.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355350D10AC84009FC9DE /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = "Frameworks/Adium Framework/Resources/es.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355400D10AC86009FC9DE /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = "Frameworks/Adium Framework/Resources/pl.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E3554B0D10AC89009FC9DE /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_AU; path = "Frameworks/Adium Framework/Resources/en_AU.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355560D10AC8B009FC9DE /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = "Frameworks/Adium Framework/Resources/tr.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355610D10AC8E009FC9DE /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = "Frameworks/Adium Framework/Resources/fi.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E3556C0D10AC92009FC9DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt_BR; path = "Frameworks/Adium Framework/Resources/pt_BR.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355770D10AC95009FC9DE /* en_CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_CA; path = "Frameworks/Adium Framework/Resources/en_CA.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
 		34E3C8870638D40500AA3EF7 /* ESYahooJapanService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESYahooJapanService.h; path = "Plugins/Purple Service/ESYahooJapanService.h"; sourceTree = "<group>"; };
 		34E3C8880638D40500AA3EF7 /* ESYahooJapanService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESYahooJapanService.m; path = "Plugins/Purple Service/ESYahooJapanService.m"; sourceTree = "<group>"; };
 		34E3C8A50638D50F00AA3EF7 /* ESPurpleYahooJapanAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESPurpleYahooJapanAccount.h; path = "Plugins/Purple Service/ESPurpleYahooJapanAccount.h"; sourceTree = "<group>"; };
@@ -10436,6 +10457,27 @@
 			isa = PBXVariantGroup;
 			children = (
 				34F144460BA8FF46000473DE /* en */,
+				34E354ED0D10AC5E009FC9DE /* nl */,
+				34E354F80D10AC63009FC9DE /* de */,
+				34E355030D10AC66009FC9DE /* zh_TW */,
+				34E3550C0D10AC68009FC9DE /* ja */,
+				34E3550D0D10AC6B009FC9DE /* it */,
+				34E3550E0D10AC6E009FC9DE /* fr */,
+				34E355190D10AC70009FC9DE /* da */,
+				34E355240D10AC73009FC9DE /* nb */,
+				34E3552F0D10AC76009FC9DE /* zh_CN */,
+				34E355300D10AC78009FC9DE /* cs */,
+				34E355310D10AC7A009FC9DE /* is */,
+				34E355320D10AC7D009FC9DE /* sv */,
+				34E355330D10AC7F009FC9DE /* ca */,
+				34E355340D10AC81009FC9DE /* ru */,
+				34E355350D10AC84009FC9DE /* es */,
+				34E355400D10AC86009FC9DE /* pl */,
+				34E3554B0D10AC89009FC9DE /* en_AU */,
+				34E355560D10AC8B009FC9DE /* tr */,
+				34E355610D10AC8E009FC9DE /* fi */,
+				34E3556C0D10AC92009FC9DE /* pt_BR */,
+				34E355770D10AC95009FC9DE /* en_CA */,
 			);
 			name = EmoticonNames.strings;
 			sourceTree = "<group>";
