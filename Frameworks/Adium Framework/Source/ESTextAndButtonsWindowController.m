@@ -277,7 +277,7 @@
 	NSWindow	*window = [self window];
 	int			heightChange = 0;
 	int			distanceFromBottomOfMessageToButtons = 24;
-	NSRect		frame = [window frame];
+	NSRect		windowFrame = [window frame];
 
 	//Set the image if we have one
 	if (image) {
@@ -349,8 +349,8 @@
 		 * proper positioning above the buttons; after that, the window needs to expand.
 		 */
 		if (heightChange > distanceFromBottomOfMessageToButtons) {
-			frame.size.height += (heightChange - distanceFromBottomOfMessageToButtons);
-			frame.origin.y -= (heightChange - distanceFromBottomOfMessageToButtons);
+			windowFrame.size.height += (heightChange - distanceFromBottomOfMessageToButtons);
+			windowFrame.origin.y -= (heightChange - distanceFromBottomOfMessageToButtons);
 		}			
 
 		NSRect	messageFrame = [scrollView_message frame];
@@ -361,22 +361,60 @@
 		
 		[scrollView_message setFrame:messageFrame];
 		[scrollView_message setNeedsDisplay:YES];
-		
-		//Resize the window to fit the message
-		[window setFrame:frame display:YES animate:YES];
 	}
 	
 	//Set the default button
-	[button_default setLocalizedString:(defaultButton ? defaultButton : AILocalizedString(@"OK",nil))];
+	NSRect newFrame;
+	[button_default setTitle:(defaultButton ? defaultButton : AILocalizedString(@"OK",nil))];
+	[button_default sizeToFit];
+	
+	newFrame = [button_default frame];
+	/* For NSButtons, sizeToFit is 8 pixels smaller than the HIG recommended size  */
+	newFrame.size.width += 8;
+	/* Only use integral widths to keep alignment correct; round up as an extra pixel of whitespace never hurt anybody */
+	newFrame.size.width = round(NSWidth(newFrame) + 0.5);
+	if (newFrame.size.width < 90) newFrame.size.width = 90;
+	newFrame.origin.x = NSWidth([window frame]) - NSWidth(newFrame) - 14;
 
+	[button_default setFrame:newFrame];
+	
 	//Set the alternate button if we were provided one, otherwise hide it
 	if (alternateButton) {
-		[button_alternate setLocalizedString:alternateButton];
+		[button_alternate setTitle:alternateButton];
+		[button_alternate sizeToFit];
+		
+		newFrame = [button_alternate frame];
+		/* For NSButtons, sizeToFit is 8 pixels smaller than the HIG recommended size  */
+		newFrame.size.width += 8;
+		/* Only use integral widths to keep alignment correct; round up as an extra pixel of whitespace never hurt anybody */
+		newFrame.size.width = round(NSWidth(newFrame) + 0.5);
+		if (newFrame.size.width < 90) newFrame.size.width = 90;
+		newFrame.origin.x = NSMinX([button_default frame]) - NSWidth(newFrame) + 2;
+		
+		[button_alternate setFrame:newFrame];
 
 		//Set the other button if we were provided one, otherwise hide it
 		if (otherButton) {
-			[button_other setLocalizedString:otherButton];
+			NSRect oldFrame = [button_other frame];
+			[button_other setTitle:otherButton];
 
+			[button_other sizeToFit];
+			
+			newFrame = [button_other frame];
+			/* For NSButtons, sizeToFit is 8 pixels smaller than the HIG recommended size  */
+			newFrame.size.width += 8;
+			/* Only use integral widths to keep alignment correct; round up as an extra pixel of whitespace never hurt anybody */
+			newFrame.size.width = round(NSWidth(newFrame) + 0.5);
+			if (newFrame.size.width < 90) newFrame.size.width = 90;
+
+			newFrame.origin.x = oldFrame.origin.x;
+			
+			[button_other setFrame:newFrame];
+			
+			if (NSMaxX([button_other frame]) >= (NSMinX([button_alternate frame]) + 10)) {
+				windowFrame.size.width += 10 - (NSMinX([button_alternate frame]) - NSMaxX([button_other frame]));
+			}
+			
 		} else {
 			[button_other setHidden:YES];
 		}
@@ -385,9 +423,13 @@
 		[button_alternate setHidden:YES];
 		[button_other setHidden:YES];
 	}
-
+	
+	//Resize the window to fit the message
+	[window setFrame:windowFrame display:NO animate:NO];
+	
     //Center the window (if we're not a sheet)
     [window center];
+	[window display];
 }
 
 - (IBAction)pressedButton:(id)sender
