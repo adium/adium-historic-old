@@ -372,7 +372,7 @@ ssl_cdsa_close(PurpleSslConnection *gsc)
 	PurpleSslCDSAData *cdsa_data = PURPLE_SSL_CDSA_DATA(gsc);
 
 #ifdef CDSA_DEBUG
-	purple_debug_info(@"Closing PurpleSslConnection %p", cdsa_data);
+	purple_debug_info("cdsa", "Closing PurpleSslConnection %p", cdsa_data);
 #endif
 
 	if (cdsa_data == NULL)
