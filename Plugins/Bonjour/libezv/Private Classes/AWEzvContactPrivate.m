@@ -204,7 +204,7 @@
 	/* connect to client */
 	if (connect(fd, (const struct sockaddr *)&socketAddress, sizeof(socketAddress)) < 0) {
 		[[[[self manager] client] client] reportError:
-		 [NSString stringWithFormat:@"%@: Could not connect socket on fd %i to contact (%@:%i)", self, fd, _ipAddr, [self port]];
+		 [NSString stringWithFormat:@"%@: Could not connect socket on fd %i to contact (%@:%i)", self, fd, _ipAddr, [self port]]
 							ofLevel:AWEzvError];
 		return;
 	}
