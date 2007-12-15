@@ -56,28 +56,6 @@
 - (void)updateReconnectTime:(NSTimer *)timer;
 @end
 
-@implementation NSTableView (rightClickMenu)
-
-// Override the menuForEvent so we can generate one.
-- (NSMenu *)menuForEvent: (NSEvent *)event
-{
-	NSIndexSet	*selectedIndexes	= [self selectedRowIndexes];
-	int			mouseRow			= [self rowAtPoint:[self convertPoint:[event locationInWindow] toView:nil]];
-	
-	//Multiple rows selected where the right-clicked row is in the selection
-	if ([selectedIndexes count] > 1 && [selectedIndexes containsIndex:mouseRow]) {
-		//Display a multi-selection menu
-		return [(AIAccountListPreferences *)[self dataSource] menuForRowIndexes:selectedIndexes];
-	} else {
-		// Otherwise, select our new row and provide a menu for it.
-		[self selectRowIndexes:[NSIndexSet indexSetWithIndex:mouseRow] byExtendingSelection:NO];
-		// Return our delegate's menu for this row.
-		return [(AIAccountListPreferences *)[self dataSource] menuForRow:mouseRow];
-	}
-}
-
-@end
-
 /*!
  * @class AIAccountListPreferences
  * @brief Shows a list of accounts and provides for management of them
@@ -1022,6 +1000,24 @@
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
 {
 	[self updateControlAvailability];
+}
+
+- (NSMenu *)tableView:(NSTableView *)inTableView menuForEvent:(NSEvent *)theEvent
+{
+	NSIndexSet	*selectedIndexes	= [inTableView selectedRowIndexes];
+	int			mouseRow			= [inTableView rowAtPoint:[inTableView convertPoint:[event locationInWindow] toView:nil]];
+	
+	//Multiple rows selected where the right-clicked row is in the selection
+	if ([selectedIndexes count] > 1 && [selectedIndexes containsIndex:mouseRow]) {
+		//Display a multi-selection menu
+		return [self menuForRowIndexes:selectedIndexes];
+	} else {
+		// Otherwise, select our new row and provide a menu for it.
+		[inTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:mouseRow] byExtendingSelection:NO];
+
+		// Return our delegate's menu for this row.
+		return [self menuForRow:mouseRow];
+	}	
 }
 
 /*!
