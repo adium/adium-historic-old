@@ -119,10 +119,6 @@
 	return supportedPropertyKeys;
 }
 
-- (void)accountConnectionStep:(NSString*)msg step:(int)step totalSteps:(int)step_count {
-
-}
-
 - (void)configurePurpleAccount
 {
 	[super configurePurpleAccount];
