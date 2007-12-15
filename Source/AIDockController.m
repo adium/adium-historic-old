@@ -175,12 +175,14 @@
 {
 	NSImage			*image;
 	
-	image = [[[availableIconStateDict objectForKey:@"State"] objectForKey:@"Base"] image];
+	image = [[[availableIconStateDict objectForKey:@"State"] objectForKey:@"ApplicationIcon"] image];
+	if (!image) image = [[[availableIconStateDict objectForKey:@"State"] objectForKey:@"Base"] image];
+
 	if (image) {
 		[[NSWorkspace sharedWorkspace] setIcon:image 
 									   forFile:[[NSBundle mainBundle] bundlePath]
 									   options:0];
-		
+
 		//Finder won't update Adium's icon to match the new one until it is restarted if we don't
 		//tell NSWorkspace to note the change.
 		[[NSWorkspace sharedWorkspace] noteFileSystemChanged:[[NSBundle mainBundle] bundlePath]];
