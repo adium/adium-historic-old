@@ -749,7 +749,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 		if ([inContentMessage isAutoreply]) {
 			flags |= PURPLE_MESSAGE_AUTO_RESP;
 		}
-				
+
 		[purpleThread sendEncodedMessage:[inContentMessage encodedMessage]
 							 fromAccount:self
 								  inChat:[inContentMessage chat]
@@ -1602,11 +1602,6 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	[self notifyOfChangedStatusSilently:NO];
 	
 	AILog(@"************ %@ --step-- %i",[self UID],[step intValue]);
-}
-
-- (void)accountConnectionStep:(NSString*)msg step:(int)step totalSteps:(int)step_count
-{
-
 }
 
 /*!
