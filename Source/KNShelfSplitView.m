@@ -289,10 +289,10 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	}
 	
 	if( contentView ){
-		float contentViewX = (isShelfVisible ? currentShelfWidth : 0);
-		NSRect newRect = NSMakeRect( contentViewX + 1, 0, [self bounds].size.width - (contentViewX + 1), [self bounds].size.height);
-		if( ! NSEqualRects(newRect, [contentView frame]) ){
-			[contentView setFrame: newRect];
+		float contentViewX = (isShelfVisible ? (currentShelfWidth + 1) : 0);
+		NSRect newRect = NSMakeRect(contentViewX, 0, NSWidth([self bounds]) - contentViewX, NSHeight([self bounds]));
+		if (!NSEqualRects(newRect, [contentView frame])){
+			[contentView setFrame:newRect];
 		}
 	}
 	
