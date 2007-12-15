@@ -28,6 +28,8 @@
 
 #ifdef HAVE_CDSA
 
+#define CDSA_DEBUG
+
 #include <Security/Security.h>
 #include <unistd.h>
 
@@ -288,7 +290,7 @@ ssl_cdsa_connect(PurpleSslConnection *gsc) {
 	/*
 	 * allocate a new SSLContextRef object
 	 */
-    err = SSLNewContext(false,&cdsa_data->ssl_ctx);
+    err = SSLNewContext(false, &cdsa_data->ssl_ctx);
 	if (err != noErr) {
 		purple_debug_error("cdsa", "SSLNewContext failed\n");
 		if (gsc->error_cb != NULL)
@@ -369,6 +371,10 @@ ssl_cdsa_close(PurpleSslConnection *gsc)
 {
 	PurpleSslCDSAData *cdsa_data = PURPLE_SSL_CDSA_DATA(gsc);
 
+#ifdef CDSA_DEBUG
+	AILogWithSignature(@"Closing PurpleSslConnection %p", cdsa_data);
+#endif
+
 	if (cdsa_data == NULL)
 		return;
 
@@ -387,7 +393,11 @@ ssl_cdsa_close(PurpleSslConnection *gsc)
             if(err != noErr)
                 purple_debug_error("cdsa", "SSLClose failed\n");
         }
-        
+		
+#ifdef CDSA_DEBUG
+		AILogWithSignature(@"SSLDisposeContext(%p)", cdsa_data->ssl_ctx);
+#endif
+
         err = SSLDisposeContext(cdsa_data->ssl_ctx);
         if(err != noErr)
             purple_debug_error("cdsa", "SSLDisposeContext failed\n");
@@ -427,6 +437,10 @@ ssl_cdsa_write(PurpleSslConnection *gsc, const void *data, size_t len)
     OSStatus err;
 
 	if (cdsa_data != NULL) {
+#ifdef CDSA_DEBUG
+		AILogWithSignature(@"SSLWrite(%p, %p %i)", cdsa_data->ssl_ctx, data, len);
+#endif
+
         err = SSLWrite(cdsa_data->ssl_ctx, data, len, &s);
         
         if(err != noErr) {
