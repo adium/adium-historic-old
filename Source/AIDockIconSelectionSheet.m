@@ -257,7 +257,8 @@
 	NSDictionary	*iconDict = [iconArray objectAtIndex:[imageGridView_icons selectedIndex]];
 	NSString		*iconName = [[[iconDict objectForKey:@"Path"] lastPathComponent] stringByDeletingPathExtension];
 	
-	[[adium preferenceController] setPreference:iconName forKey:KEY_ACTIVE_DOCK_ICON group:PREF_GROUP_APPEARANCE];
+	if (![[[adium preferenceController] preferenceForKey:KEY_ACTIVE_DOCK_ICON group:PREF_GROUP_APPEARANCE] isEqualToString:iconName])
+		[[adium preferenceController] setPreference:iconName forKey:KEY_ACTIVE_DOCK_ICON group:PREF_GROUP_APPEARANCE];
 }
 
 - (void)imageGridView:(AIImageGridView *)imageGridView cursorIsHoveringImageAtIndex:(int)index
