@@ -1005,7 +1005,7 @@
 - (NSMenu *)tableView:(NSTableView *)inTableView menuForEvent:(NSEvent *)theEvent
 {
 	NSIndexSet	*selectedIndexes	= [inTableView selectedRowIndexes];
-	int			mouseRow			= [inTableView rowAtPoint:[inTableView convertPoint:[event locationInWindow] toView:nil]];
+	int			mouseRow			= [inTableView rowAtPoint:[inTableView convertPoint:[theEvent locationInWindow] toView:nil]];
 	
 	//Multiple rows selected where the right-clicked row is in the selection
 	if ([selectedIndexes count] > 1 && [selectedIndexes containsIndex:mouseRow]) {
