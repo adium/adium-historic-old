@@ -372,7 +372,7 @@ ssl_cdsa_close(PurpleSslConnection *gsc)
 	PurpleSslCDSAData *cdsa_data = PURPLE_SSL_CDSA_DATA(gsc);
 
 #ifdef CDSA_DEBUG
-	AILogWithSignature(@"Closing PurpleSslConnection %p", cdsa_data);
+	purple_debug_info(@"Closing PurpleSslConnection %p", cdsa_data);
 #endif
 
 	if (cdsa_data == NULL)
@@ -395,7 +395,7 @@ ssl_cdsa_close(PurpleSslConnection *gsc)
         }
 		
 #ifdef CDSA_DEBUG
-		AILogWithSignature(@"SSLDisposeContext(%p)", cdsa_data->ssl_ctx);
+		purple_debug_info("cdsa", "SSLDisposeContext(%p)", cdsa_data->ssl_ctx);
 #endif
 
         err = SSLDisposeContext(cdsa_data->ssl_ctx);
@@ -438,7 +438,7 @@ ssl_cdsa_write(PurpleSslConnection *gsc, const void *data, size_t len)
 
 	if (cdsa_data != NULL) {
 #ifdef CDSA_DEBUG
-		AILogWithSignature(@"SSLWrite(%p, %p %i)", cdsa_data->ssl_ctx, data, len);
+		purple_debug_info("cdsa", "SSLWrite(%p, %p %i)", cdsa_data->ssl_ctx, data, len);
 #endif
 
         err = SSLWrite(cdsa_data->ssl_ctx, data, len, &s);
