@@ -149,8 +149,6 @@ void image_register_reply (
 - (void) login {
 	regCount = 0;
 
-	serviceResolvers = [[NSMutableDictionary alloc] init];
-
 	/* create data structure we'll advertise with */
 	userAnnounceData = [[AWEzvRendezvousData alloc] init];
 	/* set field contents of the data */
@@ -226,8 +224,6 @@ void image_register_reply (
 - (void) disconnect {
 	AILogWithSignature(@"Disconnecting");
 
-	[serviceResolvers release]; serviceResolvers = nil;
-	
 	[fServiceBrowser release]; fServiceBrowser = nil;
 
 	/* Remove Resolvers, this also deallocates the DNSServiceReferences */
@@ -404,14 +400,10 @@ void image_register_reply (
 #pragma mark Browsing Functions
 /* start browsing the network for new rendezvous clients */
 - (void) startBrowsing {
-	if ( fServiceBrowser != nil) {
-		[fServiceBrowser release];
-		fServiceBrowser = nil;
-	}
+	[fServiceBrowser release]; fServiceBrowser = nil;
 
 	/* destroy old contact dictionary if one exists */
-	if (contacts)
-		[contacts release];
+	[contacts release];
 
 	/* allocate new contact dictionary */
 	contacts = [[NSMutableDictionary alloc] init];
@@ -484,8 +476,8 @@ void image_register_reply (
 
 		if (resolveRefError == kDNSServiceErr_NoError) {
 			ServiceController *serviceResolver = [[ServiceController alloc] initWithServiceRef:resolveRef];
-			[serviceResolver addToCurrentRunLoop];
-			[serviceResolvers setObject:serviceResolver forKey:[contact uniqueID]];
+			[contact setResolveServiceController:serviceResolver];
+			[[contact resolveServiceController] addToCurrentRunLoop];
 			[serviceResolver release];
 
 		} else {
@@ -754,10 +746,8 @@ void image_register_reply (
 
 }
 
-- (void)stopResolvingForContact:(AWEzvContact *)contact
+- (void)contactWillDeallocate:(AWEzvContact *)contact
 {
-	[serviceResolvers removeObjectForKey:[contact uniqueID]];
-	
 	[[client client] userLoggedOut:contact];
 }
 

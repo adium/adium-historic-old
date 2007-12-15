@@ -49,13 +49,21 @@
 
 - (void)dealloc
 {
-	[_manager stopResolvingForContact:self];
-
-	[_stream release];
-    [_idleSinceDate release];
+	[_manager contactWillDeallocate:self];
+	
 	[_name release];
-	[_ipAddr release];
+	[_uniqueID release];
+	[_contactImage release];
+    [_idleSinceDate release];
+	
+	[_stream release];
 	[_rendezvous release];
+	[_ipAddr release];
+	[imageHash release];
+
+	[_resolveServiceController release];
+	[_imageServiceController release];
+	[_addressServiceController release];
 	[_manager release];
 
 	[super dealloc];
@@ -140,6 +148,18 @@
     return _manager;
 }
 
+- (void) setResolveServiceController:(ServiceController *)controller
+{
+	if (_resolveServiceController != controller) {
+		[_resolveServiceController release];
+		_resolveServiceController = [controller retain];
+	}
+}
+
+- (ServiceController *) resolveServiceController{
+	return _resolveServiceController;
+}
+
 - (void) setImageServiceController:(ServiceController *)controller{
 	if (_imageServiceController != controller) {
         [_imageServiceController release];
@@ -183,7 +203,9 @@
 
 	/* connect to client */
 	if (connect(fd, (const struct sockaddr *)&socketAddress, sizeof(socketAddress)) < 0) {
-		[[[[self manager] client] client] reportError:@"Could not connect socket to contact" ofLevel:AWEzvError];
+		[[[[self manager] client] client] reportError:
+		 [NSString stringWithFormat:@"%@: Could not connect socket on fd %i to contact (%@:%i)", self, fd, _ipAddr, [self port]];
+							ofLevel:AWEzvError];
 		return;
 	}
 
