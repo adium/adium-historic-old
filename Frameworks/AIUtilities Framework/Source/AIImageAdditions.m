@@ -389,17 +389,23 @@
 	
 	if ((NSWidth(rect) < size.width) || (NSHeight(rect) < size.height)) {
 		//The size is larger than our available rect. Decrease the size.
-
+		NSLog(@"****");
 		//Adjust the width to be our rect's width and the height to be proportionate
 		if (NSWidth(rect) < size.width) {
 			size.height = size.height * (NSWidth(rect) / size.width);
 			size.width = NSWidth(rect);
+			NSLog(@"Decreasing based on width from %@ to %@", NSStringFromRect(rect), 
+				  NSStringFromRect(NSMakeRect(rect.origin.x, rect.origin.y, NSWidth(rect), size.height * (NSWidth(rect) / size.width))));
 		}
 		
 		if (NSHeight(rect) < size.height) {
 			size.width = size.width * (NSHeight(rect) / size.height);
 			size.height = NSHeight(rect);
+			
+			NSLog(@"Decreasing based on height from %@ to %@", NSStringFromRect(rect), 
+				  NSStringFromRect(NSMakeRect(rect.origin.x, rect.origin.y, size.width * (NSHeight(rect) / size.height), NSHeight(rect))));
 		}
+		NSLog(@"++++");
 	}
 
 	//Adjust the positioning
