@@ -206,7 +206,7 @@
         [tabView selectTabViewItem:self]; //Select our tab
     }
 
-    if (![window isKeyWindow]) {
+    if (![window isKeyWindow] || ![window isVisible]) {
         [window makeKeyAndOrderFront:nil]; //Bring our window to the front
     }
 }
