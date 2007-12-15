@@ -11084,6 +11084,7 @@
 					DEBUG_BUILD,
 				);
 				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
@@ -11097,6 +11098,7 @@
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"Plugins/Purple Service/Include\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SDKROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "$(SRCROOT)/Frameworks/libintl.framework/Headers";
 				INFOPLIST_FILE = Plists/Purple_Service.plist;
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
@@ -11566,6 +11568,7 @@
 					DEBUG_BUILD,
 				);
 				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
@@ -11579,6 +11582,7 @@
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"Plugins/Purple Service/Include\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SDKROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "$(SRCROOT)/Frameworks/libintl.framework/Headers";
 				INFOPLIST_FILE = Plists/Purple_Service.plist;
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
@@ -11607,6 +11611,7 @@
 					CRASH_REPORTER,
 				);
 				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
@@ -11620,6 +11625,7 @@
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"Plugins/Purple Service/Include\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SDKROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "$(SRCROOT)/Frameworks/libintl.framework/Headers";
 				INFOPLIST_FILE = Plists/Purple_Service.plist;
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
@@ -11649,6 +11655,7 @@
 					DEBUG_BUILD,
 				);
 				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
@@ -11662,6 +11669,7 @@
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"Plugins/Purple Service/Include\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SDKROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "$(SRCROOT)/Frameworks/libintl.framework/Headers";
 				INFOPLIST_FILE = Plists/Purple_Service.plist;
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
