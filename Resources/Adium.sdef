@@ -40,7 +40,7 @@
 		<class name="service" code="Csrv" description="An Adium service (a.k.a. chat protocol)">
 			<cocoa class="AIService" />
 			<property name="name" code="pnam" type="text" access="r" description="The name of the service.">
-				<cocoa key="shortDescription" />
+				<cocoa key="serviceID" />
 			</property>
 			<element type="account" />
 		</class>
