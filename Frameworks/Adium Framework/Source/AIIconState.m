@@ -244,9 +244,6 @@
     }
 	
     //Draw on the images of all overlayed states
-	NSSize workingImageSize = [workingImage size];
-	NSRect workingImageRect = NSMakeRect(0, 0, workingImageSize.width, workingImageSize.height);
-
     enumerator = [iconStateArray objectEnumerator];
     while ((iconState = [enumerator nextObject])) {
         if ([iconState overlay]) {
@@ -267,8 +264,8 @@
 			
             //Layer it on top of our working image
             [workingImage lockFocus];
-            [overlayImage drawInRect:workingImageRect
-							 fromRect:NSMakeRect(0, 0, size.width, size.height)
+            [overlayImage drawAtPoint:NSMakePoint(0,0)
+							 fromRect:NSMakeRect(0,0,size.width,size.height)
 							operation:NSCompositeSourceOver
 							 fraction:1.0];
             [workingImage unlockFocus];
