@@ -98,6 +98,11 @@
 		//If attached to a menu item, insert below that item
 		targetMenu = [menuItem menu];
 		targetIndex = [targetMenu indexOfItem:menuItem];
+		
+		//If the next item is its alternate, skip over it
+		if ((targetIndex < [targetMenu numberOfItems]-1) && [[targetMenu itemAtIndex:targetIndex+1] isAlternate]) {
+			targetIndex++;
+		}
 	} else {
 		//If it's attached to an NSMenu (and not an NSMenuItem), insert at the top of the menu
 		targetMenu = (NSMenu *)menuItem;
