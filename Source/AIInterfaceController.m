@@ -402,7 +402,7 @@
 		if ([containers count] > 0) {
 			containerID = [[containers objectAtIndex:0] objectForKey:@"ID"];
 		} else {
-			containerID = AILocalizedString(@"Chat",nil);
+			containerID = nil;
 		}
 	}
 
@@ -417,30 +417,8 @@
 }
 
 - (id)openChat:(AIChat *)inChat inContainerWithID:(NSString *)containerID atIndex:(int)index
-{
-	//at this point, I'm not sure if I should really be opening this chat in that container. I should double-check with my preferences to make sure that I'm not screwing something up
-	
+{	
 	NSArray		*containers = [interfacePlugin openContainersAndChats];
-	
-	if (!tabbedChatting) {
-		if ([inChat listObject]) {
-			NSAssert(containerID == [[inChat listObject] internalObjectID],@"Bad containerID!");
-		} else {
-			NSAssert(containerID == [inChat name],@"Bad containerID!");
-		}
-	} else if (groupChatsByContactGroup) {
-		if ([inChat isGroupChat]) {
-			NSAssert(containerID == AILocalizedString(@"Group Chat",nil),@"Bad containerID!");
-			
-		} else {
-			AIListObject	*group = [[[inChat listObject] parentContact] containingObject];
-			
-			//If the contact is in the contact list root, we don't have a group
-			if (group && (group != [[adium contactController] contactList])) {
-				NSAssert(containerID == [group displayName],@"Bad containerID!");
-			}
-		}
-	}
 
 	if (!containerID) {
 		//Open new chats into the first container (if not available, create a new one)
