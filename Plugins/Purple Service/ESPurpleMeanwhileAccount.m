@@ -31,6 +31,12 @@ extern const char *mwServiceAware_getText(void *, void *);
 
 #ifndef MEANWHILE_NOT_AVAILABLE
 
+#define MW_KEY_FORCE       "force_login"
+#define MW_KEY_FAKE_IT     "fake_client_id"
+#define MW_KEY_CLIENT      "client_id_val"
+#define MW_KEY_MAJOR       "client_major"
+#define MW_KEY_MINOR       "client_minor"
+
 - (const char*)protocolPlugin
 {
     return "prpl-meanwhile";
@@ -41,10 +47,28 @@ extern const char *mwServiceAware_getText(void *, void *);
 	[super configurePurpleAccount];
 	
 	purple_prefs_set_int(MW_PRPL_OPT_BLIST_ACTION, Meanwhile_CL_Load_And_Save);
-	purple_account_set_bool(account, "force_login", [[self preferenceForKey:KEY_MEANWHILE_FORCE_LOGIN
+	purple_account_set_bool(account, MW_KEY_FORCE, [[self preferenceForKey:KEY_MEANWHILE_FORCE_LOGIN
 																	group:GROUP_ACCOUNT_STATUS] boolValue]);
-	purple_account_set_bool(account, "fake_client_id", [[self preferenceForKey:KEY_MEANWHILE_FAKE_CLIENT_ID
-																	   group:GROUP_ACCOUNT_STATUS] boolValue]);
+	
+	BOOL fakeIt = [[self preferenceForKey:KEY_MEANWHILE_FAKE_CLIENT_ID
+									group:GROUP_ACCOUNT_STATUS] boolValue];
+	purple_account_set_bool(account, MW_KEY_FAKE_IT, fakeIt);
+	if (fakeIt) {
+		int client;
+		if ((client = [[NSUserDefaults standardUserDefaults] integerForKey:@"AISametimeClient"]))
+			purple_account_set_int(account, MW_KEY_CLIENT, client);
+
+		int majorVersion;
+		if (!(majorVersion = [[NSUserDefaults standardUserDefaults] integerForKey:@"AISametimeMajorVersion"]))
+			majorVersion = 0x001e;
+
+		int minorVersion;
+		if (!(minorVersion = [[NSUserDefaults standardUserDefaults] integerForKey:@"AISametimeMinorVersion"]))
+			minorVersion = 0x196f;
+		
+		purple_account_set_int(account, MW_KEY_MAJOR, majorVersion);
+		purple_account_set_int(account, MW_KEY_MINOR, minorVersion);
+	}
 }
 
 #pragma mark Status Messages
