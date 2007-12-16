@@ -510,12 +510,8 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 - (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict didAuthorize:(BOOL)inDidAuthorize
 {
 	id		 callback;
-	
-	//Inform libpurple that the request window closed
-	//[ESPurpleRequestAdapter requestCloseWithHandle:inWindowController];
+
 	if (account) {
-		purple_account_request_close(inWindowController);
-		
 		if (inDidAuthorize) {
 			callback = [[[infoDict objectForKey:@"authorizeCB"] retain] autorelease];
 		} else {
