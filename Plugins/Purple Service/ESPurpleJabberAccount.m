@@ -161,8 +161,9 @@
 
 - (NSString *)serverSuffix
 {
-	AILog(@"using jabber");
-	return DEFAULT_JABBER_HOST;
+	NSString *host = [self preferenceForKey:KEY_JABBER_CONNECT_SERVER group:GROUP_ACCOUNT_STATUS];
+	
+	return (host ? host : DEFAULT_JABBER_HOST);
 }
 
 /*!	@brief	Obtain the resource name for this Jabber account.
