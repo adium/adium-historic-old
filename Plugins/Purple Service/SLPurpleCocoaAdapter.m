@@ -451,7 +451,9 @@ PurpleConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					struct proto_chat_entry *pce;
 					NSString				*identifier;
 					NSEnumerator			*enumerator;
-					
+
+					g_return_val_if_fail(gc != NULL, NULL);
+
 					//Create a hash table
 					//The hash table should contain char* objects created via a g_strdup method
 					components = g_hash_table_new_full(g_str_hash, g_str_equal,
