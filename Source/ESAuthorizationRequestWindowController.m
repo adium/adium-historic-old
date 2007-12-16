@@ -45,7 +45,7 @@
 - (void)dealloc
 {
 	[infoDict release]; infoDict = nil;
-	[account release];
+	[account release]; account = nil;
 
 	[super dealloc];
 }
@@ -104,6 +104,23 @@
 	
 	[[self window] center];
 }
+
+- (void)windowWillClose:(id)sender
+{
+	windowIsClosing = YES;
+
+	[super windowWillClose:sender];
+
+	[self autorelease];
+}
+
+- (void)closeWindow:(id)sender
+{
+	if (!windowIsClosing)
+		[super closeWindow:sender];
+}
+	
+
 
 - (IBAction)authorize:(id)sender
 {
