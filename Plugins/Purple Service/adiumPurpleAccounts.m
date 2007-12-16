@@ -8,8 +8,6 @@
 #import "adiumPurpleAccounts.h"
 #import <Adium/AIContactControllerProtocol.h>
 
-static NSMutableSet *authRequests = nil;
-
 /* A buddy we already have added us to their buddy list. */
 static void adiumPurpleAccountNotifyAdded(PurpleAccount *account, const char *remote_user,
 							 const char *id, const char *alias,
@@ -58,15 +56,8 @@ static void *adiumPurpleAccountRequestAuthorize(PurpleAccount *account, const ch
 		nil];
 	
 	if (message && strlen(message)) [infoDict setObject:[NSString stringWithUTF8String:message] forKey:@"Reason"];
-	
-	id authRequestWindow = [accountLookup(account) authorizationRequestWithDict:infoDict];
-	
-	if(authRequestWindow) {
-		if (!authRequests) authRequests = [[NSMutableSet alloc] init];
-		[authRequests addObject:authRequestWindow];
-	}
-	
-	return authRequestWindow;
+
+	return [accountLookup(account) authorizationRequestWithDict:infoDict];;
 }
 
 static void adiumPurpleAccountRequestClose(void *ui_handle)
@@ -79,12 +70,6 @@ static void adiumPurpleAccountRequestClose(void *ui_handle)
 	} else if ([ourHandle respondsToSelector:@selector(closeWindow:)]) {
 		[ourHandle performSelector:@selector(closeWindow:)
 						withObject:nil];
-	}
-	
-	[authRequests removeObject:(id)ui_handle];
-	if (![authRequests count]) {
-		[authRequests release];
-		authRequests = nil;
 	}
 }
 
