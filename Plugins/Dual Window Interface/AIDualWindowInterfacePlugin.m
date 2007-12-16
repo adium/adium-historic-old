@@ -253,8 +253,6 @@
 {
 	if (!containerID)
 		containerID = [NSString stringWithFormat:@"%@:%i", ADIUM_UNIQUE_CONTAINER, uniqueContainerNumber++];
-	if (!containerName)
-		containerName = [[containerID copy] autorelease];
 	AIMessageWindowController	*windowController = [containers objectForKey:containerID];
 	if (!windowController) {
 		windowController = [AIMessageWindowController messageWindowControllerForInterface:self withID:containerID name:containerName];
@@ -333,7 +331,7 @@
 			
 			//Create a new unique container, set the frame
 			newMessageWindow = [self openContainerWithID:[NSString stringWithFormat:@"%@:%i", ADIUM_UNIQUE_CONTAINER, uniqueContainerNumber++]
-													name:AILocalizedString(@"Chat",nil)];
+													name:nil];
 			
 			if (newFrame.origin.x == -1 && newFrame.origin.y == -1) {
 				NSRect curFrame = [[newMessageWindow window] frame];
@@ -355,7 +353,7 @@
 - (id)openNewContainer
 {
 	AIMessageWindowController *controller = [self openContainerWithID:[NSString stringWithFormat:@"%@:%i", ADIUM_UNIQUE_CONTAINER, uniqueContainerNumber++]
-													name:AILocalizedString(@"Chat",nil)];
+													name:nil];
 	return controller;
 }
 
