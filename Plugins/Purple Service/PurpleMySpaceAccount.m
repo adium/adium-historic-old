@@ -22,7 +22,7 @@
 		return AILocalizedString(@"Connecting",nil);
 		break;
 	case 1:
-		return AILocalizedString(@"Reading challenge",nil);
+		return AILocalizedString(@"Reading challenge", "Description of a step in the connection process for MySpace. This could be translated as something like 'Reading from server'.");
 		break;
 	case 2:
 		return AILocalizedString(@"Logging in","Connection step");
