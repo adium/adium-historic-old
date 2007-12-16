@@ -21,6 +21,8 @@
 	NSDictionary				*infoDict;
 	
 	AIAccount					*account;
+	
+	BOOL						windowIsClosing;
 }
 
 + (ESAuthorizationRequestWindowController *)showAuthorizationRequestWithDict:(NSDictionary *)inInfoDict  forAccount:(AIAccount *)inAccount;
