@@ -3163,6 +3163,7 @@
 		34D8346D07CBE6F5006466F2 /* IconFamily.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = IconFamily.m; path = "Frameworks/Adium Framework/Source/IconFamily.m"; sourceTree = "<group>"; };
 		34D8346E07CBE6F5006466F2 /* IconFamily.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = IconFamily.h; path = "Frameworks/Adium Framework/Source/IconFamily.h"; sourceTree = "<group>"; };
 		34D836F307CBF960006466F2 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
+		34D8B3D60D15A40C0066F013 /* fr_CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr_CA; path = Resources/fr_CA.lproj/Statuses.strings; sourceTree = "<group>"; };
 		34DC84280A7EA012003E1636 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = Resources/nl.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		34DFF46007A5EABF00B92233 /* ESSecureMessagingPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESSecureMessagingPlugin.h; path = "Plugins/Secure Messaging/ESSecureMessagingPlugin.h"; sourceTree = "<group>"; };
 		34DFF46107A5EABF00B92233 /* ESSecureMessagingPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESSecureMessagingPlugin.m; path = "Plugins/Secure Messaging/ESSecureMessagingPlugin.m"; sourceTree = "<group>"; };
@@ -7975,6 +7976,7 @@
 				pt_BR,
 				en,
 				English,
+				fr_CA,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CocAIMe2 */;
 			projectDirPath = "";
@@ -10222,6 +10224,7 @@
 				345DA0790CA09B09009F1989 /* tr */,
 				345DA0710CA09AF1009F1989 /* zh_CN */,
 				345DA06E0CA09AE9009F1989 /* zh_TW */,
+				34D8B3D60D15A40C0066F013 /* fr_CA */,
 			);
 			name = Statuses.strings;
 			sourceTree = "<group>";
