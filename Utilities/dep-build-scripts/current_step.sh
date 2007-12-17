@@ -46,10 +46,11 @@ fi
 # support. This is OK because OpenSSL is part of the base system on OS X.
 
 pushd $PIDGIN_SOURCE
-#  "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff"
+#  libpurple_jabber_fallback_on_old_auth.diff is in im.pidgin.pidgin but not the 2.3.1 branch -evands 12/07
 for patch in "$PATCHDIR/libpurple_sasl_hack.diff" \
              "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" \
              "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
+             "$PATCHDIR/libpurple_jabber_fallback_on_old_auth.diff" \
              "$PATCHDIR/libpurple_myspace_hack.diff" ; do
     echo "Applying $patch"
 	cat $patch | patch --forward -p0
