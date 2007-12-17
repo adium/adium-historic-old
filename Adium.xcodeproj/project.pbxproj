@@ -1646,7 +1646,6 @@
 		1172FBC70CDAA8D400B8E233 /* libintl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libintl.framework; path = Frameworks/libintl.framework; sourceTree = "<group>"; };
 		1172FBC80CDAA8D400B8E233 /* libmeanwhile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libmeanwhile.framework; path = Frameworks/libmeanwhile.framework; sourceTree = "<group>"; };
 		1172FBC90CDAA8D400B8E233 /* libpurple.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libpurple.framework; path = Frameworks/libpurple.framework; sourceTree = "<group>"; };
-		1172FBCA0CDAA8D400B8E233 /* libsasl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsasl.framework; path = Frameworks/libsasl.framework; sourceTree = "<group>"; };
 		117D6DBF0BC5F0C40080D02B /* notify.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = notify.png; path = Resources/notify.png; sourceTree = SOURCE_ROOT; };
 		11AA1EF90BCAE9C3003DDA66 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = /System/Library/Frameworks/Quartz.framework; sourceTree = "<absolute>"; };
 		11C157D804A88E04008E0C76 /* AIEmoticonController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonController.h; path = Source/AIEmoticonController.h; sourceTree = "<group>"; };
@@ -4137,7 +4136,6 @@
 				1172FBC70CDAA8D400B8E233 /* libintl.framework */,
 				1172FBC80CDAA8D400B8E233 /* libmeanwhile.framework */,
 				1172FBC90CDAA8D400B8E233 /* libpurple.framework */,
-				1172FBCA0CDAA8D400B8E233 /* libsasl.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
