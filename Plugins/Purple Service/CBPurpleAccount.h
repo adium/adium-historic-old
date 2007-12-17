@@ -101,7 +101,6 @@
 - (void)accountConnectionNotice:(NSString *)text;
 - (void)accountConnectionDisconnected;
 - (void)accountConnectionProgressStep:(NSNumber *)step percentDone:(NSNumber *)connectionProgressPrecent;
-- (void)accountConnectionStep:(NSString*)msg step:(int)step totalSteps:(int)step_count;
 
 - (void)newContact:(AIListContact *)theContact withName:(NSString *)inName;
 - (void)updateContact:(AIListContact *)theContact
