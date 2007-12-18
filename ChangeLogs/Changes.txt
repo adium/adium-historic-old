@@ -17,13 +17,13 @@ Version 1.2 (??/??/????)
    * Major improvements to reliability and performance
    * Modernized Bonjour for Mac OS X 10.4+
    * Various minor bug fixes
- * Improved XMPP support
+ * Improved XMPP (Jabber) support
    * Fixed importing of groups (#2795)
    * Added support for fields-based dialogues, which allows many serverside functions to work
    * Added support for server and contact actions
    * Added SSL certificate verification and trust control
    * Improved new account registration 
-   * Fixed connectivity to servers which require GSSAPI/Kerberos 5 and some other forms of authentication
+   * Fixed connectivity to servers which require GSSAPI/Kerberos 5 and some other forms of authentication via SASL and which require CRAM-MD5 via jabber:iq:auth
    * XMPP can now broadcast information about the current iTunes track
    * Fixed a long-standing crash after disconnecting from a server which uses SSL (#7461)
  * Rewrote almost all of Applescript support, fixing numerous problems and expanding its capabilities
@@ -46,6 +46,10 @@ Version 1.2 (??/??/????)
  * Added options for showing/hiding mobile contacts, away contacts, and idle contacts as could be done with offline contacts previously (#3242)
  * Mobile contacts can now have a customized color in the contact list (#215)
  * Fixed pixelated contact icon appearance in Mac OS X 10.5
+ * (Sametime) Fixed Sametime login to servers which are configured to prevent 'old' clients from connecting. Be sure to enable the 'Hide Client Identity' account option.
+ * Fixed a condition in which a chat window would not appear after Adium had been hidden when a new message was received (#6101)</li>
+ * Simplified chat window titles (#8596)
+ * Fixed erroneous display of an 'Arrange in Front' menu item in the Window menu in 10.5 (#8588)
  * Added drag & drop of contacts to places besides the contact list (#3097)
  * The status message is now displayed by Growl notifications for status changes (#758)
  * Added an option to change status when a screensaver is activated (#5069)
@@ -68,6 +72,7 @@ Version 1.2 (??/??/????)
  * Restored ignoring Exposé when the contact list is set to below other windows on 10.4; this behavior breaks Spaces so can not be done on 10.5.
  * Improved how Spotlight displays chat transcripts on 10.4 (Known issue: 10.5 is still ignoring Spotlight results from chat transcripts because they are within ~/Library) (#8160)
  * Fixed linkification of single-world domain names (#3540)
+ * Fixed a leak after a contact requests authorization
  * Updated Adiumy icons to 512x512 for Leopard
  * Updated to libpurple 2.3.1
  * Got David a gerbil (#7278)
