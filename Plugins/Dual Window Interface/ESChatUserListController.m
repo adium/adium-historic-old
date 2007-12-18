@@ -29,8 +29,8 @@
 	if ([[self superclass] instancesRespondToSelector:@selector(outlineViewSelectionDidChange:)]) {
 		[super outlineViewSelectionDidChange:notification];
 	}
-
-	if ([[self delegate] respondsToSelector@selector(outlineViewSelectionDidChange:)]) {
+	
+	if ([[self delegate] respondsToSelector:@selector(outlineViewSelectionDidChange:)]) {
 		[[self delegate] performSelector:@selector(outlineViewSelectionDidChange:)
 							  withObject:notification];
 	}
