@@ -26,12 +26,14 @@
  */
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
-	if ([[super class] instancesRespondToSelector:@selector(outlineViewSelectionDidChange:)]) {
+	if ([[self superclass] instancesRespondToSelector:@selector(outlineViewSelectionDidChange:)]) {
 		[super outlineViewSelectionDidChange:notification];
 	}
 
-	[[self delegate] performSelector:@selector(outlineViewSelectionDidChange:)
-						  withObject:notification];
+	if ([[self delegate] respondsToSelector@selector(outlineViewSelectionDidChange:)]) {
+		[[self delegate] performSelector:@selector(outlineViewSelectionDidChange:)
+							  withObject:notification];
+	}
 }
 
 /*!
