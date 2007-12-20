@@ -287,7 +287,7 @@
 			<key>NSvFlags</key>
 			<integer>256</integer>
 		</dict>
-		<string>{{30, 90}, {120, 17}}</string>
+		<string>{{11, 89}, {120, 17}}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -339,7 +339,7 @@
 			<key>NSSize</key>
 			<real>13</real>
 			<key>NSfFlags</key>
-			<integer>1044</integer>
+			<integer>1040</integer>
 		</dict>
 		<string>LucidaGrande</string>
 		<dict>
@@ -452,7 +452,6 @@
 			<key>$classes</key>
 			<array>
 				<string>NSTextField</string>
-				<string>%NSTextField</string>
 				<string>NSControl</string>
 				<string>NSView</string>
 				<string>NSResponder</string>
@@ -492,7 +491,7 @@
 			<key>NSvFlags</key>
 			<integer>256</integer>
 		</dict>
-		<string>{{152, 6}, {260, 14}}</string>
+		<string>{{133, 4}, {260, 14}}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -529,7 +528,7 @@
 				<integer>24</integer>
 			</dict>
 		</dict>
-		<string>Séparer les noms des contacts avec une virgule.</string>
+		<string>Séparer les noms des contacts par une virgule.</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -544,7 +543,7 @@
 			<key>NSSize</key>
 			<real>11</real>
 			<key>NSfFlags</key>
-			<integer>3100</integer>
+			<integer>3088</integer>
 		</dict>
 		<dict>
 			<key>$class</key>
@@ -589,7 +588,7 @@
 		</dict>
 		<string>AICompletingTextField</string>
 		<string>NSTextField</string>
-		<string>{{155, 20}, {266, 60}}</string>
+		<string>{{136, 18}, {266, 60}}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -732,7 +731,7 @@
 			<key>NSvFlags</key>
 			<integer>256</integer>
 		</dict>
-		<string>{{9, 60}, {141, 17}}</string>
+		<string>{{0, 64}, {131, 17}}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -801,7 +800,7 @@
 			<key>NSvFlags</key>
 			<integer>256</integer>
 		</dict>
-		<string>{{155, 88}, {266, 22}}</string>
+		<string>{{136, 86}, {266, 22}}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -850,7 +849,7 @@
 			<key>$classname</key>
 			<string>NSMutableArray</string>
 		</dict>
-		<string>{451, 119}</string>
+		<string>{418, 116}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -1017,7 +1016,7 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>12</integer>
+					<integer>10</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1025,11 +1024,11 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>10</integer>
+					<integer>50</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>29</integer>
+					<integer>12</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1037,7 +1036,7 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>50</integer>
+					<integer>29</integer>
 				</dict>
 			</array>
 		</dict>
@@ -1060,15 +1059,15 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>10</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>10</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
 					<integer>2</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>10</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>10</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1094,15 +1093,7 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>12</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
 					<integer>2</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>34</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1110,7 +1101,15 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
+					<integer>34</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
 					<integer>50</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>12</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1160,11 +1159,11 @@
 				</dict>
 			</array>
 		</dict>
-		<string>NSTextField2</string>
 		<string>File's Owner</string>
-		<string>NSTextField31</string>
 		<string>View</string>
+		<string>NSTextField31</string>
 		<string>NSTextField</string>
+		<string>NSTextField2</string>
 		<string>NSTextField211</string>
 		<string>NSTextField11</string>
 		<dict>
@@ -1205,31 +1204,7 @@
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>50</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>12</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>29</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>2</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
 					<integer>9</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>46</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>10</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1237,15 +1212,7 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>63</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>61</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>34</integer>
+					<integer>65</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -1253,7 +1220,39 @@
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>65</integer>
+					<integer>46</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>2</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>12</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>10</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>34</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>61</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>63</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>29</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>50</integer>
 				</dict>
 			</array>
 		</dict>
@@ -1319,19 +1318,19 @@
 				</dict>
 			</array>
 		</dict>
-		<integer>38</integer>
-		<integer>34</integer>
-		<integer>35</integer>
-		<integer>1</integer>
 		<integer>31</integer>
-		<integer>37</integer>
-		<integer>27</integer>
 		<integer>43</integer>
-		<integer>40</integer>
-		<integer>39</integer>
-		<integer>36</integer>
-		<integer>42</integer>
 		<integer>41</integer>
+		<integer>42</integer>
+		<integer>37</integer>
+		<integer>1</integer>
+		<integer>34</integer>
+		<integer>27</integer>
+		<integer>36</integer>
+		<integer>39</integer>
+		<integer>40</integer>
+		<integer>35</integer>
+		<integer>38</integer>
 		<dict>
 			<key>$class</key>
 			<dict>
