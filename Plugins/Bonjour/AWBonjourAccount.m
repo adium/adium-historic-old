@@ -210,7 +210,9 @@ typedef enum {
 	[listContact setStatusWithName:nil
 	                    statusType:(([contact status] == AWEzvAway) ? AIAwayStatusType : AIAvailableStatusType)
 	                        notify:NotifyLater];
-	[listContact setStatusMessage:[[[NSAttributedString alloc] initWithString:[contact statusMessage]] autorelease]
+
+	statusMessage = [contact statusMessage];
+	[listContact setStatusMessage:(statusMessage ? [[[NSAttributedString alloc] initWithString:statusMessage] autorelease] : nil)
 	                       notify:NotifyLater];
 	
 	idleSinceDate = [contact idleSinceDate];
