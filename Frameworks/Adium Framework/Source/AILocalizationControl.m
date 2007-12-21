@@ -143,7 +143,9 @@
 		default:
 			break;
 	}
-	
+
+	newFrame.origin.y = oldFrame.origin.y - (NSHeight(newFrame) - NSHeight(oldFrame));
+
 	float distanceToRightAnchoredView = 0;
 	if (view_anchorToRightSide) {
 		distanceToRightAnchoredView = NSMinX([view_anchorToRightSide frame]) - NSMaxX(oldFrame);
