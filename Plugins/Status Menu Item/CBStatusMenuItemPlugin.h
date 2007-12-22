@@ -20,6 +20,7 @@
 #define STATUS_MENU_ITEM_DEFAULT_PREFS  @"StatusMenuItemDefaultPrefs"
 #define PREF_GROUP_STATUS_MENU_ITEM     @"Status Menu Item"
 #define KEY_STATUS_MENU_ITEM_ENABLED    @"Status Menu Item Enabled"
+#define	KEY_STATUS_MENU_ITEM_COUNT		@"Status Menu Item Unread Count"
 #define	KEY_STATUS_MENU_ITEM_BADGE		@"Status Menu Item Badge"
 #define KEY_STATUS_MENU_ITEM_FLASH		@"Status Menu Item Flash Unviewed"
 

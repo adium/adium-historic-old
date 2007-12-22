@@ -241,7 +241,7 @@
 	int unreadCount = [[adium chatController] unviewedContentCount];
 
 	// Only show if greater-than zero, otherwise set to nil.
-	if (unreadCount > 0) {
+	if (showUnreadCount && unreadCount > 0) {
 		[statusItem setTitle:[NSString stringWithFormat:@"%i", unreadCount]];
 	} else {
 		[statusItem setTitle:nil];
@@ -774,8 +774,10 @@
 	}
 	
 	if ([group isEqualToString:PREF_GROUP_STATUS_MENU_ITEM]) {
+		showUnreadCount = [[prefDict objectForKey:KEY_STATUS_MENU_ITEM_COUNT] boolValue];
 		showBadge = [[prefDict objectForKey:KEY_STATUS_MENU_ITEM_BADGE] boolValue];
 		flashUnviewed = [[prefDict objectForKey:KEY_STATUS_MENU_ITEM_FLASH] boolValue];
+		
 		[self updateMenuIcons];
 	}
 }
