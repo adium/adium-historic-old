@@ -3,7 +3,7 @@
 #
 # patch "libpurple/protocols/jabber/auth.c"
 #  from [12caf62ded6c3314a811a59f8730fc801420cd8c]
-#    to [24ddb8a71eeb82f1a2f8ec3e2f7899c4050e0373]
+#    to [ec28c44c8f440b6af093275a75cf1868085a0b6d]
 # 
 # patch "libpurple/protocols/jabber/libxmpp.c"
 #  from [e90c78b600e55ee816eae95ffc4c0fd69fdd785b]
@@ -11,7 +11,7 @@
 #
 ============================================================
 --- libpurple/protocols/jabber/auth.c	12caf62ded6c3314a811a59f8730fc801420cd8c
-+++ libpurple/protocols/jabber/auth.c	24ddb8a71eeb82f1a2f8ec3e2f7899c4050e0373
++++ libpurple/protocols/jabber/auth.c	ec28c44c8f440b6af093275a75cf1868085a0b6d
 @@ -330,14 +330,21 @@ static void jabber_auth_start_cyrus(Jabb
  							disallow_plaintext_auth);
  					g_free(msg);
@@ -239,7 +239,7 @@
 +			int i;
 +
 +			challenge = xmlnode_get_attrib(xmlnode_get_child(query, "crammd5"), "challenge");
-+			auth_hmac_md5(challenge, strlen(challenge), pw, strlen(pw), &digest);
++			auth_hmac_md5(challenge, strlen(challenge), pw, strlen(pw), digest);
 +
 +			/* Create the response query */
 +			iq = jabber_iq_new_query(js, JABBER_IQ_SET, "jabber:iq:auth");
