@@ -240,7 +240,7 @@
 {
 	int unreadCount = [[adium chatController] unviewedContentCount];
 
-	// Only show if greater-than zero, otherwise set to nil.
+	// Only show if enabled and greater-than zero; otherwise, set to nil.
 	if (showUnreadCount && unreadCount > 0) {
 		[statusItem setTitle:[NSString stringWithFormat:@"%i", unreadCount]];
 	} else {
