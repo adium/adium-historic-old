@@ -47,9 +47,10 @@ fi
 
 pushd $PIDGIN_SOURCE
 #  libpurple_jabber_fallback_on_old_auth.diff is in im.pidgin.pidgin but not the 2.3.1 branch -evands 12/07
+#             "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
+# libpurple_jabber_fallback_on_old_auth includes im.pidgin.pidgin changes (pre-2.4.0) and libpurple_jabber_avoid_sasl_option_hack.diff
 for patch in "$PATCHDIR/libpurple_sasl_hack.diff" \
              "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" \
-             "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
              "$PATCHDIR/libpurple_jabber_fallback_on_old_auth.diff" \
              "$PATCHDIR/libpurple_myspace_hack.diff" ; do
     echo "Applying $patch"
