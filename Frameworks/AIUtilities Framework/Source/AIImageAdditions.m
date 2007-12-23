@@ -387,6 +387,7 @@
 	//If we're passed a 0,0 size, use the image's size
 	if (size.width == 0 || size.height == 0) size = [self size];
 	
+	/*
 	if ((NSWidth(rect) < size.width) || (NSHeight(rect) < size.height)) {
 		//The size is larger than our available rect. Decrease the size.
 
@@ -401,6 +402,7 @@
 			size.height = NSHeight(rect);
 		}
 	}
+	 */
 
 	//Adjust the positioning
 	switch (position) {
