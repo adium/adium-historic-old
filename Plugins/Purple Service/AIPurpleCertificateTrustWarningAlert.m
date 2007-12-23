@@ -147,6 +147,7 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 			case kSecTrustResultConfirm: // trust ok, but user asked (earlier) that you check with him before proceeding
 			case kSecTrustResultDeny: // trust ok, but user previously said not to trust it anyway
 			case kSecTrustResultRecoverableTrustFailure: // trust broken, perhaps argue with the user
+			case kSecTrustResultOtherError: // failure other than trust evaluation; e.g., internal failure of the SecTrustEvaluate function. We'll let the user decide where to go from here.
 			{
 				SFCertificateTrustPanel *trustpanel = [[SFCertificateTrustPanel alloc] init];
 				
@@ -173,8 +174,7 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 			default:
 				/*
 				 * kSecTrustResultFatalTrustFailure -> trust broken, user can't fix it
-				 * kSecTrustResultOtherError -> something failed weirdly, abort operation
-				 * kSecTrustResultInvalid -> logic error; fix your program (SecTrust was used incorrectly
+				 * kSecTrustResultInvalid -> logic error; fix your program (SecTrust was used incorrectly)
 				 */
 				query_cert_cb(false, userdata);
 				[self release];
