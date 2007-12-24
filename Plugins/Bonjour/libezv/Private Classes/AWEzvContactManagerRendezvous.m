@@ -70,24 +70,14 @@
 	DNSServiceRef			fServiceRef;
 	CFSocketRef				fSocketRef;
 	CFRunLoopSourceRef		fRunloopSrc;
+	AWEzvContactManager		*contactManager;
 }
 
-- (id) initWithServiceRef:(DNSServiceRef) ref;
-- (boolean_t) addToCurrentRunLoop;
-- (DNSServiceRef) serviceRef;
-- (void) dealloc;
+- (id)initWithServiceRef:(DNSServiceRef)ref forContactManager:(AWEzvContactManager *)inContactManager;
+- (boolean_t)addToCurrentRunLoop;
+- (DNSServiceRef)serviceRef;
 
 @end // interface ServiceController
-
-/* DNS parser will want this */
-typedef struct
-{
-    u_int16_t 	type;
-    u_int16_t 	class;
-    u_int32_t 	ttl;
-    u_int16_t 	length;
-
-} rr_header;
 
 /* C-helper function prototypes */
 void register_reply ( 
@@ -206,7 +196,7 @@ void image_register_reply (
 			/* application context pointer, may be null */ self);
 
 	if (dnsError == kDNSServiceErr_NoError) {		
-		fDomainBrowser = [[ServiceController alloc] initWithServiceRef:servRef];
+		fDomainBrowser = [[ServiceController alloc] initWithServiceRef:servRef forContactManager:self];
 		[fDomainBrowser addToCurrentRunLoop];
 		avDNSReference = servRef;
 	} else {
@@ -421,7 +411,7 @@ void image_register_reply (
 	                                  /* context, may be null */ self);
 
 	if (avBrowseError == kDNSServiceErr_NoError) {
-		fServiceBrowser = [[ServiceController alloc] initWithServiceRef:browsRef];
+		fServiceBrowser = [[ServiceController alloc] initWithServiceRef:browsRef forContactManager:self];
 		[fServiceBrowser addToCurrentRunLoop];
 	} else {
 		[[client client] reportError:@"Could not browse for _presence._tcp instances" ofLevel:AWEzvError];
@@ -475,7 +465,7 @@ void image_register_reply (
 			/* contxt, may be NULL */ contact);
 
 		if (resolveRefError == kDNSServiceErr_NoError) {
-			ServiceController *serviceResolver = [[ServiceController alloc] initWithServiceRef:resolveRef];
+			ServiceController *serviceResolver = [[ServiceController alloc] initWithServiceRef:resolveRef forContactManager:self];
 			[contact setResolveServiceController:serviceResolver];
 			[[contact resolveServiceController] addToCurrentRunLoop];
 			[serviceResolver release];
@@ -507,7 +497,7 @@ void image_register_reply (
 	err = DNSServiceQueryRecord( &serviceRef, (DNSServiceFlags) 0, interface, [host UTF8String], 
 	                             kDNSServiceType_A, kDNSServiceClass_IN, AddressQueryRecordReply, contact);
 	if ( err == kDNSServiceErr_NoError) {
-		ServiceController *temp = [[ServiceController alloc] initWithServiceRef:serviceRef];
+		ServiceController *temp = [[ServiceController alloc] initWithServiceRef:serviceRef forContactManager:self];
 		[contact setAddressServiceController:temp];
 		[[contact addressServiceController] addToCurrentRunLoop];
 		[temp release];
@@ -679,7 +669,7 @@ void image_register_reply (
 			err = DNSServiceQueryRecord( &serviceRef, (DNSServiceFlags) 0, interface, [dnsname UTF8String], 
 			                            kDNSServiceType_NULL, kDNSServiceClass_IN, ImageQueryRecordReply, contact);
 			if ( err == kDNSServiceErr_NoError) {
-				ServiceController *temp = [[ServiceController alloc] initWithServiceRef:serviceRef];
+				ServiceController *temp = [[ServiceController alloc] initWithServiceRef:serviceRef forContactManager:self];
 				[contact setImageServiceController:temp];
 				[[contact imageServiceController] addToCurrentRunLoop];
 				[temp release];
@@ -723,6 +713,7 @@ void image_register_reply (
 	/* Recover if there was an error */
     if (errorCode != kDNSServiceErr_NoError) {
 		switch (errorCode) {
+#warning Localize and report through the connection error system
 			case kDNSServiceErr_Unknown:
 				[[[self client] client] reportError:@"Unknown error in Bonjour Registration"
 						        ofLevel:AWEzvError];
@@ -751,6 +742,12 @@ void image_register_reply (
 	[[client client] userLoggedOut:contact];
 }
 
+- (void)serviceControllerReceivedFatalError:(ServiceController *)serviceController
+{
+	[[[self client] client] reportError:@"An unrecoverable connection error occurred"
+						        ofLevel:AWEzvError];
+	[self disconnect];
+}
 
 @end
 
@@ -862,33 +859,44 @@ void ImageQueryRecordReply( DNSServiceRef DNSServiceRef, DNSServiceFlags flags, 
 	}
 }
 
+#pragma mark Service Controller
+
+/* ServiceController was taken from Apple's DNSServiceBrowser.m */
+@implementation ServiceController : NSObject
+
 #pragma mark CFSocket Callback
 /* This code was taken from Apple's DNSServiceBrowser.m */
 static void	ProcessSockData( CFSocketRef s, CFSocketCallBackType type, CFDataRef address, const void *data, void *info)
 // CFRunloop callback that notifies dns_sd when new data appears on a DNSServiceRef's socket.
 {
+	ServiceController *self = (ServiceController *)info;
 	DNSServiceRef		serviceRef = (DNSServiceRef) info;
-	DNSServiceErrorType err = DNSServiceProcessResult( serviceRef);
-	if ( err != kDNSServiceErr_NoError) {
-		//printf( "DNSServiceProcessResult() for socket descriptor %d returned an error! %d with CFSocketCallBackType %d and data %s\n", DNSServiceRefSockFD(info), err, type, data);
+	DNSServiceErrorType err = DNSServiceProcessResult([self serviceRef]);
+	if (err != kDNSServiceErr_NoError) {
+		if ((err == kDNSServiceErr_Unknown) && !data) {
+			AILog(@"Received an unknown error with no data; perhaps mDNSResponder crashed? Disconnecting with error.");
+			[[self contactManager] serviceControllerReceivedFatalError:self];
+
+		} else {
+			AILog(@"DNSServiceProcessResult() for socket descriptor %d returned an error! %d with CFSocketCallBackType %d and data %s\n",
+				  DNSServiceRefSockFD(info), err, type, data);
+		}
 	}
 }
 
-
-/* ServiceController was taken from Apple's DNSServiceBrowser.m */
-@implementation ServiceController : NSObject
-
-- (id) initWithServiceRef:(DNSServiceRef) ref
+- (id) initWithServiceRef:(DNSServiceRef) ref forContactManager:(AWEzvContactManager *)inContactManager
 {
 	[super init];
 	fServiceRef = ref;
+	contactManager = [inContactManager retain];
+
 	return self;
 }
 
 - (boolean_t) addToCurrentRunLoop
 /* Add the service to the current runloop. Returns non-zero on success. */
 {
-	CFSocketContext			ctx = { 1, (void*) fServiceRef, nil, nil, nil };
+	CFSocketContext			ctx = { 1, self, nil, nil, nil };
 
 	fSocketRef = CFSocketCreateWithNative( kCFAllocatorDefault, DNSServiceRefSockFD( fServiceRef), 
 										kCFSocketReadCallBack, ProcessSockData, &ctx);
@@ -897,7 +905,7 @@ static void	ProcessSockData( CFSocketRef s, CFSocketCallBackType type, CFDataRef
 	if ( fRunloopSrc != nil)
 		CFRunLoopAddSource( CFRunLoopGetCurrent(), fRunloopSrc, kCFRunLoopDefaultMode);
 	else
-		printf("Could not listen to runloop socket\n");
+		AILog(@"%@: Could not listen to runloop socket", self);
 
 	return fRunloopSrc != nil;
 }
@@ -923,6 +931,8 @@ static void	ProcessSockData( CFSocketRef s, CFSocketCallBackType type, CFDataRef
 
 	DNSServiceRefDeallocate( fServiceRef);
 
+	[contactManager release];
+	
 	[super dealloc];
 }
 
