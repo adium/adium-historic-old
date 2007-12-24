@@ -39,7 +39,10 @@ typedef struct
 	guint	handshake_handler;
 } PurpleSslCDSAData;
 
+static GList *connections = NULL;
+
 #define PURPLE_SSL_CDSA_DATA(gsc) ((PurpleSslCDSAData *)gsc->private_data)
+#define PURPLE_SSL_CONNECTION_IS_VALID(gsc) (g_list_find(connections, (gsc)) != NULL)
 
 /*
  * query_cert_chain - callback for letting the user review the certificate before accepting it
@@ -94,18 +97,21 @@ static void query_cert_result(gboolean trusted, void *userdata) {
 	CFRelease(ud->certs);
 	free(ud->hostname);
 
-	if(!trusted) {
-		if (gsc->error_cb != NULL)
-			gsc->error_cb(gsc, PURPLE_SSL_CERTIFICATE_INVALID,
-						  gsc->connect_cb_data);
-		
-		purple_ssl_close(ud->gsc);
-	} else {
-		purple_debug_info("cdsa", "SSL_connect complete\n");
-		
-		/* SSL connected now */
-		ud->gsc->connect_cb(ud->gsc->connect_cb_data, ud->gsc, ud->cond);
+	if (PURPLE_SSL_CONNECTION_IS_VALID(gsc)) {
+		if (!trusted) {
+			if (gsc->error_cb != NULL)
+				gsc->error_cb(gsc, PURPLE_SSL_CERTIFICATE_INVALID,
+							  gsc->connect_cb_data);
+			
+			purple_ssl_close(ud->gsc);
+		} else {
+			purple_debug_info("cdsa", "SSL_connect complete\n");
+			
+			/* SSL connected now */
+			ud->gsc->connect_cb(ud->gsc->connect_cb_data, ud->gsc, ud->cond);
+		}
 	}
+
 	free(ud);
 }
 
@@ -286,6 +292,7 @@ ssl_cdsa_connect(PurpleSslConnection *gsc) {
 	 */
 	cdsa_data = g_new0(PurpleSslCDSAData, 1);
 	gsc->private_data = cdsa_data;
+	connections = g_list_append(connections, gsc);
 
 	/*
 	 * allocate a new SSLContextRef object
@@ -403,6 +410,8 @@ ssl_cdsa_close(PurpleSslConnection *gsc)
             purple_debug_error("cdsa", "SSLDisposeContext failed\n");
         cdsa_data->ssl_ctx = NULL;
     }
+
+	connections = g_list_remove(connections, gsc);
 
 	g_free(cdsa_data);
 	gsc->private_data = NULL;
