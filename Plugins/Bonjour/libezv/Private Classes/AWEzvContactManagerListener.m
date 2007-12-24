@@ -61,7 +61,7 @@
 	   socket that is bound and listening */
 
 	if ((fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-		[[client client] reportError:@"Could not create listening socket for iChat Bonjour" ofLevel:AWEzvError];
+		[[client client] reportError:@"Could not create listening socket for iChat Bonjour" ofLevel:AWEzvConnectionError];
 		return -1;
 	}
 

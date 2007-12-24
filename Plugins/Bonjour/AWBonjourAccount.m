@@ -367,8 +367,9 @@ typedef enum {
 
 - (void)reportError:(NSString *)error ofLevel:(AWEzvErrorSeverity)severity
 {
-	if (severity == AWEzvError) {
-		[self setLastDisconnectionError:error];
+	if (severity == AWEzvConnectionError) {
+		[self mainPerformSelector:@selector(setLastDisconnectionError:)
+					   withObject:error];
 	}
 	NSLog(@"Bonjour Error (%i): %@", severity, error);
 	AILog(@"Bonjour Error (%i): %@", severity, error);

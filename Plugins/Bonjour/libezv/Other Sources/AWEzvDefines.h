@@ -46,7 +46,8 @@ typedef enum _AWEzvTyping {
 } AWEzvTyping;
 
 typedef enum _AWEzvErrorSeverity {
-    AWEzvError = 1,
+    AWEzvConnectionError = 1,
+	AWEzvError,
     AWEzvWarning,
     AWEzvNotice    
 } AWEzvErrorSeverity;

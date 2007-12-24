@@ -200,7 +200,7 @@ void image_register_reply (
 		[fDomainBrowser addToCurrentRunLoop];
 		avDNSReference = servRef;
 	} else {
-		[[client client] reportError:@"Could not register DNS service: _presence._tcp" ofLevel:AWEzvError];
+		[[client client] reportError:@"Could not register DNS service: _presence._tcp" ofLevel:AWEzvConnectionError];
 		[self disconnect];
 	}
 }
@@ -224,9 +224,10 @@ void image_register_reply (
 		avDNSReference = nil;
 		imageServiceRef = nil;
 		
-		[self setConnected:NO];
 		[avInstanceName release]; avInstanceName = nil;
 	}
+
+	[self setConnected:NO];
 }
 
 - (void) setConnected:(BOOL)connected {
@@ -300,7 +301,7 @@ void image_register_reply (
 		/* data */ TXTRecordGetBytesPtr(&txtRecord),
 		/* time to live */ 0 );
 	if (updateError != kDNSServiceErr_NoError) {		
-		[[client client] reportError:@"Error updating TXT Record" ofLevel:AWEzvError];
+		[[client client] reportError:@"Error updating TXT Record" ofLevel:AWEzvConnectionError];
 		[self disconnect];
 	}
 }
@@ -414,7 +415,7 @@ void image_register_reply (
 		fServiceBrowser = [[ServiceController alloc] initWithServiceRef:browsRef forContactManager:self];
 		[fServiceBrowser addToCurrentRunLoop];
 	} else {
-		[[client client] reportError:@"Could not browse for _presence._tcp instances" ofLevel:AWEzvError];
+		[[client client] reportError:@"Could not browse for _presence._tcp instances" ofLevel:AWEzvConnectionError];
 		[self disconnect];
 	}
 }
@@ -471,7 +472,7 @@ void image_register_reply (
 			[serviceResolver release];
 
 		} else {
-			[[client client] reportError:@"Could not search for TXT records" ofLevel:AWEzvError];
+			[[client client] reportError:@"Could not search for TXT records" ofLevel:AWEzvConnectionError];
 			[self disconnect];
 		}
 	} else {
@@ -716,15 +717,15 @@ void image_register_reply (
 #warning Localize and report through the connection error system
 			case kDNSServiceErr_Unknown:
 				[[[self client] client] reportError:@"Unknown error in Bonjour Registration"
-						        ofLevel:AWEzvError];
+						        ofLevel:AWEzvConnectionError];
 				break;
 			case kDNSServiceErr_NameConflict:
 				[[[self client] client] reportError:@"A user with your Bonjour data is already online"
-						        ofLevel:AWEzvError];
+						        ofLevel:AWEzvConnectionError];
 				break;
 			default:
 				[[[self client] client] reportError:@"An internal error occurred"
-						        ofLevel:AWEzvError];
+						        ofLevel:AWEzvConnectionError];
 				AWEzvLog(@"Internal error: rendezvous code %d", errorCode);
 				break;
 		}
@@ -745,7 +746,7 @@ void image_register_reply (
 - (void)serviceControllerReceivedFatalError:(ServiceController *)serviceController
 {
 	[[[self client] client] reportError:@"An unrecoverable connection error occurred"
-						        ofLevel:AWEzvError];
+						        ofLevel:AWEzvConnectionError];
 	[self disconnect];
 }
 
@@ -913,6 +914,11 @@ static void	ProcessSockData( CFSocketRef s, CFSocketCallBackType type, CFDataRef
 - (DNSServiceRef) serviceRef
 {
 	return fServiceRef;
+}
+
+- (AWEzvContactManager *)contactManager
+{
+	return contactManager;
 }
 
 - (void) dealloc
