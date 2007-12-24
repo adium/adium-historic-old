@@ -284,6 +284,11 @@
 	LSGetApplicationForURL((CFURLRef)[NSURL URLWithString:@"mailto://"], kLSRolesAll, &myAppRef, NULL);
 	LSCopyDisplayNameForRef(&myAppRef, (CFStringRef *)&appName);
 	
+	NSRange appRange;
+	if ((appRange = [appName rangeOfString:@".app" options:(NSCaseInsensitiveSearch | NSBackwardsSearch | NSAnchoredSearch)]).location != NSNotFound) {
+		appName = [[appName substringToIndex:appRange.location] retain];
+	}
+
 	return [appName autorelease];
 }
 
