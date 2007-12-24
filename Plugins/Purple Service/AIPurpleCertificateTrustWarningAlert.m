@@ -169,6 +169,8 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 									contextInfo:fakeWindow
 										  trust:trustRef
 										message:[NSString stringWithFormat:AILocalizedString(@"The certificate of the server %@ is not trusted, which means that the server's identity cannot be automatically verified. Do you want to continue connecting?\n\nFor more information, click \"Show Certificate\".",nil),hostname]];
+				[fakeWindow makeKeyAndOrderFront:nil];
+
 				break;
 			}				
 			default:
