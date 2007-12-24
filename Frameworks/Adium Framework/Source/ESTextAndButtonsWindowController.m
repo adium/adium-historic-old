@@ -364,11 +364,14 @@
 	}
 	
 	//Set the default button
-	NSRect newFrame;
+	NSRect newFrame, oldFrame;
+	oldFrame = [button_default frame];
+
 	[button_default setTitle:(defaultButton ? defaultButton : AILocalizedString(@"OK",nil))];
 	[button_default sizeToFit];
 	
 	newFrame = [button_default frame];
+
 	/* For NSButtons, sizeToFit is 8 pixels smaller than the HIG recommended size  */
 	newFrame.size.width += 8;
 	/* Only use integral widths to keep alignment correct; round up as an extra pixel of whitespace never hurt anybody */
@@ -380,6 +383,8 @@
 	
 	//Set the alternate button if we were provided one, otherwise hide it
 	if (alternateButton) {
+		oldFrame = [button_alternate frame];
+
 		[button_alternate setTitle:alternateButton];
 		[button_alternate sizeToFit];
 		
@@ -390,12 +395,15 @@
 		newFrame.size.width = round(NSWidth(newFrame) + 0.5);
 		if (newFrame.size.width < 90) newFrame.size.width = 90;
 		newFrame.origin.x = NSMinX([button_default frame]) - NSWidth(newFrame) + 2;
-		
+
 		[button_alternate setFrame:newFrame];
 
 		//Set the other button if we were provided one, otherwise hide it
 		if (otherButton) {
-			NSRect oldFrame = [button_other frame];
+			[window setFrame:windowFrame display:NO animate:NO];
+
+			oldFrame = [button_other frame];
+
 			[button_other setTitle:otherButton];
 
 			[button_other sizeToFit];
@@ -407,14 +415,23 @@
 			newFrame.size.width = round(NSWidth(newFrame) + 0.5);
 			if (newFrame.size.width < 90) newFrame.size.width = 90;
 
-			newFrame.origin.x = oldFrame.origin.x;
+			newFrame.origin.x = NSMinX([button_alternate frame]) - 36 - NSWidth(newFrame);
 			
 			[button_other setFrame:newFrame];
 			
-			if (NSMaxX([button_other frame]) >= (NSMinX([button_alternate frame]) + 10)) {
-				windowFrame.size.width += 10 - (NSMinX([button_alternate frame]) - NSMaxX([button_other frame]));
+			//Increase the window size to keep our origin in the same location after resizing
+			unsigned int oldAutosizingMask = [button_other autoresizingMask]; 
+			[button_other setAutoresizingMask:(NSViewMinYMargin | NSViewMinXMargin)];
+			windowFrame.size.width += oldFrame.origin.x - newFrame.origin.x;
+			[window setFrame:windowFrame display:NO animate:NO];
+			if (NSMinX([button_other frame]) < 18) {
+				//Keep the left side far enough away from the left side of the window
+				windowFrame.size.width += 18 - NSMinX([button_other frame]);
+				[window setFrame:windowFrame display:NO animate:NO];				
 			}
-			
+
+			[button_other setAutoresizingMask:oldAutosizingMask];
+
 		} else {
 			[button_other setHidden:YES];
 		}
