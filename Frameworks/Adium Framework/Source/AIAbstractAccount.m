@@ -1248,6 +1248,7 @@
 			AILog(@"%@: Disconnected (\"%@\"): Automatically reconnecting immediately", self, lastDisconnectionError);
 			[self performAutoreconnect];
 		} else {
+			AILog(@"%@: Disconnected: Will not reconnect");
 			if (lastDisconnectionError) {
 				[[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Error",[self UID],[[self service] shortDescription]]
 												withDescription:lastDisconnectionError];
@@ -1256,6 +1257,9 @@
 			//Reset reconnection attempts
 			reconnectAttemptsPerformed = 0;
 		}
+	} else {
+		AILog(@"%@: Disconnected; should be online? %@; lastDisconnectionError %@",
+			  self, ([self shouldBeOnline] ? @"Yes" : @"No"), lastDisconnectionError);
 	}
 }
 
