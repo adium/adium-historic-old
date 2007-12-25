@@ -871,18 +871,17 @@ static void	ProcessSockData( CFSocketRef s, CFSocketCallBackType type, CFDataRef
 // CFRunloop callback that notifies dns_sd when new data appears on a DNSServiceRef's socket.
 {
 	ServiceController *self = (ServiceController *)info;
-	DNSServiceRef		serviceRef = (DNSServiceRef) info;
 	DNSServiceErrorType err = DNSServiceProcessResult([self serviceRef]);
 	if (err != kDNSServiceErr_NoError) {
 		if ((err == kDNSServiceErr_Unknown) && !data) {
 			//Try to accept(2) a connection. May be the cause of a hang on Tiger; see #7887.
 			int socketFD = CFSocketGetNative(s);
 			int childFD = accept(s, /*addr*/ NULL, /*addrlen*/ NULL);
-			AILog(@"Received an unknown error with no data; perhaps mDNSResponder crashed? Result of calling accept(2) on fd %d is %d", socketFD, childFD);
+			AILog(@"%@: Received an unknown error with no data; perhaps mDNSResponder crashed? Result of calling accept(2) on fd %d is %d; will disconnect with error",
+				  self, socketFD, childFD);
 			//We don't actually *want* a connection, so close the socket immediately.
 			if (childFD > -1) close(childFD);
 
-			AILog(@"Received an unknown error with no data; perhaps mDNSResponder crashed? Disconnecting with error.");
 			[[self contactManager] serviceControllerReceivedFatalError:self];
 
 		} else {
@@ -931,7 +930,7 @@ static void	ProcessSockData( CFSocketRef s, CFSocketCallBackType type, CFDataRef
 - (void) dealloc
 /* Remove service from runloop, deallocate service and associated resources */
 {
-	AILogWithSignature(@"");
+	AILogWithSignature(@"%@", self);
 	if (fSocketRef != nil) {
 		CFSocketInvalidate( fSocketRef);		// Note: Also closes the underlying socket
 		CFRelease( fSocketRef);
