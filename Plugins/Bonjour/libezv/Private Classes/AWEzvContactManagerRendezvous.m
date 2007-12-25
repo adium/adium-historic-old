@@ -232,11 +232,13 @@ void image_register_reply (
 }
 
 - (void) setConnected:(BOOL)connected {
-	isConnected = connected;
-	if (connected)
-		[[client client] reportLoggedIn];
-	else
-		[[client client] reportLoggedOut];
+	if (isConnected != connected) {
+		isConnected = connected;
+		if (connected)
+			[[client client] reportLoggedIn];
+		else
+			[[client client] reportLoggedOut];
+	}
 }
 
 - (void)setStatus:(AWEzvStatus)status withMessage:(NSString *)message {
