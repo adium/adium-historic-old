@@ -1248,7 +1248,7 @@
 			AILog(@"%@: Disconnected (\"%@\"): Automatically reconnecting immediately", self, lastDisconnectionError);
 			[self performAutoreconnect];
 		} else {
-			AILog(@"%@: Disconnected: Will not reconnect");
+			AILog(@"%@: Disconnected: Will not reconnect", self);
 			if (lastDisconnectionError) {
 				[[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Error",[self UID],[[self service] shortDescription]]
 												withDescription:lastDisconnectionError];
