@@ -75,6 +75,7 @@
 
 - (id)initWithServiceRef:(DNSServiceRef)ref forContactManager:(AWEzvContactManager *)inContactManager;
 - (boolean_t)addToCurrentRunLoop;
+- (void)breakdownServiceController;
 - (DNSServiceRef)serviceRef;
 
 @end // interface ServiceController
@@ -871,6 +872,7 @@ static void	ProcessSockData( CFSocketRef s, CFSocketCallBackType type, CFDataRef
 // CFRunloop callback that notifies dns_sd when new data appears on a DNSServiceRef's socket.
 {
 	ServiceController *self = (ServiceController *)info;
+
 	DNSServiceErrorType err = DNSServiceProcessResult([self serviceRef]);
 	if (err != kDNSServiceErr_NoError) {
 		if ((err == kDNSServiceErr_Unknown) && !data) {
@@ -882,7 +884,10 @@ static void	ProcessSockData( CFSocketRef s, CFSocketCallBackType type, CFDataRef
 			//We don't actually *want* a connection, so close the socket immediately.
 			if (childFD > -1) close(childFD);
 
+			[self retain];
 			[[self contactManager] serviceControllerReceivedFatalError:self];
+			[self breakdownServiceController];
+			[self release];
 
 		} else {
 			AILog(@"DNSServiceProcessResult() for socket descriptor %d returned an error! %d with CFSocketCallBackType %d and data %s\n",
@@ -903,18 +908,19 @@ static void	ProcessSockData( CFSocketRef s, CFSocketCallBackType type, CFDataRef
 - (boolean_t) addToCurrentRunLoop
 /* Add the service to the current runloop. Returns non-zero on success. */
 {
-	CFSocketContext			ctx = { 1, self, nil, nil, nil };
+	CFSocketContext			ctx = { 1, self, NULL, NULL, NULL };
 
-	fSocketRef = CFSocketCreateWithNative( kCFAllocatorDefault, DNSServiceRefSockFD( fServiceRef), 
+	fSocketRef = CFSocketCreateWithNative(kCFAllocatorDefault, DNSServiceRefSockFD(fServiceRef),
 										kCFSocketReadCallBack, ProcessSockData, &ctx);
-	if ( fSocketRef != nil)
-		fRunloopSrc = CFSocketCreateRunLoopSource( kCFAllocatorDefault, fSocketRef, 1);
-	if ( fRunloopSrc != nil)
-		CFRunLoopAddSource( CFRunLoopGetCurrent(), fRunloopSrc, kCFRunLoopDefaultMode);
-	else
+	if (fSocketRef != NULL)
+		fRunloopSrc = CFSocketCreateRunLoopSource(kCFAllocatorDefault, fSocketRef, 1);
+	if (fRunloopSrc != NULL) {
+		AILogWithSignature(@"Adding run loop source %p from run loop %p", fRunloopSrc, CFRunLoopGetCurrent());
+		CFRunLoopAddSource(CFRunLoopGetCurrent(), fRunloopSrc, kCFRunLoopDefaultMode);
+	} else
 		AILog(@"%@: Could not listen to runloop socket", self);
 
-	return fRunloopSrc != nil;
+	return (fRunloopSrc != NULL);
 }
 
 - (DNSServiceRef) serviceRef
@@ -931,21 +937,35 @@ static void	ProcessSockData( CFSocketRef s, CFSocketCallBackType type, CFDataRef
 /* Remove service from runloop, deallocate service and associated resources */
 {
 	AILogWithSignature(@"%@", self);
-	if (fSocketRef != nil) {
-		CFSocketInvalidate( fSocketRef);		// Note: Also closes the underlying socket
-		CFRelease( fSocketRef);
-	}
 
-	if (fRunloopSrc != nil) {
-		CFRunLoopRemoveSource( CFRunLoopGetCurrent(), fRunloopSrc, kCFRunLoopDefaultMode);
-		CFRelease( fRunloopSrc);
-	}
+	[self breakdownServiceController];
 
-	DNSServiceRefDeallocate( fServiceRef);
-
-	[contactManager release];
-	
 	[super dealloc];
+}
+
+- (void)breakdownServiceController
+{
+	AILogWithSignature(@"%@", self);
+
+	if (fSocketRef != NULL) {
+		CFSocketInvalidate(fSocketRef);		// Note: Also closes the underlying socket
+		CFRelease(fSocketRef);
+		fSocketRef = NULL;
+	}
+
+	if (fRunloopSrc != NULL) {
+		AILogWithSignature(@"Removing run loop source %p from run loop %p", fRunloopSrc, CFRunLoopGetCurrent());
+		CFRunLoopRemoveSource(CFRunLoopGetCurrent(), fRunloopSrc, kCFRunLoopDefaultMode);
+		CFRelease(fRunloopSrc);
+		fRunloopSrc = NULL;
+	}
+
+	if (fServiceRef) {
+		DNSServiceRefDeallocate(fServiceRef);
+		fServiceRef = NULL;
+	}
+
+	[contactManager release]; contactManager = nil;
 }
 
 @end // implementation ServiceController
