@@ -11,6 +11,7 @@
 #import <Security/SecureTransport.h>
 #import <Security/SecPolicySearch.h>
 #import <Security/oidsalg.h>
+#import <Adium/AIAccountControllerProtocol.h>
 #import "ESPurpleJabberAccount.h"
 
 static NSMutableDictionary *acceptedCertificates = nil;
@@ -149,12 +150,11 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 			case kSecTrustResultRecoverableTrustFailure: // trust broken, perhaps argue with the user
 			case kSecTrustResultOtherError: // failure other than trust evaluation; e.g., internal failure of the SecTrustEvaluate function. We'll let the user decide where to go from here.
 			{
+				
+#if 0
+				//Show on an independent window. This fails oddly. We should just implement our own window and use SFCertificateView.
 				SFCertificateTrustPanel *trustpanel = [[SFCertificateTrustPanel alloc] init];
 				
-				// this could probably be used for a more detailed message:
-				//	CFArrayRef certChain;
-				//	CSSM_TP_APPLE_EVIDENCE_INFO *statusChain;
-				//	err = SecTrustGetResult(trustRef, &result, &certChain, &statusChain);
 #define TRUST_PANEL_WIDTH 535
 				NSWindow *fakeWindow = [[[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, TRUST_PANEL_WIDTH, 0)
 																	styleMask:NSTitledWindowMask
@@ -169,10 +169,11 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 									contextInfo:fakeWindow
 										  trust:trustRef
 										message:[NSString stringWithFormat:AILocalizedString(@"The certificate of the server %@ is not trusted, which means that the server's identity cannot be automatically verified. Do you want to continue connecting?\n\nFor more information, click \"Show Certificate\".",nil),hostname]];
-				[fakeWindow makeKeyAndOrderFront:nil];
-
+#else
+				//Show as a sheet on the account's preferences
+				[[adium accountController] editAccount:account onWindow:nil notifyingTarget:self];
+#endif
 				break;
-			}				
 			default:
 				/*
 				 * kSecTrustResultFatalTrustFailure -> trust broken, user can't fix it
@@ -189,6 +190,24 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 
 	CFRelease(searchRef);
 	CFRelease(policyRef);
+}
+
+- (void)editAccountWindow:(NSWindow*)window didOpenForAccount:(AIAccount *)inAccount {
+	SFCertificateTrustPanel *trustpanel = [[SFCertificateTrustPanel alloc] init];
+	
+	[trustpanel setAlternateButtonTitle:AILocalizedString(@"Cancel",nil)];
+
+	// this could probably be used for a more detailed message:
+	//	CFArrayRef certChain;
+	//	CSSM_TP_APPLE_EVIDENCE_INFO *statusChain;
+	//	err = SecTrustGetResult(trustRef, &result, &certChain, &statusChain);
+
+	[trustpanel beginSheetForWindow:window
+	                  modalDelegate:self
+	                 didEndSelector:@selector(certificateTrustSheetDidEnd:returnCode:contextInfo:)
+	                    contextInfo:window
+	                          trust:trustRef
+	                        message:[NSString stringWithFormat:AILocalizedString(@"The certificate of the server %@ is not trusted, which means that the server's identity cannot be automatically verified. Do you want to continue connecting?\n\nFor more information, click \"Show Certificate\".",nil),hostname]];
 }
 
 - (void)certificateTrustSheetDidEnd:(SFCertificateTrustPanel *)trustpanel returnCode:(int)returnCode contextInfo:(void *)contextInfo {
