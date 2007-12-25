@@ -174,6 +174,7 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 				[[adium accountController] editAccount:account onWindow:nil notifyingTarget:self];
 #endif
 				break;
+			}
 			default:
 				/*
 				 * kSecTrustResultFatalTrustFailure -> trust broken, user can't fix it
