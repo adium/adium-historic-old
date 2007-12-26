@@ -131,7 +131,6 @@
 		34082690075B5CB900703011 /* Awake.png in Resources */ = {isa = PBXBuildFile; fileRef = 3408268E075B5CB900703011 /* Awake.png */; };
 		34082691075B5CB900703011 /* Flap.png in Resources */ = {isa = PBXBuildFile; fileRef = 3408268F075B5CB900703011 /* Flap.png */; };
 		340B9BD4069C735900FE1E57 /* WebKit Message View.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3499F45006309AC80035B468 /* WebKit Message View.AdiumPlugin */; };
-		340BAB1D09EC6E53000EC441 /* libirc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 340BAB1C09EC6E53000EC441 /* libirc.a */; };
 		340C1A360BD58F9000D09235 /* DiskImageUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 340C1A320BD58F9000D09235 /* DiskImageUtilities.m */; };
 		340C1A380BD58F9000D09235 /* AuthorizedTaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 340C1A340BD58F9000D09235 /* AuthorizedTaskManager.m */; };
 		340C1ABF0BD58FAB00D09235 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 340C1ABE0BD58FAB00D09235 /* Security.framework */; };
@@ -190,6 +189,7 @@
 		341BDBBB0968BC9B00CF83F5 /* OTR.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 341BDBBA0968BC9A00CF83F5 /* OTR.framework */; };
 		341BDF5E0969814A00CF83F5 /* BadgerDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 341BDF5D0969814900CF83F5 /* BadgerDefaults.plist */; };
 		341BDF700969829E00CF83F5 /* DockUnviewedContentDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 341BDF6F0969829E00CF83F5 /* DockUnviewedContentDefaults.plist */; };
+		3420B7200D222D2100605780 /* libpurple.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC90CDAA8D400B8E233 /* libpurple.framework */; };
 		342113CE08261FB900A3B0FB /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 342113CD08261FB900A3B0FB /* MainMenu.nib */; };
 		342353D709D45726009FF634 /* AIAbstractLogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */; };
 		3428328907D2643F004F01C9 /* ESStatusPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 3428328507D2643F004F01C9 /* ESStatusPreferences.m */; };
@@ -1724,7 +1724,6 @@
 		340915F105C0A5DF00CDE3DD /* PurpleCommon.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PurpleCommon.h; path = "Plugins/Purple Service/PurpleCommon.h"; sourceTree = "<group>"; };
 		340BA84409EC593A000EC441 /* AICorePluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AICorePluginLoader.h; path = "Frameworks/Adium Framework/Source/AICorePluginLoader.h"; sourceTree = "<group>"; };
 		340BA84509EC593B000EC441 /* AICorePluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AICorePluginLoader.m; path = "Frameworks/Adium Framework/Source/AICorePluginLoader.m"; sourceTree = "<group>"; };
-		340BAB1C09EC6E53000EC441 /* libirc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libirc.a; path = "Plugins/IRC Libpurple Plugin/libirc.a"; sourceTree = "<group>"; };
 		340C1A310BD58F9000D09235 /* AuthorizedTaskManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AuthorizedTaskManager.h; path = Source/AuthorizedTaskManager.h; sourceTree = "<group>"; };
 		340C1A320BD58F9000D09235 /* DiskImageUtilities.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DiskImageUtilities.m; path = Source/DiskImageUtilities.m; sourceTree = "<group>"; };
 		340C1A330BD58F9000D09235 /* DiskImageUtilities.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DiskImageUtilities.h; path = Source/DiskImageUtilities.h; sourceTree = "<group>"; };
@@ -3996,11 +3995,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3420B7200D222D2100605780 /* libpurple.framework in Frameworks */,
 				34C7C5DC09EC4D7A0060FB4A /* AdiumLibpurple.framework in Frameworks */,
 				3485D5F409EB406000232CC4 /* AIUtilities.framework in Frameworks */,
 				3485D40409EB3FEA00232CC4 /* Adium.framework in Frameworks */,
 				34B323B809B9FEAC00029361 /* Cocoa.framework in Frameworks */,
-				340BAB1D09EC6E53000EC441 /* libirc.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5152,7 +5151,6 @@
 				3497CBAE09BA0B5D00C0428E /* ESIRCJoinChatViewController.m */,
 				3497CBDD09BA0C0900C0428E /* ESIRCJoinChatView.nib */,
 				3497CC0A09BA0D7900C0428E /* ESIRCAccountViewController.h */,
-				340BAB1C09EC6E53000EC441 /* libirc.a */,
 				3497CC0B09BA0D7900C0428E /* ESIRCAccountViewController.m */,
 				3497CC1B09BA0DC100C0428E /* ESIRCAccountView.nib */,
 				3497CC2609BA0FDB00C0428E /* PurpleDefaultsIRC.plist */,
@@ -7752,7 +7750,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 34B323BB09B9FEAC00029361 /* Build configuration list for PBXNativeTarget "IRC Service Libpurple Plugin" */;
 			buildPhases = (
-				340BABD409EC8C6C000EC441 /* ShellScript */,
 				34B3234409B9FEAC00029361 /* Resources */,
 				34B3236E09B9FEAC00029361 /* Sources */,
 				34B323B609B9FEAC00029361 /* Frameworks */,
@@ -8473,20 +8470,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
-		};
-		340BABD409EC8C6C000EC441 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Plugins/IRC Libpurple Plugin/libirc.a",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "ranlib \"${SCRIPT_INPUT_FILE_0}\"";
 		};
 		345DFF4A05564DB200CEE7B3 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -10883,30 +10866,34 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(SRCROOT)/Frameworks",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Purple\\ Service";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Frameworks\"";
+				GCC_C_LANGUAGE_STANDARD = gnu89;
 				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
-					"$(SDKROOT)/usr/include/libxml2",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 				);
-				HEADER_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Purple\\ Service/Libpurple.framework/Headers";
-				HEADER_SEARCH_PATHS_QUOTED_2 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib";
-				HEADER_SEARCH_PATHS_QUOTED_3 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/glib";
-				HEADER_SEARCH_PATHS_QUOTED_4 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/gmodule";
-				HEADER_SEARCH_PATHS_QUOTED_5 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/gobject";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"Plugins/Purple Service/Include/glib\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"Plugins/Purple Service/Include\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SDKROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/Frameworks/libpurple.framework/Headers\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "\"$(SRCROOT)/Frameworks/libintl.framework/Headers\"";
 				INFOPLIST_FILE = "Plists/IRC Service Libpurple.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(LIBRARY_SEARCH_PATHS)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
-				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libpurple\\ Plugin";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibpurplePlugin;
 			};
@@ -10916,30 +10903,34 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(SRCROOT)/Frameworks",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Purple\\ Service";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Frameworks\"";
+				GCC_C_LANGUAGE_STANDARD = gnu89;
 				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
-					"$(SDKROOT)/usr/include/libxml2",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 				);
-				HEADER_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Purple\\ Service/Libpurple.framework/Headers";
-				HEADER_SEARCH_PATHS_QUOTED_2 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib";
-				HEADER_SEARCH_PATHS_QUOTED_3 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/glib";
-				HEADER_SEARCH_PATHS_QUOTED_4 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/gmodule";
-				HEADER_SEARCH_PATHS_QUOTED_5 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/gobject";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"Plugins/Purple Service/Include/glib\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"Plugins/Purple Service/Include\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SDKROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/Frameworks/libpurple.framework/Headers\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "\"$(SRCROOT)/Frameworks/libintl.framework/Headers\"";
 				INFOPLIST_FILE = "Plists/IRC Service Libpurple.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(LIBRARY_SEARCH_PATHS)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
-				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libpurple\\ Plugin";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibpurplePlugin;
 			};
@@ -10949,30 +10940,34 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(SRCROOT)/Frameworks",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Purple\\ Service";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Frameworks\"";
+				GCC_C_LANGUAGE_STANDARD = gnu89;
 				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
-					"$(SDKROOT)/usr/include/libxml2",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 				);
-				HEADER_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Purple\\ Service/Libpurple.framework/Headers";
-				HEADER_SEARCH_PATHS_QUOTED_2 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib";
-				HEADER_SEARCH_PATHS_QUOTED_3 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/glib";
-				HEADER_SEARCH_PATHS_QUOTED_4 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/gmodule";
-				HEADER_SEARCH_PATHS_QUOTED_5 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/gobject";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"Plugins/Purple Service/Include/glib\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"Plugins/Purple Service/Include\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SDKROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/Frameworks/libpurple.framework/Headers\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "\"$(SRCROOT)/Frameworks/libintl.framework/Headers\"";
 				INFOPLIST_FILE = "Plists/IRC Service Libpurple.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(LIBRARY_SEARCH_PATHS)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
-				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libpurple\\ Plugin";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibpurplePlugin;
 			};
@@ -10982,30 +10977,34 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(SRCROOT)/Frameworks",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Purple\\ Service";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Frameworks\"";
+				GCC_C_LANGUAGE_STANDARD = gnu89;
 				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
-					"$(SDKROOT)/usr/include/libxml2",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 				);
-				HEADER_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Purple\\ Service/Libpurple.framework/Headers";
-				HEADER_SEARCH_PATHS_QUOTED_2 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib";
-				HEADER_SEARCH_PATHS_QUOTED_3 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/glib";
-				HEADER_SEARCH_PATHS_QUOTED_4 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/gmodule";
-				HEADER_SEARCH_PATHS_QUOTED_5 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/gobject";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"Plugins/Purple Service/Include/glib\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"Plugins/Purple Service/Include\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SDKROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/Frameworks/libpurple.framework/Headers\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "\"$(SRCROOT)/Frameworks/libintl.framework/Headers\"";
 				INFOPLIST_FILE = "Plists/IRC Service Libpurple.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(LIBRARY_SEARCH_PATHS)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
-				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libpurple\\ Plugin";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibpurplePlugin;
 			};
