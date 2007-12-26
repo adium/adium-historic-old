@@ -185,7 +185,8 @@
 		[inModifiedKeys containsObject:@"IdleSince"] ||
 		[inModifiedKeys containsObject:@"Signed Off"] ||
 		[inModifiedKeys containsObject:@"New Object"] ||
-		[inModifiedKeys containsObject:@"VisibleObjectCount"]) {
+		[inModifiedKeys containsObject:@"VisibleObjectCount"] ||
+		[inModifiedKeys containsObject:@"IsMobile"]) {
 
 		if ([inObject isKindOfClass:[AIListContact class]]) {
 			BOOL visible = YES;
