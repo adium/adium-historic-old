@@ -203,7 +203,7 @@ OSStatus ChangeWindowTags(WindowRef theWindow, WindowTags setThese, WindowTags c
 	if ([NSApp isOnLeopardOrBetter]) {
 		NSLog(@"%s called! You should not use this method on Leopard until this warning is removed.", __PRETTY_FUNCTION__);
 	}
-	NSLog(@"setIgnoresExpose:%@ called; changing stickiness of window %@", flag ? @"YES" : @"NO", self);
+
 	ChangeWindowTags([self windowRef],
 					 (flag ? kWindowExposeIsStickyTag : kWindowNoTags),
 					 (!flag ? kWindowExposeIsStickyTag : kWindowNoTags)); 
