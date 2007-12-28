@@ -183,7 +183,6 @@
 	[[adium preferenceController] setPreference:[NSNumber numberWithInt:entryMinHeight]
 										 forKey:KEY_ENTRY_TEXTVIEW_MIN_HEIGHT
 										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-	AILogWithSignature(@"entryMinHeight is saved as %i",entryMinHeight);
 
 	if (userListController) {
 		[self saveUserListMinimumSize];
@@ -689,8 +688,7 @@
 	//User's choice of mininum height for their text entry view
 	entryMinHeight = [[[adium preferenceController] preferenceForKey:KEY_ENTRY_TEXTVIEW_MIN_HEIGHT
 															   group:PREF_GROUP_DUAL_WINDOW_INTERFACE] intValue];
-	if (entryMinHeight < ENTRY_TEXTVIEW_MIN_HEIGHT) entryMinHeight = ENTRY_TEXTVIEW_MIN_HEIGHT;
-	AILogWithSignature(@"entryMinHeight is %i",entryMinHeight);
+	if (entryMinHeight <= 0) entryMinHeight = [self _textEntryViewProperHeightIgnoringUserMininum:YES];
 
 	//Associate the view with our message view so it knows which view to scroll in response to page up/down
 	//and other special key-presses.
@@ -1112,7 +1110,6 @@
 {
 	if (sender == splitView_textEntryHorizontal) {
 		entryMinHeight = (int)([sender frame].size.height - (proposedPosition + [sender dividerThickness]));
-		AILogWithSignature(@"entryMinHeight is now %i",entryMinHeight);
 	} else {
 		NSLog(@"Unknown split view %@",sender);
 		return 0;
