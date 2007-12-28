@@ -124,7 +124,7 @@
 				<cocoa key="scriptingUID" />
 			</property>
 			<property name="display name" code="Pdnm" type="text" access="rw" description="The display name of this account"/>
-			<property name="service" code="Psrv" type="service" access="r" description="The service this account is registered under" />
+			<property name="service" code="Csrv" type="service" access="r" description="The service this account is registered under" />
 			<property name="enabled" code="Penb" type="boolean" access="r" description="Whether or not this account is enabled" />
 			<property name="host" code="Phst" type="text" access="r" description="The host this account is connected to" />
 			<property name="port" code="Pprt" type="integer" access="r" description="The port this account is connected to" />
