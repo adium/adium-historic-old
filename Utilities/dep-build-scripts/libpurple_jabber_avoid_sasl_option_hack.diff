@@ -1,4 +1,4 @@
---- /Users/evands/pidgin/libpurple/protocols/jabber/auth.c	2007-12-22 10:53:25.000000000 -0600
+--- libpurple/protocols/jabber/auth.c	2007-12-22 10:53:25.000000000 -0600
 +++ auth.c	2007-12-27 21:33:53.000000000 -0600
 @@ -414,6 +414,31 @@ static void jabber_auth_start_cyrus(Jabb
  			js->sasl = NULL;
