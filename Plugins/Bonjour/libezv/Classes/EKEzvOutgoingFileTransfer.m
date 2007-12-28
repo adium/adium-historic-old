@@ -120,10 +120,9 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 - (bool) processTransfer
 {
 	/*Check to see if it is a directory, mimetype, etc... */
-	NSFileManager *manager = [NSFileManager defaultManager];
 	NSString *path = [self localFilename];
 	BOOL directory = NO;
-	BOOL exists = [manager fileExistsAtPath:path isDirectory:&directory];
+	BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&directory];
 	if (!exists) {
 		[self cancelTransfer];
 		return NO;
@@ -132,7 +131,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 		isDirectory = YES;
 	}
 
-	[self setMimeType: [self mimeTypeForPath:path]];
+	[self setMimeType:[self mimeTypeForPath:path]];
 	posixflags = [self posixFlagsForPath:path];
 
 	if (posixflags == nil) {
@@ -156,8 +155,8 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 		/*First we need to get the NSData for the xml to describe the directory contents*/
 		directoryXMLData = [[self generateDirectoryXML] retain];
 		/* Now we need to get the NSData for each item in the directory */
-		NSFileManager *manager = [NSFileManager defaultManager];
-		NSDirectoryEnumerator *enumerator = [manager enumeratorAtPath:[self localFilename]];
+		NSFileManager *fileManager = [NSFileManager defaultManager];
+		NSDirectoryEnumerator *enumerator = [fileManager enumeratorAtPath:[self localFilename]];
 		NSString *file;
 		NSString *basePath = [[self localFilename] stringByAppendingString:@"/"];
 		while (file = [enumerator nextObject]) {
@@ -165,7 +164,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 
 			BOOL exists = NO;
 			BOOL directory = NO;
-			exists = [manager fileExistsAtPath:fullPath isDirectory:&directory];
+			exists = [fileManager fileExistsAtPath:fullPath isDirectory:&directory];
 			if (!exists) {
 				[[[[self manager] client] client] reportError:@"File to transfer no longer exists." ofLevel:AWEzvError];
 
@@ -256,15 +255,15 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 	 * </dir>
 	 **/
 	NSMutableArray *children = [NSMutableArray arrayWithCapacity:10];
-	NSFileManager *manager = [NSFileManager defaultManager];
-	NSEnumerator *enumerator = [[manager directoryContentsAtPath:basePath] objectEnumerator];
+	NSFileManager *fileManager = [NSFileManager defaultManager];
+	NSEnumerator *enumerator = [[fileManager directoryContentsAtPath:basePath] objectEnumerator];
 
 	NSString *file;
 	while (file = [enumerator nextObject]) {
 		NSString *newPath = [basePath stringByAppendingPathComponent:file];
 		bool exists = NO;
 		bool directory = NO;
-		exists = [manager fileExistsAtPath:newPath isDirectory:&directory];
+		exists = [fileManager fileExistsAtPath:newPath isDirectory:&directory];
 		if (!exists) {
 			[[[[self manager] client] client] reportError:@"File to transfer no longer exists." ofLevel:AWEzvError];
 			return nil;
@@ -471,8 +470,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 - (NSString *)posixFlagsForPath:(NSString *)filePath
 {
 	NSString *posixFlags = nil;
-	NSFileManager *manager = [NSFileManager defaultManager];
-	NSDictionary *attributes = [manager fileAttributesAtPath:filePath traverseLink:NO];
+	NSDictionary *attributes = [[NSFileManager defaultManager] fileAttributesAtPath:filePath traverseLink:NO];
 	if (attributes && [attributes objectForKey:NSFilePosixPermissions]) {
 		NSNumber *posixInfo = [attributes objectForKey:NSFilePosixPermissions];
 		posixFlags = [NSString stringWithFormat:@"%X", [posixInfo longValue]];
@@ -498,8 +496,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 - (NSString *)sizeForPath:(NSString *)filePath
 {
 	NSString *fileSize = nil;
-	NSFileManager *manager = [NSFileManager defaultManager];
-	NSDictionary *attributes = [manager fileAttributesAtPath:filePath traverseLink:NO];
+	NSDictionary *attributes = [[NSFileManager defaultManager] fileAttributesAtPath:filePath traverseLink:NO];
 	if (attributes && [attributes objectForKey:NSFileSize]) {
 		NSNumber *fileSizeNumber = [attributes objectForKey:NSFileSize];
 		fileSize = [NSString stringWithFormat:@"%qu", [fileSizeNumber unsignedLongLongValue]];
@@ -511,8 +508,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 - (NSNumber *)sizeNumberForPath:(NSString *)filePath
 {
 	NSNumber *fileSize = nil;
-	NSFileManager *manager = [NSFileManager defaultManager];
-	NSDictionary *attributes = [manager fileAttributesAtPath:filePath traverseLink:NO];
+	NSDictionary *attributes = [[NSFileManager defaultManager] fileAttributesAtPath:filePath traverseLink:NO];
 	if (attributes && [attributes objectForKey:NSFileSize]) {
 		fileSize = [attributes objectForKey:NSFileSize];
 	}
@@ -558,7 +554,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 	bytesSent = bytesSent+length;
 	percentComplete=((float)bytesSent/(float)[[self sizeNumber] floatValue]);
 	if (percentComplete < 1.0) {
-		[[[manager client] client] updateProgressForFileTransfer:self percent:[NSNumber numberWithFloat:percentComplete] bytesSent:[NSNumber numberWithLongLong:bytesSent]];
+		[[[self manager] client] client] updateProgressForFileTransfer:self percent:[NSNumber numberWithFloat:percentComplete] bytesSent:[NSNumber numberWithLongLong:bytesSent]];
 	}
 }
 

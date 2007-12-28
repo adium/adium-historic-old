@@ -90,7 +90,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 	NSError *error = nil;
 	NSXMLDocument *documentRoot = [[NSXMLDocument alloc] initWithContentsOfURL:URL options:0 error:&error];
 	if (error) {
-		[[[manager client] client] remoteCanceledFileTransfer:self];
+		[[[[self manager] client] client] remoteCanceledFileTransfer:self];
 		return;
 	}
 	/*NO error so we have the xml */
@@ -98,22 +98,22 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 	/*We don't care about the root name because the user can rename it*/
 	NSString *posixFlags = [[root attributeForName:@"posixflags"] objectValue];
 
-	NSFileManager *defaultManager = [NSFileManager defaultManager];
+	NSFileManager *fileManager = [NSFileManager defaultManager];
 
 	bool isDirectory = NO;
-	bool exists = [defaultManager fileExistsAtPath:localFilename isDirectory:&isDirectory];
+	bool exists = [fileManager fileExistsAtPath:localFilename isDirectory:&isDirectory];
 	if (exists && isDirectory) {
 		/*We need to remove this file*/
-		if (![defaultManager removeFileAtPath:localFilename handler:nil]) {
-			[[[manager client] client] reportError:@"Could not replace old file at path" ofLevel:AWEzvError];
-			[[[manager client] client] remoteCanceledFileTransfer:self];
+		if (![fileManager removeFileAtPath:localFilename handler:nil]) {
+			[[[[self manager] client] client] reportError:@"Could not replace old file at path" ofLevel:AWEzvError];
+			[[[[self manager] client] client] remoteCanceledFileTransfer:self];
 			return;
 		}
 	}
 
-	if (![defaultManager createDirectoryAtPath:localFilename attributes:[self posixAttributesFromString:posixFlags]]) {
-		[[[manager client] client] reportError:@"There was an error creating the root directory for the file tranfer" ofLevel:AWEzvError];
-		[[[manager client] client] remoteCanceledFileTransfer:self];
+	if (![fileManager createDirectoryAtPath:localFilename attributes:[self posixAttributesFromString:posixFlags]]) {
+		[[[[self manager] client] client] reportError:@"There was an error creating the root directory for the file tranfer" ofLevel:AWEzvError];
+		[[[[self manager] client] client] remoteCanceledFileTransfer:self];
 		return;
 	}
 
@@ -150,15 +150,15 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 				[self downloadURL:url toPath:path];
 				url = nil;
 			} else {
-				[[[manager client] client] reportError:[NSString stringWithFormat:@"Error downloading file from %@ to %@", url, path] ofLevel:AWEzvError];
-				[[[manager client] client] remoteCanceledFileTransfer:self];
+				[[[[self manager] client] client] reportError:[NSString stringWithFormat:@"Error downloading file from %@ to %@", url, path] ofLevel:AWEzvError];
+				[[[[self manager] client] client] remoteCanceledFileTransfer:self];
 			}
 		}
 
 
 		[permissionsToApply retain];
 	} else {
-		[[[manager client] client] remoteCanceledFileTransfer:self];
+		[[[[self manager] client] client] remoteCanceledFileTransfer:self];
 	}
 }
 - (bool)downloadFolder:(NSXMLElement *)root path:(NSString *)rootPath url:(NSString *)rootURL
@@ -175,7 +175,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 
 		NSArray *nameChildren = [root elementsForName:@"name"];
 		if (!nameChildren) {
-			[[[manager client] client] reportError:@"Could not download file because there is no name" ofLevel:AWEzvError];
+			[[[[self manager] client] client] reportError:@"Could not download file because there is no name" ofLevel:AWEzvError];
 			return NO;
 		}
 		NSString *name = [[nameChildren objectAtIndex:0] stringValue];
@@ -195,7 +195,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 		/*Find the name of the directory*/
 		NSArray *nameChildren = [root elementsForName:@"name"];
 		if (!nameChildren) {
-			[[[manager client] client] reportError:@"Could not download directory because there was no name." ofLevel: AWEzvError];
+			[[[[self manager] client] client] reportError:@"Could not download directory because there was no name." ofLevel: AWEzvError];
 			return NO;
 		}
 		NSString *name = [[nameChildren objectAtIndex:0] stringValue];
@@ -205,7 +205,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 		NSString *newPath = [rootPath stringByAppendingPathComponent:name];
 
 		if (![defaultManager createDirectoryAtPath:newPath attributes:[self posixAttributesFromString:posixFlags]]) {
-			[[[manager client] client] reportError:@"Could not create directory for transfer." ofLevel: AWEzvError];
+			[[[[self manager] client] client] reportError:@"Could not create directory for transfer." ofLevel: AWEzvError];
 			
 			return NO;	
 		}
@@ -226,7 +226,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 		}
 		return (fileSuccess && folderSuccess);
 	} else{
-		[[[manager client] client] reportError:@"Error, attempting to download something which is not a directory or a file." ofLevel: AWEzvError];
+		[[[[self manager] client] client] reportError:@"Error, attempting to download something which is not a directory or a file." ofLevel: AWEzvError];
 		
 		return NO;
 	}
@@ -381,12 +381,11 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 - (BOOL)decodeAppleSingleAtPath:(NSString *)path
 {
 	/*Get NSData from path*/
-	NSFileManager *manager = [NSFileManager defaultManager];
-	if (![manager fileExistsAtPath:path]) {
+	if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
 		[[[manager client] client] reportError:@"AppleSingle: Could not apply permissions to file because it does not exist." ofLevel: AWEzvError];
 		return NO;
 	}
-	NSData *data = [manager contentsAtPath:path];
+	NSData *data = [[NSFileManager defaultManager] contentsAtPath:path];
 
 	/*Declarations*/
 	unsigned long length = [data length];
