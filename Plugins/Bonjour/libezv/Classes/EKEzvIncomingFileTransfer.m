@@ -79,8 +79,8 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 		while ( download = [enumerator nextObject]) {
 			[download cancel];
 		}
-		[currentDownloads release];
-		[encodedDownloads release];
+		[currentDownloads release]; currentDownloads = nil;
+		[encodedDownloads release]; encodedDownloads = nil;
 	}
 }
 - (void) downloadFolder
@@ -260,11 +260,11 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 - (BOOL) applyPermissions
 {
 	/*Now go through and apply the permissions*/
-	if (permissionsToApply == NULL) {
+	if (!permissionsToApply) {
 		return YES;
 	}
 	if ([permissionsToApply count] <= 0) {
-		[permissionsToApply release];
+		[permissionsToApply release]; permissionsToApply = nil;
 		return YES;
 	}
 	NSEnumerator *enumerator = [permissionsToApply keyEnumerator];
@@ -277,11 +277,11 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 		if (![defaultManager changeFileAttributes:attributes atPath:path]) {
 			[[[manager client] client] reportError:[NSString stringWithFormat:@"Error applying permissions of %@ to file at %@", attributes, path] ofLevel: AWEzvError];
 			[[[manager client] client] remoteCanceledFileTransfer:self];
-			[permissionsToApply release];
+			[permissionsToApply release]; permissionsToApply = nil;
 			return NO;
 		}
 	}
-	[permissionsToApply release];
+	[permissionsToApply release]; permissionsToApply = nil;
 	return YES;
 }
 - (void)downloadURL:(NSURL *)url toPath:(NSString *)path
