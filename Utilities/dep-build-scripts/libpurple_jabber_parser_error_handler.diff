@@ -3,17 +3,15 @@
 #
 # patch "libpurple/protocols/jabber/parser.c"
 #  from [6cecb079972daf216504b3dce358ca781c92c3d9]
-#    to [9a47d8c1d7619d2d51db0f85502ee45208bd9e57]
+#    to [a315ec40314000e4a928ed81819213df5bb6a843]
 #
 ============================================================
 --- libpurple/protocols/jabber/parser.c	6cecb079972daf216504b3dce358ca781c92c3d9
-+++ libpurple/protocols/jabber/parser.c	9a47d8c1d7619d2d51db0f85502ee45208bd9e57
-@@ -132,6 +132,20 @@ jabber_parser_element_text_libxml(void *
++++ libpurple/protocols/jabber/parser.c	a315ec40314000e4a928ed81819213df5bb6a843
+@@ -132,6 +132,18 @@ jabber_parser_element_text_libxml(void *
  	xmlnode_insert_data(js->current, (const char*) text, text_len);
  }
  
-+static void
-+jabber_parser_
 +static void
 +jabber_parser_structured_error_handler(void * userData, xmlErrorPtr error)
 +{
@@ -29,7 +27,7 @@
  static xmlSAXHandler jabber_parser_libxml = {
  	.internalSubset         = NULL,
  	.isStandalone           = NULL,
-@@ -164,7 +178,7 @@ static xmlSAXHandler jabber_parser_libxm
+@@ -164,7 +176,7 @@ static xmlSAXHandler jabber_parser_libxm
  	._private               = NULL,
  	.startElementNs         = jabber_parser_element_start_libxml,
  	.endElementNs           = jabber_parser_element_end_libxml,
