@@ -60,6 +60,7 @@ typedef enum {
 - (BOOL)canCreateGroupChats;
 - (BOOL)canRegisterNewAccounts;
 - (BOOL)supportsProxySettings;
+- (BOOL)supportsPassword;
 - (BOOL)requiresPassword;
 - (void)registerStatuses;
 - (NSString *)defaultUserName;

@@ -53,7 +53,10 @@
 - (BOOL)canCreateGroupChats{
 	return YES;
 }
-//Passwords are optional - XXX right now this means we totally ignore the password field
+- (BOOL)supportsPassword{
+	return YES;
+}
+//Passwords are supported but optional
 - (BOOL)requiresPassword
 {
 	return NO;
