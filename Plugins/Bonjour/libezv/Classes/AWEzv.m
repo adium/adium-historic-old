@@ -140,7 +140,7 @@
 }
 - (void) startOutgoingFileTransfer:(EKEzvOutgoingFileTransfer *)transfer
 {
-	[transfer setManager: manager];
+	[transfer setManager:manager];
 	[transfer startSending];
 }
 
