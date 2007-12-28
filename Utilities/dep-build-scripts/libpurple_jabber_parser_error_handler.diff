@@ -3,17 +3,17 @@
 #
 # patch "libpurple/protocols/jabber/parser.c"
 #  from [6cecb079972daf216504b3dce358ca781c92c3d9]
-#    to [a315ec40314000e4a928ed81819213df5bb6a843]
+#    to [3fa47cc96684386b26ab276ec3ee20f44c7b5b61]
 #
 ============================================================
 --- libpurple/protocols/jabber/parser.c	6cecb079972daf216504b3dce358ca781c92c3d9
-+++ libpurple/protocols/jabber/parser.c	a315ec40314000e4a928ed81819213df5bb6a843
++++ libpurple/protocols/jabber/parser.c	3fa47cc96684386b26ab276ec3ee20f44c7b5b61
 @@ -132,6 +132,18 @@ jabber_parser_element_text_libxml(void *
  	xmlnode_insert_data(js->current, (const char*) text, text_len);
  }
  
 +static void
-+jabber_parser_structured_error_handler(void * userData, xmlErrorPtr error)
++jabber_parser_structured_error_handler(void *user_data, xmlErrorPtr error)
 +{
 +	JabberStream *js = user_data;
 +
