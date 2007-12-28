@@ -14,6 +14,8 @@
 #import <Adium/AIAccountControllerProtocol.h>
 #import "ESPurpleJabberAccount.h"
 
+//#define ALWAYS_SHOW_TRUST_WARNING
+
 static NSMutableDictionary *acceptedCertificates = nil;
 
 @interface AIPurpleCertificateTrustWarningAlert (privateMethods)
@@ -141,10 +143,11 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 		switch(result) {
 			case kSecTrustResultProceed: // trust ok, go right ahead
 			case kSecTrustResultUnspecified: // trust ok, user has no particular opinion about this
+#ifndef ALWAYS_SHOW_TRUST_WARNING
 				query_cert_cb(true, userdata);
 				[self release];
 				break;
-				
+#endif
 			case kSecTrustResultConfirm: // trust ok, but user asked (earlier) that you check with him before proceeding
 			case kSecTrustResultDeny: // trust ok, but user previously said not to trust it anyway
 			case kSecTrustResultRecoverableTrustFailure: // trust broken, perhaps argue with the user
@@ -212,19 +215,24 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 }
 
 - (void)certificateTrustSheetDidEnd:(SFCertificateTrustPanel *)trustpanel returnCode:(int)returnCode contextInfo:(void *)contextInfo {
-	NSWindow *win = (NSWindow*)contextInfo;
-	query_cert_cb(returnCode == NSOKButton, userdata);
-	// if the user confirmed this cert, we store this information until the app is closed so the user doesn't have to re-confirm it every time
-	// (this might be particularily annoying on auto-reconnect)
-	CSSM_DATA certdata;
-	OSStatus err = SecCertificateGetData((SecCertificateRef)CFArrayGetValueAtIndex(certificates, 0), &certdata);
-	if(err == noErr)
-		[acceptedCertificates setObject:[NSData dataWithBytes:certdata.Data length:certdata.Length] forKey:hostname];
+	BOOL didTrustCerficate = (returnCode == NSOKButton);
+	NSWindow *parentWindow = (NSWindow *)contextInfo;
+
+	query_cert_cb(didTrustCerficate, userdata);
+	/* If the user confirmed this cert, we store this information until the app is closed so the user doesn't have to re-confirm it every time
+	 * (doing otherwise might be particularily annoying on auto-reconnect)
+	 */
+	if (didTrustCerficate) {
+		CSSM_DATA certdata;
+		OSStatus err = SecCertificateGetData((SecCertificateRef)CFArrayGetValueAtIndex(certificates, 0), &certdata);
+		if(err == noErr)
+			[acceptedCertificates setObject:[NSData dataWithBytes:certdata.Data length:certdata.Length] forKey:hostname];
+	}
 
 	[trustpanel release];
 	CFRelease(trustRef);
-	
-	[win performSelector:@selector(performClose:) withObject:nil afterDelay:0.0];
+
+	[parentWindow performSelector:@selector(performClose:) withObject:nil afterDelay:0.0];
 	
 	[self release];
 }
