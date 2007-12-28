@@ -17,16 +17,17 @@
 #import "BGICImportController.h"
 #import "BGICLogImportController.h"
 
-#import <AIUtilities/AIFileManagerAdditions.h>
-
-#import "AIStatusController.h"
-#import "AIStatusGroup.h"
-#import "AIAccountController.h"
-
 #import "ESAIMService.h"
 #import "ESDotMacService.h"
 #import "ESJabberService.h"
 #import "AWBonjourService.h"
+
+#import <Adium/AIStatusControllerProtocol.h>
+#import <Adium/AIStatusGroup.h>
+#import <Adium/AIAccountControllerProtocol.h>
+
+#import <AIUtilities/AIFileManagerAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 
 #define ICHAT_LOCATION [@"~/Documents/iChats/" stringByExpandingTildeInPath]
 
@@ -234,7 +235,7 @@
 	// loop through the availables and add them
 	NSArray *customAvailable = [ichatPrefs objectForKey:@"CustomAvailableMessages"];
 	
-	[importStatusDetails setStringValue:[NSString stringWithFormat:[AILocalizedString(@"Now importing %i 'Available' messages", nil) stringByAppendingEllipsis]
+	[importStatusDetails setStringValue:[NSString stringWithFormat:[AILocalizedString(@"Now importing %i 'Available' messages", nil) stringByAppendingEllipsis],
 										 [customAvailable count]]];
 	
 	AIStatusGroup *availableGroup = nil;
@@ -378,7 +379,7 @@
 		[backButton setEnabled:NO];
 		[importAccountsProgress startAnimation:importAccountsProgress];
 		[importAccountsDetails setStringValue:[AILocalizedString(@"Now importing all your accounts from iChat", nil) stringByAppendingEllipsis]];
-		[titleField setStringValue:AILocalizedString(@"Importing Accounts and Settings",nil) stringByAppendingEllipsis]];
+		[titleField setStringValue:[AILocalizedString(@"Importing Accounts and Settings",nil) stringByAppendingEllipsis]];
 		[assistantPanes selectTabViewItemWithIdentifier:@"accounts"];
 		[importAccountsButton setState:NSOffState]; // reset so we don't do this again
 		currentStep--;
