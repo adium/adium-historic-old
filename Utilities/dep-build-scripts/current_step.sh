@@ -50,7 +50,7 @@ pushd $PIDGIN_SOURCE
 # Patches bringing in forward changes from libpurple:
 #
 #  libpurple_jabber_fallback_on_old_auth.diff is in im.pidgin.pidgin but not the 2.3.1 branch; diff from 2e5cda103238f64d27e4ed5aa92c149f6d50a5ec to 16e6cd4ffd8a8308380dc016f0afa782a7750374 -evands 12/07
-# libpurple_jabber_use_builtin_digestmd5.diff is in im.pidgin.pidgin but not the 2.3.1 branch; diff from 16e6cd4ffd8a8308380dc016f0afa782a7750374 to f6430c7013d08f95c60248eeb22c752a0107499b -evands 12/07
+# libpurple_jabber_use_builtin_digestmd5.diff was in im.pidgin.pidgin but not the 2.3.1 branch; diff from 16e6cd4ffd8a8308380dc016f0afa782a7750374 to f6430c7013d08f95c60248eeb22c752a0107499b. It has, however, been disapproved, because Openfire 3.4.x fixes the problem. -evands 12/07
 ###
 # Patches for our own hackery
 #
