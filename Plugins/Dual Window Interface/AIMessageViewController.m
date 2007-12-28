@@ -183,6 +183,8 @@
 	[[adium preferenceController] setPreference:[NSNumber numberWithInt:entryMinHeight]
 										 forKey:KEY_ENTRY_TEXTVIEW_MIN_HEIGHT
 										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+	AILogWithSignature(@"entryMinHeight is saved as %i",entryMinHeight);
+
 	if (userListController) {
 		[self saveUserListMinimumSize];
 	}
