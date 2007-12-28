@@ -275,7 +275,7 @@ enum{
 												errorMessage:AILocalizedString(@"The characters you're entering are not valid for an account name on this service.", nil)]];
 	[[textField_username cell] setPlaceholderString:[service UIDPlaceholder]];
 	
-	BOOL showPasswordField = ![service requiresPassword];
+	BOOL showPasswordField = ![service supportsPassword];
 	[textField_passwordLabel setHidden:showPasswordField];
 	[textField_password setHidden:showPasswordField];
 }

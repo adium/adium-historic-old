@@ -62,7 +62,7 @@
 	return NO;
 }
 //No need for a password for Bonjour accounts
-- (BOOL)requiresPassword
+- (BOOL)supportsPassword
 {
 	return NO;
 }

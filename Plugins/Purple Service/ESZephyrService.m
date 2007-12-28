@@ -73,7 +73,7 @@
 	return YES;
 }
 //No need for a password for Zephyr accounts
-- (BOOL)requiresPassword
+- (BOOL)supportsPassword
 {
 	return NO;
 }

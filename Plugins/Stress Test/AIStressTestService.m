@@ -63,7 +63,7 @@
 - (BOOL)supportsProxySettings{
 	return NO;
 }
-- (BOOL)requiresPassword
+- (BOOL)supportsPassword
 {
 	return NO;
 }
