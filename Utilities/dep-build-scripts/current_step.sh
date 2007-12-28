@@ -8,7 +8,7 @@ GLIB=glib-2.14.1
 MEANWHILE=meanwhile-1.0.2
 GADU=libgadu-1.7.1
 INTLTOOL=intltool-0.36.2
-PROTOCOLS="gg irc jabber msn myspace novell oscar qq sametime simple yahoo zephyr"
+PROTOCOLS="bonjour gg irc jabber msn myspace novell oscar qq sametime simple yahoo zephyr"
 PATCHDIR="$PWD"
 
 if [ "x$PIDGIN_SOURCE" == "x" ] ; then
@@ -46,18 +46,21 @@ fi
 # support. This is OK because OpenSSL is part of the base system on OS X.
 
 pushd $PIDGIN_SOURCE
-#  libpurple_jabber_fallback_on_old_auth.diff is in im.pidgin.pidgin but not the 2.3.1 branch -evands 12/07
-# libpurple_jabber_use_builtin_digestmd5.diff is in im.pidgin.pidgin but not the 2.3.1 branch -evands 12/07
+###
+# Patches bringing in forward changes from libpurple:
 #
-#             "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
-# libpurple_jabber_fallback_on_old_auth includes im.pidgin.pidgin changes 
-#   (pre-2.4.0) and libpurple_jabber_avoid_sasl_option_hack.diff
-
-for patch in "$PATCHDIR/libpurple_sasl_hack.diff" \
+#  libpurple_jabber_fallback_on_old_auth.diff is in im.pidgin.pidgin but not the 2.3.1 branch; diff from 2e5cda103238f64d27e4ed5aa92c149f6d50a5ec to 16e6cd4ffd8a8308380dc016f0afa782a7750374 -evands 12/07
+# libpurple_jabber_use_builtin_digestmd5.diff is in im.pidgin.pidgin but not the 2.3.1 branch; diff from 16e6cd4ffd8a8308380dc016f0afa782a7750374 to f6430c7013d08f95c60248eeb22c752a0107499b -evands 12/07
+###
+# Patches for our own hackery
+#
+# libpurple_jabber_avoid_sasl_option_hack.diff is needed to avoid using PLAIN via SASL on Mac OS X 10.4, where it doesn't work properly
+# libpurple_makefile_linkage_hacks.diff fixes some linkage problems
+###
+for patch in "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
              "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" \
-             "$PATCHDIR/libpurple_jabber_fallback_on_old_auth.diff" \
              "$PATCHDIR/libpurple_jabber_use_builtin_digestmd5.diff" \
-             "$PATCHDIR/libpurple_myspace_hack.diff" ; do
+             "$PATCHDIR/libpurple_jabber_fallback_on_old_auth.diff" ; do
     echo "Applying $patch"
 	cat $patch | patch --forward -p0
 done
@@ -138,8 +141,10 @@ for ARCH in ppc i386 ; do
 done
 
 pushd $PIDGIN_SOURCE
-for patch in "$PATCHDIR/libpurple_sasl_hack.diff" \
-             "$PATCHDIR/libpurple_myspace_hack.diff"; do
+for patch in "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
+             "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" \
+             "$PATCHDIR/libpurple_jabber_use_builtin_digestmd5.diff" \
+             "$PATCHDIR/libpurple_jabber_fallback_on_old_auth.diff" ; do
 	patch -R -p0 < $patch
 done
 popd
