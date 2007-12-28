@@ -60,7 +60,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 	}
 	return self;
 }
-- (void) dealloc
+- (void)dealloc
 {
 	[urlSizes release];
 	[validURLS release];
@@ -81,7 +81,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 	return posixflags;
 }
 
-- (void) setContactUID:(NSString *)newUID
+- (void)setContactUID:(NSString *)newUID
 {
 	if (contactUID != newUID) {
 		[contactUID release];
@@ -89,7 +89,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 	}
 }
 
-- (void) startSending
+- (void)startSending
 {
 	bool success = NO;
 
@@ -118,8 +118,16 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 	/* Now we send the correct information to the contact */
 	[self sendTransferMessage];
 	
-	/* Keep ourself around until the transfer is complete */
+	/* Keep ourself around until the transfer is complete or cancelled */
 	[self retain];
+}
+
+- (void)stopSending
+{
+	[server stop];
+	
+	/* We called -[self retain] in startSending */
+	[self autorelease];
 }
 
 - (bool) processTransfer
@@ -210,7 +218,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 	}
 }
 
-- (void) sendTransferMessage
+- (void)sendTransferMessage
 {
 	[[self contact] sendOutgoingFileTransfer: self];
 }
@@ -521,59 +529,48 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 
 	return fileSize;
 }
-- (void) cancelTransfer
+
+- (void)cancelTransfer
 {
-	if (server) {
-		[server stop];
-	}
-	if (urlData)
-		[urlData release];
-	if (validURLS)
-		[validURLS release];
+	[self stopSending];
 }
 
-- (void) userFailedDownload
+- (void)userFailedDownload
 {
 	[[[[self manager] client] client] remoteCanceledFileTransfer:self];
 }
-- (void) userBeganDownload
+- (void)userBeganDownload
 {
 	[[[[self manager] client] client] remoteUserBeganDownload:self];
 }
 
-- (void) userFinishedDownload
+- (void)userFinishedDownload
 {
 	/* Cleanup the data lying around */
-	if (server) {
-		[server stop];
-	}
-	if (urlData)
-		[urlData release];
-	if (validURLS)
-		[validURLS release];
+	[self stopSending];
 
-	[[[[self manager] client] client] remoteUserFinishedDownload:self];
-	
-	/* We called -[self retain] in startSending */
-	[self autorelease];
+	[[[[self manager] client] client] remoteUserFinishedDownload:self];	
 }
 
 - (void)didSendDataWithLength:(UInt32)length
 {
 	bytesSent = bytesSent+length;
-	percentComplete=((float)bytesSent/(float)[[self sizeNumber] floatValue]);
+	percentComplete = ((float)bytesSent/(float)[[self sizeNumber] floatValue]);
 	if (percentComplete < 1.0) {
-		[[[self manager] client] client] updateProgressForFileTransfer:self percent:[NSNumber numberWithFloat:percentComplete] bytesSent:[NSNumber numberWithLongLong:bytesSent]];
+		[[[[self manager] client] client] updateProgressForFileTransfer:self
+																percent:[NSNumber numberWithFloat:percentComplete] 
+															  bytesSent:[NSNumber numberWithLongLong:bytesSent]];
 	}
 }
 
 - (BOOL)moreFilesToDownload
 {
 	BOOL more = NO;
-	if ( isDirectory && urlData)
+	if (isDirectory && urlData)
 		more = ([urlData count] > 0);
 	return more;
 }
+
 - (NSData *)directoryXMLData
 {
 	return directoryXMLData;
