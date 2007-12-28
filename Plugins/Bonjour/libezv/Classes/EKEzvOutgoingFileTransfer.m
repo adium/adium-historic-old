@@ -92,7 +92,8 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 - (void) startSending
 {
 	bool success = NO;
-	/*Get contact from UID*/
+
+	/* Get contact from UID */
 	[self setContact:[[self manager] contactForIdentifier:contactUID]];
 
 	success = [self processTransfer];
@@ -107,14 +108,18 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 		return;
 	}
 
-	/*We need to start the server*/
+	/* We need to start the server */
 	success = [self startHTTPServer];
 	if (!success) {
 		[[[[self manager] client] client] transferFailed:self];
 		return;
 	}
-	/*Now we send the correct information to the contact */
+	
+	/* Now we send the correct information to the contact */
 	[self sendTransferMessage];
+	
+	/* Keep ourself around until the transfer is complete */
+	[self retain];
 }
 
 - (bool) processTransfer
@@ -137,6 +142,7 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 	if (posixflags == nil) {
 		return NO;
 	}
+
 	return YES;
 }
 
@@ -547,6 +553,9 @@ typedef struct AppleSingleFinderInfo AppleSingleFinderInfo;
 		[validURLS release];
 
 	[[[[self manager] client] client] remoteUserFinishedDownload:self];
+	
+	/* We called -[self retain] in startSending */
+	[self autorelease];
 }
 
 - (void)didSendDataWithLength:(UInt32)length
