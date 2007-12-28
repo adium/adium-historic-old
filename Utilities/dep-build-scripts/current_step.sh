@@ -141,10 +141,10 @@ for ARCH in ppc i386 ; do
 done
 
 pushd $PIDGIN_SOURCE
-for patch in "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
-             "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" \
+for patch in "$PATCHDIR/libpurple_jabber_fallback_on_old_auth.diff" \
              "$PATCHDIR/libpurple_jabber_use_builtin_digestmd5.diff" \
-             "$PATCHDIR/libpurple_jabber_fallback_on_old_auth.diff" ; do
+             "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" \
+             "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" ; do
 	patch -R -p0 < $patch
 done
 popd
