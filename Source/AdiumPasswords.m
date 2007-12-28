@@ -126,22 +126,7 @@
  */
 - (void)passwordForAccount:(AIAccount *)inAccount forcePromptDisplay:(BOOL)forceDisplay notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
-	NSError		*error    = nil;
-	AIKeychain	*keychain = [AIKeychain defaultKeychain_error:&error];
-	NSString	*password = [keychain internetPasswordForServer:[self _passKeyForAccount:inAccount]
-														account:[self _accountNameForAccount:inAccount]
-													   protocol:FOUR_CHAR_CODE('AdIM')
-														  error:&error];
-	if (error) {
-		OSStatus err = [error code];
-		/*errSecItemNotFound: no entry in the keychain. a harmless error.
-		 *we don't get here at all for noErr (error will be nil).
-		 */
-		if (err != errSecItemNotFound) {
-			NSDictionary *userInfo = [error userInfo];
-			NSLog(@"could not retrieve password for account %@: %@ returned %i (%@)", [self _accountNameForAccount:inAccount], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], err, [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
-		}
-	}
+	NSString	*password = [self passwordForAccount:inAccount];
 	
 	if (password && [password length] && !forceDisplay) {
 		//Invoke the target right away
