@@ -56,6 +56,10 @@ pushd $PIDGIN_SOURCE
 #
 # libpurple_jabber_avoid_sasl_option_hack.diff is needed to avoid using PLAIN via SASL on Mac OS X 10.4, where it doesn't work properly
 # libpurple_makefile_linkage_hacks.diff fixes some linkage problems
+#
+#  libpurple_jabber_parser_error_handler.diff adds a handler for jabber errors
+#  which may fix crashes in __xmlRaiseError() --> _structuredErrorFunc().
+#  If it does, we'll commit the fix upstream.
 ###
 for patch in "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
              "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" \
