@@ -67,10 +67,14 @@ static void init_all_plugins()
 
 	//First, initialize our built-in plugins
 	purple_init_ssl_plugin();
-#ifndef HAVE_CDSA
-    purple_init_ssl_openssl_plugin();
-#else
+#ifdef HAVE_CDSA
 	purple_init_ssl_cdsa_plugin();
+#else
+	#ifdef HAVE_OPENSSL
+		purple_init_ssl_openssl_plugin();
+	#else
+		#warning No SSL plugin!
+	#endif
 #endif
 
 	//Load each plugin
