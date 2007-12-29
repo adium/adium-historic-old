@@ -24,7 +24,11 @@ void adium_query_cert_chain(PurpleSslConnection *gsc, const char *hostname, CFAr
 	while((account = [e nextObject])) {
 		if([account secureConnection] == gsc) {
 			if([account shouldVerifyCertificates])
-				[AIPurpleCertificateTrustWarningAlert displayTrustWarningAlertWithAccount:account hostname:[NSString stringWithUTF8String:hostname] certificates:certs resultCallback:query_cert_cb userData:userdata];
+				[AIPurpleCertificateTrustWarningAlert displayTrustWarningAlertWithAccount:account
+																				 hostname:[NSString stringWithUTF8String:hostname]
+																			 certificates:certs
+																		   resultCallback:query_cert_cb
+																				 userData:userdata];
 			else
 				query_cert_cb(true, userdata);
 			return;
