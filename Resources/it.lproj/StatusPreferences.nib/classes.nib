@@ -115,26 +115,6 @@
 		<dict>
 			<key>ACTIONS</key>
 			<dict>
-				<key>changePreference</key>
-				<string>id</string>
-			</dict>
-			<key>CLASS</key>
-			<string>AIModularPane</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>OUTLETS</key>
-			<dict>
-				<key>plugin</key>
-				<string>id</string>
-				<key>view</key>
-				<string>NSView</string>
-			</dict>
-			<key>SUPERCLASS</key>
-			<string>AIObject</string>
-		</dict>
-		<dict>
-			<key>ACTIONS</key>
-			<dict>
 				<key>addGroup</key>
 				<string>id</string>
 				<key>deleteState</key>
@@ -187,6 +167,26 @@
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>AIPreferencePane</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changePreference</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>AIModularPane</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>plugin</key>
+				<string>id</string>
+				<key>view</key>
+				<string>NSView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>AIObject</string>
 		</dict>
 		<dict>
 			<key>CLASS</key>
