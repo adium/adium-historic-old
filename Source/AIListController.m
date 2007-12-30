@@ -536,6 +536,9 @@
 				AISortController *sortController = [[adium contactController] activeSortController];
 				//XXX If we can sort manually but the sort controller also has some control (e.g. status sort with manual ordering), we should get a hint and make use of it.
 				if (![sortController canSortManually]) {
+					//If we're dragging a group, force a drop onto the contact list itself, and determine the destination location accordingly
+					if ([primaryDragItem isKindOfClass:[AIListGroup class]]) item = nil;
+					
 					int indexForInserting = [sortController indexForInserting:[dragItems objectAtIndex:0]
 																  intoObjects:(item ? [item containedObjects] : [[[adium contactController] contactList] containedObjects])];
 					/*
