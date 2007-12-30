@@ -130,6 +130,8 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 	if(err != noErr) {
 		CFRelease(searchRef);
 		CFRelease(policyRef);
+		if (trustRef)
+			CFRelease(trustRef);
 		NSBeep();
 		[self release];
 		return;
@@ -194,6 +196,7 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 
 	CFRelease(searchRef);
 	CFRelease(policyRef);
+	CFRelease(trustRef);
 }
 
 - (void)editAccountWindow:(NSWindow*)window didOpenForAccount:(AIAccount *)inAccount {
