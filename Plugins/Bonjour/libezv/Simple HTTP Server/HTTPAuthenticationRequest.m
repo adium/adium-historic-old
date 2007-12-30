@@ -10,12 +10,10 @@
 
 - (id)initWithRequest:(CFHTTPMessageRef)request
 {
-	if(self = [super init])
-	{
+	if (self = [super init]) {
 		NSString *authInfo = (NSString *)CFHTTPMessageCopyHeaderFieldValue(request, CFSTR("Authorization"));
 		
-		if(authInfo != nil)
-		{
+		if (authInfo != nil) {
 			username = [[self quotedSubHeaderFieldValue:@"username" fromHeaderFieldValue:authInfo] retain];
 			realm    = [[self quotedSubHeaderFieldValue:@"realm" fromHeaderFieldValue:authInfo] retain];
 			nonce    = [[self quotedSubHeaderFieldValue:@"nonce" fromHeaderFieldValue:authInfo] retain];
@@ -25,8 +23,7 @@
 			// Tests show that Firefox performs this way, but Safari does not
 			// Thus we'll attempt to retrieve the value as nonquoted, but we'll verify it doesn't start with a quote
 			qop      = [self nonquotedSubHeaderFieldValue:@"qop" fromHeaderFieldValue:authInfo];
-			if(qop && ([qop characterAtIndex:0] == '"'))
-			{
+			if (qop && ([qop characterAtIndex:0] == '"')) {
 				qop  = [self quotedSubHeaderFieldValue:@"qop" fromHeaderFieldValue:authInfo];
 			}
 			[qop retain];
@@ -34,9 +31,9 @@
 			nc       = [[self nonquotedSubHeaderFieldValue:@"nc" fromHeaderFieldValue:authInfo] retain];
 			cnonce   = [[self quotedSubHeaderFieldValue:@"cnonce" fromHeaderFieldValue:authInfo] retain];
 			response = [[self quotedSubHeaderFieldValue:@"response" fromHeaderFieldValue:authInfo] retain];
-		}
-		else
-		{
+			
+			CFRelease(authInfo);
+		} else {
 			// Setup a default value for any non-pointer types
 			nc = 0;
 		}
@@ -108,7 +105,7 @@
 - (NSString *)quotedSubHeaderFieldValue:(NSString *)param fromHeaderFieldValue:(NSString *)header
 {
 	NSRange startRange = [header rangeOfString:[NSString stringWithFormat:@"%@=\"", param]];
-	if(startRange.location == NSNotFound)
+	if (startRange.location == NSNotFound)
 	{
 		// The param was not found anywhere in the header
 		return nil;
@@ -118,8 +115,8 @@
 	int postStartRangeLength = [header length] - postStartRangeLocation;
 	NSRange postStartRange = NSMakeRange(postStartRangeLocation, postStartRangeLength);
 	
-	NSRange endRange = [header rangeOfString:@"\"" options:0 range:postStartRange];
-	if(endRange.location == NSNotFound)
+	NSRange endRange = [header rangeOfString:@"\"" options:NSLiteralSearch range:postStartRange];
+	if (endRange.location == NSNotFound)
 	{
 		// The ending double-quote was not found anywhere in the header
 		return nil;
@@ -140,7 +137,7 @@
 - (NSString *)nonquotedSubHeaderFieldValue:(NSString *)param fromHeaderFieldValue:(NSString *)header
 {
 	NSRange startRange = [header rangeOfString:[NSString stringWithFormat:@"%@=", param]];
-	if(startRange.location == NSNotFound)
+	if (startRange.location == NSNotFound)
 	{
 		// The param was not found anywhere in the header
 		return nil;
@@ -150,14 +147,14 @@
 	int postStartRangeLength = [header length] - postStartRangeLocation;
 	NSRange postStartRange = NSMakeRange(postStartRangeLocation, postStartRangeLength);
 	
-	NSRange endRange = [header rangeOfString:@"," options:0 range:postStartRange];
-	if(endRange.location == NSNotFound)
+	NSRange endRange = [header rangeOfString:@"," options:NSLiteralSearch range:postStartRange];
+	if (endRange.location == NSNotFound)
 	{
 		// The ending comma was not found anywhere in the header
 		// However, if the nonquoted param is at the end of the string, there would be no comma
 		// This is only possible if there are no spaces anywhere
-		NSRange endRange2 = [header rangeOfString:@" " options:0 range:postStartRange];
-		if(endRange2.location != NSNotFound)
+		NSRange endRange2 = [header rangeOfString:@" " options:NSLiteralSearch range:postStartRange];
+		if (endRange2.location != NSNotFound)
 		{
 			return nil;
 		}

@@ -40,6 +40,10 @@
 
 #define	ACCOUNT_DEFAULTS			@"AccountDefaults"
 
+@interface AIAccount (Abstract_PRIVATE)
+- (void)passwordReturnedForConnect:(NSString *)inPassword context:(id)inContext;
+@end
+
 /*!
  * @class AIAbstractAccount
  * @brief Abstract AIAccount methods
@@ -426,14 +430,24 @@
         if ([self shouldBeOnline] &&
 			[self enabled]) {
             if (!areOnline && ![[self statusObjectForKey:@"Connecting"] boolValue]) {
-				if ([[self service] requiresPassword] && (!password ||
+				if ([[self service] supportsPassword] && (!password ||
 														  [[self statusObjectForKey:@"Prompt For Password On Next Connect"] boolValue])) {
-					//Retrieve the user's password and then call connect
-					[[adium accountController] passwordForAccount:self 
-											   forcePromptDisplay:[[self statusObjectForKey:@"Prompt For Password On Next Connect"] boolValue]
-												  notifyingTarget:self
-														 selector:@selector(passwordReturnedForConnect:context:)
-														  context:nil];
+					if ([[self service] requiresPassword] ||
+						[[self statusObjectForKey:@"Prompt For Password On Next Connect"] boolValue]) {
+						//Retrieve the user's password and then call connect
+						[[adium accountController] passwordForAccount:self 
+												   forcePromptDisplay:[[self statusObjectForKey:@"Prompt For Password On Next Connect"] boolValue]
+													  notifyingTarget:self
+															 selector:@selector(passwordReturnedForConnect:context:)
+															  context:nil];
+					} else {
+						/* This service allows passwords but treats them as optional, and we haven't been told to force a prompt.
+						 * Retrieve the password without prompting and proceed.
+						 */
+						[self passwordReturnedForConnect:[[adium accountController] passwordForAccount:self]
+												 context:nil];
+					}
+
 				} else {
 					/* Connect immediately without retrieving a password because we either don't need one or
 					 * already have one.
@@ -665,7 +679,7 @@
 - (void)passwordReturnedForConnect:(NSString *)inPassword context:(id)inContext
 {
     //If a password was returned, and we're still waiting to connect
-    if (inPassword && [inPassword length] != 0) {
+    if ((inPassword && [inPassword length]) || (![[self service] requiresPassword])) {
 		[self setStatusObject:nil
 					   forKey:@"Prompt For Password On Next Connect"
 					   notify:NotifyNever];
@@ -1057,7 +1071,7 @@
 	
 	while ((chat = [enumerator nextObject])) {
 		if ([chat account] == self && [chat isOpen]) {
-			[[adium contentController] displayEvent:AILocalizedString(@"You have connected","Displayed in an open chat when its account has been connected")
+			[[adium contentController] displayEvent:AILocalizedStringFromTableInBundle(@"You have connected", nil, [NSBundle bundleForClass:[AIAccount class]], "Displayed in an open chat when its account has been connected")
 											 ofType:@"connected"
 											 inChat:chat];
 		}
@@ -1197,7 +1211,7 @@
 		
 		while ((chat = [enumerator nextObject])) {
 			if ([chat account] == self && [chat isOpen]) {
-				[[adium contentController] displayEvent:AILocalizedString(@"You have disconnected","Displayed in an open chat when its account has been disconnected.")
+				[[adium contentController] displayEvent:AILocalizedStringFromTableInBundle(@"You have disconnected", nil, [NSBundle bundleForClass:[AIAccount class]], "Displayed in an open chat when its account has been disconnected.")
 												 ofType:@"disconnected"
 												 inChat:chat];
 			}
@@ -1248,6 +1262,7 @@
 			AILog(@"%@: Disconnected (\"%@\"): Automatically reconnecting immediately", self, lastDisconnectionError);
 			[self performAutoreconnect];
 		} else {
+			AILog(@"%@: Disconnected: Will not reconnect", self);
 			if (lastDisconnectionError) {
 				[[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Error",[self UID],[[self service] shortDescription]]
 												withDescription:lastDisconnectionError];
@@ -1256,6 +1271,9 @@
 			//Reset reconnection attempts
 			reconnectAttemptsPerformed = 0;
 		}
+	} else {
+		AILog(@"%@: Disconnected; should be online? %@; lastDisconnectionError %@",
+			  self, ([self shouldBeOnline] ? @"Yes" : @"No"), lastDisconnectionError);
 	}
 }
 

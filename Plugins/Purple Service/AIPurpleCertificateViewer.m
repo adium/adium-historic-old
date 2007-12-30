@@ -9,7 +9,7 @@
 #import "AIPurpleCertificateViewer.h"
 #import <SecurityInterface/SFCertificatePanel.h>
 #import <AIUtilities/AITigerCompatibility.h>
-#import "AIEditAccountWindowController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 
 @interface AIPurpleCertificateViewer (privateMethods)
 
@@ -41,7 +41,7 @@
 }
 
 - (IBAction)showWindow:(id)sender {
-	[NSClassFromString(@"AIEditAccountWindowController") editAccount:account onWindow:nil notifyingTarget:self];
+	[[adium accountController] editAccount:account onWindow:nil notifyingTarget:self];
 }
 
 - (void)editAccountWindow:(NSWindow*)window didOpenForAccount:(AIAccount *)inAccount {

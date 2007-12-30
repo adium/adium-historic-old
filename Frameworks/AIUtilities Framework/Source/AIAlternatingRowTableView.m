@@ -117,6 +117,16 @@
 	return acceptFirstMouse;
 }
 
+//Allow our delegate to specify context menus
+- (NSMenu *)menuForEvent:(NSEvent *)theEvent
+{
+    if ([[self delegate] respondsToSelector:@selector(tableView:menuForEvent:)]) {
+        return [[self delegate] tableView:self menuForEvent:theEvent];
+    } else {
+        return [super menuForEvent:theEvent];
+    }
+}
+
 // Scrolling ----------------------------------------------------------------------
 - (void)tile
 {

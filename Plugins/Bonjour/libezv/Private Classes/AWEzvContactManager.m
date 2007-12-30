@@ -37,9 +37,8 @@
 
 - (id)initWithClient:(AWEzv *)newClient 
 {
-    if((self = [super init]))
-	{
-		contacts = [[NSMutableDictionary dictionary] retain];
+    if ((self = [super init])) {
+		contacts = [[NSMutableDictionary alloc] init];
 		client = newClient;
 		isConnected = NO;
 	}
@@ -78,7 +77,8 @@
 - (void)dealloc {
 	/* AWEzvContactManagerListener adds an observer; remove it */
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
-	
+	[userAnnounceData release];
+
 	[super dealloc];
 }
 

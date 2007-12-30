@@ -55,8 +55,7 @@ void xml_char_data	(void *userData,
 
 - (id) initWithFileHandle:(NSFileHandle *)myConnection initiator:(int)myInitiator 
 {
-    if((self = [super init]))
-	{
+    if ((self = [super init])) {
 		connection = [myConnection retain];
 		delegate = nil;
 		nodeStack = [[AWEzvStack alloc] init];
@@ -192,7 +191,7 @@ void xml_char_data	(void *userData,
 	if (([nodeStack size] > 0) && ([(AWEzvXMLNode *)[nodeStack top] type] == AWEzvXMLText)) {
 		node = [nodeStack pop];
 	}
-	else if ([nodeStack size] == 0 && [nodeName isEqualToString:@"stream:stream"]){
+	else if ([nodeStack size] == 0 && [nodeName isEqualToString:@"stream:stream"]) {
 		/* We have no stack but were sent stream:stream to end, therefore end connection */
 		[self endConnection];
 		return;
@@ -269,7 +268,7 @@ void xml_char_data	(void *userData,
 
 	/* create elements for handshake */
 	dict = [NSMutableDictionary dictionary];
-	if ([delegate uniqueID]){
+	if ([delegate uniqueID]) {
 		[dict setObject:[delegate uniqueID] forKey:@"to"];
 	} else {
 		[dict setObject:@"127.0.0.1" forKey:@"to"];

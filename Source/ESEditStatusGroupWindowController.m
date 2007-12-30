@@ -72,6 +72,9 @@
 	[label_groupWith setLocalizedString:AILocalizedString(@"Group with:", "The popup button after this lists status types; it will determine the status type with which a status group will be listed in status menus")];
 	[label_title setAutoresizingMask:NSViewMaxXMargin];
 
+	[button_OK setLocalizedString:AILocalizedString(@"OK", nil)];
+	[button_cancel setLocalizedString:AILocalizedString(@"Cancel", nil)];
+
 	[super windowDidLoad];
 }
 

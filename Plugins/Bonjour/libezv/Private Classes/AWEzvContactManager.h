@@ -51,11 +51,8 @@
 	/* Rendezvous related instance variables */
 	AWEzvRendezvousData		*userAnnounceData;
 
-	ServiceController			*fDomainBrowser;
-	ServiceController			*fServiceBrowser;
-	ServiceController			*fServiceResolver;
-	ServiceController			*fAddressResolver;
-	//ServiceController			*fImageResolver;
+	ServiceController		*fDomainBrowser;
+	ServiceController		*fServiceBrowser;
 	
 	
 	DNSServiceRef avDNSReference;

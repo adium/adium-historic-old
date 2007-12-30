@@ -355,7 +355,7 @@
 {
 	NSEnumerator	*enumerator = [emoticons keyEnumerator];
 	NSString		*fileName;
-	NSBundle		*myBundle = (!localizationDict ? [NSBundle bundleForClass:[self class]] : nil);
+	NSBundle		*myBundle = nil;
 
 	while ((fileName = [enumerator nextObject])) {
 		id	dict = [emoticons objectForKey:fileName];
@@ -369,8 +369,10 @@
 					//If the bundle provides localizations, use them
 					localizedEmoticonName = [localizationDict objectForKey:emoticonName];
 				} 
-				
+
 				if (!localizedEmoticonName) {
+					if (!myBundle) myBundle = [NSBundle bundleForClass:[self class]];
+
 					//Otherwise, look at our list of default translations (generated at the bottom of this file)
 					localizedEmoticonName = [myBundle localizedStringForKey:emoticonName
 																	  value:emoticonName

@@ -60,8 +60,8 @@
 	/* NSFileHandle's acceptConnectionInBackgroundAndNotify method expects a
 	   socket that is bound and listening */
 
-	if((fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-		[[client client] reportError:@"Could not create listening socket for iChat Bonjour" ofLevel:AWEzvError];
+	if ((fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+		[[client client] reportError:@"Could not create listening socket for iChat Bonjour" ofLevel:AWEzvConnectionError];
 		return -1;
 	}
 
@@ -80,13 +80,13 @@
 		[[client client] reportError:@"Could not set socket to SO_REUSEADDR" ofLevel:AWEzvWarning];
 
 	}
-	while(bind(fd, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0) {
+	while (bind(fd, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0) {
 		port++;
 		serverAddress.sin_port = htons(port);
 	}
 
 	/* now to create file handle to accept incoming connections */
-	if(listen(fd, MAXBACKLOG) == 0) {
+	if (listen(fd, MAXBACKLOG) == 0) {
 		listenSocket = [[NSFileHandle alloc] initWithFileDescriptor:fd closeOnDealloc:YES];
 	}
 
@@ -113,6 +113,7 @@
 - (void)connectionReceived:(NSNotification *)aNotification {
 	AILog(@"%s: Got notification with name %@; userInfo is:\n%@", __PRETTY_FUNCTION__, [aNotification name], [aNotification userInfo]);
 	NSFileHandle 	*incomingConnection = [[aNotification userInfo] objectForKey:NSFileHandleNotificationFileHandleItem];
+	NSString		*ipAddr;
 	NSMutableString	*contactIdentifier;
 	int			fd;
 	socklen_t	size;
@@ -132,11 +133,13 @@
 	/* we have to ask it to keep accepting connections now */
 	[[aNotification object] acceptConnectionInBackgroundAndNotify];
 
-	contactIdentifier = [NSMutableString stringWithCString:inet_ntoa((&remoteAddress)->sin_addr)];
-	AILog(@"%s: Remote IP address (basis of contactIdentifier) is %@", __PRETTY_FUNCTION__, contactIdentifier);
+	ipAddr = [NSString stringWithCString:inet_ntoa((&remoteAddress)->sin_addr)];
+
+	AILog(@"%s: Remote IP address (basis of contactIdentifier) is %@", __PRETTY_FUNCTION__, ipAddr);
+	contactIdentifier = [[ipAddr mutableCopy] autorelease];
 	[contactIdentifier replaceOccurrencesOfString:@"."
 		       withString:@"_"
-		       options:0
+		       options:NSLiteralSearch
 		       range:NSMakeRange(0, [contactIdentifier length])];
 		       
 	contact = [contacts objectForKey:contactIdentifier];
@@ -145,16 +148,25 @@
 	if ([contact rendezvous] == nil) {
 		NSEnumerator *enumerator = [contacts objectEnumerator];
 
-		[contactIdentifier replaceOccurrencesOfString:@"_"
-			withString:@"."
-			options:0
-			range:NSMakeRange(0, [contactIdentifier length])];
-		AILog(@"%s: Changed contactIdentifier back to an IP address; it is now %@", __PRETTY_FUNCTION__, contactIdentifier);
-
 		while ((contact = [enumerator nextObject])) {
 			AILog(@"%s: Searching contacts; rendezvous is %@ and ipaddr is %@", __PRETTY_FUNCTION__, [contact rendezvous], [contact ipaddr]);
-			if ([contact rendezvous] != nil && [[contact ipaddr] isEqualToString:contactIdentifier])
+			if ([contact rendezvous] != nil && [[contact ipaddr] isEqualToString:ipAddr])
 				break;
+		}
+		
+		if (!contact)  {
+			/* We couldn't find an existing contact... but clearly we're getting a connection from someone. Create a contact
+			 * and add it to the contacts dictionary.
+			 */
+			contact = [[AWEzvContact alloc] init];
+			
+			[contact setIpaddr:ipAddr];
+			
+			[contact setUniqueID:contactIdentifier];
+			[contact setManager:self];
+			/* save contact in dictionary */
+			[contacts setObject:contact forKey:contactIdentifier];
+			[contact autorelease];
 		}
 	}
 
@@ -172,7 +184,6 @@
 	[stream release];
 
 	return;
-
 }
 
 @end

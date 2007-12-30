@@ -46,8 +46,7 @@ NSString	*endn = @"\x00\x00\x00\x00";
 /* initialization, create our dictionary */
 -(AWEzvRendezvousData *) init 
 {
-    if((self = [super init]))
-	{
+    if ((self = [super init])) {
 		keys = [[NSMutableDictionary dictionary] retain];
 		serial = 1;
 	}
@@ -205,8 +204,7 @@ NSString	*endn = @"\x00\x00\x00\x00";
 /* initialise object with a dictionary */
 - (AWEzvRendezvousData *)initWithDictionary:(NSDictionary *)dictionary 
 {
-    if((self = [super init]))
-	{
+    if ((self = [super init])) {
 		keys = [dictionary retain];
 		serial++;
 	}	
@@ -245,7 +243,7 @@ NSString	*endn = @"\x00\x00\x00\x00";
 	
 	int i, numKeys;
 	numKeys = TXTRecordGetCount(len, txtRecord);
-	for(i=0; i<numKeys; i++){
+	for (i=0; i<numKeys; i++) {
 		char key[256];
 		uint8_t valLen;
 		const void *value;
@@ -258,16 +256,16 @@ NSString	*endn = @"\x00\x00\x00\x00";
 		    /* key buffer */ key,
 			/* valueLength */ &valLen,
 			/* value pointer */ &value );
-		if (txtRecordError == kDNSServiceErr_NoError){
+		if (txtRecordError == kDNSServiceErr_NoError) {
 			NSString *keyString = NULL;
 			NSString *data = NULL;
 			keyString = [NSString stringWithUTF8String: key];
 			
-			if (value){
+			if (value) {
 				data = [[NSString alloc] initWithBytes: value length: valLen encoding: NSUTF8StringEncoding];
 			}
 			
-			if (data != NULL && keyString != NULL){
+			if (data != NULL && keyString != NULL) {
 				[self setField:keyString content:data];
 			} else {
 				AWEzvLog(@"Creating TXTRecord: No data and No key");
@@ -499,7 +497,7 @@ NSString	*endn = @"\x00\x00\x00\x00";
 	/* Enumerate through keys setting the txtrecordvalue */
 	enumerator = [keys keyEnumerator];
     
-	while (key = [enumerator nextObject]){
+	while (key = [enumerator nextObject]) {
 		
 		value = [keys objectForKey:key];
 		 //AWEzvLog(@"key=%@ value=%@", key, value);
@@ -526,7 +524,7 @@ NSString	*endn = @"\x00\x00\x00\x00";
 			/* key */ [key UTF8String],
 			/* size, may be zero */ valueSize,
 			/* value, may be null */ valueToSet /* may be NULL */);
-		if (txtRecordError != kDNSServiceErr_NoError){
+		if (txtRecordError != kDNSServiceErr_NoError) {
 			AWEzvLog(@"Error setting TXTRecord of key=%@ and value=%@", key, valueToSet);
 			
 		}

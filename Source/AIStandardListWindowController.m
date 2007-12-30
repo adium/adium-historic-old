@@ -689,6 +689,7 @@
 	}
 
 	[nameView setTitle:alias];
+	[nameView setToolTip:alias];
 }
 
 #pragma mark Sliding

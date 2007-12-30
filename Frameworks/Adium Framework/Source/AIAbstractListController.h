@@ -209,6 +209,7 @@ typedef enum {
 - (void)updateTransparency;
 - (BOOL)useAliasesInContactListAsRequested;
 - (BOOL)shouldUseContactTextColors;
+- (BOOL)useStatusMessageAsExtendedStatus;
 
 - (void)configureViewsAndTooltips;
 

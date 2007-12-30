@@ -102,6 +102,10 @@
 	} else {
 		[popUp_encryption compatibleSelectItemWithTag:EncryptedChat_Default];		
 	}
+	
+	//Visibility
+	[checkBox_visibility setEnabled:![inObject isKindOfClass:[AIListGroup class]]];
+	[checkBox_visibility setState:[listObject alwaysVisible]];
 }
 
 //Apply an alias
@@ -122,11 +126,22 @@
     }
 }
 
+//Save encryption preference
 - (IBAction)selectedEncryptionPreference:(id)sender
 {
-	[listObject setPreference:[NSNumber numberWithInt:[sender tag]]
-					   forKey:KEY_ENCRYPTED_CHAT_PREFERENCE
-						group:GROUP_ENCRYPTION];
+	if (listObject) {
+		[listObject setPreference:[NSNumber numberWithInt:[sender tag]]
+						   forKey:KEY_ENCRYPTED_CHAT_PREFERENCE
+							group:GROUP_ENCRYPTION];
+	}
+}
+
+//Save visibility state
+- (IBAction)setVisible:(id)sender
+{
+	if (listObject) {
+		[listObject setAlwaysVisible:[checkBox_visibility state]];
+	}
 }
 
 - (void)localizeTitles
@@ -134,6 +149,8 @@
 	[label_alias setLocalizedString:AILocalizedString(@"Alias:","Label beside the field for a contact's alias in the settings tab of the Get Infow indow")];
 	[label_notes setLocalizedString:AILocalizedString(@"Notes:","Label beside the field for contact notes in the Settings tab of the Get Info window")];
 	[label_encryption setLocalizedString:AILocalizedString(@"Encryption:","Label besides the field for contact encryption settings")];
+	[label_visibility setLocalizedString:AILocalizedString(@"Visibility:","Label besides the field for contact visibility settings")];
+	[checkBox_visibility setLocalizedString:AILocalizedString(@"Always show this contact regardless of status","Option for a contact's visibility setting")];
 }
 
 @end

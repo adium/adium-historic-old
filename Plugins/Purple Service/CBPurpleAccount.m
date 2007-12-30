@@ -326,6 +326,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	return (returnString ? returnString : inString);
 }
 
+
 - (void)updateUserInfo:(AIListContact *)theContact withData:(PurpleNotifyUserInfo *)user_info
 {
 	char *user_info_text = purple_notify_user_info_get_text_with_newline(user_info, "<BR />");
@@ -509,12 +510,8 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 - (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict didAuthorize:(BOOL)inDidAuthorize
 {
 	id		 callback;
-	
-	//Inform libpurple that the request window closed
-	//[ESPurpleRequestAdapter requestCloseWithHandle:inWindowController];
+
 	if (account) {
-		purple_account_request_close(inWindowController);
-		
 		if (inDidAuthorize) {
 			callback = [[[infoDict objectForKey:@"authorizeCB"] retain] autorelease];
 		} else {
@@ -543,6 +540,8 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
  */
 - (void)addChat:(AIChat *)chat
 {
+	AILogWithSignature(@"");
+
 	//Open the chat
 	[[adium interfaceController] openChat:chat];
 	
@@ -608,6 +607,15 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 {
 
 }
+
+/*!
+ * @brief Called when we are informed that we left a multiuser chat
+ */
+- (void)leftChat:(AIChat *)chat
+{
+	AILogWithSignature(@"Chat left - something should happen here!");
+}
+
 - (void)updateTopic:(NSString *)inTopic forChat:(AIChat *)chat
 {
 	
@@ -737,7 +745,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 		if ([inContentMessage isAutoreply]) {
 			flags |= PURPLE_MESSAGE_AUTO_RESP;
 		}
-				
+
 		[purpleThread sendEncodedMessage:[inContentMessage encodedMessage]
 							 fromAccount:self
 								  inChat:[inContentMessage chat]
@@ -775,6 +783,14 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 - (BOOL)allowsNewlinesInMessages
 {
 	return (account && account->gc && ((account->gc->flags & PURPLE_CONNECTION_NO_NEWLINES) != 0));
+}
+
+/*!
+ * @brief Libpurple prints file transfer messages to the chat window. The Adium core therefore shouldn't.
+ */
+- (BOOL)accountDisplaysFileTransferMessages
+{
+	return YES;
 }
 
 //Return YES if we're available for sending the specified content or will be soon (are currently connecting).
@@ -1584,11 +1600,6 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	AILog(@"************ %@ --step-- %i",[self UID],[step intValue]);
 }
 
-- (void)accountConnectionStep:(NSString*)msg step:(int)step totalSteps:(int)step_count
-{
-
-}
-
 /*!
  * @brief Name to use when creating a PurpleAccount for this CBPurpleAccount
  *
@@ -1635,13 +1646,26 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	}
 }
 
+- (void)setLastDisconnectionReason:(PurpleConnectionError)reason
+{
+	lastDisconnectionReason = reason;
+}
+
+- (PurpleConnectionError)lastDisconnectionReason
+{
+	return lastDisconnectionReason;
+}
+
 /*!
  * @brief Our account was unexpectedly disconnected with an error message
  */
 - (void)accountConnectionReportDisconnect:(NSString *)text withReason:(PurpleConnectionError)reason
 {
-#warning Should make use of reason
 	[self setLastDisconnectionError:text];
+	[self setLastDisconnectionReason:reason];
+
+	if (reason == PURPLE_CONNECTION_ERROR_AUTHENTICATION_FAILED)
+		[self serverReportedInvalidPassword];
 
 	//We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:NotifyNow];
@@ -1684,12 +1708,25 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 
 - (AIReconnectDelayType)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
-	// If libPurple considers the connection suicidal, don't attempt to reconnect.
-	if ((account && account->gc) ? account->gc->wants_to_die : NO) {
-		return AIReconnectNever;
+	AIReconnectDelayType reconnectDelayType;
+
+	if ([self lastDisconnectionReason] == PURPLE_CONNECTION_ERROR_AUTHENTICATION_FAILED) {
+		[self setLastDisconnectionError:AILocalizedString(@"Incorrect username or password","Error message displayed when the server reports username or password as being incorrect.")];
+		reconnectDelayType = AIReconnectImmediately;
+
+	} else if ([self lastDisconnectionReason] == PURPLE_CONNECTION_ERROR_INVALID_USERNAME) {
+		reconnectDelayType = AIReconnectNever;
+		//Enable this after Adium 1.2, which is in string freeze as it is added.
+		/* *disconnectionError = AILocalizedString(@"The name you entered is not registered. Check to ensure you typed it correctly.", nil); */
+
+	} else if (purple_connection_error_is_fatal([self lastDisconnectionReason])) {
+		reconnectDelayType = AIReconnectNever;
+
 	} else {
-		return AIReconnectNormally;
+		reconnectDelayType = AIReconnectNormally;
 	}
+
+	return reconnectDelayType;
 }
 
 #pragma mark Registering
@@ -2380,7 +2417,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 //Subclasses may override to provide a localized label and/or prevent a specified label from being shown
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
-	if ((strcmp(label, "Change Password...") == 0) || (strcmp(label, "Change Password") == 0)) {
+	if ((strcmp(label, _("Change Password...")) == 0) || (strcmp(label, _("Change Password")) == 0)) {
 		return [[NSString stringWithFormat:AILocalizedString(@"Change Password", "Menu item title for changing the password of an account")] stringByAppendingEllipsis];
 	} else {
 		return [NSString stringWithUTF8String:label];

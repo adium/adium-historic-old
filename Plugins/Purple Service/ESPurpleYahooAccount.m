@@ -104,24 +104,6 @@
 	return nil;
 }
 
-- (AIReconnectDelayType)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
-{
-	AIReconnectDelayType shouldAttemptReconnect = [super shouldAttemptReconnectAfterDisconnectionError:disconnectionError];
-	
-	if (disconnectionError && *disconnectionError) {
-		if ([*disconnectionError rangeOfString:@"Incorrect password"].location != NSNotFound) {
-			[self setLastDisconnectionError:AILocalizedString(@"Incorrect username or password","Error message displayed when the server reports username or password as being incorrect.")];
-			[self serverReportedInvalidPassword];
-			shouldAttemptReconnect = AIReconnectImmediately;
-		} else if (([*disconnectionError rangeOfString:@"You have signed on from another location"].location != NSNotFound) ||
-				   ([*disconnectionError rangeOfString:@"logged in on a different machine or device"].location != NSNotFound)) {
-			shouldAttemptReconnect = AIReconnectNever;
-		}
-	}
-	
-	return shouldAttemptReconnect;
-}
-
 #pragma mark Encoding
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {	
@@ -139,7 +121,8 @@
 					   attachmentsAsText:YES
 			   onlyIncludeOutgoingImages:NO
 						  simpleTagsOnly:YES
-						  bodyBackground:NO];
+						  bodyBackground:NO
+					 allowJavascriptURLs:YES];
 	} else {
 		return [inAttributedString string];
 	}
@@ -444,36 +427,36 @@
 #pragma mark Contact List Menu Items
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
-	if (!strcmp(label, "Add Buddy")) {
+	if (!strcmp(label, _("Add Buddy"))) {
 		//We handle Add Buddy ourselves
 		return nil;
 		
-	} else if (!strcmp(label, "Join in Chat")) {
+	} else if (!strcmp(label, _("Join in Chat"))) {
 		return [NSString stringWithFormat:AILocalizedString(@"Join %@'s Chat",nil),[inContact formattedUID]];
 
-	} else if (!strcmp(label, "Initiate Conference")) {
+	} else if (!strcmp(label, _("Initiate Conference"))) {
 		return [NSString stringWithFormat:AILocalizedString(@"Initiate Conference with %@",nil), [inContact formattedUID]];
 
-	} else if (!strcmp(label, "Presence Settings")) {
+	} else if (!strcmp(label, _("Presence Settings"))) {
 		return [NSString stringWithFormat:AILocalizedString(@"Presence Settings for %@",nil), [inContact formattedUID]];
 
-	} else if (!strcmp(label, "Appear Online")) {
+	} else if (!strcmp(label, _("Appear Online"))) {
 		return [NSString stringWithFormat:AILocalizedString(@"Appear Online to %@",nil), [inContact formattedUID]];
 		
-	} else if (!strcmp(label, "Appear Offline")) {
+	} else if (!strcmp(label, _("Appear Offline"))) {
 		return [NSString stringWithFormat:AILocalizedString(@"Appear Offline to %@",nil), [inContact formattedUID]];
 		
-	} else if (!strcmp(label, "Appear Permanently Offline")) {
+	} else if (!strcmp(label, _("Appear Permanently Offline"))) {
 		return [NSString stringWithFormat:AILocalizedString(@"Always Appear Offline to %@",nil), [inContact formattedUID]];
 		
-	} else if (!strcmp(label, "Don't Appear Permanently Offline")) {
+	} else if (!strcmp(label, _("Don't Appear Permanently Offline"))) {
 		return [NSString stringWithFormat:AILocalizedString(@"Don't Always Appear Offline to %@",nil), [inContact formattedUID]];
 		
-	} else if (!strcmp(label, "View Webcam")) {
+	} else if (!strcmp(label, _("View Webcam"))) {
 		//return [NSString stringWithFormat:AILocalizedString(@"View %@'s Webcam",nil), [inContact formattedUID]];		
 		return nil;
 
-	} else if (!strcmp(label, "Start Doodling")) {
+	} else if (!strcmp(label, _("Start Doodling"))) {
 		return nil;
 	}
 

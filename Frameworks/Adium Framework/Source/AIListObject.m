@@ -174,26 +174,31 @@
  */
 - (BOOL)visible
 {
-	return visible;
+	return visible || [self alwaysVisible];
 }
 
 /*!
  * @brief Sets if list object should always be visible
  */
-- (void)setAlwaysVisible:(BOOL)isVisible {
-	[[adium preferenceController] setPreference:[NSNumber numberWithBool:isVisible] 
-										 forKey:@"Visible" 
-										  group:PREF_GROUP_ALWAYS_VISIBLE 
-										 object:self];
+- (void)setAlwaysVisible:(BOOL)inVisible {
+	if (inVisible != [self alwaysVisible]) {
+		[self setPreference:[NSNumber numberWithBool:inVisible] 
+					 forKey:@"Visible" 
+					  group:PREF_GROUP_ALWAYS_VISIBLE];
+		
+		if ([containingObject isKindOfClass:[AIListGroup class]]) {
+			//Let our containing group know about the visibility change
+			[(AIListGroup *)containingObject visibilityOfContainedObject:self changedTo:[self visible]];			
+		}
+	}
 }
 
 /*!
  * @returns If object should always be visible
  */
 - (BOOL)alwaysVisible {
-	return [[[adium preferenceController] preferenceForKey:@"Visible" 
-													 group:PREF_GROUP_ALWAYS_VISIBLE 
-													object:self] boolValue];
+	return [[self preferenceForKey:@"Visible"
+							 group:PREF_GROUP_ALWAYS_VISIBLE] boolValue];
 }
 
 //Grouping / Ownership -------------------------------------------------------------------------------------------------

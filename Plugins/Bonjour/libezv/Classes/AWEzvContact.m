@@ -71,17 +71,18 @@
 
 - (void) setUniqueID:(NSString *)uniqueID
 {
-    if (_uniqueID != nil)
-        [_uniqueID autorelease];
-    _uniqueID = [uniqueID retain];
+    if (_uniqueID != uniqueID) {
+        [_uniqueID release];
+		_uniqueID = [uniqueID retain];
+	}
 }
 
 - (void) setContactImage:(NSImage *)contactImage
 {
-    if (_contactImage != nil){
-		[_contactImage autorelease];
+    if (_contactImage != contactImage) {
+		[_contactImage release];
+		_contactImage = [contactImage retain];
 	}
-    _contactImage = [contactImage retain];
 }
 
 - (NSImage *) contactImage
@@ -126,11 +127,11 @@
 		[mutableString replaceOccurrencesOfString:@"<br>" withString:@"<br />"
 			options:NSCaseInsensitiveSearch range:NSMakeRange(0, [mutableString length])];
 		[mutableString replaceOccurrencesOfString:@"&" withString:@"&amp;"
-			options:0 range:NSMakeRange(0, [mutableString length])];
+			options:NSLiteralSearch range:NSMakeRange(0, [mutableString length])];
 		[mutableString replaceOccurrencesOfString:@"<" withString:@"&lt;"
-			options:0 range:NSMakeRange(0, [mutableString length])];
+			options:NSLiteralSearch range:NSMakeRange(0, [mutableString length])];
 		[mutableString replaceOccurrencesOfString:@">" withString:@"&gt;"
-			options:0 range:NSMakeRange(0, [mutableString length])];
+			options:NSLiteralSearch range:NSMakeRange(0, [mutableString length])];
 		messageExtraEscapedString = [mutableString copy];
 		[mutableString release];
 
@@ -180,7 +181,6 @@
 		[messageNode release];
 		[messageExtraEscapedString release];
 		[htmlFiltered release];
-		[fixedHTML release];
 
 	} else {
 		[self setStatus: AWEzvUndefined];
@@ -194,32 +194,32 @@
 {
 	/* ABSZ and SIZE are set to integers without quotes which doesn't work with iChat so lets add quotes */
 	NSMutableString *mutableHTML;
-	
-	mutableHTML = [html mutableCopy];
-	
 	NSRange findRange;
-	
+
+	mutableHTML = [html mutableCopy];
+
 	findRange = [mutableHTML rangeOfString:@"ABSZ="];
-	if (findRange.location != NSNotFound && findRange.length == 5){
+	if (findRange.location != NSNotFound && findRange.length == 5) {
 		/* We have a correct ABSZ= string */
 		[mutableHTML insertString:@"\"" atIndex:(findRange.location + findRange.length)];
 		int i = (findRange.location + findRange.length);
-		while(([mutableHTML characterAtIndex:i] != ' ') && ([mutableHTML characterAtIndex:i] != '>')){
+		while (([mutableHTML characterAtIndex:i] != ' ') && ([mutableHTML characterAtIndex:i] != '>')) {
 			i++;
 		}
 		[mutableHTML insertString:@"\"" atIndex: i];
 	}
-	
+
 	findRange = [mutableHTML rangeOfString:@"SIZE="];
-	if (findRange.location != NSNotFound && findRange.length == 5){
+	if (findRange.location != NSNotFound && findRange.length == 5) {
 		/* We have a correct SIZE= string */
 		[mutableHTML insertString:@"\"" atIndex:(findRange.location + findRange.length)];
 		int i = (findRange.location + findRange.length);
-		while(([mutableHTML characterAtIndex:i] != ' ') && ([mutableHTML characterAtIndex:i] != '>')){
+		while (([mutableHTML characterAtIndex:i] != ' ') && ([mutableHTML characterAtIndex:i] != '>')) {
 			i++;
 		}
 		[mutableHTML insertString:@"\"" atIndex: i];
 	}
+
 	/* iChat display pt sized fonts larger than the NSTextView, however, using px makes the sizes the same */
 	findRange = [mutableHTML rangeOfString:@"font-size"];
 	if (findRange.location != NSNotFound) {
@@ -229,7 +229,8 @@
 												range:NSMakeRange(findRange.location, [mutableHTML length] - findRange.location)];
 		[mutableHTML replaceOccurrencesOfString:@"pt" withString:@"px" options:NSCaseInsensitiveSearch range:NSMakeRange(findRange.location, NSMaxRange(nextSemicolon) - findRange.location)];
 	}
-	return [mutableHTML copy];
+
+	return [mutableHTML autorelease];
 }
 
 #pragma mark Send Typing Notification
@@ -238,8 +239,7 @@
 {
 	AWEzvXMLNode *messageNode, *bodyNode, *htmlNode, *xNode, *composingNode = nil, *idNode = nil;
 
-	if(_ipAddr != nil) {
-
+	if (_ipAddr != nil) {
 		messageNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"message"];
 		[messageNode addAttribute:@"to" withValue:[self uniqueID]];
 		[messageNode addAttribute:@"from" withValue:[_manager myInstanceName]];
@@ -268,8 +268,7 @@
 
 		/* release messages */
 		[idNode release];
-		if (composingNode != nil)
-			[composingNode release];
+		[composingNode release];
 		[xNode release];
 		[htmlNode release];
 		[bodyNode release];
@@ -299,7 +298,6 @@
 	**/	
 	AWEzvXMLNode *messageNode, *bodyNode, *htmlNode, *xNode, *urlNode, *urlValue;
 	if (_ipAddr != nil) {
-
 		if (_stream == nil) {
 			[self createConnection];
 		}
@@ -321,7 +319,7 @@
 
 		urlNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"url"];
 		/*directory transfers*/
-		if ([transfer isDirectory]){
+		if ([transfer isDirectory]) {
 			[urlNode addAttribute:@"type" withValue:@"directory"];
 		} else {
 			[urlNode addAttribute:@"type" withValue:@"file"];

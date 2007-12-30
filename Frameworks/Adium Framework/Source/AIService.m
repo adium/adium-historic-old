@@ -367,16 +367,30 @@
 {
 	return YES;
 }
+/*!
+ * @brief Supports password
+ *
+ * Subclasses should return NO if this service does not use passwords at all for connectivity.
+ * If NO, all fields related to passwords will be hidden for this service and the user will never be prompted to
+ * enter passwords.
+ */
+- (BOOL)supportsPassword
+{
+	return YES;
+}
 
 /*!
  * @brief Requires Password
  *
- * Subclass to return NO if this account does not require a password.  By default, accounts require a password to
- * connect.  Returning NO from this method will hide all password related fields and prompts.
+ * Subclasses should return NO if this service does not require a password.  Returning NO from this method will use the password if
+ * entered but allow a conection to be initiated with no password without prompting for one.
+ * If YES, Adium will insist upon a password being entered before a connection can begin.
+ *
+ * By default, the service requires a password if it is supported. See -[AIService supportsPassword].
  */
 - (BOOL)requiresPassword
 {
-	return YES;
+	return [self supportsPassword];
 }
 
 /*!

@@ -110,31 +110,88 @@ body {
     
 .status_container {
     position: relative;
-    background: url("images/status_background.png");
-    margin: 0px 30px -1px 32px;
+    margin: 0px 5px 5px 5px;
     color: #fff;
     text-shadow: 1px 1px 3px #aaa;
     font-size: 9px;
     font-weight: bold;
     text-transform: lowercase;
-    height: 29px;
+}
+.status_top {
+	background: url("images/status_top.png") top repeat-x;
+	height: 8px;
+	margin: 0px 10px 0px 10px;
+}
+.status_bottom {
+	background: url("images/status_bottom.png") bottom repeat-x;
+	height: 8px;
+	margin: 0px 10px 0px 10px;	
+}
+
+.status_message_upperleft {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 10px;
+	height: 8px;
+	background: url("images/status_left_top.png") top left no-repeat;
+}
+.status_message_upperright {
+	position: absolute;
+	top: 0;
+	right: 0;	
+	width: 10px;
+	height: 8px;
+	background: url("images/status_right_top.png") top right no-repeat;
+}
+.status_message_lowerleft {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 10px;
+	height: 8px;
+	background: url("images/status_left_bottom.png") bottom left no-repeat;
+}
+.status_message_lowerright {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 10px;
+	height: 8px;
+	background: url("images/status_right_bottom.png") bottom right no-repeat;
 }
 
 .status_message {
+	padding: 0px 8px 0px 8px;
     position: relative;
-    left: -30px;
-    background: url("images/status_left.png") top left no-repeat;
-    padding: 7px 8px 7px 15px;
+	margin: 0px;
 }
-
+.status_message_text {
+	background: url("images/status_background.png");
+	padding-right: 40px;
+}
+.status_left {
+	background: url("images/status_left.png") repeat-y;
+	position: absolute;
+	top: 0;
+	left: 0px;
+	width: 10px;
+	height: 100%;
+}
+.status_right {
+	background: url("images/status_right.png") repeat-y;
+	position: absolute;
+	top: 0;
+	right: -2px;
+	width: 10px;
+	height: 100%;
+}
 .status_time {
     position: absolute;
-    top: 0px;
-    right: -30px;
-    padding: 8px 16px 8px 5px;
+    top: 7px;
+    right: 17px;
     text-transform: uppercase;
     font-size: 8px;
-    background: url("images/status_right.png") top right no-repeat;
 }
 
 IMG {

@@ -249,30 +249,58 @@
 	[button_stopResume setEnabled:flag];
 }
 
+- (void)updateColors
+{
+	NSColor	*newColor;
+	
+	if (isSelected && [[self window] isKeyWindow]) {
+		newColor = SELECTED_TEXT_COLOR;
+	} else {
+		newColor = NORMAL_TEXT_COLOR;
+	}
+
+	[textField_rate setTextColor:newColor];
+	[textField_source setTextColor:newColor];
+	[textField_destination setTextColor:newColor];		
+	[textField_fileName setTextColor:newColor];
+	
+	[self updateButtonStopResume];
+	[self updateButtonReveal];
+	[self setNeedsDisplay:YES];
+}
+
+- (void)windowDidChangeKey:(NSNotification *)notification
+{
+	[self updateColors];
+}
+
+- (void)viewDidMoveToWindow
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self
+													name:NSWindowDidBecomeKeyNotification
+												  object:nil];
+	[[NSNotificationCenter defaultCenter] removeObserver:self
+													name:NSWindowDidResignKeyNotification
+												  object:nil];
+	if ([self window]) {
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(windowDidChangeKey:)
+													 name:NSWindowDidBecomeKeyNotification
+												   object:[self window]];
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(windowDidChangeKey:)
+													 name:NSWindowDidResignKeyNotification
+												   object:[self window]];
+	}
+}
+
 #pragma mark Selection
 - (void)setIsHighlighted:(BOOL)flag
 {
 	if (isSelected != flag) {
 		isSelected = flag;
 		
-		NSColor	*newColor;
-		NSColor	*transferStatusColor;
-		
-		if (isSelected) {
-			newColor = SELECTED_TEXT_COLOR;
-			transferStatusColor = newColor;
-		} else {
-			newColor = NORMAL_TEXT_COLOR;
-			transferStatusColor = TRANSFER_STATUS_COLOR;
-		}
-		
-		[textField_rate setTextColor:newColor];
-		[textField_source setTextColor:newColor];
-		[textField_destination setTextColor:newColor];		
-		[textField_fileName setTextColor:newColor];
-		
-		[self updateButtonStopResume];
-		[self updateButtonReveal];
+		[self updateColors];
 	}
 }
 
@@ -329,7 +357,6 @@ static NSDictionary	*transferStatusSelectedAttributes = nil;
 //this lets us not worry about autosizing and positioning since the view takes care of that for us.
 - (void)drawRect:(NSRect)rect
 {
-
 	[super drawRect:rect];
 
 	NSDictionary	*attributes;
@@ -339,7 +366,7 @@ static NSDictionary	*transferStatusSelectedAttributes = nil;
 	targetRect.origin.x += primaryControlsRect.origin.x;
 	targetRect.origin.y += primaryControlsRect.origin.y;
 
-	if (isSelected) {
+	if (isSelected && [[self window] isKeyWindow]) {
 		if (!transferStatusSelectedAttributes) {
 			NSMutableParagraphStyle	*paragraphStyle = [NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
 																					lineBreakMode:NSLineBreakByTruncatingTail];

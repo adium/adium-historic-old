@@ -36,8 +36,7 @@
 @implementation AWEzvStack
 - (id) init 
 {
-    if((self = [super init]))
-	{
+    if ((self = [super init])) {
 		top = NULL;
 		size = 0;
 	}

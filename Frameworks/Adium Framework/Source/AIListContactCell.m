@@ -55,6 +55,7 @@
 		_statusAttributes = nil;
 		_statusAttributesInverted = nil;
 		shouldUseContactTextColors = YES;
+		useStatusMessageAsExtendedStatus = NO;
 	}
 
 	return self;
@@ -323,9 +324,10 @@
 	shouldUseContactTextColors = flag;
 }
 
-
-
-
+- (void)setUseStatusMessageAsExtendedStatus:(BOOL)flag
+{
+	useStatusMessageAsExtendedStatus = flag;
+}
 
 //Drawing --------------------------------------------------------------------------------------------------------------
 #pragma mark Drawing
@@ -502,8 +504,10 @@
 - (NSRect)drawUserExtendedStatusInRect:(NSRect)rect drawUnder:(BOOL)drawUnder
 {
 	if (extendedStatusVisible && (drawUnder || [self textAlignment] != NSCenterTextAlignment)) {
-		NSString 	*string = [listObject displayArrayObjectForKey:@"ExtendedStatus"];
-		
+		NSString 	*string = (useStatusMessageAsExtendedStatus ?
+							   [listObject statusMessageString] : 
+							   [listObject displayArrayObjectForKey:@"ExtendedStatus"]);
+
 		if (string) {
 			int	halfHeight = rect.size.height / 2;
 

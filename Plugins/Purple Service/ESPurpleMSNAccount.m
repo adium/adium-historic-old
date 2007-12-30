@@ -37,7 +37,6 @@
 
 #define DEFAULT_MSN_PASSPORT_DOMAIN				@"@hotmail.com"
 #define SECONDS_BETWEEN_FRIENDLY_NAME_CHANGES	10
-#define	NEW_MSN									FALSE
 
 #if !NEW_MSN
 	extern void msn_set_friendly_name(PurpleConnection *gc, const char *entry);
@@ -76,9 +75,13 @@
 {
 	[super initAccount];
 	lastFriendlyNameChange = nil;
+
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_MSN_SERVICE];
 }
 
 - (void)dealloc {
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+	
 	[lastFriendlyNameChange release];
 	[queuedFriendlyName release];
 
@@ -180,24 +183,6 @@
 	return nil;
 }
 
-- (AIReconnectDelayType)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
-{
-	AIReconnectDelayType shouldAttemptReconnect = [super shouldAttemptReconnectAfterDisconnectionError:disconnectionError];
-
-	if (disconnectionError && *disconnectionError) {
-		if (([*disconnectionError rangeOfString:@"Type your e-mail address and password correctly"].location != NSNotFound) ||
-			([*disconnectionError rangeOfString:@"Unable to authenticate"].location != NSNotFound)) {
-			[self setLastDisconnectionError:AILocalizedString(@"Incorrect username or password","Error message displayed when the server reports username or password as being incorrect.")];
-			[self serverReportedInvalidPassword];
-			shouldAttemptReconnect = AIReconnectImmediately;
-		} else if (([*disconnectionError rangeOfString:@"You have signed on from another location"].location != NSNotFound)) {
-			shouldAttemptReconnect = AIReconnectNever;
-		}
-	}
-	
-	return shouldAttemptReconnect;
-}
-
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
 	return [AIHTMLDecoder encodeHTML:inAttributedString
@@ -213,13 +198,8 @@
 				   attachmentsAsText:YES
 		   onlyIncludeOutgoingImages:NO
 					  simpleTagsOnly:YES
-					  bodyBackground:NO];
-}
-
-- (BOOL)encrypted
-{
-	//MSN can only connect via SSL.
-	return [self online];
+					  bodyBackground:NO
+				 allowJavascriptURLs:YES];
 }
 
 #pragma mark Status
@@ -415,6 +395,11 @@
 	[super gotFilteredDisplayName:attributedDisplayName];
 }
 
+- (BOOL)useDisplayNameAsStatusMessage
+{
+	return displayNamesAsStatus;
+}
+
 - (void)updateMobileStatus:(AIListContact *)theContact withData:(BOOL)isMobile
 {
 	//No-op
@@ -449,6 +434,16 @@
 - (void)cancelFileTransfer:(ESFileTransfer *)fileTransfer
 {
 	[super cancelFileTransfer:fileTransfer];
+}
+
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	[super preferencesChangedForGroup:group key:key object:object preferenceDict:prefDict firstTime:firstTime];
+	
+	if ([group isEqualToString:PREF_GROUP_MSN_SERVICE]) {
+		displayNamesAsStatus = [[prefDict objectForKey:KEY_MSN_DISPLAY_NAMES_AS_STATUS] boolValue];
+	}
 }
 
 #pragma mark Status messages
@@ -540,10 +535,10 @@
 #pragma mark Contact List Menu Items
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
-	if ((strcmp(label, "Initiate Chat") == 0) || (strcmp(label, "Initiate _Chat") == 0)) {
+	if ((strcmp(label, _("Initiate Chat")) == 0) || (strcmp(label, _("Initiate _Chat")) == 0)) {
 		return [NSString stringWithFormat:AILocalizedString(@"Initiate Multiuser Chat with %@",nil),[inContact formattedUID]];
 
-	} else if (strcmp(label, "Send to Mobile") == 0) {
+	} else if (strcmp(label, _("Send to Mobile")) == 0) {
 		return [NSString stringWithFormat:AILocalizedString(@"Send to %@'s Mobile",nil),[inContact formattedUID]];
 	}
 	
@@ -553,24 +548,22 @@
 #pragma mark Account Action Menu Items
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {	
-	if (strcmp(label, "Set Friendly Name...") == 0) {
-//		return [AILocalizedString(@"Set Display Name","Action menu item for setting the display name") stringByAppendingEllipsis];
+	if (strcmp(label, _("Set Friendly Name...")) == 0) {
+		/* Don't include the Set Friendly Name action since we have our own UI for this */
 		return nil;
 
-	} else if (strcmp(label, "Set Home Phone Number...") == 0) {
+	} else if (strcmp(label, _("Set Home Phone Number...")) == 0) {
 		return [AILocalizedString(@"Set Home Phone Number",nil) stringByAppendingEllipsis];
 		
-	} else if (strcmp(label, "Set Work Phone Number...") == 0) {
+	} else if (strcmp(label, _("Set Work Phone Number...")) == 0) {
 		return [AILocalizedString(@"Set Work Phone Number",nil) stringByAppendingEllipsis];
 		
-	} else if (strcmp(label, "Set Mobile Phone Number...") == 0) {
+	} else if (strcmp(label, _("Set Mobile Phone Number...")) == 0) {
 		return [AILocalizedString(@"Set Mobile Phone Number",nil) stringByAppendingEllipsis];
 		
-	} else if (strcmp(label, "Allow/Disallow Mobile Pages...") == 0) {
+	} else if (strcmp(label, _("Allow/Disallow Mobile Pages...")) == 0) {
 		return [AILocalizedString(@"Allow/Disallow Mobile Pages","Action menu item for MSN accounts to toggle whether Mobile pages [forwarding messages to a mobile device] are enabled") stringByAppendingEllipsis];
 
-	} else if (strcmp(label, "Open Hotmail Inbox") == 0) {
-		return AILocalizedString(@"Open Hotmail Inbox", "Action menu item for MSN accounts to open the hotmail inbox");
 	}
 
 	return [super titleForAccountActionMenuLabel:label];

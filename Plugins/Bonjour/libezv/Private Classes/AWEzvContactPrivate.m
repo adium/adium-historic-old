@@ -49,11 +49,21 @@
 
 - (void)dealloc
 {
-	[_stream release];
-    [_idleSinceDate release];
+	[_manager contactWillDeallocate:self];
+	
 	[_name release];
-	[_ipAddr release];
+	[_uniqueID release];
+	[_contactImage release];
+    [_idleSinceDate release];
+	
+	[_stream release];
 	[_rendezvous release];
+	[_ipAddr release];
+	[imageHash release];
+
+	[_resolveServiceController release];
+	[_imageServiceController release];
+	[_addressServiceController release];
 	[_manager release];
 
 	[super dealloc];
@@ -138,6 +148,18 @@
     return _manager;
 }
 
+- (void) setResolveServiceController:(ServiceController *)controller
+{
+	if (_resolveServiceController != controller) {
+		[_resolveServiceController release];
+		_resolveServiceController = [controller retain];
+	}
+}
+
+- (ServiceController *) resolveServiceController{
+	return _resolveServiceController;
+}
+
 - (void) setImageServiceController:(ServiceController *)controller{
 	if (_imageServiceController != controller) {
         [_imageServiceController release];
@@ -168,7 +190,7 @@
 	if (_stream != nil || (_ipAddr == nil))
 		return;
 
-	if((fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
+	if ((fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
 		[[[[self manager] client] client] reportError:@"Could not create socket to connect to contact for iChat Bonjour" ofLevel:AWEzvError];
 		return;
 	}
@@ -181,7 +203,9 @@
 
 	/* connect to client */
 	if (connect(fd, (const struct sockaddr *)&socketAddress, sizeof(socketAddress)) < 0) {
-		[[[[self manager] client] client] reportError:@"Could not connect socket to contact" ofLevel:AWEzvError];
+		[[[[self manager] client] client] reportError:
+		 [NSString stringWithFormat:@"%@: Could not connect socket on fd %i to contact (%@:%i)", self, fd, _ipAddr, [self port]]
+							ofLevel:AWEzvError];
 		return;
 	}
 
@@ -226,8 +250,7 @@
 					NSMutableString *mutableHtml = [html mutableCopy];
 					[mutableHtml replaceOccurrencesOfString:@"<br></br>" withString:@"<br />" 
 						options:NSCaseInsensitiveSearch range:NSMakeRange(0, [mutableHtml length])];
-					html = [mutableHtml copy];
-					[mutableHtml release];
+					html = [mutableHtml autorelease];
 				}
 
 				if (([node type] == AWEzvXMLElement) && ([[node name] isEqualToString:@"x"])) {
@@ -251,7 +274,7 @@
 		if ([plaintext length] > 0)
 			[[[[self manager] client] client] user:self sentMessage:plaintext withHtml:html];
 
-	} else if (([root type] == AWEzvXMLElement) && ([[root name] isEqualToString:@"iq"])){
+	} else if (([root type] == AWEzvXMLElement) && ([[root name] isEqualToString:@"iq"])) {
 		/* We can also receive items such as 
 		 * <iq id="iChat_887C7BB4" type="set" to="erichjkr@erkreutzer">
 		 *   <query xmlns="jabber:iq:oob">
@@ -334,7 +357,7 @@
 		}
 	}
 	
-	if(!urlFlag)
+	if (!urlFlag)
 		return;
 		
 	[self evaluteURLXML:obj];
@@ -358,19 +381,19 @@
 	NSString		*key;
 	
 	
-	/* We have a url so lets diagnose what type it is */
+	/* We have a url, so let's determine what type it is */
 	NSString *type = nil, *sizeString = nil, *nfiles = nil, *posixflags = nil, *mimeType = nil;
 	objs = [[node attributes] keyEnumerator];
-	while ((key = [objs nextObject])){
-		if ([key isEqualToString:@"type"]){
+	while ((key = [objs nextObject])) {
+		if ([key isEqualToString:@"type"]) {
 			type = [[node attributes] objectForKey:key];
-		} else if ([key isEqualToString:@"size"]){
+		} else if ([key isEqualToString:@"size"]) {
 			sizeString = [[node attributes] objectForKey:key]; 
-		} else if ([key isEqualToString:@"nfiles"]){
+		} else if ([key isEqualToString:@"nfiles"]) {
 			nfiles = [[node attributes] objectForKey:key]; 
-		} else if ([key isEqualToString:@"posixflags"]){
+		} else if ([key isEqualToString:@"posixflags"]) {
 			posixflags = [[node attributes] objectForKey:key]; 
-		} else if ([key isEqualToString:@"mimeType"]){
+		} else if ([key isEqualToString:@"mimeType"]) {
 			mimeType = [[node attributes] objectForKey:key]; 
 		}
 	}
@@ -404,13 +427,14 @@
 	[fileTransfer setDirection: EKEzvIncomingTransfer];
 	[fileTransfer setUrl: url];
 	[fileTransfer setRemoteFilename: name];
-	if ([type isEqualToString:@"directory"]){
+	if ([type isEqualToString:@"directory"]) {
 		[fileTransfer setType:EKEzvDirectory_Transfer];
-	} else if ([type isEqualToString:@"file"]){
+	} else if ([type isEqualToString:@"file"]) {
 		[fileTransfer setType:EKEzvFile_Transfer];
 	}
 	
-	[[[[self manager] client] client] user:self sentFile:(EKEzvFileTransfer *)fileTransfer];
-	
+	[[[[self manager] client] client] user:self sentFile:fileTransfer];
+	[fileTransfer release];
 }
+
 @end

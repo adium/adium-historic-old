@@ -210,7 +210,9 @@ typedef enum {
 	[listContact setStatusWithName:nil
 	                    statusType:(([contact status] == AWEzvAway) ? AIAwayStatusType : AIAvailableStatusType)
 	                        notify:NotifyLater];
-	[listContact setStatusMessage:[[[NSAttributedString alloc] initWithString:[contact statusMessage]] autorelease]
+
+	statusMessage = [contact statusMessage];
+	[listContact setStatusMessage:(statusMessage ? [[[NSAttributedString alloc] initWithString:statusMessage] autorelease] : nil)
 	                       notify:NotifyLater];
 	
 	idleSinceDate = [contact idleSinceDate];
@@ -365,8 +367,9 @@ typedef enum {
 
 - (void)reportError:(NSString *)error ofLevel:(AWEzvErrorSeverity)severity
 {
-	if (severity == AWEzvError) {
-		[self setLastDisconnectionError:error];
+	if (severity == AWEzvConnectionError) {
+		[self mainPerformSelector:@selector(setLastDisconnectionError:)
+					   withObject:error];
 	}
 	NSLog(@"Bonjour Error (%i): %@", severity, error);
 	AILog(@"Bonjour Error (%i): %@", severity, error);
@@ -424,7 +427,8 @@ typedef enum {
 	                                    attachmentsAsText:YES
 	                            onlyIncludeOutgoingImages:NO
 	                                       simpleTagsOnly:NO
-	                                       bodyBackground:NO];
+	                                       bodyBackground:NO
+									  allowJavascriptURLs:YES];
 
 	[XHTMLDecoder setGeneratesStrictXHTML:YES];
 	[XHTMLDecoder setClosesFontTags:YES];
@@ -671,49 +675,43 @@ typedef enum {
 
 #pragma mark Outgoing File Transfer
 
-- (void)mainThreadBeginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
+//Instructs the account to initiate sending of a file
+- (void)beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
 {
 	[fileTransfer setFileTransferType: Outgoing_FileTransfer];
 	/*Let's create the EKEzvFileTransfer */
 	EKEzvOutgoingFileTransfer *ezvFileTransfer = [[EKEzvOutgoingFileTransfer alloc] init];
-	[ezvFileTransfer setLocalFilename: [fileTransfer localFilename]];
-	[ezvFileTransfer setSize: [[fileTransfer sizeNumber] unsignedLongLongValue]];
-	[ezvFileTransfer setContactUID: [[fileTransfer contact] UID]];
-	[ezvFileTransfer setUniqueID: [fileTransfer uniqueID]];
-	[ezvFileTransfer setDirection: EKEzvOutgoingTransfer];
-
-	/*Now connect the EKEzvOutgoingFileTransfer to the ESFileTRansfer */
-	[fileTransfer setAccountData: ezvFileTransfer];
-
-	[[self libezvThreadProxy] startOutgoingFileTransfer: ezvFileTransfer];
-	[fileTransfer setStatus: Waiting_on_Remote_User_FileTransfer];
+	[ezvFileTransfer setLocalFilename:[fileTransfer localFilename]];
+	[ezvFileTransfer setSize:[[fileTransfer sizeNumber] unsignedLongLongValue]];
+	[ezvFileTransfer setContactUID:[[fileTransfer contact] UID]];
+	[ezvFileTransfer setUniqueID:[fileTransfer uniqueID]];
+	[ezvFileTransfer setDirection:EKEzvOutgoingTransfer];
+	
+	/* Now store the EKEzvOutgoingFileTransfer in the ESFileTransfer */
+	[fileTransfer setAccountData:ezvFileTransfer];
+	
+	[[self libezvThreadProxy] startOutgoingFileTransfer:ezvFileTransfer];
+	[fileTransfer setStatus:Waiting_on_Remote_User_FileTransfer];
+	[ezvFileTransfer release];
 }
 
-//Instructs the account to initiate sending of a file
-- (void)beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
+#pragma  mark Outgoing file transfer status updates
+- (void)mainThreadRemoteUserBeganDownload:(EKEzvOutgoingFileTransfer *)transfer
 {
-	[self mainPerformSelector:@selector(mainThreadBeginSendOfFileTransfer:) withObject:fileTransfer];
-
-}
-
-- (void)mainThreadRemoteUserBeganDownload:(ESFileTransfer *)transfer
-{
-	[transfer setStatus:Accepted_FileTransfer];
+	[[ESFileTransfer existingFileTransferWithID:[transfer uniqueID]] setStatus:Accepted_FileTransfer];
 }
 - (void)remoteUserBeganDownload:(EKEzvOutgoingFileTransfer *)fileTransfer
 {
-	ESFileTransfer *transfer = [ESFileTransfer existingFileTransferWithID: [fileTransfer uniqueID]];
-	[self mainPerformSelector:@selector(mainThreadRemoteUserBeganDownload:) withObject:transfer];
+	[self mainPerformSelector:@selector(mainThreadRemoteUserBeganDownload:) withObject:fileTransfer];
 }
 
-- (void)mainThreadRemoteUserFinishedDownload:(ESFileTransfer *)transfer
+- (void)mainThreadRemoteUserFinishedDownload:(EKEzvOutgoingFileTransfer *)transfer
 {
-	[transfer setStatus:Complete_FileTransfer];
+	[[ESFileTransfer existingFileTransferWithID:[transfer uniqueID]] setStatus:Complete_FileTransfer];
 }
 - (void)remoteUserFinishedDownload:(EKEzvOutgoingFileTransfer *)fileTransfer
 {
-	ESFileTransfer *transfer = [ESFileTransfer existingFileTransferWithID: [fileTransfer uniqueID]];
-	[self mainPerformSelector:@selector(mainThreadRemoteUserFinishedDownload:) withObject:transfer];
+	[self mainPerformSelector:@selector(mainThreadRemoteUserFinishedDownload:) withObject:fileTransfer];
 }
 
 #pragma mark Bonjour Thread

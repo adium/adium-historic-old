@@ -451,7 +451,9 @@ PurpleConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					struct proto_chat_entry *pce;
 					NSString				*identifier;
 					NSEnumerator			*enumerator;
-					
+
+					g_return_val_if_fail(gc != NULL, NULL);
+
 					//Create a hash table
 					//The hash table should contain char* objects created via a g_strdup method
 					components = g_hash_table_new_full(g_str_hash, g_str_equal,
@@ -655,71 +657,59 @@ NSString *processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 	NSString *errorMessage = nil;
 	NSString *description = nil;
 	
-	if (primaryString) {
-		if (([primaryString rangeOfString:@"Already there"].location != NSNotFound)) {
-			return NULL;
-		}
-	}
+	if (primary && strcmp(primary, _("Already there")) == 0) 
+		return NULL;
 
 	//Suppress notification warnings we have no interest in seeing
 	if (secondaryString) {
-		if (([secondaryString rangeOfString:@"Could not add the buddy 1 for an unknown reason"].location != NSNotFound) ||
-			([secondaryString rangeOfString:@"Your screen name is currently formatted as follows"].location != NSNotFound) ||
-			([secondaryString rangeOfString:@"Unable to format screen name"].location != NSNotFound) ||
-			([secondaryString rangeOfString:@"Error reading from Switchboard server"].location != NSNotFound) ||
-			([secondaryString rangeOfString:@"0x001a: Unknown error"].location != NSNotFound) ||
-			([secondaryString rangeOfString:@"Not supported by host"].location != NSNotFound) ||
-			([secondaryString rangeOfString:@"Not logged in"].location != NSNotFound) ||
-			([secondaryString rangeOfString:@"Your buddy list was downloaded from the server."].location != NSNotFound) || /* Gadu-gadu */
-			([secondaryString rangeOfString:@"Your buddy list was stored on the server."].location != NSNotFound) /* Gadu-gadu */ ||
-			([secondaryString rangeOfString:@"Your contact is using Windows Live"].location != NSNotFound) /* Yahoo without MSN support */) {
+		/*
+		 We previously suppressed:
+			if (([secondaryString rangeOfString:@"Could not add the buddy 1 for an unknown reason"].location != NSNotFound) ||
+		 is it still needed?
+		 */
+		if ((strcmp(secondary, _("Not supported by host")) == 0) || /* OSCAR */
+			(strcmp(secondary, _("Not logged in")) == 0) || /* OSCAR */
+			(strcmp(secondary, _("Your buddy list was downloaded from the server.")) == 0) || /* Gadu-gadu */
+			(strcmp(secondary, _("Your buddy list was stored on the server.")) == 0) /* Gadu-gadu */) {
 			return NULL;
 		}
-	}
-
-    if ([primaryString rangeOfString: @"Yahoo! message did not get sent."].location != NSNotFound) {
-		//Yahoo send error
-		errorMessage = AILocalizedString(@"Your Yahoo! message did not get sent.", nil);
 		
+		if ([secondaryString rangeOfString:@"Your contact is using Windows Live"].location != NSNotFound) {
+			 /* Yahoo without MSN support - English string from the server */
+			return NULL;
+		}
+
 	} else if ([primaryString rangeOfString: @"did not get sent"].location != NSNotFound) {
 		//Oscar send error
 		NSString *targetUserName = [[[[primaryString componentsSeparatedByString:@" message to "] objectAtIndex:1] componentsSeparatedByString:@" did not get "] objectAtIndex:0];
 		
 		errorMessage = [NSString stringWithFormat:AILocalizedString(@"Your message to %@ did not get sent",nil),targetUserName];
 		
-		if ([secondaryString rangeOfString:@"Rate"].location != NSNotFound) {
+		if ([secondaryString rangeOfString:[NSString stringWithUTF8String:_("Rate")]].location != NSNotFound) {
 			description = AILocalizedString(@"You are sending messages too quickly; wait a moment and try again.",nil);
-		} else if ([secondaryString isEqualToString:@"Service unavailable"] || [secondaryString isEqualToString:@"Not logged in"]) {
+		} else if ([secondaryString rangeOfString:[NSString stringWithUTF8String:_("Service unavailable")]].location != NSNotFound ||
+				   [secondaryString rangeOfString:[NSString stringWithUTF8String:_("Not logged in")]].location != NSNotFound) {
 			description = AILocalizedString(@"Connection error.",nil);
-		} else if ([secondaryString isEqualToString:@"Refused by client"]) {
+
+		} else if ([secondaryString rangeOfString:[NSString stringWithUTF8String:_("Refused by client")]].location != NSNotFound) {
 			description = AILocalizedString(@"Your message was refused by the other user.",nil);
-		} else if ([secondaryString isEqualToString:@"Reply too big"]) {
+
+		} else if ([secondaryString rangeOfString:[NSString stringWithUTF8String:_("Reply too big")]].location != NSNotFound) {
 			description = AILocalizedString(@"Your message was too big.",nil);
-		} else if ([secondaryString isEqualToString:@"In local permit/deny"]) {
+
+		} else if ([secondaryString rangeOfString:[NSString stringWithUTF8String:_("In local permit/deny")]].location != NSNotFound) {
 			description = AILocalizedString(@"The other user is in your deny list.",nil);
-		} else if ([secondaryString rangeOfString:@"Too evil"].location != NSNotFound) {
+
+		} else if ([secondaryString rangeOfString:[NSString stringWithUTF8String:_("Too evil")]].location != NSNotFound) {
 			description = AILocalizedString(@"Warning level is too high.",nil);
-		} else if ([secondaryString isEqualToString:@"User temporarily unavailable"]) {
+
+		} else if ([secondaryString rangeOfString:[NSString stringWithUTF8String:_("User temporarily unavailable")]].location != NSNotFound) {
 			description = AILocalizedString(@"The other user is temporarily unavailable.",nil);
+
 		} else {
 			description = AILocalizedString(@"No reason was given.",nil);
 		}
-		
-    } else if ([primaryString rangeOfString: @"Authorization Denied"].location != NSNotFound) {
-		//Authorization denied; grab the user name and reason
-		NSArray		*parts = [[[secondaryString componentsSeparatedByString:@" user "] objectAtIndex:1] componentsSeparatedByString:@" has denied your request to add them to your buddy list for the following reason:\n"];
-		NSString	*targetUserName =  [parts objectAtIndex:0];
-		NSString	*reason = ([parts count] > 1 ? [parts objectAtIndex:1] : AILocalizedString(@"(No reason given)",nil));
-		
-		errorMessage = [NSString stringWithFormat:AILocalizedString(@"%@ denied authorization:","User deined authorization; the next line has an explanation."),targetUserName];
-		description = reason;
-
-    } else if ([primaryString rangeOfString: @"Authorization Granted"].location != NSNotFound) {
-		//ICQ Authorization granted
-		NSString *targetUserName = [[[[secondaryString componentsSeparatedByString:@" user "] objectAtIndex:1] componentsSeparatedByString:@" has "] objectAtIndex:0];
-		
-		errorMessage = [NSString stringWithFormat:AILocalizedString(@"%@ granted authorization.",nil),targetUserName];
-	}
+    }
 	
 	//If we didn't grab a translated version, at least display the English version Purple supplied
 	[[adium interfaceController] handleMessage:([errorMessage length] ? errorMessage : primaryString)
