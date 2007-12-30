@@ -40,14 +40,13 @@
 	id r;
 	NSString *methodName = [NSString stringWithFormat:@"make%@WithProperties:",[[newObjectDescription className] camelCase]];
 	SEL customMethod = NSSelectorFromString(methodName);
-	NSLog(@"Checking if %@ responds to %@",NSStringFromClass([target class]),methodName);
+
 	if ([target respondsToSelector:customMethod])
 	{
 		//this can do the insert, based on the parameters, methinks.
 		NSMethodSignature *method = [target methodSignatureForSelector:customMethod];
 		if (!method)
 		{
-			NSLog(@"%@ doesn't support %@!",NSStringFromClass([target class]),method);
 			return nil;
 		}
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:method];

@@ -15,11 +15,9 @@
 	ircService = [[[ESIRCService alloc] init] retain];
 }
 
-extern BOOL purple_init_irc_plugin(void);
-
 - (void)installLibpurplePlugin
 {
-	purple_init_irc_plugin();
+	//No action needed. The IRC prpl is incldued in libpurple.framework and initialized by libpurple automatically.
 }
 
 - (void)loadLibpurplePlugin

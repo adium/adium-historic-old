@@ -18,7 +18,6 @@
 #import "adiumPurpleNotify.h"
 #import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
 #import <AIUtilities/AIObjectAdditions.h>
-#import "ESPurpleMeanwhileContactAdditionController.h"
 #import "AMPurpleSearchResultsController.h"
 
 static void *adiumPurpleNotifyMessage(PurpleNotifyMsgType type, const char *title, const char *primary, const char *secondary)
@@ -80,47 +79,14 @@ static void *adiumPurpleNotifySearchResults(PurpleConnection *gc, const char *ti
 										  const char *primary, const char *secondary,
 										  PurpleNotifySearchResults *results, gpointer user_data)
 {
-	NSString *primaryString = (primary ? [NSString stringWithUTF8String:primary] : nil);
-	if (primaryString &&
-		[primaryString rangeOfString:@"An ambiguous user ID was entered"].location != NSNotFound) {
-		/* Meanwhile ambiguous ID... hack implementation until a full search results UI exists */
-		NSDictionary			*infoDict;
-
-		/* secondary is 
-		 * ("The identifier '%s' may possibly refer to any of the following"
-		 * " users. Please select the correct user from the list below to"
-		 * " add them to your buddy list.");
-		 */
-		NSString	*secondaryString = [NSString stringWithUTF8String:secondary];
-		NSString	*originalName;
-		NSRange		preRange,postRange;
-		preRange = [secondaryString rangeOfString:@"The identifier '"];
-		postRange = [secondaryString rangeOfString:@"' may possibly refer to any of the following"];
-		originalName = [secondaryString substringWithRange:NSMakeRange(preRange.location+preRange.length,
-																	   postRange.location - (preRange.location+preRange.length))];		
-		
-		infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-			[NSValue valueWithPointer:gc], @"PurpleConnection",
-			[NSValue valueWithPointer:user_data],@"userData",
-			[NSValue valueWithPointer:results], @"PurpleNotifySearchResultsValue",
-			originalName, @"Original Name",
-			nil];
-		
-		ESPurpleMeanwhileContactAdditionController *requestController = [ESPurpleMeanwhileContactAdditionController showContactAdditionListWithDict:infoDict];
-
-		//This will be released in adiumPurpleNotifyClose()
-		return requestController;
-
-	} else {
-		AILog(@"**** returning search results");
-		//This will be released in adiumPurpleNotifyClose()
-		return [[AMPurpleSearchResultsController alloc] initWithPurpleConnection:gc
-																		   title:title?[NSString stringWithUTF8String:title]:nil
-																	 primaryText:primary?[NSString stringWithUTF8String:primary]:nil
-																   secondaryText:secondary?[NSString stringWithUTF8String:secondary]:nil
-																   searchResults:results
-																		userData:user_data];
-	}
+	AILog(@"**** returning search results");
+	//This will be released in adiumPurpleNotifyClose()
+	return [[AMPurpleSearchResultsController alloc] initWithPurpleConnection:gc
+																	   title:(title ? [NSString stringWithUTF8String:title] : nil)
+																 primaryText:(primary ? [NSString stringWithUTF8String:primary] : nil)
+															   secondaryText:(secondary ? [NSString stringWithUTF8String:secondary] : nil)
+															   searchResults:results
+																	userData:user_data];
 }
 
 static void adiumPurpleNotifySearchResultsNewRows(PurpleConnection *gc,

@@ -14,16 +14,20 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+
 #import "adiumPurpleRequest.h"
 #import "ESPurpleRequestActionController.h"
 #import "ESPurpleRequestWindowController.h"
 #import "ESPurpleFileReceiveRequestController.h"
-#import "ESPurpleMeanwhileContactAdditionController.h"
 #import <Adium/NDRunLoopMessenger.h>
 #import <Adium/AIContactAlertsControllerProtocol.h>
 #import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/ESFileTransfer.h>
 #import "AMPurpleRequestFieldsController.h"
+
+#import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
+#import "AILibpurplePlugin.h"
+#import <libintl/libintl.h>
 
 /*
  * Purple requires us to return a handle from each of the request functions.  This handle is passed back to use in 
@@ -368,21 +372,22 @@ static void *adiumPurpleRequestFile(const char *title, const char *filename,
 	id					requestController = nil;
 	NSString			*titleString = (title ? [NSString stringWithUTF8String:title] : nil);
 	
-	if (titleString &&
-		([titleString rangeOfString:@"Sametime"].location != NSNotFound)) {
-		if ([titleString rangeOfString:@"Export"].location != NSNotFound) {
-			NSSavePanel *savePanel = [NSSavePanel savePanel];
-			
-			if ([savePanel runModalForDirectory:nil file:nil] == NSOKButton) {
-				((PurpleRequestFileCb)ok_cb)(user_data, [[savePanel filename] UTF8String]);
-			}
-		} else if ([titleString rangeOfString:@"Import"].location != NSNotFound) {
-			NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-			
-			if ([openPanel runModalForDirectory:nil file:nil types:nil] == NSOKButton) {
-				((PurpleRequestFileCb)ok_cb)(user_data, [[openPanel filename] UTF8String]);
-			}
+	if (titleString && [titleString isEqualToString:[NSString stringWithFormat:[NSString stringWithUTF8String:_("Export Sametime List for Account %s")], 
+													 purple_account_get_username(account)]]) {
+		NSSavePanel *savePanel = [NSSavePanel savePanel];
+		
+		if ([savePanel runModalForDirectory:nil file:nil] == NSOKButton) {
+			((PurpleRequestFileCb)ok_cb)(user_data, [[savePanel filename] UTF8String]);
 		}
+
+	} else if (titleString && [titleString isEqualToString:[NSString stringWithFormat:[NSString stringWithUTF8String:_("Import Sametime List for Account %s")],
+															purple_account_get_username(account)]]) {
+		NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+		
+		if ([openPanel runModalForDirectory:nil file:nil types:nil] == NSOKButton) {
+			((PurpleRequestFileCb)ok_cb)(user_data, [[openPanel filename] UTF8String]);
+		}
+
 	} else {
 		PurpleXfer *xfer = (PurpleXfer *)user_data;
 		if (xfer) {

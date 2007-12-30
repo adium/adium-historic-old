@@ -54,6 +54,8 @@
 
 #define MESSAGES_WINDOW_MENU_TITLE		AILocalizedString(@"Chats","Title for the messages window menu item")
 
+//#define	LOG_RESPONDER_CHAIN
+
 @interface AIInterfaceController (PRIVATE)
 - (void)_resetOpenChatsCache;
 - (void)_addItemToMainMenuAndDock:(NSMenuItem *)item;
@@ -119,12 +121,16 @@
 		flashState = 0;
 		
 		windowMenuArray = nil;
+		
+#ifdef LOG_RESPONDER_CHAIN
+		[NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(reportResponderChain:) userInfo:nil repeats:YES];
+#endif
 	}
 	
 	return self;
 }
 
-#if 0
+#ifdef LOG_RESPONDER_CHAIN
 //Can be called by a timer to periodically log the responder chain
 //[NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(reportResponderChain:) userInfo:nil repeats:YES];
 - (void)reportResponderChain:(NSTimer *)inTimer
@@ -239,9 +245,10 @@
 //Handle a reopen/dock icon click
 - (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows
 {
-	if (!visibleWindows) {
-		//The Contact List is hidden, and there are no chat windows, so unhide the Contact List.
+	if (![self contactListIsVisibleAndMain] && [[interfacePlugin openContainers] count] == 0) {
+		//The contact list is not visible, and there are no chat windows. Make the contact list visible.
 		[self showContactList:nil];
+
 	} else {
 		AIChat	*mostRecentUnviewedChat;
 
@@ -395,7 +402,7 @@
 		if ([containers count] > 0) {
 			containerID = [[containers objectAtIndex:0] objectForKey:@"ID"];
 		} else {
-			containerID = AILocalizedString(@"Chat",nil);
+			containerID = nil;
 		}
 	}
 
@@ -410,30 +417,8 @@
 }
 
 - (id)openChat:(AIChat *)inChat inContainerWithID:(NSString *)containerID atIndex:(int)index
-{
-	//at this point, I'm not sure if I should really be opening this chat in that container. I should double-check with my preferences to make sure that I'm not screwing something up
-	
+{	
 	NSArray		*containers = [interfacePlugin openContainersAndChats];
-	
-	if (!tabbedChatting) {
-		if ([inChat listObject]) {
-			NSAssert(containerID == [[inChat listObject] internalObjectID],@"Bad containerID!");
-		} else {
-			NSAssert(containerID == [inChat name],@"Bad containerID!");
-		}
-	} else if (groupChatsByContactGroup) {
-		if ([inChat isGroupChat]) {
-			NSAssert(containerID == AILocalizedString(@"Group Chat",nil),@"Bad containerID!");
-			
-		} else {
-			AIListObject	*group = [[[inChat listObject] parentContact] containingObject];
-			
-			//If the contact is in the contact list root, we don't have a group
-			if (group && (group != [[adium contactController] contactList])) {
-				NSAssert(containerID == [group displayName],@"Bad containerID!");
-			}
-		}
-	}
 
 	if (!containerID) {
 		//Open new chats into the first container (if not available, create a new one)

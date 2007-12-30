@@ -127,6 +127,12 @@
 	return 129;
 }
 
+//Passwords are supported but optional
+- (BOOL)requiresPassword
+{
+	return NO;
+}
+
 //Generally, Jabber is NOT case sensitive, but handles in group chats are case sensitive, so return YES
 //and do custom handling as needed in the account code
 - (BOOL)caseSensitive{

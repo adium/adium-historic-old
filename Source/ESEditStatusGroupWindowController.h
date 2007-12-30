@@ -15,6 +15,9 @@
 	IBOutlet	NSTextField			*label_groupWith;
 	IBOutlet	NSPopUpButton		*popUp_groupWith;
 	
+	IBOutlet	NSButton			*button_OK;
+	IBOutlet	NSButton			*button_cancel;
+	
 	AIStatusGroup					*statusGroup;
 	id								target;
 }

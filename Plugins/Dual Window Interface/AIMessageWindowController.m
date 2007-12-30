@@ -619,12 +619,22 @@
 	NSWindow	*window = [self window];
 	
 	//Window Title
-    if ([tabView_messages numberOfTabViewItems] == 1) {
-        title = [NSString stringWithFormat:@"%@", label];
+    if (([tabView_messages numberOfTabViewItems] == 1) || !containerName) {
+        title = (label ? [NSString stringWithFormat:@"%@", label] : nil);
     } else {
-		title = [NSString stringWithFormat:@"%@ - %@", containerName, label];
+		if (containerName && label) {
+			title = [NSString stringWithFormat:@"%@ - %@", containerName, label];
+		} else {
+			if (containerName)
+				title = containerName;
+			else if (label)
+				title = label;
+			else
+				title = nil;
+		}
     }
-	[window setTitle:title];
+	
+	if (title) [window setTitle:title];
 	
 	//Window Icon (We display state in the window title if tabs are not visible)
 	if (!hasShownDocumentButton) {

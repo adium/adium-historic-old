@@ -82,7 +82,6 @@
 		1172FBCF0CDAA8D400B8E233 /* libintl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC70CDAA8D400B8E233 /* libintl.framework */; };
 		1172FBD00CDAA8D400B8E233 /* libmeanwhile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC80CDAA8D400B8E233 /* libmeanwhile.framework */; };
 		1172FBD10CDAA8D400B8E233 /* libpurple.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC90CDAA8D400B8E233 /* libpurple.framework */; };
-		1172FBD20CDAA8D400B8E233 /* libsasl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBCA0CDAA8D400B8E233 /* libsasl.framework */; };
 		1172FBD30CDAA8D400B8E233 /* libglib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC30CDAA8D400B8E233 /* libglib.framework */; };
 		1172FBD40CDAA8D400B8E233 /* libgmodule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC40CDAA8D400B8E233 /* libgmodule.framework */; };
 		1172FBD50CDAA8D400B8E233 /* libgobject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC50CDAA8D400B8E233 /* libgobject.framework */; };
@@ -90,7 +89,6 @@
 		1172FBD70CDAA8D400B8E233 /* libintl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC70CDAA8D400B8E233 /* libintl.framework */; };
 		1172FBD80CDAA8D400B8E233 /* libmeanwhile.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC80CDAA8D400B8E233 /* libmeanwhile.framework */; };
 		1172FBD90CDAA8D400B8E233 /* libpurple.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC90CDAA8D400B8E233 /* libpurple.framework */; };
-		1172FBDA0CDAA8D400B8E233 /* libsasl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBCA0CDAA8D400B8E233 /* libsasl.framework */; };
 		117D6DC00BC5F0C40080D02B /* notify.png in Resources */ = {isa = PBXBuildFile; fileRef = 117D6DBF0BC5F0C40080D02B /* notify.png */; };
 		11AA1EFA0BCAE9C3003DDA66 /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 11AA1EF90BCAE9C3003DDA66 /* Quartz.framework */; };
 		11C7CAF30BB58F4100296D7F /* AINudgeBuzzHandlerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 11C7CAF10BB58F4100296D7F /* AINudgeBuzzHandlerPlugin.m */; };
@@ -108,7 +106,6 @@
 		11EE1CD30CDD01120097F246 /* libintl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1172FBC70CDAA8D400B8E233 /* libintl.framework */; };
 		11EE1CD40CDD01120097F246 /* libmeanwhile.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1172FBC80CDAA8D400B8E233 /* libmeanwhile.framework */; };
 		11EE1CD50CDD01120097F246 /* libpurple.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1172FBC90CDAA8D400B8E233 /* libpurple.framework */; };
-		11EE1CD60CDD01120097F246 /* libsasl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 1172FBCA0CDAA8D400B8E233 /* libsasl.framework */; };
 		11F145F00B546AC500CA91F6 /* Menu Bar Icons in CopyFiles */ = {isa = PBXBuildFile; fileRef = 11F145C70B546A6D00CA91F6 /* Menu Bar Icons */; };
 		11F1460C0B546C1200CA91F6 /* AIMenuBarIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = 11F1460A0B546C1200CA91F6 /* AIMenuBarIcons.m */; };
 		31034EFF0C8142680003F5AA /* TestStringAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 31034EFE0C8142680003F5AA /* TestStringAdditions.m */; };
@@ -134,7 +131,6 @@
 		34082690075B5CB900703011 /* Awake.png in Resources */ = {isa = PBXBuildFile; fileRef = 3408268E075B5CB900703011 /* Awake.png */; };
 		34082691075B5CB900703011 /* Flap.png in Resources */ = {isa = PBXBuildFile; fileRef = 3408268F075B5CB900703011 /* Flap.png */; };
 		340B9BD4069C735900FE1E57 /* WebKit Message View.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3499F45006309AC80035B468 /* WebKit Message View.AdiumPlugin */; };
-		340BAB1D09EC6E53000EC441 /* libirc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 340BAB1C09EC6E53000EC441 /* libirc.a */; };
 		340C1A360BD58F9000D09235 /* DiskImageUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 340C1A320BD58F9000D09235 /* DiskImageUtilities.m */; };
 		340C1A380BD58F9000D09235 /* AuthorizedTaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 340C1A340BD58F9000D09235 /* AuthorizedTaskManager.m */; };
 		340C1ABF0BD58FAB00D09235 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 340C1ABE0BD58FAB00D09235 /* Security.framework */; };
@@ -193,6 +189,7 @@
 		341BDBBB0968BC9B00CF83F5 /* OTR.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 341BDBBA0968BC9A00CF83F5 /* OTR.framework */; };
 		341BDF5E0969814A00CF83F5 /* BadgerDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 341BDF5D0969814900CF83F5 /* BadgerDefaults.plist */; };
 		341BDF700969829E00CF83F5 /* DockUnviewedContentDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 341BDF6F0969829E00CF83F5 /* DockUnviewedContentDefaults.plist */; };
+		3420B7200D222D2100605780 /* libpurple.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC90CDAA8D400B8E233 /* libpurple.framework */; };
 		342113CE08261FB900A3B0FB /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 342113CD08261FB900A3B0FB /* MainMenu.nib */; };
 		342353D709D45726009FF634 /* AIAbstractLogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */; };
 		3428328907D2643F004F01C9 /* ESStatusPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 3428328507D2643F004F01C9 /* ESStatusPreferences.m */; };
@@ -517,9 +514,6 @@
 		3485DBC209EBCE7400232CC4 /* ESPurpleRequestWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3499F4A606309AF60035B468 /* ESPurpleRequestWindowController.m */; };
 		3485DBC309EBCE7400232CC4 /* PurpleMultilineRequestWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34C2CF85063340540018E5D2 /* PurpleMultilineRequestWindow.nib */; };
 		3485DBC409EBCE7400232CC4 /* PurpleSinglelineRequestWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34C2CF86063340540018E5D2 /* PurpleSinglelineRequestWindow.nib */; };
-		3485DBC509EBCE7400232CC4 /* ESPurpleMeanwhileContactAdditionController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C9A6360822930D004F912C /* ESPurpleMeanwhileContactAdditionController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3485DBC609EBCE7400232CC4 /* ESPurpleMeanwhileContactAdditionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C9A6370822930D004F912C /* ESPurpleMeanwhileContactAdditionController.m */; };
-		3485DBC709EBCE7400232CC4 /* PurpleMeanwhileContactAdditionWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34C9A64408229348004F912C /* PurpleMeanwhileContactAdditionWindow.nib */; };
 		3485DBC809EBCE7400232CC4 /* ESPurpleFileReceiveRequestController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34AEE7DC08E3546F00AE1C78 /* ESPurpleFileReceiveRequestController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3485DBC909EBCE7400232CC4 /* ESPurpleFileReceiveRequestController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AEE7DD08E3546F00AE1C78 /* ESPurpleFileReceiveRequestController.m */; };
 		3485DBCA09EBCE7400232CC4 /* ESPurpleRequestActionController.h in Headers */ = {isa = PBXBuildFile; fileRef = 341E88680648FF1B00E0C828 /* ESPurpleRequestActionController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1526,7 +1520,6 @@
 				11EE1CD30CDD01120097F246 /* libintl.framework in CopyFiles */,
 				11EE1CD40CDD01120097F246 /* libmeanwhile.framework in CopyFiles */,
 				11EE1CD50CDD01120097F246 /* libpurple.framework in CopyFiles */,
-				11EE1CD60CDD01120097F246 /* libsasl.framework in CopyFiles */,
 				EE5754ED0B3D7A7A00100989 /* Sparkle.framework in CopyFiles */,
 				377ED0220AE95D7D00CB7BDF /* PSMTabBarControl.framework in CopyFiles */,
 				9E1E1E270A96770C00E16DFC /* LMX.framework in CopyFiles */,
@@ -1653,7 +1646,6 @@
 		1172FBC70CDAA8D400B8E233 /* libintl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libintl.framework; path = Frameworks/libintl.framework; sourceTree = "<group>"; };
 		1172FBC80CDAA8D400B8E233 /* libmeanwhile.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libmeanwhile.framework; path = Frameworks/libmeanwhile.framework; sourceTree = "<group>"; };
 		1172FBC90CDAA8D400B8E233 /* libpurple.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libpurple.framework; path = Frameworks/libpurple.framework; sourceTree = "<group>"; };
-		1172FBCA0CDAA8D400B8E233 /* libsasl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libsasl.framework; path = Frameworks/libsasl.framework; sourceTree = "<group>"; };
 		117D6DBF0BC5F0C40080D02B /* notify.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = notify.png; path = Resources/notify.png; sourceTree = SOURCE_ROOT; };
 		11AA1EF90BCAE9C3003DDA66 /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = /System/Library/Frameworks/Quartz.framework; sourceTree = "<absolute>"; };
 		11C157D804A88E04008E0C76 /* AIEmoticonController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonController.h; path = Source/AIEmoticonController.h; sourceTree = "<group>"; };
@@ -1732,7 +1724,6 @@
 		340915F105C0A5DF00CDE3DD /* PurpleCommon.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = PurpleCommon.h; path = "Plugins/Purple Service/PurpleCommon.h"; sourceTree = "<group>"; };
 		340BA84409EC593A000EC441 /* AICorePluginLoader.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AICorePluginLoader.h; path = "Frameworks/Adium Framework/Source/AICorePluginLoader.h"; sourceTree = "<group>"; };
 		340BA84509EC593B000EC441 /* AICorePluginLoader.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AICorePluginLoader.m; path = "Frameworks/Adium Framework/Source/AICorePluginLoader.m"; sourceTree = "<group>"; };
-		340BAB1C09EC6E53000EC441 /* libirc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libirc.a; path = "Plugins/IRC Libpurple Plugin/libirc.a"; sourceTree = "<group>"; };
 		340C1A310BD58F9000D09235 /* AuthorizedTaskManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AuthorizedTaskManager.h; path = Source/AuthorizedTaskManager.h; sourceTree = "<group>"; };
 		340C1A320BD58F9000D09235 /* DiskImageUtilities.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DiskImageUtilities.m; path = Source/DiskImageUtilities.m; sourceTree = "<group>"; };
 		340C1A330BD58F9000D09235 /* DiskImageUtilities.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DiskImageUtilities.h; path = Source/DiskImageUtilities.h; sourceTree = "<group>"; };
@@ -2972,7 +2963,7 @@
 		34BC8F790ACA3AAC00562745 /* AIScannerDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIScannerDebug.m; path = Source/AIScannerDebug.m; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BEA0F109C4A481000787E4 /* AITranslatorRequestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AITranslatorRequestDelegate.h; path = Plugins/Translation/AITranslatorRequestDelegate.h; sourceTree = "<group>"; };
@@ -3051,9 +3042,6 @@
 		34C899AB07E51B18009357F6 /* BuiltInEventPresets.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist; name = BuiltInEventPresets.plist; path = Resources/BuiltInEventPresets.plist; sourceTree = "<group>"; };
 		34C91BB90CA8909700740974 /* AIContentNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContentNotification.h; path = "Frameworks/Adium Framework/Source/AIContentNotification.h"; sourceTree = "<group>"; };
 		34C91BBA0CA8909700740974 /* AIContentNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIContentNotification.m; path = "Frameworks/Adium Framework/Source/AIContentNotification.m"; sourceTree = "<group>"; };
-		34C9A6360822930D004F912C /* ESPurpleMeanwhileContactAdditionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESPurpleMeanwhileContactAdditionController.h; path = "Plugins/Purple Service/ESPurpleMeanwhileContactAdditionController.h"; sourceTree = "<group>"; };
-		34C9A6370822930D004F912C /* ESPurpleMeanwhileContactAdditionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESPurpleMeanwhileContactAdditionController.m; path = "Plugins/Purple Service/ESPurpleMeanwhileContactAdditionController.m"; sourceTree = "<group>"; };
-		34C9A64408229348004F912C /* PurpleMeanwhileContactAdditionWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = PurpleMeanwhileContactAdditionWindow.nib; path = "Plugins/Purple Service/PurpleMeanwhileContactAdditionWindow.nib"; sourceTree = "<group>"; };
 		34C9EC40099FA2A8007ECAB3 /* DefaultBlockedStatusIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DefaultBlockedStatusIcon.png; path = "Frameworks/Adium Framework/DefaultBlockedStatusIcon.png"; sourceTree = "<group>"; };
 		34CA15520CAFDFB2009AA5E3 /* sidebarActionWidget.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = sidebarActionWidget.png; path = Resources/sidebarActionWidget.png; sourceTree = "<group>"; };
 		34CA23990A671E0E00B11032 /* ca */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ca; path = Resources/ca.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
@@ -3173,6 +3161,7 @@
 		34D8346D07CBE6F5006466F2 /* IconFamily.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = IconFamily.m; path = "Frameworks/Adium Framework/Source/IconFamily.m"; sourceTree = "<group>"; };
 		34D8346E07CBE6F5006466F2 /* IconFamily.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = IconFamily.h; path = "Frameworks/Adium Framework/Source/IconFamily.h"; sourceTree = "<group>"; };
 		34D836F307CBF960006466F2 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
+		34D8B3D60D15A40C0066F013 /* fr_CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr_CA; path = Resources/fr_CA.lproj/Statuses.strings; sourceTree = "<group>"; };
 		34DC84280A7EA012003E1636 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = Resources/nl.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		34DFF46007A5EABF00B92233 /* ESSecureMessagingPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESSecureMessagingPlugin.h; path = "Plugins/Secure Messaging/ESSecureMessagingPlugin.h"; sourceTree = "<group>"; };
 		34DFF46107A5EABF00B92233 /* ESSecureMessagingPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESSecureMessagingPlugin.m; path = "Plugins/Secure Messaging/ESSecureMessagingPlugin.m"; sourceTree = "<group>"; };
@@ -3207,6 +3196,27 @@
 		34E2A2EF07B018B2006735BC /* ESAddressBookIntegrationAdvancedPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESAddressBookIntegrationAdvancedPreferences.m; path = Source/ESAddressBookIntegrationAdvancedPreferences.m; sourceTree = "<group>"; };
 		34E2A3E507B08CC9006735BC /* AIAliasSupportPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAliasSupportPlugin.m; path = Source/AIAliasSupportPlugin.m; sourceTree = "<group>"; };
 		34E2A3E607B08CC9006735BC /* AIAliasSupportPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAliasSupportPlugin.h; path = Source/AIAliasSupportPlugin.h; sourceTree = "<group>"; };
+		34E354ED0D10AC5E009FC9DE /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = "Frameworks/Adium Framework/Resources/nl.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E354F80D10AC63009FC9DE /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = "Frameworks/Adium Framework/Resources/de.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355030D10AC66009FC9DE /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = "Frameworks/Adium Framework/Resources/zh_TW.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E3550C0D10AC68009FC9DE /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = "Frameworks/Adium Framework/Resources/ja.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E3550D0D10AC6B009FC9DE /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = "Frameworks/Adium Framework/Resources/it.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E3550E0D10AC6E009FC9DE /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = "Frameworks/Adium Framework/Resources/fr.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355190D10AC70009FC9DE /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = "Frameworks/Adium Framework/Resources/da.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355240D10AC73009FC9DE /* nb */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nb; path = "Frameworks/Adium Framework/Resources/nb.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E3552F0D10AC76009FC9DE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = "Frameworks/Adium Framework/Resources/zh_CN.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355300D10AC78009FC9DE /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = "Frameworks/Adium Framework/Resources/cs.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355310D10AC7A009FC9DE /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = "Frameworks/Adium Framework/Resources/is.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355320D10AC7D009FC9DE /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = "Frameworks/Adium Framework/Resources/sv.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355330D10AC7F009FC9DE /* ca */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ca; path = "Frameworks/Adium Framework/Resources/ca.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355340D10AC81009FC9DE /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = "Frameworks/Adium Framework/Resources/ru.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355350D10AC84009FC9DE /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = "Frameworks/Adium Framework/Resources/es.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355400D10AC86009FC9DE /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = "Frameworks/Adium Framework/Resources/pl.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E3554B0D10AC89009FC9DE /* en_AU */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_AU; path = "Frameworks/Adium Framework/Resources/en_AU.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355560D10AC8B009FC9DE /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = "Frameworks/Adium Framework/Resources/tr.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355610D10AC8E009FC9DE /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = "Frameworks/Adium Framework/Resources/fi.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E3556C0D10AC92009FC9DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt_BR; path = "Frameworks/Adium Framework/Resources/pt_BR.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		34E355770D10AC95009FC9DE /* en_CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en_CA; path = "Frameworks/Adium Framework/Resources/en_CA.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
 		34E3C8870638D40500AA3EF7 /* ESYahooJapanService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESYahooJapanService.h; path = "Plugins/Purple Service/ESYahooJapanService.h"; sourceTree = "<group>"; };
 		34E3C8880638D40500AA3EF7 /* ESYahooJapanService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESYahooJapanService.m; path = "Plugins/Purple Service/ESYahooJapanService.m"; sourceTree = "<group>"; };
 		34E3C8A50638D50F00AA3EF7 /* ESPurpleYahooJapanAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESPurpleYahooJapanAccount.h; path = "Plugins/Purple Service/ESPurpleYahooJapanAccount.h"; sourceTree = "<group>"; };
@@ -3417,7 +3427,7 @@
 		4B22E15C085CAE2E001864DE /* AIAbstractListObjectMenu.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAbstractListObjectMenu.h; path = "Frameworks/Adium Framework/Source/AIAbstractListObjectMenu.h"; sourceTree = "<group>"; };
 		4B22E15D085CAE2F001864DE /* AIAbstractListObjectMenu.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAbstractListObjectMenu.m; path = "Frameworks/Adium Framework/Source/AIAbstractListObjectMenu.m"; sourceTree = "<group>"; };
 		4B25494603F6A32700A8010A /* AIAccountSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountSelectionView.h; path = "Plugins/Dual Window Interface/AIAccountSelectionView.h"; sourceTree = "<group>"; };
-		4B25494703F6A32700A8010A /* AIAccountSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountSelectionView.m; path = "Plugins/Dual Window Interface/AIAccountSelectionView.m"; sourceTree = "<group>"; };
+		4B25494703F6A32700A8010A /* AIAccountSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAccountSelectionView.m; path = "Plugins/Dual Window Interface/AIAccountSelectionView.m"; sourceTree = "<group>"; };
 		4B28DDAB0599FED200343093 /* AIAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountViewController.h; path = "Frameworks/Adium Framework/Source/AIAccountViewController.h"; sourceTree = "<group>"; };
 		4B28DDAC0599FED200343093 /* AIAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountViewController.m; path = "Frameworks/Adium Framework/Source/AIAccountViewController.m"; sourceTree = "<group>"; };
 		4B292D3007A9C8E100C5F882 /* AIStatusController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIStatusController.h; path = Source/AIStatusController.h; sourceTree = "<group>"; };
@@ -3425,9 +3435,9 @@
 		4B2DC068066F6B1200AD5AAD /* ContactSettingsPane.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ContactSettingsPane.nib; path = "Plugins/Contact Settings/ContactSettingsPane.nib"; sourceTree = SOURCE_ROOT; };
 		4B2DC06B066F705800AD5AAD /* AIContactSettingsPane.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactSettingsPane.h; path = "Plugins/Contact Settings/AIContactSettingsPane.h"; sourceTree = SOURCE_ROOT; };
 		4B2DC06C066F705800AD5AAD /* AIContactSettingsPane.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContactSettingsPane.m; path = "Plugins/Contact Settings/AIContactSettingsPane.m"; sourceTree = SOURCE_ROOT; };
-		4B31E8C004C46A9100A8010A /* AIContactStatusColoringPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactStatusColoringPlugin.h; path = "Plugins/Contact Status Coloring/AIContactStatusColoringPlugin.h"; sourceTree = "<group>"; };
-		4B31E8C104C46A9100A8010A /* AIContactStatusColoringPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContactStatusColoringPlugin.m; path = "Plugins/Contact Status Coloring/AIContactStatusColoringPlugin.m"; sourceTree = "<group>"; };
-		4B31E8C404C46A9100A8010A /* ContactStatusColoringDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist; name = ContactStatusColoringDefaults.plist; path = "Plugins/Contact Status Coloring/ContactStatusColoringDefaults.plist"; sourceTree = "<group>"; };
+		4B31E8C004C46A9100A8010A /* AIContactStatusColoringPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactStatusColoringPlugin.h; path = Source/AIContactStatusColoringPlugin.h; sourceTree = "<group>"; };
+		4B31E8C104C46A9100A8010A /* AIContactStatusColoringPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContactStatusColoringPlugin.m; path = Source/AIContactStatusColoringPlugin.m; sourceTree = "<group>"; };
+		4B31E8C404C46A9100A8010A /* ContactStatusColoringDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = ContactStatusColoringDefaults.plist; path = Resources/ContactStatusColoringDefaults.plist; sourceTree = "<group>"; };
 		4B387EB707199FE5004DE713 /* ESPurpleDotMacAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESPurpleDotMacAccountViewController.h; path = "Plugins/Purple Service/ESPurpleDotMacAccountViewController.h"; sourceTree = "<group>"; };
 		4B387EB807199FE5004DE713 /* ESPurpleDotMacAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESPurpleDotMacAccountViewController.m; path = "Plugins/Purple Service/ESPurpleDotMacAccountViewController.m"; sourceTree = "<group>"; };
 		4B388E0D0719C376004DE713 /* AIMSNServicePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIMSNServicePreferences.h; path = "Plugins/Purple Service/AIMSNServicePreferences.h"; sourceTree = "<group>"; };
@@ -3969,7 +3979,6 @@
 				1172FBCF0CDAA8D400B8E233 /* libintl.framework in Frameworks */,
 				1172FBD00CDAA8D400B8E233 /* libmeanwhile.framework in Frameworks */,
 				1172FBD10CDAA8D400B8E233 /* libpurple.framework in Frameworks */,
-				1172FBD20CDAA8D400B8E233 /* libsasl.framework in Frameworks */,
 				811035180CDE783800EC6038 /* SecurityInterface.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3986,11 +3995,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3420B7200D222D2100605780 /* libpurple.framework in Frameworks */,
 				34C7C5DC09EC4D7A0060FB4A /* AdiumLibpurple.framework in Frameworks */,
 				3485D5F409EB406000232CC4 /* AIUtilities.framework in Frameworks */,
 				3485D40409EB3FEA00232CC4 /* Adium.framework in Frameworks */,
 				34B323B809B9FEAC00029361 /* Cocoa.framework in Frameworks */,
-				340BAB1D09EC6E53000EC441 /* libirc.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4081,7 +4090,6 @@
 				1172FBD70CDAA8D400B8E233 /* libintl.framework in Frameworks */,
 				1172FBD80CDAA8D400B8E233 /* libmeanwhile.framework in Frameworks */,
 				1172FBD90CDAA8D400B8E233 /* libpurple.framework in Frameworks */,
-				1172FBDA0CDAA8D400B8E233 /* libsasl.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4127,7 +4135,6 @@
 				1172FBC70CDAA8D400B8E233 /* libintl.framework */,
 				1172FBC80CDAA8D400B8E233 /* libmeanwhile.framework */,
 				1172FBC90CDAA8D400B8E233 /* libpurple.framework */,
-				1172FBCA0CDAA8D400B8E233 /* libsasl.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -5144,7 +5151,6 @@
 				3497CBAE09BA0B5D00C0428E /* ESIRCJoinChatViewController.m */,
 				3497CBDD09BA0C0900C0428E /* ESIRCJoinChatView.nib */,
 				3497CC0A09BA0D7900C0428E /* ESIRCAccountViewController.h */,
-				340BAB1C09EC6E53000EC441 /* libirc.a */,
 				3497CC0B09BA0D7900C0428E /* ESIRCAccountViewController.m */,
 				3497CC1B09BA0DC100C0428E /* ESIRCAccountView.nib */,
 				3497CC2609BA0FDB00C0428E /* PurpleDefaultsIRC.plist */,
@@ -5654,9 +5660,6 @@
 			children = (
 				34E0103307B956F6000DF265 /* ESPurpleNotifyEmailController.h */,
 				34E0103207B956F6000DF265 /* ESPurpleNotifyEmailController.m */,
-				34C9A6360822930D004F912C /* ESPurpleMeanwhileContactAdditionController.h */,
-				34C9A6370822930D004F912C /* ESPurpleMeanwhileContactAdditionController.m */,
-				34C9A64408229348004F912C /* PurpleMeanwhileContactAdditionWindow.nib */,
 			);
 			name = "Notify UI";
 			sourceTree = "<group>";
@@ -7452,7 +7455,6 @@
 				3485DBBD09EBCE7400232CC4 /* ESPurpleNotifyEmailController.h in Headers */,
 				3485DBBF09EBCE7400232CC4 /* ESPurpleRequestAbstractWindowController.h in Headers */,
 				3485DBC109EBCE7400232CC4 /* ESPurpleRequestWindowController.h in Headers */,
-				3485DBC509EBCE7400232CC4 /* ESPurpleMeanwhileContactAdditionController.h in Headers */,
 				3485DBC809EBCE7400232CC4 /* ESPurpleFileReceiveRequestController.h in Headers */,
 				3485DBCA09EBCE7400232CC4 /* ESPurpleRequestActionController.h in Headers */,
 				34C7C62809EC4E890060FB4A /* AILibpurplePlugin.h in Headers */,
@@ -7748,7 +7750,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 34B323BB09B9FEAC00029361 /* Build configuration list for PBXNativeTarget "IRC Service Libpurple Plugin" */;
 			buildPhases = (
-				340BABD409EC8C6C000EC441 /* ShellScript */,
 				34B3234409B9FEAC00029361 /* Resources */,
 				34B3236E09B9FEAC00029361 /* Sources */,
 				34B323B609B9FEAC00029361 /* Frameworks */,
@@ -7938,11 +7939,7 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
-			attributes = {
-				BuildIndependentTargetsInParallel = NO;
-			};
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
@@ -7970,6 +7967,7 @@
 				pt_BR,
 				en,
 				English,
+				fr_CA,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CocAIMe2 */;
 			projectDirPath = "";
@@ -8116,7 +8114,6 @@
 				3485DBBC09EBCE7400232CC4 /* PurpleDefaultsZephyr.plist in Resources */,
 				3485DBC309EBCE7400232CC4 /* PurpleMultilineRequestWindow.nib in Resources */,
 				3485DBC409EBCE7400232CC4 /* PurpleSinglelineRequestWindow.nib in Resources */,
-				3485DBC709EBCE7400232CC4 /* PurpleMeanwhileContactAdditionWindow.nib in Resources */,
 				3485DBD009EBCE8200232CC4 /* Localizable.strings in Resources */,
 				34E036780A75AA4F00394F11 /* DCPurpleOscarJoinChatView.nib in Resources */,
 				34E0368E0A75AA4F00394F11 /* ESPurpleICQAccountView.nib in Resources */,
@@ -8470,20 +8467,6 @@
 			shellPath = /bin/sh;
 			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
 		};
-		340BABD409EC8C6C000EC441 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/Plugins/IRC Libpurple Plugin/libirc.a",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "ranlib \"${SCRIPT_INPUT_FILE_0}\"";
-		};
 		345DFF4A05564DB200CEE7B3 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -8679,7 +8662,6 @@
 				3485DBBE09EBCE7400232CC4 /* ESPurpleNotifyEmailController.m in Sources */,
 				3485DBC009EBCE7400232CC4 /* ESPurpleRequestAbstractWindowController.m in Sources */,
 				3485DBC209EBCE7400232CC4 /* ESPurpleRequestWindowController.m in Sources */,
-				3485DBC609EBCE7400232CC4 /* ESPurpleMeanwhileContactAdditionController.m in Sources */,
 				3485DBC909EBCE7400232CC4 /* ESPurpleFileReceiveRequestController.m in Sources */,
 				3485DBCB09EBCE7400232CC4 /* ESPurpleRequestActionController.m in Sources */,
 				34E036730A75AA4F00394F11 /* CBOscarService.m in Sources */,
@@ -10219,6 +10201,7 @@
 				345DA0790CA09B09009F1989 /* tr */,
 				345DA0710CA09AF1009F1989 /* zh_CN */,
 				345DA06E0CA09AE9009F1989 /* zh_TW */,
+				34D8B3D60D15A40C0066F013 /* fr_CA */,
 			);
 			name = Statuses.strings;
 			sourceTree = "<group>";
@@ -10454,6 +10437,27 @@
 			isa = PBXVariantGroup;
 			children = (
 				34F144460BA8FF46000473DE /* en */,
+				34E354ED0D10AC5E009FC9DE /* nl */,
+				34E354F80D10AC63009FC9DE /* de */,
+				34E355030D10AC66009FC9DE /* zh_TW */,
+				34E3550C0D10AC68009FC9DE /* ja */,
+				34E3550D0D10AC6B009FC9DE /* it */,
+				34E3550E0D10AC6E009FC9DE /* fr */,
+				34E355190D10AC70009FC9DE /* da */,
+				34E355240D10AC73009FC9DE /* nb */,
+				34E3552F0D10AC76009FC9DE /* zh_CN */,
+				34E355300D10AC78009FC9DE /* cs */,
+				34E355310D10AC7A009FC9DE /* is */,
+				34E355320D10AC7D009FC9DE /* sv */,
+				34E355330D10AC7F009FC9DE /* ca */,
+				34E355340D10AC81009FC9DE /* ru */,
+				34E355350D10AC84009FC9DE /* es */,
+				34E355400D10AC86009FC9DE /* pl */,
+				34E3554B0D10AC89009FC9DE /* en_AU */,
+				34E355560D10AC8B009FC9DE /* tr */,
+				34E355610D10AC8E009FC9DE /* fi */,
+				34E3556C0D10AC92009FC9DE /* pt_BR */,
+				34E355770D10AC95009FC9DE /* en_CA */,
 			);
 			name = EmoticonNames.strings;
 			sourceTree = "<group>";
@@ -10606,11 +10610,11 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu89;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					ENABLE_NLS,
 					HAVE_CDSA,
 					DEBUG_BUILD,
 				);
@@ -10621,13 +10625,15 @@
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"Plugins/Purple Service/Include/glib\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"Plugins/Purple Service/Include\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SDKROOT)/usr/include/libxml2\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/Frameworks/Libpurple.framework/Headers";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/Frameworks/libpurple.framework/Headers\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "\"$(SRCROOT)/Frameworks/libintl.framework/Headers\"";
 				INFOPLIST_FILE = Plists/AdiumLibpurple.plist;
 				INSTALL_PATH = "@executable_path/../PlugIns/Purple.AdiumPlugin/Contents/Frameworks/";
 				LIBRARY_SEARCH_PATHS = (
@@ -10635,6 +10641,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
+				OTHER_LDFLAGS = "-lsasl2";
 				PRODUCT_NAME = AdiumLibpurple;
 				WARNING_CFLAGS = (
 					"-Wall",
@@ -10651,12 +10658,11 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Plugins/Purple Service/Frameworks\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu89;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					ENABLE_NLS,
 					CRASH_REPORTER,
 					HAVE_CDSA,
 				);
@@ -10667,13 +10673,15 @@
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"Plugins/Purple Service/Include/glib\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"Plugins/Purple Service/Include\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SDKROOT)/usr/include/libxml2\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/Frameworks/Libpurple.framework/Headers";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/Frameworks/libpurple.framework/Headers\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "\"$(SRCROOT)/Frameworks/libintl.framework/Headers\"";
 				INFOPLIST_FILE = Plists/AdiumLibpurple.plist;
 				INSTALL_PATH = "@executable_path/../PlugIns/Purple.AdiumPlugin/Contents/Frameworks/";
 				LIBRARY_SEARCH_PATHS = (
@@ -10681,6 +10689,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
+				OTHER_LDFLAGS = "-lsasl2";
 				PRODUCT_NAME = AdiumLibpurple;
 				WARNING_CFLAGS = (
 					"-Wall",
@@ -10697,12 +10706,11 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Plugins/Purple Service/Frameworks\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu89;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					ENABLE_NLS,
 					HAVE_CDSA,
 					CRASH_REPORTER,
 					DEBUG_BUILD,
@@ -10714,13 +10722,15 @@
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"Plugins/Purple Service/Include/glib\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"Plugins/Purple Service/Include\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SDKROOT)/usr/include/libxml2\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/Frameworks/Libpurple.framework/Headers";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/Frameworks/libpurple.framework/Headers\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "\"$(SRCROOT)/Frameworks/libintl.framework/Headers\"";
 				INFOPLIST_FILE = Plists/AdiumLibpurple.plist;
 				INSTALL_PATH = "@executable_path/../PlugIns/Purple.AdiumPlugin/Contents/Frameworks/";
 				LIBRARY_SEARCH_PATHS = (
@@ -10728,6 +10738,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
+				OTHER_LDFLAGS = "-lsasl2";
 				PRODUCT_NAME = AdiumLibpurple;
 				WARNING_CFLAGS = (
 					"-Wall",
@@ -10744,12 +10755,11 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Plugins/Purple Service/Frameworks\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu89;
 				GCC_PREPROCESSOR_DEFINITIONS = (
+					ENABLE_NLS,
 					HAVE_CDSA,
 					CRASH_REPORTER,
 					DEBUG_BUILD,
@@ -10761,13 +10771,15 @@
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"Plugins/Purple Service/Include/glib\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"Plugins/Purple Service/Include\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SDKROOT)/usr/include/libxml2\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/Frameworks/Libpurple.framework/Headers";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/Frameworks/libpurple.framework/Headers\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "\"$(SRCROOT)/Frameworks/libintl.framework/Headers\"";
 				INFOPLIST_FILE = Plists/AdiumLibpurple.plist;
 				INSTALL_PATH = "@executable_path/../PlugIns/Purple.AdiumPlugin/Contents/Frameworks/";
 				LIBRARY_SEARCH_PATHS = (
@@ -10775,6 +10787,7 @@
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
+				OTHER_LDFLAGS = "-lsasl2";
 				PRODUCT_NAME = AdiumLibpurple;
 				WARNING_CFLAGS = (
 					"-Wall",
@@ -10849,30 +10862,34 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(SRCROOT)/Frameworks",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Purple\\ Service";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Frameworks\"";
+				GCC_C_LANGUAGE_STANDARD = gnu89;
 				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
-					"$(SDK_ROOT)/usr/include/libxml2",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 				);
-				HEADER_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Purple\\ Service/Libpurple.framework/Headers";
-				HEADER_SEARCH_PATHS_QUOTED_2 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib";
-				HEADER_SEARCH_PATHS_QUOTED_3 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/glib";
-				HEADER_SEARCH_PATHS_QUOTED_4 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/gmodule";
-				HEADER_SEARCH_PATHS_QUOTED_5 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/gobject";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"Plugins/Purple Service/Include/glib\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"Plugins/Purple Service/Include\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SDKROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/Frameworks/libpurple.framework/Headers\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "\"$(SRCROOT)/Frameworks/libintl.framework/Headers\"";
 				INFOPLIST_FILE = "Plists/IRC Service Libpurple.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(LIBRARY_SEARCH_PATHS)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
-				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libpurple\\ Plugin";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibpurplePlugin;
 			};
@@ -10882,30 +10899,34 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(SRCROOT)/Frameworks",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Purple\\ Service";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Frameworks\"";
+				GCC_C_LANGUAGE_STANDARD = gnu89;
 				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
-					"$(SDK_ROOT)/usr/include/libxml2",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 				);
-				HEADER_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Purple\\ Service/Libpurple.framework/Headers";
-				HEADER_SEARCH_PATHS_QUOTED_2 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib";
-				HEADER_SEARCH_PATHS_QUOTED_3 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/glib";
-				HEADER_SEARCH_PATHS_QUOTED_4 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/gmodule";
-				HEADER_SEARCH_PATHS_QUOTED_5 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/gobject";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"Plugins/Purple Service/Include/glib\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"Plugins/Purple Service/Include\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SDKROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/Frameworks/libpurple.framework/Headers\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "\"$(SRCROOT)/Frameworks/libintl.framework/Headers\"";
 				INFOPLIST_FILE = "Plists/IRC Service Libpurple.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(LIBRARY_SEARCH_PATHS)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
-				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libpurple\\ Plugin";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibpurplePlugin;
 			};
@@ -10915,30 +10936,34 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(SRCROOT)/Frameworks",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Purple\\ Service";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Frameworks\"";
+				GCC_C_LANGUAGE_STANDARD = gnu89;
 				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
-					"$(SDK_ROOT)/usr/include/libxml2",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 				);
-				HEADER_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Purple\\ Service/Libpurple.framework/Headers";
-				HEADER_SEARCH_PATHS_QUOTED_2 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib";
-				HEADER_SEARCH_PATHS_QUOTED_3 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/glib";
-				HEADER_SEARCH_PATHS_QUOTED_4 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/gmodule";
-				HEADER_SEARCH_PATHS_QUOTED_5 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/gobject";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"Plugins/Purple Service/Include/glib\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"Plugins/Purple Service/Include\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SDKROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/Frameworks/libpurple.framework/Headers\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "\"$(SRCROOT)/Frameworks/libintl.framework/Headers\"";
 				INFOPLIST_FILE = "Plists/IRC Service Libpurple.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(LIBRARY_SEARCH_PATHS)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
-				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libpurple\\ Plugin";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibpurplePlugin;
 			};
@@ -10948,30 +10973,34 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
-					"$(BUILT_PRODUCTS_DIR)",
-					"$(SRCROOT)/Frameworks",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Purple\\ Service";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Frameworks\"";
+				GCC_C_LANGUAGE_STANDARD = gnu89;
 				HEADER_SEARCH_PATHS = (
-					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
-					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
-					"$(SDK_ROOT)/usr/include/libxml2",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 				);
-				HEADER_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/Purple\\ Service/Libpurple.framework/Headers";
-				HEADER_SEARCH_PATHS_QUOTED_2 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib";
-				HEADER_SEARCH_PATHS_QUOTED_3 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/glib";
-				HEADER_SEARCH_PATHS_QUOTED_4 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/gmodule";
-				HEADER_SEARCH_PATHS_QUOTED_5 = "$(SRCROOT)/Plugins/Purple\\ Service/Include/glib/gobject";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"Plugins/Purple Service/Include/glib\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"Plugins/Purple Service/Include\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"$(SDKROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SRCROOT)/Frameworks/libpurple.framework/Headers\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "\"$(SRCROOT)/Frameworks/libintl.framework/Headers\"";
 				INFOPLIST_FILE = "Plists/IRC Service Libpurple.plist";
 				LIBRARY_SEARCH_PATHS = (
 					"$(LIBRARY_SEARCH_PATHS)",
 					"$(LIBRARY_SEARCH_PATHS_QUOTED_1)",
 				);
-				LIBRARY_SEARCH_PATHS_QUOTED_1 = "$(SRCROOT)/Plugins/IRC\\ Libpurple\\ Plugin";
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
 				PRODUCT_NAME = "IRC Service";
 				WRAPPER_EXTENSION = AdiumLibpurplePlugin;
 			};
@@ -11045,25 +11074,34 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					ENABLE_NLS,
+					CRASH_REPORTER,
+					DEBUG_BUILD,
+				);
 				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"Plugins/Purple Service/Include/glib\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"Plugins/Purple Service/Include\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SDK_ROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SDKROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "\"$(SRCROOT)/Frameworks/libintl.framework/Headers\"";
 				INFOPLIST_FILE = Plists/Purple_Service.plist;
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
 					"-undefined",
 					suppress,
+					"-lsasl2",
 				);
 				PRODUCT_NAME = Purple;
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -11073,7 +11111,10 @@
 		34BAF9880942598800689991 /* Deployment-Debug_PPC-Only */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					DEBUG_BUILD,
+					HAVE_EXPAT_CONFIG_H,
+				);
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				INFOPLIST_FILE = Plists/Bonjour.plist;
 				PRODUCT_NAME = Bonjour;
@@ -11145,7 +11186,7 @@
 					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
-					"$(SDK_ROOT)/usr/include/libxml2",
+					"$(SDKROOT)/usr/include/libxml2",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Purple\\ Service/Include/glib";
 				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Purple\\ Service/Include/glib/glib";
@@ -11519,25 +11560,33 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					ENABLE_NLS,
+					DEBUG_BUILD,
+				);
 				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"Plugins/Purple Service/Include/glib\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"Plugins/Purple Service/Include\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SDK_ROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SDKROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "\"$(SRCROOT)/Frameworks/libintl.framework/Headers\"";
 				INFOPLIST_FILE = Plists/Purple_Service.plist;
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
 					"-undefined",
 					suppress,
+					"-lsasl2",
 				);
 				PRODUCT_NAME = Purple;
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -11555,25 +11604,33 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					ENABLE_NLS,
+					CRASH_REPORTER,
+				);
 				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"Plugins/Purple Service/Include/glib\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"Plugins/Purple Service/Include\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SDK_ROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SDKROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "\"$(SRCROOT)/Frameworks/libintl.framework/Headers\"";
 				INFOPLIST_FILE = Plists/Purple_Service.plist;
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
 					"-undefined",
 					suppress,
+					"-lsasl2",
 				);
 				PRODUCT_NAME = Purple;
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -11591,25 +11648,34 @@
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					ENABLE_NLS,
+					CRASH_REPORTER,
+					DEBUG_BUILD,
+				);
 				HEADER_SEARCH_PATHS = (
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6)",
+					"$(HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7)",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"Plugins/Purple Service/Include/glib\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"Plugins/Purple Service/Include/glib/glib\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"Plugins/Purple Service/Include/glib/gmodule\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_4 = "\"$(SRCROOT)/Frameworks/libglib.framework/Headers/glib-2.0\"";
 				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_5 = "\"Plugins/Purple Service/Include\"";
-				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SDK_ROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_6 = "\"$(SDKROOT)/usr/include/libxml2\"";
+				HEADER_SEARCH_PATHS_QUOTED_FOR_TARGET_7 = "\"$(SRCROOT)/Frameworks/libintl.framework/Headers\"";
 				INFOPLIST_FILE = Plists/Purple_Service.plist;
 				OTHER_LDFLAGS = (
 					"-flat_namespace",
 					"-undefined",
 					suppress,
+					"-lsasl2",
 				);
 				PRODUCT_NAME = Purple;
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -11619,7 +11685,10 @@
 		DADE8E0F085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					DEBUG_BUILD,
+					HAVE_EXPAT_CONFIG_H,
+				);
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				INFOPLIST_FILE = Plists/Bonjour.plist;
 				PRODUCT_NAME = Bonjour;
@@ -11641,7 +11710,10 @@
 		DADE8E11085507450062B664 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					DEBUG_BUILD,
+					HAVE_EXPAT_CONFIG_H,
+				);
 				GCC_WARN_INHIBIT_ALL_WARNINGS = YES;
 				INFOPLIST_FILE = Plists/Bonjour.plist;
 				PRODUCT_NAME = Bonjour;
@@ -11743,7 +11815,7 @@
 					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
-					"$(SDK_ROOT)/usr/include/libxml2",
+					"$(SDKROOT)/usr/include/libxml2",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Purple\\ Service/Include/glib";
 				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Purple\\ Service/Include/glib/glib";
@@ -11771,7 +11843,7 @@
 					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
-					"$(SDK_ROOT)/usr/include/libxml2",
+					"$(SDKROOT)/usr/include/libxml2",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Purple\\ Service/Include/glib";
 				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Purple\\ Service/Include/glib/glib";
@@ -11799,7 +11871,7 @@
 					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_4)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_5)",
-					"$(SDK_ROOT)/usr/include/libxml2",
+					"$(SDKROOT)/usr/include/libxml2",
 				);
 				HEADER_SEARCH_PATHS_QUOTED_1 = "Plugins/Purple\\ Service/Include/glib";
 				HEADER_SEARCH_PATHS_QUOTED_2 = "Plugins/Purple\\ Service/Include/glib/glib";

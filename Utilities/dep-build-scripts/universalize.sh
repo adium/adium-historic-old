@@ -10,7 +10,8 @@ LIBGMODULE=libgmodule-2.0.0
 MEANWHILE=libmeanwhile.1
 GADU=libgadu.3.7.0
 SASL=libsasl2.2
-PURPLE_VERSION=0.3.0
+
+PURPLE_VERSION=0.3.1
 
 LIBPURPLE=libpurple.$PURPLE_VERSION
 PURPLE_FOLDER=libpurple-$PURPLE_VERSION
@@ -66,7 +67,7 @@ cd ..
 cd $UNIVERSAL_DIR
 
 for lib in $LIBINTL $LIBGLIB $LIBGOBJECT $LIBGTHREAD $LIBGMODULE $MEANWHILE \
-           $GADU $SASL $LIBPURPLE; do
+           $GADU $LIBPURPLE; do
 	echo "Making $lib universal..."
 	python  $SCRIPT_DIR/framework_maker/universalize.py \
 	  i386:$TARGET_DIR_I386/lib/$lib.dylib \
@@ -85,3 +86,5 @@ python $SCRIPT_DIR/framework_maker/frameworkize.py $UNIVERSAL_DIR/$LIBPURPLE.dyl
 echo "Adding the Adium framework header."
 cp $SCRIPT_DIR/libpurple-full.h \
    $PWD/Frameworks/libpurple.framework/Headers/libpurple.h
+
+cp $SCRIPT_DIR/Libpurple-Info.plist $PWD/Frameworks/libpurple.framework/Resources/Info.plist

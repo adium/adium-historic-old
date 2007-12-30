@@ -33,8 +33,8 @@
 @interface AIEditAccountWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName account:(AIAccount *)inAccount notifyingTarget:(id)inTarget;
 - (void)_addCustomViewAndTabsForAccount:(AIAccount *)inAccount;
-- (int)_addCustomView:(NSView *)customView toView:(NSView *)setupView tabViewItemIdentifier:(NSString *)identifier
-	  availableHeight:(int)height;
+- (void)_addCustomView:(NSView *)customView toView:(NSView *)setupView tabViewItemIdentifier:(NSString *)identifier
+		runningHeight:(int *)height width:(int *)width;
 - (void)_configureResponderChain:(NSTimer *)inTimer;
 - (void)_removeCustomViewAndTabs;
 - (void)_localizeTabViewItemLabels;
@@ -243,8 +243,9 @@
 - (void)_addCustomViewAndTabsForAccount:(AIAccount *)inAccount
 {
 	NSRect	windowFrame = [[self window] frame];
-	int		baseHeight = [view_accountSetup frame].size.height;
-	int		newHeight = baseHeight;
+	int		baseHeight = NSHeight([view_accountSetup frame]);
+	int		baseWidth = NSWidth([view_accountSetup frame]);
+	int		newHeight = baseHeight, newWidth = baseWidth;
 
 	//Configure our account and proxy view controllers
 	accountViewController = [[[inAccount service] accountViewController] retain];
@@ -256,39 +257,46 @@
 	[accountProxyController configureForAccount:inAccount];
 
 	//Account setup view
-	newHeight = [self _addCustomView:[accountViewController setupView]
-						   toView:view_accountSetup
-			tabViewItemIdentifier:@"account"
-				  availableHeight:newHeight];
+	[self _addCustomView:[accountViewController setupView]
+				  toView:view_accountSetup
+   tabViewItemIdentifier:@"account"
+		 runningHeight:&newHeight
+				   width:&newWidth];
 	
 	//Account Profile View
-	newHeight = [self _addCustomView:[accountViewController profileView]
-						   toView:view_accountProfile
-			tabViewItemIdentifier:@"profile"
-				  availableHeight:newHeight];
+	[self _addCustomView:[accountViewController profileView]
+				  toView:view_accountProfile
+   tabViewItemIdentifier:@"profile"
+		 runningHeight:&newHeight
+				   width:NULL];
 	
 	//Account Options view
-	newHeight = [self _addCustomView:[accountViewController optionsView]
-						   toView:view_accountOptions
-			tabViewItemIdentifier:@"options"
-				  availableHeight:newHeight];
+	[self _addCustomView:[accountViewController optionsView]
+				  toView:view_accountOptions
+   tabViewItemIdentifier:@"options"
+		 runningHeight:&newHeight
+				   width:&newWidth];
 	
 	//Account Privacy view
-	newHeight = [self _addCustomView:[accountViewController privacyView]
-						   toView:view_accountPrivacy
-			tabViewItemIdentifier:@"privacy"
-				  availableHeight:newHeight];
+	[self _addCustomView:[accountViewController privacyView]
+				  toView:view_accountPrivacy
+   tabViewItemIdentifier:@"privacy"
+		 runningHeight:&newHeight
+				   width:&newWidth];
 	
 	//Add proxy view
-	newHeight = [self _addCustomView:[accountProxyController view]
-						   toView:view_accountProxy
-			tabViewItemIdentifier:@"proxy"
-				  availableHeight:newHeight];
+	[self _addCustomView:[accountProxyController view]
+				  toView:view_accountProxy
+   tabViewItemIdentifier:@"proxy"
+		 runningHeight:&newHeight
+				   width:&newWidth];
 	
 	//Resize our window as necessary to make room for the custom views
-	windowFrame.size.height += newHeight - [view_accountSetup frame].size.height;
+	windowFrame.size.height += newHeight - baseHeight;
+	windowFrame.size.width += newWidth - baseWidth;
+
 	[[self window] setFrame:windowFrame display:YES];
-	
+
 	//Responder chains are a pain in 10.3.  The tab view will set them up correctly when we switch tabs, but doesn't
 	//get a chance to setup the responder chain for our default tab.  A quick hack to get the tab view to set things
 	//up correctly is to switch tabs away and then back to our default.  This causes little harm, since our window
@@ -310,26 +318,35 @@
  * @param requiredHeight The current required view height to display all our views
  * @result The new required window height to display our existing views and the newly added view
  */
-- (int)_addCustomView:(NSView *)customView toView:(NSView *)setupView tabViewItemIdentifier:(NSString *)identifier
-	  availableHeight:(int)height
+- (void)_addCustomView:(NSView *)customView toView:(NSView *)setupView tabViewItemIdentifier:(NSString *)identifier
+	  runningHeight:(int *)height width:(int *)width
 {
 	if (customView) {
 		//Adjust height as necessary if our view needs more room
-		if ([customView frame].size.height > height) {
-			height = [customView frame].size.height;
+		if (NSHeight([customView frame]) > *height) {
+			*height = NSHeight([customView frame]);
 		}
 
+		//Adjust height as necessary if our view needs more room
+		if (width && (NSWidth([customView frame]) > *width)) {
+			*width = NSWidth([customView frame]);
+		}
+		
 		//Align our view to the top and insert it into the window
-		[customView setFrameOrigin:NSMakePoint(0, [setupView frame].size.height - [customView frame].size.height)];
-		[customView setAutoresizingMask:NSViewMinYMargin];
+		if (width && (NSWidth([setupView frame]) > NSWidth([customView frame])))
+			[customView setFrameOrigin:NSMakePoint(floor((NSWidth([setupView frame]) - NSWidth([customView frame])) / 2),
+												   NSHeight([setupView frame]) - NSHeight([customView frame]))];
+		else
+			[customView setFrameOrigin:NSMakePoint(0,
+												   NSHeight([setupView frame]) - NSHeight([customView frame]))];
+
+		[customView setAutoresizingMask:(NSViewMinYMargin | NSViewMinXMargin | NSViewMaxXMargin)];
 		[setupView addSubview:customView];
 
 	} else {
 		//If no view is available, remove the corresponding tab
 		[tabView_auxiliary removeTabViewItem:[tabView_auxiliary tabViewItemWithIdentifier:identifier]];
 	}
-
-	return height;
 }
 
 /*!

@@ -93,11 +93,11 @@
 {
 	/* Remove various actions which are either duplicates of superior Adium actions (*grin*)
 	 * or are just silly ("Confirm Account" for example). */
-	if (strcmp(label, "Set Available Message...") == 0) {
+	if (strcmp(label, _("Set Available Message...")) == 0) {
 		return nil;
-	} else if (strcmp(label, "Format Screen Name...") == 0) {
+	} else if (strcmp(label, _("Format Screen Name...")) == 0) {
 		return nil;
-	} else if (strcmp(label, "Confirm Account") == 0) {
+	} else if (strcmp(label, _("Confirm Account")) == 0) {
 		return nil;
 	}
 

@@ -209,7 +209,7 @@
 #pragma mark -
 - (NSString *)description
 {
-	return [NSString stringWithFormat:@"<%@:%x %@ - %@>",NSStringFromClass([self class]), self, [self formattedUID], [self chatCreationDictionary]];
+	return [NSString stringWithFormat:@"<%@:%x %@ - %@ on %@>",NSStringFromClass([self class]), self, [self formattedUID], [self chatCreationDictionary], [self account]];
 }
 
 @end

@@ -161,6 +161,7 @@ typedef enum {
 - (BOOL)suppressTypingNotificationChangesAfterSend;
 - (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact;
 - (BOOL)allowsNewlinesInMessages;
+- (BOOL)accountDisplaysFileTransferMessages;
 
 //Status
 - (NSSet *)supportedPropertyKeys;

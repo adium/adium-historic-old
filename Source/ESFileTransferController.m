@@ -796,7 +796,7 @@ static ESFileTransferPreferences *preferences;
 	NSString *ret = nil;
 	
 	if ( inSize == 0. ) ret = ZERO_BYTES;
-	else if ( inSize > 0. && inSize < 1024. ) ret = [NSString stringWithFormat:AILocalizedString( @"%lu bytes", "file size measured in bytes" ), inSize];
+	else if ( inSize > 0. && inSize < 1024. ) ret = [NSString stringWithFormat:AILocalizedString( @"%llu bytes", "file size measured in bytes" ), inSize];
 	else if ( inSize >= 1024. && inSize < pow( 1024., 2. ) ) ret = [NSString stringWithFormat:AILocalizedString( @"%.1f KB", "file size measured in kilobytes" ), ( inSize / 1024. )];
 	else if ( inSize >= pow( 1024., 2. ) && inSize < pow( 1024., 3. ) ) ret = [NSString stringWithFormat:AILocalizedString( @"%.2f MB", "file size measured in megabytes" ), ( inSize / pow( 1024., 2. ) )];
 	else if ( inSize >= pow( 1024., 3. ) && inSize < pow( 1024., 4. ) ) ret = [NSString stringWithFormat:AILocalizedString( @"%.3f GB", "file size measured in gigabytes" ), ( inSize / pow( 1024., 3. ) )];
@@ -815,10 +815,10 @@ static ESFileTransferPreferences *preferences;
 		ret = ZERO_BYTES;
 	} else if ( inSize > 0. && inSize < 1024. ) {
 		if ( totalSize > 0. && totalSize < 1024. ) {
-			ret = [NSString stringWithFormat:AILocalizedString( @"%lu of %lu bytes", "file sizes both measured in bytes" ), inSize, totalSize];
+			ret = [NSString stringWithFormat:AILocalizedString( @"%llu of %llu bytes", "file sizes both measured in bytes" ), inSize, totalSize];
 			
 		} else {
-			ret = [NSString stringWithFormat:AILocalizedString( @"%lu bytes of %@", "file size measured in bytes out of some other measurement" ), inSize, totalSizeString];
+			ret = [NSString stringWithFormat:AILocalizedString( @"%llu bytes of %@", "file size measured in bytes out of some other measurement" ), inSize, totalSizeString];
 			
 		}
 	} else if ( inSize >= 1024. && inSize < pow( 1024., 2. ) ) {

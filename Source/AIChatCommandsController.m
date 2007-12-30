@@ -10,11 +10,6 @@
 
 #import "AIChatCommandsController.h"
 @implementation AIChatCommandsController
-+(id)init;
-{
-	
-	return [[super alloc] init];
-}
 
 /* @name	verifyCommand
  * @param	command: command picked by the user

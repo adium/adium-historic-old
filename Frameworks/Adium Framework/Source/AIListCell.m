@@ -15,12 +15,16 @@
  */
 
 #import <Adium/AIListCell.h>
+
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIListBookmark.h>
 #import <Adium/AIListOutlineView.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIParagraphStyleAdditions.h>
+
+#import <Adium/AIStatusControllerProtocol.h>
 
 #import <AIUtilities/AITigerCompatibility.h>
 
@@ -55,6 +59,8 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 			leftParagraphStyleWithTruncatingTail = [[NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
 																				  lineBreakMode:NSLineBreakByTruncatingTail] retain];
 		}
+		
+		adium = [[AIObject sharedAdiumInstance] retain];
 	}
 		
     return self;
@@ -72,12 +78,16 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	[newCell->textColor retain];
 	[newCell->invertedTextColor retain];
 
+	[newCell->adium retain];
+
 	return newCell;
 }
 
 //Dealloc
 - (void)dealloc
 {
+	[adium release];
+
 	[textColor release];
 	[invertedTextColor release];
 	
@@ -445,29 +455,31 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 {
 	id value;
 
-#define IS_GROUP [listObject isKindOfClass:[AIListGroup class]]
-#define IS_CONTACT (!IS_GROUP)
-
 	if([attribute isEqualToString:NSAccessibilityRoleAttribute]) {
-		value = IS_CONTACT ? @"AIContactListItem": @"AIContactListGroup";
+		value = ([listObject isKindOfClass:[AIListGroup class]] ? @"AIContactListGroup" : @"AIContactListItem");
 		
 	} else if([attribute isEqualToString:NSAccessibilityRoleDescriptionAttribute]) {
-		NSString *currentStatus = nil;
-		
-		if([listObject statusType] == AIAvailableStatusType) {
-			currentStatus = AILocalizedString(@"available contact", /*comment*/ nil);
-			
-		} else if([listObject statusType] == AIAwayStatusType) {
-			currentStatus = AILocalizedString(@"away contact", /*comment*/ nil);
-			
-		} else if([listObject statusType] == AIIdleStatus) {
-			currentStatus = AILocalizedString(@"idle contact", /*comment*/ nil);
+		if ([listObject isKindOfClass:[AIListGroup class]]) {
+			value = [NSString stringWithFormat:AILocalizedString(@"contact group %@", "%@ will be the name of a group in the contact list"), [listObject longDisplayName]];
+
+		} else if ([listObject isKindOfClass:[AIListBookmark class]]) {			
+			value = [NSString stringWithFormat:AILocalizedString(@"group chat bookmark %@", "%@ will be the name of a bookmark"), [listObject longDisplayName]];			
+
 		} else {
-			//XXX There should be a default here, I think, and this could be a switch statement -eds
+			NSString *name, *statusDescription, *statusMessage;
+			
+			name = [listObject longDisplayName];
+			statusDescription = [[adium statusController] localizedDescriptionForStatusName:([listObject statusName] ?
+																					  [listObject statusName] :
+																					  [[adium statusController] defaultStatusNameForType:[listObject statusType]])
+																		  statusType:[listObject statusType]];
+			statusMessage = [listObject statusMessageString];
+			
+			value = [[name mutableCopy] autorelease];
+			if (statusDescription) [value appendFormat:@"; %@", statusDescription];
+			if (statusMessage) [value appendFormat:AILocalizedString(@"; status message %@", "please keep the semicolon at the start of the line. %@ will be replaced by a status message. This is used when reading an entry in the contact list aloud, such as 'Evan Schoenberg; status message I am bouncing up and down'"), statusMessage];
 		}
-		
-		value = (IS_CONTACT ? currentStatus : AILocalizedString(@"contact list group", /*comment*/ nil));
-		
+
 	} else if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
 		value = [self labelString];
 		
@@ -477,9 +489,6 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	} else {
 		value = [super accessibilityAttributeValue:attribute];
 	}
-
-#undef IS_CONTACT
-#undef IS_GROUP
 
 	return value;
 }

@@ -41,6 +41,7 @@
 #import "AdiumPasswords.h"
 #import "AdiumAccounts.h"
 #import "AdiumPreferredAccounts.h"
+#import "AIEditAccountWindowController.h"
 
 #define ACCOUNT_DEFAULT_PREFS			@"AccountPrefs"
 
@@ -220,6 +221,14 @@
     }	
 
 	return NO;	
+}
+
+#pragma mark Editing
+- (void)editAccount:(AIAccount *)account onWindow:(NSWindow *)window notifyingTarget:(id)target
+{
+	[AIEditAccountWindowController editAccount:account
+									  onWindow:window
+							   notifyingTarget:target];	
 }
 
 @end

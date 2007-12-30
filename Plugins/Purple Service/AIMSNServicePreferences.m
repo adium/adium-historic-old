@@ -41,6 +41,14 @@
 
 - (void)viewDidLoad
 {
+	[checkBox_treatDisplayNamesAsStatus setState:[[[adium preferenceController] preferenceForKey:KEY_MSN_DISPLAY_NAMES_AS_STATUS
+																						   group:PREF_GROUP_MSN_SERVICE] boolValue]];
+	
+	[checkBox_treatDisplayNamesAsStatus setLocalizedString:AILocalizedString(@"Show display names as status messages",nil)];
+	
+	[label_displayNames setLocalizedString:AILocalizedString(@"Display names (friendly names)",nil)];
+	[label_displayNamesWarning setLocalizedString:AILocalizedString(@"(Takes effect the next time Adium launches)","Indicates a preference will not take effect until the next time Adium is loaded")];
+	
 	[checkBox_displayCustomEmoticons setState:[[[adium preferenceController] preferenceForKey:KEY_MSN_DISPLAY_CUSTOM_EMOTICONS
 																						group:PREF_GROUP_MSN_SERVICE] boolValue]];
 	[checkBox_displayCustomEmoticons setLocalizedString:AILocalizedString(@"Display custom emoticons", nil)];
@@ -48,7 +56,13 @@
 
 - (IBAction)changePreference:(id)sender
 {
-	if (sender == checkBox_displayCustomEmoticons) {
+	if (sender == checkBox_treatDisplayNamesAsStatus) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]] 
+											 forKey:KEY_MSN_DISPLAY_NAMES_AS_STATUS
+											  group:PREF_GROUP_MSN_SERVICE];
+		
+	}
+	else if (sender == checkBox_displayCustomEmoticons) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]] 
 											 forKey:KEY_MSN_DISPLAY_CUSTOM_EMOTICONS
 											  group:PREF_GROUP_MSN_SERVICE];

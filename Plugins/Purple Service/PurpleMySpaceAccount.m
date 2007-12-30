@@ -22,7 +22,7 @@
 		return AILocalizedString(@"Connecting",nil);
 		break;
 	case 1:
-		return AILocalizedString(@"Reading challenge",nil);
+		return AILocalizedString(@"Reading challenge", "Description of a step in the connection process for MySpace. This could be translated as something like 'Reading from server'.");
 		break;
 	case 2:
 		return AILocalizedString(@"Logging in","Connection step");
@@ -50,22 +50,8 @@
 				   attachmentsAsText:YES
 		   onlyIncludeOutgoingImages:NO
 					  simpleTagsOnly:NO
-					  bodyBackground:NO];
-}
-
-- (AIReconnectDelayType)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
-{
-	AIReconnectDelayType shouldAttemptReconnect = [super shouldAttemptReconnectAfterDisconnectionError:disconnectionError];
-
-	if (disconnectionError && *disconnectionError) {
-		if ([*disconnectionError rangeOfString:@"The password provided is incorrect"].location != NSNotFound) {
-			[self setLastDisconnectionError:AILocalizedString(@"Incorrect username or password","Error message displayed when the server reports username or password as being incorrect.")];
-			[self serverReportedInvalidPassword];
-			shouldAttemptReconnect = AIReconnectImmediately;
-		}
-	}
-	
-	return shouldAttemptReconnect;
+					  bodyBackground:NO
+				 allowJavascriptURLs:YES];
 }
 
 @end

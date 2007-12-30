@@ -11,8 +11,10 @@
 #import <Security/SecureTransport.h>
 #import <Security/SecPolicySearch.h>
 #import <Security/oidsalg.h>
+#import <Adium/AIAccountControllerProtocol.h>
 #import "ESPurpleJabberAccount.h"
-#import "AIEditAccountWindowController.h"
+
+//#define ALWAYS_SHOW_TRUST_WARNING
 
 static NSMutableDictionary *acceptedCertificates = nil;
 
@@ -113,7 +115,7 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 		.Version = CSSM_APPLE_TP_SSL_OPTS_VERSION,
 		.ServerNameLen = [hostname length]+1,
 		.ServerName = [hostname cStringUsingEncoding:NSASCIIStringEncoding],
-		.Flags = CSSM_APPLE_TP_SSL_CLIENT
+		.Flags = 0
 	};
 	
 	CSSM_DATA theCssmData = {
@@ -128,6 +130,8 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 	if(err != noErr) {
 		CFRelease(searchRef);
 		CFRelease(policyRef);
+		if (trustRef)
+			CFRelease(trustRef);
 		NSBeep();
 		[self release];
 		return;
@@ -141,19 +145,45 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 		switch(result) {
 			case kSecTrustResultProceed: // trust ok, go right ahead
 			case kSecTrustResultUnspecified: // trust ok, user has no particular opinion about this
+#ifndef ALWAYS_SHOW_TRUST_WARNING
 				query_cert_cb(true, userdata);
 				[self release];
 				break;
+#endif
 			case kSecTrustResultConfirm: // trust ok, but user asked (earlier) that you check with him before proceeding
 			case kSecTrustResultDeny: // trust ok, but user previously said not to trust it anyway
 			case kSecTrustResultRecoverableTrustFailure: // trust broken, perhaps argue with the user
-				[NSClassFromString(@"AIEditAccountWindowController") editAccount:account onWindow:nil notifyingTarget:self];
+			case kSecTrustResultOtherError: // failure other than trust evaluation; e.g., internal failure of the SecTrustEvaluate function. We'll let the user decide where to go from here.
+			{
+				
+#if 0
+				//Show on an independent window. This fails oddly. We should just implement our own window and use SFCertificateView.
+				SFCertificateTrustPanel *trustpanel = [[SFCertificateTrustPanel alloc] init];
+				
+#define TRUST_PANEL_WIDTH 535
+				NSWindow *fakeWindow = [[[NSWindow alloc] initWithContentRect:NSMakeRect(0, 0, TRUST_PANEL_WIDTH, 0)
+																	styleMask:NSTitledWindowMask
+																	  backing:NSBackingStoreBuffered
+																		defer:NO] autorelease];
+				[fakeWindow center];
+
+				[trustpanel setAlternateButtonTitle:AILocalizedString(@"Cancel",nil)];
+				[trustpanel beginSheetForWindow:fakeWindow
+								  modalDelegate:self
+								 didEndSelector:@selector(certificateTrustSheetDidEnd:returnCode:contextInfo:)
+									contextInfo:fakeWindow
+										  trust:trustRef
+										message:[NSString stringWithFormat:AILocalizedString(@"The certificate of the server %@ is not trusted, which means that the server's identity cannot be automatically verified. Do you want to continue connecting?\n\nFor more information, click \"Show Certificate\".",nil),hostname]];
+#else
+				//Show as a sheet on the account's preferences
+				[[adium accountController] editAccount:account onWindow:nil notifyingTarget:self];
+#endif
 				break;
+			}
 			default:
 				/*
 				 * kSecTrustResultFatalTrustFailure -> trust broken, user can't fix it
-				 * kSecTrustResultOtherError -> something failed weirdly, abort operation
-				 * kSecTrustResultInvalid -> logic error; fix your program (SecTrust was used incorrectly
+				 * kSecTrustResultInvalid -> logic error; fix your program (SecTrust was used incorrectly)
 				 */
 				query_cert_cb(false, userdata);
 				[self release];
@@ -166,6 +196,7 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 
 	CFRelease(searchRef);
 	CFRelease(policyRef);
+	CFRelease(trustRef);
 }
 
 - (void)editAccountWindow:(NSWindow*)window didOpenForAccount:(AIAccount *)inAccount {
@@ -187,19 +218,24 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 }
 
 - (void)certificateTrustSheetDidEnd:(SFCertificateTrustPanel *)trustpanel returnCode:(int)returnCode contextInfo:(void *)contextInfo {
-	NSWindow *win = (NSWindow*)contextInfo;
-	query_cert_cb(returnCode == NSOKButton, userdata);
-	// if the user confirmed this cert, we store this information until the app is closed so the user doesn't have to re-confirm it every time
-	// (this might be particularily annoying on auto-reconnect)
-	CSSM_DATA certdata;
-	OSStatus err = SecCertificateGetData((SecCertificateRef)CFArrayGetValueAtIndex(certificates, 0), &certdata);
-	if(err == noErr)
-		[acceptedCertificates setObject:[NSData dataWithBytes:certdata.Data length:certdata.Length] forKey:hostname];
+	BOOL didTrustCerficate = (returnCode == NSOKButton);
+	NSWindow *parentWindow = (NSWindow *)contextInfo;
+
+	query_cert_cb(didTrustCerficate, userdata);
+	/* If the user confirmed this cert, we store this information until the app is closed so the user doesn't have to re-confirm it every time
+	 * (doing otherwise might be particularily annoying on auto-reconnect)
+	 */
+	if (didTrustCerficate) {
+		CSSM_DATA certdata;
+		OSStatus err = SecCertificateGetData((SecCertificateRef)CFArrayGetValueAtIndex(certificates, 0), &certdata);
+		if(err == noErr)
+			[acceptedCertificates setObject:[NSData dataWithBytes:certdata.Data length:certdata.Length] forKey:hostname];
+	}
 
 	[trustpanel release];
 	CFRelease(trustRef);
-	
-	[win performSelector:@selector(performClose:) withObject:nil afterDelay:0.0];
+
+	[parentWindow performSelector:@selector(performClose:) withObject:nil afterDelay:0.0];
 	
 	[self release];
 }

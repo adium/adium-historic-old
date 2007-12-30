@@ -315,6 +315,17 @@
 }
 
 /*!
+ * @brief Does the account itself display file transfer messages in chat windows?
+ *
+ * If YES, Adium won't attempt to display messages in chat windows regarding file transfers.
+ * If NO, Adium automatically displays appropriate messages in open chats.
+ */
+- (BOOL)accountDisplaysFileTransferMessages
+{
+	return NO;
+}
+
+/*!
  * @brief Called once the display name has been properly filtered
  *
  * Subclasses may override to pass this name on to the server if appropriate.
@@ -772,14 +783,13 @@
 #pragma mark Chat Commands
 -(NSMenu*)actionsForChat:(AIChat*)chat
 {
-#warning breakage
 	return nil;
-	//add stuff
 }
 
 -(void)verifyCommand:(NSString*)commandName forChat:(AIChat*)chat
 {
-	[self setDelegate:[AIChatCommandsController init]];
+#warning Huh
+	[self setDelegate:[[AIChatCommandsController alloc] init]];
 	[[self delegate] verifyCommand:commandName forChat:chat];
 	[[self delegate] setDelegate:self];
 }

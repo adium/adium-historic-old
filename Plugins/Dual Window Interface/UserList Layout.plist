@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
 	<key>Contact Cell Style</key>
@@ -14,6 +14,8 @@
 	<integer>3</integer>
 	<key>Contact Text Alignment</key>
 	<integer>0</integer>
+	<key>Extended Status Position</key>
+	<integer>1</integer>
 	<key>Grid Enabled</key>
 	<true/>
 	<key>Group Bottom Spacing</key>
@@ -21,7 +23,7 @@
 	<key>Group Cell Style</key>
 	<integer>0</integer>
 	<key>Group Font</key>
-	<string>LucidaGrande-Bold,16</string>
+	<string>LucidaGrande-Bold,12</string>
 	<key>Group Text Alignment</key>
 	<integer>0</integer>
 	<key>Group Top Spacing</key>
@@ -39,7 +41,7 @@
 	<key>Show User Icon</key>
 	<true/>
 	<key>Status Font</key>
-	<string>LucidaGrande,16</string>
+	<string>LucidaGrande,10</string>
 	<key>Status Icon Position</key>
 	<integer>3</integer>
 	<key>User Icon Position</key>

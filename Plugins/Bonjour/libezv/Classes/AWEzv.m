@@ -48,8 +48,7 @@
 @implementation AWEzv
 - (id) initWithClient:(id <AWEzvClientProtocol, NSObject>)newClient 
 {
-    if((self = [super init]))
-	{
+    if ((self = [super init])) {
 		client = newClient;
 		name = nil;
 		status = AWEzvUndefined;
@@ -117,7 +116,7 @@
     AWEzvContact *contact;
     
     contact = [manager contactForIdentifier:uniqueId];
-    if (contact != nil){
+    if (contact != nil) {
 		[contact sendTypingNotification:typingStatus];
 	}
 }
@@ -141,7 +140,7 @@
 }
 - (void) startOutgoingFileTransfer:(EKEzvOutgoingFileTransfer *)transfer
 {
-	[transfer setManager: manager];
+	[transfer setManager:manager];
 	[transfer startSending];
 }
 

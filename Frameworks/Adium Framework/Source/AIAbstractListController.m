@@ -271,6 +271,7 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	//"Preferences" determined by the subclass of AIAbstractListController
 	[contentCell setUseAliasesAsRequested:[self useAliasesInContactListAsRequested]];
 	[contentCell setShouldUseContactTextColors:[self shouldUseContactTextColors]];
+	[contentCell setUseStatusMessageAsExtendedStatus:[self useStatusMessageAsExtendedStatus]];
 		
 	//Alignment
 	contentCellAlignment = [[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue];
@@ -295,7 +296,6 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 		[contentCell setUserIconVisible:(allowIcons ? [[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue] : NO)];
 		[contentCell setStatusIconsVisible:(allowIcons ? [[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS] boolValue] : NO)];
 		[contentCell setServiceIconsVisible:(allowIcons ? [[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS] boolValue] : NO)];
-
 		[contentCell setExtendedStatusVisible:NO /*(allowIcons ? [[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue] : NO)*/];
 
 		if (allowIcons) {
@@ -375,9 +375,7 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	}*/
 	
 	//Disable square row highlighting for bubble lists - the bubble cells handle this on their own
-	if (windowStyle == AIContactListWindowStyleGroupBubbles ||
-	   pillowsOrPillowsFittedWindowStyle) {
-#warning row highlight
+	if ((windowStyle == AIContactListWindowStyleGroupBubbles) || pillowsOrPillowsFittedWindowStyle) {
 		[contactListView setDrawsSelectedRowHighlight:NO];
 	}
 	
@@ -657,10 +655,11 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 - (void)setDragItems:(NSNotification *)notification
 {
 	NSArray *items = [notification object];
-	if(dragItems)
+	if (dragItems != items) {
 		[dragItems release];
-	dragItems = [items retain];
-	
+		dragItems = [items retain];
+	}
+
 	// Remove this contact list if from drag & drop operation took the last group away
 	if(![[contactList listContacts] count]){
 		[[adium notificationCenter] postNotificationName:DetachedContactListIsEmpty
@@ -750,10 +749,9 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
 {	
-	if (dragItems) {
-		[dragItems release]; 
-		dragItems = nil;
-	}
+	//Post a notification that the drag ended so any other list controllers which have cached the drag can clear it
+	[[adium notificationCenter] postNotificationName:@"AIListControllerDragEnded"
+											  object:nil];
 
 	return YES;
 }
@@ -774,6 +772,7 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	return NSDragOperationMove;
 }
 
+//Is this method needed?
 - (void)outlineView:(NSOutlineView *)outlineView draggedImage:(NSImage *)image endedAt:(NSPoint)screenPoint operation:(NSDragOperation)operation
 {
 	//Post a notification that the drag ended so any other list controllers which have cached the drag can clear it
@@ -783,17 +782,10 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 
 - (void)listControllerDragEnded:(NSNotification *)notification
 {
-	//Check if this contact list is empty from drag operation
-	if(![contactList containedObjectsCount])
-		[[adium notificationCenter] postNotificationName:DetachedContactListIsEmpty 
-												  object:contactListView];
-	
-	if (dragItems) {
-		[dragItems release]; dragItems = nil;
-	}
-	
 	[self setShowTooltips:[[[adium preferenceController] preferenceForKey:KEY_CL_SHOW_TOOLTIPS
 																	group:PREF_GROUP_CONTACT_LIST] boolValue]];
+	
+	[self setDragItems:nil];
 }
 
 - (void)pasteboard:(NSPasteboard *)sender provideDataForType:(NSString *)type
@@ -867,7 +859,9 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 - (BOOL)shouldUseContactTextColors{
 	return YES;
 }
-
+- (BOOL)useStatusMessageAsExtendedStatus{
+	return NO;
+}
 /*!
  * @brief Show tooltips?
  */

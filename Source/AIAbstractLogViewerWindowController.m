@@ -1101,6 +1101,8 @@ static int toArraySort(id itemA, id itemB, void *context);
 //Abort any active searches
 - (void)stopSearching
 {
+	[refreshResultsTimer invalidate]; [refreshResultsTimer release]; refreshResultsTimer = nil;
+
     //Increase the active search ID so any existing searches stop, and then
     //wait for any active searches to finish and release the lock
     activeSearchID++;

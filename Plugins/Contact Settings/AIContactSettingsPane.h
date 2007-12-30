@@ -28,11 +28,15 @@
 	IBOutlet	NSTextField				*label_encryption;
 	IBOutlet	NSPopUpButton			*popUp_encryption;
 	
+	IBOutlet	NSTextField				*label_visibility;
+	IBOutlet	NSButton				*checkBox_visibility;
+	
 	AIListObject						*listObject;
 }
 
 - (IBAction)setAlias:(id)sender;
 - (IBAction)setNotes:(id)sender;
 - (IBAction)selectedEncryptionPreference:(id)sender;
+- (IBAction)setVisible:(id)sender;
 
 @end

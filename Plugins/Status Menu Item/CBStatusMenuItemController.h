@@ -16,6 +16,7 @@
 
 #import <Adium/AIObject.h>
 #import <Adium/AIChatControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
 #import "AIMenuBarIcons.h"
 
 @class AIAccountMenu, AIStatusMenu, AIContactMenu;
@@ -41,6 +42,7 @@
 	NSTimer					*unviewedContentFlash;
 	
 	BOOL					showBadge;
+	BOOL					showUnreadCount;
 	BOOL					flashUnviewed;
 	BOOL					currentlyIgnoringUnviewed;
 	BOOL					unviewedContent;

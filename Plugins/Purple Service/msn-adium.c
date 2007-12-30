@@ -25,6 +25,8 @@
 #include "sync.h"
 #include "slplink.h"
 
+#import "PurpleCommon.h"
+
 void msn_set_friendly_name(PurpleConnection *gc, const char *entry)
 {
 	MsnCmdProc *cmdproc;

@@ -30,7 +30,7 @@
 **/
 - (id)init
 {
-	if(self = [super init])
+	if (self = [super init])
 	{
 		// Initialize underlying asynchronous tcp/ip socket
 		asyncSocket = [[AsyncSocket alloc] initWithDelegate:self];
@@ -104,7 +104,7 @@
 }
 - (void)setDocumentRoot:(NSURL *)value
 {
-    if(![documentRoot isEqual:value])
+    if (![documentRoot isEqual:value])
 	{
         [documentRoot release];
         documentRoot = [value copy];
@@ -153,7 +153,7 @@
 }
 
 - (void)setTransfer:(EKEzvOutgoingFileTransfer *)newTransfer{
-	if(transfer !=newTransfer)
+	if (transfer !=newTransfer)
 	{
 		[transfer release];
 		transfer = [newTransfer retain];
@@ -171,7 +171,7 @@
 {
 	BOOL success = [asyncSocket acceptOnPort:port error:error];
 	
-	if(success)
+	if (success)
 	{
 		// Update our port number
 		[self setPort:[asyncSocket localPort]];
@@ -229,10 +229,10 @@
 - (void)connectionDidDie:(NSNotification *)notification
 {
 	// AWEzvLog(@"%s",  __PRETTY_FUNCTION__);
-	if (self != (HTTPServer *)[[notification object] server]){
+	if (self != (HTTPServer *)[[notification object] server]) {
 		return;
 	} else {
-		if (![transfer moreFilesToDownload]){
+		if (![transfer moreFilesToDownload]) {
 			[transfer userFinishedDownload];
 		}
 		// [connections removeObject:[notification object]];
@@ -258,7 +258,7 @@
 + (void)initialize
 {
 	static BOOL initialized = NO;
-	if(!initialized)
+	if (!initialized)
 	{
 		
 		initialized = YES;
@@ -273,7 +273,7 @@
 **/
 - (id)initWithAsyncSocket:(AsyncSocket *)newSocket forServer:(HTTPServer *)myServer
 {
-	if(self = [super init])
+	if (self = [super init])
 	{
 		// Take over ownership of the socket
 		asyncSocket = [newSocket retain];
@@ -301,7 +301,7 @@
 - (void)dealloc
 {
 	[asyncSocket release];
-	if(request) CFRelease(request);
+	if (request) CFRelease(request);
 		
 	[super dealloc];
 }
@@ -325,13 +325,13 @@
 
 	NSString *encoding = [(NSString *)CFHTTPMessageCopyHeaderFieldValue(request, CFSTR("Accept-Encoding")) autorelease];
 	bool isAppleSingle = NO;
-	if ([encoding isEqualToString:@"AppleSingle"]){
+	if ([encoding isEqualToString:@"AppleSingle"]) {
 		isAppleSingle = YES;
 	}
 	
 	NSString *connection = [(NSString *)CFHTTPMessageCopyHeaderFieldValue(request, CFSTR("Connection")) autorelease];
 	bool isKeepAlive = NO;
-	if ([connection isEqualToString:@"keep-alive"]){
+	if ([connection isEqualToString:@"keep-alive"]) {
 		isKeepAlive = YES;
 	}
 	
@@ -340,8 +340,7 @@
 	// Check the HTTP version
 	// If it's anything but HTTP version 1.1, we don't support it
 	NSString *version = [(NSString *)CFHTTPMessageCopyVersion(request) autorelease];
-    if(!version || ![version isEqualToString:(NSString *)kCFHTTPVersion1_1])
-	{
+    if (!version || ![version isEqualToString:(NSString *)kCFHTTPVersion1_1]) {
 		//NSLog(@"HTTP Server: Error 505 - Version Not Supported");
 		
 		// Status Code 505 - Version Not Supported
@@ -351,13 +350,13 @@
 		[asyncSocket writeData:responseData withTimeout:WRITE_ERROR_TIMEOUT tag:HTTP_RESPONSE];
 		CFRelease(response);
 		[[server transfer] userFailedDownload];
-		return;    }
+		return;
+	}
 	
 	// Check HTTP method
 	// If no method was passed, issue a Bad Request response
     NSString *method = [(NSString *)CFHTTPMessageCopyRequestMethod(request) autorelease];
-    if(!method)
-	{
+    if (!method) {
 		//NSLog(@"HTTP Server: Error 400 - Bad Request");
 		
 		// Status Code 400 - Bad Request
@@ -373,14 +372,12 @@
 	// Extract requested URI
 	NSURL *uri = [(NSURL *)CFHTTPMessageCopyRequestURL(request) autorelease];
 	
-	
 	// Respond properly to HTTP 'GET' and 'HEAD' commands
-    if([method isEqualToString:@"GET"] || [method isEqualToString:@"HEAD"])
-	{
+    if ([method isEqualToString:@"GET"] || [method isEqualToString:@"HEAD"]) {
 		// AWEzvLog(@"responding to get/head");
 		NSData *data = [self dataForURI:[uri relativeString] appleSingle:isAppleSingle];
 		
-        if(!data)
+        if (!data)
 		{
 			/*We have a request for a non-existant file so we need to stop the transfer */
 			[[server transfer] userFailedDownload];
@@ -399,13 +396,11 @@
 
 		// If they issue a 'HEAD' command, we don't have to include the file
 		// If they issue a 'GET' command, we need to include the file
-		if([method isEqual:@"HEAD"])
+		if ([method isEqual:@"HEAD"])
 		{
 			NSData *responseData = [(NSData *)CFHTTPMessageCopySerializedMessage(response) autorelease];
 			[asyncSocket writeData:responseData withTimeout:WRITE_HEAD_TIMEOUT tag:HTTP_RESPONSE];
-        }
-		else
-		{
+        } else {
 			// Previously, we would use the CFHTTPMessageSetBody method here.
 			// This caused problems, however, if the data was large.
 			// For example, if the data represented a 500 MB movie on the disk, this method would thrash the OS!
@@ -426,7 +421,9 @@
     NSData *responseData = [(NSData *)CFHTTPMessageCopySerializedMessage(response) autorelease];
 	[asyncSocket writeData:responseData withTimeout:WRITE_ERROR_TIMEOUT tag:HTTP_RESPONSE];
     CFRelease(response);
+
 	[[server transfer] userFailedDownload];
+
 	return;
 }
 
@@ -443,23 +440,23 @@
 	NSMutableData *data = [NSMutableData data];
 
 
-	if ([[server transfer] isDirectory] && [[server transfer] isBaseURIForDirectoryTransfer: path]){
+	if ([[server transfer] isDirectory] && [[server transfer] isBaseURIForDirectoryTransfer: path]) {
 		/*If this is the base url for a directory transfer then we need to send the xml */
 		[data appendData:[[server transfer] directoryXMLData]];
 		// AWEzvLog(@"%@", data);
 	} else {
 
 	/*Check to see whether we should get applesingle data*/
-		if (isAppleSingle){
+		if (isAppleSingle) {
 			[data appendData:[[server transfer] appleSingleDataForURI:path]];
 		}
 
 		/*Send the AppleSingle data along with the other stuff!*/
 		/*We will get the path so let's load the data from the path */
-		if (data){
+		if (data) {
 			NSError *error = nil;
 			NSData *fileData = [[NSData alloc] initWithContentsOfFile:[[server transfer] fileDataForURI:path] options:(NSMappedRead | NSUncachedRead) error:&error];
-			if (error || (fileData == nil)){
+			if (error || (fileData == nil)) {
 				data = nil;
 			} else {
 				[data appendData: fileData];
@@ -507,8 +504,7 @@
 	
 	// Append the header line to the http message
 	CFHTTPMessageAppendBytes(request, [data bytes], [data length]);
-	if(!CFHTTPMessageIsHeaderComplete(request))
-	{
+	if (!CFHTTPMessageIsHeaderComplete(request)) {
 		// We don't have a complete header yet
 		// That is, we haven't yet received a CRLF on a line by itself, indicating the end of the header
 		[asyncSocket readDataToData:[AsyncSocket CRLFData] withTimeout:READ_TIMEOUT tag:HTTP_REQUEST];
@@ -533,10 +529,10 @@
 	// A partial response represents a header response with a body following it,
 	// so we still need to wait til the body is sent too.
 	
-	if(tag == HTTP_RESPONSE)
+	if (tag == HTTP_RESPONSE)
 	{
 		// Release the old request, and create a new one
-		if(request) CFRelease(request);
+		if (request) CFRelease(request);
 		request = CFHTTPMessageCreateEmpty(kCFAllocatorDefault, YES);
 		
 		// And start listening for more requests
@@ -552,7 +548,7 @@
 **/
 - (void)onSocket:(AsyncSocket *)sock willDisconnectWithError:(NSError *)err
 {	
-	if(err)
+	if (err)
 	{
 	}
 }

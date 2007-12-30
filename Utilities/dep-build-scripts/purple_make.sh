@@ -1,7 +1,6 @@
 GLIB=glib-2.14.1
 MEANWHILE=meanwhile-1.0.2
 GADU=libgadu-1.7.1
-SASL=cyrus-sasl-2.1.18
 INTLTOOL=intltool-0.36.2
 
 SDK_ROOT="/Developer/SDKs/MacOSX10.4u.sdk"
@@ -71,45 +70,6 @@ for ARCH in ppc i386 ; do
 	make -j $NUMBER_OF_CORES && make install
 	cd ..
 done
-
-# Cyrus-SASL
-# Apply our patch
-pushd ../$SASL
-patch --forward -p1 < ../$SASL.patch
-popd
-
-for ARCH in ppc i386 ; do
-    export CFLAGS="$BASE_CFLAGS -arch $ARCH -I$SDK_ROOT/usr/include/gssapi"
-	export LDFLAGS="$BASE_LDFLAGS -arch $ARCH"
-	export SASL_PATH=" "
-    mkdir cyrus-sasl-$ARCH || true
-    cd cyrus-sasl-$ARCH
-    case $ARCH in
-        ppc) HOST=powerpc-apple-darwin8
-             TARGET_DIR="$TARGET_DIR_PPC" ;;
-        i386) HOST=i686-apple-darwin8 
-             TARGET_DIR="$TARGET_DIR_I386" ;;
-    esac
-    # In my experience, --enable-static horks things. Not sure why. Be careful
-    # if you turn it back on. Check things with a completely clean build.
-    ../../$SASL/configure --prefix=$TARGET_DIR \
-        --disable-macos-framework \
-        --with-openssl=$SDK_ROOT/usr/lib \
-        --disable-digest \
-        --enable-static=cram,otp,gssapi,plain,anon \
-        --host=$HOST
-    # EVIL HACK ALERT: http://www.theronge.com/2006/04/15/how-to-compile-cyrus-sasl-as-universal/
-    # We edit libtool before we run make. This is evil and makes me sad.
-    cat libtool | sed 's%archive_cmds="\\\$CC%archive_cmds="\\\$CC -mmacosx-version-min=10.4 -Wl,-syslibroot,$SDK_ROOT -arch '$ARCH'%' > libtool.tmp
-    mv libtool.tmp libtool
-    make -j $NUMBER_OF_CORES && make install
-    cd ..
-done
-
-# Deapply our patch
-pushd ../$SASL
-patch -p1 -R < ../$SASL.patch
-popd
 
 # intltool so pidgin will configure
 # need a native intltool in both ppc and i386

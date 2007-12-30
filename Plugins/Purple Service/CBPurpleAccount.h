@@ -34,6 +34,8 @@
 	NSDictionary		*tuneinfo;
 	BOOL				willBeDeleted;
 	id<AIAccountControllerRemoveConfirmationDialog> deletionDialog;
+	
+	PurpleConnectionError lastDisconnectionReason;
 }
 
 - (const char*)protocolPlugin;
@@ -73,6 +75,7 @@
 - (void)connect;
 - (void)configureAccountProxyNotifyingTarget:(id)target selector:(SEL)selector;
 - (void)disconnect;
+- (PurpleConnectionError)lastDisconnectionReason;
 - (NSString *)connectionStringForStep:(int)step;
 - (void)configurePurpleAccount;
 
@@ -98,7 +101,6 @@
 - (void)accountConnectionNotice:(NSString *)text;
 - (void)accountConnectionDisconnected;
 - (void)accountConnectionProgressStep:(NSNumber *)step percentDone:(NSNumber *)connectionProgressPrecent;
-- (void)accountConnectionStep:(NSString*)msg step:(int)step totalSteps:(int)step_count;
 
 - (void)newContact:(AIListContact *)theContact withName:(NSString *)inName;
 - (void)updateContact:(AIListContact *)theContact
@@ -131,6 +133,7 @@
 - (void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
 - (void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
 - (void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat;
+- (void)leftChat:(AIChat *)chat;
 
 - (void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer;
 - (void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer 
