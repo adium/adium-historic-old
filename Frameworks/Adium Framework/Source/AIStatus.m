@@ -17,11 +17,12 @@
 #import <Adium/AIStatus.h>
 #import <Adium/AIStatusIcons.h>
 
+#import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIStatusControllerProtocol.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import "AIAccountController.h"
+
 
 @implementation AIStatus
 
@@ -437,46 +438,8 @@
 	return [[statusDict objectForKey:STATUS_SPECIAL_TYPE] intValue];
 }
 
-#pragma mark AppleScript
+#pragma mark Applescript
 
-/**
- * @brief statuses are specified by name in the 'statuses' key of AIApplication
- */
-- (NSScriptObjectSpecifier *)objectSpecifier
-{
-	NSScriptClassDescription *containerClassDesc = (NSScriptClassDescription *)[NSScriptClassDescription classDescriptionForClass:[NSApp class]];
-	return [[[NSNameSpecifier alloc]
-		   initWithContainerClassDescription:containerClassDesc
-		   containerSpecifier:nil key:@"statuses"
-		   name:[self title]] autorelease];
-}
-
-/**
- * @brief Returns the title of this status.
- */
-- (NSString *)scriptingTitle
-{
-	return [self title];
-}
-/**
- * @brief Sets the title of this status to the given value.
- *
- * This may copy self, if self is not editable.
- */
-- (void)setScriptingTitle:(NSString *)newTitle
-{
-	if ([self mutabilityType] == AIEditableStatusState || [self mutabilityType] == AITemporaryEditableStatusState) {
-		[self setTitle:newTitle];
-		[[adium statusController] savedStatusesChanged];
-		[[adium statusController] applyState:self toAccounts:[[adium accountController] accountsWithCurrentStatus:self]];
-	} else {
-		AIStatus *newStatus = [self mutableCopy];
-		[newStatus setMutabilityType:AITemporaryEditableStatusState];
-		[newStatus setTitle:newTitle];
-		[[adium statusController] savedStatusesChanged];		
-		[[adium statusController] applyState:newStatus toAccounts:[[adium accountController] accountsWithCurrentStatus:self]];
-	}
-}
 /**
  * @brief Returns the message of this status as an NSTextStorage
  */
