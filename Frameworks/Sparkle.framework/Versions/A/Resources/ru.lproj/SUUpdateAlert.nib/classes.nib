@@ -22,19 +22,6 @@
                 releaseNotesView = WebView;
             };
             SUPERCLASS = NSWindowController;
-        },
-                {
-            ACTIONS =             {
-                installUpdate = id;
-                remindMeLater = id;
-                skipThisVersion = id;
-            };
-            CLASS = SUUpdateAlertController;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                releaseNotesView = id;
-            };
-            SUPERCLASS = NSWindowController;
         }
     );
     IBVersion = 1;

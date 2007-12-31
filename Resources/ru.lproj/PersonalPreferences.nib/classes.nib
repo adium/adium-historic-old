@@ -1,11 +1,6 @@
 {
     IBClasses =     (
                 {
-            CLASS = AIAlternatingRowTableView;
-            LANGUAGE = ObjC;
-            SUPERCLASS = NSTableView;
-        },
-                {
             CLASS = AIAutoScrollView;
             LANGUAGE = ObjC;
             SUPERCLASS = NSScrollView;
@@ -63,21 +58,6 @@
             CLASS = AIObject;
             LANGUAGE = ObjC;
             SUPERCLASS = NSObject;
-        },
-                {
-            CLASS = AIPlasticButton;
-            LANGUAGE = ObjC;
-            SUPERCLASS = NSPopUpButton;
-        },
-                {
-            CLASS = AIPlasticMinusButton;
-            LANGUAGE = ObjC;
-            SUPERCLASS = AIPlasticButton;
-        },
-                {
-            CLASS = AIPlasticPlusButton;
-            LANGUAGE = ObjC;
-            SUPERCLASS = AIPlasticButton;
         },
                 {
             CLASS = AIPreferencePane;

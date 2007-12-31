@@ -27,29 +27,12 @@
             SUPERCLASS = NSObject;
         },
                 {
-            CLASS = ESDelayedTextField;
-            LANGUAGE = ObjC;
-            SUPERCLASS = NSTextField;
-        },
-                {
             CLASS = ESGaimYahooAccountViewController;
             LANGUAGE = ObjC;
             OUTLETS =             {
                 "popUp_chatServer" = NSPopUpButton;
             };
             SUPERCLASS = AIAccountViewController;
-        },
-                {
-            ACTIONS =             {
-                copy = id;
-                paste = id;
-            };
-            CLASS = ESImageViewWithImagePicker;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                delegate = id;
-            };
-            SUPERCLASS = NSImageView;
         },
                 {
             CLASS = FirstResponder;
