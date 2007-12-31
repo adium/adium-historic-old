@@ -341,7 +341,6 @@ static ESFileTransferPreferences *preferences;
 - (void)sendFile:(NSString *)inPath toListContact:(AIListContact *)listContact
 {
 	AIAccount		*account;
-	ESFileTransfer	*fileTransfer;
 	
 	if ((account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_FILE_TRANSFER_TYPE
 																		  toContact:listContact]) &&
@@ -351,12 +350,6 @@ static ESFileTransferPreferences *preferences;
 		
 		//Resolve any alias we're passed if necessary
 		inPath = [defaultManager pathByResolvingAlias:inPath];
-		
-		//Set up a fileTransfer object
-		fileTransfer = [self newFileTransferWithContact:listContact
-											 forAccount:account
-												   type:Outgoing_FileTransfer];
-		
 
 		if ([defaultManager fileExistsAtPath:inPath isDirectory:&isDir]) {
 			//If we get a directory and the account we're sending from doesn't support folder transfers
@@ -366,15 +359,28 @@ static ESFileTransferPreferences *preferences;
 			}
 			
 			if (inPath) {
-				[fileTransfer setLocalFilename:inPath];
-				[fileTransfer setSize:[[[defaultManager fileAttributesAtPath:inPath
-																traverseLink:YES] objectForKey:NSFileSize] longValue]];
-				
-				//The fileTransfer object should now have everything the account needs to begin transferring
-				[(AIAccount<AIAccount_Files> *)account beginSendOfFileTransfer:fileTransfer];
-				
-				if (showProgressWindow) {
-					[self showProgressWindowIfNotOpen:nil];
+				long fileSize = [[[defaultManager fileAttributesAtPath:inPath
+														  traverseLink:YES] objectForKey:NSFileSize] longValue];
+				if (fileSize > 0) {
+					ESFileTransfer	*fileTransfer;
+
+					//Set up a fileTransfer object
+					fileTransfer = [self newFileTransferWithContact:listContact
+														 forAccount:account
+															   type:Outgoing_FileTransfer];
+					
+					[fileTransfer setLocalFilename:inPath];
+					[fileTransfer setSize:fileSize];
+					
+					//The fileTransfer object should now have everything the account needs to begin transferring
+					[(AIAccount<AIAccount_Files> *)account beginSendOfFileTransfer:fileTransfer];
+					
+					if (showProgressWindow) {
+						[self showProgressWindowIfNotOpen:nil];
+					}
+				} else {
+					//XXX Show a warning message rather than just beeping
+					NSBeep();
 				}
 			}
 		}
