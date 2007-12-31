@@ -14,11 +14,6 @@
             SUPERCLASS = AIWindowController;
         },
                 {
-            CLASS = AIObject;
-            LANGUAGE = ObjC;
-            SUPERCLASS = NSObject;
-        },
-                {
             CLASS = AISmartStepper;
             LANGUAGE = ObjC;
             SUPERCLASS = NSStepper;

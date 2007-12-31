@@ -22,11 +22,6 @@
             SUPERCLASS = AIObject;
         },
                 {
-            CLASS = AIContextMenuTextView;
-            LANGUAGE = ObjC;
-            SUPERCLASS = NSTextView;
-        },
-                {
             CLASS = AIObject;
             LANGUAGE = ObjC;
             SUPERCLASS = NSObject;
@@ -38,18 +33,6 @@
                 "popUp_encoding" = NSPopUpButton;
             };
             SUPERCLASS = AIAccountViewController;
-        },
-                {
-            ACTIONS =             {
-                copy = id;
-                paste = id;
-            };
-            CLASS = ESImageViewWithImagePicker;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                delegate = id;
-            };
-            SUPERCLASS = NSImageView;
         },
                 {
             CLASS = FirstResponder;

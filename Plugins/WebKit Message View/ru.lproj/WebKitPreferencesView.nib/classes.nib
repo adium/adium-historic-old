@@ -1,11 +1,6 @@
 {
     IBClasses =     (
                 {
-            CLASS = AIAutoScrollView;
-            LANGUAGE = ObjC;
-            SUPERCLASS = NSScrollView;
-        },
-                {
             ACTIONS =             {
                 showImagePicker = id;
             };
@@ -45,22 +40,6 @@
             SUPERCLASS = AIModularPane;
         },
                 {
-            CLASS = AIWebkitMessageViewStyle;
-            LANGUAGE = ObjC;
-            SUPERCLASS = NSObject;
-        },
-                {
-            ACTIONS =             {
-                showImagePicker = id;
-            };
-            CLASS = ESImageViewWithImagePicker;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                delegate = id;
-            };
-            SUPERCLASS = NSImageView;
-        },
-                {
             ACTIONS =             {
                 resetDisplayFontToDefault = id;
             };
@@ -81,11 +60,6 @@
                 "view_previewLocation" = NSView;
             };
             SUPERCLASS = AIPreferencePane;
-        },
-                {
-            CLASS = ESWebView;
-            LANGUAGE = ObjC;
-            SUPERCLASS = WebView;
         },
                 {
             CLASS = FirstResponder;

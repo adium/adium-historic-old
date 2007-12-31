@@ -40,19 +40,6 @@
             SUPERCLASS = NSWindowController;
         },
                 {
-            ACTIONS =             {
-                joinChat = id;
-            };
-            CLASS = DCNothing;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                "popUp_service" = NSPopUpButton;
-                "view_customView" = NSView;
-                "window_main" = NSWindow;
-            };
-            SUPERCLASS = NSObject;
-        },
-                {
             CLASS = FirstResponder;
             LANGUAGE = ObjC;
             SUPERCLASS = NSObject;

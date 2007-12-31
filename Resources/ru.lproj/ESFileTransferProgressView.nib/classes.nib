@@ -1,11 +1,6 @@
 {
     IBClasses =     (
                 {
-            CLASS = AIObject;
-            LANGUAGE = ObjC;
-            SUPERCLASS = NSObject;
-        },
-                {
             CLASS = AIRolloverButton;
             LANGUAGE = ObjC;
             OUTLETS =             {

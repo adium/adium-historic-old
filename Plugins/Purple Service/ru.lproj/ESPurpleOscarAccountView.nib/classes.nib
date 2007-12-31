@@ -40,18 +40,6 @@
             SUPERCLASS = NSObject;
         },
                 {
-            ACTIONS =             {
-                copy = id;
-                paste = id;
-            };
-            CLASS = ESImageViewWithImagePicker;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                delegate = id;
-            };
-            SUPERCLASS = NSImageView;
-        },
-                {
             CLASS = FirstResponder;
             LANGUAGE = ObjC;
             SUPERCLASS = NSObject;

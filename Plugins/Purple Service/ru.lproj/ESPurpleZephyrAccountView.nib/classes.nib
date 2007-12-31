@@ -47,11 +47,6 @@
             SUPERCLASS = AIPlasticButton;
         },
                 {
-            CLASS = ESDelayedTextField;
-            LANGUAGE = ObjC;
-            SUPERCLASS = NSTextField;
-        },
-                {
             ACTIONS =             {
                 addRowToServerList = id;
                 removeSelectedRowFromServerList = id;
@@ -74,11 +69,6 @@
             CLASS = FirstResponder;
             LANGUAGE = ObjC;
             SUPERCLASS = NSObject;
-        },
-                {
-            CLASS = NSLevelIndicator;
-            LANGUAGE = ObjC;
-            SUPERCLASS = NSControl;
         }
     );
     IBVersion = 1;
