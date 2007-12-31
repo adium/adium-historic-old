@@ -776,7 +776,7 @@ static int nextChatNumber = 0;
 	}
 	
 	//Send any file we were told to send to every participating list object (anyone remember the AOL mass mailing zareW scene?)
-	if (filePath && [[filePath absoluteString] length]) {
+	if (filePath && [[filePath path] length]) {
 		NSEnumerator	*enumerator = [[self containedObjects] objectEnumerator];
 		AIListContact	*listContact;
 		
@@ -787,7 +787,8 @@ static int nextChatNumber = 0;
 			//sending CONTENT_FILE_TRANSFER_TYPE.
 			targetFileTransferContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
 																				   forListContact:listContact];
-			[[adium fileTransferController] sendFile:[filePath absoluteString] toListContact:targetFileTransferContact];
+			[[adium fileTransferController] sendFile:[[filePath path] stringByExpandingTildeInPath]
+									   toListContact:targetFileTransferContact];
 		}
 	}
 	
