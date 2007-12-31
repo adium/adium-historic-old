@@ -758,7 +758,7 @@ static int nextChatNumber = 0;
 - (id)sendScriptCommand:(NSScriptCommand *)command {
 	NSDictionary	*evaluatedArguments = [command evaluatedArguments];
 	NSString		*message = [evaluatedArguments objectForKey:@"message"];
-	NSURL			*filePath = [evaluatedArguments objectForKey:@"withFile"];
+	NSURL			*fileURL = [evaluatedArguments objectForKey:@"withFile"];
 	
 	//Send any message we were told to send
 	if (message && [message length]) {
@@ -776,7 +776,7 @@ static int nextChatNumber = 0;
 	}
 	
 	//Send any file we were told to send to every participating list object (anyone remember the AOL mass mailing zareW scene?)
-	if (filePath && [[filePath path] length]) {
+	if (fileURL && [[fileURL path] length]) {
 		NSEnumerator	*enumerator = [[self containedObjects] objectEnumerator];
 		AIListContact	*listContact;
 		
@@ -787,7 +787,7 @@ static int nextChatNumber = 0;
 			//sending CONTENT_FILE_TRANSFER_TYPE.
 			targetFileTransferContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
 																				   forListContact:listContact];
-			[[adium fileTransferController] sendFile:[[filePath path] stringByExpandingTildeInPath]
+			[[adium fileTransferController] sendFile:[fileURL path]
 									   toListContact:targetFileTransferContact];
 		}
 	}
