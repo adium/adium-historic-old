@@ -126,6 +126,8 @@
 	return [[[AIObject sharedAdiumInstance] interfaceController] mostRecentActiveChat];
 }
 
+#pragma mark Status
+
 - (id)makeStatusWithProperties:(NSDictionary *)keyDictionary
 {
 	//ready the arguments!
@@ -193,23 +195,25 @@
 }
 - (void)insertInStatuses:(AIStatus *)status
 {
-	NSLog(@"%s",__PRETTY_FUNCTION__);
 	[[[AIObject sharedAdiumInstance] statusController] addStatusState:status];
 }
 - (void)insertInStatuses:(AIStatus *)status atIndex:(unsigned int)i
 {
-	NSLog(@"%s",__PRETTY_FUNCTION__);
 	[[[[AIObject sharedAdiumInstance] statusController] rootStateGroup] addStatusItem:status atIndex:i];
 }
 - (void)removeFromStatusesAtIndex:(unsigned int)i
 {
-	NSLog(@"%s",__PRETTY_FUNCTION__);
 	[[[[AIObject sharedAdiumInstance] statusController] rootStateGroup] removeStatusItem:[[self statuses] objectAtIndex:i]];
 }
 - (void)replaceInStatuses:(AIStatus *)status atIndex:(unsigned int)i
 {
-	NSLog(@"%s",__PRETTY_FUNCTION__);
+	NSLog(@"%s NOT IMPLEMENTED",__PRETTY_FUNCTION__);
 }
+- (AIStatus *)valueInStatusesWithUniqueID:(id)uniqueID
+{
+	return [[[AIObject sharedAdiumInstance] statusController] statusStateWithUniqueStatusID:uniqueID];
+}
+
 - (NSObject<AIAdium> *)adium
 {
 	return [AIObject sharedAdiumInstance];
