@@ -72,8 +72,9 @@ update_language()
 		silent_popd
     
 		# Emoticons
+       if [ -e  "Emoticons" ] ; then
 		echo "Emoticons"
-		silent_pushd Emoticons
+         silent_pushd Emoticons
 			silent_pushd Default.AdiumEmoticonset
 				if [ -e  "Resources/$LANG" ] ; then
 				    silent_pushd Resources/$LANG
@@ -81,11 +82,15 @@ update_language()
 				    silent_popd
 				fi
 			silent_popd
-		silent_popd
+		  silent_popd
+	    else
+	      echo "No Emoticons found for $LANG"
+	    fi
 	
 		# Scripts
-		echo "Scripts"
-		silent_pushd Scripts
+       if [ -e "Scripts" ] ; then
+		 echo "Scripts"
+		 silent_pushd Scripts
 			silent_pushd "System Statistics.AdiumScripts"
 		        if [ -e  "Resources/$LANG" ] ; then
     				silent_pushd Resources/$LANG
@@ -93,7 +98,10 @@ update_language()
 				    silent_popd
 				fi
 			silent_popd
-		silent_popd
+		 silent_popd
+        else
+          echo "No Scripts found for $LANG"
+        fi
 	silent_popd
 
 	#back to Contents
