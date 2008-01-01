@@ -17,6 +17,7 @@
 #import <Adium/AIActionDetailsPane.h>
 
 @interface ESPanelAlertDetailPane : AIActionDetailsPane {
+	IBOutlet	NSTextField		*label_alertText;
     IBOutlet	NSTextView		*view_alertText;
 }
 
