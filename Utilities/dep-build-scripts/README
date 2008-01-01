@@ -22,7 +22,7 @@ which will leave you with frameworks in build/Frameworks.
 The next step only needs to be done after a clean build or after updating to a new version of libpurple; it generates and copies in the po (localization) files:
     ./make_po_files.sh
 
-(Once you've built the dependencies, you can simply use the steps from purple_make.sh onward to update your build).
+(Once you've built the dependencies, you can simply use the steps from purple_make.sh onward to update your build.)
 
 You can then copy the frameworks to Adium itself with:
     ./copy_frameworks.sh
