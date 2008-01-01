@@ -147,7 +147,7 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 			case kSecTrustResultUnspecified: // trust ok, user has no particular opinion about this
 #ifndef ALWAYS_SHOW_TRUST_WARNING
 				query_cert_cb(true, userdata);
-				[self release];
+				[self autorelease];
 				break;
 #endif
 			case kSecTrustResultConfirm: // trust ok, but user asked (earlier) that you check with him before proceeding
@@ -186,12 +186,12 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 				 * kSecTrustResultInvalid -> logic error; fix your program (SecTrust was used incorrectly)
 				 */
 				query_cert_cb(false, userdata);
-				[self release];
+				[self autorelease];
 				break;
 		}
 	} else {
 		query_cert_cb(false, userdata);
-		[self release];
+		[self autorelease];
 	}
 
 	CFRelease(searchRef);
