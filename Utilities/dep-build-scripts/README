@@ -12,18 +12,17 @@ In csh/tcsh: setenv PIDGIN_SOURCE "/path/to/im.pidgin.pidgin"
  * This Pidgin checkout must be completely clean. If you use it for building Pidgin (or libpurple, or Finch), be sure to run "make distclean" in it before starting the process below.
 
 Then, once you have the source trees, the current build process is this:
-    ./dep_make.sh
+    ./general_dependencies_make.sh
+    ./purple_dependencies_make.sh
     ./purple_make.sh
-# this next step will die soon, it's here because of the churn on the procedure
-# for building libpurple
-    ./current_step.sh
     ./universalize.sh
 
-the next step only needs to be done after a clean build or after updating to a new version of libpurple; it generates and copies in the po (localization) files
+which will leave you with frameworks in build/Frameworks.
 
+The next step only needs to be done after a clean build or after updating to a new version of libpurple; it generates and copies in the po (localization) files:
     ./make_po_files.sh
 
-which will leave you with frameworks in build/Frameworks.
+(Once you've built the dependencies, you can simply use the steps from purple_make.sh onward to update your build).
 
 You can then copy the frameworks to Adium itself with:
     ./copy_frameworks.sh
