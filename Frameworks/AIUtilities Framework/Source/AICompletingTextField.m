@@ -139,6 +139,8 @@
     }
 
     oldUserLength = userValueLength;
+	
+	[super textDidChange:notification];
 }
 
 - (void)textDidEndEditing:(NSNotification *)notification
