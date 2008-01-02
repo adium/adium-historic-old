@@ -459,6 +459,16 @@
 }
 
 /*!
+ * @brief Normalize a chat name
+ *
+ * The default implementation makes no changes
+ */
+- (NSString *)normalizeChatName:(NSString *)inChatName
+{
+	return inChatName;
+}
+
+/*!
  * @brief Compare this service to another, ranking by long description
  */
 - (NSComparisonResult)compareLongDescription:(AIService *)inService

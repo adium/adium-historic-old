@@ -15,9 +15,10 @@
  */
 
 #import "AIPurpleOscarAccountViewController.h"
-#import <Adium/AIStatusControllerProtocol.h>
 #import "CBOscarService.h"
 #import "DCPurpleOscarJoinChatViewController.h"
+#import <Adium/AIStatusControllerProtocol.h>
+#import <AIUtilities/AIStringAdditions.h>
 
 /*!
  * @class CBOscarService
@@ -65,6 +66,11 @@
 }
 - (NSString *)serviceID{
 	return @"";
+}
+
+- (NSString *)normalizeChatName:(NSString *)inChatName
+{
+	return [inChatName compactedString];
 }
 
 #pragma mark Statuses

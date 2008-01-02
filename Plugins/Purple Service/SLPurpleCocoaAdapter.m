@@ -305,7 +305,7 @@ AIChat* groupChatLookupFromConv(PurpleConversation *conv)
 		
 		chat = [accountLookup(conv->account) chatWithName:name identifier:[NSValue valueWithPointer:conv]];
 		conv->ui_data = [chat retain];
-		AILog(@"group chat lookup assigned %@ to %p",chat,conv);
+		AILog(@"group chat lookup assigned %@ to %p (%s)",chat,conv, conv->name);
 	}
 
 	return chat;
@@ -441,7 +441,7 @@ PurpleConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 						return NULL;
 					}
 					
-					AILog(@"Creating a chat.");
+					AILog(@"Creating a chat with name %s (Creation info: %@).", name, chatCreationInfo);
 
 					GHashTable				*components;
 					
