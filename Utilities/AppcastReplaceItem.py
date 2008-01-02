@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 
 """
-Usage: AppcastReplaceItem path-to-appcast version-to-replace version-to-replace-with path-to-dmg
+Usage:
+AppcastReplaceItem <path-to-appcast> <old-version> <new-version> <path-to-dmg>
 
 Example: AppcastReplaceItem appcast-release.xml 1.1.4 1.2 Release/build/Adium_1.2.dmg
 """
