@@ -817,22 +817,28 @@
 	}
 }
 #pragma mark AppleScript
+- (int)scriptingInternalObjectID
+{
+	return [[self internalObjectID] intValue];
+}
+
 /**
  * @brief The standard objectSpecifier for this model object.
  *
- * AIAccount is contained by AIService, using the 'accounts' key, and the UID of the account as a name.
- * This method says that, but in code.
+ * AIAccount is contained by AIService, using the 'accounts' key.
+ * Each instance has a unique integer identifier.
  */
 - (NSScriptObjectSpecifier *)objectSpecifier
 {
 	//get my service
 	AIService *theService = [self service];
 	NSScriptObjectSpecifier *containerRef = [theService objectSpecifier];
-	
-	//create a reference to this object, by name
-	return [[[NSNameSpecifier allocWithZone:[self zone]]
-		initWithContainerClassDescription:[containerRef keyClassDescription]
-		containerSpecifier:containerRef key:@"accounts" name:[self UID]] autorelease];
+
+	NSScriptClassDescription *containerClassDesc = (NSScriptClassDescription *)[NSScriptClassDescription classDescriptionForClass:[NSApp class]];
+	return [[[NSUniqueIDSpecifier alloc]
+			 initWithContainerClassDescription:[containerRef keyClassDescription]
+			 containerSpecifier:containerRef key:@"accounts"
+			 uniqueID:[self scriptingInternalObjectID]] autorelease];
 }
 
 /**

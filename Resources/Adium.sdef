@@ -118,7 +118,7 @@
 		<class name="account" code="Cact" description="An account in Adium">
 			<cocoa class="AIAccount" />
 			<property name="id" code="ID  " type="integer" access="r" description="The unique ID associated with this account">
-				<cocoa key="accountNumber" />
+				<cocoa key="scriptingInternalObjectID" />
 			</property>
 			<property name="name" code="pnam" type="text" access="r" description="The name of this account">
 				<cocoa key="scriptingUID" />
