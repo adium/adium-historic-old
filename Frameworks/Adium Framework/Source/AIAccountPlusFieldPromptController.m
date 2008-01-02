@@ -169,6 +169,7 @@
 										   showTitleVerbs:NO] retain];
 	[self _restoreLastAccountIfPossible];
 	[self _configureTextFieldForAccount:[[popUp_service selectedItem] representedObject]];
+	[self controlTextDidChange:nil];
 
     //Center the window
     [[self window] center];
@@ -184,6 +185,15 @@
 	[[self class] destroySharedInstance];
 }
 
+- (void)controlTextDidChange:(NSNotification *)aNotification
+{
+	if (!aNotification || [aNotification object] == textField_handle) {
+		[button_okay setEnabled:([[textField_handle stringValue] length] > 0)];
+	}
+
+	if ([[AIAccountPlusFieldPromptController superclass] instancesRespondToSelector:@selector(controlTextDidChange:)])
+		[super controlTextDidChange:aNotification];
+}
 
 //Account menu ---------------------------------------------------------------------------------------------------------
 #pragma mark Account menu
