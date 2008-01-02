@@ -109,7 +109,7 @@
 				<cocoa method="sendScriptCommand:"/>
 			</responds-to>
 		</class>
-		<enumeration name="status type" code="Esta">
+		<enumeration name="status types" code="Esta">
 			<enumerator name="offline" code="Soff" description="Account is offline."/>
 			<enumerator name="available" code="Sonl" description="Account is online."/>
 			<enumerator name="away" code="Sawy" description="Account is away."/>
@@ -131,7 +131,7 @@
 			<property name="status" code="Csts" type="status" access="rw" description="The current status on the account.">
 				<cocoa key="statusState" />
 			</property>
-			<property name="status type" code="Past" type="status type" access="rw" description="The type of the current status. Setting this creates a temporary status.">
+			<property name="status type" code="Psts" type="status types" access="rw" description="The type of the current status. Setting this creates a temporary status.">
 				<cocoa key="scriptingStatusType" />
 			</property>
 			<property name="status message" code="Pasm" type="rich text" access="rw" description="The message associated with the current status. Setting this creates a temporary status.">
@@ -166,7 +166,7 @@
 			<property name="idle time" code="Pidl" type="integer" access="r" description="The duration this contact has been idle."/>
 			<property name="notes" code="Pnts" type="text" access="rw" description="The user-defined notes for this contact."/>
 			<property name="idle time" code="Pidl" type="integer" access="r" description="The time this contact has been idle." />
-			<property name="status type" code="Psts" type="status type" access="r" description="The current status of this contact">
+			<property name="status type" code="Psts" type="status types" access="r" description="The current status of this contact">
 				<cocoa key="scriptingStatusType" />
 			</property>
 			<property name="status message" code="Pstm" type="rich text" access="r" description="The custom status message for this contact.">
@@ -178,7 +178,7 @@
 			<property name="title" code="pnam" type="text" access="r" description="The title of the status.">
 				<cocoa key="scriptingTitle" />
 			</property>
-			<property name="type" code="Psts" type="status type" access="r" description="The type of this status.">
+			<property name="status type" code="Psts" type="status types" access="r" description="The type of this status.">
 				<cocoa key="statusTypeApplescript"/>
 			</property>
 			<property name="message" code="Pstm" type="rich text" access="r" description="The custom status message.">
