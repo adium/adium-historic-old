@@ -160,9 +160,9 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 {
 	//If the name we were passed differs from the current formatted UID of the contact, it's itself a formatted UID
 	//This is important since we may get an alias ("Evan Schoenberg") from the server but also want the formatted name
-	NSString	*filteredUID = [[self service] filterUID:newUID removeIgnoredCharacters:YES];
+	NSString	*normalizedUID = [[self service] normalizeUID:newUID removeIgnoredCharacters:YES];
 	
-	if ([filteredUID isEqualToString:[theContact UID]]) {
+	if ([normalizedUID isEqualToString:[theContact UID]]) {
 		[theContact setStatusObject:newUID
 							 forKey:@"FormattedUID"
 							 notify:NotifyLater];		
