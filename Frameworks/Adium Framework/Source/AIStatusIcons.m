@@ -216,7 +216,7 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 		statusIconNames[AIStatusIconList] = [[statusIconDict objectForKey:@"List"] retain];
 
 		[statusIconNames[AIStatusIconMenu] release];
-		statusIconNames[AIStatusIconMenu] = [statusIconNames[AIStatusIconList] retain];
+		statusIconNames[AIStatusIconMenu] = [statusIconNames[AIStatusIconTab] retain];
 
 		//Clear out the status icon cache
 		for (unsigned i = 0; i < NUMBER_OF_STATUS_ICON_TYPES; i++) {
