@@ -179,7 +179,7 @@
  */
 - (IBAction)addContact:(id)sender
 {
-	NSString		*UID = [service filterUID:[textField_contactName stringValue] removeIgnoredCharacters:YES];
+	NSString		*UID = [service normalizeUID:[textField_contactName stringValue] removeIgnoredCharacters:YES];
 	NSString		*alias = [textField_contactAlias stringValue];
 	NSEnumerator	*enumerator;
 	AIListGroup		*group;
@@ -248,7 +248,7 @@
 		AIService *selectedService = [controller selectedService];
 		
 		if (selectedScreenName)
-			[textField_contactName setStringValue:[service filterUID:selectedScreenName removeIgnoredCharacters:YES]];
+			[textField_contactName setStringValue:[service normalizeUID:selectedScreenName removeIgnoredCharacters:YES]];
 		
 		if (selectedName)
 			[textField_contactAlias setStringValue:selectedName];

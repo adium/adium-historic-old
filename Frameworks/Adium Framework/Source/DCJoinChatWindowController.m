@@ -165,7 +165,7 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 	
 	//Get the service type and UID
 	account = [[popUp_service selectedItem] representedObject];
-	UID = [[account service] filterUID:text removeIgnoredCharacters:YES];
+	UID = [[account service] normalizeUID:text removeIgnoredCharacters:YES];
 	
 	//Find the contact
 	contact = [[adium contactController] contactWithService:[account service]

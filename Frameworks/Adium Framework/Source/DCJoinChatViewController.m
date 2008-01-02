@@ -208,7 +208,7 @@
 			enumerator = [contactNames objectEnumerator];		
 			while ((aContactName = [enumerator nextObject])) {
 								
-				UID = [[inAccount service] filterUID:[self impliedCompletion:aContactName] removeIgnoredCharacters:YES];
+				UID = [[inAccount service] normalizeUID:[self impliedCompletion:aContactName] removeIgnoredCharacters:YES];
 				
 				//If the service is not case sensitive, compact the string before proceeding so our UID will be correct
 				if (![[inAccount service] caseSensitive]) {
