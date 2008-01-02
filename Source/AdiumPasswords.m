@@ -23,6 +23,7 @@
 #import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
+#import <objc/objc-runtime.h>
 
 @interface AdiumPasswords (PRIVATE)
 - (NSString *)_accountNameForAccount:(AIAccount *)inAccount;
@@ -130,7 +131,9 @@
 	
 	if (password && [password length] && !forceDisplay) {
 		//Invoke the target right away
-		[inTarget performSelector:inSelector withObject:password withObject:inContext afterDelay:0.0001];
+		void (*targetMethodSender)(id, SEL, id, AIPasswordPromptReturn, id) = (void (*)(id, SEL, id, AIPasswordPromptReturn, id)) objc_msgSend;
+		targetMethodSender(inTarget, inSelector, password, AIPasswordPromptOKReturn, inContext);
+
 	} else {
 		//Prompt the user for their password
 		[ESAccountPasswordPromptController showPasswordPromptForAccount:inAccount
@@ -230,7 +233,10 @@
 	
 	if (password && [password length] != 0) {
 		//Invoke the target right away
-		[inTarget performSelector:inSelector withObject:password withObject:inContext afterDelay:0.0001];    
+		//Invoke the target right away
+		void (*targetMethodSender)(id, SEL, id, AIPasswordPromptReturn, id) = (void (*)(id, SEL, id, AIPasswordPromptReturn, id)) objc_msgSend;
+		targetMethodSender(inTarget, inSelector, password, AIPasswordPromptOKReturn, inContext);
+
 	} else {
 		//Prompt the user for their password
 		[ESProxyPasswordPromptController showPasswordPromptForProxyServer:server

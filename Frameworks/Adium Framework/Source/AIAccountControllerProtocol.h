@@ -100,7 +100,7 @@
  * @param inAccount account whose password is desired
  * @param forceDisplay If YES, a password prompt will be shown even if a stored password is available. If NO, it will only be displayed if no password is stored.
  * @param inTarget target to notify when password is available
- * @param inSelector selector to notify when password is available
+ * @param inSelector selector to notify when password is available. Selector is of the form - (void)returnedPassword:(NSString *)p returnCode:(AIPasswordPromptReturn)returnCode context:(id)context
  * @param inContext context passed to target
  */
 - (void)passwordForAccount:(AIAccount *)inAccount forcePromptDisplay:(BOOL)forceDisplay notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
@@ -131,7 +131,7 @@
  * @param server proxy server name
  * @param userName proxy server user name
  * @param inTarget target to notify when password is available
- * @param inSelector selector to notify when password is available
+ * @param inSelector selector to notify when password is available. Selector is of the form - (void)returnedPassword:(NSString *)p returnCode:(AIPasswordPromptReturn)returnCode context:(id)context
  * @param inContext context passed to target
  */
 - (void)passwordForProxyServer:(NSString *)server userName:(NSString *)userName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;

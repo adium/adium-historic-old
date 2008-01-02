@@ -25,6 +25,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
 #import <Adium/AIStatus.h>
+#import <Adium/AIPasswordPromptController.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIStringAdditions.h>
@@ -41,7 +42,7 @@
 #define	ACCOUNT_DEFAULTS			@"AccountDefaults"
 
 @interface AIAccount (Abstract_PRIVATE)
-- (void)passwordReturnedForConnect:(NSString *)inPassword context:(id)inContext;
+- (void)passwordReturnedForConnect:(NSString *)inPassword returnCode:(AIPasswordPromptReturn)returnCode context:(id)inContext;
 @end
 
 /*!
@@ -274,8 +275,8 @@
 - (void)filterAndSetUID:(NSString *)inUID
 {
 	//Filter our UID both with and without removing ignored characters
-	NSString	*newProposedUID = [[self service] filterUID:inUID removeIgnoredCharacters:YES];
-	NSString	*newProposedFormattedUID = [[self service] filterUID:inUID removeIgnoredCharacters:NO];
+	NSString	*newProposedUID = [[self service] normalizeUID:inUID removeIgnoredCharacters:YES];
+	NSString	*newProposedFormattedUID = [[self service] normalizeUID:inUID removeIgnoredCharacters:NO];
 	BOOL		didChangeUID = NO;
 
 	//Give the account a chance to modify the UID
@@ -438,13 +439,14 @@
 						[[adium accountController] passwordForAccount:self 
 												   forcePromptDisplay:[[self statusObjectForKey:@"Prompt For Password On Next Connect"] boolValue]
 													  notifyingTarget:self
-															 selector:@selector(passwordReturnedForConnect:context:)
+															 selector:@selector(passwordReturnedForConnect:returnCode:context:)
 															  context:nil];
 					} else {
 						/* This service allows passwords but treats them as optional, and we haven't been told to force a prompt.
 						 * Retrieve the password without prompting and proceed.
 						 */
 						[self passwordReturnedForConnect:[[adium accountController] passwordForAccount:self]
+											  returnCode:AIPasswordPromptOKReturn
 												 context:nil];
 					}
 
@@ -676,10 +678,11 @@
  *
  * Callback after the user enters her password for connecting; finish the connect process.
  */
-- (void)passwordReturnedForConnect:(NSString *)inPassword context:(id)inContext
+- (void)passwordReturnedForConnect:(NSString *)inPassword returnCode:(AIPasswordPromptReturn)returnCode context:(id)inContext
 {
     //If a password was returned, and we're still waiting to connect
-    if ((inPassword && [inPassword length]) || (![[self service] requiresPassword])) {
+    if ((returnCode == AIPasswordPromptOKReturn) &&
+		((inPassword && [inPassword length]) || ![[self service] requiresPassword])) {
 		[self setStatusObject:nil
 					   forKey:@"Prompt For Password On Next Connect"
 					   notify:NotifyNever];
@@ -1515,9 +1518,9 @@
  * @param inPassword The retrieved password
  * @param proxyConfiguration The proxy configuration dictionary, which also includes the original target/selector/context passed to getProxyConfigurationNotifyingTarget:selector:context:
  */
-- (void)gotProxyServerPassword:(NSString *)inPassword proxyConfiguration:(NSMutableDictionary *)proxyConfiguration
+- (void)gotProxyServerPassword:(NSString *)inPassword returnCode:(AIPasswordPromptReturn)returnCode proxyConfiguration:(NSMutableDictionary *)proxyConfiguration
 {
-	if (inPassword) {
+	if ((returnCode == AIPasswordPromptOKReturn) && inPassword) {
 		id target = [proxyConfiguration objectForKey:@"NotificationTarget"];
 		SEL selector = NSSelectorFromString([proxyConfiguration objectForKey:@"NotificationSelector"]);
 		id context = [proxyConfiguration objectForKey:@"NotificationContext"];

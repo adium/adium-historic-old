@@ -16,6 +16,11 @@
 
 #include "AIWindowController.h"
 
+typedef enum {
+	AIPasswordPromptOKReturn = 0,
+	AIPasswordPromptCancelReturn
+} AIPasswordPromptReturn;
+
 /*!
  * @class AIPasswordPromptController
  * 
@@ -41,7 +46,7 @@
  * @param windowNibName Nib name.
  * @param password Iniital password to put in the password field. If nil, the field will be empty.
  * @param inTarget Target to notify when the prompt window is closed
- * @param inSelector Selector on target. Signature is - (void)passwordReturnedForConnect:(NSString *)inPassword context:(id)inContext
+ * @param inSelector Selector on target. Signature is - (void)passwordReturnedForConnect:(NSString *)inPassword returnCode:(AIPasswordPromptReturn)returnCode context:(id)inContext
  * @param context Context to pass back when notifying the target.
  *
  * @result An AIPasswordPromptController
