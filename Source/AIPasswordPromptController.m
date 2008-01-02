@@ -18,6 +18,7 @@
 
 #import "AIPasswordPromptController.h"
 #import <AIUtilities/AITextFieldAdditions.h>
+#import <objc/objc-runtime.h>
 
 #define 	PASSWORD_PROMPT_NIB 		@"PasswordPrompt"
 #define		KEY_PASSWORD_WINDOW_FRAME	@"Password Prompt Frame"
@@ -88,7 +89,9 @@
 {
     //close up and notify our caller (pass nil to signify no password)
     [self closeWindow:nil]; 
-    [target performSelector:selector withObject:nil withObject:context];
+	
+	void (*targetMethodSender)(id, SEL, id, AIPasswordPromptReturn, id) = (void (*)(id, SEL, id, AIPasswordPromptReturn, id)) objc_msgSend;
+	targetMethodSender(target, selector, nil, AIPasswordPromptCancelReturn, context);
 }
 
 - (IBAction)okay:(id)sender
@@ -103,7 +106,9 @@
 
 	//close up and notify our caller
 	[self closeWindow:nil];    
-	[target performSelector:selector withObject:thePassword withObject:context];
+	
+	void (*targetMethodSender)(id, SEL, id, AIPasswordPromptReturn, id) = (void (*)(id, SEL, id, AIPasswordPromptReturn, id)) objc_msgSend;
+	targetMethodSender(target, selector, thePassword, AIPasswordPromptOKReturn, context);
 }
 
 - (IBAction)togglePasswordSaved:(id)sender

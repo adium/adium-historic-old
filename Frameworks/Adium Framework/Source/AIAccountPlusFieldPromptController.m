@@ -72,7 +72,7 @@
 		UID = [(AIListContact *)impliedValue UID];
 
 	} else  if ([impliedValue isKindOfClass:[NSString class]]) {
-		UID = [[account service] filterUID:impliedValue removeIgnoredCharacters:YES];
+		UID = [[account service] normalizeUID:impliedValue removeIgnoredCharacters:YES];
 	}
 
 	if (!contact && UID) {
