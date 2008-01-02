@@ -57,14 +57,14 @@
 }
 
 /*!
- * @brief Filter a UID
+ * @brief Normalize a UID
  *
- * Add &#64;mac.com to the end of a dotMac contact if it's not already present but should be.  super's implementation will make the UID
+ * Add @mac.com to the end of a dotMac contact if it's not already present but should be.  super's implementation will make the UID
  * lowercase, since [self caseSensitive] returns NO, so we can use -[NSString hasSuffix:] to check for the string.
  */
-- (NSString *)filterUID:(NSString *)inUID removeIgnoredCharacters:(BOOL)removeIgnored
+- (NSString *)normalizeUID:(NSString *)inUID removeIgnoredCharacters:(BOOL)removeIgnored
 {
-	NSString	*filteredUID = [super filterUID:inUID removeIgnoredCharacters:removeIgnored];
+	NSString	*normalizedUID = [super normalizeUID:inUID removeIgnoredCharacters:removeIgnored];
 
 #warning Right now, this code would mean that the New Message prompt for a .Mac account can only message .Mac users
 //XXX ToDo: Rewrite the New Message prompt to be service-oriented rather than account-oriented such that this isn't a problem
@@ -86,7 +86,7 @@
 	}
 #endif
 
-	return filteredUID;
+	return normalizedUID;
 }
 
 @end

@@ -57,7 +57,7 @@
  */
 - (id)accountWithUID:(NSString *)inUID internalObjectID:(NSString *)inInternalObjectID
 {
-	return [[[[self accountClass] alloc] initWithUID:[self filterUID:inUID removeIgnoredCharacters:YES]
+	return [[[[self accountClass] alloc] initWithUID:[self normalizeUID:inUID removeIgnoredCharacters:YES]
 									internalObjectID:inInternalObjectID
 											 service:self] autorelease];
 }
@@ -417,9 +417,9 @@
 //Utilities ------------------------------------------------------------------------------------------------------------
 #pragma mark Utilities
 /*!
- * @brief Filter a UID
+ * @brief Normalize a UID
  *
- * Filters a UID.  All invalid characters and ignored characters are removed.
+ * Normalizes a UID.  All invalid characters and ignored characters are removed.
  * UID's are ONLY filtered when creating contacts, and when renaming contacts.
  * - When changing ownership of a contact, a filter is not necessary, since all the accounts should have the same service
  *   types and requirements.
@@ -429,7 +429,7 @@
  *   SHOULD ALWAYS BE VALID.
  * @return NSString filtered UID
  */
-- (NSString *)filterUID:(NSString *)inUID removeIgnoredCharacters:(BOOL)removeIgnored
+- (NSString *)normalizeUID:(NSString *)inUID removeIgnoredCharacters:(BOOL)removeIgnored
 {
 	NSString		*workingString = ([self caseSensitive] ? inUID : [inUID lowercaseString]);
 	NSCharacterSet	*allowedCharacters = [self allowedCharactersForUIDs];

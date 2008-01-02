@@ -66,6 +66,6 @@ typedef enum {
 - (NSString *)defaultUserName;
 
 //Utilities
-- (NSString *)filterUID:(NSString *)inUID removeIgnoredCharacters:(BOOL)removeIgnored;
+- (NSString *)normalizeUID:(NSString *)inUID removeIgnoredCharacters:(BOOL)removeIgnored;
 
 @end
