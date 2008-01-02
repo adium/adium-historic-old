@@ -26,7 +26,7 @@ try:
 	version      = args['version']
 	dmg_pathname = args['dmg_pathname']
 except KeyError:
-	print >>sys.stderr, __doc__
+	sys.exit(__doc__.strip())
 else:
 	args['app_name'] = app_name
 
