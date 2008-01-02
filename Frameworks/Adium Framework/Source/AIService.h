@@ -67,5 +67,6 @@ typedef enum {
 
 //Utilities
 - (NSString *)normalizeUID:(NSString *)inUID removeIgnoredCharacters:(BOOL)removeIgnored;
+- (NSString *)normalizeChatName:(NSString *)inChatName;
 
 @end

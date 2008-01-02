@@ -18,6 +18,7 @@
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIMetaContact.h>
+#import <Adium/AIService.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 
@@ -383,6 +384,8 @@
 {
 	AIChat			*chat = nil;
 
+	name = [[account service] normalizeChatName:name];
+
  	if (identifier) {
  		chat = [self existingChatWithIdentifier:identifier onAccount:account];
 		if (!chat) {
@@ -431,6 +434,8 @@
 	NSEnumerator	*enumerator;
 	AIChat			*chat = nil;
 	
+	name = [[account service] normalizeChatName:name];
+
 	enumerator = [openChats objectEnumerator];
 	
 	while ((chat = [enumerator nextObject])) {
