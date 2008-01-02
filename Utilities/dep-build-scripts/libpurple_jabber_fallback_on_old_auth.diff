@@ -152,37 +152,3 @@
  		} else if(xmlnode_get_child(query, "password")) {
  			if(js->gsc == NULL && !purple_account_get_bool(js->gc->account,
  						"auth_plain_in_clear", FALSE)) {
-============================================================
---- libpurple/protocols/jabber/jabber.c	eea6e7d81fa04f0cc37dae64741e2b910f56b45c
-+++ libpurple/protocols/jabber/jabber.c	2330bff326c57b0af35a8e92d91ad78287655cec
-@@ -388,9 +388,29 @@ void jabber_send(JabberStream *js, xmlno
- 	g_free(txt);
- }
- 
-+static void jabber_pong_cb(JabberStream *js, xmlnode *packet, gpointer timeout) 
-+{
-+	purple_timeout_remove(GPOINTER_TO_INT(timeout));
-+}
-+
-+static gboolean jabber_pong_timeout(PurpleConnection *gc)
-+{
-+	purple_connection_error_reason(gc, PURPLE_CONNECTION_ERROR_NETWORK_ERROR,
-+					_("Ping timeout"));
-+	return FALSE;
-+}
-+
- void jabber_keepalive(PurpleConnection *gc)
- {
--	jabber_send_raw(gc->proto_data, "\t", -1);
-+	JabberIq *iq = jabber_iq_new(gc->proto_data, JABBER_IQ_GET);
-+	guint timeout;
-+
-+        xmlnode *ping = xmlnode_new_child(iq->node, "ping");
-+        xmlnode_set_namespace(ping, "urn:xmpp:ping");
-+
-+	timeout = purple_timeout_add_seconds(20, (GSourceFunc)(jabber_pong_timeout), gc);
-+        jabber_iq_set_callback(iq, jabber_pong_cb, GINT_TO_POINTER(timeout));
-+	jabber_iq_send(iq);
- }
- 
- static void
