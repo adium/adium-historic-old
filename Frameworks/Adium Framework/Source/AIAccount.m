@@ -817,9 +817,9 @@
 	}
 }
 #pragma mark AppleScript
-- (int)scriptingInternalObjectID
+- (NSNumber *)scriptingInternalObjectID
 {
-	return [[self internalObjectID] intValue];
+	return [NSNumber numberWithInt:[[self internalObjectID] intValue]];
 }
 
 /**
@@ -834,7 +834,6 @@
 	AIService *theService = [self service];
 	NSScriptObjectSpecifier *containerRef = [theService objectSpecifier];
 
-	NSScriptClassDescription *containerClassDesc = (NSScriptClassDescription *)[NSScriptClassDescription classDescriptionForClass:[NSApp class]];
 	return [[[NSUniqueIDSpecifier alloc]
 			 initWithContainerClassDescription:[containerRef keyClassDescription]
 			 containerSpecifier:containerRef key:@"accounts"
