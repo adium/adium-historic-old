@@ -92,18 +92,18 @@
 	delegate = inDelegate;
 	
 	//Ensure the the delegate implements all required selectors and remember which optional selectors it supports.
-	NSParameterAssert([inDelegate respondsToSelector:@selector(contactMenu:didRebuildMenuItems:)]);
-	delegateRespondsToDidSelectContact = [inDelegate respondsToSelector:@selector(contactMenu:didSelectContact:)];
-	delegateRespondsToShouldIncludeContact = [inDelegate respondsToSelector:@selector(contactMenu:shouldIncludeContact:)];
+	if (delegate) NSParameterAssert([delegate respondsToSelector:@selector(contactMenu:didRebuildMenuItems:)]);
+	delegateRespondsToDidSelectContact = [delegate respondsToSelector:@selector(contactMenu:didSelectContact:)];
+	delegateRespondsToShouldIncludeContact = [delegate respondsToSelector:@selector(contactMenu:shouldIncludeContact:)];
 	
-	shouldUseUserIcon = ([inDelegate respondsToSelector:@selector(contactMenuShouldUseUserIcon:)] &&
-								 [inDelegate contactMenuShouldUseUserIcon:self]);
+	shouldUseUserIcon = ([delegate respondsToSelector:@selector(contactMenuShouldUseUserIcon:)] &&
+								 [delegate contactMenuShouldUseUserIcon:self]);
 	
-	shouldUseDisplayName = ([inDelegate respondsToSelector:@selector(contactMenuShouldUseDisplayName:)] &&
-							[inDelegate contactMenuShouldUseDisplayName:self]);
+	shouldUseDisplayName = ([delegate respondsToSelector:@selector(contactMenuShouldUseDisplayName:)] &&
+							[delegate contactMenuShouldUseDisplayName:self]);
 	
-	shouldDisplayGroupHeaders = ([inDelegate respondsToSelector:@selector(contactMenuShouldDisplayGroupHeaders:)] &&
-								 [inDelegate contactMenuShouldDisplayGroupHeaders:self]);
+	shouldDisplayGroupHeaders = ([delegate respondsToSelector:@selector(contactMenuShouldDisplayGroupHeaders:)] &&
+								 [delegate contactMenuShouldDisplayGroupHeaders:self]);
 }
 - (id)delegate
 {

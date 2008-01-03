@@ -182,10 +182,10 @@
 	[mainAccountsMenu release];
 	
 	// Release our various menus.
-	[accountMenu release];
-	[contactMenu release];
-	[statusMenu release];
-	
+	[accountMenu setDelegate:nil]; [accountMenu release];
+	[contactMenu setDelegate:nil]; [contactMenu release];
+	[statusMenu setDelegate:nil]; [statusMenu release];
+
 	// Release our AIMenuBarIcons bundle
 	[menuIcons release];
 	
