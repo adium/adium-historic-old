@@ -17,6 +17,7 @@
 }
 
 + (id)statusMenuWithDelegate:(id)inDelegate;
+- (void)setDelegate:(id)inDelegate;
 
 - (void)delegateWillReplaceAllMenuItems;
 - (void)delegateCreatedMenuItems:(NSArray *)addedMenuItems;

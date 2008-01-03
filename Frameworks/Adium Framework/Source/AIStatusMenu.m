@@ -76,6 +76,11 @@
 	[super dealloc];
 }
 
+- (void)setDelegate:(id)inDelegate
+{
+	delegate = inDelegate;
+}
+
 /*!
  * @brief The delegate is just too good for the menu items we've created; it will create all of the ones it wants on its own
  */
