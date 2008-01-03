@@ -152,7 +152,7 @@
 	NSRect	compositeRect;
 	
 	//Get the service and status icons
-	statusIcon = [AIStatusIcons statusIconForListObject:listObject type:AIStatusIconList direction:AIIconNormal];
+	statusIcon = [AIStatusIcons statusIconForListObject:listObject type:AIStatusIconMenu direction:AIIconNormal];
 	statusSize = [statusIcon size];
 	if (useUserIcon) {
 		//menuUserIconForObject
