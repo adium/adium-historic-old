@@ -51,6 +51,10 @@
 			- (BOOL)isGrammarCheckingEnabled;
 			- (void)toggleGrammarChecking:(id)sender;
 		@end
+
+		@interface NSSplitView (NSScrollViewTigerMethods)
+			- (void)setPosition:(float)position ofDividerAtIndex:(NSInteger)dividerIndex;
+		@end
 #	endif
 
 #else //Not compiling for 10.5

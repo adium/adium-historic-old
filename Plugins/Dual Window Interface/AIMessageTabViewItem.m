@@ -294,4 +294,9 @@
 			[[self chat] unviewedContentCount] : 0);
 }
 
+- (void)tabViewDidChangeVisibility
+{
+	[[self messageViewController] tabViewDidChangeVisibility];
+}
+
 @end

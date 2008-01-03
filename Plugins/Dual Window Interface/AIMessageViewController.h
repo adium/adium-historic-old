@@ -98,8 +98,7 @@
 // -(void)collapseShelfView;
  -(void)toggleUserlist:(id)sender;
  
-
-
+- (void)tabViewDidChangeVisibility;
 
 @end
 
