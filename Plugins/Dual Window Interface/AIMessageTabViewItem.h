@@ -37,6 +37,7 @@
 - (NSImage *)image;
 - (AIMessageViewController *)messageViewController;
 - (void)tabViewItemWasSelected;
+- (void)tabViewDidChangeVisibility;
 - (void)setWindowController:(AIMessageWindowController *)inWindowController;
 - (AIMessageWindowController *)windowController;
 

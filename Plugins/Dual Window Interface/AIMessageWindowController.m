@@ -54,7 +54,6 @@
 
 @interface AIMessageWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName interface:(AIDualWindowInterfacePlugin *)inInterface containerID:(NSString *)inContainerID containerName:(NSString *)inName;
-- (void)preferencesChanged:(NSNotification *)notification;
 - (void)_configureToolbar;
 - (void)_updateWindowTitleAndIcon;
 - (NSString *)_frameSaveKey;
@@ -996,6 +995,8 @@
 
 	[tabView setFrame:frame];
 	[tabView setNeedsDisplay:YES];
+
+	[[tabView_messages tabViewItems] makeObjectsPerformSelector:@selector(tabViewDidChangeVisibility)];
 }
 
 - (void)tabView:(NSTabView *)tabView tabBarDidUnhide:(PSMTabBarControl *)tabBarControl
@@ -1019,6 +1020,8 @@
     
     [tabView setFrame:frame];
     [tabView setNeedsDisplay:YES];
+	
+	[[tabView_messages tabViewItems] makeObjectsPerformSelector:@selector(tabViewDidChangeVisibility)];
 }
 
 - (float)desiredWidthForVerticalTabBar:(PSMTabBarControl *)tabBarControl

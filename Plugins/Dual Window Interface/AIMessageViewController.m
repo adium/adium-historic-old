@@ -46,6 +46,8 @@
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AISplitView.h>
 
+#import <AIUtilities/AITigerCompatibility.h>
+
 #import <PSMTabBarControl/NSBezierPath_AMShading.h>
 #import "KNShelfSplitView.h"
 #import "ESChatUserListController.h"
@@ -765,6 +767,11 @@
 	[self _updateTextEntryViewHeight];
 }
 
+- (void)tabViewDidChangeVisibility
+{
+	[self _updateTextEntryViewHeight];
+}
+
 /* 
  * @brief Update the height of our text entry view
  *
@@ -774,26 +781,34 @@
 - (void)_updateTextEntryViewHeight
 {
 	int		height = [self _textEntryViewProperHeightIgnoringUserMininum:NO];
-	NSRect	tempFrame, newFrame;
-	BOOL	changed = NO;
 	
 	//Display the vertical scroller if our view is not tall enough to display all the entered text
 	[scrollView_outgoing setHasVerticalScroller:(height < [textView_outgoing desiredSize].height)];
 
-	//Size the outgoing text view to the desired height
-	tempFrame = [scrollView_outgoing frame];
-	newFrame = NSMakeRect(tempFrame.origin.x,
-						  [splitView_textEntryHorizontal frame].size.height - height,
-						  tempFrame.size.width,
-						  height);
-	if (!NSEqualRects(tempFrame, newFrame)) {
-		[scrollView_outgoing setFrame:newFrame];
-		[scrollView_outgoing setNeedsDisplay:YES];
-		changed = YES;
-	}
+	if ([NSApp isOnLeopardOrBetter]) {
+		//Attempt to maximize the message view's size.  We'll automatically restrict it to the correct minimum via the NSSplitView's delegate methods.
+		[splitView_textEntryHorizontal setPosition:NSHeight([splitView_textEntryHorizontal frame])
+								  ofDividerAtIndex:0];
+		
+	} else {
+		NSRect	tempFrame, newFrame;
+		BOOL	changed = NO;
 
-	if (changed) {
-		[splitView_textEntryHorizontal adjustSubviews];
+		//Size the outgoing text view to the desired height
+		tempFrame = [scrollView_outgoing frame];
+		newFrame = NSMakeRect(tempFrame.origin.x,
+							  [splitView_textEntryHorizontal frame].size.height - height,
+							  tempFrame.size.width,
+							  height);
+		if (!NSEqualRects(tempFrame, newFrame)) {
+			[scrollView_outgoing setFrame:newFrame];
+			[scrollView_outgoing setNeedsDisplay:YES];
+			changed = YES;
+		}
+
+		if (changed) {
+			[splitView_textEntryHorizontal adjustSubviews];
+		}
 	}
 }
 
