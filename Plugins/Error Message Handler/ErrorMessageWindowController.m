@@ -114,7 +114,6 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
 - (void)refreshErrorDialog
 {
     NSRect	frame = [[self window] frame];
-    int		heightChange = 0, titleHeightChange;
 
     //Display the current error title
 	NSString	*title = [errorTitleArray objectAtIndex:0];
@@ -122,28 +121,36 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
 
 	//Resize the window frame to fit the error title
 	[textView_errorTitle sizeToFit];
-	titleHeightChange = [textView_errorTitle frame].size.height - [scrollView_errorTitle documentVisibleRect].size.height;
-	heightChange += titleHeightChange;
+	int	titleHeightChange = [textView_errorTitle frame].size.height - [scrollView_errorTitle documentVisibleRect].size.height;
+	
+	NSRect errorTitleFrame = [scrollView_errorTitle frame];
+	errorTitleFrame.size.height += titleHeightChange;
+	errorTitleFrame.origin.y -= titleHeightChange;
+	[scrollView_errorTitle setFrame:errorTitleFrame];
 
-	frame.size.height += heightChange;
-	frame.origin.y -= heightChange;
+	frame.size.height += titleHeightChange;
+	frame.origin.y -= titleHeightChange;
 	
 	//Display the message
 	[textView_errorInfo setString:[errorDescArray objectAtIndex:0]];
 
 	//Resize the window frame to fit the error message
 	[textView_errorInfo sizeToFit];
-	heightChange = [textView_errorInfo frame].size.height - [scrollView_errorInfo documentVisibleRect].size.height;
-	
-	frame.size.height += heightChange;
-    frame.origin.y -= heightChange;
+	int errorInfoChange = [textView_errorInfo frame].size.height - [scrollView_errorInfo documentVisibleRect].size.height;
+
+	NSRect errorInfoFrame = [scrollView_errorInfo frame];
+	errorInfoFrame.size.height += errorInfoChange;
+	errorInfoFrame.origin.y -= errorInfoChange;
+	//Also move it down to keep it from overlapping the title
+	errorInfoFrame.origin.y -= titleHeightChange;
+	[scrollView_errorInfo setFrame:errorInfoFrame];
+
+	frame.size.height += errorInfoChange;
+    frame.origin.y -= errorInfoChange;
 	
 	//Perform the window resizing as needed
 	[[self window] setFrame:frame display:YES animate:YES];
 
-	NSRect	infoFrame = [scrollView_errorInfo frame];
-	infoFrame.origin.y -= titleHeightChange;
-	[scrollView_errorInfo setFrame:infoFrame];
 
     //Display the current error count
     if ([errorTitleArray count] == 1) {
