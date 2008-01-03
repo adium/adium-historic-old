@@ -1,6 +1,7 @@
 To set up the build environment (fetch the source trees):
 python download.py `cat urls.txt`
-This requires python 2.5.1 (which comes with Mac OS X 10.5).  If you don't have that version of python, you can install wget and run:
+
+The download script requires python 2.5.1 or later. Mac OS X 10.5 comes with this version.  If you don't have that version of python, you can substitute wget. First, you must install wget; then, run:
 wget -i=urls.txt
 
 *****
