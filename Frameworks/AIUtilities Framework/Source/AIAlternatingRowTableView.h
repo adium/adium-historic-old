@@ -41,3 +41,7 @@
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView;
 @end
 
+
+@interface NSObject (AITableViewDelegateMenuSupport)
+- (NSMenu *)tableView:(NSTableView *)inTableView menuForEvent:(NSEvent *)theEvent;
+@end
