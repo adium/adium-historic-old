@@ -25,6 +25,7 @@
 #import <Adium/AIService.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/OWAddressBookAdditions.h>
