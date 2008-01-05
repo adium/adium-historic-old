@@ -1,6 +1,6 @@
 				Adium X Version History
 				-----------------------
-Version 1.2 (??/??/????)
+Version 1.2 (1/5/2008)
  * Improved Group Chat interface
    * Improved the user list (#192, #2973)
    * Implemented chat bookmarks in the contact list (#331)
@@ -72,11 +72,14 @@ Version 1.2 (??/??/????)
  * Restored ignoring Exposé when the contact list is set to below other windows on 10.4; this behavior breaks Spaces so can not be done on 10.5.
  * Improved how Spotlight displays chat transcripts on 10.4 (Known issue: 10.5 is still ignoring Spotlight results from chat transcripts because they are within ~/Library) (#8160)
  * Fixed linkification of single-world domain names (#3540)
+ * Fixed retention of the size of the text entry area in chat windows (#8685)
+ * Fixed rejoining AIM group chats with spaces in their names (#8722)
+ * Improved the New Message dialogue (#8714)
  * Fixed a leak after a contact requests authorization
  * Updated Adiumy icons to 512x512 for Leopard
  * Updated to libpurple 2.3.1
  * Got David a gerbil (#7278)
- * Localization updates
+ * Major localization updates: Catalan, Czech, Danish, Dutch, Chinese (Simplified), Chinese (Traditional), English (Australian), Finnish, French, French Canadian, German, Italian, Japanese, Norwegian, Polish, Spanish, Swedish,  and Russian
 
 Version 1.1.4 (11/5/2007)
  * Compatibility updates for Mac OS X 10.5:
