@@ -13,6 +13,7 @@
 #import <Security/oidsalg.h>
 #import <Adium/AIAccountControllerProtocol.h>
 #import "ESPurpleJabberAccount.h"
+#import <AIUtilities/AITigerCompatibility.h>
 
 //#define ALWAYS_SHOW_TRUST_WARNING
 
@@ -83,15 +84,17 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 	if(err == noErr) {
 		// Did we ask the user to confirm this certificate before?
 		// Note that this information is not stored on the disk, which is on purpose.
-		NSData *certdata = [[NSData alloc] initWithBytesNoCopy:data.Data length:data.Length freeWhenDone:NO];
-		NSData *oldcert = [acceptedCertificates objectForKey:hostname];
-		BOOL ok = oldcert ? [certdata isEqualToData:oldcert] : NO;
-		[certdata release];
-		
-		if(ok) {
-			query_cert_cb(true, userdata);
-			[self release];
-			return;
+		NSUInteger oldCertHash = [[acceptedCertificates objectForKey:hostname] unsignedIntValue];
+		if (oldCertHash) {
+			NSData *certData = [[NSData alloc] initWithBytesNoCopy:data.Data length:data.Length freeWhenDone:NO];
+			NSUInteger newCertHash = [certData hash];
+			[certData release];
+			
+			if (oldCertHash == newCertHash) {
+				query_cert_cb(true, userdata);
+				[self release];
+				return;
+			}
 		}
 	}
 		
@@ -228,8 +231,10 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 	if (didTrustCerficate) {
 		CSSM_DATA certdata;
 		OSStatus err = SecCertificateGetData((SecCertificateRef)CFArrayGetValueAtIndex(certificates, 0), &certdata);
-		if(err == noErr)
-			[acceptedCertificates setObject:[NSData dataWithBytes:certdata.Data length:certdata.Length] forKey:hostname];
+		if(err == noErr) {
+			[acceptedCertificates setObject:[NSNumber numberWithUnsignedInt:[[NSData dataWithBytes:certdata.Data length:certdata.Length] hash]]
+									 forKey:hostname];
+		}
 	}
 
 	[trustpanel release];
