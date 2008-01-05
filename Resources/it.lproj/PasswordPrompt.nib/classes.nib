@@ -5,14 +5,6 @@
 	<key>IBClasses</key>
 	<array>
 		<dict>
-			<key>CLASS</key>
-			<string>FirstResponder</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
-		</dict>
-		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key>cancel</key>
@@ -44,6 +36,22 @@
 		</dict>
 		<dict>
 			<key>CLASS</key>
+			<string>AIWindowController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSWindowController</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
 			<string>ESAccountPasswordPromptController</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
@@ -56,14 +64,6 @@
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>AIPasswordPromptController</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>AIWindowController</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSWindowController</string>
 		</dict>
 	</array>
 	<key>IBVersion</key>

@@ -6,14 +6,6 @@
 	<array>
 		<dict>
 			<key>CLASS</key>
-			<string>ESGaimNovellAccountViewController</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>AIAccountViewController</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
 			<string>AIObject</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
@@ -27,6 +19,14 @@
 			<string>ObjC</string>
 			<key>SUPERCLASS</key>
 			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>ESGaimNovellAccountViewController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>AIAccountViewController</string>
 		</dict>
 		<dict>
 			<key>ACTIONS</key>
