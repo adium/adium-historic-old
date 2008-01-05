@@ -66,14 +66,6 @@
 			<string>NSTextField</string>
 		</dict>
 		<dict>
-			<key>CLASS</key>
-			<string>FirstResponder</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSObject</string>
-		</dict>
-		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key>customizeEmoticons</key>
@@ -132,6 +124,14 @@
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>AIPreferencePane</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
 		</dict>
 	</array>
 	<key>IBVersion</key>
