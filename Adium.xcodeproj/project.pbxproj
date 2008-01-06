@@ -296,6 +296,7 @@
 		3461621406FB482D009181D8 /* UserList Theme.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3461621006FB482C009181D8 /* UserList Theme.plist */; };
 		3461621606FB482D009181D8 /* ESChatUserListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3461621206FB482C009181D8 /* ESChatUserListController.m */; };
 		3461621706FB482D009181D8 /* UserList Layout.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3461621306FB482D009181D8 /* UserList Layout.plist */; };
+		346196F20D31607500763051 /* SRSnapback.png in Resources */ = {isa = PBXBuildFile; fileRef = 346196F10D31607500763051 /* SRSnapback.png */; };
 		346371080BCA0A5400AD57AD /* AIMessageTabSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 346371060BCA0A5400AD57AD /* AIMessageTabSplitView.m */; };
 		346544DB0C8F686B0046ED68 /* AMPurpleJabberXMLConsole.nib in Resources */ = {isa = PBXBuildFile; fileRef = 346544D90C8F686B0046ED68 /* AMPurpleJabberXMLConsole.nib */; };
 		346544DC0C8F686B0046ED68 /* AMPurpleJabberDiscoveryBrowser.nib in Resources */ = {isa = PBXBuildFile; fileRef = 346544DA0C8F686B0046ED68 /* AMPurpleJabberDiscoveryBrowser.nib */; };
@@ -2378,6 +2379,7 @@
 		3461621106FB482C009181D8 /* ESChatUserListController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESChatUserListController.h; path = "Plugins/Dual Window Interface/ESChatUserListController.h"; sourceTree = "<group>"; };
 		3461621206FB482C009181D8 /* ESChatUserListController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESChatUserListController.m; path = "Plugins/Dual Window Interface/ESChatUserListController.m"; sourceTree = "<group>"; };
 		3461621306FB482D009181D8 /* UserList Layout.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = "UserList Layout.plist"; path = "Plugins/Dual Window Interface/UserList Layout.plist"; sourceTree = "<group>"; };
+		346196F10D31607500763051 /* SRSnapback.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SRSnapback.png; path = Resources/SRSnapback.png; sourceTree = "<group>"; };
 		34619A860BC8BF2300DF383C /* ca */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ca; path = Resources/ca.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
 		34619A870BC8BF2800DF383C /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
 		34619A880BC8BF2B00DF383C /* da */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = da; path = Resources/da.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
@@ -7378,6 +7380,7 @@
 				4B2DC068066F6B1200AD5AAD /* ContactSettingsPane.nib */,
 				345EE2DC0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.h */,
 				345EE2DD0AD057FA003F396A /* AIContactInfoImageViewWithImagePicker.m */,
+				346196F10D31607500763051 /* SRSnapback.png */,
 			);
 			name = "Contact Info Window";
 			sourceTree = "<group>";
@@ -8384,6 +8387,7 @@
 				34A9707E0C96602300F46006 /* sidebarStatusAreaBackground.png in Resources */,
 				345DA0680CA09AD0009F1989 /* Statuses.strings in Resources */,
 				34CA15530CAFDFB2009AA5E3 /* sidebarActionWidget.png in Resources */,
+				346196F20D31607500763051 /* SRSnapback.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
