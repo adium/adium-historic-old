@@ -787,7 +787,8 @@
 
 	if ([NSApp isOnLeopardOrBetter]) {
 		//Attempt to maximize the message view's size.  We'll automatically restrict it to the correct minimum via the NSSplitView's delegate methods.
-		[splitView_textEntryHorizontal setPosition:NSHeight([splitView_textEntryHorizontal frame])
+		[splitView_textEntryHorizontal adjustSubviews];
+		[splitView_textEntryHorizontal setPosition:(NSHeight([splitView_textEntryHorizontal frame]) - height)
 								  ofDividerAtIndex:0];
 		
 	} else {
@@ -828,9 +829,11 @@
 	
 	//Our primary goal is to display all the entered text
 	height = [textView_outgoing desiredSize].height;
-	
+
 	//But we must never fall below the user's prefered mininum or above the allowed height
-	if (!ignoreUserMininum && height < entryMinHeight) height = entryMinHeight;
+	if (!ignoreUserMininum && height < entryMinHeight) {
+		height = entryMinHeight;
+	}
 	if (height > allowedHeight) height = allowedHeight;
 	
 	return height;
@@ -1090,7 +1093,7 @@
  */
 - (float)splitView:(NSSplitView *)sender constrainMaxCoordinate:(float)proposedMax ofSubviewAt:(int)offset
 {
-	if (sender == splitView_textEntryHorizontal) {
+	if (sender == splitView_textEntryHorizontal) {		
 		return ([sender frame].size.height - ([self _textEntryViewProperHeightIgnoringUserMininum:YES] +
 											 [sender dividerThickness]));
 
@@ -1124,7 +1127,7 @@
 - (float)splitView:(NSSplitView *)sender constrainSplitPosition:(float)proposedPosition ofSubviewAt:(int)index
 {
 	if (sender == splitView_textEntryHorizontal) {
-		entryMinHeight = (int)([sender frame].size.height - (proposedPosition + [sender dividerThickness]));
+		entryMinHeight = (int)([sender frame].size.height - proposedPosition);
 	} else {
 		NSLog(@"Unknown split view %@",sender);
 		return 0;
