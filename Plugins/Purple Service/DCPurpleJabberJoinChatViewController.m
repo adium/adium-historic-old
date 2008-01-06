@@ -187,7 +187,7 @@
 			[textField_inviteUsers addCompletionString:UID];
 		}
     }
-	
+	[[textField_handle cell] setPlaceholderString:[account displayName]];
 }
 
 - (void)setRoomName:(NSString*)roomName {
