@@ -555,6 +555,11 @@
 		NSImage *image = [inPictureTaker outputImage];
 		
 		//Update the NSImageView
+		NSSize imageSize = [image size];
+		if ((maxSize.width > 0 && imageSize.width > maxSize.width) ||
+			(maxSize.height > 0 && imageSize.height > maxSize.height)) {
+			image = [image imageByScalingToSize:maxSize];
+		}
 		[self setImage:image];
 		
 		//Inform the delegate, but only if NOT using NSOpenPanel
