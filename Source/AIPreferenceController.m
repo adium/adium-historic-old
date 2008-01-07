@@ -494,6 +494,23 @@
 //Preference Cache -----------------------------------------------------------------------------------------------------
 //We cache the preferences locally to avoid loading them each time we need a value
 #pragma mark Preference Cache
+
+/*!
+ * @brief Queue clearing a key from a cache
+ *
+ * If this method isn't called again within 30 seconds, the passed key will be removed from the passed cache dictionary.
+ */
+- (void)queueClearingOfCache:(NSMutableDictionary *)cache forKey:(NSString *)cacheKey
+{
+	//Cache only for 30 seconds, then release the memory
+	[NSObject cancelPreviousPerformRequestsWithTarget:cache
+											 selector:@selector(removeObjectForKey:)
+											   object:cacheKey];
+	[cache performSelector:@selector(removeObjectForKey:)
+				withObject:cacheKey
+				afterDelay:30.0];
+}
+
 /*!
  * @brief Fetch cached preferences
  *
@@ -592,6 +609,8 @@
 	if (!(existingDict = [activeDefaultsCache objectForKey:cacheKey])) {
 		existingDict = [NSMutableDictionary dictionary];
 		[activeDefaultsCache setObject:existingDict forKey:cacheKey];
+		
+		[self queueClearingOfCache:activeDefaultsCache forKey:cacheKey];
 	}
 	
 	[existingDict setDictionary:prefWithDefaultsDict];
