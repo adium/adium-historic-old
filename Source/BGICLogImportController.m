@@ -21,6 +21,7 @@
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AILoginControllerProtocol.h>
 #import <AIUtilities/NSCalendarDate+ISO8601Unparsing.h>
+#import <AIUtilities/AIFileManagerAdditions.h>
 
 // InstantMessage and other iChat transcript classes are from Spiny Software's Logorrhea, used with permission.
 #import "InstantMessage.h"
@@ -64,10 +65,24 @@
 	[xhtmlDecoder setUsesAttachmentTextEquivalents:YES];
 	
 	// read the raw file into an array for working against, two different formats have been employed by iChat, based on available classes
-	NSArray *rawChat =  ([[fullPath pathExtension] isEqual:@"ichat"] ?
-						 [NSKeyedUnarchiver unarchiveObjectWithFile:fullPath] :
-						 [NSUnarchiver unarchiveObjectWithFile:fullPath]);
+	fullPath = [[NSFileManager defaultManager] pathByResolvingAlias:fullPath];
+
+	NSArray *rawChat;
 	
+	@try 
+	{
+		rawChat =  ([[fullPath pathExtension] isEqual:@"ichat"] ?
+					[NSKeyedUnarchiver unarchiveObjectWithFile:fullPath] :
+					[NSUnarchiver unarchiveObjectWithFile:fullPath]);
+	}
+	@catch (NSException *releaseException)
+	{
+		NSLog(@"Could not open iChat log at %@: %@", fullPath, releaseException);
+		rawChat = nil;
+	}
+	
+	if (!rawChat) return NO;
+
 	NSString *preceedingPath = nil;
 	
 #ifndef LOG_TO_TEST
