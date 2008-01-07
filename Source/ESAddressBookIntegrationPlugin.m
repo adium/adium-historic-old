@@ -149,7 +149,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 
 - (void)installAddressBookActions
 {
-	NSNumber		*installedActions = [[NSUserDefaults standardUserDefaults] objectForKey:@"Adium:Installed Adress Book Actions"];
+	NSNumber		*installedActions = [[NSUserDefaults standardUserDefaults] objectForKey:@"Adium:Installed Adress Book Actions 1.2"];
 	
 	if (!installedActions || ![installedActions boolValue]) {
 		NSEnumerator  *enumerator = [[NSArray arrayWithObjects:@"AIM", @"MSN", @"Yahoo", @"ICQ", @"Jabber", @"SMS", nil] objectEnumerator];
@@ -176,8 +176,10 @@ NSString* serviceIDForJabberUID(NSString *UID);
 			NSString *path = [[NSBundle bundleForClass:[self class]] pathForResource:fullName ofType:@"scpt"];
 
 			if (path) {
+				NSString *destination = [pluginDirectory stringByAppendingPathComponent:[fullName stringByAppendingPathExtension:@"scpt"]];
+				[fileManager trashFileAtPath:destination];
 				[fileManager copyPath:path
-							   toPath:[pluginDirectory stringByAppendingPathComponent:[fullName stringByAppendingPathExtension:@"scpt"]]
+							   toPath:destination
 							  handler:NULL];
 				
 				//Remove the old xtra if installed
