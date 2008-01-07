@@ -16,6 +16,7 @@
 
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
@@ -366,7 +367,7 @@
 	return activeAccount;
 }
 
-- (void)updateImagePicker
+- (NSImage *)imageForImagePicker
 {
 	AIAccount *activeAccount = [[self class] activeAccountForIconsGettingOnlineAccounts:nil ownIconAccounts:nil];
 	NSImage	  *image;
@@ -379,8 +380,18 @@
 		
 		image = [[[NSImage alloc] initWithData:data] autorelease];
 	}
-	
-	[imagePicker setImage:image];
+
+	return image;
+}
+
+- (void)updateImagePicker
+{
+	[imagePicker setImage:[[self imageForImagePicker] imageByScalingToSize:[imagePicker frame].size]];
+}
+
+- (NSImage *)imageForImageViewWithImagePicker:(AIImageViewWithImagePicker *)picker
+{
+	return [self imageForImagePicker];
 }
 
 /*!
