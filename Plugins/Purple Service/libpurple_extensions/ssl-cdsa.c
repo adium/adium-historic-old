@@ -28,7 +28,7 @@
 
 #ifdef HAVE_CDSA
 
-#define CDSA_DEBUG
+//#define CDSA_DEBUG
 
 #include <Security/Security.h>
 #include <unistd.h>
