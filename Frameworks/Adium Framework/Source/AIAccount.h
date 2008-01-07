@@ -182,6 +182,7 @@ typedef enum {
 - (BOOL)sendMessageObject:(AIContentMessage *)inMessageObject;
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject;
 - (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage;
+-(BOOL)rejoinChat:(AIChat*)chat;
 
 //Presence Tracking
 - (BOOL)contactListEditable;

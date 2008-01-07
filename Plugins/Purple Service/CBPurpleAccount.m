@@ -581,6 +581,25 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
     return YES;
 }
 
+/* 
+ * @brief Rejoin a chat
+ */
+- (BOOL)rejoinChat:(AIChat *)chat
+{
+//	id identifier = [[chat identifier] retain];
+
+	/* The identifier is how we associate a PurpleConversation with an AIChat.
+	 * Clear the identifier so a new PurpleConversation will be made. The ChatCreationInfo for the chat is still around, so it can join.
+	 */
+	[chat setIdentifier:nil];
+	[purpleThread openChat:chat onAccount:self];
+//	[chat setIdentifier:identifier];
+//	[[chat identifier] release];
+	
+	//created chat succesfully
+	return YES;
+}
+
 - (AIChat *)chatWithContact:(AIListContact *)contact identifier:(id)identifier
 {
 	AIChat *chat = [[adium chatController] chatWithContact:contact];

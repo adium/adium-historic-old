@@ -141,6 +141,9 @@ static int nextChatNumber = 0;
 	}
 }
 
+/*@brief: holds information passed upon the creation of the chat:
+ * handle, server, etc.
+ */
 - (NSDictionary *)chatCreationDictionary
 {
 	return [self statusObjectForKey:@"ChatCreationInfo"];

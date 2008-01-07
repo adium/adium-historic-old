@@ -122,6 +122,16 @@
 }
 
 /*!
+ * @brief rejoinChat
+ * 
+ * Rejoin the open group chats after disconnect
+ */
+-(BOOL)rejoinChat:(AIChat*)chat
+{
+	return NO;
+}	
+
+/*!
  * @brief Disconnect
  *
  * Disconnect the account, transitioning it into an offline state.
