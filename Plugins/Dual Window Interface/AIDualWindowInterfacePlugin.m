@@ -81,7 +81,7 @@
 //Interface: Chat Control ----------------------------------------------------------------------------------------------
 #pragma mark Interface: Chat Control
 //Open a new chat window
-- (id)openChat:(AIChat *)chat inContainerWithID:(NSString *)containerID atIndex:(int)index
+- (id)openChat:(AIChat *)chat inContainerWithID:(NSString *)containerID withName:(NSString *)containerName atIndex:(int)index
 {
 	AIMessageTabViewItem		*messageTab = [chat statusObjectForKey:@"MessageTabViewItem"];
 	AIMessageWindowController	*container = nil;
@@ -89,7 +89,7 @@
 	
 	//Create the message tab (if necessary)
 	if (!messageTab) {
-		container = [self openContainerWithID:containerID name:containerID];
+		container = [self openContainerWithID:containerID name:containerName];
 		messageView = [AIMessageViewController messageDisplayControllerForChat:chat];
 		
 		//
