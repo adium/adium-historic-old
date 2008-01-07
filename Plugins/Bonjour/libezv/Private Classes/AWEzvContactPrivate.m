@@ -53,7 +53,7 @@
 	
 	[_name release];
 	[_uniqueID release];
-	[_contactImage release];
+	[_contactImageData release];
     [_idleSinceDate release];
 	
 	[_stream release];

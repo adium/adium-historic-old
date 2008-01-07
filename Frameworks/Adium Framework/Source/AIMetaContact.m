@@ -288,7 +288,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		}
 		
 		//Our effective icon may have changed
-		[AIUserIcons flushCacheForContact:self];
+		[AIUserIcons flushCacheForObject:self];
 		
 		//Add the object from our status cache, notifying of the changes (silently) as appropriate
 		[self _updateCachedStatusOfObject:inObject];
@@ -334,7 +334,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		}
 
 		//Our effective icon may have changed
-		[AIUserIcons flushCacheForContact:self];
+		[AIUserIcons flushCacheForObject:self];
 
 		//Remove all references to the object from our status cache; notifying of the changes as appropriate
 		[self _removeCachedStatusOfObject:inObject];
@@ -976,7 +976,19 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
  */
 - (NSImage *)userIcon
 {
-	NSImage *userIcon = [self displayUserIcon];
+	NSImage *userIcon = [self internalUserIcon];
+	BOOL	useOwnIconAsLastResort = NO;
+
+	id <AIUserIconSource> myUserIconSource = [AIUserIcons userIconSourceForObject:self];
+	if (myUserIconSource) {
+		if ([myUserIconSource priority] > AIUserIconMediumPriority) {
+			/* If our own user iocn if it is at less than medium priority, don't use it unless
+			 * we find nothing else; this allows a contact's serverside icon to still be used if desired.
+			 */
+			useOwnIconAsLastResort = YES;
+			userIcon = nil;
+		}
+	}
 	if (!userIcon) {
 		userIcon = [[self preferredContact] userIcon];
 	}
@@ -990,26 +1002,11 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 			i++;
 		}
 	}
+	if (!userIcon && useOwnIconAsLastResort) {
+		userIcon = [self internalUserIcon];
+	}
 
 	return userIcon;
-}
-
-/** @brief Return a medium-priority or better user icon from this specific meta contact's display array
- *
- * If the meta contact has a medium-priority or better user icon, such as a user-specified icon or an address book
- * supplied icon with the "prefer address book icon images" preference, return it.  Otherwise, return nil, indicating
- * that contained contacts should be queried for a better, more preferred icon.
- *
- * @result An <tt>NSImage</tt> of medium priority or higher (note that a lower float value is a higher priority)
- */
-- (NSImage *)displayUserIcon
-{
-	AIMutableOwnerArray	*userIconArray = [self displayArrayForKey:KEY_USER_ICON create:NO];
-	NSImage	*displayUserIcon = [userIconArray objectValue];
-	if ([userIconArray priorityOfObject:displayUserIcon] < Medium_Priority)
-		return displayUserIcon;
-	else
-		return nil;
 }
 
 - (NSString *)displayName
@@ -1218,7 +1215,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	[self clearContainedObjectInfoCache];
 
 	//Our effective icon may have changed
-	[AIUserIcons flushCacheForContact:self];
+	[AIUserIcons flushCacheForObject:self];
 }
 
 - (float)smallestOrder
@@ -1241,7 +1238,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		[self clearContainedObjectInfoCache];
 		
 		//Our effective icon may have changed
-		[AIUserIcons flushCacheForContact:self];
+		[AIUserIcons flushCacheForObject:self];
 	}
 }
 

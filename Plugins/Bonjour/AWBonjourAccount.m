@@ -220,11 +220,6 @@ typedef enum {
 	           sinceDate:idleSinceDate
 	              notify:NotifyLater];
 
-	contactImage = [contact contactImage];
-	if (contactImage != [listContact userIcon]) {
-		[listContact setStatusObject:contactImage forKey:KEY_USER_ICON notify:NotifyLater];
-	}
-
 	//Use the contact alias as the serverside display name
 	contactName = [contact name];
 
@@ -250,6 +245,21 @@ typedef enum {
 
 	//Adding an existing object to a set has no effect, so just ensure it is added
 	[libezvContacts addObject:contact];
+}
+
+- (void)mainThreadUserChangedImage:(AWEzvContact *)contact
+{
+	AIListContact *listContact = [[adium contactController] contactWithService:service
+																	   account:self
+																		   UID:[self UIDForContact:contact]];  
+
+	[listContact setServersideIconData:[contact contactImageData] notify:NotifyNow];
+}
+		 
+- (void)userChangedImage:(AWEzvContact *)contact
+{
+	[self mainPerformSelector:@selector(mainThreadUserChangedImage:)
+				   withObject:contact];
 }
 
 - (void)mainThreadUserWithUIDLoggedOut:(NSString *)inUID

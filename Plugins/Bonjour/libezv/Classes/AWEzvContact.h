@@ -41,7 +41,7 @@
 @interface AWEzvContact : NSObject {
     NSString *_name;
     NSString *_uniqueID;
-    NSImage *_contactImage;
+    NSData *_contactImageData;
     AWEzvStatus _status;
     NSDate *_idleSinceDate;
     AWEzvXMLStream *_stream;
@@ -60,10 +60,10 @@
 - (NSString *)uniqueID;
 - (void)setUniqueID:(NSString *)uniqueID;
 
-- (NSImage *) contactImage;
+- (NSData *) contactImageData;
 - (void)setImageHash:(NSString *)newHash;
 - (NSString *)imageHash;
-- (void)setContactImage:(NSImage *)contactImage;
+- (void)setContactImageData:(NSData *)contactImageData;
 
 - (AWEzvStatus) status;
 - (NSString *) statusMessage;

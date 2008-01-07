@@ -17,31 +17,299 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIUserIcons.h>
+#import <Adium/AIAdiumProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
+
 #import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIServiceIcons.h>
 
+#import "AIServersideUserIconSource.h"
+#import "AIManuallySetUserIconSource.h"
+#import "AICachedUserIconSource.h"
+
+static NSObject <AIAdium>	*adium = nil;
+static NSMutableArray		*userIconSources = nil;
+static BOOL					isQueryingIconSources = NO;
+
 static NSMutableDictionary	*iconCache = nil;
+static NSMutableDictionary  *iconCacheOwners = nil;
+
+static NSMutableDictionary	*listIconCache = nil;
 static NSMutableDictionary	*menuIconCache = nil;
 static NSSize				iconCacheSize;
+
+static AIServersideUserIconSource	*serversideUserIconSource = nil;
+static AIManuallySetUserIconSource	*manuallySetUserIconSource = nil;
+
+@interface AIUserIcons (PRIVATE)
++ (void)updateAllIcons;
++ (void)updateUserIconForObject:(AIListObject *)inObject;
+@end
 
 @implementation AIUserIcons
 
 + (void)initialize
 {
 	if (self == [AIUserIcons class]) {
+		userIconSources = [[NSMutableArray alloc] init];
 		iconCache = [[NSMutableDictionary alloc] init];
+		iconCacheOwners = [[NSMutableDictionary alloc] init];
+
+		listIconCache = [[NSMutableDictionary alloc] init];
 		menuIconCache = [[NSMutableDictionary alloc] init];
+		
+		adium = [[AIObject sharedAdiumInstance] retain];
+		
+		/* Initialize built-in user icon sources */
+		serversideUserIconSource = [[AIServersideUserIconSource alloc] init];
+		[self registerUserIconSource:serversideUserIconSource];
+		
+		manuallySetUserIconSource = [[AIManuallySetUserIconSource alloc] init];
+		[self registerUserIconSource:manuallySetUserIconSource];
+
+		[self registerUserIconSource:[[[AICachedUserIconSource alloc] init] autorelease]];
 	}
 }
 
-//Retrieve a user icon sized for the contact list
+static int compareSources(id <AIUserIconSource> sourceA, id <AIUserIconSource> sourceB, void *context)
+{
+	float priorityA = [sourceA priority];
+	float priorityB = [sourceB priority];
+	if (priorityA < priorityB)
+		return NSOrderedAscending;
+	else if (priorityB < priorityA)
+		return NSOrderedDescending;
+	else
+		return NSOrderedSame;
+
+}
+#pragma mark User Icon Sources
+/*!
+ * @brief Register a user icon source
+ */
++ (void)registerUserIconSource:(id <AIUserIconSource>)inSource
+{
+	[userIconSources addObject:inSource];
+	[userIconSources sortUsingFunction:compareSources context:NULL];
+
+	[self updateAllIcons];
+}
+
++ (void)updateAllIcons
+{
+	[[adium contactController] delayListObjectNotifications];
+	
+	[self flushAllCaches];
+
+	NSEnumerator *enumerator = [[[adium contactController] allContacts] objectEnumerator];
+	AIListObject *listObject;
+	
+	while ((listObject = [enumerator nextObject])) {
+		[self updateUserIconForObject:listObject];
+	}
+
+	[[adium contactController] endListObjectNotificationsDelay];	
+}
+
+/*!
+ * @brief The priority of a user icon source changed
+ */
++ (void)userIconSource:(id <AIUserIconSource>)inSource priorityDidChange:(AIUserIconPriority)newPriority fromPriority:(AIUserIconPriority)oldPriority
+{
+	[userIconSources sortUsingFunction:compareSources context:NULL];
+
+	[self updateAllIcons];
+}
+
+
++ (void)notifyOfChangedIconForObject:(AIListObject *)inObject
+{
+	AIListObject	*containingObject = [inObject containingObject];
+	NSSet			*modifiedKeys = [NSSet setWithObject:KEY_USER_ICON];
+	
+	//Notify
+	[[adium contactController] listObjectAttributesChanged:inObject
+											  modifiedKeys:modifiedKeys];		
+	
+	if ([containingObject isKindOfClass:[AIListContact class]]) {		
+		//Notify
+		[self flushCacheForObject:containingObject];
+		[[adium contactController] listObjectAttributesChanged:containingObject
+												  modifiedKeys:modifiedKeys];
+	}	
+}
+
+/*!
+ * @brief A user icon source determined a user icon for an object
+ *
+ * This should be called only by a user icon source upon successful determination of a user icon
+ */
++ (void)userIconSource:(id <AIUserIconSource>)inSource
+  didDetermineUserIcon:(NSImage *)inUserIcon 
+		asynchronously:(BOOL)wasAsynchronous
+			 forObject:(AIListObject *)inObject
+{
+	NSString *internalObjectID = [inObject internalObjectID];
+
+	//Keep the data around so that this image can be resized without loss of quality
+	[inUserIcon setDataRetained:YES];
+
+	if (inUserIcon && inSource) {
+		[self flushCacheForObject:inObject];
+
+		[iconCache setObject:inUserIcon forKey:internalObjectID];
+		[iconCacheOwners setObject:inSource forKey:internalObjectID];
+
+	} else if (!wasAsynchronous || ([self userIconSourceForObject:inObject] == inSource)) {
+		[self flushCacheForObject:inObject];
+
+		[iconCache setObject:[NSNull null] forKey:internalObjectID];
+		[iconCacheOwners removeObjectForKey:internalObjectID];
+	}
+
+	if (!isQueryingIconSources) {
+		/* We determined a user icon when we weren't in the middle of an update;
+		 * this means an asynchronous icon lookup was completed.
+		 *
+		 * Do we need to do anything differently?
+		 */
+	}
+	
+	[self notifyOfChangedIconForObject:inObject];
+}
+
+/*!
+ * @brief Get the user icon source currently providing the icon for an object
+ */
++ (id <AIUserIconSource>)userIconSourceForObject:(AIListObject *)inObject
+{
+	return [iconCacheOwners objectForKey:[inObject internalObjectID]];
+}
+
+/*!
+ * @brief Query all user icon sources to determine the right user icon for an object
+ *
+ * Higher priority sources will be queried first.  Once one returns YES, we stop going down the line.
+ */
++ (void)updateUserIconForObject:(AIListObject *)inObject
+{
+	NSEnumerator *enumerator = [userIconSources objectEnumerator];
+	id <AIUserIconSource> userIconSource;
+	BOOL foundIcon = NO;
+	BOOL inProgressForCurrentSource = NO;
+	
+	isQueryingIconSources = YES;
+	while ((userIconSource = [enumerator nextObject])) {
+		AIUserIconSourceQueryResult queryResult = [userIconSource updateUserIconForObject:inObject];
+		if (queryResult == AIUserIconSourceFoundIcon) {
+			foundIcon = YES;
+			break;
+
+		} else if (queryResult == AIUserIconSourceLookingUpIconAsynchronously) {
+			inProgressForCurrentSource = ([self userIconSourceForObject:inObject] == userIconSource);
+		}
+	}
+	isQueryingIconSources = NO;
+
+	if (!foundIcon && !inProgressForCurrentSource) {
+		//If we -are- in progress for the current source, we'll clear the icon when it returns
+		[self userIconSource:nil didDetermineUserIcon:nil asynchronously:NO forObject:inObject];
+	}
+}
+
+/*!
+ * @brief Determine if a change in a given icon source would potentially change the icon of an object
+ */
++ (BOOL)userIconSource:(id <AIUserIconSource>)inSource changeWouldBeRelevantForObject:(AIListObject *)inObject
+{
+	id <AIUserIconSource> currentSource = [self userIconSourceForObject:inObject];
+
+	return (!currentSource || ([currentSource priority] >= [inSource priority]));
+}
+
+/*!
+ * @brief Called by an icon source to inform us that its provided icon changed
+ */
++ (void)userIconSource:(id <AIUserIconSource>)inSource didChangeForObject:(AIListObject *)inObject
+{
+	if ([self userIconSource:inSource changeWouldBeRelevantForObject:inObject]) {
+		[self updateUserIconForObject:inObject];
+	}
+}
+
+#pragma mark Icon setting pass-throughs
+
+/*!
+ * @brief Inform AIUserIcons a new manually-set icon data for an object
+ *
+ * We take responsibility (via AIManuallySetUserIconSource) for saving the data
+ */
++ (void)setManuallySetUserIconData:(NSData *)inData forObject:(AIListObject *)inObject
+{
+	[manuallySetUserIconSource setManuallySetUserIconData:inData forObject:inObject];
+}
+
+/*!
+ * @brief Inform AIUserIcons of new serverside icon data for an object.
+ *
+ * This is likely called by a contact for itself or by an accont for a contact.
+ */
++ (void)setServersideIconData:(NSData *)inData forObject:(AIListObject *)inObject notify:(NotifyTiming)notify
+{
+	[serversideUserIconSource setServersideUserIconData:inData forObject:inObject];
+}
+
+#pragma mark Icon retrieval
+
+/*!
+ * @brief Retrieve the manually set user icon (a stored preference) for an object, if there is one
+ */
++ (NSData *)manuallySetUserIconDataForObject:(AIListObject *)inObject
+{
+	return [manuallySetUserIconSource manuallySetUserIconDataForObject:inObject];
+}
+
+/*!
+ * @brief Retreive the serverside icon for an object, if there is one.
+ */
++ (NSData *)serversideUserIconDataForObject:(AIListObject *)inObject
+{
+	return [serversideUserIconSource serversideUserIconDataForObject:inObject];
+}
+
+/*!
+ * @brief Get the user icon for an object
+ *
+ * If it's not already cached, the icon sources will be queried as needed.
+ */
++ (NSImage *)userIconForObject:(AIListObject *)inObject
+{
+	NSImage *userIcon = nil;
+
+	userIcon = [iconCache objectForKey:[inObject internalObjectID]];
+	if (!userIcon) {
+		[self updateUserIconForObject:inObject];
+		userIcon = [iconCache objectForKey:[inObject internalObjectID]];
+	}
+
+	if ((id)userIcon == (id)[NSNull null]) userIcon = nil;
+
+	return userIcon;
+}
+
+/*
+ * @brief Retrieve a user icon sized for the contact list
+ *
+ * @param inObject The object
+ * @param size Size of the returned image. If this is the size passed to -[self setListUserIconSize:], a cache will be used.
+ */
 + (NSImage *)listUserIconForContact:(AIListObject *)inObject size:(NSSize)size
 {
 	BOOL	cache = NSEqualSizes(iconCacheSize, size);
 	NSImage *userIcon = nil;
 	
 	//Retrieve the icon from our cache
-	if (cache) userIcon = [iconCache objectForKey:[inObject internalObjectID]];
+	if (cache) userIcon = [listIconCache objectForKey:[inObject internalObjectID]];
 
 	//Render the icon if it's not cached
 	if (!userIcon) {
@@ -50,13 +318,17 @@ static NSSize				iconCacheSize;
 													flipImage:YES
 											   proportionally:YES
 											   allowAnimation:YES];
-		if (userIcon && cache) [iconCache setObject:userIcon forKey:[inObject internalObjectID]];
+		if (userIcon && cache) [listIconCache setObject:userIcon forKey:[inObject internalObjectID]];
 	}
 	
 	return userIcon;
 }
 
-//Retrieve a user icon sized for a menu, returning the appropriate service icon if no user icon is found
+/*!
+ * @brief Retrieve a user icon sized for a menu
+ *
+ * Returns the appropriate service icon if no user icon is found
+ */
 + (NSImage *)menuUserIconForObject:(AIListObject *)inObject
 {
 	NSImage *userIcon;
@@ -78,7 +350,20 @@ static NSSize				iconCacheSize;
 									  direction:AIIconNormal]);
 }
 
-//Set the current contact list user icon size
+#pragma mark -
+
+/*!
+ * @brief Flush the cache of listUserIcons
+ */
++ (void)flushListUserIconCache
+{
+	[listIconCache removeAllObjects];
+}
+
+/*
+ * @brief Set the current contact list user icon size
+ * This determines the size at which images are cached for listUserIconForContact:size:
+ */
 + (void)setListUserIconSize:(NSSize)inSize
 {
 	if (!NSEqualSizes(inSize, iconCacheSize)) {
@@ -87,20 +372,29 @@ static NSSize				iconCacheSize;
 	}	
 }
 
-//Flush all cached user icons
-+ (void)flushListUserIconCache
+/*!
+ * @brief Clear the cache for a specific object
+ */
++ (void)flushCacheForObject:(AIListObject *)inObject
 {
-	[iconCache release]; iconCache = nil; 	
-	iconCache = [[NSMutableDictionary alloc] init];
-	
-	[menuIconCache release]; menuIconCache = nil; 	
-	menuIconCache = [[NSMutableDictionary alloc] init];
+	[iconCache removeObjectForKey:[inObject internalObjectID]];
+	[iconCacheOwners removeObjectForKey:[inObject internalObjectID]];
+
+	[listIconCache removeObjectForKey:[inObject internalObjectID]];
+	[menuIconCache removeObjectForKey:[inObject internalObjectID]];
 }
 
-+ (void)flushCacheForContact:(AIListContact *)inContact
+/*!
+ * @brief Clear all caches
+ */
++ (void)flushAllCaches
 {
-	[iconCache removeObjectForKey:[inContact internalObjectID]];
-	[menuIconCache removeObjectForKey:[inContact internalObjectID]];
+	[iconCache removeAllObjects];
+	[iconCacheOwners removeAllObjects];
+
+	[listIconCache removeAllObjects];
+	[menuIconCache removeAllObjects];	 
 }
 
 @end
+

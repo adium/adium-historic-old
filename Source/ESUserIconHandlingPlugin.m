@@ -63,8 +63,6 @@
 - (void)installPlugin
 {
 	//Register our observers
-	[[adium contactController] registerListObjectObserver:self];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_USERICONS];
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(listObjectAttributesChanged:)
 									   name:ListObject_AttributesChanged
@@ -82,75 +80,7 @@
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
-/*!
- * @brief Update list object
- *
- * Handle object creation and changes to the userIcon status object, which should be set by account code
- * when a user icon is retrieved for the object.
- */
-- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
-{
-	if (inModifiedKeys == nil) {
-		//At object creation, load the user icon.
-
-		//Only load the cached image file if we do not load from a preference
-		if (![self cacheAndSetUserIconFromPreferenceForListObject:inObject]) {
-			//Load the cached image file by reference into the display array;
-			//It will only be loaded into memory if needed
-			NSString			*cachedImagePath = [self _cachedImagePathForObject:inObject];
-
-			if ([[NSFileManager defaultManager] fileExistsAtPath:cachedImagePath]) {
-				NSImage				*cachedImage;
-
-				cachedImage = [[NSImage alloc] initWithContentsOfFile:cachedImagePath];
-				[cachedImage setDataRetained:YES];
-
-				if (cachedImage) {
-					//A cache image is used at lowest priority, since it is outdated data
-					[inObject setDisplayUserIcon:cachedImage
-									   withOwner:self
-								   priorityLevel:Lowest_Priority];
-					[inObject setStatusObject:cachedImagePath
-									   forKey:@"UserIconPath"
-									   notify:NotifyNever];
-				}
-
-				[cachedImage release];
-			}
-		}
-	} else if ([inModifiedKeys containsObject:KEY_USER_ICON]) {
-		//The status UserIcon object is set by account code; apply this to the display array and cache it if necesssary
-		NSImage				*userIcon;
-		NSImage				*statusUserIcon = [inObject statusObjectForKey:KEY_USER_ICON];
-		AIMutableOwnerArray *userIconDisplayArray = [inObject displayArrayForKey:KEY_USER_ICON];
-
-		//Apply the image at medium priority if  we don't already have a higher priority (lower float value) icon set
-		if (![userIconDisplayArray objectWithOwner:self] ||
-			[userIconDisplayArray priorityOfObjectWithOwner:self] >= Medium_Priority) {
-			[inObject setDisplayUserIcon:statusUserIcon
-							   withOwner:self
-						   priorityLevel:Medium_Priority];
-
-			//If the new objectValue is what we just set, notify and cache
-			userIcon = [inObject displayUserIcon];
-
-			if (userIcon == statusUserIcon) {
-				//Cache using the raw data if possible, otherwise create a TIFF representation to cache
-				//Note: TIFF supports transparency but not animation
-				NSData  *userIconData = [inObject statusObjectForKey:@"UserIconData"];
-
-				[self _cacheUserIconData:(userIconData ? userIconData : [userIcon TIFFRepresentation]) forObject:inObject];
-
-				[[adium contactController] listObjectAttributesChanged:inObject
-														  modifiedKeys:[NSSet setWithObject:KEY_USER_ICON]];
-				
-				[self updateToolbarItemForObject:inObject];
-			}
-		}
-	}
-
-	return nil;
-}
+//Needs some 		[self updateToolbarItemForObject:inObject];
 
 /*!
  * @brief List object attributes changes
@@ -161,143 +91,10 @@
 {
 	AIListObject	*inObject = [notification object];
 	NSSet			*keys = [[notification userInfo] objectForKey:@"Keys"];
-
+	
 	if (inObject && [keys containsObject:KEY_USER_ICON]) {
-		AIMutableOwnerArray *userIconDisplayArray = [inObject displayArrayForKey:KEY_USER_ICON];
-		NSImage *userIcon = [userIconDisplayArray objectValue];
-		NSImage *ownedUserIcon = [userIconDisplayArray objectWithOwner:self];
-
-		/* If the new user icon is not the same as the one we own, we should update our cache
-		 * and our toolbar item. If we get here from -[self updateListObject:keys:silent:] doing a
-		 * listObjectAttributesChanged call, then the userIcon will be the same as ownedUserIcon, and we won't do anything
-		 * since it was already done previously.
-		 */
-		if (userIcon != ownedUserIcon) {
-			[self _cacheUserIconData:[userIcon TIFFRepresentation] forObject:inObject];
-			
-			[self updateToolbarItemForObject:inObject];
-		}
-	}
-}
-
-/*!
- * @brief The user icon preference was changed
- */
-- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
-{
-	if (object) {
-		if (![self cacheAndSetUserIconFromPreferenceForListObject:object]) {
-			[self destroyCacheForListObject:object];
-		}
-	}
-}
-
-/*!
- * @brief Cache and set the user icon from a listObject's preference
- *
- * This loads the user-set preference for a listObject, sets it at highest priority, and then caches the
- * newly set image.
- *
- * @param inObject The listObject to modify if necessary.
- * @result YES if the method resulted in setting an image
- */
-- (BOOL)cacheAndSetUserIconFromPreferenceForListObject:(AIListObject *)inObject
-{
-	NSData  *imageData = [inObject preferenceForKey:KEY_USER_ICON
-											  group:PREF_GROUP_USERICONS
-							  ignoreInheritedValues:YES];
-
-	//A preference is used at highest priority
-	if (imageData) {
-		NSImage	*image;
-
-		image = [[NSImage alloc] initWithData:imageData];
-		[image setDataRetained:YES];
-
-		[inObject setDisplayUserIcon:image
-						   withOwner:self
-					   priorityLevel:Highest_Priority];
 		[self updateToolbarItemForObject:inObject];
-
-		[image release];
-
-		return YES;
-	} else {
-		//If we had a preference set before (that is, there's an object set at Highest_Priority), clear it
-		if ([[inObject displayArrayForKey:KEY_USER_ICON create:NO] objectWithOwner:self] &&
-			([[inObject displayArrayForKey:KEY_USER_ICON create:NO] priorityOfObjectWithOwner:self] == Highest_Priority)) {
-			[inObject setDisplayUserIcon:nil
-							   withOwner:self
-						   priorityLevel:Highest_Priority];
-			
-			//Update the list object to grab the serverside icon as the one we're using, if necessary
-			[self updateListObject:inObject
-							  keys:[NSSet setWithObject:KEY_USER_ICON]
-							silent:NO];
-			
-			[self updateToolbarItemForObject:inObject];
-		}
 	}
-
-	return NO;
-}
-
-/*!
- * @brief Cache user icon data for an object
- *
- * @param inData Image data to cache
- * @param inObject AIListObject to cache the data for
- *
- * @result YES if successful
- */
-- (BOOL)_cacheUserIconData:(NSData *)inData forObject:(AIListObject *)inObject
-{
-	BOOL		success;
-	NSString	*cachedImagePath = [self _cachedImagePathForObject:inObject];
-
-	if (inData && [inData length]) {
-		success = ([inData writeToFile:cachedImagePath
-							atomically:YES]);
-	} else {
-		success = [[NSFileManager defaultManager] removeFileAtPath:cachedImagePath
-														   handler:NULL];
-		cachedImagePath = nil;
-	}
-
-	if (success) {
-		[inObject setStatusObject:cachedImagePath
-						   forKey:@"UserIconPath"
-						   notify:YES];
-	}
-
-	return success;
-}
-/*!
- * @brief Trash a list object's cached icon
- *
- * @result YES if successful
- */
-- (BOOL)destroyCacheForListObject:(AIListObject *)inObject
-{
-	NSString	*cachedImagePath = [self _cachedImagePathForObject:inObject];
-	BOOL		success;
-
-	if ((success = [[NSFileManager defaultManager] trashFileAtPath:cachedImagePath])) {
-		[inObject setStatusObject:nil
-						   forKey:@"UserIconPath"
-						   notify:YES];
-	}
-
-	return (success);
-}
-
-/*!
- * @brief Retrieve the path at which to cache an <tt>AIListObject</tt>'s image
- */
-- (NSString *)_cachedImagePathForObject:(AIListObject *)inObject
-{
-	return [[adium cachesPath] stringByAppendingPathComponent:[inObject internalObjectID]];
 }
 
 #pragma mark Toolbar Item
