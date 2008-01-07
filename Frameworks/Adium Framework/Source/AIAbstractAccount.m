@@ -1074,9 +1074,17 @@
 	
 	while ((chat = [enumerator nextObject])) {
 		if ([chat account] == self && [chat isOpen]) {
-			[[adium contentController] displayEvent:AILocalizedStringFromTableInBundle(@"You have connected", nil, [NSBundle bundleForClass:[AIAccount class]], "Displayed in an open chat when its account has been connected")
-											 ofType:@"connected"
-											 inChat:chat];
+			if ([chat isGroupChat]) {
+				BOOL success = [self rejoinChat:chat];
+
+				//Since there is no callback from libpurple if the chat failed, the result of rejoining will always be true
+				AILogWithSignature(@"Rejoined chat <<%@>> on account: %@: %@", chat, self, success ? @"TRUE" : @"FALSE");
+
+			} else {
+				[[adium contentController] displayEvent:AILocalizedStringFromTableInBundle(@"You have connected", nil, [NSBundle bundleForClass:[AIAccount class]], "Displayed in an open chat when its account has been connected")
+												 ofType:@"connected"
+												 inChat:chat];
+			}
 		}
 	}
     

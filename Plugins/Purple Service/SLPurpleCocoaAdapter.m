@@ -488,10 +488,9 @@ PurpleConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 
 					//In debug mode, verify we didn't miss any required values
 					if (PURPLE_DEBUG) {
-						/*
-						 Get the chat_info for our desired account.  This will be a GList of proto_chat_entry
-						 objects, each of which has a label and identifier.  Each may also have is_int, with a minimum
-						 and a maximum integer value.
+						/* Get the chat_info for our desired account.  This will be a GList of proto_chat_entry
+						 * objects, each of which has a label and identifier.  Each may also have is_int, with a minimum
+						 * and a maximum integer value.
 						 */
 						if ((PURPLE_PLUGIN_PROTOCOL_INFO(gc->prpl))->chat_info)
 						{
@@ -511,23 +510,9 @@ PurpleConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 						}
 					}
 
-					/*
-					 //Add the PurpleChat to our local buddy list?
-					purpleChat = purple_chat_new(account,
-											 name,
-											 components);
-					if ((group = purple_find_group(group_name)) == NULL) {
-						group = purple_group_new(group_name);
-						purple_blist_add_group(group, NULL);
-					}
-					
-					if (purpleChat != NULL) {
-						purple_blist_add_chat(purpleChat, group, NULL);
-					}
-					*/
-
-					//Join the chat serverside - the GHsahTable components, couple with the originating PurpleConnect,
-					//now contains all the information the prpl will need to process our request.
+					/* Join the chat serverside - the GHashTable components, coupled with the originating PurpleConnection,
+					 * now contains all the information the prpl will need to process our request.
+					 */
 					AILog(@"In the event of an emergency, your GHashTable may be used as a flotation device...");
 					serv_join_chat(gc, components);
 				}
@@ -648,6 +633,7 @@ NSString *processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 // We handle the notify messages within SLPurpleCocoaAdapter so we can use our localized string macro
 - (void *)handleNotifyMessageOfType:(PurpleNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
 {
+
     NSString *primaryString = [NSString stringWithUTF8String:primary];
 	NSString *secondaryString = secondary ? [NSString stringWithUTF8String:secondary] : nil;
 	
