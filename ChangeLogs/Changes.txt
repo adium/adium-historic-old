@@ -79,7 +79,7 @@ Version 1.2 (1/5/2008)
  * Updated Adiumy icons to 512x512 for Leopard
  * Updated to libpurple 2.3.1
  * Got David a gerbil (#7278)
- * Major localization updates: Catalan, Czech, Danish, Dutch, Chinese (Simplified), Chinese (Traditional), English (Australian), Finnish, French, French Canadian, German, Italian, Japanese, Norwegian, Polish, Spanish, Swedish,  and Russian
+ * Major localization updates: Catalan, Czech, Danish, Dutch, Chinese (Simplified), Chinese (Traditional), English (Australian), Finnish, French, French Canadian, German, Italian, Japanese, Norwegian, Polish, Russian, Spanish, Swedish, and Turkish
 
 Version 1.1.4 (11/5/2007)
  * Compatibility updates for Mac OS X 10.5:
