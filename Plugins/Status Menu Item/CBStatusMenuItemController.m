@@ -661,7 +661,7 @@
 		//Only update next time if we need to
 		mainMenuNeedsUpdate = NO;
 	// Contacts menu - or, override the main menu with option held down
-	} else if ([NSEvent optionKey] || (menu == mainContactsMenu && contactsMenuNeedsUpdate)) {
+	} else if (((menu == mainMenu) && [NSEvent optionKey]) || ((menu == mainContactsMenu) && contactsMenuNeedsUpdate)) {
 		NSEnumerator    *enumerator = [contactMenuItemsArray objectEnumerator];
 		NSMenuItem      *menuItem;
 		
