@@ -1102,7 +1102,11 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	while ((window = [enumerator nextObject])) {
 		// No snapping to itself and it must be within a snapping distance to other windows
 		if ((window != myWindow) &&
-			[window delegate] && [[window delegate] conformsToProtocol:@protocol(AIInterfaceContainer)]) {
+			[window delegate] && [window isVisible] && 
+			[[window delegate] conformsToProtocol:@protocol(AIInterfaceContainer)]) {
+			/* Note: [window delegate] may be invalid if the window is in the middle of closing.
+			 * Checking if it's visible should hopefully cover that case.
+			 */
 			suggested = [self snapTo:window with:currentFrame saveTo:suggested];
 		}
 	}
