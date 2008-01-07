@@ -78,8 +78,13 @@ typedef enum {
 #define CONTENT_CONTACT_LEFT_CHAT			@"Content_ContactLeftChat"
 #define CONTENT_GROUP_CHAT_INVITE			@"Content_GroupChatInvite"
 #define INTERFACE_ERROR_MESSAGE				@"Interface_ErrorMessageReceived"
+
+/* Note: The account connected/disconnected events are aggregated for many accounts connecting simultaneously.
+ * Use a list object observer (see AIContactController) if you are concerned about specific account connectivity changes.
+ */
 #define ACCOUNT_CONNECTED					@"Account_Connected"
 #define ACCOUNT_DISCONNECTED				@"Account_Disconnected"
+
 #define	ACCOUNT_RECEIVED_EMAIL				@"Account_NewMailReceived"
 #define FILE_TRANSFER_REQUEST				@"FileTransfer_Request"
 #define FILE_TRANSFER_CHECKSUMMING			@"FileTransfer_Checksumming"
