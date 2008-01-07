@@ -202,6 +202,28 @@
 				 allowJavascriptURLs:YES];
 }
 
+- (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
+{
+	/* If we're sending a message on an encryption chat, we can encode the HTML normally, as links will go through fine.
+	 * If we're sending a message normally, MSN will drop the title of any link, so we preprocess it to be in the form "title (link)"
+	 */
+	return [AIHTMLDecoder encodeHTML:([[inContentMessage chat] isSecure] ? inAttributedString : [inAttributedString attributedStringByConvertingLinksToStrings])
+							 headers:NO
+							fontTags:YES
+				  includingColorTags:YES
+					   closeFontTags:YES
+						   styleTags:YES
+		  closeStyleTagsOnFontChange:YES
+					  encodeNonASCII:NO
+						encodeSpaces:NO
+						  imagesPath:nil
+				   attachmentsAsText:YES
+		   onlyIncludeOutgoingImages:NO
+					  simpleTagsOnly:YES
+					  bodyBackground:NO
+				 allowJavascriptURLs:YES];
+}
+
 #pragma mark Status
 //Update our full name on connect
 - (oneway void)accountConnectionConnected

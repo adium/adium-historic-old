@@ -526,25 +526,30 @@ NSString *AIFontStyleAttributeName  = @"AIFontStyle";
 												   effectiveRange:&searchRange];
 			
 			if (URL) {
-				NSString	*replacementString = [URL absoluteString];
-				
 				if (!newAttributedString) {
 					newAttributedString = [[self mutableCopy] autorelease];
 					currentAttributedString = newAttributedString;
 				}
 
-				//Replace the URL with the NSString of where it was pointing
+				NSString	*absoluteString = [URL absoluteString];
+				NSString	*originalTitle = [[newAttributedString string] substringWithRange:searchRange];
+				NSString	*replacementString;
+				
+				if ([originalTitle caseInsensitiveCompare:absoluteString] == NSOrderedSame) {
+					replacementString = originalTitle;
+
+				} else {
+					replacementString = [NSString stringWithFormat:@"%@ (%@)", originalTitle, absoluteString];
+				}
+
 				[newAttributedString replaceCharactersInRange:searchRange 
 												   withString:replacementString];
 				
-				/*The attributed string may have changed length; modify our 
-					*	searchRange and cached length to reflect the string we just
-					*	inserted.
-					*/
+				//Modify our searchRange and cached length to reflect the string we just inserted.
 				searchRange.length = [replacementString length];
 				length = [newAttributedString length];
 				
-				//Now remove the URL
+				//Now remove the link attribute
 				[newAttributedString removeAttribute:NSLinkAttributeName range:searchRange];
 			}
 
