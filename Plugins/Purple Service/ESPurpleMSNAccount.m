@@ -207,7 +207,7 @@
 	/* If we're sending a message on an encryption chat, we can encode the HTML normally, as links will go through fine.
 	 * If we're sending a message normally, MSN will drop the title of any link, so we preprocess it to be in the form "title (link)"
 	 */
-	return [AIHTMLDecoder encodeHTML:([[inContentMessage chat] isSecure] ? inAttributedString : [inAttributedString attributedStringByConvertingLinksToStrings])
+	return [AIHTMLDecoder encodeHTML:([[inContentMessage chat] isSecure] ? [inContentMessage message] : [[inContentMessage message] attributedStringByConvertingLinksToStrings])
 							 headers:NO
 							fontTags:YES
 				  includingColorTags:YES
