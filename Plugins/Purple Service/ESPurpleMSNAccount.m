@@ -33,6 +33,8 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <FriBidi/NSString-FBAdditions.h>
 
+#import "SLPurpleCocoaAdapter.h"
+
 #import <libpurple/msn.h>
 
 #define DEFAULT_MSN_PASSPORT_DOMAIN				@"@hotmail.com"
@@ -95,9 +97,35 @@
 
 - (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
 {
-	NSString *msg = [super encodedAttributedStringForSendingContentMessage:inContentMessage];
+	NSString	*encodedString;
+	BOOL		didCommand = [[self purpleThread] attemptPurpleCommandOnMessage:[[inContentMessage message] string]
+															  fromAccount:(AIAccount *)[inContentMessage source]
+																   inChat:[inContentMessage chat]];	
 	
-	if (msg) {
+	if (!didCommand) {
+		/* If we're sending a message on an encryption chat, we can encode the HTML normally, as links will go through fine.
+		 * If we're sending a message normally, MSN will drop the title of any link, so we preprocess it to be in the form "title (link)"
+		 */
+		encodedString = [AIHTMLDecoder encodeHTML:([[inContentMessage chat] isSecure] ? [inContentMessage message] : [[inContentMessage message] attributedStringByConvertingLinksToStrings])
+										  headers:NO
+										 fontTags:YES
+							   includingColorTags:YES
+									closeFontTags:YES
+										styleTags:YES
+					   closeStyleTagsOnFontChange:YES
+								   encodeNonASCII:NO
+									 encodeSpaces:NO
+									   imagesPath:nil
+								attachmentsAsText:YES
+						onlyIncludeOutgoingImages:NO
+								   simpleTagsOnly:YES
+								   bodyBackground:NO
+							  allowJavascriptURLs:YES];
+	} else {
+		encodedString = nil;
+	}
+
+	if (encodedString) {
 		/* If our message contains RTL string we shall surround it with a span tag
 		 * with proper dir attribute so libpurple can apply the MSN writing direction
 		 * flag. Note that we must check the string of the content message and not the
@@ -105,8 +133,8 @@
 		 * Only the content message can tell us the original direction.
 		 */
 		return (([[[inContentMessage message] string] baseWritingDirection] == NSWritingDirectionRightToLeft)
-				? [NSString stringWithFormat:@"<span dir=\"rtl\">%@</span>", msg]
-				: msg);
+				? [NSString stringWithFormat:@"<span dir=\"rtl\">%@</span>", encodedString]
+				: encodedString);
 	} else {
 		return nil;
 	}
@@ -186,28 +214,6 @@
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
 	return [AIHTMLDecoder encodeHTML:inAttributedString
-							 headers:NO
-							fontTags:YES
-				  includingColorTags:YES
-					   closeFontTags:YES
-						   styleTags:YES
-		  closeStyleTagsOnFontChange:YES
-					  encodeNonASCII:NO
-						encodeSpaces:NO
-						  imagesPath:nil
-				   attachmentsAsText:YES
-		   onlyIncludeOutgoingImages:NO
-					  simpleTagsOnly:YES
-					  bodyBackground:NO
-				 allowJavascriptURLs:YES];
-}
-
-- (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
-{
-	/* If we're sending a message on an encryption chat, we can encode the HTML normally, as links will go through fine.
-	 * If we're sending a message normally, MSN will drop the title of any link, so we preprocess it to be in the form "title (link)"
-	 */
-	return [AIHTMLDecoder encodeHTML:([[inContentMessage chat] isSecure] ? [inContentMessage message] : [[inContentMessage message] attributedStringByConvertingLinksToStrings])
 							 headers:NO
 							fontTags:YES
 				  includingColorTags:YES
