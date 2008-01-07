@@ -362,12 +362,13 @@
 /*!
  * @brief Animation ended
  */
-- (void)animationDidEnd:(NSAnimation*)animation
+- (void)animationDidEnd:(NSAnimation *)animation
 {
 	animationsCount--;
 	if (animationsCount == 0) {
 		[self willChangeValueForKey:@"totalHeight"];
 		animationHedgeFactor = NSZeroSize;
+		[allAnimatingItemsDict removeAllObjects];
 		[self didChangeValueForKey:@"totalHeight"];
 	}
 
