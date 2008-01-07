@@ -55,7 +55,7 @@
 													  onWindow:[[[adium interfaceController] activeChat] window]
 												notifyingTarget:self];
 }
-
+// @brief: create a bookmark for the given chat with the given name in the given group
 - (void)createBookmarkForChat:(AIChat *)chat withName:(NSString *)name inGroup:(AIListGroup *)group
 {
 	AIListBookmark *bookmark = [[adium contactController] bookmarkForChat:chat];
