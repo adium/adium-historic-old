@@ -372,6 +372,7 @@
 {
 	NSArray		*containers = [interfacePlugin openContainersAndChats];
 	NSString	*containerID = nil;
+	NSString	*containerName = nil;
 	
 	//Determine the correct container for this chat
 	
@@ -395,6 +396,8 @@
 				containerID = [group displayName];
 			}
 		}
+		
+		containerName = containerID;
 	}
 	
 	if (!containerID) {
@@ -407,7 +410,7 @@
 	}
 
 	//Determine the correct placement for this chat within the container
-	[interfacePlugin openChat:inChat inContainerWithID:containerID atIndex:-1];
+	[interfacePlugin openChat:inChat inContainerWithID:containerID withName:containerName atIndex:-1];
 	if (![inChat isOpen]) {
 		[inChat setIsOpen:YES];
 		
@@ -430,7 +433,7 @@
 	}
 
 	//Determine the correct placement for this chat within the container
-	id tabViewItem = [interfacePlugin openChat:inChat inContainerWithID:containerID atIndex:index];
+	id tabViewItem = [interfacePlugin openChat:inChat inContainerWithID:containerID withName:nil atIndex:index];
 	if (![inChat isOpen]) {
 		[inChat setIsOpen:YES];
 		
