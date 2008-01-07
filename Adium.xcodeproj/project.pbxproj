@@ -3439,7 +3439,7 @@
 		4B2DC06C066F705800AD5AAD /* AIContactSettingsPane.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContactSettingsPane.m; path = "Plugins/Contact Settings/AIContactSettingsPane.m"; sourceTree = SOURCE_ROOT; };
 		4B31E8C004C46A9100A8010A /* AIContactStatusColoringPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactStatusColoringPlugin.h; path = Source/AIContactStatusColoringPlugin.h; sourceTree = "<group>"; };
 		4B31E8C104C46A9100A8010A /* AIContactStatusColoringPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContactStatusColoringPlugin.m; path = Source/AIContactStatusColoringPlugin.m; sourceTree = "<group>"; };
-		4B31E8C404C46A9100A8010A /* ContactStatusColoringDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.xml; name = ContactStatusColoringDefaults.plist; path = Resources/ContactStatusColoringDefaults.plist; sourceTree = "<group>"; };
+		4B31E8C404C46A9100A8010A /* ContactStatusColoringDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = ContactStatusColoringDefaults.plist; path = Resources/ContactStatusColoringDefaults.plist; sourceTree = "<group>"; };
 		4B387EB707199FE5004DE713 /* ESPurpleDotMacAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESPurpleDotMacAccountViewController.h; path = "Plugins/Purple Service/ESPurpleDotMacAccountViewController.h"; sourceTree = "<group>"; };
 		4B387EB807199FE5004DE713 /* ESPurpleDotMacAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESPurpleDotMacAccountViewController.m; path = "Plugins/Purple Service/ESPurpleDotMacAccountViewController.m"; sourceTree = "<group>"; };
 		4B388E0D0719C376004DE713 /* AIMSNServicePreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIMSNServicePreferences.h; path = "Plugins/Purple Service/AIMSNServicePreferences.h"; sourceTree = "<group>"; };
@@ -7942,11 +7942,7 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
-			attributes = {
-				BuildIndependentTargetsInParallel = NO;
-			};
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
