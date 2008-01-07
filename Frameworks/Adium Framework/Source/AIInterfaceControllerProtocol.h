@@ -205,7 +205,7 @@ typedef enum {
 @protocol AIInterfaceComponent <NSObject>
 - (void)openInterface;
 - (void)closeInterface;
-- (id)openChat:(AIChat *)chat inContainerWithID:(NSString *)containerName atIndex:(int)index;
+- (id)openChat:(AIChat *)chat inContainerWithID:(NSString *)containerID withName:(NSString *)containerName atIndex:(int)index;
 - (void)setActiveChat:(AIChat *)inChat;
 - (void)moveChat:(AIChat *)chat toContainerWithID:(NSString *)containerID index:(int)index;
 - (void)closeChat:(AIChat *)chat;
