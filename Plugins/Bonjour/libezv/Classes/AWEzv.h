@@ -74,6 +74,7 @@
 - (void) reportLoggedOut;
 - (void) userLoggedOut:(AWEzvContact *)contact;
 - (void) userChangedState:(AWEzvContact *)contact;
+- (void) userChangedImage:(AWEzvContact *)contact;
 - (void) user:(AWEzvContact *)contact sentMessage:(NSString *)message withHtml:(NSString *)html;
 - (void) user:(AWEzvContact *)contact typingNotification:(AWEzvTyping)typingStatus;
 - (void) user:(AWEzvContact *)contact typeAhead:(NSString *)message withHtml:(NSString *)html;

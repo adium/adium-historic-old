@@ -168,6 +168,7 @@
 - (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(int)row
 {
 	if (row >= 0 && row < [[self advancedCategoryArray] count]) {		
+		AILog(@"Selecting row %i", row);
 		[self configureAdvancedPreferencesForPane:[[self advancedCategoryArray] objectAtIndex:row]];
 		return YES;
     } else {

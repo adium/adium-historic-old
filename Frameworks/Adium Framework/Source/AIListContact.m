@@ -23,6 +23,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIService.h>
+#import <Adium/AIUserIcons.h>
 #import <Adium/ESFileTransfer.h>
 #import <Adium/AIHTMLDecoder.h>
 
@@ -384,24 +385,7 @@
 
 - (void)setServersideIconData:(NSData *)iconData notify:(NotifyTiming)notify
 {
-	//Observers get a single shot at utilizing the user icon data in its raw form
-	[self setStatusObject:iconData forKey:@"UserIconData" notify:NotifyLater];
-	
-	//Set the User Icon as an NSImage
-	NSImage *userIcon = [[NSImage alloc] initWithData:iconData];
-	[userIcon setDataRetained:YES];
-	[self setStatusObject:userIcon forKey:KEY_USER_ICON notify:NotifyLater];
-	[userIcon release];
-	
-	//Clear the UserIconData after it has been used
-	[self setStatusObject:nil
-				   forKey:@"UserIconData"
-			   afterDelay:1];
-	
-	//Apply any changes
-	if (notify == NotifyNow) {
-		[self notifyOfChangedStatusSilently:NO];
-	}	
+	[AIUserIcons setServersideIconData:iconData forObject:self notify:notify];
 }
 
 /*!

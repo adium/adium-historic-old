@@ -153,9 +153,9 @@ typedef enum {
 - (NSImage *)statusIcon;
 - (NSData *)userIconData;
 - (void)setUserIconData:(NSData *)inData;
-- (NSImage *)displayUserIcon;
-- (void)setDisplayUserIcon:(NSImage *)inImage;
-- (void)setDisplayUserIcon:(NSImage *)inImage withOwner:(id)inOwner priorityLevel:(float)inPriorityLevel;
+
+//For use only by subclasses
+- (NSImage *)internalUserIcon;
 
 //mutableOwnerArray delegate and methods
 - (void)listObject:(AIListObject *)listObject mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(AIListObject *)inOwner priorityLevel:(float)priority;

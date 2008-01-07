@@ -568,11 +568,9 @@ void image_register_reply (
 	if (dataLen != 0 ) {
 		/* We have an image */
 		/* parse raw Data */
-		NSImage *image = [[NSImage alloc] initWithData:[NSData dataWithBytes:data length:dataLen]];
+		[contact setContactImageData:[NSData dataWithBytes:data length:dataLen]];
+	    [[client client] userChangedImage:contact];
 
-		[contact setContactImage:image];
-		[image autorelease];
-	    [[client client] userChangedState:contact];
 	} else {
 		[contact setImageHash: NULL];
 		[[client client] reportError:@"Error retrieving picture" ofLevel:AWEzvError];
@@ -684,6 +682,7 @@ void image_register_reply (
 		}
 	} else {
 		[contact setContactImage:nil];
+		[[client client] userChangedImage:contact];
 	}
 
 	/* now set the port */

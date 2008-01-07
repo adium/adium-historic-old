@@ -17,7 +17,7 @@
 #import <Adium/AIPlugin.h>
 #import <Adium/AIContactControllerProtocol.h>
 
-@interface ESUserIconHandlingPlugin : AIPlugin <AIListObjectObserver> {
+@interface ESUserIconHandlingPlugin : AIPlugin {
 	NSMutableSet	*toolbarItems;
 	NSMutableSet	*validatedItems;
 }

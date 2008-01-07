@@ -499,46 +499,12 @@
 #pragma mark Key-Value Pairing
 - (NSImage *)userIcon
 {
-	return [self displayUserIcon];
+	return [self internalUserIcon];
 }
-- (NSImage *)displayUserIcon
+- (NSImage *)internalUserIcon
 {
-	return [[self displayArrayForKey:KEY_USER_ICON create:NO] objectValue];	
+	return [AIUserIcons userIconForObject:self];
 }
-
-- (void)setDisplayUserIcon:(NSImage *)inImage
-{
-	[self setDisplayUserIcon:inImage withOwner:self priorityLevel:Highest_Priority];
-}
-- (void)setDisplayUserIcon:(NSImage *)inImage withOwner:(id)inOwner priorityLevel:(float)inPriorityLevel
-{
-	NSImage				*oldImage = [self displayUserIcon];
-
-	[[self displayArrayForKey:KEY_USER_ICON] setObject:inImage
-											 withOwner:inOwner
-										 priorityLevel:inPriorityLevel];
-	
-	//If the displayUserIcon changed, flush our cache and send out a notification
-	if (oldImage != [self displayUserIcon]) {
-		AIListObject	*myContainingObject = [self containingObject];
-		NSSet			*modifiedKeys = [NSSet setWithObject:KEY_USER_ICON];
-	
-		[AIUserIcons flushCacheForContact:(AIListContact *)self];
-
-		//Notify
-		[[adium contactController] listObjectAttributesChanged:self
-												  modifiedKeys:modifiedKeys];		
-		
-		if ([myContainingObject isKindOfClass:[AIListContact class]]) {
-			[AIUserIcons flushCacheForContact:(AIListContact *)myContainingObject];
-
-			//Notify
-			[[adium contactController] listObjectAttributesChanged:myContainingObject
-													  modifiedKeys:modifiedKeys];
-		}		
-	}
-}
-
 
 - (NSData *)userIconData
 {
@@ -547,9 +513,7 @@
 }
 - (void)setUserIconData:(NSData *)inData
 {
-	[self setPreference:inData
-				 forKey:KEY_USER_ICON
-				  group:PREF_GROUP_USERICONS];
+	[AIUserIcons setManuallySetUserIconData:inData forObject:self];
 }
 
 - (NSNumber *)idleTime

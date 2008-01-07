@@ -32,6 +32,7 @@
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/NDRunLoopMessenger.h>
+#import <Adium/AIUserIcons.h>
 #import <AIUtilities/AIImageAdditions.h>
 
 #import <CoreFoundation/CFRunLoop.h>
@@ -285,6 +286,9 @@ AIListContact* contactLookupFromBuddy(PurpleBuddy *buddy)
 		
 		//Associate the handle with ui_data and the buddy with our statusDictionary
 		buddy->node.ui_data = [theContact retain];
+		
+		//This is the first time the contact has been accessed from the buddy; reset the icon cache for it
+		[AIUserIcons flushCacheForObject:theContact];
 	}
 	
 	return theContact;

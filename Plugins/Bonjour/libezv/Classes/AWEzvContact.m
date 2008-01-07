@@ -77,17 +77,17 @@
 	}
 }
 
-- (void) setContactImage:(NSImage *)contactImage
+- (void) setContactImageData:(NSImage *)contactImageData
 {
-    if (_contactImage != contactImage) {
-		[_contactImage release];
-		_contactImage = [contactImage retain];
+    if (_contactImageData != contactImageData) {
+		[_contactImageData release];
+		_contactImageData = [contactImageData retain];
 	}
 }
 
-- (NSImage *) contactImage
+- (NSImage *) contactImageData
 {
-    return _contactImage;
+    return _contactImageData;
 }
 - (void)setImageHash:(NSString *)newHash
 {

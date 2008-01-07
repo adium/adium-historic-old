@@ -162,6 +162,7 @@ typedef enum {
 - (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact;
 - (BOOL)allowsNewlinesInMessages;
 - (BOOL)accountDisplaysFileTransferMessages;
+- (BOOL)managesOwnContactIconCache;
 
 //Status
 - (NSSet *)supportedPropertyKeys;
@@ -191,6 +192,8 @@ typedef enum {
 - (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group;
 - (void)renameGroup:(AIListGroup *)group to:(NSString *)newName;
 - (BOOL)isContactIntentionallyListed:(AIListContact *)contact;
+
+- (NSData *)serversideIconDataForContact:(AIListContact *)contact;
 
 //Contact-specific menu items
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact;

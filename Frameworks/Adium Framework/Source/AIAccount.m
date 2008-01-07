@@ -326,6 +326,14 @@
 }
 
 /*!
+ * @brief Does the account manage its own cache of serverside contact icons?
+ */
+- (BOOL)managesOwnContactIconCache
+{
+	return NO;
+}
+
+/*!
  * @brief Called once the display name has been properly filtered
  *
  * Subclasses may override to pass this name on to the server if appropriate.
@@ -702,6 +710,14 @@
 - (BOOL)isContactIntentionallyListed:(AIListContact *)contact
 {
 	return YES;
+}
+
+/*!
+ * @brief Return the data for the serverside icon for a contact
+ */
+- (NSData *)serversideIconDataForContact:(AIListContact *)contact
+{
+	return nil;
 }
 
 #pragma mark Secure messsaging

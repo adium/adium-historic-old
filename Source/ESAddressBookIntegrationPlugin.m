@@ -23,13 +23,16 @@
 #import <Adium/AIListObject.h>
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIService.h>
+#import <Adium/AIUserIcons.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/OWAddressBookAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
+
+#import "AIAddressBookUserIconSource.h"
+
 
 #define IMAGE_LOOKUP_INTERVAL   0.01
 #define SHOW_IN_AB_CONTEXTUAL_MENU_TITLE AILocalizedString(@"Show In Address Book", "Show In Address Book Contextual Menu")
@@ -42,12 +45,12 @@
 #define CONTACT_ADDED_ERROR_Message		AILocalizedString(@"An error had occurred while adding %@ to the Address Book.", nil)
 
 @interface ESAddressBookIntegrationPlugin(PRIVATE)
++ (ABPerson *)_searchForUID:(NSString *)UID serviceID:(NSString *)serviceID;
+
 - (void)updateAllContacts;
 - (void)updateSelfIncludingIcon:(BOOL)includeIcon;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (NSString *)nameForPerson:(ABPerson *)person phonetic:(NSString **)phonetic;
-- (ABPerson *)personForListObject:(AIListObject *)inObject;
-- (ABPerson *)_searchForUID:(NSString *)UID serviceID:(NSString *)serviceID;
 - (void)rebuildAddressBookDict;
 - (void)queueDelayedFetchOfImageForPerson:(ABPerson *)person object:(AIListObject *)inObject;
 - (void)showInAddressBook;
@@ -67,8 +70,10 @@
  */
 @implementation ESAddressBookIntegrationPlugin
 
-static	ABAddressBook	*sharedAddressBook = nil;
-static	NSDictionary	*serviceDict = nil;
+static	ABAddressBook		*sharedAddressBook = nil;
+static  NSMutableDictionary	*addressBookDict = nil;
+
+static	NSDictionary		*serviceDict = nil;
 
 NSString* serviceIDForOscarUID(NSString *UID);
 NSString* serviceIDForJabberUID(NSString *UID);
@@ -82,15 +87,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 {
     meTag = -1;
     addressBookDict = nil;
-	listObjectArrayForImageData = nil;
-	personArrayForImageData = nil;
-	imageLookupTimer = nil;
 	createMetaContacts = NO;
-
-	//Tracking dictionary for asynchronous image loads
-    trackingDict = [[NSMutableDictionary alloc] init];
-    trackingDictPersonToTagNumber = [[NSMutableDictionary alloc] init];
-    trackingDictTagNumberToPerson = [[NSMutableDictionary alloc] init];
 	
     //Configure our preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AB_DISPLAYFORMAT_DEFAULT_PREFS 
@@ -144,7 +141,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 									 object:nil];
 	
 	//Update self immediately so the information is available to plugins and interface elements as they load
-	[self updateSelfIncludingIcon:YES];
+	[self updateSelfIncludingIcon:YES];	
 }
 
 - (void)installAddressBookActions
@@ -208,11 +205,9 @@ NSString* serviceIDForJabberUID(NSString *UID);
 - (void)dealloc
 {
     [serviceDict release]; serviceDict = nil;
-    [trackingDict release]; trackingDict = nil;
-	[trackingDictPersonToTagNumber release]; trackingDictPersonToTagNumber = nil;
-	[trackingDictTagNumberToPerson release]; trackingDictTagNumberToPerson = nil;
 
 	[sharedAddressBook release]; sharedAddressBook = nil;
+	[addressBookUserIconSource release]; addressBookUserIconSource = nil;
 
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[[adium notificationCenter] removeObserver:self];
@@ -244,6 +239,9 @@ NSString* serviceIDForJabberUID(NSString *UID);
     id<AIPreferenceController> preferenceController = [adium preferenceController];
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_ADDRESSBOOK];
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_USERICONS];
+	
+	addressBookUserIconSource = [[AIAddressBookUserIconSource alloc] init];
+	[AIUserIcons registerUserIconSource:addressBookUserIconSource];
 }
 
 /*!
@@ -263,11 +261,14 @@ NSString* serviceIDForJabberUID(NSString *UID);
 	NSSet		*modifiedAttributes = nil;
 	
     if (inModifiedKeys == nil) { //Only perform this when updating for all list objects
-        ABPerson *person = [self personForListObject:inObject];
+        ABPerson *person = [[self class] personForListObject:inObject];
 		
-		if (person) {
-			[self queueDelayedFetchOfImageForPerson:person object:inObject];
+		if ([AIUserIcons userIconSource:addressBookUserIconSource changeWouldBeRelevantForObject:inObject]) {
+			//This object's user icon would be changed if we have a new icon Update!
+			[addressBookUserIconSource queueDelayedFetchOfImageForPerson:person object:inObject];
+		}
 
+		if (person) {
 			if (enableImport) {
 				//Load the name if appropriate
 				AIMutableOwnerArray *displayNameArray, *phoneticNameArray;
@@ -337,19 +338,13 @@ NSString* serviceIDForJabberUID(NSString *UID);
     } else if (automaticSync && [inModifiedKeys containsObject:KEY_USER_ICON]) {
         
 		//Only update when the serverside icon changes if there is no Adium preference overriding it
-		if (![inObject preferenceForKey:KEY_USER_ICON group:PREF_GROUP_USERICONS ignoreInheritedValues:YES]) {
+		if (![AIUserIcons manuallySetUserIconDataForObject:inObject]) {
 			//Find the person
-			ABPerson *person = [self personForListObject:inObject];
+			ABPerson *person = [[self class] personForListObject:inObject];
 			
-			if (person && (person != [sharedAddressBook me])) {
-				//Set the person's image to the inObject's serverside User Icon.
-				NSData  *userIconData = [inObject statusObjectForKey:@"UserIconData"];
-				if (!userIconData) {
-					userIconData = [[inObject statusObjectForKey:KEY_USER_ICON] TIFFRepresentation];
-				}
-				
-				[person setImageData:userIconData];
-				
+			if (person && (person != [sharedAddressBook me])) {				
+				[person setImageData:[inObject userIconData]];
+
 				[[sharedAddressBook class] cancelPreviousPerformRequestsWithTarget:sharedAddressBook
 																		  selector:@selector(save)
 																			object:nil];
@@ -475,8 +470,6 @@ NSString* serviceIDForJabberUID(NSString *UID);
         automaticSync = [[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue];
         useNickName = [[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue];
 		useMiddleName = [[prefDict objectForKey:KEY_AB_USE_MIDDLE] boolValue];
-		preferAddressBookImages = [[prefDict objectForKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES] boolValue];
-		useABImages = [[prefDict objectForKey:KEY_AB_USE_IMAGES] boolValue];
 
 		createMetaContacts = [[prefDict objectForKey:KEY_AB_CREATE_METACONTACTS] boolValue];
 		
@@ -507,21 +500,11 @@ NSString* serviceIDForJabberUID(NSString *UID);
 		}
 
     } else if (automaticSync && ([group isEqualToString:PREF_GROUP_USERICONS]) && object) {
-		//Find the person
-		ABPerson *person = [self personForListObject:object];
+		//Set an icon to the address book
+		ABPerson *person = [[self class] personForListObject:object];
 		
-		if (person) {
-			//Set the person's image to the inObject's serverside User Icon.
-			NSData	*imageData = [object preferenceForKey:KEY_USER_ICON
-													group:PREF_GROUP_USERICONS
-									ignoreInheritedValues:YES];
-			
-			//If the pref is now nil, we should restore the address book back to the serverside icon if possible
-			if (!imageData) {
-				imageData = [[object statusObjectForKey:KEY_USER_ICON] TIFFRepresentation];
-			}
-			
-			[person setImageData:imageData];
+		if (person) {			
+			[person setImageData:[object userIconData]];
 		}
 	}
 }
@@ -577,13 +560,11 @@ NSString* serviceIDForJabberUID(NSString *UID);
 	return result;
 }
 
-#pragma mark Image data
-
 /*!
  * @brief Called when the address book completes an asynchronous image lookup
  *
  * @param inData NSData representing an NSImage
- * @param tag A tag indicating the lookup with which this call is associated. We use a tracking dictionary, trackingDict, to associate this int back to a usable object.
+ * @param tag A tag indicating the lookup with which this call is associated.
  */
 - (void)consumeImageData:(NSData *)inData forTag:(int)tag
 {
@@ -592,139 +573,9 @@ NSString* serviceIDForJabberUID(NSString *UID);
 											 forKey:KEY_DEFAULT_USER_ICON 
 											  group:GROUP_ACCOUNT_STATUS];
 		meTag = -1;
-		
-	} else if (useABImages) {
-		NSNumber		*tagNumber;
-		NSImage			*image;
-		AIListObject	*listObject;
-//		AIListContact	*parentContact;
-		NSString		*uniqueID;
-		id				setOrObject;
-		
-		tagNumber = [NSNumber numberWithInt:tag];
-		
-		//Apply the image to the appropriate listObject
-		image = (inData ? [[[NSImage alloc] initWithData:inData] autorelease] : nil);
-
-		//Address book can feed us giant images, which we really don't want to keep around
-		NSSize size = [image size];
-		if (size.width > 96 || size.height > 96)
-			image = [image imageByScalingToSize:NSMakeSize(96, 96)];
-		[image setDataRetained:YES];
-
-		//Get the object from our tracking dictionary
-		setOrObject = [trackingDict objectForKey:tagNumber];
-		
-		if ([setOrObject isKindOfClass:[AIListObject class]]) {
-			listObject = (AIListObject *)setOrObject;
-			
-			//Apply the image at the appropriate priority
-			[listObject setDisplayUserIcon:image
-								 withOwner:self
-							 priorityLevel:(preferAddressBookImages ? High_Priority : Low_Priority)];
-
-			/*
-			parentContact = [listObject parentContact];
-			 */
-			
-		} else /*if ([setOrObject isKindOfClass:[NSSet class]])*/{
-			NSEnumerator	*enumerator;
-//			BOOL			checkedForMetaContact = NO;
-
-			//Apply the image to each listObject at the appropriate priority
-			enumerator = [(NSSet *)setOrObject objectEnumerator];
-			while ((listObject = [enumerator nextObject])) {
-				
-				/*
-				//These objects all have the same unique ID so will all also have the same meta contact; just check once
-				if (!checkedForMetaContact) {
-					parentContact = [listObject parentContact];
-					if (parentContact == listObject) parentContact = nil;
-					checkedForMetaContact = YES;
-				}
-				*/
-				
-				[listObject setDisplayUserIcon:image
-									 withOwner:self
-								 priorityLevel:(preferAddressBookImages ? High_Priority : Low_Priority)];
-			}
-		}
-		
-		/*
-		if (parentContact) {
-			[parentContact setDisplayUserIcon:image
-									withOwner:self
-								priorityLevel:(preferAddressBookImages ? High_Priority : Low_Priority)];			
-		}
-		*/
-		
-		//No further need for the dictionary entries
-		[trackingDict removeObjectForKey:tagNumber];
-		
-		if ((uniqueID = [trackingDictTagNumberToPerson objectForKey:tagNumber])) {
-			[trackingDictPersonToTagNumber removeObjectForKey:uniqueID];
-			[trackingDictTagNumberToPerson removeObjectForKey:tagNumber];
-		}
 	}
 }
-
-/*!
- * @brief Queue an asynchronous image fetch for person associated with inObject
- *
- * Image lookups are done asynchronously.  This allows other processing to be done between image calls, improving the perceived
- * speed.  [Evan: I have seen one instance of this being problematic. My localhost loop was broken due to odd network problems,
- *			and the asynchronous lookup therefore hung the problem.  Submitted as radar 3977541.]
- *
- * We load from the same ABPerson for multiple AIListObjects, one for each service/UID combination times
- * the number of accounts on that service.  We therefore aggregate the lookups to lower the address book search
- * and image/data creation overhead.
- *
- * @param person The ABPerson to fetch the image from
- * @param inObject The AIListObject with which to ultimately associate the image
- */
-- (void)queueDelayedFetchOfImageForPerson:(ABPerson *)person object:(AIListObject *)inObject
-{
-	int				tag;
-	NSNumber		*tagNumber;
-	NSString		*uniqueId;
-	
-	uniqueId = [person uniqueId];
-	
-	//Check if we already have a tag for the loading of another object with the same
-	//internalObjectID
-	if ((tagNumber = [trackingDictPersonToTagNumber objectForKey:uniqueId])) {
-		id				previousValue;
-		NSMutableSet	*objectSet;
 		
-		previousValue = [trackingDict objectForKey:tagNumber];
-		
-		if ([previousValue isKindOfClass:[AIListObject class]]) {
-			//If the old value is just a listObject, create an array with the old object
-			//and the new object
-			objectSet = [NSMutableSet setWithObjects:previousValue,inObject,nil];
-			
-			//Store the array in the tracking dict
-			[trackingDict setObject:objectSet forKey:tagNumber];
-			
-		} else /*if ([previousValue isKindOfClass:[NSMutableArray class]])*/{
-			//Add the new object to the previously-created array
-			[(NSMutableSet *)previousValue addObject:inObject];
-		}
-		
-	} else {
-		//Begin the image load
-		tag = [person beginLoadingImageDataForClient:self];
-		tagNumber = [NSNumber numberWithInt:tag];
-		
-		//We need to be able to take a tagNumber and retrieve the object
-		[trackingDict setObject:inObject forKey:tagNumber];
-		
-		//We also want to take a person's uniqueID and potentially find an existing tag number
-		[trackingDictPersonToTagNumber setObject:tagNumber forKey:uniqueId];
-		[trackingDictTagNumberToPerson setObject:uniqueId forKey:tagNumber];
-	}
-}
-
 #pragma mark Searching
 /*!
  * @brief Find an ABPerson corresponding to an AIListObject
@@ -732,7 +583,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
  * @param inObject The object for which it search
  * @result An ABPerson is one is found, or nil if none is found
  */
-- (ABPerson *)personForListObject:(AIListObject *)inObject
++ (ABPerson *)personForListObject:(AIListObject *)inObject
 {
 	ABPerson	*person = nil;
 	NSString	*uniqueID = [inObject preferenceForKey:KEY_AB_UNIQUE_ID group:PREF_GROUP_ADDRESSBOOK];
@@ -785,7 +636,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
  * @param serviceID The serviceID for the contact
  * @result A corresponding <tt>ABPerson</tt>
  */
-- (ABPerson *)_searchForUID:(NSString *)UID serviceID:(NSString *)serviceID
++ (ABPerson *)_searchForUID:(NSString *)UID serviceID:(NSString *)serviceID
 {
 	ABPerson		*person = nil;
 	NSDictionary	*dict;
@@ -815,6 +666,8 @@ NSString* serviceIDForJabberUID(NSString *UID);
 	
 	return person;
 }
+
+#pragma mark -
 
 - (NSSet *)contactsForPerson:(ABPerson *)person
 {
@@ -1263,7 +1116,7 @@ NSString* serviceIDForJabberUID(NSString *UID)
  */
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
-	BOOL	hasABEntry = ([self personForListObject:[[adium menuController] currentContextMenuObject]] != nil);
+	BOOL	hasABEntry = ([[self class] personForListObject:[[adium menuController] currentContextMenuObject]] != nil);
 	BOOL	result = NO;
 	
 	if ([menuItem isEqual:showInABContextualMenuItem] || [menuItem isEqual:editInABContextualMenuItem])
@@ -1279,7 +1132,7 @@ NSString* serviceIDForJabberUID(NSString *UID)
  */
 - (void)showInAddressBook
 {
-	ABPerson *selectedPerson = [self personForListObject:[[adium menuController] currentContextMenuObject]];
+	ABPerson *selectedPerson = [[self class] personForListObject:[[adium menuController] currentContextMenuObject]];
 	NSString *url = [NSString stringWithFormat:@"addressbook://%@", [selectedPerson uniqueId]];
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:url]];
 }
@@ -1289,7 +1142,7 @@ NSString* serviceIDForJabberUID(NSString *UID)
  */
 - (void)editInAddressBook
 {
-	ABPerson *selectedPerson = [self personForListObject:[[adium menuController] currentContextMenuObject]];
+	ABPerson *selectedPerson = [[self class] personForListObject:[[adium menuController] currentContextMenuObject]];
 	NSString *url = [NSString stringWithFormat:@"addressbook://%@?edit", [selectedPerson uniqueId]];
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:url]];
 }

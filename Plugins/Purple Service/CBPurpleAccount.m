@@ -408,6 +408,55 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 
 - (void)gotGroupForContact:(AIListContact *)listContact {};
 
+/*!
+ * @brief Return the serverside icon for a contact
+ */
+- (NSData *)serversideIconDataForContact:(AIListContact *)contact
+{
+	PurpleBuddy		*buddy;
+	NSData			*data = nil;
+
+	if (account &&
+		(buddy = purple_find_buddy(account, [[contact UID] UTF8String]))) {
+		PurpleBuddyIcon *buddyIcon;
+		BOOL			shouldUnref = NO;
+		
+		/* First, try to get a current buddy icon from the PurpleBuddy */
+		buddyIcon = purple_buddy_get_icon(buddy);
+		if (!buddyIcon) {
+			/* Failing that, load one from the cache. We'll need to unreference the returned PurpleBuddyIcon
+			 * when we're done.
+			 */
+			buddyIcon = purple_buddy_icons_find(account, [[contact UID] UTF8String]);
+			shouldUnref = YES;
+		}
+		
+		if (buddyIcon) {
+			const guchar	*iconData;
+			size_t			len;
+			
+			iconData = purple_buddy_icon_get_data(buddyIcon, &len);
+			
+			if (iconData && len) {
+				data = [NSData dataWithBytes:iconData length:len];
+			}
+			
+			if (shouldUnref)
+				purple_buddy_icon_unref(buddyIcon);
+		}
+	}
+	
+	return data;
+}
+
+/*!
+ * @brief Libpurple manages a contact icon cache; we don't need to duplicate it.
+ */
+- (BOOL)managesOwnContactIconCache
+{
+	return YES;
+}
+
 /*********************/
 /* AIAccount_Handles */
 /*********************/
