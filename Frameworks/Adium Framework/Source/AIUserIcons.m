@@ -41,6 +41,8 @@ static NSSize				iconCacheSize;
 static AIServersideUserIconSource	*serversideUserIconSource = nil;
 static AIManuallySetUserIconSource	*manuallySetUserIconSource = nil;
 
+//#define AIUSERICON_DEBUG
+
 @interface AIUserIcons (PRIVATE)
 + (void)updateAllIcons;
 + (void)updateUserIconForObject:(AIListObject *)inObject;
@@ -97,6 +99,10 @@ static int compareSources(id <AIUserIconSource> sourceA, id <AIUserIconSource> s
 
 + (void)updateAllIcons
 {
+#ifdef AIUSERICON_DEBUG
+	AILogWithSignature(@"");
+#endif
+
 	[[adium contactController] delayListObjectNotifications];
 	
 	[self flushAllCaches];
@@ -157,14 +163,26 @@ static int compareSources(id <AIUserIconSource> sourceA, id <AIUserIconSource> s
 	if (inUserIcon && inSource) {
 		[self flushCacheForObject:inObject];
 
+#ifdef AIUSERICON_DEBUG
+		AILogWithSignature(@"%@ provided icon for %@", inSource, inUserIcon);
+#endif
+
 		[iconCache setObject:inUserIcon forKey:internalObjectID];
 		[iconCacheOwners setObject:inSource forKey:internalObjectID];
 
 	} else if (!wasAsynchronous || ([self userIconSourceForObject:inObject] == inSource)) {
 		[self flushCacheForObject:inObject];
 
+#ifdef AIUSERICON_DEBUG
+		AILogWithSignature(@"Source %@ got nothing for %@; current source is %@", inSource, inObject, [self userIconSourceForObject:inObject]);
+#endif
+
 		[iconCache setObject:[NSNull null] forKey:internalObjectID];
 		[iconCacheOwners removeObjectForKey:internalObjectID];
+	} else {
+#ifdef AIUSERICON_DEBUG
+		AILogWithSignature(@"Source %@: Ignoring information on %@ for %@", inSource, inUserIcon, inObject);
+#endif
 	}
 
 	if (!isQueryingIconSources) {
@@ -206,7 +224,8 @@ static int compareSources(id <AIUserIconSource> sourceA, id <AIUserIconSource> s
 			break;
 
 		} else if (queryResult == AIUserIconSourceLookingUpIconAsynchronously) {
-			inProgressForCurrentSource = ([self userIconSourceForObject:inObject] == userIconSource);
+			id <AIUserIconSource> currentUserIconSource = [self userIconSourceForObject:inObject];
+			inProgressForCurrentSource = !currentUserIconSource || (currentUserIconSource == userIconSource);
 		}
 	}
 	isQueryingIconSources = NO;
@@ -284,12 +303,17 @@ static int compareSources(id <AIUserIconSource> sourceA, id <AIUserIconSource> s
  */
 + (NSImage *)userIconForObject:(AIListObject *)inObject
 {
-	NSImage *userIcon = nil;
-
-	userIcon = [iconCache objectForKey:[inObject internalObjectID]];
+	NSImage		*userIcon = nil;
+	NSString	*internalObjectID = [inObject internalObjectID];
+	
+	userIcon = [iconCache objectForKey:internalObjectID];
 	if (!userIcon) {
 		[self updateUserIconForObject:inObject];
-		userIcon = [iconCache objectForKey:[inObject internalObjectID]];
+		userIcon = [iconCache objectForKey:internalObjectID];
+		if (!userIcon) {
+			[iconCache setObject:[NSNull null] forKey:internalObjectID];
+			[iconCacheOwners removeObjectForKey:internalObjectID];
+		}
 	}
 
 	if ((id)userIcon == (id)[NSNull null]) userIcon = nil;
