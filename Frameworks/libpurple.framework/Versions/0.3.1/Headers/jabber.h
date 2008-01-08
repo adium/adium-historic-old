@@ -191,6 +191,8 @@ struct _JabberStream
 	char *old_uri;
 	int old_length;
 	char *old_track;
+	
+	char *certificate_CN;
 };
 
 typedef gboolean (JabberFeatureEnabled)(JabberStream *js, const gchar *shortname, const gchar *namespace);
