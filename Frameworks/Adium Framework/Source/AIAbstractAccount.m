@@ -26,6 +26,7 @@
 #import <Adium/AIService.h>
 #import <Adium/AIStatus.h>
 #import <Adium/AIPasswordPromptController.h>
+#import <Adium/AIUserIcons.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIStringAdditions.h>
@@ -1187,6 +1188,7 @@
 	while ((listContact = [enumerator nextObject])) {
 		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		[listContact setRemoteGroupName:nil];
+		[AIUserIcons flushCacheForObject:listContact];
 		[self removeStatusObjectsFromContact:listContact silently:YES];
 		[pool release];
 	}
