@@ -361,6 +361,7 @@
 		347E7AC307CAF96000350507 /* AIContactWarningLevelPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 347E7AC107CAF95F00350507 /* AIContactWarningLevelPlugin.m */; };
 		347E7ACF07CAF98500350507 /* ESMetaContactContentsPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 347E7ACD07CAF98400350507 /* ESMetaContactContentsPlugin.m */; };
 		347EAB2D09721D490090EA6E /* pref-personal.png in Resources */ = {isa = PBXBuildFile; fileRef = 347EAB2C09721D490090EA6E /* pref-personal.png */; };
+		347F4B810D340F16006D5A56 /* AIPreferenceContainer.m in Sources */ = {isa = PBXBuildFile; fileRef = 347F4B800D340F16006D5A56 /* AIPreferenceContainer.m */; };
 		347F51810947449000CEF1FF /* AdiumAddressBookAction_Yahoo.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E4094743B100CEF1FF /* AdiumAddressBookAction_Yahoo.scpt */; };
 		347F51820947449000CEF1FF /* AdiumAddressBookAction_AIM.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E5094743B100CEF1FF /* AdiumAddressBookAction_AIM.scpt */; };
 		347F51830947449000CEF1FF /* AdiumAddressBookAction_ICQ.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 347F50E6094743B100CEF1FF /* AdiumAddressBookAction_ICQ.scpt */; };
@@ -2608,6 +2609,8 @@
 		347E7ACD07CAF98400350507 /* ESMetaContactContentsPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESMetaContactContentsPlugin.m; path = Source/ESMetaContactContentsPlugin.m; sourceTree = "<group>"; };
 		347E7ACE07CAF98500350507 /* ESMetaContactContentsPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESMetaContactContentsPlugin.h; path = Source/ESMetaContactContentsPlugin.h; sourceTree = "<group>"; };
 		347EAB2C09721D490090EA6E /* pref-personal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pref-personal.png"; path = "Resources/pref-personal.png"; sourceTree = "<group>"; };
+		347F4B7F0D340F16006D5A56 /* AIPreferenceContainer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIPreferenceContainer.h; path = Source/AIPreferenceContainer.h; sourceTree = "<group>"; };
+		347F4B800D340F16006D5A56 /* AIPreferenceContainer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIPreferenceContainer.m; path = Source/AIPreferenceContainer.m; sourceTree = "<group>"; };
 		347F50E4094743B100CEF1FF /* AdiumAddressBookAction_Yahoo.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; name = AdiumAddressBookAction_Yahoo.scpt; path = Resources/AdiumAddressBookAction_Yahoo.scpt; sourceTree = "<group>"; };
 		347F50E5094743B100CEF1FF /* AdiumAddressBookAction_AIM.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; name = AdiumAddressBookAction_AIM.scpt; path = Resources/AdiumAddressBookAction_AIM.scpt; sourceTree = "<group>"; };
 		347F50E6094743B100CEF1FF /* AdiumAddressBookAction_ICQ.scpt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.scpt; name = AdiumAddressBookAction_ICQ.scpt; path = Resources/AdiumAddressBookAction_ICQ.scpt; sourceTree = "<group>"; };
@@ -6402,6 +6405,8 @@
 				F57938AD033E737001A8010A /* AILoginController.m */,
 				F57938ED033E745F01A8010A /* AIPreferenceController.h */,
 				F57938AF033E737001A8010A /* AIPreferenceController.m */,
+				347F4B7F0D340F16006D5A56 /* AIPreferenceContainer.h */,
+				347F4B800D340F16006D5A56 /* AIPreferenceContainer.m */,
 				340C1E750BD59A0500D09235 /* GBImportPlugin.m */,
 				340C1E760BD59A0500D09235 /* GBImportPlugin.h */,
 				344C0D4306B6D5E300DA7200 /* Applescriptability */,
@@ -9014,6 +9019,7 @@
 				34A9706F0C965F8E00F46006 /* AIAddBookmarkPlugin.m in Sources */,
 				343BB5020C96CB2000506F9B /* AINewBookmarkWindowController.m in Sources */,
 				34F8D2AE0CF68FEB00F62536 /* AIUserListOutlineView.m in Sources */,
+				347F4B810D340F16006D5A56 /* AIPreferenceContainer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
