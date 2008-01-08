@@ -255,6 +255,9 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	_preferredContact = nil;
 	[_listContacts release]; _listContacts = nil;
 	[_listContactsIncludingOfflineAccounts release]; _listContactsIncludingOfflineAccounts = nil;
+	
+	//Our effective icon may have changed
+	[AIUserIcons flushCacheForObject:self];
 }
 
 /*!
@@ -286,10 +289,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		if (containsOnlyOneUniqueContact) {
 			[self _determineIfWeShouldAppearToContainOnlyOneContact];
 		}
-		
-		//Our effective icon may have changed
-		[AIUserIcons flushCacheForObject:self];
-		
+
 		//Add the object from our status cache, notifying of the changes (silently) as appropriate
 		[self _updateCachedStatusOfObject:inObject];
 
@@ -332,9 +332,6 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		if (!containsOnlyOneUniqueContact) {
 			[self _determineIfWeShouldAppearToContainOnlyOneContact];
 		}
-
-		//Our effective icon may have changed
-		[AIUserIcons flushCacheForObject:self];
 
 		//Remove all references to the object from our status cache; notifying of the changes as appropriate
 		[self _removeCachedStatusOfObject:inObject];
@@ -1213,9 +1210,6 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	containedObjectsNeedsSort = YES;
 
 	[self clearContainedObjectInfoCache];
-
-	//Our effective icon may have changed
-	[AIUserIcons flushCacheForObject:self];
 }
 
 - (float)smallestOrder
@@ -1235,10 +1229,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	delayContainedObjectSorting = flag;
 	
 	if (!delayContainedObjectSorting) {
-		[self clearContainedObjectInfoCache];
-		
-		//Our effective icon may have changed
-		[AIUserIcons flushCacheForObject:self];
+		[self clearContainedObjectInfoCache];		
 	}
 }
 
