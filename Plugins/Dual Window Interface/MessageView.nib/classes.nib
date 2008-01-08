@@ -68,6 +68,9 @@
             LANGUAGE = ObjC;
             OUTLETS =             {
                 "customView_messages" = NSView;
+                "nibrootView_messageView" = NSView;
+                "nibrootView_shelfVew" = NSView;
+                "nibrootView_userList" = NSView;
                 "scrollView_messages" = NSScrollView;
                 "scrollView_outgoing" = NSScrollView;
                 "scrollView_userList" = AIAutoScrollView;
