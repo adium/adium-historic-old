@@ -15,10 +15,10 @@
  */
 
 #import "ESDebugController.h"
-
-#import "AIMenuController.h"
-#import "AIPreferenceController.h"
 #import "ESDebugWindowController.h"
+
+#import <Adium/AIMenuControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIMenuAdditions.h>
 
 #include <fcntl.h>  //open(2)
