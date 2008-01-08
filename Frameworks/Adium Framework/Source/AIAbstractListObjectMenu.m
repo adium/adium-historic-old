@@ -143,7 +143,9 @@
 }
 
 /*!
- * @brief Returns a menu image for the account
+ * @brief Returns a menu image for the object
+ *
+ * @param useUserIcon If YES, the status icon and user icon will be used. If NO, the status icon and service icon will be used.
  */
 - (NSImage *)imageForListObject:(AIListObject *)listObject usingUserIcon:(BOOL)useUserIcon
 {
