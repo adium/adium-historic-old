@@ -44,6 +44,10 @@
 	IBOutlet	NSScrollView			*scrollView_outgoing;
 	IBOutlet	AIMessageEntryTextView	*textView_outgoing;
 	
+	IBOutlet	NSView					*nibrootView_messageView;
+	IBOutlet	NSView					*nibrootView_shelfVew;
+	IBOutlet	NSView					*nibrootView_userList;
+
 	//
     NSObject<AIMessageDisplayController>	*messageDisplayController;
 	AIAccountSelectionView					*view_accountSelection;
