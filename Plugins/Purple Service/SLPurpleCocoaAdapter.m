@@ -175,6 +175,9 @@ static void ZombieKiller_Signal(int i)
 	NSString	*purpleUserDir = [[[adium loginController] userDirectory] stringByAppendingPathComponent:@"libpurple"];
 	purple_util_set_user_dir([[purpleUserDir stringByExpandingTildeInPath] UTF8String]);
 
+	//Set the caches path
+	purple_buddy_icons_set_cache_dir([[[adium cachesPath] stringByExpandingTildeInPath] UTF8String]);
+
 	/* Delete blist.xml once when 1.0 runs to clear out any old silliness */
 	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"Adium 1.0 deleted blist.xml"]) {
 		[[NSFileManager defaultManager] removeFileAtPath:
@@ -192,9 +195,6 @@ static void ZombieKiller_Signal(int i)
 		NSLog(@"*** FATAL ***: Failed to initialize purple core");
 		AILog(@"*** FATAL ***: Failed to initialize purple core");
 	}
-
-	//Set the caches path after initialization is complete
-	purple_buddy_icons_set_cache_dir([[[adium cachesPath] stringByExpandingTildeInPath] UTF8String]);
 
 	//Libpurple's async DNS lookup tends to create zombies.
 	{
