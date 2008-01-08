@@ -209,8 +209,10 @@
 
 	[controllerView_messages release];
 	
-	//Release view_contents, for which we are responsible because we loaded it via -[NSBundle loadNibNamed:owner]
-	[view_contents release];
+	//Release the views for which we are responsible (because we loaded them via -[NSBundle loadNibNamed:owner])
+	[nibrootView_messageView release];
+	[nibrootView_shelfVew release];
+	[nibrootView_userList release];
 
 	//Release the hidden user list view
 	if (retainingScrollViewUserList) {
