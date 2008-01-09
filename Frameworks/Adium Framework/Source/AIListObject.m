@@ -50,12 +50,21 @@
 {
 	if ((self = [super init])) {
 		containingObject = nil;
-		preferencesCacheKey = nil;
 		UID = [inUID retain];	
 		service = inService;
 
 		visible = YES;
 		orderIndex = 0;
+
+		[[adium preferenceController] addObserver:self
+									   forKeyPath:@"Always Visible.Visible"
+										 ofObject:self
+										  options:NSKeyValueObservingOptionNew
+										  context:NULL];
+		[self observeValueForKeyPath:@"Always Visible.Visible"
+							ofObject:nil
+							  change:nil
+							 context:NULL];
 	}
 
 	return self;
@@ -70,11 +79,16 @@
 	[UID release]; UID = nil;
 	[internalObjectID release]; internalObjectID = nil;
 	[containingObject release]; containingObject = nil;
-	[preferencesCacheKey release]; preferencesCacheKey = nil;
 
     [super dealloc];
 }
 
+- (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
+{
+	if ([keyPath hasSuffix:@"Visible"]) {
+		alwaysVisible = [[self preferenceForKey:@"Visible" group:PREF_GROUP_ALWAYS_VISIBLE] boolValue];
+	}
+}
 
 //Identification -------------------------------------------------------------------------------------------------------
 #pragma mark Identification
@@ -181,7 +195,7 @@
  * @brief Sets if list object should always be visible
  */
 - (void)setAlwaysVisible:(BOOL)inVisible {
-	if (inVisible != [self alwaysVisible]) {
+	if (inVisible != alwaysVisible) {
 		[self setPreference:[NSNumber numberWithBool:inVisible] 
 					 forKey:@"Visible" 
 					  group:PREF_GROUP_ALWAYS_VISIBLE];
@@ -197,8 +211,7 @@
  * @returns If object should always be visible
  */
 - (BOOL)alwaysVisible {
-	return [[self preferenceForKey:@"Visible"
-							 group:PREF_GROUP_ALWAYS_VISIBLE] boolValue];
+	return alwaysVisible;
 }
 
 //Grouping / Ownership -------------------------------------------------------------------------------------------------
@@ -403,15 +416,6 @@
 - (NSString *)pathToPreferences
 {
     return OBJECT_PREFS_PATH;
-}
-
-- (NSString *)preferencesCacheKey
-{
-	if (!preferencesCacheKey) {
-		preferencesCacheKey = [[NSString alloc] initWithFormat:@"%@:%@", [self pathToPreferences], [self internalObjectID]];
-	}
-	
-	return preferencesCacheKey;
 }
 
 //Display Name  -------------------------------------------------------------------------------------
