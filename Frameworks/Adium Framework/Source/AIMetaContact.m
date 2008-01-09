@@ -48,8 +48,9 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 //init
 - (id)initWithObjectID:(NSNumber *)inObjectID
 {
+	objectID = [inObjectID retain];
+
 	if ((self = [super initWithUID:[inObjectID stringValue] service:nil])) {
-		objectID = [inObjectID retain];
 		statusCacheDict = [[NSMutableDictionary alloc] init];
 		_preferredContact = nil;
 		_listContacts = nil;
