@@ -79,18 +79,19 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 	SecPolicySearchRef searchRef = NULL;
 	SecPolicyRef policyRef;
 	
-	CSSM_DATA data;
-	err = SecCertificateGetData((SecCertificateRef)CFArrayGetValueAtIndex(certificates, 0), &data);
+	CSSM_DATA *data = malloc(sizeof(CSSM_DATA));
+	err = SecCertificateGetData((SecCertificateRef)CFArrayGetValueAtIndex(certificates, 0), data);
 	if(err == noErr) {
 		// Did we ask the user to confirm this certificate before?
 		// Note that this information is not stored on the disk, which is on purpose.
 		NSUInteger oldCertHash = [[acceptedCertificates objectForKey:hostname] unsignedIntValue];
 		if (oldCertHash) {
-			NSData *certData = [[NSData alloc] initWithBytesNoCopy:data.Data length:data.Length freeWhenDone:NO];
+			NSData *certData = [[NSData alloc] initWithBytesNoCopy:data->Data length:data->Length freeWhenDone:NO];
 			NSUInteger newCertHash = [certData hash];
 			[certData release];
 			
 			if (oldCertHash == newCertHash) {
+				free(data);
 				query_cert_cb(true, userdata);
 				[self release];
 				return;
@@ -102,6 +103,7 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 	err = SecPolicySearchCreate(CSSM_CERT_X_509v3, &CSSMOID_APPLE_TP_SSL, NULL, &searchRef);
 	if(err != noErr) {
 		NSBeep();
+		free(data);
 		[self release];
 		return;
 	}
@@ -109,6 +111,7 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 	err = SecPolicySearchCopyNext(searchRef, &policyRef);
 	if(err != noErr) {
 		CFRelease(searchRef);
+		free(data);
 		NSBeep();
 		[self release];
 		return;
@@ -131,6 +134,7 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 	
 	err = SecTrustCreateWithCertificates(certificates, policyRef, &trustRef);
 	if(err != noErr) {
+		free(data);
 		CFRelease(searchRef);
 		CFRelease(policyRef);
 		if (trustRef)
@@ -197,6 +201,7 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 		[self autorelease];
 	}
 
+	free(data);
 	CFRelease(searchRef);
 	CFRelease(policyRef);
 	CFRelease(trustRef);
@@ -229,12 +234,13 @@ OSStatus SecPolicySetValue(SecPolicyRef policyRef, CSSM_DATA *theCssmData);
 	 * (doing otherwise might be particularily annoying on auto-reconnect)
 	 */
 	if (didTrustCerficate) {
-		CSSM_DATA certdata;
-		OSStatus err = SecCertificateGetData((SecCertificateRef)CFArrayGetValueAtIndex(certificates, 0), &certdata);
+		CSSM_DATA *certdata = malloc(sizeof(CSSM_DATA));
+		OSStatus err = SecCertificateGetData((SecCertificateRef)CFArrayGetValueAtIndex(certificates, 0), certdata);
 		if(err == noErr) {
-			[acceptedCertificates setObject:[NSNumber numberWithUnsignedInt:[[NSData dataWithBytes:certdata.Data length:certdata.Length] hash]]
+			[acceptedCertificates setObject:[NSNumber numberWithUnsignedInt:[[NSData dataWithBytes:certdata->Data length:certdata->Length] hash]]
 									 forKey:hostname];
 		}
+		free(certdata);
 	}
 
 	[trustpanel release];
