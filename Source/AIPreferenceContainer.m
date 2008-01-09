@@ -28,7 +28,7 @@
 - (id)initForGroup:(NSString *)inGroup object:(AIListObject *)inObject
 {
 	if ((self = [super init])) {
-		group = [inGroup copy];
+		group = [inGroup retain];
 		object = [inObject retain];
 	}
 	
@@ -44,6 +44,11 @@
 	[self emptyCache];
 	
 	[super dealloc];
+}
+
++ (BOOL)automaticallyNotifiesObserversForKey:(NSString *)theKey
+{
+	return NO;
 }
 
 #pragma mark Cache
@@ -106,6 +111,8 @@
 		NSString	*userDirectory = [[adium loginController] userDirectory];
 		
 		if (object) {
+			if (![[object internalObjectID] safeFilenameString])
+				NSLog(@"%@ -> %@ ", object, [object internalObjectID]);
 			prefs = [[NSMutableDictionary dictionaryAtPath:[userDirectory stringByAppendingPathComponent:[object pathToPreferences]]
 												  withName:[[object internalObjectID] safeFilenameString]
 													create:YES] retain];
@@ -138,7 +145,7 @@
 		
 		[self queueClearingOfCache];
 	}
-	
+
 	return prefsWithDefaults;
 }
 
@@ -157,8 +164,11 @@
 
 	//Now tell the preference controller
 	if (!preferenceChangeDelays) {
+		if (object) NSLog(@"Telling %@", [adium preferenceController]);
 		[[adium preferenceController] informObserversOfChangedKey:key inGroup:group object:object];
 		[self save];
+	} else {
+		NSLog(@"%@: %i delays", self, preferenceChangeDelays);
 	}
 }
 
@@ -242,6 +252,14 @@
 	NSString	*name = (object ? [[object internalObjectID] safeFilenameString] : group);
 	
 	[[self prefs] writeToPath:path withName:name];
+}
+
+- (void)setGroup:(NSString *)inGroup
+{
+	if (group != inGroup) {
+		[group release];
+		group = [inGroup retain];
+	}
 }
 
 #pragma mark Debug
