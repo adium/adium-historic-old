@@ -673,6 +673,22 @@ static void parseKeypath(NSString *keyPath, NSString **outGroup, NSString **outK
 	[prefContainer addObserver:anObserver forKeyPath:newKeyPath options:options context:context];
 }
 
+- (void)removeObserver:(NSObject *)anObserver forKeyPath:(NSString *)keyPath
+{
+	unsigned periodIdx = [keyPath rangeOfString:@"." options:NSLiteralSearch].location;
+	if(periodIdx == NSNotFound) {
+		[super removeObserver:anObserver forKeyPath:keyPath];
+		
+	} else {
+		NSString *group, *newKeyPath, *internalObjectID;
+		parseKeypath(keyPath, &group, &newKeyPath, &internalObjectID);
+		
+		AIPreferenceContainer *prefContainer = [self preferenceContainerForGroup:group
+																		  object:(internalObjectID ? [[adium contactController] existingListObjectWithUniqueID:internalObjectID] : nil)];
+		[prefContainer removeObserver:anObserver forKeyPath:newKeyPath];
+	}	
+}
+
 - (id) valueForKey:(NSString *)key {
 	return [self preferenceContainerForGroup:key object:nil];
 }
