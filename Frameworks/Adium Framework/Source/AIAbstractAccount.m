@@ -60,31 +60,28 @@
  */
 - (id)initWithUID:(NSString *)inUID internalObjectID:(NSString *)inInternalObjectID service:(AIService *)inService
 {
+	internalObjectID = [inInternalObjectID retain];
+
     if ((self = [super initWithUID:inUID service:inService])) {
 		NSString	*accountModifiedUID;
-
-		internalObjectID = [inInternalObjectID retain];
-		isTemporary = NO;
-
-		accountModifiedUID = [self accountWillSetUID:UID];
-		if (accountModifiedUID != UID) {
-			[UID release];
-			UID = [accountModifiedUID retain];
-		}
 		
-		namesAreCaseSensitive = [[self service] caseSensitive];
+		isTemporary = NO;
+		
+		accountModifiedUID = [self accountWillSetUID:UID];
 
 		//Register the defaults
 		static NSDictionary	*defaults = nil;
-
+		
 		if (!defaults) {
 			defaults = [[NSDictionary dictionaryNamed:ACCOUNT_DEFAULTS
 											 forClass:[AIAccount class]] retain];
 		}
-
+		
 		[[adium preferenceController] registerDefaults:defaults
 											  forGroup:GROUP_ACCOUNT_STATUS
 												object:self];
+
+		namesAreCaseSensitive = [[self service] caseSensitive];
 		
 		enabled = [[self preferenceForKey:KEY_ENABLED group:GROUP_ACCOUNT_STATUS] boolValue];
 
@@ -111,7 +108,7 @@
 
 		//Handle the preference changed monitoring (for account status) for our subclass
 		[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
-		
+
 		//Update our display name and formattedUID immediately
 		[self updateStatusForKey:@"FormattedUID"];
 		
