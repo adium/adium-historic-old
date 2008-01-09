@@ -38,5 +38,6 @@
 
 - (void)setPreferenceChangedNotificationsEnabled:(BOOL)inEnbaled;
 
+- (void)setGroup:(NSString *)inGroup;
 
 @end
