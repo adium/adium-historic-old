@@ -1332,21 +1332,23 @@ static NSArray *draggedTypes = nil;
 
 - (BOOL)zoomImage:(DOMHTMLImageElement *)img
 {
-	NSMutableString *className = [[img className]mutableCopy];
-	if([className rangeOfString:@"fullSizeImage"].location != NSNotFound)
+	NSMutableString *className = [[[img className] mutableCopy] autorelease];
+	if ([className rangeOfString:@"fullSizeImage"].location != NSNotFound)
 		[className replaceOccurrencesOfString:@"fullSizeImage"
 								   withString:@"scaledToFitImage"
 									  options:NSLiteralSearch
 										range:NSMakeRange(0, [className length])];
-	else if([className rangeOfString:@"scaledToFitImage"].location != NSNotFound)
+	else if ([className rangeOfString:@"scaledToFitImage"].location != NSNotFound)
 		[className replaceOccurrencesOfString:@"scaledToFitImage"
 								   withString:@"fullSizeImage"
 									  options:NSLiteralSearch
 										range:NSMakeRange(0, [className length])];
-	else return NO;
+	else 
+		return NO;
 	
 	[img setClassName:className];
 	[[webView windowScriptObject] callWebScriptMethod:@"alignChat" withArguments:[NSArray arrayWithObject:[NSNumber numberWithBool:YES]]];
+
 	return YES;
 }
 
