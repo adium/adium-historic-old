@@ -192,7 +192,7 @@
 
 	//Add our new observer
 	[groupObservers addObject:[NSValue valueWithNonretainedObject:observer]];
-	
+
 	//Blanket change notification for initialization
 	[observer preferencesChangedForGroup:group
 									 key:nil
@@ -438,6 +438,8 @@
 	[prefContainer registerDefaults:defaultDict];
 }
 
+#pragma mark Preference Container
+
 /*!
  * @brief Retrieve an AIPreferenceContainer
  *
@@ -448,11 +450,14 @@
 {
 	AIPreferenceContainer	*prefContainer;
 	
-	//Object specific preferences are stored by path and objectID, while regular preferences are stored by group.
 	if (object) {
-		NSString	*cacheKey = [object preferencesCacheKey];
+		NSString	*cacheKey = [[object internalObjectID] stringByAppendingString:group];
 		
-		if (!(prefContainer = [objectPrefCache objectForKey:cacheKey])) {
+		if ((prefContainer = [objectPrefCache objectForKey:cacheKey])) {
+			//Until we access this pref container again, it will be associated with the passed group
+			[prefContainer setGroup:group];
+
+		} else {
 			prefContainer = [AIPreferenceContainer preferenceContainerForGroup:group
 																		object:object];
 			[objectPrefCache setObject:prefContainer forKey:cacheKey];
@@ -466,7 +471,7 @@
 		}
 	}
 	
-	return prefContainer;
+	return prefContainer;	
 }
 
 
@@ -602,13 +607,91 @@
 
 #pragma mark KVC
 
+static void parseKeypath(NSString *keyPath, NSString **outGroup, NSString **outKeyPath, NSString **outInternalObjectID)
+{
+	NSRange prefixRange = [keyPath rangeOfString:@"Group:" options:NSLiteralSearch | NSAnchoredSearch];
+	NSString *groupWithKeyPath = keyPath;
+	NSString *group = nil, *finalKeyPath = nil;
+	NSString *internalObjectID = nil;
+	
+	if (prefixRange.location == 0) {
+		//Allow a Group: prefix, stripping it out if present.
+		groupWithKeyPath = [keyPath substringFromIndex:prefixRange.length];
+	} else {
+		prefixRange = [keyPath rangeOfString:@"ByObject:" options:(NSLiteralSearch | NSAnchoredSearch)];
+		if (prefixRange.location == 0) {			 
+			keyPath = [keyPath substringFromIndex:prefixRange.length];
+			
+			NSRange nextPeriod = [keyPath rangeOfString:@"." 
+												options:NSLiteralSearch
+												  range:NSMakeRange(0, [keyPath length])];
+			internalObjectID = [keyPath substringToIndex:nextPeriod.location];
+			groupWithKeyPath = [keyPath substringFromIndex:nextPeriod.location + 1];			
+		}
+	}
+	
+	//We need the key to do AIPC change notifications.
+	int periodIdx = [groupWithKeyPath rangeOfString:@"." options:NSLiteralSearch].location;
+	if (periodIdx == NSNotFound) {
+		group = groupWithKeyPath;
+	} else {
+		group = [groupWithKeyPath substringToIndex:periodIdx];
+		finalKeyPath = [groupWithKeyPath substringFromIndex:periodIdx + 1];
+	}
+	
+	if (outGroup) *outGroup = group;
+	if (outKeyPath) *outKeyPath = finalKeyPath;
+	if (outInternalObjectID) *outInternalObjectID = internalObjectID;
+}
+
 + (BOOL) accessInstanceVariablesDirectly {
 	return NO;
+}
+
+- (void)addObserver:(NSObject *)anObserver forKeyPath:(NSString *)keyPath options:(NSKeyValueObservingOptions)options context:(void *)context
+{
+	unsigned periodIdx = [keyPath rangeOfString:@"." options:NSLiteralSearch].location;
+	if(periodIdx == NSNotFound) {
+		[super addObserver:anObserver forKeyPath:keyPath options:options context:context];
+		
+	} else {
+		NSString *group, *newKeyPath, *internalObjectID;
+		parseKeypath(keyPath, &group, &newKeyPath, &internalObjectID);
+
+		AIPreferenceContainer *prefContainer = [self preferenceContainerForGroup:group
+																		  object:(internalObjectID ? [[adium contactController] existingListObjectWithUniqueID:internalObjectID] : nil)];
+		[prefContainer addObserver:anObserver forKeyPath:newKeyPath options:options context:context];
+	}	
+}
+
+- (void)addObserver:(NSObject *)anObserver forKeyPath:(NSString *)keyPath ofObject:(AIListObject *)listObject options:(NSKeyValueObservingOptions)options context:(void *)context
+{
+	NSString *group, *newKeyPath, *internalObjectID;
+	parseKeypath(keyPath, &group, &newKeyPath, &internalObjectID);
+
+	AIPreferenceContainer *prefContainer = [self preferenceContainerForGroup:group object:listObject];		
+	[prefContainer addObserver:anObserver forKeyPath:newKeyPath options:options context:context];
 }
 
 - (id) valueForKey:(NSString *)key {
 	return [self preferenceContainerForGroup:key object:nil];
 }
+
+- (id) valueForKeyPath:(NSString *)keyPath {
+	unsigned periodIdx = [keyPath rangeOfString:@"." options:NSLiteralSearch].location;
+	if(periodIdx == NSNotFound) {
+		return [self valueForKey:keyPath];
+		
+	} else {
+		NSString *group, *newKeyPath, *internalObjectID;
+		parseKeypath(keyPath, &group, &newKeyPath, &internalObjectID);
+
+		return [[self preferenceContainerForGroup:group 
+										   object:(internalObjectID ? [[adium contactController] existingListObjectWithUniqueID:internalObjectID] : nil)]
+				valueForKeyPath:newKeyPath];
+	}
+}
+
 
 /*!
  * @brief Set a dictionary of preferences for a group
@@ -620,21 +703,26 @@
  */
 - (void) setValue:(id)value forKey:(NSString *)key {
 	NSRange prefixRange = [key rangeOfString:@"Group:" options:NSLiteralSearch | NSAnchoredSearch];
-	if(prefixRange.location == 0) {
-		key = [key substringFromIndex:prefixRange.length + 1];
+	NSString *group = nil;
+	NSString *internalObjectID = nil;
+
+	if (prefixRange.location == 0) {
+		group = [key substringFromIndex:prefixRange.length + 1];
 	} else {
-		prefixRange = [key rangeOfString:@"ByObject:" options:NSLiteralSearch | NSAnchoredSearch];
-		 if(prefixRange.location == 0) {
-			NSAssert(NO, @"ByObject is not yet supported in AIPreferenceController KVC methods.");
-//			key = [key substringFromIndex:prefixRange.length + 1];
+		prefixRange = [key rangeOfString:@"ByObject:" options:(NSLiteralSearch | NSAnchoredSearch)];
+		if (prefixRange.location == 0) {			 
+			 key = [key substringFromIndex:prefixRange.length + 1];
+
+			 NSRange nextPeriod = [key rangeOfString:@"." 
+											 options:NSLiteralSearch
+											   range:NSMakeRange(prefixRange.length, [key length] - prefixRange.length)];
+			internalObjectID = [key substringToIndex:nextPeriod.location - 1];
+			group = [key substringFromIndex:nextPeriod.location + 1];			
 		}
 	}
 
 	[[self preferenceContainerForGroup:key object:nil] setPreferences:value];
 }
-
-//- (id) valueForKeyPath:(NSString *)keyPath
-//We don't need this method. NSObject's version works by calling -valueForKey: successively, which works for us.
 
 /* 
  * Key paths:
@@ -645,37 +733,19 @@
  * For example, General.MyKey would refer to the MyKey value of the General group, as would Group:General.MyKey
  */
 - (void) setValue:(id)value forKeyPath:(NSString *)keyPath {
-	//NSLog(@"AIPC setting value %@ for key path %@", value, keyPath);
 	unsigned periodIdx = [keyPath rangeOfString:@"." options:NSLiteralSearch].location;
-	NSString *key = [keyPath substringToIndex:periodIdx];
 	if(periodIdx == NSNotFound) {
+		NSString *key = [keyPath substringToIndex:periodIdx];
+
 		[self setValue:value forKey:key];
 	} else {
-		NSRange prefixRange = [key rangeOfString:@"Group:" options:NSLiteralSearch | NSAnchoredSearch];
-		if(prefixRange.location == 0) {
-			key = [key substringFromIndex:prefixRange.length + 1];
-		} else {
-			prefixRange = [key rangeOfString:@"ByObject:" options:NSLiteralSearch | NSAnchoredSearch];
-			if(prefixRange.location == 0) {
-				NSAssert(NO, @"ByObject is not yet supported in AIPreferenceController KVC methods.");
-//				key = [key substringFromIndex:prefixRange.length + 1];
-			}
-		}
-		keyPath = [keyPath substringFromIndex:periodIdx + 1];
+		NSString *group, *newKeyPath, *internalObjectID;
+		parseKeypath(keyPath, &group, &newKeyPath, &internalObjectID);
 		
-		//We need the key to do AIPC change notifications.
-		NSString *keyInGroup;
-		periodIdx = [keyPath rangeOfString:@"." options:NSLiteralSearch].location;
-		if (periodIdx == NSNotFound) {
-			keyInGroup = keyPath;
-		} else {
-			keyInGroup = [keyPath substringToIndex:periodIdx];
-		}
-
-		//NSLog(@"key path: %@; first key: %@; second key: %@", keyPath, key, keyInGroup);
-
 		//Change the value.
-		[[self preferenceContainerForGroup:key object:nil] setValue:value forKeyPath:keyPath];
+		AIPreferenceContainer *prefContainer = [self preferenceContainerForGroup:group
+																		  object:(internalObjectID ? [[adium contactController] existingListObjectWithUniqueID:internalObjectID] : nil)];
+		[prefContainer setValue:value forKeyPath:newKeyPath];
 	}
 }
 
