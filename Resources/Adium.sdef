@@ -96,6 +96,10 @@
 			<property name="account" code="Cact" type="account" access="r" description="The account associated with this chat">
 				<cocoa key="scriptingAccount" />
 			</property>
+            <property name="date opened" code="CDop" type="date" access="r" description="The date ad time at which this chat was opened">
+            	<cocoa key="dateOpened" />
+            </property>
+
 			<property name="index" code="pidx" type="integer" access="r" description="The index of this tab in the chat window" />
 			<property name="window" code="cwin" type="window" access="r" description="The window this chat is in" />
 			<element type="contact">
