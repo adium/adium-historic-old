@@ -111,8 +111,6 @@
 		NSString	*userDirectory = [[adium loginController] userDirectory];
 		
 		if (object) {
-			if (![[object internalObjectID] safeFilenameString])
-				NSLog(@"%@ -> %@ ", object, [object internalObjectID]);
 			prefs = [[NSMutableDictionary dictionaryAtPath:[userDirectory stringByAppendingPathComponent:[object pathToPreferences]]
 												  withName:[[object internalObjectID] safeFilenameString]
 													create:YES] retain];
@@ -164,11 +162,8 @@
 
 	//Now tell the preference controller
 	if (!preferenceChangeDelays) {
-		if (object) NSLog(@"Telling %@", [adium preferenceController]);
 		[[adium preferenceController] informObserversOfChangedKey:key inGroup:group object:object];
 		[self save];
-	} else {
-		NSLog(@"%@: %i delays", self, preferenceChangeDelays);
 	}
 }
 
