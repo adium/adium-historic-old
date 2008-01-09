@@ -284,13 +284,12 @@
 }
 
 - (id)authorizationRequestWithDict:(NSDictionary*)dict {
-	id handle;
-	switch([[self preferenceForKey:KEY_JABBER_SUBSCRIPTION_BEHAVIOR group:GROUP_ACCOUNT_STATUS] intValue]) {
+	switch ([[self preferenceForKey:KEY_JABBER_SUBSCRIPTION_BEHAVIOR group:GROUP_ACCOUNT_STATUS] intValue]) {
 		case 2: // always accept + add
 			// add
 			{
 				NSString *groupname = [self preferenceForKey:KEY_JABBER_SUBSCRIPTION_GROUP group:GROUP_ACCOUNT_STATUS];
-				if([groupname length] > 0) {
+				if ([groupname length] > 0) {
 					AIListContact *contact = [[adium contactController] contactWithService:[self service] account:self UID:[dict objectForKey:@"Remote Name"]];
 					AIListGroup *group = [[adium contactController] groupWithUID:groupname];
 					[[adium contactController] addContacts:[NSArray arrayWithObject:contact] toGroup:group];
@@ -299,23 +298,15 @@
 			// fallthrough
 		case 1: // always accept
 			[[self purpleThread] doAuthRequestCbValue:[[[dict objectForKey:@"authorizeCB"] retain] autorelease] withUserDataValue:[[[dict objectForKey:@"userData"] retain] autorelease]];
-			handle = [[NSObject alloc] init];
 			break;
 		case 3: // always deny
 			[[self purpleThread] doAuthRequestCbValue:[[[dict objectForKey:@"denyCB"] retain] autorelease] withUserDataValue:[[[dict objectForKey:@"userData"] retain] autorelease]];
-			handle = [[NSObject alloc] init];
 			break;
 		default: // ask (should be 0)
 			return [super authorizationRequestWithDict:dict];
 	}
-	
-	// we can't execute this immediately, since libpurple doesn't know about the handle yet
-	[self performSelector:@selector(closeAuthRequest:) withObject:handle afterDelay:0.0];
-	return handle;
-}
 
-- (void)closeAuthRequest:(id)handle {
-	purple_account_request_close(handle);
+	return NULL;
 }
 
 - (void)purpleAccountRegistered:(BOOL)success
