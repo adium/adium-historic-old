@@ -366,7 +366,9 @@
 	// Badge the highlight image and set it.
 	[statusItem setAlternateImage:[self badgeDuck:alternateMenuIcon withImage:badge]];
 	// Update our unread count.
-	[self updateUnreadCount];
+	if (showUnreadCount) {
+		[self updateUnreadCount];
+	}
 }
 
 - (NSImage *)badgeDuck:(NSImage *)duckImage withImage:(NSImage *)badgeImage 
@@ -779,6 +781,7 @@
 		flashUnviewed = [[prefDict objectForKey:KEY_STATUS_MENU_ITEM_FLASH] boolValue];
 		
 		[self updateMenuIcons];
+		[self updateUnreadCount];
 	}
 }
 
