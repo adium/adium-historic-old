@@ -12,7 +12,7 @@ BUILDCONFIGURATION?=$(DEFAULT_BUILDCONFIGURATION)
 CP=ditto --rsrc
 RM=rm
 
-.PHONY: all adium clean localizable-strings latest test astest
+.PHONY: all adium clean localizable-strings latest test astest install
 
 adium:
 	xcodebuild -project Adium.xcodeproj -configuration $(BUILDCONFIGURATION) CFLAGS="$(ADIUM_CFLAGS)" build
@@ -22,9 +22,8 @@ test:
 astest:
 	osascript unittest\ runner.applescript | tr '\r' '\n'
 
-#install:
-#	    cp -R build/Adium.app ~/Applications/
-#	    cp -R build/AIUtilities.framework ~/Library/Frameworks/
+install:
+	cp -R build/$(BUILDCONFIGURATION)/Adium.app ~/Applications/
 
 clean:
 	xcodebuild -project Adium.xcodeproj -configuration $(BUILDCONFIGURATION)  clean
