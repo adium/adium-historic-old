@@ -142,6 +142,11 @@
  		[iTunesCurrentInfo release];
  		NSMutableDictionary *mutableNewInfo = [newInfo mutableCopy];
 
+		//If we get a stream title, use that as the track name
+		if ([mutableNewInfo objectForKey:ITUNES_STREAM_TITLE] && [[mutableNewInfo objectForKey:ITUNES_STREAM_TITLE] length])
+			[mutableNewInfo setObject:[mutableNewInfo objectForKey:ITUNES_STREAM_TITLE]
+							   forKey:ITUNES_NAME];
+
 		NSEnumerator *enumerator = [newInfo keyEnumerator];
 		NSString *key;
 		while ((key = [enumerator nextObject])) {
@@ -490,7 +495,7 @@
 - (void)iTunesUpdate:(NSNotification *)aNotification
 {
 	NSDictionary *newInfo = [aNotification userInfo];
-
+	NSLog(@"newInfo is %@", newInfo);
 	[self setiTunesCurrentInfo:newInfo];
 }
 
