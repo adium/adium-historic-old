@@ -513,4 +513,9 @@
 		   name:[self serviceID]] autorelease];
 }
 
+- (NSData *)image
+{
+	return [[AIServiceIcons serviceIconForService:self type:AIServiceIconLarge direction:AIIconNormal] TIFFRepresentation];
+}
+
 @end

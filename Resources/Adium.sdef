@@ -45,6 +45,7 @@
 			<property name="name" code="pnam" type="text" access="r" description="The name of the service.">
 				<cocoa key="serviceID" />
 			</property>
+			<property name="image" code="Pimg" type="TIFF picture" access="r" description="The image associated with this service." />
 			<element type="account" />
 		</class>
 		<class name="window" code="cwin" description="A window in Adium">
