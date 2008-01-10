@@ -495,7 +495,6 @@
 - (void)iTunesUpdate:(NSNotification *)aNotification
 {
 	NSDictionary *newInfo = [aNotification userInfo];
-	NSLog(@"newInfo is %@", newInfo);
 	[self setiTunesCurrentInfo:newInfo];
 }
 
