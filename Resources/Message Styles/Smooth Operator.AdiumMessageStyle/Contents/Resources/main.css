@@ -10,9 +10,10 @@ body {
 .context .outgoing { color: #47508F; }
 
 .container {
-    position: relative;
-    background: url("images/bottom_right.png") bottom right no-repeat;
+    	position: relative;
+    	background: url("images/bottom_right.png") bottom right no-repeat;
 	margin: 15px 0px 0px 43px;
+	min-height: 25px;
 }
 
 .context {
@@ -62,7 +63,7 @@ body {
     float: left;
     background: 29px url("images/arrow.png") no-repeat;
     margin-left: -40px;
-    margin-top: 5px;
+    margin-top: 10px;
     font-size: 9px;
     text-shadow: 1px 1px 3px #ddd;
     color: #bfbfbf;
@@ -75,7 +76,6 @@ body {
     top: -5px;
     left: -29px;
     z-index: 4;
-	height: 40px;
 	width: 40px;
     }
 	
@@ -87,27 +87,29 @@ body {
 	}
     
 .message {
-    position: relative;
-    background: url("images/bottom_left.png") bottom left repeat-y;
-    top: 0;
-    left: -41px;
-    margin-right: -24px;
-    text-shadow: 1px 1px 3px #ccc;
-    padding: 6px 0 10px 56px;
-    color: #404040;
-    }
+	position: relative;
+	background: url("images/bottom_left.png") bottom left repeat-y;
+	margin: 0px -24px 0px -41px;
+	text-shadow: 1px 1px 3px #ccc;
+	padding: 10px 0 10px 56px;
+	min-height: 25px;
+	color: #404040;
+}
  
 .context .message {
 	background: url("images/context_bottom_left.png") bottom left repeat-y;
 	color: #666666;
 	}    
    
- p {
-    padding: 0;
-    margin-bottom: 6px;
+.text {
+	padding: 0 40px 0 0;
+	margin: 0;
 	overflow: auto;
 }
-    
+ 
+.time_consecutive + .text{ /* Next message in same bubble */
+	margin-top: 7px;
+}   
 .status_container {
     position: relative;
     margin: 0px 5px 5px 5px;
