@@ -22,6 +22,7 @@ typedef enum {
 #define ITUNES_GENRE		@"Genre"
 #define ITUNES_PLAYER_STATE	@"Player State"
 #define ITUNES_NAME			@"Name"
+#define ITUNES_STREAM_TITLE @"Stream Title"
 #define ITUNES_STORE_URL	@"Store URL"
 #define ITUNES_TOTAL_TIME	@"Total Time"
 #define ITUNES_YEAR			@"Year"
