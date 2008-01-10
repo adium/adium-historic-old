@@ -23,7 +23,7 @@
     NSData *tiffData = nil;
     NSAppleEventDescriptor *tiffDataDescriptor = [inDescriptor coerceToDescriptorType:typeTIFF];
     if (tiffDataDescriptor) {
-		NSData *tiffData = [NSData dataWithData:[tiffDataDescriptor data]];
+		tiffData = [NSData dataWithData:[tiffDataDescriptor data]];
     }
     return tiffData;
 }
