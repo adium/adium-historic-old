@@ -115,6 +115,7 @@ OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMA
 	if( actionButtonImage ){ [actionButtonImage release]; }
 	if( shelfBackgroundColor ){ [shelfBackgroundColor release]; }
 	if( contextButtonMenu ){ [contextButtonMenu release]; }
+	if( background ){ [background release]; }
 	
 	[self unbind:@"contextButtonMenu"];
 
