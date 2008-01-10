@@ -18,6 +18,6 @@
 
 
 @interface NSData(NSDataAdditions)
-+ (NSData *)scriptingTIFFPictureWithDescriptor:(NSAppleEventDescriptor *)inDescriptor;
-- (NSAppleEventDescriptor *)scriptingTIFFPictureDescriptor;
++ (NSData *)scriptingTiffPictureWithDescriptor:(NSAppleEventDescriptor *)inDescriptor;
+- (NSAppleEventDescriptor *)scriptingTiffPictureDescriptor;
 @end
