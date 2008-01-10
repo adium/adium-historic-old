@@ -29,7 +29,7 @@ body {
 	height: 14px;
 	margin-right: 4px;
 	overflow: hidden;
-	padding-right: 0px;
+	padding-right: 30px;
 }
 
 .buddyicon {
@@ -66,14 +66,15 @@ body {
 
 .message {
 	overflow: auto;
+	margin: 0;
+	padding: 0;
+}
+.message-next{
 }
 
-p {
-	margin: 0px;
-	padding-top: 2px;
-	padding-bottom: 2px;
-	padding-left: 4px;
-	padding-right: 4px;
+.text {
+	margin: 0 40px 0 0;
+	padding: 2px 4px 2px 4px;
 }
 
 .status_container {
