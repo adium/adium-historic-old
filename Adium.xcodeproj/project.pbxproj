@@ -70,6 +70,7 @@
 		0CAC6A140C0C657A0090AE95 /* Adium.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 0CAC6A130C0C657A0090AE95 /* Adium.sdef */; };
 		0CD3C3AD0C43C8CC003E637C /* NSWindowScriptingAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD3C3AB0C43C8CC003E637C /* NSWindowScriptingAdditions.m */; };
 		0CD41C710C2776550082F83B /* AICreateCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CD41C6F0C2776550082F83B /* AICreateCommand.m */; };
+		0CFA98C90D35C18000A077C6 /* NSDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CFA98C70D35C18000A077C6 /* NSDataAdditions.m */; };
 		110763F608676CC9005987A5 /* RAFBlockEditorPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */; };
 		110763F808676CC9005987A5 /* RAFBlockEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F408676CC9005987A5 /* RAFBlockEditorWindowController.m */; };
 		110763FA08676D05005987A5 /* BlockEditorWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 110763F908676D04005987A5 /* BlockEditorWindow.nib */; };
@@ -1641,6 +1642,8 @@
 		0CD3C3AB0C43C8CC003E637C /* NSWindowScriptingAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSWindowScriptingAdditions.m; path = Source/NSWindowScriptingAdditions.m; sourceTree = "<group>"; };
 		0CD41C6E0C2776540082F83B /* AICreateCommand.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AICreateCommand.h; path = Source/AICreateCommand.h; sourceTree = "<group>"; };
 		0CD41C6F0C2776550082F83B /* AICreateCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AICreateCommand.m; path = Source/AICreateCommand.m; sourceTree = "<group>"; };
+		0CFA98C60D35C18000A077C6 /* NSDataAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSDataAdditions.h; path = Source/NSDataAdditions.h; sourceTree = "<group>"; };
+		0CFA98C70D35C18000A077C6 /* NSDataAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NSDataAdditions.m; path = Source/NSDataAdditions.m; sourceTree = "<group>"; };
 		110763F108676CC9005987A5 /* RAFBlockEditorPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorPlugin.h; path = Source/RAFBlockEditorPlugin.h; sourceTree = "<group>"; };
 		110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFBlockEditorPlugin.m; path = Source/RAFBlockEditorPlugin.m; sourceTree = "<group>"; };
 		110763F308676CC9005987A5 /* RAFBlockEditorWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorWindowController.h; path = Source/RAFBlockEditorWindowController.h; sourceTree = "<group>"; };
@@ -4741,6 +4744,8 @@
 				0CD3C3AB0C43C8CC003E637C /* NSWindowScriptingAdditions.m */,
 				0C27C8630C75A23A002AA363 /* NSStringScriptingAdditions.h */,
 				0C27C8640C75A23A002AA363 /* NSStringScriptingAdditions.m */,
+				0CFA98C60D35C18000A077C6 /* NSDataAdditions.h */,
+				0CFA98C70D35C18000A077C6 /* NSDataAdditions.m */,
 			);
 			name = Applescriptability;
 			sourceTree = "<group>";
@@ -9047,6 +9052,7 @@
 				34F8D2AE0CF68FEB00F62536 /* AIUserListOutlineView.m in Sources */,
 				3403F4320D2EF01D006B08FB /* AIAddressBookUserIconSource.m in Sources */,
 				347F4B810D340F16006D5A56 /* AIPreferenceContainer.m in Sources */,
+				0CFA98C90D35C18000A077C6 /* NSDataAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

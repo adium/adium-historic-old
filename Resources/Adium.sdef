@@ -2,6 +2,9 @@
 <!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
 <dictionary title="Adium Terminology">
 	<suite name="Adium Suite" code="Adum" description="AppleScript support for Adium">
+		<value-type name="TIFF picture" code="TIFF">
+			<cocoa class="NSData"/>
+		</value-type>
 		<class name="application" code="capp" description="Adium's application class">
 			<cocoa class="AIApplication" />
 			<property name="name" code="pnam" type="text" access="r" description="The name of the application."/>
@@ -175,6 +178,9 @@
 			</property>
 			<property name="status message" code="Pstm" type="rich text" access="r" description="The custom status message for this contact.">
 				<cocoa key="scriptingStatusMessage" />
+			</property>
+			<property name="image" code="Pimg" type="TIFF picture" access="r" description="The image associated with this contact.">
+				<cocoa key="userIconData" />
 			</property>
 		</class>
 		<class name="status" plural="statuses" code="Csts" description="A saved status in Adium">
