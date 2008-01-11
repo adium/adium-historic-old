@@ -790,8 +790,11 @@
 	if ([NSApp isOnLeopardOrBetter]) {
 		//Attempt to maximize the message view's size.  We'll automatically restrict it to the correct minimum via the NSSplitView's delegate methods.
 		[splitView_textEntryHorizontal adjustSubviews];
+		
+		ignorePositionChangesForMinimumHeight = YES;
 		[splitView_textEntryHorizontal setPosition:(NSHeight([splitView_textEntryHorizontal frame]) - height)
 								  ofDividerAtIndex:0];
+		ignorePositionChangesForMinimumHeight = NO;
 		
 	} else {
 		NSRect	tempFrame, newFrame;
@@ -1129,7 +1132,8 @@
 - (float)splitView:(NSSplitView *)sender constrainSplitPosition:(float)proposedPosition ofSubviewAt:(int)index
 {
 	if (sender == splitView_textEntryHorizontal) {
-		entryMinHeight = (int)([sender frame].size.height - proposedPosition);
+		if (!ignorePositionChangesForMinimumHeight)
+			entryMinHeight = (int)([sender frame].size.height - proposedPosition);
 	} else {
 		NSLog(@"Unknown split view %@",sender);
 		return 0;
