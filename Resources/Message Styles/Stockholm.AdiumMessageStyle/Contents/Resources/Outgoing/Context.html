@@ -11,15 +11,15 @@
 				<div class="outgoingheader_ctx_left"></div>
 				<div class="outgoingheader_ctx_center">
 						<div class="sender">%sender%</div>
-						<div class="time">%time%</div>
+						<div class="time">%time{%1I:%M}%</div>
 				</div>
 				<div class="outgoingheader_ctx_right"></div>
 			</div>
 			<div class="message">
 				<div class="outgoingmessage_left"></div>
 				<div class="outgoingmessage_right"></div>
-					<div class="text" style="background-color:%textbackgroundcolor{}%;">
-						%message%
+					<div class="text">
+							<p>%message%</p>
 						<div id="insert" border="1"></div>
 					</div>
 			</div>
