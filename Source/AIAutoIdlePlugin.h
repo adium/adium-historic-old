@@ -18,7 +18,6 @@
 
 @interface AIAutoIdlePlugin : AIPlugin {
 	BOOL	automaticIdleSet;
-	NSDate	*automaticIdleDate;
 	
 	BOOL	reportIdleTime;
 	double	idleTimeInterval;
