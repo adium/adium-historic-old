@@ -182,7 +182,7 @@
 			<property name="status message" code="Pstm" type="rich text" access="r" description="The custom status message for this contact.">
 				<cocoa key="scriptingStatusMessage" />
 			</property>
-			<property name="image" code="Pimg" type="TIFF picture" access="r" description="The image associated with this contact.">
+			<property name="image" code="Pimg" type="TIFF picture" access="rw" description="The image associated with this contact.">
 				<cocoa key="userIconData" />
 			</property>
 		</class>

@@ -56,5 +56,6 @@ Zachary West
 Ofri Wolfus
 Brian Dickman
 Jordan Schelew
+Mike Timm
 
 If you have contributed to Adium and are not on this list, please contact us.
