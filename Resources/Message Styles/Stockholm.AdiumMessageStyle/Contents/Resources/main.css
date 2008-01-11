@@ -10,7 +10,7 @@ body {
 }
 p {
 	margin: 0;
-	padding: 0;
+	padding: 0px;
 	overflow: auto;
 }
 
@@ -21,8 +21,6 @@ a {
 img {
 	border:	none;
 }
-
-img.scaledToFitImage{ width:auto; }
 
 .container, .ctx_container {
 	margin: 0 2px 0 6px;
@@ -79,25 +77,32 @@ img.scaledToFitImage{ width:auto; }
 /* HEADER */
 
 .header {
-	height:21px;
+	font-size: 11px;
+	height:21px; 
 	color: #FFF;
+	font-family:Lucida Grande;
 	font-weight:bold;
-	text-shadow: #555555 2px 2px 2px;
+	text-shadow: #4D4D4D 2px 2px 1px;
 }
 
 .sender {
-	padding:2px 30px 0 7px;
+	padding:2px 30px 0 6px;
 	overflow:hidden;
 	height:15px;
-	font-size: 11px;
 }
 
 .time {
 	position: absolute;
-	right:6px;
+	right:5px;
 	top:2px;
-	font-size: 11px;
 }
+
+.time {
+	position: absolute;
+	right:5px;
+	top:2px;
+}
+
 
 /* MESSAGE */
 
@@ -127,6 +132,7 @@ img.scaledToFitImage{ width:auto; }
 	right: 0px;
 	top:21px;
 }
+
 
 .text, .text_ctx {
 	line-height: 1.3em;
@@ -172,6 +178,8 @@ img.scaledToFitImage{ width:auto; }
 /* STATUS */
 
 .status_container {
+	font-size: 10px;
+	font-family:Lucida Grande;
 	margin:11px 2px 0px 6px;
 	position:relative;
 	clear:both;
@@ -302,6 +310,19 @@ img.scaledToFitImage{ width:auto; }
 	margin-top: 3px;
 	padding-top: 2px;
 	border-top: 1px solid #DDDDDD;
+}
+
+.combine:hover .ctime {
+	visibility: visible;
+}
+
+.combine .ctime {
+	float: right; 
+	color: #8f8f8f;
+	top: 14px;
+	margin-right: -3px;
+	text-align:right;
+	visibility: hidden;
 }
 
 
