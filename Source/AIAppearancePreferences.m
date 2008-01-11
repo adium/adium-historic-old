@@ -497,7 +497,7 @@ typedef enum {
 {
 	NSString *theme = [[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_APPEARANCE];	
 	
-	[ESPresetNameSheetController showPresetNameSheetWithDefaultName:[theme stringByAppendingString:@" Copy"]
+	[ESPresetNameSheetController showPresetNameSheetWithDefaultName:[[theme stringByAppendingString:@" "] stringByAppendingString:AILocalizedString(@"(Copy)", nil)]
 													explanatoryText:AILocalizedString(@"Enter a unique name for this new theme.",nil)
 														   onWindow:[[self view] window]
 													notifyingTarget:self
@@ -540,10 +540,14 @@ typedef enum {
 		//Revert back to selected theme
 		NSString *theme = [[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_APPEARANCE];	
 		
+		//Reapply the selected theme
 		[plugin applySetWithName:theme
 					   extension:LIST_THEME_EXTENSION
 						inFolder:LIST_THEME_FOLDER
 			   toPreferenceGroup:PREF_GROUP_LIST_THEME];
+			   
+		//Revert back to the current theme name in popUp_colorTheme component
+		[popUp_colorTheme selectItemWithTitle:[[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_APPEARANCE]];		
 	}
 	
 
@@ -573,7 +577,7 @@ typedef enum {
 {
 	NSString *layout = [[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME group:PREF_GROUP_APPEARANCE];
 	
-	[ESPresetNameSheetController showPresetNameSheetWithDefaultName:[layout stringByAppendingString:@" Copy"]
+	[ESPresetNameSheetController showPresetNameSheetWithDefaultName:[[layout stringByAppendingString:@" "] stringByAppendingString:AILocalizedString(@"(Copy)",nil)]
 													explanatoryText:AILocalizedString(@"Enter a unique name for this new layout.",nil)
 														   onWindow:[[self view] window]
 													notifyingTarget:self
@@ -615,11 +619,15 @@ typedef enum {
 	} else {
 		//Revert back to selected layout
 		NSString *layout = [[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME group:PREF_GROUP_APPEARANCE];	
-		
+
+		//Reapply the selected layout
 		[plugin applySetWithName:layout
 					   extension:LIST_LAYOUT_EXTENSION
 						inFolder:LIST_LAYOUT_FOLDER
 			   toPreferenceGroup:PREF_GROUP_LIST_LAYOUT];
+			   
+		//Revert back to the current layout name in popUp_listLayout component
+		[popUp_listLayout selectItemWithTitle:[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME group:PREF_GROUP_APPEARANCE]];
 	}
 	
 	//No longer allow alpha in our color pickers
@@ -675,6 +683,7 @@ typedef enum {
 {
 	switch (returnCode) {
 		case ESPresetNameSheetOkayReturn:
+			//User has created a new theme/layout	: show the editor
 			if ([userInfo isEqualToString:@"theme"]) {
 				[self performSelector:@selector(_editListThemeWithName:) withObject:newName afterDelay:0.00001];
 			} else {
@@ -683,8 +692,13 @@ typedef enum {
 		break;
 			
 		case ESPresetNameSheetCancelReturn:
-			//Do nothing
-		break;
+			//User has canceled the operation	: revert back to the current theme 
+			if ([userInfo isEqualToString:@"theme"]) {
+				[popUp_colorTheme selectItemWithTitle:[[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_APPEARANCE]];
+			} else {
+				[popUp_listLayout selectItemWithTitle:[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME group:PREF_GROUP_APPEARANCE]];
+			}			
+		break;	
 	}
 }
 - (void)_editListThemeWithName:(NSString *)name{
