@@ -33,7 +33,6 @@
 
 #import "AIAddressBookUserIconSource.h"
 
-
 #define IMAGE_LOOKUP_INTERVAL   0.01
 #define SHOW_IN_AB_CONTEXTUAL_MENU_TITLE AILocalizedString(@"Show In Address Book", "Show In Address Book Contextual Menu")
 #define EDIT_IN_AB_CONTEXTUAL_MENU_TITLE AILocalizedString(@"Edit In Address Book", "Edit In Address Book Contextual Menu")
@@ -43,6 +42,8 @@
 #define CONTACT_ADDED_SUCCESS_Message	AILocalizedString(@"%@ had been successfully added to the Address Book.\nWould you like to edit the card now?", nil)
 #define CONTACT_ADDED_ERROR_TITLE		AILocalizedString(@"Error", nil)
 #define CONTACT_ADDED_ERROR_Message		AILocalizedString(@"An error had occurred while adding %@ to the Address Book.", nil)
+
+#define KEY_ADDRESS_BOOK_ACTIONS_INSTALLED	@"Adium:Installed Adress Book Actions 1.2"
 
 @interface ESAddressBookIntegrationPlugin(PRIVATE)
 + (ABPerson *)_searchForUID:(NSString *)UID serviceID:(NSString *)serviceID;
@@ -146,7 +147,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 
 - (void)installAddressBookActions
 {
-	NSNumber		*installedActions = [[NSUserDefaults standardUserDefaults] objectForKey:@"Adium:Installed Adress Book Actions 1.2"];
+	NSNumber		*installedActions = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_ADDRESS_BOOK_ACTIONS_INSTALLED];
 	
 	if (!installedActions || ![installedActions boolValue]) {
 		NSEnumerator  *enumerator = [[NSArray arrayWithObjects:@"AIM", @"MSN", @"Yahoo", @"ICQ", @"Jabber", @"SMS", nil] objectEnumerator];
@@ -188,7 +189,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 		}
 
 		[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES]
-												  forKey:@"Adium:Installed Adress Book Actions"];
+												  forKey:KEY_ADDRESS_BOOK_ACTIONS_INSTALLED];
 	}
 }
 
