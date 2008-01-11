@@ -67,16 +67,6 @@
 }
 
 /*!
- * Deallocate
- */
-- (void)dealloc
-{
-	[automaticIdleDate release];
-
-	[super dealloc];
-}
-
-/*!
  * @brief Preferences changed
  *
  * Note whether we are supposed to report idle time, and, if so, after how much time.
@@ -102,8 +92,7 @@
 		if (duration > idleTimeInterval) {
 			//If we are over the idle threshold, set our accounts to idle
 			automaticIdleSet = YES;
-			automaticIdleDate = [[[notification userInfo] objectForKey:@"IdleSince"] retain];
-			[[adium preferenceController] setPreference:automaticIdleDate
+			[[adium preferenceController] setPreference:[[notification userInfo] objectForKey:@"IdleSince"]
 												 forKey:@"IdleSince"
 												  group:GROUP_ACCOUNT_STATUS];
 		}
@@ -114,22 +103,13 @@
  * @brief Invoked when machine becomes active
  *
  * Invoked when Adium has an update on machine activity.  If we are currently idle, set our accounts back to active.
- * This method checks to make sure that the current idle is the one we've set.  If it is not, we do not remove the
- * idle time (It's not nice to remove an idle you didn't set).
  */
 - (void)machineIsActive:(NSNotification *)notification
 {
 	if (automaticIdleSet) {
-		//Only clear the idle status if it's the one we set, otherwise it's not ours to touch.
-		if ([[adium preferenceController] preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS] == automaticIdleDate) {
-			[[adium preferenceController] setPreference:nil
-												 forKey:@"IdleSince"
-												  group:GROUP_ACCOUNT_STATUS];
-		}
-		
-		//Clean up
-		[automaticIdleDate release];
-		automaticIdleDate = nil;
+		[[adium preferenceController] setPreference:nil
+											 forKey:@"IdleSince"
+											  group:GROUP_ACCOUNT_STATUS];		
 		automaticIdleSet = NO;
 	}
 }
