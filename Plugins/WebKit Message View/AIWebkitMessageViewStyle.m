@@ -343,9 +343,13 @@ static NSArray *validSenderColors;
 			((showHeader && headerHTML) ? headerHTML : @""),
 			(footerHTML ? footerHTML : @"")];
 	} else {
+		NSString *cssString = styleVersion < 3 ? 
+							   @"" : 
+							   [@"@import url( \"main.css\" );" stringByAppendingString:([chat isGroupChat] ? @"\n@import url( \"groupchat.css\" );" : @"")];
+		
 		templateHTML = [NSMutableString stringWithFormat:baseHTML,						//Template
 			[[NSURL fileURLWithPath:stylePath] absoluteString],							//Base path
-			(styleVersion < 3 ? @"" : @"@import url( \"main.css\" );"),					//Import main.css by default (For version 3 and newer styles)
+			cssString,																	//Import main.css by default, groupchat.css if needed (For version 3 and newer styles)
 			[self pathForVariant:variant],												//Variant path
 			((showHeader && headerHTML) ? headerHTML : @""),
 			(footerHTML ? footerHTML : @"")];
