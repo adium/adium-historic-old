@@ -485,9 +485,6 @@
 {
     [self setAccountSelectionMenuVisibleIfNeeded:NO];
     [self clearTextEntryView];
-	
-	//Redisplay the cursor
-	[NSCursor setHiddenUntilMouseMoves:NO];
 }
 
 /*!
