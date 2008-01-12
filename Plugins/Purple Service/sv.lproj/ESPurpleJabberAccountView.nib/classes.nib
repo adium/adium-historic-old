@@ -69,6 +69,7 @@
             CLASS = ESPurpleJabberAccountViewController;
             LANGUAGE = ObjC;
             OUTLETS =             {
+                "button_register" = NSButton;
                 "checkBox_allowPlaintext" = NSButton;
                 "checkBox_checkCertificates" = NSButton;
                 "checkBox_forceOldSSL" = NSButton;

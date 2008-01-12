@@ -59,6 +59,10 @@
 	return AIServiceSecondary;
 }
 
+- (BOOL)canRegisterNewAccounts{
+	return NO;
+}
+
 /*!
  * @brief Placeholder string for the UID field
  */
