@@ -1748,6 +1748,9 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 													range:NSMakeRange(0, [newLinkString length])];
 				linkString = newLinkString;
 			}
+			
+			//NSURL does not expect an HTML-escaped string, but HTML-escape codes are valid within links (e.g. &amp;)
+			linkString = [linkString stringByUnescapingFromXMLWithEntities:NULL];
 
 			[textAttributes setLinkURL:[NSURL URLWithString:linkString]];
 		}
