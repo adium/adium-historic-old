@@ -16,8 +16,8 @@
 #import <Adium/AIChat.h>
 #import <Adium/AIListBookmark.h>
 
-#define TOOLBAR_ITEM_IDENTIFIER		@"AddBookmark"
-#define ADD_BOOKMARK				@"Add Bookmark"
+#define ADD_BOOKMARKTOOLBAR_ITEM_IDENTIFIER		@"AddBookmark"
+#define ADD_BOOKMARK							AILocalizedString(@"Add Bookmark", "Add a chat bookmark")
 
 @implementation AIAddBookmarkPlugin
 /*!
@@ -27,10 +27,10 @@
 - (void)installPlugin
 {
 	
-	NSToolbarItem	*chatItem = [AIToolbarUtilities toolbarItemWithIdentifier:TOOLBAR_ITEM_IDENTIFIER
+	NSToolbarItem	*chatItem = [AIToolbarUtilities toolbarItemWithIdentifier:ADD_BOOKMARKTOOLBAR_ITEM_IDENTIFIER
 																		  label:ADD_BOOKMARK
 																   paletteLabel:ADD_BOOKMARK
-																		toolTip:@"Bookmark the current chat"
+																		toolTip:AILocalizedString(@"Bookmark the current chat", "tooltip text for Add Bookmark")
 																  		 target:self
 																settingSelector:@selector(setImage:)
 																	itemContent:[NSImage imageNamed:@"AddressBook" forClass:[self class] loadLazily:YES]
