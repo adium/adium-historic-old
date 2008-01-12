@@ -528,7 +528,7 @@ typedef enum {
 - (void)setAccountUserImage:(NSData *)image
 {	
 	NSImage *newImage = (image ? [[[NSImage alloc] initWithData:image] autorelease] : nil);
-	[[self libezvThreadProxy] setContactImage:[newImage JPEGRepresentation]];	
+	[[self libezvThreadProxy] setContactImageData:[newImage JPEGRepresentation]];	
 
 	//We now have an icon
 	[self setStatusObject:newImage forKey:KEY_USER_ICON notify:YES];

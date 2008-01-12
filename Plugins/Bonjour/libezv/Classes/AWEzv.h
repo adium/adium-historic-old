@@ -59,7 +59,7 @@
 - (void) setName:(NSString *)name;
 - (void) setStatus:(AWEzvStatus)status withMessage:(NSString *)message;
 - (void) setIdleTime:(NSDate *)date;
-- (void) setContactImage:(NSData *)contactImage;
+- (void) setContactImageData:(NSData *)contactImage;
 - (AWEzvContact *) contactForIdentifier:(NSString *)uniqueID;
 
 // This API is subject to change

@@ -108,7 +108,7 @@
 	[contact sendMessage:message withHtml:html];
 }
 
-- (void) setContactImage:(NSData *)contactImage {
+- (void) setContactImageData:(NSData *)contactImage {
 	[manager setImageData: contactImage];
 }
 

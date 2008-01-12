@@ -681,7 +681,7 @@ void image_register_reply (
 			}
 		}
 	} else {
-		[contact setContactImage:nil];
+		[contact setContactImageData:nil];
 		[[client client] userChangedImage:contact];
 	}
 
