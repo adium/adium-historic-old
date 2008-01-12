@@ -31,6 +31,8 @@
 	IBOutlet	NSTextField		*textField_subscriptionModeLabel;
 	IBOutlet	NSComboBox		*comboBox_subscriptionGroup;
 
+	IBOutlet	NSButton		*button_register;
+
 	IBOutlet	NSPanel			*window_registerServer;
 	IBOutlet	NSTableView		*tableview_servers;
 	IBOutlet	NSTextField		*textField_registerServerName;
