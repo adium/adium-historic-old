@@ -102,6 +102,9 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 
 - (SLPurpleCocoaAdapter *)purpleThread
 {
+	if (!purpleThread) {
+		purpleThread = [[SLPurpleCocoaAdapter sharedInstance] retain];	
+	}	
 	return purpleThread;
 }
 
