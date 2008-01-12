@@ -465,7 +465,11 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 - (NSString *)fileNameForImageInImagePicker:(AIImageViewWithImagePicker *)picker
 {
-	return [[displayedObject displayName] safeFilenameString];
+	NSString *fileName = [[displayedObject displayName] safeFilenameString];
+	if ([fileName hasPrefix:@"."]) {
+		fileName = [fileName substringFromIndex:1];
+	}
+	return fileName;
 }
 
 #pragma mark Contact List (metaContact)
