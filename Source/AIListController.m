@@ -501,9 +501,11 @@
 			
 		} else {
 			//We have one or more contacts. Don't allow them to drop on the contact list itself
-			if (!item) {
-				/* The user is hovering on the contact list itself.  This actually means that, assuming we have any items in the list at all, she is hovering just below
-				 * a group or an item in a group.  Let's do this right by shifting the drop to object above.
+			if (!item && [[adium contactController] useContactListGroups]) {
+				/* The user is hovering on the contact list itself.
+				 * If groups are shown at all, assuming we have any items in the list at all, she is hovering just below
+				 * a group or an item in a group.
+				 * Do this right by shifting the drop to object above.
 				 */
 				id itemAboveProposedIndex = [outlineView itemAtRow:(index - 1)];
 				if (!itemAboveProposedIndex) {
