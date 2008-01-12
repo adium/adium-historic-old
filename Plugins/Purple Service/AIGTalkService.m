@@ -49,6 +49,9 @@
 - (BOOL)caseSensitive{
 	return NO;
 }
+- (BOOL)canRegisterNewAccounts{
+	return NO;
+}
 - (AIServiceImportance)serviceImportance{
 	return AIServiceSecondary;
 }
