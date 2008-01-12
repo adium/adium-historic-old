@@ -922,7 +922,7 @@
 			chatWindowController = [[[AIObject sharedAdiumInstance] interfaceController] openContainerWithID:nil name:nil];
 		} else {
 			//I need to figure out to which chat window the location specifier is referring.
-			NSLog(@"Here is the info about the location specifier: %@",[resolvedKeyDictionary objectForKey:@"Location"]);
+			//NSLog(@"Here is the info about the location specifier: %@",[resolvedKeyDictionary objectForKey:@"Location"]);
 			NSPositionalSpecifier *location = [resolvedKeyDictionary objectForKey:@"Location"];
 			AIMessageWindow *chatWindow = [location insertionContainer];
 			index = [location insertionIndex];
@@ -935,7 +935,7 @@
 		}
 		
 		AIChat *newChat = [[[AIObject sharedAdiumInstance] chatController] chatWithContact:contact];
-		NSLog(@"Making new chat %@ in chat window %@:%@",newChat,chatWindowController,[chatWindowController containerID]);
+//		NSLog(@"Making new chat %@ in chat window %@:%@",newChat,chatWindowController,[chatWindowController containerID]);
 		[[[AIObject sharedAdiumInstance] interfaceController] openChat:newChat inContainerWithID:[chatWindowController containerID] atIndex:index];
 		return newChat;
 	} else {
