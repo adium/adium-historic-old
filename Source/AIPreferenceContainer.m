@@ -154,10 +154,12 @@
  */
 - (void)setValue:(id)value forKey:(NSString *)key
 {
+	NSDictionary *oldPrefsWithDefaults = prefsWithDefaults;
+
 	[self willChangeValueForKey:key];
 	//Clear the cached defaults dictionary so it will be recreated as needed
-	[prefsWithDefaults release]; prefsWithDefaults = nil;
 	[[self prefs] setValue:value forKey:key];
+	prefsWithDefaults = nil;
 	[self didChangeValueForKey:key];
 
 	//Now tell the preference controller
@@ -165,6 +167,8 @@
 		[[adium preferenceController] informObserversOfChangedKey:key inGroup:group object:object];
 		[self save];
 	}
+
+	[oldPrefsWithDefaults autorelease];
 }
 
 - (id)valueForKey:(NSString *)key
