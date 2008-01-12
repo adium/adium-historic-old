@@ -414,8 +414,14 @@
 	if (([self lastDisconnectionReason] == PURPLE_CONNECTION_ERROR_CERT_OTHER_ERROR) &&
 		([self shouldVerifyCertificates])) {
 		shouldAttemptReconnect = AIReconnectNever;
+	} else if (disconnectionError &&
+			   [*disconnectionError isEqualToString:[NSString stringWithfUTF8String:_("Read Error")]] &&
+			   ![password length]) {
+		//No password specified + "Read Error" = old openfire bug if we send no password.  Get a password from the user.
+		[self serverReportedInvalidPassword];
+		shouldAttemptReconnect = AIReconnectImmediately;
 	}
-
+ 
 	return shouldAttemptReconnect;
 }
 
