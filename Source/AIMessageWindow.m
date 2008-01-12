@@ -57,7 +57,7 @@
 	return [[NSUniqueIDSpecifier alloc]
 			initWithContainerClassDescription:containerClassDesc
 			containerSpecifier:nil key:@"chatWindows"
-			uniqueID:[NSValue valueWithPointer:self]];
+			uniqueID:[NSNumber numberWithUnsignedInt:[self hash]]];
 }
 
 - (NSArray *)chats
