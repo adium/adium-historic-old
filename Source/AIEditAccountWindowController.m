@@ -399,7 +399,11 @@
 
 - (NSString *)fileNameForImageInImagePicker:(AIImageViewWithImagePicker *)picker
 {
-	return [[account displayName] safeFilenameString];
+	NSString *fileName = [[account displayName] safeFilenameString];
+	if ([fileName hasPrefix:@"."]) {
+		fileName = [fileName substringFromIndex:1];
+	}
+	return fileName;
 }
 
 - (NSImage *)emptyPictureImageForImageViewWithImagePicker:(AIImageViewWithImagePicker *)picker
