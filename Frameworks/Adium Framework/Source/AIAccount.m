@@ -1010,9 +1010,9 @@
 /**
  * @brief Returns the current status message as rich text
  */
-- (NSAttributedString *)scriptingStatusMessage
+- (NSTextStorage *)scriptingStatusMessage
 {
-	return [[self statusState] statusMessage];
+	return [[[NSTextStorage alloc] initWithAttributedString:[[self statusState] statusMessage]] autorelease];
 }
 
 /**
@@ -1020,7 +1020,7 @@
  *
  * If the current status is built in, we create a temporary copy of the current status and set that.
  */
-- (void)setScriptingStatusMessage:(NSAttributedString *)message
+- (void)setScriptingStatusMessage:(NSTextStorage *)message
 {
 	AIStatus *currentStatus = [self statusState];
 	if ([currentStatus mutabilityType] != AITemporaryEditableStatusState) {
@@ -1042,7 +1042,7 @@
 	if ([self statusType] == AIOfflineStatusType || [self statusType] == AIInvisibleStatusType)
 		[self toggleOnline];
 
-	NSAttributedString *withMessage = [[c evaluatedArguments] objectForKey:@"WithMessage"];
+	NSTextStorage *withMessage = [[[NSTextStorage alloc] initWithAttributedString:[[c evaluatedArguments] objectForKey:@"WithMessage"]] autorelease];
 	if (withMessage)
 		[self setScriptingStatusMessage:withMessage];
 }
@@ -1053,7 +1053,7 @@
 - (void)scriptingGoAvailable:(NSScriptCommand *)c
 {
 	[[adium statusController] setActiveStatusState:[[adium statusController] availableStatus] forAccount:self];
-	NSAttributedString *withMessage = [[c evaluatedArguments] objectForKey:@"WithMessage"];
+	NSTextStorage *withMessage = [[[NSTextStorage alloc] initWithAttributedString:[[c evaluatedArguments] objectForKey:@"WithMessage"]] autorelease];
 	if (withMessage)
 		[self setScriptingStatusMessage:withMessage];
 }
@@ -1064,7 +1064,7 @@
 - (void)scriptingGoOffline:(NSScriptCommand *)c
 {
 	[[adium statusController] setActiveStatusState:[[adium statusController] offlineStatus] forAccount:self];
-	NSAttributedString *withMessage = [[c evaluatedArguments] objectForKey:@"WithMessage"];
+	NSTextStorage *withMessage = [[[NSTextStorage alloc] initWithAttributedString:[[c evaluatedArguments] objectForKey:@"WithMessage"]] autorelease];
 	if (withMessage)
 		[self setScriptingStatusMessage:withMessage];
 }
@@ -1075,7 +1075,7 @@
 - (void)scriptingGoAway:(NSScriptCommand *)c
 {
 	[[adium statusController] setActiveStatusState:[[adium statusController] awayStatus] forAccount:self];
-	NSAttributedString *withMessage = [[c evaluatedArguments] objectForKey:@"WithMessage"];
+	NSTextStorage *withMessage = [[[NSTextStorage alloc] initWithAttributedString:[[c evaluatedArguments] objectForKey:@"WithMessage"]] autorelease];
 	if (withMessage)
 		[self setScriptingStatusMessage:withMessage];
 }
