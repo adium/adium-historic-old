@@ -31,8 +31,6 @@
 #import <AIUtilities/OWAddressBookAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 
-#import "AIAddressBookUserIconSource.h"
-
 #define IMAGE_LOOKUP_INTERVAL   0.01
 #define SHOW_IN_AB_CONTEXTUAL_MENU_TITLE AILocalizedString(@"Show In Address Book", "Show In Address Book Contextual Menu")
 #define EDIT_IN_AB_CONTEXTUAL_MENU_TITLE AILocalizedString(@"Edit In Address Book", "Edit In Address Book Contextual Menu")
