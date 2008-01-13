@@ -104,6 +104,9 @@
 	
 	shouldDisplayGroupHeaders = ([delegate respondsToSelector:@selector(contactMenuShouldDisplayGroupHeaders:)] &&
 								 [delegate contactMenuShouldDisplayGroupHeaders:self]);
+	
+	shouldSetTooltip = ([delegate respondsToSelector:@selector(contactMenuShouldSetTooltip:)] &&
+								 [delegate contactMenuShouldSetTooltip:self]);	
 }
 - (id)delegate
 {
@@ -261,6 +264,7 @@
 		}
 		
 		[menuItem setTitle:(shouldUseDisplayName ? [listObject displayName] : [listObject formattedUID])];
+		[menuItem setToolTip:(shouldSetTooltip ? [[listObject statusMessage] string] : nil)];
 
 		[[menuItem menu] setMenuChangedMessagesEnabled:YES];
 	}
