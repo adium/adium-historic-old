@@ -14,6 +14,10 @@
 			<property name="version" code="vers" type="text" access="r" description="The version of the application."/>
 			<property name="active chat" code="Pcht" type="chat" access="r" description="The frontmost chat."/>
 			
+			<property name="global status" code="Pgst" type="status" access="rw" description="The global status. This is the status that the most online accounts are currently using; it will only be an offline status if no accounts are online. Setting it changes the status for all accounts.">
+			     <cocoa key="globalStatus"/>
+			 </property>
+			
 			<element type="account" />
 			<element type="contact" />
 			<element type="service" />
