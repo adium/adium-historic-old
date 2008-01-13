@@ -146,7 +146,7 @@
 		//Account menu
 		accountMenu = [[AIAccountMenu accountMenuWithDelegate:self
 												  submenuType:AIAccountStatusSubmenu
-											   showTitleVerbs:NO] retain];
+											   showTitleVerbs:YES] retain];
 		
 		//Contact menu
 		contactMenu = [[AIContactMenu contactMenuWithDelegate:self
@@ -489,6 +489,11 @@
 }
 
 - (BOOL)contactMenuShouldUseUserIcon:(AIContactMenu *)inContactMenu
+{
+	return YES;
+}
+
+- (BOOL)contactMenuShouldSetTooltip:(AIContactMenu *)inContactMenu
 {
 	return YES;
 }
