@@ -49,8 +49,11 @@
 #define TAB_BAR_STEP                            0.6
 #define TOOLBAR_MESSAGE_WINDOW					@"AdiumMessageWindow"			//Toolbar identifier
 
+#define HORIZONTAL_TAB_BAR_TO_VIEW_SPACING		7
+
 #define KEY_VERTICAL_TABS_WIDTH					@"Vertical Tabs Width"
 #define VERTICAL_DIVIDER_THICKNESS				4
+#define VERTICAL_TAB_BAR_TO_VIEW_SPACING		3
 
 @interface AIMessageWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName interface:(AIDualWindowInterfacePlugin *)inInterface containerID:(NSString *)inContainerID containerName:(NSString *)inName;
@@ -981,19 +984,20 @@
     NSRect frame = [tabView frame];
 	switch ([tabBarControl orientation]) {
 		case PSMTabBarHorizontalOrientation:
-			frame.origin.y -= 7;
-			frame.size.height += 7;
+			frame.origin.y -= HORIZONTAL_TAB_BAR_TO_VIEW_SPACING;
+			frame.size.height += HORIZONTAL_TAB_BAR_TO_VIEW_SPACING;
 			break;
 
 		case PSMTabBarVerticalOrientation:
-			frame.origin.x -= 3;
-			frame.size.width += 3;
+			frame.origin.x -= VERTICAL_TAB_BAR_TO_VIEW_SPACING;
+			frame.size.width += VERTICAL_TAB_BAR_TO_VIEW_SPACING;
 			
 			[tabView_splitView setDividerThickness:0];
 			break;
 	}
 
 	[tabView setFrame:frame];
+	[tabBarControl setHidden:YES];
 	[tabView setNeedsDisplay:YES];
 
 	[[tabView_messages tabViewItems] makeObjectsPerformSelector:@selector(tabViewDidChangeVisibility)];
@@ -1006,19 +1010,20 @@
 	
 	switch ([tabBarControl orientation]) {
 		case PSMTabBarHorizontalOrientation:
-			frame.origin.y += 7;
-			frame.size.height -= 7;
+			frame.origin.y += HORIZONTAL_TAB_BAR_TO_VIEW_SPACING;
+			frame.size.height -= HORIZONTAL_TAB_BAR_TO_VIEW_SPACING;
 			break;
 
 		case PSMTabBarVerticalOrientation:
-			frame.origin.x += 3;
-			frame.size.width -= 3;
+			frame.origin.x += VERTICAL_TAB_BAR_TO_VIEW_SPACING;
+			frame.size.width -= VERTICAL_TAB_BAR_TO_VIEW_SPACING;
 			
 			[tabView_splitView setDividerThickness:VERTICAL_DIVIDER_THICKNESS];
 			break;
     }
     
     [tabView setFrame:frame];
+	[tabBarControl setHidden:NO];
     [tabView setNeedsDisplay:YES];
 	
 	[[tabView_messages tabViewItems] makeObjectsPerformSelector:@selector(tabViewDidChangeVisibility)];
