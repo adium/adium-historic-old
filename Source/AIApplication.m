@@ -218,6 +218,13 @@
 {
 	return [AIObject sharedAdiumInstance];
 }
-
+- (AIStatus *)globalStatus
+{
+	return [[[AIObject sharedAdiumInstance] statusController] activeStatusState];
+}
+- (void)setGobalStatus:(AIStatus *)inGlobalStatus
+{
+	return [[[AIObject sharedAdiumInstance] statusController] setActiveStatusState:inGlobalStatus];	
+}
 @end
 
