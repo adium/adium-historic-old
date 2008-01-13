@@ -4,6 +4,8 @@ else
     IS_ON_10_4=FALSE
 fi
 
+DEBUG_SYMBOLS=TRUE
+
 GLIB=glib-2.14.1
 MEANWHILE=meanwhile-1.0.2
 GADU=libgadu-1.7.1
@@ -53,6 +55,8 @@ pushd $PIDGIN_SOURCE
 # libpurple_jabber_use_builtin_digestmd5.diff was in im.pidgin.pidgin but not the 2.3.1 branch; diff from 16e6cd4ffd8a8308380dc016f0afa782a7750374 to f6430c7013d08f95c60248eeb22c752a0107499b. It has, however, been disapproved, because Openfire 3.4.x fixes the problem. -evands 12/07
 # libpurple_jabber_cert_against_jid_hostname.diff  - im.pidgin.pidgin 6227c43549bf66022512f18bb36d70b7c57c4430 (will be in 2.4.0)
 # libpurple_buddyicon_cache.diff - im.pidgin.pidgin 5d18b4aee9c05f592af532f9155aadb23ad11d4b (will be in 2.4.0)
+#
+# libpurple-account-request.fix.diff - fix a crash in the account auth request code. A similar change was made in im.pidgin.pidgin for 2.4.0.
 ###
 # Patches for our own hackery
 #
@@ -70,7 +74,8 @@ for patch in "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
              "$PATCHDIR/libpurple_jabber_parser_error_handler.diff" \
              "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
              "$PATCHDIR/libpurple_jabber_cert_against_jid_hostname.diff" \
-             "$PATCHDIR/libpurple_buddyicon_cache.diff" ; do
+             "$PATCHDIR/libpurple_buddyicon_cache.diff" \
+             "$PATCHDIR/libpurple-account-request.fix.diff" ; do
     echo "Applying $patch"
 	cat $patch | patch --forward -p0
 done
@@ -97,6 +102,11 @@ for ARCH in ppc i386 ; do
 
     #Note that whether we use openssl or cdsa the same underlying workarounds (as seen in jabber.c, only usage at present 12/07) are needed
     export CFLAGS="$BASE_CFLAGS -arch $ARCH -I$TARGET_DIR/include -I$SDK_ROOT/usr/include/kerberosIV -DHAVE_SSL -DHAVE_OPENSSL -fno-common"
+    
+    if [ "$DEBUG_SYMBOLS" = "TRUE" ] ; then
+        export CFLAGS="$CFLAGS -gdwarf-2 -g3" 
+    fi
+
     export LDFLAGS="$BASE_LDFLAGS -L$TARGET_DIR/lib -arch $ARCH"
     mkdir libpurple-$ARCH || true
     cd libpurple-$ARCH
@@ -159,7 +169,8 @@ for patch in "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
              "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" \
              "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
              "$PATCHDIR/libpurple_jabber_cert_against_jid_hostname.diff" \
-             "$PATCHDIR/libpurple_buddyicon_cache.diff" ; do
+             "$PATCHDIR/libpurple_buddyicon_cache.diff" \
+             "$PATCHDIR/libpurple-account-request.fix.diff" ; do
 	patch -R -p0 < $patch
 done
 popd
