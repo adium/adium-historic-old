@@ -222,9 +222,17 @@
 {
 	return [[[AIObject sharedAdiumInstance] statusController] activeStatusState];
 }
-- (void)setGobalStatus:(AIStatus *)inGlobalStatus
+- (void)setGlobalStatus:(AIStatus *)inGlobalStatus
 {
 	return [[[AIObject sharedAdiumInstance] statusController] setActiveStatusState:inGlobalStatus];	
 }
+
+#pragma mark Debugging
+- (void)setValue:(id)value forUndefinedKey:(NSString *)key
+{
+	NSLog(@"*** setValue:%@ forUndefinedKey:%@ ***", value, key);
+	[super setValue:value forUndefinedKey:key];
+}
+
 @end
 
