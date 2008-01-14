@@ -20,7 +20,7 @@
 #import <Adium/AIInterfaceControllerProtocol.h>
 
 @class AIAccount, AIListContact, AIListObject, AIAccountSelectionView, AIMessageTabSplitView, AIMessageEntryTextView;
-@class AIMessageWindowController;
+@class AIMessageWindowController, AIMessageWindowOutgoingScrollView;
 
 @interface AIMessageViewController : AIObject <AIListControllerDelegate> {
     IBOutlet	NSView					*view_contents;
@@ -30,9 +30,9 @@
 	
 
 	//Message Display
-	NSView								*controllerView_messages;
-	IBOutlet	NSScrollView			*scrollView_messages;
-	IBOutlet	NSView					*customView_messages;
+	NSView											*controllerView_messages;
+	IBOutlet	AIMessageWindowOutgoingScrollView	*scrollView_messages;
+	IBOutlet	NSView								*customView_messages;
 	
 	//User List
 	IBOutlet	AIAutoScrollView		*scrollView_userList;
