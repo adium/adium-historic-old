@@ -344,7 +344,11 @@ static NSArray *draggedTypes = nil;
 			if (![key isEqualToString:@"BackgroundCacheUniqueID"] &&
 			    ![key isEqualToString:[plugin styleSpecificKey:@"BackgroundCachePath" forStyle:activeStyle]] &&
 				(![key isEqualToString:KEY_CURRENT_WEBKIT_STYLE_PATH] || shouldReflectPreferenceChanges)) {
-				[self _updateWebViewForCurrentPreferences];
+				if (!isUpdatingWebViewForCurrentPreferences) {
+					isUpdatingWebViewForCurrentPreferences = YES;
+					[self _updateWebViewForCurrentPreferences];
+					isUpdatingWebViewForCurrentPreferences = NO;
+				}
 			}
 		}
 #endif
@@ -355,7 +359,11 @@ static NSArray *draggedTypes = nil;
 		[[adium preferenceController] setPreference:nil
 											 forKey:[plugin styleSpecificKey:@"BackgroundCachePath" forStyle:activeStyle]
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];	
-		[self _updateWebViewForCurrentPreferences];
+		if (!isUpdatingWebViewForCurrentPreferences) {
+			isUpdatingWebViewForCurrentPreferences = YES;
+			[self _updateWebViewForCurrentPreferences];
+			isUpdatingWebViewForCurrentPreferences = NO;
+		}
 	}
 	
 	if (preferencesChangedDelegate) {
@@ -400,13 +408,11 @@ static NSArray *draggedTypes = nil;
  * @brief Updates our webview to the current preferences, priming the view
  */
 - (void)_updateWebViewForCurrentPreferences
-{		
-	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-
+{
 	//Cleanup first
 	[messageStyle autorelease]; messageStyle = nil;
-	[activeStyle release];
-	[activeVariant release];
+	[activeStyle release]; activeStyle = nil;
+	[activeVariant release]; activeVariant = nil;
 	
 	//Load the message style
 	messageStyle = [[plugin currentMessageStyle] retain];
@@ -415,7 +421,8 @@ static NSArray *draggedTypes = nil;
 	[webView setPreferencesIdentifier:activeStyle];
 
 	//Get the prefered variant (or the default if a prefered is not available)
-	activeVariant = [[prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:activeStyle]] retain];
+	activeVariant = [[[adium preferenceController] preferenceForKey:[plugin styleSpecificKey:@"Variant" forStyle:activeStyle]
+															  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] retain];
 	if (!activeVariant) activeVariant = [[messageStyle defaultVariant] retain];
 	if (!activeVariant) {
 		/* If the message style doesn't specify a default variant, choose the first one.
@@ -428,27 +435,37 @@ static NSArray *draggedTypes = nil;
 	}
 
 	//Update message style behavior: XXX move this somewhere not per-chat
-	[messageStyle setShowUserIcons:[[prefDict objectForKey:KEY_WEBKIT_SHOW_USER_ICONS] boolValue]];
-	[messageStyle setShowHeader:[[prefDict objectForKey:KEY_WEBKIT_SHOW_HEADER] boolValue]];
-	[messageStyle setUseCustomNameFormat:[[prefDict objectForKey:KEY_WEBKIT_USE_NAME_FORMAT] boolValue]];
-	[messageStyle setNameFormat:[[prefDict objectForKey:KEY_WEBKIT_NAME_FORMAT] intValue]];
-	[messageStyle setDateFormat:[prefDict objectForKey:KEY_WEBKIT_TIME_STAMP_FORMAT]];
-	[messageStyle setShowIncomingMessageColors:[[prefDict objectForKey:KEY_WEBKIT_SHOW_MESSAGE_COLORS] boolValue]];
-	[messageStyle setShowIncomingMessageFonts:[[prefDict objectForKey:KEY_WEBKIT_SHOW_MESSAGE_FONTS] boolValue]];
+	[messageStyle setShowUserIcons:[[[adium preferenceController] preferenceForKey:KEY_WEBKIT_SHOW_USER_ICONS
+																			 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] boolValue]];
+	[messageStyle setShowHeader:[[[adium preferenceController] preferenceForKey:KEY_WEBKIT_SHOW_HEADER
+																		  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] boolValue]];
+	[messageStyle setUseCustomNameFormat:[[[adium preferenceController] preferenceForKey:KEY_WEBKIT_USE_NAME_FORMAT
+																				   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] boolValue]];
+	[messageStyle setNameFormat:[[[adium preferenceController] preferenceForKey:KEY_WEBKIT_NAME_FORMAT
+																		  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] intValue]];
+	[messageStyle setDateFormat:[[adium preferenceController] preferenceForKey:KEY_WEBKIT_TIME_STAMP_FORMAT
+																		 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]];
+	[messageStyle setShowIncomingMessageColors:[[[adium preferenceController] preferenceForKey:KEY_WEBKIT_SHOW_MESSAGE_COLORS
+																						 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] boolValue]];
+	[messageStyle setShowIncomingMessageFonts:[[[adium preferenceController] preferenceForKey:KEY_WEBKIT_SHOW_MESSAGE_FONTS
+																						group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] boolValue]];
 	
 	//Custom background image
 	//Webkit wants to load these from disk, but we have it stuffed in a plist.  So we'll write it out as an image
 	//into the cache and have webkit fetch from there.
 	NSString	*cachePath = nil;
-	if ([[prefDict objectForKey:[plugin styleSpecificKey:@"UseCustomBackground" forStyle:activeStyle]] boolValue]) {
-		cachePath = [prefDict objectForKey:[plugin styleSpecificKey:@"BackgroundCachePath" forStyle:activeStyle]];
+	if ([[[adium preferenceController] preferenceForKey:[plugin styleSpecificKey:@"UseCustomBackground" forStyle:activeStyle]
+												  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] boolValue]) {
+		cachePath = [[adium preferenceController] preferenceForKey:[plugin styleSpecificKey:@"BackgroundCachePath" forStyle:activeStyle]
+															 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		if (!cachePath || ![[NSFileManager defaultManager] fileExistsAtPath:cachePath]) {
 			NSData	*backgroundImage = [[adium preferenceController] preferenceForKey:[plugin styleSpecificKey:@"Background" forStyle:activeStyle]
 																				group:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES];
 			
 			if (backgroundImage) {
 				//Generate a unique cache ID for this image
-				int	uniqueID = [[prefDict objectForKey:@"BackgroundCacheUniqueID"] intValue] + 1;
+				int	uniqueID = [[[adium preferenceController] preferenceForKey:@"BackgroundCacheUniqueID"
+																		 group:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES] intValue] + 1;
 				[[adium preferenceController] setPreference:[NSNumber numberWithInt:uniqueID]
 													 forKey:@"BackgroundCacheUniqueID"
 													  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
@@ -466,27 +483,30 @@ static NSArray *draggedTypes = nil;
 				cachePath = @""; //No custom image found
 			}
 		}
-	}
-	[messageStyle setCustomBackgroundPath:cachePath];
-	[messageStyle setCustomBackgroundType:[[prefDict objectForKey:[plugin styleSpecificKey:@"BackgroundType" forStyle:activeStyle]] intValue]];
-
-	//Custom background color
-	if ([[prefDict objectForKey:[plugin styleSpecificKey:@"UseCustomBackground" forStyle:activeStyle]] boolValue]) {
-		[messageStyle setCustomBackgroundColor:[[prefDict objectForKey:[plugin styleSpecificKey:@"BackgroundColor" forStyle:activeStyle]] representedColor]];
+		
+		[messageStyle setCustomBackgroundColor:[[[adium preferenceController] preferenceForKey:[plugin styleSpecificKey:@"BackgroundColor" forStyle:activeStyle]
+																						 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] representedColor]];
 	} else {
 		[messageStyle setCustomBackgroundColor:nil];
 	}
 
+	[messageStyle setCustomBackgroundPath:cachePath];
+	[messageStyle setCustomBackgroundType:[[[adium preferenceController] preferenceForKey:[plugin styleSpecificKey:@"BackgroundType" forStyle:activeStyle]
+																					group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] intValue]];
+	
 	[webView setTransparent:[[self messageStyle] isBackgroundTransparent]];
 	
 	//Update webview font settings
-	NSString	*fontFamily = [prefDict objectForKey:[plugin styleSpecificKey:@"FontFamily" forStyle:activeStyle]];
+	NSString	*fontFamily = [[adium preferenceController] preferenceForKey:[plugin styleSpecificKey:@"FontFamily" forStyle:activeStyle]
+																	group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	[webView setFontFamily:(fontFamily ? fontFamily : [messageStyle defaultFontFamily])];
 	
-	NSNumber	*fontSize = [prefDict objectForKey:[plugin styleSpecificKey:@"FontSize" forStyle:activeStyle]];
+	NSNumber	*fontSize = [[adium preferenceController] preferenceForKey:[plugin styleSpecificKey:@"FontSize" forStyle:activeStyle]
+																  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	[[webView preferences] setDefaultFontSize:[(fontSize ? fontSize : [messageStyle defaultFontSize]) intValue]];
 	
-	NSNumber	*minSize = [prefDict objectForKey:KEY_WEBKIT_MIN_FONT_SIZE];
+	NSNumber	*minSize = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_MIN_FONT_SIZE
+																 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	[[webView preferences] setMinimumFontSize:(minSize ? [minSize intValue] : 1)];
 
 	//Update our icons before doing any loading
