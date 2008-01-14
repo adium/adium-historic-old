@@ -179,13 +179,13 @@
  */
 - (void)registerPreferenceObserver:(id)observer forGroup:(NSString *)group
 {
-	NSMutableSet	*groupObservers;
+	NSMutableArray	*groupObservers;
 	
 	NSParameterAssert([observer respondsToSelector:@selector(preferencesChangedForGroup:key:object:preferenceDict:firstTime:)]);
 	
 	//Fetch the observers for this group
 	if (!(groupObservers = [observers objectForKey:group])) {
-		groupObservers = [[NSMutableSet alloc] init];
+		groupObservers = [[NSMutableArray alloc] init];
 		[observers setObject:groupObservers forKey:group];
 		[groupObservers release];
 	}
@@ -233,7 +233,7 @@
 	if (!object && preferenceChangeDelays > 0) {
         [delayedNotificationGroups addObject:group];
     } else {
-		NSDictionary	*preferenceDict = [[self preferenceContainerForGroup:group object:object] dictionary];
+		NSDictionary	*preferenceDict = [[[self preferenceContainerForGroup:group object:object] dictionary] retain];
 		NSEnumerator	*enumerator = [[observers objectForKey:group] objectEnumerator];
 		NSValue			*observerValue;
 
@@ -245,6 +245,8 @@
 								  preferenceDict:preferenceDict
 									   firstTime:NO];
 		}
+
+		[preferenceDict release];
     }
 }
 
