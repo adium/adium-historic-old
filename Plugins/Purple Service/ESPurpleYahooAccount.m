@@ -44,6 +44,17 @@
 	purple_account_set_bool(account, "yahoojp", FALSE);
 }
 
+- (NSString *)stringByRemovingYahooSuffix:(NSString *)inString
+{
+	if ((inString && ([inString length] > 0)) && 
+		([inString rangeOfString:@"@yahoo.com" options:NSCaseInsensitiveSearch].location != NSNotFound)) {
+		inString = [inString substringToIndex:[inString rangeOfString:@"@yahoo.com" 
+															  options:NSCaseInsensitiveSearch].location];
+	}
+	
+	return inString;
+}
+
 /*!
 * @brief The UID will be changed. The account has a chance to perform modifications
  *
@@ -54,17 +65,15 @@
  */
 - (NSString *)accountWillSetUID:(NSString *)proposedUID
 {
-	NSString	*correctUID;
-	
-	if ((proposedUID && ([proposedUID length] > 0)) && 
-		([proposedUID rangeOfString:@"@yahoo.com" options:NSCaseInsensitiveSearch].location != NSNotFound)) {
-		correctUID = [proposedUID substringToIndex:[proposedUID rangeOfString:@"@yahoo.com" 
-																	  options:NSCaseInsensitiveSearch].location];
-	} else {
-		correctUID = proposedUID;
-	}
-	
-	return correctUID;
+	return [self stringByRemovingYahooSuffix:proposedUID];
+}
+
+/*!
+ * @brief Name to use when creating a PurpleAccount for this CBPurpleAccount
+ */
+- (const char *)purpleAccountName
+{
+	return [[self stringByRemovingYahooSuffix:[self formattedUID]] UTF8String];
 }
 
 - (NSSet *)supportedPropertyKeys
