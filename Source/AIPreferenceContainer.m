@@ -18,6 +18,8 @@
 - (void)save;
 @end
 
+#define EMPTY_CACHE_DELAY 30.0
+
 @implementation AIPreferenceContainer
 
 + (AIPreferenceContainer *)preferenceContainerForGroup:(NSString *)inGroup object:(AIListObject *)inObject
@@ -75,7 +77,7 @@
 											   object:nil];
 	[self performSelector:@selector(emptyCache)
 			   withObject:nil
-			   afterDelay:30.0];
+			   afterDelay:EMPTY_CACHE_DELAY];
 }
 
 #pragma mark Defaults
@@ -154,12 +156,12 @@
  */
 - (void)setValue:(id)value forKey:(NSString *)key
 {
-	NSDictionary *oldPrefsWithDefaults = prefsWithDefaults;
-
 	[self willChangeValueForKey:key];
 	//Clear the cached defaults dictionary so it will be recreated as needed
-	[[self prefs] setValue:value forKey:key];
+	[prefsWithDefaults autorelease];
 	prefsWithDefaults = nil;
+
+	[[self prefs] setValue:value forKey:key];
 	[self didChangeValueForKey:key];
 
 	//Now tell the preference controller
@@ -167,8 +169,6 @@
 		[[adium preferenceController] informObserversOfChangedKey:key inGroup:group object:object];
 		[self save];
 	}
-
-	[oldPrefsWithDefaults autorelease];
 }
 
 - (id)valueForKey:(NSString *)key
