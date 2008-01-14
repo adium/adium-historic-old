@@ -25,7 +25,7 @@
 {
 	if (!(self = [super initWithContentRect:contentRect styleMask:styleMask backing:bufferingType defer:deferCreation]))
 		return nil;
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scriptedWindowDidClose:) name:NSWindowWillCloseNotification object:nil];
+
 	return self;
 }
 
@@ -67,18 +67,9 @@
 
 - (id)handleCloseScriptCommand:(NSCloseCommand *)command
 {
-	[command suspendExecution];
-	rememberedScriptCommand = command;
-	
-	//get a list of all the chats in this window
-	NSArray *chatsInThisWindow = [self chats];
-	for (int i=[chatsInThisWindow count]-1;i>=0;i--)
-		[[[AIObject sharedAdiumInstance] interfaceController] closeChat:[chatsInThisWindow objectAtIndex:i]];
+	[self performClose:nil];
+
 	return nil;
 }
-- (void)scriptedWindowDidClose:(NSNotification *)notification
-{
-	[rememberedScriptCommand resumeExecutionWithResult:nil];
-	rememberedScriptCommand = nil;
-}
+
 @end
