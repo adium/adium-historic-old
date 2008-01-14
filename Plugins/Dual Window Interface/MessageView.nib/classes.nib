@@ -96,6 +96,11 @@
             SUPERCLASS = NSWindowController;
         },
                 {
+            CLASS = AIMessageWindowOutgoingScrollView;
+            LANGUAGE = ObjC;
+            SUPERCLASS = NSScrollView;
+        },
+                {
             CLASS = AIMiniToolbar;
             LANGUAGE = ObjC;
             OUTLETS =             {

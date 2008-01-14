@@ -523,6 +523,7 @@
 		3485DBCB09EBCE7400232CC4 /* ESPurpleRequestActionController.m in Sources */ = {isa = PBXBuildFile; fileRef = 341E88690648FF1B00E0C828 /* ESPurpleRequestActionController.m */; };
 		3485DBD009EBCE8200232CC4 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3402E04D07CB0EB00044F818 /* Localizable.strings */; };
 		348B250D0A50A1C900B2B972 /* ESSourceListBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 348B250B0A50A1C900B2B972 /* ESSourceListBackgroundView.m */; };
+		348C47170D3B20BE00FB6E7A /* AIMessageWindowOutgoingScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 348C47160D3B20BE00FB6E7A /* AIMessageWindowOutgoingScrollView.m */; };
 		348E5ACB06D2A74C004C051C /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 348E5ACA06D2A74C004C051C /* AddressBook.framework */; };
 		348EE1B4080A57480015E0FC /* WebKitPreferencesView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 348EE1B3080A57480015E0FC /* WebKitPreferencesView.nib */; };
 		348F57940936F3CC00288E41 /* ESEditStatusGroupWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 348F57920936F3CC00288E41 /* ESEditStatusGroupWindowController.m */; };
@@ -2658,6 +2659,8 @@
 		348B250B0A50A1C900B2B972 /* ESSourceListBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESSourceListBackgroundView.m; path = Source/ESSourceListBackgroundView.m; sourceTree = "<group>"; };
 		348B25C60A50FBF300B2B972 /* KNShelfSplitView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = KNShelfSplitView.m; path = Source/KNShelfSplitView.m; sourceTree = "<group>"; };
 		348B25C70A50FBF300B2B972 /* KNShelfSplitView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = KNShelfSplitView.h; path = Source/KNShelfSplitView.h; sourceTree = "<group>"; };
+		348C47150D3B20BE00FB6E7A /* AIMessageWindowOutgoingScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIMessageWindowOutgoingScrollView.h; path = Source/AIMessageWindowOutgoingScrollView.h; sourceTree = "<group>"; };
+		348C47160D3B20BE00FB6E7A /* AIMessageWindowOutgoingScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIMessageWindowOutgoingScrollView.m; path = Source/AIMessageWindowOutgoingScrollView.m; sourceTree = "<group>"; };
 		348D8D1A06CC079F00449EBB /* ESZephyrService.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESZephyrService.m; path = "Plugins/Purple Service/ESZephyrService.m"; sourceTree = "<group>"; };
 		348D8D1B06CC079F00449EBB /* ESZephyrService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESZephyrService.h; path = "Plugins/Purple Service/ESZephyrService.h"; sourceTree = "<group>"; };
 		348D8D2206CC07BC00449EBB /* ESPurpleZephyrAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESPurpleZephyrAccountViewController.m; path = "Plugins/Purple Service/ESPurpleZephyrAccountViewController.m"; sourceTree = "<group>"; };
@@ -7262,6 +7265,8 @@
 				34A970590C965F2400F46006 /* AISideSplitView.m */,
 				34F8D2AC0CF68FEB00F62536 /* AIUserListOutlineView.h */,
 				34F8D2AD0CF68FEB00F62536 /* AIUserListOutlineView.m */,
+				348C47150D3B20BE00FB6E7A /* AIMessageWindowOutgoingScrollView.h */,
+				348C47160D3B20BE00FB6E7A /* AIMessageWindowOutgoingScrollView.m */,
 			);
 			name = Messages;
 			sourceTree = "<group>";
@@ -7953,6 +7958,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
@@ -9026,6 +9032,7 @@
 				34F8D2AE0CF68FEB00F62536 /* AIUserListOutlineView.m in Sources */,
 				347F4B810D340F16006D5A56 /* AIPreferenceContainer.m in Sources */,
 				0CFA98C90D35C18000A077C6 /* NSDataAdditions.m in Sources */,
+				348C47170D3B20BE00FB6E7A /* AIMessageWindowOutgoingScrollView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
