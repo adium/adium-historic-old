@@ -34,6 +34,7 @@
 	id							preferencesChangedDelegate;
 	AIChat						*chat;
 	BOOL						shouldReflectPreferenceChanges;
+	BOOL						isUpdatingWebViewForCurrentPreferences;
 
 	//Content processing
 	AIContentObject				*previousContent;
