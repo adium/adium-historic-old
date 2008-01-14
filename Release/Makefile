@@ -14,7 +14,7 @@
 # - make all
 ###########
 
-VERSION=1.2
+VERSION=1.3svn
 BUILD_IN_DEBUG_MODE=FALSE
 BETA=FALSE
 
@@ -96,7 +96,7 @@ assertnoconflicts:
 
 version:
 	@# update the plists
-	defaults write $(ADIUM_PLIST) CFBundleGetInfoString '$(VERSION), Copyright 2001-2007 The Adium Team'
+	defaults write $(ADIUM_PLIST) CFBundleGetInfoString '$(VERSION), Copyright 2001-2008 The Adium Team'
 	defaults write $(ADIUM_PLIST) CFBundleVersion '$(VERSION)'
 	defaults write $(ADIUM_PLIST) CFBundleShortVersionString '$(VERSION)'
 	plutil -convert xml1 $(ADIUM_PLIST).plist
