@@ -21,6 +21,9 @@
 #import "AIDualWindowInterfacePlugin.h"
 #import "AIContactInfoWindowController.h"
 #import "AIMessageTabSplitView.h"
+#import "AIMessageWindowOutgoingScrollView.h"
+#import "KNShelfSplitView.h"
+#import "ESChatUserListController.h"
 
 #import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIContactAlertsControllerProtocol.h>
@@ -49,8 +52,6 @@
 #import <AIUtilities/AITigerCompatibility.h>
 
 #import <PSMTabBarControl/NSBezierPath_AMShading.h>
-#import "KNShelfSplitView.h"
-#import "ESChatUserListController.h"
 
 //Heights and Widths
 #define MESSAGE_VIEW_MIN_HEIGHT_RATIO		.50						//Mininum height ratio of the message view
@@ -66,6 +67,7 @@
 #define	KEY_ENTRY_TEXTVIEW_MIN_HEIGHT		@"Minimum Text Height"	//Preference key for text entry height
 #define	KEY_ENTRY_USER_LIST_MIN_WIDTH		@"UserList Width"		//Preference key for user list width
 
+//#define TEXTVIEW_HEIGHT_DEBUG
 
 @interface AIMessageViewController (PRIVATE)
 - (id)initForChat:(AIChat *)inChat;
@@ -345,8 +347,18 @@
 	messageDisplayController = [[[adium interfaceController] messageDisplayControllerForChat:chat] retain];
 	//Get the messageView from the controller
 	controllerView_messages = [[messageDisplayController messageView] retain];
-	//scrollView_messages is originally a placeholder; replace it with controllerView_messages
+
+	/* customView_messages is really just a placeholder.  It's a subview of scrollView_messages, which exists just
+	 * to draw a box around itself to give the desired border. NSBox could be used for the same purpose.
+	 * We replace customView_messages with the actual message view we want to use, controllerView_messages.
+	 *
+	 * Note that this does -not- change the documentView of scrollView_messages, which remains NULL.
+	 * This is because the controllerView_messages supplies its own scroll view (within the WebView).
+	 * We therefore use -[AIMessageWindowOutgoingScrollView setAccessibilityChild:] to manage the accessibility
+	 * heirarchy.
+	 */
 	[controllerView_messages setFrame:[scrollView_messages documentVisibleRect]];
+	[scrollView_messages setAccessibilityChild:controllerView_messages];
 	[[customView_messages superview] replaceSubview:customView_messages with:controllerView_messages];
 
 	//This is what draws our transparent background
@@ -642,16 +654,16 @@
  */
 - (void)updateFramesForAccountSelectionView
 {
-	int		contentsHeight = [[shelfView contentView] frame].size.height;
 	int 	accountSelectionHeight = (view_accountSelection ? [view_accountSelection frame].size.height : 0);
-	int		intersectionPoint = ([[shelfView contentView] isFlipped] ? accountSelectionHeight : (contentsHeight - accountSelectionHeight));
 
 	if (view_accountSelection) {
-		[view_accountSelection setFrameOrigin:NSMakePoint(NSMinX([view_accountSelection frame]), intersectionPoint)];
+		[view_accountSelection setFrameOrigin:NSMakePoint(NSMinX([view_accountSelection frame]), NSHeight([[view_accountSelection superview] frame]) - accountSelectionHeight)];
 		[view_accountSelection setNeedsDisplay:YES];
 	}
 
-	[splitView_textEntryHorizontal setFrameSize:NSMakeSize(NSWidth([splitView_textEntryHorizontal frame]), intersectionPoint)];
+	NSRect splitView_textEntryHorizontalFrame = [splitView_textEntryHorizontal frame];
+	splitView_textEntryHorizontalFrame.size.height = NSHeight([[splitView_textEntryHorizontal superview] frame]) - accountSelectionHeight - NSMinY(splitView_textEntryHorizontalFrame);
+	[splitView_textEntryHorizontal setFrame:splitView_textEntryHorizontalFrame];
 	[splitView_textEntryHorizontal setNeedsDisplay:YES];
 }	
 
@@ -690,7 +702,10 @@
 	entryMinHeight = [[[adium preferenceController] preferenceForKey:KEY_ENTRY_TEXTVIEW_MIN_HEIGHT
 															   group:PREF_GROUP_DUAL_WINDOW_INTERFACE] intValue];
 	if (entryMinHeight <= 0) entryMinHeight = [self _textEntryViewProperHeightIgnoringUserMininum:YES];
-
+#ifdef TEXTVIEW_HEIGHT_DEBUG
+	NSLog(@"entryMinHeight starts at %i", entryMinHeight);
+#endif
+	
 	//Associate the view with our message view so it knows which view to scroll in response to page up/down
 	//and other special key-presses.
 	[textView_outgoing setAssociatedView:[messageDisplayController messageScrollView]];
@@ -787,12 +802,12 @@
 	if ([NSApp isOnLeopardOrBetter]) {
 		//Attempt to maximize the message view's size.  We'll automatically restrict it to the correct minimum via the NSSplitView's delegate methods.
 		[splitView_textEntryHorizontal adjustSubviews];
-		
+
 		ignorePositionChangesForMinimumHeight = YES;
 		[splitView_textEntryHorizontal setPosition:(NSHeight([splitView_textEntryHorizontal frame]) - height)
 								  ofDividerAtIndex:0];
 		ignorePositionChangesForMinimumHeight = NO;
-		
+
 	} else {
 		NSRect	tempFrame, newFrame;
 		BOOL	changed = NO;
@@ -1096,6 +1111,13 @@
 - (float)splitView:(NSSplitView *)sender constrainMaxCoordinate:(float)proposedMax ofSubviewAt:(int)offset
 {
 	if (sender == splitView_textEntryHorizontal) {		
+#ifdef TEXTVIEW_HEIGHT_DEBUG
+		NSLog(@"Constraining max to %f: %f - %i + %f", ([sender frame].size.height - ([self _textEntryViewProperHeightIgnoringUserMininum:YES] +
+																		[sender dividerThickness])),
+			  [sender frame].size.height, [self _textEntryViewProperHeightIgnoringUserMininum:YES] ,
+											 [sender dividerThickness]);
+#endif
+
 		return ([sender frame].size.height - ([self _textEntryViewProperHeightIgnoringUserMininum:YES] +
 											 [sender dividerThickness]));
 
@@ -1113,6 +1135,9 @@
 - (float)splitView:(NSSplitView *)sender constrainMinCoordinate:(float)proposedMin ofSubviewAt:(int)offset
 {
 	if (sender == splitView_textEntryHorizontal) {
+#ifdef TEXTVIEW_HEIGHT_DEBUG
+		NSLog(@"Constraining min to %i", (int)([sender frame].size.height * MESSAGE_VIEW_MIN_HEIGHT_RATIO));
+#endif
 		return (int)([sender frame].size.height * MESSAGE_VIEW_MIN_HEIGHT_RATIO);
 		
 	} else {
@@ -1131,6 +1156,9 @@
 	if (sender == splitView_textEntryHorizontal) {
 		if (!ignorePositionChangesForMinimumHeight)
 			entryMinHeight = (int)([sender frame].size.height - proposedPosition);
+#ifdef TEXTVIEW_HEIGHT_DEBUG
+		NSLog(@"After constraining the split position, entryMinHeight is now %i", entryMinHeight);
+#endif
 	} else {
 		NSLog(@"Unknown split view %@",sender);
 		return 0;
