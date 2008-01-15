@@ -1,5 +1,48 @@
 				Adium X Version History
 				-----------------------
+Version 1.2.1 (??/??/????)
+ * Group chats now reconnect automatically when their accounts reconnect after being disconnected (#1880)
+ * Fixed accessibility of the message window to allow VoiceOver and other assistive devices to read messages
+ * Fixed a major memory leak which occurred when closing chats (regressed in Adium 1.2) and several minor memory leaks
+ * Decreased Adium's memory footprint 
+ * Jabber conferences now use the account's display name as the handle by default (#8757)
+ * Fixed retention of the minimum text entry height in message windows (#8759)
+ * Fixed the "Get Info for Contact" prompt (#8756)
+ * Fixed display of the revert overlay on manually-set icons in the Get Info window
+ * Fixed a crash which could occur when dragging the contact list
+ * Fixed a crash which could occur when importing logs from iChat (#8729)
+ * Fixed sending of links over MSN (#8535)
+ * Fixed the menu bar status item's account menu, which could previously display the contact menu instead in some cases
+ * Fixed the Address Book scripts and the %_statusMessage script to work with Adium 1.2 (#8817)
+ * Fixed issues with Jabber certificate checking (#8787)
+ * Fixed a crash when a Jabber account was set to automatically accept authorization requests
+ * Worked around a bug connecting to old OpenFire servers since Adium 1.2 (#8803)
+ * Fixed a crash after showing an authorization request window and then disconnecting (#8886)
+ * Fixed the 'Always show this contact regardless of status' setting for contacts in the Get Info window
+ * Fixed missing carriage returns when copying from some message styles (#6893)
+ * Fixed linkification of IP addresses on 10.5 (#7839)
+ * Fixed determination of the song title when playing a stream in iTunes
+ * Fixed ampersands in HTML links (#8445)
+ * Added the Add Bookmark toolbar item to the default toolbar (#8772)
+ * Stopped obnoxious flickering of the mouse cursor after sending a message (#5651)
+ * Fixed manual reordering when not showing contact list groups (#8884)
+ * Fixed filenames created by dragging out of image wells when the contact's name starts with a period (#6102)
+ * Fixed an errant line at the bottom of the message window (#8657)
+ * Fixed updating of the Variants menu after changing the Style in the Messages preferences (#8234)
+ * Fixed Yahoo accounts connecting if @yahoo.com is included in the user name
+ * Updated the Stockholm message style (#8353)
+ * Fixed the "Show the file transfer window automatically" preference
+ * Applescript fixes:
+    * Added date opened property (#8859)
+    * Fixed retrieval of account status messages (#8820)
+    * Fixed access and setting of account and contact user icons (#8818)
+    * Allowed access to service images for accounts
+    * Fixed a crash when interacting with message windows (#8821)
+    * Added a global status property
+ * Fixed several localization issues
+ * Updated Norwegian localization
+ * Added Slovenian localization
+
 Version 1.2 (1/5/2008)
  * Improved Group Chat interface
    * Improved the user list (#192, #2973)
