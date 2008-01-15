@@ -61,6 +61,17 @@ static void buddy_event_cb(PurpleBuddy *buddy, PurpleBuddyEvent event)
 			}
 			case PURPLE_BUDDY_ICON: {
 				PurpleBuddyIcon *buddyIcon = purple_buddy_get_icon(buddy);
+				BOOL			shouldUnref = NO;
+	
+				if (!buddyIcon) {
+					/* Failing that, load one from the cache. We'll need to unreference the returned PurpleBuddyIcon
+					 * when we're done.
+					 */
+					buddyIcon = purple_buddy_icons_find(account, [[contact UID] UTF8String]);
+					shouldUnref = YES;
+				}
+
+				
 				updateSelector = @selector(updateIcon:withData:);
 				AILog(@"Buddy icon update for %s",buddy->name);
 				if (buddyIcon) {
@@ -74,6 +85,9 @@ static void buddy_event_cb(PurpleBuddy *buddy, PurpleBuddyEvent event)
 											  length:len];
 						AILog(@"[buddy icon: %s got data]",buddy->name);
 					}
+					
+					if (shouldUnref)
+						purple_buddy_icon_unref(buddyIcon);
 				}
 				break;
 			}
@@ -114,6 +128,7 @@ static void buddy_event_cb(PurpleBuddy *buddy, PurpleBuddyEvent event)
 			if (event == PURPLE_BUDDY_SIGNON) {
 				buddy_idle_changed_cb(buddy, FALSE, purple_presence_is_idle(presence), event);
 				buddy_event_cb(buddy, PURPLE_BUDDY_SIGNON_TIME);
+				buddy_event_cb(buddy, PURPLE_BUDDY_ICON);
 			}
 		}
 	}
