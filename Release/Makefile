@@ -14,9 +14,9 @@
 # - make all
 ###########
 
-VERSION=1.2.1svn
-BUILD_IN_DEBUG_MODE=FALSE
-BETA=FALSE
+VERSION=1.2.1b1
+BUILD_IN_DEBUG_MODE=TRUE
+BETA=TRUE
 
 ###########
 # To release!
