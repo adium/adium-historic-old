@@ -1866,6 +1866,29 @@
 		341DE03B07FE10B600EB7B06 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = Resources/de.lproj/Localizable.strings; sourceTree = "<group>"; };
 		341E88680648FF1B00E0C828 /* ESPurpleRequestActionController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESPurpleRequestActionController.h; path = "Plugins/Purple Service/ESPurpleRequestActionController.h"; sourceTree = "<group>"; };
 		341E88690648FF1B00E0C828 /* ESPurpleRequestActionController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESPurpleRequestActionController.m; path = "Plugins/Purple Service/ESPurpleRequestActionController.m"; sourceTree = "<group>"; };
+		341EC8A60D3C2B9B007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sl; path = "Frameworks/Adium Framework/Resources/sl.lproj/EmoticonNames.strings"; sourceTree = "<group>"; };
+		341EC8B40D3C2BA6007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sl; path = Resources/sl.lproj/AccountProxy.nib; sourceTree = "<group>"; };
+		341EC8B50D3C2BA6007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sl; path = Resources/sl.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
+		341EC8B60D3C2BA6007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sl; path = Resources/sl.lproj/Buttons.strings; sourceTree = "<group>"; };
+		341EC8B70D3C2BA7007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sl; path = Resources/sl.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
+		341EC8B80D3C2BA7007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sl; path = "Frameworks/Adium Framework/Resources/sl.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
+		341EC8B90D3C2BA7007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sl; path = Resources/sl.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
+		341EC8BA0D3C2BA8007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sl; path = Resources/sl.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
+		341EC8BB0D3C2BA8007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sl; path = Resources/sl.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		341EC8BC0D3C2BA8007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sl; path = Resources/sl.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
+		341EC8BD0D3C2BA9007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sl; path = Resources/sl.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
+		341EC8BE0D3C2BA9007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sl; path = "Frameworks/Adium Framework/Resources/sl.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		341EC8BF0D3C2BA9007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sl; path = Resources/sl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		341EC8C00D3C2BA9007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sl; path = Resources/sl.lproj/MessageHistoryConfiguration.nib; sourceTree = "<group>"; };
+		341EC8C10D3C2BA9007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sl; path = Resources/sl.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
+		341EC8C20D3C2BAA007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sl; path = Resources/sl.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
+		341EC8C30D3C2BAA007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sl; path = Resources/sl.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
+		341EC8C40D3C2BAA007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sl; path = Resources/sl.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
+		341EC8C50D3C2BAA007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = folder; name = sl; path = "Resources/sl.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
+		341EC8C60D3C2BAA007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sl; path = Resources/sl.lproj/ShortcutRecorder.strings; sourceTree = "<group>"; };
+		341EC8C70D3C2BAA007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sl; path = Resources/sl.lproj/Statuses.strings; sourceTree = "<group>"; };
+		341EC8C80D3C2BAB007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sl; path = Resources/sl.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
+		341EC8C90D3C2BAB007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sl; path = Resources/sl.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
 		3420E65B0611D80000AE67E3 /* ESAccountPasswordPromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESAccountPasswordPromptController.h; path = Source/ESAccountPasswordPromptController.h; sourceTree = "<group>"; };
 		3420E65C0611D80000AE67E3 /* ESAccountPasswordPromptController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESAccountPasswordPromptController.m; path = Source/ESAccountPasswordPromptController.m; sourceTree = "<group>"; };
 		3420E65D0611D80000AE67E3 /* ESProxyPasswordPromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESProxyPasswordPromptController.h; path = Source/ESProxyPasswordPromptController.h; sourceTree = "<group>"; };
@@ -7987,6 +8010,7 @@
 				en,
 				English,
 				fr_CA,
+				sl,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CocAIMe2 */;
 			projectDirPath = "";
@@ -9369,6 +9393,7 @@
 				347AC44608AAA7C70043FB94 /* ca */,
 				34A30EA208D8EE7B00697644 /* es */,
 				342F9E560B552628000D5FC2 /* fi */,
+				341EC8C50D3C2BAA007216A2 /* sl */,
 			);
 			name = "Shared Dock Icon Images";
 			sourceTree = "<group>";
@@ -9396,6 +9421,7 @@
 				3437FF530A9BF0A60028604E /* tr */,
 				342F9E730B552630000D5FC2 /* fi */,
 				34F13F3A0BA6D56D000473DE /* pt_BR */,
+				341EC8B90D3C2BA7007216A2 /* sl */,
 			);
 			name = ESFileTransferProgressView.nib;
 			sourceTree = "<group>";
@@ -9423,6 +9449,7 @@
 				342F9E580B552628000D5FC2 /* fi */,
 				34F430890B7724E700A03603 /* nl */,
 				34F13F4D0BA6D56E000473DE /* pt_BR */,
+				341EC8C40D3C2BAA007216A2 /* sl */,
 			);
 			name = ProxyPasswordPrompt.nib;
 			sourceTree = "<group>";
@@ -9450,6 +9477,7 @@
 				342F9E5A0B552629000D5FC2 /* fi */,
 				34F4308A0B7724E800A03603 /* nl */,
 				34F13F4C0BA6D56E000473DE /* pt_BR */,
+				341EC8C20D3C2BAA007216A2 /* sl */,
 			);
 			name = PasswordPrompt.nib;
 			sourceTree = "<group>";
@@ -9479,6 +9507,7 @@
 				3419E5960A86996200C3FC68 /* tr */,
 				3465235208371A3F009565FE /* zh_CN */,
 				345F5BAB081AC4F2001F733C /* zh_TW */,
+				341EC8BF0D3C2BA9007216A2 /* sl */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -9562,6 +9591,7 @@
 				3437FF550A9BF0A70028604E /* tr */,
 				342F9E750B552630000D5FC2 /* fi */,
 				34F13F380BA6D56D000473DE /* pt_BR */,
+				341EC8B70D3C2BA7007216A2 /* sl */,
 			);
 			name = DualWindowMessageAdvanced.nib;
 			sourceTree = "<group>";
@@ -9591,6 +9621,7 @@
 				3419E2F40A81452400C3FC68 /* zh_TW */,
 				342F9E630B55262B000D5FC2 /* fi */,
 				34F13F4A0BA6D56E000473DE /* pt_BR */,
+				341EC8BE0D3C2BA9007216A2 /* sl */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
@@ -9615,6 +9646,7 @@
 				34CF88AD0A6D5EF1009D9A21 /* nl */,
 				3437FF460A9BF0A60028604E /* tr */,
 				342F9E5B0B552629000D5FC2 /* fi */,
+				341EC8C10D3C2BA9007216A2 /* sl */,
 			);
 			name = OTRPrefs.nib;
 			sourceTree = "<group>";
@@ -9652,6 +9684,7 @@
 				3437FF540A9BF0A70028604E /* tr */,
 				342F9E740B552630000D5FC2 /* fi */,
 				34F13F390BA6D56D000473DE /* pt_BR */,
+				341EC8B80D3C2BA7007216A2 /* sl */,
 			);
 			name = EditStateSheet.nib;
 			sourceTree = "<group>";
@@ -9679,6 +9712,7 @@
 				3437FF5D0A9BF0A70028604E /* tr */,
 				342F9E7D0B552632000D5FC2 /* fi */,
 				34F13F300BA6D56D000473DE /* pt_BR */,
+				341EC8B40D3C2BA6007216A2 /* sl */,
 			);
 			name = AccountProxy.nib;
 			sourceTree = "<group>";
@@ -9735,6 +9769,7 @@
 				3437FF5C0A9BF0A70028604E /* tr */,
 				342F9E7C0B552632000D5FC2 /* fi */,
 				34F13F310BA6D56D000473DE /* pt_BR */,
+				341EC8B50D3C2BA6007216A2 /* sl */,
 			);
 			name = AppearancePrefs.nib;
 			sourceTree = "<group>";
@@ -9950,6 +9985,7 @@
 				3437FF420A9BF0A50028604E /* tr */,
 				342F9E530B552627000D5FC2 /* fi */,
 				34F13F500BA6D56E000473DE /* pt_BR */,
+				341EC8C90D3C2BAB007216A2 /* sl */,
 			);
 			name = StatusSortConfiguration.nib;
 			sourceTree = "<group>";
@@ -10141,6 +10177,7 @@
 				3437FF480A9BF0A60028604E /* tr */,
 				342F9E640B55262B000D5FC2 /* fi */,
 				34F13F460BA6D56E000473DE /* pt_BR */,
+				341EC8BD0D3C2BA9007216A2 /* sl */,
 			);
 			name = ListThemeSheet.nib;
 			sourceTree = "<group>";
@@ -10170,6 +10207,7 @@
 				3437FF490A9BF0A60028604E /* tr */,
 				342F9E650B55262B000D5FC2 /* fi */,
 				34F13F450BA6D56E000473DE /* pt_BR */,
+				341EC8BC0D3C2BA8007216A2 /* sl */,
 			);
 			name = ListLayoutSheet.nib;
 			sourceTree = "<group>";
@@ -10225,6 +10263,7 @@
 				345DA0710CA09AF1009F1989 /* zh_CN */,
 				345DA06E0CA09AE9009F1989 /* zh_TW */,
 				34D8B3D60D15A40C0066F013 /* fr_CA */,
+				341EC8C70D3C2BAA007216A2 /* sl */,
 			);
 			name = Statuses.strings;
 			sourceTree = "<group>";
@@ -10252,6 +10291,7 @@
 				34619A960BC8BF5400DF383C /* tr */,
 				34619A970BC8BF5600DF383C /* zh_CN */,
 				34619A980BC8BF5B00DF383C /* zh_TW */,
+				341EC8C00D3C2BA9007216A2 /* sl */,
 			);
 			name = MessageHistoryConfiguration.nib;
 			sourceTree = "<group>";
@@ -10279,6 +10319,7 @@
 				347375000AA9216700AD18E3 /* zh_TW */,
 				342F9E550B552628000D5FC2 /* fi */,
 				34F13F4E0BA6D56E000473DE /* pt_BR */,
+				341EC8C60D3C2BAA007216A2 /* sl */,
 			);
 			name = ShortcutRecorder.strings;
 			sourceTree = "<group>";
@@ -10306,6 +10347,7 @@
 				3437FF430A9BF0A50028604E /* tr */,
 				342F9E540B552627000D5FC2 /* fi */,
 				34F13F4F0BA6D56E000473DE /* pt_BR */,
+				341EC8C80D3C2BAB007216A2 /* sl */,
 			);
 			name = StatusPreferences.nib;
 			sourceTree = "<group>";
@@ -10362,6 +10404,7 @@
 				348839200BB0E7B7009C3F7C /* tr */,
 				348839210BB0E7BB009C3F7C /* zh_CN */,
 				3488390F0BB0E770009C3F7C /* zh_TW */,
+				341EC8BB0D3C2BA8007216A2 /* sl */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -10389,6 +10432,7 @@
 				3437FF5B0A9BF0A70028604E /* tr */,
 				342F9E7B0B552632000D5FC2 /* fi */,
 				34F13F320BA6D56D000473DE /* pt_BR */,
+				341EC8B60D3C2BA6007216A2 /* sl */,
 			);
 			name = Buttons.strings;
 			sourceTree = "<group>";
@@ -10417,6 +10461,7 @@
 				345AF6CD0A5C9B5A00D7DA6F /* zh_TW */,
 				342F9E680B55262C000D5FC2 /* fi */,
 				34F13F440BA6D56D000473DE /* pt_BR */,
+				341EC8BA0D3C2BA8007216A2 /* sl */,
 			);
 			name = GeneralPreferences.nib;
 			sourceTree = "<group>";
@@ -10444,6 +10489,7 @@
 				34695FA40A89BA5800E3B0D0 /* tr */,
 				342F9E590B552628000D5FC2 /* fi */,
 				34636E4C0BC9A90600AD57AD /* pt_BR */,
+				341EC8C30D3C2BAA007216A2 /* sl */,
 			);
 			name = PersonalPreferences.nib;
 			sourceTree = "<group>";
@@ -10481,6 +10527,7 @@
 				34E355610D10AC8E009FC9DE /* fi */,
 				34E3556C0D10AC92009FC9DE /* pt_BR */,
 				34E355770D10AC95009FC9DE /* en_CA */,
+				341EC8A60D3C2B9B007216A2 /* sl */,
 			);
 			name = EmoticonNames.strings;
 			sourceTree = "<group>";
