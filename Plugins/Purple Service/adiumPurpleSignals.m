@@ -67,7 +67,7 @@ static void buddy_event_cb(PurpleBuddy *buddy, PurpleBuddyEvent event)
 					/* Failing that, load one from the cache. We'll need to unreference the returned PurpleBuddyIcon
 					 * when we're done.
 					 */
-					buddyIcon = purple_buddy_icons_find(account, [[contact UID] UTF8String]);
+					buddyIcon = purple_buddy_icons_find(buddy->account, buddy->name);
 					shouldUnref = YES;
 				}
 
