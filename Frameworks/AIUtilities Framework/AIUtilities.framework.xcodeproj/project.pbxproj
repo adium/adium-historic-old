@@ -409,7 +409,7 @@
 		34C2A4540821797100F3363F /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = Resources/da.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34D18390075FC2390075A380 /* AIRolloverButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIRolloverButton.h; path = Source/AIRolloverButton.h; sourceTree = "<group>"; };
 		34D18391075FC2390075A380 /* AIRolloverButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIRolloverButton.m; path = Source/AIRolloverButton.m; sourceTree = "<group>"; };
-		34D833A907CBE34B006466F2 /* en */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = en; path = Resources/English.lproj/Localizable.strings; sourceTree = "<group>"; };
+		34D833A907CBE34B006466F2 /* en */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = en; path = Resources/en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34D8356E07CBEB4C006466F2 /* PlasticButtonDefault_Caps.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PlasticButtonDefault_Caps.png; path = Resources/PlasticButtonDefault_Caps.png; sourceTree = "<group>"; };
 		34D8356F07CBEB4C006466F2 /* PlasticButtonNormal_Middle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PlasticButtonNormal_Middle.png; path = Resources/PlasticButtonNormal_Middle.png; sourceTree = "<group>"; };
 		34D8357007CBEB4C006466F2 /* PlasticButtonPressed_Caps.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = PlasticButtonPressed_Caps.png; path = Resources/PlasticButtonPressed_Caps.png; sourceTree = "<group>"; };
