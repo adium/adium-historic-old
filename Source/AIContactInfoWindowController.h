@@ -21,30 +21,20 @@
 	   AIListOutlineView, AIListObject;
 
 @interface AIContactInfoWindowController : AIWindowController <AIListControllerDelegate> {	
-	IBOutlet		NSTabView						*tabView_category;
 	
-	IBOutlet		NSTabViewItem					*tabViewItem_info;
-	IBOutlet		NSTabViewItem					*tabViewItem_accounts;
-	NSTabViewItem									*tabViewItem_lastSelectedForListContacts;
+	IBOutlet		NSSegmentedControl				*inspectorToolbar;
+	
 
-	IBOutlet		AIContactInfoImageViewWithImagePicker	*imageView_userIcon;
-	IBOutlet		NSTextField								*textField_accountName;
-	IBOutlet		NSTextField								*textField_service;
 	
-	IBOutlet		AIModularPaneCategoryView		*view_Profile;
-	IBOutlet		AIModularPaneCategoryView		*view_Accounts;
-	IBOutlet		AIModularPaneCategoryView		*view_Alerts;
-	IBOutlet		AIModularPaneCategoryView		*view_Settings;
-
-	IBOutlet		NSDrawer						*drawer_metaContact;
+	IBOutlet		NSView							*currentView;
 	
-	IBOutlet		AIAutoScrollView				*scrollView_contactList;
-    IBOutlet		AIListOutlineView				*contactListView;
-	IBOutlet		NSButton						*button_addContact;
-	IBOutlet		NSButton						*button_removeContact;
+	IBOutlet		AIAutoScrollView				*contactListScrollView;
+    IBOutlet		AIListOutlineView				*contactListOutlineView;
+	IBOutlet		NSButton						*removeContact;
 	
 	AIListObject									*displayedObject;
 	NSMutableDictionary								*loadedPanes;
+	int												lastSegmentForContact;
 
 	ESContactInfoListController						*contactListController;
 }
@@ -53,11 +43,9 @@
 + (void)closeInfoWindow;
 - (void)configureForListObject:(AIListObject *)inObject;
 
-- (IBAction)addContact:(id)sender;
 - (IBAction)removeContact:(id)sender;
 
 //Internal use
-- (float)drawerTrailingOffset;
 - (void)contactInfoListControllerSelectionDidChangeToListObject:(AIListObject *)listObject;
 
 @end
