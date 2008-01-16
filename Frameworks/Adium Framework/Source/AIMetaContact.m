@@ -692,6 +692,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	//If the online status of a contained object changed, we should also check if our one-contact-only
 	//in terms of online contacts has changed
 	if ([key isEqualToString:@"Online"]) {
+		_preferredContact = nil;
 		[self _determineIfWeShouldAppearToContainOnlyOneContact];
 		shouldNotify = YES;
 	}
