@@ -102,13 +102,14 @@ body {
 	}    
    
 .text {
-	padding: 0 40px 0 0;
+	padding: 6px 40px 0 0;
 	margin: 0;
 	overflow: auto;
 }
  
 .time_consecutive + .text{ /* Next message in same bubble */
 	margin-top: 7px;
+	padding-top: 0px;
 }   
 .status_container {
     position: relative;
