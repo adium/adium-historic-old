@@ -117,8 +117,8 @@
 - (NSString *)passwordForAccount:(AIAccount *)inAccount {
 	return [adiumPasswords passwordForAccount:inAccount];
 }
-- (void)passwordForAccount:(AIAccount *)inAccount forcePromptDisplay:(BOOL)forceDisplay notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext {
-	[adiumPasswords passwordForAccount:inAccount forcePromptDisplay:forceDisplay notifyingTarget:inTarget selector:inSelector context:inContext];
+- (void)passwordForAccount:(AIAccount *)inAccount promptOption:(AIPromptOption)promptOption notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext {
+	[adiumPasswords passwordForAccount:inAccount promptOption:promptOption notifyingTarget:inTarget selector:inSelector context:inContext];
 }
 - (void)setPassword:(NSString *)inPassword forProxyServer:(NSString *)server userName:(NSString *)userName {
 	[adiumPasswords setPassword:inPassword forProxyServer:server userName:userName];
