@@ -838,3 +838,9 @@
 }
 
 @end
+
+/*
+ * These strinsg were used previously; we may want them again. Keeping the translations around for now.
+ AILocalizedString("%@ joined the chat", nil);
+  AILocalizedString("%@ left the chat", nil);
+ */
