@@ -26,6 +26,12 @@
 - (void)editAccountSheetDidEndForAccount:(AIAccount *)inAccount withSuccess:(BOOL)successful;
 @end
 
+typedef enum {
+	AIPromptAsNeeded = 0,
+	AIPromptAlways,
+	AIPromptNever
+} AIPromptOption;
+
 @protocol AIAccountController <AIController>
 
 #pragma mark Services
@@ -98,12 +104,12 @@
  * @brief Retrieve the password of an account, prompting the user if necessary
  *
  * @param inAccount account whose password is desired
- * @param forceDisplay If YES, a password prompt will be shown even if a stored password is available. If NO, it will only be displayed if no password is stored.
+ * @param promptOption An AIPromptOption determining whether and how a prompt for the password should be displayed if it is needed. This allows forcing or suppressing of the prompt dialogue.
  * @param inTarget target to notify when password is available
  * @param inSelector selector to notify when password is available. Selector is of the form - (void)returnedPassword:(NSString *)p returnCode:(AIPasswordPromptReturn)returnCode context:(id)context
  * @param inContext context passed to target
  */
-- (void)passwordForAccount:(AIAccount *)inAccount forcePromptDisplay:(BOOL)forceDisplay notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
+- (void)passwordForAccount:(AIAccount *)inAccount promptOption:(AIPromptOption)promptOption notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
 
 /*!
  * @brief Set the password for a proxy server

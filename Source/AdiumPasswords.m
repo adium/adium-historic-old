@@ -120,28 +120,46 @@
  * @brief Retrieve the password of an account, prompting the user if necessary
  *
  * @param inAccount account whose password is desired
- * @param forceDisplay If YES, a password prompt will be shown even if a stored password is available. If NO, it will only be displayed if no password is stored.
+ * @param promptOption An AIPromptOption determining whether and how a prompt for the password should be displayed if it is needed. This allows forcing or suppressing of the prompt dialogue.
  * @param inTarget target to notify when password is available
  * @param inSelector selector to notify when password is available
  * @param inContext context passed to target
  */
-- (void)passwordForAccount:(AIAccount *)inAccount forcePromptDisplay:(BOOL)forceDisplay notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
+- (void)passwordForAccount:(AIAccount *)inAccount promptOption:(AIPromptOption)promptOption notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
 	NSString	*password = [self passwordForAccount:inAccount];
-	
-	if (password && [password length] && !forceDisplay) {
+	BOOL		shouldPrompt;
+
+	switch (promptOption)
+	{
+		case AIPromptAlways:
+			shouldPrompt = YES;
+			break;
+		case AIPromptAsNeeded:
+		{
+			if (password && [password length])
+				shouldPrompt = NO;
+			else 
+				shouldPrompt = YES;
+			break;
+		}
+		case AIPromptNever:
+			shouldPrompt = NO;
+			break;
+	}
+
+	if (shouldPrompt) {
+			//Prompt the user for their password
+			[ESAccountPasswordPromptController showPasswordPromptForAccount:inAccount
+																   password:password
+															notifyingTarget:inTarget
+																   selector:inSelector
+																	context:inContext];
+	} else {
 		//Invoke the target right away
 		void (*targetMethodSender)(id, SEL, id, AIPasswordPromptReturn, id) = (void (*)(id, SEL, id, AIPasswordPromptReturn, id)) objc_msgSend;
 		targetMethodSender(inTarget, inSelector, password, AIPasswordPromptOKReturn, inContext);
-
-	} else {
-		//Prompt the user for their password
-		[ESAccountPasswordPromptController showPasswordPromptForAccount:inAccount
-															   password:password
-														notifyingTarget:inTarget
-															   selector:inSelector
-																context:inContext];
-	}
+	}		
 }
 
 //Proxy Servers --------------------------------------------------------------------------------------------------------
