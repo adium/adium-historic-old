@@ -116,32 +116,79 @@
 	return password;
 }
 
+- (void)retrievedPassword:(NSDictionary *)requestDict
+{
+	NSString		*password = [requestDict objectForKey:@"Password"];
+	AIAccount		*account = [requestDict objectForKey:@"Account"];
+	AIPromptOption	promptOption = [[requestDict objectForKey:@"AIPromptOption"] intValue];
+	id				target = [requestDict objectForKey:@"Target"];
+	SEL				selector = NSSelectorFromString([requestDict objectForKey:@"Selector"]);
+	id				context = [requestDict objectForKey:@"Context"];
+	BOOL			shouldPrompt;
+
+	switch (promptOption)
+	{
+		case AIPromptAlways:
+			shouldPrompt = YES;
+			break;
+		case AIPromptAsNeeded:
+		{
+			if (password && [password length])
+				shouldPrompt = NO;
+			else 
+				shouldPrompt = YES;
+			break;
+		}
+		case AIPromptNever:
+			shouldPrompt = NO;
+			break;
+	}
+	
+	if (shouldPrompt) {
+		//Prompt the user for their password
+		[ESAccountPasswordPromptController showPasswordPromptForAccount:account
+															   password:password
+														notifyingTarget:target
+															   selector:selector
+																context:context];
+	} else {
+		//Invoke the target right away
+		void (*targetMethodSender)(id, SEL, id, AIPasswordPromptReturn, id) = (void (*)(id, SEL, id, AIPasswordPromptReturn, id)) objc_msgSend;
+		targetMethodSender(target, selector, password, AIPasswordPromptOKReturn, context);
+	}	
+}
+
+- (void)threadedPasswordRetrieval:(NSMutableDictionary *)requestDict
+{
+	NSString	*password = [self passwordForAccount:[requestDict objectForKey:@"Account"]];
+	if (password)
+		[requestDict setObject:password forKey:@"Password"];
+
+	[self performSelectorOnMainThread:@selector(retrievedPassword:)
+						   withObject:requestDict
+						waitUntilDone:NO];
+}
+
 /*!
  * @brief Retrieve the password of an account, prompting the user if necessary
  *
  * @param inAccount account whose password is desired
- * @param forceDisplay If YES, a password prompt will be shown even if a stored password is available. If NO, it will only be displayed if no password is stored.
+ * @param promptOption An AIPromptOption determining whether and how a prompt for the password should be displayed if it is needed. This allows forcing or suppressing of the prompt dialogue.
  * @param inTarget target to notify when password is available
  * @param inSelector selector to notify when password is available
  * @param inContext context passed to target
  */
-- (void)passwordForAccount:(AIAccount *)inAccount forcePromptDisplay:(BOOL)forceDisplay notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
+- (void)passwordForAccount:(AIAccount *)inAccount promptOption:(AIPromptOption)promptOption notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
-	NSString	*password = [self passwordForAccount:inAccount];
-	
-	if (password && [password length] && !forceDisplay) {
-		//Invoke the target right away
-		void (*targetMethodSender)(id, SEL, id, AIPasswordPromptReturn, id) = (void (*)(id, SEL, id, AIPasswordPromptReturn, id)) objc_msgSend;
-		targetMethodSender(inTarget, inSelector, password, AIPasswordPromptOKReturn, inContext);
-
-	} else {
-		//Prompt the user for their password
-		[ESAccountPasswordPromptController showPasswordPromptForAccount:inAccount
-															   password:password
-														notifyingTarget:inTarget
-															   selector:inSelector
-																context:inContext];
-	}
+	[NSThread detachNewThreadSelector:@selector(threadedPasswordRetrieval:)
+							 toTarget:self
+						   withObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
+									   inAccount, @"Account",
+									   [NSNumber numberWithInt:promptOption], @"AIPromptOption",
+									   inTarget, @"Target",
+									   NSStringFromSelector(inSelector), @"Selector",
+									   inContext, @"Context" /* may be nil so should be last */,
+									   nil]];
 }
 
 //Proxy Servers --------------------------------------------------------------------------------------------------------
