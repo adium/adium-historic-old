@@ -27,7 +27,7 @@
 - (void)forgetPasswordForAccount:(AIAccount *)inAccount;
 - (NSString *)passwordForAccount:(AIAccount *)inAccount;
 - (void)passwordForAccount:(AIAccount *)inAccount
-		forcePromptDisplay:(BOOL)forceDisplay
+			  promptOption:(AIPromptOption)promptOption
 		   notifyingTarget:(id)inTarget
 				  selector:(SEL)inSelector
 				   context:(id)inContext;

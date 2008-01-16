@@ -431,23 +431,18 @@
             if (!areOnline && ![[self statusObjectForKey:@"Connecting"] boolValue]) {
 				if ([[self service] supportsPassword] && (!password ||
 														  [[self statusObjectForKey:@"Prompt For Password On Next Connect"] boolValue])) {
-					if ([[self service] requiresPassword] ||
-						[[self statusObjectForKey:@"Prompt For Password On Next Connect"] boolValue]) {
-						//Retrieve the user's password and then call connect
-						[[adium accountController] passwordForAccount:self 
-												   forcePromptDisplay:[[self statusObjectForKey:@"Prompt For Password On Next Connect"] boolValue]
-													  notifyingTarget:self
-															 selector:@selector(passwordReturnedForConnect:returnCode:context:)
-															  context:nil];
-					} else {
-						/* This service allows passwords but treats them as optional, and we haven't been told to force a prompt.
-						 * Retrieve the password without prompting and proceed.
-						 */
-						[self passwordReturnedForConnect:[[adium accountController] passwordForAccount:self]
-											  returnCode:AIPasswordPromptOKReturn
-												 context:nil];
-					}
+					AIPromptOption promptOption = AIPromptAsNeeded;
+					if ([[self statusObjectForKey:@"Prompt For Password On Next Connect"] boolValue]) 
+						promptOption = AIPromptAlways;
+					else if (![[self service] requiresPassword])
+						promptOption = AIPromptNever;
 
+					//Retrieve the user's password and then call connect
+					[[adium accountController] passwordForAccount:self 
+													 promptOption:promptOption
+												  notifyingTarget:self
+														 selector:@selector(passwordReturnedForConnect:returnCode:context:)
+														  context:nil];
 				} else {
 					/* Connect immediately without retrieving a password because we either don't need one or
 					 * already have one.
