@@ -29,4 +29,13 @@
 	[checkBox_checkMail setEnabled:YES];
 }
 
+- (void)configureForAccount:(AIAccount *)inAccount
+{
+	[super configureForAccount:inAccount];
+	[textField_connectServer setStringValue:@"talk.google.com"];
+	[textField_connectServer setEditable:NO];
+	[textField_connectServer setBordered:NO];
+	[textField_connectServer setDrawsBackground:NO];
+}
+
 @end
