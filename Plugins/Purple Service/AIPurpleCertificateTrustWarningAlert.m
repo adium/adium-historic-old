@@ -13,6 +13,7 @@
 #import <Security/oidsalg.h>
 #import <Adium/AIAccountControllerProtocol.h>
 #import "ESPurpleJabberAccount.h"
+#import "AIPurpleGTalkAccount.h"
 #import <AIUtilities/AITigerCompatibility.h>
 
 //#define ALWAYS_SHOW_TRUST_WARNING
@@ -38,6 +39,8 @@ static NSMutableDictionary *acceptedCertificates = nil;
 							 resultCallback:(void (*)(gboolean trusted, void *userdata))_query_cert_cb
 								   userData:(void*)ud
 {
+	if([account isKindOfClass:[AIPurpleGTalkAccount class]])
+		hostname = @"gmail.com"; // messed up certificate CN of gtalk
 	AIPurpleCertificateTrustWarningAlert *alert = [[self alloc] initWithAccount:account hostname:hostname certificates:certs resultCallback:_query_cert_cb userData:ud];
 	[alert showWindow:nil];
 	[alert release];

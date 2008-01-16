@@ -71,4 +71,12 @@
 	return shouldAttemptReconnect;
 }
 
+- (void)configurePurpleAccount
+{
+	[super configurePurpleAccount];
+	
+	// force connect server
+	purple_account_set_string(account, "connect_server", "talk.google.com");
+}
+
 @end
