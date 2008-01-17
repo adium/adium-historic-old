@@ -439,6 +439,8 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	NSString		*groupName = [self _mapOutgoingGroupName:[group UID]];
 	
 	while ((object = [enumerator nextObject])) {
+		AILogWithSignature(@"%@ adding %@ to %@", self, [self _UIDForAddingObject:object], groupName);
+
 		[purpleThread addUID:[self _UIDForAddingObject:object] onAccount:self toGroup:groupName];
 		
 		//Add it to Adium's list
