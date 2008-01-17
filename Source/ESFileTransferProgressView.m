@@ -404,4 +404,47 @@ static NSDictionary	*transferStatusSelectedAttributes = nil;
 	return [owner menuForEvent:inEvent];
 }
 
+#pragma mark Accessibility
+
+- (id)accessibilityAttributeValue:(NSString *)attribute
+{
+	id value;
+	
+	if ([attribute isEqualToString:NSAccessibilityRoleAttribute]) {
+		value = NSAccessibilityRowRole;
+
+	} else if ([attribute isEqualToString:NSAccessibilityRoleDescriptionAttribute]) {
+		if (![progressIndicator isIndeterminate]) {
+			//We are in the concrete phase of an active transfer
+			value = [NSString stringWithFormat:
+					 AILocalizedString(@"Transferring %@ from %@ to %@ at %@ : %@", "e.g: Transferring file.zip from Evan to Joel at 45 kb/sec : 5 minutes remaining. Keep the spaces around the colon."),
+					 [textField_fileName stringValue],
+					 [textField_source stringValue],
+					 [textField_destination stringValue], 
+					 [textField_rate stringValue],
+					 (transferStatus ? transferStatus : @"")];
+			
+		} else {
+			value = [NSString stringWithFormat:
+					 AILocalizedString(@"Transfer of %@ from %@ to %@ : %@", "e.g: Transfer of file.zip from Evan to Joel : Upload complete. Keep the spaces around the colon"),
+					 [textField_fileName stringValue],
+					 [textField_source stringValue],
+					 [textField_destination stringValue], 
+					 (transferStatus ? transferStatus : @"")];
+		}
+
+	} else if ([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
+		value = AILocalizedString(@"File transfer", nil);
+		
+	} else if ([attribute isEqualToString:NSAccessibilityEnabledAttribute]) {
+		//Never report as disabled, so we don't say 'dimmed' all the time
+		value = [NSNumber numberWithBool:YES];
+
+	} else {
+		value = [super accessibilityAttributeValue:attribute];
+	}
+	
+	return value;
+}
+
 @end

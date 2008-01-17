@@ -105,4 +105,12 @@
 	return YES;
 }
 
+- (id)accessibilityAttributeValue:(NSString *)attribute
+{
+	if (embeddedView)
+		return [embeddedView accessibilityAttributeValue:attribute];
+	else
+		return [super accessibilityAttributeValue:attribute];
+}
+
 @end
