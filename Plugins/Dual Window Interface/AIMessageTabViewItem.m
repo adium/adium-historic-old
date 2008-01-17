@@ -60,6 +60,7 @@
 		windowController = nil;
 
 		//Configure ourself for the message view
+		AIChat *chat = [messageViewController chat];
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(chatSourceOrDestinationChanged:)
 										   name:Chat_SourceChanged
@@ -67,16 +68,16 @@
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(chatSourceOrDestinationChanged:)
 										   name:Chat_DestinationChanged
-										 object:chat];		
+										 object:chat];
 		[[adium notificationCenter] addObserver:self selector:@selector(chatStatusChanged:)
 										   name:Chat_StatusChanged
-										 object:[messageViewController chat]];
+										 object:chat];
 		[[adium notificationCenter] addObserver:self selector:@selector(chatAttributesChanged:)
 										   name:Chat_AttributesChanged
-										 object:[messageViewController chat]];	
+										 object:chat];	
 		[[adium notificationCenter] addObserver:self selector:@selector(chatParticipatingListObjectsChanged:)
 										   name:Chat_ParticipatingListObjectsChanged
-										 object:[messageViewController chat]];
+										 object:chat];
 		[self chatStatusChanged:nil];
 		[self chatParticipatingListObjectsChanged:nil];
 		
