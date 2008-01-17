@@ -193,11 +193,14 @@
 	
 	if (!group) group = [[adium contactController] groupWithUID:DEFAULT_GROUP_NAME];
 	
+	AILogWithSignature(@"checkedAccounts is %@", checkedAccounts);
+
 	//Add contact to our accounts
 	enumerator = [accounts objectEnumerator];
 	while ((account = [enumerator nextObject])) {
 		if ([account contactListEditable] &&
 		   [[account preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT] boolValue]) {
+			AILogWithSignature(@"Accont %@ was checked per its preference; we'll add %@ to it", account, UID);
 			AIListContact	*contact = [[adium contactController] contactWithService:service
 																			 account:account
 																				 UID:UID];
@@ -219,6 +222,7 @@
 	}
 
 	//Add them to our local group
+	AILogWithSignature(@"Adding %@ to %@", contactArray, group);
 	[[adium contactController] addContacts:contactArray toGroup:group];
 
 	[self closeWindow:nil];
