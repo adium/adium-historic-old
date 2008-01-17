@@ -16,10 +16,12 @@
 
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIMenuControllerProtocol.h>
 #import <Adium/AIHTMLDecoder.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIServiceIcons.h>
@@ -389,12 +391,16 @@ static int toArraySort(id itemA, id itemB, void *context);
 																	   alpha:1.0]];
 
 	AIImageTextCell	*dataCell = [[AIImageTextCell alloc] init];
-	[[[outlineView_contacts tableColumns] objectAtIndex:0] setDataCell:dataCell];
+	NSTableColumn	*tableColumn = [[outlineView_contacts tableColumns] objectAtIndex:0];
+	[tableColumn setDataCell:dataCell];
+	[tableColumn setEditable:NO];
 	[dataCell setFont:[NSFont systemFontOfSize:[NSFont smallSystemFontSize]]];
 	[dataCell release];
 
 	[outlineView_contacts setDrawsGradientSelection:YES];
-
+	// Set the selector for doubleAction
+	[outlineView_contacts setDoubleAction:@selector(openChatOnDoubleAction:)];
+	
 	//Localize tableView_results column headers
 	[[[tableView_results tableColumnWithIdentifier:@"To"] headerCell] setStringValue:TO];
 	[[[tableView_results tableColumnWithIdentifier:@"From"] headerCell] setStringValue:FROM];
@@ -632,6 +638,16 @@ static int toArraySort(id itemA, id itemB, void *context);
 {
 	[refreshResultsTimer invalidate]; [refreshResultsTimer release]; refreshResultsTimer = nil;
 	[self refreshResultsSearchIsComplete:YES];
+}
+
+// Called on doubleAction to open a chat
+-(void)openChatOnDoubleAction:(id)sender
+{
+	id item = [outlineView_contacts firstSelectedItem];
+	if ([item isKindOfClass:[AIListContact class]]) {
+		//Open a new message with the contact
+		[[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:(AIListContact *)item onPreferredAccount:YES]];
+	}
 }
 
 //Displays the contents of the specified log in our window
