@@ -104,7 +104,7 @@
 			<property name="account" code="Cact" type="account" access="r" description="The account associated with this chat">
 				<cocoa key="scriptingAccount" />
 			</property>
-            <property name="date opened" code="CDop" type="date" access="r" description="The date ad time at which this chat was opened">
+            <property name="date opened" code="CDop" type="date" access="r" description="The date and time at which this chat was opened">
             	<cocoa key="dateOpened" />
             </property>
 
