@@ -1052,8 +1052,8 @@
 
 - (void)setScriptingStatusMessageFromScriptCommand:(NSScriptCommand *)c
 {
-	NSAttributedString	*messaegString = [[c evaluatedArguments] objectForKey:@"WithMessage"];
-	NSTextStorage		*withMessage = (messaegString ? [[[NSTextStorage alloc] initWithAttributedString:messaegString] autorelease] : nil);
+	NSAttributedString	*messageString = [[c evaluatedArguments] objectForKey:@"WithMessage"];
+	NSTextStorage		*withMessage = (messageString ? [[[NSTextStorage alloc] initWithAttributedString:messageString] autorelease] : nil);
 	if (withMessage)
 		[self setScriptingStatusMessage:withMessage];	
 }
