@@ -437,7 +437,13 @@
     } else if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
         return [self stringValue];
 		
-    } else if([attribute isEqualToString:NSAccessibilityHelpAttribute]) {
+    } else if([attribute isEqualToString:NSAccessibilityRoleDescriptionAttribute]) {
+		if (subString)
+			return [NSString stringWithFormat:@"%@\n%@", [self stringValue], subString];
+		else
+			return [self stringValue];
+
+	} else if([attribute isEqualToString:NSAccessibilityHelpAttribute]) {
         return [self stringValue];
 		
 	} else if ([attribute isEqualToString: NSAccessibilityWindowAttribute]) {
