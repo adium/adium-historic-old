@@ -183,6 +183,9 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 		}
 	}
 	
+	[outlineView accessibilitySetOverrideValue:AILocalizedString(@"File Transfers", nil)
+								  forAttribute:NSAccessibilityDescriptionAttribute];
+
 	//Call super's implementation
 	[super windowDidLoad];
 
