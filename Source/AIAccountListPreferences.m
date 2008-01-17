@@ -38,6 +38,7 @@
 #import <Adium/AIStatusIcons.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import "KFTypeSelectTableView.h"
+#import "AIBlankCell.h"
 
 #define MINIMUM_ROW_HEIGHT				34
 #define MINIMUM_CELL_SPACING			 4
@@ -349,6 +350,13 @@
 	[tableView_accountList registerForDraggedTypes:[NSArray arrayWithObjects:ACCOUNT_DRAG_TYPE,nil]];
 	
     //Custom vertically-centered text cell for account names
+	/*
+	cell = [[AIBlankCell alloc] init];
+	[[tableView_accountList tableColumnWithIdentifier:@"blank1"] setDataCell:cell];
+	[[tableView_accountList tableColumnWithIdentifier:@"blank2"] setDataCell:cell];
+	[cell release];
+	*/
+	
     cell = [[AIImageTextCell alloc] init];
     [cell setFont:[NSFont boldSystemFontOfSize:13]];
 	[cell setDrawsImageAfterMainString:YES];
@@ -361,6 +369,8 @@
     [cell setAlignment:NSRightTextAlignment];
 	[cell setLineBreakMode:NSLineBreakByWordWrapping];
     [[tableView_accountList tableColumnWithIdentifier:@"status"] setDataCell:cell];
+	[cell accessibilitySetOverrideValue:[NSNumber numberWithBool:YES]
+						   forAttribute:NSAccessibilityEnabledAttribute];
 	[cell release];
     
 	[tableView_accountList sizeToFit];
@@ -903,6 +913,10 @@
 		// Update the subString with our current status message (if it exists);
 		[cell setSubString:[self statusMessageForAccount:account]];
 		
+	} else if ([identifier isEqualToString:@"service"]) {
+		[cell accessibilitySetOverrideValue:[[account service] longDescription]
+							   forAttribute:NSAccessibilityRoleDescriptionAttribute];		 
+
 	} else if ([identifier isEqualToString:@"status"]) {
 		if ([account enabled] && ![[account statusObjectForKey:@"Connecting"] boolValue] && [account statusObjectForKey:@"Waiting to Reconnect"]) {
 			NSString *format = [NSDateFormatter stringForTimeInterval:[[account statusObjectForKey:@"Waiting to Reconnect"] timeIntervalSinceNow]
@@ -919,8 +933,19 @@
 						  [account statusObjectForKey:@"Waiting to Reconnect"] ||
 						  [[account statusObjectForKey:@"Disconnecting"] boolValue] ||
 						  [[account statusObjectForKey:@"Online"] boolValue])];
+
+	} else if ([identifier isEqualToString:@"statusicon"]) {
+		[cell accessibilitySetOverrideValue:@" "
+							   forAttribute:NSAccessibilityTitleAttribute];
+		[cell accessibilitySetOverrideValue:@" "
+							   forAttribute:NSAccessibilityRoleDescriptionAttribute];
+
+	} else if ([identifier isEqualToString:@"blank1"] || [identifier isEqualToString:@"blank2"]) {
+		[cell accessibilitySetOverrideValue:@" "
+							   forAttribute:NSAccessibilityTitleAttribute];		
+		[cell accessibilitySetOverrideValue:@" "
+							   forAttribute:NSAccessibilityRoleDescriptionAttribute];		
 	}
-	
 }
 
 /*!
