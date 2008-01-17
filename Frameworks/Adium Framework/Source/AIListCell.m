@@ -498,21 +498,9 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	return NSAccessibilityUnignoredAncestor(self);
 }
 
-- (NSArray *)accessibilityActionNames
-{
-	return [NSArray arrayWithObjects: NSAccessibilityPressAction, nil];
-}
-
 - (NSString *)accessibilityActionDescription:(NSString *)action
 {
 	return NSAccessibilityActionDescription(action);
-}
-	
-- (void)accessibilityPerformAction:(NSString *)action {
-	if ([action isEqualToString:NSAccessibilityPressAction]) {
-		// perform action on this cell
-		[controlView performSelector:@selector(performDefaultActionOnSelectedItem:)];
-	}
 }
 
 @end
