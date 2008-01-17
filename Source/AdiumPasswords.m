@@ -160,6 +160,7 @@
 
 - (void)threadedPasswordRetrieval:(NSMutableDictionary *)requestDict
 {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSString	*password = [self passwordForAccount:[requestDict objectForKey:@"Account"]];
 	if (password)
 		[requestDict setObject:password forKey:@"Password"];
@@ -167,6 +168,7 @@
 	[self performSelectorOnMainThread:@selector(retrievedPassword:)
 						   withObject:requestDict
 						waitUntilDone:NO];
+	[pool release];
 }
 
 /*!
