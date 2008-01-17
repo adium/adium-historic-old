@@ -638,17 +638,23 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
  */
 - (BOOL)rejoinChat:(AIChat *)chat
 {
-//	id identifier = [[chat identifier] retain];
+	[chat retain];
+
+	PurpleConversation *conv = [[chat identifier] pointerValue];
+	if (conv && conv->ui_data) {
+		[(AIChat *)(conv->ui_data) release];
+		conv->ui_data = NULL;
+	}
 
 	/* The identifier is how we associate a PurpleConversation with an AIChat.
 	 * Clear the identifier so a new PurpleConversation will be made. The ChatCreationInfo for the chat is still around, so it can join.
 	 */
 	[chat setIdentifier:nil];
 	[purpleThread openChat:chat onAccount:self];
-//	[chat setIdentifier:identifier];
-//	[[chat identifier] release];
-	
-	//created chat succesfully
+
+	[chat autorelease];
+
+	//We don't get any immediate feedback as to our success; just return YES.
 	return YES;
 }
 
