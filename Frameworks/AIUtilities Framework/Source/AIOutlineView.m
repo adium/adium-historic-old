@@ -244,11 +244,16 @@
 
 #pragma mark Accessibility
 
-- (id)accessibilityAttributeValue:(NSString *)attribute
-{	
-	return [super accessibilityAttributeValue:attribute];
+- (NSArray *)accessibilityActionNames
+{
+	NSMutableArray *accessibilityActionNames = [[super accessibilityActionNames] mutableCopy];
+	
+	//These are both handled by NSOutlineView by default but not included in the accessibilityActionNames by default
+	[accessibilityActionNames addObject:NSAccessibilityPressAction];
+	[accessibilityActionNames addObject:NSAccessibilityShowMenuAction];
+	
+	return [accessibilityActionNames autorelease];
 }
-
 
 @end
 
