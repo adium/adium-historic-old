@@ -38,7 +38,6 @@
 #import <Adium/AIStatusIcons.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import "KFTypeSelectTableView.h"
-#import "AIBlankCell.h"
 
 #define MINIMUM_ROW_HEIGHT				34
 #define MINIMUM_CELL_SPACING			 4
