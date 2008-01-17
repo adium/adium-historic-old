@@ -1923,6 +1923,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		   (preferredContact = [self existingListObjectWithUniqueID:internalObjectID]) &&
 		   ([preferredContact isKindOfClass:[AIListContact class]]) &&
 		   ([preferredContact statusSummary] == [inContact statusSummary]) &&
+			([inContact isMobile] || ![preferredContact isMobile]) && //Either the parent contact is mobile (so that's the best we have), or the preferred is not.
 			([[(AIMetaContact *)inContact containedObjects] containsObject:preferredContact])) {
 			returnContact = [self preferredContactForContentType:inType
 												  forListContact:(AIListContact *)preferredContact];
