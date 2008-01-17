@@ -222,4 +222,13 @@
 	}
 }
 
+/*
+- (id)accessibilityAttributeValue:(NSString *)attribute
+{
+	NSLog(@"%@: Returning %@ for %@", self, [super accessibilityAttributeValue:attribute], attribute);
+
+	return [super accessibilityAttributeValue:attribute];
+}
+*/
+
 @end
