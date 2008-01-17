@@ -82,6 +82,9 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 	[button_delete setToolTip:AILocalizedString(@"Remove the selected action(s)", nil)];
 	[button_edit setToolTip:AILocalizedString(@"Configure the selected action", nil)];
 
+	[outlineView_summary accessibilitySetOverrideValue:AILocalizedString(@"Events", nil)
+										  forAttribute:NSAccessibilityDescriptionAttribute];
+
 	//Update enable state of our buttons
 	[self outlineViewSelectionDidChange:nil];
 		
