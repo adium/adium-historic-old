@@ -116,25 +116,21 @@
 #pragma mark Encoding
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {	
-	if (inListObject) {
-		return [AIHTMLDecoder encodeHTML:inAttributedString
-								 headers:NO
-								fontTags:YES
-					  includingColorTags:YES
-						   closeFontTags:YES
-							   styleTags:YES
-			  closeStyleTagsOnFontChange:YES
-						  encodeNonASCII:NO
-							encodeSpaces:NO
-							  imagesPath:nil
-					   attachmentsAsText:YES
-			   onlyIncludeOutgoingImages:NO
-						  simpleTagsOnly:YES
-						  bodyBackground:NO
-					 allowJavascriptURLs:YES];
-	} else {
-		return [inAttributedString string];
-	}
+	return [AIHTMLDecoder encodeHTML:inAttributedString
+							 headers:NO
+							fontTags:YES
+				  includingColorTags:YES
+					   closeFontTags:YES
+						   styleTags:YES
+		  closeStyleTagsOnFontChange:YES
+					  encodeNonASCII:NO
+						encodeSpaces:NO
+						  imagesPath:nil
+				   attachmentsAsText:YES
+		   onlyIncludeOutgoingImages:NO
+					  simpleTagsOnly:YES
+					  bodyBackground:NO
+				 allowJavascriptURLs:YES];
 }
 
 #pragma mark File transfer
