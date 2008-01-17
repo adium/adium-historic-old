@@ -707,6 +707,8 @@ static NSArray *draggedTypes = nil;
 							   withObject:nil
 							   afterDelay:0.0];
 	}
+
+	NSAccessibilityPostNotification(webView, NSAccessibilityValueChangedNotification);
 }
 
 
