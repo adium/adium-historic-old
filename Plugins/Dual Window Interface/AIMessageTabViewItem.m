@@ -60,6 +60,14 @@
 		windowController = nil;
 
 		//Configure ourself for the message view
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(chatSourceOrDestinationChanged:)
+										   name:Chat_SourceChanged
+										 object:chat];
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(chatSourceOrDestinationChanged:)
+										   name:Chat_DestinationChanged
+										 object:chat];		
 		[[adium notificationCenter] addObserver:self selector:@selector(chatStatusChanged:)
 										   name:Chat_StatusChanged
 										 object:[messageViewController chat]];
@@ -171,6 +179,13 @@
 		[self setValue:nil forKeyPath:@"icon"];
 	}
 }
+
+- (void)chatSourceOrDestinationChanged:(NSNotification *)notification
+{
+	[[self windowController] updateIconForTabViewItem:self];
+	[self setValue:nil forKeyPath:@"icon"];
+}
+
 //
 - (void)listObjectAttributesChanged:(NSNotification *)notification
 {
