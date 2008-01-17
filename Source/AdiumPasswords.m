@@ -14,25 +14,42 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AdiumPasswords.h"
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AILoginControllerProtocol.h>
-#import "AdiumPasswords.h"
-#import "ESAccountPasswordPromptController.h"
-#import "ESProxyPasswordPromptController.h"
-#import <AIUtilities/AIKeychain.h>
-#import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
+#import <AIUtilities/AIKeychain.h>
+#import <AIUtilities/AIObjectAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <objc/objc-runtime.h>
 
+#import "ESAccountPasswordPromptController.h"
+#import "ESProxyPasswordPromptController.h"
+
+#define KEY_PERFORMED_ACCOUNT_PASSWORD_UPGRADE @"Adium 1.3: Account Passwords Upgraded"
+
 @interface AdiumPasswords (PRIVATE)
-- (NSString *)_accountNameForAccount:(AIAccount *)inAccount;
+- (NSString *)_oldStyleAccountNameForAccount:(AIAccount *)inAccount;
 - (NSString *)_passKeyForAccount:(AIAccount *)inAccount;
+- (NSString *)_accountNameForAccount:(AIAccount *)inAccount;
+- (NSString *)_serverNameForAccount:(AIAccount *)inAccount;
 - (NSString *)_accountNameForProxyServer:(NSString *)proxyServer userName:(NSString *)userName;
 - (NSString *)_passKeyForProxyServer:(NSString *)proxyServer;
+- (void)_upgradeAccountPasswordKeychainEntries;
 @end
 
 @implementation AdiumPasswords
+
+/*!
+ * @brief Finish Initing
+ *
+ * Requires that all accounts have been loaded
+ */
+- (void)controllerDidLoad 
+ {
+	[self _upgradeAccountPasswordKeychainEntries];
+}
 
 //Accounts -------------------------------------------------------------------------------------------------------------
 #pragma mark Accounts
@@ -47,7 +64,7 @@
 {
 	NSError *error = nil;
 	[[AIKeychain defaultKeychain_error:&error] setInternetPassword:inPassword
-														 forServer:[self _passKeyForAccount:inAccount]
+														 forServer:[self _serverNameForAccount:inAccount]
 														   account:[self _accountNameForAccount:inAccount]
 														  protocol:FOUR_CHAR_CODE('AdIM')
 															 error:&error];
@@ -73,10 +90,11 @@
 {
 	NSError		*error    = nil;
 	AIKeychain	*keychain = [AIKeychain defaultKeychain_error:&error];
-	[keychain deleteInternetPasswordForServer:[self _passKeyForAccount:inAccount]
-		account:[self _accountNameForAccount:inAccount]
-		protocol:FOUR_CHAR_CODE('AdIM')
-		error:&error];
+	[keychain deleteInternetPasswordForServer:[self _serverNameForAccount:inAccount]
+									  account:[self _accountNameForAccount:inAccount]
+									 protocol:FOUR_CHAR_CODE('AdIM')
+										error:&error];
+
 	if (error) {
 		OSStatus err = [error code];
 		/*errSecItemNotFound: no entry in the keychain. a harmless error.
@@ -99,10 +117,11 @@
 {
 	NSError		*error    = nil;
 	AIKeychain	*keychain = [AIKeychain defaultKeychain_error:&error];
-	NSString	*password = [keychain internetPasswordForServer:[self _passKeyForAccount:inAccount]
+	NSString	*password = [keychain internetPasswordForServer:[self _serverNameForAccount:inAccount]
 														account:[self _accountNameForAccount:inAccount]
 													   protocol:FOUR_CHAR_CODE('AdIM')
 														  error:&error];
+	
 	if (error) {
 		OSStatus err = [error code];
 		/*errSecItemNotFound: no entry in the keychain. a harmless error.
@@ -301,17 +320,27 @@
 #pragma mark Password Keys
 
 /*!
- * @brief Keychain identifier for an account
+ * @brief Old-style Keychain identifier for an account
  */
-- (NSString *)_accountNameForAccount:(AIAccount *)inAccount{
+- (NSString *)_oldStyleAccountNameForAccount:(AIAccount *)inAccount{
 	return [NSString stringWithFormat:@"%@.%@",[[inAccount service] serviceID],[inAccount internalObjectID]];
 }
 - (NSString *)_passKeyForAccount:(AIAccount *)inAccount{
 	if ([[[adium loginController] userArray] count] > 1) {
-		return [NSString stringWithFormat:@"Adium.%@.%@",[[adium loginController] currentUser],[self _accountNameForAccount:inAccount]];
+		return [NSString stringWithFormat:@"Adium.%@.%@",[[adium loginController] currentUser],[self _oldStyleAccountNameForAccount:inAccount]];
 	} else {
-		return [NSString stringWithFormat:@"Adium.%@",[self _accountNameForAccount:inAccount]];
+		return [NSString stringWithFormat:@"Adium.%@",[self _oldStyleAccountNameForAccount:inAccount]];
 	}
+}
+
+/*!
+ * @brief New-style Keychain identifier for an account
+ */
+- (NSString *)_accountNameForAccount:(AIAccount *)inAccount {
+	return [[inAccount UID] compactedString];
+}
+- (NSString *)_serverNameForAccount:(AIAccount *)inAccount {
+	return [NSString stringWithFormat:@"%@.%@", [[inAccount service] serviceID], [self _accountNameForAccount:inAccount]];
 }
 
 /*!
@@ -325,6 +354,58 @@
 		return [NSString stringWithFormat:@"Adium.%@.%@",[[adium loginController] currentUser],proxyServer];
 	} else {
 		return [NSString stringWithFormat:@"Adium.%@",proxyServer];	
+	}
+}
+
+#pragma mark Upgrade code
+
+/*!
+ * @brief Changes the naming of the Keychain password entries from AdIM://Adium.{Service ID}.{Account internalObjectID} to AdIM://{Service ID}.{Account UID}.
+ */
+- (void)_upgradeAccountPasswordKeychainEntries
+{
+	if (![[NSUserDefaults standardUserDefaults] boolForKey:KEY_PERFORMED_ACCOUNT_PASSWORD_UPGRADE]) {
+		NSError			*error;
+		AIKeychain		*keychain = [AIKeychain defaultKeychain_error:&error];
+		NSArray			*accounts = [[adium accountController] accounts];
+		NSEnumerator	*enumerator = [accounts objectEnumerator];
+		AIAccount		*account;
+		NSString		*password;
+		
+		while ((account = [enumerator nextObject])) {
+			password = [keychain internetPasswordForServer:[self _passKeyForAccount:account]
+												   account:[self _oldStyleAccountNameForAccount:account]
+												  protocol:FOUR_CHAR_CODE('AdIM')
+													 error:&error];
+			if (error) {
+				OSStatus err = [error code];
+				if (err != errSecItemNotFound) {
+					NSDictionary *userInfo = [error userInfo];
+					NSLog(@"could not retrieve password for account %@: %@ returned %i (%@)", [self _oldStyleAccountNameForAccount:account], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], err, [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
+				}
+			} else {
+				[self setPassword:password forAccount:account];
+				
+				// Delete old keychain entry
+				[keychain deleteInternetPasswordForServer:[self _passKeyForAccount:account]
+												  account:[self _oldStyleAccountNameForAccount:account]
+												 protocol:FOUR_CHAR_CODE('AdIM')
+													error:&error];
+				if (error) {
+					OSStatus err = [error code];
+					/*errSecItemNotFound: no entry in the keychain. a harmless error.
+					 *we don't get here at all for noErr (error will be nil).
+					 */
+					if (err != errSecItemNotFound) {
+						NSDictionary *userInfo = [error userInfo];
+						NSLog(@"could not delete password for account %@: %@ returned %i (%@)", [self _oldStyleAccountNameForAccount:account], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], err, [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
+					}
+				}
+			}
+		}
+		
+		[[NSUserDefaults standardUserDefaults] setBool:YES
+												forKey:KEY_PERFORMED_ACCOUNT_PASSWORD_UPGRADE];
 	}
 }
 
