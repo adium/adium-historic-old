@@ -267,6 +267,22 @@
 	}
 }
 
+- (id)accessibilityAttributeValue:(NSString *)attribute
+{
+	if([attribute isEqualToString:NSAccessibilityRoleAttribute]) {
+		return NSAccessibilityButtonRole;
+
+    } else if([attribute isEqualToString:NSAccessibilityTitleAttribute]) {
+        return [self title];
+		
+    } else if([attribute isEqualToString:NSAccessibilityHelpAttribute]) {
+        return [self title];
+		
+	} else {
+        return [super accessibilityAttributeValue:attribute];
+    }
+}
+
 #pragma mark Accessors (should that REALLY be plural?)
 
 - (BOOL)isOpaque
