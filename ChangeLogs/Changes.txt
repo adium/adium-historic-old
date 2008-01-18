@@ -1,11 +1,15 @@
 				Adium X Version History
 				-----------------------
-Version 1.2.1 (??/??/????)
+Version 1.2.1 (1/18/2008)
  * Group chats now reconnect automatically when their accounts reconnect after being disconnected (#1880)
- * Fixed accessibility of the message window to allow VoiceOver and other assistive devices to read messages
+ * Greatly improved accessibility, including the chat window, the Accounts, Events, and Advanced preference panes, the File Transfer progress window, and the contact list
  * Fixed a major memory leak which occurred when closing chats (regressed in Adium 1.2) and several minor memory leaks
  * Decreased Adium's memory footprint 
  * Jabber conferences now use the account's display name as the handle by default (#8757)
+ * Fixed certificate checks for Google Talk accounts
+ * Fixed issues with mobile contacts being used from within a metacontact even though an online non-mobile contact could be used
+ * Improved performance when connecting multiple accounts with saved passwords
+ * Fixed updating of tab icons when the account or contact of a chat changes
  * Fixed retention of the minimum text entry height in message windows (#8759)
  * Fixed the "Get Info for Contact" prompt (#8756)
  * Fixed display of the revert overlay on manually-set icons in the Get Info window
@@ -38,6 +42,7 @@ Version 1.2.1 (??/??/????)
     * Fixed access and setting of account and contact user icons (#8818)
     * Allowed access to service images for accounts
     * Fixed a crash when interacting with message windows (#8821)
+    * Fixed the "Go Online" applescript action
     * Added a global status property
  * Fixed several localization issues
  * Updated Norwegian localization
