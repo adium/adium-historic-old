@@ -86,8 +86,10 @@
 		if (newFrame.size.width > oldFrame.size.width) newFrame.size.width += 8;
 		[button_addGroup setFrame:newFrame];
 	}
-	
-	
+		
+	[outlineView_stateList accessibilitySetOverrideValue:AILocalizedString(@"Statuses", nil)
+											forAttribute:NSAccessibilityRoleDescriptionAttribute];
+
 	/* Register as an observer of state array changes so we can refresh our list
 	 * in response to changes. */
 	[[adium notificationCenter] addObserver:self
