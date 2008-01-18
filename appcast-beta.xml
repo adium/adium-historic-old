@@ -4,11 +4,11 @@
     <title>Adium Updates</title>
     <language>en</language>
     <item>
-        <title>Adium 1.2.1b2</title>
-        <pubDate>Thursday, January 17th, 2008 15:21:49 GMT-5</pubDate>
-        <sparkle:releaseNotesLink>http://www.adiumx.com/changelogs/1.2.1b2.html</sparkle:releaseNotesLink>
+        <title>Adium 1.2.1</title>
+        <pubDate>Friday, January 18th, 2008 17:00:52 GMT-5</pubDate>
+        <sparkle:releaseNotesLink>http://www.adiumx.com/changelogs/1.2.1.html</sparkle:releaseNotesLink>
         <sparkle:minimumSystemVersion>10.4.0</sparkle:minimumSystemVersion>
-        <enclosure sparkle:md5Sum="cde14edd638d01dc3257dd051b9e64f0" sparkle:version="1.2.1b2" url="http://adiumx.cachefly.net/Adium_1.2.1b2.dmg" length="21523993" type="application/octet-stream"/>
+        <enclosure sparkle:md5Sum="701c2cd7d21bcc93986c69e14de76211" sparkle:version="1.2.1" url="http://adiumx.cachefly.net/Adium_1.2.1.dmg" length="20418156" type="application/octet-stream"/>
     </item>
     <item>
         <title>Adium 1.0.6</title>
