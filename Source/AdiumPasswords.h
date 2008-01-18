@@ -15,6 +15,7 @@
  */
 
 #import <Adium/AIObject.h>
+#import <Adium/AIAccountControllerProtocol.h>
 
 @class AIAccount;
 
