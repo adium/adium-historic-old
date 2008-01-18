@@ -23,6 +23,8 @@
 
 }
 
+- (void)controllerDidLoad;
+
 //Accounts
 - (void)setPassword:(NSString *)inPassword forAccount:(AIAccount *)inAccount;
 - (void)forgetPasswordForAccount:(AIAccount *)inAccount;
