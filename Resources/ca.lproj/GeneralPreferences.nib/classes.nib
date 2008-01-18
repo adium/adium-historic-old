@@ -1,6 +1,16 @@
 {
     IBClasses = (
         {
+            CLASS = AIColorSelectionPopUpButton; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIObjectSelectionPopUpButton; 
+        }, 
+        {
+            CLASS = AIFontSelectionPopUpButton; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIObjectSelectionPopUpButton; 
+        }, 
+        {
             CLASS = AILocalizationButton; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -30,6 +40,11 @@
             SUPERCLASS = AIObject; 
         }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = AIObjectSelectionPopUpButton; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSPopUpButton; 
+        }, 
         {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {CLASS = AISmartStepper; LANGUAGE = ObjC; SUPERCLASS = NSStepper; }, 
         {

@@ -13,9 +13,8 @@
 /* Emoticon name */
 "Cool" = "Figo";
 
-/* Emoticon name 
-*/
-"Cry" = "Piangente";
+/* Emoticon name */
+"Cry" = "Pianto";
 
 /* Emoticon name */
 "Embarrassed" = "Imbarazzato";
@@ -42,7 +41,7 @@
 "Kiss" = "Bacio";
 
 /* Emoticon name */
-"Lips Are Sealed" = "Labbra sigillate";
+"Lips Are Sealed" = "Acqua in bocca";
 
 /* Emoticon name */
 "Money-mouth" = "Avido";
