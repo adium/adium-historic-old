@@ -186,11 +186,15 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 			//We'd reuse one context for all the movies, but that doesn't work; movies can't share a context, apparently. (You get paramErr when you try to give the second movie a context already in use by the first.)
 			QTAudioContextRef newAudioContext = [self createAudioContextWithSystemOutputDevice];
 
-			OSStatus err = SetMovieAudioContext([movie quickTimeMovie], newAudioContext);
-			NSAssert4(err == noErr, @"%s: Could not set audio context of movie %@ to %p: SetMovieAudioContext returned error %i", __PRETTY_FUNCTION__, movie, newAudioContext, err);
-
-			//We created it, so we must release it.
-			QTAudioContextRelease(newAudioContext);
+			if (newAudioContext) {
+				OSStatus err = SetMovieAudioContext([movie quickTimeMovie], newAudioContext);
+				NSCAssert4(err == noErr, @"%s: Could not set audio context of movie %@ to %p: SetMovieAudioContext returned error %i", __PRETTY_FUNCTION__, movie, newAudioContext, err);
+				
+				//We created it, so we must release it.
+				QTAudioContextRelease(newAudioContext);
+			} else {
+				NSLog(@"cachedPlaySound: Could not set audio context because -[AdiumSound createAudioContextWithSystemOutputDevice] returned NULL");
+			}			
 		}
 
     } else {
@@ -239,18 +243,27 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 	AudioDeviceID systemOutputDevice = 0;
 	dataSize = sizeof(systemOutputDevice);
 	err = AudioHardwareGetProperty(kAudioHardwarePropertyDefaultSystemOutputDevice, &dataSize, &systemOutputDevice);
-	NSAssert2(err == noErr, @"%s: Could not get the system output device: AudioHardwareGetProperty returned error %i", __PRETTY_FUNCTION__, err);
+	if (err != noErr) {
+		NSLog(@"%s: Could not get the system output device: AudioHardwareGetProperty returned error %i", __PRETTY_FUNCTION__, err);
+		return NULL;
+	}
 
 	//Now get its UID. We'll need to release this.
 	CFStringRef deviceUID = NULL;
 	dataSize = sizeof(deviceUID);
 	err = AudioDeviceGetProperty(systemOutputDevice, /*channel*/ 0, /*isInput*/ false, kAudioDevicePropertyDeviceUID, &dataSize, &deviceUID);
-	NSAssert3(err == noErr, @"%s: Could not get the device UID for device %p: AudioDeviceGetProperty returned error %i", __PRETTY_FUNCTION__, systemOutputDevice, err);
+	if (err != noErr) {
+		NSLog(@"%s: Could not get the device UID for device %p: AudioDeviceGetProperty returned error %i", __PRETTY_FUNCTION__, systemOutputDevice, err);
+		return NULL;
+	}
 	[(NSObject *)deviceUID autorelease];
 
 	//Create an audio context for this device so that our movies can play into it.
 	err = QTAudioContextCreateForAudioDevice(kCFAllocatorDefault, deviceUID, /*options*/ NULL, &newAudioContext);
-	NSAssert3(err == noErr, @"%s: QTAudioContextCreateForAudioDevice with device UID %@ returned error %i", __PRETTY_FUNCTION__, deviceUID, err);
+	if (err != noErr) {
+		NSLog(@"%s: QTAudioContextCreateForAudioDevice with device UID %@ returned error %i", __PRETTY_FUNCTION__, deviceUID, err);
+		return NULL;
+	}
 
 	return newAudioContext;
 }
@@ -313,11 +326,15 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 		//Exchange the audio context for a new one with the new device.
 		QTAudioContextRef newAudioContext = [self createAudioContextWithSystemOutputDevice];
 
-		OSStatus err = SetMovieAudioContext([movie quickTimeMovie], newAudioContext);
-		NSCAssert4(err == noErr, @"%s: Could not set audio context of movie %@ to %p: SetMovieAudioContext returned error %i", __PRETTY_FUNCTION__, movie, newAudioContext, err);
-
-		//We created it, so we must release it.
-		QTAudioContextRelease(newAudioContext);
+		if (newAudioContext) {
+			OSStatus err = SetMovieAudioContext([movie quickTimeMovie], newAudioContext);
+			NSCAssert4(err == noErr, @"%s: Could not set audio context of movie %@ to %p: SetMovieAudioContext returned error %i", __PRETTY_FUNCTION__, movie, newAudioContext, err);
+			
+			//We created it, so we must release it.
+			QTAudioContextRelease(newAudioContext);
+		} else {
+			NSLog(@"systemOutputDeviceDidChange: Could not set audio context because -[AdiumSound createAudioContextWithSystemOutputDevice] returned NULL");
+		}
 
 		//Resume playback, now on the new device.
 		[movie setRate:savedRate];
