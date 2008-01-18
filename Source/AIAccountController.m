@@ -69,6 +69,8 @@
 	
 	//Finish prepping the accounts
 	[adiumAccounts controllerDidLoad];
+	
+	[adiumPasswords controllerDidLoad];
 }
 
 //close
