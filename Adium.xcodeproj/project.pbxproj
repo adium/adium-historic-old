@@ -29,6 +29,7 @@
 				4B8E0BD8086A16D4009A7A4D /* PBXTargetDependency */,
 				4B8E0BDA086A16D4009A7A4D /* PBXTargetDependency */,
 				34611CCF09B67ABC00870036 /* PBXTargetDependency */,
+				346637760D41547F006C9034 /* PBXTargetDependency */,
 			);
 			name = "External Frameworks";
 			productName = "External Frameworks";
@@ -316,6 +317,8 @@
 		346545BA0C8F71380046ED68 /* AMPurpleJabberAdHocCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = 346545B80C8F71380046ED68 /* AMPurpleJabberAdHocCommand.m */; };
 		346545CB0C8F73000046ED68 /* AMPurpleJabberAdHocPing.h in Headers */ = {isa = PBXBuildFile; fileRef = 346545C90C8F73000046ED68 /* AMPurpleJabberAdHocPing.h */; };
 		346545CC0C8F73000046ED68 /* AMPurpleJabberAdHocPing.m in Sources */ = {isa = PBXBuildFile; fileRef = 346545CA0C8F73000046ED68 /* AMPurpleJabberAdHocPing.m */; };
+		346636AC0D415440006C9034 /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3466368B0D41541A006C9034 /* FriBidi.framework */; };
+		346637690D415457006C9034 /* FriBidi.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3466368B0D41541A006C9034 /* FriBidi.framework */; };
 		346935D60BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 346935D40BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.m */; };
 		346BA33F0774C27400628F06 /* ESGlobalEventsPreferencesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 346BA33D0774C27400628F06 /* ESGlobalEventsPreferencesPlugin.m */; };
 		346BA3450774C2D200628F06 /* ESGlobalEventsPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 346BA3430774C2D200628F06 /* ESGlobalEventsPreferences.m */; };
@@ -995,7 +998,6 @@
 		34E6C5670A791BAF0076D7F0 /* AIContactInfoWindowPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E6C5650A791BAF0076D7F0 /* AIContactInfoWindowPlugin.m */; };
 		34E6C9950A7926650076D7F0 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		34EA6B320A62F3420053DFEB /* AIApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 34EA6B300A62F3420053DFEB /* AIApplication.m */; };
-		34EFC46C0AACC4CD0086AC43 /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
 		34F144430BA8FF3C000473DE /* EmoticonNames.strings in Resources */ = {isa = PBXBuildFile; fileRef = 34F144420BA8FF3B000473DE /* EmoticonNames.strings */; };
 		34F191DC09BA5F43001D6BE2 /* irc.png in Resources */ = {isa = PBXBuildFile; fileRef = 34F191DB09BA5F43001D6BE2 /* irc.png */; };
 		34F312930ADC3FE800A4310E /* KNShelfSplitView.h in Headers */ = {isa = PBXBuildFile; fileRef = 348B25C70A50FBF300B2B972 /* KNShelfSplitView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1263,13 +1265,7 @@
 		EE147A790896B32400A21377 /* ABSearch.nib in Resources */ = {isa = PBXBuildFile; fileRef = EE147A780896B32400A21377 /* ABSearch.nib */; };
 		EE147A800896B33400A21377 /* OWABSearchWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE147A7E0896B33400A21377 /* OWABSearchWindowController.m */; };
 		EE5754ED0B3D7A7A00100989 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
-		EE96A3CC0A9C5E4000C47A57 /* FriBidi.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
 		EEC461B6096D68580028632F /* OWSpellingPerContactPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = EEC461B4096D68580028632F /* OWSpellingPerContactPlugin.m */; };
-		EEF71BA60A9C76AB00284E7E /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
-		F4D9BBF70ACF5B5300615461 /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
-		F4D9BBF80ACF5B9400615461 /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
-		F4D9BBF90ACF5B9900615461 /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
-		F4D9BBFA0ACF5B9F00615461 /* FriBidi.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */; };
 		F51BCD3B0A156261000FDC06 /* AIHyperlinks.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3496A8EA07CE6CA30055BBAB /* AIHyperlinks.framework */; };
 		F51BCD3C0A156269000FDC06 /* AIUtilities.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		F51BCE390A156312000FDC06 /* AdiumSpotlightImporter.mdimporter in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34611C8309B6756D00870036 /* AdiumSpotlightImporter.mdimporter */; };
@@ -1356,6 +1352,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8D57630D048677EA00EA77CD;
 			remoteInfo = AdiumSpotlightImporter;
+		};
+		3466368A0D41541A006C9034 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 346636860D41541A006C9034 /* FriBidi.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216 /* FriBidi.framework */;
+			remoteInfo = FriBidi;
+		};
+		346637750D41547F006C9034 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 346636860D41541A006C9034 /* FriBidi.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* FriBidi */;
+			remoteInfo = FriBidi;
 		};
 		346C9C9A06004585000F5A8A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1525,6 +1535,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				11EE1CCF0CDD01120097F246 /* libglib.framework in CopyFiles */,
+				346637690D415457006C9034 /* FriBidi.framework in CopyFiles */,
 				11EE1CD00CDD01120097F246 /* libgmodule.framework in CopyFiles */,
 				11EE1CD10CDD01120097F246 /* libgobject.framework in CopyFiles */,
 				11EE1CD20CDD01120097F246 /* libgthread.framework in CopyFiles */,
@@ -1534,7 +1545,6 @@
 				EE5754ED0B3D7A7A00100989 /* Sparkle.framework in CopyFiles */,
 				377ED0220AE95D7D00CB7BDF /* PSMTabBarControl.framework in CopyFiles */,
 				9E1E1E270A96770C00E16DFC /* LMX.framework in CopyFiles */,
-				EE96A3CC0A9C5E4000C47A57 /* FriBidi.framework in CopyFiles */,
 				F51BCD3B0A156261000FDC06 /* AIHyperlinks.framework in CopyFiles */,
 				F51BCD3C0A156269000FDC06 /* AIUtilities.framework in CopyFiles */,
 				341BDBBB0968BC9B00CF83F5 /* OTR.framework in CopyFiles */,
@@ -2546,6 +2556,7 @@
 		346545B80C8F71380046ED68 /* AMPurpleJabberAdHocCommand.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AMPurpleJabberAdHocCommand.m; path = "Plugins/Purple Service/AMPurpleJabberAdHocCommand.m"; sourceTree = "<group>"; };
 		346545C90C8F73000046ED68 /* AMPurpleJabberAdHocPing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AMPurpleJabberAdHocPing.h; path = "Plugins/Purple Service/AMPurpleJabberAdHocPing.h"; sourceTree = "<group>"; };
 		346545CA0C8F73000046ED68 /* AMPurpleJabberAdHocPing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AMPurpleJabberAdHocPing.m; path = "Plugins/Purple Service/AMPurpleJabberAdHocPing.m"; sourceTree = "<group>"; };
+		346636860D41541A006C9034 /* FriBidi.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = FriBidi.xcodeproj; path = "Frameworks/FriBidi Framework/FriBidi.xcodeproj"; sourceTree = "<group>"; };
 		346935D30BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIFileTransferProgressOutlineView.h; path = Source/AIFileTransferProgressOutlineView.h; sourceTree = "<group>"; };
 		346935D40BA6C89D00E1CF7E /* AIFileTransferProgressOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIFileTransferProgressOutlineView.m; path = Source/AIFileTransferProgressOutlineView.m; sourceTree = "<group>"; };
 		34695FA20A89BA2B00E3B0D0 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
@@ -3897,7 +3908,6 @@
 		EE147A780896B32400A21377 /* ABSearch.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ABSearch.nib; path = Resources/ABSearch.nib; sourceTree = "<group>"; };
 		EE147A7E0896B33400A21377 /* OWABSearchWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = OWABSearchWindowController.m; path = Source/OWABSearchWindowController.m; sourceTree = "<group>"; };
 		EE147A7F0896B33400A21377 /* OWABSearchWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OWABSearchWindowController.h; path = Source/OWABSearchWindowController.h; sourceTree = "<group>"; };
-		EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FriBidi.framework; path = Frameworks/FriBidi.framework; sourceTree = "<group>"; };
 		EEC461B4096D68580028632F /* OWSpellingPerContactPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = OWSpellingPerContactPlugin.m; path = Source/OWSpellingPerContactPlugin.m; sourceTree = "<group>"; };
 		EEC461B5096D68580028632F /* OWSpellingPerContactPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OWSpellingPerContactPlugin.h; path = Source/OWSpellingPerContactPlugin.h; sourceTree = "<group>"; };
 		F11B9621051CDB3B0000000E /* AIMessageAliasPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMessageAliasPlugin.h; path = "Plugins/Message Alias Support/AIMessageAliasPlugin.h"; sourceTree = "<group>"; };
@@ -4007,7 +4017,6 @@
 				3448761D06D1ED8E00DA778C /* Cocoa.framework in Frameworks */,
 				346C9C7C06004560000F5A8A /* WebKit.framework in Frameworks */,
 				346C9C700600453C000F5A8A /* Adium.framework in Frameworks */,
-				F4D9BBF90ACF5B9900615461 /* FriBidi.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4020,7 +4029,6 @@
 				3485D8EA09EB446900232CC4 /* Cocoa.framework in Frameworks */,
 				3485D8EB09EB446900232CC4 /* Adium.framework in Frameworks */,
 				3485D8E709EB445C00232CC4 /* AIUtilities.framework in Frameworks */,
-				F4D9BBF70ACF5B5300615461 /* FriBidi.framework in Frameworks */,
 				1172FBCB0CDAA8D400B8E233 /* libglib.framework in Frameworks */,
 				1172FBCC0CDAA8D400B8E233 /* libgmodule.framework in Frameworks */,
 				1172FBCD0CDAA8D400B8E233 /* libgobject.framework in Frameworks */,
@@ -4056,6 +4064,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				346636AC0D415440006C9034 /* FriBidi.framework in Frameworks */,
 				F51BCEEA0A15793E000FDC06 /* AIHyperlinks.framework in Frameworks */,
 				34D835D907CBED8F006466F2 /* AIUtilities.framework in Frameworks */,
 				3448758E06D1EBDF00DA778C /* Cocoa.framework in Frameworks */,
@@ -4068,7 +4077,6 @@
 				638392F809D4D67A0067B9B7 /* Sparkle.framework in Frameworks */,
 				F58904F20A7828B9001F0ADC /* OTR.framework in Frameworks */,
 				9E1E1DFD0A96741500E16DFC /* LMX.framework in Frameworks */,
-				34EFC46C0AACC4CD0086AC43 /* FriBidi.framework in Frameworks */,
 				377EC8940AE9525B00CB7BDF /* PSMTabBarControl.framework in Frameworks */,
 				8163F99C0B318824002005EE /* Sparkle.framework in Frameworks */,
 				11AA1EFA0BCAE9C3003DDA66 /* Quartz.framework in Frameworks */,
@@ -4083,7 +4091,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EEF71BA60A9C76AB00284E7E /* FriBidi.framework in Frameworks */,
 				34D835D807CBED81006466F2 /* AIUtilities.framework in Frameworks */,
 				34D836E507CBF593006466F2 /* Carbon.framework in Frameworks */,
 				3448761406D1EC0C00DA778C /* Cocoa.framework in Frameworks */,
@@ -4120,7 +4127,6 @@
 				4947F5C70655E85200B791E5 /* Adium.framework in Frameworks */,
 				49778165067F558700401CC7 /* SystemConfiguration.framework in Frameworks */,
 				3448761606D1EC3000DA778C /* Cocoa.framework in Frameworks */,
-				F4D9BBF80ACF5B9400615461 /* FriBidi.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4159,7 +4165,6 @@
 				34E0E98707CC48C000A82198 /* AIUtilities.framework in Frameworks */,
 				3448763D06D1EF3C00DA778C /* Cocoa.framework in Frameworks */,
 				B72537C4058C45EF004BA969 /* Adium.framework in Frameworks */,
-				F4D9BBFA0ACF5B9F00615461 /* FriBidi.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4285,11 +4290,11 @@
 				11AA1EF90BCAE9C3003DDA66 /* Quartz.framework */,
 				377EC8930AE9525B00CB7BDF /* PSMTabBarControl.framework */,
 				9E1E1DFC0A96741500E16DFC /* LMX.framework */,
-				EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */,
 				815D37460A765E83009338C2 /* CoreServices.framework */,
 				638392F609D4D67A0067B9B7 /* Sparkle.framework */,
 				3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */,
 				3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */,
+				346636860D41541A006C9034 /* FriBidi.xcodeproj */,
 				341BDBBA0968BC9A00CF83F5 /* OTR.framework */,
 				348E5ACA06D2A74C004C051C /* AddressBook.framework */,
 				F5819CE9032124CE01A8010A /* AppKit.framework */,
@@ -4874,6 +4879,14 @@
 				346545CA0C8F73000046ED68 /* AMPurpleJabberAdHocPing.m */,
 			);
 			name = "Ad Hoc Server";
+			sourceTree = "<group>";
+		};
+		346636870D41541A006C9034 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3466368B0D41541A006C9034 /* FriBidi.framework */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		346BA3330774C21300628F06 /* Global Events Preferences */ = {
@@ -8053,6 +8066,10 @@
 					ProductGroup = 34D834D107CBE7B2006466F2 /* Products */;
 					ProjectRef = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
 				},
+				{
+					ProductGroup = 346636870D41541A006C9034 /* Products */;
+					ProjectRef = 346636860D41541A006C9034 /* FriBidi.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -8092,6 +8109,13 @@
 			fileType = wrapper.cfbundle;
 			path = AdiumSpotlightImporter.mdimporter;
 			remoteRef = 34611C8209B6756D00870036 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		3466368B0D41541A006C9034 /* FriBidi.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = FriBidi.framework;
+			remoteRef = 3466368A0D41541A006C9034 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		3496A8EA07CE6CA30055BBAB /* AIHyperlinks.framework */ = {
@@ -9309,6 +9333,11 @@
 			isa = PBXTargetDependency;
 			name = AdiumSpotlightImporter;
 			targetProxy = 34611CCE09B67ABC00870036 /* PBXContainerItemProxy */;
+		};
+		346637760D41547F006C9034 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = FriBidi;
+			targetProxy = 346637750D41547F006C9034 /* PBXContainerItemProxy */;
 		};
 		346C9C9B06004585000F5A8A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
