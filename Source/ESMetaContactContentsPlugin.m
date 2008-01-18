@@ -14,16 +14,22 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIInterfaceControllerProtocol.h>
 #import "ESMetaContactContentsPlugin.h"
-#import <AIUtilities/AIImageAdditions.h>
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIMenuControllerProtocol.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIMetaContact.h>
+#import <Adium/AIAbstractListController.h>
 #import <Adium/AIServiceIcons.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
 
 #define META_TOOLTIP_ICON_SIZE NSMakeSize(11,11)
 
+#define EXPAND_CONTACT		AILocalizedString(@"Expand combined contact", nil)
+#define COLLAPSE_CONTACT	AILocalizedString(@"Collapse combined contact", nil)
 /*!
  * @class ESMetaContactContentsPlugin
  * @brief Tooltip component: Show the contacts contained by metaContacts, with service and status state.
@@ -36,7 +42,21 @@
 - (void)installPlugin
 {
     //Install our tooltip entry
-    [[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];	
+    [[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:YES];
+	
+	contextualMenuItem = [[NSMenuItem alloc] initWithTitle:EXPAND_CONTACT
+													target:self
+													action:@selector(toggleMetaContactExpansion:)
+											 keyEquivalent:@""];
+	[[adium menuController] addContextualMenuItem:contextualMenuItem
+									   toLocation:Context_Contact_Manage];
+}
+
+- (void)dealloc
+{
+	[contextualMenuItem release]; contextualMenuItem = nil;
+
+	[super dealloc];
 }
 
 /*!
@@ -129,6 +149,43 @@
 	}
     
     return [entry autorelease];
+}
+
+#pragma mark Menu
+- (void)toggleMetaContactExpansion:(id)sender
+{
+	AIListObject *listObject = [[adium menuController] currentContextMenuObject];
+	if ([listObject isKindOfClass:[AIMetaContact class]]) {
+		BOOL currentlyExpandable = [(AIMetaContact *)listObject isExpandable];
+		
+		if (currentlyExpandable) {
+			[[adium notificationCenter] postNotificationName:AIPerformCollapseItemNotification
+													 object:listObject];
+			[(AIMetaContact *)listObject setExpandable:NO];
+
+		} else {
+			[(AIMetaContact *)listObject setExpandable:YES];
+			[[adium notificationCenter] postNotificationName:AIPerformExpandItemNotification
+													 object:listObject];
+		}
+	}
+}
+
+- (void)menu:(NSMenu *)menu needsUpdateForMenuItem:(NSMenuItem *)menuItem
+{
+	AIListObject *listObject = [[adium menuController] currentContextMenuObject];
+	if (menuItem == contextualMenuItem) {
+		if ([listObject isKindOfClass:[AIMetaContact class]]) {
+			BOOL currentlyExpandable = [(AIMetaContact *)listObject isExpandable];
+			if (currentlyExpandable) {
+				[menuItem setTitle:COLLAPSE_CONTACT];
+			} else {
+				[menuItem setTitle:EXPAND_CONTACT];				
+			}
+		} else {
+			[[menuItem menu] removeItem:menuItem];
+		}
+	}
 }
 
 @end

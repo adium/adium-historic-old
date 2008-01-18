@@ -249,6 +249,12 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	return rightPadding;
 }
 
+- (void)setIndentation:(int)inIndentation{
+	indentation = inIndentation;
+}
+- (int)indentation{
+	return indentation;
+}
 
 //Drawing --------------------------------------------------------------------------------------------------------------
 #pragma mark Drawing
@@ -270,8 +276,8 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 		//Padding
 		cellFrame.origin.y += [self topPadding];
 		cellFrame.size.height -= [self bottomPadding] + [self topPadding];
-		cellFrame.origin.x += [self leftPadding];
-		cellFrame.size.width -= [self rightPadding] + [self leftPadding];
+		cellFrame.origin.x += [self leftPadding] + [self indentation];
+		cellFrame.size.width -= [self rightPadding] + [self leftPadding] + [self indentation];
 
 		[self drawContentWithFrame:cellFrame];
 	}

@@ -36,7 +36,8 @@
 	BOOL					saveGroupingChanges;
 	
     BOOL					expanded;			//Exanded/Collapsed state of this object
-	
+	BOOL					isExpandable;
+
 	float					largestOrder;
 	float					smallestOrder;
 }
@@ -62,8 +63,7 @@
 - (NSDictionary *)dictionaryOfServiceClassesAndListContacts;
 - (NSArray *)servicesOfContainedObjects;
 
-- (void)setExpanded:(BOOL)inExpanded;
-- (BOOL)isExpanded;
+- (void)setExpandable:(BOOL)inExpandable;
 
 // (PRIVATE: For contact controller ONLY)
 - (BOOL)addObject:(AIListObject *)inObject;

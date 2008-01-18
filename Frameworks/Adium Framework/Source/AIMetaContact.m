@@ -21,11 +21,15 @@
 #import <Adium/AIService.h>
 #import <Adium/AIUserIcons.h>
 #import <Adium/AIAccount.h>
+#import <Adium/AIAbstractListController.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIArrayAdditions.h>
 
 #define	KEY_CONTAINING_OBJECT_ID	@"ContainingObjectInternalObjectID"
 #define	OBJECT_STATUS_CACHE			@"Object Status Cache"
+
+#define	KEY_IS_EXPANDABLE					@"IsExpandable"
+#define	KEY_EXPANDED						@"IsExpanded"
 
 @interface AIMetaContact (PRIVATE)
 - (void)_updateCachedStatusOfObject:(AIListObject *)inObject;
@@ -58,9 +62,14 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		
 		containedObjects = [[NSMutableArray alloc] init];
 		
+		isExpandable = [[self preferenceForKey:KEY_IS_EXPANDABLE
+										 group:OBJECT_STATUS_CACHE] boolValue];
+
+		expanded = [[self preferenceForKey:KEY_EXPANDED
+									 group:OBJECT_STATUS_CACHE] boolValue];
+
 		containsOnlyOneUniqueContact = NO;
 		containsOnlyOneService = YES;
-		expanded = YES;
 		containedObjectsNeedsSort = NO;
 		delayContainedObjectSorting = NO;
 		saveGroupingChanges = YES;
@@ -1191,12 +1200,38 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 //Set the expanded/collapsed state of this group (PRIVATE: For the contact list view to let us know our state)
 - (void)setExpanded:(BOOL)inExpanded
 {
-    expanded = inExpanded;
+	if (expanded != inExpanded) {
+		expanded = inExpanded;
+		
+		[self setPreference:[NSNumber numberWithBool:expanded]
+					 forKey:KEY_EXPANDED
+					  group:OBJECT_STATUS_CACHE];
+	
+	}
 }
 //Returns the current expanded/collapsed state of this group
 - (BOOL)isExpanded
 {
     return expanded;
+}
+
+- (void)setExpandable:(BOOL)inExpandable
+{
+	if (inExpandable != isExpandable) {
+		isExpandable = inExpandable;
+
+		[self setPreference:[NSNumber numberWithBool:isExpandable]
+					 forKey:KEY_IS_EXPANDABLE
+					  group:OBJECT_STATUS_CACHE];
+		
+		[[adium notificationCenter] postNotificationName:AIDisplayableContainedObjectsDidChange
+												  object:self];
+	}
+}
+
+- (BOOL)isExpandable
+{
+	return isExpandable && !containsOnlyOneUniqueContact;
 }
 
 //Order index
