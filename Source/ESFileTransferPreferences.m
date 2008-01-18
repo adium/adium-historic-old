@@ -48,7 +48,7 @@
 - (IBAction)changePreference:(id)sender
 {
 	if ((sender == checkBox_autoAcceptFiles) ||
-			 (sender == checkBox_autoAcceptOnlyFromCLList)) {
+		(sender == checkBox_autoAcceptOnlyFromCLList)) {
 		AIFileTransferAutoAcceptType autoAcceptType;
 		
 		if ([checkBox_autoAcceptFiles state] == NSOffState) {

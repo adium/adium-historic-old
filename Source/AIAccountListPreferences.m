@@ -918,7 +918,6 @@
 	} else if ([identifier isEqualToString:@"service"]) {
 		[cell accessibilitySetOverrideValue:[[account service] longDescription]
 							   forAttribute:NSAccessibilityTitleAttribute];		 
-
 		[cell accessibilitySetOverrideValue:@" "
 							   forAttribute:NSAccessibilityRoleDescriptionAttribute];		 
  
