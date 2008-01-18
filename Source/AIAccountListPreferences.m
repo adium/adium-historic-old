@@ -133,6 +133,9 @@
 									   name:AIServiceIconSetDidChangeNotification
 									 object:nil];
 	
+	[tableView_accountList accessibilitySetOverrideValue:AILocalizedString(@"Accounts", nil)
+											forAttribute:NSAccessibilityRoleDescriptionAttribute];
+
 	// Start updating the reconnect time if an account is already reconnecting.	
 	[self updateReconnectTime:nil];
 }
@@ -914,7 +917,11 @@
 		
 	} else if ([identifier isEqualToString:@"service"]) {
 		[cell accessibilitySetOverrideValue:[[account service] longDescription]
+							   forAttribute:NSAccessibilityTitleAttribute];		 
+
+		[cell accessibilitySetOverrideValue:@" "
 							   forAttribute:NSAccessibilityRoleDescriptionAttribute];		 
+ 
 
 	} else if ([identifier isEqualToString:@"status"]) {
 		if ([account enabled] && ![[account statusObjectForKey:@"Connecting"] boolValue] && [account statusObjectForKey:@"Waiting to Reconnect"]) {

@@ -368,11 +368,15 @@ static int toArraySort(id itemA, id itemB, void *context);
 	[containingView_results removeFromSuperview];
 	[shelf_splitView setContentView:containingView_results];
 	[containingView_results release];
+	[tableView_results accessibilitySetOverrideValue:AILocalizedString(@"Transcripts", nil)
+										forAttribute:NSAccessibilityRoleDescriptionAttribute];
 	
 	// Pull our source view out of the nib and position it in the shelf view
 	[containingView_contactsSourceList retain];
 	[containingView_contactsSourceList removeFromSuperview];
 	[shelf_splitView setShelfView:containingView_contactsSourceList];
+	[outlineView_contacts accessibilitySetOverrideValue:AILocalizedString(@"Contacts", nil)
+										forAttribute:NSAccessibilityRoleDescriptionAttribute];
 	[containingView_contactsSourceList release];
 
     //Set emoticon filtering
