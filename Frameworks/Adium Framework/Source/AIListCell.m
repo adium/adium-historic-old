@@ -456,7 +456,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	id value;
 
 	if([attribute isEqualToString:NSAccessibilityRoleAttribute]) {
-		value = ([listObject isKindOfClass:[AIListGroup class]] ? @"AIContactListGroup" : @"AIContactListItem");
+		value = NSAccessibilityRowRole;
 		
 	} else if([attribute isEqualToString:NSAccessibilityRoleDescriptionAttribute]) {
 		if ([listObject isKindOfClass:[AIListGroup class]]) {
@@ -496,11 +496,6 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 - (id)accessibilityFocusedUIElement:(NSPoint)point 
 {
 	return NSAccessibilityUnignoredAncestor(self);
-}
-
-- (NSString *)accessibilityActionDescription:(NSString *)action
-{
-	return NSAccessibilityActionDescription(action);
 }
 
 @end
