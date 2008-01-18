@@ -135,9 +135,8 @@
 														group:PREF_GROUP_WINDOW_POSITIONS] intValue];
 	if (row < 0 || row >= [tableView_categories numberOfRows]) row = 1;
 	
-	if ([self tableView:tableView_categories shouldSelectRow:row]) {
-		[tableView_categories selectRow:row byExtendingSelection:NO];
-	}
+	[tableView_categories selectRow:row byExtendingSelection:NO];
+	[self tableViewSelectionDidChange:nil];
 }
 
 /*!
@@ -168,14 +167,12 @@
 /*!
 * @brief Update our advanced preferences for the selected pane
  */
-- (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(int)row
+- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
+	int row = [tableView_categories selectedRow];
+
 	if (row >= 0 && row < [[self advancedCategoryArray] count]) {		
-		AILog(@"Selecting row %i", row);
 		[self configureAdvancedPreferencesForPane:[[self advancedCategoryArray] objectAtIndex:row]];
-		return YES;
-    } else {
-		return NO;
 	}
 }
 
