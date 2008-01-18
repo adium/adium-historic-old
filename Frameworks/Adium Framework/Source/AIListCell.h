@@ -36,6 +36,8 @@
 	int					leftSpacing;
 	int					rightSpacing;
 	
+	int					indentation;
+
 	NSColor				*textColor;
 	NSColor				*invertedTextColor;
 	
@@ -79,6 +81,9 @@
 - (int)leftPadding;
 - (void)setRightPadding:(int)inPadding;
 - (int)rightPadding;
+
+- (void)setIndentation:(int)inIndentation;
+- (int)indentation;
 
 //Drawing
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;

@@ -52,6 +52,7 @@ typedef enum {
 
 - (void)setExpanded:(BOOL)inExpanded;
 - (BOOL)isExpanded;
+- (BOOL)isExpandable;
 - (float)smallestOrder;
 - (float)largestOrder;
 - (void)listObject:(AIListObject *)listObject didSetOrderIndex:(float)inOrderIndex;

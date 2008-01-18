@@ -344,6 +344,11 @@
     return expanded;
 }
 
+- (BOOL)isExpandable
+{
+	return YES;
+}
+
 //Order index
 - (void)listObject:(AIListObject *)listObject didSetOrderIndex:(float)inOrderIndex
 {

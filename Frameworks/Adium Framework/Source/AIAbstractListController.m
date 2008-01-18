@@ -94,6 +94,20 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 									   selector:@selector(setDragItems:)
 										   name:@"AIListControllerDraggedItems"
 										 object:nil];
+		
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(performExpandItem:)
+										   name:AIPerformExpandItemNotification
+										 object:nil];
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(performCollapseItem:)
+										   name:AIPerformCollapseItemNotification
+										 object:nil];
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(displayableContainedObjectsDidChange:)
+										   name:AIDisplayableContainedObjectsDidChange
+										 object:nil];
+		
 	}
 
 	return self;
@@ -178,6 +192,10 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	[contactListView setIntercellSpacing:NSZeroSize];
 	[contactListView setIndentationPerLevel:0];
 	
+	indentationPerLevel[0] = 0;
+	indentationPerLevel[1] = 0;
+	indentationPerLevel[2] = 10;
+	
 	[scrollView_contactList setDrawsBackground:NO];
     [scrollView_contactList setAutoScrollToBottom:NO];
     [scrollView_contactList setAutohidesScrollers:YES];
@@ -225,6 +243,30 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 - (void)reloadData
 {
 	[contactListView reloadData];
+}
+
+- (void)performExpandItem:(NSNotification *)notification
+{
+	id item = [notification object];
+	if ([contactListView rowForItem:item] != -1) {
+		[contactListView expandItem:item];
+	}
+}
+
+- (void)performCollapseItem:(NSNotification *)notification
+{
+	id item = [notification object];
+	if ([contactListView rowForItem:item] != -1) {
+		[contactListView collapseItem:item];
+	}
+}
+
+- (void)displayableContainedObjectsDidChange:(NSNotification *)notification
+{
+	id item = [notification object];
+	if ([contactListView rowForItem:item] != -1) {
+		[contactListView reloadItem:item];
+	}
 }
 
 //Preferences ---------------------------------------------
@@ -535,6 +577,8 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	if ([outlineView isKindOfClass:[AIListOutlineView class]]) {
 		[(AIListCell *)cell setListObject:item];
 		[(AIListCell *)cell setControlView:(AIListOutlineView *)outlineView];
+		
+		[(AIListCell *)cell setIndentation:indentationPerLevel[[outlineView levelForItem:item]]];
 	}
 }
 
@@ -547,7 +591,12 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 //
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
-	return !item || [item isKindOfClass:[AIListGroup class]];
+	return (!item || ([item conformsToProtocol:@protocol(AIContainingObject)] && [item isExpandable]));
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView isGroup:(id)item
+{
+	return (!item || ([item isKindOfClass:[AIListGroup class]]));
 }
 
 //
@@ -607,7 +656,7 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 
 - (float)outlineView:(NSOutlineView *)outlineView heightOfRowByItem:(id)item
 {
-	return ([outlineView isExpandable:item] ? [groupCell cellSize].height : [contentCell cellSize].height);
+	return ([self outlineView:outlineView isGroup:item] ? [groupCell cellSize].height : [contentCell cellSize].height);
 }
 
 #pragma mark Finder-style searching
@@ -901,5 +950,8 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	return [[draggedContacts retain] autorelease];
 }
 
-
+- (void)accessibilityPerformAction:(NSString *)action {
+	NSLog(@"%@ Performing %@", self, action);
+	[super accessibilityPerformAction:action]; 
+}
 @end

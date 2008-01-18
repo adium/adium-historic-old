@@ -154,6 +154,10 @@ typedef enum {
 
 #define KEY_LIST_THEME_FADE_OFFLINE_IMAGES			@"Fade Offline Images"
 
+#define	AIPerformExpandItemNotification				@"AIPerformExpandItemNotification"
+#define AIPerformCollapseItemNotification			@"AIPerformCollapseItemNotification"
+#define AIDisplayableContainedObjectsDidChange		@"AIDisplayableContainedObjectsDidChange"
+
 @protocol AIListControllerDelegate
 - (IBAction)performDefaultActionOnSelectedObject:(AIListObject *)selectedObject sender:(NSOutlineView *)sender;
 @end
@@ -182,9 +186,11 @@ typedef enum {
 	BOOL								showTooltips;
 	BOOL								showTooltipsInBackground;
 
-	}
-	NSArray*							draggedContacts;
-	NSString*							dragOperation;
+	NSArray								*draggedContacts;
+	NSString							*dragOperation;
+
+	int									indentationPerLevel[9];
+}
 
 - (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate;
 - (id)delegate;

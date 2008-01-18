@@ -179,7 +179,6 @@
 	desiredHeightPadding = inPadding;
 }
 
-
 //Background image ---------------------------------------------------------------
 //Draw our background image or color with transparency
 - (void)drawBackgroundInClipRect:(NSRect)clipRect
