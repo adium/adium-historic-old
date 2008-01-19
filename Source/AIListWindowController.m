@@ -258,8 +258,7 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 	BOOL shouldRevealWindowAndDelaySliding = NO;
 
     if ([group isEqualToString:PREF_GROUP_CONTACT_LIST]) {
-		AIWindowLevel	windowLevel = [[prefDict objectForKey:KEY_CL_WINDOW_LEVEL] intValue];
-		
+		windowLevel = [[prefDict objectForKey:KEY_CL_WINDOW_LEVEL] intValue];
 		[self setWindowLevel:levelForAIWindowLevel(windowLevel)];
 
 		listHasShadow = [[prefDict objectForKey:KEY_CL_WINDOW_HAS_SHADOW] boolValue];
@@ -270,8 +269,9 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 		
 		[[self window] setHidesOnDeactivate:(windowHidingStyle == AIContactListWindowHidingStyleBackground)];
 		
-		if ([[NSApplication sharedApplication] isOnLeopardOrBetter]) {
-			if (windowHidingStyle == AIContactListWindowHidingStyleSliding || [[prefDict objectForKey:KEY_CL_ALL_SPACES] boolValue])
+		showOnAllSpaces = [[prefDict objectForKey:KEY_CL_ALL_SPACES] boolValue];
+		if ([NSApp isOnLeopardOrBetter]) {
+			if (showOnAllSpaces)
 				[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
 			else
 				[[self window] setCollectionBehavior:NSWindowCollectionBehaviorDefault];
@@ -523,8 +523,6 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 	}
 
 	//Ensure the window is displaying at the proper level and exposé setting
-	AIWindowLevel	windowLevel = [[[adium preferenceController] preferenceForKey:KEY_CL_WINDOW_LEVEL
-																			group:PREF_GROUP_CONTACT_LIST] intValue];
 	[self setWindowLevel:levelForAIWindowLevel(windowLevel)];	
 }
 
@@ -633,6 +631,10 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		//If we're hiding the window (generally) but now sliding it on screen, make sure it's on top
 		if (windowHidingStyle == AIContactListWindowHidingStyleSliding) {
 			[self setWindowLevel:NSFloatingWindowLevel];
+
+			if ([NSApp isOnLeopardOrBetter])
+				[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
+			
 			overrodeWindowLevel = YES;
 		}
 
@@ -653,6 +655,10 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		if (overrodeWindowLevel &&
 			windowHidingStyle == AIContactListWindowHidingStyleSliding) {
 			[self setWindowLevel:kCGBackstopMenuLevel];
+			
+			if ([NSApp isOnLeopardOrBetter])
+				[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
+			
 			overrodeWindowLevel = YES;
 		}
 		
@@ -664,9 +670,15 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		 *   2. No longer have any edges eligible for sliding
 		 * we should restore our window level.
 		 */
-		AIWindowLevel	windowLevel = [[[adium preferenceController] preferenceForKey:KEY_CL_WINDOW_LEVEL
-																				group:PREF_GROUP_CONTACT_LIST] intValue];
 		[self setWindowLevel:levelForAIWindowLevel(windowLevel)];
+		
+		if ([NSApp isOnLeopardOrBetter]) {
+			if (showOnAllSpaces)
+				[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
+			else
+				[[self window] setCollectionBehavior:NSWindowCollectionBehaviorDefault];
+		}
+		
 		overrodeWindowLevel = NO;
 	}
 }
