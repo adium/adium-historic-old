@@ -1357,14 +1357,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 346636860D41541A006C9034 /* FriBidi.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 8DC2EF5B0486A6940098B216 /* FriBidi.framework */;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
 			remoteInfo = FriBidi;
 		};
 		346637750D41547F006C9034 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 346636860D41541A006C9034 /* FriBidi.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* FriBidi */;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = FriBidi;
 		};
 		346C9C9A06004585000F5A8A /* PBXContainerItemProxy */ = {
@@ -8588,7 +8588,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#############################################################################################\n# Set framework bundles to have their executables' dates, thereby letting Xcode suck less.  #\n#############################################################################################\ntouch -r \"$SRCROOT/Frameworks/libpurple.framework/Versions/Current/libpurple\" \"$SRCROOT/Frameworks/libpurple.framework\"\ntouch -r \"$SRCROOT/Frameworks/Growl-WithInstaller.framework/Versions/A/Growl-WithInstaller\" \"$SRCROOT/Frameworks/Growl-WithInstaller.framework\"\ntouch -r \"$SRCROOT/Frameworks/LMX.framework/Versions/A/LMX\" \"$SRCROOT/Frameworks/LMX.framework\"\ntouch -r \"$SRCROOT/Frameworks/PSMTabBarControl.framework/Versions/A/PSMTabBarControl\" \"$SRCROOT/Frameworks/PSMTabBarControl.framework\"\ntouch -r \"$SRCROOT/Frameworks/Sparkle.framework/Versions/A/Sparkle\" \"$SRCROOT/Frameworks/Sparkle.framework\"\ntouch -r \"$SRCROOT/Frameworks/FriBidi.framework/Versions/A/FriBidi\" \"$SRCROOT/Frameworks/FriBidi.framework\"\ntouch -r \"$SRCROOT/Frameworks/OTR.framework/Versions/A/OTR\" \"$SRCROOT/Frameworks/OTR.framework\"\n";
+			shellScript = "#############################################################################################\n# Set framework bundles to have their executables' dates, thereby letting Xcode suck less.  #\n#############################################################################################\ntouch -r \"$SRCROOT/Frameworks/libpurple.framework/Versions/Current/libpurple\" \"$SRCROOT/Frameworks/libpurple.framework\"\ntouch -r \"$SRCROOT/Frameworks/Growl-WithInstaller.framework/Versions/A/Growl-WithInstaller\" \"$SRCROOT/Frameworks/Growl-WithInstaller.framework\"\ntouch -r \"$SRCROOT/Frameworks/LMX.framework/Versions/A/LMX\" \"$SRCROOT/Frameworks/LMX.framework\"\ntouch -r \"$SRCROOT/Frameworks/PSMTabBarControl.framework/Versions/A/PSMTabBarControl\" \"$SRCROOT/Frameworks/PSMTabBarControl.framework\"\ntouch -r \"$SRCROOT/Frameworks/Sparkle.framework/Versions/A/Sparkle\" \"$SRCROOT/Frameworks/Sparkle.framework\"\ntouch -r \"$SRCROOT/Frameworks/OTR.framework/Versions/A/OTR\" \"$SRCROOT/Frameworks/OTR.framework\"\n";
 		};
 		4BC8AABA059A33B400F940E1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
