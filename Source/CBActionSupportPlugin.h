@@ -17,16 +17,5 @@
 #import <Adium/AIPlugin.h>
 #import <Adium/AIContentControllerProtocol.h>
 
-@interface CBActionSupportPlugin : AIPlugin <AIContentFilter>
-{
-	/*output when YES: *Mac-arena the Bored Zo winks
-	 *output when NO:  *winks*
-	 *(note also the disappearance of the ending *.)
-	 */
-	BOOL includesDisplayName;
-}
-
-- (BOOL)includesDisplayNameInReplacement;
-- (void)setIncludesDisplayNameInReplacement:(BOOL)flag;
-
+@interface CBActionSupportPlugin : AIPlugin <AIContentFilter>{}
 @end

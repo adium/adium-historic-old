@@ -742,6 +742,7 @@ static NSArray *validSenderColors;
 					  withString:[(formattedUID ?
 								   formattedUID :
 								   displayName) stringByEscapingForXMLWithEntities:nil]];
+		 
         
 		do{
 			range = [inString rangeOfString:@"%sender%"];
@@ -911,11 +912,24 @@ static NSArray *validSenderColors;
 						  withString:[NSString stringWithFormat:@"client.handleFileTransfer('Cancel', '%@')", fileTransferID]];
 		}
 
-		//Message (must do last)
+		//Message (must do last, except for %actionMessage% which will only show up post-%message%-replacement)
 		range = [inString rangeOfString:@"%message%"];
 		if (range.location != NSNotFound) {
 			[inString safeReplaceCharactersInRange:range withString:htmlEncodedMessage];
 		}
+		 
+		 //This is pretty much a hack; We can't currently get HTML output from filters, so we output tokens instead
+		 //we're also reusing code from %senderDisplayName%"
+
+		NSString *serversideDisplayName = ([theSource isKindOfClass:[AIListContact class]] ?
+										   [(AIListContact *)theSource serversideDisplayName] :
+										   nil);
+		if (!serversideDisplayName) {
+			serversideDisplayName = [theSource displayName];
+		}
+
+		 [inString replaceKeyword:@"%actionMessage%" withString:[NSString stringWithFormat:@"<span class='actionMessageUserName'>%@ </span><span class='actionMessageBody'>", [serversideDisplayName stringByEscapingForXMLWithEntities:nil]]];
+		  [inString replaceKeyword:@"%/actionMessage%" withString:@"</span>"];
 		
 	} else if ([content isKindOfClass:[AIContentStatus class]]) {
 		NSString	*statusPhrase;

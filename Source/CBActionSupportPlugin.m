@@ -16,13 +16,10 @@
 
 #import <Adium/AIContentControllerProtocol.h>
 #import "CBActionSupportPlugin.h"
-#import <Adium/AIInterfaceControllerProtocol.h>
-#import <Adium/AIChat.h>
-#import <Adium/AIAccount.h>
 
 /*!
  * @class CBActionSupportPlugin
- * @brief Simple content filter to turn "/me blah" into "*blah*"
+ * @brief Simple content filter to turn "/me blah" into "<span class='actionMessageUserName'>Name of contact </span><span class="actionMessageBody">blah</span>"
  */
 @implementation CBActionSupportPlugin
 
@@ -31,24 +28,13 @@
  */
 - (void)installPlugin
 {
-	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterOutgoing];
-	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterIncoming];
+	[[adium contentController] registerContentFilter:self ofType:AIFilterMessageDisplay direction:AIFilterOutgoing];
+	[[adium contentController] registerContentFilter:self ofType:AIFilterMessageDisplay direction:AIFilterIncoming];
 }
 
 - (void)uninstallPlugin
 {
 	[[adium contentController] unregisterContentFilter:self];
-}
-
-#pragma mark -
-
-- (BOOL)includesDisplayNameInReplacement
-{
-	return includesDisplayName;
-}
-- (void)setIncludesDisplayNameInReplacement:(BOOL)flag
-{
-	includesDisplayName = YES;
 }
 
 #pragma mark -
@@ -66,17 +52,16 @@
 										   options:NSLiteralSearch
 											 range:NSMakeRange(0, [inAttributedString length])].location != NSNotFound) {
 		NSMutableString *str;
-		NSString		*startReplacement = @"*", *endReplacement = @"*";
+		NSString		*startReplacement = @"%actionMessage%", *endReplacement = @"%/actionMessage%";
 		NSRange			extent;
 		unsigned		replacementLength;
 		
 		ourMessage = [[inAttributedString mutableCopyWithZone:[inAttributedString zone]] autorelease];
 		str = [ourMessage mutableString];
 
-		if (includesDisplayName) {
-			startReplacement = [startReplacement stringByAppendingString:[[[[[adium interfaceController] activeChat] account] displayName] stringByAppendingString:@" "]];
-			endReplacement = @"";
-		}
+	//	startReplacement = [startReplacement stringByAppendingString:[[[[[adium interfaceController] activeChat] account] displayName] stringByAppendingString:@" "]];
+	//	endReplacement = @"";
+
 		replacementLength = [startReplacement length] + [endReplacement length];
 
 		extent = NSMakeRange(0, [str length]);
