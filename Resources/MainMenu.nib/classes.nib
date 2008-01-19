@@ -127,6 +127,7 @@
                 "menuItem_smaller" = NSMenuItem;
                 "menuItem_speech" = NSMenuItem;
                 "menuItem_spelling" = NSMenuItem;
+                "menuItem_spellingCheckGrammarWithSpelling" = NSMenuItem;
                 "menuItem_spellingCheckSpelling" = NSMenuItem;
                 "menuItem_spellingCheckSpellingAsYouType" = NSMenuItem;
                 "menuItem_spellingCommand" = NSMenuItem;
@@ -181,6 +182,7 @@
             ACTIONS =             {
                 runToolbarConfigurationPalette = id;
                 toggleBaseWritingDirection = id;
+                toggleGrammarChecking = id;
             };
             CLASS = FirstResponder;
             LANGUAGE = ObjC;
