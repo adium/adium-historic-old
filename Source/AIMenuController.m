@@ -383,8 +383,8 @@
 	[menuItem_adiumXtras setTitle:[AILocalizedString(@"Xtras Manager",nil) stringByAppendingEllipsis]];
 	[menuItem_checkForUpdates setTitle:[AILocalizedString(@"Check For Updates",nil) stringByAppendingEllipsis]];
 	[menuItem_preferences setTitle:[AILocalizedString(@"Preferences",nil) stringByAppendingEllipsis]];
-	[menuItem_donate setTitle:AILocalizedString(@"Donate",nil)];
-	[menuItem_helpOut setTitle:AILocalizedString(@"Contributing to Adium",nil)];
+	[menuItem_donate setTitle:[AILocalizedString(@"Donate",nil) stringByAppendingEllipsis]];
+	[menuItem_helpOut setTitle:[AILocalizedString(@"Contributing to Adium",nil) stringByAppendingEllipsis]];
 
 	[menuItem_services setTitle:AILocalizedString(@"Services","Services menu item in the Adium menu")];
 	[menuItem_hideAdium setTitle:AILocalizedString(@"Hide Adium",nil)];
@@ -422,7 +422,8 @@
 	[menuItem_spellingCommand setTitle:[TITLE_SPELLING stringByAppendingEllipsis]];
 	[menuItem_spellingCheckSpelling setTitle:AILocalizedString(@"Check Spelling",nil)];
 	[menuItem_spellingCheckSpellingAsYouType setTitle:AILocalizedString(@"Check Spelling As You Type",nil)];
-
+	[menuItem_spellingCheckGrammarWithSpelling setTitle:AILocalizedString(@"Check Grammar With Spelling",nil)];
+	
 	[menuItem_speech setTitle:AILocalizedString(@"Speech",nil)];
 	[menuItem_startSpeaking setTitle:AILocalizedString(@"Start Speaking",nil)];
 	[menuItem_stopSpeaking setTitle:AILocalizedString(@"Stop Speaking",nil)];
