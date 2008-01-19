@@ -16,7 +16,8 @@
 
 #import "ESPurpleJabberAccountViewController.h"
 #import <Adium/AIAccount.h>
-#import "AIContactControllerProtocol.h"
+#import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIService.h>
 #include <SystemConfiguration/SystemConfiguration.h>
 
 #define SERVERFEEDRSSURL @"https://www.xmpp.net/servers/feed/rss"
