@@ -137,11 +137,16 @@
 		window.onresize = windowDidResize;
 	</script>
 	
-	<!-- This style is shared by all variants. !-->
-	<style id="baseStyle" type="text/css" media="screen,print">	
-		%@  
+	<style type="text/css">
+		.actionMessageUserName:before { content:"*"; }
+		.actionMessageBody:after { content:"*"; }
 		*{ word-wrap:break-word; }
 		img.scaledToFitImage { height:auto; width:100%; }
+	</style>
+	
+	<!-- This style is shared by all variants. !-->
+	<style id="baseStyle" type="text/css" media="screen,print">	
+		%@
 	</style>
 	
 	<!-- Although we call this mainStyle for legacy reasons, it's actually the variant style !-->
