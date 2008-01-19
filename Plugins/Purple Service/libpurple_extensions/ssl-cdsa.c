@@ -363,14 +363,14 @@ ssl_cdsa_connect(PurpleSslConnection *gsc) {
         /* error is not fatal */
     }
 	
+	cdsa_data->handshake_handler = purple_input_add(gsc->fd, PURPLE_INPUT_READ, ssl_cdsa_handshake_cb, gsc);
+
 	// calling this here relys on the fact that SSLHandshake has to be called at least twice
 	// to get an actual connection (first time returning errSSLWouldBlock).
 	// I guess this is always the case because SSLHandshake has to send the initial greeting first, and then wait
 	// for a reply from the server, which would block the connection. SSLHandshake is called again when the server
 	// has sent its reply (this is achieved by the second line below)
     ssl_cdsa_handshake_cb(gsc, gsc->fd, PURPLE_INPUT_READ);
-	
-	cdsa_data->handshake_handler = purple_input_add(gsc->fd, PURPLE_INPUT_READ, ssl_cdsa_handshake_cb, gsc);
 }
 
 static void
