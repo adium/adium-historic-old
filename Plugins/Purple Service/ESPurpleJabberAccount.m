@@ -150,13 +150,21 @@
 	allowPlaintext = [[self preferenceForKey:KEY_JABBER_ALLOW_PLAINTEXT group:GROUP_ACCOUNT_STATUS] boolValue];
 	purple_account_set_bool(account, "auth_plain_in_clear", allowPlaintext);
 	
-	/* Mac OS X 10.4's cyrus-sasl gives us problems.  Is it a bug in the installed library, a bug in its compilation, or a bug
-	 * in our linkage against it? I don't know. In any case, work around it as much as possible by utilizing libpurple's own implementation
-	 * of PLAIN on 10.4. (Libpurple's own DIGEST-MD5 is always used). We can safely use cyrus-sasl in all its authenticating awesomeness for all methods on 10.5. -evands
+	/* Mac OS X 10.4's cyrus-sasl's PLAIN mech gives us problems.  Is it a bug in the installed library, a bug in its compilation, or a bug
+	 * in our linkage against it? I don't know. The result is that the username gets included twice before the base64 encoding is performed.
 	 *
-	 * This preference is added via the "libpurple_jabber_avoid_sasl_option_hack.diff" patch we apply during the build process.
+	 * Furthermore, on any version, using the cyrus-sasl PLAIN mech prevents us from following Google Talk best practices for handling of domain names.
+	 * This is because we can't add to the <auth> response's attributes:
+	 *		xmlns:ga='http://www.google.com/talk/protocol/auth' ga:client-uses-full-bind-result='true'
+	 * as per http://code.google.com/apis/talk/jep_extensions/jid_domain_change.html and therefore we won't automatically resolve changing an
+	 * "@gmail.com" to "@googlemail.com" or some other domain name.
+	 *
+	 * We therefore use the PLAIN implementation in libpurple itself. Libpurple's own DIGEST-MD5 is always used for compatibility with old OpenFire
+	 * servers.
+	 *
+	 * This preference and the changes for it are added via the "libpurple_jabber_avoid_sasl_option_hack.diff" patch we apply during the build process.
 	 */
-	purple_prefs_set_bool("/plugins/prpl/jabber/avoid_sasl_for_plain_auth", [NSApp isTiger]);
+	purple_prefs_set_bool("/plugins/prpl/jabber/avoid_sasl_for_plain_auth", YES);
 }
 
 - (NSString *)serverSuffix
