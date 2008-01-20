@@ -165,7 +165,8 @@
 		if ([userText rangeOfString:@"%m"].location != NSNotFound) {
 			NSString			*message;
 			
-			if ([[adium contactAlertsController] isMessageEvent:eventID]) {
+			if ([[adium contactAlertsController] isMessageEvent:eventID] &&
+				[userInfo objectForKey:@"AIContentObject"]) {
 				AIContentMessage	*content = [userInfo objectForKey:@"AIContentObject"];
 				message = [[[content message] attributedStringByConvertingAttachmentsToStrings] string];
 				
@@ -197,7 +198,8 @@
 					  nil);
 		
 		//Handle messages in a custom manner
-		if ([[adium contactAlertsController] isMessageEvent:eventID]) {
+		if ([[adium contactAlertsController] isMessageEvent:eventID] &&
+			[userInfo objectForKey:@"AIContentObject"]) {
 			AIContentMessage	*content = [userInfo objectForKey:@"AIContentObject"];
 			NSString			*message = [[[content message] attributedStringByConvertingAttachmentsToStrings] string];
 			AIListObject		*source = [content source];
@@ -248,7 +250,7 @@
 			//theMessage is now the final string which will be passed to the speech engine
 			textToSpeak = theMessage;
 			
-		}else{
+		} else {
 			//All non-message events use the normal naturalLanguageDescription methods, optionally prepending
 			//the time
 			NSString	*eventDescription;

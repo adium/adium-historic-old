@@ -178,7 +178,8 @@
 
 	//For a message event, listObject should become whoever sent the message
 	if ([[adium contactAlertsController] isMessageEvent:eventID] &&
-		[userInfo respondsToSelector:@selector(objectForKey:)]) {
+		[userInfo respondsToSelector:@selector(objectForKey:)] &&
+		[userInfo objectForKey:@"AIContentObject"]) {
 		AIContentObject	*contentObject = [userInfo objectForKey:@"AIContentObject"];
 		AIListObject	*source = [contentObject source];
 		chat = [userInfo objectForKey:@"AIChat"];
