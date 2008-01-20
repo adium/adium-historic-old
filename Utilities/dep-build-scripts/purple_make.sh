@@ -57,6 +57,8 @@ pushd $PIDGIN_SOURCE
 # libpurple_buddyicon_cache.diff - im.pidgin.pidgin 5d18b4aee9c05f592af532f9155aadb23ad11d4b (will be in 2.4.0)
 #
 # libpurple-account-request.fix.diff - fix a crash in the account auth request code. A similar change was made in im.pidgin.pidgin for 2.4.0.
+#
+# libpurple_flap_connection_validity.diff - fix an oscar crash which could occur after disconnecting. (will be in 2.4.0).
 ###
 # Patches for our own hackery
 #
@@ -65,7 +67,8 @@ pushd $PIDGIN_SOURCE
 #
 #  libpurple_jabber_parser_error_handler.diff adds a handler for jabber errors
 #  which may fix crashes in __xmlRaiseError() --> _structuredErrorFunc().
-#  If it does, we'll commit the fix upstream.
+#
+#  libpurple_xmlnode_parser_error_handler does the same for other xml parsing.
 ###
 for patch in "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
              "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" \
@@ -75,7 +78,9 @@ for patch in "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
              "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
              "$PATCHDIR/libpurple_jabber_cert_against_jid_hostname.diff" \
              "$PATCHDIR/libpurple_buddyicon_cache.diff" \
-             "$PATCHDIR/libpurple-account-request.fix.diff" ; do
+             "$PATCHDIR/libpurple-account-request.fix.diff" \
+             "$PATCHDIR/libpurple_xmlnode_parser_error_handler.diff" \
+             "$PATCHDIR/libpurple_flap_connection_validity.diff" ; do
     echo "Applying $patch"
 	cat $patch | patch --forward -p0
 done
@@ -170,7 +175,9 @@ for patch in "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
              "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
              "$PATCHDIR/libpurple_jabber_cert_against_jid_hostname.diff" \
              "$PATCHDIR/libpurple_buddyicon_cache.diff" \
-             "$PATCHDIR/libpurple-account-request.fix.diff" ; do
+             "$PATCHDIR/libpurple-account-request.fix.diff" \
+             "$PATCHDIR/libpurple_xmlnode_parser_error_handler.diff" \
+             "$PATCHDIR/libpurple_flap_connection_validity.diff" ; do
 	patch -R -p0 < $patch
 done
 popd
