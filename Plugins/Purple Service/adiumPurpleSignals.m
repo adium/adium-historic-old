@@ -16,6 +16,7 @@
 
 #import "adiumPurpleSignals.h"
 #import <AIUtilities/AIObjectAdditions.h>
+#import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 
 static void buddy_status_changed_cb(PurpleBuddy *buddy, PurpleStatus *oldstatus, PurpleStatus *status, PurpleBuddyEvent event);
@@ -170,6 +171,27 @@ static void buddy_idle_changed_cb(PurpleBuddy *buddy, gboolean old_idle, gboolea
 	AILog(@"buddy_event_cb: %@ is %@ [old_idle %i, idle %i]",theContact,(idle ? @"idle" : @"not idle"),old_idle,idle);
 }
 
+static void typing_changed(PurpleAccount *acct, const char *name, AITypingState typingState)
+{
+	AIListContact *contact = contactLookupFromBuddy(purple_find_buddy(acct, name));
+	[contact setStatusObject:[NSNumber numberWithInt:typingState] forKey:KEY_TYPING notify:NotifyNow];		
+}
+
+static void
+buddy_typing_cb(PurpleAccount *acct, const char *name, void *data) {
+	typing_changed(acct, name, AITyping);
+}
+
+static void
+buddy_typed_cb(PurpleAccount *acct, const char *name, void *data) {
+	typing_changed(acct, name, AIEnteredText);
+}
+
+static void
+buddy_typing_stopped_cb(PurpleAccount *acct, const char *name, void *data) {
+	typing_changed(acct, name, AINotTyping);
+}
+
 void configureAdiumPurpleSignals(void)
 {
 	void *blist_handle = purple_blist_get_handle();
@@ -200,4 +222,13 @@ void configureAdiumPurpleSignals(void)
 	purple_signal_connect(blist_handle, "buddy-got-login-time",
 						handle, PURPLE_CALLBACK(buddy_event_cb),
 						GINT_TO_POINTER(PURPLE_BUDDY_SIGNON_TIME));	
+	
+	purple_signal_connect(purple_conversations_get_handle(), "buddy-typing",
+						  handle, PURPLE_CALLBACK(buddy_typing_cb), NULL);
+	
+	purple_signal_connect(purple_conversations_get_handle(), "buddy-typed",
+						  handle, PURPLE_CALLBACK(buddy_typed_cb), NULL);
+	
+	purple_signal_connect(purple_conversations_get_handle(), "buddy-typing-stopped",
+						  handle, PURPLE_CALLBACK(buddy_typing_stopped_cb), NULL);	
 }
