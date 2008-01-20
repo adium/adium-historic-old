@@ -1,0 +1,48 @@
+#
+# old_revision [20e2add42a314b4914e798757eb2a69ac3b491d0]
+#
+# patch "libpurple/protocols/oscar/flap_connection.c"
+#  from [b3c9d505d8cd6772ff3d3ea77d62e0202cf0eb00]
+#    to [5889cc26d7c52e57b425237145f7a88a21e2968b]
+#
+============================================================
+--- libpurple/protocols/oscar/flap_connection.c	b3c9d505d8cd6772ff3d3ea77d62e0202cf0eb00
++++ libpurple/protocols/oscar/flap_connection.c	5889cc26d7c52e57b425237145f7a88a21e2968b
+@@ -33,6 +33,9 @@
+ #include "win32dep.h"
+ #endif
+ 
++static GList *flap_connections = NULL;
++#define PURPLE_FLAP_CONNECTION_IS_VALID(conn) (g_list_find(flap_connections, (conn)) != NULL)
++
+ /**
+  * This sends a channel 1 SNAC containing the FLAP version.
+  * The FLAP version is sent by itself at the beginning of every
+@@ -273,6 +276,7 @@ flap_connection_new(OscarData *od, int t
+ 	conn->queued_snacs = g_queue_new();
+ 
+ 	od->oscar_connections = g_slist_prepend(od->oscar_connections, conn);
++	flap_connections = g_list_append(flap_connections, conn);
+ 
+ 	return conn;
+ }
+@@ -359,6 +363,10 @@ flap_connection_destroy_cb(gpointer data
+ 	aim_rxcallback_t userfunc;
+ 
+ 	conn = data;
++	
++	if (!PURPLE_FLAP_CONNECTION_IS_VALID(conn))
++		return FALSE;
++
+ 	od = conn->od;
+ 	account = (PURPLE_CONNECTION_IS_VALID(od->gc) ? purple_connection_get_account(od->gc) : NULL);
+ 
+@@ -440,6 +448,8 @@ flap_connection_destroy_cb(gpointer data
+ 	if (conn->queued_timeout > 0)
+ 		purple_timeout_remove(conn->queued_timeout);
+ 
++	flap_connections = g_list_remove(flap_connections, conn);
++
+ 	g_free(conn);
+ 
+ 	return FALSE;
