@@ -1463,7 +1463,7 @@
 			port = [self preferenceForKey:KEY_ACCOUNT_PROXY_PORT group:GROUP_ACCOUNT_STATUS];
 			
 			if (host && [host length]) {
-				//If we need to authenticate, request the password and finish setting up the proxy in gotProxyServerPassword:proxyConfiguration:
+				//If we need to authenticate, request the password and finish setting up the proxy in gotProxyServerPassword:returnCode:proxyConfiguration:
 				username = [self preferenceForKey:KEY_ACCOUNT_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
 				if (username && [username length]) {
 					promptForPassword = YES;					
@@ -1493,10 +1493,10 @@
 			[[adium accountController] passwordForProxyServer:host 
 													 userName:username 
 											  notifyingTarget:self 
-													 selector:@selector(gotProxyServerPassword:proxyConfiguration:)
+													 selector:@selector(gotProxyServerPassword:returnCode:proxyConfiguration:)
 													  context:proxyConfiguration];
 			
-			//gotProxyServerPassword:proxyConfiguration: is responsible for notifying the target
+			//gotProxyServerPassword:returnCode:proxyConfiguration: is responsible for notifying the target
 			notifyTargetNow = NO;
 		}
 		
