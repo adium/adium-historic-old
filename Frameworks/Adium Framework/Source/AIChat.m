@@ -563,6 +563,10 @@ static int nextChatNumber = 0;
 {
 	return expanded;
 }
+- (BOOL)isExpandable
+{
+	return NO;
+}
 
 - (unsigned)visibleCount
 {
