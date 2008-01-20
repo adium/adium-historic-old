@@ -460,7 +460,7 @@
 {
     NSArray			*types = [[info draggingPasteboard] types];
 	NSDragOperation retVal = NSDragOperationNone;
-
+	
 	//No dropping into contacts
 	BOOL allowBetweenContactDrop = (index == NSOutlineViewDropOnItemIndex);
 
@@ -557,7 +557,9 @@
 		}
 
 	} else if ([types containsObject:NSFilenamesPboardType] ||
-			   [types containsObject:NSRTFPboardType]) {
+			   [types containsObject:NSRTFPboardType] ||
+			   [types containsObject:NSURLPboardType] ||
+			   [types containsObject:NSStringPboardType]) {
 		retVal = ((item && [item isKindOfClass:[AIListContact class]]) ? NSDragOperationLink : NSDragOperationNone);
 
 	} else if (!allowBetweenContactDrop) {
@@ -630,23 +632,44 @@
 			[[adium fileTransferController] sendFile:file toListContact:targetFileTransferContact];
 		}
 
-	} else if ([[[info draggingPasteboard] types] containsObject:NSRTFPboardType]) {
+	} else if ([[[info draggingPasteboard] types] containsObject:NSRTFPboardType] ||
+				[[[info draggingPasteboard] types] containsObject:NSURLPboardType] ||
+				[[[info draggingPasteboard] types] containsObject:NSStringPboardType]) {
 		//Drag and drop text sending via the contact list.
 		if ([item isKindOfClass:[AIListContact class]]) {
 			/* This will send the message. Alternately, we could just insert it into the text view... */
 			AIChat							*chat;
 			AIContentMessage				*messageContent;
+			NSAttributedString				*messageAttributedString = nil;
 			
-			chat = [[adium chatController] openChatWithContact:(AIListContact *)item
-											onPreferredAccount:YES];
-			messageContent = [AIContentMessage messageInChat:chat
-												  withSource:[chat account]
-												 destination:[chat listObject]
-														date:nil
-													 message:[NSAttributedString stringWithData:[[info draggingPasteboard] dataForType:NSRTFPboardType]]
-												   autoreply:NO];
+			if([[[info draggingPasteboard] types] containsObject:NSRTFPboardType]) {
+				//for RTF data, we want to preserve the formatting, so use dataForType:
+				messageAttributedString = [NSAttributedString stringWithData:[[info draggingPasteboard] dataForType:NSRTFPboardType]];
+			}
+			else if([[[info draggingPasteboard] types] containsObject:NSURLPboardType]) {
+				//NSURLPboardType contains an NSURL object
+				messageAttributedString = [NSAttributedString stringWithString:[[NSURL URLFromPasteboard:[info draggingPasteboard]]absoluteString]];
+			}
+			else if([[[info draggingPasteboard] types] containsObject:NSStringPboardType]) {
+				//this is just plain text, so stringForType: works fine
+				messageAttributedString = [NSAttributedString stringWithString:[[info draggingPasteboard]stringForType:NSStringPboardType]];
+			}
 			
-			[[adium contentController] sendContentObject:messageContent];
+			if(messageAttributedString && [messageAttributedString length] !=0) {
+				chat = [[adium chatController] openChatWithContact:(AIListContact *)item
+												onPreferredAccount:YES];
+				messageContent = [AIContentMessage messageInChat:chat
+													  withSource:[chat account]
+													 destination:[chat listObject]
+															date:nil
+														 message:messageAttributedString
+													   autoreply:NO];
+			
+				[[adium contentController] sendContentObject:messageContent];
+			}
+			else {
+				success = NO;
+			}
 
 		} else {
 			success = NO;
