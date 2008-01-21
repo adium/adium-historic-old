@@ -197,6 +197,7 @@
 
 - (void)setRoomName:(NSString*)roomName {
 	[textField_roomName setStringValue:roomName];
+	[self validateEnteredText];
 }
 
 - (void)setServer:(NSString*)server {
