@@ -21,6 +21,7 @@
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
+#import <Adium/AIContentNotification.h>
 #import <Adium/AIContentObject.h>
 #import <Adium/AIListContact.h>
 
