@@ -42,6 +42,7 @@
 + (BOOL)_checkHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst;
 + (void)_openChatToContactWithName:(NSString *)name onService:(NSString *)serviceIdentifier withMessage:(NSString *)body;
 + (void)_openAIMGroupChat:(NSString *)roomname onExchange:(int)exchange;
++ (void)_openXMPPGroupChat:(NSString *)name onServer:(NSString *)server withPassword:(NSString *)inPassword;
 - (void)promptUser;
 @end
 
@@ -315,22 +316,34 @@
 				// xmpp:johndoe@jabber.org?unsubscribe
 				
 			} else {
-				//Default to opening the host as a name.
-				NSString	*user = [url user];
-				NSString	*host = [url host];
-				NSString	*name;
-				if (user && [user length]) {
-					//jabber://tekjew@jabber.org
-					//msn://jdoe@hotmail.com
-					name = [NSString stringWithFormat:@"%@@%@",[url user],[url host]];
-				} else {
-					//aim://tekjew
-					name = host;
-				}
+				if (([query caseInsensitiveCompare:@"join"] == NSOrderedSame) &&
+					([scheme caseInsensitiveCompare:@"xmpp"] == NSOrderedSame)) {
+					NSString *password = [[url queryArgumentForKey:@"password"] stringByDecodingURLEscapes];
+					//TODO: password support: xmpp:darkcave@macbeth.shakespeare.lit?join;password=cauldronburn
 
-				[self _openChatToContactWithName:[name compactedString]
-									   onService:serviceID
-									 withMessage:nil];
+					[self _openXMPPGroupChat:[url user]
+									onServer:[url host]
+								withPassword:password];
+
+					//TODO: 
+				} else {
+					//Default to opening the host as a name.
+					NSString	*user = [url user];
+					NSString	*host = [url host];
+					NSString	*name;
+					if (user && [user length]) {
+						//jabber://tekjew@jabber.org
+						//msn://jdoe@hotmail.com
+						name = [NSString stringWithFormat:@"%@@%@",[url user],[url host]];
+					} else {
+						//aim://tekjew
+						name = host;
+					}
+					
+					[self _openChatToContactWithName:[name compactedString]
+										   onService:serviceID
+										 withMessage:nil];
+				}
 			}
 			
 		} else if ([scheme isEqualToString:@"adiumxtra"]) {
@@ -399,6 +412,36 @@
 			[responder insertText:message];
 		}
 
+	} else {
+		NSBeep();
+	}
+}
+
++ (void)_openXMPPGroupChat:(NSString *)name onServer:(NSString *)server withPassword:(NSString *)password
+{
+	AIAccount		*account;
+	NSEnumerator	*enumerator;
+	
+	//Find an XMPP-compatible online account which can create group chats
+	enumerator = [[[[AIObject sharedAdiumInstance] accountController] accounts] objectEnumerator];
+	while ((account = [enumerator nextObject])) {
+		if ([account online] &&
+			[[account serviceClass] isEqualToString:@"Jabber"] &&
+			[[account service] canCreateGroupChats]) {
+			break;
+		}
+	}
+	
+	if (name && account) {
+		[[[AIObject sharedAdiumInstance] chatController] chatWithName:name
+														   identifier:nil
+															onAccount:account
+													 chatCreationInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+																	   name, @"room",
+																	   server, @"server",
+																	   [account formattedUID], @"handle",
+																	   password, @"password", /* may be nil, so should be last */
+																	   nil]];
 	} else {
 		NSBeep();
 	}
