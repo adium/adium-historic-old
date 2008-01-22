@@ -94,6 +94,8 @@
  */
 - (BOOL)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
+	AILogWithSignature(@"Performing action %@ for %@ with details %@. Triggerring event was %@.",
+					   actionID, listObject, details, eventID);
 	if ([[adium dockController] performBehavior:[[details objectForKey:KEY_DOCK_BEHAVIOR_TYPE] intValue]]) {
 		//The behavior will continue into the future
 		if ([[adium contactAlertsController] isMessageEvent:eventID]) {
