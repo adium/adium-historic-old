@@ -7,9 +7,11 @@
 	<key>IBEditorPositions</key>
 	<dict>
 		<key>146</key>
-		<string>499 385 442 387 0 0 1440 878 </string>
+		<string>120 176 442 387 0 0 1440 878 </string>
+		<key>332</key>
+		<string>449 589 542 117 0 0 1440 878 </string>
 		<key>39</key>
-		<string>412 580 406 122 0 0 1440 878 </string>
+		<string>215 379 406 164 0 0 1440 878 </string>
 	</dict>
 	<key>IBFramework Version</key>
 	<string>482.0</string>
