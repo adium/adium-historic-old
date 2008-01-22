@@ -307,7 +307,7 @@
 	NSString				*concatenatediTunesData = [result stringValue];
 
 	//if the player was playing when the script was executed
-	if (![concatenatediTunesData isEqualToString:@"None"]) {
+	if (concatenatediTunesData && ![concatenatediTunesData isEqualToString:@"None"]) {
 		
 		//get the expected number of entries in the dictionary
 		unsigned infoCount = [substitutionDict count];
