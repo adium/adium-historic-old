@@ -28,7 +28,7 @@ body {
 	background: rgba(226,219,203,0.9);
 }
 
-.incoming .time_consecutive + p {
+.incoming .time_consecutive + div {
 	border-top: 1px solid rgba(178,125,75,0.4);
 }
 
@@ -63,7 +63,7 @@ body {
 	background: rgba(213,225,207,0.9);
 }
 
-.outgoing .time_consecutive + p {
+.outgoing .time_consecutive + div {
 	border-top: 1px solid rgba(116,157,95,0.4);
 }
 
