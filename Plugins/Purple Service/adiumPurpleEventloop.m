@@ -159,6 +159,7 @@ gboolean adium_source_remove(guint tag) {
 			if (sourceInfo->timer) { 
 				CFRunLoopTimerInvalidate(sourceInfo->timer);
 				CFRelease(sourceInfo->timer);
+				sourceInfo->timer = NULL;
 			}
 			
 			if (sourceInfo->socket) {
@@ -172,6 +173,7 @@ gboolean adium_source_remove(guint tag) {
 
 			if (sourceInfo->run_loop_source) {
 				CFRelease(sourceInfo->run_loop_source);
+				sourceInfo->run_loop_source = NULL;
 			}
 		} else {
 			if ((sourceInfo->timer_tag == 0) && (sourceInfo->timer)) {
