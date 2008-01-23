@@ -207,6 +207,9 @@ void callTimerFunc(CFRunLoopTimerRef timer, void *info)
 {
 	SourceInfo *sourceInfo = info;
 
+	if (![sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:sourceInfo->timer_tag]])
+		NSLog(@"**** WARNING: %@ has already been removed, but we're calling its timer function!", info);
+
 	if (!sourceInfo->timer_function ||
 		!sourceInfo->timer_function(sourceInfo->timer_user_data)) {
         adium_source_remove(sourceInfo->timer_tag);
