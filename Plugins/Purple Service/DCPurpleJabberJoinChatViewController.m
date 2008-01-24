@@ -101,7 +101,12 @@
 	NSString		*invitemsg = [textField_inviteMessage stringValue];
 	NSMutableDictionary	*chatCreationInfo;
 			
-	if (![handle length]) handle = [inAccount formattedUID];
+	if (![handle length]) {
+		if (![[[textField_handle cell] placeholderString] length])
+			handle = [inAccount formattedUID];
+		else 
+			handle = [[textField_handle cell] placeholderString];
+	}
 	if (![password length]) password = nil;
 	
 	if (![server length]) {
