@@ -45,6 +45,8 @@
 - (void)updateAccountList;
 - (void)_setServiceType:(AIService *)inService;
 - (void)selectServiceType:(id)sender;
+
+- (void)configureControlDimming;
 @end
 
 /*!
@@ -146,6 +148,8 @@
 									   name:Account_ListChanged
 									 object:nil];
 	[[adium contactController] registerListObjectObserver:self];
+	
+	[self configureControlDimming];
 }
 
 /*!
@@ -223,9 +227,13 @@
 
 	//Add them to our local group
 	AILogWithSignature(@"Adding %@ to %@", contactArray, group);
-	[[adium contactController] addContacts:contactArray toGroup:group];
-
-	[self closeWindow:nil];
+	if ([contactArray count]) {
+		[[adium contactController] addContacts:contactArray toGroup:group];
+		
+		[self closeWindow:nil];
+	} else {
+		NSBeep();
+	}
 }
 
 /*!
@@ -269,6 +277,12 @@
 	[controller release];
 }
 
+- (void)controlTextDidChange:(NSNotification *)aNotification
+{
+	if ([aNotification object] == textField_contactName) {
+		[self configureControlDimming];
+	}
+}
 
 //Service Type ---------------------------------------------------------------------------------------------------------
 #pragma mark Service Type
@@ -510,6 +524,20 @@
 	[tableView_accounts reloadData];
 }
 
+- (void)configureControlDimming
+{
+	BOOL		shouldEnable = NO;
+	
+	if (([[textField_contactName stringValue] length] > 0)) {
+		NSEnumerator *enumerator = [checkedAccounts objectEnumerator];
+		AIAccount	 *account;
+		while (!shouldEnable && (account = [enumerator nextObject]))
+			if ([account contactListEditable]) shouldEnable = YES;
+	}
+
+	[button_add setEnabled:shouldEnable];
+}
+
 /*!
  * @brief Rows in the accounts table view
  */
@@ -569,6 +597,8 @@
 		} else {
 			[checkedAccounts removeObject:[accounts objectAtIndex:row]];			
 		}
+		
+		[self configureControlDimming];
 	}
 }
 
