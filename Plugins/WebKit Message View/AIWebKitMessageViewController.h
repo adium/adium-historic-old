@@ -83,6 +83,13 @@
 - (AIWebkitMessageViewStyle *)messageStyle;
 
 /*!
+ *	@brief Clears the view from displayed messages
+ *
+ *	Implements the method defined in protocol AIMessageDisplayController
+ */
+- (void)clearView;
+
+/*!
  *	@brief Enable or disable updating to reflect preference changes
  *
  *	When disabled, the view will not update when a preferece changes that would require rebuilding the views content

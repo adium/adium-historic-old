@@ -399,10 +399,32 @@
 	//Only send if we have a non-zero-length string
     if ([attributedString length] != 0) { 
 		AIListObject				*listObject = [chat listObject];
+
+		//If user typed command /clear, reset the content of the view
+		if ([[attributedString string] caseInsensitiveCompare:AILocalizedString(@"/clear", "Command which will clear the message area of a chat. Please include the '/' at the front of your translation.")] == NSOrderedSame) {
+			//Reset the content of the view
+			[messageDisplayController clearView];
+
+			//Reset the content of the text field, removing the command as it has been executed
+			[self clearTextEntryView];
+
+			//Commands are not messages, so they don't have to be sent
+			return;
+		}
 		
 		if ([chat isGroupChat] && ![[chat account] online]) {
 			//Refuse to do anything with a group chat for an offline account.
 			NSBeep();
+			return;
+		}
+
+		// If user typed command /clear, reset the content of the view
+		if ([[attributedString string] caseInsensitiveCompare:AILocalizedString(@"/clear", nil)] == NSOrderedSame) {
+			// Reset the content of the view
+			[messageDisplayController clearView];
+			// Reset the content of the text field, removing the command as it has been executed
+			[self clearTextEntryView];
+			// Commands are not messages, so they don't have to be sent
 			return;
 		}
 		
