@@ -173,6 +173,7 @@ typedef enum {
 - (NSView *)messageView;
 - (NSView *)messageScrollView;
 - (void)messageViewIsClosing;
+- (void)clearView;
 @end
 
 /*

@@ -530,6 +530,18 @@ static NSArray *draggedTypes = nil;
 }
 
 /*!
+ *	@brief Clears the view from displayed messages
+ *
+ *	Implements the method defined in protocol AIMessageDisplayController
+ */
+- (void)clearView
+{
+	[self _primeWebViewAndReprocessContent:NO];
+	[previousContent release];
+	previousContent = nil;
+}
+
+/*!
  * @brief Primes our webview to the currently active style and variant
  *
  * The webview won't be ready right away, so we flag it as not ready and set ourself as the frame load delegate so
