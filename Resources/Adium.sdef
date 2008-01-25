@@ -312,7 +312,7 @@
 			<cocoa class="NSColor"/>
 		</value-type>
 
-		<class name="rich text" plural="rich text" code="ctxt" description="Rich (styled) text">
+		<class name="rich text" plural="rich text" code="ricT" description="Rich (styled) text">
 			<cocoa class="NSTextStorage"/>
 			<!-- this "type" element and the ones that follow, while they
 				contradict the DTD, are NOT errors.	Cocoa Scripting in 10.4 uses them to accomplish certain type conversions. -->
