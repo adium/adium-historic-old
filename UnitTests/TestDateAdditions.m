@@ -1,11 +1,3 @@
-//
-//  TestDateAdditions.m
-//  Adium
-//
-//  Created by Peter Hosey on 2007-11-12.
-//  Copyright 2007 Peter Hosey. All rights reserved.
-//
-
 #import "TestDateAdditions.h"
 
 #import <AIUtilities/AIDateAdditions.h>
