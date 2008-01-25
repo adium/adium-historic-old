@@ -243,6 +243,9 @@
 		<command name="go invisible" code="Adumgoin" description="Changes the status of an account.">
 			<cocoa class="NSScriptCommand" />
 			<direct-parameter description="The account that should become invisible" type="account" />
+			<parameter name="with message" code="Pmsg" description="The custom status message." type="rich text" optional="yes">
+				<cocoa key="WithMessage"/>
+			</parameter>
 		</command>
 		<command name="count" code="corecnte" description="Return the number elements of a particular class within an object.">
 			<cocoa class="NSCountCommand"/>
