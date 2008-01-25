@@ -148,9 +148,9 @@
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
 	/* These are dumb and should be handled automatically */
-	if (strcmp(label, "Download buddylist from Server") == 0) return nil;
-	if (strcmp(label, "Upload buddylist to Server") == 0) return nil;
-	if (strcmp(label, "Delete buddylist from Server") == 0) return nil;
+	if (strcmp(label, _("Download buddylist from Server")) == 0) return nil;
+	if (strcmp(label, _("Upload buddylist to Server")) == 0) return nil;
+	if (strcmp(label, _("Delete buddylist from Server")) == 0) return nil;
 
 	return [super titleForAccountActionMenuLabel:label];
 }
