@@ -18,6 +18,7 @@
 #import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
+#import <Adium/ESFileTransfer.h>
 
 static void buddy_status_changed_cb(PurpleBuddy *buddy, PurpleStatus *oldstatus, PurpleStatus *status, PurpleBuddyEvent event);
 static void buddy_idle_changed_cb(PurpleBuddy *buddy, gboolean old_idle, gboolean idle, PurpleBuddyEvent event);
@@ -192,6 +193,30 @@ buddy_typing_stopped_cb(PurpleAccount *acct, const char *name, void *data) {
 	typing_changed(acct, name, AINotTyping);
 }
 
+static void
+file_recv_request_cb(PurpleXfer *xfer)
+{
+	ESFileTransfer  *fileTransfer;
+	
+	//Ask the account for an ESFileTransfer* object
+	fileTransfer = [accountLookup(xfer->account) newFileTransferObjectWith:[NSString stringWithUTF8String:purple_xfer_get_remote_user(xfer)]
+					size:purple_xfer_get_size(xfer)
+					remoteFilename:[NSString stringWithUTF8String:purple_xfer_get_filename(xfer)]];
+	
+	//Configure the new object for the transfer
+	[fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
+	
+	xfer->ui_data = [fileTransfer retain];
+	
+	/* Set a fake local filename to convince libpurple that we are handling the request. We are, but
+	 * the code expects a synchronous response, and we rock out asynchronously.
+	 */
+	purple_xfer_set_local_filename(xfer, "");
+	
+	//Tell the account that we are ready to request the reception
+	[accountLookup(purple_xfer_get_account(xfer)) requestReceiveOfFileTransfer:fileTransfer];
+}
+
 void configureAdiumPurpleSignals(void)
 {
 	void *blist_handle = purple_blist_get_handle();
@@ -230,5 +255,8 @@ void configureAdiumPurpleSignals(void)
 						  handle, PURPLE_CALLBACK(buddy_typed_cb), NULL);
 	
 	purple_signal_connect(purple_conversations_get_handle(), "buddy-typing-stopped",
-						  handle, PURPLE_CALLBACK(buddy_typing_stopped_cb), NULL);	
+						  handle, PURPLE_CALLBACK(buddy_typing_stopped_cb), NULL);
+
+	purple_signal_connect(purple_xfers_get_handle(), "file-recv-request",
+						  handle, PURPLE_CALLBACK(file_recv_request_cb), NULL);
 }
