@@ -202,8 +202,7 @@
 	//Add contact to our accounts
 	enumerator = [accounts objectEnumerator];
 	while ((account = [enumerator nextObject])) {
-		if ([account contactListEditable] &&
-		   [[account preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT] boolValue]) {
+		if ([account contactListEditable] && [checkedAccounts containsObject:account]) {
 			AILogWithSignature(@"Accont %@ was checked per its preference; we'll add %@ to it", account, UID);
 			AIListContact	*contact = [[adium contactController] contactWithService:service
 																			 account:account
