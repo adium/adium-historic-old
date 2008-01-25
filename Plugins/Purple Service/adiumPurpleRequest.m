@@ -151,46 +151,8 @@ static void *adiumPurpleRequestAction(const char *title, const char *primary,
 	id					requestController = nil;
 	int					i;
 	BOOL				handled = NO;
-	if (primaryString && ([primaryString rangeOfString:@"wants to send you"].location != NSNotFound)) {
-		GCallback ok_cb;
-		
-		//Get the callback for OK, skipping over the title
-		va_arg(actions, char *);
-		ok_cb = va_arg(actions, GCallback);
-		
-		//Redirect a "wants to send you" action request to our file choosing method so we handle it as a normal file transfer
-		((PurpleRequestActionCb)ok_cb)(userData, default_action);
-		
-		handled = YES;
-		
-    } else if (primaryString && ([primaryString rangeOfString:@"Create New Room"].location != NSNotFound)) {
-		/* Jabber's Create New Room dialog has a default option of accepting default values and another option
-		 * of configuration of the room... unfortunately, configuring the room requires a purple_request_fields
-		 * implementation, which we don't have yet, so the dialog is just confusing.  Accept the defaults.
-		 */
-		// XXX remove when purple_request_fields is implemented
-		for (i = 0; i < actionCount; i += 1) {
-			GCallback	tempCallBack;
-			char		*buttonName;
-			
-			//Get the name
-			buttonName = va_arg(actions, char *);
-			
-			//Get the callback for that name
-			tempCallBack = va_arg(actions, GCallback);
-			
-			//Perform the default action
-			if (i == default_action) {
-				PurpleRequestActionCb callBack = (PurpleRequestActionCb)tempCallBack;
-				callBack(userData, default_action);
-				
-				break;
-			}
-		}
-
-		handled = YES;
 	
-	} else if (primaryString && ([primaryString rangeOfString:@"has just asked to directly connect"].location != NSNotFound)) {
+	if (primaryString && ([primaryString rangeOfString:@"has just asked to directly connect"].location != NSNotFound)) {
 		AIListContact *adiumContact = contactLookupFromBuddy(purple_find_buddy(account, who));
 		//Automatically accept Direct IM requests from contacts on our list
 		if (adiumContact && [adiumContact isIntentionallyNotAStranger]) {
@@ -394,30 +356,17 @@ static void *adiumPurpleRequestFile(const char *title, const char *filename,
 			PurpleXferType xferType = purple_xfer_get_type(xfer);
 			
 			if (xferType == PURPLE_XFER_RECEIVE) {
-				AILog(@"File request: %s from %s on IP %s",xfer->filename,xfer->who,purple_xfer_get_remote_ip(xfer));
+				AILog(@"*** WARNING: File request: %s from %s on IP %s which wasn't handled by the file-recv-request signal",
+					  xfer->filename,xfer->who,purple_xfer_get_remote_ip(xfer));
+				/* We should never get here.  The file-recv-request signal is posted before we could.  We handle that signal
+				 * (in adiumPurpleSignals) and set a local filename when we do to prevent being prompted via the request_file() ui op.
+				 */
 				
-				ESFileTransfer  *fileTransfer;
-				
-				//Ask the account for an ESFileTransfer* object
-				fileTransfer = [accountLookup(xfer->account) newFileTransferObjectWith:[NSString stringWithUTF8String:who]
-																				  size:purple_xfer_get_size(xfer)
-																		remoteFilename:[NSString stringWithUTF8String:(xfer->filename)]];
-				
-				//Configure the new object for the transfer
-				[fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
-				
-				xfer->ui_data = [fileTransfer retain];
-				
-				//Tell the account that we are ready to request the reception
-				NSDictionary	*infoDict;
-				
-				infoDict = [NSDictionary dictionaryWithObjectsAndKeys:
-					accountLookup(account), @"CBPurpleAccount",
-					fileTransfer, @"ESFileTransfer",
-					nil];
-				requestController = [ESPurpleFileReceiveRequestController showFileReceiveWindowWithDict:infoDict];
-				AILog(@"PURPLE_XFER_RECEIVE: Request controller for %x is %@",xfer,requestController);
 			} else if (xferType == PURPLE_XFER_SEND) {
+				/*
+				 * Um, yes, we've already set the local filename... which should be the same as the file name for the transfer itself...
+				 * and we do, in fact, want to send. Call the OK callback immediately.
+				 */
 				if (xfer->local_filename != NULL && xfer->filename != NULL) {
 					AILog(@"PURPLE_XFER_SEND: %x (%s)",xfer,xfer->local_filename);
 					((PurpleRequestFileCb)ok_cb)(user_data, xfer->local_filename);
