@@ -11,7 +11,7 @@
 ============================================================
 --- libpurple/protocols/jabber/auth.c	12caf62ded6c3314a811a59f8730fc801420cd8c
 +++ libpurple/protocols/jabber/auth.c	c7157e2b2625e9be09dd8b2c201b1d3dcc72fd19
-@@ -330,14 +330,21 @@ static void jabber_auth_start_cyrus(Jabb
+@@ -330,14 +330,22 @@ static void jabber_auth_start_cyrus(Jabb
  							disallow_plaintext_auth);
  					g_free(msg);
  					return;
@@ -36,6 +36,7 @@
 +					 * Doing otherwise means that simply compiling with SASL support renders the client unable to connect to servers
 +					 * which would connect without issue otherwise. -evands
 +					 */
++                   js->auth_type = JABBER_AUTH_IQ_AUTH;
 +					jabber_auth_start_old(js);
  					return;
  				}
@@ -116,7 +117,7 @@
  static void auth_old_cb(JabberStream *js, xmlnode *packet, gpointer data)
  {
  	JabberIq *iq;
-@@ -608,6 +684,35 @@ static void auth_old_cb(JabberStream *js
+@@ -608,6 +685,35 @@ static void auth_old_cb(JabberStream *js
  			jabber_iq_set_callback(iq, auth_old_result_cb, NULL);
  			jabber_iq_send(iq);
  
