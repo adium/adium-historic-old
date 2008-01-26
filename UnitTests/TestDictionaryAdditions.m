@@ -144,9 +144,6 @@
 	STAssertNotNil([dict objectForKey:[translation objectForKey:@"Bar"]], @"translate:add:remove: method failed to translate %@ to %@", @"Bar", [translation objectForKey:@"Bar"]);
 	STAssertNotNil([dict objectForKey:[translation objectForKey:@"Baz"]], @"translate:add:remove: method failed to translate %@ to %@", @"Baz", [translation objectForKey:@"Baz"]);
 
-	STAssertNotNil([dict objectForKey:@"Foo"],   @"translate:add:remove: method failed to keep %@", @"Foo");
-	STAssertNotNil([dict objectForKey:@"Bar"],   @"translate:add:remove: method failed to keep %@", @"Bar");
-	STAssertNotNil([dict objectForKey:@"Baz"],   @"translate:add:remove: method failed to keep %@", @"Baz");
 	STAssertNotNil([dict objectForKey:@"Qux"],   @"translate:add:remove: method failed to add %@", @"Qux");
 	STAssertNotNil([dict objectForKey:@"Quux"],  @"translate:add:remove: method failed to add %@", @"Quux");
 	STAssertNotNil([dict objectForKey:@"Quuux"], @"translate:add:remove: method failed to add %@", @"Quuux");
