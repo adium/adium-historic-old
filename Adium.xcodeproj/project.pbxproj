@@ -116,6 +116,7 @@
 		312ED3D50C7E878300A6BDA9 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 312ED3D40C7E878300A6BDA9 /* SenTestingKit.framework */; };
 		312ED3E20C7E8A0700A6BDA9 /* TestDateFormatterStringRepWithInterval.m in Sources */ = {isa = PBXBuildFile; fileRef = 312ED3E10C7E8A0700A6BDA9 /* TestDateFormatterStringRepWithInterval.m */; };
 		312ED41F0C7E963A00A6BDA9 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
+		313C2F940D4B19B50032334D /* TestDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 313C2F930D4B19B50032334D /* TestDictionaryAdditions.m */; };
 		31455C9A0CC353F800D231A0 /* TestDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 31455C990CC353F800D231A0 /* TestDataAdditions.m */; };
 		31918ED80C5E486C00717F0A /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31918ED70C5E486C00717F0A /* QTKit.framework */; };
 		319B29800CE8EC6F00C65398 /* TestDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 319B297F0CE8EC6E00C65398 /* TestDateAdditions.m */; };
@@ -1691,6 +1692,8 @@
 		312ED3E00C7E8A0700A6BDA9 /* TestDateFormatterStringRepWithInterval.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestDateFormatterStringRepWithInterval.h; path = UnitTests/TestDateFormatterStringRepWithInterval.h; sourceTree = "<group>"; };
 		312ED3E10C7E8A0700A6BDA9 /* TestDateFormatterStringRepWithInterval.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestDateFormatterStringRepWithInterval.m; path = UnitTests/TestDateFormatterStringRepWithInterval.m; sourceTree = "<group>"; };
 		312ED3E30C7E8A4A00A6BDA9 /* UnitTests_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = UnitTests_Prefix.pch; path = UnitTests/UnitTests_Prefix.pch; sourceTree = "<group>"; };
+		313C2F920D4B19B50032334D /* TestDictionaryAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestDictionaryAdditions.h; path = UnitTests/TestDictionaryAdditions.h; sourceTree = "<group>"; };
+		313C2F930D4B19B50032334D /* TestDictionaryAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestDictionaryAdditions.m; path = UnitTests/TestDictionaryAdditions.m; sourceTree = "<group>"; };
 		31455C980CC353F800D231A0 /* TestDataAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestDataAdditions.h; path = UnitTests/TestDataAdditions.h; sourceTree = "<group>"; };
 		31455C990CC353F800D231A0 /* TestDataAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestDataAdditions.m; path = UnitTests/TestDataAdditions.m; sourceTree = "<group>"; };
 		31918ED70C5E486C00717F0A /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
@@ -3023,7 +3026,7 @@
 		34BC8F790ACA3AAC00562745 /* AIScannerDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIScannerDebug.m; path = Source/AIScannerDebug.m; sourceTree = "<group>"; };
 		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
 		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
-		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BEA0F109C4A481000787E4 /* AITranslatorRequestDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AITranslatorRequestDelegate.h; path = Plugins/Translation/AITranslatorRequestDelegate.h; sourceTree = "<group>"; };
@@ -4323,6 +4326,8 @@
 				319B297F0CE8EC6E00C65398 /* TestDateAdditions.m */,
 				312ED3E00C7E8A0700A6BDA9 /* TestDateFormatterStringRepWithInterval.h */,
 				312ED3E10C7E8A0700A6BDA9 /* TestDateFormatterStringRepWithInterval.m */,
+				313C2F920D4B19B50032334D /* TestDictionaryAdditions.h */,
+				313C2F930D4B19B50032334D /* TestDictionaryAdditions.m */,
 				31034EFD0C8142680003F5AA /* TestStringAdditions.h */,
 				31034EFE0C8142680003F5AA /* TestStringAdditions.m */,
 				31034F0B0C8142720003F5AA /* UTF8Snowman.txt */,
@@ -8020,7 +8025,6 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
@@ -8656,6 +8660,7 @@
 				31034EFF0C8142680003F5AA /* TestStringAdditions.m in Sources */,
 				31455C9A0CC353F800D231A0 /* TestDataAdditions.m in Sources */,
 				319B29800CE8EC6F00C65398 /* TestDateAdditions.m in Sources */,
+				313C2F940D4B19B50032334D /* TestDictionaryAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
