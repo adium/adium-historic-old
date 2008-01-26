@@ -79,8 +79,10 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	fastUserSwitchStatusID = [prefDict objectForKey:KEY_STATUS_FUS_STATUS_STATE_ID];
-	screenSaverStatusID    = [prefDict objectForKey:KEY_STATUS_SS_STATUS_STATE_ID];
+	[fastUserSwitchStatusID release];
+	fastUserSwitchStatusID = [[prefDict objectForKey:KEY_STATUS_FUS_STATUS_STATE_ID] retain];
+	[screenSaverStatusID release];
+	screenSaverStatusID    = [[prefDict objectForKey:KEY_STATUS_SS_STATUS_STATE_ID] retain];
 	
 	fastUserSwitchStatus = [[prefDict objectForKey:KEY_STATUS_FUS] boolValue];
 	screenSaverStatus = [[prefDict objectForKey:KEY_STATUS_SS] boolValue];
@@ -104,6 +106,9 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 	[previousStatusStateDict release];
 	[accountsToReconnect release];
 	
+	[fastUserSwitchStatusID release];
+	[screenSaverStatusID release];
+
 	[super dealloc];
 }
 
