@@ -440,12 +440,16 @@ static NSArray *validSenderColors;
 	statusHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle semiCaseInsensitivePathForResource:@"Status" ofType:@"html"]] retain];
 	
 	//TODO: make a generic Request message, rather than having this ft specific one
-	fileTransferHTML = [[NSString stringWithContentsOfUTF8File:[styleBundle semiCaseInsensitivePathForResource:@"FileTransferRequest" ofType:@"html"]] retain];
-	if(!fileTransferHTML) {
-		fileTransferHTML = [contentInHTML mutableCopy];
-		[(NSMutableString *)fileTransferHTML replaceKeyword:@"%message%"
-												 withString:@"<p><img src=\"%fileIconPath%\" style=\"width:32px; height:32px; vertical-align:middle;\"></img><input type=\"button\" onclick=\"%saveFileAsHandler%\" value=\"Download %fileName%\"></p>"];
+	NSMutableString *fileTransferHTMLTemplate;
+	fileTransferHTMLTemplate = [[NSMutableString stringWithContentsOfUTF8File:[styleBundle semiCaseInsensitivePathForResource:@"FileTransferRequest" ofType:@"html"]] retain];
+	if(!fileTransferHTMLTemplate) {
+		fileTransferHTMLTemplate = [contentInHTML mutableCopy];
+		[fileTransferHTMLTemplate replaceKeyword:@"%message%"
+									  withString:@"<p><img src=\"%fileIconPath%\" style=\"width:32px; height:32px; vertical-align:middle;\"></img><input type=\"button\" onclick=\"%saveFileAsHandler%\" value=\"Download %fileName%\"></p>"];
 	}
+	[fileTransferHTMLTemplate replaceKeyword:@"Download %fileName%"
+						  withString:[NSString stringWithFormat:AILocalizedString(@"Download %@", "%@ will be a file name"), @"%fileName%"]];
+	fileTransferHTML = fileTransferHTMLTemplate;
 }
 
 #pragma mark Scripts
