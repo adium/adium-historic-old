@@ -231,7 +231,7 @@
 			}
 		}
 
-		[selfCopy release];		
+		[selfCopy release];
 	}
 }
 
