@@ -221,17 +221,22 @@
 			NSString *newKey = [translation objectForKey:key];
 			if (newKey) {
 				[self setObject:[selfCopy objectForKey:key] forKey:newKey];
-			} else {
-				id newObj = [addition objectForKey:key];
-				if (newObj) {
-					[self setObject:newObj forKey:key];
-				} else if (removal && [removal containsObject:key]) {
-					[self removeObjectForKey:key];
-				}
+			}
+
+			if (removal && [removal containsObject:key]) {
+				[self removeObjectForKey:key];
 			}
 		}
 
 		[selfCopy release];
+
+		//Add items that aren't in the removal set.
+		keyEnum = [addition keyEnumerator];
+		while ((key = [keyEnum nextObject])) {
+			if (!(removal && [removal containsObject:key])) {
+				[self setObject:[addition objectForKey:key] forKey:key];
+			}
+		}
 	}
 }
 
