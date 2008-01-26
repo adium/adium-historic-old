@@ -30,6 +30,11 @@
             SUPERCLASS = NSTextField;
         },
                 {
+            CLASS = AIDockingPanel;
+            LANGUAGE = ObjC;
+            SUPERCLASS = NSPanel;
+        },
+                {
             CLASS = AIDockingWindow;
             LANGUAGE = ObjC;
             SUPERCLASS = NSWindow;
@@ -82,6 +87,11 @@
             CLASS = AIStandardListOutlineView;
             LANGUAGE = ObjC;
             SUPERCLASS = AIListOutlineView;
+        },
+                {
+            CLASS = AIStandardListScrollView;
+            LANGUAGE = ObjC;
+            SUPERCLASS = AIAutoScrollView;
         },
                 {
             ACTIONS =             {
