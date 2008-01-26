@@ -51,7 +51,9 @@
 	NSString		*fileName;
 	
 	dirPath = [dirPath stringByExpandingTildeInPath];
-	
+
+	if (!prefix) prefix = @"";
+
 	enumerator = [[self directoryContentsAtPath:dirPath] objectEnumerator];
 	while ((fileName = [enumerator nextObject])) {
 		if ([fileName hasPrefix:prefix]) {
