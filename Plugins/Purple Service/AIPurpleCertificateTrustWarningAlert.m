@@ -16,7 +16,7 @@
 #import "AIPurpleGTalkAccount.h"
 #import <AIUtilities/AITigerCompatibility.h>
 
-#define ALWAYS_SHOW_TRUST_WARNING
+//#define ALWAYS_SHOW_TRUST_WARNING
 
 static NSMutableDictionary *acceptedCertificates = nil;
 
@@ -36,14 +36,24 @@ static NSMutableDictionary *acceptedCertificates = nil;
 
 @implementation AIPurpleCertificateTrustWarningAlert
 
-+ (void)displayTrustWarningAlertWithAccount:(AIAccount*)account
-								   hostname:(NSString*)hostname
++ (void)displayTrustWarningAlertWithAccount:(AIAccount *)account
+								   hostname:(NSString *)hostname
 							   certificates:(CFArrayRef)certs
 							 resultCallback:(void (*)(gboolean trusted, void *userdata))_query_cert_cb
 								   userData:(void*)ud
 {
-	if([account isKindOfClass:[AIPurpleGTalkAccount class]])
-		hostname = @"gmail.com"; // messed up certificate CN of gtalk
+	if ([hostname caseInsensitiveCompare:@"talk.google.com"] == NSOrderedSame) {
+		NSString *UID = [account UID];
+		NSRange startOfDomain = [UID rangeOfString:@"@"];
+		if (startOfDomain.location == NSNotFound ||
+			([[UID substringFromIndex:NSMaxRange(startOfDomain)] caseInsensitiveCompare:@"gmail.com"] == NSOrderedSame)) {
+			/* Google Talk accounts end up with a cert signed using gmail.com as the server.
+			 * However, Google For Domains accounts are signed using talk.google.com.
+			 */
+			hostname = @"gmail.com";
+		}
+	}
+
 	AIPurpleCertificateTrustWarningAlert *alert = [[self alloc] initWithAccount:account hostname:hostname certificates:certs resultCallback:_query_cert_cb userData:ud];
 	[alert showWindow:nil];
 	[alert release];
@@ -288,7 +298,7 @@ static SecPolicyRef SSLSecPolicyCopy()
 	[trustpanel release];
 	CFRelease(trustRef);
 
-	[parentWindow performSelector:@selector(performClose:) withObject:nil afterDelay:0.0];
+	[parentWindow performClose:nil];
 	
 	[self release];
 }
