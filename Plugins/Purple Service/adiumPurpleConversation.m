@@ -33,7 +33,7 @@ static void adiumPurpleConvCreate(PurpleConversation *conv)
 		
 		AIChat *chat = groupChatLookupFromConv(conv);
 		
-		[accountLookup(conv->account) addChat:chat];
+		[accountLookup(purple_conversation_get_account(conv)) addChat:chat];
 	}
 }
 
@@ -73,7 +73,7 @@ static void adiumPurpleConvWriteChat(PurpleConversation *conv, const char *who,
 			  purple_conv_chat_get_nick(PURPLE_CONV_CHAT(conv)),
 			  messageString);
 		if (!who || (flags & PURPLE_MESSAGE_DELAYED) || (strcmp(who, purple_conv_chat_get_nick(PURPLE_CONV_CHAT(conv))) &&
-													   strcmp(who, purple_account_get_username(conv->account)))) {
+													   strcmp(who, purple_account_get_username(purple_conversation_get_account(conv))))) {
 			NSAttributedString	*attributedMessage = [AIHTMLDecoder decodeHTML:messageString];
 			NSNumber			*purpleMessageFlags = [NSNumber numberWithInt:flags];
 			NSDate				*date = [NSDate dateWithTimeIntervalSince1970:mtime];
@@ -90,7 +90,7 @@ static void adiumPurpleConvWriteChat(PurpleConversation *conv, const char *who,
 					date, @"Date",nil];
 			}
 			
-			[accountLookup(conv->account) receivedMultiChatMessage:messageDict
+			[accountLookup(purple_conversation_get_account(conv)) receivedMultiChatMessage:messageDict
 															inChat:groupChatLookupFromConv(conv)];
 		}
 	}
@@ -123,7 +123,7 @@ static void adiumPurpleConvWriteIm(PurpleConversation *conv, const char *who,
 																					   nil]];
 		} else {
 			NSDictionary		*messageDict;
-			CBPurpleAccount		*adiumAccount = accountLookup(conv->account);
+			CBPurpleAccount		*adiumAccount = accountLookup(purple_conversation_get_account(conv));
 			NSString			*messageString;
 			AIChat				*chat;
 			
@@ -164,7 +164,7 @@ static void adiumPurpleConvWriteConv(PurpleConversation *conv, const char *who, 
 			if (messageString) {
 				BOOL				shouldDisplayMessage = TRUE;
 				if (strcmp(message, _("Direct IM established")) == 0) {
-					[accountLookup(conv->account) updateContact:[chat listObject]
+					[accountLookup(purple_conversation_get_account(conv)) updateContact:[chat listObject]
 													   forEvent:[NSNumber numberWithInt:PURPLE_BUDDY_DIRECTIM_CONNECTED]];
 					shouldDisplayMessage = FALSE;
 					
@@ -192,7 +192,7 @@ static void adiumPurpleConvWriteConv(PurpleConversation *conv, const char *who, 
 																					  inChat:chat];
 						}
 						
-						[accountLookup(conv->account) updateContact:[chat listObject] forEvent:[NSNumber numberWithInt:PURPLE_BUDDY_DIRECTIM_DISCONNECTED]];
+						[accountLookup(purple_conversation_get_account(conv)) updateContact:[chat listObject] forEvent:[NSNumber numberWithInt:PURPLE_BUDDY_DIRECTIM_DISCONNECTED]];
 						shouldDisplayMessage = FALSE;
 					}
 				}
@@ -240,7 +240,7 @@ static void adiumPurpleConvWriteConv(PurpleConversation *conv, const char *who, 
 					 * first.
 					 */
 					if (errorType != AIChatUnknownError) {
-												[accountLookup(conv->account) performSelector:@selector(errorForChat:type:)
+												[accountLookup(purple_conversation_get_account(conv)) performSelector:@selector(errorForChat:type:)
 												 										   withObject:chat
 												 										   withObject:[NSNumber numberWithInt:errorType]
 												 										   afterDelay:0];
@@ -275,7 +275,7 @@ static void adiumPurpleConvChatAddUsers(PurpleConversation *conv, GList *cbuddie
 			[flagsArray addObject:[NSNumber numberWithInt:GPOINTER_TO_INT(chatBuddy->flags)]];
 		}
 
-		[accountLookup(conv->account) addUsersArray:usersArray
+		[accountLookup(purple_conversation_get_account(conv)) addUsersArray:usersArray
 										  withFlags:flagsArray
 										 andAliases:aliasesArray
 										newArrivals:[NSNumber numberWithBool:new_arrivals]
@@ -301,10 +301,10 @@ static void adiumPurpleConvChatRemoveUsers(PurpleConversation *conv, GList *user
 
 		GList *l;
 		for (l = users; l != NULL; l = l->next) {
-			[usersArray addObject:[NSString stringWithUTF8String:purple_normalize(conv->account, (char *)l->data)]];
+			[usersArray addObject:[NSString stringWithUTF8String:purple_normalize(purple_conversation_get_account(conv), (char *)l->data)]];
 		}
 
-		[accountLookup(conv->account) removeUsersArray:usersArray
+		[accountLookup(purple_conversation_get_account(conv)) removeUsersArray:usersArray
 											  fromChat:existingChatLookupFromConv(conv)];
 
 	} else {
@@ -335,13 +335,13 @@ static void adiumPurpleConvUpdated(PurpleConversation *conv, PurpleConvUpdateTyp
 		
 		switch(type) {
 			case PURPLE_CONV_UPDATE_TOPIC:
-				[accountLookup(conv->account) updateTopic:(purple_conv_chat_get_topic(chat) ?
+				[accountLookup(purple_conversation_get_account(conv)) updateTopic:(purple_conv_chat_get_topic(chat) ?
 														   [NSString stringWithUTF8String:purple_conv_chat_get_topic(chat)] :
 														   nil)
 												  forChat:existingChatLookupFromConv(conv)];
 				break;
 			case PURPLE_CONV_UPDATE_TITLE:
-				[accountLookup(conv->account) updateTitle:(purple_conversation_get_title(conv) ?
+				[accountLookup(purple_conversation_get_account(conv)) updateTitle:(purple_conversation_get_title(conv) ?
 														   [NSString stringWithUTF8String:purple_conversation_get_title(conv)] :
 														   nil)
 												  forChat:existingChatLookupFromConv(conv)];
@@ -349,7 +349,7 @@ static void adiumPurpleConvUpdated(PurpleConversation *conv, PurpleConvUpdateTyp
 				AILog(@"Update to title: %s",purple_conversation_get_title(conv));
 				break;
 			case PURPLE_CONV_UPDATE_CHATLEFT:
-				[accountLookup(conv->account) leftChat:existingChatLookupFromConv(conv)];
+				[accountLookup(purple_conversation_get_account(conv)) leftChat:existingChatLookupFromConv(conv)];
 				break;
 			case PURPLE_CONV_UPDATE_ADD:
 			case PURPLE_CONV_UPDATE_REMOVE:
@@ -364,7 +364,7 @@ static void adiumPurpleConvUpdated(PurpleConversation *conv, PurpleConvUpdateTyp
 			case PURPLE_CONV_UPDATE_FEATURES:
 
 /*				
-				[accountLookup(conv->account) mainPerformSelector:@selector(convUpdateForChat:type:)
+				[accountLookup(purple_conversation_get_account(conv)) mainPerformSelector:@selector(convUpdateForChat:type:)
 													   withObject:existingChatLookupFromConv(conv)
 													   withObject:[NSNumber numberWithInt:type]];
 */				
@@ -394,7 +394,7 @@ static void adiumPurpleConvUpdated(PurpleConversation *conv, PurpleConvUpdateTyp
 
 				NSNumber	*typingStateNumber = [NSNumber numberWithInt:typingState];
 
-				[accountLookup(conv->account) typingUpdateForIMChat:imChatLookupFromConv(conv)
+				[accountLookup(purple_conversation_get_account(conv)) typingUpdateForIMChat:imChatLookupFromConv(conv)
 															 typing:typingStateNumber];
 				break;
 			}
@@ -415,7 +415,7 @@ static void adiumPurpleConvUpdated(PurpleConversation *conv, PurpleConvUpdateTyp
 gboolean adiumPurpleConvCustomSmileyAdd(PurpleConversation *conv, const char *smile, gboolean remote)
 {
 	AILog(@"%s: Added Custom Smiley %s",purple_conversation_get_name(conv),smile);
-	[accountLookup(conv->account) chat:chatLookupFromConv(conv)
+	[accountLookup(purple_conversation_get_account(conv)) chat:chatLookupFromConv(conv)
 			 isWaitingOnCustomEmoticon:[NSString stringWithUTF8String:smile]];
 
 	return TRUE;
@@ -426,7 +426,7 @@ void adiumPurpleConvCustomSmileyWrite(PurpleConversation *conv, const char *smil
 {
 	AILog(@"%s: Write Custom Smiley %s (%x %i)",purple_conversation_get_name(conv),smile,data,size);
 
-	[accountLookup(conv->account) chat:chatLookupFromConv(conv)
+	[accountLookup(purple_conversation_get_account(conv)) chat:chatLookupFromConv(conv)
 					 setCustomEmoticon:[NSString stringWithUTF8String:smile]
 						 withImageData:[NSData dataWithBytes:data
 													  length:size]];
@@ -436,7 +436,7 @@ void adiumPurpleConvCustomSmileyClose(PurpleConversation *conv, const char *smil
 {
 	AILog(@"%s: Close Custom Smiley %s",purple_conversation_get_name(conv),smile);
 
-	[accountLookup(conv->account) chat:chatLookupFromConv(conv)
+	[accountLookup(purple_conversation_get_account(conv)) chat:chatLookupFromConv(conv)
 				  closedCustomEmoticon:[NSString stringWithUTF8String:smile]];
 }
 

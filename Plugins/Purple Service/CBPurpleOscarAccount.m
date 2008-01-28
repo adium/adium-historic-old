@@ -281,10 +281,10 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 			PurpleGroup   *g;
 			char		*comment;
 			OscarData   *od;
-			
+
 			if ((g = purple_buddy_get_group(buddy)) &&
-				(od = account->gc->proto_data) &&
-				(comment = aim_ssi_getcomment(od->ssi.local, g->name, buddy->name))) {
+				(od = purple_account_get_connection(account)->proto_data) &&
+				(comment = aim_ssi_getcomment(od->ssi.local, purple_group_get_name(g), purple_buddy_get_name(buddy)))) {
 				gchar		*comment_utf8;
 				
 				comment_utf8 = purple_utf8_try_convert(comment);
@@ -339,7 +339,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 			OscarData			*od;
 
 			if ((purple_account_is_connected(account)) &&
-				(od = account->gc->proto_data)) {
+				(od = purple_account_get_connection(account)->proto_data)) {
 				aim_icq_getalias(od, contactUIDUTF8String);
 			}
 		}
@@ -411,7 +411,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 {	
 	if ([inChat isGroupChat]) return NO;
 	
-	OscarData *od = ((account && account->gc) ? account->gc->proto_data : NULL);
+	OscarData *od = ((account && purple_account_get_connection(account)) ? purple_account_get_connection(account)->proto_data : NULL);
 	if (od) {
 		AIListObject *listObject = [inChat listObject];
 		const char *contactUID = [[listObject UID] UTF8String];
@@ -465,7 +465,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 				
 				//Check for a PeerConnection for a direct IM currently open
 				PeerConnection	*conn;
-				OscarData		*od = (OscarData *)account->gc->proto_data;
+				OscarData		*od = (OscarData *)purple_account_get_connection(account)->proto_data;
 				const char		*who = [[inListObject UID] UTF8String];
 				
 				conn = peer_connection_find_by_type(od, who, OSCAR_CAPABILITY_DIRECTIM);
@@ -513,7 +513,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 		if ([thisContactQueue containsObject:inContentMessage]) {
 			//This message is in our queue of messages to send...
 			PeerConnection	*conn;
-			OscarData		*od = (OscarData *)account->gc->proto_data;
+			OscarData		*od = (OscarData *)purple_account_get_connection(account)->proto_data;
 			const char		*who = [[[inContentMessage destination] UID] UTF8String];
 			
 			conn = peer_connection_find_by_type(od, who, OSCAR_CAPABILITY_DIRECTIM);
@@ -770,7 +770,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 {
 	NSString		*statusName = nil;
 	
-	if (aim_snvalid_icq(buddy->name)) {
+	if (aim_snvalid_icq(purple_buddy_get_name(buddy))) {
 		PurplePresence	*presence = purple_buddy_get_presence(buddy);
 		PurpleStatus *status = purple_presence_get_active_status(presence);
 		const char *purpleStatusID = purple_status_get_id(status);

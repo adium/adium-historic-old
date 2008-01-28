@@ -14,7 +14,7 @@
 static void AMPurpleJabberAdHocServer_received_data_cb(PurpleConnection *gc, xmlnode **packet, gpointer this) {
 	AMPurpleJabberAdHocServer *self = this;
 	PurpleAccount *account = [[self account] purpleAccount];
-	if(account->gc == gc) {
+	if(purple_account_get_connection(account) == gc) {
 		if(strcmp((*packet)->name,"iq"))
 			return;
 		const char *type = xmlnode_get_attrib(*packet,"type");
@@ -40,7 +40,7 @@ static void xmlnode_sent_cb(PurpleConnection *gc, xmlnode **packet, gpointer thi
 	xmlnode *xml = *packet;
 	AMPurpleJabberAdHocServer *self = this;
 	PurpleAccount *account = [[self account] purpleAccount];
-	if(xml && account->gc == gc) {
+	if(xml && purple_account_get_connection(account) == gc) {
 		if(!strcmp(xml->name,"iq")) {
 			const char *tostr = xmlnode_get_attrib(xml,"to");
 			if(tostr) {

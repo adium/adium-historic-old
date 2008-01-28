@@ -320,7 +320,7 @@
 - (void)purpleAccountRegistered:(BOOL)success
 {
 	if(success && [[self service] accountViewController]) {
-		const char *usernamestr = account->username;
+		const char *usernamestr = purple_account_get_username(account);
 		NSString *username;
 		if (usernamestr) {
 			NSString *userWithResource = [NSString stringWithUTF8String:usernamestr];
@@ -332,7 +332,7 @@
 		} else
 			username = (id)[NSNull null];
 
-		NSString *pw = (account->password ? [NSString stringWithUTF8String:account->password] : [NSNull null]);
+		NSString *pw = (purple_account_get_password(account) ? [NSString stringWithUTF8String:purple_account_get_password(account)] : [NSNull null]);
 		
 		[[adium notificationCenter] postNotificationName:AIAccountUsernameAndPasswordRegisteredNotification
 												  object:self
@@ -486,10 +486,10 @@
 	NSAttributedString  *statusMessage = nil;
 
 	if (purple_account_is_connected(account)) {		
-		char	*normalized = g_strdup(purple_normalize(b->account, b->name));
+		char	*normalized = g_strdup(purple_normalize(purple_buddy_get_account(b), purple_buddy_get_name(b)));
 		JabberBuddy	*jb;
 		
-		if ((jb = jabber_buddy_find(account->gc->proto_data, normalized, FALSE))) {
+		if ((jb = jabber_buddy_find(purple_account_get_connection(account)->proto_data, normalized, FALSE))) {
 			NSString	*statusMessageString = nil;
 			const char	*msg = jabber_buddy_get_status_msg(jb);
 			
@@ -768,11 +768,11 @@
 	[discoveryBrowserController browse:sender];
 }
 
-- (PurpleSslConnection*)secureConnection {
+- (PurpleSslConnection *)secureConnection {
 	// this is really ugly
-	if([self purpleAccount]->gc && [self purpleAccount]->gc->proto_data)
-		return ((JabberStream*)[self purpleAccount]->gc->proto_data)->gsc;
-	return NULL;
+	PurpleConnection *gc = purple_account_get_connection([self purpleAccount]);
+
+	return ((gc && gc->proto_data) ? ((JabberStream*)purple_account_get_connection([self purpleAccount])->proto_data)->gsc : NULL);
 }
 
 - (void)setShouldVerifyCertificates:(BOOL)yesOrNo {
@@ -780,7 +780,7 @@
 }
 
 - (BOOL)shouldVerifyCertificates {
-	return ([self preferenceForKey:KEY_JABBER_VERIFY_CERTS group:GROUP_ACCOUNT_STATUS]==nil) || [[self preferenceForKey:KEY_JABBER_VERIFY_CERTS group:GROUP_ACCOUNT_STATUS] boolValue];
+	return [[self preferenceForKey:KEY_JABBER_VERIFY_CERTS group:GROUP_ACCOUNT_STATUS] boolValue];
 }
 
 #ifdef HAVE_CDSA
@@ -868,7 +868,7 @@
 
 - (void)registerGateway:(NSMenuItem*)mitem {
 	if(mitem && [mitem representedObject])
-		jabber_register_gateway((JabberStream*)[self purpleAccount]->gc->proto_data, [[[mitem representedObject] UID] UTF8String]);
+		jabber_register_gateway((JabberStream*)purple_account_get_connection([self purpleAccount])->proto_data, [[[mitem representedObject] UID] UTF8String]);
 	else
 		NSBeep();
 }
