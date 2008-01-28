@@ -77,9 +77,9 @@ extern const char *mwServiceAware_getText(void *, void *);
 	NSString				*statusMessageString;
 	NSAttributedString		*statusMessage = nil;
 	const char				*statusMessageText;
-	PurpleConnection			*gc = b->account->gc;
+	PurpleConnection			*gc = purple_account_get_connection(purple_buddy_get_account(b));
 	struct mwPurplePluginData	*pd = ((struct mwPurplePluginData *)(gc->proto_data));
-	struct mwAwareIdBlock	t = { mwAware_USER,  b->name, NULL };
+	struct mwAwareIdBlock	t = { mwAware_USER,  (char *)purple_buddy_get_name(b), NULL };
 	
 	statusMessageText = (const char *)mwServiceAware_getText(pd->srvc_aware, &t);
 	statusMessageString = (statusMessageText ? [NSString stringWithUTF8String:statusMessageText] : nil);

@@ -29,7 +29,7 @@ static void buddy_event_cb(PurpleBuddy *buddy, PurpleBuddyEvent event)
 		SEL				updateSelector = nil;
 		id				data = nil;
 		BOOL			letAccountHandleUpdate = YES;
-		CBPurpleAccount	*account = accountLookup(buddy->account);
+		CBPurpleAccount	*account = accountLookup(purple_buddy_get_account(buddy));
 		AIListContact   *theContact = contactLookupFromBuddy(buddy);
 
 		switch (event) {
@@ -64,7 +64,7 @@ static void buddy_event_cb(PurpleBuddy *buddy, PurpleBuddyEvent event)
 			case PURPLE_BUDDY_ICON: {
 				PurpleBuddyIcon *buddyIcon = purple_buddy_get_icon(buddy);
 				updateSelector = @selector(updateIcon:withData:);
-				AILog(@"Buddy icon update for %s",buddy->name);
+				AILog(@"Buddy icon update for %s",purple_buddy_get_name(buddy));
 				if (buddyIcon) {
 					const guchar  *iconData;
 					size_t		len;
@@ -74,7 +74,7 @@ static void buddy_event_cb(PurpleBuddy *buddy, PurpleBuddyEvent event)
 					if (iconData && len) {
 						data = [NSData dataWithBytes:iconData
 											  length:len];
-						AILog(@"[buddy icon: %s got data]",buddy->name);
+						AILog(@"[buddy icon: %s got data]",purple_buddy_get_name(buddy));
 					}
 				}
 				break;
@@ -82,7 +82,7 @@ static void buddy_event_cb(PurpleBuddy *buddy, PurpleBuddyEvent event)
 			case PURPLE_BUDDY_NAME: {
 				updateSelector = @selector(renameContact:toUID:);
 
-				data = [NSString stringWithUTF8String:buddy->name];
+				data = [NSString stringWithUTF8String:purple_buddy_get_name(buddy)];
 				AILog(@"Renaming %@ to %@",theContact,data);
 				break;
 			}
@@ -123,7 +123,7 @@ static void buddy_event_cb(PurpleBuddy *buddy, PurpleBuddyEvent event)
 
 static void buddy_status_changed_cb(PurpleBuddy *buddy, PurpleStatus *oldstatus, PurpleStatus *status, PurpleBuddyEvent event)
 {
-	CBPurpleAccount		*account = accountLookup(buddy->account);
+	CBPurpleAccount		*account = accountLookup(purple_buddy_get_account(buddy));
 	AIListContact		*theContact = contactLookupFromBuddy(buddy);
 	NSNumber			*statusTypeNumber;
 	NSString			*statusName;
@@ -153,7 +153,7 @@ static void buddy_status_changed_cb(PurpleBuddy *buddy, PurpleStatus *oldstatus,
 
 static void buddy_idle_changed_cb(PurpleBuddy *buddy, gboolean old_idle, gboolean idle, PurpleBuddyEvent event)
 {
-	CBPurpleAccount	*account = accountLookup(buddy->account);
+	CBPurpleAccount	*account = accountLookup(purple_buddy_get_account(buddy));
 	AIListContact	*theContact = contactLookupFromBuddy(buddy);
 	PurplePresence	*presence = purple_buddy_get_presence(buddy);
 				

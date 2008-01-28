@@ -280,9 +280,9 @@ AIListContact* contactLookupFromBuddy(PurpleBuddy *buddy)
 	if (!theContact && buddy) {
 		NSString	*UID;
 	
-		UID = [NSString stringWithUTF8String:purple_normalize(buddy->account, buddy->name)];
+		UID = [NSString stringWithUTF8String:purple_normalize(purple_buddy_get_account(buddy), purple_buddy_get_name(buddy))];
 		
-		theContact = [accountLookup(buddy->account) contactWithUID:UID];
+		theContact = [accountLookup(purple_buddy_get_account(buddy)) contactWithUID:UID];
 		
 		//Associate the handle with ui_data and the buddy with our statusDictionary
 		buddy->node.ui_data = [theContact retain];
@@ -305,11 +305,11 @@ AIChat* groupChatLookupFromConv(PurpleConversation *conv)
 	
 	chat = (AIChat *)conv->ui_data;
 	if (!chat) {
-		NSString *name = [NSString stringWithUTF8String:conv->name];
+		NSString *name = [NSString stringWithUTF8String:purple_conversation_get_name(conv)];
 		
-		chat = [accountLookup(conv->account) chatWithName:name identifier:[NSValue valueWithPointer:conv]];
+		chat = [accountLookup(purple_conversation_get_account(conv)) chatWithName:name identifier:[NSValue valueWithPointer:conv]];
 		conv->ui_data = [chat retain];
-		AILog(@"group chat lookup assigned %@ to %p (%s)",chat,conv, conv->name);
+		AILog(@"group chat lookup assigned %@ to %p (%s)",chat,conv, purple_conversation_get_name(conv));
 	}
 
 	return chat;
@@ -347,15 +347,15 @@ AIChat* imChatLookupFromConv(PurpleConversation *conv)
 		PurpleBuddy		*buddy;
 		PurpleAccount		*account;
 		
-		account = conv->account;
-//		AILog(@"%x conv->name %s; normalizes to %s",account,conv->name,purple_normalize(account,conv->name));
+		account = purple_conversation_get_account(conv);
+//		AILog(@"%x purple_conversation_get_name(conv) %s; normalizes to %s",account,purple_conversation_get_name(conv),purple_normalize(account,purple_conversation_get_name(conv)));
 
 		//First, find the PurpleBuddy with whom we are conversing
-		buddy = purple_find_buddy(account, conv->name);
+		buddy = purple_find_buddy(account, purple_conversation_get_name(conv));
 		if (!buddy) {
-			AILog(@"imChatLookupFromConv: Creating %s %s",account->username,purple_normalize(account,conv->name));
-			//No purple_buddy corresponding to the conv->name is on our list, so create one
-			buddy = purple_buddy_new(account, purple_normalize(account, conv->name), NULL);	//create a PurpleBuddy
+			AILog(@"imChatLookupFromConv: Creating %s %s",purple_account_get_username(account),purple_normalize(account,purple_conversation_get_name(conv)));
+			//No purple_buddy corresponding to the purple_conversation_get_name(conv) is on our list, so create one
+			buddy = purple_buddy_new(account, purple_normalize(account, purple_conversation_get_name(conv)), NULL);	//create a PurpleBuddy
 		}
 
 		NSCAssert(buddy != nil, @"buddy was nil");
@@ -372,11 +372,11 @@ AIChat* imChatLookupFromConv(PurpleConversation *conv)
 				conv,
 				sourceContact,
 				buddy,
-				(buddy ? buddy->name : ""),
-				((buddy && buddy->account && buddy->name) ? purple_normalize(buddy->account, buddy->name) : ""),
+				(buddy ? purple_buddy_get_name(buddy) : ""),
+				((buddy && purple_buddy_get_account(buddy) && purple_buddy_get_name(buddy)) ? purple_normalize(purple_buddy_get_account(buddy), purple_buddy_get_name(buddy)) : ""),
 				accountLookup(account),
 				account,
-				(account ? account->username : "")];
+				(account ? purple_account_get_username(account) : "")];
 
 			NSCAssert(chat != nil, errorString);
 		}
@@ -811,13 +811,13 @@ static void purpleUnregisterCb(PurpleAccount *account, gboolean success, void *u
 	switch (status) {
 		case PURPLE_CMD_STATUS_FAILED:
 		{
-			purple_conv_present_error(conv->name, conv->account, "Command failed");
+			purple_conv_present_error(purple_conversation_get_name(conv), purple_conversation_get_account(conv), "Command failed");
 			didCommand = YES;
 			break;
 		}	
 		case PURPLE_CMD_STATUS_WRONG_ARGS:
 		{
-			purple_conv_present_error(conv->name, conv->account, "Wrong number of arguments");
+			purple_conv_present_error(purple_conversation_get_name(conv), purple_conversation_get_account(conv), "Wrong number of arguments");
 			didCommand = YES;			
 			break;
 		}
@@ -957,7 +957,7 @@ static void purpleUnregisterCb(PurpleAccount *account, gboolean success, void *u
 	buddy = purple_find_buddy(account, buddyUTF8String);
 	if (!buddy) buddy = purple_buddy_new(account, buddyUTF8String, NULL);
 
-	AILog(@"Adding buddy %s to group %s",buddy->name, group->name);
+	AILog(@"Adding buddy %s to group %s",purple_buddy_get_name(buddy), group->name);
 
 	/* purple_blist_add_buddy() will move an existing contact serverside, but will not add a buddy serverside.
 	 * We're working with a new contact, hopefully, so we want to call serv_add_buddy() after modifying the purple list.
@@ -1207,8 +1207,8 @@ static void purpleUnregisterCb(PurpleAccount *account, gboolean success, void *u
 
 	purple_account_set_user_info(account, profileHTMLUTF8);
 
-	if (account->gc != NULL && purple_account_is_connected(account)) {
-		serv_set_info(account->gc, profileHTMLUTF8);
+	if (purple_account_get_connection(account) != NULL && purple_account_is_connected(account)) {
+		serv_set_info(purple_account_get_connection(account), profileHTMLUTF8);
 	}
 }
 
@@ -1240,7 +1240,7 @@ static void purpleUnregisterCb(PurpleAccount *account, gboolean success, void *u
 {
 	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (purple_account_is_connected(account)) {
-		serv_get_info(account->gc, purple_normalize(account, [inUID UTF8String]));
+		serv_get_info(purple_account_get_connection(account), purple_normalize(account, [inUID UTF8String]));
 	}
 }
 
@@ -1307,8 +1307,8 @@ static void purpleUnregisterCb(PurpleAccount *account, gboolean success, void *u
 
 		if ((buddy = purple_find_buddy(account, uidUTF8String)) &&
 			(g = purple_buddy_get_group(buddy)) && 
-			(od = account->gc->proto_data)) {
-			aim_ssi_editcomment(od, g->name, uidUTF8String, [comment UTF8String]);	
+			(od = purple_account_get_connection(account)->proto_data)) {
+			aim_ssi_editcomment(od, purple_group_get_name(g), uidUTF8String, [comment UTF8String]);	
 		}
 	}
 }
@@ -1343,11 +1343,11 @@ static void purpleUnregisterCb(PurpleAccount *account, gboolean success, void *u
 	PurplePluginAction *act;
 	PurpleAccount		 *account = accountLookupFromAdiumAccount(adiumAccount);
 
-	if (account && account->gc) {
+	if (account && purple_account_get_connection(account)) {
 		act = purple_plugin_action_new(NULL, [[dict objectForKey:@"PurplePluginActionCallback"] pointerValue]);
 		if (act->callback) {
-			act->plugin = account->gc->prpl;
-			act->context = account->gc;
+			act->plugin = purple_account_get_connection(account)->prpl;
+			act->context = purple_account_get_connection(account);
 			act->user_data = [[dict objectForKey:@"PurplePluginActionCallbackUserData"] pointerValue];
 			act->callback(act);
 		}

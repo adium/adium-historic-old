@@ -165,7 +165,7 @@
 	aim_userinfo_t		*userinfo;
 	
 	if (purple_account_is_connected(account) &&
-		(od = account->gc->proto_data) &&
+		(od = purple_account_get_connection(account)->proto_data) &&
 		(userinfo = aim_locate_finduserinfo(od, [[theContact UID] UTF8String]))) {
 		
 		//Update the profile if necessary - length must be greater than one since we get "" with info_len 1
