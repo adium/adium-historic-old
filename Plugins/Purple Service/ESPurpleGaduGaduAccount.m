@@ -70,7 +70,7 @@
 	char *buddylist = ggp_buddylist_dump(account);
 		
 	if (buddylist) {
-		PurpleConnection *gc = account->gc;
+		PurpleConnection *gc = purple_account_get_connection(account);
 		GGPInfo *info = gc->proto_data;
 		
 		AILog(@"Uploading gadu-gadu list...");
@@ -104,7 +104,7 @@
 - (void)downloadContactListFromServer
 {
 	//If we're connected and have no buddies, request 'em from the server.
-	PurpleConnection *gc = account->gc;
+	PurpleConnection *gc = purple_account_get_connection(account);
 	GGPInfo *info = gc->proto_data;
 	
 	AILog(@"Requesting gadu-gadu list...");

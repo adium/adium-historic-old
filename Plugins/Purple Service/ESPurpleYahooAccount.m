@@ -219,12 +219,12 @@
 {
 	NSString			*statusMessageString = nil;
 	NSAttributedString	*statusMessage = nil;
-	char				*normalized = g_strdup(purple_normalize(b->account, b->name));
+	char				*normalized = g_strdup(purple_normalize(purple_buddy_get_account(b), purple_buddy_get_name(b)));
 	struct yahoo_data   *od;
 	YahooFriend			*f;
 	
 	if ((purple_account_is_connected(account)) &&
-		(od = account->gc->proto_data) &&
+		(od = purple_account_get_connection(account)->proto_data) &&
 		(f = g_hash_table_lookup(od->friends, normalized))) {
 		
 		if (f->msg != NULL) {
@@ -306,7 +306,7 @@
 
 	/* Grab the idle time while we have a chance */
 	if ((purple_account_is_connected(account)) &&
-		(od = account->gc->proto_data) &&
+		(od = purple_account_get_connection(account)->proto_data) &&
 		(f = g_hash_table_lookup(od->friends, normalized))) {
 
 		if (f->status == YAHOO_STATUS_IDLE) {

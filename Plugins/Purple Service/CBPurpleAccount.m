@@ -812,7 +812,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
  */
 - (BOOL)allowsNewlinesInMessages
 {
-	return (account && account->gc && ((account->gc->flags & PURPLE_CONNECTION_NO_NEWLINES) != 0));
+	return (account && purple_account_get_connection(account) && ((purple_account_get_connection(account)->flags & PURPLE_CONNECTION_NO_NEWLINES) != 0));
 }
 
 /*!
@@ -854,19 +854,19 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 {
 	PurplePluginProtocolInfo *prpl_info = NULL;
 
-	if (account && account->gc && account->gc->prpl)
-		prpl_info = PURPLE_PLUGIN_PROTOCOL_INFO(account->gc->prpl);
+	if (account && purple_account_get_connection(account) && purple_account_get_connection(account)->prpl)
+		prpl_info = PURPLE_PLUGIN_PROTOCOL_INFO(purple_account_get_connection(account)->prpl);
 	
 	if (prpl_info && prpl_info->send_file)
-		return (!prpl_info->can_receive_file || prpl_info->can_receive_file(account->gc, [[inListObject UID] UTF8String]));
+		return (!prpl_info->can_receive_file || prpl_info->can_receive_file(purple_account_get_connection(account), [[inListObject UID] UTF8String]));
 	else
 		return NO;
 }
 
 - (BOOL)supportsAutoReplies
 {
-	if (account && account->gc) {
-		return ((account->gc->flags & PURPLE_CONNECTION_AUTO_RESP) != 0);
+	if (account && purple_account_get_connection(account)) {
+		return ((purple_account_get_connection(account)->flags & PURPLE_CONNECTION_AUTO_RESP) != 0);
 	}
 	
 	return NO;
@@ -876,8 +876,8 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 {
 	PurplePluginProtocolInfo *prpl_info = NULL;
 
-	if (account && account->gc && account->gc->prpl)
-		prpl_info = PURPLE_PLUGIN_PROTOCOL_INFO(account->gc->prpl);
+	if (account && purple_account_get_connection(account) && purple_account_get_connection(account)->prpl)
+		prpl_info = PURPLE_PLUGIN_PROTOCOL_INFO(purple_account_get_connection(account)->prpl);
 	
 	if (prpl_info && prpl_info->offline_message) {
 		
@@ -1247,9 +1247,9 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 
 	if (account && purple_account_get_connection(account)) {
 		PurplePlugin				*prpl;
-		PurplePluginProtocolInfo  *prpl_info = ((prpl = purple_find_prpl(account->protocol_id)) ?
-											  PURPLE_PLUGIN_PROTOCOL_INFO(prpl) :
-											  NULL);
+		PurplePluginProtocolInfo  *prpl_info = ((prpl = purple_find_prpl(purple_account_get_protocol_id(account))) ?
+												PURPLE_PLUGIN_PROTOCOL_INFO(prpl) :
+												NULL);
 
 		if (prpl_info && prpl_info->new_xfer) {
 			char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
@@ -1330,18 +1330,16 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	xfer = [[fileTransfer accountData] pointerValue];
 
     xferType = purple_xfer_get_type(xfer);
-    if ( xferType == PURPLE_XFER_SEND ) {
-        [fileTransfer setFileTransferType:Outgoing_FileTransfer];   
-    } else if ( xferType == PURPLE_XFER_RECEIVE ) {
+    if (xferType == PURPLE_XFER_SEND) {
+        [fileTransfer setFileTransferType:Outgoing_FileTransfer];
+
+    } else if (xferType == PURPLE_XFER_RECEIVE) {
         [fileTransfer setFileTransferType:Incoming_FileTransfer];
-		[fileTransfer setSize:(xfer->size)];
+		[fileTransfer setSize:purple_xfer_get_size(xfer)];
     }
     
     //accept the request
 	[purpleThread xferRequestAccepted:xfer withFileName:[fileTransfer localFilename]];
-    
-	//set the size - must be done after request is accepted?
-
 	
 	[fileTransfer setStatus:Accepted_FileTransfer];
 }
@@ -1799,8 +1797,8 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 - (void)purpleAccountRegistered:(BOOL)success
 {
 	if (success && [[self service] accountViewController]) {
-		NSString *username = (account->username ? [NSString stringWithUTF8String:account->username] : [NSNull null]);
-		NSString *pw = (account->password ? [NSString stringWithUTF8String:account->password] : [NSNull null]);
+		NSString *username = (purple_account_get_username(account) ? [NSString stringWithUTF8String:purple_account_get_username(account)] : [NSNull null]);
+		NSString *pw = (purple_account_get_password(account) ? [NSString stringWithUTF8String:purple_account_get_password(account)] : [NSNull null]);
 
 		[[adium notificationCenter] postNotificationName:AIAccountUsernameAndPasswordRegisteredNotification
 												  object:self
@@ -2109,7 +2107,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 		 * which would indicate currupt data */
 		if (image && !NSEqualSizes(NSZeroSize, imageSize)) {
 			PurplePlugin				*prpl;
-			PurplePluginProtocolInfo  *prpl_info = ((prpl = purple_find_prpl(account->protocol_id)) ?
+			PurplePluginProtocolInfo  *prpl_info = ((prpl = purple_find_prpl(purple_account_get_protocol_id(account))) ?
 												  PURPLE_PLUGIN_PROTOCOL_INFO(prpl) :
 												  NULL);
 
@@ -2323,7 +2321,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 
 	if (account && purple_account_is_connected(account)) {
 		PurplePlugin				*prpl;
-		PurplePluginProtocolInfo  *prpl_info = ((prpl = purple_find_prpl(account->protocol_id)) ?
+		PurplePluginProtocolInfo  *prpl_info = ((prpl = purple_find_prpl(purple_account_get_protocol_id(account))) ?
 											  PURPLE_PLUGIN_PROTOCOL_INFO(prpl) :
 											  NULL);
 		GList					*l, *ll;
@@ -2375,12 +2373,12 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	NSMutableArray			*menuItemArray = nil;
 	
 	if (account && purple_account_is_connected(account)) {
-		PurplePlugin *plugin = account->gc->prpl;
+		PurplePlugin *plugin = purple_account_get_connection(account)->prpl;
 		
 		if (PURPLE_PLUGIN_HAS_ACTIONS(plugin)) {
 			GList	*l, *actions;
 			
-			actions = PURPLE_PLUGIN_ACTIONS(plugin, account->gc);
+			actions = PURPLE_PLUGIN_ACTIONS(plugin, purple_account_get_connection(account));
 
 			//Avoid adding separators between nonexistant items (i.e. items which Purple shows but we don't)
 			BOOL	addedAnAction = NO;
@@ -2400,7 +2398,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 						(title = [self titleForAccountActionMenuLabel:action->label])) {
 
 						action->plugin = plugin;
-						action->context = account->gc;
+						action->context = purple_account_get_connection(account);
 
 						menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
 																						 target:self

@@ -42,13 +42,13 @@ static void adiumPurpleBlistUpdate(PurpleBuddyList *list, PurpleBlistNode *node)
 		PurpleBuddy *buddy = (PurpleBuddy*)node;
 
 		//Take no action if the relevant account isn't online.
-		if (!buddy->account || !purple_account_is_connected(buddy->account))
+		if (!purple_buddy_get_account(buddy) || !purple_account_is_connected(purple_buddy_get_account(buddy)))
 			return;
 		   
 		AIListContact	*theContact = contactLookupFromBuddy(buddy);
 
 		PurpleGroup		*g = purple_buddy_get_group(buddy);
-		NSString		*groupName = ((g && g->name) ? [NSString stringWithUTF8String:g->name] : nil);
+		NSString		*groupName = ((g && purple_group_get_name(g)) ? [NSString stringWithUTF8String:purple_group_get_name(g)] : nil);
 		NSString		*oldGroupName;
 		NSValue			*buddyValue = [NSValue valueWithPointer:buddy];
 
@@ -62,13 +62,13 @@ static void adiumPurpleBlistUpdate(PurpleBuddyList *list, PurpleBlistNode *node)
 		    !(groupName) ||
 		    !([oldGroupName isEqualToString:groupName])) {
 
-			/* We pass in buddy->name directly (without filtering or normalizing it) as it may indicate a 
+			/* We pass in purple_buddy_get_name(buddy) directly (without filtering or normalizing it) as it may indicate a 
 			 * formatted version of the UID.  We have a signal for when a rename occurs, but passing here lets us get
 			 * formatted names which are originally formatted in a way which differs from the results of normalization.
 			 * For example, TekJew will normalize to tekjew in AIM; we want to use tekjew internally but display TekJew.
 			 */
 			NSString	*contactName;
-			contactName = [NSString stringWithUTF8String:buddy->name];
+			contactName = [NSString stringWithUTF8String:purple_buddy_get_name(buddy)];
 
 			//Store the new string in our aliasDict
 			if (groupName) {
@@ -77,7 +77,7 @@ static void adiumPurpleBlistUpdate(PurpleBuddyList *list, PurpleBlistNode *node)
 				[groupDict removeObjectForKey:buddyValue];
 			}
 
-			[accountLookup(buddy->account) updateContact:theContact
+			[accountLookup(purple_buddy_get_account(buddy)) updateContact:theContact
 											 toGroupName:groupName
 											 contactName:contactName];
 		}
@@ -106,7 +106,7 @@ static void adiumPurpleBlistUpdate(PurpleBuddyList *list, PurpleBlistNode *node)
 				}
 				
 				//Send it to the main thread
-				[accountLookup(buddy->account) updateContact:theContact
+				[accountLookup(purple_buddy_get_account(buddy)) updateContact:theContact
 													 toAlias:aliasString];
 			}
 		}
@@ -121,8 +121,8 @@ static void adiumPurpleBlistRemove(PurpleBuddyList *list, PurpleBlistNode *node)
 		PurpleBuddy	*buddy = (PurpleBuddy*) node;
 		NSValue		*buddyValue = [NSValue valueWithPointer:buddy];
 
-//		AILog(@"adiumPurpleBlistRemove %s",buddy->name);
-		[accountLookup(buddy->account) removeContact:contactLookupFromBuddy(buddy)];
+//		AILog(@"adiumPurpleBlistRemove %s",purple_buddy_get_name(buddy));
+		[accountLookup(purple_buddy_get_account(buddy)) removeContact:contactLookupFromBuddy(buddy)];
 
 		//Clear our dictionaries
 		[groupDict removeObjectForKey:buddyValue];
