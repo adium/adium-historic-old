@@ -51,6 +51,9 @@ static NSMutableDictionary *acceptedCertificates = nil;
 			 * However, Google For Domains accounts are signed using talk.google.com.
 			 */
 			hostname = @"gmail.com";
+		} else if ([[UID substringFromIndex:NSMaxRange(startOfDomain)] caseInsensitiveCompare:@"googlemail.com"] == NSOrderedSame)) {
+			/* There are three certificates, as far as I (am) know. Maybe we should ask Sean for confirmation. */
+			hostname = @"googlemail.com";
 		}
 	}
 
