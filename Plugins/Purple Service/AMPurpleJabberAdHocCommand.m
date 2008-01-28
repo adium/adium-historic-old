@@ -149,7 +149,7 @@
 	
 	int len = 0;
 	char *text = xmlnode_to_str(iq, &len);
-	PURPLE_PLUGIN_PROTOCOL_INFO(account->gc->prpl)->send_raw(account->gc, text, len);
+	PURPLE_PLUGIN_PROTOCOL_INFO(purple_account_get_connection(account)->prpl)->send_raw(purple_account_get_connection(account), text, len);
 	g_free(text);
 	xmlnode_free(iq);
 }
