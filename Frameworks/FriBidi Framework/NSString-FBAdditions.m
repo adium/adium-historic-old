@@ -24,8 +24,8 @@
 - (NSWritingDirection)baseWritingDirection {
 	unsigned int		len = [self length];
 	unsigned int		i;
-	FriBidiChar			*f, *fch = calloc(1, sizeof(FriBidiChar));
-	UTF16				*u, *uch = calloc(1, sizeof(unichar));
+	FriBidiChar			*f, fch;
+	UTF16				*u, uch;
 	NSWritingDirection	dir = NSWritingDirectionNatural;
 	
 	/*
@@ -37,14 +37,14 @@
 		FriBidiCharType type;
 		
 		// Get a single character
-		*uch = (UTF16)CFStringGetCharacterAtIndex((CFStringRef)self, i);
-		u = uch;
-		f = fch;
+		uch = (UTF16)CFStringGetCharacterAtIndex((CFStringRef)self, i);
+		u = &uch;
+		f = &fch;
 		
 		// Convert our UniChar (which is UTF16) to FriBidiChar (which is UTF32)
 		if (ConvertUTF16toUTF32((const UTF16**)&u, (u + 1), &f, (f + 1), lenientConversion) == conversionOK) {
 			// Get the type of our character
-			type = fribidi_get_type(*fch);
+			type = fribidi_get_type(fch);
 			
 			// LTR char?
 			if (type == FRIBIDI_TYPE_LTR) {
@@ -59,10 +59,6 @@
 			}
 		}
 	}
-	
-	// Clean up
-	free(fch);
-	free(uch);
 	
 	return dir;
 }
