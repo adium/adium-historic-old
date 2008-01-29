@@ -631,8 +631,15 @@ static NSArray *validSenderColors;
 	
 	//Replacements applicable to any AIContentObject
 	[inString replaceKeyword:@"%time%" 
-			  withString:(date != nil ? [timeStampFormatter stringForObjectValue:date] : @"")];
-	
+			  withString:(date ? [timeStampFormatter stringForObjectValue:date] : @"")];
+
+	[inString replaceKeyword:@"%shortTime%"
+				  withString:(date ?
+							  [[[[NSDateFormatter alloc] initWithDateFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO
+																													   showingAMorPM:NO]
+													   allowNaturalLanguage:NO] autorelease] stringForObjectValue:date] :
+							  @"")];
+
 	if ([inString rangeOfString:@"%senderStatusIcon%"].location != NSNotFound) {
 		//Only cache the status icon to disk if the message style will actually use it
 		[inString replaceKeyword:@"%senderStatusIcon%"
