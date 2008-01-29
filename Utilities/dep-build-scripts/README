@@ -2,7 +2,7 @@ To set up the build environment (fetch the source trees):
 python download.py `cat urls.txt`
 
 The download script requires python 2.5.1 or later. Mac OS X 10.5 comes with this version.  If you don't have that version of python, you can substitute wget. First, you must install wget; then, run:
-wget -i=urls.txt
+wget -iurls.txt
 
 *****
 Get a copy of the pidgin sources. Adium currently uses libpurple 2.3.1, and patches applied during the build process depend upon this.
