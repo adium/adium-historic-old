@@ -36,6 +36,8 @@
 
 #import <AIUtilities/AITigerCompatibility.h>
 
+#import <FriBidi/NSString-FBAdditions.h>
+
 #define MAX_HISTORY					25		//Number of messages to remember in history
 #define ENTRY_TEXTVIEW_PADDING		6		//Padding for auto-sizing
 
@@ -567,6 +569,9 @@
 		//Perform the paste
 		[textStorage replaceCharactersInRange:selectedRange
 						 withAttributedString:attributedString];
+		// Align our text properly (only need to if the first character was changed)
+		if (selectedRange.location == 0)
+			[self setBaseWritingDirection:[[textStorage string] baseWritingDirection]];
 		//Notify that we changed our text
 		[[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification
 															object:self];
@@ -1262,6 +1267,13 @@
 	[[self textStorage] edited:NSTextStorageEditedAttributes
 						 range:selectedRange
 				changeInLength:0];
+}
+
+- (void)insertText:(id)aString
+{
+	[super insertText:aString];
+	// Auto set the writing direction based on our content
+	[self setBaseWritingDirection:[[[self textStorage] string] baseWritingDirection]];
 }
 
 @end
