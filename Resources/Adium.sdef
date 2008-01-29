@@ -215,28 +215,28 @@
 		<command name="go online" code="Adumgoon" description="Changes the status of an account.">
 			<cocoa class="NSScriptCommand" />
 			<direct-parameter description="The account that should connect" type="account" />
-			<parameter name="with message" code="Pmsg" description="The custom status message." type="text" optional="yes">
+			<parameter name="with message" code="Pmsg" description="The custom status message." type="rich text" optional="yes">
 				<cocoa key="WithMessage"/>
 			</parameter>
 		</command>
 		<command name="go available" code="Adumgoav" description="Changes the status of an account.">
 			<cocoa class="NSScriptCommand" />
 			<direct-parameter description="The account that should become available" type="account" />
-			<parameter name="with message" code="Pmsg" description="The custom status message." type="text" optional="yes">
+			<parameter name="with message" code="Pmsg" description="The custom status message." type="rich text" optional="yes">
 				<cocoa key="WithMessage"/>
 			</parameter>
 		</command>
 		<command name="go offline" code="Adumgoof" description="Changes the status of an account.">
 			<cocoa class="NSScriptCommand" />
 			<direct-parameter description="The account that should disconnect" type="account" />
-			<parameter name="with message" code="Pmsg" description="The custom status message." type="text" optional="yes">
+			<parameter name="with message" code="Pmsg" description="The custom status message." type="rich text" optional="yes">
 				<cocoa key="WithMessage"/>
 			</parameter>
 		</command>
 		<command name="go away" code="Adumgoaw" description="Changes the status of an account.">
 			<cocoa class="NSScriptCommand" />
 			<direct-parameter description="The account that should go away" type="account" />
-			<parameter name="with message" code="Pmsg" description="The custom status message." type="text" optional="yes">
+			<parameter name="with message" code="Pmsg" description="The custom status message." type="rich text" optional="yes">
 				<cocoa key="WithMessage"/>
 			</parameter>
 		</command>
@@ -312,7 +312,7 @@
 			<cocoa class="NSColor"/>
 		</value-type>
 
-		<class name="rich text" plural="rich text" code="ctxt" description="Rich (styled) text">
+		<class name="rich text" plural="rich text" code="ricT" description="Rich (styled) text">
 			<cocoa class="NSTextStorage"/>
 			<!-- this "type" element and the ones that follow, while they
 				contradict the DTD, are NOT errors.	Cocoa Scripting in 10.4 uses them to accomplish certain type conversions. -->
