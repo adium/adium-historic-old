@@ -639,5 +639,10 @@
 	return YES;
 }
 
+- (id)accessibilityAttributeValue:(NSString *)attribute
+{
+	NSLog(@"%@ -> %@", attribute, [super accessibilityAttributeValue:attribute]);
+	return [super accessibilityAttributeValue:attribute];
+}
 @end
 
