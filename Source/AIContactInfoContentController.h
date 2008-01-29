@@ -9,33 +9,34 @@
 #import <Cocoa/Cocoa.h>
 #import <AddressBook/ABPeoplePickerView.h>
 
+@class AIListObject;
+
+@protocol AIContentInspectorPane
+-(NSString *)nibName;
+-(NSView *)inspectorContentView;
+-(void)updateForListObject:(AIListObject *)inObject;
+@end
+
 @interface AIContactInfoContentController : NSObject {
-	NSObjectController				*listObjectController;
+
+			 NSArray				*loadedPanes;
+
+	IBOutlet NSObjectController		*listObjectController;
 	
 	IBOutlet NSSegmentedControl		*inspectorToolbar;
 	IBOutlet NSPanel				*infoInspector;
 	IBOutlet NSView					*panelContent;
 	
 	IBOutlet id						currentView;
-	IBOutlet NSView					*infoView;
-	IBOutlet NSView					*addressBookView;
-	IBOutlet NSView					*eventsView;
-	IBOutlet NSView					*advancedView;
-	
-	IBOutlet NSPanel				*addressBookPanel;
-	IBOutlet NSView					*addressBookPalette;
-	IBOutlet ABPeoplePickerView		*addressBookPicker;
 }
+
+-(id)initWithContentPanes:(NSArray *)contentPanes;
+
++(NSArray *)defaultPanes;
+-(NSArray *)loadedPanes;
+-(void)loadContentPanes:(NSArray *)contentPanes;
 
 //Segmented Control action
 -(IBAction)segmentSelected:(id)sender;
-
-//Address Book Panel actions
--(IBAction)runABPanel:(id)sender;
--(IBAction)cardSelected:(id)sender;
--(IBAction)cancelABPanel:(id)sender;
-
-
-
 
 @end

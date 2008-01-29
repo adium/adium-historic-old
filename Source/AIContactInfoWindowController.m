@@ -49,21 +49,59 @@ enum segments {
 	CONTACT_INFO_SEGMENT = 0,
 	CONTACT_ADDRESSBOOK_SEGMENT = 1,
 	CONTACT_EVENTS_SEGMENT = 2,
-	CONTACT_ADVANCED_SEGMENT = 3
+	CONTACT_ADVANCED_SEGMENT = 3,
+	CONTACT_PLUGINS_SEGMENT = 4
 };
 
 @interface AIContactInfoWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)selectionChanged:(NSNotification *)notification;
 - (void)localizeSegmentTitles;
-- (void)configureSegmentsForListObject:(AIListObject *)inObject;
+- (void)configureToolbarForListObject:(AIListObject *)inObject;
+- (void)contactInfoListControllerSelectionDidChangeToListObject:(AIListObject *)listObject;
+
+-(void)addInspectorView:(NSView *)aView animate:(BOOL)doAnimate;
+-(void)animateRemovingRect:(NSRect)aRect inView:(NSView *)aView;
+-(void)animateViewIn:(NSView *)aView;
+-(void)animateViewOut:(NSView *)aView;
 @end
 
 @implementation AIContactInfoWindowController
 
 static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
-#pragma mark CFI
+-(IBAction)segmentSelected:(id)sender
+{
+	//Action method for the Segmented Control, which is actually the toolbar.
+	int currentSegment = [sender selectedSegment];
+	
+	//Take focus away from any textual controls to ensure that they register changes and save
+	if ([[[self window] firstResponder] isKindOfClass:[NSText class]]) {
+		[[self window] makeFirstResponder:nil];
+	}
+	
+	//There is an optional fifth segment, so we define a case for it.
+	switch(currentSegment) {
+		case CONTACT_INFO_SEGMENT:
+			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_INFO_SEGMENT] inspectorContentView] animate:YES];
+			break;
+		case CONTACT_ADDRESSBOOK_SEGMENT:
+			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_ADDRESSBOOK_SEGMENT] inspectorContentView] animate:YES];
+			break;
+		case CONTACT_EVENTS_SEGMENT:
+			[self addInspectorView:[loadedContent objectAtIndex:CONTACT_EVENTS_SEGMENT] animate:YES];
+			break;
+		case CONTACT_ADVANCED_SEGMENT:
+			[self addInspectorView:[loadedContent objectAtIndex:CONTACT_ADVANCED_SEGMENT] animate:YES];
+			break;
+		case CONTACT_PLUGINS_SEGMENT:
+			[self addInspectorView:[loadedContent objectAtIndex:CONTACT_PLUGINS_SEGMENT] animate:YES];
+			break;
+		default:
+			[self addInspectorView:[loadedContent objectAtIndex:CONTACT_INFO_SEGMENT] animate:YES];
+			break;
+	}
+}
 
 //Return the shared contact info window
 + (id)showInfoWindowForListObject:(AIListObject *)listObject
@@ -74,7 +112,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	}
 
 	//Configure and show window
-
 	if ([listObject isKindOfClass:[AIListContact class]]) {
 		AIListContact *parentContact = [(AIListContact *)listObject parentContact];
 		
@@ -105,7 +142,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (void)dealloc
 {
 	[displayedObject release]; displayedObject = nil;
-	[loadedPanes release]; loadedPanes = nil;
+	//[loadedContent release]; loadedContent = nil;
 	
 	[super dealloc];
 }
@@ -122,30 +159,32 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	[super windowDidLoad];
 
 	int	selectedSegment;
-
-	//
-	loadedPanes = [[NSMutableDictionary alloc] init];
-
+	
+	contentController = [[AIContactInfoContentController alloc] init];
+	
+	if(!loadedContent) {
+		//Load the content array from the content controller.
+		loadedContent = [contentController loadedPanes];
+	}
+	
 	//Localization
 	[self localizeSegmentTitles];
-	[removeContact setToolTip:AILocalizedString(@"Disassociate the selected contact from this meta contact. This does not remove the contact from your contact list.",nil)];
-	[removeContact setEnabled:NO];
-
+	
 	//Select the previously selected category
 	selectedSegment = [[[adium preferenceController] preferenceForKey:KEY_INFO_SELECTED_CATEGORY
 															group:PREF_GROUP_WINDOW_POSITIONS] intValue];
 	if (selectedSegment < 0 || selectedSegment >= [inspectorToolbar segmentCount]) selectedSegment = 0;
 
-	[inspectorToolbar setSelectedSegment:selectedSegment];
-
-	[userIcon setAnimates:YES];
-	[userIcon setMaxSize:NSMakeSize(256, 256)];
-
+	//TODO: Change this back to loading the segment from preferences when all the segments work!
+	[inspectorToolbar setSelectedSegment:0];
+	[self segmentSelected:inspectorToolbar];
+	
 	//Monitor the selected contact
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(selectionChanged:)
 									   name:Interface_ContactSelectionChanged
 									 object:nil];
+	
 
 	//contactListController = [[ESContactInfoListController alloc] initWithContactListView:contactListView
 //																			inScrollView:scrollView_contactList
@@ -187,6 +226,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	//Take focus away from any controls to ensure that they register changes and save
 	//Not really sure if we'll need to do this for the new inspector, so i'm just commenting it out - EBH
 	//[[self window] makeFirstResponder:tabView_category];
+	[[self window] makeFirstResponder:nil];
 
 	//Save the selected category
 	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[inspectorToolbar selectedSegment]]
@@ -198,8 +238,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	[self autorelease]; sharedContactInfoInstance = nil;
 }
 
-#pragma mark non-CFI
-
 //When the contact list selection changes, then configure the window for the new contact
 - (void)selectionChanged:(NSNotification *)notification
 {
@@ -207,109 +245,32 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	if (object) [self configureForListObject:[[adium interfaceController] selectedListObject]];
 }
 
-- (void)updateUserIcon
-{
-	NSImage		*currentIcon;
-	NSSize		userIconSize, imagePickerSize;
-
-	//User Icon
-	if (!(currentIcon = [displayedObject userIcon])) {
-		currentIcon = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
-	}
-	
-	/* NSScaleProportionally will lock an animated GIF into a single frame.  We therefore use NSScaleNone if
-	 * we are already at the right size or smaller than the right size; otherwise we scale proportionally to
-	 * fit the frame.
-	 */
-	userIconSize = [currentIcon size];
-	imagePickerSize = [userIcon frame].size;
-	
-	[userIcon setImageScaling:(((userIconSize.width <= userIconSize.width) && (userIconSize.height <= userIconSize.height)) ?
-										 NSScaleNone :
-										 NSScaleProportionally)];
-	[userIcon setImage:currentIcon];
-	[userIcon setTitle:(displayedObject ?
-								  [NSString stringWithFormat:AILocalizedString(@"%@'s Image",nil),[displayedObject displayName]] :
-								  AILocalizedString(@"Image Picker",nil))];
-
-	//Show the reset image button if a preference is set on this object, overriding its serverside icon
-	[userIcon setShowResetImageButton:([displayedObject preferenceForKey:KEY_USER_ICON
-																			 group:PREF_GROUP_USERICONS
-															 ignoreInheritedValues:YES] != nil)];
-}
-
 //Change the list object
 - (void)configureForListObject:(AIListObject *)inObject
 {
-	if (inObject == nil || displayedObject != inObject) {
-		BOOL		useDisplayName = NO;
-
-		//Update our displayed object
-		[displayedObject release];
-		displayedObject = [inObject retain];
-
-		//Update our window title
-		if (inObject) {
-			[[self window] setTitle:[NSString stringWithFormat:AILocalizedString(@"%@'s Info",nil),[inObject displayName]]];
-		} else {
-			[[self window] setTitle:AILocalizedString(@"Contact Info",nil)];
-		}
-
-		//Service
-		if ([inObject isKindOfClass:[AIListContact class]]) {
-			NSString	*displayServiceID;
-			if ([inObject isKindOfClass:[AIMetaContact class]]) {
-				if ([[(AIMetaContact *)inObject listContacts] count] > 1) {
-					displayServiceID = AILocalizedString(@"Meta", "Short string used to identify the 'service' of a multiple-service meta contact");
-					useDisplayName = YES;
-				} else {
-					displayServiceID = [[[(AIMetaContact *)inObject preferredContact] service] shortDescription];
-				}
-
-			} else {
-				displayServiceID = [[inObject service] shortDescription];
-			}
-
-			[serviceName setStringValue:(displayServiceID ? displayServiceID : @"")];
-
-		} else if ([inObject isKindOfClass:[AIListGroup class]]) {
-			[serviceName setLocalizedString:AILocalizedString(@"Group",nil)];
-		} else {
-			[serviceName setStringValue:@""];
-		}
-
-		//Account name
-		if (inObject) {
-			NSString	*formattedUID;
-
-			if (!useDisplayName && (formattedUID = [inObject formattedUID])) {
-				[accountName setStringValue:formattedUID];
-			} else {
-				NSString	*displayName;
-
-				if ((displayName = [inObject displayName])) {
-					[accountName setStringValue:displayName];
-				} else {
-					[accountName setStringValue:[inObject UID]];
-				}
-			}
-
-		} else {
-			[accountName setStringValue:@""];
-		}
-
-		[self updateUserIcon];
-
-		//Configure our subpanes
-		[self configureSegmentsForListObject:inObject];
-		
-		//Reconfigure the currently selected tab view item
-		//[self tabView:tabView_category willSelectTabViewItem:[tabView_category selectedTabViewItem]];
-
+	//Set the title of the window.
+	if (inObject) {
+		[[self window] setTitle:[NSString stringWithFormat:AILocalizedString(@"%@'s Info",nil), [inObject displayName]]];
+	} else {
+		[[self window] setTitle:AILocalizedString(@"Contact Info",nil)];
 	}
+	
+	//Configure each pane for this contact.
+	id<AIContentInspectorPane> pane = nil;
+	NSEnumerator *paneEnumerator = [loadedContent objectEnumerator];
+	
+	while((pane = [paneEnumerator nextObject])) {
+		[pane updateForListObject:inObject];
+	}
+	
+	//Configure our toolbar's enabledness
+	[self configureToolbarForListObject:inObject];
+		
+	//Reconfigure the currently selected tab view item
+	//[self tabView:tabView_category willSelectTabViewItem:[tabView_category selectedTabViewItem]];
 }
 
-- (void)configureSegmentsForListObject:(AIListObject *)inObject
+- (void)configureToolbarForListObject:(AIListObject *)inObject
 {
 	if ([inObject isKindOfClass:[AIListGroup class]]) {
 		//Remove the info and account items for groups
@@ -330,9 +291,9 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 			[inspectorToolbar setEnabled:YES forSegment:CONTACT_INFO_SEGMENT];
 			
 			//Restore the tab view item last selected for a contact if we have one stored
-			if (lastSegmentForContact != NULL) {
+			if (lastSegmentForContact != -1) {
 				[inspectorToolbar setSelectedSegment:lastSegmentForContact];
-				lastSegmentForContact = NULL;
+				lastSegmentForContact = 0;
 			}
 
 		}			
@@ -341,117 +302,115 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 #warning need to hide panes for bookmarks
 }
 
-#pragma mark AIImageViewWithImagePicker Delegate
-// AIImageViewWithImagePicker Delegate ---------------------------------------------------------------------
-- (void)imageViewWithImagePicker:(AIImageViewWithImagePicker *)sender didChangeToImageData:(NSData *)imageData
+#pragma mark View Management and Animation
+-(void)addInspectorView:(NSView *)aView animate:(BOOL)doAnimate;
 {
-	if (displayedObject) {
-		[displayedObject setUserIconData:imageData];
+	NSLog(@"Adding Inspector View: %@", aView);
+	
+	if(currentPane == aView)
+		return;
+	
+	else if(currentPane) {
+		[self animateViewOut:currentPane];
+		[currentPane removeFromSuperview];
 	}
 	
-	[self updateUserIcon];
+	NSWindow *inspectorWindow = [self window];
+	
+	NSRect viewBounds = [aView bounds];
+	//TODO: It does kind of work, but the window bounds includes the toolbar, need to fix that.
+	NSRect contentBounds = [inspectorContent bounds];
+	NSRect inspectorFrame = [inspectorWindow frame];
+
+	viewBounds.size.height = ((inspectorFrame.size.height - contentBounds.size.height) + viewBounds.size.height);
+	viewBounds.origin.x = inspectorFrame.origin.x;
+	viewBounds.origin.y = inspectorFrame.origin.y + (inspectorFrame.size.height - viewBounds.size.height);
+	
+	[inspectorWindow setFrame:viewBounds display:YES animate:doAnimate];
+
+	[inspectorContent setFrame:[aView bounds]];
+	[inspectorContent addSubview:aView];
+	currentPane = aView;
+	[self animateViewIn:currentPane];
 }
 
-- (void)deleteInImageViewWithImagePicker:(AIImageViewWithImagePicker *)sender
+-(void)animateRemovingRect:(NSRect)aRect inView:(NSView *)aView;
 {
-	if (displayedObject) {
-		//Remove the preference
-		[displayedObject setUserIconData:nil];
-
-		[self updateUserIcon];
-	}
+	NSMutableDictionary *animationDict = [NSMutableDictionary dictionaryWithCapacity:4];
+	
+	[animationDict setObject:aView forKey:NSViewAnimationTargetKey];
+	[animationDict setObject:[NSValue valueWithRect:aRect] forKey:NSViewAnimationEndFrameKey];
+	[animationDict setObject:NSViewAnimationFadeInEffect forKey:NSViewAnimationEffectKey];
+	
+	NSViewAnimation *viewAnim = [[NSViewAnimation alloc] initWithViewAnimations:[NSArray arrayWithObjects:animationDict, nil]];
+	
+	//Setup the animation
+	[viewAnim setDuration:0.1];
+	[viewAnim setAnimationCurve:NSAnimationEaseInOut];
+	[viewAnim setAnimationBlockingMode:NSAnimationBlocking];
+	
+	//Start it
+	[viewAnim startAnimation];
+	
+	[viewAnim release];
 }
 
-/*
- If the userIcon was bigger than our image view's frame, it will have been clipped before being passed
- to the AIImageViewWithImagePicker.  This delegate method lets us pass the original, unmodified userIcon.
- */
-- (NSImage *)imageForImageViewWithImagePicker:(AIImageViewWithImagePicker *)picker
+-(void)animateViewIn:(NSView *)aView;
 {
-	return ([displayedObject userIcon]);
+	NSMutableDictionary *animationDict = [NSMutableDictionary dictionaryWithCapacity:4];
+	
+	//Set View for animation
+	[animationDict setObject:aView forKey:NSViewAnimationTargetKey];
+	
+	//Set View to resize to passed frame size during animation.
+	NSRect zeroView = [aView frame];
+	[animationDict setObject:[NSValue valueWithRect:zeroView] forKey:NSViewAnimationStartFrameKey];
+	
+	//Set View to fade in.
+	[animationDict setObject:NSViewAnimationFadeInEffect forKey:NSViewAnimationEffectKey];
+	
+	//Create the animation
+	NSViewAnimation *viewAnim = [[NSViewAnimation alloc] initWithViewAnimations:[NSArray arrayWithObjects:animationDict, nil]];
+	
+	//Setup the animation
+	[viewAnim setDuration:0.1];
+	[viewAnim setAnimationCurve:NSAnimationEaseInOut];
+	[viewAnim setAnimationBlockingMode:NSAnimationBlocking];
+	
+	//Start it
+	[viewAnim startAnimation];
+	
+	[viewAnim release];
 }
 
-- (NSImage *)emptyPictureImageForImageViewWithImagePicker:(AIImageViewWithImagePicker *)picker
+-(void)animateViewOut:(NSView *)aView;
 {
-	return [AIServiceIcons serviceIconForObject:displayedObject type:AIServiceIconLarge direction:AIIconNormal];
+	NSMutableDictionary *animationDict = [NSMutableDictionary dictionaryWithCapacity:3];
+	
+	//Set View for animation
+	[animationDict setObject:aView forKey:NSViewAnimationTargetKey];
+	
+	//Set View to resize to 0 during animation.
+	NSRect zeroView = [aView frame];
+	[animationDict setObject:[NSValue valueWithRect:zeroView] forKey:NSViewAnimationEndFrameKey];
+	
+	//Set View to fade out.
+	[animationDict setObject:NSViewAnimationFadeOutEffect forKey:NSViewAnimationEffectKey];
+	
+	//Create the animation
+	NSViewAnimation *viewAnim = [[NSViewAnimation alloc] initWithViewAnimations:[NSArray arrayWithObjects:animationDict, nil]];
+	
+	//Setup the animation
+	[viewAnim setDuration:0.1];
+	[viewAnim setAnimationCurve:NSAnimationEaseInOut];
+	[viewAnim setAnimationBlockingMode:NSAnimationBlocking];
+	
+	//Start it
+	[viewAnim startAnimation];
+	
+	[viewAnim release];
 }
 
-- (NSString *)fileNameForImageInImagePicker:(AIImageViewWithImagePicker *)picker
-{
-	NSString *fileName = [[displayedObject displayName] safeFilenameString];
-	if ([fileName hasPrefix:@"."]) {
-		fileName = [fileName substringFromIndex:1];
-	}
-	return fileName;
-}
 
-#pragma mark Contact List (metaContact)
-//- (void)setupMetaContactDrawer
-//{
-//	NSDictionary	*themeDict = [NSDictionary dictionaryNamed:CONTACT_INFO_THEME forClass:[self class]];
-//	NSDictionary	*layoutDict = [NSDictionary dictionaryNamed:CONTACT_INFO_LAYOUT forClass:[self class]];
-//
-//	[contactListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
-//
-//	[contactListController setHideRoot:YES];
-//}
-//
-//- (void)configureDrawer
-//{
-//	AIListObject	*listObject = ([displayedObject isKindOfClass:[AIListContact class]] ?
-//								   [(AIListContact *)displayedObject parentContact] :
-//								   displayedObject);
-//	
-//	if ([listObject isKindOfClass:[AIMetaContact class]] &&
-//		([[(AIMetaContact *)listObject listContacts] count] > 1)) {
-//		[contactListController setContactListRoot:(AIMetaContact *)listObject];
-//		[drawer_metaContact open];
-//
-//		NSRect	outlineFrame = [contactListView frame];
-//		int		totalHeight = [contactListView totalHeight];
-//
-//		if (outlineFrame.size.height != totalHeight) {
-//			outlineFrame.size.height = totalHeight;
-//			[contactListView setFrame:outlineFrame];
-//			[contactListView setNeedsDisplay:YES];
-//		}
-//
-//	} else {
-//		[drawer_metaContact close];
-//		[contactListController setContactListRoot:nil];
-//	}
-//}
-
-//- (IBAction)removeContact:(id)sender
-//{
-//	NSEnumerator	*enumerator;
-//	AIListObject	*aListObject;
-//	AIMetaContact	*contactListRoot = (AIMetaContact *)[contactListController contactListRoot];
-//
-//	enumerator = [[contactListView arrayOfSelectedItems] objectEnumerator];
-//	while ((aListObject = [enumerator nextObject])) {
-//		[[adium contactController] removeAllListObjectsMatching:aListObject
-//												fromMetaContact:contactListRoot];
-//	}
-//
-//	//The contents of the metaContact have now changed; reload
-//	[contactListView reloadData];
-//
-//	[contactListController outlineViewSelectionDidChange:nil];
-//}
-
-- (void)performDefaultActionOnSelectedObject:(AIListObject *)listObject sender:(NSOutlineView *)sender
-{
-
-}
-
-- (void)contactInfoListControllerSelectionDidChangeToListObject:(AIListObject *)listObject
-{
-	AILog(@"Configuring Info List for %@",listObject);
-	[self configureForListObject:listObject];
-
-	//Only enable the remove contact button if a contact within the metacontact is selected
-	[removeContact setEnabled:(listObject && (listObject != (AIListObject *)[contactListController contactListRoot]))];
-}
 
 @end

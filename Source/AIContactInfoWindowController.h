@@ -16,36 +16,27 @@
  
 #import <Adium/AIWindowController.h>
 #import <Adium/AIAbstractListController.h>
+#import <AIContactInfoContentController.h>
 
 @class ESContactInfoListController, AIModularPaneCategoryView, AIContactInfoImageViewWithImagePicker, AIAutoScrollView,
 	   AIListOutlineView, AIListObject;
 
-@interface AIContactInfoWindowController : AIWindowController <AIListControllerDelegate> {	
-	
+@interface AIContactInfoWindowController : AIWindowController {	
+
+	IBOutlet		AIContactInfoContentController  *contentController;
 	IBOutlet		NSSegmentedControl				*inspectorToolbar;
+	IBOutlet		NSView							*inspectorContent;
 	
-
-	
-	IBOutlet		NSView							*currentView;
-	
-	IBOutlet		AIAutoScrollView				*contactListScrollView;
-    IBOutlet		AIListOutlineView				*contactListOutlineView;
-	IBOutlet		NSButton						*removeContact;
-	
-	AIListObject									*displayedObject;
-	NSMutableDictionary								*loadedPanes;
-	int												lastSegmentForContact;
-
-	ESContactInfoListController						*contactListController;
+					NSView							*currentPane;
+					NSArray							*loadedContent;
+					
+					AIListObject					*displayedObject;
+					int								lastSegmentForContact;
 }
+
+- (IBAction)segmentSelected:(id)sender;
 
 + (id)showInfoWindowForListObject:(AIListObject *)listObject;
 + (void)closeInfoWindow;
 - (void)configureForListObject:(AIListObject *)inObject;
-
-- (IBAction)removeContact:(id)sender;
-
-//Internal use
-- (void)contactInfoListControllerSelectionDidChangeToListObject:(AIListObject *)listObject;
-
 @end
