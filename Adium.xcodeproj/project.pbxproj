@@ -1143,6 +1143,12 @@
 		4BFF665B063693FA00308A3B /* ESSendMessageAlertDetailPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 342DC49C05783BE8000E1D83 /* ESSendMessageAlertDetailPane.m */; };
 		4F0B0D230D3AF50A00B44E62 /* ContactInfoInspector.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4F0B0D220D3AF50900B44E62 /* ContactInfoInspector.nib */; };
 		4F0B0D340D3AF96300B44E62 /* AIContactInfoContentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F0B0D330D3AF96300B44E62 /* AIContactInfoContentController.m */; };
+		4F3656600D4DA2DC00AB02ED /* AIAddressBookInspectorPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4F36565F0D4DA2DC00AB02ED /* AIAddressBookInspectorPane.nib */; };
+		4F3840510D4B055800A66829 /* AIInfoInspectorPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4F3840500D4B055800A66829 /* AIInfoInspectorPane.nib */; };
+		4F4656400D3EECA30032C64A /* AIInfoInspectorPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F46563F0D3EECA30032C64A /* AIInfoInspectorPane.m */; };
+		4F87EFD30D3F33B2005D43D3 /* AIAddressBookInspectorPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F87EFD20D3F33B1005D43D3 /* AIAddressBookInspectorPane.m */; };
+		4F87EFD60D3F34AC005D43D3 /* AIEventsInspectorPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F87EFD50D3F34AC005D43D3 /* AIEventsInspectorPane.m */; };
+		4F87EFDA0D3F3520005D43D3 /* AIAdvancedInspectorPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F87EFD90D3F3520005D43D3 /* AIAdvancedInspectorPane.m */; };
 		63093C2F0892143500F118D3 /* newContentThreeDigits.png in Resources */ = {isa = PBXBuildFile; fileRef = 63093C2D0892143500F118D3 /* newContentThreeDigits.png */; };
 		63093C300892143500F118D3 /* newContentTwoDigits.png in Resources */ = {isa = PBXBuildFile; fileRef = 63093C2E0892143500F118D3 /* newContentTwoDigits.png */; };
 		632D60C1094B81AB003A9786 /* AIDockIconPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 632D60BF094B81AB003A9786 /* AIDockIconPreviewController.m */; };
@@ -3665,9 +3671,19 @@
 		4BFC5407043E509A00A8010A /* AIContentStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContentStatus.h; path = "Frameworks/Adium Framework/Source/AIContentStatus.h"; sourceTree = "<group>"; };
 		4BFC5408043E509A00A8010A /* AIContentStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIContentStatus.m; path = "Frameworks/Adium Framework/Source/AIContentStatus.m"; sourceTree = "<group>"; };
 		4BFE2E9F07E61A4E00C07EBE /* NewAlertNoEvents.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = NewAlertNoEvents.nib; path = "Frameworks/Adium Framework/Resources/NewAlertNoEvents.nib"; sourceTree = "<group>"; };
-		4F0B0D220D3AF50900B44E62 /* ContactInfoInspector.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = ContactInfoInspector.nib; sourceTree = "<group>"; };
-		4F0B0D320D3AF96300B44E62 /* AIContactInfoContentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIContactInfoContentController.h; sourceTree = "<group>"; };
-		4F0B0D330D3AF96300B44E62 /* AIContactInfoContentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIContactInfoContentController.m; sourceTree = "<group>"; };
+		4F0B0D220D3AF50900B44E62 /* ContactInfoInspector.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ContactInfoInspector.nib; path = Resources/ContactInfoInspector.nib; sourceTree = "<group>"; };
+		4F0B0D320D3AF96300B44E62 /* AIContactInfoContentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContactInfoContentController.h; path = Source/AIContactInfoContentController.h; sourceTree = "<group>"; };
+		4F0B0D330D3AF96300B44E62 /* AIContactInfoContentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIContactInfoContentController.m; path = Source/AIContactInfoContentController.m; sourceTree = "<group>"; };
+		4F36565F0D4DA2DC00AB02ED /* AIAddressBookInspectorPane.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AIAddressBookInspectorPane.nib; path = Resources/AIAddressBookInspectorPane.nib; sourceTree = "<group>"; };
+		4F3840500D4B055800A66829 /* AIInfoInspectorPane.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AIInfoInspectorPane.nib; path = Resources/AIInfoInspectorPane.nib; sourceTree = "<group>"; };
+		4F46563E0D3EECA30032C64A /* AIInfoInspectorPane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIInfoInspectorPane.h; path = Source/AIInfoInspectorPane.h; sourceTree = "<group>"; };
+		4F46563F0D3EECA30032C64A /* AIInfoInspectorPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIInfoInspectorPane.m; path = Source/AIInfoInspectorPane.m; sourceTree = "<group>"; };
+		4F87EFD10D3F33B1005D43D3 /* AIAddressBookInspectorPane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAddressBookInspectorPane.h; path = Source/AIAddressBookInspectorPane.h; sourceTree = "<group>"; };
+		4F87EFD20D3F33B1005D43D3 /* AIAddressBookInspectorPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAddressBookInspectorPane.m; path = Source/AIAddressBookInspectorPane.m; sourceTree = "<group>"; };
+		4F87EFD40D3F34AC005D43D3 /* AIEventsInspectorPane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIEventsInspectorPane.h; path = Source/AIEventsInspectorPane.h; sourceTree = "<group>"; };
+		4F87EFD50D3F34AC005D43D3 /* AIEventsInspectorPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIEventsInspectorPane.m; path = Source/AIEventsInspectorPane.m; sourceTree = "<group>"; };
+		4F87EFD80D3F3520005D43D3 /* AIAdvancedInspectorPane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAdvancedInspectorPane.h; path = Source/AIAdvancedInspectorPane.h; sourceTree = "<group>"; };
+		4F87EFD90D3F3520005D43D3 /* AIAdvancedInspectorPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAdvancedInspectorPane.m; path = Source/AIAdvancedInspectorPane.m; sourceTree = "<group>"; };
 		63093C2D0892143500F118D3 /* newContentThreeDigits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newContentThreeDigits.png; sourceTree = "<group>"; };
 		63093C2E0892143500F118D3 /* newContentTwoDigits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newContentTwoDigits.png; sourceTree = "<group>"; };
 		63125D8D0A75EBF000303EE9 /* AIPurpleLiveJournalAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIPurpleLiveJournalAccount.h; path = "Plugins/Purple Service/AIPurpleLiveJournalAccount.h"; sourceTree = "<group>"; };
@@ -7392,6 +7408,14 @@
 		F5CDCE460350758501A8010A /* Contact Info Window */ = {
 			isa = PBXGroup;
 			children = (
+				4F36565F0D4DA2DC00AB02ED /* AIAddressBookInspectorPane.nib */,
+				4F3840500D4B055800A66829 /* AIInfoInspectorPane.nib */,
+				4F87EFD80D3F3520005D43D3 /* AIAdvancedInspectorPane.h */,
+				4F87EFD90D3F3520005D43D3 /* AIAdvancedInspectorPane.m */,
+				4F87EFD40D3F34AC005D43D3 /* AIEventsInspectorPane.h */,
+				4F87EFD50D3F34AC005D43D3 /* AIEventsInspectorPane.m */,
+				4F87EFD10D3F33B1005D43D3 /* AIAddressBookInspectorPane.h */,
+				4F87EFD20D3F33B1005D43D3 /* AIAddressBookInspectorPane.m */,
 				34E6C5640A791BAF0076D7F0 /* AIContactInfoWindowPlugin.h */,
 				34E6C5650A791BAF0076D7F0 /* AIContactInfoWindowPlugin.m */,
 				F570A59803704B6101A8010A /* AIContactInfoWindowController.h */,
@@ -7399,6 +7423,8 @@
 				34BFE25B07E8E69300AD984D /* AIContactAccountsPane.h */,
 				34BFE25A07E8E69300AD984D /* AIContactAccountsPane.m */,
 				4BBF41DD0661194A001D31E1 /* AIContactProfilePane.h */,
+				4F46563E0D3EECA30032C64A /* AIInfoInspectorPane.h */,
+				4F46563F0D3EECA30032C64A /* AIInfoInspectorPane.m */,
 				4BBF41DE0661194A001D31E1 /* AIContactProfilePane.m */,
 				4B2DC06B066F705800AD5AAD /* AIContactSettingsPane.h */,
 				4B2DC06C066F705800AD5AAD /* AIContactSettingsPane.m */,
@@ -8430,6 +8456,8 @@
 				34CA15530CAFDFB2009AA5E3 /* sidebarActionWidget.png in Resources */,
 				346196F20D31607500763051 /* SRSnapback.png in Resources */,
 				4F0B0D230D3AF50A00B44E62 /* ContactInfoInspector.nib in Resources */,
+				4F3840510D4B055800A66829 /* AIInfoInspectorPane.nib in Resources */,
+				4F3656600D4DA2DC00AB02ED /* AIAddressBookInspectorPane.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9064,6 +9092,10 @@
 				347F4B810D340F16006D5A56 /* AIPreferenceContainer.m in Sources */,
 				0CFA98C90D35C18000A077C6 /* NSDataAdditions.m in Sources */,
 				4F0B0D340D3AF96300B44E62 /* AIContactInfoContentController.m in Sources */,
+				4F4656400D3EECA30032C64A /* AIInfoInspectorPane.m in Sources */,
+				4F87EFD30D3F33B2005D43D3 /* AIAddressBookInspectorPane.m in Sources */,
+				4F87EFD60D3F34AC005D43D3 /* AIEventsInspectorPane.m in Sources */,
+				4F87EFDA0D3F3520005D43D3 /* AIAdvancedInspectorPane.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
