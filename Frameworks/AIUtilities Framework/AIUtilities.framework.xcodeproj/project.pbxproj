@@ -138,6 +138,8 @@
 		344870D206D1E3CE00DA778C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 344870D106D1E3CE00DA778C /* SystemConfiguration.framework */; };
 		344870ED06D1E3DF00DA778C /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 344870EB06D1E3DF00DA778C /* AudioUnit.framework */; };
 		344870EE06D1E3DF00DA778C /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 344870EC06D1E3DF00DA778C /* AudioToolbox.framework */; };
+		34891C310D4B994B00AEF48C /* AIDockingPanel.h in Headers */ = {isa = PBXBuildFile; fileRef = 34891C2F0D4B994B00AEF48C /* AIDockingPanel.h */; };
+		34891C320D4B994B00AEF48C /* AIDockingPanel.m in Sources */ = {isa = PBXBuildFile; fileRef = 34891C300D4B994B00AEF48C /* AIDockingPanel.m */; };
 		34BFE58207E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BFE58007E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34BFE58307E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BFE58107E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.m */; };
 		34D18392075FC2390075A380 /* AIRolloverButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D18390075FC2390075A380 /* AIRolloverButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -275,6 +277,7 @@
 		340580C3087EEFB900664D64 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = Resources/ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		341BCFF509615D8600CF83F5 /* AITextAttachmentAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AITextAttachmentAdditions.m; path = Source/AITextAttachmentAdditions.m; sourceTree = "<group>"; };
 		341BCFF609615D8600CF83F5 /* AITextAttachmentAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AITextAttachmentAdditions.h; path = Source/AITextAttachmentAdditions.h; sourceTree = "<group>"; };
+		34208D450D502DD3003138D1 /* fr_CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr_CA; path = Resources/fr_CA.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34235A6909D7B370009FF634 /* AICharacterSetAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AICharacterSetAdditions.h; path = Source/AICharacterSetAdditions.h; sourceTree = "<group>"; };
 		34235A6A09D7B370009FF634 /* AICharacterSetAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AICharacterSetAdditions.m; path = Source/AICharacterSetAdditions.m; sourceTree = "<group>"; };
 		342F9E8A0B552659000D5FC2 /* fi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fi; path = Resources/fi.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -391,6 +394,8 @@
 		344870EC06D1E3DF00DA778C /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
 		345F5CF4081AFD51001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = Resources/zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34662F430D3C2E12006C9034 /* sl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sl; path = Resources/sl.lproj/Localizable.strings; sourceTree = "<group>"; };
+		34891C2F0D4B994B00AEF48C /* AIDockingPanel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIDockingPanel.h; sourceTree = "<group>"; };
+		34891C300D4B994B00AEF48C /* AIDockingPanel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIDockingPanel.m; sourceTree = "<group>"; };
 		3498FEA707F489600004B79A /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = Resources/it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3498FEAE07F489730004B79A /* nl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = nl; path = Resources/nl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3498FEAF07F489770004B79A /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = Resources/fr.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1186,6 +1191,8 @@
 			children = (
 				34486B5E06D1DF0300DA778C /* AIDockingWindow.h */,
 				34486B5F06D1DF0300DA778C /* AIDockingWindow.m */,
+				34891C2F0D4B994B00AEF48C /* AIDockingPanel.h */,
+				34891C300D4B994B00AEF48C /* AIDockingPanel.m */,
 			);
 			name = "Window that docks to screen edges";
 			sourceTree = "<group>";
@@ -1448,6 +1455,7 @@
 				34E1D8060CD5C4FA0071836E /* IKPictureTakerForTiger.h in Headers */,
 				319EF07F0CE787E40070D159 /* AICalendarDateAdditions.h in Headers */,
 				3113CCA60CE8CB4200B13AC0 /* AIDateAdditions.h in Headers */,
+				34891C310D4B994B00AEF48C /* AIDockingPanel.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1505,6 +1513,7 @@
 				fi,
 				pt_BR,
 				sl,
+				fr_CA,
 			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* AIUtilities.framework */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
@@ -1648,6 +1657,7 @@
 				34E1D8050CD5C4FA0071836E /* IKPictureTakerForTiger.m in Sources */,
 				319EF0800CE787E40070D159 /* AICalendarDateAdditions.m in Sources */,
 				3113CCA70CE8CB4200B13AC0 /* AIDateAdditions.m in Sources */,
+				34891C320D4B994B00AEF48C /* AIDockingPanel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1678,6 +1688,7 @@
 				342F9E8A0B552659000D5FC2 /* fi */,
 				34F13FA50BA6D5E4000473DE /* pt_BR */,
 				34662F430D3C2E12006C9034 /* sl */,
+				34208D450D502DD3003138D1 /* fr_CA */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
