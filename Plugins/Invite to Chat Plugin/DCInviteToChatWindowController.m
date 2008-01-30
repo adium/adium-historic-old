@@ -32,6 +32,7 @@
 - (void)windowDidLoad;
 - (void)setChat:(AIChat *)inChat contact:(AIListContact *)inContact;
 - (void)setContact:(AIListContact *)inContact;
+- (void)localize;
 @end 
 @implementation DCInviteToChatWindowController
 
@@ -84,6 +85,8 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 {
     //Center the window
     [[self window] center];
+	
+	[self localize];
 }
 
 - (IBAction)invite:(id)sender
@@ -195,6 +198,17 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 	}	
 	
 	[self closeWindow:nil];
+}
+
+- (void)localize
+{
+	[[self window] setTitle:AILocalizedString(@"Invite to Chat", "Invite to Chat window title")];
+	[label_inviteContact setLocalizedString:AILocalizedString(@"Invite Contact:", nil)];
+	[label_chatName setLocalizedString:AILocalizedString(@"To Chat:", nil)];
+	[label_message setLocalizedString:AILocalizedString(@"With Message:", nil)];
+
+	[button_invite setLocalizedString:AILocalizedStringFromTable(@"Invite", @"Buttons", nil)];
+	[button_cancel setLocalizedString:AILocalizedStringFromTable(@"Cancel", @"Buttons", nil)];
 }
 
 @end
