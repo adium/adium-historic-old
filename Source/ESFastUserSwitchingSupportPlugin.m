@@ -121,6 +121,8 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
  */
 -(void)switchHandler:(NSNotification*) notification
 {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
 	if (notification &&
 		(([[notification name] isEqualToString:NSWorkspaceSessionDidResignActiveNotification] && fastUserSwitchStatus) ||
 			([[notification name] isEqualToString:@"com.apple.screensaver.didstart"] && screenSaverStatus))) {
@@ -196,6 +198,8 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 		[previousStatusStateDict release]; previousStatusStateDict = nil;
 		[accountsToReconnect release]; accountsToReconnect = nil;
 	}
+	
+	[pool release];
 }
 
 @end
