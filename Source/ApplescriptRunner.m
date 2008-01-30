@@ -64,7 +64,9 @@
  */
 - (void)respondIfReady:(NSNotification *)inNotification
 {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[self applescriptRunnerIsReady];
+	[pool release];
 }
 
 /*!
