@@ -22,6 +22,12 @@
 	IBOutlet	NSPopUpButton   *menu_contacts;
 	IBOutlet	NSTextField		*textField_message;
 	IBOutlet	NSTextField		*textField_chatName;
+
+	IBOutlet	NSTextField		*label_inviteContact;
+	IBOutlet	NSTextField		*label_chatName;
+	IBOutlet	NSTextField		*label_message;
+	IBOutlet	NSButton		*button_invite;
+	IBOutlet	NSButton		*button_cancel;
 	
 	AIListContact				*contact;
 	AIService					*service;
