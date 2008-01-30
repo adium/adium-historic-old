@@ -151,7 +151,9 @@ extern CFTimeInterval CGSSecondsSinceLastInputEvent(unsigned long evType);
  */
 - (void)screenSaverDidStart
 {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[self _setMachineIsIdle:YES];
+	[pool release];
 }
 
 /*!
@@ -161,7 +163,9 @@ extern CFTimeInterval CGSSecondsSinceLastInputEvent(unsigned long evType);
  */
 - (void)screenSaverDidStop
 {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[self _setMachineIsIdle:NO];
+	[pool release];
 }
 
 
