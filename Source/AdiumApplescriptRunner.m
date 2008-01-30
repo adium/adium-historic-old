@@ -123,6 +123,7 @@
 
 - (void)applescriptRunnerIsReady:(NSNotification *)inNotification
 {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSEnumerator	*enumerator;
 	NSDictionary	*executionDict;
 	
@@ -134,6 +135,7 @@
 	}
 	
 	[pendingApplescriptsArray release]; pendingApplescriptsArray = nil;
+	[pool release];
 }
 
 - (void)applescriptRunnerDidQuit:(NSNotification *)inNotification
@@ -143,6 +145,7 @@
 
 - (void)applescriptDidRun:(NSNotification *)inNotification
 {
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	NSDictionary *userInfo = [inNotification userInfo];
 	NSString	 *uniqueID = [userInfo objectForKey:@"uniqueID"];
 
@@ -164,6 +167,7 @@
 			[runningApplescriptsDict release]; runningApplescriptsDict = nil;
 		}
 	}
+	[pool release];
 }
 
 @end
