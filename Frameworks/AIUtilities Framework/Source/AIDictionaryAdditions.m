@@ -52,22 +52,66 @@
     return dictionary;
 }
 
+- (BOOL)validateAsPropertyList
+{
+	BOOL validated = YES;
+	NSEnumerator *enumerator = [self keyEnumerator];
+	NSString	 *key;
+	while ((key = [enumerator nextObject])) {
+		if (![key isKindOfClass:[NSString class]]) {
+			NSLog(@"** Dictionary failed validation: %@: Key %@ is a %@ but must be an NSString",
+				  self, key, NSStringFromClass([key class]));
+			validated = NO;
+		}
+
+		id value = [self objectForKey:key];
+		Class valueClass = [value class];
+		if (![value isKindOfClass:[NSString class]] &&
+			![value isKindOfClass:[NSData class]] &&
+			![value isKindOfClass:[NSNumber class]] &&
+			![value isKindOfClass:[NSArray class]] &&
+			![value isKindOfClass:[NSDictionary class]] &&
+			![value isKindOfClass:[NSDate class]]) {
+			NSLog(@"** Dictionary failed validation: %@: Value %@ is a %@ but must be a string, data, number, array, dictionary, or date",
+				  self, value, NSStringFromClass(valueClass));
+			validated = NO;
+		}
+		
+		if ([value isKindOfClass:[NSArray class]] ||[value isKindOfClass:[NSDictionary class]]) {
+			BOOL successOfValue = [value validateAsPropertyList];
+			if (validated) validated = successOfValue;
+		}
+	}
+
+return validated;
+}
+
 // saves this dictionary to the specified path
 - (BOOL)writeToPath:(NSString *)path withName:(NSString *)name
 {
-    NSParameterAssert(path != nil); NSParameterAssert([path length] != 0);
+	NSParameterAssert(path != nil); NSParameterAssert([path length] != 0);
     NSParameterAssert(name != nil); NSParameterAssert([name length] != 0);
 
 	[[NSFileManager defaultManager] createDirectoriesForPath:path]; //make sure the path exists
 	
 	NSData *plistData;
+	NSString *retainedError = nil;
 	plistData = [NSPropertyListSerialization dataFromPropertyList:self
 														   format:NSPropertyListBinaryFormat_v1_0
-												 errorDescription:NULL];
+												 errorDescription:&retainedError];
 	if (plistData) {
-		return [plistData writeToFile:[[path stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"plist"]
-						   atomically:YES];
-	} else {
+		BOOL success = [plistData writeToFile:[[path stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"plist"]
+								  atomically:YES];
+		if (!success)
+			NSLog(@"%s: Error writing path %@, name %@ (%@)", __PRETTY_FUNCTION__, path, name, [[path stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"plist"]);
+
+		return success;
+	} else {		
+		NSLog(@"%s: Could not serialize. Error: \"%@\".", retainedError);
+		[self validateAsPropertyList];
+
+		if (retainedError) [retainedError release];
+
 		return NO;
 	}
 }

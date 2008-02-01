@@ -12,6 +12,7 @@
 - (BOOL)containsObjectIdenticalTo:(id)obj;
 + (NSArray *)arrayNamed:(NSString *)name forClass:(Class)inClass;
 - (NSComparisonResult)compare:(NSArray *)other;
+- (BOOL)validateAsPropertyList;
 @end
 
 @interface NSMutableArray (ESArrayAdditions)

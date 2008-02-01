@@ -51,6 +51,34 @@
 	return result;
 }
 
+- (BOOL)validateAsPropertyList
+{
+	BOOL validated = YES;
+	NSEnumerator *enumerator = [self objectEnumerator];
+	id	value;
+
+	while ((value = [enumerator nextObject])) {
+		Class valueClass = [value class];
+		if (![value isKindOfClass:[NSString class]] &&
+			![value isKindOfClass:[NSData class]] &&
+			![value isKindOfClass:[NSNumber class]] &&
+			![value isKindOfClass:[NSArray class]] &&
+			![value isKindOfClass:[NSDictionary class]] &&
+			![value isKindOfClass:[NSDate class]]) {
+			NSLog(@"** Array failed validation: %@: Value %@ is a %@ but must be a string, data, number, array, dictionary, or date",
+				  self, value, NSStringFromClass(valueClass));
+			validated = NO;
+		}
+
+		if ([value isKindOfClass:[NSArray class]] ||[value isKindOfClass:[NSDictionary class]]) {
+			BOOL successOfValue = [value validateAsPropertyList];
+			if (validated) validated = successOfValue;
+		}
+	}
+	
+	return validated;
+}
+
 @end
 
 @implementation NSMutableArray (ESArrayAdditions)
