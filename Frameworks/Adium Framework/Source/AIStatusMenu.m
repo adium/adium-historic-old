@@ -409,12 +409,11 @@
 	if (([baseStatusState statusType] != statusType)) {
 		NSDictionary *lastStatusStates = [[adium preferenceController] preferenceForKey:@"LastStatusStates"
 																				  group:PREF_GROUP_STATUS_PREFERENCES];
-		
-		NSData		*lastStatusStateData = [lastStatusStates objectForKey:[NSNumber numberWithInt:statusType]];
+		NSData		*lastStatusStateData = [lastStatusStates objectForKey:[[NSNumber numberWithInt:statusType] stringValue]];
 		AIStatus	*lastStatusStateOfThisType = (lastStatusStateData ?
-												  [NSKeyedUnarchiver unarchiveObjectWithData:lastStatusStateData] :
+												  [[NSKeyedUnarchiver unarchiveObjectWithData:lastStatusStateData] objectAtIndex:0] :
 												  nil);
-		
+
 		baseStatusState = [[lastStatusStateOfThisType retain] autorelease];
 	}
 	
