@@ -10,7 +10,7 @@
 	<string>http://messenger.msn.com/Resource/Emoticons.aspx</string>
 	<key>Emoticons</key>
 	<dict>
-		<key>Angry Face.tiff</key>
+		<key>Angry Face.png</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -21,7 +21,7 @@
 			<key>Name</key>
 			<string>Angry</string>
 		</dict>
-		<key>Blush.tiff</key>
+		<key>Blush.png</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -32,7 +32,7 @@
 			<key>Name</key>
 			<string>Embarrassed</string>
 		</dict>
-		<key>Crying.tiff</key>
+		<key>Crying.png</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -42,7 +42,7 @@
 			<key>Name</key>
 			<string>Cry</string>
 		</dict>
-		<key>Frown.tiff</key>
+		<key>Frown.png</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -53,7 +53,7 @@
 			<key>Name</key>
 			<string>Sad</string>
 		</dict>
-		<key>Gasp.tiff</key>
+		<key>Gasp.png</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -66,7 +66,7 @@
 			<key>Name</key>
 			<string>Gasp</string>
 		</dict>
-		<key>Grin.tiff</key>
+		<key>Grin.png</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -79,7 +79,7 @@
 			<key>Name</key>
 			<string>Grin</string>
 		</dict>
-		<key>Halo.tiff</key>
+		<key>Halo.png</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -90,7 +90,7 @@
 			<key>Name</key>
 			<string>Halo</string>
 		</dict>
-		<key>Kiss.tiff</key>
+		<key>Kiss.png</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -101,7 +101,7 @@
 			<key>Name</key>
 			<string>Kiss</string>
 		</dict>
-		<key>Lips are Sealed.tiff</key>
+		<key>Lips are Sealed.png</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -111,7 +111,7 @@
 			<key>Name</key>
 			<string>Lips Are Sealed</string>
 		</dict>
-		<key>Money-mouth.tiff</key>
+		<key>Money-mouth.png</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -124,7 +124,7 @@
 			<key>Name</key>
 			<string>Confused</string>
 		</dict>
-		<key>Smile.tiff</key>
+		<key>Smile.png</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -135,7 +135,7 @@
 			<key>Name</key>
 			<string>Smile</string>
 		</dict>
-		<key>Sticking Out Tongue.tiff</key>
+		<key>Sticking Out Tongue.png</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -148,7 +148,7 @@
 			<key>Name</key>
 			<string>Sticking Out Tongue</string>
 		</dict>
-		<key>Wearing Sunglasses.tiff</key>
+		<key>Wearing Sunglasses.png</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -159,7 +159,7 @@
 			<key>Name</key>
 			<string>Cool</string>
 		</dict>
-		<key>Wink.tiff</key>
+		<key>Wink.png</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
