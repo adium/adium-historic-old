@@ -52,6 +52,17 @@
 - (void)_repositionMenusAndResize;
 @end
 
+/*!
+ * @class AIAccountSelectionView
+ * @brief A view for picking the destination (contact) and source (account) for a chat.
+ *
+ * This view manages data, as well, MVC be damned.
+ *
+ * The To: field, display first, is the indepdenent variable.  It shows all contacts within the selected metacontact, or shows nothing
+ * if a normal contact is the chat's destination.
+ *
+ * The From: field is the dependent variable. It shows all accounts which could message the selected contact.
+ */
 @implementation AIAccountSelectionView
 
 /*!
@@ -204,6 +215,7 @@
 - (void)chatSourceChanged:(NSNotification *)notification
 {
 	//Update selection in account menu
+	AILogWithSignature(@"popUp_accounts selecting %@", [chat account]);
 	[popUp_accounts selectItemWithRepresentedObject:[chat account]];
 }
 
@@ -257,11 +269,51 @@
 	return NO;
 }
 
+- (void)rebuildAccountMenu
+{
+	NSEnumerator *enumerator = [[accountMenu menuItems] objectEnumerator];
+	NSMenuItem	 *menuItem;
+	NSMutableArray *menuItemsForAccountsWhichKnow = [NSMutableArray array];
+	NSMutableArray *menuItemsForAccountsWhichDoNotKnow = [NSMutableArray array];
+	
+	while ((menuItem = [enumerator nextObject])) {
+		AIAccount *account = [menuItem representedObject];
+		AIListContact *listContact = [[adium contactController] existingContactWithService:[[chat listObject] service]
+																				 account:account
+																					 UID:[[chat listObject] UID]];
+
+		if (!listContact || [listContact isStranger])
+			[menuItemsForAccountsWhichDoNotKnow addObject:menuItem];
+		else
+			[menuItemsForAccountsWhichKnow addObject:menuItem];
+	}
+	
+	NSMenu *menu = [[NSMenu alloc] init];
+
+	//First, add items for accounts which have the current contact on their contact lists
+	enumerator = [menuItemsForAccountsWhichKnow objectEnumerator];
+	while ((menuItem = [enumerator nextObject])) {
+		[menu addItem:menuItem];
+	}
+	
+	//If we added any items and will be adding more, put in a separator
+	if ([menu numberOfItems] && [menuItemsForAccountsWhichDoNotKnow count]) [menu addItem:[NSMenuItem separatorItem]];
+
+	//Finally, add items for accounts which are on the right service but don't know about this contact
+	enumerator = [menuItemsForAccountsWhichDoNotKnow objectEnumerator];
+	while ((menuItem = [enumerator nextObject])) {
+		[menu addItem:menuItem];
+	}
+
+	[popUp_accounts setMenu:menu];
+	[menu release];
+}
+
 /*!
  * @brief Account Menu Delegate
  */
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems {
-	[popUp_accounts setMenu:[inAccountMenu menu]];
+	[self rebuildAccountMenu];
 }
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount {
 	[[adium chatController] switchChat:chat toAccount:inAccount];
