@@ -250,7 +250,9 @@
 	NSString	*path = (object ? [userDirectory stringByAppendingPathComponent:[object pathToPreferences]] : userDirectory);
 	NSString	*name = (object ? [[object internalObjectID] safeFilenameString] : group);
 	
-	[[self prefs] writeToPath:path withName:name];
+	BOOL success = [[self prefs] writeToPath:path withName:name];
+	if (!success)
+		NSLog(@"Error writing %@ for %@", self);
 }
 
 - (void)setGroup:(NSString *)inGroup
