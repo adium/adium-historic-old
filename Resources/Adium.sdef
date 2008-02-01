@@ -179,6 +179,7 @@
 			<property name="visible" code="pvis" type="boolean" access="r" description="The visibility of this group.">
 				<cocoa key="visible" />
 			</property>
+			<element type="contact" />
 		</class>
 		<class name="contact" code="Ccnt" description="A contact">
 			<cocoa class="AIListContact" />

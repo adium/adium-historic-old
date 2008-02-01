@@ -379,5 +379,9 @@
 		   name:[self UID]] autorelease];
 }
 
+- (NSArray *)contacts
+{
+	return [self containedObjects];
+}
 
 @end
