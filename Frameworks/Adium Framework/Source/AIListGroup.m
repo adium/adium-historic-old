@@ -369,4 +369,15 @@
 	return largestOrder;
 }
 
+#pragma mark Applescript
+- (NSScriptObjectSpecifier *)objectSpecifier
+{
+	NSScriptClassDescription *containerClassDesc = (NSScriptClassDescription *)[NSScriptClassDescription classDescriptionForClass:[NSApp class]];
+	return [[[NSNameSpecifier alloc]
+		   initWithContainerClassDescription:containerClassDesc
+		   containerSpecifier:nil key:@"contactGroups"
+		   name:[self UID]] autorelease];
+}
+
+
 @end

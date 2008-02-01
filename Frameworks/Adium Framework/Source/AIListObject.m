@@ -777,7 +777,7 @@
 	return [NSString stringWithFormat:@"<%@:%x %@>",NSStringFromClass([self class]), self, [self internalObjectID]];
 }
 
-
+#pragma mark Applescript
 - (int)scriptingStatusType
 {
 	AIStatusType statusType = [self statusType];
@@ -793,5 +793,4 @@
 	}
 	return 0;
 }
-
 @end

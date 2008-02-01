@@ -20,6 +20,7 @@
 			
 			<element type="account" />
 			<element type="contact" />
+			<element type="contact group" />
 			<element type="service" />
 			<element type="window">
 				<cocoa key="orderedWindows" />
@@ -170,9 +171,21 @@
 				<cocoa method="scriptingGoInvisible:"/>
 			</responds-to>
 		</class>
+		<class name="contact group" code="Cgrp" description="A contact group">
+			<cocoa class="AIListGroup" />
+			<property name="name" code="pnam" type="text" access="rw" description="The name of this contact group.">
+				<cocoa key="UID" />
+			</property>
+			<property name="visible" code="pvis" type="boolean" access="r" description="The visibility of this group.">
+				<cocoa key="visible" />
+			</property>
+		</class>
 		<class name="contact" code="Ccnt" description="A contact">
 			<cocoa class="AIListContact" />
 			<property name="account" code="Pacc" type="account" access="r" description="The account associated with this contact" />
+			<property name="group" code="Pgrp" type="contact group" access="r" description="The group associated with this contact">
+				<cocoa key="parentGroup" />
+			</property>
 			<property name="name" code="pnam" type="text" access="r" description="The name of this contact">
 				<cocoa key="UID" />
 			</property>
@@ -191,7 +204,7 @@
 		</class>
 		<class name="status" plural="statuses" code="Csts" description="A saved status in Adium">
 			<cocoa class="AIStatus" />
-			<property name="title" code="pnam" type="text" access="r" description="The title of the status.">
+			<property name="title" code="Pttl" type="text" access="r" description="The title of the status.">
 				<cocoa key="scriptingTitle" />
 			</property>
 			<property name="status type" code="Psts" type="status types" access="r" description="The type of this status.">

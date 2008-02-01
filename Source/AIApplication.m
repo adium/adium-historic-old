@@ -86,6 +86,10 @@
 {
 	return [[[[AIObject sharedAdiumInstance] statusController] flatStatusSet] allObjects];
 }
+- (NSArray *)contactGroups
+{
+	return [[[AIObject sharedAdiumInstance] contactController] allGroups];
+}
 
 - (void)setIsActive:(BOOL)val
 {
