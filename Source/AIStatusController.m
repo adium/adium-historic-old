@@ -1185,7 +1185,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 																  group:PREF_GROUP_STATUS_PREFERENCES] mutableCopy] autorelease];
 	if (!lastStatusStates) lastStatusStates = [NSMutableDictionary dictionary];
 	
-	[lastStatusStates setObject:[NSKeyedArchiver archivedDataWithRootObject:[NSArray arrayWithObject:statusState]]
+	[lastStatusStates setObject:[NSKeyedArchiver archivedDataWithRootObject:statusState]
 						 forKey:[[NSNumber numberWithInt:[statusState statusType]] stringValue]];
 
 	[[adium preferenceController] setPreference:lastStatusStates
