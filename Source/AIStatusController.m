@@ -178,8 +178,6 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 						 group:GROUP_ACCOUNT_STATUS];
 	}
 	
-	//XXX change this back sometime before 1.0 release
-//	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[self rootStateGroup]]
 	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[[self rootStateGroup] containedStatusItems]]
 										 forKey:KEY_SAVED_STATUS
 										  group:PREF_GROUP_SAVED_STATUS];
@@ -1125,8 +1123,6 @@ static 	NSMutableSet			*temporaryStateArray = nil;
  */
 - (void)savedStatusesChanged
 {
-	//XXX change this back sometime before 1.0 release
-//	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[self rootStateGroup]]
 	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[[self rootStateGroup] containedStatusItems]]
 										 forKey:KEY_SAVED_STATUS
 										  group:PREF_GROUP_SAVED_STATUS];
@@ -1135,8 +1131,6 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 
 - (void)statusStateDidSetUniqueStatusID
 {
-	//XXX change this back sometime before 1.0 release
-//	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[self rootStateGroup]]
 	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[[self rootStateGroup] containedStatusItems]]
 										 forKey:KEY_SAVED_STATUS
 										  group:PREF_GROUP_SAVED_STATUS];
@@ -1187,13 +1181,13 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 {
 	NSMutableDictionary *lastStatusStates;
 	
-	lastStatusStates = [[[adium preferenceController] preferenceForKey:@"LastStatusStates"
-																 group:PREF_GROUP_STATUS_PREFERENCES] mutableCopy];
+	lastStatusStates = [[[[adium preferenceController] preferenceForKey:@"LastStatusStates"
+																  group:PREF_GROUP_STATUS_PREFERENCES] mutableCopy] autorelease];
 	if (!lastStatusStates) lastStatusStates = [NSMutableDictionary dictionary];
 	
-	[lastStatusStates setObject:[NSKeyedArchiver archivedDataWithRootObject:statusState]
-						 forKey:[NSNumber numberWithInt:[statusState statusType]]];
-	
+	[lastStatusStates setObject:[NSKeyedArchiver archivedDataWithRootObject:[NSArray arrayWithObject:statusState]]
+						 forKey:[[NSNumber numberWithInt:[statusState statusType]] stringValue]];
+
 	[[adium preferenceController] setPreference:lastStatusStates
 										 forKey:@"LastStatusStates"
 										  group:PREF_GROUP_STATUS_PREFERENCES];	
