@@ -37,6 +37,8 @@
 //	font-family: Helvetica; font-size: 12pt; font-weight: bold; font-style: italic;
 - (NSString *)CSSString;
 
+- (BOOL)validateAsPropertyList;
+
 @end
 
 @interface NSMutableDictionary (AIDictionaryAdditions)
