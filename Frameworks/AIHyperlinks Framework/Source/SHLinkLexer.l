@@ -76,7 +76,8 @@ adiumxtra:\/\/		|
 webcal:\/\/		|
 svn(\+ssh)?:\/\/	|
 notes:\/\/		|
-gopher:\/\/		    {SHStringOffset += SHleng; SHValidShift = SHleng; BEGIN CANONICAL;}
+gopher:\/\/		|
+x-man-page:\/\/		{SHStringOffset += SHleng; SHValidShift = SHleng; BEGIN CANONICAL;}
 
 sip:{mailSpecifier}         {SHStringOffset += SHleng; SHleng += SHValidShift; BEGIN INITIAL; return SH_URL_VALID;}
 
