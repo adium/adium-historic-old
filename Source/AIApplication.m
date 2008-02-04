@@ -82,6 +82,15 @@
 {
 	return [[[AIObject sharedAdiumInstance] contactController] allContacts];
 }
+- (void)insertObject:(AIListObject *)contact inContactsAtIndex:(int)index
+{
+	//Intentially unimplemented. This should never be called (contacts are created a different way), but is required for KVC-compliance.
+}
+- (void)removeObjectFromContactsAtIndex:(int)index
+{
+	[[[AIObject sharedAdiumInstance] contactController] removeListObjects:[NSArray arrayWithObject:[[self contacts] objectAtIndex:index]]];
+}
+
 - (NSArray *)statuses
 {
 	return [[[[AIObject sharedAdiumInstance] statusController] flatStatusSet] allObjects];
