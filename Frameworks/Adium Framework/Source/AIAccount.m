@@ -886,6 +886,31 @@
 	[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't dynamically change the UID of this account."];
 }
 
+- (id)makeContactWithProperties:(NSDictionary *)properties
+{
+	NSDictionary *keyDictionary = [properties objectForKey:@"KeyDictionary"];
+	if (!keyDictionary) {
+		[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
+		[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't create a contact without specifying contact properties."];
+		return nil;
+	}
+	NSString *contactUID = [keyDictionary objectForKey:@"UID"];
+	if (!contactUID) {
+		[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
+		[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't create a contact without specifying the contact name."];
+		return nil;
+	}
+	AIListContact *newContact = [[[AIObject sharedAdiumInstance] contactController] contactWithService:[self service] account:self UID:contactUID];
+	NSScriptObjectSpecifier *groupSpecifier = [keyDictionary objectForKey:@"parentGroup"];
+	AIListGroup *group = [groupSpecifier objectsByEvaluatingSpecifier];
+	if (groupSpecifier && group) {
+		[[[AIObject sharedAdiumInstance] contactController] addContacts:[NSArray arrayWithObject:newContact] toGroup:group];
+	} else {
+		[[[AIObject sharedAdiumInstance] contactController] addContacts:[NSArray arrayWithObject:newContact] toGroup:[[[AIObject sharedAdiumInstance] contactController] contactList]];
+	}
+	
+	return newContact;
+}
 - (void)insertObject:(AIListObject *)contact inContactsAtIndex:(int)index
 {
 	//Intentially unimplemented. This should never be called (contacts are created a different way), but is required for KVC-compliance.
