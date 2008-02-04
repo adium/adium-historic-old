@@ -886,6 +886,15 @@
 	[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't dynamically change the UID of this account."];
 }
 
+- (void)insertObject:(AIListObject *)contact inContactsAtIndex:(int)index
+{
+	//Intentially unimplemented. This should never be called (contacts are created a different way), but is required for KVC-compliance.
+}
+- (void)removeObjectFromContactsAtIndex:(int)index
+{
+	[[[AIObject sharedAdiumInstance] contactController] removeListObjects:[NSArray arrayWithObject:[[self contacts] objectAtIndex:index]]];
+}
+
 /**
  * @brief Creates a chat according to the given properties.
  * @param resolvedKeyDictionary The dictionary of arguments to the 'make' command.
