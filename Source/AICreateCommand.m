@@ -41,14 +41,11 @@
 	NSString *methodName = [NSString stringWithFormat:@"make%@WithProperties:",[[newObjectDescription className] camelCase]];
 	SEL customMethod = NSSelectorFromString(methodName);
 
-	if ([target respondsToSelector:customMethod])
-	{
+	if ([target respondsToSelector:customMethod]) {
 		//this can do the insert, based on the parameters, methinks.
 		NSMethodSignature *method = [target methodSignatureForSelector:customMethod];
 		if (!method)
-		{
 			return nil;
-		}
 		NSInvocation *invocation = [NSInvocation invocationWithMethodSignature:method];
 		[invocation setSelector:customMethod];
 		NSDictionary *resolvedKeyDictionary = [self evaluatedArguments];
