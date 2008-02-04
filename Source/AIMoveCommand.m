@@ -31,6 +31,10 @@
 	NSString *keyClassName = [[self keySpecifier] key];
 	NSString *methodName = [NSString stringWithFormat:@"move%@:toIndex:",[keyClassName camelCase]];
 	id target = [toLocation insertionContainer];
+	id thingToMove = [target valueAtIndex:[toLocation insertionIndex] inPropertyWithKey:[toLocation insertionKey]];
+	if ([thingToMove respondsToSelector:NSSelectorFromString(methodName)]) {
+		target = thingToMove;
+	}
 	if ([target respondsToSelector:NSSelectorFromString(methodName)]) {
 		NSMethodSignature *method = [target methodSignatureForSelector:NSSelectorFromString(methodName)];
 		if (!method) {

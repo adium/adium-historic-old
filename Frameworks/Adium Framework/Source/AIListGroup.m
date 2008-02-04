@@ -383,5 +383,9 @@
 {
 	return [self containedObjects];
 }
-
+- (id)moveContacts:(AIListObject *)contact toIndex:(int)index
+{
+	[[[AIObject sharedAdiumInstance] contactController] moveListObjects:[NSArray arrayWithObject:contact] intoObject:self index:index];
+	return [NSNull null];
+}
 @end
