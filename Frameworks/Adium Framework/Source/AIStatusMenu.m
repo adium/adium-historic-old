@@ -411,7 +411,7 @@
 																				  group:PREF_GROUP_STATUS_PREFERENCES];
 		NSData		*lastStatusStateData = [lastStatusStates objectForKey:[[NSNumber numberWithInt:statusType] stringValue]];
 		AIStatus	*lastStatusStateOfThisType = (lastStatusStateData ?
-												  [[NSKeyedUnarchiver unarchiveObjectWithData:lastStatusStateData] objectAtIndex:0] :
+												  [NSKeyedUnarchiver unarchiveObjectWithData:lastStatusStateData] :
 												  nil);
 
 		baseStatusState = [[lastStatusStateOfThisType retain] autorelease];
