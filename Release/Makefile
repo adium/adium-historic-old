@@ -78,7 +78,7 @@ all-withlocalchanges-noclean: update assertnoconflicts version compile release
 
 #doesn't bother putting things in a dmg
 #useful for builds not intended for distribution
-all-nopackage-noclean: update version compile createfolder prepare-release-bundle
+all-nopackage-noclean: update assertnoconflicts version compile createfolder prepare-release-bundle
 
 update:
 	svn update $(SRC_DIR)
