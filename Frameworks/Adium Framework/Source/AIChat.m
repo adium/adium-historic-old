@@ -409,7 +409,7 @@ static int nextChatNumber = 0;
  * @param inObject The object being sent
  * @result YES if the object should be sent immediately; NO if another object is in process so we should wait
  */
-- (BOOL)willBeginSendingContentObject:(AIContentObject *)inObject
+- (BOOL)shouldBeginSendingContentObject:(AIContentObject *)inObject
 {
 	int	currentIndex = [pendingOutgoingContentObjects indexOfObjectIdenticalTo:inObject];
 
