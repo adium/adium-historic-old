@@ -70,7 +70,7 @@ ADIUM_PLIST=$(PLIST_DIR)/Adium_2
 ###########
 # Targets
 ###########
-.PHONY: all all-withlocalchanges all-withlocalchanges-noclean update assertnochanges assertnoconflicts version compile clean release source prepare-release-bundle createfolder diskimage
+.PHONY: all all-withlocalchanges all-withlocalchanges-noclean all-nopackage-noclean all-nightly update assertnochanges assertnoconflicts version compile clean release source prepare-release-bundle createfolder diskimage nightly
 
 all: update assertnochanges version clean compile release
 all-withlocalchanges: update assertnoconflicts version clean compile release
@@ -157,3 +157,8 @@ diskimage:
 	
 	@echo Build finished. `md5 $(BUILD_DIR)/$(RELEASE_NAME).dmg`
 
+#This is what nightly builds use. Does not update because buildbot does.
+nightly: assertnochanges version clean compile release
+	(svn info | perl -nle 's/Revision: ([0-9]+)/$$1/g and print') > $(BUILD_DIR)/latest
+	md5 $(BUILD_DIR)/$(RELEASE_NAME).dmg > $(BUILD_DIR)/Adium-r`cat $(BUILD_DIR)/latest`.dmg.md5sum
+	mv $(BUILD_DIR)/$(RELEASE_NAME).dmg $(BUILD_DIR)/Adium-r`cat $(BUILD_DIR)/latest`.dmg
