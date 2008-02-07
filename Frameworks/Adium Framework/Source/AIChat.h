@@ -140,7 +140,7 @@ typedef enum {
 - (void)setPreferredListObject:(AIListContact *)inObject;
 - (BOOL)inviteListContact:(AIListContact *)inObject withMessage:(NSString *)inviteMessage;
 
-- (BOOL)willBeginSendingContentObject:(AIContentObject *)inObject;
+- (BOOL)shouldBeginSendingContentObject:(AIContentObject *)inObject;
 - (void)finishedSendingContentObject:(AIContentObject *)inObject;
 
 - (NSString *)name;

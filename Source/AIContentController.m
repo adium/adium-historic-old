@@ -265,7 +265,7 @@
 - (BOOL)sendContentObject:(AIContentObject *)inObject
 {
 	//Only proceed if the chat allows it; if it doesn't, it will handle calling this method again when it is ready
-	if ([[inObject chat] willBeginSendingContentObject:inObject]) {
+	if ([[inObject chat] shouldBeginSendingContentObject:inObject]) {
 
 		//Run the object through our outgoing content filters
 		if ([inObject filterContent]) {
