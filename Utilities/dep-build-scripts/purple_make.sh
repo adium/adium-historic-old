@@ -35,14 +35,12 @@ TARGET_DIR_BASE="$PWD/root"
 export PATH_PPC="$TARGET_DIR_PPC/bin:$PATH"
 export PATH_I386="$TARGET_DIR_I386/bin:$PATH"
 
-# On 10.5+, we need glibtoolize to be libtoolize for pidgin, their silly
+# On Mac OS X, we need glibtoolize to be libtoolize for pidgin, their silly
 # autogen.sh expects it to be that way right now. In the future I'm hoping 
 # to offer a patch to pidgin so that it'll check and see if glibtoolize
 # exists if it doesn't find libtoolize.
-if [ "$IS_ON_10_4" == "FALSE" ] ; then
-    ln -s /usr/bin/glibtoolize $TARGET_DIR_PPC/bin/libtoolize
-    ln -s /usr/bin/glibtoolize $TARGET_DIR_I386/bin/libtoolize
-fi
+ln -s /usr/bin/glibtoolize $TARGET_DIR_PPC/bin/libtoolize
+ln -s /usr/bin/glibtoolize $TARGET_DIR_I386/bin/libtoolize
 
 # Apply our openssl patch - enables using OpenSSL and allows libgadu with SSL
 # support. This is OK because OpenSSL is part of the base system on OS X.
@@ -91,12 +89,12 @@ for ARCH in ppc i386 ; do
     case $ARCH in
 		ppc) export HOST=powerpc-apple-darwin9
 			 export PATH="$PATH_PPC"
-			 export ACLOCAL_FLAGS="-I$TARGET_DIR_PPC/share/aclocal"
+			 export ACLOCAL_FLAGS="-I $TARGET_DIR_PPC/share/aclocal"
 			 export PKG_CONFIG_PATH="$TARGET_DIR_PPC/lib/pkgconfig"
 			 TARGET_DIR=$TARGET_DIR_PPC;;
 		i386) export HOST=i686-apple-darwin9
 			  export PATH="$PATH_I386"
-			  export ACLOCAL_FLAGS="-I$TARGET_DIR_I386/share/aclocal"
+			  export ACLOCAL_FLAGS="-I $TARGET_DIR_I386/share/aclocal"
 			  export PKG_CONFIG_PATH="$TARGET_DIR_I386/lib/pkgconfig"
 			  TARGET_DIR=$TARGET_DIR_I386;;
 	esac
@@ -116,7 +114,7 @@ for ARCH in ppc i386 ; do
     mkdir libpurple-$ARCH || true
     cd libpurple-$ARCH
 	export ARCH
-	export PKG_CONFIG="`which pkg-config`"
+	export PKG_CONFIG="$TARGET_DIR_BASE-$ARCH/bin/pkg-config"
 	export MSGFMT="`which msgfmt`"
 	# this part is really ew. We actually re-run autogen.sh per-arch.
 	# we pass configure --help so that it bails out and doesn't fubar the source
@@ -141,12 +139,12 @@ for ARCH in ppc i386 ; do
             --prefix=$TARGET_DIR \
             --with-static-prpls="$PROTOCOLS" --disable-plugins \
             --host=$HOST \
-            --enable-gnutls=no --enable-nss=no --enable-openssl=no $@
+            --enable-gnutls=no --enable-nss=no --enable-openssl=no $@ || exit 1
     cd libpurple
-    make -j $NUMBER_OF_CORES && make install
+    make -j $NUMBER_OF_CORES || exit 1
+    make install || exit 1
     # HACK ALERT! We use the following internal-only headers:
     cp $PIDGIN_SOURCE/libpurple/protocols/oscar/oscar.h \
-       $PIDGIN_SOURCE/libpurple/protocols/oscar/oscar-adium.h \
        $PIDGIN_SOURCE/libpurple/protocols/oscar/snactypes.h \
        $PIDGIN_SOURCE/libpurple/protocols/oscar/peer.h \
        $PIDGIN_SOURCE/libpurple/cmds.h \
