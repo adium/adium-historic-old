@@ -1105,14 +1105,18 @@ static NSString	*prefsCategory;
 
 #pragma mark Sparkle Delegate Methods
 
+#define NIGHTLY_UPDATE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"nightly", @"value", @"Nightly Versions Only", @"visibleValue", nil]
 #define BETA_UPDATE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"beta", @"value", @"Beta or Release Versions", @"visibleValue", nil]
 #define RELEASE_UPDATE_DICT [NSDictionary dictionaryWithObjectsAndKeys:@"type", @"key", @"Update Type", @"visibleKey", @"release", @"value", @"Release Versions Only", @"visibleValue", nil]
 
-#ifdef BETA_RELEASE
+//Nightlies should update to other nightlies
+#if defined(NIGHTLY_RELEASE)
+#define UPDATE_TYPE_DICT NIGHTLY_UPDATE_DICT
 //For a beta release, always use the beta appcast
+#elif defined(BETA_RELEASE)
 #define UPDATE_TYPE_DICT BETA_UPDATE_DICT
-#else
 //For a release, use the beta appcast if AIAlwaysUpdateToBetas is enabled; otherwise, use the release appcast
+#else
 #define UPDATE_TYPE_DICT ([[NSUserDefaults standardUserDefaults] boolForKey:@"AIAlwaysUpdateToBetas"] ? BETA_UPDATE_DICT : RELEASE_UPDATE_DICT)
 #endif
 
@@ -1182,6 +1186,10 @@ static NSString	*prefsCategory;
 
 	[profileInfo addObject:UPDATE_GENERATION_DICT];
 	[profileInfo addObject:UPDATE_TYPE_DICT];
+#if NIGHTLY_RELEASE
+    NSString *buildId = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AIBuildIdentifier"];
+    [profileInfo addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"revision", @"key", @"Revision", @"visibleKey", buildId, @"value", buildId, @"visibleValue", nil];
+#endif
 	return profileInfo;
 }
 
