@@ -36,7 +36,7 @@
 
 @interface AIAccountSelectionView (PRIVATE)
 - (id)_init;
-- (void)chatMetaContactChanged;
+- (void)configureForCurrentChat;
 - (void)chatDestinationChanged:(NSNotification *)notification;
 - (void)chatSourceChanged:(NSNotification *)notification;
 - (BOOL)_accountIsAvailable:(AIAccount *)inAccount;
@@ -167,20 +167,22 @@
 											 object:chat];
 			
 			//Update source and destination menus
-			[self chatMetaContactChanged];
+			[self configureForCurrentChat];
 		}			
 	}
 }
 
 /*!
- * @brief Update our menus when the meta contact or the meta contact's content changes
+ * @brief Build and configure all menus for the current chat
  */
-- (void)chatMetaContactChanged
+- (void)configureForCurrentChat
 {
+	AILogWithSignature(@"");
+
 	//Rebuild 'To' contact menu
-	if([self choicesAvailableForContact]){
+	if ([self choicesAvailableForContact]) {
 		[self _createContactMenu];
-	}else{
+	} else {
 		[self _destroyContactMenu];
 	}
 
@@ -193,6 +195,8 @@
  */
 - (void)chatDestinationChanged:(NSNotification *)notification
 {
+	AILogWithSignature(@"popUp_contacts selecting %@ (%@)", [chat listObject], [notification object]);
+
 	//Update selection in contact menu
 	[popUp_contacts selectItemWithRepresentedObjectUsingCompare:[chat listObject]];
 
@@ -215,7 +219,7 @@
 - (void)chatSourceChanged:(NSNotification *)notification
 {
 	//Update selection in account menu
-	AILogWithSignature(@"popUp_accounts selecting %@", [chat account]);
+	AILogWithSignature(@"popUp_accounts selecting %@ (%@)", [chat account],  [notification object]);
 	[popUp_accounts selectItemWithRepresentedObject:[chat account]];
 }
 
@@ -394,12 +398,18 @@
  * @brief Contact menu delegate
  */
 - (void)contactMenu:(AIContactMenu *)inContactMenu didRebuildMenuItems:(NSArray *)menuItems {
+	AILogWithSignature(@"");
 	[popUp_contacts setMenu:[inContactMenu menu]];
+	[self chatDestinationChanged:nil];
 }
 - (void)contactMenu:(AIContactMenu *)inContactMenu didSelectContact:(AIListContact *)inContact {
 	[[adium chatController] switchChat:chat toListContact:inContact usingContactAccount:YES];
 }
-
+- (AIListContact *)contactMenu:(AIContactMenu *)inContactMenu validateContact:(AIListContact *)inContact {
+	AIListContact *preferredContact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
+																				 forListContact:inContact];
+	return preferredContact;
+}
 /*!
  * @brief Create the contact menu and add it to our view
  */

@@ -17,7 +17,7 @@
 @interface AIContactMenu (PRIVATE)
 - (id)initWithDelegate:(id)inDelegate forContactsInObject:(AIListObject *)inContainingObject;
 - (NSArray *)contactMenusForListObjects:(NSArray *)listObjects;
-- (NSArray *)listObjectsForContainedObjects:(NSArray *)listObjects;
+- (NSArray *)listObjectsForMenuFromArrayOfListObjects:(NSArray *)listObjects;
 - (void)_updateMenuItem:(NSMenuItem *)menuItem;
 @end
 
@@ -49,9 +49,9 @@
 		
 		// Register for contact list order notifications (so we can update our sorting)
 		[[adium notificationCenter] addObserver:self
-								   selector:@selector(rebuildMenu)
-									   name:Contact_OrderChanged
-									 object:nil];
+									   selector:@selector(contactOrderChanged:)
+										   name:Contact_OrderChanged
+										 object:nil];
 
 		[self rebuildMenu];
 	}
@@ -81,6 +81,13 @@
 	return [self menuItemWithRepresentedObject:contact];
 }
 
+- (void)contactOrderChanged:(NSNotification *)notification
+{
+	AIListObject *changedObject = [notification object];
+	if (changedObject == containingObject) {
+		[self rebuildMenu];
+	}
+}
 
 //Delegate -------------------------------------------------------------------------------------------------------------
 #pragma mark Delegate
@@ -95,7 +102,8 @@
 	if (delegate) NSParameterAssert([delegate respondsToSelector:@selector(contactMenu:didRebuildMenuItems:)]);
 	delegateRespondsToDidSelectContact = [delegate respondsToSelector:@selector(contactMenu:didSelectContact:)];
 	delegateRespondsToShouldIncludeContact = [delegate respondsToSelector:@selector(contactMenu:shouldIncludeContact:)];
-	
+	delegateRespondsToValidateContact = [delegate respondsToSelector:@selector(contactMenu:validateContact:)];
+
 	shouldUseUserIcon = ([delegate respondsToSelector:@selector(contactMenuShouldUseUserIcon:)] &&
 								 [delegate contactMenuShouldUseUserIcon:self]);
 	
@@ -159,16 +167,16 @@
 		 * to decide if the contact should be included.
 		 */
 		if (!shouldDisplayGroupHeaders) {
-			listObjects = [self listObjectsForContainedObjects:listObjects];
+			listObjects = [self listObjectsForMenuFromArrayOfListObjects:listObjects];
 		}
 
 		// Sort what we're given
 		listObjects = [[[adium contactController] activeSortController] sortListObjects:listObjects];
 	} else {
 		// We can assume these are already sorted
-		listObjects = ([containingObject conformsToProtocol:@protocol(AIContainingObject)] ?
-					   [(AIListObject<AIContainingObject> *)containingObject listContacts] :
-					   [NSArray arrayWithObject:containingObject]);
+		listObjects = [self listObjectsForMenuFromArrayOfListObjects:([containingObject conformsToProtocol:@protocol(AIContainingObject)] ?
+																	  [(AIListObject<AIContainingObject> *)containingObject listContacts] :
+																	  [NSArray arrayWithObject:containingObject])];
 	}
 	
 	// Create menus for them
@@ -178,7 +186,7 @@
 /*!
 * @brief Creates an array of list objects which should be presented in the menu, expanding any containing objects
  */
-- (NSArray *)listObjectsForContainedObjects:(NSArray *)listObjects
+- (NSArray *)listObjectsForMenuFromArrayOfListObjects:(NSArray *)listObjects
 {
 	NSMutableArray	*listObjectArray = [NSMutableArray array];
 	NSEnumerator	*enumerator = [listObjects objectEnumerator];
@@ -186,13 +194,18 @@
 	
 	while ((listObject = [enumerator nextObject])) {
 		if ([listObject isKindOfClass:[AIListContact class]]) {
-			// Include if the delegate doesn't specify, or if the delegate approves the contact.
+			/* Include if the delegate doesn't specify, or if the delegate approves the contact.
+			 * Note that this includes a metacontact itself, not its contained objects.
+			 */
 			if (!delegateRespondsToShouldIncludeContact || [delegate contactMenu:self shouldIncludeContact:(AIListContact *)listObject]) {
+				if (delegateRespondsToValidateContact)
+					listObject = [delegate contactMenu:self validateContact:(AIListContact *)listObject];
+	
 				[listObjectArray addObject:listObject];
 			}
-		// Only recurse through groups; meta contacts can stay as meta contacts.
-		} else if ([listObject isKindOfClass:[AIListGroup class]] && [listObject conformsToProtocol:@protocol(AIContainingObject)]) {
-			[listObjectArray addObjectsFromArray:[self listObjectsForContainedObjects:[(AIListObject<AIContainingObject> *)listObject listContacts]]];
+
+		} else if ([listObject isKindOfClass:[AIListGroup class]]) {
+			[listObjectArray addObjectsFromArray:[self listObjectsForMenuFromArrayOfListObjects:[(AIListGroup *)listObject listContacts]]];
 		}
 	}
 	
@@ -210,8 +223,8 @@
 	
 	while ((listObject = [enumerator nextObject])) {
 		// Display groups inline
-		if ([listObject isKindOfClass:[AIListGroup class]] && [listObject conformsToProtocol:@protocol(AIContainingObject)]) {
-			NSArray			*containedListObjects = [self listObjectsForContainedObjects:[(AIListObject<AIContainingObject> *)listObject listContacts]];
+		if ([listObject isKindOfClass:[AIListGroup class]]) {
+			NSArray			*containedListObjects = [self listObjectsForMenuFromArrayOfListObjects:[(AIListObject<AIContainingObject> *)listObject listContacts]];
 			
 			// If there's any contained list objects, add ourself as a group and add the contained objects.
 			if ([containedListObjects count] > 0) {
@@ -276,6 +289,7 @@
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if ([inObject isKindOfClass:[AIListContact class]]) {
+		//Note that this will return nil if we don't ahve a menu item for inObject
 		NSMenuItem	*menuItem = [self menuItemForContact:(AIListContact *)inObject];
 		
 		//Update menu items to reflect status changes
@@ -284,7 +298,7 @@
 		   [inModifiedKeys containsObject:@"Disconnecting"] ||
 		   [inModifiedKeys containsObject:@"IdleSince"] ||
 		   [inModifiedKeys containsObject:@"StatusType"]) {
-			
+
 			//Update the changed menu item (or rebuild the entire menu if this item should be removed or added)
 			if (delegateRespondsToShouldIncludeContact) {
 				BOOL shouldIncludeContact = [delegate contactMenu:self shouldIncludeContact:(AIListContact *)inObject];
