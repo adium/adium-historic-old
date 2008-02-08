@@ -1,3 +1,4 @@
+#!/bin/sh
 #create universal libraries for AdiumDeps.
 # "top-level" deps
 LIBINTL=libintl.8

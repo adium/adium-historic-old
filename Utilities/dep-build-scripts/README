@@ -10,6 +10,9 @@ Get a copy of the pidgin sources. Adium currently uses libpurple 2.3.1, and patc
 See http://pidgin.im to download a 2.3.1 tarball.
 
 To get libpurple via Monotone, see http://developer.pidgin.im/wiki/UsingPidginMonotone .  Check out the v2.3.1 tag (with -t:2.3.1) to get the code used by Adium.
+****
+BUILD REQUIREMENTS:
+You need automake 1.10 or later. The easiest way to install this is likely MacPorts (port install automake).
 *****
 
 When you set up your pidgin working copy, set the environment variable
