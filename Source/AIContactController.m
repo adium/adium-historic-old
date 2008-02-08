@@ -851,7 +851,7 @@
 		 */
 		if (shouldRestoreContacts) {
 			if (![self _restoreContactsToMetaContact:metaContact]) {
-
+				AILogWithSignature(@"Removing %@ because __restoreContactsToMetaContact returned nil", metaContact);
 				//If restoring the metacontact did not actually add any contacts, delete it since it is invalid
 				[self breakdownAndRemoveMetaContact:metaContact];
 				metaContact = nil;
@@ -1925,6 +1925,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		   ([preferredContact statusSummary] == [inContact statusSummary]) &&
 			([inContact isMobile] || ![preferredContact isMobile]) && //Either the parent contact is mobile (so that's the best we have), or the preferred is not.
 			([[(AIMetaContact *)inContact containedObjects] containsObject:preferredContact])) {
+
 			returnContact = [self preferredContactForContentType:inType
 												  forListContact:(AIListContact *)preferredContact];
         }
@@ -1936,7 +1937,6 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		 *  2) If no available non-mobile contacts, use the first online contact
 		 *  3) If no online contacts, use the metacontact's preferredContact
 		 */
-#warning This is a casting mess... define a protocol for metacontact-like AIListContact subclasses
 		if (!returnContact) {
 			//Recurse into metacontacts if necessary
 			AIListContact *firstAvailableContact = nil;
@@ -1965,6 +1965,18 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			returnContact = (firstAvailableContact ?
 							 firstAvailableContact :
 							 (firstNotOfflineContact ? firstNotOfflineContact : [(AIMetaContact *)inContact preferredContact]));
+			
+			//find the best account for talking to this contact,
+			//and return an AIListContact on that account
+			account = [[adium accountController] preferredAccountForSendingContentType:inType
+																			 toContact:returnContact];
+			if (account) {
+				if ([inContact account] != account) {
+					returnContact = [self contactWithService:[returnContact service]
+													 account:account
+														 UID:[returnContact UID]];
+				}
+			}
 		}
 
 	} else {
@@ -1976,6 +1988,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		//and return an AIListContact on that account
 		account = [[adium accountController] preferredAccountForSendingContentType:inType
 																		 toContact:inContact];
+
 		if (account) {
 			if ([inContact account] == account) {
 				returnContact = inContact;
