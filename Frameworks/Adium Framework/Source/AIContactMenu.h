@@ -16,6 +16,7 @@
 	id						delegate;
 	BOOL					delegateRespondsToDidSelectContact;
 	BOOL					delegateRespondsToShouldIncludeContact;	
+	BOOL					delegateRespondsToValidateContact;
 	BOOL					shouldUseDisplayName;
 	BOOL					shouldDisplayGroupHeaders;
 	BOOL					shouldUseUserIcon;
@@ -32,6 +33,7 @@
 @interface NSObject (AIContactMenuDelegate)
 - (void)contactMenu:(AIContactMenu *)inContactMenu didRebuildMenuItems:(NSArray *)menuItems;
 - (void)contactMenu:(AIContactMenu *)inContactMenu didSelectContact:(AIListContact *)inContact; //Optional
+- (AIListContact *)contactMenu:(AIContactMenu *)inContactMenu validateContact:(AIListContact *)inContact; //Optional
 - (BOOL)contactMenu:(AIContactMenu *)inContactMenu shouldIncludeContact:(AIListContact *)inContact; //Optional
 - (BOOL)contactMenuShouldUseUserIcon:(AIContactMenu *)inContactMenu; //Optional
 - (BOOL)contactMenuShouldSetTooltip:(AIContactMenu *)inContactMenu; //Optional
