@@ -68,4 +68,4 @@
 +	purple_prefs_add_bool("/plugins/prpl/jabber/avoid_sasl_for_plain_auth", FALSE);
  #endif
  	jabber_register_commands();
- 
+
