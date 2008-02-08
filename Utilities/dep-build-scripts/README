@@ -12,7 +12,9 @@ See http://pidgin.im to download a 2.3.1 tarball.
 To get libpurple via Monotone, see http://developer.pidgin.im/wiki/UsingPidginMonotone .  Check out the v2.3.1 tag (with "-r t:v2.3.1" in place of "-b im.pidgin.pidgin" as given in the UsingPidginMonotone instructions) to get the code used by Adium.
 ****
 BUILD REQUIREMENTS:
-You need automake 1.10 or later. The easiest way to install this is likely MacPorts (port install automake).
+You need automake 1.10 or later. 
+10.5 includes automake 1.10, but if you are on 10.4 you need to install this
+yourself. The easiest way to install this is MacPorts (port install automake).
 *****
 
 When you set up your pidgin working copy, set the environment variable
