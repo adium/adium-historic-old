@@ -289,15 +289,16 @@
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if ([inObject isKindOfClass:[AIListContact class]]) {
-		//Note that this will return nil if we don't ahve a menu item for inObject
-		NSMenuItem	*menuItem = [self existingMenuItemForContact:(AIListContact *)inObject];
-		
+
 		//Update menu items to reflect status changes
 		if ([inModifiedKeys containsObject:@"Online"] ||
-		   [inModifiedKeys containsObject:@"Connecting"] ||
-		   [inModifiedKeys containsObject:@"Disconnecting"] ||
-		   [inModifiedKeys containsObject:@"IdleSince"] ||
-		   [inModifiedKeys containsObject:@"StatusType"]) {
+			[inModifiedKeys containsObject:@"Connecting"] ||
+			[inModifiedKeys containsObject:@"Disconnecting"] ||
+			[inModifiedKeys containsObject:@"IdleSince"] ||
+			[inModifiedKeys containsObject:@"StatusType"]) {
+
+			//Note that this will return nil if we don't ahve a menu item for inObject
+			NSMenuItem	*menuItem = [self existingMenuItemForContact:(AIListContact *)inObject];
 
 			//Update the changed menu item (or rebuild the entire menu if this item should be removed or added)
 			if (delegateRespondsToShouldIncludeContact) {
