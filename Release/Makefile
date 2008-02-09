@@ -48,6 +48,7 @@ ADIUM_DIR=$(BUILD_DIR)/Adium
 RELEASE_NAME=Adium_$(VERSION)
 
 ifeq ($(NIGHTLY),TRUE)
+	VERSION:=$(VERSION)`date +%Y%m%d%H`
 	BUILD_IN_DEBUG_MODE=TRUE
 	BUILDFLAGS+="ADIUM_CFLAGS=-DNIGHTLY_RELEASE"
 endif
@@ -104,9 +105,9 @@ assertnoconflicts:
 
 version:
 	@# update the plists
-	defaults write $(ADIUM_PLIST) CFBundleGetInfoString '$(VERSION), Copyright 2001-2008 The Adium Team'
-	defaults write $(ADIUM_PLIST) CFBundleVersion '$(VERSION)'
-	defaults write $(ADIUM_PLIST) CFBundleShortVersionString '$(VERSION)'
+	defaults write $(ADIUM_PLIST) CFBundleGetInfoString "$(VERSION), Copyright 2001-2008 The Adium Team"
+	defaults write $(ADIUM_PLIST) CFBundleVersion "$(VERSION)"
+	defaults write $(ADIUM_PLIST) CFBundleShortVersionString "$(VERSION)"
 	plutil -convert xml1 $(ADIUM_PLIST).plist
 
 compile:
@@ -167,6 +168,6 @@ diskimage:
 
 #This is what nightly builds use. Does not update because buildbot does.
 nightly: assertnochanges version clean compile release
-	(svn info | perl -nle 's/Revision: ([0-9]+)/$$1/g and print "r".$$_') > $(BUILD_DIR)/latest
-	md5 $(BUILD_DIR)/$(RELEASE_NAME).dmg > $(BUILD_DIR)/Adium-`cat $(BUILD_DIR)/latest`.dmg.md5sum
-	mv $(BUILD_DIR)/$(RELEASE_NAME).dmg $(BUILD_DIR)/Adium-`cat $(BUILD_DIR)/latest`.dmg
+	echo $(RELEASE_NAME) > $(BUILD_DIR)/latest
+	(svn info | perl -nle 's/Revision: ([0-9]+)/$$1/g and print "r".$$_') >> $(BUILD_DIR)/latest
+	md5 -q $(BUILD_DIR)/$(RELEASE_NAME).dmg > $(BUILD_DIR)/$(RELEASE_NAME).dmg.md5sum
