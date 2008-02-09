@@ -18,6 +18,9 @@ VERSION=1.3svn
 BUILD_IN_DEBUG_MODE=FALSE
 BETA=FALSE
 
+# Always builds in debug mode.
+NIGHTLY?=FALSE
+
 ###########
 # To release!
 # Releasing requires cachefly access and adiumx.com access.
@@ -44,15 +47,20 @@ ART_DIR=Artwork
 ADIUM_DIR=$(BUILD_DIR)/Adium
 RELEASE_NAME=Adium_$(VERSION)
 
+ifeq ($(NIGHTLY),TRUE)
+	BUILD_IN_DEBUG_MODE=TRUE
+	BUILDFLAGS+="ADIUM_CFLAGS=-DNIGHTLY_RELEASE"
+endif
+
 ifeq ($(BUILD_IN_DEBUG_MODE),TRUE)
     BUILDSTYLE=Deployment-Debug
 else
     BUILDSTYLE=Deployment
 endif
 
-BUILDFLAGS="BUILDCONFIGURATION=$(BUILDSTYLE)"
+BUILDFLAGS+="BUILDCONFIGURATION=$(BUILDSTYLE)"
 ifeq ($(BETA),TRUE)
-	 BUILDFLAGS+="ADIUM_CFLAGS=-DBETA_RELEASE"
+	BUILDFLAGS+="ADIUM_CFLAGS=-DBETA_RELEASE"
 endif
 
 PRODUCT_DIR=$(shell defaults read com.apple.Xcode PBXProductDirectory 2> /dev/null)
@@ -159,6 +167,6 @@ diskimage:
 
 #This is what nightly builds use. Does not update because buildbot does.
 nightly: assertnochanges version clean compile release
-	(svn info | perl -nle 's/Revision: ([0-9]+)/$$1/g and print') > $(BUILD_DIR)/latest
-	md5 $(BUILD_DIR)/$(RELEASE_NAME).dmg > $(BUILD_DIR)/Adium-r`cat $(BUILD_DIR)/latest`.dmg.md5sum
-	mv $(BUILD_DIR)/$(RELEASE_NAME).dmg $(BUILD_DIR)/Adium-r`cat $(BUILD_DIR)/latest`.dmg
+	(svn info | perl -nle 's/Revision: ([0-9]+)/$$1/g and print "r".$$_') > $(BUILD_DIR)/latest
+	md5 $(BUILD_DIR)/$(RELEASE_NAME).dmg > $(BUILD_DIR)/Adium-`cat $(BUILD_DIR)/latest`.dmg.md5sum
+	mv $(BUILD_DIR)/$(RELEASE_NAME).dmg $(BUILD_DIR)/Adium-`cat $(BUILD_DIR)/latest`.dmg

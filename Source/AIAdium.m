@@ -1186,9 +1186,9 @@ static NSString	*prefsCategory;
 
 	[profileInfo addObject:UPDATE_GENERATION_DICT];
 	[profileInfo addObject:UPDATE_TYPE_DICT];
-#if NIGHTLY_RELEASE
+#ifdef NIGHTLY_RELEASE
     NSString *buildId = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AIBuildIdentifier"];
-    [profileInfo addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"revision", @"key", @"Revision", @"visibleKey", buildId, @"value", buildId, @"visibleValue", nil];
+    [profileInfo addObject:[NSDictionary dictionaryWithObjectsAndKeys:@"revision", @"key", @"Revision", @"visibleKey", buildId, @"value", buildId, @"visibleValue", nil]];
 #endif
 	return profileInfo;
 }
