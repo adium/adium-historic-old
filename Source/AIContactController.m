@@ -1789,9 +1789,6 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		//Create
 		contact = [[ContactClass alloc] initWithUID:inUID account:inAccount service:inService];
 
-		//Do the update thing
-		[self _updateAllAttributesOfObject:contact];
-		
 		//Check to see if we should add to a metaContact
 		AIMetaContact *metaContact = [contactToMetaContactLookupDict objectForKey:[contact internalObjectID]];
 		if (metaContact) {
@@ -1809,6 +1806,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 		//Add
 		[contactDict setObject:contact forKey:key];
+
+		//Do the update thing
+		[self _updateAllAttributesOfObject:contact];
+
 		[contact release];
 	}
 
