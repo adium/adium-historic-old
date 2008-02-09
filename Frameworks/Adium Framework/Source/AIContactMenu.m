@@ -76,9 +76,9 @@
  * @param contact AIListContact whose menu item to return
  * @return NSMenuItem instance for the contact
  */
-- (NSMenuItem *)menuItemForContact:(AIListContact *)contact
+- (NSMenuItem *)existingMenuItemForContact:(AIListContact *)contact
 {
-	return [self menuItemWithRepresentedObject:contact];
+	return (menuItems ? [self menuItemWithRepresentedObject:contact] : nil);
 }
 
 - (void)contactOrderChanged:(NSNotification *)notification
@@ -290,7 +290,7 @@
 {
 	if ([inObject isKindOfClass:[AIListContact class]]) {
 		//Note that this will return nil if we don't ahve a menu item for inObject
-		NSMenuItem	*menuItem = [self menuItemForContact:(AIListContact *)inObject];
+		NSMenuItem	*menuItem = [self existingMenuItemForContact:(AIListContact *)inObject];
 		
 		//Update menu items to reflect status changes
 		if ([inModifiedKeys containsObject:@"Online"] ||
