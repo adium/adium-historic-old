@@ -146,6 +146,9 @@
 //AIXMLElement: Sub-element (e.g. span in a p).
 - (void) addObject:(id)obj
 {
+	//Warn but don't assert if null is added.  Adding nothing is a no-op, but we may want to investigate where this is happening further.
+	if (!obj) NSLog(@"Warning: Attempted to add (null) to %@", obj);
+
 	BOOL isString = [obj isKindOfClass:[NSString class]];
 	NSAssert2((isString || [obj isKindOfClass:[AIXMLElement class]]), @"%@: addObject: %@ is of incorrect class",self,obj);
 
