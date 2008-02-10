@@ -16,15 +16,26 @@
 - (id)initForGroup:(NSString *)inGroup object:(AIListObject *)inObject;
 - (void)emptyCache;
 - (void)save;
++ (void)performObjectPrefsSave;
 @end
 
-#define EMPTY_CACHE_DELAY 30.0
+#define EMPTY_CACHE_DELAY 120.0
+
+static NSMutableDictionary *objectPrefs = nil;
+static BOOL					awaitingSave = NO;
+static int					usersOfObjectPrefs = 0;
 
 @implementation AIPreferenceContainer
 
 + (AIPreferenceContainer *)preferenceContainerForGroup:(NSString *)inGroup object:(AIListObject *)inObject
 {
 	return [[[self alloc] initForGroup:inGroup object:inObject] autorelease];
+}
+
++ (void)preferenceControllerWillClose
+{
+	if (awaitingSave)
+		[self performObjectPrefsSave];
 }
 
 - (id)initForGroup:(NSString *)inGroup object:(AIListObject *)inObject
@@ -60,8 +71,14 @@
  */
 - (void)emptyCache
 {
+	if (object) usersOfObjectPrefs--;
+
 	[prefs release]; prefs = nil;
 	[prefsWithDefaults release]; prefsWithDefaults = nil;
+	
+	if (object && usersOfObjectPrefs == 0) {
+		[objectPrefs release]; objectPrefs = nil;
+	}
 }
 
 /*!
@@ -113,9 +130,25 @@
 		NSString	*userDirectory = [[adium loginController] userDirectory];
 		
 		if (object) {
-			prefs = [[NSMutableDictionary dictionaryAtPath:[userDirectory stringByAppendingPathComponent:[object pathToPreferences]]
-												  withName:[[object internalObjectID] safeFilenameString]
-													create:YES] retain];
+			if (!objectPrefs) {
+				NSString	*objectPrefsPath = [[userDirectory stringByAppendingPathComponent:OBJECT_PREFS_DICTIONARY_NAME] stringByAppendingPathExtension:@"plist"];
+				NSData		*data = [NSData dataWithContentsOfFile:objectPrefsPath];
+				NSString	*errorString;
+
+				//We want to load a mutable dictioanry of mutable dictionaries.
+				objectPrefs = [[NSPropertyListSerialization propertyListFromData:data 
+															   mutabilityOption:NSPropertyListMutableContainers 
+																		 format:NULL 
+															   errorDescription:&errorString] retain];
+				if (!objectPrefs) objectPrefs = [[NSMutableDictionary alloc] init];
+			}
+
+			//For compatibility with having loaded individual object prefs from previous version of Adium, we key by the safe filename string
+			prefs = [[objectPrefs objectForKey:[[object internalObjectID] safeFilenameString]] retain];
+			if (!prefs) prefs = [[NSMutableDictionary alloc] init];
+
+			usersOfObjectPrefs++;
+
 		} else {
 			prefs = [[NSMutableDictionary dictionaryAtPath:userDirectory
 												  withName:group
@@ -239,20 +272,44 @@
 }
 
 #pragma mark Saving
++ (void)performObjectPrefsSave
+{
+	[objectPrefs writeToPath:[[[AIObject sharedAdiumInstance] loginController] userDirectory]
+					withName:OBJECT_PREFS_DICTIONARY_NAME];
+	awaitingSave = NO;
+}
+
 /*!
  * @brief Save to disk
  */
 - (void)save
 {
-	//Save the preference change immediately (Probably not the best idea?)
-	NSString	*userDirectory = [[adium loginController] userDirectory];
-	
-	NSString	*path = (object ? [userDirectory stringByAppendingPathComponent:[object pathToPreferences]] : userDirectory);
-	NSString	*name = (object ? [[object internalObjectID] safeFilenameString] : group);
-	
-	BOOL success = [[self prefs] writeToPath:path withName:name];
-	if (!success)
-		NSLog(@"Error writing %@ for %@", self);
+	if (object) {
+		//For an object's pref changes, batch all changes in a 10 second period. We'll force an immediate save if Adium quits.
+		NSDictionary *myPrefs = [self prefs];
+		if (![myPrefs count]) myPrefs = nil;
+		[objectPrefs setValue:myPrefs
+					   forKey:[[object internalObjectID] safeFilenameString]];
+
+		awaitingSave = YES;
+		[NSObject cancelPreviousPerformRequestsWithTarget:[self class]
+												 selector:@selector(performObjectPrefsSave)
+												   object:nil];
+		[[self class] performSelector:@selector(performObjectPrefsSave)
+						   withObject:nil
+						   afterDelay:10];
+
+	} else {
+		//Save the preference change immediately
+		NSString	*userDirectory = [[adium loginController] userDirectory];
+		
+		NSString	*path = (object ? [userDirectory stringByAppendingPathComponent:[object pathToPreferences]] : userDirectory);
+		NSString	*name = (object ? [[object internalObjectID] safeFilenameString] : group);
+		
+		BOOL success = [[self prefs] writeToPath:path withName:name];
+		if (!success)
+			NSLog(@"Error writing %@ for %@", self);
+	}
 }
 
 - (void)setGroup:(NSString *)inGroup
