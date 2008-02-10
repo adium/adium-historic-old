@@ -22,6 +22,7 @@
 }
 
 + (AIPreferenceContainer *)preferenceContainerForGroup:(NSString *)inGroup object:(AIListObject *)inObject;
++ (void)preferenceControllerWillClose;
 
 //Return a dictionary of preferences and defaults, appropriately merged together
 - (NSDictionary *)dictionary;

@@ -34,8 +34,10 @@
 
 #import <AIUtilities/AITigerCompatibility.h>
 
-#define PREFS_DEFAULT_PREFS 	@"PrefsPrefs.plist"
 #define TITLE_OPEN_PREFERENCES	AILocalizedString(@"Open Preferences",nil)
+
+#define LOADED_OBJECT_PREFS_KEY @"Loaded individual object prefs"
+#define PREFS_GROUP				@"Preferences"
 
 @interface AIPreferenceController (PRIVATE)
 - (AIPreferenceContainer *)preferenceContainerForGroup:(NSString *)group object:(AIListObject *)object;
@@ -84,9 +86,49 @@
     //Create the 'ByObject' and 'Accounts' object specific preference directory
 	[[NSFileManager defaultManager] createDirectoriesForPath:[userDirectory stringByAppendingPathComponent:OBJECT_PREFS_PATH]];
 	[[NSFileManager defaultManager] createDirectoriesForPath:[userDirectory stringByAppendingPathComponent:ACCOUNT_PREFS_PATH]];
-	
-	//Register our default preferences
-    [self registerDefaults:[NSDictionary dictionaryNamed:PREFS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
+
+	[self upgradeToSingleObjectPrefsDictIfNeeded];
+}
+
+/*!
+ * @brief Upgrade to a single, monolithic prefs dictionary for all objects
+ *
+ * Adium 1.2 and below used a separate plist file on disk for each object. This is a nice memory optimization but a nasty performance hit.
+ * This code moves all those plists into a single file when first run and is a no-op after that.
+ */
+- (void)upgradeToSingleObjectPrefsDictIfNeeded
+{
+	if (![[self preferenceForKey:LOADED_OBJECT_PREFS_KEY group:PREF_GROUP_GENERAL] boolValue]) {
+		NSString	*userDirectory = [[adium loginController] userDirectory];
+		NSEnumerator *topLevelDirectoryEnumerator = [[NSArray arrayWithObjects:
+													  [userDirectory stringByAppendingPathComponent:OBJECT_PREFS_PATH],
+													  [userDirectory stringByAppendingPathComponent:ACCOUNT_PREFS_PATH], nil] objectEnumerator];
+		NSMutableDictionary *objectPrefsDict = [NSMutableDictionary dictionary];		
+		NSString *dir;
+		
+		while ((dir = [topLevelDirectoryEnumerator nextObject])) {
+			NSEnumerator *enumerator;
+			NSString *file;
+
+			enumerator = [[NSFileManager defaultManager] enumeratorAtPath:dir];
+			while ((file = [enumerator nextObject])) {
+				NSString *name = [file stringByDeletingPathExtension];
+				NSDictionary *thisDict = [NSDictionary dictionaryAtPath:dir
+															   withName:name
+																 create:NO];
+				if ([thisDict count]) {
+					[objectPrefsDict setObject:thisDict
+										forKey:name];
+				}
+			}
+		}
+
+		[objectPrefsDict writeToPath:userDirectory
+							withName:OBJECT_PREFS_DICTIONARY_NAME];
+
+		[self setPreference:[NSNumber numberWithBool:YES]
+					 forKey:LOADED_OBJECT_PREFS_KEY group:PREF_GROUP_GENERAL];
+	}
 }
 
 /*!
@@ -94,7 +136,7 @@
  */
 - (void)controllerWillClose
 {
-    //Preferences are (always) saved as they're modified, so there's no need to save them here.
+	[AIPreferenceContainer preferenceControllerWillClose];
 } 
 
 /*!
