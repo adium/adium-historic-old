@@ -23,7 +23,7 @@
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIAbstractListController.h>
 #import <Adium/AIServiceIcons.h>
-#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageDrawingAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 
 #define META_TOOLTIP_ICON_SIZE NSMakeSize(11,11)

@@ -44,7 +44,7 @@
 {
     NSParameterAssert(path != nil); NSParameterAssert([path length] != 0);
     NSParameterAssert(name != nil); NSParameterAssert([name length] != 0);
-	
+
 	NSDictionary	*dictionary = [NSDictionary dictionaryWithContentsOfFile:[[path stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"plist"]];
 
 	if (!dictionary && create) dictionary = [NSDictionary dictionary];

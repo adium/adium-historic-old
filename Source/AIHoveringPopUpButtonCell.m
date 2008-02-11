@@ -9,7 +9,7 @@
 #import <AIUtilities/AIParagraphStyleAdditions.h>
 #import <AIUtilities/AIBezierPathAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
-#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageDrawingAdditions.h>
 
 #include <Carbon/Carbon.h>
 

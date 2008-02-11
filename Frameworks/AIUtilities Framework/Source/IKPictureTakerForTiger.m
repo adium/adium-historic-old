@@ -6,7 +6,7 @@
 //
 
 #import "IKPictureTakerForTiger.h"
-#import "AIImageAdditions.h"
+#import "AIImageDrawingAdditions.h"
 #import "NSImagePicker.h"
 #import "AIStringUtilities.h"
 

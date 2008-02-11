@@ -16,7 +16,7 @@
 
 #import <Adium/AIAbstractListController.h>
 #import <Adium/AIListCell.h>
-#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageDrawingAdditions.h>
 
 //User Icon
 #define USER_ICON_LEFT_PAD			2

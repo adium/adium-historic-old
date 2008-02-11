@@ -7,7 +7,7 @@
 //
 
 #import "SetupWizardBackgroundView.h"
-#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageDrawingAdditions.h>
 
 @implementation SetupWizardBackgroundView
 

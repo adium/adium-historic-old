@@ -27,7 +27,7 @@
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIFontAdditions.h>
-#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageDrawingAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AITooltipUtilities.h>
@@ -1734,7 +1734,6 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
 
 -(void)toggleUserlist:(id)sender
 {
-	NSLog(@"toggle userlist in interfaceController");
 	[[adium notificationCenter] postNotificationName:@"toggleUserlist" object:nil];
 }	
 

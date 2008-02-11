@@ -15,6 +15,7 @@
 
 #import <Adium/AITextAttachmentExtension.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageDrawingAdditions.h>
 #import <AIUtilities/AITextAttachmentAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 

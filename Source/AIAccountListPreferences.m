@@ -24,6 +24,7 @@
 #import <AIUtilities/AIVerticallyCenteredTextCell.h>
 #import <AIUtilities/AITableViewAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageDrawingAdditions.h>
 #import <AIUtilities/AIMutableStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>

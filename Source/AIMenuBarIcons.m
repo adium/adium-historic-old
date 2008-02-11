@@ -163,7 +163,7 @@
 - (NSImage *)alternateImageForImage:(NSImage *)inImage
 {
 	NSImage				*altImage = [[NSImage alloc] initWithSize:[inImage size]];
-	NSBitmapImageRep	*srcImageRep = [inImage bitmapRep];
+	NSBitmapImageRep	*srcImageRep = [inImage largestBitmapImageRep];
 
 	id monochromeFilter, invertFilter, alphaFilter;
 	

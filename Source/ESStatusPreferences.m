@@ -8,17 +8,18 @@
 
 #import "ESStatusPreferences.h"
 #import "AIStatusController.h"
-#import <Adium/AIAccountControllerProtocol.h>
 #import "ESEditStatusGroupWindowController.h"
+#import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIEditStateWindowController.h>
 #import <Adium/AIStatusMenu.h>
 #import <Adium/AIStatusGroup.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIImageTextCell.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIVerticallyCenteredTextCell.h>
 #import <AIUtilities/AIOutlineViewAdditions.h>
-#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageDrawingAdditions.h>
 #import "KFTypeSelectTableView.h"
 
 #define STATE_DRAG_TYPE	@"AIState"

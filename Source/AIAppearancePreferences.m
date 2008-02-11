@@ -23,6 +23,7 @@
 #import "AIListThemeWindowController.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageDrawingAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <Adium/AIAbstractListController.h>
