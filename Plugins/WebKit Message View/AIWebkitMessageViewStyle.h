@@ -19,9 +19,9 @@
 @class AIChat, AIContentObject;
 
 /*!
- *	@brief Key used to retrieve the user's icon
+ *	@brief Key used to retrieve the user's icon encoded in base64
  */
-#define KEY_WEBKIT_USER_ICON 				@"WebKitUserIconPath"
+#define KEY_WEBKIT_BASE64_USER_ICON 		@"KEY_WEBKIT_BASE64_USER_ICON"
 
 /*!
  *	@brief Key used to retrieve the default font family

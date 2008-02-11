@@ -39,6 +39,7 @@
 #import <Adium/ESTextAndButtonsWindowController.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
+#import <AIUtilities/AIDataAdditions.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
@@ -59,7 +60,6 @@
 - (void)_processContentObject:(AIContentObject *)content willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
 - (void)_appendContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
 
-- (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject;
 - (void)releaseCurrentWebKitUserIconForObject:(AIListObject *)inObject;
 - (void)releaseAllCachedIcons;
 - (void)updateUserIconForObject:(AIListObject *)inObject;
@@ -94,7 +94,6 @@ static NSArray *draggedTypes = nil;
 		chat = [inChat retain];
 		plugin = [inPlugin retain];
 		contentQueue = [[NSMutableArray alloc] init];
-		objectIconPathDict = [[NSMutableDictionary alloc] init];
 		objectsWithUserIconsArray = [[NSMutableArray alloc] init];
 		shouldReflectPreferenceChanges = NO;
 		storedContentObjects = nil;
@@ -165,7 +164,6 @@ static NSArray *draggedTypes = nil;
 	[preferencesChangedDelegate release]; preferencesChangedDelegate = nil;
 	[plugin release]; plugin = nil;
 	[objectsWithUserIconsArray release]; objectsWithUserIconsArray = nil;
-	[objectIconPathDict release]; objectIconPathDict = nil;
 
 	//Stop any delayed requests and remove all observers
 	[NSObject cancelPreviousPerformRequestsWithTarget:self];
@@ -1114,27 +1112,7 @@ static NSArray *draggedTypes = nil;
 
 - (void)userIconForObjectDidChange:(AIListObject *)inObject
 {
-	AIListObject	*iconSourceObject = ([inObject isKindOfClass:[AIListContact class]] ?
-										 [(AIListContact *)inObject parentContact] :
-										 inObject);
-	NSString		*currentIconPath = [objectIconPathDict objectForKey:[iconSourceObject internalObjectID]];
-	if (currentIconPath) {
-		NSString	*objectsKnownIconPath = [iconSourceObject statusObjectForKey:KEY_WEBKIT_USER_ICON];
-		if (objectsKnownIconPath &&
-			[currentIconPath isEqualToString:objectsKnownIconPath]) {
-			//We're the first one to get to this object!  We get to delete the old path and remove the reference to it
-			[[NSFileManager defaultManager] removeFileAtPath:currentIconPath handler:nil];
-			[iconSourceObject setStatusObject:nil
-									   forKey:KEY_WEBKIT_USER_ICON
-									   notify:NotifyNever];
-		} else {
-			/* Some other instance beat us to the punch. The object's KEY_WEBKIT_USER_ICON is right, since it doesn't match our
-			 * internally tracked path.
-			 */
-		}
-	}
-	
-	[self updateUserIconForObject:iconSourceObject];
+	[self updateUserIconForObject:inObject];
 }
 
 /*!
@@ -1159,14 +1137,11 @@ static NSArray *draggedTypes = nil;
 	[objectsWithUserIconsArray removeObjectIdenticalTo:iconSourceObject];
 
 	if ((chatsUsingCachedIcon <= 0) &&
-		(path = [iconSourceObject statusObjectForKey:KEY_WEBKIT_USER_ICON])) {
-		[[NSFileManager defaultManager] removeFileAtPath:path handler:nil];
+		(path = [iconSourceObject statusObjectForKey:KEY_WEBKIT_BASE64_USER_ICON])) {
 		[iconSourceObject setStatusObject:nil
-								   forKey:KEY_WEBKIT_USER_ICON
+								   forKey:KEY_WEBKIT_BASE64_USER_ICON
 								   notify:NotifyNever];
 	}
-
-	[objectIconPathDict removeObjectForKey:[iconSourceObject internalObjectID]];
 }
 
 /*!
@@ -1190,20 +1165,9 @@ static NSArray *draggedTypes = nil;
 	AIListObject		*iconSourceObject = ([inObject isKindOfClass:[AIListContact class]] ?
 											 [(AIListContact *)inObject parentContact] :
 											 inObject);
-	NSImage				*userIcon;
-	NSString			*oldWebKitUserIconPath = nil;
-	NSString			*webKitUserIconPath = nil;
+	NSImage				*userIcon = [iconSourceObject userIcon];
 	NSImage				*webKitUserIcon;
 	
-	/*
-	 * We probably already have a userIcon waiting for us, the active display icon; use that
-	 * rather than loading one from disk.
-	 */
-	if (!(userIcon = [iconSourceObject userIcon])) {
-		//If that's not the case, try using the UserIconPath
-		userIcon = [[[NSImage alloc] initWithContentsOfFile:[iconSourceObject statusObjectForKey:@"UserIconPath"]] autorelease];
-	}
-
 	if (userIcon) {
 		if ([messageStyle userIconMask]) {
 			//Apply the mask if the style has one
@@ -1220,25 +1184,11 @@ static NSArray *draggedTypes = nil;
 			webKitUserIcon = userIcon;
 		}
 
-		oldWebKitUserIconPath = [objectIconPathDict objectForKey:[iconSourceObject internalObjectID]];
-		webKitUserIconPath = [iconSourceObject statusObjectForKey:KEY_WEBKIT_USER_ICON];
-
-		if (!webKitUserIconPath) {
-			/* If the image doesn't know a path to use, write it out and set it.
-			 *
-			 * Writing the icon out is necessary for webkit to be able to use it; it also guarantees that there won't be
-			 * any animation, which is good since animation in the message view is slow and annoying.
-			 *
-			 * Only write out the icon if the object doesn't already have one
-			 */				
-			webKitUserIconPath = [self _webKitUserIconPathForObject:iconSourceObject];
-			if ([[webKitUserIcon PNGRepresentation] writeToFile:webKitUserIconPath
-													 atomically:YES]) {
-				[iconSourceObject setStatusObject:webKitUserIconPath
-										   forKey:KEY_WEBKIT_USER_ICON
-										   notify:NO];				
-			}			
-		}
+		NSString *newBase64 = [[webKitUserIcon PNGRepresentation] base64Encoding];
+		NSString *oldBase64 = [[[iconSourceObject statusObjectForKey:KEY_WEBKIT_BASE64_USER_ICON] retain] autorelease];
+		[iconSourceObject setStatusObject:newBase64
+								   forKey:KEY_WEBKIT_BASE64_USER_ICON
+								   notify:NotifyNever];
 
 		//Make sure it's known that this user has been handled
 		if (![objectsWithUserIconsArray containsObjectIdenticalTo:iconSourceObject]) {
@@ -1250,27 +1200,23 @@ static NSArray *draggedTypes = nil;
 									   notify:NotifyNever];
 		}
 		
-		if (!webKitUserIconPath) webKitUserIconPath = @"";
+		if (!newBase64) newBase64 = @"";
 
 		//Update existing images
-		if (oldWebKitUserIconPath &&
-			![oldWebKitUserIconPath isEqualToString:webKitUserIconPath]) {
+		if (oldBase64 &&
+			![oldBase64 isEqualToString:newBase64]) {
 			DOMNodeList  *images = [[[webView mainFrame] DOMDocument] getElementsByTagName:@"img"];
 			unsigned int imagesCount = [images length];
-
-			webKitUserIconPath = [[webKitUserIconPath copy] autorelease];
+			NSString	 *newDataSrc = [NSString stringWithFormat:@"data:image/png;base64,%@", newBase64];
 
 			for (int i = 0; i < imagesCount; i++) {
 				DOMHTMLImageElement *img = (DOMHTMLImageElement *)[images item:i];
 				NSString *currentSrc = [img getAttribute:@"src"];
-				if (currentSrc && ([currentSrc rangeOfString:oldWebKitUserIconPath].location != NSNotFound)) {
-					[img setSrc:webKitUserIconPath];
+				if (currentSrc && ([currentSrc rangeOfString:oldBase64].location != NSNotFound)) {
+					[img setSrc:newDataSrc];
 				}
 			}
 		}
-
-		[objectIconPathDict setObject:webKitUserIconPath
-							   forKey:[iconSourceObject internalObjectID]];
 	}
 }
 
@@ -1304,15 +1250,6 @@ static NSArray *draggedTypes = nil;
 		if (updatedImage) [[webView windowScriptObject] callWebScriptMethod:@"alignChat" 
 															  withArguments:[NSArray arrayWithObject:shouldScroll]];
 	}
-}
-
-/*!
- * @brief Returns the path to the list object's masked user icon
- */
-- (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject
-{
-	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@.png", [inObject internalObjectID], [NSString randomStringOfLength:5]];
-	return [[adium cachesPath] stringByAppendingPathComponent:filename];
 }
 
 #pragma mark File Transfer

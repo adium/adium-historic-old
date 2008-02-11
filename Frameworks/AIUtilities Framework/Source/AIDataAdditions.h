@@ -13,9 +13,10 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@interface NSData(AIDataAdditions)
+@interface NSData (AIDataAdditions)
 
 - (NSData *)subdataFromIndex:(unsigned)start;
 - (NSData *)subdataToIndex:(unsigned)stop;
+- (NSString *)base64Encoding;
 
 @end

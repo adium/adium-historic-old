@@ -534,9 +534,8 @@
 		
 		//User icon
 		if ((userIconName = [participant objectForKey:@"UserIcon Name"])) {
-			[listContact setStatusObject:[previewPath stringByAppendingPathComponent:userIconName]
-								  forKey:@"UserIconPath"
-								  notify:YES];
+			[listContact setServersideIconData:[NSData dataWithContentsOfFile:[previewPath stringByAppendingPathComponent:userIconName]]
+										notify:NotifyNever];
 		}
 		
 		[listObjectDict setObject:listContact forKey:UID];
