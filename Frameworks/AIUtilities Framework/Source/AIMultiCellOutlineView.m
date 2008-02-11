@@ -73,7 +73,7 @@
 }
 - (id)cellForTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
-	return ([self isExpandable:item] ? groupCell : contentCell);
+	return ([[self delegate] outlineView:self isGroup:item] ? groupCell : contentCell);
 }
 
 @end

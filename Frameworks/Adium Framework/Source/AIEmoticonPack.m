@@ -18,7 +18,7 @@
 #import <Adium/AIEmoticonPack.h>
 #import <Adium/AIEmoticonControllerProtocol.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
-#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageDrawingAdditions.h>
 
 #define EMOTICON_PATH_EXTENSION			@"emoticon"
 #define EMOTICON_PACK_TEMP_EXTENSION	@"AdiumEmoticonOld"

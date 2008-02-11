@@ -19,7 +19,7 @@
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIListObject.h>
 #import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageDrawingAdditions.h>
 
 @interface ESContactAlertsController (PRIVATE)
 - (NSArray *)arrayOfMenuItemsForEventsWithTarget:(id)target forGlobalMenu:(BOOL)global;

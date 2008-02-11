@@ -16,7 +16,7 @@
 
 #import "AIEmoticonPackPreviewTableView.h"
 #import <AIUtilities/AIGenericViewCell.h>
-#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageDrawingAdditions.h>
 
 #define	DRAG_IMAGE_FRACTION	0.75
 

@@ -8,7 +8,7 @@
 
 #import "AIVariableHeightOutlineView.h"
 #import "AIApplicationAdditions.h"
-#import "AIImageAdditions.h"
+#import "AIImageDrawingAdditions.h"
 #import "AIGradient.h"
 
 #define	DRAG_IMAGE_FRACTION	0.75

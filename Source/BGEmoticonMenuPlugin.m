@@ -23,6 +23,7 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageDrawingAdditions.h>
 #import <AIUtilities/MVMenuButton.h>
 #import <Adium/AIEmoticon.h>
 

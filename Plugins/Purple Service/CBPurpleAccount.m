@@ -47,6 +47,7 @@
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIObjectAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageDrawingAdditions.h>
 #import <AIUtilities/AISystemNetworkDefaults.h>
 #import "ESiTunesPlugin.h"
 #import "AMPurpleTuneTooltip.h"

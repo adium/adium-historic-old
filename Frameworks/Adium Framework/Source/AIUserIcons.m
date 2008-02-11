@@ -20,7 +20,7 @@
 #import <Adium/AIAdiumProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 
-#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageDrawingAdditions.h>
 #import <Adium/AIServiceIcons.h>
 
 #import "AIServersideUserIconSource.h"

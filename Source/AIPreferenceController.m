@@ -41,6 +41,7 @@
 
 @interface AIPreferenceController (PRIVATE)
 - (AIPreferenceContainer *)preferenceContainerForGroup:(NSString *)group object:(AIListObject *)object;
+- (void)upgradeToSingleObjectPrefsDictIfNeeded;
 @end
 
 /*!

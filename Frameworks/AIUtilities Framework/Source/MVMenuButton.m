@@ -1,7 +1,7 @@
 //Adapted from Colloquy  (www.colloquy.info)
 
 #import "MVMenuButton.h"
-#import "AIImageAdditions.h"
+#import "AIImageDrawingAdditions.h"
 
 @interface MVMenuButton (PRIVATE)
 - (NSBezierPath *)popUpArrowPath;

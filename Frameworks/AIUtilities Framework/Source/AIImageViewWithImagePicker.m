@@ -11,6 +11,7 @@
 #import "AIImageViewWithImagePicker.h"
 #import <Quartz/Quartz.h>
 
+#import "AIImageDrawingAdditions.h"
 #import "AIImageAdditions.h"
 #import "AIFileManagerAdditions.h"
 #import "AIApplicationAdditions.h"
