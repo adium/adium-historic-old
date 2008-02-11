@@ -1146,6 +1146,12 @@
 		4F3656600D4DA2DC00AB02ED /* AIAddressBookInspectorPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4F36565F0D4DA2DC00AB02ED /* AIAddressBookInspectorPane.nib */; };
 		4F3840510D4B055800A66829 /* AIInfoInspectorPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4F3840500D4B055800A66829 /* AIInfoInspectorPane.nib */; };
 		4F4656400D3EECA30032C64A /* AIInfoInspectorPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F46563F0D3EECA30032C64A /* AIInfoInspectorPane.m */; };
+		4F6A17F10D60CDDD0020FB52 /* addressbook_segment.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F6A17ED0D60CDDD0020FB52 /* addressbook_segment.png */; };
+		4F6A17F20D60CDDD0020FB52 /* advanced_segment.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F6A17EE0D60CDDD0020FB52 /* advanced_segment.png */; };
+		4F6A17F30D60CDDD0020FB52 /* events_segment.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F6A17EF0D60CDDD0020FB52 /* events_segment.png */; };
+		4F6A17F40D60CDDD0020FB52 /* info_segment.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F6A17F00D60CDDD0020FB52 /* info_segment.png */; };
+		4F6A17F70D60CE580020FB52 /* AIEventsInspectorPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4F6A17F50D60CE580020FB52 /* AIEventsInspectorPane.nib */; };
+		4F6A17F80D60CE580020FB52 /* AIAdvancedInspectorPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4F6A17F60D60CE580020FB52 /* AIAdvancedInspectorPane.nib */; };
 		4F87EFD30D3F33B2005D43D3 /* AIAddressBookInspectorPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F87EFD20D3F33B1005D43D3 /* AIAddressBookInspectorPane.m */; };
 		4F87EFD60D3F34AC005D43D3 /* AIEventsInspectorPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F87EFD50D3F34AC005D43D3 /* AIEventsInspectorPane.m */; };
 		4F87EFDA0D3F3520005D43D3 /* AIAdvancedInspectorPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F87EFD90D3F3520005D43D3 /* AIAdvancedInspectorPane.m */; };
@@ -3678,6 +3684,12 @@
 		4F3840500D4B055800A66829 /* AIInfoInspectorPane.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AIInfoInspectorPane.nib; path = Resources/AIInfoInspectorPane.nib; sourceTree = "<group>"; };
 		4F46563E0D3EECA30032C64A /* AIInfoInspectorPane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIInfoInspectorPane.h; path = Source/AIInfoInspectorPane.h; sourceTree = "<group>"; };
 		4F46563F0D3EECA30032C64A /* AIInfoInspectorPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIInfoInspectorPane.m; path = Source/AIInfoInspectorPane.m; sourceTree = "<group>"; };
+		4F6A17ED0D60CDDD0020FB52 /* addressbook_segment.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = addressbook_segment.png; path = Resources/addressbook_segment.png; sourceTree = "<group>"; };
+		4F6A17EE0D60CDDD0020FB52 /* advanced_segment.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = advanced_segment.png; path = Resources/advanced_segment.png; sourceTree = "<group>"; };
+		4F6A17EF0D60CDDD0020FB52 /* events_segment.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = events_segment.png; path = Resources/events_segment.png; sourceTree = "<group>"; };
+		4F6A17F00D60CDDD0020FB52 /* info_segment.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = info_segment.png; path = Resources/info_segment.png; sourceTree = "<group>"; };
+		4F6A17F50D60CE580020FB52 /* AIEventsInspectorPane.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AIEventsInspectorPane.nib; path = Resources/AIEventsInspectorPane.nib; sourceTree = "<group>"; };
+		4F6A17F60D60CE580020FB52 /* AIAdvancedInspectorPane.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AIAdvancedInspectorPane.nib; path = Resources/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
 		4F87EFD10D3F33B1005D43D3 /* AIAddressBookInspectorPane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAddressBookInspectorPane.h; path = Source/AIAddressBookInspectorPane.h; sourceTree = "<group>"; };
 		4F87EFD20D3F33B1005D43D3 /* AIAddressBookInspectorPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAddressBookInspectorPane.m; path = Source/AIAddressBookInspectorPane.m; sourceTree = "<group>"; };
 		4F87EFD40D3F34AC005D43D3 /* AIEventsInspectorPane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIEventsInspectorPane.h; path = Source/AIEventsInspectorPane.h; sourceTree = "<group>"; };
@@ -7408,6 +7420,12 @@
 		F5CDCE460350758501A8010A /* Contact Info Window */ = {
 			isa = PBXGroup;
 			children = (
+				4F6A17ED0D60CDDD0020FB52 /* addressbook_segment.png */,
+				4F6A17EE0D60CDDD0020FB52 /* advanced_segment.png */,
+				4F6A17EF0D60CDDD0020FB52 /* events_segment.png */,
+				4F6A17F00D60CDDD0020FB52 /* info_segment.png */,
+				4F6A17F50D60CE580020FB52 /* AIEventsInspectorPane.nib */,
+				4F6A17F60D60CE580020FB52 /* AIAdvancedInspectorPane.nib */,
 				4F36565F0D4DA2DC00AB02ED /* AIAddressBookInspectorPane.nib */,
 				4F3840500D4B055800A66829 /* AIInfoInspectorPane.nib */,
 				4F87EFD80D3F3520005D43D3 /* AIAdvancedInspectorPane.h */,
@@ -8458,6 +8476,12 @@
 				4F0B0D230D3AF50A00B44E62 /* ContactInfoInspector.nib in Resources */,
 				4F3840510D4B055800A66829 /* AIInfoInspectorPane.nib in Resources */,
 				4F3656600D4DA2DC00AB02ED /* AIAddressBookInspectorPane.nib in Resources */,
+				4F6A17F10D60CDDD0020FB52 /* addressbook_segment.png in Resources */,
+				4F6A17F20D60CDDD0020FB52 /* advanced_segment.png in Resources */,
+				4F6A17F30D60CDDD0020FB52 /* events_segment.png in Resources */,
+				4F6A17F40D60CDDD0020FB52 /* info_segment.png in Resources */,
+				4F6A17F70D60CE580020FB52 /* AIEventsInspectorPane.nib in Resources */,
+				4F6A17F80D60CE580020FB52 /* AIAdvancedInspectorPane.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

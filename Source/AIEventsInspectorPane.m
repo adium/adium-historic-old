@@ -34,7 +34,7 @@
 
 -(void)updateForListObject:(AIListObject *)inObject
 {
-	//Events update goes here.
+	[alertsController configureForListObject:inObject];
 }
 
 @end
