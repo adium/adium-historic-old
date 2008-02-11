@@ -725,13 +725,16 @@ static NSArray *validSenderColors;
 		do{
 			range = [inString rangeOfString:@"%userIconPath%"];
 			if (range.location != NSNotFound) {
-				NSString    *userIconBase64;
+				NSString    *userIconPath;
 				NSString	*replacementString;
-
-				userIconBase64 = [theSource statusObjectForKey:KEY_WEBKIT_BASE64_USER_ICON];
+				
+				userIconPath = [theSource statusObjectForKey:KEY_WEBKIT_USER_ICON];
+				if (!userIconPath) {
+					userIconPath = [theSource statusObjectForKey:@"UserIconPath"];
+				}
 					
-				if (showUserIcons && userIconBase64) {
-					replacementString = [NSString stringWithFormat:@"data:image/png;base64,%@", userIconBase64];
+				if (showUserIcons && userIconPath) {
+					replacementString = [NSString stringWithFormat:@"file://%@", userIconPath];
 					
 				} else {
 					replacementString = ([content isOutgoing]
@@ -1016,28 +1019,28 @@ static NSArray *validSenderColors;
 				  withString:[serversideDisplayName stringByEscapingForXMLWithEntities:nil]];
 		
 	AIListContact	*listObject = [chat listObject];
-	NSString		*iconString = nil;
+	NSString		*iconPath = nil;
 	
 	if (listObject) {
-		NSString *userIconBase64 = [listObject statusObjectForKey:KEY_WEBKIT_BASE64_USER_ICON];
-		if (userIconBase64)
-			iconString = [NSString stringWithFormat:@"data:image/png;base64,%@", userIconBase64];
+		iconPath = [listObject statusObjectForKey:KEY_WEBKIT_USER_ICON];
+		if (!iconPath) {
+			iconPath = [listObject statusObjectForKey:@"UserIconPath"];
+		}
 	}
-	
 	[inString replaceKeyword:@"%incomingIconPath%"
-				  withString:(iconString ? iconString : @"incoming_icon.png")];
+				  withString:(iconPath ? iconPath : @"incoming_icon.png")];
 	
 	AIListObject	*account = [chat account];
-	iconString = nil;
-
+	iconPath = nil;
+	
 	if (account) {
-		NSString *userIconBase64 = [account statusObjectForKey:KEY_WEBKIT_BASE64_USER_ICON];
-		if (userIconBase64)
-			iconString = [NSString stringWithFormat:@"data:image/png;base64,%@", userIconBase64];
+		iconPath = [account statusObjectForKey:KEY_WEBKIT_USER_ICON];
+		if (!iconPath) {
+			iconPath = [account statusObjectForKey:@"UserIconPath"];
+		}
 	}
-
 	[inString replaceKeyword:@"%outgoingIconPath%"
-				  withString:(iconString ? iconString : @"outgoing_icon.png")];
+				  withString:(iconPath ? iconPath : @"outgoing_icon.png")];
 	
 	[inString replaceKeyword:@"%timeOpened%"
 				  withString:[timeStampFormatter stringForObjectValue:[chat dateOpened]]];
