@@ -45,6 +45,12 @@
 #define	CONTACT_INFO_THEME				@"Contact Info List Theme"
 #define	CONTACT_INFO_LAYOUT				@"Contact Info List Layout"
 
+//Defines for the image files used by the toolbar segments
+#define INFO_SEGMENT_IMAGE (@"info_segment.png")
+#define ADDRESS_BOOK_SEGMENT_IMAGE (@"addressbook_segment.png")
+#define EVENTS_SEGMENT_IMAGE (@"events_segment.png")
+#define ADVANCED_SEGMENT_IMAGE (@"advanced_segment.png")
+
 enum segments {
 	CONTACT_INFO_SEGMENT = 0,
 	CONTACT_ADDRESSBOOK_SEGMENT = 1,
@@ -56,10 +62,11 @@ enum segments {
 @interface AIContactInfoWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)selectionChanged:(NSNotification *)notification;
-- (void)localizeSegmentTitles;
+- (void)setupToolbarSegments;
 - (void)configureToolbarForListObject:(AIListObject *)inObject;
 - (void)contactInfoListControllerSelectionDidChangeToListObject:(AIListObject *)listObject;
 
+//View Animation
 -(void)addInspectorView:(NSView *)aView animate:(BOOL)doAnimate;
 -(void)animateRemovingRect:(NSRect)aRect inView:(NSView *)aView;
 -(void)animateViewIn:(NSView *)aView;
@@ -89,16 +96,16 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_ADDRESSBOOK_SEGMENT] inspectorContentView] animate:YES];
 			break;
 		case CONTACT_EVENTS_SEGMENT:
-			[self addInspectorView:[loadedContent objectAtIndex:CONTACT_EVENTS_SEGMENT] animate:YES];
+			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_EVENTS_SEGMENT] inspectorContentView] animate:YES];
 			break;
 		case CONTACT_ADVANCED_SEGMENT:
-			[self addInspectorView:[loadedContent objectAtIndex:CONTACT_ADVANCED_SEGMENT] animate:YES];
+			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_ADVANCED_SEGMENT] inspectorContentView] animate:YES];
 			break;
 		case CONTACT_PLUGINS_SEGMENT:
-			[self addInspectorView:[loadedContent objectAtIndex:CONTACT_PLUGINS_SEGMENT] animate:YES];
+			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_PLUGINS_SEGMENT] inspectorContentView] animate:YES];
 			break;
 		default:
-			[self addInspectorView:[loadedContent objectAtIndex:CONTACT_INFO_SEGMENT] animate:YES];
+			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_INFO_SEGMENT] inspectorContentView] animate:YES];
 			break;
 	}
 }
@@ -168,7 +175,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	}
 	
 	//Localization
-	[self localizeSegmentTitles];
+	[self setupToolbarSegments];
 	
 	//Select the previously selected category
 	selectedSegment = [[[adium preferenceController] preferenceForKey:KEY_INFO_SELECTED_CATEGORY
@@ -176,7 +183,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	if (selectedSegment < 0 || selectedSegment >= [inspectorToolbar segmentCount]) selectedSegment = 0;
 
 	//TODO: Change this back to loading the segment from preferences when all the segments work!
-	[inspectorToolbar setSelectedSegment:0];
+	[inspectorToolbar setSelectedSegment:selectedSegment];
 	[self segmentSelected:inspectorToolbar];
 	
 	//Monitor the selected contact
@@ -191,30 +198,43 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 //																				delegate:self];
 }
 
-- (void)localizeSegmentTitles
+/*
+    @method     setupToolbarSegments
+    @abstract   setupToolbarSegments loads the localized tooltips and images for each toolbar segment
+    @discussion Since we don't want to enumerate over all of the segments twice, we've combined the
+	localization and image loading steps into this method.
+*/
+
+- (void)setupToolbarSegments
 {	
 	int i;
 	for(i = 0; i < [inspectorToolbar segmentCount]; i++) {
-		NSString	*label = nil;
+		NSString	*segmentLabel = nil;
+		NSImage		*segmentImage;
 
 		switch (i) {
 			case CONTACT_INFO_SEGMENT:
-				label = AILocalizedString(@"Status and Profile","This segment displays the status and profile information for the selected contact.");
+				segmentLabel = AILocalizedString(@"Status and Profile","This segment displays the status and profile information for the selected contact.");
+				segmentImage = [NSImage imageNamed:INFO_SEGMENT_IMAGE];
 				break;
 			case CONTACT_ADDRESSBOOK_SEGMENT:
-				label = AILocalizedString(@"Contact Information", "This segment displays contact and alias information for the selected contact.");
+				segmentLabel = AILocalizedString(@"Contact Information", "This segment displays contact and alias information for the selected contact.");
+				segmentImage = [NSImage imageNamed:ADDRESS_BOOK_SEGMENT_IMAGE];
 				break;
 			case CONTACT_EVENTS_SEGMENT:
-				label = AILocalizedString(@"Events", "This segment displays controls for a user to set up events for this contact.");
+				segmentLabel = AILocalizedString(@"Events", "This segment displays controls for a user to set up events for this contact.");
+				segmentImage = [NSImage imageNamed:EVENTS_SEGMENT_IMAGE];
 				break;
 			case CONTACT_ADVANCED_SEGMENT:
-				label = AILocalizedString(@"Advanced Settings","This segment displays the advanced settings for a contact, including encryption details and account information.");
+				segmentLabel = AILocalizedString(@"Advanced Settings","This segment displays the advanced settings for a contact, including encryption details and account information.");
+				segmentImage = [NSImage imageNamed:ADVANCED_SEGMENT_IMAGE];
 				break;
 		}
 
-		AILog(@"%@", label);
+		NSLog(@"Loading label: %@ and image: %@ for segment: %d", segmentLabel, segmentImage, i);
 
-		[(NSSegmentedCell *)[inspectorToolbar cell] setToolTip:label forSegment:i];
+		[(NSSegmentedCell *)[inspectorToolbar cell] setToolTip:segmentLabel forSegment:i];
+		[inspectorToolbar setImage:segmentImage forSegment:i];
 	}
 }
 
@@ -318,7 +338,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	NSWindow *inspectorWindow = [self window];
 	
 	NSRect viewBounds = [aView bounds];
-	//TODO: It does kind of work, but the window bounds includes the toolbar, need to fix that.
 	NSRect contentBounds = [inspectorContent bounds];
 	NSRect inspectorFrame = [inspectorWindow frame];
 
@@ -334,6 +353,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	[self animateViewIn:currentPane];
 }
 
+//TODO: Refactor this.
 -(void)animateRemovingRect:(NSRect)aRect inView:(NSView *)aView;
 {
 	NSMutableDictionary *animationDict = [NSMutableDictionary dictionaryWithCapacity:4];

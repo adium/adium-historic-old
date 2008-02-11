@@ -8,13 +8,28 @@
 
 #import "AIEventsInspectorPane.h"
 
-#define EVENTS_NIB_NAME (@"EventsInspectorPane")
+#define EVENTS_NIB_NAME (@"AIEventsInspectorPane")
 
 @implementation AIEventsInspectorPane
+
+- (id) init
+{
+	self = [super init];
+	if (self != nil) {
+		[NSBundle loadNibNamed:[self nibName] owner:self];
+		//Other init goes here.
+	}
+	return self;
+}
 
 -(NSString *)nibName
 {
 	return EVENTS_NIB_NAME;
+}
+
+-(NSView *)inspectorContentView
+{
+	return inspectorContentView;
 }
 
 -(void)updateForListObject:(AIListObject *)inObject
