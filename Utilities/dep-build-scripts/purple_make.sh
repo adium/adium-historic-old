@@ -78,6 +78,7 @@ for patch in "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
              "$PATCHDIR/libpurple_buddyicon_cache.diff" \
              "$PATCHDIR/libpurple-account-request.fix.diff" \
              "$PATCHDIR/libpurple_xmlnode_parser_error_handler.diff" \
+             "$PATCHDIR/libpurple_zephyr_fix_krb4_flags.diff" \
              "$PATCHDIR/libpurple_flap_connection_validity.diff" ; do
     echo "Applying $patch"
 	cat $patch | patch --forward -p0
@@ -134,7 +135,7 @@ for ARCH in ppc i386 ; do
             --disable-perl \
             --enable-debug \
             --disable-static --enable-shared \
-            --enable-krb4 \
+            --with-krb4 \
             --enable-cyrus-sasl \
             --prefix=$TARGET_DIR \
             --with-static-prpls="$PROTOCOLS" --disable-plugins \
@@ -175,6 +176,7 @@ for patch in "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
              "$PATCHDIR/libpurple_buddyicon_cache.diff" \
              "$PATCHDIR/libpurple-account-request.fix.diff" \
              "$PATCHDIR/libpurple_xmlnode_parser_error_handler.diff" \
+             "$PATCHDIR/libpurple_zephyr_fix_krb4_flags.diff" \
              "$PATCHDIR/libpurple_flap_connection_validity.diff" ; do
 	patch -R -p0 < $patch
 done
