@@ -725,16 +725,13 @@ static NSArray *validSenderColors;
 		do{
 			range = [inString rangeOfString:@"%userIconPath%"];
 			if (range.location != NSNotFound) {
-				NSString    *userIconPath;
+				NSString    *userIconBase64;
 				NSString	*replacementString;
-				
-				userIconPath = [theSource statusObjectForKey:KEY_WEBKIT_USER_ICON];
-				if (!userIconPath) {
-					userIconPath = [theSource statusObjectForKey:@"UserIconPath"];
-				}
+
+				userIconBase64 = [theSource statusObjectForKey:KEY_WEBKIT_BASE64_USER_ICON];
 					
-				if (showUserIcons && userIconPath) {
-					replacementString = [NSString stringWithFormat:@"file://%@", userIconPath];
+				if (showUserIcons && userIconBase64) {
+					replacementString = [NSString stringWithFormat:@"data:image/png;base64,%@", userIconBase64];
 					
 				} else {
 					replacementString = ([content isOutgoing]
@@ -1019,28 +1016,28 @@ static NSArray *validSenderColors;
 				  withString:[serversideDisplayName stringByEscapingForXMLWithEntities:nil]];
 		
 	AIListContact	*listObject = [chat listObject];
-	NSString		*iconPath = nil;
+	NSString		*iconString = nil;
 	
 	if (listObject) {
-		iconPath = [listObject statusObjectForKey:KEY_WEBKIT_USER_ICON];
-		if (!iconPath) {
-			iconPath = [listObject statusObjectForKey:@"UserIconPath"];
-		}
+		NSString *userIconBase64 = [listObject statusObjectForKey:KEY_WEBKIT_BASE64_USER_ICON];
+		if (userIconBase64)
+			iconString = [NSString stringWithFormat:@"data:image/png;base64,%@", userIconBase64];
 	}
+	
 	[inString replaceKeyword:@"%incomingIconPath%"
-				  withString:(iconPath ? iconPath : @"incoming_icon.png")];
+				  withString:(iconString ? iconString : @"incoming_icon.png")];
 	
 	AIListObject	*account = [chat account];
-	iconPath = nil;
-	
+	iconString = nil;
+
 	if (account) {
-		iconPath = [account statusObjectForKey:KEY_WEBKIT_USER_ICON];
-		if (!iconPath) {
-			iconPath = [account statusObjectForKey:@"UserIconPath"];
-		}
+		NSString *userIconBase64 = [account statusObjectForKey:KEY_WEBKIT_BASE64_USER_ICON];
+		if (userIconBase64)
+			iconString = [NSString stringWithFormat:@"data:image/png;base64,%@", userIconBase64];
 	}
+
 	[inString replaceKeyword:@"%outgoingIconPath%"
-				  withString:(iconPath ? iconPath : @"outgoing_icon.png")];
+				  withString:(iconString ? iconString : @"outgoing_icon.png")];
 	
 	[inString replaceKeyword:@"%timeOpened%"
 				  withString:[timeStampFormatter stringForObjectValue:[chat dateOpened]]];
