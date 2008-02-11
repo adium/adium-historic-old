@@ -28,7 +28,7 @@
 #import <AIUtilities/AIVariableHeightFlexibleColumnsOutlineView.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIScaledImageCell.h>
-#import <AIUtilities/AIVerticallyCenteredTextCell.h>
+//#import <AIUtilities/AIVerticallyCenteredTextCell.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 
 #define VERTICAL_ROW_PADDING	6
@@ -298,7 +298,7 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 {
 	AIScaledImageCell				*imageCell;
 	AIImageTextCell					*imageTextCell;
-	AIVerticallyCenteredTextCell	*verticallyCenteredTextCell;
+	//AIVerticallyCenteredTextCell	*verticallyCenteredTextCell;
 	
 	imageCell = [[AIScaledImageCell alloc] init];
 	[imageCell setAlignment:NSCenterTextAlignment];
@@ -312,10 +312,10 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 	[[outlineView_summary tableColumnWithIdentifier:@"event"] setDataCell:imageTextCell];
 	[imageTextCell release];
 	
-	verticallyCenteredTextCell = [[AIVerticallyCenteredTextCell alloc] init];
-	[verticallyCenteredTextCell setFont:[NSFont systemFontOfSize:10]];
-	[[outlineView_summary tableColumnWithIdentifier:@"action"] setDataCell:verticallyCenteredTextCell];
-	[verticallyCenteredTextCell release];
+	//verticallyCenteredTextCell = [[AIVerticallyCenteredTextCell alloc] init];
+//	[verticallyCenteredTextCell setFont:[NSFont systemFontOfSize:10]];
+//	[[outlineView_summary tableColumnWithIdentifier:@"action"] setDataCell:verticallyCenteredTextCell];
+//	[verticallyCenteredTextCell release];
 
 	[outlineView_summary setDrawsAlternatingRows:YES];
 	[outlineView_summary setIntercellSpacing:NSMakeSize(6.0,6.0)];
