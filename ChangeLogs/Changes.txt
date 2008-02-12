@@ -1,5 +1,36 @@
 				Adium X Version History
 				-----------------------
+Version 1.2.2
+ * Fixed incorrect behavior (including seemingly random changes in selection) in the account/contact selector at the top of chats when multiple sources or destinations are possible (#9013) 
+ * XMPP & Google Talk
+   * Fixed validation of Google Talk SSL certificates (#8529)
+   * Fixed connecting to @googlemail.com Google Talk accounts with an @gmail.com ID (#8971)
+   * Fixed a crash which could occur when an SSL handshake failed
+   * Added support for xmpp://?join URIs. (#8914)
+   * Improved determination of the default handle for XMPP conferences (#8757)
+   * Fixed a condition which could cause failure to connect to iChat Server 10.5 when GSSAPI authentication fails but the traditional authentication method is available
+   * Fixed appearance of the certificate trust panel (#8702)
+   * Fixed joining chats via the XMPP services discovery browser (#9007)
+ * Fixes for regressions in Adium 1.2 and 1.2.1
+   * Fixed a crash introduced in 1.2.1 when connecting with a proxy configured within Adium
+   * Fixed speech of chat joined / chat left events (#8995)
+   * Fixed a crash introduced in 1.2.1 when using Fast User Switching (#9040, #9060)
+   * Fixed the Custom Status window to show the last-used status, broken in 1.2 (#9082)
+   * Fixed autoaccepting of final transfers, broken in 1.2 (#8928)
+   * Fixed the Finnish and Dutch Jabber / Google Talk account preferences (#9020)
+ * Fixed an intermittent crash related to memory management (#8692)
+ * Fixed a spacing issue in the Mockie message style (#8966)
+ * Fixed a hang if iTunes was showing its license agreement or preferences window when Adium first set an iTunes status (#8310)
+ * Improved the Add Contact dialogue to validate entered information and to add contacts to the correct account when entering the window via an authorization request window
+ * Fixed a visual display glitch when scrolling the standard contact list with a dark background (#9055)
+ * Fixed display of 24 hour time in the Stockholm message style (#8989)
+ * Fixed a crash when dragging a tab out of a window (#8999)
+ * Fixed a visual glitch when dragging a tab out of a window
+ * Fixed a bug which could cause Adium to use large amounts of memory when the system was idle for a long time (#8892)
+ * Fixed saving of Status preferences, which previously would fail to save in some situations (#225)
+ * Updated Firewall instructions in Adium Help for 10.5
+ * Danish, French Canadian, German, and Swedish updates
+
 Version 1.2.1 (1/18/2008)
  * Group chats now reconnect automatically when their accounts reconnect after being disconnected (#1880)
  * Greatly improved accessibility, including the chat window, the Accounts, Events, and Advanced preference panes, the File Transfer progress window, and the contact list
