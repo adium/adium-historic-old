@@ -10,6 +10,8 @@
 #import <Adium/AIListObject.h>
 #import <Adium/AIListContact.h>
 
+static AICachedUserIconSource *sharedCachedUserIconSourceInstance = nil;
+
 @implementation AICachedUserIconSource
 
 /*!
@@ -47,10 +49,24 @@
 															   handler:NULL];
 		}
 		
-		[AIUserIcons userIconSource:self didChangeForObject:inObject];
+		[AIUserIcons userIconSource:sharedCachedUserIconSourceInstance didChangeForObject:inObject];
 		
 		return success;
 	}
+}
+
+- (id)init
+{
+	if (sharedCachedUserIconSourceInstance) {
+		[self release];
+		return [sharedCachedUserIconSourceInstance retain];
+	} else {
+		if ((self = [super init])) {
+			sharedCachedUserIconSourceInstance = [self retain];
+		}
+	}
+	
+	return self;
 }
 
 /*!
