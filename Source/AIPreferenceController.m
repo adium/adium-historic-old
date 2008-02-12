@@ -36,7 +36,7 @@
 
 #define TITLE_OPEN_PREFERENCES	AILocalizedString(@"Open Preferences",nil)
 
-#define LOADED_OBJECT_PREFS_KEY @"Loaded individual object prefs"
+#define LOADED_OBJECT_PREFS_KEY @"Loaded individual object & account prefs"
 #define PREFS_GROUP				@"Preferences"
 
 @interface AIPreferenceController (PRIVATE)
@@ -101,31 +101,47 @@
 {
 	if (![[self preferenceForKey:LOADED_OBJECT_PREFS_KEY group:PREF_GROUP_GENERAL] boolValue]) {
 		NSString	*userDirectory = [[adium loginController] userDirectory];
-		NSEnumerator *topLevelDirectoryEnumerator = [[NSArray arrayWithObjects:
-													  [userDirectory stringByAppendingPathComponent:OBJECT_PREFS_PATH],
-													  [userDirectory stringByAppendingPathComponent:ACCOUNT_PREFS_PATH], nil] objectEnumerator];
-		NSMutableDictionary *objectPrefsDict = [NSMutableDictionary dictionary];		
+		NSMutableDictionary *prefsDict;
 		NSString *dir;
 		
-		while ((dir = [topLevelDirectoryEnumerator nextObject])) {
-			NSEnumerator *enumerator;
-			NSString *file;
+		NSEnumerator *enumerator;
+		NSString *file;
 
-			enumerator = [[NSFileManager defaultManager] enumeratorAtPath:dir];
-			while ((file = [enumerator nextObject])) {
-				NSString *name = [file stringByDeletingPathExtension];
-				NSDictionary *thisDict = [NSDictionary dictionaryAtPath:dir
-															   withName:name
-																 create:NO];
-				if ([thisDict count]) {
-					[objectPrefsDict setObject:thisDict
-										forKey:name];
-				}
+		dir = [userDirectory stringByAppendingPathComponent:OBJECT_PREFS_PATH];
+		prefsDict = [NSMutableDictionary dictionary];		
+		enumerator = [[NSFileManager defaultManager] enumeratorAtPath:dir];
+		while ((file = [enumerator nextObject])) {
+			NSString *name = [file stringByDeletingPathExtension];
+			NSMutableDictionary *thisDict = [NSMutableDictionary dictionaryAtPath:dir
+																		 withName:name
+																		   create:NO];
+			if ([thisDict count]) {
+				[thisDict removeObjectForKey:@"Message Context"];
+
+				[prefsDict setObject:thisDict
+							  forKey:name];
 			}
 		}
 
-		[objectPrefsDict writeToPath:userDirectory
-							withName:OBJECT_PREFS_DICTIONARY_NAME];
+		[prefsDict writeToPath:userDirectory
+					  withName:@"ByObjectPrefs"];
+
+		dir = [userDirectory stringByAppendingPathComponent:ACCOUNT_PREFS_PATH];
+		prefsDict = [NSMutableDictionary dictionary];		
+		enumerator = [[NSFileManager defaultManager] enumeratorAtPath:dir];
+		while ((file = [enumerator nextObject])) {
+			NSString *name = [file stringByDeletingPathExtension];
+			NSDictionary *thisDict = [NSDictionary dictionaryAtPath:dir
+														   withName:name
+															 create:NO];
+			if ([thisDict count]) {
+				[prefsDict setObject:thisDict
+							  forKey:name];
+			}
+		}
+
+		[prefsDict writeToPath:userDirectory
+					  withName:@"AccountPrefs"];
 
 		[self setPreference:[NSNumber numberWithBool:YES]
 					 forKey:LOADED_OBJECT_PREFS_KEY group:PREF_GROUP_GENERAL];
