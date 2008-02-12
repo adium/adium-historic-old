@@ -46,8 +46,11 @@ BUILD_DIR=build
 ART_DIR=Artwork
 ADIUM_DIR=$(BUILD_DIR)/Adium
 RELEASE_NAME=Adium_$(VERSION)
+VERSION_ESCAPED=$(VERSION)
+RELEASE_NAME_ESCAPED=Adium_$(VERSION_ESCAPED)
 
 ifeq ($(NIGHTLY),TRUE)
+	VERSION_ESCAPED:=$(VERSION_ESCAPED)\`date +%Y%m%d%H\`
 	VERSION:=$(VERSION)`date +%Y%m%d%H`
 	BUILD_IN_DEBUG_MODE=TRUE
 	BUILDFLAGS+="ADIUM_CFLAGS=-DNIGHTLY_RELEASE"
@@ -164,7 +167,7 @@ diskimage:
 	./ensureCustomIconsExtracted $(ART_DIR)
 	./make-diskimage.sh $(BUILD_DIR)/$(RELEASE_NAME).dmg $(ADIUM_DIR) "Adium X $(VERSION)" dmg_adium.scpt $(ART_DIR)
 	
-	@echo Build finished. `md5 $(BUILD_DIR)/$(RELEASE_NAME).dmg`
+	@echo Build finished. `md5 $(BUILD_DIR)/$(RELEASE_NAME_ESCAPED).dmg`
 
 #This is what nightly builds use. Does not update because buildbot does.
 nightly: assertnochanges version clean compile release
