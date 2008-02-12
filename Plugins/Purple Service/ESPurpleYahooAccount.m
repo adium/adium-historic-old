@@ -47,9 +47,9 @@
 - (NSString *)stringByRemovingYahooSuffix:(NSString *)inString
 {
 	if ((inString && ([inString length] > 0)) && 
-		([inString rangeOfString:@"@yahoo.com" options:NSCaseInsensitiveSearch].location != NSNotFound)) {
-		inString = [inString substringToIndex:[inString rangeOfString:@"@yahoo.com" 
-															  options:NSCaseInsensitiveSearch].location];
+		([inString rangeOfString:@"@" options:NSLiteralSearch].location != NSNotFound)) {
+		inString = [inString substringToIndex:[inString rangeOfString:@"@" 
+															  options:NSLiteralSearch].location];
 	}
 	
 	return inString;
