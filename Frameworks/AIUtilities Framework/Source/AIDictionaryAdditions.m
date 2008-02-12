@@ -107,7 +107,7 @@ return validated;
 
 		return success;
 	} else {		
-		NSLog(@"%s: Could not serialize. Error: \"%@\".", retainedError);
+		NSLog(@"%s: Could not serialize. Error: \"%@\".", __PRETTY_FUNCTION__, retainedError);
 		[self validateAsPropertyList];
 
 		if (retainedError) [retainedError release];
