@@ -308,14 +308,20 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 - (void)threadedSavePrefs:(NSDictionary *)info
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	[[info objectForKey:@"PrefsToSave"] writeToPath:[info objectForKey:@"DestinationDirectory"]
-															  withName:[info objectForKey:@"PrefsName"]];
-	
+	NSDictionary *dictToSave = [[info objectForKey:@"PrefsToSave"] copy];
+	[dictToSave writeToPath:[info objectForKey:@"DestinationDirectory"]
+				   withName:[info objectForKey:@"PrefsName"]];
+	[dictToSave release];
+
 	NSTimer *inTimer = [info objectForKey:@"NSTimer"];
 	if (inTimer == timer_savingOfObjectCache) {
-		[timer_savingOfObjectCache release]; timer_savingOfObjectCache = nil;		
+		@synchronized(timer_savingOfObjectCache) {
+			[timer_savingOfObjectCache release]; timer_savingOfObjectCache = nil;
+		}
 	} else if (inTimer == timer_savingOfAccountCache) {
-		[timer_savingOfAccountCache release]; timer_savingOfAccountCache = nil;		
+		@synchronized(timer_savingOfAccountCache) {
+			[timer_savingOfAccountCache release]; timer_savingOfAccountCache = nil;
+		}
 	}
 	[pool release];
 }
@@ -351,7 +357,9 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 																		   userInfo:*myGlobalPrefs
 																			repeats:NO] retain];
 		} else {
-			[*myTimerForSavingGlobalPrefs setFireDate:[NSDate dateWithTimeIntervalSinceNow:SAVE_OBJECT_PREFS_DELAY]];
+			@synchronized(*myTimerForSavingGlobalPrefs) {
+				[*myTimerForSavingGlobalPrefs setFireDate:[NSDate dateWithTimeIntervalSinceNow:SAVE_OBJECT_PREFS_DELAY]];
+			}
 		}
 
 	} else {
