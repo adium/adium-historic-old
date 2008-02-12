@@ -11,6 +11,7 @@
 #import <Adium/AILoginControllerProtocol.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
+#import <Adium/AIAccount.h>
 
 @interface AIPreferenceContainer (PRIVATE)
 - (id)initForGroup:(NSString *)inGroup object:(AIListObject *)inObject;
@@ -19,11 +20,16 @@
 + (void)performObjectPrefsSave;
 @end
 
-#define EMPTY_CACHE_DELAY 120.0
+#define EMPTY_CACHE_DELAY		120.0
+#define	SAVE_OBJECT_PREFS_DELAY	10.0
 
-static NSMutableDictionary *objectPrefs = nil;
-static BOOL					awaitingSave = NO;
+static NSMutableDictionary	*objectPrefs = nil;
 static int					usersOfObjectPrefs = 0;
+static NSTimer				*timer_savingOfObjectCache = nil;
+
+static NSMutableDictionary	*accountPrefs = nil;
+static int					usersOfAccountPrefs = 0;
+static NSTimer				*timer_savingOfAccountCache = nil;
 
 @implementation AIPreferenceContainer
 
@@ -34,8 +40,15 @@ static int					usersOfObjectPrefs = 0;
 
 + (void)preferenceControllerWillClose
 {
-	if (awaitingSave)
-		[self performObjectPrefsSave];
+	if (timer_savingOfObjectCache) {
+		[objectPrefs writeToPath:[[[AIObject sharedAdiumInstance] loginController] userDirectory]
+						withName:@"ByObjectPrefs"];
+	}
+	
+	if (timer_savingOfAccountCache) {
+		[accountPrefs writeToPath:[[[AIObject sharedAdiumInstance] loginController] userDirectory]
+						withName:@"AccountPrefs"];
+	}
 }
 
 - (id)initForGroup:(NSString *)inGroup object:(AIListObject *)inObject
@@ -43,8 +56,23 @@ static int					usersOfObjectPrefs = 0;
 	if ((self = [super init])) {
 		group = [inGroup retain];
 		object = [inObject retain];
+		
+		if (object) {
+			if ([object isKindOfClass:[AIAccount class]]) {
+				myGlobalPrefs = &accountPrefs;
+				myUsersOfGlobalPrefs = &usersOfAccountPrefs;
+				myTimerForSavingGlobalPrefs = &timer_savingOfAccountCache;
+				globalPrefsName = [@"AccountPrefs" retain];
+				
+			} else {
+				myGlobalPrefs = &objectPrefs;
+				myUsersOfGlobalPrefs = &usersOfObjectPrefs;
+				myTimerForSavingGlobalPrefs = &timer_savingOfObjectCache;
+				globalPrefsName = [@"ByObjectPrefs" retain];
+			}
+		}
 	}
-	
+
 	return self;
 }
 
@@ -53,6 +81,8 @@ static int					usersOfObjectPrefs = 0;
 	[defaults release]; defaults = nil;
 	[group release];
 	[object release];
+	[timer_clearingOfCache release]; timer_clearingOfCache = nil;
+	[globalPrefsName release]; globalPrefsName = nil;
 
 	[self emptyCache];
 	
@@ -69,16 +99,18 @@ static int					usersOfObjectPrefs = 0;
 /*!
  * @brief Empty our cache
  */
-- (void)emptyCache
+- (void)emptyCache:(NSTimer *)inTimer
 {
-	if (object) usersOfObjectPrefs--;
+	if (object) (*myUsersOfGlobalPrefs)--;
 
 	[prefs release]; prefs = nil;
 	[prefsWithDefaults release]; prefsWithDefaults = nil;
 	
-	if (object && usersOfObjectPrefs == 0) {
-		[objectPrefs release]; objectPrefs = nil;
+	if (object && (*myUsersOfGlobalPrefs) == 0) {
+		[*myGlobalPrefs release]; *myGlobalPrefs = nil;
 	}
+	
+	[timer_clearingOfCache release]; timer_clearingOfCache = nil;
 }
 
 /*!
@@ -88,13 +120,15 @@ static int					usersOfObjectPrefs = 0;
  */
 - (void)queueClearingOfCache
 {
-	//Cache only for 30 seconds, then release the memory
-	[NSObject cancelPreviousPerformRequestsWithTarget:self
-											 selector:@selector(emptyCache)
-											   object:nil];
-	[self performSelector:@selector(emptyCache)
-			   withObject:nil
-			   afterDelay:EMPTY_CACHE_DELAY];
+	if (!timer_clearingOfCache) {
+		timer_clearingOfCache = [[NSTimer scheduledTimerWithTimeInterval:EMPTY_CACHE_DELAY
+																  target:self
+																selector:@selector(emptyCache:)
+																userInfo:nil
+																 repeats:NO] retain];
+	} else {
+		[timer_clearingOfCache setFireDate:[NSDate dateWithTimeIntervalSinceNow:EMPTY_CACHE_DELAY]];
+	}
 }
 
 #pragma mark Defaults
@@ -130,24 +164,23 @@ static int					usersOfObjectPrefs = 0;
 		NSString	*userDirectory = [[adium loginController] userDirectory];
 		
 		if (object) {
-			if (!objectPrefs) {
-				NSString	*objectPrefsPath = [[userDirectory stringByAppendingPathComponent:OBJECT_PREFS_DICTIONARY_NAME] stringByAppendingPathExtension:@"plist"];
+			if (!(*myGlobalPrefs)) {
+				NSString	*objectPrefsPath = [[userDirectory stringByAppendingPathComponent:globalPrefsName] stringByAppendingPathExtension:@"plist"];
 				NSData		*data = [NSData dataWithContentsOfFile:objectPrefsPath];
 				NSString	*errorString;
 
 				//We want to load a mutable dictioanry of mutable dictionaries.
-				objectPrefs = [[NSPropertyListSerialization propertyListFromData:data 
-															   mutabilityOption:NSPropertyListMutableContainers 
-																		 format:NULL 
-															   errorDescription:&errorString] retain];
-				if (!objectPrefs) objectPrefs = [[NSMutableDictionary alloc] init];
+				*myGlobalPrefs = [[NSPropertyListSerialization propertyListFromData:data 
+																   mutabilityOption:NSPropertyListMutableContainers 
+																			 format:NULL 
+																   errorDescription:&errorString] retain];
+				if (!*myGlobalPrefs) *myGlobalPrefs = [[NSMutableDictionary alloc] init];
 			}
 
 			//For compatibility with having loaded individual object prefs from previous version of Adium, we key by the safe filename string
-			prefs = [[objectPrefs objectForKey:[[object internalObjectID] safeFilenameString]] retain];
+			prefs = [[*myGlobalPrefs objectForKey:[[object internalObjectID] safeFilenameString]] retain];
 			if (!prefs) prefs = [[NSMutableDictionary alloc] init];
-
-			usersOfObjectPrefs++;
+			(*myUsersOfGlobalPrefs)++;
 
 		} else {
 			prefs = [[NSMutableDictionary dictionaryAtPath:userDirectory
@@ -272,11 +305,31 @@ static int					usersOfObjectPrefs = 0;
 }
 
 #pragma mark Saving
-+ (void)performObjectPrefsSave
+- (void)threadedSavePrefs:(NSDictionary *)info
 {
-	[objectPrefs writeToPath:[[[AIObject sharedAdiumInstance] loginController] userDirectory]
-					withName:OBJECT_PREFS_DICTIONARY_NAME];
-	awaitingSave = NO;
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	[[info objectForKey:@"PrefsToSave"] writeToPath:[info objectForKey:@"DestinationDirectory"]
+															  withName:[info objectForKey:@"PrefsName"]];
+	
+	NSTimer *inTimer = [info objectForKey:@"NSTimer"];
+	if (inTimer == timer_savingOfObjectCache) {
+		[timer_savingOfObjectCache release]; timer_savingOfObjectCache = nil;		
+	} else if (inTimer == timer_savingOfAccountCache) {
+		[timer_savingOfAccountCache release]; timer_savingOfAccountCache = nil;		
+	}
+	[pool release];
+}
+
+- (void)performObjectPrefsSave:(NSTimer *)inTimer
+{
+	[NSThread detachNewThreadSelector:@selector(threadedSavePrefs:)
+							 toTarget:self
+						   withObject:[NSDictionary dictionaryWithObjectsAndKeys:
+									   [inTimer userInfo], @"PrefsToSave",
+									   [[[AIObject sharedAdiumInstance] loginController] userDirectory], @"DestinationDirectory",
+										globalPrefsName, @"PrefsName",
+									    inTimer, @"NSTimer",
+									   nil]];
 }
 
 /*!
@@ -285,19 +338,21 @@ static int					usersOfObjectPrefs = 0;
 - (void)save
 {
 	if (object) {
-		//For an object's pref changes, batch all changes in a 10 second period. We'll force an immediate save if Adium quits.
+		//For an object's pref changes, batch all changes in a SAVE_OBJECT_PREFS_DELAY second period. We'll force an immediate save if Adium quits.
 		NSDictionary *myPrefs = [self prefs];
 		if (![myPrefs count]) myPrefs = nil;
-		[objectPrefs setValue:myPrefs
-					   forKey:[[object internalObjectID] safeFilenameString]];
+		[*myGlobalPrefs setValue:myPrefs
+						  forKey:[[object internalObjectID] safeFilenameString]];
 
-		awaitingSave = YES;
-		[NSObject cancelPreviousPerformRequestsWithTarget:[self class]
-												 selector:@selector(performObjectPrefsSave)
-												   object:nil];
-		[[self class] performSelector:@selector(performObjectPrefsSave)
-						   withObject:nil
-						   afterDelay:10];
+		if (!*myTimerForSavingGlobalPrefs) {
+			*myTimerForSavingGlobalPrefs = [[NSTimer scheduledTimerWithTimeInterval:SAVE_OBJECT_PREFS_DELAY
+																			 target:self
+																		   selector:@selector(performObjectPrefsSave:)
+																		   userInfo:*myGlobalPrefs
+																			repeats:NO] retain];
+		} else {
+			[*myTimerForSavingGlobalPrefs setFireDate:[NSDate dateWithTimeIntervalSinceNow:SAVE_OBJECT_PREFS_DELAY]];
+		}
 
 	} else {
 		//Save the preference change immediately

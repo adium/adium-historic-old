@@ -17,8 +17,13 @@
 	NSMutableDictionary	*prefsWithDefaults;
 
 	NSMutableDictionary	*defaults;
-	
+	NSTimer				*timer_clearingOfCache;
 	int					preferenceChangeDelays;
+	
+	NSMutableDictionary **myGlobalPrefs;
+	int					*myUsersOfGlobalPrefs;
+	NSTimer				**myTimerForSavingGlobalPrefs;
+	NSString			*globalPrefsName;
 }
 
 + (AIPreferenceContainer *)preferenceContainerForGroup:(NSString *)inGroup object:(AIListObject *)inObject;

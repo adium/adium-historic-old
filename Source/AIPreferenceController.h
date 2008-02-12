@@ -19,8 +19,6 @@
 
 @class AIListObject;
 
-#define OBJECT_PREFS_DICTIONARY_NAME @"ByObjectPrefs"
-
 @interface AIPreferenceController : AIObject <AIPreferenceController> {
 	NSMutableArray			*paneArray;						//Loaded preference panes
 	NSMutableArray			*advancedPaneArray;
