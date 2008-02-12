@@ -83,7 +83,7 @@
 	if (![NSApp isActive]) {
 		[NSApp activateIgnoringOtherApps:YES];
 	}
-	NSLog(@"hit hot key");
+
 	//Switch to the appropriate window, just like clicking the dock; this method will handle switching to a chat with unviewed content, for example.
 	[[adium interfaceController] handleReopenWithVisibleWindows:NO];
 	
