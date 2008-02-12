@@ -115,12 +115,6 @@
     int			location = SHStringOffset;
 
 	static NSCharacterSet *skipSet = nil;
-	static NSCharacterSet *startSet = nil;
-	static NSCharacterSet *endSet = nil;
-	static NSCharacterSet *hostnameComponentSeparatorSet = nil;	
-	static NSCharacterSet *surroundingStartDelimiters = nil;
-	static NSCharacterSet *surroundingEndDelimiters = nil;
-
     if (!skipSet) {
         NSMutableCharacterSet *mutableSkipSet = [[NSMutableCharacterSet alloc] init];
         [mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -128,19 +122,25 @@
         [mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
 		skipSet = [[NSCharacterSet characterSetWithBitmapRepresentation:[mutableSkipSet bitmapRepresentation]] retain];
 		[mutableSkipSet release];
+    }
 
+	static NSCharacterSet *startSet = nil;
+    if (!startSet) {
         NSMutableCharacterSet *mutableStartSet = [[NSMutableCharacterSet alloc] init];
         [mutableStartSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         [mutableStartSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"'-,:;<([{.?!"]];
 		startSet = [[NSCharacterSet characterSetWithBitmapRepresentation:[mutableStartSet bitmapRepresentation]] retain];
 		[mutableStartSet release];
+    }
 
+	static NSCharacterSet *endSet = nil;
+    if (!endSet) {
         endSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"',;>)]}.?!"] retain];
+    }
 
+	static NSCharacterSet *hostnameComponentSeparatorSet = nil;	
+   	if (!hostnameComponentSeparatorSet) {
    		hostnameComponentSeparatorSet = [[NSCharacterSet characterSetWithCharactersInString:@"./"] retain];
-
-   		surroundingStartDelimiters = [[NSCharacterSet characterSetWithCharactersInString:@"<("] retain];
-   		surroundingEndDelimiters = [[NSCharacterSet characterSetWithCharactersInString:@">)"] retain];
    	}
 	
     // scan upto the next whitespace char so that we don't unnecessarity confuse flex
@@ -173,17 +173,8 @@
 
         // if we have a valid URL then save the scanned string, and make a SHMarkedHyperlink out of it.
         // this way, we can preserve things like the matched string (to be converted to a NSURL),
-        // parent string, its validation status (valid, file, degenerate, etc), and its range in the parent string
+        // parent string, it's validation status (valid, file, degenerate, etc), and it's range in the parent string
         if((finalStringLen > 0) && [self isStringValidURL:scanString]){
-			NSLog(@"scanString is %@", scanString);
-			if (finalStringLen >= 2) {
-				if ([surroundingStartDelimiters characterIsMember:[scanString characterAtIndex:0]] &&
-					[surroundingEndDelimiters characterIsMember:[scanString characterAtIndex:finalStringLen-1]]) {
-					
-				}
-			}
-			
-			
             SHMarkedHyperlink	*markedLink;
 			NSRange				urlRange;
 			
