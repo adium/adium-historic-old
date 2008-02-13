@@ -324,9 +324,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 #pragma mark View Management and Animation
 -(void)addInspectorView:(NSView *)aView animate:(BOOL)doAnimate;
-{
-	NSLog(@"Adding Inspector View: %@", aView);
-	
+{	
 	if(currentPane == aView)
 		return;
 	
@@ -351,28 +349,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	[inspectorContent addSubview:aView];
 	currentPane = aView;
 	[self animateViewIn:currentPane];
-}
-
-//TODO: Refactor this.
--(void)animateRemovingRect:(NSRect)aRect inView:(NSView *)aView;
-{
-	NSMutableDictionary *animationDict = [NSMutableDictionary dictionaryWithCapacity:4];
-	
-	[animationDict setObject:aView forKey:NSViewAnimationTargetKey];
-	[animationDict setObject:[NSValue valueWithRect:aRect] forKey:NSViewAnimationEndFrameKey];
-	[animationDict setObject:NSViewAnimationFadeInEffect forKey:NSViewAnimationEffectKey];
-	
-	NSViewAnimation *viewAnim = [[NSViewAnimation alloc] initWithViewAnimations:[NSArray arrayWithObjects:animationDict, nil]];
-	
-	//Setup the animation
-	[viewAnim setDuration:0.1];
-	[viewAnim setAnimationCurve:NSAnimationEaseInOut];
-	[viewAnim setAnimationBlockingMode:NSAnimationBlocking];
-	
-	//Start it
-	[viewAnim startAnimation];
-	
-	[viewAnim release];
 }
 
 -(void)animateViewIn:(NSView *)aView;
