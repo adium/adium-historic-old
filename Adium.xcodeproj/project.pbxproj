@@ -122,6 +122,7 @@
 		319B29800CE8EC6F00C65398 /* TestDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 319B297F0CE8EC6E00C65398 /* TestDateAdditions.m */; };
 		31E0CD580C5EEEFA00271DB1 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D836F307CBF960006466F2 /* QuickTime.framework */; };
 		31E0CD810C5EEF5200271DB1 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31E0CD800C5EEF5200271DB1 /* CoreAudio.framework */; };
+		31FA804C0D4A8EB200ABE634 /* Adium.sdef in Resources */ = {isa = PBXBuildFile; fileRef = 0CAC6A130C0C657A0090AE95 /* Adium.sdef */; };
 		3402D5A5080DBC91004E50B4 /* SortConfiguration.nib in Resources */ = {isa = PBXBuildFile; fileRef = 347E791D07CAA52300350507 /* SortConfiguration.nib */; };
 		3402E01B07CB0CED0044F818 /* ESFileTransferProgressView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E01A07CB0CEC0044F818 /* ESFileTransferProgressView.nib */; };
 		3402E02407CB0D1B0044F818 /* ProxyPasswordPrompt.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E02307CB0D1B0044F818 /* ProxyPasswordPrompt.nib */; };
@@ -8074,7 +8075,6 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
@@ -8194,6 +8194,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				31034F0C0C8142720003F5AA /* UTF8Snowman.txt in Resources */,
+				31FA804C0D4A8EB200ABE634 /* Adium.sdef in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
