@@ -1702,6 +1702,8 @@
 		319B297F0CE8EC6E00C65398 /* TestDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestDateAdditions.m; path = UnitTests/TestDateAdditions.m; sourceTree = "<group>"; };
 		31E0CD800C5EEF5200271DB1 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = /System/Library/Frameworks/CoreAudio.framework; sourceTree = "<absolute>"; };
 		31E84DF10C7F387800674BCA /* AIUnitTestUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIUnitTestUtilities.h; path = UnitTests/AIUnitTestUtilities.h; sourceTree = "<group>"; };
+		31FA7F0F0D4A75D000ABE634 /* TestRichTextCoercion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestRichTextCoercion.h; path = UnitTests/TestRichTextCoercion.h; sourceTree = "<group>"; };
+		31FA7F100D4A75D000ABE634 /* TestRichTextCoercion.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestRichTextCoercion.m; path = UnitTests/TestRichTextCoercion.m; sourceTree = "<group>"; };
 		3402E01807CB0CE40044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		3402E01F07CB0D150044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		3402E02007CB0D150044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
@@ -4371,6 +4373,8 @@
 				312ED3E10C7E8A0700A6BDA9 /* TestDateFormatterStringRepWithInterval.m */,
 				313C2F920D4B19B50032334D /* TestDictionaryAdditions.h */,
 				313C2F930D4B19B50032334D /* TestDictionaryAdditions.m */,
+				31FA7F0F0D4A75D000ABE634 /* TestRichTextCoercion.h */,
+				31FA7F100D4A75D000ABE634 /* TestRichTextCoercion.m */,
 				31034EFD0C8142680003F5AA /* TestStringAdditions.h */,
 				31034EFE0C8142680003F5AA /* TestStringAdditions.m */,
 				31034F0B0C8142720003F5AA /* UTF8Snowman.txt */,
