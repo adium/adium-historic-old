@@ -31,6 +31,8 @@
 		3113CCA70CE8CB4200B13AC0 /* AIDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3113CCA50CE8CB4200B13AC0 /* AIDateAdditions.m */; };
 		319EF07F0CE787E40070D159 /* AICalendarDateAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 319EF07D0CE787E40070D159 /* AICalendarDateAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		319EF0800CE787E40070D159 /* AICalendarDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 319EF07E0CE787E40070D159 /* AICalendarDateAdditions.m */; };
+		31FA7E8C0D4A6CF800ABE634 /* AIRichTextCoercer.h in Headers */ = {isa = PBXBuildFile; fileRef = 31FA7E8A0D4A6CF800ABE634 /* AIRichTextCoercer.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		31FA7E8D0D4A6CF800ABE634 /* AIRichTextCoercer.m in Sources */ = {isa = PBXBuildFile; fileRef = 31FA7E8B0D4A6CF800ABE634 /* AIRichTextCoercer.m */; };
 		3402D33107CB043F0044F818 /* AIUtilities.framework_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 3402D33007CB043F0044F818 /* AIUtilities.framework_Prefix.pch */; settings = {ATTRIBUTES = (); }; };
 		34057BD6087DF73F00664D64 /* AIFlexibleToolbarItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 34057BD4087DF73F00664D64 /* AIFlexibleToolbarItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34057BD7087DF73F00664D64 /* AIFlexibleToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 34057BD5087DF73F00664D64 /* AIFlexibleToolbarItem.m */; };
@@ -269,6 +271,8 @@
 		3113CCA50CE8CB4200B13AC0 /* AIDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIDateAdditions.m; path = Source/AIDateAdditions.m; sourceTree = "<group>"; };
 		319EF07D0CE787E40070D159 /* AICalendarDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AICalendarDateAdditions.h; path = Source/AICalendarDateAdditions.h; sourceTree = "<group>"; };
 		319EF07E0CE787E40070D159 /* AICalendarDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AICalendarDateAdditions.m; path = Source/AICalendarDateAdditions.m; sourceTree = "<group>"; };
+		31FA7E8A0D4A6CF800ABE634 /* AIRichTextCoercer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIRichTextCoercer.h; path = Source/AIRichTextCoercer.h; sourceTree = "<group>"; };
+		31FA7E8B0D4A6CF800ABE634 /* AIRichTextCoercer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIRichTextCoercer.m; path = Source/AIRichTextCoercer.m; sourceTree = "<group>"; };
 		3402D33007CB043F0044F818 /* AIUtilities.framework_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AIUtilities.framework_Prefix.pch; sourceTree = "<group>"; };
 		34057BD4087DF73F00664D64 /* AIFlexibleToolbarItem.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIFlexibleToolbarItem.h; path = Source/AIFlexibleToolbarItem.h; sourceTree = "<group>"; };
 		34057BD5087DF73F00664D64 /* AIFlexibleToolbarItem.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIFlexibleToolbarItem.m; path = Source/AIFlexibleToolbarItem.m; sourceTree = "<group>"; };
@@ -684,6 +688,15 @@
 			name = "Other Frameworks";
 			sourceTree = "<group>";
 		};
+		31FA7E880D4A6CBD00ABE634 /* Object to coerce text↔rich text in AppleScript */ = {
+			isa = PBXGroup;
+			children = (
+				31FA7E8A0D4A6CF800ABE634 /* AIRichTextCoercer.h */,
+				31FA7E8B0D4A6CF800ABE634 /* AIRichTextCoercer.m */,
+			);
+			name = "Object to coerce text↔rich text in AppleScript";
+			sourceTree = "<group>";
+		};
 		32C88DFF0371C24200C91783 /* Other Sources */ = {
 			isa = PBXGroup;
 			children = (
@@ -1095,6 +1108,7 @@
 				4BD1EF7706D2636E00B3975E /* Keychain access */,
 				07C52D4007BD2F53006BE37C /* Notification of host reachability */,
 				4BD1EF7406D2636A00B3975E /* Notification of system sleep */,
+				31FA7E880D4A6CBD00ABE634 /* Object to coerce text↔rich text in AppleScript */,
 				4BD1F2B406D268C300B3975E /* Simplification of text attributes */,
 				4BD1F2D506D2693200B3975E /* Smooth tracking tooltips */,
 				0795642507C3555300F9A88F /* String object that uses wired memory */,
@@ -1383,6 +1397,7 @@
 				34486C9E06D1DF0400DA778C /* AIPlasticMinusButton.h in Headers */,
 				34486CA006D1DF0400DA778C /* AIPlasticPlusButton.h in Headers */,
 				34486CA206D1DF0400DA778C /* AIPopUpButtonAdditions.h in Headers */,
+				31FA7E8C0D4A6CF800ABE634 /* AIRichTextCoercer.h in Headers */,
 				34486CA406D1DF0400DA778C /* AIScrollViewAdditions.h in Headers */,
 				34486CA606D1DF0400DA778C /* AISendingTextView.h in Headers */,
 				34486CA806D1DF0400DA778C /* AISleepNotification.h in Headers */,
@@ -1487,7 +1502,6 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DA8A805C08553B3800F24BB3 /* Build configuration list for PBXProject "AIUtilities.framework" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
@@ -1657,6 +1671,7 @@
 				34E1D8050CD5C4FA0071836E /* IKPictureTakerForTiger.m in Sources */,
 				319EF0800CE787E40070D159 /* AICalendarDateAdditions.m in Sources */,
 				3113CCA70CE8CB4200B13AC0 /* AIDateAdditions.m in Sources */,
+				31FA7E8D0D4A6CF800ABE634 /* AIRichTextCoercer.m in Sources */,
 				346E5F410D60F87000ACD38C /* AIImageDrawingAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
