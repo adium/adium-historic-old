@@ -28,11 +28,12 @@
 #import <AIUtilities/AIVariableHeightFlexibleColumnsOutlineView.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIScaledImageCell.h>
-#import <AIUtilities/AIVerticallyCenteredTextCell.h>
+//#import <AIUtilities/AIVerticallyCenteredTextCell.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 
 #define VERTICAL_ROW_PADDING	6
-#define MINIMUM_ROW_HEIGHT		30.0f
+#define MINIMUM_IMAGE_HEIGHT		20.0f
+#define MINIMUM_ROW_HEIGHT			32.0f
 
 #define	EVENT_COLUMN_INDEX		1
 
@@ -77,11 +78,11 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 		newFrame.origin.x = oldFrame.origin.x + oldFrame.size.width - newFrame.size.width;
 		[button_edit setFrame:newFrame];
 	}
-	
+		
 	[button_add setToolTip:AILocalizedString(@"Add an action for the selected event", nil)];
 	[button_delete setToolTip:AILocalizedString(@"Remove the selected action(s)", nil)];
 	[button_edit setToolTip:AILocalizedString(@"Configure the selected action", nil)];
-
+	
 	[outlineView_summary accessibilitySetOverrideValue:AILocalizedString(@"Events", nil)
 										  forAttribute:NSAccessibilityDescriptionAttribute];
 
@@ -301,11 +302,11 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 {
 	AIScaledImageCell				*imageCell;
 	AIImageTextCell					*imageTextCell;
-	AIVerticallyCenteredTextCell	*verticallyCenteredTextCell;
+	//AIVerticallyCenteredTextCell	*verticallyCenteredTextCell;
 	
 	imageCell = [[AIScaledImageCell alloc] init];
 	[imageCell setAlignment:NSCenterTextAlignment];
-	[imageCell setMaxSize:NSMakeSize(MINIMUM_ROW_HEIGHT, MINIMUM_ROW_HEIGHT)];
+	[imageCell setMaxSize:NSMakeSize(MINIMUM_IMAGE_HEIGHT, MINIMUM_IMAGE_HEIGHT)];
 	[[outlineView_summary tableColumnWithIdentifier:@"image"] setDataCell:imageCell];
 	[imageCell release];
 
@@ -315,10 +316,10 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 	[[outlineView_summary tableColumnWithIdentifier:@"event"] setDataCell:imageTextCell];
 	[imageTextCell release];
 	
-	verticallyCenteredTextCell = [[AIVerticallyCenteredTextCell alloc] init];
-	[verticallyCenteredTextCell setFont:[NSFont systemFontOfSize:10]];
-	[[outlineView_summary tableColumnWithIdentifier:@"action"] setDataCell:verticallyCenteredTextCell];
-	[verticallyCenteredTextCell release];
+	//verticallyCenteredTextCell = [[AIVerticallyCenteredTextCell alloc] init];
+//	[verticallyCenteredTextCell setFont:[NSFont systemFontOfSize:10]];
+//	[[outlineView_summary tableColumnWithIdentifier:@"action"] setDataCell:verticallyCenteredTextCell];
+//	[verticallyCenteredTextCell release];
 
 	[outlineView_summary setDrawsAlternatingRows:YES];
 	[outlineView_summary setIntercellSpacing:NSMakeSize(6.0,6.0)];

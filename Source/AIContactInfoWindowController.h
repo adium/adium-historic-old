@@ -16,48 +16,27 @@
  
 #import <Adium/AIWindowController.h>
 #import <Adium/AIAbstractListController.h>
+#import <AIContactInfoContentController.h>
 
 @class ESContactInfoListController, AIModularPaneCategoryView, AIContactInfoImageViewWithImagePicker, AIAutoScrollView,
 	   AIListOutlineView, AIListObject;
 
-@interface AIContactInfoWindowController : AIWindowController <AIListControllerDelegate> {	
-	IBOutlet		NSTabView						*tabView_category;
-	
-	IBOutlet		NSTabViewItem					*tabViewItem_info;
-	IBOutlet		NSTabViewItem					*tabViewItem_accounts;
-	NSTabViewItem									*tabViewItem_lastSelectedForListContacts;
+@interface AIContactInfoWindowController : AIWindowController {	
 
-	IBOutlet		AIContactInfoImageViewWithImagePicker	*imageView_userIcon;
-	IBOutlet		NSTextField								*textField_accountName;
-	IBOutlet		NSTextField								*textField_service;
+	IBOutlet		AIContactInfoContentController  *contentController;
+	IBOutlet		NSSegmentedControl				*inspectorToolbar;
+	IBOutlet		NSView							*inspectorContent;
 	
-	IBOutlet		AIModularPaneCategoryView		*view_Profile;
-	IBOutlet		AIModularPaneCategoryView		*view_Accounts;
-	IBOutlet		AIModularPaneCategoryView		*view_Alerts;
-	IBOutlet		AIModularPaneCategoryView		*view_Settings;
-
-	IBOutlet		NSDrawer						*drawer_metaContact;
-	
-	IBOutlet		AIAutoScrollView				*scrollView_contactList;
-    IBOutlet		AIListOutlineView				*contactListView;
-	IBOutlet		NSButton						*button_addContact;
-	IBOutlet		NSButton						*button_removeContact;
-	
-	AIListObject									*displayedObject;
-	NSMutableDictionary								*loadedPanes;
-
-	ESContactInfoListController						*contactListController;
+					NSView							*currentPane;
+					NSArray							*loadedContent;
+					
+					AIListObject					*displayedObject;
+					int								lastSegmentForContact;
 }
+
+- (IBAction)segmentSelected:(id)sender;
 
 + (id)showInfoWindowForListObject:(AIListObject *)listObject;
 + (void)closeInfoWindow;
 - (void)configureForListObject:(AIListObject *)inObject;
-
-- (IBAction)addContact:(id)sender;
-- (IBAction)removeContact:(id)sender;
-
-//Internal use
-- (float)drawerTrailingOffset;
-- (void)contactInfoListControllerSelectionDidChangeToListObject:(AIListObject *)listObject;
-
 @end
