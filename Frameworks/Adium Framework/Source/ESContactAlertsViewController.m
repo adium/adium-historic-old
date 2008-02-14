@@ -32,7 +32,8 @@
 #import <AIUtilities/AIAttributedStringAdditions.h>
 
 #define VERTICAL_ROW_PADDING	6
-#define MINIMUM_ROW_HEIGHT		30.0f
+#define MINIMUM_IMAGE_HEIGHT		20.0f
+#define MINIMUM_ROW_HEIGHT			32.0f
 
 #define	EVENT_COLUMN_INDEX		1
 
@@ -77,11 +78,11 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 		newFrame.origin.x = oldFrame.origin.x + oldFrame.size.width - newFrame.size.width;
 		[button_edit setFrame:newFrame];
 	}
-	
+		
 	[button_add setToolTip:AILocalizedString(@"Add an action for the selected event", nil)];
 	[button_delete setToolTip:AILocalizedString(@"Remove the selected action(s)", nil)];
 	[button_edit setToolTip:AILocalizedString(@"Configure the selected action", nil)];
-
+	
 	//Update enable state of our buttons
 	[self outlineViewSelectionDidChange:nil];
 		
@@ -302,7 +303,7 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 	
 	imageCell = [[AIScaledImageCell alloc] init];
 	[imageCell setAlignment:NSCenterTextAlignment];
-	[imageCell setMaxSize:NSMakeSize(MINIMUM_ROW_HEIGHT, MINIMUM_ROW_HEIGHT)];
+	[imageCell setMaxSize:NSMakeSize(MINIMUM_IMAGE_HEIGHT, MINIMUM_IMAGE_HEIGHT)];
 	[[outlineView_summary tableColumnWithIdentifier:@"image"] setDataCell:imageCell];
 	[imageCell release];
 

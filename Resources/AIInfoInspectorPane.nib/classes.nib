@@ -62,6 +62,8 @@
 				<string>NSView</string>
 				<key>profileView</key>
 				<string>NSTextView</string>
+				<key>serviceImage</key>
+				<string>NSImageView</string>
 				<key>serviceName</key>
 				<string>NSTextField</string>
 				<key>statusImage</key>

@@ -61,6 +61,7 @@ enum segments {
 
 @interface AIContactInfoWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
+-(void)segmentSelected:(id)sender animate:(BOOL)shouldAnimate;
 - (void)selectionChanged:(NSNotification *)notification;
 - (void)setupToolbarSegments;
 - (void)configureToolbarForListObject:(AIListObject *)inObject;
@@ -68,7 +69,6 @@ enum segments {
 
 //View Animation
 -(void)addInspectorView:(NSView *)aView animate:(BOOL)doAnimate;
--(void)animateRemovingRect:(NSRect)aRect inView:(NSView *)aView;
 -(void)animateViewIn:(NSView *)aView;
 -(void)animateViewOut:(NSView *)aView;
 @end
@@ -78,6 +78,11 @@ enum segments {
 static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 -(IBAction)segmentSelected:(id)sender
+{
+	[self segmentSelected:sender animate:YES];
+}
+
+-(void)segmentSelected:(id)sender animate:(BOOL)shouldAnimate
 {
 	//Action method for the Segmented Control, which is actually the toolbar.
 	int currentSegment = [sender selectedSegment];
@@ -90,22 +95,22 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	//There is an optional fifth segment, so we define a case for it.
 	switch(currentSegment) {
 		case CONTACT_INFO_SEGMENT:
-			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_INFO_SEGMENT] inspectorContentView] animate:YES];
+			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_INFO_SEGMENT] inspectorContentView] animate:shouldAnimate];
 			break;
 		case CONTACT_ADDRESSBOOK_SEGMENT:
-			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_ADDRESSBOOK_SEGMENT] inspectorContentView] animate:YES];
+			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_ADDRESSBOOK_SEGMENT] inspectorContentView] animate:shouldAnimate];
 			break;
 		case CONTACT_EVENTS_SEGMENT:
-			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_EVENTS_SEGMENT] inspectorContentView] animate:YES];
+			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_EVENTS_SEGMENT] inspectorContentView] animate:shouldAnimate];
 			break;
 		case CONTACT_ADVANCED_SEGMENT:
-			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_ADVANCED_SEGMENT] inspectorContentView] animate:YES];
+			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_ADVANCED_SEGMENT] inspectorContentView] animate:shouldAnimate];
 			break;
 		case CONTACT_PLUGINS_SEGMENT:
-			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_PLUGINS_SEGMENT] inspectorContentView] animate:YES];
+			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_PLUGINS_SEGMENT] inspectorContentView] animate:shouldAnimate];
 			break;
 		default:
-			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_INFO_SEGMENT] inspectorContentView] animate:YES];
+			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_INFO_SEGMENT] inspectorContentView] animate:shouldAnimate];
 			break;
 	}
 }
@@ -284,7 +289,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	}
 	
 	//Configure our toolbar's enabledness
-	[self configureToolbarForListObject:inObject];
+	//[self configureToolbarForListObject:inObject];
 		
 	//Reconfigure the currently selected tab view item
 	//[self tabView:tabView_category willSelectTabViewItem:[tabView_category selectedTabViewItem]];
@@ -298,11 +303,15 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 			//Store the tab view item selected out of accounts or info, if one is selected
 			int currentSegment = [inspectorToolbar selectedSegment];
-			lastSegmentForContact = ((currentSegment == CONTACT_INFO_SEGMENT) ?
+			lastSegmentForContact = ((currentSegment != CONTACT_INFO_SEGMENT) ?
 													   currentSegment :
-													   0);
+													   CONTACT_INFO_SEGMENT);
 
 			[inspectorToolbar setEnabled:NO forSegment:CONTACT_INFO_SEGMENT];
+			
+			//Load the Address Book Segment once we've disabled the info segment.
+			[inspectorToolbar setSelectedSegment:CONTACT_ADDRESSBOOK_SEGMENT];
+			[self segmentSelected:inspectorToolbar animate:YES];
 		}
 		
 	} else {
@@ -313,6 +322,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 			//Restore the tab view item last selected for a contact if we have one stored
 			if (lastSegmentForContact != -1) {
 				[inspectorToolbar setSelectedSegment:lastSegmentForContact];
+				[self segmentSelected:inspectorToolbar animate:YES];
 				lastSegmentForContact = 0;
 			}
 
