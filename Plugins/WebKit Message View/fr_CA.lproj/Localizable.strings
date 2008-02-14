@@ -4,6 +4,9 @@
 /* No comment provided by engineer. */
 "Centered" = "Centré";
 
+/* %@ will be a file name */
+"Download %@" = "Télécharger %@";
+
 /* Title of the messages preferences
    Message Display Options advanced preferences label */
 
