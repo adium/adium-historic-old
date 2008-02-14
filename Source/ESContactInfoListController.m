@@ -242,7 +242,8 @@
 {
 	NSPoint			viewPoint = [contactListView convertPoint:[[contactListView window] convertScreenToBase:screenPoint] fromView:[[contactListView window] contentView]];
 	
-	viewPoint.y += [(AIContactInfoWindowController *)delegate drawerTrailingOffset];
+	#warning This method no longer exists, because we no longer have a drawer in the Get Info panel. 
+	//viewPoint.y += [(AIContactInfoWindowController *)delegate drawerTrailingOffset];
 	
 	AIListObject	*hoveredObject = [contactListView itemAtRow:[contactListView rowAtPoint:viewPoint]];
 	

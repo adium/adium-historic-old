@@ -38,28 +38,82 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AITabViewAdditions.h>
 
-#define	CONTACT_INFO_NIB				@"ContactInfoWindow"			//Filename of the contact info nib
-#define KEY_INFO_WINDOW_FRAME			@"Contact Info Window Frame"	//
+#define	CONTACT_INFO_NIB				@"ContactInfoInspector"			//Filename of the contact info nib
+#define KEY_INFO_WINDOW_FRAME			@"Contact Info Inspector Frame"	//
 #define KEY_INFO_SELECTED_CATEGORY		@"Selected Info Category"		//
 
 #define	CONTACT_INFO_THEME				@"Contact Info List Theme"
 #define	CONTACT_INFO_LAYOUT				@"Contact Info List Layout"
 
+//Defines for the image files used by the toolbar segments
+#define INFO_SEGMENT_IMAGE (@"info_segment.png")
+#define ADDRESS_BOOK_SEGMENT_IMAGE (@"addressbook_segment.png")
+#define EVENTS_SEGMENT_IMAGE (@"events_segment.png")
+#define ADVANCED_SEGMENT_IMAGE (@"advanced_segment.png")
+
+enum segments {
+	CONTACT_INFO_SEGMENT = 0,
+	CONTACT_ADDRESSBOOK_SEGMENT = 1,
+	CONTACT_EVENTS_SEGMENT = 2,
+	CONTACT_ADVANCED_SEGMENT = 3,
+	CONTACT_PLUGINS_SEGMENT = 4
+};
+
 @interface AIContactInfoWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
+-(void)segmentSelected:(id)sender animate:(BOOL)shouldAnimate;
 - (void)selectionChanged:(NSNotification *)notification;
+- (void)setupToolbarSegments;
+- (void)configureToolbarForListObject:(AIListObject *)inObject;
+- (void)contactInfoListControllerSelectionDidChangeToListObject:(AIListObject *)listObject;
 
-- (void)localizeTabViewItemTitles;
-- (void)configureDrawer;
-- (void)configureVisiblityOfTabViewItemsForListObject:(AIListObject *)inObject;
-- (void)configurePane:(AIContactInfoPane *)inPane;
-- (void)setupMetaContactDrawer;
-
+//View Animation
+-(void)addInspectorView:(NSView *)aView animate:(BOOL)doAnimate;
+-(void)animateViewIn:(NSView *)aView;
+-(void)animateViewOut:(NSView *)aView;
 @end
 
 @implementation AIContactInfoWindowController
 
 static AIContactInfoWindowController *sharedContactInfoInstance = nil;
+
+-(IBAction)segmentSelected:(id)sender
+{
+	[self segmentSelected:sender animate:YES];
+}
+
+-(void)segmentSelected:(id)sender animate:(BOOL)shouldAnimate
+{
+	//Action method for the Segmented Control, which is actually the toolbar.
+	int currentSegment = [sender selectedSegment];
+	
+	//Take focus away from any textual controls to ensure that they register changes and save
+	if ([[[self window] firstResponder] isKindOfClass:[NSText class]]) {
+		[[self window] makeFirstResponder:nil];
+	}
+	
+	//There is an optional fifth segment, so we define a case for it.
+	switch(currentSegment) {
+		case CONTACT_INFO_SEGMENT:
+			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_INFO_SEGMENT] inspectorContentView] animate:shouldAnimate];
+			break;
+		case CONTACT_ADDRESSBOOK_SEGMENT:
+			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_ADDRESSBOOK_SEGMENT] inspectorContentView] animate:shouldAnimate];
+			break;
+		case CONTACT_EVENTS_SEGMENT:
+			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_EVENTS_SEGMENT] inspectorContentView] animate:shouldAnimate];
+			break;
+		case CONTACT_ADVANCED_SEGMENT:
+			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_ADVANCED_SEGMENT] inspectorContentView] animate:shouldAnimate];
+			break;
+		case CONTACT_PLUGINS_SEGMENT:
+			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_PLUGINS_SEGMENT] inspectorContentView] animate:shouldAnimate];
+			break;
+		default:
+			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_INFO_SEGMENT] inspectorContentView] animate:shouldAnimate];
+			break;
+	}
+}
 
 //Return the shared contact info window
 + (id)showInfoWindowForListObject:(AIListObject *)listObject
@@ -70,7 +124,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	}
 
 	//Configure and show window
-
 	if ([listObject isKindOfClass:[AIListContact class]]) {
 		AIListContact *parentContact = [(AIListContact *)listObject parentContact];
 		
@@ -100,19 +153,13 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 - (void)dealloc
 {
-	//If we removed the account and info tab view items, we're currently also retaining them
-	if ([tabView_category indexOfTabViewItem:tabViewItem_info] == NSNotFound) {
-		[tabViewItem_accounts release]; tabViewItem_accounts = nil;
-		[tabViewItem_info release]; tabViewItem_info = nil;
-	}
-
 	[displayedObject release]; displayedObject = nil;
-	[loadedPanes release]; loadedPanes = nil;
+	//[loadedContent release]; loadedContent = nil;
 	
 	[super dealloc];
 }
 
-//
+
 - (NSString *)adiumFrameAutosaveName
 {
 	return KEY_INFO_WINDOW_FRAME;
@@ -123,151 +170,97 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 {
 	[super windowDidLoad];
 
-	int				 selectedTab;
-	NSTabViewItem   *tabViewItem;
-
-	//
-	loadedPanes = [[NSMutableDictionary alloc] init];
-
+	int	selectedSegment;
+	
+	contentController = [[AIContactInfoContentController alloc] init];
+	
+	if(!loadedContent) {
+		//Load the content array from the content controller.
+		loadedContent = [contentController loadedPanes];
+	}
+	
 	//Localization
-	[self localizeTabViewItemTitles];
-	[button_removeContact setToolTip:AILocalizedString(@"Disassociate the selected contact from this meta contact. This does not remove the contact from your contact list.",nil)];
-	[button_removeContact setEnabled:NO];
-
+	[self setupToolbarSegments];
+	
 	//Select the previously selected category
-	selectedTab = [[[adium preferenceController] preferenceForKey:KEY_INFO_SELECTED_CATEGORY
+	selectedSegment = [[[adium preferenceController] preferenceForKey:KEY_INFO_SELECTED_CATEGORY
 															group:PREF_GROUP_WINDOW_POSITIONS] intValue];
-	if (selectedTab < 0 || selectedTab >= [tabView_category numberOfTabViewItems]) selectedTab = 0;
+	if (selectedSegment < 0 || selectedSegment >= [inspectorToolbar segmentCount]) selectedSegment = 0;
 
-	tabViewItem = [tabView_category tabViewItemAtIndex:selectedTab];
-
-	//NSTabView won't send the willSelectTabViewItem: properly when we call selectTabViewItem:
-	[self tabView:tabView_category willSelectTabViewItem:tabViewItem];
-	[tabView_category selectTabViewItem:tabViewItem];
-
-	[imageView_userIcon setAnimates:YES];
-	[imageView_userIcon setMaxSize:NSMakeSize(256, 256)];
-
+	//TODO: Change this back to loading the segment from preferences when all the segments work!
+	[inspectorToolbar setSelectedSegment:selectedSegment];
+	[self segmentSelected:inspectorToolbar];
+	
 	//Monitor the selected contact
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(selectionChanged:)
 									   name:Interface_ContactSelectionChanged
 									 object:nil];
-
-	contactListController = [[ESContactInfoListController alloc] initWithContactListView:contactListView
-																			inScrollView:scrollView_contactList
-																				delegate:self];
 	
-	[self setupMetaContactDrawer];
+
+	//contactListController = [[ESContactInfoListController alloc] initWithContactListView:contactListView
+//																			inScrollView:scrollView_contactList
+//																				delegate:self];
 }
 
-- (void)localizeTabViewItemTitles
-{
-	NSEnumerator	*enumerator = [[tabView_category tabViewItems] objectEnumerator];
-	NSTabViewItem	*tabViewItem;
-	while ((tabViewItem = [enumerator nextObject])) {
-		NSString	*label = nil;
-		int			identifier = [[tabViewItem identifier] intValue];
+/*
+    @method     setupToolbarSegments
+    @abstract   setupToolbarSegments loads the localized tooltips and images for each toolbar segment
+    @discussion Since we don't want to enumerate over all of the segments twice, we've combined the
+	localization and image loading steps into this method.
+*/
 
-		switch (identifier) {
-			case AIInfo_Profile:
-				label = AILocalizedString(@"Info","short form of tab view item title for Contact Info window's first tab");
+- (void)setupToolbarSegments
+{	
+	int i;
+	for(i = 0; i < [inspectorToolbar segmentCount]; i++) {
+		NSString	*segmentLabel = nil;
+		NSImage		*segmentImage;
+
+		switch (i) {
+			case CONTACT_INFO_SEGMENT:
+				segmentLabel = AILocalizedString(@"Status and Profile","This segment displays the status and profile information for the selected contact.");
+				segmentImage = [NSImage imageNamed:INFO_SEGMENT_IMAGE];
 				break;
-			case AIInfo_Accounts:
-				label = AILocalizedString(@"Accounts",nil);
+			case CONTACT_ADDRESSBOOK_SEGMENT:
+				segmentLabel = AILocalizedString(@"Contact Information", "This segment displays contact and alias information for the selected contact.");
+				segmentImage = [NSImage imageNamed:ADDRESS_BOOK_SEGMENT_IMAGE];
 				break;
-			case AIInfo_Alerts:
-				label = AILocalizedString(@"Events", "Name of preferences and tab for specifying what Adium should do when events occur - for example, display a Growl alert when John signs on.");
+			case CONTACT_EVENTS_SEGMENT:
+				segmentLabel = AILocalizedString(@"Events", "This segment displays controls for a user to set up events for this contact.");
+				segmentImage = [NSImage imageNamed:EVENTS_SEGMENT_IMAGE];
 				break;
-			case AIInfo_Settings:
-				label = AILocalizedString(@"Settings","tab view item title for Contact Settings (Settings)");
+			case CONTACT_ADVANCED_SEGMENT:
+				segmentLabel = AILocalizedString(@"Advanced Settings","This segment displays the advanced settings for a contact, including encryption details and account information.");
+				segmentImage = [NSImage imageNamed:ADVANCED_SEGMENT_IMAGE];
 				break;
 		}
 
-		[tabViewItem setLabel:label];
+		NSLog(@"Loading label: %@ and image: %@ for segment: %d", segmentLabel, segmentImage, i);
+
+		[(NSSegmentedCell *)[inspectorToolbar cell] setToolTip:segmentLabel forSegment:i];
+		[inspectorToolbar setImage:segmentImage forSegment:i];
 	}
 }
 
 //called as the window closes
 - (void)windowWillClose:(id)sender
 {
-	NSEnumerator 		*enumerator;
-	AIContactInfoPane	*pane;
-
 	[super windowWillClose:sender];
 
 	//Take focus away from any controls to ensure that they register changes and save
-	[[self window] makeFirstResponder:tabView_category];
-
-	//Close all open panes
-	enumerator = [loadedPanes objectEnumerator];
-	while ((pane = [enumerator nextObject])) {
-		[pane closeView];
-	}
+	//Not really sure if we'll need to do this for the new inspector, so i'm just commenting it out - EBH
+	//[[self window] makeFirstResponder:tabView_category];
+	[[self window] makeFirstResponder:nil];
 
 	//Save the selected category
-	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[tabView_category indexOfSelectedTabViewItem]]
+	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[inspectorToolbar selectedSegment]]
 										 forKey:KEY_INFO_SELECTED_CATEGORY
 										  group:PREF_GROUP_WINDOW_POSITIONS];
 
 	//Close down
 	[[adium notificationCenter] removeObserver:self];
 	[self autorelease]; sharedContactInfoInstance = nil;
-}
-
-- (NSImage *)tabView:(NSTabView *)tabView imageForTabViewItem:(NSTabViewItem *)tabViewItem
-{
-	if (tabView == tabView_category) {
-		return [NSImage imageNamed:[NSString stringWithFormat:@"info%@",[tabViewItem identifier]] forClass:[self class]];
-	}
-
-	return nil;
-}
-
-//
-- (void)tabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
-{
-	if (tabView == tabView_category) {
-		AIContactInfoPane *pane = nil;
-		
-		//Take focus away from any textual controls to ensure that they register changes and save
-		if ([[[self window] firstResponder] isKindOfClass:[NSText class]]) {
-			[[self window] makeFirstResponder:nil];
-		}
-		
-		int identifier = [[tabViewItem identifier] intValue];
-		if (!(pane = [loadedPanes objectForKey:[NSNumber numberWithInt:identifier]])) {
-			switch (identifier) {
-				case AIInfo_Profile:
-					pane = [AIContactProfilePane contactInfoPane];
-					[view_Profile setPanes:[NSArray arrayWithObject:pane]];
-
-					break;
-				case AIInfo_Accounts:
-					pane = [AIContactAccountsPane contactInfoPane];
-					[view_Accounts setPanes:[NSArray arrayWithObject:pane]];
-					break;
-				case AIInfo_Alerts:
-					pane = [ESContactAlertsPane contactInfoPane];
-					[view_Alerts setPanes:[NSArray arrayWithObject:pane]];
-					break;
-				case AIInfo_Settings:
-					pane = [AIContactSettingsPane contactInfoPane];
-					[view_Settings setPanes:[NSArray arrayWithObject:pane]];
-					break;
-			}
-			
-			if (pane) {
-				[loadedPanes setObject:pane
-								forKey:[NSNumber numberWithInt:identifier]];
-			} else {
-				NSLog(@"%@: Could not load pane for identifier %i",self,identifier);
-			}
-		}
-
-		//Configure the loaded panes
-		[self configurePane:pane];
-	}
 }
 
 //When the contact list selection changes, then configure the window for the new contact
@@ -277,277 +270,153 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	if (object) [self configureForListObject:[[adium interfaceController] selectedListObject]];
 }
 
-- (void)updateUserIcon
-{
-	NSImage		*userIcon;
-	NSSize		userIconSize, imageView_userIconSize;
-
-	//User Icon
-	if (!(userIcon = [displayedObject userIcon])) {
-		userIcon = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
-	}
-	
-	/* NSScaleProportionally will lock an animated GIF into a single frame.  We therefore use NSScaleNone if
-	 * we are already at the right size or smaller than the right size; otherwise we scale proportionally to
-	 * fit the frame.
-	 */
-	userIconSize = [userIcon size];
-	imageView_userIconSize = [imageView_userIcon frame].size;
-	
-	[imageView_userIcon setImageScaling:(((userIconSize.width <= imageView_userIconSize.width) && (userIconSize.height <= imageView_userIconSize.height)) ?
-										 NSScaleNone :
-										 NSScaleProportionally)];
-	[imageView_userIcon setImage:userIcon];
-	[imageView_userIcon setTitle:(displayedObject ?
-								  [NSString stringWithFormat:AILocalizedString(@"%@'s Image",nil),[displayedObject displayName]] :
-								  AILocalizedString(@"Image Picker",nil))];
-
-	//Show the reset image button if a preference is set on this object, overriding its serverside icon
-	[imageView_userIcon setShowResetImageButton:([displayedObject preferenceForKey:KEY_USER_ICON
-																			 group:PREF_GROUP_USERICONS
-															 ignoreInheritedValues:YES] != nil)];
-}
-
 //Change the list object
 - (void)configureForListObject:(AIListObject *)inObject
 {
-	if (inObject == nil || displayedObject != inObject) {
-		BOOL		useDisplayName = NO;
-
-		//Update our displayed object
-		[displayedObject release];
-		displayedObject = [inObject retain];
-
-		//Update our window title
-		if (inObject) {
-			[[self window] setTitle:[NSString stringWithFormat:AILocalizedString(@"%@'s Info",nil),[inObject displayName]]];
-		} else {
-			[[self window] setTitle:AILocalizedString(@"Contact Info",nil)];
-		}
-
-		//Service
-		if ([inObject isKindOfClass:[AIListContact class]]) {
-			NSString	*displayServiceID;
-			if ([inObject isKindOfClass:[AIMetaContact class]]) {
-				if ([[(AIMetaContact *)inObject listContacts] count] > 1) {
-					displayServiceID = AILocalizedString(@"Meta", "Short string used to identify the 'service' of a multiple-service meta contact");
-					useDisplayName = YES;
-				} else {
-					displayServiceID = [[[(AIMetaContact *)inObject preferredContact] service] shortDescription];
-				}
-
-			} else {
-				displayServiceID = [[inObject service] shortDescription];
-			}
-
-			[textField_service setStringValue:(displayServiceID ? displayServiceID : @"")];
-
-		} else if ([inObject isKindOfClass:[AIListGroup class]]) {
-			[textField_service setLocalizedString:AILocalizedString(@"Group",nil)];
-		} else {
-			[textField_service setStringValue:@""];
-		}
-
-		//Account name
-		if (inObject) {
-			NSString	*formattedUID;
-
-			if (!useDisplayName && (formattedUID = [inObject formattedUID])) {
-				[textField_accountName setStringValue:formattedUID];
-			} else {
-				NSString	*displayName;
-
-				if ((displayName = [inObject displayName])) {
-					[textField_accountName setStringValue:displayName];
-				} else {
-					[textField_accountName setStringValue:[inObject UID]];
-				}
-			}
-
-		} else {
-			[textField_accountName setStringValue:@""];
-		}
-
-		[self updateUserIcon];
-
-		//Configure our subpanes
-		[self configureVisiblityOfTabViewItemsForListObject:inObject];
-
-		//Confiugre the drawer
-		[self configureDrawer];
+	//Set the title of the window.
+	if (inObject) {
+		[[self window] setTitle:[NSString stringWithFormat:AILocalizedString(@"%@'s Info",nil), [inObject displayName]]];
+	} else {
+		[[self window] setTitle:AILocalizedString(@"Contact Info",nil)];
+	}
+	
+	//Configure each pane for this contact.
+	id<AIContentInspectorPane> pane = nil;
+	NSEnumerator *paneEnumerator = [loadedContent objectEnumerator];
+	
+	while((pane = [paneEnumerator nextObject])) {
+		[pane updateForListObject:inObject];
+	}
+	
+	//Configure our toolbar's enabledness
+	//[self configureToolbarForListObject:inObject];
 		
-		//Reconfigure the currently selected tab view item
-		[self tabView:tabView_category willSelectTabViewItem:[tabView_category selectedTabViewItem]];
-
-	}
+	//Reconfigure the currently selected tab view item
+	//[self tabView:tabView_category willSelectTabViewItem:[tabView_category selectedTabViewItem]];
 }
 
-//Configure our views
-- (void)configurePane:(AIContactInfoPane *)pane
-{
-	if (displayedObject) {
-		[pane configureForListObject:displayedObject];
-	}
-}
-
-- (void)configureVisiblityOfTabViewItemsForListObject:(AIListObject *)inObject
+- (void)configureToolbarForListObject:(AIListObject *)inObject
 {
 	if ([inObject isKindOfClass:[AIListGroup class]]) {
 		//Remove the info and account items for groups
-		if ([tabView_category indexOfTabViewItem:tabViewItem_info] != NSNotFound) {
-			[tabViewItem_accounts retain];
-			[tabViewItem_info retain];
-			
-			//Store the tab view item selected out of accounts or info, if one is selected
-			NSTabViewItem *currentlySelected = [tabView_category selectedTabViewItem];
-			tabViewItem_lastSelectedForListContacts = ((currentlySelected == tabViewItem_accounts || currentlySelected == tabViewItem_info) ?
-													   currentlySelected :
-													   nil);
+		if ([inspectorToolbar isEnabledForSegment:CONTACT_INFO_SEGMENT]) {
 
-			[tabView_category removeTabViewItem:tabViewItem_accounts];
-			[tabView_category removeTabViewItem:tabViewItem_info];
+			//Store the tab view item selected out of accounts or info, if one is selected
+			int currentSegment = [inspectorToolbar selectedSegment];
+			lastSegmentForContact = ((currentSegment != CONTACT_INFO_SEGMENT) ?
+													   currentSegment :
+													   CONTACT_INFO_SEGMENT);
+
+			[inspectorToolbar setEnabled:NO forSegment:CONTACT_INFO_SEGMENT];
+			
+			//Load the Address Book Segment once we've disabled the info segment.
+			[inspectorToolbar setSelectedSegment:CONTACT_ADDRESSBOOK_SEGMENT];
+			[self segmentSelected:inspectorToolbar animate:YES];
 		}
 		
 	} else {
 		//Add the info and account items back in if they are missing
-		if ([tabView_category indexOfTabViewItem:tabViewItem_info] == NSNotFound) {
-			[tabView_category insertTabViewItem:tabViewItem_accounts atIndex:0];
-			[tabView_category insertTabViewItem:tabViewItem_info atIndex:0];
+		if (![inspectorToolbar isEnabledForSegment:CONTACT_INFO_SEGMENT]) {
+			[inspectorToolbar setEnabled:YES forSegment:CONTACT_INFO_SEGMENT];
 			
 			//Restore the tab view item last selected for a contact if we have one stored
-			if (tabViewItem_lastSelectedForListContacts) {
-				[tabView_category selectTabViewItem:tabViewItem_lastSelectedForListContacts];
-				tabViewItem_lastSelectedForListContacts = nil;
+			if (lastSegmentForContact != -1) {
+				[inspectorToolbar setSelectedSegment:lastSegmentForContact];
+				[self segmentSelected:inspectorToolbar animate:YES];
+				lastSegmentForContact = 0;
 			}
-			
-			[tabViewItem_accounts release];
-			[tabViewItem_info release];
+
 		}			
 	}
 	
 #warning need to hide panes for bookmarks
 }
 
-#pragma mark AIImageViewWithImagePicker Delegate
-// AIImageViewWithImagePicker Delegate ---------------------------------------------------------------------
-- (void)imageViewWithImagePicker:(AIImageViewWithImagePicker *)sender didChangeToImageData:(NSData *)imageData
-{
-	if (displayedObject) {
-		[displayedObject setUserIconData:imageData];
+#pragma mark View Management and Animation
+-(void)addInspectorView:(NSView *)aView animate:(BOOL)doAnimate;
+{	
+	if(currentPane == aView)
+		return;
+	
+	else if(currentPane) {
+		[self animateViewOut:currentPane];
+		[currentPane removeFromSuperview];
 	}
 	
-	[self updateUserIcon];
-}
-
-- (void)deleteInImageViewWithImagePicker:(AIImageViewWithImagePicker *)sender
-{
-	if (displayedObject) {
-		//Remove the preference
-		[displayedObject setUserIconData:nil];
-
-		[self updateUserIcon];
-	}
-}
-
-/*
- If the userIcon was bigger than our image view's frame, it will have been clipped before being passed
- to the AIImageViewWithImagePicker.  This delegate method lets us pass the original, unmodified userIcon.
- */
-- (NSImage *)imageForImageViewWithImagePicker:(AIImageViewWithImagePicker *)picker
-{
-	return ([displayedObject userIcon]);
-}
-
-- (NSImage *)emptyPictureImageForImageViewWithImagePicker:(AIImageViewWithImagePicker *)picker
-{
-	return [AIServiceIcons serviceIconForObject:displayedObject type:AIServiceIconLarge direction:AIIconNormal];
-}
-
-- (NSString *)fileNameForImageInImagePicker:(AIImageViewWithImagePicker *)picker
-{
-	NSString *fileName = [[displayedObject displayName] safeFilenameString];
-	if ([fileName hasPrefix:@"."]) {
-		fileName = [fileName substringFromIndex:1];
-	}
-	return fileName;
-}
-
-#pragma mark Contact List (metaContact)
-- (void)setupMetaContactDrawer
-{
-	NSDictionary	*themeDict = [NSDictionary dictionaryNamed:CONTACT_INFO_THEME forClass:[self class]];
-	NSDictionary	*layoutDict = [NSDictionary dictionaryNamed:CONTACT_INFO_LAYOUT forClass:[self class]];
-
-	[contactListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
-
-	[contactListController setHideRoot:YES];
-}
-
-- (void)configureDrawer
-{
-	AIListObject	*listObject = ([displayedObject isKindOfClass:[AIListContact class]] ?
-								   [(AIListContact *)displayedObject parentContact] :
-								   displayedObject);
+	NSWindow *inspectorWindow = [self window];
 	
-	if ([listObject isKindOfClass:[AIMetaContact class]] &&
-		([[(AIMetaContact *)listObject listContacts] count] > 1)) {
-		[contactListController setContactListRoot:(AIMetaContact *)listObject];
-		[drawer_metaContact open];
+	NSRect viewBounds = [aView bounds];
+	NSRect contentBounds = [inspectorContent bounds];
+	NSRect inspectorFrame = [inspectorWindow frame];
 
-		NSRect	outlineFrame = [contactListView frame];
-		int		totalHeight = [contactListView totalHeight];
+	viewBounds.size.height = ((inspectorFrame.size.height - contentBounds.size.height) + viewBounds.size.height);
+	viewBounds.origin.x = inspectorFrame.origin.x;
+	viewBounds.origin.y = inspectorFrame.origin.y + (inspectorFrame.size.height - viewBounds.size.height);
+	
+	[inspectorWindow setFrame:viewBounds display:YES animate:doAnimate];
 
-		if (outlineFrame.size.height != totalHeight) {
-			outlineFrame.size.height = totalHeight;
-			[contactListView setFrame:outlineFrame];
-			[contactListView setNeedsDisplay:YES];
-		}
-
-	} else {
-		[drawer_metaContact close];
-		[contactListController setContactListRoot:nil];
-	}
+	[inspectorContent setFrame:[aView bounds]];
+	[inspectorContent addSubview:aView];
+	currentPane = aView;
+	[self animateViewIn:currentPane];
 }
-- (IBAction)addContact:(id)sender
+
+-(void)animateViewIn:(NSView *)aView;
 {
-
+	NSMutableDictionary *animationDict = [NSMutableDictionary dictionaryWithCapacity:4];
+	
+	//Set View for animation
+	[animationDict setObject:aView forKey:NSViewAnimationTargetKey];
+	
+	//Set View to resize to passed frame size during animation.
+	NSRect zeroView = [aView frame];
+	[animationDict setObject:[NSValue valueWithRect:zeroView] forKey:NSViewAnimationStartFrameKey];
+	
+	//Set View to fade in.
+	[animationDict setObject:NSViewAnimationFadeInEffect forKey:NSViewAnimationEffectKey];
+	
+	//Create the animation
+	NSViewAnimation *viewAnim = [[NSViewAnimation alloc] initWithViewAnimations:[NSArray arrayWithObjects:animationDict, nil]];
+	
+	//Setup the animation
+	[viewAnim setDuration:0.1];
+	[viewAnim setAnimationCurve:NSAnimationEaseInOut];
+	[viewAnim setAnimationBlockingMode:NSAnimationBlocking];
+	
+	//Start it
+	[viewAnim startAnimation];
+	
+	[viewAnim release];
 }
 
-- (IBAction)removeContact:(id)sender
+-(void)animateViewOut:(NSView *)aView;
 {
-	NSEnumerator	*enumerator;
-	AIListObject	*aListObject;
-	AIMetaContact	*contactListRoot = (AIMetaContact *)[contactListController contactListRoot];
-
-	enumerator = [[contactListView arrayOfSelectedItems] objectEnumerator];
-	while ((aListObject = [enumerator nextObject])) {
-		[[adium contactController] removeAllListObjectsMatching:aListObject
-												fromMetaContact:contactListRoot];
-	}
-
-	//The contents of the metaContact have now changed; reload
-	[contactListView reloadData];
-
-	[contactListController outlineViewSelectionDidChange:nil];
+	NSMutableDictionary *animationDict = [NSMutableDictionary dictionaryWithCapacity:3];
+	
+	//Set View for animation
+	[animationDict setObject:aView forKey:NSViewAnimationTargetKey];
+	
+	//Set View to resize to 0 during animation.
+	NSRect zeroView = [aView frame];
+	[animationDict setObject:[NSValue valueWithRect:zeroView] forKey:NSViewAnimationEndFrameKey];
+	
+	//Set View to fade out.
+	[animationDict setObject:NSViewAnimationFadeOutEffect forKey:NSViewAnimationEffectKey];
+	
+	//Create the animation
+	NSViewAnimation *viewAnim = [[NSViewAnimation alloc] initWithViewAnimations:[NSArray arrayWithObjects:animationDict, nil]];
+	
+	//Setup the animation
+	[viewAnim setDuration:0.1];
+	[viewAnim setAnimationCurve:NSAnimationEaseInOut];
+	[viewAnim setAnimationBlockingMode:NSAnimationBlocking];
+	
+	//Start it
+	[viewAnim startAnimation];
+	
+	[viewAnim release];
 }
 
-- (float)drawerTrailingOffset
-{
-	return [drawer_metaContact trailingOffset];
-}
 
-- (void)performDefaultActionOnSelectedObject:(AIListObject *)listObject sender:(NSOutlineView *)sender
-{
-
-}
-
-- (void)contactInfoListControllerSelectionDidChangeToListObject:(AIListObject *)listObject
-{
-	AILog(@"Configuring Info List for %@",listObject);
-	[self configureForListObject:listObject];
-
-	//Only enable the remove contact button if a contact within the metacontact is selected
-	[button_removeContact setEnabled:(listObject && (listObject != (AIListObject *)[contactListController contactListRoot]))];
-}
 
 @end
