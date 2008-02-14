@@ -12,7 +12,7 @@
 @interface AIInfoInspectorPane (PRIVATE)
 - (void)updateUserIcon:(AIListObject *)inObject;
 -(void)updateAccountName:(AIListObject *)inObject;
--(void)updateServiceName:(AIListObject *)inObject;
+-(void)updateServiceIcon:(AIListObject *)inObject;
 -(void)updateStatusIcon:(AIListObject *)inObject;
 -(void)updateStatusView:(AIListObject *)inObject;
 -(void)updateProfileView:(AIListObject *)inObject;
@@ -66,7 +66,7 @@
 	
 	[self updateUserIcon:inObject];
 	[self updateAccountName:inObject];
-	[self updateServiceName:inObject];
+	[self updateServiceIcon:inObject];
 	[self updateStatusIcon:inObject];
 	[self updateStatusView:inObject];
 	[self updateProfileView:inObject];
@@ -105,55 +105,44 @@
 
 -(void)updateAccountName:(AIListObject *)inObject
 {
-	if (inObject) {
-		NSString	*formattedUID;
+	if(!inObject) {
+		[accountName setStringValue:@""];
+		return;
+	}
+	
+	NSString *displayName;
+			
+	if ((displayName = [inObject displayName])) {
+		[accountName setStringValue:displayName];
+	} else {
+		NSString *formattedUID;
 		
 		if ((formattedUID = [inObject formattedUID])) {
-				[accountName setStringValue:formattedUID];
-		} 
-		
-		else {
-			NSString	*displayName;
-			
-			if ((displayName = [inObject displayName])) {
-				[accountName setStringValue:displayName];
-			} else {
-				[accountName setStringValue:[inObject UID]];
-			}
-		}
-
-	} else {
-			[accountName setStringValue:@""];
-	}	
-}
-
--(void)updateServiceName:(AIListObject *)inObject
-{
-	if ([inObject isKindOfClass:[AIListContact class]]) {
-		NSString	*displayServiceID;
-		if ([inObject isKindOfClass:[AIMetaContact class]]) {
-			if ([[(AIMetaContact *)inObject listContacts] count] > 1) {
-				displayServiceID = AILocalizedString(@"Meta", "Short string used to identify the 'service' of a multiple-service meta contact");
-			} else {
-				displayServiceID = [[[(AIMetaContact *)inObject preferredContact] service] shortDescription];
-			}
-
+			[accountName setStringValue:formattedUID];
 		} else {
-			displayServiceID = [[inObject service] shortDescription];
+			[accountName setStringValue:[inObject UID]];
 		}
-
-		[serviceName setStringValue:(displayServiceID ? displayServiceID : @"")];
-
-	} else if ([inObject isKindOfClass:[AIListGroup class]]) {
-		[serviceName setLocalizedString:AILocalizedString(@"Group",nil)];
-	} else {
-		[serviceName setStringValue:@""];
 	}
 }
 
 -(void)updateStatusIcon:(AIListObject *)inObject
 {
-	[statusImage setImage:[AIStatusIcons statusIconForListObject:inObject type:AIStatusIconList direction:AIIconNormal]];
+	if([inObject isKindOfClass:[AIListGroup class]]) {
+		[statusImage setHidden:YES];
+	} else {
+		[statusImage setHidden:NO];
+		[statusImage setImage:[AIStatusIcons statusIconForListObject:inObject type:AIStatusIconList direction:AIIconNormal]];
+	}
+}
+
+-(void)updateServiceIcon:(AIListObject *)inObject
+{
+	if([inObject isKindOfClass:[AIListGroup class]]) {
+		[serviceImage setHidden:YES];
+	} else {
+		[serviceImage setHidden:NO];
+		[serviceImage setImage:[AIServiceIcons serviceIconForObject:inObject type:AIServiceIconSmall direction:AIIconNormal]];
+	}
 }
 
 -(void)updateStatusView:(AIListObject *)inObject

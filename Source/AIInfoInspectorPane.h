@@ -28,8 +28,9 @@
 
 	IBOutlet AIContactInfoImageViewWithImagePicker	*userIcon;
 	IBOutlet NSImageView							*statusImage;
+	IBOutlet NSImageView							*serviceImage;
+	
 	IBOutlet NSTextField							*accountName;
-	IBOutlet NSTextField							*serviceName;
 	
 	IBOutlet NSTextView								*statusView;
 	IBOutlet NSTextView								*profileView;
