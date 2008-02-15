@@ -67,8 +67,11 @@ pushd $PIDGIN_SOURCE
 #  which may fix crashes in __xmlRaiseError() --> _structuredErrorFunc().
 #
 #  libpurple_xmlnode_parser_error_handler does the same for other xml parsing.
+#
+# libpurple_disable_last_seen_tracking.diff disables the last-seen tracking, avoiding unnecessary blist.xml writes, since we don't ever use the information (we keep track of it ourselves).
 ###
 for patch in "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
+             "$PATCHDIR/libpurple_disable_last_seen_tracking.diff" \
              "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" \
              "$PATCHDIR/libpurple_jabber_use_builtin_digestmd5.diff" \
              "$PATCHDIR/libpurple_jabber_fallback_on_old_auth.diff" \
@@ -172,6 +175,7 @@ for patch in "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
              "$PATCHDIR/libpurple_jabber_use_builtin_digestmd5.diff" \
              "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" \
              "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
+             "$PATCHDIR/libpurple_disable_last_seen_tracking.diff" \
              "$PATCHDIR/libpurple_jabber_cert_against_jid_hostname.diff" \
              "$PATCHDIR/libpurple_buddyicon_cache.diff" \
              "$PATCHDIR/libpurple-account-request.fix.diff" \
