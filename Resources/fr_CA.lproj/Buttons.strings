@@ -19,6 +19,9 @@
 /* Button in the Xtras Manager to go to adiumxtras.com to get more adiumxtras */
 "Get More Xtras" = "Plus d'Xtras";
 
+/* No comment provided by engineer. */
+"Invite" = "Inviter";
+
 /* Button title to open a message window the specific contact from the 'New Chat' window */
 "Message" = "Message";
 
