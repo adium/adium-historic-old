@@ -1743,9 +1743,14 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 		reconnectDelayType = AIReconnectImmediately;
 
 	} else if ([self lastDisconnectionReason] == PURPLE_CONNECTION_ERROR_INVALID_USERNAME) {
+		[self setLastDisconnectionError:AILocalizedString(@"The name you entered is not registered. Check to ensure you typed it correctly.", nil)];
 		reconnectDelayType = AIReconnectNever;
-		//Enable this after Adium 1.2, which is in string freeze as it is added.
-		/* *disconnectionError = AILocalizedString(@"The name you entered is not registered. Check to ensure you typed it correctly.", nil); */
+
+	} else if (disconnectionError && [*disconnectionError isEqualToString:[NSString stringWithUT8String:_("SSL Handshake Failed")]]) {
+		/* This particular message comes with PURPLE_CONNECTION_ERROR_ENCRYPTION_ERROR, which is a 'fatal' error according to libpurple. Other problems
+		 * with that message may be fatal, but this one isn't.
+		 */
+		reconnectDelayType = AIReconnectNormally;
 
 	} else if (purple_connection_error_is_fatal([self lastDisconnectionReason])) {
 		reconnectDelayType = AIReconnectNever;
