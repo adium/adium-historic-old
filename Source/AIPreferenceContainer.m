@@ -227,7 +227,14 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 	[prefsWithDefaults autorelease];
 	prefsWithDefaults = nil;
 
-	[[self prefs] setValue:value forKey:key];
+	if (object) {
+		@synchronized (*myGlobalPrefs) {
+			[[self prefs] setValue:value forKey:key];
+		}
+	} else {
+		[[self prefs] setValue:value forKey:key];		
+	}
+
 	[self didChangeValueForKey:key];
 
 	//Now tell the preference controller
@@ -308,7 +315,11 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 - (void)threadedSavePrefs:(NSDictionary *)info
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-	NSDictionary *dictToSave = [[info objectForKey:@"PrefsToSave"] copy];
+	NSDictionary *sourcePrefsToSave = [info objectForKey:@"PrefsToSave"];
+	NSDictionary *dictToSave;
+	@synchronized (sourcePrefsToSave) {
+		dictToSave = [[NSDictionary alloc] initWithDictionary:sourcePrefsToSave copyItems:YES];
+	}
 	[dictToSave writeToPath:[info objectForKey:@"DestinationDirectory"]
 				   withName:[info objectForKey:@"PrefsName"]];
 	[dictToSave release];
@@ -346,9 +357,13 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 	if (object) {
 		//For an object's pref changes, batch all changes in a SAVE_OBJECT_PREFS_DELAY second period. We'll force an immediate save if Adium quits.
 		NSDictionary *myPrefs = [self prefs];
-		if (![myPrefs count]) myPrefs = nil;
-		[*myGlobalPrefs setValue:myPrefs
-						  forKey:[[object internalObjectID] safeFilenameString]];
+		if (![myPrefs count]) {
+			@synchronized (*myGlobalPrefs) {
+				myPrefs = nil;
+				[*myGlobalPrefs setValue:myPrefs
+								  forKey:[[object internalObjectID] safeFilenameString]];
+			}
+		}
 
 		if (!*myTimerForSavingGlobalPrefs) {
 			*myTimerForSavingGlobalPrefs = [[NSTimer scheduledTimerWithTimeInterval:SAVE_OBJECT_PREFS_DELAY
