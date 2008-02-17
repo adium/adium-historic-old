@@ -1,4 +1,4 @@
-﻿/* No comment provided by engineer. */
+/* No comment provided by engineer. */
 " (%i of %i)" = " (%1$i sur %2$i)";
 
 /* No comment provided by engineer. */
@@ -80,7 +80,7 @@
 "%@ had been successfully added to the Address Book.\nWould you like to edit the card now?" = "%@ a été ajouté au Carnet d'adresses avec succès.\nVoulez-vous modifier la fiche maintenant?";
 
 /* No comment provided by engineer. */
-"%@ has sent you (%@) an unknown encryption fingerprint.\n\nFingerprint for you: %@\n\nPurported fingerprint for %@: %@\n\nAccept this fingerprint as verified?" = "%1$@ vous a envoyé (%2$@) une empreinte de cryptage inconnue.\n\nL'empreinte pour vous : %3$@\n\nEmpreinte prétendue pour %4$@ : %5$@\n\nAccepter cette empreinte comme vérifiée ?";
+"%@ has sent you (%@) an unknown encryption fingerprint.\n\nFingerprint for you: %@\n\nPurported fingerprint for %@: %@\n\nAccept this fingerprint as verified?" = "%1$@ vous a envoyé (%2$@) une empreinte de cryptage inconnue.\n\n L'empreinte pour vous : %3$@\n\nEmpreinte prétendue pour %4$@ : %5$@\n\nAccepter cette empreinte comme vérifiée ?";
 
 /* AccountName on ChatRoomName */
 "%@ in %@" = "%1$@ dans %2$@";
@@ -274,6 +274,9 @@
 /* Checkbox under 'on screen edges' in the advanced contact list preferences */
 "...only while Adium is in the background" = "…seulement quand Adium est en arrière-plan";
 
+/* Command which will clear the message area of a chat. Please include the '/' at the front of your translation. */
+"/clear" = "/effacer";
+
 /* No comment provided by engineer. */
 "1 Contact" = "1 contact";
 
@@ -437,7 +440,7 @@
 "Adium Icon" = "Icône d'Adium";
 
 /* No comment provided by engineer. */
-"Adium includes assistants to import your accounts, settings, and transcripts from other clients. Choose a client below to open its assistant, or press Continue to skip importing." = "Adium inclut des assistants pour importer vos comptes, réglages, et transcriptions d'autres clients. Choisissez un client ci-dessous pour ouvrir son assistant, ou appuyez sur Poursuivre pour sauter l'importation.";
+"Adium includes assistants to import your accounts, settings, and transcripts from other clients. Choose a client below to open its assistant, or press Continue to skip importing." = "Adium inclut des assistants pour importer vos comptes, réglages, et transcriptions d'autres clients. Choisissez un client ci-dessous pour ouvrir son assistant, ou appuyez sur Poursuivre pour sauté l'importation.";
 
 /* No comment provided by engineer. */
 "Adium is not your default Instant Messaging client. The default client is loaded when you click messaging URLs in web pages. Would you like Adium to become the default?" = "Adium n'est pas votre logiciel de discussion par défaut. Le logiciel par défaut est lancé vous cliquez sur une URL dans une page Web. Voulez-vous utiliser Adium par défaut ?";
@@ -458,10 +461,13 @@
 "Adium uses the Growl notification system to provide a configurable interface to display status changes, incoming messages and more.\n\nThis release of Adium includes an updated version of Growl. It is strongly recommended that you allow Adium to automatically update Growl; no download is required." = "Adium utilise les notifications Growl pour paramétrer à votre guise les changements de statuts, messages entrants et bien plus encore.\n\nCette version inclut une mise à jour de Growl. Il est fortement recommandé de laisser Adium l'installer automatiquement; aucun téléchargement requis.";
 
 /* No comment provided by engineer. */
-"Adium was unable to write the log file for this conversation. Please ensure you have appropriate file permissions to write to your log directory (%@) for and then re-enable logging in the General preferences." = "Adium n'a pas pu écrire l'historique pour cette conversation. Veuillez vous assurer que vous avez la permission d'écrire sur (%@) et si besoin réactivez l'historique dans les Préférences Générales.";
+"Adium was unable to write the log file for this conversation. Please ensure you have appropriate file permissions to write to your log directory (%@) for and then re-enable logging in the General preferences." = "Adium n'a pas pu écrire l'historique pour cette conversation. Veuillez vous assurer que vous avez la permission d'écrire sur (%@) et si besoin réactivez l'historique dans les Préférences générales.";
 
 /* Title of the messages preferences */
-"Advanced" = "Avancé";
+"Advanced" = "Avancés";
+
+/* No comment provided by engineer. */
+"Advanced Preference Categories" = "Catégories de préférences avancées ";
 
 /* No comment provided by engineer. */
 "After" = "Après";
@@ -764,6 +770,9 @@
 "Check For Updates" = "Rechercher les mises à jour";
 
 /* No comment provided by engineer. */
+"Check Grammar With Spelling" = "Vérifier la grammaire et l'orthographe";
+
+/* No comment provided by engineer. */
 "Check Spelling" = "Vérifier l'orthographe";
 
 /* No comment provided by engineer. */
@@ -795,6 +804,9 @@
 
 /* Title for the close chat menu item */
 "Close Chat" = "Fermer la discussion";
+
+/* No comment provided by engineer. */
+"Collapse combined contact" = "Condenser le contact combiné";
 
 /* Button title for accepting the action of combining multiple contacts into a metacontact */
 "Combine" = "Combiner";
@@ -860,7 +872,7 @@
 "Consolidate Chats" = "Regrouper les discussions";
 
 /* menu item title */
-"Consolidate Detached Groups" = "Regrouper les discussions séparées";
+"Consolidate Detached Groups" = "Regrouper les groupes séparés";
 
 /* Title of column containing user IDs of blocked contacts
    Title of the Contact menu */
@@ -871,7 +883,7 @@
 "Contact Alert" = "Alerte du contact";
 
 /* No comment provided by engineer. */
-"Contact Alert Error" = "Erreur avec l'alerte du contact ";
+"Contact Alert Error" = "Erreur d'alerte du contact ";
 
 /* No comment provided by engineer. */
 "Contact becomes idle" = "Le contact devient inactif";
@@ -1114,7 +1126,7 @@
 "Disable" = "Désactiver";
 
 /* No comment provided by engineer. */
-"Disable chat encryption" = "Désactiver le cryptage de la discussion";
+"Disable chat encryption" = "Désactiver le chiffrement de la discussion";
 
 /* No comment provided by engineer. */
 "Disabled" = "Désactivé";
@@ -1322,14 +1334,17 @@
 /* No comment provided by engineer. */
 "Exactly" = "Exactement";
 
+/* No comment provided by engineer. */
+"Expand combined contact" = "Développer le contact combiné";
+
 /* File transfer failed status description */
 "Failed" = "Échec";
 
 /* %@ is a filename of a file being sent */
-"failed to receive %@" = "échec de la réception de %@";
+"failed to receive %@" = "n'a pu recevoir %@";
 
 /* %@ is a filename of a file being sent */
-"failed to send you %@" = "a échoué de vous envoyer %@";
+"failed to send you %@" = "n'a pu envoyer %@";
 
 /* No comment provided by engineer. */
 "Far Left" = "Extrême gauche";
@@ -1345,6 +1360,9 @@
 
 /* No comment provided by engineer. */
 "File Transfer" = "Transfert de fichier";
+
+/* No comment provided by engineer. */
+"File transfer" = "Transfert de fichier";
 
 /* No comment provided by engineer. */
 "File transfer begins" = "Le transfert de fichier commence";
@@ -1512,7 +1530,7 @@
 "Hide Adium" = "Masquer Adium";
 
 /* No comment provided by engineer. */
-"Hide Certain Contacts" = "Masquer certain contacts";
+"Hide Certain Contacts" = "Masquer certains contacts";
 
 /* No comment provided by engineer. */
 "Hide Emoticons" = "Masquer les émoticônes";
@@ -1620,7 +1638,7 @@
 "Importing Statuses" = "Importation des états";
 
 /* No comment provided by engineer. */
-"Importing transcripts requires at least 1 account to be present." = "L'importation des transcriptions exige au moins un 1 compte.";
+"Importing transcripts requires at least 1 account to be present." = "L'importation des transcriptions exige au moins un compte.";
 
 /* No comment provided by engineer. */
 "In Group" = "Dans le groupe";
@@ -1698,19 +1716,22 @@
 "Installation Successful" = "Installation réussie";
 
 /* No comment provided by engineer. */
+"Invite Contact:" = "Inviter le contact :";
+
+/* Invite to Chat window title */
 "Invite to Chat" = "Inviter à une discussion";
+
+/* No comment provided by engineer. */
+"Invites you to a group chat" = "vous invite à une conférence";
 
 /* Contact left Chat Name */
 "invites you to a group chat" = "vous invite à une conférence";
 
 /* No comment provided by engineer. */
-"Invites you to a group chat" = "vous invite à une conférence";
+"Is no longer seen" = "N'est plus visible";
 
 /* Event: is no longer seen (follows a contact's name displayed as a header) */
 "is no longer seen" = "n'est plus visible";
-
-/* No comment provided by engineer. */
-"Is no longer seen" = "N'est plus visible";
 
 /* No comment provided by engineer. */
 "Is seen" = "Est visible";
@@ -1793,11 +1814,11 @@
 /* No comment provided by engineer. */
 "Maximum Width:" = "Largeur maximum :";
 
-/* AdiumXtras category name */
-"Menu Bar Icons" = "Icônes de la barre des menus";
-
 /* No comment provided by engineer. */
 "menu bar icons" = "icônes de la barre des menus";
+
+/* AdiumXtras category name */
+"Menu Bar Icons" = "Icônes de la barre des menus";
 
 /* Speak Text action keyword: message */
 "Message" = "Message";
@@ -1809,13 +1830,13 @@
 "Message received" = "Message reçu";
 
 /* No comment provided by engineer. */
-"Message received (Background Chat)" = "Message reçu (discussion en arrière plan)";
+"Message received (Background Chat)" = "Message reçu (discussion en arrière-plan)";
 
 /* No comment provided by engineer. */
-"Message received (Background Group Chat)" = "Message reçu (conférence en arrière plan)";
+"Message received (Background Group Chat)" = "Message reçu (conférence en arrière-plan)";
 
 /* No comment provided by engineer. */
-"Message received (Group Chat)" = "Message reçu (conférence en arrière plan)";
+"Message received (Group Chat)" = "Message reçu (conférence en arrière-plan)";
 
 /* No comment provided by engineer. */
 "Message received (Initial)" = "Message reçu (initial)";
@@ -2334,10 +2355,10 @@
 "Sends a message" = "Envoie un message";
 
 /* No comment provided by engineer. */
-"Sends a message in a background chat" = "Envoie un message dans une discussion d'arrière-plan";
+"Sends a message in a background chat" = "Envoie un message dans une discussion en arrière plan";
 
 /* No comment provided by engineer. */
-"Sends a message in a background group chat" = "Envoie un message dans une conférence en arrière-plan";
+"Sends a message in a background group chat" = "Envoie un message dans une conférence en arrière plan ";
 
 /* No comment provided by engineer. */
 "Sends a message in a group chat" = "Envoie un message dans une conférence";
@@ -2360,6 +2381,12 @@
 /* Services menu item in the Adium menu */
 "Services" = "Services";
 
+/* No comment provided by engineer. */
+"Set maximum volume" = "Régler le volume maximal";
+
+/* No comment provided by engineer. */
+"Set minimum volume" = "Régler le volume minimum";
+
 /* Used in the context menu for the accounts list for the sub menu to set status in. */
 "Set Status" = "Définir l'état";
 
@@ -2376,7 +2403,7 @@
 "Show Colors" = "Afficher les couleurs";
 
 /* No comment provided by engineer. */
-"Show contact information tooltips" = "Afficher les informations contextuelles du contact";
+"Show contact information tooltips" = "Afficher les infobulles du contact";
 
 /* No comment provided by engineer. */
 "Show Details" = "Afficher les détails";
@@ -2514,7 +2541,7 @@
 "Speak Specific Text" = "Énoncer le texte spécifique";
 
 /* short phrase for the contact alert which speaks the event */
-"Speak the event aloud" = "Énoncer l'événement à haute voix";
+"Speak the event aloud" = "Lire l'événement à haute voix";
 
 /* No comment provided by engineer. */
 "Speak the text \"%@\"" = "Lire le texte \"%@\"";
@@ -2554,6 +2581,9 @@
 
 /* No comment provided by engineer. */
 "Status Menu Item" = "Élément de menu État";
+
+/* No comment provided by engineer. */
+"Statuses" = "États";
 
 /* Growl contact alert label */
 "Sticky" = "Badge";
@@ -2634,7 +2664,7 @@
 "This will remove %@ from the contact lists of your online accounts." = "Cela supprimera %@ de votre liste de contacts de vos comptes en ligne.";
 
 /* No comment provided by engineer. */
-"This will remove %i contacts from the contact lists of your online accounts." = "Cela supprimera %i contacts de vos liste de contacts de vos comptes en ligne.";
+"This will remove %i contacts from the contact lists of your online accounts." = "Cela supprimera %i contacts de vos listes de contacts de vos comptes en ligne.";
 
 /* No comment provided by engineer. */
 "This will remove %i items from the contact lists of your online accounts. Contacts in any deleted groups will also be removed.\n\nThis action can not be undone." = "Cela supprimera %i éléments de votre liste de contacts de vos comptes en ligne. Les contacts de ces groupes supprimés le seront également.\n\nCette action est irréversible.";
@@ -2656,6 +2686,9 @@
 
 /* No comment provided by engineer. */
 "To" = "À";
+
+/* No comment provided by engineer. */
+"To Chat:" = "En discussion :";
 
 /* Label in front of the dropdown for picking which contact to send a message to in the message window */
 "To:" = "À :";
@@ -2685,13 +2718,19 @@
 "Track Information" = "Information sur la piste";
 
 /* No comment provided by engineer. */
-"Transcript importing cancelled. %i of %i transcripts already imported." = "Importation de transcription annulée. %1$i sur %2$i transcriptions déjà importés.";
+"Transcript importing cancelled. %i of %i transcripts already imported." = "Importation de transcription annulée. %1$i sur %2$i transcriptions déjà importées.";
 
 /* No comment provided by engineer. */
 "Transcript importing complete." = "Importation de transcription terminée.";
 
 /* No comment provided by engineer. */
 "Transcripts" = "Transcriptions";
+
+/* e.g: Transfer of file.zip from Evan to Joel : Upload complete. Keep the spaces around the colon */
+"Transfer of %@ from %@ to %@ : %@" = "Transfert de %1$@ par %2$@ à %3$@ : %4$@";
+
+/* e.g: Transferring file.zip from Evan to Joel at 45 kb/sec : 5 minutes remaining. Keep the spaces around the colon. */
+"Transferring %@ from %@ to %@ at %@ : %@" = "Transfert de %1$@ par %2$@ à %3$@ at %4$@ : %5$@";
 
 /* Parameters are <error msg>,<original msg> */
 "Translation Error: %@\nOriginal Message: \"%@\"" = "Erreur de traduction : %1$@\nMessage original : \"%2$@\"";
@@ -2733,7 +2772,7 @@
 "Unknown conversation error." = "Erreur inconnue de conversation.";
 
 /* Translation Error */
-"Unknown error in translation" = "Erreur de traduction inconnue";
+"Unknown error in translation" = "Erreur inconnue de la traduction";
 
 /* Word to describe an encryption fingerprint which is not currently being used */
 "Unused" = "Inutilisé";
@@ -2751,7 +2790,7 @@
 "Use another account if necessary" = "Utiliser un autre compte si nécessaire";
 
 /* No comment provided by engineer. */
-"Use custom pitch:" = "Tonalité personnelle :";
+"Use custom pitch:" = "Tonalité personnalisée :";
 
 /* No comment provided by engineer. */
 "Use custom rate:" = "Débit personnalisé :";
@@ -2780,11 +2819,11 @@
 /* Speak Text action keyword: user alias */
 "User alias" = "Alias de l'utilisateur";
 
-/* No comment provided by engineer. */
-"User Name" = "Nom d'utilisateur";
-
 /* Speak Text action keyword: user name */
 "User name" = "Nom d'utilisateur";
+
+/* No comment provided by engineer. */
+"User Name" = "Nom d'utilisateur";
 
 /* No comment provided by engineer. */
 "User Name (Alias)" = "Nom d'utilisateur (Alias)";
@@ -2818,6 +2857,9 @@
 
 /* No comment provided by engineer. */
 "Voice:" = "Voix :";
+
+/* No comment provided by engineer. */
+"Volume" = "Volume";
 
 /* File transfer waiting on remote user status description */
 "Waiting for transfer to be accepted" = "En attente de l'acceptation du transfert";
@@ -2937,7 +2979,7 @@
 "When an error occurs" = "Quand une erreur se produit";
 
 /* No comment provided by engineer. */
-"When talking to %@" = "Quand discute avec %@";
+"When talking to %@" = "Quand on discute avec %@";
 
 /* No comment provided by engineer. */
 "When you connect" = "Quand vous êtes connecté(e)";
@@ -2988,6 +3030,9 @@
 "Window Handling" = "Comportement de la fenêtre";
 
 /* No comment provided by engineer. */
+"With Message:" = "Avec le message :";
+
+/* No comment provided by engineer. */
 "Within Last 2 Months" = "Lors des 2 derniers mois";
 
 /* No comment provided by engineer. */
@@ -3036,7 +3081,7 @@
 "You have file transfers in progress." = "Vous avez des transferts de fichier en cours.";
 
 /* Quit Confirmation */
-"You have open chats." = "Vous avez des discusions ouvertes.";
+"You have open chats." = "Vous avez des discussions ouvertes.";
 
 /* Quit Confirmation */
 "You have unread messages." = "Vous avez des messages non lus.";
@@ -3051,7 +3096,7 @@
 "You sent an encrypted message, but %@ was not expecting encryption." = "Vous avez envoyé un message crypté, mais %@ ne s'attendait pas à un cryptage.";
 
 /* Message when sending unencrypted messages to a contact expecting encrypted ones. %s will be a name. */
-"You sent an unencrypted message, but %@ was expecting encryption." = "Vous avez envoyé un message non-crypté, mais %@ s'attendait à un cryptage.";
+"You sent an unencrypted message, but %@ was expecting encryption." = "Vous avez envoyé un message non chiffré, mais %@ s'attendait à un chiffrement.";
 
 /* Message shown if Adium can not install automatically. Don't localize the URL. */
 "You will need to install Adium manually; please see Episode 0 at http://www.adiumx.com/screencasts/ for a video tutorial." = "Vous allez devoir installer Adium manuellement ; S'il vous plaît, allez voir le tutoriel vidéo Episode 0 sur http://www.adiumx.com/screencasts/ .";

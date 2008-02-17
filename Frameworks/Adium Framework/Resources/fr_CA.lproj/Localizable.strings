@@ -1,4 +1,4 @@
-﻿/* conjunction to end a compound sentence */
+/* conjunction to end a compound sentence */
 " and" = "et";
 
 /* No comment provided by engineer. */
@@ -134,6 +134,9 @@
 "Event:" = "Événement :";
 
 /* No comment provided by engineer. */
+"Events" = "Événements";
+
+/* No comment provided by engineer. */
 "External plugins may cause crashes and odd behavior after updating Adium.  Disable this plugin if you experience any issues." = "Les modules externes peuvent causer des pannes et le comportement suspicieux après une mise à jour d'Adium. Désacivez ce module si vous éprouvez des problèmes.";
 
 /* %@ will be the name of a bookmark */
@@ -149,7 +152,7 @@
 "Join" = "Se joindre à";
 
 /* No comment provided by engineer. */
-"Join Chat" = "Se joindre la discussion";
+"Join Chat" = "Se joindre à la discussion";
 
 /* Text of the typing preference checkbox in the account preferneces */
 "Let others know when you are typing" = "Laisser savoir que vous écrivez";
@@ -191,7 +194,7 @@
 "The active status icon pack \"%@\" installed at \"%@\" is invalid.  It is missing the required status icon \"%@\".  If you received this pack from adiumxtras.com, please contact its author. Your status icon setting will be restored to the default." = "La banque d'icônes d'états utilisée \"%1$@\" installée le \"%2$@\" est invalide. L'icône \"%3$@\" est manquante. Si vous avez reçu cette banque d'adiumxtras.com, veuillez contacter l'auteur. Le réglage de l'état de l'icône revient à celui par défaut.";
 
 /* No comment provided by engineer. */
-"The characters you're entering are not valid for an account name on this service." = "Les caractères que vous entrez ne sont pas comptatibles avec ce service.";
+"The characters you're entering are not valid for an account name on this service." = "Les caractères que vous entrez ne sont pas compatibles avec ce service.";
 
 /* No comment provided by engineer. */
 "The sound set %@ is version %i, and this version of Adium does not know how to handle that; perhaps try a later version of Adium." = "La banque de son %1$@ est de version %2$i, et cette version d'Adium ne sait pas l'utiliser; essayez avec une version plus récente d'Adium.";
