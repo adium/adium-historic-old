@@ -1015,8 +1015,6 @@
 - (BOOL)_performAddListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact
 {
 	//we only allow group->meta->contact, not group->meta->meta->contact
-	//FIXME: deal with smack contacts correctly.
-	//NSParameterAssert(![listObject conformsToProtocol:@protocol(AIContainingObject)]);	
 	AIListObject<AIContainingObject>	*localGroup;
 	BOOL								success;
 
