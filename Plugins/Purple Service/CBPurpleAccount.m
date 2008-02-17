@@ -1746,7 +1746,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 		[self setLastDisconnectionError:AILocalizedString(@"The name you entered is not registered. Check to ensure you typed it correctly.", nil)];
 		reconnectDelayType = AIReconnectNever;
 
-	} else if (disconnectionError && [*disconnectionError isEqualToString:[NSString stringWithUT8String:_("SSL Handshake Failed")]]) {
+	} else if (disconnectionError && [*disconnectionError isEqualToString:[NSString stringWithUTF8String:_("SSL Handshake Failed")]]) {
 		/* This particular message comes with PURPLE_CONNECTION_ERROR_ENCRYPTION_ERROR, which is a 'fatal' error according to libpurple. Other problems
 		 * with that message may be fatal, but this one isn't.
 		 */
