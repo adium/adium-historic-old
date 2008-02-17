@@ -5,7 +5,7 @@
 /* Trigger for status message substitution. Must begin with %_ */
 "%_statusMessage" = "%_statusMessage";
 
-"Active Application" = "使用中的應用程式";
+"Active Application" = "使用的應用程式";
 /* Trigger for active application substitution. Must begin with %_ */
 "%_activeApp" = "%_activeApp";
 
@@ -22,6 +22,6 @@
 "%_safari" = "%_safari";
 
 /* Script title which shows how long since the last reboot */
-"Uptime" = "執行時間";
+"Uptime" = "開機運行時間";
 /* Trigger for Uptime substitution. Must begin with %_ */
 "%_uptime" = "%_uptime";
