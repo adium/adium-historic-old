@@ -125,11 +125,11 @@
 
 - (void)localizePane
 {
-	[[button_minvolume cell] accessibilitySetOverrideValue:AILocalizedString(@"Set minimum volume", nil)
+	[[button_minvolume cell] accessibilitySetOverrideValue:AILocalizedString(@"Set minimum volume", "Accessibility label for button to set to the minimum sound volume")
 									   forAttribute:NSAccessibilityDescriptionAttribute];
-	[[button_maxvolume cell] accessibilitySetOverrideValue:AILocalizedString(@"Set maximum volume", nil)
+	[[button_maxvolume cell] accessibilitySetOverrideValue:AILocalizedString(@"Set maximum volume", "Accessibility label for button to set to the maximum sound volume")
 									   forAttribute:NSAccessibilityDescriptionAttribute];
-	[[slider_volume cell] accessibilitySetOverrideValue:AILocalizedString(@"Volume", nil)
+	[[slider_volume cell] accessibilitySetOverrideValue:AILocalizedString(@"Volume", "Accessibility label for the sound volume slider")
 										   forAttribute:NSAccessibilityDescriptionAttribute];
 	 
 	[label_eventPreset setLocalizedString:AILocalizedString(@"Event preset:",nil)];
