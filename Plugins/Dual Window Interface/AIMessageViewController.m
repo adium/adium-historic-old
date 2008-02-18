@@ -801,7 +801,9 @@
  */
 - (void)outgoingTextViewDesiredSizeDidChange:(NSNotification *)notification
 {
+#ifdef TEXTVIEW_HEIGHT_DEBUG
 	AILogWithSignature(@"");
+#endif
 	[self _updateTextEntryViewHeight];
 }
 
