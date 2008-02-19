@@ -46,10 +46,15 @@
 
 - (NSString *)stringByRemovingYahooSuffix:(NSString *)inString
 {
-	if ((inString && ([inString length] > 0)) && 
-		([inString rangeOfString:@"@" options:NSLiteralSearch].location != NSNotFound)) {
-		inString = [inString substringToIndex:[inString rangeOfString:@"@" 
-															  options:NSLiteralSearch].location];
+	if ((inString && ([inString length] > 0))) {
+		//If inString contains @yahoo., we consider this to be an email address suffix such as @yahoo.com or @yahoo.it, and delete it and everything after it. Thus, jdoe@yahoo.com becomes simply jdoe.
+		//However, we must leave other suffixes, such as sbcglobal.net, alone. We can't simply match @, or we would delete the @sbcglobal.net suffix and leave the user unable to connect with it.
+		NSRange yahooRange = [inString rangeOfString:@"@yahoo." 
+		                                     options:NSLiteralSearch];
+		if (yahooRange.location != NSNotFound) {
+			//Future expansion: Only delete if “@yahoo.” is followed by a known TLD and (if appropriate) 2LD, in order to support oddball suffixes such as “@yahoo.example.com”. I don't know whether any such suffixes exist. —boredzo
+			inString = [inString substringToIndex:yahooRange.location];
+		}
 	}
 	
 	return inString;
