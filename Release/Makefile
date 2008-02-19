@@ -14,9 +14,9 @@
 # - make all
 ###########
 
-VERSION=1.2.2b1
-BUILD_IN_DEBUG_MODE=TRUE
-BETA=TRUE
+VERSION=1.2.2
+BUILD_IN_DEBUG_MODE=FALSE
+BETA=FALSE
 
 # Always builds in debug mode.
 NIGHTLY?=FALSE
