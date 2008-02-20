@@ -26,10 +26,28 @@
 	NSString *snowmanFromFile = [NSString stringWithContentsOfUTF8File:pathToFile];
 	AISimplifiedAssertEqualObjects(snowman, snowmanFromFile, @"+stringWithContentsOfUTF8File: incorrectly read the file");
 }
+- (void)testMutableStringWithContentsOfUTF8File
+{
+	//Our octest file contains a sample file to read in testing this method.
+	NSBundle *bundle = [NSBundle bundleForClass:[self class]];
+	NSString *pathToFile = [bundle pathForResource:@"UTF8Snowman" ofType:@"txt"];
+
+	char snowmanUTF8[4] = { 0xe2, 0x98, 0x83, 0 };
+	NSString *snowman = [NSString stringWithUTF8String:snowmanUTF8];
+	NSMutableString *snowmanFromFile = [NSMutableString stringWithContentsOfUTF8File:pathToFile];
+	AISimplifiedAssertEqualObjects(snowman, snowmanFromFile, @"+stringWithContentsOfUTF8File: incorrectly read the file");
+	STAssertTrue([snowmanFromFile isKindOfClass:[NSMutableString class]], @"Sending +stringWithContentsOfUTF8File: to NSMutableString should result in a mutable string");
+}
 - (void)testEllipsis
 {
 	STAssertEquals([[NSString ellipsis] length], 1U, @"+ellipsis did not return a 1-character string; it returned \"%@\"", [NSString ellipsis]);
 	STAssertEquals((unsigned int)[[NSString ellipsis] characterAtIndex:0U], 0x2026U, @"+ellipsis did not return a horizontal ellipsis (U+2026); it returned \"%@\" instead", [NSString ellipsis]);
+}
+- (void)testMutableEllipsis
+{
+	STAssertEquals([[NSMutableString ellipsis] length], 1U, @"+ellipsis did not return a 1-character string; it returned \"%@\"", [NSString ellipsis]);
+	STAssertEquals((unsigned int)[[NSMutableString ellipsis] characterAtIndex:0U], 0x2026U, @"+ellipsis did not return a horizontal ellipsis (U+2026); it returned \"%@\" instead", [NSString ellipsis]);
+	STAssertTrue([[NSMutableString ellipsis] isKindOfClass:[NSMutableString class]], @"Sending +ellipsis to NSMutableString should result in a mutable string");
 }
 - (void)testStringByAppendingEllipsis
 {
