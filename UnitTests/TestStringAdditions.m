@@ -24,7 +24,7 @@
 	char snowmanUTF8[4] = { 0xe2, 0x98, 0x83, 0 };
 	NSString *snowman = [NSString stringWithUTF8String:snowmanUTF8];
 	NSString *snowmanFromFile = [NSString stringWithContentsOfUTF8File:pathToFile];
-	AISimplifiedAssertEqualObjects(snowman, snowmanFromFile, @"-stringWithContentsOfUTF8File: incorrectly read the file");
+	AISimplifiedAssertEqualObjects(snowman, snowmanFromFile, @"+stringWithContentsOfUTF8File: incorrectly read the file");
 }
 - (void)testEllipsis
 {
