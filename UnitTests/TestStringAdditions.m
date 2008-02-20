@@ -9,11 +9,11 @@
 {
 	//Test at least two different lengths, and see what happens when we ask for 0.
 	NSString *str = [NSString randomStringOfLength:6];
-	STAssertEquals([str length], 6U, @"-randomStringOfLength:6 did not return a 6-character string; it returned \"%@\", which is %u characters", str, [str length]);
+	STAssertEquals([str length], 6U, @"+randomStringOfLength:6 did not return a 6-character string; it returned \"%@\", which is %u characters", str, [str length]);
 	str = [NSString randomStringOfLength:12];
-	STAssertEquals([str length], 12U, @"-randomStringOfLength:12 did not return a 12-character string; it returned \"%@\", which is %u characters", str, [str length]);
+	STAssertEquals([str length], 12U, @"+randomStringOfLength:12 did not return a 12-character string; it returned \"%@\", which is %u characters", str, [str length]);
 	str = [NSString randomStringOfLength:0];
-	STAssertEquals([str length], 0U, @"-randomStringOfLength:0 did not return a 0-character string; it returned \"%@\", which is %u characters", str, [str length]);
+	STAssertEquals([str length], 0U, @"+randomStringOfLength:0 did not return a 0-character string; it returned \"%@\", which is %u characters", str, [str length]);
 }
 - (void)testStringWithContentsOfUTF8File
 {
@@ -28,8 +28,8 @@
 }
 - (void)testEllipsis
 {
-	STAssertEquals([[NSString ellipsis] length], 1U, @"-ellipsis did not return a 1-character string; it returned \"%@\"", [NSString ellipsis]);
-	STAssertEquals((unsigned int)[[NSString ellipsis] characterAtIndex:0U], 0x2026U, @"-ellipsis did not return a horizontal ellipsis (U+2026); it returned \"%@\" instead", [NSString ellipsis]);
+	STAssertEquals([[NSString ellipsis] length], 1U, @"+ellipsis did not return a 1-character string; it returned \"%@\"", [NSString ellipsis]);
+	STAssertEquals((unsigned int)[[NSString ellipsis] characterAtIndex:0U], 0x2026U, @"+ellipsis did not return a horizontal ellipsis (U+2026); it returned \"%@\" instead", [NSString ellipsis]);
 }
 - (void)testStringByAppendingEllipsis
 {
@@ -83,23 +83,23 @@
 - (void)testEscapingForShell
 {
 	//Whitespace should be replaced by '\' followed by a character (one of [atnfr] for most of them; space simply puts a \ in front of the space).
-	STAssertEqualObjects([@"\a" stringByEscapingForShell], @"\\a", @"stringByEscapingForShell didn't properly escape the alert (bell) character");
-	STAssertEqualObjects([@"\t" stringByEscapingForShell], @"\\t", @"stringByEscapingForShell didn't properly escape the horizontal tab character");
-	STAssertEqualObjects([@"\n" stringByEscapingForShell], @"\\n", @"stringByEscapingForShell didn't properly escape the line-feed character");
-	STAssertEqualObjects([@"\v" stringByEscapingForShell], @"\\v", @"stringByEscapingForShell didn't properly escape the vertical tab character");
-	STAssertEqualObjects([@"\f" stringByEscapingForShell], @"\\f", @"stringByEscapingForShell didn't properly escape the form-feed character");
-	STAssertEqualObjects([@"\r" stringByEscapingForShell], @"\\r", @"stringByEscapingForShell didn't properly escape the carriage-return character");
-	STAssertEqualObjects([@" "  stringByEscapingForShell], @"\\ ", @"stringByEscapingForShell didn't properly escape the space character");
+	STAssertEqualObjects([@"\a" stringByEscapingForShell], @"\\a", @"-stringByEscapingForShell didn't properly escape the alert (bell) character");
+	STAssertEqualObjects([@"\t" stringByEscapingForShell], @"\\t", @"-stringByEscapingForShell didn't properly escape the horizontal tab character");
+	STAssertEqualObjects([@"\n" stringByEscapingForShell], @"\\n", @"-stringByEscapingForShell didn't properly escape the line-feed character");
+	STAssertEqualObjects([@"\v" stringByEscapingForShell], @"\\v", @"-stringByEscapingForShell didn't properly escape the vertical tab character");
+	STAssertEqualObjects([@"\f" stringByEscapingForShell], @"\\f", @"-stringByEscapingForShell didn't properly escape the form-feed character");
+	STAssertEqualObjects([@"\r" stringByEscapingForShell], @"\\r", @"-stringByEscapingForShell didn't properly escape the carriage-return character");
+	STAssertEqualObjects([@" "  stringByEscapingForShell], @"\\ ", @"-stringByEscapingForShell didn't properly escape the space character");
 
 	//Other unsafe characters are simply backslash-escaped.
-	STAssertEqualObjects([@"\\" stringByEscapingForShell], @"\\\\", @"stringByEscapingForShell didn't properly escape the alert (bell) character");
-	STAssertEqualObjects([@"'" stringByEscapingForShell], @"\\'", @"stringByEscapingForShell didn't properly escape the horizontal tab character");
-	STAssertEqualObjects([@"\"" stringByEscapingForShell], @"\\\"", @"stringByEscapingForShell didn't properly escape the line-feed character");
-	STAssertEqualObjects([@"`" stringByEscapingForShell], @"\\`", @"stringByEscapingForShell didn't properly escape the vertical tab character");
-	STAssertEqualObjects([@"!" stringByEscapingForShell], @"\\!", @"stringByEscapingForShell didn't properly escape the form-feed character");
-	STAssertEqualObjects([@"$" stringByEscapingForShell], @"\\$", @"stringByEscapingForShell didn't properly escape the carriage-return character");
-	STAssertEqualObjects([@"&"  stringByEscapingForShell], @"\\&", @"stringByEscapingForShell didn't properly escape the space character");
-	STAssertEqualObjects([@"|"  stringByEscapingForShell], @"\\|", @"stringByEscapingForShell didn't properly escape the space character");
+	STAssertEqualObjects([@"\\" stringByEscapingForShell], @"\\\\", @"-stringByEscapingForShell didn't properly escape the alert (bell) character");
+	STAssertEqualObjects([@"'" stringByEscapingForShell], @"\\'", @"-stringByEscapingForShell didn't properly escape the horizontal tab character");
+	STAssertEqualObjects([@"\"" stringByEscapingForShell], @"\\\"", @"-stringByEscapingForShell didn't properly escape the line-feed character");
+	STAssertEqualObjects([@"`" stringByEscapingForShell], @"\\`", @"-stringByEscapingForShell didn't properly escape the vertical tab character");
+	STAssertEqualObjects([@"!" stringByEscapingForShell], @"\\!", @"-stringByEscapingForShell didn't properly escape the form-feed character");
+	STAssertEqualObjects([@"$" stringByEscapingForShell], @"\\$", @"-stringByEscapingForShell didn't properly escape the carriage-return character");
+	STAssertEqualObjects([@"&"  stringByEscapingForShell], @"\\&", @"-stringByEscapingForShell didn't properly escape the space character");
+	STAssertEqualObjects([@"|"  stringByEscapingForShell], @"\\|", @"-stringByEscapingForShell didn't properly escape the space character");
 }
 - (void)testVolumePath
 {
