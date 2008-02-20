@@ -35,7 +35,7 @@
 #ifndef BSD_LICENSE_ONLY
 
 //Random alphanumeric string
-+ (NSString *)randomStringOfLength:(unsigned int)inLength
++ (id)randomStringOfLength:(unsigned int)inLength
 {
 	srandom(TickCount());
 
@@ -68,7 +68,7 @@
  *
  * If it can not be read as UTF8, it will be read as ASCII.
  */
-+ (NSString *)stringWithContentsOfUTF8File:(NSString *)path
++ (id)stringWithContentsOfUTF8File:(NSString *)path
 {
 	if (!path) return nil;
 

@@ -15,9 +15,9 @@
 
 @interface NSString (AIStringAdditions)
 
-+ (NSString *)randomStringOfLength:(unsigned int)inLength;
++ (id)randomStringOfLength:(unsigned int)inLength;
 
-+ (NSString *)stringWithContentsOfUTF8File:(NSString *)path;
++ (id)stringWithContentsOfUTF8File:(NSString *)path;
 
 + (id)stringWithData:(NSData *)data encoding:(NSStringEncoding)encoding;
 + (id)stringWithBytes:(const void *)inBytes length:(unsigned)inLength encoding:(NSStringEncoding)inEncoding;
