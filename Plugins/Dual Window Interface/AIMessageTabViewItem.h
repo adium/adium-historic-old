@@ -24,6 +24,7 @@
     AIMessageViewController 	*messageViewController;
     NSObject<AIAdium>			*adium;
 	NSImage						*tabViewItemImage;
+	NSImage						*largeImage;
 }
 
 + (AIMessageTabViewItem *)messageTabWithView:(AIMessageViewController *)inMessageView;
