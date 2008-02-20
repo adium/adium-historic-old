@@ -441,7 +441,7 @@ static NSArray *validSenderColors;
 	
 	//TODO: make a generic Request message, rather than having this ft specific one
 	NSMutableString *fileTransferHTMLTemplate;
-	fileTransferHTMLTemplate = [[NSMutableString stringWithContentsOfUTF8File:[styleBundle semiCaseInsensitivePathForResource:@"FileTransferRequest" ofType:@"html"]] retain];
+	fileTransferHTMLTemplate = [[NSString stringWithContentsOfUTF8File:[styleBundle semiCaseInsensitivePathForResource:@"FileTransferRequest" ofType:@"html"]] mutableCopy];
 	if(!fileTransferHTMLTemplate) {
 		fileTransferHTMLTemplate = [contentInHTML mutableCopy];
 		[fileTransferHTMLTemplate replaceKeyword:@"%message%"
