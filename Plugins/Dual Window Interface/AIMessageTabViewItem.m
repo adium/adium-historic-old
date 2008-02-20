@@ -38,6 +38,10 @@
 - (NSAttributedString *)attributedLabelStringWithColor:(NSColor *)textColor;
 - (void)chatParticipatingListObjectsChanged:(NSNotification *)notification;
 - (void)chatStatusChanged:(NSNotification *)notification;
+- (void)listObjectAttributesChanged:(NSNotification *)notification;
+- (void)setLargeImage:(NSImage *)inImage;
+- (void)updateTabStatusIcon;
+- (void)updateTabContactIcon;
 @end
 
 @implementation AIMessageTabViewItem
@@ -95,6 +99,8 @@
 	[tabViewItemImage release]; tabViewItemImage = nil;
     [messageViewController release]; messageViewController = nil;
 
+	[largeImage release];
+
     [super dealloc];
 }
 
@@ -146,6 +152,12 @@
 										 object:nil];
 		
 	}
+
+	//Notify that our list object's attributes have changed, because our list object has changed.
+	//We fake a ListObject_AttributesChanged notification with our new list object. Our list object may be nil, but that's fine.
+	notification = [NSNotification notificationWithName:ListObject_AttributesChanged
+												 object:listObject];
+	[self listObjectAttributesChanged:notification];
 }
 
 //
@@ -176,15 +188,17 @@
 	
 	//Redraw if the icon has changed
 	if (keys == nil || [keys containsObject:@"Tab State Icon"]) {
-		[[self windowController] updateIconForTabViewItem:self];
-		[self setValue:nil forKeyPath:@"icon"];
+		[self updateTabStatusIcon];
+	}
+	if (keys == nil || [keys containsObject:KEY_USER_ICON]) {
+		[self updateTabContactIcon];
 	}
 }
 
 - (void)chatSourceOrDestinationChanged:(NSNotification *)notification
 {
-	[[self windowController] updateIconForTabViewItem:self];
-	[self setValue:nil forKeyPath:@"icon"];
+	[self updateTabStatusIcon];
+	[self updateTabContactIcon];
 }
 
 //
@@ -197,11 +211,13 @@
 		NSSet		 *keys = [[notification userInfo] objectForKey:@"Keys"];
 		
 		//Redraw if the icon has changed
-		if (!keys || [keys containsObject:@"Tab Status Icon"]) {
-			[[self windowController] updateIconForTabViewItem:self];
-			[self setValue:nil forKeyPath:@"icon"];
+		if (!keys || [keys containsObject:@"Tab State Icon"]) {
+			[self updateTabStatusIcon];
 		}
-		
+		if (!keys || [keys containsObject:KEY_USER_ICON]) {
+			[self updateTabContactIcon];
+		}
+
 		//If the list object's display name changed, we resize the tabs
 		if (!keys || [keys containsObject:@"Display Name"]) {
 			[self setLabel:[self label]];
@@ -288,12 +304,15 @@
 
 - (void)setLargeImage:(NSImage *)inImage
 {
-	
+	if (largeImage != inImage) {
+		[largeImage release];
+		largeImage = [inImage copy];
+	}
 }
 
 - (NSImage *)largeImage
 {
-	return [[[self chat] chatImage] imageByScalingToSize:NSMakeSize(48,48)];
+	return largeImage;
 }
 
 //bindings methods for PSMTabBarControl
@@ -313,6 +332,18 @@
 - (void)tabViewDidChangeVisibility
 {
 	[[self messageViewController] tabViewDidChangeVisibility];
+}
+
+//Update the contact and status icons on the tab.
+- (void)updateTabStatusIcon
+{
+	[[self windowController] updateIconForTabViewItem:self];
+#warning Wha-huh? setIcon: is a no-op, so this doesnt do anything.
+	[self setValue:nil forKey:@"icon"];
+}
+- (void)updateTabContactIcon
+{
+	[self setLargeImage:[[[self chat] chatImage] imageByScalingToSize:NSMakeSize(48,48)]];
 }
 
 @end
