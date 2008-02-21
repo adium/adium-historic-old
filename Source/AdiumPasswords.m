@@ -143,7 +143,7 @@
 	id				target = [requestDict objectForKey:@"Target"];
 	SEL				selector = NSSelectorFromString([requestDict objectForKey:@"Selector"]);
 	id				context = [requestDict objectForKey:@"Context"];
-	BOOL			shouldPrompt;
+	BOOL			shouldPrompt = YES;
 
 	switch (promptOption)
 	{
