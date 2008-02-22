@@ -39,7 +39,7 @@
 {
 	srandom(TickCount());
 
-	if (!inLength) return [NSString string];
+	if (!inLength) return [self string];
 
 	NSString *string = nil;
 	char *buf = malloc(inLength);
@@ -56,7 +56,7 @@
 		while (remaining--) {
 			buf[remaining] = alphanumeric[random() % sizeof(alphanumeric)];
 		}
-		string = [NSString stringWithBytes:buf length:inLength encoding:NSASCIIStringEncoding];
+		string = [self stringWithBytes:buf length:inLength encoding:NSASCIIStringEncoding];
 		free(buf);
 	}
 
@@ -76,9 +76,9 @@
 	
 	NSError	*error = nil;
 
-	string = [NSString stringWithContentsOfFile:path
-									   encoding:NSUTF8StringEncoding 
-										  error:&error];
+	string = [self stringWithContentsOfFile:path
+								   encoding:NSUTF8StringEncoding 
+									  error:&error];
 
 	if (error) {
 		BOOL	handled = NO;
@@ -100,9 +100,9 @@
 				 */
 				NSError				*newError = nil;
 
-				string = [NSString stringWithContentsOfFile:path
-												   encoding:NSASCIIStringEncoding
-													  error:&newError];
+				string = [self stringWithContentsOfFile:path
+											   encoding:NSASCIIStringEncoding
+												  error:&newError];
 
 				//If there isn't a new error, we recovered reasonably successfully...
 				if (!newError) {
@@ -131,7 +131,7 @@
 
 + (id)ellipsis
 {
-	return [NSString stringWithUTF8String:"\xE2\x80\xA6"];
+	return [self stringWithUTF8String:"\xE2\x80\xA6"];
 }
 
 - (NSString *)stringByAppendingEllipsis
