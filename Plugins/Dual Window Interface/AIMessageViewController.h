@@ -21,12 +21,13 @@
 
 @class AIAccount, AIListContact, AIListObject, AIAccountSelectionView, AIMessageTabSplitView, AIMessageEntryTextView;
 @class AIMessageWindowController, AIMessageWindowOutgoingScrollView;
+@class RBSplitView;
 
 @interface AIMessageViewController : AIObject <AIListControllerDelegate> {
     IBOutlet	NSView					*view_contents;
 	
 	//Split views
-	IBOutlet	AIMessageTabSplitView	*splitView_textEntryHorizontal;
+	IBOutlet	RBSplitView	*splitView_textEntryHorizontal;
 	
 
 	//Message Display

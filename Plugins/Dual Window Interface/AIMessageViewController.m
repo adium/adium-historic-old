@@ -53,6 +53,8 @@
 
 #import <PSMTabBarControl/NSBezierPath_AMShading.h>
 
+#import "RBSplitView.h"
+
 //Heights and Widths
 #define MESSAGE_VIEW_MIN_HEIGHT_RATIO		.50						//Mininum height ratio of the message view
 #define MESSAGE_VIEW_MIN_WIDTH_RATIO		.50						//Mininum width ratio of the message view
@@ -146,10 +148,7 @@
 									   selector:@selector(toggleUserlist:)
 										   name:@"toggleUserlist"
 										 object:nil];
-		
-		[splitView_textEntryHorizontal setDividerThickness:3]; //Default is 9
-		[splitView_textEntryHorizontal setDrawsDivider:NO];
-		
+
 		//Observe general preferences for sending keys
 		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GENERAL];
 
@@ -252,7 +251,8 @@
 	}
 
 	[view_accountSelection setLeftColor:leftColor rightColor:rightColor];
-	[splitView_textEntryHorizontal setLeftColor:leftColor rightColor:rightColor];
+	//XXX
+//	[splitView_textEntryHorizontal setLeftColor:leftColor rightColor:rightColor];
 }
 
 /*!
@@ -802,30 +802,14 @@
 	//Display the vertical scroller if our view is not tall enough to display all the entered text
 	[scrollView_outgoing setHasVerticalScroller:(height < [textView_outgoing desiredSize].height)];
 
-	NSRect	tempFrame, newFrame;
-	BOOL	changed = NO;
-	
-	//Size the outgoing text view to the desired height
-	tempFrame = [scrollView_outgoing frame];
-	newFrame = NSMakeRect(tempFrame.origin.x,
-						  [splitView_textEntryHorizontal frame].size.height - height - [splitView_textEntryHorizontal dividerThickness],
-						  tempFrame.size.width,
-						  height);
-	if (!NSEqualRects(tempFrame, newFrame)) {
-#ifdef TEXTVIEW_HEIGHT_DEBUG
-		AILogWithSignature(@"Old %@, new %@", NSStringFromRect(tempFrame), NSStringFromRect(newFrame));
-#endif
-		[scrollView_outgoing setFrame:newFrame];
-		[scrollView_outgoing setNeedsDisplay:YES];
-		changed = YES;
-	}
-	
-	if (changed) {
-		[splitView_textEntryHorizontal adjustSubviews];
-#ifdef TEXTVIEW_HEIGHT_DEBUG
-		AILogWithSignature(@"Final result %@", NSStringFromRect([scrollView_outgoing frame]));
-#endif
-	}
+	ignorePositionChangesForMinimumHeight = YES;
+	//First, set the text entry subview to the exact height we want
+	[[splitView_textEntryHorizontal subviewAtPosition:1] setMinDimension:height andMaxDimension:height];
+	[splitView_textEntryHorizontal adjustSubviews];
+
+	//Now, allow it to be resized again between the text view's minimum size and the max size which is based on the splitview's height
+	[[splitView_textEntryHorizontal subviewAtPosition:1] setMinDimension:[self _textEntryViewProperHeightIgnoringUserMininum:YES] andMaxDimension:([splitView_textEntryHorizontal frame].size.height * MESSAGE_VIEW_MIN_HEIGHT_RATIO)];
+	ignorePositionChangesForMinimumHeight = NO;
 }
 
 /*!
@@ -1099,94 +1083,27 @@
 	return width;
 }
 
-
 //Split Views --------------------------------------------------------------------------------------------------
 #pragma mark Split Views
-#if 1
-/* 
- * @brief Returns the maximum constraint of the split pane
- *
- * For the horizontal split, we prevent the message view from growing so large that the text entry view
- * is forced below its desired height.
- */
-- (float)splitView:(NSSplitView *)sender constrainMaxCoordinate:(float)proposedMax ofSubviewAt:(int)offset
-{
-	if (sender == splitView_textEntryHorizontal) {		
-		float height = [self _textEntryViewProperHeightIgnoringUserMininum:YES];
-#ifdef TEXTVIEW_HEIGHT_DEBUG
-		AILogWithSignature(@"Proposed %f. Constraining max to %f: %f - %f + %f. My reported max is %f", proposedMax, ([sender frame].size.height - (height+
-																		[sender dividerThickness])),
-						   [sender frame].size.height, height ,
-						   [sender dividerThickness],
-						   ([sender respondsToSelector:@selector(maxPossiblePositionOfDividerAtIndex:)] ? [sender maxPossiblePositionOfDividerAtIndex:0] : 0.0)
-						   );
-#endif
-		
-		return ([sender frame].size.height - (height + [sender dividerThickness]));
 
-	} else {
-		NSLog(@"Unknown split view %@",sender);
-		return 0;
-	}
+// This method will be called after a RBSplitView is resized with setFrameSize: but before
+// adjustSubviews is called on it.
+- (void)splitView:(RBSplitView*)sender wasResizedFrom:(float)oldDimension to:(float)newDimension
+{
+	[[sender subviewAtPosition:0] setDimension:[[sender subviewAtPosition:0] dimension] + (newDimension - oldDimension)];
 }
 
-/* 
- * @brief Returns the mininum constraint of the split pane
- *
- * For both splitpanes, we prevent the message view from dropping below 50% of the window's width and height
- */
-- (float)splitView:(NSSplitView *)sender constrainMinCoordinate:(float)proposedMin ofSubviewAt:(int)offset
+// This method will be called whenever a subview's frame is changed, usually from inside adjustSubviews' final loop.
+// You'd normally use this to move some auxiliary view to keep it aligned with the subview.
+- (void)splitView:(RBSplitView*)sender changedFrameOfSubview:(RBSplitSubview*)subview from:(NSRect)fromRect to:(NSRect)toRect
 {
-	if (sender == splitView_textEntryHorizontal) {
-#ifdef TEXTVIEW_HEIGHT_DEBUG
-		AILogWithSignature(@"Constraining min to %i", (int)([sender frame].size.height * MESSAGE_VIEW_MIN_HEIGHT_RATIO));
-#endif
-		return (int)([sender frame].size.height * MESSAGE_VIEW_MIN_HEIGHT_RATIO);
-		
-	} else {
-		NSLog(@"Unknown split view %@",sender);
-		return 0;
-	}
-}
-
-/*!
- * @brief A split view had its divider position changed
- *
- * Remember the user's choice of text entry view height.
- */
-- (float)splitView:(NSSplitView *)sender constrainSplitPosition:(float)proposedPosition ofSubviewAt:(int)index
-{
-	if (sender == splitView_textEntryHorizontal) {
-//		float trueMax = [self splitView:sender constrainMaxCoordinate:proposedPosition ofSubviewAt:index];
-//		if (trueMax < proposedPosition) proposedPosition = trueMax;
-
+	if ([sender subviewAtPosition:1] == subview) {
 		if (!ignorePositionChangesForMinimumHeight)
-			entryMinHeight = (int)([sender frame].size.height - proposedPosition - [sender dividerThickness]);
-		else
-			return 10;
+			entryMinHeight = NSHeight(toRect);
 #ifdef TEXTVIEW_HEIGHT_DEBUG
-		AILogWithSignature(@"After constraining the split position, entryMinHeight is now %i (proposed position %f).", entryMinHeight, proposedPosition);
+		AILogWithSignature(@"After constraining the split position, entryMinHeight is now %i", entryMinHeight);
 #endif
-	} else {
-		NSLog(@"Unknown split view %@",sender);
-		return 0;
-	}
-	
-	return proposedPosition;
-}
-#endif
-
-/* 
- * @brief Returns YES if the passed subview can be collapsed
- */
-- (BOOL)splitView:(NSSplitView *)sender canCollapseSubview:(NSView *)subview
-{
-	if (sender == splitView_textEntryHorizontal) {
-		return NO;
 		
-	} else {
-		NSLog(@"Unknown split view %@",sender);
-		return 0;
 	}
 }
 

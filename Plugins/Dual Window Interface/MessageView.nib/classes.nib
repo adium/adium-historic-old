@@ -71,11 +71,11 @@
                 "nibrootView_messageView" = NSView;
                 "nibrootView_shelfVew" = NSView;
                 "nibrootView_userList" = NSView;
-                "scrollView_messages" = NSScrollView;
+                "scrollView_messages" = AIMessageWindowOutgoingScrollView;
                 "scrollView_outgoing" = NSScrollView;
                 "scrollView_userList" = AIAutoScrollView;
                 shelfView = KNShelfSplitView;
-                "splitView_textEntryHorizontal" = AIMessageTabSplitView;
+                "splitView_textEntryHorizontal" = RBSplitView;
                 "textView_outgoing" = AIMessageEntryTextView;
                 userListView = AIListOutlineView;
                 "view_contents" = NSView;

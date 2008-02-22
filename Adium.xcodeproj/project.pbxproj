@@ -29,6 +29,7 @@
 				4B8E0BD8086A16D4009A7A4D /* PBXTargetDependency */,
 				4B8E0BDA086A16D4009A7A4D /* PBXTargetDependency */,
 				34611CCF09B67ABC00870036 /* PBXTargetDependency */,
+				34D1AC840D69958000470520 /* PBXTargetDependency */,
 			);
 			name = "External Frameworks";
 			productName = "External Frameworks";
@@ -652,6 +653,8 @@
 		34D0FDD20956186200DCB678 /* ESPersonalPreferencesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D0FDD00956186200DCB678 /* ESPersonalPreferencesPlugin.m */; };
 		34D0FDD80956187700DCB678 /* ESPersonalPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D0FDD60956187700DCB678 /* ESPersonalPreferences.m */; };
 		34D0FF8509569FE500DCB678 /* PersonalPreferencesDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D0FF8409569FE500DCB678 /* PersonalPreferencesDefaults.plist */; };
+		34D1AC850D69958900470520 /* RBSplitView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D1AB5C0D693DEB00470520 /* RBSplitView.framework */; };
+		34D1AC880D69959700470520 /* RBSplitView.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34D1AB5C0D693DEB00470520 /* RBSplitView.framework */; };
 		34D8329007CBD5E2006466F2 /* Contact Info List Theme.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8328E07CBD5E2006466F2 /* Contact Info List Theme.plist */; };
 		34D8329107CBD5E2006466F2 /* Contact Info List Layout.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8328F07CBD5E2006466F2 /* Contact Info List Layout.plist */; };
 		34D832A007CBD61A006466F2 /* ContactListDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D8329F07CBD61A006466F2 /* ContactListDefaults.plist */; };
@@ -1414,6 +1417,41 @@
 			remoteGlobalIDString = 3485D67F09EB416300232CC4;
 			remoteInfo = AdiumLibpurple;
 		};
+		34D1AB590D693DEB00470520 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 34D1AB510D693DEB00470520 /* RBSplitView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8D1AC9740486D14A00FE50C9;
+			remoteInfo = Palette;
+		};
+		34D1AB5B0D693DEB00470520 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 34D1AB510D693DEB00470520 /* RBSplitView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D5E002A107328E1100594182;
+			remoteInfo = Framework;
+		};
+		34D1AB5D0D693DEB00470520 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 34D1AB510D693DEB00470520 /* RBSplitView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D5E003B9073298FC00594182;
+			remoteInfo = Library;
+		};
+		34D1AB5F0D693DEB00470520 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 34D1AB510D693DEB00470520 /* RBSplitView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = D5EA8A09074CF5AB00AE807E;
+			remoteInfo = SampleApp;
+		};
+		34D1AC830D69958000470520 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 34D1AB510D693DEB00470520 /* RBSplitView.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = D5E002A007328E1100594182;
+			remoteInfo = Framework;
+		};
 		34D834DC07CBE7BB006466F2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
@@ -1518,6 +1556,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				34D1AC880D69959700470520 /* RBSplitView.framework in CopyFiles */,
 				11EE1CCF0CDD01120097F246 /* libglib.framework in CopyFiles */,
 				11EE1CD00CDD01120097F246 /* libgmodule.framework in CopyFiles */,
 				11EE1CD10CDD01120097F246 /* libgobject.framework in CopyFiles */,
@@ -3176,6 +3215,9 @@
 		34D1897D076114C00075A380 /* AILocalizationButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILocalizationButton.h; path = "Frameworks/Adium Framework/Source/AILocalizationButton.h"; sourceTree = "<group>"; };
 		34D1897E076114C00075A380 /* AILocalizationButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationButton.m; path = "Frameworks/Adium Framework/Source/AILocalizationButton.m"; sourceTree = "<group>"; };
 		34D189B1076131850075A380 /* AILocalizationAssistance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILocalizationAssistance.h; path = "Frameworks/Adium Framework/Source/AILocalizationAssistance.h"; sourceTree = "<group>"; };
+		34D1AB510D693DEB00470520 /* RBSplitView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RBSplitView.xcodeproj; path = Frameworks/RBSplitView/RBSplitView.xcodeproj; sourceTree = "<group>"; };
+		34D1AC5B0D69450200470520 /* RBSplitSubview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RBSplitSubview.h; path = Frameworks/RBSplitView/Source/RBSplitSubview.h; sourceTree = "<group>"; };
+		34D1AC5C0D69450200470520 /* RBSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RBSplitView.h; path = Frameworks/RBSplitView/Source/RBSplitView.h; sourceTree = "<group>"; };
 		34D2E8670758BB0B0054C56D /* ESFileTransferPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferPreferences.h; path = Source/ESFileTransferPreferences.h; sourceTree = "<group>"; };
 		34D2E8680758BB0B0054C56D /* ESFileTransferPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferPreferences.m; path = Source/ESFileTransferPreferences.m; sourceTree = "<group>"; };
 		34D369ED08E7544D00E15E40 /* AIColorPickerSliders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIColorPickerSliders.h; path = "Frameworks/Adium Framework/Source/AIColorPickerSliders.h"; sourceTree = "<group>"; };
@@ -4085,6 +4127,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F51BCEEA0A15793E000FDC06 /* AIHyperlinks.framework in Frameworks */,
+				34D1AC850D69958900470520 /* RBSplitView.framework in Frameworks */,
 				34D835D907CBED8F006466F2 /* AIUtilities.framework in Frameworks */,
 				3448758E06D1EBDF00DA778C /* Cocoa.framework in Frameworks */,
 				3419F7760531512200C68BA3 /* Adium.framework in Frameworks */,
@@ -4316,6 +4359,7 @@
 				EE96A3CB0A9C5E3F00C47A57 /* FriBidi.framework */,
 				815D37460A765E83009338C2 /* CoreServices.framework */,
 				638392F609D4D67A0067B9B7 /* Sparkle.framework */,
+				34D1AB510D693DEB00470520 /* RBSplitView.xcodeproj */,
 				3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */,
 				3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */,
 				341BDBBA0968BC9A00CF83F5 /* OTR.framework */,
@@ -4370,6 +4414,8 @@
 				340C1A340BD58F9000D09235 /* AuthorizedTaskManager.m */,
 				340C1A330BD58F9000D09235 /* DiskImageUtilities.h */,
 				340C1A320BD58F9000D09235 /* DiskImageUtilities.m */,
+				34D1AC5B0D69450200470520 /* RBSplitSubview.h */,
+				34D1AC5C0D69450200470520 /* RBSplitView.h */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -5449,6 +5495,17 @@
 				34D1897E076114C00075A380 /* AILocalizationButton.m */,
 			);
 			name = "Localization Assistance";
+			sourceTree = "<group>";
+		};
+		34D1AB520D693DEB00470520 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				34D1AB5A0D693DEB00470520 /* RBSplitView.palette */,
+				34D1AB5C0D693DEB00470520 /* RBSplitView.framework */,
+				34D1AB5E0D693DEB00470520 /* libRBSplitView.a */,
+				34D1AB600D693DEB00470520 /* SampleApp.app */,
+			);
+			name = Products;
 			sourceTree = "<group>";
 		};
 		34D8342B07CBE6A4006466F2 /* External Sources */ = {
@@ -8072,6 +8129,10 @@
 					ProductGroup = 34D834D107CBE7B2006466F2 /* Products */;
 					ProjectRef = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
 				},
+				{
+					ProductGroup = 34D1AB520D693DEB00470520 /* Products */;
+					ProjectRef = 34D1AB510D693DEB00470520 /* RBSplitView.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -8118,6 +8179,34 @@
 			fileType = wrapper.framework;
 			path = AIHyperlinks.framework;
 			remoteRef = 3496A8ED07CE6CCB0055BBAB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34D1AB5A0D693DEB00470520 /* RBSplitView.palette */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = RBSplitView.palette;
+			remoteRef = 34D1AB590D693DEB00470520 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34D1AB5C0D693DEB00470520 /* RBSplitView.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = RBSplitView.framework;
+			remoteRef = 34D1AB5B0D693DEB00470520 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34D1AB5E0D693DEB00470520 /* libRBSplitView.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRBSplitView.a;
+			remoteRef = 34D1AB5D0D693DEB00470520 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34D1AB600D693DEB00470520 /* SampleApp.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = SampleApp.app;
+			remoteRef = 34D1AB5F0D693DEB00470520 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		34D834D207CBE7B2006466F2 /* AIUtilities.framework */ = {
@@ -9365,6 +9454,11 @@
 			isa = PBXTargetDependency;
 			target = 3485D67F09EB416300232CC4 /* AdiumLibpurple */;
 			targetProxy = 34C7C62C09EC4EBE0060FB4A /* PBXContainerItemProxy */;
+		};
+		34D1AC840D69958000470520 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Framework;
+			targetProxy = 34D1AC830D69958000470520 /* PBXContainerItemProxy */;
 		};
 		34F3B9AB0BDF177C0011AB34 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -11337,6 +11431,7 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
 				);
 				HEADER_SEARCH_PATHS = (
+					Frameworks/RBSplitView/Source,
 					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
@@ -11966,6 +12061,7 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
 				);
 				HEADER_SEARCH_PATHS = (
+					Frameworks/RBSplitView/Source,
 					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
@@ -11994,6 +12090,7 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
 				);
 				HEADER_SEARCH_PATHS = (
+					Frameworks/RBSplitView/Source,
 					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
@@ -12022,6 +12119,7 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_PROJECT_2)",
 				);
 				HEADER_SEARCH_PATHS = (
+					Frameworks/RBSplitView/Source,
 					"$(HEADER_SEARCH_PATHS_QUOTED_1)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_2)",
 					"$(HEADER_SEARCH_PATHS_QUOTED_3)",
