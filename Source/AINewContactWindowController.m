@@ -270,6 +270,8 @@
 		}
 		
 		uniqueID = [[selectedPerson uniqueId] retain];
+		
+		[self configureControlDimming];
 	}
 	
 	//Clean up
