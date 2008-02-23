@@ -223,7 +223,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 		for (l = purple_notify_user_info_get_entries(user_info); l != NULL; l = l->next) {
 			PurpleNotifyUserInfoEntry *user_info_entry = l->data;
 			if (purple_notify_user_info_entry_get_label(user_info_entry) &&
-				strcmp(purple_notify_user_info_entry_get_label(user_info_entry), "Profile") == 0) {
+				strcmp(purple_notify_user_info_entry_get_label(user_info_entry), _("Profile")) == 0) {
 
 				[theContact setProfile:[AIHTMLDecoder decodeHTML:(purple_notify_user_info_entry_get_value(user_info_entry) ?
 																  [NSString stringWithUTF8String:purple_notify_user_info_entry_get_value(user_info_entry)] :

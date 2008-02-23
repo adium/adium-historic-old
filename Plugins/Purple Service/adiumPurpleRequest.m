@@ -151,8 +151,9 @@ static void *adiumPurpleRequestAction(const char *title, const char *primary,
 	id					requestController = nil;
 	int					i;
 	BOOL				handled = NO;
-	
-	if (primaryString && ([primaryString rangeOfString:@"has just asked to directly connect"].location != NSNotFound)) {
+
+	if (primaryString && ([primaryString isEqualToString:[NSString stringWithFormat:[NSString stringWithUTF8String:_("%s has just asked to directly connect to %s")],
+														  who, purple_account_get_username(account)]])) {
 		AIListContact *adiumContact = contactLookupFromBuddy(purple_find_buddy(account, who));
 		//Automatically accept Direct IM requests from contacts on our list
 		if (adiumContact && [adiumContact isIntentionallyNotAStranger]) {
@@ -166,7 +167,7 @@ static void *adiumPurpleRequestAction(const char *title, const char *primary,
 			
 			handled = YES;
 		}
-	} else if (primaryString && ([primaryString rangeOfString:@"Accept chat invitation"].location != NSNotFound)) {
+	} else if (primary && strcmp(primary, _("Accept chat invitation?")) == 0) {
 		AIListContact *contact = contactLookupFromBuddy(purple_find_buddy(account, who));
 		[[[AIObject sharedAdiumInstance] contactAlertsController] generateEvent:CONTENT_GROUP_CHAT_INVITE
 										 forListObject:contact
