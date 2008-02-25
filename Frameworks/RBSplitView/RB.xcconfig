@@ -17,3 +17,12 @@ GCC_WARN_ABOUT_MISSING_NEWLINE = YES
 GCC_WARN_ALLOW_INCOMPLETE_PROTOCOL = YES
 GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = YES
 GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = YES
+
+// There is an issue with Xcode 2.5:
+// The InterfaceBuilder Framework moved from /System/Library/Frameworks to
+// $(DEVELOPER_FRAMEWORKS_DIR); which is /Library/Frameworks relative to the
+// Xcode installation direcotry. This works fine in Xcode 3.0, as it supports
+// @loader_path, but Xcode 2.5 does not. Apple suggested the following fix:
+// http://lists.apple.com/archives/Xcode-users/2007/Nov/msg00398.html
+FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_FRAMEWORKS_DIR)"
+OTHER_LDFLAGS = -dylib_file "@loader_path/../../../../PrivateFrameworks/DevToolsRemoteClient.framework/Versions/A/DevToolsRemoteClient:$(DEVELOPER_LIBRARY_DIR)/PrivateFrameworks/DevToolsRemoteClient.framework/Versions/A/DevToolsRemoteClient" -dylib_file "@loader_path/../../../../PrivateFrameworks/DevToolsFoundation.framework/Versions/A/DevToolsFoundation:$(DEVELOPER_LIBRARY_DIR)/PrivateFrameworks/DevToolsFoundation.framework/Versions/A/DevToolsFoundation"
