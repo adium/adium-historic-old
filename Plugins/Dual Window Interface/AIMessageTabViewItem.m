@@ -211,7 +211,7 @@
 		NSSet		 *keys = [[notification userInfo] objectForKey:@"Keys"];
 		
 		//Redraw if the icon has changed
-		if (!keys || [keys containsObject:@"Tab State Icon"]) {
+		if (!keys || [keys containsObject:@"Tab Status Icon"]) {
 			[self updateTabStatusIcon];
 		}
 		if (!keys || [keys containsObject:KEY_USER_ICON]) {
@@ -337,13 +337,18 @@
 //Update the contact and status icons on the tab.
 - (void)updateTabStatusIcon
 {
+	/* Really, we should be observing for the icon changing and posting a dependent key change notification when it does...
+	 * Pretending to have changed our icon key is a path of much less resistance to note that -[self icon] has changed.
+	 */
+	[self willChangeValueForKey:@"icon"];
 	[[self windowController] updateIconForTabViewItem:self];
-#warning Wha-huh? setIcon: is a no-op, so this doesnt do anything.
-	[self setValue:nil forKey:@"icon"];
+	[self didChangeValueForKey:@"icon"];
 }
 - (void)updateTabContactIcon
 {
+	[self willChangeValueForKey:@"icon"];
 	[self setLargeImage:[[[self chat] chatImage] imageByScalingToSize:NSMakeSize(48,48)]];
+	[self didChangeValueForKey:@"icon"];
 }
 
 @end
