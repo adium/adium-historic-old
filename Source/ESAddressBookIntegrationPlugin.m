@@ -30,6 +30,7 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/OWAddressBookAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 
 #import "AIAddressBookUserIconSource.h"
 
@@ -345,15 +346,26 @@ NSString* serviceIDForJabberUID(NSString *UID);
 			//Find the person
 			ABPerson *person = [[self class] personForListObject:inObject];
 			
-			if (person && (person != [sharedAddressBook me])) {				
-				[person setImageData:[inObject userIconData]];
+			if (person && (person != [sharedAddressBook me])) {
+				if (person) {
+					NSData	*existingABImageData = [person imageData];
+					NSImage	*existingABImage = (existingABImageData ? [[NSImage alloc] initWithData:[person imageData]] : nil);
+					NSImage	*objectUserIcon = [inObject userIcon];
+					NSData  *objectUserIconData = nil;
 
-				[[sharedAddressBook class] cancelPreviousPerformRequestsWithTarget:sharedAddressBook
-																		  selector:@selector(save)
-																			object:nil];
-				[sharedAddressBook performSelector:@selector(save)
-										withObject:nil
-										afterDelay:5.0];
+					if (!existingABImage ||
+						(objectUserIcon && [(objectUserIconData = [objectUserIcon PNGRepresentation]) isEqualToData:[existingABImage PNGRepresentation]])) {
+						[person setImageData:objectUserIconData];
+						
+						
+						[[sharedAddressBook class] cancelPreviousPerformRequestsWithTarget:sharedAddressBook
+																				  selector:@selector(save)
+																					object:nil];
+						[sharedAddressBook performSelector:@selector(save)
+												withObject:nil
+												afterDelay:5.0];						
+					}
+				}
 			}
 		}
     }
@@ -505,9 +517,16 @@ NSString* serviceIDForJabberUID(NSString *UID);
     } else if (automaticSync && ([group isEqualToString:PREF_GROUP_USERICONS]) && object) {
 		//Set an icon to the address book
 		ABPerson *person = [[self class] personForListObject:object];
-		
-		if (person) {			
-			[person setImageData:[object userIconData]];
+		if (person) {
+			NSData	*existingABImageData = [person imageData];
+			NSImage	*existingABImage = (existingABImageData ? [[NSImage alloc] initWithData:[person imageData]] : nil);
+			NSImage	*objectUserIcon = [object userIcon];
+			NSData  *objectUserIconData = nil;
+
+			if (!existingABImage ||
+				(objectUserIcon && [(objectUserIconData = [objectUserIcon PNGRepresentation]) isEqualToData:[existingABImage PNGRepresentation]])) {
+				[person setImageData:objectUserIconData];
+			}
 		}
 	}
 }
@@ -1180,8 +1199,7 @@ NSString* serviceIDForJabberUID(NSString *UID)
 			
 			[multiValue release];
 		}
-		
-		
+
 		//Set the image
 		[person setImageData:[contact userIconData]];
 		
