@@ -139,7 +139,7 @@
 		D5E002A207328E1100594182 /* Framework-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "Framework-Info.plist"; sourceTree = "<group>"; };
 		D5E003B9073298FC00594182 /* libRBSplitView.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libRBSplitView.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5E197990732760700003922 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/RBSplitSubviewSizeInspector.nib; sourceTree = "<group>"; };
-		D5EA8A09074CF5AB00AE807E /* SampleApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		D5EA8A09074CF5AB00AE807E /* SampleApp.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = SampleApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5EA8A0B074CF5AB00AE807E /* SampleApp-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.xml; name = "SampleApp-Info.plist"; path = "Sample App/SampleApp-Info.plist"; sourceTree = "<group>"; };
 		D5EA8A2F074CF6DE00AE807E /* main.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "Sample App/main.m"; sourceTree = "<group>"; };
 		D5EA8A37074CF72A00AE807E /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/SampleApp.nib; sourceTree = "<group>"; };
@@ -315,6 +315,7 @@
 				8D1AC9660486D14A00FE50C9 /* Resources */,
 				8D1AC96A0486D14A00FE50C9 /* Sources */,
 				8D1AC96E0486D14A00FE50C9 /* Frameworks */,
+				D4823A8E0D72F8AC00163E7D /* Fix Framework Path Shell Script */,
 			);
 			buildRules = (
 			);
@@ -438,6 +439,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		D4823A8E0D72F8AC00163E7D /* Fix Framework Path Shell Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Fix Framework Path Shell Script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#! /bin/sh\n# There is an issue with Xcode 2.5:\n# The InterfaceBuilder Framework moved from /System/Library/Frameworks to\n# $(DEVELOPER_FRAMEWORKS_DIR); which is /Library/Frameworks relative to the\n# Xcode installation direcotry. This works fine in Xcode 3.0, as it supports\n# @loader_path, but Xcode 2.5 does not. Apple suggested the following fix:\n# http://lists.apple.com/archives/Xcode-users/2007/Nov/msg00398.html\n\n\"${INSTALL_PATH}/usr/bin/install_name_tool\" -change \"${DEVELOPER_LIBRARY_DIR}/Frameworks/InterfaceBuilder.framework/Versions/A/InterfaceBuilder\" /System/Library/FrameworksInterfaceBuilder.framework/Versions/A/InterfaceBuilder \"${TARGET_BUILD_DIR}/${EXECUTABLE_PATH}\"";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8D1AC96A0486D14A00FE50C9 /* Sources */ = {
