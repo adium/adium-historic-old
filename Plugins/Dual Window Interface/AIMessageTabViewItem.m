@@ -211,7 +211,7 @@
 		NSSet		 *keys = [[notification userInfo] objectForKey:@"Keys"];
 		
 		//Redraw if the icon has changed
-		if (!keys || [keys containsObject:@"Tab State Icon"]) {
+		if (!keys || [keys containsObject:@"Tab Status Icon"]) {
 			[self updateTabStatusIcon];
 		}
 		if (!keys || [keys containsObject:KEY_USER_ICON]) {
@@ -347,6 +347,7 @@
 - (void)updateTabContactIcon
 {
 	[self setLargeImage:[[[self chat] chatImage] imageByScalingToSize:NSMakeSize(48,48)]];
+	[self setValue:nil forKey:@"icon"];
 }
 
 @end
