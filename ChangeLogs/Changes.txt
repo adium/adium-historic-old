@@ -1,5 +1,15 @@
 				Adium X Version History
 				-----------------------
+Version 1.2.3 (2/25/08)
+ * Fixed logging in for certain Yahoo! Messenger accounts
+ * Fixed opening chats when using certain message styles (#9224)
+ * Fixed sizing of the message entry field (#8701)
+ * Improved XMPP account reconnections after an SSL handshake fails (#9214)
+ * Optimized drawing of tabs when on the side of the window
+ * Fixed enabling of the Add button in the Add Contact window when adding from the Apple Address Book (#9260)
+ * We now treat 'Busy' as 'Do Not Disturb' for XMPP accounts (#9051)
+ * Catalan and Russian translation updates
+ 
 Version 1.2.2 (2/18/08)
  * Fixed incorrect behavior (including seemingly random changes in selection) in the account/contact selector at the top of chats when multiple sources or destinations are possible (#9013) 
  * XMPP & Google Talk
