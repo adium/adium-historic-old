@@ -22,6 +22,7 @@
 #import <Adium/AIService.h>
 #import <Adium/AIUserIcons.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
+#import <AIUtilities/AIImageAdditions.h>
 
 #define ObjectStatusCache	@"Object Status Cache"
 #define DisplayName			@"Display Name"
@@ -513,7 +514,7 @@
 - (NSData *)userIconData
 {
 	NSImage *userIcon = [self userIcon];
-	return ([userIcon TIFFRepresentation]);
+	return ([userIcon PNGRepresentation]);
 }
 - (void)setUserIconData:(NSData *)inData
 {
