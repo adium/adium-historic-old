@@ -346,8 +346,9 @@
 }
 - (void)updateTabContactIcon
 {
+	[self willChangeValueForKey:@"icon"];
 	[self setLargeImage:[[[self chat] chatImage] imageByScalingToSize:NSMakeSize(48,48)]];
-	[self setValue:nil forKey:@"icon"];
+	[self didChangeValueForKey:@"icon"];
 }
 
 @end
