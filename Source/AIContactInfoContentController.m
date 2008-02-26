@@ -62,7 +62,8 @@
 	while((currentPane = [paneEnumerator nextObject])) {
 		Class planeClass = nil;
 		if(!(planeClass = NSClassFromString(currentPane))) {
-			return nil;
+			AILogWithSignature(@"Warning: Could not obtain a class for %@", currentPane);
+			return;
 		}
 		
 		[contentArray addObject:[[planeClass alloc] init]];
