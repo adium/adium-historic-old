@@ -743,15 +743,20 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 - (void)reimportLogsToSpotlightIfNeeded
 {
 	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"Adium 1.1:Reimported Spotlight Logs"]) {
-		NSArray *arguments;
-
-		arguments = [NSArray arrayWithObjects:
-			@"-r",
-			[[[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"Contents"] stringByAppendingPathComponent:@"Library"]
-				stringByAppendingPathComponent:@"Spotlight"] stringByAppendingPathComponent:[@"AdiumSpotlightImporter" stringByAppendingPathExtension:@"mdimporter"]],
-			nil];
-		[NSTask launchedTaskWithLaunchPath:@"/usr/bin/mdimport"	arguments:arguments];
-
+		@try {
+			NSArray *arguments;
+			
+			arguments = [NSArray arrayWithObjects:
+						 @"-r",
+						 [[[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"Contents"] stringByAppendingPathComponent:@"Library"]
+						   stringByAppendingPathComponent:@"Spotlight"] stringByAppendingPathComponent:[@"AdiumSpotlightImporter" stringByAppendingPathExtension:@"mdimporter"]],
+						 nil];
+			[NSTask launchedTaskWithLaunchPath:@"/usr/bin/mdimport"	arguments:arguments];
+		}
+		@catch (NSException *e) {
+			NSLog(@"Exception caught while reimporting Spotlight logs: %@", e);
+		}
+		
 		[[NSUserDefaults standardUserDefaults] setBool:YES
 												forKey:@"Adium 1.1:Reimported Spotlight Logs"];
 	}
