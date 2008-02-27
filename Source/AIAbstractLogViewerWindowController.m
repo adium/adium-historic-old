@@ -2397,8 +2397,14 @@ static int toArraySort(id itemA, id itemB, void *context)
 			
 			[[adium notificationCenter] postNotificationName:ChatLog_WillDelete object:aLog userInfo:nil];
 			AILogToGroup	*logToGroup = [logToGroupDict objectForKey:[NSString stringWithFormat:@"%@.%@/%@",[aLog serviceClass],[aLog from],[aLog to]]];
+
+			// Success will be unused in deployment builds as AILog turns to nothing
+#ifdef DEBUG_BUILD
 			BOOL success = [logToGroup trashLog:aLog];
 			AILog(@"Trashing %@: %i",[aLog path], success);
+#else
+			[logToGroup trashLog:aLog];
+#endif
 			//Clear the to group out if it no longer has anything of interest
 			if ([logToGroup logCount] == 0) {
 				AILogFromGroup	*logFromGroup = [logFromGroupDict objectForKey:[NSString stringWithFormat:@"%@.%@",[aLog serviceClass],[aLog from]]];

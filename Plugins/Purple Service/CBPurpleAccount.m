@@ -2776,7 +2776,10 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	BOOL result = [purpleThread doCommand:[parameters objectForKey:@"totalCommandString"] fromAccount:[parameters objectForKey:@"account"] inChat:[parameters objectForKey:@"chat"]];
 	if(result == FALSE)	{
 #warning Incomplete
-		int choice = NSRunAlertPanel(@"Command Failed!",@"command failed: %@ from Account: %@ in Chat: %@",@"Cancel",@"OK",nil,[parameters objectForKey:@"totalCommandString"],[parameters objectForKey:@"account"],[parameters objectForKey:@"chat"]); 
+		// Either choice should be taken into account for various actions
+		// or the panel should be modified to only present an OK button,
+		// so there is no real choice for the user
+		/* int choice = */NSRunAlertPanel(@"Command Failed!",@"command failed: %@ from Account: %@ in Chat: %@",@"Cancel",@"OK",nil,[parameters objectForKey:@"totalCommandString"],[parameters objectForKey:@"account"],[parameters objectForKey:@"chat"]); 
 	}
 }
 
