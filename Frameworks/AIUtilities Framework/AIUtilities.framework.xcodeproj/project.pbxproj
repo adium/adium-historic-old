@@ -1502,7 +1502,6 @@
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DA8A805C08553B3800F24BB3 /* Build configuration list for PBXProject "AIUtilities.framework" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
@@ -1733,15 +1732,12 @@
 				INFOPLIST_FILE = Resources/AIUtilities_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_STYLE = DYNAMIC;
-				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_CPLUSPLUSFLAGS = "-fconstant-cfstrings";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0x12000000,
-					"-lSystem",
-					"-lgcc",
 				);
 				PRODUCT_NAME = AIUtilities;
 				WARNING_CFLAGS = (
@@ -1785,15 +1781,12 @@
 				INFOPLIST_FILE = Resources/AIUtilities_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_STYLE = DYNAMIC;
-				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_CPLUSPLUSFLAGS = "-fconstant-cfstrings";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0x12000000,
-					"-lSystem",
-					"-lgcc",
 				);
 				PRODUCT_NAME = AIUtilities;
 				WARNING_CFLAGS = (
@@ -1842,15 +1835,12 @@
 				INFOPLIST_FILE = Resources/AIUtilities_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_STYLE = DYNAMIC;
-				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_CPLUSPLUSFLAGS = "-fconstant-cfstrings";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0x12000000,
-					"-lSystem",
-					"-lgcc",
 				);
 				PRODUCT_NAME = AIUtilities;
 				WARNING_CFLAGS = (
@@ -1904,15 +1894,12 @@
 				INFOPLIST_FILE = Resources/AIUtilities_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_STYLE = DYNAMIC;
-				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_CPLUSPLUSFLAGS = "-fconstant-cfstrings";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0x12000000,
-					"-lSystem",
-					"-lgcc",
 				);
 				PRODUCT_NAME = AIUtilities;
 				WARNING_CFLAGS = (
@@ -1943,15 +1930,12 @@
 				INFOPLIST_FILE = Resources/AIUtilities_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_STYLE = DYNAMIC;
-				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.4;
 				OTHER_CPLUSPLUSFLAGS = "-fconstant-cfstrings";
 				OTHER_LDFLAGS = (
 					"-seg1addr",
 					0x12000000,
-					"-lSystem",
-					"-lgcc",
 				);
 				PRODUCT_NAME = AIUtilities;
 				WARNING_CFLAGS = (
