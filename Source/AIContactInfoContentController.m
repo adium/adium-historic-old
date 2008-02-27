@@ -75,5 +75,9 @@
 	[self _setLoadedPanes:contentArray];
 }
 
+-(IBAction)segmentSelected:(id)sender
+{
+#warning Needs implementation
+}
 
 @end

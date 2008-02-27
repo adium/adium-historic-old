@@ -97,7 +97,7 @@
 	if (!aNotification || [aNotification object] == contactListView) {
 		int selectedRow = [contactListView selectedRow];
 
-		[delegate contactInfoListControllerSelectionDidChangeToListObject:((selectedRow != -1) ?
+		[(AIContactInfoWindowController *)delegate contactInfoListControllerSelectionDidChangeToListObject:((selectedRow != -1) ?
 																		   [contactListView itemAtRow:selectedRow] :
 																		   contactList)];
 	}
@@ -108,7 +108,9 @@
  */
 - (void)outlineViewDeleteSelectedRows:(NSOutlineView *)outlineView
 {
-	[(AIContactInfoWindowController *)delegate removeContact:outlineView];
+#warning AIContactInfoWindowController has no method removeContact
+// Either this needs to be implemented first or this call needs to be removed completely
+//	[(AIContactInfoWindowController *)delegate removeContact:outlineView];
 }
 
 /*!
