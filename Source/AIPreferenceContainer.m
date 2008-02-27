@@ -196,8 +196,13 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 			}
 
 			//For compatibility with having loaded individual object prefs from previous version of Adium, we key by the safe filename string
-			prefs = [[*myGlobalPrefs objectForKey:[[object internalObjectID] safeFilenameString]] retain];
-			if (!prefs) prefs = [[NSMutableDictionary alloc] init];
+			NSString *globalPrefsKey = [[object internalObjectID] safeFilenameString];
+			prefs = [[*myGlobalPrefs objectForKey:globalPrefsKey] retain];
+			if (!prefs) {
+				prefs = [[NSMutableDictionary alloc] init];
+				[*myGlobalPrefs setObject:prefs
+								   forKey:globalPrefsKey];
+			}
 			(*myUsersOfGlobalPrefs)++;
 
 		} else {
@@ -352,6 +357,9 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 			[timer_savingOfAccountCache release]; timer_savingOfAccountCache = nil;
 		}
 	}
+
+	(*myUsersOfGlobalPrefs)--;
+	
 	[pool release];
 }
 
@@ -383,17 +391,21 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 			}
 		}
 
-		if (!*myTimerForSavingGlobalPrefs) {
+		if (*myTimerForSavingGlobalPrefs) {
+			@synchronized(*myTimerForSavingGlobalPrefs) {
+				[*myTimerForSavingGlobalPrefs setFireDate:[NSDate dateWithTimeIntervalSinceNow:SAVE_OBJECT_PREFS_DELAY]];
+			}
+
+		} else {
+			(*myUsersOfGlobalPrefs)++;
+
 			*myTimerForSavingGlobalPrefs = [[NSTimer scheduledTimerWithTimeInterval:SAVE_OBJECT_PREFS_DELAY
 																			 target:self
 																		   selector:@selector(performObjectPrefsSave:)
 																		   userInfo:*myGlobalPrefs
 																			repeats:NO] retain];
-		} else {
-			@synchronized(*myTimerForSavingGlobalPrefs) {
-				[*myTimerForSavingGlobalPrefs setFireDate:[NSDate dateWithTimeIntervalSinceNow:SAVE_OBJECT_PREFS_DELAY]];
-			}
 		}
+
 
 	} else {
 		//Save the preference change immediately
