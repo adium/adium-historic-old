@@ -27,8 +27,6 @@
 
 }
 
-+(id)init;
-
 -(void)verifyCommand:(NSString*)command forChat:(AIChat*)chat;
 -(id)delegate;
 -(void)setDelegate:(id)newDelegate;
