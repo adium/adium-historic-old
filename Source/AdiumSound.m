@@ -306,18 +306,11 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 		[self _stopAndReleaseAllSounds];
 }
 
-@end
-
-static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, void *refcon)
+- (void)systemOutputDeviceDidChange
 {
-#pragma unused(property)
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSEnumerator	*soundsEnum = [[self allSounds] objectEnumerator];
+	QTMovie			*movie;
 
-	AdiumSound *self = (id)refcon;
-	NSCAssert1(self, @"AudioHardware property listener function %s called with nil refcon, which we expected to be the AdiumSound instance", __PRETTY_FUNCTION__);
-
-	NSEnumerator *soundsEnum = [[self allSounds] objectEnumerator];
-	QTMovie *movie;
 	while ((movie = [soundsEnum nextObject])) {
 		//QTMovie gets confused if we're playing when we do this, so pause momentarily.
 		float savedRate = [movie rate];
@@ -339,8 +332,22 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 		//Resume playback, now on the new device.
 		[movie setRate:savedRate];
 	}
+}
 
+@end
+
+static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, void *refcon)
+{
+#pragma unused(property)
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+
+	AdiumSound *self = (id)refcon;
+	NSCAssert1(self, @"AudioHardware property listener function %s called with nil refcon, which we expected to be the AdiumSound instance", __PRETTY_FUNCTION__);
+
+	[self performSelectorOnMainThread:@selector(systemOutputDeviceDidChange)
+						   withObject:nil
+						waitUntilDone:NO];
 	[pool release];
-	
+
 	return noErr;
 }
