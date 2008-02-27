@@ -234,6 +234,10 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 				segmentLabel = AILocalizedString(@"Advanced Settings","This segment displays the advanced settings for a contact, including encryption details and account information.");
 				segmentImage = [NSImage imageNamed:ADVANCED_SEGMENT_IMAGE];
 				break;
+			default:
+				// Should not happen, but otherwise GCC will complain about variable could be used uninitialized;
+				// the NSLog below will make sure we notice it, should we really ever run into that case
+				segmentImage = nil;
 		}
 
 		NSLog(@"Loading label: %@ and image: %@ for segment: %d", segmentLabel, segmentImage, i);
