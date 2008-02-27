@@ -31,6 +31,24 @@ static NSMutableDictionary	*accountPrefs = nil;
 static int					usersOfAccountPrefs = 0;
 static NSTimer				*timer_savingOfAccountCache = nil;
 
+/*!
+ * @brief Preference Container
+ *
+ * A single AIPreferenceContainer instance provides read/write access preferences to a specific preference group, either
+ * for the global preferences or for a specific object.  After EMPTY_CACHE_DELAY seconds, it releases its preferences from memory;
+ * it will reload them from disk as needed when accessed again.
+ *
+ * All contacts share a single plist on-disk, loaded into a single mutable dictionary in-memory, objectPrefs.
+ * All accounts share a single plist on-disk, loaded into a single mutable dictionary in-memory, accountPrefs.
+ * These global dictionaries provide per-object preference dictionaries, keyed by the object's internalObjectID.
+ *
+ * Individual instances of AIPreferenceContainer make use of this shared store.  Saving of changes is batched for all changes made during a
+ * SAVE_OBJECT_PREFS_DELAY interval across all instances of AIPreferenceContainer for a given global dictionary. Because creating
+ * the data representation of a large dictionary and writing it out can be time-consuming (certainly less than a second, but still long
+ * enough to cause a perceptible delay for a user actively typing or interacting with Adium), saving is performed on a thread.
+ *
+ * When no instances are currently making use of a global dictionary, it is removed from memory; it will be reloaded from disk as needed.
+ */
 @implementation AIPreferenceContainer
 
 + (AIPreferenceContainer *)preferenceContainerForGroup:(NSString *)inGroup object:(AIListObject *)inObject
