@@ -59,7 +59,9 @@
 - (IBAction)joinChat:(id)sender
 {	
 #warning What is here
-	DCJoinChatWindowController* sharedChatInstance = [DCJoinChatWindowController joinChatWindow];
+	// Either something should be done with the instance here or the method
+	// joinChatWindow does not even need to return that instance
+	/* DCJoinChatWindowController* sharedChatInstance = */[DCJoinChatWindowController joinChatWindow];
 }
 
 /*!
