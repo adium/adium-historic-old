@@ -64,7 +64,6 @@
     AIChat					*chat;
 	BOOL					suppressSendLaterPrompt;
 	int						entryMinHeight;
-	BOOL					ignorePositionChangesForMinimumHeight;
 	int						userListMinWidth;
 }
 
