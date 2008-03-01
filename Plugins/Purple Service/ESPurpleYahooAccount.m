@@ -284,6 +284,7 @@
 				case YAHOO_STATUS_IDLE:
 				case YAHOO_STATUS_OFFLINE:
 				case YAHOO_STATUS_TYPING:
+				case YAHOO_STATUS_DISCONNECTED:
 					break;
 			}
 		}

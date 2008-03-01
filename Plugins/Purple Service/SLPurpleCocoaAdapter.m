@@ -1137,15 +1137,11 @@ static void purpleUnregisterCb(PurpleAccount *account, gboolean success, void *u
 }
 
 #pragma mark Account Status
-- (void)setStatusID:(const char *)statusID 
-		   isActive:(NSNumber *)isActive
-		  arguments:(NSMutableDictionary *)arguments
-		  onAccount:(id)adiumAccount
+GList *createListFromDictionary(NSDictionary *arguments)
 {
-	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	GList		*attrs = NULL;
-
 	//Generate a GList of attrs from arguments
+	GList *attrs = NULL;
+
 	if ([arguments count]) {
 		NSEnumerator	*enumerator;
 		NSString		*key;
@@ -1154,12 +1150,12 @@ static void purpleUnregisterCb(PurpleAccount *account, gboolean success, void *u
 		while ((key = [enumerator nextObject])) {
 			const char *value = NULL;
 			id	 valueObject;
-
+			
 			valueObject = [arguments objectForKey:key];
 			
 			if ([valueObject isKindOfClass:[NSNumber class]]) {
 				value = GINT_TO_POINTER([valueObject intValue]);
-
+				
 			} else if ([valueObject isKindOfClass:[NSString class]]) {
 				value = [valueObject UTF8String];
 			}				
@@ -1170,16 +1166,28 @@ static void purpleUnregisterCb(PurpleAccount *account, gboolean success, void *u
 				
 				//Now append the value
 				attrs = g_list_append(attrs, (gpointer)value);
-
+				
 			} else {
-				AILog(@"Warning; could not determine value of %@ for key %@, statusID %s",valueObject,key,statusID);
+				AILogWithSignature(@"Warning; could not determine value of %@ for key %@",valueObject,key);
 			}
 		}
 	}
+	
+	return attrs;
+}
+
+- (void)setStatusID:(const char *)statusID 
+		   isActive:(NSNumber *)isActive
+		  arguments:(NSMutableDictionary *)arguments
+		  onAccount:(id)adiumAccount
+{
+	PurpleAccount	*account = accountLookupFromAdiumAccount(adiumAccount);
+	GList			*attrs = createListFromDictionary(arguments);
 
 	AILog(@"Setting status on %x (%s): ID %s, isActive %i, attributes %@",account, purple_account_get_username(account),
 		  statusID, [isActive boolValue], arguments);
 	purple_account_set_status_list(account, statusID, [isActive boolValue], attrs);
+	g_list_free(attrs);
 
 	if (purple_status_is_online(purple_account_get_active_status(account)) &&
 		purple_account_is_disconnected(account))  {
@@ -1192,9 +1200,23 @@ static void purpleUnregisterCb(PurpleAccount *account, gboolean success, void *u
 
 		//Now connect the account
 		purple_account_connect(account);
-	}
-	
+	}	
 }
+
+- (void)setSongInformation:(NSDictionary *)arguments onAccount:(id)adiumAccount
+{
+	PurpleAccount	*account = accountLookupFromAdiumAccount(adiumAccount);
+	GList			*attrs;
+	PurpleStatus	*tune;
+
+	tune = purple_presence_get_status(purple_account_get_presence(account), "tune");
+	if (!tune)
+		return;
+
+	attrs = createListFromDictionary(arguments);
+	purple_status_set_active_with_attrs_list(tune, TRUE, attrs);
+	g_list_free(attrs);
+}	
 
 - (void)setInfo:(NSString *)profileHTML onAccount:(id)adiumAccount
 {
