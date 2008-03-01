@@ -74,6 +74,7 @@
 - (void)getInfoFor:(NSString *)inUID onAccount:(id)adiumAccount;
 
 - (void)setStatusID:(const char *)statusID isActive:(NSNumber *)isActive arguments:(NSMutableDictionary *)arguments onAccount:(id)adiumAccount;
+- (void)setSongInformation:(NSDictionary *)arguments onAccount:(id)adiumAccount;
 - (void)setInfo:(NSString *)profileHTML onAccount:(id)adiumAccount;
 - (void)setBuddyIcon:(NSData *)buddyImageData onAccount:(id)adiumAccount;
 - (void)setIdleSinceTo:(NSDate *)idleSince onAccount:(id)adiumAccount;
