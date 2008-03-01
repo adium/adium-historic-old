@@ -33,7 +33,7 @@
 
 }
 
-+ (DCJoinChatWindowController *)joinChatWindow;
++ (void)showJoinChatWindow;
 
 - (DCJoinChatViewController*)joinChatViewController;
 - (void)configureForAccount:(AIAccount *)inAccount;
@@ -41,4 +41,5 @@
 
 - (void)setJoinChatEnabled:(BOOL)enabled;
 - (AIListContact *)contactFromText:(NSString *)text;
+
 @end
