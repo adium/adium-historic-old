@@ -69,7 +69,8 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 		
 		//Sign up for notification when the user changes the system output device in the Sound pane of System Preferences.
 		OSStatus err = AudioHardwareAddPropertyListener(kAudioHardwarePropertyDefaultSystemOutputDevice, systemOutputDeviceDidChange, /*refcon*/ self);
-		NSAssert2(err == noErr, @"%s: Couldn't sign up for system-output-device-changed notification, because AudioHardwareAddPropertyListener returned %i", __PRETTY_FUNCTION__, err);
+		if (err != noErr)
+			NSLog(@"%s: Couldn't sign up for system-output-device-changed notification, because AudioHardwareAddPropertyListener returned %i. Adium will not know when the default system audio device changes.", __PRETTY_FUNCTION__, err);
 	}
 
 	return self;
@@ -188,7 +189,8 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 
 			if (newAudioContext) {
 				OSStatus err = SetMovieAudioContext([movie quickTimeMovie], newAudioContext);
-				NSCAssert4(err == noErr, @"%s: Could not set audio context of movie %@ to %p: SetMovieAudioContext returned error %i", __PRETTY_FUNCTION__, movie, newAudioContext, err);
+				if (err != noErr) {
+					NSLog(@"%s: Could not set audio context of movie %@ to %p: SetMovieAudioContext returned error %i. Sounds may be routed to the default audio device instead of the system alert audio device.", __PRETTY_FUNCTION__, movie, newAudioContext, err);
 				
 				//We created it, so we must release it.
 				QTAudioContextRelease(newAudioContext);
@@ -321,8 +323,10 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 
 		if (newAudioContext) {
 			OSStatus err = SetMovieAudioContext([movie quickTimeMovie], newAudioContext);
-			NSCAssert4(err == noErr, @"%s: Could not set audio context of movie %@ to %p: SetMovieAudioContext returned error %i", __PRETTY_FUNCTION__, movie, newAudioContext, err);
-			
+			if (err != noErr) {
+				NSLog(@"%s: Could not set audio context of movie %@ to %p: SetMovieAudioContext returned error %i. Sounds may be routed to the default audio device instead of the system alert audio device.", __PRETTY_FUNCTION__, movie, newAudioContext, err);
+			}
+
 			//We created it, so we must release it.
 			QTAudioContextRelease(newAudioContext);
 		} else {
