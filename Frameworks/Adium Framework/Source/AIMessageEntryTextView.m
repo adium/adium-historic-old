@@ -261,7 +261,6 @@
 //Text changed
 - (void)textDidChange:(NSNotification *)notification
 {
-
 	//Update typing status
 	if (enableTypingNotifications) {
 		[[adium contentController] userIsTypingContentForChat:chat hasEnteredText:[[self textStorage] length] > 0];
@@ -466,6 +465,8 @@
 	}
 
 	[attributes release];
+	
+	[self scrollRangeToVisible:[self selectedRange]];
 }
 
 - (void)pasteAsPlainTextWithTraits:(id)sender
@@ -593,6 +594,8 @@
 	}
 
 	[attributes release];	
+	
+	[self scrollRangeToVisible:[self selectedRange]];
 }
 
 #pragma mark Deletion
@@ -643,20 +646,27 @@
 {
     if (_desiredSizeCached.width == 0) {
         float 		textHeight;
-
         if ([[self textStorage] length] != 0) {
             //If there is text in this view, let the container tell us its height
+
 			//Force glyph generation.  We must do this or usedRectForTextContainer might only return a rect for a
 			//portion of our text.
-            [[self layoutManager] glyphRangeForTextContainer:[self textContainer]];
-            textHeight = [[self layoutManager] usedRectForTextContainer:[self textContainer]].size.height;
+            [[self layoutManager] glyphRangeForTextContainer:[self textContainer]];            
 
+            textHeight = [[self layoutManager] usedRectForTextContainer:[self textContainer]].size.height;
         } else {
             //Otherwise, we use the current typing attributes to guess what the height of a line should be
 			textHeight = [NSAttributedString stringHeightForAttributes:[self typingAttributes]];
         }
 
-        _desiredSizeCached = NSMakeSize([self frame].size.width, textHeight + ENTRY_TEXTVIEW_PADDING);
+		/* When we called glyphRangeForTextContainer, we may have triggered re-entry via
+		 *		-[self setFrame:] --> -[self frameDidChange:] --> -[self _resetCacheAndPostSizeChanged]
+		 * in which case the second entry through the loop (the future relative to our conversation in this comment) got the correct desired size.
+		 * In the present, an *old* value is in textHeight.  We don't want to use that. Jumping gigawatts!
+		 */
+		if (_desiredSizeCached.width == 0) {
+			_desiredSizeCached = NSMakeSize([self frame].size.width, textHeight + ENTRY_TEXTVIEW_PADDING);
+		}
     }
 
     return _desiredSizeCached;
@@ -677,15 +687,14 @@
 - (void)_resetCacheAndPostSizeChanged
 {
 	//Reset the size cache
-    _desiredSizeCached = NSMakeSize(0,0);
+	_desiredSizeCached = NSMakeSize(0,0);
 
-    //Post notification if size changed
-    if (!NSEqualSizes([self desiredSize], lastPostedSize)) {
-        [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:self];
-        lastPostedSize = [self desiredSize];
-    }
+	//Post notification if size changed
+	if (!NSEqualSizes([self desiredSize], lastPostedSize)) {
+		lastPostedSize = [self desiredSize];
+		[[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:self];
+	}
 }
-
 
 //Paging ---------------------------------------------------------------------------------------------------------------
 #pragma mark Paging
