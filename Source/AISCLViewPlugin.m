@@ -147,7 +147,7 @@
 	if ([contactList isKindOfClass:[AIListGroup class]]) { 
 		AIListWindowController  *newContactList = [AIBorderlessListWindowController listWindowControllerForContactList:contactList];
 	
-		[contactLists addObject:[newContactList retain]];
+		[contactLists addObject:newContactList];
 		[newContactList showWindowInFrontIfAllowed:YES];
 		
 		return newContactList;
@@ -177,7 +177,7 @@
  */
 - (void)contactListIsEmpty:(NSNotification *)notification
 {
-	NSEnumerator *i = [contactLists objectEnumerator];
+	NSEnumerator *i = [[[contactLists copy] autorelease] objectEnumerator];
 	id object = [notification object];
 	AIListWindowController *window;
 	
@@ -261,7 +261,7 @@
 - (void)closeDetachedContactLists
 {
 	// Close all other windows
-	NSEnumerator *windowEnumerator = [contactLists objectEnumerator];
+	NSEnumerator *windowEnumerator = [[[contactLists copy] autorelease] objectEnumerator];
 	AIListWindowController *window;
 	while ((window = [windowEnumerator nextObject])) {
 		[self closeContactList:window];
