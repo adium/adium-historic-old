@@ -391,8 +391,6 @@
 	if (menuItem == menuItem_nextDetached || menuItem == menuItem_previousDetached || menuItem == menuItem_consolidate)
 		return ([self detachedContactListCount] != 0);
 	else if (menuItem == contextSubmenu) {
-#warning Unacceptable and broken
-		[self rebuildContextMenu];
 		return YES;
 	}
 
@@ -401,7 +399,8 @@
 
 - (void)menu:(NSMenu *)menu needsUpdateForMenuItem:(NSMenuItem *)menuItem
 {
-	NSLog(@"%@ -> %@", menu, menuItem);
+	if (menuItem == contextSubmenu)
+		[self rebuildContextMenu];
 }
 
 - (void)rebuildContextMenu{	
