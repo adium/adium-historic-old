@@ -87,7 +87,7 @@ static NSImage *det_triangle_closed = nil;
 #warning This should not be called outside libpurple!
 				jabber_register_gateway((JabberStream*)gc->proto_data, [[item jid] UTF8String]);
 			else if ([[identity objectForKey:@"category"] isEqualToString:@"conference"]) {
-                DCJoinChatWindowController *jcwc = [DCJoinChatWindowController joinChatWindow];
+                DCJoinChatWindowController *jcwc = [DCJoinChatWindowController showJoinChatWindow];
                 [jcwc configureForAccount:account];
                 
 				NSRange atsign = [[item jid] rangeOfString:@"@"];
