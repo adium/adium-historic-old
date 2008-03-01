@@ -266,7 +266,6 @@ typedef enum {
 - (id)detachContactList:(AIListGroup *)contactList;
 - (void)nextDetachedContactList;
 - (void)previousDetachedContactList;
-- (BOOL)allowDetachableContactList;
 - (unsigned)detachedContactListCount;
 @end
 
