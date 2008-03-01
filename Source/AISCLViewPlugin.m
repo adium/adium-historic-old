@@ -38,7 +38,7 @@
 - (void)loadWindowPreferences:(NSDictionary *)windowPreferences;
 - (void)saveAndCloseDetachedGroups;
 
-- (BOOL)rebuildContextMenu;
+- (void)rebuildContextMenu;
 - (NSString *)formatContextMenu:(AIListObject<AIContainingObject> *)contactList;
 - (NSString *)formatContextMenu:(AIListObject<AIContainingObject> *)contactList showEmpty:(BOOL)empty;
 @end
@@ -116,7 +116,6 @@
 	//Detached state
 	hasLoaded = NO;
 	detachedCycle = 0;
-	detachable = YES;
 }
 
 - (void)uninstallPlugin
@@ -307,13 +306,6 @@
 #pragma mark Navigate Through Detached Windows
 
 /*!
- * @return Returns YES if contact list is allowed to be detached
- */
-- (BOOL)allowDetachableContactList {
-	return detachable;
-}
-
-/*!
  * @retrun Returns the number of detached contact lists
  */
 - (unsigned)detachedContactListCount {
@@ -400,12 +392,14 @@
 		return ([self detachedContactListCount] != 0);
 	else if (menuItem == contextSubmenu) {
 #warning Unacceptable and broken
-		return [self rebuildContextMenu];
+		[self rebuildContextMenu];
+		return YES;
 	}
+
 	return YES;
 }
 
-- (BOOL)rebuildContextMenu{	
+- (void)rebuildContextMenu{	
 	AIListObject *listObject = [[adium interfaceController] selectedListObject];
 	
 	// If no item selected then we can't continue
@@ -482,13 +476,6 @@
 	if (contextMenuAttach!=nil)
 		[contextMenuAttach release];
 	contextMenuAttach = attachMenu;
-	
-	// Respect if groups can detach
-	if (![self allowDetachableContactList])
-		return NO;
-	else
-		return YES;
-	
 }
 
 - (NSString *)formatContextMenu:(AIListObject<AIContainingObject> *)contactList {

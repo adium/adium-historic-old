@@ -54,7 +54,6 @@
 	NSMenu									*contextSubmenuContent;
 	NSMenuItem								*contextSubmenu;
 
-	BOOL									detachable;
 	unsigned								detachedCycle;
 }
 
