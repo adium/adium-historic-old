@@ -399,12 +399,17 @@
 	return YES;
 }
 
+- (void)menu:(NSMenu *)menu needsUpdateForMenuItem:(NSMenuItem *)menuItem
+{
+	NSLog(@"%@ -> %@", menu, menuItem);
+}
+
 - (void)rebuildContextMenu{	
 	AIListObject *listObject = [[adium interfaceController] selectedListObject];
 	
 	// If no item selected then we can't continue
 	if(listObject == nil)
-		return NO;
+		return;
 	
 	NSMutableDictionary *attachMenu = [[NSMutableDictionary alloc] init];
 	
@@ -595,7 +600,7 @@
 		defaultController = [[AIBorderlessListWindowController listWindowController] retain];
 	}
 	
-	if (!hasLoaded && detachable) {
+	if (!hasLoaded) {
 		NSArray *detachedWindowsDict = [[adium preferenceController] preferenceForKey:DETACHED_WINDOWS
 																				group:PREF_DETACHED_GROUPS];
 		NSEnumerator *enumerator = [detachedWindowsDict objectEnumerator];
