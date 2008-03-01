@@ -59,7 +59,6 @@
 - (BOOL)shouldSlideWindowOnScreen_mousePositionStrategy;
 - (BOOL)shouldSlideWindowOnScreen_adiumActiveStrategy;
 - (BOOL)shouldSlideWindowOffScreen_adiumActiveStrategy;
-- (void)setSavedFrame:(NSRect)f;
 
 - (void)delayWindowSlidingForInterval:(NSTimeInterval)inDelayTime;
 @end

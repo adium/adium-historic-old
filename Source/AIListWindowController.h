@@ -108,6 +108,7 @@ typedef enum {
 - (void)moveWindowToPoint:(NSPoint)inOrigin;
 - (NSScreen *)windowLastScreen;
 - (NSRect)savedFrame;
+- (void)setSavedFrame:(NSRect)frame;
 
 // Window snapping
 - (void)snapToOtherWindows;
