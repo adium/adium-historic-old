@@ -53,13 +53,14 @@
 	NSSize				sampleSize;
 	
 	//Background
-	if ([backgroundEnabled state] != NSOffState) {
-		if (backgroundGradientColor) {
-			[[AIGradient gradientWithFirstColor:[backgroundGradientColor color]
-								   secondColor:[backgroundColor color]
-									 direction:AIVertical] drawInRect:rect];
-		} else {
-			[(backColorOverride ? backColorOverride : [backgroundColor color]) set];
+	if (([backgroundEnabled state] != NSOffState) && backgroundGradientColor) {
+		[[AIGradient gradientWithFirstColor:[backgroundGradientColor color]
+							   secondColor:[backgroundColor color]
+								 direction:AIVertical] drawInRect:rect];
+	} else {
+		NSColor *backColor = (backColorOverride ? backColorOverride : [backgroundColor color]);
+		if (backColor) {
+			[backColor set];
 			[NSBezierPath fillRect:rect];
 		}
 	}
