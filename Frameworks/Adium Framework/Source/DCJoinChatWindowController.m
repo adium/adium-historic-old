@@ -38,7 +38,7 @@
 static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 
 //Create a new join chat window
-+ (DCJoinChatWindowController *)joinChatWindow
++ (void)showJoinChatWindow
 {
     if (!sharedJoinChatInstance) {
         sharedJoinChatInstance = [[self alloc] initWithWindowNibName:JOIN_CHAT_NIB];
