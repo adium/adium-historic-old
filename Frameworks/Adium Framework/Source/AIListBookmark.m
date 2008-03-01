@@ -15,8 +15,6 @@
 #import <Adium/AIService.h>
 #import <Adium/AIChat.h>
 
-#warning Wrong file location
-
 #define	KEY_CONTAINING_OBJECT_ID	@"ContainingObjectInternalObjectID"
 #define	OBJECT_STATUS_CACHE			@"Object Status Cache"
 
