@@ -60,7 +60,6 @@
 - (BOOL)shouldSlideWindowOnScreen_adiumActiveStrategy;
 - (BOOL)shouldSlideWindowOffScreen_adiumActiveStrategy;
 - (void)setSavedFrame:(NSRect)f;
-- (void)restoreSavedFrame;
 
 - (void)delayWindowSlidingForInterval:(NSTimeInterval)inDelayTime;
 @end
@@ -322,7 +321,7 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 		[[self window] setShowsResizeIndicator:!(autoResizeVertically && autoResizeHorizontally)];
 		
 		/*
-		 Reset the minimum and maximum sizes in case [self contactListDesiredSizeChanged]; doesn't cause a sizing change
+		 Reset the minimum and maximum sizes in case [contactListController contactListDesiredSizeChanged]; doesn't cause a sizing change
 		 (and therefore the min and max sizes aren't set there).
 		 */
 		NSSize	thisMinimumSize = minWindowSize;
@@ -529,14 +528,11 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 - (void)setSavedFrame:(NSRect)frame
 {
 	oldFrame = frame;
-	[[self window] saveFrameUsingName:@"SavedContactListFrame"];
 }
 
-- (void)restoreSavedFrame
+- (NSRect)savedFrame
 {
-	NSWindow *myWindow = [self window];
-	[myWindow setFrameUsingName:@"SavedContactListFrame" force:YES];
-	oldFrame = [myWindow frame];
+	return oldFrame;
 }
 
 // Auto-resizing support ------------------------------------------------------------------------------------------------
@@ -849,9 +845,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		[(id)[self window] setDockingEnabled:YES];
 	
 	if (windowSlidOffScreenEdgeMask == AINoEdges) {
-		/* When the window is offscreen, there are no constraints on its size, for example it will grow downwards as much as
-		 * it needs to to accomodate new rows.  Now that it's onscreen, there are constraints.
-		 */
+		//When the window is offscreen, its horizontal autosizing can't occur. Size it now.
 		[contactListController contactListDesiredSizeChanged];
 
 	} else {
@@ -1015,9 +1009,10 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 			[window setHasShadow:[[[adium preferenceController] preferenceForKey:KEY_CL_WINDOW_HAS_SHADOW
 																		   group:PREF_GROUP_CONTACT_LIST] boolValue]];			
 			[window orderFront:nil]; 
-			
+			[contactListController contactListWillSlideOnScreen];
+
 			windowSlidOffScreenEdgeMask = AINoEdges;
-			
+
 			if (animate) {
 				[self slideWindowToPoint:oldFrame.origin];
 			} else {
