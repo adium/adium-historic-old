@@ -69,7 +69,7 @@
 #define	KEY_ENTRY_TEXTVIEW_MIN_HEIGHT		@"Minimum Text Height"	//Preference key for text entry height
 #define	KEY_ENTRY_USER_LIST_MIN_WIDTH		@"UserList Width"		//Preference key for user list width
 
-//#define TEXTVIEW_HEIGHT_DEBUG
+#define TEXTVIEW_HEIGHT_DEBUG
 
 @interface AIMessageViewController (PRIVATE)
 - (id)initForChat:(AIChat *)inChat;
@@ -664,7 +664,7 @@
 	NSRect splitView_textEntryHorizontalFrame = [splitView_textEntryHorizontal frame];
 	splitView_textEntryHorizontalFrame.size.height = NSHeight([[splitView_textEntryHorizontal superview] frame]) - accountSelectionHeight - NSMinY(splitView_textEntryHorizontalFrame);
 	[splitView_textEntryHorizontal setFrame:splitView_textEntryHorizontalFrame];
-	AILogWithSignature(@"splitView_textEntryHorizontal frame now %@", NSStringFromRect(splitView_textEntryHorizontalFrame));
+
 	[splitView_textEntryHorizontal setNeedsDisplay:YES];
 }	
 
@@ -703,9 +703,6 @@
 	entryMinHeight = [[[adium preferenceController] preferenceForKey:KEY_ENTRY_TEXTVIEW_MIN_HEIGHT
 															   group:PREF_GROUP_DUAL_WINDOW_INTERFACE] intValue];
 	if (entryMinHeight <= 0) entryMinHeight = [self _textEntryViewProperHeightIgnoringUserMininum:YES];
-#ifdef TEXTVIEW_HEIGHT_DEBUG
-	AILogWithSignature(@"entryMinHeight starts at %i", entryMinHeight);
-#endif
 	
 	//Associate the view with our message view so it knows which view to scroll in response to page up/down
 	//and other special key-presses.
@@ -779,9 +776,6 @@
  */
 - (void)outgoingTextViewDesiredSizeDidChange:(NSNotification *)notification
 {
-#ifdef TEXTVIEW_HEIGHT_DEBUG
-	AILogWithSignature(@"");
-#endif
 	[self _updateTextEntryViewHeight];
 }
 
@@ -801,15 +795,13 @@
 	int		height = [self _textEntryViewProperHeightIgnoringUserMininum:NO];
 	//Display the vertical scroller if our view is not tall enough to display all the entered text
 	[scrollView_outgoing setHasVerticalScroller:(height < [textView_outgoing desiredSize].height)];
-
-	ignorePositionChangesForMinimumHeight = YES;
+	
 	//First, set the text entry subview to the exact height we want
 	[[splitView_textEntryHorizontal subviewAtPosition:1] setMinDimension:height andMaxDimension:height];
 	[splitView_textEntryHorizontal adjustSubviews];
-
+	
 	//Now, allow it to be resized again between the text view's minimum size and the max size which is based on the splitview's height
 	[[splitView_textEntryHorizontal subviewAtPosition:1] setMinDimension:[self _textEntryViewProperHeightIgnoringUserMininum:YES] andMaxDimension:([splitView_textEntryHorizontal frame].size.height * MESSAGE_VIEW_MIN_HEIGHT_RATIO)];
-	ignorePositionChangesForMinimumHeight = NO;
 }
 
 /*!
@@ -828,9 +820,7 @@
 	
 	//Our primary goal is to display all the entered text
 	height = [textView_outgoing desiredSize].height;
-#ifdef TEXTVIEW_HEIGHT_DEBUG
-	AILogWithSignature(@"Desired is %i", height);
-#endif
+
 	//But we must never fall below the user's prefered mininum or above the allowed height
 	if (!ignoreUserMininum && height < entryMinHeight) {
 		height = entryMinHeight;
@@ -1098,12 +1088,8 @@
 - (void)splitView:(RBSplitView*)sender changedFrameOfSubview:(RBSplitSubview*)subview from:(NSRect)fromRect to:(NSRect)toRect
 {
 	if ([sender subviewAtPosition:1] == subview) {
-		if (!ignorePositionChangesForMinimumHeight)
+		if ([sender isDragging])
 			entryMinHeight = NSHeight(toRect);
-#ifdef TEXTVIEW_HEIGHT_DEBUG
-		AILogWithSignature(@"After constraining the split position, entryMinHeight is now %i", entryMinHeight);
-#endif
-		
 	}
 }
 
