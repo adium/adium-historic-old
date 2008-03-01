@@ -2772,7 +2772,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 
 -(void)executeCommandWithParameters:(NSMutableDictionary*)parameters
 {
-	BOOL result = [purpleThread doCommand:[parameters objectForKey:@"totalCommandString"] fromAccount:[parameters objectForKey:@"account"] inChat:[parameters objectForKey:@"chat"]];
+	BOOL result = [purpleThread doCommand:[parameters objectForKey:@"totalCommandString"] fromAccount:self inChat:[parameters objectForKey:@"chat"]];
 	if(result == FALSE)	{
 #warning Incomplete
 		// Either choice should be taken into account for various actions
