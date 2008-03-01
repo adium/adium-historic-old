@@ -193,6 +193,9 @@ struct _JabberStream
 	char *old_track;
 	
 	char *certificate_CN;
+	
+	/* A purple timeout tag for the keepalive */
+	int keepalive_timeout;
 };
 
 typedef gboolean (JabberFeatureEnabled)(JabberStream *js, const gchar *shortname, const gchar *namespace);
