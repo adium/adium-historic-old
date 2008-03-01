@@ -14,7 +14,7 @@
 # - make all
 ###########
 
-VERSION=1.2.3
+VERSION=1.3svn
 BUILD_IN_DEBUG_MODE=FALSE
 BETA=FALSE
 
@@ -46,8 +46,13 @@ BUILD_DIR=build
 ART_DIR=Artwork
 ADIUM_DIR=$(BUILD_DIR)/Adium
 RELEASE_NAME=Adium_$(VERSION)
+VERSION_ESCAPED=$(VERSION)
+RELEASE_NAME_ESCAPED=Adium_$(VERSION_ESCAPED)
 
 ifeq ($(NIGHTLY),TRUE)
+	echo `date +%Y%m%d%H\` > date.tmp
+	VERSION_ESCAPED:=$(VERSION_ESCAPED)\`cat date.tmp\`
+	VERSION:=$(VERSION)`cat date.tmp`
 	BUILD_IN_DEBUG_MODE=TRUE
 	BUILDFLAGS+="ADIUM_CFLAGS=-DNIGHTLY_RELEASE"
 endif
@@ -78,7 +83,7 @@ ADIUM_PLIST=$(PLIST_DIR)/Adium_2
 ###########
 # Targets
 ###########
-.PHONY: all all-withlocalchanges all-withlocalchanges-noclean update assertnochanges assertnoconflicts version compile clean release source prepare-release-bundle createfolder diskimage nightly
+.PHONY: all all-withlocalchanges all-withlocalchanges-noclean all-nopackage-noclean all-nightly update assertnochanges assertnoconflicts version compile clean release source prepare-release-bundle createfolder diskimage nightly
 
 all: update assertnochanges version clean compile release
 all-withlocalchanges: update assertnoconflicts version clean compile release
@@ -86,7 +91,7 @@ all-withlocalchanges-noclean: update assertnoconflicts version compile release
 
 #doesn't bother putting things in a dmg
 #useful for builds not intended for distribution
-all-nopackage-noclean: update assertnoconflicts version compile createfolder
+all-nopackage-noclean: update assertnoconflicts version compile createfolder prepare-release-bundle
 
 update:
 	svn update $(SRC_DIR)
@@ -104,9 +109,9 @@ assertnoconflicts:
 
 version:
 	@# update the plists
-	defaults write $(ADIUM_PLIST) CFBundleGetInfoString '$(VERSION), Copyright 2001-2008 The Adium Team'
-	defaults write $(ADIUM_PLIST) CFBundleVersion '$(VERSION)'
-	defaults write $(ADIUM_PLIST) CFBundleShortVersionString '$(VERSION)'
+	defaults write $(ADIUM_PLIST) CFBundleGetInfoString "$(VERSION), Copyright 2001-2008 The Adium Team"
+	defaults write $(ADIUM_PLIST) CFBundleVersion "$(VERSION)"
+	defaults write $(ADIUM_PLIST) CFBundleShortVersionString "$(VERSION)"
 	plutil -convert xml1 $(ADIUM_PLIST).plist
 
 compile:
@@ -163,10 +168,10 @@ diskimage:
 	./ensureCustomIconsExtracted $(ART_DIR)
 	./make-diskimage.sh $(BUILD_DIR)/$(RELEASE_NAME).dmg $(ADIUM_DIR) "Adium X $(VERSION)" dmg_adium.scpt $(ART_DIR)
 	
-	@echo Build finished. `md5 $(BUILD_DIR)/$(RELEASE_NAME).dmg`
+	@echo Build finished. `md5 $(BUILD_DIR)/$(RELEASE_NAME_ESCAPED).dmg`
 
 #This is what nightly builds use. Does not update because buildbot does.
 nightly: assertnochanges version clean compile release
-	(svn info | perl -nle 's/Revision: ([0-9]+)/$$1/g and print "r".$$_') > $(BUILD_DIR)/latest
-	md5 $(BUILD_DIR)/$(RELEASE_NAME).dmg > $(BUILD_DIR)/Adium-`cat $(BUILD_DIR)/latest`.dmg.md5sum
-	mv $(BUILD_DIR)/$(RELEASE_NAME).dmg $(BUILD_DIR)/Adium-`cat $(BUILD_DIR)/latest`.dmg
+	echo $(RELEASE_NAME) > $(BUILD_DIR)/latest
+	(svn info | perl -nle 's/Revision: ([0-9]+)/$$1/g and print "r".$$_') >> $(BUILD_DIR)/latest
+	md5 -q $(BUILD_DIR)/$(RELEASE_NAME).dmg > $(BUILD_DIR)/$(RELEASE_NAME).dmg.md5sum
