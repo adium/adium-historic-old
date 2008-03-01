@@ -54,4 +54,10 @@
 				 allowJavascriptURLs:YES];
 }
 
+- (BOOL)shouldIncludeNowPlayingInformationInAllStatuses
+{
+	//Should add a preference
+	return /*[[self preferenceForKey:KEY_BROADCAST_MUSIC_INFO group:GROUP_ACCOUNT_STATUS] boolValue]*/ YES;
+}
+
 @end
