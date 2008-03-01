@@ -85,7 +85,6 @@ typedef enum {
 /*! @} */
 
 //Detachable Contact List
-- (BOOL)allowDetachableGroups;
 - (AIListWindowController *)detachContactList:(AIListGroup *)aContactList;
 
 //Messaging
