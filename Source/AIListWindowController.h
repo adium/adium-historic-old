@@ -106,6 +106,8 @@ typedef enum {
 - (BOOL)windowShouldHideOnDeactivate;
 - (AIRectEdgeMask)windowSlidOffScreenEdgeMask;
 - (void)moveWindowToPoint:(NSPoint)inOrigin;
+- (NSScreen *)windowLastScreen;
+- (NSRect)savedFrame;
 
 // Window snapping
 - (void)snapToOtherWindows;
