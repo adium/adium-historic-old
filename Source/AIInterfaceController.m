@@ -347,13 +347,6 @@
 #pragma mark Detachable Contact List
 
 /*!
- * @returns YES if detachable groups are allowed, otherwise NO
- */
-- (BOOL)allowDetachableGroups {
-	return [contactListPlugin allowDetachableContactList];
-}
-
-/*!
  * @returns Created contact list controller for detached contact list
  */
 - (AIListWindowController *)detachContactList:(AIListGroup *)aContactList {

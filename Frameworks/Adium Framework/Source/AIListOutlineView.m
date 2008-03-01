@@ -523,8 +523,9 @@
 	id<AIInterfaceController>		interfaceController = [[AIObject sharedAdiumInstance] interfaceController];
 	id<AIContactController>			contactController = [[AIObject sharedAdiumInstance] contactController];
 
-	// If nothing is being dragged or we are not allowing to snap off groups-> quit
-	if(!dragContent || ![interfaceController allowDetachableGroups])
+	//If nothing is being dragged, stop now.
+	//How would this happen? -evands
+	if (!dragContent)
 		return;
 	
 	// Group being unlocked from current location
