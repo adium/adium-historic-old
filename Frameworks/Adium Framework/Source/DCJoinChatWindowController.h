@@ -33,7 +33,7 @@
 
 }
 
-+ (void)showJoinChatWindow;
++ (DCJoinChatWindowController *)showJoinChatWindow;
 
 - (DCJoinChatViewController*)joinChatViewController;
 - (void)configureForAccount:(AIAccount *)inAccount;
