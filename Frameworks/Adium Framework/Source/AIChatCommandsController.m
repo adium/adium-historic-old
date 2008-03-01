@@ -1,12 +1,10 @@
 //
-//  EBChatCommandsController.m
+//  AIChatCommandsController.m
 //  Adium
 //
 //  Created by Erik Beerepoot on 11/07/07.
 //  Copyright 2007 Adium. All rights reserved.
 //
-
-#warning Wrong location - move to frameworks folder
 
 #import "AIChatCommandsController.h"
 @interface AIChatCommandsController (PRIVATE)
