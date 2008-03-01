@@ -189,7 +189,7 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 
 			if (newAudioContext) {
 				OSStatus err = SetMovieAudioContext([movie quickTimeMovie], newAudioContext);
-				if (err != noErr) {
+				if (err != noErr)
 					NSLog(@"%s: Could not set audio context of movie %@ to %p: SetMovieAudioContext returned error %i. Sounds may be routed to the default audio device instead of the system alert audio device.", __PRETTY_FUNCTION__, movie, newAudioContext, err);
 				
 				//We created it, so we must release it.
