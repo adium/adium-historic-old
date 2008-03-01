@@ -49,6 +49,7 @@ typedef enum {
 - (void)close;
 
 - (void)contactListDesiredSizeChanged;
+- (void)contactListWillSlideOnScreen;
 
 - (void)setMinWindowSize:(NSSize)inSize;
 - (void)setMaxWindowWidth:(int)inWidth;

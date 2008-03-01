@@ -161,6 +161,62 @@
     }
 }
 
+/*!
+ * @brief The window will be sliding on screen momentarily
+ *
+ * This is sent by the AIListWindowController. We take this opportunity to perform autosizing as appropriate.
+ * The window is actually off-screen and should remain as such; we therefore perform sizing but maintain an appropriate origin such that
+ * the window won't be seen.
+ */
+- (void)contactListWillSlideOnScreen
+{
+	NSWindow	*theWindow;
+	
+    if ((autoResizeVertically || autoResizeHorizontally) &&
+		(theWindow = [contactListView window])) {
+		NSRect currentFrame, savedFrame, desiredFrame;
+		
+		
+		currentFrame = [theWindow frame];
+		/* Pretend, for autosizing purposes, we're where we'll be once we're done sliding on screen. This allows sizing relative to screen edges and the dock
+		 * to work properly. We'll return to our previous origin after performing size checking.
+		 */
+		savedFrame = [(AIListWindowController *)[theWindow windowController] savedFrame];
+		[theWindow setFrame:savedFrame display:NO animate:NO];
+        
+		desiredFrame = [self _desiredWindowFrameUsingDesiredWidth:(autoResizeHorizontally || (forcedWindowWidth != -1))
+													desiredHeight:autoResizeVertically];
+
+		if (!NSEqualRects(savedFrame, desiredFrame)) {
+			/* We must set the min/max first, otherwise our setFrame will be restricted by them and not produce the
+			 * expected results
+			 */
+			float toolbarHeight = (autoResizeVertically ? [theWindow toolbarHeight] : 0);
+			NSRect offscreenFrame = desiredFrame;
+			[theWindow setMinSize:NSMakeSize((autoResizeHorizontally ? desiredFrame.size.width : minWindowSize.width),
+											 (autoResizeVertically ? (desiredFrame.size.height - toolbarHeight) : minWindowSize.height))];
+			[theWindow setMaxSize:NSMakeSize((autoResizeHorizontally ? desiredFrame.size.width : 10000),
+											 (autoResizeVertically ? (desiredFrame.size.height - toolbarHeight) : 10000))];
+
+			//Adjust the origin to remain offscreen
+			offscreenFrame.origin.x = NSMinX(currentFrame);
+
+			if ([(AIListWindowController *)[theWindow windowController] windowSlidOffScreenEdgeMask] & AIMinXEdgeMask) {
+				offscreenFrame.origin.x -= NSWidth(desiredFrame) - NSWidth(currentFrame);
+			}
+
+			[theWindow setFrame:offscreenFrame display:NO animate:NO];
+
+			//Note the new desired frame so that we'll slide to that position
+			[(AIListWindowController *)[theWindow windowController] setSavedFrame:desiredFrame];
+
+		} else {
+			//Nothing to do. Return to our actual current frame, unchanged.
+			[theWindow setFrame:currentFrame display:NO animate:NO];
+		}
+    }
+}
+
 //Size for window zoom
 - (NSRect)windowWillUseStandardFrame:(NSWindow *)sender defaultFrame:(NSRect)defaultFrame
 {
@@ -214,8 +270,9 @@
 	newWindowFrame = windowFrame;
 	viewFrame = [scrollView_contactList frame];
 	
+	if (!currentScreen) currentScreen = [(AIListWindowController *)[theWindow windowController] windowLastScreen];
 	if (!currentScreen) currentScreen = [NSScreen mainScreen];
-	
+
 	screenFrame = [currentScreen frame]; 
 	visibleScreenFrame = [currentScreen visibleFrame];
 	
