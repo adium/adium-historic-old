@@ -73,10 +73,17 @@
 	}
 
 	//Text
+	NSColor *colorForText = [textColor color];
+	if (colorForText) {
+		//If we have a checkbox and it's unchecked, change to black.
+		if (textColorEnabled && ([textColorEnabled state] == NSOffState)) {
+			colorForText = [NSColor blackColor];
+		}
+	}
 	attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 		[NSFont systemFontOfSize:12], NSFontAttributeName,
 		[NSParagraphStyle styleWithAlignment:NSCenterTextAlignment], NSParagraphStyleAttributeName,
-		[textColor color], NSForegroundColorAttributeName,
+		colorForText, NSForegroundColorAttributeName,
 		shadow, NSShadowAttributeName,
 		nil];
 	
