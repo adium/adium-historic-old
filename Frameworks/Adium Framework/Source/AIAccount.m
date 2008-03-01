@@ -814,10 +814,7 @@
 
 -(void)verifyCommand:(NSString*)commandName forChat:(AIChat*)chat
 {
-#warning Huh
-	[self setDelegate:[[AIChatCommandsController alloc] init]];
-	[[self delegate] verifyCommand:commandName forChat:chat];
-	[[self delegate] setDelegate:self];
+	[AIChatCommandsController showCommand:commandName forChat:chat];
 }
 
 -(void)executeCommandWithParameters:(NSDictionary*)parameters
@@ -825,23 +822,6 @@
 	//add stuff
 }
 
-
-
-#pragma mark delegate accessor methods
-//delegate accessor methods
--(id)delegate
-{
-	return delegate;
-}
-
--(void)setDelegate:(id)newDelegate;
-{
-	if(delegate != newDelegate)
-	{
-		[delegate release];
-		delegate = [newDelegate retain];
-	}
-}
 #pragma mark AppleScript
 - (NSNumber *)scriptingInternalObjectID
 {
@@ -1066,29 +1046,38 @@
 }
 
 /**
- * @brief Sets the current status message
+ * @brief Returns current status (or mutable copy if built in)
  *
  * If the current status is built in, we create a temporary copy of the current status and set that.
  */
-- (void)setScriptingStatusMessage:(NSTextStorage *)message
+- (AIStatus *)createMutableCopyOfCurrentStatusIfBuiltIn
 {
 	AIStatus *currentStatus = [self statusState];
 	if ([currentStatus mutabilityType] != AITemporaryEditableStatusState) {
 		currentStatus = [currentStatus mutableCopy];
 		[currentStatus setMutabilityType:AITemporaryEditableStatusState];
-	}
-	if ([message isKindOfClass:[NSAttributedString class]])
-		[currentStatus setStatusMessage:message];
-	else
-		[currentStatus setStatusMessageString:(NSString *)message];
+	}	
+	return currentStatus;
+}
+
+/**
+ * @brief Sets the status message to the NSAttributedString message
+ */
+- (void)setScriptingStatusMessageWithAttributedString:(NSAttributedString *)message
+{
+	AIStatus *currentStatus = [self createMutableCopyOfCurrentStatusIfBuiltIn];
+	[currentStatus setStatusMessage:message];
 	[[adium statusController] setActiveStatusState:currentStatus forAccount:self];
 }
 
+/**
+ * @brief Sets the status message to a NSAttributedString extracted of a NSScriptCommand
+ */
 - (void)setScriptingStatusMessageFromScriptCommand:(NSScriptCommand *)c
 {
 	NSAttributedString	*messageString = [[c evaluatedArguments] objectForKey:@"WithMessage"];
 	if (messageString)
-		[self setScriptingStatusMessage:messageString];	
+		[self setScriptingStatusMessageWithAttributedString:messageString];	
 }
 
 /**

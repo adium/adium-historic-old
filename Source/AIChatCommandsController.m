@@ -9,7 +9,25 @@
 #warning Wrong location - move to frameworks folder
 
 #import "AIChatCommandsController.h"
+@interface AIChatCommandsController (PRIVATE)
+- (void)verifyCommand:(NSString*)command forChat:(AIChat*)chat;
+@end
+
 @implementation AIChatCommandsController
+
++ (void)showCommand:(NSString *)command forChat:(AIChat *)chat
+{
+	AIChatCommandsController *controller = [[self alloc] init];
+	[controller verifyCommand:command forChat:chat];
+	[controller release];
+}
+
+- (void)dealloc
+{
+	[parameters release];
+	
+	[super dealloc];
+}
 
 /* @name	verifyCommand
  * @param	command: command picked by the user
@@ -24,7 +42,6 @@
 	[parameters setObject:chat forKey:@"chat"];
 	[parameters setObject:[chat account] forKey:@"account"];
 	[parameters setObject:[command stringByAppendingString:@" "] forKey:@"command"];
-	
 
 	//check what command was given & set proper label
 	if([command isEqualTo:@"kick"]) {
@@ -74,6 +91,9 @@
 	//show sheet
 	[self showWindow:[self window]];
 	[[self window] center];
+	
+	//Will release when the window closes;
+	[self retain];
 }
 
 /* @name	ok
@@ -81,27 +101,30 @@
  *			on the input sheet. This method calls
  *			"doCommand" on the delegate. 
  */
--(IBAction)ok:(id)sender
+- (IBAction)ok:(id)sender
 {
 	/* the proper command string is in the form:
 	* "/ command target"
 	* make sure this is the form "totalCommandString has"
 	*/
-	NSString *command = [[NSString alloc] init];
-	NSString *totalCommandString = [[NSString alloc] init];
-	command = [@"/" stringByAppendingString:[parameters objectForKey:@"command"]];
-	totalCommandString = [command stringByAppendingString:[textField_target stringValue]];
-		
-	if([textField_comment stringValue] != nil){
-		command = [totalCommandString stringByAppendingString:@" "];
-		totalCommandString = [command stringByAppendingString:[textField_comment stringValue]];
+	
+	NSMutableString *totalCommandString = [NSMutableString stringWithFormat:@"/%@", [parameters objectForKey:@"command"]];
+
+	if ([[textField_target stringValue] length]) {
+		[totalCommandString appendFormat:@" %@", [textField_target stringValue]];
 	}
-		
+
+	if ([[textField_comment stringValue] length]) {
+		[totalCommandString appendFormat:@" %@", [textField_comment stringValue]];
+	}
+
 	[parameters setObject:totalCommandString forKey:@"totalCommandString"];	
-	[delegate executeCommandWithParameters:parameters];
+	[[[parameters objectForKey:@"chat"] account] executeCommandWithParameters:parameters];
 	
 	[sheet orderOut:nil];
 	[NSApp endSheet:sheet];
+	
+	[self autorelease];
 }
 
 /* @name	cancel
@@ -112,23 +135,8 @@
 {
 	[sheet orderOut:nil];
 	[NSApp endSheet:sheet];
+	
+	[self autorelease];
 }
-
-
-// @brief accessor methods for the delegate
--(id)delegate
-{
-	return delegate;
-}
-
--(void)setDelegate:(id)newDelegate
-{
-	if(delegate != newDelegate){
-		[delegate release];
-		delegate = [newDelegate retain];
-	}
-}
-
-
 
 @end
