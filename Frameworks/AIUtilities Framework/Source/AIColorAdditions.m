@@ -248,13 +248,13 @@ end:
     float h,l,s;
 
     //Get our HLS
-    [self getHue:&h luminance:&l saturation:&s];
+    [self getHue:&h saturation:&s brightness:&l alpha:NULL];
 
     //Invert L
     l = 1.0 - l;
 
     //Return the new color
-    return [NSColor colorWithCalibratedHue:h luminance:l saturation:s alpha:1.0];
+    return [NSColor colorWithCalibratedHue:h saturation:s brightness:l alpha:1.0];
 }
 
 //Returns a color that contrasts well with this one
@@ -294,27 +294,6 @@ end:
     cap(brit);
     
     return [NSColor colorWithCalibratedHue:hue saturation:sat brightness:brit alpha:alpha];
-}
-
-- (void)getHue:(float *)hue luminance:(float *)luminance saturation:(float *)saturation
-{
-    NSColor	*rgbColor;
-    float	r, g, b;
-    
-    //Get the current RGB values
-    rgbColor = [self colorUsingColorSpaceName:NSDeviceRGBColorSpace];
-	[rgbColor getRed:&r green:&g blue:&b alpha:NULL];
-
-	getHueLuminanceSaturationFromRGB(hue, luminance, saturation, r, g, b);
-}
-
-+ (NSColor *)colorWithCalibratedHue:(float)hue luminance:(float)luminance saturation:(float)saturation alpha:(float)alpha
-{
-    float r, g, b;
-
-	getRGBFromHueLuminanceSaturation(&r, &g, &b, hue, luminance, saturation);
-
-    return [NSColor colorWithCalibratedRed:r green:g blue:b alpha:alpha];
 }
 
 @end

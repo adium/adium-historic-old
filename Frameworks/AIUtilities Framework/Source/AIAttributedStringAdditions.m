@@ -245,8 +245,8 @@ NSString *AIFontStyleAttributeName  = @"AIFontStyle";
         float hue,saturation;
         float fontLuminance,backLuminance;
         
-        [fontColor getHue:&hue luminance:&fontLuminance saturation:&saturation];
-        [backColor getHue:&hue luminance:&backLuminance saturation:&saturation];
+        [fontColor getHue:&hue saturation:&saturation brightness:&fontLuminance alpha:NULL];
+        [backColor getHue:&hue saturation:&saturation brightness:&backLuminance alpha:NULL];
             
         deltaSum = backLuminance - fontLuminance;
         
