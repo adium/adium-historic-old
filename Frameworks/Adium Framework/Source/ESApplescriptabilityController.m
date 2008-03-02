@@ -57,7 +57,7 @@
 }
 
 #pragma mark Attributes
-#warning Quite a bit in here is broken and needs to be rewritten for the new status system -eds
+
 - (NSTimeInterval)myIdleTime
 {
 	NSDate  *idleSince = [[adium preferenceController] preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
