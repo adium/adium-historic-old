@@ -418,16 +418,6 @@
 			return;
 		}
 
-		// If user typed command /clear, reset the content of the view
-		if ([[attributedString string] caseInsensitiveCompare:AILocalizedString(@"/clear", nil)] == NSOrderedSame) {
-			// Reset the content of the view
-			[messageDisplayController clearView];
-			// Reset the content of the text field, removing the command as it has been executed
-			[self clearTextEntryView];
-			// Commands are not messages, so they don't have to be sent
-			return;
-		}
-		
 		if (!suppressSendLaterPrompt &&
 			![chat canSendMessages]) {
 			
