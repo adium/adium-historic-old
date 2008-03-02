@@ -121,6 +121,8 @@
  *
  *	@par	This function exists to help you compute HSL values without first creating an \c NSColor instance. It also gets the job done in only one function call, rather than at least two Objective-C messages.
  *
+ *	@par	Hue is expressed as a fraction of a circle. Red is any multiple of 1 (a whole circle), and will be returned as 0.
+ *
  *	@param	r	The red component of the color to convert.
  *	@param	g	The green component of the color to convert.
  *	@param	b	The blue component of the color to convert.
@@ -132,6 +134,8 @@ void getHueLuminanceSaturationFromRGB(float *hue, float *luminance, float *satur
 /*!	@brief	Computes the red, green, and blue of a given hue, saturation, and brightness triplet.
  *
  *	@par	This function exists to help you compute RGB values without first creating an \c NSColor instance. It also gets the job done in only one function call, rather than at least two Objective-C messages.
+ *
+ *	@par	Hue is expressed as a fraction of a circle. Red is any multiple of 1 (a whole circle), such as 0.
  *
  *	@param	hue	The hue component of the color to convert.
  *	@param	saturation	The saturation component of the color to convert.
