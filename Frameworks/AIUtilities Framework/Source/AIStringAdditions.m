@@ -717,7 +717,7 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 {
 	//012345678 <-Indices.
 	//42.123400 <-Assuming numDigits = 6.
-	//^-----^   <-Returns this substring.
+	//^-----^   <-Returns this substring. (Trailing zeroes are deleted.)
 	//42.000000
 	//^^        <-Returns this substring (everything before the decimal point) for a whole number.
 	NSString *format = numDigits ? [NSString stringWithFormat:@"%%.%uf", numDigits] : @"%f";
