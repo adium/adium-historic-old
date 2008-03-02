@@ -273,8 +273,8 @@
 	
 	//Add a sealing line at the light side of the gradient to make it look more polished.  Apple does this with
 	//most gradients in OS X.
-	[backgroundColor getHue:NULL saturation:NULL brightness:&backgroundL];
-	[gradientColor   getHue:NULL saturation:NULL brightness:&gradientL];
+	[backgroundColor getHue:NULL saturation:NULL brightness:&backgroundL alpha:NULL];
+	[gradientColor   getHue:NULL saturation:NULL brightness:&gradientL   alpha:NULL];
 	
 	if (gradientL < backgroundL) { //Seal the top
 		[gradientColor set];
