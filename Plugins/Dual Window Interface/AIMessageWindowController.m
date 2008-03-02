@@ -99,9 +99,6 @@
 		//Load our window
 		myWindow = [self window];
 
-		//Disable the optimization for opaque windows since ours might not be
-		[myWindow setOpaque:NO];
-		
 		[[NSNotificationCenter defaultCenter] addObserver:self
 												 selector:@selector(tabDraggingNotificationReceived:)
 													 name:PSMTabDragDidBeginNotification
