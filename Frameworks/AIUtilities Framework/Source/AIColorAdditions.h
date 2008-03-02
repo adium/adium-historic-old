@@ -48,6 +48,8 @@
  *
  *	@par	This method assumes that the receiver and the other color are both in an RGB color-space. If they're not, you will get an exception.
  *
+ *	@par	The alpha component is considered in the comparison.
+ *
  *	@return	\c YES if the two colors are equal; \c NO if they're not.
  */
 - (BOOL)equalToRGBColor:(NSColor *)inColor;
