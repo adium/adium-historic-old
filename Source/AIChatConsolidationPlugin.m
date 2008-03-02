@@ -19,7 +19,8 @@
 #import <Adium/AIMenuControllerProtocol.h>
 #import <AIUtilities/AIMenuAdditions.h>
 
-#define CONSOLIDATE_CHATS_MENU_TITLE			AILocalizedString(@"Consolidate Chats",nil)
+#define CONSOLIDATE_CHATS_MENU_TITLE	AILocalizedString(@"Consolidate Chats",nil)
+#define NEW_TAB_MENU_TITLE				AILocalizedString(@"Move Chat to New Window",nil)
 
 /*!
  * @class AIChatConsolidationPlugin
@@ -39,12 +40,19 @@
 													 action:@selector(consolidateChats:)
 											  keyEquivalent:@"O"];
 	[[adium menuController] addMenuItem:consolidateMenuItem toLocation:LOC_Window_Commands];
+
+	newWndowMenuItem = [[NSMenuItem alloc] initWithTitle:NEW_TAB_MENU_TITLE
+												  target:self 
+												  action:@selector(moveChatToNewWindow:)
+										   keyEquivalent:@""];
+	[[adium menuController] addMenuItem:newWndowMenuItem toLocation:LOC_Window_Commands];	
 }
 
 - (void)dealloc
 {
 	[consolidateMenuItem release];
-	
+	[newWndowMenuItem release];
+
 	[super dealloc];
 }
 
@@ -58,6 +66,11 @@
 	[[adium interfaceController] consolidateChats];	
 }
 
+- (void)moveChatToNewWindow:(id)sender
+{
+	[[adium interfaceController] moveChatToNewContainer:[[adium interfaceController] activeChat]];
+}
+
 /*!
  * @brief Validate menu items
  *
@@ -65,7 +78,16 @@
  */
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
-	return [[[adium interfaceController] openChats] count] > 1;
+	BOOL validate;
+
+	if (menuItem == consolidateMenuItem)
+		validate = ([[[adium interfaceController] openContainers] count] > 1);
+	else if (menuItem == newWndowMenuItem)
+		validate = ([[(id <AIChatWindowController>)[[[[adium interfaceController] activeChat] window] windowController] containedChats] count] > 1);
+	else
+		validate = TRUE;
+
+	return validate;
 }
 
 @end

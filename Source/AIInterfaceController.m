@@ -492,6 +492,11 @@
 	[openContainers release];
 }
 
+- (void)moveChatToNewContainer:(AIChat *)inChat
+{
+	[interfacePlugin moveChatToNewContainer:inChat];
+}
+
 /*!
  * @returns Active chat
  */
@@ -534,6 +539,11 @@
 	}
 	
 	return _cachedOpenChats;
+}
+
+- (NSArray *)openContainers
+{
+	return [interfacePlugin openContainers];
 }
 
 /*!
