@@ -18,6 +18,7 @@
 
 @interface AIChatConsolidationPlugin : AIPlugin {
 	NSMenuItem		*consolidateMenuItem;
+	NSMenuItem		*newWndowMenuItem;
 }
 
 @end

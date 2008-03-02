@@ -303,24 +303,24 @@
 #pragma mark Custom Tab Management
 //Transfer a tab from one window to another (or to its own window)
 - (void)transferMessageTab:(AIMessageTabViewItem *)tabViewItem
-			   toContainer:(id)newMessageWindow
+			   toContainer:(id)newMessageWindowController
 				   atIndex:(int)index
 		 withTabBarAtPoint:(NSPoint)screenPoint
 {
-	AIMessageWindowController 	*oldMessageWindow = [tabViewItem windowController];
+	AIMessageWindowController 	*oldMessageWindowController = [tabViewItem windowController];
 	
-	if (oldMessageWindow != newMessageWindow) {
+	if (oldMessageWindowController != newMessageWindowController) {
 		//Get the frame of the source window (We must do this before removing the tab, since removing a tab may
 		//destroy the source window)
-		NSRect  oldMessageWindowFrame = [[oldMessageWindow window] frame];
+		NSRect  oldMessageWindowFrame = [[oldMessageWindowController window] frame];
 		
 		//Remove the tab, which will close the containiner if it becomes empty
 		[tabViewItem retain];
 	
-		[oldMessageWindow removeTabViewItem:tabViewItem silent:YES];
+		[oldMessageWindowController removeTabViewItem:tabViewItem silent:YES];
 		
 		//Spawn a new window (if necessary)
-		if (!newMessageWindow) {
+		if (!newMessageWindowController) {
 			NSRect          newFrame;
 			
 			//Default to the width of the source container, and the drop point
@@ -330,19 +330,22 @@
 			newFrame.origin = screenPoint;
 			
 			//Create a new unique container, set the frame
-			newMessageWindow = [self openContainerWithID:[NSString stringWithFormat:@"%@:%i", ADIUM_UNIQUE_CONTAINER, uniqueContainerNumber++]
-													name:nil];
+			newMessageWindowController = [self openNewContainer];
 			
+			//If we weren't given an origin, find one from the window's frame
 			if (newFrame.origin.x == -1 && newFrame.origin.y == -1) {
-				NSRect curFrame = [[newMessageWindow window] frame];
-				newFrame.origin = curFrame.origin;				
+				NSRect curFrame = [[newMessageWindowController window] frame];
+				newFrame.origin = curFrame.origin;
+
+				//Cascade
+				newFrame.origin.x += 20;
+				newFrame.origin.y -= 20;
 			}
 			
-			[[newMessageWindow window] setFrame:newFrame display:NO];
-			
+			[[newMessageWindowController window] setFrame:newFrame display:NO];
 		}
 		
-		[(AIMessageWindowController *)newMessageWindow addTabViewItem:tabViewItem atIndex:index silent:YES]; 
+		[(AIMessageWindowController *)newMessageWindowController addTabViewItem:tabViewItem atIndex:index silent:YES]; 
 		[[adium interfaceController] chatOrderDidChange];
 		[tabViewItem makeActive:nil];
 		[tabViewItem release];
@@ -355,6 +358,14 @@
 	AIMessageWindowController *controller = [self openContainerWithID:[NSString stringWithFormat:@"%@:%i", ADIUM_UNIQUE_CONTAINER, uniqueContainerNumber++]
 													name:nil];
 	return controller;
+}
+
+- (void)moveChatToNewContainer:(AIChat *)inChat
+{
+	[self transferMessageTab:[inChat statusObjectForKey:@"MessageTabViewItem"]
+				 toContainer:nil
+					 atIndex:0
+		   withTabBarAtPoint:NSMakePoint(-1, -1)];
 }
 
 @end

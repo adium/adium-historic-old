@@ -90,6 +90,7 @@ typedef enum {
 //Messaging
 - (void)openChat:(AIChat *)inChat;
 - (id)openChat:(AIChat *)inChat inContainerWithID:(NSString *)containerID atIndex:(int)index;
+- (void)moveChatToNewContainer:(AIChat *)inChat;
 - (void)closeChat:(AIChat *)inChat;
 - (void)consolidateChats;
 - (void)setActiveChat:(AIChat *)inChat;
@@ -97,6 +98,7 @@ typedef enum {
 - (AIChat *)mostRecentActiveChat;
 - (NSArray *)openChats;
 - (NSArray *)openChatsInContainerWithID:(NSString *)containerID;
+- (NSArray *)openContainers;
 - (id)openContainerWithID:(NSString *)containerID name:(NSString *)containerName;
 
 //Chat cycling
@@ -208,6 +210,7 @@ typedef enum {
 - (id)openChat:(AIChat *)chat inContainerWithID:(NSString *)containerID withName:(NSString *)containerName atIndex:(int)index;
 - (void)setActiveChat:(AIChat *)inChat;
 - (void)moveChat:(AIChat *)chat toContainerWithID:(NSString *)containerID index:(int)index;
+- (void)moveChatToNewContainer:(AIChat *)inChat;
 - (void)closeChat:(AIChat *)chat;
 - (id)openContainerWithID:(NSString *)containerID name:(NSString *)containerName;
 - (NSArray *)openContainersAndChats;
