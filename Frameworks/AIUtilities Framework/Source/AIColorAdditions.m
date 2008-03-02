@@ -308,7 +308,7 @@ end:
     NSColor	*convertedColor;
 
     convertedColor = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
-    [convertedColor getRed:&red green:&green blue:&blue alpha:nil];
+    [convertedColor getRed:&red green:&green blue:&blue alpha:NULL];
     
     tempNum = (red * 255) / 16;
     hexString[0] = intToHex(tempNum);
