@@ -330,6 +330,57 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	return (returnString ? returnString : inString);
 }
 
+#if 0
+
+#define KEY_KEY		@"Key"
+#define KEY_VALUE	@"Value"
+#define KEY_TYPE	@"Type"
+
+NSrray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
+{
+	GList *l;
+	NSMutableArray *array = [NSMutableArray dictionary];
+	
+	for (l = user_info->user_info_entries; l != NULL; l = l->next) {
+		PurpleNotifyUserInfoEntry *user_info_entry = l->data;
+
+		switch (user_info_entry->type) {
+			case PURPLE_NOTIFY_USER_INFO_ENTRY_SECTION_HEADER:
+				[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+								  [NSString stringWithUTF8String:user_info_entry->label], KEY_LABEL,
+								  [NSNumber numberWithValue:AIUserInfoSectionHeader], KEY_TYPE,
+								  nil]];
+				
+				break;
+			case PURPLE_NOTIFY_USER_INFO_ENTRY_SECTION_BREAK:
+				[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+								  [NSNumber numberWithValue:AIUserInfoSectionBreak], KEY_TYPE,
+								  nil]];
+				break;
+				
+			case PURPLE_NOTIFY_USER_INFO_ENTRY_PAIR:
+			{
+				if (user_info_entry->label && user_info_entry->value) {
+					[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+									  [NSString stringWithUTF8String:user_info_entry->label], KEY_LABEL,
+									  [NSString stringWithUTF8String:user_info_entry->value], KEY_VALUE,
+									  nil]];
+					
+				} else if (user_info_entry->label) {
+					[array addObject:[NSDictionary dictionaryWithObject:[NSString stringWithUTF8String:user_info_entry->label]
+																 forKey:KEY_LABEL]];
+				} else if (user_info_entry->value) {
+					[array addObject:[NSDictionary dictionaryWithObject:[NSString stringWithUTF8String:user_info_entry->value]
+																 forKey:KEY_VALUE]];
+				}	
+				break;
+			}
+		}
+	}
+
+	return array;
+}
+#endif
 
 - (void)updateUserInfo:(AIListContact *)theContact withData:(PurpleNotifyUserInfo *)user_info
 {
