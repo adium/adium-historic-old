@@ -91,7 +91,11 @@
 //Address Book Panel methods.
 -(IBAction)runABPanel:(id)sender
 {
-	[NSApp beginSheet:addressBookPanel modalForWindow:[inspectorContentView window] modalDelegate:self didEndSelector:@selector(didEndSheet:returnCode:contextInfo:) contextInfo:nil];
+	[NSApp beginSheet:addressBookPanel
+	   modalForWindow:[inspectorContentView window]
+		modalDelegate:self
+	   didEndSelector:@selector(didEndSheet:returnCode:contextInfo:) 
+		  contextInfo:nil];
 }
 
 -(IBAction)cardSelected:(id)sender
