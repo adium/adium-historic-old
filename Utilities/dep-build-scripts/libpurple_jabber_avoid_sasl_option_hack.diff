@@ -32,22 +32,6 @@
  		jabber_send(js, auth);
  		xmlnode_free(auth);
  	} else {
-@@ -1077,10 +1077,12 @@ void jabber_auth_handle_success(JabberSt
- 		}
- 	}
- 	/* If we've negotiated a security layer, we need to enable it */
--	sasl_getprop(js->sasl, SASL_SSF, &x);
--	if (*(int *)x > 0) {
--		sasl_getprop(js->sasl, SASL_MAXOUTBUF, &x);
--		js->sasl_maxbuf = *(int *)x;
-+	if (js->sasl) {
-+		sasl_getprop(js->sasl, SASL_SSF, &x);
-+		if (*(int *)x > 0) {
-+			sasl_getprop(js->sasl, SASL_MAXOUTBUF, &x);
-+			js->sasl_maxbuf = *(int *)x;
-+		}
- 	}
- #endif
 #
 # old_revision [20e2add42a314b4914e798757eb2a69ac3b491d0]
 #
