@@ -89,7 +89,7 @@
 	userIconSize = [currentIcon size];
 	imagePickerSize = [userIcon frame].size;
 	
-	[userIcon setImageScaling:(((userIconSize.width <= userIconSize.width) && (userIconSize.height <= userIconSize.height)) ?
+	[userIcon setImageScaling:(((userIconSize.width <= imagePickerSize.width) && (userIconSize.height <= imagePickerSize.height)) ?
 										 NSScaleNone :
 										 NSScaleProportionally)];
 	[userIcon setImage:currentIcon];
