@@ -551,7 +551,7 @@ int hexToInt(char hex)
     } else if (hex >= 'A' && hex <= 'F') {
         return (hex - 'A' + 10);
     } else {
-        return 0;
+        return -1;
     }
 }
 
