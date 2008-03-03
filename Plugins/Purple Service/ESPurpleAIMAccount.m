@@ -22,9 +22,7 @@
 #define MAX_AVAILABLE_MESSAGE_LENGTH	249
 
 @interface ESPurpleAIMAccount (PRIVATE)
-- (NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding;
 - (void)setFormattedUID;
-
 - (void)updateInfo:(AIListContact *)theContact;
 @end
 
@@ -131,83 +129,6 @@
 	
 	[super updateContact:theContact forEvent:event];
 }
-
-- (NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding
-{
-	//Default to UTF-8
-	NSStringEncoding	desiredEncoding = NSUTF8StringEncoding;
-	
-	//Only attempt to check encoding if we were passed one
-	if (encoding && (encoding[0] != '\0')) {
-		NSString	*encodingString = [NSString stringWithUTF8String:encoding];
-		NSRange		encodingRange;
-		
-		encodingRange = (encodingString ? [encodingString rangeOfString:@"charset=\""] : NSMakeRange(NSNotFound, 0));
-		if (encodingRange.location != NSNotFound) {
-			encodingString = [encodingString substringWithRange:NSMakeRange(NSMaxRange(encodingRange),
-																			[encodingString length] - NSMaxRange(encodingRange) - 1)];
-			if (encodingString && [encodingString length]) {
-				desiredEncoding = CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding((CFStringRef)encodingString));
-				
-				if (desiredEncoding == kCFStringEncodingInvalidId) {
-					desiredEncoding = NSUTF8StringEncoding;
-				}
-			}
-		}
-	}
-	
-	return [[[NSString alloc] initWithBytes:bytes length:length encoding:desiredEncoding] autorelease];
-}
-
-- (void)updateInfo:(AIListContact *)theContact
-{
-	OscarData			*od;
-	aim_userinfo_t		*userinfo;
-	
-	if (purple_account_is_connected(account) &&
-		(od = purple_account_get_connection(account)->proto_data) &&
-		(userinfo = aim_locate_finduserinfo(od, [[theContact UID] UTF8String]))) {
-		
-		//Update the profile if necessary - length must be greater than one since we get "" with info_len 1
-		//when attempting to retrieve the profile of an AOL member (which can't be done via AIM).
-		if ((userinfo->info_len > 1) && (userinfo->info != NULL) && (userinfo->info_encoding != NULL)) {
-			
-			//Away message
-			NSString *profileString = [self stringWithBytes:userinfo->info
-													 length:userinfo->info_len
-												   encoding:userinfo->info_encoding];
-			
-			NSString *oldProfileString = [theContact statusObjectForKey:@"TextProfileString"];
-			
-			if (profileString && [profileString length]) {
-				if (![profileString isEqualToString:oldProfileString]) {
-					
-					//Due to OSCAR being silly, we can get a single control character as profileString.
-					//This passes the [profileString length] check above, but we don't want to store it as our profile.
-					NSAttributedString	*attributedProfile = [AIHTMLDecoder decodeHTML:profileString];
-					if ([attributedProfile length]) {
-						[theContact setStatusObject:attributedProfile
-											 forKey:@"TextProfile" 
-											 notify:NO];
-					}
-
-					//Store the string for comparison purposes later (since [attributedProfile string] != the HTML of the string,
-					//					and we don't want to have to decode it just to compare it)
-					[theContact setStatusObject:profileString
-										 forKey:@"TextProfileString" 
-										 notify:NO];
-				}
-			} else if (oldProfileString) {
-				[theContact setStatusObject:nil forKey:@"TextProfileString" notify:NO];
-				[theContact setStatusObject:nil forKey:@"TextProfile" notify:NO];	
-			}
-		}
-		
-		//Apply any changes
-		[theContact notifyOfChangedStatusSilently:NO];
-	}
-}	
-
 
 #pragma mark Status
 /*!
