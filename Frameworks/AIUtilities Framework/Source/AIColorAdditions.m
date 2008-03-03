@@ -559,10 +559,14 @@ int hexToInt(char hex)
 char intToHex(int digit)
 {
     if (digit > 9) {
-        return ('a' + digit - 10);
-    } else {
+		if (digit <= 0xf) {
+			return ('a' + digit - 10);
+		}
+    } else if (digit >= 0) {
         return ('0' + digit);
     }
+
+	return '\0'; //NUL
 }
 
 void getHueLuminanceSaturationFromRGB(float *hue, float *luminance, float *saturation, float r, float g, float b)

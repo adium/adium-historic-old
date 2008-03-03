@@ -212,7 +212,7 @@ void getRGBFromHueLuminanceSaturation(float *r, float *g, float *b, float hue, f
 int hexToInt(char hex);
 /*!	@brief	Converts a digit to a character representing a hexadecimal digit.
  *
- *	@par	\a digit must be in the range 0 to 15, inclusive. If it isn't, the behavior of this function is undefined.
+ *	@par	\a digit must be in the range 0 to 15, inclusive. If it isn't, the return value is NUL (<code>'\0'</code>).
  *
  *	@return	A lowercase character, encoded in ASCII, representing the number in hexadecimal.
  */
