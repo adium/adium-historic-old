@@ -49,14 +49,8 @@ pushd $PIDGIN_SOURCE
 ###
 # Patches bringing in forward changes from libpurple:
 #
-#  libpurple_jabber_fallback_on_old_auth.diff is in im.pidgin.pidgin but not the 2.3.1 branch; diff from 2e5cda103238f64d27e4ed5aa92c149f6d50a5ec to 16e6cd4ffd8a8308380dc016f0afa782a7750374 -evands 12/07
-# libpurple_jabber_use_builtin_digestmd5.diff was in im.pidgin.pidgin but not the 2.3.1 branch; diff from 16e6cd4ffd8a8308380dc016f0afa782a7750374 to f6430c7013d08f95c60248eeb22c752a0107499b. It has, however, been disapproved, because Openfire 3.4.x fixes the problem. -evands 12/07
-# libpurple_jabber_cert_against_jid_hostname.diff  - im.pidgin.pidgin 6227c43549bf66022512f18bb36d70b7c57c4430 (will be in 2.4.0)
-# libpurple_buddyicon_cache.diff - im.pidgin.pidgin 5d18b4aee9c05f592af532f9155aadb23ad11d4b (will be in 2.4.0)
+# libpurple_jabber_use_builtin_digestmd5.diff was in im.pidgin.pidgin but not the 2.3 branch; diff from 16e6cd4ffd8a8308380dc016f0afa782a7750374 to f6430c7013d08f95c60248eeb22c752a0107499b. It has, however, been disapproved, because Openfire 3.4.x fixes the problem. -evands 12/07
 #
-# libpurple-account-request.fix.diff - fix a crash in the account auth request code. A similar change was made in im.pidgin.pidgin for 2.4.0.
-#
-# libpurple_flap_connection_validity.diff - fix an oscar crash which could occur after disconnecting. (will be in 2.4.0).
 ###
 # Patches for our own hackery
 #
@@ -74,15 +68,10 @@ for patch in "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
              "$PATCHDIR/libpurple_disable_last_seen_tracking.diff" \
              "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" \
              "$PATCHDIR/libpurple_jabber_use_builtin_digestmd5.diff" \
-             "$PATCHDIR/libpurple_jabber_fallback_on_old_auth.diff" \
              "$PATCHDIR/libpurple_jabber_parser_error_handler.diff" \
              "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
-             "$PATCHDIR/libpurple_jabber_cert_against_jid_hostname.diff" \
-             "$PATCHDIR/libpurple_buddyicon_cache.diff" \
-             "$PATCHDIR/libpurple-account-request.fix.diff" \
              "$PATCHDIR/libpurple_xmlnode_parser_error_handler.diff" \
-             "$PATCHDIR/libpurple_zephyr_fix_krb4_flags.diff" \
-             "$PATCHDIR/libpurple_flap_connection_validity.diff" ; do
+             "$PATCHDIR/libpurple_zephyr_fix_krb4_flags.diff" ; do
     echo "Applying $patch"
 	cat $patch | patch --forward -p0
 done
@@ -165,23 +154,17 @@ for ARCH in ppc i386 ; do
        $PIDGIN_SOURCE/libpurple/protocols/jabber/si.h \
        $PIDGIN_SOURCE/libpurple/protocols/jabber/jabber.h \
 	   $TARGET_DIR/include/libpurple
-    cd ../..
 done
 
 pushd $PIDGIN_SOURCE
 for patch in "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
              "$PATCHDIR/libpurple_jabber_parser_error_handler.diff" \
-             "$PATCHDIR/libpurple_jabber_fallback_on_old_auth.diff" \
              "$PATCHDIR/libpurple_jabber_use_builtin_digestmd5.diff" \
              "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" \
              "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
              "$PATCHDIR/libpurple_disable_last_seen_tracking.diff" \
-             "$PATCHDIR/libpurple_jabber_cert_against_jid_hostname.diff" \
-             "$PATCHDIR/libpurple_buddyicon_cache.diff" \
-             "$PATCHDIR/libpurple-account-request.fix.diff" \
              "$PATCHDIR/libpurple_xmlnode_parser_error_handler.diff" \
-             "$PATCHDIR/libpurple_zephyr_fix_krb4_flags.diff" \
-             "$PATCHDIR/libpurple_flap_connection_validity.diff" ; do
+             "$PATCHDIR/libpurple_zephyr_fix_krb4_flags.diff" ; do
 	patch -R -p0 < $patch
 done
 popd
