@@ -231,18 +231,19 @@ guint adium_timeout_add(guint interval, GSourceFunc function, gpointer data)
 														  callTimerFunc, /* CFRunLoopTimerCallBack callout */
 														  &runLoopTimerContext /* context */
 														  );
-	CFRunLoopAddTimer(purpleRunLoop, runLoopTimer, kCFRunLoopCommonModes);
-	[info release];
-
+	guint timer_tag = ++sourceId;
 	info->timer_function = function;
 	info->timer = runLoopTimer;
 	info->timer_user_data = data;	
-	info->timer_tag = ++sourceId;
+	info->timer_tag = timer_tag;
 
 	[sourceInfoDict setObject:info
-					   forKey:[NSNumber numberWithUnsignedInt:info->timer_tag]];
+					   forKey:[NSNumber numberWithUnsignedInt:timer_tag]];
 
-	return info->timer_tag;
+	CFRunLoopAddTimer(purpleRunLoop, runLoopTimer, kCFRunLoopCommonModes);
+	[info release];
+
+	return timer_tag;
 }
 
 guint adium_input_add(int fd, PurpleInputCondition condition,
