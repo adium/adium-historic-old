@@ -444,7 +444,7 @@ scanFailed:
 }
 + (id)colorWithHTMLString:(NSString *)str defaultColor:(NSColor *)defaultColor
 {
-	if (!str) return nil;
+	if (!str) return defaultColor;
 
 	unsigned strLength = [str length];
 
