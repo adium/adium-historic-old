@@ -30,6 +30,13 @@
 #define PREF_GROUP_ADDRESSBOOK                  @"Address Book"
 #define PREF_GROUP_ALWAYS_VISIBLE				@"Always Visible"
 
+
+typedef enum {
+	AIUserInfoLabelValuePair = 0 /* default */,
+	AIUserInfoSectionHeader,
+	AIUserInfoSectionBreak
+}  AIUserInfoEntryType;
+
 typedef enum {
     AIInfo_Profile = 1, 
     AIInfo_Accounts,
