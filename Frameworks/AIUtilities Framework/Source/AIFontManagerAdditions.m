@@ -25,6 +25,7 @@
 	@try
 	{
 		theFont = [fontManager fontWithFamily:name traits:fontTraitMask weight:weight size:size];
+		theFont = [fontManager convertFont:theFont toHaveTrait:fontTraitMask];
 	}
 	@catch (NSException *localException)
 	{
@@ -41,6 +42,7 @@
 				@try
 				{
 					theFont = [fontManager fontWithFamily:thisName traits:fontTraitMask weight:weight size:size];				
+					theFont = [fontManager convertFont:theFont toHaveTrait:fontTraitMask];
 					break;
 				}
 				@catch (NSException *localException)
