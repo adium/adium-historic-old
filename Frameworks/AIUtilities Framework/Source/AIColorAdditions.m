@@ -310,17 +310,17 @@ end:
     convertedColor = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
     [convertedColor getRed:&red green:&green blue:&blue alpha:NULL];
     
-    tempNum = (red * 255) / 16;
-    hexString[0] = intToHex(tempNum);
-    hexString[1] = intToHex((red * 255) - (tempNum * 16));
+    tempNum = (red * 255.0f);
+    hexString[0] = intToHex(tempNum / 16);
+    hexString[1] = intToHex(tempNum % 16);
 
-    tempNum = (green * 255) / 16;
-    hexString[2] = intToHex(tempNum);
-    hexString[3] = intToHex((green * 255) - (tempNum * 16));
+    tempNum = (green * 255.0f);
+    hexString[2] = intToHex(tempNum / 16);
+    hexString[3] = intToHex(tempNum % 16);
 
-    tempNum = (blue * 255) / 16;
-    hexString[4] = intToHex(tempNum);
-    hexString[5] = intToHex((blue * 255) - (tempNum * 16));
+    tempNum = (blue * 255.0f);
+    hexString[4] = intToHex(tempNum / 16);
+    hexString[5] = intToHex(tempNum % 16);
     hexString[6] = '\0';
     
     return [NSString stringWithUTF8String:hexString];
