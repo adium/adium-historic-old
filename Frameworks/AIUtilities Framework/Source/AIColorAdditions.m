@@ -498,14 +498,17 @@ scanFailed:
 	//for a short component c = 'x':
 	//	c = x / 0xf
 
+#warning Unsafe: These statements assume that the two characters really are a hex value.
 	red   = hexToInt(*(hexString++));
 	if (isLong) red    = (red   * 16.0 + hexToInt(*(hexString++))) / 255.0;
 	else        red   /= 15.0;
 
+#warning Unsafe: These statements assume that the two characters really are a hex value.
 	green = hexToInt(*(hexString++));
 	if (isLong) green  = (green * 16.0 + hexToInt(*(hexString++))) / 255.0;
 	else        green /= 15.0;
 
+#warning Unsafe: These statements assume that the two characters really are a hex value.
 	blue  = hexToInt(*(hexString++));
 	if (isLong) blue   = (blue  * 16.0 + hexToInt(*(hexString++))) / 255.0;
 	else        blue  /= 15.0;
@@ -513,6 +516,7 @@ scanFailed:
 	if (*hexString) {
 		//we still have one more component to go: this is alpha.
 		//without this component, alpha defaults to 1.0 (see initialiser above).
+#warning Unsafe: These statements assume that the two characters really are a hex value.
 		alpha = hexToInt(*(hexString++));
 		if (isLong) alpha = (alpha * 16.0 + hexToInt(*(hexString++))) / 255.0;
 		else alpha /= 15.0;

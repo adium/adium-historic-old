@@ -476,6 +476,7 @@
 		unsigned char	ch = UTF8[sourceIndex++];
 
 		if (ch == '%') {
+#warning Unsafe: This statement assumes that the two characters really are a hex value.
 			destPtr[destIndex] = ( hexToInt(UTF8[sourceIndex]) * 0x10 ) + hexToInt(UTF8[sourceIndex+1]);
 			sourceIndex += 2;
 		} else {
