@@ -203,40 +203,6 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	return nil;
 }
 
-- (oneway void)updateUserInfo:(AIListContact *)theContact withData:(PurpleNotifyUserInfo *)user_info
-{
-	/*
-	[super updateUserInfo:theContact withData:user_info];
-
-	return;
-	 */
-	NSString	*contactUID = [theContact UID];
-	const char	firstCharacter = [contactUID characterAtIndex:0];
-
-	if ((firstCharacter >= '0' && firstCharacter <= '9')) {
-		//For ICQ contacts, however, we want to pass this data on as the profile
-		[super updateUserInfo:theContact withData:user_info];
-
-	} else {
-		GList *l;
-		
-		for (l = purple_notify_user_info_get_entries(user_info); l != NULL; l = l->next) {
-			PurpleNotifyUserInfoEntry *user_info_entry = l->data;
-			if (purple_notify_user_info_entry_get_label(user_info_entry) &&
-				strcmp(purple_notify_user_info_entry_get_label(user_info_entry), _("Profile")) == 0) {
-
-				[theContact setProfile:[AIHTMLDecoder decodeHTML:(purple_notify_user_info_entry_get_value(user_info_entry) ?
-																  [NSString stringWithUTF8String:purple_notify_user_info_entry_get_value(user_info_entry)] :
-																  nil)]
-								notify:NotifyLater];
-				
-				//Apply any changes
-				[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-			}
-		}
-	}
-}
-
 #pragma mark Account status
 - (const char *)purpleStatusIDForStatus:(AIStatus *)statusState
 							arguments:(NSMutableDictionary *)arguments
