@@ -22,6 +22,27 @@
 		</dict>
 		<dict>
 			<key>CLASS</key>
+			<string>RBSplitView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>delegate</key>
+				<string>id</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>RBSplitSubview</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>RBSplitSubview</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSView</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
 			<string>AIPlasticPlusButton</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
@@ -33,8 +54,12 @@
 			<dict>
 				<key>adiumPrint</key>
 				<string>id</string>
+				<key>didAdjustSubviews</key>
+				<string>RBSplitView</string>
 				<key>prefsWindowWillClose</key>
 				<string>SS_PrefsController</string>
+				<key>willAdjustSubviews</key>
+				<string>RBSplitView</string>
 			</dict>
 			<key>CLASS</key>
 			<string>NSObject</string>

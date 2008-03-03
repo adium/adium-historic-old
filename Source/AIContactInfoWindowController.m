@@ -243,7 +243,22 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		NSLog(@"Loading label: %@ and image: %@ for segment: %d", segmentLabel, segmentImage, i);
 
 		[(NSSegmentedCell *)[inspectorToolbar cell] setToolTip:segmentLabel forSegment:i];
+		
+		[segmentImage setDataRetained:YES];
 		[inspectorToolbar setImage:segmentImage forSegment:i];
+	}	
+}
+
+- (void)windowDidResize:(NSNotification *)notification
+{
+	float availableWidth = [[inspectorToolbar superview] frame].size.width + 2;
+	[inspectorToolbar setAutoresizingMask:(NSViewWidthSizable | NSViewMinYMargin)];
+	[inspectorToolbar setFrame:NSMakeRect(-1, [inspectorToolbar frame].origin.y,
+										  availableWidth, [inspectorToolbar frame].size.height)];	
+	
+	int i;
+	for(i = 0; i < [inspectorToolbar segmentCount]; i++) {
+		[(NSSegmentedCell *)[inspectorToolbar cell] setWidth:(availableWidth / 4) forSegment:i];
 	}
 }
 
