@@ -145,13 +145,19 @@
 {
 	NSColor *white = [NSColor whiteColor];
 	NSColor *contrastingColor = [white contrastingColor];
-	STAssertEquals([contrastingColor whiteComponent], 0.0f, @"White's contrasting color should be black");
+	//contrastingColor inverts the R, G, and B components if the receiver is not medium, so its result will be in an RGB color space. This is why we compare its RGB components rather than its white component (it has no white component).
+	STAssertEquals([contrastingColor   redComponent], 0.0f, @"White's contrasting color should be black (its red component should be 0)");
+	STAssertEquals([contrastingColor greenComponent], 0.0f, @"White's contrasting color should be black (its green component should be 0)");
+	STAssertEquals([contrastingColor  blueComponent], 0.0f, @"White's contrasting color should be black (its blue component should be 0)");
 }
 - (void)testContrastingColorForBlack
 {
 	NSColor *black = [NSColor blackColor];
 	NSColor *contrastingColor = [black contrastingColor];
-	STAssertEquals([contrastingColor whiteComponent], 1.0f, @"Black's contrasting color should be white");
+	//contrastingColor inverts the R, G, and B components if the receiver is not medium, so its result will be in an RGB color space. This is why we compare its RGB components rather than its white component (it has no white component).
+	STAssertEquals([contrastingColor   redComponent], 1.0f, @"Black's contrasting color should be white (its red component should be 1)");
+	STAssertEquals([contrastingColor greenComponent], 1.0f, @"Black's contrasting color should be white (its green component should be 1)");
+	STAssertEquals([contrastingColor  blueComponent], 1.0f, @"Black's contrasting color should be white (its blue component should be 1)");
 }
 - (void)testContrastingColorForGray
 {
