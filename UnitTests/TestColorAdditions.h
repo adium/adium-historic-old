@@ -90,6 +90,15 @@
 - (void)testStringRepresentationForWhite;
 - (void)testStringRepresentationForBlack;
 
+- (void)testStringRepresentationForSemiTransparentRed;
+- (void)testStringRepresentationForSemiTransparentYellow;
+- (void)testStringRepresentationForSemiTransparentGreen;
+- (void)testStringRepresentationForSemiTransparentCyan;
+- (void)testStringRepresentationForSemiTransparentBlue;
+- (void)testStringRepresentationForSemiTransparentMagenta;
+- (void)testStringRepresentationForSemiTransparentWhite;
+- (void)testStringRepresentationForSemiTransparentBlack;
+
 #pragma mark -CSSRepresentation
 - (void)testCSSRepresentationForRed;
 - (void)testCSSRepresentationForYellow;
