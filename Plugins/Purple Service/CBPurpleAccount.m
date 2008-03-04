@@ -336,7 +336,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 #define KEY_VALUE	@"Value"
 #define KEY_TYPE	@"Type"
 
-NSÅrray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
+NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 {
 	GList *l;
 	NSMutableArray *array = [NSMutableArray dictionary];
