@@ -358,11 +358,12 @@ end:
 	float alpha = [self alphaComponent];
 	if ((1.0 - alpha) >= 0.000001) {
 		NSColor *rgb = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+		//CSS3 defines rgba() to take 0..255 for the color components, but 0..1 for the alpha component. Thus, we must multiply by 255 for the color components, but not for the alpha component.
 		return [NSString stringWithFormat:@"rgba(%@,%@,%@,%@)",
-			[NSString stringWithFloat:[rgb redComponent]   maxDigits:6],
-			[NSString stringWithFloat:[rgb greenComponent] maxDigits:6],
-			[NSString stringWithFloat:[rgb blueComponent]  maxDigits:6],
-			[NSString stringWithFloat:alpha                maxDigits:6]];
+			[NSString stringWithFloat:[rgb redComponent]   * 255.0f maxDigits:6],
+			[NSString stringWithFloat:[rgb greenComponent] * 255.0f maxDigits:6],
+			[NSString stringWithFloat:[rgb blueComponent]  * 255.0f maxDigits:6],
+			[NSString stringWithFloat:alpha                         maxDigits:6]];
 	} else {
 		return [@"#" stringByAppendingString:[self hexString]];
 	}
