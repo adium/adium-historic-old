@@ -511,9 +511,6 @@ typedef enum {
 {
 	NSString *theme = [[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_APPEARANCE];	
 	
-	//Allow alpha in our color pickers
-	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
-
 	[AIListThemeWindowController editListThemeWithName:theme
 											  onWindow:[[self view] window]
 									   notifyingTarget:self];
@@ -549,10 +546,6 @@ typedef enum {
 		//Revert back to the current theme name in popUp_colorTheme component
 		[popUp_colorTheme selectItemWithTitle:[[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_APPEARANCE]];		
 	}
-	
-
-	//No longer allow alpha in our color pickers
-	[[NSColorPanel sharedColorPanel] setShowsAlpha:NO];
 }
 
 /*!
@@ -591,9 +584,6 @@ typedef enum {
 {
 	NSString *theme = [[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME group:PREF_GROUP_APPEARANCE];	
 	
-	//Allow alpha in our color pickers
-	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES];	
-
 	[AIListLayoutWindowController editListLayoutWithName:theme
 											  onWindow:[[self view] window]
 									   notifyingTarget:self];
@@ -629,9 +619,6 @@ typedef enum {
 		//Revert back to the current layout name in popUp_listLayout component
 		[popUp_listLayout selectItemWithTitle:[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME group:PREF_GROUP_APPEARANCE]];
 	}
-	
-	//No longer allow alpha in our color pickers
-	[[NSColorPanel sharedColorPanel] setShowsAlpha:NO];
 }
 
 /*!
