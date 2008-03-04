@@ -43,28 +43,6 @@
 - (void)testContrastingColorForBlack;
 - (void)testContrastingColorForGray;
 
-#pragma mark getHueLuminanceSaturationFromRGB
-- (void)testHSLFromRGBForRed;
-- (void)testHSLFromRGBForYellow;
-- (void)testHSLFromRGBForGreen;
-- (void)testHSLFromRGBForCyan;
-- (void)testHSLFromRGBForBlue;
-- (void)testHSLFromRGBForMagenta;
-- (void)testHSLFromRGBForWhite;
-- (void)testHSLFromRGBForBlack;
-- (void)testHSLFromRGBForGray;
-
-#pragma mark getRGBFromHueLuminanceSaturation
-- (void)testRGBFromHSLForRed;
-- (void)testRGBFromHSLForYellow;
-- (void)testRGBFromHSLForGreen;
-- (void)testRGBFromHSLForCyan;
-- (void)testRGBFromHSLForBlue;
-- (void)testRGBFromHSLForMagenta;
-- (void)testRGBFromHSLForWhite;
-- (void)testRGBFromHSLForBlack;
-- (void)testRGBFromHSLForGray;
-
 #pragma mark -adjustHue:saturation:brightness:
 - (void)testAdjustRedToGreen; //Hue += 1/3
 - (void)testAdjustRedToWhite; //Saturation -= 1
