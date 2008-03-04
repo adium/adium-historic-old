@@ -2208,13 +2208,10 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	NSImage	*image =  (originalData ? [[[NSImage alloc] initWithData:originalData] autorelease] : nil);
 
 	if (account) {
-		NSSize		imageSize = [image size];
-		
-		//Clear the existing icon first
-		[purpleThread setBuddyIcon:nil onAccount:self];
-		
-		/* Now pass libpurple the new icon.  Libpurple takes icons as a file, so we save our
-		 * image to one, and then pass libpurple the path. Check to be sure our image doesn't have an NSZeroSize size,
+		NSSize		imageSize = (image ? [image size] : NSZeroSize);
+		NSData		*buddyIconData = nil;
+
+		/* Now pass libpurple the new icon. Check to be sure our image doesn't have an NSZeroSize size,
 		 * which would indicate currupt data */
 		if (image && !NSEqualSizes(NSZeroSize, imageSize)) {
 			PurplePlugin				*prpl;
@@ -2225,7 +2222,6 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 			AILog(@"Original image of size %f %f",imageSize.width,imageSize.height);
 
 			if (prpl_info && (prpl_info->icon_spec.format)) {
-				NSData		*buddyIconData = nil;
 				BOOL		smallEnough, prplScales;
 				unsigned	i;
 				
@@ -2324,10 +2320,10 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 					//Cleanup
 					g_strfreev(prpl_formats);
 				}
-
- 				[purpleThread setBuddyIcon:buddyIconData onAccount:self];
 			}
 		}
+
+		[purpleThread setBuddyIcon:buddyIconData onAccount:self];
 	}
 	
 	//We now have an icon
