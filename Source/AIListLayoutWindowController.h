@@ -58,7 +58,7 @@
 	IBOutlet		NSTextField			*textField_outlineWidthIndicator;
 	
 	id				target;
-	NSString		*layoutName;
+	NSString		*layoutName;	
 }
 
 + (id)editListLayoutWithName:(NSString *)inName onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget;

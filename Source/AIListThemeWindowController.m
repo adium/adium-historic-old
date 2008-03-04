@@ -77,24 +77,25 @@
 #pragma mark Window Methods
 - (void)windowDidLoad
 {
+	//Allow alpha in our color pickers
+	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES];	
+
 	[self configureControls];
 	
 	[textField_themeName setStringValue:(themeName ? themeName : @"")];
-}
-
-//Window is closing
-- (void)windowWillClose:(id)sender
-{
-	[super windowWillClose:sender];
-	
-	[[NSColorPanel sharedColorPanel] close];
-	[self autorelease];
 }
 
 //Called as the sheet closes, dismisses the sheet
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
     [sheet orderOut:nil];
+	
+	[[NSColorPanel sharedColorPanel] close];
+	
+	//No longer allow alpha in our color pickers
+	[[NSColorPanel sharedColorPanel] setShowsAlpha:NO];
+	
+	[self autorelease];
 }
 
 //Cancel
@@ -116,7 +117,7 @@
 - (void)configureControls
 {
     NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
-	
+
 	//Colors
     [colorWell_away setColor:[[prefDict objectForKey:KEY_AWAY_COLOR] representedColor]];
     [colorWell_idle setColor:[[prefDict objectForKey:KEY_IDLE_COLOR] representedColor]];
@@ -167,6 +168,7 @@
 	
 	//
     [colorWell_background setColor:[[prefDict objectForKey:KEY_LIST_THEME_BACKGROUND_COLOR] representedColor]];
+
     //not all themes have highlight colours
     NSColor *color = [[prefDict objectForKey:KEY_LIST_THEME_HIGHLIGHT_COLOR] representedColor];
 	if (color) [colorWell_customHighlight setColor:color];
@@ -365,7 +367,7 @@
                                               group:PREF_GROUP_LIST_THEME];
 		[preview_background setNeedsDisplay:YES];
 		[preview_group setNeedsDisplay:YES];
-		
+
     } else if (sender == colorWell_customHighlight) {
         [[adium preferenceController] setPreference:[[sender color] stringRepresentation]
                                              forKey:KEY_LIST_THEME_HIGHLIGHT_COLOR

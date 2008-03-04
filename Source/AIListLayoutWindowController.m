@@ -89,6 +89,9 @@
 	//We'll be adding/removing this from our view
 	[tabViewItem_advancedContactBubbles retain];
 	
+	//Allow alpha in our color pickers
+	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES];	
+
 	//Setup
 	[fontField_contact setShowPointSize:YES];
 	[fontField_contact setShowFontFace:YES];
@@ -100,19 +103,18 @@
 	[self configureControls];
 }
 
-//Window is closing
-- (void)windowWillClose:(id)sender
-{
-	[super windowWillClose:sender];
-	
-	[tabViewItem_advancedContactBubbles autorelease];
-	[self autorelease];
-}
-
 //Called as the sheet closes, dismisses the sheet
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
     [sheet orderOut:nil];
+	
+	[[NSColorPanel sharedColorPanel] close];
+	
+	//No longer allow alpha in our color pickers
+	[[NSColorPanel sharedColorPanel] setShowsAlpha:NO];
+	
+	[tabViewItem_advancedContactBubbles autorelease];
+	[self autorelease];
 }
 
 //Cancel
