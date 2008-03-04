@@ -139,6 +139,7 @@
 - (void)testRepresentedColorWithInvalidString;
 - (void)testRepresentedColorWithTwoCommas;
 - (void)testRepresentedColorWithThreeCommas;
+- (void)testRepresentedColorWithFourCommas;
 
 #pragma mark -representedColorWithAlpha:
 //Valid
