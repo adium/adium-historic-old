@@ -247,8 +247,10 @@ end:
 {
     float h,l,s;
 
+	NSColor *convertedColor = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
+
     //Get our HLS
-    [self getHue:&h saturation:&s brightness:&l alpha:NULL];
+    [convertedColor getHue:&h saturation:&s brightness:&l alpha:NULL];
 
     //Invert L
     l = 1.0 - l;
