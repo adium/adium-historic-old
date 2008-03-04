@@ -288,6 +288,10 @@ end:
     float hue, sat, brit, alpha;
     
     [self getHue:&hue saturation:&sat brightness:&brit alpha:&alpha];
+
+	//For some reason, redColor's hue is 1.0f, not 0.0f, as of Mac OS X 10.4.10 and 10.5.2. Therefore, we must normalize any multiple of 1.0 to 0.0. We do this by taking the remainder of hue ÷ 1.
+	hue = fmodf(hue, 1.0f);
+
     hue += dHue;
     cap(hue);
     sat += dSat;
