@@ -34,11 +34,12 @@ typedef enum {
 	float				backgroundFade;
 	BOOL				_drawBackground;
 	AIBackgroundStyle	backgroundStyle;
+	AIContactListWindowStyle windowStyle;
 	
 	NSColor				*backgroundColor;
 	NSColor				*_backgroundColorWithOpacity;
 	float				backgroundOpacity;
-
+	
 	NSColor				*highlightColor;
 
 	NSColor				*rowColor;

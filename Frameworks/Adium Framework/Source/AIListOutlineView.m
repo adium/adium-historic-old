@@ -291,7 +291,7 @@
 }
 
 //
-- (void)setBackgroundOpacity:(float)opacity forWindowStyle:(AIContactListWindowStyle)windowStyle
+- (void)setBackgroundOpacity:(float)opacity forWindowStyle:(AIContactListWindowStyle)inWindowStyle
 {
 	backgroundOpacity = opacity;
 
@@ -299,16 +299,7 @@
 	[_backgroundColorWithOpacity release]; _backgroundColorWithOpacity = nil;
 	[_rowColorWithOpacity release]; _rowColorWithOpacity = nil;
 	
-	//Mockie and pillow lists always require a non-opaque window, other lists only require a non-opaque window when
-	//the user has requested transparency.
-	if (windowStyle == AIContactListWindowStyleGroupBubbles || windowStyle == AIContactListWindowStyleContactBubbles || windowStyle == AIContactListWindowStyleContactBubbles_Fitted) {
-		[[self window] setOpaque:NO];
-	} else {
-		[[self window] setOpaque:(backgroundOpacity == 1.0)];
-	}
-	
-	//Turn our shadow drawing hack on if they're going to be visible through the transparency
-	[self setUpdateShadowsWhileDrawing:(![[self window] isOpaque])];
+	windowStyle = inWindowStyle;
 
 	[self setNeedsDisplay:YES];
 
@@ -349,10 +340,37 @@
 {
 	//Factor in opacity
 	if (!_backgroundColorWithOpacity) { 
-		_backgroundColorWithOpacity = [[backgroundColor colorWithAlphaComponent:backgroundOpacity] retain];
+		float backgroundAlpha = ([backgroundColor alphaComponent] * backgroundOpacity);
+		_backgroundColorWithOpacity = [[backgroundColor colorWithAlphaComponent:backgroundAlpha] retain];
+		
+		//Mockie and pillow lists always require a non-opaque window, other lists only require a non-opaque window when
+		//the user has requested transparency.
+		if (windowStyle == AIContactListWindowStyleGroupBubbles || windowStyle == AIContactListWindowStyleContactBubbles || windowStyle == AIContactListWindowStyleContactBubbles_Fitted) {
+			[[self window] setOpaque:NO];
+		} else {
+			NSLog(@"%f", backgroundAlpha);
+			[[self window] setOpaque:(backgroundAlpha == 1.0f)];
+		}
+		
+		//Turn our shadow drawing hack on if they're going to be visible through the transparency
+		[self setUpdateShadowsWhileDrawing:(![[self window] isOpaque])];		
 	}
 	
 	return _backgroundColorWithOpacity;
+}
+
+- (void)setDrawsBackground:(BOOL)inDraw
+{
+	[super setDrawsBackground:inDraw];
+
+	//Mockie and pillow lists always require a non-opaque window, other lists only require a non-opaque window when
+	//the user has requested transparency.
+	if (windowStyle == AIContactListWindowStyleGroupBubbles || windowStyle == AIContactListWindowStyleContactBubbles || windowStyle == AIContactListWindowStyleContactBubbles_Fitted) {
+		[[self window] setOpaque:NO];
+	} else {
+		//XXX Should we still use backgroundOpacity
+		[[self window] setOpaque:(backgroundOpacity == 1.0)];
+	}
 }
 
 - (void)setHighlightColor:(NSColor *)inColor
@@ -404,12 +422,10 @@
 	[super drawRect:rect];
 
 	/*	#################### Crappy Code ###################
-	 *	10.4 compatibility:  10.4 does NOT invalidate the shadow
+	 *	Mac OS X 10.0 through 10.5.2 (and possibly beyond) do NOT invalidate the shadow
 	 *	of a transparent window correctly, forcing us to do it manually each
 	 *	time the window content is changed.  This is absolutely horrible for
-	 *	performance, but the only way to avoid shadow ghosting in 10.4 :(
-	 *
-	 *  XXX - ToDo: Check if this is still a problem in 10.5
+	 *	performance, but the only way to avoid shadow ghosting :(
 	 */
 	if (updateShadowsWhileDrawing) [[self window] invalidateShadow];
 }
