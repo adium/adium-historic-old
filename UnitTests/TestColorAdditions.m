@@ -724,6 +724,11 @@
 	NSColor *noColor = [@",,," representedColor];
 	STAssertEquals(noColor, (NSColor *)nil, @"Color represented by three commas should be nil");
 }
+- (void)testRepresentedColorWithFourCommas
+{
+	NSColor *noColor = [@",,,," representedColor];
+	STAssertEquals(noColor, (NSColor *)nil, @"Color represented by four commas should be nil");
+}
 
 #pragma mark -representedColorWithAlpha:
 //Valid
