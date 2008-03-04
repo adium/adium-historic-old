@@ -202,7 +202,8 @@ end:
     
     return (([convertedA redComponent]   == [convertedB redComponent])   &&
             ([convertedA blueComponent]  == [convertedB blueComponent])  &&
-            ([convertedA greenComponent] == [convertedB greenComponent]));
+            ([convertedA greenComponent] == [convertedB greenComponent]) &&
+            ([convertedA alphaComponent] == [convertedB alphaComponent]));
 }
 
 @end
