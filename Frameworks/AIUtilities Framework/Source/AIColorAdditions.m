@@ -406,13 +406,24 @@ scanFailed:
 	
 	//format: r,g,b
 	//all components are decimal numbers 0..255.
+	if (!isdigit(*selfUTF8)) goto scanFailed;
 	r = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
+
+	if (*selfUTF8 != ',') goto scanFailed;
 	++selfUTF8;
+
+	if (!isdigit(*selfUTF8)) goto scanFailed;
 	g = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
+
+	if (*selfUTF8 != ',') goto scanFailed;
 	++selfUTF8;
+
+	if (!isdigit(*selfUTF8)) goto scanFailed;
 	b = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
 
     return [NSColor colorWithCalibratedRed:(r/255.0) green:(g/255.0) blue:(b/255.0) alpha:alpha];
+scanFailed:
+	return nil;
 }
 
 @end
