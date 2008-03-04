@@ -650,8 +650,7 @@ void getHueLuminanceSaturationFromRGB(float *hue, float *luminance, float *satur
 float _v(float m1, float m2, float hue) {
 	
     //hue = hue % 1.0
-    while (hue < 0.0) hue += 1.0;
-    while (hue > 1.0) hue -= 1.0;
+	hue = fmodf(hue, 1.0f);
     
     if     (hue < ONE_SIXTH) return ( m1 + (m2 - m1) *              hue  * 6.0);
     else if (hue < 0.5)       return ( m2 );
