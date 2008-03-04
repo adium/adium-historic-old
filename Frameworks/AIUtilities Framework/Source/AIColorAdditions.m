@@ -375,12 +375,18 @@ end:
 	
 	//format: r,g,b[,a]
 	//all components are decimal numbers 0..255.
+	if (!isdigit(*selfUTF8)) goto scanFailed;
 	r = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
+
 	if(*selfUTF8 == ',') ++selfUTF8;
 	else                 goto scanFailed;
+
+	if (!isdigit(*selfUTF8)) goto scanFailed;
 	g = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
 	if(*selfUTF8 == ',') ++selfUTF8;
 	else                 goto scanFailed;
+
+	if (!isdigit(*selfUTF8)) goto scanFailed;
 	b = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
 	if (*selfUTF8 == ',') {
 		++selfUTF8;
