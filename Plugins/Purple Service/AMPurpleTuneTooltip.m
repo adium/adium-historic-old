@@ -9,6 +9,7 @@
 #import "AMPurpleTuneTooltip.h"
 #import <Adium/AIListObject.h>
 #import <Adium/AIListContact.h>
+#import <Adium/AIHTMLDecoder.h>
 #import "CBPurpleAccount.h"
 #import <libpurple/blist.h>
 
@@ -71,7 +72,7 @@
 		if (timeval > 0)
 			[text appendFormat:@" - [%d:%02d]", timeval / 60, timeval % 60];
 		
-		return [[[NSAttributedString alloc] initWithString:text attributes:nil] autorelease];
+		return [AIHTMLDecoder decodeHTML:text];
 	}
 
 	return nil;
