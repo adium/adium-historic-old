@@ -247,8 +247,12 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 {
 	[self willChangeValueForKey:key];
 	//Clear the cached defaults dictionary so it will be recreated as needed
-	[prefsWithDefaults autorelease];
-	prefsWithDefaults = nil;
+	
+	if (value)
+		[prefsWithDefaults setValue:value forKey:key];
+	else {
+		[prefsWithDefaults autorelease]; prefsWithDefaults = nil;
+	}
 
 	if (object) {
 		@synchronized (*myGlobalPrefs) {
