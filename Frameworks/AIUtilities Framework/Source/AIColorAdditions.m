@@ -506,7 +506,7 @@ scanFailed:
 	//skip # if present.
 	if (*hexString == '#') {
 		++hexString;
-//		--hexStringLength;
+		--hexStringLength;
 	}
 
 	if (hexStringLength < 3) {
