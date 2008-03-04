@@ -640,11 +640,9 @@ void getHueLuminanceSaturationFromRGB(float *hue, float *luminance, float *satur
 		else
 			*hue = 4.0f + g - r;
 		
-		*hue = (*hue / 6.0f);// % 1.0f;
-			
-			//hue = hue % 1.0f
-			while (*hue < 0.0f) *hue += 1.0f;
-			while (*hue > 1.0f) *hue -= 1.0f;
+		*hue = (*hue / 6.0f);
+
+		*hue = fmodf(*hue, 1.0f); //i.e., *hue % 1.0f
 	}	
 }
 
