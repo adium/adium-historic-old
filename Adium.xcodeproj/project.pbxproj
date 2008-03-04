@@ -119,6 +119,7 @@
 		312ED41F0C7E963A00A6BDA9 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		313C2F940D4B19B50032334D /* TestDictionaryAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 313C2F930D4B19B50032334D /* TestDictionaryAdditions.m */; };
 		31455C9A0CC353F800D231A0 /* TestDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 31455C990CC353F800D231A0 /* TestDataAdditions.m */; };
+		318EA69C0D7A659900EDB105 /* TestColorAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 318EA69B0D7A659900EDB105 /* TestColorAdditions.m */; };
 		31918ED80C5E486C00717F0A /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31918ED70C5E486C00717F0A /* QTKit.framework */; };
 		319B29800CE8EC6F00C65398 /* TestDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 319B297F0CE8EC6E00C65398 /* TestDateAdditions.m */; };
 		31E0CD580C5EEEFA00271DB1 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D836F307CBF960006466F2 /* QuickTime.framework */; };
@@ -1751,6 +1752,8 @@
 		313C2F930D4B19B50032334D /* TestDictionaryAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestDictionaryAdditions.m; path = UnitTests/TestDictionaryAdditions.m; sourceTree = "<group>"; };
 		31455C980CC353F800D231A0 /* TestDataAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestDataAdditions.h; path = UnitTests/TestDataAdditions.h; sourceTree = "<group>"; };
 		31455C990CC353F800D231A0 /* TestDataAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestDataAdditions.m; path = UnitTests/TestDataAdditions.m; sourceTree = "<group>"; };
+		318EA69A0D7A659900EDB105 /* TestColorAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestColorAdditions.h; path = UnitTests/TestColorAdditions.h; sourceTree = "<group>"; };
+		318EA69B0D7A659900EDB105 /* TestColorAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestColorAdditions.m; path = UnitTests/TestColorAdditions.m; sourceTree = "<group>"; };
 		31918ED70C5E486C00717F0A /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		319B29420CE8D28300C65398 /* TestDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestDateAdditions.h; path = UnitTests/TestDateAdditions.h; sourceTree = "<group>"; };
 		319B297F0CE8EC6E00C65398 /* TestDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestDateAdditions.m; path = UnitTests/TestDateAdditions.m; sourceTree = "<group>"; };
@@ -4443,6 +4446,8 @@
 				312ED3E30C7E8A4A00A6BDA9 /* UnitTests_Prefix.pch */,
 				312ED3CB0C7E875B00A6BDA9 /* UnitTests-Info.plist */,
 				31E84DF10C7F387800674BCA /* AIUnitTestUtilities.h */,
+				318EA69A0D7A659900EDB105 /* TestColorAdditions.h */,
+				318EA69B0D7A659900EDB105 /* TestColorAdditions.m */,
 				31455C980CC353F800D231A0 /* TestDataAdditions.h */,
 				31455C990CC353F800D231A0 /* TestDataAdditions.m */,
 				319B29420CE8D28300C65398 /* TestDateAdditions.h */,
@@ -8863,6 +8868,7 @@
 				31455C9A0CC353F800D231A0 /* TestDataAdditions.m in Sources */,
 				319B29800CE8EC6F00C65398 /* TestDateAdditions.m in Sources */,
 				313C2F940D4B19B50032334D /* TestDictionaryAdditions.m in Sources */,
+				318EA69C0D7A659900EDB105 /* TestColorAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
