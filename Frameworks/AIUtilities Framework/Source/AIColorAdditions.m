@@ -504,7 +504,10 @@ scanFailed:
 	float	alpha = 1.0;
 
 	//skip # if present.
-	if (*hexString == '#') ++hexString;
+	if (*hexString == '#') {
+		++hexString;
+//		--hexStringLength;
+	}
 
 	if (hexStringLength < 3) {
 #if COLOR_DEBUG
