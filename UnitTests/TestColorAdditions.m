@@ -123,13 +123,17 @@
 {
 	NSColor *white = [NSColor whiteColor];
 	NSColor *black = [white colorWithInvertedLuminance];
-	STAssertEquals([white whiteComponent], [black whiteComponent], @"White, luminance-inverted, should be black");
+	STAssertEquals([black   redComponent], 1.0f - [white whiteComponent], @"White, luminance-inverted, should be black (red component should be %f",   1.0f - [white whiteComponent]);
+	STAssertEquals([black greenComponent], 1.0f - [white whiteComponent], @"White, luminance-inverted, should be black (green component should be %f", 1.0f - [white whiteComponent]);
+	STAssertEquals([black  blueComponent], 1.0f - [white whiteComponent], @"White, luminance-inverted, should be black (blue component should be %f",  1.0f - [white whiteComponent]);
 }
 - (void)testInvertLuminanceOfBlack
 {
 	NSColor *black = [NSColor blackColor];
 	NSColor *white = [black colorWithInvertedLuminance];
-	STAssertEquals([black whiteComponent], [white whiteComponent], @"Black, luminance-inverted, should be white");
+	STAssertEquals([white   redComponent], 1.0f - [black whiteComponent], @"Black, luminance-inverted, should be white (red component should be %f",   1.0f - [white whiteComponent]);
+	STAssertEquals([white greenComponent], 1.0f - [black whiteComponent], @"Black, luminance-inverted, should be white (green component should be %f", 1.0f - [white whiteComponent]);
+	STAssertEquals([white  blueComponent], 1.0f - [black whiteComponent], @"Black, luminance-inverted, should be white (blue component should be %f",  1.0f - [white whiteComponent]);
 }
 - (void)testInvertLuminanceOfRed
 {
