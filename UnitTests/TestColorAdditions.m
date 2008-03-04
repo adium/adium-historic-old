@@ -480,6 +480,55 @@
 	STAssertEqualObjects([color stringRepresentation], correctString, @"String representation for black should be %@", correctString);
 }
 
+- (void)testStringRepresentationForSemiTransparentRed
+{
+	NSColor *color = [[NSColor redColor] colorWithAlphaComponent:0.5];
+	NSString *correctString = @"255,0,0,127";
+	STAssertEqualObjects([color stringRepresentation], correctString, @"String representation for red should be %@", correctString);
+}
+- (void)testStringRepresentationForSemiTransparentYellow
+{
+	NSColor *color = [[NSColor yellowColor] colorWithAlphaComponent:0.5];
+	NSString *correctString = @"255,255,0,127";
+	STAssertEqualObjects([color stringRepresentation], correctString, @"String representation for yellow should be %@", correctString);
+}
+- (void)testStringRepresentationForSemiTransparentGreen
+{
+	NSColor *color = [[NSColor greenColor] colorWithAlphaComponent:0.5];
+	NSString *correctString = @"0,255,0,127";
+	STAssertEqualObjects([color stringRepresentation], correctString, @"String representation for green should be %@", correctString);
+}
+- (void)testStringRepresentationForSemiTransparentCyan
+{
+	NSColor *color = [[NSColor cyanColor] colorWithAlphaComponent:0.5];
+	NSString *correctString = @"0,255,255,127";
+	STAssertEqualObjects([color stringRepresentation], correctString, @"String representation for cyan should be %@", correctString);
+}
+- (void)testStringRepresentationForSemiTransparentBlue
+{
+	NSColor *color = [[NSColor blueColor] colorWithAlphaComponent:0.5];
+	NSString *correctString = @"0,0,255,127";
+	STAssertEqualObjects([color stringRepresentation], correctString, @"String representation for blue should be %@", correctString);
+}
+- (void)testStringRepresentationForSemiTransparentMagenta
+{
+	NSColor *color = [[NSColor magentaColor] colorWithAlphaComponent:0.5];
+	NSString *correctString = @"255,0,255,127";
+	STAssertEqualObjects([color stringRepresentation], correctString, @"String representation for magenta should be %@", correctString);
+}
+- (void)testStringRepresentationForSemiTransparentWhite
+{
+	NSColor *color = [[NSColor whiteColor] colorWithAlphaComponent:0.5];
+	NSString *correctString = @"255,255,255,127";
+	STAssertEqualObjects([color stringRepresentation], correctString, @"String representation for white should be %@", correctString);
+}
+- (void)testStringRepresentationForSemiTransparentBlack
+{
+	NSColor *color = [[NSColor blackColor] colorWithAlphaComponent:0.5];
+	NSString *correctString = @"0,0,0,127";
+	STAssertEqualObjects([color stringRepresentation], correctString, @"String representation for black should be %@", correctString);
+}
+
 #pragma mark -CSSRepresentation
 - (void)testCSSRepresentationForRed
 {
