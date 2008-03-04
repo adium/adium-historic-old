@@ -96,7 +96,7 @@ update:
 	svn update $(SRC_DIR)
 
 assertnochanges:
-	if [[ 0 -ne `svn st $(SRC_DIR) | grep --invert-match \? | wc -l` ]]; then \
+	if [[ 0 -ne `svn st $(SRC_DIR) | egrep --invert-match '\?\|Adium_2\.plist' | wc -l` ]]; then \
 		echo 'You have local changes. Please do not build releases from an unclean checkout. You must revert the changes, commit them, or check out another working copy and build from that.' 1>&2; \
 		exit 1; \
 	fi
