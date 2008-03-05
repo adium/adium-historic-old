@@ -602,7 +602,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 							//Old versions of AIM for Windows only supports JPEG and GIF images, so we need to pick a format it does support.
 							OscarData			*od;
 							aim_userinfo_t		*userinfo;
-
+							
 							if (purple_account_is_connected(account) &&
 								(od = purple_account_get_connection(account)->proto_data) &&
 								(userinfo = aim_locate_finduserinfo(od, who))) {
@@ -612,12 +612,11 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 								 */
 								if ((userinfo->capabilities & OSCAR_CAPABILITY_GAMES) ||
 									(userinfo->capabilities & OSCAR_CAPABILITY_GAMES2) ||
-									(userinfo->capabilities & OSCAR_CAPABILITY_ADDINS) 
+									(userinfo->capabilities & OSCAR_CAPABILITY_ADDINS)) 
 									requiresConversionToJPEG = YES;
-								}
 							}
 						}
-
+						
 						if (requiresConversionToJPEG) {
 							NSImage				*image = [[NSImage alloc] initWithData:imageData];
 							
@@ -635,8 +634,8 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 						}
 
 						//Delete any existing wrong extension
-						if ([filename pathExtesnion] &&
-							[[filename pathExtesnion] caseInsensitiveCompare:extension] != NSOrderedSame) 
+						if ([filename pathExtension] &&
+							[[filename pathExtension] caseInsensitiveCompare:extension] != NSOrderedSame) 
 							filename = [filename stringByDeletingPathExtension];
 	
 						//Add the right extension if needed
