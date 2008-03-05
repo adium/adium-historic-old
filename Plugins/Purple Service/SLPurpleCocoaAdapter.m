@@ -178,13 +178,13 @@ static void ZombieKiller_Signal(int i)
 	//Set the caches path
 	purple_buddy_icons_set_cache_dir([[[adium cachesPath] stringByExpandingTildeInPath] UTF8String]);
 
-	/* Delete blist.xml once when 1.0 runs to clear out any old silliness */
-	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"Adium 1.0 deleted blist.xml"]) {
+	/* Delete blist.xml once when 1.2.4 runs to clear out any old silliness, including improperly blocked Yahoo contacts */
+	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"Adium 1.2.4 deleted blist.xml"]) {
 		[[NSFileManager defaultManager] removeFileAtPath:
 			[[[NSString stringWithUTF8String:purple_user_dir()] stringByAppendingPathComponent:@"blist"] stringByAppendingPathExtension:@"xml"]
 												 handler:nil];
 		[[NSUserDefaults standardUserDefaults] setBool:YES
-												forKey:@"Adium 1.0 deleted blist.xml"];
+												forKey:@"Adium 1.2.4 deleted blist.xml"];
 	}
 
 	purple_core_set_ui_ops(adium_purple_core_get_ops());
