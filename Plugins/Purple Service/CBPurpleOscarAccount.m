@@ -43,7 +43,7 @@ static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
 static AIHTMLDecoder	*encoderGroupChat = nil;
 
 @interface CBPurpleOscarAccount (PRIVATE)
-- (NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString;
+- (NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString forContactWithUID:(const char *)who;
 @end
 
 @implementation CBPurpleOscarAccount
@@ -470,7 +470,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 				
 				conn = peer_connection_find_by_type(od, who, OSCAR_CAPABILITY_DIRECTIM);
 				
-				encodedString = [self stringByProcessingImgTagsForDirectIM:encodedString];
+				encodedString = [self stringByProcessingImgTagsForDirectIM:encodedString forContactWithUID:who];
 				
 				if ((conn != NULL) && (conn->ready)) {
 					//We have a connected dim already; simply continue, and we'll be told to send it in a moment
@@ -529,7 +529,19 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 		}
 	}
 	
-	return [super sendMessageObject:inContentMessage];
+	BOOL success = [super sendMessageObject:inContentMessage];
+	
+	if (purpleImagesToUnref) {
+		NSEnumerator *enumerator = [purpleImagesToUnref objectEnumerator];
+		NSNumber	 *imgstoreNumber;
+		while ((imgstoreNumber = [enumerator nextObject])) {
+			purple_imgstore_unref_by_id([imgstoreNumber intValue]);			
+		}
+		
+		[purpleImagesToUnref release]; purpleImagesToUnref = nil;
+	}
+
+	return success;
 }
 
 #pragma mark DirectIM (IM Image)
@@ -570,7 +582,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 									 inChat:[[adium chatController] chatWithContact:theContact]];	
 }
 
-- (NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString
+- (NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString forContactWithUID:(const char *)who
 {
 	NSScanner			*scanner;
 	
@@ -608,32 +620,72 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 						NSString		*alt = [imgArguments objectForKey:@"alt"];
 						NSString		*filename;
 						NSData			*imageData = [NSData dataWithContentsOfURL:[NSURL URLWithString:source]];
+						NSString		*extension;
+						BOOL			requiresConversionToJPEG = NO;
 						
 						//Store the src image's data purpleside
 						filename = (alt ? alt : [source lastPathComponent]);
-						if (![[filename pathExtension] length]) {
-							NSString *extension = [NSImage extensionForBitmapImageFileType:[NSImage fileTypeOfData:imageData]];
-							if (!extension) {
-								//We don't know what it is; try to make a png out of it
-								NSImage				*image = [[NSImage alloc] initWithData:imageData];
-								NSData				*imageTIFFData = [image TIFFRepresentation];
-								NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
-								
-								imageData = [bitmapRep representationUsingType:NSPNGFileType properties:nil];
-								extension = @"png";
-								[image release];
-							}
-							
-							filename = [filename stringByAppendingPathExtension:extension];
-						}
 						
-						/* XXX Are we leaking every image added here? Where should it be unref'd? */
+						extension = [filename pathExtension];
+						if (![extension length])
+							extension = [NSImage extensionForBitmapImageFileType:[NSImage fileTypeOfData:imageData]];
+						
+						if (([extension caseInsensitiveCompare:@"jpg"] != NSOrderedSame) &&
+							([extension caseInsensitiveCompare:@"jpeg"] != NSOrderedSame) &&
+							([extension caseInsensitiveCompare:@"gif"] != NSOrderedSame)) {							
+							//Old versions of AIM for Windows only supports JPEG and GIF images, so we need to pick a format it does support.
+							OscarData			*od;
+							aim_userinfo_t		*userinfo;
+
+							if (purple_account_is_connected(account) &&
+								(od = purple_account_get_connection(account)->proto_data) &&
+								(userinfo = aim_locate_finduserinfo(od, who))) {
+								/* There's no explicit AIM for Windows capability, but only AIM for Windows advertises AOL's AIM games.
+								 * Not all AIM for Windows clients advertise those, though. OSCAR_CAPABILITY_ADDINS is only advertised
+								 * by official AIM clients, so it's a good sensitive-but-not-specific test.
+								 */
+								if ((userinfo->capabilities & OSCAR_CAPABILITY_GAMES) ||
+									(userinfo->capabilities & OSCAR_CAPABILITY_GAMES2) ||
+									(userinfo->capabilities & OSCAR_CAPABILITY_ADDINS) 
+									requiresConversionToJPEG = YES;
+								}
+							}
+						}
+
+						if (requiresConversionToJPEG) {
+							NSImage				*image = [[NSImage alloc] initWithData:imageData];
+							
+							imageData = [image JPEGRepresentationWithCompressionFactor:1.0];
+							extension = @"jpg";
+							[image release];
+
+						} else if (![extension length]) {
+							//We don't know what we're working with. Try to produce a PNG so we know the format.
+							NSImage				*image = [[NSImage alloc] initWithData:imageData];
+							
+							imageData = [image PNGRepresentation];
+							extension = @"png";
+							[image release];							
+						}
+
+						//Delete any existing wrong extension
+						if ([filename pathExtesnion] &&
+							[[filename pathExtesnion] caseInsensitiveCompare:extension] != NSOrderedSame) 
+							filename = [filename stringByDeletingPathExtension];
+	
+						//Add the right extension if needed
+						if (![filename pathExtension])
+							filename = [filename stringByAppendingPathExtension:extension];
+
 						int	imgstore = purple_imgstore_add_with_id((gpointer)[imageData bytes], [imageData length], [filename UTF8String]);
 						
 						AILog(@"Adding image id %i with name %s", imgstore, (filename ? [filename UTF8String] : "(null)"));
 						
 						NSString		*newTag = [NSString stringWithFormat:@"<IMG ID=\"%i\" CLASS=\"scaledToFitImage\">",imgstore];
 						[processedString appendString:newTag];
+						
+						if (!purpleImagesToUnref) purpleImagesToUnref = [[NSMutableSet alloc] init];
+						[purpleImagesToUnref addObject:[NSNumber numberWithInt:imgstore]];
 					}
 				}
 				

@@ -33,6 +33,7 @@
 	NSMutableArray  *arrayOfContactsForDelayedUpdates;
 	
 	NSMutableDictionary	*directIMQueue;
+	NSMutableSet		*purpleImagesToUnref;
 }
 
 @end
