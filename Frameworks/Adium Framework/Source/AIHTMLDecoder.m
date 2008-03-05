@@ -1839,8 +1839,20 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	return attachString;
 }
 
-//XXX - Currently always appends as png.  This is probably not always best as Windows DirectIM will not handle it.
-- (BOOL)appendImage:(NSImage *)attachmentImage
+/*!
+ * @brief Append an image to the HTML
+ *
+ * @param attachmentImage The image itself
+ * @param inPath The path at which the image is stored on disk, or nil if it is not currently on disk at a known location
+ * @param string The HTML string in progress to which the image should be appended
+ * @param inName The name of the image, used as the alt parameter and as the filename if necessary
+ * @param imageClass A string which wlll be used as the 'class' parameter's value, or nil
+ * @param imagesPath The path at which to write out the image if writing is necessary. May be nil if inPath is not nil.
+ * @param uniqueifyHTML If YES, the resulting HTML will avoid all caching by using "?" followed by the date in seconds in the src tag.
+ *
+ * @result YES if successful.
+ */
+ - (BOOL)appendImage:(NSImage *)attachmentImage
 			 atPath:(NSString *)inPath
 		   toString:(NSMutableString *)string
 		   withName:(NSString *)inName 
