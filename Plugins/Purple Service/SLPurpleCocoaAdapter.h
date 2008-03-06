@@ -22,7 +22,7 @@
 
 #define	ENABLE_WEBCAM	FALSE
 
-@class AIChat, AIListContact, CBPurpleAccount, NDRunLoopMessenger;
+@class AIChat, AIListContact, CBPurpleAccount;
 
 /*!
  * @class SLPurpleCocoaAdapter

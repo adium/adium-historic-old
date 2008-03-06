@@ -23,7 +23,6 @@
 #import <AIUtilities/AIAppleScriptAdditions.h>
 #import <AIUtilities/AIWindowAdditions.h>
 #import <Adium/AIHTMLDecoder.h>
-#import <Adium/NDRunLoopMessenger.h>
 
 #define SAFARI_LINK_IDENTIFER	@"SafariLink"
 #define SAFARI_LINK_SCRIPT_PATH	[[NSBundle bundleForClass:[self class]] pathForResource:@"Safari.scpt" ofType:nil]
