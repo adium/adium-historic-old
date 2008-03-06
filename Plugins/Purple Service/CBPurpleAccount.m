@@ -2711,11 +2711,21 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	//Only need to take action if we have a created PurpleAccount already
 	if (account != NULL) {
 		//Remove our current account
-		[purpleThread removeAdiumAccount:self];
+		[[self purpleThread] removeAdiumAccount:self];
 		
 		//Clear the reference to the PurpleAccount... it'll be created when needed
 		account = NULL;
 	}
+}
+
+/*!
+ * @brief The account will be deleted
+ */
+- (void)willBeDeleted
+{	
+	[super willBeDeleted];
+
+	[[self purpleThread] removeAdiumAccount:self];
 }
 
 - (void)dealloc
