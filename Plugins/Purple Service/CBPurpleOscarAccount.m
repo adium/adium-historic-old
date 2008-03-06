@@ -620,7 +620,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 						if (requiresConversionToJPEG) {
 							NSImage				*image = [[NSImage alloc] initWithData:imageData];
 							
-							imageData = [image JPEGRepresentationWithCompressionFactor:1.0];
+							imageData = [[[image JPEGRepresentationWithCompressionFactor:1.0] retain] autorelease];
 							extension = @"jpg";
 							[image release];
 
@@ -628,18 +628,17 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 							//We don't know what we're working with. Try to produce a PNG so we know the format.
 							NSImage				*image = [[NSImage alloc] initWithData:imageData];
 							
-							imageData = [image PNGRepresentation];
+							imageData = [[[image PNGRepresentation] retain] autorelease];
 							extension = @"png";
 							[image release];							
 						}
 
 						//Delete any existing wrong extension
-						if ([filename pathExtension] &&
-							[[filename pathExtension] caseInsensitiveCompare:extension] != NSOrderedSame) 
+						if ([[filename pathExtension] caseInsensitiveCompare:extension] != NSOrderedSame) 
 							filename = [filename stringByDeletingPathExtension];
 	
 						//Add the right extension if needed
-						if (![filename pathExtension])
+						if (![[filename pathExtension] length])
 							filename = [filename stringByAppendingPathExtension:extension];
 
 						int	imgstore = purple_imgstore_add_with_id((gpointer)[imageData bytes], [imageData length], [filename UTF8String]);
