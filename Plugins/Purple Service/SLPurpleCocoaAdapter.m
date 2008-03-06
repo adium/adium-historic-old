@@ -31,7 +31,6 @@
 #import <Adium/AIContentTyping.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
-#import <Adium/NDRunLoopMessenger.h>
 #import <Adium/AIUserIcons.h>
 #import <AIUtilities/AIImageAdditions.h>
 

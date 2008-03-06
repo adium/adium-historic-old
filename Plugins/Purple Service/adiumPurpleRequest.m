@@ -19,7 +19,6 @@
 #import "ESPurpleRequestActionController.h"
 #import "ESPurpleRequestWindowController.h"
 #import "ESPurpleFileReceiveRequestController.h"
-#import <Adium/NDRunLoopMessenger.h>
 #import <Adium/AIContactAlertsControllerProtocol.h>
 #import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/ESFileTransfer.h>

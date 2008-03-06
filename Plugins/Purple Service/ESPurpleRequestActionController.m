@@ -20,7 +20,6 @@
 #import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
 #import "ESTextAndButtonsWindowController.h"
 #import <Adium/AIHTMLDecoder.h>
-#import <Adium/NDRunLoopMessenger.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 
 @interface ESPurpleRequestActionController (PRIVATE)
