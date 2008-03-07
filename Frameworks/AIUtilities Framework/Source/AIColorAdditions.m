@@ -463,6 +463,38 @@ scanFailed:
 {
 	return [self colorWithHTMLString:str defaultColor:nil];
 }
+
+/*!
+ * @brief Convert one or two hex characters to a float
+ *
+ * @param firstChar The first hex character
+ * @param secondChar The second hex character, or 0x0 if only one character is to be used
+ * @result The float value. Returns 0 as a bailout value if firstChar or secondChar are not valid hexadecimal characters ([0-9]|[A-F]|[a-f]). Also returns 0 if firstChar and secondChar equal 0.
+ */
+static float hexCharsToFloat(char firstChar, char secondChar)
+{
+	float	hexValue;
+	int		firstDigit;
+	firstDigit = hexToInt(firstChar);
+	if (firstDigit != -1) {
+		hexValue = firstDigit;
+		if (secondChar != 0x0) {
+			int secondDigit = hexToInt(secondChar);
+			if (secondDigit != -1)
+				hexValue = (hexValue * 16.0 + secondDigit) / 255.0;
+			else
+				hexValue = 0;
+		} else {
+			hexValue /= 15.0;
+		}
+
+	} else {
+		hexValue = 0;
+	}
+
+	return hexValue;
+}
+
 + (id)colorWithHTMLString:(NSString *)str defaultColor:(NSColor *)defaultColor
 {
 	if (!str) return defaultColor;
@@ -522,28 +554,26 @@ scanFailed:
 	//for a short component c = 'x':
 	//	c = x / 0xf
 
-#warning Unsafe: These statements assume that the two characters really are a hex value.
-	red   = hexToInt(*(hexString++));
-	if (isLong) red    = (red   * 16.0 + hexToInt(*(hexString++))) / 255.0;
-	else        red   /= 15.0;
+	char firstChar, secondChar;
+	
+	firstChar = *(hexString++);
+	secondChar = (isLong ? *(hexString++) : 0x0);
+	red = hexCharsToFloat(firstChar, secondChar);
 
-#warning Unsafe: These statements assume that the two characters really are a hex value.
-	green = hexToInt(*(hexString++));
-	if (isLong) green  = (green * 16.0 + hexToInt(*(hexString++))) / 255.0;
-	else        green /= 15.0;
+	firstChar = *(hexString++);
+	secondChar = (isLong ? *(hexString++) : 0x0);
+	green = hexCharsToFloat(firstChar, secondChar);
 
-#warning Unsafe: These statements assume that the two characters really are a hex value.
-	blue  = hexToInt(*(hexString++));
-	if (isLong) blue   = (blue  * 16.0 + hexToInt(*(hexString++))) / 255.0;
-	else        blue  /= 15.0;
+	firstChar = *(hexString++);
+	secondChar = (isLong ? *(hexString++) : 0x0);
+	blue = hexCharsToFloat(firstChar, secondChar);
 
 	if (*hexString) {
 		//we still have one more component to go: this is alpha.
 		//without this component, alpha defaults to 1.0 (see initialiser above).
-#warning Unsafe: These statements assume that the two characters really are a hex value.
-		alpha = hexToInt(*(hexString++));
-		if (isLong) alpha = (alpha * 16.0 + hexToInt(*(hexString++))) / 255.0;
-		else alpha /= 15.0;
+		firstChar = *(hexString++);
+		secondChar = (isLong ? *(hexString++) : 0x0);
+		alpha = hexCharsToFloat(firstChar, secondChar);
 	}
 
 	return [self colorWithCalibratedRed:red green:green blue:blue alpha:alpha];
