@@ -34,6 +34,8 @@
 	
 	IBOutlet NSTextView								*statusView;
 	IBOutlet NSTextView								*profileView;
+
+	IBOutlet NSProgressIndicator					*profileProgress;
 }
 
 //Methods from AIContentInspectorPane protocol defined in AIContactInfoInspectorController.h

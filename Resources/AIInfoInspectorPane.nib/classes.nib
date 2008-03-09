@@ -85,6 +85,8 @@
 				<string>NSTextField</string>
 				<key>inspectorContentView</key>
 				<string>NSView</string>
+				<key>profileProgress</key>
+				<string>NSProgressIndicator</string>
 				<key>profileView</key>
 				<string>NSTextView</string>
 				<key>serviceImage</key>
