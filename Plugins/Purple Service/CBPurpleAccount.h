@@ -32,14 +32,16 @@
 	NSMutableArray		*deniedContactsArray;	
 	
 	NSDictionary		*tuneinfo;
-	BOOL				willBeDeleted;
-	id<AIAccountControllerRemoveConfirmationDialog> deletionDialog;
+	
+	BOOL				unregisterAfterConnecting;
+	BOOL				deletePurpleAccountAfterDisconnecting;
 	
 	PurpleConnectionError lastDisconnectionReason;
 }
 
 - (const char*)protocolPlugin;
 - (PurpleAccount*)purpleAccount;
+- (void)setPurpleAccount:(PurpleAccount *)inAccount;
 - (const char *)purpleAccountName;
 
 - (void)createNewPurpleAccount;

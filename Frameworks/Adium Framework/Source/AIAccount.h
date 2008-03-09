@@ -147,7 +147,7 @@ typedef enum {
 - (NSString *)accountWillSetUID:(NSString *)proposedUID;
 - (void)didChangeUID;
 - (void)willBeDeleted;
-- (id<AIAccountControllerRemoveConfirmationDialog>)confirmationDialogForAccountDeletionForAccountsList:(AdiumAccounts*)accounts;
+- (id<AIAccountControllerRemoveConfirmationDialog>)confirmationDialogForAccountDeletion;
 - (NSAlert*)alertForAccountDeletion;
 - (void)alertForAccountDeletion:(id<AIAccountControllerRemoveConfirmationDialog>)dialog didReturn:(int)returnCode;
 - (NSString *)explicitFormattedUID;
@@ -221,6 +221,7 @@ typedef enum {
 
 @interface AIAccount (Private_ForSubclasses)
 - (void)gotFilteredDisplayName:(NSAttributedString *)attributedDisplayName;
+- (void)performDelete;
 @end
 
 #import <Adium/AIAbstractAccount.h>
