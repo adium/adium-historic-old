@@ -63,8 +63,14 @@ extern void _objc_flush_caches(Class);
 																			  withClass:[AIDictionaryDebug class]];
 }
 
++ (void)breakpoint
+{
+	NSLog(@"Invalid NSDictionary access. Set a breakpoint at +[AIDictionaryDebug breakpoint] to debug");
+}
+
 - (void)setObject:(id)object forKey:(id)key
 {
+	if (!object || !key) [AIDictionaryDebug breakpoint];
 	NSAssert3(object != nil, @"%@: Attempted to set %@ for %@",self,object,key);
 	NSAssert3(key != nil, @"%@: Attempted to set %@ for %@",self,object,key);
 
@@ -73,6 +79,7 @@ extern void _objc_flush_caches(Class);
 
 - (void)removeObjectForKey:(id)key
 {
+	if (!key) [AIDictionaryDebug breakpoint];
 	NSAssert1(key != nil, @"%@: Attempted to remove a nil key",self);
 
 	originalRemoveObjectForKey(self, @selector(removeObjectForKey:),key);
