@@ -96,9 +96,9 @@ static NSComparisonResult compareContactsByTheirAccounts(id firstContact, id sec
 				//It was added as last; move to the middle.
 				[accountsTableView moveColumn:1 toColumn:0];
 				//Set all of the table view's columns to be the same width.
-				//float columnWidth = [accountsTableView frame].size.width / 2.0;
+				float columnWidth = [accountsTableView frame].size.width / 2.0;
 				//NSLog(@"Setting columnWidth to: %f / 2.0 == %f", [accountsTableView frame].size.width, columnWidth);
-				//[[accountsTableView tableColumns] setValue:[NSNumber numberWithFloat:columnWidth] forKey:@"width"];
+				[[accountsTableView tableColumns] setValue:[NSNumber numberWithFloat:columnWidth] forKey:@"width"];
 				[accountsTableView sizeToFit];
 				//We don't need it retained anymore.
 				[contactsColumn release];
@@ -112,9 +112,9 @@ static NSComparisonResult compareContactsByTheirAccounts(id firstContact, id sec
 			[contactsColumn retain];
 			[accountsTableView removeTableColumn:contactsColumn];
 			//Set both of the table view's columns to be the same width.
-			//float columnWidth = [accountsTableView frame].size.width;
+			float columnWidth = [accountsTableView frame].size.width;
 			//NSLog(@"Setting columnWidth to: %f", [accountsTableView frame].size.width);
-			//[[accountsTableView tableColumns] setValue:[NSNumber numberWithFloat:columnWidth] forKey:@"width"];
+			[[accountsTableView tableColumns] setValue:[NSNumber numberWithFloat:columnWidth] forKey:@"width"];
 			[accountsTableView sizeToFit];
 
 			contactsColumnIsInAccountsTableView = NO;
