@@ -158,7 +158,7 @@
 
 
 -(void)updateProfileView:(AIListObject *)inObject
-{
+{	
 	[[adium contentController] filterAttributedString:([inObject isKindOfClass:[AIListContact class]] ?
 													   [(AIListContact *)inObject profile] :
 													   nil)
@@ -172,6 +172,20 @@
 
 - (void)gotFilteredProfile:(NSAttributedString *)infoString context:(AIListObject *)object
 {
+	//If we've been called with infoString == nil, we don't have the profile information yet.
+	if(!infoString && ![displayedObject isKindOfClass:[AIListGroup class]]) {
+		//This should only run if we get a nil string and if we aren't a group.
+		[profileProgress startAnimation:self];
+		/*	We deal with the progress indicator's visibility manually, because sometimes it will 
+		corrupt text when set to hide/unhide automatically.	*/
+		[profileProgress setHidden:NO];
+		//We can freely start the progress indicator numerous times - it has no effect.
+	} else {
+		//Non-nil info string means we have some profile text and we will bet setting it.
+		[profileProgress stopAnimation:self];
+		[profileProgress setHidden:YES];
+	}
+	
 	[self setAttributedString:infoString intoTextView:profileView];
 }
 

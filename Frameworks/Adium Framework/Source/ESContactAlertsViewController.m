@@ -739,9 +739,9 @@ int actionSort(id objectA, id objectB, void *context)
 			NSArray	*contactEvents = (NSArray *)item;
 
 			if ([contactEvents count]) {
-				font = [NSFont boldSystemFontOfSize:12];
+				font = [NSFont boldSystemFontOfSize:9];
 			} else {
-				font = [NSFont boldSystemFontOfSize:11];				
+				font = [NSFont systemFontOfSize:9];				
 			}
 
 		} else {
@@ -750,7 +750,7 @@ int actionSort(id objectA, id objectB, void *context)
 			id <AIActionHandler>	actionHandler = [[[adium contactAlertsController] actionHandlers] objectForKey:actionID];
 		
 			image = [actionHandler imageForActionID:actionID];
-			font = [NSFont systemFontOfSize:11];
+			font = [NSFont systemFontOfSize:9];
 		}
 		
 		[cell setImage:image];
