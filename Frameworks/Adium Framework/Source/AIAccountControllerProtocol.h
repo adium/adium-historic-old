@@ -13,7 +13,7 @@
 #define Account_ListChanged 					@"Account_ListChanged"
 #define Adium_RequestSetManualIdleTime			@"Adium_RequestSetManualIdleTime"
 
-@protocol AIAccountControllerRemoveConfirmationDialog
+@protocol AIAccountControllerRemoveConfirmationDialog <NSObject>
 - (void)runModal;
 - (void)beginSheetModalForWindow:(NSWindow*)window;
 @end
@@ -149,7 +149,7 @@ typedef enum {
 - (AIAccount *)accountWithInternalObjectID:(NSString *)objectID;
 - (AIAccount *)createAccountWithService:(AIService *)service UID:(NSString *)inUID;
 - (void)addAccount:(AIAccount *)inAccount;
-- (id<AIAccountControllerRemoveConfirmationDialog>)deleteAccount:(AIAccount *)inAccount; // the dialog has to be executed for the operation to actually take place!
+- (void)deleteAccount:(AIAccount *)inAccount;
 - (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
 - (void)accountDidChangeUID:(AIAccount *)inAccount;
 

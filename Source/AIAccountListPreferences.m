@@ -292,8 +292,9 @@
 {
     int index = [tableView_accountList selectedRow];
 
-    if ([tableView_accountList numberOfSelectedRows] == 1 && index >= 0 && index < [accountArray count])
-		[[[adium accountController] deleteAccount:[accountArray objectAtIndex:index]] beginSheetModalForWindow:[[self view] window]];
+    if ([tableView_accountList numberOfSelectedRows] == 1 && index >= 0 && index < [accountArray count]) {
+		[[(AIAccount *)[accountArray objectAtIndex:index] confirmationDialogForAccountDeletion] beginSheetModalForWindow:[[self view] window]];
+	}
 }
 
 /*!

@@ -203,11 +203,20 @@
 	[self removeAllContacts];
 }
 
-- (id<AIAccountControllerRemoveConfirmationDialog>)confirmationDialogForAccountDeletionForAccountsList:(AdiumAccounts*)accounts
+/*!
+ * @brief Perform the deletion of this account
+ *
+ * This should be called only after proper confirmation has been made by the user.
+ */
+- (void)performDelete
 {
-	AIAccountDeletionDialog *result = [[AIAccountDeletionDialog alloc] initWithAccount:self alert:[self alertForAccountDeletion]];
-	[result setUserData:accounts];
-	return result;
+	[[adium accountController] deleteAccount:self];
+}
+
+- (id<AIAccountControllerRemoveConfirmationDialog>)confirmationDialogForAccountDeletion
+{
+	//Will be released in alertForAccountDeletion:didReturn:
+	return [[AIAccountDeletionDialog alloc] initWithAccount:self alert:[self alertForAccountDeletion]];
 }
 
 /*!
@@ -232,14 +241,15 @@
  *
  * This method should be overridden when alertForAccountDeletion: was overridden, and/or asynchronous behavior is required.
  * This implementation disconnects and deletes the account from the accounts list when returnCode == NSAlertDefaultReturn.
- * It must be called by subclassers (could be done asynchronously) with either NSAlertDefaultReturn or NSAlertAlternateReturn.
+ *
+ * If this implementation is not called, dialog should be released by the subclass.
  */
 - (void)alertForAccountDeletion:(id<AIAccountControllerRemoveConfirmationDialog>)dialog didReturn:(int)returnCode
 {
 	if(returnCode == NSAlertDefaultReturn) {
-		[self willBeDeleted];
-		[(AdiumAccounts*)[(AIAccountDeletionDialog*)dialog userData] deleteAccount:self];
+		[self performDelete];
 	}
+
 	[(AIAccountDeletionDialog*)dialog release];
 }
 

@@ -15,6 +15,7 @@
  */
 
 #import "CBPurpleAccount.h"
+
 #import <libpurple/cmds.h>
 #import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
 #import <Adium/AIAccount.h>
@@ -95,7 +96,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	//Create a purple account if one does not already exist
 	if (!account) {
 		[self createNewPurpleAccount];
-		AILog(@"%x: created PurpleAccount 0x%x with UID %@, protocolPlugin %s", [NSRunLoop currentRunLoop],account, [self UID], [self protocolPlugin]);
+		AILog(@"Created PurpleAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
 	}
 	
     return account;
@@ -1472,12 +1473,9 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 - (void)connect
 {
 	[super connect];
-	
-	if (!account) {
-		//create a purple account if one does not already exist
-		[self createNewPurpleAccount];
-		AILog(@"Created PurpleAccount 0x%x with UID %@ and protocolPlugin %s", account, [self UID], [self protocolPlugin]);
-	}
+
+	//Ensure we have a purple account if one does not already exist
+	[self purpleAccount];
 	
 	//Make sure our settings are correct
 	if ([self connectivityBasedOnNetworkReachability] &&
@@ -1487,6 +1485,11 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 	} else {
 		[self configurePurpleAccountNotifyingTarget:self selector:@selector(continueConnectWithConfiguredPurpleAccount)];
 	}
+}
+
+- (void)unregister
+{
+	[purpleThread unregisterAccount:self];
 }
 
 static void prompt_host_cancel_cb(CBPurpleAccount *self) {
@@ -1546,7 +1549,6 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 										   selector:@selector(gotFilteredStatusMessage:forStatusState:)
 											context:statusState];
 }
-
 
 //Make sure our settings are correct; notify target/selector when we're finished
 - (void)configurePurpleAccountNotifyingTarget:(id)target selector:(SEL)selector
@@ -1692,27 +1694,31 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	return NO;
 }
 
-//Our account has connected
-- (void)accountConnectionConnected
-{
-	AILog(@"************ %@ CONNECTED ***********",[self UID]);
+- (void)didConnect
+{	
+	[super didConnect];
 	
-	[self didConnect];
-
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(iTunesDidUpdate:)
 									   name:Adium_iTunesTrackChangedNotification
 									 object:nil];
 	
-    //Silence updates
-    [self silenceAllContactUpdatesForInterval:18.0];
+	//Silence updates
+	[self silenceAllContactUpdatesForInterval:18.0];
 	[[adium contactController] delayListObjectNotificationsUntilInactivity];
 	
 	//Clear any previous disconnection error
 	[self setLastDisconnectionError:nil];
-	
-	if(deletionDialog)
-		[purpleThread unregisterAccount:self];
+
+	if (unregisterAfterConnecting)
+		[self unregister];
+}
+
+//Our account has connected
+- (void)accountConnectionConnected
+{
+	AILog(@"************ %@ CONNECTED ***********",[self UID]);
+	[self didConnect];
 }
 
 - (void)accountConnectionProgressStep:(NSNumber *)step percentDone:(NSNumber *)connectionProgressPrecent
@@ -1739,15 +1745,23 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	return [[self formattedUID] UTF8String];
 }
 
+- (void)setPurpleAccount:(PurpleAccount *)inAccount
+{
+	account = inAccount;
+}
+
 - (void)createNewPurpleAccount
 {
-	if (!purpleThread) {
-		purpleThread = [[SLPurpleCocoaAdapter sharedInstance] retain];	
-	}	
+	//Ensure libpurple is loaded and initialized
+	[self purpleThread];
+	
+	//If loading libpurple didn't set an account for us, tell it to create one
+	if (!account)
+		[[self purpleThread] addAdiumAccount:self];
 
-	//Create a fresh version of the account
-    if ((account = purple_account_new([self purpleAccountName], [self protocolPlugin]))) {
-		[purpleThread addAdiumAccount:self];
+	//-[SLPurpleCocoaAdapter addAdiumAccount:] should have immediately called back on setPurpleAccount. It's bad if it didn't.
+	if (account) {
+		AILog(@"Created PurpleAccount 0x%x with UID %@ and protocolPlugin %s", account, [self UID], [self protocolPlugin]);
 	} else {
 		AILog(@"Unable to create Libpurple account with name %s and protocol plugin %s",
 			  [self purpleAccountName], [self protocolPlugin]);
@@ -1807,17 +1821,11 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
                                     withDescription:connectionNotice];
 }
 
-
-/*!
- * @brief Our account has disconnected
- *
- * This is called after the account disconnects for any reason
- */
-- (void)accountConnectionDisconnected
+- (void)didDisconnect
 {
 	//Clear status objects which don't make sense for a disconnected account
 	[self setStatusObject:nil forKey:@"TextProfile" notify:NO];
-
+	
 	//Apply any changes
 	[self notifyOfChangedStatusSilently:NO];
 	
@@ -1826,12 +1834,25 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 										object:nil];
 	[tuneinfo release];
 	tuneinfo = nil;
+	
+	if (deletePurpleAccountAfterDisconnecting) {
+		deletePurpleAccountAfterDisconnecting = FALSE;
+
+		[[self purpleThread] removeAdiumAccount:self];
+	}
+
+	[super didDisconnect];
+}
+/*!
+ * @brief Our account has disconnected
+ *
+ * This is called after the account disconnects for any reason
+ */
+- (void)accountConnectionDisconnected
+{
 	//Report that we disconnected
 	AILog(@"%@: Telling the core we disconnected", self);
 	[self didDisconnect];
-
-	if (willBeDeleted)
-		[super alertForAccountDeletion:deletionDialog didReturn:NSAlertDefaultReturn];
 }
 
 - (AIReconnectDelayType)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
@@ -1870,12 +1891,9 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	if (password != inPassword) {
 		[password release]; password = [inPassword retain];
 	}
-	
-	if (!account) {
-		//create a purple account if one does not already exist
-		[self createNewPurpleAccount];
-		AILog(@"Registering: created PurpleAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
-	}
+
+	//Ensure we have a purple account if one does not already exist
+	[self purpleAccount];
 	
 	//We are connecting
 	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:NotifyNow];
@@ -2597,25 +2615,22 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 {
 	PurplePlugin *prpl;
 	PurplePluginProtocolInfo *prpl_info;
-	
-	if (!purpleThread) {
-		purpleThread = [[SLPurpleCocoaAdapter sharedInstance] retain];	
-	}	
-	
-	prpl = purple_find_prpl([self protocolPlugin]);
-	if(!prpl)
-		return nil;
-	prpl_info = PURPLE_PLUGIN_PROTOCOL_INFO(prpl);
-	if(!prpl_info)
-		return nil;
-	if(prpl_info->unregister_user)
+
+	//Ensure libpurple has been loaded, since we need to know whether we can unregister this account
+	[self purpleThread];
+
+	if ((prpl = purple_find_prpl([self protocolPlugin])) &&
+		(prpl_info = PURPLE_PLUGIN_PROTOCOL_INFO(prpl)) &&
+		(prpl_info->unregister_user)) {
 		return [NSAlert alertWithMessageText:AILocalizedString(@"Delete Account",nil)
 							   defaultButton:AILocalizedString(@"Delete",nil)
 							 alternateButton:AILocalizedString(@"Cancel",nil)
 								 otherButton:AILocalizedString(@"Delete & Unregister",nil)
-				   informativeTextWithFormat:AILocalizedString(@"Delete the account %@? You can also optionally unregister the account on the server if possible.",nil), ([[self formattedUID] length] ? [self formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT)];
-	else
+				   informativeTextWithFormat:AILocalizedString(@"Delete the account %@? You can also optionally unregister the account on the server if possible.",nil), ([[self formattedUID] length] ? [self formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT)];		
+
+	} else {
 		return [super alertForAccountDeletion];
+	}
 }
 
 - (void)alertForAccountDeletion:(id<AIAccountControllerRemoveConfirmationDialog>)dialog didReturn:(int)returnCode
@@ -2623,88 +2638,60 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	PurplePlugin *prpl;
 	PurplePluginProtocolInfo *prpl_info;
 	
-	if (!purpleThread) {
-		purpleThread = [[SLPurpleCocoaAdapter sharedInstance] retain];	
-	}	
-	
-	prpl = purple_find_prpl([self protocolPlugin]);
-	if(!prpl) {
-		[super alertForAccountDeletion:dialog didReturn:NSAlertAlternateReturn];
-		return;
-	}
-
-	prpl_info = PURPLE_PLUGIN_PROTOCOL_INFO(prpl);
-	if(!prpl_info) {
-		[super alertForAccountDeletion:dialog didReturn:NSAlertAlternateReturn];
-		return;
-	}
-
-	/* If the user canceled, we can tell the superclass immediately.
-	 * If the deletion is in fact happening, we first have to unregister and disconnect.
-	 * This is an asynchronous process.
-	 */
-	if(prpl_info->unregister_user) {
-		switch(returnCode) {
-			case NSAlertOtherReturn: // delete & unregister
-				deletionDialog = dialog;
-				if(!account || !purple_account_is_connected(account)) {
-					password = [[[adium accountController] passwordForAccount:self] retain];
-					[self connect];
-				} else
-					[purpleThread unregisterAccount:self];
+	if ((prpl = purple_find_prpl([self protocolPlugin])) &&
+		(prpl_info = PURPLE_PLUGIN_PROTOCOL_INFO(prpl)) &&
+		(prpl_info->unregister_user)) {
+		switch (returnCode) {
+			case NSAlertOtherReturn:
+				// delete & unregister
+				if ([self online])
+					[self unregister];
+				else {
+					unregisterAfterConnecting = YES;
+					[self setShouldBeOnline:YES];
+				}
+			
 				// further progress happens in -unregisteredAccount:
 				break;
-			case NSAlertDefaultReturn: // delete
-				willBeDeleted = YES;
-				if(!account || !purple_account_is_connected(account)) {
-					[super alertForAccountDeletion:dialog didReturn:NSAlertDefaultReturn];
-				} else {
-					deletionDialog = dialog;
-					[self setShouldBeOnline:NO];
-					// further progress happens in -accountConnectionDisconnected
-				}
+			case NSAlertDefaultReturn:
+				// delete without unregistering
+				[self performDelete];
 				break;
-			default: // cancel
-				[super alertForAccountDeletion:dialog didReturn:NSAlertAlternateReturn];
+			default:
+				// cancel
+				break;
 		}
-
+		
 	} else {
 		switch(returnCode) {
 			case NSAlertDefaultReturn:
-				willBeDeleted = YES;
-				if (!account || !purple_account_is_connected(account)) {
-					[super alertForAccountDeletion:dialog didReturn:NSAlertDefaultReturn];
-				} else {
-					deletionDialog = dialog;
-					[self setShouldBeOnline:NO];
-					// further progress happens in -accountConnectionDisconnected
-				}
+				[self performDelete];
 				break;
 			default:
-				[super alertForAccountDeletion:dialog didReturn:returnCode];
+				// cancel
+				break;
 		}
 	}
+	
+	//Release dialog as required by AIAccount's documentation since we didn't call super's implementation.
+	[dialog release];
 }
 
 - (void)unregisteredAccount:(BOOL)success {
-	if(success) {
-		willBeDeleted = YES;
-		NSInvocation *inv = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:@selector(setShouldBeOnline:)]];
-		[inv setTarget:self];
-		[inv setSelector:@selector(setShouldBeOnline:)];
-		static BOOL nope = NO;
-		[inv setArgument:&nope atIndex:2];
-		[inv performSelector:@selector(invoke) withObject:nil afterDelay:0.0];
-		// further progress happens in -accountConnectionDisconnected
-
-	} else {
-		[super alertForAccountDeletion:deletionDialog didReturn:NSAlertAlternateReturn];
-		deletionDialog = nil;
+	if (success) {
+		/* We're not going to be online, but we *must* not disconnect within this run loop,
+		 * as libpurple may still have Things To Do with the connection and it has no concept of reference
+		 * counting with which to survive the disconnection. Performing a deletion would set us offline,
+		 * so wait until the next run loop.
+		 */
+		[self performSelector:@selector(performDelete)
+				   withObject:nil
+				   afterDelay:0];
 	}
 }
 
 /*!
-* @brief The account's UID changed
+ * @brief The account's UID changed
  */
 - (void)didChangeUID
 {
@@ -2719,13 +2706,19 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 }
 
 /*!
- * @brief The account will be deleted
+ * @brief The account will be deleted; it has already been told to disconnect
  */
 - (void)willBeDeleted
 {	
-	[super willBeDeleted];
+	if ([self online]) {
+		//Wait until we are finished disconnecting before removing ourselves from libpurple.
+		deletePurpleAccountAfterDisconnecting = TRUE;
 
-	[[self purpleThread] removeAdiumAccount:self];
+	} else {
+		[[self purpleThread] removeAdiumAccount:self];
+	}
+
+	[super willBeDeleted];
 }
 
 - (void)dealloc
