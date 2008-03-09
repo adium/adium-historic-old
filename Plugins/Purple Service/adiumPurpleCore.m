@@ -34,6 +34,7 @@
 #import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
 #import "AILibpurplePlugin.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
+#import <Adium/AIAccountControllerProtocol.h>
 
 #pragma mark Debug
 // Debug ------------------------------------------------------------------------------------------------------
@@ -144,6 +145,24 @@ static void adiumPurpleCoreDebugInit(void)
 	init_all_plugins();
 }
 
+static void associateLibpurpleAccounts(void)
+{
+	NSEnumerator	*enumerator = [[[[AIObject sharedAdiumInstance] accountController] accounts] objectEnumerator];
+	CBPurpleAccount	*adiumAccount;
+
+	while ((adiumAccount = [enumerator nextObject])) {
+		if ([adiumAccount isKindOfClass:[CBPurpleAccount class]]) {
+			PurpleAccount *account = purple_accounts_find([adiumAccount purpleAccountName], [adiumAccount protocolPlugin]);
+			if (account) {
+				[(CBPurpleAccount *)account->ui_data autorelease];
+				account->ui_data = [adiumAccount retain];
+
+				[adiumAccount setPurpleAccount:account];				
+			}
+		}
+	}
+}
+
 /* The core is ready... finish configuring libpurple and its plugins */
 static void adiumPurpleCoreUiInit(void)
 {		
@@ -166,6 +185,12 @@ static void adiumPurpleCoreUiInit(void)
     purple_privacy_set_ui_ops (adium_purple_privacy_get_ui_ops());	
 	purple_accounts_set_ui_ops(adium_purple_accounts_get_ui_ops());
 
+	//Configure signals for receiving purple events
+	configureAdiumPurpleSignals();
+	
+	//Associate each libpurple account with the appropriate Adium AIAccount.
+	associateLibpurpleAccounts();
+
 	/* Why use Purple's accounts and blist list when we have the information locally?
 		*		- Faster account connection: Purple doesn't have to recreate the local list
 		*		- Privacy/blocking support depends on the accounts and blist files existing
@@ -178,10 +203,7 @@ static void adiumPurpleCoreUiInit(void)
 	purple_set_blist(purple_blist_new());
 	AILog(@"adiumPurpleCore: purple_blist_load()...");
 	purple_blist_load();
-	
-	//Configure signals for receiving purple events
-	configureAdiumPurpleSignals();
-	
+
 	//Configure the GUI-related UI ops last
 	purple_roomlist_set_ui_ops (adium_purple_roomlist_get_ui_ops());
     purple_notify_set_ui_ops(adium_purple_notify_get_ui_ops());

@@ -112,9 +112,14 @@ static NSMutableArray		*libpurplePluginArray = nil;
 //Register the account purpleside in the purple thread
 - (void)addAdiumAccount:(CBPurpleAccount *)adiumAccount
 {
-	PurpleAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+	//Note that purple_account_new() calls purple_accounts_find() first, returning an existing PurpleAccount if there is one.
+	PurpleAccount *account = purple_account_new([adiumAccount purpleAccountName], [adiumAccount protocolPlugin]);
+
+	[(CBPurpleAccount *)account->ui_data autorelease];
 	account->ui_data = [adiumAccount retain];
-	
+
+	[adiumAccount setPurpleAccount:account];
+
 	purple_accounts_add(account);
 	purple_account_set_status_list(account, "offline", YES, NULL);
 }
@@ -126,7 +131,8 @@ static NSMutableArray		*libpurplePluginArray = nil;
 
 	[(CBPurpleAccount *)account->ui_data release];
 	account->ui_data = nil;
-	
+	[adiumAccount setPurpleAccount:NULL];
+
     purple_accounts_remove(account);	
 }
 
