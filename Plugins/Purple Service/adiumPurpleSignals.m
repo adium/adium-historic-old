@@ -173,19 +173,31 @@ static void buddy_idle_changed_cb(PurpleBuddy *buddy, gboolean old_idle, gboolea
 //This is called when a buddy is added or changes groups
 static void buddy_added_cb(PurpleBuddy *buddy)
 {
-	CBPurpleAccount	*account = accountLookup(purple_buddy_get_account(buddy));
-	PurpleGroup		*g = purple_buddy_get_group(buddy);
-	NSString		*groupName = ((g && purple_group_get_name(g)) ? [NSString stringWithUTF8String:purple_group_get_name(g)] : nil);
+	PurpleAccount	*purpleAccount = purple_buddy_get_account(buddy);
+	if (purple_account_is_connected(purpleAccount)) {
+		CBPurpleAccount	*account = accountLookup(purpleAccount);
+		PurpleGroup		*g = purple_buddy_get_group(buddy);
+		NSString		*groupName = ((g && purple_group_get_name(g)) ? [NSString stringWithUTF8String:purple_group_get_name(g)] : nil);
+		
+		/* We pass in purple_buddy_get_name(buddy) directly (without filtering or normalizing it) as it may indicate a 
+		 * formatted version of the UID.  We have a signal for when a rename occurs, but passing here lets us get
+		 * formatted names which are originally formatted in a way which differs from the results of normalization.
+		 * For example, TekJew will normalize to tekjew in AIM; we want to use tekjew internally but display TekJew.
+		 */
+		[account updateContact:contactLookupFromBuddy(buddy)
+				   toGroupName:groupName
+				   contactName:[NSString stringWithUTF8String:purple_buddy_get_name(buddy)]];
+	}
+}
 
-	/* We pass in purple_buddy_get_name(buddy) directly (without filtering or normalizing it) as it may indicate a 
-	 * formatted version of the UID.  We have a signal for when a rename occurs, but passing here lets us get
-	 * formatted names which are originally formatted in a way which differs from the results of normalization.
-	 * For example, TekJew will normalize to tekjew in AIM; we want to use tekjew internally but display TekJew.
-	 */
-	AILogWithSignature(@"%@'s contact %@ for %p in group %@", account, contactLookupFromBuddy(buddy), buddy, groupName);
-	[account updateContact:contactLookupFromBuddy(buddy)
-			   toGroupName:groupName
-			   contactName:[NSString stringWithUTF8String:purple_buddy_get_name(buddy)]];	
+static void connection_signed_on_cb(PurpleConnection *gc)
+{
+	GSList *buddies = purple_find_buddies(purple_connection_get_account(gc), /* buddy_name */ NULL);
+	GSList *cur;
+	for (cur = buddies; cur; cur = cur->next) {
+		buddy_added_cb((PurpleBuddy *)cur->data);
+	}
+	g_slist_free(buddies);
 }
 
 static void node_aliased_cb(PurpleBlistNode *node, char *old_alias)
@@ -197,8 +209,6 @@ static void node_aliased_cb(PurpleBlistNode *node, char *old_alias)
 
 		alias = purple_buddy_get_server_alias(buddy);
 		if (!alias) alias = purple_buddy_get_alias_only(buddy);
-
-		AILogWithSignature(@"%s -> %s", buddy->name, alias);
 
 		[account updateContact:contactLookupFromBuddy(buddy)
 					   toAlias:(alias ? [NSString stringWithUTF8String:alias] : nil)];
@@ -292,7 +302,11 @@ void configureAdiumPurpleSignals(void)
 	purple_signal_connect(blist_handle, "blist-node-aliased",
 						  handle, PURPLE_CALLBACK(node_aliased_cb),
 						  NULL);
-
+	
+	purple_signal_connect(purple_connections_get_handle(), "signed-on",
+						  handle, PURPLE_CALLBACK(connection_signed_on_cb),
+						  NULL);
+	
 	purple_signal_connect(purple_conversations_get_handle(), "buddy-typing",
 						  handle, PURPLE_CALLBACK(buddy_typing_cb), NULL);
 	

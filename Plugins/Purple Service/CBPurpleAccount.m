@@ -122,36 +122,30 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 
 - (void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName contactName:(NSString *)contactName
 {
-	//A quick sign on/sign off can leave these messages in the threaded messaging queue... we most definitely don't want
-	//to put the contact back into a remote group after signing off, as a ghost will appear. Spooky!
-	if ([self online] || [self integerStatusObjectForKey:@"Connecting"]) {
-		//When a new contact is created, if we aren't already silent and delayed, set it  a second to cover our initial
-		//status updates
-		if (!silentAndDelayed) {
-			[self silenceAllContactUpdatesForInterval:2.0];
-			[[adium contactController] delayListObjectNotificationsUntilInactivity];		
-		}
-
-		//If the name we were passed differs from the current formatted UID of the contact, it's itself a formatted UID
-		//This is important since we may get an alias ("Evan Schoenberg") from the server but also want the formatted name
-		if (![contactName isEqualToString:[theContact formattedUID]] && ![contactName isEqualToString:[theContact UID]]) {
-			[theContact setStatusObject:contactName
-								 forKey:@"FormattedUID"
-								 notify:NotifyLater];
-		}
-
-		if (groupName && [groupName isEqualToString:@PURPLE_ORPHANS_GROUP_NAME]) {
-			[theContact setRemoteGroupName:AILocalizedString(@"Orphans","Name for the orphans group")];
-		} else if (groupName && [groupName length] != 0) {
-			[theContact setRemoteGroupName:[self _mapIncomingGroupName:groupName]];
-		} else {
-			AILog(@"Got a nil group for %@",theContact);
-		}
-		
-		[self gotGroupForContact:theContact];
-	} else {
-		AILog(@"Got %@ for %@ while not online",groupName,theContact);
+	//When a new contact is created, if we aren't already silent and delayed, set it  a second to cover our initial
+	//status updates
+	if (!silentAndDelayed) {
+		[self silenceAllContactUpdatesForInterval:2.0];
+		[[adium contactController] delayListObjectNotificationsUntilInactivity];		
 	}
+	
+	//If the name we were passed differs from the current formatted UID of the contact, it's itself a formatted UID
+	//This is important since we may get an alias ("Evan Schoenberg") from the server but also want the formatted name
+	if (![contactName isEqualToString:[theContact formattedUID]] && ![contactName isEqualToString:[theContact UID]]) {
+		[theContact setStatusObject:contactName
+							 forKey:@"FormattedUID"
+							 notify:NotifyLater];
+	}
+	
+	if (groupName && [groupName isEqualToString:@PURPLE_ORPHANS_GROUP_NAME]) {
+		[theContact setRemoteGroupName:AILocalizedString(@"Orphans","Name for the orphans group")];
+	} else if (groupName && [groupName length] != 0) {
+		[theContact setRemoteGroupName:[self _mapIncomingGroupName:groupName]];
+	} else {
+		AILog(@"Got a nil group for %@",theContact);
+	}
+	
+	[self gotGroupForContact:theContact];
 }
 
 /*!
