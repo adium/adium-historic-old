@@ -15,7 +15,6 @@
  */
 
 #import "AIListWindowController.h"
-#import <Adium/AIContactControllerProtocol.h>
 
 #define ALL_OTHER_ACCOUNTS AILocalizedString(@"All Other Accounts", nil)
 
@@ -31,27 +30,41 @@ typedef enum {
 
 @interface AIStandardListWindowController : AIListWindowController {
 	IBOutlet	NSView						*view_statusAndImage;
-
+	
 	IBOutlet	NSView						*view_nameAndStatusMenu;
 	IBOutlet	AIHoveringPopUpButton		*statusMenuView;
 	IBOutlet	AIContactListNameButton		*nameView;
 	IBOutlet	NSImageView					*imageView_status;
-
+	
 	IBOutlet	AIContactListImagePicker	*imagePicker;
 	
+	IBOutlet	NSView						*filterBarView;
 	IBOutlet	NSSearchField				*searchField;
+	BOOL									filterBarIsVisible;
+	BOOL									filterBarIsAnimating;
+	NSViewAnimation							*showFilterBarAnimation;
+	NSViewAnimation							*hideFilterBarAnimation;
 	
 	ContactListImagePickerPosition			imagePickerPosition;
-
+	
 	NSDictionary				*toolbarItems;
 	AIStatusMenu				*statusMenu;	
 }
 
+
 - (void)updateImagePicker;
-- (IBAction)activateFirstContact:(id)sender;
 
 + (AIAccount *)activeAccountForIconsGettingOnlineAccounts:(NSMutableSet *)onlineAccounts
 										  ownIconAccounts:(NSMutableSet *)ownIconAccounts;
 + (AIAccount *)activeAccountForDisplayNameGettingOnlineAccounts:(NSMutableSet *)onlineAccounts
 										 ownDisplayNameAccounts:(NSMutableSet *)ownDisplayNameAccounts;
+
+- (void)toggleFindPanel:(id)sender;
+- (void)forwardKeyEventToFindPanel:(NSEvent *)theEvent;
+- (IBAction)showFilterBar:(id)sender;
+- (IBAction)hideFilterBar:(id)sender;
+- (void)animationDidEnd:(NSAnimation*)animation;
+- (IBAction)toggleFilterBar:(id)sender;
+- (IBAction)filterContacts:(id)sender;
+
 @end

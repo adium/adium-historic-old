@@ -162,6 +162,11 @@ typedef enum {
 - (IBAction)performDefaultActionOnSelectedObject:(AIListObject *)selectedObject sender:(NSOutlineView *)sender;
 @end
 
+@interface NSObject(AIListControllerOptionalDelegateMethods)
+- (void)toggleFindPanel:(id)sender;
+- (void)forwardKeyEventToFindPanel:(NSEvent *)theEvent;
+@end
+
 @interface AIAbstractListController : AIObject <AISmoothTooltipTrackerDelegate> {	
 	AIAutoScrollView					*scrollView_contactList;
     AIListOutlineView					*contactListView;
@@ -234,5 +239,9 @@ typedef enum {
 
 //Drag & Drop
 - (void)setDragItems:(NSNotification *)notification;
+
+//find panel
+- (void)outlineViewToggleFindPanel:(NSOutlineView *)outlineView;
+- (BOOL)outlineView:(NSOutlineView *)outlineView forwardKeyEventToFindPanel:(NSEvent *)event;
 
 @end

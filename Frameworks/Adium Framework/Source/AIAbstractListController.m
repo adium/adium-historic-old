@@ -954,4 +954,20 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	NSLog(@"%@ Performing %@", self, action);
 	[super accessibilityPerformAction:action]; 
 }
+
+#pragma mark Find Panel
+- (void)outlineViewToggleFindPanel:(NSOutlineView *)outlineView;
+{
+	if ([[self delegate]respondsToSelector:@selector(toggleFindPanel:)])
+		[[self delegate]toggleFindPanel:outlineView];
+}
+- (BOOL)outlineView:(NSOutlineView *)outlineView forwardKeyEventToFindPanel:(NSEvent *)event;
+{
+	if ([[self delegate]respondsToSelector:@selector(forwardKeyEventToFindPanel:)]) {
+		[[self delegate]forwardKeyEventToFindPanel:event];
+		return YES;
+	} else {
+		return NO;
+	}
+}
 @end

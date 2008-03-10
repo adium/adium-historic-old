@@ -463,6 +463,19 @@
 	return [self arrayOfSelectedItems];
 }
 
+- (unsigned)indexOfFirstVisibleListContact
+{
+	id contact = nil;
+	for(unsigned i = 0; i < [self numberOfRows]; i++)
+	{
+		contact = [self itemAtRow:i];
+		if([contact isKindOfClass:[AIListContact class]])
+		{
+			return i;
+		}
+	}
+}
+
 #pragma mark Drag & Drop Drawing
 /*!
  * @brief Called by NSOutineView to draw a drop highight

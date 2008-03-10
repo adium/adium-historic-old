@@ -69,6 +69,9 @@ typedef enum {
 - (AIListObject *)listObject;
 - (NSArray *)arrayOfListObjects;
 
+//Contacts
+- (unsigned)indexOfFirstVisibleListContact;
+
 //Shadows
 - (void)setUpdateShadowsWhileDrawing:(BOOL)update;
 

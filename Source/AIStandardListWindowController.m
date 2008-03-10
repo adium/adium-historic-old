@@ -25,6 +25,7 @@
 #import <Adium/AIListGroup.h>
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIToolbarControllerProtocol.h>
 #import <Adium/AIAccount.h>
@@ -39,6 +40,10 @@
 #import "AIHoveringPopUpButton.h"
 #import "AIContactListImagePicker.h"
 #import "AIContactListNameButton.h"
+#import "AIContactController.h"
+#import "AIContactHidingController.h"
+
+#define PREF_GROUP_APPEARANCE		@"Appearance"
 
 #define TOOLBAR_CONTACT_LIST				@"ContactList:1.0"				//Toolbar identifier
 
@@ -59,7 +64,7 @@
 {
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[[adium notificationCenter] removeObserver:self];
-
+	
 	[super dealloc];
 }
 
@@ -78,14 +83,14 @@
 {
 	//Our nib starts with the image picker on the left side
 	imagePickerPosition = ContactListImagePickerOnLeft;
-
+	
 	[super windowDidLoad];
-
+	
 	[nameView setFont:[NSFont fontWithName:@"Lucida Grande" size:12]];
-
+	
 	//Configure the state menu
 	statusMenu = [[AIStatusMenu statusMenuWithDelegate:self] retain];
-
+	
 	//Update the selections in our state menu when the active state changes
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(updateStatusMenuSelection:)
@@ -112,9 +117,19 @@
 	//Set our minimum size here rather than in the nib to avoid conflicts with autosizing
 	[[self window] setMinSize:NSMakeSize(135, 60)];
 	
-	[searchField setDelegate:self];
-
 	[self _configureToolbar];
+	
+	
+	filterBarIsVisible = NO;
+	[searchField setDelegate:self];
+	[[[searchField cell]cancelButtonCell]setTarget:self];
+	[[[searchField cell]cancelButtonCell]setAction:@selector(hideFilterBar:)];
+	
+	[[NSNotificationCenter defaultCenter]addObserver:self
+											selector:@selector(hideFilterBarFromWindowResignedMain:)
+												name:NSWindowDidResignMainNotification
+											  object:nil];
+		
 }
 
 /*!
@@ -123,7 +138,6 @@
 - (void)windowWillClose:(id)sender
 {
 	[[adium notificationCenter] removeObserver:self];
-	[searchField setDelegate:nil];
 	[statusMenu release];
 	
 	[super windowWillClose:sender];
@@ -191,7 +205,7 @@
 			[self updateNameView];
 		}
 	}
-
+	
 	/*
 	 * We move our image picker to mirror the contact list's own layout
 	 */
@@ -239,7 +253,7 @@
 				//Image picker is on the right but we want it on the left
 				newImagePickerFrame.origin.x = NSMinX(nameAndStatusMenuFrame);	
 			}
-
+			
 			if (desiredImagePickerPosition == ContactListImagePickerOnLeft) {
 				if ((imagePickerPosition == ContactListImagePickerHiddenOnLeft) ||
 					(imagePickerPosition == ContactListImagePickerHiddenOnRight)) {
@@ -247,9 +261,9 @@
 					newNameAndStatusMenuFrame.size.width -= NSWidth(newImagePickerFrame);
 					[imagePicker setHidden:NO];
 				}
-
+				
 				newNameAndStatusMenuFrame.origin.x = NSMaxX(newImagePickerFrame);
-
+				
 			} else /* if (desiredImagePickerPosition == ContactListImagePickerHiddenOnLeft) */ {
 				if ((imagePickerPosition == ContactListImagePickerOnLeft) ||
 					(imagePickerPosition == ContactListImagePickerOnRight)) {
@@ -257,12 +271,12 @@
 					newNameAndStatusMenuFrame.size.width += NSWidth(newImagePickerFrame);
 					[imagePicker setHidden:YES];
 				}
-
+				
 				newNameAndStatusMenuFrame.origin.x = NSMinX(newImagePickerFrame);
 			}
 			
 			[imagePicker setAutoresizingMask:(NSViewMaxXMargin | NSViewMinYMargin)];
-
+			
 			break;
 		}
 		case ContactListImagePickerOnRight:
@@ -275,7 +289,7 @@
 					newNameAndStatusMenuFrame.size.width -= NSWidth(newImagePickerFrame);
 					[imagePicker setHidden:NO];	
 				}
-	
+				
 			} else /* if (desiredImagePickerPosition == ContactListImagePickerHiddenOnLeft) */ {
 				if ((imagePickerPosition == ContactListImagePickerOnLeft) ||
 					(imagePickerPosition == ContactListImagePickerOnRight)) {
@@ -292,12 +306,12 @@
 				newImagePickerFrame.origin.x = (NSWidth([[imagePicker superview] frame]) - NSMaxX(imagePickerFrame));
 				newNameAndStatusMenuFrame.origin.x = NSMinX(imagePickerFrame);
 			}
-
+			
 			[imagePicker setAutoresizingMask:(NSViewMinXMargin | NSViewMinYMargin)];
 			break;
 		}
 	}
-
+	
 	[view_nameAndStatusMenu setFrame:newNameAndStatusMenuFrame];
 	[[nameView superview] setNeedsDisplayInRect:nameAndStatusMenuFrame];
 	[view_nameAndStatusMenu setNeedsDisplay:YES];
@@ -325,7 +339,7 @@
 	NSEnumerator		*enumerator;
 	BOOL				atLeastOneOwnIconAccount = NO;
 	NSArray				*accounts = [[sharedAdium accountController] accounts];
-
+	
 	if (!onlineAccounts) onlineAccounts = [NSMutableSet set];
 	if (!ownIconAccounts) ownIconAccounts = [NSMutableSet set];
 	
@@ -344,7 +358,7 @@
 	//At least one account is using its own icon rather than the global preference
 	if (atLeastOneOwnIconAccount) {
 		NSString	*accountID = [[sharedAdium preferenceController] preferenceForKey:@"Active Icon Selection Account"
-																				group:GROUP_ACCOUNT_STATUS];
+																			 group:GROUP_ACCOUNT_STATUS];
 		
 		activeAccount = (accountID ? [[sharedAdium accountController] accountWithInternalObjectID:accountID] : nil);
 		
@@ -364,7 +378,7 @@
 			}
 		}
 	}
-
+	
 	return activeAccount;
 }
 
@@ -381,7 +395,7 @@
 		
 		image = [[[NSImage alloc] initWithData:data] autorelease];
 	}
-
+	
 	return image;
 }
 
@@ -401,13 +415,13 @@
 - (void)imageViewWithImagePicker:(AIImageViewWithImagePicker *)picker didChangeToImageData:(NSData *)imageData
 {
 	AIAccount	*activeAccount = [[self class] activeAccountForIconsGettingOnlineAccounts:nil
-																		  ownIconAccounts:nil];
-
+																		ownIconAccounts:nil];
+	
 	if (activeAccount) {
 		[activeAccount setPreference:imageData
 							  forKey:KEY_USER_ICON
 							   group:GROUP_ACCOUNT_STATUS];
-
+		
 	} else {
 		[[adium preferenceController] setPreference:imageData
 											 forKey:KEY_USER_ICON
@@ -417,7 +431,7 @@
 
 #pragma mark Status menu
 /*!
-* @brief Add state menu items to our location
+ * @brief Add state menu items to our location
  *
  * Implemented as required by the StateMenuPlugin protocol.
  *
@@ -446,16 +460,16 @@
 	AIStatus	*activeStatus = [[adium statusController] activeStatusState];
 	NSString	*title = [activeStatus title];
 	if (!title) NSLog(@"Warning: Title for %@ is (null)",activeStatus);
-
+	
 	[statusMenuView setTitle:(title ? title : @"")];
 	/*
-	[statusMenuView setImage:[activeStatus iconOfType:AIStatusIconList
-											direction:AIIconFlipped]];
+	 [statusMenuView setImage:[activeStatus iconOfType:AIStatusIconList
+	 direction:AIIconFlipped]];
 	 */
 	[imageView_status setImage:[activeStatus iconOfType:AIStatusIconList
 											  direction:AIIconNormal]];
 	[statusMenuView setToolTip:[activeStatus statusMessageTooltipString]];
-
+	
 	[self updateImagePicker];
 	[self updateNameView];
 }
@@ -497,7 +511,7 @@
 	//At least one account is using its own display name rather than the global preference
 	if (atLeastOneOwnDisplayNameAccount) {
 		NSString	*accountID = [[sharedAdium preferenceController] preferenceForKey:@"Active Display Name Account"
-																				group:GROUP_ACCOUNT_STATUS];
+																			 group:GROUP_ACCOUNT_STATUS];
 		
 		activeAccount = (accountID ? [[sharedAdium accountController] accountWithInternalObjectID:accountID] : nil);
 		
@@ -505,8 +519,8 @@
 		if (![ownDisplayNameAccounts containsObject:activeAccount]) activeAccount = nil;
 		
 		/* However, if all accounts are using their own display name, we should return one of them.
-			* Let's use the first one in the accounts list.
-			*/
+		 * Let's use the first one in the accounts list.
+		 */
 		if (!activeAccount && ([ownDisplayNameAccounts count] == [onlineAccounts count])) {
 			enumerator = [accounts objectEnumerator];
 			while ((account = [enumerator nextObject])) {
@@ -534,7 +548,7 @@
 	NSData		*newDisplayName = ((inName && [inName length]) ?
 								   [[NSAttributedString stringWithString:inName] dataRepresentation] :
 								   nil);
-
+	
 	if (activeAccount) {
 		[activeAccount setPreference:newDisplayName
 							  forKey:KEY_ACCOUNT_DISPLAY_NAME
@@ -549,24 +563,24 @@
 - (void)nameViewChangeName:(id)sender
 {
 	AIAccount	*activeAccount = [[self class] activeAccountForDisplayNameGettingOnlineAccounts:nil
-																		  ownDisplayNameAccounts:nil];
+																	   ownDisplayNameAccounts:nil];
 	NSString	*startingString = nil;
-
+	
 	if (activeAccount) {
 		startingString = [[[activeAccount preferenceForKey:KEY_ACCOUNT_DISPLAY_NAME
 													 group:GROUP_ACCOUNT_STATUS] attributedString] string];		
-
+		
 	} else {
 		startingString = [[[[adium preferenceController] preferenceForKey:KEY_ACCOUNT_DISPLAY_NAME
 																	group:GROUP_ACCOUNT_STATUS] attributedString] string];
 	}
-
+	
 	NSMutableDictionary *userInfo = [NSMutableDictionary dictionary];
 	if (activeAccount) {
 		[userInfo setObject:activeAccount
 					 forKey:@"activeAccount"];
 	}
-
+	
 	[nameView editNameStartingWithString:startingString
 						 notifyingTarget:self
 								selector:@selector(nameView:didChangeToString:userInfo:)
@@ -579,7 +593,7 @@
 	AIAccount *account;
 	NSMenu *menu = [[NSMenu alloc] init];
 	NSMenuItem *menuItem;
-
+	
 	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Display Name For:", nil)
 										  target:nil
 										  action:nil
@@ -638,9 +652,9 @@
 	NSMutableSet *ownDisplayNameAccounts = [NSMutableSet set];
 	NSMutableSet *onlineAccounts = [NSMutableSet set];
 	AIAccount	 *activeAccount = [[self class] activeAccountForDisplayNameGettingOnlineAccounts:onlineAccounts
-																		  ownDisplayNameAccounts:ownDisplayNameAccounts];
+																		ownDisplayNameAccounts:ownDisplayNameAccounts];
 	NSString	 *alias = nil;
-
+	
 	if (activeAccount) {
 		//There is a specific account active whose display name we should show
 		alias = [activeAccount displayName];
@@ -648,12 +662,12 @@
 		/* There isn't an account active. We should show the global preference if possible.  Using it directly would mean
 		 * that it displays exactly as typed by the user, whereas using it via an account's displayName means it is preprocessed
 		 * for any substitutions, which looks better.
-		*/
+		 */
 		NSMutableSet *onlineAccountsUsingGlobalPreference = [onlineAccounts mutableCopy];
 		[onlineAccountsUsingGlobalPreference minusSet:ownDisplayNameAccounts];
 		if ([onlineAccountsUsingGlobalPreference count]) {
 			alias = [[onlineAccountsUsingGlobalPreference anyObject] displayName];
-
+			
 		} else {
 			/* No online accounts... look for an enabled account using the global preference
 			 * 'cause we still want to use displayName if possible
@@ -667,10 +681,10 @@
 										   group:GROUP_ACCOUNT_STATUS
 						   ignoreInheritedValues:YES] attributedString] length]) break;
 			}
-
+			
 			alias = [account displayName];
 		}
-
+		
 		[onlineAccountsUsingGlobalPreference release];
 	}
 	
@@ -688,7 +702,7 @@
 										 accountsUsingOwnName:ownDisplayNameAccounts
 											   onlineAccounts:onlineAccounts]];
 	}
-
+	
 	/* If we don't have an alias to display as our text yet, grab from the global preferences. This can be the case
 	 * in a no-accounts-enabled situation.
 	 */
@@ -699,7 +713,7 @@
 			alias = @"Adium";
 		}
 	}
-
+	
 	[nameView setTitle:alias];
 	[nameView setToolTip:alias];
 }
@@ -717,13 +731,13 @@
 - (void)_configureToolbar
 {
     NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:TOOLBAR_CONTACT_LIST] autorelease];
-
+	
 	[toolbar setAutosavesConfiguration:YES];
     [toolbar setDelegate:self];
     [toolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
     [toolbar setSizeMode:NSToolbarSizeModeSmall];
     [toolbar setAllowsUserCustomization:NO];
-
+	
 	/* Seemingly randomling, setToolbar: may throw:
 	 * Exception:	NSInternalInconsistencyException
 	 * Reason:		Uninitialized rectangle passed to [View initWithFrame:].
@@ -747,7 +761,7 @@
 	[statusAndIconItem setMinSize:NSMakeSize(100, [view_statusAndImage bounds].size.height)];
 	[statusAndIconItem setMaxSize:NSMakeSize(100000, [view_statusAndImage bounds].size.height)];
 	[statusAndIconItem setView:view_statusAndImage];
-
+	
 	return [statusAndIconItem autorelease];
 }
 
@@ -773,61 +787,211 @@
 }
 
 #pragma mark Filtering
-
-static ESObjectWithStatus<AIContainingObject> *oldContactList = nil;
-- (void)controlTextDidChange:(NSNotification *)aNotification
+- (void)toggleFindPanel:(id)sender;
 {
-	//XXX This is busted. I'm turning it off to protect the innocent. More considered removal should follow as discussed in #7832
-	return;
+	[self toggleFilterBar:sender];
+}
+- (void)forwardKeyEventToFindPanel:(NSEvent *)theEvent;
+{
+	//if we were not searching something before, we need to show the filter bar first
+	[self showFilterBar:nil];
 	
-	NSSearchField *sender = [aNotification object];
-	NSString *queryString = [(NSSearchFieldCell *)[(NSTextField *)sender cell] stringValue];
-	if (!oldContactList) {
-		oldContactList = [contactListController contactListRoot];
-		[oldContactList retain];
-	}
-	if ([queryString isEqualToString:@""]) {
-		[contactListController setHideRoot:YES];
-		[contactListController setContactListRoot:oldContactList];
-		[oldContactList release];
-		oldContactList = nil;
-	} else {
-		AIListSmartGroup *searchResults = [[AIListGroup alloc] initWithUID:AILocalizedString(@"Search Results", "Contact List Search Results")];
-		[searchResults setDisplayName:AILocalizedString(@"Search Results", "Contact List Search Results")];
-		AIListContact *contact;
-		// recursively walk the contact list, because if we enumerate over the contactController's -allContacts method we end up with weird
-		// duplicated contacts
-		NSMutableArray *enumeratorStack = [NSMutableArray arrayWithObject:[[oldContactList containedObjects] objectEnumerator]];
-		while ([enumeratorStack count] > 0) {
-			while (( contact = [[enumeratorStack objectAtIndex:0] nextObject])) {
-				if ([contact isKindOfClass:[AIMetaContact class]])
-					[enumeratorStack insertObject:[[(AIMetaContact *)contact containedObjects] objectEnumerator] atIndex:0];
-				else if ([contact isKindOfClass:[AIListGroup class]])
-					[enumeratorStack insertObject:[[(AIListGroup *)contact containedObjects] objectEnumerator] atIndex:0];
-				else
-					if ([[contact account] online] && 
-					([[contact displayName] rangeOfString:queryString options:NSCaseInsensitiveSearch].location != NSNotFound || 
-					 [[contact UID] rangeOfString:queryString options:NSCaseInsensitiveSearch].location != NSNotFound)) {
-						if ([[contact containingObject] isKindOfClass:[AIListGroup class]])
-							[searchResults addObject:contact];
-						else if ([[contact containingObject] isKindOfClass:[AIMetaContact class]])
-							[searchResults addObject:[contact containingObject]];
-						break;
-					}
-			}
-			[enumeratorStack removeObjectAtIndex:0];
-		}
-		[contactListController setContactListRoot:searchResults];
-		[contactListController setHideRoot:NO];
-#warning this really should get autoreleased....
-//		[searchResults autorelease];
-	}
+	[[self window]makeFirstResponder:searchField];
+	[[[self window] fieldEditor:YES forObject:searchField]keyDown:theEvent];
+	
+}
+- (IBAction)showFilterBar:(id)sender;
+{
+	if (filterBarIsVisible || filterBarIsAnimating)
+		return;
+	
+	NSSize filterBarSize = [filterBarView bounds].size;
+	
+	//contact list resizing
+	//we need to decrease the height of the contact list to make room for the filter bar
+	id viewToResize;
+	if([contactListView enclosingScrollView])
+		viewToResize = [contactListView enclosingScrollView];
+	else
+		viewToResize = contactListView;
+	
+	NSRect viewFrame = [viewToResize frame];
+	
+	
+	NSRect endingViewFrame = viewFrame;
+	endingViewFrame.size.height = viewFrame.size.height - filterBarSize.height;
+	
+	NSDictionary *viewToResizeAnimationDictionary = [NSDictionary dictionaryWithObjectsAndKeys:viewToResize, NSViewAnimationTargetKey,
+													 [NSValue valueWithRect:endingViewFrame], NSViewAnimationEndFrameKey, nil];
+	
+	
+	
+	//filter bar view resizing
+	//start the filter bar at the top of the window
+	NSRect startingFilterBarFrame = NSMakeRect(endingViewFrame.origin.x,
+											   viewFrame.size.height,
+											   endingViewFrame.size.width,
+											   filterBarSize.height);
+	
+	//...and end with the filter bar on top of the contact list
+	NSRect endingFilterBarFrame = NSMakeRect(endingViewFrame.origin.x, 
+											 endingViewFrame.size.height,
+											 endingViewFrame.size.width,
+											 filterBarSize.height);
+	
+	//put the tiny filter bar in the window before we begin the animation
+	[filterBarView setFrame:startingFilterBarFrame];
+	[[[self window]contentView]addSubview:filterBarView];
+	
+	[[self window]makeFirstResponder:searchField]; 
+	
+	NSDictionary *filterBarAnimationDictionary = [NSDictionary dictionaryWithObjectsAndKeys:filterBarView, NSViewAnimationTargetKey,
+												  [NSValue valueWithRect:endingFilterBarFrame], NSViewAnimationEndFrameKey, nil];
+	
+	
+	showFilterBarAnimation = [[NSViewAnimation alloc]initWithViewAnimations:[NSArray arrayWithObjects:viewToResizeAnimationDictionary,filterBarAnimationDictionary,nil]];
+	[showFilterBarAnimation setDuration:0.25];
+	[showFilterBarAnimation setDelegate:self];
+	filterBarIsAnimating = YES;
+	//disable vertical autoresizing just while the animation is running
+	//this prevents display bugs that can occur when contacts are being shown/hidden that cause the frame to change while the filter bar is sliding
+	[contactListController setAutoresizeVertically:NO];
+	[showFilterBarAnimation startAnimation];
+	
+	//disable horizontal autoresizing while the filter bar is shown so the width does not change when longer contacts are eliminated as results
+	[contactListController setAutoresizeHorizontally:NO];
+	
+	
+	//contact list animation is a cool idea, but too glichy to work well when hiding/showing potentially hundreds of contacts
+	[contactListView setEnableAnimation:NO];
+	
+	filterBarIsVisible = YES;
 }
 
-- (IBAction)activateFirstContact:(id)sender;
+- (IBAction)hideFilterBar:(id)sender;
 {
-	if([[(NSSearchFieldCell *)[(NSTextField *)sender cell] stringValue] length] == 0) return;
-	[contactListController performDefaultActionOnFirstItem];
+	if (!filterBarIsVisible || filterBarIsAnimating)
+		return;
+	
+	//clear the search and show all contacts
+	[searchField setStringValue:@""];
+	[self filterContacts:searchField];
+	
+	NSSize filterBarSize = [filterBarView bounds].size;
+	
+	//contact list resizing
+	//we need to increase the height of the contact list as we decrease the height of the filter bar
+	id viewToResize;
+	if([contactListView enclosingScrollView])
+		viewToResize = [contactListView enclosingScrollView];
+	else
+		viewToResize = contactListView;
+	
+	NSRect viewFrame = [viewToResize frame];
+	
+	NSRect endingViewFrame = viewFrame;
+	endingViewFrame.size.height = viewFrame.size.height + filterBarSize.height;
+	
+	NSDictionary *viewToResizeAnimationDictionary = [NSDictionary dictionaryWithObjectsAndKeys:viewToResize, NSViewAnimationTargetKey,
+													 [NSValue valueWithRect:endingViewFrame], NSViewAnimationEndFrameKey, nil];
+	
+	
+	//filter bar resizing
+	//end with the filter bar at the top of the window animationDidEnd: will remove it from the superview
+	NSRect endingFilterBarFrame = NSMakeRect(endingViewFrame.origin.x,
+											 endingViewFrame.size.height,
+											 endingViewFrame.size.width,
+											 filterBarSize.height);
+	
+	NSDictionary *filterBarAnimationDictionary = [NSDictionary dictionaryWithObjectsAndKeys:filterBarView, NSViewAnimationTargetKey,
+												  [NSValue valueWithRect:endingFilterBarFrame], NSViewAnimationEndFrameKey, nil];
+	
+	hideFilterBarAnimation = [[NSViewAnimation alloc]initWithViewAnimations:[NSArray arrayWithObjects:viewToResizeAnimationDictionary,filterBarAnimationDictionary,nil]];
+	[hideFilterBarAnimation setDuration:0.25];
+	filterBarIsVisible = NO;
+	[hideFilterBarAnimation setDelegate:self];
+	filterBarIsAnimating = YES;
+	//disable vertical autoresizing just while the animation is running
+	//this prevents display bugs that can occur when contacts are being shown/hidden that cause the frame to change while the filter bar is sliding
+	[contactListController setAutoresizeVertically:NO];
+	[hideFilterBarAnimation startAnimation];
+	[contactListController setAutoresizeHorizontally:[[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE group:PREF_GROUP_APPEARANCE] boolValue]];
+	[contactListView setEnableAnimation:YES];
 }
+
+- (void)animationDidEnd:(NSAnimation*)animation
+{
+	if (![animation isEqual:showFilterBarAnimation] && ![animation isEqual:hideFilterBarAnimation]) {
+		[super animationDidEnd:animation];
+		return;
+	}
+	
+	if ([animation isEqual:hideFilterBarAnimation]) {
+		[filterBarView removeFromSuperview];
+	}
+	
+	[contactListController setAutoresizeVertically:[[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE group:PREF_GROUP_APPEARANCE] boolValue]];
+
+	//resize the window for vertical autoresizing to reflect the addition/subtraction of the filter bar rect
+	[contactListController contactListDesiredSizeChanged];
+	
+	filterBarIsAnimating = NO;
+	[animation autorelease];
+}
+
+- (IBAction)toggleFilterBar:(id)sender;
+{
+	if(filterBarIsVisible) {
+		[self hideFilterBar:sender];
+	} else {
+		[self showFilterBar:sender];
+	}		
+}
+- (void)hideFilterBarFromWindowResignedMain:(NSNotification *)sender
+{
+	if ([[sender object]isEqual:[self window]]) {
+		//if the filter bar was shown, but the user clicks out of the window, assume the user is done and hide the filter bar
+		[self hideFilterBar:nil];
+	}
+}
+- (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)command
+{
+	if (control != searchField)
+		return NO;
+	
+	if (command == @selector(insertNewline:))
+	{
+		[[adium chatController] openChatWithContact:[contactListView itemAtRow:[contactListView indexOfFirstVisibleListContact]] onPreferredAccount:YES];
+		[self hideFilterBar:nil];
+		[[self window] makeFirstResponder:contactListView];
+	}
+	else if(command == @selector(moveDown:)) {
+		//make the down key a shortcut for selecting the first contact
+		[[self window] makeFirstResponder:contactListView];
+		
+		[contactListView selectRowIndexes:[NSIndexSet indexSetWithIndex:[contactListView indexOfFirstVisibleListContact]] byExtendingSelection:NO];
+		
+	}
+	else if(command == @selector(cancelOperation:) && filterBarIsVisible) {
+		[self hideFilterBar:nil];
+		[[self window] makeFirstResponder:contactListView];
+	}
+	
+	return NO;
+}
+
+- (IBAction)filterContacts:(id)sender;
+{
+	if (![sender isKindOfClass:[NSSearchField class]])
+		return;
+	
+	[[[adium contactController]contactHidingController]setContactFilteringSearchString:[sender stringValue]
+																	  refilterContacts:YES];
+		
+	[contactListView selectRowIndexes:[NSIndexSet indexSetWithIndex:[contactListView indexOfFirstVisibleListContact]] byExtendingSelection:NO];
+	
+}
+
+
 
 @end

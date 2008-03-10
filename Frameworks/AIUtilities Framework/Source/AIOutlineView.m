@@ -101,8 +101,11 @@
             id 	object = [self itemAtRow:[self selectedRow]];
             if (object && [self isExpandable:object] && ![self isItemExpanded:object]) {
 				[self expandItem:object];
-            }
-
+			}
+		} else if (pressedChar == NSUpArrowFunctionKey) { //up
+			[super keyDown:theEvent];
+		} else if (pressedChar == NSDownArrowFunctionKey) { //down
+			[super keyDown:theEvent];
         } else if ((pressedChar == '\031') && // backtab
 				   [self respondsToSelector:@selector(findPrevious:)] &&
 				   [self tabPerformsTypeSelectFind]) {
@@ -117,11 +120,28 @@
 			* if KFTypeSelectTableView is being used via posing */
 			[self findNext:self];
 
-		} else {
+		} else if([[self delegate] respondsToSelector:@selector(outlineView:forwardKeyEventToFindPanel:)] && 
+				  !([theEvent modifierFlags] & NSCommandKeyMask) && 
+				  !([theEvent modifierFlags] & NSControlKeyMask) &&
+				  [[[NSCharacterSet controlCharacterSet]invertedSet]characterIsMember:pressedChar]) {
+			//handle any key we have not alredy handled that is a visable character and likely not to be a shortcut key (no command or control key modifiers) by asking the delegate to add it to the search string
+			if(![[self delegate]outlineView:self forwardKeyEventToFindPanel:theEvent]) {
+				//the delegate's find panel could not handle the event, so we just pass it to super
+				[super keyDown:theEvent];
+			}
+		}
+			
+		else {
 			[super keyDown:theEvent];
 		}
 	} else {
 		[super keyDown:theEvent];
+	}
+}
+- (void)performFindPanelAction:(id)sender;
+{
+	if ([[self delegate] respondsToSelector:@selector(outlineViewToggleFindPanel:)]) {
+		[[self delegate]outlineViewToggleFindPanel:self];
 	}
 }
 

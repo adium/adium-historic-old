@@ -14,11 +14,14 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+//This plugin manages the menu items and preferences for hiding offline, idle, and/or mobile contacts
+//The actaual hiding is done by AIContactHidingController
+
 #import <Adium/AIPlugin.h>
 #import <Adium/AIContactControllerProtocol.h>
 
 
-@interface AIOfflineContactHidingPlugin : AIPlugin <AIListObjectObserver> {
+@interface AIOfflineContactHidingPlugin : AIPlugin {
 	NSMenuItem		*menuItem_hideContacts;
 	NSMenuItem		*menuItem_hideOffline;
 	NSMenuItem		*menuItem_hideIdle;

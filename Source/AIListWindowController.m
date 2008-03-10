@@ -823,6 +823,9 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 
 - (BOOL)animationShouldStart:(NSAnimation *)animation
 {
+	if(![animation isEqual:windowAnimation])
+		return YES;
+	
 	//Whenever an animation starts, we should be using the normal shadow setting
 	[[self window] setHasShadow:listHasShadow];
 	
@@ -839,6 +842,9 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 
 - (void)animationDidEnd:(NSAnimation*)animation
 {
+	if(![animation isEqual:windowAnimation])
+		return;
+	
 	//Restore docking behavior	
 	if ([[self window] respondsToSelector:@selector(setDockingEnabled:)])
 		[(id)[self window] setDockingEnabled:YES];
