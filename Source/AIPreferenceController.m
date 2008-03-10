@@ -75,19 +75,9 @@
 
 /*!
  * @brief Finish initialization
- *
- * Sets up the toolbar items.
- * We can't do these in initing, since the toolbar controller hasn't loaded yet at that point.
  */
 - (void)controllerDidLoad
 {
-	//
-	NSString *userDirectory = [[adium loginController] userDirectory];
-	
-    //Create the 'ByObject' and 'Accounts' object specific preference directory
-	[[NSFileManager defaultManager] createDirectoriesForPath:[userDirectory stringByAppendingPathComponent:OBJECT_PREFS_PATH]];
-	[[NSFileManager defaultManager] createDirectoriesForPath:[userDirectory stringByAppendingPathComponent:ACCOUNT_PREFS_PATH]];
-
 	[self upgradeToSingleObjectPrefsDictIfNeeded];
 }
 
