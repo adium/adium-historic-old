@@ -717,10 +717,10 @@
 }
 
 - (void)didConnect {
+	[gateways release];
 	gateways = [[NSMutableArray alloc] init];
 
-	if(adhocServer)
-		[adhocServer release];
+	[adhocServer release];
 	adhocServer = [[AMPurpleJabberAdHocServer alloc] initWithAccount:self];
 	[adhocServer addCommand:@"ping" delegate:[AMPurpleJabberAdHocPing class] name:@"Ping"];
 	
