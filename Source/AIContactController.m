@@ -1554,23 +1554,11 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 }
 
 /*!
- * @brief Return an array of all contact list groups, detached or not
+ * @brief Return an array of all contact list groups
  */
-- (NSMutableArray *)allGroups
+- (NSArray *)allGroups
 {
-	NSEnumerator		*enumerator = [detachedContactLists objectEnumerator];
-	NSMutableArray		*groups = [NSMutableArray array];
-	AIListGroup			*detachedGroup;
-	
-	// Main contact list
-	[groups addObjectsFromArray:[contactList containedObjects]];
-	
-	// Detached groups
-	while ((detachedGroup = [enumerator nextObject])) {
-		[groups addObjectsFromArray:[detachedGroup containedObjects]];
-	}
-	
-	return groups;
+	return [groupDict allValues];
 }
 
 //Returns a flat array of all contacts (by calling through to -allContactsInObject:recurse:onAccount:)
