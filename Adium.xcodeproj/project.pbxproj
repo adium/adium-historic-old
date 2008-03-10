@@ -1207,6 +1207,8 @@
 		63EA63DD094BB79A009C8453 /* StatusIconPreviewView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 63336B3F094994A800970871 /* StatusIconPreviewView.nib */; };
 		63EA6409094BB9A9009C8453 /* AIStatusIconPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 63EA6407094BB9A9009C8453 /* AIStatusIconPreviewController.m */; };
 		63FBAA480887779D00026246 /* AIDockBadger.m in Sources */ = {isa = PBXBuildFile; fileRef = 636AB7F2087E2B6700A87670 /* AIDockBadger.m */; };
+		661561650D84AEED004B7946 /* AIContactHidingController.m in Sources */ = {isa = PBXBuildFile; fileRef = 661561640D84AEEC004B7946 /* AIContactHidingController.m */; };
+		6615618B0D84B875004B7946 /* AIFilterBarBackgroundBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6615618A0D84B874004B7946 /* AIFilterBarBackgroundBox.m */; };
 		6C3E0730054471CD00A4AE2E /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		6E4D961406B739AC005235E9 /* DCJoinChatPanelPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4D961206B739AC005235E9 /* DCJoinChatPanelPlugin.m */; };
 		6EA3689706B73FE5009CA81A /* DCStressTestJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6EA3689406B73FE5009CA81A /* DCStressTestJoinChatView.nib */; };
@@ -3879,6 +3881,10 @@
 		63EA62EE094B8705009C8453 /* AIXtraInfoController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtraInfoController.m; path = Source/AIXtraInfoController.m; sourceTree = "<group>"; };
 		63EA6406094BB9A9009C8453 /* AIStatusIconPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIStatusIconPreviewController.h; path = Source/AIStatusIconPreviewController.h; sourceTree = "<group>"; };
 		63EA6407094BB9A9009C8453 /* AIStatusIconPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIStatusIconPreviewController.m; path = Source/AIStatusIconPreviewController.m; sourceTree = "<group>"; };
+		661561630D84AEEC004B7946 /* AIContactHidingController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContactHidingController.h; path = Source/AIContactHidingController.h; sourceTree = "<group>"; };
+		661561640D84AEEC004B7946 /* AIContactHidingController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIContactHidingController.m; path = Source/AIContactHidingController.m; sourceTree = "<group>"; };
+		661561890D84B874004B7946 /* AIFilterBarBackgroundBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIFilterBarBackgroundBox.h; path = Source/AIFilterBarBackgroundBox.h; sourceTree = "<group>"; };
+		6615618A0D84B874004B7946 /* AIFilterBarBackgroundBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIFilterBarBackgroundBox.m; path = Source/AIFilterBarBackgroundBox.m; sourceTree = "<group>"; };
 		6CE795BD0A6F9CEE00FF3217 /* es */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = es; path = Resources/es.lproj/PersonalPreferences.nib; sourceTree = "<group>"; };
 		6CF42677057763E100F27FAA /* ESContactAlertsController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESContactAlertsController.h; path = Source/ESContactAlertsController.h; sourceTree = "<group>"; };
 		6CF42678057763E200F27FAA /* ESContactAlertsController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESContactAlertsController.m; path = Source/ESContactAlertsController.m; sourceTree = "<group>"; };
@@ -5780,6 +5786,7 @@
 				34C2D31006334A460018E5D2 /* Blocking */,
 				34086A1005E5E17B00ABB759 /* User Icon Handling */,
 				EEC461B1096D67F00028632F /* Spelling Per Contact */,
+				661561620D84AEB0004B7946 /* Contact Hiding */,
 			);
 			name = Contacts;
 			sourceTree = "<group>";
@@ -6757,6 +6764,8 @@
 				34A48A0B06F64376002C7C5F /* ContactListWindow.nib */,
 				34D001E50958868000DCB678 /* AIMenuItemView.h */,
 				34D001E60958868000DCB678 /* AIMenuItemView.m */,
+				661561890D84B874004B7946 /* AIFilterBarBackgroundBox.h */,
+				6615618A0D84B874004B7946 /* AIFilterBarBackgroundBox.m */,
 				34607F0C09B2296A000DB3D2 /* AIHoveringPopUpButtonCell.m */,
 				34607F0D09B2296A000DB3D2 /* AIHoveringPopUpButtonCell.h */,
 				34607F0E09B2296A000DB3D2 /* AIHoveringPopUpButton.m */,
@@ -6912,6 +6921,15 @@
 			);
 			name = OldListXtras;
 			path = Resources/OldListXtras;
+			sourceTree = "<group>";
+		};
+		661561620D84AEB0004B7946 /* Contact Hiding */ = {
+			isa = PBXGroup;
+			children = (
+				661561630D84AEEC004B7946 /* AIContactHidingController.h */,
+				661561640D84AEEC004B7946 /* AIContactHidingController.m */,
+			);
+			name = "Contact Hiding";
 			sourceTree = "<group>";
 		};
 		6E4D961006B73991005235E9 /* Join Chat Panel */ = {
@@ -9327,6 +9345,8 @@
 				4F1CB62E0D640D770073A1E6 /* AIAdvancedInspectorPane.m in Sources */,
 				4F1CB62F0D640D770073A1E6 /* AIAddressBookInspectorPane.m in Sources */,
 				4F1CB6320D640D7F0073A1E6 /* AIEventsInspectorPane.m in Sources */,
+				661561650D84AEED004B7946 /* AIContactHidingController.m in Sources */,
+				6615618B0D84B875004B7946 /* AIFilterBarBackgroundBox.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

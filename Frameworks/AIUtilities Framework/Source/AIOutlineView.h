@@ -72,6 +72,24 @@
  */
 - (void)outlineView:(NSOutlineView *)outlineView draggedImage:(NSImage *)image endedAt:(NSPoint)screenPoint operation:(NSDragOperation)operation;
 
+/*!
+ * @brief Informs the delegate of a request to show or hide the fine panel
+ *
+ * Informs the delegate of a request to show the find panel if it is hidden, and hide it if shown. The delegate must implement the find panel UI and filtering
+ * @param outlineView The <tt>NSOutlineView</tt> that the user wants to filter
+ */
+- (void)outlineViewToggleFindPanel:(NSOutlineView *)outlineView;
+
+
+/*!
+ * @brief Informs the delegate of a request to forward a key down event to the find panel text field, displaying it if necessary
+ *
+ * Informs the delegate of a request to forward a key down event to the find panel text field,displaying it if necessary. The key down event was recieved by outlineView, and it determined it should be added to the search string
+ * Return YES iff the find panel can handle theEvent. If NO is returned, outlineView will forward theEvent to super
+ * @param outlineView The <tt>NSOutlineView</tt> that the user wants to filter
+ */
+- (BOOL)outlineView:(NSOutlineView *)outlineView forwardKeyEventToFindPanel:(NSEvent *)theEvent;
+
 @end
 
 /*!
@@ -89,5 +107,5 @@
     BOOL		needsReload;
 	BOOL		ignoreExpandCollapse;
 }
-
+- (void)performFindPanelAction:(id)sender;
 @end

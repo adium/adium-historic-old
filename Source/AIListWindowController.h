@@ -25,6 +25,7 @@
 #import <Adium/AIWindowController.h>
 #import <AIUtilities/AIFunctions.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
+#import "AIAnimatingListOutlineView.h"
 
 typedef enum {
 	AIContactListWindowHidingStyleNone = 0,
@@ -47,8 +48,8 @@ typedef enum {
 	BOOL                                borderless;
 	
 	NSSize								minWindowSize;
-	IBOutlet	AIAutoScrollView		*scrollView_contactList;
-    IBOutlet	AIListOutlineView		*contactListView;
+	IBOutlet AIAutoScrollView			*scrollView_contactList;
+    IBOutlet AIAnimatingListOutlineView	*contactListView;
 	AIListController					*contactListController;
 	AIListObject<AIContainingObject>	*contactListRoot;
 	
@@ -109,6 +110,10 @@ typedef enum {
 - (NSScreen *)windowLastScreen;
 - (NSRect)savedFrame;
 - (void)setSavedFrame:(NSRect)frame;
+
+- (BOOL)animationShouldStart:(NSAnimation *)animation;
+- (void)animationDidEnd:(NSAnimation*)animation;
+
 
 // Window snapping
 - (void)snapToOtherWindows;

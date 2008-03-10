@@ -51,7 +51,7 @@ typedef enum {
 } AISortMode;
 
 @protocol AIListObjectObserver;
-@class AIListGroup, AIListObject, AIListContact, AIMetaContact, AIService, AIAccount, AISortController, AIListBookmark;
+@class AIListGroup, AIListObject, AIListContact, AIMetaContact, AIService, AIAccount, AISortController, AIListBookmark, AIContactHidingController;
 
 @protocol AIContactController <AIController>
 //Contact list access
@@ -82,13 +82,13 @@ typedef enum {
 - (AIListGroup *)remoteGroupForContact:(AIListContact *)inContact;
 - (void)clearAllMetaContactData;
 
-	//Contact status & Attributes
+//Contact status & Attributes
 - (void)registerListObjectObserver:(id <AIListObjectObserver>)inObserver;
 - (void)unregisterListObjectObserver:(id)inObserver;
 - (void)updateAllListObjectsForObserver:(id <AIListObjectObserver>)inObserver;
 - (void)updateContacts:(NSSet *)contacts forObserver:(id <AIListObjectObserver>)inObserver;
 
-	//
+//
 - (void)delayListObjectNotifications;
 - (void)endListObjectNotificationsDelay;
 - (void)delayListObjectNotificationsUntilInactivity;
@@ -96,7 +96,7 @@ typedef enum {
 - (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSSet *)inModifiedKeys silent:(BOOL)silent;
 - (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSSet *)inModifiedKeys;
 
-	//Contact list sorting
+//Contact list sorting
 - (NSArray *)sortControllerArray;
 - (void)registerListSortController:(AISortController *)inController;
 - (void)setActiveSortController:(AISortController *)inController;
@@ -104,11 +104,11 @@ typedef enum {
 - (void)sortContactList;
 - (void)sortListObject:(AIListObject *)inObject;
 
-	//Preferred contacts
+//Preferred contacts
 - (AIListContact *)preferredContactForContentType:(NSString *)inType forListContact:(AIListContact *)inContact;
 - (AIListContact *)preferredContactWithUID:(NSString *)UID andServiceID:(NSString *)serviceID forSendingContentType:(NSString *)inType;
 
-	//Editing
+//Editing
 - (void)addContacts:(NSArray *)contactArray toGroup:(AIListGroup *)group;
 - (void)removeListObjects:(NSArray *)objectArray;
 - (void)requestAddContactWithUID:(NSString *)contactUID service:(AIService *)inService account:(AIAccount *)inAccount;
@@ -119,14 +119,17 @@ typedef enum {
 
 - (id)showAuthorizationRequestWithDict:(NSDictionary *)inDict forAccount:(AIAccount *)inAccount;
 
-	//Contact info
+//Contact info
 - (void)updateListContactStatus:(AIListContact *)inContact;
 
-	//Contact List 
+//Contact List 
 - (AIListGroup *)createDetachedContactList;
 - (void)removeDetachedContactList:(AIListGroup *)detachedList;
 - (BOOL)isGroupDetached:(AIListObject *)group;
 - (unsigned)contactListCount;
+
+//Contact hiding
+- (AIContactHidingController *)contactHidingController;
 
 @end
 

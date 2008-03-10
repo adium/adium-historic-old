@@ -27,7 +27,7 @@
 #define	KEY_HIDE_CONTACT_LIST_GROUPS	@"Hide Contact List Groups"
 #define	PREF_GROUP_CONTACT_LIST_DISPLAY	@"Contact List Display"
 
-@class AISortController, AdiumAuthorization;
+@class AISortController, AdiumAuthorization, AIContactHidingController;
 
 @interface AIContactController : AIObject <AIContactController, AIListObjectObserver> {
 	//Contacts and metaContacts
@@ -63,9 +63,14 @@
 	
 	//Authorization
 	AdiumAuthorization		*adiumAuthorization;
+	
+	//hiding
+	AIContactHidingController	*contactHidingController;
 }
 
 - (void)sortAContactList:(AIListGroup *)group;
 - (void)loadContactList;
+
+- (AIContactHidingController *)contactHidingController;
 
 @end
