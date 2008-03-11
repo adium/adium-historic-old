@@ -49,6 +49,7 @@
 
 @interface AIStandardListWindowController (PRIVATE)
 - (void)showFilterBarWithAnimation:(BOOL)flag;
+- (void)hideFilterBarWithAnimation:(BOOL)flag;
 - (void)_configureToolbar;
 - (void)updateStatusMenuSelection:(NSNotification *)notification;
 - (void)updateImagePicker;
@@ -858,6 +859,7 @@
 	
 	showFilterBarAnimation = [[NSViewAnimation alloc]initWithViewAnimations:[NSArray arrayWithObjects:viewToResizeAnimationDictionary,filterBarAnimationDictionary,nil]];
 	[showFilterBarAnimation setDuration:flag ? 0.25f : 0.0f];
+	[showFilterBarAnimation setAnimationBlockingMode:NSAnimationBlocking];
 	[showFilterBarAnimation setDelegate:self];
 	filterBarIsAnimating = YES;
 	//disable vertical autoresizing just while the animation is running
@@ -876,6 +878,11 @@
 }
 
 - (IBAction)hideFilterBar:(id)sender;
+{
+	[self hideFilterBarWithAnimation:YES];
+}
+
+- (void)hideFilterBarWithAnimation:(BOOL)flag
 {
 	if (!filterBarIsVisible || filterBarIsAnimating)
 		return;
@@ -915,6 +922,7 @@
 	
 	hideFilterBarAnimation = [[NSViewAnimation alloc]initWithViewAnimations:[NSArray arrayWithObjects:viewToResizeAnimationDictionary,filterBarAnimationDictionary,nil]];
 	[hideFilterBarAnimation setDuration:0.25];
+	[hideFilterBarAnimation setAnimationBlockingMode:NSAnimationBlocking];
 	filterBarIsVisible = NO;
 	[hideFilterBarAnimation setDelegate:self];
 	filterBarIsAnimating = YES;
@@ -932,7 +940,7 @@
 
 - (void)animationDidEnd:(NSAnimation*)animation
 {
-	if (!animation == showFilterBarAnimation && !animation == hideFilterBarAnimation) {
+	if (animation != showFilterBarAnimation && animation != hideFilterBarAnimation) {
 		[super animationDidEnd:animation];
 		return;
 	}
@@ -962,7 +970,7 @@
 {
 	if ([sender object] == [self window]) {
 		//if the filter bar was shown, but the user clicks out of the window, assume the user is done and hide the filter bar
-		[self hideFilterBar:nil];
+		[self hideFilterBarWithAnimation:NO];
 	}
 }
 - (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)command
