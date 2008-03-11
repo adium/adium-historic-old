@@ -2618,6 +2618,8 @@ static int toArraySort(id itemA, id itemB, void *context)
 #pragma mark Gestures
 /*!
  * @brief Responds to a swipe gesture
+ *
+ * This is a private method added in AppKit 949.18.0.
  */
 - (void)swipeWithEvent:(NSEvent *)inEvent
 {

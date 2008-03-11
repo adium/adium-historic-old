@@ -1319,6 +1319,8 @@
 
 /*!
  * @brief Responds to a swipe gesture
+ *
+ * This is a private method added in AppKit 949.18.0.
  */
 - (void)swipeWithEvent:(NSEvent *)inEvent
 {
