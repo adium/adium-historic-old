@@ -97,12 +97,7 @@
 }
 - (NSArray *)contactGroups
 {
-	NSArray *contacts = [[[AIObject sharedAdiumInstance] contactController] allGroups];
-	NSMutableArray *contactGroups = [[[NSMutableArray alloc] init] autorelease];
-	for (int i=0;i<[contacts count];i++)
-		if ([[contacts objectAtIndex:i] isKindOfClass:[AIListGroup class]])
-			[contactGroups addObject:[contacts objectAtIndex:i]];
-	return contactGroups;
+	return [[[AIObject sharedAdiumInstance] contactController] allGroups];
 }
 
 - (void)setIsActive:(BOOL)val
