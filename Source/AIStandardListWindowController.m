@@ -961,7 +961,9 @@
 	
 	if (command == @selector(insertNewline:))
 	{
-		[[adium chatController] openChatWithContact:[contactListView itemAtRow:[contactListView indexOfFirstVisibleListContact]] onPreferredAccount:YES];
+		int index = [contactListView indexOfFirstVisibleListContact];
+		if (index != -1)
+			[[adium chatController] openChatWithContact:[contactListView itemAtRow:index] onPreferredAccount:YES];
 		[self hideFilterBar:nil];
 		[[self window] makeFirstResponder:contactListView];
 	}
@@ -969,7 +971,11 @@
 		//make the down key a shortcut for selecting the first contact
 		[[self window] makeFirstResponder:contactListView];
 		
-		[contactListView selectRowIndexes:[NSIndexSet indexSetWithIndex:[contactListView indexOfFirstVisibleListContact]] byExtendingSelection:NO];
+		int index = [contactListView indexOfFirstVisibleListContact];
+		[contactListView selectRowIndexes:((index != -1) ?
+										   [NSIndexSet indexSetWithIndex:[contactListView indexOfFirstVisibleListContact]] :
+										   [NSIndexSet indexSet])
+					 byExtendingSelection:NO];
 		
 	}
 	else if(command == @selector(cancelOperation:) && filterBarIsVisible) {
@@ -987,9 +993,12 @@
 	
 	[[[adium contactController]contactHidingController]setContactFilteringSearchString:[sender stringValue]
 																	  refilterContacts:YES];
-		
-	[contactListView selectRowIndexes:[NSIndexSet indexSetWithIndex:[contactListView indexOfFirstVisibleListContact]] byExtendingSelection:NO];
 	
+	int index = [contactListView indexOfFirstVisibleListContact];
+	[contactListView selectRowIndexes:(index != -1 ?
+									   [NSIndexSet indexSetWithIndex:[contactListView indexOfFirstVisibleListContact]] :
+									   [NSIndexSet indexSet])
+				 byExtendingSelection:NO];
 }
 
 
