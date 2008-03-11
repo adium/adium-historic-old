@@ -48,6 +48,7 @@
 #define TOOLBAR_CONTACT_LIST				@"ContactList:1.0"				//Toolbar identifier
 
 @interface AIStandardListWindowController (PRIVATE)
+- (void)showFilterBarWithAnimation:(BOOL)flag;
 - (void)_configureToolbar;
 - (void)updateStatusMenuSelection:(NSNotification *)notification;
 - (void)updateImagePicker;
@@ -794,13 +795,19 @@
 - (void)forwardKeyEventToFindPanel:(NSEvent *)theEvent;
 {
 	//if we were not searching something before, we need to show the filter bar first
-	[self showFilterBar:nil];
+	[self showFilterBarWithAnimation:NO];
 	
-	[[self window]makeFirstResponder:searchField];
-	[[[self window] fieldEditor:YES forObject:searchField]keyDown:theEvent];
+	[[self window] makeFirstResponder:searchField];
+	[[[self window] fieldEditor:YES forObject:searchField] keyDown:theEvent];
 	
 }
+
 - (IBAction)showFilterBar:(id)sender;
+{
+	[self showFilterBarWithAnimation:YES];
+}
+
+- (void)showFilterBarWithAnimation:(BOOL)flag
 {
 	if (filterBarIsVisible || filterBarIsAnimating)
 		return;
@@ -850,7 +857,7 @@
 	
 	
 	showFilterBarAnimation = [[NSViewAnimation alloc]initWithViewAnimations:[NSArray arrayWithObjects:viewToResizeAnimationDictionary,filterBarAnimationDictionary,nil]];
-	[showFilterBarAnimation setDuration:0.25];
+	[showFilterBarAnimation setDuration:flag ? 0.25f : 0.0f];
 	[showFilterBarAnimation setDelegate:self];
 	filterBarIsAnimating = YES;
 	//disable vertical autoresizing just while the animation is running
@@ -917,16 +924,20 @@
 	[hideFilterBarAnimation startAnimation];
 	[contactListController setAutoresizeHorizontally:[[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE group:PREF_GROUP_APPEARANCE] boolValue]];
 	[contactListView setEnableAnimation:YES];
+	
+	
+	if([[self window] isKeyWindow] && [[self window] isMainWindow])
+		[[self window] makeFirstResponder:contactListView];
 }
 
 - (void)animationDidEnd:(NSAnimation*)animation
 {
-	if (![animation isEqual:showFilterBarAnimation] && ![animation isEqual:hideFilterBarAnimation]) {
+	if (!animation == showFilterBarAnimation && !animation == hideFilterBarAnimation) {
 		[super animationDidEnd:animation];
 		return;
 	}
 	
-	if ([animation isEqual:hideFilterBarAnimation]) {
+	if (animation == hideFilterBarAnimation) {
 		[filterBarView removeFromSuperview];
 	}
 	
@@ -949,7 +960,7 @@
 }
 - (void)hideFilterBarFromWindowResignedMain:(NSNotification *)sender
 {
-	if ([[sender object]isEqual:[self window]]) {
+	if ([sender object] == [self window]) {
 		//if the filter bar was shown, but the user clicks out of the window, assume the user is done and hide the filter bar
 		[self hideFilterBar:nil];
 	}
@@ -965,7 +976,6 @@
 		if (index != -1)
 			[[adium chatController] openChatWithContact:[contactListView itemAtRow:index] onPreferredAccount:YES];
 		[self hideFilterBar:nil];
-		[[self window] makeFirstResponder:contactListView];
 	}
 	else if(command == @selector(moveDown:)) {
 		//make the down key a shortcut for selecting the first contact
@@ -980,7 +990,6 @@
 	}
 	else if(command == @selector(cancelOperation:) && filterBarIsVisible) {
 		[self hideFilterBar:nil];
-		[[self window] makeFirstResponder:contactListView];
 	}
 	
 	return NO;
