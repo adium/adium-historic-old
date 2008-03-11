@@ -1312,4 +1312,23 @@
 	return NO;
 }
 
+#pragma mark Gestures
+
+/*!
+ * @brief Responds to a swipe gesture
+ */
+- (void)swipeWithEvent:(NSEvent *)inEvent
+{
+	// We don't do anything for vertical swipes.
+	if ([inEvent deltaY] != 0)
+		return;
+	
+	// Horizontal swipe; +1f is left, -1f is right.
+	if ([inEvent deltaX] == -1) {
+		[[adium interfaceController] nextChat:nil];
+	} else {
+		[[adium interfaceController] previousChat:nil];
+	}
+}
+
 @end
