@@ -463,17 +463,16 @@
 	return [self arrayOfSelectedItems];
 }
 
-- (unsigned)indexOfFirstVisibleListContact
+- (int)indexOfFirstVisibleListContact
 {
-	id contact = nil;
-	for(unsigned i = 0; i < [self numberOfRows]; i++)
-	{
-		contact = [self itemAtRow:i];
-		if([contact isKindOfClass:[AIListContact class]])
-		{
+	unsigned int numberOfRows = [self numberOfRows];
+	for (unsigned i = 0; i <numberOfRows ; i++) {
+		if ([[self itemAtRow:i] isKindOfClass:[AIListContact class]]) {
 			return i;
 		}
 	}
+	
+	return -1;
 }
 
 #pragma mark Drag & Drop Drawing

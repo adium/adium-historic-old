@@ -70,7 +70,12 @@ typedef enum {
 - (NSArray *)arrayOfListObjects;
 
 //Contacts
-- (unsigned)indexOfFirstVisibleListContact;
+/*!
+ * @brief Index of the first visible list contact
+ *
+ * @result The index, or -1 if no list contact is visible
+ */
+- (int)indexOfFirstVisibleListContact;
 
 //Shadows
 - (void)setUpdateShadowsWhileDrawing:(BOOL)update;
