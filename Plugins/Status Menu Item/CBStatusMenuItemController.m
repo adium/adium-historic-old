@@ -581,6 +581,38 @@
 		
 		//Clear out all the items, start from scratch
 		[menu removeAllItems];
+		
+		// If there's more than one account, show the accounts menu
+		if ([accountMenuItemsArray count] > 1) {
+			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Accounts",nil)
+																			target:self
+																			action:nil
+																	 keyEquivalent:@""];
+			
+			[menuItem setSubmenu:mainAccountsMenu];
+			[menu addItem:menuItem];
+			[menuItem release];
+		}
+		
+		// Show the contacts menu if we have any contacts to display
+		if ([contactMenuItemsArray count] > 0) {
+			// Add contacts
+			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Contacts",nil)
+																			target:self
+																			action:nil
+																	 keyEquivalent:@""];
+			
+			[menuItem setSubmenu:mainContactsMenu];
+			[menu addItem:menuItem];
+			[menuItem release];
+		} else {
+			[menu addItemWithTitle:[AILocalizedString(@"Contact List", nil) stringByAppendingEllipsis]
+							target:self
+							action:@selector(activateContactList:)
+					 keyEquivalent:@""];
+		}
+		
+		[menu addItem:[NSMenuItem separatorItem]];
 
 		//Add the state menu items
 		enumerator = [stateMenuItemsArray objectEnumerator];
@@ -594,38 +626,6 @@
 			}
 		}
 
-		[menu addItem:[NSMenuItem separatorItem]];
-		
-		// If there's more than one account, show the accounts menu
-		if ([accountMenuItemsArray count] > 1) {
-			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Accounts",nil)
-																			 target:self
-																			action:nil
-																	  keyEquivalent:@""];
-			
-			[menuItem setSubmenu:mainAccountsMenu];
-			[menu addItem:menuItem];
-			[menuItem release];
-		}
-		
-		// Show the contacts menu if we have any contacts to display
-		if ([contactMenuItemsArray count] > 0) {
-			// Add contacts
-			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Contacts",nil)
-																			 target:self
-																			action:nil
-																	  keyEquivalent:@""];
-
-			[menuItem setSubmenu:mainContactsMenu];
-			[menu addItem:menuItem];
-			[menuItem release];
-		} else {
-			[menu addItemWithTitle:[AILocalizedString(@"Contact List", nil) stringByAppendingEllipsis]
-							target:self
-							action:@selector(activateContactList:)
-					 keyEquivalent:@""];
-		}
-		
 		//If there exist any open chats, add them
 		if ([openChatsArray count] > 0) {
 			AIChat          *chat = nil;
