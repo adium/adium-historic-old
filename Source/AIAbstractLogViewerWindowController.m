@@ -2615,4 +2615,44 @@ static int toArraySort(id itemA, id itemB, void *context)
 	return undoManager;
 }
 
+#pragma mark Gestures
+/*!
+ * @brief Responds to a swipe gesture
+ */
+- (void)swipeWithEvent:(NSEvent *)inEvent
+{
+	// We don't do anything for vertical swipes.
+	if ([inEvent deltaY] != 0) {
+		return;
+	}
+	
+	int nextSelected;
+	
+	[resultsLock lock];
+	
+	// Horizontal swipe; +1f is left, -1f is right.
+	
+	// Find the index of the next row to select.
+	// Going to the right.
+	if ([inEvent deltaX] == -1) {
+		nextSelected = [[tableView_results selectedRowIndexes] lastIndex] + 1;
+	// Going to the left.
+	} else {
+		nextSelected = [[tableView_results selectedRowIndexes] firstIndex] - 1;
+	}
+	
+	// Loop around in circles.
+	if (nextSelected >= [tableView_results numberOfRows]) {
+		nextSelected = 0;
+	} else if (nextSelected < 0) {
+		nextSelected = [tableView_results numberOfRows]-1;
+	}
+	
+	// Select either the next row or the previous row.
+	[tableView_results selectRowIndexes:[NSIndexSet indexSetWithIndex:nextSelected]
+				   byExtendingSelection:NO];
+	
+	[resultsLock unlock];
+}
+
 @end
