@@ -2623,38 +2623,47 @@ static int toArraySort(id itemA, id itemB, void *context)
  */
 - (void)swipeWithEvent:(NSEvent *)inEvent
 {
-	// We don't do anything for vertical swipes.
-	if ([inEvent deltaY] != 0) {
-		return;
+	NSTableView *targetTableView;
+	int changeValue, nextSelected;
+
+	if ([inEvent deltaY] == 0) {
+		// For horizontal swipes, switch between individual logs.
+		targetTableView = tableView_results;
+		changeValue = [inEvent deltaX];
+		// Lock the results when we're dealing with the logs tableView
+		[resultsLock lock];
+	} else {
+		// For vertical swipes, switch between contacts.
+		targetTableView = outlineView_contacts;
+		changeValue = [inEvent deltaY];
 	}
 	
-	int nextSelected;
-	
-	[resultsLock lock];
-	
-	// Horizontal swipe; +1f is left, -1f is right.
+	// Swipe; +1f is left/up, -1f is right/down
 	
 	// Find the index of the next row to select.
-	// Going to the right.
-	if ([inEvent deltaX] == -1) {
-		nextSelected = [[tableView_results selectedRowIndexes] lastIndex] + 1;
-	// Going to the left.
+	if (changeValue == -1) {
+		// Going to the right.
+		nextSelected = [[targetTableView selectedRowIndexes] lastIndex] + 1;
 	} else {
-		nextSelected = [[tableView_results selectedRowIndexes] firstIndex] - 1;
+		// Going to the left.
+		nextSelected = [[targetTableView selectedRowIndexes] firstIndex] - 1;
 	}
 	
 	// Loop around in circles.
-	if (nextSelected >= [tableView_results numberOfRows]) {
+	if (nextSelected >= [targetTableView numberOfRows]) {
 		nextSelected = 0;
 	} else if (nextSelected < 0) {
-		nextSelected = [tableView_results numberOfRows]-1;
+		nextSelected = [targetTableView numberOfRows]-1;
 	}
 	
 	// Select either the next row or the previous row.
-	[tableView_results selectRowIndexes:[NSIndexSet indexSetWithIndex:nextSelected]
-				   byExtendingSelection:NO];
+	[targetTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:nextSelected]
+				 byExtendingSelection:NO];
 	
-	[resultsLock unlock];
+	[targetTableView scrollRowToVisible:nextSelected];
+	
+	if ([inEvent deltaY] == 0)
+		[resultsLock unlock];		
 }
 
 @end
