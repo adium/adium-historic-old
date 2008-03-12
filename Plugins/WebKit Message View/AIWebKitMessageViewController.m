@@ -17,7 +17,6 @@
 #import "AIWebKitMessageViewController.h"
 #import "AIWebKitMessageViewStyle.h"
 #import "AIWebKitMessageViewPlugin.h"
-#import "ESWebFrameViewAdditions.h"
 #import "ESWebKitMessageViewPreferences.h"
 #import "AIWebKitDelegate.h"
 #import "ESFileTransferRequestPromptController.h"
@@ -242,7 +241,7 @@ static NSArray *draggedTypes = nil;
     pageWidth = pageWidth / scale;
 	
 	//Get the HTMLDocumentView which has all the content we want
-	documentView = [[[[[webView mainFrame] frameView] frameScrollView] contentView] documentView];
+	documentView = [[[webView mainFrame] frameView] documentView];
 	
 	//Get initial frames
 	originalWebViewFrame = [webView frame];

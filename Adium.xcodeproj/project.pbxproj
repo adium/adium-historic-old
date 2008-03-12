@@ -331,7 +331,6 @@
 		346C9C7C06004560000F5A8A /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C103FAE057127A500F3C158 /* WebKit.framework */; };
 		346C9D020600463D000F5A8A /* AIWebKitMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B539C5205EFD6FB00E5921A /* AIWebKitMessageViewController.m */; };
 		346C9D060600463F000F5A8A /* AIWebKitMessageViewPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B539C4C05EFD6CD00E5921A /* AIWebKitMessageViewPlugin.m */; };
-		346C9D1006004644000F5A8A /* ESWebFrameViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FB54DD05FEC73A00F0D7D7 /* ESWebFrameViewAdditions.m */; };
 		346C9D1606004646000F5A8A /* ESWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 346C9A2405FFE3DF000F5A8A /* ESWebView.m */; };
 		346F5D3208A43E7B0055C610 /* CurrentTunes.scpt in Resources */ = {isa = PBXBuildFile; fileRef = 346F5CB308A418FB0055C610 /* CurrentTunes.scpt */; };
 		347065E506015DC5004F0D20 /* WebKit Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 347065E406015DC5004F0D20 /* WebKit Defaults.plist */; };
@@ -2674,7 +2673,6 @@
 		346BA3630774C35400628F06 /* GlobalEventsPreferences.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = GlobalEventsPreferences.nib; path = Resources/GlobalEventsPreferences.nib; sourceTree = "<group>"; };
 		346C9A2305FFE3DE000F5A8A /* ESWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESWebView.h; path = "Plugins/WebKit Message View/ESWebView.h"; sourceTree = "<group>"; };
 		346C9A2405FFE3DF000F5A8A /* ESWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESWebView.m; path = "Plugins/WebKit Message View/ESWebView.m"; sourceTree = "<group>"; };
-		346C9A4005FFE418000F5A8A /* WebKitPrivateDefinitions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebKitPrivateDefinitions.h; path = "Plugins/WebKit Message View/WebKitPrivateDefinitions.h"; sourceTree = "<group>"; };
 		346C9DA406004754000F5A8A /* Standard Message View.AdiumPlugin */ = {isa = PBXFileReference; lastKnownFileType = wrapper.cfbundle; path = "Standard Message View.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		346CFDC4087B7836009711C8 /* AdiumIdleManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumIdleManager.h; path = Source/AdiumIdleManager.h; sourceTree = "<group>"; };
 		346CFDC5087B7836009711C8 /* AdiumIdleManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumIdleManager.m; path = Source/AdiumIdleManager.m; sourceTree = "<group>"; };
@@ -3493,8 +3491,6 @@
 		34F8D2AD0CF68FEB00F62536 /* AIUserListOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIUserListOutlineView.m; path = Source/AIUserListOutlineView.m; sourceTree = "<group>"; };
 		34FA280F0C820C3A00FEA944 /* AIPreviewContentMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIPreviewContentMessage.h; path = "Plugins/WebKit Message View/AIPreviewContentMessage.h"; sourceTree = "<group>"; };
 		34FA28100C820C3A00FEA944 /* AIPreviewContentMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIPreviewContentMessage.m; path = "Plugins/WebKit Message View/AIPreviewContentMessage.m"; sourceTree = "<group>"; };
-		34FB54DD05FEC73A00F0D7D7 /* ESWebFrameViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESWebFrameViewAdditions.m; path = "Plugins/WebKit Message View/ESWebFrameViewAdditions.m"; sourceTree = "<group>"; };
-		34FB54DE05FEC73A00F0D7D7 /* ESWebFrameViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESWebFrameViewAdditions.h; path = "Plugins/WebKit Message View/ESWebFrameViewAdditions.h"; sourceTree = "<group>"; };
 		34FD5BB007F1F85B00687C70 /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = Resources/it.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		34FD5BBA07F1F87400687C70 /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = Resources/fr.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		34FD5BE307F1F90400687C70 /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = Resources/it.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
@@ -5079,9 +5075,6 @@
 		3470663806015FB6004F0D20 /* WebKit Additions */ = {
 			isa = PBXGroup;
 			children = (
-				346C9A4005FFE418000F5A8A /* WebKitPrivateDefinitions.h */,
-				34FB54DE05FEC73A00F0D7D7 /* ESWebFrameViewAdditions.h */,
-				34FB54DD05FEC73A00F0D7D7 /* ESWebFrameViewAdditions.m */,
 				346C9A2305FFE3DE000F5A8A /* ESWebView.h */,
 				346C9A2405FFE3DF000F5A8A /* ESWebView.m */,
 			);
@@ -8916,7 +8909,6 @@
 			files = (
 				346C9D020600463D000F5A8A /* AIWebKitMessageViewController.m in Sources */,
 				346C9D060600463F000F5A8A /* AIWebKitMessageViewPlugin.m in Sources */,
-				346C9D1006004644000F5A8A /* ESWebFrameViewAdditions.m in Sources */,
 				346C9D1606004646000F5A8A /* ESWebView.m in Sources */,
 				34C2D70606338E2E0018E5D2 /* ESWebKitMessageViewPreferences.m in Sources */,
 				4BD62D8107CE8F240099EBA2 /* AIWebkitMessageViewStyle.m in Sources */,
