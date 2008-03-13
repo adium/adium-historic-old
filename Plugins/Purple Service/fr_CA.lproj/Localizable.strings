@@ -1,4 +1,4 @@
-/* No comment provided by engineer. */
+﻿/* No comment provided by engineer. */
 "%@ (%@) : Connection Notice" = "%@ (%@) : Notification de connexion";
 
 /* first %@ is an account name; second is a service. This is a title for a window */

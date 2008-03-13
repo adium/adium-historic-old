@@ -79,7 +79,6 @@
                 backgroundEnabled = NSButton; 
                 backgroundGradientColor = NSColorWell; 
                 textColor = NSColorWell; 
-                textColorEnabled = NSButton; 
                 textShadowColor = NSColorWell; 
                 textShadowColorEnabled = NSButton; 
             }; 
