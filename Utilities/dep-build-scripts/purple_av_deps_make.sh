@@ -1,4 +1,6 @@
+#!/bin/bash
 LIBOGG=libogg-1.1.3
+LIBVORBIS=libvorbis-1.2.0
 
 mkdir -p build/universal
 cd build
@@ -39,6 +41,23 @@ done
 
 
 #libvorbis
+for ARCH in ppc i386 ; do
+    export CFLAGS="$BASE_CFLAGS -arch $ARCH"
+	export LDFLAGS="$BASE_LDFLAGS -arch $ARCH"
+    mkdir -p libvorbis-$ARCH
+    cd libvorbis-$ARCH
+    export ARCH
+	case $ARCH in
+		ppc) TARGET_DIR="$TARGET_DIR_PPC"
+			 export PATH="$PATH_PPC";;
+		i386) TARGET_DIR="$TARGET_DIR_I386"
+			  export PATH="$PATH_I386";;
+	esac
+    ../../$LIBVORBIS/configure --prefix=$TARGET_DIR 
+    make -j $NUMBER_OF_CORES && make install
+    cd ..
+done
+
 #libspeex
 #libtheora
 #taglib
