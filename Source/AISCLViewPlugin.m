@@ -273,31 +273,30 @@
  */
 - (void)contactListDidClose:(NSNotification *)notification
 {
-	AIListWindowController *window = [notification object]; 
+	AIListWindowController *windowController = [notification object]; 
 	
-	if (window == defaultController) {
+	if (windowController == defaultController) {
 		[defaultController release];
 		defaultController = nil;
 	} else {
-		NSEnumerator *i = [[[window contactList] containedObjects] objectEnumerator];
-		AIListGroup *group;
+		//Return the groups in this detached contact list to the main contact list
+		NSEnumerator	*enumerator = [[[windowController contactList] containedObjects] objectEnumerator];
+		AIListGroup		*group;
 		AIListObject<AIContainingObject> *contactList;
 		
 		contactList = [[adium contactController] contactList];
 		
-		while ((group = [i nextObject])){
+		while ((group = [enumerator nextObject])){
 			[group moveGroupTo:contactList];
 		}
 
-		[[adium contactController] removeDetachedContactList:(AIListGroup *)[window contactList]];
+		[[adium contactController] removeDetachedContactList:(AIListGroup *)[windowController contactList]];
 		
 		[[adium notificationCenter] postNotificationName:@"Contact_ListChanged"
 												  object:contactList 
 												userInfo:nil];
 			
-		[contactLists removeObject:window];
-		
-		[window release];
+		[contactLists removeObject:windowController];
 	}
 	
 }
