@@ -1,6 +1,7 @@
 #!/bin/bash
 LIBOGG=libogg-1.1.3
 LIBVORBIS=libvorbis-1.2.0
+LIBSPEEX=speex-1.0.5
 
 mkdir -p build/universal
 cd build
@@ -59,5 +60,24 @@ for ARCH in ppc i386 ; do
 done
 
 #libspeex
+for ARCH in ppc i386 ; do
+    export CFLAGS="$BASE_CFLAGS -arch $ARCH"
+	export LDFLAGS="$BASE_LDFLAGS -arch $ARCH"
+    mkdir -p libspeex-$ARCH
+    cd libspeex-$ARCH
+    export ARCH
+	case $ARCH in
+		ppc) TARGET_DIR="$TARGET_DIR_PPC"
+			 export PATH="$PATH_PPC";;
+		i386) TARGET_DIR="$TARGET_DIR_I386"
+			  export PATH="$PATH_I386";;
+	esac
+    ../../$LIBSPEEX/configure --prefix=$TARGET_DIR --with-ogg-dir=$TARGET_DIR
+    make -j $NUMBER_OF_CORES && make install
+    cd ..
+done
+
 #libtheora
 #taglib
+#liboil (patches?)
+#gstreamer
