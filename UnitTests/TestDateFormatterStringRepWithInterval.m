@@ -238,6 +238,7 @@
 		            hours:-10
 		          minutes:-0
 		          seconds:-0];
+	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"5 weeks 10 hours", @"Unexpected string for time interval");
 }
 - (void)testDateFormatterStringRepWithInterval_weeksHoursSeconds {
@@ -249,6 +250,7 @@
 		            hours:-10
 		          minutes:-0
 		          seconds:-10];
+	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"5 weeks 10 hours 10 seconds", @"Unexpected string for time interval");
 }
 - (void)testDateFormatterStringRepWithInterval_weeksHoursMinutes {
@@ -260,6 +262,7 @@
 		            hours:-10
 		          minutes:-10
 		          seconds:-0];
+	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"5 weeks 10 hours 10 minutes", @"Unexpected string for time interval");
 }
 - (void)testDateFormatterStringRepWithInterval_weeksHoursMinutesSeconds {
@@ -271,6 +274,7 @@
 		            hours:-10
 		          minutes:-10
 		          seconds:-10];
+	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"5 weeks 10 hours 10 minutes 10 seconds", @"Unexpected string for time interval");
 }
 - (void)testDateFormatterStringRepWithInterval_weeksDays {
@@ -607,6 +611,7 @@
 		            hours:-10
 		          minutes:-0
 		          seconds:-0];
+	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5w 10h", @"Unexpected string for time interval");
 }
 - (void)testDateFormatterStringRepWithInterval_weeksHoursSeconds_abbreviated {
@@ -618,6 +623,7 @@
 		            hours:-10
 		          minutes:-0
 		          seconds:-10];
+	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5w 10h 10s", @"Unexpected string for time interval");
 }
 - (void)testDateFormatterStringRepWithInterval_weeksHoursMinutes_abbreviated {
@@ -629,6 +635,7 @@
 		            hours:-10
 		          minutes:-10
 		          seconds:-0];
+	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5w 10h 10m", @"Unexpected string for time interval");
 }
 - (void)testDateFormatterStringRepWithInterval_weeksHoursMinutesSeconds_abbreviated {
@@ -640,6 +647,7 @@
 		            hours:-10
 		          minutes:-10
 		          seconds:-10];
+	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5w 10h 10m 10s", @"Unexpected string for time interval");
 }
 - (void)testDateFormatterStringRepWithInterval_weeksDays_abbreviated {
