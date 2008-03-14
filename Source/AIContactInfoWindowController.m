@@ -290,8 +290,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 				segmentImage = nil;
 		}
 
-		NSLog(@"Loading label: %@ and image: %@ for segment: %d", segmentLabel, segmentImage, i);
-
 		[(NSSegmentedCell *)[inspectorToolbar cell] setToolTip:segmentLabel forSegment:i];
 		
 		[segmentImage setDataRetained:YES];
@@ -395,7 +393,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	if([aListObject isKindOfClass:[AIListGroup class]]) {
 		AIListObject *currentContact;
 		
-		NSLog(@"group contains: %@", [(AIListGroup *)aListObject listContacts]);
 		NSEnumerator *contactEnumerator = [[(AIListGroup *)aListObject listContacts] objectEnumerator];
 		
 		int i = 2;
@@ -457,7 +454,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 -(NSMenuItem *)contactMenuItemForListObject:(AIListObject *)aListObject
 {
-	NSLog(@"Creating menu item for contact: %@", aListObject);
 	//This returns an menu item, titled with the UID of the list object. We do this enough to merit this, I think.
 	NSMenuItem *newMenuItem = [[NSMenuItem alloc] initWithTitle:[aListObject UID] action:@selector(selectContact:) keyEquivalent:@""];
 	[newMenuItem setRepresentedObject:aListObject];
@@ -473,7 +469,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	if(!(title = [aListObject displayName]))
 		title = [aListObject UID];
 
-	NSLog(@"Creating menu item for contact: %@", aListObject);
 	//This returns an menu item, titled with the displayName of the list object. We do this enough to merit this, I think.
 	NSMenuItem *newMenuItem = [[NSMenuItem alloc] initWithTitle:title action:@selector(selectContact:) keyEquivalent:@""];
 	[newMenuItem setRepresentedObject:aListObject];
@@ -489,7 +484,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	if(!(title = [aListObject displayName]))
 		title = [aListObject UID];
 
-	NSLog(@"Creating menu item for contact: %@", aListObject);
 	//This returns an menu item, titled with the displayName of the list object. We do this enough to merit this, I think.
 	NSMenuItem *newMenuItem = [[NSMenuItem alloc] initWithTitle:title action:@selector(selectContactFromGroup:) keyEquivalent:@""];
 	[newMenuItem setRepresentedObject:aListObject];
@@ -541,8 +535,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 {
 	//All we need to do here is to grab the object we get from representedObject, and update using it.
 	AIListObject *representedObject = (AIListObject *)[sender representedObject];
-	
-	NSLog(@"Selecting contact: %@", representedObject);
 	
 	if(representedObject)
 		[self configureForMetaPopupChange:representedObject];
