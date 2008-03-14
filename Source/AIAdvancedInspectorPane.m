@@ -84,8 +84,6 @@ static NSComparisonResult compareContactsByTheirAccounts(id firstContact, id sec
 
 -(void)updateForListObject:(AIListObject *)inObject
 {
-	//TODO: Figure out why group changes aren't being applied properly.
-	//TODO: Figure out why the width of the table view keeps growing.
 	if (displayedObject != inObject) {
 		//Update the table view to have or not have the "Individual Contact" column, as appropriate.
 		//It should have the column when our list object is a metacontact.

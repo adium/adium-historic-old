@@ -92,6 +92,8 @@
 				<string>RBSplitView</string>
 				<key>prefsWindowWillClose</key>
 				<string>SS_PrefsController</string>
+				<key>toggleFindPanel</key>
+				<string>id</string>
 				<key>willAdjustSubviews</key>
 				<string>RBSplitView</string>
 			</dict>

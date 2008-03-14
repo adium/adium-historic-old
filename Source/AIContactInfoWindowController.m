@@ -31,12 +31,14 @@
 #import <Adium/AIListObject.h>
 #import <Adium/AIListOutlineView.h>
 #import <Adium/AIService.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIImageViewWithImagePicker.h>
 #import <AIUtilities/AIOutlineViewAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AITabViewAdditions.h>
+#import <QuartzCore/QuartzCore.h>
 
 #define	CONTACT_INFO_NIB				@"ContactInfoInspector"			//Filename of the contact info nib
 #define KEY_INFO_WINDOW_FRAME			@"Contact Info Inspector Frame"	//
@@ -73,6 +75,24 @@ enum segments {
 -(void)animateViewOut:(NSView *)aView;
 @end
 
+@interface AIContactInfoWindowController (MetaPopup)
+-(NSMenu *)prepareMenuForListObject:(AIListObject *)aListObject;
+-(NSMenuItem *)contactMenuItemForListObject:(AIListObject *)aListObject;
+-(NSMenuItem *)metaMenuItemForListObject:(AIListObject *)aListObject;
+-(NSMenuItem *)groupMenuItemForListObject:(AIListObject *)aListObject;
+-(void)setupMetaPopup:(AIListObject *)aListObject;
+-(void)selectContact:(id)sender;
+-(void)selectContactFromGroup:(id)sender;
+-(void)configureForMetaPopupChange:(AIListObject *)aListObject;
+-(int)menuIndexForListObject:(AIListObject *)aListObject;
+@end
+
+@interface NSWindow (FakeLeopardAdditions)
+- (void)setAutorecalculatesContentBorderThickness:(BOOL)autorecalculateContentBorderThickness forEdge:(NSRectEdge)edge;
+- (float)contentBorderThicknessForEdge:(NSRectEdge)edge;
+- (void)setContentBorderThickness:(float)borderThickness forEdge:(NSRectEdge)edge;
+@end
+
 @implementation AIContactInfoWindowController
 
 static AIContactInfoWindowController *sharedContactInfoInstance = nil;
@@ -95,18 +115,23 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	//There is an optional fifth segment, so we define a case for it.
 	switch(currentSegment) {
 		case CONTACT_INFO_SEGMENT:
+			[metaPopup setHidden:NO];
 			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_INFO_SEGMENT] inspectorContentView] animate:shouldAnimate];
 			break;
 		case CONTACT_ADDRESSBOOK_SEGMENT:
+			[metaPopup setHidden:YES];
 			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_ADDRESSBOOK_SEGMENT] inspectorContentView] animate:shouldAnimate];
 			break;
 		case CONTACT_EVENTS_SEGMENT:
+			[metaPopup setHidden:YES];
 			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_EVENTS_SEGMENT] inspectorContentView] animate:shouldAnimate];
 			break;
 		case CONTACT_ADVANCED_SEGMENT:
+			[metaPopup setHidden:YES];
 			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_ADVANCED_SEGMENT] inspectorContentView] animate:shouldAnimate];
 			break;
 		case CONTACT_PLUGINS_SEGMENT:
+			[metaPopup setHidden:YES];
 			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_PLUGINS_SEGMENT] inspectorContentView] animate:shouldAnimate];
 			break;
 		default:
@@ -133,11 +158,15 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		 */
 		if (![parentContact isKindOfClass:[AIMetaContact class]] ||
 			[[(AIMetaContact *)parentContact listContacts] count]) {
-			listObject = parentContact;
+			sharedContactInfoInstance->displayedObject = parentContact;
+		} else {
+			 sharedContactInfoInstance->displayedObject = listObject;
 		}
+	} else {
+		//We have a group, let's roll with it.
+		sharedContactInfoInstance->displayedObject = listObject;
 	}
-
-	[sharedContactInfoInstance configureForListObject:listObject];
+	
 	[[sharedContactInfoInstance window] makeKeyAndOrderFront:nil];
 
 	return (sharedContactInfoInstance);
@@ -165,12 +194,22 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	return KEY_INFO_WINDOW_FRAME;
 }
 
-//Setup the window before it is displayed
-- (void)windowDidLoad
+-(void)awakeFromNib
 {
-	[super windowDidLoad];
+	
+	if([NSApp isOnLeopardOrBetter]) {
+		[[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
+		[[self window] setContentBorderThickness:29.0 forEdge:NSMinYEdge];
+	}
+}
 
-	int	selectedSegment;
+-(void)windowWillLoad
+{
+	[super windowWillLoad];
+	
+	//If we are on Leopard, we want our panel to have a finder-esque look.
+	
+	
 	
 	contentController = [[AIContactInfoContentController alloc] init];
 	
@@ -179,23 +218,34 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		loadedContent = [contentController loadedPanes];
 	}
 	
+	//Monitor the selected contact
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(selectionChanged:)
+									   name:Interface_ContactSelectionChanged
+									 object:nil];
+}
+	
+
+//Setup the window before it is displayed
+- (void)windowDidLoad
+{
+	[super windowDidLoad];
+	
+	[self configureForListObject:displayedObject];
+	[self setupMetaPopup:displayedObject];
+
 	//Localization
 	[self setupToolbarSegments];
+	
+	int	selectedSegment;
 	
 	//Select the previously selected category
 	selectedSegment = [[[adium preferenceController] preferenceForKey:KEY_INFO_SELECTED_CATEGORY
 															group:PREF_GROUP_WINDOW_POSITIONS] intValue];
 	if (selectedSegment < 0 || selectedSegment >= [inspectorToolbar segmentCount]) selectedSegment = 0;
 
-	//TODO: Change this back to loading the segment from preferences when all the segments work!
 	[inspectorToolbar setSelectedSegment:selectedSegment];
 	[self segmentSelected:inspectorToolbar];
-	
-	//Monitor the selected contact
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(selectionChanged:)
-									   name:Interface_ContactSelectionChanged
-									 object:nil];
 	
 
 	//contactListController = [[ESContactInfoListController alloc] initWithContactListView:contactListView
@@ -262,31 +312,24 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	}
 }
 
-//called as the window closes
-- (void)windowWillClose:(id)sender
-{
-	[super windowWillClose:sender];
-
-	//Take focus away from any controls to ensure that they register changes and save
-	//Not really sure if we'll need to do this for the new inspector, so i'm just commenting it out - EBH
-	//[[self window] makeFirstResponder:tabView_category];
-	[[self window] makeFirstResponder:nil];
-
-	//Save the selected category
-	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[inspectorToolbar selectedSegment]]
-										 forKey:KEY_INFO_SELECTED_CATEGORY
-										  group:PREF_GROUP_WINDOW_POSITIONS];
-
-	//Close down
-	[[adium notificationCenter] removeObserver:self];
-	[self autorelease]; sharedContactInfoInstance = nil;
-}
-
 //When the contact list selection changes, then configure the window for the new contact
 - (void)selectionChanged:(NSNotification *)notification
 {
 	AIListObject	*object = [[adium interfaceController] selectedListObject];
-	if (object) [self configureForListObject:[[adium interfaceController] selectedListObject]];
+	if (object) {
+		[self configureForListObject:object];
+		[self setupMetaPopup:object];
+	}
+}
+
+- (void)loadInfoForListObject:(AIListObject *)aListObject
+{
+	//This method is how the Get Info toolbar item works in the Message Window Toolbar. 
+	
+	if (aListObject) {
+		[self configureForListObject:aListObject];
+		[self setupMetaPopup:aListObject];
+	}
 }
 
 //Change the list object
@@ -306,49 +349,214 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	while((pane = [paneEnumerator nextObject])) {
 		[pane updateForListObject:inObject];
 	}
-	
-	//Configure our toolbar's enabledness
-	//[self configureToolbarForListObject:inObject];
-		
-	//Reconfigure the currently selected tab view item
-	//[self tabView:tabView_category willSelectTabViewItem:[tabView_category selectedTabViewItem]];
 }
 
-- (void)configureToolbarForListObject:(AIListObject *)inObject
+#pragma mark Meta Pop-Up
+
+-(void)configureForMetaPopupChange:(AIListObject *)aListObject
 {
-	if ([inObject isKindOfClass:[AIListGroup class]]) {
-		//Remove the info and account items for groups
-		if ([inspectorToolbar isEnabledForSegment:CONTACT_INFO_SEGMENT]) {
-
-			//Store the tab view item selected out of accounts or info, if one is selected
-			int currentSegment = [inspectorToolbar selectedSegment];
-			lastSegmentForContact = ((currentSegment != CONTACT_INFO_SEGMENT) ?
-													   currentSegment :
-													   CONTACT_INFO_SEGMENT);
-
-			[inspectorToolbar setEnabled:NO forSegment:CONTACT_INFO_SEGMENT];
-			
-			//Load the Address Book Segment once we've disabled the info segment.
-			[inspectorToolbar setSelectedSegment:CONTACT_ADDRESSBOOK_SEGMENT];
-			[self segmentSelected:inspectorToolbar animate:YES];
-		}
-		
+	//This method is very similar to configureForListObject, except we only update the info pane, since it's the only
+	//panel that repsonds to the meta popup. This prevents the selection of non-metacontacts with the popup from messing
+	//up the other panels, which is a good thing.
+	
+	//Set the title of the window.
+	if (aListObject) {
+		[[self window] setTitle:[NSString stringWithFormat:AILocalizedString(@"%@'s Info",nil), [aListObject displayName]]];
 	} else {
-		//Add the info and account items back in if they are missing
-		if (![inspectorToolbar isEnabledForSegment:CONTACT_INFO_SEGMENT]) {
-			[inspectorToolbar setEnabled:YES forSegment:CONTACT_INFO_SEGMENT];
-			
-			//Restore the tab view item last selected for a contact if we have one stored
-			if (lastSegmentForContact != -1) {
-				[inspectorToolbar setSelectedSegment:lastSegmentForContact];
-				[self segmentSelected:inspectorToolbar animate:YES];
-				lastSegmentForContact = 0;
-			}
+		[[self window] setTitle:AILocalizedString(@"Contact Info",nil)];
+	}
+		
+	//Configure the info pane.
+	[(id<AIContentInspectorPane>)[loadedContent objectAtIndex:CONTACT_INFO_SEGMENT] updateForListObject:aListObject];
+}
 
-		}			
+-(NSMenu *)prepareMenuForListObject:(AIListObject *)aListObject
+{
+	NSMenu *newMenu = [[NSMenu alloc] init];
+	
+	//Make sure we don't autoenable anything so the displayName stays disabled.
+	[newMenu setAutoenablesItems:NO];
+	
+	//The first two items in our menu will always be the displayName of the contact in an non-enabled menu item, followed by a seperator.
+	if([aListObject isKindOfClass:[AIListContact class]]) {
+		NSMenuItem *displayNameMenuItem = [self metaMenuItemForListObject:aListObject];
+		[newMenu insertItem:displayNameMenuItem atIndex:0];
+	} else {
+		//This is a group!
+		NSMenuItem *displayNameMenuItem = [self groupMenuItemForListObject:aListObject];
+		[newMenu insertItem:displayNameMenuItem atIndex:0];
 	}
 	
-#warning need to hide panes for bookmarks
+	//Now the seperator.
+	NSMenuItem *seperatorMenuItem = [NSMenuItem separatorItem];
+	[newMenu insertItem:seperatorMenuItem atIndex:1];
+	
+	//Kind of a neat idea here, not sure if I like it - make the entire group accessible form the popup.
+	if([aListObject isKindOfClass:[AIListGroup class]]) {
+		AIListObject *currentContact;
+		
+		NSLog(@"group contains: %@", [(AIListGroup *)aListObject listContacts]);
+		NSEnumerator *contactEnumerator = [[(AIListGroup *)aListObject listContacts] objectEnumerator];
+		
+		int i = 2;
+		while((currentContact = (AIListObject *)[contactEnumerator nextObject])) {
+			[newMenu insertItem:[self groupMenuItemForListObject:currentContact] atIndex:i];
+			i++;
+		}
+		
+		return newMenu;
+	}
+	
+	//Finally, we need the content. First we handle the cast of a plain old AIListContact.
+	if(![aListObject isKindOfClass:[AIMetaContact class]]) {
+		//In this case, we just need to add a single menu item -- the UID.
+		NSMenuItem *uidMenuItem = [self contactMenuItemForListObject:aListObject];
+		[newMenu insertItem:uidMenuItem atIndex:2];
+		//Size the menu to fit.
+		[newMenu sizeToFit];
+		return newMenu;
+	} else {
+		//In this case, we've got a metacontact.
+		
+		//We want to add the preferredContact first, so that they are at the top of the list. We also cache the preferred contact for a jiff
+		//to keep them out of the other contacts.
+		AIListContact *preferredContact = [(AIMetaContact *)aListObject preferredContact];
+		
+		//Just in case!
+		if(!preferredContact)
+			return newMenu;
+		
+		//Make a new menu item for the preferredContact.
+		NSMenuItem *preferredContactMenuItem = [self contactMenuItemForListObject:preferredContact];
+		[newMenu insertItem:preferredContactMenuItem atIndex:2];
+		
+		//Finally, we can get the rest of containedObjects, iterate over them, and create the rest of the menu items.
+		//Wish I could use fast enumeration here, :crying:
+		unsigned int i = 3; //Just an index so we can keep track of where we are adding menu items. We are at 3, since we've added 3 so far.
+		AIListObject *currentContact = nil;
+		NSEnumerator *contactEnumerator = [[(AIMetaContact *)aListObject listContactsIncludingOfflineAccounts] objectEnumerator];
+				
+		while((currentContact = [contactEnumerator nextObject])) {
+			
+			//We don't want to add the preferredContact again.
+			if(currentContact == preferredContact)
+				continue;
+			
+			NSMenuItem *contactMenuItem = [self contactMenuItemForListObject:currentContact];
+			[newMenu insertItem:contactMenuItem atIndex:i];
+			++i;
+		}
+		
+		//Finally! Just need to resize and return.
+		[newMenu sizeToFit];
+		
+		return newMenu;
+	}
+	
+}
+
+-(NSMenuItem *)contactMenuItemForListObject:(AIListObject *)aListObject
+{
+	NSLog(@"Creating menu item for contact: %@", aListObject);
+	//This returns an menu item, titled with the UID of the list object. We do this enough to merit this, I think.
+	NSMenuItem *newMenuItem = [[NSMenuItem alloc] initWithTitle:[aListObject UID] action:@selector(selectContact:) keyEquivalent:@""];
+	[newMenuItem setRepresentedObject:aListObject];
+	[newMenuItem setImage:[AIServiceIcons serviceIconForObject:aListObject type:AIServiceIconSmall direction:AIIconNormal]];
+	[newMenuItem setEnabled:YES];
+	
+	return newMenuItem;
+}
+
+-(NSMenuItem *)metaMenuItemForListObject:(AIListObject *)aListObject
+{
+	NSString *title = nil;
+	if(!(title = [aListObject displayName]))
+		title = [aListObject UID];
+
+	NSLog(@"Creating menu item for contact: %@", aListObject);
+	//This returns an menu item, titled with the displayName of the list object. We do this enough to merit this, I think.
+	NSMenuItem *newMenuItem = [[NSMenuItem alloc] initWithTitle:title action:@selector(selectContact:) keyEquivalent:@""];
+	[newMenuItem setRepresentedObject:aListObject];
+	[newMenuItem setImage:[AIServiceIcons serviceIconForObject:aListObject type:AIServiceIconSmall direction:AIIconNormal]];
+	[newMenuItem setEnabled:YES];
+	
+	return newMenuItem;
+}
+
+-(NSMenuItem *)groupMenuItemForListObject:(AIListObject *)aListObject
+{
+	NSString *title = nil;
+	if(!(title = [aListObject displayName]))
+		title = [aListObject UID];
+
+	NSLog(@"Creating menu item for contact: %@", aListObject);
+	//This returns an menu item, titled with the displayName of the list object. We do this enough to merit this, I think.
+	NSMenuItem *newMenuItem = [[NSMenuItem alloc] initWithTitle:title action:@selector(selectContactFromGroup:) keyEquivalent:@""];
+	[newMenuItem setRepresentedObject:aListObject];
+	[newMenuItem setImage:[AIServiceIcons serviceIconForObject:aListObject type:AIServiceIconSmall direction:AIIconNormal]];
+	[newMenuItem setEnabled:YES];
+	
+	return newMenuItem;
+}
+
+-(int)menuIndexForListObject:(AIListObject *)aListObject
+{
+	//We need to search the menuPopup's menu to find a menu item's index with a matching representedObject.
+	id<NSMenuItem> currentItem = nil;
+	NSEnumerator *menuItemEnumerator = [[[metaPopup menu] itemArray] objectEnumerator];
+	
+	while((currentItem = [menuItemEnumerator nextObject])) {
+		if([[currentItem representedObject] isEqual:aListObject])
+			return [[metaPopup menu] indexOfItem:currentItem];
+	}
+	
+	//Return 0 if we can't find it, this will just load the metacontact/normal contact
+	return 0;
+}
+
+-(void)setupMetaPopup:(AIListObject *)aListObject
+{
+	//First we need to detect whether this object is apart of a metacontact or not.
+	AIListObject *availableMeta = nil;
+	
+	if([[aListObject containingObject] isKindOfClass:[AIMetaContact class]])
+		(availableMeta = [aListObject containingObject]);
+	
+	if (availableMeta) {
+		//Generate the menu for the meta.
+		[metaPopup setMenu:[self prepareMenuForListObject:availableMeta]];
+		//Select the contact in the metaPopup.
+		[metaPopup selectItemAtIndex:[self menuIndexForListObject:aListObject]];
+		[self selectContact:[metaPopup selectedItem]];
+	} else {
+		//Just a normal contact or group, configure as normal.
+		[metaPopup setMenu:[self prepareMenuForListObject:aListObject]];
+	}
+	
+	//Size to fit.
+	[metaPopup sizeToFit];
+}
+
+-(void)selectContact:(id)sender
+{
+	//All we need to do here is to grab the object we get from representedObject, and update using it.
+	AIListObject *representedObject = (AIListObject *)[sender representedObject];
+	
+	NSLog(@"Selecting contact: %@", representedObject);
+	
+	if(representedObject)
+		[self configureForMetaPopupChange:representedObject];
+}
+
+-(void)selectContactFromGroup:(id)sender
+{
+	//All we need to do here is to grab the object we get from representedObject, and update using it.
+	AIListObject *representedObject = (AIListObject *)[sender representedObject];
+	
+	[self setupMetaPopup:representedObject];
+	
+	if(representedObject)
+		[self configureForMetaPopupChange:representedObject];
 }
 
 #pragma mark View Management and Animation
@@ -361,21 +569,20 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		[self animateViewOut:currentPane];
 		[currentPane removeFromSuperview];
 	}
-	
-	NSWindow *inspectorWindow = [self window];
-	
+		
 	NSRect viewBounds = [aView bounds];
 	NSRect contentBounds = [inspectorContent bounds];
-	NSRect inspectorFrame = [inspectorWindow frame];
+	NSRect inspectorFrame = [[self window] frame];
 
 	viewBounds.size.height = ((inspectorFrame.size.height - contentBounds.size.height) + viewBounds.size.height);
 	viewBounds.origin.x = inspectorFrame.origin.x;
 	viewBounds.origin.y = inspectorFrame.origin.y + (inspectorFrame.size.height - viewBounds.size.height);
 	
-	[inspectorWindow setFrame:viewBounds display:YES animate:doAnimate];
-
-	[inspectorContent setFrame:[aView bounds]];
+	[[self window] setFrame:viewBounds display:YES animate:doAnimate];
+	
 	[inspectorContent addSubview:aView];
+	//[inspectorContent setFrame:[aView bounds]];
+	
 	currentPane = aView;
 	[self animateViewIn:currentPane];
 }

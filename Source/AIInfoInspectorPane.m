@@ -147,7 +147,15 @@
 
 -(void)updateStatusView:(AIListObject *)inObject
 {
-	[[adium contentController] filterAttributedString:[inObject statusMessage]
+	//If we are updating the profile of a metacontact, we need to make sure to work with the preferred contact.
+	AIListObject *currentObject = nil;
+	
+	if([inObject isKindOfClass:[AIMetaContact class]])
+		currentObject = [(AIMetaContact *)inObject preferredContact];
+	else
+		currentObject = inObject;
+	
+	[[adium contentController] filterAttributedString:[currentObject statusMessage]
 									  usingFilterType:AIFilterDisplay
 											direction:AIFilterIncoming
 										filterContext:inObject
@@ -158,9 +166,17 @@
 
 
 -(void)updateProfileView:(AIListObject *)inObject
-{	
+{
+	//If we are updating the profile of a metacontact, we need to make sure to work with the preferred contact.
+	AIListObject *currentObject = nil;
+	
+	if([inObject isKindOfClass:[AIMetaContact class]])
+		currentObject = [(AIMetaContact *)inObject preferredContact];
+	else
+		currentObject = inObject;
+	
 	[[adium contentController] filterAttributedString:([inObject isKindOfClass:[AIListContact class]] ?
-													   [(AIListContact *)inObject profile] :
+													   [(AIListContact *)currentObject profile] :
 													   nil)
 									  usingFilterType:AIFilterDisplay
 											direction:AIFilterIncoming
@@ -172,6 +188,10 @@
 
 - (void)gotFilteredProfile:(NSAttributedString *)infoString context:(AIListObject *)object
 {
+	//Prevent duplicate profiles from being set again.
+	if([[profileView string] isEqual:[infoString string]])
+		return;
+		
 	//If we've been called with infoString == nil, we don't have the profile information yet.
 	if(!infoString && ![displayedObject isKindOfClass:[AIListGroup class]]) {
 		//This should only run if we get a nil string and if we aren't a group.

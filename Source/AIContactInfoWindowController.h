@@ -26,6 +26,9 @@
 	IBOutlet		AIContactInfoContentController  *contentController;
 	IBOutlet		NSSegmentedControl				*inspectorToolbar;
 	IBOutlet		NSView							*inspectorContent;
+	IBOutlet		NSView							*inspectorBottomBar;
+	IBOutlet		NSPopUpButton					*metaPopup;
+	IBOutlet		NSBox							*bottomBarSeperator;
 	
 					NSView							*currentPane;
 					NSArray							*loadedContent;
@@ -39,4 +42,5 @@
 + (id)showInfoWindowForListObject:(AIListObject *)listObject;
 + (void)closeInfoWindow;
 - (void)configureForListObject:(AIListObject *)inObject;
+- (void)loadInfoForListObject:(AIListObject *)aListObject;
 @end
