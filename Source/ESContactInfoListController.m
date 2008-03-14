@@ -25,5 +25,6 @@
 @implementation ESContactInfoListController
 
 #warning This class is completely useless now. Wee. We should probably remove it.
-	
+#warning Go for it. Connect four. -evands
+
 @end
