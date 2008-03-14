@@ -329,6 +329,19 @@
 	useStatusMessageAsExtendedStatus = flag;
 }
 
+#pragma mark Hovering
+- (BOOL)startTrackingAt:(NSPoint)startPoint inView:(NSView *)controlView;
+{
+	[self setHighlighted:YES];
+	return YES;
+}
+
+- (void)stopTracking:(NSPoint)lastPoint at:(NSPoint)stopPoint inView:(NSView *)controlView mouseIsUp:(BOOL)flag;
+{
+	[self setHighlighted:NO];
+}
+
+
 //Drawing --------------------------------------------------------------------------------------------------------------
 #pragma mark Drawing
 //Draw content of our cell
