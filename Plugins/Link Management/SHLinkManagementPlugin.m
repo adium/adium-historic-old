@@ -80,7 +80,7 @@
 			//Update the menu item's title to reflect the current action
 			[menuItem setTitle:([self textViewSelectionIsLink:(NSTextView *)responder] ? EDIT_LINK_TITLE : ADD_LINK_TITLE)];
 			
-			return [(NSTextView *)responder isEditable];
+			return ([(NSTextView *)responder isEditable] && [(NSTextView *)responder isRichText]);
 		}
 	} else {
 		return NO; //Disable the menu item if a text field is not key
