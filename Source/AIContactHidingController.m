@@ -220,7 +220,8 @@ NSString *AIContactFilteringReason = @"contactFiltering";
 	if (!searchString)
 		return;
 	
-	NSArray *listContacts = [[adium contactController]allContacts];
+	NSMutableArray *listContacts = [[adium contactController]allContacts];
+	[listContacts addObjectsFromArray:[[adium contactController]allBookmarks]];
 	
 	//we will be making a lot of calls to setVisible:, which is very expensive because it resorts the contact list each time
 	//instead, hold off on sorting the list until we have searched through all contacts
