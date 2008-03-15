@@ -340,14 +340,15 @@
 					//set the position of the tab bar (top/bottom)
 					if (tabPosition == AdiumTabPositionBottom) {
 						tabBarFrame.origin.y = NSMinY(contentRect);
-						tabViewMessagesFrame.origin.y = NSHeight(tabBarFrame) + 6;
-						tabViewMessagesFrame.size.height = NSHeight(contentRect) - NSHeight(tabBarFrame) - 5;
+						tabViewMessagesFrame.origin.y = NSHeight(tabBarFrame) + ([tabView_tabBar isTabBarHidden] ? 0 : (HORIZONTAL_TAB_BAR_TO_VIEW_SPACING - 1));
+						tabViewMessagesFrame.size.height = (NSHeight(contentRect) - NSHeight(tabBarFrame) -
+															([tabView_tabBar isTabBarHidden] ? 0 : (HORIZONTAL_TAB_BAR_TO_VIEW_SPACING - 2)));
 						[tabView_tabBar setAutoresizingMask:(NSViewMaxYMargin | NSViewWidthSizable)];
 						
 					} else {
-						tabBarFrame.origin.y = NSMaxY(contentRect) - NSHeight(tabBarFrame) + 1;
+						tabBarFrame.origin.y = NSMaxY(contentRect) - NSHeight(tabBarFrame);
 						tabViewMessagesFrame.origin.y = NSMinY(contentRect);
-						tabViewMessagesFrame.size.height = NSHeight(contentRect) - NSHeight(tabBarFrame) + 1;
+						tabViewMessagesFrame.size.height = NSHeight(contentRect) - NSHeight(tabBarFrame) + 2;
 						[tabView_tabBar setAutoresizingMask:(NSViewMinYMargin | NSViewWidthSizable)];
 					}
 					/* If the cell is less than 60, icon + title + unread message count may overlap */
@@ -984,8 +985,13 @@
     NSRect frame = [tabView frame];
 	switch ([tabBarControl orientation]) {
 		case PSMTabBarHorizontalOrientation:
-			frame.origin.y -= HORIZONTAL_TAB_BAR_TO_VIEW_SPACING;
-			frame.size.height += HORIZONTAL_TAB_BAR_TO_VIEW_SPACING;
+			/* We put a space between a bottom horizontal tab bar and the message tab view.
+			 * This space is not needed when the tab bar is at the top.
+			 */			
+			if (tabPosition == AdiumTabPositionBottom) {
+				frame.origin.y -= HORIZONTAL_TAB_BAR_TO_VIEW_SPACING;
+				frame.size.height += HORIZONTAL_TAB_BAR_TO_VIEW_SPACING;				
+			}
 			break;
 
 		case PSMTabBarVerticalOrientation:
@@ -1010,8 +1016,13 @@
 	
 	switch ([tabBarControl orientation]) {
 		case PSMTabBarHorizontalOrientation:
-			frame.origin.y += HORIZONTAL_TAB_BAR_TO_VIEW_SPACING;
-			frame.size.height -= HORIZONTAL_TAB_BAR_TO_VIEW_SPACING;
+			/* We put a space between a bottom horizontal tab bar and the message tab view.
+			 * This space is not needed when the tab bar is at the top.
+			 */
+			if (tabPosition == AdiumTabPositionBottom) {
+				frame.origin.y += HORIZONTAL_TAB_BAR_TO_VIEW_SPACING;
+				frame.size.height -= HORIZONTAL_TAB_BAR_TO_VIEW_SPACING;				
+			}
 			break;
 
 		case PSMTabBarVerticalOrientation:
