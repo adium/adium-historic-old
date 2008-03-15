@@ -9,6 +9,7 @@
 #import "TestDateAdditions.h"
 
 #import <AIUtilities/AIDateAdditions.h>
+#import <AIUtilities/AICalendarDateAdditions.h>
 
 @implementation TestDateAdditions
 
@@ -24,14 +25,15 @@
 	then = [now
 		dateByAddingYears:-0  months:-0    days:-7
 					hours:-0 minutes:-0 seconds:-0];
+	
+	then = [then dateByMatchingDSTOfDate:now];
 	[NSDate convertTimeInterval:[now timeIntervalSinceDate:then]
 						toWeeks:&weeks
 						   days:&days
 						  hours:&hours
 						minutes:&minutes
 						seconds:&seconds];
-	NSLog(@"%s: seconds is %.15f", __PRETTY_FUNCTION__, seconds);
-	STAssertEquals(weeks, 1, @"Expected the difference between now and 7 days ago to be 1 week; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
+	STAssertEquals(weeks, 1, @"Expected the difference between now and 7 days ago, which is %f seconds, to be 1 week; result was %iw, %id, %ih, %im, %fs", [now timeIntervalSinceDate:then], weeks, days, hours, minutes, seconds);
 	STAssertEquals( days, 0, @"Expected the difference between now and 7 days ago to be 1 week, 0 days; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals(hours, 0, @"Expected the difference between now and 7 days ago to be 1 week, 0 hours; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 	STAssertEquals(minutes, 0, @"Expected the difference between now and 7 days ago to be 1 week, 0 minutes; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
@@ -41,6 +43,7 @@
 	then = [now
 		dateByAddingYears:-0  months:-0    days:-8
 					hours:-0 minutes:-0 seconds:-0];
+	then = [then dateByMatchingDSTOfDate:now];
 	[NSDate convertTimeInterval:[now timeIntervalSinceDate:then]
 						toWeeks:&weeks
 						   days:&days
@@ -58,6 +61,7 @@
 	then = [now
 		dateByAddingYears:-0  months:-0    days:-6
 					hours:-0 minutes:-0 seconds:-0];
+	then = [then dateByMatchingDSTOfDate:now];
 	[NSDate convertTimeInterval:[now timeIntervalSinceDate:then]
 						toWeeks:&weeks
 						   days:&days
@@ -66,10 +70,10 @@
 						seconds:&seconds];
 	NSLog(@"%s: seconds is %.15f", __PRETTY_FUNCTION__, seconds);
 	STAssertEquals(weeks, 0, @"Expected the difference between now and 6 days ago to be 0 weeks, 6 days; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
-	STAssertEquals( days, 6, @"Expected the difference between now and 8 days ago to be 6 days; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
-	STAssertEquals(hours, 0, @"Expected the difference between now and 8 days ago to be 6 days, 0 hours; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
-	STAssertEquals(minutes, 0, @"Expected the difference between now and 8 days ago to be 6 days, 0 minutes; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
-	STAssertEquals(seconds, 0.0, @"Expected the difference between now and 8 days ago to be 6 days, 0 seconds; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
+	STAssertEquals( days, 6, @"Expected the difference between now and 6 days ago to be 6 days; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
+	STAssertEquals(hours, 0, @"Expected the difference between now and 6 days ago to be 6 days, 0 hours; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
+	STAssertEquals(minutes, 0, @"Expected the difference between now and 6 days ago to be 6 days, 0 minutes; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
+	STAssertEquals(seconds, 0.0, @"Expected the difference between now and 6 days ago to be 6 days, 0 seconds; result was %iw, %id, %ih, %im, %fs", weeks, days, hours, minutes, seconds);
 }
 - (void)testConvertIntervalToDays
 {
