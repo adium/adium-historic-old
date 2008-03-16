@@ -161,8 +161,8 @@ createfolder:
 
 	@# sign the executable
 ifeq ($(OFFICIAL_BUILD),TRUE)
-	if [ -e ~/adium-password ]; then
-		security -v unlock-keychain -p `cat ~/adium-password`
+	if [ -e ~/adium-password ]; then \
+		security -v unlock-keychain -p `cat ~/adium-password`; \
 	fi
 	codesign -v -s Adium $(ADIUM_DIR)/Adium.app/Contents/MacOS/Adium
 endif
