@@ -874,6 +874,9 @@
 	//contact list animation is a cool idea, but too glichy to work well when hiding/showing potentially hundreds of contacts
 	[contactListView setEnableAnimation:NO];
 	
+	[filterBarView setNextResponder:contactListView];
+	[[self window] makeKeyAndOrderFront:nil];
+	
 	filterBarIsVisible = YES;
 }
 
@@ -1014,8 +1017,9 @@
 									   [NSIndexSet indexSetWithIndex:[contactListView indexOfFirstVisibleListContact]] :
 									   [NSIndexSet indexSet])
 				 byExtendingSelection:NO];
+	
+	[[adium notificationCenter] postNotificationName:Interface_ContactSelectionChanged
+											  object:nil];
 }
-
-
 
 @end
