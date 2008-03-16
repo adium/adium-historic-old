@@ -20,6 +20,7 @@ Version 1.2.4
  * Fixed setting how many past messages to show when opening a chat  via the arrow buttons (#8833)
  * Fixed a crash after closing a detached contact list (#9447)
  * Fixed a visual glitch when tabs are at the top of the message window and are hidden (#9362)
+ * Fixed printing from the message window
  * Brazilian Portuguese and French Canadian localization updates
 
 Version 1.2.3 (2/25/08)
