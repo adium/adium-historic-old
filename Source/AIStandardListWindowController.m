@@ -933,9 +933,7 @@
 	[contactListController setAutoresizeHorizontally:[[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE group:PREF_GROUP_APPEARANCE] boolValue]];
 	[contactListView setEnableAnimation:YES];
 	
-	
-	if([[self window] isKeyWindow] && [[self window] isMainWindow])
-		[[self window] makeFirstResponder:contactListView];
+	[[self window] makeFirstResponder:contactListView];
 }
 
 - (void)animationDidEnd:(NSAnimation*)animation
