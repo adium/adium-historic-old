@@ -52,42 +52,22 @@ NSString *AIContactFilteringReason = @"contactFiltering";
 }
 
 
-- (void)setVisibility:(BOOL)visibleFlag ofListContact:(AIListContact *)listContact withReason:(NSString *)reason;
+- (void)setVisibility:(BOOL)visibleFlag
+		ofListContact:(AIListContact *)listContact
+		   withReason:(NSString *)reason;
 {	
 	if([listContact visible] == visibleFlag) {
 		// No change needed
 		return;
 	}
 
-	
-	//Case 1: The contact is offline, idle, or mobile and the user's prefrences are set to not show those contacts
-	//In this case, no check is needed. These contacts should always be hidden
-	if(reason == AIOfflineContactHidingReason && visibleFlag == NO) {
-		[listContact setVisible:NO];
-	}
-	
-	//Case 2: The contact was offline, idle, or mobile, but now is not. Or, the user changed the prefrences to show offline, idle, or mobile contacts
-	//We must check if the contact matches the current filtering search string (if there is one). If so, it is shown. Otherwise, it remains hidden
-	else if(reason == AIOfflineContactHidingReason && visibleFlag == YES) {
-		// If the search also matches this contact, we can show it
-		// Otherwise, it must remain hidden while the search is going on
-		if ([self evaluatePredicateOnListContact:listContact withSearchString:searchString]) { 
-			[listContact setVisible:YES];
-		}
-	}
-	
-	//Case 3: The contact is a search result from contact list filtering
-	//We must check if the contact should be hidden because it is offline, idle, or mobile and the user's prefrences are set to not show those contacts
-	else if(reason == AIContactFilteringReason && visibleFlag == YES) {
-		if ([self visibilityBasedOnOfflineContactHidingPreferencesOfListContact:listContact]) {
-			[listContact setVisible:YES];
-		}
-	}
-	
-	//Case 4: The contact was a search result, but is not anymore
-	//In this case, no check is needed. These contacts should always be hidden
-	else if(reason == AIContactFilteringReason && visibleFlag == NO) {
-		[listContact setVisible:NO];
+	if (reason == AIOfflineContactHidingReason) {
+		// If the contact is to be shown, make sure it also matches the current search term.
+		// -evaluatePredicateOnListObject:withSearchString: returns YES on an empty search string.
+		[listContact setVisible:(visibleFlag && [self evaluatePredicateOnListContact:listContact withSearchString:searchString])];
+	} else if (reason == AIContactFilteringReason) {
+		// visibilityFlag = YES if we're part of the search set, otherwise NO if we're no longer part of the search.
+		[listContact setVisible:(visibleFlag && [self visibilityBasedOnOfflineContactHidingPreferencesOfListContact:listContact])];
 	}
 }
 
