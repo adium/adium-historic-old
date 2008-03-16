@@ -31,6 +31,7 @@
 #define Group				@"Group"
 #define DisplayServiceID	@"DisplayServiceID"
 #define FormattedUID		@"FormattedUID"
+#define AlwaysVisible		@"AlwaysVisible"
 
 @interface AIListObject (PRIVATE)
 - (void)determineOrderIndex;
@@ -189,7 +190,7 @@
  */
 - (BOOL)visible
 {
-	return visible || [self alwaysVisible];
+	return visible;
 }
 
 /*!
@@ -201,9 +202,13 @@
 					 forKey:@"Visible" 
 					  group:PREF_GROUP_ALWAYS_VISIBLE];
 		
+		[self setStatusObject:[NSNumber numberWithBool:alwaysVisible]
+					   forKey:AlwaysVisible
+					   notify:NotifyNow];
+		
 		if ([containingObject isKindOfClass:[AIListGroup class]]) {
 			//Let our containing group know about the visibility change
-			[(AIListGroup *)containingObject visibilityOfContainedObject:self changedTo:[self visible]];			
+			[(AIListGroup *)containingObject visibilityOfContainedObject:self changedTo:(alwaysVisible || [self visible])];
 		}
 	}
 }

@@ -106,7 +106,8 @@ NSString *AIContactFilteringReason = @"contactFiltering";
 		[inModifiedKeys containsObject:@"Signed Off"] ||
 		[inModifiedKeys containsObject:@"New Object"] ||
 		[inModifiedKeys containsObject:@"VisibleObjectCount"] ||
-		[inModifiedKeys containsObject:@"IsMobile"]) {
+		[inModifiedKeys containsObject:@"IsMobile"] ||
+		[inModifiedKeys containsObject:@"AlwaysVisible"]) {
 		
 		if ([inObject isKindOfClass:[AIListContact class]]) {
 			[self setVisibility:[self visibilityBasedOnOfflineContactHidingPreferencesOfListContact:(AIListContact *)inObject]
@@ -126,6 +127,11 @@ NSString *AIContactFilteringReason = @"contactFiltering";
 }
 - (BOOL)visibilityBasedOnOfflineContactHidingPreferencesOfListContact:(AIListContact *)listContact;
 {
+	// Don't do any processing for a contact that's always visible.
+	if ([listContact alwaysVisible]) {
+		return YES;
+	}
+	
 	BOOL visible = YES;
 	
 	// If we're hiding contacts, and these meet a criteria for hiding
