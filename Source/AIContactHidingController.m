@@ -66,8 +66,8 @@ NSString *AIContactFilteringReason = @"contactFiltering";
 		// -evaluatePredicateOnListObject:withSearchString: returns YES on an empty search string.
 		[listContact setVisible:(visibleFlag && [self evaluatePredicateOnListContact:listContact withSearchString:searchString])];
 	} else if (reason == AIContactFilteringReason) {
-		// visibilityFlag = YES if we're part of the search set, otherwise NO if we're no longer part of the search.
-		[listContact setVisible:(visibleFlag && [self visibilityBasedOnOfflineContactHidingPreferencesOfListContact:listContact])];
+		// visibileFlag = YES if we're part of the search set, otherwise NO if we're no longer part of the search.
+		[listContact setVisible:visibleFlag];
 	}
 }
 
@@ -178,6 +178,13 @@ NSString *AIContactFilteringReason = @"contactFiltering";
 	if (!searchString)
 		return;
 	
+	// If the search string is empty, refresh the visibility of all contacts.
+	// This allows us to show *all* contacts when searching, and rehide them when searching is complete.
+	if ([searchString isEqualToString:@""]) {
+		[[adium contactController] updateAllListObjectsForObserver:self];
+		return;
+	}
+	
 	NSMutableArray *listContacts = [[adium contactController]allContacts];
 	[listContacts addObjectsFromArray:[[adium contactController]allBookmarks]];
 	
@@ -240,9 +247,7 @@ static NSPredicate *filterPredicateTemplate;
 		return [predicate evaluateWithObject:listContact];
 
 	}
-}	
-
-
+}
 
 - (void) dealloc
 {
