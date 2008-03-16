@@ -141,6 +141,12 @@ endif
 	find $(BUILD_DIR) -name ".svn" -type d -exec rm -rf {} \; -prune
 	find $(BUILD_DIR) \( -name "*~" -or -name .DS_Store \) -type f -delete
 
+	@# sign the executable
+ifeq ($(OFFICIAL_BUILD),TRUE)
+	if [ -e ~/adium-password ]; then \
+		security -v unlock-keychain -p `cat ~/adium-password`; \
+	fi
+	codesign -v -s Adium $(ADIUM_DIR)/Adium.app/Contents/MacOS/Adium
 
 createfolder:
 	@# clean build directory
@@ -158,13 +164,6 @@ createfolder:
 	
 	@# symlink /Applications
 	./mkalias -r /Applications $(ADIUM_DIR)/Applications
-
-	@# sign the executable
-ifeq ($(OFFICIAL_BUILD),TRUE)
-	if [ -e ~/adium-password ]; then \
-		security -v unlock-keychain -p `cat ~/adium-password`; \
-	fi
-	codesign -v -s Adium $(ADIUM_DIR)/Adium.app/Contents/MacOS/Adium
 endif
 
 diskimage:
