@@ -1,5 +1,27 @@
 				Adium X Version History
 				-----------------------
+Version 1.2.4
+ * Updated to libpurple 2.4.0 (pidgin.im), which includes AIM offline message support, fast Yahoo file transfers, viewing of ICQ status notes, setting Google Talk buddy icons, and a fix for an issue which could make you appear offline to MSN users
+ * Fixed an issue causing some Yahoo! contacts to be incorrectly blocked (#7744)
+ * Fixed autosizing of the text entry field, for real this time (#8701)
+ * Fixed 'now playing' on protocols like XMPP and MySpace
+ * Fixed an issue that could lead to slow login times and poor performance for MSN users (#9384)
+ * Fixed sending bold text over some protocols on Mac OS X 10.5 (#9076)
+ * AIM Direct IM improvements
+   * Improved compatibility with Windows users for AIM DirectIM
+   * Fixed a memory leak when using DirectIM
+ * Fixed support for transparent background colors in the contact list (#9341)
+ * Fixed a memory leak when setting contact list colors
+ * Fixed a crash when using certain audio configurations (#8902)
+ * Fixed the size of the divider between the message view and the text entry field (#9324)
+ * Fixed some glitches when pasting text
+ * Fixed a crash when the system audio output device changes (#9299)
+ * Fixed a crash if the permissions on mdimport are set incorrectly (#7933)
+ * Fixed setting how many past messages to show when opening a chat  via the arrow buttons (#8833)
+ * Fixed a crash after closing a detached contact list (#9447)
+ * Fixed a visual glitch when tabs are at the top of the message window and are hidden (#9362)
+ * Brazilian Portuguese and French Canadian localization updates
+
 Version 1.2.3 (2/25/08)
  * Fixed logging in for certain Yahoo! Messenger accounts
  * Fixed opening chats when using certain message styles (#9224)
