@@ -1326,4 +1326,14 @@
 	return NO;
 }
 
+#pragma mark Printing
+
+/*!
+ * @brief Support for printing.  Forward the print command to the active tab view's message view controller
+ */
+- (void)adiumPrint:(id)sender
+{
+	[[(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] messageViewController] adiumPrint:sender];
+}
+
 @end
