@@ -55,7 +55,7 @@ NSString *AIContactFilteringReason = @"contactFiltering";
 - (void)setVisibility:(BOOL)visibleFlag ofListContact:(AIListContact *)listContact withReason:(NSString *)reason;
 {	
 	if([listContact visible] == visibleFlag) {
-		//no change needed
+		// No change needed
 		return;
 	}
 
@@ -63,60 +63,32 @@ NSString *AIContactFilteringReason = @"contactFiltering";
 	//Case 1: The contact is offline, idle, or mobile and the user's prefrences are set to not show those contacts
 	//In this case, no check is needed. These contacts should always be hidden
 	if(reason == AIOfflineContactHidingReason && visibleFlag == NO) {
-		if ([[listContact containingObject] isKindOfClass:[AIMetaContact class]]) {
-			//if listContact is contained in a meta contact, we actually apply the new visiblity to the meta contact
-			[[listContact containingObject]setVisible:NO];
-		} else {
-			[listContact setVisible:NO];
-		}
+		[listContact setVisible:NO];
 	}
 	
 	//Case 2: The contact was offline, idle, or mobile, but now is not. Or, the user changed the prefrences to show offline, idle, or mobile contacts
 	//We must check if the contact matches the current filtering search string (if there is one). If so, it is shown. Otherwise, it remains hidden
 	else if(reason == AIOfflineContactHidingReason && visibleFlag == YES) {
-		
-		BOOL contactMatchesPredicate = [self evaluatePredicateOnListContact:listContact withSearchString:searchString];
-		
-		if(contactMatchesPredicate) //the search also matches this contact, so we can show it
-		{
-			if ([[listContact containingObject] isKindOfClass:[AIMetaContact class]]) {
-				//if listContact is contained in a meta contact, we actually apply the new visiblity to the meta contact
-				[[listContact containingObject]setVisible:YES];
-			} else {
-				[listContact setVisible:YES];
-			}
+		// If the search also matches this contact, we can show it
+		// Otherwise, it must remain hidden while the search is going on
+		if ([self evaluatePredicateOnListContact:listContact withSearchString:searchString]) { 
+			[listContact setVisible:YES];
 		}
-		//otherwise, it must remain hidden while the search is going on
 	}
 	
 	//Case 3: The contact is a search result from contact list filtering
 	//We must check if the contact should be hidden because it is offline, idle, or mobile and the user's prefrences are set to not show those contacts
 	else if(reason == AIContactFilteringReason && visibleFlag == YES) {
-		BOOL shouldBeVisible = [self visibilityBasedOnOfflineContactHidingPreferencesOfListContact:listContact];
-		
-		if(shouldBeVisible)
-		{
-			if ([[listContact containingObject] isKindOfClass:[AIMetaContact class]]) {
-				//if listContact is contained in a meta contact, we actually apply the new visiblity to the meta contact
-				[[listContact containingObject]setVisible:YES];
-			} else {
-				[listContact setVisible:YES];
-			}
+		if ([self visibilityBasedOnOfflineContactHidingPreferencesOfListContact:listContact]) {
+			[listContact setVisible:YES];
 		}
 	}
 	
 	//Case 4: The contact was a search result, but is not anymore
 	//In this case, no check is needed. These contacts should always be hidden
 	else if(reason == AIContactFilteringReason && visibleFlag == NO) {
-		if ([[listContact containingObject] isKindOfClass:[AIMetaContact class]]) {
-			//if listContact is contained in a meta contact, we actually apply the new visiblity to the meta contact
-			[[listContact containingObject]setVisible:NO];
-		} else {
-			[listContact setVisible:NO];
-		}
+		[listContact setVisible:NO];
 	}
-		
-	
 }
 
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
