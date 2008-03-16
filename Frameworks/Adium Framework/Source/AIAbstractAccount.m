@@ -413,6 +413,22 @@
 	return [self statusObjectForKey:@"CurrentDisplayName"];
 }
 
+- (void)retrievePasswordThenConnect
+{
+	AIPromptOption promptOption = AIPromptAsNeeded;
+	if ([[self statusObjectForKey:@"Prompt For Password On Next Connect"] boolValue]) 
+		promptOption = AIPromptAlways;
+	else if (![[self service] requiresPassword])
+		promptOption = AIPromptNever;
+	
+	//Retrieve the user's password and then call connect
+	[[adium accountController] passwordForAccount:self 
+									 promptOption:promptOption
+								  notifyingTarget:self
+										 selector:@selector(passwordReturnedForConnect:returnCode:context:)
+										  context:nil];	
+}
+
 /*!
  * @brief Handle common account status updates
  *
@@ -431,18 +447,8 @@
             if (!areOnline && ![[self statusObjectForKey:@"Connecting"] boolValue]) {
 				if ([[self service] supportsPassword] && (!password ||
 														  [[self statusObjectForKey:@"Prompt For Password On Next Connect"] boolValue])) {
-					AIPromptOption promptOption = AIPromptAsNeeded;
-					if ([[self statusObjectForKey:@"Prompt For Password On Next Connect"] boolValue]) 
-						promptOption = AIPromptAlways;
-					else if (![[self service] requiresPassword])
-						promptOption = AIPromptNever;
+					[self retrievePasswordThenConnect];
 
-					//Retrieve the user's password and then call connect
-					[[adium accountController] passwordForAccount:self 
-													 promptOption:promptOption
-												  notifyingTarget:self
-														 selector:@selector(passwordReturnedForConnect:returnCode:context:)
-														  context:nil];
 				} else {
 					/* Connect immediately without retrieving a password because we either don't need one or
 					 * already have one.
@@ -683,8 +689,8 @@
 		if (![[self statusObjectForKey:@"Online"] boolValue] &&
 		   ![[self statusObjectForKey:@"Connecting"] boolValue]) {
 			[self setPasswordTemporarily:inPassword];
-
-			//Tell the account to connect
+			
+			//Time to connect!
 			[self connect];
 		}
 
