@@ -420,7 +420,7 @@
 		promptOption = AIPromptAlways;
 	else if (![[self service] requiresPassword])
 		promptOption = AIPromptNever;
-	
+
 	//Retrieve the user's password and then call connect
 	[[adium accountController] passwordForAccount:self 
 									 promptOption:promptOption
@@ -689,7 +689,7 @@
 		if (![[self statusObjectForKey:@"Online"] boolValue] &&
 		   ![[self statusObjectForKey:@"Connecting"] boolValue]) {
 			[self setPasswordTemporarily:inPassword];
-			
+
 			//Time to connect!
 			[self connect];
 		}
