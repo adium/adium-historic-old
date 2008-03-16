@@ -17,6 +17,7 @@
 VERSION=1.3svn
 BUILD_IN_DEBUG_MODE=FALSE
 BETA=FALSE
+OFFICIAL_BUILD=TRUE
 
 # Always builds in debug mode.
 NIGHTLY?=FALSE
@@ -157,6 +158,11 @@ createfolder:
 	
 	@# symlink /Applications
 	./mkalias -r /Applications $(ADIUM_DIR)/Applications
+
+	@# sign the executable
+ifeq ($(OFFICIAL_BUILD),TRUE)
+	codesign -v -s Adium $(ADIUM_DIR)/Adium.app/Contents/MacOS/Adium
+endif
 
 diskimage:
 	rm "$(BUILD_DIR)/$(RELEASE_NAME).dmg" || true
