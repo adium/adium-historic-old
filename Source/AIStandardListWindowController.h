@@ -14,6 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import <AIUtilities/AIRolloverButton.h>
 #import "AIListWindowController.h"
 
 #define ALL_OTHER_ACCOUNTS AILocalizedString(@"All Other Accounts", nil)
@@ -28,7 +29,7 @@ typedef enum {
 	ContactListImagePickerHiddenOnRight,
 } ContactListImagePickerPosition;
 
-@interface AIStandardListWindowController : AIListWindowController {
+@interface AIStandardListWindowController : AIListWindowController <AIRolloverButtonDelegate> {
 	IBOutlet	NSView						*view_statusAndImage;
 	
 	IBOutlet	NSView						*view_nameAndStatusMenu;
@@ -40,6 +41,8 @@ typedef enum {
 	
 	IBOutlet	NSView						*filterBarView;
 	IBOutlet	NSSearchField				*searchField;
+	IBOutlet	AIRolloverButton			*button_cancelFilterBar;
+
 	BOOL									filterBarIsVisible;
 	BOOL									filterBarIsAnimating;
 	NSViewAnimation							*showFilterBarAnimation;
