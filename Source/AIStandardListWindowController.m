@@ -21,6 +21,7 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
+#import <AIUtilities/AIRolloverButton.h>
 
 #import <Adium/AIListGroup.h>
 #import <Adium/AIAccountControllerProtocol.h>
@@ -124,8 +125,6 @@
 	
 	filterBarIsVisible = NO;
 	[searchField setDelegate:self];
-	[[[searchField cell]cancelButtonCell]setTarget:self];
-	[[[searchField cell]cancelButtonCell]setAction:@selector(hideFilterBar:)];
 	
 	[[NSNotificationCenter defaultCenter]addObserver:self
 											selector:@selector(hideFilterBarFromWindowResignedMain:)
@@ -825,15 +824,12 @@
 	
 	NSRect viewFrame = [viewToResize frame];
 	
-	
 	NSRect endingViewFrame = viewFrame;
 	endingViewFrame.size.height = viewFrame.size.height - filterBarSize.height;
 	
 	NSDictionary *viewToResizeAnimationDictionary = [NSDictionary dictionaryWithObjectsAndKeys:viewToResize, NSViewAnimationTargetKey,
 													 [NSValue valueWithRect:endingViewFrame], NSViewAnimationEndFrameKey, nil];
-	
-	
-	
+
 	//filter bar view resizing
 	//start the filter bar at the top of the window
 	NSRect startingFilterBarFrame = NSMakeRect(endingViewFrame.origin.x,
@@ -856,12 +852,14 @@
 	NSDictionary *filterBarAnimationDictionary = [NSDictionary dictionaryWithObjectsAndKeys:filterBarView, NSViewAnimationTargetKey,
 												  [NSValue valueWithRect:endingFilterBarFrame], NSViewAnimationEndFrameKey, nil];
 	
+	[button_cancelFilterBar setDelegate:self];
 	
 	showFilterBarAnimation = [[NSViewAnimation alloc]initWithViewAnimations:[NSArray arrayWithObjects:viewToResizeAnimationDictionary,filterBarAnimationDictionary,nil]];
 	[showFilterBarAnimation setDuration:flag ? 0.25f : 0.0f];
 	[showFilterBarAnimation setAnimationBlockingMode:NSAnimationBlocking];
 	[showFilterBarAnimation setDelegate:self];
 	filterBarIsAnimating = YES;
+
 	//disable vertical autoresizing just while the animation is running
 	//this prevents display bugs that can occur when contacts are being shown/hidden that cause the frame to change while the filter bar is sliding
 	[contactListController setAutoresizeVertically:NO];
@@ -869,7 +867,6 @@
 	
 	//disable horizontal autoresizing while the filter bar is shown so the width does not change when longer contacts are eliminated as results
 	[contactListController setAutoresizeHorizontally:NO];
-	
 	
 	//contact list animation is a cool idea, but too glichy to work well when hiding/showing potentially hundreds of contacts
 	[contactListView setEnableAnimation:NO];
@@ -929,6 +926,7 @@
 	filterBarIsVisible = NO;
 	[hideFilterBarAnimation setDelegate:self];
 	filterBarIsAnimating = YES;
+
 	//disable vertical autoresizing just while the animation is running
 	//this prevents display bugs that can occur when contacts are being shown/hidden that cause the frame to change while the filter bar is sliding
 	[contactListController setAutoresizeVertically:NO];
@@ -1020,6 +1018,12 @@
 	
 	[[adium notificationCenter] postNotificationName:Interface_ContactSelectionChanged
 											  object:nil];
+}
+
+- (void)rolloverButton:(AIRolloverButton *)inButton mouseChangedToInsideButton:(BOOL)isInside
+{
+	[button_cancelFilterBar setImage:[NSImage imageNamed:(isInside ? @"FTProgressStopRollover" : @"FTProgressStop")
+												forClass:[self class]]];
 }
 
 @end
