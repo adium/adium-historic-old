@@ -277,7 +277,7 @@
 	 It's a good idea for the caller to pick the preferred contact for us, since they know the content type
 	 being sent and more information - but we'll do it here as well just to be safe.
 	 */
-	if ([inContact containsMultipleContacts]) {
+	if ([inContact isKindOfClass:[AIMetaContact class]]) {
 		targetContact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
 																   forListContact:inContact];
 		
@@ -297,10 +297,7 @@
 		NSLog(@"Warning: -[AIChatController chatWithContact:%@] got a nil targetContact.",inContact);
 		return nil;
 	}
-	
-	//XXX Temporary.. make sure that the fixes early in adium-1.1svn are right.
-	NSAssert1(![targetContact isMemberOfClass:[AIMetaContact class]], @"Should not get this far in chatWithContact: with an AIMetaContact (%@)!",targetContact);
-	
+
 	//Search for an existing chat we can switch instead of replacing
 	enumerator = [openChats objectEnumerator];
 	while ((chat = [enumerator nextObject])) {
