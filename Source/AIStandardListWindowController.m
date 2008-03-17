@@ -980,7 +980,7 @@
 	if (command == @selector(insertNewline:))
 	{
 		int index = [contactListView indexOfFirstVisibleListContact];
-		if (index != -1)
+		if (index != -1 && ![[textView string] isEqualToString:@""])
 			[[adium chatController] openChatWithContact:[contactListView itemAtRow:index] onPreferredAccount:YES];
 		[self hideFilterBar:nil];
 	}
