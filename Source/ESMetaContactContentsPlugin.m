@@ -175,7 +175,8 @@
 {
 	AIListObject *listObject = [[adium menuController] currentContextMenuObject];
 	if (menuItem == contextualMenuItem) {
-		if ([listObject isKindOfClass:[AIMetaContact class]]) {
+		if ([listObject isKindOfClass:[AIMetaContact class]] &&
+			[(AIMetaContact *)listObject containsMultipleContacts]) {
 			BOOL currentlyExpandable = [(AIMetaContact *)listObject isExpandable];
 			if (currentlyExpandable) {
 				[menuItem setTitle:COLLAPSE_CONTACT];
