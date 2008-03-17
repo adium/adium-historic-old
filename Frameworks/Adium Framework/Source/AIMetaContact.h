@@ -56,8 +56,9 @@
  * @brief Does this metacontact contains multiple contacts?
  *
  * For a metacontact, this is YES if the metaContact contains more than one contact.
+ *
  * Note that a metacontact may contain multiple AIListContacts (as returned by its containedObjects), but
- * if this returns YES, all those AIListContacts represent the same UID/Service combination (but on different accounts).
+ * if this returns NO, all those AIListContacts represent the same UID/Service combination (but on different accounts).
  * In that case, listContacts will return a single contact.
  */
 - (BOOL)containsMultipleContacts;
