@@ -950,11 +950,6 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	return [[draggedContacts retain] autorelease];
 }
 
-- (void)accessibilityPerformAction:(NSString *)action {
-	NSLog(@"%@ Performing %@", self, action);
-	[super accessibilityPerformAction:action]; 
-}
-
 #pragma mark Find Panel
 - (void)outlineViewToggleFindPanel:(NSOutlineView *)outlineView;
 {
