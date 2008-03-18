@@ -457,11 +457,6 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 
 #pragma mark Accessibility
 
-- (NSArray *)accessibilityAttributeNames
-{
-	NSLog(@"%@ names are %@", self, [super accessibilityAttributeNames]);
-	return [super accessibilityAttributeNames];
-}
 - (id)accessibilityAttributeValue:(NSString *)attribute
 {
 	id value;
