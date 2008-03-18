@@ -1139,16 +1139,10 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 /*!
  * @brief Are multiple contacts represented by this metacontact?
- *
- * A metacontact might represent only a single contact (waiting around for more contacts to be added to it, such as when another account connects).
- * Alternately, it might represent multiple contacts (the usual case).
- *
- * If containedObjects only contains one AIListContact but that AIListContact then has multiple contacts within it -- for example, it's a SmackContact -- our
- * metacontact actually *does* contain multiple contacts.  This is why [[self containedObjects] count] alone is not an accurate assessment.
  */
 - (BOOL)containsMultipleContacts
 {
-    return (([containedObjects count] > 1) ? YES : [[containedObjects lastObject] containsMultipleContacts]);
+    return !containsOnlyOneUniqueContact;
 }
 
 //Test for the presence of an object in our group
