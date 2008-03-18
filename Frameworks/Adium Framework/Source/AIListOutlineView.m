@@ -348,7 +348,6 @@
 		if (windowStyle == AIContactListWindowStyleGroupBubbles || windowStyle == AIContactListWindowStyleContactBubbles || windowStyle == AIContactListWindowStyleContactBubbles_Fitted) {
 			[[self window] setOpaque:NO];
 		} else {
-			NSLog(@"%f", backgroundAlpha);
 			[[self window] setOpaque:(backgroundAlpha == 1.0f)];
 		}
 		
@@ -633,7 +632,6 @@
 
 	if (dataSource) {
 		NSIndexSet *selection = [self selectedRowIndexes];
-		NSLog(@"%s: selection has count %u and is %@", __PRETTY_FUNCTION__, [selection count], selection);
 
 		NSMutableArray *items = [NSMutableArray arrayWithCapacity:[selection count]];
 		for (unsigned idx = [selection firstIndex]; idx <= [selection lastIndex]; idx = [selection indexGreaterThanIndex:idx]) {
