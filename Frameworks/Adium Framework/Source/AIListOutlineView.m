@@ -656,6 +656,14 @@
 	}
 }
 
+- (BOOL) validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem
+{
+	if ([anItem action] == @selector(copy:))
+		return [self numberOfSelectedRows] > 0;
+	else
+		return [super validateUserInterfaceItem:anItem];
+}
+
 /*!
  * @brief Should we perform type select next/previous on find?
  *
