@@ -183,7 +183,7 @@
 		</class>
 		<class name="contact" code="Ccnt" description="A contact">
 			<cocoa class="AIListContact" />
-			<property name="account" code="Pacc" type="account" access="r" description="The account associated with this contact" />
+			<property name="account" code="Cact" type="account" access="r" description="The account associated with this contact" />
 			<property name="group" code="Pgrp" type="contact group" access="r" description="The group associated with this contact">
 				<cocoa key="parentGroup" />
 			</property>
