@@ -568,4 +568,9 @@
 	}
 }
 
+- (BOOL)scriptingMutabilityType
+{
+	return [self mutabilityType] != AITemporaryEditableStatusState;
+}
+
 @end
