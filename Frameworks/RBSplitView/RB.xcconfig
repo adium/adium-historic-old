@@ -24,5 +24,5 @@ GCC_WARN_ABOUT_INVALID_OFFSETOF_MACRO = YES
 // Xcode installation direcotry. This works fine in Xcode 3.0, as it supports
 // @loader_path, but Xcode 2.5 does not. Apple suggested the following fix:
 // http://lists.apple.com/archives/Xcode-users/2007/Nov/msg00398.html
-FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_FRAMEWORKS_DIR)"
+FRAMEWORK_SEARCH_PATHS = '"$(DEVELOPER_FRAMEWORKS_DIR)" "This pathname is only here to satisfy Xcode 2.4.x. Without it, the build fails with a “missing argument to: -filelist option” error."'
 OTHER_LDFLAGS = -dylib_file "@loader_path/../../../../PrivateFrameworks/DevToolsRemoteClient.framework/Versions/A/DevToolsRemoteClient:$(DEVELOPER_LIBRARY_DIR)/PrivateFrameworks/DevToolsRemoteClient.framework/Versions/A/DevToolsRemoteClient" -dylib_file "@loader_path/../../../../PrivateFrameworks/DevToolsFoundation.framework/Versions/A/DevToolsFoundation:$(DEVELOPER_LIBRARY_DIR)/PrivateFrameworks/DevToolsFoundation.framework/Versions/A/DevToolsFoundation"
