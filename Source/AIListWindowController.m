@@ -378,7 +378,13 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 	if ([group isEqualToString:PREF_GROUP_APPEARANCE]) {
 		float opacity = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_OPACITY] floatValue];		
 		[contactListController setBackgroundOpacity:opacity];
-		
+
+		/* Don't allow clickthrough of a transparent list unless using fitted pillows; this allows full transparency
+		 * but proper responsiveness. Fitted pillows have lots of window space which clearly shouldn't respond to clicks.
+		 */
+		BOOL allowsTransparentClickthrough = ([[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue] == AIContactListWindowStyleContactBubbles_Fitted);
+		[[self window] setIgnoresMouseEvents:allowsTransparentClickthrough];
+
 		if (!firstTime) {
 			shouldRevealWindowAndDelaySliding = YES;
 		}
@@ -411,7 +417,7 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 		
 		//Both layout and theme
 		[contactListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
-		
+
 		if (!firstTime) {
 			shouldRevealWindowAndDelaySliding = YES;
 		}
