@@ -86,7 +86,10 @@ typedef enum {
  * @brief Configure the preference view
  */
 - (void)viewDidLoad
-{	
+{
+	[slider_windowOpacity setMinValue:0.0];
+	[slider_windowOpacity setMaxValue:100.0];
+
 	//Other list options
 	[popUp_windowStyle setMenu:[self _windowStyleMenu]];
 		
