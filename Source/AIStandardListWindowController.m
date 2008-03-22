@@ -934,9 +934,13 @@
 	//this prevents display bugs that can occur when contacts are being shown/hidden that cause the frame to change while the filter bar is sliding
 	[contactListController setAutoresizeVertically:NO];
 	[hideFilterBarAnimation startAnimation];
-	[contactListController setAutoresizeHorizontally:[[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE group:PREF_GROUP_APPEARANCE] boolValue]];
-	[contactListView setEnableAnimation:[[[adium preferenceController] preferenceForKey:@"Animate Changes"
-																				  group:@"Contact List"] boolValue]];
+
+	// Restore the default settings which we disabled previously.	
+	[contactListController setAutoresizeHorizontally:[[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE
+																							   group:PREF_GROUP_APPEARANCE] boolValue]];
+
+	[contactListView setEnableAnimation:[[[adium preferenceController] preferenceForKey:KEY_CL_ANIMATE_CHANGES
+																				  group:PREF_GROUP_CONTACT_LIST] boolValue]];
 }
 
 - (void)animationDidEnd:(NSAnimation*)animation
