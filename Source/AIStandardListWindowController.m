@@ -861,7 +861,7 @@
 	[button_cancelFilterBar setDelegate:self];
 	
 	showFilterBarAnimation = [[NSViewAnimation alloc]initWithViewAnimations:[NSArray arrayWithObjects:viewToResizeAnimationDictionary,filterBarAnimationDictionary,nil]];
-	[showFilterBarAnimation setDuration:(flag ? 0.25f : 0.0f)];
+	[showFilterBarAnimation setDuration:(flag ? 0.15f : 0.0f)];
 	[showFilterBarAnimation setAnimationBlockingMode:NSAnimationBlocking];
 	[showFilterBarAnimation setDelegate:self];
 
@@ -925,7 +925,7 @@
 												  [NSValue valueWithRect:endingFilterBarFrame], NSViewAnimationEndFrameKey, nil];
 	
 	hideFilterBarAnimation = [[NSViewAnimation alloc]initWithViewAnimations:[NSArray arrayWithObjects:viewToResizeAnimationDictionary,filterBarAnimationDictionary,nil]];
-	[hideFilterBarAnimation setDuration:(flag ? 0.25f : 0.0f)];
+	[hideFilterBarAnimation setDuration:(flag ? 0.15f : 0.0f)];
 	[hideFilterBarAnimation setAnimationBlockingMode:NSAnimationBlocking];
 	filterBarIsVisible = NO;
 	[hideFilterBarAnimation setDelegate:self];
