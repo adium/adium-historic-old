@@ -139,7 +139,7 @@
  */
 - (void)windowWillClose:(NSNotification *)notification
 {
-	// When closing the contact while a search is in progress, reset visibility first.
+	// When closing the contact list while a search is in progress, reset visibility first.
 	if (![[searchField stringValue] isEqualToString:@""]) {
 		[searchField setStringValue:@""];
 		[self filterContacts:searchField];
