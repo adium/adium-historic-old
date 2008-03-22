@@ -143,8 +143,6 @@
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[[[AIObject sharedAdiumInstance] notificationCenter] removeObserver:self];
 
-	[[self undoManager] removeAllActions];
-
     [chat release];
     [associatedView release];
     [historyArray release]; historyArray = nil;
