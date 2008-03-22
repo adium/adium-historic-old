@@ -40,6 +40,4 @@ extern NSString *AIContactFilteringReason;
 - (BOOL)searchTermMatchesAnyContacts:(NSString *)inSearchString;
 - (void)setContactFilteringSearchString:(NSString *)aSearchString refilterContacts:(BOOL)flag;
 - (void)refilterContacts;
-
-
 @end

@@ -1043,8 +1043,7 @@
 		while ((listObject = [enumerator nextObject])) {
 			if ([listObject isKindOfClass:[AIListGroup class]]) {
 				// If this group's stored status is to be collapsed, collapse it
-				if (![[listObject preferenceForKey:@"IsExpanded"
-											group:@"Contact List"] boolValue]) {
+				if (![[listObject preferenceForKey:@"IsExpanded" group:@"Contact List"] boolValue]) {
 					[contactListView collapseItem:listObject];
 				}
 			}
@@ -1054,19 +1053,26 @@
 	}
 
 	if ([[[adium contactController] contactHidingController] searchTermMatchesAnyContacts:[sender stringValue]]) {
+		// Set the new string in the hiding controller, and refilter the contact lists.
 		[[[adium contactController] contactHidingController] setContactFilteringSearchString:[sender stringValue]
 																			refilterContacts:YES];
 		
-		int index = [contactListView indexOfFirstVisibleListContact];
-		[contactListView selectRowIndexes:(index != -1 ?
-										   [NSIndexSet indexSetWithIndex:[contactListView indexOfFirstVisibleListContact]] :
-										   [NSIndexSet indexSet])
+		// Select the first contact; we're guaranteed at least one visible contact.
+		[contactListView selectRowIndexes:[NSIndexSet indexSetWithIndex:[contactListView indexOfFirstVisibleListContact]]
 					 byExtendingSelection:NO];
 		
+		// Since this wasn't a user-initiated selection change, we need to post a notification for it.
 		[[adium notificationCenter] postNotificationName:Interface_ContactSelectionChanged
 												  object:nil];
-	} else if (![[sender stringValue] isEqualToString:@""]) {
-		NSBeep();
+	} else {
+		// Beep if the user continues appending text to an already not found string, otherwise don't beep.
+		if ([[sender stringValue] length] > [[[[adium contactController] contactHidingController] contactFilteringSearchString] length]) {
+			NSBeep();
+		}
+
+		// Set the search string in the hiding controller, but don't refilter the contacts.
+		[[[adium contactController] contactHidingController] setContactFilteringSearchString:[sender stringValue]
+																			refilterContacts:NO];
 	}
 }
 
