@@ -138,6 +138,12 @@
  */
 - (void)windowWillClose:(id)sender
 {
+	// When closing the contact while a search is in progress, reset visibility first.
+	if (![[searchField stringValue] isEqualToString:@""]) {
+		[searchField setStringValue:@""];
+		[self filterContacts:searchField];
+	}
+
 	[[adium notificationCenter] removeObserver:self];
 	[statusMenu release];
 	
@@ -964,6 +970,7 @@
 		[self showFilterBar:sender];
 	}		
 }
+
 - (void)hideFilterBarFromWindowResignedMain:(NSNotification *)sender
 {
 	if ([sender object] == [self window]) {
