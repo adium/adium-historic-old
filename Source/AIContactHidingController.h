@@ -37,6 +37,7 @@ extern NSString *AIContactFilteringReason;
 - (void)setVisibility:(BOOL)visibleFlag ofListContact:(AIListContact *)listContact withReason:(NSString *)reason;
 
 - (NSString *)contactFilteringSearchString;
+- (BOOL)searchTermMatchesAnyContacts:(NSString *)inSearchString;
 - (void)setContactFilteringSearchString:(NSString *)aSearchString refilterContacts:(BOOL)flag;
 - (void)refilterContacts;
 
