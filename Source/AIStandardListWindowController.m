@@ -119,13 +119,13 @@
 /*!
  * @brief Window closing
  */
-- (void)windowWillClose:(id)sender
+- (void)windowWillClose:(NSNotification *)notification
 {
 	[[adium notificationCenter] removeObserver:self];
 	[searchField setDelegate:nil];
 	[statusMenu release];
 	
-	[super windowWillClose:sender];
+	[super windowWillClose:notification];
 }
 
 - (void)positionImagePickerIfNeeded
