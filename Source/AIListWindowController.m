@@ -254,6 +254,10 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 						 firstTime:(BOOL)firstTime
 {
 	BOOL shouldRevealWindowAndDelaySliding = NO;
+	
+	// Make sure we're not getting an object-specific update.
+	if (object != nil)
+			return;
 
     if ([group isEqualToString:PREF_GROUP_CONTACT_LIST]) {
 		windowLevel = [[prefDict objectForKey:KEY_CL_WINDOW_LEVEL] intValue];
