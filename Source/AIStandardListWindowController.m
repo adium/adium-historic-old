@@ -989,14 +989,12 @@
 	if (control != searchField)
 		return NO;
 	
-	if (command == @selector(insertNewline:))
-	{
+	if (command == @selector(insertNewline:)) {
 		int index = [contactListView indexOfFirstVisibleListContact];
 		if (index != -1 && ![[textView string] isEqualToString:@""])
 			[[adium chatController] openChatWithContact:[contactListView itemAtRow:index] onPreferredAccount:YES];
 		[self hideFilterBar:nil];
-	}
-	else if(command == @selector(moveDown:)) {
+	} else if(command == @selector(moveDown:)) {
 		//make the down key a shortcut for selecting the first contact
 		[[self window] makeFirstResponder:contactListView];
 		
@@ -1005,10 +1003,10 @@
 										   [NSIndexSet indexSetWithIndex:[contactListView indexOfFirstVisibleListContact]] :
 										   [NSIndexSet indexSet])
 					 byExtendingSelection:NO];
-		
-	}
-	else if(command == @selector(cancelOperation:) && filterBarIsVisible) {
+	} else if(command == @selector(cancelOperation:) && filterBarIsVisible) {
 		[self hideFilterBar:nil];
+	} else {
+		return NO;
 	}
 	
 	return YES;
