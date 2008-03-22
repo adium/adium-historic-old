@@ -137,7 +137,7 @@
 /*!
  * @brief Window closing
  */
-- (void)windowWillClose:(id)sender
+- (void)windowWillClose:(NSNotification *)notification
 {
 	// When closing the contact while a search is in progress, reset visibility first.
 	if (![[searchField stringValue] isEqualToString:@""]) {
