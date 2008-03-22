@@ -122,7 +122,8 @@
 	
 	[self _configureToolbar];
 	
-	
+	filterBarExpandedGroups = NO;
+	filterBarIsAnimating = NO;
 	filterBarIsVisible = NO;
 	[searchField setDelegate:self];
 	
@@ -934,7 +935,8 @@
 	[contactListController setAutoresizeVertically:NO];
 	[hideFilterBarAnimation startAnimation];
 	[contactListController setAutoresizeHorizontally:[[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE group:PREF_GROUP_APPEARANCE] boolValue]];
-	[contactListView setEnableAnimation:YES];
+	[contactListView setEnableAnimation:[[[adium preferenceController] preferenceForKey:@"Animate Changes"
+																				  group:@"Contact List"] boolValue]];
 }
 
 - (void)animationDidEnd:(NSAnimation*)animation
@@ -1012,7 +1014,43 @@
 {
 	if (![sender isKindOfClass:[NSSearchField class]])
 		return;
-	
+
+	if (!filterBarExpandedGroups && ![[sender stringValue] isEqualToString:@""]) {
+		// Temporarily expand all groups when performing a search.
+		NSEnumerator	*enumerator = [[[[adium contactController] contactList] containedObjects] objectEnumerator];
+		AIListObject	*listObject;
+		
+		while ((listObject = [enumerator nextObject])) {
+			if ([listObject isKindOfClass:[AIListGroup class]]) {
+				// Force the listgroup to save its expanded status
+				[listObject setPreference:[NSNumber numberWithBool:[(AIListGroup *)listObject isExpanded]]
+								  forKey:@"IsExpanded"
+								   group:@"Contact List"];
+
+				// Set the group as expanded
+				[contactListView expandItem:listObject];
+			}
+		}
+
+		filterBarExpandedGroups = YES;
+	} else if (filterBarExpandedGroups && [[sender stringValue] isEqualToString:@""]) {
+		// Restore saved expansion status when returning to no search.
+		NSEnumerator	*enumerator = [[[[adium contactController] contactList] containedObjects] objectEnumerator];
+		AIListObject	*listObject;
+		
+		while ((listObject = [enumerator nextObject])) {
+			if ([listObject isKindOfClass:[AIListGroup class]]) {
+				// If this group's stored status is to be collapsed, collapse it
+				if (![[listObject preferenceForKey:@"IsExpanded"
+											group:@"Contact List"] boolValue]) {
+					[contactListView collapseItem:listObject];
+				}
+			}
+		}
+		
+		filterBarExpandedGroups = NO;
+	}
+
 	[[[adium contactController]contactHidingController]setContactFilteringSearchString:[sender stringValue]
 																	  refilterContacts:YES];
 	

@@ -43,6 +43,7 @@ typedef enum {
 	IBOutlet	NSSearchField				*searchField;
 	IBOutlet	AIRolloverButton			*button_cancelFilterBar;
 
+	BOOL									filterBarExpandedGroups;
 	BOOL									filterBarIsVisible;
 	BOOL									filterBarIsAnimating;
 	NSViewAnimation							*showFilterBarAnimation;
