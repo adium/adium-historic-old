@@ -1053,17 +1053,21 @@
 		filterBarExpandedGroups = NO;
 	}
 
-	[[[adium contactController]contactHidingController]setContactFilteringSearchString:[sender stringValue]
-																	  refilterContacts:YES];
-	
-	int index = [contactListView indexOfFirstVisibleListContact];
-	[contactListView selectRowIndexes:(index != -1 ?
-									   [NSIndexSet indexSetWithIndex:[contactListView indexOfFirstVisibleListContact]] :
-									   [NSIndexSet indexSet])
-				 byExtendingSelection:NO];
-	
-	[[adium notificationCenter] postNotificationName:Interface_ContactSelectionChanged
-											  object:nil];
+	if ([[[adium contactController] contactHidingController] searchTermMatchesAnyContacts:[sender stringValue]]) {
+		[[[adium contactController] contactHidingController] setContactFilteringSearchString:[sender stringValue]
+																			refilterContacts:YES];
+		
+		int index = [contactListView indexOfFirstVisibleListContact];
+		[contactListView selectRowIndexes:(index != -1 ?
+										   [NSIndexSet indexSetWithIndex:[contactListView indexOfFirstVisibleListContact]] :
+										   [NSIndexSet indexSet])
+					 byExtendingSelection:NO];
+		
+		[[adium notificationCenter] postNotificationName:Interface_ContactSelectionChanged
+												  object:nil];
+	} else if (![[sender stringValue] isEqualToString:@""]) {
+		NSBeep();
+	}
 }
 
 - (void)rolloverButton:(AIRolloverButton *)inButton mouseChangedToInsideButton:(BOOL)isInside

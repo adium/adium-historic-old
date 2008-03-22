@@ -171,7 +171,22 @@ NSString *AIContactFilteringReason = @"contactFiltering";
 		[self refilterContacts];
 }
 
-
+- (BOOL)searchTermMatchesAnyContacts:(NSString *)inSearchString
+{
+	NSMutableArray *listContacts = [[adium contactController] allContacts];
+	[listContacts addObjectsFromArray:[[adium contactController] allBookmarks]];
+	
+	NSEnumerator	*enumerator = [listContacts objectEnumerator];
+	AIListContact	*listContact;
+	
+	while ((listContact = [enumerator nextObject])) {
+		if ([self evaluatePredicateOnListContact:listContact withSearchString:inSearchString]) {
+			return YES;
+		}
+	}
+	
+	return NO;
+}
 
 - (void)refilterContacts;
 {
@@ -219,7 +234,7 @@ static NSPredicate *filterPredicateTemplate;
 {	
 	if (!listContact)
 		return NO;
-	if(!searchString)
+	if(!aSearchString)
 		return YES;
 	
 	
@@ -228,7 +243,7 @@ static NSPredicate *filterPredicateTemplate;
 	if(!filterPredicateTemplate)
 		filterPredicateTemplate = [[NSPredicate predicateWithFormat:@"$SEARCH_STRING.length == 0 OR displayName contains[cd] $SEARCH_STRING OR formattedUID contains[cd] $SEARCH_STRING OR statusMessageString contains[cd] $SEARCH_STRING"] retain];
 	
-	NSPredicate *predicate = [filterPredicateTemplate predicateWithSubstitutionVariables:[NSDictionary dictionaryWithObject:searchString forKey:@"SEARCH_STRING"]];
+	NSPredicate *predicate = [filterPredicateTemplate predicateWithSubstitutionVariables:[NSDictionary dictionaryWithObject:aSearchString forKey:@"SEARCH_STRING"]];
 	
 	if ([[listContact containingObject] isKindOfClass:[AIMetaContact class]]) {
 		//meta contacts (contacts containing more than one screen name, for example), should be shown if ANY of its contacts match the predicate
