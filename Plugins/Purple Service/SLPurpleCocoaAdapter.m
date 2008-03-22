@@ -657,15 +657,16 @@ NSString *processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 
 	//Suppress notification warnings we have no interest in seeing
 	if (secondaryString) {
-		/*
-		 We previously suppressed:
-			if (([secondaryString rangeOfString:@"Could not add the buddy 1 for an unknown reason"].location != NSNotFound) ||
-		 is it still needed?
-		 */
 		if ((strcmp(secondary, _("Not supported by host")) == 0) || /* OSCAR */
 			(strcmp(secondary, _("Not logged in")) == 0) || /* OSCAR */
 			(strcmp(secondary, _("Your buddy list was downloaded from the server.")) == 0) || /* Gadu-gadu */
 			(strcmp(secondary, _("Your buddy list was stored on the server.")) == 0) /* Gadu-gadu */) {
+			return NULL;
+		}
+		
+		if ([secondaryString isEqualToString:
+			 [NSString stringWithFormat:[NSString stringWithUTF8String:_("Could not add the buddy %s for an unknown reason.")], "1"]]) {
+			/* Rather random error displayed by OSCAR (since forever, as of libpurple 2.4.0) for some clients while connecting */
 			return NULL;
 		}
 		
@@ -676,6 +677,7 @@ NSString *processPurpleImages(NSString* inString, AIAccount* adiumAccount)
 
 	} else if ([primaryString rangeOfString: @"did not get sent"].location != NSNotFound) {
 		//Oscar send error
+		//This may not ever occur as of libpurple 2.4.0; I can't find the phrase 'did not get sent' in any of the code. -evands
 		NSString *targetUserName = [[[[primaryString componentsSeparatedByString:@" message to "] objectAtIndex:1] componentsSeparatedByString:@" did not get "] objectAtIndex:0];
 		
 		errorMessage = [NSString stringWithFormat:AILocalizedString(@"Your message to %@ did not get sent",nil),targetUserName];
