@@ -148,7 +148,7 @@
 	[[adium notificationCenter] removeObserver:self];
 	[statusMenu release];
 	
-	[super windowWillClose:sender];
+	[super windowWillClose:notification];
 }
 
 - (void)positionImagePickerIfNeeded
