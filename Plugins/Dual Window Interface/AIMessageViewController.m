@@ -221,6 +221,9 @@
 	}
 	//release menuItem
 	[showHide release];
+	
+	[undoManager release]; undoManager = nil;
+
     [super dealloc];
 }
 
@@ -1123,5 +1126,15 @@
 {	
 	[shelfView setShelfIsVisible:![shelfView isShelfVisible]];
 }	
+
+#pragma mark Undo
+- (NSUndoManager *)undoManagerForTextView:(NSTextView *)aTextView
+{
+	if (!undoManager)
+		undoManager = [[NSUndoManager alloc] init];
+
+	return undoManager;
+}
+
 
 @end

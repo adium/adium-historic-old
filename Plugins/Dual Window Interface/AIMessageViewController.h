@@ -65,6 +65,8 @@
 	BOOL					suppressSendLaterPrompt;
 	int						entryMinHeight;
 	int						userListMinWidth;
+
+	NSUndoManager		*undoManager;
 }
 
 + (AIMessageViewController *)messageDisplayControllerForChat:(AIChat *)inChat;
