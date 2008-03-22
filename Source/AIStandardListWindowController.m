@@ -1011,7 +1011,7 @@
 		[self hideFilterBar:nil];
 	}
 	
-	return NO;
+	return YES;
 }
 
 - (IBAction)filterContacts:(id)sender;
