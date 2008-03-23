@@ -991,9 +991,8 @@
 	if (command == @selector(insertNewline:)) {
 		// If we have a search term, open a chat with the first contact
 		if (![[textView string] isEqualToString:@""])
-			[[adium chatController] openChatWithContact:[contactListView itemAtRow:[contactListView indexOfFirstVisibleListContact]]
-									 onPreferredAccount:YES];
-
+			[self performDefaultActionOnSelectedObject:[contactListView itemAtRow:[contactListView indexOfFirstVisibleListContact]]
+												sender:contactListView];
 		// Hide the filter bar
 		[self hideFilterBarWithAnimation:YES];		
 	} else if(command == @selector(moveDown:)) {
