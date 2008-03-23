@@ -22,8 +22,9 @@
 #import "AIContactController.h"
 
 @interface AIContactHidingController (PRIVATE)
+- (void)setVisibility:(BOOL)visibleFlag ofListContact:(AIListContact *)listContact withReason:(AIVisibilityReason)reason;
 - (BOOL)visibilityBasedOnOfflineContactHidingPreferencesOfListContact:(AIListContact *)listContact;
-- (BOOL)evaluatePredicateOnListContact:(AIListContact *)listContact withSearchString:(NSString *)aSearchString;
+- (BOOL)evaluatePredicateOnListContact:(AIListContact *)listContact withSearchString:(NSString *)inSearchString;
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent;
 @end;
 
@@ -36,7 +37,7 @@
 
 @implementation AIContactHidingController
 
-- (id) init
+- (id)init
 {
 	self = [super init];
 	if (self != nil) {
@@ -53,13 +54,65 @@
 	[super dealloc];
 }
 
+- (void)preferencesChangedForGroup:(NSString *)group
+							   key:(NSString *)key
+							object:(AIListObject *)object
+					preferenceDict:(NSDictionary *)prefDict
+						 firstTime:(BOOL)firstTime
+{
+	hideOfflineIdleOrMobileContacts = [[prefDict objectForKey:KEY_HIDE_CONTACTS] boolValue];
+	showOfflineContacts = [[prefDict objectForKey:KEY_SHOW_OFFLINE_CONTACTS] boolValue];
+	showIdleContacts = [[prefDict objectForKey:KEY_SHOW_IDLE_CONTACTS] boolValue];
+	showMobileContacts = [[prefDict objectForKey:KEY_SHOW_MOBILE_CONTACTS] boolValue];
+	
+	useContactListGroups = ![[prefDict objectForKey:KEY_HIDE_CONTACT_LIST_GROUPS] boolValue];
+	useOfflineGroup = (useContactListGroups && [[prefDict objectForKey:KEY_USE_OFFLINE_GROUP] boolValue]);
+	
+	if (firstTime) {
+		[[adium contactController] registerListObjectObserver:self];
+	} else {
+		//Refresh visibility of all contacts
+		[[adium contactController] updateAllListObjectsForObserver:self];
+		
+		//Resort the entire list, forcing the visibility changes to hae an immediate effect (we return nil in the 
+		//updateListObject: method call, so the contact controller doesn't know we changed anything)
+		[[adium contactController] sortContactList];
+	}
+}
 
+/*!
+ * @brief Returns the current contact filtering search string
+ */
+- (NSString *)contactFilteringSearchString
+{
+    return searchString; 
+}
+
+/*!
+ * @brief Sets the contact filtering search string
+ * @param refilterContacts If YES, all contacts will be reevaluated against the string
+ */
+- (void)setContactFilteringSearchString:(NSString *)inSearchString refilterContacts:(BOOL)refilterContacts
+{
+    [searchString release];
+    searchString = [inSearchString retain];
+	
+	if(refilterContacts)
+		[self refilterContacts];
+}
+
+/*!
+ * @brief Sets the visibility of a contact
+ * @param visibileFlag YES if the contact should be visible, otherwise NO
+ * @param listContact The list contact whose visibility is being modified
+ * @param reason The AIVisibilityReason which is causing the visibility change
+ */
 - (void)setVisibility:(BOOL)visibleFlag
 		ofListContact:(AIListContact *)listContact
 		   withReason:(AIVisibilityReason)reason;
 {	
 	if ([listContact visible] == visibleFlag) {
-		// No change needed
+		// The contact already has this visibility set
 		return;
 	}
 
@@ -73,34 +126,12 @@
 	}
 }
 
-- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
-{
-		
-	hideOfflineIdleOrMobileContacts = [[prefDict objectForKey:KEY_HIDE_CONTACTS] boolValue];
-	showOfflineContacts = [[prefDict objectForKey:KEY_SHOW_OFFLINE_CONTACTS] boolValue];
-	showIdleContacts = [[prefDict objectForKey:KEY_SHOW_IDLE_CONTACTS] boolValue];
-	showMobileContacts = [[prefDict objectForKey:KEY_SHOW_MOBILE_CONTACTS] boolValue];
-	
-	useContactListGroups = ![[prefDict objectForKey:KEY_HIDE_CONTACT_LIST_GROUPS] boolValue];
-	useOfflineGroup = (useContactListGroups && [[prefDict objectForKey:KEY_USE_OFFLINE_GROUP] boolValue]);
-	
-	if(firstTime) {
-		[[adium contactController] registerListObjectObserver:self];
-	} else {
-		//Refresh visibility of all contacts
-		[[adium contactController] updateAllListObjectsForObserver:self];
-		
-		//Resort the entire list, forcing the visibility changes to hae an immediate effect (we return nil in the 
-		//updateListObject: method call, so the contact controller doesn't know we changed anything)
-		[[adium contactController] sortContactList];
-	}
-}
-
 /*!
  * @brief Update visibility of a list object
  */
-- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
+- (NSSet *)updateListObject:(AIListObject *)inObject
+					   keys:(NSSet *)inModifiedKeys
+					 silent:(BOOL)silent
 {
 	if (inModifiedKeys == nil ||
 		[inModifiedKeys containsObject:@"Online"] ||
@@ -127,7 +158,12 @@
 	
 	return nil;
 }
-- (BOOL)visibilityBasedOnOfflineContactHidingPreferencesOfListContact:(AIListContact *)listContact;
+
+/*!
+ * @brief Determines a contact's visibility based on the contact hiding preferences
+ * @result Returns YES if the contact should be visible, otherwise NO
+ */
+- (BOOL)visibilityBasedOnOfflineContactHidingPreferencesOfListContact:(AIListContact *)listContact
 {
 	// Don't do any processing for a contact that's always visible.
 	if ([listContact alwaysVisible]) {
@@ -149,30 +185,18 @@
 	}
 	
 	if ([listContact conformsToProtocol:@protocol(AIContainingObject)]) {
-		//A metaContact must meet the criteria for a contact to be visible and also have at least 1 contained contact
+		// A meta contact must meet the criteria for a contact to be visible and also have at least 1 contained contact
 		visible = (visible && ([(AIListContact<AIContainingObject> *)listContact visibleCount] > 0));
 	} 
 	
 	return visible;
 }
-	
 
-
-
-- (NSString *)contactFilteringSearchString
-{
-    return searchString; 
-}
-- (void)setContactFilteringSearchString:(NSString *)aSearchString refilterContacts:(BOOL)flag;
-{
-    [aSearchString retain];
-    [searchString release];
-    searchString = aSearchString;
-	
-	if(flag)
-		[self refilterContacts];
-}
-
+/*!
+ * @brief Determines if any contacts match the given search string
+ * @param inSearchString The search string contacts are evaluated against
+ * @result Returns YES if one or more contacts match the string, otherwise NO
+ */
 - (BOOL)searchTermMatchesAnyContacts:(NSString *)inSearchString
 {
 	NSMutableArray *listContacts = [[adium contactController] allContacts];
@@ -190,7 +214,10 @@
 	return NO;
 }
 
-- (void)refilterContacts;
+/*! 
+ * @brief Refilters all contacts for visibility
+ */
+- (void)refilterContacts
 {
 	if (!searchString)
 		return;
@@ -202,67 +229,68 @@
 		return;
 	}
 	
-	NSMutableArray *listContacts = [[adium contactController]allContacts];
-	[listContacts addObjectsFromArray:[[adium contactController]allBookmarks]];
+	NSMutableArray *listContacts = [[adium contactController] allContacts];
+	[listContacts addObjectsFromArray:[[adium contactController] allBookmarks]];
 	
-	//we will be making a lot of calls to setVisible:, which is very expensive because it resorts the contact list each time
-	//instead, hold off on sorting the list until we have searched through all contacts
+	// Delay list object notifications until we're done
 	[[adium contactController] delayListObjectNotifications];
 	
-	//now, go through all the contacts and make sure only those that that predicate matches are displayed
-	NSEnumerator *e = [listContacts objectEnumerator];
-	AIListContact *aListContact;
-	while ((aListContact = [e nextObject])) {
-		BOOL contactMatchesPredicate = [self evaluatePredicateOnListContact:aListContact withSearchString:searchString];
-		
-		if ([[aListContact containingObject] isKindOfClass:[AIMetaContact class]]) {
-			//if listContact is contained in a meta contact, we actually apply the new visiblity to the meta contact
-			[self setVisibility:contactMatchesPredicate
-				  ofListContact:(AIListContact *)[aListContact containingObject]
-					 withReason:AIContactFilteringReason];
-		} else {
-			[self setVisibility:contactMatchesPredicate
-				  ofListContact:aListContact
-					 withReason:AIContactFilteringReason];
+	NSEnumerator	*enumerator = [listContacts objectEnumerator];
+	AIListContact	*listContact;
+
+	while ((listContact = [enumerator nextObject])) {
+		// If this contact is in a meta contact, we need to check the meta contact, not this particular contact.
+		if ([[listContact containingObject] isKindOfClass:[AIMetaContact class]]) {
+			listContact = (AIListContact *)[listContact containingObject];
 		}
+
+		[self setVisibility:[self evaluatePredicateOnListContact:listContact withSearchString:searchString]
+			  ofListContact:listContact
+				 withReason:AIContactFilteringReason];
 	}
 	
+	// Stop delaying list object notifications
 	[[adium contactController] endListObjectNotificationsDelay];
-	
 }	
 
+/*!
+ * @brief Evaluates a search string on a list contact
+ * @param listContact The contact or meta contact to compare to the search string
+ * @param inSearchString The search string the listContact should be compared with
+ * @result If the display name, formatted UID or status message contain inSearchString, or if inSearchString is empty, returns YES. Otherwise, NO.
+ */
 static NSPredicate *filterPredicateTemplate;
-- (BOOL)evaluatePredicateOnListContact:(AIListContact *)listContact withSearchString:(NSString *)aSearchString;
+- (BOOL)evaluatePredicateOnListContact:(AIListContact *)listContact
+					  withSearchString:(NSString *)inSearchString
 {	
+	// If we aren't given a contact, return NO.
 	if (!listContact)
 		return NO;
-	if(!aSearchString)
+
+	// If the search string is nil or empty, return YES.
+	if(!inSearchString || [inSearchString isEqualToString:@""])
 		return YES;
 	
+	// Create a static predicate to search the properties of a contact.
+	if (!filterPredicateTemplate)
+		filterPredicateTemplate = [[NSPredicate predicateWithFormat:@"displayName contains[cd] $SEARCH_STRING OR formattedUID contains[cd] $SEARCH_STRING OR statusMessageString contains[cd] $SEARCH_STRING"] retain];
 	
-	//create a predicate to search all display properties of a contact
-	//"$SEARCH_STRING.length == 0" just ensures that the predicate will evaluate to YES when the search is canceled or deleted so that all contacts will be shown
-	if(!filterPredicateTemplate)
-		filterPredicateTemplate = [[NSPredicate predicateWithFormat:@"$SEARCH_STRING.length == 0 OR displayName contains[cd] $SEARCH_STRING OR formattedUID contains[cd] $SEARCH_STRING OR statusMessageString contains[cd] $SEARCH_STRING"] retain];
+	NSPredicate *predicate = [filterPredicateTemplate predicateWithSubstitutionVariables:[NSDictionary dictionaryWithObject:inSearchString forKey:@"SEARCH_STRING"]];
 	
-	NSPredicate *predicate = [filterPredicateTemplate predicateWithSubstitutionVariables:[NSDictionary dictionaryWithObject:aSearchString forKey:@"SEARCH_STRING"]];
-	
+	// If the given contact is a meta contact, check all of its contained objects.
 	if ([[listContact containingObject] isKindOfClass:[AIMetaContact class]]) {
-		//meta contacts (contacts containing more than one screen name, for example), should be shown if ANY of its contacts match the predicate
-		NSEnumerator *eForMetaContacts = [[(AIMetaContact *)[listContact containingObject]containedObjects]objectEnumerator];
-		AIListContact *aContactInMetaContacts;
-		BOOL someContactInMetaContactMatchesPredicate = NO;
-		while ((aContactInMetaContacts = [eForMetaContacts nextObject]))
-		{
-			if([predicate evaluateWithObject:aContactInMetaContacts])
-				someContactInMetaContactMatchesPredicate = YES;
-		}
+		NSEnumerator	*enumerator = [[(AIMetaContact *)[listContact containingObject] containedObjects] objectEnumerator];
+		AIListContact	*listContact;
 		
-		return someContactInMetaContactMatchesPredicate;
+		while ((listContact = [enumerator nextObject])) {
+			if ([predicate evaluateWithObject:listContact]) {
+				return YES;
+			}
+		}
 
+		return NO;
 	} else {
 		return [predicate evaluateWithObject:listContact];
-
 	}
 }
 
