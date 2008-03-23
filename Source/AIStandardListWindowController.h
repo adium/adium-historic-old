@@ -64,10 +64,7 @@ typedef enum {
 
 - (void)toggleFindPanel:(id)sender;
 - (void)forwardKeyEventToFindPanel:(NSEvent *)theEvent;
-- (IBAction)showFilterBar:(id)sender;
 - (IBAction)hideFilterBar:(id)sender;
-- (void)animationDidEnd:(NSAnimation*)animation;
-- (IBAction)toggleFilterBar:(id)sender;
 - (IBAction)filterContacts:(id)sender;
 
 @end
