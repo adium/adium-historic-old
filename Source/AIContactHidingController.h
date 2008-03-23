@@ -23,7 +23,6 @@ typedef enum {
 
 @class AIListContact;
 @interface AIContactHidingController : AIObject <AIListObjectObserver> {
-	
 	NSString		*searchString;
 	
 	BOOL			hideOfflineIdleOrMobileContacts;
@@ -36,10 +35,8 @@ typedef enum {
 	BOOL			useContactListGroups;
 }
 
-- (void)setVisibility:(BOOL)visibleFlag ofListContact:(AIListContact *)listContact withReason:(AIVisibilityReason)reason;
-
 - (NSString *)contactFilteringSearchString;
+- (void)setContactFilteringSearchString:(NSString *)inSearchString refilterContacts:(BOOL)refilterContacts;
 - (BOOL)searchTermMatchesAnyContacts:(NSString *)inSearchString;
-- (void)setContactFilteringSearchString:(NSString *)aSearchString refilterContacts:(BOOL)flag;
 - (void)refilterContacts;
 @end
