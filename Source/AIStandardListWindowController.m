@@ -55,6 +55,7 @@
 - (void)updateStatusMenuSelection:(NSNotification *)notification;
 - (void)updateImagePicker;
 - (void)updateNameView;
+- (void)animateFilterBar:(float)duration;
 - (void)repositionImagePickerToPosition:(ContactListImagePickerPosition)desiredImagePickerPosition;
 @end
 
@@ -795,187 +796,169 @@
 }
 
 #pragma mark Filtering
+/*!
+ * @brief Toggles the find bar on and off
+ */
 - (void)toggleFindPanel:(id)sender;
 {
-	[self toggleFilterBar:sender];
-}
-- (void)forwardKeyEventToFindPanel:(NSEvent *)theEvent;
-{
-	//if we were not searching something before, we need to show the filter bar first
-	[self showFilterBarWithAnimation:NO];
-	
-	[[self window] makeFirstResponder:searchField];
-	[[[self window] fieldEditor:YES forObject:searchField] keyDown:theEvent];
+	if (filterBarIsVisible) {
+		[self hideFilterBarWithAnimation:YES];
+	} else {
+		[self showFilterBarWithAnimation:YES];
+	}
 }
 
-- (IBAction)showFilterBar:(id)sender;
-{
-	[self showFilterBarWithAnimation:YES];
-}
-
-- (void)showFilterBarWithAnimation:(BOOL)flag
-{
-	if (filterBarIsVisible || filterBarIsAnimating)
-		return;
-	
-	filterBarIsAnimating = YES;
-	
-	NSSize filterBarSize = [filterBarView bounds].size;
-	
-	//contact list resizing
-	//we need to decrease the height of the contact list to make room for the filter bar
-	id viewToResize;
-	if([contactListView enclosingScrollView])
-		viewToResize = [contactListView enclosingScrollView];
-	else
-		viewToResize = contactListView;
-	
-	NSRect viewFrame = [viewToResize frame];
-	
-	NSRect endingViewFrame = viewFrame;
-	endingViewFrame.size.height = viewFrame.size.height - filterBarSize.height;
-	
-	NSDictionary *viewToResizeAnimationDictionary = [NSDictionary dictionaryWithObjectsAndKeys:viewToResize, NSViewAnimationTargetKey,
-													 [NSValue valueWithRect:endingViewFrame], NSViewAnimationEndFrameKey, nil];
-
-	//filter bar view resizing
-	//start the filter bar at the top of the window
-	NSRect startingFilterBarFrame = NSMakeRect(endingViewFrame.origin.x,
-											   viewFrame.size.height,
-											   endingViewFrame.size.width,
-											   filterBarSize.height);
-	
-	//...and end with the filter bar on top of the contact list
-	NSRect endingFilterBarFrame = NSMakeRect(endingViewFrame.origin.x, 
-											 endingViewFrame.size.height,
-											 endingViewFrame.size.width,
-											 filterBarSize.height);
-	
-	//put the tiny filter bar in the window before we begin the animation
-	[filterBarView setFrame:startingFilterBarFrame];
-	[[[self window]contentView]addSubview:filterBarView];
-	
-	NSDictionary *filterBarAnimationDictionary = [NSDictionary dictionaryWithObjectsAndKeys:filterBarView, NSViewAnimationTargetKey,
-												  [NSValue valueWithRect:endingFilterBarFrame], NSViewAnimationEndFrameKey, nil];
-	
-	[button_cancelFilterBar setDelegate:self];
-	
-	filterBarAnimation = [[NSViewAnimation alloc]initWithViewAnimations:[NSArray arrayWithObjects:viewToResizeAnimationDictionary,filterBarAnimationDictionary,nil]];
-	[filterBarAnimation setDuration:(flag ? 0.15f : 0.0f)];
-	[filterBarAnimation setAnimationBlockingMode:NSAnimationBlocking];
-	[filterBarAnimation setDelegate:self];
-
-	//disable vertical autoresizing just while the animation is running
-	//this prevents display bugs that can occur when contacts are being shown/hidden that cause the frame to change while the filter bar is sliding
-	[contactListController setAutoresizeVertically:NO];
-	[filterBarAnimation startAnimation];
-	
-	//disable horizontal autoresizing while the filter bar is shown so the width does not change when longer contacts are eliminated as results
-	[contactListController setAutoresizeHorizontally:NO];
-	
-	//contact list animation is a cool idea, but too glichy to work well when hiding/showing potentially hundreds of contacts
-	[contactListView setEnableAnimation:NO];
-}
-
+/*!
+ * @brief Hide the filter bar
+ */
 - (IBAction)hideFilterBar:(id)sender;
 {
 	[self hideFilterBarWithAnimation:YES];
 }
 
-- (void)hideFilterBarWithAnimation:(BOOL)flag
+/*!
+ * @brief Show the filter bar
+ *
+ * @param useAnimation If YES, the filter bar will scroll into view, otherwise it appears immediately
+ */
+- (void)showFilterBarWithAnimation:(BOOL)useAnimation
+{
+	if (filterBarIsVisible || filterBarIsAnimating)
+		return;
+	
+	// While the filter bar is shown, temporarily disable automatic horizontal resizing
+	[contactListController setAutoresizeHorizontally:NO];
+	
+	// Disable contact list animation while the filter bar is shown
+	[contactListView setEnableAnimation:NO];
+	
+	// Animate the filter bar into view	
+	[self animateFilterBar:(useAnimation ? 0.15f : 0.0)];
+}
+
+/*!
+ * @brief Hide the filter bar
+ *
+ * @param useAnimation If YES, the filter bar will scroll out of view, otherwise it disappears immediately
+ */
+- (void)hideFilterBarWithAnimation:(BOOL)useAnimation
 {
 	if (!filterBarIsVisible || filterBarIsAnimating)
 		return;
 	
-	filterBarIsAnimating = YES;
-	
-	//clear the search and show all contacts
+	// Clear the search field so that visibility is reset
 	[searchField setStringValue:@""];
 	[self filterContacts:searchField];
 	
-	NSSize filterBarSize = [filterBarView bounds].size;
-	
-	//contact list resizing
-	//we need to increase the height of the contact list as we decrease the height of the filter bar
-	id viewToResize;
-	if([contactListView enclosingScrollView])
-		viewToResize = [contactListView enclosingScrollView];
-	else
-		viewToResize = contactListView;
-	
-	NSRect viewFrame = [viewToResize frame];
-	
-	NSRect endingViewFrame = viewFrame;
-	endingViewFrame.size.height = viewFrame.size.height + filterBarSize.height;
-	
-	NSDictionary *viewToResizeAnimationDictionary = [NSDictionary dictionaryWithObjectsAndKeys:viewToResize, NSViewAnimationTargetKey,
-													 [NSValue valueWithRect:endingViewFrame], NSViewAnimationEndFrameKey, nil];
-	
-	
-	//filter bar resizing
-	//end with the filter bar at the top of the window animationDidEnd: will remove it from the superview
-	NSRect endingFilterBarFrame = NSMakeRect(endingViewFrame.origin.x,
-											 endingViewFrame.size.height,
-											 endingViewFrame.size.width,
-											 filterBarSize.height);
-	
-	NSDictionary *filterBarAnimationDictionary = [NSDictionary dictionaryWithObjectsAndKeys:filterBarView, NSViewAnimationTargetKey,
-												  [NSValue valueWithRect:endingFilterBarFrame], NSViewAnimationEndFrameKey, nil];
-	
-	filterBarAnimation = [[NSViewAnimation alloc]initWithViewAnimations:[NSArray arrayWithObjects:viewToResizeAnimationDictionary,filterBarAnimationDictionary,nil]];
-	[filterBarAnimation setDuration:(flag ? 0.15f : 0.0f)];
-	[filterBarAnimation setAnimationBlockingMode:NSAnimationBlocking];
-	[filterBarAnimation setDelegate:self];
-
-	//disable vertical autoresizing just while the animation is running
-	//this prevents display bugs that can occur when contacts are being shown/hidden that cause the frame to change while the filter bar is sliding
-	[contactListController setAutoresizeVertically:NO];
-	[filterBarAnimation startAnimation];
-
-	// Restore the default settings which we disabled previously.	
+	// Restore the default settings which we temporarily disabled previously
 	[contactListController setAutoresizeHorizontally:[[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE
 																							   group:PREF_GROUP_APPEARANCE] boolValue]];
-
+	
 	[contactListView setEnableAnimation:[[[adium preferenceController] preferenceForKey:KEY_CL_ANIMATE_CHANGES
 																				  group:PREF_GROUP_CONTACT_LIST] boolValue]];
+	
+	// Animate the filter bar out of view
+	[self animateFilterBar:(useAnimation ? 0.15f : 0.0)];
 }
 
+/*!
+ * @brief Animates the filter bar in and out of view
+ *
+ * @param duration The duration the animation will last
+ */
+- (void)animateFilterBar:(float)duration
+{
+	filterBarIsAnimating = YES;
+
+	NSView *targetView = ([contactListView enclosingScrollView] ? (NSView *)[contactListView enclosingScrollView] : contactListView);
+	NSRect targetFrame = [targetView frame];
+	NSDictionary *targetViewDict, *filterBarDict;
+
+	// Contact list resizing
+	if (filterBarIsVisible) {
+		targetFrame.size.height = targetFrame.size.height + [filterBarView bounds].size.height;
+	} else {
+		targetFrame.size.height = targetFrame.size.height - [filterBarView bounds].size.height;
+	}
+	
+	// Filter bar resizing
+	if (!filterBarIsVisible) {
+		// If the filter bar isn't already visible
+		[filterBarView setFrame:NSMakeRect(targetFrame.origin.x,
+										   [targetView frame].size.height,
+										   targetFrame.size.width,
+										   [filterBarView bounds].size.height)];
+
+		// Attach the filter bar to the window
+		[[[self window] contentView] addSubview:filterBarView];
+	}
+	
+	filterBarDict = [NSDictionary dictionaryWithObjectsAndKeys:filterBarView, NSViewAnimationTargetKey,
+					 [NSValue valueWithRect:NSMakeRect(targetFrame.origin.x, targetFrame.size.height,
+													   targetFrame.size.width, [filterBarView bounds].size.height)], NSViewAnimationEndFrameKey, nil];
+	
+	targetViewDict = [NSDictionary dictionaryWithObjectsAndKeys:targetView, NSViewAnimationTargetKey,
+					  [NSValue valueWithRect:targetFrame], NSViewAnimationEndFrameKey, nil];
+	
+	filterBarAnimation = [[NSViewAnimation alloc] initWithViewAnimations:[NSArray arrayWithObjects:targetViewDict, filterBarDict, nil]];
+	[filterBarAnimation setDuration:duration];
+	[filterBarAnimation setAnimationBlockingMode:NSAnimationBlocking];
+	[filterBarAnimation setDelegate:self];
+	
+	// Temporarily disable automatic vertical resizing. This is re-enabled when the animation ends (if the user wants it that way)
+	[contactListController setAutoresizeVertically:NO];
+	
+	// Start the animation
+	[filterBarAnimation startAnimation];
+}
+
+/*!
+ * @brief Called when an animation finishes
+ */
 - (void)animationDidEnd:(NSAnimation*)animation
 {
+	// If this isn't a filter bar animation, let our superclass handle it
 	if (animation != filterBarAnimation) {
 		[super animationDidEnd:animation];
 		return;
 	}
-	
+
 	if (filterBarIsVisible) {
+		// If the filter bar is already visible, remove it from its superview.
 		[filterBarView removeFromSuperview];
+
+		// Set the first responder back to the contact list view.
 		[[self window] makeFirstResponder:contactListView];
+
 		filterBarIsVisible = NO;
 	} else {
+		// If the filter bar wasn't visible, make it the first responder.
 		[[self window] makeFirstResponder:searchField]; 
+
+		// Set the filter bar as the next responder so the chain works for things like the info inspector
 		[filterBarView setNextResponder:contactListView];
+
+		// Bring the contact list to front, in case the find command was triggered from another window like the info inspector
 		[[self window] makeKeyAndOrderFront:nil];
+		
 		filterBarIsVisible = YES;
 	}
 	
-	[contactListController setAutoresizeVertically:[[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE group:PREF_GROUP_APPEARANCE] boolValue]];
+	// We've previously disabled the contact list's vertical resizing; set it to the user's setting.
+	[contactListController setAutoresizeVertically:[[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE
+																							 group:PREF_GROUP_APPEARANCE] boolValue]];
 
-	//resize the window for vertical autoresizing to reflect the addition/subtraction of the filter bar rect
+	// Let the contact list controller know that our size has changed.
 	[contactListController contactListDesiredSizeChanged];
 	
+	// We're no longer animating.
 	filterBarIsAnimating = NO;
 	[animation autorelease];
 }
 
-- (IBAction)toggleFilterBar:(id)sender;
-{
-	if(filterBarIsVisible) {
-		[self hideFilterBar:sender];
-	} else {
-		[self showFilterBar:sender];
-	}		
-}
-
+/*!
+ * @brief Called when the window loses focus
+ */
 - (void)hideFilterBarFromWindowResignedMain:(NSNotification *)sender
 {
 	if ([sender object] == [self window]) {
@@ -983,34 +966,57 @@
 		[self hideFilterBarWithAnimation:NO];
 	}
 }
+
+/*!
+ * @brief Forward typing events from the contact list to the filter bar
+ */
+- (void)forwardKeyEventToFindPanel:(NSEvent *)theEvent;
+{
+	//if we were not searching something before, we need to show the filter bar first without animation
+	[self showFilterBarWithAnimation:NO];
+	
+	[[self window] makeFirstResponder:searchField];
+	[[[self window] fieldEditor:YES forObject:searchField] keyDown:theEvent];
+}
+
+/*!
+ * @brief Process text commands while on the search field
+ */
 - (BOOL)control:(NSControl *)control textView:(NSTextView *)textView doCommandBySelector:(SEL)command
 {
+	// Only process commands when we're in the search field.
 	if (control != searchField)
 		return NO;
 	
 	if (command == @selector(insertNewline:)) {
-		int index = [contactListView indexOfFirstVisibleListContact];
-		if (index != -1 && ![[textView string] isEqualToString:@""])
-			[[adium chatController] openChatWithContact:[contactListView itemAtRow:index] onPreferredAccount:YES];
-		[self hideFilterBar:nil];
+		// If we have a search term, open a chat with the first contact
+		if (![[textView string] isEqualToString:@""])
+			[[adium chatController] openChatWithContact:[contactListView itemAtRow:[contactListView indexOfFirstVisibleListContact]]
+									 onPreferredAccount:YES];
+
+		// Hide the filter bar
+		[self hideFilterBarWithAnimation:YES];		
 	} else if(command == @selector(moveDown:)) {
-		//make the down key a shortcut for selecting the first contact
-		[[self window] makeFirstResponder:contactListView];
-		
-		int index = [contactListView indexOfFirstVisibleListContact];
-		[contactListView selectRowIndexes:((index != -1) ?
-										   [NSIndexSet indexSetWithIndex:[contactListView indexOfFirstVisibleListContact]] :
-										   [NSIndexSet indexSet])
-					 byExtendingSelection:NO];
-	} else if(command == @selector(cancelOperation:) && filterBarIsVisible) {
-		[self hideFilterBar:nil];
+		// The down arrow functions to move into the contact list view
+		[[self window] makeFirstResponder:contactListView];		
+	} else if(command == @selector(cancelOperation:)) {
+		// Escape hides the filter bar.
+		[self hideFilterBarWithAnimation:YES];
 	} else {
+		// If we didn't process a command, return NO.
 		return NO;
 	}
 	
+	// We processed a command, return YES.
 	return YES;
 }
 
+/*!
+ * @brief Filter contacts from the search field
+ *
+ * This method will expand or contract groups as necessary, as well as handle forwarding the search term to
+ * the contact hiding controller.
+ */
 - (IBAction)filterContacts:(id)sender;
 {
 	if (![sender isKindOfClass:[NSSearchField class]])
@@ -1075,6 +1081,9 @@
 	}
 }
 
+/*!
+ * @brief Delegate method for the search field's close button
+ */
 - (void)rolloverButton:(AIRolloverButton *)inButton mouseChangedToInsideButton:(BOOL)isInside
 {
 	[button_cancelFilterBar setImage:[NSImage imageNamed:(isInside ? @"FTProgressStopRollover" : @"FTProgressStop")
