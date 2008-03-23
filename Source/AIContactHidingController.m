@@ -257,7 +257,7 @@
  * @brief Evaluates a search string on a list contact
  * @param listContact The contact or meta contact to compare to the search string
  * @param inSearchString The search string the listContact should be compared with
- * @result If the display name, formatted UID or status message contain inSearchString, or if inSearchString is empty, returns YES. Otherwise, NO.
+ * @result Returns YES if the display name, formatted UID or status message contain inSearchString, or if inSearchString is empty. Otherwise NO.
  */
 static NSPredicate *filterPredicateTemplate;
 - (BOOL)evaluatePredicateOnListContact:(AIListContact *)listContact
@@ -278,8 +278,8 @@ static NSPredicate *filterPredicateTemplate;
 	NSPredicate *predicate = [filterPredicateTemplate predicateWithSubstitutionVariables:[NSDictionary dictionaryWithObject:inSearchString forKey:@"SEARCH_STRING"]];
 	
 	// If the given contact is a meta contact, check all of its contained objects.
-	if ([[listContact containingObject] isKindOfClass:[AIMetaContact class]]) {
-		NSEnumerator	*enumerator = [[(AIMetaContact *)[listContact containingObject] containedObjects] objectEnumerator];
+	if ([listContact isKindOfClass:[AIMetaContact class]]) {
+		NSEnumerator	*enumerator = [[(AIMetaContact *)listContact containedObjects] objectEnumerator];
 		AIListContact	*listContact;
 		
 		while ((listContact = [enumerator nextObject])) {
