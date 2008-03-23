@@ -46,8 +46,7 @@ typedef enum {
 	BOOL									filterBarExpandedGroups;
 	BOOL									filterBarIsVisible;
 	BOOL									filterBarIsAnimating;
-	NSViewAnimation							*showFilterBarAnimation;
-	NSViewAnimation							*hideFilterBarAnimation;
+	NSViewAnimation							*filterBarAnimation;
 	
 	ContactListImagePickerPosition			imagePickerPosition;
 	
