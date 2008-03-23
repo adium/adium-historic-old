@@ -860,23 +860,21 @@
 	
 	[button_cancelFilterBar setDelegate:self];
 	
-	showFilterBarAnimation = [[NSViewAnimation alloc]initWithViewAnimations:[NSArray arrayWithObjects:viewToResizeAnimationDictionary,filterBarAnimationDictionary,nil]];
-	[showFilterBarAnimation setDuration:(flag ? 0.15f : 0.0f)];
-	[showFilterBarAnimation setAnimationBlockingMode:NSAnimationBlocking];
-	[showFilterBarAnimation setDelegate:self];
+	filterBarAnimation = [[NSViewAnimation alloc]initWithViewAnimations:[NSArray arrayWithObjects:viewToResizeAnimationDictionary,filterBarAnimationDictionary,nil]];
+	[filterBarAnimation setDuration:(flag ? 0.15f : 0.0f)];
+	[filterBarAnimation setAnimationBlockingMode:NSAnimationBlocking];
+	[filterBarAnimation setDelegate:self];
 
 	//disable vertical autoresizing just while the animation is running
 	//this prevents display bugs that can occur when contacts are being shown/hidden that cause the frame to change while the filter bar is sliding
 	[contactListController setAutoresizeVertically:NO];
-	[showFilterBarAnimation startAnimation];
+	[filterBarAnimation startAnimation];
 	
 	//disable horizontal autoresizing while the filter bar is shown so the width does not change when longer contacts are eliminated as results
 	[contactListController setAutoresizeHorizontally:NO];
 	
 	//contact list animation is a cool idea, but too glichy to work well when hiding/showing potentially hundreds of contacts
 	[contactListView setEnableAnimation:NO];
-	
-	filterBarIsVisible = YES;
 }
 
 - (IBAction)hideFilterBar:(id)sender;
@@ -924,16 +922,15 @@
 	NSDictionary *filterBarAnimationDictionary = [NSDictionary dictionaryWithObjectsAndKeys:filterBarView, NSViewAnimationTargetKey,
 												  [NSValue valueWithRect:endingFilterBarFrame], NSViewAnimationEndFrameKey, nil];
 	
-	hideFilterBarAnimation = [[NSViewAnimation alloc]initWithViewAnimations:[NSArray arrayWithObjects:viewToResizeAnimationDictionary,filterBarAnimationDictionary,nil]];
-	[hideFilterBarAnimation setDuration:(flag ? 0.15f : 0.0f)];
-	[hideFilterBarAnimation setAnimationBlockingMode:NSAnimationBlocking];
-	filterBarIsVisible = NO;
-	[hideFilterBarAnimation setDelegate:self];
+	filterBarAnimation = [[NSViewAnimation alloc]initWithViewAnimations:[NSArray arrayWithObjects:viewToResizeAnimationDictionary,filterBarAnimationDictionary,nil]];
+	[filterBarAnimation setDuration:(flag ? 0.15f : 0.0f)];
+	[filterBarAnimation setAnimationBlockingMode:NSAnimationBlocking];
+	[filterBarAnimation setDelegate:self];
 
 	//disable vertical autoresizing just while the animation is running
 	//this prevents display bugs that can occur when contacts are being shown/hidden that cause the frame to change while the filter bar is sliding
 	[contactListController setAutoresizeVertically:NO];
-	[hideFilterBarAnimation startAnimation];
+	[filterBarAnimation startAnimation];
 
 	// Restore the default settings which we disabled previously.	
 	[contactListController setAutoresizeHorizontally:[[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE
@@ -945,18 +942,20 @@
 
 - (void)animationDidEnd:(NSAnimation*)animation
 {
-	if (animation != showFilterBarAnimation && animation != hideFilterBarAnimation) {
+	if (animation != filterBarAnimation) {
 		[super animationDidEnd:animation];
 		return;
 	}
 	
-	if (animation == hideFilterBarAnimation) {
+	if (filterBarIsVisible) {
 		[filterBarView removeFromSuperview];
 		[[self window] makeFirstResponder:contactListView];
+		filterBarIsVisible = NO;
 	} else {
 		[[self window] makeFirstResponder:searchField]; 
 		[filterBarView setNextResponder:contactListView];
 		[[self window] makeKeyAndOrderFront:nil];
+		filterBarIsVisible = YES;
 	}
 	
 	[contactListController setAutoresizeVertically:[[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE group:PREF_GROUP_APPEARANCE] boolValue]];
