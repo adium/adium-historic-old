@@ -55,7 +55,7 @@
 - (void)updateStatusMenuSelection:(NSNotification *)notification;
 - (void)updateImagePicker;
 - (void)updateNameView;
-- (void)animateFilterBar:(float)duration;
+- (void)animateFilterBarWithDuration:(float)duration;
 - (void)repositionImagePickerToPosition:(ContactListImagePickerPosition)desiredImagePickerPosition;
 @end
 
@@ -833,7 +833,7 @@
 	[contactListView setEnableAnimation:NO];
 	
 	// Animate the filter bar into view	
-	[self animateFilterBar:(useAnimation ? 0.15f : 0.0)];
+	[self animateFilterBarWithDuration:(useAnimation ? 0.15f : 0.0)];
 }
 
 /*!
@@ -858,7 +858,7 @@
 																				  group:PREF_GROUP_CONTACT_LIST] boolValue]];
 	
 	// Animate the filter bar out of view
-	[self animateFilterBar:(useAnimation ? 0.15f : 0.0)];
+	[self animateFilterBarWithDuration:(useAnimation ? 0.15f : 0.0)];
 }
 
 /*!
@@ -866,7 +866,7 @@
  *
  * @param duration The duration the animation will last
  */
-- (void)animateFilterBar:(float)duration
+- (void)animateFilterBarWithDuration:(float)duration
 {
 	filterBarIsAnimating = YES;
 
