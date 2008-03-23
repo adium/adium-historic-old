@@ -21,9 +21,6 @@
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import "AIContactController.h"
 
-NSString *AIOfflineContactHidingReason = @"offlineContactHiding";
-NSString *AIContactFilteringReason = @"contactFiltering";
-
 @interface AIContactHidingController (PRIVATE)
 - (BOOL)visibilityBasedOnOfflineContactHidingPreferencesOfListContact:(AIListContact *)listContact;
 - (BOOL)evaluatePredicateOnListContact:(AIListContact *)listContact withSearchString:(NSString *)aSearchString;
@@ -43,20 +40,25 @@ NSString *AIContactFilteringReason = @"contactFiltering";
 {
 	self = [super init];
 	if (self != nil) {
-		
 		//Register preference observer first so values will be correct for the following calls
 		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
-						
 	}
 	return self;
+}
+
+- (void)dealloc
+{
+	[[adium contactController] unregisterListObjectObserver:self];
+	[searchString release];
+	[super dealloc];
 }
 
 
 - (void)setVisibility:(BOOL)visibleFlag
 		ofListContact:(AIListContact *)listContact
-		   withReason:(NSString *)reason;
+		   withReason:(AIVisibilityReason)reason;
 {	
-	if([listContact visible] == visibleFlag) {
+	if ([listContact visible] == visibleFlag) {
 		// No change needed
 		return;
 	}
@@ -262,13 +264,6 @@ static NSPredicate *filterPredicateTemplate;
 		return [predicate evaluateWithObject:listContact];
 
 	}
-}
-
-- (void) dealloc
-{
-	[[adium contactController] unregisterListObjectObserver:self];
-	[searchString release];
-	[super dealloc];
 }
 
 @end

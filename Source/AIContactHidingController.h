@@ -15,11 +15,13 @@
  */
 #import <Cocoa/Cocoa.h>
 #import <Adium/AIContactControllerProtocol.h>
+
+typedef enum {
+	AIOfflineContactHidingReason = 0,
+	AIContactFilteringReason
+} AIVisibilityReason;
+
 @class AIListContact;
-
-extern NSString *AIOfflineContactHidingReason;
-extern NSString *AIContactFilteringReason;
-
 @interface AIContactHidingController : AIObject <AIListObjectObserver> {
 	
 	NSString		*searchString;
@@ -34,7 +36,7 @@ extern NSString *AIContactFilteringReason;
 	BOOL			useContactListGroups;
 }
 
-- (void)setVisibility:(BOOL)visibleFlag ofListContact:(AIListContact *)listContact withReason:(NSString *)reason;
+- (void)setVisibility:(BOOL)visibleFlag ofListContact:(AIListContact *)listContact withReason:(AIVisibilityReason)reason;
 
 - (NSString *)contactFilteringSearchString;
 - (BOOL)searchTermMatchesAnyContacts:(NSString *)inSearchString;
