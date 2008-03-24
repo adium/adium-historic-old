@@ -124,8 +124,8 @@
 	[self _configureToolbar];
 	
 	filterBarExpandedGroups = NO;
-	filterBarIsAnimating = NO;
 	filterBarIsVisible = NO;
+	filterBarAnimation = nil;
 	[searchField setDelegate:self];
 	
 	[[NSNotificationCenter defaultCenter]addObserver:self
@@ -823,7 +823,7 @@
  */
 - (void)showFilterBarWithAnimation:(BOOL)useAnimation
 {
-	if (filterBarIsVisible || filterBarIsAnimating)
+	if (filterBarIsVisible || filterBarAnimation)
 		return;
 	
 	// While the filter bar is shown, temporarily disable automatic horizontal resizing
@@ -843,7 +843,7 @@
  */
 - (void)hideFilterBarWithAnimation:(BOOL)useAnimation
 {
-	if (!filterBarIsVisible || filterBarIsAnimating)
+	if (!filterBarIsVisible || filterBarAnimation)
 		return;
 	
 	// Clear the search field so that visibility is reset
@@ -868,8 +868,6 @@
  */
 - (void)animateFilterBarWithDuration:(float)duration
 {
-	filterBarIsAnimating = YES;
-
 	NSView *targetView = ([contactListView enclosingScrollView] ? (NSView *)[contactListView enclosingScrollView] : contactListView);
 	NSRect targetFrame = [targetView frame];
 	NSDictionary *targetViewDict, *filterBarDict;
@@ -952,8 +950,7 @@
 	[contactListController contactListDesiredSizeChanged];
 	
 	// We're no longer animating.
-	filterBarIsAnimating = NO;
-	[animation autorelease];
+	[filterBarAnimation autorelease]; filterBarAnimation = nil;
 }
 
 /*!
