@@ -903,9 +903,6 @@
 	[filterBarAnimation setAnimationBlockingMode:NSAnimationBlocking];
 	[filterBarAnimation setDelegate:self];
 	
-	// Temporarily disable automatic vertical resizing. This is re-enabled when the animation ends (if the user wants it that way)
-	[contactListController setAutoresizeVertically:NO];
-	
 	// Start the animation
 	[filterBarAnimation startAnimation];
 }
@@ -941,10 +938,6 @@
 		
 		filterBarIsVisible = YES;
 	}
-	
-	// We've previously disabled the contact list's vertical resizing; set it to the user's setting.
-	[contactListController setAutoresizeVertically:[[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE
-																							 group:PREF_GROUP_APPEARANCE] boolValue]];
 
 	// Let the contact list controller know that our size has changed.
 	[contactListController contactListDesiredSizeChanged];
