@@ -51,7 +51,7 @@
 	if (!image) { // Image not already stored.
 		if (alternate) {
 			NSImage *normalImage = [self imageOfType:imageType alternate:NO];
-			image = normalImage;//[self alternateImageForImage:normalImage];
+			image = [self alternateImageForImage:normalImage];
 			[alternateImageStates setObject:image forKey:imageType];
 		} else {
 			image = [self imageForKey:imageType];
