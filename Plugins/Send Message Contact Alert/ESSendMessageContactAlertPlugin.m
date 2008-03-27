@@ -93,6 +93,8 @@
 	BOOL					useAnotherAccount;
 	BOOL					success = NO;
 
+	AILogWithSignature(@"actionID %@, listObject %@, details %@, eventID %@, userInfo %@", actionID, listObject, details, eventID, userInfo);
+
 	//Intended source and dest
 	id accountID = [details objectForKey:KEY_MESSAGE_SEND_FROM];
 	if (![accountID isKindOfClass:[NSString class]]) {
@@ -166,6 +168,7 @@
 
 		//Send the content
 		success = [[adium contentController] sendContentObject:content];
+		AILogWithSignature(@"%@ %@ to %@ from %@ in %@", (success ? @"Sent" : @"Failed to send"), content, contact, account, chat);
 
 		//Display an error message if the message was not delivered
 		if (!success) {
