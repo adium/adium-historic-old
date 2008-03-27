@@ -335,6 +335,7 @@ int eventIDSort(id objectA, id objectB, void *context) {
 					
 					//If this alert was a single-fire alert, we can delete it now
 					if ([[alert objectForKey:KEY_ONE_TIME_ALERT] intValue]) {
+						AILogWithSignature(@"One time alert, so removing %@ from %@", alert, listObject);
 						[self removeAlert:alert fromListObject:listObject];
 					}
 					
