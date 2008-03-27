@@ -100,15 +100,10 @@
 	NSString		*password = [textField_password stringValue];
 	NSString		*invitemsg = [textField_inviteMessage stringValue];
 	NSMutableDictionary	*chatCreationInfo;
-			
-	if (![handle length]) {
-		if (![[[textField_handle cell] placeholderString] length])
-			handle = [inAccount formattedUID];
-		else 
-			handle = [[textField_handle cell] placeholderString];
-	}
+
 	if (![password length]) password = nil;
-	
+	if (![handle length]) handle = nil;
+
 	if (![server length]) {
 		//If no server is specified, use the default, which may be visible to the user as a placeholder string
 		server = [self defaultConferenceServer];
@@ -123,9 +118,13 @@
 	chatCreationInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 						room, @"room",
 						server, @"server",
-						handle, @"handle",
 						nil];
-	
+
+	if (handle) {
+		[chatCreationInfo setObject:handle
+							 forKey:@"handle"];
+	}
+
 	if (password) {
 		[chatCreationInfo setObject:password
 							 forKey:@"password"];
@@ -151,22 +150,8 @@
 
 - (void)validateEnteredText
 {
-	NSString *roomLen = [textField_roomName stringValue];
-	//NSString *serverLen = [textField_server stringValue];
-	//NSString *handleLen = [textField_handle stringValue];
-	//NSString *passwordLen = [textField_password stringValue];
-	BOOL enabled = NO;
-	
-	if ( roomLen && [roomLen length] 
-		//&& serverLen && [serverLen length]
-		//&& handleLen && [handleLen length]
-		//&& passwordLen && [passwordLen length]
-		) {
-		enabled = YES;
-	}
-	
-	if ( delegate )
-		[(DCJoinChatWindowController *)delegate setJoinChatEnabled:enabled];
+	if (delegate)
+		[(DCJoinChatWindowController *)delegate setJoinChatEnabled:([[textField_roomName stringValue] length] > 0)];
 }
 
 - (NSString *)impliedCompletion:(NSString *)aString

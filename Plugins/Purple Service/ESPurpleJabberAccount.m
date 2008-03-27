@@ -588,6 +588,27 @@
 	return [NSString stringWithFormat:@"%@/%@",[chat name],inUID];
 }
 
+/*!
+ * @brief A chat will be joined
+ *
+ * This gives the account a chance to update any information in the chat's creation dictionary if desired.
+ *
+ * @result The final chat creation dictionary to use.
+ */
+- (NSDictionary *)willJoinChatUsingDictionary:(NSDictionary *)chatCreationDictionary
+{
+	if (![[chatCreationDictionary objectForKey:@"handle"] length]) {
+		NSMutableDictionary *dict = [[chatCreationDictionary mutableCopy] autorelease];
+		
+		[dict setObject:[self displayName]
+				 forKey:@"handle"];
+
+		chatCreationDictionary = dict;
+	}
+	
+	return chatCreationDictionary;
+}
+
 #pragma mark Status
 /*!
  * @brief Return the purple status type to be used for a status

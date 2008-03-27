@@ -444,7 +444,8 @@ PurpleConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					 perform the join.
 					 */
 					NSDictionary	*chatCreationInfo = [chat statusObjectForKey:@"ChatCreationInfo"];
-					
+					chatCreationInfo = [[chat account] willJoinChatUsingDictionary:chatCreationInfo];
+
 					if (!chatCreationInfo) {
 						AILog(@"*** No chat creation info for %@ on %@",chat,adiumAccount);
 						return NULL;
