@@ -707,6 +707,18 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 	return YES;
 }
 
+/*!
+ * @brief A chat will be joined
+ *
+ * This gives the account a chance to update any information in the chat's creation dictionary if desired.
+ *
+ * @result The final chat creation dictionary to use.
+ */
+- (NSDictionary *)willJoinChatUsingDictionary:(NSDictionary *)chatCreationDictionary
+{
+	return chatCreationDictionary;
+}
+
 - (AIChat *)chatWithContact:(AIListContact *)contact identifier:(id)identifier
 {
 	AIChat *chat = [[adium chatController] chatWithContact:contact];

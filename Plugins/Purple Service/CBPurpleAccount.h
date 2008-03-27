@@ -182,6 +182,7 @@
 		   andAliases:(NSArray *)aliasesArray 
 		  newArrivals:(NSNumber *)newArrivals
 			   toChat:(AIChat *)chat;
+- (NSDictionary *)willJoinChatUsingDictionary:(NSDictionary *)chatCreationDictionary;
 
 #pragma mark Privacy
 - (void)privacyPermitListAdded:(NSString *)sourceUID;
