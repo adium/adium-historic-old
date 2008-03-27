@@ -431,7 +431,7 @@ ssl_cdsa_read(PurpleSslConnection *gsc, void *data, size_t len)
             errno = EAGAIN;
             return (s > 0) ? s : -1;
         }
-		purple_debug_error("cdsa", "receive failed (%d): %s\n", err, strerror(errno));
+		purple_debug_error("cdsa", "receive failed (%d): %s\n", (int)err, strerror(errno));
         return -1;
     }
     
@@ -457,7 +457,7 @@ ssl_cdsa_write(PurpleSslConnection *gsc, const void *data, size_t len)
                 errno = EAGAIN;
                 return -1;
             }
-            purple_debug_error("cdsa", "send failed (%d): %s\n", err, strerror(errno));
+            purple_debug_error("cdsa", "send failed (%d): %s\n", (int)err, strerror(errno));
             return -1;
         }
     }
