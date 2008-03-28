@@ -51,6 +51,7 @@
 - (void)updateMenuIconsBundle;
 - (void)updateUnreadCount;
 - (void)updateOpenChats;
+- (void)updateStatusItemLength;
 @end
 
 @implementation CBStatusMenuItemController
@@ -371,6 +372,16 @@
 	}
 }
 
+- (void)updateStatusItemLength
+{
+	if (showUnreadCount && [[adium chatController] unviewedContentCount] > 0) {
+		[statusItem setLength:NSVariableStatusItemLength];
+	} else {
+		[statusItem setLength:[[statusItem image] size].width + STATUS_ITEM_MARGIN];
+	}
+}
+
+
 - (NSImage *)badgeDuck:(NSImage *)duckImage withImage:(NSImage *)badgeImage 
 {
 	NSImage *image = duckImage;
@@ -545,6 +556,8 @@
 		
 		// Update our menu icons
 		[self updateMenuIcons];
+		// Update the status item length
+		[self updateStatusItemLength];
 	// We think there's no unviewed content, and there is.
 	} else if (!unviewedContent && unviewedContentCount > 0) {
 		// If this particular Xtra wants us to flash unviewed content, start the timer up
@@ -562,6 +575,8 @@
 		
 		// Update our menu icons
 		[self updateMenuIcons];
+		// Update the status item length
+		[self updateStatusItemLength];
 	// If we already know there's unviewed content, just update the count.
 	} else if (unviewedContent && unviewedContentCount > 0) {
 		[self updateUnreadCount];
@@ -787,6 +802,7 @@
 		
 		[self updateMenuIcons];
 		[self updateUnreadCount];
+		[self updateStatusItemLength];
 	}
 }
 
