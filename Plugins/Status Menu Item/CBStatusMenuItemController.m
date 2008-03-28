@@ -370,6 +370,8 @@
 	if (showUnreadCount) {
 		[self updateUnreadCount];
 	}
+	// Update the status item length
+	[self updateStatusItemLength];
 }
 
 - (void)updateStatusItemLength
