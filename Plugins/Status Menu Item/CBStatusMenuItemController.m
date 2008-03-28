@@ -558,8 +558,6 @@
 		
 		// Update our menu icons
 		[self updateMenuIcons];
-		// Update the status item length
-		[self updateStatusItemLength];
 	// We think there's no unviewed content, and there is.
 	} else if (!unviewedContent && unviewedContentCount > 0) {
 		// If this particular Xtra wants us to flash unviewed content, start the timer up
@@ -577,8 +575,6 @@
 		
 		// Update our menu icons
 		[self updateMenuIcons];
-		// Update the status item length
-		[self updateStatusItemLength];
 	// If we already know there's unviewed content, just update the count.
 	} else if (unviewedContent && unviewedContentCount > 0) {
 		[self updateUnreadCount];
