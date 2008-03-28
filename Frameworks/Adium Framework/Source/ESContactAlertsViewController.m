@@ -437,7 +437,9 @@ int actionSort(id objectA, id objectB, void *context)
 	contactAlertsDict = [[adium preferenceController] preferenceForKey:KEY_CONTACT_ALERTS
 																 group:PREF_GROUP_CONTACT_ALERTS
 											 objectIgnoringInheritance:listObject];
-	
+
+	AILogWithSignature(@"Displaying alerts for %@: %@", listObject, contactAlertsDict);
+
 	[contactAlertsEvents release]; contactAlertsEvents = [[NSMutableArray alloc] init];
 	[contactAlertsActions release]; contactAlertsActions = [[NSMutableArray alloc] init];
 	
