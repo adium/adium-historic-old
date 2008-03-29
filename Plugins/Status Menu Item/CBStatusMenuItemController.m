@@ -379,6 +379,9 @@
 	if (showUnreadCount && [[adium chatController] unviewedContentCount] > 0) {
 		[statusItem setLength:NSVariableStatusItemLength];
 	} else {
+		//We're showing only the image, so we want the status item to use the menu bar height.
+		//Due to a bug in Mac OS X 10.4.10 and 10.5.2, NSVariableStatusItemLength puts too much space on the right side of the image—probably the separator between image and title, even when the title is nil.
+		//Until this problem (rdar://problem/5829508) is fixed, we must use the image's width (plus the margin) instead of NSVariableStatusItemLength.
 		[statusItem setLength:[[statusItem image] size].width + STATUS_ITEM_MARGIN];
 	}
 }
