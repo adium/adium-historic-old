@@ -8,7 +8,7 @@
         <pubDate>Saturday, March 29th, 2008 16:44:28 GMT-5</pubDate>
         <sparkle:releaseNotesLink>http://www.adiumx.com/changelogs/1.2.4b3.html</sparkle:releaseNotesLink>
         <sparkle:minimumSystemVersion>10.4.0</sparkle:minimumSystemVersion>
-        <enclosure sparkle:md5Sum="40ae5c161a22acdf17228a0566fcb61e" sparkle:version="1.2.4b3" url="http://adiumx.cachefly.net/Adium_1.2.4b2.dmg" length="22320508" type="application/octet-stream"/>
+        <enclosure sparkle:md5Sum="40ae5c161a22acdf17228a0566fcb61e" sparkle:version="1.2.4b3" url="http://adiumx.cachefly.net/Adium_1.2.4b3.dmg" length="22320508" type="application/octet-stream"/>
     </item>
     <item>
         <title>Adium 1.0.6</title>
