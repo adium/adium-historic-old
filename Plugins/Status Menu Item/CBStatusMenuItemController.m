@@ -41,6 +41,8 @@
 // For the KEY_SHOW_OFFLINE_CONTACTS and PREF_GROUP_CONTACT_LIST_DISPLAY
 #import "AIContactController.h"
 
+#define STATUS_ITEM_MARGIN 8
+
 @interface CBStatusMenuItemController (PRIVATE)
 - (void)activateAdium:(id)sender;
 - (void)setIconImage:(NSImage *)inImage;
@@ -379,8 +381,8 @@
 	} else {
 		//We're showing only the image, so we want the status item to use the menu bar height.
 		//Due to a bug in Mac OS X 10.4.10 and 10.5.2, NSVariableStatusItemLength puts too much space on the right side of the image—probably the separator between image and title, even when the title is nil.
-		//Until this problem (rdar://problem/5829508) is fixed, we must use NSSquareStatusItemLength instead of NSVariableStatusItemLength.
-		[statusItem setLength:NSSquareStatusItemLength];
+		//Until this problem (rdar://problem/5829508) is fixed, we must use the image's width (plus the margin) instead of NSVariableStatusItemLength.
+		[statusItem setLength:[[statusItem image] size].width + STATUS_ITEM_MARGIN];
 	}
 }
 
