@@ -1,7 +1,7 @@
 				Adium X Version History
 				-----------------------
 Version 1.2.4
- * Updated to libpurple 2.4.0 (pidgin.im), which includes AIM offline message support, fast Yahoo file transfers, viewing of ICQ status notes, setting Google Talk buddy icons, and a fix for an issue which could make you appear offline to MSN users
+ * Updated to libpurple 2.4.1 (pidgin.im), which includes AIM offline message support, fast Yahoo file transfers, viewing of ICQ status notes, setting Google Talk buddy icons, and a fix for an issue which could make you appear offline to MSN users
  * Moved Accounts and Contacts submenus to the top of the StatusItem
  * Fixed an issue causing some Yahoo! contacts to be incorrectly blocked (#7744)
  * Fixed autosizing of the text entry field, for real this time (#8701)
@@ -16,6 +16,11 @@ Version 1.2.4
  * Fixed a crash when using certain audio configurations (#8902)
  * Fixed the size of the divider between the message view and the text entry field (#9324)
  * Fixed some glitches when pasting text
+ * Fixed a crash when closing tabs and using the undo menu item (#9511)
+ * Fixed several other undo-related bugs
+ * Improved handling of certain error conditions (#8762)
+ * Completely transparent contact lists are now allowed (#5104)
+ * The 'copy' menu item is now disabled correctly when there's nothing to copy
  * Fixed a crash when the system audio output device changes (#9299)
  * Fixed a crash if the permissions on mdimport are set incorrectly (#7933)
  * Fixed setting how many past messages to show when opening a chat  via the arrow buttons (#8833)
