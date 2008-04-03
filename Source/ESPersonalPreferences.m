@@ -81,6 +81,9 @@
 - (void)viewWillClose
 {
 	[[adium preferenceController] unregisterPreferenceObserver:self];
+
+	[textField_alias fireImmediately];
+	[textField_displayName fireImmediately];
 	[self fireProfileChangesImmediately];
 
 	[[NSFontPanel sharedFontPanel] setDelegate:nil];
