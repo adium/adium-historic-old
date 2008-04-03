@@ -883,10 +883,9 @@
 //Reposition indicator into lower right corner
 - (void)_positionIndicator:(NSNotification *)notification
 {
-    NSRect visRect = [[self enclosingScrollView] documentVisibleRect];
+    NSRect visRect = [[self superview] bounds];
     NSRect indFrame = [indicator frame];
-    
-    [indicator setFrameOrigin:NSMakePoint(NSMaxX(visRect) - indFrame.size.width - 2, NSMaxY(visRect) - indFrame.size.height - 2)];
+    [indicator setFrameOrigin:NSMakePoint(NSMaxX(visRect) - NSWidth(indFrame) - 10, NSMaxY(visRect) - indFrame.size.height - 2)];
     [[self enclosingScrollView] setNeedsDisplay:YES];
 }
 
