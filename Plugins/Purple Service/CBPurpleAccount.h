@@ -125,7 +125,7 @@
 
 - (void)removeContact:(AIListContact *)theContact;
 
-- (id)authorizationRequestWithDict:(NSDictionary*)dict;
+- (NSWindowController *)authorizationRequestWithDict:(NSDictionary*)dict;
 
 - (void)addChat:(AIChat *)chat;
 - (void)typingUpdateForIMChat:(AIChat *)chat typing:(NSNumber *)typing;
