@@ -146,6 +146,10 @@ static NSString	*prefsCategory;
 	return componentLoader;
 }
 
+- (AICorePluginLoader *)pluginLoader
+{
+	return pluginLoader;
+}
 //Notifications --------------------------------------------------------------------------------------------------------
 #pragma mark Notifications
 //Return the shared Adium notification center
