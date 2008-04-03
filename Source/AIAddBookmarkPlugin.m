@@ -66,4 +66,9 @@
 	[bookmark setVisible:YES];
 }
 
+- (BOOL)validateToolbarItem:(NSToolbarItem *)inToolbarItem
+{
+	return [[[adium interfaceController] activeChat] isGroupChat];
+}
+
 @end
