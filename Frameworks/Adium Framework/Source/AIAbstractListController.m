@@ -231,13 +231,11 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 //Double click in outline view
 - (IBAction)performDefaultActionOnSelectedItem:(NSOutlineView *)sender
 {
-    AIListObject	*selectedObject = [sender itemAtRow:[sender selectedRow]];
-	[delegate performDefaultActionOnSelectedObject:selectedObject sender:sender];
-}
-
-- (void)performDefaultActionOnFirstItem
-{
-	[delegate performDefaultActionOnSelectedObject:[contactListView itemAtRow:1] sender:contactListView];
+	NSEnumerator	*enumerator = [[sender arrayOfSelectedItems] objectEnumerator];
+	AIListObject	*selectedObject;
+	while ((selectedObject = [enumerator nextObject])) {
+		[delegate performDefaultActionOnSelectedObject:selectedObject sender:sender];
+	}
 }
 
 - (void)reloadData
