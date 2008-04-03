@@ -64,6 +64,11 @@
 - (void) uninstallPlugin
 {
 	[[adium preferenceController] unregisterPreferenceObserver:self];
+	[[adium interfaceController] unregisterMessageDisplayPlugin:self];
+	[[adium preferenceController] removePreferencePane:preferences];
+
+	[[adium notificationCenter] removeObserver:self];
+
 	[styleDictionary release]; styleDictionary = nil;
 	[preferences release]; preferences = nil;
 	[currentStyle release]; currentStyle = nil;
