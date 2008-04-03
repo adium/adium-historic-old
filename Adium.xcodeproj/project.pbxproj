@@ -1014,6 +1014,8 @@
 		34F849590A4AF04D0002A017 /* AILogFileUpgradeWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F849570A4AF04D0002A017 /* AILogFileUpgradeWindowController.m */; };
 		34F8D2AE0CF68FEB00F62536 /* AIUserListOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F8D2AD0CF68FEB00F62536 /* AIUserListOutlineView.m */; };
 		34FA28110C820C3A00FEA944 /* AIPreviewContentMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FA28100C820C3A00FEA944 /* AIPreviewContentMessage.m */; };
+		34FF12120DA52FB10054A872 /* AIPurpleGTalkJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34FF12100DA52FB10054A872 /* AIPurpleGTalkJoinChatViewController.h */; };
+		34FF12130DA52FB10054A872 /* AIPurpleGTalkJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34FF12110DA52FB10054A872 /* AIPurpleGTalkJoinChatViewController.m */; };
 		377EC8940AE9525B00CB7BDF /* PSMTabBarControl.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 377EC8930AE9525B00CB7BDF /* PSMTabBarControl.framework */; };
 		377ED0220AE95D7D00CB7BDF /* PSMTabBarControl.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 377EC8930AE9525B00CB7BDF /* PSMTabBarControl.framework */; };
 		38399DCB0A95C9CF006C8EB1 /* AIVideoConfControllerProtocol.h in Headers */ = {isa = PBXBuildFile; fileRef = 383984700A94F780006C8EB1 /* AIVideoConfControllerProtocol.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -3475,6 +3477,8 @@
 		34FD5BEB07F1F92900687C70 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = Resources/it.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34FDD6E305632BFD00F5B30F /* ESFileTransferController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferController.h; path = Source/ESFileTransferController.h; sourceTree = "<group>"; };
 		34FDD6E405632BFD00F5B30F /* ESFileTransferController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferController.m; path = Source/ESFileTransferController.m; sourceTree = "<group>"; };
+		34FF12100DA52FB10054A872 /* AIPurpleGTalkJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIPurpleGTalkJoinChatViewController.h; path = "Plugins/Purple Service/AIPurpleGTalkJoinChatViewController.h"; sourceTree = "<group>"; };
+		34FF12110DA52FB10054A872 /* AIPurpleGTalkJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIPurpleGTalkJoinChatViewController.m; path = "Plugins/Purple Service/AIPurpleGTalkJoinChatViewController.m"; sourceTree = "<group>"; };
 		377EC8930AE9525B00CB7BDF /* PSMTabBarControl.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PSMTabBarControl.framework; path = Frameworks/PSMTabBarControl.framework; sourceTree = "<group>"; };
 		383984700A94F780006C8EB1 /* AIVideoConfControllerProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIVideoConfControllerProtocol.h; path = "Frameworks/Adium Framework/Source/AIVideoConfControllerProtocol.h"; sourceTree = "<group>"; };
 		387226C40A8B7C83002CC4F4 /* AIVideoConfController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIVideoConfController.h; path = Source/AIVideoConfController.h; sourceTree = "<group>"; };
@@ -7148,6 +7152,8 @@
 				A3C0431C08D74D3100B48CE1 /* AIPurpleGTalkAccount.m */,
 				A3C0431D08D74D3100B48CE1 /* AIPurpleGTalkAccountViewController.h */,
 				A3C0431E08D74D3100B48CE1 /* AIPurpleGTalkAccountViewController.m */,
+				34FF12100DA52FB10054A872 /* AIPurpleGTalkJoinChatViewController.h */,
+				34FF12110DA52FB10054A872 /* AIPurpleGTalkJoinChatViewController.m */,
 				A3C0431F08D74D3100B48CE1 /* AIGTalkService.h */,
 				A3C0432008D74D3100B48CE1 /* AIGTalkService.m */,
 				A3C042D108D7483100B48CE1 /* PurpleDefaultsGTalk.plist */,
@@ -7709,6 +7715,7 @@
 				8110362C0CDE8F5800EC6038 /* AIPurpleCertificateTrustWarningAlert.h in Headers */,
 				34B3247A0CE4CCF400158D5F /* PurpleAccountViewController.h in Headers */,
 				34B08C590CF2130700A6190C /* msn-adium.h in Headers */,
+				34FF12120DA52FB10054A872 /* AIPurpleGTalkJoinChatViewController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8969,6 +8976,7 @@
 				8110362D0CDE8F5800EC6038 /* AIPurpleCertificateTrustWarningAlert.m in Sources */,
 				34B3247B0CE4CCF400158D5F /* PurpleAccountViewController.m in Sources */,
 				34B08C5A0CF2130700A6190C /* msn-adium.c in Sources */,
+				34FF12130DA52FB10054A872 /* AIPurpleGTalkJoinChatViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
