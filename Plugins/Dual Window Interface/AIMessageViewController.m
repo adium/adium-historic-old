@@ -421,27 +421,12 @@
 			return;
 		}
 
+		AIChatSendingAbilityType messageSendingAbility = [chat messageSendingAbility];
 		if (!suppressSendLaterPrompt &&
-			![chat canSendMessages]) {
-			
+			(messageSendingAbility != AIChatCanSendMessageNow)) {
 			NSString							*formattedUID = [listObject formattedUID];
-
+			
 			NSAlert *alert = [[NSAlert alloc] init];
-			[alert setMessageText:[NSString stringWithFormat:AILocalizedString(@"%@ appears to be offline. How do you want to send this message?", nil),
-								   formattedUID]];
-			[alert setInformativeText:[NSString stringWithFormat:
-									   AILocalizedString(@"Send Later will send the message the next time both you and %@ are online. Send Now may work if %@ is invisible or is not on your contact list and so only appears to be offline.", "Send Later dialogue explanation text"),
-									   formattedUID, formattedUID, formattedUID]];
-			[alert addButtonWithTitle:AILocalizedString(@"Send Now", nil)];
-
-			[alert addButtonWithTitle:AILocalizedString(@"Send Later", nil)];
-			[[[alert buttons] objectAtIndex:1] setKeyEquivalent:@"l"];
-			[[[alert buttons] objectAtIndex:1] setKeyEquivalentModifierMask:0];
-
-			[alert addButtonWithTitle:AILocalizedString(@"Don't Send", nil)];			 
-			[[[alert buttons] objectAtIndex:2] setKeyEquivalent:@"\E"];
-			[[[alert buttons] objectAtIndex:2] setKeyEquivalentModifierMask:0];
-
 			NSImage *icon = ([listObject userIcon] ? [listObject userIcon] : [AIServiceIcons serviceIconForObject:listObject
 																											 type:AIServiceIconLarge
 																										direction:AIIconNormal]);
@@ -449,11 +434,52 @@
 			[icon setScalesWhenResized:NO];
 			[alert setIcon:icon];
 			[alert setAlertStyle:NSInformationalAlertStyle];
+			
+			[alert setMessageText:[NSString stringWithFormat:AILocalizedString(@"%@ appears to be offline. How do you want to send this message?", nil),
+								   formattedUID]];
 
+			switch (messageSendingAbility) {
+				case AIChatCanSendViaServersideOfflineMessage:
+				{
+					[alert setInformativeText:[NSString stringWithFormat:
+											   AILocalizedString(@"Send Now will deliver your message to the server immediately. %@ will receive the message the next time he or she signs on, even if you are no longer online.\n\nSend When Both Online will send the message the next time both you and %@ are known to be online and you are connected using Adium on this computer.", "Send Later dialogue explanation text for accounts supporting offline messaging support."),
+											   formattedUID, formattedUID]];
+					[alert addButtonWithTitle:AILocalizedString(@"Send Now", nil)];
+					
+					[alert addButtonWithTitle:AILocalizedString(@"Send When Both Online", nil)];
+					[[[alert buttons] objectAtIndex:1] setKeyEquivalent:@"b"];
+					[[[alert buttons] objectAtIndex:1] setKeyEquivalentModifierMask:0];
+
+					break;
+				}
+				case AIChatCanNotSendMessage:
+				{
+					[alert setInformativeText:[NSString stringWithFormat:
+											   AILocalizedString(@"Send Later will send the message the next time both you and %@ are online. Send Now may work if %@ is invisible or is not on your contact list and so only appears to be offline.", "Send Later dialogue explanation text"),
+											   formattedUID, formattedUID, formattedUID]];
+					[alert addButtonWithTitle:AILocalizedString(@"Send Now", nil)];
+					
+					[alert addButtonWithTitle:AILocalizedString(@"Send Later", nil)];
+					[[[alert buttons] objectAtIndex:1] setKeyEquivalent:@"l"];
+					[[[alert buttons] objectAtIndex:1] setKeyEquivalentModifierMask:0];
+					
+					break;
+				}
+				case AIChatCanSendMessageNow:
+				{
+					//We will never get here.
+					break;
+				}
+			}
+			
+			[alert addButtonWithTitle:AILocalizedString(@"Don't Send", nil)];			 
+			[[[alert buttons] objectAtIndex:2] setKeyEquivalent:@"\E"];
+			[[[alert buttons] objectAtIndex:2] setKeyEquivalentModifierMask:0];
+			
 			[alert beginSheetModalForWindow:[view_contents window]
 							  modalDelegate:self
 							 didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:)
-								contextInfo:NULL];
+								contextInfo:nil];
 			[alert release];
 
 
@@ -522,7 +548,7 @@
 	AIListContact	*listContact;
 
 	//If the chat can _now_ send a message, send it immediately instead of waiting for "later".
-	if ([chat canSendMessages]) {
+	if ([chat messageSendingAbility] == AIChatCanSendMessageNow) {
 		[self sendMessage:sender];
 		return;
 	}

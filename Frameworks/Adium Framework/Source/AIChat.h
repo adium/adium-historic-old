@@ -41,6 +41,12 @@ typedef enum {
 	AIChatClosedWindow
 } AIChatUpdateType;
 
+typedef enum {
+	AIChatCanNotSendMessage = 0,
+	AIChatCanSendMessageNow,
+	AIChatCanSendViaServersideOfflineMessage
+} AIChatSendingAbilityType;
+
 #define KEY_ENCRYPTED_CHAT_PREFERENCE	@"Encrypted Chat Preference"
 #define GROUP_ENCRYPTION				@"Encryption"
 
@@ -160,7 +166,7 @@ typedef enum {
 - (AIEncryptionStatus)encryptionStatus;
 - (BOOL)supportsSecureMessagingToggling;
 
-- (BOOL)canSendMessages;
+- (AIChatSendingAbilityType)messageSendingAbility;
 - (BOOL)canSendImages;
 
 - (BOOL)isListContactIgnored:(AIListObject *)inContact;
