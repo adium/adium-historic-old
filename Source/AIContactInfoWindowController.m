@@ -183,6 +183,8 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	[loadedContent release]; loadedContent = nil;
 	[contentController release]; contentController = nil;
 
+	[[adium notificationCenter] removeObserver:self];
+
 	[super dealloc];
 }
 
