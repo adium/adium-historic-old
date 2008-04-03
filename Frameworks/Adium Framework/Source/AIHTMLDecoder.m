@@ -65,20 +65,15 @@ int HTMLEquivalentForFontSize(int fontSize);
 
 @implementation AIHTMLDecoder
 
-static AITextAttributes *_defaultTextDecodingAttributes = nil;
 static NSString			*horizontalRule = nil;
 
 + (void)initialize
 {
-	if (!_defaultTextDecodingAttributes) {
-		_defaultTextDecodingAttributes = [[AITextAttributes textAttributesWithFontFamily:@"Lucida Grande" traits:0 size:12] retain];
-	}
-
 	//Set up the horizontal rule which will be searched-for when encoding and inserted when decoding
-	if (!horizontalRule) {
+	if ((self == [AIHTMLDecoder class])) {
 #define HORIZONTAL_BAR			0x2013
 #define HORIZONTAL_RULE_LENGTH	12
-
+		
 		const unichar separatorUTF16[HORIZONTAL_RULE_LENGTH] = {
 			'\n', HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR,
 			HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, '\n'
@@ -1058,9 +1053,9 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	if (inDefaultAttributes) {
 		textAttributes = [AITextAttributes textAttributesWithDictionary:inDefaultAttributes];
 	} else {
-		textAttributes = [[_defaultTextDecodingAttributes copy] autorelease];
+		textAttributes = [[[AITextAttributes alloc] init] autorelease];
 	}
-	
+
     attrString = [[NSMutableAttributedString alloc] init];
 
 	if (!tagCharStart)     tagCharStart = [[NSCharacterSet characterSetWithCharactersInString:@"<&"] retain];
