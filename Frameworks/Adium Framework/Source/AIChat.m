@@ -439,26 +439,36 @@ static int nextChatNumber = 0;
 	}
 }
 
-- (BOOL)canSendMessages
+- (AIChatSendingAbilityType)messageSendingAbility
 {
-	BOOL canSendMessages;
+	AIChatSendingAbilityType sendingAbilityType;
+
 	if ([self isGroupChat]) {
-		//XXX Liar!
-		canSendMessages = YES;
+		if ([[self account] online]) {
+			//XXX Liar!
+			sendingAbilityType = AIChatCanSendMessageNow;
+		} else {
+			sendingAbilityType = AIChatCanNotSendMessage;
+		}
 
 	} else {
 		if ([[self account] online]) {
 			AIListContact *listObject = [self listObject];
 			
-			canSendMessages = ([listObject online] ||
-							   [listObject isStranger] ||
-							   [[self account] canSendOfflineMessageToContact:listObject]);
+			if ([listObject online] || [listObject isStranger]) {
+				sendingAbilityType = AIChatCanSendMessageNow;
+			} else if ([[self account] canSendOfflineMessageToContact:listObject]) {
+				sendingAbilityType = AIChatCanSendViaServersideOfflineMessage;				
+			} else {
+				sendingAbilityType = AIChatCanNotSendMessage;	
+			}
+
 		} else {
-			canSendMessages = NO;
-		}
+			sendingAbilityType = AIChatCanNotSendMessage;
+		}		
 	}
 	
-	return canSendMessages;
+	return sendingAbilityType;
 }
 
 - (BOOL)canSendImages
