@@ -533,7 +533,7 @@
 		/* On 10.4, the menu should have two items. The first is added by the system; the second has no title and is
 		 * our menu item for showing the image. Leopard fixed this silliness.
 		 */
-		 menuItem = [menu itemAtIndex:1];
+		menuItem = [menu itemAtIndex:1];
 	}
 	NSToolbarItem	*toolbarItem = [menuItem representedObject];
 
