@@ -1423,6 +1423,8 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Registers code to observe handle status changes
 - (void)registerListObjectObserver:(id <AIListObjectObserver>)inObserver
 {
+	AILogWithSignature(@"%@", inObserver);
+
 	//Add the observer
     [contactObservers addObject:[NSValue valueWithNonretainedObject:inObserver]];
 	
@@ -1432,6 +1434,8 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 - (void)unregisterListObjectObserver:(id)inObserver
 {
+	AILogWithSignature(@"%@", inObserver);
+
     [contactObservers removeObject:[NSValue valueWithNonretainedObject:inObserver]];
 }
 

@@ -19,18 +19,25 @@
 
 @implementation AIContactInfoContentController
 
-- (id) init
++ (AIContactInfoContentController *)defaultInfoContentController
 {
-	return [self initWithContentPanes:[AIContactInfoContentController defaultPanes]];
+	return [[[self alloc] initWithContentPanes:[self defaultPanes]] autorelease];
 }
 
 - (id)initWithContentPanes:(NSArray *)panes
 {
-	self = [super init];
-	if (self != nil) {
+	if ((self = [self init])) {
 		[self loadContentPanes:panes];
 	}
+
 	return self;
+}
+
+- (void)dealloc
+{
+	[loadedPanes release];
+	
+	[super dealloc];
 }
 
 +(NSArray *)defaultPanes
@@ -46,10 +53,11 @@
 
 -(void)_setLoadedPanes:(NSArray *)newPanes
 {
-	if(loadedPanes == newPanes)
-		return;
-	[loadedPanes release];
-	loadedPanes = [newPanes retain];
+	if (loadedPanes != newPanes)
+	{
+		[loadedPanes release];
+		loadedPanes = [newPanes retain];
+	}
 }
 
 -(void)loadContentPanes:(NSArray *)contentPanes
@@ -66,13 +74,11 @@
 			return;
 		}
 		
-		[contentArray addObject:[[planeClass alloc] init]];
+		[contentArray addObject:[[[planeClass alloc] init] autorelease]];
 	}
-	
-	//FIXME: Remove NSLog.
-	NSLog(@"Created content array: %@", contentArray);
-	
+
 	[self _setLoadedPanes:contentArray];
+	[contentArray release];
 }
 
 -(IBAction)segmentSelected:(id)sender

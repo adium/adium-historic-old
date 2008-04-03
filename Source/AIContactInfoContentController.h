@@ -18,23 +18,16 @@
 @end
 
 @interface AIContactInfoContentController : NSObject {
-
-			 NSArray				*loadedPanes;
-
-	IBOutlet NSObjectController		*listObjectController;
-	
-	IBOutlet NSSegmentedControl		*inspectorToolbar;
-	IBOutlet NSPanel				*infoInspector;
-	IBOutlet NSView					*panelContent;
-	
-	IBOutlet id						currentView;
+	NSArray		*loadedPanes;
 }
 
--(id)initWithContentPanes:(NSArray *)contentPanes;
++ (AIContactInfoContentController *)defaultInfoContentController;
+- (id)initWithContentPanes:(NSArray *)contentPanes;
 
-+(NSArray *)defaultPanes;
--(NSArray *)loadedPanes;
--(void)loadContentPanes:(NSArray *)contentPanes;
++ (NSArray *)defaultPanes;
+
+- (NSArray *)loadedPanes;
+- (void)loadContentPanes:(NSArray *)contentPanes;
 
 //Segmented Control action
 -(IBAction)segmentSelected:(id)sender;

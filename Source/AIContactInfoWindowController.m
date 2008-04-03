@@ -15,11 +15,6 @@
  */
 
 #import "AIContactInfoWindowController.h"
-#import "AIContactAccountsPane.h"
-#import "AIContactProfilePane.h"
-#import "AIContactSettingsPane.h"
-#import "ESContactAlertsPane.h"
-#import "ESContactInfoListController.h"
 #import "AIContactInfoImageViewWithImagePicker.h"
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
@@ -177,14 +172,17 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 {
 	if (sharedContactInfoInstance) {
 		[sharedContactInfoInstance closeWindow:nil];
+		[sharedContactInfoInstance release]; sharedContactInfoInstance = nil;
 	}
 }
 
 - (void)dealloc
 {
+	AILogWithSignature(@"");
 	[displayedObject release]; displayedObject = nil;
-	//[loadedContent release]; loadedContent = nil;
-	
+	[loadedContent release]; loadedContent = nil;
+	[contentController release]; contentController = nil;
+
 	[super dealloc];
 }
 
@@ -208,14 +206,12 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	[super windowWillLoad];
 	
 	//If we are on Leopard, we want our panel to have a finder-esque look.
-	
-	
-	
-	contentController = [[AIContactInfoContentController alloc] init];
-	
+
+	contentController = [[AIContactInfoContentController defaultInfoContentController] retain];
+
 	if(!loadedContent) {
 		//Load the content array from the content controller.
-		loadedContent = [contentController loadedPanes];
+		loadedContent = [[contentController loadedPanes] retain];
 	}
 	
 	//Monitor the selected contact
@@ -253,13 +249,20 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 //																				delegate:self];
 }
 
+- (void)windowWillClose:(NSNotification *)inNotification
+{
+	AILogWithSignature(@"");
+	[sharedContactInfoInstance autorelease]; sharedContactInfoInstance = nil;
+
+	[super windowWillClose:inNotification];
+}
+
 /*
     @method     setupToolbarSegments
     @abstract   setupToolbarSegments loads the localized tooltips and images for each toolbar segment
     @discussion Since we don't want to enumerate over all of the segments twice, we've combined the
 	localization and image loading steps into this method.
 */
-
 - (void)setupToolbarSegments
 {	
 	int i;
