@@ -507,9 +507,10 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
     return [self online];
 }
 
-- (id)authorizationRequestWithDict:(NSDictionary*)dict {
-	return [[[AIObject sharedAdiumInstance] contactController] showAuthorizationRequestWithDict:dict
-																					 forAccount:self];
+- (NSWindowController *)authorizationRequestWithDict:(NSDictionary*)dict {
+	//We will release the returned window controller in -[self authorizationWindowController:authorizationWithDict:didAuthorize:]
+	return [[[[AIObject sharedAdiumInstance] contactController] showAuthorizationRequestWithDict:dict
+																					  forAccount:self] release];
 }
 
 - (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict didAuthorize:(BOOL)inDidAuthorize
@@ -523,8 +524,14 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 			callback = [[[infoDict objectForKey:@"denyCB"] retain] autorelease];
 		}
 		
+		//libpurple will remove its reference to the handle for this request, which is inWindowController, in response to this callback invocation
 		[purpleThread doAuthRequestCbValue:callback withUserDataValue:[[[infoDict objectForKey:@"userData"] retain] autorelease]];
 	}
+	
+	/* Retained in -[self authorizationRequestWithDict:].  We kept it around before now in case libpurle wanted us to close it early, such as because the
+	 * account disconnected.
+	 */
+	[inWindowController autorelease];
 }
 
 //Chats ------------------------------------------------------------

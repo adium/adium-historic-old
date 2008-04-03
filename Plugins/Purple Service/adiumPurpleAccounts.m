@@ -57,6 +57,7 @@ static void *adiumPurpleAccountRequestAuthorize(PurpleAccount *account, const ch
 	
 	if (message && strlen(message)) [infoDict setObject:[NSString stringWithUTF8String:message] forKey:@"Reason"];
 
+	//Note that CBPurpleAccount will retain ownership of this object to keep it around for us in case adiumPurpleAccountRequestClose() is called.
 	return [accountLookup(account) authorizationRequestWithDict:infoDict];;
 }
 
