@@ -336,7 +336,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			}
 
 			//Size
-			if (!thingsToInclude.simpleTagsOnly) {
+			if (thingsToInclude.fontTags && font && !thingsToInclude.simpleTagsOnly) {
 				[string appendString:[NSString stringWithFormat:@" ABSZ=%i SIZE=%i", (int)pointSize, HTMLEquivalentForFontSize((int)pointSize)]];
 				currentSize = pointSize;
 			}
