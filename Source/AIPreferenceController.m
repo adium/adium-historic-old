@@ -196,6 +196,14 @@
 }
 
 /*!
+ * @brief Add a view to the preferences
+ */
+- (void)removePreferencePane:(AIPreferencePane *)inPane
+{
+    [paneArray removeObject:inPane];
+}
+
+/*!
  * @brief Returns all currently available preference panes
  */
 - (NSArray *)paneArray
