@@ -119,6 +119,8 @@
 		31455C9A0CC353F800D231A0 /* TestDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 31455C990CC353F800D231A0 /* TestDataAdditions.m */; };
 		31918ED80C5E486C00717F0A /* QTKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31918ED70C5E486C00717F0A /* QTKit.framework */; };
 		319B29800CE8EC6F00C65398 /* TestDateAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 319B297F0CE8EC6E00C65398 /* TestDateAdditions.m */; };
+		31A763EE0DA56E3F000AC729 /* TestHyperlinkScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 31A763ED0DA56E3E000AC729 /* TestHyperlinkScanner.m */; };
+		31A764B90DA572B8000AC729 /* AIHyperlinks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3496A8EA07CE6CA30055BBAB /* AIHyperlinks.framework */; };
 		31E0CD580C5EEEFA00271DB1 /* QuickTime.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D836F307CBF960006466F2 /* QuickTime.framework */; };
 		31E0CD810C5EEF5200271DB1 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 31E0CD800C5EEF5200271DB1 /* CoreAudio.framework */; };
 		3402D5A5080DBC91004E50B4 /* SortConfiguration.nib in Resources */ = {isa = PBXBuildFile; fileRef = 347E791D07CAA52300350507 /* SortConfiguration.nib */; };
@@ -1299,6 +1301,13 @@
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AIUtilities;
 		};
+		31A763FA0DA570E9000AC729 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = AIHyperlinks.framework;
+		};
 		340BA85509EC59AF000EC441 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -1720,6 +1729,8 @@
 		31918ED70C5E486C00717F0A /* QTKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QTKit.framework; path = /System/Library/Frameworks/QTKit.framework; sourceTree = "<absolute>"; };
 		319B29420CE8D28300C65398 /* TestDateAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestDateAdditions.h; path = UnitTests/TestDateAdditions.h; sourceTree = "<group>"; };
 		319B297F0CE8EC6E00C65398 /* TestDateAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestDateAdditions.m; path = UnitTests/TestDateAdditions.m; sourceTree = "<group>"; };
+		31A763EC0DA56E3E000AC729 /* TestHyperlinkScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestHyperlinkScanner.h; path = UnitTests/TestHyperlinkScanner.h; sourceTree = "<group>"; };
+		31A763ED0DA56E3E000AC729 /* TestHyperlinkScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestHyperlinkScanner.m; path = UnitTests/TestHyperlinkScanner.m; sourceTree = "<group>"; };
 		31E0CD800C5EEF5200271DB1 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = /System/Library/Frameworks/CoreAudio.framework; sourceTree = "<absolute>"; };
 		31E84DF10C7F387800674BCA /* AIUnitTestUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIUnitTestUtilities.h; path = UnitTests/AIUnitTestUtilities.h; sourceTree = "<group>"; };
 		3402E01807CB0CE40044F818 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
@@ -4047,6 +4058,7 @@
 				312ED3D30C7E876E00A6BDA9 /* Cocoa.framework in Frameworks */,
 				312ED41F0C7E963A00A6BDA9 /* AIUtilities.framework in Frameworks */,
 				312ED3D50C7E878300A6BDA9 /* SenTestingKit.framework in Frameworks */,
+				31A764B90DA572B8000AC729 /* AIHyperlinks.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4390,6 +4402,8 @@
 				319B297F0CE8EC6E00C65398 /* TestDateAdditions.m */,
 				312ED3E00C7E8A0700A6BDA9 /* TestDateFormatterStringRepWithInterval.h */,
 				312ED3E10C7E8A0700A6BDA9 /* TestDateFormatterStringRepWithInterval.m */,
+				31A763EC0DA56E3E000AC729 /* TestHyperlinkScanner.h */,
+				31A763ED0DA56E3E000AC729 /* TestHyperlinkScanner.m */,
 				31034EFD0C8142680003F5AA /* TestStringAdditions.h */,
 				31034EFE0C8142680003F5AA /* TestStringAdditions.m */,
 				31034F0B0C8142720003F5AA /* UTF8Snowman.txt */,
@@ -7794,6 +7808,7 @@
 			);
 			dependencies = (
 				312ED4290C7E964400A6BDA9 /* PBXTargetDependency */,
+				31A763FB0DA570E9000AC729 /* PBXTargetDependency */,
 			);
 			name = "Unit tests";
 			productName = "Unit tests";
@@ -8083,7 +8098,6 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
-			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
@@ -8740,6 +8754,7 @@
 				31034EFF0C8142680003F5AA /* TestStringAdditions.m in Sources */,
 				31455C9A0CC353F800D231A0 /* TestDataAdditions.m in Sources */,
 				319B29800CE8EC6F00C65398 /* TestDateAdditions.m in Sources */,
+				31A763EE0DA56E3F000AC729 /* TestHyperlinkScanner.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9384,6 +9399,11 @@
 			isa = PBXTargetDependency;
 			name = AIUtilities;
 			targetProxy = 312ED4280C7E964400A6BDA9 /* PBXContainerItemProxy */;
+		};
+		31A763FB0DA570E9000AC729 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIHyperlinks.framework;
+			targetProxy = 31A763FA0DA570E9000AC729 /* PBXContainerItemProxy */;
 		};
 		340BA85609EC59AF000EC441 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
