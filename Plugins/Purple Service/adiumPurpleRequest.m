@@ -121,7 +121,7 @@ static void *adiumPurpleRequestInput(
 	
 	requestController = [ESPurpleRequestWindowController showInputWindowWithDict:infoDict];
 	
-	return (requestController ? requestController : [NSNull null]);
+	return requestController;
 }
 
 static void *adiumPurpleRequestChoice(const char *title, const char *primary,
@@ -136,7 +136,7 @@ static void *adiumPurpleRequestChoice(const char *title, const char *primary,
 			   (primary ? primary : ""),
 			   (secondary ? secondary : ""));
 	
-	return [NSNull null];
+	return nil;
 }
 
 //Purple requests the user take an action such as accept or deny a buddy's attempt to add us to her list 
@@ -236,7 +236,7 @@ static void *adiumPurpleRequestAction(const char *title, const char *primary,
 		requestController = [ESPurpleRequestActionController showActionWindowWithDict:infoDict];
 	}
 
-	return (requestController ? requestController : [NSNull null]);
+	return requestController;
 }
 
 static void *adiumPurpleRequestFields(const char *title, const char *primary,
@@ -323,7 +323,7 @@ static void *adiumPurpleRequestFields(const char *title, const char *primary,
 #endif
 	}
     
-	return (requestController ? requestController : [NSNull null]);
+	return requestController;
 }
 
 static void *adiumPurpleRequestFile(const char *title, const char *filename,
@@ -332,7 +332,6 @@ static void *adiumPurpleRequestFile(const char *title, const char *filename,
 								  PurpleAccount *account, const char *who, PurpleConversation *conv,
 								  void *user_data)
 {
-	id					requestController = nil;
 	NSString			*titleString = (title ? [NSString stringWithUTF8String:title] : nil);
 	
 	if (titleString && [titleString isEqualToString:[NSString stringWithFormat:[NSString stringWithUTF8String:_("Export Sametime List for Account %s")], 
@@ -379,8 +378,7 @@ static void *adiumPurpleRequestFile(const char *title, const char *filename,
 		}
 	}
 	
-	AILog(@"adiumPurpleRequestFile() returning %@",(requestController ? requestController : [NSNull null]));
-	return (requestController ? requestController : [NSNull null]);
+	return NULL;
 }
 
 /*!
