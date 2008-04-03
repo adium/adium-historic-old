@@ -39,6 +39,7 @@ typedef enum {
 - (IBAction)closePreferenceWindow:(id)sender;
 - (void)openPreferencesToCategoryWithIdentifier:(NSString *)identifier;
 - (void)addPreferencePane:(AIPreferencePane *)inPane;
+- (void)removePreferencePane:(AIPreferencePane *)inPane;
 - (NSArray *)paneArray;
 - (void)addAdvancedPreferencePane:(AIAdvancedPreferencePane *)inPane;
 - (NSArray *)advancedPaneArray;
