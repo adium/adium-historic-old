@@ -18,5 +18,13 @@
 - (void)testGreaterThanBeforeGreaterThan;
 - (void)testGreaterThanBeforeOpenParenthesis;
 - (void)testGreaterThanBeforeCloseParenthesis;
+- (void)testGreaterThanBeforeOpenCurlyBracket;
+- (void)testGreaterThanBeforeCloseCurlyBracket;
+- (void)testGreaterThanBeforeDumbQuote;
+- (void)testGreaterThanBeforeApostrophe;
+- (void)testGreaterThanBeforeHyphenMinus;
+- (void)testGreaterThanBeforeComma;
+- (void)testGreaterThanBeforeColon;
+- (void)testGreaterThanBeforeSemicolon;
 
 @end
