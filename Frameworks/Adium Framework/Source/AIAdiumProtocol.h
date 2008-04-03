@@ -6,16 +6,15 @@
  */
 
 #import <Cocoa/Cocoa.h>
-#import <Adium/AIEmoticonControllerProtocol.h>
 
-@class AICoreComponentLoader;
+@class AICoreComponentLoader, AICorePluginLoader;
 
 typedef enum {
 	AIQuitConfirmAlways = 0,
 	AIQuitConfirmSelective
 } AIQuitConfirmationType;
 
-@protocol AIAccountController, AIChatController, AIContactAlertsController, AIDebugController,
+@protocol AIAccountController, AIChatController, AIContactAlertsController, AIDebugController, AIEmoticonController,
 		  AIPreferenceController, AIMenuController, AIApplescriptabilityController, AIStatusController,
 		  AIContentController, AIToolbarController, AISoundController, AIDockController,
 		  AIFileTransferController, AILoginController, AIInterfaceController, AIContactController;
@@ -42,6 +41,7 @@ typedef enum {
 
 - (NSNotificationCenter *)notificationCenter;
 - (AICoreComponentLoader *)componentLoader;
+- (AICorePluginLoader *)pluginLoader;
 
 - (NSString *)applicationSupportDirectory;
 - (NSString *)createResourcePathForName:(NSString *)name;
