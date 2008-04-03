@@ -235,8 +235,6 @@ typedef enum {
 - (NSArray*)draggedContacts;
 - (void)pasteboard:(NSPasteboard *)sender provideDataForType:(NSString *)type;
 
-- (void)performDefaultActionOnFirstItem;
-
 //Drag & Drop
 - (void)setDragItems:(NSNotification *)notification;
 
