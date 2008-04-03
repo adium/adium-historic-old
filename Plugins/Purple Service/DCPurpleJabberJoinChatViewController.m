@@ -22,10 +22,10 @@
 #import <Adium/AIListContact.h>
 #import <AIWindowController.h>
 #import "AdiumPurpleRoomlist.h"
-#define	KEY_DEFAULT_CONFERENCE_SERVER	@"DefaultConferenceServer"
+
 #define ROOM_LIST_NIB @"roomlistbrowser.nib"
+
 @interface DCPurpleJabberJoinChatViewController (PRIVATE)
-- (void)validateEnteredText;
 - (void)_configureTextField;
 @end
 

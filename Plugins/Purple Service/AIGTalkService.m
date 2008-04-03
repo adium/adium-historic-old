@@ -17,6 +17,7 @@
 #import "AIGTalkService.h"
 #import "AIPurpleGTalkAccount.h"
 #import "AIPurpleGTalkAccountViewController.h"
+#import "AIPurpleGTalkJoinChatViewController.h"
 
 @implementation AIGTalkService
 
@@ -29,6 +30,11 @@
 - (AIAccountViewController *)accountViewController{
     return [AIPurpleGTalkAccountViewController accountViewController];
 }
+
+- (DCJoinChatViewController *)joinChatView{
+	return [AIPurpleGTalkJoinChatViewController joinChatView];
+}
+
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
