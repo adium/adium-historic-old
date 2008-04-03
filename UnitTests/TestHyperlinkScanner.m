@@ -42,5 +42,29 @@
 - (void)testGreaterThanBeforeCloseParenthesis {
 	[self testGreaterThanBeforeString:@")"];
 }
+- (void)testGreaterThanBeforeOpenCurlyBracket {
+	[self testGreaterThanBeforeString:@"{"];
+}
+- (void)testGreaterThanBeforeCloseCurlyBracket {
+	[self testGreaterThanBeforeString:@"}"];
+}
+- (void)testGreaterThanBeforeDumbQuote {
+	[self testGreaterThanBeforeString:@"\""];
+}
+- (void)testGreaterThanBeforeApostrophe {
+	[self testGreaterThanBeforeString:@"'"];
+}
+- (void)testGreaterThanBeforeHyphenMinus {
+	[self testGreaterThanBeforeString:@"-"];
+}
+- (void)testGreaterThanBeforeComma {
+	[self testGreaterThanBeforeString:@","];
+}
+- (void)testGreaterThanBeforeColon {
+	[self testGreaterThanBeforeString:@":"];
+}
+- (void)testGreaterThanBeforeSemicolon {
+	[self testGreaterThanBeforeString:@";"];
+}
 
 @end
