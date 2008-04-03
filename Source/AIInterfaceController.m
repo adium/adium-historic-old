@@ -983,6 +983,10 @@
 {
     [messageViewArray addObject:inPlugin];
 }
+- (void)unregisterMessageDisplayPlugin:(id <AIMessageDisplayPlugin>)inPlugin
+{
+    [messageViewArray removeObject:inPlugin];
+}
 - (id <AIMessageDisplayController>)messageDisplayControllerForChat:(AIChat *)inChat
 {
 	//Sometimes our users find it amusing to disable plugins that are located within the Adium bundle.  This error
