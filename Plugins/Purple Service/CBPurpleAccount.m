@@ -510,7 +510,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 - (NSWindowController *)authorizationRequestWithDict:(NSDictionary*)dict {
 	//We will release the returned window controller in -[self authorizationWindowController:authorizationWithDict:didAuthorize:]
 	return [[[[AIObject sharedAdiumInstance] contactController] showAuthorizationRequestWithDict:dict
-																					  forAccount:self] release];
+																					  forAccount:self] autorelease];
 }
 
 - (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict didAuthorize:(BOOL)inDidAuthorize
