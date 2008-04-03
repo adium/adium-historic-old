@@ -46,8 +46,6 @@
 - (id)initWithFontFamily:(NSString *)inFamilyName traits:(NSFontTraitMask)inTraits size:(int)inSize
 {
 	if ((self = [self init])) {
-		dictionary = [[NSMutableDictionary alloc] init];
-
 		fontFamilyName = [inFamilyName retain];
 		fontTraitsMask = inTraits;
 		fontSize = inSize;
@@ -59,6 +57,7 @@
 - (id)initWithDictionary:(NSDictionary *)inAttributes
 {
 	if ((self = [self init])) {
+		[dictionary release];
 		dictionary = [inAttributes mutableCopy];
 
 		NSFont	*font = [dictionary objectForKey:NSFontAttributeName];
@@ -80,7 +79,8 @@
 - (id)init
 {
 	if ((self = [super init])) {
-		dictionary = nil;
+		dictionary = [[NSMutableDictionary alloc] init];
+		
 		fontFamilyName = nil;
 		fontTraitsMask = 0;
 		fontSize = 0;
