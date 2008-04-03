@@ -25,6 +25,8 @@
     float				customVolume;
 	
 	unsigned			soundsAreMuted;
+
+	BOOL				reconfigureAudioContextBeforeEachPlay;
 }
 
 /*!
