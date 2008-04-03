@@ -40,6 +40,7 @@
 NSTimeInterval aggregatePluginLoadingTime = 0.0;
 #endif
 
+static	NSMutableDictionary		*pluginDict = nil;
 @interface AICorePluginLoader (PRIVATE)
 - (void)loadPlugins;
 + (BOOL)confirmPluginAtPath:(NSString *)pluginPath;
@@ -52,7 +53,8 @@ NSTimeInterval aggregatePluginLoadingTime = 0.0;
 {
 	if ((self = [super init])) {
 		pluginArray = [[NSMutableArray alloc] init];
-		
+		if (!pluginDict) pluginDict = [[NSMutableDictionary alloc] init];
+
 		[self loadPlugins];
 	}
 
@@ -118,6 +120,7 @@ NSTimeInterval aggregatePluginLoadingTime = 0.0;
 	[pluginArray release];
 	pluginArray = nil;
 
+	[pluginDict release]; pluginDict = nil;
 	[super dealloc];
 }
 
@@ -157,6 +160,7 @@ NSTimeInterval aggregatePluginLoadingTime = 0.0;
 			if (plugin) {
 				[plugin installPlugin];
 				[inPluginArray addObject:plugin];
+				[pluginDict setObject:plugin forKey:NSStringFromClass(principalClass)];
 				[plugin release];
 			} else {
 				NSLog(@"Failed to initialize Plugin \"%@\" (\"%@\")!",[pluginPath lastPathComponent],pluginPath);
@@ -225,6 +229,13 @@ NSTimeInterval aggregatePluginLoadingTime = 0.0;
 	[[NSFileManager defaultManager] movePath:[basePath stringByAppendingPathComponent:pluginName]
 									  toPath:[disabledPath stringByAppendingPathComponent:pluginName]
 									 handler:nil];
+}
+
+/*!
+ * @brief Retrieve a plugin by its class name
+ */
+- (id <AIPlugin>)pluginWithClassName:(NSString *)className {
+	return [pluginDict objectForKey:className];
 }
 
 @end

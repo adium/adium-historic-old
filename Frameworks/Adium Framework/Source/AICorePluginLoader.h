@@ -17,11 +17,13 @@
 #import <Adium/AIObject.h>
 #import <Adium/AIControllerProtocol.h>
 
+@protocol AIPlugin;
 
 @interface AICorePluginLoader : AIObject <AIController> {
     NSMutableArray			*pluginArray;
 }
 
 + (void)loadPluginAtPath:(NSString *)pluginName confirmLoading:(BOOL)confirmLoading pluginArray:(NSMutableArray *)pluginArray;
+- (id <AIPlugin>)pluginWithClassName:(NSString *)className;
 
 @end
