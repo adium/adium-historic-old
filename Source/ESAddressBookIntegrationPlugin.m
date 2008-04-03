@@ -793,7 +793,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 			//We have only one record
 			peopleToAdd = [NSArray arrayWithObject:(ABPerson *)[sharedAddressBook recordForUniqueId:addedPeopleUniqueIDs]];
 		}
-
+		AILogWithSignature(@"Adding %@ to address book", peopleToAdd);
 		[allModifiedPeople addObjectsFromArray:peopleToAdd];
 		[self addToAddressBookDict:peopleToAdd];
 	}
@@ -811,7 +811,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 			[self removeFromAddressBookDict:[NSArray arrayWithObject:modifiedPeopleUniqueIDs]];
 			peopleToAdd = [NSArray arrayWithObject:(ABPerson *)[sharedAddressBook recordForUniqueId:modifiedPeopleUniqueIDs]];
 		}
-		
+		AILogWithSignature(@"Modified unique IDs %@, which correspond to people %@", modifiedPeopleUniqueIDs, peopleToAdd);
 		[allModifiedPeople addObjectsFromArray:peopleToAdd];
 		[self addToAddressBookDict:peopleToAdd];
 	}
@@ -827,6 +827,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 		}
 		
 		//Note: We have no way of retrieving the records of people who were removed, so we really can't do much here.
+		AILogWithSignature(@"Removed %@", deletedPeopleUniqueIDs);
 	}
 	
 	NSEnumerator	*peopleEnumerator;
