@@ -522,13 +522,19 @@
  * @brief Menu needs update
  *
  * Should only be called for a menu off one of our toolbar items in text-only mode, and only when that menu is about
- * to be displayed. The menu should have two items. The first is added by the system; the second has no title and is
- * our menu item for showing the image.
+ * to be displayed.
  */
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
-	//The first item is a root item inserted by the system. The second item is the single item
-	NSMenuItem		*menuItem = [menu itemAtIndex:1];
+	NSMenuItem		*menuItem;
+	if ([NSApp isOnLeopardOrBetter]) {
+		menuItem = [menu itemAtIndex:0];
+	} else {
+		/* On 10.4, the menu should have two items. The first is added by the system; the second has no title and is
+		 * our menu item for showing the image. Leopard fixed this silliness.
+		 */
+		 menuItem = [menu itemAtIndex:1];
+	}
 	NSToolbarItem	*toolbarItem = [menuItem representedObject];
 
 	[menuItem setImage:[[[(AIImageButton *)[toolbarItem view] image] copy] autorelease]];
