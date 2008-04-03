@@ -777,8 +777,10 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 			} else if ([contact isKindOfClass:[AIListContact class]]) {
 				format = [URLFormats objectForKey:[contact serviceID]];
 				if (!format) {
-#warning Present a sheet
-					NSLog(@"Can't copy contact of service %@ because there's no URL scheme associated with that service - skipping", [contact serviceID]);
+					NSLog(@"Can't copy contact %@ of service %@ because there's no URL scheme associated with that service - skipping", contact, [contact serviceID]);
+					AILogWithSignature(@"Can't copy contact %@ of service %@ because there's no URL scheme associated with that service - skipping", contact, [contact serviceID]);
+					NSBeep();
+
 				} else {
 					[URLStrings addObject:[NSString stringWithFormat:format, [[contact UID] stringByEncodingURLEscapes]]];
 					[linkTitles addObject:[NSString stringWithFormat:LINK_TITLE_FORMAT, [contact UID], [[contact service] longDescription]]];
