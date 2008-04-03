@@ -644,7 +644,6 @@
 		34CA15530CAFDFB2009AA5E3 /* sidebarActionWidget.png in Resources */ = {isa = PBXBuildFile; fileRef = 34CA15520CAFDFB2009AA5E3 /* sidebarActionWidget.png */; };
 		34CA22300A671BEF00B11032 /* PersonalPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34CA222F0A671BEF00B11032 /* PersonalPreferences.nib */; };
 		34CAA3FB0BD3998E00AE92DC /* ESPurpleOscarAccountView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 343EB41C08086D9100E27095 /* ESPurpleOscarAccountView.nib */; };
-		34CEBE6306F117DF00A89DDE /* ESContactInfoListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */; };
 		34CF9DF5085B8B7900D87E37 /* ESiTunesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CF9DF3085B8B7900D87E37 /* ESiTunesPlugin.m */; };
 		34D000C60957918000DCB678 /* ContactListRecentImages.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34D000C50957918000DCB678 /* ContactListRecentImages.nib */; };
 		34D001E80958868000DCB678 /* AIMenuItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D001E60958868000DCB678 /* AIMenuItemView.m */; };
@@ -3240,8 +3239,6 @@
 		34CAA4C20BD3A79600AE92DC /* tr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = tr; path = "Plugins/Purple Service/tr.lproj/ESPurpleSimpleAccountView.nib"; sourceTree = "<group>"; };
 		34CAA4C30BD3A79A00AE92DC /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/Purple Service/zh_CN.lproj/ESPurpleSimpleAccountView.nib"; sourceTree = "<group>"; };
 		34CAA4C40BD3A79D00AE92DC /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Plugins/Purple Service/zh_TW.lproj/ESPurpleSimpleAccountView.nib"; sourceTree = "<group>"; };
-		34CEBE6006F117DF00A89DDE /* ESContactInfoListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESContactInfoListController.h; path = Source/ESContactInfoListController.h; sourceTree = "<group>"; };
-		34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESContactInfoListController.m; path = Source/ESContactInfoListController.m; sourceTree = "<group>"; };
 		34CF88A70A6D5EC0009D9A21 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = Resources/nl.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		34CF88AD0A6D5EF1009D9A21 /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = Resources/nl.lproj/OTRPrefs.nib; sourceTree = "<group>"; };
 		34CF9DF2085B8B7900D87E37 /* ESiTunesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESiTunesPlugin.h; path = Source/ESiTunesPlugin.h; sourceTree = "<group>"; };
@@ -7620,8 +7617,6 @@
 				4B2DC06C066F705800AD5AAD /* AIContactSettingsPane.m */,
 				343EC6A80809DEC700E27095 /* ESContactAlertsPane.h */,
 				343EC6A70809DEC700E27095 /* ESContactAlertsPane.m */,
-				34CEBE6006F117DF00A89DDE /* ESContactInfoListController.h */,
-				34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */,
 				34D8328E07CBD5E2006466F2 /* Contact Info List Theme.plist */,
 				34D8328F07CBD5E2006466F2 /* Contact Info List Layout.plist */,
 				34BFE30007E8FA7800AD984D /* ContactAccounts.nib */,
@@ -9084,7 +9079,6 @@
 				6E4D961406B739AC005235E9 /* DCJoinChatPanelPlugin.m in Sources */,
 				6EC1684D06C170A000F9FAD3 /* DCInviteToChatPlugin.m in Sources */,
 				6EC1684F06C170A000F9FAD3 /* DCInviteToChatWindowController.m in Sources */,
-				34CEBE6306F117DF00A89DDE /* ESContactInfoListController.m in Sources */,
 				34A489F306F64359002C7C5F /* AISCLViewPlugin.m in Sources */,
 				34A48A0106F6436D002C7C5F /* AIStandardListWindowController.m in Sources */,
 				34A48A0406F6436D002C7C5F /* AIListWindowController.m in Sources */,
