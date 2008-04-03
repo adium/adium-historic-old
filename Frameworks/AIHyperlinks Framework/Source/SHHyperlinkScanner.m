@@ -157,16 +157,16 @@
         unsigned int localStringLen = [scanString length];
 		unsigned int finalStringLen;
 		
-        if(localStringLen > 2 && [startSet characterIsMember:[scanString characterAtIndex:0]]){
-            scanString = [scanString substringFromIndex:1];
-            localStringLen = [scanString length];
-        }
-		
-        if(localStringLen > 2 && [endSet characterIsMember:[scanString characterAtIndex:localStringLen - 1]]){
-            scanString = [scanString substringToIndex:localStringLen - 1];
-			finalStringLen = [scanString length];
-        }else{
-			finalStringLen = localStringLen;
+		while (localStringLen > 2 && [startSet characterIsMember:[scanString characterAtIndex:0]]) {
+			scanString = [scanString substringFromIndex:1];
+			localStringLen--;
+		}
+
+		finalStringLen = localStringLen;
+
+		while (finalStringLen > 2 && [endSet characterIsMember:[scanString characterAtIndex:finalStringLen - 1]]) {
+            scanString = [scanString substringToIndex:finalStringLen - 1];
+			finalStringLen--;
 		}
 
         SHStringOffset = [preScanner scanLocation] - finalStringLen;
