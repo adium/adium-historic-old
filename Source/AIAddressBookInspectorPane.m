@@ -22,6 +22,13 @@
 	return self;
 }
 
+- (void)dealloc
+{
+	[inspectorContentView release]; inspectorContentView = nil;
+	[addressBookPanel release]; addressBookPanel = nil;
+	
+	[super dealloc];
+}
 
 -(NSString *)nibName
 {

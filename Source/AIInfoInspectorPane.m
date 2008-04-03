@@ -41,7 +41,11 @@
 
 - (void) dealloc
 {
+	AILogWithSignature(@"%@", self);
+	[inspectorContentView release];
+	
 	[[adium contactController] unregisterListObjectObserver:self];
+
 	[super dealloc];
 }
 

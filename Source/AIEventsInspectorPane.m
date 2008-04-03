@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Elliott Harris on 1/17/08.
-//  Copyright 2008 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIEventsInspectorPane.h"
@@ -20,6 +19,14 @@
 		//Other init goes here.
 	}
 	return self;
+}
+
+- (void)dealloc
+{
+	[inspectorContentView release];
+	[alertsController release];
+	
+	[super dealloc];
 }
 
 -(NSString *)nibName

@@ -67,6 +67,8 @@ static NSComparisonResult compareContactsByTheirAccounts(id firstContact, id sec
 	[accounts release]; accounts = nil;
 	[contacts release]; contacts = nil;
     [displayedObject release]; displayedObject = nil;
+	[inspectorContentView release]; inspectorContentView = nil;
+
 	[[adium notificationCenter] removeObserver:self]; 
 	[super dealloc];
 }

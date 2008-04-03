@@ -22,9 +22,9 @@
 	
 	IBOutlet	NSTextField				*notesLabel;
 	IBOutlet	AIDelayedTextField		*contactNotes;
-	
-	IBOutlet	NSButton				*addressBookButton;
+
 	IBOutlet	NSPanel					*addressBookPanel;
+	IBOutlet	NSButton				*addressBookButton;
 	IBOutlet	ABPeoplePickerView		*addressBookPicker;
 }
 -(NSString *)nibName;
