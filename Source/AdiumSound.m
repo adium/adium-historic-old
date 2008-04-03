@@ -21,6 +21,7 @@
 #import <AIUtilities/AISleepNotification.h>
 #import <QTKit/QTKit.h>
 #import <CoreServices/CoreServices.h>
+#import <sys/sysctl.h>
 
 #define SOUND_DEFAULT_PREFS				@"SoundPrefs"
 #define MAX_CACHED_SOUNDS				4			//Max cached sounds
@@ -33,6 +34,10 @@
 - (QTAudioContextRef)createAudioContextWithSystemOutputDevice;
 - (void)configureAudioContextForMovie:(QTMovie *)movie;
 - (NSArray *)allSounds;
+@end
+
+@interface NSProcessInfo (AIProcessorInfoAdditions)
+- (BOOL)processorFamilyIsG5;
 @end
 
 static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, void *refcon);
@@ -75,11 +80,7 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 		 * kAudioHardwarePropertyDefaultSystemOutputDevice notifications without the device actually changing;
 		 * rather than stutter our audio and eat CPU continuously, we just won't try to update.
 		 */
-		SInt32 gestaltReturnValue;
-		OSErr gestaltErr;
-		gestaltErr = Gestalt(gestaltNativeCPUfamily, &gestaltReturnValue);
-		if ((gestaltErr != noErr) || ((gestaltReturnValue != gestaltCPU970) && (gestaltReturnValue != gestaltCPU970FX))) {
-			//We couldn't determine the CPU type, or we're not on a G5.
+		if (![[NSProcessInfo processInfo] processorFamilyIsG5]) {
 			OSStatus err = AudioHardwareAddPropertyListener(kAudioHardwarePropertyDefaultSystemOutputDevice, systemOutputDeviceDidChange, /*refcon*/ self);
 			if (err != noErr)
 				NSLog(@"%s: Couldn't sign up for system-output-device-changed notification, because AudioHardwareAddPropertyListener returned %i. Adium will not know when the default system audio device changes.", __PRETTY_FUNCTION__, err);			
@@ -368,3 +369,29 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 
 	return noErr;
 }
+
+@implementation NSProcessInfo (AIProcessorInfoAdditions)
+
+- (BOOL)processorFamilyIsG5
+{
+	/* Credit to http://www.cocoadev.com/index.pl?MacintoshModels */
+	BOOL	isG5 = NO;
+	char	buffer[128];
+	size_t	length = sizeof(buffer);
+	if (sysctlbyname("hw.model", &buffer, &length, NULL, 0) == 0) {
+		NSString	*hardwareModel = [NSString stringWithUTF8String:buffer];
+		NSArray		*knownG5Macs = [NSArray arrayWithObjects:@"PowerMac11,2" /* G5 PCIe */, @"PowerMac12,1" /* iMac G5 (iSight) */, 
+									@"PowerMac7,2" /* PowerMac G5 */, @"PowerMac7,3" /* PowerMac G5 */, @"PowerMac8,1" /* iMac G5 */,
+									@"PowerMac8,2" /* iMac G5 Ambient Light Sensor */, @"PowerMac9,1" /* Power Mac G5 (Late 2004) */,
+									@"RackMac3,1" /* Xserve G5 */, nil];
+
+		if ([knownG5Macs containsObject:hardwareModel]) {
+			AILogWithSignature(@"On a G5 Mac.");
+			isG5 = YES;
+		}
+	}
+	
+	return isG5;
+}
+
+@end
