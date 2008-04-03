@@ -121,6 +121,7 @@ typedef enum {
 
 //Message View
 - (void)registerMessageDisplayPlugin:(id <AIMessageDisplayPlugin>)inPlugin;
+- (void)unregisterMessageDisplayPlugin:(id <AIMessageDisplayPlugin>)inPlugin;
 - (id <AIMessageDisplayController>)messageDisplayControllerForChat:(AIChat *)inChat;
 
 //Error Display
