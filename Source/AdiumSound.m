@@ -20,6 +20,7 @@
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AISleepNotification.h>
 #import <QTKit/QTKit.h>
+#import <CoreServices/CoreServices.h>
 
 #define SOUND_DEFAULT_PREFS				@"SoundPrefs"
 #define MAX_CACHED_SOUNDS				4			//Max cached sounds
@@ -30,6 +31,7 @@
 - (void)cachedPlaySound:(NSString *)inPath;
 - (void)_uncacheLeastRecentlyUsedSound;
 - (QTAudioContextRef)createAudioContextWithSystemOutputDevice;
+- (void)configureAudioContextForMovie:(QTMovie *)movie;
 - (NSArray *)allSounds;
 @end
 
@@ -67,10 +69,24 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 													 name:AISystemWillSleep_Notification
 												   object:nil];
 		
-		//Sign up for notification when the user changes the system output device in the Sound pane of System Preferences.
-		OSStatus err = AudioHardwareAddPropertyListener(kAudioHardwarePropertyDefaultSystemOutputDevice, systemOutputDeviceDidChange, /*refcon*/ self);
-		if (err != noErr)
-			NSLog(@"%s: Couldn't sign up for system-output-device-changed notification, because AudioHardwareAddPropertyListener returned %i. Adium will not know when the default system audio device changes.", __PRETTY_FUNCTION__, err);
+		/* Sign up for notification when the user changes the system output device in the Sound pane of System Preferences.
+		 *
+		 * However, we avoid doing this on G5 machines. G5s spew a continuous stream of
+		 * kAudioHardwarePropertyDefaultSystemOutputDevice notifications without the device actually changing;
+		 * rather than stutter our audio and eat CPU continuously, we just won't try to update.
+		 */
+		SInt32 gestaltReturnValue;
+		OSErr gestaltErr;
+		gestaltErr = Gestalt(gestaltNativeCPUfamily, &gestaltReturnValue);
+		if ((gestaltErr != noErr) || ((gestaltReturnValue != gestaltCPU970) && (gestaltReturnValue != gestaltCPU970FX))) {
+			//We couldn't determine the CPU type, or we're not on a G5.
+			OSStatus err = AudioHardwareAddPropertyListener(kAudioHardwarePropertyDefaultSystemOutputDevice, systemOutputDeviceDidChange, /*refcon*/ self);
+			if (err != noErr)
+				NSLog(@"%s: Couldn't sign up for system-output-device-changed notification, because AudioHardwareAddPropertyListener returned %i. Adium will not know when the default system audio device changes.", __PRETTY_FUNCTION__, err);			
+		} else {
+			//We won't be updating automatically, so reconfigure before a sound is played again
+			reconfigureAudioContextBeforeEachPlay = YES;
+		}
 	}
 
 	return self;
@@ -183,26 +199,18 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 			//Set the volume (otherwise #2283 happens)
 			[movie setVolume:customVolume];
 
-			//Create an audio context for the system output audio device.
-			//We'd reuse one context for all the movies, but that doesn't work; movies can't share a context, apparently. (You get paramErr when you try to give the second movie a context already in use by the first.)
-			QTAudioContextRef newAudioContext = [self createAudioContextWithSystemOutputDevice];
-
-			if (newAudioContext) {
-				OSStatus err = SetMovieAudioContext([movie quickTimeMovie], newAudioContext);
-				if (err != noErr)
-					NSLog(@"%s: Could not set audio context of movie %@ to %p: SetMovieAudioContext returned error %i. Sounds may be routed to the default audio device instead of the system alert audio device.", __PRETTY_FUNCTION__, movie, newAudioContext, err);
-				
-				//We created it, so we must release it.
-				QTAudioContextRelease(newAudioContext);
-			} else {
-				NSLog(@"cachedPlaySound: Could not set audio context because -[AdiumSound createAudioContextWithSystemOutputDevice] returned NULL");
-			}			
+			[self configureAudioContextForMovie:movie];
 		}
 
     } else {
 		//Move this sound to the front of the cache (This will naturally move lesser used sounds to the back for removal)
 		[soundCacheArray removeObject:inPath];
 		[soundCacheArray insertObject:inPath atIndex:0];
+		
+		if (reconfigureAudioContextBeforeEachPlay) {
+			[movie stop];
+			[self configureAudioContextForMovie:movie];
+		}
     }
 
     //Engage!
@@ -235,7 +243,7 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 	}
 }
 
-- (QTAudioContextRef) createAudioContextWithSystemOutputDevice
+- (QTAudioContextRef)createAudioContextWithSystemOutputDevice
 {
 	QTAudioContextRef newAudioContext = NULL;
 	OSStatus err;
@@ -268,6 +276,31 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 	}
 
 	return newAudioContext;
+}
+
+- (void)configureAudioContextForMovie:(QTMovie *)movie
+{
+	//QTMovie gets confused if we're playing when we do this, so pause momentarily.
+	float savedRate = [movie rate];
+	[movie setRate:0.0];
+	
+	//Exchange the audio context for a new one with the new device.
+	QTAudioContextRef newAudioContext = [self createAudioContextWithSystemOutputDevice];
+	
+	if (newAudioContext) {
+		OSStatus err = SetMovieAudioContext([movie quickTimeMovie], newAudioContext);
+		if (err != noErr) {
+			NSLog(@"%s: Could not set audio context of movie %@ to %p: SetMovieAudioContext returned error %i. Sounds may be routed to the default audio device instead of the system alert audio device.", __PRETTY_FUNCTION__, movie, newAudioContext, err);
+		}
+		
+		//We created it, so we must release it.
+		QTAudioContextRelease(newAudioContext);
+	} else {
+		NSLog(@"%s: Could not set audio context because -[AdiumSound createAudioContextWithSystemOutputDevice] returned NULL", __PRETTY_FUNCTION__);
+	}
+	
+	//Resume playback, now on the new device.
+	[movie setRate:savedRate];
 }
 
 - (NSArray *)allSounds
@@ -314,27 +347,7 @@ static OSStatus systemOutputDeviceDidChange(AudioHardwarePropertyID property, vo
 	QTMovie			*movie;
 
 	while ((movie = [soundsEnum nextObject])) {
-		//QTMovie gets confused if we're playing when we do this, so pause momentarily.
-		float savedRate = [movie rate];
-		[movie setRate:0.0];
-
-		//Exchange the audio context for a new one with the new device.
-		QTAudioContextRef newAudioContext = [self createAudioContextWithSystemOutputDevice];
-
-		if (newAudioContext) {
-			OSStatus err = SetMovieAudioContext([movie quickTimeMovie], newAudioContext);
-			if (err != noErr) {
-				NSLog(@"%s: Could not set audio context of movie %@ to %p: SetMovieAudioContext returned error %i. Sounds may be routed to the default audio device instead of the system alert audio device.", __PRETTY_FUNCTION__, movie, newAudioContext, err);
-			}
-
-			//We created it, so we must release it.
-			QTAudioContextRelease(newAudioContext);
-		} else {
-			NSLog(@"systemOutputDeviceDidChange: Could not set audio context because -[AdiumSound createAudioContextWithSystemOutputDevice] returned NULL");
-		}
-
-		//Resume playback, now on the new device.
-		[movie setRate:savedRate];
+		[self configureAudioContextForMovie:movie];
 	}
 }
 
