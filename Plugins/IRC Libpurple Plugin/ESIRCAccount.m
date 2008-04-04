@@ -32,7 +32,7 @@ void purple_account_set_bool(void *account, const char *name,
 
 - (const char *)purpleAccountName
 {
-	NSString	*myUID = [self UID];
+	NSString	*myUID = [self formattedUID];
 	BOOL		serverAppendedToUID  = ([myUID rangeOfString:@"@"].location != NSNotFound);
 
 	return [(serverAppendedToUID ? myUID : [myUID stringByAppendingString:[self serverSuffix]]) UTF8String];
