@@ -44,6 +44,7 @@ aolIMSpec       aim:goim\?screenname=[^\ \t\n&]+(&message=.+)?
 aolChatSpec	aim:gochat\?roomname=[^\ \t\n&]+
 yahooIMSpec	ymsgr:sendim\?.+
 rdarSpec	rdar:\/\/(problems?\/)?[0-9]+(&[0-9]+)*
+spotifySpec      spotify:(track|album|artist|search|playlist|user|radio):[^<>]+
 
 
 %option noyywrap 8bit caseless never-interactive prefix="SH"
@@ -92,6 +93,7 @@ mailto:{mailSpecifier}      {SHStringOffset += SHleng; return SH_MAILTO_VALID;}
 {aolChatSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
 {yahooIMSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
 {rdarSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
+{spotifySpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
 
 .			    {return SH_URL_INVALID;}
 %%
