@@ -28,6 +28,10 @@
 - (void)_hideTooltip;
 @end
 
+@interface NSWindow (SpacesDeterminationHackery)
+- (BOOL)isOnCurrentWorkspace;
+@end
+
 @implementation AISmoothTooltipTracker
 
 + (AISmoothTooltipTracker *)smoothTooltipTrackerForView:(NSView *)inView withDelegate:(id <AISmoothTooltipTrackerDelegate>)inDelegate
@@ -258,7 +262,8 @@
 #endif
 	
 	if ([theWindow isVisible] && 
-	   NSPointInRect([theWindow convertScreenToBase:mouseLocation],[[theWindow contentView] convertRect:[view frame] fromView:[view superview]])) {
+	   NSPointInRect([theWindow convertScreenToBase:mouseLocation],[[theWindow contentView] convertRect:[view frame] fromView:[view superview]]) &&
+		[theWindow isOnCurrentWorkspace]) {
 		//tooltipCount is used for delaying the appearence of tooltips.  We reset it to 0 when the mouse moves.  When
 		//the mouse is left still tooltipCount will eventually grow greater than TOOL_TIP_DELAY, and we will begin
 		//displaying the tooltips
@@ -285,6 +290,51 @@
 #endif
 		[self _hideTooltip];
 	}
+}
+
+@end
+
+@implementation NSWindow (SpacesDeterminationHackery)
+
+// Internal CoreGraphics typedefs
+typedef int	CGSConnection;
+typedef int	CGSWindow;
+
+/* Retrieve the workspace number associated with the workspace currently
+ * being shown.
+ *
+ * cid -- Current connection.
+ * workspace -- Pointer to int value to be set to workspace number.
+ */
+extern OSStatus CGSGetWorkspace(const CGSConnection cid, int *workspace);
+
+/* Retrieve workspace number associated with the workspace a particular window
+ * resides on.
+ *
+ * cid -- Current connection.
+ * wid -- Window number of window to examine.
+ * workspace -- Pointer to int value to be set to workspace number.
+ */
+extern OSStatus CGSGetWindowWorkspace(const CGSConnection cid, const CGSWindow wid, int *workspace);
+
+/* Get the default connection for the current process. */
+extern CGSConnection _CGSDefaultConnection(void);
+
+- (BOOL)isOnCurrentWorkspace
+{
+	OSStatus err;
+	int currentWorkspace, windowWorkspace;
+
+	err = CGSGetWorkspace(_CGSDefaultConnection(), &currentWorkspace);
+	if (err == noErr) {
+		CGSGetWindowWorkspace(_CGSDefaultConnection(), [self windowNumber], &windowWorkspace);
+		if (err == noErr) {
+			return (currentWorkspace == windowWorkspace);
+		}
+	}
+	
+	//Default to assuming that we're on the current workspace
+	return YES;
 }
 
 @end
