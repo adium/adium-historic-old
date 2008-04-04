@@ -97,7 +97,7 @@
 	NSMutableCharacterSet	*allowedCharacters = [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
 	NSCharacterSet			*returnSet;
 
-	[allowedCharacters addCharactersInString:@"._@-()[]^%|\\`"];
+	[allowedCharacters addCharactersInString:@"._@-()[]^%#|\\`"];
 	returnSet = [allowedCharacters immutableCopy];
 	[allowedCharacters release];
 
@@ -113,7 +113,7 @@
 	NSMutableCharacterSet	*allowedCharacters = [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
 	NSCharacterSet			*returnSet;
 
-	[allowedCharacters addCharactersInString:@"._@-()[]^%|\\/+`"];
+	[allowedCharacters addCharactersInString:@"._@-()[]^%#|\\/+`"];
 	returnSet = [allowedCharacters immutableCopy];
 	[allowedCharacters release];
 	
