@@ -87,6 +87,10 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
+	// Don't update for specific objects.
+	if (object != nil)
+		return;
+	
 	if ([group isEqualToString:PREF_GROUP_CONTACT_LIST]) {
 		BOOL oldCountAllObjects = countAllObjects;
 		BOOL oldCountOnlineObjects = countOnlineObjects;
