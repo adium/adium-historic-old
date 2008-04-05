@@ -60,6 +60,10 @@
 					preferenceDict:(NSDictionary *)prefDict
 						 firstTime:(BOOL)firstTime
 {
+	// Don't update for specific objects.
+	if (object != nil)
+		return;
+	
 	hideOfflineIdleOrMobileContacts = [[prefDict objectForKey:KEY_HIDE_CONTACTS] boolValue];
 	showOfflineContacts = [[prefDict objectForKey:KEY_SHOW_OFFLINE_CONTACTS] boolValue];
 	showIdleContacts = [[prefDict objectForKey:KEY_SHOW_IDLE_CONTACTS] boolValue];
