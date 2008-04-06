@@ -245,21 +245,38 @@ static NSTimer				*timer_savingOfAccountCache = nil;
  */
 - (void)setValue:(id)value forKey:(NSString *)key
 {
-	[self willChangeValueForKey:key];
-	//Clear the cached defaults dictionary so it will be recreated as needed
-	
-	if (value)
-		[prefsWithDefaults setValue:value forKey:key];
-	else {
-		[prefsWithDefaults autorelease]; prefsWithDefaults = nil;
+	BOOL	valueChanged;
+	/* Comparing pointers, numbers, and strings is far cheapear than writing out to disk;
+	 * check to see if we don't need to change anything at all. However, we still want to post notifications
+	 * for observers that we were set.
+	 */
+	id oldValue;
+	if ((!value && ![self valueForKey:key]) ||
+		((value && (oldValue = [self valueForKey:key])) && 
+		 ([value isKindOfClass:[NSNumber class]] && [(NSNumber *)value isEqualToNumber:oldValue]) ||
+		 ([value isKindOfClass:[NSString class]] && [(NSString *)value isEqualToString:oldValue]))) {
+		valueChanged = NO;
+	} else {
+		valueChanged = YES;
 	}
 
-	if (object) {
-		@synchronized (*myGlobalPrefs) {
-			[[self prefs] setValue:value forKey:key];
+	[self willChangeValueForKey:key];
+
+	if (valueChanged) {
+		//Clear the cached defaults dictionary so it will be recreated as needed
+		if (value)
+			[prefsWithDefaults setValue:value forKey:key];
+		else {
+			[prefsWithDefaults autorelease]; prefsWithDefaults = nil;
 		}
-	} else {
-		[[self prefs] setValue:value forKey:key];		
+		
+		if (object) {
+			@synchronized (*myGlobalPrefs) {
+				[[self prefs] setValue:value forKey:key];
+			}
+		} else {
+			[[self prefs] setValue:value forKey:key];		
+		}
 	}
 
 	[self didChangeValueForKey:key];
@@ -267,7 +284,8 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 	//Now tell the preference controller
 	if (!preferenceChangeDelays) {
 		[[adium preferenceController] informObserversOfChangedKey:key inGroup:group object:object];
-		[self save];
+		if (valueChanged)
+			[self save];
 	}
 }
 
