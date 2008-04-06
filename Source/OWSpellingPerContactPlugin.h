@@ -16,10 +16,9 @@
 
 #import <Adium/AIPlugin.h>
 
-@class AIChat;
-
 @interface OWSpellingPerContactPlugin : AIPlugin {
 	NSMutableDictionary	*languageDict;
+	NSString			*preferredLanguage;
 }
 
 @end
