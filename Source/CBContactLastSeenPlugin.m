@@ -57,9 +57,6 @@
 								   selector:@selector(statusUpdate:)
 									   name:CONTACT_SEEN_ONLINE_NO
 									 object:nil];
-
-
-									 
 }
 
 /*!
@@ -73,39 +70,29 @@
 	
 	//Either they are online, or we've come online. Either way, update both their status and the time
 	if ([[notification name] isEqualToString:CONTACT_SEEN_ONLINE_YES]) {
-	
-		[[adium preferenceController] setPreference:AILocalizedString(@"Online",nil)
-											 forKey:KEY_LAST_SEEN_STATUS
-											  group:PREF_GROUP_LAST_SEEN
-											 object:inObject];
-											 
-		[[adium preferenceController] setPreference:[NSDate date]
-											 forKey:KEY_LAST_SEEN_DATE
-											  group:PREF_GROUP_LAST_SEEN
-											 object:inObject];
-											 
+		[inObject setPreference:AILocalizedString(@"Online",nil)
+						 forKey:KEY_LAST_SEEN_STATUS
+						  group:PREF_GROUP_LAST_SEEN];
+
+		[inObject setPreference:[NSDate date]
+						 forKey:KEY_LAST_SEEN_DATE
+						  group:PREF_GROUP_LAST_SEEN];
+		
 	//They've signed off, update their status and the time		
 	} else if ([[notification name] isEqualToString:CONTACT_STATUS_ONLINE_NO]) {
+		[inObject setPreference:AILocalizedString(@"Signing off",nil)
+						 forKey:KEY_LAST_SEEN_STATUS
+						  group:PREF_GROUP_LAST_SEEN];
 
-		[[adium preferenceController] setPreference:AILocalizedString(@"Signing off",nil)
-											 forKey:KEY_LAST_SEEN_STATUS
-											  group:PREF_GROUP_LAST_SEEN
-											 object:inObject];
+		[inObject setPreference:[NSDate date]
+						 forKey:KEY_LAST_SEEN_DATE
+						  group:PREF_GROUP_LAST_SEEN];	
 
-
-		[[adium preferenceController] setPreference:[NSDate date]
-											 forKey:KEY_LAST_SEEN_DATE
-											  group:PREF_GROUP_LAST_SEEN
-											 object:inObject];
-	
 	//Don't update the status, just the date
 	} else if ([[notification name] isEqualToString:CONTACT_SEEN_ONLINE_NO]) {
-	
-		[[adium preferenceController] setPreference:[NSDate date]
-											 forKey:KEY_LAST_SEEN_DATE
-											  group:PREF_GROUP_LAST_SEEN
-											 object:inObject];
-	}
+		[inObject setPreference:[NSDate date]
+						 forKey:KEY_LAST_SEEN_DATE
+						  group:PREF_GROUP_LAST_SEEN];	}
 }
 
 #pragma mark Tooltip entry
