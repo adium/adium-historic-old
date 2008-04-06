@@ -56,7 +56,7 @@
 - (void)_updateVariantWithoutPrimingView;
 - (void)processQueuedContent;
 - (void)_processContentObject:(AIContentObject *)content willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
-- (void)_appendContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
+- (void)_appendContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects replaceLastContent:(BOOL)replaceLastContent;
 
 - (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject;
 - (void)releaseCurrentWebKitUserIconForObject:(AIListObject *)inObject;
@@ -607,7 +607,8 @@ static NSArray *draggedTypes = nil;
 - (void)_processContentObject:(AIContentObject *)content willAddMoreContentObjects:(BOOL)willAddMoreContentObjects
 {
 	AIContentEvent	*dateSeparator = nil;
-	
+	BOOL			replaceLastContent = NO;
+
 	/*
 	 If the day has changed since our last message (or if there was no previous message and 
 	 we are about to display context), insert a date line.
@@ -627,16 +628,22 @@ static NSArray *draggedTypes = nil;
 		//Add the date header
 		[self _appendContent:dateSeparator 
 					 similar:NO
-			willAddMoreContentObjects:YES];
+			willAddMoreContentObjects:YES
+		  replaceLastContent:NO];
 		[previousContent release]; previousContent = [dateSeparator retain];
 	}
 	
 	BOOL similar = (previousContent && [content isSimilarToContent:previousContent] && ![content isKindOfClass:[ESFileTransfer class]]);
-	
+	if ([previousContent isKindOfClass:[AIContentStatus class]] && [content isKindOfClass:[AIContentStatus class]] &&
+		[(AIContentStatus *)previousContent shouldCoalesce] && [(AIContentStatus *)content shouldCoalesce]) {
+		replaceLastContent = YES;
+	}
+
 	//Add the content object
 	[self _appendContent:content 
 				 similar:similar
-	willAddMoreContentObjects:willAddMoreContentObjects];
+	willAddMoreContentObjects:willAddMoreContentObjects
+	  replaceLastContent:replaceLastContent];
 		
 	[previousContent release]; previousContent = [content retain];
 }
@@ -644,11 +651,12 @@ static NSArray *draggedTypes = nil;
 /*!
  * @brief Append a content object
  */
-- (void)_appendContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects
+- (void)_appendContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects replaceLastContent:(BOOL)replaceLastContent
 {
 	[webView stringByEvaluatingJavaScriptFromString:[messageStyle scriptForAppendingContent:content
 																					similar:contentIsSimilar
-																  willAddMoreContentObjects:willAddMoreContentObjects]];
+																  willAddMoreContentObjects:willAddMoreContentObjects
+																		 replaceLastContent:replaceLastContent]];
 	if([[self messageStyle] isBackgroundTransparent]) {
 		[[webView window] performSelector:@selector(invalidateShadow)
 							   withObject:nil

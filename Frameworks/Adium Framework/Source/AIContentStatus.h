@@ -21,6 +21,7 @@
 @interface AIContentStatus : AIContentObject {
 	NSString			*statusType;
 	NSAttributedString	*loggedMessage;
+	BOOL				shouldCoalesce;
 }
 
 + (id)statusInChat:(AIChat *)inChat
@@ -33,5 +34,8 @@
 
 - (void)setLoggedMessage:(NSAttributedString *)inLoggedMessage;
 - (NSAttributedString *)loggedMessage;
+
+- (void)setShouldCoalesce:(BOOL)inShouldCoalesce;
+- (BOOL)shouldCoalesce;
 
 @end

@@ -160,7 +160,7 @@ typedef enum {
 /*!
  *	@brief Returns the BOM script for appending content
  */
-- (NSString *)scriptForAppendingContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
+- (NSString *)scriptForAppendingContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects replaceLastContent:(BOOL)replaceLastContent;
 
 /*!
  *	@brief Returns the BOM script for changing the view's variant
