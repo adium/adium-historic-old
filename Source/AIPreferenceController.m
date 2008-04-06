@@ -108,6 +108,11 @@
 			if ([thisDict count]) {
 				[thisDict removeObjectForKey:@"Message Context"];
 
+				//This was previously written out for every single contact. It's only needed for the exceptions
+				[thisDict removeObjectForKey:@"Last Used Spelling Languge"];
+				//This was previously written out for every single contact. It's only needed for the exceptions
+				[thisDict removeObjectForKey:@"Base Writing Direction"];
+
 				[prefsDict setObject:thisDict
 							  forKey:name];
 			}
@@ -363,7 +368,7 @@
 - (void)setPreferences:(NSDictionary *)inPrefDict inGroup:(NSString *)group object:(AIListObject *)object
 {
 	AIPreferenceContainer	*prefContainer = [self preferenceContainerForGroup:group object:object];
-	
+
 	[prefContainer setPreferenceChangedNotificationsEnabled:NO];
 	[prefContainer setValuesForKeysWithDictionary:inPrefDict];
 	[prefContainer setPreferenceChangedNotificationsEnabled:YES];
