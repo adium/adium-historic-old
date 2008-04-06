@@ -1090,6 +1090,8 @@
 		4BAE6D4307CFA0CB007E2820 /* AIAppearancePreferencesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAE6D4107CFA0CB007E2820 /* AIAppearancePreferencesPlugin.m */; };
 		4BAFD5CB06E00B7C00FF7FBC /* AIStressTestService.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BAFD5C906E00B7C00FF7FBC /* AIStressTestService.m */; };
 		4BB1E493067F2EAC00D1DB86 /* Scripts in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BB1E47D067F2E9F00D1DB86 /* Scripts */; };
+		4BB2EB220D88D76100CA7A7D /* timestamp32.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BB2EB200D88D76100CA7A7D /* timestamp32.png */; };
+		4BB2EB230D88D76100CA7A7D /* timestamp32_transparent.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BB2EB210D88D76100CA7A7D /* timestamp32_transparent.png */; };
 		4BB5B78207D2DC4900CFE06F /* pref-status.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BB5B78107D2DC4900CFE06F /* pref-status.png */; };
 		4BB7670D05B31DBA00E89FA2 /* crashDuck.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BB7670C05B31DBA00E89FA2 /* crashDuck.png */; };
 		4BB9972B083D1A5F006ACD6F /* SMContactListShowBehaviorPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BB99727083D1A5F006ACD6F /* SMContactListShowBehaviorPlugin.m */; };
@@ -3716,6 +3718,8 @@
 		4BAFD5E806E00D1700FF7FBC /* Service Icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Service Icons"; path = "Resources/Service Icons"; sourceTree = "<group>"; };
 		4BB19298079EE90900DAA523 /* PurpleDefaultsJabber.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = PurpleDefaultsJabber.plist; path = "Plugins/Purple Service/PurpleDefaultsJabber.plist"; sourceTree = "<group>"; };
 		4BB1E47D067F2E9F00D1DB86 /* Scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Scripts; path = Resources/Scripts; sourceTree = "<group>"; };
+		4BB2EB200D88D76100CA7A7D /* timestamp32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = timestamp32.png; path = Resources/timestamp32.png; sourceTree = "<group>"; };
+		4BB2EB210D88D76100CA7A7D /* timestamp32_transparent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = timestamp32_transparent.png; path = Resources/timestamp32_transparent.png; sourceTree = "<group>"; };
 		4BB5B78107D2DC4900CFE06F /* pref-status.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pref-status.png"; path = "Resources/pref-status.png"; sourceTree = "<group>"; };
 		4BB7670C05B31DBA00E89FA2 /* crashDuck.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = crashDuck.png; path = "Adium Crash Reporter/crashDuck.png"; sourceTree = "<group>"; };
 		4BB826B504C8876C00A8010A /* DockOverlayDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist; name = DockOverlayDefaults.plist; path = "Plugins/Contact Status Dock Overlays/DockOverlayDefaults.plist"; sourceTree = "<group>"; };
@@ -5798,6 +5802,8 @@
 				34DFF52607A62EB000B92233 /* Lock_Unlocked State.png */,
 				347E787507CA975900350507 /* remove.png */,
 				34D8326307CBD598006466F2 /* sendfile.png */,
+				4BB2EB200D88D76100CA7A7D /* timestamp32.png */,
+				4BB2EB210D88D76100CA7A7D /* timestamp32_transparent.png */,
 				345F58F208199727001F733C /* togglegroups.png */,
 				345F58F108199727001F733C /* togglegroups_transparent.png */,
 				34D8327607CBD5B3006466F2 /* ToolbarPrefs.plist */,
@@ -8176,6 +8182,7 @@
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
+			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			knownRegions = (
 				en,
@@ -8664,6 +8671,8 @@
 				4F1CB6410D640DA40073A1E6 /* events_segment.png in Resources */,
 				4F1CB6420D640DA40073A1E6 /* info_segment.png in Resources */,
 				4F1CB64C0D640F4F0073A1E6 /* ContactInfoInspector.nib in Resources */,
+				4BB2EB220D88D76100CA7A7D /* timestamp32.png in Resources */,
+				4BB2EB230D88D76100CA7A7D /* timestamp32_transparent.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

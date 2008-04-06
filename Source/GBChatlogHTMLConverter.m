@@ -36,10 +36,10 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 
 @implementation GBChatlogHTMLConverter
 
-+ (NSString *)readFile:(NSString *)filePath
++ (NSString *)readFile:(NSString *)filePath withOptions:(NSDictionary *)options
 {
 	GBChatlogHTMLConverter *converter = [[GBChatlogHTMLConverter alloc] init];
-	NSString *ret = [[converter readFile:filePath] retain];
+	NSString *ret = [[converter readFile:filePath withOptions:options] retain];
 	[converter release];
 	return [ret autorelease];
 }
@@ -105,13 +105,13 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	[super dealloc];
 }
 
-- (NSString *)readFile:(NSString *)filePath
+- (NSString *)readFile:(NSString *)filePath withOptions:(NSDictionary *)options
 {
 	NSData *inputData = [NSData dataWithContentsOfFile:filePath];
 	inputFileString = [[NSString alloc] initWithData:inputData encoding:NSUTF8StringEncoding];
 	NSURL *url = [[NSURL alloc] initFileURLWithPath:filePath];
 	output = [[NSMutableString alloc] init];
-	
+	showTimestamps = [[options objectForKey:@"showTimestamps"] boolValue];
 	CFXMLParserCallBacks callbacks = {
 		0,
 		createStructure,
@@ -280,15 +280,15 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 					}
 				}
 				
-				[output appendFormat:@"<div class=\"%@\"><span class=\"timestamp\">%@</span> <span class=\"sender\">%@%@: </span><pre class=\"message\">%@</pre></div>\n",
-					([mySN isEqualToString:sender] ? @"send" : @"receive"), 
-					[date descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:YES
-																								   showingAMorPM:YES]
-											   timeZone:nil
-												 locale:nil],
-					shownSender, 
-					(autoResponse ? AILocalizedString(@" (Autoreply)",nil) : @""),
-					message];
+				NSString *timestampStr = [date descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:YES
+																														showingAMorPM:YES]
+																	timeZone:nil
+																	  locale:nil];
+				[output appendFormat:@"<div class=\"%@\">%@<span class=\"sender\">%@%@:</span> <pre class=\"message\">%@</pre></div>\n",
+				 ([mySN isEqualToString:sender] ? @"send" : @"receive"),
+				 (showTimestamps ? [NSString stringWithFormat:@"<span class=\"timestamp\">%@</span> ", timestampStr] : @""),
+				 shownSender, (autoResponse ? AILocalizedString(@" (Autoreply)", nil) : @""),
+				 message];
 				state = XML_STATE_CHAT;
 			}
 			break;

@@ -29,6 +29,7 @@
 #define SEARCH							AILocalizedString(@"Search",nil)
 
 #define	KEY_LOG_VIEWER_EMOTICONS			@"Log Viewer Emoticons"
+#define	KEY_LOG_VIEWER_TIMESTAMPS			@"Log Viewer Timestamps"
 #define KEY_LOG_VIEWER_SELECTED_COLUMN		@"Log Viewer Selected Column Identifier"
 #define	LOG_VIEWER_DID_CREATE_LOG_ARRAYS	@"LogViewerDidCreateLogArrays"
 #define	LOG_VIEWER_DID_UPDATE_LOG_ARRAYS	@"LogViewerDidUpdateLogArrays"
@@ -145,6 +146,7 @@ typedef enum {
 	NSNumber			*allContactsIdentifier;
 	//Old
 	BOOL showEmoticons;
+	BOOL showTimestamps;
 }
 
 + (id)openForPlugin:(id)inPlugin;
