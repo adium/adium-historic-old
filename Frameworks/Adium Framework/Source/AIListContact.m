@@ -700,35 +700,33 @@
 //Writing Direction ----------------------------------------------------------------------------------------------------------
 #pragma mark Writing Direction
 
-- (NSWritingDirection)baseWritingDirection {
-	NSNumber	*dir;
-
-	if ((dir = [self preferenceForKey:KEY_BASE_WRITING_DIRECTION group:PREF_GROUP_WRITING_DIRECTION])) {
-		//If we have a saved base direction, we'll return that.
-		return [dir intValue];
-
-	} else {
-		//Otherwise, we'll try to be smart and use the default writing direction of the language of the user's locale
-		//(and not the language of the active localization). By that, we assume most users are mostly talking to their local friends.
-		NSString	*lang = nil;
-
-#ifdef __LITTLE_ENDIAN__
-		//An Intel build need not care about anything before 10.4
-		lang = [[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode];
-#else
-		/* Rather than manually loading this symbol from the appkit bundle, we'll just hard code its value.
-		 * Worst case is we nil or irrelevant data back, at which point NSParagraphStyle will return the default locale's direction
-		 * anyways.
+- (NSWritingDirection)defaultBaseWritingDirection
+{
+	static NSWritingDirection defaultBaseWritingDirection;
+	static BOOL determinedDefaultBaseWritingDirection = NO;
+	
+	if (!determinedDefaultBaseWritingDirection) {
+		/* Use  the default writing direction of the language of the user's locale (and not the language
+		 * of the active localization). By that, we assume most users are mostly talking to their local friends.
 		 */
-		lang = [[NSClassFromString(@"NSLocale") currentLocale] objectForKey:@"locale:language code"];
-#endif
-
-		return [NSParagraphStyle defaultWritingDirectionForLanguage:lang];
+		NSString	*lang = [[NSLocale currentLocale] objectForKey:NSLocaleLanguageCode];		
+		defaultBaseWritingDirection = [NSParagraphStyle defaultWritingDirectionForLanguage:lang];
+		determinedDefaultBaseWritingDirection = YES;
 	}
+	
+	return determinedDefaultBaseWritingDirection;
+}
+
+- (NSWritingDirection)baseWritingDirection {
+	NSNumber	*dir = [self preferenceForKey:KEY_BASE_WRITING_DIRECTION group:PREF_GROUP_WRITING_DIRECTION];
+
+	return (dir ? [dir intValue] : [self defaultBaseWritingDirection]);
 }
 
 - (void)setBaseWritingDirection:(NSWritingDirection)direction {
-	[self setPreference:[NSNumber numberWithInt:direction] forKey:KEY_BASE_WRITING_DIRECTION group:PREF_GROUP_WRITING_DIRECTION];
+	[self setPreference:[NSNumber numberWithInt:direction]
+				 forKey:KEY_BASE_WRITING_DIRECTION
+				  group:PREF_GROUP_WRITING_DIRECTION];
 }
 
 - (NSScriptObjectSpecifier *)objectSpecifier
