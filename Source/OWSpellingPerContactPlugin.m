@@ -48,7 +48,7 @@
 	
 	languageDict = [[NSMutableDictionary alloc] init];
 	
-	preferredLanguage = [[[NSUserDefaults standardUserDefaults] objectForKey:@"AppleLanguages"] objectAtIndex:0];
+	preferredLanguage = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"AppleLanguages"] objectAtIndex:0] retain];
 }
 
 /*!
@@ -57,7 +57,8 @@
 - (void)uninstallPlugin
 {
 	[languageDict release]; languageDict = nil;
-
+	[preferredLanguage release]; preferredLanguage = nil;
+	
 	[[adium notificationCenter] removeObserver:self];
 }
 
