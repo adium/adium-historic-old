@@ -3,86 +3,88 @@
 <head>
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<base href="%@">
-	<script type="text/ecmascript" defer="defer">
+	<script type="text/javascript">
+	
+		//avoid returning things like comment nodes, since they're not especially useful ;)
+		function getFirstFragmentChildElement(fragment) {
+			for(var i = 0; i < fragment.childNodes.length; i++)
+			{
+				var node = fragment.childNodes[i];
+				if(node.nodeType == 1) //element
+					return node;
+			}
+			return null;
+		}
 	
 		//Appending new content to the message view
 		function appendMessage(html) {
-			shouldScroll = nearBottom();
+			var shouldScroll = nearBottom();
 		
 			//Remove any existing insertion point
-			insert = document.getElementById("insert");
-			if(insert) insert.parentNode.removeChild(insert);
+			var insert = document.getElementById("insert");
+			if(insert) 
+				insert.parentNode.removeChild(insert);
 
 			//Append the new message to the bottom of our chat block
-			chat = document.getElementById("Chat");
-			range = document.createRange();
+			var chat = document.getElementById("Chat");
+			var range = document.createRange();
 			range.selectNode(chat);
-			documentFragment = range.createContextualFragment(html);
-			chat.appendChild(documentFragment);
+			var documentFragment = range.createContextualFragment(html);
+			chat.appendChild(getFirstFragmentChildElement(documentFragment));
 			
 			alignChat(shouldScroll);
 		}
 		function appendMessageNoScroll(html) {
 			//Remove any existing insertion point
-			insert = document.getElementById("insert");
+			var insert = document.getElementById("insert");
 			if(insert) insert.parentNode.removeChild(insert);
 
 			//Append the new message to the bottom of our chat block
-			chat = document.getElementById("Chat");
-			range = document.createRange();
+			var chat = document.getElementById("Chat");
+			var range = document.createRange();
 			range.selectNode(chat);
-			documentFragment = range.createContextualFragment(html);
-			chat.appendChild(documentFragment);
+			var documentFragment = range.createContextualFragment(html);
+			chat.appendChild(getFirstFragmentChildElement(documentFragment));
 		}
-		function appendNextMessage(html){
-			shouldScroll = nearBottom();
+		function appendNextMessage(html) {
+			var shouldScroll = nearBottom();
 
 			//Locate the insertion point
-			insert = document.getElementById("insert");
+			var insert = document.getElementById("insert");
 		
 			//make new node
-			range = document.createRange();
+			var range = document.createRange();
 			range.selectNode(insert.parentNode);
-			newNode = range.createContextualFragment(html);
+			var frag = range.createContextualFragment(html);
 
 			//swap
-			insert.parentNode.replaceChild(newNode,insert);
+			insert.parentNode.replaceChild(frag,insert);
 			
 			alignChat(shouldScroll);
 		}
 		function appendNextMessageNoScroll(html){
 			//Locate the insertion point
-			insert = document.getElementById("insert");
+			var insert = document.getElementById("insert");
 		
 			//make new node
-			range = document.createRange();
+			var range = document.createRange();
 			range.selectNode(insert.parentNode);
-			newNode = range.createContextualFragment(html);
+			var frag = range.createContextualFragment(html);
 
 			//swap
-			insert.parentNode.replaceChild(newNode,insert);
+			insert.parentNode.replaceChild(frag,insert);
 		}
-		function replaceLastMessage(html){
-            shouldScroll = nearBottom();
-
-            //Retrieve the current insertion point, then remove it
-            //This requires that there have been an insertion point... is there a better way to retrieve the last element? -evands
-			insert = document.getElementById("insert");
-            parentNode = insert.parentNode;
-   			lastMessage = insert.previousSibling;
-   			parentNode.removeChild(insert);
+		function replaceLastMessage(html) {
+            var shouldScroll = nearBottom();
 
             //Delete the previous message
-            chat = document.getElementById("Chat");
-			range = document.createRange();
-			range.setStart(lastMessage, 0)
-			range.setEndAfter(lastMessage);
-			range.deleteContents();
-
+            var chat = document.getElementById("Chat");
+			var lastMessage = chat.childNodes[chat.childNodes.length - 1];
+			
             //Now append the message itself
 			range.selectNode(chat);
-			documentFragment = range.createContextualFragment(html);
-			chat.appendChild(documentFragment);
+			var documentFragment = range.createContextualFragment(html);
+			chat.replaceChild(getFirstFragmentChildElement(documentFragment), lastMessage);
 			
             alignChat(shouldScroll);
 		}
@@ -96,13 +98,14 @@
 
 		//Dynamically exchange the active stylesheet
 		function setStylesheet( id, url ) {
-			code = "<style id=\"" + id + "\" type=\"text/css\" media=\"screen,print\">";
-			if( url.length ) code += "@import url( \"" + url + "\" );";
+			var code = "<style id=\"" + id + "\" type=\"text/css\" media=\"screen,print\">";
+			if( url.length ) 
+				code += "@import url( \"" + url + "\" );";
 			code += "</style>";
-			range = document.createRange();
-			head = document.getElementsByTagName( "head" ).item(0);
+			var range = document.createRange();
+			var head = document.getElementsByTagName( "head" ).item(0);
 			range.selectNode( head );
-			documentFragment = range.createContextualFragment( code );
+			var documentFragment = range.createContextualFragment( code );
 			head.removeChild( document.getElementById( id ) );
 			head.appendChild( documentFragment );
 		}
@@ -110,23 +113,23 @@
 		//Swap an image with its alt-tag text on click, or expand/unexpand an attached image
 		document.onclick = imageCheck;
 		function imageCheck() {		
-			node = event.target;
+			var node = event.target;
 			if(node.tagName == 'IMG' && !client.zoomImage(node) && node.alt) {
-				a = document.createElement('a');
+				var a = document.createElement('a');
 				a.setAttribute('onclick', 'imageSwap(this)');
 				a.setAttribute('src', node.getAttribute('src'));
 				a.className = node.className;
-				text = document.createTextNode(node.alt);
+				var text = document.createTextNode(node.alt);
 				a.appendChild(text);
 				node.parentNode.replaceChild(a, node);
 			}
 		}
 
 		function imageSwap(node) {
-			shouldScroll = nearBottom();
+			var shouldScroll = nearBottom();
 
 			//Swap the image/text
-			img = document.createElement('img');
+			var img = document.createElement('img');
 			img.setAttribute('src', node.getAttribute('src'));
 			img.setAttribute('alt', node.firstChild.nodeValue);
 			img.className = node.className;
@@ -140,7 +143,7 @@
 			var windowHeight = window.innerHeight;
 			
 			if (windowHeight > 0) {
-				var contentElement = document.getElementById('Chat');
+				var contentElement = document.body;
 				var contentHeight = contentElement.offsetHeight;
 				if (windowHeight - contentHeight > 0) {
 					contentElement.style.position = 'relative';
@@ -150,7 +153,8 @@
 				}
 			}
 			
-			if (shouldScroll) scrollToBottom();
+			if (shouldScroll) 
+				scrollToBottom();
 		}
 		
 		function windowDidResize(){
