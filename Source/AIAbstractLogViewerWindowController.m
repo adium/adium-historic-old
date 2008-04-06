@@ -62,9 +62,14 @@
 
 #define HIDE_EMOTICONS					AILocalizedString(@"Hide Emoticons",nil)
 #define SHOW_EMOTICONS					AILocalizedString(@"Show Emoticons",nil)
+#define HIDE_TIMESTAMPS					AILocalizedString(@"Hide Timestamps",nil)
+#define SHOW_TIMESTAMPS					AILocalizedString(@"Show Timestamps",nil)
 
 #define IMAGE_EMOTICONS_OFF				@"emoticon32"
 #define IMAGE_EMOTICONS_ON				@"emoticon32_transparent"
+#define IMAGE_TIMESTAMPS_OFF			@"timestamp32"
+#define IMAGE_TIMESTAMPS_ON				@"timestamp32_transparent"
+
 
 #define	REFRESH_RESULTS_INTERVAL		1.0 //Interval between results refreshes while searching
 
@@ -161,6 +166,7 @@ static int toArraySort(id itemA, id itemB, void *context);
     searching = NO;
     automaticSearch = YES;
     showEmoticons = NO;
+		showTimestamps = YES;
     activeSearchString = nil;
     displayedLogArray = nil;
     windowIsClosing = NO;
@@ -379,11 +385,17 @@ static int toArraySort(id itemA, id itemB, void *context);
 										forAttribute:NSAccessibilityRoleDescriptionAttribute];
 	[containingView_contactsSourceList release];
 
-    //Set emoticon filtering
-    showEmoticons = [[[adium preferenceController] preferenceForKey:KEY_LOG_VIEWER_EMOTICONS
-                                                              group:PREF_GROUP_LOGGING] boolValue];
-    [[toolbarItems objectForKey:@"toggleemoticons"] setLabel:(showEmoticons ? HIDE_EMOTICONS : SHOW_EMOTICONS)];
-    [[toolbarItems objectForKey:@"toggleemoticons"] setImage:[NSImage imageNamed:(showEmoticons ? IMAGE_EMOTICONS_ON : IMAGE_EMOTICONS_OFF) forClass:[self class]]];
+	//Set emoticon filtering
+	showEmoticons = [[[adium preferenceController] preferenceForKey:KEY_LOG_VIEWER_EMOTICONS
+																														group:PREF_GROUP_LOGGING] boolValue];
+	[[toolbarItems objectForKey:@"toggleemoticons"] setLabel:(showEmoticons ? HIDE_EMOTICONS : SHOW_EMOTICONS)];
+	[[toolbarItems objectForKey:@"toggleemoticons"] setImage:[NSImage imageNamed:(showEmoticons ? IMAGE_EMOTICONS_ON : IMAGE_EMOTICONS_OFF) forClass:[self class]]];
+
+	// Set timestamp filtering
+	showTimestamps = [[[adium preferenceController] preferenceForKey:KEY_LOG_VIEWER_TIMESTAMPS
+																														 group:PREF_GROUP_LOGGING] boolValue];
+	[[toolbarItems objectForKey:@"toggletimestamps"] setLabel:(showTimestamps ? HIDE_TIMESTAMPS : SHOW_TIMESTAMPS)];
+	[[toolbarItems objectForKey:@"toggletimestamps"] setImage:[NSImage imageNamed:(showTimestamps ? IMAGE_TIMESTAMPS_ON : IMAGE_TIMESTAMPS_OFF) forClass:[self class]]];
 
 	//Toolbar
 	[self installToolbar];	
@@ -472,6 +484,11 @@ static int toArraySort(id itemA, id itemB, void *context);
 	[[adium preferenceController] setPreference:[NSNumber numberWithBool:showEmoticons]
 										 forKey:KEY_LOG_VIEWER_EMOTICONS
 										  group:PREF_GROUP_LOGGING];
+											
+	// Set preference for timestamp filtering
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:showTimestamps]
+																			 forKey:KEY_LOG_VIEWER_TIMESTAMPS
+																				group:PREF_GROUP_LOGGING];
 	
 	//Set preference for selected column
 	[[adium preferenceController] setPreference:[selectedColumn identifier]
@@ -743,8 +760,10 @@ static int toArraySort(id itemA, id itemB, void *context);
 						NSLog(@"Could not write fix!");
 				}
 			}
-			NSString *logFileText = [GBChatlogHTMLConverter readFile:logFullPath];
-
+			
+			NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:showTimestamps]
+																forKey:@"showTimestamps"];
+			NSString *logFileText = [GBChatlogHTMLConverter readFile:logFullPath withOptions:options];
 			if (logFileText) {
 				if (displayText)
 					[displayText appendAttributedString:[AIHTMLDecoder decodeHTML:logFileText]];
@@ -1659,6 +1678,15 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 	[self displayLogs:displayedLogArray];
 }
 
+- (IBAction)toggleTimestampFiltering:(id)sender
+{
+	showTimestamps = !showTimestamps;
+	[sender setLabel:(showTimestamps ? HIDE_TIMESTAMPS : SHOW_TIMESTAMPS)];
+	[sender setImage:[NSImage imageNamed:(showTimestamps ? IMAGE_TIMESTAMPS_ON : IMAGE_TIMESTAMPS_OFF) forClass:[self class]]];
+
+	[self displayLogs:displayedLogArray];
+}
+
 #pragma mark Outline View Data source
 - (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
 {
@@ -2020,6 +2048,17 @@ static int toArraySort(id itemA, id itemB, void *context)
 									   itemContent:[NSImage imageNamed:(showEmoticons ? IMAGE_EMOTICONS_ON : IMAGE_EMOTICONS_OFF) forClass:[self class]]
 											action:@selector(toggleEmoticonFiltering:)
 											  menu:nil];
+	// Toggle Timestamps
+	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
+																	withIdentifier:@"toggletimestamps"
+																					 label:(showTimestamps ? HIDE_TIMESTAMPS : SHOW_TIMESTAMPS)
+																		paletteLabel:AILocalizedString(@"Show/Hide Timestamps", nil)
+																				 toolTip:AILocalizedString(@"Show or hide timestamps in logs", nil)
+																				  target:self
+																 settingSelector:@selector(setImage:)
+																		 itemContent:[NSImage imageNamed:(showTimestamps ? IMAGE_TIMESTAMPS_ON : IMAGE_TIMESTAMPS_OFF) forClass:[self class]]
+																					action:@selector(toggleTimestampFiltering:)
+																						menu:nil];
 
 	[[self window] setToolbar:toolbar];
 
@@ -2034,7 +2073,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
     return [NSArray arrayWithObjects:DATE_ITEM_IDENTIFIER, NSToolbarFlexibleSpaceItemIdentifier,
-		@"delete", @"toggleemoticons", NSToolbarPrintItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier,
+		@"delete", @"toggleemoticons", @"toggletimestamps", NSToolbarPrintItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier,
 		@"search", nil];
 }
 

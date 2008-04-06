@@ -49,6 +49,7 @@ typedef enum {
 	NSCalendarDate	*date;
 	int				messageStart;
 	BOOL			autoResponse;
+	BOOL			showTimestamps;
 	NSString		*status;
 	
 	NSMutableString *output;
@@ -57,7 +58,7 @@ typedef enum {
 	AINameFormat	nameFormat;
 }
 
-+ (NSString *)readFile:(NSString *)filePath;
-- (NSString *)readFile:(NSString *)filePath;
++ (NSString *)readFile:(NSString *)filePath withOptions:(NSDictionary *)options;
+- (NSString *)readFile:(NSString *)filePath withOptions:(NSDictionary *)options;
 
 @end
