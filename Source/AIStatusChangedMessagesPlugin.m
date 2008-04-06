@@ -191,6 +191,8 @@ static	NSDictionary	*statusTypeDict = nil;
 			[content setLoggedMessage:loggedMessage];
 		}
 
+		[content setShouldCoalesce:YES];
+		
 		//Add the object
 		[[adium contentController] receiveContentObject:content];
 		

@@ -44,6 +44,7 @@
 #define APPEND_NEXT_MESSAGE				@"appendNextMessage(\"%@\");"
 #define APPEND_MESSAGE_NO_SCROLL		@"appendMessageNoScroll(\"%@\");"
 #define	APPEND_NEXT_MESSAGE_NO_SCROLL	@"appendNextMessageNoScroll(\"%@\");"
+#define REPLACE_LAST_MESSAGE			@"replaceLastMessage(\"%@\");"
 
 #define VALID_SENDER_COLORS_ARRAY [[NSArray alloc] initWithObjects:@"red", @"blue" , @"gray", @"magenta", @"violet", @"olive", @"yellowgreen", @"darkred", @"darkgreen", @"darksalmon", @"darkcyan", @"darkyellow", @"mediumpurple", @"peru", @"olivedrab", @"royalred", @"darkorange", @"slateblue", @"slategray", @"goldenrod", @"orangered", @"tomato", @"dodgerblue", @"steelblue", @"deeppink", @"saddlebrown", @"coral", @"royalblue", nil]
 
@@ -457,7 +458,7 @@ static NSArray *validSenderColors;
 }
 
 #pragma mark Scripts
-- (NSString *)scriptForAppendingContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects
+- (NSString *)scriptForAppendingContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects replaceLastContent:(BOOL)replaceLastContent
 {
 	NSMutableString	*newHTML;
 	NSString		*script;
@@ -471,7 +472,9 @@ static NSArray *validSenderColors;
 	
 	//BOM scripts vary by style version
 	if (styleVersion >= 3) {
-		if (willAddMoreContentObjects) {
+		if (replaceLastContent)
+			script = REPLACE_LAST_MESSAGE;
+		else if (willAddMoreContentObjects) {
 			script = (contentIsSimilar ? APPEND_NEXT_MESSAGE_NO_SCROLL : APPEND_MESSAGE_NO_SCROLL);
 		} else {
 			script = (contentIsSimilar ? APPEND_NEXT_MESSAGE : APPEND_MESSAGE);

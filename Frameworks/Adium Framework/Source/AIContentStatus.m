@@ -106,4 +106,14 @@
 	return loggedMessage;
 }
 
+- (void)setShouldCoalesce:(BOOL)inShouldCoalesce
+{
+	shouldCoalesce = inShouldCoalesce;
+}
+
+- (BOOL)shouldCoalesce
+{
+	return shouldCoalesce;
+}
+
 @end
