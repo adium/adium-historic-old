@@ -24,12 +24,11 @@
 @class RBSplitView;
 
 @interface AIMessageViewController : AIObject <AIListControllerDelegate> {
-    IBOutlet	NSView					*view_contents;
+    IBOutlet	NSView			*view_contents;
 	
 	//Split views
-	IBOutlet	RBSplitView	*splitView_textEntryHorizontal;
+	IBOutlet	RBSplitView		*splitView_textEntryHorizontal;
 	
-
 	//Message Display
 	NSView											*controllerView_messages;
 	IBOutlet	AIMessageWindowOutgoingScrollView	*scrollView_messages;
@@ -44,7 +43,7 @@
 	//Text entry
 	IBOutlet	NSScrollView			*scrollView_outgoing;
 	IBOutlet	AIMessageEntryTextView	*textView_outgoing;
-	
+
 	IBOutlet	NSView					*nibrootView_messageView;
 	IBOutlet	NSView					*nibrootView_shelfVew;
 	IBOutlet	NSView					*nibrootView_userList;
@@ -54,19 +53,20 @@
 	AIAccountSelectionView					*view_accountSelection;
 	AIMessageWindowController				*messageWindowController;
 
-
 	//widgetstrip
 	IBOutlet				KNShelfSplitView				*shelfView;
 	
 	//menuitem
-	NSMenuItem *						showHide;
-	
+	NSMenuItem				*showHide;
+
     AIChat					*chat;
 	BOOL					suppressSendLaterPrompt;
 	int						entryMinHeight;
 	int						userListMinWidth;
 
-	NSUndoManager		*undoManager;
+	NSUndoManager			*undoManager;
+	
+	NSWritingDirection		initialBaseWritingDirection;
 }
 
 + (AIMessageViewController *)messageDisplayControllerForChat:(AIChat *)inChat;

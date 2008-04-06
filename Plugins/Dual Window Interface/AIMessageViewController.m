@@ -166,7 +166,9 @@
 
 		//Set our base writing direction
 		if (contact) {
-			[textView_outgoing setBaseWritingDirection:[contact baseWritingDirection]];
+			initialBaseWritingDirection = [contact baseWritingDirection];
+			[textView_outgoing setBaseWritingDirection:initialBaseWritingDirection];
+			AILogWithSignature(@"initialBaseWritingDirection is %i", initialBaseWritingDirection);
 		}
 	}
 
@@ -192,7 +194,7 @@
 	}
 	
 	//Save the base writing direction
-	if (contact)
+	if (contact && initialBaseWritingDirection != [textView_outgoing baseWritingDirection])
 		[contact setBaseWritingDirection:[textView_outgoing baseWritingDirection]];
 
 	[chat release]; chat = nil;
