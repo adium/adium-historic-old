@@ -326,9 +326,9 @@ extern CGSConnection _CGSDefaultConnection(void);
 	int currentWorkspace, windowWorkspace;
 
 	err = CGSGetWorkspace(_CGSDefaultConnection(), &currentWorkspace);
-	if (err == noErr) {
+	if (err == kCGErrorSuccess) {
 		CGSGetWindowWorkspace(_CGSDefaultConnection(), [self windowNumber], &windowWorkspace);
-		if (err == noErr) {
+		if (err == kCGErrorSuccess) {
 			return (currentWorkspace == windowWorkspace);
 		}
 	}
