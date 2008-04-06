@@ -47,6 +47,8 @@
 							 object:nil];
 	
 	languageDict = [[NSMutableDictionary alloc] init];
+	
+	preferredLanguage = [[[NSUserDefaults standardUserDefaults] objectForKey:@"AppleLanguages"] objectAtIndex:0];
 }
 
 /*!
@@ -98,18 +100,15 @@
 				}
 
 				if (!newChatLanguage) {
-					//If no preference, set to @"" so we won't keep trying to load the preference
-					newChatLanguage = @"";
+					//If no preference, use the preferred language
+					newChatLanguage = preferredLanguage;
 				}
 
 				[languageDict setObject:newChatLanguage
 								 forKey:chatID];
 			}
-			
-			if ([newChatLanguage length]) {
-				//Only set the language if we have one specified
-				[[NSSpellChecker sharedSpellChecker] setLanguage:newChatLanguage];
-			}
+
+			[[NSSpellChecker sharedSpellChecker] setLanguage:newChatLanguage];
 		}
 	}
 	@catch(id exc) {}
@@ -120,20 +119,24 @@
  */
 - (void)chatWillClose:(NSNotification *)notification
 {
-	AIChat		 *chat = [notification object];
-	AIListObject *listObject = [chat listObject];
+	AIChat			*chat = [notification object];
+	AIListContact	*listObject = [chat listObject];
 
 	if (listObject) {
 		NSString	 *chatID = [chat uniqueChatID];
 		NSString	 *chatLanguage = [languageDict objectForKey:chatID];
+		NSString	 *previousLanguage = [listObject preferenceForKey:KEY_LAST_USED_SPELLING group:GROUP_LAST_USED_SPELLING];
 
-		//If we didn't cache a language for this chat, we might just never have made it inactive; save the current language
+		//If we didn't cache a language for this chat, we might just never have made it inactive; use the spell checker's current language
 		if (!chatLanguage) chatLanguage = [[NSSpellChecker sharedSpellChecker] language];
+
+		//Now, if we end up at the user's default language, we don't want to store anything
+		if ([preferredLanguage isEqualToString:chatLanguage])
+			chatLanguage = nil;
 		
-		//Save the last used language for this chat as it closes
 		[listObject setPreference:chatLanguage
 						   forKey:KEY_LAST_USED_SPELLING
-							group:GROUP_LAST_USED_SPELLING];
+							group:GROUP_LAST_USED_SPELLING];			
 
 		[languageDict removeObjectForKey:chatID];
 	}
