@@ -229,21 +229,9 @@ static NSRect screenBoundariesRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	return YES;
 }
 
-/*!
- * @brief Return a string representation of the saved frame
- *
- * This is a fixed implementation of -[NSWindow stringWithSavedFrame].  The built-in stringWithSavedFrame method
- * performs some odd behavior when the window overlaps the dock and has a toolbar visible, moving it up by the height
- * of the toolbar.
- */
 - (NSString *)stringWithSavedFrame
 {
-	NSRect frame = [[self window] frame];
-	NSRect screenFrame = [[[self window] screen] frame];
-
-	return [NSString stringWithFormat:@"%.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f",
-			NSMinX(frame), NSMinY(frame), NSWidth(frame), NSHeight(frame),
-			NSMinX(screenFrame), NSMinY(screenFrame), NSWidth(screenFrame), NSHeight(screenFrame)];	
+	return [[self window] stringWithSavedFrame];
 }
 
 /*!
