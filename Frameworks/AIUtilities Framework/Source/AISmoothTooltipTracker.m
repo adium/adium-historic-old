@@ -329,7 +329,8 @@ extern CGSConnection _CGSDefaultConnection(void);
 	if (err == noErr) {
 		CGSGetWindowWorkspace(_CGSDefaultConnection(), [self windowNumber], &windowWorkspace);
 		if (err == noErr) {
-			return (currentWorkspace == windowWorkspace);
+			//If windowWorkspace is 0, the window is showing on every workspace, so it definitely is on the current one.
+			return ((currentWorkspace == windowWorkspace) || (windowWorkspace == 0));
 		}
 	}
 	
