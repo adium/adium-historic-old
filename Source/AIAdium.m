@@ -1198,4 +1198,14 @@ static NSString	*prefsCategory;
 	return [NSArray arrayWithObjects:UPDATE_GENERATION_DICT, UPDATE_TYPE_DICT, nil];
 }
 
+//Treat debug builds as being the same as their corresponding version
+- (NSComparisonResult)compareVersion:(NSString *)appcastVersion toVersion:(NSString *)appVersion;
+{
+	NSRange debugRange;
+	if ((debugRange = [appVersion rangeOfString:@"-debug"]).location != NSNotFound)
+		appcastVersion = [appVersion substringToIndex:debugRange.location];
+
+	return SUStandardVersionComparison(appcastVersion, appVersion);
+}
+
 @end
