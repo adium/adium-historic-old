@@ -48,7 +48,15 @@
 	
 	languageDict = [[NSMutableDictionary alloc] init];
 	
-	preferredLanguage = [[[[NSUserDefaults standardUserDefaults] objectForKey:@"AppleLanguages"] objectAtIndex:0] retain];
+	//Find the first language the user prefers which the spellchecker knows about, then keep it around for future reference
+	NSEnumerator *enumerator = [[[NSUserDefaults standardUserDefaults] objectForKey:@"AppleLanguages"] objectEnumerator];
+	NSString	 *language;
+	while ((language = [enumerator nextObject])) {
+		if ([[NSSpellChecker sharedSpellChecker] setLanguage:language]) {
+			preferredLanguage = [language retain];
+			break;
+		}
+	}
 }
 
 /*!
