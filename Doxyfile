@@ -143,6 +143,7 @@ EXCLUDE_PATTERNS       = */build/* \
                          */OTR.framework/* \
                          */Other/* \
                          */Release/* \
+                         */.svn \
                          */.svn/* \
                          */*.nib/* \
                          */Libpurple.framework/*
