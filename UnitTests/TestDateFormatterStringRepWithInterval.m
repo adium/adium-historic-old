@@ -2,14 +2,6 @@
 #import <AIUtilities/AICalendarDateAdditions.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
 
-//Numbers used by the test for various units.
-//Why 65? In order to prove an earlier fix (r23098). For further information, see #8921.
-#define NUM_WEEKS   65
-#define NUM_DAYS     5
-#define NUM_HOURS   10
-#define NUM_MINUTES 10
-#define NUM_SECONDS 10
-
 @implementation TestDateFormatterStringRepWithInterval
 
 //Note: All of these delta values that we pass to NSCalendarDate need to be NEGATIVE, because we're looking to get a string representation of the interval since some time in the past.
@@ -21,7 +13,7 @@
 		             days:-0
 		            hours:-0
 		          minutes:-0
-		          seconds:-NUM_SECONDS];
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"10 seconds", @"Unexpected string for time interval");
 }
@@ -32,7 +24,7 @@
 		           months:-0
 		             days:-0
 		            hours:-0
-		          minutes:-NUM_MINUTES
+		          minutes:-10
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"10 minutes", @"Unexpected string for time interval");
@@ -44,8 +36,8 @@
 		           months:-0
 		             days:-0
 		            hours:-0
-		          minutes:-NUM_MINUTES
-		          seconds:-NUM_SECONDS];
+		          minutes:-10
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"10 minutes 10 seconds", @"Unexpected string for time interval");
 }
@@ -55,7 +47,7 @@
 		dateByAddingYears:-0
 		           months:-0
 		             days:-0
-		            hours:-NUM_HOURS
+		            hours:-10
 		          minutes:-0
 		          seconds:-0];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"10 hours", @"Unexpected string for time interval");
@@ -66,9 +58,9 @@
 		dateByAddingYears:-0
 		           months:-0
 		             days:-0
-		            hours:-NUM_HOURS
+		            hours:-10
 		          minutes:-0
-		          seconds:-NUM_SECONDS];
+		          seconds:-10];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"10 hours 10 seconds", @"Unexpected string for time interval");
 }
 - (void)testDateFormatterStringRepWithInterval_hoursMinutes {
@@ -77,8 +69,8 @@
 		dateByAddingYears:-0
 		           months:-0
 		             days:-0
-		            hours:-NUM_HOURS
-		          minutes:-NUM_MINUTES
+		            hours:-10
+		          minutes:-10
 		          seconds:-0];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"10 hours 10 minutes", @"Unexpected string for time interval");
 }
@@ -88,9 +80,9 @@
 		dateByAddingYears:-0
 		           months:-0
 		             days:-0
-		            hours:-NUM_HOURS
-		          minutes:-NUM_MINUTES
-		          seconds:-NUM_SECONDS];
+		            hours:-10
+		          minutes:-10
+		          seconds:-10];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"10 hours 10 minutes 10 seconds", @"Unexpected string for time interval");
 }
 - (void)testDateFormatterStringRepWithInterval_days {
@@ -98,7 +90,7 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:-NUM_DAYS
+		             days:-5
 		            hours:-0
 		          minutes:-0
 		          seconds:-0];
@@ -110,10 +102,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:-NUM_DAYS
+		             days:-5
 		            hours:-0
 		          minutes:-0
-		          seconds:-NUM_SECONDS];
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"5 days 10 seconds", @"Unexpected string for time interval");
 }
@@ -122,9 +114,9 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:-NUM_DAYS
+		             days:-5
 		            hours:-0
-		          minutes:-NUM_MINUTES
+		          minutes:-10
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"5 days 10 minutes", @"Unexpected string for time interval");
@@ -134,10 +126,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:-NUM_DAYS
+		             days:-5
 		            hours:-0
-		          minutes:-NUM_MINUTES
-		          seconds:-NUM_SECONDS];
+		          minutes:-10
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"5 days 10 minutes 10 seconds", @"Unexpected string for time interval");
 }
@@ -146,8 +138,8 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:-NUM_DAYS
-		            hours:-NUM_HOURS
+		             days:-5
+		            hours:-10
 		          minutes:-0
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
@@ -158,10 +150,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:-NUM_DAYS
-		            hours:-NUM_HOURS
+		             days:-5
+		            hours:-10
 		          minutes:-0
-		          seconds:-NUM_SECONDS];
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"5 days 10 hours 10 seconds", @"Unexpected string for time interval");
 }
@@ -170,9 +162,9 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:-NUM_DAYS
-		            hours:-NUM_HOURS
-		          minutes:-NUM_MINUTES
+		             days:-5
+		            hours:-10
+		          minutes:-10
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"5 days 10 hours 10 minutes", @"Unexpected string for time interval");
@@ -182,10 +174,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:-NUM_DAYS
-		            hours:-NUM_HOURS
-		          minutes:-NUM_MINUTES
-		          seconds:-NUM_SECONDS];
+		             days:-5
+		            hours:-10
+		          minutes:-10
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"5 days 10 hours 10 minutes 10 seconds", @"Unexpected string for time interval");
 }
@@ -194,7 +186,7 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS
+		             days:7 * -65
 		            hours:-0
 		          minutes:-0
 		          seconds:-0];
@@ -206,10 +198,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS
+		             days:7 * -65
 		            hours:-0
 		          minutes:-0
-		          seconds:-NUM_SECONDS];
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"65 weeks 10 seconds", @"Unexpected string for time interval");
 }
@@ -218,9 +210,9 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS
+		             days:7 * -65
 		            hours:-0
-		          minutes:-NUM_MINUTES
+		          minutes:-10
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"65 weeks 10 minutes", @"Unexpected string for time interval");
@@ -230,10 +222,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS
+		             days:7 * -65
 		            hours:-0
-		          minutes:-NUM_MINUTES
-		          seconds:-NUM_SECONDS];
+		          minutes:-10
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"65 weeks 10 minutes 10 seconds", @"Unexpected string for time interval");
 }
@@ -242,8 +234,8 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS
-		            hours:-NUM_HOURS
+		             days:7 * -65
+		            hours:-10
 		          minutes:-0
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
@@ -254,10 +246,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS
-		            hours:-NUM_HOURS
+		             days:7 * -65
+		            hours:-10
 		          minutes:-0
-		          seconds:-NUM_SECONDS];
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"65 weeks 10 hours 10 seconds", @"Unexpected string for time interval");
 }
@@ -266,9 +258,9 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS
-		            hours:-NUM_HOURS
-		          minutes:-NUM_MINUTES
+		             days:7 * -65
+		            hours:-10
+		          minutes:-10
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"65 weeks 10 hours 10 minutes", @"Unexpected string for time interval");
@@ -278,10 +270,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS
-		            hours:-NUM_HOURS
-		          minutes:-NUM_MINUTES
-		          seconds:-NUM_SECONDS];
+		             days:7 * -65
+		            hours:-10
+		          minutes:-10
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"65 weeks 10 hours 10 minutes 10 seconds", @"Unexpected string for time interval");
 }
@@ -290,7 +282,7 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS + -NUM_DAYS
+		             days:7 * -65 + -5
 		            hours:-0
 		          minutes:-0
 		          seconds:-0];
@@ -302,10 +294,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS + -NUM_DAYS
+		             days:7 * -65 + -5
 		            hours:-0
 		          minutes:-0
-		          seconds:-NUM_SECONDS];
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"65 weeks 5 days 10 seconds", @"Unexpected string for time interval");
 }
@@ -314,9 +306,9 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS + -NUM_DAYS
+		             days:7 * -65 + -5
 		            hours:-0
-		          minutes:-NUM_MINUTES
+		          minutes:-10
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"65 weeks 5 days 10 minutes", @"Unexpected string for time interval");
@@ -326,10 +318,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS + -NUM_DAYS
+		             days:7 * -65 + -5
 		            hours:-0
-		          minutes:-NUM_MINUTES
-		          seconds:-NUM_SECONDS];
+		          minutes:-10
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"65 weeks 5 days 10 minutes 10 seconds", @"Unexpected string for time interval");
 }
@@ -338,8 +330,8 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS + -NUM_DAYS
-		            hours:-NUM_HOURS
+		             days:7 * -65 + -5
+		            hours:-10
 		          minutes:-0
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
@@ -350,10 +342,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS + -NUM_DAYS
-		            hours:-NUM_HOURS
+		             days:7 * -65 + -5
+		            hours:-10
 		          minutes:-0
-		          seconds:-NUM_SECONDS];
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"65 weeks 5 days 10 hours 10 seconds", @"Unexpected string for time interval");
 }
@@ -362,9 +354,9 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS + -NUM_DAYS
-		            hours:-NUM_HOURS
-		          minutes:-NUM_MINUTES
+		             days:7 * -65 + -5
+		            hours:-10
+		          minutes:-10
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"65 weeks 5 days 10 hours 10 minutes", @"Unexpected string for time interval");
@@ -374,10 +366,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS + -NUM_DAYS
-		            hours:-NUM_HOURS
-		          minutes:-NUM_MINUTES
-		          seconds:-NUM_SECONDS];
+		             days:7 * -65 + -5
+		            hours:-10
+		          minutes:-10
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date], @"65 weeks 5 days 10 hours 10 minutes 10 seconds", @"Unexpected string for time interval");
 }
@@ -390,7 +382,7 @@
 		             days:-0
 		            hours:-0
 		          minutes:-0
-		          seconds:-NUM_SECONDS];
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"10s", @"Unexpected string for time interval");
 }
@@ -401,7 +393,7 @@
 		           months:-0
 		             days:-0
 		            hours:-0
-		          minutes:-NUM_MINUTES
+		          minutes:-10
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"10m", @"Unexpected string for time interval");
@@ -413,8 +405,8 @@
 		           months:-0
 		             days:-0
 		            hours:-0
-		          minutes:-NUM_MINUTES
-		          seconds:-NUM_SECONDS];
+		          minutes:-10
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"10m 10s", @"Unexpected string for time interval");
 }
@@ -424,7 +416,7 @@
 		dateByAddingYears:-0
 		           months:-0
 		             days:-0
-		            hours:-NUM_HOURS
+		            hours:-10
 		          minutes:-0
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
@@ -436,9 +428,9 @@
 		dateByAddingYears:-0
 		           months:-0
 		             days:-0
-		            hours:-NUM_HOURS
+		            hours:-10
 		          minutes:-0
-		          seconds:-NUM_SECONDS];
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"10h 10s", @"Unexpected string for time interval");
 }
@@ -448,8 +440,8 @@
 		dateByAddingYears:-0
 		           months:-0
 		             days:-0
-		            hours:-NUM_HOURS
-		          minutes:-NUM_MINUTES
+		            hours:-10
+		          minutes:-10
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"10h 10m", @"Unexpected string for time interval");
@@ -460,9 +452,9 @@
 		dateByAddingYears:-0
 		           months:-0
 		             days:-0
-		            hours:-NUM_HOURS
-		          minutes:-NUM_MINUTES
-		          seconds:-NUM_SECONDS];
+		            hours:-10
+		          minutes:-10
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"10h 10m 10s", @"Unexpected string for time interval");
 }
@@ -471,7 +463,7 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:-NUM_DAYS
+		             days:-5
 		            hours:-0
 		          minutes:-0
 		          seconds:-0];
@@ -483,10 +475,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:-NUM_DAYS
+		             days:-5
 		            hours:-0
 		          minutes:-0
-		          seconds:-NUM_SECONDS];
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5d 10s", @"Unexpected string for time interval");
 }
@@ -495,9 +487,9 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:-NUM_DAYS
+		             days:-5
 		            hours:-0
-		          minutes:-NUM_MINUTES
+		          minutes:-10
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5d 10m", @"Unexpected string for time interval");
@@ -507,10 +499,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:-NUM_DAYS
+		             days:-5
 		            hours:-0
-		          minutes:-NUM_MINUTES
-		          seconds:-NUM_SECONDS];
+		          minutes:-10
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5d 10m 10s", @"Unexpected string for time interval");
 }
@@ -519,8 +511,8 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:-NUM_DAYS
-		            hours:-NUM_HOURS
+		             days:-5
+		            hours:-10
 		          minutes:-0
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
@@ -531,10 +523,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:-NUM_DAYS
-		            hours:-NUM_HOURS
+		             days:-5
+		            hours:-10
 		          minutes:-0
-		          seconds:-NUM_SECONDS];
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5d 10h 10s", @"Unexpected string for time interval");
 }
@@ -543,9 +535,9 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:-NUM_DAYS
-		            hours:-NUM_HOURS
-		          minutes:-NUM_MINUTES
+		             days:-5
+		            hours:-10
+		          minutes:-10
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5d 10h 10m", @"Unexpected string for time interval");
@@ -555,10 +547,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:-NUM_DAYS
-		            hours:-NUM_HOURS
-		          minutes:-NUM_MINUTES
-		          seconds:-NUM_SECONDS];
+		             days:-5
+		            hours:-10
+		          minutes:-10
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"5d 10h 10m 10s", @"Unexpected string for time interval");
 }
@@ -567,7 +559,7 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS
+		             days:7 * -65
 		            hours:-0
 		          minutes:-0
 		          seconds:-0];
@@ -579,10 +571,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS
+		             days:7 * -65
 		            hours:-0
 		          minutes:-0
-		          seconds:-NUM_SECONDS];
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"65w 10s", @"Unexpected string for time interval");
 }
@@ -591,9 +583,9 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS
+		             days:7 * -65
 		            hours:-0
-		          minutes:-NUM_MINUTES
+		          minutes:-10
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"65w 10m", @"Unexpected string for time interval");
@@ -603,10 +595,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS
+		             days:7 * -65
 		            hours:-0
-		          minutes:-NUM_MINUTES
-		          seconds:-NUM_SECONDS];
+		          minutes:-10
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"65w 10m 10s", @"Unexpected string for time interval");
 }
@@ -615,8 +607,8 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS
-		            hours:-NUM_HOURS
+		             days:7 * -65
+		            hours:-10
 		          minutes:-0
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
@@ -627,10 +619,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS
-		            hours:-NUM_HOURS
+		             days:7 * -65
+		            hours:-10
 		          minutes:-0
-		          seconds:-NUM_SECONDS];
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"65w 10h 10s", @"Unexpected string for time interval");
 }
@@ -639,9 +631,9 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS
-		            hours:-NUM_HOURS
-		          minutes:-NUM_MINUTES
+		             days:7 * -65
+		            hours:-10
+		          minutes:-10
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"65w 10h 10m", @"Unexpected string for time interval");
@@ -651,10 +643,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS
-		            hours:-NUM_HOURS
-		          minutes:-NUM_MINUTES
-		          seconds:-NUM_SECONDS];
+		             days:7 * -65
+		            hours:-10
+		          minutes:-10
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"65w 10h 10m 10s", @"Unexpected string for time interval");
 }
@@ -663,7 +655,7 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS + -NUM_DAYS
+		             days:7 * -65 + -5
 		            hours:-0
 		          minutes:-0
 		          seconds:-0];
@@ -675,10 +667,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS + -NUM_DAYS
+		             days:7 * -65 + -5
 		            hours:-0
 		          minutes:-0
-		          seconds:-NUM_SECONDS];
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"65w 5d 10s", @"Unexpected string for time interval");
 }
@@ -687,9 +679,9 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS + -NUM_DAYS
+		             days:7 * -65 + -5
 		            hours:-0
-		          minutes:-NUM_MINUTES
+		          minutes:-10
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"65w 5d 10m", @"Unexpected string for time interval");
@@ -699,10 +691,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS + -NUM_DAYS
+		             days:7 * -65 + -5
 		            hours:-0
-		          minutes:-NUM_MINUTES
-		          seconds:-NUM_SECONDS];
+		          minutes:-10
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"65w 5d 10m 10s", @"Unexpected string for time interval");
 }
@@ -711,8 +703,8 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS + -NUM_DAYS
-		            hours:-NUM_HOURS
+		             days:7 * -65 + -5
+		            hours:-10
 		          minutes:-0
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
@@ -723,10 +715,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS + -NUM_DAYS
-		            hours:-NUM_HOURS
+		             days:7 * -65 + -5
+		            hours:-10
 		          minutes:-0
-		          seconds:-NUM_SECONDS];
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"65w 5d 10h 10s", @"Unexpected string for time interval");
 }
@@ -735,9 +727,9 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS + -NUM_DAYS
-		            hours:-NUM_HOURS
-		          minutes:-NUM_MINUTES
+		             days:7 * -65 + -5
+		            hours:-10
+		          minutes:-10
 		          seconds:-0];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"65w 5d 10h 10m", @"Unexpected string for time interval");
@@ -747,10 +739,10 @@
 	NSCalendarDate *date = [now
 		dateByAddingYears:-0
 		           months:-0
-		             days:7 * -NUM_WEEKS + -NUM_DAYS
-		            hours:-NUM_HOURS
-		          minutes:-NUM_MINUTES
-		          seconds:-NUM_SECONDS];
+		             days:7 * -65 + -5
+		            hours:-10
+		          minutes:-10
+		          seconds:-10];
 	date = [date dateByMatchingDSTOfDate:now];
 	AISimplifiedAssertEqualObjects([NSDateFormatter stringForTimeIntervalSinceDate:date showingSeconds:YES abbreviated:YES], @"65w 5d 10h 10m 10s", @"Unexpected string for time interval");
 }
