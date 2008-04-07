@@ -114,7 +114,7 @@
 		document.onclick = imageCheck;
 		function imageCheck() {		
 			var node = event.target;
-			if(node.tagName == 'IMG' && !client.zoomImage(node) && node.alt) {
+			if(node.tagName.toLowerCase() == 'img' && !client.zoomImage(node) && node.alt) {
 				var a = document.createElement('a');
 				a.setAttribute('onclick', 'imageSwap(this)');
 				a.setAttribute('src', node.getAttribute('src'));
