@@ -31,7 +31,7 @@
 	if (outDays) *outDays = workInterval % 7; //Get the fraction of a week in days.
 	workInterval = workInterval / 7; //Now it's weeks.
 
-	if (outWeeks) *outWeeks = workInterval % 60;
+	if (outWeeks) *outWeeks = workInterval;
 }
 
 @end
