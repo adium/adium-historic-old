@@ -215,7 +215,8 @@
 		//If we are now online and are waiting to connect this account, do it if the account hasn't already
 		//been taken care of.
 		[account setStatusObject:nil forKey:@"Waiting for Network" notify:NotifyNow];
-		if ([accountsToConnect containsObject:account]) {
+		if ([accountsToConnect containsObject:account] ||
+			[account statusObjectForKey:@"Waiting to Reconnect"]) {
 			if (![account online] &&
 				![account integerStatusObjectForKey:@"Connecting"]) {
 				[account setShouldBeOnline:YES];
