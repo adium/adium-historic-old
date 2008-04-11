@@ -96,7 +96,7 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_ALERTS];
 }
 
-//Preference view is closing - stop observering preferences immediately, even if we aren't immediately deallocating
+//Preference view is closing - stop observing preferences immediately, even if we aren't immediately deallocating
 - (void)viewWillClose
 {
 	[[adium preferenceController] unregisterPreferenceObserver:self];
