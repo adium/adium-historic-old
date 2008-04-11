@@ -80,7 +80,6 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 		unsigned int aDebugStringLength = [aDebugString length];
 		
 		[mutableDebugString appendString:aDebugString];
-		
 		[[textView_debug textStorage] addAttribute:NSParagraphStyleAttributeName
 											 value:debugParagraphStyle
 											 range:NSMakeRange([mutableDebugString length] - aDebugStringLength, aDebugStringLength)];
@@ -102,8 +101,6 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 	NSEnumerator	*enumerator;
 	NSString		*aDebugString;
 
-	[super windowDidLoad];
-
 	//We store the reference to the mutableString of the textStore for efficiency
 	mutableDebugString = [[[textView_debug textStorage] mutableString] retain];
 	fullDebugLogArray = [[NSMutableArray alloc] init];
@@ -111,7 +108,6 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 	debugParagraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 	[debugParagraphStyle setHeadIndent:12];
 	[debugParagraphStyle setFirstLineHeadIndent:2];
-	
 	[scrollView_debug setAutoScrollToBottom:YES];
 
 	//Load the logs which were added before the window was loaded
@@ -135,6 +131,8 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 	
 	[checkBox_logWriting setState:[[[adium preferenceController] preferenceForKey:KEY_DEBUG_WRITE_LOG
 																			group:GROUP_DEBUG] boolValue]];
+	
+	[super windowDidLoad];
 }
 
 //Close the debug window
