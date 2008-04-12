@@ -72,6 +72,10 @@
 #define SERVICE_ID_KEY					@"ServiceID"
 #define UID_KEY							@"UID"
 
+#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
+	static BOOL unregisterListObjectObserverCalled = NO;
+#endif
+
 @interface AIContactController (PRIVATE)
 - (AIListGroup *)processGetGroupNamed:(NSString *)serverGroup;
 - (void)_performDelayedUpdates:(NSTimer *)timer;
@@ -121,7 +125,11 @@
 {
 	if ((self = [super init])) {
 		//
+#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
+		contactObservers = [[NSMutableArray alloc] init];
+#else
 		contactObservers = [[NSMutableSet alloc] init];
+#endif
 		sortControllerArray = [[NSMutableArray alloc] init];
 		activeSortController = nil;
 		delayedStatusChanges = 0;
@@ -1160,6 +1168,7 @@
 	
 	//Create a new metaContact is we didn't find one.
 	if (!metaContact) {
+		AILogWithSignature(@"New metacontact to group %@ on %@", UIDsArray, servicesArray);
 		metaContact = [self metaContactWithObjectID:nil];
 	}
 	
@@ -1208,6 +1217,7 @@
 	
 	//Create a new metaContact is we didn't find one.
 	if (!metaContact) {
+		AILogWithSignature(@"New metacontact to group %@", contactsToGroupArray);
 		metaContact = [self metaContactWithObjectID:nil];
 	}
 	
@@ -1423,10 +1433,13 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Registers code to observe handle status changes
 - (void)registerListObjectObserver:(id <AIListObjectObserver>)inObserver
 {
-	AILogWithSignature(@"%@", inObserver);
-
 	//Add the observer
+#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
+	AILogWithSignature(@"%@", inObserver);
+    [contactObservers addObject:inObserver];
+#else
     [contactObservers addObject:[NSValue valueWithNonretainedObject:inObserver]];
+#endif
 	
     //Let the new observer process all existing objects
 	[self updateAllListObjectsForObserver:inObserver];
@@ -1434,9 +1447,13 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 - (void)unregisterListObjectObserver:(id)inObserver
 {
+#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
 	AILogWithSignature(@"%@", inObserver);
-
+    [contactObservers removeObjectIdenticalTo:inObserver];
+	unregisterListObjectObserverCalled = YES;
+#else
     [contactObservers removeObject:[NSValue valueWithNonretainedObject:inObserver]];
+#endif
 }
 
 
@@ -1507,6 +1524,45 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (NSSet *)_informObserversOfObjectStatusChange:(AIListObject *)inObject withKeys:(NSSet *)modifiedKeys silent:(BOOL)silent
 {
 	NSMutableSet	*attrChange = nil;
+
+#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
+	NSObject <AIListObjectObserver>	*observer;
+	
+	//Let our observers know
+	int i;
+	for (i = 0; i < [contactObservers count]; i++) {
+		NSAutoreleasePool	*pool = [[NSAutoreleasePool alloc] init];
+		NSSet				*newKeys;
+
+		observer = [contactObservers objectAtIndex:i];
+
+		if ([observer retainCount] == 1) {
+			NSString *observerDescription = [observer description];
+
+			/* This observer is fully released except for our retention (contactObservers plus its copy), which wouldn't happen without 
+			 * CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG defined.  That -might- be an error... except that it
+			 * might remove itself as an observer in its dealloc method, which is fine if it actually happens.
+			 */
+			unregisterListObjectObserverCalled = NO;
+			[contactObservers removeObjectIdenticalTo:observer];
+			
+			//observer will have deallocated.  It should have called removeContactObserver in the process. If it didn't, that's bad.
+			if (!unregisterListObjectObserverCalled) {
+				AILogWithSignature(@"%@ failed at removing itself as a contact observer! This would be fatal in a release build!", observerDescription);
+				NSLog(@"%@ failed at removing itself as a contact observer! This would be fatal in a release build!", observerDescription);
+				NSAssert1(FALSE, @"%@ failed at removing itself as a contact observer! This would be fatal in a release build!", observerDescription);
+			} else {
+				AILogWithSignature(@"All is well after the dealloc of %@", observerDescription);
+			}
+		} else {
+			if ((newKeys = [observer updateListObject:inObject keys:modifiedKeys silent:silent])) {
+				if (!attrChange) attrChange = [[NSMutableSet alloc] init];
+				[attrChange unionSet:newKeys];
+			}
+		}
+		[pool release];
+	}	
+#else
 	NSEnumerator	*enumerator;
 	NSValue			*observerValue;
 	
@@ -1524,7 +1580,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		}
 		[pool release];
 	}
-	
+#endif
 	//Send out the notification for other observers
 	[[adium notificationCenter] postNotificationName:ListObject_StatusChanged
 											  object:inObject
@@ -1538,6 +1594,13 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (void)_updateAllAttributesOfObject:(AIListObject *)inObject
 {
 	NSEnumerator	*enumerator = [contactObservers objectEnumerator];
+#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
+	id <AIListObjectObserver> observer;
+	
+	while ((observer = [enumerator nextObject])) {		
+		[observer updateListObject:inObject keys:nil silent:YES];
+	}
+#else
 	NSValue			*observerValue;
 	
 	while ((observerValue = [enumerator nextObject])) {		
@@ -1545,6 +1608,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		
 		[observer updateListObject:inObject keys:nil silent:YES];
 	}
+#endif	
 }
 
 

@@ -27,6 +27,10 @@
 #define	KEY_HIDE_CONTACT_LIST_GROUPS	@"Hide Contact List Groups"
 #define	PREF_GROUP_CONTACT_LIST_DISPLAY	@"Contact List Display"
 
+#ifdef DEBUG_BUILD
+	#define CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG	TRUE
+#endif
+
 @class AISortController, AdiumAuthorization, AIContactHidingController;
 
 @interface AIContactController : AIObject <AIContactController, AIListObjectObserver> {
@@ -47,7 +51,11 @@
 	NSMutableArray			*detachedContactLists;
 	
 	//Status and Attribute updates
-    NSMutableSet			*contactObservers;
+#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
+    NSMutableArray			*contactObservers;
+#else
+    NSMutableSet			*contactObservers;	
+#endif
     NSTimer					*delayedUpdateTimer;
     int						delayedStatusChanges;
 	NSMutableSet			*delayedModifiedStatusKeys;
