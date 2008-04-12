@@ -134,7 +134,6 @@
 	if (listObject) {
 		NSString	 *chatID = [chat uniqueChatID];
 		NSString	 *chatLanguage = [languageDict objectForKey:chatID];
-		NSString	 *previousLanguage = [listObject preferenceForKey:KEY_LAST_USED_SPELLING group:GROUP_LAST_USED_SPELLING];
 
 		//If we didn't cache a language for this chat, we might just never have made it inactive; use the spell checker's current language
 		if (!chatLanguage) chatLanguage = [[NSSpellChecker sharedSpellChecker] language];
