@@ -23,6 +23,7 @@
 	AIAccount					*account;
 	
 	BOOL						windowIsClosing;
+	BOOL						postedAuthorizationResponse;
 }
 
 + (ESAuthorizationRequestWindowController *)showAuthorizationRequestWithDict:(NSDictionary *)inInfoDict  forAccount:(AIAccount *)inAccount;

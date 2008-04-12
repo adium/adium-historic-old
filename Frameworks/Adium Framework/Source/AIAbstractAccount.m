@@ -1092,7 +1092,8 @@
 	[self setStatusObject:nil forKey:@"ConnectionProgressString" notify:NotifyLater];
 	[self setStatusObject:nil forKey:@"ConnectionProgressPercent" notify:NotifyLater];	
     [self setStatusObject:nil forKey:@"Waiting to Reconnect" notify:NotifyLater];
-
+	AILogWithSignature(@"*** status dictionary is now %@", statusDictionary);
+	
 	//Apply any changes
 	[self notifyOfChangedStatusSilently:NO];
 	

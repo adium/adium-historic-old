@@ -109,6 +109,12 @@
 {
 	windowIsClosing = YES;
 
+	if (!postedAuthorizationResponse) {
+		[account authorizationWindowController:self
+						 authorizationWithDict:infoDict
+									  response:AIAuthorizationNoResponse];
+	}
+	
 	[super windowWillClose:sender];
 
 	[self autorelease];
@@ -124,10 +130,12 @@
 
 - (IBAction)authorize:(id)sender
 {
+	postedAuthorizationResponse = YES;
+
 	//Do the authorization serverside
 	[account authorizationWindowController:self
 					 authorizationWithDict:infoDict
-							  didAuthorize:YES];
+							  response:AIAuthorizationAllowed];
 	
 	//Now handle the Add To Contact List checkbox
 	AILog(@"Authorize: (%i) %@",[checkBox_addToList state],infoDict);
@@ -145,9 +153,11 @@
 
 - (IBAction)deny:(id)sender
 {
+	postedAuthorizationResponse = YES;
+
 	[account authorizationWindowController:self
 					 authorizationWithDict:infoDict
-							  didAuthorize:NO];	
+								  response:AIAuthorizationDenied];	
 
 	[infoDict release]; infoDict = nil;
 
