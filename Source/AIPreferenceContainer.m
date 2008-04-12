@@ -253,8 +253,8 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 	id oldValue;
 	if ((!value && ![self valueForKey:key]) ||
 		((value && (oldValue = [self valueForKey:key])) && 
-		 ([value isKindOfClass:[NSNumber class]] && [(NSNumber *)value isEqualToNumber:oldValue]) ||
-		 ([value isKindOfClass:[NSString class]] && [(NSString *)value isEqualToString:oldValue]))) {
+		 (([value isKindOfClass:[NSNumber class]] && [(NSNumber *)value isEqualToNumber:oldValue]) ||
+		  ([value isKindOfClass:[NSString class]] && [(NSString *)value isEqualToString:oldValue])))) {
 		valueChanged = NO;
 	} else {
 		valueChanged = YES;
