@@ -58,20 +58,19 @@ static void *adiumPurpleAccountRequestAuthorize(PurpleAccount *account, const ch
 	if (message && strlen(message)) [infoDict setObject:[NSString stringWithUTF8String:message] forKey:@"Reason"];
 
 	//Note that CBPurpleAccount will retain ownership of this object to keep it around for us in case adiumPurpleAccountRequestClose() is called.
-	return [accountLookup(account) authorizationRequestWithDict:infoDict];;
+	return [accountLookup(account) authorizationRequestWithDict:infoDict];
 }
 
 static void adiumPurpleAccountRequestClose(void *ui_handle)
 {
 	id	ourHandle = (id)ui_handle;
 
-	if ([ourHandle respondsToSelector:@selector(purpleRequestClose)]) {
-		[ourHandle performSelector:@selector(purpleRequestClose)];
-		
-	} else if ([ourHandle respondsToSelector:@selector(closeWindow:)]) {
-		[ourHandle performSelector:@selector(closeWindow:)
-						withObject:nil];
-	}
+	//Close the window
+	[ourHandle performSelector:@selector(closeWindow:)
+					withObject:nil];
+
+	//Then release our reference to the handle, since adiumPurpleAccountRequestAuthorize() returned a retained object
+	[ourHandle release];
 }
 
 void adiumPurpleAccountRegisterCb(PurpleAccount *account, gboolean succeeded, void *user_data) {
