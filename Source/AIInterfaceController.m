@@ -379,7 +379,7 @@
 		
 	} else if (groupChatsByContactGroup) {
 		if ([inChat isGroupChat]) {
-			containerID = AILocalizedString(@"Group Chat",nil);
+			containerID = AILocalizedString(@"Group Chats",nil);
 			
 		} else {
 			AIListObject	*group = [[[inChat listObject] parentContact] containingObject];
@@ -421,7 +421,7 @@
 		if ([containers count] > 0) {
 			containerID = [[containers objectAtIndex:0] objectForKey:@"ID"];
 		} else {
-			containerID = AILocalizedString(@"Chat",nil);
+			containerID = AILocalizedString(@"Chats",nil);
 		}
 	}
 
@@ -815,7 +815,7 @@
 		
 		//Add a menu item for the container
 		if ([contentArray count] > 1) {
-			item = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:containerName
+			item = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:([containerName length] ? containerName : AILocalizedString(@"Chats", nil))
 																		target:nil
 																		action:nil
 																 keyEquivalent:@""];
