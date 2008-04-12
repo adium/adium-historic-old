@@ -236,9 +236,17 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				CFIndex end = CFXMLParserGetLocation(parser);
 				NSString *message = nil;
 				if (!empty) {
-					// Need to unescape entities ourself. & wasn't getting unescaped for some reason. See #6850.
-					// 10 for </message> and 1 for the index being off
-					message = [[inputFileString substringWithRange:NSMakeRange(messageStart, end - messageStart - 11)] stringByUnescapingFromXMLWithEntities:nil];
+					/* Need to unescape & now so that we'll do link detection properly when decoding the HTML. See #6850.
+					 * We'll let HTML decoding handle the other entities.
+					 *
+					 * 11 = 10 for </message> and 1 for the index being off
+					 */
+					NSMutableString *mutableMessage = [[inputFileString substringWithRange:NSMakeRange(messageStart, end - messageStart - 11)] mutableCopy];
+					[mutableMessage replaceOccurrencesOfString:@"&amp;"
+													withString:@"&"
+													   options:NSLiteralSearch
+														 range:NSMakeRange(0, [mutableMessage length])];
+					message = [mutableMessage autorelease];
 				}
 				NSString *shownSender = sender;
 				NSString *cssClass;
