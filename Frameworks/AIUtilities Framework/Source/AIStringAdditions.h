@@ -42,7 +42,7 @@
 - (NSString *)string;
 
 /*!
- * @brief Wraps CFXMLCreateStringByEscapingEntities() with the addition of escaping whitespace if no entites dictionary is specified. See its documentation.
+ * @brief Wraps CFXMLCreateStringByEscapingEntities() with the addition of escaping whitespace if no entities dictionary is specified. See its documentation.
  */
 - (NSString *)stringByEscapingForXMLWithEntities:(NSDictionary *)entities;
 
