@@ -346,6 +346,7 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 	purpleUserInfo = processPurpleImages(purpleUserInfo, self);
 	purpleUserInfo = [self processedIncomingUserInfo:purpleUserInfo];
 
+	AILogWithSignature(@"Decoded %@ to %@", purpleUserInfo, [AIHTMLDecoder decodeHTML:purpleUserInfo]);
 	[theContact setProfile:[AIHTMLDecoder decodeHTML:purpleUserInfo]
 					notify:NotifyLater];
 
@@ -510,28 +511,39 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 - (NSWindowController *)authorizationRequestWithDict:(NSDictionary*)dict {
 	//We will release the returned window controller in -[self authorizationWindowController:authorizationWithDict:didAuthorize:]
 	return [[[[AIObject sharedAdiumInstance] contactController] showAuthorizationRequestWithDict:dict
-																					  forAccount:self] autorelease];
+																					  forAccount:self] retain];
 }
 
-- (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict didAuthorize:(BOOL)inDidAuthorize
+- (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict response:(AIAuthorizationResponse)authorizationResponse
 {
-	id		 callback;
-
 	if (account) {
-		if (inDidAuthorize) {
-			callback = [[[infoDict objectForKey:@"authorizeCB"] retain] autorelease];
-		} else {
-			callback = [[[infoDict objectForKey:@"denyCB"] retain] autorelease];
+		id		 callback;
+
+		switch (authorizationResponse) {
+			case AIAuthorizationAllowed:
+				callback = [[[infoDict objectForKey:@"authorizeCB"] retain] autorelease];
+				break;
+			case AIAuthorizationDenied:
+				callback = [[[infoDict objectForKey:@"denyCB"] retain] autorelease];
+				break;
+			case AIAuthorizationNoResponse:
+				callback = nil;
+				break;
 		}
 		
 		//libpurple will remove its reference to the handle for this request, which is inWindowController, in response to this callback invocation
-		[purpleThread doAuthRequestCbValue:callback withUserDataValue:[[[infoDict objectForKey:@"userData"] retain] autorelease]];
+		if (callback) {
+			[purpleThread doAuthRequestCbValue:callback withUserDataValue:[[[infoDict objectForKey:@"userData"] retain] autorelease]];
+
+			/* Retained in -[self authorizationRequestWithDict:].  We kept it around before now in case libpurle wanted us to close it early, such as because the
+			 * account disconnected.
+			 */
+			[inWindowController autorelease];
+		} else {
+			[purpleThread closeAuthRequestWithHandle:inWindowController];
+			
+		}
 	}
-	
-	/* Retained in -[self authorizationRequestWithDict:].  We kept it around before now in case libpurle wanted us to close it early, such as because the
-	 * account disconnected.
-	 */
-	[inWindowController autorelease];
 }
 
 //Chats ------------------------------------------------------------

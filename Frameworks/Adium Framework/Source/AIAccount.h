@@ -73,6 +73,12 @@ typedef enum {
 	AIPrivacyOptionCustom				//used by the privacy settings window
 } AIPrivacyOption;
 
+typedef enum {
+	AIAuthorizationNoResponse = 0,
+	AIAuthorizationDenied,
+	AIAuthorizationAllowed
+} AIAuthorizationResponse;
+
 //Support for file transfer
 @protocol AIAccount_Files
 	//can the account send entire folders on its own?
@@ -207,9 +213,19 @@ typedef enum {
 						inChat:(AIChat *)inChat;
 - (void)promptToVerifyEncryptionIdentityInChat:(AIChat *)inChat;
 
+/*!
+ * @brief Can the account send images inline within a chat?
+ */
 - (BOOL)canSendImagesForChat:(AIChat *)inChat;
 
-- (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict didAuthorize:(BOOL)inDidAuthorize;
+/*!
+ * @brief An authorization prompt closed, granting or denying a contact's request for authorization
+ *
+ * @param inWindowController The window controller which closed; an account may have kept track of what windows were showing its authorization prompts
+ * @param inDict A dictionary of authorization information created by the account originally and possibly modified
+ * @param authorizationResponse An AIAuthorizationResponse indicating if authorization was granted or denied or if there was no response
+ */
+- (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict response:(AIAuthorizationResponse)authorizationResponse;
 
 -(NSMenu*)actionsForChat:(AIChat*)chat;
 

@@ -1376,7 +1376,7 @@ GList *createListFromDictionary(NSDictionary *arguments)
 }
 
 /*!
-* @brief Call the purple callback to finish up the window
+* @brief Call the purple callback to pass on an authorization response
  *
  * @param inCallBackValue The cb to use
  * @param inUserDataValue Original user data
@@ -1387,6 +1387,14 @@ GList *createListFromDictionary(NSDictionary *arguments)
 	if (callBack) {
 		callBack([inUserDataValue pointerValue]);
 	}
+}
+
+/*!
+ * @brief Tell purple we closed an authorization request without a response
+ */
+- (void)closeAuthRequestWithHandle:(id)authRequestHandle
+{
+	purple_account_request_close(authRequestHandle);
 }
 
 #pragma mark Secure messaging

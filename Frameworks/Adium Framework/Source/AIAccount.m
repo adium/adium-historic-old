@@ -774,6 +774,9 @@
 }
 
 #pragma mark Image sending
+/*!
+ * @brief Can the account send images inline within a chat?
+ */
 - (BOOL)canSendImagesForChat:(AIChat *)inChat
 {
 	return NO;
@@ -785,9 +788,9 @@
  *
  * @param inWindowController The window controller which closed; an account may have kept track of what windows were showing its authorization prompts
  * @param inDict A dictionary of authorization information created by the account originally and possibly modified
- * @param inDidAuthorize YES if authorization was granted; NO if it was denied
+ * @param authorizationResponse An AIAuthorizationResponse indicating if authorization was granted or denied or if there was no response
  */
-- (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict didAuthorize:(BOOL)inDidAuthorize
+- (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict response:(AIAuthorizationResponse)authorizationResponse;
 {}
 
 #pragma mark Chat Commands
