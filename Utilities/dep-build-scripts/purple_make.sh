@@ -64,6 +64,10 @@ pushd $PIDGIN_SOURCE
 #
 # libpurple_disable_last_seen_tracking.diff disables the last-seen tracking, avoiding unnecessary blist.xml writes, since we don't ever use the information (we keep track of it ourselves).
 ###
+# Add
+#    "$PATCHDIR/libpurple-enable-msnp14.diff" \ 
+# to allow enabling msnp14. Needs change below.
+###
 for patch in "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
              "$PATCHDIR/libpurple_disable_last_seen_tracking.diff" \
              "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" \
@@ -122,6 +126,12 @@ for ARCH in ppc i386 ; do
 	export GADU_LIBS="-lgadu"
 	export MEANWHILE_CFLAGS="-I$TARGET_DIR/include/meanwhile -I$TARGET_DIR/include/glib-2.0 -I$TARGET_DIR/lib/glib-2.0/include"
 	export MEANWHILE_LIBS="-lmeanwhile -lglib-2.0 -liconv"
+	
+	###
+	# With change above, add 
+	#   --enable-msnp14 \
+	# to enable msnp14
+	###
 	$PIDGIN_SOURCE/configure \
 	        --disable-gtkui --disable-consoleui \
             --disable-perl \
@@ -132,7 +142,6 @@ for ARCH in ppc i386 ; do
             --prefix=$TARGET_DIR \
             --with-static-prpls="$PROTOCOLS" --disable-plugins \
             --host=$HOST \
-#            --enable-msnp14 \
             --disable-gstreamer \
             --disable-avahi \
             --disable-dbus \
