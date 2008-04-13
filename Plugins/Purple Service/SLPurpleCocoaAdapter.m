@@ -178,10 +178,10 @@ static void ZombieKiller_Signal(int i)
 	
 	//Set the purple user directory to be within this user's directory
 	NSString	*purpleUserDir = [[[adium loginController] userDirectory] stringByAppendingPathComponent:@"libpurple"];
-	purple_util_set_user_dir([[purpleUserDir stringByExpandingTildeInPath] UTF8String]);
+	purple_util_set_user_dir([[purpleUserDir stringByExpandingTildeInPath] fileSystemRepresentation]);
 
 	//Set the caches path
-	purple_buddy_icons_set_cache_dir([[[adium cachesPath] stringByExpandingTildeInPath] UTF8String]);
+	purple_buddy_icons_set_cache_dir([[[adium cachesPath] stringByExpandingTildeInPath] fileSystemRepresentation]);
 
 	/* Delete blist.xml once when 1.2.4 runs to clear out any old silliness, including improperly blocked Yahoo contacts */
 	if (![[NSUserDefaults standardUserDefaults] boolForKey:@"Adium 1.2.4 deleted blist.xml"]) {
