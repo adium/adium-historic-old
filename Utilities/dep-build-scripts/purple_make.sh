@@ -109,46 +109,48 @@ for ARCH in ppc i386 ; do
 
     export LDFLAGS="$BASE_LDFLAGS -L$TARGET_DIR/lib -arch $ARCH"
     mkdir libpurple-$ARCH || true
-    cd libpurple-$ARCH
-	export ARCH
-	export PKG_CONFIG="$TARGET_DIR_BASE-$ARCH/bin/pkg-config"
-	export MSGFMT="`which msgfmt`"
-	# this part is really ew. We actually re-run autogen.sh per-arch.
-	# we pass configure --help so that it bails out and doesn't fubar the source
-	# tree, because otherwise we'd have to un-configure it. Stupid autotools.
-	pushd $PIDGIN_SOURCE
-	./autogen.sh --help
-	popd
-	# we don't need pkg-config for this
-	export LIBXML_CFLAGS='-I/usr/include/libxml2' 
-	export LIBXML_LIBS='-lxml2'
-	export GADU_CFLAGS="-I$TARGET_DIR/include"
-	export GADU_LIBS="-lgadu"
-	export MEANWHILE_CFLAGS="-I$TARGET_DIR/include/meanwhile -I$TARGET_DIR/include/glib-2.0 -I$TARGET_DIR/lib/glib-2.0/include"
-	export MEANWHILE_LIBS="-lmeanwhile -lglib-2.0 -liconv"
-	
-	###
-	# With change above, add 
-	#   --enable-msnp14 \
-	# to enable msnp14
-	###
-	$PIDGIN_SOURCE/configure \
-	        --disable-gtkui --disable-consoleui \
-            --disable-perl \
-            --enable-debug \
-            --disable-static --enable-shared \
-            --with-krb4 \
-            --enable-cyrus-sasl \
-            --prefix=$TARGET_DIR \
-            --with-static-prpls="$PROTOCOLS" --disable-plugins \
-            --host=$HOST \
-            --disable-gstreamer \
-            --disable-avahi \
-            --disable-dbus \
-            --enable-gnutls=no --enable-nss=no --enable-openssl=no $@ || exit 1
-    cd libpurple
-    make -j $NUMBER_OF_CORES || exit 1
-    make install || exit 1
+    pushd libpurple-$ARCH
+        export ARCH
+        export PKG_CONFIG="$TARGET_DIR_BASE-$ARCH/bin/pkg-config"
+        export MSGFMT="`which msgfmt`"
+    	# this part is really ew. We actually re-run autogen.sh per-arch.
+    	# we pass configure --help so that it bails out and doesn't fubar the source
+    	# tree, because otherwise we'd have to un-configure it. Stupid autotools.
+    	pushd $PIDGIN_SOURCE
+    	   ./autogen.sh --help
+    	popd
+    	# we don't need pkg-config for this
+    	export LIBXML_CFLAGS='-I/usr/include/libxml2' 
+    	export LIBXML_LIBS='-lxml2'
+    	export GADU_CFLAGS="-I$TARGET_DIR/include"
+    	export GADU_LIBS="-lgadu"
+    	export MEANWHILE_CFLAGS="-I$TARGET_DIR/include/meanwhile -I$TARGET_DIR/include/glib-2.0 -I$TARGET_DIR/lib/glib-2.0/include"
+    	export MEANWHILE_LIBS="-lmeanwhile -lglib-2.0 -liconv"
+    	
+    	###
+    	# With change above, add 
+    	#   --enable-msnp14 \
+    	# to enable msnp14
+    	###
+    	$PIDGIN_SOURCE/configure \
+    	        --disable-gtkui --disable-consoleui \
+                --disable-perl \
+                --enable-debug \
+                --disable-static --enable-shared \
+                --with-krb4 \
+                --enable-cyrus-sasl \
+                --prefix=$TARGET_DIR \
+                --with-static-prpls="$PROTOCOLS" --disable-plugins \
+                --host=$HOST \
+                --disable-gstreamer \
+                --disable-avahi \
+                --disable-dbus \
+                --enable-gnutls=no --enable-nss=no --enable-openssl=no $@ || exit 1
+        pushd libpurple
+            make -j $NUMBER_OF_CORES || exit 1
+            make install || exit 1
+        popd
+    popd
     # HACK ALERT! We use the following internal-only headers:
     cp $PIDGIN_SOURCE/libpurple/protocols/oscar/oscar.h \
        $PIDGIN_SOURCE/libpurple/protocols/oscar/snactypes.h \
