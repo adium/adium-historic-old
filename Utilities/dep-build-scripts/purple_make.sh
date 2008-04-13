@@ -71,6 +71,7 @@ for patch in "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
              "$PATCHDIR/libpurple_jabber_parser_error_handler.diff" \
              "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
              "$PATCHDIR/libpurple_xmlnode_parser_error_handler.diff" \
+#             "$PATCHDIR/libpurple-enable-msnp14.diff" \
              "$PATCHDIR/libpurple_zephyr_fix_krb4_flags.diff" ; do
     echo "Applying $patch"
 	cat $patch | patch --forward -p0
@@ -132,6 +133,10 @@ for ARCH in ppc i386 ; do
             --prefix=$TARGET_DIR \
             --with-static-prpls="$PROTOCOLS" --disable-plugins \
             --host=$HOST \
+#            --enable-msnp14 \
+            --disable-gstreamer \
+            --disable-avahi \
+            --disable-dbus \
             --enable-gnutls=no --enable-nss=no --enable-openssl=no $@ || exit 1
     cd libpurple
     make -j $NUMBER_OF_CORES || exit 1

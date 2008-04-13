@@ -13,7 +13,7 @@
  			}
  		}
 +		
-+		if (mech && (strcmp(mech, "DIGEST-MD5") == 0)) {
++		if (js->current_mech && (strcmp(js->current_mech, "DIGEST-MD5") == 0)) {
 +			/* CYRUS-SASL's DIGEST-MD5 and Java's DIGEST-MD5 are mutually incompatible because of different interpretations of RFC2831.
 +			 * This means that if we are using SASL and connecting to a Java-based server such as OpenFire, we will receive an authentication
 +			 * failure if that server offers DIGEST-MD5 in such a way that SASL chooses it as the best mechanism for us.

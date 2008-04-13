@@ -4,7 +4,7 @@
  			js->sasl = NULL;
  		}
  
-+		if (mech && (strcmp(mech, "PLAIN") == 0) && purple_prefs_get_bool("/plugins/prpl/jabber/avoid_sasl_for_plain_auth")) {
++		if (js->current_mech && (strcmp(js->current_mech, "PLAIN") == 0) && purple_prefs_get_bool("/plugins/prpl/jabber/avoid_sasl_for_plain_auth")) {
 +			js->auth_type = JABBER_AUTH_PLAIN;
 +			js->sasl_state = SASL_OK;
 +			sasl_dispose(&js->sasl);
