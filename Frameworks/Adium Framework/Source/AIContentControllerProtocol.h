@@ -49,7 +49,7 @@ typedef enum {
 #define LOW_FILTER_PRIORITY 0.75
 #define LOWEST_FILTER_PRIORITY 1.0
 
-@protocol AIContentFilter, AIDelayedContentFilter;
+@protocol AIContentFilter, AIDelayedContentFilter, AIHTMLContentFilter;
 @protocol AdiumMessageEncryptor;
 
 @class AIAccount, AIChat, AIListContact, AIListObject, AIContentObject;
@@ -68,7 +68,9 @@ typedef enum {
 					direction:(AIFilterDirection)direction;
 - (void)registerDelayedContentFilter:(id <AIDelayedContentFilter>)inFilter
 							  ofType:(AIFilterType)type
-						   direction:(AIFilterDirection)direction;;
+						   direction:(AIFilterDirection)direction;
+- (void)registerHTMLContentFilter:(id <AIHTMLContentFilter>)inFilter
+						direction:(AIFilterDirection)direction;
 - (void)unregisterContentFilter:(id <AIContentFilter>)inFilter;
 - (void)registerFilterStringWhichRequiresPolling:(NSString *)inPollString;
 - (BOOL)shouldPollToUpdateString:(NSString *)inString;
@@ -85,6 +87,9 @@ typedef enum {
 					  selector:(SEL)selector
 					   context:(id)context;
 - (void)delayedFilterDidFinish:(NSAttributedString *)attributedString uniqueID:(unsigned long long)uniqueID;
+- (NSString *)filterHTMLString:(NSString *)htmlString
+					 direction:(AIFilterDirection)direction
+					   content:(AIContentObject*)content;
 
 	//Sending / Receiving content
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact onAccount:(AIAccount *)inAccount;
@@ -118,6 +123,12 @@ typedef enum {
 //AIContentFilters have the opportunity to examine every attributed string.  Non-attributed strings are not passed through these filters.
 @protocol AIContentFilter
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context;
+- (float)filterPriority;
+@end
+
+//AIHTMLContentFilters only see strings just as the WKMV is about to display them. This allows outputting custom html for display
+@protocol AIHTMLContentFilter
+- (NSString *)filterHTMLString:(NSString *)inHTMLString content:(AIContentObject*)content;
 - (float)filterPriority;
 @end
 

@@ -22,6 +22,8 @@
 
 	NSMutableArray			*delayedContentFilters[FILTER_TYPE_COUNT][FILTER_DIRECTION_COUNT];
 	
+	NSMutableArray			*htmlContentFilters[FILTER_DIRECTION_COUNT];
+	
 	NSMutableSet			*stringsRequiringPolling;
 	
 	NSMutableDictionary		*delayedFilteringDict;
@@ -30,10 +32,18 @@
 - (void)registerContentFilter:(id <AIContentFilter>)inFilter
 					   ofType:(AIFilterType)type
 					direction:(AIFilterDirection)direction;
+
 - (void)registerDelayedContentFilter:(id<AIDelayedContentFilter>)inFilter
 							  ofType:(AIFilterType)type
 						   direction:(AIFilterDirection)direction;
+
+- (void)registerHTMLContentFilter:(id <AIHTMLContentFilter>)inFilter
+						direction:(AIFilterDirection)direction;
+
 - (void)unregisterContentFilter:(id <AIContentFilter>)inFilter;
+- (void)unregisterDelayedContentFilter:(id <AIDelayedContentFilter>)inFilter;
+- (void)unregisterHTMLContentFilter:(id <AIHTMLContentFilter>)inFilter;
+
 - (void)registerFilterStringWhichRequiresPolling:(NSString *)inPollString;
 - (BOOL)shouldPollToUpdateString:(NSString *)inString;
 
@@ -48,6 +58,10 @@
 			   notifyingTarget:(id)target
 					  selector:(SEL)selector
 					   context:(id)context;
+
+- (NSString *)filterHTMLString:(NSString *)htmlString
+					 direction:(AIFilterDirection)direction
+					   content:(AIContentObject *)content;
 
 - (void)delayedFilterDidFinish:(NSAttributedString *)attributedString uniqueID:(unsigned long long)uniqueID;
 

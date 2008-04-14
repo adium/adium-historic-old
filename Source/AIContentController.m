@@ -161,6 +161,11 @@
 						   direction:(AIFilterDirection)direction {
 	[adiumContentFiltering registerDelayedContentFilter:inFilter ofType:type direction:direction];
 }
+- (void)registerHTMLContentFilter:(id <AIHTMLContentFilter>)inFilter
+						direction:(AIFilterDirection)direction {
+	[adiumContentFiltering registerHTMLContentFilter:inFilter
+										   direction:direction];
+}
 - (void)unregisterContentFilter:(id <AIContentFilter>)inFilter {
 	[adiumContentFiltering unregisterContentFilter:inFilter];
 }
@@ -193,6 +198,14 @@
 								  notifyingTarget:target
 										 selector:selector
 										  context:context];
+}
+- (NSString *)filterHTMLString:(NSString *)htmlString
+					 direction:(AIFilterDirection)direction
+					   content:(AIContentObject *)content
+{
+	return [adiumContentFiltering filterHTMLString:htmlString
+										 direction:direction
+										   content:(AIContentObject*)content];
 }
 - (void)delayedFilterDidFinish:(NSAttributedString *)attributedString uniqueID:(unsigned long long)uniqueID
 {

@@ -67,6 +67,17 @@
 					 filterArray:contentFilter[type][direction]];
 }
 
+- (void)registerHTMLContentFilter:(id <AIHTMLContentFilter>)inFilter
+						direction:(AIFilterDirection)direction
+{
+	if(!htmlContentFilters[direction]) {
+		htmlContentFilters[direction] = [[NSMutableArray alloc] init];
+	}
+	
+	[self _registerContentFilter:inFilter
+					 filterArray:htmlContentFilters[direction]];
+}
+
 /*!
  * @brief Register a delayed content filter
  *
@@ -98,18 +109,41 @@
 
 /*!
  * @brief Unregister a filter.
- *
- * Looks in both contentFilter and delayedContentFilter, for all types and directions
  */
 - (void)unregisterContentFilter:(id<AIContentFilter>)inFilter
 {
 	NSParameterAssert(inFilter != nil);
 
-	int i, j;
-	for (i = 0; i < FILTER_TYPE_COUNT; i++) {
-		for (j = 0; j < FILTER_DIRECTION_COUNT; j++) {
+	for (unsigned i = 0; i < FILTER_TYPE_COUNT; i++) {
+		for (unsigned j = 0; j < FILTER_DIRECTION_COUNT; j++) {
 			[contentFilter[i][j] removeObject:inFilter];
 		}
+	}
+}
+
+/*!
+ * @brief Unregister a delayed filter.
+ */
+- (void)unregisterDelayedContentFilter:(id <AIDelayedContentFilter>)inFilter
+{
+	NSParameterAssert(inFilter != nil);
+	
+	for (unsigned i = 0; i < FILTER_TYPE_COUNT; i++) {
+		for (unsigned j = 0; j < FILTER_DIRECTION_COUNT; j++) {
+			[delayedContentFilters[i][j] removeObject:inFilter];
+		}
+	}
+}
+
+/*!
+ * @brief Unregister an HTML filter.
+ */
+- (void)unregisterHTMLContentFilter:(id <AIHTMLContentFilter>)inFilter
+{
+	NSParameterAssert(inFilter != nil);
+	
+	for (unsigned j = 0; j < FILTER_DIRECTION_COUNT; j++) {
+		[htmlContentFilters[j] removeObject:inFilter];
 	}
 }
 
@@ -139,6 +173,28 @@
 	}
 	
 	return shouldPoll;
+}
+
+/*!
+ * @brief Filters an NSString containing HTML.
+ *
+ * @param htmlString A pointer to the NSString to filter
+ * @param direction An AIFilterDirection representing whether the message is incoming or outgoing
+ * @param contentObject The AIContentObject that the html was derived from
+ *
+ * @result the filtered NSString
+ */
+- (NSString *)filterHTMLString:(NSString *)htmlString
+					 direction:(AIFilterDirection)direction
+					   content:(AIContentObject *)content
+{
+	NSEnumerator *filterEnu = [htmlContentFilters[direction] objectEnumerator];
+	id<AIHTMLContentFilter> filter = nil;
+	NSString *result = htmlString;
+	while((filter = [filterEnu nextObject])) {
+		result = [filter filterHTMLString:result content:content];
+	}
+	return result;
 }
 
 /*!

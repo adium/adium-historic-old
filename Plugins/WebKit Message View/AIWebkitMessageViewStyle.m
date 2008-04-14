@@ -30,6 +30,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
 #import <Adium/ESFileTransfer.h>
+#import <Adium/AIContentControllerProtocol.h>
 
 //
 #define LEGACY_VERSION_THRESHOLD		3	//Styles older than this version are considered legacy
@@ -605,7 +606,7 @@ static NSArray *validSenderColors;
 	AIListObject	*theSource = ([contentSource isKindOfClass:[AIListContact class]] ?
 								  [(AIListContact *)contentSource parentContact] :
 								  contentSource);
-	
+
 	/*
 		htmlEncodedMessage is only encoded correctly for AIContentMessages
 		but we do it up here so that we can check for RTL/LTR text below without
@@ -630,6 +631,10 @@ static NSArray *validSenderColors;
 													 simpleTagsOnly:NO
 													 bodyBackground:NO
 										        allowJavascriptURLs:NO];
+	
+	htmlEncodedMessage = [[adium contentController] filterHTMLString:htmlEncodedMessage
+														   direction:[content isOutgoing] ? AIFilterOutgoing : AIFilterIncoming
+															 content:content];
 		
 		
 	//date
@@ -926,24 +931,11 @@ static NSArray *validSenderColors;
 						  withString:[NSString stringWithFormat:@"client.handleFileTransfer('Cancel', '%@')", fileTransferID]];
 		}
 
-		//Message (must do last, except for %actionMessage% which will only show up post-%message%-replacement)
+		//Message (must do last)
 		range = [inString rangeOfString:@"%message%"];
 		if (range.location != NSNotFound) {
 			[inString safeReplaceCharactersInRange:range withString:htmlEncodedMessage];
 		}
-		 
-		 //This is pretty much a hack; We can't currently get HTML output from filters, so we output tokens instead
-		 //we're also reusing code from %senderDisplayName%"
-
-		NSString *serversideDisplayName = ([theSource isKindOfClass:[AIListContact class]] ?
-										   [(AIListContact *)theSource serversideDisplayName] :
-										   nil);
-		if (!serversideDisplayName) {
-			serversideDisplayName = [theSource displayName];
-		}
-
-		 [inString replaceKeyword:@"%actionMessage%" withString:[NSString stringWithFormat:@"<span class='actionMessageUserName'>%@ </span><span class='actionMessageBody'>", [serversideDisplayName stringByEscapingForXMLWithEntities:nil]]];
-		  [inString replaceKeyword:@"%/actionMessage%" withString:@"</span>"];
 		
 	} else if ([content isKindOfClass:[AIContentStatus class]]) {
 		NSString	*statusPhrase;
