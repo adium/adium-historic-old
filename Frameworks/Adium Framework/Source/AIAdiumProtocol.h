@@ -77,6 +77,7 @@ typedef enum {
 #define CONTENT_CONTACT_JOINED_CHAT			@"Content_ContactJoinedChat"
 #define CONTENT_CONTACT_LEFT_CHAT			@"Content_ContactLeftChat"
 #define CONTENT_GROUP_CHAT_INVITE			@"Content_GroupChatInvite"
+#define CONTENT_GROUP_CHAT_MENTION			@"Content_GroupChatMention"
 #define INTERFACE_ERROR_MESSAGE				@"Interface_ErrorMessageReceived"
 
 /* Note: The account connected/disconnected events are aggregated for many accounts connecting simultaneously.
