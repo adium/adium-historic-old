@@ -422,6 +422,8 @@
 		promptOption = AIPromptNever;
 
 	//Retrieve the user's password and then call connect
+	AILogWithSignature(@"Retrieving %@'s password (promptOption %i)", self, promptOption);
+
 	[[adium accountController] passwordForAccount:self 
 									 promptOption:promptOption
 								  notifyingTarget:self
@@ -701,6 +703,8 @@
 
 - (void)serverReportedInvalidPassword
 {
+	AILogWithSignature(@"%@", self);
+
 	[self setStatusObject:[NSNumber numberWithBool:YES]
 				   forKey:@"Prompt For Password On Next Connect"
 				   notify:NotifyNever];
