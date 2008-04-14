@@ -57,5 +57,5 @@
 @end
 
 @interface NSObject (AIMultiCellOutlineViewDelegate)
-- (BOOL)outlineView:(NSOutlineView *)outlineView isGroup:(id)item;
+- (BOOL)outlineView:(NSOutlineView *)outlineView isGroupItem:(id)item;
 @end

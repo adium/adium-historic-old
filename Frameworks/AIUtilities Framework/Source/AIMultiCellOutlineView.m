@@ -71,9 +71,10 @@
 - (NSCell *)groupCell{
 	return groupCell;
 }
+
 - (id)cellForTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
-	return ([[self delegate] outlineView:self isGroup:item] ? groupCell : contentCell);
+	return ([[self delegate] outlineView:self isGroupItem:item] ? groupCell : contentCell);
 }
 
 @end
