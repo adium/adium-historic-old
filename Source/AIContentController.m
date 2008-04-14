@@ -169,6 +169,12 @@
 - (void)unregisterContentFilter:(id <AIContentFilter>)inFilter {
 	[adiumContentFiltering unregisterContentFilter:inFilter];
 }
+- (void)unregisterDelayedContentFilter:(id <AIDelayedContentFilter>)inFilter {
+	[adiumContentFiltering unregisterDelayedContentFilter:inFilter];
+}
+- (void)unregisterHTMLContentFilter:(id <AIHTMLContentFilter>)inFilter {
+	[adiumContentFiltering unregisterHTMLContentFilter:inFilter];
+}
 - (void)registerFilterStringWhichRequiresPolling:(NSString *)inPollString {
 	[adiumContentFiltering registerFilterStringWhichRequiresPolling:inPollString];
 }

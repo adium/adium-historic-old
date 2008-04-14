@@ -72,6 +72,8 @@ typedef enum {
 - (void)registerHTMLContentFilter:(id <AIHTMLContentFilter>)inFilter
 						direction:(AIFilterDirection)direction;
 - (void)unregisterContentFilter:(id <AIContentFilter>)inFilter;
+- (void)unregisterDelayedContentFilter:(id <AIDelayedContentFilter>)inFilter;
+- (void)unregisterHTMLContentFilter:(id <AIHTMLContentFilter>)inFilter;
 - (void)registerFilterStringWhichRequiresPolling:(NSString *)inPollString;
 - (BOOL)shouldPollToUpdateString:(NSString *)inString;
 
