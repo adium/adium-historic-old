@@ -15,6 +15,7 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/AIObject.h>
 
 @class AIChat, AIContentObject;
 
@@ -75,7 +76,7 @@ typedef enum {
  *	@brief Handles all interaction between the webkit message view controller and the message style, including creating the actual html strings to be appended
  *	@see AIWebKitMessageViewController
  */
-@interface AIWebkitMessageViewStyle : NSObject {
+@interface AIWebkitMessageViewStyle : AIObject {
 	int					styleVersion;
 	NSBundle			*styleBundle;
 	NSString			*stylePath;

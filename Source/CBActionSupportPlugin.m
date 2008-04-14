@@ -16,7 +16,8 @@
 
 #import <Adium/AIContentControllerProtocol.h>
 #import "CBActionSupportPlugin.h"
-
+#import <Adium/AIContentObject.h>
+#import <Adium/AIListObject.h>
 /*!
  * @class CBActionSupportPlugin
  * @brief Simple content filter to turn "/me blah" into "<span class='actionMessageUserName'>Name of contact </span><span class="actionMessageBody">blah</span>"
@@ -28,13 +29,13 @@
  */
 - (void)installPlugin
 {
-	[[adium contentController] registerContentFilter:self ofType:AIFilterMessageDisplay direction:AIFilterOutgoing];
-	[[adium contentController] registerContentFilter:self ofType:AIFilterMessageDisplay direction:AIFilterIncoming];
+	[[adium contentController] registerHTMLContentFilter:self direction:AIFilterOutgoing];
+	[[adium contentController] registerHTMLContentFilter:self direction:AIFilterIncoming];
 }
 
 - (void)uninstallPlugin
 {
-	[[adium contentController] unregisterContentFilter:self];
+	[[adium contentController] unregisterHTMLContentFilter:self];
 }
 
 #pragma mark -
@@ -42,65 +43,21 @@
 /*!
  * @brief Filter
  */
-- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
-{
-	NSMutableAttributedString   *ourMessage = nil;
-	
-	if (inAttributedString && 
-		[inAttributedString length] &&
-		[[inAttributedString string] rangeOfString:@"/me"
-										   options:NSLiteralSearch
-											 range:NSMakeRange(0, [inAttributedString length])].location != NSNotFound) {
-		NSMutableString *str;
-		NSString		*startReplacement = @"%actionMessage%", *endReplacement = @"%/actionMessage%";
-		NSRange			extent;
-		unsigned		replacementLength;
-		
-		ourMessage = [[inAttributedString mutableCopyWithZone:[inAttributedString zone]] autorelease];
-		str = [ourMessage mutableString];
-
-	//	startReplacement = [startReplacement stringByAppendingString:[[[[[adium interfaceController] activeChat] account] displayName] stringByAppendingString:@" "]];
-	//	endReplacement = @"";
-
-		replacementLength = [startReplacement length] + [endReplacement length];
-
-		extent = NSMakeRange(0, [str length]);
-		do { //while (extent.length)
-			NSRange lineRange, searchRange, meRange;
-			signed shift = 0;
-			unsigned endInsertPoint;
-			
-			lineRange = NSMakeRange(extent.location, 1);
-			endInsertPoint = 0;
-			[str getLineStart:&lineRange.location
-			              end:&lineRange.length
-			      contentsEnd:&endInsertPoint
-			         forRange:lineRange];
-			lineRange.length -= lineRange.location;
-			
-			searchRange = NSMakeRange(lineRange.location, endInsertPoint - lineRange.location);
-			meRange = [str rangeOfString:@"/me " options:(NSLiteralSearch | NSCaseInsensitiveSearch) range:searchRange];
-			
-			if (meRange.location == lineRange.location && meRange.length == 4) {
-				NSAttributedString *endSplat = [[NSAttributedString alloc] initWithString:endReplacement 
-																			attributes:[ourMessage attributesAtIndex:endInsertPoint-1
-																									  effectiveRange:nil]];
-				[ourMessage insertAttributedString:endSplat atIndex:endInsertPoint];
-				[endSplat release];
-
-				[ourMessage replaceCharactersInRange:meRange withString:startReplacement];
-
-				shift = meRange.length - replacementLength;
-			}
-			
-			shift += lineRange.length;
-			if (shift > extent.length) shift = extent.length;
-			extent.location += shift;
-			extent.length   -= shift;
-		} while (extent.length);
+- (NSString *)filterHTMLString:(NSString *)inHTMLString content:(AIContentObject*)content;
+{	
+	if ( inHTMLString && 
+		[inHTMLString length] &&
+		[[[content message] string] rangeOfString:@"/me"
+										  options:NSLiteralSearch
+											range:NSMakeRange(0, [[content message] length])].location == 0) {
+		NSMutableString   *ourMessage = [inHTMLString mutableCopy];
+		NSString *replacement = [NSString stringWithFormat:@"<span class='actionMessageUserName'>%@</span><span class='actionMessageBody'>", [[content source] displayName]];
+		[ourMessage replaceCharactersInRange:[inHTMLString rangeOfString:@"/me"]
+								  withString:replacement];
+		[ourMessage appendString:@"</span>"];
+		return ourMessage;
 	}
-	
-	return (ourMessage ? ourMessage : inAttributedString);
+	return inHTMLString;
 }
 
 /*!
