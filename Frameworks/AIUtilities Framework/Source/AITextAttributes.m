@@ -345,6 +345,8 @@
 														  traits:fontTraitsMask
 														  weight:5
 															size:fontSize];
+		//Ensure that fontTraitsMask was actually respected; fontWithFamily:traits:weight:size: may not do it for us depending on the font
+		font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:fontTraitsMask];
     }
 
     if (font) { //Just to be safe, incase the default font was unavailable for some reason
