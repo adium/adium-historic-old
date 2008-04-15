@@ -16,6 +16,7 @@ Version 1.2.5
  * Fixed restoration of the message window's location when it overlaps the dock and has a visible toolbar (#9096)
  * Fixed negotiation of XMPP authentication over SASL when one mechanism fails but another can succeed, as when the server support GSSAPI, Adium is not authorized to connect via GSSAPI, but Adium has a valid username/password combination to use instead. (#9492)
  * We now allow the # character in Jabber names (#9544)
+ * Brazilian Portuguese translation updates
 
 Version 1.2.4 (3/30/2008)
  * Updated to libpurple 2.4.1 (pidgin.im), which includes AIM offline message support, fast Yahoo file transfers, viewing of ICQ status notes, setting Google Talk buddy icons, and a fix for an issue which could make you appear offline to MSN users
