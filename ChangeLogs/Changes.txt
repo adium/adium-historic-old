@@ -18,7 +18,7 @@ Version 1.2.5
  * We now allow the # character in Jabber names (#9544)
 
 Version 1.2.4 (3/30/2008)
- * Updated to libpurple 2.4.0 (pidgin.im), which includes AIM offline message support, fast Yahoo file transfers, viewing of ICQ status notes, setting Google Talk buddy icons, and a fix for an issue which could make you appear offline to MSN users
+ * Updated to libpurple 2.4.1 (pidgin.im), which includes AIM offline message support, fast Yahoo file transfers, viewing of ICQ status notes, setting Google Talk buddy icons, and a fix for an issue which could make you appear offline to MSN users
  * Moved Accounts and Contacts submenus to the top of the StatusItem
  * Fixed an issue causing some Yahoo! contacts to be incorrectly blocked (#7744)
  * Fixed autosizing of the text entry field, for real this time (#8701)
