@@ -14,7 +14,6 @@
 -(void)updateAccountName:(AIListObject *)inObject;
 -(void)updateServiceIcon:(AIListObject *)inObject;
 -(void)updateStatusIcon:(AIListObject *)inObject;
--(void)updateStatusView:(AIListObject *)inObject;
 -(void)updateProfileView:(AIListObject *)inObject;
 - (void)gotFilteredProfile:(NSAttributedString *)infoString context:(AIListObject *)object;
 - (void)gotFilteredStatus:(NSAttributedString *)infoString context:(AIListObject *)object;
@@ -41,7 +40,6 @@
 
 - (void) dealloc
 {
-	AILogWithSignature(@"%@", self);
 	[inspectorContentView release];
 	
 	[[adium contactController] unregisterListObjectObserver:self];
@@ -72,7 +70,6 @@
 	[self updateAccountName:inObject];
 	[self updateServiceIcon:inObject];
 	[self updateStatusIcon:inObject];
-	[self updateStatusView:inObject];
 	[self updateProfileView:inObject];
 }
 
@@ -149,38 +146,10 @@
 	}
 }
 
--(void)updateStatusView:(AIListObject *)inObject
-{
-	//If we are updating the profile of a metacontact, we need to make sure to work with the preferred contact.
-	AIListObject *currentObject = nil;
-	
-	if([inObject isKindOfClass:[AIMetaContact class]])
-		currentObject = [(AIMetaContact *)inObject preferredContact];
-	else
-		currentObject = inObject;
-	
-	[[adium contentController] filterAttributedString:[currentObject statusMessage]
-									  usingFilterType:AIFilterDisplay
-											direction:AIFilterIncoming
-										filterContext:inObject
-									  notifyingTarget:self
-											 selector:@selector(gotFilteredStatus:context:)
-											  context:inObject];
-}
-
-
 -(void)updateProfileView:(AIListObject *)inObject
-{
-	//If we are updating the profile of a metacontact, we need to make sure to work with the preferred contact.
-	AIListObject *currentObject = nil;
-	
-	if([inObject isKindOfClass:[AIMetaContact class]])
-		currentObject = [(AIMetaContact *)inObject preferredContact];
-	else
-		currentObject = inObject;
-	
+{	
 	[[adium contentController] filterAttributedString:([inObject isKindOfClass:[AIListContact class]] ?
-													   [(AIListContact *)currentObject profile] :
+													   [(AIListContact *)inObject profile] :
 													   nil)
 									  usingFilterType:AIFilterDisplay
 											direction:AIFilterIncoming
@@ -193,7 +162,7 @@
 - (void)gotFilteredProfile:(NSAttributedString *)infoString context:(AIListObject *)object
 {
 	//Prevent duplicate profiles from being set again.
-	if([[profileView string] isEqual:[infoString string]])
+	if([[profileView string] isEqualToString:[infoString string]])
 		return;
 		
 	//If we've been called with infoString == nil, we don't have the profile information yet.
@@ -211,11 +180,6 @@
 	}
 	
 	[self setAttributedString:infoString intoTextView:profileView];
-}
-
-- (void)gotFilteredStatus:(NSAttributedString *)infoString context:(AIListObject *)object
-{
-	[self setAttributedString:infoString intoTextView:statusView];
 }
 
 - (void)setAttributedString:(NSAttributedString *)infoString intoTextView:(NSTextView *)textView
@@ -239,15 +203,19 @@
 {
 	//This is a hold-over from the refactoring of the old Get Info Window.
 	//The code for the Get Info Window only updated the status and profile, so we only do that here.
-	
-	if(inObject != displayedObject)
+	//Update if our object or an object contained by our metacontact (if applicable) was updated
+	if ([displayedObject isKindOfClass:[AIMetaContact class]] &&
+		((inObject != displayedObject) && ![(AIMetaContact *)displayedObject containsObject:inObject]))
 		return nil;
-	
+	else if (inObject != displayedObject)
+		return nil;
+
 	//We've added the status icon, since we may get this notification in the middle of viewing an object
 	//and we'd like to have the right icon.
-	[self updateStatusIcon:inObject];
-	[self updateStatusView:inObject];
-	[self updateProfileView:inObject];
+	[self updateStatusIcon:displayedObject];
+
+	if (!inModifiedKeys || [inModifiedKeys containsObject:@"TextProfile"])
+		[self updateProfileView:displayedObject];
 	
 	return nil;
 }
