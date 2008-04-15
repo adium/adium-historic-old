@@ -229,6 +229,23 @@ static NSRect screenBoundariesRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	return YES;
 }
 
+static float ToolbarHeightForWindow(NSWindow *window)
+{
+    NSToolbar *toolbar;
+    float toolbarHeight = 0.0;
+    NSRect windowFrame;
+
+    toolbar = [window toolbar];
+
+    if (toolbar && [toolbar isVisible]) {
+        windowFrame = [NSWindow contentRectForFrameRect:[window frame]
+											  styleMask:[window styleMask]];
+        toolbarHeight = NSHeight(windowFrame) - NSHeight([[window contentView] frame]);
+    }
+
+    return toolbarHeight;
+}
+
 /*!
  * @brief Return a string representation of the saved frame
  *
@@ -238,9 +255,22 @@ static NSRect screenBoundariesRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
  */
 - (NSString *)stringWithSavedFrame
 {
-	NSRect frame = [[self window] frame];
-	NSRect screenFrame = [[[self window] screen] frame];
+	NSWindow *window = [self window];
+	NSRect frame = [window frame];
+	NSRect screenFrame = [[window screen] frame];
+	float toolbarHeight = ToolbarHeightForWindow(window);
 
+	//The window starts off without a toolbar, so we need to save its size as such
+	frame.size.height -= toolbarHeight;
+
+	/* If the window's origin overlaps the dock at the bottom of the screen, we don't want to adjust its origin
+	 * since NSToolbar takes the dock into account as it moves the window when added to it initially. Otherwise,
+	 * we need to shift the origin to make up for the change in height. This is the bit that -[NSWindow stringWithSavedFrame]
+	 * gets wrong.
+	 */
+	if (NSMinY(frame) > NSMinY([[window screen] visibleFrame]))
+		frame.origin.y += toolbarHeight;
+		
 	return [NSString stringWithFormat:@"%.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f",
 			NSMinX(frame), NSMinY(frame), NSWidth(frame), NSHeight(frame),
 			NSMinX(screenFrame), NSMinY(screenFrame), NSWidth(screenFrame), NSHeight(screenFrame)];	
