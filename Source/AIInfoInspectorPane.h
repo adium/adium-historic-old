@@ -32,7 +32,6 @@
 	
 	IBOutlet NSTextField							*accountName;
 	
-	IBOutlet NSTextView								*statusView;
 	IBOutlet NSTextView								*profileView;
 
 	IBOutlet NSProgressIndicator					*profileProgress;
