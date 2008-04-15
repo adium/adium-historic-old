@@ -176,6 +176,9 @@
 			<property name="name" code="pnam" type="text" access="r" description="The name of this contact">
 				<cocoa key="UID" />
 			</property>
+			<property name="ID" code="ID  " type="text" access="r" description="The opaque unique identifier of the contact">
+				<cocoa key="internalObjectID" />
+			</property>			
 			<property name="display name" code="Pdnm" type="text" access="rw" description="The display name or alias associated with this contact." />
 			<property name="notes" code="Pnts" type="text" access="rw" description="The user-defined notes for this contact."/>
 			<property name="idle time" code="Pidl" type="integer" access="r" description="The time this contact has been idle." />
