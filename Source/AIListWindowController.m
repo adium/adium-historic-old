@@ -1011,7 +1011,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	}
 
 	windowSlidOffScreenEdgeMask |= rectEdgeMask;
-
+		
 	[self slideWindowToPoint:newWindowFrame.origin];
 }
 
@@ -1022,12 +1022,11 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 		NSRect		windowFrame = [window frame];
 		
 		if (!NSEqualRects(windowFrame, oldFrame)) {
-			[contactListController contactListWillSlideOnScreen];
-
 			//Restore shadow and frame if we're appearing from having slid off-screen
 			[window setHasShadow:[[[adium preferenceController] preferenceForKey:KEY_CL_WINDOW_HAS_SHADOW
 																		   group:PREF_GROUP_CONTACT_LIST] boolValue]];			
 			[window orderFront:nil]; 
+			[contactListController contactListWillSlideOnScreen];
 
 			windowSlidOffScreenEdgeMask = AINoEdges;
 
