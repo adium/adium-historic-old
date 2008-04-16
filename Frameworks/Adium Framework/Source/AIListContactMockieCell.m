@@ -81,7 +81,7 @@
 
 			[lastBackgroundBezierPath fill];
 			
-		} else if (row >= (numberOfRows-1) || [[controlView delegate] outlineView:controlView isGroupItem:[controlView itemAtRow:row+1]]) {
+		} else if (row >= (numberOfRows-1) || [[controlView delegate] outlineView:controlView isGroup:[controlView itemAtRow:row+1]]) {
 			//Draw the bottom corners rounded if this is the last cell in a group
 			lastBackgroundBezierPath = [[NSBezierPath bezierPathWithRoundedBottomCorners:rect radius:MOCKIE_RADIUS] retain];
 			[lastBackgroundBezierPath fill];
