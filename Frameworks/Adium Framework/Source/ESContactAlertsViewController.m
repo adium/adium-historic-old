@@ -33,7 +33,7 @@
 
 #define VERTICAL_ROW_PADDING	6
 #define MINIMUM_IMAGE_HEIGHT		20.0f
-#define MINIMUM_ROW_HEIGHT			32.0f
+#define MINIMUM_ROW_HEIGHT			/* 32.0f */ 16.0f
 
 #define	EVENT_COLUMN_INDEX		1
 
@@ -321,7 +321,7 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 	
 	verticallyCenteredTextCell = [[AIVerticallyCenteredTextCell alloc] init];
 	[verticallyCenteredTextCell setFont:[NSFont systemFontOfSize:10]];
-//	[[outlineView_summary tableColumnWithIdentifier:@"action"] setDataCell:verticallyCenteredTextCell];
+	[[outlineView_summary tableColumnWithIdentifier:@"action"] setDataCell:verticallyCenteredTextCell];
 	[verticallyCenteredTextCell release];
 
 	[outlineView_summary setDrawsAlternatingRows:YES];
@@ -464,8 +464,9 @@ int actionSort(id objectA, id objectB, void *context)
 		}
 	}
 
-	[self calculateAllHeights];
 	[outlineView_summary reloadData];
+	[self calculateAllHeights];
+	[outlineView_summary noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [outlineView_summary numberOfRows])]];
 
 	if (selectedEventID) {
 		int actionsIndex = [contactAlertsEvents indexOfObject:selectedEventID];
@@ -710,7 +711,6 @@ int actionSort(id objectA, id objectB, void *context)
 		//This item isn't an action; use the minimum row height
 		necessaryHeight = MINIMUM_ROW_HEIGHT;
 	}
-
 	return necessaryHeight;
 }
 
