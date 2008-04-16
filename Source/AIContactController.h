@@ -27,11 +27,7 @@
 #define	KEY_HIDE_CONTACT_LIST_GROUPS	@"Hide Contact List Groups"
 #define	PREF_GROUP_CONTACT_LIST_DISPLAY	@"Contact List Display"
 
-#ifdef DEBUG_BUILD
-	#define CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG	TRUE
-#endif
-
-@class AISortController, AdiumAuthorization, AIContactHidingController;
+@class AISortController, AdiumAuthorization, AIContactHidingController, AdiumContactPropertiesObserverManager;
 
 @interface AIContactController : AIObject <AIContactController, AIListObjectObserver> {
 	//Contacts and metaContacts
@@ -50,21 +46,6 @@
 	//Detached Contact Lists
 	NSMutableArray			*detachedContactLists;
 	
-	//Status and Attribute updates
-#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
-    NSMutableArray			*contactObservers;
-#else
-    NSMutableSet			*contactObservers;	
-#endif
-    NSTimer					*delayedUpdateTimer;
-    int						delayedStatusChanges;
-	NSMutableSet			*delayedModifiedStatusKeys;
-    int						delayedAttributeChanges;
-	NSMutableSet			*delayedModifiedAttributeKeys;
-    int						delayedContactChanges;
-	int						delayedUpdateRequests;
-	BOOL					updatesAreDelayed;
-	
 	//Sorting
     NSMutableArray			*sortControllerArray;
     AISortController	 	*activeSortController;
@@ -74,6 +55,8 @@
 	
 	//hiding
 	AIContactHidingController	*contactHidingController;
+	
+	AdiumContactPropertiesObserverManager *contactPropertiesObserverManager;
 }
 
 - (void)sortAContactList:(AIListGroup *)group;
@@ -81,4 +64,9 @@
 
 - (AIContactHidingController *)contactHidingController;
 
+@end
+
+@interface AIContactController (ContactControllerHelperAccess)
+- (NSEnumerator *)contactEnumerator;
+- (NSEnumerator *)groupEnumerator;
 @end

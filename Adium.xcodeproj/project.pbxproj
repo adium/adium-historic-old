@@ -279,6 +279,7 @@
 		344D97510C3C442600498CA1 /* Person.m in Sources */ = {isa = PBXBuildFile; fileRef = 344D97430C3C442500498CA1 /* Person.m */; };
 		344D97530C3C442600498CA1 /* Presentity.m in Sources */ = {isa = PBXBuildFile; fileRef = 344D97450C3C442600498CA1 /* Presentity.m */; };
 		34500ED00A881F8500509225 /* PurpleDefaultsQQ.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3419E74B0A880C0900C3FC68 /* PurpleDefaultsQQ.plist */; };
+		34555C600DB6BCE500649CD4 /* AdiumContactPropertiesObserverManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 34555C5F0DB6BCE500649CD4 /* AdiumContactPropertiesObserverManager.m */; };
 		3456231C0A3771D800E7FC97 /* ESRankingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3456231A0A3771D800E7FC97 /* ESRankingCell.m */; };
 		345623200A3771E100E7FC97 /* AIChatLog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3456231E0A3771E100E7FC97 /* AIChatLog.m */; };
 		3456232A0A3771F400E7FC97 /* AILogToGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 345623240A3771F300E7FC97 /* AILogToGroup.m */; };
@@ -2357,6 +2358,8 @@
 		3452A9F607891C8A00C3C494 /* ESFileTransferRequestPromptController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferRequestPromptController.h; path = Source/ESFileTransferRequestPromptController.h; sourceTree = "<group>"; };
 		3452A9F707891C8A00C3C494 /* ESFileTransferRequestPromptController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferRequestPromptController.m; path = Source/ESFileTransferRequestPromptController.m; sourceTree = "<group>"; };
 		34536750059BA8ED00A83D9E /* atos */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = atos; sourceTree = "<group>"; };
+		34555C5E0DB6BCE500649CD4 /* AdiumContactPropertiesObserverManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumContactPropertiesObserverManager.h; path = Source/AdiumContactPropertiesObserverManager.h; sourceTree = "<group>"; };
+		34555C5F0DB6BCE500649CD4 /* AdiumContactPropertiesObserverManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumContactPropertiesObserverManager.m; path = Source/AdiumContactPropertiesObserverManager.m; sourceTree = "<group>"; };
 		3456231A0A3771D800E7FC97 /* ESRankingCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESRankingCell.m; path = Source/ESRankingCell.m; sourceTree = "<group>"; };
 		3456231B0A3771D800E7FC97 /* ESRankingCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESRankingCell.h; path = Source/ESRankingCell.h; sourceTree = "<group>"; };
 		3456231E0A3771E100E7FC97 /* AIChatLog.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIChatLog.m; path = Source/AIChatLog.m; sourceTree = "<group>"; };
@@ -3023,8 +3026,8 @@
 		34AA35D9095CCA4D003B56DB /* AdiumDisconnectionErrorController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumDisconnectionErrorController.h; path = Source/AdiumDisconnectionErrorController.h; sourceTree = "<group>"; };
 		34AA35DA095CCA4D003B56DB /* AdiumDisconnectionErrorController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumDisconnectionErrorController.m; path = Source/AdiumDisconnectionErrorController.m; sourceTree = "<group>"; };
 		34AA366A095CE124003B56DB /* AIStatusDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusDefines.h; path = "Frameworks/Adium Framework/Source/AIStatusDefines.h"; sourceTree = "<group>"; };
-		34AB43000CEFDAF300F76493 /* msn-adium.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "msn-adium.h"; path = "Plugins/Purple Service/msn-adium.h"; sourceTree = SOURCE_ROOT; };
-		34AB43010CEFDAF300F76493 /* msn-adium.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "msn-adium.c"; path = "Plugins/Purple Service/msn-adium.c"; sourceTree = SOURCE_ROOT; };
+		34AB43000CEFDAF300F76493 /* msn-adium.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "msn-adium.h"; path = "Plugins/Purple Service/msn-adium.h"; sourceTree = "<group>"; };
+		34AB43010CEFDAF300F76493 /* msn-adium.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "msn-adium.c"; path = "Plugins/Purple Service/msn-adium.c"; sourceTree = "<group>"; };
 		34AC2E9F0934FAE100393D7A /* AIStatusMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusMenu.h; path = "Frameworks/Adium Framework/Source/AIStatusMenu.h"; sourceTree = "<group>"; };
 		34AC2EA00934FAE100393D7A /* AIStatusMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIStatusMenu.m; path = "Frameworks/Adium Framework/Source/AIStatusMenu.m"; sourceTree = "<group>"; };
 		34AC2FA509352C2400393D7A /* AIStatusGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusGroup.h; path = "Frameworks/Adium Framework/Source/AIStatusGroup.h"; sourceTree = "<group>"; };
@@ -4343,8 +4346,6 @@
 			children = (
 				11EE1B490CDCFAF40097F246 /* oscar-adium.c */,
 				11EE1B4A0CDCFAF40097F246 /* oscar-adium.h */,
-				34AB43000CEFDAF300F76493 /* msn-adium.h */,
-				34AB43010CEFDAF300F76493 /* msn-adium.c */,
 				811033500CDE170B00EC6038 /* ssl-cdsa.c */,
 				11EE1B4B0CDCFAF40097F246 /* ssl-openssl.c */,
 				11EE1B4C0CDCFAF40097F246 /* ssl.c */,
@@ -4741,6 +4742,8 @@
 				344158AA059F90FB0019246B /* ESMSNService.m */,
 				3441593F059F94C10019246B /* ESPurpleMSNAccount.h */,
 				34415940059F94C10019246B /* ESPurpleMSNAccount.m */,
+				34AB43000CEFDAF300F76493 /* msn-adium.h */,
+				34AB43010CEFDAF300F76493 /* msn-adium.c */,
 				6E4D962E06B73C4D005235E9 /* DCPurpleMSNJoinChatViewController.h */,
 				6E4D962F06B73C4D005235E9 /* DCPurpleMSNJoinChatViewController.m */,
 				6E4D962D06B73C4D005235E9 /* DCPurpleMSNJoinChatView.nib */,
@@ -5767,6 +5770,8 @@
 			children = (
 				F57938F6033E745F01A8010A /* AIContactController.h */,
 				F57938AB033E737001A8010A /* AIContactController.m */,
+				34555C5E0DB6BCE500649CD4 /* AdiumContactPropertiesObserverManager.h */,
+				34555C5F0DB6BCE500649CD4 /* AdiumContactPropertiesObserverManager.m */,
 				343C89B005704DEC005E0632 /* Address Book Integration */,
 				4B28907503C1D14200A8010A /* Alias Support */,
 				34C2D31006334A460018E5D2 /* Blocking */,
@@ -9313,6 +9318,7 @@
 				4F1CB6320D640D7F0073A1E6 /* AIEventsInspectorPane.m in Sources */,
 				661561650D84AEED004B7946 /* AIContactHidingController.m in Sources */,
 				6615618B0D84B875004B7946 /* AIFilterBarBackgroundBox.m in Sources */,
+				34555C600DB6BCE500649CD4 /* AdiumContactPropertiesObserverManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
