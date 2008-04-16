@@ -116,7 +116,7 @@ static void *adiumPurpleRequestInput(
 	[infoDict setObject:[NSNumber numberWithBool:multiline] forKey:@"Multiline"];
 	[infoDict setObject:[NSNumber numberWithBool:masked] forKey:@"Masked"];
 	
-	AILog(@"adiumPurpleRequestInput: %@",infoDict);
+	AILogWithSignature(@"%@",infoDict);
 	
 	requestController = [ESPurpleRequestWindowController showInputWindowWithDict:infoDict];
 	
@@ -130,7 +130,7 @@ static void *adiumPurpleRequestChoice(const char *title, const char *primary,
 									PurpleAccount *account, const char *who, PurpleConversation *conv,
 									void *userData, va_list choices)
 {
-	AILog(@"adiumPurpleRequestChoice: %s\n%s\n%s ",
+	AILogWithSignature(@"%s\n%s\n%s ",
 			   (title ? title : ""),
 			   (primary ? primary : ""),
 			   (secondary ? secondary : ""));
@@ -392,7 +392,7 @@ static void *adiumPurpleRequestFile(const char *title, const char *filename,
 static void adiumPurpleRequestClose(PurpleRequestType type, void *uiHandle)
 {
 	id	ourHandle = (id)uiHandle;
-	AILog(@"adiumPurpleRequestClose %@ (%i)",uiHandle,[ourHandle respondsToSelector:@selector(purpleRequestClose)]);
+	AILogWithSignature(@"%@ (%i)",uiHandle,[ourHandle respondsToSelector:@selector(purpleRequestClose)]);
 	if ([ourHandle respondsToSelector:@selector(purpleRequestClose)]) {
 		[ourHandle purpleRequestClose];
 
@@ -405,7 +405,7 @@ static void *adiumPurpleRequestFolder(const char *title, const char *dirname, GC
 									  PurpleAccount *account, const char *who, PurpleConversation *conv,
 									  void *user_data)
 {
-	AILog(@"adiumPurpleRequestFolder");
+	AILogWithSignature(@"");
 
 	return NULL;
 }
@@ -429,7 +429,7 @@ PurpleRequestUiOps *adium_purple_request_get_ui_ops()
 
 + (void)requestCloseWithHandle:(id)handle
 {
-	AILog(@"purpleThreadRequestCloseWithHandle: %@",handle);
+	AILogWithSignature(@"%@", handle);
 	purple_request_close_with_handle(handle);
 }
 

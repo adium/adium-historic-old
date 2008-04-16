@@ -305,10 +305,10 @@
 			}
 			// fallthrough
 		case 1: // always accept
-			[[self purpleThread] doAuthRequestCbValue:[[[dict objectForKey:@"authorizeCB"] retain] autorelease] withUserDataValue:[[[dict objectForKey:@"userData"] retain] autorelease]];
+			[[self purpleAdapter] doAuthRequestCbValue:[[[dict objectForKey:@"authorizeCB"] retain] autorelease] withUserDataValue:[[[dict objectForKey:@"userData"] retain] autorelease]];
 			break;
 		case 3: // always deny
-			[[self purpleThread] doAuthRequestCbValue:[[[dict objectForKey:@"denyCB"] retain] autorelease] withUserDataValue:[[[dict objectForKey:@"userData"] retain] autorelease]];
+			[[self purpleAdapter] doAuthRequestCbValue:[[[dict objectForKey:@"denyCB"] retain] autorelease] withUserDataValue:[[[dict objectForKey:@"userData"] retain] autorelease]];
 			break;
 		default: // ask (should be 0)
 			return [super authorizationRequestWithDict:dict];
@@ -718,7 +718,7 @@
 		NSDictionary *gatewaydict;
 		while((gatewaydict = [e nextObject])) {
 			if([[[gatewaydict objectForKey:@"contact"] UID] isEqualToString:[theContact UID]]) {
-				[[self purpleThread] removeUID:[theContact UID] onAccount:self fromGroup:[gatewaydict objectForKey:@"remoteGroup"]];
+				[[self purpleAdapter] removeUID:[theContact UID] onAccount:self fromGroup:[gatewaydict objectForKey:@"remoteGroup"]];
 				
 				[gateways removeObjectIdenticalTo:gatewaydict];
 				break;
@@ -809,7 +809,7 @@
 
 #ifdef HAVE_CDSA
 - (IBAction)showServerCertificate:(id)sender {
-	CFArrayRef certificates = [[self purpleThread] copyServerCertificates:[self secureConnection]];
+	CFArrayRef certificates = [[self purpleAdapter] copyServerCertificates:[self secureConnection]];
 	
 	[AIPurpleCertificateViewer displayCertificateChain:certificates forAccount:self];
 	CFRelease(certificates);

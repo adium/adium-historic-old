@@ -79,7 +79,7 @@
 		//Remove trailing and leading whitespace
 		formattedUID = [formattedUID stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
 		
-		[[self purpleThread] performSelector:@selector(OSCARSetFormatTo:onAccount:)
+		[[self purpleAdapter] performSelector:@selector(OSCARSetFormatTo:onAccount:)
 								withObject:formattedUID
 								withObject:self
 								afterDelay:5.0];

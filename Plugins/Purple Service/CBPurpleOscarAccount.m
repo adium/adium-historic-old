@@ -281,7 +281,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 														group:PREF_GROUP_NOTES
 										ignoreInheritedValues:YES];
 				
-				[[super purpleThread] OSCAREditComment:comment forUID:[object UID] onAccount:self];
+				[[super purpleAdapter] OSCAREditComment:comment forUID:[object UID] onAccount:self];
 			}			
 		}
 	}
