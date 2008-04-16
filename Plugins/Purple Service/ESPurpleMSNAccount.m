@@ -98,7 +98,7 @@
 - (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
 {
 	NSString	*encodedString;
-	BOOL		didCommand = [[self purpleThread] attemptPurpleCommandOnMessage:[[inContentMessage message] string]
+	BOOL		didCommand = [[self purpleAdapter] attemptPurpleCommandOnMessage:[[inContentMessage message] string]
 															  fromAccount:(AIAccount *)[inContentMessage source]
 																   inChat:[inContentMessage chat]];	
 	

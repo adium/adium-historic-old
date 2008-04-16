@@ -95,7 +95,7 @@
 
 - (BOOL)shouldSetAliasesServerside;
 
-- (SLPurpleCocoaAdapter *)purpleThread;
+- (SLPurpleCocoaAdapter *)purpleAdapter;
 
 #pragma mark Purple callback handling methods
 - (void)accountConnectionConnected;

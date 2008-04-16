@@ -88,7 +88,7 @@
 
 @implementation CBPurpleAccount
 
-static SLPurpleCocoaAdapter *purpleThread = nil;
+static SLPurpleCocoaAdapter *purpleAdapter = nil;
 
 // The PurpleAccount currently associated with this Adium account
 - (PurpleAccount*)purpleAccount
@@ -102,12 +102,12 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
     return account;
 }
 
-- (SLPurpleCocoaAdapter *)purpleThread
+- (SLPurpleCocoaAdapter *)purpleAdapter
 {
-	if (!purpleThread) {
-		purpleThread = [[SLPurpleCocoaAdapter sharedInstance] retain];	
+	if (!purpleAdapter) {
+		purpleAdapter = [[SLPurpleCocoaAdapter sharedInstance] retain];	
 	}	
-	return purpleThread;
+	return purpleAdapter;
 }
 
 // Subclasses must override this
@@ -442,7 +442,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact
 {
     //Request profile
-	[purpleThread getInfoFor:[inContact UID] onAccount:self];
+	[purpleAdapter getInfoFor:[inContact UID] onAccount:self];
 }
 
 - (void)requestAddContactWithUID:(NSString *)contactUID
@@ -522,7 +522,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 		NSString	*groupName = [self _mapOutgoingGroupName:[object remoteGroupName]];
 
 		//Have the purple thread perform the serverside actions
-		[purpleThread removeUID:[object UID] onAccount:self fromGroup:groupName];
+		[purpleAdapter removeUID:[object UID] onAccount:self fromGroup:groupName];
 		
 		//Remove it from Adium's list
 		[object setRemoteGroupName:nil];
@@ -538,7 +538,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 	while ((object = [enumerator nextObject])) {
 		AILogWithSignature(@"%@ adding %@ to %@", self, [self _UIDForAddingObject:object], groupName);
 
-		[purpleThread addUID:[self _UIDForAddingObject:object] onAccount:self toGroup:groupName];
+		[purpleAdapter addUID:[self _UIDForAddingObject:object] onAccount:self toGroup:groupName];
 		
 		//Add it to Adium's list
 		[object setRemoteGroupName:[group UID]]; //Use the non-mapped group name locally
@@ -566,7 +566,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 			//			NSString	*oldGroupName = [self _mapOutgoingGroupName:[listObject remoteGroupName]];
 			
 			//Tell the purple thread to perform the serverside operation
-			[purpleThread moveUID:[listObject UID] onAccount:self toGroup:groupName];
+			[purpleAdapter moveUID:[listObject UID] onAccount:self toGroup:groupName];
 
 			//Use the non-mapped group name locally
 			[listObject setRemoteGroupName:[group UID]];
@@ -579,7 +579,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 	NSString		*groupName = [self _mapOutgoingGroupName:[inGroup UID]];
 
 	//Tell the purple thread to perform the serverside operation	
-	[purpleThread renameGroup:groupName onAccount:self to:newName];
+	[purpleAdapter renameGroup:groupName onAccount:self to:newName];
 
 	//We must also update the remote grouping of all our contacts in that group
 	NSEnumerator	*enumerator = [[[adium contactController] allContactsInObject:inGroup recurse:YES onAccount:self] objectEnumerator];
@@ -595,7 +595,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 {
 	NSString		*groupName = [self _mapOutgoingGroupName:[inGroup UID]];
 
-	[purpleThread deleteGroup:groupName onAccount:self];
+	[purpleAdapter deleteGroup:groupName onAccount:self];
 }
 
 // Return YES if the contact list is editable
@@ -629,14 +629,14 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 		
 		//libpurple will remove its reference to the handle for this request, which is inWindowController, in response to this callback invocation
 		if (callback) {
-			[purpleThread doAuthRequestCbValue:callback withUserDataValue:[[[infoDict objectForKey:@"userData"] retain] autorelease]];
+			[purpleAdapter doAuthRequestCbValue:callback withUserDataValue:[[[infoDict objectForKey:@"userData"] retain] autorelease]];
 
 			/* Retained in -[self authorizationRequestWithDict:].  We kept it around before now in case libpurle wanted us to close it early, such as because the
 			 * account disconnected.
 			 */
 			[inWindowController autorelease];
 		} else {
-			[purpleThread closeAuthRequestWithHandle:inWindowController];
+			[purpleAdapter closeAuthRequestWithHandle:inWindowController];
 			
 		}
 	}
@@ -684,7 +684,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 	AILog(@"purple openChat:%@ for %@",chat,[chat uniqueChatID]);
 
 	//Inform purple that we have opened this chat
-	[purpleThread openChat:chat onAccount:self];
+	[purpleAdapter openChat:chat onAccount:self];
 	
 	//Created the chat successfully
 	return YES;
@@ -692,7 +692,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 
 - (BOOL)closeChat:(AIChat*)chat
 {
-	[purpleThread closeChat:chat];
+	[purpleAdapter closeChat:chat];
 	
 	//Be sure any remaining typing flag is cleared as the chat closes
 	[self setTypingFlagOfChat:chat to:nil];
@@ -718,7 +718,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 	 * Clear the identifier so a new PurpleConversation will be made. The ChatCreationInfo for the chat is still around, so it can join.
 	 */
 	[chat setIdentifier:nil];
-	[purpleThread openChat:chat onAccount:self];
+	[purpleAdapter openChat:chat onAccount:self];
 
 	[chat autorelease];
 
@@ -813,7 +813,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
         //Purple is telling us that our message was sent successfully.
 
 		//We would tell the other side that we're done typing, except that if we do this now, the typing notification icon in some clients (e.g., iChat) disappears before the message actually arrives.
-		//[purpleThread sendTyping:AINotTyping inChat:chat];
+		//[purpleAdapter sendTyping:AINotTyping inChat:chat];
     } else {
 		NSAttributedString		*attributedMessage;
 		AIListContact			*listContact;
@@ -877,7 +877,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 	AIChat *chat = [inContentTyping chat];
 
 	if (![chat isGroupChat]) {
-		[purpleThread sendTyping:[inContentTyping typingState] inChat:chat];
+		[purpleAdapter sendTyping:[inContentTyping typingState] inChat:chat];
 	}
 }
 
@@ -893,7 +893,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 	if ([inContentMessage isKindOfClass:[AIContentNotification class]] &&
 		[self supportsSendingNotifications]) {
 		//Send a notification directly if possible
-		[purpleThread sendNotificationOfType:[(AIContentNotification *)inContentMessage notificationType]
+		[purpleAdapter sendNotificationOfType:[(AIContentNotification *)inContentMessage notificationType]
 								 fromAccount:self
 									  inChat:[inContentMessage chat]];
 
@@ -902,7 +902,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 			flags |= PURPLE_MESSAGE_AUTO_RESP;
 		}
 
-		[purpleThread sendEncodedMessage:[inContentMessage encodedMessage]
+		[purpleAdapter sendEncodedMessage:[inContentMessage encodedMessage]
 							 fromAccount:self
 								  inChat:[inContentMessage chat]
 							   withFlags:flags];
@@ -919,7 +919,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 - (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
 {
 	NSString	*encodedString;
-	BOOL		didCommand = [purpleThread attemptPurpleCommandOnMessage:[[inContentMessage message] string]
+	BOOL		didCommand = [purpleAdapter attemptPurpleCommandOnMessage:[[inContentMessage message] string]
 														 fromAccount:(AIAccount *)[inContentMessage source]
 															  inChat:[inContentMessage chat]];	
 	
@@ -1362,7 +1362,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 			- (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
 		 below.
 		 */
-		[purpleThread xferRequest:xfer];
+		[purpleAdapter xferRequest:xfer];
 		[fileTransfer setStatus: Waiting_on_Remote_User_FileTransfer];
 	}
 }
@@ -1465,7 +1465,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
     }
     
     //accept the request
-	[purpleThread xferRequestAccepted:xfer withFileName:[fileTransfer localFilename]];
+	[purpleAdapter xferRequestAccepted:xfer withFileName:[fileTransfer localFilename]];
 	
 	[fileTransfer setStatus:Accepted_FileTransfer];
 }
@@ -1477,7 +1477,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 {
 	PurpleXfer	*xfer = [[fileTransfer accountData] pointerValue];
 	if (xfer) {
-		[purpleThread xferRequestRejected:xfer];
+		[purpleAdapter xferRequestRejected:xfer];
 	}
 }
 
@@ -1488,7 +1488,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 {
 	PurpleXfer	*xfer = [[fileTransfer accountData] pointerValue];
 	if (xfer) {
-		[purpleThread xferCancel:xfer];
+		[purpleAdapter xferCancel:xfer];
 	}	
 }
 
@@ -1514,7 +1514,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 
 - (void)unregister
 {
-	[purpleThread unregisterAccount:self];
+	[purpleAdapter unregisterAccount:self];
 }
 
 static void prompt_host_cancel_cb(CBPurpleAccount *self) {
@@ -1778,11 +1778,11 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 - (void)createNewPurpleAccount
 {
 	//Ensure libpurple is loaded and initialized
-	[self purpleThread];
+	[self purpleAdapter];
 	
 	//If loading libpurple didn't set an account for us, tell it to create one
 	if (!account)
-		[[self purpleThread] addAdiumAccount:self];
+		[[self purpleAdapter] addAdiumAccount:self];
 
 	//-[SLPurpleCocoaAdapter addAdiumAccount:] should have immediately called back on setPurpleAccount. It's bad if it didn't.
 	if (account) {
@@ -1809,7 +1809,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 		[[adium contactController] delayListObjectNotificationsUntilInactivity];
 
 		//Tell libpurple to disconnect
-		[purpleThread disconnectAccount:self];
+		[purpleAdapter disconnectAccount:self];
 	}
 }
 
@@ -1863,7 +1863,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	if (deletePurpleAccountAfterDisconnecting) {
 		deletePurpleAccountAfterDisconnecting = FALSE;
 
-		[[self purpleThread] removeAdiumAccount:self];
+		[[self purpleAdapter] removeAdiumAccount:self];
 	}
 
 	[super didDisconnect];
@@ -1934,7 +1934,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	
 	AILog(@"Adium: Register: %@ initiating connection.",[self UID]);
 	
-	[purpleThread registerAccount:self];
+	[purpleAdapter registerAccount:self];
 }
 
 - (void)continueRegisterWithConfiguredPurpleAccount
@@ -2004,7 +2004,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 		} else if ([key isEqualToString:KEY_ACCOUNT_CHECK_MAIL]) {
 			//Update the mail checking setting if the account is already made (if it isn't, we'll set it when it is made)
 			if (account) {
-				[purpleThread setCheckMail:[self shouldCheckMail]
+				[purpleAdapter setCheckMail:[self shouldCheckMail]
 							  forAccount:self];
 			}
 		}
@@ -2107,7 +2107,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 		[tuneinfo release];
 		tuneinfo = [[notification object] retain];
 
-		[purpleThread setSongInformation:[self purpleSongInfoDictionary] onAccount:self];
+		[purpleAdapter setSongInformation:[self purpleSongInfoDictionary] onAccount:self];
 	}
 }
 
@@ -2195,7 +2195,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
  */
 - (void)setStatusState:(AIStatus *)statusState statusID:(const char *)statusID isActive:(NSNumber *)isActive arguments:(NSMutableDictionary *)arguments
 {
-	[purpleThread setStatusID:statusID
+	[purpleAdapter setStatusID:statusID
 				   isActive:isActive
 				  arguments:arguments
 				  onAccount:self];
@@ -2204,7 +2204,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 //Set our idle (Pass nil for no idle)
 - (void)setAccountIdleSinceTo:(NSDate *)idleSince
 {
-	[purpleThread setIdleSinceTo:idleSince onAccount:self];
+	[purpleAdapter setIdleSinceTo:idleSince onAccount:self];
 	
 	//We now should update our idle status object
 	[self setStatusObject:([idleSince timeIntervalSinceNow] ? idleSince : nil)
@@ -2221,7 +2221,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	[inInvocation invoke];
 }
 
-//Set our profile immediately on the purpleThread
+//Set our profile immediately on the purpleAdapter
 - (void)setAccountProfileTo:(NSAttributedString *)profile
 {
 	if (!profile || ![[profile string] isEqualToString:[[self statusObjectForKey:@"TextProfile"] string]]) {
@@ -2232,7 +2232,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 			profileHTML = [self encodedAttributedString:profile forListObject:nil];
 		}
 		
-		[purpleThread setInfo:profileHTML onAccount:self];
+		[purpleAdapter setInfo:profileHTML onAccount:self];
 		
 		//We now have a profile
 		[self setStatusObject:profile forKey:@"TextProfile" notify:NotifyNow];
@@ -2366,7 +2366,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 			}
 		}
 
-		[purpleThread setBuddyIcon:buddyIconData onAccount:self];
+		[purpleAdapter setBuddyIcon:buddyIconData onAccount:self];
 	}
 	
 	//We now have an icon
@@ -2376,7 +2376,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 #pragma mark Group Chat
 - (BOOL)inviteContact:(AIListContact *)inContact toChat:(AIChat *)inChat withMessage:(NSString *)inviteMessage
 {
-	[purpleThread inviteContact:inContact toChat:inChat withMessage:inviteMessage];
+	[purpleAdapter inviteContact:inContact toChat:inChat withMessage:inviteMessage];
 	
 	return YES;
 }
@@ -2387,7 +2387,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 {
 	NSDictionary		*dict = [sender representedObject];
 	
-	[purpleThread performContactMenuActionFromDict:dict forAccount:self];
+	[purpleAdapter performContactMenuActionFromDict:dict forAccount:self];
 }
 
 /*!
@@ -2589,7 +2589,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 {
 	NSDictionary		*dict = [sender representedObject];
 
-	[purpleThread performAccountMenuActionFromDict:dict forAccount:self];
+	[purpleAdapter performAccountMenuActionFromDict:dict forAccount:self];
 }
 
 //Subclasses may override to provide a localized label and/or prevent a specified label from being shown
@@ -2642,7 +2642,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	PurplePluginProtocolInfo *prpl_info;
 
 	//Ensure libpurple has been loaded, since we need to know whether we can unregister this account
-	[self purpleThread];
+	[self purpleAdapter];
 
 	if ((prpl = purple_find_prpl([self protocolPlugin])) &&
 		(prpl_info = PURPLE_PLUGIN_PROTOCOL_INFO(prpl)) &&
@@ -2723,7 +2723,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	//Only need to take action if we have a created PurpleAccount already
 	if (account != NULL) {
 		//Remove our current account
-		[[self purpleThread] removeAdiumAccount:self];
+		[[self purpleAdapter] removeAdiumAccount:self];
 		
 		//Clear the reference to the PurpleAccount... it'll be created when needed
 		account = NULL;
@@ -2740,7 +2740,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 		deletePurpleAccountAfterDisconnecting = TRUE;
 
 	} else {
-		[[self purpleThread] removeAdiumAccount:self];
+		[[self purpleAdapter] removeAdiumAccount:self];
 	}
 
 	[super willBeDeleted];
@@ -2787,13 +2787,13 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 				AIListContact	*containedListContact;
 				while ((containedListContact = [enumerator nextObject])) {
 					if ([containedListContact account] == self) {
-						[purpleThread setAlias:alias forUID:[containedListContact UID] onAccount:self];
+						[purpleAdapter setAlias:alias forUID:[containedListContact UID] onAccount:self];
 					}
 				}
 				
 			} else if ([object isKindOfClass:[AIListContact class]]) {
 				if ([(AIListContact *)object account] == self) {
-					[purpleThread setAlias:alias forUID:[object UID] onAccount:self];
+					[purpleAdapter setAlias:alias forUID:[object UID] onAccount:self];
 				}
 			}
 		}
@@ -2852,7 +2852,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 
 -(void)executeCommandWithParameters:(NSMutableDictionary*)parameters
 {
-	BOOL result = [purpleThread doCommand:[parameters objectForKey:@"totalCommandString"] fromAccount:self inChat:[parameters objectForKey:@"chat"]];
+	BOOL result = [purpleAdapter doCommand:[parameters objectForKey:@"totalCommandString"] fromAccount:self inChat:[parameters objectForKey:@"chat"]];
 	if(result == FALSE)	{
 #warning Incomplete
 		// Either choice should be taken into account for various actions
