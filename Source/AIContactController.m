@@ -120,20 +120,8 @@
 {
 	if ((self = [super init])) {
 		//
-#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
-		contactObservers = [[NSMutableArray alloc] init];
-#else
-		contactObservers = [[NSMutableSet alloc] init];
-#endif
 		sortControllerArray = [[NSMutableArray alloc] init];
 		activeSortController = nil;
-		delayedStatusChanges = 0;
-		delayedModifiedStatusKeys = [[NSMutableSet alloc] init];
-		delayedAttributeChanges = 0;
-		delayedModifiedAttributeKeys = [[NSMutableSet alloc] init];
-		delayedContactChanges = 0;
-		delayedUpdateRequests = 0;
-		updatesAreDelayed = NO;
 				
 		//
 		contactDict = [[NSMutableDictionary alloc] init];
@@ -141,8 +129,6 @@
 		metaContactDict = [[NSMutableDictionary alloc] init];
 		contactToMetaContactLookupDict = [[NSMutableDictionary alloc] init];
 		detachedContactLists = [[NSMutableArray alloc] init];
-		
-		contactPropertiesObserverManager = [[AdiumContactPropertiesObserverManager alloc] init];
 	}
 	
 	return self;
@@ -178,6 +164,7 @@
 	
 	contactHidingController = [[AIContactHidingController alloc]init];
 
+	contactPropertiesObserverManager = [[AdiumContactPropertiesObserverManager alloc] init];
 }
 
 //close
@@ -192,11 +179,8 @@
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	
     [contactList release];
-    [contactObservers release]; contactObservers = nil;
 	
 	[sortControllerArray release];
-	[delayedModifiedStatusKeys release];
-	[delayedModifiedAttributeKeys release];
 	
 	[contactDict release];
 	[groupDict release];
@@ -207,7 +191,8 @@
 	[adiumAuthorization release];
 	
 	[contactHidingController release];
-	
+	[contactPropertiesObserverManager release];
+
     [super dealloc];
 }
 
@@ -496,8 +481,9 @@
 //Post a list grouping changed notification for the object and group
 - (void)_listChangedGroup:(AIListObject *)group object:(AIListObject *)object
 {
-	if (updatesAreDelayed) {
-		delayedContactChanges++;
+	if ([contactPropertiesObserverManager updatesAreDelayed]) {
+		contactPropertiesObserverManager->delayedContactChanges++;
+
 	} else {
 		[[adium notificationCenter] postNotificationName:Contact_ListChanged
 												  object:object
@@ -1244,8 +1230,9 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Sort an individual object
 - (void)sortListObject:(AIListObject *)inObject
 {
-	if (updatesAreDelayed) {
-		delayedContactChanges++;
+	if ([contactPropertiesObserverManager updatesAreDelayed]) {
+		contactPropertiesObserverManager->delayedContactChanges++;
+
 	} else {
 		AIListObject		*group = [inObject containingObject];
 		
@@ -2114,6 +2101,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (void)updateContacts:(NSSet *)contacts forObserver:(id <AIListObjectObserver>)inObserver
 {
 	[contactPropertiesObserverManager updateContacts:contacts forObserver:inObserver];
+}
+- (void)updateListContactStatus:(AIListContact *)inContact
+{
+	[contactPropertiesObserverManager updateListContactStatus:inContact];
 }
 
 @end
