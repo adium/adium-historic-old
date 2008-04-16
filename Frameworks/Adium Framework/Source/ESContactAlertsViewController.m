@@ -349,6 +349,9 @@ int actionSort(id objectA, id objectB, void *context)
 										 ofRow:[outlineView_summary rowForItem:item]];
 	BOOL			enforceMinimumHeight = ([(NSArray *)item count] > 0);
 	float			necessaryHeight = 0;
+	NSRect			rectOfLastColumn = [outlineView_summary rectOfColumn:([outlineView_summary numberOfColumns] - 1)];
+	NSRect			rectOfEventColumn = [outlineView_summary rectOfColumn:EVENT_COLUMN_INDEX];
+	float			expandedEventWidth = NSMaxX(rectOfLastColumn) - NSMinX(rectOfEventColumn);
 
 	//This pool seems to fix a crash. I don't know why.
 	enumerator = [[outlineView_summary tableColumns] objectEnumerator];
@@ -377,13 +380,15 @@ int actionSort(id objectA, id objectB, void *context)
 			NSAttributedString	*attributedTitle = [[NSAttributedString alloc] initWithString:objectValue
 																				  attributes:attributes];
 			
-			if ([identifier isEqualToString:@"event"] && eventIsExtended) {
-				/* If this is the event column and it is extended, the available width will be from its origin
-				 * to the right edge of the frame. */
-				NSRect	frame = [outlineView_summary frame];
-				NSRect	columnRect = [outlineView_summary rectOfColumn:EVENT_COLUMN_INDEX];
-				
-				tableColumnWidth = frame.size.width - columnRect.origin.x;
+			if ([identifier isEqualToString:@"event"]) {
+				if (eventIsExtended) {
+					/* If this is the event column and it is extended, the available width will be from its origin
+					 * to the right edge of the frame. Subtract a bit to provide a border */
+					tableColumnWidth = expandedEventWidth - 4;
+				} else {
+					tableColumnWidth = NSWidth(rectOfEventColumn) - 4;
+				}
+
 			} else {
 				/* Otherwise, it's the width as normal. */
 				tableColumnWidth = [tableColumn width];
@@ -454,7 +459,8 @@ int actionSort(id objectA, id objectB, void *context)
 	}
 
 	//Now add events which have no actions at present
-	enumerator = [[[adium contactAlertsController] sortedArrayOfEventIDsFromArray:[[adium contactAlertsController] allEventIDs]] objectEnumerator];
+	NSArray *sourceEventArray = (listObject ? [[adium contactAlertsController] nonGlobalEventIDs] : [[adium contactAlertsController] allEventIDs]);
+	enumerator = [[[adium contactAlertsController] sortedArrayOfEventIDsFromArray:sourceEventArray] objectEnumerator];
 	while ((eventID = [enumerator nextObject])) {
 		if (![contactAlertsEvents containsObject:eventID]) {
 			[contactAlertsEvents addObject:eventID];
