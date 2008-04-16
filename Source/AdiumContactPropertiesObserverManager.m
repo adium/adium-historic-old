@@ -26,6 +26,32 @@ static BOOL unregisterListObjectObserverCalled = NO;
 
 @implementation AdiumContactPropertiesObserverManager
 
+- (id)init
+{
+	if ((self = [super init])) {
+#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
+		contactObservers = [[NSMutableArray alloc] init];
+#else
+		contactObservers = [[NSMutableSet alloc] init];
+#endif
+		delayedStatusChanges = 0;
+		delayedModifiedStatusKeys = [[NSMutableSet alloc] init];
+		delayedAttributeChanges = 0;
+		delayedModifiedAttributeKeys = [[NSMutableSet alloc] init];
+		delayedContactChanges = 0;
+		delayedUpdateRequests = 0;
+		updatesAreDelayed = NO;		
+	}
+	
+	return self;
+}
+- (void)dealloc
+{
+	[contactObservers release]; contactObservers = nil;
+	[delayedModifiedStatusKeys release];
+	[delayedModifiedAttributeKeys release];
+}
+
 //Status and Display updates -------------------------------------------------------------------------------------------
 #pragma mark Status and Display updates
 //These delay Contact_ListChanged, ListObject_AttributesChanged, Contact_OrderChanged notificationsDelays,
@@ -44,6 +70,11 @@ static BOOL unregisterListObjectObserverCalled = NO;
 	if (delayedUpdateRequests == 0 && !delayedUpdateTimer) {
 		[self _performDelayedUpdates:nil];
 	}
+}
+
+- (BOOL)updatesAreDelayed
+{
+	return updatesAreDelayed;
 }
 
 //Delay all list object notifications until a period of inactivity occurs.  This is useful for accounts that do not
@@ -376,7 +407,5 @@ static BOOL unregisterListObjectObserverCalled = NO;
 	}
 #endif	
 }
-
-
 
 @end
