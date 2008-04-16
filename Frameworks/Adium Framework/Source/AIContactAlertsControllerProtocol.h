@@ -63,9 +63,14 @@ typedef enum {
 - (NSSet *)generateEvent:(NSString *)eventID forListObject:(AIListObject *)listObject userInfo:(id)userInfo previouslyPerformedActionIDs:(NSSet *)previouslyPerformedActionIDs;
 
 /*!
- * @brief Return all event IDs for groups/contacts
+ * @brief Return all event IDs
  */
 - (NSArray *)allEventIDs;
+
+/*!
+ * @brief Return all event IDs for groups/contacts (but not global ones)
+ */
+- (NSArray *)nonGlobalEventIDs;
 
 /*!
  * @brief Returns a menu of all events

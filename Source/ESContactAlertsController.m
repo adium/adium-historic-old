@@ -120,10 +120,16 @@ static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_
 	}
 }
 
-//Return all event IDs for groups/contacts
+//Return all event IDs
 - (NSArray *)allEventIDs
 {
 	return [[eventHandlers allKeys] arrayByAddingObjectsFromArray:[globalOnlyEventHandlers allKeys]];
+}
+
+//Return event IDs which aren't global
+- (NSArray *)nonGlobalEventIDs
+{
+	return [eventHandlers allKeys];
 }
 
 - (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject
