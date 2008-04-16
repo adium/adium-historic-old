@@ -198,7 +198,7 @@
 	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND_GROUP]) {
 		description = AILocalizedString(@"Message received (Background Group Chat)",nil);
 	} else if ([eventID isEqualToString:CONTENT_GROUP_CHAT_MENTION]) {
-		description = AILocalizedString(@"Mentioned (Group Chat)", nil);
+		description = AILocalizedString(@"You are mentioned (Group Chat)", nil);
 	} else {
 		description = @"";
 	}
@@ -225,7 +225,7 @@
 	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND_GROUP]) {
 		description = @"Message Received (Background Group Chat)";
 	} else if ([eventID isEqualToString:CONTENT_GROUP_CHAT_MENTION]) {
-		description = @"Mentioned (Group Chat)";
+		description = @"You Are Mentioned (Group Chat)";
 	} else {
 		description = @"";
 	}
