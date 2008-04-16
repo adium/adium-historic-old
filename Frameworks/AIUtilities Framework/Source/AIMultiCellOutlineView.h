@@ -57,5 +57,15 @@
 @end
 
 @interface NSObject (AIMultiCellOutlineViewDelegate)
-- (BOOL)outlineView:(NSOutlineView *)outlineView isGroupItem:(id)item;
+/*
+ * @brief Is this item a group?
+ *
+ * Note that we do NOT use the Mac OS X 10.5+ delegate method outlineView:isGroupItem:.
+ * Doing so requests that the cell be drawn in the "group style", which may not be desired.
+ * If both behaviors are desired, simply implement this delegate method and call outlineView:isGroupItem: to
+ * share code between the two.
+ *
+ * @result YES if the groupCell should be used for displaying this item.
+ */
+- (BOOL)outlineView:(NSOutlineView *)outlineView isGroup:(id)item;
 @end

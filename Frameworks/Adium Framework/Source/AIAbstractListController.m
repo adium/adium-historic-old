@@ -592,7 +592,7 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	return (!item || ([item conformsToProtocol:@protocol(AIContainingObject)] && [item isExpandable]));
 }
 
-- (BOOL)outlineView:(NSOutlineView *)outlineView isGroupItem:(id)item
+- (BOOL)outlineView:(NSOutlineView *)outlineView isGroup:(id)item
 {
 	return (!item || ([item isKindOfClass:[AIListGroup class]]));
 }
@@ -654,7 +654,7 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 
 - (float)outlineView:(NSOutlineView *)outlineView heightOfRowByItem:(id)item
 {
-	return ([self outlineView:outlineView isGroupItem:item] ? [groupCell cellSize].height : [contentCell cellSize].height);
+	return ([self outlineView:outlineView isGroup:item] ? [groupCell cellSize].height : [contentCell cellSize].height);
 }
 
 #pragma mark Finder-style searching
