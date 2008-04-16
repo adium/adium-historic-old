@@ -93,9 +93,11 @@
 
 		[window makeKeyAndOrderFront:self];
 
-		urlToDownload = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@://%@/%@?%@", @"http", [url host], [url path], [url query]]];
+		urlToDownload = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@://%@/%@%@%@", @"http", [url host], [url path],
+													   ([url query] ? @"?" : @""),
+													   ([url query] ? [url query] : @"")]];
 //		dest = [NSTemporaryDirectory() stringByAppendingPathComponent:[[urlToDownload path] lastPathComponent]];
-
+		AILogWithSignature(@"Downloading %@", urlToDownload);
 		download = [[NSURLDownload alloc] initWithRequest:[NSURLRequest requestWithURL:urlToDownload] delegate:self];
 //		[download setDestination:dest allowOverwrite:YES];
 
@@ -125,6 +127,7 @@
 	downloadSize = [response expectedContentLength];
 	[progressBar setMaxValue:(long long)downloadSize];
 	[progressBar setDoubleValue:0.0];
+	AILogWithSignature(@"Beginning download of %@, which has size %ll", [response allHeaderFields], downloadSize);
 	[self updateInfoText];
 }
 
@@ -133,6 +136,7 @@
 	NSString * downloadDir = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString uuid]];
 	[[NSFileManager defaultManager] createDirectoryAtPath:downloadDir attributes:nil];
 	dest = [downloadDir stringByAppendingPathComponent:filename];
+	AILogWithSignature(@"Downloading to is %@", dest);
 	[download setDestination:dest allowOverwrite:YES];
 }
 
@@ -163,7 +167,7 @@
 - (void)downloadDidFinish:(NSURLDownload *)download {
 	NSString		*lastPathComponent = [[dest lowercaseString] lastPathComponent];
 	NSString		*pathExtension = [lastPathComponent pathExtension];
-	BOOL			decompressionSuccess = YES;
+	BOOL			decompressionSuccess = YES, success = NO;
 	
 	if ([pathExtension isEqualToString:@"tgz"] || [lastPathComponent hasSuffix:@".tar.gz"]) {
 		NSTask			*uncompress, *untar;
@@ -244,13 +248,17 @@
 	NSEnumerator	*fileEnumerator;
 
 	//Delete the compressed xtra, now that we've decompressed it
+#ifdef DEBUG_BUILD
+	if (decompressionSuccess)
+		[fileManager removeFileAtPath:dest handler:nil];
+#else
 	[fileManager removeFileAtPath:dest handler:nil];
+#endif
 	
 	dest = [dest stringByDeletingLastPathComponent];
 	
 	//the remaining files in the directory should be the contents of the xtra
 	fileEnumerator = [fileManager enumeratorAtPath:dest];
-	AILog(@"Downloaded to %@. fileEnumerator: %@",dest,fileEnumerator);
 
 	if (decompressionSuccess && fileEnumerator) {
 		NSString		*xtraPath;
@@ -276,12 +284,10 @@
 				}
 
 				if (isSupported) {
-					BOOL	success;
-
 					xtraPath = [dest stringByAppendingPathComponent:nextFile];
 
 					//Open the file directly
-					AILog(@"Installing %@",xtraPath);
+					AILogWithSignature(@"Installing %@",xtraPath);
 					success = [[NSApp delegate] application:NSApp
 											   openTempFile:xtraPath];
 
@@ -297,8 +303,13 @@
 	}
 	
 	//delete our temporary directory, and any files remaining in it
+#ifdef DEBUG_BUILD
+	if (success)
+		[fileManager removeFileAtPath:dest handler:nil];
+#else
 	[fileManager removeFileAtPath:dest handler:nil];
-	
+#endif
+
 	[self closeInstaller];
 }
 
