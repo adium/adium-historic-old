@@ -77,7 +77,6 @@
 - (AIListGroup *)processGetGroupNamed:(NSString *)serverGroup;
 
 - (void)saveContactList;
-- (void)_updateAllAttributesOfObject:(AIListObject *)inObject;
 - (void)prepareContactInfo;
 
 - (NSMenu *)menuOfAllContactsInContainingObject:(AIListObject<AIContainingObject> *)inGroup withTarget:(id)target firstLevel:(BOOL)firstLevel;
@@ -286,7 +285,7 @@
 		bookmark = [NSKeyedUnarchiver unarchiveObjectWithData:data];	
 		
 		//It's a newly created object, so set its initial attributes
-		[self _updateAllAttributesOfObject:bookmark];
+		[contactPropertiesObserverManager _updateAllAttributesOfObject:bookmark];
 	}
 }
 
@@ -689,7 +688,7 @@
 		/* As with contactWithService:account:UID, update all attributes so observers are initially informed of
 		 * this object's existence.
 		 */
-		[self _updateAllAttributesOfObject:metaContact];
+		[contactPropertiesObserverManager _updateAllAttributesOfObject:metaContact];
 		
 		[metaContact release];
 	}
@@ -1498,7 +1497,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		[contactDict setObject:contact forKey:key];
 
 		//Do the update thing
-		[self _updateAllAttributesOfObject:contact];
+		[contactPropertiesObserverManager _updateAllAttributesOfObject:contact];
 
 		[contact release];
 	}
@@ -1511,7 +1510,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	AIListBookmark *bookmark = [[AIListBookmark alloc] initWithChat:inChat];
 	
 	//Do the update thing
-	[self _updateAllAttributesOfObject:bookmark];
+	[contactPropertiesObserverManager _updateAllAttributesOfObject:bookmark];
 	
 	return [bookmark autorelease];
 }
@@ -1764,7 +1763,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		group = [[AIListGroup alloc] initWithUID:groupUID];
 		
 		//Add
-		[self _updateAllAttributesOfObject:group];
+		[contactPropertiesObserverManager _updateAllAttributesOfObject:group];
 		[groupDict setObject:group forKey:[groupUID lowercaseString]];
 		
 		//Add to the contact list

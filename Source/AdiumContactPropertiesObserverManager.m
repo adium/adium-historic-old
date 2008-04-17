@@ -50,6 +50,8 @@ static BOOL unregisterListObjectObserverCalled = NO;
 	[contactObservers release]; contactObservers = nil;
 	[delayedModifiedStatusKeys release];
 	[delayedModifiedAttributeKeys release];
+
+	[super dealloc];
 }
 
 //Status and Display updates -------------------------------------------------------------------------------------------
