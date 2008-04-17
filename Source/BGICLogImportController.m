@@ -103,7 +103,6 @@
 	// create a new xml parser for logs
 	NSString *documentPath = [parentPath stringByAppendingPathComponent:[NSString stringWithFormat:@"%@ (%@).chatlog", [[[rawChat objectAtIndex:3] objectAtIndex:0] senderID], [[[[rawChat objectAtIndex:2] objectAtIndex:0] date] dateWithCalendarFormat:@"%Y-%m-%dT%H.%M.%S%z" timeZone:nil]]];
 	AIXMLAppender *appender = [AIXMLAppender documentWithPath:documentPath];
-	[appender setFullSyncAfterEachAppend:NO];
 
 	// set up the initial layout of the xml log
 	[appender initializeDocumentWithRootElementName:@"chat"
@@ -132,10 +131,7 @@
 					   attributeKeys:([attributeValues count] == 2 ? attributeKeys : nil)
 					 attributeValues:([attributeValues count] == 2 ? attributeValues : nil)];
 	}
-	
-	//Force this log to disk immediately
-	[appender performFullSync];
-	
+
 	if ([[NSFileManager defaultManager] fileExistsAtPath:documentPath]) {
 		[(AILoggerPlugin *)[[adium componentLoader] pluginWithClassName:@"AILoggerPlugin"] markLogDirtyAtPath:documentPath];
 		return YES;
