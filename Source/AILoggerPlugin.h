@@ -57,7 +57,9 @@
 
 	//Locked by the plugin while the index is being modified
 	NSConditionLock		*logWritingLock;
-    
+	//Locked by the plugin while the index is being closed
+    NSConditionLock		*logClosingLock;
+	
     //Array of dirty logs / Logs that need re-indexing.  (Locked access)
     NSMutableArray		*dirtyLogArray;
     NSLock				*dirtyLogLock;

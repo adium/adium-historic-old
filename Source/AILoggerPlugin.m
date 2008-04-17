@@ -182,7 +182,8 @@ Class LogViewerWindowControllerClass = NULL;
 	indexingThreadLock = [[NSLock alloc] init];
 	dirtyLogLock = [[NSLock alloc] init];
 	logWritingLock = [[NSConditionLock alloc] initWithCondition:AIIndexFileAvailable];
-	
+	logClosingLock = [[NSConditionLock alloc] initWithCondition:AIIndexFileAvailable];
+
 	//Init index searching
 	[self initLogIndexing];
 	
@@ -820,21 +821,20 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 {
 	SKIndexRef	returnIndex;
 
-	AILogWithSignature(@"Got %@", logWritingLock);
+	AILogWithSignature(@"Got %@", logClosingLock);
 	/* We shouldn't have to lock here except in createLogIndex.  However, a 'window period' exists after an SKIndex has been closed via SKIndexClose()
 	 * in which an attempt to load the index from disk returns NULL (presumably because it's still being written-to asynchronously).  We therefore lock
-	 * around the full access (at a cost of a significant performance hit if we try to search as indexing is finishing and SKIndexFlush() is being called)
-	 * to make the process reliable.  The documentation says that SKIndex is thread-safe, but that seems to assume that you keep a single instance of SKIndex
-	 * open at all times... which is a major memory hit for a large index of a significant number of logs. We only keep the index open as long as the transcript
-	 * viewer window is open.
+	 * around the full access to make the process reliable.  The documentation says that SKIndex is thread-safe, but that seems to assume that you keep
+	 * a single instance of SKIndex open at all times... which is a major memory hit for a large index of a significant number of logs. We only keep the index
+	 * open as long as the transcript viewer window is open.
 	 */
-	[logWritingLock lockWhenCondition:AIIndexFileAvailable];
+	[logClosingLock lockWhenCondition:AIIndexFileAvailable];
 	[self cancelClosingLogIndex];
 	if (!index_Content) {
 		index_Content = [self createLogIndex];
 	}
 	returnIndex = (SKIndexRef)[[(NSObject *)index_Content retain] autorelease];
-	[logWritingLock unlockWithCondition:AIIndexFileAvailable];
+	[logClosingLock unlockWithCondition:AIIndexFileAvailable];
 
 	return returnIndex;
 }
@@ -952,7 +952,9 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 
 - (void)finishClosingIndex
 {
+	//No writing or opening/closing while we call SKIndexClose()
 	[logWritingLock lockWhenCondition:AIIndexFileAvailable];
+	[logClosingLock lockWhenCondition:AIIndexFileAvailable];
 
 	AILogWithSignature(@"finishClosingIndex: %p",index_Content);
 
@@ -962,7 +964,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 	}
 
 	[logWritingLock unlockWithCondition:AIIndexFileAvailable];
-
+	[logClosingLock unlockWithCondition:AIIndexFileAvailable];
 }
 
 - (void)cancelClosingLogIndex
@@ -982,7 +984,6 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 		CFRelease(inIndex);
 		AILogWithSignature(@"**** Finished flushing index %p, and released it",inIndex);
 	}
-	
 	[logWritingLock unlockWithCondition:AIIndexFileAvailable];
 
 	[pool release];
@@ -994,7 +995,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 	[logWritingLock lockWhenCondition:AIIndexFileAvailable];
 
 	if (index_Content) {
-		AILogWithSignature(@"Triggerring the flushIndex thread and queuing index closing",logWritingLock);
+		AILogWithSignature(@"Triggerring the flushIndex thread and queuing index closing");
 
 		[NSThread detachNewThreadSelector:@selector(flushIndex:)
 								 toTarget:self
@@ -1009,7 +1010,6 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 	/* Note that we're waiting on the index file to close.  An attempt to open the index file before
 	 * it closes will return nil and make us think that we have a corrupt index file.
 	 */
-
 	[logWritingLock unlockWithCondition:AIIndexFileIsClosing];
 }
 
