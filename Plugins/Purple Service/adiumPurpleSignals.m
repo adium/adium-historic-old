@@ -215,10 +215,15 @@ static void node_aliased_cb(PurpleBlistNode *node, char *old_alias)
 	}
 }
 
+static void conversation_created_cb(PurpleConversation *conv, void *data) {
+	if (purple_conversation_get_type(conv) == PURPLE_CONV_TYPE_IM)
+		[[imChatLookupFromConv(conv) listObject] setStatusObject:[NSNumber numberWithInt:AINotTyping] forKey:KEY_TYPING notify:NotifyNow];
+}
+
 static void typing_changed(PurpleAccount *acct, const char *name, AITypingState typingState)
 {
 	AIListContact *contact = contactLookupFromBuddy(purple_find_buddy(acct, name));
-	[contact setStatusObject:[NSNumber numberWithInt:typingState] forKey:KEY_TYPING notify:NotifyNow];		
+	[contact setStatusObject:[NSNumber numberWithInt:typingState] forKey:KEY_TYPING notify:NotifyNow];	
 }
 
 static void
@@ -305,6 +310,10 @@ void configureAdiumPurpleSignals(void)
 	
 	purple_signal_connect(purple_connections_get_handle(), "signed-on",
 						  handle, PURPLE_CALLBACK(connection_signed_on_cb),
+						  NULL);
+
+	purple_signal_connect(purple_conversations_get_handle(), "conversation-created",
+						  handle, PURPLE_CALLBACK(conversation_created_cb),
 						  NULL);
 	
 	purple_signal_connect(purple_conversations_get_handle(), "buddy-typing",
