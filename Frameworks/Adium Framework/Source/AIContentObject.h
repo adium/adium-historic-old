@@ -52,6 +52,8 @@
 	BOOL				postProcessContent;
 	
 	NSDictionary		*userInfo;
+	
+	NSMutableArray		*customDisplayClasses;
 }
 
 /*!	@brief	Create a content object without a message.
@@ -184,6 +186,12 @@
  *	@return	An array of strings, each containing a class name.
  */
 - (NSMutableArray *)displayClasses;
+
+/*! @brief	Add a custom display class to this object
+ *
+ *  @par	This can be used to tag messages with custom metadata which display engines can use to style them accordingly
+ */
+- (void) addDisplayClass:(NSString *)className;
 
 /*!	@brief	Obtain an object previously associated with this content object.
  *

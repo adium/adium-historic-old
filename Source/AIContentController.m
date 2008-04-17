@@ -266,23 +266,7 @@
 
 //Receiving step 3: Display the content
 - (void)finishReceiveContentObject:(AIContentObject *)inContent
-{
-	if([[inContent chat] isGroupChat]) {
-		NSString *searchString = [[[inContent message] string] lowercaseString];
-		AIListObject *me = [inContent destination]; //we know that we're receiving it, so the recipient must be us
-		
-		//TODO: This needs to respect per-room nicknames
-		if([searchString rangeOfString:[[me displayName] lowercaseString]].location != NSNotFound ||
-		   [searchString rangeOfString:[[me formattedUID] lowercaseString]].location != NSNotFound) 
-		{
-			[[adium contactAlertsController] generateEvent:CONTENT_GROUP_CHAT_MENTION
-											 forListObject:[inContent source]
-												  userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[inContent chat],@"AIChat",inContent,@"AIContentObject",nil]
-							  previouslyPerformedActionIDs:nil];
-		}
-		  
-	}
-	   
+{	   
 	//Display the content
 	[self displayContentObject:inContent];
 }
