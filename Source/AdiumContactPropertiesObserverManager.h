@@ -45,4 +45,6 @@
 - (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSSet *)inModifiedKeys;
 - (void)updateListContactStatus:(AIListContact *)inContact;
 
+- (void)_updateAllAttributesOfObject:(AIListObject *)inObject;
+
 @end
