@@ -69,6 +69,9 @@
 	[message release]; message = nil;
 	[chat release]; chat = nil;
 	[userInfo release]; userInfo = nil;
+	if(customDisplayClasses)
+		[customDisplayClasses release];
+	customDisplayClasses = nil;
 
     [super dealloc];
 }
@@ -79,9 +82,17 @@
     return @"";
 }
 
+- (void) addDisplayClass:(NSString *)className
+{
+	if(!customDisplayClasses)
+		customDisplayClasses = [[NSMutableArray alloc] init];
+	
+	[customDisplayClasses addObject:className];
+}
+
 - (NSMutableArray *)displayClasses
 {
-	NSMutableArray *classes = [NSMutableArray array];
+	NSMutableArray *classes = customDisplayClasses ? customDisplayClasses : [NSMutableArray array];
 	[classes addObject:(outgoing) ? @"outgoing" : @"incoming"];
 	return classes;
 }

@@ -1163,6 +1163,7 @@
 		63093C300892143500F118D3 /* newContentTwoDigits.png in Resources */ = {isa = PBXBuildFile; fileRef = 63093C2E0892143500F118D3 /* newContentTwoDigits.png */; };
 		632D60C1094B81AB003A9786 /* AIDockIconPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 632D60BF094B81AB003A9786 /* AIDockIconPreviewController.m */; };
 		632D801708E7E0A40032C187 /* XtrasManager.nib in Resources */ = {isa = PBXBuildFile; fileRef = 632D801608E7E0A40032C187 /* XtrasManager.nib */; };
+		632D859E0DB70FC800040EC7 /* AIMentionEventPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 632D859D0DB70FC800040EC7 /* AIMentionEventPlugin.m */; };
 		6332879B0A769BF3004D0F2B /* AIPurpleLiveJournalAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 63125D8D0A75EBF000303EE9 /* AIPurpleLiveJournalAccount.h */; };
 		6332879C0A769BF3004D0F2B /* AILiveJournalService.h in Headers */ = {isa = PBXBuildFile; fileRef = 63125D970A75ECE400303EE9 /* AILiveJournalService.h */; };
 		6332879D0A769C18004D0F2B /* AIPurpleLiveJournalAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 63125D8E0A75EBF000303EE9 /* AIPurpleLiveJournalAccount.m */; };
@@ -3829,6 +3830,8 @@
 		632D60BE094B81AB003A9786 /* AIDockIconPreviewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIDockIconPreviewController.h; path = Source/AIDockIconPreviewController.h; sourceTree = "<group>"; };
 		632D60BF094B81AB003A9786 /* AIDockIconPreviewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIDockIconPreviewController.m; path = Source/AIDockIconPreviewController.m; sourceTree = "<group>"; };
 		632D801608E7E0A40032C187 /* XtrasManager.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = XtrasManager.nib; path = Resources/XtrasManager.nib; sourceTree = "<group>"; };
+		632D859C0DB70FC800040EC7 /* AIMentionEventPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIMentionEventPlugin.h; path = Source/AIMentionEventPlugin.h; sourceTree = "<group>"; };
+		632D859D0DB70FC800040EC7 /* AIMentionEventPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIMentionEventPlugin.m; path = Source/AIMentionEventPlugin.m; sourceTree = "<group>"; };
 		6333699309497DB000970871 /* EmoticonPreviewView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = EmoticonPreviewView.nib; path = Resources/EmoticonPreviewView.nib; sourceTree = "<group>"; };
 		63336B050949908300970871 /* DockIconPreviewView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = DockIconPreviewView.nib; path = Resources/DockIconPreviewView.nib; sourceTree = "<group>"; };
 		63336B3F094994A800970871 /* StatusIconPreviewView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = StatusIconPreviewView.nib; path = Resources/StatusIconPreviewView.nib; sourceTree = "<group>"; };
@@ -5216,6 +5219,8 @@
 				342DC48A05783B8D000E1D83 /* Send Message Contact Alert */,
 				F5AAD085039BA0D301A8010A /* Sound */,
 				11C7CAEF0BB58F4100296D7F /* Nudge and Buzz Handler */,
+				632D859C0DB70FC800040EC7 /* AIMentionEventPlugin.h */,
+				632D859D0DB70FC800040EC7 /* AIMentionEventPlugin.m */,
 			);
 			name = "Events and Actions";
 			sourceTree = "<group>";
@@ -9319,6 +9324,7 @@
 				661561650D84AEED004B7946 /* AIContactHidingController.m in Sources */,
 				6615618B0D84B875004B7946 /* AIFilterBarBackgroundBox.m in Sources */,
 				34555C600DB6BCE500649CD4 /* AdiumContactPropertiesObserverManager.m in Sources */,
+				632D859E0DB70FC800040EC7 /* AIMentionEventPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
