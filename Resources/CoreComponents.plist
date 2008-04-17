@@ -88,5 +88,6 @@
 	<string>AIAdvancedPreferencesPlugin</string>
 	<string>GBImportPlugin</string>
 	<string>AIContactVisibilityPlugin</string>
+	<string>AIMentionEventPlugin</string>
 </array>
 </plist>
