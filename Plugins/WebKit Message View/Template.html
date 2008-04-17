@@ -73,15 +73,11 @@
             var parentNode = insert.parentNode;
    			var lastMessage = insert.previousSibling;
    			parentNode.removeChild(insert);
-
-            //Delete the previous message
-            var chat = document.getElementById("Chat");
-			var range = document.createRange();
-			range.setStart(lastMessage, 0)
-			range.setEndAfter(lastMessage);
-			range.deleteContents();
+			parentNode.removeChild(lastMessage);
 
             //Now append the message itself
+			var range = document.createRange();
+			var chat = document.getElementById("Chat");
 			range.selectNode(chat);
 			documentFragment = range.createContextualFragment(html);
 			chat.appendChild(documentFragment);
