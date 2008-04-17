@@ -128,6 +128,8 @@
 		metaContactDict = [[NSMutableDictionary alloc] init];
 		contactToMetaContactLookupDict = [[NSMutableDictionary alloc] init];
 		detachedContactLists = [[NSMutableArray alloc] init];
+
+		contactPropertiesObserverManager = [[AdiumContactPropertiesObserverManager alloc] init];
 	}
 	
 	return self;
@@ -162,8 +164,6 @@
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 	
 	contactHidingController = [[AIContactHidingController alloc]init];
-
-	contactPropertiesObserverManager = [[AdiumContactPropertiesObserverManager alloc] init];
 }
 
 //close
