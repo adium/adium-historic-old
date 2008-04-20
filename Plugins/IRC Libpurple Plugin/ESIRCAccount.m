@@ -76,8 +76,8 @@ void purple_account_set_bool(void *account, const char *name,
 
 - (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact
 {
-	return ([[inContact UID] isEqualToString:@"nickserv"] ||
-			[[inContact UID] isEqualToString:@"chanserv"]);
+	return ([[[inContact UID] lowercaseString] isEqualToString:@"nickserv"] ||
+			[[[inContact UID] lowercaseString] isEqualToString:@"chanserv"]);
 }
 
 @end
