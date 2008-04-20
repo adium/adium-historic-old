@@ -7,6 +7,9 @@
 //
 
 #import "ESIRCAccount.h"
+#import <Adium/AIHTMLDecoder.h>
+#import <Adium/AIContentMessage.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
 
 /*
 void purple_account_set_username(void *account, const char *username);
@@ -23,6 +26,38 @@ void purple_account_set_bool(void *account, const char *name,
 - (void)dealloc
 {
 	[super dealloc];
+}
+
+- (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
+{
+
+	NSString	*encodedString = nil;
+	BOOL		didCommand = [[self purpleAdapter] attemptPurpleCommandOnMessage:[[inContentMessage message] string]
+																	 fromAccount:(AIAccount *)[inContentMessage source]
+																		  inChat:[inContentMessage chat]];	
+
+	if (!didCommand) {
+		/* If we're sending a message on an encryption chat (can this even happen on irc?), we can encode the HTML normally, as links will go through fine.
+		 * If we're sending a message normally, IRC will drop the title of any link, so we preprocess it to be in the form "title (link)"
+		 */
+		encodedString = [AIHTMLDecoder encodeHTML:([[inContentMessage chat] isSecure] ? [inContentMessage message] : [[inContentMessage message] attributedStringByConvertingLinksToStrings])
+										  headers:NO
+										 fontTags:YES
+							   includingColorTags:YES
+									closeFontTags:YES
+										styleTags:YES
+					   closeStyleTagsOnFontChange:YES
+								   encodeNonASCII:NO
+									 encodeSpaces:NO
+									   imagesPath:nil
+								attachmentsAsText:YES
+						onlyIncludeOutgoingImages:NO
+								   simpleTagsOnly:YES
+								   bodyBackground:NO
+							  allowJavascriptURLs:YES];
+	}
+	
+	return encodedString;
 }
 
 - (NSString *)serverSuffix
