@@ -66,7 +66,9 @@ typedef enum {
 typedef enum {
 	BackgroundNormal = 0,
 	BackgroundCenter,
-	BackgroundTile
+	BackgroundTile,
+	BackgroundTileCenter,
+	BackgroundScale
 } AIWebkitBackgroundType;
 
 @class ESFileTransfer;

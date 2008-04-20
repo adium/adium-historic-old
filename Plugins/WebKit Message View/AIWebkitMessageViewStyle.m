@@ -1082,6 +1082,12 @@ static NSArray *validSenderColors;
 							case BackgroundTile:
 								[bodyTag appendString:[NSString stringWithFormat:@"background-image: url('%@'); background-repeat: repeat;", customBackgroundPath]];
 							break;
+							case BackgroundTileCenter:
+								[bodyTag appendString:[NSString stringWithFormat:@"background-image: url('%@'); background-repeat: repeat; background-position: center;", customBackgroundPath]];
+							break;
+							case BackgroundScale:
+								[bodyTag appendString:[NSString stringWithFormat:@"background-image: url('%@'); -webkit-background-size: 100%% 100%%; background-size: 100%% 100%%; background-repeat: no-repeat;", customBackgroundPath]];
+							break;
 						}
 					} else {
 						[bodyTag appendString:@"background-image: none; "];
