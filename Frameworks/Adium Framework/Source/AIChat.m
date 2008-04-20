@@ -689,7 +689,7 @@ static int nextChatNumber = 0;
 }
 - (void)setActionMenu:(NSMenu *)inMenu {};
 
-#pragma mark Applescirpt
+#pragma mark Applescript
 
 - (NSScriptObjectSpecifier *)objectSpecifier
 {

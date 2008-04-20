@@ -1148,14 +1148,25 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 		alias = [aliasesArray objectAtIndex:i];
 
 		listContact = [self contactWithUID:[self uidForContactWithUID:contactName inChat:chat]];
-		[listContact setStatusObject:contactName forKey:@"FormattedUID" notify:NotifyNow];
+		[listContact setFormattedUID:contactName notify:NotifyNow];
 
 		if (alias && [alias length]) {
+			//XXX: this is currently being hit for IRC nicks, which is probably wrong
 			[listContact setServersideAlias:alias asStatusMessage:NO silently:YES];
 		}
 
 		[chat addParticipatingListObject:listContact notify:isNewArrival];
 	}
+}
+
+- (void)renameRoomOccupant:(NSString *)contactName to:(NSString *)newName inChat:(AIChat *)chat
+{
+	AIListContact	*occupant = (AIListContact *)[chat objectWithService:[[chat account] service]
+																	 UID:contactName];
+
+	[occupant setFormattedUID:newName notify:NotifyLater];
+	//XXX: we're treating IRC nicknames as aliases, which is arguably wrong. Until we stop doing that, we need to do it consistently.
+	[occupant setDisplayName:newName];
 }
 
 - (void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat

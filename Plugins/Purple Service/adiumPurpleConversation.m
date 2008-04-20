@@ -294,6 +294,12 @@ static void adiumPurpleConvChatRenameUser(PurpleConversation *conv, const char *
 	AILog(@"adiumPurpleConvChatRenameUser: %s: oldName %s, newName %s, newAlias %s",
 			   purple_conversation_get_name(conv),
 			   oldName, newName, newAlias);
+	if (purple_conversation_get_type(conv) == PURPLE_CONV_TYPE_CHAT) {
+
+		[accountLookup(purple_conversation_get_account(conv)) renameRoomOccupant:[NSString stringWithUTF8String:purple_normalize(purple_conversation_get_account(conv), oldName)]
+																			  to:[NSString stringWithUTF8String:purple_normalize(purple_conversation_get_account(conv), newName)] 
+																		  inChat:existingChatLookupFromConv(conv)];
+	}
 }
 
 static void adiumPurpleConvChatRemoveUsers(PurpleConversation *conv, GList *users)
