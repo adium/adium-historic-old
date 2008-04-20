@@ -22,6 +22,8 @@
 #import <Adium/AIChat.h>
 #import <Adium/AIContentStatus.h>
 
+#define	CONTACT_STATUS_UPDATE_COALESCING_KEY	@"Contact Status Update"
+
 @interface AIStatusChangedMessagesPlugin (PRIVATE)
 - (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact 
 			 withType:(NSString *)type
@@ -191,7 +193,7 @@ static	NSDictionary	*statusTypeDict = nil;
 			[content setLoggedMessage:loggedMessage];
 		}
 
-		[content setShouldCoalesce:YES];
+		[content setCoalescingKey:CONTACT_STATUS_UPDATE_COALESCING_KEY];
 		
 		//Add the object
 		[[adium contentController] receiveContentObject:content];

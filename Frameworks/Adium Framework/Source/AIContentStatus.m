@@ -69,6 +69,7 @@
 {
 	[statusType release]; statusType = nil;
 	[loggedMessage release]; loggedMessage = nil;
+	[coalescingKey release]; coalescingKey = nil;
 
     [super dealloc];
 }
@@ -106,14 +107,14 @@
 	return loggedMessage;
 }
 
-- (void)setShouldCoalesce:(BOOL)inShouldCoalesce
+- (void)setCoalescingKey:(NSString *)inCoalescingKey
 {
-	shouldCoalesce = inShouldCoalesce;
+	coalescingKey = [inCoalescingKey copy];
 }
 
-- (BOOL)shouldCoalesce
+- (NSString *)coalescingKey
 {
-	return shouldCoalesce;
+	return coalescingKey;
 }
 
 @end

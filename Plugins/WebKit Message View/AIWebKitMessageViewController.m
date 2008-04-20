@@ -635,7 +635,7 @@ static NSArray *draggedTypes = nil;
 	
 	BOOL similar = (previousContent && [content isSimilarToContent:previousContent] && ![content isKindOfClass:[ESFileTransfer class]]);
 	if ([previousContent isKindOfClass:[AIContentStatus class]] && [content isKindOfClass:[AIContentStatus class]] &&
-		[(AIContentStatus *)previousContent shouldCoalesce] && [(AIContentStatus *)content shouldCoalesce]) {
+		[[(AIContentStatus *)previousContent coalescingKey] isEqualToString:[(AIContentStatus *)content coalescingKey]]) {
 		replaceLastContent = YES;
 	}
 
