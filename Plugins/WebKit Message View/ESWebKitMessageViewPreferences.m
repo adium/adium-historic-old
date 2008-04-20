@@ -418,7 +418,9 @@
 	[self _addBackgroundImageTypeChoice:BackgroundNormal toMenu:menu withTitle:AILocalizedString(@"Normal",nil)];
 	[self _addBackgroundImageTypeChoice:BackgroundCenter toMenu:menu withTitle:AILocalizedString(@"Centered",nil)];
 	[self _addBackgroundImageTypeChoice:BackgroundTile toMenu:menu withTitle:AILocalizedString(@"Tiled",nil)];
-		
+	[self _addBackgroundImageTypeChoice:BackgroundTileCenter toMenu:menu withTitle:AILocalizedString(@"Tiled (Centered)",nil)];
+	[self _addBackgroundImageTypeChoice:BackgroundScale toMenu:menu withTitle:AILocalizedString(@"Scaled",nil)];
+			
 	return [menu autorelease];
 }
 - (void)_addBackgroundImageTypeChoice:(int)tag toMenu:(NSMenu *)menu withTitle:(NSString *)title
