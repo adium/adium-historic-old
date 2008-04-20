@@ -918,16 +918,11 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
  */
 - (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
 {
-	NSString	*encodedString;
 	BOOL		didCommand = [purpleAdapter attemptPurpleCommandOnMessage:[[inContentMessage message] string]
 														 fromAccount:(AIAccount *)[inContentMessage source]
 															  inChat:[inContentMessage chat]];	
 	
-	encodedString = (didCommand ?
-					 nil :
-					 [super encodedAttributedStringForSendingContentMessage:inContentMessage]);
-
-	return encodedString;
+	return (didCommand ? nil : [super encodedAttributedStringForSendingContentMessage:inContentMessage]);
 }
 
 /*!
