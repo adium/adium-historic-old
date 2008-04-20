@@ -21,7 +21,7 @@
 @interface AIContentStatus : AIContentObject {
 	NSString			*statusType;
 	NSAttributedString	*loggedMessage;
-	BOOL				shouldCoalesce;
+	NSString			*coalescingKey;
 }
 
 + (id)statusInChat:(AIChat *)inChat
@@ -35,7 +35,19 @@
 - (void)setLoggedMessage:(NSAttributedString *)inLoggedMessage;
 - (NSAttributedString *)loggedMessage;
 
-- (void)setShouldCoalesce:(BOOL)inShouldCoalesce;
-- (BOOL)shouldCoalesce;
+/*!
+ * @brief Set a key on which multple status messages should be consolidated if possible
+ *
+ * The message view can choose to collapse multiple consecutive status messages into a single
+ * or combined display if those messages have the same coalescing key.
+ */
+- (void)setCoalescingKey:(NSString *)inCoalescingKey;
+
+/*!
+ * @brief Retrieve the coalescing key.
+ *
+ * See -[self setCoalescingKey:] for details
+ */
+- (NSString *)coalescingKey;
 
 @end
