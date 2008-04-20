@@ -930,6 +930,8 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
  *
  * Only IRC doesn't allow newlines out of the built-in prpls... and we don't even support it yet.
  * This method is never called at present.
+ *
+ * XXX: despite not being called (?) multiline irc messages are being divided into multiple messages properly... is this necessary?
  */
 - (BOOL)allowsNewlinesInMessages
 {
