@@ -22,6 +22,7 @@
 #import <Adium/AIStatusControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIChat.h>
+#import <Adium/AIContentStatus.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
 #import <Adium/AIStatus.h>
@@ -41,6 +42,8 @@
 #define RECONNECT_MAX_TIME				600.0	//Maximum time in seconds to wait between reconnect attempts
 
 #define	ACCOUNT_DEFAULTS			@"AccountDefaults"
+
+#define ACCOUNT_STATUS_UPDATE_COALESCING_KEY	@"Account Status Update"
 
 @interface AIAccount (Abstract_PRIVATE)
 - (void)passwordReturnedForConnect:(NSString *)inPassword returnCode:(AIPasswordPromptReturn)returnCode context:(id)inContext;
@@ -1083,9 +1086,17 @@
 				// always be true at the moment
 				[self rejoinChat:chat];
 			} else {
-				[[adium contentController] displayEvent:AILocalizedStringFromTableInBundle(@"You have connected", nil, [NSBundle bundleForClass:[AIAccount class]], "Displayed in an open chat when its account has been connected")
-												 ofType:@"connected"
-												 inChat:chat];
+				//Display a connected message in all open chats
+				AIContentStatus *statusMessage = [AIContentStatus statusInChat:chat
+																	withSource:[chat account]
+																   destination:[chat account]
+																		  date:[NSDate date]
+																	   message:[[[NSAttributedString alloc] initWithString:AILocalizedStringFromTableInBundle(@"You have connected", nil, [NSBundle bundleForClass:[AIAccount class]], "Displayed in an open chat when its account has been connected")] autorelease]
+																	  withType:@"connected"];
+				
+				[statusMessage setCoalescingKey:ACCOUNT_STATUS_UPDATE_COALESCING_KEY];
+				
+				[[adium contentController] receiveContentObject:statusMessage];
 			}
 		}
 	}
@@ -1226,9 +1237,17 @@
 		
 		while ((chat = [enumerator nextObject])) {
 			if ([chat account] == self && [chat isOpen]) {
-				[[adium contentController] displayEvent:AILocalizedStringFromTableInBundle(@"You have disconnected", nil, [NSBundle bundleForClass:[AIAccount class]], "Displayed in an open chat when its account has been disconnected.")
-												 ofType:@"disconnected"
-												 inChat:chat];
+				//Display a connected message in all open chats
+				AIContentStatus *statusMessage = [AIContentStatus statusInChat:chat
+																	withSource:[chat account]
+																   destination:[chat account]
+																		  date:[NSDate date]
+																	   message:[[[NSAttributedString alloc] initWithString:AILocalizedStringFromTableInBundle(@"You have disconnected", nil, [NSBundle bundleForClass:[AIAccount class]], "Displayed in an open chat when its account has been connected")] autorelease]
+																	  withType:@"disconnected"];
+
+				[statusMessage setCoalescingKey:ACCOUNT_STATUS_UPDATE_COALESCING_KEY];
+
+				[[adium contentController] receiveContentObject:statusMessage];
 			}
 		}
 	}
