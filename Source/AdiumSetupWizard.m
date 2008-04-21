@@ -10,6 +10,7 @@
 #import <Adium/AIContentControllerProtocol.h>
 #import "SetupWizardBackgroundView.h"
 #import "GBFireImporter.h"
+#import "BGICImportController.h"
 #import <AIUtilities/AIImageAdditions.h>
 #import "AIServiceMenu.h"
 #import <Adium/AIService.h>
@@ -117,9 +118,9 @@ enum{
 {
 	if(returnCode == NSAlertOtherReturn)
 	{
-		[adium performSelector:@selector(importFromiChat:)
-					withObject:nil
-					afterDelay:0.5];
+		[BGICImportController performSelector:@selector(importIChatConfiguration)
+								   withObject:nil
+								   afterDelay:0.5];
 		[[self window] close];
 	}
 	if(returnCode == NSAlertAlternateReturn)
