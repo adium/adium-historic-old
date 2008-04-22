@@ -89,14 +89,13 @@ typedef enum {
 - (void)unregisterListObjectObserver:(id)inObserver;
 - (void)updateAllListObjectsForObserver:(id <AIListObjectObserver>)inObserver;
 - (void)updateContacts:(NSSet *)contacts forObserver:(id <AIListObjectObserver>)inObserver;
-
-//
 - (void)delayListObjectNotifications;
 - (void)endListObjectNotificationsDelay;
 - (void)delayListObjectNotificationsUntilInactivity;
-- (void)listObjectRemoteGroupingChanged:(AIListContact *)inObject;
 - (void)listObjectStatusChanged:(AIListObject *)inObject modifiedStatusKeys:(NSSet *)inModifiedKeys silent:(BOOL)silent;
 - (void)listObjectAttributesChanged:(AIListObject *)inObject modifiedKeys:(NSSet *)inModifiedKeys;
+
+- (void)listObjectRemoteGroupingChanged:(AIListContact *)inObject;
 
 //Contact list sorting
 - (NSArray *)sortControllerArray;
