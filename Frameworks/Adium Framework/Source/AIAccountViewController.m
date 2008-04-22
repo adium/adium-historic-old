@@ -246,7 +246,11 @@
 		//Encryption
 		[popUp_encryption compatibleSelectItemWithTag:[[account preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
 																		   group:GROUP_ENCRYPTION] intValue]];
-		
+		AILogWithSignature(@"popUp_encryption %@ attempted to select %i and got %i",
+						   popUp_encryption, [[account preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
+																  group:GROUP_ENCRYPTION] intValue],
+						   [popUp_encryption selectedItem]);
+
 		[[adium notificationCenter] removeObserver:self
 											  name:AIAccountUsernameAndPasswordRegisteredNotification
 											object:nil];
@@ -314,6 +318,7 @@
 					 group:GROUP_ACCOUNT_STATUS];
 
 	//Encryption
+	AILogWithSignature(@"Account %@'s encryption preference will be set to %i", [[popUp_encryption selectedItem] tag]);
 	[account setPreference:[NSNumber numberWithInt:[[popUp_encryption selectedItem] tag]]
 					forKey:KEY_ENCRYPTED_CHAT_PREFERENCE
 					 group:GROUP_ENCRYPTION];
