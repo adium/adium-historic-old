@@ -30,6 +30,7 @@ typedef enum {
 	BOOL			showOfflineContacts;
 	BOOL			showIdleContacts;
 	BOOL			showMobileContacts;
+	BOOL			showBlockedContacts;
 	BOOL			useOfflineGroup;
 	
 	BOOL			useContactListGroups;

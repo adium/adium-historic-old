@@ -20,6 +20,7 @@
 
 #define	KEY_HIDE_CONTACTS				@"Hide Contacts"
 #define KEY_SHOW_OFFLINE_CONTACTS		@"Show Offline Contacts"
+#define KEY_SHOW_BLOCKED_CONTACTS		@"Show Blocked Contacts"
 #define	KEY_SHOW_IDLE_CONTACTS			@"Show Idle Contacts"
 #define KEY_SHOW_MOBILE_CONTACTS		@"Show Mobile Contacts"
 

@@ -68,6 +68,7 @@
 	showOfflineContacts = [[prefDict objectForKey:KEY_SHOW_OFFLINE_CONTACTS] boolValue];
 	showIdleContacts = [[prefDict objectForKey:KEY_SHOW_IDLE_CONTACTS] boolValue];
 	showMobileContacts = [[prefDict objectForKey:KEY_SHOW_MOBILE_CONTACTS] boolValue];
+	showBlockedContacts = [[prefDict objectForKey:KEY_SHOW_BLOCKED_CONTACTS] boolValue];
 	
 	useContactListGroups = ![[prefDict objectForKey:KEY_HIDE_CONTACT_LIST_GROUPS] boolValue];
 	useOfflineGroup = (useContactListGroups && [[prefDict objectForKey:KEY_USE_OFFLINE_GROUP] boolValue]);
@@ -144,6 +145,7 @@
 		[inModifiedKeys containsObject:@"New Object"] ||
 		[inModifiedKeys containsObject:@"VisibleObjectCount"] ||
 		[inModifiedKeys containsObject:@"IsMobile"] ||
+		[inModifiedKeys containsObject:@"IsBlocked"] ||
 		[inModifiedKeys containsObject:@"AlwaysVisible"]) {
 		
 		if ([inObject isKindOfClass:[AIListContact class]]) {
@@ -184,7 +186,9 @@
 											 ![listContact integerStatusObjectForKey:@"Signed Off"] &&
 											 ![listContact integerStatusObjectForKey:@"New Object"]) ||
 											(!showMobileContacts && 
-											 [listContact isMobile]))) {
+											 [listContact isMobile])) ||
+											(!showBlockedContacts &&
+											 [listContact isBlocked])) {
 		visible = NO;
 	}
 	

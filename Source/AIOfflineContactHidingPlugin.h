@@ -26,6 +26,7 @@
 	NSMenuItem		*menuItem_hideOffline;
 	NSMenuItem		*menuItem_hideIdle;
 	NSMenuItem		*menuItem_hideMobile;
+	NSMenuItem		*menuItem_hideBlocked;
 	NSMenuItem		*menuItem_useOfflineGroup;
 
 	BOOL			hideContacts;
@@ -33,6 +34,7 @@
 	BOOL			showOfflineContacts;
 	BOOL			showIdleContacts;
 	BOOL			showMobileContacts;
+	BOOL			showBlockedContacts;
 	BOOL			useOfflineGroup;
 	
 	BOOL			useContactListGroups;
