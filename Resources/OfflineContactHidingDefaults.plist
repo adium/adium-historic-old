@@ -12,6 +12,8 @@
 	<true/>
 	<key>Show Offline Contacts</key>
 	<false/>
+	<key>Show Blocked Contacts</key>
+	<false/>
 	<key>Use Offline Group</key>
 	<false/>
 </dict>
