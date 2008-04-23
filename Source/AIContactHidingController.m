@@ -186,9 +186,9 @@
 											 ![listContact integerStatusObjectForKey:@"Signed Off"] &&
 											 ![listContact integerStatusObjectForKey:@"New Object"]) ||
 											(!showMobileContacts && 
-											 [listContact isMobile])) ||
+											 [listContact isMobile]) ||
 											(!showBlockedContacts &&
-											 [listContact isBlocked])) {
+											 [listContact isBlocked]))) {
 		visible = NO;
 	}
 	
