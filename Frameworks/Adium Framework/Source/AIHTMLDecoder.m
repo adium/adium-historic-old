@@ -1169,7 +1169,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 							[self processBodyTagArgs:[self parseArguments:chunkString] attributes:textAttributes]; //Process the font tag's contents
 						}
 
-					} else if ([chunkString caseInsensitiveCompare:@"/BODY"] == NSOrderedSame) {
+					} else if (([chunkString caseInsensitiveCompare:@"/BODY"] == NSOrderedSame) ||
+							   ([chunkString caseInsensitiveCompare:@"BODY/"] == NSOrderedSame)) {
 						//ignore
 
 					//Font
