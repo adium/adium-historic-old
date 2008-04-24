@@ -38,10 +38,15 @@
 {
 	NSString *defaultMessage;
 	
-	defaultMessage = (inSource ? [NSString stringWithFormat:AILocalizedString(@"%@ wants your attention!", "Message displayed when a contact sends a buzz/nudge/other notification"),
-								  [inSource displayName]] :
-					  AILocalizedString(@"Your attention is requested!", nil));
-	
+	if ([inSource isKindOfClass:[AIAccount class]]) {
+		defaultMessage = [NSString stringWithFormat:AILocalizedString(@"You requested %@'s attention", "Message displayed when you send a buzz/nudge/other notification. %@ will be the other person's name."),
+						  [inSource displayName]] :
+	} else {
+		defaultMessage = (inSource ? [NSString stringWithFormat:AILocalizedString(@"%@ wants your attention!", "Message displayed when a contact sends a buzz/nudge/other notification. %@ will be the other person's name."),
+									  [inSource displayName]] :
+						  AILocalizedString(@"Your attention is requested!", nil));
+	}
+
 	if ((self = [super initWithChat:inChat
 							 source:inSource
 						destination:inDest
