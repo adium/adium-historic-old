@@ -459,6 +459,7 @@
 			[[NSScriptCommand currentCommand] setScriptErrorString:@"Status message must be a string or an attributed string."];
 		}
 		[[adium statusController] savedStatusesChanged];
+		AILogWithSignature(@"Applying %@ to %@", self, [[adium accountController] accountsWithCurrentStatus:self]);
 		[[adium statusController] applyState:self toAccounts:[[adium accountController] accountsWithCurrentStatus:self]];
 	} else {
 		AIStatus *newStatus = [self mutableCopy];
