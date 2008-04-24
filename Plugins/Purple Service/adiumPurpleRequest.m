@@ -147,6 +147,7 @@ static void *adiumPurpleRequestAction(const char *title, const char *primary,
 {
     NSString			*titleString = (title ? [NSString stringWithUTF8String:title] : @"");
 	NSString			*primaryString = (primary ? [NSString stringWithUTF8String:primary] : nil);
+	AIAdium				*adium = [AIObject sharedAdiumInstance];
 	id					requestController = nil;
 	int					i;
 	BOOL				handled = NO;
@@ -154,8 +155,12 @@ static void *adiumPurpleRequestAction(const char *title, const char *primary,
 	if (primaryString && ([primaryString isEqualToString:[NSString stringWithFormat:[NSString stringWithUTF8String:_("%s has just asked to directly connect to %s")],
 														  who, purple_account_get_username(account)]])) {
 		AIListContact *adiumContact = contactLookupFromBuddy(purple_find_buddy(account, who));
-		//Automatically accept Direct IM requests from contacts on our list
-		if (adiumContact && [adiumContact isIntentionallyNotAStranger]) {
+
+		// Look up the user preference for this setting -- we use the same settings as the File Transfer code.
+		AIFileTransferAutoAcceptType autoAccept = [[adium preferenceController] preferenceForKey:KEY_FT_AUTO_ACCEPT 
+																						   group:PREF_GROUP_FILE_TRANSFER];
+		if ((autoAccept == AutoAccept_All) || 
+			((autoAccept == AutoAccept_FromContactList) && adiumContact && [adiumContact isIntentionallyNotAStranger])) {
 			GCallback ok_cb;
 
 			//Get the callback for Connect, skipping over the title
@@ -168,7 +173,7 @@ static void *adiumPurpleRequestAction(const char *title, const char *primary,
 		}
 	} else if (primary && strcmp(primary, _("Accept chat invitation?")) == 0) {
 		AIListContact *contact = contactLookupFromBuddy(purple_find_buddy(account, who));
-		[[[AIObject sharedAdiumInstance] contactAlertsController] generateEvent:CONTENT_GROUP_CHAT_INVITE
+		[[adium contactAlertsController] generateEvent:CONTENT_GROUP_CHAT_INVITE
 										 forListObject:contact
 											  userInfo:[NSDictionary dictionary]
 						  previouslyPerformedActionIDs:nil];	
