@@ -19,13 +19,15 @@
 #import "ESPurpleRequestActionController.h"
 #import "ESPurpleRequestWindowController.h"
 #import "ESPurpleFileReceiveRequestController.h"
-#import <Adium/AIContactAlertsControllerProtocol.h>
-#import <AIUtilities/AIObjectAdditions.h>
-#import <Adium/ESFileTransfer.h>
+#import "AILibpurplePlugin.h"
 #import "AMPurpleRequestFieldsController.h"
 
+#import <Adium/AIContactAlertsControllerProtocol.h>
+#import <Adium/ESFileTransfer.h>
+#import <AIUtilities/AIObjectAdditions.h>
+
 #import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
-#import "AILibpurplePlugin.h"
+
 #import <libintl/libintl.h>
 
 /*
@@ -147,7 +149,7 @@ static void *adiumPurpleRequestAction(const char *title, const char *primary,
 {
     NSString			*titleString = (title ? [NSString stringWithUTF8String:title] : @"");
 	NSString			*primaryString = (primary ? [NSString stringWithUTF8String:primary] : nil);
-	AIAdium				*adium = [AIObject sharedAdiumInstance];
+	NSObject<AIAdium>	*adium = [AIObject sharedAdiumInstance];
 	id					requestController = nil;
 	int					i;
 	BOOL				handled = NO;
