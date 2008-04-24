@@ -6,6 +6,7 @@
 //
 
 #import "AIContentNotification.h"
+#import <Adium/AIAccount.h>
 
 @interface AIContentNotification (PRIVATE)
 - (id)initWithChat:(AIChat *)inChat
@@ -40,7 +41,7 @@
 	
 	if ([inSource isKindOfClass:[AIAccount class]]) {
 		defaultMessage = [NSString stringWithFormat:AILocalizedString(@"You requested %@'s attention", "Message displayed when you send a buzz/nudge/other notification. %@ will be the other person's name."),
-						  [inSource displayName]] :
+						  [inDest displayName]];
 	} else {
 		defaultMessage = (inSource ? [NSString stringWithFormat:AILocalizedString(@"%@ wants your attention!", "Message displayed when a contact sends a buzz/nudge/other notification. %@ will be the other person's name."),
 									  [inSource displayName]] :
