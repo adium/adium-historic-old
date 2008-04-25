@@ -331,7 +331,7 @@
 			AILogWithSignature(@"%p is a released observer! This is a crash.", observer);
 			NSAssert1(FALSE, @"%p is a released observer. Please check the Adium Debug Log. If it wasn't logging to file, do that next time.", observer);
 		}
-#else		
+#endif		
 		if ((newKeys = [observer updateListObject:inObject keys:modifiedKeys silent:silent])) {
 			if (!attrChange) attrChange = [[NSMutableSet alloc] init];
 			[attrChange unionSet:newKeys];
