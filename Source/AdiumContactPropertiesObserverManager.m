@@ -20,8 +20,8 @@
 
 #define UPDATE_CLUMP_INTERVAL			1.0
 
-#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
-static BOOL unregisterListObjectObserverCalled = NO;
+#ifdef DEBUG_BUILD
+	#define CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG	TRUE
 #endif
 
 @implementation AdiumContactPropertiesObserverManager
@@ -29,11 +29,7 @@ static BOOL unregisterListObjectObserverCalled = NO;
 - (id)init
 {
 	if ((self = [super init])) {
-#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
-		contactObservers = [[NSMutableArray alloc] init];
-#else
 		contactObservers = [[NSMutableSet alloc] init];
-#endif
 		delayedStatusChanges = 0;
 		delayedModifiedStatusKeys = [[NSMutableSet alloc] init];
 		delayedAttributeChanges = 0;
@@ -235,10 +231,8 @@ static BOOL unregisterListObjectObserverCalled = NO;
 	//Add the observer
 #ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
 	AILogWithSignature(@"%@", inObserver);
-    [contactObservers addObject:inObserver];
-#else
-    [contactObservers addObject:[NSValue valueWithNonretainedObject:inObserver]];
 #endif
+    [contactObservers addObject:[NSValue valueWithNonretainedObject:inObserver]];
 	
     //Let the new observer process all existing objects
 	[self updateAllListObjectsForObserver:inObserver];
@@ -248,11 +242,8 @@ static BOOL unregisterListObjectObserverCalled = NO;
 {
 #ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
 	AILogWithSignature(@"%@", inObserver);
-    [contactObservers removeObjectIdenticalTo:inObserver];
-	unregisterListObjectObserverCalled = YES;
-#else
-    [contactObservers removeObject:[NSValue valueWithNonretainedObject:inObserver]];
 #endif
+    [contactObservers removeObject:[NSValue valueWithNonretainedObject:inObserver]];
 }
 
 
@@ -324,44 +315,6 @@ static BOOL unregisterListObjectObserverCalled = NO;
 {
 	NSMutableSet	*attrChange = nil;
 	
-#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
-	NSObject <AIListObjectObserver>	*observer;
-	
-	//Let our observers know
-	int i;
-	for (i = 0; i < [contactObservers count]; i++) {
-		NSAutoreleasePool	*pool = [[NSAutoreleasePool alloc] init];
-		NSSet				*newKeys;
-		
-		observer = [contactObservers objectAtIndex:i];
-		
-		if ([observer retainCount] == 1) {
-			NSString *observerDescription = [observer description];
-			
-			/* This observer is fully released except for our retention (contactObservers plus its copy), which wouldn't happen without 
-			 * CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG defined.  That -might- be an error... except that it
-			 * might remove itself as an observer in its dealloc method, which is fine if it actually happens.
-			 */
-			unregisterListObjectObserverCalled = NO;
-			[contactObservers removeObjectIdenticalTo:observer];
-			
-			//observer will have deallocated.  It should have called removeContactObserver in the process. If it didn't, that's bad.
-			if (!unregisterListObjectObserverCalled) {
-				AILogWithSignature(@"%@ failed at removing itself as a contact observer! This would be fatal in a release build!", observerDescription);
-				NSLog(@"%@ failed at removing itself as a contact observer! This would be fatal in a release build!", observerDescription);
-				NSAssert1(FALSE, @"%@ failed at removing itself as a contact observer! This would be fatal in a release build!", observerDescription);
-			} else {
-				AILogWithSignature(@"All is well after the dealloc of %@", observerDescription);
-			}
-		} else {
-			if ((newKeys = [observer updateListObject:inObject keys:modifiedKeys silent:silent])) {
-				if (!attrChange) attrChange = [[NSMutableSet alloc] init];
-				[attrChange unionSet:newKeys];
-			}
-		}
-		[pool release];
-	}	
-#else
 	NSEnumerator	*enumerator;
 	NSValue			*observerValue;
 	
@@ -373,13 +326,18 @@ static BOOL unregisterListObjectObserverCalled = NO;
 		NSSet						*newKeys;
 		
 		observer = [observerValue nonretainedObjectValue];
+#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
+		if (NSIsFreedObject(observer)) {
+			AILogWithSignature(@"%p is a released observer! This is a crash.", observer);
+			NSAssert1(FALSE, @"%p is a released observer. Please check the Adium Debug Log. If it wasn't logging to file, do that next time.", observer);
+		}
+#else		
 		if ((newKeys = [observer updateListObject:inObject keys:modifiedKeys silent:silent])) {
 			if (!attrChange) attrChange = [[NSMutableSet alloc] init];
 			[attrChange unionSet:newKeys];
 		}
 		[pool release];
 	}
-#endif
 	//Send out the notification for other observers
 	[[adium notificationCenter] postNotificationName:ListObject_StatusChanged
 											  object:inObject
@@ -393,13 +351,6 @@ static BOOL unregisterListObjectObserverCalled = NO;
 - (void)_updateAllAttributesOfObject:(AIListObject *)inObject
 {
 	NSEnumerator	*enumerator = [contactObservers objectEnumerator];
-#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
-	id <AIListObjectObserver> observer;
-	
-	while ((observer = [enumerator nextObject])) {		
-		[observer updateListObject:inObject keys:nil silent:YES];
-	}
-#else
 	NSValue			*observerValue;
 	
 	while ((observerValue = [enumerator nextObject])) {		
@@ -407,7 +358,6 @@ static BOOL unregisterListObjectObserverCalled = NO;
 		
 		[observer updateListObject:inObject keys:nil silent:YES];
 	}
-#endif	
 }
 
 @end

@@ -9,17 +9,9 @@
 #import <Adium/AIObject.h>
 #import <Adium/AIContactControllerProtocol.h>
 
-#ifdef DEBUG_BUILD
-	#define CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG	TRUE
-#endif
-
 @interface AdiumContactPropertiesObserverManager : AIObject {
 	//Status and Attribute updates
-#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
-    NSMutableArray			*contactObservers;
-#else
     NSMutableSet			*contactObservers;	
-#endif
     NSTimer					*delayedUpdateTimer;
     int						delayedStatusChanges;
 	NSMutableSet			*delayedModifiedStatusKeys;
