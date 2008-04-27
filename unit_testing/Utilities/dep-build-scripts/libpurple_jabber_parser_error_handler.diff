@@ -1,0 +1,55 @@
+#
+# old_revision [20e2add42a314b4914e798757eb2a69ac3b491d0]
+#
+# patch "libpurple/protocols/jabber/parser.c"
+#  from [6cecb079972daf216504b3dce358ca781c92c3d9]
+#    to [d66cc169b95ef6131b2369df7ca32a04ca475f49]
+#
+============================================================
+--- libpurple/protocols/jabber/parser.c	6cecb079972daf216504b3dce358ca781c92c3d9
++++ libpurple/protocols/jabber/parser.c	d66cc169b95ef6131b2369df7ca32a04ca475f49
+@@ -132,6 +132,18 @@ jabber_parser_element_text_libxml(void *
+ 	xmlnode_insert_data(js->current, (const char*) text, text_len);
+ }
+ 
++static void
++jabber_parser_structured_error_handler(void *user_data, xmlErrorPtr error)
++{
++	JabberStream *js = user_data;
++
++	purple_debug_error("jabber", "XML parser error for JabberStream %p: "
++								 "Domain %i, code %i, level %i: %s\n",
++					   js,
++					   error->domain, error->code, error->level,
++					   (error->message ? error->message : "(null)"));
++}
++
+ static xmlSAXHandler jabber_parser_libxml = {
+ 	.internalSubset         = NULL,
+ 	.isStandalone           = NULL,
+@@ -164,7 +176,7 @@ static xmlSAXHandler jabber_parser_libxm
+ 	._private               = NULL,
+ 	.startElementNs         = jabber_parser_element_start_libxml,
+ 	.endElementNs           = jabber_parser_element_end_libxml,
+-	.serror                 = NULL
++	.serror                 = jabber_parser_structured_error_handler
+ };
+ 
+ void
+@@ -179,6 +191,7 @@ void jabber_parser_free(JabberStream *js
+ 
+ void jabber_parser_free(JabberStream *js) {
+ 	if (js->context) {
++		xmlSetStructuredErrorFunc(NULL, jabber_parser_structured_error_handler);
+ 		xmlParseChunk(js->context, NULL,0,1);
+ 		xmlFreeParserCtxt(js->context);
+ 		js->context = NULL;
+@@ -187,6 +200,8 @@ void jabber_parser_process(JabberStream 
+ 
+ void jabber_parser_process(JabberStream *js, const char *buf, int len)
+ {
++	xmlSetStructuredErrorFunc(NULL, jabber_parser_structured_error_handler);
++
+ 	if (js->context ==  NULL) {
+ 		/* libxml inconsistently starts parsing on creating the
+ 		 * parser, so do a ParseChunk right afterwards to force it. */
