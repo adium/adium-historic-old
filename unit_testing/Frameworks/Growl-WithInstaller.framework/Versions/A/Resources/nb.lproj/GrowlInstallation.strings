@@ -1,0 +1,23 @@
+﻿/* Button title for canceling installation of Growl */
+"Cancel" = "Avbryt";
+
+/* Don't ask again checkbox title for installation of Growl */
+"Don't Ask Again" = "Ikke spør igjen";
+
+/* Growl installation window title */
+"Growl Installation Recommended" = "Growl installasjon er anbefalt";
+
+/* Growl update window title */
+"Growl Update Available" = "Growl oppdatering tilgjengelig";
+
+/* Button title for installing Growl */
+"Install" = "Installer";
+
+/* Default Growl update explanation */
+"This program displays information via Growl, a centralized notification system that enables applications to unobtrusively inform the user about potentially important information.  A version of Growl is currently installed, but this program includes an updated version of Growl.  It is strongly recommended that you update now.  No download is required." = "This program displays information via Growl, a centralized notification system that enables applications to unobtrusively inform the user about potentially important information.  A version of Growl is currently installed, but this program includes an updated version of Growl.  It is strongly recommended that you update now.  No download is required.";
+
+/* Default Growl installation explanation */
+"This program displays information via Growl, a centralized notification system that enables applications to unobtrusively inform the user about potentially important information.  Growl is not currently installed; to see Growl notifications from this and other applications, you must install it.  No download is required." = "This program displays information via Growl, a centralized notification system that enables applications to unobtrusively inform the user about potentially important information.  Growl is not currently installed; to see Growl notifications from this and other applications, you must install it.  No download is required.";
+
+/* Button title for updating Growl */
+"Update" = "Oppdater";
