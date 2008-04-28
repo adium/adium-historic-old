@@ -5,6 +5,10 @@
 //  Created by Evan Schoenberg on 4/16/08.
 //
 
+#ifdef DEBUG_BUILD
+	#define CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG	TRUE
+#endif
+
 #import "AdiumContactPropertiesObserverManager.h"
 #import "AIContactController.h"
 #import <Adium/AIAccountControllerProtocol.h>
@@ -13,16 +17,16 @@
 #import <Adium/AIMetaContact.h>
 #import <Adium/AISortController.h>
 
+#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
+#import <Foundation/NSDebug.h>
+#endif
+
 @interface AdiumContactPropertiesObserverManager (PRIVATE)
 - (NSSet *)_informObserversOfObjectStatusChange:(AIListObject *)inObject withKeys:(NSSet *)modifiedKeys silent:(BOOL)silent;
 - (void)_performDelayedUpdates:(NSTimer *)timer;
 @end
 
 #define UPDATE_CLUMP_INTERVAL			1.0
-
-#ifdef DEBUG_BUILD
-	#define CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG	TRUE
-#endif
 
 @implementation AdiumContactPropertiesObserverManager
 
