@@ -926,19 +926,6 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 }
 
 /*!
- * @brief Allow newlines in messages
- *
- * Only IRC doesn't allow newlines out of the built-in prpls... and we don't even support it yet.
- * This method is never called at present.
- *
- * XXX: despite not being called (?) multiline irc messages are being divided into multiple messages properly... is this necessary?
- */
-- (BOOL)allowsNewlinesInMessages
-{
-	return (account && purple_account_get_connection(account) && ((purple_account_get_connection(account)->flags & PURPLE_CONNECTION_NO_NEWLINES) != 0));
-}
-
-/*!
  * @brief Libpurple prints file transfer messages to the chat window. The Adium core therefore shouldn't.
  */
 - (BOOL)accountDisplaysFileTransferMessages

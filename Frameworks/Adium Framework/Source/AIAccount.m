@@ -325,16 +325,6 @@
 }
 
 /*!
- * @brief Are newlines allowed in messages?
- *
- * If NO, messages with newlines will be split into multiple messages before being sent
- */
-- (BOOL)allowsNewlinesInMessages
-{
-	return YES;
-}
-
-/*!
  * @brief Does the account itself display file transfer messages in chat windows?
  *
  * If YES, Adium won't attempt to display messages in chat windows regarding file transfers.
