@@ -35,13 +35,6 @@ TARGET_DIR_BASE="$PWD/root"
 export PATH_PPC="$TARGET_DIR_PPC/bin:$PATH"
 export PATH_I386="$TARGET_DIR_I386/bin:$PATH"
 
-# On Mac OS X, we need glibtoolize to be libtoolize for pidgin, their silly
-# autogen.sh expects it to be that way right now. In the future I'm hoping 
-# to offer a patch to pidgin so that it'll check and see if glibtoolize
-# exists if it doesn't find libtoolize.
-ln -s /usr/bin/glibtoolize $TARGET_DIR_PPC/bin/libtoolize
-ln -s /usr/bin/glibtoolize $TARGET_DIR_I386/bin/libtoolize
-
 # Apply our openssl patch - enables using OpenSSL and allows libgadu with SSL
 # support. This is OK because OpenSSL is part of the base system on OS X.
 
