@@ -10,6 +10,7 @@
 #import "ESIRCAccountViewController.h"
 #import "ESIRCJoinChatViewController.h"
 #import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageDrawingAdditions.h>
 
 @implementation ESIRCService
 //Account Creation
