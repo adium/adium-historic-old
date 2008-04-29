@@ -535,6 +535,23 @@
 }
 
 /*!
+ * @brief Called by an account to notifiy the chat controller that it left a chat
+ *
+ * Typically this is called in response to -[AIAccout closeChat:] caled in -[self closeChat:] above.
+ * However, if the chat is never opened, accountDidCloseChat: may be called without closeChat: being called first.
+ */
+- (void)accountDidCloseChat:(AIChat *)inChat
+{
+	/* If the chat is not open and the account told us that it was closed,
+	 * ensure that it's no longer in the open chats list, as the user will have no further
+	 * interaction with it. This is poarticularly important if the chat closes before it is
+	 * ever opened, such as when an error occurs while joining a group chat.
+	 */
+	if (![inChat isOpen])
+		[openChats removeObject:inChat];
+}
+
+/*!
  * @brief Switch a chat from one account to another
  *
  * The target list contact for the chat is changed to be an 'identical' one on the target account; that is, a contact

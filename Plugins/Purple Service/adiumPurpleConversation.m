@@ -42,12 +42,14 @@ static void adiumPurpleConvDestroy(PurpleConversation *conv)
 	/* Purple is telling us a conv was destroyed.  We've probably already cleaned up, but be sure in case purple calls this
 	 * when we don't ask it to (for example if we are summarily kicked from a chat room and purple closes the 'window').
 	 */
-	AIChat *chat;
+	AIChat *chat = (AIChat *)conv->ui_data;
 
-	chat = (AIChat *)conv->ui_data;
+	AILogWithSignature(@"%p: %@", conv, chat);
 
 	//Chat will be nil if we've already cleaned up, at which point no further action is needed.
 	if (chat) {
+		[accountLookup(purple_conversation_get_account(conv)) chatWasDestroyed:chat];
+
 		[chat setIdentifier:nil];
 		[chat release];
 		conv->ui_data = nil;
