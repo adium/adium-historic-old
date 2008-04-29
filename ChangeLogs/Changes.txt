@@ -1,6 +1,6 @@
 				Adium X Version History
 				-----------------------
-Version 1.2.5
+Version 1.2.5 (4/28/2008)
  * Fixed Yahoo! Japan connectivity
  * Fixed ICQ connectivity for some accounts with large contact lists
  * Improved rate limiting management for AIM and ICQ accounts
