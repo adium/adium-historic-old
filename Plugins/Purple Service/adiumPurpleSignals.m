@@ -220,6 +220,13 @@ static void conversation_created_cb(PurpleConversation *conv, void *data) {
 		[[imChatLookupFromConv(conv) listObject] setStatusObject:[NSNumber numberWithInt:AINotTyping] forKey:KEY_TYPING notify:NotifyNow];
 }
 
+static void chat_join_failed_cb(PurpleConnection *gc, const char *name)
+{
+	CBPurpleAccount	*account = accountLookup(purple_connection_get_account(gc));
+	AILogWithSignature(@"%@: %s", account, name);
+	[account chatJoinDidFail:name];
+}
+
 static void typing_changed(PurpleAccount *acct, const char *name, AITypingState typingState)
 {
 	AIListContact *contact = contactLookupFromBuddy(purple_find_buddy(acct, name));
@@ -314,6 +321,9 @@ void configureAdiumPurpleSignals(void)
 
 	purple_signal_connect(purple_conversations_get_handle(), "conversation-created",
 						  handle, PURPLE_CALLBACK(conversation_created_cb),
+						  NULL);
+	purple_signal_connect(purple_conversations_get_handle(), "chat-join-failed",
+						  handle, PURPLE_CALLBACK(chat_join_failed_cb),
 						  NULL);
 	
 	purple_signal_connect(purple_conversations_get_handle(), "buddy-typing",

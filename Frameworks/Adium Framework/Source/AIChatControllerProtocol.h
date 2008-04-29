@@ -34,6 +34,8 @@
 - (AIChat *)existingChatWithName:(NSString *)name onAccount:(AIAccount *)account;
 
 - (BOOL)closeChat:(AIChat *)inChat;
+- (void)accountDidCloseChat:(AIChat *)inChat;
+
 - (NSSet *)openChats;
 - (AIChat *)mostRecentUnviewedChat;
 - (int)unviewedContentCount;
