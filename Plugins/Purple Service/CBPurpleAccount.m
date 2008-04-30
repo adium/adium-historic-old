@@ -1504,6 +1504,8 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 //Connect this account (Our password should be in the instance variable 'password' all ready for us)
 - (void)connect
 {
+	finishedConnectProcess = NO;
+
 	[super connect];
 
 	//Ensure we have a purple account if one does not already exist
@@ -1521,6 +1523,8 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 
 - (void)unregister
 {
+	finishedConnectProcess = NO;
+
 	[purpleAdapter unregisterAccount:self];
 }
 
@@ -1727,7 +1731,9 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 }
 
 - (void)didConnect
-{	
+{
+	finishedConnectProcess = YES;
+
 	[super didConnect];
 	
 	[[adium notificationCenter] addObserver:self
