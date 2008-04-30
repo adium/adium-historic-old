@@ -50,6 +50,15 @@
 
 #import "AdiumAuthorization.h"
 
+#ifdef DEBUG_BUILD
+	#define CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG	TRUE
+#endif
+
+#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
+	#import <Foundation/NSDebug.h>
+#endif
+
+
 #define KEY_FLAT_GROUPS					@"FlatGroups"			//Group storage
 #define KEY_FLAT_CONTACTS				@"FlatContacts"			//Contact storage
 #define KEY_FLAT_METACONTACTS			@"FlatMetaContacts"		//Metacontact objectID storage
@@ -1420,6 +1429,9 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Registers code to observe handle status changes
 - (void)registerListObjectObserver:(id <AIListObjectObserver>)inObserver
 {
+#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
+	AILogWithSignature(@"%@", inObserver);
+#endif	
 	//Add the observer
     [contactObservers addObject:[NSValue valueWithNonretainedObject:inObserver]];
 
@@ -1429,6 +1441,9 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 - (void)unregisterListObjectObserver:(id)inObserver
 {
+#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
+	AILogWithSignature(@"%@", inObserver);
+#endif	
     [contactObservers removeObject:[NSValue valueWithNonretainedObject:inObserver]];
 }
 
@@ -1511,6 +1526,12 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		NSSet						*newKeys;
 
 		observer = [observerValue nonretainedObjectValue];
+#ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
+		if (NSIsFreedObject(observer)) {
+			AILogWithSignature(@"%p is a released observer! This is a crash.", observer);
+			NSAssert1(FALSE, @"%p is a released observer. Please check the Adium Debug Log. If it wasn't logging to file, do that next time.", observer);
+		}
+#endif		
 		if ((newKeys = [observer updateListObject:inObject keys:modifiedKeys silent:silent])) {
 			if (!attrChange) attrChange = [[NSMutableSet alloc] init];
 			[attrChange unionSet:newKeys];
