@@ -35,6 +35,8 @@
 	BOOL				willBeDeleted;
 	id<AIAccountControllerRemoveConfirmationDialog> deletionDialog;
 	
+	BOOL				finishedConnectProcess;
+
 	PurpleConnectionError lastDisconnectionReason;
 }
 

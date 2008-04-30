@@ -1390,6 +1390,8 @@ static SLPurpleCocoaAdapter *purpleThread = nil;
 //Connect this account (Our password should be in the instance variable 'password' all ready for us)
 - (void)connect
 {
+	finishedConnectProcess = NO;
+
 	[super connect];
 	
 	if (!account) {
@@ -1614,8 +1616,8 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 //Our account has connected
 - (void)accountConnectionConnected
 {
-	AILog(@"************ %@ CONNECTED ***********",[self UID]);
-	
+	finishedConnectProcess = YES;
+
 	[self didConnect];
 
 	[[adium notificationCenter] addObserver:self
