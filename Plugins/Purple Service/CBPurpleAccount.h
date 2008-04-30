@@ -35,7 +35,8 @@
 	
 	BOOL				unregisterAfterConnecting;
 	BOOL				deletePurpleAccountAfterDisconnecting;
-	
+	BOOL				finishedConnectProcess;
+
 	PurpleConnectionError lastDisconnectionReason;
 }
 
@@ -186,6 +187,7 @@
 		  newArrivals:(NSNumber *)newArrivals
 			   toChat:(AIChat *)chat;
 - (NSDictionary *)willJoinChatUsingDictionary:(NSDictionary *)chatCreationDictionary;
+- (BOOL)chatCreationDictionary:(NSDictionary *)chatCreationDict isEqualToDictionary:(NSDictionary *)baseDict;
 
 #pragma mark Privacy
 - (void)privacyPermitListAdded:(NSString *)sourceUID;
