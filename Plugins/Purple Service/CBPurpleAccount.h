@@ -132,7 +132,7 @@
 - (void)updateForChat:(AIChat *)chat type:(NSNumber *)type;
 - (AIChat *)chatWithContact:(AIListContact *)contact identifier:(id)identifier;
 - (void)chatWasDestroyed:(AIChat *)chat;
-- (void)chatJoinDidFail:(const char *)name;
+- (void)chatJoinDidFail:(AIChat *)chat;
 
 - (void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
 - (void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;

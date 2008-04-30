@@ -16,6 +16,7 @@
 
 #import "adiumPurpleSignals.h"
 #import <AIUtilities/AIObjectAdditions.h>
+#import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/ESFileTransfer.h>
@@ -220,11 +221,42 @@ static void conversation_created_cb(PurpleConversation *conv, void *data) {
 		[[imChatLookupFromConv(conv) listObject] setStatusObject:[NSNumber numberWithInt:AINotTyping] forKey:KEY_TYPING notify:NotifyNow];
 }
 
-static void chat_join_failed_cb(PurpleConnection *gc, const char *name)
+static NSDictionary *dictionaryFromHashTable(GHashTable *data)
+{
+	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+	GList *l = g_hash_table_get_keys(data);	
+	GList *ll;
+	for (ll = l; ll; ll = ll->next) {
+		void *key = ll->data;
+		void *value = g_hash_table_lookup(data, key);
+		NSString *keyString = [NSString stringWithUTF8String:key];
+		NSString *valueString = [NSString stringWithUTF8String:value];
+		if ([valueString intValue]) {
+			[dict setValue:[NSNumber numberWithInt:[valueString intValue]]
+					forKey:keyString];
+		}  else {
+			[dict setValue:valueString
+					forKey:keyString];
+		}
+	}
+	
+	return dict;
+}
+
+static void chat_join_failed_cb(PurpleConnection *gc, GHashTable *components)
 {
 	CBPurpleAccount	*account = accountLookup(purple_connection_get_account(gc));
-	AILogWithSignature(@"%@: %s", account, name);
-	[account chatJoinDidFail:name];
+	NSEnumerator *enumerator = [[[[[[AIObject sharedAdiumInstance] chatController] openChats] copy] autorelease] objectEnumerator];
+	AIChat *chat;
+	NSDictionary *componentDict = dictionaryFromHashTable(components);
+
+	while ((chat = [enumerator nextObject])) {
+		if (([chat account] == account) &&
+			[account chatCreationDictionary:[chat chatCreationDictionary] isEqualToDictionary:componentDict]) {
+			[account chatJoinDidFail:chat];
+			break;
+		}
+	}
 }
 
 static void typing_changed(PurpleAccount *acct, const char *name, AITypingState typingState)

@@ -521,6 +521,7 @@ PurpleConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					 */
 					AILog(@"In the event of an emergency, your GHashTable may be used as a flotation device...");
 					serv_join_chat(gc, components);
+					g_hash_table_unref(components);
 				}
 			}
 		}

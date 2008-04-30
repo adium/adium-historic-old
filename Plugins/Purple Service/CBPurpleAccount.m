@@ -706,15 +706,9 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 	[[adium chatController] accountDidCloseChat:chat];
 }
 
-- (void)chatJoinDidFail:(const char *)name
+- (void)chatJoinDidFail:(AIChat *)chat
 {
-	AILogWithSignature(@"%s", name);
-
-	if (name) {
-		AIChat *chat = [[adium chatController] existingChatWithName:[NSString stringWithUTF8String:name] onAccount:self];
-		
-		[[adium chatController] accountDidCloseChat:chat];
-	}
+	[[adium chatController] accountDidCloseChat:chat];
 }
 
 /* 
@@ -752,6 +746,11 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 - (NSDictionary *)willJoinChatUsingDictionary:(NSDictionary *)chatCreationDictionary
 {
 	return chatCreationDictionary;
+}
+
+- (BOOL)chatCreationDictionary:(NSDictionary *)chatCreationDict isEqualToDictionary:(NSDictionary *)baseDict
+{
+	return [chatCreationDict isEqualToDictionary:baseDict];
 }
 
 - (AIChat *)chatWithContact:(AIListContact *)contact identifier:(id)identifier

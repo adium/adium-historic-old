@@ -29,6 +29,7 @@
 #import <Adium/AIService.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #include <libpurple/presence.h>
 #include <libpurple/si.h>
@@ -607,6 +608,17 @@
 	}
 	
 	return chatCreationDictionary;
+}
+
+- (BOOL)chatCreationDictionary:(NSDictionary *)chatCreationDict isEqualToDictionary:(NSDictionary *)baseDict
+{
+	/* If the chat isn't keeping track of a handle, it's because we added it in
+	 * willJoinChatUsingDictionary: above. Remove it from baseDict so the comparison is accurate.
+	 */
+	if (![chatCreationDict objectForKey:@"handle"])
+		baseDict = [baseDict dictionaryWithDifferenceWithSetOfKeys:[NSSet setWithObject:@"handle"]];
+
+	return [chatCreationDict isEqualToDictionary:baseDict];
 }
 
 #pragma mark Status
