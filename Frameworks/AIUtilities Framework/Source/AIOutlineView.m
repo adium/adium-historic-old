@@ -92,16 +92,23 @@
 			}
 
         } else if (pressedChar == NSLeftArrowFunctionKey) { //left
-            id 	object = [self itemAtRow:[self selectedRow]];
-            if (object && [self isExpandable:object] && [self isItemExpanded:object]) {
-				[self collapseItem:object];
-            }
+			NSEnumerator *enumerator = [[self arrayOfSelectedItems] objectEnumerator];
+			id object;
+			while ((object = [enumerator nextObject])) {
+				if ([self isExpandable:object] && [self isItemExpanded:object]) {
+					[self collapseItem:object];
+				}
+			}
 
         } else if (pressedChar == NSRightArrowFunctionKey) { //right
-            id 	object = [self itemAtRow:[self selectedRow]];
-            if (object && [self isExpandable:object] && ![self isItemExpanded:object]) {
-				[self expandItem:object];
+			NSEnumerator *enumerator = [[self arrayOfSelectedItems] objectEnumerator];
+			id object;
+			while ((object = [enumerator nextObject])) {
+				if ([self isExpandable:object] && ![self isItemExpanded:object]) {
+					[self expandItem:object];
+				}
 			}
+
 		} else if (pressedChar == NSUpArrowFunctionKey) { //up
 			[super keyDown:theEvent];
 		} else if (pressedChar == NSDownArrowFunctionKey) { //down
