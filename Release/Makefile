@@ -49,6 +49,7 @@ ADIUM_DIR=$(BUILD_DIR)/Adium
 RELEASE_NAME=Adium_$(VERSION)
 VERSION_ESCAPED=$(VERSION)
 RELEASE_NAME_ESCAPED=Adium_$(VERSION_ESCAPED)
+TARBALL_DIR=adium-$(VERSION)
 
 ifeq ($(NIGHTLY),TRUE)
 	VERSION_ESCAPED:=$(VERSION_ESCAPED)\`date +%Y%m%d\`
@@ -83,7 +84,7 @@ ADIUM_PLIST=$(PLIST_DIR)/Adium_2
 ###########
 # Targets
 ###########
-.PHONY: all all-withlocalchanges all-withlocalchanges-noclean all-nopackage-noclean all-nightly update assertnochanges assertnoconflicts version compile clean release source prepare-release-bundle createfolder diskimage nightly
+.PHONY: all all-withlocalchanges all-withlocalchanges-noclean all-nopackage-noclean all-nightly update assertnochanges assertnoconflicts version compile clean release source prepare-release-bundle createfolder diskimage nightly tarball
 
 all: update assertnochanges version clean compile release
 all-withlocalchanges: update assertnoconflicts version clean compile release
@@ -182,3 +183,8 @@ nightly: assertnochanges version clean compile release
 	echo $(RELEASE_NAME) > $(BUILD_DIR)/latest
 	(svn info | perl -nle 's/Revision: ([0-9]+)/$$1/g and print "r".$$_') >> $(BUILD_DIR)/latest
 	md5 -q $(BUILD_DIR)/$(RELEASE_NAME).dmg > $(BUILD_DIR)/$(RELEASE_NAME).dmg.md5sum
+
+tarball:
+	svn export -q --non-interactive $(SRC_DIR) $(TARBALL_DIR)
+	tar zcf $(TARBALL_DIR).tgz $(TARBALL_DIR)
+	rm -rf $(TARBALL_DIR)
