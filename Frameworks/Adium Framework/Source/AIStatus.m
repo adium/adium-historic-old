@@ -449,6 +449,7 @@
 }
 - (void)setScriptingMessage:(NSTextStorage *)newMessage
 {
+	NSLog(@"setScriptingMessage: %@", newMessage);
 	if ([self mutabilityType] == AIEditableStatusState || [self mutabilityType] == AITemporaryEditableStatusState) {
 		if ([newMessage isKindOfClass:[NSAttributedString class]])
 			[self setStatusMessage:newMessage];
