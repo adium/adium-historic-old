@@ -35,7 +35,7 @@ domains		({ccTLD}|{sTLD}|{uTLD}|arpa|local)
 %{
 /*The Unicode standard, version 4.1, table 3-6, says that the highest byte that will occur in a valid UTF-8 sequence is 0xF4.*/
 %}
-urlSpecifier	([[:alnum:]\x80-\xf4-]+\.)+{domains}(:[0-9]+)?(\/.*)?
+urlSpecifier	([_[:alnum:]\x80-\xf4-]+\.)+{domains}(:[0-9]+)?(\/.*)?
 ipURL		([0-9]{1,3}\.){3}[0-9][0-9]?[0-9]?(:[0-9]+)?(\/.*)?
 singleDomain [[:alnum:]\x80-\xf4-]+
 mailSpecifier	[^:\/]+\@.+\.{domains}
