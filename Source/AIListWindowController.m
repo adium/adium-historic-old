@@ -301,10 +301,24 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 	//Auto-Resizing
 	if ([group isEqualToString:PREF_GROUP_APPEARANCE]) {
 		int				windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
-		BOOL			autoResizeVertically = [[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue];
 		BOOL			autoResizeHorizontally = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
+		BOOL			autoResizeVertically;
 		int				forcedWindowWidth, maxWindowWidth;
 		
+		//Determine how to handle vertical autosizing. AIAppearancePreferences must match this behavior for this to make sense.
+		switch (windowStyle) {
+			case AIContactListWindowStyleStandard:
+			case AIContactListWindowStyleBorderless:
+				//Standard and borderless don't have to vertically autosize, but they might
+				autoResizeVertically = [[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue];
+				break;
+			case AIContactListWindowStyleGroupBubbles:
+			case AIContactListWindowStyleContactBubbles:
+			case AIContactListWindowStyleContactBubbles_Fitted:
+				//The bubbles styles don't show a window; force them to autosize
+				autoResizeVertically = YES;
+		}			
+
 		if (autoResizeHorizontally) {
 			//If autosizing, KEY_LIST_LAYOUT_HORIZONTAL_WIDTH determines the maximum width; no forced width.
 			maxWindowWidth = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue];
