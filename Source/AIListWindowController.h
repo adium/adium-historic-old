@@ -74,7 +74,8 @@ typedef enum {
 	AIRectEdgeMask						windowSlidOffScreenEdgeMask;
 	NSScreen							*windowLastScreen;
 	NSTimer								*slideWindowIfNeededTimer;
-	
+	BOOL								waitingToSlideOnScreen;
+
 	NSRect								oldFrame;
 	NSScreen							*currentScreen;
 	NSRect								currentScreenFrame;

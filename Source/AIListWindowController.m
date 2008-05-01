@@ -39,13 +39,14 @@
 
 #define PREF_GROUP_CONTACT_LIST					@"Contact List"
 
-#define SLIDE_ALLOWED_RECT_EDGE_MASK			(AIMinXEdgeMask | AIMaxXEdgeMask)
-#define DOCK_HIDING_MOUSE_POLL_INTERVAL			0.1
-#define WINDOW_ALIGNMENT_TOLERANCE				2.0f
-#define MOUSE_EDGE_SLIDE_ON_DISTANCE			1.1f
-#define WINDOW_SLIDING_MOUSE_DISTANCE_TOLERANCE 3.0f
+#define SLIDE_ALLOWED_RECT_EDGE_MASK			(AIMinXEdgeMask | AIMaxXEdgeMask) /* Screen edges on which sliding is allowde */
+#define DOCK_HIDING_MOUSE_POLL_INTERVAL			0.1 /* Interval at which to check the mouse position for sliding */
+#define	WINDOW_SLIDING_DELAY					0.2 /* Time after the mouse is in the right place before the window slides on screen */
+#define WINDOW_ALIGNMENT_TOLERANCE				2.0f /* Threshold distance far the window from an edge to be considered on it */
+#define MOUSE_EDGE_SLIDE_ON_DISTANCE			1.1f /* ??? */
+#define WINDOW_SLIDING_MOUSE_DISTANCE_TOLERANCE 3.0f /* Distance the mouse must be from the window's frame to be considered outside it */
 
-#define SNAP_DISTANCE							15.0
+#define SNAP_DISTANCE							15.0 /* Distance beween one window's edge and another's at which they should snap together */
 
 @interface AIListWindowController (PRIVATE)
 - (id)initWithContactList:(AIListObject<AIContainingObject> *)contactList;
@@ -632,61 +633,95 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	return (windowHidingStyle == AIContactListWindowHidingStyleBackground);
 }
 
+/*!
+ * @brief Called on a delay by -[self slideWindowIfNeeded:]
+ *
+ * This is a separate function so that the call to it may be canceled if the mouse doesn't
+ * remain in position long enough.
+ */
+- (void)slideWindowOnScreenAfterDelay
+{
+	waitingToSlideOnScreen = NO;
+
+	//If we're hiding the window (generally) but now sliding it on screen, make sure it's on top
+	if (windowHidingStyle == AIContactListWindowHidingStyleSliding) {
+		[self setWindowLevel:NSFloatingWindowLevel];
+		
+		if ([NSApp isOnLeopardOrBetter])
+			[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
+		
+		overrodeWindowLevel = YES;
+	}
+	
+	[self slideWindowOnScreen];	
+}
+
+/*!
+ * @brief Check what behavior the window should perform and initiate it
+ *
+ * Called regularly by a repeating timer to check mouse position against window position.
+ */
 - (void)slideWindowIfNeeded:(id)sender
 {
 	if ([self shouldSlideWindowOnScreen]) {
-		//If we're hiding the window (generally) but now sliding it on screen, make sure it's on top
-		if (windowHidingStyle == AIContactListWindowHidingStyleSliding) {
-			[self setWindowLevel:NSFloatingWindowLevel];
+		if (!waitingToSlideOnScreen) {
+			[self performSelector:@selector(slideWindowOnScreenAfterDelay)
+					   withObject:nil
+					   afterDelay:WINDOW_SLIDING_DELAY];
+			waitingToSlideOnScreen = YES;
+		}
+	} else {
+		if (waitingToSlideOnScreen) {
+			/* If we were waiting to slide on screen but the mouse moved out of position too soon,
+			 * cancel the selector which would slide us on screen.
+			 */
+			waitingToSlideOnScreen = NO;
+			[[self class] cancelPreviousPerformRequestsWithTarget:self
+														 selector:@selector(slideWindowOnScreenAfterDelay)
+														   object:nil];
+		}
 
-			if ([NSApp isOnLeopardOrBetter])
-				[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
+		if ([self shouldSlideWindowOffScreen]) {
+			AIRectEdgeMask adjacentEdges = [self slidableEdgesAdjacentToWindow];
 			
-			overrodeWindowLevel = YES;
-		}
-
-		[self slideWindowOnScreen];
-
-	} else if ([self shouldSlideWindowOffScreen]) {
-		AIRectEdgeMask adjacentEdges = [self slidableEdgesAdjacentToWindow];
-
-        if (adjacentEdges & (AIMinXEdgeMask | AIMaxXEdgeMask)) {
-            [self slideWindowOffScreenEdges:(adjacentEdges & (AIMinXEdgeMask | AIMaxXEdgeMask))];
-		} else {
-            [self slideWindowOffScreenEdges:adjacentEdges];
-		}
-
-		/* If we're hiding the window (generally) but now sliding it off screen, set it to kCGBackstopMenuLevel and don't
-		 * let it participate in expose.
-		 */
-		if (overrodeWindowLevel &&
-			windowHidingStyle == AIContactListWindowHidingStyleSliding) {
-			[self setWindowLevel:kCGBackstopMenuLevel];
+			if (adjacentEdges & (AIMinXEdgeMask | AIMaxXEdgeMask)) {
+				[self slideWindowOffScreenEdges:(adjacentEdges & (AIMinXEdgeMask | AIMaxXEdgeMask))];
+			} else {
+				[self slideWindowOffScreenEdges:adjacentEdges];
+			}
 			
-			if ([NSApp isOnLeopardOrBetter])
-				[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
+			/* If we're hiding the window (generally) but now sliding it off screen, set it to kCGBackstopMenuLevel and don't
+			 * let it participate in expose.
+			 */
+			if (overrodeWindowLevel &&
+				windowHidingStyle == AIContactListWindowHidingStyleSliding) {
+				[self setWindowLevel:kCGBackstopMenuLevel];
+				
+				if ([NSApp isOnLeopardOrBetter])
+					[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
+				
+				overrodeWindowLevel = YES;
+			}
 			
-			overrodeWindowLevel = YES;
+		} else if (overrodeWindowLevel &&
+				   ([self slidableEdgesAdjacentToWindow] == AINoEdges) &&
+				   ([self windowSlidOffScreenEdgeMask] == AINoEdges)) {
+			/* If the window level was overridden at some point and now we:
+			 *   1. Are on screen AND
+			 *   2. No longer have any edges eligible for sliding
+			 * we should restore our window level.
+			 */
+			[self setWindowLevel:levelForAIWindowLevel(windowLevel)];
+			
+			if ([NSApp isOnLeopardOrBetter]) {
+				if (showOnAllSpaces)
+					[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
+				else
+					[[self window] setCollectionBehavior:NSWindowCollectionBehaviorDefault];
+			}
+			
+			overrodeWindowLevel = NO;
 		}
-		
-	} else if (overrodeWindowLevel &&
-			   ([self slidableEdgesAdjacentToWindow] == AINoEdges) &&
-			   ([self windowSlidOffScreenEdgeMask] == AINoEdges)) {
-		/* If the window level was overridden at some point and now we:
-		 *   1. Are on screen AND
-		 *   2. No longer have any edges eligible for sliding
-		 * we should restore our window level.
-		 */
-		[self setWindowLevel:levelForAIWindowLevel(windowLevel)];
-		
-		if ([NSApp isOnLeopardOrBetter]) {
-			if (showOnAllSpaces)
-				[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
-			else
-				[[self window] setCollectionBehavior:NSWindowCollectionBehaviorDefault];
-		}
-		
-		overrodeWindowLevel = NO;
 	}
 }
 
