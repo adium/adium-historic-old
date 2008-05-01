@@ -209,6 +209,7 @@
 	[tabView_tabBar setSelectsTabsOnMouseDown:YES];
 	[tabView_tabBar setAutomaticallyAnimates:NO];
 	[tabView_tabBar setAllowsScrubbing:YES];
+	[tabView_tabBar setAllowsBackgroundTabClosing:NO];
 	[tabView_tabBar setTearOffStyle:PSMTabBarTearOffAlphaWindow];
 }
 
@@ -292,7 +293,6 @@
 		NSWindow	*window = [self window];
 		alwaysShowTabs = ![[prefDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
 		[tabView_tabBar setHideForSingleTab:!alwaysShowTabs];
-		[tabView_tabBar setAllowsBackgroundTabClosing:YES];
 		NSNumber *useOverflow = [prefDict objectForKey:KEY_TABBAR_OVERFLOW];
 		[tabView_tabBar setUseOverflowMenu:(useOverflow ? [useOverflow boolValue] : YES)];
 		
