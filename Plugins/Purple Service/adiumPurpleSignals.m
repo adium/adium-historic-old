@@ -179,15 +179,26 @@ static void buddy_added_cb(PurpleBuddy *buddy)
 		CBPurpleAccount	*account = accountLookup(purpleAccount);
 		PurpleGroup		*g = purple_buddy_get_group(buddy);
 		NSString		*groupName = ((g && purple_group_get_name(g)) ? [NSString stringWithUTF8String:purple_group_get_name(g)] : nil);
-		
+		AIListContact	*listContact = contactLookupFromBuddy(buddy);
 		/* We pass in purple_buddy_get_name(buddy) directly (without filtering or normalizing it) as it may indicate a 
 		 * formatted version of the UID.  We have a signal for when a rename occurs, but passing here lets us get
 		 * formatted names which are originally formatted in a way which differs from the results of normalization.
 		 * For example, TekJew will normalize to tekjew in AIM; we want to use tekjew internally but display TekJew.
 		 */
-		[account updateContact:contactLookupFromBuddy(buddy)
+		[account updateContact:listContact
 				   toGroupName:groupName
 				   contactName:[NSString stringWithUTF8String:purple_buddy_get_name(buddy)]];
+
+		//We won't get an initial alias update for this buddy if one is already set, so check and update appropriately.
+		const char		*alias;
+
+		alias = purple_buddy_get_server_alias(buddy);
+		if (!alias) alias = purple_buddy_get_alias_only(buddy);
+		
+		if (alias) {
+			[account updateContact:listContact
+						   toAlias:[NSString stringWithUTF8String:alias]];
+		}
 	}
 }
 
@@ -207,10 +218,10 @@ static void node_aliased_cb(PurpleBlistNode *node, char *old_alias)
 		PurpleBuddy		*buddy = (PurpleBuddy *)node;
 		CBPurpleAccount	*account = accountLookup(purple_buddy_get_account(buddy));
 		const char		*alias;
-
+		
 		alias = purple_buddy_get_server_alias(buddy);
 		if (!alias) alias = purple_buddy_get_alias_only(buddy);
-
+		
 		[account updateContact:contactLookupFromBuddy(buddy)
 					   toAlias:(alias ? [NSString stringWithUTF8String:alias] : nil)];
 	}
