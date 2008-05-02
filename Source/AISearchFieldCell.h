@@ -8,7 +8,6 @@
 #import <Cocoa/Cocoa.h>
 
 @interface AISearchFieldCell : NSSearchFieldCell {
-	NSColor *textColor;
 	NSColor *backgroundColor;
 }
 

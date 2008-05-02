@@ -6,46 +6,36 @@
 //
 
 #import "AISearchFieldCell.h"
-
-@interface NSSearchFieldCell (SecretsIKnow)
-- (void)_getTextColor:(NSColor **)outTextColor backgroundColor:(NSColor **)outBackgroundColor;
-@end
+#import <AIUtilities/AIBezierPathAdditions.h>
 
 @implementation AISearchFieldCell
 
-- (void)_getTextColor:(NSColor **)outTextColor backgroundColor:(NSColor **)outBackgroundColor
+- (void)dealloc
 {
-	[super _getTextColor:outTextColor backgroundColor:outBackgroundColor];
+	[backgroundColor release];
+	[super dealloc];
+}
 
-	if (textColor)
-		*outTextColor = [[textColor retain] autorelease];
+- (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+{
+	if (backgroundColor) {
+		[backgroundColor setFill];
+		[[NSBezierPath bezierPathWithRoundedRect:cellFrame] fill];
+	}
 
-	if (backgroundColor)
-		*outBackgroundColor = [[backgroundColor retain] autorelease];
+	[super drawInteriorWithFrame:cellFrame inView:controlView];
 }
 
 - (void)setTextColor:(NSColor *)inTextColor backgroundColor:(NSColor *)inBackgroundColor
 {
-	if (textColor != inTextColor) {
-		[textColor release];
-		textColor = [inTextColor retain];
-	}
+	NSSearchField	*searchField = (NSSearchField *)[self controlView];
+
+	[searchField setTextColor:(inTextColor ? inTextColor : [NSColor blackColor])];
 
 	if (backgroundColor != inBackgroundColor) {
 		[backgroundColor release];
 		backgroundColor = [inBackgroundColor retain];
 	}
-	
-	/* Toggle the responder chain while maintaining our selection and/or text insertion position
-	 * to force the display to update. Simply calling display won't work.
-	 */
-	NSSearchField	*searchField = (NSSearchField *)[self controlView];
-	NSText			*fieldEditor = [[searchField window] fieldEditor:NO forObject:searchField];
-	NSRange			selectedRange = [fieldEditor selectedRange];
-
-	[[searchField window] makeFirstResponder:nil];
-	[[searchField window] makeFirstResponder:searchField];
-	[fieldEditor setSelectedRange:selectedRange];
 }
 
 @end
