@@ -44,7 +44,7 @@
 #define STATUS_ITEM_MARGIN 8
 
 @interface CBStatusMenuItemController (PRIVATE)
-- (void)activateAdium:(id)sender;
+- (void)activateAdium;
 - (void)setIconImage:(NSImage *)inImage;
 - (NSImage *)badgeDuck:(NSImage *)duckImage withImage:(NSImage *)inImage;
 - (void)updateMenuIcons;
@@ -80,6 +80,9 @@
 
 		mainAccountsMenu = [[NSMenu alloc] init];
 		[mainAccountsMenu setDelegate:self];
+		
+		mainAdiumMenu = [[NSMenu alloc] init];
+		[mainAdiumMenu setDelegate:self];
 
 		// Set the main menu as the status item's menu
 		[statusItem setMenu:mainMenu];
@@ -94,6 +97,7 @@
 		mainMenuNeedsUpdate = YES;
 		contactsMenuNeedsUpdate = YES;
 		accountsMenuNeedsUpdate = YES;
+		adiumMenuNeedsUpdate = YES;
 		
 		NSNotificationCenter *notificationCenter = [adium notificationCenter];
 		//Register to recieve chat opened and chat closed notifications
@@ -117,7 +121,7 @@
 		
 		// Register for our menu bar icon set changing
 		[[adium notificationCenter] addObserver:self
-									   selector:@selector(menuBarIconsDidChange:)
+									   selector:@selector(updateMenuIconsBundle:)
 										   name:AIMenuBarIconsDidChangeNotification
 										 object:nil];
 		
@@ -181,6 +185,7 @@
 	[mainMenu release];
 	[mainContactsMenu release];
 	[mainAccountsMenu release];
+	[mainAdiumMenu release];
 	
 	// Release our various menus.
 	[accountMenu setDelegate:nil]; [accountMenu release];
@@ -485,7 +490,7 @@
 {
 	[[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:inContact
 																		onPreferredAccount:YES]];
-	[self activateAdium:nil];
+	[self activateAdium];
 }
 
 - (BOOL)contactMenu:(AIContactMenu *)inContactMenu shouldIncludeContact:(AIListContact *)inContact
@@ -600,18 +605,6 @@
 		//Clear out all the items, start from scratch
 		[menu removeAllItems];
 		
-		// If there's more than one account, show the accounts menu
-		if ([accountMenuItemsArray count] > 1) {
-			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Accounts",nil)
-																			target:self
-																			action:nil
-																	 keyEquivalent:@""];
-			
-			[menuItem setSubmenu:mainAccountsMenu];
-			[menu addItem:menuItem];
-			[menuItem release];
-		}
-		
 		// Show the contacts menu if we have any contacts to display
 		if ([contactMenuItemsArray count] > 0) {
 			// Add contacts
@@ -625,10 +618,30 @@
 			[menuItem release];
 		} else {
 			[menu addItemWithTitle:[AILocalizedString(@"Contact List", nil) stringByAppendingEllipsis]
-							target:self
-							action:@selector(activateContactList:)
+							target:[adium interfaceController]
+							action:@selector(toggleContactList:)
 					 keyEquivalent:@""];
 		}
+		
+		// If there's more than one account, show the accounts menu
+		if ([accountMenuItemsArray count] > 1) {
+			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Accounts",nil)
+																			target:self
+																			action:nil
+																	 keyEquivalent:@""];
+			
+			[menuItem setSubmenu:mainAccountsMenu];
+			[menu addItem:menuItem];
+			[menuItem release];
+		}
+		
+		menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Adium",nil)
+																		target:self
+																		action:nil
+																 keyEquivalent:@""];
+		[menuItem setSubmenu:mainAdiumMenu];
+		[menu addItem:menuItem];
+		[menuItem release];
 		
 		[menu addItem:[NSMenuItem separatorItem]];
 
@@ -703,8 +716,8 @@
 		}
 		
 		[menu addItemWithTitle:[AILocalizedString(@"Contact List", nil) stringByAppendingEllipsis]
-						target:self
-						action:@selector(activateContactList:)
+						target:[adium interfaceController]
+						action:@selector(toggleContactList:)
 				 keyEquivalent:@""];
 		
 		if ([contactMenuItemsArray count] > 0)
@@ -758,28 +771,61 @@
 		}
 		
 		accountsMenuNeedsUpdate = NO;
+	} else if (menu == mainAdiumMenu && adiumMenuNeedsUpdate) {
+		[menu removeAllItems];
+		
+		[menu addItemWithTitle:[AILocalizedString(@"Adium Preferences", nil) stringByAppendingEllipsis]
+						target:self
+						action:@selector(showPreferenceWindow:)
+				 keyEquivalent:@""];
+		
+		[menu addItemWithTitle:AILocalizedString(@"Toggle Contact List", nil)
+						target:[adium interfaceController]
+						action:@selector(toggleContactList:)
+				 keyEquivalent:@""];
+		
+		[menu addItem:[NSMenuItem separatorItem]];
+
+		[menu addItemWithTitle:AILocalizedString(@"Hide Status Item", nil)
+						target:self
+						action:@selector(disableStatusItem:)
+				 keyEquivalent:@""];
+		
+		[menu addItemWithTitle:AILocalizedString(@"Quit Adium", nil)
+						target:NSApp
+						action:@selector(terminate:)
+				 keyEquivalent:@""];
+		
+		adiumMenuNeedsUpdate = NO;
 	}
 }
 
 - (void)switchToChat:(id)sender
 {
 	[[adium interfaceController] setActiveChat:[sender representedObject]];
-	[self activateAdium:nil];
-}
-
-- (void)activateContactList:(id)sender
-{
-	[[adium interfaceController] showContactList:nil];
-	[self activateAdium:nil];
+	[self activateAdium];
 }
 
 - (void)activateAccountList:(id)sender
 {
 	[[adium preferenceController] openPreferencesToCategoryWithIdentifier:@"Accounts"];
-	[self activateAdium:nil];
+	[self activateAdium];
 }
 
-- (void)activateAdium:(id)sender
+- (void)disableStatusItem:(id)sender
+{
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:NO]
+										 forKey:KEY_STATUS_MENU_ITEM_ENABLED
+										  group:PREF_GROUP_STATUS_MENU_ITEM];
+}
+
+- (void)showPreferenceWindow:(id)sender
+{
+	[[adium preferenceController] showPreferenceWindow:nil];
+	[self activateAdium];
+}
+
+- (void)activateAdium
 {
 	if (![NSApp isActive]) {
 		[NSApp activateIgnoringOtherApps:YES];
@@ -807,10 +853,4 @@
 	}
 }
 
-#pragma mark -
-
-- (void)menuBarIconsDidChange:(NSNotification *)notification
-{
-	[self updateMenuIconsBundle];
-}
 @end
