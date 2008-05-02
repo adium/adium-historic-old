@@ -999,6 +999,7 @@
 		34E6C5670A791BAF0076D7F0 /* AIContactInfoWindowPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E6C5650A791BAF0076D7F0 /* AIContactInfoWindowPlugin.m */; };
 		34E6C9950A7926650076D7F0 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		34EA6B320A62F3420053DFEB /* AIApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 34EA6B300A62F3420053DFEB /* AIApplication.m */; };
+		34EBB2C30DCA8DE500B4CB6E /* AISearchFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34EBB2C20DCA8DE500B4CB6E /* AISearchFieldCell.m */; };
 		34F144430BA8FF3C000473DE /* EmoticonNames.strings in Resources */ = {isa = PBXBuildFile; fileRef = 34F144420BA8FF3B000473DE /* EmoticonNames.strings */; };
 		34F191DC09BA5F43001D6BE2 /* irc.png in Resources */ = {isa = PBXBuildFile; fileRef = 34F191DB09BA5F43001D6BE2 /* irc.png */; };
 		34F312930ADC3FE800A4310E /* KNShelfSplitView.h in Headers */ = {isa = PBXBuildFile; fileRef = 348B25C70A50FBF300B2B972 /* KNShelfSplitView.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -3396,6 +3397,8 @@
 		34EA648E0A62E2ED0053DFEB /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = Resources/nl.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		34EA6B2F0A62F3420053DFEB /* AIApplication.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIApplication.h; path = Source/AIApplication.h; sourceTree = "<group>"; };
 		34EA6B300A62F3420053DFEB /* AIApplication.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIApplication.m; path = Source/AIApplication.m; sourceTree = "<group>"; };
+		34EBB2C10DCA8DE400B4CB6E /* AISearchFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AISearchFieldCell.h; path = Source/AISearchFieldCell.h; sourceTree = "<group>"; };
+		34EBB2C20DCA8DE500B4CB6E /* AISearchFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AISearchFieldCell.m; path = Source/AISearchFieldCell.m; sourceTree = "<group>"; };
 		34F101E307342B4D00890D3B /* ESPurpleDotMacAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESPurpleDotMacAccount.m; path = "Plugins/Purple Service/ESPurpleDotMacAccount.m"; sourceTree = "<group>"; };
 		34F101E407342B4D00890D3B /* ESPurpleDotMacAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESPurpleDotMacAccount.h; path = "Plugins/Purple Service/ESPurpleDotMacAccount.h"; sourceTree = "<group>"; };
 		34F1022A0734499600890D3B /* XtraProgressWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = XtraProgressWindow.nib; path = Resources/XtraProgressWindow.nib; sourceTree = "<group>"; };
@@ -6760,6 +6763,8 @@
 				34A489FC06F6436D002C7C5F /* AIStandardListWindowController.h */,
 				34A489FB06F6436D002C7C5F /* AIStandardListWindowController.m */,
 				34A48A0B06F64376002C7C5F /* ContactListWindow.nib */,
+				34EBB2C10DCA8DE400B4CB6E /* AISearchFieldCell.h */,
+				34EBB2C20DCA8DE500B4CB6E /* AISearchFieldCell.m */,
 				34D001E50958868000DCB678 /* AIMenuItemView.h */,
 				34D001E60958868000DCB678 /* AIMenuItemView.m */,
 				661561890D84B874004B7946 /* AIFilterBarBackgroundBox.h */,
@@ -9325,6 +9330,7 @@
 				6615618B0D84B875004B7946 /* AIFilterBarBackgroundBox.m in Sources */,
 				34555C600DB6BCE500649CD4 /* AdiumContactPropertiesObserverManager.m in Sources */,
 				632D859E0DB70FC800040EC7 /* AIMentionEventPlugin.m in Sources */,
+				34EBB2C30DCA8DE500B4CB6E /* AISearchFieldCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
