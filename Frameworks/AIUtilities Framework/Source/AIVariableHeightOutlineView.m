@@ -79,18 +79,21 @@
 	NSPoint	viewPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 	int		row = [self rowAtPoint:viewPoint];
 	id		item = [self itemAtRow:row];
-
-	[super mouseDown:theEvent];
 	
 	//Expand/Collapse groups on mouse DOWN instead of mouse up (Makes it feel a ton faster)
-	if (item && [self isExpandable:item]) {
+	if ((item) &&
+		([self isExpandable:item]) &&
+		(viewPoint.x < [self frameOfCellAtColumn:0 row:row].size.height)) {
+		//XXX - This is kind of a hack.  We need to check < WidthOfDisclosureTriangle, and are using the fact that
+		//      the disclosure width is about the same as the height of the row to fudge it. -ai
+		
 		if ([self isItemExpanded:item]) {
 			[self collapseItem:item];
 		} else {
 			[self expandItem:item];
 		}
-		
-		[self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:[NSEvent cmdKey]];
+	} else {
+		[super mouseDown:theEvent];
 	}
 }
 //Row height cache -----------------------------------------------------------------------------------------------------
