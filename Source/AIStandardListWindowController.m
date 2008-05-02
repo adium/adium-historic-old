@@ -1067,7 +1067,7 @@
 												  object:nil];
 		
 		[[searchField cell] setTextColor:nil backgroundColor:nil];
-
+	
 	} else {
 		// Beep if the user continues appending text to an already not found string, otherwise don't beep.
 		if ([[sender stringValue] length] > [[[[adium contactController] contactHidingController] contactFilteringSearchString] length]) {
@@ -1083,7 +1083,6 @@
 																								   saturation:0.43
 																								   brightness:0.99
 																										alpha:1.0]];
-		//XXX TODO: Change the search and delete buttons to have a red background, too
 	}
 }
 
