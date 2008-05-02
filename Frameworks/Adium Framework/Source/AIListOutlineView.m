@@ -485,7 +485,6 @@
 	int		row = [self rowAtPoint:viewPoint];
 	id		item = [self itemAtRow:row];
 	
-	// If we're not keyed, this item isn't a group, or we're dealing with selection (command key), let super handle it.
 	// Let super handle it if it's not a group, or the command key is down (dealing with selection)
 	if (![[self window] isKeyWindow] || ![item isKindOfClass:[AIListGroup class]] || [NSEvent cmdKey]) {
 		[super mouseDown:theEvent];
