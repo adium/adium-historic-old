@@ -81,56 +81,17 @@
 	id		item = [self itemAtRow:row];
 
 	//Expand/Collapse groups on mouse DOWN instead of mouse up (Makes it feel a ton faster)
-	if ((item) &&
- 	   ([self isExpandable:item]) &&
- 	   (viewPoint.x < [self frameOfCellAtColumn:0 row:row].size.height)) {
-		//XXX - This is kind of a hack.  We need to check < WidthOfDisclosureTriangle, and are using the fact that
-		//      the disclosure width is about the same as the height of the row to fudge it. -ai
-
+	if (item && [self isExpandable:item]) {
 		if ([self isItemExpanded:item]) {
 			[self collapseItem:item];
 		} else {
 			[self expandItem:item];
 		}
+		
+		[self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:[NSEvent cmdKey]];
 	} else {
 		[super mouseDown:theEvent];
 	}
-
-//	if ((expandOnClick) &&
-//	   (item) &&
-//	   ([self isExpandable:item]) &&
-//	   (viewPoint.x < [self frameOfCellAtColumn:0 row:row].size.width)) {
-//
-//		NSEvent *nextEvent;
-//		BOOL	itemIsExpanded;
-//
-//		//Store the current expanded state
-//		itemIsExpanded = [self isItemExpanded:item];
-//
-//		//Wait for the next event - don't dequeue it so it will be handled as normal
-//		nextEvent = [[self window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask)
-//											   untilDate:[NSDate distantFuture]
-//												  inMode:NSEventTrackingRunLoopMode
-//												 dequeue:NO];
-//		//Handle the original event
-//		[super mouseDown:theEvent];
-//
-//		if ([nextEvent type] == NSLeftMouseUp) {
-//			//If they pressed and released, expand/collapse the item unless mouseDown: already did
-//			BOOL itemIsNowExpanded = [self isItemExpanded:item];
-//
-//			if (itemIsNowExpanded == itemIsExpanded) {
-//				if (itemIsNowExpanded) {
-//					[self collapseItem:item];
-//				} else {
-//					[self expandItem:item];
-//				}
-//			}
-//		}
-//
-//	} else {
-//		[super mouseDown:theEvent];
-//	}
 }
 //Row height cache -----------------------------------------------------------------------------------------------------
 #pragma mark Row height cache
