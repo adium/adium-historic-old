@@ -456,15 +456,7 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 
 - (IBAction)performDefaultActionOnSelectedObject:(AIListObject *)selectedObject sender:(NSOutlineView *)sender
 {	
-    if ([selectedObject isKindOfClass:[AIListGroup class]]) {
-        //Expand or collapse the group
-        if ([sender isItemExpanded:selectedObject]) {
-            [sender collapseItem:selectedObject];
-        } else {
-            [sender expandItem:selectedObject];
-        }
-
-	} else if ([selectedObject isMemberOfClass:[AIListBookmark class]]) {
+	if ([selectedObject isMemberOfClass:[AIListBookmark class]]) {
 		//Hide any tooltip the contactListController is currently showing
 		[contactListController hideTooltip];
 
