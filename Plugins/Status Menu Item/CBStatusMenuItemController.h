@@ -28,7 +28,7 @@
 	NSMenu                  *mainMenu;
 	NSMenu					*mainAccountsMenu;
 	NSMenu					*mainContactsMenu;
-	NSMenu					*mainAdiumMenu;
+	NSMenu					*mainOptionsMenu;
 
 	AIContactMenu			*contactMenu;
 	AIAccountMenu           *accountMenu;
@@ -51,7 +51,7 @@
 
 	BOOL                    accountsMenuNeedsUpdate;
 	BOOL					contactsMenuNeedsUpdate;
-	BOOL					adiumMenuNeedsUpdate;
+	BOOL					optionsMenuNeedsUpdate;
 	BOOL					mainMenuNeedsUpdate;
 }
 

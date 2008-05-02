@@ -81,8 +81,8 @@
 		mainAccountsMenu = [[NSMenu alloc] init];
 		[mainAccountsMenu setDelegate:self];
 		
-		mainAdiumMenu = [[NSMenu alloc] init];
-		[mainAdiumMenu setDelegate:self];
+		mainOptionsMenu = [[NSMenu alloc] init];
+		[mainOptionsMenu setDelegate:self];
 
 		// Set the main menu as the status item's menu
 		[statusItem setMenu:mainMenu];
@@ -97,7 +97,7 @@
 		mainMenuNeedsUpdate = YES;
 		contactsMenuNeedsUpdate = YES;
 		accountsMenuNeedsUpdate = YES;
-		adiumMenuNeedsUpdate = YES;
+		optionsMenuNeedsUpdate = YES;
 		
 		NSNotificationCenter *notificationCenter = [adium notificationCenter];
 		//Register to recieve chat opened and chat closed notifications
@@ -185,7 +185,7 @@
 	[mainMenu release];
 	[mainContactsMenu release];
 	[mainAccountsMenu release];
-	[mainAdiumMenu release];
+	[mainOptionsMenu release];
 	
 	// Release our various menus.
 	[accountMenu setDelegate:nil]; [accountMenu release];
@@ -635,11 +635,11 @@
 			[menuItem release];
 		}
 		
-		menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Adium",nil)
+		menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Options",nil)
 																		target:self
 																		action:nil
 																 keyEquivalent:@""];
-		[menuItem setSubmenu:mainAdiumMenu];
+		[menuItem setSubmenu:mainOptionsMenu];
 		[menu addItem:menuItem];
 		[menuItem release];
 		
@@ -771,7 +771,7 @@
 		}
 		
 		accountsMenuNeedsUpdate = NO;
-	} else if (menu == mainAdiumMenu && adiumMenuNeedsUpdate) {
+	} else if (menu == mainOptionsMenu && optionsMenuNeedsUpdate) {
 		[menu removeAllItems];
 		
 		[menu addItemWithTitle:[AILocalizedString(@"Adium Preferences", nil) stringByAppendingEllipsis]
@@ -796,7 +796,7 @@
 						action:@selector(terminate:)
 				 keyEquivalent:@""];
 		
-		adiumMenuNeedsUpdate = NO;
+		optionsMenuNeedsUpdate = NO;
 	}
 }
 
