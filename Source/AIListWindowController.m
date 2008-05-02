@@ -456,7 +456,15 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 
 - (IBAction)performDefaultActionOnSelectedObject:(AIListObject *)selectedObject sender:(NSOutlineView *)sender
 {	
-	if ([selectedObject isMemberOfClass:[AIListBookmark class]]) {
+    if ([selectedObject isKindOfClass:[AIListGroup class]]) {
+        //Expand or collapse the group
+        if ([sender isItemExpanded:selectedObject]) {
+            [sender collapseItem:selectedObject];
+        } else {
+            [sender expandItem:selectedObject];
+        }
+
+	} else if ([selectedObject isMemberOfClass:[AIListBookmark class]]) {
 		//Hide any tooltip the contactListController is currently showing
 		[contactListController hideTooltip];
 
@@ -469,9 +477,7 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 		//Open a new message with the contact
 		[[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:(AIListContact *)selectedObject
 																			onPreferredAccount:YES]];
-    } 
-		
-		
+    }
 }
 
 - (BOOL) canCustomizeToolbar
