@@ -22,6 +22,7 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIRolloverButton.h>
+#import <AIUtilities/AIOutlineViewAdditions.h>
 
 #import <Adium/AIListGroup.h>
 #import <Adium/AIAccountControllerProtocol.h>
@@ -68,9 +69,13 @@
  */
 - (void)dealloc
 {
+	[searchField setDelegate:nil];
+	[filterBarAnimation autorelease];
+	[filterBarPreviouslySelected release];
+	
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[[adium notificationCenter] removeObserver:self];
-	
+
 	[super dealloc];
 }
 
@@ -128,6 +133,7 @@
 	filterBarExpandedGroups = NO;
 	filterBarIsVisible = NO;
 	filterBarAnimation = nil;
+	filterBarPreviouslySelected = nil;
 	[searchField setDelegate:self];
 
 	//Substitute an otherwise identical copy of the search field for one of our class. We don't want to globally pose as class; we just want it here.
@@ -932,6 +938,14 @@
 		// Set the first responder back to the contact list view.
 		[[self window] makeFirstResponder:contactListView];
 
+		[contactListView selectItemsInArray:filterBarPreviouslySelected];
+		
+		// Since this wasn't a user-initiated selection change, we need to post a notification for it.
+		[[adium notificationCenter] postNotificationName:Interface_ContactSelectionChanged
+												  object:nil];
+		
+		[filterBarPreviouslySelected release]; filterBarPreviouslySelected = nil;
+		
 		filterBarIsVisible = NO;
 	} else {
 		// If the filter bar wasn't visible, make it the first responder.
@@ -942,6 +956,8 @@
 
 		// Bring the contact list to front, in case the find command was triggered from another window like the info inspector
 		[[self window] makeKeyAndOrderFront:nil];
+		
+		filterBarPreviouslySelected = [[contactListView arrayOfSelectedItems] retain];
 		
 		filterBarIsVisible = YES;
 	}
