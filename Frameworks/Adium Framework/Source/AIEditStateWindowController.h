@@ -50,6 +50,7 @@
 
 	IBOutlet	NSButton			*checkBox_save;
 	IBOutlet	NSButton			*checkBox_muteSounds;
+	IBOutlet	NSButton			*checkBox_silenceGrowl;
 	IBOutlet	NSButton			*checkBox_okay;
 	IBOutlet	NSButton			*checkBox_cancel;
 

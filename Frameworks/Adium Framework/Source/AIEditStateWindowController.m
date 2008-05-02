@@ -214,15 +214,6 @@ static	NSMutableDictionary	*controllerDict = nil;
 	
 	[self configureForAccountAndWorkingStatusState];
 	
-	/*
-	intFormatter = [[NSNumberFormatter alloc] init];
-	[intFormatter setAllowsFloats:NO];
-	[intFormatter setMinimum:0];
-	[textField_idleHours setFormatter:intFormatter];
-	[textField_idleMinutes setFormatter:intFormatter];
-	[intFormatter release];
-	*/
-	
 	[textView_statusMessage setTypingAttributes:[[adium contentController] defaultFormattingAttributes]];
 	[textView_autoReply setTypingAttributes:[[adium contentController] defaultFormattingAttributes]];
 
@@ -238,8 +229,10 @@ static	NSMutableDictionary	*controllerDict = nil;
 	if (!showSaveCheckbox) {
 		[checkBox_save setHidden:YES];
 	}
-
+	
 	[super windowDidLoad];
+	
+	[self updateControlVisibilityAndResizeWindow];
 }
 
 /*!
@@ -368,6 +361,8 @@ static	NSMutableDictionary	*controllerDict = nil;
 		[workingStatusState setShouldForceInitialIdleTime:[checkbox_idle state]];
 	else if (sender == checkBox_muteSounds)
 		[workingStatusState setMutesSound:[checkBox_muteSounds state]];
+	else if (sender == checkBox_silenceGrowl)
+		[workingStatusState setSilencesGrowl:[checkBox_silenceGrowl state]];	
 	
 	[self updateControlVisibilityAndResizeWindow];
 	[self updateTitleDisplay];
@@ -515,6 +510,8 @@ static	NSMutableDictionary	*controllerDict = nil;
 	current = [self _positionControl:checkbox_idle relativeTo:current height:&height];
 	current = [self _positionControl:box_idle relativeTo:current height:&height];
 	current = [self _positionControl:checkBox_muteSounds relativeTo:current height:&height];
+	current = [self _positionControl:checkBox_silenceGrowl relativeTo:current height:&height];
+	current = [self _positionControl:checkBox_save relativeTo:current height:&height];
 
 	[window setContentSize:NSMakeSize([[window contentView] frame].size.width, height)
 				   display:YES
@@ -590,6 +587,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 	[checkbox_autoReply setState:[statusState hasAutoReply]];
 	[checkbox_customAutoReply setState:![statusState autoReplyIsStatusMessage]];
 	[checkBox_muteSounds setState:[statusState mutesSound]];
+	[checkBox_silenceGrowl setState:[statusState silencesGrowl]];
 	
 	//Strings
 	NSAttributedString	*statusMessage = [statusState statusMessage];

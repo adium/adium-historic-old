@@ -428,6 +428,16 @@
 	[statusDict setObject:[NSNumber numberWithBool:mutes] forKey:STATUS_MUTE_SOUNDS];
 }
 
+- (BOOL)silencesGrowl
+{
+	return [[statusDict objectForKey:STATUS_SILENCE_GROWL] boolValue];
+}
+
+- (void)setSilencesGrowl:(BOOL)mutes
+{
+	[statusDict setObject:[NSNumber numberWithBool:mutes] forKey:STATUS_SILENCE_GROWL];
+}
+
 - (void)setSpecialStatusType:(AISpecialStatusType)inSpecialStatusType
 {
 	[statusDict setObject:[NSNumber numberWithInt:inSpecialStatusType] forKey:STATUS_SPECIAL_TYPE];
