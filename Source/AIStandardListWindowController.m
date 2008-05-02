@@ -44,6 +44,8 @@
 #import "AIContactController.h"
 #import "AIContactHidingController.h"
 
+#import "AISearchFieldCell.h"
+
 #define PREF_GROUP_APPEARANCE		@"Appearance"
 
 #define TOOLBAR_CONTACT_LIST				@"ContactList:1.0"				//Toolbar identifier
@@ -127,7 +129,12 @@
 	filterBarIsVisible = NO;
 	filterBarAnimation = nil;
 	[searchField setDelegate:self];
-	
+
+	//Substitute an otherwise identical copy of the search field for one of our class. We don't want to globally pose as class; we just want it here.
+	[NSKeyedArchiver setClassName:@"AISearchFieldCell" forClass:[NSSearchFieldCell class]];
+	[searchField setCell:[NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:[searchField cell]]]];	
+	[NSKeyedArchiver setClassName:@"NSSearchFieldCell" forClass:[NSSearchFieldCell class]];
+
 	[[NSNotificationCenter defaultCenter]addObserver:self
 											selector:@selector(hideFilterBarFromWindowResignedMain:)
 												name:NSWindowDidResignMainNotification
@@ -1058,6 +1065,9 @@
 		// Since this wasn't a user-initiated selection change, we need to post a notification for it.
 		[[adium notificationCenter] postNotificationName:Interface_ContactSelectionChanged
 												  object:nil];
+		
+		[[searchField cell] setTextColor:nil backgroundColor:nil];
+
 	} else {
 		// Beep if the user continues appending text to an already not found string, otherwise don't beep.
 		if ([[sender stringValue] length] > [[[[adium contactController] contactHidingController] contactFilteringSearchString] length]) {
@@ -1067,6 +1077,13 @@
 		// Set the search string in the hiding controller, but don't refilter the contacts.
 		[[[adium contactController] contactHidingController] setContactFilteringSearchString:[sender stringValue]
 																			refilterContacts:NO];
+		
+		//White on light red (like Firefox!)
+		[[searchField cell] setTextColor:[NSColor whiteColor] backgroundColor:[NSColor colorWithCalibratedHue:0.983
+																								   saturation:0.43
+																								   brightness:0.99
+																										alpha:1.0]];
+		//XXX TODO: Change the search and delete buttons to have a red background, too
 	}
 }
 
