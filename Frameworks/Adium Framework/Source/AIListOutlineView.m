@@ -24,6 +24,7 @@
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIGradient.h>
 #import <AIUtilities/AIBezierPathAdditions.h>
+#import <AIUtilities/AIEventAdditions.h>
 #import "AISCLViewPlugin.h"
 
 #define MINIMUM_HEIGHT				48
@@ -472,6 +473,32 @@
 	}
 	
 	return -1;
+}
+
+#pragma mark Group expanding
+/*!
+ * @brief Expand or collapses groups on mouse down
+ */
+- (void)mouseDown:(NSEvent *)theEvent
+{
+	NSPoint	viewPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+	int		row = [self rowAtPoint:viewPoint];
+	id		item = [self itemAtRow:row];
+	
+	// If we're not keyed, this item isn't a group, or we're dealing with selection (command key), let super handle it.
+	// Let super handle it if it's not a group, or the command key is down (dealing with selection)
+	if (![[self window] isKeyWindow] || ![item isKindOfClass:[AIListGroup class]] || [NSEvent cmdKey]) {
+		[super mouseDown:theEvent];
+		return;
+	}
+	
+	if ([self isItemExpanded:item]) {
+		[self collapseItem:item]; 
+	} else {
+		[self expandItem:item]; 
+	}
+	
+	[self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO]; 
 }
 
 #pragma mark Drag & Drop Drawing
