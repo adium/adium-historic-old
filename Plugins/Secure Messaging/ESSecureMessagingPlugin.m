@@ -338,7 +338,7 @@
 
 - (IBAction)selectedEncryptionPreference:(id)sender
 {
-	AIListContact	*listContact = [[[adium interfaceController] activeChat] listObject];
+	AIListContact	*listContact = [[[[adium interfaceController] activeChat] listObject] parentContact];
 	
 	[listContact setPreference:[NSNumber numberWithInt:[sender tag]]
 						forKey:KEY_ENCRYPTED_CHAT_PREFERENCE
@@ -358,7 +358,7 @@
 		switch (tag) {
 			case EncryptedChat_Default:
 			{
-				AIListContact	*listContact = [chat listObject];
+				AIListContact	*listContact = [[chat listObject] parentContact];
 				if (listContact) {
 					NSNumber	*pref = [listContact preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
 																group:GROUP_ENCRYPTION];
@@ -373,7 +373,7 @@
 			case EncryptedChat_Automatically:
 			case EncryptedChat_RejectUnencryptedMessages:
 			{
-				AIListContact	*listContact = [chat listObject];
+				AIListContact	*listContact = [[chat listObject] parentContact];
 				if (listContact) {
 					NSNumber	*pref = [listContact preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
 																group:GROUP_ENCRYPTION];
