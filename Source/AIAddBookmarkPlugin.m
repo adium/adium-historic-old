@@ -12,6 +12,8 @@
 #import <Adium/AIToolbarControllerProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIMenuControllerProtocol.h>
+#import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListBookmark.h>
@@ -27,7 +29,7 @@
 - (void)installPlugin
 {
 	
-	NSToolbarItem	*chatItem = [AIToolbarUtilities toolbarItemWithIdentifier:ADD_BOOKMARKTOOLBAR_ITEM_IDENTIFIER
+	addBookmarkToolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:ADD_BOOKMARKTOOLBAR_ITEM_IDENTIFIER
 																		  label:ADD_BOOKMARK
 																   paletteLabel:ADD_BOOKMARK
 																		toolTip:AILocalizedString(@"Bookmark the current chat", "tooltip text for Add Bookmark")
@@ -37,12 +39,23 @@
 																		 action:@selector(addBookmark:)
 																		   menu:nil];
 	
-	[[adium toolbarController] registerToolbarItem:chatItem forToolbarType:@"MessageWindow"];
+	addBookmarkMenuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_BOOKMARK
+																			   target:self
+																			   action:@selector(addBookmark:)
+																		keyEquivalent:@""];
+	
+	[[adium menuController] addMenuItem:addBookmarkMenuItem
+							 toLocation:LOC_Contact_Manage];
+	
+	[[adium toolbarController] registerToolbarItem:addBookmarkToolbarItem forToolbarType:@"MessageWindow"];
 	
 }
 
 - (void)uninstallPlugin
 {
+	[addBookmarkMenuItem release];
+	[[adium toolbarController] unregisterToolbarItem:addBookmarkToolbarItem forToolbarType:@"MessageWindow"];
+	[[adium menuController] removeMenuItem:addBookmarkMenuItem];
 }
 
 /*!
