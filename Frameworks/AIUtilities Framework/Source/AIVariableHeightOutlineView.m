@@ -80,6 +80,8 @@
 	int		row = [self rowAtPoint:viewPoint];
 	id		item = [self itemAtRow:row];
 
+	[super mouseDown:theEvent];
+	
 	//Expand/Collapse groups on mouse DOWN instead of mouse up (Makes it feel a ton faster)
 	if (item && [self isExpandable:item]) {
 		if ([self isItemExpanded:item]) {
@@ -89,8 +91,6 @@
 		}
 		
 		[self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:[NSEvent cmdKey]];
-	} else {
-		[super mouseDown:theEvent];
 	}
 }
 //Row height cache -----------------------------------------------------------------------------------------------------
