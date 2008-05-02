@@ -19,7 +19,7 @@
 #import <Adium/AIListBookmark.h>
 
 #define ADD_BOOKMARKTOOLBAR_ITEM_IDENTIFIER		@"AddBookmark"
-#define ADD_BOOKMARK							AILocalizedString(@"Add Bookmark", "Add a chat bookmark")
+#define ADD_BOOKMARK							AILocalizedString(@"Add Group Chat Bookmark", "Add a chat bookmark")
 
 @implementation AIAddBookmarkPlugin
 /*!
@@ -82,6 +82,11 @@
 - (BOOL)validateToolbarItem:(NSToolbarItem *)inToolbarItem
 {
 	return [[[adium interfaceController] activeChat] isGroupChat];
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem *)inMenuItem
+{
+	return [[[adium interfaceController] activeChat] isGroupChat];	
 }
 
 @end
