@@ -21,6 +21,7 @@
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIContactAlertsControllerProtocol.h>
+#import <Adium/AIStatusControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentObject.h>
@@ -175,6 +176,11 @@
 	NSData				*iconData = nil;
 	NSMutableDictionary	*clickContext = [NSMutableDictionary dictionary];
 	NSString			*identifier = nil;
+	
+	// Don't show growl notifications if we're silencing growl.
+	if ([[[adium statusController] activeStatusState] silencesGrowl]) {
+		return NO;
+	}
 
 	//For a message event, listObject should become whoever sent the message
 	if ([[adium contactAlertsController] isMessageEvent:eventID] &&

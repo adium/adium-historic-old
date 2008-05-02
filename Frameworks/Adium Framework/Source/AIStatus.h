@@ -27,6 +27,7 @@
 #define STATUS_INVISIBLE					@"Invisible"
 #define STATUS_MUTABILITY_TYPE				@"Mutability Type"
 #define STATUS_MUTE_SOUNDS					@"Mute Sounds"
+#define STATUS_SILENCE_GROWL				@"Silence Growl"
 #define STATUS_SPECIAL_TYPE					@"Special Type"
 
 typedef enum {
@@ -72,6 +73,9 @@ typedef enum {
 
 - (BOOL)mutesSound;
 - (void)setMutesSound:(BOOL)mutes;
+
+- (BOOL)silencesGrowl;
+- (void)setSilencesGrowl:(BOOL)silences;
 
 - (AISpecialStatusType)specialStatusType;
 - (void)setSpecialStatusType:(AISpecialStatusType)inSpecialStatusType;
