@@ -524,13 +524,31 @@
 		return;
 	}
 	
-	if ([self isItemExpanded:item]) {
-		[self collapseItem:item]; 
-	} else {
-		[self expandItem:item]; 
-	}
+	//Wait for the next event
+	NSEvent *nextEvent = [[self window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask)
+													untilDate:[NSDate distantFuture]
+													   inMode:NSEventTrackingRunLoopMode
+													  dequeue:NO];
 	
-	[self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO]; 
+	// Only expand/contract if they release the mouse. Otherwise pass on the goods.
+	switch ([nextEvent type]) {
+		case NSLeftMouseUp:
+				if ([self isItemExpanded:item]) {
+					[self collapseItem:item]; 
+				} else {
+					[self expandItem:item]; 
+				}
+				
+				[self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO]; 
+			break;
+		case NSLeftMouseDragged:
+			[super mouseDown:theEvent];
+			[super mouseDragged:nextEvent];
+			break;
+		default:
+			[super mouseDown:theEvent];
+			break;
+	}	
 }
 
 #pragma mark Drag & Drop Drawing
