@@ -372,6 +372,7 @@ TrustLevel otrg_plugin_context_to_trust(ConnContext *context)
 }
 
 #pragma mark -
+/* Return the OTR policy for the given context. */
 
 static OtrlPolicy policy_cb(void *opdata, ConnContext *context)
 {
@@ -398,18 +399,32 @@ void otrg_plugin_create_privkey(const char *accountname,
 	[ESOTRPrivateKeyGenerationWindowController finishedGeneratingForIdentifier:identifier];
 }
 
+/* Create a private key for the given accountname/protocol if
+ * desired. */
 static void create_privkey_cb(void *opdata, const char *accountname,
 							  const char *protocol)
 {
 	otrg_plugin_create_privkey(accountname, protocol);
 }
 
+/* Report whether you think the given user is online.  Return 1 if
+ * you think he is, 0 if you think he isn't, -1 if you're not sure.
+ *
+ * If you return 1, messages such as heartbeats or other
+ * notifications may be sent to the user, which could result in "not
+ * logged in" errors if you're wrong. */
 static int is_logged_in_cb(void *opdata, const char *accountname,
 						   const char *protocol, const char *recipient)
 {
-	return ([contactFromInfo(accountname, protocol, recipient) online]);
+	AIListContact *contact = contactFromInfo(accountname, protocol, recipient);
+	if ([contact statusSummary] == AIUnknownStatus)
+		return -1;
+	else
+		return ([contact online] ? 1 : 0);
 }
 
+/* Send the given IM to the given recipient from the given
+ * accountname/protocol. */
 static void inject_message_cb(void *opdata, const char *accountname,
 							  const char *protocol, const char *recipient, const char *message)
 {	
@@ -502,6 +517,8 @@ static int display_otr_message(const char *accountname, const char *protocol,
 	return 0;
 }
 
+/* Display a notification message for a particular accountname /
+ * protocol / username conversation. */
 static void notify_cb(void *opdata, OtrlNotifyLevel level,
 					  const char *accountname, const char *protocol, const char *username,
 					  const char *title, const char *primary, const char *secondary)
@@ -520,41 +537,56 @@ static void notify_cb(void *opdata, OtrlNotifyLevel level,
 																 isWorthOpeningANewChat:NULL]];
 }
 
+/* Display an OTR control message for a particular accountname /
+ * protocol / username conversation.  Return 0 if you are able to
+ * successfully display it.  If you return non-0 (or if this
+ * function is NULL), the control message will be displayed inline,
+ * as a received message, or else by using the above notify()
+ * callback. */
 static int display_otr_message_cb(void *opdata, const char *accountname,
 								  const char *protocol, const char *username, const char *msg)
 {
 	return display_otr_message(accountname, protocol, username, msg);
 }
 
+/* When the list of ConnContexts changes (including a change in
+ * state), this is called so the UI can be updated. */
 static void update_context_list_cb(void *opdata)
 {
 	otrg_ui_update_keylist();
 }
 
+/* Return a newly allocated string containing a human-friendly
+ * representation for the given account */
 static const char *account_display_name_cb(void *opdata, const char *accountname, const char *protocol)
 {
-	return [[accountFromAccountID(accountname) formattedUID] UTF8String];
+	return strdup([[accountFromAccountID(accountname) formattedUID] UTF8String]);
 }
 
+/* Deallocate a string returned by account_name */
 static void account_display_name_free_cb(void *opdata, const char *account_display_name)
 {
-    /* Do nothing, since we didn't actually allocate any memory in
-	 * account_display_name_cb(). */
+	if (account_display_name)
+		free((char *)account_display_name);
 }
 
+/* Return a newly allocated string containing a human-friendly name
+ * for the given protocol id */
 static const char *protocol_name_cb(void *opdata, const char *protocol)
 {
-	return [[serviceFromServiceID(protocol) shortDescription] UTF8String];
+	return strdup([[serviceFromServiceID(protocol) shortDescription] UTF8String]);
 }
 
+/* Deallocate a string allocated by protocol_name */
 static void protocol_name_free_cb(void *opdata, const char *protocol_name)
 {
-    /* Do nothing, since we didn't actually allocate any memory in
-	 * protocol_name_cb(). */
+	if (protocol_name)
+		free((char *)protocol_name);
 }
 
 
-static void confirm_fingerprint_cb(void *opdata, OtrlUserState us,
+/* A new fingerprint for the given user has been received. */
+static void new_fingerprint_cb(void *opdata, OtrlUserState us,
 								   const char *accountname, const char *protocol, const char *username,
 								   unsigned char fingerprint[20])
 {
@@ -573,11 +605,13 @@ static void confirm_fingerprint_cb(void *opdata, OtrlUserState us,
 							 afterDelay:0];
 }
 
+/* The list of known fingerprints has changed.  Write them to disk. */
 static void write_fingerprints_cb(void *opdata)
 {
 	otrg_plugin_write_fingerprints();
 }
 
+/* A ConnContext has entered a secure state. */
 static void gone_secure_cb(void *opdata, ConnContext *context)
 {
 	AIChat *chat = chatForContext(context);
@@ -586,6 +620,7 @@ static void gone_secure_cb(void *opdata, ConnContext *context)
 	otrg_ui_update_fingerprint();
 }
 
+/* A ConnContext has left a secure state. */
 static void gone_insecure_cb(void *opdata, ConnContext *context)
 {
 	AIChat *chat = chatForContext(context);
@@ -594,6 +629,8 @@ static void gone_insecure_cb(void *opdata, ConnContext *context)
 	otrg_ui_update_fingerprint();
 }
 
+/* We have completed an authentication, using the D-H keys we
+ * already knew.  is_reply indicates whether we initiated the AKE. */
 static void still_secure_cb(void *opdata, ConnContext *context, int is_reply)
 {
     if (is_reply == 0) {
@@ -602,9 +639,44 @@ static void still_secure_cb(void *opdata, ConnContext *context, int is_reply)
     }
 }
 
+/* Log a message.  The passed message will end in "\n". */
 static void log_message_cb(void *opdata, const char *message)
 {
     AILog([NSString stringWithFormat:@"otr: %s", (message ? message : "(null)")]);
+}
+
+/*!
+ * @brief Find the maximum message size supported by this protocol.
+ *
+ * This method is called whenever a message is about to be sent with
+ * fragmentation enabled.  The return value is checked against the size of
+ * the message to be sent to determine whether fragmentation is necessary.
+ *
+ * Setting max_message_size to NULL will disable the fragmentation of all
+ * sent messages; returning 0 from this callback will disable fragmentation
+ * of a particular message.  The latter is useful, for example, for
+ * protocols like XMPP (Jabber) that do not require fragmentation at all.
+ */
+int max_message_size_cb(void *opdata, ConnContext *context)
+{
+	AIChat *chat = chatForContext(context);
+	
+	/* Values from http://www.cypherpunks.ca/otr/UPGRADING-libotr-3.1.0.txt */
+	static NSDictionary *maxSizeByServiceClassDict = nil;
+	if (!maxSizeByServiceClassDict) {
+		maxSizeByServiceClassDict = [[NSDictionary alloc] initWithObjectsAndKeys:
+									 [NSNumber numberWithInt:2343], @"AIM-compatible",
+									 [NSNumber numberWithInt:1409], @"MSN",
+									 [NSNumber numberWithInt:832], @"Yahoo!",
+									 [NSNumber numberWithInt:1999], @"Gadu-Gadu",
+									 [NSNumber numberWithInt:417], @"IRC",
+									 nil];
+	}
+
+	/* This will return 0 if we don't know (unknown protocol) or don't need it (Jabber),
+	 * which will disable fragmentation.
+	 */
+	return [[maxSizeByServiceClassDict objectForKey:[[chat account] serviceClass]] intValue];
 }
 
 static OtrlMessageAppOps ui_ops = {
@@ -615,16 +687,17 @@ static OtrlMessageAppOps ui_ops = {
     notify_cb,
     display_otr_message_cb,
     update_context_list_cb,
-	account_display_name_cb,
-	account_display_name_free_cb,
     protocol_name_cb,
     protocol_name_free_cb,
-    confirm_fingerprint_cb,
+    new_fingerprint_cb,
     write_fingerprints_cb,
     gone_secure_cb,
     gone_insecure_cb,
     still_secure_cb,
-    log_message_cb
+    log_message_cb,
+	max_message_size_cb,
+	account_display_name_cb,
+	account_display_name_free_cb,
 };
 
 #pragma mark -
@@ -636,7 +709,7 @@ static OtrlMessageAppOps ui_ops = {
     const char	*accountname = [[account internalObjectID] UTF8String];
     const char	*protocol = [[[account service] serviceCodeUniqueID] UTF8String];
     const char	*username = [[[inContentMessage destination] UID] UTF8String];
-	char		*newMessage = NULL;
+	char		*fullOutgoingMessage = NULL;
 
     gcry_error_t err;
 	
@@ -644,20 +717,72 @@ static OtrlMessageAppOps ui_ops = {
 		return;
 
     err = otrl_message_sending(otrg_plugin_userstate, &ui_ops, /* opData */ NULL,
-							   accountname, protocol, username, originalMessage, /* tlvs */ NULL, &newMessage,
+							   accountname, protocol, username, originalMessage, /* tlvs */ NULL, &fullOutgoingMessage,
 							   /* add_appdata cb */NULL, /* appdata */ NULL);
 
-    if (err && newMessage == NULL) {
+    if (err && fullOutgoingMessage == NULL) {
 		//Be *sure* not to send out plaintext
 		[inContentMessage setEncodedMessage:nil];
 
-    } else if (newMessage) {
-		//This new message is what should be sent to the remote contact
-		[inContentMessage setEncodedMessage:[NSString stringWithUTF8String:newMessage]];
+    } else if (fullOutgoingMessage) {
+		/* We got a message to send. Fragment it, saving the last fragment so Adium has something to do (and therefore
+		 * knows that a message is really being sent.
+		 */
+		char *lastFragmentOfMessage = NULL;
 
-		//We're now done with newMessage
-		otrl_message_free(newMessage);
+		ConnContext		*context = contextForChat([inContentMessage chat]);
+
+		err = otrl_message_fragment_and_send(&ui_ops, /* opData */ NULL, context,
+											 fullOutgoingMessage, OTRL_FRAGMENT_SEND_ALL_BUT_LAST, &lastFragmentOfMessage);
+
+		//This new message is what should be sent to the remote contact
+		[inContentMessage setEncodedMessage:[NSString stringWithUTF8String:lastFragmentOfMessage]];
+
+		//We're now done with the messages allocated by OTR
+		otrl_message_free(fullOutgoingMessage);
+		otrl_message_free(lastFragmentOfMessage);
     }
+}
+
+/* Abort the SMP protocol.  Used when malformed or unexpected messages
+ * are received. */
+static void otrg_plugin_abort_smp(ConnContext *context)
+{
+	otrl_message_abort_smp(otrg_plugin_userstate, &ui_ops, NULL, context);
+}
+
+/* Start the Socialist Millionaires' Protocol over the current connection,
+ * using the given initial secret. */
+void otrg_plugin_start_smp(ConnContext *context,
+						   const unsigned char *secret, size_t secretlen)
+{
+    otrl_message_initiate_smp(otrg_plugin_userstate, &ui_ops, NULL,
+							  context, secret, secretlen);	
+}
+
+/* Continue the Socialist Millionaires' Protocol over the current connection,
+ * using the given initial secret (ie finish step 2). */
+void otrg_plugin_continue_smp(ConnContext *context,
+							  const unsigned char *secret, size_t secretlen)
+{
+	otrl_message_respond_smp(otrg_plugin_userstate, &ui_ops, NULL,
+							 context, secret, secretlen);
+}
+
+/* Show a dialog asking the user to respond to an SMP secret sent by a remote contact.
+ * Our user should enter the same secret entered by the remote contact. */
+static void otrg_dialogue_respond_socialist_millionaires(ConnContext *context)
+{
+    if (context == NULL || context->msgstate != OTRL_MSGSTATE_ENCRYPTED)
+		return;
+
+	/* XXX Implement me - prompt to respond to a secret, and then call
+	 * otrg_plugin_continue_smp() with the secret and the appropriate context */
+}
+
+static void otrg_dialog_update_smp(ConnContext *context, float percentage)
+{
+	/* SMP status update */
 }
 
 - (NSString *)decryptIncomingMessage:(NSString *)inString fromContact:(AIListContact *)inListContact onAccount:(AIAccount *)inAccount
@@ -702,6 +827,55 @@ static OtrlMessageAppOps ui_ops = {
 
 		otrg_ui_update_keylist();
     }
+
+	/* Keep track of our current progress in the Socialist Millionaires'
+     * Protocol. */
+	ConnContext *context = otrl_context_find(otrg_plugin_userstate, username,
+											 accountname, protocol, 0, NULL, NULL, NULL);
+    if (context) {
+		NextExpectedSMP nextMsg = context->smstate->nextExpected;
+		
+		tlv = otrl_tlv_find(tlvs, OTRL_TLV_SMP1);
+		if (tlv) {
+			if (nextMsg != OTRL_SMP_EXPECT1)
+				otrg_plugin_abort_smp(context);
+			else {
+				otrg_dialogue_respond_socialist_millionaires(context);
+			}
+		}
+		tlv = otrl_tlv_find(tlvs, OTRL_TLV_SMP2);
+		if (tlv) {
+			if (nextMsg != OTRL_SMP_EXPECT2)
+				otrg_plugin_abort_smp(context);
+			else {
+				otrg_dialog_update_smp(context, 0.6);
+				context->smstate->nextExpected = OTRL_SMP_EXPECT4;
+			}
+		}
+		tlv = otrl_tlv_find(tlvs, OTRL_TLV_SMP3);
+		if (tlv) {
+			if (nextMsg != OTRL_SMP_EXPECT3)
+				otrg_plugin_abort_smp(context);
+			else {
+				otrg_dialog_update_smp(context, 1.0);
+				context->smstate->nextExpected = OTRL_SMP_EXPECT1;
+			}
+		}
+		tlv = otrl_tlv_find(tlvs, OTRL_TLV_SMP4);
+		if (tlv) {
+			if (nextMsg != OTRL_SMP_EXPECT4)
+				otrg_plugin_abort_smp(context);
+			else {
+				otrg_dialog_update_smp(context, 1.0);
+				context->smstate->nextExpected = OTRL_SMP_EXPECT1;
+			}
+		}
+		tlv = otrl_tlv_find(tlvs, OTRL_TLV_SMP_ABORT);
+		if (tlv) {
+			otrg_dialog_update_smp(context, 0.0);
+			context->smstate->nextExpected = OTRL_SMP_EXPECT1;
+		}
+	}
 
     otrl_tlv_free(tlvs);
 	
