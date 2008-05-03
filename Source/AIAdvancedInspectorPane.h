@@ -28,6 +28,8 @@
 #import <Adium/AILocalizationTextField.h>
 #import <Adium/AIMetaContact.h>
 
+@class AIAccountMenu;
+
 @interface AIAdvancedInspectorPane : AIObject <AIContentInspectorPane> {
 	IBOutlet	NSView							*inspectorContentView;
 	
@@ -43,17 +45,20 @@
 	IBOutlet	NSTextField						*visibilityField;
 	IBOutlet	NSButton						*visibilityButton;
 	
-				AIListObject					*displayedObject;
-				NSArray							*accounts;
-				NSArray							*contacts;
-				BOOL							contactsColumnIsInAccountsTableView;
+	AIAccountMenu	*accountMenu;
+	
+	AIListObject					*displayedObject;
+	NSArray							*accounts;
+	NSArray							*contacts;
+	BOOL							contactsColumnIsInAccountsTableView;
+	
+	BOOL							rebuildingContacts;
 }
 
 -(NSString *)nibName;
 -(NSView *)inspectorContentView;
 -(void)updateForListObject:(AIListObject *)inObject;
 
--(IBAction)selectAccount:(id)sender;
 - (IBAction)selectedEncryptionPreference:(id)sender;
 - (IBAction)setVisible:(id)sender;
 
