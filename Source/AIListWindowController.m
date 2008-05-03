@@ -1153,6 +1153,8 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 												  object:to
 												userInfo:nil]; 
 	}
+	
+	[super mouseUp:event];
 }
 
 /*!
