@@ -93,6 +93,23 @@
 
 @end
 
+//Proxy types for applescript
+typedef enum
+{
+	Adium_Proxy_HTTP_AS = 'HTTP',
+	Adium_Proxy_SOCKS4_AS = 'SCK4',
+	Adium_Proxy_SOCKS5_AS = 'SCK5',
+	Adium_Proxy_Default_HTTP_AS = 'DHTP',
+	Adium_Proxy_Default_SOCKS4_AS = 'DSK4',
+	Adium_Proxy_Default_SOCKS5_AS = 'DSK5',
+	Adium_Proxy_None_AS = 'NONE'
+} AdiumProxyTypeApplescript;
+
+@interface AIAccount(AppleScriptPRIVATE)
+- (AdiumProxyType)proxyTypeFromApplescript:(AdiumProxyTypeApplescript)proxyTypeAS;
+- (AdiumProxyTypeApplescript)applescriptProxyType:(AdiumProxyType)proxyType;
+@end
+
 /*!
  * @class AIAccount
  * @brief An account
@@ -1083,6 +1100,14 @@
 		[self setScriptingStatusMessageWithAttributedString:messageString];	
 }
 
+- (void)waitUntilStatusChange:(AIStatusType)status withCommand:(NSScriptCommand *)c
+{
+	while(status != [self statusType])
+	{
+		[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:1.0f]];
+	}
+}
+
 /**
  * @brief Tells this account to be available, with an optional temporary status message.
  */
@@ -1091,6 +1116,7 @@
 	[[adium statusController] setActiveStatusState:[[adium statusController] availableStatus] forAccount:self];
 	
 	[self setScriptingStatusMessageFromScriptCommand:c];
+	[self waitUntilStatusChange:AIAvailableStatusType withCommand:c];
 }
 
 /**
@@ -1136,6 +1162,111 @@
 	[[adium statusController] setActiveStatusState:[[adium statusController] invisibleStatus] forAccount:self];
 	
 	[self setScriptingStatusMessageFromScriptCommand:c];
+}
+
+/**
+ * @brief True, if a proxy is enabled
+ */
+- (BOOL)proxyEnabled
+{
+	return [[self preferenceForKey:KEY_ACCOUNT_PROXY_ENABLED group:GROUP_ACCOUNT_STATUS] boolValue];
+}
+- (void)setProxyEnabled:(BOOL)proxyEnabled
+{
+	[self setPreference:[NSNumber numberWithBool:proxyEnabled] forKey:KEY_ACCOUNT_PROXY_ENABLED group:GROUP_ACCOUNT_STATUS];
+}
+- (AdiumProxyType)proxyType
+{
+	return [[self preferenceForKey:KEY_ACCOUNT_PROXY_TYPE group:GROUP_ACCOUNT_STATUS] intValue];
+}
+- (void)setProxyType:(AdiumProxyType)type
+{
+	[self setPreference:[NSNumber numberWithInt:type] forKey:KEY_ACCOUNT_PROXY_TYPE group:GROUP_ACCOUNT_STATUS];
+}
+- (NSString *)proxyHost
+{
+	return [self preferenceForKey:KEY_ACCOUNT_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
+}
+- (void)setProxyHost:(NSString *)host
+{
+	[self setPreference:host forKey:KEY_ACCOUNT_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
+}
+- (int)proxyPort
+{
+	return [[self preferenceForKey:KEY_ACCOUNT_PROXY_PORT group:GROUP_ACCOUNT_STATUS] intValue];
+}
+- (void)setProxyPort:(int)port
+{
+	[self setPreference:[NSNumber numberWithInt:port] forKey:KEY_ACCOUNT_PROXY_PORT group:GROUP_ACCOUNT_STATUS];
+}
+- (NSString *)proxyUsername
+{
+	return [self preferenceForKey:KEY_ACCOUNT_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
+}
+- (void)setProxyUsername:(NSString *)username
+{
+	[self setPreference:username forKey:KEY_ACCOUNT_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
+}
+- (NSString *)proxyPassword
+{
+	return [self preferenceForKey:KEY_ACCOUNT_PROXY_PASSWORD group:GROUP_ACCOUNT_STATUS];
+}
+- (void)setProxyPassword:(NSString *)proxyPassword
+{
+	[self setPreference:proxyPassword forKey:KEY_ACCOUNT_PROXY_PASSWORD group:GROUP_ACCOUNT_STATUS];
+}
+
+- (AdiumProxyTypeApplescript)scriptingProxyType
+{
+	return [self applescriptProxyType:[self proxyType]];
+}
+- (void)setScriptingProxyType:(AdiumProxyTypeApplescript)type
+{
+	[self setProxyType:[self proxyTypeFromApplescript:type]];
+}
+
+@end
+
+@implementation AIAccount(AppleScriptPRIVATE)
+- (AdiumProxyType)proxyTypeFromApplescript:(AdiumProxyTypeApplescript)proxyTypeAS
+{
+	switch(proxyTypeAS)
+	{
+		case Adium_Proxy_HTTP_AS:
+			return Adium_Proxy_HTTP;
+		case Adium_Proxy_SOCKS4_AS:
+			return Adium_Proxy_SOCKS4;
+		case Adium_Proxy_SOCKS5_AS:
+			return Adium_Proxy_SOCKS5;
+		case Adium_Proxy_Default_HTTP_AS:
+			return Adium_Proxy_Default_HTTP;
+		case Adium_Proxy_Default_SOCKS4_AS:
+			return Adium_Proxy_Default_SOCKS4;
+		case Adium_Proxy_Default_SOCKS5_AS:
+			return Adium_Proxy_Default_SOCKS5;
+		default:
+			return Adium_Proxy_None;
+	}
+}
+- (AdiumProxyTypeApplescript)applescriptProxyType:(AdiumProxyType)proxyType
+{
+	switch(proxyType)
+	{
+		case Adium_Proxy_HTTP:
+			return Adium_Proxy_HTTP_AS;
+		case Adium_Proxy_SOCKS4:
+			return Adium_Proxy_SOCKS4_AS;
+		case Adium_Proxy_SOCKS5:
+			return Adium_Proxy_SOCKS5_AS;
+		case Adium_Proxy_Default_HTTP:
+			return Adium_Proxy_Default_HTTP_AS;
+		case Adium_Proxy_Default_SOCKS4:
+			return Adium_Proxy_Default_SOCKS4_AS;
+		case Adium_Proxy_Default_SOCKS5:
+			return Adium_Proxy_Default_SOCKS5_AS;
+		default:
+			return Adium_Proxy_None_AS;
+	}
 }
 
 @end
