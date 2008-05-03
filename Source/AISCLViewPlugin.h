@@ -50,6 +50,14 @@
 	NSMenuItem								*menuItem_consolidate;
 	
 	NSDictionary							*contextMenuAttach;
+	
+	NSMenuItem								*attachOrDetachMenuItem;
+	NSMenu									*attachOrDetachSubmenu;
+	
+	
+	
+	
+	
 	NSMenuItem								*contextMenuDetach;
 	NSMenu									*contextSubmenuContent;
 	NSMenuItem								*contextSubmenu;
