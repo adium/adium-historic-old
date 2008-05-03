@@ -53,14 +53,6 @@
 	
 	NSMenuItem								*attachOrDetachMenuItem;
 	NSMenu									*attachOrDetachSubmenu;
-	
-	
-	
-	
-	
-	NSMenuItem								*contextMenuDetach;
-	NSMenu									*contextSubmenuContent;
-	NSMenuItem								*contextSubmenu;
 
 	unsigned								detachedCycle;
 }
