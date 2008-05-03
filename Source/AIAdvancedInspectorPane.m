@@ -69,6 +69,7 @@
 
 - (void) dealloc
 {
+	[accountMenu release]; accountMenu = nil;
 	[accounts release]; accounts = nil;
 	[contacts release]; contacts = nil;
     [displayedObject release]; displayedObject = nil;
