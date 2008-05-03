@@ -1100,14 +1100,6 @@ typedef enum
 		[self setScriptingStatusMessageWithAttributedString:messageString];	
 }
 
-- (void)waitUntilStatusChange:(AIStatusType)status withCommand:(NSScriptCommand *)c
-{
-	while(status != [self statusType])
-	{
-		[[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow:1.0f]];
-	}
-}
-
 /**
  * @brief Tells this account to be available, with an optional temporary status message.
  */
@@ -1116,7 +1108,6 @@ typedef enum
 	[[adium statusController] setActiveStatusState:[[adium statusController] availableStatus] forAccount:self];
 	
 	[self setScriptingStatusMessageFromScriptCommand:c];
-	[self waitUntilStatusChange:AIAvailableStatusType withCommand:c];
 }
 
 /**
