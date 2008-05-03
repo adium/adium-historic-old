@@ -184,8 +184,15 @@
 		}
 		
 		//Configure our style-specific controls to represent the current style
-		NSFont	*defaultFont = [NSFont cachedFontWithName:[prefDict objectForKey:[plugin styleSpecificKey:@"FontFamily" forStyle:style]]
-													 size:[[prefDict objectForKey:[plugin styleSpecificKey:@"FontSize" forStyle:style]] intValue]];
+		NSString	*fontFamily = [prefDict objectForKey:[plugin styleSpecificKey:@"FontFamily" forStyle:style]];
+		if (!fontFamily) fontFamily = [[plugin messageStyleBundleWithIdentifier:style] objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_FAMILY];
+		if (!fontFamily) fontFamily = [[NSFont systemFontOfSize:0] familyName];
+		
+		NSNumber	*fontSize = [prefDict objectForKey:[plugin styleSpecificKey:@"FontSize" forStyle:style]];
+		if (!fontSize) fontSize = [[plugin messageStyleBundleWithIdentifier:style] objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_SIZE];
+		if (!fontSize) fontSize = [NSNumber numberWithInt:[[NSFont systemFontOfSize:0] pointSize]];
+
+		NSFont	*defaultFont = [NSFont cachedFontWithName:fontFamily size:[fontSize intValue]];
 		[fontPreviewField_currentFont setFont:defaultFont];
 
 		//Style-specific background prefs
