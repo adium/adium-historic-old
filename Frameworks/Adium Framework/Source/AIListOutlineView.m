@@ -73,21 +73,42 @@
 	
 	[self setDrawsGradientSelection:YES];
 	[self sizeLastColumnToFit];	
+
+	groupsHaveBackground = NO;
 	
+	[[[AIObject sharedAdiumInstance] preferenceController] registerPreferenceObserver:self
+																			 forGroup:PREF_GROUP_LIST_THEME];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(setUnlockGroup:)
 												 name:@"AIListOutlineViewUnlockGroup" 
 											   object:nil];
+
+
 }
 
 - (void)dealloc
 {	
+	[[[AIObject sharedAdiumInstance] preferenceController] unregisterPreferenceObserver:self];
+	
 	[backgroundImage release];
 	[backgroundColor release];
 	[self unregisterDraggedTypes];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
 	[super dealloc];
+}
+
+- (void)preferencesChangedForGroup:(NSString *)group 
+							   key:(NSString *)key
+							object:(AIListObject *)object 
+					preferenceDict:(NSDictionary *)prefDict 
+						 firstTime:(BOOL)firstTime
+{
+	if (object != nil)
+		return;
+	
+	groupsHaveBackground = [[prefDict objectForKey:KEY_LIST_THEME_GROUP_GRADIENT] boolValue];
 }
 
 //Prevent the display of a focus ring around the contact list in 10.3 and greater
@@ -413,9 +434,7 @@
 // Don't consider list groups when highlighting
 - (BOOL)shouldResetAlternating:(int)row
 {
-	return ([[self itemAtRow:row] isKindOfClass:[AIListGroup class]] && 
-			[[[[AIObject sharedAdiumInstance] preferenceController] preferenceForKey:KEY_LIST_THEME_GROUP_GRADIENT
-																			  group:PREF_GROUP_LIST_THEME] boolValue]);
+	return ([[self itemAtRow:row] isKindOfClass:[AIListGroup class]] && groupsHaveBackground);
 }
 
 - (void)viewWillMoveToSuperview:(NSView *)newSuperview
