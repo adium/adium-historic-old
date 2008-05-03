@@ -15,6 +15,7 @@
  */
 #import "AIContactController.h"
 #import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListCell.h>
 #import <Adium/AIListOutlineView.h>
@@ -407,6 +408,14 @@
 	}
 	
 	return _rowColorWithOpacity;
+}
+
+// Don't consider list groups when highlighting
+- (BOOL)shouldResetAlternating:(int)row
+{
+	return ([[self itemAtRow:row] isKindOfClass:[AIListGroup class]] && 
+			[[[[AIObject sharedAdiumInstance] preferenceController] preferenceForKey:KEY_LIST_THEME_GROUP_GRADIENT
+																			  group:PREF_GROUP_LIST_THEME] boolValue]);
 }
 
 - (void)viewWillMoveToSuperview:(NSView *)newSuperview

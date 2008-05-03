@@ -36,6 +36,7 @@
  * @param inFlag YES if the highlight should only be drawn when main.
  */
 - (void)setDrawHighlightOnlyWhenMain:(BOOL)inFlag;
+
 /*!
  * @brief Return if the highlight is only drawn when the outlineView is the main view.
  *
@@ -59,6 +60,15 @@
  * @return NSCell object corresponding to the given table column.
  */
 - (id)cellForTableColumn:(NSTableColumn *)tableColumn item:(id)item;
+
+/*!
+ * @brief Should the given row reset the alternating
+ *
+ * @param row The row to be considered
+ * @return YES if the row should reset alternating
+ */
+- (BOOL)shouldResetAlternating:(int)row;
+
 
 @end
 
