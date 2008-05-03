@@ -29,7 +29,7 @@
 #import <Adium/AIMessageEntryTextView.h>
 
 #define CONTROL_SPACING			8
-#define WINDOW_HEIGHT_PADDING	60
+#define WINDOW_HEIGHT_PADDING	30
 
 #define	SEND_ON_ENTER					@"Send On Enter"
 
