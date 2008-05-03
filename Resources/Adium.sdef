@@ -128,6 +128,15 @@
 			<enumerator name="away" code="Sawy" description="Account is away."/>
 			<enumerator name="invisible" code="Sinv" description="Account is invisible."/>
 		</enumeration>
+		<enumeration name="proxy types" code="Epxt">
+			<enumerator name="HTTP proxy" code="HTTP" description="An HTTP proxy."/>
+			<enumerator name="SOCKS4 proxy" code="SCK4" description="A SOCKS 4 proxy."/>
+			<enumerator name="SOCKS5 proxy" code="SCK5" description="A SOCKS 5 proxy."/>
+			<enumerator name="default HTTP proxy" code="DHTP" description="The system-wide HTTP proxy."/>
+			<enumerator name="default SOCKS4 proxy" code="DSK4" description="The system-wide SOCKS4 proxy."/>
+			<enumerator name="default SOCKS5 proxy" code="DSK5" description="The system-wide SOCKS5 proxy."/>
+			<enumerator name="no proxy" code="NONE" description="No proxy configured."/>
+		</enumeration>
 		<class name="account" code="Cact" description="An account in Adium">
 			<cocoa class="AIAccount" />
 			<property name="id" code="ID  " type="integer" access="r" description="The unique ID associated with this account">
@@ -153,6 +162,17 @@
 			<property name="image" code="Pimg" type="TIFF picture" access="rw" description="The image associated with this account.">
 				<cocoa key="userIconData" />
 			</property>
+			
+			<!-- Technically, by the scripting interface guidelines, a proxy should be its own class. However, I don't see that as useful outside of AS, so I'm just going to implement this here. -applmak-->
+			<property name="proxy enabled" code="Ppxe" type="boolean" access="rw" description="Whether or not a proxy is enabled for this account." />
+			<property name="proxy type" code="Ppxt" type="proxy types" access="rw" description="The type of this proxy.">
+				<cocoa key="scriptingProxyType" />
+			</property>
+			<property name="proxy host" code="Ppxh" type="text" access="rw" description="The proxy host." />
+			<property name="proxy port" code="Ppxp" type="integer" access="rw" description="The port that should be used to connect to the proxy." />
+			<property name="proxy username" code="Ppxu" type="text" access="rw" description="The username that should be used to connect to the proxy." />
+			<property name="proxy password" code="Ppxx" type="text" access="rw" description="The password that should be used to connect to the proxy." />
+			
 			<element type="contact" />
 			
 			<responds-to name="go online">
