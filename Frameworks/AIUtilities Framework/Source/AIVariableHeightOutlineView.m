@@ -131,26 +131,38 @@
 }
 
 #pragma mark Drawing
+// Consider all rows by default.
+- (BOOL)shouldResetAlternating:(int)row
+{
+	return NO;
+}
+
 - (void)drawAlternatingRowsInRect:(NSRect)rect
 {
 	/* Draw the alternating rows.  If we draw alternating rows, the cell in the first column
 	 * can optionally suppress drawing.
 	 */
 	if ([self drawsAlternatingRows]) {
-		int numberOfRows = [self numberOfRows];
-		int rectNumber = 0;
+		BOOL alternateColor = YES;
+		int numberOfRows = [self numberOfRows], rectNumber = 0;
 		NSTableColumn *tableColumn = [[self tableColumns] objectAtIndex:0];
-
 		NSRect *gridRects = (NSRect *)malloc(sizeof(NSRect) * numberOfRows);
-		for (int row = 0; row < numberOfRows; row += 2) {
-			if (row < numberOfRows) {
-				id 	cell = [self cellForTableColumn:tableColumn item:[self itemAtRow:row]];
-				if (![cell respondsToSelector:@selector(drawGridBehindCell)] || [cell drawGridBehindCell]) {					
-					NSRect	thisRect = [self rectOfRow:row];
+		
+		for (int row = 0; row < numberOfRows; row++) {
+			id 	cell = [self cellForTableColumn:tableColumn item:[self itemAtRow:row]];
+			
+			if (![self shouldResetAlternating:row]) {
+				alternateColor = !alternateColor;
+			} else {
+				alternateColor = YES;
+			}
+			
+			if (alternateColor &&
+				(![cell respondsToSelector:@selector(drawGridBehindCell)] || [cell drawGridBehindCell])) {
+				NSRect	thisRect = [self rectOfRow:row];
 
-					if (NSIntersectsRect(thisRect, rect)) { 
-						gridRects[rectNumber++] = thisRect;
-					}
+				if (NSIntersectsRect(thisRect, rect)) { 
+					gridRects[rectNumber++] = thisRect;
 				}
 			}
 		}
@@ -159,6 +171,7 @@
 			[[self alternatingRowColor] set];
 			NSRectFillList(gridRects, rectNumber);
 		}
+		
 		free(gridRects);
 	}
 }
