@@ -71,6 +71,7 @@
 - (void)debugLog:(NSString *)message;
 - (void)processQueuedContent;
 - (NSString *)webviewSource;
+- (void) setIsGroupChat:(BOOL) flag;
 @end
 
 static NSArray *draggedTypes = nil;
@@ -516,6 +517,21 @@ static NSArray *draggedTypes = nil;
 	}
 }
 
+/*!
+ * @brief Sets the class 'groupchat' on the #Chat element, to allow styles to modify their appearance based on whether we're in a groupchat
+ *
+ * If/when we support transforming chats to/from groupchats we'll need to observe that and call this as appropriate
+ */
+- (void) setIsGroupChat:(BOOL) flag
+{
+	DOMHTMLElement *chat = [[[webView mainFrame] DOMDocument] getElementById:@"Chat"];
+	NSMutableString *chatClassName = [[[chat className] mutableCopy] autorelease];
+	if(flag == NO)
+		[chatClassName replaceOccurrencesOfString:@" groupchat" withString:@""];
+	else
+		[chatClassName appendString:@" groupchat"];
+	[chat setClassName:chatClassName];
+}
 
 //Content --------------------------------------------------------------------------------------------------------------
 #pragma mark Content
@@ -672,6 +688,7 @@ static NSArray *draggedTypes = nil;
 
 - (void)webViewIsReady{
 	webViewIsReady = YES;
+	[self setIsGroupChat:[chat isGroupChat]];
 	[self processQueuedContent];
 }
 
