@@ -515,11 +515,7 @@
 	
 	// Let super handle it if it's not a group, or the command key is down (dealing with selection)
 	// Allow clickthroughs for triangle disclosure only.
-	if (![item isKindOfClass:[AIListGroup class]] ||
-		[NSEvent cmdKey] ||
-		(![[self window] isKeyWindow] && (viewPoint.x > [self frameOfCellAtColumn:0 row:row].size.height))) {
-			//XXX - This is kind of a hack.  We need to check < WidthOfDisclosureTriangle, and are using the fact that
-			//      the disclosure width is about the same as the height of the row to fudge it. -ai) {
+	if (![item isKindOfClass:[AIListGroup class]] || [NSEvent cmdKey]) {
 		[super mouseDown:theEvent];
 		return;
 	}
