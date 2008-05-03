@@ -290,20 +290,14 @@
 		defaultController = nil;
 	} else {
 		//Return the groups in this detached contact list to the main contact list
-		NSEnumerator	*enumerator = [[[windowController contactList] containedObjects] objectEnumerator];
-		AIListGroup		*group;
-		AIListObject<AIContainingObject> *contactList;
 		
-		contactList = [[adium contactController] contactList];
-		
-		while ((group = [enumerator nextObject])){
-			[group moveGroupTo:contactList];
-		}
+		[[[windowController contactList] containedObjects] makeObjectsPerformSelector:@selector(moveGroupTo:)
+																		   withObject:[[adium contactController] contactList]];
 
 		[[adium contactController] removeDetachedContactList:(AIListGroup *)[windowController contactList]];
 		
 		[[adium notificationCenter] postNotificationName:@"Contact_ListChanged"
-												  object:contactList 
+												  object:[[adium contactController] contactList] 
 												userInfo:nil];
 			
 		[contactLists removeObject:windowController];
@@ -393,12 +387,12 @@
 		}
 		
 		if ([selectedObject containingObject] == [[adium contactController] contactList]) {
-			[menu addItemWithTitle:AILocalizedString(@"Detach from Main Window", "Detach from group from the current (which is the main) window")
+			[menu addItemWithTitle:AILocalizedString(@"Detach from Main Window", "Detach the group from the current (which is the main) window")
 							target:self
 							action:@selector(detachFromWindow:)
 					 keyEquivalent:@""];
 		} else {
-			[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Detach from %@", "Detach from group from the current window"),
+			[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Detach from %@", "Detach the group from the current window named by %@"),
 									[self humanReadableNameForGroup:(AIListGroup *)[selectedObject containingObject]]]
 							target:self
 							action:@selector(detachFromWindow:)
@@ -414,8 +408,6 @@
  */
 - (void)attachToWindow:(id)sender
 {
-	NSLog(@"Asked to attach %@ to %@", [[adium menuController] currentContextMenuObject], [sender representedObject]);
-	
 	// Attach the group to its new window.
 	[self moveListGroup:(AIListGroup *)[[adium menuController] currentContextMenuObject]
 		  toContactList:[sender representedObject]];
@@ -428,8 +420,6 @@
 {
 	AIListGroup		*destinationGroup = [[adium contactController] createDetachedContactList];
 
-	NSLog(@"Asked to detach %@, adding to %@", [[adium menuController] currentContextMenuObject], destinationGroup);
-	
 	// Detaching is the same as moving to a new group.
 	[self moveListGroup:(AIListGroup *)[[adium menuController] currentContextMenuObject]
 		  toContactList:destinationGroup];
