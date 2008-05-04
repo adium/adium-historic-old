@@ -17,6 +17,7 @@
 #import "ESFileTransferController.h"
 
 #import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIMenuControllerProtocol.h>
@@ -52,6 +53,10 @@
 static ESFileTransferPreferences *preferences;
 
 @interface ESFileTransferController (PRIVATE)
+- (NSOpenPanel *)createOpenPanelForListContact:(AIListContact *)listContact;
+- (void)requestForSendingFileToListContact:(AIListContact *)listContact forWindow:(NSWindow *)theWindow;
+- (void)filePanelDidEnd:(NSOpenPanel *)openPanel returnCode:(int)returnCode contextInfo:(void *)contextInfo;
+
 - (void)configureFileTransferProgressWindow;
 - (void)showProgressWindow:(id)sender;
 - (void)showProgressWindowIfNotOpen:(id)sender;
@@ -257,8 +262,7 @@ static ESFileTransferPreferences *preferences;
 	}	
 }
 
-//Prompt the user for the file to send via an Open File dialogue
-- (void)requestForSendingFileToListContact:(AIListContact *)listContact
+- (NSOpenPanel *)sendFilePanelForListContact:(AIListContact *)listContact
 {
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 	[openPanel setTitle:[NSString stringWithFormat:AILocalizedString(@"Send File to %@",nil),[listContact displayName]]];
@@ -267,12 +271,42 @@ static ESFileTransferPreferences *preferences;
 	[openPanel setAllowsMultipleSelection:YES];
 	[openPanel setPrompt:AILocalizedStringFromTable(@"Send", @"Buttons", nil)];
 
-	if ([openPanel runModalForDirectory:nil file:nil types:nil] == NSOKButton) {
+    return openPanel;
+}
+
+//Prompt the user for the file to send via an Open File dialogue
+- (void)requestForSendingFileToListContact:(AIListContact *)listContact
+{
+	[self requestForSendingFileToListContact:listContact forWindow:nil];
+}
+
+- (void)requestForSendingFileToListContact:(AIListContact *)listContact forWindow:(NSWindow *)theWindow
+{
+	NSOpenPanel *openPanel = [self sendFilePanelForListContact:listContact];
+	if (theWindow) {
+		[openPanel beginSheetForDirectory:nil
+									 file:nil
+									types:nil
+						   modalForWindow:theWindow
+							modalDelegate:self
+						   didEndSelector:@selector(filePanelDidEnd:returnCode:contextInfo:)
+						  contextInfo:listContact];
+	} else {
+		NSInteger returnCode = [openPanel runModalForDirectory:nil file:nil types:nil];
+		[self filePanelDidEnd:openPanel
+				   returnCode:returnCode
+				  contextInfo:listContact];		
+	}
+}
+
+- (void)filePanelDidEnd:(NSOpenPanel *)openPanel returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	if (returnCode == NSOKButton) {
 		NSEnumerator *enumerator = [[openPanel filenames] objectEnumerator];
 		NSString	 *filePath;
 
 		while ((filePath = [enumerator nextObject])) {
-			[self sendFile:filePath toListContact:listContact];
+			[self sendFile:filePath toListContact:(AIListContact *)contextInfo];
 		}
 	}
 }
@@ -401,7 +435,13 @@ static ESFileTransferPreferences *preferences;
 	}
 	
 	if (listContact) {
-		[self requestForSendingFileToListContact:listContact];
+		if (![sender isKindOfClass:[NSToolbarItem class]] || !listContact) {
+			[self requestForSendingFileToListContact:listContact];
+		} else {
+			AIChat *theChat = [[adium chatController] existingChatWithContact:listContact];
+			NSWindow *theWindow = [[adium interfaceController] windowForChat:theChat];
+			[self requestForSendingFileToListContact:listContact forWindow:theWindow];
+		}
 	}
 }
 //Prompt for a new contact with the current tab's name
