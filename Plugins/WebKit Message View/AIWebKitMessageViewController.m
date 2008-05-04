@@ -524,13 +524,16 @@ static NSArray *draggedTypes = nil;
  */
 - (void) setIsGroupChat:(BOOL) flag
 {
-	DOMHTMLElement *chat = [[[webView mainFrame] DOMDocument] getElementById:@"Chat"];
-	NSMutableString *chatClassName = [[[chat className] mutableCopy] autorelease];
-	if(flag == NO)
-		[chatClassName replaceOccurrencesOfString:@" groupchat" withString:@""];
+	DOMHTMLElement *chatElement = (DOMHTMLElement *)[[[webView mainFrame] DOMDocument] getElementById:@"Chat"];
+	NSMutableString *chatClassName = [[[chatElement className] mutableCopy] autorelease];
+	if (flag == NO)
+		[chatClassName replaceOccurrencesOfString:@" groupchat"
+									   withString:@""
+										  options:NSLiteralSearch
+											range:NSMakeRange(0, [chatClassName length])];
 	else
 		[chatClassName appendString:@" groupchat"];
-	[chat setClassName:chatClassName];
+	[chatElement setClassName:chatClassName];
 }
 
 //Content --------------------------------------------------------------------------------------------------------------
