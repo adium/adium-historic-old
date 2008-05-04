@@ -66,16 +66,7 @@
 						forKey:KEY_ZEPHYR_LAUNCH_ZHM
 						 group:GROUP_ACCOUNT_STATUS];
 
-	} else {
-		[super changedPreference:sender];
-	}
-}
-
-- (void)controlTextDidChange:(NSNotification *)notification
-{
-	NSTextField *sender = [notification object];
-
-	if (sender == textField_exposure) {
+	} else if (sender == textField_exposure) {
 		NSString *exposure = [sender stringValue];
 		[account setPreference:([exposure length] ? exposure : nil)
 						forKey:KEY_ZEPHYR_EXPOSURE
@@ -89,8 +80,8 @@
 						 group:GROUP_ACCOUNT_STATUS];
 
 	} else {
-		[super controlTextDidChange:notification];
-	}		
+		[super changedPreference:sender];
+	}
 }
 
 // We are the data source for the table we use to show server names
