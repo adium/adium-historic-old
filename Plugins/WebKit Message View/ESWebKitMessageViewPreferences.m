@@ -95,7 +95,7 @@
 	[popUp_styles setMenu:[self _stylesMenu]];
 	
 	//Other controls
-	[fontPreviewField_currentFont setShowFontFace:NO];
+	[fontPreviewField_currentFont setShowFontFace:YES];
 	[fontPreviewField_currentFont setShowPointSize:YES];
 
 	//We want to be able to obtain bigger images than the image picker will feed us
