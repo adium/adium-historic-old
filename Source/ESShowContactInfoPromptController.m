@@ -10,7 +10,8 @@
 #import <Adium/AIListContact.h>
 
 #define SHOW_CONTACT_INFO_PROMPT_NIB	@"ShowContactInfoPrompt"
-#define GET_INFO						AILocalizedStringFromTable(@"Get Info", @"Buttons", "'Get Info' on a button; when pressed, the information for a specified contact will be displayed")
+#define GET_INFO_BUTTON_TITLE			AILocalizedStringFromTable(@"Get Info", @"Buttons", "'Get Info' on a button; when pressed, the information for a specified contact will be displayed")
+#define GET_INFO_WINDOW_TITLE			AILocalizedString(@"Get Info", nil)
 
 static ESShowContactInfoPromptController *sharedShowInfoPromptInstance = nil;
 
@@ -58,8 +59,8 @@ static ESShowContactInfoPromptController *sharedShowInfoPromptInstance = nil;
 	[label_using setLocalizedString:AILocalizedString(@"Using:","Label in front of an account drop-down selector to determine what account to use")];
 	[label_contact setLocalizedString:AILocalizedString(@"Contact:",nil)];
 
-	[button_okay setLocalizedString:GET_INFO];
-	[[self window] setTitle:GET_INFO];
+	[button_okay setLocalizedString:GET_INFO_BUTTON_TITLE];
+	[[self window] setTitle:GET_INFO_WINDOW_TITLE];
 }
 
 /*!
