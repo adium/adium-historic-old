@@ -78,7 +78,7 @@
 	
 	[attachMenuItem setSubmenu:attachSubmenu];
 	
-	[[adium menuController] addContextualMenuItem:attachMenuItem toLocation:Context_Group_Manage];
+	[[adium menuController] addContextualMenuItem:attachMenuItem toLocation:Context_Group_AttachDetach];
 	
 	//Context submenu
 	detachMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Detach From Window", "Menu item for detaching groups from their window")
@@ -86,7 +86,7 @@
 												action:@selector(detachFromWindow:)
 										 keyEquivalent:@""];
 	
-	[[adium menuController] addContextualMenuItem:detachMenuItem toLocation:Context_Group_Manage];
+	[[adium menuController] addContextualMenuItem:detachMenuItem toLocation:Context_Group_AttachDetach];
 
 	//Control detached groups menu
 	[[adium menuController] addMenuItem:[NSMenuItem separatorItem] toLocation:LOC_Window_Commands];
