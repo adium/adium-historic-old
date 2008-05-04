@@ -71,7 +71,7 @@
 	[attachSubmenu setDelegate:self];
 	
 	//Context submenu
-	attachMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Attach to Window", "Menu item for attaching groups to detachable windows")
+	attachMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Attach To Window", "Menu item for attaching groups to detachable windows")
 												target:self
 												action:@selector(dummyAction:)
 										 keyEquivalent:@""];
@@ -379,8 +379,7 @@
 	
 	// If this group isn't part of the main contact list, provide a menu item to add it back.
 	if ([selectedObject containingObject] != [[adium contactController] contactList]) {
-		[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Main Window", "Option in the 'Attach to Window' for the main contact list window"),
-								[self humanReadableNameForGroup:[[adium contactController] contactList]]]
+		[menu addItemWithTitle:AILocalizedString(@"Main Window", "Option in the 'Attach to Window' for the main contact list window")
 						target:self
 						action:@selector(attachToWindow:)
 				 keyEquivalent:@""
