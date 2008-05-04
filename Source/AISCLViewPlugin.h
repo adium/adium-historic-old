@@ -51,8 +51,9 @@
 	
 	NSDictionary							*contextMenuAttach;
 	
-	NSMenuItem								*attachOrDetachMenuItem;
-	NSMenu									*attachOrDetachSubmenu;
+	NSMenuItem								*detachMenuItem;
+	NSMenuItem								*attachMenuItem;
+	NSMenu									*attachSubmenu;
 
 	unsigned								detachedCycle;
 }

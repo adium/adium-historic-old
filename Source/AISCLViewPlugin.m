@@ -66,19 +66,27 @@
 	
 	//Install our preference view
 	advancedPreferences = [[ESContactListAdvancedPreferences preferencePane] retain];
-
-	attachOrDetachSubmenu = [[NSMenu alloc] init];
-	[attachOrDetachSubmenu setDelegate:self];
+	
+	attachSubmenu = [[NSMenu alloc] init];
+	[attachSubmenu setDelegate:self];
 	
 	//Context submenu
-	attachOrDetachMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Attach or Detach", "Menu item for attaching and detatching groups")
-														target:self
-														action:nil
-												 keyEquivalent:@""];
+	attachMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Attach to Window", "Menu item for attaching groups to detachable windows")
+												target:self
+												action:@selector(dummyAction:)
+										 keyEquivalent:@""];
 	
-	[attachOrDetachMenuItem setSubmenu:attachOrDetachSubmenu];
+	[attachMenuItem setSubmenu:attachSubmenu];
 	
-	[[adium menuController] addContextualMenuItem:attachOrDetachMenuItem toLocation:Context_Group_Manage];
+	[[adium menuController] addContextualMenuItem:attachMenuItem toLocation:Context_Group_Manage];
+	
+	//Context submenu
+	detachMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Detach From Window", "Menu item for detaching groups from their window")
+												target:self
+												action:@selector(detachFromWindow:)
+										 keyEquivalent:@""];
+	
+	[[adium menuController] addContextualMenuItem:detachMenuItem toLocation:Context_Group_Manage];
 
 	//Control detached groups menu
 	[[adium menuController] addMenuItem:[NSMenuItem separatorItem] toLocation:LOC_Window_Commands];
@@ -134,10 +142,11 @@
 
 - (void)dealloc
 {	
-	[attachOrDetachMenuItem release];
+	[attachMenuItem release];
+	[detachMenuItem release];
 	
-	[attachOrDetachSubmenu setDelegate:nil];
-	[attachOrDetachSubmenu release];
+	[attachSubmenu setDelegate:nil];
+	[attachSubmenu release];
 	
 	[contactLists release];
 	
@@ -348,12 +357,19 @@
 #pragma mark Context menu
 
 /*!
+ * @brief Does nothing
+ * 
+ * In order for the "Attach" menu item to get validated, it needs an action.
+ */
+- (void)dummyAction:(id)sender { }
+
+/*!
  * @brief Updates the Attach/Detach submenu
  */
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
 	// Our only delegate should be attachOrDetachSubmenu
-	if (menu != attachOrDetachSubmenu)
+	if (menu != attachSubmenu)
 		return;
 	
 	[menu removeAllItems];
@@ -363,7 +379,7 @@
 	
 	// If this group isn't part of the main contact list, provide a menu item to add it back.
 	if ([selectedObject containingObject] != [[adium contactController] contactList]) {
-		[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Attach to Main Window", "Attach this group to the main window"),
+		[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Main Window", "Option in the 'Attach to Window' for the main contact list window"),
 								[self humanReadableNameForGroup:[[adium contactController] contactList]]]
 						target:self
 						action:@selector(attachToWindow:)
@@ -380,34 +396,12 @@
 			continue;
 		}
 		
-		[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Attach to %@", "Attach to %@, where %@ is a human-readable string with the name of the groups in the window"),
-								[self humanReadableNameForGroup:(AIListGroup *)[window contactList]]]
+		[menu addItemWithTitle:[self humanReadableNameForGroup:(AIListGroup *)[window contactList]]
 						target:self
 						action:@selector(attachToWindow:)
 				 keyEquivalent:@""
 			 representedObject:[window contactList]];
 	}
-	
-	// If we're not on our own separate window, provide an option to detach (and put a separator before it)
-	if ([[selectedObject containingObject] containedObjectsCount] > 1) {
-		if ([menu numberOfItems] > 0) {
-			// Only add a separator if we've already had items present.
-			[menu addItem:[NSMenuItem separatorItem]];
-		}
-		
-		if ([selectedObject containingObject] == [[adium contactController] contactList]) {
-			[menu addItemWithTitle:AILocalizedString(@"Detach from Main Window", "Detach the group from the current (which is the main) window")
-							target:self
-							action:@selector(detachFromWindow:)
-					 keyEquivalent:@""];
-		} else {
-			[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Detach from %@", "Detach the group from the current window named by %@"),
-									[self humanReadableNameForGroup:(AIListGroup *)[selectedObject containingObject]]]
-							target:self
-							action:@selector(detachFromWindow:)
-					 keyEquivalent:@""];			
-		}
-	}	
 }
 
 /*!
@@ -505,7 +499,12 @@
 {
 	// Only Next Detached, Previous Deatached and Consolidate need validation.
 	if (menuItem == menuItem_nextDetached || menuItem == menuItem_previousDetached || menuItem == menuItem_consolidate) {
-		return ([self detachedContactListCount] != 0);
+		return ([self detachedContactListCount] > 0);
+	} else if (menuItem == detachMenuItem) {
+		return ([[(AIListGroup *)[[adium menuController] currentContextMenuObject] containingObject] containedObjectsCount] > 1);
+	} else if (menuItem == attachMenuItem) {
+		return ([self detachedContactListCount] > 0 ||
+				([(AIListGroup *)[[adium menuController] currentContextMenuObject] containingObject] != [[adium contactController] contactList]));
 	}
 	
 	return YES;
