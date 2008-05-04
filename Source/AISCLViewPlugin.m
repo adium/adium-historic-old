@@ -498,13 +498,13 @@
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	// Only Next Detached, Previous Deatached and Consolidate need validation.
-	if (menuItem == menuItem_nextDetached || menuItem == menuItem_previousDetached || menuItem == menuItem_consolidate) {
+	if ((menuItem == menuItem_nextDetached) ||
+		(menuItem == menuItem_previousDetached) ||
+		(menuItem == menuItem_consolidate) ||
+		(menuItem == attachMenuItem)) {
 		return ([self detachedContactListCount] > 0);
 	} else if (menuItem == detachMenuItem) {
 		return ([[(AIListGroup *)[[adium menuController] currentContextMenuObject] containingObject] containedObjectsCount] > 1);
-	} else if (menuItem == attachMenuItem) {
-		return ([self detachedContactListCount] > 0 ||
-				([(AIListGroup *)[[adium menuController] currentContextMenuObject] containingObject] != [[adium contactController] contactList]));
 	}
 	
 	return YES;
