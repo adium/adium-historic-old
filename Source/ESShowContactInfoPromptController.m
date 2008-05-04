@@ -10,7 +10,7 @@
 #import <Adium/AIListContact.h>
 
 #define SHOW_CONTACT_INFO_PROMPT_NIB	@"ShowContactInfoPrompt"
-#define GET_INFO						AILocalizedStringFromTable(@"Get Info", @"Buttons", "'Get Info' on a button; when pressed, the information for a specified contact will be displayed")];
+#define GET_INFO						AILocalizedStringFromTable(@"Get Info", @"Buttons", "'Get Info' on a button; when pressed, the information for a specified contact will be displayed")
 
 static ESShowContactInfoPromptController *sharedShowInfoPromptInstance = nil;
 
