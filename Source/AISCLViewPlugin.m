@@ -128,18 +128,25 @@
 
 - (void)uninstallPlugin
 {
+	[[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+}
+
+- (void)dealloc
+{	
 	[attachOrDetachMenuItem release];
 	
 	[attachOrDetachSubmenu setDelegate:nil];
 	[attachOrDetachSubmenu release];
+	
+	[contactLists release];
 	
 	[menuItem_allowDetach release];
 	[menuItem_previousDetached release];
 	[menuItem_nextDetached release];
 	[menuItem_consolidate release];
 	
-	[[adium notificationCenter] removeObserver:self];
-	[[adium preferenceController] unregisterPreferenceObserver:self];
+	[super dealloc];
 }
 
 //Contact List Windows -------------------------------------------------------------------------------------------------
@@ -309,16 +316,18 @@
 #pragma mark Navigate Through Detached Windows
 
 /*!
- * @retrun Returns the number of detached contact lists
+ * @brief The number of detached lists present
  */
-- (unsigned)detachedContactListCount {
+- (unsigned)detachedContactListCount
+{
 	return [contactLists count];
 }
 
 /*!
  * @brief Attempts to bring the next detached contact list to the front 
  */
-- (void)nextDetachedContactList {
+- (void)nextDetachedContactList
+{
 	if (detachedCycle>=[contactLists count] || detachedCycle<0)
 		detachedCycle = 0;
 	if (detachedCycle>=0 && detachedCycle<[contactLists count])
