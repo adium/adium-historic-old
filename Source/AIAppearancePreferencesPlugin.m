@@ -33,7 +33,7 @@
 #define HIDE_USER_ICONS_TITLE		AILocalizedString(@"Hide User Icons", nil)
 
 #define SHOW_STATUS_MESSAGES_TITLE	AILocalizedString(@"Show Status Messages", nil)
-#define HIDE_STATUS_MESSAGES_TITLE	AILocalizedString(@"Show Status Messages", nil)
+#define HIDE_STATUS_MESSAGES_TITLE	AILocalizedString(@"Hide Status Messages", nil)
 
 @implementation AIAppearancePreferencesPlugin
 
