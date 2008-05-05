@@ -602,9 +602,13 @@
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {
+	if (NSPointInRect([sender draggingLocation], [[[self window] contentView] frame])) {
+		return;
+	}
+	
 	unlockingGroup = YES;
 	dragContent = [sender draggingPasteboard];
-	
+
 	// Tell other windows that something may be dropped in them
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"AIListOutlineViewUnlockGroup"
 														object:[NSNumber numberWithBool:unlockingGroup]];
@@ -637,7 +641,7 @@
 		while ((uID = [idEnumerator nextObject])) {
 			currentGroup = (AIListGroup  *)[contactController existingListObjectWithUniqueID:uID];
 			
-			if ([currentGroup isKindOfClass:[AIListGroup class]]) {
+			if ([currentGroup isKindOfClass:[AIListGroup class]] ) {
 				// If root of contact list was not yet created, create it now
 				if(!newContactList){
 					newContactList = [contactController createDetachedContactList];
