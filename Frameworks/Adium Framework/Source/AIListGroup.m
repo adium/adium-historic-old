@@ -108,7 +108,8 @@
 		if ([containedObject visible]){
 			visibleCount++;
 		} else if ([containedObject isKindOfClass:[AIListGroup class]] && 
-				   ([[adium contactController] isGroupDetached:self])) {
+				   [[adium contactController] isGroupDetached:self] &&
+				   [self containedObjectsCount] == 1) {
 			visibleCount++;
 		}
 	}

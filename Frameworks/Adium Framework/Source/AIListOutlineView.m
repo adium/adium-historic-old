@@ -641,7 +641,7 @@
 		while ((uID = [idEnumerator nextObject])) {
 			currentGroup = (AIListGroup  *)[contactController existingListObjectWithUniqueID:uID];
 			
-			if ([currentGroup isKindOfClass:[AIListGroup class]] ) {
+			if ([currentGroup isKindOfClass:[AIListGroup class]]) {
 				// If root of contact list was not yet created, create it now
 				if(!newContactList){
 					newContactList = [contactController createDetachedContactList];

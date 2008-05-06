@@ -29,6 +29,7 @@
 #import <Adium/AIToolbarControllerProtocol.h>
 #import <Adium/AIContactAlertsControllerProtocol.h>
 
+#import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
@@ -2024,7 +2025,8 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 /*!
  * @returns Empty contact list
  */
-- (AIListGroup *)createDetachedContactList{
+- (AIListGroup *)createDetachedContactList
+{
 	static int count = 0;
 	AIListGroup * list = [[AIListGroup alloc] initWithUID:[NSString stringWithFormat:@"Detached%d",count++]];
 	[detachedContactLists addObject:list];
@@ -2035,7 +2037,8 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 /*!
  * @brief Removes detached contact list
  */
-- (void)removeDetachedContactList:(AIListGroup *)detachedList{
+- (void)removeDetachedContactList:(AIListGroup *)detachedList
+{
 	[detachedContactLists removeObject:detachedList];
 }
 
@@ -2043,25 +2046,20 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
  * @breif Checks if a particular group is in a detached contact list 
  */
 - (BOOL)isGroupDetached:(AIListObject *)group{
-	NSEnumerator *i = [detachedContactLists objectEnumerator];
-	AIListGroup *currentGroup;
-	
-	while((currentGroup = [i nextObject])){
-		if(currentGroup == group)
-			return YES;
-	}
-	return NO;
+	return [detachedContactLists containsObjectIdenticalTo:group];
 }
 
 /*!
  * @returns Number of contact lists (ie. both main contact list and all detached contact lists)
  */
-- (unsigned)contactListCount {
-	return (contactList!=nil) + [detachedContactLists count];
+- (unsigned)contactListCount
+{
+	return (contactList != nil) + [detachedContactLists count];
 }
 
 #pragma mark Contact Hiding
-- (AIContactHidingController *)contactHidingController {
+- (AIContactHidingController *)contactHidingController
+{
 	return contactHidingController;
 }
 

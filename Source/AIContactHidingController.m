@@ -154,10 +154,8 @@
 					 withReason:AIOfflineContactHidingReason];
 			
 		} else if ([inObject isKindOfClass:[AIListGroup class]]) {
-			BOOL	newObject = [inObject integerStatusObjectForKey:@"New Object"];
-			
 			[inObject setVisible:((useContactListGroups) &&
-								  ([(AIListGroup *)inObject visibleCount] > 0 || newObject) &&
+								  ([(AIListGroup *)inObject visibleCount] > 0 || [inObject integerStatusObjectForKey:@"New Object"]) &&
 								  (useOfflineGroup || ((AIListGroup *)inObject != [[adium contactController] offlineGroup])))];
 		}
 	}
