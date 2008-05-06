@@ -35,16 +35,17 @@ domains		({ccTLD}|{sTLD}|{uTLD}|arpa|local)
 %{
 /*The Unicode standard, version 4.1, table 3-6, says that the highest byte that will occur in a valid UTF-8 sequence is 0xF4.*/
 %}
+userAndPass	[^:@]+(:[^:@]+)?
 urlSpecifier	([_[:alnum:]\x80-\xf4-]+\.)+{domains}(:[0-9]+)?(\/.*)?
 ipURL		([0-9]{1,3}\.){3}[0-9][0-9]?[0-9]?(:[0-9]+)?(\/.*)?
-singleDomain [[:alnum:]\x80-\xf4-]+
+singleDomain	[[:alnum:]\x80-\xf4-]+
 mailSpecifier	[^:\/]+\@.+\.{domains}
 jabberSpec      xmpp:.*\@.+\.{domains}(\/.*)?
 aolIMSpec       aim:goim\?screenname=[^\ \t\n&]+(&message=.+)?
 aolChatSpec	aim:gochat\?roomname=[^\ \t\n&]+
 yahooIMSpec	ymsgr:sendim\?.+
 rdarSpec	rdar:\/\/(problems?\/)?[0-9]+(&[0-9]+)*
-spotifySpec      spotify:(track|album|artist|search|playlist|user|radio):[^<>]+
+spotifySpec	spotify:(track|album|artist|search|playlist|user|radio):[^<>]+
 
 
 %option noyywrap 8bit caseless never-interactive prefix="SH"
@@ -52,9 +53,9 @@ spotifySpec      spotify:(track|album|artist|search|playlist|user|radio):[^<>]+
 %x CANONICAL
 %%
 
-<CANONICAL>{urlSpecifier}   {SHStringOffset += SHleng; SHleng += SHValidShift; BEGIN INITIAL; return SH_URL_VALID;}
-<CANONICAL>{ipURL}          {SHStringOffset += SHleng; SHleng += SHValidShift; BEGIN INITIAL; return SH_URL_VALID;}
-<CANONICAL>{singleDomain}(\/.*)? {SHStringOffset += SHleng; SHleng += SHValidShift; BEGIN INITIAL; return SH_URL_VALID;}
+<CANONICAL>({userAndPass}@)?{urlSpecifier}   {SHStringOffset += SHleng; SHleng += SHValidShift; BEGIN INITIAL; return SH_URL_VALID;}
+<CANONICAL>({userAndPass}@)?{ipURL}          {SHStringOffset += SHleng; SHleng += SHValidShift; BEGIN INITIAL; return SH_URL_VALID;}
+<CANONICAL>({userAndPass}@)?{singleDomain}(\/.*)? {SHStringOffset += SHleng; SHleng += SHValidShift; BEGIN INITIAL; return SH_URL_VALID;}
 <CANONICAL>.*		    {SHStringOffset += SHleng; BEGIN INITIAL; return SH_URL_INVALID;}
 
 file:\/\/\/.*		    {SHStringOffset += SHleng; return SH_FILE_VALID;}
