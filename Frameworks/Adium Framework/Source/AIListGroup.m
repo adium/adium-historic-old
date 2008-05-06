@@ -105,11 +105,7 @@
 	AIListObject *containedObject = nil;
 	
 	while ((containedObject = [containedObjectEnumerator nextObject])){
-		if ([containedObject visible]){
-			visibleCount++;
-		} else if ([containedObject isKindOfClass:[AIListGroup class]] && 
-				   [[adium contactController] isGroupDetached:self] &&
-				   [self containedObjectsCount] == 1) {
+		if ([containedObject visible]) {
 			visibleCount++;
 		}
 	}
