@@ -1,6 +1,6 @@
-This file contains a list of URIs, URLs, and other patterns that the SHHyperlinkScanner should be able to correctly identify and link.
+# This file contains a list of URIs, URLs, and other patterns that the SHHyperlinkScanner should be able to correctly identify and link.
 
-Basic URLs:
+# Basic URLs:
 example.com
 www.example.com
 ftp.example.com
@@ -8,13 +8,13 @@ example.com/
 www.example.com/
 ftp.example.com/
 
-URLs with paths:
+# URLs with paths:
 example.com/foo
 www.example.com/foo
 example.com/foo/bar.php
 www.example.com/foo/bar.php
 
-Basic URIs:
+# Basic URIs:
 http://example.com/
 http://www.example.com/
 http://ftp.example.com/
@@ -28,7 +28,7 @@ ftp://example.com
 ftp://www.example.com
 ftp://ftp.example.com
 
-URI's with paths:
+# URI's with paths:
 http://example.com/foo
 http://example.com/foo/bar.php
 http://www.example.com/foo/
@@ -42,7 +42,7 @@ ftp://www.example.com/foo/bar.php
 ftp://ftp.example.com/foo
 ftp://ftp.example.com/foo/bar.php
 
-URIs with user/pass:
+# URIs with user/pass:
 http://user@example.com
 http://user:pass@example.com
 http://user@example.com/
@@ -92,7 +92,7 @@ ftp://user:pass@ftp.example.com/foo
 ftp://user@ftp.example.com/foo/bar.php
 ftp://user:pass@ftp.example.com/foo/bar.php
 
-IP Addresses:
+# IP Addresses:
 1.1.1.1
 1.1.1.12
 1.1.1.123
@@ -580,6 +580,26 @@ ftp://123.123.123.1/
 ftp://123.123.123.12/
 ftp://123.123.123.123/
 
-Email addresses:
+# IPv6 URIs
+# Examples adapted from http://www.ietf.org/rfc/rfc2732.txt
+http://[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]
+http://[1080:0:0:0:8:800:200C:417A]
+http://[3ffe:2a00:100:7031::1]
+http://[1080::8:800:200C:417A
+http://[::192.9.5.5]
+http://[::FFFF:129.144.52.38]
+http://[2010:836B:4179::836B:4179]
+http://[::1]
+
+http://[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]/
+http://[1080:0:0:0:8:800:200C:417A]/
+http://[3ffe:2a00:100:7031::1]/
+http://[1080::8:800:200C:417A/
+http://[::192.9.5.5]/
+http://[::FFFF:129.144.52.38]/
+http://[2010:836B:4179::836B:4179]/
+http://[::1]/
+
+# Email addresses:
 foo@example.com
 foo.bar@example.com
