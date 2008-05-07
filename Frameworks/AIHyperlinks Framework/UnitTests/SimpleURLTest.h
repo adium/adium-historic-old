@@ -2,20 +2,20 @@
 //  SimpleURLTest.h
 //  AIHyperlinks.framework
 //
-//  Created by Stephen Holt on 5/6/08.
-//  Copyright 2008 __MyCompanyName__. All rights reserved.
-//
 
 #import <SenTestingKit/SenTestingKit.h>
+#import "AIHyperlinks.h"
 
+#define testHyperlink(x) STAssertTrue([scanner isStringValidURL: x ], nil)
 
 @interface SimpleURLTest : SenTestCase {
+	SHHyperlinkScanner	*scanner;
 }
 - (void)testURLOnly;
 - (void)testURI;
 - (void)testURIWithPaths;
 - (void)testURIWithUserAndPass;
 - (void)testIPAddressURI;
-//- (void)testIPv6URI;
+- (void)testIPv6URI;
 - (void)testEmailAddress;
 @end
