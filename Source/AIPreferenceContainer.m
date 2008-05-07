@@ -31,6 +31,14 @@ static NSMutableDictionary	*accountPrefs = nil;
 static int					usersOfAccountPrefs = 0;
 static NSTimer				*timer_savingOfAccountCache = nil;
 
+static NSConditionLock		*quittingLock;
+
+typedef enum {
+	AIWantsToQuit,
+	AISaving,
+	AIReadyToQuit
+} AIQuittingLockState;
+	
 /*!
  * @brief Preference Container
  *
@@ -58,15 +66,41 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 
 + (void)preferenceControllerWillClose
 {
+	//Wait until any threaded save is complete
+	[quittingLock lockWhenCondition:AIReadyToQuit];
+
+	//If a save of the object prefs is pending, perform it immediately since we are quitting
 	if (timer_savingOfObjectCache) {
-		[objectPrefs writeToPath:[[[AIObject sharedAdiumInstance] loginController] userDirectory]
-						withName:@"ByObjectPrefs"];
+		@synchronized (objectPrefs) {
+			[objectPrefs writeToPath:[[[AIObject sharedAdiumInstance] loginController] userDirectory]
+							withName:@"ByObjectPrefs"];
+		}
+		/* There's no guarantee that 'will close' is called in the same run loop as the actual program termination.
+		 * We've done our final save, though; don't let the timer fire again.
+		 */
+		@synchronized(timer_savingOfObjectCache) {
+			[timer_savingOfObjectCache invalidate];
+			[timer_savingOfObjectCache release]; timer_savingOfObjectCache = nil;
+		}		
 	}
-	
+
+	//If a save of the account prefs is pending, perform it immediately since we are quitting
 	if (timer_savingOfAccountCache) {
-		[accountPrefs writeToPath:[[[AIObject sharedAdiumInstance] loginController] userDirectory]
-						withName:@"AccountPrefs"];
+		@synchronized (accountPrefs) {
+			[accountPrefs writeToPath:[[[AIObject sharedAdiumInstance] loginController] userDirectory]
+							 withName:@"AccountPrefs"];
+		}
+		/* There's no guarantee that 'will close' is called in the same run loop as the actual program termination.
+		 * We've done our final save, though; don't let the timer fire again.
+		 */		
+		@synchronized(timer_savingOfAccountCache) {
+			[timer_savingOfAccountCache invalidate];
+			[timer_savingOfAccountCache release]; timer_savingOfObjectCache = nil;
+		}		
 	}
+
+	//Relinguish the lock
+	[quittingLock unlockWithCondition:AIReadyToQuit];
 }
 
 - (id)initForGroup:(NSString *)inGroup object:(AIListObject *)inObject
@@ -74,7 +108,7 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 	if ((self = [super init])) {
 		group = [inGroup retain];
 		object = [inObject retain];
-		
+		if (!quittingLock) quittingLock = [[NSConditionLock alloc] initWithCondition:AIReadyToQuit];
 		if (object) {
 			if ([object isKindOfClass:[AIAccount class]]) {
 				myGlobalPrefs = &accountPrefs;
@@ -360,15 +394,25 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 - (void)threadedSavePrefs:(NSDictionary *)info
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
+	//Obtain the lock when no save operations are being performed
+	[quittingLock lockWhenCondition:AIReadyToQuit];
+
+	//Set the lock's condition to saving so that other threads (including the main one) know what we're up to
+	[quittingLock unlockWithCondition:AISaving];
+	
 	NSDictionary *sourcePrefsToSave = [info objectForKey:@"PrefsToSave"];
 	NSDictionary *dictToSave;
+	//Don't allow modification of the dictionary while we're copying it...
 	@synchronized (sourcePrefsToSave) {
 		dictToSave = [[NSDictionary alloc] initWithDictionary:sourcePrefsToSave copyItems:YES];
 	}
+	//...and now it's safe to write it out, which may take a little while.
 	[dictToSave writeToPath:[info objectForKey:@"DestinationDirectory"]
 				   withName:[info objectForKey:@"PrefsName"]];
 	[dictToSave release];
 
+	//The timer is not a repeating one, so we can just release it
 	NSTimer *inTimer = [info objectForKey:@"NSTimer"];
 	if (inTimer == timer_savingOfObjectCache) {
 		@synchronized(timer_savingOfObjectCache) {
@@ -380,8 +424,12 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 		}
 	}
 
+	//We're no longer using global prefs; if nobody is, the main thread will release its in-memory cache later
 	(*myUsersOfGlobalPrefs)--;
 	
+	//Unlock and note that we're ready to quit
+	[quittingLock unlockWithCondition:AIReadyToQuit];
+
 	[pool release];
 }
 
