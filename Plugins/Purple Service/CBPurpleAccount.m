@@ -948,31 +948,29 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 	return YES;
 }
 
-//Return YES if we're available for sending the specified content or will be soon (are currently connecting).
-//If inListObject is nil, we can return YES if we will 'most likely' be able to send the content.
+/*!
+ * @brief Available for sending content
+ *
+ * Returns YES if the contact is available for receiving content of the specified type.  If contact is nil, instead
+ * check for the availiability to send any content of the given type.
+ *
+ * We override the default implementation to check -[self allowFileTransferWithListObject:] for file transfers
+ *
+ * @param inType A string content type
+ * @param inContact The destination contact, or nil to check global availability
+ */
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
-    BOOL	weAreOnline = [self online];
-	
-    if ([inType isEqualToString:CONTENT_MESSAGE_TYPE] ||
-		[inType isEqualToString:CONTENT_NOTIFICATION_TYPE]) {
-        if ((weAreOnline && (inContact == nil || [inContact online])) ||
-			([self integerStatusObjectForKey:@"Connecting"])) {  //XXX - Why do we lie if we're connecting? -ai
-			return YES;
-        }
-    } else if (([inType isEqualToString:CONTENT_FILE_TRANSFER_TYPE]) && ([self conformsToProtocol:@protocol(AIAccount_Files)])) {
-		if (weAreOnline) {
-			if (inContact) {
-				if ([inContact online]) {
-					return [self allowFileTransferWithListObject:inContact];
-				}
-			} else {
-				return YES;
-			}
-       }	
+    if ([self online] && [inType isEqualToString:CONTENT_FILE_TRANSFER_TYPE]) {
+		if (inContact) {
+			return ([self conformsToProtocol:@protocol(AIAccount_Files)] &&
+					(([inContact online] || [inContact isStranger]) && [self allowFileTransferWithListObject:inContact]));
+		} else {
+			return [self conformsToProtocol:@protocol(AIAccount_Files)];
+		}
 	}
-	
-    return NO;
+
+    return [super availableForSendingContentType:inType toContact:inContact];
 }
 
 - (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
