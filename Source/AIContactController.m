@@ -1658,17 +1658,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 							 firstAvailableContact :
 							 (firstNotOfflineContact ? firstNotOfflineContact : [(AIMetaContact *)inContact preferredContact]));
 			
-			//find the best account for talking to this contact,
-			//and return an AIListContact on that account
-			account = [[adium accountController] preferredAccountForSendingContentType:inType
-																			 toContact:returnContact];
-			if (account) {
-				if ([inContact account] != account) {
-					returnContact = [self contactWithService:[returnContact service]
-													 account:account
-														 UID:[returnContact UID]];
-				}
-			}
+			returnContact = [self preferredContactForContentType:inType forListContact:returnContact];
 		}
 		
 	} else {
