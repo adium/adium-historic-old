@@ -52,4 +52,9 @@
 	return NO;
 }
 
+- (BOOL)allowAccountUnregistrationIfSupportedByLibpurple
+{
+	return NO;
+}
+
 @end
