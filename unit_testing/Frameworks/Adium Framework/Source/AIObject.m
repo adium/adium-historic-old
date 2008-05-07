@@ -73,12 +73,15 @@ static NSObject<AIAdium> *_sharedAdium = nil;
 /*!
  * @brief Set the shared AIAdium instance
  *
- * Called once, after AIAdium loads
+ * Called once, after AIAdium loads.  Also used by unit tests.
+ * 
+ * @param shared The new shared AIAdium instance
  */
 + (void)_setSharedAdiumInstance:(NSObject<AIAdium> *)shared
 {
-    NSParameterAssert(_sharedAdium == nil);
-    _sharedAdium = [shared retain];
+	NSParameterAssert(shared != nil);
+    //NSParameterAssert(_sharedAdium == nil);
+	_sharedAdium = shared;
 #if INSTANCE_COUNT_STYLE != COUNT_NONE
 	instanceCountDict = [[NSMutableDictionary alloc] init];
 	classList = CLASS_LIST;
