@@ -11,5 +11,11 @@
 
 @interface SimpleURLTest : SenTestCase {
 }
--(void) testSimpleDomain;
+- (void)testURLOnly;
+- (void)testURI;
+- (void)testURIWithPaths;
+- (void)testURIWithUserAndPass;
+- (void)testIPAddressURI;
+//- (void)testIPv6URI;
+- (void)testEmailAddress;
 @end
