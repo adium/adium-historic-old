@@ -499,14 +499,14 @@ typedef enum
  */
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
-	if ([self online] && (!inContact || [inContact online])) {
-		if ([inType isEqualToString:CONTENT_MESSAGE_TYPE] ||
-			[inType isEqualToString:CONTENT_NOTIFICATION_TYPE]) {
-			return YES;
-
-		} else if ([inType isEqualToString:CONTENT_FILE_TRANSFER_TYPE]) {
-			return [self conformsToProtocol:@protocol(AIAccount_Files)];
-		}
+	if ([inType isEqualToString:CONTENT_MESSAGE_TYPE] ||
+		[inType isEqualToString:CONTENT_NOTIFICATION_TYPE]) {
+		return ([self online] &&
+				(!inContact || [inContact online] || [inContact isStranger] || [self canSendOfflineMessageToContact:inContact]));
+				
+	} else if ([inType isEqualToString:CONTENT_FILE_TRANSFER_TYPE]) {
+		return ([self online] && [self conformsToProtocol:@protocol(AIAccount_Files)] &&
+				(!inContact || [inContact online] || [inContact isStranger]));
 	}
 
 	return NO;
