@@ -79,4 +79,9 @@
 	purple_account_set_string(account, "connect_server", "talk.google.com");
 }
 
+- (BOOL)allowAccountUnregistrationIfSupportedByLibpurple
+{
+	return NO;
+}
+
 @end

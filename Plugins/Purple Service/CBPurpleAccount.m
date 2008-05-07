@@ -613,7 +613,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 - (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict response:(AIAuthorizationResponse)authorizationResponse
 {
 	if (account) {
-		id		 callback;
+		NSValue	*callback = nil;
 
 		switch (authorizationResponse) {
 			case AIAuthorizationAllowed:
@@ -2645,6 +2645,11 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_ALIASES];
 }
 
+- (BOOL)allowAccountUnregistrationIfSupportedByLibpurple
+{
+	return YES;
+}
+
 /*!
  * @brief The account will be deleted, we should ask the user for confirmation. If the prpl supports it, we can also remove
  * the account from the server (if the user wants us to do that)
@@ -2659,7 +2664,8 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 
 	if ((prpl = purple_find_prpl([self protocolPlugin])) &&
 		(prpl_info = PURPLE_PLUGIN_PROTOCOL_INFO(prpl)) &&
-		(prpl_info->unregister_user)) {
+		(prpl_info->unregister_user) &&
+		[self allowAccountUnregistrationIfSupportedByLibpurple]) {
 		return [NSAlert alertWithMessageText:AILocalizedString(@"Delete Account",nil)
 							   defaultButton:AILocalizedString(@"Delete",nil)
 							 alternateButton:AILocalizedString(@"Cancel",nil)
