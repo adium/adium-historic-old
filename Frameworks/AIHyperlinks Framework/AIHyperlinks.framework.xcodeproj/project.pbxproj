@@ -14,9 +14,26 @@
 		3496A82707CE69270055BBAB /* SHHyperlinkScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 3496A82007CE69270055BBAB /* SHHyperlinkScanner.m */; };
 		3496A82807CE69270055BBAB /* SHHyperlinkScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = 3496A82107CE69270055BBAB /* SHHyperlinkScanner.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3496A82907CE69270055BBAB /* SHMarkedHyperlink.m in Sources */ = {isa = PBXBuildFile; fileRef = 3496A82207CE69270055BBAB /* SHMarkedHyperlink.m */; };
+		7E78D9C50DD12D4200B9388F /* SimpleURLTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E78D9C40DD12D4200B9388F /* SimpleURLTest.m */; };
+		7E78D9C60DD12DF200B9388F /* SHHyperlinkScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 3496A82007CE69270055BBAB /* SHHyperlinkScanner.m */; };
+		7E78D9C70DD12DF300B9388F /* SHLinkLexer.l in Sources */ = {isa = PBXBuildFile; fileRef = 3496A81E07CE69270055BBAB /* SHLinkLexer.l */; };
+		7E78D9C80DD12DF400B9388F /* SHMarkedHyperlink.m in Sources */ = {isa = PBXBuildFile; fileRef = 3496A82207CE69270055BBAB /* SHMarkedHyperlink.m */; };
+		7E78D9DC0DD1314300B9388F /* Test-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7EA3B0450DD1153F002A18D1 /* Test-Info.plist */; };
+		7EA3B04C0DD1155D002A18D1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
+		7EA3B04E0DD11627002A18D1 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EA3B04D0DD11627002A18D1 /* SenTestingKit.framework */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7E78D9F40DD132E800B9388F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = AIHyperlinks.framework;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -31,11 +48,26 @@
 		3496A82007CE69270055BBAB /* SHHyperlinkScanner.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SHHyperlinkScanner.m; path = Source/SHHyperlinkScanner.m; sourceTree = "<group>"; };
 		3496A82107CE69270055BBAB /* SHHyperlinkScanner.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SHHyperlinkScanner.h; path = Source/SHHyperlinkScanner.h; sourceTree = "<group>"; };
 		3496A82207CE69270055BBAB /* SHMarkedHyperlink.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SHMarkedHyperlink.m; path = Source/SHMarkedHyperlink.m; sourceTree = "<group>"; };
+		7E78D9C30DD12D4200B9388F /* SimpleURLTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleURLTest.h; path = UnitTests/SimpleURLTest.h; sourceTree = "<group>"; };
+		7E78D9C40DD12D4200B9388F /* SimpleURLTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimpleURLTest.m; path = UnitTests/SimpleURLTest.m; sourceTree = "<group>"; };
+		7E78DA140DD133F300B9388F /* AIHyperlinks.framework_Test_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIHyperlinks.framework_Test_Prefix.pch; path = UnitTests/AIHyperlinks.framework_Test_Prefix.pch; sourceTree = "<group>"; };
+		7EA3B0440DD1153F002A18D1 /* Test.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Test.octest; sourceTree = BUILT_PRODUCTS_DIR; };
+		7EA3B0450DD1153F002A18D1 /* Test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Test-Info.plist"; path = "Resources/Test-Info.plist"; sourceTree = "<group>"; };
+		7EA3B04D0DD11627002A18D1 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = /System/Library/Frameworks/SenTestingKit.framework; sourceTree = "<absolute>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* AIHyperlinks.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AIHyperlinks.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		7EA3B0410DD1153F002A18D1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7EA3B04C0DD1155D002A18D1 /* Cocoa.framework in Frameworks */,
+				7EA3B04E0DD11627002A18D1 /* SenTestingKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8DC2EF560486A6940098B216 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -51,6 +83,7 @@
 			isa = PBXGroup;
 			children = (
 				8DC2EF5B0486A6940098B216 /* AIHyperlinks.framework */,
+				7EA3B0440DD1153F002A18D1 /* Test.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -61,6 +94,7 @@
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				089C1665FE841158C02AAC07 /* Resources */,
+				7EA3B03C0DD1150E002A18D1 /* UnitTests */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
@@ -79,6 +113,7 @@
 		089C1665FE841158C02AAC07 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				7EA3B0450DD1153F002A18D1 /* Test-Info.plist */,
 				8DC2EF5A0486A6940098B216 /* Info.plist */,
 				089C1666FE841158C02AAC07 /* InfoPlist.strings */,
 			);
@@ -102,6 +137,7 @@
 		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7EA3B04D0DD11627002A18D1 /* SenTestingKit.framework */,
 				1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */,
 			);
 			name = "Linked Frameworks";
@@ -120,8 +156,18 @@
 			isa = PBXGroup;
 			children = (
 				32DBCF5E0370ADEE00C91783 /* AIHyperlinks.framework_Prefix.pch */,
+				7E78DA140DD133F300B9388F /* AIHyperlinks.framework_Test_Prefix.pch */,
 			);
 			name = "Other Sources";
+			sourceTree = "<group>";
+		};
+		7EA3B03C0DD1150E002A18D1 /* UnitTests */ = {
+			isa = PBXGroup;
+			children = (
+				7E78D9C30DD12D4200B9388F /* SimpleURLTest.h */,
+				7E78D9C40DD12D4200B9388F /* SimpleURLTest.m */,
+			);
+			name = UnitTests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -141,6 +187,25 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		7EA3B0430DD1153F002A18D1 /* UnitTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7EA3B04B0DD11540002A18D1 /* Build configuration list for PBXNativeTarget "UnitTests" */;
+			buildPhases = (
+				7EA3B03F0DD1153F002A18D1 /* Resources */,
+				7EA3B0400DD1153F002A18D1 /* Sources */,
+				7EA3B0410DD1153F002A18D1 /* Frameworks */,
+				7EA3B0420DD1153F002A18D1 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7E78D9F50DD132E800B9388F /* PBXTargetDependency */,
+			);
+			name = UnitTests;
+			productName = Test;
+			productReference = 7EA3B0440DD1153F002A18D1 /* Test.octest */;
+			productType = "com.apple.product-type.bundle";
+		};
 		8DC2EF4F0486A6940098B216 /* AIHyperlinks.framework */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DA8A8083085549EE00F24BB3 /* Build configuration list for PBXNativeTarget "AIHyperlinks.framework" */;
@@ -174,11 +239,20 @@
 			projectRoot = "";
 			targets = (
 				8DC2EF4F0486A6940098B216 /* AIHyperlinks.framework */,
+				7EA3B0430DD1153F002A18D1 /* UnitTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		7EA3B03F0DD1153F002A18D1 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E78D9DC0DD1314300B9388F /* Test-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8DC2EF520486A6940098B216 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -189,7 +263,34 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		7EA3B0420DD1153F002A18D1 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Run the unit tests in this test bundle.\n\"${SYSTEM_DEVELOPER_DIR}/Tools/RunUnitTests\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
+		7EA3B0400DD1153F002A18D1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7E78D9C50DD12D4200B9388F /* SimpleURLTest.m in Sources */,
+				7E78D9C60DD12DF200B9388F /* SHHyperlinkScanner.m in Sources */,
+				7E78D9C70DD12DF300B9388F /* SHLinkLexer.l in Sources */,
+				7E78D9C80DD12DF400B9388F /* SHMarkedHyperlink.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8DC2EF540486A6940098B216 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -201,6 +302,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7E78D9F50DD132E800B9388F /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8DC2EF4F0486A6940098B216 /* AIHyperlinks.framework */;
+			targetProxy = 7E78D9F40DD132E800B9388F /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		089C1666FE841158C02AAC07 /* InfoPlist.strings */ = {
@@ -345,6 +454,142 @@
 			};
 			name = "Deployment-Debug";
 		};
+		7EA3B0460DD11540002A18D1 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = UnitTests/AIHyperlinks.framework_Test_Prefix.pch;
+				INFOPLIST_FILE = "Resources/Test-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Cocoa,
+					"-framework",
+					SenTestingKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Test;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = Development;
+		};
+		7EA3B0470DD11540002A18D1 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Cocoa.framework/Headers/Cocoa.h";
+				INFOPLIST_FILE = "Test-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Cocoa,
+					"-framework",
+					SenTestingKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Test;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = "Development-libgaim_oscar";
+		};
+		7EA3B0480DD11540002A18D1 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Cocoa.framework/Headers/Cocoa.h";
+				INFOPLIST_FILE = "Test-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Cocoa,
+					"-framework",
+					SenTestingKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Test;
+				WRAPPER_EXTENSION = octest;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		7EA3B0490DD11540002A18D1 /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Cocoa.framework/Headers/Cocoa.h";
+				INFOPLIST_FILE = "Test-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Cocoa,
+					"-framework",
+					SenTestingKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Test;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = "Deployment-Debug";
+		};
+		7EA3B04A0DD11540002A18D1 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1)";
+				ARCHS_STANDARD_32_BIT_PRE_XCODE_3_1 = "ppc i386";
+				FRAMEWORK_SEARCH_PATHS = "$(DEVELOPER_LIBRARY_DIR)/Frameworks";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/Cocoa.framework/Headers/Cocoa.h";
+				INFOPLIST_FILE = "Test-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Cocoa,
+					"-framework",
+					SenTestingKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = Test;
+				WRAPPER_EXTENSION = octest;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
 		DA8A8084085549EE00F24BB3 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -435,6 +680,18 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		7EA3B04B0DD11540002A18D1 /* Build configuration list for PBXNativeTarget "UnitTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7EA3B0460DD11540002A18D1 /* Development */,
+				7EA3B0470DD11540002A18D1 /* Development-libgaim_oscar */,
+				7EA3B0480DD11540002A18D1 /* Deployment */,
+				7EA3B0490DD11540002A18D1 /* Deployment-Debug */,
+				7EA3B04A0DD11540002A18D1 /* Deployment-Debug_PPC-Only */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
 		DA8A8083085549EE00F24BB3 /* Build configuration list for PBXNativeTarget "AIHyperlinks.framework" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
