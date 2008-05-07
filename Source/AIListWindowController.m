@@ -585,6 +585,8 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 
 	NSRect listFrame = [window frame];
 	
+//XXX TODO: This should happen on the next run loop so that the other screen params changed callback is guaranteed to have been called
+//XXX TODO: We should use the known edges rather than scaling to find a new location. Also, do not unhide if hidden.
 	oldFrame.origin.x *= ((newScreenFrame.size.width - listFrame.size.width) / ((currentScreenFrame.size.width - listFrame.size.width) + 0.00001));
 	oldFrame.origin.y *= ((newScreenFrame.size.height - listFrame.size.height) / ((currentScreenFrame.size.height - listFrame.size.height) + 0.00001));
 	
