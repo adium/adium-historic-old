@@ -1540,6 +1540,13 @@
 			remoteGlobalIDString = 34BD9DAF05314751000AB133;
 			remoteInfo = Adium.Framework;
 		};
+		7E78DA9B0DD135DE00B9388F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 7EA3B0440DD1153F002A18D1 /* Test.octest */;
+			remoteInfo = Test;
+		};
 		B72537BD058C45CF004BA969 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -5296,6 +5303,7 @@
 			isa = PBXGroup;
 			children = (
 				3496A8EA07CE6CA30055BBAB /* AIHyperlinks.framework */,
+				7E78DA9C0DD135DE00B9388F /* Test.octest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -8339,6 +8347,13 @@
 			fileType = wrapper.framework;
 			path = AIUtilities.framework;
 			remoteRef = 34D834DC07CBE7BB006466F2 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		7E78DA9C0DD135DE00B9388F /* Test.octest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = Test.octest;
+			remoteRef = 7E78DA9B0DD135DE00B9388F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
