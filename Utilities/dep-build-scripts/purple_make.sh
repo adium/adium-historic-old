@@ -13,6 +13,8 @@ INTLTOOL=intltool-0.36.2
 PROTOCOLS="bonjour gg irc jabber msn myspace novell oscar qq sametime simple yahoo zephyr"
 PATCHDIR="$PWD"
 
+MSN_PECAN_DIR="$PWD/msn-pecan-0.0.12"
+
 if [ "x$PIDGIN_SOURCE" == "x" ] ; then
 	echo 'Error: you need to set PIDGIN_SOURCE to be the location of' \
 	'your pidgin source tree.'
@@ -42,8 +44,6 @@ pushd $PIDGIN_SOURCE
 ###
 # Patches bringing in forward changes from libpurple:
 #
-# libpurple_jabber_use_builtin_digestmd5.diff was in im.pidgin.pidgin but not the 2.3 branch; diff from 16e6cd4ffd8a8308380dc016f0afa782a7750374 to f6430c7013d08f95c60248eeb22c752a0107499b. It has, however, been disapproved, because Openfire 3.4.x fixes the problem. -evands 12/07
-#
 ###
 # Patches for our own hackery
 #
@@ -64,7 +64,6 @@ pushd $PIDGIN_SOURCE
 for patch in "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
              "$PATCHDIR/libpurple_disable_last_seen_tracking.diff" \
              "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" \
-             "$PATCHDIR/libpurple_jabber_use_builtin_digestmd5.diff" \
              "$PATCHDIR/libpurple_jabber_parser_error_handler.diff" \
              "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
              "$PATCHDIR/libpurple_xmlnode_parser_error_handler.diff" \
@@ -101,11 +100,12 @@ for ARCH in ppc i386 ; do
     fi
 
     export LDFLAGS="$BASE_LDFLAGS -L$TARGET_DIR/lib -arch $ARCH"
+    export PKG_CONFIG="$TARGET_DIR_BASE-$ARCH/bin/pkg-config"
+    export MSGFMT="`which msgfmt`"
+
     mkdir libpurple-$ARCH || true
     pushd libpurple-$ARCH
         export ARCH
-        export PKG_CONFIG="$TARGET_DIR_BASE-$ARCH/bin/pkg-config"
-        export MSGFMT="`which msgfmt`"
     	# this part is really ew. We actually re-run autogen.sh per-arch.
     	# we pass configure --help so that it bails out and doesn't fubar the source
     	# tree, because otherwise we'd have to un-configure it. Stupid autotools.
@@ -133,7 +133,7 @@ for ARCH in ppc i386 ; do
                 --with-krb4 \
                 --enable-cyrus-sasl \
                 --prefix=$TARGET_DIR \
-                --with-static-prpls="$PROTOCOLS" --disable-plugins \
+                --with-static-prpls="$PROTOCOLS" \
                 --host=$HOST \
                 --disable-gstreamer \
                 --disable-avahi \
@@ -162,12 +162,17 @@ for ARCH in ppc i386 ; do
        $PIDGIN_SOURCE/libpurple/protocols/jabber/si.h \
        $PIDGIN_SOURCE/libpurple/protocols/jabber/jabber.h \
 	   $TARGET_DIR/include/libpurple
+
+    pushd $MSN_PECAN_DIR
+       # make clean || exit 1
+       # make -j $NUMBER_OF_CORES || exit 1
+       # make install || exit 1
+    popd
 done
 
 pushd $PIDGIN_SOURCE
 for patch in "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
              "$PATCHDIR/libpurple_jabber_parser_error_handler.diff" \
-             "$PATCHDIR/libpurple_jabber_use_builtin_digestmd5.diff" \
              "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" \
              "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
              "$PATCHDIR/libpurple_disable_last_seen_tracking.diff" \
