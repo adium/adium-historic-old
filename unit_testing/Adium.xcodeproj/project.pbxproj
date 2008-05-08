@@ -1273,6 +1273,12 @@
 		B72537C4058C45EF004BA969 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		B73E464307DB5F9200D9129E /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		B747E987058D144C00A9F037 /* AILaTeXPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B747E985058D144C00A9F037 /* AILaTeXPlugin.m */; };
+		B7E23A5B0DD27DBD00A7472B /* libgcov.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B7E23A5A0DD27DBD00A7472B /* libgcov.a */; };
+		B7E23A5E0DD27DD600A7472B /* TestAdiumAccounts.m in Sources */ = {isa = PBXBuildFile; fileRef = B7E23A5D0DD27DD600A7472B /* TestAdiumAccounts.m */; };
+		B7E23A6F0DD27EB700A7472B /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7E23A6E0DD27EB700A7472B /* OCMock.framework */; };
+		B7E23A740DD2804700A7472B /* AIObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BFC33DE058D4430008F7FA2 /* AIObject.m */; };
+		B7E23A8B0DD2832000A7472B /* AdiumAccounts.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE40C1F0846544000F5790F /* AdiumAccounts.m */; };
+		B7E23A950DD2834200A7472B /* ESDebugAILog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3448054E07AC5151006A7F7B /* ESDebugAILog.m */; };
 		B7FD6C170596550F000C4D9D /* SQLLogging.plist in Resources */ = {isa = PBXBuildFile; fileRef = B7FD6C160596550F000C4D9D /* SQLLogging.plist */; };
 		C44BA7830AAB696400C7504F /* SetupAssistantBoxBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C44BA7810AAB696400C7504F /* SetupAssistantBoxBackgroundView.m */; };
 		C4D29CC40C3C2E3C001545A2 /* BGICImportController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D29CC00C3C2E3C001545A2 /* BGICImportController.m */; };
@@ -4014,6 +4020,10 @@
 		B799BC8105793C1300338E54 /* JMSQLLoggerAdvancedPreferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = JMSQLLoggerAdvancedPreferences.h; sourceTree = "<group>"; };
 		B7AE664F0465778E0051E914 /* AISQLLoggerPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AISQLLoggerPlugin.h; path = "Plugins/SQL Logger/AISQLLoggerPlugin.h"; sourceTree = SOURCE_ROOT; };
 		B7AE66500465778E0051E914 /* AISQLLoggerPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AISQLLoggerPlugin.m; path = "Plugins/SQL Logger/AISQLLoggerPlugin.m"; sourceTree = SOURCE_ROOT; };
+		B7E23A5A0DD27DBD00A7472B /* libgcov.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgcov.a; path = UnitTests/libgcov.a; sourceTree = "<group>"; };
+		B7E23A5C0DD27DD600A7472B /* TestAdiumAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAdiumAccounts.h; path = UnitTests/TestAdiumAccounts.h; sourceTree = "<group>"; };
+		B7E23A5D0DD27DD600A7472B /* TestAdiumAccounts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestAdiumAccounts.m; path = UnitTests/TestAdiumAccounts.m; sourceTree = "<group>"; };
+		B7E23A6E0DD27EB700A7472B /* OCMock.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OCMock.framework; path = Frameworks/OCMock.framework; sourceTree = "<group>"; };
 		B7FD6C160596550F000C4D9D /* SQLLogging.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = SQLLogging.plist; sourceTree = "<group>"; };
 		C4243C920638E4EA007AD2D9 /* BGEmoticonMenuPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = BGEmoticonMenuPlugin.h; path = Source/BGEmoticonMenuPlugin.h; sourceTree = "<group>"; };
 		C4243C930638E4EA007AD2D9 /* BGEmoticonMenuPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = BGEmoticonMenuPlugin.m; path = Source/BGEmoticonMenuPlugin.m; sourceTree = "<group>"; };
@@ -4113,6 +4123,8 @@
 				312ED41F0C7E963A00A6BDA9 /* AIUtilities.framework in Frameworks */,
 				312ED3D50C7E878300A6BDA9 /* SenTestingKit.framework in Frameworks */,
 				31A764B90DA572B8000AC729 /* AIHyperlinks.framework in Frameworks */,
+				B7E23A5B0DD27DBD00A7472B /* libgcov.a in Frameworks */,
+				B7E23A6F0DD27EB700A7472B /* OCMock.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4440,6 +4452,10 @@
 		312ED3D80C7E89CC00A6BDA9 /* Unit tests */ = {
 			isa = PBXGroup;
 			children = (
+				B7E23A6E0DD27EB700A7472B /* OCMock.framework */,
+				B7E23A5C0DD27DD600A7472B /* TestAdiumAccounts.h */,
+				B7E23A5D0DD27DD600A7472B /* TestAdiumAccounts.m */,
+				B7E23A5A0DD27DBD00A7472B /* libgcov.a */,
 				312ED3E30C7E8A4A00A6BDA9 /* UnitTests_Prefix.pch */,
 				312ED3CB0C7E875B00A6BDA9 /* UnitTests-Info.plist */,
 				31E84DF10C7F387800674BCA /* AIUnitTestUtilities.h */,
@@ -8868,6 +8884,10 @@
 				313C2F940D4B19B50032334D /* TestDictionaryAdditions.m in Sources */,
 				318EA69C0D7A659900EDB105 /* TestColorAdditions.m in Sources */,
 				31A763EE0DA56E3F000AC729 /* TestHyperlinkScanner.m in Sources */,
+				B7E23A5E0DD27DD600A7472B /* TestAdiumAccounts.m in Sources */,
+				B7E23A740DD2804700A7472B /* AIObject.m in Sources */,
+				B7E23A8B0DD2832000A7472B /* AdiumAccounts.m in Sources */,
+				B7E23A950DD2834200A7472B /* ESDebugAILog.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10868,22 +10888,35 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(value)",
 					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
+				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = UnitTests/UnitTests_Prefix.pch;
 				INFOPLIST_FILE = "Plists/UnitTests-Info.plist";
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/UnitTests\"";
 				OTHER_CFLAGS = (
 					"-DDEBUG_BUILD",
 					"-fconstant-cfstrings",
 					"-fms-extensions",
+				);
+				OTHER_LDFLAGS = (
+					"-lgcov",
+					"-LUnitTests/",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = "Unit tests";
@@ -10899,7 +10932,9 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(value)",
 					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -10909,6 +10944,11 @@
 				GCC_PREFIX_HEADER = UnitTests/UnitTests_Prefix.pch;
 				INFOPLIST_FILE = "Plists/UnitTests-Info.plist";
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/UnitTests\"";
 				PREBINDING = NO;
 				PRODUCT_NAME = "Unit tests";
 				WRAPPER_EXTENSION = octest;
@@ -10922,7 +10962,9 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(value)",
 					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -10931,6 +10973,11 @@
 				GCC_PREFIX_HEADER = UnitTests/UnitTests_Prefix.pch;
 				INFOPLIST_FILE = "Plists/UnitTests-Info.plist";
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/UnitTests\"";
 				OTHER_CFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = "Unit tests";
@@ -10945,7 +10992,9 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(value)",
 					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -10954,6 +11003,11 @@
 				GCC_PREFIX_HEADER = UnitTests/UnitTests_Prefix.pch;
 				INFOPLIST_FILE = "Plists/UnitTests-Info.plist";
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/UnitTests\"";
 				OTHER_CFLAGS = "";
 				PREBINDING = NO;
 				PRODUCT_NAME = "Unit tests";
