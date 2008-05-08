@@ -397,7 +397,7 @@
 	testHyperlink(@"http://[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]");
 	testHyperlink(@"http://[1080:0:0:0:8:800:200C:417A]");
 	testHyperlink(@"http://[3ffe:2a00:100:7031::1]");
-	testHyperlink(@"http://[1080::8:800:200C:417A");
+	testHyperlink(@"http://[1080::8:800:200C:417A]");
 	testHyperlink(@"http://[::192.9.5.5]");
 	testHyperlink(@"http://[::FFFF:129.144.52.38]");
 	testHyperlink(@"http://[2010:836B:4179::836B:4179]");
@@ -406,7 +406,7 @@
 	testHyperlink(@"http://[FEDC:BA98:7654:3210:FEDC:BA98:7654:3210]/");
 	testHyperlink(@"http://[1080:0:0:0:8:800:200C:417A]/");
 	testHyperlink(@"http://[3ffe:2a00:100:7031::1]/");
-	testHyperlink(@"http://[1080::8:800:200C:417A/");
+	testHyperlink(@"http://[1080::8:800:200C:417A]/");
 	testHyperlink(@"http://[::192.9.5.5]/");
 	testHyperlink(@"http://[::FFFF:129.144.52.38]/");
 	testHyperlink(@"http://[2010:836B:4179::836B:4179]/");
