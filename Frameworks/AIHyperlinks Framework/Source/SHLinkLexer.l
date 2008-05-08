@@ -54,7 +54,7 @@ ipv6HexPart     ({ipv6HexSeq})|(::{ipv6HexSeq})
 ipv6Address     {ipv6HexPart}({ipv4address})?
 ipv6URL         \[{ipv6Address}](:[0-9]+)?(\/.*)?
 
-%option noyywrap 8bit caseless never-interactive prefix="SH" debug
+%option noyywrap 8bit caseless never-interactive prefix="SH"
 
 %x CANONICAL
 %%
