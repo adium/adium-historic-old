@@ -422,6 +422,15 @@
 	testHyperlink(@"rdar://1234");
 	testHyperlink(@"rdar://problem/1234");
 	testHyperlink(@"rdar://problems/1234&5678&9012");
+	testHyperlink(@"radr://1234");
+	testHyperlink(@"radr://problem/1234");
+	testHyperlink(@"radr://problems/1234&5678&9012");
+	testHyperlink(@"radar://1234");
+	testHyperlink(@"radar://problem/1234");
+	testHyperlink(@"radar://problems/1234&5678&9012");
+	testHyperlink(@"x-radar://1234");
+	testHyperlink(@"x-radar://problem/1234");
+	testHyperlink(@"x-radar://problems/1234&5678&9012");
 	testHyperlink(@"spotify:track:abcd1234");
 	testHyperlink(@"spotify:album:abcd1234");
 	testHyperlink(@"spotify:artist:abcd1234");
