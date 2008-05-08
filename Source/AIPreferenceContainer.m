@@ -428,6 +428,7 @@ typedef enum {
 	(*myUsersOfGlobalPrefs)--;
 	
 	//Unlock and note that we're ready to quit
+	[quittingLock lockWhenCondition:AISaving];
 	[quittingLock unlockWithCondition:AIReadyToQuit];
 
 	[pool release];
