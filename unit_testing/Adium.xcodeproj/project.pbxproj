@@ -832,6 +832,7 @@
 		34DC8A880A7EEEF7003E1636 /* AICorePluginLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = 340BA84409EC593A000EC441 /* AICorePluginLoader.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34DC8A890A7EEEF7003E1636 /* AICorePluginLoader.m in Sources */ = {isa = PBXBuildFile; fileRef = 340BA84509EC593B000EC441 /* AICorePluginLoader.m */; };
 		34DC8A8A0A7EEEF7003E1636 /* ESDebugAILog.h in Headers */ = {isa = PBXBuildFile; fileRef = 3448054F07AC5151006A7F7B /* ESDebugAILog.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		34DC8A8B0A7EEEF7003E1636 /* ESDebugAILog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3448054E07AC5151006A7F7B /* ESDebugAILog.m */; };
 		34DC8A8C0A7EEEF7003E1636 /* AIObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BFC33DD058D4430008F7FA2 /* AIObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34DC8A8D0A7EEEF7003E1636 /* AIObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BFC33DE058D4430008F7FA2 /* AIObject.m */; };
 		34DC8A8E0A7EEEF7003E1636 /* AISoundSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BD548AE086086B5008DF3CB /* AISoundSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1272,13 +1273,7 @@
 		B72537C4058C45EF004BA969 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		B73E464307DB5F9200D9129E /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		B747E987058D144C00A9F037 /* AILaTeXPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B747E985058D144C00A9F037 /* AILaTeXPlugin.m */; };
-		B7E5D95B0DCBD5E500470792 /* AdiumAccounts.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE40C1F0846544000F5790F /* AdiumAccounts.m */; };
-		B7E5D9650DCBD5F500470792 /* AIObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BFC33DE058D4430008F7FA2 /* AIObject.m */; };
 		B7FD6C170596550F000C4D9D /* SQLLogging.plist in Resources */ = {isa = PBXBuildFile; fileRef = B7FD6C160596550F000C4D9D /* SQLLogging.plist */; };
-		B7FEA5250DCD085E00E217F2 /* OCMock.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B7FEA5240DCD085E00E217F2 /* OCMock.framework */; };
-		B7FEA6690DCD0D1B00E217F2 /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7FEA5240DCD085E00E217F2 /* OCMock.framework */; };
-		B7FEA72B0DCD20F600E217F2 /* TestAdiumAccounts.m in Sources */ = {isa = PBXBuildFile; fileRef = B7FEA72A0DCD20F600E217F2 /* TestAdiumAccounts.m */; };
-		B7FEA7750DCD2EC500E217F2 /* ESDebugAILog.m in Sources */ = {isa = PBXBuildFile; fileRef = B7FEA7740DCD2EC500E217F2 /* ESDebugAILog.m */; };
 		C44BA7830AAB696400C7504F /* SetupAssistantBoxBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C44BA7810AAB696400C7504F /* SetupAssistantBoxBackgroundView.m */; };
 		C4D29CC40C3C2E3C001545A2 /* BGICImportController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D29CC00C3C2E3C001545A2 /* BGICImportController.m */; };
 		C4D29CC60C3C2E3C001545A2 /* BGICLogImportController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D29CC20C3C2E3C001545A2 /* BGICLogImportController.m */; };
@@ -1682,16 +1677,6 @@
 				63AF932C0AA81E2300B88299 /* Pure White.ListTheme in CopyFiles */,
 				63AF932D0AA81E2300B88299 /* Tiny (with user icons).ListLayout in CopyFiles */,
 				63AF932E0AA81E2300B88299 /* Tiny.ListLayout in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B7FEA5A10DCD0AD200E217F2 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "$(BUILT_PRODUCTS_DIR)";
-			dstSubfolderSpec = 0;
-			files = (
-				B7FEA5250DCD085E00E217F2 /* OCMock.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2335,6 +2320,7 @@
 		344458EE070B5BEF00D8E932 /* ESDebugWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESDebugWindowController.m; path = Source/ESDebugWindowController.m; sourceTree = "<group>"; };
 		344499E70B23CA5D0054B761 /* adiumPurpleAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = adiumPurpleAccounts.h; path = "Plugins/Purple Service/adiumPurpleAccounts.h"; sourceTree = "<group>"; };
 		344499E80B23CA5D0054B761 /* adiumPurpleAccounts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumPurpleAccounts.m; path = "Plugins/Purple Service/adiumPurpleAccounts.m"; sourceTree = "<group>"; };
+		3448054E07AC5151006A7F7B /* ESDebugAILog.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESDebugAILog.m; path = "Frameworks/Adium Framework/Source/ESDebugAILog.m"; sourceTree = "<group>"; };
 		3448054F07AC5151006A7F7B /* ESDebugAILog.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESDebugAILog.h; path = "Frameworks/Adium Framework/Source/ESDebugAILog.h"; sourceTree = "<group>"; };
 		344836900BC8510B0083723B /* SS_PrefsController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SS_PrefsController.m; path = "Frameworks/Adium Framework/Source/SS_PrefsController.m"; sourceTree = "<group>"; };
 		344836910BC8510B0083723B /* SS_PreferencePaneProtocol.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SS_PreferencePaneProtocol.h; path = "Frameworks/Adium Framework/Source/SS_PreferencePaneProtocol.h"; sourceTree = "<group>"; };
@@ -4029,11 +4015,6 @@
 		B7AE664F0465778E0051E914 /* AISQLLoggerPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AISQLLoggerPlugin.h; path = "Plugins/SQL Logger/AISQLLoggerPlugin.h"; sourceTree = SOURCE_ROOT; };
 		B7AE66500465778E0051E914 /* AISQLLoggerPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AISQLLoggerPlugin.m; path = "Plugins/SQL Logger/AISQLLoggerPlugin.m"; sourceTree = SOURCE_ROOT; };
 		B7FD6C160596550F000C4D9D /* SQLLogging.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; path = SQLLogging.plist; sourceTree = "<group>"; };
-		B7FEA5240DCD085E00E217F2 /* OCMock.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OCMock.framework; path = Frameworks/OCMock.framework; sourceTree = "<group>"; };
-		B7FEA71A0DCD1F8700E217F2 /* libgcov.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgcov.a; path = UnitTests/libgcov.a; sourceTree = "<group>"; };
-		B7FEA7290DCD20F600E217F2 /* TestAdiumAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAdiumAccounts.h; path = UnitTests/TestAdiumAccounts.h; sourceTree = "<group>"; };
-		B7FEA72A0DCD20F600E217F2 /* TestAdiumAccounts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestAdiumAccounts.m; path = UnitTests/TestAdiumAccounts.m; sourceTree = "<group>"; };
-		B7FEA7740DCD2EC500E217F2 /* ESDebugAILog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESDebugAILog.m; path = ../../.Trash/ESDebugAILog.m; sourceTree = SOURCE_ROOT; };
 		C4243C920638E4EA007AD2D9 /* BGEmoticonMenuPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = BGEmoticonMenuPlugin.h; path = Source/BGEmoticonMenuPlugin.h; sourceTree = "<group>"; };
 		C4243C930638E4EA007AD2D9 /* BGEmoticonMenuPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = BGEmoticonMenuPlugin.m; path = Source/BGEmoticonMenuPlugin.m; sourceTree = "<group>"; };
 		C44BA7800AAB696300C7504F /* SetupAssistantBoxBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SetupAssistantBoxBackgroundView.h; path = Source/SetupAssistantBoxBackgroundView.h; sourceTree = "<group>"; };
@@ -4128,7 +4109,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B7FEA6690DCD0D1B00E217F2 /* OCMock.framework in Frameworks */,
 				312ED3D30C7E876E00A6BDA9 /* Cocoa.framework in Frameworks */,
 				312ED41F0C7E963A00A6BDA9 /* AIUtilities.framework in Frameworks */,
 				312ED3D50C7E878300A6BDA9 /* SenTestingKit.framework in Frameworks */,
@@ -4429,7 +4409,6 @@
 		29B97323FDCFA39411CA2CEA /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				B7FEA5240DCD085E00E217F2 /* OCMock.framework */,
 				312ED3D40C7E878300A6BDA9 /* SenTestingKit.framework */,
 				31E0CD800C5EEF5200271DB1 /* CoreAudio.framework */,
 				31918ED70C5E486C00717F0A /* QTKit.framework */,
@@ -4461,9 +4440,6 @@
 		312ED3D80C7E89CC00A6BDA9 /* Unit tests */ = {
 			isa = PBXGroup;
 			children = (
-				B7FEA7290DCD20F600E217F2 /* TestAdiumAccounts.h */,
-				B7FEA72A0DCD20F600E217F2 /* TestAdiumAccounts.m */,
-				B7FEA71A0DCD1F8700E217F2 /* libgcov.a */,
 				312ED3E30C7E8A4A00A6BDA9 /* UnitTests_Prefix.pch */,
 				312ED3CB0C7E875B00A6BDA9 /* UnitTests-Info.plist */,
 				31E84DF10C7F387800674BCA /* AIUnitTestUtilities.h */,
@@ -4902,7 +4878,7 @@
 				340BA84409EC593A000EC441 /* AICorePluginLoader.h */,
 				340BA84509EC593B000EC441 /* AICorePluginLoader.m */,
 				3448054F07AC5151006A7F7B /* ESDebugAILog.h */,
-				B7FEA7740DCD2EC500E217F2 /* ESDebugAILog.m */,
+				3448054E07AC5151006A7F7B /* ESDebugAILog.m */,
 				347933F10C861017007ADCAA /* AIColorStringTransformer.h */,
 				347933F20C861017007ADCAA /* AIColorStringTransformer.m */,
 				4BFC33DD058D4430008F7FA2 /* AIObject.h */,
@@ -7919,7 +7895,6 @@
 			buildPhases = (
 				312ED3C50C7E875B00A6BDA9 /* Resources */,
 				312ED3C60C7E875B00A6BDA9 /* Sources */,
-				B7FEA5A10DCD0AD200E217F2 /* CopyFiles */,
 				312ED3C70C7E875B00A6BDA9 /* Frameworks */,
 				312ED3C80C7E875B00A6BDA9 /* ShellScript */,
 			);
@@ -8893,10 +8868,6 @@
 				313C2F940D4B19B50032334D /* TestDictionaryAdditions.m in Sources */,
 				318EA69C0D7A659900EDB105 /* TestColorAdditions.m in Sources */,
 				31A763EE0DA56E3F000AC729 /* TestHyperlinkScanner.m in Sources */,
-				B7E5D95B0DCBD5E500470792 /* AdiumAccounts.m in Sources */,
-				B7E5D9650DCBD5F500470792 /* AIObject.m in Sources */,
-				B7FEA72B0DCD20F600E217F2 /* TestAdiumAccounts.m in Sources */,
-				B7FEA7750DCD2EC500E217F2 /* ESDebugAILog.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9381,6 +9352,7 @@
 				34DC8A840A7EEEF7003E1636 /* ESTextAndButtonsWindowController.m in Sources */,
 				34DC8A870A7EEEF7003E1636 /* AIWindowController.m in Sources */,
 				34DC8A890A7EEEF7003E1636 /* AICorePluginLoader.m in Sources */,
+				34DC8A8B0A7EEEF7003E1636 /* ESDebugAILog.m in Sources */,
 				34DC8A8D0A7EEEF7003E1636 /* AIObject.m in Sources */,
 				34DC8A8F0A7EEEF7003E1636 /* AISoundSet.m in Sources */,
 				34DC8A910A7EEEF7003E1636 /* AIToolbar.m in Sources */,
@@ -10896,16 +10868,12 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(value)",
 					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_GENERATE_TEST_COVERAGE_FILES = YES;
-				GCC_INSTRUMENT_PROGRAM_FLOW_ARCS = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -10916,10 +10884,6 @@
 					"-DDEBUG_BUILD",
 					"-fconstant-cfstrings",
 					"-fms-extensions",
-				);
-				OTHER_LDFLAGS = (
-					"-lgcov",
-					"-LUnitTests",
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = "Unit tests";
@@ -10935,9 +10899,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(value)",
 					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -10960,9 +10922,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(value)",
 					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -10985,9 +10945,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(value)",
 					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
-					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
-				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
