@@ -18,6 +18,8 @@
 
 - (void)testEnclosedURI:(NSString *)URIString {
 	[self testLaxContext:@"<%@>" withURI:URIString];
+	[self testLaxContext:@"(%@)" withURI:URIString];
+	[self testLaxContext:@"[%@]" withURI:URIString];
 }
 
 - (void)testURIBorder:(NSString *)URIString {
@@ -35,5 +37,6 @@
 //	[self testURIBorder:@"example.com/foo_(bar)"];
 	[self testEnclosedURI:@"http://example.com/foo_(bar)"];
 	[self testURIBorder:@"http://example.com/foo_(bar)"];
+	[self testLaxContext:@"<><><><><<<<><><><><%@><><><><><><<<><><><><><>" withURI:@"example.com"];
 }
 @end
