@@ -19,6 +19,7 @@
 	testHyperlink(@"http://");
 	testHyperlink(@"example.co");
 	testHyperlink(@"http://[::]");
+	testHyperlink(@"http://[::1:]");
 	testHyperlink(@"http://[1]");
 	testHyperlink(@"http://[]");
 }
