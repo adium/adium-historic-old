@@ -166,9 +166,54 @@
 
 		finalStringLen = localStringLen;
 
+		static NSCharacterSet *enclosureStartSet;
+		if(!enclosureStartSet){
+#define INVALID_URL_ENCLOSURE_START_CHARACTERS @"([{"
+			enclosureStartSet = [[NSCharacterSet characterSetWithCharactersInString:INVALID_URL_ENCLOSURE_START_CHARACTERS] retain];
+		}
+		
+		static NSArray *enclosureStartArray;
+		if(!enclosureStartArray){
+			enclosureStartArray = [[NSArray arrayWithObjects:@"(",@"[",@"{",nil] retain];
+		}
+
+		static NSCharacterSet *enclosureEndSet;
+		if(!enclosureEndSet){
+#define INVALID_URL_ENCLOSURE_END_CHARACTERS @")]}"
+			enclosureEndSet = [[NSCharacterSet characterSetWithCharactersInString:INVALID_URL_ENCLOSURE_END_CHARACTERS] retain];
+		}
+		
+		static NSArray *enclosureStopArray;
+		if(!enclosureStopArray){
+			enclosureStopArray = [[NSArray arrayWithObjects:@")",@"]",@"}",nil] retain];
+		}
+		
+		// Find balanced enclosure chars
+		NSScanner *enclosureScanner = [[[NSScanner alloc] initWithString:scanString] autorelease];
+		NSString  *matchStartChar = nil, *matchEndChar = nil;
+		NSMutableArray   *enclosureArray = [NSMutableArray arrayWithCapacity:1];
+		NSUInteger encStart, encEnd;
+		while ([enclosureScanner scanUpToCharactersFromSet:enclosureStartSet intoString:nil] &&
+			   [enclosureScanner scanLocation] < [scanString length]) {
+			matchStartChar = [scanString substringWithRange:NSMakeRange([enclosureScanner scanLocation], 1)];
+			if([enclosureStartArray containsObject:matchStartChar]) {
+				encStart = [enclosureScanner scanLocation];
+				while ([enclosureScanner scanUpToCharactersFromSet:enclosureEndSet intoString:nil] &&
+					   [enclosureScanner scanLocation] < [scanString length]){
+					matchEndChar = [scanString substringWithRange:NSMakeRange([enclosureScanner scanLocation], 1)];
+					if([enclosureStopArray containsObject:matchEndChar] &&
+					   [enclosureStartArray indexOfObjectIdenticalTo:matchStartChar] == [enclosureStopArray indexOfObjectIdenticalTo:matchEndChar]) {
+						[enclosureArray addObject:NSStringFromRange(NSMakeRange(encStart, [enclosureScanner scanLocation] - encStart))];
+					}
+				}
+			}
+		}
+		NSRange lastEnclosureRange = NSRangeFromString([enclosureArray lastObject]);
 		while (finalStringLen > 2 && [endSet characterIsMember:[scanString characterAtIndex:finalStringLen - 1]]) {
-            scanString = [scanString substringToIndex:finalStringLen - 1];
-			finalStringLen--;
+			if((lastEnclosureRange.location + lastEnclosureRange.length + 1) < finalStringLen){
+				scanString = [scanString substringToIndex:finalStringLen - 1];
+				finalStringLen--;
+			}else break;
 		}
 
         SHStringOffset = [preScanner scanLocation] - finalStringLen;
