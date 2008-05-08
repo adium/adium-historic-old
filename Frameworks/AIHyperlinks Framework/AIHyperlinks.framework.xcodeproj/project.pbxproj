@@ -14,6 +14,8 @@
 		3496A82707CE69270055BBAB /* SHHyperlinkScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 3496A82007CE69270055BBAB /* SHHyperlinkScanner.m */; };
 		3496A82807CE69270055BBAB /* SHHyperlinkScanner.h in Headers */ = {isa = PBXBuildFile; fileRef = 3496A82107CE69270055BBAB /* SHHyperlinkScanner.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3496A82907CE69270055BBAB /* SHMarkedHyperlink.m in Sources */ = {isa = PBXBuildFile; fileRef = 3496A82207CE69270055BBAB /* SHMarkedHyperlink.m */; };
+		7E4C244F0DD214C500DF1359 /* NegativeURLTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E4C24330DD20C0100DF1359 /* NegativeURLTest.m */; };
+		7E4C25240DD2334800DF1359 /* HyperlinkContextTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E4C24370DD20C9900DF1359 /* HyperlinkContextTest.m */; };
 		7E78D9C50DD12D4200B9388F /* SimpleURLTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E78D9C40DD12D4200B9388F /* SimpleURLTest.m */; };
 		7E78D9C60DD12DF200B9388F /* SHHyperlinkScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 3496A82007CE69270055BBAB /* SHHyperlinkScanner.m */; };
 		7E78D9C70DD12DF300B9388F /* SHLinkLexer.l in Sources */ = {isa = PBXBuildFile; fileRef = 3496A81E07CE69270055BBAB /* SHLinkLexer.l */; };
@@ -24,16 +26,6 @@
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		7E78D9F40DD132E800B9388F /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = AIHyperlinks.framework;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -48,6 +40,10 @@
 		3496A82007CE69270055BBAB /* SHHyperlinkScanner.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SHHyperlinkScanner.m; path = Source/SHHyperlinkScanner.m; sourceTree = "<group>"; };
 		3496A82107CE69270055BBAB /* SHHyperlinkScanner.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SHHyperlinkScanner.h; path = Source/SHHyperlinkScanner.h; sourceTree = "<group>"; };
 		3496A82207CE69270055BBAB /* SHMarkedHyperlink.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SHMarkedHyperlink.m; path = Source/SHMarkedHyperlink.m; sourceTree = "<group>"; };
+		7E4C24320DD20C0100DF1359 /* NegativeURLTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NegativeURLTest.h; path = UnitTests/NegativeURLTest.h; sourceTree = "<group>"; };
+		7E4C24330DD20C0100DF1359 /* NegativeURLTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NegativeURLTest.m; path = UnitTests/NegativeURLTest.m; sourceTree = "<group>"; };
+		7E4C24360DD20C9900DF1359 /* HyperlinkContextTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = HyperlinkContextTest.h; path = UnitTests/HyperlinkContextTest.h; sourceTree = "<group>"; };
+		7E4C24370DD20C9900DF1359 /* HyperlinkContextTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = HyperlinkContextTest.m; path = UnitTests/HyperlinkContextTest.m; sourceTree = "<group>"; };
 		7E78D9C30DD12D4200B9388F /* SimpleURLTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleURLTest.h; path = UnitTests/SimpleURLTest.h; sourceTree = "<group>"; };
 		7E78D9C40DD12D4200B9388F /* SimpleURLTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimpleURLTest.m; path = UnitTests/SimpleURLTest.m; sourceTree = "<group>"; };
 		7E78DA140DD133F300B9388F /* AIHyperlinks.framework_Test_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIHyperlinks.framework_Test_Prefix.pch; path = UnitTests/AIHyperlinks.framework_Test_Prefix.pch; sourceTree = "<group>"; };
@@ -166,6 +162,10 @@
 			children = (
 				7E78D9C30DD12D4200B9388F /* SimpleURLTest.h */,
 				7E78D9C40DD12D4200B9388F /* SimpleURLTest.m */,
+				7E4C24320DD20C0100DF1359 /* NegativeURLTest.h */,
+				7E4C24330DD20C0100DF1359 /* NegativeURLTest.m */,
+				7E4C24360DD20C9900DF1359 /* HyperlinkContextTest.h */,
+				7E4C24370DD20C9900DF1359 /* HyperlinkContextTest.m */,
 			);
 			name = UnitTests;
 			sourceTree = "<group>";
@@ -199,7 +199,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				7E78D9F50DD132E800B9388F /* PBXTargetDependency */,
 			);
 			name = UnitTests;
 			productName = Test;
@@ -288,6 +287,8 @@
 				7E78D9C60DD12DF200B9388F /* SHHyperlinkScanner.m in Sources */,
 				7E78D9C70DD12DF300B9388F /* SHLinkLexer.l in Sources */,
 				7E78D9C80DD12DF400B9388F /* SHMarkedHyperlink.m in Sources */,
+				7E4C244F0DD214C500DF1359 /* NegativeURLTest.m in Sources */,
+				7E4C25240DD2334800DF1359 /* HyperlinkContextTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -302,14 +303,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		7E78D9F50DD132E800B9388F /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 8DC2EF4F0486A6940098B216 /* AIHyperlinks.framework */;
-			targetProxy = 7E78D9F40DD132E800B9388F /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		089C1666FE841158C02AAC07 /* InfoPlist.strings */ = {
