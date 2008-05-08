@@ -413,11 +413,30 @@
 	testHyperlink(@"http://[::1]/");
 }
 
-- (void)testUserCases {
-	testHyperlink(@"http://example.com/foo_(bar)");
+- (void)testUniqueURI {
+	testHyperlink(@"sip:foo@example.com");
+	testHyperlink(@"xmpp:foo@example.com");
+	testHyperlink(@"xmpp:foo@example.com/adium");
+	testHyperlink(@"aim:goim?screenname=adiumx");
+	testHyperlink(@"aim:goim?screenname=adiumx&message=Hey!+Does+this+work?");
+	testHyperlink(@"rdar://1234");
+	testHyperlink(@"rdar://problem/1234");
+	testHyperlink(@"rdar://problems/1234&5678&9012");
+	testHyperlink(@"spotify:track:abcd1234");
+	testHyperlink(@"spotify:album:abcd1234");
+	testHyperlink(@"spotify:artist:abcd1234");
+	testHyperlink(@"spotify:search:abcd1234");
+	testHyperlink(@"spotify:playlist:abcd1234");
+	testHyperlink(@"spotify:user:abcd1234");
+	testHyperlink(@"spotify:radio:abcd1234");
 }
+
 - (void)testEmailAddress {
 	testHyperlink(@"foo@example.com");
 	testHyperlink(@"foo.bar@example.com");
+}
+
+- (void)testUserCases {
+	testHyperlink(@"http://example.com/foo_(bar)");
 }
 @end

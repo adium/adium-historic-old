@@ -17,5 +17,7 @@
 - (void)testURIWithUserAndPass;
 - (void)testIPAddressURI;
 - (void)testIPv6URI;
+- (void)testUniqueURI;
 - (void)testEmailAddress;
+- (void)testUserCases;
 @end
