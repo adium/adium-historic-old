@@ -459,9 +459,10 @@ static	ABAddressBook	*sharedAddressBook = nil;
 /*!
  * @brief Called by AIServiceMenu to determine what services should be included
  */
-- (BOOL)serviceMenuShouldIncludeService:(AIService *)service
+- (BOOL)serviceMenuShouldIncludeService:(AIService *)inService
 {
-	return ([ESAddressBookIntegrationPlugin propertyFromService:service] ? YES : NO);
+	return (([ESAddressBookIntegrationPlugin propertyFromService:inService] &&
+			 [[[[adium accountController] accountsCompatibleWithService:inService] valueForKeyPath:@"@sum.online"] boolValue]) ? YES : NO);
 }
 
 /*!
