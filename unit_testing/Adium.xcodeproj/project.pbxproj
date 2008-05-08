@@ -4119,12 +4119,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B7E23A6F0DD27EB700A7472B /* OCMock.framework in Frameworks */,
 				312ED3D30C7E876E00A6BDA9 /* Cocoa.framework in Frameworks */,
 				312ED41F0C7E963A00A6BDA9 /* AIUtilities.framework in Frameworks */,
 				312ED3D50C7E878300A6BDA9 /* SenTestingKit.framework in Frameworks */,
 				31A764B90DA572B8000AC729 /* AIHyperlinks.framework in Frameworks */,
 				B7E23A5B0DD27DBD00A7472B /* libgcov.a in Frameworks */,
-				B7E23A6F0DD27EB700A7472B /* OCMock.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
