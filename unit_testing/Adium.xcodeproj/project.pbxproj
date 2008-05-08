@@ -1279,6 +1279,7 @@
 		B7E23A740DD2804700A7472B /* AIObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BFC33DE058D4430008F7FA2 /* AIObject.m */; };
 		B7E23A8B0DD2832000A7472B /* AdiumAccounts.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE40C1F0846544000F5790F /* AdiumAccounts.m */; };
 		B7E23A950DD2834200A7472B /* ESDebugAILog.m in Sources */ = {isa = PBXBuildFile; fileRef = 3448054E07AC5151006A7F7B /* ESDebugAILog.m */; };
+		B7E23B9B0DD2C8CB00A7472B /* OCMock.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B7E23A6E0DD27EB700A7472B /* OCMock.framework */; };
 		B7FD6C170596550F000C4D9D /* SQLLogging.plist in Resources */ = {isa = PBXBuildFile; fileRef = B7FD6C160596550F000C4D9D /* SQLLogging.plist */; };
 		C44BA7830AAB696400C7504F /* SetupAssistantBoxBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = C44BA7810AAB696400C7504F /* SetupAssistantBoxBackgroundView.m */; };
 		C4D29CC40C3C2E3C001545A2 /* BGICImportController.m in Sources */ = {isa = PBXBuildFile; fileRef = C4D29CC00C3C2E3C001545A2 /* BGICImportController.m */; };
@@ -1683,6 +1684,16 @@
 				63AF932C0AA81E2300B88299 /* Pure White.ListTheme in CopyFiles */,
 				63AF932D0AA81E2300B88299 /* Tiny (with user icons).ListLayout in CopyFiles */,
 				63AF932E0AA81E2300B88299 /* Tiny.ListLayout in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B7E23B9E0DD2C8E600A7472B /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(BUILT_PRODUCTS_DIR)";
+			dstSubfolderSpec = 0;
+			files = (
+				B7E23B9B0DD2C8CB00A7472B /* OCMock.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7910,6 +7921,7 @@
 			buildConfigurationList = 312ED3CC0C7E875C00A6BDA9 /* Build configuration list for PBXNativeTarget "Unit tests" */;
 			buildPhases = (
 				312ED3C50C7E875B00A6BDA9 /* Resources */,
+				B7E23B9E0DD2C8E600A7472B /* CopyFiles */,
 				312ED3C60C7E875B00A6BDA9 /* Sources */,
 				312ED3C70C7E875B00A6BDA9 /* Frameworks */,
 				312ED3C80C7E875B00A6BDA9 /* ShellScript */,
