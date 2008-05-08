@@ -7,7 +7,7 @@ wget -iurls.txt
 *****
 Get a copy of the pidgin sources. Adium currently uses libpurple 2.4.2mtn, and patches applied during the build process depend upon this.
 
-See http://pidgin.im to download a 2.4,1 tarball. This may not compile. Use Monotone; see below.
+See http://pidgin.im to download a 2.4.1 tarball. This may not compile. Use Monotone; see below.
 
 To get libpurple via Monotone, see http://developer.pidgin.im/wiki/UsingPidginMonotone .  Check out im.pidgin.pidgin.next.minor using "-b im.pidgin.pidgin.next.minor".
     Previous instructions, for reference: Check out the v2.3.1 tag (with "-r t:v2.3.1" in place of "-b im.pidgin.pidgin" as given in the UsingPidginMonotone instructions) to get the code used by Adium.
