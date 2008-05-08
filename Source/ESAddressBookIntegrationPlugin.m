@@ -476,6 +476,8 @@ NSString* serviceIDForJabberUID(NSString *UID);
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
+	if (object) return;
+
     if ([group isEqualToString:PREF_GROUP_ADDRESSBOOK]) {
 		BOOL			oldCreateMetaContacts = createMetaContacts;
 		
@@ -1122,7 +1124,6 @@ NSString* serviceIDForJabberUID(NSString *UID)
 			NSString *key;
 			
 			dict = [addressBookDict objectForKey:serviceID];
-			
 			keysEnumerator = [[dict allKeysForObject:uniqueID] objectEnumerator];
 			
 			//The same person may have multiple accounts from the same service; we should remove them all.
@@ -1180,8 +1181,9 @@ NSString* serviceIDForJabberUID(NSString *UID)
 		
 		//Set the name
 		[person setValue:[contact displayName] forKey:kABFirstNameProperty];
-		[person setValue:[contact phoneticName] forKey:kABFirstNamePhoneticProperty];
-		
+		if (![[contact phoneticName] isEqualToString:[contact displayName]])
+			[person setValue:[contact phoneticName] forKey:kABFirstNamePhoneticProperty];
+
 		NSString				*UID = [contact formattedUID];
 	
 		NSEnumerator * containedContactEnu = [contact isKindOfClass:[AIMetaContact class]] ? [[(AIMetaContact *)contact listContacts] objectEnumerator] : [[NSArray arrayWithObject:contact] objectEnumerator];
