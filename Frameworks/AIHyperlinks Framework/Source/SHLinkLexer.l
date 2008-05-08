@@ -106,7 +106,7 @@ notes:\/\/              |
 gopher:\/\/             |
 x-man-page:\/\/         {SHStringOffset += SHleng; SHValidShift = SHleng; BEGIN CANONICAL;}
 
-sip:{mailSpecifier}     {SHStringOffset += SHleng; SHleng += SHValidShift; BEGIN INITIAL; return SH_URL_VALID;}
+sip:{mailSpecifier}     {SHStringOffset += SHleng; return SH_URL_VALID;}
 
 mailto:{mailSpecifier}  {SHStringOffset += SHleng; return SH_MAILTO_VALID;}
 {mailSpecifier}         {SHStringOffset += SHleng; return SH_MAILTO_DEGENERATE;}
