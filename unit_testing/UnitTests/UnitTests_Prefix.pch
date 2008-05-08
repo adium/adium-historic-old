@@ -1,3 +1,4 @@
 #import <Cocoa/Cocoa.h>
 #import <SenTestingKit/SenTestingKit.h>
 #import "AIUnitTestUtilities.h"
+#import <Adium/ESDebugAILog.h>
