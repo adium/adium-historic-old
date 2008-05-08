@@ -176,6 +176,15 @@
 {
 	//Get the new groups
 	NSMenu		*groupMenu = [[adium contactController] menuOfAllGroupsInGroup:nil withTarget:self];
+	NSMenuItem  *notListedMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"(Not Listed)", nil)
+																						 target:self
+																action:@selector(selectGroup:)
+														 keyEquivalent:@""
+													 representedObject:nil];
+	[groupMenu insertItem:notListedMenuItem atIndex:0];
+	[notListedMenuItem release];
+	[groupMenu insertItem:[NSMenuItem separatorItem] atIndex:1];
+
 	[[groupMenu itemArray] makeObjectsPerformSelector:@selector(setAttributes:)
 										   withObject:[NSDictionary dictionaryWithObjectsAndKeys:
 													   [NSFont menuFontOfSize:[NSFont systemFontSizeForControlSize:NSSmallControlSize]], NSFontAttributeName,
