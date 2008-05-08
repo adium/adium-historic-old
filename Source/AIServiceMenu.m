@@ -45,6 +45,8 @@ int titleSort(NSMenuItem *itemA, NSMenuItem *itemB, void *context)
 	unsigned			numberOfItems = 0;
 	id					serviceArray;
 	
+	BOOL targetRespondsToShouldIncludeService = [target respondsToSelector:@selector(serviceMenuShouldIncludeService:)];
+
 	//Prepare our menu
 	NSMenu *menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
 	
@@ -70,7 +72,8 @@ int titleSort(NSMenuItem *itemA, NSMenuItem *itemB, void *context)
 		//Insert a menu item for each service of this importance
 		enumerator = [serviceArray objectEnumerator];
 		while ((service = [enumerator nextObject])) {
-			if ([service serviceImportance] == importance) {
+			if (([service serviceImportance] == importance) &&
+				(!targetRespondsToShouldIncludeService || [target serviceMenuShouldIncludeService:service])) {
 				NSString	*description = (longDescription ?
 											[service longDescription] :
 											[service shortDescription]);
