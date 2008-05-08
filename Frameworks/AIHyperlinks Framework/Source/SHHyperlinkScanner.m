@@ -120,6 +120,7 @@
         [mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         [mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet illegalCharacterSet]];
         [mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet controlCharacterSet]];
+		[mutableSkipSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"<>"]];
 		skipSet = [[NSCharacterSet characterSetWithBitmapRepresentation:[mutableSkipSet bitmapRepresentation]] retain];
 		[mutableSkipSet release];
     }
