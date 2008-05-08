@@ -193,7 +193,7 @@
 		NSScanner *enclosureScanner = [[[NSScanner alloc] initWithString:scanString] autorelease];
 		NSString  *matchStartChar = nil, *matchEndChar = nil;
 		NSMutableArray   *enclosureArray = [NSMutableArray arrayWithCapacity:1];
-		NSUInteger encStart, encEnd;
+		NSUInteger encStart;
 		while ([enclosureScanner scanUpToCharactersFromSet:enclosureStartSet intoString:nil] &&
 			   [enclosureScanner scanLocation] < [scanString length]) {
 			matchStartChar = [scanString substringWithRange:NSMakeRange([enclosureScanner scanLocation], 1)];
