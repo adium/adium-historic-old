@@ -45,7 +45,7 @@ jabberSpec      xmpp:.*\@.+\.{domains}(\/.*)?
 aolIMSpec       aim:goim\?screenname=[^\ \t\n&]+(&message=.+)?
 aolChatSpec     aim:gochat\?roomname=[^\ \t\n&]+
 yahooIMSpec     ymsgr:sendim\?.+
-rdarSpec        rdar:\/\/(problems?\/)?[0-9]+(&[0-9]+)*
+rdarSpec        (rdar|radr|radar|x-radar):\/\/(problems?\/)?[0-9]+(&[0-9]+)*
 spotifySpec     spotify:(track|album|artist|search|playlist|user|radio):[^<>]+
 
 hex4            [0-9A-Fa-f]{1,4}
