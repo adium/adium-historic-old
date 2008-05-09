@@ -1679,9 +1679,14 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 												 account:account
 													 UID:[inContact UID]];
 			}
+		} else {
+			AILogWithSignature(@"Warning: There is no account available to send %@ to %@", inType, inContact);
 		}
  	}
 	
+	if (!returnContact)
+		AILogWithSignature(@"Warning: (null) returnContact for sending %@ to %@", inType, inContact);
+
 	return returnContact;
 }
 
