@@ -59,33 +59,36 @@
 		AIListContact *listContact = [account contactWithUID:contactUID];
 		NSDictionary  *dict = [userInfos objectForKey:contactUID];
 		NSString	  *name = [dict objectForKey:@"name"];
-		NSString	  *firstName = [dict objectForKey:@"firstName"];
+		/*
+		 NSString	  *firstName = [dict objectForKey:@"firstName"];
+		 if ([firstName isKindOfClass:[NSNull class]]) firstName = nil;
+		 */
 		NSString	  *status = [dict objectForKey:@"status"];
-		NSString	  *statusTime = [dict objectForKey:@"statusTime"];
+		/*
+		 NSString	  *statusTime = [dict objectForKey:@"statusTime"];
+		 if ([statusTime isKindOfClass:[NSNull class]]) statusTime = nil;
+		 NSDate		  *dateStatusLastChanged = (statusTime ?
+												[NSDate dateWithTimeIntervalSince1970:([statusTime intValue])] :
+												nil);		
+		 */
 		NSString	  *pictureSrc = [dict objectForKey:@"thumbSrc"];
 		
 		//The parser gives us NSNull in place of a string if there is a nil value
 		if ([name isKindOfClass:[NSNull class]]) name = nil;
-		if ([firstName isKindOfClass:[NSNull class]]) firstName = nil;
 		if ([status isKindOfClass:[NSNull class]]) status = nil;
-		if ([statusTime isKindOfClass:[NSNull class]]) statusTime = nil;
 
-		NSDate		  *idleSince = (statusTime ?
-									[NSDate dateWithTimeIntervalSince1970:([statusTime intValue])] :
-									nil);
 		[listContact setFormattedUID:name notify:NotifyLater];
-		[listContact setServersideAlias:firstName asStatusMessage:NO silently:YES];
 		[listContact setStatusMessage:(status ? 
 									   [[[NSAttributedString alloc] initWithString:status] autorelease] :
 									   nil)
 							   notify:NotifyLater];
 		[listContact setIdle:[[[nowAvailableList objectForKey:contactUID] objectForKey:@"i"] boolValue]
-				   sinceDate:idleSince
+				   sinceDate:nil
 					  notify:NotifyLater];
 
 		if (pictureSrc)
 			[AIFacebookBuddyIconRequest retrieveBuddyIconForContact:listContact
-															fromURL:[NSURL URLWithString:pictureSrc]];
+													   withThumbSrc:pictureSrc];
 	
 		[listContact setRemoteGroupName:@"Facebook"];
 		[listContact setOnline:YES notify:NotifyLater silently:isSigningOn];

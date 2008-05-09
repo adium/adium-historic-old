@@ -9,24 +9,36 @@
 #import <Adium/AIListContact.h>
 
 @interface AIFacebookBuddyIconRequest (PRIVATE)
-- (id)initForContact:(AIListContact *)inContact fromURL:(NSURL *)inURL;
+- (id)initForContact:(AIListContact *)inContact withThumbSrc:(NSString *)thumbSrc;
 @end 
 
 @implementation AIFacebookBuddyIconRequest
 
-+ (void)retrieveBuddyIconForContact:(AIListContact *)inContact fromURL:(NSURL *)inURL
++ (void)retrieveBuddyIconForContact:(AIListContact *)inContact withThumbSrc:(NSString *)thumbSrc
 {
 	//Will release ourselves when done
-	[[self alloc] initForContact:inContact fromURL:inURL];
+	[[self alloc] initForContact:inContact withThumbSrc:thumbSrc];
 }
 
-- (id)initForContact:(AIListContact *)inContact fromURL:(NSURL *)inURL
+- (id)initForContact:(AIListContact *)inContact withThumbSrc:(NSString *)thumbSrc
 {
 	if ((self = [super init])) {
 		contact = [inContact retain];
 		receivedData = [[NSMutableData alloc] init];
 
-		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:inURL
+		NSURL *URL;
+		NSMutableString  *fileName = [[thumbSrc lastPathComponent] mutableCopy];
+
+		/* The file name starts with a 'q' for the small thumbnail and with an 'n' for a higher-resolution one */
+		[fileName replaceOccurrencesOfString:@"q"
+                                  withString:@"n"
+                                     options:NSLiteralSearch
+                                       range:NSMakeRange(0, 1)];
+		
+		URL = [NSURL URLWithString:[[thumbSrc stringByDeletingLastPathComponent] stringByAppendingPathComponent:fileName]];
+		[fileName release];
+
+		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:URL
 															   cachePolicy:NSURLRequestUseProtocolCachePolicy
 														   timeoutInterval:120];
 		connection = [[NSURLConnection connectionWithRequest:request delegate:self] retain];
