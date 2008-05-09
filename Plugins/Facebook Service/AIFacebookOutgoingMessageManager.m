@@ -13,7 +13,8 @@
 @implementation AIFacebookOutgoingMessageManager
 + (void)sendMessageObject:(AIContentMessage *)inContentMessage
 {
-	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://www.facebook.com/ajax/chat/send.php"]
+	//This can not be https:// - the message fails to send
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://www.facebook.com/ajax/chat/send.php"]
 														   cachePolicy:NSURLRequestUseProtocolCachePolicy
 													   timeoutInterval:120];
 	NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
