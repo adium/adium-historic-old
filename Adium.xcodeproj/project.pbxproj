@@ -11527,7 +11527,7 @@
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/build/Development\"";
-				INFOPLIST_FILE = /Users/evands/adium/Plists/Facebook.plist;
+				INFOPLIST_FILE = Plists/Facebook.plist;
 				PRODUCT_NAME = Facebook;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
