@@ -1,0 +1,179 @@
+//
+//  AIFacebookBuddyListManager.m
+//  Adium
+//
+//  Created by Evan Schoenberg on 5/8/08.
+//
+
+#import "AIFacebookBuddyListManager.h"
+#import "AIFacebookAccount.h"
+#import "AIFacebookBuddyIconRequest.h"
+#import <JSON/JSON.h>
+#import <Adium/AIListContact.h>
+
+@interface AIFacebookBuddyListManager (PRIVATE)
+- (id)initForAccount:(AIFacebookAccount *)inAccount;
+- (void)setupBuddyListPolling;
+@end
+
+@implementation AIFacebookBuddyListManager
+
++ (AIFacebookBuddyListManager *)buddyListManagerForAccount:(AIFacebookAccount *)inAccount
+{
+	return [[[self alloc] initForAccount:inAccount] autorelease];
+}
+
+- (id)initForAccount:(AIFacebookAccount *)inAccount
+{
+	if ((self = [super init])) {
+		account = [inAccount retain];
+		receivedData = [[NSMutableData alloc] init];
+
+		[self setupBuddyListPolling];
+	}
+	
+	return self;
+}
+
+- (void)disconnect
+{
+	[timer_polling invalidate];
+	[timer_polling release]; timer_polling = nil;
+	
+	[account release]; account = nil;
+}
+
+- (void)parseBuddyList:(NSDictionary *)buddyList
+{
+	NSDictionary *nowAvailableList = [buddyList objectForKey:@"nowAvailableList"];
+	NSDictionary *userInfos = [buddyList objectForKey:@"userInfos"];
+
+	NSSet *nowAvailableContacts = [NSSet setWithArray:[nowAvailableList allKeys]];
+
+	BOOL isSigningOn = [account isSigningOn];
+
+	//Process each online contact's information
+	NSEnumerator *enumerator = [nowAvailableContacts objectEnumerator];
+	NSString	 *contactUID;
+	while ((contactUID = [enumerator nextObject])) {
+		AIListContact *listContact = [account contactWithUID:contactUID];
+		NSDictionary  *dict = [userInfos objectForKey:contactUID];
+		NSString	  *name = [dict objectForKey:@"name"];
+		NSString	  *firstName = [dict objectForKey:@"firstName"];
+		NSString	  *status = [dict objectForKey:@"status"];
+		NSString	  *statusTime = [dict objectForKey:@"statusTime"];
+		NSString	  *pictureSrc = [dict objectForKey:@"thumbSrc"];
+		
+		//The parser gives us NSNull in place of a string if there is a nil value
+		if ([name isKindOfClass:[NSNull class]]) name = nil;
+		if ([firstName isKindOfClass:[NSNull class]]) firstName = nil;
+		if ([status isKindOfClass:[NSNull class]]) status = nil;
+		if ([statusTime isKindOfClass:[NSNull class]]) statusTime = nil;
+
+		NSDate		  *idleSince = (statusTime ?
+									[NSDate dateWithTimeIntervalSince1970:([statusTime intValue])] :
+									nil);
+		[listContact setFormattedUID:name notify:NotifyLater];
+		[listContact setServersideAlias:firstName asStatusMessage:NO silently:YES];
+		[listContact setStatusMessage:(status ? 
+									   [[[NSAttributedString alloc] initWithString:status] autorelease] :
+									   nil)
+							   notify:NotifyLater];
+		[listContact setIdle:[[[nowAvailableList objectForKey:contactUID] objectForKey:@"i"] boolValue]
+				   sinceDate:idleSince
+					  notify:NotifyLater];
+
+		if (pictureSrc)
+			[AIFacebookBuddyIconRequest retrieveBuddyIconForContact:listContact
+															fromURL:[NSURL URLWithString:pictureSrc]];
+	
+		[listContact setRemoteGroupName:@"Facebook"];
+		[listContact setOnline:YES notify:NotifyLater silently:isSigningOn];
+
+		//Apply any changes
+		[listContact notifyOfChangedStatusSilently:isSigningOn];	
+	}
+	
+	if (lastAvailableBuddiesList) {
+		NSMutableSet *signedOffContacts = [lastAvailableBuddiesList mutableCopy];
+		[signedOffContacts minusSet:nowAvailableContacts];
+		
+		enumerator = [signedOffContacts objectEnumerator];
+		while ((contactUID = [enumerator nextObject])) {
+			AIListContact *listContact = [account contactWithUID:contactUID];
+			[listContact setOnline:NO notify:NotifyLater silently:isSigningOn];
+			
+			//Apply any changes
+			[listContact notifyOfChangedStatusSilently:isSigningOn];
+		}
+
+		[signedOffContacts release];
+	}
+	
+	[lastAvailableBuddiesList release]; lastAvailableBuddiesList = [nowAvailableContacts retain];
+}
+
+- (void)pollBuddyList:(NSTimer *)inTimer
+{
+	if (!loveConnection) {
+		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://www.facebook.com/ajax/presence/update.php"]
+															   cachePolicy:NSURLRequestUseProtocolCachePolicy
+														   timeoutInterval:120];
+		NSData *postData = [AIFacebookAccount postDataForDictionary:[NSDictionary dictionaryWithObject:@"1"
+																								forKey:@"buddy_list"]];
+
+		[request setHTTPMethod:@"POST"];
+		[request setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
+		[request setHTTPBody:postData];
+
+		loveConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+	}
+}
+
+- (void)setupBuddyListPolling
+{
+	timer_polling = [[NSTimer scheduledTimerWithTimeInterval:60
+													  target:self
+													selector:@selector(pollBuddyList:)
+													userInfo:nil
+													 repeats:YES] retain];
+	[self pollBuddyList:timer_polling];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
+    // it can be called multiple times, for example in the case of a
+    // redirect, so each time we reset the data.
+    // receivedData is declared as a method instance elsewhere
+    [receivedData setLength:0];
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data
+{
+    // append the new data to the receivedData
+    // receivedData is declared as a method instance elsewhere
+    [receivedData appendData:data];
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+	NSMutableString *receivedString = [[NSMutableString alloc] initWithData:receivedData encoding:NSUTF8StringEncoding];
+
+	//Remove the javascript part of the response so we just have a JSON string
+	if ([receivedString hasPrefix:@"for (;;);"])
+		[receivedString deleteCharactersInRange:NSMakeRange(0, [@"for (;;);" length])];
+
+	NSDictionary *buddyListJSONDict = [receivedString JSONValue];
+
+	AILogWithSignature(@"%@", buddyListJSONDict)
+	NSDictionary *buddyList = [[buddyListJSONDict objectForKey:@"payload"] objectForKey:@"buddy_list"];
+	[self parseBuddyList:buddyList];
+	
+	[receivedString release];
+	
+    //Release the connection, and trunacte the data object
+    [loveConnection release]; loveConnection = nil;
+    [receivedData setLength:0];
+}
+
+@end
