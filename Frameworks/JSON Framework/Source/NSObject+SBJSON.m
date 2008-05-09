@@ -29,6 +29,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #import "NSObject+SBJSON.h"
 
+/* #define ENABLE_FAST_ENUMERATION MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5 */
+#define ENABLE_FAST_ENUMERATION	FALSE
+
 typedef struct {
     unsigned before, after, indent, depth, maxdepth;
 } opts_t;
@@ -167,14 +170,14 @@ static opts_t defaults(NSDictionary *x)
     [json appendString: @"["];
     if( x->indent ) [json appendString: open];
     x->depth++;
-#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
-    unsigned n = [self count];
-    for (int i = 0; i < n; i++) {
-        id item = [self objectAtIndex:i];
-#else
+#if ENABLE_FAST_ENUMERATION
     int i=-1;
     for( id item in self ) {
         i++;
+#else
+	unsigned n = [self count];
+	for (int i = 0; i < n; i++) {
+		id item = [self objectAtIndex:i];			
 #endif
         if( i>0 ) [json appendString: sep];
         [item JSONFragmentWithOptions:x into: json];
@@ -218,14 +221,14 @@ static opts_t defaults(NSDictionary *x)
 
     x->depth++;
     NSArray *keys = [[self allKeys] sortedArrayUsingSelector:@selector(compare:)];
-#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_5
-    unsigned n = [keys count];
-    for (int i = 0; i < n; i++) {
-        NSString *key = [keys objectAtIndex:i];
-#else
+#if ENABLE_FAST_ENUMERATION
     int i=-1;
     for( NSString *key in keys ) {
-        i++;
+        i++;		
+#else
+	unsigned n = [keys count];
+    for (int i = 0; i < n; i++) {
+        NSString *key = [keys objectAtIndex:i];
 #endif
         if( i>0 ) [json appendString: sep];
         if (![key isKindOfClass:[NSString class]])
