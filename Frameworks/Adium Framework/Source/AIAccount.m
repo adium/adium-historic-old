@@ -398,7 +398,7 @@ typedef enum
 			KEY_ACCOUNT_DISPLAY_NAME,
 			@"Display Name",
 			@"StatusState",
-			KEY_USER_ICON,
+			KEY_USE_USER_ICON, KEY_USER_ICON, KEY_DEFAULT_USER_ICON,
 			@"Enabled",
 			nil];
 	}
