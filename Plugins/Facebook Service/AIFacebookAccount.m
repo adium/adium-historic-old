@@ -63,7 +63,7 @@
 
 	[super connect];
 
-	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://www.facebook.com/login.php"]
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://www.facebook.com/login.php"]
 														   cachePolicy:NSURLRequestUseProtocolCachePolicy
 													   timeoutInterval:120];
 	[[webView mainFrame] loadRequest:request];
@@ -172,9 +172,9 @@
 
 - (id)webView:(WebView *)sender identifierForInitialRequest:(NSURLRequest *)request fromDataSource:(WebDataSource *)dataSource
 {
-	if ([[request URL] isEqual:[NSURL URLWithString:@"https://www.facebook.com/login.php"]]) {
+	if ([[request URL] isEqual:[NSURL URLWithString:@"http://www.facebook.com/login.php"]]) {
 		return @"Logging in";
-	} else if ([[request URL] isEqual:[NSURL URLWithString:@"https://www.facebook.com/home.php"]]) {
+	} else if ([[request URL] isEqual:[NSURL URLWithString:@"http://www.facebook.com/home.php"]]) {
 		return @"Home";
 	} else {
 		return nil;
@@ -189,7 +189,7 @@
 			//We sent our login; proceed with the home page
 			[sender stopLoading:self];
 			
-			NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://www.facebook.com/home.php"]
+			NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://www.facebook.com/home.php"]
 																   cachePolicy:NSURLRequestUseProtocolCachePolicy
 															   timeoutInterval:120];	
 			
@@ -204,7 +204,7 @@
 								  [self UID], @"email",
 								  password, @"pass",
 								  nil]
-						   toURL:[NSURL URLWithString:@"https://www.facebook.com/login.php"]];
+						   toURL:[NSURL URLWithString:@"http://www.facebook.com/login.php"]];
 		}
 	} else if ([identifier isEqualToString:@"Home"]) {
 		//We finished logging in and got the home page
