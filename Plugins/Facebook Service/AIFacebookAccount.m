@@ -14,6 +14,9 @@
 #import "AIFacebookOutgoingMessageManager.h"
 #import "AIFacebookIncomingMessageManager.h"
 
+#define LOGIN_PAGE	@"http://www.facebook.com/login.php"
+#define HOME_PAGE	@"http://www.facebook.com/home.php"
+
 @interface AIFacebookAccount (PRIVATE)
 - (void)extractLoginInfoFromHomePage:(NSString *)homeString;
 @end
@@ -63,7 +66,7 @@
 
 	[super connect];
 
-	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://www.facebook.com/login.php"]
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:LOGIN_PAGE]
 														   cachePolicy:NSURLRequestUseProtocolCachePolicy
 													   timeoutInterval:120];
 	[[webView mainFrame] loadRequest:request];
@@ -172,9 +175,9 @@
 
 - (id)webView:(WebView *)sender identifierForInitialRequest:(NSURLRequest *)request fromDataSource:(WebDataSource *)dataSource
 {
-	if ([[request URL] isEqual:[NSURL URLWithString:@"http://www.facebook.com/login.php"]]) {
+	if ([[request URL] isEqual:[NSURL URLWithString:LOGIN_PAGE]]) {
 		return @"Logging in";
-	} else if ([[request URL] isEqual:[NSURL URLWithString:@"http://www.facebook.com/home.php"]]) {
+	} else if ([[request URL] isEqual:[NSURL URLWithString:HOME_PAGE]]) {
 		return @"Home";
 	} else {
 		return nil;
@@ -183,13 +186,12 @@
 
 - (void)webView:(WebView *)sender resource:(id)identifier didFinishLoadingFromDataSource:(WebDataSource *)dataSource
 {
-	AILogWithSignature(@"ID %@ finished!", identifier);
 	if ([identifier isEqualToString:@"Logging in"]) {
 		if (sentLogin) {
 			//We sent our login; proceed with the home page
 			[sender stopLoading:self];
 			
-			NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://www.facebook.com/home.php"]
+			NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:HOME_PAGE]
 																   cachePolicy:NSURLRequestUseProtocolCachePolicy
 															   timeoutInterval:120];	
 			
@@ -204,13 +206,14 @@
 								  [self UID], @"email",
 								  password, @"pass",
 								  nil]
-						   toURL:[NSURL URLWithString:@"http://www.facebook.com/login.php"]];
+						   toURL:[NSURL URLWithString:LOGIN_PAGE]];
 		}
 	} else if ([identifier isEqualToString:@"Home"]) {
 		//We finished logging in and got the home page
 		[self extractLoginInfoFromHomePage:[[dataSource representation] documentSource]];
 
 		AILogWithSignature(@"facebookUID is %@, channel is %@, post form ID is %@", facebookUID, channel, postFormID);
+		
 		[sender stopLoading:self];
 		
 		[self didConnect];
