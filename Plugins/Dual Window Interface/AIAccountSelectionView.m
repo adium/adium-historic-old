@@ -408,7 +408,7 @@
 - (AIListContact *)contactMenu:(AIContactMenu *)inContactMenu validateContact:(AIListContact *)inContact {
 	AIListContact *preferredContact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
 																				 forListContact:inContact];
-	return preferredContact;
+	return (preferredContact ? preferredContact : inContact);
 }
 /*!
  * @brief Create the contact menu and add it to our view

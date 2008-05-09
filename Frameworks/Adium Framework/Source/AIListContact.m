@@ -664,20 +664,24 @@
 			targetAccount = [targetMessagingContact account];	
 		}
 		
-		chat = [[adium chatController] openChatWithContact:targetMessagingContact
-										onPreferredAccount:NO];
-		
-		//Take the string and turn it into an attributed string (in case we were passed HTML)
-		NSAttributedString  *attributedMessage = [AIHTMLDecoder decodeHTML:message];
-		AIContentMessage	*messageContent;
-		messageContent = [AIContentMessage messageInChat:chat
-											  withSource:targetAccount
-											 destination:targetMessagingContact
-													date:nil
-												 message:attributedMessage
-											   autoreply:autoreply];
-		
-		[[adium contentController] sendContentObject:messageContent];
+		if (targetMessagingContact) {
+			chat = [[adium chatController] openChatWithContact:targetMessagingContact
+											onPreferredAccount:NO];
+			
+			//Take the string and turn it into an attributed string (in case we were passed HTML)
+			NSAttributedString  *attributedMessage = [AIHTMLDecoder decodeHTML:message];
+			AIContentMessage	*messageContent;
+			messageContent = [AIContentMessage messageInChat:chat
+												  withSource:targetAccount
+												 destination:targetMessagingContact
+														date:nil
+													 message:attributedMessage
+												   autoreply:autoreply];
+			
+			[[adium contentController] sendContentObject:messageContent];
+		} else {
+			AILogWithSignature(@"No contact available to receive a message to %@", self);
+		}
 	}
 	
 	//Send any file we were told to send
@@ -691,7 +695,14 @@
 																				   forListContact:self];
 		}
 		
-		[[adium fileTransferController] sendFile:filePath toListContact:targetFileTransferContact];
+		if (targetFileTransferContact) {
+			[[adium fileTransferController] sendFile:filePath toListContact:targetFileTransferContact];
+		} else {
+			AILogWithSignature(@"No contact available to receive files to %@", self);
+			NSBeep();
+		}
+	}
+	
 	}
 		
 	return nil;
