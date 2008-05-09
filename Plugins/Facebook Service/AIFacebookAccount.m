@@ -69,6 +69,12 @@
 	[[webView mainFrame] loadRequest:request];
 }
 
+- (NSString *)host
+{
+	// Provide our host so that we know availability
+	return @"www.facebook.com";
+}
+
 - (void)disconnect
 {
 	//XXX how do we disconnect?
