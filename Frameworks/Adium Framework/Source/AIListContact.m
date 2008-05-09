@@ -702,8 +702,6 @@
 			NSBeep();
 		}
 	}
-	
-	}
 		
 	return nil;
 }
