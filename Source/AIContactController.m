@@ -1666,7 +1666,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		if ([inContact respondsToSelector:@selector(preferredContact)])
 			inContact = [inContact performSelector:@selector(preferredContact)];
 		
-		//find the best account for talking to this contact,
+		//Find the best account for talking to this contact,
 		//and return an AIListContact on that account
 		account = [[adium accountController] preferredAccountForSendingContentType:inType
 																		 toContact:inContact];
@@ -1686,8 +1686,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	
 	if (!returnContact)
 		AILogWithSignature(@"Warning: (null) returnContact for sending %@ to %@", inType, inContact);
-
-	return returnContact;
+	/* XXX We can only get a nil returnContact if preferredAccountForSendingContentType:toContact: returns nil.
+	 * that probably shouldn't happen.
+	 */
+	return (returnContact ? returnContact : inContact);
 }
 
 //Retrieve a list contact matching the UID and serviceID of the passed contact but on the specified account.

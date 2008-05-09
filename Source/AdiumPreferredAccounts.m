@@ -146,6 +146,8 @@
 		}
 	}
 
+	AILogWithSignature(@"Could not find a good choice to talk to %@; will return first available account", inContact);
+
 	//If the previous attempts failed, or we weren't passed a contact, use the first appropriate account
 	return [self firstAccountAvailableForSendingContentType:inType
 												  toContact:inContact
