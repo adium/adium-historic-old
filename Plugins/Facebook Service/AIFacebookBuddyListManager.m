@@ -119,7 +119,7 @@
 - (void)pollBuddyList:(NSTimer *)inTimer
 {
 	if (!loveConnection) {
-		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://www.facebook.com/ajax/presence/update.php"]
+		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"https://www.facebook.com/ajax/presence/update.php"]
 															   cachePolicy:NSURLRequestUseProtocolCachePolicy
 														   timeoutInterval:120];
 		NSData *postData = [AIFacebookAccount postDataForDictionary:[NSDictionary dictionaryWithObject:@"1"
