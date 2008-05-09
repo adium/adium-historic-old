@@ -1162,55 +1162,95 @@ typedef enum
 {
 	return [[self preferenceForKey:KEY_ACCOUNT_PROXY_ENABLED group:GROUP_ACCOUNT_STATUS] boolValue];
 }
+/**
+ * @brief Sets whether or not the proxy is enabled for this account.
+ * This does not change the proxy setting immediately, a disconnect and reconnect is still required.
+ */
 - (void)setProxyEnabled:(BOOL)proxyEnabled
 {
 	[self setPreference:[NSNumber numberWithBool:proxyEnabled] forKey:KEY_ACCOUNT_PROXY_ENABLED group:GROUP_ACCOUNT_STATUS];
 }
+/**
+ * @brief Gets the type of the proxy (one of the defined AdiumProxyTypes)
+ */
 - (AdiumProxyType)proxyType
 {
 	return [[self preferenceForKey:KEY_ACCOUNT_PROXY_TYPE group:GROUP_ACCOUNT_STATUS] intValue];
 }
+/**
+ * @brief Sets the proxy type (one of the defined AdiumProxyTypes)
+ */
 - (void)setProxyType:(AdiumProxyType)type
 {
 	[self setPreference:[NSNumber numberWithInt:type] forKey:KEY_ACCOUNT_PROXY_TYPE group:GROUP_ACCOUNT_STATUS];
 }
+/**
+ * @brief Gets the proxy host as a string
+ */
 - (NSString *)proxyHost
 {
 	return [self preferenceForKey:KEY_ACCOUNT_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
 }
+/**
+ * @brief Sets the proxy host
+ */
 - (void)setProxyHost:(NSString *)host
 {
 	[self setPreference:host forKey:KEY_ACCOUNT_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
 }
+/**
+ * @brief Gets the proxy's port
+ */
 - (int)proxyPort
 {
 	return [[self preferenceForKey:KEY_ACCOUNT_PROXY_PORT group:GROUP_ACCOUNT_STATUS] intValue];
 }
+/**
+ * @brief Set the port to which we should connect when connecting to the proxy
+ */
 - (void)setProxyPort:(int)port
 {
 	[self setPreference:[NSNumber numberWithInt:port] forKey:KEY_ACCOUNT_PROXY_PORT group:GROUP_ACCOUNT_STATUS];
 }
+/**
+ * @brief Gets the username we use when connecting to the proxy
+ */
 - (NSString *)proxyUsername
 {
 	return [self preferenceForKey:KEY_ACCOUNT_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
 }
+/**
+ * @brief Sets the username we should use when connecting to the proxy
+ */
 - (void)setProxyUsername:(NSString *)username
 {
 	[self setPreference:username forKey:KEY_ACCOUNT_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
 }
+/**
+ * @brief Gets the password we use when connecting to the proxy
+ */
 - (NSString *)proxyPassword
 {
 	return [self preferenceForKey:KEY_ACCOUNT_PROXY_PASSWORD group:GROUP_ACCOUNT_STATUS];
 }
+/**
+ * @brief Sets the password we should use when connecting to the proxy
+ */
 - (void)setProxyPassword:(NSString *)proxyPassword
 {
 	[self setPreference:proxyPassword forKey:KEY_ACCOUNT_PROXY_PASSWORD group:GROUP_ACCOUNT_STATUS];
 }
 
+/**
+ * @brief Gets the proxy type for applescript (using the nice four-letter codes defined by AdiumProxyTypeApplescript)
+ */
 - (AdiumProxyTypeApplescript)scriptingProxyType
 {
 	return [self applescriptProxyType:[self proxyType]];
 }
+/**
+ * @brief Sets the proxy type to one of the defined AdiumProxyTypeApplescripts
+ */
 - (void)setScriptingProxyType:(AdiumProxyTypeApplescript)type
 {
 	[self setProxyType:[self proxyTypeFromApplescript:type]];
