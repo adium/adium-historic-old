@@ -1596,6 +1596,14 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	return nil;
 }
 
+/*!
+ * @brief Get the best AIListContact to send a given content type to a contat
+ *
+ * The resulting AIListContact will be the most available individual contact (not metacontact) on the best account to
+ * receive the specified content type.
+ *
+ * @result The contact, or nil if it is impossible to send inType to inContact
+ */
 - (AIListContact *)preferredContactForContentType:(NSString *)inType forListContact:(AIListContact *)inContact
 {
 	AIListContact   *returnContact = nil;
@@ -1666,8 +1674,9 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		if ([inContact respondsToSelector:@selector(preferredContact)])
 			inContact = [inContact performSelector:@selector(preferredContact)];
 		
-		//Find the best account for talking to this contact,
-		//and return an AIListContact on that account
+		/* Find the best account for talking to this contact, and return an AIListContact on that account.
+		 * We'll get nil if no account can send inType to inContact.
+		 */
 		account = [[adium accountController] preferredAccountForSendingContentType:inType
 																		 toContact:inContact];
 
@@ -1679,17 +1688,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 												 account:account
 													 UID:[inContact UID]];
 			}
-		} else {
-			AILogWithSignature(@"Warning: There is no account available to send %@ to %@", inType, inContact);
 		}
  	}
-	
-	if (!returnContact)
-		AILogWithSignature(@"Warning: (null) returnContact for sending %@ to %@", inType, inContact);
-	/* XXX We can only get a nil returnContact if preferredAccountForSendingContentType:toContact: returns nil.
-	 * that probably shouldn't happen.
-	 */
-	return (returnContact ? returnContact : inContact);
+
+	return returnContact;
 }
 
 //Retrieve a list contact matching the UID and serviceID of the passed contact but on the specified account.

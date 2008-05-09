@@ -802,10 +802,14 @@ static int nextChatNumber = 0;
 			
 			//Make sure we know where we are sending the file by finding the best contact for
 			//sending CONTENT_FILE_TRANSFER_TYPE.
-			targetFileTransferContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
-																				   forListContact:listContact];
-			[[adium fileTransferController] sendFile:[fileURL path]
-									   toListContact:targetFileTransferContact];
+			if ((targetFileTransferContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
+																						forListContact:listContact])) {
+				[[adium fileTransferController] sendFile:[fileURL path]
+										   toListContact:targetFileTransferContact];
+			} else {
+				AILogWithSignature(@"No contact available to receive files to %@", listContact);
+				NSBeep();
+			}
 		}
 	}
 	
