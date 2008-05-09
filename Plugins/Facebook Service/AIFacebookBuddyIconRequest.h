@@ -15,6 +15,6 @@
 	NSMutableData	*receivedData;
 }
 
-+ (void)retrieveBuddyIconForContact:(AIListContact *)inContact fromURL:(NSURL *)inURL;
++ (void)retrieveBuddyIconForContact:(AIListContact *)inContact withThumbSrc:(NSString *)thumbSrc;
 
 @end
