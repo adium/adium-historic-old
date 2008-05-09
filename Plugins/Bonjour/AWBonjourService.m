@@ -6,11 +6,11 @@
 //  Copyright (c) 2004-2006 The Adium Team. All rights reserved.
 //
 
-#import <Adium/AIStatusControllerProtocol.h>
-#import "AWBonjourAccount.h"
 #import "AWBonjourService.h"
-#import "ESBonjourAccountViewController.h"
+#import <Adium/AIStatusControllerProtocol.h>
 #import <Adium/DCJoinChatViewController.h>
+#import "AWBonjourAccount.h"
+#import "ESBonjourAccountViewController.h"
 
 @implementation AWBonjourService
 

@@ -118,8 +118,7 @@ typedef enum {
 }
 - (void)connect
 {
-	// Say we're connecting...
-	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
+	[super connect];
 
 	[[self libezvThreadProxy] setName:[self displayName]];
 	AILog(@"%@: Logging in using libezvThreadProxy %@",self, [self libezvThreadProxy]);
