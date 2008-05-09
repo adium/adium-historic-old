@@ -308,6 +308,14 @@
 
 //Status ---------------------------------------------------------------------------------------------------------------
 #pragma mark Status
+- (NSString *)effectiveStatusKeyForKey:(NSString *)key
+{
+	if ([key isEqualToString:KEY_USE_USER_ICON] || [key isEqualToString:KEY_DEFAULT_USER_ICON])
+		key = KEY_USER_ICON;
+	
+	return key;
+}
+
 /*!
  * @brief Catch status changes for this account
  *
@@ -318,7 +326,7 @@
 {
 	if (!object || object == self) {
 		if ([[self supportedPropertyKeys] containsObject:key]) {
-			[self updateStatusForKey:key];
+			[self updateStatusForKey:[self effectiveStatusKeyForKey:key]];
 		}
 	}
 }
