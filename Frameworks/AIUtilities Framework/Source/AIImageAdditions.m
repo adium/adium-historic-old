@@ -99,9 +99,11 @@
 	float maxWidth = 0;
 	while ((rep = [repsEnum nextObject])) {
 		if ([rep isKindOfClass:NSBitmapImageRepClass]) {
-			if ([rep size].width >= maxWidth) {
+			float thisWidth = [rep size].width;
+			if (thisWidth >= maxWidth) {
 				//Cast explanation: GCC warns about us returning an NSImageRep here, presumably because it could be some other kind of NSImageRep if we don't check the class. Fortunately, we have such a check. This cast silences the warning.
 				bestRep = (NSBitmapImageRep *)rep;
+				maxWidth = thisWidth;
 			}
 		}
 	}
