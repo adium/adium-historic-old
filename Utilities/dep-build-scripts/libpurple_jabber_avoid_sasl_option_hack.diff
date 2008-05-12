@@ -1,9 +1,9 @@
 #
-# old_revision [f42c9025190a57ae55424302fd21d2b615a721a9]
+# old_revision [4d2d20241c7dac5915e142f0aa9811c9eab40111]
 #
 # patch "libpurple/protocols/jabber/auth.c"
 #  from [8e99ca556f5791c7e113bcbcfddb8b5b02fd83f4]
-#    to [148b02db8967b19b0aa4087dd7b394f2879fe1e5]
+#    to [ded72d5fa5cd3e813b5acf5f39585280ae11bbee]
 # 
 # patch "libpurple/protocols/jabber/libxmpp.c"
 #  from [b56db1a878a32e93e80e36ccaa343dc7422f18cf]
@@ -11,8 +11,8 @@
 #
 ============================================================
 --- libpurple/protocols/jabber/auth.c	8e99ca556f5791c7e113bcbcfddb8b5b02fd83f4
-+++ libpurple/protocols/jabber/auth.c	148b02db8967b19b0aa4087dd7b394f2879fe1e5
-@@ -394,6 +394,33 @@ static void jabber_auth_start_cyrus(Jabb
++++ libpurple/protocols/jabber/auth.c	ded72d5fa5cd3e813b5acf5f39585280ae11bbee
+@@ -394,6 +394,32 @@ static void jabber_auth_start_cyrus(Jabb
  	} while (again);
  
  	if (js->sasl_state == SASL_CONTINUE || js->sasl_state == SASL_OK) {
@@ -39,7 +39,6 @@
 +			}
 +			finish_plaintext_authentication(js);
 +
-+			xmlnode_free(auth);
 +			return;
 +		}
 +
