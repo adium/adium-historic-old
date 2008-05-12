@@ -27,6 +27,8 @@
 + (NSData *)postDataForDictionary:(NSDictionary *)inDict;
 - (BOOL)isSigningOn;
 
+- (void)reconnect;
+
 - (NSString *)facebookUID;
 - (NSString *)channel;
 - (NSString *)postFormID;
