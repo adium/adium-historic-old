@@ -245,7 +245,7 @@
 //Handle a reopen/dock icon click
 - (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows
 {
-	if (![self contactListIsVisibleAndMain] && [[interfacePlugin openContainers] count] == 0) {
+	if (![self contactListIsVisibleAndMain] && [[interfacePlugin openContainerIDs] count] == 0) {
 		//The contact list is not visible, and there are no chat windows. Make the contact list visible.
 		[self showContactList:nil];
 
@@ -363,7 +363,7 @@
  */
 - (void)openChat:(AIChat *)inChat
 {
-	NSArray		*containers = [interfacePlugin openContainersAndChats];
+	NSArray		*containerIDs = [interfacePlugin openContainerIDs];
 	NSString	*containerID = nil;
 	NSString	*containerName = nil;
 	
@@ -395,8 +395,8 @@
 	
 	if (!containerID) {
 		//Open new chats into the first container (if not available, create a new one)
-		if ([containers count] > 0) {
-			containerID = [[containers objectAtIndex:0] objectForKey:@"ID"];
+		if ([containerIDs count] > 0) {
+			containerID = [containerIDs objectAtIndex:0];
 		} else {
 			containerID = nil;
 		}
@@ -414,12 +414,12 @@
 
 - (id)openChat:(AIChat *)inChat inContainerWithID:(NSString *)containerID atIndex:(int)index
 {	
-	NSArray		*containers = [interfacePlugin openContainersAndChats];
+	NSArray		*openContainerIDs = [interfacePlugin openContainerIDs];
 
 	if (!containerID) {
 		//Open new chats into the first container (if not available, create a new one)
-		if ([containers count] > 0) {
-			containerID = [[containers objectAtIndex:0] objectForKey:@"ID"];
+		if ([openContainerIDs count] > 0) {
+			containerID = [openContainerIDs objectAtIndex:0];
 		} else {
 			containerID = AILocalizedString(@"Chats",nil);
 		}
@@ -441,7 +441,7 @@
  *
  * Asks the interfacePlugin to openContainerWithID:
  */
-- (id)openContainerWithID:(NSString *)containerID name:(NSString *)containerName
+- (AIMessageWindowController *)openContainerWithID:(NSString *)containerID name:(NSString *)containerName
 {
 	return [interfacePlugin openContainerWithID:containerID name:containerName];
 }
@@ -466,8 +466,8 @@
 - (void)consolidateChats
 {
 	//We work with copies of these arrays, since moving chats may change their contents
-	NSArray			*openContainers = [[interfacePlugin openContainers] copy];
-	NSEnumerator	*containerEnumerator = [openContainers objectEnumerator];
+	NSArray			*openContainerIDs = [[interfacePlugin openContainerIDs] copy];
+	NSEnumerator	*containerEnumerator = [openContainerIDs objectEnumerator];
 	NSString		*firstContainerID = [containerEnumerator nextObject];
 	NSString		*containerID;
 	
@@ -489,7 +489,7 @@
 	
 	[self chatOrderDidChange];
 	
-	[openContainers release];
+	[openContainerIDs release];
 }
 
 - (void)moveChatToNewContainer:(AIChat *)inChat
@@ -541,9 +541,9 @@
 	return _cachedOpenChats;
 }
 
-- (NSArray *)openContainers
+- (NSArray *)openContainerIDs
 {
-	return [interfacePlugin openContainers];
+	return [interfacePlugin openContainerIDs];
 }
 
 /*!
@@ -571,7 +571,9 @@
 //changing order, etc.
 #pragma mark Interface plugin callbacks
 /*!
- * @breif A chat window did open: rebuild our window menu to show the new chat
+ * @brief A chat window did open: rebuild our window menu to show the new chat
+ *
+ * This should be called by the interface plugin (e.g. AIDualWindowInterfacePlugin) after a chat opens
  *
  * @param inChat Newly created chat 
  */
