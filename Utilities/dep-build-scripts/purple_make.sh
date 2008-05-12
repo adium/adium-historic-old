@@ -6,7 +6,7 @@ fi
 
 DEBUG_SYMBOLS=TRUE
 
-GLIB=glib-2.14.1
+GLIB=glib-2.15.4
 MEANWHILE=meanwhile-1.0.2
 GADU=libgadu-1.7.1
 INTLTOOL=intltool-0.36.2
