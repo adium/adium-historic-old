@@ -116,21 +116,32 @@
 	[lastAvailableBuddiesList release]; lastAvailableBuddiesList = [nowAvailableContacts retain];
 }
 
+- (void)parseNotifications:(NSDictionary *)notifications
+{
+	AILogWithSignature(@"Parsing %@", notifications);
+}
+
 - (void)pollBuddyList:(NSTimer *)inTimer
 {
-	if (!loveConnection) {
-		NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://www.facebook.com/ajax/presence/update.php"]
-															   cachePolicy:NSURLRequestUseProtocolCachePolicy
-														   timeoutInterval:120];
-		NSData *postData = [AIFacebookAccount postDataForDictionary:[NSDictionary dictionaryWithObject:@"1"
-																								forKey:@"buddy_list"]];
-
-		[request setHTTPMethod:@"POST"];
-		[request setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
-		[request setHTTPBody:postData];
-
-		loveConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+	/* If we have an existing connection, it timed out. Give up and try again. */
+	if (loveConnection) {
+		[loveConnection cancel];
+		[loveConnection release];
 	}
+
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://www.facebook.com/ajax/presence/update.php"]
+														   cachePolicy:NSURLRequestUseProtocolCachePolicy
+													   timeoutInterval:120];
+	NSData *postData = [AIFacebookAccount postDataForDictionary:[NSDictionary dictionaryWithObjectsAndKeys:
+																 @"1", @"buddy_list",
+																 @"1", @"notifications",
+																 nil]];
+	
+	[request setHTTPMethod:@"POST"];
+	[request setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
+	[request setHTTPBody:postData];
+	
+	loveConnection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 
 - (void)setupBuddyListPolling
@@ -169,9 +180,10 @@
 	NSDictionary *buddyListJSONDict = [receivedString JSONValue];
 
 	AILogWithSignature(@"%@", buddyListJSONDict)
-	NSDictionary *buddyList = [[buddyListJSONDict objectForKey:@"payload"] objectForKey:@"buddy_list"];
-	[self parseBuddyList:buddyList];
-	
+	NSDictionary *payload = [buddyListJSONDict objectForKey:@"payload"];
+	[self parseBuddyList:[payload objectForKey:@"buddy_list"]];
+	[self parseNotifications:[payload objectForKey:@"notifications"]];
+
 	[receivedString release];
 	
     //Release the connection, and trunacte the data object
