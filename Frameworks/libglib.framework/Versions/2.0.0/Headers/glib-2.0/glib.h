@@ -35,6 +35,7 @@
 #include <glib/gbase64.h>
 #include <glib/gbookmarkfile.h>
 #include <glib/gcache.h>
+#include <glib/gchecksum.h>
 #include <glib/gcompletion.h>
 #include <glib/gconvert.h>
 #include <glib/gdataset.h>
@@ -70,12 +71,14 @@
 #include <glib/gspawn.h>
 #include <glib/gstrfuncs.h>
 #include <glib/gstring.h>
+#include <glib/gtestutils.h>
 #include <glib/gthread.h>
 #include <glib/gthreadpool.h>
 #include <glib/gtimer.h>
 #include <glib/gtree.h>
 #include <glib/gtypes.h>
 #include <glib/gunicode.h>
+#include <glib/gurifuncs.h>
 #include <glib/gutils.h>
 #ifdef G_PLATFORM_WIN32
 #include <glib/gwin32.h>
