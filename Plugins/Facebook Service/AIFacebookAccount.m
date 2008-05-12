@@ -13,12 +13,14 @@
 #import "AIFacebookBuddyListManager.h"
 #import "AIFacebookOutgoingMessageManager.h"
 #import "AIFacebookIncomingMessageManager.h"
+#import "AIFacebookStatusManager.h"
 
 #define LOGIN_PAGE	@"http://www.facebook.com/login.php"
-#define HOME_PAGE	@"http://www.facebook.com/home.php"
+#define FACEBOOK_HOME_PAGE	@"http://www.facebook.com/home.php"
 
 @interface AIFacebookAccount (PRIVATE)
 - (void)extractLoginInfoFromHomePage:(NSString *)homeString;
+- (void)postDictionary:(NSDictionary *)inDict toURL:(NSURL *)inURL;
 @end
 
 /*!
@@ -137,6 +139,22 @@
 	return YES;
 }
 
+#pragma mark Status
+
+- (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage
+{
+	if ([statusState statusType] == AIOfflineStatusType) {
+		[self disconnect];
+	} else {
+		if ([self online]) {
+			/* This is not acceptable as-is; we'll be updating our status message way too often as this will follow global status as other accounts do */
+			// [AIFacebookStatusManager setFacebookStatusMessage:[statusMessage string] forAccount:self];
+		} else {
+			[self connect];
+		}
+	}
+}
+
 #pragma mark Connection processing
 + (NSData *)postDataForDictionary:(NSDictionary *)inDict
 {
@@ -164,7 +182,6 @@
 	
 	NSData *postData = [AIFacebookAccount postDataForDictionary:inDict];
 	
-	[request setAllHTTPHeaderFields:[NSHTTPCookie requestHeaderFieldsWithCookies:[[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:inURL]]];
 	[request setHTTPMethod:@"POST"];
 	[request setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
 	[request setHTTPBody:postData];
@@ -177,7 +194,7 @@
 {
 	if ([[request URL] isEqual:[NSURL URLWithString:LOGIN_PAGE]]) {
 		return @"Logging in";
-	} else if ([[request URL] isEqual:[NSURL URLWithString:HOME_PAGE]]) {
+	} else if ([[request URL] isEqual:[NSURL URLWithString:FACEBOOK_HOME_PAGE]]) {
 		return @"Home";
 	} else {
 		return nil;
@@ -186,12 +203,14 @@
 
 - (void)webView:(WebView *)sender resource:(id)identifier didFinishLoadingFromDataSource:(WebDataSource *)dataSource
 {
+	AILogWithSignature(@"%@ resource %@ finished loading %@", sender, identifier, dataSource);
+
 	if ([identifier isEqualToString:@"Logging in"]) {
 		if (sentLogin) {
 			//We sent our login; proceed with the home page
 			[sender stopLoading:self];
 			
-			NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:HOME_PAGE]
+			NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:FACEBOOK_HOME_PAGE]
 																   cachePolicy:NSURLRequestUseProtocolCachePolicy
 															   timeoutInterval:120];	
 			
@@ -216,7 +235,13 @@
 		
 		[sender stopLoading:self];
 		
-		[self didConnect];
+		if (facebookUID && channel && postFormID) {
+			[self didConnect];
+		} else {
+			[self serverReportedInvalidPassword];
+			[self setLastDisconnectionError:AILocalizedString(@"Could not log in", nil)];
+			[self disconnect];
+		}
 	}
 }
 
