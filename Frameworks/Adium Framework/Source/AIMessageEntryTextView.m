@@ -264,6 +264,9 @@
 		[[adium contentController] userIsTypingContentForChat:chat hasEnteredText:[[self textStorage] length] > 0];
 	}
 
+	//Hide any existing contact list tooltip when we begin typing
+	[[adium interfaceController] showTooltipForListObject:nil atScreenPoint:NSZeroPoint onWindow:nil];
+
     //Reset cache and resize
 	[self _resetCacheAndPostSizeChanged];	
 }

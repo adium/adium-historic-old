@@ -149,11 +149,6 @@
 		[chat setStatusObject:(typingState == AINotTyping ? nil : [NSNumber numberWithInt:typingState])
 					   forKey:OUR_TYPING_STATE
 					   notify:NotifyNever];
-
-		if (typingState == AITyping) {
-			//Hide any existing contact list tooltip when we begin typing
-			[[adium interfaceController] showTooltipForListObject:nil atScreenPoint:NSZeroPoint onWindow:nil];
-		}
 	}
 }
 
