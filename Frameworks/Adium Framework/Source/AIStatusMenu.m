@@ -350,9 +350,9 @@
 	}
 	
 	/* Random undocumented feature of the moment... hold option and select a state to bring up the custom status window
-	 * for modifying and then setting it.
+	 * for modifying and then setting it. Alternately, select an active 
 	 */
-	if ([NSEvent optionKey]) {
+	if ([NSEvent optionKey] || ([sender state] == NSOnState)) {
 		[AIEditStateWindowController editCustomState:(AIStatus *)statusItem
 											 forType:[statusItem statusType]
 										  andAccount:account
