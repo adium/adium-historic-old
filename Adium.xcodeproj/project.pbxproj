@@ -206,6 +206,7 @@
 		341BDF700969829E00CF83F5 /* DockUnviewedContentDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 341BDF6F0969829E00CF83F5 /* DockUnviewedContentDefaults.plist */; };
 		341D41710DD3993100467119 /* JSON.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34A687E30DD3928F008F0430 /* JSON.framework */; };
 		341D41740DD3993300467119 /* JSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34A687E30DD3928F008F0430 /* JSON.framework */; };
+		341FFD940DD85B1E0049F13D /* AIFacebookStatusManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 341FFD930DD85B1E0049F13D /* AIFacebookStatusManager.m */; };
 		3420B7200D222D2100605780 /* libpurple.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC90CDAA8D400B8E233 /* libpurple.framework */; };
 		342113CE08261FB900A3B0FB /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 342113CD08261FB900A3B0FB /* MainMenu.nib */; };
 		342353D709D45726009FF634 /* AIAbstractLogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 342353D509D45725009FF634 /* AIAbstractLogViewerWindowController.m */; };
@@ -2068,6 +2069,8 @@
 		341EC8C70D3C2BAA007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sl; path = Resources/sl.lproj/Statuses.strings; sourceTree = "<group>"; };
 		341EC8C80D3C2BAB007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sl; path = Resources/sl.lproj/StatusPreferences.nib; sourceTree = "<group>"; };
 		341EC8C90D3C2BAB007216A2 /* sl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sl; path = Resources/sl.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
+		341FFD920DD85B1E0049F13D /* AIFacebookStatusManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIFacebookStatusManager.h; path = "Plugins/Facebook Service/AIFacebookStatusManager.h"; sourceTree = "<group>"; };
+		341FFD930DD85B1E0049F13D /* AIFacebookStatusManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIFacebookStatusManager.m; path = "Plugins/Facebook Service/AIFacebookStatusManager.m"; sourceTree = "<group>"; };
 		34208CFB0D502D3E003138D1 /* fr_CA */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr_CA; path = Resources/fr_CA.lproj/AccountProxy.nib; sourceTree = "<group>"; };
 		34208CFC0D502D3F003138D1 /* fr_CA */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr_CA; path = Resources/fr_CA.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
 		34208CFD0D502D3F003138D1 /* fr_CA */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr_CA; path = Resources/fr_CA.lproj/Buttons.strings; sourceTree = "<group>"; };
@@ -5491,6 +5494,8 @@
 				34A3C8CB0DD3DBB100D35F10 /* AIFacebookOutgoingMessageManager.m */,
 				34A3C8FE0DD3DF8000D35F10 /* AIFacebookIncomingMessageManager.h */,
 				34A3C8FF0DD3DF8000D35F10 /* AIFacebookIncomingMessageManager.m */,
+				341FFD920DD85B1E0049F13D /* AIFacebookStatusManager.h */,
+				341FFD930DD85B1E0049F13D /* AIFacebookStatusManager.m */,
 			);
 			name = Facebook;
 			sourceTree = "<group>";
@@ -9268,6 +9273,7 @@
 				34A1EFDE0DD3D4BB0090667A /* AIFacebookBuddyIconRequest.m in Sources */,
 				34A3C8CC0DD3DBB100D35F10 /* AIFacebookOutgoingMessageManager.m in Sources */,
 				34A3C9000DD3DF8000D35F10 /* AIFacebookIncomingMessageManager.m in Sources */,
+				341FFD940DD85B1E0049F13D /* AIFacebookStatusManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
