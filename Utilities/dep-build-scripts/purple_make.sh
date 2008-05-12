@@ -73,7 +73,6 @@ for patch in "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
 done
 popd
 
-
 for ARCH in ppc i386 ; do
     case $ARCH in
 		ppc) export HOST=powerpc-apple-darwin9
@@ -163,11 +162,15 @@ for ARCH in ppc i386 ; do
        $PIDGIN_SOURCE/libpurple/protocols/jabber/jabber.h \
 	   $TARGET_DIR/include/libpurple
 
-    pushd $MSN_PECAN_DIR
-       # make clean || exit 1
-       # make -j $NUMBER_OF_CORES || exit 1
-       # make install || exit 1
-    popd
+echo Compiling for $ARCH
+echo LDFLAGS is $LDFLAGS
+echo PKG_CONFIG is $PKG_CONFIG
+
+#    pushd $MSN_PECAN_DIR
+#       make clean || exit 1
+#       make -j $NUMBER_OF_CORES || exit 1
+#       make install || exit 1
+#    popd
 done
 
 pushd $PIDGIN_SOURCE
