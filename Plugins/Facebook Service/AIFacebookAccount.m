@@ -94,6 +94,23 @@
 	[self didDisconnect];
 }
 
+- (void)reconnect
+{
+	[self setLastDisconnectionError:AILocalizedString(@"Waiting to reconnect", nil)];
+	[self disconnect];
+}
+
+- (AIReconnectDelayType)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
+{
+	if (*disconnectionError &&
+		([*disconnectionError isEqualToString:AILocalizedString(@"Waiting to reconnect", nil)] ||
+		 [*disconnectionError isEqualToString:AILocalizedString(@"Could not log in", nil)])) {
+		return AIReconnectImmediately;
+	}
+	
+	return [super shouldAttemptReconnectAfterDisconnectionError:disconnectionError];
+}
+
 - (BOOL)isSigningOn
 {
 	return silentAndDelayed;

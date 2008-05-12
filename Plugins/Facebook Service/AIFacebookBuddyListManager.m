@@ -179,7 +179,13 @@
 
 	NSDictionary *buddyListJSONDict = [receivedString JSONValue];
 
-	AILogWithSignature(@"%@", buddyListJSONDict)
+	AILogWithSignature(@"%@", buddyListJSONDict);
+	if ([[buddyListJSONDict objectForKey:@"errorSummary"] length]) {
+		if ([[buddyListJSONDict objectForKey:@"errorSummary"] isEqualToString:@"Not Logged In"]) {
+			[account reconnect];
+		}
+	}
+
 	NSDictionary *payload = [buddyListJSONDict objectForKey:@"payload"];
 	[self parseBuddyList:[payload objectForKey:@"buddy_list"]];
 	[self parseNotifications:[payload objectForKey:@"notifications"]];
