@@ -1163,8 +1163,9 @@
  * @brief	toggles the state of the userlist shelf
  */
 -(void)toggleUserlist:(id)sender
-{	
-	[shelfView setShelfIsVisible:![shelfView isShelfVisible]];
+{
+	if ([chat isGroupChat])
+		[shelfView setShelfIsVisible:![shelfView isShelfVisible]];
 }	
 
 #pragma mark Undo
