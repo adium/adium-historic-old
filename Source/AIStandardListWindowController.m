@@ -887,26 +887,26 @@
 
 	// Contact list resizing
 	if (filterBarIsVisible) {
-		targetFrame.size.height = targetFrame.size.height + [filterBarView bounds].size.height;
+		targetFrame.size.height = NSHeight(targetFrame) + NSHeight([filterBarView bounds]);
 	} else {
-		targetFrame.size.height = targetFrame.size.height - [filterBarView bounds].size.height;
+		targetFrame.size.height = NSHeight(targetFrame) - NSHeight([filterBarView bounds]);
 	}
 	
 	// Filter bar resizing
 	if (!filterBarIsVisible) {
 		// If the filter bar isn't already visible
-		[filterBarView setFrame:NSMakeRect(targetFrame.origin.x,
-										   [targetView frame].size.height,
-										   targetFrame.size.width,
-										   [filterBarView bounds].size.height)];
+		[filterBarView setFrame:NSMakeRect(NSMinX(targetFrame),
+										   NSHeight([targetView frame]),
+										   NSWidth(targetFrame),
+										   NSHeight([filterBarView bounds]))];
 
 		// Attach the filter bar to the window
 		[[[self window] contentView] addSubview:filterBarView];
 	}
 	
 	filterBarDict = [NSDictionary dictionaryWithObjectsAndKeys:filterBarView, NSViewAnimationTargetKey,
-					 [NSValue valueWithRect:NSMakeRect(targetFrame.origin.x, targetFrame.size.height,
-													   targetFrame.size.width, [filterBarView bounds].size.height)], NSViewAnimationEndFrameKey, nil];
+					 [NSValue valueWithRect:NSMakeRect(NSMinX(targetFrame), NSHeight(targetFrame),
+													   NSWidth(targetFrame), NSHeight([filterBarView bounds]))], NSViewAnimationEndFrameKey, nil];
 	
 	targetViewDict = [NSDictionary dictionaryWithObjectsAndKeys:targetView, NSViewAnimationTargetKey,
 					  [NSValue valueWithRect:targetFrame], NSViewAnimationEndFrameKey, nil];
