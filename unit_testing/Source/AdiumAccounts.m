@@ -91,7 +91,7 @@
  * @brief Returns an array of accounts compatible with a service
  *
  * @param service AIService for compatible accounts
- * @param NSArray of AIAccount instances
+ * @return NSArray of AIAccount instances compatible with the given service
  */
 - (NSArray *)accountsCompatibleWithService:(AIService *)service
 {
@@ -110,6 +110,13 @@
 	return matchingAccounts;	
 }
 
+
+/*!
+ * @brief Returns the account with the given \a objectID, or nil if no such account exists.
+ * 
+ * @param objectID An \c NSString containing the desired objectID.
+ * @return An \c AIAccount instance of the previously-added account with the given ID, or nil if no such account exists.
+ */
 - (AIAccount *)accountWithInternalObjectID:(NSString *)objectID
 {
     NSEnumerator	*enumerator = [accounts objectEnumerator];
