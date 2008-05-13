@@ -886,9 +886,26 @@
 	NSDictionary *targetViewDict, *filterBarDict;
 
 	// Contact list resizing
-	if (filterBarIsVisible) {
+	if (filterBarIsVisible) {			
 		targetFrame.size.height = NSHeight(targetFrame) + NSHeight([filterBarView bounds]);
+
 	} else {
+		/* We can only have a height less than the filter bar view if we are autosizing vertically, as
+		 * there is a minimum height otherwise which is larger.  We can therefore increase our window size to allow space
+		 * for the filter bar with impunity and without undoing this when hiding the bar, as the autosizing of the contact
+		 * list will get us back to the right size later.
+		 */
+		if (NSHeight(targetFrame) < (NSHeight([filterBarView bounds]) * 2)) {
+			NSRect windowFrame = [[targetView window] frame];
+			
+			[[targetView window] setFrame:NSMakeRect(NSMinX(windowFrame), NSMinY(windowFrame) - NSHeight([filterBarView bounds]),
+													 NSWidth(windowFrame), NSHeight(windowFrame) + NSHeight([filterBarView bounds]))
+								  display:NO
+								  animate:NO];
+			
+			targetFrame = [targetView frame];			
+		}
+			
 		targetFrame.size.height = NSHeight(targetFrame) - NSHeight([filterBarView bounds]);
 	}
 	
@@ -910,7 +927,7 @@
 	
 	targetViewDict = [NSDictionary dictionaryWithObjectsAndKeys:targetView, NSViewAnimationTargetKey,
 					  [NSValue valueWithRect:targetFrame], NSViewAnimationEndFrameKey, nil];
-	
+
 	filterBarAnimation = [[NSViewAnimation alloc] initWithViewAnimations:[NSArray arrayWithObjects:targetViewDict, filterBarDict, nil]];
 	[filterBarAnimation setDuration:duration];
 	[filterBarAnimation setAnimationBlockingMode:NSAnimationBlocking];
