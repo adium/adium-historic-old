@@ -7,7 +7,6 @@
 //
 
 #import "TestAdiumAccounts.h"
-#import "AdiumAccountsForTest.h"
 #import "AIAdiumProtocol.h"
 #import "OCMock/OCMock.h"
 #import <Adium/AIService.h>
