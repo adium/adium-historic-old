@@ -24,6 +24,8 @@
 		<string>livejournal.png</string>
 		<key>MSN</key>
 		<string>msn.png</string>
+		<key>MySpace</key>
+		<string>myspace.png</string>
 		<key>Mac</key>
 		<string>dotmac.png</string>
 		<key>QQ</key>
@@ -98,6 +100,8 @@
 		<string>livejournal-small.png</string>
 		<key>MSN</key>
 		<string>msn-small.png</string>
+		<key>MySpace</key>
+		<string>myspace-small.png</string>
 		<key>Mac</key>
 		<string>dotmac-small.png</string>
         <key>QQ</key>
