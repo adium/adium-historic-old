@@ -90,7 +90,7 @@
  */
 - (NSImage *)defaultServiceIconOfType:(AIServiceIconType)iconType
 {
-	if (iconType == AIServiceIconSmall) {
+	if ((iconType == AIServiceIconSmall) || (iconType == AIServiceIconList)) {
 		return [NSImage imageNamed:@"facebook-small" forClass:[self class] loadLazily:YES];
 	} else {
 		return [NSImage imageNamed:@"facebook" forClass:[self class] loadLazily:YES];
