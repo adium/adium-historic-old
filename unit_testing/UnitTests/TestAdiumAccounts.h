@@ -2,20 +2,28 @@
 #import <AdiumAccounts.h>
 
 
-@interface testAdiumAccounts : SenTestCase {
+@interface TestAdiumAccounts : SenTestCase {
 	AdiumAccounts* adiumAccounts;
+	
+	id googleService;
+	id yahooService;
+	id aimService;
+	
+	id googleAccount;
+	id googleAccount2;
+	id aimAccount;
 }
 
 - (void)testControllerDidLoad;
 
 //Accounts
-- (void)testAccounts;
+- (void)testEmptyAccounts;
 - (void)testAccountsCompatibleWithService;
 - (void)testAccountWithInternalObjectID;
 
 //Editing
 - (void)testCreateAccountWithService_UID;
-- (void)testAddAccount;
+- (void)testAddAccounts;
 - (void)testDeleteAccount;
 - (void)testMoveAccount_toIndex;
 - (void)testAccountDidChangeUID;
