@@ -42,7 +42,6 @@
  *											  ensures that yyleng reports whole length of the string,
  *											  without a costly call to yymore().
  */
-#define YY_NO_UNPUT
 unsigned int AHStringOffset;
 int AHValidShift = 0;
 #include "AHLinkLexer.h"
@@ -76,7 +75,7 @@ ipv6HexPart     ({ipv6HexSeq})|(::{ipv6HexSeq})
 ipv6Address     {ipv6HexPart}({ipv4address})?
 ipv6URL         \[{ipv6Address}](:[0-9]+)?(\/.*)?
 
-%option noyywrap 8bit caseless never-interactive prefix="AH"
+%option noyywrap nounput 8bit caseless never-interactive prefix="AH"
 
 %x CANONICAL
 %%
