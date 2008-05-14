@@ -8,13 +8,13 @@
 
 #import "TestHyperlinkScanner.h"
 
-#import <AIHyperlinks/AIHyperlinks.h>
+#import <AutoHyperlinks/AHyperlinks.h>
 
 @implementation TestHyperlinkScanner
 
 - (void)testGreaterThanBeforeString:(NSString *)suffix {
-	SHHyperlinkScanner *scanner = [[SHHyperlinkScanner alloc] initWithStrictChecking:YES];
-	SHMarkedHyperlink *link = [scanner nextURLFromString:[@"<http://adiumx.com/>" stringByAppendingString:suffix]];
+	AHHyperlinkScanner *scanner = [[AHHyperlinkScanner alloc] initWithStrictChecking:YES];
+	AHMarkedHyperlink *link = [scanner nextURLFromString:[@"<http://adiumx.com/>" stringByAppendingString:suffix]];
 	STAssertEqualObjects([link URL], [NSURL URLWithString:@"http://adiumx.com/"], @"-[SHHyperlinkScanner nextURLFromString:] must not include any characters that appear after the URL");
 	[scanner release];
 }

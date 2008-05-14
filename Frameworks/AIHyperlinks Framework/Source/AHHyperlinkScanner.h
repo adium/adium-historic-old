@@ -25,5 +25,37 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "SHHyperlinkScanner.h"
-#import "SHMarkedHyperlink.h"
+#import "AHLinkLexer.h"
+
+extern int AHleng;
+extern int AHlex();
+typedef struct AH_buffer_state *AH_BUFFER_STATE;
+void AH_switch_to_buffer(AH_BUFFER_STATE);
+AH_BUFFER_STATE AH_scan_string (const char *);
+void AH_delete_buffer(AH_BUFFER_STATE);
+
+extern unsigned int AHStringOffset;
+
+@class AHMarkedHyperlink;
+
+@interface AHHyperlinkScanner : NSObject
+{
+	NSDictionary				*urlSchemes;
+	BOOL						 useStrictChecking;
+	AH_URI_VERIFICATION_STATUS		 validStatus;
+}
+
+- (id)init;
+- (id)initWithStrictChecking:(BOOL)flag;
+
+- (AH_URI_VERIFICATION_STATUS)validationStatus;
+
+- (BOOL)isStringValidURL:(NSString *)inString;
+- (AHMarkedHyperlink *)nextURLFromString:(NSString *)inString;
+
+- (NSArray *)allURLsFromString:(NSString *)inString;
+- (NSArray *)allURLsFromTextView:(NSTextView *)inView;
+- (NSAttributedString *)linkifyString:(NSAttributedString *)inString;
+- (void)linkifyTextView:(NSTextView *)inView;
+
+@end

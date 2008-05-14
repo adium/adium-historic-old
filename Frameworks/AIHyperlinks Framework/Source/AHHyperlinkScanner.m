@@ -25,13 +25,13 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "SHHyperlinkScanner.h"
-#import "SHLinkLexer.h"
-#import "SHMarkedHyperlink.h"
+#import "AHHyperlinkScanner.h"
+#import "AHLinkLexer.h"
+#import "AHMarkedHyperlink.h"
 
 #define	DEFAULT_URL_SCHEME	@"http://"
 
-@implementation SHHyperlinkScanner
+@implementation AHHyperlinkScanner
 
 #pragma mark Init
 
@@ -49,7 +49,7 @@
 			@"ftp://", @"ftp",
 			nil];
 		useStrictChecking = flag;
-		SHStringOffset = 0;
+		AHStringOffset = 0;
 	}
 
 	return self;
@@ -63,7 +63,7 @@
 
 #pragma mark utility
 
-- (URI_VERIFICATION_STATUS)validationStatus
+- (AH_URI_VERIFICATION_STATUS)validationStatus
 {
 	return validStatus;
 }
@@ -73,11 +73,11 @@
 // method to determine the validity of a given string, only place where flex is called
 - (BOOL)isStringValidURL:(NSString *)inString
 {
-    SH_BUFFER_STATE buf;  // buffer for flex to scan from
+    AH_BUFFER_STATE buf;  // buffer for flex to scan from
 	const char		*inStringUTF8;
     unsigned		utf8Length;
     
-	validStatus = SH_URL_INVALID; // assume the URL is invalid
+	validStatus = AH_URL_INVALID; // assume the URL is invalid
 
 	if (!(inStringUTF8 = [inString UTF8String])) {
 		return NO;
@@ -86,31 +86,31 @@
 	utf8Length = strlen(inStringUTF8); // length of the string in utf-8
     
 	// initialize the buffer (flex automatically switches to the buffer in this function)
-    buf = SH_scan_string(inStringUTF8);
+    buf = AH_scan_string(inStringUTF8);
 
     // call flex to parse the input
-    validStatus = SHlex();
+    validStatus = AHlex();
 
     // condition for valid URI's
-    if(validStatus == SH_URL_VALID || validStatus == SH_MAILTO_VALID || validStatus == SH_FILE_VALID){
-        SH_delete_buffer(buf); //remove the buffer from flex.
+    if(validStatus == AH_URL_VALID || validStatus == AH_MAILTO_VALID || validStatus == AH_FILE_VALID){
+        AH_delete_buffer(buf); //remove the buffer from flex.
         buf = NULL; //null the buffer pointer for safty's sake.
         
         // check that the whole string was matched by flex.
         // this prevents silly things like "blah...com" from being seen as links
-        if(SHleng == utf8Length){
+        if(AHleng == utf8Length){
             return YES;
         }
     // condition for degenerate URL's (A.K.A. URI's sans specifiers), requres strict checking to be NO.
-    }else if((validStatus == SH_URL_DEGENERATE || validStatus == SH_MAILTO_DEGENERATE) && !useStrictChecking){
-        SH_delete_buffer(buf);
+    }else if((validStatus == AH_URL_DEGENERATE || validStatus == AH_MAILTO_DEGENERATE) && !useStrictChecking){
+        AH_delete_buffer(buf);
         buf = NULL;
-        if(SHleng == utf8Length){
+        if(AHleng == utf8Length){
             return YES;
         }
     // if it ain't vaild, and it ain't degenerate, then it's invalid.
     }else{
-        SH_delete_buffer(buf);
+        AH_delete_buffer(buf);
         buf = NULL;
         return NO;
     }
@@ -118,12 +118,12 @@
     return NO;
 }
 
-- (SHMarkedHyperlink *)nextURLFromString:(NSString *)inString
+- (AHMarkedHyperlink *)nextURLFromString:(NSString *)inString
 {
     NSString    *scanString = nil;
 
-	//get our location from SHStringOffset, so we can pick up where we left off
-    int			location = SHStringOffset;
+	//get our location from AHStringOffset, so we can pick up where we left off
+    int			location = AHStringOffset;
 
 	static NSCharacterSet *skipSet = nil;
     if (!skipSet) {
@@ -228,20 +228,20 @@
 			}else break;
 		}
 
-        SHStringOffset = [preScanner scanLocation] - finalStringLen;
+        AHStringOffset = [preScanner scanLocation] - finalStringLen;
 
         // if we have a valid URL then save the scanned string, and make a SHMarkedHyperlink out of it.
         // this way, we can preserve things like the matched string (to be converted to a NSURL),
         // parent string, it's validation status (valid, file, degenerate, etc), and it's range in the parent string
         if((finalStringLen > 0) && [self isStringValidURL:scanString]){
-            SHMarkedHyperlink	*markedLink;
+            AHMarkedHyperlink	*markedLink;
 			NSRange				urlRange;
 			
 			urlRange = NSMakeRange([preScanner scanLocation] - localStringLen, finalStringLen);
 
             //insert typical specifiers if the URL is degenerate
             switch(validStatus){
-                case SH_URL_DEGENERATE:
+                case AH_URL_DEGENERATE:
                 {
                     NSString *scheme = DEFAULT_URL_SCHEME;
                     NSScanner *dotScanner = [[NSScanner alloc] initWithString:scanString];
@@ -262,7 +262,7 @@
                     break;
                 }
 
-                case SH_MAILTO_DEGENERATE:
+                case AH_MAILTO_DEGENERATE:
 					scanString = [@"mailto:" stringByAppendingString:scanString];
                     break;
                 default:
@@ -270,7 +270,7 @@
             }
             
             //make a marked link
-            markedLink = [[SHMarkedHyperlink alloc] initWithString:scanString
+            markedLink = [[AHMarkedHyperlink alloc] initWithString:scanString
 											  withValidationStatus:validStatus
 													  parentString:inString
 														  andRange:urlRange];
@@ -278,14 +278,14 @@
         }
 		
         //step location after scanning a string
-        location = SHStringOffset;
+        location = AHStringOffset;
 		
 		[pool release];
     }
 	
     // if we're here, then NSScanner hit the end of the string
-    // set SHStringOffset to the string length here so we avoid potential infinite looping with many trailing spaces.
-    SHStringOffset = [inString length];
+    // set AHStringOffset to the string length here so we avoid potential infinite looping with many trailing spaces.
+    AHStringOffset = [inString length];
     return nil;
 }
 
@@ -294,12 +294,12 @@
 //fetch all the URL's from a string
 -(NSArray *)allURLsFromString:(NSString *)inString
 {
-    SHStringOffset = 0; //set the offset to 0.
+    AHStringOffset = 0; //set the offset to 0.
     NSMutableArray		*rangeArray = nil;
-    SHMarkedHyperlink	*markedLink;
+    AHMarkedHyperlink	*markedLink;
     
     //build an array of marked links.
-    while([inString length] > SHStringOffset){
+    while([inString length] > AHStringOffset){
         if((markedLink = [self nextURLFromString:inString])){
 			if(!rangeArray) rangeArray = [NSMutableArray array];
             [rangeArray addObject:markedLink];
@@ -326,7 +326,7 @@
 	if([rangeArray count]){
 		NSMutableAttributedString	*linkifiedString;
 		NSEnumerator				*enumerator;
-		SHMarkedHyperlink			*markedLink;
+		AHMarkedHyperlink			*markedLink;
 		
 		linkifiedString = [[inString mutableCopy] autorelease];
 

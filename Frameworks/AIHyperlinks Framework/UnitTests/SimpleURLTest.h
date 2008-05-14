@@ -4,12 +4,12 @@
 //
 
 #import <SenTestingKit/SenTestingKit.h>
-#import "AIHyperlinks.h"
+#import "AHyperlinks.h"
 
 #define testHyperlink(x) STAssertTrue([scanner isStringValidURL: x ], nil)
 
 @interface SimpleURLTest : SenTestCase {
-	SHHyperlinkScanner	*scanner;
+	AHHyperlinkScanner	*scanner;
 }
 - (void)testURLOnly;
 - (void)testURI;

@@ -16,7 +16,7 @@
 
 #import "AIAutoLinkingPlugin.h"
 #import <Adium/AIContentControllerProtocol.h>
-#import <AIHyperlinks/AIHyperlinks.h>
+#import <AutoHyperlinks/AHyperlinks.h>
  
 /*!
  * @class AIAutoLinkingPlugin
@@ -31,7 +31,7 @@
  */
 - (void)installPlugin
 {
-	hyperlinkScanner = [[SHHyperlinkScanner alloc] initWithStrictChecking:NO];
+	hyperlinkScanner = [[AHHyperlinkScanner alloc] initWithStrictChecking:NO];
 
 	[[adium contentController] registerContentFilter:self ofType:AIFilterDisplay direction:AIFilterIncoming];
 	[[adium contentController] registerContentFilter:self ofType:AIFilterMessageDisplay direction:AIFilterIncoming];

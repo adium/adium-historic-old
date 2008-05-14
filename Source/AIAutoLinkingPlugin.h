@@ -17,10 +17,10 @@
 #import <Adium/AIPlugin.h>
 #import <Adium/AIContentControllerProtocol.h>
 
-@class SHHyperlinkScanner;
+@class AHHyperlinkScanner;
 
 @interface AIAutoLinkingPlugin : AIPlugin <AIContentFilter> {
-	SHHyperlinkScanner	*hyperlinkScanner;
+	AHHyperlinkScanner	*hyperlinkScanner;
 }
 
 @end
