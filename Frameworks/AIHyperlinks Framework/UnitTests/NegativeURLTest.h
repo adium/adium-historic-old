@@ -4,7 +4,7 @@
 //
 
 #import <SenTestingKit/SenTestingKit.h>
-#import "AHyperlinks.h"
+#import "AutoHyperlinks.h"
 
 #define testHyperlink(x) STAssertFalse([scanner isStringValidURL: x ], @"%@ is a valid URI and should not be", x)
 
