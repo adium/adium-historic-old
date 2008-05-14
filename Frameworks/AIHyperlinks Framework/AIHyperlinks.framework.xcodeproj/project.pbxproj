@@ -47,6 +47,8 @@
 		7E78D9C30DD12D4200B9388F /* SimpleURLTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleURLTest.h; path = UnitTests/SimpleURLTest.h; sourceTree = "<group>"; };
 		7E78D9C40DD12D4200B9388F /* SimpleURLTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimpleURLTest.m; path = UnitTests/SimpleURLTest.m; sourceTree = "<group>"; };
 		7E78DA140DD133F300B9388F /* AIHyperlinks.framework_Test_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIHyperlinks.framework_Test_Prefix.pch; path = UnitTests/AIHyperlinks.framework_Test_Prefix.pch; sourceTree = "<group>"; };
+		7E9D89FA0DD4FD4200CD54F8 /* Copyright.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Copyright.txt; sourceTree = "<group>"; };
+		7E9D89FB0DD4FD6400CD54F8 /* License.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = License.txt; sourceTree = "<group>"; };
 		7EA3B0440DD1153F002A18D1 /* Test.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Test.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EA3B0450DD1153F002A18D1 /* Test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Test-Info.plist"; path = "Resources/Test-Info.plist"; sourceTree = "<group>"; };
 		7EA3B04D0DD11627002A18D1 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = /System/Library/Frameworks/SenTestingKit.framework; sourceTree = "<absolute>"; };
@@ -87,6 +89,8 @@
 		0867D691FE84028FC02AAC07 /* AIHyperlinks.framework */ = {
 			isa = PBXGroup;
 			children = (
+				7E9D89FB0DD4FD6400CD54F8 /* License.txt */,
+				7E9D89FA0DD4FD4200CD54F8 /* Copyright.txt */,
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
 				089C1665FE841158C02AAC07 /* Resources */,
