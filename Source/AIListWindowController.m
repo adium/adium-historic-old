@@ -859,20 +859,28 @@ static NSMutableDictionary *screenSlideBoundaryRectDictionary = nil;
 	return inCorner;
 }
 
-// YES if the mouse is against all edges of the screen where we previously slid the window and not in a corner.
-// This means that this method will never return YES of the cl is slid into a corner, which shouldn't happen. 
+/*!
+ * @brief Should the window be slid on screen given the mouse's position?
+ *
+ * This method will never return YES of the cl is slid into a corner, which shouldn't happen, or if the mouse is in a corner.
+ *
+ * @result YES if the mouse is against all edges of the screen where we previously slid the window and not in a corner.
+ */
 - (BOOL)shouldSlideWindowOnScreen_mousePositionStrategy
 {
 	if ([self windowSlidOffScreenEdgeMask] != AINoEdges) {
-		NSPoint mouseLocation = [NSEvent mouseLocation];		
-		BOOL	mouseNearSlideOffEdges = YES;
+		NSPoint mouseLocation = [NSEvent mouseLocation];
+		//Initially, assume the mouse is not in an appropriate position
+		BOOL	mouseNearSlideOffEdges = NO;
 	
 		NSEnumerator *enumerator = [screenSlideBoundaryRectDictionary objectEnumerator];
 		NSValue		 *screenSlideBoundaryRectValue;
-		while (mouseNearSlideOffEdges && (screenSlideBoundaryRectValue = [enumerator nextObject])) {
+		while ((screenSlideBoundaryRectValue = [enumerator nextObject])) {
 			NSRectEdge	screenEdge;
 			NSRect		screenSlideBoundaryRect = [screenSlideBoundaryRectValue rectValue];
-			//Only look at the screen in which the mouse currently resides
+			/* Only look at the screen in which the mouse currently resides.
+			 * The mouse may be in no screen if it is over the menu bar.
+			 */
 			if (NSPointInRect(mouseLocation, screenSlideBoundaryRect)) {
 				//Check each edge
 				for (screenEdge = 0; screenEdge < 4; screenEdge++) {
@@ -885,10 +893,14 @@ static NSMutableDictionary *screenSlideBoundaryRectDictionary = nil;
 						if(mouseOutsideSlideBoundaryRectDistance < -MOUSE_EDGE_SLIDE_ON_DISTANCE) {
 							mouseNearSlideOffEdges = NO;
 							break;
+						} else {
+							mouseNearSlideOffEdges = YES;							
 						}
 					}
 				}
 			}
+
+			if (mouseNearSlideOffEdges) break;
 		}
 
 		return mouseNearSlideOffEdges && ![self pointIsInScreenCorner:mouseLocation];
