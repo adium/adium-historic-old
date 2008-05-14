@@ -322,7 +322,8 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 - (void)removeObject:(AIListObject *)inObject
 {
 	if ([containedObjects containsObjectIdenticalTo:inObject]) {
-		
+		BOOL	noteRemoteGroupingChanged = NO;
+
 		[inObject retain];
 		
 		[containedObjects removeObject:inObject];
@@ -330,11 +331,11 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		if ([inObject isKindOfClass:[AIListContact class]] && [(AIListContact *)inObject remoteGroupName]) {
 			//Reset it to its remote group
 			[inObject setContainingObject:nil];
-			[[adium contactController] listObjectRemoteGroupingChanged:(AIListContact *)inObject];
+			noteRemoteGroupingChanged = YES;
 		} else {
 			[inObject setContainingObject:[self containingObject]];
 		}
-		
+
 		[self clearContainedObjectInfoCache];
 
 		//Only need to check if we are now unique if we weren't unique before, since we've either become
@@ -349,6 +350,13 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		//If we remove our list object, don't continue to show up in the contact list
 		if ([containedObjects count] == 0) {
 			[self setContainingObject:nil];
+		}
+
+		/* Now that we're done reconfigured ourselves and the recently removed object,
+		 * tell the contactController about the change in the removed object.
+		 */
+		if (noteRemoteGroupingChanged) {
+			[[adium contactController] listObjectRemoteGroupingChanged:(AIListContact *)inObject];
 		}
 
 		[inObject release];
