@@ -4,7 +4,7 @@
 //
 
 #import "HyperlinkContextTest.h"
-#import "AHyperlinks.h"
+#import "AutoHyperlinks.h"
 
 @implementation HyperlinkContextTest
 - (void)testLaxContext:(NSString *)linkString withURI:(NSString *)URIString {

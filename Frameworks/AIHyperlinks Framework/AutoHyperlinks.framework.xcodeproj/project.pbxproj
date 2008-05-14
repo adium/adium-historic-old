@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3496A82307CE69270055BBAB /* AHLinkLexer.h in Headers */ = {isa = PBXBuildFile; fileRef = 3496A81C07CE69270055BBAB /* AHLinkLexer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3496A82407CE69270055BBAB /* AHyperlinks.h in Headers */ = {isa = PBXBuildFile; fileRef = 3496A81D07CE69270055BBAB /* AHyperlinks.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		3496A82407CE69270055BBAB /* AutoHyperlinks.h in Headers */ = {isa = PBXBuildFile; fileRef = 3496A81D07CE69270055BBAB /* AutoHyperlinks.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3496A82507CE69270055BBAB /* AHLinkLexer.l in Sources */ = {isa = PBXBuildFile; fileRef = 3496A81E07CE69270055BBAB /* AHLinkLexer.l */; };
 		3496A82607CE69270055BBAB /* AHMarkedHyperlink.h in Headers */ = {isa = PBXBuildFile; fileRef = 3496A81F07CE69270055BBAB /* AHMarkedHyperlink.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3496A82707CE69270055BBAB /* AHHyperlinkScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 3496A82007CE69270055BBAB /* AHHyperlinkScanner.m */; };
@@ -35,7 +35,7 @@
 		1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		32DBCF5E0370ADEE00C91783 /* AutoHyperlinks.framework_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AutoHyperlinks.framework_Prefix.pch; sourceTree = "<group>"; };
 		3496A81C07CE69270055BBAB /* AHLinkLexer.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AHLinkLexer.h; path = Source/AHLinkLexer.h; sourceTree = "<group>"; };
-		3496A81D07CE69270055BBAB /* AHyperlinks.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AHyperlinks.h; path = Source/AHyperlinks.h; sourceTree = "<group>"; };
+		3496A81D07CE69270055BBAB /* AutoHyperlinks.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AutoHyperlinks.h; path = Source/AutoHyperlinks.h; sourceTree = "<group>"; };
 		3496A81E07CE69270055BBAB /* AHLinkLexer.l */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.lex; name = AHLinkLexer.l; path = Source/AHLinkLexer.l; sourceTree = "<group>"; };
 		3496A81F07CE69270055BBAB /* AHMarkedHyperlink.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AHMarkedHyperlink.h; path = Source/AHMarkedHyperlink.h; sourceTree = "<group>"; };
 		3496A82007CE69270055BBAB /* AHHyperlinkScanner.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AHHyperlinkScanner.m; path = Source/AHHyperlinkScanner.m; sourceTree = "<group>"; };
@@ -124,7 +124,7 @@
 		08FB77AEFE84172EC02AAC07 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				3496A81D07CE69270055BBAB /* AHyperlinks.h */,
+				3496A81D07CE69270055BBAB /* AutoHyperlinks.h */,
 				3496A82107CE69270055BBAB /* AHHyperlinkScanner.h */,
 				3496A82007CE69270055BBAB /* AHHyperlinkScanner.m */,
 				3496A81C07CE69270055BBAB /* AHLinkLexer.h */,
@@ -183,7 +183,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3496A82307CE69270055BBAB /* AHLinkLexer.h in Headers */,
-				3496A82407CE69270055BBAB /* AHyperlinks.h in Headers */,
+				3496A82407CE69270055BBAB /* AutoHyperlinks.h in Headers */,
 				3496A82607CE69270055BBAB /* AHMarkedHyperlink.h in Headers */,
 				3496A82807CE69270055BBAB /* AHHyperlinkScanner.h in Headers */,
 				7E08746F0DDA8D5F0059AB2F /* AutoHyperlinks.framework_Prefix.pch in Headers */,
@@ -235,7 +235,7 @@
 /* Begin PBXProject section */
 		0867D690FE84028FC02AAC07 /* Project object */ = {
 			isa = PBXProject;
-			buildConfigurationList = DA8A8087085549EE00F24BB3 /* Build configuration list for PBXProject "AIHyperlinks.framework" */;
+			buildConfigurationList = DA8A8087085549EE00F24BB3 /* Build configuration list for PBXProject "AutoHyperlinks.framework" */;
 			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
 			mainGroup = 0867D691FE84028FC02AAC07 /* AIHyperlinks.framework */;
@@ -703,7 +703,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
 		};
-		DA8A8087085549EE00F24BB3 /* Build configuration list for PBXProject "AIHyperlinks.framework" */ = {
+		DA8A8087085549EE00F24BB3 /* Build configuration list for PBXProject "AutoHyperlinks.framework" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				DA8A8088085549EE00F24BB3 /* Development */,
