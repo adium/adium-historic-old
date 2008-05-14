@@ -36,16 +36,16 @@
  *										  -- only use while editing rules, and don't commit with this on
  *										     (it generates a lot of unnecessary output and kills performace.)
  *
- *	Variables used:		uint SHStringOffset : the position of the pointer, relative to the parent string
+ *	Variables used:		uint AHStringOffset : the position of the pointer, relative to the parent string
  *											  incremented by yyleng at each yylex() call.
- *	               		 int SHValidShift	: Used only in CANONICAL start state
+ *	               		 int AHValidShift	: Used only in CANONICAL start state
  *											  ensures that yyleng reports whole length of the string,
  *											  without a costly call to yymore().
  */
 #define YY_NO_UNPUT
-unsigned int SHStringOffset;
-int SHValidShift = 0;
-#include "SHLinkLexer.h"
+unsigned int AHStringOffset;
+int AHValidShift = 0;
+#include "AHLinkLexer.h"
 %}
 
 
@@ -76,36 +76,36 @@ ipv6HexPart     ({ipv6HexSeq})|(::{ipv6HexSeq})
 ipv6Address     {ipv6HexPart}({ipv4address})?
 ipv6URL         \[{ipv6Address}](:[0-9]+)?(\/.*)?
 
-%option noyywrap 8bit caseless never-interactive prefix="SH"
+%option noyywrap 8bit caseless never-interactive prefix="AH"
 
 %x CANONICAL
 %%
 
-<CANONICAL>({userAndPass}@)?{urlSpecifier}        {SHStringOffset += SHleng;
-                                                   SHleng += SHValidShift;
+<CANONICAL>({userAndPass}@)?{urlSpecifier}        {AHStringOffset += AHleng;
+                                                   AHleng += AHValidShift;
                                                    BEGIN INITIAL;
-                                                   return SH_URL_VALID;}
+                                                   return AH_URL_VALID;}
 
-<CANONICAL>({userAndPass}@)?{ipURL}               {SHStringOffset += SHleng;
-                                                   SHleng += SHValidShift;
+<CANONICAL>({userAndPass}@)?{ipURL}               {AHStringOffset += AHleng;
+                                                   AHleng += AHValidShift;
                                                    BEGIN INITIAL;
-                                                   return SH_URL_VALID;}
+                                                   return AH_URL_VALID;}
 
-<CANONICAL>({userAndPass}@)?{singleDomain}(\/.*)? {SHStringOffset += SHleng;
-                                                   SHleng += SHValidShift;
+<CANONICAL>({userAndPass}@)?{singleDomain}(\/.*)? {AHStringOffset += AHleng;
+                                                   AHleng += AHValidShift;
                                                    BEGIN INITIAL;
-                                                   return SH_URL_VALID;}
+                                                   return AH_URL_VALID;}
 
-<CANONICAL>({userAndPass}@)?{ipv6URL}            {SHStringOffset += SHleng;
-                                                   SHleng += SHValidShift;
+<CANONICAL>({userAndPass}@)?{ipv6URL}            {AHStringOffset += AHleng;
+                                                   AHleng += AHValidShift;
                                                    BEGIN INITIAL;
-                                                   return SH_URL_VALID;}
+                                                   return AH_URL_VALID;}
 
-<CANONICAL>.*                                    {SHStringOffset += SHleng;
+<CANONICAL>.*                                    {AHStringOffset += AHleng;
                                                   BEGIN INITIAL;
-                                                  return SH_URL_INVALID;}
+                                                  return AH_URL_INVALID;}
 
-file:\/\/\/.*           {SHStringOffset += SHleng; return SH_FILE_VALID;}
+file:\/\/\/.*           {AHStringOffset += AHleng; return AH_FILE_VALID;}
 
 https?:\/\/             |
 s?ftp:\/\/              |
@@ -126,22 +126,22 @@ webcal:\/\/             |
 svn(\+ssh)?:\/\/        |
 notes:\/\/              |
 gopher:\/\/             |
-x-man-page:\/\/         {SHStringOffset += SHleng; SHValidShift = SHleng; BEGIN CANONICAL;}
+x-man-page:\/\/         {AHStringOffset += AHleng; AHValidShift = AHleng; BEGIN CANONICAL;}
 
-sip:{mailSpecifier}     {SHStringOffset += SHleng; return SH_URL_VALID;}
+sip:{mailSpecifier}     {AHStringOffset += AHleng; return AH_URL_VALID;}
 
-mailto:{mailSpecifier}  {SHStringOffset += SHleng; return SH_MAILTO_VALID;}
-{mailSpecifier}         {SHStringOffset += SHleng; return SH_MAILTO_DEGENERATE;}
+mailto:{mailSpecifier}  {AHStringOffset += AHleng; return AH_MAILTO_VALID;}
+{mailSpecifier}         {AHStringOffset += AHleng; return AH_MAILTO_DEGENERATE;}
 
-{jabberSpec}            {SHStringOffset += SHleng; return SH_URL_VALID;}
+{jabberSpec}            {AHStringOffset += AHleng; return AH_URL_VALID;}
 
-{urlSpecifier}          {SHStringOffset += SHleng; return SH_URL_DEGENERATE;}
+{urlSpecifier}          {AHStringOffset += AHleng; return AH_URL_DEGENERATE;}
 
-{aolIMSpec}             {SHStringOffset += SHleng; return SH_URL_VALID;}
-{aolChatSpec}           {SHStringOffset += SHleng; return SH_URL_VALID;}
-{yahooIMSpec}           {SHStringOffset += SHleng; return SH_URL_VALID;}
-{rdarSpec}              {SHStringOffset += SHleng; return SH_URL_VALID;}
-{spotifySpec}           {SHStringOffset += SHleng; return SH_URL_VALID;}
+{aolIMSpec}             {AHStringOffset += AHleng; return AH_URL_VALID;}
+{aolChatSpec}           {AHStringOffset += AHleng; return AH_URL_VALID;}
+{yahooIMSpec}           {AHStringOffset += AHleng; return AH_URL_VALID;}
+{rdarSpec}              {AHStringOffset += AHleng; return AH_URL_VALID;}
+{spotifySpec}           {AHStringOffset += AHleng; return AH_URL_VALID;}
 
-.                       {return SH_URL_INVALID;}
+.                       {return AH_URL_INVALID;}
 %%

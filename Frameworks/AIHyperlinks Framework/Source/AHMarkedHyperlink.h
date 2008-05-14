@@ -25,27 +25,27 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "SHLinkLexer.h"
+#import "AHLinkLexer.h"
 
 
-@interface SHMarkedHyperlink : NSObject {
+@interface AHMarkedHyperlink : NSObject {
     NSRange                      linkRange;
     NSURL                       *linkURL;
     NSString                    *pString;
-    URI_VERIFICATION_STATUS      urlStatus;
+    AH_URI_VERIFICATION_STATUS      urlStatus;
 }
 
--(id)initWithString:(NSString *)inString withValidationStatus:(URI_VERIFICATION_STATUS)status parentString:(NSString *)pInString andRange:(NSRange)inRange;
+-(id)initWithString:(NSString *)inString withValidationStatus:(AH_URI_VERIFICATION_STATUS)status parentString:(NSString *)pInString andRange:(NSRange)inRange;
 -(NSString *)parentString;
 -(NSRange)range;
 -(NSURL *)URL;
--(URI_VERIFICATION_STATUS)validationStatus;
+-(AH_URI_VERIFICATION_STATUS)validationStatus;
 -(BOOL)parentStringMatchesString:(NSString *)inString;
 
 -(void)setRange:(NSRange)inRange;
 -(void)setURL:(NSURL *)inURL;
 -(void)setURLFromString:(NSString *)inString;
--(void)setValidationStatus:(URI_VERIFICATION_STATUS)status;
+-(void)setValidationStatus:(AH_URI_VERIFICATION_STATUS)status;
 -(void)setParentString:(NSString *)pInString;
 
 

@@ -7,7 +7,7 @@
 
 @implementation NegativeURLTest
 - (void)setUp {
-	scanner = [[SHHyperlinkScanner alloc] initWithStrictChecking:NO];
+	scanner = [[AHHyperlinkScanner alloc] initWithStrictChecking:NO];
 }
 
 - (void)tearDown {

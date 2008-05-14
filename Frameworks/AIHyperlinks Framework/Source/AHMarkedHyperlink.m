@@ -25,14 +25,14 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#import "SHMarkedHyperlink.h"
+#import "AHMarkedHyperlink.h"
 
-@implementation SHMarkedHyperlink
+@implementation AHMarkedHyperlink
 
 #pragma mark init and dealloc
 
 // one really big init method that does it all...
-- (id)initWithString:(NSString *)inString withValidationStatus:(URI_VERIFICATION_STATUS)status parentString:(NSString *)pInString andRange:(NSRange)inRange
+- (id)initWithString:(NSString *)inString withValidationStatus:(AH_URI_VERIFICATION_STATUS)status parentString:(NSString *)pInString andRange:(NSRange)inRange
 {
 	if((self = [self init])) {
 		[self setURLFromString:inString];
@@ -79,7 +79,7 @@
 	return linkURL;
 }
 
-- (URI_VERIFICATION_STATUS)validationStatus
+- (AH_URI_VERIFICATION_STATUS)validationStatus
 {
 	return urlStatus;
 }
@@ -120,7 +120,7 @@
 	[linkString release];
 }
 
-- (void)setValidationStatus:(URI_VERIFICATION_STATUS)status
+- (void)setValidationStatus:(AH_URI_VERIFICATION_STATUS)status
 {
 	urlStatus = status;
 }
@@ -137,7 +137,7 @@
 
 - (id)copyWithZone:(NSZone *)zone
 {
-	SHMarkedHyperlink   *newLink = [[[self class] allocWithZone:zone] initWithString:[[self URL] absoluteString]
+	AHMarkedHyperlink   *newLink = [[[self class] allocWithZone:zone] initWithString:[[self URL] absoluteString]
 	                                                            withValidationStatus:[self validationStatus]
 	                                                                    parentString:[self parentString]
 	                                                                        andRange:[self range]];
