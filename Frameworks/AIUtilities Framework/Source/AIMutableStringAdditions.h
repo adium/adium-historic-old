@@ -16,4 +16,9 @@
 - (NSMutableString*)mutableString;
 
 - (void)convertNewlinesToSlashes;
+
+//There is/was code in Adium that attempted to be smart about avoiding doing NSMakeRange(0, [str length]) over and over again
+//At least a few cases were wrong, and it's generally pointless. Please use this instead and ignore the slight overhead.
+- (unsigned int)replaceOccurrencesOfString:(NSString *)target withString:(NSString *)replacement options:(unsigned)opts;
+
 @end

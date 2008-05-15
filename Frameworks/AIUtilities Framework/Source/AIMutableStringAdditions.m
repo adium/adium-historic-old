@@ -70,4 +70,9 @@
 							   range:fullRange];
 }
 
+- (unsigned int)replaceOccurrencesOfString:(NSString *)target withString:(NSString *)replacement options:(unsigned)opts
+{
+	return [self replaceOccurrencesOfString:target withString:replacement options:opts range:NSMakeRange(0, [self length])];
+}
+
 @end

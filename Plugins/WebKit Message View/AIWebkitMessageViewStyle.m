@@ -506,26 +506,23 @@ static NSArray *validSenderColors;
  *	@brief Escape a string for passing to our BOM scripts
  */
 - (NSMutableString *)_escapeStringForPassingToScript:(NSMutableString *)inString
-{
-	NSRange range = NSMakeRange(0, [inString length]);
-	unsigned delta;
+{	
 	//We need to escape a few things to get our string to the javascript without trouble
-	delta = [inString replaceOccurrencesOfString:@"\\" withString:@"\\\\" 
-										 options:NSLiteralSearch range:range];
-	range.length += delta;
+	[inString replaceOccurrencesOfString:@"\\" 
+							  withString:@"\\\\" 
+								 options:NSLiteralSearch];
 	
-	delta = [inString replaceOccurrencesOfString:@"\"" withString:@"\\\"" 
-											options:NSLiteralSearch range:range];
-	range.length += delta;
+	[inString replaceOccurrencesOfString:@"\"" 
+							  withString:@"\\\"" 
+								 options:NSLiteralSearch];
+		
+	[inString replaceOccurrencesOfString:@"\n" 
+							  withString:@"" 
+								 options:NSLiteralSearch];
 
-	delta = [inString replaceOccurrencesOfString:@"\n" withString:@"" 
-										 options:NSLiteralSearch range:range];
-	range.length -= delta;
-
-	delta = [inString replaceOccurrencesOfString:@"\r" withString:@"<br>" 
-										 options:NSLiteralSearch range:range];
-	//4 is the length of <br>
-	range.length += delta * 4;
+	[inString replaceOccurrencesOfString:@"\r" 
+							  withString:@"<br>" 
+								 options:NSLiteralSearch];
 
 	return inString;
 }
