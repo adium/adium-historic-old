@@ -74,27 +74,24 @@ static void adiumPurpleConvWriteChat(PurpleConversation *conv, const char *who,
 			  purple_conversation_get_name(conv),
 			  purple_conv_chat_get_nick(PURPLE_CONV_CHAT(conv)),
 			  messageString);
-		if (!who || (flags & PURPLE_MESSAGE_DELAYED) || (strcmp(who, purple_conv_chat_get_nick(PURPLE_CONV_CHAT(conv))) &&
-													   strcmp(who, purple_account_get_username(purple_conversation_get_account(conv))))) {
-			NSAttributedString	*attributedMessage = [AIHTMLDecoder decodeHTML:messageString];
-			NSNumber			*purpleMessageFlags = [NSNumber numberWithInt:flags];
-			NSDate				*date = [NSDate dateWithTimeIntervalSince1970:mtime];
+
+		NSAttributedString	*attributedMessage = [AIHTMLDecoder decodeHTML:messageString];
+		NSNumber			*purpleMessageFlags = [NSNumber numberWithInt:flags];
+		NSDate				*date = [NSDate dateWithTimeIntervalSince1970:mtime];
+		
+		if (who && strlen(who)) {
+			messageDict = [NSDictionary dictionaryWithObjectsAndKeys:attributedMessage, @"AttributedMessage",
+						   [NSString stringWithUTF8String:who], @"Source",
+						   purpleMessageFlags, @"PurpleMessageFlags",
+						   date, @"Date",nil];
 			
-			if (who && strlen(who)) {
-				messageDict = [NSDictionary dictionaryWithObjectsAndKeys:attributedMessage, @"AttributedMessage",
-					[NSString stringWithUTF8String:who], @"Source",
-					purpleMessageFlags, @"PurpleMessageFlags",
-					date, @"Date",nil];
-				
-			} else {
-				messageDict = [NSDictionary dictionaryWithObjectsAndKeys:attributedMessage, @"AttributedMessage",
-					purpleMessageFlags, @"PurpleMessageFlags",
-					date, @"Date",nil];
-			}
-			
-			[accountLookup(purple_conversation_get_account(conv)) receivedMultiChatMessage:messageDict
-															inChat:groupChatLookupFromConv(conv)];
+		} else {
+			messageDict = [NSDictionary dictionaryWithObjectsAndKeys:attributedMessage, @"AttributedMessage",
+						   purpleMessageFlags, @"PurpleMessageFlags",
+						   date, @"Date",nil];
 		}
+
+		[accountLookup(purple_conversation_get_account(conv)) receivedMultiChatMessage:messageDict inChat:groupChatLookupFromConv(conv)];
 	}
 }
 
