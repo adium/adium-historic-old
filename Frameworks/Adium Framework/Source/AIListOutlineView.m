@@ -597,7 +597,11 @@
 	//From previous implementation - still needed?
 	[[sender draggingDestinationWindow] makeKeyAndOrderFront:self];
 
-	return [super draggingEntered:sender];
+	if ([[[sender draggingPasteboard] types] containsObject:@"AIListObjectUniqueIDs"]) {
+		return NSDragOperationMove;
+	} else {
+		return [super draggingEntered:sender];
+	}
 }
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender
@@ -615,26 +619,35 @@
 	[super draggingExited:sender];
 }
 
+- (NSDragOperation)draggingSourceOperationMaskForLocal:(BOOL)isLocal
+{
+	return (NSDragOperationCopy | NSDragOperationMove | NSDragOperationPrivate);
+}
+
 - (void)draggedImage:(NSImage *)anImage endedAt:(NSPoint)aPoint operation:(NSDragOperation)operation
 {
-	NSArray					*dragUniqueIDs = nil;	// Items being dragged
-	NSEnumerator			*idEnumerator = nil;	
-	NSString				*uID = nil;				// Current group being dragged ID
+	NSArray			*dragUniqueIDs = nil;	// Items being dragged
+	NSEnumerator	*idEnumerator = nil;	
+	NSString		*uID = nil;				// Current group being dragged ID
 	
-	AIListGroup				*newContactList = nil;	// New contact list to be created
-	AIListGroup				*currentGroup = nil;	// Current group being dragged
+	AIListGroup		*newContactList = nil;	// New contact list to be created
+	AIListGroup		*currentGroup = nil;	// Current group being dragged
 	
-	id<AIInterfaceController>		interfaceController = [[AIObject sharedAdiumInstance] interfaceController];
-	id<AIContactController>			contactController = [[AIObject sharedAdiumInstance] contactController];
-
 	//If nothing is being dragged, stop now.
 	//How would this happen? -evands
 	if (!dragContent)
 		return;
 	
+	//The drag was canceled
+	if (operation == NSDragOperationNone)
+		return;
+
+	id<AIInterfaceController>		interfaceController = [[AIObject sharedAdiumInstance] interfaceController];
+	id<AIContactController>			contactController = [[AIObject sharedAdiumInstance] contactController];
+	
+	
 	// Group being unlocked from current location
-	if(unlockingGroup && [[dragContent types] containsObject:@"AIListObjectUniqueIDs"])
-	{
+	if (unlockingGroup && [[dragContent types] containsObject:@"AIListObjectUniqueIDs"]) {
 		dragUniqueIDs = [dragContent propertyListForType:@"AIListObjectUniqueIDs"];
 		idEnumerator = [dragUniqueIDs objectEnumerator];
 
@@ -643,22 +656,21 @@
 			
 			if ([currentGroup isKindOfClass:[AIListGroup class]]) {
 				// If root of contact list was not yet created, create it now
-				if(!newContactList){
+				if (!newContactList)
 					newContactList = [contactController createDetachedContactList];
-				}
+
 				
 				[self moveGroup:currentGroup to:newContactList];
 			}	
 		}
 		
-		// If new contact list was created
-		if(newContactList) {
-			// Update new contact list
+		if (newContactList) {
+			// Update the new contact list
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"Contact_ListChanged"
 																object:newContactList
 															  userInfo:nil];
 			
-			// Create new contact list
+			// Detach the contact list to a window and set its origin
 			[[[interfaceController detachContactList:newContactList] window] setFrameTopLeftPoint:aPoint];
 		}
 	}
