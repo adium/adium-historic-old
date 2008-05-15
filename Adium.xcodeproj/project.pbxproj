@@ -1304,6 +1304,7 @@
 		EE147A800896B33400A21377 /* OWABSearchWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE147A7E0896B33400A21377 /* OWABSearchWindowController.m */; };
 		EE5754ED0B3D7A7A00100989 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 638392F609D4D67A0067B9B7 /* Sparkle.framework */; };
 		EEC461B6096D68580028632F /* OWSpellingPerContactPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = EEC461B4096D68580028632F /* OWSpellingPerContactPlugin.m */; };
+		EFB1C3140DDBDA3100B3973D /* AITwitterIMPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = EFB1C3130DDBDA3100B3973D /* AITwitterIMPlugin.m */; };
 		F51BCD3B0A156261000FDC06 /* AutoHyperlinks.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3496A8EA07CE6CA30055BBAB /* AutoHyperlinks.framework */; };
 		F51BCD3C0A156269000FDC06 /* AIUtilities.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		F51BCE390A156312000FDC06 /* AdiumSpotlightImporter.mdimporter in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34611C8309B6756D00870036 /* AdiumSpotlightImporter.mdimporter */; };
@@ -1635,6 +1636,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 4947F5BC0655E85200B791E5;
 			remoteInfo = Bonjour;
+		};
+		EFB1C3D70DDCA0A900B3973D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3496A8E707CE6CA30055BBAB /* AutoHyperlinks.framework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 7EB550100DDC80DB000DC0D6 /* LinkDriver.app */;
+			remoteInfo = LinkDriver;
 		};
 		F53C25E10A2F997700F7B73D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -4149,6 +4157,8 @@
 		EE147A7F0896B33400A21377 /* OWABSearchWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OWABSearchWindowController.h; path = Source/OWABSearchWindowController.h; sourceTree = "<group>"; };
 		EEC461B4096D68580028632F /* OWSpellingPerContactPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = OWSpellingPerContactPlugin.m; path = Source/OWSpellingPerContactPlugin.m; sourceTree = "<group>"; };
 		EEC461B5096D68580028632F /* OWSpellingPerContactPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OWSpellingPerContactPlugin.h; path = Source/OWSpellingPerContactPlugin.h; sourceTree = "<group>"; };
+		EFB1C3120DDBDA3100B3973D /* AITwitterIMPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AITwitterIMPlugin.h; path = Source/AITwitterIMPlugin.h; sourceTree = "<group>"; };
+		EFB1C3130DDBDA3100B3973D /* AITwitterIMPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AITwitterIMPlugin.m; path = Source/AITwitterIMPlugin.m; sourceTree = "<group>"; };
 		F11B9621051CDB3B0000000E /* AIMessageAliasPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMessageAliasPlugin.h; path = "Plugins/Message Alias Support/AIMessageAliasPlugin.h"; sourceTree = "<group>"; };
 		F11B9622051CDB3B0000000E /* AIMessageAliasPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMessageAliasPlugin.m; path = "Plugins/Message Alias Support/AIMessageAliasPlugin.m"; sourceTree = "<group>"; };
 		F50A75A00A0AE77A00A6D1BA /* GBFireImporter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = GBFireImporter.h; path = Source/GBFireImporter.h; sourceTree = "<group>"; };
@@ -5424,6 +5434,7 @@
 			children = (
 				3496A8EA07CE6CA30055BBAB /* AutoHyperlinks.framework */,
 				7E78DA9C0DD135DE00B9388F /* Test.octest */,
+				EFB1C3D80DDCA0A900B3973D /* LinkDriver.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -6789,6 +6800,7 @@
 				340C1E760BD59A0500D09235 /* GBImportPlugin.h */,
 				344C0D4306B6D5E300DA7200 /* Applescriptability */,
 				83DB8F21061145C400A5C28C /* Version Checker */,
+				EFB1C3110DDBD9EF00B3973D /* Twitter IM Integration */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -7459,6 +7471,15 @@
 				EEC461B4096D68580028632F /* OWSpellingPerContactPlugin.m */,
 			);
 			name = "Spelling Per Contact";
+			sourceTree = "<group>";
+		};
+		EFB1C3110DDBD9EF00B3973D /* Twitter IM Integration */ = {
+			isa = PBXGroup;
+			children = (
+				EFB1C3120DDBDA3100B3973D /* AITwitterIMPlugin.h */,
+				EFB1C3130DDBDA3100B3973D /* AITwitterIMPlugin.m */,
+			);
+			name = "Twitter IM Integration";
 			sourceTree = "<group>";
 		};
 		F1D0C631051AC2380000000E /* Message Alias Support */ = {
@@ -8571,6 +8592,13 @@
 			remoteRef = 7E78DA9B0DD135DE00B9388F /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		EFB1C3D80DDCA0A900B3973D /* LinkDriver.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = LinkDriver.app;
+			remoteRef = EFB1C3D70DDCA0A900B3973D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -9587,6 +9615,7 @@
 				34555C600DB6BCE500649CD4 /* AdiumContactPropertiesObserverManager.m in Sources */,
 				632D859E0DB70FC800040EC7 /* AIMentionEventPlugin.m in Sources */,
 				34EBB2C30DCA8DE500B4CB6E /* AISearchFieldCell.m in Sources */,
+				EFB1C3140DDBDA3100B3973D /* AITwitterIMPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

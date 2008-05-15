@@ -20,6 +20,8 @@
 
 @class AIListContact, AIAccount, AIChat;
 
+@class AISimpleTextView;
+
 @interface AIMessageEntryTextView : AISendingTextView <AITextEntryView> {
     NSObject<AIAdium>	*adium;
     AIChat				*chat;
@@ -35,7 +37,7 @@
 
     NSMutableArray		*pushArray;
     BOOL                 pushIndicatorVisible;
-    NSButton			*indicator;
+    NSButton			*pushIndicator;
     NSMenu              *pushMenu;
     NSDictionary		*defaultTypingAttributes;
 	
@@ -44,6 +46,9 @@
 	BOOL				 resizing;
     
     NSView              *associatedView;
+	
+	AISimpleTextView	*characterCounter;
+	int					maxCharacters;
 }
 
 //Configure
