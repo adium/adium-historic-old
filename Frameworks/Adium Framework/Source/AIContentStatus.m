@@ -80,7 +80,7 @@
 	NSMutableArray *classes = [super displayClasses];
 	
 	//The notion of direction is not very useful on statuses
-	NSInteger idx = [classes indexOfObject:@"incoming"];
+	NSUInteger idx = [classes indexOfObject:@"incoming"];
 	if(idx != NSNotFound)
 		[classes removeObjectAtIndex:idx];
 	

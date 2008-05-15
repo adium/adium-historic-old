@@ -21,7 +21,7 @@
 	NSMutableArray *classes = [super displayClasses];
 	
 	//Events are not really status changes...
-	NSInteger idx = [classes indexOfObject:@"status"];
+	NSUInteger idx = [classes indexOfObject:@"status"];
 	if(idx != NSNotFound)
 		[classes removeObjectAtIndex:idx];
 	
