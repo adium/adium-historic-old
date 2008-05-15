@@ -135,6 +135,8 @@
 	NSData *postData = [AIFacebookAccount postDataForDictionary:[NSDictionary dictionaryWithObjectsAndKeys:
 																 @"1", @"buddy_list",
 																 @"1", @"notifications",
+																 [account postFormID], @"post_form_id",
+																 [account facebookUID], @"user",
 																 nil]];
 	
 	[request setHTTPMethod:@"POST"];
