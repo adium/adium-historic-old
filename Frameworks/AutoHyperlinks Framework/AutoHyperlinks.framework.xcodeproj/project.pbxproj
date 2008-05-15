@@ -24,9 +24,23 @@
 		7E78D9DC0DD1314300B9388F /* Test-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7EA3B0450DD1153F002A18D1 /* Test-Info.plist */; };
 		7EA3B04C0DD1155D002A18D1 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 		7EA3B04E0DD11627002A18D1 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EA3B04D0DD11627002A18D1 /* SenTestingKit.framework */; };
+		7EB5501D0DDC810E000DC0D6 /* AutoHyperlinks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* AutoHyperlinks.framework */; };
+		7EB550200DDC813D000DC0D6 /* LinkDriverMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EB5501F0DDC813D000DC0D6 /* LinkDriverMain.m */; };
+		7EB5514A0DDC8272000DC0D6 /* LinkDriverWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EB551490DDC8272000DC0D6 /* LinkDriverWindowController.m */; };
+		7EF1C0220DDC846B00CFC182 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7EF1C0210DDC846B00CFC182 /* MainMenu.nib */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		7EB550190DDC80E2000DC0D6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0867D690FE84028FC02AAC07 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = AutoHyperlinks.framework;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		0867D69BFE84028FC02AAC07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -53,6 +67,13 @@
 		7EA3B0440DD1153F002A18D1 /* Test.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Test.octest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EA3B0450DD1153F002A18D1 /* Test-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Test-Info.plist"; path = "Resources/Test-Info.plist"; sourceTree = "<group>"; };
 		7EA3B04D0DD11627002A18D1 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = /System/Library/Frameworks/SenTestingKit.framework; sourceTree = "<absolute>"; };
+		7EB550100DDC80DB000DC0D6 /* LinkDriver.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LinkDriver.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7EB550120DDC80DB000DC0D6 /* LinkDriver-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "LinkDriver-Info.plist"; path = "LinkDriver/LinkDriver-Info.plist"; sourceTree = "<group>"; };
+		7EB5501F0DDC813D000DC0D6 /* LinkDriverMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LinkDriverMain.m; path = LinkDriver/LinkDriverMain.m; sourceTree = "<group>"; };
+		7EB551480DDC8272000DC0D6 /* LinkDriverWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LinkDriverWindowController.h; path = LinkDriver/LinkDriverWindowController.h; sourceTree = "<group>"; };
+		7EB551490DDC8272000DC0D6 /* LinkDriverWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LinkDriverWindowController.m; path = LinkDriver/LinkDriverWindowController.m; sourceTree = "<group>"; };
+		7EF1C0210DDC846B00CFC182 /* MainMenu.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = MainMenu.nib; path = LinkDriver/MainMenu.nib; sourceTree = "<group>"; };
+		7EF1C0410DDC8F3600CFC182 /* LinkDriver.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LinkDriver.pch; path = LinkDriver/LinkDriver.pch; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* AutoHyperlinks.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AutoHyperlinks.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -64,6 +85,14 @@
 			files = (
 				7EA3B04C0DD1155D002A18D1 /* Cocoa.framework in Frameworks */,
 				7EA3B04E0DD11627002A18D1 /* SenTestingKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7EB5500E0DDC80DB000DC0D6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7EB5501D0DDC810E000DC0D6 /* AutoHyperlinks.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +112,7 @@
 			children = (
 				8DC2EF5B0486A6940098B216 /* AutoHyperlinks.framework */,
 				7EA3B0440DD1153F002A18D1 /* Test.octest */,
+				7EB550100DDC80DB000DC0D6 /* LinkDriver.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -94,8 +124,9 @@
 				7E9D89FA0DD4FD4200CD54F8 /* Copyright.txt */,
 				08FB77AEFE84172EC02AAC07 /* Classes */,
 				32C88DFF0371C24200C91783 /* Other Sources */,
-				089C1665FE841158C02AAC07 /* Resources */,
+				7EB5500B0DDC8030000DC0D6 /* LinkDriver */,
 				7EA3B03C0DD1150E002A18D1 /* UnitTests */,
+				089C1665FE841158C02AAC07 /* Resources */,
 				0867D69AFE84028FC02AAC07 /* External Frameworks and Libraries */,
 				034768DFFF38A50411DB9C8B /* Products */,
 			);
@@ -175,6 +206,19 @@
 			name = UnitTests;
 			sourceTree = "<group>";
 		};
+		7EB5500B0DDC8030000DC0D6 /* LinkDriver */ = {
+			isa = PBXGroup;
+			children = (
+				7EB550120DDC80DB000DC0D6 /* LinkDriver-Info.plist */,
+				7EB5501F0DDC813D000DC0D6 /* LinkDriverMain.m */,
+				7EB551480DDC8272000DC0D6 /* LinkDriverWindowController.h */,
+				7EB551490DDC8272000DC0D6 /* LinkDriverWindowController.m */,
+				7EF1C0210DDC846B00CFC182 /* MainMenu.nib */,
+				7EF1C0410DDC8F3600CFC182 /* LinkDriver.pch */,
+			);
+			name = LinkDriver;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -211,6 +255,24 @@
 			productReference = 7EA3B0440DD1153F002A18D1 /* Test.octest */;
 			productType = "com.apple.product-type.bundle";
 		};
+		7EB5500F0DDC80DB000DC0D6 /* LinkDriver */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7EB550180DDC80DC000DC0D6 /* Build configuration list for PBXNativeTarget "LinkDriver" */;
+			buildPhases = (
+				7EB5500C0DDC80DB000DC0D6 /* Resources */,
+				7EB5500D0DDC80DB000DC0D6 /* Sources */,
+				7EB5500E0DDC80DB000DC0D6 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7EB5501A0DDC80E2000DC0D6 /* PBXTargetDependency */,
+			);
+			name = LinkDriver;
+			productName = LinkDriver;
+			productReference = 7EB550100DDC80DB000DC0D6 /* LinkDriver.app */;
+			productType = "com.apple.product-type.application";
+		};
 		8DC2EF4F0486A6940098B216 /* AutoHyperlinks.framework */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DA8A8083085549EE00F24BB3 /* Build configuration list for PBXNativeTarget "AutoHyperlinks.framework" */;
@@ -245,6 +307,7 @@
 			targets = (
 				8DC2EF4F0486A6940098B216 /* AutoHyperlinks.framework */,
 				7EA3B0430DD1153F002A18D1 /* UnitTests */,
+				7EB5500F0DDC80DB000DC0D6 /* LinkDriver */,
 			);
 		};
 /* End PBXProject section */
@@ -255,6 +318,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				7E78D9DC0DD1314300B9388F /* Test-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7EB5500C0DDC80DB000DC0D6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7EF1C0220DDC846B00CFC182 /* MainMenu.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -298,6 +369,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7EB5500D0DDC80DB000DC0D6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7EB550200DDC813D000DC0D6 /* LinkDriverMain.m in Sources */,
+				7EB5514A0DDC8272000DC0D6 /* LinkDriverWindowController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8DC2EF540486A6940098B216 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -309,6 +389,14 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		7EB5501A0DDC80E2000DC0D6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 8DC2EF4F0486A6940098B216 /* AutoHyperlinks.framework */;
+			targetProxy = 7EB550190DDC80E2000DC0D6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		089C1666FE841158C02AAC07 /* InfoPlist.strings */ = {
@@ -589,6 +677,121 @@
 			};
 			name = "Deployment-Debug_PPC-Only";
 		};
+		7EB550130DDC80DB000DC0D6 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = LinkDriver/LinkDriver.pch;
+				INFOPLIST_FILE = "LinkDriver/LinkDriver-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = LinkDriver;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		7EB550140DDC80DB000DC0D6 /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "LinkDriver-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = LinkDriver;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = "Development-libgaim_oscar";
+		};
+		7EB550150DDC80DB000DC0D6 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "LinkDriver-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = LinkDriver;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		7EB550160DDC80DB000DC0D6 /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "LinkDriver-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = LinkDriver;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = "Deployment-Debug";
+		};
+		7EB550170DDC80DB000DC0D6 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INFOPLIST_FILE = "LinkDriver-Info.plist";
+				INSTALL_PATH = "$(HOME)/Applications";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = LinkDriver;
+				WRAPPER_EXTENSION = app;
+				ZERO_LINK = YES;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
 		DA8A8084085549EE00F24BB3 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -687,6 +890,18 @@
 				7EA3B0480DD11540002A18D1 /* Deployment */,
 				7EA3B0490DD11540002A18D1 /* Deployment-Debug */,
 				7EA3B04A0DD11540002A18D1 /* Deployment-Debug_PPC-Only */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		7EB550180DDC80DC000DC0D6 /* Build configuration list for PBXNativeTarget "LinkDriver" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7EB550130DDC80DB000DC0D6 /* Development */,
+				7EB550140DDC80DB000DC0D6 /* Development-libgaim_oscar */,
+				7EB550150DDC80DB000DC0D6 /* Deployment */,
+				7EB550160DDC80DB000DC0D6 /* Deployment-Debug */,
+				7EB550170DDC80DB000DC0D6 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
