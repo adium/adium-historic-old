@@ -72,6 +72,8 @@
 		7EB5501F0DDC813D000DC0D6 /* LinkDriverMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LinkDriverMain.m; path = LinkDriver/LinkDriverMain.m; sourceTree = "<group>"; };
 		7EB551480DDC8272000DC0D6 /* LinkDriverWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LinkDriverWindowController.h; path = LinkDriver/LinkDriverWindowController.h; sourceTree = "<group>"; };
 		7EB551490DDC8272000DC0D6 /* LinkDriverWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LinkDriverWindowController.m; path = LinkDriver/LinkDriverWindowController.m; sourceTree = "<group>"; };
+		7EC75F180DDC9EC60004F634 /* StressTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StressTest.h; path = UnitTests/StressTest.h; sourceTree = "<group>"; };
+		7EC75F190DDC9EC60004F634 /* StressTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StressTest.m; path = UnitTests/StressTest.m; sourceTree = "<group>"; };
 		7EF1C0210DDC846B00CFC182 /* MainMenu.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = MainMenu.nib; path = LinkDriver/MainMenu.nib; sourceTree = "<group>"; };
 		7EF1C0410DDC8F3600CFC182 /* LinkDriver.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LinkDriver.pch; path = LinkDriver/LinkDriver.pch; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
@@ -202,6 +204,8 @@
 				7E4C24330DD20C0100DF1359 /* NegativeURLTest.m */,
 				7E4C24360DD20C9900DF1359 /* HyperlinkContextTest.h */,
 				7E4C24370DD20C9900DF1359 /* HyperlinkContextTest.m */,
+				7EC75F180DDC9EC60004F634 /* StressTest.h */,
+				7EC75F190DDC9EC60004F634 /* StressTest.m */,
 			);
 			name = UnitTests;
 			sourceTree = "<group>";
