@@ -22,29 +22,29 @@
 	id aiMock = [OCMockObject niceMockForProtocol:@protocol(AIAdium)];
 	[AIObject _setSharedAdiumInstance:aiMock];
 	
-	googleService = [OCMockObject mockForClass:[AIService class]];
+	googleService = [[OCMockObject mockForClass:[AIService class]] retain];
 	[[[googleService stub] andReturn:@"Google"] serviceClass];	
 	
-	yahooService = [OCMockObject mockForClass:[AIService class]];
+	yahooService = [[OCMockObject mockForClass:[AIService class]] retain];
 	[[[yahooService stub] andReturn:@"Yahoo"] serviceClass];
 	
-	aimService = [OCMockObject mockForClass:[AIService class]];
+	aimService = [[OCMockObject mockForClass:[AIService class]] retain];
 	[[[aimService stub] andReturn:@"AIM"] serviceClass];
 	
 	// Must to be a variable for the OCMOCK_VALUE macro to work
 	BOOL yes = YES;
 	
-	googleAccount = [OCMockObject niceMockForClass:[AIAccount class]];
+	googleAccount = [[OCMockObject niceMockForClass:[AIAccount class]] retain];
 	[[[googleAccount stub] andReturnValue:OCMOCK_VALUE(yes)] isTemporary];
 	[[[googleAccount stub] andReturnValue:OCMOCK_VALUE(yes)] enabled];
 	[[[googleAccount stub] andReturn:googleService] service];
 	
-	googleAccount2 = [OCMockObject niceMockForClass:[AIAccount class]];
+	googleAccount2 = [[OCMockObject niceMockForClass:[AIAccount class]] retain];
 	[[[googleAccount2 stub] andReturnValue:OCMOCK_VALUE(yes)] isTemporary];
 	[[[googleAccount2 stub] andReturnValue:OCMOCK_VALUE(yes)] enabled];
 	[[[googleAccount2 stub] andReturn:googleService] service];
 	
-	aimAccount = [OCMockObject niceMockForClass:[AIAccount class]];
+	aimAccount = [[OCMockObject niceMockForClass:[AIAccount class]] retain];
 	[[[aimAccount stub] andReturnValue:OCMOCK_VALUE(yes)] isTemporary];
 	[[[aimAccount stub] andReturnValue:OCMOCK_VALUE(yes)] enabled];
 	[[[aimAccount stub] andReturn:aimService] service];
@@ -55,6 +55,24 @@
 - (void)tearDown {
 	[adiumAccounts release];
 	adiumAccounts = nil;
+	
+	[googleService release];
+	googleService = nil;
+	
+	[aimService release];
+	aimService = nil;
+	
+	[yahooService release];
+	yahooService = nil;
+	
+	[googleAccount release];
+	googleAccount = nil;
+	
+	[googleAccount2 release];
+	googleAccount2 = nil;
+	
+	[aimAccount release];
+	aimAccount = nil;
 }
 
 
@@ -117,7 +135,12 @@
 }
 
 #pragma mark Editing
-- (void)testCreateAccountWithService_UID {}
+- (void)testCreateAccountWithService_UID {
+	[[aimService expect] accountWithUID:@"myUID" internalObjectID:OCMOCK_ANY];
+	[adiumAccounts createAccountWithService:aimService UID:@"myUID"];
+	
+	[aimService verify];
+}
 
 
 - (void)testAddAccounts {
@@ -142,6 +165,8 @@
 - (void)testDeleteAccount { }
 - (void)testMoveAccount_toIndex {}
 - (void)testAccountDidChangeUID {}
+
+- (void)testGenerateUniqueObjectID {}
 
 
 @end
