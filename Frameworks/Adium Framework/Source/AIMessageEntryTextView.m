@@ -1042,20 +1042,9 @@
 {
 	NSRect visRect = [[self superview] bounds];
 
-
-	// XXXcbarrett If anyone has ideas for improving this, let me know.
-	//
-	// If we've entered text, the attributes for the first character are a reasonable approximation of what the user's
-	// text style is. Hopefully it won't look too horrible, especially given that this is designed (currently) for use
-	// with Twitter, which doesn't support formatting anyway.
-	NSDictionary *attributes = nil;
-	if ([[self textStorage] length] != 0)
-		attributes = [[self textStorage] attributesAtIndex:0 effectiveRange:NULL];
-	else
-		attributes = [self typingAttributes];
-
 	int currentCount = (maxCharacters - [[self textStorage] length]);	
-	NSAttributedString *label = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%d", currentCount] attributes:attributes];
+	NSAttributedString *label = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%d", currentCount] 
+																attributes:[[adium contentController] defaultFormattingAttributes]];
 	[characterCounter setString:label];
 	[characterCounter setFrameSize:[label size]];
 	[label release];
