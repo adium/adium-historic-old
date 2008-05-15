@@ -47,15 +47,51 @@
 #define KEY_GRAMMAR_CHECKING					@"Grammar Checking Enabled"
 #define	PREF_GROUP_DUAL_WINDOW_INTERFACE		@"Dual Window Interface"
 
+#define INDICATOR_RIGHT_PADDING					10		// Padding between right side of the message view and the rightmost indicator
+#define INDICATOR_BOTTOM_PADDING				2		// Padding between the bottom of the message view and any indicator
+
+#define PREF_GROUP_CHARACTER_COUNTER			@"Character Counter"
+#define KEY_CHARACTER_COUNTER_ENABLED			@"Character Counter Enabled"
+#define KEY_MAX_NUMBER_OF_CHARACTERS			@"Maximum Number Of Characters"
+
 #define FILES_AND_IMAGES_TYPES [NSArray arrayWithObjects: \
 	NSFilenamesPboardType, NSTIFFPboardType, NSPDFPboardType, NSPICTPboardType, nil]
 
 #define PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY [NSArray arrayWithObjects: \
 	NSRTFPboardType, NSStringPboardType, nil]
+	
+
+/**
+ * @class AISimpleTextView
+ * @brief Just draws an attributed string. That's it.
+ * 
+ * No really, it's dead simple. It just draws an attributed string in its bounds (which you set). That's it.
+ */
+@interface AISimpleTextView : NSView {
+	NSAttributedString *string;
+}
+- (void)setString:(NSAttributedString *)inString;
+@end
+
+
+@implementation  AISimpleTextView
+- (void)setString:(NSAttributedString *)inString
+{
+	if (string != inString) {
+		[string release];
+		string = [inString copy];
+	}
+}
+
+- (void)drawRect:(NSRect)rect 
+{
+	[string drawInRect:[self bounds]];
+}
+@end
 
 @interface AIMessageEntryTextView (PRIVATE)
 - (void)_setPushIndicatorVisible:(BOOL)visible;
-- (void)_positionIndicator:(NSNotification *)notification;
+- (void)positionPushIndicator;
 - (void)_resetCacheAndPostSizeChanged;
 
 - (NSAttributedString *)attributedStringWithAITextAttachmentExtensionsFromRTFDData:(NSData *)data;
@@ -63,6 +99,13 @@
 - (void)addAttachmentOfPath:(NSString *)inPath;
 - (void)addAttachmentOfImage:(NSImage *)inImage;
 - (void)addAttachmentsFromPasteboard:(NSPasteboard *)pasteboard;
+
+- (void)setCharacterCounterVisible:(BOOL)visible;
+- (void)setCharacterCounterMaximum:(int)inMaxCharacters;
+- (void)updateCharacterCounter;
+- (void)positionCharacterCounter;
+
+- (void)positionIndicators:(NSNotification *)notification;
 @end
 
 @interface NSMutableAttributedString (AIMessageEntryTextViewAdditions)
@@ -76,7 +119,7 @@
 	adium = [AIObject sharedAdiumInstance];
 	associatedView = nil;
 	chat = nil;
-	indicator = nil;
+	pushIndicator = nil;
 	pushPopEnabled = YES;
 	historyEnabled = YES;
 	clearOnEscape = NO;
@@ -88,6 +131,8 @@
 	currentHistoryLocation = 0;
 	[self setDrawsBackground:YES];
 	_desiredSizeCached = NSMakeSize(0,0);
+	characterCounter = nil;
+	maxCharacters = 0;
 	
 	if ([self respondsToSelector:@selector(setAllowsUndo:)]) {
 		[self setAllowsUndo:YES];
@@ -268,7 +313,12 @@
 	[[adium interfaceController] showTooltipForListObject:nil atScreenPoint:NSZeroPoint onWindow:nil];
 
     //Reset cache and resize
-	[self _resetCacheAndPostSizeChanged];	
+	[self _resetCacheAndPostSizeChanged]; 
+	
+	//Update the character counter
+	if (characterCounter) {
+		[self updateCharacterCounter];
+	}
 }
 
 /*!
@@ -360,6 +410,14 @@
 			(!key || [key isEqualToString:KEY_GRAMMAR_CHECKING])) {
 			[self setGrammarCheckingEnabled:[[prefDict objectForKey:KEY_GRAMMAR_CHECKING] boolValue]];
 		}
+	}
+	
+	if ((object == [chat listObject]) &&
+		[group isEqualToString:PREF_GROUP_CHARACTER_COUNTER]) {
+		if (!key || [key isEqualToString:KEY_CHARACTER_COUNTER_ENABLED])
+			[self setCharacterCounterVisible:[[prefDict objectForKey:KEY_CHARACTER_COUNTER_ENABLED] boolValue]];
+		if (!key || [key isEqualToString:KEY_MAX_NUMBER_OF_CHARACTERS])
+			[self setCharacterCounterMaximum:[[prefDict objectForKey:KEY_MAX_NUMBER_OF_CHARACTERS] intValue]];
 	}
 }
 
@@ -623,6 +681,13 @@
 		
 		//Observe preferences changes for typing enable/disable
 		[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
+
+		//Grab our initial values for the state of the character counter, since registering as an observer only gives you global state
+		[self setCharacterCounterMaximum:[[[chat listObject] preferenceForKey:KEY_MAX_NUMBER_OF_CHARACTERS group:PREF_GROUP_CHARACTER_COUNTER] intValue]];
+		[self setCharacterCounterVisible:[[[chat listObject] preferenceForKey:KEY_CHARACTER_COUNTER_ENABLED group:PREF_GROUP_CHARACTER_COUNTER] boolValue]];
+
+		//Observer preference changes for the character counter, just in case
+		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CHARACTER_COUNTER];
     }
 }
 - (AIChat *)chat{
@@ -851,50 +916,178 @@
 		
         //Push text over to make room for indicator
         NSSize size = [self frame].size;
-        size.width -= ([pushIndicatorImage size].width + 2);
+        size.width -= ([pushIndicatorImage size].width);
         [self setFrameSize:size];
-		
+				
 		// Make the indicator and set its action. It is a button with no border.
-		indicator = [[NSButton alloc] initWithFrame:
+		pushIndicator = [[NSButton alloc] initWithFrame:
             NSMakeRect(0, 0, [pushIndicatorImage size].width, [pushIndicatorImage size].height)]; 
-		[indicator setButtonType:NSMomentaryPushButton];
-        [indicator setAutoresizingMask:(NSViewMinXMargin)];
-        [indicator setImage:pushIndicatorImage];
-        [indicator setImagePosition:NSImageOnly];
-		[indicator setBezelStyle:NSRegularSquareBezelStyle];
-		[indicator setBordered:NO];
-        [[self superview] addSubview:indicator];
-		[indicator setTarget:self];
-		[indicator setAction:@selector(popContent)];
+		[pushIndicator setButtonType:NSMomentaryPushButton];
+        [pushIndicator setAutoresizingMask:(NSViewMinXMargin)];
+        [pushIndicator setImage:pushIndicatorImage];
+        [pushIndicator setImagePosition:NSImageOnly];
+		[pushIndicator setBezelStyle:NSRegularSquareBezelStyle];
+		[pushIndicator setBordered:NO];
+        [[self superview] addSubview:pushIndicator];
+		[pushIndicator setTarget:self];
+		[pushIndicator setAction:@selector(popContent)];
 		
-		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_positionIndicator:) name:NSViewBoundsDidChangeNotification object:[self superview]];
-        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_positionIndicator:) name:NSViewFrameDidChangeNotification object:[self superview]];
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(positionIndicators:) name:NSViewBoundsDidChangeNotification object:[self superview]];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(positionIndicators:) name:NSViewFrameDidChangeNotification object:[self superview]];
 		
-        [self _positionIndicator:nil]; //Set the indicators initial position
+        [self positionPushIndicator]; //Set the indicators initial position
 		
     } else if (!visible && pushIndicatorVisible) {
         pushIndicatorVisible = visible;
-		
+
         //Push text back
         NSSize size = [self frame].size;
         size.width += [pushIndicatorImage size].width;
         [self setFrameSize:size];
+
+		//Unsubcribe, if necessary.
+		if (!characterCounter) {
+			[[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewBoundsDidChangeNotification object:[self superview]];
+			[[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:[self superview]];
+		}
+		//Remove indicator
+        [pushIndicator removeFromSuperview];
+        [pushIndicator release]; pushIndicator = nil;
 		
-        //Remove indicator
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewBoundsDidChangeNotification object:[self superview]];
-        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:[self superview]];
-        [indicator removeFromSuperview];
-        [indicator release]; indicator = nil;
+		[self positionPushIndicator];
     }
 }
 
-//Reposition indicator into lower right corner
-- (void)_positionIndicator:(NSNotification *)notification
+//Reposition the push indicator into lower right corner
+- (void)positionPushIndicator
 {
     NSRect visRect = [[self superview] bounds];
-    NSRect indFrame = [indicator frame];
-    [indicator setFrameOrigin:NSMakePoint(NSMaxX(visRect) - NSWidth(indFrame) - 10, NSMaxY(visRect) - indFrame.size.height - 2)];
+    NSRect indFrame = [pushIndicator frame];
+	float counterPadding = characterCounter ? NSWidth([characterCounter frame]) : 0;
+	[pushIndicator setFrameOrigin:NSMakePoint(NSMaxX(visRect) - NSWidth(indFrame) - INDICATOR_RIGHT_PADDING - counterPadding, 
+											  NSMaxY(visRect) - NSHeight(indFrame) - INDICATOR_BOTTOM_PADDING)];
     [[self enclosingScrollView] setNeedsDisplay:YES];
+}
+
+#pragma mark Indicators Positioning
+
+/**
+ * @brief Dispatch for both indicators to observe bounds & frame changes of their superview
+ *
+ * Stupid that this is necessary, but you can only remove an entire object from a notification center's observer list,
+ * not on a per-method basis.
+ */
+- (void)positionIndicators:(NSNotification *)notification
+{
+	if (pushIndicatorVisible)
+		[self positionPushIndicator];
+	if (characterCounter)
+		[self positionCharacterCounter];
+}
+
+#pragma mark Character Counter
+
+/**
+ * @brief Makes the character counter for this view visible.
+ */
+- (void)setCharacterCounterVisible:(BOOL)visible
+{
+	if (visible && !characterCounter) {
+		characterCounter = [[AISimpleTextView alloc] initWithFrame:NSZeroRect];
+		[characterCounter setAutoresizingMask:(NSViewMinXMargin)];
+
+		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(positionIndicators:) name:NSViewBoundsDidChangeNotification object:[self superview]];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(positionIndicators:) name:NSViewFrameDidChangeNotification object:[self superview]];		
+
+		[self updateCharacterCounter];
+		[[self superview] addSubview:characterCounter];
+		
+	} else if (!visible && characterCounter) {	
+		[characterCounter removeFromSuperview];
+		
+		// Make sure to resize this view back to the right size.
+		NSSize size = [self frame].size;
+        size.width += NSWidth([characterCounter frame]);
+        [self setFrameSize:size];
+
+		//Unsubscribe, if necessary.
+		if (!pushIndicatorVisible) {
+			[[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewBoundsDidChangeNotification object:[self superview]];
+			[[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:[self superview]];
+		}
+
+		[characterCounter release];
+		characterCounter = nil;
+		
+		// Reposition the push indicator, if necessary.
+		if (pushIndicatorVisible)
+			[self positionPushIndicator];
+		
+		[[self enclosingScrollView] setNeedsDisplay:YES];
+	}
+}
+
+/**
+ * @brief Set the number of characters the character counter should count down from.
+ */
+- (void)setCharacterCounterMaximum:(int)inMaxCharacters
+{
+	maxCharacters = inMaxCharacters;
+}
+
+/**
+ * @brief Update the character counter and resize this view to make space if the counter's bounds change.
+ */
+- (void)updateCharacterCounter
+{
+	NSRect visRect = [[self superview] bounds];
+
+
+	// XXXcbarrett If anyone has ideas for improving this, let me know.
+	//
+	// If we've entered text, the attributes for the first character are a reasonable approximation of what the user's
+	// text style is. Hopefully it won't look too horrible, especially given that this is designed (currently) for use
+	// with Twitter, which doesn't support formatting anyway.
+	NSDictionary *attributes = nil;
+	if ([[self textStorage] length] != 0)
+		attributes = [[self textStorage] attributesAtIndex:0 effectiveRange:NULL];
+	else
+		attributes = [self typingAttributes];
+
+	int currentCount = (maxCharacters - [[self textStorage] length]);	
+	NSAttributedString *label = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%d", currentCount] attributes:attributes];
+	[characterCounter setString:label];
+	[characterCounter setFrameSize:[label size]];
+	[label release];
+
+	//Reposition the character counter.
+	[self positionCharacterCounter];
+	
+	//Shift the text entry view over as necessary.
+	float indent = 0;
+	if (pushIndicatorVisible || characterCounter)
+		indent = NSWidth(visRect) - fminf(NSMinX([pushIndicator frame]), NSMinX([characterCounter frame]));
+	[self setFrameSize:NSMakeSize(NSWidth(visRect) - indent, NSHeight([self frame]))];
+	
+	//Reposition the push indicator if necessary.
+	if (pushIndicatorVisible)
+		[self positionPushIndicator];
+		
+	[[self enclosingScrollView] setNeedsDisplay:YES];
+}
+
+/**
+ * @brief Keeps the character counter in the bottom right corner.
+ */
+- (void)positionCharacterCounter
+{
+	NSRect visRect = [[self superview] bounds];
+	NSRect counterRect = [characterCounter frame];
+	
+	//NSMaxY([self frame]) is necessary because visRect's height changes after you start typing. No idea why.
+	[characterCounter setFrameOrigin:NSMakePoint(NSMaxX(visRect) - NSWidth(counterRect) - INDICATOR_RIGHT_PADDING,
+												 NSMaxY([self frame]) - NSHeight(counterRect) - INDICATOR_BOTTOM_PADDING)];
+	[[self enclosingScrollView] setNeedsDisplay:YES];
 }
 
 #pragma mark Contextual Menus

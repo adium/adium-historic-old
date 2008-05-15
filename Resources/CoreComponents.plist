@@ -89,5 +89,6 @@
 	<string>GBImportPlugin</string>
 	<string>AIContactVisibilityPlugin</string>
 	<string>AIMentionEventPlugin</string>
+	<string>AITwitterIMPlugin</string>
 </array>
 </plist>
