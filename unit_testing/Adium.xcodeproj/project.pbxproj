@@ -1694,15 +1694,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B7E23B9E0DD2C8E600A7472B /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "$(BUILT_PRODUCTS_DIR)";
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		F51BCD3E0A156281000FDC06 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -7927,8 +7918,8 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 312ED3CC0C7E875C00A6BDA9 /* Build configuration list for PBXNativeTarget "Unit tests" */;
 			buildPhases = (
+				B712C7A60DDA6A11008FF276 /* ShellScript */,
 				312ED3C50C7E875B00A6BDA9 /* Resources */,
-				B7E23B9E0DD2C8E600A7472B /* CopyFiles */,
 				312ED3C60C7E875B00A6BDA9 /* Sources */,
 				312ED3C70C7E875B00A6BDA9 /* Frameworks */,
 				312ED3C80C7E875B00A6BDA9 /* ShellScript */,
@@ -8861,6 +8852,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Delete .h files\nfind \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" -name '*.h' -print0 | xargs -0 rm -f\n";
+		};
+		B712C7A60DDA6A11008FF276 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Remove coverage files from previous builds\n/bin/rm -rf \"$OBJECT_FILE_DIR_normal/*/*.gcno\"\n/bin/rm -rf \"$OBJECT_FILE_DIR_normal/*/*.gcda\"";
 		};
 		F53C25AD0A2F95F100F7B73D /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
