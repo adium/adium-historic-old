@@ -443,7 +443,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		//Wish I could use fast enumeration here, :crying:
 		unsigned int i = 3; //Just an index so we can keep track of where we are adding menu items. We are at 3, since we've added 3 so far.
 		AIListObject *currentContact = nil;
-		NSEnumerator *contactEnumerator = [[(AIMetaContact *)aListObject listContactsIncludingOfflineAccounts] objectEnumerator];
+		NSEnumerator *contactEnumerator = [[(AIMetaContact *)aListObject listContacts] objectEnumerator];
 
 		while((currentContact = [contactEnumerator nextObject])) {			
 			//We don't want to add the preferredContact again.
