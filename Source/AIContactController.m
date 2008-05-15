@@ -1927,7 +1927,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			AIListContact	*actualListContact;
 			
 			//This is a meta contact, move the objects within it.  listContacts will give us a flat array of AIListContacts.
-			enumerator = [[(AIMetaContact *)listContact listContacts] objectEnumerator];
+			enumerator = [[(AIMetaContact *)listContact containedObjects] objectEnumerator];
 			while ((actualListContact = [enumerator nextObject])) {
 				//Only move the contact if it is actually listed on the account in question
 				if (![actualListContact isStranger]) {
