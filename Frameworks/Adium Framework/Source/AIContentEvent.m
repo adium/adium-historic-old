@@ -6,6 +6,7 @@
 //
 
 #import <Adium/AIContentEvent.h>
+#import <AIUtilities/AITigerCompatibility.h>
 
 @implementation AIContentEvent
 
@@ -19,12 +20,11 @@
 {
 	NSMutableArray *classes = [super displayClasses];
 	
-	//Events are neither incoming nor outgoing, and really aren't statuses, but the way this is designed doesn't support that right now :(
-	uint idx = [classes indexOfObject:@"incoming"];
-	[classes removeObjectAtIndex:idx];
-	idx = [classes indexOfObject:@"status"];
-	[classes removeObjectAtIndex:idx];
-
+	//Events are not really status changes...
+	NSInteger idx = [classes indexOfObject:@"status"];
+	if(idx != NSNotFound)
+		[classes removeObjectAtIndex:idx];
+	
 	[classes addObject:@"event"];
 	return classes;
 }

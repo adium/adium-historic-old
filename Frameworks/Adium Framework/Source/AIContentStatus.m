@@ -16,6 +16,7 @@
 
 #import <Adium/AIContentObject.h>
 #import <Adium/AIContentStatus.h>
+#import <AIUtilities/AITigerCompatibility.h>
 
 @interface AIContentStatus (PRIVATE)
 - (id)initWithChat:(AIChat *)inChat
@@ -77,6 +78,12 @@
 - (NSMutableArray *)displayClasses
 {
 	NSMutableArray *classes = [super displayClasses];
+	
+	//The notion of direction is not very useful on statuses
+	NSInteger idx = [classes indexOfObject:@"incoming"];
+	if(idx != NSNotFound)
+		[classes removeObjectAtIndex:idx];
+	
 	[classes addObject:@"status"];
 	[classes addObject:statusType];
 	return classes;
