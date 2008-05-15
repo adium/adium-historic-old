@@ -270,11 +270,8 @@
 }
 
 - (BOOL)moveAllGroupsFrom:(AIListGroup *)fromContactList to:(AIListGroup *)toContactList {
-	NSEnumerator *groups = [containedObjects objectEnumerator];
-	AIListGroup *group;
-	
-	while ((group = [groups nextObject]))
-		[group moveGroupTo:toContactList];
+	[[[containedObjects copy] autorelease] makeObjectsPerformSelector:@selector(moveGroupTo:)
+														   withObject:toContactList];
 	
 	return YES;
 }
