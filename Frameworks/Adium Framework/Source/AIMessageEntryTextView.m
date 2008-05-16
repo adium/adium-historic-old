@@ -61,31 +61,119 @@
 	NSRTFPboardType, NSStringPboardType, nil]
 
 /**
- * @class AISimpleTextView
- * @brief Just draws an attributed string. That's it.
- * 
- * No really, it's dead simple. It just draws an attributed string in its bounds (which you set). That's it.
- * It's totally not even useful.
+ * @class AITwitterCharacterCounterView
+ * @brief Indicates how many characters you have in your message budget.
+ *
+ * Some services, such as Twitter, impose a maximum size per message. This view indicates when the user is approaching the maximum.
+ *
+ * The view is a grid of four by four square-shaped dots, each three points square, with one-point gaps between adjacent dots. Each dot represents one character remaining; thus, if the user has 16 or more characters remaining, then all the dots will be visible, but if the user dips below 16, then dots will go away one by one. If the user runs out, no more dots are visible, and the controller may want to forbid the user from entering any more characters.
  */
 
-@implementation  AISimpleTextView
-- (void)setString:(NSAttributedString *)inString
-{
-	if (string != inString) {
-		[string release];
-		string = [inString copy];
+@implementation  AITwitterCharacterCounterView
+enum {
+	TCC_dot_size = 3,
+	TCC_dot_spacing = 1,
+	TCC_dot_offset = TCC_dot_size + TCC_dot_spacing
+};
+
++ (NSSize) idealSize {
+	float sideSize = (TCC_dot_size * 4U + TCC_dot_spacing * 3U);
+	return (NSSize){ sideSize, sideSize };
+}
+
+- (NSColor *) remainingDotColor {
+	return remainingDotColor;
+}
+- (void) setRemainingDotColor:(NSColor *)newRemainingDotColor {
+	if(remainingDotColor != newRemainingDotColor) {
+		[remainingDotColor release];
+		remainingDotColor = [newRemainingDotColor retain];
 	}
+}
+
+- (NSColor *) usedDotColor {
+	return usedDotColor;
+}
+- (void) setUsedDotColor:(NSColor *)newUsedDotColor {
+	if(usedDotColor != newUsedDotColor) {
+		[usedDotColor release];
+		usedDotColor = [newUsedDotColor retain];
+	}
+}
+
+- (NSUInteger) currentMessageSize {
+	return currentMessageSize;
+}
+- (void) setCurrentMessageSize:(NSUInteger)newCurrentMessageSize {
+	currentMessageSize = newCurrentMessageSize;
+}
+
+- (NSUInteger) maximumMessageSize {
+	return maximumMessageSize;
+}
+- (void) setMaximumMessageSize:(NSUInteger)newMaximumMessageSize {
+	maximumMessageSize = newMaximumMessageSize;
+}
+
+#pragma mark -
+
+- (id) initWithFrame:(NSRect)newFrame
+{
+	if ((self = [super initWithFrame:newFrame])) {
+		remainingDotColor = [[NSColor blackColor] retain];
+		usedDotColor = [[[NSColor blackColor] colorWithAlphaComponent:0.1f] retain]; //10% opacity
+	}
+	return self;
 }
 
 - (void)dealloc
 {
-	[string release];
+	[remainingDotColor release];
+	[usedDotColor release];
 	[super dealloc];
 }
 
 - (void)drawRect:(NSRect)rect 
 {
-	[string drawInRect:[self bounds]];
+	/*Array indices:
+	 *15 14 13 12
+	 *11 10 09 08
+	 *07 06 05 04
+	 *03 02 01 00
+	 *
+	 *The reason for this order is so that dots disappear in standard Western reading order (left to right, top to bottom).
+	 */
+
+	NSUInteger balance = (maximumMessageSize < currentMessageSize)
+		? 0U
+		: (maximumMessageSize - currentMessageSize);
+
+	NSUInteger idx;
+	NSBezierPath *bezierPath;
+
+	bezierPath = [NSBezierPath bezierPath];
+	[remainingDotColor set];
+	for (idx = 0U; idx < balance && idx < 16U; ++idx) {
+		NSUInteger column = idx % 4U;
+		column = (4U - column) - 1U; //Invert from 0..3 to 3..0
+		NSUInteger row    = idx / 4U;
+
+		NSRect dotRect = { { TCC_dot_offset * column, TCC_dot_offset * row }, { TCC_dot_size, TCC_dot_size } };
+		[bezierPath appendBezierPathWithRect:dotRect];
+	}
+	[bezierPath fill];
+
+	bezierPath = [NSBezierPath bezierPath];
+	[usedDotColor set];
+	for (idx = balance; idx < 16U; ++idx) {
+		NSUInteger column = idx % 4U;
+		column = (4U - column) - 1U; //Invert from 0..3 to 3..0
+		NSUInteger row    = idx / 4U;
+
+		NSRect dotRect = { { TCC_dot_offset * column, TCC_dot_offset * row }, { TCC_dot_size, TCC_dot_size } };
+		[bezierPath appendBezierPathWithRect:dotRect];
+	}
+	[bezierPath fill];
 }
 @end
 
@@ -993,8 +1081,10 @@
 - (void)setCharacterCounterVisible:(BOOL)visible
 {
 	if (visible && !characterCounter) {
-		characterCounter = [[AISimpleTextView alloc] initWithFrame:NSZeroRect];
+		characterCounter = [[AITwitterCharacterCounterView alloc] initWithFrame:(NSRect){ NSZeroPoint, [AITwitterCharacterCounterView idealSize] }];
 		[characterCounter setAutoresizingMask:(NSViewMinXMargin)];
+#warning Hard-coded numbers are bad! 140 is the message budget on Twitter, but this should be a property, to accomodate other services that may have different budgets.
+		[characterCounter setMaximumMessageSize:140U];
 
 		[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(positionIndicators:) name:NSViewBoundsDidChangeNotification object:[self superview]];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(positionIndicators:) name:NSViewFrameDidChangeNotification object:[self superview]];		
@@ -1042,12 +1132,7 @@
 {
 	NSRect visRect = [[self superview] bounds];
 
-	int currentCount = (maxCharacters - [[self textStorage] length]);	
-	NSAttributedString *label = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%d", currentCount] 
-																attributes:[[adium contentController] defaultFormattingAttributes]];
-	[characterCounter setString:label];
-	[characterCounter setFrameSize:[label size]];
-	[label release];
+	[characterCounter setCurrentMessageSize:[[self textStorage] length]];
 
 	//Reposition the character counter.
 	[self positionCharacterCounter];

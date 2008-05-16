@@ -17,13 +17,31 @@
 #import <AIUtilities/AISendingTextView.h>
 #import <Adium/AIAdiumProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
+#import <AIUtilities/AITigerCompatibility.h>
 
 @class AIListContact, AIAccount, AIChat;
 
-@interface AISimpleTextView : NSView {
-	NSAttributedString *string;
+@interface AITwitterCharacterCounterView : NSView {
+	NSColor *remainingDotColor; //Indicates a character that the user has remaining in budget.
+	NSColor *usedDotColor; //Indicates a character that the user has spent. This could be low-opacity black, to have dots faintly visible rather than completely hidden.
+	NSUInteger currentMessageSize; //Number of characters the user has entered (spent).
+	NSUInteger maximumMessageSize; //E.g., 140 for Twitter.
 }
-- (void)setString:(NSAttributedString *)inString;
+
++ (NSSize) idealSize;
+
+- (NSColor *) remainingDotColor;
+- (void) setRemainingDotColor:(NSColor *)newRemainingDotColor;
+
+- (NSColor *) usedDotColor;
+- (void) setUsedDotColor:(NSColor *)newUsedDotColor;
+
+- (NSUInteger) currentMessageSize;
+- (void) setCurrentMessageSize:(NSUInteger)newCurrentMessageSize;
+
+- (NSUInteger) maximumMessageSize;
+- (void) setMaximumMessageSize:(NSUInteger)newMaximumMessageSize;
+
 @end
 
 
@@ -52,7 +70,7 @@
     
     NSView              *associatedView;
 	
-	AISimpleTextView	*characterCounter;
+	AITwitterCharacterCounterView	*characterCounter;
 	int					maxCharacters;
 }
 
