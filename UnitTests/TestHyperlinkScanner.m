@@ -14,7 +14,7 @@
 
 - (void)testGreaterThanBeforeString:(NSString *)suffix {
 	AHHyperlinkScanner *scanner = [[AHHyperlinkScanner alloc] initWithStrictChecking:YES];
-	AHMarkedHyperlink *link = [scanner nextURLFromString:[@"<http://adiumx.com/>" stringByAppendingString:suffix]];
+	AHMarkedHyperlink *link = [[scanner allURLsFromString:[@"<http://adiumx.com/>" stringByAppendingString:suffix]] objectAtIndex:0];
 	STAssertEqualObjects([link URL], [NSURL URLWithString:@"http://adiumx.com/"], @"-[SHHyperlinkScanner nextURLFromString:] must not include any characters that appear after the URL");
 	[scanner release];
 }
