@@ -24,6 +24,7 @@
 @interface AITwitterCharacterCounterView : NSView {
 	NSColor *remainingDotColor; //Indicates a character that the user has remaining in budget.
 	NSColor *usedDotColor; //Indicates a character that the user has spent. This could be low-opacity black, to have dots faintly visible rather than completely hidden.
+	NSColor *noCharactersRemainingDotColor; //Color of *all* dots when the user has completely run out of characters.
 	NSUInteger currentMessageSize; //Number of characters the user has entered (spent).
 	NSUInteger maximumMessageSize; //E.g., 140 for Twitter.
 }
@@ -35,6 +36,9 @@
 
 - (NSColor *) usedDotColor;
 - (void) setUsedDotColor:(NSColor *)newUsedDotColor;
+
+- (NSColor *) noCharactersRemainingDotColor;
+- (void) setNoCharactersRemainingDotColor:(NSColor *)newNoCharactersRemainingDotColor;
 
 - (NSUInteger) currentMessageSize;
 - (void) setCurrentMessageSize:(NSUInteger)newCurrentMessageSize;

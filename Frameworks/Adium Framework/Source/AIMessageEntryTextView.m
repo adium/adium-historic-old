@@ -101,6 +101,16 @@ enum {
 	}
 }
 
+- (NSColor *) noCharactersRemainingDotColor {
+	return noCharactersRemainingDotColor;
+}
+- (void) setNoCharactersRemainingDotColor:(NSColor *)newNoCharactersRemainingDotColor {
+	if(noCharactersRemainingDotColor != newNoCharactersRemainingDotColor) {
+		[noCharactersRemainingDotColor release];
+		noCharactersRemainingDotColor = [newNoCharactersRemainingDotColor retain];
+	}
+}
+
 - (NSUInteger) currentMessageSize {
 	return currentMessageSize;
 }
@@ -122,6 +132,7 @@ enum {
 	if ((self = [super initWithFrame:newFrame])) {
 		remainingDotColor = [[NSColor blackColor] retain];
 		usedDotColor = [[[NSColor blackColor] colorWithAlphaComponent:0.1f] retain]; //10% opacity
+		noCharactersRemainingDotColor = [[[NSColor redColor] colorWithAlphaComponent:0.75f] retain];
 	}
 	return self;
 }
@@ -130,6 +141,7 @@ enum {
 {
 	[remainingDotColor release];
 	[usedDotColor release];
+	[noCharactersRemainingDotColor release];
 	[super dealloc];
 }
 
@@ -164,7 +176,7 @@ enum {
 	[bezierPath fill];
 
 	bezierPath = [NSBezierPath bezierPath];
-	[usedDotColor set];
+	[(balance > 0U ? usedDotColor : noCharactersRemainingDotColor) set];
 	for (idx = balance; idx < 16U; ++idx) {
 		NSUInteger column = idx % 4U;
 		column = (4U - column) - 1U; //Invert from 0..3 to 3..0
