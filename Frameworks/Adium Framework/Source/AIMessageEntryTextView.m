@@ -111,11 +111,26 @@ enum {
 	}
 }
 
+- (void) updateToolTip {
+	if (currentMessageSize >= maximumMessageSize) {
+		[self setToolTip:[NSString stringWithFormat:AILocalizedString(@"You've used all of the %u characters that you're allowed!", /*comment*/ @"Tooltips for character-counter view"), maximumMessageSize]];
+	} else {
+		NSUInteger balance = maximumMessageSize - currentMessageSize;
+		if (balance >= 16U) {
+			[self setToolTip:[NSString stringWithFormat:AILocalizedString(@"%u of %u characters remaining.\n\n"@"These dots will begin to disappear once you have fewer than %u characters remaining. This indicates that you may need to edit your message to fit it into the allowed space.", /*comment*/ @"Tooltips for character-counter view"), balance, maximumMessageSize, 16U]];
+		} else {
+			//User is running out.
+			[self setToolTip:[NSString stringWithFormat:AILocalizedString(@"%u of %u characters remaining.\n\n"@"%u of these dots are gone because you have so few characters remaining. You're running low, and you may need to edit your message to fit it into the allowed space.", /*comment*/ @"Tooltips for character-counter view"), balance, maximumMessageSize, (16U - balance)]];
+		}
+	}
+}
+
 - (NSUInteger) currentMessageSize {
 	return currentMessageSize;
 }
 - (void) setCurrentMessageSize:(NSUInteger)newCurrentMessageSize {
 	currentMessageSize = newCurrentMessageSize;
+	[self updateToolTip];
 }
 
 - (NSUInteger) maximumMessageSize {
@@ -123,6 +138,7 @@ enum {
 }
 - (void) setMaximumMessageSize:(NSUInteger)newMaximumMessageSize {
 	maximumMessageSize = newMaximumMessageSize;
+	[self updateToolTip];
 }
 
 #pragma mark -
