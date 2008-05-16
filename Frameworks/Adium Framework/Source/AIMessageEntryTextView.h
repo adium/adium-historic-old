@@ -20,7 +20,12 @@
 
 @class AIListContact, AIAccount, AIChat;
 
-@class AISimpleTextView;
+@interface AISimpleTextView : NSView {
+	NSAttributedString *string;
+}
+- (void)setString:(NSAttributedString *)inString;
+@end
+
 
 @interface AIMessageEntryTextView : AISendingTextView <AITextEntryView> {
     NSObject<AIAdium>	*adium;

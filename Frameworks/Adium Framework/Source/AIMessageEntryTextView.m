@@ -59,20 +59,14 @@
 
 #define PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY [NSArray arrayWithObjects: \
 	NSRTFPboardType, NSStringPboardType, nil]
-	
 
 /**
  * @class AISimpleTextView
  * @brief Just draws an attributed string. That's it.
  * 
  * No really, it's dead simple. It just draws an attributed string in its bounds (which you set). That's it.
+ * It's totally not even useful.
  */
-@interface AISimpleTextView : NSView {
-	NSAttributedString *string;
-}
-- (void)setString:(NSAttributedString *)inString;
-@end
-
 
 @implementation  AISimpleTextView
 - (void)setString:(NSAttributedString *)inString
