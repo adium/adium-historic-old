@@ -1054,8 +1054,11 @@
 	
 	//Shift the text entry view over as necessary.
 	float indent = 0;
-	if (pushIndicatorVisible || characterCounter)
-		indent = NSWidth(visRect) - fminf(NSMinX([pushIndicator frame]), NSMinX([characterCounter frame]));
+	if (pushIndicatorVisible || characterCounter) {
+		float pushIndicatorX = pushIndicator ? NSMinX([pushIndicator frame]) : NSMaxX([self bounds]);
+		float characterCounterX = characterCounter ? NSMinX([characterCounter frame]) : NSMaxX([self bounds]);
+		indent = NSWidth(visRect) - fminf(pushIndicatorX, characterCounterX);
+	}
 	[self setFrameSize:NSMakeSize(NSWidth(visRect) - indent, NSHeight([self frame]))];
 	
 	//Reposition the push indicator if necessary.
