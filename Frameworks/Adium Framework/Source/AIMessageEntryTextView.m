@@ -111,16 +111,32 @@ enum {
 	}
 }
 
+- (NSUInteger) numberOfColumns {
+	return numberOfColumns;
+}
+- (void) setNumberOfColumns:(NSUInteger)newNumberOfColumns {
+	numberOfColumns = newNumberOfColumns;
+}
+
+- (NSUInteger) numberOfRows {
+	return numberOfRows;
+}
+- (void) setNumberOfRows:(NSUInteger)newNumberOfRows {
+	numberOfRows = newNumberOfRows;
+}
+
 - (void) updateToolTip {
 	if (currentMessageSize >= maximumMessageSize) {
 		[self setToolTip:[NSString stringWithFormat:AILocalizedString(@"You've used all of the %u characters that you're allowed!", /*comment*/ @"Tooltips for character-counter view"), maximumMessageSize]];
 	} else {
 		NSUInteger balance = maximumMessageSize - currentMessageSize;
-		if (balance >= 16U) {
-			[self setToolTip:[NSString stringWithFormat:AILocalizedString(@"%u of %u characters remaining.\n\n"@"These dots will begin to disappear once you have fewer than %u characters remaining. This indicates that you may need to edit your message to fit it into the allowed space.", /*comment*/ @"Tooltips for character-counter view"), balance, maximumMessageSize, 16U]];
+		NSUInteger numberOfDots = numberOfColumns * numberOfRows;
+
+		if (balance >= numberOfDots) {
+			[self setToolTip:[NSString stringWithFormat:AILocalizedString(@"%u of %u characters remaining.\n\n"@"These dots will begin to disappear once you have fewer than %u characters remaining. This indicates that you may need to edit your message to fit it into the allowed space.", /*comment*/ @"Tooltips for character-counter view"), balance, maximumMessageSize, numberOfDots]];
 		} else {
 			//User is running out.
-			[self setToolTip:[NSString stringWithFormat:AILocalizedString(@"%u of %u characters remaining.\n\n"@"%u of these dots are gone because you have so few characters remaining. You're running low, and you may need to edit your message to fit it into the allowed space.", /*comment*/ @"Tooltips for character-counter view"), balance, maximumMessageSize, (16U - balance)]];
+			[self setToolTip:[NSString stringWithFormat:AILocalizedString(@"%u of %u characters remaining.\n\n"@"%u of these dots are gone because you have so few characters remaining. You're running low, and you may need to edit your message to fit it into the allowed space.", /*comment*/ @"Tooltips for character-counter view"), balance, maximumMessageSize, (numberOfDots - balance)]];
 		}
 	}
 }
@@ -149,6 +165,8 @@ enum {
 		remainingDotColor = [[NSColor blackColor] retain];
 		usedDotColor = [[[NSColor blackColor] colorWithAlphaComponent:0.1f] retain]; //10% opacity
 		noCharactersRemainingDotColor = [[[NSColor redColor] colorWithAlphaComponent:0.75f] retain];
+
+		numberOfRows = numberOfColumns = 4U;
 	}
 	return self;
 }
@@ -163,7 +181,7 @@ enum {
 
 - (void)drawRect:(NSRect)rect 
 {
-	/*Array indices:
+	/*Array indices (where numberOfRows = numberOfColumns = 4U):
 	 *15 14 13 12
 	 *11 10 09 08
 	 *07 06 05 04
@@ -178,13 +196,14 @@ enum {
 
 	NSUInteger idx;
 	NSBezierPath *bezierPath;
+	NSUInteger numberOfDots = numberOfColumns * numberOfRows;
 
 	bezierPath = [NSBezierPath bezierPath];
 	[remainingDotColor set];
-	for (idx = 0U; idx < balance && idx < 16U; ++idx) {
-		NSUInteger column = idx % 4U;
-		column = (4U - column) - 1U; //Invert from 0..3 to 3..0
-		NSUInteger row    = idx / 4U;
+	for (idx = 0U; idx < balance && idx < numberOfDots; ++idx) {
+		NSUInteger column = idx % numberOfRows;
+		column = (numberOfColumns - column) - 1U; //Invert from 0..3 to 3..0
+		NSUInteger row    = idx / numberOfRows;
 
 		NSRect dotRect = { { TCC_dot_offset * column, TCC_dot_offset * row }, { TCC_dot_size, TCC_dot_size } };
 		[bezierPath appendBezierPathWithRect:dotRect];
@@ -193,10 +212,10 @@ enum {
 
 	bezierPath = [NSBezierPath bezierPath];
 	[(balance > 0U ? usedDotColor : noCharactersRemainingDotColor) set];
-	for (idx = balance; idx < 16U; ++idx) {
-		NSUInteger column = idx % 4U;
-		column = (4U - column) - 1U; //Invert from 0..3 to 3..0
-		NSUInteger row    = idx / 4U;
+	for (idx = balance; idx < numberOfDots; ++idx) {
+		NSUInteger column = idx % numberOfRows;
+		column = (numberOfColumns - column) - 1U; //Invert from 0..3 to 3..0
+		NSUInteger row    = idx / numberOfRows;
 
 		NSRect dotRect = { { TCC_dot_offset * column, TCC_dot_offset * row }, { TCC_dot_size, TCC_dot_size } };
 		[bezierPath appendBezierPathWithRect:dotRect];
