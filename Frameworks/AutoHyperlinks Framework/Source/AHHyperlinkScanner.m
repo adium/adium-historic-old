@@ -31,18 +31,32 @@
 
 #define	DEFAULT_URL_SCHEME	@"http://"
 
+@interface AHHyperlinkScanner (PRIVATE)
+- (AHMarkedHyperlink *)nextURLFromString:(NSString *)inString;
+@end
+
 @implementation AHHyperlinkScanner
 
 #pragma mark Init
 
-//default initializer - use strict checking by default
+/*!
+ * @brief Init
+ *
+ * Defaults to strict URL checking (only links with schemes are matched).
+ *
+ * @return A new AHHyperlinkScanner.
+ */
 - (id)init
 {
 	return [self initWithStrictChecking:YES];
 }
 
-//init with a user specified value for strict checking
-- (id)initWithStrictChecking:(BOOL)flag
+/*!
+ * @brief Init
+ *
+ * @param flag Sets strict checking preference.
+ * @return A new AHHyperlinkScanner.
+ */- (id)initWithStrictChecking:(BOOL)flag
 {
 	if((self = [super init])){
 		urlSchemes = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -70,7 +84,12 @@
 
 #pragma mark primitive methods
 
-// method to determine the validity of a given string, only place where flex is called
+/*!
+ * @brief Determine the validity of a given string
+ *
+ * @param inString The string to be verified
+ * @return Boolean
+ */
 - (BOOL)isStringValidURL:(NSString *)inString
 {
     AH_BUFFER_STATE buf;  // buffer for flex to scan from
@@ -118,6 +137,13 @@
     return NO;
 }
 
+/*!
+ * @brief Retreives the next URL from the given string
+ * 
+ * Private to AHHyperlinkScanner.  Calling on this externally could create some weird results.
+ *
+ * @return a AHMarkedHyperlink representing the given URL or nil, if there are no more hyperlinks. 
+ */
 - (AHMarkedHyperlink *)nextURLFromString:(NSString *)inString
 {
     NSString    *scanString = nil;
@@ -291,7 +317,11 @@
 
 #pragma mark string and textview handleing
 
-//fetch all the URL's from a string
+/*!
+ * @brief Fetches all the URLs from a string
+ * @param inString The NSString with potential URLs in it
+ * @return An array of AHMarkedHyperlinks representing each matched URL in the string or nil if no matches.
+ */
 -(NSArray *)allURLsFromString:(NSString *)inString
 {
     AHStringOffset = 0; //set the offset to 0.
@@ -309,7 +339,11 @@
 	return rangeArray;
 }
 
-// fetch all the URL's form a text view
+/*!
+ * @brief Fetches all the URLs from a NSTextView
+ * @param inView The NSTextView with potential URLs in it
+ * @return An array of AHMarkedHyperlinks representing each matched URL in the textView or nil if no matches.
+ */
 -(NSArray *)allURLsFromTextView:(NSTextView *)inView
 {
     // since a NSTextView is really just a glorified NSMutableAttributedString,
@@ -317,7 +351,11 @@
     return [self allURLsFromString:[inView string]];
 }
 
-//scan an attributed string for URL's, then give them the proper link attribs.
+/*!
+ * @brief Scans an attributed string for URLs then adds the link attribs and objects.
+ * @param inString The NSAttributedString to be linkified
+ * @return An autoreleased NSAttributedString.
+ */
 -(NSAttributedString *)linkifyString:(NSAttributedString *)inString
 {
     //build an array from the input string and get its obj. enumerator
@@ -350,7 +388,12 @@
 	}
 }
 
-// scan a textView for URL's, as above
+/*!
+ * @brief Scans a NSTextView's text store for URLs then adds the link attribs and objects.
+ * 
+ * This scan happens in place: the origional NSTextView is modified, and nothing is returned.
+ * @param inView The NSTextView to be linkified.
+ */
 - (void)linkifyTextView:(NSTextView *)inView
 {
 	NSAttributedString *newAttributedString;
