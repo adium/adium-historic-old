@@ -447,5 +447,9 @@
 
 - (void)testUserCases {
 	testHyperlink(@"http://example.com/foo_(bar)");
+	testHyperlink(@"http://example.not.a.tld/");
+	testHyperlink(@"http://example.not.a.tld:8080/");
+	testHyperlink(@"http://example.not.a.tld/stuff");
+	testHyperlink(@"http://example.not.a.tld:8080/stuff");
 }
 @end

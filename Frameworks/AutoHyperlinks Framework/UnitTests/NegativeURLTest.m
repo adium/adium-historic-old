@@ -22,5 +22,7 @@
 	testHyperlink(@"http://[::1:]");
 	testHyperlink(@"http://[1]");
 	testHyperlink(@"http://[]");
+	testHyperlink(@"http://example.not.a.tld");
+	testHyperlink(@"http://example.not.a.tld:8080");
 }
 @end

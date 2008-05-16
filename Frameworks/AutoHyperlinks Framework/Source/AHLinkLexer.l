@@ -90,7 +90,7 @@ ipv6URL         \[{ipv6Address}](:[0-9]+)?(\/.*)?
                                                    BEGIN INITIAL;
                                                    return AH_URL_VALID;}
 
-<CANONICAL>({userAndPass}@)?{singleDomain}(\.{singleDomain})*(:[0-9]+)?/.* {AHStringOffset += AHleng;
+<CANONICAL>({userAndPass}@)?{singleDomain}(\.{singleDomain})*(:[0-9]+)?\/.* {AHStringOffset += AHleng;
                                                    AHleng += AHValidShift;
                                                    BEGIN INITIAL;
                                                    return AH_URL_VALID;}
