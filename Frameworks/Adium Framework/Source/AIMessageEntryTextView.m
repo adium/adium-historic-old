@@ -80,6 +80,7 @@
 - (void)dealloc
 {
 	[string release];
+	[super dealloc];
 }
 
 - (void)drawRect:(NSRect)rect 
