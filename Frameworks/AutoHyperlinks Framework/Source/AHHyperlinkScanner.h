@@ -51,7 +51,6 @@ extern unsigned int AHStringOffset;
 - (AH_URI_VERIFICATION_STATUS)validationStatus;
 
 - (BOOL)isStringValidURL:(NSString *)inString;
-- (AHMarkedHyperlink *)nextURLFromString:(NSString *)inString;
 
 - (NSArray *)allURLsFromString:(NSString *)inString;
 - (NSArray *)allURLsFromTextView:(NSTextView *)inView;
