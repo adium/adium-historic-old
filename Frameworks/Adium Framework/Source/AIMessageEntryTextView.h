@@ -25,6 +25,10 @@
 	NSColor *remainingDotColor; //Indicates a character that the user has remaining in budget.
 	NSColor *usedDotColor; //Indicates a character that the user has spent. This could be low-opacity black, to have dots faintly visible rather than completely hidden.
 	NSColor *noCharactersRemainingDotColor; //Color of *all* dots when the user has completely run out of characters.
+
+	NSUInteger numberOfColumns; //X dimension
+	NSUInteger numberOfRows; //Y dimension
+
 	NSUInteger currentMessageSize; //Number of characters the user has entered (spent).
 	NSUInteger maximumMessageSize; //E.g., 140 for Twitter.
 }
@@ -39,6 +43,12 @@
 
 - (NSColor *) noCharactersRemainingDotColor;
 - (void) setNoCharactersRemainingDotColor:(NSColor *)newNoCharactersRemainingDotColor;
+
+- (NSUInteger) numberOfColumns;
+- (void) setNumberOfColumns:(NSUInteger)newNumberOfColumns;
+
+- (NSUInteger) numberOfRows;
+- (void) setNumberOfRows:(NSUInteger)newNumberOfRows;
 
 - (NSUInteger) currentMessageSize;
 - (void) setCurrentMessageSize:(NSUInteger)newCurrentMessageSize;
