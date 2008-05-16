@@ -77,6 +77,11 @@
 	}
 }
 
+- (void)dealloc
+{
+	[string release];
+}
+
 - (void)drawRect:(NSRect)rect 
 {
 	[string drawInRect:[self bounds]];
