@@ -161,6 +161,8 @@
 															  object:nil];
 
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];	
+	
+	[[adium contactController] registerListObjectObserver:self];
 }
 
 //Init the text view
@@ -187,6 +189,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[[[AIObject sharedAdiumInstance] notificationCenter] removeObserver:self];
+	[[adium contactController] unregisterListObjectObserver:self];
 
     [chat release];
     [associatedView release];
@@ -410,14 +413,6 @@
 			(!key || [key isEqualToString:KEY_GRAMMAR_CHECKING])) {
 			[self setGrammarCheckingEnabled:[[prefDict objectForKey:KEY_GRAMMAR_CHECKING] boolValue]];
 		}
-	}
-	
-	if ((object == [chat listObject]) &&
-		[group isEqualToString:PREF_GROUP_CHARACTER_COUNTER]) {
-		if (!key || [key isEqualToString:KEY_CHARACTER_COUNTER_ENABLED])
-			[self setCharacterCounterVisible:[[prefDict objectForKey:KEY_CHARACTER_COUNTER_ENABLED] boolValue]];
-		if (!key || [key isEqualToString:KEY_MAX_NUMBER_OF_CHARACTERS])
-			[self setCharacterCounterMaximum:[[prefDict objectForKey:KEY_MAX_NUMBER_OF_CHARACTERS] intValue]];
 	}
 }
 
@@ -682,12 +677,9 @@
 		//Observe preferences changes for typing enable/disable
 		[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
 
-		//Grab our initial values for the state of the character counter, since registering as an observer only gives you global state
-		[self setCharacterCounterMaximum:[[[chat listObject] preferenceForKey:KEY_MAX_NUMBER_OF_CHARACTERS group:PREF_GROUP_CHARACTER_COUNTER] intValue]];
-		[self setCharacterCounterVisible:[[[chat listObject] preferenceForKey:KEY_CHARACTER_COUNTER_ENABLED group:PREF_GROUP_CHARACTER_COUNTER] boolValue]];
-
-		//Observer preference changes for the character counter, just in case
-		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CHARACTER_COUNTER];
+		//Set up the character counter for this chat. If this changes, we'll get notified as a list object observer.
+		[self setCharacterCounterMaximum:[[chat listObject] integerStatusObjectForKey:@"Character Counter Max"]];
+		[self setCharacterCounterVisible:([[chat listObject] statusObjectForKey:@"Character Counter Max"] != nil)];
     }
 }
 - (AIChat *)chat{
@@ -1033,6 +1025,9 @@
 - (void)setCharacterCounterMaximum:(int)inMaxCharacters
 {
 	maxCharacters = inMaxCharacters;
+	
+	if (characterCounter)
+		[self updateCharacterCounter];
 }
 
 /**
@@ -1081,6 +1076,20 @@
 												 NSMaxY([self frame]) - NSHeight(counterRect) - INDICATOR_BOTTOM_PADDING)];
 	[[self enclosingScrollView] setNeedsDisplay:YES];
 }
+
+#pragma mark List Object Observer
+
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
+{
+	if ((inObject == [chat listObject]) &&
+		(!inModifiedKeys || [inModifiedKeys containsObject:@"Character Counter Max"])) {
+		[self setCharacterCounterMaximum:[inObject integerStatusObjectForKey:@"Character Counter Max"]];
+		[self setCharacterCounterVisible:([inObject statusObjectForKey:@"Character Counter Max"] != nil)];
+	}
+
+	return nil;
+}
+
 
 #pragma mark Contextual Menus
 
