@@ -25,6 +25,7 @@
 - (void)testURIBorder:(NSString *)URIString {
 	[self testLaxContext:@":%@" withURI:URIString];
 	[self testLaxContext:@"%@:" withURI:URIString];
+	[self testLaxContext:@"%@." withURI:URIString];
 }
 
 - (void)testSimpleDomain {
@@ -37,6 +38,13 @@
 	[self testURIBorder:@"example.com/foo_(bar)"];
 	[self testEnclosedURI:@"http://example.com/foo_(bar)"];
 	[self testURIBorder:@"http://example.com/foo_(bar)"];
+	[self testURIBorder:@"http://www.example.com/___"];
+	[self testURIBorder:@"http://www.example.com/$$$"];
+	[self testURIBorder:@"http://www.example.com/---"];
+	
+	[self testEnclosedURI:@"http://www.example.com/___"];
+	[self testEnclosedURI:@"http://www.example.com/$$$"];
+	[self testEnclosedURI:@"http://www.example.com/---"];
 
 	[self testLaxContext:@"<><><><><<<<><><><><%@><><><><><><<<><><><><><>" withURI:@"example.com"];
 	[self testLaxContext:@"l<><><><><<<<><><><><%@><><><><><><<<><><><><><>" withURI:@"http://example.com/foo_(bar)"];
