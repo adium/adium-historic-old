@@ -38,6 +38,7 @@
 
 
 #import "AIXMLAppender.h"
+#define BSD_LICENSE_ONLY 1
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <sys/stat.h>
