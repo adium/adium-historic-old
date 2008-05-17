@@ -24,6 +24,8 @@
 #define PREF_GROUP_INTERFACE			@"Interface"
 #define KEY_TABBED_CHATTING				@"Tabbed Chatting"
 #define KEY_GROUP_CHATS_BY_GROUP		@"Group Chats By Group"
+#define KEY_SAVE_CONTAINERS				@"Save Containers On Quit"
+#define KEY_CONTAINERS					@"Containers"
 
 #define PREF_GROUP_CONTACT_LIST				@"Contact List"
 #define KEY_CL_WINDOW_LEVEL					@"Window Level"
@@ -441,6 +443,7 @@ typedef enum {
  * The returned array has zero or more NSDictionary objects with the following information for each container
  *	Key			Value
  *	@"ID"		NSString of the containerID
+ *  @"Frame"	NSString of the window's [NSWindow frame]
  *	@"Content"	NSArray of the AIChat objects within that container
  *	@"Name"		NSString of the container's name
  */

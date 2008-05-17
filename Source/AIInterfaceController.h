@@ -74,6 +74,7 @@
 	id <AIMultiContactListComponent>	contactListPlugin;
 		
 	BOOL						groupChatsByContactGroup;
+	BOOL						saveContainers;
 	
 	NSMenuItem					*menuItem_toggleUserlist;
 

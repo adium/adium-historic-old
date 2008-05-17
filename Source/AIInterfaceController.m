@@ -18,6 +18,7 @@
 
 #import "AIInterfaceController.h"
 
+#import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
@@ -63,6 +64,9 @@
 - (NSAttributedString *)_tooltipBodyForObject:(AIListObject *)object;
 - (void)_pasteWithPreferredSelector:(SEL)preferredSelector sender:(id)sender;
 - (void)updateCloseMenuKeys;
+
+- (void)saveContainers;
+- (void)restoreSavedContainers;
 
 //Window Menu
 - (void)updateActiveWindowMenuItem;
@@ -160,7 +164,7 @@
 
 	//Open the contact list window
     [self showContactList:nil];
-
+	
 	//Userlist show/hide item
 	menuItem_toggleUserlist = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Toggle User List", nil)
 																							 target:self
@@ -191,7 +195,13 @@
     [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) 
 									   name:CONTENT_MESSAGE_RECEIVED object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) 
-									   name:CONTENT_MESSAGE_RECEIVED_GROUP object:nil];	
+									   name:CONTENT_MESSAGE_RECEIVED_GROUP object:nil];
+	
+	//Observe quits so we can save containers.
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(saveContainers)
+									   name:AIAppWillTerminateNotification
+									 object:nil];
 }
 
 - (void)controllerWillClose
@@ -240,6 +250,12 @@
 	//Update prefs
 	tabbedChatting = [[prefDict objectForKey:KEY_TABBED_CHATTING] boolValue];
 	groupChatsByContactGroup = [[prefDict objectForKey:KEY_GROUP_CHATS_BY_GROUP] boolValue];
+	saveContainers = [[prefDict objectForKey:KEY_SAVE_CONTAINERS] boolValue];
+	
+	if (saveContainers && firstTime) {
+		//Restore saved containers
+		[self restoreSavedContainers];	
+	}
 }
 
 //Handle a reopen/dock icon click
@@ -349,10 +365,119 @@
 /*!
  * @returns Created contact list controller for detached contact list
  */
-- (AIListWindowController *)detachContactList:(AIListGroup *)aContactList {
+- (AIListWindowController *)detachContactList:(AIListGroup *)aContactList
+{
 	return [contactListPlugin detachContactList:aContactList];
 }
 
+
+#pragma mark Container Saving
+/*!
+ * @brief Restores containers saved from a previous session
+ */
+- (void)restoreSavedContainers
+{
+	NSData				*savedData = [[adium preferenceController] preferenceForKey:KEY_CONTAINERS
+																	group:PREF_GROUP_INTERFACE];
+	
+	// If there's no data, we can't restore anything.
+	if (!savedData)
+		return;
+
+	NSEnumerator		*enumerator = [[NSKeyedUnarchiver unarchiveObjectWithData:savedData] objectEnumerator];
+	NSDictionary		*dict;
+	
+	while ((dict = [enumerator nextObject])) {
+		AIMessageWindowController *windowController = [self openContainerWithID:[dict objectForKey:@"ID"]
+																 name:[dict objectForKey:@"Name"]];
+		
+		NSEnumerator			*chatEnumerator = [[dict objectForKey:@"Content"] objectEnumerator];
+		NSDictionary			*chatDict;
+		
+		while ((chatDict = [chatEnumerator nextObject])) {
+			AIChat			*chat = nil;
+			AIService		*service = [[adium accountController] firstServiceWithServiceID:[chatDict objectForKey:@"serviceID"]];
+			AIAccount		*account = [[adium accountController] accountWithInternalObjectID:[chatDict objectForKey:@"AccountID"]];
+				
+			if ([[chatDict objectForKey:@"IsGroupChat"] boolValue]) {
+				chat = [[adium chatController] chatWithName:[chatDict objectForKey:@"Name"]
+												 identifier:nil
+												  onAccount:account
+										   chatCreationInfo:[chatDict objectForKey:@"ChatCreationInfo"]];
+			} else {
+				AIListContact		*contact = [[adium contactController] contactWithService:service
+																				account:account
+																					UID:[chatDict objectForKey:@"UID"]];
+				
+				chat = [[adium chatController] chatWithContact:contact];
+			}
+			
+			// Open the chat into the container we've created above.
+			[self openChat:chat inContainerWithID:[dict objectForKey:@"ID"] atIndex:-1];
+		}
+	
+		// Position the container where it was last saved (using -savedFrameFromString: to prevent going offscreen)
+		[[windowController window] setFrame:[windowController savedFrameFromString:[dict objectForKey:@"Frame"]] display:YES];
+	}
+}
+
+/*!
+ * @brief Saves open container information when Adium quits
+ */
+- (void)saveContainers
+{
+	// If we're quitting with containers unsaved, be sure to reset the possibly-formerly-valid information to nil
+	// We don't do this upon unchecking the preference so that it isn't a permanent removal of the saved information until
+	// end of session.
+	if (!saveContainers) {
+		[[adium preferenceController] setPreference:nil
+											 forKey:KEY_CONTAINERS
+											  group:PREF_GROUP_INTERFACE];
+		return;
+	}
+	
+	// Save active containers.
+	NSMutableArray		*savedContainers = [NSMutableArray array];
+	NSEnumerator		*enumerator = [[interfacePlugin openContainersAndChats] objectEnumerator];
+	NSDictionary		*dict;
+	
+	while ((dict = [enumerator nextObject])) {
+		NSMutableArray		*containerContents = [NSMutableArray array];		
+		NSEnumerator		*containedEnumerator = [[dict objectForKey:@"Content"] objectEnumerator];
+		AIChat				*chat;
+		
+		while ((chat = [containedEnumerator nextObject])) {
+			if ([chat isOpen]) {
+				if ([chat isGroupChat]) {
+					// -chatCreationDictionary may be nil, so put it last.
+					[containerContents addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+												  [NSNumber numberWithBool:YES], @"IsGroupChat",
+												  [chat name], @"Name",
+												  [[chat account] internalObjectID], @"AccountID",
+  												  [chat chatCreationDictionary], @"ChatCreationInfo",nil]];
+				} else {
+					[containerContents addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+												  [[chat listObject] UID], @"UID",
+												  [[chat listObject] serviceID], @"serviceID",
+												  [[chat account] internalObjectID], @"AccountID",nil]];
+				}
+			}
+		}
+		
+		// Replace the "Content" key in -openContainersAndChats with our version of the content.
+		// We use the same keys otherwise that -openContainersAndChats provides (Name, ID, Frame)
+		NSMutableDictionary *saveDict = [[dict mutableCopy] autorelease];
+		
+		[saveDict setObject:containerContents
+					 forKey:@"Content"];
+		
+		[savedContainers addObject:saveDict];
+	}
+	
+	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:savedContainers]
+										 forKey:KEY_CONTAINERS
+										  group:PREF_GROUP_INTERFACE];
+}
 
 //Messaging ------------------------------------------------------------------------------------------------------------
 //Methods for instructing the interface to provide a representation of chats, and to determine which chat has user focus
