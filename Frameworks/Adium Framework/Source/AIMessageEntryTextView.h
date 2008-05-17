@@ -17,6 +17,7 @@
 #import <AIUtilities/AISendingTextView.h>
 #import <Adium/AIAdiumProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
 
 @class AIListContact, AIAccount, AIChat;
 
@@ -27,7 +28,7 @@
 @end
 
 
-@interface AIMessageEntryTextView : AISendingTextView <AITextEntryView> {
+@interface AIMessageEntryTextView : AISendingTextView <AITextEntryView, AIListObjectObserver> {
     NSObject<AIAdium>	*adium;
     AIChat				*chat;
     

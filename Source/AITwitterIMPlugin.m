@@ -6,10 +6,6 @@
 
 #import "AITwitterIMPlugin.h"
 
-#define PREF_GROUP_CHARACTER_COUNTER	@"Character Counter"
-#define KEY_CHARACTER_COUNTER_ENABLED	@"Character Counter Enabled"
-#define KEY_MAX_NUMBER_OF_CHARACTERS	@"Maximum Number Of Characters"
-
 @implementation AITwitterIMPlugin
 
 - (void)installPlugin
@@ -28,13 +24,12 @@
 	if (!inModifiedKeys) {
 		if ([[inObject UID] isEqualToString:@"twitter@twitter.com"] &&
 			[[inObject serviceClass] isEqualToString:@"Jabber"]) {
-						
-			[inObject setPreference:[NSNumber numberWithBool:YES] forKey:KEY_CHARACTER_COUNTER_ENABLED group:PREF_GROUP_CHARACTER_COUNTER];
-			[inObject setPreference:[NSNumber numberWithInt:140] forKey:KEY_MAX_NUMBER_OF_CHARACTERS group:PREF_GROUP_CHARACTER_COUNTER];
+			
+			[inObject setStatusObject:[NSNumber numberWithInt:140] forKey:@"Character Counter Max" notify:YES];
 		}
 	}
 	
-	return nil;
+	return [NSSet setWithObject:@"Character Counter Max"];
 }
 
 @end
