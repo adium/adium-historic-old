@@ -164,16 +164,14 @@
 
 	static NSCharacterSet *endSet = nil;
     if (!endSet) {
-#define INVALID_URL_EDGE_CHARACTERS @"\"'-,:;<>()[]{}.?!"
-        endSet = [[NSCharacterSet characterSetWithCharactersInString:INVALID_URL_EDGE_CHARACTERS] retain];
+        endSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"',:;>)]}.?!"] retain];
     }
 	
 	static NSCharacterSet *startSet = nil;
     if (!startSet) {
         NSMutableCharacterSet *mutableStartSet = [[NSMutableCharacterSet alloc] init];
         [mutableStartSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-		//Note that endSet is composed of INVALID_URL_EDGE_CHARACTERS
-        [mutableStartSet formUnionWithCharacterSet:endSet];
+        [mutableStartSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"',:;<([{.?!-"]];
 		startSet = [[NSCharacterSet characterSetWithBitmapRepresentation:[mutableStartSet bitmapRepresentation]] retain];
 		[mutableStartSet release];
     }
