@@ -302,7 +302,7 @@
         }
 		
         //step location after scanning a string
-        location = AHStringOffset;
+        [preScanner setScanLocation:location++];
 		
 		[pool release];
     }
