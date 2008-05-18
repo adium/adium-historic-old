@@ -835,7 +835,11 @@
 	[self _resetOpenChatsCache];
 	[inChat clearUnviewedContentCount];
 	[self buildWindowMenu];
-	[self saveContainersWithContent:NO];
+	
+	if (![adium isQuitting]) {
+		// Don't save containers when the chats are closed while quitting
+		[self saveContainersWithContent:NO];
+	}
 	
 	if (inChat == activeChat) {
 		[activeChat release]; activeChat = nil;
@@ -853,7 +857,12 @@
 {
 	[self _resetOpenChatsCache];
 	[self buildWindowMenu];
-	[self saveContainersWithContent:NO];
+
+	if (![adium isQuitting]) {
+		// Don't save containers when the chats are closed while quitting
+		[self saveContainersWithContent:NO];
+	}
+	
 	[[adium notificationCenter] postNotificationName:Chat_OrderDidChange object:nil userInfo:nil];
 	
 }
