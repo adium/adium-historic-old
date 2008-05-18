@@ -68,7 +68,7 @@
 - (void)_pasteWithPreferredSelector:(SEL)preferredSelector sender:(id)sender;
 - (void)updateCloseMenuKeys;
 
-- (void)saveContainers;
+- (void)saveContainersWithContent:(BOOL)withContent;
 - (void)restoreSavedContainers;
 
 //Window Menu
@@ -202,7 +202,7 @@
 	
 	//Observe quits so we can save containers.
 	[[adium notificationCenter] addObserver:self
-								   selector:@selector(saveContainers)
+								   selector:@selector(saveContainersOnQuit:)
 									   name:AIAppWillTerminateNotification
 									 object:nil];
 }
@@ -426,24 +426,39 @@
 			// Open the chat into the container we've created above.
 			AIMessageTabViewItem *tabViewItem = [self openChat:chat inContainerWithID:[dict objectForKey:@"ID"] atIndex:-1];
 			
-			// Restore the display buffer of the chat.
-			NSObject<AIMessageDisplayController>	*displayController = [(AIMessageViewController *)[tabViewItem messageViewController] messageDisplayController];
-			
-			// Only load the old content if the content name is the same.
-			if ([[displayController contentSourceName] isEqualToString:[chatDict objectForKey:@"ChatContentsName"]]) {
-				[displayController setChatContentSource:[chatDict objectForKey:@"ChatContents"]];
+			if ([chatDict objectForKey:@"ChatContents"]) {
+				// Restore the display buffer of the chat.
+				NSObject<AIMessageDisplayController>	*displayController = [(AIMessageViewController *)[tabViewItem messageViewController] messageDisplayController];
+				
+				// Only load the old content if the content name is the same.
+				if ([[displayController contentSourceName] isEqualToString:[chatDict objectForKey:@"ChatContentsName"]]) {
+					[displayController setChatContentSource:[chatDict objectForKey:@"ChatContents"]];
+				}
 			}
 		}
 	
 		// Position the container where it was last saved (using -savedFrameFromString: to prevent going offscreen)
 		[[windowController window] setFrame:[windowController savedFrameFromString:[dict objectForKey:@"Frame"]] display:YES];
 	}
+	
+	// Re-save and remove the old content.
+	[self saveContainersWithContent:NO];
 }
 
 /*!
- * @brief Saves open container information when Adium quits
+ * @brief Saves open container information with their content when Adium quits
  */
-- (void)saveContainers
+- (void)saveContainersOnQuit:(NSNotification *)notification
+{
+	[self saveContainersWithContent:YES];
+}
+
+/*!
+ * @brief Save opened containers and windows
+ *
+ * @param withContent Save the current buffer of the window to restore at a later point
+ */
+- (void)saveContainersWithContent:(BOOL)withContent
 {
 	if (!saveContainers) {
 		// Don't save anything if we're not set to.
@@ -463,14 +478,16 @@
 		while ((chat = [containedEnumerator nextObject])) {
 			NSMutableDictionary		*newContainerDict = [NSMutableDictionary dictionary];
 			
-			// Save the current display buffer.
-			NSObject<AIMessageDisplayController>	*displayController = [(AIMessageViewController *)[(AIMessageTabViewItem *)[chat statusObjectForKey:@"MessageTabViewItem"] messageViewController] messageDisplayController];
-			[newContainerDict setObject:[displayController chatContentSource]
-								 forKey:@"ChatContents"];
-			
-			[newContainerDict setObject:[displayController contentSourceName]
-								 forKey:@"ChatContentsName"];
-			
+			if (withContent) {
+				// Save the current display buffer.
+				NSObject<AIMessageDisplayController>	*displayController = [(AIMessageViewController *)[(AIMessageTabViewItem *)[chat statusObjectForKey:@"MessageTabViewItem"] messageViewController] messageDisplayController];
+				[newContainerDict setObject:[displayController chatContentSource]
+									 forKey:@"ChatContents"];
+				
+				[newContainerDict setObject:[displayController contentSourceName]
+									 forKey:@"ChatContentsName"];
+			}
+				
 			[newContainerDict setObject:[[chat account] internalObjectID] forKey:@"AccountID"];
 
 			// Save chat-specific information.
@@ -732,6 +749,7 @@
 {
 	[self _resetOpenChatsCache];
 	[self buildWindowMenu];
+	[self saveContainersWithContent:NO];
 }
 
 /*!
@@ -817,6 +835,7 @@
 	[self _resetOpenChatsCache];
 	[inChat clearUnviewedContentCount];
 	[self buildWindowMenu];
+	[self saveContainersWithContent:NO];
 	
 	if (inChat == activeChat) {
 		[activeChat release]; activeChat = nil;
@@ -834,6 +853,7 @@
 {
 	[self _resetOpenChatsCache];
 	[self buildWindowMenu];
+	[self saveContainersWithContent:NO];
 	[[adium notificationCenter] postNotificationName:Chat_OrderDidChange object:nil userInfo:nil];
 	
 }
