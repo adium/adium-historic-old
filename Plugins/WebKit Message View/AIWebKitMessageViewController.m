@@ -39,6 +39,7 @@
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
+#import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIMutableStringAdditions.h>
@@ -47,6 +48,8 @@
 #define KEY_WEBKIT_CHATS_USING_CACHED_ICON @"WebKit:Chats Using Cached Icon"
 
 #define USE_FASTER_BUT_BUGGY_WEBKIT_PREFERENCE_CHANGE_HANDLING FALSE
+
+#define TEMPORARY_FILE_PREFIX	@"TEMP"
 
 @interface AIWebKitMessageViewController (PRIVATE)
 - (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
@@ -1284,7 +1287,7 @@ static NSArray *draggedTypes = nil;
  */
 - (NSString *)_webKitBackgroundImagePathForUniqueID:(int)uniqueID
 {
-	NSString	*filename = [NSString stringWithFormat:@"TEMP-WebkitBGImage-%i.png",uniqueID]];
+	NSString	*filename = [NSString stringWithFormat:@"%@-WebkitBGImage-%i.png", TEMPORARY_FILE_PREFIX, uniqueID];
 	return [[adium cachesPath] stringByAppendingPathComponent:filename];
 }
 
@@ -1293,7 +1296,7 @@ static NSArray *draggedTypes = nil;
  */
 - (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject
 {
-	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@.png", [inObject internalObjectID], [NSString randomStringOfLength:5]];
+	NSString	*filename = [NSString stringWithFormat:@"%@-%@%@.png", TEMPORARY_FILE_PREFIX, [inObject internalObjectID], [NSString randomStringOfLength:5]];
 	return [[adium cachesPath] stringByAppendingPathComponent:filename];
 }
 
