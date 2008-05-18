@@ -169,6 +169,8 @@
 			//Update source and destination menus
 			[self configureForCurrentChat];
 		}			
+	} else {
+		[self configureForCurrentChat];
 	}
 }
 
