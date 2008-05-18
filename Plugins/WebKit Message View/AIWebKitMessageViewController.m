@@ -835,6 +835,16 @@ static NSArray *draggedTypes = nil;
 			[webViewMenuItems addObject:webViewMenuItem];
 			[webViewMenuItem release];
 		}
+		
+		[webViewMenuItems addObject:[NSMenuItem separatorItem]];
+		
+		//Present an option to clear the display
+		menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Clear Display", "Clears the display window for the currently open message window")
+											  target:self
+											  action:@selector(clearView)
+									   keyEquivalent:@""];
+		[webViewMenuItems addObject:menuItem];
+		[menuItem release];
 	}
 	
 	return webViewMenuItems;
