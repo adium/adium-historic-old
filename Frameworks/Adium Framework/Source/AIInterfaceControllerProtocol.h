@@ -395,6 +395,10 @@ typedef enum {
  * The AIMessageDisplayController is informed when the message view which is using it is closing.
  */
 @protocol AIMessageDisplayController <NSObject>
+- (void)setChatContentSource:(NSString *)source;
+- (NSString *)chatContentSource;
+- (NSString *)contentSourceName; // Unique name for this particular style of "content source".
+
 - (NSView *)messageView;
 - (NSView *)messageScrollView;
 - (void)messageViewIsClosing;

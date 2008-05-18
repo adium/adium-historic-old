@@ -78,6 +78,7 @@
 - (AIListObject *)preferredListObject;
 
 //Message Display
+- (NSObject<AIMessageDisplayController> *)messageDisplayController;
 - (NSView *)view;
 - (void)adiumPrint:(id)sender;
 
