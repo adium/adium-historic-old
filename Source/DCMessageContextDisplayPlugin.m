@@ -229,7 +229,9 @@ static int linesLeftToFind = 0;
 	//If there's no log there, there's no message history. Bail out.
 	NSArray *logPaths = [AILoggerPlugin sortedArrayOfLogFilesForChat:chat];
 	if(!logPaths) return nil;
-		
+
+	AIHTMLDecoder *decoder = [AIHTMLDecoder decoder];
+
 	NSString *logObjectUID = [chat name];
 	if (!logObjectUID) logObjectUID = [[chat listObject] UID];
 	logObjectUID = [logObjectUID safeFilenameString];
@@ -253,12 +255,22 @@ static int linesLeftToFind = 0;
 				
 		//Stick the base path on to the beginning
 		logPath = [baseLogPath stringByAppendingPathComponent:logPath];
-		
+
+		//By default, the xmlFilePath is the chat log file/bundle... if we find that the chatlog is a bundle, we'll use the xml file inside.
+		NSString *xmlFilePath = logPath;
+
 		BOOL isDir;
 		if ([[NSFileManager defaultManager] fileExistsAtPath:logPath isDirectory:&isDir]) {
 			/* If we have a chatLog bundle, we want to get the text content for the xml file inside */
-			if (isDir) logPath = [logPath stringByAppendingPathComponent:
-									 [[[logPath lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"xml"]];
+			NSString *baseURL;
+			if (isDir) {
+				baseURL = logPath;
+				xmlFilePath = [logPath stringByAppendingPathComponent:
+							   [[[logPath lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"xml"]];
+			} else {
+				baseURL = nil;
+			}
+			[decoder setBaseURL:baseURL];
 		}
 
 		//Initialize the found messages array and element stack for us-as-delegate
@@ -279,16 +291,17 @@ static int linesLeftToFind = 0;
 			NSString	 *accountID = [NSString stringWithFormat:@"%@.%@", [account serviceID], [account UID]];
 
 			contextInfo = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-				serviceName, @"Service name",
-				account, @"Account",
-				accountID, @"Account ID",
-				chat, @"Chat",
-				nil];
+						   serviceName, @"Service name",
+						   account, @"Account",
+						   accountID, @"Account ID",
+						   chat, @"Chat",
+						   decoder, @"AIHTMLDecoder",
+						   nil];
 			[parser setContextInfo:(void *)contextInfo];
 		}
 
 		//Open up the file we need to read from, and seek to the end (this is a *backwards* parser, after all :)
-		NSFileHandle *file = [NSFileHandle fileHandleForReadingAtPath:logPath];
+		NSFileHandle *file = [NSFileHandle fileHandleForReadingAtPath:xmlFilePath];
 		[file seekToEndOfFile];
 		
 		//Set up some more doohickeys and then start the parse loop
@@ -397,13 +410,13 @@ static int linesLeftToFind = 0;
 															 withSource:(sentByMe ? account : [chat listObject])
 															destination:(sentByMe ? [chat listObject] : account)
 																   date:time
-																message:[[AIHTMLDecoder decoder] decodeHTML:[element contentsAsXMLString]]
+																message:[[contextInfo objectForKey:@"AIHTMLDecoder"] decodeHTML:[element contentsAsXMLString]]
 															  autoreply:(autoreplyAttribute && [autoreplyAttribute caseInsensitiveCompare:@"true"] == NSOrderedSame)];
 				
 				//Don't log this object
 				[message setPostProcessContent:NO];
 				[message setTrackContent:NO];
-				
+				AILogWithSignature(@"Got %@", message);
 				//Add it to the array (in front, since we're working backwards, and we want the array in forward order)
 				[foundMessages insertObject:message atIndex:0];
 			} else {
