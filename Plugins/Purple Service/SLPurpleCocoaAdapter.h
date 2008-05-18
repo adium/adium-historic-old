@@ -20,8 +20,6 @@
 #import <AdiumLibpurple/PurpleCommon.h>
 #import <AdiumLibpurple/CBPurpleAccount.h>
 
-#define	ENABLE_WEBCAM	FALSE
-
 @class AIChat, AIListContact, CBPurpleAccount;
 
 /*!
