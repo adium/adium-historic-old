@@ -402,6 +402,9 @@
 		AIMessageWindowController *windowController = [self openContainerWithID:[dict objectForKey:@"ID"]
 																 name:[dict objectForKey:@"Name"]];
 		
+		// Position the container where it was last saved (using -savedFrameFromString: to prevent going offscreen)
+		[[windowController window] setFrame:[windowController savedFrameFromString:[dict objectForKey:@"Frame"]] display:YES];
+		
 		NSEnumerator			*chatEnumerator = [[dict objectForKey:@"Content"] objectEnumerator];
 		NSDictionary			*chatDict;
 		
@@ -436,9 +439,6 @@
 				}
 			}
 		}
-	
-		// Position the container where it was last saved (using -savedFrameFromString: to prevent going offscreen)
-		[[windowController window] setFrame:[windowController savedFrameFromString:[dict objectForKey:@"Frame"]] display:YES];
 	}
 	
 	// Re-save and remove the old content.
