@@ -51,6 +51,8 @@ typedef enum {
 - (NSString *)cachesPath;
 - (NSComparisonResult)compareVersionString:(NSString *)versionA toVersionString:(NSString *)versionB;
 
+- (BOOL)isQuitting;
+
 @end
 
 //Adium events

@@ -405,6 +405,8 @@ static NSString	*prefsCategory;
 	//Take no action if we didn't complete the application load
 	if (!completedApplicationLoad) return;
 
+	isQuitting = YES;
+
 	[[self notificationCenter] postNotificationName:AIAppWillTerminateNotification object:nil];
 	
 	//Close the preference window before we shut down the plugins that compose it
@@ -440,6 +442,10 @@ static NSString	*prefsCategory;
 											 movingToTrash:NO];
 }
 
+- (BOOL)isQuitting
+{
+	return isQuitting;
+}
 
 //Menu Item Hooks ------------------------------------------------------------------------------------------------------
 #pragma mark Menu Item Hooks
