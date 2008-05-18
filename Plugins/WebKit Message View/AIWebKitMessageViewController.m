@@ -1357,4 +1357,41 @@ static NSArray *draggedTypes = nil;
 	return [(DOMHTMLHtmlElement *)[[[[webView mainFrame] DOMDocument] getElementsByTagName:@"html"] item:0] outerHTML];
 }
 
+/*!
+ * @brief Set the HTML content for the "Chat" area.
+ */
+- (void)setChatContentSource:(NSString *)source
+{
+	if (!webViewIsReady) {
+		// If the webview isn't ready yet, wait a very short amount of time before trying again
+		[self performSelector:@selector(setChatContentSource:)
+				   withObject:source
+				   afterDelay:0.01];
+	} else {
+		// Add the old "Chat" element to the window.
+		[(DOMHTMLElement *)[[[webView mainFrame] DOMDocument] getElementById:@"Chat"] setOuterHTML:source];
+
+		NSString	*scrollToBottomScript;		
+		if ((scrollToBottomScript = [messageStyle scriptForScrollingAfterAddingMultipleContentObjects])) {
+			[webView stringByEvaluatingJavaScriptFromString:scrollToBottomScript];
+		}
+	}
+}
+
+/*!
+ * @brief Get the HTML content for the "Chat" area.
+ */
+- (NSString *)chatContentSource
+{
+	return [(DOMHTMLElement *)[[[webView mainFrame] DOMDocument] getElementById:@"Chat"] outerHTML];
+}
+
+/*!
+ * @brief The unique name for this style of "content source"
+ */
+- (NSString *)contentSourceName
+{
+	return [[[messageStyle bundle] bundlePath] lastPathComponent];
+}
+
 @end

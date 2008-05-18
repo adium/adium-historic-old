@@ -43,8 +43,11 @@
 #import <Adium/AIService.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AISortController.h>
+#import "AIMessageTabViewItem.h"
 #import "KFTypeSelectTableView.h"
 #import <KNShelfSplitview.h>
+
+#import "AIMessageViewController.h"
 
 #define ERROR_MESSAGE_WINDOW_TITLE		AILocalizedString(@"Adium : Error","Error message window title")
 #define LABEL_ENTRY_SPACING				4.0
@@ -255,6 +258,10 @@
 	if (saveContainers && firstTime) {
 		//Restore saved containers
 		[self restoreSavedContainers];	
+	} else if (!saveContainers) {
+		[[adium preferenceController] setPreference:nil
+											 forKey:KEY_CONTAINERS
+											  group:PREF_GROUP_INTERFACE];
 	}
 }
 
@@ -413,7 +420,15 @@
 			}
 			
 			// Open the chat into the container we've created above.
-			[self openChat:chat inContainerWithID:[dict objectForKey:@"ID"] atIndex:-1];
+			AIMessageTabViewItem *tabViewItem = [self openChat:chat inContainerWithID:[dict objectForKey:@"ID"] atIndex:-1];
+			
+			// Restore the display buffer of the chat.
+			NSObject<AIMessageDisplayController>	*displayController = [(AIMessageViewController *)[tabViewItem messageViewController] messageDisplayController];
+			
+			// Only load the old content if the content name is the same.
+			if ([[displayController contentSourceName] isEqualToString:[chatDict objectForKey:@"ChatContentsName"]]) {
+				[displayController setChatContentSource:[chatDict objectForKey:@"ChatContents"]];
+			}
 		}
 	
 		// Position the container where it was last saved (using -savedFrameFromString: to prevent going offscreen)
@@ -430,9 +445,6 @@
 	// We don't do this upon unchecking the preference so that it isn't a permanent removal of the saved information until
 	// end of session.
 	if (!saveContainers) {
-		[[adium preferenceController] setPreference:nil
-											 forKey:KEY_CONTAINERS
-											  group:PREF_GROUP_INTERFACE];
 		return;
 	}
 	
@@ -442,26 +454,38 @@
 	NSDictionary		*dict;
 	
 	while ((dict = [enumerator nextObject])) {
-		NSMutableArray		*containerContents = [NSMutableArray array];		
+		NSMutableArray		*containerContents = [NSMutableArray array];
 		NSEnumerator		*containedEnumerator = [[dict objectForKey:@"Content"] objectEnumerator];
 		AIChat				*chat;
 		
 		while ((chat = [containedEnumerator nextObject])) {
-			if ([chat isOpen]) {
-				if ([chat isGroupChat]) {
-					// -chatCreationDictionary may be nil, so put it last.
-					[containerContents addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-												  [NSNumber numberWithBool:YES], @"IsGroupChat",
-												  [chat name], @"Name",
-												  [[chat account] internalObjectID], @"AccountID",
-  												  [chat chatCreationDictionary], @"ChatCreationInfo",nil]];
-				} else {
-					[containerContents addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-												  [[chat listObject] UID], @"UID",
-												  [[chat listObject] serviceID], @"serviceID",
-												  [[chat account] internalObjectID], @"AccountID",nil]];
-				}
+			NSMutableDictionary		*newContainerDict = [NSMutableDictionary dictionary];
+			
+			// Save the current display buffer.
+			NSObject<AIMessageDisplayController>	*displayController = [(AIMessageViewController *)[(AIMessageTabViewItem *)[chat statusObjectForKey:@"MessageTabViewItem"] messageViewController] messageDisplayController];
+			[newContainerDict setObject:[displayController chatContentSource]
+								 forKey:@"ChatContents"];
+			
+			[newContainerDict setObject:[displayController contentSourceName]
+								 forKey:@"ChatContentsName"];
+			
+			[newContainerDict setObject:[[chat account] internalObjectID] forKey:@"AccountID"];
+
+			// Save chat-specific information.
+			if ([chat isGroupChat]) {
+				// -chatCreationDictionary may be nil, so put it last.
+				[newContainerDict addEntriesFromDictionary:[NSDictionary dictionaryWithObjectsAndKeys:
+															[NSNumber numberWithBool:YES], @"IsGroupChat",
+															[chat name], @"Name",
+															[chat chatCreationDictionary], @"ChatCreationInfo",nil]];
+			} else {
+				[newContainerDict addEntriesFromDictionary:[NSDictionary dictionaryWithObjectsAndKeys:
+															[[chat listObject] UID], @"UID",
+															[[chat listObject] serviceID], @"serviceID",
+															[[chat account] internalObjectID], @"AccountID",nil]];
 			}
+			
+			[containerContents addObject:newContainerDict];
 		}
 		
 		// Replace the "Content" key in -openContainersAndChats with our version of the content.

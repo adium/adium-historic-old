@@ -374,6 +374,14 @@
 }
 
 /*!
+ * @brief The message display controller
+ */
+- (NSObject<AIMessageDisplayController> *)messageDisplayController
+{
+	return messageDisplayController;
+}
+
+/*!
  * @brief Access to our view
  */
 - (NSView *)view
