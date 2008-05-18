@@ -497,9 +497,9 @@
 	} else {
 		[tabView_messages insertTabViewItem:inTabViewItem atIndex:index];
 	}
-	
-#warning questionable
-	[self _reloadContainedChats]; //I'm not sure the right delegate method is getting called. This will make sure containedChats is up to date.
+
+	//Refresh our list and order of chats
+	[self _reloadContainedChats];
 	
 	if (![tabView_messages selectedTabViewItem]) [tabView_messages selectNextTabViewItem:nil];
 	
