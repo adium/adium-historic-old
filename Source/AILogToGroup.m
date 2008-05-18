@@ -113,11 +113,8 @@
 			while ((fileName = [enumerator nextObject])) {			
 				if (![fileName hasPrefix:@"."]) {
 					NSString	*relativeLogPath = [path stringByAppendingPathComponent:fileName];
-					BOOL		isDir;
 					
-					if (![logDict objectForKey:relativeLogPath] &&
-						([defaultManager fileExistsAtPath:[logBasePath stringByAppendingPathComponent:relativeLogPath] isDirectory:&isDir] &&
-						 !isDir)) {
+					if (![logDict objectForKey:relativeLogPath]) {
 						AIChatLog	*theLog;
 						
 						theLog = [[AIChatLog alloc] initWithPath:relativeLogPath
