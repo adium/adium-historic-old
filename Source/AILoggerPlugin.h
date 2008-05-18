@@ -74,7 +74,6 @@
 //Paths
 + (NSString *)logBasePath;
 + (NSString *)relativePathForLogWithObject:(NSString *)object onAccount:(AIAccount *)account;
-+ (NSString *)fileNameForLogWithObject:(NSString *)object onDate:(NSDate *)date;
 
 //Message History
 + (NSArray *)sortedArrayOfLogFilesForChat:(AIChat *)chat;

@@ -122,13 +122,12 @@ Class LogViewerWindowControllerClass = NULL;
 												styleTags:YES
 										   encodeNonASCII:YES
 											 encodeSpaces:NO
-										attachmentsAsText:YES
+										attachmentsAsText:NO
 								onlyIncludeOutgoingImages:NO
 										   simpleTagsOnly:NO
 										   bodyBackground:NO
 									  allowJavascriptURLs:YES];
 	[xhtmlDecoder setGeneratesStrictXHTML:YES];
-	[xhtmlDecoder setUsesAttachmentTextEquivalents:YES];
 	
 	statusTranslation = [[NSDictionary alloc] initWithObjectsAndKeys:
 		@"away",@"away",
@@ -261,7 +260,7 @@ Class LogViewerWindowControllerClass = NULL;
 	return [NSString stringWithFormat:@"%@.%@/%@", [account serviceID], [[account UID] safeFilenameString], object];
 }
 
-+ (NSString *)fileNameForLogWithObject:(NSString *)object onDate:(NSDate *)date
++ (NSString *)nameForLogWithObject:(NSString *)object onDate:(NSDate *)date
 {
 	NSParameterAssert(date != nil);
 	NSParameterAssert(object != nil);
@@ -269,7 +268,7 @@ Class LogViewerWindowControllerClass = NULL;
 	
 	NSAssert2(dateString != nil, @"Date string was invalid for the chatlog for %@ on %@", object, date);
 		
-	return [NSString stringWithFormat:@"%@ (%@).chatlog", object, dateString];
+	return [NSString stringWithFormat:@"%@ (%@)", object, dateString];
 }
 
 + (NSString *)fullPathForLogOfChat:(AIChat *)chat onDate:(NSDate *)date
@@ -280,9 +279,11 @@ Class LogViewerWindowControllerClass = NULL;
 	if (!objectUID) objectUID = [[chat listObject] UID];
 	objectUID = [objectUID safeFilenameString];
 
-	NSString	*fileName = [self fileNameForLogWithObject:objectUID onDate:date];
+	NSString	*name = [self nameForLogWithObject:objectUID onDate:date];
+
 	NSString	*absolutePath = [logBasePath stringByAppendingPathComponent:[self relativePathForLogWithObject:objectUID onAccount:account]];
-	NSString	*fullPath = [absolutePath stringByAppendingPathComponent:fileName];
+	NSString	*fullPath = [[absolutePath stringByAppendingPathComponent:[name stringByAppendingPathExtension:@"chatlog"]]
+							 stringByAppendingPathComponent:[name stringByAppendingPathExtension:@"xml"]];
 
 	return fullPath;
 }
@@ -397,15 +398,15 @@ Class LogViewerWindowControllerClass = NULL;
 		if ([contentType isEqualToString:CONTENT_MESSAGE_TYPE]) {
 			NSMutableArray *attributeKeys = [NSMutableArray arrayWithObjects:@"sender", @"time", nil];
 			NSMutableArray *attributeValues = [NSMutableArray arrayWithObjects:[[content source] UID], date, nil];
-			
+			AIXMLAppender  *appender = [self appenderForChat:chat];
 			if([content isAutoreply])
 			{
 				[attributeKeys addObject:@"auto"];
 				[attributeValues addObject:@"true"];
 			}
 			
-			[[self appenderForChat:chat] addElementWithName:@"message" 
-						  escapedContent:[xhtmlDecoder encodeHTML:[content message] imagesPath:nil]
+			[appender addElementWithName:@"message" 
+						  escapedContent:[xhtmlDecoder encodeHTML:[content message] imagesPath:[[appender path] stringByDeletingLastPathComponent]]
 						   attributeKeys:attributeKeys
 						 attributeValues:attributeValues];
 			dirty = YES;

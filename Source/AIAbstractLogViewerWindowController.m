@@ -731,6 +731,13 @@ static int toArraySort(id itemA, id itemB, void *context);
 			//XML log
 			NSString *logFullPath = [logBasePath stringByAppendingPathComponent:[theLog path]];
 			
+			BOOL isDir;
+			if ([[NSFileManager defaultManager] fileExistsAtPath:logFullPath isDirectory:&isDir]) {
+				/* If we have a chatLog bundle, we want to get the text content for the xml file inside */
+				if (isDir) logFullPath = [logFullPath stringByAppendingPathComponent:
+										 [[[logFullPath lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"xml"]];
+			}
+			
 			//If this log begins with a malformed UTF-8 BOM (which was written out by Adium for a brief time between 1.0b7 and 1.0b8), fix it before trying to read it in.
 			enum {
 				failedUtf8BomLength = 6
