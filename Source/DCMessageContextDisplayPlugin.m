@@ -254,6 +254,13 @@ static int linesLeftToFind = 0;
 		//Stick the base path on to the beginning
 		logPath = [baseLogPath stringByAppendingPathComponent:logPath];
 		
+		BOOL isDir;
+		if ([[NSFileManager defaultManager] fileExistsAtPath:logPath isDirectory:&isDir]) {
+			/* If we have a chatLog bundle, we want to get the text content for the xml file inside */
+			if (isDir) logPath = [logPath stringByAppendingPathComponent:
+									 [[[logPath lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"xml"]];
+		}
+
 		//Initialize the found messages array and element stack for us-as-delegate
 		foundMessages = [NSMutableArray arrayWithCapacity:linesLeftToFind];
 		elementStack = [NSMutableArray array];
@@ -374,7 +381,6 @@ static int linesLeftToFind = 0;
 			NSDictionary	*attributes = [element attributes];
 			NSString		*timeString = [attributes objectForKey:@"time"];
 			//Create the context object
-			//http://www.visualdistortion.org/crash/view.jsp?crash=211821
 			if (timeString) {
 				NSCalendarDate *time = [NSCalendarDate calendarDateWithString:timeString];
 
