@@ -49,7 +49,7 @@
 													action:@selector(toggleMetaContactExpansion:)
 											 keyEquivalent:@""];
 	[[adium menuController] addContextualMenuItem:contextualMenuItem
-									   toLocation:Context_Contact_Manage];
+									   toLocation:Context_Contact_ListAction];
 }
 
 - (void)dealloc
@@ -171,6 +171,11 @@
 	}
 }
 
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
+{
+	return ([[[adium menuController] currentContextMenuObject] isKindOfClass:[AIMetaContact class]]);
+}
+
 - (void)menu:(NSMenu *)menu needsUpdateForMenuItem:(NSMenuItem *)menuItem
 {
 	AIListObject *listObject = [[adium menuController] currentContextMenuObject];
@@ -184,7 +189,7 @@
 				[menuItem setTitle:EXPAND_CONTACT];				
 			}
 		} else {
-			[[menuItem menu] removeItem:menuItem];
+			[menuItem setTitle:EXPAND_CONTACT];
 		}
 	}
 }
