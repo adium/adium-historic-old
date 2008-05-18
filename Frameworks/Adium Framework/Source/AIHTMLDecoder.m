@@ -46,7 +46,7 @@ int HTMLEquivalentForFontSize(int fontSize);
 - (void)processLinkTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (NSDictionary *)processSpanTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (void)processDivTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
-- (NSAttributedString *)processImgTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
+- (NSAttributedString *)processImgTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes baseURL:(NSString *)baseURL;
 - (BOOL)appendImage:(NSImage *)attachmentImage
 			 atPath:(NSString *)inPath
 		   toString:(NSMutableString *)string
@@ -709,7 +709,11 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	return string;
 }
 
-- (AIXMLElement *)elementWithAppKitAttributes:(NSDictionary *)attributes attributeNames:(NSSet *)attributeNames elementContent:(NSMutableString *)elementContent shouldAddElementContentToTopElement:(out BOOL *)outAddElementContentToTopElement
+- (AIXMLElement *)elementWithAppKitAttributes:(NSDictionary *)attributes
+							   attributeNames:(NSSet *)attributeNames
+							   elementContent:(NSMutableString *)elementContent
+		  shouldAddElementContentToTopElement:(out BOOL *)outAddElementContentToTopElement
+								   imagesPath:(NSString *)imagesPath
 {
 	if (!(attributes && [attributes count] && attributeNames && [attributeNames count]))
 		return nil;
@@ -731,32 +735,35 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	if (attachmentValue) {
 		AITextAttachmentExtension *extension = (AITextAttachmentExtension *)attachmentValue;
 		if ((thingsToInclude.attachmentTextEquivalents ||
+			 !imagesPath ||
 			([extension respondsToSelector:@selector(shouldAlwaysSendAsText)] && [extension shouldAlwaysSendAsText])) &&
 			([extension respondsToSelector:@selector(string)])) {
 			[elementContent setString:[extension string]];
-#if 0
 		} else {
-			/*XXX This doesn't work yet, and I have no interest in fixing it because nothing that receives the output from this method will have any use for the images.
-			*It's not known whether any XHTML-IM clients support data: URLs, and the logs probably will not retain images either.
-			*Feel free to hack on this if you find something that will want images.
-			*I would recommend allocating a bit from the bitfield to control it, though.
-			*--boredzo
-			*
-			*The log viewer now uses the output of this method and definitely does have use for images :)
-			*/
+			/* We have an image we want to save if possible, and we have an imagesPath */
 			AIXMLElement *imageElement = [AIXMLElement elementWithNamespaceName:XMLNamespace elementName:@"img"];
 			[imageElement setSelfCloses:YES];
 
 			NSTextAttachmentCell *cell = (NSTextAttachmentCell *)[attachmentValue attachmentCell];
 			NSSize size = [cell cellSize];
-			[imageElement setValue:[NSNumber numberWithFloat:size.width] forAttribute:@"width"];
-			[imageElement setValue:[NSNumber numberWithFloat:size.height] forAttribute:@"height"];
+			[imageElement setValue:[[NSNumber numberWithFloat:size.width] stringValue] forAttribute:@"width"];
+			[imageElement setValue:[[NSNumber numberWithFloat:size.height] stringValue] forAttribute:@"height"];
 
-			NSString *path = [[attachmentValue fileWrapper] filename];
-			//XXX If !path, write the image to the save path passed to -encodeStrictXHTML:imagesPath:.
+			NSString *path = [extension path];
 			if (path) {
-				NSURL *fileURL = [NSURL fileURLWithPath:path];
-				[imageElement setValue:fileURL forAttribute:@"src"];
+				NSString *destinationPath = [imagesPath stringByAppendingPathComponent:[path lastPathComponent]];
+				if ([[NSFileManager defaultManager] copyPath:path
+													  toPath:destinationPath
+													 handler:nil]) {
+					/* Just the file name; the XML should be set to have a base URL of the imagesPath */
+					/* It might be good to make this an optional behavior, with the other choice of an absolute
+					 * file URL (destinationPath).
+					 */
+					[imageElement setValue:[path lastPathComponent]
+							  forAttribute:@"src"];					
+				} else {
+					AILogWithSignature(@"Could not copy %@ to %@", path, destinationPath);
+				}
 			}
 
 			if (elementContent && [elementContent length]) {
@@ -770,7 +777,6 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			}
 
 			addElementContentToTopElement = NO;
-#endif
 		}
 	}
 
@@ -874,7 +880,9 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	searchRange = NSMakeRange(0,messageLength);
 	while (searchRange.location < messageLength) {
 		NSRange runRange;
-		NSDictionary *attributes = [self attributesByReplacingNSFontAttributeNameWithAIFontAttributeNames:[inMessage attributesAtIndex:searchRange.location longestEffectiveRange:&runRange inRange:searchRange]];
+		NSDictionary *attributes = [self attributesByReplacingNSFontAttributeNameWithAIFontAttributeNames:[inMessage attributesAtIndex:searchRange.location 
+																												 longestEffectiveRange:&runRange
+																															   inRange:searchRange]];
 		attributes = [attributes dictionaryWithIntersectionWithSetOfKeys:CSSCapableAttributes];
 
 		NSSet *startedKeys = nil, *endedKeys = nil;
@@ -913,7 +921,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					AIXMLElement *restoreElement = [self elementWithAppKitAttributes:[attributes dictionaryWithIntersectionWithSetOfKeys:attributesToRestore]
 					                                                  attributeNames:attributesToRestore
 					                                                  elementContent:nil
-					                             shouldAddElementContentToTopElement:NULL];
+					                             shouldAddElementContentToTopElement:NULL
+																		  imagesPath:imagesSavePath];
 					[[elementStack lastObject] addObject:restoreElement];
 					[elementStack addObject:restoreElement];
 
@@ -980,7 +989,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 				AIXMLElement *thisElement = [self elementWithAppKitAttributes:attributes
 															   attributeNames:itemKeys
 															   elementContent:elementContent
-										  shouldAddElementContentToTopElement:&addElementContentToTopElement];
+										  shouldAddElementContentToTopElement:&addElementContentToTopElement
+																   imagesPath:imagesSavePath];
 				if (thisElement) {
 					[[elementStack lastObject] addObject:thisElement];
 					[attributeNamesStack addObject:itemKeys];
@@ -1043,6 +1053,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	AITextAttributes			*textAttributes;
 	NSMutableArray				*spanTagChangedAttributesQueue = [NSMutableArray array];
 	NSMutableArray				*fontTagChangedAttributesQueue = [NSMutableArray array];
+	NSString					*baseURL = nil;
 
 	//Reset the div and span ivars
 	send = NO;
@@ -1275,7 +1286,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					} else if ([chunkString caseInsensitiveCompare:@"IMG"] == NSOrderedSame) {
 						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
 							NSAttributedString *attachString = [self processImgTagArgs:[self parseArguments:chunkString] 
-																			attributes:textAttributes];
+																			attributes:textAttributes
+																			   baseURL:baseURL];
 							if (attachString) {
 								[attrString appendAttributedString:attachString];
 							}
@@ -1296,6 +1308,12 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 							   ([chunkString caseInsensitiveCompare:@"/HEAD"] == NSOrderedSame)) {
 						[scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
 						
+					//Base URL tag
+					} else if ([chunkString caseInsensitiveCompare:@"BASE"] == NSOrderedSame) {
+						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
+							[baseURL release];
+							baseURL = [[[self parseArguments:chunkString] objectForKey:@"href"] retain];
+						}
 					// Ignore <meta> tags
 					} else if ([chunkString caseInsensitiveCompare:@"META"] == NSOrderedSame ||
 							   ([chunkString caseInsensitiveCompare:@"/META"] == NSOrderedSame)) {
@@ -1414,6 +1432,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 								  range:NSMakeRange(0,[attrString length])];
 		}
 	}
+
+	[baseURL release];
 
 	return [attrString autorelease];
 }
@@ -1786,7 +1806,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	}
 }
 
-- (NSAttributedString *)processImgTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
+- (NSAttributedString *)processImgTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes baseURL:(NSString *)baseURL
 {
 	NSEnumerator				*enumerator;
 	NSString					*arg;
@@ -1797,11 +1817,14 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	while ((arg = [enumerator nextObject])) {
 		if ([arg caseInsensitiveCompare:@"src"] == NSOrderedSame) {
 			NSString	*src = [inArgs objectForKey:arg];
-
+			
 			//The src may be a file:// style path; convert it to a system path via NSURL
 			NSURL		*url = [NSURL URLWithString:src];
 			if (url && [url isFileURL]) src = [url path];
 
+			if (baseURL && ![[NSFileManager defaultManager] fileExistsAtPath:src])
+				src = [baseURL stringByAppendingPathComponent:src];
+			
 			[attachment setPath:src];
 		}
 		if ([arg caseInsensitiveCompare:@"alt"] == NSOrderedSame) {
