@@ -441,10 +441,8 @@
  */
 - (void)saveContainers
 {
-	// If we're quitting with containers unsaved, be sure to reset the possibly-formerly-valid information to nil
-	// We don't do this upon unchecking the preference so that it isn't a permanent removal of the saved information until
-	// end of session.
 	if (!saveContainers) {
+		// Don't save anything if we're not set to.
 		return;
 	}
 	
