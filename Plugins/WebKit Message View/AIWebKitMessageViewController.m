@@ -58,6 +58,7 @@
 - (void)_processContentObject:(AIContentObject *)content willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
 - (void)_appendContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects replaceLastContent:(BOOL)replaceLastContent;
 
+- (NSString *)_webKitBackgroundImagePathForUniqueID:(int)uniqueID;
 - (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject;
 - (void)releaseCurrentWebKitUserIconForObject:(AIListObject *)inObject;
 - (void)releaseAllCachedIcons;
@@ -406,8 +407,7 @@ static NSArray *draggedTypes = nil;
 				
 				//Cache the image under that unique ID
 				//Since we prefix the filename with TEMP, Adium will automatically clean it up on quit
-				cachePath = [[adium cachesPath] stringByAppendingPathComponent:[NSString stringWithFormat:@"TEMP-WebkitBGImage-%i.png",uniqueID]];
-				[backgroundImage writeToFile:cachePath atomically:YES];
+				[backgroundImage writeToFile:[self _webKitBackgroundImagePathForUniqueID:uniqueID] atomically:YES];
 
 				//Remember where we cached it
 				[[adium preferenceController] setPreference:cachePath
@@ -1277,6 +1277,15 @@ static NSArray *draggedTypes = nil;
 		if (updatedImage) [[webView windowScriptObject] callWebScriptMethod:@"alignChat" 
 															  withArguments:[NSArray arrayWithObject:shouldScroll]];
 	}
+}
+
+/*!
+ * @brief Returns the path the background image given a unique ID
+ */
+- (NSString *)_webKitBackgroundImagePathForUniqueID:(int)uniqueID
+{
+	NSString	*filename = [NSString stringWithFormat:@"TEMP-WebkitBGImage-%i.png",uniqueID]];
+	return [[adium cachesPath] stringByAppendingPathComponent:filename];
 }
 
 /*!
