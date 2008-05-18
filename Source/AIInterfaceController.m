@@ -247,21 +247,25 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	//
-	[[adium notificationCenter] removeObserver:self name:Contact_OrderChanged object:nil];
+	if (!object) {
+		//Update prefs
+		tabbedChatting = [[prefDict objectForKey:KEY_TABBED_CHATTING] boolValue];
+		groupChatsByContactGroup = [[prefDict objectForKey:KEY_GROUP_CHATS_BY_GROUP] boolValue];
+		saveContainers = [[prefDict objectForKey:KEY_SAVE_CONTAINERS] boolValue];
 	
-	//Update prefs
-	tabbedChatting = [[prefDict objectForKey:KEY_TABBED_CHATTING] boolValue];
-	groupChatsByContactGroup = [[prefDict objectForKey:KEY_GROUP_CHATS_BY_GROUP] boolValue];
-	saveContainers = [[prefDict objectForKey:KEY_SAVE_CONTAINERS] boolValue];
-	
-	if (saveContainers && firstTime) {
-		//Restore saved containers
-		[self restoreSavedContainers];	
-	} else if (!saveContainers) {
-		[[adium preferenceController] setPreference:nil
-											 forKey:KEY_CONTAINERS
-											  group:PREF_GROUP_INTERFACE];
+		if (firstTime) {
+			if (saveContainers) {
+				//Restore saved containers
+				[self restoreSavedContainers];	
+			} else if ([prefDict objectForKey:KEY_CONTAINERS]) {
+				/* We've loaded without wanting to save containers; clear any saved
+				 * from a previous session.
+				 */
+				[[adium preferenceController] setPreference:nil
+													 forKey:KEY_CONTAINERS
+													  group:PREF_GROUP_INTERFACE];
+			}
+		}
 	}
 }
 
