@@ -271,6 +271,17 @@ Class LogViewerWindowControllerClass = NULL;
 	return [NSString stringWithFormat:@"%@ (%@)", object, dateString];
 }
 
++ (NSString *)pathForLogsLikeChat:(AIChat *)chat
+{
+	NSString	*objectUID = [chat name];
+	AIAccount	*account = [chat account];
+	
+	if (!objectUID) objectUID = [[chat listObject] UID];
+	objectUID = [objectUID safeFilenameString];
+
+	return [logBasePath stringByAppendingPathComponent:[self relativePathForLogWithObject:objectUID onAccount:account]];
+}
+
 + (NSString *)fullPathForLogOfChat:(AIChat *)chat onDate:(NSDate *)date
 {
 	NSString	*objectUID = [chat name];
@@ -279,9 +290,9 @@ Class LogViewerWindowControllerClass = NULL;
 	if (!objectUID) objectUID = [[chat listObject] UID];
 	objectUID = [objectUID safeFilenameString];
 
-	NSString	*name = [self nameForLogWithObject:objectUID onDate:date];
-
 	NSString	*absolutePath = [logBasePath stringByAppendingPathComponent:[self relativePathForLogWithObject:objectUID onAccount:account]];
+
+	NSString	*name = [self nameForLogWithObject:objectUID onDate:date];
 	NSString	*fullPath = [[absolutePath stringByAppendingPathComponent:[name stringByAppendingPathExtension:@"chatlog"]]
 							 stringByAppendingPathComponent:[name stringByAppendingPathExtension:@"xml"]];
 
@@ -652,12 +663,9 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 
 + (NSArray *)sortedArrayOfLogFilesForChat:(AIChat *)chat
 {
-	NSString *baseLogPath = [[self fullPathForLogOfChat:chat onDate:[NSDate date]] stringByDeletingLastPathComponent];
-	NSArray *files = [[NSFileManager defaultManager] directoryContentsAtPath:baseLogPath];	
-	if (files) {
-		return [files sortedArrayUsingFunction:&sortPaths context:NULL];
-	}
-	return nil;
+	NSArray *files = [[NSFileManager defaultManager] directoryContentsAtPath:[self pathForLogsLikeChat:chat]];
+
+	return (files ? [files sortedArrayUsingFunction:&sortPaths context:NULL] : nil);
 }
 
 #pragma mark Upgrade code
