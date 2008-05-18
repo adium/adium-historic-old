@@ -618,7 +618,7 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	
 	NSMutableArray			*locationsArray = [NSArray arrayWithObjects:
 		[NSNumber numberWithInt:(isGroup ? Context_Group_Manage : Context_Contact_Manage)],
-		[NSNumber numberWithInt:(isGroup ? Context_Group_AttachDetach : Context_Group_AttachDetach)],
+		[NSNumber numberWithInt:(isGroup ? Context_Group_AttachDetach : Context_Contact_AttachDetach)],
 		[NSNumber numberWithInt:Context_Contact_Action],
 		[NSNumber numberWithInt:Context_Contact_ListAction],
 		[NSNumber numberWithInt:Context_Contact_NegativeAction],
