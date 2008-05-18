@@ -677,6 +677,8 @@
 			
 		//Redisplay everything
 		[[shelfView contentView] setNeedsDisplay:YES];
+	} else {
+		[view_accountSelection setChat:chat];
 	}
 }
 
