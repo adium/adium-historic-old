@@ -322,7 +322,7 @@
 				<string>com.adiumx.xmllog</string>
 			</array>
 			<key>LSTypeIsPackage</key>
-			<false/>
+			<true/>
 			<key>NSPersistentStoreTypeKey</key>
 			<string>Binary</string>
 		</dict>
