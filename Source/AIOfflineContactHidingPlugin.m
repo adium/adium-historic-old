@@ -190,7 +190,7 @@
 {
 	if (menuItem == menuItem_useOfflineGroup) {
 		//Can only show offline group if groups and offline contacts are both shown
-		return (useContactListGroups && showOfflineContacts);
+		return (useContactListGroups && (showOfflineContacts || !hideContacts));
 
 	} else if (menuItem == menuItem_hideOffline ||
 			   menuItem == menuItem_hideIdle ||
