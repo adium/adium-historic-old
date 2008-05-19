@@ -739,6 +739,7 @@
 			<key>UTTypeConformsTo</key>
 			<array>
 				<string>public.data</string>
+				<string>com.apple.bundle</string>
 				<string>public.content</string>
 				<string>public.text</string>
 				<string>public.message</string>
