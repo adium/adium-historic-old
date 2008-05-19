@@ -31,13 +31,12 @@ static NSMutableDictionary	*accountPrefs = nil;
 static int					usersOfAccountPrefs = 0;
 static NSTimer				*timer_savingOfAccountCache = nil;
 
-static NSConditionLock		*quittingLock;
+static NSConditionLock		*writingLock;
 
 typedef enum {
-	AIWantsToQuit,
-	AISaving,
-	AIReadyToQuit
-} AIQuittingLockState;
+	AIReadyToWrite,
+	AIWriting,
+} AIWritingLockState;
 	
 /*!
  * @brief Preference Container
@@ -67,11 +66,11 @@ typedef enum {
 + (void)preferenceControllerWillClose
 {
 	//Wait until any threaded save is complete
-	[quittingLock lockWhenCondition:AIReadyToQuit];
+	[writingLock lockWhenCondition:AIReadyToWrite];
 
 	//If a save of the object prefs is pending, perform it immediately since we are quitting
 	if (timer_savingOfObjectCache) {
-		@synchronized (objectPrefs) {
+		@synchronized(objectPrefs) {
 			[objectPrefs writeToPath:[[[AIObject sharedAdiumInstance] loginController] userDirectory]
 							withName:@"ByObjectPrefs"];
 		}
@@ -86,7 +85,7 @@ typedef enum {
 
 	//If a save of the account prefs is pending, perform it immediately since we are quitting
 	if (timer_savingOfAccountCache) {
-		@synchronized (accountPrefs) {
+		@synchronized(accountPrefs) {
 			[accountPrefs writeToPath:[[[AIObject sharedAdiumInstance] loginController] userDirectory]
 							 withName:@"AccountPrefs"];
 		}
@@ -100,7 +99,7 @@ typedef enum {
 	}
 
 	//Relinguish the lock
-	[quittingLock unlockWithCondition:AIReadyToQuit];
+	[writingLock unlockWithCondition:AIReadyToWrite];
 }
 
 - (id)initForGroup:(NSString *)inGroup object:(AIListObject *)inObject
@@ -108,7 +107,7 @@ typedef enum {
 	if ((self = [super init])) {
 		group = [inGroup retain];
 		object = [inObject retain];
-		if (!quittingLock) quittingLock = [[NSConditionLock alloc] initWithCondition:AIReadyToQuit];
+		if (!writingLock) writingLock = [[NSConditionLock alloc] initWithCondition:AIReadyToWrite];
 		if (object) {
 			if ([object isKindOfClass:[AIAccount class]]) {
 				myGlobalPrefs = &accountPrefs;
@@ -153,13 +152,15 @@ typedef enum {
  */
 - (void)emptyCache:(NSTimer *)inTimer
 {
-	if (object) (*myUsersOfGlobalPrefs)--;
-
-	[prefs release]; prefs = nil;
-	[prefsWithDefaults release]; prefsWithDefaults = nil;
-	
-	if (object && (*myUsersOfGlobalPrefs) == 0) {
-		[*myGlobalPrefs release]; *myGlobalPrefs = nil;
+	@synchronized(*myGlobalPrefs) {
+		if (object) (*myUsersOfGlobalPrefs)--;
+		
+		[prefs release]; prefs = nil;
+		[prefsWithDefaults release]; prefsWithDefaults = nil;
+		
+		if (object && (*myUsersOfGlobalPrefs) == 0) {
+			[*myGlobalPrefs release]; *myGlobalPrefs = nil;
+		}
 	}
 	
 	[timer_clearingOfCache release]; timer_clearingOfCache = nil;
@@ -219,23 +220,45 @@ typedef enum {
 			if (!(*myGlobalPrefs)) {
 				NSString	*objectPrefsPath = [[userDirectory stringByAppendingPathComponent:globalPrefsName] stringByAppendingPathExtension:@"plist"];
 				NSData		*data = [NSData dataWithContentsOfFile:objectPrefsPath];
-				NSString	*errorString;
+				NSString	*errorString = nil;
 
 				//We want to load a mutable dictioanry of mutable dictionaries.
-				*myGlobalPrefs = [[NSPropertyListSerialization propertyListFromData:data 
-																   mutabilityOption:NSPropertyListMutableContainers 
-																			 format:NULL 
-																   errorDescription:&errorString] retain];
-				if (!*myGlobalPrefs) *myGlobalPrefs = [[NSMutableDictionary alloc] init];
+				if (data) {
+					*myGlobalPrefs = [[NSPropertyListSerialization propertyListFromData:data 
+																	   mutabilityOption:NSPropertyListMutableContainers 
+																				 format:NULL 
+																	   errorDescription:&errorString] retain];
+				}
+				
+				/* Log any error */
+				if (errorString) {
+					NSLog(@"Error reading preferences file %@: %@", objectPrefsPath, errorString);
+					AILogWithSignature(@"Error reading preferences file %@: %@", objectPrefsPath, errorString);
+					[errorString release];
+				}
+				
+				/* If we don't get a dictionary, create a new one */
+				if (!*myGlobalPrefs) {
+					/* This wouldn't be an error if this were a new Adium installation; the below is temporary debug logging. */
+					NSLog(@"WARNING: Unable to parse preference file %@ (data was %@)", objectPrefsPath, data);
+					AILogWithSignature(@"WARNING: Unable to parse preference file %@ (data was %@)", objectPrefsPath, data);
+
+					*myGlobalPrefs = [[NSMutableDictionary alloc] init];
+				}
 			}
 
 			//For compatibility with having loaded individual object prefs from previous version of Adium, we key by the safe filename string
 			NSString *globalPrefsKey = [[object internalObjectID] safeFilenameString];
 			prefs = [[*myGlobalPrefs objectForKey:globalPrefsKey] retain];
 			if (!prefs) {
-				prefs = [[NSMutableDictionary alloc] init];
-				[*myGlobalPrefs setObject:prefs
-								   forKey:globalPrefsKey];
+				/* If this particular object has no dictionary within the global one,
+				 * create it and store it for future use.
+				 */
+				@synchronized(*myGlobalPrefs) {
+					prefs = [[NSMutableDictionary alloc] init];
+					[*myGlobalPrefs setObject:prefs
+									   forKey:globalPrefsKey];
+				}
 			}
 			(*myUsersOfGlobalPrefs)++;
 
@@ -305,7 +328,7 @@ typedef enum {
 		}
 		
 		if (object) {
-			@synchronized (*myGlobalPrefs) {
+			@synchronized(*myGlobalPrefs) {
 				[[self prefs] setValue:value forKey:key];
 			}
 		} else {
@@ -396,15 +419,15 @@ typedef enum {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	
 	//Obtain the lock when no save operations are being performed
-	[quittingLock lockWhenCondition:AIReadyToQuit];
+	[writingLock lockWhenCondition:AIReadyToWrite];
 
 	//Set the lock's condition to saving so that other threads (including the main one) know what we're up to
-	[quittingLock unlockWithCondition:AISaving];
+	[writingLock unlockWithCondition:AIWriting];
 	
 	NSDictionary *sourcePrefsToSave = [info objectForKey:@"PrefsToSave"];
 	NSDictionary *dictToSave;
 	//Don't allow modification of the dictionary while we're copying it...
-	@synchronized (sourcePrefsToSave) {
+	@synchronized(sourcePrefsToSave) {
 		dictToSave = [[NSDictionary alloc] initWithDictionary:sourcePrefsToSave copyItems:YES];
 	}
 	//...and now it's safe to write it out, which may take a little while.
@@ -425,11 +448,13 @@ typedef enum {
 	}
 
 	//We're no longer using global prefs; if nobody is, the main thread will release its in-memory cache later
-	(*myUsersOfGlobalPrefs)--;
+	@synchronized(sourcePrefsToSave) {
+		(*myUsersOfGlobalPrefs)--;
+	}
 	
 	//Unlock and note that we're ready to quit
-	[quittingLock lockWhenCondition:AISaving];
-	[quittingLock unlockWithCondition:AIReadyToQuit];
+	[writingLock lockWhenCondition:AIWriting];
+	[writingLock unlockWithCondition:AIReadyToWrite];
 
 	[pool release];
 }
