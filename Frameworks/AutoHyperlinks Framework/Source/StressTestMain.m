@@ -23,7 +23,9 @@ int main(int argc, char **argv) {
 	SenTestRun *run = [[SenTestRun alloc] initWithTest:test];
 
 	[run start];
-	[test performTest:run];
+	while (numIterations--) {
+		[test performTest:run];
+	}
 	[run stop];
 
 	BOOL success = [run hasSucceeded];
