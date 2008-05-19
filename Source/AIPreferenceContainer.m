@@ -152,15 +152,21 @@ typedef enum {
  */
 - (void)emptyCache:(NSTimer *)inTimer
 {
-	@synchronized(*myGlobalPrefs) {
-		if (object) (*myUsersOfGlobalPrefs)--;
-		
+	if (object) {
+		@synchronized(*myGlobalPrefs) {
+			(*myUsersOfGlobalPrefs)--;
+			
+			[prefs release]; prefs = nil;
+			[prefsWithDefaults release]; prefsWithDefaults = nil;
+			
+			if ((*myUsersOfGlobalPrefs) == 0) {
+				[*myGlobalPrefs release]; *myGlobalPrefs = nil;
+			}
+		}
+
+	} else {
 		[prefs release]; prefs = nil;
 		[prefsWithDefaults release]; prefsWithDefaults = nil;
-		
-		if (object && (*myUsersOfGlobalPrefs) == 0) {
-			[*myGlobalPrefs release]; *myGlobalPrefs = nil;
-		}
 	}
 	
 	[timer_clearingOfCache release]; timer_clearingOfCache = nil;
