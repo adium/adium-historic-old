@@ -31,6 +31,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
 #import <Adium/ESFileTransfer.h>
+#import <Adium/AIServiceIcons.h>
 #import <Adium/AIContentControllerProtocol.h>
 
 //
@@ -1030,6 +1031,14 @@ static NSArray *validSenderColors;
 	}
 	[inString replaceKeyword:@"%outgoingIconPath%"
 				  withString:(iconPath ? iconPath : @"outgoing_icon.png")];
+	
+	NSString *serviceIconPath = [AIServiceIcons pathForServiceIconForServiceID:[account serviceID]
+																		  type:AIServiceIconLarge];
+	
+	NSString *serviceIconTag = [NSString stringWithFormat:@"<img class=\"serviceIcon\" src=\"@\" alt=\"%@\">", serviceIconPath ? serviceIconPath : @"outgoing_icon.png", [[account service] shortDescription]];
+	
+	[inString replaceKeyword:@"%serviceIconImg%"
+				  withString:serviceIconTag];
 	
 	[inString replaceKeyword:@"%timeOpened%"
 				  withString:[timeStampFormatter stringForObjectValue:[chat dateOpened]]];

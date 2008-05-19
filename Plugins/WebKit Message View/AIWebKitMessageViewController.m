@@ -1048,6 +1048,8 @@ static NSArray *draggedTypes = nil;
 	
 	//And update the source account
 	[self updateUserIconForObject:[chat account]];
+	
+	[self updateServiceIcon];
 }
 
 /*!
@@ -1248,6 +1250,24 @@ static NSArray *draggedTypes = nil;
 		[objectIconPathDict setObject:webKitUserIconPath
 							   forKey:[iconSourceObject internalObjectID]];
 	}
+}
+
+- (void) updateServiceIcon
+{
+	DOMDocument *doc = [[webView mainFrame] DOMDocument];
+	//Old WebKits don't support this... if someone feels like doing it the slower way here, feel free
+	if(![doc respondsToSelector:@selector(getElementsByClassName:)])
+		return; 
+	DOMNodeList  *serviceIconImages = [doc getElementsByClassName:@"serviceIcon"];
+	unsigned int imagesCount = [serviceIconImages length];
+	
+	NSString *serviceIconPath = [AIServiceIcons pathForServiceIconForServiceID:[[chat account] serviceID] 
+																type:AIServiceIconLarge];
+	
+	for (int i = 0; i < imagesCount; i++) {
+		DOMHTMLImageElement *img = (DOMHTMLImageElement *)[serviceIconImages item:i];
+		[img setSrc:serviceIconPath];
+	}	
 }
 
 - (void)customEmoticonUpdated:(NSNotification *)inNotification
