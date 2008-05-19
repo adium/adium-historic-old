@@ -226,14 +226,14 @@
 		NSString  *matchChar = nil;
 		NSScanner *enclosureScanner = [[[NSScanner alloc] initWithString:scanString] autorelease];
 		NSDictionary *encDict;
-		while([enclosureScanner scanUpToCharactersFromSet:enclosureSet intoString:nil] && [enclosureScanner scanLocation] < [[enclosureScanner string] length]) {
+		while([enclosureScanner scanLocation] < [[enclosureScanner string] length]) {
+			[enclosureScanner scanUpToCharactersFromSet:enclosureSet intoString:nil];
+			if([enclosureScanner scanLocation] >= [[enclosureScanner string] length]) break;
 			matchChar = [scanString substringWithRange:NSMakeRange([enclosureScanner scanLocation], 1)];
 			if([enclosureStartArray containsObject:matchChar]) {
 				encDict = [NSDictionary	dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithUnsignedInt:[enclosureScanner scanLocation]], matchChar, nil]
-									    forKeys:[NSArray arrayWithObjects:ENC_INDEX_KEY, ENC_CHAR_KEY, nil]];
+													  forKeys:[NSArray arrayWithObjects:ENC_INDEX_KEY, ENC_CHAR_KEY, nil]];
 				[enclosureStack addObject:encDict];
-				if([enclosureScanner scanLocation] < [[enclosureScanner string] length])
-					[enclosureScanner setScanLocation:[enclosureScanner scanLocation]+1];
 			}else if([enclosureStopArray containsObject:matchChar]) {
 				NSEnumerator *encEnumerator = [enclosureStack objectEnumerator];
 				while ((encDict = [encEnumerator nextObject])) {
@@ -243,12 +243,12 @@
 						NSRange encRange = NSMakeRange(encTagIndex, [enclosureScanner scanLocation] - encTagIndex);
 						[enclosureStack removeObject:encDict];
 						[enclosureArray addObject:NSStringFromRange(encRange)];
-						if([enclosureScanner scanLocation] < [[enclosureScanner string] length])
-							[enclosureScanner setScanLocation:[enclosureScanner scanLocation]+1];
 						break;
 					}
 				}
 			}
+			if([enclosureScanner scanLocation] < [[enclosureScanner string] length])
+				[enclosureScanner setScanLocation:[enclosureScanner scanLocation]+1];
 		}
 		NSRange lastEnclosureRange = NSMakeRange(0, 0);
 		if([enclosureArray count]) lastEnclosureRange = NSRangeFromString([enclosureArray lastObject]);
