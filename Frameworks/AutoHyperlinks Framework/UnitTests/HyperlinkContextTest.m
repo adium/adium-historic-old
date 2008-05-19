@@ -39,6 +39,10 @@
 	[self testURIBorder:@"example.com/foo_(bar)"];
 	[self testEnclosedURI:@"http://example.com/foo_(bar)"];
 	[self testURIBorder:@"http://example.com/foo_(bar)"];
+	[self testEnclosedURI:@"http://example.com/f(oo_(ba)r)"];
+	[self testURIBorder:@"http://example.com/f(oo_(ba)r)"];
+	[self testEnclosedURI:@"http://example.com/f[oo_(ba]r)"];
+	[self testURIBorder:@"http://example.com/f[oo_(ba]r)"];
 	[self testURIBorder:@"http://www.example.com/___"];
 	[self testURIBorder:@"http://www.example.com/$$$"];
 	[self testURIBorder:@"http://www.example.com/---"];
