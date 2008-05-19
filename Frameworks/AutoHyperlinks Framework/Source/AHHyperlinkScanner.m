@@ -201,22 +201,16 @@
 		}
 
 		finalStringLen = localStringLen;
-
-		static NSCharacterSet *enclosureStartSet;
-		if(!enclosureStartSet){
-#define INVALID_URL_ENCLOSURE_START_CHARACTERS @"([{"
-			enclosureStartSet = [[NSCharacterSet characterSetWithCharactersInString:INVALID_URL_ENCLOSURE_START_CHARACTERS] retain];
-		}
 		
 		static NSArray *enclosureStartArray;
 		if(!enclosureStartArray){
 			enclosureStartArray = [[NSArray arrayWithObjects:@"(",@"[",@"{",nil] retain];
 		}
 
-		static NSCharacterSet *enclosureEndSet;
-		if(!enclosureEndSet){
-#define INVALID_URL_ENCLOSURE_END_CHARACTERS @")]}"
-			enclosureEndSet = [[NSCharacterSet characterSetWithCharactersInString:INVALID_URL_ENCLOSURE_END_CHARACTERS] retain];
+		static NSCharacterSet *enclosureSet;
+		if(!enclosureSet){
+#define URL_ENCLOSURE_CHARACTERS @"()[]{}"
+			enclosureSet = [[NSCharacterSet characterSetWithCharactersInString:URL_ENCLOSURE_CHARACTERS] retain];
 		}
 		
 		static NSArray *enclosureStopArray;
@@ -225,26 +219,39 @@
 		}
 		
 		// Find balanced enclosure chars
+#define ENC_INDEX_KEY @"encIndex"
+#define ENC_CHAR_KEY @"encChar"
+		NSMutableArray	*enclosureStack = [NSMutableArray arrayWithCapacity:2]; // totally arbitrary.
+		NSMutableArray	*enclosureArray = [NSMutableArray arrayWithCapacity:2];
+		NSString  *matchChar = nil;
 		NSScanner *enclosureScanner = [[[NSScanner alloc] initWithString:scanString] autorelease];
-		NSString  *matchStartChar = nil, *matchEndChar = nil;
-		NSMutableArray   *enclosureArray = [NSMutableArray arrayWithCapacity:1];
-		unsigned int encStart;
-		while ([enclosureScanner scanUpToCharactersFromSet:enclosureStartSet intoString:nil] &&
-			   [enclosureScanner scanLocation] < [scanString length]) {
-			matchStartChar = [scanString substringWithRange:NSMakeRange([enclosureScanner scanLocation], 1)];
-			if([enclosureStartArray containsObject:matchStartChar]) {
-				encStart = [enclosureScanner scanLocation];
-				while ([enclosureScanner scanUpToCharactersFromSet:enclosureEndSet intoString:nil] &&
-					   [enclosureScanner scanLocation] < [scanString length]){
-					matchEndChar = [scanString substringWithRange:NSMakeRange([enclosureScanner scanLocation], 1)];
-					if([enclosureStopArray containsObject:matchEndChar] &&
-					   [enclosureStartArray indexOfObjectIdenticalTo:matchStartChar] == [enclosureStopArray indexOfObjectIdenticalTo:matchEndChar]) {
-						[enclosureArray addObject:NSStringFromRange(NSMakeRange(encStart, [enclosureScanner scanLocation] - encStart))];
+		NSDictionary *encDict;
+		while([enclosureScanner scanUpToCharactersFromSet:enclosureSet intoString:nil] && [enclosureScanner scanLocation] < [[enclosureScanner string] length]) {
+			matchChar = [scanString substringWithRange:NSMakeRange([enclosureScanner scanLocation], 1)];
+			if([enclosureStartArray containsObject:matchChar]) {
+				encDict = [NSDictionary	dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithUnsignedInt:[enclosureScanner scanLocation]], matchChar, nil]
+									    forKeys:[NSArray arrayWithObjects:ENC_INDEX_KEY, ENC_CHAR_KEY, nil]];
+				[enclosureStack addObject:encDict];
+				if([enclosureScanner scanLocation] < [[enclosureScanner string] length])
+					[enclosureScanner setScanLocation:[enclosureScanner scanLocation]+1];
+			}else if([enclosureStopArray containsObject:matchChar]) {
+				NSEnumerator *encEnumerator = [enclosureStack objectEnumerator];
+				while ((encDict = [encEnumerator nextObject])) {
+					unsigned int encTagIndex = [(NSNumber *)[encDict objectForKey:ENC_INDEX_KEY] unsignedIntegerValue];
+					unsigned int encStartIndex = [enclosureStartArray indexOfObjectIdenticalTo:[encDict objectForKey:ENC_CHAR_KEY]];
+					if([enclosureStopArray indexOfObjectIdenticalTo:matchChar] == encStartIndex) {
+						NSRange encRange = NSMakeRange(encTagIndex, [enclosureScanner scanLocation] - encTagIndex);
+						[enclosureStack removeObject:encDict];
+						[enclosureArray addObject:NSStringFromRange(encRange)];
+						if([enclosureScanner scanLocation] < [[enclosureScanner string] length])
+							[enclosureScanner setScanLocation:[enclosureScanner scanLocation]+1];
+						break;
 					}
 				}
 			}
 		}
-		NSRange lastEnclosureRange = NSRangeFromString([enclosureArray lastObject]);
+		NSRange lastEnclosureRange = NSMakeRange(0, 0);
+		if([enclosureArray count]) lastEnclosureRange = NSRangeFromString([enclosureArray lastObject]);
 		while (finalStringLen > 2 && [endSet characterIsMember:[scanString characterAtIndex:finalStringLen - 1]]) {
 			if((lastEnclosureRange.location + lastEnclosureRange.length + 1) < finalStringLen){
 				scanString = [scanString substringToIndex:finalStringLen - 1];
