@@ -192,14 +192,7 @@
     while([preScanner scanUpToCharactersFromSet:skipSet intoString:&scanString]) {
 		
         unsigned int localStringLen = [scanString length];
-		unsigned int finalStringLen;
-		
-		while (localStringLen > 2 && [startSet characterIsMember:[scanString characterAtIndex:0]]) {
-			scanString = [scanString substringFromIndex:1];
-			localStringLen--;
-		}
-
-		finalStringLen = localStringLen;
+		unsigned int finalStringLen = localStringLen;
 		
 		static NSArray *enclosureStartArray;
 		if(!enclosureStartArray){
