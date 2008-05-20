@@ -248,6 +248,14 @@
 	AILogWithSignature(@"%@", inObserver);
 #endif
     [contactObservers removeObject:[NSValue valueWithNonretainedObject:inObserver]];
+	
+	/* If we're in the middle of informing observers, we need to note this now-removed observer
+	 * so that we don't attempt to message it during this iteration.
+	 */
+	if (informingObservers) {
+		if (!removedContactObservers) removedContactObservers = [[NSMutableSet alloc] init];
+		[removedContactObservers addObject:[NSValue valueWithNonretainedObject:inObserver]];
+	}
 }
 
 
@@ -322,12 +330,19 @@
 	NSEnumerator	*enumerator;
 	NSValue			*observerValue;
 	
+	informingObservers = YES;
+
 	//Let our observers know
-	enumerator = [contactObservers objectEnumerator];
+	enumerator = [[[contactObservers copy] autorelease] objectEnumerator];
 	while ((observerValue = [enumerator nextObject])) {
-		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		id <AIListObjectObserver>	observer;
 		NSSet						*newKeys;
+		
+		/* Skip any observer which has been removed while we were iterating over observers,
+		 * as we don't retain observers and therefore risk messaging a released object.
+		 */
+		if (removedContactObservers && [removedContactObservers containsObject:observerValue])
+			continue;
 		
 		observer = [observerValue nonretainedObjectValue];
 #ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
@@ -340,7 +355,6 @@
 			if (!attrChange) attrChange = [[NSMutableSet alloc] init];
 			[attrChange unionSet:newKeys];
 		}
-		[pool release];
 	}
 	//Send out the notification for other observers
 	[[adium notificationCenter] postNotificationName:ListObject_StatusChanged
@@ -348,20 +362,37 @@
 											userInfo:(modifiedKeys ? [NSDictionary dictionaryWithObject:modifiedKeys
 																								 forKey:@"Keys"] : nil)];
 	
+	informingObservers = NO;
+
+	//If we removed any observers while informing them, we don't need that information any more
+	if (removedContactObservers) {
+		[removedContactObservers release]; removedContactObservers = nil;
+	}
+
 	return [attrChange autorelease];
 }
 
 //Command all observers to apply their attributes to an object
 - (void)_updateAllAttributesOfObject:(AIListObject *)inObject
 {
-	NSEnumerator	*enumerator = [contactObservers objectEnumerator];
+	NSEnumerator	*enumerator = [[[contactObservers copy] autorelease] objectEnumerator];
 	NSValue			*observerValue;
-	
-	while ((observerValue = [enumerator nextObject])) {		
+
+	informingObservers = YES;
+
+	while ((observerValue = [enumerator nextObject])) {
+		/* Skip any observer which has been removed while we were iterating over observers,
+		 * as we don't retain observers and therefore risk messaging a released object.
+		 */
+		if (removedContactObservers && [removedContactObservers containsObject:observerValue])
+			continue;
+
 		id <AIListObjectObserver> observer = [observerValue nonretainedObjectValue];
 		
 		[observer updateListObject:inObject keys:nil silent:YES];
 	}
+	
+	informingObservers = NO;
 }
 
 @end
