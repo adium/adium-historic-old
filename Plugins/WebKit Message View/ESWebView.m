@@ -74,6 +74,13 @@
 	transparentBackground = flag;
 }
 
+- (void)viewDidMoveToWindow
+{
+	NSWindow *win = [self window];
+	if(win)
+		[win setOpaque:!transparentBackground];
+}
+
 //Font Family ----------------------------------------------------------------------------------------------------------
 #pragma mark Font Family
 - (void)setFontFamily:(NSString *)familyName
