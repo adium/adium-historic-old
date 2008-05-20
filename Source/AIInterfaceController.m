@@ -68,7 +68,7 @@
 - (void)_pasteWithPreferredSelector:(SEL)preferredSelector sender:(id)sender;
 - (void)updateCloseMenuKeys;
 
-- (void)saveContainersWithContent:(BOOL)withContent;
+- (void)saveContainers;
 - (void)restoreSavedContainers;
 
 //Window Menu
@@ -426,23 +426,15 @@
 				chat = [[adium chatController] chatWithContact:contact];
 			}
 			
-			// Open the chat into the container we've created above.
-			AIMessageTabViewItem *tabViewItem = [self openChat:chat inContainerWithID:[dict objectForKey:@"ID"] atIndex:-1];
+			// Tag the chat as restored.
+			[chat setStatusObject:[NSNumber numberWithBool:YES]
+						   forKey:@"Restored Chat"
+						   notify:NotifyNow];
 			
-			if ([chatDict objectForKey:@"ChatContents"]) {
-				// Restore the display buffer of the chat.
-				NSObject<AIMessageDisplayController>	*displayController = [(AIMessageViewController *)[tabViewItem messageViewController] messageDisplayController];
-				
-				// Only load the old content if the content name is the same.
-				if ([[displayController contentSourceName] isEqualToString:[chatDict objectForKey:@"ChatContentsName"]]) {
-					[displayController setChatContentSource:[chatDict objectForKey:@"ChatContents"]];
-				}
-			}
+			// Open the chat into the container we've created above.
+			[self openChat:chat inContainerWithID:[dict objectForKey:@"ID"] atIndex:-1];
 		}
 	}
-	
-	// Re-save and remove the old content.
-	[self saveContainersWithContent:NO];
 }
 
 /*!
@@ -450,7 +442,7 @@
  */
 - (void)saveContainersOnQuit:(NSNotification *)notification
 {
-	[self saveContainersWithContent:YES];
+	[self saveContainers];
 }
 
 /*!
@@ -458,7 +450,7 @@
  *
  * @param withContent Save the current buffer of the window to restore at a later point
  */
-- (void)saveContainersWithContent:(BOOL)withContent
+- (void)saveContainers
 {
 	if (!saveContainers) {
 		// Don't save anything if we're not set to.
@@ -477,17 +469,7 @@
 		
 		while ((chat = [containedEnumerator nextObject])) {
 			NSMutableDictionary		*newContainerDict = [NSMutableDictionary dictionary];
-			
-			if (withContent) {
-				// Save the current display buffer.
-				NSObject<AIMessageDisplayController>	*displayController = [(AIMessageViewController *)[(AIMessageTabViewItem *)[chat statusObjectForKey:@"MessageTabViewItem"] messageViewController] messageDisplayController];
-				[newContainerDict setObject:[displayController chatContentSource]
-									 forKey:@"ChatContents"];
-				
-				[newContainerDict setObject:[displayController contentSourceName]
-									 forKey:@"ChatContentsName"];
-			}
-				
+
 			[newContainerDict setObject:[[chat account] internalObjectID] forKey:@"AccountID"];
 
 			// Save chat-specific information.
@@ -749,7 +731,7 @@
 {
 	[self _resetOpenChatsCache];
 	[self buildWindowMenu];
-	[self saveContainersWithContent:NO];
+	[self saveContainers];
 }
 
 /*!
@@ -838,7 +820,7 @@
 	
 	if (![adium isQuitting]) {
 		// Don't save containers when the chats are closed while quitting
-		[self saveContainersWithContent:NO];
+		[self saveContainers];
 	}
 	
 	if (inChat == activeChat) {
@@ -860,7 +842,7 @@
 
 	if (![adium isQuitting]) {
 		// Don't save containers when the chats are closed while quitting
-		[self saveContainersWithContent:NO];
+		[self saveContainers];
 	}
 	
 	[[adium notificationCenter] postNotificationName:Chat_OrderDidChange object:nil userInfo:nil];
