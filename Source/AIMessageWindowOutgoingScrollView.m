@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on 1/13/08.
-//  Copyright 2008 __MyCompanyName__. All rights reserved.
+//  Copyright 2008 The Adium Team. All rights reserved.
 //
 
 #import "AIMessageWindowOutgoingScrollView.h"
