@@ -480,6 +480,12 @@ static NSArray *draggedTypes = nil;
 	[self _primeWebViewAndReprocessContent:NO];
 	[previousContent release];
 	previousContent = nil;
+	
+	if([[self messageStyle] isBackgroundTransparent]) {
+		[[webView window] performSelector:@selector(invalidateShadow)
+							   withObject:nil
+							   afterDelay:0.0];
+	}
 }
 
 /*!
