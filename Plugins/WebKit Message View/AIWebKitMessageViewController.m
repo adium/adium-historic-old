@@ -433,7 +433,9 @@ static NSArray *draggedTypes = nil;
 	
 	BOOL isBackgroundTransparent = [[self messageStyle] isBackgroundTransparent];
 	[webView setTransparent:isBackgroundTransparent];
-	[[webView window] setOpaque:!isBackgroundTransparent];
+	NSWindow *win = [webView window];
+	if(win)
+		[win setOpaque:!isBackgroundTransparent];
 
 	//Update webview font settings
 	NSString	*fontFamily = [[adium preferenceController] preferenceForKey:[plugin styleSpecificKey:@"FontFamily" forStyle:activeStyle]
