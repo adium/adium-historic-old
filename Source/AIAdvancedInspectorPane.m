@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Elliott Harris on 1/17/08.
-//  Copyright 2008 __MyCompanyName__. All rights reserved.
+//  Copyright 2008 The Adium Team. All rights reserved.
 //
 
 #import "AIAdvancedInspectorPane.h"

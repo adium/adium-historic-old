@@ -3,7 +3,7 @@
  *  Adium
  *
  *  Created by Evan Schoenberg on 7/31/06.
- *  Copyright 2006 __MyCompanyName__. All rights reserved.
+ *  Copyright 2006 The Adium Team. All rights reserved.
  *
  */
 

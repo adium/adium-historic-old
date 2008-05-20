@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by David Smith on 5/9/07.
-//  Copyright 2007 __MyCompanyName__. All rights reserved.
+//  Copyright 2007 The Adium Team. All rights reserved.
 //
 
 #import <Cocoa/Cocoa.h>
