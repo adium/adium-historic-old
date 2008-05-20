@@ -11,7 +11,8 @@
 
 @interface AdiumContactPropertiesObserverManager : AIObject {
 	//Status and Attribute updates
-    NSMutableSet			*contactObservers;	
+    NSMutableSet			*contactObservers;
+	NSMutableSet			*removedContactObservers;
     NSTimer					*delayedUpdateTimer;
     int						delayedStatusChanges;
 	NSMutableSet			*delayedModifiedStatusKeys;
@@ -19,6 +20,8 @@
 	NSMutableSet			*delayedModifiedAttributeKeys;
 
 	BOOL					updatesAreDelayed;
+	
+	BOOL					informingObservers;
 	/* Only the contact controller can speak to us directly, and it's allowed to access these ivars */
 @public
     int						delayedContactChanges;
