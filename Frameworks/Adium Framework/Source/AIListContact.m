@@ -723,7 +723,7 @@
 		determinedDefaultBaseWritingDirection = YES;
 	}
 	
-	return determinedDefaultBaseWritingDirection;
+	return defaultBaseWritingDirection;
 }
 
 - (NSWritingDirection)baseWritingDirection {
