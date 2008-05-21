@@ -156,6 +156,20 @@
 	return YES;
 }
 
+#pragma mark Contact list
+- (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group
+{
+	NSEnumerator	*enumerator;
+	AIListContact	*listObject;
+	
+	//Move the objects to it
+	enumerator = [objects objectEnumerator];
+	while ((listObject = [enumerator nextObject])) {
+		[buddyListManager moveContact:listObject
+					  toGroupWithName:[group UID]];
+	}
+}
+
 #pragma mark Status
 
 - (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage

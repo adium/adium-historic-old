@@ -90,7 +90,13 @@
 			[AIFacebookBuddyIconRequest retrieveBuddyIconForContact:listContact
 													   withThumbSrc:pictureSrc];
 	
-		[listContact setRemoteGroupName:@"Facebook"];
+		if (![listContact remoteGroupName]) {
+			NSString *groupName = [listContact preferenceForKey:@"Facebook Local Group"
+														  group:@"Facebook"];
+			if (!groupName) groupName = @"Facebook";
+			[listContact setRemoteGroupName:groupName];
+		}
+
 		[listContact setOnline:YES notify:NotifyLater silently:isSigningOn];
 
 		//Apply any changes
@@ -115,6 +121,17 @@
 	
 	[lastAvailableBuddiesList release]; lastAvailableBuddiesList = [nowAvailableContacts retain];
 }
+
+- (void)moveContact:(AIListContact *)listContact toGroupWithName:(NSString *)groupName
+{
+	//Tell the purple thread to perform the serverside operation
+	[listContact setPreference:groupName
+					   forKey:@"Facebook Local Group"
+						group:@"Facebook"];
+	
+	//Use the non-mapped group name locally
+	[listContact setRemoteGroupName:groupName];
+}	
 
 - (void)parseNotifications:(NSDictionary *)notifications
 {

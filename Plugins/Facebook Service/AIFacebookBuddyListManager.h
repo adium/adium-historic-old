@@ -8,6 +8,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class AIFacebookAccount;
+@class AIListContact;
 
 @interface AIFacebookBuddyListManager : NSObject {
 	AIFacebookAccount	*account;
@@ -20,5 +21,6 @@
 
 + (AIFacebookBuddyListManager *)buddyListManagerForAccount:(AIFacebookAccount *)inAccount;
 - (void)disconnect;
+- (void)moveContact:(AIListContact *)listContact toGroupWithName:(NSString *)groupName;
 
 @end
