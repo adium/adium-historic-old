@@ -1053,7 +1053,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	AITextAttributes			*textAttributes;
 	NSMutableArray				*spanTagChangedAttributesQueue = [NSMutableArray array];
 	NSMutableArray				*fontTagChangedAttributesQueue = [NSMutableArray array];
-	NSString					*baseURL = nil;
+	NSString					*myBaseURL = [baseURL copy];
 
 	//Reset the div and span ivars
 	send = NO;
@@ -1287,7 +1287,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
 							NSAttributedString *attachString = [self processImgTagArgs:[self parseArguments:chunkString] 
 																			attributes:textAttributes
-																			   baseURL:baseURL];
+																			   baseURL:myBaseURL];
 							if (attachString) {
 								[attrString appendAttributedString:attachString];
 							}
@@ -1311,8 +1311,8 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 					//Base URL tag
 					} else if ([chunkString caseInsensitiveCompare:@"BASE"] == NSOrderedSame) {
 						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
-							[baseURL release];
-							baseURL = [[[self parseArguments:chunkString] objectForKey:@"href"] retain];
+							[myBaseURL release];
+							myBaseURL = [[[self parseArguments:chunkString] objectForKey:@"href"] retain];
 						}
 					// Ignore <meta> tags
 					} else if ([chunkString caseInsensitiveCompare:@"META"] == NSOrderedSame ||
@@ -1433,7 +1433,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 		}
 	}
 
-	[baseURL release];
+	[myBaseURL release];
 
 	return [attrString autorelease];
 }
@@ -1806,7 +1806,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 	}
 }
 
-- (NSAttributedString *)processImgTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes baseURL:(NSString *)baseURL
+- (NSAttributedString *)processImgTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes baseURL:(NSString *)inBaseURL
 {
 	NSEnumerator				*enumerator;
 	NSString					*arg;
@@ -1822,9 +1822,9 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 			NSURL		*url = [NSURL URLWithString:src];
 			if (url && [url isFileURL]) src = [url path];
 
-			if (baseURL && ![[NSFileManager defaultManager] fileExistsAtPath:src])
-				src = [baseURL stringByAppendingPathComponent:src];
-			
+			if (inBaseURL && ![[NSFileManager defaultManager] fileExistsAtPath:src])
+				src = [inBaseURL stringByAppendingPathComponent:src];
+			AILogWithSignature(@"baseURL is %@ so src is %@", inBaseURL, src);
 			[attachment setPath:src];
 		}
 		if ([arg caseInsensitiveCompare:@"alt"] == NSOrderedSame) {
@@ -2085,6 +2085,19 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 - (void)setAllowJavascriptURLs:(BOOL)newValue
 {
 	thingsToInclude.allowJavascriptURLs = newValue;
+}
+
+- (NSString *)baseURL
+{
+	return baseURL;
+}
+
+- (void)setBaseURL:(NSString *)inBaseURL
+{
+	if (baseURL != inBaseURL) {
+		[baseURL release];
+		baseURL = [inBaseURL copy];
+	}
 }
 
 @end
