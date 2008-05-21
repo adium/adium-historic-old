@@ -353,7 +353,8 @@
 	 * for modifying and then setting it. Alternately, select an active status (one in the on state) to do the same.
 	 * Selecting a mixed state item should still select it to switch to full-on (all accounts).
 	 */
-	if ([NSEvent optionKey] || ([sender state] == NSOnState)) {
+	if ([NSEvent optionKey] ||
+		(([sender state] == NSOnState) && ([statusItem statusType] != AIOfflineStatusType))) {
 		[AIEditStateWindowController editCustomState:(AIStatus *)statusItem
 											 forType:[statusItem statusType]
 										  andAccount:account
