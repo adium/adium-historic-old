@@ -388,7 +388,7 @@ static int nextChatNumber = 0;
 		}
 	}
 
-	return (uniqueChatID);
+	return uniqueChatID;
 }
 
 - (void)clearUniqueChatID
@@ -460,7 +460,7 @@ static int nextChatNumber = 0;
 			} else if ([[self account] canSendOfflineMessageToContact:listObject]) {
 				sendingAbilityType = AIChatCanSendViaServersideOfflineMessage;				
 			} else {
-				sendingAbilityType = AIChatCanNotSendMessage;	
+				sendingAbilityType = AIChatMayNotBeAbleToSendMessage;	
 			}
 
 		} else {
