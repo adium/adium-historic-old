@@ -507,11 +507,25 @@
 	[checkedAccounts release];
 	checkedAccounts = [[NSMutableSet alloc] init];
 
-	//Select accounts by default
 	if (initialAccount && [accounts containsObject:initialAccount]) {
+		//Select accounts by default
 		[checkedAccounts addObject:initialAccount];
 
+	} else if ([[accounts valueForKeyPath:@"@sum.online"] intValue] == 1) {
+		//Only one online account; it should be checked
+		NSEnumerator	*enumerator;
+		AIAccount		*anAccount;
+		
+		enumerator = [accounts objectEnumerator];
+		while ((anAccount = [enumerator nextObject])) {
+			if ([anAccount online]) {
+				[checkedAccounts addObject:anAccount];
+				break;
+			}
+		}
+		
 	} else {
+		//More than one online account; follow our 'add contact to' preferences
 		NSEnumerator	*enumerator;
 		AIAccount		*anAccount;
 
