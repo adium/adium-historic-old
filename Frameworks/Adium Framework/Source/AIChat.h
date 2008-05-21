@@ -43,6 +43,7 @@ typedef enum {
 
 typedef enum {
 	AIChatCanNotSendMessage = 0,
+	AIChatMayNotBeAbleToSendMessage,
 	AIChatCanSendMessageNow,
 	AIChatCanSendViaServersideOfflineMessage
 } AIChatSendingAbilityType;
