@@ -182,7 +182,7 @@
 	} else if (menuItem == menuItem_tabAddContact) {
 		return [[adium menuController] currentContextMenuObject] != nil;
 	
-	} else if (menuItem == menuItem_addGroup || menuItem == menuItem_addContact || menuItem == menuItem_addContactContext) {
+	} else if (menuItem == menuItem_addContact || menuItem == menuItem_addContactContext) {
 		NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
 		AIAccount		*account;
 		
@@ -191,6 +191,10 @@
 		}
 		
 		return NO;
+
+	} else if (menuItem == menuItem_addGroup) {
+		/* The user can always add groups; accounts should simulate serverside groups if necessary */
+		return YES;
 
 	} else if (menuItem == menuItem_addBookmark) {
 		return [[[adium interfaceController] activeChat] isGroupChat];
