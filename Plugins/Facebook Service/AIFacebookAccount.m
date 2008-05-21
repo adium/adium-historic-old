@@ -18,6 +18,8 @@
 #define LOGIN_PAGE	@"http://www.facebook.com/login.php"
 #define FACEBOOK_HOME_PAGE	@"http://www.facebook.com/home.php"
 
+#define CONNECTION_DEBUG	TRUE
+
 @interface AIFacebookAccount (PRIVATE)
 - (void)extractLoginInfoFromHomePage:(NSString *)homeString;
 - (void)postDictionary:(NSDictionary *)inDict toURL:(NSURL *)inURL;
@@ -238,6 +240,9 @@
 
 	if ([identifier isEqualToString:@"Logging in"]) {
 		if (sentLogin) {
+#ifdef CONNECTION_DEBUG
+			AILogWithSignature(@"Should now be logged in; login.php result is %@", [[dataSource representation] documentSource]);
+#endif
 			//We sent our login; proceed with the home page
 			[sender stopLoading:self];
 			
@@ -248,6 +253,9 @@
 			[[webView mainFrame] loadRequest:request];
 			
 		} else {
+#ifdef CONNECTION_DEBUG
+			AILogWithSignature(@"Loaded login.php initially: %@", [[dataSource representation] documentSource]);
+#endif
 			//We loaded login.php; now we can send the email and password
 			sentLogin = YES;
 			[sender stopLoading:self];
