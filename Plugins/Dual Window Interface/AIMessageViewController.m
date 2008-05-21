@@ -492,11 +492,12 @@
 					break;
 				}
 			}
-			
+
+			[alert addButtonWithTitle:AILocalizedString(@"Don't Send", nil)];
+
 			NSButton *dontSendButton = ((messageSendingAbility == AIChatCanNotSendMessage) ?
 										[[alert buttons] objectAtIndex:1] :
 										[[alert buttons] objectAtIndex:2]);
-			[alert addButtonWithTitle:AILocalizedString(@"Don't Send", nil)];
 			[dontSendButton setKeyEquivalent:@"\E"];
 			[dontSendButton setKeyEquivalentModifierMask:0];
 			
