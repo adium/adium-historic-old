@@ -1824,7 +1824,7 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 			if (inBaseURL && ![[NSFileManager defaultManager] fileExistsAtPath:src])
 				src = [inBaseURL stringByAppendingPathComponent:src];
-			AILogWithSignature(@"baseURL is %@ so src is %@", inBaseURL, src);
+
 			[attachment setPath:src];
 		}
 		if ([arg caseInsensitiveCompare:@"alt"] == NSOrderedSame) {
