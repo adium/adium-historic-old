@@ -297,7 +297,7 @@
 																	  profileRange.location - NSMaxRange(linkBeforeProfile))] retain];
 		}
 	}
-	
+		
 	NSRange channelRange = [homeString rangeOfString:@", \"channel" options:NSLiteralSearch];
 	if (channelRange.location != NSNotFound) {
 		NSRange endChannelRange = [homeString rangeOfString:@"\"" options:NSLiteralSearch range:NSMakeRange(NSMaxRange(channelRange),
@@ -319,6 +319,12 @@
 																	  endPostFormIDRange.location - NSMaxRange(postFormIDRange))] retain];
 		}
 	}
+	
+	if (!facebookUID || !channel || !postFormID) {
+		AILogWithSignature(@"Could not extract information (ID %@, channel %@, postFormID %@) from:\n******\n%@\nn******",
+						   facebookUID, channel, postFormID,
+						   homeString);
+	}	
 }
 
 @end
