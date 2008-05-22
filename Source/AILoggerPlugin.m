@@ -1391,5 +1391,3 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 
 
 @end
-
-
