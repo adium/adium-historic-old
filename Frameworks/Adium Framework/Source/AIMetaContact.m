@@ -729,7 +729,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 }
 
 //---- Default property behavior ----
-//Retrieve a status key for this object - return the value of our preferredContact, 
+//Retrieve a property for this object - return the value of our preferredContact, 
 //returning nil if our preferredContact returns nil.
 
 - (id)valueForProperty:(NSString *)key

@@ -533,7 +533,7 @@ typedef enum {
 	[self setValue:newImage forProperty:KEY_USER_ICON notify:YES];
 }
 
-//Status keys this account supports
+//Properties this account supports
 - (NSSet *)supportedPropertyKeys
 {
 	static NSMutableSet *supportedPropertyKeys = nil;

@@ -26,7 +26,7 @@ typedef enum {
 	
 @interface ESObjectWithProperties : AIObject {
     NSMutableDictionary		*propertiesDictionary;
-    NSMutableSet			*changedProperties;		//Status keys that have changed since the last notification
+    NSMutableSet			*changedProperties;		//Properties that have changed since the last notification
 	
 	NSMutableDictionary		*displayDictionary;		//A dictionary of values affecting this object's display
 }

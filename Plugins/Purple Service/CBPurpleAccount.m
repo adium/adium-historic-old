@@ -1637,7 +1637,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	//E-mail checking
 	purple_account_set_check_mail(account, [[self shouldCheckMail] boolValue]);
 	
-	//Update a few status keys before we begin connecting.  Libpurple will send these automatically
+	//Update a few properties before we begin connecting.  Libpurple will send these automatically
     [self updateStatusForKey:KEY_USER_ICON];
 }
 
@@ -1715,7 +1715,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 /*!
  * @brief Should the account's status be updated as soon as it is connected?
  *
- * If YES, the StatusState and IdleSince status keys will be told to update as soon as the account connects.
+ * If YES, the StatusState and IdleSince properties will be told to update as soon as the account connects.
  * This will allow the account to send its status information to the server upon connecting.
  *
  * If this information is already known by the account at the time it connects and further prompting to send it is
@@ -1971,7 +1971,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 
 //Account Status ------------------------------------------------------------------------------------------------------
 #pragma mark Account Status
-//Status keys this account supports
+//Properties this account supports
 - (NSSet *)supportedPropertyKeys
 {
 	static NSMutableSet *supportedPropertyKeys = nil;
