@@ -141,6 +141,12 @@
 	[searchField setCell:[NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:[searchField cell]]]];	
 	[NSKeyedArchiver setClassName:@"NSSearchFieldCell" forClass:[NSSearchFieldCell class]];
 
+	/* Get rid of the "x" button in the search field that would clear the search.
+	 * It conflicts with the other "x" button that hides the entire bar, and clearing a few characters is probably not necessary.
+	 */
+	[[searchField cell] setCancelButtonCell:nil];
+	
+	
 	[[NSNotificationCenter defaultCenter]addObserver:self
 											selector:@selector(hideFilterBarFromWindowResignedMain:)
 												name:NSWindowDidResignMainNotification

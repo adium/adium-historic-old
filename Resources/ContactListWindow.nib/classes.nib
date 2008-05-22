@@ -194,19 +194,19 @@
 		</dict>
 		<dict>
 			<key>CLASS</key>
-			<string>AIAnimatingListOutlineView</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>AIOutlineView</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
 			<string>AIFilterBarBackgroundBox</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
 			<key>SUPERCLASS</key>
 			<string>NSBox</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>AIAnimatingListOutlineView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>AIOutlineView</string>
 		</dict>
 		<dict>
 			<key>ACTIONS</key>
@@ -231,7 +231,7 @@
 			<key>OUTLETS</key>
 			<dict>
 				<key>button_cancelFilterBar</key>
-				<string>NSButton</string>
+				<string>AIRolloverButton</string>
 				<key>filterBarView</key>
 				<string>NSView</string>
 				<key>imagePicker</key>
