@@ -22,14 +22,18 @@ int main(int argc, char **argv) {
 	StressTest *test = [[StressTest alloc] initWithSelector:@selector(testStress)];
 	SenTestRun *run = [[SenTestRun alloc] initWithTest:test];
 
+	NSDate *startDate, *endDate;
+
+	startDate = [NSDate date];
 	[run start];
 	while (numIterations--) {
 		[test performTest:run];
 	}
 	[run stop];
+	endDate = [NSDate date];
 
 	BOOL success = [run hasSucceeded];
-	NSLog(@"Test %@ in %f seconds", success ? @"succeeded" : @"failed", [[run stopDate] timeIntervalSinceDate:[run startDate]]);
+	NSLog(@"Test %@ in %f seconds", success ? @"succeeded" : @"failed", [endDate timeIntervalSinceDate:startDate]);
 
 	[pool drain]; //Glug glug glug
 
