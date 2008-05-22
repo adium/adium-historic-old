@@ -190,15 +190,18 @@
 															 keyEquivalent:@""];
 	[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Tab_Action];
 	[menuItem release];
-	
-	//Observe preference changes
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_INTERFACE];
 
     //Observe content so we can open chats as necessary
     [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) 
 									   name:CONTENT_MESSAGE_RECEIVED object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) 
 									   name:CONTENT_MESSAGE_RECEIVED_GROUP object:nil];
+	
+	//Observe Adium finishing loading so we can do things which may require other components or plugins
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(adiumDidFinishLoading:)
+									   name:AIApplicationDidFinishLoadingNotification
+									 object:nil];
 	
 	//Observe quits so we can save containers.
 	[[adium notificationCenter] addObserver:self
@@ -229,6 +232,16 @@
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	
     [super dealloc];
+}
+
+- (void)adiumDidFinishLoading:(NSNotification *)inNotification
+{
+	//Observe preference changes. This will also restore saved containers if appropriate.
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_INTERFACE];
+	
+	[[adium notificationCenter] removeObserver:self
+										  name:AIApplicationDidFinishLoadingNotification
+										object:nil];
 }
 
 //Registers code to handle the interface
