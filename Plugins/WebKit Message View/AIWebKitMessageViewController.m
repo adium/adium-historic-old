@@ -1105,13 +1105,13 @@ static NSArray *draggedTypes = nil;
 										 inObject);
 	NSString		*currentIconPath = [objectIconPathDict objectForKey:[iconSourceObject internalObjectID]];
 	if (currentIconPath) {
-		NSString	*objectsKnownIconPath = [iconSourceObject statusObjectForKey:KEY_WEBKIT_USER_ICON];
+		NSString	*objectsKnownIconPath = [iconSourceObject valueForProperty:KEY_WEBKIT_USER_ICON];
 		if (objectsKnownIconPath &&
 			[currentIconPath isEqualToString:objectsKnownIconPath]) {
 			//We're the first one to get to this object!  We get to delete the old path and remove the reference to it
 			[[NSFileManager defaultManager] removeFileAtPath:currentIconPath handler:nil];
-			[iconSourceObject setStatusObject:nil
-									   forKey:KEY_WEBKIT_USER_ICON
+			[iconSourceObject setValue:nil
+									   forProperty:KEY_WEBKIT_USER_ICON
 									   notify:NotifyNever];
 		} else {
 			/* Some other instance beat us to the punch. The object's KEY_WEBKIT_USER_ICON is right, since it doesn't match our
@@ -1137,18 +1137,18 @@ static NSArray *draggedTypes = nil;
 										 inObject);
 	NSString		*path;
 	
-	int chatsUsingCachedIcon = [[iconSourceObject statusObjectForKey:KEY_WEBKIT_CHATS_USING_CACHED_ICON] intValue];
+	int chatsUsingCachedIcon = [[iconSourceObject valueForProperty:KEY_WEBKIT_CHATS_USING_CACHED_ICON] intValue];
 	chatsUsingCachedIcon--;
-	[iconSourceObject setStatusObject:[NSNumber numberWithInt:chatsUsingCachedIcon]
-					   forKey:KEY_WEBKIT_CHATS_USING_CACHED_ICON
+	[iconSourceObject setValue:[NSNumber numberWithInt:chatsUsingCachedIcon]
+					   forProperty:KEY_WEBKIT_CHATS_USING_CACHED_ICON
 					   notify:NotifyNever];
 	[objectsWithUserIconsArray removeObjectIdenticalTo:iconSourceObject];
 
 	if ((chatsUsingCachedIcon <= 0) &&
-		(path = [iconSourceObject statusObjectForKey:KEY_WEBKIT_USER_ICON])) {
+		(path = [iconSourceObject valueForProperty:KEY_WEBKIT_USER_ICON])) {
 		[[NSFileManager defaultManager] removeFileAtPath:path handler:nil];
-		[iconSourceObject setStatusObject:nil
-								   forKey:KEY_WEBKIT_USER_ICON
+		[iconSourceObject setValue:nil
+								   forProperty:KEY_WEBKIT_USER_ICON
 								   notify:NotifyNever];
 	}
 
@@ -1187,7 +1187,7 @@ static NSArray *draggedTypes = nil;
 	 */
 	if (!(userIcon = [iconSourceObject userIcon])) {
 		//If that's not the case, try using the UserIconPath
-		userIcon = [[[NSImage alloc] initWithContentsOfFile:[iconSourceObject statusObjectForKey:@"UserIconPath"]] autorelease];
+		userIcon = [[[NSImage alloc] initWithContentsOfFile:[iconSourceObject valueForProperty:@"UserIconPath"]] autorelease];
 	}
 
 	if (userIcon) {
@@ -1207,7 +1207,7 @@ static NSArray *draggedTypes = nil;
 		}
 
 		oldWebKitUserIconPath = [objectIconPathDict objectForKey:[iconSourceObject internalObjectID]];
-		webKitUserIconPath = [iconSourceObject statusObjectForKey:KEY_WEBKIT_USER_ICON];
+		webKitUserIconPath = [iconSourceObject valueForProperty:KEY_WEBKIT_USER_ICON];
 
 		if (!webKitUserIconPath) {
 			/* If the image doesn't know a path to use, write it out and set it.
@@ -1220,8 +1220,8 @@ static NSArray *draggedTypes = nil;
 			webKitUserIconPath = [self _webKitUserIconPathForObject:iconSourceObject];
 			if ([[webKitUserIcon PNGRepresentation] writeToFile:webKitUserIconPath
 													 atomically:YES]) {
-				[iconSourceObject setStatusObject:webKitUserIconPath
-										   forKey:KEY_WEBKIT_USER_ICON
+				[iconSourceObject setValue:webKitUserIconPath
+										   forProperty:KEY_WEBKIT_USER_ICON
 										   notify:NO];				
 			}			
 		}
@@ -1231,8 +1231,8 @@ static NSArray *draggedTypes = nil;
 			[objectsWithUserIconsArray addObject:iconSourceObject];
 
 			//Keep track of this chat using the icon
-			[iconSourceObject setStatusObject:[NSNumber numberWithInt:([[iconSourceObject statusObjectForKey:KEY_WEBKIT_CHATS_USING_CACHED_ICON] intValue] + 1)]
-									   forKey:KEY_WEBKIT_CHATS_USING_CACHED_ICON
+			[iconSourceObject setValue:[NSNumber numberWithInt:([[iconSourceObject valueForProperty:KEY_WEBKIT_CHATS_USING_CACHED_ICON] intValue] + 1)]
+									   forProperty:KEY_WEBKIT_CHATS_USING_CACHED_ICON
 									   notify:NotifyNever];
 		}
 		

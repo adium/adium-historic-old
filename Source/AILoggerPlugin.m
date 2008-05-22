@@ -853,7 +853,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 {
 	NSString    *dirtyKey = [@"LogIsDirty_" stringByAppendingString:path];
 	
-	if (![chat integerStatusObjectForKey:dirtyKey]) {
+	if (![chat integerValueForProperty:dirtyKey]) {
 		//Add to dirty array (Lock to ensure that no one changes its content while we are)
 		[dirtyLogLock lock];
 		if (path != nil) {
@@ -872,8 +872,8 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 		[self _saveDirtyLogArray];
 		
 		//Flag the chat with 'LogIsDirty' for this filename.  On the next message we can quickly check this flag.
-		[chat setStatusObject:[NSNumber numberWithBool:YES]
-					   forKey:dirtyKey
+		[chat setValue:[NSNumber numberWithBool:YES]
+					   forProperty:dirtyKey
 					   notify:NotifyNever];
 	}	
 }
@@ -1205,9 +1205,9 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 		if (existingAppenderPath) {
 			NSString *dirtyKey = [@"LogIsDirty_" stringByAppendingString:existingAppenderPath];
 
-			if ([chat integerStatusObjectForKey:dirtyKey]) {
-				[chat setStatusObject:nil
-							   forKey:dirtyKey
+			if ([chat integerValueForProperty:dirtyKey]) {
+				[chat setValue:nil
+							   forProperty:dirtyKey
 							   notify:NotifyNever];
 			}
 		}

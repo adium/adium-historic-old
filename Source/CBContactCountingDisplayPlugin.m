@@ -180,7 +180,7 @@
 		
 		//Obtain a count of all objects in this group
 		if (countAllObjects) {
-			totalObjects = [[targetGroup statusObjectForKey:@"ObjectCount"] intValue];
+			totalObjects = [[targetGroup valueForProperty:@"ObjectCount"] intValue];
 		}
 	
 		//Build a string to add to the right of the name which shows any information we just extracted

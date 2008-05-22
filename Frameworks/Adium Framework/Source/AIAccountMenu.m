@@ -416,9 +416,9 @@
 	
 	if ([account enabled]) {
 		if (showTitleVerbs) {
-			if ([[account statusObjectForKey:@"Connecting"] boolValue] || [account statusObjectForKey:@"Waiting to Reconnect"]) {
+			if ([[account valueForProperty:@"Connecting"] boolValue] || [account valueForProperty:@"Waiting to Reconnect"]) {
 				titleFormat = ACCOUNT_CONNECTING_ACTION_MENU_TITLE;
-			} else if ([[account statusObjectForKey:@"Disconnecting"] boolValue]) {
+			} else if ([[account valueForProperty:@"Disconnecting"] boolValue]) {
 				titleFormat = ACCOUNT_DISCONNECTING_ACTION_MENU_TITLE;
 			} else {
 				//Display 'connect' or 'disconnect' before the account name
@@ -426,7 +426,7 @@
 			}
 			
 		} else {
-			if ([[account statusObjectForKey:@"Connecting"] boolValue]) {
+			if ([[account valueForProperty:@"Connecting"] boolValue]) {
 				titleFormat = ACCOUNT_CONNECT_PARENS_MENU_TITLE;
 			}
 		}

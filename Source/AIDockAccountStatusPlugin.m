@@ -26,8 +26,8 @@
 #import <Adium/AIStatus.h>
 
 @interface AIDockAccountStatusPlugin (PRIVATE)
-- (BOOL)_accountsWithBoolKey:(NSString *)inKey;
-- (BOOL)_accountsWithKey:(NSString *)inKey;
+- (BOOL)_accountsWithBoolProperty:(NSString *)inKey;
+- (BOOL)_accountsWithProperty:(NSString *)inKey;
 - (void)_updateIconForKey:(NSString *)key;
 @end
 
@@ -89,7 +89,7 @@
 		BOOL					shouldUpdateStatus = NO;
 		
 		if (inObject == nil || [inModifiedKeys containsObject:@"Online"]) {
-			if ([self _accountsWithBoolKey:@"Online"]) {
+			if ([self _accountsWithBoolProperty:@"Online"]) {
 				[dockController setIconStateNamed:@"Online"];
 			} else {
 				[dockController removeIconStateNamed:@"Online"];
@@ -98,7 +98,7 @@
 		}
 
 		if (inObject == nil || ([inModifiedKeys containsObject:@"Connecting"] || [inModifiedKeys containsObject:@"Waiting to Reconnect"])) {
-			if ([self _accountsWithBoolKey:@"Connecting"] || [self _accountsWithKey:@"Waiting to Reconnect"]) {
+			if ([self _accountsWithBoolProperty:@"Connecting"] || [self _accountsWithProperty:@"Waiting to Reconnect"]) {
 				[dockController setIconStateNamed:@"Connecting"];
 			} else {
 				[dockController removeIconStateNamed:@"Connecting"];
@@ -107,7 +107,7 @@
 		}
 		
 		if (inObject == nil || [inModifiedKeys containsObject:@"IdleSince"]) {
-			if ([self _accountsWithKey:@"IdleSince"]) {
+			if ([self _accountsWithProperty:@"IdleSince"]) {
 				[dockController setIconStateNamed:@"Idle"];
 			} else {
 				[dockController removeIconStateNamed:@"Idle"];
@@ -136,36 +136,36 @@
 }
 
 /*!
- * @brief Return if any accounts have a TRUE value for the specified key
+ * @brief Return if any accounts have a TRUE value for the specified property
  *
- * @param inKey The status key to search on
- * @result YES if any account returns TRUE for the boolean status object for inKey
+ * @param inKey The property for which to search
+ * @result YES if any account returns TRUE for the boolean property for inKey
  */
-- (BOOL)_accountsWithBoolKey:(NSString *)inKey
+- (BOOL)_accountsWithBoolProperty:(NSString *)inKey
 {
     NSEnumerator    *enumerator = [[[adium accountController] accounts] objectEnumerator];
     AIAccount       *account;
 
     while ((account = [enumerator nextObject])) {
-		if ([account integerStatusObjectForKey:inKey] && [account enabled]) return YES;
+		if ([account integerValueForProperty:inKey] && [account enabled]) return YES;
     }
 
     return NO;
 }
 
 /*!
- * @brief Return if any accounts have a non-nil value for the specified key
+ * @brief Return if any accounts have a non-nil value for the specified property
  *
- * @param inKey The status key to search on
- * @result YES if any account returns a non-nil value for the status object for inKey
+ * @param inKey The property for which to search
+ * @result YES if any account returns a non-nil value for the property for inKey
  */
-- (BOOL)_accountsWithKey:(NSString *)inKey
+- (BOOL)_accountsWithProperty:(NSString *)inKey
 {
     NSEnumerator    *enumerator = [[[adium accountController] accounts] objectEnumerator];
     AIAccount       *account;
 
     while ((account = [enumerator nextObject])) {
-		if ([account statusObjectForKey:inKey] && [account enabled]) return YES;
+		if ([account valueForProperty:inKey] && [account enabled]) return YES;
     }
 
     return NO;

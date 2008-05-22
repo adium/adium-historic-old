@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/ESObjectWithStatus.h>
+#import <Adium/ESObjectWithProperties.h>
 #import <Adium/AIStatus.h>
 
 @class AIListObject, AIService, AIMutableOwnerArray, AIListGroup;
@@ -60,12 +60,12 @@ typedef enum {
 @end
 
 @protocol AIListObject
-- (void)object:(id)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify;
-- (void)notifyOfChangedStatusSilently:(BOOL)silent;
+- (void)object:(id)inObject didSetValue:(id)value forProperty:(NSString *)key notify:(NotifyTiming)notify;
+- (void)notifyOfChangedPropertiesSilently:(BOOL)silent;
 - (void)listObject:(AIListObject *)listObject mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(AIListObject *)anObject withOwner:(AIListObject *)inOwner priorityLevel:(float)priority;
 @end
 
-@interface AIListObject : ESObjectWithStatus <AIListObject> {
+@interface AIListObject : ESObjectWithProperties <AIListObject> {
 	AIService				*service;
 	
     NSString				*UID;

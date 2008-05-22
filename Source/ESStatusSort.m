@@ -597,10 +597,10 @@ int statusSort(id objectA, id objectB, BOOL groups)
 			away[1] = ((statusSummaryB == AIAwayStatus) || (statusSummaryB == AIAwayAndIdleStatus));
 			
 			idle[0] = (((statusSummaryA == AIIdleStatus) || (statusSummaryA == AIAwayAndIdleStatus)) ?
-					   [objectA integerStatusObjectForKey:@"Idle" fromAnyContainedObject:NO] :
+					   [objectA integerValueForProperty:@"Idle" fromAnyContainedObject:NO] :
 					   0);
 			idle[1] = (((statusSummaryB == AIIdleStatus) || (statusSummaryB == AIAwayAndIdleStatus)) ?
-					   [objectB integerStatusObjectForKey:@"Idle" fromAnyContainedObject:NO] :
+					   [objectB integerValueForProperty:@"Idle" fromAnyContainedObject:NO] :
 					   0);
 			
 			if (groupMobile) {

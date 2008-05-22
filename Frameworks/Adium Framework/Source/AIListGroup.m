@@ -110,8 +110,8 @@
 		}
 	}
 	
-	[self setStatusObject:(visibleCount ? [NSNumber numberWithInt:visibleCount] : nil)
-				   forKey:@"VisibleObjectCount"
+	[self setValue:(visibleCount ? [NSNumber numberWithInt:visibleCount] : nil)
+				   forProperty:@"VisibleObjectCount"
 				   notify:NotifyNow];
 }
 
@@ -221,8 +221,8 @@
 		}
 		
 		//
-		[self setStatusObject:[NSNumber numberWithInt:[containedObjects count]] 
-					   forKey:@"ObjectCount"
+		[self setValue:[NSNumber numberWithInt:[containedObjects count]] 
+					   forProperty:@"ObjectCount"
 					   notify:NotifyNow];
 		
 		success = YES;
@@ -244,8 +244,8 @@
 		[self _recomputeVisibleCount];
 
 		//
-		[self setStatusObject:[NSNumber numberWithInt:[containedObjects count]]
-					   forKey:@"ObjectCount" 
+		[self setValue:[NSNumber numberWithInt:[containedObjects count]]
+					   forProperty:@"ObjectCount" 
 					   notify:NotifyNow];
 	}
 }

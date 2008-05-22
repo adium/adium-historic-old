@@ -68,7 +68,7 @@
  * This controller handles default formatting and text entry filters, which can respond as text is entered in a message
  * window.  It the center for content filtering, including registering/unregistering of content filters.
  * It handles sending and receiving of content objects.  It manages chat observers, which are objects notified as
- * status objects are set and removed on AIChat objects.  It manages chats themselves, tracking open ones, closing
+ * properties are set and removed on AIChat objects.  It manages chats themselves, tracking open ones, closing
  * them when needed, etc.  Finally, it provides Events related to sending and receiving content, such as Message Received.
  */
 @implementation AIContentController

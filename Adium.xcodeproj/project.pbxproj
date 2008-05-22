@@ -863,8 +863,8 @@
 		34DC8A950A7EEEF7003E1636 /* AIPathUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = DA9CF855080F9784000C5249 /* AIPathUtilities.m */; };
 		34DC8A960A7EEEF7003E1636 /* AISortController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B422C0905ACB248005E720B /* AISortController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34DC8A970A7EEEF7003E1636 /* AISortController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B422C0A05ACB248005E720B /* AISortController.m */; };
-		34DC8A980A7EEEF7003E1636 /* ESObjectWithStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = 34111A5D06BE1B370005AF5C /* ESObjectWithStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		34DC8A990A7EEEF7003E1636 /* ESObjectWithStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 34111A5E06BE1B370005AF5C /* ESObjectWithStatus.m */; };
+		34DC8A980A7EEEF7003E1636 /* ESObjectWithProperties.h in Headers */ = {isa = PBXBuildFile; fileRef = 34111A5D06BE1B370005AF5C /* ESObjectWithProperties.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		34DC8A990A7EEEF7003E1636 /* ESObjectWithProperties.m in Sources */ = {isa = PBXBuildFile; fileRef = 34111A5E06BE1B370005AF5C /* ESObjectWithProperties.m */; };
 		34DC8A9A0A7EEEF7003E1636 /* AIChat.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B82138E049CA6CC00A8010A /* AIChat.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34DC8A9B0A7EEEF7003E1636 /* AIChat.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B82138F049CA6CC00A8010A /* AIChat.m */; };
 		34DC8A9C0A7EEEF7003E1636 /* AIListObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BF5BA14042F3CB200A8010A /* AIListObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1377,6 +1377,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = DACF3ED3085574D0006BFB18;
 			remoteInfo = "External Frameworks";
+		};
+		3416394C0DE58A1A009E9550 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3496A8E707CE6CA30055BBAB /* AutoHyperlinks.framework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 31C460380DE1D17100C4265B /* AHStressTester */;
+			remoteInfo = StressTester;
 		};
 		345AF7D30A5D559B00D7DA6F /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1971,8 +1978,8 @@
 		34107B4909E9923D001CC042 /* AIGuestAccountWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIGuestAccountWindowController.h; path = Source/AIGuestAccountWindowController.h; sourceTree = "<group>"; };
 		34107B4A09E9923D001CC042 /* AIGuestAccountWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIGuestAccountWindowController.m; path = Source/AIGuestAccountWindowController.m; sourceTree = "<group>"; };
 		34107B5509E992DA001CC042 /* GuestAccountWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = GuestAccountWindow.nib; path = Resources/GuestAccountWindow.nib; sourceTree = "<group>"; };
-		34111A5D06BE1B370005AF5C /* ESObjectWithStatus.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESObjectWithStatus.h; path = "Frameworks/Adium Framework/Source/ESObjectWithStatus.h"; sourceTree = "<group>"; };
-		34111A5E06BE1B370005AF5C /* ESObjectWithStatus.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESObjectWithStatus.m; path = "Frameworks/Adium Framework/Source/ESObjectWithStatus.m"; sourceTree = "<group>"; };
+		34111A5D06BE1B370005AF5C /* ESObjectWithProperties.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESObjectWithProperties.h; path = "Frameworks/Adium Framework/Source/ESObjectWithProperties.h"; sourceTree = "<group>"; };
+		34111A5E06BE1B370005AF5C /* ESObjectWithProperties.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESObjectWithProperties.m; path = "Frameworks/Adium Framework/Source/ESObjectWithProperties.m"; sourceTree = "<group>"; };
 		341591E105463DA800291275 /* SQL_Logger_Prefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = SQL_Logger_Prefs.nib; sourceTree = "<group>"; };
 		34167FE5081D700B00E35678 /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/DualWindowMessageAdvanced.nib; sourceTree = "<group>"; };
 		3417D26109C332B900FC413E /* Translator.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Translator.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -5435,6 +5442,7 @@
 				3496A8EA07CE6CA30055BBAB /* AutoHyperlinks.framework */,
 				7E78DA9C0DD135DE00B9388F /* Test.octest */,
 				EFB1C3D80DDCA0A900B3973D /* LinkDriver.app */,
+				3416394D0DE58A1A009E9550 /* AHStressTester */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -7575,8 +7583,8 @@
 		F5300A2B032F760B01A8010A /* Contacts & Chats */ = {
 			isa = PBXGroup;
 			children = (
-				34111A5D06BE1B370005AF5C /* ESObjectWithStatus.h */,
-				34111A5E06BE1B370005AF5C /* ESObjectWithStatus.m */,
+				34111A5D06BE1B370005AF5C /* ESObjectWithProperties.h */,
+				34111A5E06BE1B370005AF5C /* ESObjectWithProperties.m */,
 				4B82138E049CA6CC00A8010A /* AIChat.h */,
 				4B82138F049CA6CC00A8010A /* AIChat.m */,
 				4BF5BA14042F3CB200A8010A /* AIListObject.h */,
@@ -7995,7 +8003,7 @@
 				34DC8A920A7EEEF7003E1636 /* AIColorPickerSliders.h in Headers */,
 				34DC8A940A7EEEF7003E1636 /* AIPathUtilities.h in Headers */,
 				34DC8A960A7EEEF7003E1636 /* AISortController.h in Headers */,
-				34DC8A980A7EEEF7003E1636 /* ESObjectWithStatus.h in Headers */,
+				34DC8A980A7EEEF7003E1636 /* ESObjectWithProperties.h in Headers */,
 				34DC8A9A0A7EEEF7003E1636 /* AIChat.h in Headers */,
 				34DC8A9C0A7EEEF7003E1636 /* AIListObject.h in Headers */,
 				34DC8A9E0A7EEEF7003E1636 /* AIListGroup.h in Headers */,
@@ -8494,6 +8502,13 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		3416394D0DE58A1A009E9550 /* AHStressTester */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = AHStressTester;
+			remoteRef = 3416394C0DE58A1A009E9550 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		345AF7D40A5D559B00D7DA6F /* AISpotlightImporterTest */ = {
 			isa = PBXReferenceProxy;
 			fileType = "compiled.mach-o.executable";
@@ -9650,7 +9665,7 @@
 				34DC8A930A7EEEF7003E1636 /* AIColorPickerSliders.m in Sources */,
 				34DC8A950A7EEEF7003E1636 /* AIPathUtilities.m in Sources */,
 				34DC8A970A7EEEF7003E1636 /* AISortController.m in Sources */,
-				34DC8A990A7EEEF7003E1636 /* ESObjectWithStatus.m in Sources */,
+				34DC8A990A7EEEF7003E1636 /* ESObjectWithProperties.m in Sources */,
 				34DC8A9B0A7EEEF7003E1636 /* AIChat.m in Sources */,
 				34DC8A9D0A7EEEF7003E1636 /* AIListObject.m in Sources */,
 				34DC8A9F0A7EEEF7003E1636 /* AIListGroup.m in Sources */,

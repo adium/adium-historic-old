@@ -135,7 +135,7 @@ typedef enum
 - (void)connect
 {
 	//We are connecting
-	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:NotifyNow];
+	[self setValue:[NSNumber numberWithBool:YES] forProperty:@"Connecting" notify:NotifyNow];
 }
 
 /*!
@@ -156,9 +156,9 @@ typedef enum
 - (void)disconnect
 {
 	[self cancelAutoReconnect];
-	[self setStatusObject:nil forKey:@"Connecting" notify:NotifyLater];
+	[self setValue:nil forProperty:@"Connecting" notify:NotifyLater];
 
-	[self notifyOfChangedStatusSilently:NO];
+	[self notifyOfChangedPropertiesSilently:NO];
 }
 
 /*!

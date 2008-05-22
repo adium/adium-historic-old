@@ -731,9 +731,9 @@ static NSArray *validSenderColors;
 				NSString    *userIconPath;
 				NSString	*replacementString;
 				
-				userIconPath = [theSource statusObjectForKey:KEY_WEBKIT_USER_ICON];
+				userIconPath = [theSource valueForProperty:KEY_WEBKIT_USER_ICON];
 				if (!userIconPath) {
-					userIconPath = [theSource statusObjectForKey:@"UserIconPath"];
+					userIconPath = [theSource valueForProperty:@"UserIconPath"];
 				}
 					
 				if (showUserIcons && userIconPath) {
@@ -1012,9 +1012,9 @@ static NSArray *validSenderColors;
 	NSString		*iconPath = nil;
 	
 	if (listObject) {
-		iconPath = [listObject statusObjectForKey:KEY_WEBKIT_USER_ICON];
+		iconPath = [listObject valueForProperty:KEY_WEBKIT_USER_ICON];
 		if (!iconPath) {
-			iconPath = [listObject statusObjectForKey:@"UserIconPath"];
+			iconPath = [listObject valueForProperty:@"UserIconPath"];
 		}
 	}
 	[inString replaceKeyword:@"%incomingIconPath%"
@@ -1024,9 +1024,9 @@ static NSArray *validSenderColors;
 	iconPath = nil;
 	
 	if (account) {
-		iconPath = [account statusObjectForKey:KEY_WEBKIT_USER_ICON];
+		iconPath = [account valueForProperty:KEY_WEBKIT_USER_ICON];
 		if (!iconPath) {
-			iconPath = [account statusObjectForKey:@"UserIconPath"];
+			iconPath = [account valueForProperty:@"UserIconPath"];
 		}
 	}
 	[inString replaceKeyword:@"%outgoingIconPath%"

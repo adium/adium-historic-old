@@ -543,8 +543,8 @@
 		
 		//User icon
 		if ((userIconName = [participant objectForKey:@"UserIcon Name"])) {
-			[listContact setStatusObject:[previewPath stringByAppendingPathComponent:userIconName]
-								  forKey:@"UserIconPath"
+			[listContact setValue:[previewPath stringByAppendingPathComponent:userIconName]
+								  forProperty:@"UserIconPath"
 								  notify:YES];
 		}
 		

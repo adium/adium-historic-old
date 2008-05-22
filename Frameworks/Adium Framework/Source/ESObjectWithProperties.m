@@ -14,25 +14,25 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/ESObjectWithStatus.h>
+#import <Adium/ESObjectWithProperties.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 
 #define KEY_KEY		@"Key"
 #define KEY_VALUE	@"Value"
 
 /*!
- * @class ESObjectWithStatus
- * @brief Abstract superclass for objects with a system of status objects and display arrays
+ * @class ESObjectWithProperties
+ * @brief Abstract superclass for objects with a system of properties and display arrays
  *
- * Status objects are an abstracted NSMutableDictionary implementation with notification of changed
+ * Properties are an abstracted NSMutableDictionary implementation with notification of changed
  * keys and optional delayed, grouped notification.  They allow storage of arbitrary information associate with
- * an ESObjectWithStatus subclass. Such information is not persistent across sessions.
+ * an ESObjectWithProperties subclass. Such information is not persistent across sessions.
  *
- * Status objects are KVO compliant.
+ * Properties are KVO compliant.
  *
  * Display arrays utilize AIMutableOwnerArray.  See its documentation in AIUtilities.framework.
  */
-@implementation ESObjectWithStatus
+@implementation ESObjectWithProperties
 
 /*!
  * @brief Initialize
@@ -40,7 +40,7 @@
 - (id)init
 {
 	if ((self = [super init])) {
-		statusDictionary = [[NSMutableDictionary alloc] init];
+		propertiesDictionary = [[NSMutableDictionary alloc] init];
 		displayDictionary = [[NSMutableDictionary alloc] init];
 	}
 
@@ -52,57 +52,57 @@
  */
 - (void)dealloc
 {
-	[statusDictionary release]; statusDictionary = nil;
-	[changedStatusKeys release]; changedStatusKeys = nil;
+	[propertiesDictionary release]; propertiesDictionary = nil;
+	[changedProperties release]; changedProperties = nil;
 	[displayDictionary release]; displayDictionary = nil;
 	
 	[super dealloc];
 }
 
-//Setting status objects -----------------------------------------------------------------------------------------------
-#pragma mark Setting Status
+//Setting properties ---------------------------------------------------------------------------------------------------
+#pragma mark Setting Properties
 
 /*!
- * @brief Set a status object
+ * @brief Set a property
  *
  * @param value The value
- * @param key The NSString key for the value
+ * @param key The property to set the value to.
  * @param notify The notification timing. One of NotifyNow, NotifyLater, or NotifyNever.
  */
- - (void)setStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify
+ - (void)setValue:(id)value forProperty:(NSString *)key notify:(NotifyTiming)notify
 {
 	if (key) {
-		BOOL changedStatusDict = YES;
+		BOOL changedPropertiesDict = YES;
 
 		[self willChangeValueForKey:key];
 		if (value) {
-			[statusDictionary setObject:value forKey:key];
+			[propertiesDictionary setObject:value forKey:key];
 		} else {
 			//If we are already nil and being told to set nil, we don't need to do anything at all
-			if ([statusDictionary objectForKey:key]) {
-				[statusDictionary removeObjectForKey:key];
+			if ([propertiesDictionary objectForKey:key]) {
+				[propertiesDictionary removeObjectForKey:key];
 			} else {
-				changedStatusDict = NO;
+				changedPropertiesDict = NO;
 			}
 		}
 		
-		if (changedStatusDict) {
-			[self object:self didSetStatusObject:value forKey:key notify:notify];
+		if (changedPropertiesDict) {
+			[self object:self didSetValue:value forProperty:key notify:notify];
 		}
 		[self didChangeValueForKey:key];
 	}
 }
 
 /*!
- * @brief Set a status object after a delay
+ * @brief Set a property after a delay
  *
  * @param value The value
- * @param key The NSString key for the value
+ * @param key The property to set the value to.
  * @param delay The delay until the change is made
  */
-- (void)setStatusObject:(id)value forKey:(NSString *)key afterDelay:(NSTimeInterval)delay
+- (void)setValue:(id)value forProperty:(NSString *)key afterDelay:(NSTimeInterval)delay
 {
-	[self performSelector:@selector(_applyDelayedStatus:)
+	[self performSelector:@selector(_applyDelayedProperties:)
 			   withObject:[NSDictionary dictionaryWithObjectsAndKeys:
 				   key, KEY_KEY,
 				   value, KEY_VALUE,
@@ -112,93 +112,93 @@
 
 - (id)valueForUndefinedKey:(NSString *)inKey
 {
-	return [self statusObjectForKey:inKey];
+	return [self valueForProperty:inKey];
 }
 
 /*!
- * @brief Perform a delayed status object change
+ * @brief Perform a delayed property change
  *
- * Called as a result of -[ESObjectWithStatus setStatusObject:forKey:afterDelay:]
+ * Called as a result of -[ESObjectWithProperties setValue:forProperty:afterDelay:]
  */
-- (void)_applyDelayedStatus:(NSDictionary *)infoDict
+- (void)_applyDelayedProperties:(NSDictionary *)infoDict
 {
 	id				object = [infoDict objectForKey:KEY_VALUE];
 	NSString		*key = [infoDict objectForKey:KEY_KEY];
 	
-	[self setStatusObject:object forKey:key notify:NotifyNow];
+	[self setValue:object forProperty:key notify:NotifyNow];
 }
 
 /*!
- * @brief Notify of any status object changes made with a NotifyTiming of NotifyLater
+ * @brief Notify of any property changes made with a NotifyTiming of NotifyLater
  *
  * @param silent YES if the notification should be marked as silent
  */
-- (void)notifyOfChangedStatusSilently:(BOOL)silent
+- (void)notifyOfChangedPropertiesSilently:(BOOL)silent
 {
-    if (changedStatusKeys && [changedStatusKeys count]) {
-		//Clear changedStatusKeys in case this status change invokes another, and we re-enter this code
-		NSSet	*keys = changedStatusKeys;
-		changedStatusKeys = nil;
+    if (changedProperties && [changedProperties count]) {
+		//Clear changedProperties in case this status change invokes another, and we re-enter this code
+		NSSet	*keys = changedProperties;
+		changedProperties = nil;
 		
-		[self didModifyStatusKeys:keys silent:silent];
+		[self didModifyProperties:keys silent:silent];
 		
-		[self didNotifyOfChangedStatusSilently:silent];
+		[self didNotifyOfChangedPropertiesSilently:silent];
 		
 		[keys release];
     }
 }
 
-//Getting status objects ----------------------------------------------------------------------------------------------
-#pragma mark Getting Status
+//Getting properties ---------------------------------------------------------------------------------------------------
+#pragma mark Getting Properties
 /*!
- * @brief Status key enumeartor
+ * @brief Properties enumeartor
  *
- * @result NSEnumerator of all status keys
+ * @result NSEnumerator of all properties
  */
-- (NSEnumerator	*)statusKeyEnumerator
+- (NSEnumerator	*)propertyEnumerator
 {
-	return [statusDictionary keyEnumerator];
+	return [propertiesDictionary keyEnumerator];
 }
 
 /*!
- * @brief Status object for key
- * @result The status object associated with the passed key, or nil if none has been set.
+ * @brief Value for a property
+ * @result The value associated with the passed key, or nil if none has been set.
  */
-- (id)statusObjectForKey:(NSString *)key
+- (id)valueForProperty:(NSString *)key
 {
-    return [statusDictionary objectForKey:key];
+    return [propertiesDictionary objectForKey:key];
 }
 
 /*!
- * @brief Integer status object for key
+ * @brief Integer for a property
  *
- * @result int value for key, or 0 if no object is set for key
+ * @result int value for key, or 0 if no value is set for key
  */
-- (int)integerStatusObjectForKey:(NSString *)key
+- (int)integerValueForProperty:(NSString *)key
 {
-	NSNumber *number = [self statusObjectForKey:key];
+	NSNumber *number = [self valueForProperty:key];
     return number ? [number intValue] : 0;
 }
 
 /*!
- * @brief Earliest date status object for key
+ * @brief Earliest date value for a property
  *
  * @result The earliest NSDate associated with this key. There can only be one NSDate for the base class, so it returns this one.
  */
-- (NSDate *)earliestDateStatusObjectForKey:(NSString *)key
+- (NSDate *)earliestDateValueForProperty:(NSString *)key
 {
-	id obj = [statusDictionary objectForKey:key];
+	id obj = [propertiesDictionary objectForKey:key];
 	return ((obj && [obj isKindOfClass:[NSDate class]]) ? obj : nil);
 }
 
 /*!
- * @brief Number status object for key
+ * @brief NSNumber value for a property
  *
  * @result The NSNumber for this key, or nil if no such key is set or the value is not an NSNumber
  */
-- (NSNumber *)numberStatusObjectForKey:(NSString *)key
+- (NSNumber *)numberValueForProperty:(NSString *)key
 {
-	id obj = [statusDictionary objectForKey:key];
+	id obj = [propertiesDictionary objectForKey:key];
 	return ((obj && [obj isKindOfClass:[NSNumber class]]) ? obj : nil);
 }
 
@@ -207,9 +207,9 @@
  *
  * @result The NSString contents of an NSAttributedString for this key
  */
-- (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key
+- (NSString *)stringFromAttributedStringValueForProperty:(NSString *)key
 {
-	id obj = [statusDictionary objectForKey:key];
+	id obj = [propertiesDictionary objectForKey:key];
 
 	return ((obj && [obj isKindOfClass:[NSAttributedString class]]) ?
 			[(NSAttributedString *)obj string] :
@@ -217,20 +217,20 @@
 }
 
 /*!
- * @brief Retrieve the status object value for a key
+ * @brief Retrieve the value for a property
  *
  * Note that fromAnyContainedObject is useful for subclasses; this default implementation ignores it.
  *
  * @param key The key
  * @param fromAnyContainedObject If YES, return the best value from any contained object if the preferred object returns nil. If NO, only look at the preferred object.
  */
-- (id)statusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
+- (id)valueForProperty:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
-	return [self statusObjectForKey:key];
+	return [self valueForProperty:key];
 }
 
 /*!
- * @brief Earliest date status object for key
+ * @brief Earliest date value for a property
  *
  * Note that fromAnyContainedObject is useful for subclasses; this default implementation ignores it.
  *
@@ -238,13 +238,13 @@
  * @param fromAnyContainedObject If YES, return the best value from any contained object if the preferred object returns nil. If NO, only look at the preferred object.
  * @result The earliest NSDate associated with this key.
  */
-- (NSDate *)earliestDateStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
+- (NSDate *)earliestDateValueForProperty:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
-	return [self earliestDateStatusObjectForKey:key];
+	return [self earliestDateValueForProperty:key];
 }
 
 /*!
- * @brief Number status object for key
+ * @brief NSNumber value for a property
  *
  * Note that fromAnyContainedObject is useful for subclasses; this default implementation ignores it.
  *
@@ -252,13 +252,13 @@
  * @param fromAnyContainedObject If YES, return the best value from any contained object if the preferred object returns nil. If NO, only look at the preferred object. 
  * @result The NSNumber for this key, or nil if no such key is set or the value is not an NSNumber
  */
-- (NSNumber *)numberStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
+- (NSNumber *)numberValueForProperty:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
-	return [self numberStatusObjectForKey:key];
+	return [self numberValueForProperty:key];
 }
 
 /*!
- * @brief Integer status object for key
+ * @brief Integer value for a property
  *
  * Note that fromAnyContainedObject is useful for subclasses; this default implementation ignores it.
  *
@@ -266,9 +266,9 @@
  * @param fromAnyContainedObject If YES, return the best value from any contained object if the preferred object returns nil. If NO, only look at the preferred object. 
  * @result int value for key, or 0 if no object is set for key
  */
-- (int)integerStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
+- (int)integerValueForProperty:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
-	NSNumber *returnValue = [self numberStatusObjectForKey:key];
+	NSNumber *returnValue = [self numberValueForProperty:key];
 	
     return returnValue ? [returnValue intValue] : 0;
 }
@@ -282,39 +282,39 @@
  * @param fromAnyContainedObject If YES, return the best value from any contained object if the preferred object returns nil. If NO, only look at the preferred object. 
  * @result The NSString contents of an NSAttributedString for this key
  */
-- (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
+- (NSString *)stringFromAttributedStringValueForProperty:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
-	return [self stringFromAttributedStringStatusObjectForKey:key];
+	return [self stringFromAttributedStringValueForProperty:key];
 }
 
 //For Subclasses -------------------------------------------------------------------------------------------------------
 #pragma mark For Subclasses
 
 /*!
- * @brief Sublcasses should implement this method to take action when a status object changes for this object or a contained one
+ * @brief Sublcasses should implement this method to take action when a property changes for this object or a contained one
  *
  * @param inObject An object, which may be this object or any object contained by this one
  * @param value The new value
  * @param key The key
  * @param notify A NotifyTiming value determining when notification is desired
  */
-- (void)object:(id)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify 
+- (void)object:(id)inObject didSetValue:(id)value forProperty:(NSString *)key notify:(NotifyTiming)notify 
 {
-	/* If the status object changed for the same object receiving this method, we should send out a notification or note it for later.
+	/* If the property changed for the same object receiving this method, we should send out a notification or note it for later.
 	 * If we get passed another object, it's just an informative message which shouldn't be triggering notification.
 	 */
 	if (inObject == self) {
 		switch (notify) {
 			case NotifyNow: {
 				//Send out the notification now
-				[self didModifyStatusKeys:[NSSet setWithObject:key]
+				[self didModifyProperties:[NSSet setWithObject:key]
 								   silent:NO];
 				break;
 			}
 			case NotifyLater: {
 				//Add this key to changedStatusKeys for later notification 
-				if (!changedStatusKeys) changedStatusKeys = [[NSMutableSet alloc] init];
-				[changedStatusKeys addObject:key];
+				if (!changedProperties) changedProperties = [[NSMutableSet alloc] init];
+				[changedProperties addObject:key];
 				break;
 			}
 			case NotifyNever: break; //Take no notification action
@@ -323,23 +323,23 @@
 }
 
 /*!
- * @brief Subclasses should implement this method to respond to a change of status keys.
+ * @brief Subclasses should implement this method to respond to a change of a property.
  *
  * The subclass should post appropriate notifications at this time.
  *
  * @param keys The keys
  * @param silent YES indicates that this should not trigger 'noisy' notifications - it is appropriate for notifications as an account signs on and notes tons of contacts.
  */
-- (void)didModifyStatusKeys:(NSSet *)keys silent:(BOOL)silent {};
+- (void)didModifyProperties:(NSSet *)keys silent:(BOOL)silent {};
 
 
 /*!
- * @brief Subclasses should implement this method to respond to a change of status keys after notifications have been posted.
+ * @brief Subclasses should implement this method to respond to a change of properties after notifications have been posted.
  *
  * @param keys The keys
  * @param silent YES indicates that this should not trigger 'noisy' notifications - it is appropriate for notifications as an account signs on and notes tons of contacts.
  */
-- (void)didNotifyOfChangedStatusSilently:(BOOL)silent {};
+- (void)didNotifyOfChangedPropertiesSilently:(BOOL)silent {};
 
 //Dynamic Display------------------------------------------------------------------------------------------------------
 #pragma mark Dynamic Display

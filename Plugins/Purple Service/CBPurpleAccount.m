@@ -132,8 +132,8 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 	//If the name we were passed differs from the current formatted UID of the contact, it's itself a formatted UID
 	//This is important since we may get an alias ("Evan Schoenberg") from the server but also want the formatted name
 	if (![contactName isEqualToString:[theContact formattedUID]] && ![contactName isEqualToString:[theContact UID]]) {
-		[theContact setStatusObject:contactName
-							 forKey:@"FormattedUID"
+		[theContact setValue:contactName
+							 forProperty:@"FormattedUID"
 							 notify:NotifyLater];
 	}
 	
@@ -162,8 +162,8 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 	NSString	*normalizedUID = [[self service] normalizeUID:newUID removeIgnoredCharacters:YES];
 	
 	if ([normalizedUID isEqualToString:[theContact UID]]) {
-		[theContact setStatusObject:newUID
-							 forKey:@"FormattedUID"
+		[theContact setValue:newUID
+							 forProperty:@"FormattedUID"
 							 notify:NotifyLater];		
 	} else {
 		[theContact setUID:newUID];		
@@ -186,7 +186,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 								 notify:NotifyLater];
 
 			//Apply any changes
-			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+			[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 		}
 	}
 }
@@ -208,7 +208,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 				   notify:NotifyLater
 				 silently:silentAndDelayed];
 
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }
 
 //Signed offline
@@ -218,7 +218,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 				   notify:NotifyLater
 				 silently:silentAndDelayed];
 	
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }
 
 //Signon Time
@@ -228,7 +228,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 					   notify:NotifyLater];
 	
 	//Apply any changes
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }
 
 /*!
@@ -263,7 +263,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 						  notify:NotifyLater];
 	
 	//Apply the change
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }
 
 //Idle time
@@ -272,7 +272,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 	[theContact setIdle:YES sinceDate:idleSinceDate notify:NotifyLater];
 
 	//Apply any changes
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }
 - (void)updateIdleReturn:(AIListContact *)theContact withData:(void *)data
 {
@@ -281,7 +281,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 				 notify:NotifyLater];
 
 	//Apply any changes
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }
 	
 //Evil level (warning level)
@@ -291,7 +291,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 						 notify:NotifyLater];
 
 	//Apply any changes
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }   
 
 //Buddy Icon
@@ -301,14 +301,14 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 							   notify:NotifyLater];
 
 	//Apply any changes
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }
 
 - (void)updateMobileStatus:(AIListContact *)theContact withData:(BOOL)isMobile
 {
 	[theContact setIsMobile:isMobile notify:NotifyLater];
 
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }
 
 - (NSString *)processedIncomingUserInfo:(NSString *)inString
@@ -398,7 +398,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 					notify:NotifyLater];
 
 	//Apply any changes
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }
 
 /*!
@@ -809,8 +809,8 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 	}
 	
 	if (key) {
-		[chat setStatusObject:[NSNumber numberWithBool:YES] forKey:key notify:NotifyNow];
-		[chat setStatusObject:nil forKey:key notify:NotifyNever];
+		[chat setValue:[NSNumber numberWithBool:YES] forProperty:key notify:NotifyNow];
+		[chat setValue:nil forProperty:key notify:NotifyNever];
 		
 	}
 }
@@ -1571,7 +1571,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	purple_account_set_password(account, [password UTF8String]);
 
 	//Set our current status state after filtering its statusMessage as appropriate. This will take us online in the process.
-	AIStatus	*statusState = [self statusObjectForKey:@"StatusState"];
+	AIStatus	*statusState = [self valueForProperty:@"StatusState"];
 	if (!statusState || ([statusState statusType] == AIOfflineStatusType)) {
 		statusState = [[adium statusController] defaultInitialStatusState];
 	}
@@ -1761,11 +1761,11 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 {
 	NSString	*connectionProgressString = [self connectionStringForStep:[step intValue]];
 
-	[self setStatusObject:connectionProgressString forKey:@"ConnectionProgressString" notify:NO];
-	[self setStatusObject:connectionProgressPrecent forKey:@"ConnectionProgressPercent" notify:NO];	
+	[self setValue:connectionProgressString forProperty:@"ConnectionProgressString" notify:NO];
+	[self setValue:connectionProgressPrecent forProperty:@"ConnectionProgressPercent" notify:NO];	
 
 	//Apply any changes
-	[self notifyOfChangedStatusSilently:NO];
+	[self notifyOfChangedPropertiesSilently:NO];
 	
 	AILog(@"************ %@ --step-- %i",[self UID],[step intValue]);
 }
@@ -1813,7 +1813,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
  */
 - (void)disconnect
 {
-	if ([self online] || [self integerStatusObjectForKey:@"Connecting"]) {
+	if ([self online] || [self integerValueForProperty:@"Connecting"]) {
 		//As per AIAccount's documentation, call super's implementation
 		[super disconnect];
 
@@ -1846,7 +1846,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 		[self serverReportedInvalidPassword];
 
 	//We are disconnecting
-    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:NotifyNow];
+    [self setValue:[NSNumber numberWithBool:YES] forProperty:@"Disconnecting" notify:NotifyNow];
 	
 	AILog(@"%@ accountConnectionReportDisconnect: %@",self,lastDisconnectionError);
 }
@@ -1859,11 +1859,11 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 
 - (void)didDisconnect
 {
-	//Clear status objects which don't make sense for a disconnected account
-	[self setStatusObject:nil forKey:@"TextProfile" notify:NO];
+	//Clear properties which don't make sense for a disconnected account
+	[self setValue:nil forProperty:@"TextProfile" notify:NO];
 	
 	//Apply any changes
-	[self notifyOfChangedStatusSilently:NO];
+	[self notifyOfChangedPropertiesSilently:NO];
 	
 	[[adium notificationCenter] removeObserver:self
 										  name:Adium_iTunesTrackChangedNotification
@@ -1932,7 +1932,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	[self purpleAccount];
 	
 	//We are connecting
-	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:NotifyNow];
+	[self setValue:[NSNumber numberWithBool:YES] forProperty:@"Connecting" notify:NotifyNow];
 	
 	//Make sure our settings are correct
 	[self configurePurpleAccountNotifyingTarget:self selector:@selector(continueRegisterWithConfiguredPurpleAccount)];
@@ -2217,9 +2217,9 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 {
 	[purpleAdapter setIdleSinceTo:idleSince onAccount:self];
 	
-	//We now should update our idle status object
-	[self setStatusObject:([idleSince timeIntervalSinceNow] ? idleSince : nil)
-				   forKey:@"IdleSince"
+	//We now should update our idle property
+	[self setValue:([idleSince timeIntervalSinceNow] ? idleSince : nil)
+				   forProperty:@"IdleSince"
 				   notify:NotifyNow];
 }
 
@@ -2235,7 +2235,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 //Set our profile immediately on the purpleAdapter
 - (void)setAccountProfileTo:(NSAttributedString *)profile
 {
-	if (!profile || ![[profile string] isEqualToString:[[self statusObjectForKey:@"TextProfile"] string]]) {
+	if (!profile || ![[profile string] isEqualToString:[[self valueForProperty:@"TextProfile"] string]]) {
 		NSString 	*profileHTML = nil;
 		
 		//Convert the profile to HTML, and pass it to libpurple
@@ -2246,7 +2246,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 		[purpleAdapter setInfo:profileHTML onAccount:self];
 		
 		//We now have a profile
-		[self setStatusObject:profile forKey:@"TextProfile" notify:NotifyNow];
+		[self setValue:profile forProperty:@"TextProfile" notify:NotifyNow];
 	}
 }
 
@@ -2381,7 +2381,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	}
 	
 	//We now have an icon
-	[self setStatusObject:image forKey:KEY_USER_ICON notify:NotifyNow];
+	[self setValue:image forProperty:KEY_USER_ICON notify:NotifyNow];
 }
 
 #pragma mark Group Chat
@@ -2892,12 +2892,12 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 #pragma mark Private
 - (void)setTypingFlagOfChat:(AIChat *)chat to:(NSNumber *)typingStateNumber
 {
-    AITypingState currentTypingState = [chat integerStatusObjectForKey:KEY_TYPING];
+    AITypingState currentTypingState = [chat integerValueForProperty:KEY_TYPING];
 	AITypingState newTypingState = [typingStateNumber intValue];
 
     if (currentTypingState != newTypingState) {
-		[chat setStatusObject:(newTypingState ? typingStateNumber : nil)
-					   forKey:KEY_TYPING
+		[chat setValue:(newTypingState ? typingStateNumber : nil)
+					   forProperty:KEY_TYPING
 					   notify:NotifyNow];
     }
 }

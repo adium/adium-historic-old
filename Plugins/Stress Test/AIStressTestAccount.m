@@ -47,14 +47,14 @@
 	}
 	AILog(@"Created command contact %@",commandContact);
 	[commandContact setRemoteGroupName:@"Command"];
-	[commandContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:YES];
+	[commandContact setValue:[NSNumber numberWithBool:YES] forProperty:@"Online" notify:YES];
 
 }
 
 - (void)disconnect
 {
 	[commandContact setRemoteGroupName:nil];
-	[commandContact setStatusObject:nil forKey:@"Online" notify:YES];
+	[commandContact setValue:nil forProperty:@"Online" notify:YES];
 	[commandContact release]; commandContact = nil;
 
 	[super disconnect];
@@ -73,7 +73,7 @@
 									   notify:NotifyLater];
 			[commandContact setStatusMessage:statusMessage
 									  notify:NotifyLater];
-			[commandContact notifyOfChangedStatusSilently:NO];
+			[commandContact notifyOfChangedPropertiesSilently:NO];
 
 		} else {
 			[self connect];
@@ -133,7 +133,7 @@
 					  silently:silent];
 
 			//Apply any changes
-			[contact notifyOfChangedStatusSilently:silent];
+			[contact notifyOfChangedPropertiesSilently:silent];
 		}
 
 		if (silent) [[adium contactController] endListObjectNotificationsDelay];
@@ -250,8 +250,8 @@
 				
 			}
 
-			[[[adium chatController] chatWithContact:commandContact] setStatusObject:[NSNumber numberWithInt:typingState]
-																			  forKey:KEY_TYPING
+			[[[adium chatController] chatWithContact:commandContact] setValue:[NSNumber numberWithInt:typingState]
+																			  forProperty:KEY_TYPING
 																			  notify:NotifyNow];
 			
 		} else if ([inContentMessage destination] == commandContact) {
@@ -274,7 +274,7 @@
 			  silently:silent];
 	
 	//Apply any changes
-	[contact notifyOfChangedStatusSilently:silent];
+	[contact notifyOfChangedPropertiesSilently:silent];
 
     [array removeLastObject];
     if ([array count] == 0) {

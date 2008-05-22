@@ -100,7 +100,7 @@
 		[listContact setOnline:YES notify:NotifyLater silently:isSigningOn];
 
 		//Apply any changes
-		[listContact notifyOfChangedStatusSilently:isSigningOn];	
+		[listContact notifyOfChangedPropertiesSilently:isSigningOn];	
 	}
 	
 	if (lastAvailableBuddiesList) {
@@ -113,7 +113,7 @@
 			[listContact setOnline:NO notify:NotifyLater silently:isSigningOn];
 			
 			//Apply any changes
-			[listContact notifyOfChangedStatusSilently:isSigningOn];
+			[listContact notifyOfChangedPropertiesSilently:isSigningOn];
 		}
 
 		[signedOffContacts release];

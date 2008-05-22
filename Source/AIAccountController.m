@@ -142,8 +142,8 @@
 }
 /**
  @brief Returns a list of accounts with a given status.
- This method returns a list of account that all share some specific status object. It
- was created so that status objects of AppleScript might know who was using them, and
+ This method returns a list of account that all share some specific AIStatus object. It
+ was created so that AppleScript's statuses might know who was using them, and
  could dynamically change its properties. As it uses NSPredicate, it only works in 10.4
  and above.
  */
@@ -217,7 +217,7 @@
 	
     enumerator = [[self accounts] objectEnumerator];
     while ((account = [enumerator nextObject])) {
-        if ([account online] || [account integerStatusObjectForKey:@"Connecting"] || [account statusObjectForKey:@"Waiting to Reconnect"]) {
+        if ([account online] || [account integerValueForProperty:@"Connecting"] || [account valueForProperty:@"Waiting to Reconnect"]) {
 			return YES;
         }
     }	

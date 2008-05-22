@@ -146,13 +146,13 @@ static int nextChatNumber = 0;
  */
 - (NSDictionary *)chatCreationDictionary
 {
-	return [self statusObjectForKey:@"ChatCreationInfo"];
+	return [self valueForProperty:@"ChatCreationInfo"];
 }
 
 - (void)setChatCreationDictionary:(NSDictionary *)inDict
 {
-	[self setStatusObject:inDict
-				   forKey:@"ChatCreationInfo"
+	[self setValue:inDict
+				   forProperty:@"ChatCreationInfo"
 				   notify:NotifyNever];
 }
 
@@ -190,14 +190,14 @@ static int nextChatNumber = 0;
 //Status ---------------------------------------------------------------------------------------------------------------
 #pragma mark Status
 //Status
-- (void)didModifyStatusKeys:(NSSet *)keys silent:(BOOL)silent
+- (void)didModifyProperties:(NSSet *)keys silent:(BOOL)silent
 {
 	[[adium chatController] chatStatusChanged:self
 						   modifiedStatusKeys:keys
 									   silent:silent];	
 }
 
-- (void)object:(id)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify
+- (void)object:(id)inObject didSetValue:(id)value forProperty:(NSString *)key notify:(NotifyTiming)notify
 {
 	//If our unviewed content changes or typing status changes, and we have a single list object, 
 	//apply the change to that object as well so it can be cleanly reflected in the contact list.
@@ -205,10 +205,10 @@ static int nextChatNumber = 0;
 		[key isEqualToString:KEY_TYPING]) {
 		AIListObject	*listObject = [self listObject];
 		
-		if (listObject) [listObject setStatusObject:value forKey:key notify:notify];
+		if (listObject) [listObject setValue:value forProperty:key notify:notify];
 	}
 	
-	[super object:inObject didSetStatusObject:value forKey:key notify:notify];
+	[super object:inObject didSetValue:value forProperty:key notify:notify];
 }
 
 - (void)clearListObjectStatuses
@@ -216,23 +216,23 @@ static int nextChatNumber = 0;
 	AIListObject	*listObject = [self listObject];
 	
 	if (listObject) {
-		[listObject setStatusObject:nil forKey:KEY_UNVIEWED_CONTENT notify:NotifyLater];
-		[listObject setStatusObject:nil forKey:KEY_TYPING notify:NotifyLater];
+		[listObject setValue:nil forProperty:KEY_UNVIEWED_CONTENT notify:NotifyLater];
+		[listObject setValue:nil forProperty:KEY_TYPING notify:NotifyLater];
 	
-		[listObject notifyOfChangedStatusSilently:NO];
+		[listObject notifyOfChangedPropertiesSilently:NO];
 	}
 	
 }
 //Secure chatting ------------------------------------------------------------------------------------------------------
 - (void)setSecurityDetails:(NSDictionary *)securityDetails
 {
-	[self setStatusObject:securityDetails
-				   forKey:@"SecurityDetails"
+	[self setValue:securityDetails
+				   forProperty:@"SecurityDetails"
 				   notify:NotifyNow];
 }
 - (NSDictionary *)securityDetails
 {
-	return [self statusObjectForKey:@"SecurityDetails"];
+	return [self valueForProperty:@"SecurityDetails"];
 }
 
 - (BOOL)isSecure
@@ -478,20 +478,20 @@ static int nextChatNumber = 0;
 
 - (int)unviewedContentCount
 {
-	return [self integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
+	return [self integerValueForProperty:KEY_UNVIEWED_CONTENT];
 }
 
 - (void)incrementUnviewedContentCount
 {
-	int currentUnviewed = [self integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
-	[self setStatusObject:[NSNumber numberWithInt:(currentUnviewed+1)]
-					 forKey:KEY_UNVIEWED_CONTENT
+	int currentUnviewed = [self integerValueForProperty:KEY_UNVIEWED_CONTENT];
+	[self setValue:[NSNumber numberWithInt:(currentUnviewed+1)]
+					 forProperty:KEY_UNVIEWED_CONTENT
 					 notify:NotifyNow];
 }
 
 - (void)clearUnviewedContentCount
 {
-	[self setStatusObject:nil forKey:KEY_UNVIEWED_CONTENT notify:NotifyNow];
+	[self setValue:nil forProperty:KEY_UNVIEWED_CONTENT notify:NotifyNow];
 }
 
 #pragma mark AIContainingObject protocol
@@ -676,10 +676,10 @@ static int nextChatNumber = 0;
 - (void)receivedError:(NSNumber *)type
 {
 	//Notify observers
-	[self setStatusObject:type forKey:KEY_CHAT_ERROR notify:NotifyNow];
+	[self setValue:type forProperty:KEY_CHAT_ERROR notify:NotifyNow];
 
 	//No need to continue to store the NSNumber
-	[self setStatusObject:nil forKey:KEY_CHAT_ERROR notify:NotifyNever];
+	[self setValue:nil forProperty:KEY_CHAT_ERROR notify:NotifyNever];
 }
 
 #pragma mark Room commands
@@ -703,7 +703,7 @@ static int nextChatNumber = 0;
 
 - (unsigned int)index
 {
-	id<AIChatContainer> messageTab = [self statusObjectForKey:@"MessageTabViewItem"];
+	id<AIChatContainer> messageTab = [self valueForProperty:@"MessageTabViewItem"];
 	//what we're going to do is find this tab in the tab view's hierarchy, so as to get its index
 	id<AIChatWindowController> windowController = [messageTab windowController];
 
@@ -717,7 +717,7 @@ static int nextChatNumber = 0;
 }
 /*- (void)setIndex:(unsigned int)index
 {
-	id<AIChatContainer> messageTab = [self statusObjectForKey:@"MessageTabViewItem"];
+	id<AIChatContainer> messageTab = [self valueForProperty:@"MessageTabViewItem"];
 	id<AIChatWindowController> windowController = [messageTab windowController];
 	NSArray *chats = [windowController containedChats];
 	NSAssert (index-1 < [chats count], @"Don't let index be bigger than the count!");
@@ -728,7 +728,7 @@ static int nextChatNumber = 0;
 
 - (NSWindow *)window
 {
-	id<AIChatContainer> messageTab = [self statusObjectForKey:@"MessageTabViewItem"];
+	id<AIChatContainer> messageTab = [self valueForProperty:@"MessageTabViewItem"];
 	id<AIChatWindowController> windowController = [messageTab windowController];
 	return [windowController window];
 }

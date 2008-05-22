@@ -208,7 +208,7 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	configuredViewsAndTooltips = YES;
 }
 
-- (void)setContactListRoot:(ESObjectWithStatus<AIContainingObject> *)newContactListRoot
+- (void)setContactListRoot:(ESObjectWithProperties<AIContainingObject> *)newContactListRoot
 {
 	if (contactList != newContactListRoot) {
 		[contactList release]; contactList = [newContactListRoot retain];
@@ -217,7 +217,7 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	[contactListView reloadData];
 }
 
-- (ESObjectWithStatus <AIContainingObject> *)contactListRoot
+- (ESObjectWithProperties <AIContainingObject> *)contactListRoot
 {
 	return contactList;
 }

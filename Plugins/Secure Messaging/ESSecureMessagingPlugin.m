@@ -227,14 +227,14 @@
 							  inWindow:[[adium interfaceController] windowForChat:inChat]];
 		
 		/* Add a status message to the chat */
-		NSNumber	*lastEncryptedNumber = [inChat statusObjectForKey:@"secureMessagingLastEncryptedState"];
+		NSNumber	*lastEncryptedNumber = [inChat valueForProperty:@"secureMessagingLastEncryptedState"];
 		BOOL		chatIsSecure = [inChat isSecure];
 		if (!lastEncryptedNumber || (chatIsSecure != [lastEncryptedNumber boolValue])) {
 			NSString	*message;
 			NSString	*type;
 
-			[inChat setStatusObject:[NSNumber numberWithBool:chatIsSecure]
-							 forKey:@"secureMessagingLastEncryptedState"
+			[inChat setValue:[NSNumber numberWithBool:chatIsSecure]
+							 forProperty:@"secureMessagingLastEncryptedState"
 							 notify:NotifyNever];
 
 			if (chatIsSecure) {

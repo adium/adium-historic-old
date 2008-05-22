@@ -240,7 +240,7 @@ static int linesLeftToFind = 0;
 	NSString *baseLogPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:
 		[AILoggerPlugin relativePathForLogWithObject:logObjectUID onAccount:[chat account]]];	
 
-	if (([[chat statusObjectForKey:@"Restored Chat"] boolValue]) &&
+	if (([[chat valueForProperty:@"Restored Chat"] boolValue]) &&
 		(linesToDisplay < RESTORED_CHAT_CONTEXT_LINE_NUMBER)) {
 		linesLeftToFind = RESTORED_CHAT_CONTEXT_LINE_NUMBER;
 	} else {

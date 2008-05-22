@@ -129,7 +129,7 @@
 /*!
  * @brief Register a chat observer
  *
- * Chat observers are notified when status objects are changed on chats
+ * Chat observers are notified when properties are changed on chats
  *
  * @param inObserver An observer, which must conform to AIChatObserver
  */
