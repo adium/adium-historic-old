@@ -297,9 +297,11 @@
 		NSRange startRange = [scanString rangeOfCharacterFromSet:startSet];
 		if (startRange.location != NSNotFound) {
 			location += startRange.location;
+		}else{
+			location += [scanString length];
 		}
         [preScanner setScanLocation:location++];
-		
+		//NSLog(scanString);
     }
 	
     // if we're here, then NSScanner hit the end of the string
