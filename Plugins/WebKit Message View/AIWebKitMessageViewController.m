@@ -67,6 +67,7 @@
 - (void)releaseAllCachedIcons;
 - (void)updateUserIconForObject:(AIListObject *)inObject;
 - (void)userIconForObjectDidChange:(AIListObject *)inObject;
+- (void)updateServiceIcon;
 
 - (void)participatingListObjectsChanged:(NSNotification *)notification;
 - (void)sourceOrDestinationChanged:(NSNotification *)notification;
@@ -1260,7 +1261,7 @@ static NSArray *draggedTypes = nil;
 	}
 }
 
-- (void) updateServiceIcon
+- (void)updateServiceIcon
 {
 	DOMDocument *doc = [[webView mainFrame] DOMDocument];
 	//Old WebKits don't support this... if someone feels like doing it the slower way here, feel free
