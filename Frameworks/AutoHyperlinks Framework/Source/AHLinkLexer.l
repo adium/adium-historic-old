@@ -57,12 +57,13 @@ domains         ({ccTLD}|{sTLD}|{uTLD}|arpa|local)
 /*The Unicode standard, version 4.1, table 3-6, says that the highest byte that will occur in a valid UTF-8 sequence is 0xF4.*/
 %}
 userAndPass     [^:@]+(:[^:@]+)?
-urlSpecifier    ([_[:alnum:]\x80-\xf4-]+\.)+{domains}(:[0-9]+)?(\/.*)?
+urlPath         \/[^[:space:]]*
+urlSpecifier    ([_[:alnum:]\x80-\xf4-]+\.)+{domains}(:[0-9]+)?{urlPath}?
 ipv4address     ([0-9]{1,3}\.){3}([0-9]{1,3})
-ipURL           {ipv4address}(:[0-9]+)?(\/.*)?
+ipURL           {ipv4address}(:[0-9]+)?{urlPath}?
 singleDomain    [[:alnum:]\x80-\xf4-]+
 mailSpecifier   [^:\/]+\@.+\.{domains}
-jabberSpec      xmpp:.*\@.+\.{domains}(\/.*)?
+jabberSpec      xmpp:.*\@.+\.{domains}{urlPath}?
 aolIMSpec       aim:goim\?screenname=[^\ \t\n&]+(&message=.+)?
 aolChatSpec     aim:gochat\?roomname=[^\ \t\n&]+
 yahooIMSpecOld  (ymsgr|yahoo):sendim\?.+
@@ -75,7 +76,7 @@ hex4            [0-9A-Fa-f]{1,4}
 ipv6HexSeq      {hex4}?(::?{hex4}){1,7}
 ipv6HexPart     ({ipv6HexSeq})|(::{ipv6HexSeq})
 ipv6Address     {ipv6HexPart}({ipv4address})?
-ipv6URL         \[{ipv6Address}](:[0-9]+)?(\/.*)?
+ipv6URL         \[{ipv6Address}](:[0-9]+)?{urlPath}?
 
 %option noyywrap nounput 8bit caseless never-interactive prefix="AH"
 
@@ -92,12 +93,12 @@ ipv6URL         \[{ipv6Address}](:[0-9]+)?(\/.*)?
                                                    BEGIN INITIAL;
                                                    return AH_URL_VALID;}
 
-<CANONICAL>({userAndPass}@)?{singleDomain}(\.{singleDomain})*(:[0-9]+)?\/.* {AHStringOffset += AHleng;
+<CANONICAL>({userAndPass}@)?{singleDomain}(\.{singleDomain})*(:[0-9]+)?{urlPath} {AHStringOffset += AHleng;
                                                    AHleng += AHValidShift;
                                                    BEGIN INITIAL;
                                                    return AH_URL_VALID;}
 
-<CANONICAL>({userAndPass}@)?{singleDomain}(:[0-9]+)?(\/.*)? {AHStringOffset += AHleng;
+<CANONICAL>({userAndPass}@)?{singleDomain}(:[0-9]+)?{urlPath}? {AHStringOffset += AHleng;
                                                    AHleng += AHValidShift;
                                                    BEGIN INITIAL;
                                                    return AH_URL_VALID;}
