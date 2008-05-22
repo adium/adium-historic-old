@@ -65,8 +65,9 @@ mailSpecifier   [^:\/]+\@.+\.{domains}
 jabberSpec      xmpp:.*\@.+\.{domains}(\/.*)?
 aolIMSpec       aim:goim\?screenname=[^\ \t\n&]+(&message=.+)?
 aolChatSpec     aim:gochat\?roomname=[^\ \t\n&]+
-yahooIMSpec     (ymsgr|yahoo):sendim\?.+
-yahooAltIMSpec	(ymsgr|yahoo):\/\/im\?to=.+
+yahooIMSpecOld  (ymsgr|yahoo):sendim\?.+
+yahooIMSpecNew	(ymsgr|yahoo):(\/\/)?im\?to=.+
+yahooIMSpec     {yahooIMSpecOld}|{yahooIMSpecNew}
 rdarSpec        (rdar|radr|radar|x-radar):\/\/(problems?\/)?[0-9]+(&[0-9]+)*
 spotifySpec     spotify:(track|album|artist|search|playlist|user|radio):[^<>]+
 
@@ -144,8 +145,7 @@ mailto:{mailSpecifier}  {AHStringOffset += AHleng; return AH_MAILTO_VALID;}
 
 {aolIMSpec}             {AHStringOffset += AHleng; return AH_URL_VALID;}
 {aolChatSpec}           {AHStringOffset += AHleng; return AH_URL_VALID;}
-{yahooIMSpec}           |
-{yahooAltIMSpec}        {AHStringOffset += AHleng; return AH_URL_VALID;}
+{yahooIMSpec}           {AHStringOffset += AHleng; return AH_URL_VALID;}
 {rdarSpec}              {AHStringOffset += AHleng; return AH_URL_VALID;}
 {spotifySpec}           {AHStringOffset += AHleng; return AH_URL_VALID;}
 
