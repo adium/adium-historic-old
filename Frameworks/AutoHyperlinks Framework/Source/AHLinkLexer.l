@@ -51,13 +51,13 @@ ccTLDtypeB1     (co.ao|ed.ao|gv.ao|it.ao|og.ao|pb.ao|com.ar|gov.ar|int.ar|mil.ar
 
 ccTLDtypeB2     (ac.mw|co.mw|com.mw|coop.mw|edu.mw|gov.mw|int.mw|museum.mw|net.mw|org.mw|com.mx|net.mx|org.mx|edu.mx|gob.mx|com.my|net.my|org.my|gov.my|edu.my|mil.my|name.my|edu.ng|com.ng|gov.ng|org.ng|net.ng|gob.ni|com.ni|edu.ni|org.ni|nom.ni|net.ni|com.np|org.np|edu.np|net.np|gov.np|mil.np|ac.nz|co.nz|cri.nz|gen.nz|geek.nz|govt.nz|iwi.nz|maori.nz|mil.nz|net.nz|org.nz|school.nz|com.om|co.om|edu.om|ac.com|sch.om|gov.om|net.om|org.om|mil.om|museum.om|biz.om|pro.om|med.om|com.pa|ac.pa|sld.pa|gob.pa|edu.pa|org.pa|net.pa|abo.pa|ing.pa|med.pa|nom.pa|com.pe|org.pe|net.pe|edu.pe|mil.pe|gob.pe|nom.pe|com.pg|net.pg|net.py|org.py|gov.py|edu.py|com.py|com.sa|edu.sa|sch.sa|med.sa|gov.sa|net.sa|org.sa|pub.sa|com.sb|gov.sb|net.sb|edu.sb|edu.sv|com.sv|gob.sv|org.sv|red.sv|gov.sy|com.sy|net.sy|ac.th|co.th|in.th|go.th|mi.th|or.th|net.th|com.tn|intl.tn|gov.tn|org.tn|ind.tn|nat.tn|tourism.tn|info.tn|ens.tn|fin.tn|net.tn|co.tz|ac.tz|go.tz|or.tz|ne.tz|ac.uk|co.uk|gov.uk|ltd.uk|me.uk|mil.uk|mod.uk|net.uk|nic.uk|nhs.uk|org.uk|plc.uk|police.uk|sch.uk|bl.uk|british-library.uk|icnet.uk|jet.uk|nel.uk|nls.uk|national-library-scotland.uk|parliament.uk|edu.uy|gub.uy|org.uy|com.uy|net.uy|mil.uy|vatican.va|com.ve|net.ve|org.ve|info.ve|co.ve|web.ve|com.ye|net.ye|ac.yu|co.yu|org.yu|edu.yu|ac.za|city.za|co.za|edu.za|gov.za|law.za|mil.za|nom.za|org.za|school.za|alt.za|net.za|ngo.za|tm.za|web.za|co.zm|org.zm|gov.zm|sch.zm|ac.zm|co.zw|org.zw|gov.zw|ac.zw)
 
-ccTLDtypeB      {ccTLDtypeB1|ccTLDtypeB2}
+ccTLDtypeB      ({ccTLDtypeB1}|{ccTLDtypeB2})
 
 ccTLD           (ac|ad|ae|af|ag|ai|al|am|an|aq|as|at|au|aw|az|ba|bb|be|bf|bg|bh|bi|bj|bm|bo|bs|bt|bv|bw|by|bz|ca|cc|cd|cf|cg|ch|ci|ck|cl|cm|cn|cu|cv|cx|cz|de|dj|dk|dm|dz|ec|ee|eh|er|es|eu|fi|fm|fo|fr|ga|gd|ge|gf|gg|gi|gl|gm|gp|gq|gr|gs|gt|gu|gw|gy|hk|hm|hn|hr|ht|hu|ie|im|in|io|iq|ir|is|it|je|jo|jp|ke|kg|ki|km|kn|kp|kr|ky|la|li|lk|lt|lu|lv|ly|ma|mc|md|mg|mh|mk|ml|mm|mn|mo|mp|mq|mr|ms|mt|mu|mz|na|nc|ne|nf|nl|no|nr|nu|pf|ph|pk|pl|pm|pn|pr|ps|pt|pw|qa|re|ro|ru|rw|sc|sd|se|sg|sh|si|sj|sk|sl|sm|sn|so|sr|st|sz|tc|td|tf|tg|tj|tk|tm|to|tp|tr|tt|tv|tw|ua|ug|um|us|uz|vc|vg|vi|vn|vu|wf|ws|ye|yt)
 sTLD            (com|edu|gov|int|mil|net|org|biz|info|name|pro)
 uTLD            (aero|coop|museum|mobi|cat|jobs|travel)
 
-domains         (ccTLDtypeB|{ccTLD}|{sTLD}|{uTLD}|arpa|local)
+domains         ({ccTLDtypeB}|{ccTLD}|{sTLD}|{uTLD}|arpa|local)
 %{
 /*The Unicode standard, version 4.1, table 3-6, says that the highest byte that will occur in a valid UTF-8 sequence is 0xF4.*/
 %}
