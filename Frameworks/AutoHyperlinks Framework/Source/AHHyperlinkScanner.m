@@ -294,6 +294,9 @@
         }
 		
         //step location after scanning a string
+		NSScanner *advanceScanner = [NSScanner scannerWithString:scanString];
+		[advanceScanner scanUpToCharactersFromSet:startSet intoString:nil];
+		location += [advanceScanner scanLocation];
         [preScanner setScanLocation:location++];
 		
     }
