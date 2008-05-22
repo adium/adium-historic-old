@@ -295,8 +295,8 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	if ([arrayOfContactsForDelayedUpdates count]) {
 		AIListContact *theContact = [arrayOfContactsForDelayedUpdates objectAtIndex:0];
 		
-		[theContact setStatusObject:[self serversideCommentForContact:theContact]
-							 forKey:@"Notes"
+		[theContact setValue:[self serversideCommentForContact:theContact]
+							 forProperty:@"Notes"
 							 notify:YES];
 
 		//Request ICQ contacts' info to get the nickname

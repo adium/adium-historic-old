@@ -330,7 +330,7 @@
 
 				// Check each account for IdleSince, a StatusState status message, or "Waiting to Reconnect"
 				while ((account = [enumerator nextObject])) {
-					if ([account online] && [account statusObjectForKey:@"IdleSince"]) {
+					if ([account online] && [account valueForProperty:@"IdleSince"]) {
 						if (showBadge) {
 							badge = [AIStatusIcons statusIconForStatusName:@"Idle"
 																statusType:AIAvailableStatusType
@@ -343,13 +343,13 @@
 						// We don't need to check anymore; idle has high precedence than offline or available with a status message.
 						break;
 					} else if (showBadge &&
-							   ([account statusObjectForKey:@"Waiting to Reconnect"] ||
-								[[account statusObjectForKey:@"Connecting"] boolValue])) {
+							   ([account valueForProperty:@"Waiting to Reconnect"] ||
+								[[account valueForProperty:@"Connecting"] boolValue])) {
 						badge = [AIStatusIcons statusIconForStatusName:@"Offline"
 															statusType:AIOfflineStatusType
 															  iconType:AIStatusIconList
 															 direction:AIIconNormal];
-					} else if ([account online] && [[account statusObjectForKey:@"StatusState"] statusMessage]) {
+					} else if ([account online] && [[account valueForProperty:@"StatusState"] statusMessage]) {
 						anyAccountHasStatusMessage = YES;
 					}
 				}

@@ -286,7 +286,7 @@
 		([(AIListContact *)inObject parentContact] == (AIListContact *)inObject)) {
 
 		if ([inModifiedKeys containsObject:@"Online"]) {
-			id newValue = [inObject numberStatusObjectForKey:@"Online" fromAnyContainedObject:NO];
+			id newValue = [inObject numberValueForProperty:@"Online" fromAnyContainedObject:NO];
 
 			if ([self updateCache:onlineCache
 						   forKey:@"Online"
@@ -312,7 +312,7 @@
 		/* Events which are irrelevent if the contact is not online - these changes occur when we are
 		 * just doing bookkeeping e.g. an away contact signs off, we clear the away flag, but they didn't actually
 		 * come back from away. */
-		if ([[inObject numberStatusObjectForKey:@"Online"] boolValue]) {
+		if ([[inObject numberValueForProperty:@"Online"] boolValue]) {
 			if ([inModifiedKeys containsObject:@"StatusMessage"] || [inModifiedKeys containsObject:@"StatusType"]) {
 				NSNumber	*newAwayNumber;
 				NSString	*newStatusMessage;
@@ -364,7 +364,7 @@
 			}
 
 			if ([inModifiedKeys containsObject:@"IsIdle"]) {
-				id newValue = [inObject numberStatusObjectForKey:@"IsIdle" fromAnyContainedObject:NO];
+				id newValue = [inObject numberValueForProperty:@"IsIdle" fromAnyContainedObject:NO];
 				if ([self updateCache:idleCache
 							   forKey:@"IsIdle"
 							 newValue:newValue

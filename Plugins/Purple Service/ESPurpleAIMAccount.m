@@ -186,7 +186,7 @@
 		(listContact = [self contactWithUID:contactName])) {
 		
 		if (!namesAreCaseSensitive) {
-			[listContact setStatusObject:contactName forKey:@"FormattedUID" notify:NotifyNow];
+			[listContact setValue:contactName forProperty:@"FormattedUID" notify:NotifyNow];
 		}
 		
 		/* Purple incorrectly flags group chat participants as being on a mobile device... we're just going
@@ -196,11 +196,11 @@
 		if ([listContact isMobile]) {
 			[listContact setIsMobile:NO notify:NotifyLater];
 			
-			[listContact setStatusObject:nil
-								  forKey:@"Client"
+			[listContact setValue:nil
+								  forProperty:@"Client"
 								  notify:NotifyLater];
 			
-			[listContact notifyOfChangedStatusSilently:NO];
+			[listContact notifyOfChangedPropertiesSilently:NO];
 		}
 		
 		[chat addParticipatingListObject:listContact notify:(newArrival && [newArrival boolValue])];

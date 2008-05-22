@@ -252,7 +252,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
  * @brief Used as contacts are created and icons are changed.
  *
  * When first created, load a contact's address book information from our dict.
- * When an icon as a status object changes, if desired, write the changed icon out to the appropriate AB card.
+ * When an icon as a property changes, if desired, write the changed icon out to the appropriate AB card.
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {

@@ -229,7 +229,7 @@ static void node_aliased_cb(PurpleBlistNode *node, char *old_alias)
 
 static void conversation_created_cb(PurpleConversation *conv, void *data) {
 	if (purple_conversation_get_type(conv) == PURPLE_CONV_TYPE_IM)
-		[[imChatLookupFromConv(conv) listObject] setStatusObject:[NSNumber numberWithInt:AINotTyping] forKey:KEY_TYPING notify:NotifyNow];
+		[[imChatLookupFromConv(conv) listObject] setValue:[NSNumber numberWithInt:AINotTyping] forProperty:KEY_TYPING notify:NotifyNow];
 }
 
 static NSDictionary *dictionaryFromHashTable(GHashTable *data)
@@ -273,7 +273,7 @@ static void chat_join_failed_cb(PurpleConnection *gc, GHashTable *components)
 static void typing_changed(PurpleAccount *acct, const char *name, AITypingState typingState)
 {
 	AIListContact *contact = contactLookupFromBuddy(purple_find_buddy(acct, name));
-	[contact setStatusObject:[NSNumber numberWithInt:typingState] forKey:KEY_TYPING notify:NotifyNow];	
+	[contact setValue:[NSNumber numberWithInt:typingState] forProperty:KEY_TYPING notify:NotifyNow];	
 }
 
 static void

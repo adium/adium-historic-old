@@ -678,8 +678,8 @@
 		[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
 
 		//Set up the character counter for this chat. If this changes, we'll get notified as a list object observer.
-		[self setCharacterCounterMaximum:[[chat listObject] integerStatusObjectForKey:@"Character Counter Max"]];
-		[self setCharacterCounterVisible:([[chat listObject] statusObjectForKey:@"Character Counter Max"] != nil)];
+		[self setCharacterCounterMaximum:[[chat listObject] integerValueForProperty:@"Character Counter Max"]];
+		[self setCharacterCounterVisible:([[chat listObject] valueForProperty:@"Character Counter Max"] != nil)];
     }
 }
 - (AIChat *)chat{
@@ -1083,8 +1083,8 @@
 {
 	if ((inObject == [chat listObject]) &&
 		(!inModifiedKeys || [inModifiedKeys containsObject:@"Character Counter Max"])) {
-		[self setCharacterCounterMaximum:[inObject integerStatusObjectForKey:@"Character Counter Max"]];
-		[self setCharacterCounterVisible:([inObject statusObjectForKey:@"Character Counter Max"] != nil)];
+		[self setCharacterCounterMaximum:[inObject integerValueForProperty:@"Character Counter Max"]];
+		[self setCharacterCounterVisible:([inObject valueForProperty:@"Character Counter Max"] != nil)];
 	}
 
 	return nil;

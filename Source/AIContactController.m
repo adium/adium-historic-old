@@ -400,10 +400,10 @@
 	BOOL	isCurrentlyAStranger = [inContact isStranger];
 	if ((isCurrentlyAStranger && (remoteGroupName != nil)) ||
 		(!isCurrentlyAStranger && (remoteGroupName == nil))) {
-		[inContact setStatusObject:(remoteGroupName ? [NSNumber numberWithBool:YES] : nil)
-							forKey:@"NotAStranger"
+		[inContact setValue:(remoteGroupName ? [NSNumber numberWithBool:YES] : nil)
+							forProperty:@"NotAStranger"
 							notify:NotifyLater];
-		[inContact notifyOfChangedStatusSilently:YES];
+		[inContact notifyOfChangedPropertiesSilently:YES];
 	}
 	
 	[inContact release];

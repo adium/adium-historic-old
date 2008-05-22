@@ -218,8 +218,8 @@
 
 				//Force this contact to show up on the user's list for a little bit, even if it is offline
 				//Otherwise they have no good feedback that a contact was added at all.
-				[contact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"New Object" notify:YES];
-				[contact setStatusObject:[NSNumber numberWithBool:NO] forKey:@"New Object" afterDelay:10.0];
+				[contact setValue:[NSNumber numberWithBool:YES] forProperty:@"New Object" notify:YES];
+				[contact setValue:[NSNumber numberWithBool:NO] forProperty:@"New Object" afterDelay:10.0];
 			}
 		}
 	}

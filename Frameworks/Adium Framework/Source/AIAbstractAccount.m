@@ -405,8 +405,8 @@
 											   withOwner:self];
 
 	//Note the actual value we've set in CurrentDisplayName so we can compare against it later
-	[self setStatusObject:displayName
-				   forKey:@"CurrentDisplayName"
+	[self setValue:displayName
+				   forProperty:@"CurrentDisplayName"
 				   notify:NotifyNever];
 	
 	//Notify
@@ -421,13 +421,13 @@
  */
 - (NSString *)currentDisplayName
 {
-	return [self statusObjectForKey:@"CurrentDisplayName"];
+	return [self valueForProperty:@"CurrentDisplayName"];
 }
 
 - (void)retrievePasswordThenConnect
 {
 	AIPromptOption promptOption = AIPromptAsNeeded;
-	if ([[self statusObjectForKey:@"Prompt For Password On Next Connect"] boolValue]) 
+	if ([[self valueForProperty:@"Prompt For Password On Next Connect"] boolValue]) 
 		promptOption = AIPromptAlways;
 	else if (![[self service] requiresPassword])
 		promptOption = AIPromptNever;
@@ -450,16 +450,16 @@
  */
 - (void)updateCommonStatusForKey:(NSString *)key
 {
-    BOOL    areOnline = [[self statusObjectForKey:@"Online"] boolValue];
+    BOOL    areOnline = [[self valueForProperty:@"Online"] boolValue];
     
     //Online status changed
     //Call connect or disconnect as appropriate
     if ([key isEqualToString:@"Online"]) {
         if ([self shouldBeOnline] &&
 			[self enabled]) {
-            if (!areOnline && ![[self statusObjectForKey:@"Connecting"] boolValue]) {
+            if (!areOnline && ![[self valueForProperty:@"Connecting"] boolValue]) {
 				if ([[self service] supportsPassword] && (!password ||
-														  [[self statusObjectForKey:@"Prompt For Password On Next Connect"] boolValue])) {
+														  [[self valueForProperty:@"Prompt For Password On Next Connect"] boolValue])) {
 					[self retrievePasswordThenConnect];
 
 				} else {
@@ -471,8 +471,8 @@
 				
             }
         } else {
-            if ((areOnline || ([[self statusObjectForKey:@"Connecting"] boolValue])) && 
-			   (![[self statusObjectForKey:@"Disconnecting"] boolValue])) {
+            if ((areOnline || ([[self valueForProperty:@"Connecting"] boolValue])) && 
+			   (![[self valueForProperty:@"Disconnecting"] boolValue])) {
                 //Disconnect
                 [self disconnect];
             }
@@ -483,7 +483,7 @@
 			//Set the status state after filtering its statusMessage as appropriate
 			[self autoRefreshingOutgoingContentForStatusKey:@"StatusState"
 												   selector:@selector(gotFilteredStatusMessage:forStatusState:)
-													context:[self statusObjectForKey:@"StatusState"]];
+													context:[self valueForProperty:@"StatusState"]];
 		} else {
 			//Check if account is 'enabled' in the accounts preferences.  If so, bring it online in the specified state.
 			[self setShouldBeOnline:YES];
@@ -496,14 +496,14 @@
 
 	} else if ([key isEqualToString:@"FormattedUID"]) {
 		//Transfer formatted UID to status dictionary
-		[self setStatusObject:[self preferenceForKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS]
-					   forKey:@"FormattedUID"
+		[self setValue:[self preferenceForKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS]
+					   forProperty:@"FormattedUID"
 					   notify:NotifyNow];
 		
 	} else if ([key isEqualToString:@"Enabled"]) {
-		//Set a status object so observers are notified
-		[self setStatusObject:[NSNumber numberWithBool:enabled]
-					   forKey:@"Enabled"
+		//Set a property so observers are notified
+		[self setValue:[NSNumber numberWithBool:enabled]
+					   forProperty:@"Enabled"
 					   notify:NotifyNow];
 		
 		//We are now enabled so should go online, or we are now disabled so should disconnect
@@ -530,8 +530,8 @@
 		[self setShouldBeOnline:NO];
 		
 	} else {
-		//Store the status state as a status object so it can be easily used elsewhere
-		[self setStatusObject:statusState forKey:@"StatusState" notify:NotifyLater];
+		//Store the status state as a property so it can be easily used elsewhere
+		[self setValue:statusState forProperty:@"StatusState" notify:NotifyLater];
 		
 		//Update us to the new state
 		[self updateStatusForKey:@"StatusState"];
@@ -552,21 +552,21 @@
 			}
 		}
 		
-		[self notifyOfChangedStatusSilently:YES];
+		[self notifyOfChangedPropertiesSilently:YES];
 	}
 }
 
 /*!
  * @brief Set a status state without going online
  *
- * Set the status state as a status object so that if we sign on later we will update to the proper state.
+ * Set the status state as a property so that if we sign on later we will update to the proper state.
  * Do not ask the account to actually switch to the state; do not perform any notifications about the change.
  * This is intended for use by the statusController only.
  */
 - (void)setStatusStateAndRemainOffline:(AIStatus *)statusState
 {
-	//Store the status state as a status object so it can be easily used elsewhere
-	[self setStatusObject:statusState forKey:@"StatusState" notify:NotifyNever];
+	//Store the status state as a property so it can be easily used elsewhere
+	[self setValue:statusState forProperty:@"StatusState" notify:NotifyNever];
 
 	if ([[self supportedPropertyKeys] containsObject:@"IdleSince"]) {
 		NSDate	*idleSince;
@@ -600,13 +600,13 @@
 		return AIOfflineStatus;
 	} else {
 		if (statusType == AIAwayStatusType) {
-			if ([self statusObjectForKey:@"IdleSince"]) {
+			if ([self valueForProperty:@"IdleSince"]) {
 				return AIAwayAndIdleStatus;
 			} else {
 				return AIAwayStatus;
 			}
 
-		} else if ([self statusObjectForKey:@"IdleSince"]) {
+		} else if ([self valueForProperty:@"IdleSince"]) {
 			return AIIdleStatus;
 
 		} else {
@@ -618,8 +618,8 @@
 
 - (AIStatus *)statusState
 {
-	if ([self integerStatusObjectForKey:@"Online"]) {
-		AIStatus	*statusState = [self statusObjectForKey:@"StatusState"];
+	if ([self integerValueForProperty:@"Online"]) {
+		AIStatus	*statusState = [self valueForProperty:@"StatusState"];
 		if (!statusState) {
 			statusState = [[adium statusController] defaultInitialStatusState];
 			[self setStatusStateAndRemainOffline:statusState];		
@@ -627,7 +627,7 @@
 		
 		return statusState;
 	} else {
-		AIStatus	*statusState = [self statusObjectForKey:@"StatusState"];
+		AIStatus	*statusState = [self valueForProperty:@"StatusState"];
 		if (statusState && [statusState statusType] == AIOfflineStatusType) {
 			//We're in an actual offline status; return it
 			return statusState;
@@ -643,7 +643,7 @@
  */
 - (AIStatus *)actualStatusState
 {
-	return [self statusObjectForKey:@"StatusState"];
+	return [self valueForProperty:@"StatusState"];
 }
 
 - (NSString *)statusName
@@ -695,12 +695,12 @@
     //If a password was returned, and we're still waiting to connect
     if ((returnCode == AIPasswordPromptOKReturn) &&
 		((inPassword && [inPassword length]) || ![[self service] requiresPassword])) {
-		[self setStatusObject:nil
-					   forKey:@"Prompt For Password On Next Connect"
+		[self setValue:nil
+					   forProperty:@"Prompt For Password On Next Connect"
 					   notify:NotifyNever];
 
-		if (![[self statusObjectForKey:@"Online"] boolValue] &&
-		   ![[self statusObjectForKey:@"Connecting"] boolValue]) {
+		if (![[self valueForProperty:@"Online"] boolValue] &&
+		   ![[self valueForProperty:@"Connecting"] boolValue]) {
 			[self setPasswordTemporarily:inPassword];
 
 			//Time to connect!
@@ -716,8 +716,8 @@
 {
 	AILogWithSignature(@"%@", self);
 
-	[self setStatusObject:[NSNumber numberWithBool:YES]
-				   forKey:@"Prompt For Password On Next Connect"
+	[self setValue:[NSNumber numberWithBool:YES]
+				   forProperty:@"Prompt For Password On Next Connect"
 				   notify:NotifyNever];
 	[self setPasswordTemporarily:nil];
 }
@@ -901,7 +901,7 @@
  * Here we suspend the auto-refreshing timer when the account goes offline, and restart it when the account goes back
  * online.  This prevents us from running the timer for offline accounts.
  */
-- (void)setStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify
+- (void)setValue:(id)value forProperty:(NSString *)key notify:(NotifyTiming)notify
 {
 	if ([key isEqualToString:@"Online"]) {
 		if ([value boolValue]) {
@@ -915,7 +915,7 @@
 		}
 	}
 	
-	[super setStatusObject:value forKey:key notify:notify];
+	[super setValue:value forProperty:key notify:notify];
 }
 
 /*!
@@ -1054,8 +1054,8 @@
 - (void)toggleOnline
 {
 	BOOL    online = [self online];
-	BOOL	connecting = [[self statusObjectForKey:@"Connecting"] boolValue];
-	BOOL	reconnecting = ([self statusObjectForKey:@"Waiting to Reconnect"] != nil);
+	BOOL	connecting = [[self valueForProperty:@"Connecting"] boolValue];
+	BOOL	reconnecting = ([self valueForProperty:@"Waiting to Reconnect"] != nil);
 	
 	//If online or connecting set the account offline, otherwise set it to online
 	[self setShouldBeOnline:!(online || connecting || reconnecting)]; 	
@@ -1110,15 +1110,15 @@
 	}
     
 	//We are now online
-    [self setStatusObject:nil forKey:@"Connecting" notify:NotifyLater];
-    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NotifyLater];
-	[self setStatusObject:nil forKey:@"ConnectionProgressString" notify:NotifyLater];
-	[self setStatusObject:nil forKey:@"ConnectionProgressPercent" notify:NotifyLater];	
-    [self setStatusObject:nil forKey:@"Waiting to Reconnect" notify:NotifyLater];
-	AILogWithSignature(@"*** status dictionary is now %@", statusDictionary);
+    [self setValue:nil forProperty:@"Connecting" notify:NotifyLater];
+    [self setValue:[NSNumber numberWithBool:YES] forProperty:@"Online" notify:NotifyLater];
+	[self setValue:nil forProperty:@"ConnectionProgressString" notify:NotifyLater];
+	[self setValue:nil forProperty:@"ConnectionProgressPercent" notify:NotifyLater];	
+    [self setValue:nil forProperty:@"Waiting to Reconnect" notify:NotifyLater];
+	AILogWithSignature(@"*** status dictionary is now %@", propertiesDictionary);
 	
 	//Apply any changes
-	[self notifyOfChangedStatusSilently:NO];
+	[self notifyOfChangedPropertiesSilently:NO];
 	
     //Reset reconnection attempts
     reconnectAttemptsPerformed = 0;
@@ -1146,7 +1146,7 @@
 
 - (void)cancelAutoReconnect
 {
-    [self setStatusObject:nil forKey:@"Waiting to Reconnect" notify:NotifyNow];
+    [self setValue:nil forProperty:@"Waiting to Reconnect" notify:NotifyNow];
 
 	reconnectAttemptsPerformed = 0;
 
@@ -1163,7 +1163,7 @@
  */
 - (void)autoReconnectAfterDelay:(NSTimeInterval)delay
 {
-    [self setStatusObject:[NSDate dateWithTimeIntervalSinceNow:delay] forKey:@"Waiting to Reconnect" notify:NotifyNow];
+    [self setValue:[NSDate dateWithTimeIntervalSinceNow:delay] forProperty:@"Waiting to Reconnect" notify:NotifyNow];
 	[self performSelector:@selector(performAutoreconnect)
 			   withObject:nil
 			   afterDelay:delay];
@@ -1172,31 +1172,31 @@
 {
 	//If we still want to be online, and we're not yet online, continue with the reconnect
     if ([self shouldBeOnline] &&
-	   ![self online] && ![[self statusObjectForKey:@"Connecting"] boolValue]) {
+	   ![self online] && ![[self valueForProperty:@"Connecting"] boolValue]) {
 		[self updateStatusForKey:@"Online"];
     }
 }
 
 /*!
- * @brief Remove the status objects from a listContact which we placed there
+ * @brief Remove the properties from a listContact which we placed there
  *
  * Called for each contact to reduce our memory footprint after a contact signs off or an account disconnects.
  */
-- (void)removeStatusObjectsFromContact:(AIListContact *)listContact silently:(BOOL)silent
+- (void)removePropetyValuesFromContact:(AIListContact *)listContact silently:(BOOL)silent
 {
-	NSEnumerator	*enumerator = [[self contactStatusObjectKeys] objectEnumerator];
+	NSEnumerator	*enumerator = [[self contactProperties] objectEnumerator];
 	NSString		*key;
 	
 	while ((key = [enumerator nextObject])) {
-		[listContact setStatusObject:nil forKey:key notify:NotifyLater];
+		[listContact setValue:nil forProperty:key notify:NotifyLater];
 	}
 	
 	//Apply any changes
-	[listContact notifyOfChangedStatusSilently:silent];
+	[listContact notifyOfChangedPropertiesSilently:silent];
 }
 
 /*!
-* @brief Remove all contacts owned by this account and clear their status objects set by this account
+* @brief Remove all contacts owned by this account and clear their properties set by this account
  */
 - (void)removeAllContacts
 {	
@@ -1210,7 +1210,7 @@
 		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		[listContact setRemoteGroupName:nil];
 		[AIUserIcons flushCacheForObject:listContact];
-		[self removeStatusObjectsFromContact:listContact silently:YES];
+		[self removePropetyValuesFromContact:listContact silently:YES];
 		[pool release];
 	}
 	
@@ -1218,19 +1218,19 @@
 }
 
 /*!
- * @brief Contact status object keys
+ * @brief Contact properties we may set
  *
- * @result An NSSet of the keys we should clear from contacts when signing off
+ * @result An NSSet of the properties we should clear from contacts when signing off
  */
-- (NSSet *)contactStatusObjectKeys
+- (NSSet *)contactProperties
 {
-	static NSSet *_contactStatusObjectKeys = nil;
+	static NSSet *_contactProperties = nil;
 	
-	if (!_contactStatusObjectKeys)
-		_contactStatusObjectKeys = [[NSSet alloc] initWithObjects:@"Online",@"Warning",@"IdleSince",
-			@"Idle",@"IsIdle",@"Signon Date",@"StatusName",@"StatusType",@"StatusMessage",@"Client",KEY_TYPING,nil];
+	if (!_contactProperties)
+		_contactProperties = [[NSSet alloc] initWithObjects:@"Online",@"Warning",@"IdleSince",
+							  @"Idle",@"IsIdle",@"Signon Date",@"StatusName",@"StatusType",@"StatusMessage",@"Client",KEY_TYPING,nil];
 	
-	return _contactStatusObjectKeys;
+	return _contactProperties;
 }
 
 /*!
@@ -1239,7 +1239,7 @@
 - (void)didDisconnect
 {
 	//If we were online, display a status message in all of our open chats noting our disconnection
-	if ([[self statusObjectForKey:@"Online"] boolValue]) {
+	if ([[self valueForProperty:@"Online"] boolValue]) {
 		AIChat			*chat = nil;
 		NSEnumerator	*enumerator = [[[adium interfaceController] openChats] objectEnumerator];
 		
@@ -1264,18 +1264,18 @@
 	[self removeAllContacts];
 
 	//We are now offline
-    [self setStatusObject:nil forKey:@"Disconnecting" notify:NotifyLater];
-    [self setStatusObject:nil forKey:@"Connecting" notify:NotifyLater];
-    [self setStatusObject:nil forKey:@"Online" notify:NotifyLater];
+    [self setValue:nil forProperty:@"Disconnecting" notify:NotifyLater];
+    [self setValue:nil forProperty:@"Connecting" notify:NotifyLater];
+    [self setValue:nil forProperty:@"Online" notify:NotifyLater];
 	
 	//Stop all autorefreshing keys
 	[self stopAutoRefreshingStatusKey:nil];
 	
 	//Apply any changes
-    [self notifyOfChangedStatusSilently:NO];
+    [self notifyOfChangedPropertiesSilently:NO];
 	
 	//If we were disconnected unexpectedly, attempt a reconnect. Give subclasses a chance to handle the disconnection error.
-	if (reconnectAttemptsPerformed > 1 && [[self statusObjectForKey:@"Waiting for Network"] boolValue]) {
+	if (reconnectAttemptsPerformed > 1 && [[self valueForProperty:@"Waiting for Network"] boolValue]) {
 		// If we know this connection is waiting for the network to return, don't bother continuing to reconnect.
 		// Let it try for 2 times and then cancel and wait for the network to return.
 		[self cancelAutoReconnect];

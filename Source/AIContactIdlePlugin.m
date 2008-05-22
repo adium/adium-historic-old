@@ -83,7 +83,7 @@
     if ((inModifiedKeys == nil || [inModifiedKeys containsObject:@"IdleSince"]) &&
 		![inObject isKindOfClass:[AIMetaContact class]]) {
 
-        if ([inObject statusObjectForKey:@"IdleSince"] != nil) {
+        if ([inObject valueForProperty:@"IdleSince"] != nil) {
             //Track the handle
             if (!idleObjectArray) {
                 idleObjectArray = [[NSMutableArray alloc] init];
@@ -145,7 +145,7 @@
  */
 - (void)setIdleForObject:(AIListObject *)inObject silent:(BOOL)silent
 {
-	NSDate		*idleSince = [inObject statusObjectForKey:@"IdleSince"];
+	NSDate		*idleSince = [inObject valueForProperty:@"IdleSince"];
 	NSNumber	*idleNumber = nil;
 	
 	if (idleSince) { //Set the handle's 'idle' value
@@ -159,11 +159,11 @@
 		idleNumber = [NSNumber numberWithInt:idle];
 	}
 
-	[inObject setStatusObject:idleNumber
-					   forKey:@"Idle"
+	[inObject setValue:idleNumber
+					   forProperty:@"Idle"
 					   notify:NotifyLater];
 
-	[inObject notifyOfChangedStatusSilently:silent];
+	[inObject notifyOfChangedPropertiesSilently:silent];
 }
 
 
@@ -177,7 +177,7 @@
  */
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-	int 		idle = [inObject integerStatusObjectForKey:@"Idle"];
+	int 		idle = [inObject integerValueForProperty:@"Idle"];
 	NSString	*entry = nil;
 
 	if ((idle > 599400) || (idle == -1)) { //Cap idle at 999 Hours (999*60*60 seconds)
@@ -196,7 +196,7 @@
  */
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
-    int 				idleMinutes = [inObject integerStatusObjectForKey:@"Idle"];
+    int 				idleMinutes = [inObject integerValueForProperty:@"Idle"];
     NSAttributedString	*entry = nil;
 
     if ((idleMinutes > 599400) || (idleMinutes == -1)) { //Cap idle at 999 Hours (999*60 minutes)

@@ -37,7 +37,7 @@
  * @brief Manage the 'extended status' shown in the contact list
  *
  * If the contact list layout calls for displaying a status message or idle time (or both), this component manages
- * generating the appropriate string, storing it in the @"ExtendedStatus" status object, and updating it as necessary.
+ * generating the appropriate string, storing it in the @"ExtendedStatus" property, and updating it as necessary.
  */
 @implementation AIExtendedStatusPlugin
 
@@ -128,7 +128,7 @@
 			[statusMessage convertNewlinesToSlashes];	
 		}
 
-		idle = (showIdle ? [inObject integerStatusObjectForKey:@"Idle"] : 0);
+		idle = (showIdle ? [inObject integerValueForProperty:@"Idle"] : 0);
 
 		//
 		if (idle > 0 && statusMessage) {

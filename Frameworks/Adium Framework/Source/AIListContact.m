@@ -184,7 +184,7 @@
  */
 - (NSString *)serversideDisplayName
 {
-	return [self statusObjectForKey:@"Server Display Name"];	
+	return [self valueForProperty:@"Server Display Name"];	
 }
 
 - (BOOL)canContainOtherContacts {
@@ -199,10 +199,10 @@
 	BOOL displayNameChanges = NO;
 	
 	//This is the server display name.  Set it as such.
-	if (![alias isEqualToString:[self statusObjectForKey:@"Server Display Name"]]) {
-		//Set the server display name status object as the full display name
-		[self setStatusObject:alias
-					   forKey:@"Server Display Name"
+	if (![alias isEqualToString:[self valueForProperty:@"Server Display Name"]]) {
+		//Set the server display name property as the full display name
+		[self setValue:alias
+					   forProperty:@"Server Display Name"
 					   notify:NotifyLater];
 		
 		changes = YES;
@@ -216,9 +216,9 @@
 
 	//Use it either as the status message or the display name.
 	if (useAsStatusMessage) {
-		if (![[self stringFromAttributedStringStatusObjectForKey:@"ContactListDisplayName"] isEqualToString:cleanedAlias]) {
-			[self setStatusObject:[[[NSAttributedString alloc] initWithString:cleanedAlias] autorelease]
-						   forKey:@"ContactListDisplayName" 
+		if (![[self stringFromAttributedStringValueForProperty:@"ContactListDisplayName"] isEqualToString:cleanedAlias]) {
+			[self setValue:[[[NSAttributedString alloc] initWithString:cleanedAlias] autorelease]
+						   forProperty:@"ContactListDisplayName" 
 						   notify:NotifyLater];
 			
 			changes = YES;
@@ -243,7 +243,7 @@
 	
 	if (changes) {
 		//Apply any changes
-		[self notifyOfChangedStatusSilently:silent];
+		[self notifyOfChangedPropertiesSilently:silent];
 	}
 	
 	if (displayNameChanges) {
@@ -286,7 +286,7 @@
 	return [super phoneticName];
 }
 
-#pragma mark Status objects
+#pragma mark Properties
 
 /*!
  * @brief Set online
@@ -294,30 +294,30 @@
 - (void)setOnline:(BOOL)online notify:(NotifyTiming)notify silently:(BOOL)silent
 {
 	if (online != [self online]) {
-		[self setStatusObject:(online ? [NSNumber numberWithBool:YES] : nil)
-					   forKey:@"Online"
+		[self setValue:(online ? [NSNumber numberWithBool:YES] : nil)
+					   forProperty:@"Online"
 					   notify:notify];
 		
 		if (!silent) {
-			[self setStatusObject:[NSNumber numberWithBool:YES] 
-						   forKey:(online ? @"Signed On" : @"Signed Off")
+			[self setValue:[NSNumber numberWithBool:YES] 
+						   forProperty:(online ? @"Signed On" : @"Signed Off")
 						   notify:notify];
-			[self setStatusObject:nil 
-						   forKey:(online ? @"Signed Off" : @"Signed On")
+			[self setValue:nil 
+						   forProperty:(online ? @"Signed Off" : @"Signed On")
 						   notify:notify];
-			[self setStatusObject:nil
-						   forKey:(online ? @"Signed On" : @"Signed Off")
+			[self setValue:nil
+						   forProperty:(online ? @"Signed On" : @"Signed Off")
 					   afterDelay:CONTACT_SIGN_ON_OR_OFF_PERSISTENCE_DELAY];
 		}
 		
 		if (online) {
 			if (notify == NotifyNow) {
-				[self notifyOfChangedStatusSilently:silent];
+				[self notifyOfChangedPropertiesSilently:silent];
 			}
 			
 		} else {
 			//Will always notify
-			[[self account] removeStatusObjectsFromContact:self
+			[[self account] removePropetyValuesFromContact:self
 												  silently:silent];	
 		}
 	}
@@ -328,8 +328,8 @@
  */
 - (void)setSignonDate:(NSDate *)signonDate notify:(NotifyTiming)notify
 {
-	[self setStatusObject:signonDate
-				   forKey:@"Signon Date"
+	[self setValue:signonDate
+				   forProperty:@"Signon Date"
 				   notify:notify];
 }
 /*!
@@ -337,7 +337,7 @@
  */
 - (NSDate *)signonDate
 {
-	return [self statusObjectForKey:@"Signon Date"];
+	return [self valueForProperty:@"Signon Date"];
 }
 
 /*!
@@ -351,21 +351,21 @@
 {
 	if (isIdle) {
 		if (idleSinceDate) {
-			[self setStatusObject:idleSinceDate
-						   forKey:@"IdleSince"
+			[self setValue:idleSinceDate
+						   forProperty:@"IdleSince"
 						   notify:NotifyLater];
 		} else {
 			//No idleSinceDate means we are Idle but don't know how long, so set to -1
-			[self setStatusObject:[NSNumber numberWithInt:-1]
-						   forKey:@"Idle"
+			[self setValue:[NSNumber numberWithInt:-1]
+						   forProperty:@"Idle"
 						   notify:NotifyLater];
 		}
 	} else {
-		[self setStatusObject:nil
-					   forKey:@"IdleSince"
+		[self setValue:nil
+					   forProperty:@"IdleSince"
 					   notify:NotifyLater];
-		[self setStatusObject:nil
-					   forKey:@"Idle"
+		[self setValue:nil
+					   forProperty:@"Idle"
 					   notify:NotifyLater];
 	}
 	
@@ -373,13 +373,13 @@
 	* to perform an action when the contact becomes/comes back from idle, regardless of whether an IdleSince is available,
 	* without having to do that action every minute for other contacts.
 	*/
-	[self setStatusObject:(isIdle ? [NSNumber numberWithBool:YES] : nil)
-				   forKey:@"IsIdle"
+	[self setValue:(isIdle ? [NSNumber numberWithBool:YES] : nil)
+				   forProperty:@"IsIdle"
 				   notify:NotifyLater];
 	
 	//Apply any changes
 	if (notify == NotifyNow) {
-		[self notifyOfChangedStatusSilently:NO];
+		[self notifyOfChangedPropertiesSilently:NO];
 	}
 }
 
@@ -396,8 +396,8 @@
 - (void)setWarningLevel:(int)warningLevel notify:(NotifyTiming)notify
 {
 	if (warningLevel != [self warningLevel]) {
-		[self setStatusObject:[NSNumber numberWithInt:warningLevel]
-					   forKey:@"Warning"
+		[self setValue:[NSNumber numberWithInt:warningLevel]
+					   forProperty:@"Warning"
 					   notify:notify];
 	}
 }
@@ -409,7 +409,7 @@
  */
 - (int)warningLevel
 {
-	return [self integerStatusObjectForKey:@"Warning"];
+	return [self integerValueForProperty:@"Warning"];
 }
 
 /*!
@@ -417,8 +417,8 @@
  */
 - (void)setProfile:(NSAttributedString *)profile notify:(NotifyTiming)notify
 {
-	[self setStatusObject:profile
-				   forKey:@"TextProfile" 
+	[self setValue:profile
+				   forProperty:@"TextProfile" 
 				   notify:notify];
 }
 
@@ -427,7 +427,7 @@
  */
 - (NSAttributedString *)profile
 {
-	return [self statusObjectForKey:@"TextProfile"];
+	return [self valueForProperty:@"TextProfile"];
 }
 
 /*!
@@ -437,7 +437,7 @@
  */
 - (BOOL)isStranger
 {
-	return ![self integerStatusObjectForKey:@"NotAStranger"];
+	return ![self integerValueForProperty:@"NotAStranger"];
 }
 
 /*!
@@ -453,7 +453,7 @@
  */
 - (BOOL)isMobile
 {
-	return [self integerStatusObjectForKey:@"IsMobile" fromAnyContainedObject:NO];
+	return [self integerValueForProperty:@"IsMobile" fromAnyContainedObject:NO];
 }
 
 /*!
@@ -461,8 +461,8 @@
  */
 - (void)setIsMobile:(BOOL)isMobile notify:(NotifyTiming)notify
 {
-	[self setStatusObject:(isMobile ? [NSNumber numberWithBool:isMobile] : nil)
-				   forKey:@"IsMobile"
+	[self setValue:(isMobile ? [NSNumber numberWithBool:isMobile] : nil)
+				   forProperty:@"IsMobile"
 				   notify:notify];
 }
 
@@ -473,7 +473,7 @@
  */
 - (BOOL)isBlocked
 {
-	return [self integerStatusObjectForKey:KEY_IS_BLOCKED];
+	return [self integerValueForProperty:KEY_IS_BLOCKED];
 }
 
 - (void)setIsBlocked:(BOOL)yesOrNo updateList:(BOOL)addToPrivacyLists
@@ -511,19 +511,19 @@
 				}
 			}
 			
-			//update status object
+			//update property
 			if (result) {
-				[self setStatusObject:((privType == AIPrivacyTypeDeny) == yesOrNo) ? [NSNumber numberWithBool:YES] : nil
-							   forKey:KEY_IS_BLOCKED 
+				[self setValue:((privType == AIPrivacyTypeDeny) == yesOrNo) ? [NSNumber numberWithBool:YES] : nil
+							   forProperty:KEY_IS_BLOCKED 
 							   notify:NotifyNow];
 			}
 		} else {
 			NSLog(@"Privacy is not supported on contacts for the account: %@", contactAccount);
 		}
 	} else {
-		//caller of this method just wants to update the status object
-		[self setStatusObject:((privType == AIPrivacyTypeDeny) == yesOrNo) ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO]
-					   forKey:KEY_IS_BLOCKED
+		//caller of this method just wants to update the property
+		[self setValue:((privType == AIPrivacyTypeDeny) == yesOrNo) ? [NSNumber numberWithBool:YES] : [NSNumber numberWithBool:NO]
+					   forProperty:KEY_IS_BLOCKED
 					   notify:NotifyNow];
 	}
 }
@@ -533,7 +533,7 @@
 /*!
 * @brief Determine the status message to be displayed in the contact list
  *
- * Look for a status object "ContactListStatusMessage".  Then look for a statusMessage.
+ * Look for a property "ContactListStatusMessage".  Then look for a statusMessage.
  * Failing both those, look for a statusName, which might be something like "DND" or "Free for Chat"
  * and look up the localized description of it.
  */
@@ -542,7 +542,7 @@
 	NSAttributedString	*contactListStatusMessage;
 	
 	if (!(contactListStatusMessage = [self statusMessage])) {
-		contactListStatusMessage = [self statusObjectForKey:@"ContactListDisplayName"];
+		contactListStatusMessage = [self valueForProperty:@"ContactListDisplayName"];
 	}
 	   
 	if (!contactListStatusMessage) {
