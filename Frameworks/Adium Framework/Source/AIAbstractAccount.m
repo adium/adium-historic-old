@@ -733,7 +733,7 @@
  * If the string does not contain dynamic content any existing scheduling for it will be removed.  Call this method when the
  * value of an attributed status that supports automatic refreshing is changed by the user.
  *
- * @param key Status key to check for auto-refreshing content
+ * @param key Property to check for auto-refreshing content
  * @result The current value of the auto-refreshing string for you to use.
  */
 - (NSAttributedString *)autoRefreshingOutgoingContentForStatusKey:(NSString *)key
@@ -762,7 +762,7 @@
  *
  * Same as autoRefreshingOutgoingContentForStatusKey: but does its filtering in the contentController filterThread,
  * sending back the filtered attributedString to self on selector "selector" whenever it's complete.
- * @param key Status key to check for auto-refreshing content
+ * @param key Property to check for auto-refreshing content
  * @param selector Selector to call when status string is updated
  * @param context Context to use for filtering the status string (Optional)
  */
@@ -797,7 +797,7 @@
 }
 
 /*!
- * @brief Provide the NSAttributedString which will be filtered for a given status key
+ * @brief Provide the NSAttributedString which will be filtered for a given property
  *
  * In general, returns the preference for the key as an attributed string.
  * For statuses, returns the status message of the current statusState.
@@ -859,7 +859,7 @@
 }
 
 /*!
- * @brief Start auto-refreshing a status key
+ * @brief Start auto-refreshing a property
  *
  * If polling is necessary, add the key to autoRefreshingKeys and start our timer.  Whether polling is needed or not,
  * note that the key is dynamic.
@@ -875,7 +875,7 @@
 }
 
 /*!
- * @brief Stop auto-refreshing a status key
+ * @brief Stop auto-refreshing a property
  *
  * Stops an account status string from auto-refreshing
  *
@@ -1064,7 +1064,7 @@
 /*!
  * @brief Should the account's status be updated as soon as it is connected?
  *
- * If YES, the StatusState and IdleSince status keys will be told to update as soon as the account connects.
+ * If YES, the StatusState and IdleSince properties will be told to update as soon as the account connects.
  * This will allow the account to send its status information to the server upon connecting.
  *
  * If this information is already known by the account at the time it connects and further prompting to send it is

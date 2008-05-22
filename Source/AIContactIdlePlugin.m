@@ -72,7 +72,7 @@
 /*!
  * @brief Update list object
  *
- * When the idleSince status key changes, we start or stop tracking the object as appropriate.
+ * When the idleSince property changes, we start or stop tracking the object as appropriate.
  * We track in order to have a simple number associated with the contact, updated once per minute, rather
  * than calculating the time from IdleSince until Now whenever we want to display the idle time.
  *

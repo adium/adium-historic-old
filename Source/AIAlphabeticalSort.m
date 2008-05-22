@@ -67,7 +67,7 @@ static  BOOL	sortByLastName;
 }
 
 /*!
- * @brief Status keys which, when changed, should trigger a resort
+ * @brief Properties which, when changed, should trigger a resort
  */
 - (NSSet *)statusKeysRequiringResort{
 	return nil;

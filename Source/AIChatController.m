@@ -153,7 +153,7 @@
 /*!
  * @brief Chat status changed
  *
- * Called by AIChat after it changes one or more status keys.
+ * Called by AIChat after it changes one or more properties.
  */
 - (void)chatStatusChanged:(AIChat *)inChat modifiedStatusKeys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {

@@ -212,7 +212,7 @@ static int  sizeOfSortOrder;
 }
 
 /*!
- * @brief Status keys which, when changed, should trigger a resort
+ * @brief Properties which, when changed, should trigger a resort
  */
 - (NSSet *)statusKeysRequiringResort{
 	return [NSSet setWithObjects:@"Online",@"Idle",@"StatusType",@"IsMobile",nil];

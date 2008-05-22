@@ -380,9 +380,9 @@ typedef enum
 //Status ---------------------------------------------------------------------------------------------------------------
 #pragma mark Status
 /*!
- * @brief Supported status keys
+ * @brief Supported properties
  *
- * Returns an array of status keys supported by this account.  This account will not be informed of changes to keys
+ * Returns an array of properties supported by this account.  This account will not be informed of changes to keys
  * it does not support.  Available keys are:
  *   @"Display Name", @"Online", @"Offline", @"IdleSince", @"IdleManuallySet", @"User Icon"
  *   @"TextProfile", @"DefaultUserIconFilename", @"StatusState"
@@ -410,7 +410,7 @@ typedef enum
  * @brief Status for key
  *
  * Returns the status this account should be for a specific key
- * @param key Status key
+ * @param key Property
  * @return id Status value
  */
 - (id)statusForKey:(NSString *)key
@@ -424,7 +424,7 @@ typedef enum
  * Update account status for the changed key.  This is called when account status changes Adium-side and the account
  * code should update status account/server side in response.  The new value for the key can be accessed using
  * the statusForKey method.
- * @param key The updated status key
+ * @param key The updated property
  */
 - (void)updateStatusForKey:(NSString *)key
 {
