@@ -19,8 +19,8 @@ int main(int argc, char **argv) {
 
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-	StressTest *test = [[StressTest alloc] initWithSelector:@selector(testStress)];
-	SenTestRun *run = [[SenTestRun alloc] initWithTest:test];
+	StressTest *test = [[[StressTest alloc] initWithSelector:@selector(testStress)] autorelease];
+	SenTestRun *run = [[[SenTestRun alloc] initWithTest:test] autorelease];
 
 	NSDate *startDate, *endDate;
 
