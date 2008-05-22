@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------------------
-//  $Id: OCMockObject.h 21 2008-01-24 18:59:39Z erik $
-//  Copyright (c) 2004-2008 by Mulle Kybernetik. See License file for details.
+//  $Id: OCMockObject.h 15 2007-06-04 11:49:51Z erik $
+//  Copyright (c) 2004-2007 by Mulle Kybernetik. See License file for details.
 //---------------------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>

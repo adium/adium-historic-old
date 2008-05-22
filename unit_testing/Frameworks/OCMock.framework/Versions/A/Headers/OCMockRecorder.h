@@ -1,12 +1,9 @@
 //---------------------------------------------------------------------------------------
-//  $Id: OCMockRecorder.h 21 2008-01-24 18:59:39Z erik $
-//  Copyright (c) 2004-2008 by Mulle Kybernetik. See License file for details.
+//  $Id: OCMockRecorder.h 12 2006-06-11 02:41:31Z erik $
+//  Copyright (c) 2004 by Mulle Kybernetik. See License file for details.
 //---------------------------------------------------------------------------------------
 
 #import <Foundation/Foundation.h>
-
-@class OCMConstraint; // reference for backwards compatibility OCMOCK_ANY macro
-
 
 @interface OCMockRecorder : NSProxy 
 {
@@ -16,6 +13,8 @@
 	BOOL			returnValueShouldBeThrown;
 	NSInvocation	*recordedInvocation;
 }
+
++ (id)anyArgument;
 
 - (id)initWithSignatureResolver:(id)anObject;
 
@@ -28,5 +27,6 @@
 
 @end
 
-#define OCMOCK_ANY [OCMConstraint any]
+
+#define OCMOCK_ANY [OCMockRecorder anyArgument]
 #define OCMOCK_VALUE(variable) [NSValue value:&variable withObjCType:@encode(typeof(variable))]
