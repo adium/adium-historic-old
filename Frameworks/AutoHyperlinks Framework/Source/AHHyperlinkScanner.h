@@ -45,16 +45,60 @@ extern unsigned int AHStringOffset;
 	AH_URI_VERIFICATION_STATUS		 validStatus;
 }
 
+/*!
+ * @brief Init
+ *
+ * Defaults to strict URL checking (only links with schemes are matched).
+ *
+ * @return A new AHHyperlinkScanner.
+ */
 - (id)init;
-- (id)initWithStrictChecking:(BOOL)flag;
+
+/*!
+ * @brief Init
+ *
+ * @param flag Sets strict checking preference.
+ * @return A new AHHyperlinkScanner.
+ */
+ - (id)initWithStrictChecking:(BOOL)flag;
 
 - (AH_URI_VERIFICATION_STATUS)validationStatus;
 
+/*!
+ * @brief Determine the validity of a given string
+ *
+ * @param inString The string to be verified
+ * @return Boolean
+ */
 - (BOOL)isStringValidURL:(NSString *)inString;
 
+/*!
+ * @brief Fetches all the URLs from a string
+ * @param inString The NSString with potential URLs in it
+ * @return An array of AHMarkedHyperlinks representing each matched URL in the string or nil if no matches.
+ */
 - (NSArray *)allURLsFromString:(NSString *)inString;
+
+/*!
+ * @brief Fetches all the URLs from a NSTextView
+ * @param inView The NSTextView with potential URLs in it
+ * @return An array of AHMarkedHyperlinks representing each matched URL in the textView or nil if no matches.
+ */
 - (NSArray *)allURLsFromTextView:(NSTextView *)inView;
+
+/*!
+ * @brief Scans an attributed string for URLs then adds the link attribs and objects.
+ * @param inString The NSAttributedString to be linkified
+ * @return An autoreleased NSAttributedString.
+ */
 - (NSAttributedString *)linkifyString:(NSAttributedString *)inString;
+
+/*!
+ * @brief Scans a NSTextView's text store for URLs then adds the link attribs and objects.
+ * 
+ * This scan happens in place: the origional NSTextView is modified, and nothing is returned.
+ * @param inView The NSTextView to be linkified.
+ */
 - (void)linkifyTextView:(NSTextView *)inView;
 
 @end
