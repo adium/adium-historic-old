@@ -195,12 +195,7 @@
 
     [preScanner scanCharactersFromSet:startSet intoString:nil];
 
-// IMPs:
-	typedef BOOL (*AHscanUpToCharactersFromSetIntoStringIMP)(id, SEL, id, id *);
-	AHscanUpToCharactersFromSetIntoStringIMP preScannerIMP =
-		(AHscanUpToCharactersFromSetIntoStringIMP)[preScanner methodForSelector:@selector(scanUpToCharactersFromSet:intoString:)];
-
-	while(preScannerIMP(preScanner, @selector(scanUpToCharactersFromSet:intoString:), skipSet, &scanString)) {
+    while([preScanner scanUpToCharactersFromSet:skipSet intoString:&scanString]) {
 		
         unsigned int localStringLen = [scanString length];
 		unsigned int finalStringLen = localStringLen;
@@ -214,11 +209,8 @@
 		
 		unsigned int encScanLocation = 0;
 		
-		AHscanUpToCharactersFromSetIntoStringIMP enclosureScannerIMP =
-			(AHscanUpToCharactersFromSetIntoStringIMP)[enclosureScanner methodForSelector:@selector(scanUpToCharactersFromSet:intoString:)];
-		
 		while(encScanLocation < [[enclosureScanner string] length]) {
-			enclosureScannerIMP(enclosureScanner, @selector(scanUpToCharactersFromSet:intoString:), enclosureSet, nil);
+			[enclosureScanner scanUpToCharactersFromSet:enclosureSet intoString:nil];
 			encScanLocation = [enclosureScanner scanLocation];
 			
 			if(encScanLocation >= [[enclosureScanner string] length]) break;
