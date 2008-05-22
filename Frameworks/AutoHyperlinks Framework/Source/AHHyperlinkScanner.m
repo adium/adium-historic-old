@@ -39,24 +39,13 @@
 
 #pragma mark Init
 
-/*!
- * @brief Init
- *
- * Defaults to strict URL checking (only links with schemes are matched).
- *
- * @return A new AHHyperlinkScanner.
- */
+
 - (id)init
 {
 	return [self initWithStrictChecking:YES];
 }
 
-/*!
- * @brief Init
- *
- * @param flag Sets strict checking preference.
- * @return A new AHHyperlinkScanner.
- */- (id)initWithStrictChecking:(BOOL)flag
+- (id)initWithStrictChecking:(BOOL)flag
 {
 	if((self = [super init])){
 		urlSchemes = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -84,12 +73,7 @@
 
 #pragma mark primitive methods
 
-/*!
- * @brief Determine the validity of a given string
- *
- * @param inString The string to be verified
- * @return Boolean
- */
+
 - (BOOL)isStringValidURL:(NSString *)inString
 {
     AH_BUFFER_STATE buf;  // buffer for flex to scan from
@@ -180,7 +164,29 @@
    	if (!hostnameComponentSeparatorSet) {
    		hostnameComponentSeparatorSet = [[NSCharacterSet characterSetWithCharactersInString:@"./"] retain];
    	}
+
+	static NSArray *enclosureStartArray;
+	if(!enclosureStartArray){
+		enclosureStartArray = [[NSArray arrayWithObjects:@"(",@"[",@"{",nil] retain];
+	}
+
+	static NSCharacterSet *enclosureSet;
+	if(!enclosureSet){
+#define URL_ENCLOSURE_CHARACTERS @"()[]{}"
+		enclosureSet = [[NSCharacterSet characterSetWithCharactersInString:URL_ENCLOSURE_CHARACTERS] retain];
+	}
+		
+	static NSArray *enclosureStopArray;
+	if(!enclosureStopArray){
+		enclosureStopArray = [[NSArray arrayWithObjects:@")",@"]",@"}",nil] retain];
+	}
 	
+#define ENC_INDEX_KEY @"encIndex"
+#define ENC_CHAR_KEY @"encChar"
+	static NSArray *encKeys;
+	if(!encKeys){
+		encKeys = [[NSArray arrayWithObjects:ENC_INDEX_KEY, ENC_CHAR_KEY, nil] retain];
+	}
     // scan upto the next whitespace char so that we don't unnecessarity confuse flex
     // otherwise we end up validating urls that look like this "http://www.adiumx.com/ <--cool"
     NSScanner *preScanner = [[[NSScanner alloc] initWithString:inString] autorelease];
@@ -194,37 +200,24 @@
         unsigned int localStringLen = [scanString length];
 		unsigned int finalStringLen = localStringLen;
 		
-		static NSArray *enclosureStartArray;
-		if(!enclosureStartArray){
-			enclosureStartArray = [[NSArray arrayWithObjects:@"(",@"[",@"{",nil] retain];
-		}
-
-		static NSCharacterSet *enclosureSet;
-		if(!enclosureSet){
-#define URL_ENCLOSURE_CHARACTERS @"()[]{}"
-			enclosureSet = [[NSCharacterSet characterSetWithCharactersInString:URL_ENCLOSURE_CHARACTERS] retain];
-		}
-		
-		static NSArray *enclosureStopArray;
-		if(!enclosureStopArray){
-			enclosureStopArray = [[NSArray arrayWithObjects:@")",@"]",@"}",nil] retain];
-		}
-		
 		// Find balanced enclosure chars
-#define ENC_INDEX_KEY @"encIndex"
-#define ENC_CHAR_KEY @"encChar"
 		NSMutableArray	*enclosureStack = [NSMutableArray arrayWithCapacity:2]; // totally arbitrary.
 		NSMutableArray	*enclosureArray = [NSMutableArray arrayWithCapacity:2];
 		NSString  *matchChar = nil;
 		NSScanner *enclosureScanner = [[[NSScanner alloc] initWithString:scanString] autorelease];
 		NSDictionary *encDict;
-		while([enclosureScanner scanLocation] < [[enclosureScanner string] length]) {
+		
+		unsigned int encScanLocation = 0;
+		
+		while(encScanLocation < [[enclosureScanner string] length]) {
 			[enclosureScanner scanUpToCharactersFromSet:enclosureSet intoString:nil];
-			if([enclosureScanner scanLocation] >= [[enclosureScanner string] length]) break;
-			matchChar = [scanString substringWithRange:NSMakeRange([enclosureScanner scanLocation], 1)];
+			encScanLocation = [enclosureScanner scanLocation];
+			
+			if(encScanLocation >= [[enclosureScanner string] length]) break;
+			matchChar = [scanString substringWithRange:NSMakeRange(encScanLocation, 1)];
 			if([enclosureStartArray containsObject:matchChar]) {
-				encDict = [NSDictionary	dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithUnsignedInt:[enclosureScanner scanLocation]], matchChar, nil]
-													  forKeys:[NSArray arrayWithObjects:ENC_INDEX_KEY, ENC_CHAR_KEY, nil]];
+				encDict = [NSDictionary	dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithUnsignedInt:encScanLocation], matchChar, nil]
+													  forKeys:encKeys];
 				[enclosureStack addObject:encDict];
 			}else if([enclosureStopArray containsObject:matchChar]) {
 				NSEnumerator *encEnumerator = [enclosureStack objectEnumerator];
@@ -232,15 +225,15 @@
 					unsigned int encTagIndex = [(NSNumber *)[encDict objectForKey:ENC_INDEX_KEY] unsignedIntValue];
 					unsigned int encStartIndex = [enclosureStartArray indexOfObjectIdenticalTo:[encDict objectForKey:ENC_CHAR_KEY]];
 					if([enclosureStopArray indexOfObjectIdenticalTo:matchChar] == encStartIndex) {
-						NSRange encRange = NSMakeRange(encTagIndex, [enclosureScanner scanLocation] - encTagIndex);
+						NSRange encRange = NSMakeRange(encTagIndex, encScanLocation - encTagIndex);
 						[enclosureStack removeObject:encDict];
 						[enclosureArray addObject:NSStringFromRange(encRange)];
 						break;
 					}
 				}
 			}
-			if([enclosureScanner scanLocation] < [[enclosureScanner string] length])
-				[enclosureScanner setScanLocation:[enclosureScanner scanLocation]+1];
+			if(encScanLocation < [[enclosureScanner string] length])
+				[enclosureScanner setScanLocation:encScanLocation+1];
 		}
 		NSRange lastEnclosureRange = NSMakeRange(0, 0);
 		if([enclosureArray count]) lastEnclosureRange = NSRangeFromString([enclosureArray lastObject]);
@@ -313,11 +306,7 @@
 
 #pragma mark string and textview handleing
 
-/*!
- * @brief Fetches all the URLs from a string
- * @param inString The NSString with potential URLs in it
- * @return An array of AHMarkedHyperlinks representing each matched URL in the string or nil if no matches.
- */
+
 -(NSArray *)allURLsFromString:(NSString *)inString
 {
     AHStringOffset = 0; //set the offset to 0.
@@ -335,11 +324,7 @@
 	return rangeArray;
 }
 
-/*!
- * @brief Fetches all the URLs from a NSTextView
- * @param inView The NSTextView with potential URLs in it
- * @return An array of AHMarkedHyperlinks representing each matched URL in the textView or nil if no matches.
- */
+
 -(NSArray *)allURLsFromTextView:(NSTextView *)inView
 {
     // since a NSTextView is really just a glorified NSMutableAttributedString,
@@ -347,11 +332,7 @@
     return [self allURLsFromString:[inView string]];
 }
 
-/*!
- * @brief Scans an attributed string for URLs then adds the link attribs and objects.
- * @param inString The NSAttributedString to be linkified
- * @return An autoreleased NSAttributedString.
- */
+
 -(NSAttributedString *)linkifyString:(NSAttributedString *)inString
 {
     //build an array from the input string and get its obj. enumerator
@@ -384,12 +365,7 @@
 	}
 }
 
-/*!
- * @brief Scans a NSTextView's text store for URLs then adds the link attribs and objects.
- * 
- * This scan happens in place: the origional NSTextView is modified, and nothing is returned.
- * @param inView The NSTextView to be linkified.
- */
+
 - (void)linkifyTextView:(NSTextView *)inView
 {
 	NSAttributedString *newAttributedString;
