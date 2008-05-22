@@ -299,8 +299,10 @@
 			location += startRange.location;
 		}else{
 			location += [scanString length];
+			if(location >= [inString length])
+				location--;
 		}
-        [preScanner setScanLocation:location++];
+		[preScanner setScanLocation:location++];
     }
 	
     // if we're here, then NSScanner hit the end of the string
