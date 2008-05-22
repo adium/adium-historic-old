@@ -41,6 +41,8 @@
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIHTMLDecoder.h>
 
+#define RESTORED_CHAT_CONTEXT_LINE_NUMBER 50
+
 /**
  * @class DCMessageContextDisplayPlugin
  * @brief Component to display in-window message history
@@ -237,13 +239,16 @@ static int linesLeftToFind = 0;
 	logObjectUID = [logObjectUID safeFilenameString];
 
 	NSString *baseLogPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:
-		[AILoggerPlugin relativePathForLogWithObject:logObjectUID onAccount:[chat account]]];
+		[AILoggerPlugin relativePathForLogWithObject:logObjectUID onAccount:[chat account]]];	
+
+	if ([[chat statusObjectForKey:@"Restored Chat"] boolValue]) {
+		linesLeftToFind = RESTORED_CHAT_CONTEXT_LINE_NUMBER;
+	} else {
+		linesLeftToFind = linesToDisplay;		
+	}
 			
 	//Initialize a place to store found messages
-	NSMutableArray *outerFoundContentContexts = [NSMutableArray arrayWithCapacity:linesToDisplay]; 
-
-	//Set up the counter variable
-	linesLeftToFind = linesToDisplay;
+	NSMutableArray *outerFoundContentContexts = [NSMutableArray arrayWithCapacity:linesLeftToFind]; 
 
 	//Iterate over the elements of the log path array.
 	NSEnumerator *pathsEnumerator = [logPaths objectEnumerator];
