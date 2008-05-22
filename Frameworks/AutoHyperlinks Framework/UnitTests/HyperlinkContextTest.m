@@ -29,9 +29,33 @@
 	[self testLaxContext:@"%@." withURI:URIString];
 }
 
+- (void)testWhitespace:(NSString *)URIString {
+	[self testLaxContext:@"\t%@" withURI:URIString];
+	[self testLaxContext:@"\n%@" withURI:URIString];
+	[self testLaxContext:@"\v%@" withURI:URIString];
+	[self testLaxContext:@"\f%@" withURI:URIString];
+	[self testLaxContext:@"\r%@" withURI:URIString];
+	[self testLaxContext:@" %@" withURI:URIString];
+
+	[self testLaxContext:@"%@\t" withURI:URIString];
+	[self testLaxContext:@"%@\n" withURI:URIString];
+	[self testLaxContext:@"%@\v" withURI:URIString];
+	[self testLaxContext:@"%@\f" withURI:URIString];
+	[self testLaxContext:@"%@\r" withURI:URIString];
+	[self testLaxContext:@"%@ " withURI:URIString];
+
+	[self testLaxContext:@"\t%@\t" withURI:URIString];
+	[self testLaxContext:@"\n%@\n" withURI:URIString];
+	[self testLaxContext:@"\v%@\v" withURI:URIString];
+	[self testLaxContext:@"\f%@\f" withURI:URIString];
+	[self testLaxContext:@"\r%@\r" withURI:URIString];
+	[self testLaxContext:@" %@ " withURI:URIString];
+}
+
 - (void)testSimpleDomain {
 	[self testEnclosedURI:@"example.com"];
 	[self testURIBorder:@"example.com"];
+	[self testWhitespace:@"example.com"];
 }
 
 - (void)testEdgeURI {
