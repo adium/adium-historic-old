@@ -423,6 +423,8 @@
 	testHyperlink(@"yahoo:sendim?adiumy");
 	testHyperlink(@"ymsgr://im?to=adiumy");
 	testHyperlink(@"yahoo://im?to=adiumy");
+	testHyperlink(@"ymsgr:im?to=adiumy");
+	testHyperlink(@"yahoo:im?to=adiumy");
 	testHyperlink(@"rdar://1234");
 	testHyperlink(@"rdar://problem/1234");
 	testHyperlink(@"rdar://problems/1234&5678&9012");
