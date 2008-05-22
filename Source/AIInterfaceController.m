@@ -430,7 +430,7 @@
 			[chat setStatusObject:[NSNumber numberWithBool:YES]
 						   forKey:@"Restored Chat"
 						   notify:NotifyNow];
-			
+					
 			// Open the chat into the container we've created above.
 			[self openChat:chat inContainerWithID:[dict objectForKey:@"ID"] atIndex:-1];
 		}
