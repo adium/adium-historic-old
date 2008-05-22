@@ -162,7 +162,7 @@
 				/* Don't display immediately, so the message view can aggregate multiple message history items.
 				 * As required, we post Content_ChatDidFinishAddingUntrackedContent when finished adding. */
 				[contextMessage setDisplayContentImmediately:NO];
-				
+			
 				[[adium contentController] displayContentObject:contextMessage
 											usingContentFilters:YES
 													immediately:YES];
@@ -171,7 +171,6 @@
 			//We finished adding untracked content
 			[[adium notificationCenter] postNotificationName:Content_ChatDidFinishAddingUntrackedContent
 												  	  object:chat];
-
 		}
 	}
 }
@@ -241,7 +240,8 @@ static int linesLeftToFind = 0;
 	NSString *baseLogPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:
 		[AILoggerPlugin relativePathForLogWithObject:logObjectUID onAccount:[chat account]]];	
 
-	if ([[chat statusObjectForKey:@"Restored Chat"] boolValue]) {
+	if (([[chat statusObjectForKey:@"Restored Chat"] boolValue]) &&
+		(linesToDisplay < RESTORED_CHAT_CONTEXT_LINE_NUMBER)) {
 		linesLeftToFind = RESTORED_CHAT_CONTEXT_LINE_NUMBER;
 	} else {
 		linesLeftToFind = linesToDisplay;		
@@ -421,7 +421,7 @@ static int linesLeftToFind = 0;
 				//Don't log this object
 				[message setPostProcessContent:NO];
 				[message setTrackContent:NO];
-				AILogWithSignature(@"Got %@", message);
+
 				//Add it to the array (in front, since we're working backwards, and we want the array in forward order)
 				[foundMessages insertObject:message atIndex:0];
 			} else {
