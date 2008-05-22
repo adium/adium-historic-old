@@ -97,8 +97,8 @@ CFStringRef CopyTextContentForFile(CFStringRef contentTypeUTI,
 		BOOL isDir;
 		if ([[NSFileManager defaultManager] fileExistsAtPath:(NSString *)pathToFile isDirectory:&isDir]) {
 			/* If we have a chatLog bundle, we want to get the text content for the xml file inside */
-			if (isDir) pathToFile = [pathToFile stringByAppendingPathComponent:
-									 [[[pathToFile lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"xml"]];
+			if (isDir) pathToFile = [(NSString *)pathToFile stringByAppendingPathComponent:
+									 [[[(NSString *)pathToFile lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"xml"]];
 			
 			textContent = (CFStringRef)GetTextContentForXMLLog((NSString *)pathToFile);
 		}
