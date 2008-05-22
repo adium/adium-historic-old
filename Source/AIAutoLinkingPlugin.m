@@ -64,6 +64,17 @@
 	NSRange						linkRange = NSMakeRange(0,0);
 	unsigned					stringLength = [replacementMessage length];
 
+	if([hyperlinkScanner isStringValidURL:[replacementMessage string]]){
+		NSString *linkString = (NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+													(CFStringRef)[replacementMessage string],
+													(CFStringRef)@"#%",
+													NULL,
+													kCFStringEncodingUTF8);
+		[replacementMessage addAttribute:NSLinkAttributeName
+								   value:[NSURL URLWithString:linkString]
+								   range:NSMakeRange(0, [replacementMessage length])];
+	}
+	
 	for (int i = 0; i < stringLength; i += linkRange.length) {
 		if (![replacementMessage attribute:NSLinkAttributeName atIndex:i longestEffectiveRange:&linkRange inRange:NSMakeRange(i, stringLength - i)]) {
 			/* If there's no link at this index already, process it via the hyperlinkScanner to see if there should be one.
