@@ -546,6 +546,9 @@
 				GCC_PREPROCESSOR_DEFINITIONS = "TEST_URIS_FILE_PATHNAME=\"\\\"$(SRCROOT)/TestURIs.txt\\\"\"";
 				INSTALL_PATH = /usr/local/bin;
 				LD_RUNPATH_SEARCH_PATHS = "$(DEVELOPER_FRAMEWORKS_DIR)";
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET_i386 = 10.5;
+				MACOSX_DEPLOYMENT_TARGET_ppc = 10.5;
 				OTHER_LDFLAGS = (
 					"-framework",
 					Foundation,
@@ -554,6 +557,8 @@
 				);
 				PREBINDING = NO;
 				PRODUCT_NAME = AHStressTester;
+				SDKROOT_i386 = /Developer/SDKs/MacOSX10.5.sdk;
+				SDKROOT_ppc = /Developer/SDKs/MacOSX10.5.sdk;
 				ZERO_LINK = NO;
 			};
 			name = Deployment;
