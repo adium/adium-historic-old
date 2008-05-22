@@ -17,6 +17,7 @@
 #import "AILoggerPlugin.h"
 #import "AILogToGroup.h"
 #import "AIChatLog.h"
+#import "AIAbstractLogViewerWindowController.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
 
 @interface AILogToGroup (PRIVATE)
@@ -34,7 +35,7 @@
 		path = [inPath retain];
 		from = [inFrom retain];
 		to = [inTo retain];
-		serviceClass = [inServiceClass retain];
+		serviceClass = [handleSpecialCasesForUIDAndServiceClass(to, inServiceClass) retain];
 		logDict = nil;
 		partialLogDict = nil;
 		

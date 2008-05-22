@@ -311,7 +311,6 @@ static int toArraySort(id itemA, id itemB, void *context);
 	while ((logFromGroup = [enumerator nextObject])) {
 		NSEnumerator	*toEnum;
 		AILogToGroup	*currentToGroup;
-		NSString		*serviceClass = [logFromGroup serviceClass];
 
 		//Add the 'to' for each grouping on this account
 		toEnum = [[logFromGroup toGroupArray] objectEnumerator];
@@ -319,6 +318,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 			NSString	*currentTo;
 			
 			if ((currentTo = [currentToGroup to])) {
+				NSString *serviceClass = [currentToGroup serviceClass];
 				AIListObject *listObject = ((serviceClass && currentTo) ?
 											[[adium contactController] existingListObjectWithUniqueID:[AIListObject internalObjectIDForServiceID:serviceClass
 																																			 UID:currentTo]] :
@@ -2716,6 +2716,48 @@ static int toArraySort(id itemA, id itemB, void *context)
 	
 	if ([inEvent deltaY] == 0)
 		[resultsLock unlock];		
+}
+
+#pragma Transcript services special-casing
+NSString *handleSpecialCasesForUIDAndServiceClass(NSString *contactUID, NSString *serviceClass)
+{
+	/* Jabber and its specified derivative services need special handling;
+	 * this is cross-contamination from ESPurpleJabberAccount.
+	 */
+	if ([serviceClass isEqualToString:@"Jabber"] ||
+		[serviceClass isEqualToString:@"GTalk"] ||
+		[serviceClass isEqualToString:@"LiveJournal"]) {
+		
+		if ([contactUID hasSuffix:@"@gmail.com"] ||
+			[contactUID hasSuffix:@"@googlemail.com"]) {
+			serviceClass = @"GTalk";
+			
+		} else if ([contactUID hasSuffix:@"@livejournal.com"]){
+			serviceClass = @"LiveJournal";
+			
+		} else {
+			serviceClass = @"Jabber";
+		}	
+		
+		/* OSCAR and its specified derivative services need special handling;
+		 *  this is cross-contamination from CBPurpleOscarAccount.
+		 */
+	} else if ([serviceClass isEqualToString:@"AIM"] ||
+			   [serviceClass isEqualToString:@"ICQ"] ||
+			   [serviceClass isEqualToString:@"Mac"]) {
+		const char	firstCharacter = ([contactUID length] ? [contactUID characterAtIndex:0] : '\0');
+		
+		//Determine service based on UID
+		if ([contactUID hasSuffix:@"@mac.com"]) {
+			serviceClass = @"Mac";
+		} else if (firstCharacter && (firstCharacter >= '0' && firstCharacter <= '9')) {
+			serviceClass = @"ICQ";
+		} else {
+			serviceClass = @"AIM";
+		}
+	}
+	
+	return serviceClass;
 }
 
 @end

@@ -49,7 +49,7 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
 	NSArray *serviceAndFromUIDArray = [serviceAndFromUID componentsSeparatedByString:@"."];
 	
 	if ([serviceAndFromUIDArray count] >= 2) {
-		myServiceClass = [serviceAndFromUIDArray objectAtIndex:0];
+		myServiceClass = handleSpecialCasesForUIDAndServiceClass(toUID, [serviceAndFromUIDArray objectAtIndex:0]);
 		
 		//Use substringFromIndex so we include the rest of the string in the case of a UID with a . in it
 		fromUID = [serviceAndFromUID substringFromIndex:([serviceClass length] + 1)]; //One off for the '.'
