@@ -34,8 +34,8 @@
 	unichar enclosureOpeningCharacters[kNumEnclosureCharacters] = { '<', '(', '[', };
 	unichar enclosureClosingCharacters[kNumEnclosureCharacters] = { '>', ')', ']', };
 	unichar terminalCharacters[kNumTerminalCharacters] = { '.', '!', '?', '<', '>', '(', ')', '{', '}', '[', ']', '"', '\'', '-', ',', ':', ';' };
-	for (NSUInteger enclosureIndex = 0U; enclosureIndex < kNumEnclosureCharacters; ++enclosureIndex) {
-		for (NSUInteger terminalCharacterIndex = 0U; terminalCharacterIndex < kNumTerminalCharacters; ++terminalCharacterIndex) {
+	for (unsigned int enclosureIndex = 0U; enclosureIndex < kNumEnclosureCharacters; ++enclosureIndex) {
+		for (unsigned int terminalCharacterIndex = 0U; terminalCharacterIndex < kNumTerminalCharacters; ++terminalCharacterIndex) {
 			[self         testEnclosedURI:URIString
 				enclosureOpeningCharacter:enclosureOpeningCharacters[enclosureIndex]
 				enclosureClosingCharacter:enclosureClosingCharacters[enclosureIndex]
