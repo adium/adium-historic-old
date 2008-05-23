@@ -318,7 +318,7 @@
 	
 	NSRange postFormIDRange = [homeString rangeOfString:@"<input type=\"hidden\" id=\"post_form_id\" name=\"post_form_id\" value=\"" options:NSLiteralSearch];
 	if (postFormIDRange.location != NSNotFound) {
-		NSRange endPostFormIDRange = [homeString rangeOfString:@"\" />"
+		NSRange endPostFormIDRange = [homeString rangeOfString:@"\""
 													  options:NSLiteralSearch
 														 range:NSMakeRange(NSMaxRange(postFormIDRange),
 																		   [homeString length] - NSMaxRange(postFormIDRange))];
@@ -332,7 +332,12 @@
 		AILogWithSignature(@"Could not extract information (ID %@, channel %@, postFormID %@) from:\n******\n%@\nn******",
 						   facebookUID, channel, postFormID,
 						   homeString);
-	}	
+	}
+	
+	if (facebookUID && postFormID && !channel) {
+		channel = [@"1" retain];
+		AILogWithSignature(@"Faking the channel (1). Hope this works!");
+	}
 }
 
 @end
