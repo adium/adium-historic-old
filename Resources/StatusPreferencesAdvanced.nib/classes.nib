@@ -14,6 +14,19 @@
 		</dict>
 		<dict>
 			<key>CLASS</key>
+			<string>RBSplitView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>delegate</key>
+				<string>id</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>RBSplitSubview</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
 			<string>NSTextField</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
@@ -29,12 +42,26 @@
 			<string>AIModularPane</string>
 		</dict>
 		<dict>
+			<key>CLASS</key>
+			<string>RBSplitSubview</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSView</string>
+		</dict>
+		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key>adiumPrint</key>
 				<string>id</string>
+				<key>didAdjustSubviews</key>
+				<string>RBSplitView</string>
 				<key>prefsWindowWillClose</key>
 				<string>SS_PrefsController</string>
+				<key>toggleFindPanel</key>
+				<string>id</string>
+				<key>willAdjustSubviews</key>
+				<string>RBSplitView</string>
 			</dict>
 			<key>CLASS</key>
 			<string>NSObject</string>
@@ -126,6 +153,8 @@
 				<key>checkBox_statusWindowAlwaysOnTop</key>
 				<string>NSButton</string>
 				<key>checkBox_statusWindowHideInBackground</key>
+				<string>NSButton</string>
+				<key>checkBox_unreadConversations</key>
 				<string>NSButton</string>
 				<key>label_quitConfirmation</key>
 				<string>NSTextField</string>
