@@ -8,6 +8,8 @@
 	<dict>
 		<key>Blocked</key>
 		<string>blocked.png</string>
+		<key>Busy</key>
+		<string>busy.png</string>
 		<key>DND</key>
 		<string>dnd.png</string>
 		<key>Free for Chat</key>
@@ -41,6 +43,8 @@
 	<dict>
 		<key>Blocked</key>
 		<string>blocked.png</string>
+		<key>Busy</key>
+		<string>busy.png</string>
 		<key>DND</key>
 		<string>dnd.png</string>
 		<key>Free for Chat</key>

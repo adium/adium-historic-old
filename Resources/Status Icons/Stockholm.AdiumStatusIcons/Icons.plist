@@ -8,6 +8,8 @@
 	<dict>
 		<key>Blocked</key>
 		<string>blocked.png</string>
+		<key>Busy</key>
+		<string>busy.png</string>
 		<key>Generic Available</key>
 		<string>available.png</string>
 		<key>Generic Away</key>
@@ -33,6 +35,8 @@
 	<dict>
 		<key>Blocked</key>
 		<string>blocked.png</string>
+		<key>Busy</key>
+		<string>busy.png</string>
 		<key>Generic Available</key>
 		<string>tab-available.png</string>
 		<key>Generic Away</key>
