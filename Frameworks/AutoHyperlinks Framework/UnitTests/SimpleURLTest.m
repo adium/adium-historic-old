@@ -417,6 +417,12 @@
 	testHyperlink(@"sip:foo@example.com");
 	testHyperlink(@"xmpp:foo@example.com");
 	testHyperlink(@"xmpp:foo@example.com/adium");
+	//URL formats with query strings as specified by http://www.xmpp.org/extensions/xep-0147.html
+	testHyperlink(@"xmpp:romeo@montague.net?message;body=Here%27s%20a%20test%20message");
+	testHyperlink(@"xmpp:romeo@montague.net?message;subject=Test%20Message;body=Here%27s%20a%20test%20message");
+	//Variants with '&' instead of ';': Adium accepts these, although the XEP does not specify them.
+	testHyperlink(@"xmpp:romeo@montague.net?message&body=Here%27s%20a%20test%20message");
+	testHyperlink(@"xmpp:romeo@montague.net?message&subject=Test%20Message&body=Here%27s%20a%20test%20message");
 	testHyperlink(@"aim:goim?screenname=adiumx");
 	testHyperlink(@"aim:goim?screenname=adiumx&message=Hey!+Does+this+work?");
 	testHyperlink(@"ymsgr:sendim?adiumy");
