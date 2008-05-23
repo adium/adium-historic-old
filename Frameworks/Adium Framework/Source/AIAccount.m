@@ -886,6 +886,13 @@ typedef enum
 	[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't dynamically change the UID of this account."];
 }
 
+/**
+ * @brief Make a group, according to the passed dictionary of AppleScript properties
+ * 
+ * The KeyDictionary is the list of the properties in the "with properties" clause of the AS make command.
+ *	The UID property of KeyDictionary is the required "name" property of contacts
+ *	The parentGroup is the optional "contact group" property of contacts. If it is not specified, the contact will not be added to the contact list.
+ */
 - (id)makeContactWithProperties:(NSDictionary *)properties
 {
 	NSDictionary *keyDictionary = [properties objectForKey:@"KeyDictionary"];
@@ -903,10 +910,9 @@ typedef enum
 	AIListContact *newContact = [[[AIObject sharedAdiumInstance] contactController] contactWithService:[self service] account:self UID:contactUID];
 	NSScriptObjectSpecifier *groupSpecifier = [keyDictionary objectForKey:@"parentGroup"];
 	AIListGroup *group = [groupSpecifier objectsByEvaluatingSpecifier];
+	//If we have a group, we add this contact to the contact list.
 	if (groupSpecifier && group) {
 		[[[AIObject sharedAdiumInstance] contactController] addContacts:[NSArray arrayWithObject:newContact] toGroup:group];
-	} else {
-		[[[AIObject sharedAdiumInstance] contactController] addContacts:[NSArray arrayWithObject:newContact] toGroup:[[[AIObject sharedAdiumInstance] contactController] contactList]];
 	}
 	
 	return newContact;
