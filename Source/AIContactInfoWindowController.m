@@ -359,7 +359,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 - (void)configureMetaPopupHiding
 {
-	[metaPopup setHidden:[[metaPopup menu] numberOfItems] <= 1];
+	[metaPopup setHidden:(([inspectorToolbar selectedSegment] != CONTACT_INFO_SEGMENT) || ([[metaPopup menu] numberOfItems] <= 1))];
 }
 
 -(void)configureForMetaPopupChange:(AIListObject *)aListObject
