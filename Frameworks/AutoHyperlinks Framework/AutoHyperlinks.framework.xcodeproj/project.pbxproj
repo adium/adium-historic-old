@@ -654,6 +654,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_SYMBOL_SEPARATION = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SYMROOT = ../../build;
 			};
 			name = "Development-libgaim_oscar";
@@ -697,7 +698,7 @@
 				GCC_VERSION = 4.0;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
-				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SYMROOT = ../../build;
 				WARNING_CFLAGS = "-Wall";
 			};
@@ -745,7 +746,7 @@
 				GCC_VERSION = 4.0;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
-				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SYMROOT = ../../build;
 				WARNING_CFLAGS = "-Wall";
 			};
@@ -1073,6 +1074,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_SYMBOL_SEPARATION = NO;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SYMROOT = ../../build;
 			};
 			name = Development;
@@ -1090,7 +1092,7 @@
 				GCC_VERSION = 4.0;
 				MACOSX_DEPLOYMENT_TARGET_i386 = 10.4;
 				MACOSX_DEPLOYMENT_TARGET_ppc = 10.3;
-				SDKROOT_i386 = /Developer/SDKs/MacOSX10.4u.sdk;
+				SDKROOT = /Developer/SDKs/MacOSX10.4u.sdk;
 				SYMROOT = ../../build;
 				WARNING_CFLAGS = "-Wall";
 			};
