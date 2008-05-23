@@ -135,13 +135,17 @@
 		// Register as a list object observer so we can know when accounts need to show reconnecting
 	    [[adium contactController] registerListObjectObserver:self];
 		
-		// Register as an observer of the preference group so we can update our "show offline contacts" option
+		// Register as an observer of the preference group so we can update our "show groups contacts" option
 		[[adium preferenceController] registerPreferenceObserver:self
 														forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 		
+		// Register as an observer of the status preferences for unread conversation count
+		[[adium preferenceController] registerPreferenceObserver:self
+														forGroup:PREF_GROUP_STATUS_PREFERENCES];		
+		
 		// Register as an observer of our own preference group
 		[[adium preferenceController] registerPreferenceObserver:self
-														forGroup:PREF_GROUP_STATUS_MENU_ITEM];		
+														forGroup:PREF_GROUP_STATUS_MENU_ITEM];
 		
 		//Register to recieve active state changed notifications
 		[notificationCenter addObserver:self
@@ -249,7 +253,8 @@
 // Updates the unread count of the status item.
 - (void)updateUnreadCount
 {
-	int unreadCount = [[adium chatController] unviewedContentCount];
+	int unreadCount = (showConversationCount ?
+					   [[adium chatController] unviewedConversationCount] : [[adium chatController] unviewedContentCount]);
 
 	// Only show if enabled and greater-than zero; otherwise, set to nil.
 	if (showUnreadCount && unreadCount > 0) {
@@ -841,6 +846,10 @@
 		[self updateMenuIcons];
 		[self updateUnreadCount];
 		[self updateStatusItemLength];
+	}
+	
+	if ([group isEqualToString:PREF_GROUP_STATUS_PREFERENCES]) {
+		showConversationCount = [[prefDict objectForKey:KEY_STATUS_CONVERSATION_COUNT] boolValue];
 	}
 }
 

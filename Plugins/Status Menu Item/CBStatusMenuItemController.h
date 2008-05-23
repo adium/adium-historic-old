@@ -45,6 +45,8 @@
 
 	NSTimer					*unviewedContentFlash;
 	
+	BOOL					showConversationCount;
+	
 	BOOL					showBadge;
 	BOOL					showUnreadCount;
 	BOOL					flashUnviewed;

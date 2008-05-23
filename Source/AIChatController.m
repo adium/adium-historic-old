@@ -719,6 +719,25 @@
 }
 
 /*!
+ * @brief Gets the total number of conversations with unviewed messages
+ * 
+ * @result The number of conversations with unviewed messages
+ */
+- (int)unviewedConversationCount
+{
+	int				count = 0;
+	AIChat			*chat;
+	NSEnumerator	*enumerator;
+	
+	enumerator = [[self openChats] objectEnumerator];
+	while ((chat = [enumerator nextObject])) {
+		if ([chat unviewedContentCount] > 0)
+			count++;
+	}
+	return count;
+}
+
+/*!
  * @brief Is the passed contact in a group chat?
  *
  * @result YES if the contact is in an open group chat; NO if not.
