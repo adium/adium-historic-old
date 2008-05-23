@@ -1261,25 +1261,32 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	return [groupDict allValues];
 }
 
-//Returns a flat array of all contacts (by calling through to -allContactsInObject:recurse:onAccount:)
+/**
+ * @brief Returns a flat array of all contacts
+ */
 - (NSMutableArray *)allContacts
 {
 	return [self allContactsOnAccount:nil];
 }
 
-//Returns a flat array of all contacts on a given account (by calling through to -allContactsInObject:recurse:onAccount:)
+/**
+ * @brief Returns a flat array of all contacts on a given account
+ * We loop through the contactDict, and get every contact that isn't a metacontact
+ */
 - (NSMutableArray *)allContactsOnAccount:(AIAccount *)inAccount
 {
-	NSMutableArray *result = [self allContactsInObject:contactList recurse:YES onAccount:inAccount];
+	NSMutableArray *result = [[[NSMutableArray alloc] init] autorelease];
 	
-	/** Could be perfected I'm sure */
-	NSEnumerator *enumerator = [detachedContactLists objectEnumerator];
-	AIListGroup *detached;
-	while((detached = [enumerator nextObject])){
-		[result addObjectsFromArray:[self allContactsInObject:detached recurse:YES onAccount:inAccount]];
+	NSEnumerator *enumerator = [self contactEnumerator];
+	AIListContact *contact;
+	while ((contact = [enumerator nextObject])) {
+		if (!inAccount || ([contact account] == inAccount)) {
+			if (![contact conformsToProtocol:@protocol(AIContainingObject)]) //just checking to see if the meta contact's contacts are in the contact dict separately.
+				[result addObject:contact];
+		}
 	}
 	
-	return result;	
+	return result;
 }
 
 //Return a flat array of all the objects in a group on an account (and all subgroups, if desired)
