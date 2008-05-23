@@ -887,11 +887,14 @@ typedef enum
 }
 
 /**
- * @brief Make a group, according to the passed dictionary of AppleScript properties
+ * @brief Make a contact, according to the passed dictionary of AppleScript properties
  * 
- * The KeyDictionary is the list of the properties in the "with properties" clause of the AS make command.
- *	The UID property of KeyDictionary is the required "name" property of contacts
- *	The parentGroup is the optional "contact group" property of contacts. If it is not specified, the contact will not be added to the contact list.
+ * @param properties A dictionary of the following keys:
+ *		@"KeyDictionary" is the list of the properties in the "with properties" clause of the AS make command.
+ *			@"UID" key of KeyDictionary is the required "name" property of contacts
+ *			@"parentGroup" key of keyDictionary is the optional "contact group" property of contacts.
+ *						   If the parentGroup is not specified, the contact will not be added to the contact list.
+ */
  */
 - (id)makeContactWithProperties:(NSDictionary *)properties
 {
@@ -938,6 +941,7 @@ typedef enum
  */
 - (id)makeChatWithProperties:(NSDictionary *)resolvedKeyDictionary
 {
+	AILogWithSignature(@"%@", resolvedKeyDictionary);
 	NSArray *participants = [resolvedKeyDictionary objectForKey:@"withContacts"];
 	if (!participants) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
