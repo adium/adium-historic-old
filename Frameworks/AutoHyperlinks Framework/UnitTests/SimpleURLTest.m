@@ -413,6 +413,12 @@
 	testHyperlink(@"http://[::1]/");
 }
 
+- (void)testInternationalDomainNameURI {
+	//http://ουτοπία.δπθ.gr/, aka utoria.duth.gr. Link borrowed from <http://en.wikipedia.org/wiki/Image:IDN-utopia-greek.jpg>.
+	testHyperlink([NSString stringWithUTF8String:"\x68\x74\x74\x70\x3A\x2F\x2F\xCE\xBF\xCF\x85\xCF\x84\xCE\xBF\xCF\x80\xCE\xAF\xCE\xB1\x2E\xCE\xB4\xCF\x80\xCE\xB8\x2E\x67\x72\x2F"]); //With pathname (/)
+	testHyperlink([NSString stringWithUTF8String:"\x68\x74\x74\x70\x3A\x2F\x2F\xCE\xBF\xCF\x85\xCF\x84\xCE\xBF\xCF\x80\xCE\xAF\xCE\xB1\x2E\xCE\xB4\xCF\x80\xCE\xB8\x2E\x67\x72"]); //Without pathname
+}
+
 - (void)testUniqueURI {
 	testHyperlink(@"sip:foo@example.com");
 	testHyperlink(@"xmpp:foo@example.com");
