@@ -24,5 +24,6 @@
 	testHyperlink(@"http://[]");
 	testHyperlink(@"http://example.not.a.tld");
 	testHyperlink(@"http://example.not.a.tld:8080");
+	testHyperlink(@"http://example.com/ is not a link");
 }
 @end
