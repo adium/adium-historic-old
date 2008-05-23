@@ -62,7 +62,7 @@ ipv4address     ([0-9]{1,3}\.){3}([0-9]{1,3})
 ipURL           {ipv4address}(:[0-9]+)?{urlPath}?
 singleDomain    [[:alnum:]\x80-\xf4-]+
 mailSpecifier   [^:\/]+\@.+\.{domains}
-jabberSpec      xmpp:.*\@.+\.{domains}{urlPath}?
+jabberSpec      xmpp:.+\@.+\.{domains}{urlPath}?(\?[[:alnum:]]+[;&][^[:space:]]*)?
 aolIMSpec       aim:goim\?screenname=[^\ \t\n&]+(&message=.+)?
 aolChatSpec     aim:gochat\?roomname=[^\ \t\n&]+
 yahooIMSpecOld  (ymsgr|yahoo):sendim\?.+
@@ -70,6 +70,7 @@ yahooIMSpecNew	(ymsgr|yahoo):(\/\/)?im\?to=.+
 yahooIMSpec     {yahooIMSpecOld}|{yahooIMSpecNew}
 rdarSpec        (rdar|radr|radar|x-radar):\/\/(problems?\/)?[0-9]+(&[0-9]+)*
 spotifySpec     spotify:(track|album|artist|search|playlist|user|radio):[^<>]+
+gtalkSpec       gtalk:(chat|call|gtalk)\?jid=.+\@.+\.{domains}(&from_jid=.+\@.+\.{domains})?
 
 hex4            [0-9A-Fa-f]{1,4}
 ipv6HexSeq      {hex4}?(::?{hex4}){1,7}
@@ -82,30 +83,14 @@ ipv6URL         \[{ipv6Address}](:[0-9]+)?{urlPath}?
 %x CANONICAL
 %%
 
-<CANONICAL>({userAndPass}@)?{urlSpecifier}        {AHStringOffset += AHleng;
-                                                   AHleng += AHValidShift;
-                                                   BEGIN INITIAL;
-                                                   return AH_URL_VALID;}
-
-<CANONICAL>({userAndPass}@)?{ipURL}               {AHStringOffset += AHleng;
-                                                   AHleng += AHValidShift;
-                                                   BEGIN INITIAL;
-                                                   return AH_URL_VALID;}
-
-<CANONICAL>({userAndPass}@)?{singleDomain}(\.{singleDomain})*(:[0-9]+)?{urlPath} {AHStringOffset += AHleng;
-                                                   AHleng += AHValidShift;
-                                                   BEGIN INITIAL;
-                                                   return AH_URL_VALID;}
-
-<CANONICAL>({userAndPass}@)?{singleDomain}(:[0-9]+)?{urlPath}? {AHStringOffset += AHleng;
-                                                   AHleng += AHValidShift;
-                                                   BEGIN INITIAL;
-                                                   return AH_URL_VALID;}
-
-<CANONICAL>({userAndPass}@)?{ipv6URL}            {AHStringOffset += AHleng;
-                                                   AHleng += AHValidShift;
-                                                   BEGIN INITIAL;
-                                                   return AH_URL_VALID;}
+<CANONICAL>({userAndPass}@)?{urlSpecifier}                                       |
+<CANONICAL>({userAndPass}@)?{ipURL}                                              |
+<CANONICAL>({userAndPass}@)?{singleDomain}(\.{singleDomain})*(:[0-9]+)?{urlPath} |
+<CANONICAL>({userAndPass}@)?{singleDomain}(:[0-9]+)?{urlPath}?                   |
+<CANONICAL>({userAndPass}@)?{ipv6URL}                                            {AHStringOffset += AHleng;
+                                                                                  AHleng += AHValidShift;
+                                                                                  BEGIN INITIAL;
+                                                                                  return AH_URL_VALID;}
 
 <CANONICAL>.*                                    {AHStringOffset += AHleng;
                                                   BEGIN INITIAL;
@@ -134,19 +119,18 @@ notes:\/\/              |
 gopher:\/\/             |
 x-man-page:\/\/         {AHStringOffset += AHleng; AHValidShift = AHleng; BEGIN CANONICAL;}
 
-sip:{mailSpecifier}     {AHStringOffset += AHleng; return AH_URL_VALID;}
-
 mailto:{mailSpecifier}  {AHStringOffset += AHleng; return AH_MAILTO_VALID;}
 {mailSpecifier}         {AHStringOffset += AHleng; return AH_MAILTO_DEGENERATE;}
 
-{jabberSpec}            {AHStringOffset += AHleng; return AH_URL_VALID;}
-
 {urlSpecifier}          {AHStringOffset += AHleng; return AH_URL_DEGENERATE;}
 
-{aolIMSpec}             {AHStringOffset += AHleng; return AH_URL_VALID;}
-{aolChatSpec}           {AHStringOffset += AHleng; return AH_URL_VALID;}
-{yahooIMSpec}           {AHStringOffset += AHleng; return AH_URL_VALID;}
-{rdarSpec}              {AHStringOffset += AHleng; return AH_URL_VALID;}
+sip:{mailSpecifier}     |
+{jabberSpec}            |
+{gtalkSpec}             |
+{aolIMSpec}             |
+{aolChatSpec}           |
+{yahooIMSpec}           |
+{rdarSpec}              |
 {spotifySpec}           {AHStringOffset += AHleng; return AH_URL_VALID;}
 
 .                       {return AH_URL_INVALID;}
