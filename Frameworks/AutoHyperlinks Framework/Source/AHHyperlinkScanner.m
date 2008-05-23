@@ -155,7 +155,7 @@
     if (!startSet) {
         NSMutableCharacterSet *mutableStartSet = [[NSMutableCharacterSet alloc] init];
         [mutableStartSet formUnionWithCharacterSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        [mutableStartSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"',:;<([{.?!-"]];
+        [mutableStartSet formUnionWithCharacterSet:[NSCharacterSet characterSetWithCharactersInString:@"\"',:;<.?!-"]];
 		startSet = [[NSCharacterSet characterSetWithBitmapRepresentation:[mutableStartSet bitmapRepresentation]] retain];
 		[mutableStartSet release];
     }
@@ -196,8 +196,23 @@
     [preScanner scanCharactersFromSet:startSet intoString:nil];
 
     while([preScanner scanUpToCharactersFromSet:skipSet intoString:&scanString]) {
+        unsigned int scannedLocation = [preScanner scanLocation];
+		if([enclosureSet characterIsMember:[scanString characterAtIndex:0]]){
+			unsigned int encIdx = [enclosureStartArray indexOfObject:[scanString substringWithRange:NSMakeRange(0, 1)]];
+			NSRange encRange;
+			if(NSNotFound != encIdx) {
+				encRange = [scanString rangeOfString:[enclosureStopArray objectAtIndex:encIdx] options:NSBackwardsSearch];
+				if(NSNotFound != encRange.location){
+					scannedLocation -= [scanString length] - encRange.location;
+					scanString = [scanString substringWithRange:NSMakeRange(1, encRange.location-1)];
+				}else{
+					scanString = [scanString substringWithRange:NSMakeRange(1, [scanString length]-1)];
+				}
+			}
+		}
+		if(![scanString length]) break;
 		
-        unsigned int localStringLen = [scanString length];
+		unsigned int localStringLen = [scanString length];
 		unsigned int finalStringLen = localStringLen;
 		
 		// Find balanced enclosure chars
@@ -244,7 +259,7 @@
 			}else break;
 		}
 
-        AHStringOffset = [preScanner scanLocation] - finalStringLen;
+        AHStringOffset = scannedLocation - finalStringLen;
 
         // if we have a valid URL then save the scanned string, and make a SHMarkedHyperlink out of it.
         // this way, we can preserve things like the matched string (to be converted to a NSURL),
@@ -253,7 +268,7 @@
             AHMarkedHyperlink	*markedLink;
 			NSRange				urlRange;
 			
-			urlRange = NSMakeRange([preScanner scanLocation] - localStringLen, finalStringLen);
+			urlRange = NSMakeRange(scannedLocation - localStringLen, finalStringLen);
 
             //insert typical specifiers if the URL is degenerate
             switch(validStatus){
