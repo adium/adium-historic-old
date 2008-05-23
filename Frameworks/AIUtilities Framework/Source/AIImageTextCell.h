@@ -28,6 +28,7 @@
 	float			imageTextPadding;
 	NSLineBreakMode lineBreakMode;
 	BOOL	imageAfterMainString;
+	BOOL	highlightWhenNotKey;
 }
 
 /*
@@ -66,6 +67,12 @@
  *	@param	flag	\c YES if you want the image to be drawn after the main string; \c NO if you want the image to be drawn before both strings.
  */
 - (void) setDrawsImageAfterMainString:(BOOL)flag;
+
+/*! @brief Set whether the strings are considered highlighted even if the window is not key
+ *
+ * @par		If \c YES, the text is drawn as highlighted even when not the key wndow. If \c NO, it is drawn normally.
+ */
+- (void) setHighlightWhenNotKey:(BOOL)flag;
 
 - (void)setLineBreakMode:(NSLineBreakMode)inLineBreakMode;
 
