@@ -225,6 +225,9 @@
 			<property name="image" code="Pimg" type="TIFF picture" access="rw" description="The image associated with this contact.">
 				<cocoa key="userIconData" />
 			</property>
+			<property name="blocked" code="Pblk" type="boolean" access="rw" description="Whether or not this contact is marked as blocked.">
+				<cocoa key="scriptingBlocked" />
+			</property>
 		</class>
 		<class name="status" plural="statuses" code="Csts" description="A saved status in Adium">
 			<cocoa class="AIStatus" />

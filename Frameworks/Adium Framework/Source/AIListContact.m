@@ -738,6 +738,8 @@
 				  group:PREF_GROUP_WRITING_DIRECTION];
 }
 
+#pragma mark Applescript
+
 - (NSScriptObjectSpecifier *)objectSpecifier
 {
 	//get my account
@@ -747,6 +749,15 @@
 	return [[[NSNameSpecifier allocWithZone:[self zone]]
 		initWithContainerClassDescription:[containerRef keyClassDescription]
 		containerSpecifier:containerRef key:@"contacts" name:[self UID]] autorelease];
+}
+
+- (BOOL)scriptingBlocked
+{
+	return [self isBlocked];
+}
+- (void)setScriptingBlocked:(BOOL)b
+{
+	[self setIsBlocked:b updateList:YES];
 }
 
 @end
