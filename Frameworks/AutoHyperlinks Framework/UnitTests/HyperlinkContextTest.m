@@ -22,6 +22,29 @@
 	[self testLaxContext:@"[%@]" withURI:URIString];
 }
 
+- (void)testEnclosedURI:(NSString *)URIString enclosureOpeningCharacter:(unichar)openingChar enclosureClosingCharacter:(unichar)closingChar followedByCharacter:(unichar)terminalChar {
+	NSString *format = [NSString stringWithFormat:@"%C%%@%C%C", openingChar, closingChar, terminalChar];
+	[self testLaxContext:format withURI:URIString];
+}
+- (void)testEnclosedURIFollowedByCharacter:(NSString *)URIString {
+	enum {
+		kNumEnclosureCharacters = 3U,
+		kNumTerminalCharacters = 17U
+	};
+	unichar enclosureOpeningCharacters[kNumEnclosureCharacters] = { '<', '(', '[', };
+	unichar enclosureClosingCharacters[kNumEnclosureCharacters] = { '>', ')', ']', };
+	unichar terminalCharacters[kNumTerminalCharacters] = { '.', '!', '?', '<', '>', '(', ')', '{', '}', '[', ']', '"', '\'', '-', ',', ':', ';' };
+	for (NSUInteger enclosureIndex = 0U; enclosureIndex < kNumEnclosureCharacters; ++enclosureIndex) {
+		for (NSUInteger terminalCharacterIndex = 0U; terminalCharacterIndex < kNumTerminalCharacters; ++terminalCharacterIndex) {
+			[self         testEnclosedURI:URIString
+				enclosureOpeningCharacter:enclosureOpeningCharacters[enclosureIndex]
+				enclosureClosingCharacter:enclosureClosingCharacters[enclosureIndex]
+					  followedByCharacter:terminalCharacters[terminalCharacterIndex]
+			];
+		}
+	}
+}
+
 - (void)testURIBorder:(NSString *)URIString {
 	[self testLaxContext:@":%@" withURI:URIString];
 	[self testLaxContext:@"check it out:%@" withURI:URIString];
@@ -54,6 +77,7 @@
 
 - (void)testSimpleDomain {
 	[self testEnclosedURI:@"example.com"];
+	[self testEnclosedURIFollowedByCharacter:@"example.com"];
 	[self testURIBorder:@"example.com"];
 	[self testWhitespace:@"example.com"];
 }
@@ -76,6 +100,9 @@
 	[self testEnclosedURI:@"http://www.example.com/___"];
 	[self testEnclosedURI:@"http://www.example.com/$$$"];
 	[self testEnclosedURI:@"http://www.example.com/---"];
+
+	[self testEnclosedURIFollowedByCharacter:@"http://example.com/"];
+	[self testEnclosedURIFollowedByCharacter:@"http://example.com"];
 
 	[self testLaxContext:@"<><><><><<<<><><><><%@><><><><><><<<><><><><><>" withURI:@"example.com"];
 	[self testLaxContext:@"l<><><><><<<<><><><><%@><><><><><><<<><><><><><>" withURI:@"http://example.com/foo_(bar)"];
