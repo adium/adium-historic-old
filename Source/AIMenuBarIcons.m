@@ -189,16 +189,9 @@
 	alphaFilter = [CIFilter filterWithName:@"CIMaskToAlpha"];
 	[alphaFilter setValue:[invertFilter valueForKey:@"outputImage"]
 				   forKey:@"inputImage"]; 
-	
-	[altImage lockFocus];
-	id context = [CIContext contextWithCGContext:[[NSGraphicsContext currentContext] graphicsPort] 
-									   options:nil];
-	id result = [alphaFilter valueForKey:@"outputImage"];
-	[context drawImage:result
-			   atPoint:CGPointZero
-			  fromRect:[result extent]];
-	[altImage unlockFocus];
-	
+
+	[altImage addRepresentation:[NSCIImageRep imageRepWithCIImage:[alphaFilter valueForKey:@"outputImage"]]];
+
 	return [altImage autorelease];
 }
 
