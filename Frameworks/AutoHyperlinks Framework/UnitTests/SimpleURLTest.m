@@ -443,6 +443,12 @@
 	testHyperlink(@"gtalk:call?jid=example@gmail.com");
 	testHyperlink(@"gtalk:call?jid=example@gmail.com&from_jid=example2@gmail.com");
 	testHyperlink(@"gtalk:gtalk?jid=example@gmail.com");
+	testHyperlink(@"msim:addContact?uID=0&cID=42");
+	testHyperlink(@"msim:addContact?uID=02&cID=&auto=true");
+	testHyperlink(@"msim:addContact?uID=42&cID=42");
+	testHyperlink(@"msim:addContact?uID=42&cID=&auto=true");
+	testHyperlink(@"msim:sendIM?uID=0&cID=42");
+	testHyperlink(@"msim:sendIM?uID=42&cID=42");
 	testHyperlink(@"rdar://1234");
 	testHyperlink(@"rdar://problem/1234");
 	testHyperlink(@"rdar://problems/1234&5678&9012");
