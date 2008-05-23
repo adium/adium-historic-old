@@ -393,8 +393,8 @@
  *
  * This should only be used for content which is not being sent or received but only displayed, such as message history. If you
  *
- * The ability to force filtering to be completed immediately exists for message history, which needs to put its display in before the first message;
- * without this, the use of threaded filtering means that message history shows up after the first message.
+ * The ability to force filtering to be completed immediately exists for message history, which needs to put its display
+ * in before the first message; otherwise, the use of delayed filtering would mean that message history showed up after the first message.
  * 
  * @param inObject The object to display
  * @param useContentFilters Should filters be used?
