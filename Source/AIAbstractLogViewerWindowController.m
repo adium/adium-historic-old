@@ -2718,7 +2718,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 		[resultsLock unlock];		
 }
 
-#pragma Transcript services special-casing
+#pragma mark Transcript services special-casing
 NSString *handleSpecialCasesForUIDAndServiceClass(NSString *contactUID, NSString *serviceClass)
 {
 	/* Jabber and its specified derivative services need special handling;
