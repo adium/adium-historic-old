@@ -125,7 +125,7 @@
 		
 		// Register for our menu bar icon set changing
 		[[adium notificationCenter] addObserver:self
-									   selector:@selector(updateMenuIconsBundle:)
+									   selector:@selector(updateMenuIconsBundle)
 										   name:AIMenuBarIconsDidChangeNotification
 										 object:nil];
 		
