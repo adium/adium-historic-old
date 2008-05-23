@@ -71,6 +71,7 @@ yahooIMSpec     {yahooIMSpecOld}|{yahooIMSpecNew}
 rdarSpec        (rdar|radr|radar|x-radar):\/\/(problems?\/)?[0-9]+(&[0-9]+)*
 spotifySpec     spotify:(track|album|artist|search|playlist|user|radio):[^<>]+
 gtalkSpec       gtalk:(chat|call|gtalk)\?jid=.+\@.+\.{domains}(&from_jid=.+\@.+\.{domains})?
+myimSpec        myim:(addContact|sendIM)\?((uID|cID)=[0-9]*&?)+(auto=(true|false))?
 
 hex4            [0-9A-Fa-f]{1,4}
 ipv6HexSeq      {hex4}?(::?{hex4}){1,7}
@@ -92,9 +93,9 @@ ipv6URL         \[{ipv6Address}](:[0-9]+)?{urlPath}?
                                                                                   BEGIN INITIAL;
                                                                                   return AH_URL_VALID;}
 
-<CANONICAL>.*                                    {AHStringOffset += AHleng;
-                                                  BEGIN INITIAL;
-                                                  return AH_URL_INVALID;}
+<CANONICAL>.*                                                                    {AHStringOffset += AHleng;
+                                                                                  BEGIN INITIAL;
+                                                                                  return AH_URL_INVALID;}
 
 file:\/\/\/.*           {AHStringOffset += AHleng; return AH_FILE_VALID;}
 
@@ -125,6 +126,7 @@ mailto:{mailSpecifier}  {AHStringOffset += AHleng; return AH_MAILTO_VALID;}
 {urlSpecifier}          {AHStringOffset += AHleng; return AH_URL_DEGENERATE;}
 
 sip:{mailSpecifier}     |
+{myimSpec}              |
 {jabberSpec}            |
 {gtalkSpec}             |
 {aolIMSpec}             |
