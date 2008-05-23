@@ -445,8 +445,10 @@
 	testHyperlink(@"gtalk:gtalk?jid=example@gmail.com");
 	testHyperlink(@"myim:addContact?uID=0&cID=42");
 	testHyperlink(@"myim:addContact?uID=0&cID=&auto=true");
+	testHyperlink(@"myim:addContact?auto=true&uID=0&cID=");
 	testHyperlink(@"myim:addContact?uID=42&cID=42");
 	testHyperlink(@"myim:addContact?uID=42&cID=&auto=true");
+	testHyperlink(@"myim:addContact?auto=true&uID=42&cID=");
 	testHyperlink(@"myim:sendIM?uID=0&cID=42");
 	testHyperlink(@"myim:sendIM?uID=42&cID=42");
 	testHyperlink(@"rdar://1234");
