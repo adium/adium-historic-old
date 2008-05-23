@@ -76,6 +76,7 @@
 		110763F608676CC9005987A5 /* RAFBlockEditorPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */; };
 		110763F808676CC9005987A5 /* RAFBlockEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F408676CC9005987A5 /* RAFBlockEditorWindowController.m */; };
 		110763FA08676D05005987A5 /* BlockEditorWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 110763F908676D04005987A5 /* BlockEditorWindow.nib */; };
+		11077B6F0DE647C100A4DD25 /* AIStatusItemView.m in Sources */ = {isa = PBXBuildFile; fileRef = 11077B6E0DE647C100A4DD25 /* AIStatusItemView.m */; };
 		1134399B0C6E870B006C115D /* AIListSmartGroup.m in Sources */ = {isa = PBXBuildFile; fileRef = 113439990C6E870B006C115D /* AIListSmartGroup.m */; };
 		113439F30C6EB1EF006C115D /* AIListSmartGroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 113439980C6E870B006C115D /* AIListSmartGroup.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1172FBCB0CDAA8D400B8E233 /* libglib.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1172FBC30CDAA8D400B8E233 /* libglib.framework */; };
@@ -1382,7 +1383,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 3496A8E707CE6CA30055BBAB /* AutoHyperlinks.framework.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 31C460380DE1D17100C4265B /* AHStressTester */;
+			remoteGlobalIDString = 31C460380DE1D17100C4265B;
 			remoteInfo = StressTester;
 		};
 		345AF7D30A5D559B00D7DA6F /* PBXContainerItemProxy */ = {
@@ -1823,6 +1824,8 @@
 		110763F308676CC9005987A5 /* RAFBlockEditorWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorWindowController.h; path = Source/RAFBlockEditorWindowController.h; sourceTree = "<group>"; };
 		110763F408676CC9005987A5 /* RAFBlockEditorWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFBlockEditorWindowController.m; path = Source/RAFBlockEditorWindowController.m; sourceTree = "<group>"; };
 		110763F908676D04005987A5 /* BlockEditorWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = BlockEditorWindow.nib; path = Resources/BlockEditorWindow.nib; sourceTree = "<group>"; };
+		11077B6D0DE647C100A4DD25 /* AIStatusItemView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStatusItemView.h; path = "Plugins/Status Menu Item/AIStatusItemView.h"; sourceTree = "<group>"; };
+		11077B6E0DE647C100A4DD25 /* AIStatusItemView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIStatusItemView.m; path = "Plugins/Status Menu Item/AIStatusItemView.m"; sourceTree = "<group>"; };
 		113439980C6E870B006C115D /* AIListSmartGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIListSmartGroup.h; path = "Frameworks/Adium Framework/Source/AIListSmartGroup.h"; sourceTree = "<group>"; };
 		113439990C6E870B006C115D /* AIListSmartGroup.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIListSmartGroup.m; path = "Frameworks/Adium Framework/Source/AIListSmartGroup.m"; sourceTree = "<group>"; };
 		1172FBC30CDAA8D400B8E233 /* libglib.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libglib.framework; path = Frameworks/libglib.framework; sourceTree = "<group>"; };
@@ -7324,6 +7327,8 @@
 		9E791D8505768A3000547562 /* Status Menu Item */ = {
 			isa = PBXGroup;
 			children = (
+				11077B6D0DE647C100A4DD25 /* AIStatusItemView.h */,
+				11077B6E0DE647C100A4DD25 /* AIStatusItemView.m */,
 				11F146090B546C1200CA91F6 /* AIMenuBarIcons.h */,
 				11F1460A0B546C1200CA91F6 /* AIMenuBarIcons.m */,
 				9E217B7706A74CA7002A3F27 /* StatusMenuItemDefaultPrefs.plist */,
@@ -9631,6 +9636,7 @@
 				632D859E0DB70FC800040EC7 /* AIMentionEventPlugin.m in Sources */,
 				34EBB2C30DCA8DE500B4CB6E /* AISearchFieldCell.m in Sources */,
 				EFB1C3140DDBDA3100B3973D /* AITwitterIMPlugin.m in Sources */,
+				11077B6F0DE647C100A4DD25 /* AIStatusItemView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
