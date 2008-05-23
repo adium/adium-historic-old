@@ -71,7 +71,7 @@ yahooIMSpec     {yahooIMSpecOld}|{yahooIMSpecNew}
 rdarSpec        (rdar|radr|radar|x-radar):\/\/(problems?\/)?[0-9]+(&[0-9]+)*
 spotifySpec     spotify:(track|album|artist|search|playlist|user|radio):[^<>]+
 gtalkSpec       gtalk:(chat|call|gtalk)\?jid=.+\@.+\.{domains}(&from_jid=.+\@.+\.{domains})?
-myimSpec        myim:(addContact|sendIM)\?((uID|cID)=[0-9]*&?)+(auto=(true|false))?
+myimSpec        myim:(addContact|sendIM)\?(((uID|cID)=[0-9]*&?)|(auto=(true|false)&?))+
 
 hex4            [0-9A-Fa-f]{1,4}
 ipv6HexSeq      {hex4}?(::?{hex4}){1,7}
