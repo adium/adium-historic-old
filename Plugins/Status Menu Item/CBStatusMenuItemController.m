@@ -65,8 +65,11 @@
 {
 	if ((self = [super init])) {
 		//Create and set up the status item
-		statusItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSVariableStatusItemLength] retain];
-		[statusItem setHighlightMode:YES];
+		statusItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:25] retain];
+		
+		statusItemView = [[AIStatusItemView alloc] initWithFrame:NSMakeRect(0,0,25,22)];
+		[statusItemView setStatusItem:statusItem];
+		[statusItem setView:statusItemView];
 		
 		unviewedContent = NO;
 		[self updateMenuIconsBundle];
@@ -85,7 +88,8 @@
 		[mainOptionsMenu setDelegate:self];
 
 		// Set the main menu as the status item's menu
-		[statusItem setMenu:mainMenu];
+		[statusItemView setMenu:mainMenu];
+		[statusItemView setAlternateMenu:mainContactsMenu];
 		
 		// Create the caches for our menu items
 		accountMenuItemsArray = [[NSMutableArray alloc] init];
@@ -174,6 +178,7 @@
 	
 	//Release our objects
 	[[statusItem statusBar] removeStatusItem:statusItem];
+	[statusItemView release];
 
 	// All the temporary NSMutableArrays we store
 	[accountMenuItemsArray release];
@@ -248,9 +253,9 @@
 
 	// Only show if enabled and greater-than zero; otherwise, set to nil.
 	if (showUnreadCount && unreadCount > 0) {
-		[statusItem setTitle:[NSString stringWithFormat:@"%i", unreadCount]];
+		[statusItemView setStringValue:[NSString stringWithFormat:@"%i", unreadCount]];
 	} else {
-		[statusItem setTitle:nil];
+		[statusItemView setStringValue:nil];
 	}
 }
 
@@ -368,9 +373,9 @@
 	NSImage *alternateMenuIcon = [menuIcons imageOfType:imageName alternate:YES];
 	
 	// Set our icon.
-	[statusItem setImage:[self badgeDuck:menuIcon withImage:badge]];
+	[statusItemView setRegularImage:[self badgeDuck:menuIcon withImage:badge]];
 	// Badge the highlight image and set it.
-	[statusItem setAlternateImage:[self badgeDuck:alternateMenuIcon withImage:badge]];
+	[statusItemView setAlternateImage:[self badgeDuck:alternateMenuIcon withImage:badge]];
 	// Update our unread count.
 	if (showUnreadCount) {
 		[self updateUnreadCount];
@@ -381,14 +386,9 @@
 
 - (void)updateStatusItemLength
 {
-	if (showUnreadCount && [[adium chatController] unviewedContentCount] > 0) {
-		[statusItem setLength:NSVariableStatusItemLength];
-	} else {
-		//We're showing only the image, so we want the status item to use the menu bar height.
-		//Due to a bug in Mac OS X 10.4.10 and 10.5.2, NSVariableStatusItemLength puts too much space on the right side of the image—probably the separator between image and title, even when the title is nil.
-		//Until this problem (rdar://problem/5829508) is fixed, we must use the image's width (plus the margin) instead of NSVariableStatusItemLength.
-		[statusItem setLength:[[statusItem image] size].width + STATUS_ITEM_MARGIN];
-	}
+	[statusItem setLength:[statusItemView desiredWidth] + STATUS_ITEM_MARGIN];
+	[statusItemView setFrame:NSMakeRect(0, 0, [statusItemView desiredWidth] + STATUS_ITEM_MARGIN, 22)];
+	[statusItemView setNeedsDisplay:YES];
 }
 
 
@@ -597,8 +597,8 @@
 #pragma mark Menu Delegates/Actions
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
-	// Main menu if not holding option key
-	if (![NSEvent optionKey] && (menu == mainMenu && mainMenuNeedsUpdate)) {
+	// Main menu if it needs an update
+	if (menu == mainMenu && mainMenuNeedsUpdate) {
 		NSEnumerator    *enumerator;
 		NSMenuItem      *menuItem;
 		
@@ -696,25 +696,16 @@
 		
 		//Only update next time if we need to
 		mainMenuNeedsUpdate = NO;
-	// Contacts menu - or, override the main menu with option held down
-	} else if (((menu == mainMenu) && [NSEvent optionKey]) || ((menu == mainContactsMenu) && contactsMenuNeedsUpdate)) {
+	// Contacts menu
+	} else if (menu == mainContactsMenu && contactsMenuNeedsUpdate) {
 		NSEnumerator    *enumerator = [contactMenuItemsArray objectEnumerator];
 		NSMenuItem      *menuItem;
 		
 		// Remove previous menu items.
 		[menu removeAllItems];
 		
-		// If this is the contact menu being pushed into the main one, force an update next time
-		if ([NSEvent optionKey]) {
-			// Remove contact menu items from the old menu
-			[mainContactsMenu removeAllItems];
-			// Have both menus update next time
-			mainMenuNeedsUpdate = YES;
-			contactsMenuNeedsUpdate = YES;
-		} else {
-			contactsMenuNeedsUpdate = NO;
-		}
-		
+		contactsMenuNeedsUpdate = NO;
+	
 		[menu addItemWithTitle:[AILocalizedString(@"Contact List", nil) stringByAppendingEllipsis]
 						target:[adium interfaceController]
 						action:@selector(toggleContactList:)
