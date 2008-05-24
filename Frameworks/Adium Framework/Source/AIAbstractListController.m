@@ -377,7 +377,7 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	//if (windowStyle == AIContactListWindowStyleStandard) {
 	//	[contactListView setDesiredHeightPadding:3];   //1 pixel border at the top and bottom + extra line at bottom
 	//} else {
-	[contactListView setDesiredHeightPadding:2];   //Accounts for the 1 pixel border at the top and bottom
+	[contactListView setDesiredHeightPadding:1];   //Accounts for the 1 pixel border at the top and bottom
 	//}
 	
 	//Bubbles special cases
