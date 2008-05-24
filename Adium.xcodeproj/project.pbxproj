@@ -3087,7 +3087,6 @@
 		34A6873B0DD38CE1008F0430 /* AIFacebookPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIFacebookPlugin.h; path = "Plugins/Facebook Service/AIFacebookPlugin.h"; sourceTree = "<group>"; };
 		34A6873C0DD38CE1008F0430 /* AIFacebookPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIFacebookPlugin.m; path = "Plugins/Facebook Service/AIFacebookPlugin.m"; sourceTree = "<group>"; };
 		34A6876D0DD38D03008F0430 /* Facebook.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Facebook.AdiumPlugin; sourceTree = BUILT_PRODUCTS_DIR; };
-		34A687760DD38D04008F0430 /* Bonjour copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "Bonjour copy.plist"; path = "Plists/Bonjour copy.plist"; sourceTree = "<group>"; };
 		34A687A40DD38E04008F0430 /* AIFacebookAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIFacebookAccountViewController.h; path = "Plugins/Facebook Service/AIFacebookAccountViewController.h"; sourceTree = "<group>"; };
 		34A687A50DD38E04008F0430 /* AIFacebookAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIFacebookAccountViewController.m; path = "Plugins/Facebook Service/AIFacebookAccountViewController.m"; sourceTree = "<group>"; };
 		34A687D80DD3928F008F0430 /* JSON.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = JSON.xcodeproj; path = "Frameworks/JSON Framework/JSON.xcodeproj"; sourceTree = "<group>"; };
@@ -4553,7 +4552,6 @@
 				312ED3D80C7E89CC00A6BDA9 /* Unit tests */,
 				29B97323FDCFA39411CA2CEA /* Linked Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				34A687760DD38D04008F0430 /* Bonjour copy.plist */,
 			);
 			name = CocAIMe2;
 			sourceTree = "<group>";
