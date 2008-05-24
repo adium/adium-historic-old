@@ -148,6 +148,7 @@ ifeq ($(OFFICIAL_BUILD),TRUE)
 		security unlock-keychain -p `cat ~/adium-password`; \
 	fi
 	codesign -v -s Adium $(ADIUM_DIR)/Adium.app/Contents/MacOS/Adium
+endif
 
 createfolder:
 	@# clean build directory
@@ -165,7 +166,6 @@ createfolder:
 	
 	@# symlink /Applications
 	./mkalias -r /Applications $(ADIUM_DIR)/Applications
-endif
 
 diskimage:
 	rm "$(BUILD_DIR)/$(RELEASE_NAME).dmg" || true
