@@ -1596,8 +1596,18 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
     return value;
 }
 
-//
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
+{
+	[NSObject cancelPreviousPerformRequestsWithTarget:self
+											 selector:@selector(tableViewSelectionDidChangeDelayed)
+											   object:nil];
+	
+	[self performSelector:@selector(tableViewSelectionDidChangeDelayed)
+			   withObject:nil
+			   afterDelay:0.05];
+}
+
+- (void)tableViewSelectionDidChangeDelayed
 {
     if (!ignoreSelectionChange) {
 		NSArray		*selectedLogs;
@@ -1844,7 +1854,19 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 	[self deleteSelection:nil];
 }
 
+
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
+{
+	[NSObject cancelPreviousPerformRequestsWithTarget:self
+											 selector:@selector(outlineViewSelectionDidChangeDelayed)
+											   object:nil];
+	
+	[self performSelector:@selector(outlineViewSelectionDidChangeDelayed)
+			   withObject:nil
+			   afterDelay:0.05];
+}
+
+- (void)outlineViewSelectionDidChangeDelayed
 {
 	NSArray *selectedItems = [outlineView_contacts arrayOfSelectedItems];
 
