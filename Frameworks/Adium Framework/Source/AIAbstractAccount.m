@@ -1075,6 +1075,21 @@
 	return YES;
 }
 
+- (void)displayYouHaveConnectedInChat:(AIChat *)chat
+{
+	//Display a connected message
+	AIContentStatus *statusMessage = [AIContentStatus statusInChat:chat
+														withSource:[chat account]
+													   destination:[chat account]
+															  date:[NSDate date]
+														   message:[[[NSAttributedString alloc] initWithString:AILocalizedStringFromTableInBundle(@"You have connected", nil, [NSBundle bundleForClass:[AIAccount class]], "Displayed in an open chat when its account has been connected")] autorelease]
+														  withType:@"connected"];
+	
+	[statusMessage setCoalescingKey:ACCOUNT_STATUS_UPDATE_COALESCING_KEY];
+	
+	[[adium contentController] receiveContentObject:statusMessage];
+}
+
 /*!
  * @brief The account did connect
  *
@@ -1094,17 +1109,7 @@
 				// always be true at the moment
 				[self rejoinChat:chat];
 			} else {
-				//Display a connected message in all open chats
-				AIContentStatus *statusMessage = [AIContentStatus statusInChat:chat
-																	withSource:[chat account]
-																   destination:[chat account]
-																		  date:[NSDate date]
-																	   message:[[[NSAttributedString alloc] initWithString:AILocalizedStringFromTableInBundle(@"You have connected", nil, [NSBundle bundleForClass:[AIAccount class]], "Displayed in an open chat when its account has been connected")] autorelease]
-																	  withType:@"connected"];
-				
-				[statusMessage setCoalescingKey:ACCOUNT_STATUS_UPDATE_COALESCING_KEY];
-				
-				[[adium contentController] receiveContentObject:statusMessage];
+				[self displayYouHaveConnectedInChat:chat];
 			}
 		}
 	}
@@ -1256,6 +1261,9 @@
 				[statusMessage setCoalescingKey:ACCOUNT_STATUS_UPDATE_COALESCING_KEY];
 
 				[[adium contentController] receiveContentObject:statusMessage];
+				
+				if ([chat isGroupChat])
+					[chat removeAllParticipatingContactsSilently];
 			}
 		}
 	}

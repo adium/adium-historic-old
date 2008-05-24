@@ -93,3 +93,8 @@ typedef enum {
 - (void)setPasswordTemporarily:(NSString *)inPassword;
 
 @end
+
+@interface AIAccount (Abstract_ForSubclasses)
+//Chats
+- (void)displayYouHaveConnectedInChat:(AIChat *)chat;
+@end
