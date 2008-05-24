@@ -68,6 +68,11 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 	return serviceIcon;
 }
 
++ (NSString *)pathForServiceIconForServiceID:(NSString *)serviceID type:(AIServiceIconType)iconType
+{
+	return [serviceIconBasePath stringByAppendingPathComponent:[serviceIconNames[iconType] objectForKey:serviceID]];
+}
+
 //Retrieve the correct service icon for a service by ID
 + (NSImage *)serviceIconForServiceID:(NSString *)serviceID type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection
 {
@@ -78,7 +83,7 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 
 	//Load the service icon if necessary
 	if (!serviceIcon) {
-		NSString	*path = [serviceIconBasePath stringByAppendingPathComponent:[serviceIconNames[iconType] objectForKey:serviceID]];
+		NSString	*path = [self pathForServiceIconForServiceID:serviceID type:iconType];
 
 		if (path) {
 			serviceIcon = [[NSImage alloc] initWithContentsOfFile:path];

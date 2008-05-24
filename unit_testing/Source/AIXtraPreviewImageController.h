@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by David Smith on 3/6/06.
-//  Copyright 2006 __MyCompanyName__. All rights reserved.
+//  Copyright 2006 The Adium Team. All rights reserved.
 //
 
 #import "AIXtraPreviewController.h"

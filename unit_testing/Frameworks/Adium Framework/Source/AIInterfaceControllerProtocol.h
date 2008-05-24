@@ -24,6 +24,8 @@
 #define PREF_GROUP_INTERFACE			@"Interface"
 #define KEY_TABBED_CHATTING				@"Tabbed Chatting"
 #define KEY_GROUP_CHATS_BY_GROUP		@"Group Chats By Group"
+#define KEY_SAVE_CONTAINERS				@"Save Containers On Quit"
+#define KEY_CONTAINERS					@"Containers"
 
 #define PREF_GROUP_CONTACT_LIST				@"Contact List"
 #define KEY_CL_WINDOW_LEVEL					@"Window Level"
@@ -50,7 +52,7 @@ typedef enum {
 @protocol AIInterfaceComponent, AIContactListComponent, AIMessageDisplayController, AIMessageDisplayPlugin;
 @protocol AIContactListTooltipEntry, AIFlashObserver;
 
-@class AIListWindowController;
+@class AIListWindowController, AIMessageWindowController;
 
 @class AIChat, AIListObject, AIListGroup;
 
@@ -78,57 +80,246 @@ typedef enum {
 //Contact List
 /*! @name Contact List */
 /* @{ */
+/*!
+ * @brief Brings contact list to the front
+ */
 - (IBAction)showContactList:(id)sender;
+/*!
+ * @brief Close the contact list window
+ */
 - (IBAction)closeContactList:(id)sender;
+/*!
+ * @returns YES if contact list is visible and selected, otherwise NO
+ */
 - (BOOL)contactListIsVisibleAndMain;
+/*!
+ * @returns YES if contact list is visible, otherwise NO
+ */
 - (BOOL)contactListIsVisible;
 /*! @} */
 
-//Detachable Contact List
+#pragma mark Detachable Contact List
+/*!
+ * @brief Create a new AIListWindowController to display a given contact list group in a detached window
+ *
+ * @result Created contact list controller for detached contact list
+ */
 - (AIListWindowController *)detachContactList:(AIListGroup *)aContactList;
 
-//Messaging
+#pragma mark Messaging
+/*!
+ * @brief Opens tab or window for a chat (following user's preferences)
+ *
+ * @param inChat The chat. If already open, the chat will be brought to the front.
+ */
 - (void)openChat:(AIChat *)inChat;
-- (id)openChat:(AIChat *)inChat inContainerWithID:(NSString *)containerID atIndex:(int)index;
-- (void)moveChatToNewContainer:(AIChat *)inChat;
-- (void)closeChat:(AIChat *)inChat;
-- (void)consolidateChats;
-- (void)setActiveChat:(AIChat *)inChat;
-- (AIChat *)activeChat;
-- (AIChat *)mostRecentActiveChat;
-- (NSArray *)openChats;
-- (NSArray *)openChatsInContainerWithID:(NSString *)containerID;
-- (NSArray *)openContainers;
-- (id)openContainerWithID:(NSString *)containerID name:(NSString *)containerName;
 
-//Chat cycling
+/*!
+ * @brief Opens a chat in a given container at a specific index
+ *
+ * NOTE: If the chat is already open, this won't move it and instead does nothing. Perhaps it should, though :)
+ *
+ * @param inChat The chat.
+ * @param containerID The name of the container window.
+ * @param index The index within that containter window.
+ */
+- (id)openChat:(AIChat *)inChat inContainerWithID:(NSString *)containerID atIndex:(int)index;
+
+/*!
+ * @brief Move a chat to a new window container
+ *
+ * NOTE: The chat must already be open. That's a bug.
+ */
+- (void)moveChatToNewContainer:(AIChat *)inChat;
+
+/*!
+ * @brief Close the interface for a chat
+ *
+ * @param inChat The chat
+ */
+- (void)closeChat:(AIChat *)inChat;
+
+/*!
+ * @brief Consolidate all open chats into a single container
+ */
+- (void)consolidateChats;
+
+/*!
+ * @brief Brings the tab/window for a chat to the front and sets it as active
+ * @param inChat The chat
+ */
+- (void)setActiveChat:(AIChat *)inChat;
+
+/*!
+ * @brief Get the active chat.
+ *
+ * @result The active chat. If no chat is active (a non-chat window is focued, or Adium is not focused), returns nil.
+ */
+- (AIChat *)activeChat;
+
+/*!
+ * @brief Get the chat which was most recently active
+ *
+ * If -[self activeChat] is non-nil, this will be the same as activeChat. However, if no chat is active, so long
+ * as any chat is open, this will return the chat most recently active.  If no chats are open, this will return nil.
+ */
+- (AIChat *)mostRecentActiveChat;
+
+/*!
+ * @brief Get all open chats
+ *
+ * @result The open chats. Returns an empty array if no chats are open.
+ */
+- (NSArray *)openChats;
+
+/*!
+ * @brief Get all open chats in a given container.
+ *
+ * @result The array of open chats. Returns nil if no container with containerID exists.
+ */
+- (NSArray *)openChatsInContainerWithID:(NSString *)containerID;
+
+/*!
+ * @brief Get an array of the containerIDs of all open containers
+ */
+- (NSArray *)openContainerIDs;
+
+/*!
+ * @brief Open a new container with a given ID and name
+ *
+ * @param containerID The container's ID. Pass nil to let Adium generate one
+ * @param containerName THe name of the container. Pass nil to not specify one.
+ *
+ * @result The newly created AIMessageWindowController
+ */
+- (AIMessageWindowController *)openContainerWithID:(NSString *)containerID name:(NSString *)containerName;
+
+/*!
+ * @brief Cycles to the next open chat, making it active
+ *
+ * This crosses container boundaries.
+ */
 - (void)nextChat:(id)sender;
+
+/*!
+ * @brief Cycles to the previous open chat, making it active
+ *
+ * This crosses container boundaries.
+ */
 - (void)previousChat:(id)sender;
 
-//Interface plugin callbacks
+#pragma mark Interface plugin callbacks
+/*!
+ * @brief A chat window did open: rebuild our window menu to show the new chat
+ *
+ * This should be called by the interface plugin (e.g. AIDualWindowInterfacePlugin) after a chat opens
+ *
+ * @param inChat Newly created chat 
+ */
 - (void)chatDidOpen:(AIChat *)inChat;
+
+/*!
+ * @brief A chat has become active: update our chat closing keys and flag this chat as selected in the window menu
+ *
+ * This should be called by the interface plugin (e.g. AIDualWindowInterfacePlugin) 
+ *
+ * @param inChat Chat which has become active
+ */
 - (void)chatDidBecomeActive:(AIChat *)inChat;
+
+/*!
+ * @brief A chat has become visible: send out a notification for components and plugins to take action
+ *
+ * This should be called by the interface plugin (e.g. AIDualWindowInterfacePlugin) 
+ *
+ * @param inChat Chat that has become active
+ * @param inWindow Containing chat window
+ */
 - (void)chatDidBecomeVisible:(AIChat *)inChat inWindow:(NSWindow *)inWindow;
+
+/*!
+ * @brief A chat window did close: rebuild our window menu to remove the chat
+ *
+ * This should be called by the interface plugin (e.g. AIDualWindowInterfacePlugin) 
+ * 
+ * @param inChat Chat that closed
+ */
 - (void)chatDidClose:(AIChat *)inChat;
+
+/*!
+ * @brief The order of chats has changed: rebuild our window menu to reflect the new order
+ *
+ * This should be called by the interface plugin (e.g. AIDualWindowInterfacePlugin) 
+ */
 - (void)chatOrderDidChange;
+
+#pragma mark Chat window access
+/*!
+ * @brief Find the window currently displaying a chat
+ *
+ * @returns Window for chat otherwise if the chat is not in any window, or is not visible in any window, returns nil
+ */
 - (NSWindow *)windowForChat:(AIChat *)inChat;
+
+
+/*!
+ * @brief Find the chat active in a window
+ *
+ * If the window does not have an active chat, nil is returned
+ */
 - (AIChat *)activeChatInWindow:(NSWindow *)window;
 
-//Interface selection
+#pragma mark Interface selection
+/*!
+ * @brief Get the list object currently focused in the interface
+ *
+ * We find the first responder that knows about list objects and get its selected object.
+ * This may be, for example, the contact list or a chat window.
+ */
 - (AIListObject *)selectedListObject;
+
+/*!
+ * @brief Get the list object currently selected in the contact list
+ *
+ * If multiple objects are selected, this returns the first one. If possible, use arrayOfSelectedListObjectsInContactList and
+ * handle multiple selections.
+ */
 - (AIListObject *)selectedListObjectInContactList;
+
+/*!
+ * @brief Get the list objects currently selected in the contact list
+ *
+ * @result An NSArray of selected objects
+ */
 - (NSArray *)arrayOfSelectedListObjectsInContactList;
 
-//Message View
+#pragma mark Message View
+/*!
+ * @brief Register an object which can handle displaying messages
+ *
+ * See @protocol AIMessageDisplayPlugin for details. An example of such an object is the WebKit Message View plugin.
+ *
+ * @param inPlugin The object, which must conform to @protocol(AIMessageDisplayPlugin)
+ */
 - (void)registerMessageDisplayPlugin:(id <AIMessageDisplayPlugin>)inPlugin;
+
+/*!
+ * @brief Unregister an object previously registered with registerMessageDisplayPlugin.
+ */
 - (void)unregisterMessageDisplayPlugin:(id <AIMessageDisplayPlugin>)inPlugin;
+
+/*!
+ * @brief Get the AIMessageDisplayController-conforming object for a chat
+ *
+ * Every chat has exactly one. You can get it!
+ */
 - (id <AIMessageDisplayController>)messageDisplayControllerForChat:(AIChat *)inChat;
 
-//Error Display
+#pragma mark Error Display
 - (void)handleErrorMessage:(NSString *)inTitle withDescription:(NSString *)inDesc;
 - (void)handleMessage:(NSString *)inTitle withDescription:(NSString *)inDesc withWindowTitle:(NSString *)inWindowTitle;
 
-//Question Display
+#pragma mark Question Display
 - (void)displayQuestion:(NSString *)inTitle withAttributedDescription:(NSAttributedString *)inDesc withWindowTitle:(NSString *)inWindowTitle
 		  defaultButton:(NSString *)inDefaultButton alternateButton:(NSString *)inAlternateButton otherButton:(NSString *)inOtherButton
 				 target:(id)inTarget selector:(SEL)inSelector userInfo:(id)inUserInfo;
@@ -136,17 +327,49 @@ typedef enum {
 		  defaultButton:(NSString *)inDefaultButton alternateButton:(NSString *)inAlternateButton otherButton:(NSString *)inOtherButton
 				 target:(id)inTarget selector:(SEL)inSelector userInfo:(id)inUserInfo;
 
-//Synchronized Flashing
+#pragma mark Synchronized Flashing
 - (void)registerFlashObserver:(id <AIFlashObserver>)inObserver;
 - (void)unregisterFlashObserver:(id <AIFlashObserver>)inObserver;
 - (int)flashState;
 
-//Tooltips
+#pragma mark Tooltips
+/*!
+ * @brief Register a tooltip-supplying object
+ *
+ * @param inEntry The object which will be queried for information when building a tooltip. Must conform to the AIContactListTooltipEntry protocol.
+ * @param isSecondary Most tooltips are secondary; this means they are displayed in the bottom half of the tooltip which can expand as needed.
+ */
 - (void)registerContactListTooltipEntry:(id <AIContactListTooltipEntry>)inEntry secondaryEntry:(BOOL)isSecondary;
+
+/*!
+ * @brief Unregister a previously reigstered tooltip-supplying object
+ *
+ * @param inEntry The object to unregister
+ * @param isSecondary This should match the value passed to registerContactListTooltipEntry:secondaryEntry:
+ */
 - (void)unregisterContactListTooltipEntry:(id <AIContactListTooltipEntry>)inEntry secondaryEntry:(BOOL)isSecondary;
+
+/*!
+ * @brief Show an object's tooltip at a given point
+ *
+ * If object is not nil, the tooltip box will be shown for that object at the given point. It is created if needed;
+ * if there is an existing object tooltip, that window is moved to the given point and reconfigured for object.
+ * This is a rich-text, information-rich tooltip, not a simple text tooltip as seen elsewhere in Mac OS X.
+ *
+ * @param object The object for which the tooltip should be shown. Pass nil to hide any existing tooltip.
+ * @param point The point in screen coordinates for the tooltip's origin. If object is nil, this value is ignored.
+ * @param inWindow The window from which the tooltip is originating. If object is nil, this value is ignored.
+ */
 - (void)showTooltipForListObject:(AIListObject *)object atScreenPoint:(NSPoint)point onWindow:(NSWindow *)inWindow;
 
-//Window levels menu
+#pragma mark Window level menu
+/*!
+ * @brief Build a menu of possible window levels
+ *
+ * Window levels may be, for example, 'Above other windows' or 'Normally'.
+ *
+ * @param target The target on which @selector(selectedWindowLevel:) will be called when a menu item is selected
+ */
 - (NSMenu *)menuForWindowLevelsNotifyingTarget:(id)target;
 
 @end
@@ -172,6 +395,10 @@ typedef enum {
  * The AIMessageDisplayController is informed when the message view which is using it is closing.
  */
 @protocol AIMessageDisplayController <NSObject>
+- (void)setChatContentSource:(NSString *)source;
+- (NSString *)chatContentSource;
+- (NSString *)contentSourceName; // Unique name for this particular style of "content source".
+
 - (NSView *)messageView;
 - (NSView *)messageScrollView;
 - (void)messageViewIsClosing;
@@ -213,9 +440,19 @@ typedef enum {
 - (void)moveChat:(AIChat *)chat toContainerWithID:(NSString *)containerID index:(int)index;
 - (void)moveChatToNewContainer:(AIChat *)inChat;
 - (void)closeChat:(AIChat *)chat;
-- (id)openContainerWithID:(NSString *)containerID name:(NSString *)containerName;
+- (AIMessageWindowController *)openContainerWithID:(NSString *)containerID name:(NSString *)containerName;
+/*!
+ * @brief Return an array of NSDictionary objects for all open containers with associated information
+ * 
+ * The returned array has zero or more NSDictionary objects with the following information for each container
+ *	Key			Value
+ *	@"ID"		NSString of the containerID
+ *  @"Frame"	NSString of the window's [NSWindow frame]
+ *	@"Content"	NSArray of the AIChat objects within that container
+ *	@"Name"		NSString of the container's name
+ */
 - (NSArray *)openContainersAndChats;
-- (NSArray *)openContainers;
+- (NSArray *)openContainerIDs;
 - (NSArray *)openChats;
 - (NSArray *)openChatsInContainerWithID:(NSString *)containerID;
 - (NSString *)containerIDForChat:(AIChat *)chat;
@@ -259,6 +496,9 @@ typedef enum {
 @end
 
 @protocol AIContactListComponent <NSObject>
+/*!
+ * @brief Show the contact list window and bring Adium to the front
+ */
 - (void)showContactListAndBringToFront:(BOOL)bringToFront;
 - (BOOL)contactListIsVisibleAndMain;
 - (BOOL)contactListIsVisible;

@@ -190,3 +190,5 @@ typedef enum {
 - (void)configureDateFilter;
 
 @end
+
+NSString *handleSpecialCasesForUIDAndServiceClass(NSString *contactUID, NSString *serviceClass);

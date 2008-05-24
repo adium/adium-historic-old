@@ -83,7 +83,7 @@
 //Open a new chat window
 - (id)openChat:(AIChat *)chat inContainerWithID:(NSString *)containerID withName:(NSString *)containerName atIndex:(int)index
 {
-	AIMessageTabViewItem		*messageTab = [chat statusObjectForKey:@"MessageTabViewItem"];
+	AIMessageTabViewItem		*messageTab = [chat valueForProperty:@"MessageTabViewItem"];
 	AIMessageWindowController	*container = nil;
 	AIMessageViewController 	*messageView = nil;
 	
@@ -96,8 +96,8 @@
 		
 		//Add chat to container
 		messageTab = [AIMessageTabViewItem messageTabWithView:messageView];
-		[chat setStatusObject:messageTab
-					   forKey:@"MessageTabViewItem"
+		[chat setValue:messageTab
+					   forProperty:@"MessageTabViewItem"
 					   notify:NotifyNever];
 		[container addTabViewItem:messageTab atIndex:index silent:NO];
 	}
@@ -123,27 +123,27 @@
  */
 - (void)closeChat:(AIChat *)chat
 {
-	AIMessageTabViewItem		*messageTab = [chat statusObjectForKey:@"MessageTabViewItem"];
+	AIMessageTabViewItem		*messageTab = [chat valueForProperty:@"MessageTabViewItem"];
 	AIMessageWindowController	*container = [messageTab windowController];
 
 	//Close the chat
 	[container removeTabViewItem:messageTab silent:NO];
-	[chat setStatusObject:nil
-				   forKey:@"MessageTabViewItem"
+	[chat setValue:nil
+				   forProperty:@"MessageTabViewItem"
 				   notify:NotifyNever];
 }
 
 //Make a chat active
 - (void)setActiveChat:(AIChat *)inChat
 {
-	AIMessageTabViewItem *messageTab = [inChat statusObjectForKey:@"MessageTabViewItem"];
+	AIMessageTabViewItem *messageTab = [inChat valueForProperty:@"MessageTabViewItem"];
 	if (messageTab) [messageTab makeActive:nil];
 }
 
 //Move a chat
 - (void)moveChat:(AIChat *)chat toContainerWithID:(NSString *)containerID index:(int)index
 {
-	AIMessageTabViewItem		*messageTab = [chat statusObjectForKey:@"MessageTabViewItem"];
+	AIMessageTabViewItem		*messageTab = [chat valueForProperty:@"MessageTabViewItem"];
 	AIMessageWindowController	*windowController = [containers objectForKey:containerID];
 
 	if ([messageTab windowController] == windowController) {
@@ -165,7 +165,16 @@
 
 //Interface: Chat Access -----------------------------------------------------------------------------------------------
 #pragma mark Interface: Chat Access
-//Returns an array of open containers and chats
+/*!
+ * @brief Return an array of NSDictionary objects for all open containers with associated information
+ * 
+ * The returned array has zero or more NSDictionary objects with the following information for each container
+ *	Key			Value
+ *	@"ID"		NSString of the containerID
+ *  @"Frame"	NSString of the window's [NSWindow frame]
+ *	@"Content"	NSArray of the AIChat objects within that container
+ *	@"Name"		NSString of the container's name
+ */
 - (NSArray *)openContainersAndChats
 {
 	NSMutableArray				*openContainersAndChats = [NSMutableArray array];
@@ -174,17 +183,18 @@
 	
 	while ((container = [containerEnumerator nextObject])) {
 		[openContainersAndChats addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-			[container containerID], @"ID",
-			[container containedChats], @"Content",
-			[container name], @"Name",
-			nil]];
+										   [container containerID], @"ID",
+										   NSStringFromRect([[container window] frame]), @"Frame",
+										   [container containedChats], @"Content",
+										   [container name], @"Name",
+										   nil]];
 	}
 	
 	return openContainersAndChats;
 }
 
 //Returns an array of open container IDs
-- (NSArray *)openContainers
+- (NSArray *)openContainerIDs
 {
 	return [containers allKeys];
 }
@@ -206,7 +216,7 @@
 //Returns the ID of the container containing the chat
 - (NSString *)containerIDForChat:(AIChat *)chat
 {
-	return [[[chat statusObjectForKey:@"MessageTabViewItem"] windowController] containerID];
+	return [[[chat valueForProperty:@"MessageTabViewItem"] windowController] containerID];
 }
 
 //Returns an array of all the chats in a container
@@ -222,7 +232,7 @@
  */
 - (NSWindow *)windowForChat:(AIChat *)chat
 {
-	AIMessageWindowController	*windowController = [[chat statusObjectForKey:@"MessageTabViewItem"] windowController];
+	AIMessageWindowController	*windowController = [[chat valueForProperty:@"MessageTabViewItem"] windowController];
 	
 	return (([windowController activeChat] == chat) ?
 			[windowController window] :
@@ -249,10 +259,11 @@
 //Containers -----------------------------------------------------------------------------------------------------------
 #pragma mark Containers
 //Open a new container
-- (id)openContainerWithID:(NSString *)containerID name:(NSString *)containerName
+- (AIMessageWindowController *)openContainerWithID:(NSString *)containerID name:(NSString *)containerName
 {
 	if (!containerID)
 		containerID = [NSString stringWithFormat:@"%@:%i", ADIUM_UNIQUE_CONTAINER, uniqueContainerNumber++];
+
 	AIMessageWindowController	*windowController = [containers objectForKey:containerID];
 	if (!windowController) {
 		windowController = [AIMessageWindowController messageWindowControllerForInterface:self withID:containerID name:containerName];
@@ -362,7 +373,7 @@
 
 - (void)moveChatToNewContainer:(AIChat *)inChat
 {
-	[self transferMessageTab:[inChat statusObjectForKey:@"MessageTabViewItem"]
+	[self transferMessageTab:[inChat valueForProperty:@"MessageTabViewItem"]
 				 toContainer:nil
 					 atIndex:0
 		   withTabBarAtPoint:NSMakePoint(-1, -1)];

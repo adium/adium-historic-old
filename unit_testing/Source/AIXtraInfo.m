@@ -85,6 +85,9 @@
 		}
 		if(!previewImage)
 			previewImage = [icon retain];
+		
+		/* Enabled by default */
+		enabled = YES;
 	}
 	return self;
 }
@@ -129,6 +132,16 @@
 - (NSImage *)previewImage
 {
 	return previewImage;
+}
+
+- (BOOL)enabled
+{
+	return enabled;
+}
+
+- (void)setEnabled:(BOOL)inEnabled
+{
+	enabled = inEnabled;
 }
 
 @end

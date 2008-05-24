@@ -25,6 +25,8 @@
 	NSString		*type;
 	NSString		*readMePath;
 	NSBundle		*xtraBundle;
+	
+	BOOL			enabled;
 }
 
 + (AIXtraInfo *) infoWithURL:(NSURL *)url;
@@ -39,4 +41,7 @@
 - (NSImage *)previewImage;
 - (void)setName:(NSString *)name;
 - (NSBundle *)bundle; //returns nil if no bundle is available
+
+- (BOOL)enabled;
+- (void)setEnabled:(BOOL)inEnabled;
 @end

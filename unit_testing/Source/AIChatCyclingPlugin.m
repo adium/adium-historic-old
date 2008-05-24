@@ -98,6 +98,11 @@
 			leftKey = @"{";
 			rightKey = @"}";
 			break;
+		case AIOptArrows:
+			leftKey = [NSString stringWithCharacters:&left length:1];
+			rightKey = [NSString stringWithCharacters:&right length:1];
+			keyMask = (NSCommandKeyMask | NSAlternateKeyMask);
+			break;
 	}
 
 	//Previous and nextMessage menuItems are in the same menu, so the setMenuChangedMessagesEnabled applies to both.

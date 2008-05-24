@@ -154,10 +154,8 @@
 					 withReason:AIOfflineContactHidingReason];
 			
 		} else if ([inObject isKindOfClass:[AIListGroup class]]) {
-			BOOL	newObject = [inObject integerStatusObjectForKey:@"New Object"];
-			
 			[inObject setVisible:((useContactListGroups) &&
-								  ([(AIListGroup *)inObject visibleCount] > 0 || newObject) &&
+								  ([(AIListGroup *)inObject visibleCount] > 0 || [inObject integerValueForProperty:@"New Object"]) &&
 								  (useOfflineGroup || ((AIListGroup *)inObject != [[adium contactController] offlineGroup])))];
 		}
 	}
@@ -180,11 +178,11 @@
 	
 	// If we're hiding contacts, and these meet a criteria for hiding
 	if (hideOfflineIdleOrMobileContacts && ((!showIdleContacts &&
-											 [listContact statusObjectForKey:@"IdleSince"]) ||
+											 [listContact valueForProperty:@"IdleSince"]) ||
 											(!showOfflineContacts &&
 											 ![listContact online] &&
-											 ![listContact integerStatusObjectForKey:@"Signed Off"] &&
-											 ![listContact integerStatusObjectForKey:@"New Object"]) ||
+											 ![listContact integerValueForProperty:@"Signed Off"] &&
+											 ![listContact integerValueForProperty:@"New Object"]) ||
 											(!showMobileContacts && 
 											 [listContact isMobile]) ||
 											(!showBlockedContacts &&

@@ -28,8 +28,10 @@
 
 #define CONTACT_COUNTING_DISPLAY_DEFAULT_PREFS  @"ContactCountingDisplayDefaults"
 
-#define COUNT_ONLINE_CONTACTS_TITLE				AILocalizedString(@"Show Group Online Count", nil)
-#define COUNT_ALL_CONTACTS_TITLE				AILocalizedString(@"Show Group Total Count", nil)
+#define SHOW_COUNT_ONLINE_CONTACTS_TITLE				AILocalizedString(@"Show Group Online Count", nil)
+#define HIDE_COUNT_ONLINE_CONTACTS_TITLE				AILocalizedString(@"Hide Group Online Count", nil)
+#define SHOW_COUNT_ALL_CONTACTS_TITLE				AILocalizedString(@"Show Group Total Count", nil)
+#define HIDE_COUNT_ALL_CONTACTS_TITLE				AILocalizedString(@"Hide Group Total Count", nil)
 
 #define PREF_GROUP_CONTACT_LIST					@"Contact List"
 #define KEY_COUNT_ALL_CONTACTS					@"Count All Contacts"
@@ -59,17 +61,17 @@
 										  forGroup:PREF_GROUP_CONTACT_LIST];
 	
     //init our menu items
-    menuItem_countOnlineObjects = [[NSMenuItem alloc] initWithTitle:COUNT_ONLINE_CONTACTS_TITLE 
+    menuItem_countOnlineObjects = [[NSMenuItem alloc] initWithTitle:SHOW_COUNT_ONLINE_CONTACTS_TITLE 
 														 target:self 
 														 action:@selector(toggleMenuItem:)
 												  keyEquivalent:@""];
-    [[adium menuController] addMenuItem:menuItem_countOnlineObjects toLocation:LOC_View_Toggles];		
+    [[adium menuController] addMenuItem:menuItem_countOnlineObjects toLocation:LOC_View_Counting_Toggles];		
 
-    menuItem_countAllObjects = [[NSMenuItem alloc] initWithTitle:COUNT_ALL_CONTACTS_TITLE
+    menuItem_countAllObjects = [[NSMenuItem alloc] initWithTitle:SHOW_COUNT_ALL_CONTACTS_TITLE
 														 target:self 
 														 action:@selector(toggleMenuItem:)
 												  keyEquivalent:@""];
-	[[adium menuController] addMenuItem:menuItem_countAllObjects toLocation:LOC_View_Toggles];		
+	[[adium menuController] addMenuItem:menuItem_countAllObjects toLocation:LOC_View_Counting_Toggles];		
     
 	//set up the prefs
 	countAllObjects = NO;
@@ -122,12 +124,8 @@
 			}
 		}
 		
-		if ([menuItem_countAllObjects state] != countAllObjects) {
-			[menuItem_countAllObjects setState:countAllObjects];
-		}
-		if ([menuItem_countOnlineObjects state] != countOnlineObjects) {
-			[menuItem_countOnlineObjects setState:countOnlineObjects];
-		}
+		[menuItem_countOnlineObjects setTitle:(countOnlineObjects ? HIDE_COUNT_ONLINE_CONTACTS_TITLE : SHOW_COUNT_ONLINE_CONTACTS_TITLE)];
+		[menuItem_countAllObjects setTitle:(countAllObjects ? HIDE_COUNT_ALL_CONTACTS_TITLE : SHOW_COUNT_ALL_CONTACTS_TITLE)];
 
 	} else if (([group isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]) &&
 			   (!key || [key isEqualToString:KEY_HIDE_CONTACT_LIST_GROUPS])) {		
@@ -182,7 +180,7 @@
 		
 		//Obtain a count of all objects in this group
 		if (countAllObjects) {
-			totalObjects = [[targetGroup statusObjectForKey:@"ObjectCount"] intValue];
+			totalObjects = [[targetGroup valueForProperty:@"ObjectCount"] intValue];
 		}
 	
 		//Build a string to add to the right of the name which shows any information we just extracted
@@ -218,15 +216,22 @@
  */
 - (void)toggleMenuItem:(id)sender
 {
-    if ((sender == menuItem_countOnlineObjects) || (sender == menuItem_countAllObjects)) {
-		BOOL	newState = ![sender state];
-		
+	if (sender == menuItem_countOnlineObjects) {
+		BOOL	newPref = !countOnlineObjects;
+
 		//Toggle and set, which will call back on preferencesChanged: above
-        [sender setState:newState];
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:newState]
-											 forKey:(sender == menuItem_countAllObjects ?
-													 KEY_COUNT_ALL_CONTACTS : 
-													 KEY_COUNT_ONLINE_CONTACTS)
+		[menuItem_countOnlineObjects setTitle:(newPref ? HIDE_COUNT_ONLINE_CONTACTS_TITLE : SHOW_COUNT_ONLINE_CONTACTS_TITLE)];
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:newPref]
+											 forKey:KEY_COUNT_ONLINE_CONTACTS
+											  group:PREF_GROUP_CONTACT_LIST];
+
+	} else if (sender == menuItem_countAllObjects) {
+		BOOL	newPref = !countAllObjects;
+
+		//Toggle and set, which will call back on preferencesChanged: above
+		[menuItem_countAllObjects setTitle:(newPref ? HIDE_COUNT_ALL_CONTACTS_TITLE : SHOW_COUNT_ALL_CONTACTS_TITLE)];
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:newPref]
+											 forKey:KEY_COUNT_ALL_CONTACTS
 											  group:PREF_GROUP_CONTACT_LIST];
     }
 }

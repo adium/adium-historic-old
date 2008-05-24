@@ -109,7 +109,7 @@
 		//Some protocols implicitly clear typing when a message is sent.  For these protocols we'll just update our
 		//typing state locally.  There is no need to send out a typing notification and doing so may actually cause
 		//undesirable behavior.
-		[chat setStatusObject:nil forKey:OUR_TYPING_STATE notify:NotifyNever];	
+		[chat setValue:nil forProperty:OUR_TYPING_STATE notify:NotifyNever];	
 	}
 }
 
@@ -131,15 +131,14 @@
  * @brief Send an AIContentTyping object for an AITypingState on a given chat
  *
  * The chat determines whether the notification should be sent or not, based on the account preference and, possibly,
- * the temporary suppression  status object.
+ * the temporary suppression  property.
  */
 - (void)setTypingState:(AITypingState)typingState ofChat:(AIChat *)chat
 {
-	if ([chat integerStatusObjectForKey:OUR_TYPING_STATE] != typingState) {
+	if ([chat integerValueForProperty:OUR_TYPING_STATE] != typingState) {
 		AIContentTyping	*contentObject;
 
 		//Send typing content object (It will go directly to the account since typing content isn't tracked or filtered)
-		//XXX - Typing isn't content
 		contentObject = [AIContentTyping typingContentInChat:chat
 												  withSource:[chat account]
 												 destination:nil
@@ -147,8 +146,8 @@
 		[[adium contentController] sendContentObject:contentObject];
 		
 		//Remember the state
-		[chat setStatusObject:(typingState == AINotTyping ? nil : [NSNumber numberWithInt:typingState])
-					   forKey:OUR_TYPING_STATE
+		[chat setValue:(typingState == AINotTyping ? nil : [NSNumber numberWithInt:typingState])
+					   forProperty:OUR_TYPING_STATE
 					   notify:NotifyNever];
 	}
 }
@@ -161,7 +160,7 @@
  */
 - (void)monitorTypingInChat:(AIChat *)chat
 {
-	NSTimer	*existingTimer = [chat statusObjectForKey:ENTERED_TEXT_TIMER];
+	NSTimer	*existingTimer = [chat valueForProperty:ENTERED_TEXT_TIMER];
 	
 	if (existingTimer) {
 		//If a timer exists, it is cheaper to reset it rather than create a new one
@@ -174,7 +173,7 @@
 													   selector:@selector(_typingHasPausedInChat:)
 													   userInfo:chat
 														repeats:NO];
-		[chat setStatusObject:existingTimer forKey:ENTERED_TEXT_TIMER notify:NotifyNever];
+		[chat setValue:existingTimer forProperty:ENTERED_TEXT_TIMER notify:NotifyNever];
 		
 	}
 }
@@ -184,8 +183,8 @@
  */
 - (void)stopMonitoringTypingInChat:(AIChat *)chat
 {
-	[[chat statusObjectForKey:ENTERED_TEXT_TIMER] invalidate];
-	[chat setStatusObject:nil forKey:ENTERED_TEXT_TIMER notify:NotifyNever];
+	[[chat valueForProperty:ENTERED_TEXT_TIMER] invalidate];
+	[chat setValue:nil forProperty:ENTERED_TEXT_TIMER notify:NotifyNever];
 }
 
 /*!

@@ -98,9 +98,19 @@ typedef enum {
 - (void)receiveContentObject:(AIContentObject *)inObject;
 - (BOOL)sendContentObject:(AIContentObject *)inObject;
 - (void)sendRawMessage:(NSString *)inString toContact:(AIListContact *)inContact;
-- (void)displayContentObject:(AIContentObject *)inObject;
-- (void)displayContentObject:(AIContentObject *)inObject immediately:(BOOL)immediately;
-- (void)displayContentObject:(AIContentObject *)inObject usingContentFilters:(BOOL)useContentFilters;
+/*!
+ * @brief Display content, optionally using content filters
+ *
+ * This should only be used for content which is not being sent or received but only displayed, such as message history. If you
+ *
+ * The ability to force filtering to be completed immediately exists for message history, which needs to put its display
+ * in before the first message; otherwise, the use of delayed filtering would mean that message history showed up after the first message.
+ * 
+ * @param inObject The object to display
+ * @param useContentFilters Should filters be used?
+ * @param immediately If YES, only immediate filters will be used, and inObject will have its message set before we return.
+ *					  If NO, immediate and delayed filters will be used, and inObject will be filtered over the course of some number of future run loops.
+ */
 - (void)displayContentObject:(AIContentObject *)inObject usingContentFilters:(BOOL)useContentFilters immediately:(BOOL)immediately;
 - (void)displayEvent:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat;
 

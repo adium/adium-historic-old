@@ -212,7 +212,7 @@ static int  sizeOfSortOrder;
 }
 
 /*!
- * @brief Status keys which, when changed, should trigger a resort
+ * @brief Properties which, when changed, should trigger a resort
  */
 - (NSSet *)statusKeysRequiringResort{
 	return [NSSet setWithObjects:@"Online",@"Idle",@"StatusType",@"IsMobile",nil];
@@ -597,10 +597,10 @@ int statusSort(id objectA, id objectB, BOOL groups)
 			away[1] = ((statusSummaryB == AIAwayStatus) || (statusSummaryB == AIAwayAndIdleStatus));
 			
 			idle[0] = (((statusSummaryA == AIIdleStatus) || (statusSummaryA == AIAwayAndIdleStatus)) ?
-					   [objectA integerStatusObjectForKey:@"Idle" fromAnyContainedObject:NO] :
+					   [objectA integerValueForProperty:@"Idle" fromAnyContainedObject:NO] :
 					   0);
 			idle[1] = (((statusSummaryB == AIIdleStatus) || (statusSummaryB == AIAwayAndIdleStatus)) ?
-					   [objectB integerStatusObjectForKey:@"Idle" fromAnyContainedObject:NO] :
+					   [objectB integerValueForProperty:@"Idle" fromAnyContainedObject:NO] :
 					   0);
 			
 			if (groupMobile) {

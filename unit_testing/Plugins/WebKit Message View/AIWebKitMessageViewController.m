@@ -39,6 +39,7 @@
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
+#import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIMutableStringAdditions.h>
@@ -47,6 +48,8 @@
 #define KEY_WEBKIT_CHATS_USING_CACHED_ICON @"WebKit:Chats Using Cached Icon"
 
 #define USE_FASTER_BUT_BUGGY_WEBKIT_PREFERENCE_CHANGE_HANDLING FALSE
+
+#define TEMPORARY_FILE_PREFIX	@"TEMP"
 
 @interface AIWebKitMessageViewController (PRIVATE)
 - (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
@@ -58,11 +61,13 @@
 - (void)_processContentObject:(AIContentObject *)content willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
 - (void)_appendContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects replaceLastContent:(BOOL)replaceLastContent;
 
+- (NSString *)_webKitBackgroundImagePathForUniqueID:(int)uniqueID;
 - (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject;
 - (void)releaseCurrentWebKitUserIconForObject:(AIListObject *)inObject;
 - (void)releaseAllCachedIcons;
 - (void)updateUserIconForObject:(AIListObject *)inObject;
 - (void)userIconForObjectDidChange:(AIListObject *)inObject;
+- (void)updateServiceIcon;
 
 - (void)participatingListObjectsChanged:(NSNotification *)notification;
 - (void)sourceOrDestinationChanged:(NSNotification *)notification;
@@ -71,6 +76,7 @@
 - (void)debugLog:(NSString *)message;
 - (void)processQueuedContent;
 - (NSString *)webviewSource;
+- (void) setIsGroupChat:(BOOL) flag;
 @end
 
 static NSArray *draggedTypes = nil;
@@ -405,8 +411,7 @@ static NSArray *draggedTypes = nil;
 				
 				//Cache the image under that unique ID
 				//Since we prefix the filename with TEMP, Adium will automatically clean it up on quit
-				cachePath = [[adium cachesPath] stringByAppendingPathComponent:[NSString stringWithFormat:@"TEMP-WebkitBGImage-%i.png",uniqueID]];
-				[backgroundImage writeToFile:cachePath atomically:YES];
+				[backgroundImage writeToFile:[self _webKitBackgroundImagePathForUniqueID:uniqueID] atomically:YES];
 
 				//Remember where we cached it
 				[[adium preferenceController] setPreference:cachePath
@@ -429,7 +434,9 @@ static NSArray *draggedTypes = nil;
 	
 	BOOL isBackgroundTransparent = [[self messageStyle] isBackgroundTransparent];
 	[webView setTransparent:isBackgroundTransparent];
-	[[webView window] setOpaque:!isBackgroundTransparent];
+	NSWindow *win = [webView window];
+	if(win)
+		[win setOpaque:!isBackgroundTransparent];
 
 	//Update webview font settings
 	NSString	*fontFamily = [[adium preferenceController] preferenceForKey:[plugin styleSpecificKey:@"FontFamily" forStyle:activeStyle]
@@ -474,6 +481,12 @@ static NSArray *draggedTypes = nil;
 	[self _primeWebViewAndReprocessContent:NO];
 	[previousContent release];
 	previousContent = nil;
+	
+	if([[self messageStyle] isBackgroundTransparent]) {
+		[[webView window] performSelector:@selector(invalidateShadow)
+							   withObject:nil
+							   afterDelay:0.0];
+	}
 }
 
 /*!
@@ -516,6 +529,24 @@ static NSArray *draggedTypes = nil;
 	}
 }
 
+/*!
+ * @brief Sets the class 'groupchat' on the #Chat element, to allow styles to modify their appearance based on whether we're in a groupchat
+ *
+ * If/when we support transforming chats to/from groupchats we'll need to observe that and call this as appropriate
+ */
+- (void) setIsGroupChat:(BOOL) flag
+{
+	DOMHTMLElement *chatElement = (DOMHTMLElement *)[[[webView mainFrame] DOMDocument] getElementById:@"Chat"];
+	NSMutableString *chatClassName = [[[chatElement className] mutableCopy] autorelease];
+	if (flag == NO)
+		[chatClassName replaceOccurrencesOfString:@" groupchat"
+									   withString:@""
+										  options:NSLiteralSearch
+											range:NSMakeRange(0, [chatClassName length])];
+	else
+		[chatClassName appendString:@" groupchat"];
+	[chatElement setClassName:chatClassName];
+}
 
 //Content --------------------------------------------------------------------------------------------------------------
 #pragma mark Content
@@ -672,6 +703,7 @@ static NSArray *draggedTypes = nil;
 
 - (void)webViewIsReady{
 	webViewIsReady = YES;
+	[self setIsGroupChat:[chat isGroupChat]];
 	[self processQueuedContent];
 }
 
@@ -815,6 +847,16 @@ static NSArray *draggedTypes = nil;
 			[webViewMenuItems addObject:webViewMenuItem];
 			[webViewMenuItem release];
 		}
+		
+		[webViewMenuItems addObject:[NSMenuItem separatorItem]];
+		
+		//Present an option to clear the display
+		menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Clear Display", "Clears the display window for the currently open message window")
+											  target:self
+											  action:@selector(clearView)
+									   keyEquivalent:@""];
+		[webViewMenuItems addObject:menuItem];
+		[menuItem release];
 	}
 	
 	return webViewMenuItems;
@@ -1015,6 +1057,8 @@ static NSArray *draggedTypes = nil;
 	
 	//And update the source account
 	[self updateUserIconForObject:[chat account]];
+	
+	[self updateServiceIcon];
 }
 
 /*!
@@ -1062,13 +1106,13 @@ static NSArray *draggedTypes = nil;
 										 inObject);
 	NSString		*currentIconPath = [objectIconPathDict objectForKey:[iconSourceObject internalObjectID]];
 	if (currentIconPath) {
-		NSString	*objectsKnownIconPath = [iconSourceObject statusObjectForKey:KEY_WEBKIT_USER_ICON];
+		NSString	*objectsKnownIconPath = [iconSourceObject valueForProperty:KEY_WEBKIT_USER_ICON];
 		if (objectsKnownIconPath &&
 			[currentIconPath isEqualToString:objectsKnownIconPath]) {
 			//We're the first one to get to this object!  We get to delete the old path and remove the reference to it
 			[[NSFileManager defaultManager] removeFileAtPath:currentIconPath handler:nil];
-			[iconSourceObject setStatusObject:nil
-									   forKey:KEY_WEBKIT_USER_ICON
+			[iconSourceObject setValue:nil
+									   forProperty:KEY_WEBKIT_USER_ICON
 									   notify:NotifyNever];
 		} else {
 			/* Some other instance beat us to the punch. The object's KEY_WEBKIT_USER_ICON is right, since it doesn't match our
@@ -1094,18 +1138,18 @@ static NSArray *draggedTypes = nil;
 										 inObject);
 	NSString		*path;
 	
-	int chatsUsingCachedIcon = [[iconSourceObject statusObjectForKey:KEY_WEBKIT_CHATS_USING_CACHED_ICON] intValue];
+	int chatsUsingCachedIcon = [[iconSourceObject valueForProperty:KEY_WEBKIT_CHATS_USING_CACHED_ICON] intValue];
 	chatsUsingCachedIcon--;
-	[iconSourceObject setStatusObject:[NSNumber numberWithInt:chatsUsingCachedIcon]
-					   forKey:KEY_WEBKIT_CHATS_USING_CACHED_ICON
+	[iconSourceObject setValue:[NSNumber numberWithInt:chatsUsingCachedIcon]
+					   forProperty:KEY_WEBKIT_CHATS_USING_CACHED_ICON
 					   notify:NotifyNever];
 	[objectsWithUserIconsArray removeObjectIdenticalTo:iconSourceObject];
 
 	if ((chatsUsingCachedIcon <= 0) &&
-		(path = [iconSourceObject statusObjectForKey:KEY_WEBKIT_USER_ICON])) {
+		(path = [iconSourceObject valueForProperty:KEY_WEBKIT_USER_ICON])) {
 		[[NSFileManager defaultManager] removeFileAtPath:path handler:nil];
-		[iconSourceObject setStatusObject:nil
-								   forKey:KEY_WEBKIT_USER_ICON
+		[iconSourceObject setValue:nil
+								   forProperty:KEY_WEBKIT_USER_ICON
 								   notify:NotifyNever];
 	}
 
@@ -1144,7 +1188,7 @@ static NSArray *draggedTypes = nil;
 	 */
 	if (!(userIcon = [iconSourceObject userIcon])) {
 		//If that's not the case, try using the UserIconPath
-		userIcon = [[[NSImage alloc] initWithContentsOfFile:[iconSourceObject statusObjectForKey:@"UserIconPath"]] autorelease];
+		userIcon = [[[NSImage alloc] initWithContentsOfFile:[iconSourceObject valueForProperty:@"UserIconPath"]] autorelease];
 	}
 
 	if (userIcon) {
@@ -1164,7 +1208,7 @@ static NSArray *draggedTypes = nil;
 		}
 
 		oldWebKitUserIconPath = [objectIconPathDict objectForKey:[iconSourceObject internalObjectID]];
-		webKitUserIconPath = [iconSourceObject statusObjectForKey:KEY_WEBKIT_USER_ICON];
+		webKitUserIconPath = [iconSourceObject valueForProperty:KEY_WEBKIT_USER_ICON];
 
 		if (!webKitUserIconPath) {
 			/* If the image doesn't know a path to use, write it out and set it.
@@ -1177,8 +1221,8 @@ static NSArray *draggedTypes = nil;
 			webKitUserIconPath = [self _webKitUserIconPathForObject:iconSourceObject];
 			if ([[webKitUserIcon PNGRepresentation] writeToFile:webKitUserIconPath
 													 atomically:YES]) {
-				[iconSourceObject setStatusObject:webKitUserIconPath
-										   forKey:KEY_WEBKIT_USER_ICON
+				[iconSourceObject setValue:webKitUserIconPath
+										   forProperty:KEY_WEBKIT_USER_ICON
 										   notify:NO];				
 			}			
 		}
@@ -1188,8 +1232,8 @@ static NSArray *draggedTypes = nil;
 			[objectsWithUserIconsArray addObject:iconSourceObject];
 
 			//Keep track of this chat using the icon
-			[iconSourceObject setStatusObject:[NSNumber numberWithInt:([[iconSourceObject statusObjectForKey:KEY_WEBKIT_CHATS_USING_CACHED_ICON] intValue] + 1)]
-									   forKey:KEY_WEBKIT_CHATS_USING_CACHED_ICON
+			[iconSourceObject setValue:[NSNumber numberWithInt:([[iconSourceObject valueForProperty:KEY_WEBKIT_CHATS_USING_CACHED_ICON] intValue] + 1)]
+									   forProperty:KEY_WEBKIT_CHATS_USING_CACHED_ICON
 									   notify:NotifyNever];
 		}
 		
@@ -1215,6 +1259,24 @@ static NSArray *draggedTypes = nil;
 		[objectIconPathDict setObject:webKitUserIconPath
 							   forKey:[iconSourceObject internalObjectID]];
 	}
+}
+
+- (void)updateServiceIcon
+{
+	DOMDocument *doc = [[webView mainFrame] DOMDocument];
+	//Old WebKits don't support this... if someone feels like doing it the slower way here, feel free
+	if(![doc respondsToSelector:@selector(getElementsByClassName:)])
+		return; 
+	DOMNodeList  *serviceIconImages = [doc getElementsByClassName:@"serviceIcon"];
+	unsigned int imagesCount = [serviceIconImages length];
+	
+	NSString *serviceIconPath = [AIServiceIcons pathForServiceIconForServiceID:[[chat account] serviceID] 
+																type:AIServiceIconLarge];
+	
+	for (int i = 0; i < imagesCount; i++) {
+		DOMHTMLImageElement *img = (DOMHTMLImageElement *)[serviceIconImages item:i];
+		[img setSrc:serviceIconPath];
+	}	
 }
 
 - (void)customEmoticonUpdated:(NSNotification *)inNotification
@@ -1250,11 +1312,20 @@ static NSArray *draggedTypes = nil;
 }
 
 /*!
+ * @brief Returns the path the background image given a unique ID
+ */
+- (NSString *)_webKitBackgroundImagePathForUniqueID:(int)uniqueID
+{
+	NSString	*filename = [NSString stringWithFormat:@"%@-WebkitBGImage-%i.png", TEMPORARY_FILE_PREFIX, uniqueID];
+	return [[adium cachesPath] stringByAppendingPathComponent:filename];
+}
+
+/*!
  * @brief Returns the path to the list object's masked user icon
  */
 - (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject
 {
-	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@.png", [inObject internalObjectID], [NSString randomStringOfLength:5]];
+	NSString	*filename = [NSString stringWithFormat:@"%@-%@%@.png", TEMPORARY_FILE_PREFIX, [inObject internalObjectID], [NSString randomStringOfLength:5]];
 	return [[adium cachesPath] stringByAppendingPathComponent:filename];
 }
 
@@ -1335,6 +1406,43 @@ static NSArray *draggedTypes = nil;
 - (NSString *)webviewSource
 {
 	return [(DOMHTMLHtmlElement *)[[[[webView mainFrame] DOMDocument] getElementsByTagName:@"html"] item:0] outerHTML];
+}
+
+/*!
+ * @brief Set the HTML content for the "Chat" area.
+ */
+- (void)setChatContentSource:(NSString *)source
+{
+	if (!webViewIsReady) {
+		// If the webview isn't ready yet, wait a very short amount of time before trying again
+		[self performSelector:@selector(setChatContentSource:)
+				   withObject:source
+				   afterDelay:0.01];
+	} else {
+		// Add the old "Chat" element to the window.
+		[(DOMHTMLElement *)[[[webView mainFrame] DOMDocument] getElementById:@"Chat"] setOuterHTML:source];
+
+		NSString	*scrollToBottomScript;		
+		if ((scrollToBottomScript = [messageStyle scriptForScrollingAfterAddingMultipleContentObjects])) {
+			[webView stringByEvaluatingJavaScriptFromString:scrollToBottomScript];
+		}
+	}
+}
+
+/*!
+ * @brief Get the HTML content for the "Chat" area.
+ */
+- (NSString *)chatContentSource
+{
+	return [(DOMHTMLElement *)[[[webView mainFrame] DOMDocument] getElementById:@"Chat"] outerHTML];
+}
+
+/*!
+ * @brief The unique name for this style of "content source"
+ */
+- (NSString *)contentSourceName
+{
+	return [[[messageStyle bundle] bundlePath] lastPathComponent];
 }
 
 @end

@@ -93,6 +93,23 @@
 
 @end
 
+//Proxy types for applescript
+typedef enum
+{
+	Adium_Proxy_HTTP_AS = 'HTTP',
+	Adium_Proxy_SOCKS4_AS = 'SCK4',
+	Adium_Proxy_SOCKS5_AS = 'SCK5',
+	Adium_Proxy_Default_HTTP_AS = 'DHTP',
+	Adium_Proxy_Default_SOCKS4_AS = 'DSK4',
+	Adium_Proxy_Default_SOCKS5_AS = 'DSK5',
+	Adium_Proxy_None_AS = 'NONE'
+} AdiumProxyTypeApplescript;
+
+@interface AIAccount(AppleScriptPRIVATE)
+- (AdiumProxyType)proxyTypeFromApplescript:(AdiumProxyTypeApplescript)proxyTypeAS;
+- (AdiumProxyTypeApplescript)applescriptProxyType:(AdiumProxyType)proxyType;
+@end
+
 /*!
  * @class AIAccount
  * @brief An account
@@ -118,7 +135,7 @@
 - (void)connect
 {
 	//We are connecting
-	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:NotifyNow];
+	[self setValue:[NSNumber numberWithBool:YES] forProperty:@"Connecting" notify:NotifyNow];
 }
 
 /*!
@@ -139,9 +156,9 @@
 - (void)disconnect
 {
 	[self cancelAutoReconnect];
-	[self setStatusObject:nil forKey:@"Connecting" notify:NotifyLater];
+	[self setValue:nil forProperty:@"Connecting" notify:NotifyLater];
 
-	[self notifyOfChangedStatusSilently:NO];
+	[self notifyOfChangedPropertiesSilently:NO];
 }
 
 /*!
@@ -325,16 +342,6 @@
 }
 
 /*!
- * @brief Are newlines allowed in messages?
- *
- * If NO, messages with newlines will be split into multiple messages before being sent
- */
-- (BOOL)allowsNewlinesInMessages
-{
-	return YES;
-}
-
-/*!
  * @brief Does the account itself display file transfer messages in chat windows?
  *
  * If YES, Adium won't attempt to display messages in chat windows regarding file transfers.
@@ -373,9 +380,9 @@
 //Status ---------------------------------------------------------------------------------------------------------------
 #pragma mark Status
 /*!
- * @brief Supported status keys
+ * @brief Supported properties
  *
- * Returns an array of status keys supported by this account.  This account will not be informed of changes to keys
+ * Returns an array of properties supported by this account.  This account will not be informed of changes to keys
  * it does not support.  Available keys are:
  *   @"Display Name", @"Online", @"Offline", @"IdleSince", @"IdleManuallySet", @"User Icon"
  *   @"TextProfile", @"DefaultUserIconFilename", @"StatusState"
@@ -391,7 +398,7 @@
 			KEY_ACCOUNT_DISPLAY_NAME,
 			@"Display Name",
 			@"StatusState",
-			KEY_USER_ICON,
+			KEY_USE_USER_ICON, KEY_USER_ICON, KEY_DEFAULT_USER_ICON,
 			@"Enabled",
 			nil];
 	}
@@ -403,7 +410,7 @@
  * @brief Status for key
  *
  * Returns the status this account should be for a specific key
- * @param key Status key
+ * @param key Property
  * @return id Status value
  */
 - (id)statusForKey:(NSString *)key
@@ -417,7 +424,7 @@
  * Update account status for the changed key.  This is called when account status changes Adium-side and the account
  * code should update status account/server side in response.  The new value for the key can be accessed using
  * the statusForKey method.
- * @param key The updated status key
+ * @param key The updated property
  */
 - (void)updateStatusForKey:(NSString *)key
 {
@@ -492,14 +499,14 @@
  */
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
-	if ([self online] && (!inContact || [inContact online])) {
-		if ([inType isEqualToString:CONTENT_MESSAGE_TYPE] ||
-			[inType isEqualToString:CONTENT_NOTIFICATION_TYPE]) {
-			return YES;
-
-		} else if ([inType isEqualToString:CONTENT_FILE_TRANSFER_TYPE]) {
-			return [self conformsToProtocol:@protocol(AIAccount_Files)];
-		}
+	if ([inType isEqualToString:CONTENT_MESSAGE_TYPE] ||
+		[inType isEqualToString:CONTENT_NOTIFICATION_TYPE]) {
+		return ([self online] &&
+				(!inContact || [inContact online] || [inContact isStranger] || [self canSendOfflineMessageToContact:inContact]));
+				
+	} else if ([inType isEqualToString:CONTENT_FILE_TRANSFER_TYPE]) {
+		return ([self online] && [self conformsToProtocol:@protocol(AIAccount_Files)] &&
+				(!inContact || [inContact online] || [inContact isStranger]));
 	}
 
 	return NO;
@@ -879,6 +886,15 @@
 	[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't dynamically change the UID of this account."];
 }
 
+/**
+ * @brief Make a contact, according to the passed dictionary of AppleScript properties
+ * 
+ * @param properties A dictionary of the following keys:
+ *		@"KeyDictionary" is the list of the properties in the "with properties" clause of the AS make command.
+ *			@"UID" key of KeyDictionary is the required "name" property of contacts
+ *			@"parentGroup" key of keyDictionary is the optional "contact group" property of contacts.
+ *						   If the parentGroup is not specified, the contact will not be added to the contact list.
+ */
 - (id)makeContactWithProperties:(NSDictionary *)properties
 {
 	NSDictionary *keyDictionary = [properties objectForKey:@"KeyDictionary"];
@@ -896,10 +912,9 @@
 	AIListContact *newContact = [[[AIObject sharedAdiumInstance] contactController] contactWithService:[self service] account:self UID:contactUID];
 	NSScriptObjectSpecifier *groupSpecifier = [keyDictionary objectForKey:@"parentGroup"];
 	AIListGroup *group = [groupSpecifier objectsByEvaluatingSpecifier];
+	//If we have a group, we add this contact to the contact list.
 	if (groupSpecifier && group) {
 		[[[AIObject sharedAdiumInstance] contactController] addContacts:[NSArray arrayWithObject:newContact] toGroup:group];
-	} else {
-		[[[AIObject sharedAdiumInstance] contactController] addContacts:[NSArray arrayWithObject:newContact] toGroup:[[[AIObject sharedAdiumInstance] contactController] contactList]];
 	}
 	
 	return newContact;
@@ -925,6 +940,7 @@
  */
 - (id)makeChatWithProperties:(NSDictionary *)resolvedKeyDictionary
 {
+	AILogWithSignature(@"%@", resolvedKeyDictionary);
 	NSArray *participants = [resolvedKeyDictionary objectForKey:@"withContacts"];
 	if (!participants) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
@@ -1146,6 +1162,151 @@
 	[[adium statusController] setActiveStatusState:[[adium statusController] invisibleStatus] forAccount:self];
 	
 	[self setScriptingStatusMessageFromScriptCommand:c];
+}
+
+/**
+ * @brief True, if a proxy is enabled
+ */
+- (BOOL)proxyEnabled
+{
+	return [[self preferenceForKey:KEY_ACCOUNT_PROXY_ENABLED group:GROUP_ACCOUNT_STATUS] boolValue];
+}
+/**
+ * @brief Sets whether or not the proxy is enabled for this account.
+ * This does not change the proxy setting immediately, a disconnect and reconnect is still required.
+ */
+- (void)setProxyEnabled:(BOOL)proxyEnabled
+{
+	[self setPreference:[NSNumber numberWithBool:proxyEnabled] forKey:KEY_ACCOUNT_PROXY_ENABLED group:GROUP_ACCOUNT_STATUS];
+}
+/**
+ * @brief Gets the type of the proxy (one of the defined AdiumProxyTypes)
+ */
+- (AdiumProxyType)proxyType
+{
+	return [[self preferenceForKey:KEY_ACCOUNT_PROXY_TYPE group:GROUP_ACCOUNT_STATUS] intValue];
+}
+/**
+ * @brief Sets the proxy type (one of the defined AdiumProxyTypes)
+ */
+- (void)setProxyType:(AdiumProxyType)type
+{
+	[self setPreference:[NSNumber numberWithInt:type] forKey:KEY_ACCOUNT_PROXY_TYPE group:GROUP_ACCOUNT_STATUS];
+}
+/**
+ * @brief Gets the proxy host as a string
+ */
+- (NSString *)proxyHost
+{
+	return [self preferenceForKey:KEY_ACCOUNT_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
+}
+/**
+ * @brief Sets the proxy host
+ */
+- (void)setProxyHost:(NSString *)host
+{
+	[self setPreference:host forKey:KEY_ACCOUNT_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
+}
+/**
+ * @brief Gets the proxy's port
+ */
+- (int)proxyPort
+{
+	return [[self preferenceForKey:KEY_ACCOUNT_PROXY_PORT group:GROUP_ACCOUNT_STATUS] intValue];
+}
+/**
+ * @brief Set the port to which we should connect when connecting to the proxy
+ */
+- (void)setProxyPort:(int)port
+{
+	[self setPreference:[NSNumber numberWithInt:port] forKey:KEY_ACCOUNT_PROXY_PORT group:GROUP_ACCOUNT_STATUS];
+}
+/**
+ * @brief Gets the username we use when connecting to the proxy
+ */
+- (NSString *)proxyUsername
+{
+	return [self preferenceForKey:KEY_ACCOUNT_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
+}
+/**
+ * @brief Sets the username we should use when connecting to the proxy
+ */
+- (void)setProxyUsername:(NSString *)username
+{
+	[self setPreference:username forKey:KEY_ACCOUNT_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
+}
+/**
+ * @brief Gets the password we use when connecting to the proxy
+ */
+- (NSString *)proxyPassword
+{
+	return [self preferenceForKey:KEY_ACCOUNT_PROXY_PASSWORD group:GROUP_ACCOUNT_STATUS];
+}
+/**
+ * @brief Sets the password we should use when connecting to the proxy
+ */
+- (void)setProxyPassword:(NSString *)proxyPassword
+{
+	[self setPreference:proxyPassword forKey:KEY_ACCOUNT_PROXY_PASSWORD group:GROUP_ACCOUNT_STATUS];
+}
+
+/**
+ * @brief Gets the proxy type for applescript (using the nice four-letter codes defined by AdiumProxyTypeApplescript)
+ */
+- (AdiumProxyTypeApplescript)scriptingProxyType
+{
+	return [self applescriptProxyType:[self proxyType]];
+}
+/**
+ * @brief Sets the proxy type to one of the defined AdiumProxyTypeApplescripts
+ */
+- (void)setScriptingProxyType:(AdiumProxyTypeApplescript)type
+{
+	[self setProxyType:[self proxyTypeFromApplescript:type]];
+}
+
+@end
+
+@implementation AIAccount(AppleScriptPRIVATE)
+- (AdiumProxyType)proxyTypeFromApplescript:(AdiumProxyTypeApplescript)proxyTypeAS
+{
+	switch(proxyTypeAS)
+	{
+		case Adium_Proxy_HTTP_AS:
+			return Adium_Proxy_HTTP;
+		case Adium_Proxy_SOCKS4_AS:
+			return Adium_Proxy_SOCKS4;
+		case Adium_Proxy_SOCKS5_AS:
+			return Adium_Proxy_SOCKS5;
+		case Adium_Proxy_Default_HTTP_AS:
+			return Adium_Proxy_Default_HTTP;
+		case Adium_Proxy_Default_SOCKS4_AS:
+			return Adium_Proxy_Default_SOCKS4;
+		case Adium_Proxy_Default_SOCKS5_AS:
+			return Adium_Proxy_Default_SOCKS5;
+		default:
+			return Adium_Proxy_None;
+	}
+}
+- (AdiumProxyTypeApplescript)applescriptProxyType:(AdiumProxyType)proxyType
+{
+	switch(proxyType)
+	{
+		case Adium_Proxy_HTTP:
+			return Adium_Proxy_HTTP_AS;
+		case Adium_Proxy_SOCKS4:
+			return Adium_Proxy_SOCKS4_AS;
+		case Adium_Proxy_SOCKS5:
+			return Adium_Proxy_SOCKS5_AS;
+		case Adium_Proxy_Default_HTTP:
+			return Adium_Proxy_Default_HTTP_AS;
+		case Adium_Proxy_Default_SOCKS4:
+			return Adium_Proxy_Default_SOCKS4_AS;
+		case Adium_Proxy_Default_SOCKS5:
+			return Adium_Proxy_Default_SOCKS5_AS;
+		default:
+			return Adium_Proxy_None_AS;
+	}
 }
 
 @end

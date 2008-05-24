@@ -115,10 +115,10 @@
 							   chatCreationInfo:inInfo];
 
 	if ([contactsToInvite count]) {
-		[chat setStatusObject:contactsToInvite forKey:@"ContactsToInvite" notify:NotifyNever];
+		[chat setValue:contactsToInvite forProperty:@"ContactsToInvite" notify:NotifyNever];
 		
 		if ([invitationMessage length]) {
-			[chat setStatusObject:invitationMessage forKey:@"InitialInivitationMessage" notify:NotifyNever];
+			[chat setValue:invitationMessage forProperty:@"InitialInivitationMessage" notify:NotifyNever];
 		}
 		
 		[[adium notificationCenter] addObserver:self selector:@selector(chatDidOpen:) name:Chat_DidOpen object:chat];
@@ -130,11 +130,11 @@
 //When the chat opens, we are ready to send out our invitations to join it
 - (void)chatDidOpen:(NSNotification *)notification
 {
-	NSArray *contacts = [chat statusObjectForKey:@"ContactsToInvite"];
+	NSArray *contacts = [chat valueForProperty:@"ContactsToInvite"];
 	
 	if (contacts && [contacts count]) {
 		NSMutableDictionary	*inviteUsersDict;
-		NSString			*initialInvitationMessage = [chat statusObjectForKey:@"InitialInivitationMessage"];
+		NSString			*initialInvitationMessage = [chat valueForProperty:@"InitialInivitationMessage"];
 		
 		inviteUsersDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[[contacts mutableCopy] autorelease],@"ContactsToInvite",nil];
 		if (initialInvitationMessage) {
@@ -151,8 +151,8 @@
 	
 	//The dictionary will retain the ContactsToInvite and InitialInivitationMessage objects;
 	//The timer will retain the dictionary until it is invalidated.
-	[chat setStatusObject:nil forKey:@"ContactsToInvite" notify:NotifyNever];
-	[chat setStatusObject:nil forKey:@"InitialInivitationMessage" notify:NotifyNever];
+	[chat setValue:nil forProperty:@"ContactsToInvite" notify:NotifyNever];
+	[chat setValue:nil forProperty:@"InitialInivitationMessage" notify:NotifyNever];
 	
 	//We are no longer concerned with the opening of this chat.
 	[[adium notificationCenter] removeObserver:self name:Chat_DidOpen object:chat];

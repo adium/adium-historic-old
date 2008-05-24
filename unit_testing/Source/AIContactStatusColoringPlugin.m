@@ -130,7 +130,7 @@
 		//Update our flash set
 		if (flashUnviewedContentEnabled &&
 			(inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT])) {
-			int unviewedContent = [inObject integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
+			int unviewedContent = [inObject integerValueForProperty:KEY_UNVIEWED_CONTENT];
 			
 			if (unviewedContent && ![flashingListObjects containsObject:inObject]) { //Start flashing
 				[self addToFlashSet:inObject];
@@ -153,7 +153,7 @@
 	BOOL			isEvent = NO;
 
     //Prefetch the value for unviewed content, we need it multiple times below
-    unviewedContent = [inContact integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
+    unviewedContent = [inContact integerValueForProperty:KEY_UNVIEWED_CONTENT];
 
     //Unviewed content
     if ((!color && !labelColor) && (unviewedContentEnabled && unviewedContent)) {
@@ -171,25 +171,25 @@
     //Offline, Signed off, signed on, or typing
     if ((!color && !labelColor)) {
 		if (offlineEnabled && (![inContact online] &&
-							  ![inContact integerStatusObjectForKey:@"Signed Off"])) {
+							  ![inContact integerValueForProperty:@"Signed Off"])) {
 			color = offlineColor;
 			invertedColor = offlineInvertedColor;
 			labelColor = offlineLabelColor;
 			if (offlineImageFading) opacity = OFFLINE_IMAGE_OPACITY;			
 			
-		} else if (signedOffEnabled && ([inContact integerStatusObjectForKey:@"Signed Off"])) {
+		} else if (signedOffEnabled && ([inContact integerValueForProperty:@"Signed Off"])) {
             color = signedOffColor;
             invertedColor = signedOffInvertedColor;
             labelColor = signedOffLabelColor;
 			isEvent = YES;
 
-        } else if (signedOnEnabled && [inContact integerStatusObjectForKey:@"Signed On"]) {
+        } else if (signedOnEnabled && [inContact integerValueForProperty:@"Signed On"]) {
 			color = signedOnColor;
             invertedColor = signedOnInvertedColor;
             labelColor = signedOnLabelColor;
 			isEvent = YES;
 			
-        } else if (typingEnabled && ([inContact integerStatusObjectForKey:KEY_TYPING] == AITyping)) {
+        } else if (typingEnabled && ([inContact integerValueForProperty:KEY_TYPING] == AITyping)) {
             color = typingColor;
             invertedColor = typingInvertedColor;
             labelColor = typingLabelColor;
@@ -208,8 +208,8 @@
 		AIStatusSummary statusSummary = [inContact statusSummary];
 
         //Prefetch these values, we need them multiple times below
-        away = [inContact integerStatusObjectForKey:@"Away" fromAnyContainedObject:NO];
-        idle = [inContact integerStatusObjectForKey:@"Idle" fromAnyContainedObject:NO];
+        away = [inContact integerValueForProperty:@"Away" fromAnyContainedObject:NO];
+        idle = [inContact integerValueForProperty:@"Idle" fromAnyContainedObject:NO];
 
         //Idle And Away, Away, or Idle
         if (awayAndIdleEnabled && (statusSummary == AIAwayAndIdleStatus)) {

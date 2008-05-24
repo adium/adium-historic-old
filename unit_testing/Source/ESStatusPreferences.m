@@ -231,7 +231,7 @@
 			if ([account statusState] == originalState) {
 				[account setStatusStateAndRemainOffline:newState];
 				
-				[account notifyOfChangedStatusSilently:YES];
+				[account notifyOfChangedPropertiesSilently:YES];
 			}
 		}
 

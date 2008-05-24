@@ -338,26 +338,26 @@ static void *adiumPurpleRequestFile(const char *title, const char *filename,
 								  GCallback cancel_cb,
 								  PurpleAccount *account, const char *who, PurpleConversation *conv,
 								  void *user_data)
-{
-	NSString			*titleString = (title ? [NSString stringWithUTF8String:title] : nil);
-	
-	if (titleString && [titleString isEqualToString:[NSString stringWithFormat:[NSString stringWithUTF8String:_("Export Sametime List for Account %s")], 
-													 purple_account_get_username(account)]]) {
-		NSSavePanel *savePanel = [NSSavePanel savePanel];
-		
-		if ([savePanel runModalForDirectory:nil file:nil] == NSOKButton) {
-			((PurpleRequestFileCb)ok_cb)(user_data, [[savePanel filename] UTF8String]);
-		}
+{	
+	if (title) {
+		NSString *titleString = (title ? [NSString stringWithUTF8String:title] : nil);
+		if (savedialog) {
+			NSSavePanel *savePanel = [NSSavePanel savePanel];
+			if ([titleString length]) [savePanel setTitle:titleString];
 
-	} else if (titleString && [titleString isEqualToString:[NSString stringWithFormat:[NSString stringWithUTF8String:_("Import Sametime List for Account %s")],
-															purple_account_get_username(account)]]) {
-		NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-		
-		if ([openPanel runModalForDirectory:nil file:nil types:nil] == NSOKButton) {
-			((PurpleRequestFileCb)ok_cb)(user_data, [[openPanel filename] UTF8String]);
-		}
+			if ([savePanel runModalForDirectory:nil file:nil] == NSOKButton) {
+				((PurpleRequestFileCb)ok_cb)(user_data, [[savePanel filename] UTF8String]);
+			}			
+		} else {
+			NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+			if ([titleString length]) [openPanel setTitle:titleString];
 
+			if ([openPanel runModalForDirectory:nil file:nil types:nil] == NSOKButton) {
+				((PurpleRequestFileCb)ok_cb)(user_data, [[openPanel filename] UTF8String]);
+			}
+		}
 	} else {
+		/* Only file transfer file requests lack a title */
 		PurpleXfer *xfer = (PurpleXfer *)user_data;
 		if (xfer) {
 			PurpleXferType xferType = purple_xfer_get_type(xfer);

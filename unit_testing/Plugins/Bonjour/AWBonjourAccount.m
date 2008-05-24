@@ -118,8 +118,7 @@ typedef enum {
 }
 - (void)connect
 {
-	// Say we're connecting...
-	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
+	[super connect];
 
 	[[self libezvThreadProxy] setName:[self displayName]];
 	AILog(@"%@: Logging in using libezvThreadProxy %@",self, [self libezvThreadProxy]);
@@ -132,7 +131,7 @@ typedef enum {
 	[super disconnect];
 
 	// Say we're disconnecting...
-	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
+	[self setValue:[NSNumber numberWithBool:YES] forProperty:@"Disconnecting" notify:YES];
 
 	[[self libezvThreadProxy] logout];
 }
@@ -223,14 +222,14 @@ typedef enum {
 	//Use the contact alias as the serverside display name
 	contactName = [contact name];
 
-	if (![[listContact statusObjectForKey:@"Server Display Name"] isEqualToString:contactName]) {
+	if (![[listContact valueForProperty:@"Server Display Name"] isEqualToString:contactName]) {
 		[listContact setServersideAlias:contactName
 		                asStatusMessage:NO
 		                       silently:silentAndDelayed];
 	}
 
 	//Apply any changes
-	[listContact notifyOfChangedStatusSilently:silentAndDelayed];	
+	[listContact notifyOfChangedPropertiesSilently:silentAndDelayed];	
 }
 
 /*!
@@ -313,8 +312,8 @@ typedef enum {
 	[[adium contentController] receiveContentObject:msgObj];
 
 	//Clear the typing flag
-	[chat setStatusObject:nil
-	               forKey:KEY_TYPING
+	[chat setValue:nil
+	               forProperty:KEY_TYPING
 	               notify:YES];	
 }
 
@@ -336,8 +335,8 @@ typedef enum {
 	                                                                UID:inUID];
 	chat = [[adium chatController] existingChatWithContact:listContact];
 
-	[chat setStatusObject:typingNumber
-	               forKey:KEY_TYPING
+	[chat setValue:typingNumber
+	               forProperty:KEY_TYPING
 	               notify:YES];	
 }
 
@@ -363,11 +362,11 @@ typedef enum {
 	                                                                UID:inContactUniqueID];
 	chat = [[adium chatController] existingChatWithContact:listContact];
 
-	[chat setStatusObject:[NSNumber numberWithInt:AIChatMessageSendingUserNotAvailable]
-	               forKey:KEY_CHAT_ERROR
+	[chat setValue:[NSNumber numberWithInt:AIChatMessageSendingUserNotAvailable]
+	               forProperty:KEY_CHAT_ERROR
 	               notify:NotifyNow];
-	[chat setStatusObject:nil
-	               forKey:KEY_CHAT_ERROR
+	[chat setValue:nil
+	               forProperty:KEY_CHAT_ERROR
 	               notify:NotifyNever];
 }
 
@@ -464,7 +463,7 @@ typedef enum {
 - (void)updateStatusForKey:(NSString *)key
 {
 	[super updateStatusForKey:key];
-	BOOL areOnline = [[self statusObjectForKey:@"Online"] boolValue];
+	BOOL areOnline = [[self valueForProperty:@"Online"] boolValue];
 
 	//Now look at keys which only make sense while online
 	if (areOnline) {
@@ -509,15 +508,15 @@ typedef enum {
 {
 	[[self libezvThreadProxy] setStatus:status withMessage:[message string]];
 
-	[self setStatusObject:message forKey:@"StatusMessage" notify:YES];
-	[self setStatusObject:[NSNumber numberWithBool:(status == AWEzvAway)] forKey:@"Away" notify:YES];
+	[self setValue:message forProperty:@"StatusMessage" notify:YES];
+	[self setValue:[NSNumber numberWithBool:(status == AWEzvAway)] forProperty:@"Away" notify:YES];
 }
 - (void)setAccountIdleTo:(NSDate *)idle
 {
 	[[self libezvThreadProxy] setIdleTime:idle];
 
 	//We are now idle
-	[self setStatusObject:idle forKey:@"IdleSince" notify:YES];
+	[self setValue:idle forProperty:@"IdleSince" notify:YES];
 }
 
 /*!
@@ -531,10 +530,10 @@ typedef enum {
 	[[self libezvThreadProxy] setContactImageData:[newImage JPEGRepresentation]];	
 
 	//We now have an icon
-	[self setStatusObject:newImage forKey:KEY_USER_ICON notify:YES];
+	[self setValue:newImage forProperty:KEY_USER_ICON notify:YES];
 }
 
-//Status keys this account supports
+//Properties this account supports
 - (NSSet *)supportedPropertyKeys
 {
 	static NSMutableSet *supportedPropertyKeys = nil;

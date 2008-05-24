@@ -56,7 +56,7 @@
     int					warningLevel;
 
     //Return the correct string
-    if ((warningLevel = [inObject integerStatusObjectForKey:@"Warning"])) {
+    if ((warningLevel = [inObject integerValueForProperty:@"Warning"])) {
 		entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%d%%", warningLevel]];
     }
 

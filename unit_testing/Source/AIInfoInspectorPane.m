@@ -113,17 +113,14 @@
 	
 	NSString *displayName;
 			
-	if ((displayName = [inObject displayName])) {
-		[accountName setStringValue:displayName];
+	if ([inObject isKindOfClass:[AIListContact class]] &&
+		inObject != [(AIListContact *)inObject parentContact]) {
+		displayName = [(AIListContact *)inObject ownDisplayName];
 	} else {
-		NSString *formattedUID;
-		
-		if ((formattedUID = [inObject formattedUID])) {
-			[accountName setStringValue:formattedUID];
-		} else {
-			[accountName setStringValue:[inObject UID]];
-		}
+		displayName = [inObject displayName];
 	}
+	
+	[accountName setStringValue:displayName];
 }
 
 -(void)updateStatusIcon:(AIListObject *)inObject

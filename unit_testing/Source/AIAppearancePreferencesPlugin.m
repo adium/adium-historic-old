@@ -29,6 +29,12 @@
 
 #define APPEARANCE_DEFAULT_PREFS 	@"AppearanceDefaults"
 
+#define SHOW_USER_ICONS_TITLE		AILocalizedString(@"Show User Icons", nil)
+#define HIDE_USER_ICONS_TITLE		AILocalizedString(@"Hide User Icons", nil)
+
+#define SHOW_STATUS_MESSAGES_TITLE	AILocalizedString(@"Show Status Messages", nil)
+#define HIDE_STATUS_MESSAGES_TITLE	AILocalizedString(@"Hide Status Messages", nil)
+
 @implementation AIAppearancePreferencesPlugin
 
 - (void)installPlugin
@@ -51,14 +57,14 @@
 									 object:nil];
 	
 	//Add the menu item for configuring the sort
-	menuItem_userIcons = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Show User Icons", nil)
-																	target:self
-																	action:@selector(toggleAppearancePreference:)
-															 keyEquivalent:@"i"];
+	menuItem_userIcons = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:SHOW_USER_ICONS_TITLE
+																			  target:self
+																			  action:@selector(toggleAppearancePreference:)
+																	   keyEquivalent:@"i"];
 	[menuItem_userIcons setKeyEquivalentModifierMask:(NSControlKeyMask | NSCommandKeyMask)];
 	[[adium menuController] addMenuItem:menuItem_userIcons toLocation:LOC_View_Appearance_Toggles];
-
-	menuItem_userStatusMessages = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Show Status Messages", nil)
+	
+	menuItem_userStatusMessages = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:SHOW_STATUS_MESSAGES_TITLE
 																					   target:self
 																					   action:@selector(toggleAppearancePreference:)
 																				keyEquivalent:@"s"];
@@ -77,7 +83,8 @@
 - (void)dealloc
 {
 	[menuItem_userIcons release];
-	
+	[menuItem_userStatusMessages release];
+
 	[super dealloc];
 }
 
@@ -164,8 +171,12 @@
 		if (firstTime || !key ||
 			[key isEqualToString:KEY_LIST_LAYOUT_SHOW_ICON] ||
 			[key isEqualToString:KEY_LIST_LAYOUT_SHOW_EXT_STATUS]) {
-			[menuItem_userIcons setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]];
-			[menuItem_userStatusMessages setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue]];
+			[menuItem_userIcons setTitle:([[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue] ?
+										  HIDE_USER_ICONS_TITLE :
+										  SHOW_USER_ICONS_TITLE)];
+			[menuItem_userStatusMessages setTitle:([[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue] ?
+												   HIDE_STATUS_MESSAGES_TITLE :
+												   SHOW_STATUS_MESSAGES_TITLE)];
 		}
 	}
 }
@@ -187,10 +198,9 @@
 
 - (void)toggleAppearancePreference:(NSMenuItem *)sender
 {
-	BOOL	 oldValue = [sender state];
 	NSString *key;
 
-	if (sender == menuItem_userIcons) {		
+	if (sender == menuItem_userIcons) {
 		key = KEY_LIST_LAYOUT_SHOW_ICON;
 		
 	} else if (sender == menuItem_userStatusMessages) {
@@ -201,10 +211,12 @@
 	}
 	
 	if (key) {
+		BOOL	 oldValue = [[[adium preferenceController] preferenceForKey:key
+																   group:PREF_GROUP_LIST_LAYOUT] boolValue];
+
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:!oldValue]
 											 forKey:key
 											  group:PREF_GROUP_LIST_LAYOUT];
-		[sender setState:!oldValue];
 
 		//Save the updated layout
 		[self createSetFromPreferenceGroup:PREF_GROUP_LIST_LAYOUT

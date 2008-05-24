@@ -1,9 +1,13 @@
 				Adium X Version History
 				-----------------------
-Version 1.2.5
+Version 1.2.5 (4/28/2008)
+ * Fixed Yahoo! Japan connectivity
+ * Fixed ICQ connectivity for some accounts with large contact lists
+ * Improved rate limiting management for AIM and ICQ accounts
  * Fixed a longstanding bug in which contact list tooltips could appear while on a different Space (workspace or virtual desktop) or while the contact list is obscured by other windows (#1156)
  * Fixed repeating / stuttering event sounds on G5 machines (#8828)
  * Fixed display of chat transcripts which contain HTML codes in their content (#9591)
+ * Fixed negotiation of XMPP authentication over SASL when one mechanism fails but another can succeed, as when the server support GSSAPI, Adium is not authorized to connect via GSSAPI, but Adium has a valid username/password combination to use instead. (#9492)
  * Fixed a crash when closing the Personal preferences immediately after changing your alias or display name (#9565)
  * Fixed a crash when disconnecting an account which had previously received an authorization request (#9482)
  * Fixed the 'Show received colors' preference to no longer determine whether we show received font size; this is now solely determined by 'Show received fonts' (#9523)
@@ -11,12 +15,16 @@ Version 1.2.5
  * Fixed the User Icon toolbar button in chat windows when in text-only mode on 10.5 (#8518)
  * Fixed enabling/disabling of the Bookmark Chat toolbar button (#9335)
  * Improved automatic linkification (#7267)
- * Fixed positioning of the push/pop/swap button in the text entry area of chat windows (seen when using control-up and control-down to manipulate the message stack) (#9063)
  * Fixed the Messages preferences preview to display the correct font for outgoing preview messages (#5561)
  * Fixed restoration of the message window's location when it overlaps the dock and has a visible toolbar (#9096)
- * Fixed negotiation of XMPP authentication over SASL when one mechanism fails but another can succeed, as when the server support GSSAPI, Adium is not authorized to connect via GSSAPI, but Adium has a valid username/password combination to use instead. (#9492)
+ * Fixed "Insert Link to Active Page" button for Camino 1.6 (#9706)
+ * Fixed another bold/italics display issue
+ * Fixed positioning of the push/pop/swap button in the text entry area of chat windows (seen when using control-up and control-down to manipulate the message stack) (#9063)
+ * Added an ID property for contacts accessed via Applescript
  * We now allow the # character in Jabber names (#9544)
- * Brazilian Portuguese translation updates
+ * Fixed the Import from iChat button in the first run wizard (#9678)
+ * Fixed receiving of empty XMPP message stanzas (#4161)
+ * Danish, French, French Canadian, and Brazilian Portuguese translation updates
 
 Version 1.2.4 (3/30/2008)
  * Updated to libpurple 2.4.1 (pidgin.im), which includes AIM offline message support, fast Yahoo file transfers, viewing of ICQ status notes, setting Google Talk buddy icons, and a fix for an issue which could make you appear offline to MSN users

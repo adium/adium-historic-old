@@ -58,6 +58,8 @@
 - (void)finishSendContentObject:(AIContentObject *)inObject;
 - (void)finishDisplayContentObject:(AIContentObject *)inObject;
 
+- (void)displayContentObject:(AIContentObject *)inObject immediately:(BOOL)immediately;
+
 - (BOOL)processAndSendContentObject:(AIContentObject *)inContentObject;
 @end
 
@@ -68,7 +70,7 @@
  * This controller handles default formatting and text entry filters, which can respond as text is entered in a message
  * window.  It the center for content filtering, including registering/unregistering of content filters.
  * It handles sending and receiving of content objects.  It manages chat observers, which are objects notified as
- * status objects are set and removed on AIChat objects.  It manages chats themselves, tracking open ones, closing
+ * properties are set and removed on AIChat objects.  It manages chats themselves, tracking open ones, closing
  * them when needed, etc.  Finally, it provides Events related to sending and receiving content, such as Message Received.
  */
 @implementation AIContentController
@@ -268,7 +270,7 @@
 - (void)finishReceiveContentObject:(AIContentObject *)inContent
 {	   
 	//Display the content
-	[self displayContentObject:inContent];
+	[self displayContentObject:inContent immediately:NO];
 }
 
 //Sending step 1: Entry point for any method in Adium which sends content
@@ -352,7 +354,7 @@
 		if ([self processAndSendContentObject:inObject]) {
 			if ([inObject displayContent]) {
 				//Add the object
-				[self displayContentObject:inObject];
+				[self displayContentObject:inObject immediately:NO];
 
 			} else {
 				//We are no longer in the process of receiving this object
@@ -386,22 +388,22 @@
 	[chat finishedSendingContentObject:inObject];
 }
 
-//Display a content object
-//Add content to the message view.  Doesn't do any sending or receiving, just adds the content.
-- (void)displayContentObject:(AIContentObject *)inObject usingContentFilters:(BOOL)useContentFilters
-{
-	[self displayContentObject:inObject usingContentFilters:useContentFilters immediately:NO];
-}
-
-//Immediately YES means the main thread will halt until the content object is displayed;
-//Immediately NO shuffles it off into the filtering thread, which will handle content sequentially but allows the main
-//thread to continue operation.  
-//This facility primarily exists for message history, which needs to put its display in before the first message;
-//without this, the use of threaded filtering means that message history shows up after the first message.
+/*!
+ * @brief Display content, optionally using content filters
+ *
+ * This should only be used for content which is not being sent or received but only displayed, such as message history. If you
+ *
+ * The ability to force filtering to be completed immediately exists for message history, which needs to put its display
+ * in before the first message; otherwise, the use of delayed filtering would mean that message history showed up after the first message.
+ * 
+ * @param inObject The object to display
+ * @param useContentFilters Should filters be used?
+ * @param immediately If YES, only immediate filters will be used, and inObject will have its message set before we return.
+ *					  If NO, immediate and delayed filters will be used, and inObject will be filtered over the course of some number of future run loops.
+ */
 - (void)displayContentObject:(AIContentObject *)inObject usingContentFilters:(BOOL)useContentFilters immediately:(BOOL)immediately
 {
 	if (useContentFilters) {
-		
 		if (immediately) {
 			//Filter in the main thread, set the message, and continue
 			[inObject setMessage:[self filterAttributedString:[inObject message]
@@ -437,11 +439,6 @@
 
 //Display a content object
 //Add content to the message view.  Doesn't do any sending or receiving, just adds the content.
-- (void)displayContentObject:(AIContentObject *)inObject
-{
-	[self displayContentObject:inObject immediately:NO];
-}
-
 - (void)displayContentObject:(AIContentObject *)inObject immediately:(BOOL)immediately
 {
     //Filter the content object
@@ -451,7 +448,6 @@
 		AIFilterDirection	direction = ([inObject isOutgoing] ? AIFilterOutgoing : AIFilterIncoming);
 		
 		if (immediately) {
-			
 			//Set it after filtering in the main thread, then display it
 			[inObject setMessage:[self filterAttributedString:[inObject message]
 											  usingFilterType:filterType

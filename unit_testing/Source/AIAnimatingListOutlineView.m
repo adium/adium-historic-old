@@ -185,18 +185,22 @@
 - (NSMutableDictionary *)indexesForItemAndChildren:(id)item dict:(NSMutableDictionary *)dict
 {
 	if (!dict) dict = [NSMutableDictionary dictionary];
-	if (!item || ([self isExpandable:item] &&
-				  [self isItemExpanded:item])) {
-		int numChildren = [[self dataSource] outlineView:self numberOfChildrenOfItem:item];
-		//Add each child
-		for (int i = 0; i < numChildren; i++) {
-			id thisChild = [[self dataSource] outlineView:self child:i ofItem:item];
-			dict = [self indexesForItemAndChildren:thisChild dict:dict];
-		}
-	}
 
-	int index = [self rowForItem:item];
-	if (index != -1) [dict setObject:[NSNumber numberWithInt:index] forKey:[NSValue valueWithPointer:item]];
+	int index = (item ? [self rowForItem:item] : -1);
+
+	if ((index != -1) || !item) {
+		if (!item || ([self isExpandable:item] &&
+					  [self isItemExpanded:item])) {
+			int numChildren = [[self dataSource] outlineView:self numberOfChildrenOfItem:item];
+			//Add each child
+			for (int i = 0; i < numChildren; i++) {
+				id thisChild = [[self dataSource] outlineView:self child:i ofItem:item];
+				dict = [self indexesForItemAndChildren:thisChild dict:dict];
+			}
+		}
+		
+		if (item) [dict setObject:[NSNumber numberWithInt:index] forKey:[NSValue valueWithPointer:item]];
+	}
 
 	return dict;
 }

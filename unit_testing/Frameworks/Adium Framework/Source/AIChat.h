@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/ESObjectWithStatus.h>
+#import <Adium/ESObjectWithProperties.h>
 #import <Adium/AIContentTyping.h>
 #import <Adium/AIListObject.h>
 
@@ -43,6 +43,7 @@ typedef enum {
 
 typedef enum {
 	AIChatCanNotSendMessage = 0,
+	AIChatMayNotBeAbleToSendMessage,
 	AIChatCanSendMessageNow,
 	AIChatCanSendViaServersideOfflineMessage
 } AIChatSendingAbilityType;
@@ -65,7 +66,7 @@ typedef enum {
 	EncryptionStatus_Finished
 } AIEncryptionStatus;
 
-//Chat errors should be indicated by setting a status object on this key 
+//Chat errors should be indicated by setting a property on this key 
 //with an NSNumber of the appropriate error type as its object
 #define	KEY_CHAT_ERROR			@"Chat Error"
 
@@ -91,7 +92,7 @@ typedef enum {
 	AIChatInvalidNumberOfArguments
 } AIChatErrorType;
 
-@interface AIChat : ESObjectWithStatus <AIContainingObject> {
+@interface AIChat : ESObjectWithProperties <AIContainingObject> {
     AIAccount			*account;
 	NSDate				*dateOpened;
 	BOOL				isOpen;

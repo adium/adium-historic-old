@@ -50,6 +50,8 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
+	[checkBox_unreadConversations setLocalizedString:AILocalizedString(@"Count unread conversations instead of unread messages", nil)];
+	
 	[label_statusWindow setLocalizedString:AILocalizedString(@"Away Status Window", nil)];
 	[checkBox_statusWindowHideInBackground setLocalizedString:AILocalizedString(@"Hide the status window when Adium is not active", nil)];
 	[checkBox_statusWindowAlwaysOnTop setLocalizedString:AILocalizedString(@"Show the status window above other windows", nil)];

@@ -17,7 +17,7 @@
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIAdiumProtocol.h>
 
-@class AIMenuController, AIChat, AIListObject;
+@class AIMenuController, AIChat, AIListObject, AIMessageViewController;
 
 @interface AIInterfaceController : NSObject <AIInterfaceController> {
     IBOutlet	NSObject<AIAdium>	*adium;
@@ -74,6 +74,7 @@
 	id <AIMultiContactListComponent>	contactListPlugin;
 		
 	BOOL						groupChatsByContactGroup;
+	BOOL						saveContainers;
 	
 	NSMenuItem					*menuItem_toggleUserlist;
 

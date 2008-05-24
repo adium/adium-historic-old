@@ -157,7 +157,7 @@
 		NSTimer	*removeTimer;
 		
 		//Clear any current timer for this object o ahve its overlay removed
-		if ((removeTimer = [listObject statusObjectForKey:@"DockOverlayRemoveTimer"])) [removeTimer invalidate];
+		if ((removeTimer = [listObject valueForProperty:@"DockOverlayRemoveTimer"])) [removeTimer invalidate];
 		
 		//Add a timer to remove this overlay
 		removeTimer = [NSTimer scheduledTimerWithTimeInterval:5
@@ -165,8 +165,8 @@
 													 selector:@selector(removeDockOverlay:)
 													 userInfo:listObject
 													  repeats:NO];
-		[listObject setStatusObject:removeTimer
-							 forKey:@"DockOverlayRemoveTimer"
+		[listObject setValue:removeTimer
+							 forProperty:@"DockOverlayRemoveTimer"
 							 notify:NotifyNever];
 
 		if (![overlayObjectsArray containsObject:listObject]) {
@@ -188,8 +188,8 @@
 
 	[overlayObjectsArray removeObjectIdenticalTo:inObject];
 	
-	[inObject setStatusObject:nil
-					   forKey:@"DockOverlayRemoveTimer"
+	[inObject setValue:nil
+					   forProperty:@"DockOverlayRemoveTimer"
 					   notify:NotifyNever];
 	
 	[self _setOverlay];
@@ -330,7 +330,7 @@
 - (NSImage *)overlayImageFlash:(BOOL)flash
 {
     NSEnumerator		*enumerator;
-    ESObjectWithStatus  *object;
+    ESObjectWithProperties  *object;
     NSFont				*font;
     NSParagraphStyle	*paragraphStyle;
     float				dockIconScale;
@@ -407,7 +407,7 @@
 		 }
 		 */
 		
-        if ([object statusObjectForKey:KEY_UNVIEWED_CONTENT]) { //Unviewed
+        if ([object valueForProperty:KEY_UNVIEWED_CONTENT]) { //Unviewed
 			if (flash) {
                 backColor = [NSColor whiteColor];
                 textColor = [NSColor blackColor];
@@ -415,11 +415,11 @@
                 backColor = backUnviewedContentColor;
                 textColor = unviewedContentColor;
             }
-        } else if ([object integerStatusObjectForKey:@"Signed On"]) { //Signed on
+        } else if ([object integerValueForProperty:@"Signed On"]) { //Signed on
             backColor = backSignedOnColor;
             textColor = signedOnColor;
 			
-        } else if ([object integerStatusObjectForKey:@"Signed Off"]) { //Signed off
+        } else if ([object integerValueForProperty:@"Signed Off"]) { //Signed off
             backColor = backSignedOffColor;
             textColor = signedOffColor;
 			

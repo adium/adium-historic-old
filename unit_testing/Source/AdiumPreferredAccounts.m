@@ -14,8 +14,10 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIAccountControllerProtocol.h>
 #import "AdiumPreferredAccounts.h"
+
+#import <Adium/AIAccountControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIService.h>
@@ -70,7 +72,7 @@
 - (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact includeOffline:(BOOL)includeOffline
 {
 	AIAccount		*account;
-	
+
 	//If passed a contact, we have a few better ways to determine the account than just using the first
     if (inContact) {
 		//If we've messaged this object previously, and the account we used to message it is online, return that account
@@ -79,48 +81,74 @@
 		if (accountID) {
 			if (![accountID isKindOfClass:[NSString class]]) {
 				//Old code stored this as an NSNumber; upgrade.
-				if ([accountID isKindOfClass:[NSNumber class]]) {
-					accountID = [NSString stringWithFormat:@"%i",[(NSNumber *)accountID intValue]];
-				} else {
-					accountID = nil; //Unrecognizable, ignore
-				}
+				accountID = ([accountID isKindOfClass:[NSNumber class]] ?
+							 [NSString stringWithFormat:@"%i",[(NSNumber *)accountID intValue]] :
+							 nil);
 				
 				[inContact setPreference:accountID
 								  forKey:KEY_PREFERRED_SOURCE_ACCOUNT
 								   group:PREF_GROUP_PREFERRED_ACCOUNTS];
 			}
 
+			
 			if ((account = [[adium accountController] accountWithInternalObjectID:accountID])) {
-				if ([account availableForSendingContentType:inType toContact:inContact]) {
+				if ([account availableForSendingContentType:inType toContact:inContact] || includeOffline) {
 					return account;
 				}
 			}
 		}
 		
-		//If inObject is an AIListContact return the account the object is on
-		if ((account = [inContact account])) {
-			if ([account availableForSendingContentType:inType toContact:inContact]) {
+		/* We don't have a known previously used account for this contact. */
+
+		//Get the last account used to message someone on this service, and check if the contact is on that account
+		NSString		*lastAccountID = [lastAccountIDToSendContent objectForKey:[[inContact service] serviceID]];
+		AIAccount		*lastUsedAccount = (lastAccountID ? [[adium accountController] accountWithInternalObjectID:lastAccountID] : nil);
+		AIListContact	*possibleContact = [[adium contactController] existingContactWithService:[lastUsedAccount service]
+																					   account:lastUsedAccount
+																						   UID:[inContact UID]];
+		if (possibleContact && ![possibleContact isStranger] &&
+			([lastUsedAccount availableForSendingContentType:inType toContact:inContact] || includeOffline)) {
+			return lastUsedAccount;
+		}
+
+		//Use the current account if and only if the contact is not a stranger on that account.
+		if ((account = [inContact account]) &&
+			![inContact isStranger] &&
+			([account availableForSendingContentType:inType toContact:inContact] || includeOffline)) {
+			return account;
+		}
+		
+		//Now check compatible accounts, looking for one that knows about the contact
+		NSEnumerator	*enumerator = [[[adium accountController] accountsCompatibleWithService:[inContact service]] objectEnumerator];
+		while ((account = [enumerator nextObject])) {
+			AIListContact *possibleContact = [[adium contactController] existingContactWithService:[account service]
+																						   account:account
+																							   UID:[inContact UID]];
+			if ((possibleContact && ![possibleContact isStranger]) &&
+				([account availableForSendingContentType:inType toContact:inContact] || includeOffline)) {
+				//If a contact with this account already exists and isn't a stranger, we've found a good possible choice.
 				return account;
 			}
 		}
-		
-		//Return the last account used to message someone on this service
-		NSString	*lastAccountID = [lastAccountIDToSendContent objectForKey:[[inContact service] serviceID]];
-		if (lastAccountID && (account = [[adium accountController] accountWithInternalObjectID:lastAccountID])) {
-			if ([account availableForSendingContentType:inType toContact:nil] || includeOffline) {
-				return account;
-			}
+
+		/* Now, just look for any account which could send to this contact.
+		 * We no longer care if the contact is not a stranger, as we exchausted all those possibilities.
+		 *
+		 * First, check to see if the last account used on this service will work.
+		 */
+		if ([lastUsedAccount availableForSendingContentType:inType toContact:inContact] || includeOffline) {
+			return lastUsedAccount;
 		}
-		
-		if (includeOffline) {
-			//If inObject is an AIListContact return the account the object is on even if the account is offline
-			if ((account = [inContact account])) {
-				return account;
-			}
+
+		//If inObject is an AIListContact return the account the object is on even if the account is offline
+		if (includeOffline && (account = [inContact account])) {
+			return account;
 		}
 	}
-	
-	//If the previous attempts failed, or we weren't passed a contact, use the first appropraite account
+
+	AILogWithSignature(@"Could not find a good choice to talk to %@; will return first available account", inContact);
+
+	//If the previous attempts failed, or we weren't passed a contact, use the first appropriate account
 	return [self firstAccountAvailableForSendingContentType:inType
 												  toContact:inContact
 											 includeOffline:includeOffline];
@@ -138,7 +166,7 @@
 		enumerator = [[[adium accountController] accounts] objectEnumerator];
 		while ((account = [enumerator nextObject])) {
 			if ([inContact service] == [account service] &&
-				([account availableForSendingContentType:inType toContact:nil] || includeOffline)) {
+				([account availableForSendingContentType:inType toContact:inContact] || includeOffline)) {
 				return account;
 			}
 		}
@@ -147,7 +175,7 @@
 		enumerator = [[[adium accountController] accounts] objectEnumerator];
 		while ((account = [enumerator nextObject])) {
 			if ([[inContact serviceClass] isEqualToString:[account serviceClass]] &&
-				([account availableForSendingContentType:inType toContact:nil] || includeOffline)) {
+				([account availableForSendingContentType:inType toContact:inContact] || includeOffline)) {
 				return account;
 			}
 		}
@@ -156,7 +184,7 @@
 		enumerator = [[[adium accountController] accounts] objectEnumerator];
 		while ((account = [enumerator nextObject])) {
 			if ([account enabled] && 
-				([account availableForSendingContentType:inType toContact:nil] || includeOffline)) {
+				([account availableForSendingContentType:inType toContact:inContact] || includeOffline)) {
 				return account;
 			}
 		}

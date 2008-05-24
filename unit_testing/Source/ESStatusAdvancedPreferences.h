@@ -8,6 +8,8 @@
 #import <Adium/AIAdvancedPreferencePane.h>
 
 @interface ESStatusAdvancedPreferences : AIAdvancedPreferencePane {
+	IBOutlet	NSButton	*checkBox_unreadConversations;
+	
 	IBOutlet	NSTextField	*label_statusWindow;
 	IBOutlet	NSButton	*checkBox_statusWindowHideInBackground;
 	IBOutlet	NSButton	*checkBox_statusWindowAlwaysOnTop;	

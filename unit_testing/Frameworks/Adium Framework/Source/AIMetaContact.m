@@ -36,7 +36,7 @@
 - (void)_removeCachedStatusOfObject:(AIListObject *)inObject;
 - (BOOL)_cacheStatusValue:(id)inObject forObject:(id)inOwner key:(NSString *)key notify:(BOOL)notify determineIfChanged:(BOOL)determineIfChanged;
 
-- (id)_statusObjectForKey:(NSString *)key containedObjectSelector:(SEL)containedObjectSelector;
+- (id)_valueForProperty:(NSString *)key containedObjectSelector:(SEL)containedObjectSelector;
 - (void)_determineIfWeShouldAppearToContainOnlyOneContact;
 
 - (NSArray *)uniqueContainedListContactsIncludingOfflineAccounts:(BOOL)includeOfflineAccounts;
@@ -252,9 +252,9 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		[currentContact setIsBlocked:yesOrNo updateList:addToPrivacyLists];
 	}
 	
-	//update status object if we are completely blocked
-	[self setStatusObject:([self isBlocked] ? [NSNumber numberWithBool:YES] : nil)
-				   forKey:KEY_IS_BLOCKED 
+	//update property if we are completely blocked
+	[self setValue:([self isBlocked] ? [NSNumber numberWithBool:YES] : nil)
+				   forProperty:KEY_IS_BLOCKED 
 				   notify:NotifyNow];
 }
 
@@ -322,7 +322,8 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 - (void)removeObject:(AIListObject *)inObject
 {
 	if ([containedObjects containsObjectIdenticalTo:inObject]) {
-		
+		BOOL	noteRemoteGroupingChanged = NO;
+
 		[inObject retain];
 		
 		[containedObjects removeObject:inObject];
@@ -330,11 +331,11 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		if ([inObject isKindOfClass:[AIListContact class]] && [(AIListContact *)inObject remoteGroupName]) {
 			//Reset it to its remote group
 			[inObject setContainingObject:nil];
-			[[adium contactController] listObjectRemoteGroupingChanged:(AIListContact *)inObject];
+			noteRemoteGroupingChanged = YES;
 		} else {
 			[inObject setContainingObject:[self containingObject]];
 		}
-		
+
 		[self clearContainedObjectInfoCache];
 
 		//Only need to check if we are now unique if we weren't unique before, since we've either become
@@ -349,6 +350,13 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		//If we remove our list object, don't continue to show up in the contact list
 		if ([containedObjects count] == 0) {
 			[self setContainingObject:nil];
+		}
+
+		/* Now that we're done reconfigured ourselves and the recently removed object,
+		 * tell the contactController about the change in the removed object.
+		 */
+		if (noteRemoteGroupingChanged) {
+			[[adium contactController] listObjectRemoteGroupingChanged:(AIListContact *)inObject];
 		}
 
 		[inObject release];
@@ -490,9 +498,9 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		 * Use super's implementation as we don't need to be searching our contained objects...
 		 */
 		count = [_listContacts count];
-		if ([super integerStatusObjectForKey:@"VisibleObjectCount"] != count) {
-			[self setStatusObject:(count ? [NSNumber numberWithInt:count] : nil)
-						   forKey:@"VisibleObjectCount"
+		if ([super integerValueForProperty:@"VisibleObjectCount"] != count) {
+			[self setValue:(count ? [NSNumber numberWithInt:count] : nil)
+						   forProperty:@"VisibleObjectCount"
 						   notify:NotifyNow];
 		}
 	}
@@ -687,10 +695,10 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	}
 }
 
-//Status Object Handling -----------------------------------------------------------------------------------------------
-#pragma mark Status Object Handling
+//Property Handling -----------------------------------------------------------------------------------------------
+#pragma mark Property Handling
 //Update our status cache as object we contain change status
-- (void)object:(id)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify
+- (void)object:(id)inObject didSetValue:(id)value forProperty:(NSString *)key notify:(NotifyTiming)notify
 {
 	//Clear our cached _preferredContact if a contained object's online, away, or idle status changed
 	BOOL	shouldNotify = NO;
@@ -716,80 +724,80 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	 * preferred contact changed. Only deteremine if the cache changed if we're not already planning to notify. */
 	if ([self _cacheStatusValue:value forObject:inObject key:key notify:notify determineIfChanged:!shouldNotify] ||
 	   shouldNotify) {
-		[super object:self didSetStatusObject:value forKey:key notify:notify];
+		[super object:self didSetValue:value forProperty:key notify:notify];
 	}
 }
 
-//---- Default status object behavior ----
-//Retrieve a status key for this object - return the value of our preferredContact, 
+//---- Default property behavior ----
+//Retrieve a property for this object - return the value of our preferredContact, 
 //returning nil if our preferredContact returns nil.
 
-- (id)statusObjectForKey:(NSString *)key
+- (id)valueForProperty:(NSString *)key
 {
-	return [self statusObjectForKey:key fromAnyContainedObject:YES];
+	return [self valueForProperty:key fromAnyContainedObject:YES];
 }
-- (int)integerStatusObjectForKey:(NSString *)key
+- (int)integerValueForProperty:(NSString *)key
 {
-	return [self integerStatusObjectForKey:key fromAnyContainedObject:YES];
+	return [self integerValueForProperty:key fromAnyContainedObject:YES];
 }
-- (NSDate *)earliestDateStatusObjectForKey:(NSString *)key
+- (NSDate *)earliestDateValueForProperty:(NSString *)key
 {
-	return [self earliestDateStatusObjectForKey:key fromAnyContainedObject:YES];
+	return [self earliestDateValueForProperty:key fromAnyContainedObject:YES];
 }
-- (NSNumber *)numberStatusObjectForKey:(NSString *)key
+- (NSNumber *)numberValueForProperty:(NSString *)key
 {
-	return [self numberStatusObjectForKey:key fromAnyContainedObject:YES];
+	return [self numberValueForProperty:key fromAnyContainedObject:YES];
 }
-- (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key
+- (NSString *)stringFromAttributedStringValueForProperty:(NSString *)key
 {
-	return [self stringFromAttributedStringStatusObjectForKey:key fromAnyContainedObject:YES];
+	return [self stringFromAttributedStringValueForProperty:key fromAnyContainedObject:YES];
 }
 
-//---- fromAnyContainedObject status object behavior ----
+//---- fromAnyContainedObject property behavior ----
 //If fromAnyContainedObject is YES, return the best value from any contained object if the preferred object returns nil.
 //If it is NO, only look at the preferred object.
 
-//General status object
-- (id)statusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
+//General property
+- (id)valueForProperty:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
-	return [self _statusObjectForKey:key containedObjectSelector:(fromAnyContainedObject ? @selector(objectValue) : nil)];
+	return [self _valueForProperty:key containedObjectSelector:(fromAnyContainedObject ? @selector(objectValue) : nil)];
 }
 
 //NSDate
-- (NSDate *)earliestDateStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
+- (NSDate *)earliestDateValueForProperty:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
-	return [self _statusObjectForKey:key containedObjectSelector:(fromAnyContainedObject ? @selector(date) : nil)];
+	return [self _valueForProperty:key containedObjectSelector:(fromAnyContainedObject ? @selector(date) : nil)];
 }
 
 //NSNumber
-- (NSNumber *)numberStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
+- (NSNumber *)numberValueForProperty:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
-	return [self _statusObjectForKey:key containedObjectSelector:(fromAnyContainedObject ? @selector(numberValue) : nil)];
+	return [self _valueForProperty:key containedObjectSelector:(fromAnyContainedObject ? @selector(numberValue) : nil)];
 }
 
-//Integer (uses numberStatusObjectForKey:)
-- (int)integerStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
+//Integer (uses numberValueForProperty:)
+- (int)integerValueForProperty:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
-	NSNumber *returnValue = [self numberStatusObjectForKey:key fromAnyContainedObject:fromAnyContainedObject];
+	NSNumber *returnValue = [self numberValueForProperty:key fromAnyContainedObject:fromAnyContainedObject];
 	
     return returnValue ? [returnValue intValue] : 0;
 }
 
-//String from attributed string (uses statusObjectForKey:)
-- (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
+//String from attributed string (uses valueForProperty:)
+- (NSString *)stringFromAttributedStringValueForProperty:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
-	return [[self statusObjectForKey:key fromAnyContainedObject:fromAnyContainedObject] string];
+	return [[self valueForProperty:key fromAnyContainedObject:fromAnyContainedObject] string];
 }
 
-//Returns the status object from our object.
-//If no such object is found, return the status object from the preferredContact for a given key.
+//Returns the property from our object.
+//If no such object is found, return the property from the preferredContact for a given key.
 //If no such object is found, and containedObjectSelector is not nil, 
 //queries the entire mutableOwnerArray using that selector.
-- (id)_statusObjectForKey:(NSString *)key containedObjectSelector:(SEL)containedObjectSelector
+- (id)_valueForProperty:(NSString *)key containedObjectSelector:(SEL)containedObjectSelector
 {
 	id					returnValue;
 
-	if (!(returnValue = [super statusObjectForKey:key])) {
+	if (!(returnValue = [super valueForProperty:key])) {
 		AIMutableOwnerArray *keyArray = [statusCacheDict objectForKey:key];
 		
 		returnValue = [keyArray objectWithOwner:[self preferredContact]];
@@ -848,35 +856,35 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 //Update our cache with the newest status of the passed object
 - (void)_updateCachedStatusOfObject:(AIListObject *)inObject
 {
-	NSEnumerator	*enumerator = [inObject statusKeyEnumerator];
+	NSEnumerator	*enumerator = [inObject propertyEnumerator];
 	NSString		*key;
 	
 	while ((key = [enumerator nextObject])) {
-		id value = [inObject statusObjectForKey:key];
+		id value = [inObject valueForProperty:key];
 
 		//Only tell super that we changed if _cacheStatusValue returns YES indicating we did
 		if ([self _cacheStatusValue:value forObject:inObject key:key notify:NotifyLater determineIfChanged:YES]) {
-			[super object:self didSetStatusObject:value forKey:key notify:NotifyLater];
+			[super object:self didSetValue:value forProperty:key notify:NotifyLater];
 		}
 	}
 	
-	[self notifyOfChangedStatusSilently:YES];
+	[self notifyOfChangedPropertiesSilently:YES];
 }
 
 //Flush all status values of the passed object from our cache
 - (void)_removeCachedStatusOfObject:(AIListObject *)inObject
 {
-	NSEnumerator	*enumerator = [inObject statusKeyEnumerator];
+	NSEnumerator	*enumerator = [inObject propertyEnumerator];
 	NSString		*key;
 	
 	while ((key = [enumerator nextObject])) {
 		//Only tell super that we changed if _cacheStatusValue returns YES indicating we did
 		if ([self _cacheStatusValue:nil forObject:inObject key:key notify:NotifyLater determineIfChanged:YES]) {
-			[super object:self didSetStatusObject:[self statusObjectForKey:key] forKey:key notify:NotifyLater];
+			[super object:self didSetValue:[self valueForProperty:key] forProperty:key notify:NotifyLater];
 		}
 	}
 	
-	[self notifyOfChangedStatusSilently:YES];
+	[self notifyOfChangedPropertiesSilently:YES];
 }
 
 //Update a value in our status cache
@@ -1064,12 +1072,12 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 #pragma mark Status
 - (NSString *)statusName
 {
-	return [[self preferredContact] statusObjectForKey:@"StatusName"];
+	return [[self preferredContact] valueForProperty:@"StatusName"];
 }
 
 - (AIStatusType)statusType
 {
-	NSNumber		*statusTypeNumber = [[self preferredContact] statusObjectForKey:@"StatusType"];
+	NSNumber		*statusTypeNumber = [[self preferredContact] valueForProperty:@"StatusType"];
 	AIStatusType	statusType = (statusTypeNumber ?
 								  [statusTypeNumber intValue] :
 								  AIAvailableStatusType);

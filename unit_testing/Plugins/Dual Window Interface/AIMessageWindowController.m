@@ -209,6 +209,7 @@
 	[tabView_tabBar setSelectsTabsOnMouseDown:YES];
 	[tabView_tabBar setAutomaticallyAnimates:NO];
 	[tabView_tabBar setAllowsScrubbing:YES];
+	[tabView_tabBar setAllowsBackgroundTabClosing:NO];
 	[tabView_tabBar setTearOffStyle:PSMTabBarTearOffAlphaWindow];
 }
 
@@ -292,7 +293,6 @@
 		NSWindow	*window = [self window];
 		alwaysShowTabs = ![[prefDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
 		[tabView_tabBar setHideForSingleTab:!alwaysShowTabs];
-		[tabView_tabBar setAllowsBackgroundTabClosing:YES];
 		NSNumber *useOverflow = [prefDict objectForKey:KEY_TABBAR_OVERFLOW];
 		[tabView_tabBar setUseOverflowMenu:(useOverflow ? [useOverflow boolValue] : YES)];
 		
@@ -497,9 +497,9 @@
 	} else {
 		[tabView_messages insertTabViewItem:inTabViewItem atIndex:index];
 	}
-	
-#warning questionable
-	[self _reloadContainedChats]; //I'm not sure the right delegate method is getting called. This will make sure containedChats is up to date.
+
+	//Refresh our list and order of chats
+	[self _reloadContainedChats];
 	
 	if (![tabView_messages selectedTabViewItem]) [tabView_messages selectNextTabViewItem:nil];
 	

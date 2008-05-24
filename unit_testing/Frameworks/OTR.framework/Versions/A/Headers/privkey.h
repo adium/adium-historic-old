@@ -1,6 +1,6 @@
 /*
  *  Off-the-Record Messaging library
- *  Copyright (C) 2004-2005  Nikita Borisov and Ian Goldberg
+ *  Copyright (C) 2004-2007  Ian Goldberg, Chris Alexander, Nikita Borisov
  *                           <otr@cypherpunks.ca>
  *
  *  This library is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@
 #ifndef __PRIVKEY_H__
 #define __PRIVKEY_H__
 
+#include <stdio.h>
 #include "privkey-t.h"
 #include "userstate.h"
 
@@ -32,14 +33,31 @@ void otrl_privkey_hash_to_human(char human[45], const unsigned char hash[20]);
 char *otrl_privkey_fingerprint(OtrlUserState us, char fingerprint[45],
 	const char *accountname, const char *protocol);
 
+/* Calculate a raw hash of our DSA public key.  Return it in the passed
+ * fingerprint buffer.  Return NULL on error, or a pointer to the given
+ * buffer on success. */
+unsigned char *otrl_privkey_fingerprint_raw(OtrlUserState us,
+	unsigned char hash[20], const char *accountname, const char *protocol);
+
 /* Read a sets of private DSA keys from a file on disk into the given
  * OtrlUserState. */
 gcry_error_t otrl_privkey_read(OtrlUserState us, const char *filename);
+
+/* Read a sets of private DSA keys from a FILE* into the given
+ * OtrlUserState.  The FILE* must be open for reading. */
+gcry_error_t otrl_privkey_read_FILEp(OtrlUserState us, FILE *privf);
 
 /* Generate a private DSA key for a given account, storing it into a
  * file on disk, and loading it into the given OtrlUserState.  Overwrite any
  * previously generated keys for that account in that OtrlUserState. */
 gcry_error_t otrl_privkey_generate(OtrlUserState us, const char *filename,
+	const char *accountname, const char *protocol);
+
+/* Generate a private DSA key for a given account, storing it into a
+ * FILE*, and loading it into the given OtrlUserState.  Overwrite any
+ * previously generated keys for that account in that OtrlUserState.
+ * The FILE* must be open for reading and writing. */
+gcry_error_t otrl_privkey_generate_FILEp(OtrlUserState us, FILE *privf,
 	const char *accountname, const char *protocol);
 
 /* Read the fingerprint store from a file on disk into the given
@@ -50,9 +68,22 @@ gcry_error_t otrl_privkey_read_fingerprints(OtrlUserState us,
 	void (*add_app_data)(void *data, ConnContext *context),
 	void  *data);
 
+/* Read the fingerprint store from a FILE* into the given
+ * OtrlUserState.  Use add_app_data to add application data to each
+ * ConnContext so created.  The FILE* must be open for reading. */
+gcry_error_t otrl_privkey_read_fingerprints_FILEp(OtrlUserState us,
+	FILE *storef,
+	void (*add_app_data)(void *data, ConnContext *context),
+	void  *data);
+
 /* Write the fingerprint store from a given OtrlUserState to a file on disk. */
 gcry_error_t otrl_privkey_write_fingerprints(OtrlUserState us,
 	const char *filename);
+
+/* Write the fingerprint store from a given OtrlUserState to a FILE*.
+ * The FILE* must be open for writing. */
+gcry_error_t otrl_privkey_write_fingerprints_FILEp(OtrlUserState us,
+	FILE *storef);
 
 /* Fetch the private key from the given OtrlUserState associated with
  * the given account */

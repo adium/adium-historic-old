@@ -94,7 +94,14 @@ CFStringRef CopyTextContentForFile(CFStringRef contentTypeUTI,
 	if (CFStringCompare(contentTypeUTI, CFSTR("com.adiumx.htmllog"), kCFCompareBackwards) == kCFCompareEqualTo) {
 		textContent = (CFStringRef)GetTextContentForHTMLLog((NSString *)pathToFile);
 	} else if (CFStringCompare(contentTypeUTI, (CFStringRef)@"com.adiumx.xmllog", kCFCompareBackwards) == kCFCompareEqualTo) {
-		textContent = (CFStringRef)GetTextContentForXMLLog((NSString *)pathToFile);
+		BOOL isDir;
+		if ([[NSFileManager defaultManager] fileExistsAtPath:(NSString *)pathToFile isDirectory:&isDir]) {
+			/* If we have a chatLog bundle, we want to get the text content for the xml file inside */
+			if (isDir) pathToFile = [(NSString *)pathToFile stringByAppendingPathComponent:
+									 [[[(NSString *)pathToFile lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"xml"]];
+			
+			textContent = (CFStringRef)GetTextContentForXMLLog((NSString *)pathToFile);
+		}
 		
 	} else {
 		textContent = nil;

@@ -132,8 +132,8 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 	//If the name we were passed differs from the current formatted UID of the contact, it's itself a formatted UID
 	//This is important since we may get an alias ("Evan Schoenberg") from the server but also want the formatted name
 	if (![contactName isEqualToString:[theContact formattedUID]] && ![contactName isEqualToString:[theContact UID]]) {
-		[theContact setStatusObject:contactName
-							 forKey:@"FormattedUID"
+		[theContact setValue:contactName
+							 forProperty:@"FormattedUID"
 							 notify:NotifyLater];
 	}
 	
@@ -162,8 +162,8 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 	NSString	*normalizedUID = [[self service] normalizeUID:newUID removeIgnoredCharacters:YES];
 	
 	if ([normalizedUID isEqualToString:[theContact UID]]) {
-		[theContact setStatusObject:newUID
-							 forKey:@"FormattedUID"
+		[theContact setValue:newUID
+							 forProperty:@"FormattedUID"
 							 notify:NotifyLater];		
 	} else {
 		[theContact setUID:newUID];		
@@ -186,7 +186,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 								 notify:NotifyLater];
 
 			//Apply any changes
-			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+			[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 		}
 	}
 }
@@ -208,7 +208,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 				   notify:NotifyLater
 				 silently:silentAndDelayed];
 
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }
 
 //Signed offline
@@ -218,7 +218,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 				   notify:NotifyLater
 				 silently:silentAndDelayed];
 	
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }
 
 //Signon Time
@@ -228,7 +228,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 					   notify:NotifyLater];
 	
 	//Apply any changes
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }
 
 /*!
@@ -263,7 +263,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 						  notify:NotifyLater];
 	
 	//Apply the change
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }
 
 //Idle time
@@ -272,7 +272,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 	[theContact setIdle:YES sinceDate:idleSinceDate notify:NotifyLater];
 
 	//Apply any changes
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }
 - (void)updateIdleReturn:(AIListContact *)theContact withData:(void *)data
 {
@@ -281,7 +281,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 				 notify:NotifyLater];
 
 	//Apply any changes
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }
 	
 //Evil level (warning level)
@@ -291,7 +291,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 						 notify:NotifyLater];
 
 	//Apply any changes
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }   
 
 //Buddy Icon
@@ -301,14 +301,14 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 							   notify:NotifyLater];
 
 	//Apply any changes
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }
 
 - (void)updateMobileStatus:(AIListContact *)theContact withData:(BOOL)isMobile
 {
 	[theContact setIsMobile:isMobile notify:NotifyLater];
 
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }
 
 - (NSString *)processedIncomingUserInfo:(NSString *)inString
@@ -398,7 +398,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 					notify:NotifyLater];
 
 	//Apply any changes
-	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }
 
 /*!
@@ -613,7 +613,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 - (void)authorizationWindowController:(NSWindowController *)inWindowController authorizationWithDict:(NSDictionary *)infoDict response:(AIAuthorizationResponse)authorizationResponse
 {
 	if (account) {
-		id		 callback;
+		NSValue	*callback = nil;
 
 		switch (authorizationResponse) {
 			case AIAuthorizationAllowed:
@@ -701,6 +701,16 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
     return YES;
 }
 
+- (void)chatWasDestroyed:(AIChat *)chat
+{
+	[[adium chatController] accountDidCloseChat:chat];
+}
+
+- (void)chatJoinDidFail:(AIChat *)chat
+{
+	[[adium chatController] accountDidCloseChat:chat];
+}
+
 /* 
  * @brief Rejoin a chat
  */
@@ -736,6 +746,11 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 - (NSDictionary *)willJoinChatUsingDictionary:(NSDictionary *)chatCreationDictionary
 {
 	return chatCreationDictionary;
+}
+
+- (BOOL)chatCreationDictionary:(NSDictionary *)chatCreationDict isEqualToDictionary:(NSDictionary *)baseDict
+{
+	return [chatCreationDict isEqualToDictionary:baseDict];
 }
 
 - (AIChat *)chatWithContact:(AIListContact *)contact identifier:(id)identifier
@@ -794,8 +809,8 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 	}
 	
 	if (key) {
-		[chat setStatusObject:[NSNumber numberWithBool:YES] forKey:key notify:NotifyNow];
-		[chat setStatusObject:nil forKey:key notify:NotifyNever];
+		[chat setValue:[NSNumber numberWithBool:YES] forProperty:key notify:NotifyNow];
+		[chat setValue:nil forProperty:key notify:NotifyNever];
 		
 	}
 }
@@ -926,19 +941,6 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 }
 
 /*!
- * @brief Allow newlines in messages
- *
- * Only IRC doesn't allow newlines out of the built-in prpls... and we don't even support it yet.
- * This method is never called at present.
- *
- * XXX: despite not being called (?) multiline irc messages are being divided into multiple messages properly... is this necessary?
- */
-- (BOOL)allowsNewlinesInMessages
-{
-	return (account && purple_account_get_connection(account) && ((purple_account_get_connection(account)->flags & PURPLE_CONNECTION_NO_NEWLINES) != 0));
-}
-
-/*!
  * @brief Libpurple prints file transfer messages to the chat window. The Adium core therefore shouldn't.
  */
 - (BOOL)accountDisplaysFileTransferMessages
@@ -946,31 +948,29 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 	return YES;
 }
 
-//Return YES if we're available for sending the specified content or will be soon (are currently connecting).
-//If inListObject is nil, we can return YES if we will 'most likely' be able to send the content.
+/*!
+ * @brief Available for sending content
+ *
+ * Returns YES if the contact is available for receiving content of the specified type.  If contact is nil, instead
+ * check for the availiability to send any content of the given type.
+ *
+ * We override the default implementation to check -[self allowFileTransferWithListObject:] for file transfers
+ *
+ * @param inType A string content type
+ * @param inContact The destination contact, or nil to check global availability
+ */
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
-    BOOL	weAreOnline = [self online];
-	
-    if ([inType isEqualToString:CONTENT_MESSAGE_TYPE] ||
-		[inType isEqualToString:CONTENT_NOTIFICATION_TYPE]) {
-        if ((weAreOnline && (inContact == nil || [inContact online])) ||
-			([self integerStatusObjectForKey:@"Connecting"])) {  //XXX - Why do we lie if we're connecting? -ai
-			return YES;
-        }
-    } else if (([inType isEqualToString:CONTENT_FILE_TRANSFER_TYPE]) && ([self conformsToProtocol:@protocol(AIAccount_Files)])) {
-		if (weAreOnline) {
-			if (inContact) {
-				if ([inContact online]) {
-					return [self allowFileTransferWithListObject:inContact];
-				}
-			} else {
-				return YES;
-			}
-       }	
+    if ([self online] && [inType isEqualToString:CONTENT_FILE_TRANSFER_TYPE]) {
+		if (inContact) {
+			return ([self conformsToProtocol:@protocol(AIAccount_Files)] &&
+					(([inContact online] || [inContact isStranger]) && [self allowFileTransferWithListObject:inContact]));
+		} else {
+			return [self conformsToProtocol:@protocol(AIAccount_Files)];
+		}
 	}
-	
-    return NO;
+
+    return [super availableForSendingContentType:inType toContact:inContact];
 }
 
 - (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
@@ -1502,6 +1502,8 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 //Connect this account (Our password should be in the instance variable 'password' all ready for us)
 - (void)connect
 {
+	finishedConnectProcess = NO;
+
 	[super connect];
 
 	//Ensure we have a purple account if one does not already exist
@@ -1519,6 +1521,8 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 
 - (void)unregister
 {
+	finishedConnectProcess = NO;
+
 	[purpleAdapter unregisterAccount:self];
 }
 
@@ -1567,7 +1571,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	purple_account_set_password(account, [password UTF8String]);
 
 	//Set our current status state after filtering its statusMessage as appropriate. This will take us online in the process.
-	AIStatus	*statusState = [self statusObjectForKey:@"StatusState"];
+	AIStatus	*statusState = [self valueForProperty:@"StatusState"];
 	if (!statusState || ([statusState statusType] == AIOfflineStatusType)) {
 		statusState = [[adium statusController] defaultInitialStatusState];
 	}
@@ -1633,7 +1637,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	//E-mail checking
 	purple_account_set_check_mail(account, [[self shouldCheckMail] boolValue]);
 	
-	//Update a few status keys before we begin connecting.  Libpurple will send these automatically
+	//Update a few properties before we begin connecting.  Libpurple will send these automatically
     [self updateStatusForKey:KEY_USER_ICON];
 }
 
@@ -1711,7 +1715,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 /*!
  * @brief Should the account's status be updated as soon as it is connected?
  *
- * If YES, the StatusState and IdleSince status keys will be told to update as soon as the account connects.
+ * If YES, the StatusState and IdleSince properties will be told to update as soon as the account connects.
  * This will allow the account to send its status information to the server upon connecting.
  *
  * If this information is already known by the account at the time it connects and further prompting to send it is
@@ -1725,7 +1729,9 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 }
 
 - (void)didConnect
-{	
+{
+	finishedConnectProcess = YES;
+
 	[super didConnect];
 	
 	[[adium notificationCenter] addObserver:self
@@ -1755,11 +1761,11 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 {
 	NSString	*connectionProgressString = [self connectionStringForStep:[step intValue]];
 
-	[self setStatusObject:connectionProgressString forKey:@"ConnectionProgressString" notify:NO];
-	[self setStatusObject:connectionProgressPrecent forKey:@"ConnectionProgressPercent" notify:NO];	
+	[self setValue:connectionProgressString forProperty:@"ConnectionProgressString" notify:NO];
+	[self setValue:connectionProgressPrecent forProperty:@"ConnectionProgressPercent" notify:NO];	
 
 	//Apply any changes
-	[self notifyOfChangedStatusSilently:NO];
+	[self notifyOfChangedPropertiesSilently:NO];
 	
 	AILog(@"************ %@ --step-- %i",[self UID],[step intValue]);
 }
@@ -1807,7 +1813,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
  */
 - (void)disconnect
 {
-	if ([self online] || [self integerStatusObjectForKey:@"Connecting"]) {
+	if ([self online] || [self integerValueForProperty:@"Connecting"]) {
 		//As per AIAccount's documentation, call super's implementation
 		[super disconnect];
 
@@ -1840,7 +1846,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 		[self serverReportedInvalidPassword];
 
 	//We are disconnecting
-    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:NotifyNow];
+    [self setValue:[NSNumber numberWithBool:YES] forProperty:@"Disconnecting" notify:NotifyNow];
 	
 	AILog(@"%@ accountConnectionReportDisconnect: %@",self,lastDisconnectionError);
 }
@@ -1853,11 +1859,11 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 
 - (void)didDisconnect
 {
-	//Clear status objects which don't make sense for a disconnected account
-	[self setStatusObject:nil forKey:@"TextProfile" notify:NO];
+	//Clear properties which don't make sense for a disconnected account
+	[self setValue:nil forProperty:@"TextProfile" notify:NO];
 	
 	//Apply any changes
-	[self notifyOfChangedStatusSilently:NO];
+	[self notifyOfChangedPropertiesSilently:NO];
 	
 	[[adium notificationCenter] removeObserver:self
 										  name:Adium_iTunesTrackChangedNotification
@@ -1926,7 +1932,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	[self purpleAccount];
 	
 	//We are connecting
-	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:NotifyNow];
+	[self setValue:[NSNumber numberWithBool:YES] forProperty:@"Connecting" notify:NotifyNow];
 	
 	//Make sure our settings are correct
 	[self configurePurpleAccountNotifyingTarget:self selector:@selector(continueRegisterWithConfiguredPurpleAccount)];
@@ -1965,7 +1971,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 
 //Account Status ------------------------------------------------------------------------------------------------------
 #pragma mark Account Status
-//Status keys this account supports
+//Properties this account supports
 - (NSSet *)supportedPropertyKeys
 {
 	static NSMutableSet *supportedPropertyKeys = nil;
@@ -2211,9 +2217,9 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 {
 	[purpleAdapter setIdleSinceTo:idleSince onAccount:self];
 	
-	//We now should update our idle status object
-	[self setStatusObject:([idleSince timeIntervalSinceNow] ? idleSince : nil)
-				   forKey:@"IdleSince"
+	//We now should update our idle property
+	[self setValue:([idleSince timeIntervalSinceNow] ? idleSince : nil)
+				   forProperty:@"IdleSince"
 				   notify:NotifyNow];
 }
 
@@ -2229,7 +2235,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 //Set our profile immediately on the purpleAdapter
 - (void)setAccountProfileTo:(NSAttributedString *)profile
 {
-	if (!profile || ![[profile string] isEqualToString:[[self statusObjectForKey:@"TextProfile"] string]]) {
+	if (!profile || ![[profile string] isEqualToString:[[self valueForProperty:@"TextProfile"] string]]) {
 		NSString 	*profileHTML = nil;
 		
 		//Convert the profile to HTML, and pass it to libpurple
@@ -2240,7 +2246,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 		[purpleAdapter setInfo:profileHTML onAccount:self];
 		
 		//We now have a profile
-		[self setStatusObject:profile forKey:@"TextProfile" notify:NotifyNow];
+		[self setValue:profile forProperty:@"TextProfile" notify:NotifyNow];
 	}
 }
 
@@ -2375,7 +2381,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	}
 	
 	//We now have an icon
-	[self setStatusObject:image forKey:KEY_USER_ICON notify:NotifyNow];
+	[self setValue:image forProperty:KEY_USER_ICON notify:NotifyNow];
 }
 
 #pragma mark Group Chat
@@ -2637,6 +2643,11 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_ALIASES];
 }
 
+- (BOOL)allowAccountUnregistrationIfSupportedByLibpurple
+{
+	return YES;
+}
+
 /*!
  * @brief The account will be deleted, we should ask the user for confirmation. If the prpl supports it, we can also remove
  * the account from the server (if the user wants us to do that)
@@ -2651,7 +2662,8 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 
 	if ((prpl = purple_find_prpl([self protocolPlugin])) &&
 		(prpl_info = PURPLE_PLUGIN_PROTOCOL_INFO(prpl)) &&
-		(prpl_info->unregister_user)) {
+		(prpl_info->unregister_user) &&
+		[self allowAccountUnregistrationIfSupportedByLibpurple]) {
 		return [NSAlert alertWithMessageText:AILocalizedString(@"Delete Account",nil)
 							   defaultButton:AILocalizedString(@"Delete",nil)
 							 alternateButton:AILocalizedString(@"Cancel",nil)
@@ -2880,12 +2892,12 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 #pragma mark Private
 - (void)setTypingFlagOfChat:(AIChat *)chat to:(NSNumber *)typingStateNumber
 {
-    AITypingState currentTypingState = [chat integerStatusObjectForKey:KEY_TYPING];
+    AITypingState currentTypingState = [chat integerValueForProperty:KEY_TYPING];
 	AITypingState newTypingState = [typingStateNumber intValue];
 
     if (currentTypingState != newTypingState) {
-		[chat setStatusObject:(newTypingState ? typingStateNumber : nil)
-					   forKey:KEY_TYPING
+		[chat setValue:(newTypingState ? typingStateNumber : nil)
+					   forProperty:KEY_TYPING
 					   notify:NotifyNow];
     }
 }

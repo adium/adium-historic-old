@@ -28,6 +28,7 @@ typedef enum {
 } AIBackgroundStyle;
 
 @interface AIListOutlineView : AIMultiCellOutlineView <ContactListOutlineView> {    
+	BOOL				groupsHaveBackground;
 	BOOL				updateShadowsWhileDrawing;	
 
 	NSImage				*backgroundImage;

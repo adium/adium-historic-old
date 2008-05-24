@@ -19,7 +19,7 @@
 #import <Adium/AIListContact.h>
 #import <AIUtilities/AISmoothTooltipTracker.h>
 
-@class AIAutoScrollView, AIListOutlineView, AIListContactCell, AIListGroupCell, ESObjectWithStatus, AIListObject, AIChat;
+@class AIAutoScrollView, AIListOutlineView, AIListContactCell, AIListGroupCell, ESObjectWithProperties, AIListObject, AIChat;
 
 #define LIST_LAYOUT_FOLDER						@"Contact List"
 #define LIST_LAYOUT_EXTENSION					@"ListLayout"
@@ -202,8 +202,8 @@ typedef enum {
 - (void)contactListWillBeRemovedFromWindow;
 - (void)contactListWasAddedBackToWindow;
 
-- (void)setContactListRoot:(ESObjectWithStatus<AIContainingObject> *)newContactListRoot;
-- (ESObjectWithStatus<AIContainingObject> *)contactListRoot;
+- (void)setContactListRoot:(ESObjectWithProperties<AIContainingObject> *)newContactListRoot;
+- (ESObjectWithProperties<AIContainingObject> *)contactListRoot;
 
 - (void)setHideRoot:(BOOL)inHideRoot;
 - (void)reloadData;

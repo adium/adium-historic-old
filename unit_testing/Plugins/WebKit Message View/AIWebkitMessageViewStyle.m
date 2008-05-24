@@ -18,6 +18,7 @@
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
+#import <AIUtilities/AIMutableStringAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentContext.h>
@@ -30,6 +31,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
 #import <Adium/ESFileTransfer.h>
+#import <Adium/AIServiceIcons.h>
 #import <Adium/AIContentControllerProtocol.h>
 
 //
@@ -344,14 +346,10 @@ static NSArray *validSenderColors;
 			[self pathForVariant:variant],												//Variant path
 			((showHeader && headerHTML) ? headerHTML : @""),
 			(footerHTML ? footerHTML : @"")];
-	} else {
-		NSString *cssString = styleVersion < 3 ? 
-							   @"" : 
-							   [@"@import url( \"main.css\" );" stringByAppendingString:([chat isGroupChat] ? @"\n@import url( \"groupchat.css\" );" : @"")];
-		
+	} else {		
 		templateHTML = [NSMutableString stringWithFormat:baseHTML,						//Template
 			[[NSURL fileURLWithPath:stylePath] absoluteString],							//Base path
-			cssString,																	//Import main.css by default, groupchat.css if needed (For version 3 and newer styles)
+			styleVersion < 3 ? @"" : @"@import url( \"main.css\" );",					//Import main.css for new enough styles
 			[self pathForVariant:variant],												//Variant path
 			((showHeader && headerHTML) ? headerHTML : @""),
 			(footerHTML ? footerHTML : @"")];
@@ -510,26 +508,23 @@ static NSArray *validSenderColors;
  *	@brief Escape a string for passing to our BOM scripts
  */
 - (NSMutableString *)_escapeStringForPassingToScript:(NSMutableString *)inString
-{
-	NSRange range = NSMakeRange(0, [inString length]);
-	unsigned delta;
+{	
 	//We need to escape a few things to get our string to the javascript without trouble
-	delta = [inString replaceOccurrencesOfString:@"\\" withString:@"\\\\" 
-										 options:NSLiteralSearch range:range];
-	range.length += delta;
+	[inString replaceOccurrencesOfString:@"\\" 
+							  withString:@"\\\\" 
+								 options:NSLiteralSearch];
 	
-	delta = [inString replaceOccurrencesOfString:@"\"" withString:@"\\\"" 
-											options:NSLiteralSearch range:range];
-	range.length += delta;
+	[inString replaceOccurrencesOfString:@"\"" 
+							  withString:@"\\\"" 
+								 options:NSLiteralSearch];
+		
+	[inString replaceOccurrencesOfString:@"\n" 
+							  withString:@"" 
+								 options:NSLiteralSearch];
 
-	delta = [inString replaceOccurrencesOfString:@"\n" withString:@"" 
-										 options:NSLiteralSearch range:range];
-	range.length -= delta;
-
-	delta = [inString replaceOccurrencesOfString:@"\r" withString:@"<br>" 
-										 options:NSLiteralSearch range:range];
-	//4 is the length of <br>
-	range.length += delta * 4;
+	[inString replaceOccurrencesOfString:@"\r" 
+							  withString:@"<br>" 
+								 options:NSLiteralSearch];
 
 	return inString;
 }
@@ -736,9 +731,9 @@ static NSArray *validSenderColors;
 				NSString    *userIconPath;
 				NSString	*replacementString;
 				
-				userIconPath = [theSource statusObjectForKey:KEY_WEBKIT_USER_ICON];
+				userIconPath = [theSource valueForProperty:KEY_WEBKIT_USER_ICON];
 				if (!userIconPath) {
-					userIconPath = [theSource statusObjectForKey:@"UserIconPath"];
+					userIconPath = [theSource valueForProperty:@"UserIconPath"];
 				}
 					
 				if (showUserIcons && userIconPath) {
@@ -1017,9 +1012,9 @@ static NSArray *validSenderColors;
 	NSString		*iconPath = nil;
 	
 	if (listObject) {
-		iconPath = [listObject statusObjectForKey:KEY_WEBKIT_USER_ICON];
+		iconPath = [listObject valueForProperty:KEY_WEBKIT_USER_ICON];
 		if (!iconPath) {
-			iconPath = [listObject statusObjectForKey:@"UserIconPath"];
+			iconPath = [listObject valueForProperty:@"UserIconPath"];
 		}
 	}
 	[inString replaceKeyword:@"%incomingIconPath%"
@@ -1029,13 +1024,21 @@ static NSArray *validSenderColors;
 	iconPath = nil;
 	
 	if (account) {
-		iconPath = [account statusObjectForKey:KEY_WEBKIT_USER_ICON];
+		iconPath = [account valueForProperty:KEY_WEBKIT_USER_ICON];
 		if (!iconPath) {
-			iconPath = [account statusObjectForKey:@"UserIconPath"];
+			iconPath = [account valueForProperty:@"UserIconPath"];
 		}
 	}
 	[inString replaceKeyword:@"%outgoingIconPath%"
 				  withString:(iconPath ? iconPath : @"outgoing_icon.png")];
+	
+	NSString *serviceIconPath = [AIServiceIcons pathForServiceIconForServiceID:[account serviceID]
+																		  type:AIServiceIconLarge];
+	
+	NSString *serviceIconTag = [NSString stringWithFormat:@"<img class=\"serviceIcon\" src=\"@\" alt=\"%@\">", serviceIconPath ? serviceIconPath : @"outgoing_icon.png", [[account service] shortDescription]];
+	
+	[inString replaceKeyword:@"%serviceIconImg%"
+				  withString:serviceIconTag];
 	
 	[inString replaceKeyword:@"%timeOpened%"
 				  withString:[timeStampFormatter stringForObjectValue:[chat dateOpened]]];
@@ -1086,7 +1089,7 @@ static NSArray *validSenderColors;
 								[bodyTag appendString:[NSString stringWithFormat:@"background-image: url('%@'); background-repeat: repeat; background-position: center;", customBackgroundPath]];
 							break;
 							case BackgroundScale:
-								[bodyTag appendString:[NSString stringWithFormat:@"background-image: url('%@'); -webkit-background-size: 100%% 100%%; background-size: 100%% 100%%; background-repeat: no-repeat;", customBackgroundPath]];
+								[bodyTag appendString:[NSString stringWithFormat:@"background-image: url('%@'); -webkit-background-size: 100%% 100%%; background-size: 100%% 100%%; background-attachment: fixed;", customBackgroundPath]];
 							break;
 						}
 					} else {

@@ -60,7 +60,7 @@
 	NSString			*currentNotes;
     
 	if ((currentNotes = [inObject preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES]) ||
-	   (currentNotes = [inObject statusObjectForKey:@"Notes"])) {
+	   (currentNotes = [inObject valueForProperty:@"Notes"])) {
         entry = [[NSAttributedString alloc] initWithString:currentNotes];
     }
     

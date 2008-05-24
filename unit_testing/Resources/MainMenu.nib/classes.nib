@@ -1,216 +1,460 @@
-{
-    IBClasses =     (
-                {
-            ACTIONS =             {
-                confirmQuit = id;
-                contibutingToAdium = id;
-                donate = id;
-                importFromiChat = id;
-                reportABug = id;
-                sendFeedback = id;
-                showAboutBox = id;
-                showForums = id;
-                showHelp = id;
-                showXtras = id;
-            };
-            CLASS = AIAdium;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                interfaceController = AIInterfaceController;
-                menuController = AIMenuController;
-                updater = SUUpdater;
-            };
-            SUPERCLASS = NSObject;
-        },
-                {
-            CLASS = AIApplication;
-            LANGUAGE = ObjC;
-            SUPERCLASS = NSApplication;
-        },
-                {
-            ACTIONS =             {
-                adiumPrint = id;
-                closeAllChats = id;
-                closeChatMenu = id;
-                closeMenu = id;
-                paste = id;
-                pasteAndMatchStyle = id;
-                pasteWithImagesAndColors = id;
-                runToolbarCustomizationPalette = id;
-                setFontPanelSettingsAsDefaultFont = id;
-                showContactListAndBringToFront = id;
-                showPreferenceWindow = id;
-                toggleContactList = id;
-                toggleFontPanel = id;
-                toggleFontTrait = id;
-                toggleToolbarShown = id;
-            };
-            CLASS = AIInterfaceController;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                adium = AIAdium;
-                "button_fontPanelSetAsDefault" = NSButton;
-                contactListPlugin = id;
-                fontPanelAccessoryView = NSView;
-                interfacePlugin = id;
-                "menuItem_bold" = NSMenuItem;
-                "menuItem_close" = NSMenuItem;
-                "menuItem_closeAllChats" = NSMenuItem;
-                "menuItem_closeChat" = NSMenuItem;
-                "menuItem_customizeToolbar" = NSMenuItem;
-                "menuItem_italic" = NSMenuItem;
-                "menuItem_paste" = NSMenuItem;
-                "menuItem_pasteAndMatchStyle" = NSMenuItem;
-                "menuItem_pasteWithImagesAndColors" = NSMenuItem;
-                "menuItem_print" = NSMenuItem;
-                "menuItem_showFonts" = NSMenuItem;
-                "menuItem_showToolbar" = NSMenuItem;
-            };
-            SUPERCLASS = NSObject;
-        },
-                {
-            CLASS = AIMenuController;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                adium = NSObject;
-                "menuItem_Format_Italics" = id;
-                "menuItem_aboutAdium" = NSMenuItem;
-                "menuItem_adiumForums" = NSMenuItem;
-                "menuItem_adiumHelp" = NSMenuItem;
-                "menuItem_adiumXtras" = NSMenuItem;
-                "menuItem_bigger" = NSMenuItem;
-                "menuItem_bold" = NSMenuItem;
-                "menuItem_bringAllToFront" = NSMenuItem;
-                "menuItem_checkForUpdates" = NSMenuItem;
-                "menuItem_clear" = NSMenuItem;
-                "menuItem_close" = NSMenuItem;
-                "menuItem_closeAllChats" = NSMenuItem;
-                "menuItem_closeChat" = NSMenuItem;
-                "menuItem_contact" = NSMenuItem;
-                "menuItem_copy" = NSMenuItem;
-                "menuItem_copyStyle" = NSMenuItem;
-                "menuItem_customizeToolbar" = NSMenuItem;
-                "menuItem_cut" = NSMenuItem;
-                "menuItem_donate" = NSMenuItem;
-                "menuItem_edit" = NSMenuItem;
-                "menuItem_file" = NSMenuItem;
-                "menuItem_find" = NSMenuItem;
-                "menuItem_findCommand" = NSMenuItem;
-                "menuItem_findJumpToSelection" = NSMenuItem;
-                "menuItem_findNext" = NSMenuItem;
-                "menuItem_findPrevious" = NSMenuItem;
-                "menuItem_findUseSelectionForFind" = NSMenuItem;
-                "menuItem_format" = NSMenuItem;
-                "menuItem_help" = NSMenuItem;
-                "menuItem_helpOut" = NSMenuItem;
-                "menuItem_hideAdium" = NSMenuItem;
-                "menuItem_hideOthers" = NSMenuItem;
-                "menuItem_italic" = NSMenuItem;
-                "menuItem_minimize" = NSMenuItem;
-                "menuItem_pageSetup" = NSMenuItem;
-                "menuItem_paste" = NSMenuItem;
-                "menuItem_pasteAndMatchStyle" = NSMenuItem;
-                "menuItem_pasteStyle" = NSMenuItem;
-                "menuItem_pasteWithImagesAndColors" = NSMenuItem;
-                "menuItem_preferences" = NSMenuItem;
-                "menuItem_print" = NSMenuItem;
-                "menuItem_quitAdium" = NSMenuItem;
-                "menuItem_reportABug" = NSMenuItem;
-                "menuItem_rightToLeft" = NSMenuItem;
-                "menuItem_saveAs" = NSMenuItem;
-                "menuItem_selectAll" = NSMenuItem;
-                "menuItem_sendFeedback" = NSMenuItem;
-                "menuItem_services" = NSMenuItem;
-                "menuItem_showAll" = NSMenuItem;
-                "menuItem_showColors" = NSMenuItem;
-                "menuItem_showFonts" = NSMenuItem;
-                "menuItem_smaller" = NSMenuItem;
-                "menuItem_speech" = NSMenuItem;
-                "menuItem_spelling" = NSMenuItem;
-                "menuItem_spellingCheckGrammarWithSpelling" = NSMenuItem;
-                "menuItem_spellingCheckSpelling" = NSMenuItem;
-                "menuItem_spellingCheckSpellingAsYouType" = NSMenuItem;
-                "menuItem_spellingCommand" = NSMenuItem;
-                "menuItem_startSpeaking" = NSMenuItem;
-                "menuItem_status" = NSMenuItem;
-                "menuItem_stopSpeaking" = NSMenuItem;
-                "menuItem_underline" = NSMenuItem;
-                "menuItem_view" = NSMenuItem;
-                "menuItem_window" = NSMenuItem;
-                "menuItem_writingDirection" = NSMenuItem;
-                "menuItem_zoom" = NSMenuItem;
-                "menu_Adium_About" = id;
-                "menu_Adium_Other" = id;
-                "menu_Adium_Preferences" = id;
-                "menu_Contact_Action" = id;
-                "menu_Contact_Additions" = id;
-                "menu_Contact_Info" = id;
-                "menu_Contact_Manage" = id;
-                "menu_Contact_NegativeAction" = id;
-                "menu_Dock_Status" = id;
-                "menu_Edit_Additions" = id;
-                "menu_Edit_Bottom" = id;
-                "menu_Edit_Links" = id;
-                "menu_File_Accounts" = id;
-                "menu_File_Additions" = id;
-                "menu_File_Close" = id;
-                "menu_File_New" = id;
-                "menu_File_Save" = id;
-                "menu_Format_Additions" = id;
-                "menu_Format_Palettes" = id;
-                "menu_Format_Styles" = id;
-                "menu_Help_Additions" = id;
-                "menu_Help_Local" = id;
-                "menu_Help_Web" = id;
-                "menu_Status_Accounts" = id;
-                "menu_Status_Additions" = id;
-                "menu_Status_State" = id;
-                "menu_View_Additions" = id;
-                "menu_View_Appearance_Toggles" = id;
-                "menu_View_General" = id;
-                "menu_View_Sorting" = id;
-                "menu_View_Toggles" = id;
-                "menu_Window_Auxiliary" = id;
-                "menu_Window_Commands" = id;
-                "menu_Window_Fixed" = id;
-                "menu_Window_Top" = id;
-                nilMenuItem = id;
-            };
-            SUPERCLASS = NSObject;
-        },
-                {
-            ACTIONS =             {
-                runToolbarConfigurationPalette = id;
-                toggleBaseWritingDirection = id;
-                toggleGrammarChecking = id;
-            };
-            CLASS = FirstResponder;
-            LANGUAGE = ObjC;
-            SUPERCLASS = NSObject;
-        },
-                {
-            ACTIONS =             {
-                adiumPrint = id;
-            };
-            CLASS = NSObject;
-            LANGUAGE = ObjC;
-        },
-                {
-            CLASS = NSWindowController;
-            LANGUAGE = ObjC;
-            SUPERCLASS = NSResponder;
-        },
-                {
-            ACTIONS =             {
-                checkForUpdates = id;
-            };
-            CLASS = SUUpdater;
-            LANGUAGE = ObjC;
-            OUTLETS =             {
-                delegate = id;
-            };
-            SUPERCLASS = NSObject;
-        }
-    );
-    IBVersion = 1;
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>CLASS</key>
+			<string>NSApplication</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSResponder</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>RBSplitView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>delegate</key>
+				<string>id</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>RBSplitSubview</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>RBSplitSubview</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSView</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>adiumPrint</key>
+				<string>id</string>
+				<key>didAdjustSubviews</key>
+				<string>RBSplitView</string>
+				<key>prefsWindowWillClose</key>
+				<string>SS_PrefsController</string>
+				<key>toggleFindPanel</key>
+				<string>id</string>
+				<key>willAdjustSubviews</key>
+				<string>RBSplitView</string>
+			</dict>
+			<key>CLASS</key>
+			<string>NSObject</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>checkForUpdates</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>SUUpdater</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>delegate</key>
+				<string>id</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>confirmQuit</key>
+				<string>id</string>
+				<key>contibutingToAdium</key>
+				<string>id</string>
+				<key>donate</key>
+				<string>id</string>
+				<key>importFromiChat</key>
+				<string>id</string>
+				<key>reportABug</key>
+				<string>id</string>
+				<key>sendFeedback</key>
+				<string>id</string>
+				<key>showAboutBox</key>
+				<string>id</string>
+				<key>showForums</key>
+				<string>id</string>
+				<key>showHelp</key>
+				<string>id</string>
+				<key>showXtras</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>AIAdium</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>interfaceController</key>
+				<string>NSObject</string>
+				<key>menuController</key>
+				<string>NSObject</string>
+				<key>updater</key>
+				<string>SUUpdater</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>runToolbarConfigurationPalette</key>
+				<string>id</string>
+				<key>toggleBaseWritingDirection</key>
+				<string>id</string>
+				<key>toggleGrammarChecking</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSButton</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSControl</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>AIApplication</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSApplication</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>AIMenuController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>adium</key>
+				<string>NSObject</string>
+				<key>menuItem_Format_Italics</key>
+				<string>id</string>
+				<key>menuItem_aboutAdium</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_adiumForums</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_adiumHelp</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_adiumXtras</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_bigger</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_bold</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_bringAllToFront</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_checkForUpdates</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_clear</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_close</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_closeAllChats</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_closeChat</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_contact</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_copy</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_copyStyle</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_customizeToolbar</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_cut</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_donate</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_edit</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_file</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_find</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_findCommand</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_findJumpToSelection</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_findNext</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_findPrevious</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_findUseSelectionForFind</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_format</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_help</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_helpOut</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_hideAdium</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_hideOthers</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_italic</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_minimize</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_pageSetup</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_paste</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_pasteAndMatchStyle</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_pasteStyle</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_pasteWithImagesAndColors</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_preferences</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_print</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_quitAdium</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_reportABug</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_rightToLeft</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_saveAs</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_selectAll</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_sendFeedback</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_services</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_showAll</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_showColors</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_showFonts</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_smaller</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_speech</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_spelling</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_spellingCheckGrammarWithSpelling</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_spellingCheckSpelling</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_spellingCheckSpellingAsYouType</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_spellingCommand</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_startSpeaking</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_status</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_stopSpeaking</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_underline</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_view</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_window</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_writingDirection</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_zoom</key>
+				<string>NSMenuItem</string>
+				<key>menu_Adium_About</key>
+				<string>id</string>
+				<key>menu_Adium_Other</key>
+				<string>id</string>
+				<key>menu_Adium_Preferences</key>
+				<string>id</string>
+				<key>menu_Contact_Action</key>
+				<string>id</string>
+				<key>menu_Contact_Additions</key>
+				<string>id</string>
+				<key>menu_Contact_Info</key>
+				<string>id</string>
+				<key>menu_Contact_Manage</key>
+				<string>id</string>
+				<key>menu_Contact_NegativeAction</key>
+				<string>id</string>
+				<key>menu_Dock_Status</key>
+				<string>id</string>
+				<key>menu_Edit_Additions</key>
+				<string>id</string>
+				<key>menu_Edit_Bottom</key>
+				<string>id</string>
+				<key>menu_Edit_Links</key>
+				<string>id</string>
+				<key>menu_File_Accounts</key>
+				<string>id</string>
+				<key>menu_File_Additions</key>
+				<string>id</string>
+				<key>menu_File_Close</key>
+				<string>id</string>
+				<key>menu_File_New</key>
+				<string>id</string>
+				<key>menu_File_Save</key>
+				<string>id</string>
+				<key>menu_Format_Additions</key>
+				<string>id</string>
+				<key>menu_Format_Palettes</key>
+				<string>id</string>
+				<key>menu_Format_Styles</key>
+				<string>id</string>
+				<key>menu_Help_Additions</key>
+				<string>id</string>
+				<key>menu_Help_Local</key>
+				<string>id</string>
+				<key>menu_Help_Web</key>
+				<string>id</string>
+				<key>menu_Status_Accounts</key>
+				<string>id</string>
+				<key>menu_Status_Additions</key>
+				<string>id</string>
+				<key>menu_Status_State</key>
+				<string>id</string>
+				<key>menu_View_Additions</key>
+				<string>id</string>
+				<key>menu_View_Appearance_Toggles</key>
+				<string>id</string>
+				<key>menu_View_Counting_Toggles</key>
+				<string>id</string>
+				<key>menu_View_General</key>
+				<string>id</string>
+				<key>menu_View_Sorting</key>
+				<string>id</string>
+				<key>menu_View_Toggles</key>
+				<string>id</string>
+				<key>menu_Window_Auxiliary</key>
+				<string>id</string>
+				<key>menu_Window_Commands</key>
+				<string>id</string>
+				<key>menu_Window_Fixed</key>
+				<string>id</string>
+				<key>menu_Window_Top</key>
+				<string>id</string>
+				<key>nilMenuItem</key>
+				<string>id</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>SS_PrefsController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>delegate</key>
+				<string>id</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>adiumPrint</key>
+				<string>id</string>
+				<key>closeAllChats</key>
+				<string>id</string>
+				<key>closeChatMenu</key>
+				<string>id</string>
+				<key>closeMenu</key>
+				<string>id</string>
+				<key>paste</key>
+				<string>id</string>
+				<key>pasteAndMatchStyle</key>
+				<string>id</string>
+				<key>pasteWithImagesAndColors</key>
+				<string>id</string>
+				<key>runToolbarCustomizationPalette</key>
+				<string>id</string>
+				<key>setFontPanelSettingsAsDefaultFont</key>
+				<string>id</string>
+				<key>showContactListAndBringToFront</key>
+				<string>id</string>
+				<key>showPreferenceWindow</key>
+				<string>id</string>
+				<key>toggleContactList</key>
+				<string>id</string>
+				<key>toggleFontPanel</key>
+				<string>id</string>
+				<key>toggleFontTrait</key>
+				<string>id</string>
+				<key>toggleToolbarShown</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>AIInterfaceController</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>adium</key>
+				<string>NSObject</string>
+				<key>button_fontPanelSetAsDefault</key>
+				<string>NSButton</string>
+				<key>contactListPlugin</key>
+				<string>id</string>
+				<key>fontPanelAccessoryView</key>
+				<string>NSView</string>
+				<key>interfacePlugin</key>
+				<string>id</string>
+				<key>menuItem_bold</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_close</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_closeAllChats</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_closeChat</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_customizeToolbar</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_italic</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_paste</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_pasteAndMatchStyle</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_pasteWithImagesAndColors</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_print</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_showFonts</key>
+				<string>NSMenuItem</string>
+				<key>menuItem_showToolbar</key>
+				<string>NSMenuItem</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>

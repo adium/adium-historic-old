@@ -682,11 +682,16 @@
 		NSString		*file;
 		NSArray			*files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
 		NSEnumerator	*enumerator = [files objectEnumerator];
-		
-		while ((file = [enumerator nextObject])) {
-			AIListContact	*targetFileTransferContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
-																									forListContact:item];
-			[[adium fileTransferController] sendFile:file toListContact:targetFileTransferContact];
+
+		AIListContact	*targetFileTransferContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
+																							  forListContact:item];
+		if (targetFileTransferContact) {
+			while ((file = [enumerator nextObject])) {
+				[[adium fileTransferController] sendFile:file toListContact:targetFileTransferContact];
+			}
+		} else {
+			AILogWithSignature(@"No contact available to receive files");
+			NSBeep();
 		}
 
 	} else if ([[[info draggingPasteboard] types] containsObject:NSRTFPboardType] ||

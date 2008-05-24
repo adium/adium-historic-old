@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
  
-#import <AIHyperlinks/AIHyperlinks.h>
+#import <AutoHyperlinks/AutoHyperlinks.h>
  
 @interface SHAutoValidatingTextView : NSTextView {
 
@@ -22,13 +22,13 @@
     BOOL                         URLIsValid;
     NSString                    *urlString;
     unsigned                     scanOffset;
-    URI_VERIFICATION_STATUS      validStatus;
+    AH_URI_VERIFICATION_STATUS      validStatus;
 }
 
 - (void)setContinuousURLValidationEnabled:(BOOL)flag;
 - (void)toggleContinuousURLValidationEnabled;
 - (BOOL)isContinuousURLValidationEnabled;
-- (URI_VERIFICATION_STATUS)validationStatus;
+- (AH_URI_VERIFICATION_STATUS)validationStatus;
 - (BOOL)isURLValid;
 - (NSString *)linkURL;
 

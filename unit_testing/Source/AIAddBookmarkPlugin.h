@@ -10,7 +10,8 @@
 
 #import <Adium/AIPlugin.h>
 @interface AIAddBookmarkPlugin : AIPlugin {
-
+	NSToolbarItem		*addBookmarkToolbarItem;
+	NSMenuItem			*addBookmarkMenuItem;
 }
 
 @end

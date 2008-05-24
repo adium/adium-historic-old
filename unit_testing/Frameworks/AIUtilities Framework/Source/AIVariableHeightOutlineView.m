@@ -73,65 +73,6 @@
 	[super dealloc];
 }
 
-//Handle mouseDown events to toggle expandable items when they are clicked
-- (void)mouseDown:(NSEvent *)theEvent
-{
-	NSPoint	viewPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-	int		row = [self rowAtPoint:viewPoint];
-	id		item = [self itemAtRow:row];
-
-	//Expand/Collapse groups on mouse DOWN instead of mouse up (Makes it feel a ton faster)
-	if ((item) &&
- 	   ([self isExpandable:item]) &&
- 	   (viewPoint.x < [self frameOfCellAtColumn:0 row:row].size.height)) {
-		//XXX - This is kind of a hack.  We need to check < WidthOfDisclosureTriangle, and are using the fact that
-		//      the disclosure width is about the same as the height of the row to fudge it. -ai
-
-		if ([self isItemExpanded:item]) {
-			[self collapseItem:item];
-		} else {
-			[self expandItem:item];
-		}
-	} else {
-		[super mouseDown:theEvent];
-	}
-
-//	if ((expandOnClick) &&
-//	   (item) &&
-//	   ([self isExpandable:item]) &&
-//	   (viewPoint.x < [self frameOfCellAtColumn:0 row:row].size.width)) {
-//
-//		NSEvent *nextEvent;
-//		BOOL	itemIsExpanded;
-//
-//		//Store the current expanded state
-//		itemIsExpanded = [self isItemExpanded:item];
-//
-//		//Wait for the next event - don't dequeue it so it will be handled as normal
-//		nextEvent = [[self window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask)
-//											   untilDate:[NSDate distantFuture]
-//												  inMode:NSEventTrackingRunLoopMode
-//												 dequeue:NO];
-//		//Handle the original event
-//		[super mouseDown:theEvent];
-//
-//		if ([nextEvent type] == NSLeftMouseUp) {
-//			//If they pressed and released, expand/collapse the item unless mouseDown: already did
-//			BOOL itemIsNowExpanded = [self isItemExpanded:item];
-//
-//			if (itemIsNowExpanded == itemIsExpanded) {
-//				if (itemIsNowExpanded) {
-//					[self collapseItem:item];
-//				} else {
-//					[self expandItem:item];
-//				}
-//			}
-//		}
-//
-//	} else {
-//		[super mouseDown:theEvent];
-//	}
-}
 //Row height cache -----------------------------------------------------------------------------------------------------
 #pragma mark Row height cache
 - (void)resetRowHeightCache
@@ -190,26 +131,38 @@
 }
 
 #pragma mark Drawing
+// Consider all rows by default.
+- (BOOL)shouldResetAlternating:(int)row
+{
+	return NO;
+}
+
 - (void)drawAlternatingRowsInRect:(NSRect)rect
 {
 	/* Draw the alternating rows.  If we draw alternating rows, the cell in the first column
 	 * can optionally suppress drawing.
 	 */
 	if ([self drawsAlternatingRows]) {
-		int numberOfRows = [self numberOfRows];
-		int rectNumber = 0;
+		BOOL alternateColor = YES;
+		int numberOfRows = [self numberOfRows], rectNumber = 0;
 		NSTableColumn *tableColumn = [[self tableColumns] objectAtIndex:0];
-
 		NSRect *gridRects = (NSRect *)malloc(sizeof(NSRect) * numberOfRows);
-		for (int row = 0; row < numberOfRows; row += 2) {
-			if (row < numberOfRows) {
-				id 	cell = [self cellForTableColumn:tableColumn item:[self itemAtRow:row]];
-				if (![cell respondsToSelector:@selector(drawGridBehindCell)] || [cell drawGridBehindCell]) {					
-					NSRect	thisRect = [self rectOfRow:row];
+		
+		for (int row = 0; row < numberOfRows; row++) {
+			id 	cell = [self cellForTableColumn:tableColumn item:[self itemAtRow:row]];
+			
+			if (![self shouldResetAlternating:row]) {
+				alternateColor = !alternateColor;
+			} else {
+				alternateColor = YES;
+			}
+			
+			if (alternateColor &&
+				(![cell respondsToSelector:@selector(drawGridBehindCell)] || [cell drawGridBehindCell])) {
+				NSRect	thisRect = [self rectOfRow:row];
 
-					if (NSIntersectsRect(thisRect, rect)) { 
-						gridRects[rectNumber++] = thisRect;
-					}
+				if (NSIntersectsRect(thisRect, rect)) { 
+					gridRects[rectNumber++] = thisRect;
 				}
 			}
 		}
@@ -218,6 +171,7 @@
 			[[self alternatingRowColor] set];
 			NSRectFillList(gridRects, rectNumber);
 		}
+		
 		free(gridRects);
 	}
 }

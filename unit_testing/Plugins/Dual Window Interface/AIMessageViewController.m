@@ -374,6 +374,14 @@
 }
 
 /*!
+ * @brief The message display controller
+ */
+- (NSObject<AIMessageDisplayController> *)messageDisplayController
+{
+	return messageDisplayController;
+}
+
+/*!
  * @brief Access to our view
  */
 - (NSView *)view
@@ -454,7 +462,7 @@
 
 					break;
 				}
-				case AIChatCanNotSendMessage:
+				case AIChatMayNotBeAbleToSendMessage:
 				{
 					[alert setInformativeText:[NSString stringWithFormat:
 											   AILocalizedString(@"Send Later will send the message the next time both you and %@ are online. Send Now may work if %@ is invisible or is not on your contact list and so only appears to be offline.", "Send Later dialogue explanation text"),
@@ -467,21 +475,36 @@
 					
 					break;
 				}
+				case AIChatCanNotSendMessage:
+				{
+					[alert setInformativeText:[NSString stringWithFormat:
+											   AILocalizedString(@"Send Later will send the message the next time both you and %@ are online.", "Send Later dialogue explanation text"),
+											   formattedUID, formattedUID, formattedUID]];					
+					[alert addButtonWithTitle:AILocalizedString(@"Send Later", nil)];
+					[[[alert buttons] objectAtIndex:0] setKeyEquivalent:@"l"];
+					[[[alert buttons] objectAtIndex:0] setKeyEquivalentModifierMask:0];
+					
+					break;
+				}
 				case AIChatCanSendMessageNow:
 				{
 					//We will never get here.
 					break;
 				}
 			}
-			
-			[alert addButtonWithTitle:AILocalizedString(@"Don't Send", nil)];			 
-			[[[alert buttons] objectAtIndex:2] setKeyEquivalent:@"\E"];
-			[[[alert buttons] objectAtIndex:2] setKeyEquivalentModifierMask:0];
+
+			[alert addButtonWithTitle:AILocalizedString(@"Don't Send", nil)];
+
+			NSButton *dontSendButton = ((messageSendingAbility == AIChatCanNotSendMessage) ?
+										[[alert buttons] objectAtIndex:1] :
+										[[alert buttons] objectAtIndex:2]);
+			[dontSendButton setKeyEquivalent:@"\E"];
+			[dontSendButton setKeyEquivalentModifierMask:0];
 			
 			[alert beginSheetModalForWindow:[view_contents window]
-							  modalDelegate:self
+							  modalDelegate:[self retain] /* Will release after the sheet ends */
 							 didEndSelector:@selector(alertDidEnd:returnCode:contextInfo:)
-								contextInfo:nil];
+								contextInfo:[[NSNumber alloc] initWithInt:messageSendingAbility] /* Will release after the sheet ends */];
 			[alert release];
 
 
@@ -517,18 +540,41 @@
  */ 
 - (void)alertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
+	AIChatSendingAbilityType messageSendingAbility = [(NSNumber *)contextInfo intValue];
+
 	switch (returnCode) {
-		case NSAlertFirstButtonReturn: /* Send Now */
-			suppressSendLaterPrompt = YES;
-			[self sendMessage:nil];
+		case NSAlertFirstButtonReturn:
+			/* The AIChatCanNotSendMessage dalogue has Send Later as the first choice;
+			 * all others have Send Now as the first choice.
+			 */
+			if (messageSendingAbility == AIChatCanNotSendMessage) {
+				 /* Send Later */
+				[self sendMessageLater:nil];
+
+			} else {
+				 /* Send Now */
+				suppressSendLaterPrompt = YES;
+				[self sendMessage:nil];
+			}
 			break;
 			
-		case NSAlertSecondButtonReturn: /* Send Later */
-			[self sendMessageLater:nil];
+		case NSAlertSecondButtonReturn:
+			/* The AIChatCanNotSendMessage dalogue has Cancel as the second choice;
+			 * all others have Send Later as the first choice.
+			 */
+			if (messageSendingAbility != AIChatCanNotSendMessage) {
+				/* Send Later */
+				[self sendMessageLater:nil];
+			}			
 			break;
+
 		case NSAlertThirdButtonReturn: /* Don't Send */
 			break;		
 	}
+	
+	//Retained when the alert was created to guard against a crash if the chat tab being closed while we are open
+	[self release];
+	[(NSNumber *)contextInfo release];
 }
 
 /*!
@@ -669,6 +715,8 @@
 			
 		//Redisplay everything
 		[[shelfView contentView] setNeedsDisplay:YES];
+	} else {
+		[view_accountSelection setChat:chat];
 	}
 }
 
@@ -1163,8 +1211,9 @@
  * @brief	toggles the state of the userlist shelf
  */
 -(void)toggleUserlist:(id)sender
-{	
-	[shelfView setShelfIsVisible:![shelfView isShelfVisible]];
+{
+	if ([chat isGroupChat])
+		[shelfView setShelfIsVisible:![shelfView isShelfVisible]];
 }	
 
 #pragma mark Undo

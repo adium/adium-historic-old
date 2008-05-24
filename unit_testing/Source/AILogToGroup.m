@@ -17,6 +17,7 @@
 #import "AILoggerPlugin.h"
 #import "AILogToGroup.h"
 #import "AIChatLog.h"
+#import "AIAbstractLogViewerWindowController.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
 
 @interface AILogToGroup (PRIVATE)
@@ -34,7 +35,7 @@
 		path = [inPath retain];
 		from = [inFrom retain];
 		to = [inTo retain];
-		serviceClass = [inServiceClass retain];
+		serviceClass = [handleSpecialCasesForUIDAndServiceClass(to, inServiceClass) retain];
 		logDict = nil;
 		partialLogDict = nil;
 		
@@ -113,11 +114,8 @@
 			while ((fileName = [enumerator nextObject])) {			
 				if (![fileName hasPrefix:@"."]) {
 					NSString	*relativeLogPath = [path stringByAppendingPathComponent:fileName];
-					BOOL		isDir;
 					
-					if (![logDict objectForKey:relativeLogPath] &&
-						([defaultManager fileExistsAtPath:[logBasePath stringByAppendingPathComponent:relativeLogPath] isDirectory:&isDir] &&
-						 !isDir)) {
+					if (![logDict objectForKey:relativeLogPath]) {
 						AIChatLog	*theLog;
 						
 						theLog = [[AIChatLog alloc] initWithPath:relativeLogPath

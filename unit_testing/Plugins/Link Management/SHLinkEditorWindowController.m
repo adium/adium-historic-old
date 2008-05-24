@@ -16,7 +16,7 @@
 
 #import "SHLinkEditorWindowController.h"
 #import "SHAutoValidatingTextView.h"
-#import <AIHyperlinks/SHLinkLexer.h>
+#import <AutoHyperlinks/AHLinkLexer.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
@@ -116,9 +116,9 @@
 
 			if (linkURL) {
 				//Only use the pasteboard if it contains a valid URL; otherwise it most likely is not intended for us.
-				SHHyperlinkScanner  *laxScanner;
+				AHHyperlinkScanner  *laxScanner;
 				
-				laxScanner = [[SHHyperlinkScanner alloc] initWithStrictChecking:NO];
+				laxScanner = [[AHHyperlinkScanner alloc] initWithStrictChecking:NO];
 				
 				if (![laxScanner isStringValidURL:linkURL]) {
 					linkURL = nil;
@@ -198,10 +198,10 @@
 	
 	//Pre-fix the url if necessary
 	switch ([textView_URL validationStatus]) {
-		case SH_URL_DEGENERATE:
+		case AH_URL_DEGENERATE:
 			[urlString insertString:@"http://" atIndex:0];
 			break;
-		case SH_MAILTO_DEGENERATE:
+		case AH_MAILTO_DEGENERATE:
 			[urlString insertString:@"mailto:" atIndex:0];
 			break;
 		default:

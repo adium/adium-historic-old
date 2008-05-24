@@ -3,7 +3,7 @@
  *  Adium
  *
  *  Created by Evan Schoenberg on 7/31/06.
- *  Copyright 2006 __MyCompanyName__. All rights reserved.
+ *  Copyright 2006 The Adium Team. All rights reserved.
  *
  */
 
@@ -30,6 +30,7 @@
 #define	KEY_STATUS_TYPE							@"Status Type"
 
 #define PREF_GROUP_STATUS_PREFERENCES			@"Status Preferences"
+#define KEY_STATUS_CONVERSATION_COUNT			@"Unread Conversations"
 #define KEY_STATUS_REPORT_IDLE					@"Report Idle"
 #define KEY_STATUS_REPORT_IDLE_INTERVAL			@"Report Idle Interval"
 #define	KEY_STATUS_AUTO_AWAY					@"Auto Away"

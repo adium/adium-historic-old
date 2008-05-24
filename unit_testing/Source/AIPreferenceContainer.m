@@ -31,6 +31,13 @@ static NSMutableDictionary	*accountPrefs = nil;
 static int					usersOfAccountPrefs = 0;
 static NSTimer				*timer_savingOfAccountCache = nil;
 
+static NSConditionLock		*writingLock;
+
+typedef enum {
+	AIReadyToWrite,
+	AIWriting,
+} AIWritingLockState;
+	
 /*!
  * @brief Preference Container
  *
@@ -58,15 +65,41 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 
 + (void)preferenceControllerWillClose
 {
+	//Wait until any threaded save is complete
+	[writingLock lockWhenCondition:AIReadyToWrite];
+
+	//If a save of the object prefs is pending, perform it immediately since we are quitting
 	if (timer_savingOfObjectCache) {
-		[objectPrefs writeToPath:[[[AIObject sharedAdiumInstance] loginController] userDirectory]
-						withName:@"ByObjectPrefs"];
+		@synchronized(objectPrefs) {
+			[objectPrefs writeToPath:[[[AIObject sharedAdiumInstance] loginController] userDirectory]
+							withName:@"ByObjectPrefs"];
+		}
+		/* There's no guarantee that 'will close' is called in the same run loop as the actual program termination.
+		 * We've done our final save, though; don't let the timer fire again.
+		 */
+		@synchronized(timer_savingOfObjectCache) {
+			[timer_savingOfObjectCache invalidate];
+			[timer_savingOfObjectCache release]; timer_savingOfObjectCache = nil;
+		}		
 	}
-	
+
+	//If a save of the account prefs is pending, perform it immediately since we are quitting
 	if (timer_savingOfAccountCache) {
-		[accountPrefs writeToPath:[[[AIObject sharedAdiumInstance] loginController] userDirectory]
-						withName:@"AccountPrefs"];
+		@synchronized(accountPrefs) {
+			[accountPrefs writeToPath:[[[AIObject sharedAdiumInstance] loginController] userDirectory]
+							 withName:@"AccountPrefs"];
+		}
+		/* There's no guarantee that 'will close' is called in the same run loop as the actual program termination.
+		 * We've done our final save, though; don't let the timer fire again.
+		 */		
+		@synchronized(timer_savingOfAccountCache) {
+			[timer_savingOfAccountCache invalidate];
+			[timer_savingOfAccountCache release]; timer_savingOfObjectCache = nil;
+		}		
 	}
+
+	//Relinguish the lock
+	[writingLock unlockWithCondition:AIReadyToWrite];
 }
 
 - (id)initForGroup:(NSString *)inGroup object:(AIListObject *)inObject
@@ -74,7 +107,7 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 	if ((self = [super init])) {
 		group = [inGroup retain];
 		object = [inObject retain];
-		
+		if (!writingLock) writingLock = [[NSConditionLock alloc] initWithCondition:AIReadyToWrite];
 		if (object) {
 			if ([object isKindOfClass:[AIAccount class]]) {
 				myGlobalPrefs = &accountPrefs;
@@ -119,13 +152,21 @@ static NSTimer				*timer_savingOfAccountCache = nil;
  */
 - (void)emptyCache:(NSTimer *)inTimer
 {
-	if (object) (*myUsersOfGlobalPrefs)--;
+	if (object) {
+		@synchronized(*myGlobalPrefs) {
+			(*myUsersOfGlobalPrefs)--;
+			
+			[prefs release]; prefs = nil;
+			[prefsWithDefaults release]; prefsWithDefaults = nil;
+			
+			if ((*myUsersOfGlobalPrefs) == 0) {
+				[*myGlobalPrefs release]; *myGlobalPrefs = nil;
+			}
+		}
 
-	[prefs release]; prefs = nil;
-	[prefsWithDefaults release]; prefsWithDefaults = nil;
-	
-	if (object && (*myUsersOfGlobalPrefs) == 0) {
-		[*myGlobalPrefs release]; *myGlobalPrefs = nil;
+	} else {
+		[prefs release]; prefs = nil;
+		[prefsWithDefaults release]; prefsWithDefaults = nil;
 	}
 	
 	[timer_clearingOfCache release]; timer_clearingOfCache = nil;
@@ -185,23 +226,45 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 			if (!(*myGlobalPrefs)) {
 				NSString	*objectPrefsPath = [[userDirectory stringByAppendingPathComponent:globalPrefsName] stringByAppendingPathExtension:@"plist"];
 				NSData		*data = [NSData dataWithContentsOfFile:objectPrefsPath];
-				NSString	*errorString;
+				NSString	*errorString = nil;
 
 				//We want to load a mutable dictioanry of mutable dictionaries.
-				*myGlobalPrefs = [[NSPropertyListSerialization propertyListFromData:data 
-																   mutabilityOption:NSPropertyListMutableContainers 
-																			 format:NULL 
-																   errorDescription:&errorString] retain];
-				if (!*myGlobalPrefs) *myGlobalPrefs = [[NSMutableDictionary alloc] init];
+				if (data) {
+					*myGlobalPrefs = [[NSPropertyListSerialization propertyListFromData:data 
+																	   mutabilityOption:NSPropertyListMutableContainers 
+																				 format:NULL 
+																	   errorDescription:&errorString] retain];
+				}
+				
+				/* Log any error */
+				if (errorString) {
+					NSLog(@"Error reading preferences file %@: %@", objectPrefsPath, errorString);
+					AILogWithSignature(@"Error reading preferences file %@: %@", objectPrefsPath, errorString);
+					[errorString release];
+				}
+				
+				/* If we don't get a dictionary, create a new one */
+				if (!*myGlobalPrefs) {
+					/* This wouldn't be an error if this were a new Adium installation; the below is temporary debug logging. */
+					NSLog(@"WARNING: Unable to parse preference file %@ (data was %@)", objectPrefsPath, data);
+					AILogWithSignature(@"WARNING: Unable to parse preference file %@ (data was %@)", objectPrefsPath, data);
+
+					*myGlobalPrefs = [[NSMutableDictionary alloc] init];
+				}
 			}
 
 			//For compatibility with having loaded individual object prefs from previous version of Adium, we key by the safe filename string
 			NSString *globalPrefsKey = [[object internalObjectID] safeFilenameString];
 			prefs = [[*myGlobalPrefs objectForKey:globalPrefsKey] retain];
 			if (!prefs) {
-				prefs = [[NSMutableDictionary alloc] init];
-				[*myGlobalPrefs setObject:prefs
-								   forKey:globalPrefsKey];
+				/* If this particular object has no dictionary within the global one,
+				 * create it and store it for future use.
+				 */
+				@synchronized(*myGlobalPrefs) {
+					prefs = [[NSMutableDictionary alloc] init];
+					[*myGlobalPrefs setObject:prefs
+									   forKey:globalPrefsKey];
+				}
 			}
 			(*myUsersOfGlobalPrefs)++;
 
@@ -271,7 +334,7 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 		}
 		
 		if (object) {
-			@synchronized (*myGlobalPrefs) {
+			@synchronized(*myGlobalPrefs) {
 				[[self prefs] setValue:value forKey:key];
 			}
 		} else {
@@ -360,15 +423,25 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 - (void)threadedSavePrefs:(NSDictionary *)info
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	
+	//Obtain the lock when no save operations are being performed
+	[writingLock lockWhenCondition:AIReadyToWrite];
+
+	//Set the lock's condition to saving so that other threads (including the main one) know what we're up to
+	[writingLock unlockWithCondition:AIWriting];
+	
 	NSDictionary *sourcePrefsToSave = [info objectForKey:@"PrefsToSave"];
 	NSDictionary *dictToSave;
-	@synchronized (sourcePrefsToSave) {
+	//Don't allow modification of the dictionary while we're copying it...
+	@synchronized(sourcePrefsToSave) {
 		dictToSave = [[NSDictionary alloc] initWithDictionary:sourcePrefsToSave copyItems:YES];
 	}
+	//...and now it's safe to write it out, which may take a little while.
 	[dictToSave writeToPath:[info objectForKey:@"DestinationDirectory"]
 				   withName:[info objectForKey:@"PrefsName"]];
 	[dictToSave release];
 
+	//The timer is not a repeating one, so we can just release it
 	NSTimer *inTimer = [info objectForKey:@"NSTimer"];
 	if (inTimer == timer_savingOfObjectCache) {
 		@synchronized(timer_savingOfObjectCache) {
@@ -380,8 +453,15 @@ static NSTimer				*timer_savingOfAccountCache = nil;
 		}
 	}
 
-	(*myUsersOfGlobalPrefs)--;
+	//We're no longer using global prefs; if nobody is, the main thread will release its in-memory cache later
+	@synchronized(sourcePrefsToSave) {
+		(*myUsersOfGlobalPrefs)--;
+	}
 	
+	//Unlock and note that we're ready to quit
+	[writingLock lockWhenCondition:AIWriting];
+	[writingLock unlockWithCondition:AIReadyToWrite];
+
 	[pool release];
 }
 
