@@ -165,12 +165,12 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	while ((account = [enumerator nextObject])) {
 		/* Store the current status state for use on next launch.
 		 *
-		 * We use the statusObjectForKey:@"StatusState" accessor rather than [account statusState]
+		 * We use the valueForProperty:@"StatusState" accessor rather than [account statusState]
 		 * because we don't want anything besides the account's actual status state.  That is, we don't
 		 * want the default available state if the account doesn't have a state yet, and we want the
 		 * real last-state-which-was-set (not the offline one) if the account is offline.
 		 */
-		AIStatus	*currentStatus = [account statusObjectForKey:@"StatusState"];
+		AIStatus	*currentStatus = [account valueForProperty:@"StatusState"];
 		[account setPreference:((currentStatus && (currentStatus != offlineStatusState)) ?
 								[NSKeyedArchiver archivedDataWithRootObject:currentStatus] :
 								nil)
@@ -610,7 +610,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 		enumerator = [accountArray objectEnumerator];
 		while ((account = [enumerator nextObject])) {
 			// Save the account if we're online or trying to be online.
-			if ([account online] || [[account statusObjectForKey:@"Connecting"] boolValue] || [account statusObjectForKey:@"Waiting to Reconnect"])
+			if ([account online] || [[account valueForProperty:@"Connecting"] boolValue] || [account valueForProperty:@"Waiting to Reconnect"])
 				[accountsToConnect addObject:account];
 		}
 	}
@@ -929,7 +929,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	}
 
 	while ((account = [enumerator nextObject])) {
-		if ([account online] || [account integerStatusObjectForKey:@"Connecting"]) {
+		if ([account online] || [account integerValueForProperty:@"Connecting"]) {
 			AIStatusType statusType = [[account statusState] statusType];
 
 			//If invisibleIsAway, pretend that invisible is away
@@ -999,7 +999,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	}
 	
 	while ((account = [enumerator nextObject])) {
-		if ([account online] || [account integerStatusObjectForKey:@"Connecting"]) {
+		if ([account online] || [account integerValueForProperty:@"Connecting"]) {
 			AIStatus	*statusState = [account statusState];
 			AIStatusType statusType = [statusState statusType];
 			

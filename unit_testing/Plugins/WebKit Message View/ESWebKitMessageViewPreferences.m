@@ -95,7 +95,7 @@
 	[popUp_styles setMenu:[self _stylesMenu]];
 	
 	//Other controls
-	[fontPreviewField_currentFont setShowFontFace:NO];
+	[fontPreviewField_currentFont setShowFontFace:YES];
 	[fontPreviewField_currentFont setShowPointSize:YES];
 
 	//We want to be able to obtain bigger images than the image picker will feed us
@@ -184,8 +184,15 @@
 		}
 		
 		//Configure our style-specific controls to represent the current style
-		NSFont	*defaultFont = [NSFont cachedFontWithName:[prefDict objectForKey:[plugin styleSpecificKey:@"FontFamily" forStyle:style]]
-													 size:[[prefDict objectForKey:[plugin styleSpecificKey:@"FontSize" forStyle:style]] intValue]];
+		NSString	*fontFamily = [prefDict objectForKey:[plugin styleSpecificKey:@"FontFamily" forStyle:style]];
+		if (!fontFamily) fontFamily = [[plugin messageStyleBundleWithIdentifier:style] objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_FAMILY];
+		if (!fontFamily) fontFamily = [[NSFont systemFontOfSize:0] familyName];
+		
+		NSNumber	*fontSize = [prefDict objectForKey:[plugin styleSpecificKey:@"FontSize" forStyle:style]];
+		if (!fontSize) fontSize = [[plugin messageStyleBundleWithIdentifier:style] objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_SIZE];
+		if (!fontSize) fontSize = [NSNumber numberWithInt:[[NSFont systemFontOfSize:0] pointSize]];
+
+		NSFont	*defaultFont = [NSFont cachedFontWithName:fontFamily size:[fontSize intValue]];
 		[fontPreviewField_currentFont setFont:defaultFont];
 
 		//Style-specific background prefs
@@ -536,8 +543,8 @@
 		
 		//User icon
 		if ((userIconName = [participant objectForKey:@"UserIcon Name"])) {
-			[listContact setStatusObject:[previewPath stringByAppendingPathComponent:userIconName]
-								  forKey:@"UserIconPath"
+			[listContact setValue:[previewPath stringByAppendingPathComponent:userIconName]
+								  forProperty:@"UserIconPath"
 								  notify:YES];
 		}
 		
@@ -643,7 +650,9 @@
 			[content setPostProcessContent:NO];
 			[content setDisplayContentImmediately:NO];
 			
-			[[adium contentController] displayContentObject:content];
+			[[adium contentController] displayContentObject:content
+										usingContentFilters:YES
+												immediately:NO];
 		}
 	}
 

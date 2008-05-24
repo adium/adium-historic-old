@@ -105,16 +105,13 @@
 	AIListObject *containedObject = nil;
 	
 	while ((containedObject = [containedObjectEnumerator nextObject])){
-		if ([containedObject visible]){
-			visibleCount++;
-		} else if ([containedObject isKindOfClass:[AIListGroup class]] && 
-				   ([[adium contactController] isGroupDetached:self])) {
+		if ([containedObject visible]) {
 			visibleCount++;
 		}
 	}
 	
-	[self setStatusObject:(visibleCount ? [NSNumber numberWithInt:visibleCount] : nil)
-				   forKey:@"VisibleObjectCount"
+	[self setValue:(visibleCount ? [NSNumber numberWithInt:visibleCount] : nil)
+				   forProperty:@"VisibleObjectCount"
 				   notify:NotifyNow];
 }
 
@@ -224,8 +221,8 @@
 		}
 		
 		//
-		[self setStatusObject:[NSNumber numberWithInt:[containedObjects count]] 
-					   forKey:@"ObjectCount"
+		[self setValue:[NSNumber numberWithInt:[containedObjects count]] 
+					   forProperty:@"ObjectCount"
 					   notify:NotifyNow];
 		
 		success = YES;
@@ -247,8 +244,8 @@
 		[self _recomputeVisibleCount];
 
 		//
-		[self setStatusObject:[NSNumber numberWithInt:[containedObjects count]]
-					   forKey:@"ObjectCount" 
+		[self setValue:[NSNumber numberWithInt:[containedObjects count]]
+					   forProperty:@"ObjectCount" 
 					   notify:NotifyNow];
 	}
 }
@@ -273,11 +270,8 @@
 }
 
 - (BOOL)moveAllGroupsFrom:(AIListGroup *)fromContactList to:(AIListGroup *)toContactList {
-	NSEnumerator *groups = [containedObjects objectEnumerator];
-	AIListGroup *group;
-	
-	while ((group = [groups nextObject]))
-		[group moveGroupTo:toContactList];
+	[[[containedObjects copy] autorelease] makeObjectsPerformSelector:@selector(moveGroupTo:)
+														   withObject:toContactList];
 	
 	return YES;
 }

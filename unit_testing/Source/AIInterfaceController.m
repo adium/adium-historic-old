@@ -18,6 +18,7 @@
 
 #import "AIInterfaceController.h"
 
+#import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
@@ -42,8 +43,11 @@
 #import <Adium/AIService.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AISortController.h>
+#import "AIMessageTabViewItem.h"
 #import "KFTypeSelectTableView.h"
 #import <KNShelfSplitview.h>
+
+#import "AIMessageViewController.h"
 
 #define ERROR_MESSAGE_WINDOW_TITLE		AILocalizedString(@"Adium : Error","Error message window title")
 #define LABEL_ENTRY_SPACING				4.0
@@ -63,6 +67,9 @@
 - (NSAttributedString *)_tooltipBodyForObject:(AIListObject *)object;
 - (void)_pasteWithPreferredSelector:(SEL)preferredSelector sender:(id)sender;
 - (void)updateCloseMenuKeys;
+
+- (void)saveContainers;
+- (void)restoreSavedContainers;
 
 //Window Menu
 - (void)updateActiveWindowMenuItem;
@@ -160,7 +167,7 @@
 
 	//Open the contact list window
     [self showContactList:nil];
-
+	
 	//Userlist show/hide item
 	menuItem_toggleUserlist = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Toggle User List", nil)
 																							 target:self
@@ -183,15 +190,24 @@
 															 keyEquivalent:@""];
 	[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Tab_Action];
 	[menuItem release];
-	
-	//Observe preference changes
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_INTERFACE];
 
     //Observe content so we can open chats as necessary
     [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) 
 									   name:CONTENT_MESSAGE_RECEIVED object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) 
-									   name:CONTENT_MESSAGE_RECEIVED_GROUP object:nil];	
+									   name:CONTENT_MESSAGE_RECEIVED_GROUP object:nil];
+	
+	//Observe Adium finishing loading so we can do things which may require other components or plugins
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(adiumDidFinishLoading:)
+									   name:AIApplicationDidFinishLoadingNotification
+									 object:nil];
+	
+	//Observe quits so we can save containers.
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(saveContainersOnQuit:)
+									   name:AIAppWillTerminateNotification
+									 object:nil];
 }
 
 - (void)controllerWillClose
@@ -218,6 +234,16 @@
     [super dealloc];
 }
 
+- (void)adiumDidFinishLoading:(NSNotification *)inNotification
+{
+	//Observe preference changes. This will also restore saved containers if appropriate.
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_INTERFACE];
+	
+	[[adium notificationCenter] removeObserver:self
+										  name:AIApplicationDidFinishLoadingNotification
+										object:nil];
+}
+
 //Registers code to handle the interface
 - (void)registerInterfaceController:(id <AIInterfaceComponent>)inController
 {
@@ -234,18 +260,32 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	//
-	[[adium notificationCenter] removeObserver:self name:Contact_OrderChanged object:nil];
+	if (!object) {
+		//Update prefs
+		tabbedChatting = [[prefDict objectForKey:KEY_TABBED_CHATTING] boolValue];
+		groupChatsByContactGroup = [[prefDict objectForKey:KEY_GROUP_CHATS_BY_GROUP] boolValue];
+		saveContainers = [[prefDict objectForKey:KEY_SAVE_CONTAINERS] boolValue];
 	
-	//Update prefs
-	tabbedChatting = [[prefDict objectForKey:KEY_TABBED_CHATTING] boolValue];
-	groupChatsByContactGroup = [[prefDict objectForKey:KEY_GROUP_CHATS_BY_GROUP] boolValue];
+		if (firstTime) {
+			if (saveContainers) {
+				//Restore saved containers
+				[self restoreSavedContainers];	
+			} else if ([prefDict objectForKey:KEY_CONTAINERS]) {
+				/* We've loaded without wanting to save containers; clear any saved
+				 * from a previous session.
+				 */
+				[[adium preferenceController] setPreference:nil
+													 forKey:KEY_CONTAINERS
+													  group:PREF_GROUP_INTERFACE];
+			}
+		}
+	}
 }
 
 //Handle a reopen/dock icon click
 - (BOOL)handleReopenWithVisibleWindows:(BOOL)visibleWindows
 {
-	if (![self contactListIsVisibleAndMain] && [[interfacePlugin openContainers] count] == 0) {
+	if (![self contactListIsVisibleAndMain] && [[interfacePlugin openContainerIDs] count] == 0) {
 		//The contact list is not visible, and there are no chat windows. Make the contact list visible.
 		[self showContactList:nil];
 
@@ -349,10 +389,133 @@
 /*!
  * @returns Created contact list controller for detached contact list
  */
-- (AIListWindowController *)detachContactList:(AIListGroup *)aContactList {
+- (AIListWindowController *)detachContactList:(AIListGroup *)aContactList
+{
 	return [contactListPlugin detachContactList:aContactList];
 }
 
+
+#pragma mark Container Saving
+/*!
+ * @brief Restores containers saved from a previous session
+ */
+- (void)restoreSavedContainers
+{
+	NSData				*savedData = [[adium preferenceController] preferenceForKey:KEY_CONTAINERS
+																	group:PREF_GROUP_INTERFACE];
+	
+	// If there's no data, we can't restore anything.
+	if (!savedData)
+		return;
+
+	NSEnumerator		*enumerator = [[NSKeyedUnarchiver unarchiveObjectWithData:savedData] objectEnumerator];
+	NSDictionary		*dict;
+	
+	while ((dict = [enumerator nextObject])) {
+		AIMessageWindowController *windowController = [self openContainerWithID:[dict objectForKey:@"ID"]
+																 name:[dict objectForKey:@"Name"]];
+		
+		// Position the container where it was last saved (using -savedFrameFromString: to prevent going offscreen)
+		[[windowController window] setFrame:[windowController savedFrameFromString:[dict objectForKey:@"Frame"]] display:YES];
+		
+		NSEnumerator			*chatEnumerator = [[dict objectForKey:@"Content"] objectEnumerator];
+		NSDictionary			*chatDict;
+		
+		while ((chatDict = [chatEnumerator nextObject])) {
+			AIChat			*chat = nil;
+			AIService		*service = [[adium accountController] firstServiceWithServiceID:[chatDict objectForKey:@"serviceID"]];
+			AIAccount		*account = [[adium accountController] accountWithInternalObjectID:[chatDict objectForKey:@"AccountID"]];
+				
+			if ([[chatDict objectForKey:@"IsGroupChat"] boolValue]) {
+				chat = [[adium chatController] chatWithName:[chatDict objectForKey:@"Name"]
+												 identifier:nil
+												  onAccount:account
+										   chatCreationInfo:[chatDict objectForKey:@"ChatCreationInfo"]];
+			} else {
+				AIListContact		*contact = [[adium contactController] contactWithService:service
+																				account:account
+																					UID:[chatDict objectForKey:@"UID"]];
+				
+				chat = [[adium chatController] chatWithContact:contact];
+			}
+			
+			// Tag the chat as restored.
+			[chat setValue:[NSNumber numberWithBool:YES]
+			   forProperty:@"Restored Chat"
+					notify:NotifyNow];
+					
+			// Open the chat into the container we've created above.
+			[self openChat:chat inContainerWithID:[dict objectForKey:@"ID"] atIndex:-1];
+		}
+	}
+}
+
+/*!
+ * @brief Saves open container information with their content when Adium quits
+ */
+- (void)saveContainersOnQuit:(NSNotification *)notification
+{
+	[self saveContainers];
+}
+
+/*!
+ * @brief Save opened containers and windows
+ *
+ * @param withContent Save the current buffer of the window to restore at a later point
+ */
+- (void)saveContainers
+{
+	if (!saveContainers) {
+		// Don't save anything if we're not set to.
+		return;
+	}
+	
+	// Save active containers.
+	NSMutableArray		*savedContainers = [NSMutableArray array];
+	NSEnumerator		*enumerator = [[interfacePlugin openContainersAndChats] objectEnumerator];
+	NSDictionary		*dict;
+	
+	while ((dict = [enumerator nextObject])) {
+		NSMutableArray		*containerContents = [NSMutableArray array];
+		NSEnumerator		*containedEnumerator = [[dict objectForKey:@"Content"] objectEnumerator];
+		AIChat				*chat;
+		
+		while ((chat = [containedEnumerator nextObject])) {
+			NSMutableDictionary		*newContainerDict = [NSMutableDictionary dictionary];
+
+			[newContainerDict setObject:[[chat account] internalObjectID] forKey:@"AccountID"];
+
+			// Save chat-specific information.
+			if ([chat isGroupChat]) {
+				// -chatCreationDictionary may be nil, so put it last.
+				[newContainerDict addEntriesFromDictionary:[NSDictionary dictionaryWithObjectsAndKeys:
+															[NSNumber numberWithBool:YES], @"IsGroupChat",
+															[chat name], @"Name",
+															[chat chatCreationDictionary], @"ChatCreationInfo",nil]];
+			} else {
+				[newContainerDict addEntriesFromDictionary:[NSDictionary dictionaryWithObjectsAndKeys:
+															[[chat listObject] UID], @"UID",
+															[[chat listObject] serviceID], @"serviceID",
+															[[chat account] internalObjectID], @"AccountID",nil]];
+			}
+			
+			[containerContents addObject:newContainerDict];
+		}
+		
+		// Replace the "Content" key in -openContainersAndChats with our version of the content.
+		// We use the same keys otherwise that -openContainersAndChats provides (Name, ID, Frame)
+		NSMutableDictionary *saveDict = [[dict mutableCopy] autorelease];
+		
+		[saveDict setObject:containerContents
+					 forKey:@"Content"];
+		
+		[savedContainers addObject:saveDict];
+	}
+	
+	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:savedContainers]
+										 forKey:KEY_CONTAINERS
+										  group:PREF_GROUP_INTERFACE];
+}
 
 //Messaging ------------------------------------------------------------------------------------------------------------
 //Methods for instructing the interface to provide a representation of chats, and to determine which chat has user focus
@@ -363,7 +526,7 @@
  */
 - (void)openChat:(AIChat *)inChat
 {
-	NSArray		*containers = [interfacePlugin openContainersAndChats];
+	NSArray		*containerIDs = [interfacePlugin openContainerIDs];
 	NSString	*containerID = nil;
 	NSString	*containerName = nil;
 	
@@ -395,8 +558,8 @@
 	
 	if (!containerID) {
 		//Open new chats into the first container (if not available, create a new one)
-		if ([containers count] > 0) {
-			containerID = [[containers objectAtIndex:0] objectForKey:@"ID"];
+		if ([containerIDs count] > 0) {
+			containerID = [containerIDs objectAtIndex:0];
 		} else {
 			containerID = nil;
 		}
@@ -414,12 +577,12 @@
 
 - (id)openChat:(AIChat *)inChat inContainerWithID:(NSString *)containerID atIndex:(int)index
 {	
-	NSArray		*containers = [interfacePlugin openContainersAndChats];
+	NSArray		*openContainerIDs = [interfacePlugin openContainerIDs];
 
 	if (!containerID) {
 		//Open new chats into the first container (if not available, create a new one)
-		if ([containers count] > 0) {
-			containerID = [[containers objectAtIndex:0] objectForKey:@"ID"];
+		if ([openContainerIDs count] > 0) {
+			containerID = [openContainerIDs objectAtIndex:0];
 		} else {
 			containerID = AILocalizedString(@"Chats",nil);
 		}
@@ -441,7 +604,7 @@
  *
  * Asks the interfacePlugin to openContainerWithID:
  */
-- (id)openContainerWithID:(NSString *)containerID name:(NSString *)containerName
+- (AIMessageWindowController *)openContainerWithID:(NSString *)containerID name:(NSString *)containerName
 {
 	return [interfacePlugin openContainerWithID:containerID name:containerName];
 }
@@ -466,8 +629,8 @@
 - (void)consolidateChats
 {
 	//We work with copies of these arrays, since moving chats may change their contents
-	NSArray			*openContainers = [[interfacePlugin openContainers] copy];
-	NSEnumerator	*containerEnumerator = [openContainers objectEnumerator];
+	NSArray			*openContainerIDs = [[interfacePlugin openContainerIDs] copy];
+	NSEnumerator	*containerEnumerator = [openContainerIDs objectEnumerator];
 	NSString		*firstContainerID = [containerEnumerator nextObject];
 	NSString		*containerID;
 	
@@ -489,7 +652,7 @@
 	
 	[self chatOrderDidChange];
 	
-	[openContainers release];
+	[openContainerIDs release];
 }
 
 - (void)moveChatToNewContainer:(AIChat *)inChat
@@ -541,9 +704,9 @@
 	return _cachedOpenChats;
 }
 
-- (NSArray *)openContainers
+- (NSArray *)openContainerIDs
 {
-	return [interfacePlugin openContainers];
+	return [interfacePlugin openContainerIDs];
 }
 
 /*!
@@ -571,7 +734,9 @@
 //changing order, etc.
 #pragma mark Interface plugin callbacks
 /*!
- * @breif A chat window did open: rebuild our window menu to show the new chat
+ * @brief A chat window did open: rebuild our window menu to show the new chat
+ *
+ * This should be called by the interface plugin (e.g. AIDualWindowInterfacePlugin) after a chat opens
  *
  * @param inChat Newly created chat 
  */
@@ -579,6 +744,7 @@
 {
 	[self _resetOpenChatsCache];
 	[self buildWindowMenu];
+	[self saveContainers];
 }
 
 /*!
@@ -665,6 +831,11 @@
 	[inChat clearUnviewedContentCount];
 	[self buildWindowMenu];
 	
+	if (![adium isQuitting]) {
+		// Don't save containers when the chats are closed while quitting
+		[self saveContainers];
+	}
+	
 	if (inChat == activeChat) {
 		[activeChat release]; activeChat = nil;
 	}
@@ -681,6 +852,12 @@
 {
 	[self _resetOpenChatsCache];
 	[self buildWindowMenu];
+
+	if (![adium isQuitting]) {
+		// Don't save containers when the chats are closed while quitting
+		[self saveContainers];
+	}
+	
 	[[adium notificationCenter] postNotificationName:Chat_OrderDidChange object:nil userInfo:nil];
 	
 }

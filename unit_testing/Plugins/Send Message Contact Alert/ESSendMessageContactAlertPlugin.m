@@ -132,14 +132,16 @@
 		if (useAnotherAccount) {
 			account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
 																			 toContact:contact];
-			//Repeat the refinement process using the newly retrieved account
-			if ([contact isKindOfClass:[AIMetaContact class]]) {
-				contact = [(AIMetaContact *)contact preferredContactWithCompatibleService:[account service]];
-				
-			} else if ([contact isKindOfClass:[AIListContact class]]) {
-				contact = [[adium contactController] contactWithService:[contact service]
-																account:account 
-																	UID:[contact UID]];
+			if (account) {
+				//Repeat the refinement process using the newly retrieved account
+				if ([contact isKindOfClass:[AIMetaContact class]]) {
+					contact = [(AIMetaContact *)contact preferredContactWithCompatibleService:[account service]];
+					
+				} else if ([contact isKindOfClass:[AIListContact class]]) {
+					contact = [[adium contactController] contactWithService:[contact service]
+																	account:account 
+																		UID:[contact UID]];
+				}
 			}
 		} else {
 			account = nil;

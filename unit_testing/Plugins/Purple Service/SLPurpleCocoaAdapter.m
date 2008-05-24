@@ -440,10 +440,10 @@ PurpleConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					/*
 					 If we don't have a PurpleChat with this name on this account, we need to create one.
 					 Our chat, which should have been created via the Adium Join Chat API, should have
-					 a ChatCreationInfo status object with the information we need to ask Purple to
+					 a ChatCreationInfo property with the information we need to ask Purple to
 					 perform the join.
 					 */
-					NSDictionary	*chatCreationInfo = [chat statusObjectForKey:@"ChatCreationInfo"];
+					NSDictionary	*chatCreationInfo = [chat valueForProperty:@"ChatCreationInfo"];
 					chatCreationInfo = [(CBPurpleAccount *)[chat account] willJoinChatUsingDictionary:chatCreationInfo];
 
 					if (!chatCreationInfo) {
@@ -521,6 +521,7 @@ PurpleConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					 */
 					AILog(@"In the event of an emergency, your GHashTable may be used as a flotation device...");
 					serv_join_chat(gc, components);
+					g_hash_table_unref(components);
 				}
 			}
 		}

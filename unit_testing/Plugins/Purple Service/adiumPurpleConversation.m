@@ -42,12 +42,14 @@ static void adiumPurpleConvDestroy(PurpleConversation *conv)
 	/* Purple is telling us a conv was destroyed.  We've probably already cleaned up, but be sure in case purple calls this
 	 * when we don't ask it to (for example if we are summarily kicked from a chat room and purple closes the 'window').
 	 */
-	AIChat *chat;
+	AIChat *chat = (AIChat *)conv->ui_data;
 
-	chat = (AIChat *)conv->ui_data;
+	AILogWithSignature(@"%p: %@", conv, chat);
 
 	//Chat will be nil if we've already cleaned up, at which point no further action is needed.
 	if (chat) {
+		[accountLookup(purple_conversation_get_account(conv)) chatWasDestroyed:chat];
+
 		[chat setIdentifier:nil];
 		[chat release];
 		conv->ui_data = nil;
@@ -72,27 +74,24 @@ static void adiumPurpleConvWriteChat(PurpleConversation *conv, const char *who,
 			  purple_conversation_get_name(conv),
 			  purple_conv_chat_get_nick(PURPLE_CONV_CHAT(conv)),
 			  messageString);
-		if (!who || (flags & PURPLE_MESSAGE_DELAYED) || (strcmp(who, purple_conv_chat_get_nick(PURPLE_CONV_CHAT(conv))) &&
-													   strcmp(who, purple_account_get_username(purple_conversation_get_account(conv))))) {
-			NSAttributedString	*attributedMessage = [AIHTMLDecoder decodeHTML:messageString];
-			NSNumber			*purpleMessageFlags = [NSNumber numberWithInt:flags];
-			NSDate				*date = [NSDate dateWithTimeIntervalSince1970:mtime];
+
+		NSAttributedString	*attributedMessage = [AIHTMLDecoder decodeHTML:messageString];
+		NSNumber			*purpleMessageFlags = [NSNumber numberWithInt:flags];
+		NSDate				*date = [NSDate dateWithTimeIntervalSince1970:mtime];
+		
+		if (who && strlen(who)) {
+			messageDict = [NSDictionary dictionaryWithObjectsAndKeys:attributedMessage, @"AttributedMessage",
+						   [NSString stringWithUTF8String:who], @"Source",
+						   purpleMessageFlags, @"PurpleMessageFlags",
+						   date, @"Date",nil];
 			
-			if (who && strlen(who)) {
-				messageDict = [NSDictionary dictionaryWithObjectsAndKeys:attributedMessage, @"AttributedMessage",
-					[NSString stringWithUTF8String:who], @"Source",
-					purpleMessageFlags, @"PurpleMessageFlags",
-					date, @"Date",nil];
-				
-			} else {
-				messageDict = [NSDictionary dictionaryWithObjectsAndKeys:attributedMessage, @"AttributedMessage",
-					purpleMessageFlags, @"PurpleMessageFlags",
-					date, @"Date",nil];
-			}
-			
-			[accountLookup(purple_conversation_get_account(conv)) receivedMultiChatMessage:messageDict
-															inChat:groupChatLookupFromConv(conv)];
+		} else {
+			messageDict = [NSDictionary dictionaryWithObjectsAndKeys:attributedMessage, @"AttributedMessage",
+						   purpleMessageFlags, @"PurpleMessageFlags",
+						   date, @"Date",nil];
 		}
+
+		[accountLookup(purple_conversation_get_account(conv)) receivedMultiChatMessage:messageDict inChat:groupChatLookupFromConv(conv)];
 	}
 }
 

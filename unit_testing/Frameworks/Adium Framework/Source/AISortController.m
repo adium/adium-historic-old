@@ -77,7 +77,7 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 //Sort Logic -------------------------------------------------------------------------------------------------------
 #pragma mark Sort Logic
 /*!
- * @brief Should we resort for a set of changed status keys?
+ * @brief Should we resort for a set of changed properties?
  *
  * @param inModifiedKeys NSSet of NSString keys to test
  * @result YES if we need to resort
@@ -299,7 +299,7 @@ int basicGroupVisibilitySort(id objectA, id objectB, void *context)
 - (NSString *)displayName{ return nil; };
 
 /*!
- * @brief Status keys which, when changed, should trigger a resort
+ * @brief Properties which, when changed, should trigger a resort
  */
 - (NSSet *)statusKeysRequiringResort{ return nil; };
 

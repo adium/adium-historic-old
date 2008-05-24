@@ -200,8 +200,8 @@
 			if (!delegateRespondsToShouldIncludeContact || [delegate contactMenu:self shouldIncludeContact:(AIListContact *)listObject]) {
 				if (delegateRespondsToValidateContact)
 					listObject = [delegate contactMenu:self validateContact:(AIListContact *)listObject];
-	
-				[listObjectArray addObject:listObject];
+				if (listObject)
+					[listObjectArray addObject:listObject];
 			}
 
 		} else if ([listObject isKindOfClass:[AIListGroup class]]) {

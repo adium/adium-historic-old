@@ -25,6 +25,7 @@
 	int							lastUnviewedContentCount;
 	
 	BOOL						shouldBadge;
+	BOOL						showConversationCount;
 }
 
 @end

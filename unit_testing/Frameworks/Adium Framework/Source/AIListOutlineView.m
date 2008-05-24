@@ -15,6 +15,7 @@
  */
 #import "AIContactController.h"
 #import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListCell.h>
 #import <Adium/AIListOutlineView.h>
@@ -24,6 +25,7 @@
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIGradient.h>
 #import <AIUtilities/AIBezierPathAdditions.h>
+#import <AIUtilities/AIEventAdditions.h>
 #import "AISCLViewPlugin.h"
 
 #define MINIMUM_HEIGHT				48
@@ -71,21 +73,42 @@
 	
 	[self setDrawsGradientSelection:YES];
 	[self sizeLastColumnToFit];	
+
+	groupsHaveBackground = NO;
 	
+	[[[AIObject sharedAdiumInstance] preferenceController] registerPreferenceObserver:self
+																			 forGroup:PREF_GROUP_LIST_THEME];
+
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(setUnlockGroup:)
 												 name:@"AIListOutlineViewUnlockGroup" 
 											   object:nil];
+
+
 }
 
 - (void)dealloc
 {	
+	[[[AIObject sharedAdiumInstance] preferenceController] unregisterPreferenceObserver:self];
+	
 	[backgroundImage release];
 	[backgroundColor release];
 	[self unregisterDraggedTypes];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
 	[super dealloc];
+}
+
+- (void)preferencesChangedForGroup:(NSString *)group 
+							   key:(NSString *)key
+							object:(AIListObject *)object 
+					preferenceDict:(NSDictionary *)prefDict 
+						 firstTime:(BOOL)firstTime
+{
+	if (object != nil)
+		return;
+	
+	groupsHaveBackground = [[prefDict objectForKey:KEY_LIST_THEME_GROUP_GRADIENT] boolValue];
 }
 
 //Prevent the display of a focus ring around the contact list in 10.3 and greater
@@ -408,6 +431,12 @@
 	return _rowColorWithOpacity;
 }
 
+// Don't consider list groups when highlighting
+- (BOOL)shouldResetAlternating:(int)row
+{
+	return ([[self itemAtRow:row] isKindOfClass:[AIListGroup class]] && groupsHaveBackground);
+}
+
 - (void)viewWillMoveToSuperview:(NSView *)newSuperview
 {
 	[super viewWillMoveToSuperview:newSuperview];
@@ -474,6 +503,50 @@
 	return -1;
 }
 
+#pragma mark Group expanding
+/*!
+ * @brief Expand or collapses groups on mouse down
+ */
+- (void)mouseDown:(NSEvent *)theEvent
+{
+	NSPoint	viewPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+	int		row = [self rowAtPoint:viewPoint];
+	id		item = [self itemAtRow:row];
+	
+	// Let super handle it if it's not a group, or the command key is down (dealing with selection)
+	// Allow clickthroughs for triangle disclosure only.
+	if (![item isKindOfClass:[AIListGroup class]] || [NSEvent cmdKey]) {
+		[super mouseDown:theEvent];
+		return;
+	}
+	
+	//Wait for the next event
+	NSEvent *nextEvent = [[self window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask)
+													untilDate:[NSDate distantFuture]
+													   inMode:NSEventTrackingRunLoopMode
+													  dequeue:NO];
+	
+	// Only expand/contract if they release the mouse. Otherwise pass on the goods.
+	switch ([nextEvent type]) {
+		case NSLeftMouseUp:
+				if ([self isItemExpanded:item]) {
+					[self collapseItem:item]; 
+				} else {
+					[self expandItem:item]; 
+				}
+				
+				[self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO]; 
+			break;
+		case NSLeftMouseDragged:
+			[super mouseDown:theEvent];
+			[super mouseDragged:nextEvent];
+			break;
+		default:
+			[super mouseDown:theEvent];
+			break;
+	}	
+}
+
 #pragma mark Drag & Drop Drawing
 /*!
  * @brief Called by NSOutineView to draw a drop highight
@@ -524,40 +597,57 @@
 	//From previous implementation - still needed?
 	[[sender draggingDestinationWindow] makeKeyAndOrderFront:self];
 
-	return [super draggingEntered:sender];
+	if ([[[sender draggingPasteboard] types] containsObject:@"AIListObjectUniqueIDs"]) {
+		return NSDragOperationMove;
+	} else {
+		return [super draggingEntered:sender];
+	}
 }
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {
+	if (NSPointInRect([sender draggingLocation], [[[self window] contentView] frame])) {
+		return;
+	}
+	
 	unlockingGroup = YES;
 	dragContent = [sender draggingPasteboard];
-	
+
 	// Tell other windows that something may be dropped in them
 	[[NSNotificationCenter defaultCenter] postNotificationName:@"AIListOutlineViewUnlockGroup"
 														object:[NSNumber numberWithBool:unlockingGroup]];
 	[super draggingExited:sender];
 }
 
+- (NSDragOperation)draggingSourceOperationMaskForLocal:(BOOL)isLocal
+{
+	return (NSDragOperationCopy | NSDragOperationMove | NSDragOperationPrivate);
+}
+
 - (void)draggedImage:(NSImage *)anImage endedAt:(NSPoint)aPoint operation:(NSDragOperation)operation
 {
-	NSArray					*dragUniqueIDs = nil;	// Items being dragged
-	NSEnumerator			*idEnumerator = nil;	
-	NSString				*uID = nil;				// Current group being dragged ID
+	NSArray			*dragUniqueIDs = nil;	// Items being dragged
+	NSEnumerator	*idEnumerator = nil;	
+	NSString		*uID = nil;				// Current group being dragged ID
 	
-	AIListGroup				*newContactList = nil;	// New contact list to be created
-	AIListGroup				*currentGroup = nil;	// Current group being dragged
+	AIListGroup		*newContactList = nil;	// New contact list to be created
+	AIListGroup		*currentGroup = nil;	// Current group being dragged
 	
-	id<AIInterfaceController>		interfaceController = [[AIObject sharedAdiumInstance] interfaceController];
-	id<AIContactController>			contactController = [[AIObject sharedAdiumInstance] contactController];
-
 	//If nothing is being dragged, stop now.
 	//How would this happen? -evands
 	if (!dragContent)
 		return;
 	
+	//The drag was canceled
+	if (operation == NSDragOperationNone)
+		return;
+
+	id<AIInterfaceController>		interfaceController = [[AIObject sharedAdiumInstance] interfaceController];
+	id<AIContactController>			contactController = [[AIObject sharedAdiumInstance] contactController];
+	
+	
 	// Group being unlocked from current location
-	if(unlockingGroup && [[dragContent types] containsObject:@"AIListObjectUniqueIDs"])
-	{
+	if (unlockingGroup && [[dragContent types] containsObject:@"AIListObjectUniqueIDs"]) {
 		dragUniqueIDs = [dragContent propertyListForType:@"AIListObjectUniqueIDs"];
 		idEnumerator = [dragUniqueIDs objectEnumerator];
 
@@ -566,22 +656,21 @@
 			
 			if ([currentGroup isKindOfClass:[AIListGroup class]]) {
 				// If root of contact list was not yet created, create it now
-				if(!newContactList){
+				if (!newContactList)
 					newContactList = [contactController createDetachedContactList];
-				}
+
 				
 				[self moveGroup:currentGroup to:newContactList];
 			}	
 		}
 		
-		// If new contact list was created
-		if(newContactList) {
-			// Update new contact list
+		if (newContactList) {
+			// Update the new contact list
 			[[NSNotificationCenter defaultCenter] postNotificationName:@"Contact_ListChanged"
 																object:newContactList
 															  userInfo:nil];
 			
-			// Create new contact list
+			// Detach the contact list to a window and set its origin
 			[[[interfaceController detachContactList:newContactList] window] setFrameTopLeftPoint:aPoint];
 		}
 	}

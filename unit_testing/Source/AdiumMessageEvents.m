@@ -70,9 +70,9 @@
 		NSString		*type = nil;
 		AIListContact	*listObject = [inChat listObject];
 		
-		if ([inChat statusObjectForKey:KEY_CHAT_ERROR] != nil) {
+		if ([inChat valueForProperty:KEY_CHAT_ERROR] != nil) {
 			
-			AIChatErrorType errorType = [inChat integerStatusObjectForKey:KEY_CHAT_ERROR];
+			AIChatErrorType errorType = [inChat integerValueForProperty:KEY_CHAT_ERROR];
 			type = @"chat-error";
 			
 			switch (errorType) {
@@ -137,10 +137,10 @@
 					break;
 			}
 			
-		} else if ([inChat integerStatusObjectForKey:KEY_CHAT_CLOSED_WINDOW] && listObject) {
+		} else if ([inChat integerValueForProperty:KEY_CHAT_CLOSED_WINDOW] && listObject) {
 			message = [NSString stringWithFormat:AILocalizedString(@"%@ closed the conversation window.",nil),[listObject displayName]];
 			type = @"closed";
-		} else if ([inChat integerStatusObjectForKey:KEY_CHAT_TIMED_OUT] && listObject) {
+		} else if ([inChat integerValueForProperty:KEY_CHAT_TIMED_OUT] && listObject) {
 			message = [NSString stringWithFormat:AILocalizedString(@"The conversation with %@ timed out.",nil),[listObject displayName]];			
 			type = @"timed_out";
 		}

@@ -35,7 +35,8 @@
 	
 	BOOL				unregisterAfterConnecting;
 	BOOL				deletePurpleAccountAfterDisconnecting;
-	
+	BOOL				finishedConnectProcess;
+
 	PurpleConnectionError lastDisconnectionReason;
 }
 
@@ -131,6 +132,8 @@
 - (void)typingUpdateForIMChat:(AIChat *)chat typing:(NSNumber *)typing;
 - (void)updateForChat:(AIChat *)chat type:(NSNumber *)type;
 - (AIChat *)chatWithContact:(AIListContact *)contact identifier:(id)identifier;
+- (void)chatWasDestroyed:(AIChat *)chat;
+- (void)chatJoinDidFail:(AIChat *)chat;
 
 - (void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
 - (void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
@@ -184,6 +187,7 @@
 		  newArrivals:(NSNumber *)newArrivals
 			   toChat:(AIChat *)chat;
 - (NSDictionary *)willJoinChatUsingDictionary:(NSDictionary *)chatCreationDictionary;
+- (BOOL)chatCreationDictionary:(NSDictionary *)chatCreationDict isEqualToDictionary:(NSDictionary *)baseDict;
 
 #pragma mark Privacy
 - (void)privacyPermitListAdded:(NSString *)sourceUID;

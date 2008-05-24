@@ -1,4 +1,4 @@
-/* 
+ /* 
  * Adium is the legal property of its developers, whose names are listed in the copyright file included
  * with this source distribution.
  * 
@@ -95,6 +95,16 @@
  *	When disabled, the view will not update when a preferece changes that would require rebuilding the views content
  */
 - (void)setShouldReflectPreferenceChanges:(BOOL)inValue;
+
+/*!
+ * @brief Set the HTML content for the "Chat" area.
+ */
+- (void)setChatContentSource:(NSString *)source;
+
+/*!
+ * @brief Get the HTML content for the "Chat" area.
+ */
+- (NSString *)chatContentSource;
 
 - (void)setPreferencesChangedDelegate:(id)inDelegate;
 @end

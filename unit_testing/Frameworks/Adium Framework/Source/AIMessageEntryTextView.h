@@ -17,10 +17,18 @@
 #import <AIUtilities/AISendingTextView.h>
 #import <Adium/AIAdiumProtocol.h>
 #import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIContactControllerProtocol.h>
 
 @class AIListContact, AIAccount, AIChat;
 
-@interface AIMessageEntryTextView : AISendingTextView <AITextEntryView> {
+@interface AISimpleTextView : NSView {
+	NSAttributedString *string;
+}
+- (void)setString:(NSAttributedString *)inString;
+@end
+
+
+@interface AIMessageEntryTextView : AISendingTextView <AITextEntryView, AIListObjectObserver> {
     NSObject<AIAdium>	*adium;
     AIChat				*chat;
     
@@ -35,7 +43,7 @@
 
     NSMutableArray		*pushArray;
     BOOL                 pushIndicatorVisible;
-    NSButton			*indicator;
+    NSButton			*pushIndicator;
     NSMenu              *pushMenu;
     NSDictionary		*defaultTypingAttributes;
 	
@@ -44,6 +52,9 @@
 	BOOL				 resizing;
     
     NSView              *associatedView;
+	
+	AISimpleTextView	*characterCounter;
+	int					maxCharacters;
 }
 
 //Configure

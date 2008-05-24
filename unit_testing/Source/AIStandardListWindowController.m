@@ -22,6 +22,7 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIRolloverButton.h>
+#import <AIUtilities/AIOutlineViewAdditions.h>
 
 #import <Adium/AIListGroup.h>
 #import <Adium/AIAccountControllerProtocol.h>
@@ -43,6 +44,8 @@
 #import "AIContactListNameButton.h"
 #import "AIContactController.h"
 #import "AIContactHidingController.h"
+
+#import "AISearchFieldCell.h"
 
 #define PREF_GROUP_APPEARANCE		@"Appearance"
 
@@ -66,9 +69,13 @@
  */
 - (void)dealloc
 {
+	[searchField setDelegate:nil];
+	[filterBarAnimation autorelease];
+	[filterBarPreviouslySelected release];
+	
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[[adium notificationCenter] removeObserver:self];
-	
+
 	[super dealloc];
 }
 
@@ -126,7 +133,19 @@
 	filterBarExpandedGroups = NO;
 	filterBarIsVisible = NO;
 	filterBarAnimation = nil;
+	filterBarPreviouslySelected = nil;
 	[searchField setDelegate:self];
+
+	//Substitute an otherwise identical copy of the search field for one of our class. We don't want to globally pose as class; we just want it here.
+	[NSKeyedArchiver setClassName:@"AISearchFieldCell" forClass:[NSSearchFieldCell class]];
+	[searchField setCell:[NSKeyedUnarchiver unarchiveObjectWithData:[NSKeyedArchiver archivedDataWithRootObject:[searchField cell]]]];	
+	[NSKeyedArchiver setClassName:@"NSSearchFieldCell" forClass:[NSSearchFieldCell class]];
+
+	/* Get rid of the "x" button in the search field that would clear the search.
+	 * It conflicts with the other "x" button that hides the entire bar, and clearing a few characters is probably not necessary.
+	 */
+	[[searchField cell] setCancelButtonCell:nil];
+	
 	
 	[[NSNotificationCenter defaultCenter]addObserver:self
 											selector:@selector(hideFilterBarFromWindowResignedMain:)
@@ -873,31 +892,48 @@
 	NSDictionary *targetViewDict, *filterBarDict;
 
 	// Contact list resizing
-	if (filterBarIsVisible) {
-		targetFrame.size.height = targetFrame.size.height + [filterBarView bounds].size.height;
+	if (filterBarIsVisible) {			
+		targetFrame.size.height = NSHeight(targetFrame) + NSHeight([filterBarView bounds]);
+
 	} else {
-		targetFrame.size.height = targetFrame.size.height - [filterBarView bounds].size.height;
+		/* We can only have a height less than the filter bar view if we are autosizing vertically, as
+		 * there is a minimum height otherwise which is larger.  We can therefore increase our window size to allow space
+		 * for the filter bar with impunity and without undoing this when hiding the bar, as the autosizing of the contact
+		 * list will get us back to the right size later.
+		 */
+		if (NSHeight(targetFrame) < (NSHeight([filterBarView bounds]) * 2)) {
+			NSRect windowFrame = [[targetView window] frame];
+			
+			[[targetView window] setFrame:NSMakeRect(NSMinX(windowFrame), NSMinY(windowFrame) - NSHeight([filterBarView bounds]),
+													 NSWidth(windowFrame), NSHeight(windowFrame) + NSHeight([filterBarView bounds]))
+								  display:NO
+								  animate:NO];
+			
+			targetFrame = [targetView frame];			
+		}
+			
+		targetFrame.size.height = NSHeight(targetFrame) - NSHeight([filterBarView bounds]);
 	}
 	
 	// Filter bar resizing
 	if (!filterBarIsVisible) {
 		// If the filter bar isn't already visible
-		[filterBarView setFrame:NSMakeRect(targetFrame.origin.x,
-										   [targetView frame].size.height,
-										   targetFrame.size.width,
-										   [filterBarView bounds].size.height)];
+		[filterBarView setFrame:NSMakeRect(NSMinX(targetFrame),
+										   NSHeight([targetView frame]),
+										   NSWidth(targetFrame),
+										   NSHeight([filterBarView bounds]))];
 
 		// Attach the filter bar to the window
 		[[[self window] contentView] addSubview:filterBarView];
 	}
 	
 	filterBarDict = [NSDictionary dictionaryWithObjectsAndKeys:filterBarView, NSViewAnimationTargetKey,
-					 [NSValue valueWithRect:NSMakeRect(targetFrame.origin.x, targetFrame.size.height,
-													   targetFrame.size.width, [filterBarView bounds].size.height)], NSViewAnimationEndFrameKey, nil];
+					 [NSValue valueWithRect:NSMakeRect(NSMinX(targetFrame), NSHeight(targetFrame),
+													   NSWidth(targetFrame), NSHeight([filterBarView bounds]))], NSViewAnimationEndFrameKey, nil];
 	
 	targetViewDict = [NSDictionary dictionaryWithObjectsAndKeys:targetView, NSViewAnimationTargetKey,
 					  [NSValue valueWithRect:targetFrame], NSViewAnimationEndFrameKey, nil];
-	
+
 	filterBarAnimation = [[NSViewAnimation alloc] initWithViewAnimations:[NSArray arrayWithObjects:targetViewDict, filterBarDict, nil]];
 	[filterBarAnimation setDuration:duration];
 	[filterBarAnimation setAnimationBlockingMode:NSAnimationBlocking];
@@ -925,6 +961,14 @@
 		// Set the first responder back to the contact list view.
 		[[self window] makeFirstResponder:contactListView];
 
+		[contactListView selectItemsInArray:filterBarPreviouslySelected];
+		
+		// Since this wasn't a user-initiated selection change, we need to post a notification for it.
+		[[adium notificationCenter] postNotificationName:Interface_ContactSelectionChanged
+												  object:nil];
+		
+		[filterBarPreviouslySelected release]; filterBarPreviouslySelected = nil;
+		
 		filterBarIsVisible = NO;
 	} else {
 		// If the filter bar wasn't visible, make it the first responder.
@@ -935,6 +979,8 @@
 
 		// Bring the contact list to front, in case the find command was triggered from another window like the info inspector
 		[[self window] makeKeyAndOrderFront:nil];
+		
+		filterBarPreviouslySelected = [[contactListView arrayOfSelectedItems] retain];
 		
 		filterBarIsVisible = YES;
 	}
@@ -1058,6 +1104,9 @@
 		// Since this wasn't a user-initiated selection change, we need to post a notification for it.
 		[[adium notificationCenter] postNotificationName:Interface_ContactSelectionChanged
 												  object:nil];
+		
+		[[searchField cell] setTextColor:nil backgroundColor:nil];
+	
 	} else {
 		// Beep if the user continues appending text to an already not found string, otherwise don't beep.
 		if ([[sender stringValue] length] > [[[[adium contactController] contactHidingController] contactFilteringSearchString] length]) {
@@ -1067,6 +1116,12 @@
 		// Set the search string in the hiding controller, but don't refilter the contacts.
 		[[[adium contactController] contactHidingController] setContactFilteringSearchString:[sender stringValue]
 																			refilterContacts:NO];
+		
+		//White on light red (like Firefox!)
+		[[searchField cell] setTextColor:[NSColor whiteColor] backgroundColor:[NSColor colorWithCalibratedHue:0.983
+																								   saturation:0.43
+																								   brightness:0.99
+																										alpha:1.0]];
 	}
 }
 

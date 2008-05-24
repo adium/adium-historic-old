@@ -311,7 +311,6 @@ static int toArraySort(id itemA, id itemB, void *context);
 	while ((logFromGroup = [enumerator nextObject])) {
 		NSEnumerator	*toEnum;
 		AILogToGroup	*currentToGroup;
-		NSString		*serviceClass = [logFromGroup serviceClass];
 
 		//Add the 'to' for each grouping on this account
 		toEnum = [[logFromGroup toGroupArray] objectEnumerator];
@@ -319,6 +318,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 			NSString	*currentTo;
 			
 			if ((currentTo = [currentToGroup to])) {
+				NSString *serviceClass = [currentToGroup serviceClass];
 				AIListObject *listObject = ((serviceClass && currentTo) ?
 											[[adium contactController] existingListObjectWithUniqueID:[AIListObject internalObjectIDForServiceID:serviceClass
 																																			 UID:currentTo]] :
@@ -730,6 +730,13 @@ static int toArraySort(id itemA, id itemB, void *context);
 		} else if ([[theLog path] hasSuffix:@".chatlog"]){
 			//XML log
 			NSString *logFullPath = [logBasePath stringByAppendingPathComponent:[theLog path]];
+			
+			BOOL isDir;
+			if ([[NSFileManager defaultManager] fileExistsAtPath:logFullPath isDirectory:&isDir]) {
+				/* If we have a chatLog bundle, we want to get the text content for the xml file inside */
+				if (isDir) logFullPath = [logFullPath stringByAppendingPathComponent:
+										 [[[logFullPath lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"xml"]];
+			}
 			
 			//If this log begins with a malformed UTF-8 BOM (which was written out by Adium for a brief time between 1.0b7 and 1.0b8), fix it before trying to read it in.
 			enum {
@@ -2709,6 +2716,48 @@ static int toArraySort(id itemA, id itemB, void *context)
 	
 	if ([inEvent deltaY] == 0)
 		[resultsLock unlock];		
+}
+
+#pragma mark Transcript services special-casing
+NSString *handleSpecialCasesForUIDAndServiceClass(NSString *contactUID, NSString *serviceClass)
+{
+	/* Jabber and its specified derivative services need special handling;
+	 * this is cross-contamination from ESPurpleJabberAccount.
+	 */
+	if ([serviceClass isEqualToString:@"Jabber"] ||
+		[serviceClass isEqualToString:@"GTalk"] ||
+		[serviceClass isEqualToString:@"LiveJournal"]) {
+		
+		if ([contactUID hasSuffix:@"@gmail.com"] ||
+			[contactUID hasSuffix:@"@googlemail.com"]) {
+			serviceClass = @"GTalk";
+			
+		} else if ([contactUID hasSuffix:@"@livejournal.com"]){
+			serviceClass = @"LiveJournal";
+			
+		} else {
+			serviceClass = @"Jabber";
+		}	
+		
+		/* OSCAR and its specified derivative services need special handling;
+		 *  this is cross-contamination from CBPurpleOscarAccount.
+		 */
+	} else if ([serviceClass isEqualToString:@"AIM"] ||
+			   [serviceClass isEqualToString:@"ICQ"] ||
+			   [serviceClass isEqualToString:@"Mac"]) {
+		const char	firstCharacter = ([contactUID length] ? [contactUID characterAtIndex:0] : '\0');
+		
+		//Determine service based on UID
+		if ([contactUID hasSuffix:@"@mac.com"]) {
+			serviceClass = @"Mac";
+		} else if (firstCharacter && (firstCharacter >= '0' && firstCharacter <= '9')) {
+			serviceClass = @"ICQ";
+		} else {
+			serviceClass = @"AIM";
+		}
+	}
+	
+	return serviceClass;
 }
 
 @end

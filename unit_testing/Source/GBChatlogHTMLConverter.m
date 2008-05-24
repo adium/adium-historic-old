@@ -111,6 +111,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	inputFileString = [[NSString alloc] initWithData:inputData encoding:NSUTF8StringEncoding];
 	NSURL *url = [[NSURL alloc] initFileURLWithPath:filePath];
 	output = [[NSMutableString alloc] init];
+	[output appendFormat:@"<head><base href=\"%@\" /></head>", [filePath stringByDeletingLastPathComponent]];
+	
 	showTimestamps = [[options objectForKey:@"showTimestamps"] boolValue];
 	CFXMLParserCallBacks callbacks = {
 		0,

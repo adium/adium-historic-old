@@ -29,6 +29,7 @@
 #import <Adium/AIToolbarControllerProtocol.h>
 #import <Adium/AIContactAlertsControllerProtocol.h>
 
+#import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
@@ -68,6 +69,8 @@
 #define CONTACT_DEFAULT_PREFS			@"ContactPrefs"
 
 #define	SHOW_GROUPS_MENU_TITLE			AILocalizedString(@"Show Groups",nil)
+#define	HIDE_GROUPS_MENU_TITLE			AILocalizedString(@"Hide Groups",nil)
+
 #define SHOW_GROUPS_IDENTIFER			@"ShowGroups"
 
 #define SERVICE_ID_KEY					@"ServiceID"
@@ -397,10 +400,10 @@
 	BOOL	isCurrentlyAStranger = [inContact isStranger];
 	if ((isCurrentlyAStranger && (remoteGroupName != nil)) ||
 		(!isCurrentlyAStranger && (remoteGroupName == nil))) {
-		[inContact setStatusObject:(remoteGroupName ? [NSNumber numberWithBool:YES] : nil)
-							forKey:@"NotAStranger"
+		[inContact setValue:(remoteGroupName ? [NSNumber numberWithBool:YES] : nil)
+							forProperty:@"NotAStranger"
 							notify:NotifyLater];
-		[inContact notifyOfChangedStatusSilently:YES];
+		[inContact notifyOfChangedPropertiesSilently:YES];
 	}
 	
 	[inContact release];
@@ -562,11 +565,10 @@
 																	  group:PREF_GROUP_CONTACT_LIST_DISPLAY] boolValue];
 	
 	//Show offline contacts menu item
-    menuItem_showGroups = [[NSMenuItem alloc] initWithTitle:SHOW_GROUPS_MENU_TITLE
+    menuItem_showGroups = [[NSMenuItem alloc] initWithTitle:(useContactListGroups ? HIDE_GROUPS_MENU_TITLE : SHOW_GROUPS_MENU_TITLE)
 													 target:self
 													 action:@selector(toggleShowGroups:)
 											  keyEquivalent:@""];
-	[menuItem_showGroups setState:useContactListGroups];
 	[[adium menuController] addMenuItem:menuItem_showGroups toLocation:LOC_View_Toggles];
 	
 	//Toolbar
@@ -591,8 +593,8 @@
 {
 	//Flip-flop.
 	useContactListGroups = !useContactListGroups;
-	[menuItem_showGroups setState:useContactListGroups];
-	
+	[menuItem_showGroups setTitle:(useContactListGroups ? HIDE_GROUPS_MENU_TITLE : SHOW_GROUPS_MENU_TITLE)];
+
 	//Update the contact list.  Do it on the next run loop for better menu responsiveness, as it may be a lengthy procedure.
 	[self performSelector:@selector(_performChangeOfUseContactListGroups)
 			   withObject:nil
@@ -1259,25 +1261,35 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	return [groupDict allValues];
 }
 
-//Returns a flat array of all contacts (by calling through to -allContactsInObject:recurse:onAccount:)
+/*!
+ * @brief Returns a flat array of all contacts
+ */
 - (NSMutableArray *)allContacts
 {
 	return [self allContactsOnAccount:nil];
 }
 
-//Returns a flat array of all contacts on a given account (by calling through to -allContactsInObject:recurse:onAccount:)
+/*!
+ * @brief Returns a flat array of all contacts on a given account
+ * 
+ * @param inAccount The account whose contacts are desired, or nil to match every account
+ * @result Every contact in the global contactDict which isn't a metacontact and matches the specified account criterion
+ */
 - (NSMutableArray *)allContactsOnAccount:(AIAccount *)inAccount
 {
-	NSMutableArray *result = [self allContactsInObject:contactList recurse:YES onAccount:inAccount];
+	NSMutableArray *result = [[[NSMutableArray alloc] init] autorelease];
 	
-	/** Could be perfected I'm sure */
-	NSEnumerator *enumerator = [detachedContactLists objectEnumerator];
-	AIListGroup *detached;
-	while((detached = [enumerator nextObject])){
-		[result addObjectsFromArray:[self allContactsInObject:detached recurse:YES onAccount:inAccount]];
+	NSEnumerator *enumerator = [self contactEnumerator];
+	AIListContact *contact;
+	while ((contact = [enumerator nextObject])) {
+		if (!inAccount || ([contact account] == inAccount)) {
+			/* We want only contacts, not metacontacts. For a given contact, -[contact parentContact] could be used to access the meta. */
+			if (![contact conformsToProtocol:@protocol(AIContainingObject)])
+				[result addObject:contact];
+		}
 	}
 	
-	return result;	
+	return result;
 }
 
 //Return a flat array of all the objects in a group on an account (and all subgroups, if desired)
@@ -1594,6 +1606,14 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	return nil;
 }
 
+/*!
+ * @brief Get the best AIListContact to send a given content type to a contat
+ *
+ * The resulting AIListContact will be the most available individual contact (not metacontact) on the best account to
+ * receive the specified content type.
+ *
+ * @result The contact, or nil if it is impossible to send inType to inContact
+ */
 - (AIListContact *)preferredContactForContentType:(NSString *)inType forListContact:(AIListContact *)inContact
 {
 	AIListContact   *returnContact = nil;
@@ -1656,17 +1676,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 							 firstAvailableContact :
 							 (firstNotOfflineContact ? firstNotOfflineContact : [(AIMetaContact *)inContact preferredContact]));
 			
-			//find the best account for talking to this contact,
-			//and return an AIListContact on that account
-			account = [[adium accountController] preferredAccountForSendingContentType:inType
-																			 toContact:returnContact];
-			if (account) {
-				if ([inContact account] != account) {
-					returnContact = [self contactWithService:[returnContact service]
-													 account:account
-														 UID:[returnContact UID]];
-				}
-			}
+			returnContact = [self preferredContactForContentType:inType forListContact:returnContact];
 		}
 		
 	} else {
@@ -1674,8 +1684,9 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		if ([inContact respondsToSelector:@selector(preferredContact)])
 			inContact = [inContact performSelector:@selector(preferredContact)];
 		
-		//find the best account for talking to this contact,
-		//and return an AIListContact on that account
+		/* Find the best account for talking to this contact, and return an AIListContact on that account.
+		 * We'll get nil if no account can send inType to inContact.
+		 */
 		account = [[adium accountController] preferredAccountForSendingContentType:inType
 																		 toContact:inContact];
 
@@ -1689,7 +1700,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			}
 		}
  	}
-	
+
 	return returnContact;
 }
 
@@ -1926,7 +1937,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			AIListContact	*actualListContact;
 			
 			//This is a meta contact, move the objects within it.  listContacts will give us a flat array of AIListContacts.
-			enumerator = [[(AIMetaContact *)listContact listContacts] objectEnumerator];
+			enumerator = [[(AIMetaContact *)listContact containedObjects] objectEnumerator];
 			while ((actualListContact = [enumerator nextObject])) {
 				//Only move the contact if it is actually listed on the account in question
 				if (![actualListContact isStranger]) {
@@ -2023,7 +2034,8 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 /*!
  * @returns Empty contact list
  */
-- (AIListGroup *)createDetachedContactList{
+- (AIListGroup *)createDetachedContactList
+{
 	static int count = 0;
 	AIListGroup * list = [[AIListGroup alloc] initWithUID:[NSString stringWithFormat:@"Detached%d",count++]];
 	[detachedContactLists addObject:list];
@@ -2034,33 +2046,39 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 /*!
  * @brief Removes detached contact list
  */
-- (void)removeDetachedContactList:(AIListGroup *)detachedList{
+- (void)removeDetachedContactList:(AIListGroup *)detachedList
+{
 	[detachedContactLists removeObject:detachedList];
 }
 
 /*!
- * @breif Checks if a particular group is in a detached contact list 
+ * @brief Checks if a particular group is in a detached contact list 
  */
-- (BOOL)isGroupDetached:(AIListObject *)group{
-	NSEnumerator *i = [detachedContactLists objectEnumerator];
-	AIListGroup *currentGroup;
+- (BOOL)isGroupDetached:(AIListObject *)inGroup
+{
+	NSEnumerator		*enumerator = [detachedContactLists objectEnumerator];
+	AIListGroup			*group;
 	
-	while((currentGroup = [i nextObject])){
-		if(currentGroup == group)
+	while ((group = [enumerator nextObject])) {
+		if ([group containsObject:inGroup]) {
 			return YES;
+		}
 	}
+	
 	return NO;
 }
 
 /*!
  * @returns Number of contact lists (ie. both main contact list and all detached contact lists)
  */
-- (unsigned)contactListCount {
-	return (contactList!=nil) + [detachedContactLists count];
+- (unsigned)contactListCount
+{
+	return (contactList != nil) + [detachedContactLists count];
 }
 
 #pragma mark Contact Hiding
-- (AIContactHidingController *)contactHidingController {
+- (AIContactHidingController *)contactHidingController
+{
 	return contactHidingController;
 }
 

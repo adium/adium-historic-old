@@ -171,6 +171,7 @@
 #define LEFTWARDS_ARROW			"\u2190"
 #define RIGHTWARDS_ARROW		"\u2192"
 #define SHIFT_ARROW				"\u21E7"
+#define OPTION_KEY				"\u2325"
 
 	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Arrows (%@ and %@)","Directional arrow keys word"), [NSString stringWithUTF8String:PLACE_OF_INTEREST_SIGN LEFTWARDS_ARROW], [NSString stringWithUTF8String:PLACE_OF_INTEREST_SIGN RIGHTWARDS_ARROW]]
 					target:nil
@@ -184,6 +185,12 @@
 			 keyEquivalent:@""
 					   tag:AISwitchShiftArrows];
 	
+	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Option + Arrows (%@ and %@)","Option key word + Directional arrow keys word"), [NSString stringWithUTF8String:OPTION_KEY PLACE_OF_INTEREST_SIGN LEFTWARDS_ARROW], [NSString stringWithUTF8String:OPTION_KEY PLACE_OF_INTEREST_SIGN RIGHTWARDS_ARROW]]
+					target:nil
+					action:nil
+			 keyEquivalent:@""
+					   tag:AIOptArrows];	
+	
 	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Brackets (%@ and %@)","Word for [ and ] keys"), [NSString stringWithUTF8String:PLACE_OF_INTEREST_SIGN "["], [NSString stringWithUTF8String:PLACE_OF_INTEREST_SIGN "]"]]
 					target:nil
 					action:nil
@@ -195,6 +202,7 @@
 					action:nil
 			 keyEquivalent:@""
 					   tag:AIBraces];
+	
 	
 	return [menu autorelease];		
 }

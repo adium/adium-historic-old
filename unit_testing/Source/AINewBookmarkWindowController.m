@@ -78,6 +78,10 @@
 {
 	[self buildGroupMenu];
 	
+	if (chat) {
+		[textField_name setStringValue:[chat name]];
+	}
+	
 	[label_name setLocalizedString:AILocalizedString(@"Name:", nil)];
 	[label_group setLocalizedString:AILocalizedString(@"Group:", nil)];
 	[button_add setLocalizedString:AILocalizedStringFromTable(@"Add", @"Buttons", nil)];

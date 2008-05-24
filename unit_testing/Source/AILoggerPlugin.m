@@ -122,13 +122,12 @@ Class LogViewerWindowControllerClass = NULL;
 												styleTags:YES
 										   encodeNonASCII:YES
 											 encodeSpaces:NO
-										attachmentsAsText:YES
+										attachmentsAsText:NO
 								onlyIncludeOutgoingImages:NO
 										   simpleTagsOnly:NO
 										   bodyBackground:NO
 									  allowJavascriptURLs:YES];
 	[xhtmlDecoder setGeneratesStrictXHTML:YES];
-	[xhtmlDecoder setUsesAttachmentTextEquivalents:YES];
 	
 	statusTranslation = [[NSDictionary alloc] initWithObjectsAndKeys:
 		@"away",@"away",
@@ -261,7 +260,7 @@ Class LogViewerWindowControllerClass = NULL;
 	return [NSString stringWithFormat:@"%@.%@/%@", [account serviceID], [[account UID] safeFilenameString], object];
 }
 
-+ (NSString *)fileNameForLogWithObject:(NSString *)object onDate:(NSDate *)date
++ (NSString *)nameForLogWithObject:(NSString *)object onDate:(NSDate *)date
 {
 	NSParameterAssert(date != nil);
 	NSParameterAssert(object != nil);
@@ -269,7 +268,18 @@ Class LogViewerWindowControllerClass = NULL;
 	
 	NSAssert2(dateString != nil, @"Date string was invalid for the chatlog for %@ on %@", object, date);
 		
-	return [NSString stringWithFormat:@"%@ (%@).chatlog", object, dateString];
+	return [NSString stringWithFormat:@"%@ (%@)", object, dateString];
+}
+
++ (NSString *)pathForLogsLikeChat:(AIChat *)chat
+{
+	NSString	*objectUID = [chat name];
+	AIAccount	*account = [chat account];
+	
+	if (!objectUID) objectUID = [[chat listObject] UID];
+	objectUID = [objectUID safeFilenameString];
+
+	return [logBasePath stringByAppendingPathComponent:[self relativePathForLogWithObject:objectUID onAccount:account]];
 }
 
 + (NSString *)fullPathForLogOfChat:(AIChat *)chat onDate:(NSDate *)date
@@ -280,9 +290,11 @@ Class LogViewerWindowControllerClass = NULL;
 	if (!objectUID) objectUID = [[chat listObject] UID];
 	objectUID = [objectUID safeFilenameString];
 
-	NSString	*fileName = [self fileNameForLogWithObject:objectUID onDate:date];
 	NSString	*absolutePath = [logBasePath stringByAppendingPathComponent:[self relativePathForLogWithObject:objectUID onAccount:account]];
-	NSString	*fullPath = [absolutePath stringByAppendingPathComponent:fileName];
+
+	NSString	*name = [self nameForLogWithObject:objectUID onDate:date];
+	NSString	*fullPath = [[absolutePath stringByAppendingPathComponent:[name stringByAppendingPathExtension:@"chatlog"]]
+							 stringByAppendingPathComponent:[name stringByAppendingPathExtension:@"xml"]];
 
 	return fullPath;
 }
@@ -397,15 +409,15 @@ Class LogViewerWindowControllerClass = NULL;
 		if ([contentType isEqualToString:CONTENT_MESSAGE_TYPE]) {
 			NSMutableArray *attributeKeys = [NSMutableArray arrayWithObjects:@"sender", @"time", nil];
 			NSMutableArray *attributeValues = [NSMutableArray arrayWithObjects:[[content source] UID], date, nil];
-			
+			AIXMLAppender  *appender = [self appenderForChat:chat];
 			if([content isAutoreply])
 			{
 				[attributeKeys addObject:@"auto"];
 				[attributeValues addObject:@"true"];
 			}
 			
-			[[self appenderForChat:chat] addElementWithName:@"message" 
-						  escapedContent:[xhtmlDecoder encodeHTML:[content message] imagesPath:nil]
+			[appender addElementWithName:@"message" 
+						  escapedContent:[xhtmlDecoder encodeHTML:[content message] imagesPath:[[appender path] stringByDeletingLastPathComponent]]
 						   attributeKeys:attributeKeys
 						 attributeValues:attributeValues];
 			dirty = YES;
@@ -651,12 +663,9 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 
 + (NSArray *)sortedArrayOfLogFilesForChat:(AIChat *)chat
 {
-	NSString *baseLogPath = [[self fullPathForLogOfChat:chat onDate:[NSDate date]] stringByDeletingLastPathComponent];
-	NSArray *files = [[NSFileManager defaultManager] directoryContentsAtPath:baseLogPath];	
-	if (files) {
-		return [files sortedArrayUsingFunction:&sortPaths context:NULL];
-	}
-	return nil;
+	NSArray *files = [[NSFileManager defaultManager] directoryContentsAtPath:[self pathForLogsLikeChat:chat]];
+
+	return (files ? [files sortedArrayUsingFunction:&sortPaths context:NULL] : nil);
 }
 
 #pragma mark Upgrade code
@@ -844,7 +853,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 {
 	NSString    *dirtyKey = [@"LogIsDirty_" stringByAppendingString:path];
 	
-	if (![chat integerStatusObjectForKey:dirtyKey]) {
+	if (![chat integerValueForProperty:dirtyKey]) {
 		//Add to dirty array (Lock to ensure that no one changes its content while we are)
 		[dirtyLogLock lock];
 		if (path != nil) {
@@ -863,8 +872,8 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 		[self _saveDirtyLogArray];
 		
 		//Flag the chat with 'LogIsDirty' for this filename.  On the next message we can quickly check this flag.
-		[chat setStatusObject:[NSNumber numberWithBool:YES]
-					   forKey:dirtyKey
+		[chat setValue:[NSNumber numberWithBool:YES]
+					   forProperty:dirtyKey
 					   notify:NotifyNever];
 	}	
 }
@@ -1196,9 +1205,9 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 		if (existingAppenderPath) {
 			NSString *dirtyKey = [@"LogIsDirty_" stringByAppendingString:existingAppenderPath];
 
-			if ([chat integerStatusObjectForKey:dirtyKey]) {
-				[chat setStatusObject:nil
-							   forKey:dirtyKey
+			if ([chat integerValueForProperty:dirtyKey]) {
+				[chat setValue:nil
+							   forProperty:dirtyKey
 							   notify:NotifyNever];
 			}
 		}
@@ -1382,5 +1391,3 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 
 
 @end
-
-

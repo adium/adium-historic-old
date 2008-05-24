@@ -50,7 +50,7 @@ typedef enum {
 - (void)autoRefreshingOutgoingContentForStatusKey:(NSString *)key selector:(SEL)selector;
 - (void)autoRefreshingOutgoingContentForStatusKey:(NSString *)key selector:(SEL)selector context:(id)originalContext;
 - (NSAttributedString *)autoRefreshingOriginalAttributedStringForStatusKey:(NSString *)key;
-- (void)setStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify;
+- (void)setValue:(id)value forProperty:(NSString *)key notify:(NotifyTiming)notify;
 - (void)startAutoRefreshingStatusKey:(NSString *)key forOriginalValueString:(NSString *)originalValueString;
 - (void)stopAutoRefreshingStatusKey:(NSString *)key;
 - (void)_startAttributedRefreshTimer;
@@ -63,14 +63,14 @@ typedef enum {
 - (NSArray *)contacts;
 - (AIListContact *)contactWithUID:(NSString *)sourceUID;
 - (void)removeAllContacts;
-- (void)removeStatusObjectsFromContact:(AIListContact *)listContact silently:(BOOL)silent;
+- (void)removePropetyValuesFromContact:(AIListContact *)listContact silently:(BOOL)silent;
 
 //Connectivity
 - (BOOL)shouldBeOnline;
 - (void)setShouldBeOnline:(BOOL)inShouldBeOnline;
 - (void)toggleOnline;
 - (void)didConnect;
-- (NSSet *)contactStatusObjectKeys;
+- (NSSet *)contactProperties;
 - (void)didDisconnect;
 - (void)connectScriptCommand:(NSScriptCommand *)command;
 - (void)disconnectScriptCommand:(NSScriptCommand *)command;

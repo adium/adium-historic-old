@@ -208,7 +208,7 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	configuredViewsAndTooltips = YES;
 }
 
-- (void)setContactListRoot:(ESObjectWithStatus<AIContainingObject> *)newContactListRoot
+- (void)setContactListRoot:(ESObjectWithProperties<AIContainingObject> *)newContactListRoot
 {
 	if (contactList != newContactListRoot) {
 		[contactList release]; contactList = [newContactListRoot retain];
@@ -217,7 +217,7 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	[contactListView reloadData];
 }
 
-- (ESObjectWithStatus <AIContainingObject> *)contactListRoot
+- (ESObjectWithProperties <AIContainingObject> *)contactListRoot
 {
 	return contactList;
 }
@@ -618,6 +618,7 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	
 	NSMutableArray			*locationsArray = [NSArray arrayWithObjects:
 		[NSNumber numberWithInt:(isGroup ? Context_Group_Manage : Context_Contact_Manage)],
+		[NSNumber numberWithInt:(isGroup ? Context_Group_AttachDetach : Context_Contact_AttachDetach)],
 		[NSNumber numberWithInt:Context_Contact_Action],
 		[NSNumber numberWithInt:Context_Contact_ListAction],
 		[NSNumber numberWithInt:Context_Contact_NegativeAction],

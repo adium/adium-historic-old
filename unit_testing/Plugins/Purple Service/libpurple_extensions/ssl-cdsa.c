@@ -421,48 +421,68 @@ static size_t
 ssl_cdsa_read(PurpleSslConnection *gsc, void *data, size_t len)
 {
 	PurpleSslCDSAData *cdsa_data = PURPLE_SSL_CDSA_DATA(gsc);
-	size_t s = 0;
-    OSStatus err;
+	OSStatus	err;			/* Error info */
+	size_t		processed;		/* Number of bytes processed */
+	size_t		result;			/* Return value */
 
     errno = 0;
-    err = SSLRead(cdsa_data->ssl_ctx, data, len, &s);
-    if(err != noErr) {
-        if(err == errSSLWouldBlock) {
-            errno = EAGAIN;
-            return (s > 0) ? s : -1;
-        }
-		purple_debug_error("cdsa", "receive failed (%d): %s\n", (int)err, strerror(errno));
-        return -1;
-    }
-    
-    return s;
+    err = SSLRead(cdsa_data->ssl_ctx, data, len, &processed);
+	switch (err) {
+		case noErr:
+			result = processed;
+			break;
+		case errSSLWouldBlock:
+			errno = EAGAIN;
+			result = ((processed > 0) ? processed : -1);
+			break;
+		case errSSLClosedGraceful:
+			result = 0;
+			break;
+		default:
+			result = -1;
+			purple_debug_error("cdsa", "receive failed (%d): %s\n", (int)err, strerror(errno));
+			break;
+	}
+
+    return result;
 }
 
 static size_t
 ssl_cdsa_write(PurpleSslConnection *gsc, const void *data, size_t len)
 {
 	PurpleSslCDSAData *cdsa_data = PURPLE_SSL_CDSA_DATA(gsc);
-	size_t s = 0;
-    OSStatus err;
-
+	OSStatus	err;			/* Error info */
+	size_t		processed;		/* Number of bytes processed */
+	size_t		result;			/* Return value */
+	
 	if (cdsa_data != NULL) {
 #ifdef CDSA_DEBUG
 		purple_debug_info("cdsa", "SSLWrite(%p, %p %i)", cdsa_data->ssl_ctx, data, len);
 #endif
 
-        err = SSLWrite(cdsa_data->ssl_ctx, data, len, &s);
+        err = SSLWrite(cdsa_data->ssl_ctx, data, len, &processed);
         
-        if(err != noErr) {
-            if(err == errSSLWouldBlock) {
-                errno = EAGAIN;
-                return -1;
-            }
-            purple_debug_error("cdsa", "send failed (%d): %s\n", (int)err, strerror(errno));
-            return -1;
-        }
-    }
-    
-    return s;
+		switch (err) {
+			case noErr:
+				result = processed;
+				break;
+			case errSSLWouldBlock:
+				errno = EAGAIN;
+				result = ((processed > 0) ? processed : -1);
+				break;
+			case errSSLClosedGraceful:
+				result = 0;
+				break;
+			default:
+				result = -1;
+				purple_debug_error("cdsa", "send failed (%d): %s\n", (int)err, strerror(errno));
+				break;
+		}
+		
+		return result;
+    } else {
+		return -1;
+	}
 }
 
 static gboolean register_certificate_ui_cb(query_cert_chain cb) {

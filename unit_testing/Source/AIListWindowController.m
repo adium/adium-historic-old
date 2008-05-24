@@ -39,13 +39,14 @@
 
 #define PREF_GROUP_CONTACT_LIST					@"Contact List"
 
-#define SLIDE_ALLOWED_RECT_EDGE_MASK			(AIMinXEdgeMask | AIMaxXEdgeMask)
-#define DOCK_HIDING_MOUSE_POLL_INTERVAL			0.1
-#define WINDOW_ALIGNMENT_TOLERANCE				2.0f
-#define MOUSE_EDGE_SLIDE_ON_DISTANCE			1.1f
-#define WINDOW_SLIDING_MOUSE_DISTANCE_TOLERANCE 3.0f
+#define SLIDE_ALLOWED_RECT_EDGE_MASK			(AIMinXEdgeMask | AIMaxXEdgeMask) /* Screen edges on which sliding is allowde */
+#define DOCK_HIDING_MOUSE_POLL_INTERVAL			0.1 /* Interval at which to check the mouse position for sliding */
+#define	WINDOW_SLIDING_DELAY					0.2 /* Time after the mouse is in the right place before the window slides on screen */
+#define WINDOW_ALIGNMENT_TOLERANCE				2.0f /* Threshold distance far the window from an edge to be considered on it */
+#define MOUSE_EDGE_SLIDE_ON_DISTANCE			1.1f /* ??? */
+#define WINDOW_SLIDING_MOUSE_DISTANCE_TOLERANCE 3.0f /* Distance the mouse must be from the window's frame to be considered outside it */
 
-#define SNAP_DISTANCE							15.0
+#define SNAP_DISTANCE							15.0 /* Distance beween one window's edge and another's at which they should snap together */
 
 @interface AIListWindowController (PRIVATE)
 - (id)initWithContactList:(AIListObject<AIContainingObject> *)contactList;
@@ -299,11 +300,25 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 	
 	//Auto-Resizing
 	if ([group isEqualToString:PREF_GROUP_APPEARANCE]) {
-		int				windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
-		BOOL			autoResizeVertically = [[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue];
-		BOOL			autoResizeHorizontally = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
-		int				forcedWindowWidth, maxWindowWidth;
+		AIContactListWindowStyle	windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
+		BOOL	autoResizeHorizontally = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
+		BOOL	autoResizeVertically = YES;
+		int		forcedWindowWidth, maxWindowWidth;
 		
+		//Determine how to handle vertical autosizing. AIAppearancePreferences must match this behavior for this to make sense.
+		switch (windowStyle) {
+			case AIContactListWindowStyleStandard:
+			case AIContactListWindowStyleBorderless:
+				//Standard and borderless don't have to vertically autosize, but they might
+				autoResizeVertically = [[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue];
+				break;
+			case AIContactListWindowStyleGroupBubbles:
+			case AIContactListWindowStyleContactBubbles:
+			case AIContactListWindowStyleContactBubbles_Fitted:
+				//The bubbles styles don't show a window; force them to autosize by leaving autoResizeVertically == YES
+				break;
+		}			
+
 		if (autoResizeHorizontally) {
 			//If autosizing, KEY_LIST_LAYOUT_HORIZONTAL_WIDTH determines the maximum width; no forced width.
 			maxWindowWidth = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue];
@@ -462,9 +477,7 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 		//Open a new message with the contact
 		[[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:(AIListContact *)selectedObject
 																			onPreferredAccount:YES]];
-    } 
-		
-		
+    }
 }
 
 - (BOOL) canCustomizeToolbar
@@ -572,6 +585,8 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 
 	NSRect listFrame = [window frame];
 	
+//XXX TODO: This should happen on the next run loop so that the other screen params changed callback is guaranteed to have been called
+//XXX TODO: We should use the known edges rather than scaling to find a new location. Also, do not unhide if hidden.
 	oldFrame.origin.x *= ((newScreenFrame.size.width - listFrame.size.width) / ((currentScreenFrame.size.width - listFrame.size.width) + 0.00001));
 	oldFrame.origin.y *= ((newScreenFrame.size.height - listFrame.size.height) / ((currentScreenFrame.size.height - listFrame.size.height) + 0.00001));
 	
@@ -595,22 +610,29 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 // Dock-like hiding -----------------------------------------------------------------------------------------------------
 #pragma mark Dock-like hiding
 
-/* screenSlideBoundaryRect is the rect that the contact list slides in and out of for dock-like hiding
- * screenSlideBoundaryRect = (menubarScreen frame without menubar) union (union of frames of all other screens) 
- */
-static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
+static NSMutableDictionary *screenSlideBoundaryRectDictionary = nil;
 + (void)updateScreenSlideBoundaryRect:(id)sender
 {
 	NSArray *screens = [NSScreen screens];
 	int numScreens = [screens count];
 	
+	[screenSlideBoundaryRectDictionary release];
+	screenSlideBoundaryRectDictionary = [[NSMutableDictionary alloc] initWithCapacity:numScreens];
+
 	if (numScreens > 0) {
 		//The menubar screen is a special case - the menubar is not a part of the rect we're interested in
-		NSScreen *menubarScreen = [screens objectAtIndex:0];
+		NSScreen	*menubarScreen = [screens objectAtIndex:0];
+		NSRect		screenSlideBoundaryRect;
+
 		screenSlideBoundaryRect = [menubarScreen frame];
 		screenSlideBoundaryRect.size.height = NSMaxY([menubarScreen visibleFrame]) - NSMinY([menubarScreen frame]);
+		[screenSlideBoundaryRectDictionary setObject:[NSValue valueWithRect:screenSlideBoundaryRect]
+											  forKey:[NSValue valueWithNonretainedObject:menubarScreen]];
+
 		for (int i = 1; i < numScreens; i++) {
-			screenSlideBoundaryRect = NSUnionRect(screenSlideBoundaryRect, [[screens objectAtIndex:i] frame]);
+			NSScreen *screen = [screens objectAtIndex:i];
+			[screenSlideBoundaryRectDictionary setObject:[NSValue valueWithRect:[screen frame]]
+												  forKey:[NSValue valueWithNonretainedObject:screen]];
 		}
 	}
 }
@@ -632,61 +654,95 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	return (windowHidingStyle == AIContactListWindowHidingStyleBackground);
 }
 
+/*!
+ * @brief Called on a delay by -[self slideWindowIfNeeded:]
+ *
+ * This is a separate function so that the call to it may be canceled if the mouse doesn't
+ * remain in position long enough.
+ */
+- (void)slideWindowOnScreenAfterDelay
+{
+	waitingToSlideOnScreen = NO;
+
+	//If we're hiding the window (generally) but now sliding it on screen, make sure it's on top
+	if (windowHidingStyle == AIContactListWindowHidingStyleSliding) {
+		[self setWindowLevel:NSFloatingWindowLevel];
+		
+		if ([NSApp isOnLeopardOrBetter])
+			[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
+		
+		overrodeWindowLevel = YES;
+	}
+	
+	[self slideWindowOnScreen];	
+}
+
+/*!
+ * @brief Check what behavior the window should perform and initiate it
+ *
+ * Called regularly by a repeating timer to check mouse position against window position.
+ */
 - (void)slideWindowIfNeeded:(id)sender
 {
 	if ([self shouldSlideWindowOnScreen]) {
-		//If we're hiding the window (generally) but now sliding it on screen, make sure it's on top
-		if (windowHidingStyle == AIContactListWindowHidingStyleSliding) {
-			[self setWindowLevel:NSFloatingWindowLevel];
+		if (!waitingToSlideOnScreen) {
+			[self performSelector:@selector(slideWindowOnScreenAfterDelay)
+					   withObject:nil
+					   afterDelay:WINDOW_SLIDING_DELAY];
+			waitingToSlideOnScreen = YES;
+		}
+	} else {
+		if (waitingToSlideOnScreen) {
+			/* If we were waiting to slide on screen but the mouse moved out of position too soon,
+			 * cancel the selector which would slide us on screen.
+			 */
+			waitingToSlideOnScreen = NO;
+			[[self class] cancelPreviousPerformRequestsWithTarget:self
+														 selector:@selector(slideWindowOnScreenAfterDelay)
+														   object:nil];
+		}
 
-			if ([NSApp isOnLeopardOrBetter])
-				[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
+		if ([self shouldSlideWindowOffScreen]) {
+			AIRectEdgeMask adjacentEdges = [self slidableEdgesAdjacentToWindow];
 			
-			overrodeWindowLevel = YES;
-		}
-
-		[self slideWindowOnScreen];
-
-	} else if ([self shouldSlideWindowOffScreen]) {
-		AIRectEdgeMask adjacentEdges = [self slidableEdgesAdjacentToWindow];
-
-        if (adjacentEdges & (AIMinXEdgeMask | AIMaxXEdgeMask)) {
-            [self slideWindowOffScreenEdges:(adjacentEdges & (AIMinXEdgeMask | AIMaxXEdgeMask))];
-		} else {
-            [self slideWindowOffScreenEdges:adjacentEdges];
-		}
-
-		/* If we're hiding the window (generally) but now sliding it off screen, set it to kCGBackstopMenuLevel and don't
-		 * let it participate in expose.
-		 */
-		if (overrodeWindowLevel &&
-			windowHidingStyle == AIContactListWindowHidingStyleSliding) {
-			[self setWindowLevel:kCGBackstopMenuLevel];
+			if (adjacentEdges & (AIMinXEdgeMask | AIMaxXEdgeMask)) {
+				[self slideWindowOffScreenEdges:(adjacentEdges & (AIMinXEdgeMask | AIMaxXEdgeMask))];
+			} else {
+				[self slideWindowOffScreenEdges:adjacentEdges];
+			}
 			
-			if ([NSApp isOnLeopardOrBetter])
-				[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
+			/* If we're hiding the window (generally) but now sliding it off screen, set it to kCGBackstopMenuLevel and don't
+			 * let it participate in expose.
+			 */
+			if (overrodeWindowLevel &&
+				windowHidingStyle == AIContactListWindowHidingStyleSliding) {
+				[self setWindowLevel:kCGBackstopMenuLevel];
+				
+				if ([NSApp isOnLeopardOrBetter])
+					[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
+				
+				overrodeWindowLevel = YES;
+			}
 			
-			overrodeWindowLevel = YES;
+		} else if (overrodeWindowLevel &&
+				   ([self slidableEdgesAdjacentToWindow] == AINoEdges) &&
+				   ([self windowSlidOffScreenEdgeMask] == AINoEdges)) {
+			/* If the window level was overridden at some point and now we:
+			 *   1. Are on screen AND
+			 *   2. No longer have any edges eligible for sliding
+			 * we should restore our window level.
+			 */
+			[self setWindowLevel:levelForAIWindowLevel(windowLevel)];
+			
+			if ([NSApp isOnLeopardOrBetter]) {
+				if (showOnAllSpaces)
+					[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
+				else
+					[[self window] setCollectionBehavior:NSWindowCollectionBehaviorDefault];
+			}
+			
+			overrodeWindowLevel = NO;
 		}
-		
-	} else if (overrodeWindowLevel &&
-			   ([self slidableEdgesAdjacentToWindow] == AINoEdges) &&
-			   ([self windowSlidOffScreenEdgeMask] == AINoEdges)) {
-		/* If the window level was overridden at some point and now we:
-		 *   1. Are on screen AND
-		 *   2. No longer have any edges eligible for sliding
-		 * we should restore our window level.
-		 */
-		[self setWindowLevel:levelForAIWindowLevel(windowLevel)];
-		
-		if ([NSApp isOnLeopardOrBetter]) {
-			if (showOnAllSpaces)
-				[[self window] setCollectionBehavior:NSWindowCollectionBehaviorCanJoinAllSpaces];
-			else
-				[[self window] setCollectionBehavior:NSWindowCollectionBehaviorDefault];
-		}
-		
-		overrodeWindowLevel = NO;
 	}
 }
 
@@ -803,27 +859,55 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	return inCorner;
 }
 
-// YES if the mouse is against all edges of the screen where we previously slid the window and not in a corner.
-// This means that this method will never return YES of the cl is slid into a corner. 
+/*!
+ * @brief Should the window be slid on screen given the mouse's position?
+ *
+ * This method will never return YES of the cl is slid into a corner, which shouldn't happen, or if the mouse is in a corner.
+ *
+ * @result YES if the mouse is against all edges of the screen where we previously slid the window and not in a corner.
+ */
 - (BOOL)shouldSlideWindowOnScreen_mousePositionStrategy
 {
-	BOOL mouseNearSlideOffEdges = ([self windowSlidOffScreenEdgeMask] != AINoEdges);
+	if ([self windowSlidOffScreenEdgeMask] != AINoEdges) {
+		NSPoint mouseLocation = [NSEvent mouseLocation];
+		//Initially, assume the mouse is not in an appropriate position
+		BOOL	mouseNearSlideOffEdges = NO;
 	
-	NSPoint mouseLocation = [NSEvent mouseLocation];
-	
-	NSRectEdge screenEdge;
-	for (screenEdge = 0; screenEdge < 4; screenEdge++) {
-		if (windowSlidOffScreenEdgeMask & (1 << screenEdge)) {
-			float mouseOutsideSlideBoundaryRectDistance = AISignedExteriorDistanceRect_edge_toPoint_(screenSlideBoundaryRect,
-																									 screenEdge,
-																									 mouseLocation);
-			if(mouseOutsideSlideBoundaryRectDistance < -MOUSE_EDGE_SLIDE_ON_DISTANCE) {
-				mouseNearSlideOffEdges = NO;
+		NSEnumerator *enumerator = [screenSlideBoundaryRectDictionary objectEnumerator];
+		NSValue		 *screenSlideBoundaryRectValue;
+		while ((screenSlideBoundaryRectValue = [enumerator nextObject])) {
+			NSRectEdge	screenEdge;
+			NSRect		screenSlideBoundaryRect = [screenSlideBoundaryRectValue rectValue];
+			/* Only look at the screen in which the mouse currently resides.
+			 * The mouse may be in no screen if it is over the menu bar.
+			 */
+			if (NSPointInRect(mouseLocation, screenSlideBoundaryRect)) {
+				//Check each edge
+				for (screenEdge = 0; screenEdge < 4; screenEdge++) {
+					//But we only care about an edge off of which the window has slid
+					if (windowSlidOffScreenEdgeMask & (1 << screenEdge)) {
+						float mouseOutsideSlideBoundaryRectDistance = AISignedExteriorDistanceRect_edge_toPoint_(screenSlideBoundaryRect,
+																												 screenEdge,
+																												 mouseLocation);
+						//The mouse must be within MOUSE_EDGE_SLIDE_ON_DISTANCE of every slid-off edge to bring the window back on-screen
+						if(mouseOutsideSlideBoundaryRectDistance < -MOUSE_EDGE_SLIDE_ON_DISTANCE) {
+							mouseNearSlideOffEdges = NO;
+							break;
+						} else {
+							mouseNearSlideOffEdges = YES;							
+						}
+					}
+				}
 			}
+
+			if (mouseNearSlideOffEdges) break;
 		}
+
+		return mouseNearSlideOffEdges && ![self pointIsInScreenCorner:mouseLocation];
+
+	} else {
+		return NO;
 	}
-	
-	return mouseNearSlideOffEdges && ![self pointIsInScreenCorner:mouseLocation];
 }
 
 #pragma mark Dock-like hiding
@@ -957,6 +1041,47 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	}
 }
 
+static BOOL AIScreenRectEdgeAdjacentToAnyOtherScreen(NSRectEdge edge, NSScreen *screen)
+{
+	NSArray  *screens = [NSScreen screens];
+	unsigned numScreens = [screens count];
+	if (numScreens > 1) {
+		NSRect	screenSlideBoundaryRect = [[screenSlideBoundaryRectDictionary objectForKey:[NSValue valueWithNonretainedObject:screen]] rectValue];
+		NSRect	shiftedScreenFrame = screenSlideBoundaryRect;
+		BOOL	isAdjacent = NO;
+		
+		switch(edge) {
+			case NSMinXEdge:
+				shiftedScreenFrame.origin.x -= 1;
+				break;
+			case NSMinYEdge:
+				shiftedScreenFrame.origin.y -= 1;
+				break;
+			case NSMaxXEdge:
+				shiftedScreenFrame.size.width += 1;
+				break;
+			case NSMaxYEdge:
+				shiftedScreenFrame.size.height += 1;
+				break;
+		}
+
+		for (int i = 0; i < numScreens; i++) {
+			NSScreen *otherScreen = [screens objectAtIndex:i];
+			if (otherScreen != screen) {
+				if (NSIntersectsRect([otherScreen frame], shiftedScreenFrame)) {
+					isAdjacent = YES;
+					break;
+				}
+			}	
+		}
+
+		return isAdjacent;
+		
+	} else {
+		return NO;
+	}
+}
+
 /*!
  * @brief Find the mask specifying what edges are potentially slidable for our window
  *
@@ -967,8 +1092,10 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	AIRectEdgeMask slidableEdges = 0;
 
 	NSWindow *window = [self window];
-	NSRect windowFrame = [window frame];
-	
+	NSRect	 windowFrame = [window frame];	
+	NSScreen *windowScreen = [window screen];
+	NSRect	 screenSlideBoundaryRect = [[screenSlideBoundaryRectDictionary objectForKey:[NSValue valueWithNonretainedObject:windowScreen]] rectValue];
+
 	NSRectEdge edge;
 	for (edge = 0; edge < 4; edge++) {
 		if ((SLIDE_ALLOWED_RECT_EDGE_MASK & (1 << edge)) &&
@@ -976,7 +1103,8 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 														 edge,
 														 screenSlideBoundaryRect,
 														 edge,
-														 WINDOW_ALIGNMENT_TOLERANCE))) { 
+														 WINDOW_ALIGNMENT_TOLERANCE)) &&
+			(!AIScreenRectEdgeAdjacentToAnyOtherScreen(edge, windowScreen))) { 
 			slidableEdges |= (1 << edge);
 		}
 	}
@@ -1001,6 +1129,8 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	[windowLastScreen release];
 	windowLastScreen = [[window screen] retain];
 
+	NSRect screenSlideBoundaryRect = [[screenSlideBoundaryRectDictionary objectForKey:[NSValue valueWithNonretainedObject:windowLastScreen]] rectValue];
+
 	for (edge = 0; edge < 4; edge++) {
 		if (rectEdgeMask & (1 << edge)) {
 			newWindowFrame = AIRectByAligningRect_edge_toRect_edge_(newWindowFrame,
@@ -1011,7 +1141,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	}
 
 	windowSlidOffScreenEdgeMask |= rectEdgeMask;
-		
+
 	[self slideWindowToPoint:newWindowFrame.origin];
 }
 
@@ -1106,6 +1236,8 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 												  object:to
 												userInfo:nil]; 
 	}
+	
+	[super mouseUp:event];
 }
 
 /*!

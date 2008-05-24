@@ -65,7 +65,16 @@ typedef enum {
 - (AIListGroup *)groupWithUID:(NSString *)groupUID;
 - (AIListGroup *)existingGroupWithUID:(NSString *)groupUID;
 - (NSArray *)allGroups;
+/*!
+ * @brief Returns a flat array of all contacts
+ */
 - (NSMutableArray *)allContacts;
+/*!
+ * @brief Returns a flat array of all contacts on a given account
+ * 
+ * @param inAccount The account whose contacts are desired, or nil to match every account
+ * @result Every contact in the global contactDict which isn't a metacontact and matches the specified account criterion
+ */
 - (NSMutableArray *)allContactsOnAccount:(AIAccount *)inAccount;
 - (NSMutableArray *)allContactsInObject:(AIListObject<AIContainingObject> *)inGroup recurse:(BOOL)recurse onAccount:(AIAccount *)inAccount;
 - (NSMutableArray *)allBookmarks;

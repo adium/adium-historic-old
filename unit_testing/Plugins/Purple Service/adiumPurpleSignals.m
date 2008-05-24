@@ -16,6 +16,7 @@
 
 #import "adiumPurpleSignals.h"
 #import <AIUtilities/AIObjectAdditions.h>
+#import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/ESFileTransfer.h>
@@ -178,15 +179,26 @@ static void buddy_added_cb(PurpleBuddy *buddy)
 		CBPurpleAccount	*account = accountLookup(purpleAccount);
 		PurpleGroup		*g = purple_buddy_get_group(buddy);
 		NSString		*groupName = ((g && purple_group_get_name(g)) ? [NSString stringWithUTF8String:purple_group_get_name(g)] : nil);
-		
+		AIListContact	*listContact = contactLookupFromBuddy(buddy);
 		/* We pass in purple_buddy_get_name(buddy) directly (without filtering or normalizing it) as it may indicate a 
 		 * formatted version of the UID.  We have a signal for when a rename occurs, but passing here lets us get
 		 * formatted names which are originally formatted in a way which differs from the results of normalization.
 		 * For example, TekJew will normalize to tekjew in AIM; we want to use tekjew internally but display TekJew.
 		 */
-		[account updateContact:contactLookupFromBuddy(buddy)
+		[account updateContact:listContact
 				   toGroupName:groupName
 				   contactName:[NSString stringWithUTF8String:purple_buddy_get_name(buddy)]];
+
+		//We won't get an initial alias update for this buddy if one is already set, so check and update appropriately.
+		const char		*alias;
+
+		alias = purple_buddy_get_server_alias(buddy);
+		if (!alias) alias = purple_buddy_get_alias_only(buddy);
+		
+		if (alias) {
+			[account updateContact:listContact
+						   toAlias:[NSString stringWithUTF8String:alias]];
+		}
 	}
 }
 
@@ -206,10 +218,10 @@ static void node_aliased_cb(PurpleBlistNode *node, char *old_alias)
 		PurpleBuddy		*buddy = (PurpleBuddy *)node;
 		CBPurpleAccount	*account = accountLookup(purple_buddy_get_account(buddy));
 		const char		*alias;
-
+		
 		alias = purple_buddy_get_server_alias(buddy);
 		if (!alias) alias = purple_buddy_get_alias_only(buddy);
-
+		
 		[account updateContact:contactLookupFromBuddy(buddy)
 					   toAlias:(alias ? [NSString stringWithUTF8String:alias] : nil)];
 	}
@@ -217,13 +229,51 @@ static void node_aliased_cb(PurpleBlistNode *node, char *old_alias)
 
 static void conversation_created_cb(PurpleConversation *conv, void *data) {
 	if (purple_conversation_get_type(conv) == PURPLE_CONV_TYPE_IM)
-		[[imChatLookupFromConv(conv) listObject] setStatusObject:[NSNumber numberWithInt:AINotTyping] forKey:KEY_TYPING notify:NotifyNow];
+		[[imChatLookupFromConv(conv) listObject] setValue:[NSNumber numberWithInt:AINotTyping] forProperty:KEY_TYPING notify:NotifyNow];
+}
+
+static NSDictionary *dictionaryFromHashTable(GHashTable *data)
+{
+	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+	GList *l = g_hash_table_get_keys(data);	
+	GList *ll;
+	for (ll = l; ll; ll = ll->next) {
+		void *key = ll->data;
+		void *value = g_hash_table_lookup(data, key);
+		NSString *keyString = [NSString stringWithUTF8String:key];
+		NSString *valueString = [NSString stringWithUTF8String:value];
+		if ([valueString intValue]) {
+			[dict setValue:[NSNumber numberWithInt:[valueString intValue]]
+					forKey:keyString];
+		}  else {
+			[dict setValue:valueString
+					forKey:keyString];
+		}
+	}
+	
+	return dict;
+}
+
+static void chat_join_failed_cb(PurpleConnection *gc, GHashTable *components)
+{
+	CBPurpleAccount	*account = accountLookup(purple_connection_get_account(gc));
+	NSEnumerator *enumerator = [[[[[[AIObject sharedAdiumInstance] chatController] openChats] copy] autorelease] objectEnumerator];
+	AIChat *chat;
+	NSDictionary *componentDict = dictionaryFromHashTable(components);
+
+	while ((chat = [enumerator nextObject])) {
+		if (([chat account] == account) &&
+			[account chatCreationDictionary:[chat chatCreationDictionary] isEqualToDictionary:componentDict]) {
+			[account chatJoinDidFail:chat];
+			break;
+		}
+	}
 }
 
 static void typing_changed(PurpleAccount *acct, const char *name, AITypingState typingState)
 {
 	AIListContact *contact = contactLookupFromBuddy(purple_find_buddy(acct, name));
-	[contact setStatusObject:[NSNumber numberWithInt:typingState] forKey:KEY_TYPING notify:NotifyNow];	
+	[contact setValue:[NSNumber numberWithInt:typingState] forProperty:KEY_TYPING notify:NotifyNow];	
 }
 
 static void
@@ -314,6 +364,9 @@ void configureAdiumPurpleSignals(void)
 
 	purple_signal_connect(purple_conversations_get_handle(), "conversation-created",
 						  handle, PURPLE_CALLBACK(conversation_created_cb),
+						  NULL);
+	purple_signal_connect(purple_conversations_get_handle(), "chat-join-failed",
+						  handle, PURPLE_CALLBACK(chat_join_failed_cb),
 						  NULL);
 	
 	purple_signal_connect(purple_conversations_get_handle(), "buddy-typing",

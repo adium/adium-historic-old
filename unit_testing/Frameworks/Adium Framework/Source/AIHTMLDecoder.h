@@ -17,6 +17,7 @@
 
 @interface AIHTMLDecoder : NSObject {
 	NSString *XMLNamespace;
+	NSString *baseURL;
 
 	struct AIHTMLDecoderOptionsBitField {
 		unsigned reserved: 18;
@@ -157,6 +158,9 @@ onlyIncludeOutgoingImages:(BOOL)onlyIncludeOutgoingImages
 
 - (BOOL)allowJavascriptURLs;
 - (void)setAllowJavascriptURLs:(BOOL)newValue;
+
+- (NSString *)baseURL;
+- (void)setBaseURL:(NSString *)inBaseURL;
 
 @end
 

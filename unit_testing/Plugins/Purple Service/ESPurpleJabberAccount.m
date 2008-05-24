@@ -29,6 +29,7 @@
 #import <Adium/AIService.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #include <libpurple/presence.h>
 #include <libpurple/si.h>
@@ -422,10 +423,12 @@
 	if (([self lastDisconnectionReason] == PURPLE_CONNECTION_ERROR_CERT_OTHER_ERROR) &&
 		([self shouldVerifyCertificates])) {
 		shouldAttemptReconnect = AIReconnectNever;
-	} else if (disconnectionError &&
-			   [*disconnectionError isEqualToString:[NSString stringWithUTF8String:_("Read Error")]] &&
-			   ![password length]) {
-		//No password specified + "Read Error" = old openfire bug if we send no password.  Get a password from the user.
+	} else if (!finishedConnectProcess && ![password length] &&
+			   (disconnectionError &&
+			   ([*disconnectionError isEqualToString:[NSString stringWithUTF8String:_("Read Error")]] ||
+				[*disconnectionError isEqualToString:[NSString stringWithUTF8String:_("Service Unavailable")]] ||
+				[*disconnectionError isEqualToString:[NSString stringWithUTF8String:_("Forbidden")]]))) {
+		//No password specified + above error while we're connecting = behavior of various broken servers. Prompt for a password.
 		[self serverReportedInvalidPassword];
 		shouldAttemptReconnect = AIReconnectImmediately;
 	}
@@ -607,6 +610,17 @@
 	}
 	
 	return chatCreationDictionary;
+}
+
+- (BOOL)chatCreationDictionary:(NSDictionary *)chatCreationDict isEqualToDictionary:(NSDictionary *)baseDict
+{
+	/* If the chat isn't keeping track of a handle, it's because we added it in
+	 * willJoinChatUsingDictionary: above. Remove it from baseDict so the comparison is accurate.
+	 */
+	if (![chatCreationDict objectForKey:@"handle"])
+		baseDict = [baseDict dictionaryWithDifferenceWithSetOfKeys:[NSSet setWithObject:@"handle"]];
+
+	return [chatCreationDict isEqualToDictionary:baseDict];
 }
 
 #pragma mark Status

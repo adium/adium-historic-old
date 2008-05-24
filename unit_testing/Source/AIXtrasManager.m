@@ -185,6 +185,12 @@ int categorySort(id categoryA, id categoryB, void * context)
 		[NSNumber numberWithInt:AIMenuBarIconsDirectory], @"Directory",
 		AILocalizedString(@"Menu Bar Icons", "AdiumXtras category name"), @"Name",
 		[NSImage imageNamed:@"AdiumMenuBarIcons"], @"Image", nil]];
+
+	[categories addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+						   [NSNumber numberWithInt:AIPluginsDirectory], @"Directory",
+						   AILocalizedString(@"Plugins", "AdiumXtras category name"), @"Name",
+						   [NSImage imageNamed:@"AdiumPlugin"], @"Image", nil]];
+
 	
 	[categories sortUsingFunction:categorySort context:NULL];
 }
@@ -206,6 +212,17 @@ int categorySort(id categoryA, id categoryB, void * context)
 				[contents addObject:[AIXtraInfo infoWithURL:[NSURL fileURLWithPath:[path stringByAppendingPathComponent:xtraName]]]];
 			}
 		}
+		
+		NSString *disabledPath = [[path stringByDeletingLastPathComponent] stringByAppendingPathComponent:
+								  [[path lastPathComponent] stringByAppendingString:@" (Disabled)"]];
+		xEnu = [[manager directoryContentsAtPath:disabledPath] objectEnumerator];
+		while ((xtraName = [xEnu nextObject])) {
+			if (![xtraName hasPrefix:@"."]) {
+				AIXtraInfo *xtraInfo = [AIXtraInfo infoWithURL:[NSURL fileURLWithPath:[disabledPath stringByAppendingPathComponent:xtraName]]];
+				[xtraInfo setEnabled:NO];
+				[contents addObject:xtraInfo];
+			}
+		}		
 	}
 
 	return contents;
@@ -404,8 +421,10 @@ int categorySort(id categoryA, id categoryB, void * context)
 		[cell setSubString:nil];
 	}
 	else {
-		[cell setImage:[[selectedCategory objectAtIndex:row] icon]];
+		AIXtraInfo *xtraInfo = [selectedCategory objectAtIndex:row];
+		[cell setImage:[xtraInfo icon]];
 		[cell setSubString:nil];
+		[cell setEnabled:[xtraInfo enabled]];
 	}
 }
 

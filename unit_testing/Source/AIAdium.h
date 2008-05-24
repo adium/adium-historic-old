@@ -61,6 +61,7 @@
 	NSString						*queuedLogPathToShow;
     BOOL							completedApplicationLoad;
 	NSString						*advancedPrefsName;	
+	BOOL							isQuitting;
 }
 
 - (IBAction)showAboutBox:(id)sender;

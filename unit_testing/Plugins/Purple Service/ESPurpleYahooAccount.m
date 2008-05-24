@@ -322,8 +322,8 @@
 				idleSince = [NSDate date];
 			}
 			
-			[theContact setStatusObject:idleSince
-								 forKey:@"IdleSince"
+			[theContact setValue:idleSince
+								 forProperty:@"IdleSince"
 								 notify:NotifyLater];
 			
 		} else if (f->status == YAHOO_STATUS_INVISIBLE) {

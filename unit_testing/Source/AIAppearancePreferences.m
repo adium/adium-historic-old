@@ -171,16 +171,24 @@ typedef enum {
 	
 	//Appearance
 	if ([group isEqualToString:PREF_GROUP_APPEARANCE]) {
+		if (firstTime) {
+			[popUp_windowStyle compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue]];	
+			[checkBox_verticalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue]];
+			[checkBox_horizontalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue]];
+			[slider_windowOpacity setFloatValue:([[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_OPACITY] floatValue] * 100.0)];
+			[slider_horizontalWidth setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue]];
+			[self _updateSliderValues];
+		}
 		
 		//Horizontal resizing label
 		if (firstTime || 
-		   [key isEqualToString:KEY_LIST_LAYOUT_WINDOW_STYLE] ||
-		   [key isEqualToString:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE]) {
-			
-			int windowMode = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
+			[key isEqualToString:KEY_LIST_LAYOUT_WINDOW_STYLE] ||
+			[key isEqualToString:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE]) {
+
+			AIContactListWindowStyle windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
 			BOOL horizontalAutosize = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
 			
-			if (windowMode == AIContactListWindowStyleStandard) {
+			if (windowStyle == AIContactListWindowStyleStandard) {
 				//In standard mode, disable the horizontal autosizing slider if horiztonal autosizing is off
 				[textField_horizontalWidthText setLocalizedString:AILocalizedString(@"Maximum Width:",nil)];
 				[slider_horizontalWidth setEnabled:horizontalAutosize];
@@ -196,6 +204,22 @@ typedef enum {
 				[slider_horizontalWidth setEnabled:YES];
 			}
 			
+			//Configure vertical autosizing's appearance. AIListWindowController must match this behavior for this to make sense.
+			switch (windowStyle) {
+				case AIContactListWindowStyleStandard:
+				case AIContactListWindowStyleBorderless:
+					//Standard and borderless don't have to vertically autosize
+					[checkBox_verticalAutosizing setEnabled:YES];
+					[checkBox_verticalAutosizing setState:[[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE
+																									group:PREF_GROUP_APPEARANCE] intValue]];
+					break;
+				case AIContactListWindowStyleGroupBubbles:
+				case AIContactListWindowStyleContactBubbles:
+				case AIContactListWindowStyleContactBubbles_Fitted:
+					//The bubbles styles don't show a window; force them to autosize
+					[checkBox_verticalAutosizing setEnabled:NO];
+					[checkBox_verticalAutosizing setState:YES];
+			}			
 		}
 
 		//Selected menu items
@@ -237,14 +261,6 @@ typedef enum {
 		}	
 		if (firstTime || [key isEqualToString:KEY_ACTIVE_DOCK_ICON]) {
 			[popUp_dockIcon selectItemWithRepresentedObject:[prefDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
-		}
-		if (firstTime) {
-			[popUp_windowStyle compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue]];	
-			[checkBox_verticalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue]];
-			[checkBox_horizontalAutosizing setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue]];
-			[slider_windowOpacity setFloatValue:([[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_OPACITY] floatValue] * 100.0)];
-			[slider_horizontalWidth setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue]];
-			[self _updateSliderValues];
 		}
 	}
 }
@@ -365,7 +381,6 @@ typedef enum {
 	[textField_windowOpacity setStringValue:[NSString stringWithFormat:@"%i%%", (int)[slider_windowOpacity floatValue]]];
 	[textField_horizontalWidthIndicator setStringValue:[NSString stringWithFormat:@"%ipx",[slider_horizontalWidth intValue]]];
 }
-
 
 //Emoticons ------------------------------------------------------------------------------------------------------------
 #pragma mark Emoticons

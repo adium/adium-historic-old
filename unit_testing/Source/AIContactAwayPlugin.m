@@ -61,7 +61,7 @@
 			/* Away with a status message */
 			
 			//Check to make sure we're not duplicating server display name information
-			NSString	*serverDisplayName = [inObject statusObjectForKey:@"Server Display Name"];
+			NSString	*serverDisplayName = [inObject valueForProperty:@"Server Display Name"];
 			
 			//Return the correct string
 			if ([serverDisplayName isEqualToString:[statusMessage string]]) {
@@ -123,7 +123,7 @@
     statusMessage = [inObject statusMessage];
 	
 	//Check to make sure we're not duplicating server display name information
-	serverDisplayName = [inObject statusObjectForKey:@"Server Display Name"];
+	serverDisplayName = [inObject valueForProperty:@"Server Display Name"];
 	
     //Return the correct string
 	if ([serverDisplayName isEqualToString:[statusMessage string]]) {

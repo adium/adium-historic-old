@@ -218,8 +218,8 @@
 
 				//Force this contact to show up on the user's list for a little bit, even if it is offline
 				//Otherwise they have no good feedback that a contact was added at all.
-				[contact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"New Object" notify:YES];
-				[contact setStatusObject:[NSNumber numberWithBool:NO] forKey:@"New Object" afterDelay:10.0];
+				[contact setValue:[NSNumber numberWithBool:YES] forProperty:@"New Object" notify:YES];
+				[contact setValue:[NSNumber numberWithBool:NO] forProperty:@"New Object" afterDelay:10.0];
 			}
 		}
 	}
@@ -507,11 +507,25 @@
 	[checkedAccounts release];
 	checkedAccounts = [[NSMutableSet alloc] init];
 
-	//Select accounts by default
 	if (initialAccount && [accounts containsObject:initialAccount]) {
+		//Select accounts by default
 		[checkedAccounts addObject:initialAccount];
 
+	} else if ([[accounts valueForKeyPath:@"@sum.online"] intValue] == 1) {
+		//Only one online account; it should be checked
+		NSEnumerator	*enumerator;
+		AIAccount		*anAccount;
+		
+		enumerator = [accounts objectEnumerator];
+		while ((anAccount = [enumerator nextObject])) {
+			if ([anAccount online]) {
+				[checkedAccounts addObject:anAccount];
+				break;
+			}
+		}
+		
 	} else {
+		//More than one online account; follow our 'add contact to' preferences
 		NSEnumerator	*enumerator;
 		AIAccount		*anAccount;
 

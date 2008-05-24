@@ -127,7 +127,7 @@
 			//If this is an account we should auto-connect, remove it from accountsToNotConnect so that we auto-connect it.
 			if (connectAccount) {
 				[accountsToNotConnect removeObject:account];
-				[account setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Waiting for Network" notify:NotifyNow];
+				[account setValue:[NSNumber numberWithBool:YES] forProperty:@"Waiting for Network" notify:NotifyNow];
 				continue; //prevent the account from being removed from accountsToConnect.
 			}
 			
@@ -214,21 +214,21 @@
 	if (reachable) {
 		//If we are now online and are waiting to connect this account, do it if the account hasn't already
 		//been taken care of.
-		[account setStatusObject:nil forKey:@"Waiting for Network" notify:NotifyNow];
+		[account setValue:nil forProperty:@"Waiting for Network" notify:NotifyNow];
 		if ([accountsToConnect containsObject:account] ||
-			[account statusObjectForKey:@"Waiting to Reconnect"]) {
+			[account valueForProperty:@"Waiting to Reconnect"]) {
 			if (![account online] &&
-				![account integerStatusObjectForKey:@"Connecting"]) {
+				![account integerValueForProperty:@"Connecting"]) {
 				[account setShouldBeOnline:YES];
 				[accountsToConnect removeObject:account];
 			}
 		}
 	} else {
 		//If we are no longer online and this account is connected, disconnect it.
-		[account setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Waiting for Network" notify:NotifyNow];
+		[account setValue:[NSNumber numberWithBool:YES] forProperty:@"Waiting for Network" notify:NotifyNow];
 		if (([account online] ||
-			 [account integerStatusObjectForKey:@"Connecting"]) &&
-			![account integerStatusObjectForKey:@"Disconnecting"]) {
+			 [account integerValueForProperty:@"Connecting"]) &&
+			![account integerValueForProperty:@"Disconnecting"]) {
 			[account disconnectFromDroppedNetworkConnection];
 			[accountsToConnect addObject:account];
 		}
@@ -250,14 +250,14 @@
 		
 		while ((account = [enumerator nextObject])) {
 			if ([account online] ||
-				[[account statusObjectForKey:@"Connecting"] boolValue] ||
-				[account statusObjectForKey:@"Waiting to Reconnect"]) {
+				[[account valueForProperty:@"Connecting"] boolValue] ||
+				[account valueForProperty:@"Waiting to Reconnect"]) {
 
 				// Disconnect the account if it's online
 				if ([account online]) {
 					[account disconnect];
 				// Cancel any reconnect attempts
-				} else if ([account statusObjectForKey:@"Waiting to Reconnect"]) {
+				} else if ([account valueForProperty:@"Waiting to Reconnect"]) {
 					[account cancelAutoReconnect];
 				}
 				// Add it to our list to reconnect
@@ -306,7 +306,7 @@
 					NSString *host = [account host];
 					AIHostReachabilityMonitor *monitor = [AIHostReachabilityMonitor defaultMonitor];
 	
-					[account setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Waiting for Network" notify:NotifyNow];
+					[account setValue:[NSNumber numberWithBool:YES] forProperty:@"Waiting for Network" notify:NotifyNow];
 					if (host &&
 						![monitor observer:self isObservingHost:host]) {
 						[monitor addObserver:self forHost:host];
@@ -319,7 +319,7 @@
 				BOOL			enabledAccountUsingThisHost = NO;
 				NSString		*thisHost = [account host];
 				
-				[account setStatusObject:nil forKey:@"Waiting for Network" notify:NotifyNow];
+				[account setValue:nil forProperty:@"Waiting for Network" notify:NotifyNow];
 
 				//Check if any enabled accounts are still using this now-disabled account's host
 				enumerator = [[[adium accountController] accounts] objectEnumerator];	
@@ -357,12 +357,12 @@
     
 	while ((account = [enumerator nextObject])) {
 		if ([account online] ||
-		   [[account statusObjectForKey:@"Disconnecting"] boolValue]) {
+		   [[account valueForProperty:@"Disconnecting"] boolValue]) {
 			AILog(@"%@ (and possibly others) is still %@",account, ([account online] ? @"online" : @"disconnecting"));
 			return YES;
 		} else if (considerConnecting &&
-				   ([[account statusObjectForKey:@"Connecting"] boolValue] ||
-					[account statusObjectForKey:@"Waiting to Reconnect"])) {
+				   ([[account valueForProperty:@"Connecting"] boolValue] ||
+					[account valueForProperty:@"Waiting to Reconnect"])) {
 			return YES;
 		}
 	}
@@ -392,7 +392,7 @@
 			[account setShouldBeOnline:YES];
 			[accountsToConnect removeObject:account];
 		} else if ([accountsToConnect containsObject:account]) {
-			[account setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Waiting for Network" notify:NotifyNow];
+			[account setValue:[NSNumber numberWithBool:YES] forProperty:@"Waiting for Network" notify:NotifyNow];
 		}
 	}
 }

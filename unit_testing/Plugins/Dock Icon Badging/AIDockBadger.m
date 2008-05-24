@@ -18,6 +18,7 @@
 #import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
+#import <Adium/AIStatusControllerProtocol.h>
 #import "AIDockController.h"
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
@@ -55,6 +56,10 @@
 
 	//Observe pref changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
+	
+	// Register as an observer of the status preferences for unread conversation count
+	[[adium preferenceController] registerPreferenceObserver:self
+													forGroup:PREF_GROUP_STATUS_PREFERENCES];
 }
 
 /*!
@@ -97,7 +102,7 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if (!key || [key isEqualToString:KEY_BADGE_DOCK_ICON]) {
+	if ([group isEqualToString:PREF_GROUP_APPEARANCE] && (!key || [key isEqualToString:KEY_BADGE_DOCK_ICON])) {
 		BOOL	newShouldBadge = [[prefDict objectForKey:KEY_BADGE_DOCK_ICON] boolValue];
 		if (newShouldBadge != shouldBadge) {
 			shouldBadge = newShouldBadge;
@@ -119,6 +124,10 @@
 				[[adium notificationCenter] removeObserver:self];
 			}
 		}
+	}
+	
+	if ([group isEqualToString:PREF_GROUP_STATUS_PREFERENCES]) {
+		showConversationCount = [[prefDict objectForKey:KEY_STATUS_CONVERSATION_COUNT] boolValue];
 	}
 }	
 
@@ -185,7 +194,8 @@
  */
 - (void)_setOverlay
 {
-	int contentCount = [[adium chatController] unviewedContentCount];
+	int contentCount = (showConversationCount ?
+					   [[adium chatController] unviewedConversationCount] : [[adium chatController] unviewedContentCount]);
 
 	if (contentCount != lastUnviewedContentCount) {
 		//Remove & release the current overlay state

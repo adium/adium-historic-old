@@ -50,9 +50,10 @@
 	NSMenuItem								*menuItem_consolidate;
 	
 	NSDictionary							*contextMenuAttach;
-	NSMenuItem								*contextMenuDetach;
-	NSMenu									*contextSubmenuContent;
-	NSMenuItem								*contextSubmenu;
+	
+	NSMenuItem								*detachMenuItem;
+	NSMenuItem								*attachMenuItem;
+	NSMenu									*attachSubmenu;
 
 	unsigned								detachedCycle;
 }

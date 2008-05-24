@@ -60,7 +60,7 @@
 {
     return URLIsValid;
 }
-- (URI_VERIFICATION_STATUS)validationStatus
+- (AH_URI_VERIFICATION_STATUS)validationStatus
 {
     return validStatus;
 }
@@ -72,7 +72,7 @@
 - (void)textDidChange:(NSNotification *)notification
 {
     if (continuousURLValidation) {//call the URL validatation if set
-        SHHyperlinkScanner  *laxScanner = [[SHHyperlinkScanner alloc] initWithStrictChecking:NO];
+        AHHyperlinkScanner  *laxScanner = [[AHHyperlinkScanner alloc] initWithStrictChecking:NO];
 		NSString			*linkURL = [self linkURL];
 
         URLIsValid = ([laxScanner isStringValidURL:linkURL] &&

@@ -81,7 +81,7 @@
 	BOOL validate;
 
 	if (menuItem == consolidateMenuItem)
-		validate = ([[[adium interfaceController] openContainers] count] > 1);
+		validate = ([[[adium interfaceController] openContainerIDs] count] > 1);
 	else if (menuItem == newWndowMenuItem)
 		validate = ([[(id <AIChatWindowController>)[[[[adium interfaceController] activeChat] window] windowController] containedChats] count] > 1);
 	else

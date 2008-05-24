@@ -447,33 +447,22 @@ static	ABAddressBook	*sharedAddressBook = nil;
 - (void)buildContactTypeMenu
 {
 	//Rebuild the menu
-	/*[popUp_contactType setMenu:[AIServiceMenu menuOfServicesWithTarget:self
+	[popUp_contactType setMenu:[AIServiceMenu menuOfServicesWithTarget:self
 													activeServicesOnly:YES
 													   longDescription:NO
-																format:nil]];*/
-	
-	[popUp_contactType removeAllItems];
-	//We show only the active services
-	NSEnumerator	*servicesEnumerator = [[[adium accountController] activeServicesIncludingCompatibleServices:YES] objectEnumerator];
-	unsigned int	i = 0;
-	
-	while ((service = [servicesEnumerator nextObject])) {
-		if ([ESAddressBookIntegrationPlugin propertyFromService:service]) {
-			NSMenuItem	*menuItem;
-			
-			[popUp_contactType addItemWithTitle:[service shortDescription]];
-			
-			menuItem = (NSMenuItem *)[popUp_contactType itemAtIndex:i];
-			[menuItem setRepresentedObject:service];
-			[menuItem setImage:[AIServiceIcons serviceIconForService:service
-																type:AIServiceIconSmall
-														   direction:AIIconNormal]];
-			i++;
-		}
-	}
-	
+																format:nil]];
+
 	//Ensure our selection is still valid
 	[self ensureValidContactTypeSelection];
+}
+
+/*!
+ * @brief Called by AIServiceMenu to determine what services should be included
+ */
+- (BOOL)serviceMenuShouldIncludeService:(AIService *)inService
+{
+	return (([ESAddressBookIntegrationPlugin propertyFromService:inService] &&
+			 [[[[adium accountController] accountsCompatibleWithService:inService] valueForKeyPath:@"@sum.online"] boolValue]) ? YES : NO);
 }
 
 /*!

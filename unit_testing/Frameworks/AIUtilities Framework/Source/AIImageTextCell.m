@@ -36,6 +36,7 @@
 	if ((self = [super init])) {
 		font = nil;
 		subString = nil;
+		highlightWhenNotKey = NO;
 		maxImageWidth = DEFAULT_MAX_IMAGE_WIDTH;
 		imageTextPadding = DEFAULT_IMAGE_TEXT_PADDING;
 		[self setLineBreakMode:NSLineBreakByTruncatingTail];
@@ -70,6 +71,15 @@
 }
 
 #pragma mark Accessors
+
+/*! @brief Set whether the strings are considered highlighted even if the window is not key
+ *
+ * @par		If \c YES, the text is drawn as highlighted even when not the key wndow. If \c NO, it is drawn normally.
+ */
+- (void) setHighlightWhenNotKey:(BOOL)flag
+{
+	highlightWhenNotKey = flag;
+}
 
 /*
  * @brief Set the string value
@@ -228,7 +238,7 @@
 	NSRect	destRect = { cellFrame.origin, size };
 	
 	//Adjust the rects
-	destRect.origin.y += 1;
+	destRect.origin.y += 0;
 	destRect.origin.x += imageTextPadding;
 	
 	//Center image vertically, or scale as needed
@@ -301,8 +311,9 @@
 		NSWindow			*window;
 
 		//If we don't have a control view, or we do and it's the first responder, draw the text in the alternateSelectedControl text color (white)
-		if (highlighted && ((window = [controlView window]) &&
-							([window isKeyWindow] && ([window firstResponder] == controlView)))) {
+		if (highlighted && (highlightWhenNotKey ||
+							((window = [controlView window]) &&
+							 ([window isKeyWindow] && ([window firstResponder] == controlView))))) {
 			// Draw the text inverted
 			mainTextColor = [NSColor alternateSelectedControlTextColor];
 			subStringTextColor = [NSColor alternateSelectedControlTextColor];

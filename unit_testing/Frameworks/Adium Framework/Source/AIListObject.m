@@ -202,8 +202,8 @@
 					 forKey:@"Visible" 
 					  group:PREF_GROUP_ALWAYS_VISIBLE];
 		
-		[self setStatusObject:[NSNumber numberWithBool:alwaysVisible]
-					   forKey:AlwaysVisible
+		[self setValue:[NSNumber numberWithBool:alwaysVisible]
+					   forProperty:AlwaysVisible
 					   notify:NotifyNow];
 		
 		if ([containingObject isKindOfClass:[AIListGroup class]]) {
@@ -306,15 +306,15 @@
 	return NO;
 }
 
-//Status objects ------------------------------------------------------------------------------------------------------
-#pragma mark Status objects
+//Properties ------------------------------------------------------------------------------------------------------
+#pragma mark Properties
 /*!
- * @brief Called after status keys have been modified; informs the contact controller.
+ * @brief Called after properties have been modified; informs the contact controller.
  *
- * @param keys The keys
+ * @param keys The properties
  * @param silent YES indicates that this should not trigger 'noisy' notifications - it is appropriate for notifications as an account signs on and notes tons of contacts.
  */
-- (void)didModifyStatusKeys:(NSSet *)keys silent:(BOOL)silent
+- (void)didModifyProperties:(NSSet *)keys silent:(BOOL)silent
 {
 	[[adium contactController] listObjectStatusChanged:self
 									modifiedStatusKeys:keys
@@ -324,30 +324,30 @@
  * @brief Called after status changes have been modified and notifications posted
  *
  * When we notify of queued status changes, our containing group should notify as well so it can stay in sync with
- * any changes it may have made in object:didSetStatusObject:forKey:notify:
+ * any changes it may have made in object:didSetValue:forProperty:notify:
  *
  * @param silent YES indicates that this should not trigger 'noisy' notifications - it is appropriate for notifications as an account signs on and notes tons of contacts.
  */
-- (void)didNotifyOfChangedStatusSilently:(BOOL)silent
+- (void)didNotifyOfChangedPropertiesSilently:(BOOL)silent
 {
 	//Let our containing object know about the notification request
 	if (containingObject)
-		[containingObject notifyOfChangedStatusSilently:silent];
+		[containingObject notifyOfChangedPropertiesSilently:silent];
 }
 
 /*!
- * @brief Notifcation of changed status keys
+ * @brief Notifcation of changed properties
  *
  * Subclasses may wish to override these - they must be sure to call super's implementation, too!
  */
-- (void)object:(id)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify
+- (void)object:(id)inObject didSetValue:(id)value forProperty:(NSString *)key notify:(NotifyTiming)notify
 {				
-	//Inform our containing group about the new status object value
+	//Inform our containing group about the new property value
 	if (containingObject) {
-		[containingObject object:self didSetStatusObject:value forKey:key notify:notify];
+		[containingObject object:self didSetValue:value forProperty:key notify:notify];
 	}
 	
-	[super object:inObject didSetStatusObject:value forKey:key notify:notify];
+	[super object:inObject didSetValue:value forProperty:key notify:notify];
 }
 
 //AIMutableOwnerArray delegate ------------------------------------------------------------------------------------------
@@ -391,8 +391,8 @@
 
 - (void)setFormattedUID:(NSString *)inFormattedUID notify:(NotifyTiming)notify
 {
-	[self setStatusObject:inFormattedUID
-				   forKey:FormattedUID
+	[self setValue:inFormattedUID
+				   forProperty:FormattedUID
 				   notify:notify];
 }
 
@@ -446,7 +446,7 @@
  */
 - (NSString *)formattedUID
 {
-	NSString  *outName = [self statusObjectForKey:FormattedUID];
+	NSString  *outName = [self valueForProperty:FormattedUID];
     return outName ? outName : UID;	
 }
 
@@ -528,7 +528,7 @@
 
 - (NSNumber *)idleTime
 {
-	NSNumber *idleNumber = [self statusObjectForKey:@"Idle"];
+	NSNumber *idleNumber = [self valueForProperty:@"Idle"];
 	return (idleNumber ? idleNumber : [NSNumber numberWithInt:0]);
 }
 
@@ -542,7 +542,7 @@
 	NSString *notes;
 	
     notes = [self preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES];
-	if (!notes) notes = [self statusObjectForKey:@"Notes"];
+	if (!notes) notes = [self valueForProperty:@"Notes"];
 	
 	return notes;
 }
@@ -575,7 +575,7 @@
  */
 - (NSString *)statusName
 {
-	return [self statusObjectForKey:@"StatusName"];
+	return [self valueForProperty:@"StatusName"];
 }
 
 /*!
@@ -585,7 +585,7 @@
  */
 - (AIStatusType)statusType
 {
-	NSNumber		*statusTypeNumber = [self statusObjectForKey:@"StatusType"];
+	NSNumber		*statusTypeNumber = [self valueForProperty:@"StatusType"];
 	AIStatusType	statusType = (statusTypeNumber ?
 								  [statusTypeNumber intValue] :
 								  ([self online] ? AIAvailableStatusType : AIOfflineStatusType));
@@ -607,14 +607,14 @@
 	NSString		*oldStatusName = [self statusName];
 	
 	if (currentStatusType != statusType) {
-		[self setStatusObject:[NSNumber numberWithInt:statusType] forKey:@"StatusType" notify:NotifyLater];
+		[self setValue:[NSNumber numberWithInt:statusType] forProperty:@"StatusType" notify:NotifyLater];
 	}
 	
 	if ((!statusName && oldStatusName) || (statusName && ![statusName isEqualToString:oldStatusName])) {
-		[self setStatusObject:statusName forKey:@"StatusName" notify:NotifyLater];
+		[self setValue:statusName forProperty:@"StatusName" notify:NotifyLater];
 	}
 	
-	if (notify) [self notifyOfChangedStatusSilently:NO];
+	if (notify) [self notifyOfChangedPropertiesSilently:NO];
 }
 
 /*!
@@ -627,7 +627,7 @@
  */
 - (NSAttributedString *)statusMessage
 {
-	return [self statusObjectForKey:@"StatusMessage"];
+	return [self valueForProperty:@"StatusMessage"];
 }
 
 /*!
@@ -640,7 +640,7 @@
  */
 - (NSString *)statusMessageString;
 {
-	return [[self statusObjectForKey:@"StatusMessage"] string];
+	return [[self valueForProperty:@"StatusMessage"] string];
 }
 
 /*!
@@ -668,13 +668,13 @@
  * @brief Set the current status message
  *
  * @param statusMessage Status message. May be nil.
- * @param noitfy How to notify of the change. See -[ESObjectWithStatus setStatusObject:forKey:notify:].
+ * @param noitfy How to notify of the change. See -[ESObjectWithProperties setValue:forProperty:notify:].
  */
 - (void)setStatusMessage:(NSAttributedString *)statusMessage notify:(NotifyTiming)notify
 {
 	if (!statusMessage ||
-	   ![[self statusObjectForKey:@"StatusMessage"] isEqualToAttributedString:statusMessage]) {
-		[self setStatusObject:statusMessage forKey:@"StatusMessage" notify:notify];
+	   ![[self valueForProperty:@"StatusMessage"] isEqualToAttributedString:statusMessage]) {
+		[self setValue:statusMessage forProperty:@"StatusMessage" notify:notify];
 	}
 }
 
@@ -696,27 +696,27 @@
 	[self setStatusMessage:nil
 					 notify:NotifyLater];
 
-	if (notify) [self notifyOfChangedStatusSilently:NO];
+	if (notify) [self notifyOfChangedPropertiesSilently:NO];
 }
 
 - (BOOL)online
 {
-	return ([self integerStatusObjectForKey:@"Online"] ? YES : NO);
+	return ([self integerValueForProperty:@"Online"] ? YES : NO);
 }
 
 - (AIStatusSummary)statusSummary
 {
-	if ([self integerStatusObjectForKey:@"Online"]) {
+	if ([self integerValueForProperty:@"Online"]) {
 		AIStatusType	statusType = [self statusType];
 		
 		if ((statusType == AIAwayStatusType) || (statusType == AIInvisibleStatusType)) {
-			if ([self integerStatusObjectForKey:@"IsIdle" fromAnyContainedObject:NO]) {
+			if ([self integerValueForProperty:@"IsIdle" fromAnyContainedObject:NO]) {
 				return AIAwayAndIdleStatus;
 			} else {
 				return AIAwayStatus;
 			}
 			
-		} else if ([self integerStatusObjectForKey:@"IsIdle" fromAnyContainedObject:NO]) {
+		} else if ([self integerValueForProperty:@"IsIdle" fromAnyContainedObject:NO]) {
 			return AIIdleStatus;
 			
 		} else {
@@ -735,9 +735,9 @@
 	}
 }
 
-- (void)notifyOfChangedStatusSilently:(BOOL)silent
+- (void)notifyOfChangedPropertiesSilently:(BOOL)silent
 {
-	[super notifyOfChangedStatusSilently:silent];
+	[super notifyOfChangedPropertiesSilently:silent];
 }
 
 /*!
