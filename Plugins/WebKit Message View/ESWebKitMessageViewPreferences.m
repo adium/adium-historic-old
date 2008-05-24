@@ -652,7 +652,7 @@
 			
 			[[adium contentController] displayContentObject:content
 										usingContentFilters:YES
-												immediately:NO];
+												immediately:YES];
 		}
 	}
 
