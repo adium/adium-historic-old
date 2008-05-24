@@ -650,7 +650,9 @@
 			[content setPostProcessContent:NO];
 			[content setDisplayContentImmediately:NO];
 			
-			[[adium contentController] displayContentObject:content immediately:NO];
+			[[adium contentController] displayContentObject:content
+										usingContentFilters:YES
+												immediately:NO];
 		}
 	}
 
