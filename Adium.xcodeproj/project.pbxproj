@@ -1347,7 +1347,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 3496A8E707CE6CA30055BBAB /* AutoHyperlinks.framework.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 7EA3B0430DD1153F002A18D1 /* UnitTests */;
+			remoteGlobalIDString = 7EA3B0430DD1153F002A18D1;
 			remoteInfo = UnitTests;
 		};
 		340BA85509EC59AF000EC441 /* PBXContainerItemProxy */ = {
