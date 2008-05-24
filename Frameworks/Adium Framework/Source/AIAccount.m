@@ -895,7 +895,6 @@ typedef enum
  *			@"parentGroup" key of keyDictionary is the optional "contact group" property of contacts.
  *						   If the parentGroup is not specified, the contact will not be added to the contact list.
  */
- */
 - (id)makeContactWithProperties:(NSDictionary *)properties
 {
 	NSDictionary *keyDictionary = [properties objectForKey:@"KeyDictionary"];
