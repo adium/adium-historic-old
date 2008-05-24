@@ -61,6 +61,8 @@
 #define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
 #define NEW_ACCOUNT_DISPLAY_TEXT		AILocalizedString(@"<New Account>", "Placeholder displayed as the name of a new account")
 
+#define	KEY_PRIVACY_OPTION	@"Privacy Option"
+
 @interface CBPurpleAccount (PRIVATE)
 - (NSString *)_mapIncomingGroupName:(NSString *)name;
 - (NSString *)_mapOutgoingGroupName:(NSString *)name;
@@ -663,6 +665,9 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 	AILogWithSignature(@"");
 
 	//Open the chat
+	if ([chat isOpen])
+		[self displayYouHaveConnectedInChat:chat];
+
 	[[adium interfaceController] openChat:chat];
 	
 	[chat accountDidJoinChat];
@@ -1299,10 +1304,17 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 				break;
 			
 		}
-		account->perm_deny = privacyType;
-		serv_set_permit_deny(purple_account_get_connection(account));
-		AILog(@"Set privacy options for %@ (%x %x) to %i",
-			  self,account,purple_account_get_connection(account),account->perm_deny);
+		
+		if (account->perm_deny != privacyType) {
+			account->perm_deny = privacyType;
+			serv_set_permit_deny(purple_account_get_connection(account));
+			AILog(@"Set privacy options for %@ (%x %x) to %i",
+				  self,account,purple_account_get_connection(account),account->perm_deny);
+
+			[self setPreference:[NSNumber numberWithInt:option]
+						 forKey:KEY_PRIVACY_OPTION
+						  group:GROUP_ACCOUNT_STATUS];			
+		}
 	} else {
 		AILog(@"Couldn't set privacy options for %@ (%x %x)",self,account,purple_account_get_connection(account));
 	}
@@ -2377,6 +2389,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 			}
 		}
 
+		AILogWithSignature(@"%@ setting icon data of length %i", self, [buddyIconData length]);
 		[purpleAdapter setBuddyIcon:buddyIconData onAccount:self];
 	}
 	
