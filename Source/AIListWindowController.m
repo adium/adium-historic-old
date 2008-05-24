@@ -53,7 +53,6 @@
 + (NSString *)nibName;
 
 - (void)_configureAutoResizing;
-- (void)_configureToolbar;
 + (void)updateScreenSlideBoundaryRect:(id)sender;
 - (BOOL)shouldSlideWindowOffScreen_mousePositionStrategy;
 - (void)slideWindowIfNeeded:(id)sender;
