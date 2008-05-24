@@ -28,8 +28,6 @@
 #import <AIUtilities/AIEventAdditions.h>
 #import "AISCLViewPlugin.h"
 
-#define MINIMUM_HEIGHT				48
-
 @interface AIListOutlineView (PRIVATE)
 - (void)_initListOutlineView;
 @end
@@ -168,8 +166,7 @@
 // Returns our desired size
 - (int)desiredHeight
 {
-	int desiredHeight = [self totalHeight] + desiredHeightPadding;
-	return ((desiredHeight > MINIMUM_HEIGHT || [self numberOfRows]) ? desiredHeight : MINIMUM_HEIGHT);
+	return ([self totalHeight] + desiredHeightPadding);
 }
 
 - (int)desiredWidth

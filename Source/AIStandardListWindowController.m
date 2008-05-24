@@ -760,6 +760,7 @@
 {
     NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:TOOLBAR_CONTACT_LIST] autorelease];
 	
+	[toolbar setShowsBaselineSeparator:NO];
 	[toolbar setAutosavesConfiguration:YES];
     [toolbar setDelegate:self];
     [toolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
@@ -822,7 +823,7 @@
 {
 	if (filterBarIsVisible) {
 		[self hideFilterBarWithAnimation:YES];
-	} else {
+	} else if ([contactListView numberOfRows] > 0) {
 		[self showFilterBarWithAnimation:YES];
 	}
 }

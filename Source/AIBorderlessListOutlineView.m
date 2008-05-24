@@ -17,6 +17,8 @@
 #import "AIBorderlessListOutlineView.h"
 #import <AIUtilities/AIEventAdditions.h>
 
+#define FORCED_MINIMUM_HEIGHT 40
+
 @implementation AIBorderlessListOutlineView
 
 //Forward mouse down events to our containing window (when command is pressed) to allow dragging
@@ -63,6 +65,12 @@
 	} else {
 		[super mouseUp:theEvent];
 	}	
+}
+
+- (int)desiredHeight
+{
+	int height = [super desiredHeight];
+	return (height > FORCED_MINIMUM_HEIGHT ? height : FORCED_MINIMUM_HEIGHT);
 }
 
 - (int)totalHeight
