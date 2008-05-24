@@ -66,6 +66,8 @@
 
 @implementation AIListWindowController
 
+static NSMutableDictionary *screenSlideBoundaryRectDictionary = nil;
+
 + (void)initialize
 {
 	if ([self isEqual:[AIListWindowController class]]) {
@@ -562,7 +564,7 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 // Auto-resizing support ------------------------------------------------------------------------------------------------
 #pragma mark Auto-resizing support
 
-- (void)screenParametersChanged:(NSNotification *)notification
+- (void)respondToScreenParametersChanged:(NSNotification *)notification
 {
 	NSWindow	*window = [self window];
 	
@@ -575,29 +577,32 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 			windowScreen = [NSScreen mainScreen];
 		}
 	}
-
-	NSRect newScreenFrame = [windowScreen frame];
 	
-	if ([[NSScreen screens] count] &&
-		(windowScreen == [[NSScreen screens] objectAtIndex:0])) {
-			newScreenFrame.size.height -= [NSMenuView menuBarHeight];
+	NSRect newScreenFrame = [[screenSlideBoundaryRectDictionary objectForKey:[NSValue valueWithNonretainedObject:windowScreen]] rectValue];
+
+	if ([self windowSlidOffScreenEdgeMask] != AINoEdges) {
+		NSRect newWindowFrame = AIRectByAligningRect_edge_toRect_edge_([window frame], [self windowSlidOffScreenEdgeMask],
+																	   newScreenFrame, [self windowSlidOffScreenEdgeMask]);
+		[[self window] setFrame:newWindowFrame display:NO];
+
+		[self delayWindowSlidingForInterval:2];
+		[self slideWindowOnScreenWithAnimation:NO];
+		
 	}
 
-	NSRect listFrame = [window frame];
-	
-//XXX TODO: This should happen on the next run loop so that the other screen params changed callback is guaranteed to have been called
-//XXX TODO: We should use the known edges rather than scaling to find a new location. Also, do not unhide if hidden.
-	oldFrame.origin.x *= ((newScreenFrame.size.width - listFrame.size.width) / ((currentScreenFrame.size.width - listFrame.size.width) + 0.00001));
-	oldFrame.origin.y *= ((newScreenFrame.size.height - listFrame.size.height) / ((currentScreenFrame.size.height - listFrame.size.height) + 0.00001));
-	
-	[self delayWindowSlidingForInterval:2];
-	[self slideWindowOnScreenWithAnimation:NO];
-
 	[contactListController contactListDesiredSizeChanged];
-
+	
 	currentScreen = [window screen];
 	currentScreenFrame = newScreenFrame;
 	[self setSavedFrame:[window frame]];
+}
+
+- (void)screenParametersChanged:(NSNotification *)notification
+{
+	/* Wait until the next run loop so the class method has definitely updated our screen sliding borders. */
+	[self performSelector:@selector(respondToScreenParametersChanged:)
+			   withObject:notification
+			   afterDelay:0];
 }
 
 // Printing
@@ -610,7 +615,6 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 // Dock-like hiding -----------------------------------------------------------------------------------------------------
 #pragma mark Dock-like hiding
 
-static NSMutableDictionary *screenSlideBoundaryRectDictionary = nil;
 + (void)updateScreenSlideBoundaryRect:(id)sender
 {
 	NSArray *screens = [NSScreen screens];
