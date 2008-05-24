@@ -374,11 +374,11 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	[groupCell setFont:(theFont ? theFont : GROUP_FONT_IF_FONT_NOT_FOUND)];
 
 	//Standard special cases.  Add an extra line of padding to the bottom of the standard window.
-	//if (windowStyle == AIContactListWindowStyleStandard) {
-	//	[contactListView setDesiredHeightPadding:3];   //1 pixel border at the top and bottom + extra line at bottom
-	//} else {
-	[contactListView setDesiredHeightPadding:1];   //Accounts for the 1 pixel border at the top and bottom
-	//}
+	if (windowStyle == AIContactListWindowStyleStandard) {
+		[contactListView setDesiredHeightPadding:1];
+	} else {
+		[contactListView setDesiredHeightPadding:2];
+	}
 	
 	//Bubbles special cases
 	pillowsOrPillowsFittedWindowStyle = (windowStyle == AIContactListWindowStyleContactBubbles || windowStyle == AIContactListWindowStyleContactBubbles_Fitted);
