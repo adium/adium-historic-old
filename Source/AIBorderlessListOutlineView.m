@@ -17,7 +17,7 @@
 #import "AIBorderlessListOutlineView.h"
 #import <AIUtilities/AIEventAdditions.h>
 
-#define FORCED_MINIMUM_HEIGHT 40
+#define FORCED_MINIMUM_HEIGHT 20
 
 @implementation AIBorderlessListOutlineView
 
@@ -75,7 +75,7 @@
 
 - (int)totalHeight
 {
-	return [super totalHeight] + 1;
+	return [super totalHeight] + 2;
 }
 
 @end
