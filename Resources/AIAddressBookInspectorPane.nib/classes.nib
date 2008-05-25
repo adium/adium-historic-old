@@ -34,6 +34,14 @@
 			<string>NSControl</string>
 		</dict>
 		<dict>
+			<key>CLASS</key>
+			<string>RBSplitSubview</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSView</string>
+		</dict>
+		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key>cancelABPanel</key>
@@ -74,14 +82,6 @@
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>AIObject</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>RBSplitSubview</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSView</string>
 		</dict>
 		<dict>
 			<key>ACTIONS</key>
