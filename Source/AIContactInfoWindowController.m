@@ -320,20 +320,28 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (void)selectionChanged:(NSNotification *)notification
 {
 	AIListObject	*object = [[adium interfaceController] selectedListObject];
-	if (object) {
-		[self configureForListObject:object];
-		[self setupMetaPopup:object];
-	}
+
+	[self loadInfoForListObject:object];
 }
 
-- (void)loadInfoForListObject:(AIListObject *)aListObject
+- (void)loadInfoForListObject:(AIListObject *)listObject
 {
 	//This method is how the Get Info toolbar item works in the Message Window Toolbar. 
 	
-	if (aListObject) {
-		[self configureForListObject:aListObject];
-		[self setupMetaPopup:aListObject];
+	AIListContact *parentContact = [(AIListContact *)listObject parentContact];
+	
+	/* Use the parent contact if it is a valid meta contact which contains contacts
+	 * If this contact is within a metacontact but not currently listed on any buddy list, we don't want to 
+	 * display the effectively-invisible metacontact's info but rather the info of this contact itself.
+	 */
+	if (![parentContact isKindOfClass:[AIMetaContact class]] ||
+		[[(AIMetaContact *)parentContact listContacts] count]) {
+		displayedObject = parentContact;
+	} else {
+		displayedObject = listObject;
 	}
+	
+	[self configureForListObject:displayedObject];
 }
 
 //Change the list object
