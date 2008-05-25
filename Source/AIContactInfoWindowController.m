@@ -564,26 +564,16 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 #pragma mark View Management and Animation
 -(void)addInspectorView:(NSView *)aView animate:(BOOL)doAnimate;
 {	
-	if(currentPane == aView)
+	if (currentPane == aView) {
 		return;
-	
-	else if(currentPane) {
+	} else if (currentPane) {
 		[self animateViewOut:currentPane];
 		[currentPane removeFromSuperview];
 	}
-		
-	NSRect viewBounds = [aView bounds];
-	NSRect contentBounds = [inspectorContent bounds];
-	NSRect inspectorFrame = [[self window] frame];
 
-	viewBounds.size.height = ((inspectorFrame.size.height - contentBounds.size.height) + viewBounds.size.height);
-	viewBounds.origin.x = inspectorFrame.origin.x;
-	viewBounds.origin.y = inspectorFrame.origin.y + (inspectorFrame.size.height - viewBounds.size.height);
-	
-	[[self window] setFrame:viewBounds display:YES animate:doAnimate];
+	[aView setFrame:[inspectorContent bounds]];
 	
 	[inspectorContent addSubview:aView];
-	//[inspectorContent setFrame:[aView bounds]];
 	
 	currentPane = aView;
 	[self animateViewIn:currentPane];
