@@ -61,6 +61,11 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 	//Configure Table view
 	[self configureEventSummaryOutlineView];
 	
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(outlineViewColumnDidResize:)
+									   name:NSOutlineViewColumnDidResizeNotification
+									 object:outlineView_summary];
+	
 	//Manually size and position our buttons
 	{
 		NSRect	newFrame, oldFrame;
@@ -99,6 +104,7 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 //Preference view is closing - stop observing preferences immediately, even if we aren't immediately deallocating
 - (void)viewWillClose
 {
+	[[adium notificationCenter] removeObserver:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
@@ -106,6 +112,7 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 {
 	//Ensure that we have unregistered as a preference observer
 	[[adium preferenceController] unregisterPreferenceObserver:self];
+	[[adium notificationCenter] removeObserver:self];
 
 	[outlineView_summary setDelegate:nil];
 	[outlineView_summary setDataSource:nil];
@@ -133,6 +140,12 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 - (id)delegate
 {
 	return delegate;
+}
+
+- (void)outlineViewColumnDidResize:(NSNotification *)notification
+{
+	[self calculateAllHeights];
+	[outlineView_summary noteHeightOfRowsWithIndexesChanged:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, [outlineView_summary numberOfRows]-1)]];
 }
 
 //Configure the pane for a list object
@@ -338,7 +351,6 @@ int actionSort(id objectA, id objectB, void *context)
 {
 	return [(NSString *)[objectA objectForKey:KEY_ACTION_ID] compare:(NSString *)[objectB objectForKey:KEY_ACTION_ID]];
 }
-
 
 - (void)calculateHeightForItem:(id)item
 {
