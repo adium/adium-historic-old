@@ -34,7 +34,7 @@
 					NSArray							*loadedContent;
 					
 					AIListObject					*displayedObject;
-					int								lastSegmentForContact;
+					int								lastSegment;
 }
 
 - (IBAction)segmentSelected:(id)sender;

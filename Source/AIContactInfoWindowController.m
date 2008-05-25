@@ -38,6 +38,7 @@
 #define	CONTACT_INFO_NIB				@"ContactInfoInspector"			//Filename of the contact info nib
 #define KEY_INFO_WINDOW_FRAME			@"Contact Info Inspector Frame"	//
 #define KEY_INFO_SELECTED_CATEGORY		@"Selected Info Category"		//
+#define KEY_INFO_SAVED_FRAME_PREFIX		@"Contact Info Inspector Frame Panel"
 
 #define	CONTACT_INFO_THEME				@"Contact Info List Theme"
 #define	CONTACT_INFO_LAYOUT				@"Contact Info List Layout"
@@ -65,7 +66,7 @@ enum segments {
 - (void)contactInfoListControllerSelectionDidChangeToListObject:(AIListObject *)listObject;
 
 //View Animation
--(void)addInspectorView:(NSView *)aView animate:(BOOL)doAnimate;
+-(void)addInspectorPanel:(int)newSegment animate:(BOOL)doAnimate;
 -(void)animateViewIn:(NSView *)aView;
 -(void)animateViewOut:(NSView *)aView;
 @end
@@ -112,26 +113,26 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	switch(currentSegment) {
 		case CONTACT_INFO_SEGMENT:
 			[self configureMetaPopupHiding];
-			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_INFO_SEGMENT] inspectorContentView] animate:shouldAnimate];
+			[self addInspectorPanel:CONTACT_INFO_SEGMENT animate:shouldAnimate];
 			break;
 		case CONTACT_ADDRESSBOOK_SEGMENT:
 			[metaPopup setHidden:YES];
-			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_ADDRESSBOOK_SEGMENT] inspectorContentView] animate:shouldAnimate];
+			[self addInspectorPanel:CONTACT_ADDRESSBOOK_SEGMENT animate:shouldAnimate];
 			break;
 		case CONTACT_EVENTS_SEGMENT:
 			[metaPopup setHidden:YES];
-			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_EVENTS_SEGMENT] inspectorContentView] animate:shouldAnimate];
+			[self addInspectorPanel:CONTACT_EVENTS_SEGMENT animate:shouldAnimate];
 			break;
 		case CONTACT_ADVANCED_SEGMENT:
 			[metaPopup setHidden:YES];
-			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_ADVANCED_SEGMENT] inspectorContentView] animate:shouldAnimate];
+			[self addInspectorPanel:CONTACT_ADVANCED_SEGMENT animate:shouldAnimate];
 			break;
 		case CONTACT_PLUGINS_SEGMENT:
 			[metaPopup setHidden:YES];
-			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_PLUGINS_SEGMENT] inspectorContentView] animate:shouldAnimate];
+			[self addInspectorPanel:CONTACT_PLUGINS_SEGMENT animate:shouldAnimate];
 			break;
 		default:
-			[self addInspectorView:[[loadedContent objectAtIndex:CONTACT_INFO_SEGMENT] inspectorContentView] animate:shouldAnimate];
+			[self addInspectorPanel:CONTACT_INFO_SEGMENT animate:shouldAnimate];
 			break;
 	}
 }
@@ -241,12 +242,17 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	//Localization
 	[self setupToolbarSegments];
 	
+	currentPane = nil;
+	lastSegment = 0;
+	
 	int	selectedSegment;
 	
 	//Select the previously selected category
 	selectedSegment = [[[adium preferenceController] preferenceForKey:KEY_INFO_SELECTED_CATEGORY
-															group:PREF_GROUP_WINDOW_POSITIONS] intValue];
-	if (selectedSegment < 0 || selectedSegment >= [inspectorToolbar segmentCount]) selectedSegment = 0;
+																group:PREF_GROUP_WINDOW_POSITIONS] intValue];
+	
+	if (selectedSegment < 0 || selectedSegment >= [inspectorToolbar segmentCount])
+		selectedSegment = 0;
 
 	[inspectorToolbar setSelectedSegment:selectedSegment];
 	[self segmentSelected:inspectorToolbar];
@@ -260,6 +266,11 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (void)windowWillClose:(NSNotification *)inNotification
 {
 	AILogWithSignature(@"");
+	
+	[[adium preferenceController] setPreference:NSStringFromRect([currentPane frame])
+										 forKey:[KEY_INFO_SAVED_FRAME_PREFIX stringByAppendingFormat:@"%d", lastSegment]
+										  group:PREF_GROUP_WINDOW_POSITIONS
+										 object:nil];
 	
 	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[inspectorToolbar selectedSegment]]
 										  forKey:KEY_INFO_SELECTED_CATEGORY
@@ -281,7 +292,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	int i;
 	for(i = 0; i < [inspectorToolbar segmentCount]; i++) {
 		NSString	*segmentLabel = nil;
-		NSImage		*segmentImage;
+		NSImage		*segmentImage = nil;
 
 		switch (i) {
 			case CONTACT_INFO_SEGMENT:
@@ -300,10 +311,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 				segmentLabel = AILocalizedString(@"Advanced Settings","This segment displays the advanced settings for a contact, including encryption details and account information.");
 				segmentImage = [NSImage imageNamed:ADVANCED_SEGMENT_IMAGE];
 				break;
-			default:
-				// Should not happen, but otherwise GCC will complain about variable could be used uninitialized;
-				// the NSLog below will make sure we notice it, should we really ever run into that case
-				segmentImage = nil;
 		}
 
 		[(NSSegmentedCell *)[inspectorToolbar cell] setToolTip:segmentLabel forSegment:i];
@@ -572,20 +579,48 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 }
 
 #pragma mark View Management and Animation
--(void)addInspectorView:(NSView *)aView animate:(BOOL)doAnimate;
+-(void)addInspectorPanel:(int)newSegment animate:(BOOL)doAnimate
 {	
-	if (currentPane == aView) {
+	NSView *newPane = [[loadedContent objectAtIndex:newSegment] inspectorContentView];
+	
+	if (currentPane == newPane) {
 		return;
-	} else if (currentPane) {
+	}
+	
+	if (currentPane) {
+		// Save current width and height
+		[[adium preferenceController] setPreference:NSStringFromRect([currentPane frame])
+											 forKey:[KEY_INFO_SAVED_FRAME_PREFIX stringByAppendingFormat:@"%d", lastSegment]
+											  group:PREF_GROUP_WINDOW_POSITIONS
+											 object:nil];
+		
+		// Remove the old pane		
 		[self animateViewOut:currentPane];
 		[currentPane removeFromSuperview];
 	}
+	
+	lastSegment = newSegment;
 
-	[aView setFrame:[inspectorContent bounds]];
+	NSRect paneFrame = [newPane frame], contentBounds = [inspectorContent frame], inspectorFrame = [[self window] frame];
 	
-	[inspectorContent addSubview:aView];
+	// Restore the saved sizing (if available)
+	NSString *savedPane = [[adium preferenceController] preferenceForKey:[KEY_INFO_SAVED_FRAME_PREFIX stringByAppendingFormat:@"%d", newSegment]
+																   group:PREF_GROUP_WINDOW_POSITIONS
+																  object:nil];
+	if (savedPane) {
+		paneFrame = NSRectFromString(savedPane);
+		[newPane setFrame:paneFrame];
+	}
 	
-	currentPane = aView;
+	paneFrame.size.height = ((inspectorFrame.size.height - contentBounds.size.height) + paneFrame.size.height); 
+	paneFrame.origin.x = inspectorFrame.origin.x; 
+	paneFrame.origin.y = inspectorFrame.origin.y + (inspectorFrame.size.height - paneFrame.size.height); 
+	
+	[[self window] setFrame:paneFrame display:YES animate:doAnimate]; 
+	
+	[inspectorContent addSubview:newPane];
+	
+	currentPane = newPane;
 	[self animateViewIn:currentPane];
 }
 
