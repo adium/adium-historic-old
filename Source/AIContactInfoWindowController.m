@@ -231,7 +231,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	[super windowDidLoad];
 	
 	[self configureForListObject:displayedObject];
-	[self setupMetaPopup:displayedObject];
 
 	//Localization
 	[self setupToolbarSegments];
@@ -361,6 +360,8 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	while((pane = [paneEnumerator nextObject])) {
 		[pane updateForListObject:inObject];
 	}
+	
+	[self setupMetaPopup:inObject];
 }
 
 #pragma mark Meta Pop-Up
