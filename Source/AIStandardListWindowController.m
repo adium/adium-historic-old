@@ -760,7 +760,6 @@
 {
     NSToolbar *toolbar = [[[NSToolbar alloc] initWithIdentifier:TOOLBAR_CONTACT_LIST] autorelease];
 	
-	[toolbar setShowsBaselineSeparator:NO];
 	[toolbar setAutosavesConfiguration:YES];
     [toolbar setDelegate:self];
     [toolbar setDisplayMode:NSToolbarDisplayModeIconOnly];
