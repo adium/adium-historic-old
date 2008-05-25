@@ -46,10 +46,10 @@
 {
 	AIListObject *listObject = nil;
 	
-	if ((sender == menuItem_getInfoContextualContact) || (sender == menuItem_getInfoContextualGroup)) {
-		listObject = [[adium menuController] currentContextMenuObject];
-	} else {
+	if ((sender == menuItem_getInfoAlternate) || (sender == menuItem_getInfo)) {
 		listObject = [[adium interfaceController] selectedListObject];
+	} else {
+		listObject = [[adium menuController] currentContextMenuObject];
 	}
 	
 	if (listObject) {
@@ -57,7 +57,7 @@
 		
 		AIContactInfoWindowController *contactInfoController = [AIContactInfoWindowController showInfoWindowForListObject:listObject];
 		[contactInfoController loadInfoForListObject:listObject];
-		
+
 		[[contactInfoController window] makeKeyAndOrderFront:nil];
 	}
 }
