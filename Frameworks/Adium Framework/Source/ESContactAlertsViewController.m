@@ -357,8 +357,8 @@ int actionSort(id objectA, id objectB, void *context)
 	NSEnumerator	*enumerator;
 	NSTableColumn	*tableColumn;
 	BOOL			eventIsExtended = [self outlineView:outlineView_summary
-							extendToEdgeColumn:EVENT_COLUMN_INDEX
-										 ofRow:[outlineView_summary rowForItem:item]];
+								extendToEdgeColumn:EVENT_COLUMN_INDEX
+											ofRow:[outlineView_summary rowForItem:item]];
 	BOOL			enforceMinimumHeight = ([(NSArray *)item count] > 0);
 	float			necessaryHeight = 0;
 	NSRect			rectOfLastColumn = [outlineView_summary rectOfColumn:([outlineView_summary numberOfColumns] - 1)];
@@ -396,9 +396,9 @@ int actionSort(id objectA, id objectB, void *context)
 				if (eventIsExtended) {
 					/* If this is the event column and it is extended, the available width will be from its origin
 					 * to the right edge of the frame. Subtract a bit to provide a border */
-					tableColumnWidth = expandedEventWidth - 4;
+					tableColumnWidth = expandedEventWidth - 8;
 				} else {
-					tableColumnWidth = NSWidth(rectOfEventColumn) - 4;
+					tableColumnWidth = NSWidth(rectOfEventColumn) - 8;
 				}
 
 			} else {
