@@ -198,7 +198,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 -(void)awakeFromNib
 {
-	
 	if([NSApp isOnLeopardOrBetter]) {
 		[[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
 		[[self window] setContentBorderThickness:29.0 forEdge:NSMinYEdge];

@@ -17,6 +17,7 @@
 	self = [super init];
 	if (self != nil) {
 		[NSBundle loadNibNamed:[self nibName] owner:self];
+		[notesLabel setLocalizedString:AILocalizedString(@"Notes:","Label beside the field for contact notes in the Settings tab of the Get Info window")];
 		//Any additional setup goes here.
 	}
 	return self;
@@ -43,11 +44,7 @@
 -(void)updateForListObject:(AIListObject *)inObject
 {
 	NSString	*currentNotes;
-	NSString	*currentAlias;
 
-	//Be sure we've set the last changes before changing which object we are editing
-	[contactAlias fireImmediately];
-	
 	//Hold onto the object, using the highest-up metacontact if necessary
 	[displayedObject release];
 	displayedObject = ([inObject isKindOfClass:[AIListContact class]] ?
@@ -55,28 +52,12 @@
 				  inObject);
 	[displayedObject retain];
 
-	//Fill in the current alias
-	if ((currentAlias = [displayedObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES ignoreInheritedValues:YES])) {
-		[contactAlias setStringValue:currentAlias];
-	} else {
-		[contactAlias setStringValue:@""];
-	}
-	
 	//Current note
     if ((currentNotes = [displayedObject notes])) {
         [contactNotes setStringValue:currentNotes];
     } else {
         [contactNotes setStringValue:@""];
     }
-}
-
-- (IBAction)setAlias:(id)sender
-{
-	if(!displayedObject)
-		return;
-	
-	NSString *currentAlias = [contactAlias stringValue];
-	[displayedObject setDisplayName:currentAlias];
 }
 
 - (IBAction)setNotes:(id)sender
@@ -86,13 +67,6 @@
 	
 	NSString *currentNote = [contactNotes stringValue];
 	[displayedObject setNotes:currentNote];
-}
-
-- (void)localizeTitles
-{
-	[aliasLabel setLocalizedString:AILocalizedString(@"Alias:","Label beside the field for a contact's alias in the settings tab of the Get Infow indow")];
-	[notesLabel setLocalizedString:AILocalizedString(@"Notes:","Label beside the field for contact notes in the Settings tab of the Get Info window")];
-	//Address book buttons and such go here.
 }
 
 //Address Book Panel methods.

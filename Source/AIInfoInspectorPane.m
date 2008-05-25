@@ -11,10 +11,11 @@
 
 @interface AIInfoInspectorPane (PRIVATE)
 - (void)updateUserIcon:(AIListObject *)inObject;
--(void)updateAccountName:(AIListObject *)inObject;
--(void)updateServiceIcon:(AIListObject *)inObject;
--(void)updateStatusIcon:(AIListObject *)inObject;
--(void)updateProfileView:(AIListObject *)inObject;
+- (void)updateAccountName:(AIListObject *)inObject;
+- (void)updateServiceIcon:(AIListObject *)inObject;
+- (void)updateStatusIcon:(AIListObject *)inObject;
+- (void)updateProfileView:(AIListObject *)inObject;
+- (void)updateAlias:(AIListObject *)inObject;
 - (void)gotFilteredProfile:(NSAttributedString *)infoString context:(AIListObject *)object;
 - (void)gotFilteredStatus:(NSAttributedString *)infoString context:(AIListObject *)object;
 - (void)setAttributedString:(NSAttributedString *)infoString intoTextView:(NSTextView *)textView;
@@ -34,12 +35,16 @@
 		[userIcon setAnimates:YES];
 		[userIcon setMaxSize:NSMakeSize(256,256)];
 		[userIcon setDelegate:self];
+		
+		[aliasLabel setLocalizedString:AILocalizedString(@"Alias:","Label beside the field for a contact's alias in the settings tab of the Get Infow indow")];
 	}
 	return self;
 }
 
 - (void) dealloc
 {
+	[lastAlias release]; lastAlias = nil;
+	
 	[inspectorContentView release];
 	
 	[[adium contactController] unregisterListObjectObserver:self];
@@ -60,7 +65,11 @@
 
 -(void)updateForListObject:(AIListObject *)inObject
 {
+	[contactAlias fireImmediately];
+	
 	displayedObject = inObject;
+	
+	[lastAlias release]; lastAlias = nil;
 	
 	if ([inObject isKindOfClass:[AIListContact class]]) {
 		[[adium contactController] updateListContactStatus:(AIListContact *)inObject];
@@ -71,6 +80,7 @@
 	[self updateServiceIcon:inObject];
 	[self updateStatusIcon:inObject];
 	[self updateProfileView:inObject];
+	[self updateAlias:inObject];
 }
 
 - (void)updateUserIcon:(AIListObject *)inObject
@@ -111,12 +121,9 @@
 		return;
 	}
 	
-	NSString *displayName;
-			
-	if ([inObject isKindOfClass:[AIListContact class]] &&
-		inObject != [(AIListContact *)inObject parentContact]) {
-		displayName = [(AIListContact *)inObject ownDisplayName];
-	} else {
+	NSString *displayName = [inObject formattedUID];
+	
+	if (!displayName) {
 		displayName = [inObject displayName];
 	}
 	
@@ -154,6 +161,44 @@
 									  notifyingTarget:self
 											 selector:@selector(gotFilteredProfile:context:)
 											  context:inObject];
+}
+
+- (void)updateAlias:(AIListObject *)inObject
+{	
+	if ([inObject isKindOfClass:[AIListContact class]]) {
+		inObject = [(AIListContact *)inObject parentContact];
+	}
+	
+	NSString *currentAlias = [inObject preferenceForKey:@"Alias"
+												  group:PREF_GROUP_ALIASES
+								  ignoreInheritedValues:YES];
+	
+	//Fill in the current alias
+	if (currentAlias) {
+		[contactAlias setStringValue:currentAlias];
+	} else {
+		[contactAlias setStringValue:@""];
+	}
+	
+	// Save a copy of this current alias so we don't spam updates of the same string.
+	lastAlias = [[contactAlias stringValue] copy];
+}
+
+- (IBAction)setAlias:(id)sender
+{
+	if(!displayedObject || [[contactAlias stringValue] isEqualToString:lastAlias])
+		return;
+	
+	AIListObject *contactToUpdate = displayedObject;
+	
+	if ([contactToUpdate isKindOfClass:[AIListContact class]]) {
+		contactToUpdate = [(AIListContact *)contactToUpdate parentContact];
+	}
+	
+	NSString *currentAlias = [contactAlias stringValue];
+	[contactToUpdate setDisplayName:currentAlias];
+	
+	[self updateAccountName:displayedObject];
 }
 
 - (void)gotFilteredProfile:(NSAttributedString *)infoString context:(AIListObject *)object
@@ -206,13 +251,9 @@
 		return nil;
 	else if (inObject != displayedObject)
 		return nil;
-
-	//We've added the status icon, since we may get this notification in the middle of viewing an object
-	//and we'd like to have the right icon.
-	[self updateStatusIcon:displayedObject];
-
-	if (!inModifiedKeys || [inModifiedKeys containsObject:@"TextProfile"])
-		[self updateProfileView:displayedObject];
+	
+	// If the properties changed for our observed contact, update based on them.
+	[self updateForListObject:displayedObject];
 	
 	return nil;
 }

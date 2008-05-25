@@ -17,9 +17,6 @@
 	IBOutlet	NSView					*inspectorContentView;
 				AIListObject			*displayedObject;
 	
-	IBOutlet	NSTextField				*aliasLabel;
-	IBOutlet	AIDelayedTextField		*contactAlias;
-	
 	IBOutlet	NSTextField				*notesLabel;
 	IBOutlet	AIDelayedTextField		*contactNotes;
 
@@ -31,7 +28,6 @@
 -(NSView *)inspectorContentView;
 -(void)updateForListObject:(AIListObject *)inObject;
 
-- (IBAction)setAlias:(id)sender;
 - (IBAction)setNotes:(id)sender;
 
 //Address Book panel methods.

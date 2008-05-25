@@ -77,6 +77,11 @@
 			<string>NSView</string>
 		</dict>
 		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>setAlias</key>
+				<string>id</string>
+			</dict>
 			<key>CLASS</key>
 			<string>AIInfoInspectorPane</string>
 			<key>LANGUAGE</key>
@@ -85,6 +90,10 @@
 			<dict>
 				<key>accountName</key>
 				<string>NSTextField</string>
+				<key>aliasLabel</key>
+				<string>NSTextField</string>
+				<key>contactAlias</key>
+				<string>AIDelayedTextField</string>
 				<key>inspectorContentView</key>
 				<string>NSView</string>
 				<key>profileProgress</key>
@@ -93,12 +102,8 @@
 				<string>NSTextView</string>
 				<key>serviceImage</key>
 				<string>NSImageView</string>
-				<key>serviceName</key>
-				<string>NSTextField</string>
 				<key>statusImage</key>
 				<string>NSImageView</string>
-				<key>statusView</key>
-				<string>NSTextView</string>
 				<key>userIcon</key>
 				<string>AIContactInfoImageViewWithImagePicker</string>
 			</dict>
@@ -112,6 +117,14 @@
 			<string>ObjC</string>
 			<key>SUPERCLASS</key>
 			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>AIDelayedTextField</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSTextField</string>
 		</dict>
 		<dict>
 			<key>CLASS</key>
