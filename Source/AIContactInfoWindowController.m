@@ -231,6 +231,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	[super windowDidLoad];
 	
 	[self configureForListObject:displayedObject];
+	[self setupMetaPopup:displayedObject];
 
 	//Localization
 	[self setupToolbarSegments];
@@ -254,6 +255,11 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (void)windowWillClose:(NSNotification *)inNotification
 {
 	AILogWithSignature(@"");
+	
+	[[adium preferenceController] setPreference:[NSNumber numberWithInt:[inspectorToolbar selectedSegment]]
+										  forKey:KEY_INFO_SELECTED_CATEGORY
+										   group:PREF_GROUP_WINDOW_POSITIONS];
+	
 	[sharedContactInfoInstance autorelease]; sharedContactInfoInstance = nil;
 
 	[super windowWillClose:inNotification];
@@ -319,28 +325,20 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (void)selectionChanged:(NSNotification *)notification
 {
 	AIListObject	*object = [[adium interfaceController] selectedListObject];
-
-	[self loadInfoForListObject:object];
+	if (object) {
+		[self configureForListObject:object];
+		[self setupMetaPopup:object];
+	}
 }
 
-- (void)loadInfoForListObject:(AIListObject *)listObject
+- (void)loadInfoForListObject:(AIListObject *)aListObject
 {
 	//This method is how the Get Info toolbar item works in the Message Window Toolbar. 
 	
-	AIListContact *parentContact = [(AIListContact *)listObject parentContact];
-	
-	/* Use the parent contact if it is a valid meta contact which contains contacts
-	 * If this contact is within a metacontact but not currently listed on any buddy list, we don't want to 
-	 * display the effectively-invisible metacontact's info but rather the info of this contact itself.
-	 */
-	if (![parentContact isKindOfClass:[AIMetaContact class]] ||
-		[[(AIMetaContact *)parentContact listContacts] count]) {
-		displayedObject = parentContact;
-	} else {
-		displayedObject = listObject;
+	if (aListObject) {
+		[self configureForListObject:aListObject];
+		[self setupMetaPopup:aListObject];
 	}
-	
-	[self configureForListObject:displayedObject];
 }
 
 //Change the list object
@@ -360,8 +358,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	while((pane = [paneEnumerator nextObject])) {
 		[pane updateForListObject:inObject];
 	}
-	
-	[self setupMetaPopup:inObject];
 }
 
 #pragma mark Meta Pop-Up
