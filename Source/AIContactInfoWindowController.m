@@ -201,6 +201,11 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	if([NSApp isOnLeopardOrBetter]) {
 		[[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
 		[[self window] setContentBorderThickness:29.0 forEdge:NSMinYEdge];
+	} else {
+		//NOTE: For some reason this Bezel style isn't applied from the nib correctly on Tiger.
+		//This is a test fix to see if maybe applying it programatically helps.
+		//TODO: Verify this fix.
+		[metaPopup setBezelStyle:NSTexturedRoundedBezelStyle];
 	}
 }
 
