@@ -346,6 +346,9 @@
 		
 		observer = [observerValue nonretainedObjectValue];
 #ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
+		/* This will log a warning in 10.4 about +[Object allocWithZone:] being a compatibility method.
+		 * It is only used in debug builds, so that's fine.
+		 */
 		if (NSIsFreedObject(observer)) {
 			AILogWithSignature(@"%p is a released observer! This is a crash.", observer);
 			NSAssert1(FALSE, @"%p is a released observer. Please check the Adium Debug Log. If it wasn't logging to file, do that next time.", observer);
