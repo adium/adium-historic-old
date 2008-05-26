@@ -992,7 +992,10 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
  */
 - (NSImage *)userIcon
 {
-	NSImage *userIcon = [self internalUserIcon];
+	NSImage		 *internalUserIcon = [self internalUserIcon];
+	NSImage		 *userIcon = internalUserIcon;
+	AIListObject *sourceListObject = self;
+
 	BOOL	useOwnIconAsLastResort = NO;
 
 	id <AIUserIconSource> myUserIconSource = [AIUserIcons userIconSourceForObject:self];
@@ -1003,23 +1006,35 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 			 */
 			useOwnIconAsLastResort = YES;
 			userIcon = nil;
+			sourceListObject = nil;
 		}
 	}
+	
 	if (!userIcon) {
-		userIcon = [[self preferredContact] userIcon];
+		sourceListObject = [self preferredContact];
+		userIcon = [sourceListObject userIcon];
 	}
 	if (!userIcon) {
-		NSArray		*theContainedObjects = [self containedObjects];
-		
+		NSArray		*theContainedObjects = [self listContacts];
+
 		unsigned int count = [theContainedObjects count];
 		unsigned int i = 0;
 		while ((i < count) && !userIcon) {
-			userIcon = [[theContainedObjects objectAtIndex:i] userIcon];
+			sourceListObject = [theContainedObjects objectAtIndex:i];
+			userIcon = [sourceListObject userIcon];
 			i++;
 		}
 	}
+
 	if (!userIcon && useOwnIconAsLastResort) {
-		userIcon = [self internalUserIcon];
+		sourceListObject = self;
+		userIcon = internalUserIcon;
+	}
+
+	if (userIcon && (sourceListObject != self)) {
+		[AIUserIcons setActualUserIcon:userIcon
+							 andSource:[AIUserIcons userIconSourceForObject:sourceListObject]
+							 forObject:self];
 	}
 
 	return userIcon;
