@@ -1213,7 +1213,6 @@
 	
 	while ((listContact = [enumerator nextObject])) {
 		[listContact setRemoteGroupName:nil];
-		[AIUserIcons flushCacheForObject:listContact];
 		[self removePropetyValuesFromContact:listContact silently:YES];
 	}
 	
