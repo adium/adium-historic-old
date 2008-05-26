@@ -33,6 +33,7 @@
 - (int)flippyIndent;
 - (void)setShadowColor:(NSColor *)inColor;
 - (NSColor *)shadowColor;
+- (NSRect)drawGroupCountWithFrame:(NSRect)inRect;
 - (void)setBackgroundColor:(NSColor *)inBackgroundColor gradientColor:(NSColor *)inGradientColor;
 - (void)setDrawsBackground:(BOOL)inValue;
 - (void)setDrawsGradientEdges:(BOOL)inValue;

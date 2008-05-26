@@ -188,8 +188,39 @@
 		rect.origin.x += rect.size.height*.4 + rect.size.height*.2 + FLIPPY_TEXT_PADDING;
 		rect.size.width -= rect.size.height*.4 + rect.size.height*.2 + FLIPPY_TEXT_PADDING;
 //	}
+	
+	if ([[listObject displayArrayObjectForKey:@"Show Count"] boolValue] || ![controlView isItemExpanded:listObject]) {
+		rect = [self drawGroupCountWithFrame:rect];
+	}
+	rect = [self drawDisplayNameWithFrame:rect];
+}
 
-	[self drawDisplayNameWithFrame:rect];
+- (NSRect)drawGroupCountWithFrame:(NSRect)inRect
+{
+	if ([listObject displayArrayObjectForKey:@"Count Text"]) {
+		NSAttributedString	*groupCount = [[NSAttributedString alloc] initWithString:[listObject displayArrayObjectForKey:@"Count Text"]
+																		  attributes:[self labelAttributes]];
+		
+		NSSize				countSize = [groupCount size];
+		NSRect				rect = inRect;
+		
+		if (countSize.width > rect.size.width) countSize.width = rect.size.width;
+		if (countSize.height > rect.size.height) countSize.height = rect.size.height;
+		
+		rect.origin.x += (rect.size.width - countSize.width);
+		
+		//Draw (centered vertical)
+		int half = ceil((rect.size.height - labelFontHeight) / 2.0);
+		[groupCount drawInRect:NSMakeRect(rect.origin.x,
+										  rect.origin.y + half,
+										  rect.size.width,
+										  countSize.height)];
+		[groupCount release];
+		
+		inRect.size.width -= countSize.width;
+	}
+	
+	return inRect;
 }
 
 //Draw the background of our cell
