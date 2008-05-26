@@ -119,7 +119,7 @@
 	NSSet		*modifiedAttributes = nil;
 
 	//We never update for an AIAccount object
-	if ([inObject isKindOfClass:[AIAccount class]] || ![inObject isKindOfClass:[AIListGroup class]]) return nil;
+	if (![inObject isKindOfClass:[AIListGroup class]]) return nil;
 
 	/* We check against a nil inModifiedKeys so we can remove our Counting information from the display when the user
 	 * toggles it off.
