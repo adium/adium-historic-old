@@ -94,6 +94,10 @@ static int compareSources(id <AIUserIconSource> sourceA, id <AIUserIconSource> s
 	[userIconSources addObject:inSource];
 	[userIconSources sortUsingFunction:compareSources context:NULL];
 
+#ifdef AIUSERICON_DEBUG
+	AILogWithSignature(@"Sources is %@", userIconSources);
+#endif
+
 	[self updateAllIcons];
 }
 
@@ -139,7 +143,6 @@ static int compareSources(id <AIUserIconSource> sourceA, id <AIUserIconSource> s
 	
 	if ([containingObject isKindOfClass:[AIListContact class]]) {		
 		//Notify
-		[self flushCacheForObject:containingObject];
 		[[adium contactController] listObjectAttributesChanged:containingObject
 												  modifiedKeys:modifiedKeys];
 	}	
@@ -155,17 +158,22 @@ static int compareSources(id <AIUserIconSource> sourceA, id <AIUserIconSource> s
 		asynchronously:(BOOL)wasAsynchronous
 			 forObject:(AIListObject *)inObject
 {
+	/* If we're receiving an asynchronous reply, only continue if the replying source has a same or
+	 * higher priority than the current one.
+	 */
+	if (wasAsynchronous && ![self userIconSource:inSource changeWouldBeRelevantForObject:inObject])
+		return;
+
 	NSString *internalObjectID = [inObject internalObjectID];
 
 	//Keep the data around so that this image can be resized without loss of quality
 	[inUserIcon setDataRetained:YES];
 
 	if (inUserIcon && inSource) {
-		[self flushCacheForObject:inObject];
-
 #ifdef AIUSERICON_DEBUG
-		AILogWithSignature(@"%@ provided icon for %@", inSource, inUserIcon);
+		AILogWithSignature(@"%@ provided icon for %@", inSource, inObject);
 #endif
+		[self flushCacheForObject:inObject];
 
 		[iconCache setObject:inUserIcon forKey:internalObjectID];
 		[iconCacheOwners setObject:inSource forKey:internalObjectID];
@@ -321,6 +329,31 @@ static int compareSources(id <AIUserIconSource> sourceA, id <AIUserIconSource> s
 	return userIcon;
 }
 
+/*!
+ * @brief Set what user icon and source an object is currently using (regardless of what AIUserIcon would otherwise do)
+ *
+ * This is useful if an object knows something AIUserIcons can't. For example, AIMetaContact uses this to let AIUserIcons
+ * know how it resolved iterating through its contained contacts based on their respective priorities in order to determine
+ * which user icon should be used.  Tracking it here prevents needless repeated lookups of data.
+ */
++ (void)setActualUserIcon:(NSImage *)userIcon andSource:(id <AIUserIconSource>)inSource forObject:(AIListObject *)inObject
+{
+	if (userIcon && inSource) {
+		NSString	*internalObjectID = [inObject internalObjectID];
+		
+		[self flushCacheForObject:inObject];
+
+#ifdef AIUSERICON_DEBUG
+		AILogWithSignature(@"%@ is using %@", inObject, inSource);
+#endif
+		
+		[iconCache setObject:userIcon
+					  forKey:internalObjectID];
+		[iconCacheOwners setObject:inSource
+							forKey:internalObjectID];
+	}
+}
+
 /*
  * @brief Retrieve a user icon sized for the contact list
  *
@@ -401,11 +434,24 @@ static int compareSources(id <AIUserIconSource> sourceA, id <AIUserIconSource> s
  */
 + (void)flushCacheForObject:(AIListObject *)inObject
 {
-	[iconCache removeObjectForKey:[inObject internalObjectID]];
-	[iconCacheOwners removeObjectForKey:[inObject internalObjectID]];
+#ifdef AIUSERICON_DEBUG
+	AILogWithSignature(@"%@",inObject);
+#endif
 
-	[listIconCache removeObjectForKey:[inObject internalObjectID]];
-	[menuIconCache removeObjectForKey:[inObject internalObjectID]];
+	NSString *internalObjectID = [inObject internalObjectID];
+	[iconCache removeObjectForKey:internalObjectID];
+	[iconCacheOwners removeObjectForKey:internalObjectID];
+
+	[listIconCache removeObjectForKey:internalObjectID];
+	[menuIconCache removeObjectForKey:internalObjectID];
+
+	/* If a contact within a metacontact is cleared, the metacontact itself should also be cleared. */
+	if ([inObject isKindOfClass:[AIListContact class]]) {
+		AIListContact *parentContact = [(AIListContact *)inObject parentContact];
+		if (parentContact != inObject) {
+			[self flushCacheForObject:parentContact];	
+		}
+	}
 }
 
 /*!
@@ -413,6 +459,10 @@ static int compareSources(id <AIUserIconSource> sourceA, id <AIUserIconSource> s
  */
 + (void)flushAllCaches
 {
+#ifdef AIUSERICON_DEBUG
+	AILogWithSignature(@"");
+#endif
+	
 	[iconCache removeAllObjects];
 	[iconCacheOwners removeAllObjects];
 
