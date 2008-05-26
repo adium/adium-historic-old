@@ -39,6 +39,7 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIOutlineViewAdditions.h>
+#import <AIUtilities/AIPasteboardAdditions.h>
 #import <Adium/KFTypeSelectTableView.h>
 #import "AIMessageWindowController.h"
 #import "DCInviteToChatWindowController.h"
@@ -201,7 +202,10 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
     [scrollView_contactList setAutohidesScrollers:YES];
 
 	//Dragging
-	[contactListView registerForDraggedTypes:[NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs", NSFilenamesPboardType, NSURLPboardType, NSStringPboardType, nil]];
+	[contactListView registerForDraggedTypes:
+	 [NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs",
+	  NSFilenamesPboardType, NSURLPboardType,
+	  AIiTunesTrackPboardType, NSStringPboardType, nil]];
 	
 	[contactListView reloadData];
 

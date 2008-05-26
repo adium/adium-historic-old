@@ -33,6 +33,7 @@
 #import <Adium/AIListOutlineView.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
+#import <AIUtilities/AIPasteboardAdditions.h>
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AIOutlineViewAdditions.h>
 #import <AIUtilities/AIObjectAdditions.h>
@@ -616,7 +617,8 @@
 	} else if ([types containsObject:NSFilenamesPboardType] ||
 			   [types containsObject:NSRTFPboardType] ||
 			   [types containsObject:NSURLPboardType] ||
-			   [types containsObject:NSStringPboardType]) {
+			   [types containsObject:NSStringPboardType] ||
+			   [types containsObject:AIiTunesTrackPboardType]) {
 		retVal = ((item && [item isKindOfClass:[AIListContact class]]) ? NSDragOperationLink : NSDragOperationNone);
 
 	} else if (!allowBetweenContactDrop) {
@@ -630,9 +632,9 @@
 {
 	BOOL		success = YES;
 	NSPasteboard *draggingPasteboard = [info draggingPasteboard];
-	NSString	*availableType = [draggingPasteboard availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
+	NSString	*availableType;
 	
-    if ([availableType isEqualToString:@"AIListObject"]) {
+    if ((availableType = [draggingPasteboard availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]])) {
 		//Kill the selection now, (in a more finder-esque way)
 		[outlineView deselectAll:nil];
 
@@ -653,64 +655,56 @@
 			}
 			
 		} else if ([item isMemberOfClass:[AIMetaContact class]]) {
-			//Ordering gets implemented here.
-			NSString	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
-			
-			//No longer in a drag, so allow tooltips again
-			if ([availableType isEqualToString:@"AIListObject"]) {
+			//Ordering gets implemented here.			
 				
-				//If we don't have drag items, we are dragging from another instance; build our own dragItems array
-				//using the supplied internalObjectIDs
-				if (!dragItems) {
-					if ([[[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObjectUniqueIDs"]] isEqualToString:@"AIListObjectUniqueIDs"]) {
-						NSArray			*dragItemsUniqueIDs;
-						NSMutableArray	*arrayOfDragItems;
-						NSString		*uniqueID;
-						NSEnumerator	*enumerator;
-						
-						dragItemsUniqueIDs = [draggingPasteboard propertyListForType:@"AIListObjectUniqueIDs"];
-						arrayOfDragItems = [NSMutableArray array];
-						
-						enumerator = [dragItemsUniqueIDs objectEnumerator];
-						while ((uniqueID = [enumerator nextObject])) {
-							[arrayOfDragItems addObject:[[adium contactController] existingListObjectWithUniqueID:uniqueID]];
-						}
-						
-						//We will release this when the drag is completed
-						dragItems = [arrayOfDragItems retain];
-					}
+			//If we don't have drag items, we are dragging from another instance; build our own dragItems array
+			//using the supplied internalObjectIDs
+			if (!dragItems) {
+				NSArray			*dragItemsUniqueIDs;
+				NSMutableArray	*arrayOfDragItems;
+				NSString		*uniqueID;
+				NSEnumerator	*enumerator;
+				
+				dragItemsUniqueIDs = [draggingPasteboard propertyListForType:@"AIListObjectUniqueIDs"];
+				arrayOfDragItems = [NSMutableArray array];
+				
+				enumerator = [dragItemsUniqueIDs objectEnumerator];
+				while ((uniqueID = [enumerator nextObject])) {
+					[arrayOfDragItems addObject:[[adium contactController] existingListObjectWithUniqueID:uniqueID]];
 				}
 				
-				//The tree root is not associated with our root contact list group, so we need to make that association here
-				if (item == nil) item = contactList;
-				
-				//Move the list object to its new location
-				if ([item isKindOfClass:[AIMetaContact class]]) {
-					
-					NSMutableArray	*realDragItems = [NSMutableArray array];
-					NSEnumerator	*enumerator;
-					AIListObject	*aDragItem;
-					
-					enumerator = [dragItems objectEnumerator];
-					while ((aDragItem = [enumerator nextObject])) {
-						if ([aDragItem isMemberOfClass:[AIListContact class]]) {
-							//For listContacts, add all contacts with the same service and UID (on all accounts)
-							[realDragItems addObjectsFromArray:[[[adium contactController] allContactsWithService:[aDragItem service] 
-																											  UID:[aDragItem UID]
-																									 existingOnly:YES] allObjects]];
-						} else {
-							[realDragItems addObject:aDragItem];
-						}
-					}
-					
-					[[adium contactController] moveListObjects:realDragItems intoObject:item index:index];
-					[outlineView reloadData];
-				}
+				//We will release this when the drag is completed
+				dragItems = [arrayOfDragItems retain];
 			}
 			
-			//Call super and return its value
-			return [super outlineView:outlineView acceptDrop:info item:item childIndex:index];
+			//The tree root is not associated with our root contact list group, so we need to make that association here
+			if (item == nil) item = contactList;
 			
+			//Move the list object to its new location
+			if ([item isKindOfClass:[AIMetaContact class]]) {
+				
+				NSMutableArray	*realDragItems = [NSMutableArray array];
+				NSEnumerator	*enumerator;
+				AIListObject	*aDragItem;
+				
+				enumerator = [dragItems objectEnumerator];
+				while ((aDragItem = [enumerator nextObject])) {
+					if ([aDragItem isMemberOfClass:[AIListContact class]]) {
+						//For listContacts, add all contacts with the same service and UID (on all accounts)
+						[realDragItems addObjectsFromArray:[[[adium contactController] allContactsWithService:[aDragItem service] 
+																										  UID:[aDragItem UID]
+																								 existingOnly:YES] allObjects]];
+					} else {
+						[realDragItems addObject:aDragItem];
+					}
+				}
+				
+				[[adium contactController] moveListObjects:realDragItems intoObject:item index:index];
+				[outlineView reloadData];
+			}
+		
+			//Call super and return its value
+			return [super outlineView:outlineView acceptDrop:info item:item childIndex:index];		
 			
 		} else if ([item isKindOfClass:[AIListContact class]]) {
 			NSString	*promptTitle;
@@ -738,26 +732,37 @@
 										   [context retain], //we're responsible for retaining the content object
 										   AILocalizedString(@"Once combined, Adium will treat these contacts as a single individual both on your contact list and when sending messages.\n\nYou may un-combine these contacts by getting info on the combined contact.","Explanation of metacontact creation"));
 		}
-	} else if ([[[info draggingPasteboard] types] containsObject:NSFilenamesPboardType]) {
-		//Drag and Drop file transfer for the contact list.
-		NSString		*file;
-		NSArray			*files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
-		NSEnumerator	*enumerator = [files objectEnumerator];
 
+		
+	} else if ((availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:
+																				   NSFilenamesPboardType, AIiTunesTrackPboardType, nil]])) {
+		//Drag and Drop file transfer for the contact list.
 		AIListContact	*targetFileTransferContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
 																							  forListContact:item];
 		if (targetFileTransferContact) {
+			NSArray			*files = nil;
+			NSString		*file;
+			NSEnumerator	*enumerator;
+			
+			if ([availableType isEqualToString:NSFilenamesPboardType]) {
+				files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
+				
+			} else if ([availableType isEqualToString:AIiTunesTrackPboardType]) {
+				files = [[info draggingPasteboard] filesFromITunesDragPasteboard];
+			}
+
+			enumerator = [files objectEnumerator];
 			while ((file = [enumerator nextObject])) {
 				[[adium fileTransferController] sendFile:file toListContact:targetFileTransferContact];
 			}
+
 		} else {
 			AILogWithSignature(@"No contact available to receive files");
 			NSBeep();
 		}
 
-	} else if ([[[info draggingPasteboard] types] containsObject:NSRTFPboardType] ||
-				[[[info draggingPasteboard] types] containsObject:NSURLPboardType] ||
-				[[[info draggingPasteboard] types] containsObject:NSStringPboardType]) {
+	} else if ((availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSRTFPboardType,
+																				   NSURLPboardType, NSStringPboardType, nil]])) {
 		//Drag and drop text sending via the contact list.
 		if ([item isKindOfClass:[AIListContact class]]) {
 			/* This will send the message. Alternately, we could just insert it into the text view... */
@@ -765,17 +770,17 @@
 			AIContentMessage				*messageContent;
 			NSAttributedString				*messageAttributedString = nil;
 			
-			if([[[info draggingPasteboard] types] containsObject:NSRTFPboardType]) {
+			if ([availableType isEqualToString:NSRTFPboardType]) {
 				//for RTF data, we want to preserve the formatting, so use dataForType:
 				messageAttributedString = [NSAttributedString stringWithData:[[info draggingPasteboard] dataForType:NSRTFPboardType]];
 			}
-			else if([[[info draggingPasteboard] types] containsObject:NSURLPboardType]) {
+			else if ([availableType isEqualToString:NSURLPboardType]) {
 				//NSURLPboardType contains an NSURL object
-				messageAttributedString = [NSAttributedString stringWithString:[[NSURL URLFromPasteboard:[info draggingPasteboard]]absoluteString]];
+				messageAttributedString = [NSAttributedString stringWithString:[[NSURL URLFromPasteboard:[info draggingPasteboard]] absoluteString]];
 			}
-			else if([[[info draggingPasteboard] types] containsObject:NSStringPboardType]) {
+			else if ([availableType isEqualToString:NSStringPboardType]) {
 				//this is just plain text, so stringForType: works fine
-				messageAttributedString = [NSAttributedString stringWithString:[[info draggingPasteboard]stringForType:NSStringPboardType]];
+				messageAttributedString = [NSAttributedString stringWithString:[[info draggingPasteboard] stringForType:NSStringPboardType]];
 			}
 			
 			if(messageAttributedString && [messageAttributedString length] !=0) {

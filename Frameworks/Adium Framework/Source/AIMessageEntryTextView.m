@@ -33,6 +33,7 @@
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
+#import <AIUtilities/AIPasteboardAdditions.h>
 
 #import <AIUtilities/AITigerCompatibility.h>
 
@@ -55,7 +56,7 @@
 #define KEY_MAX_NUMBER_OF_CHARACTERS			@"Maximum Number Of Characters"
 
 #define FILES_AND_IMAGES_TYPES [NSArray arrayWithObjects: \
-	NSFilenamesPboardType, NSTIFFPboardType, NSPDFPboardType, NSPICTPboardType, nil]
+	NSFilenamesPboardType, AIiTunesTrackPboardType, NSTIFFPboardType, NSPDFPboardType, NSPICTPboardType, nil]
 
 #define PASS_TO_SUPERCLASS_DRAG_TYPE_ARRAY [NSArray arrayWithObjects: \
 	NSRTFPboardType, NSStringPboardType, nil]
@@ -1163,29 +1164,55 @@
 
 #pragma mark Drag and drop
 
-/*An NSTextView which has setImportsGraphics:YES as of 10.3 gets the following drag types by default:
-"NSColor pasteboard type"
-"NSFilenamesPboardType"
-"Apple PDF pasteboard type"
-"Apple PICT pasteboard type"
-"NeXT Encapsulated PostScript v1.2 pasteboard type"
-"NeXT TIFF v4.0 pasteboard type"
-"CorePasteboardFlavorType 0x6D6F6F76"
-"Apple HTML pasteboard type"
-"NeXT RTFD pasteboard type"
-"NeXT Rich Text Format v1.0 pasteboard type"
-"NSStringPboardType"
-"NSFilenamesPboardType"
+/*An NSTextView which has setImportsGraphics:YES as of 10.5 gets the following drag types by default:
+ "NeXT RTFD pasteboard type",
+ "NeXT Rich Text Format v1.0 pasteboard type",
+ "Apple HTML pasteboard type",
+ NSFilenamesPboardType,
+ "CorePasteboardFlavorType 0x6D6F6F76",
+ "Apple PDF pasteboard type",
+ "NeXT TIFF v4.0 pasteboard type",
+ "Apple PICT pasteboard type",
+ "NeXT Encapsulated PostScript v1.2 pasteboard type",
+ "Apple PNG pasteboard type",
+ WebURLsWithTitlesPboardType,
+ "CorePasteboardFlavorType 0x75726C20",
+ "Apple URL pasteboard type",
+ NSStringPboardType,
+ "NSColor pasteboard type",
+ "NeXT font pasteboard type",
+ "NeXT ruler pasteboard type",
 */
-/*
+
 - (NSArray *)acceptableDragTypes;
 {
     NSMutableArray *dragTypes;
     
     dragTypes = [NSMutableArray arrayWithArray:[super acceptableDragTypes]];
+	[dragTypes addObject:AIiTunesTrackPboardType];
+
     return dragTypes;
 }
-*/
+
+- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
+{
+	NSPasteboard	*pasteboard = [sender draggingPasteboard];
+
+	if ([pasteboard availableTypeFromArray:FILES_AND_IMAGES_TYPES])
+		return NSDragOperationCopy;
+	else 
+		return [super draggingEntered:sender];
+}
+
+- (NSDragOperation)draggingUpdated:(id <NSDraggingInfo>)sender
+{
+	NSPasteboard	*pasteboard = [sender draggingPasteboard];
+	
+	if ([pasteboard availableTypeFromArray:FILES_AND_IMAGES_TYPES])
+		return NSDragOperationCopy;
+	else 
+		return [super draggingUpdated:sender];
+}
 
 //We don't need to prepare for the types we are handling in performDragOperation: below
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
@@ -1221,9 +1248,17 @@
 
 - (void)addAttachmentsFromPasteboard:(NSPasteboard *)pasteboard
 {
-	if ([pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]]) {
+	NSString *availableType;
+	if ((availableType = [pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSFilenamesPboardType, AIiTunesTrackPboardType, nil]])) {
 		//The pasteboard points to one or more files on disc.  Use them directly.
-		NSArray			*files = [pasteboard propertyListForType:NSFilenamesPboardType];
+		NSArray			*files = nil;
+		if ([availableType isEqualToString:NSFilenamesPboardType]) {
+			files = [pasteboard propertyListForType:NSFilenamesPboardType];
+			
+		} else if ([availableType isEqualToString:AIiTunesTrackPboardType]) {
+			files = [pasteboard filesFromITunesDragPasteboard];
+		}
+		
 		NSEnumerator	*enumerator = [files objectEnumerator];
 		NSString		*path;
 		while ((path = [enumerator nextObject])) {
