@@ -416,6 +416,24 @@
 }
 
 /*!
+ * @brief Set the profile array
+ */
+- (void)setProfileArray:(NSArray *)array notify:(NotifyTiming)notify
+{
+	[self setValue:array
+	   forProperty:@"ProfileArray"
+			notify:notify];
+}
+
+/*!
+ * @brief The profile array
+ */
+- (NSArray *)profileArray
+{
+	return [self valueForProperty:@"ProfileArray"];	
+}
+
+/*!
  * @brief Set the profile
  */
 - (void)setProfile:(NSAttributedString *)profile notify:(NotifyTiming)notify

@@ -7,15 +7,17 @@
 //
 
 #import "AIInfoInspectorPane.h"
+#import <Adium/AIHTMLDecoder.h>
 
+#define WIDTH_PROFILE_HEADER	 100.0f
 
 @interface AIInfoInspectorPane (PRIVATE)
 - (void)updateUserIcon:(AIListObject *)inObject;
 - (void)updateAccountName:(AIListObject *)inObject;
 - (void)updateServiceIcon:(AIListObject *)inObject;
 - (void)updateStatusIcon:(AIListObject *)inObject;
-- (void)updateProfileView:(AIListObject *)inObject;
 - (void)updateAlias:(AIListObject *)inObject;
+- (NSAttributedString *)attributedStringProfileForListObject:(AIListObject *)inObject;
 - (void)gotFilteredProfile:(NSAttributedString *)infoString context:(AIListObject *)object;
 - (void)gotFilteredStatus:(NSAttributedString *)infoString context:(AIListObject *)object;
 - (void)setAttributedString:(NSAttributedString *)infoString intoTextView:(NSTextView *)textView;
@@ -79,7 +81,8 @@
 	[self updateAccountName:inObject];
 	[self updateServiceIcon:inObject];
 	[self updateStatusIcon:inObject];
-	[self updateProfileView:inObject];
+	[self gotFilteredProfile:[self attributedStringProfileForListObject:inObject]
+					 context:inObject];
 	[self updateAlias:inObject];
 }
 
@@ -150,17 +153,128 @@
 	}
 }
 
--(void)updateProfileView:(AIListObject *)inObject
+#define KEY_KEY		@"Key"
+#define KEY_VALUE	@"Value"
+#define KEY_TYPE	@"Type"
+
+- (void)addAttributedString:(NSAttributedString *)string
+					toTable:(NSTextTable *)table
+						row:(int)row
+						col:(int)col
+					colspan:(int)colspan
+					  color:(NSColor *)color
+				  alignment:(NSTextAlignment)alignment
+		 toAttributedString:(NSMutableAttributedString *)text
+{
+	NSTextTableBlock		*block = [[NSTextTableBlock alloc] initWithTable:table
+														   startingRow:row
+															   rowSpan:1
+														startingColumn:col
+															columnSpan:colspan];
+	NSMutableParagraphStyle	*style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+	
+	int textLength = [text length];
+
+    [block setVerticalAlignment:NSTextBlockTopAlignment];
+	
+    [block setWidth:10.0f type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockPadding edge:NSMinYEdge];
+    [block setWidth:10.0f type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockPadding edge:NSMaxYEdge];
+    [block setWidth:5.0f type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockPadding edge:NSMinXEdge];
+    [block setWidth:5.0f type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockPadding edge:NSMaxXEdge];
+	
+	
+	if (col == 0) {
+		[block setValue:WIDTH_PROFILE_HEADER
+				   type:NSTextBlockAbsoluteValueType
+		   forDimension:NSTextBlockWidth];
+	}
+
+    [style setTextBlocks:[NSArray arrayWithObject:block]];
+    [style setAlignment:alignment];
+	
+	[text appendAttributedString:string];
+	[text appendAttributedString:[NSAttributedString stringWithString:@"\n"]];
+
+	[text addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(textLength, [text length] - textLength)];
+    [text addAttribute:NSParagraphStyleAttributeName value:style range:NSMakeRange(textLength, [text length] - textLength)];
+	
+    [style release];
+    [block release];
+	
+}
+
+- (NSAttributedString *)attributedStringProfileForListObject:(AIListObject *)inObject
 {	
-	[[adium contentController] filterAttributedString:([inObject isKindOfClass:[AIListContact class]] ?
-													   [(AIListContact *)inObject profile] :
-													   nil)
-									  usingFilterType:AIFilterDisplay
-											direction:AIFilterIncoming
-										filterContext:inObject
-									  notifyingTarget:self
-											 selector:@selector(gotFilteredProfile:context:)
-											  context:inObject];
+	// We don't know what to do for non-list contacts.
+	if (![inObject isKindOfClass:[AIListContact class]]) {
+		return [NSAttributedString stringWithString:@""];
+	}
+	
+	// XXX Case out if we only have HTML (nothing currently does this)
+	
+	// Create the table
+	NSTextTable		*table = [[[NSTextTable alloc] init] autorelease];
+	
+	[table setNumberOfColumns:2];
+    [table setLayoutAlgorithm:NSTextTableAutomaticLayoutAlgorithm];
+    [table setHidesEmptyCells:YES];
+
+	NSMutableAttributedString		*result = [[[NSMutableAttributedString alloc] init] autorelease];
+	NSEnumerator					*enumerator = [[(AIListContact *)inObject profileArray] objectEnumerator];
+	NSDictionary					*lineDict;
+	
+	for (int row = 0; (lineDict = [enumerator nextObject]); row++) {
+		NSAttributedString *value = nil, *key = nil;
+		
+		if ([lineDict objectForKey:KEY_VALUE]) {
+			NSMutableString		*mutableValue = [[lineDict objectForKey:KEY_VALUE] mutableCopy];
+			
+			[mutableValue replaceOccurrencesOfString:@"</html>"
+								   withString:@""
+									  options:(NSCaseInsensitiveSearch | NSLiteralSearch)
+										range:NSMakeRange(0, [mutableValue length])];
+			
+			value = [AIHTMLDecoder decodeHTML:mutableValue];
+			
+			[mutableValue release];
+			
+			value = [[adium contentController] filterAttributedString:value
+												usingFilterType:AIFilterDisplay
+													  direction:AIFilterIncoming
+														context:inObject];
+		}
+		
+		if ([lineDict objectForKey:KEY_KEY]) {
+			// We don't need to filter the key.
+			key = [NSAttributedString stringWithString:[[lineDict objectForKey:KEY_KEY] lowercaseString]];
+		}
+		
+		if (key) {
+			// This entry's name:
+			[self addAttributedString:key
+							  toTable:table
+								  row:row
+								  col:0
+							  colspan:1
+								color:[NSColor grayColor]
+							alignment:NSRightTextAlignment
+				   toAttributedString:result];
+		}
+		
+		if (value) {
+			// This entry's value:
+			[self addAttributedString:value
+							  toTable:table
+								  row:row
+								  col:1
+							  colspan:(key ? 1 : 2) /* If there's no key, we need to fill both columns. */
+								color:[NSColor controlTextColor]
+							alignment:NSLeftTextAlignment
+				   toAttributedString:result];
+		}
+	}
+	
+	return result;
 }
 
 - (void)updateAlias:(AIListObject *)inObject

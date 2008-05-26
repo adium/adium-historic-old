@@ -16,6 +16,7 @@
 
 #import "CBPurpleAccount.h"
 
+#import <libpurple/notify.h>
 #import <libpurple/cmds.h>
 #import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
 #import <Adium/AIAccount.h>
@@ -351,8 +352,6 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 	return (returnString ? returnString : inString);
 }
 
-#if 0
-
 #define KEY_KEY		@"Key"
 #define KEY_VALUE	@"Value"
 #define KEY_TYPE	@"Type"
@@ -360,38 +359,38 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 {
 	GList *l;
-	NSMutableArray *array = [NSMutableArray dictionary];
+	NSMutableArray *array = [NSMutableArray array];
 	
-	for (l = user_info->user_info_entries; l != NULL; l = l->next) {
+	for (l = purple_notify_user_info_get_entries(user_info); l != NULL; l = l->next) {
 		PurpleNotifyUserInfoEntry *user_info_entry = l->data;
-
-		switch (user_info_entry->type) {
+		
+		switch (purple_notify_user_info_entry_get_type(user_info_entry)) {
 			case PURPLE_NOTIFY_USER_INFO_ENTRY_SECTION_HEADER:
 				[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-								  [NSString stringWithUTF8String:user_info_entry->label], KEY_LABEL,
-								  [NSNumber numberWithValue:AIUserInfoSectionHeader], KEY_TYPE,
+								  [NSString stringWithUTF8String:purple_notify_user_info_entry_get_label(user_info_entry)], KEY_KEY,
+								  [NSNumber numberWithInt:AIUserInfoSectionHeader], KEY_TYPE,
 								  nil]];
 				
 				break;
 			case PURPLE_NOTIFY_USER_INFO_ENTRY_SECTION_BREAK:
 				[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-								  [NSNumber numberWithValue:AIUserInfoSectionBreak], KEY_TYPE,
+								  [NSNumber numberWithInt:AIUserInfoSectionBreak], KEY_TYPE,
 								  nil]];
 				break;
 				
 			case PURPLE_NOTIFY_USER_INFO_ENTRY_PAIR:
 			{
-				if (user_info_entry->label && user_info_entry->value) {
+				if (purple_notify_user_info_entry_get_label(user_info_entry) && purple_notify_user_info_entry_get_value(user_info_entry)) {
 					[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-									  [NSString stringWithUTF8String:user_info_entry->label], KEY_LABEL,
-									  [NSString stringWithUTF8String:user_info_entry->value], KEY_VALUE,
+									  [NSString stringWithUTF8String:purple_notify_user_info_entry_get_label(user_info_entry)], KEY_KEY,
+									  [NSString stringWithUTF8String:purple_notify_user_info_entry_get_value(user_info_entry)], KEY_VALUE,
 									  nil]];
 					
-				} else if (user_info_entry->label) {
-					[array addObject:[NSDictionary dictionaryWithObject:[NSString stringWithUTF8String:user_info_entry->label]
-																 forKey:KEY_LABEL]];
-				} else if (user_info_entry->value) {
-					[array addObject:[NSDictionary dictionaryWithObject:[NSString stringWithUTF8String:user_info_entry->value]
+				} else if (purple_notify_user_info_entry_get_label(user_info_entry)) {
+					[array addObject:[NSDictionary dictionaryWithObject:[NSString stringWithUTF8String:purple_notify_user_info_entry_get_label(user_info_entry)]
+																 forKey:KEY_KEY]];
+				} else if (purple_notify_user_info_entry_get_value(user_info_entry)) {
+					[array addObject:[NSDictionary dictionaryWithObject:[NSString stringWithUTF8String:purple_notify_user_info_entry_get_value(user_info_entry)]
 																 forKey:KEY_VALUE]];
 				}	
 				break;
@@ -401,10 +400,14 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 
 	return array;
 }
-#endif
 
 - (void)updateUserInfo:(AIListContact *)theContact withData:(PurpleNotifyUserInfo *)user_info
 {
+	NSArray		*profileContents = purple_notify_user_info_to_dictionary(user_info);
+	[theContact setProfileArray:profileContents
+					notify:NotifyLater];	
+		
+/*	
 	char *user_info_text = purple_notify_user_info_get_text_with_newline(user_info, "<BR />");
 	NSMutableString *mutablePurpleUserInfo = (user_info_text ? [NSMutableString stringWithUTF8String:user_info_text] : nil);
 	g_free(user_info_text);
@@ -422,7 +425,8 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 	AILogWithSignature(@"Decoded %@ to %@", purpleUserInfo, [AIHTMLDecoder decodeHTML:purpleUserInfo]);
 	[theContact setProfile:[AIHTMLDecoder decodeHTML:purpleUserInfo]
 					notify:NotifyLater];
-
+*/
+	
 	//Apply any changes
 	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }

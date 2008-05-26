@@ -61,7 +61,9 @@
 - (void)setWarningLevel:(int)warningLevel notify:(NotifyTiming)notify;
 - (int)warningLevel;
 
+- (void)setProfileArray:(NSArray *)array notify:(NotifyTiming)notify;
 - (void)setProfile:(NSAttributedString *)profile notify:(NotifyTiming)notify;
+- (NSArray *)profileArray;
 - (NSAttributedString *)profile;
 
 - (void)setServersideAlias:(NSString *)alias 
