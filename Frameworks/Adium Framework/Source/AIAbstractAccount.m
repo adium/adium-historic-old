@@ -1212,11 +1212,9 @@
 	AIListContact	*listContact;
 	
 	while ((listContact = [enumerator nextObject])) {
-		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		[listContact setRemoteGroupName:nil];
 		[AIUserIcons flushCacheForObject:listContact];
 		[self removePropetyValuesFromContact:listContact silently:YES];
-		[pool release];
 	}
 	
 	[[adium contactController] endListObjectNotificationsDelay];
