@@ -294,16 +294,40 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 
 	//Apply any changes
 	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
-}   
+}
+
+
+- (void)clearIconForContact:(AIListContact *)theContact
+{
+	[theContact setServersideIconData:nil
+							   notify:NotifyLater];
+	
+	//Apply any changes
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];	
+}
 
 //Buddy Icon
 - (void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData
 {
-	[theContact setServersideIconData:userIconData
-							   notify:NotifyLater];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self
+											 selector:@selector(clearIconForContact:)
+											   object:theContact];
+	if (userIconData) {
+		[theContact setServersideIconData:userIconData
+								   notify:NotifyLater];
+		
+		//Apply any changes
+		[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 
-	//Apply any changes
-	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
+	} else {
+		/* We may receive an empty icon update just before an actual change. We don't want to flicker through no-icon.
+		 * We therefore cancel empty icon updates when we receive a new icon, and we do the actual clearing on a delay in case
+		 * this is what is about to happen.
+		 */
+		[self performSelector:@selector(clearIconForContact:)
+				   withObject:theContact
+				   afterDelay:10.0];
+	}
 }
 
 - (void)updateMobileStatus:(AIListContact *)theContact withData:(BOOL)isMobile
@@ -497,6 +521,9 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 			if (shouldUnref)
 				purple_buddy_icon_unref(buddyIcon);
 		}
+
+	} else {
+		AILogWithSignature(@"Could not get serverside icon data for %@. account is %p", contact, account);
 	}
 	
 	return data;
