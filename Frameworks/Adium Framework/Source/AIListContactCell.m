@@ -18,6 +18,7 @@
 #import <Adium/AIListObject.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIParagraphStyleAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIUserIcons.h>
 
@@ -117,7 +118,14 @@
 	
 	// Also account for idle times.
 	if (idleTimeVisible && !idleTimeIsBelow && [listObject displayArrayObjectForKey:@"IdleReadable"]) {
-		NSAttributedString	*idleDisplay = [[NSAttributedString alloc] initWithString:[listObject displayArrayObjectForKey:@"IdleReadable"]
+		NSString		*idleTimeString = [listObject displayArrayObjectForKey:@"IdleReadable"];
+		
+		if (statusMessageVisible && !statusMessageIsBelow && [listObject statusMessageString]) {
+			// Account for the size of the ellipsis if there's a status message.
+			idleTimeString = [idleTimeString stringByAppendingEllipsis];
+		}
+		
+		NSAttributedString	*idleDisplay = [[NSAttributedString alloc] initWithString:idleTimeString
 																		  attributes:[self statusAttributes]];
 		width += ceil([idleDisplay size].width) + NAME_STATUS_PAD;
 		[idleDisplay release];
