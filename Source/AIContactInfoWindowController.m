@@ -109,32 +109,8 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		[[self window] makeFirstResponder:nil];
 	}
 	
-	//There is an optional fifth segment, so we define a case for it.
-	switch(currentSegment) {
-		case CONTACT_INFO_SEGMENT:
-			[self configureMetaPopupHiding];
-			[self addInspectorPanel:CONTACT_INFO_SEGMENT animate:shouldAnimate];
-			break;
-		case CONTACT_ADDRESSBOOK_SEGMENT:
-			[metaPopup setHidden:YES];
-			[self addInspectorPanel:CONTACT_ADDRESSBOOK_SEGMENT animate:shouldAnimate];
-			break;
-		case CONTACT_EVENTS_SEGMENT:
-			[metaPopup setHidden:YES];
-			[self addInspectorPanel:CONTACT_EVENTS_SEGMENT animate:shouldAnimate];
-			break;
-		case CONTACT_ADVANCED_SEGMENT:
-			[metaPopup setHidden:YES];
-			[self addInspectorPanel:CONTACT_ADVANCED_SEGMENT animate:shouldAnimate];
-			break;
-		case CONTACT_PLUGINS_SEGMENT:
-			[metaPopup setHidden:YES];
-			[self addInspectorPanel:CONTACT_PLUGINS_SEGMENT animate:shouldAnimate];
-			break;
-		default:
-			[self addInspectorPanel:CONTACT_INFO_SEGMENT animate:shouldAnimate];
-			break;
-	}
+	[self configureMetaPopupHiding];
+	[self addInspectorPanel:currentSegment animate:shouldAnimate];
 }
 
 //Return the shared contact info window
