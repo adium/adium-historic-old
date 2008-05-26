@@ -267,11 +267,6 @@ NSString* serviceIDForJabberUID(NSString *UID);
     if (inModifiedKeys == nil) { //Only perform this when updating for all list objects
         ABPerson *person = [[self class] personForListObject:inObject];
 		
-		if ([AIUserIcons userIconSource:addressBookUserIconSource changeWouldBeRelevantForObject:inObject]) {
-			//This object's user icon would be changed if we have a new icon Update!
-			[addressBookUserIconSource queueDelayedFetchOfImageForPerson:person object:inObject];
-		}
-
 		if (person) {
 			if (enableImport) {
 				//Load the name if appropriate
