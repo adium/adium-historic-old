@@ -117,10 +117,13 @@
 - (void)setRemoteGroupName:(NSString *)inName
 {
 	if ((!remoteGroupName && inName) || ![inName isEqualToString:remoteGroupName]) {
-		//Autorelease so we don't have to worry about whether (remoteGroupName == inName) or not
-		[remoteGroupName autorelease];
-		remoteGroupName = [inName retain];
-		
+		if (!remoteGroupName || !inName)
+			[AIUserIcons flushCacheForObject:self];
+
+		if (remoteGroupName != inName) {
+			[remoteGroupName release];
+			remoteGroupName = [inName retain];
+		}
 		[[adium contactController] listObjectRemoteGroupingChanged:self];
 		
 		AIListObject	*myContainingObject = [self containingObject];
