@@ -1069,32 +1069,37 @@ static NSArray *draggedTypes = nil;
     AIListObject	*inObject = [notification object];
     NSSet			*keys = [[notification userInfo] objectForKey:@"Keys"];
 	
-	if (inObject &&
-		([keys containsObject:KEY_USER_ICON])) {
-		AIListObject	*actualObject = nil;
-		
-		if ([chat account] == inObject) {
-			//The account is the object actually in the chat
-			actualObject = inObject;
-		} else {
-			/*
-			 * We are notified of a change to the metacontact's icon. Find the contact inside the chat which we will
-			 * be displaying as changed.
-			 */
-			NSEnumerator	*enumerator;
-			AIListContact	*participatingListObject;
+	if ([keys containsObject:KEY_USER_ICON]) {
+		if (inObject) {
+			AIListObject	*actualObject = nil;
 			
-			enumerator = [[chat containedObjects] objectEnumerator];
-			while ((participatingListObject = [enumerator nextObject])) {
-				if ([participatingListObject parentContact] == inObject) {
-					actualObject = participatingListObject;
-					break;
+			if ([chat account] == inObject) {
+				//The account is the object actually in the chat
+				actualObject = inObject;
+			} else {
+				/*
+				 * We are notified of a change to the metacontact's icon. Find the contact inside the chat which we will
+				 * be displaying as changed.
+				 */
+				NSEnumerator	*enumerator;
+				AIListContact	*participatingListObject;
+				
+				enumerator = [[chat containedObjects] objectEnumerator];
+				while ((participatingListObject = [enumerator nextObject])) {
+					if ([participatingListObject parentContact] == inObject) {
+						actualObject = participatingListObject;
+						break;
+					}
 				}
 			}
-		}
-		
-		if (actualObject) {
-			[self userIconForObjectDidChange:actualObject];
+
+			if (actualObject) {
+				[self userIconForObjectDidChange:actualObject];
+			}
+
+		} else {
+			//We don't know what changed, if anything, that is relevant to our chat. Update source and destination icons.
+			[self sourceOrDestinationChanged:nil];
 		}
 	}
 }
