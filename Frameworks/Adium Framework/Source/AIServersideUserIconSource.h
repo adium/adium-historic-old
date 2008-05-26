@@ -11,6 +11,7 @@
 
 @interface AIServersideUserIconSource : AIObject <AIUserIconSource> {
 	NSMutableDictionary *serversideIconDataCache;
+	BOOL				gettingServersideData;
 }
 
 - (void)setServersideUserIconData:(NSData *)inData forObject:(AIListObject *)inObject;
