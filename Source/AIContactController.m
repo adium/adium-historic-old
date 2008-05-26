@@ -377,7 +377,7 @@
 						  contactList);
 			
 			//NSLog(@"listObjectRemoteGroupingChanged: %@: remoteGroupName %@ --> %@",inContact,remoteGroupName,localGroup);
-			
+				
 			[self _moveContactLocally:inContact
 							  toGroup:localGroup];
 			
