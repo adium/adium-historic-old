@@ -147,8 +147,6 @@
 			countString = [NSString stringWithFormat:@"(%i)", visibleObjects];
 		}
 		
-		NSLog(@"Set to %@ for %@", countString, inObject);
-
 		[[inObject displayArrayForKey:@"Count Text"] setObject:countString withOwner:self];
 		[[inObject displayArrayForKey:@"Show Count"] setObject:[NSNumber numberWithBool:(countVisibleObjects || countAllObjects)] withOwner:self];
 	
