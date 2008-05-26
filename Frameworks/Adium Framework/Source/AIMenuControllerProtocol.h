@@ -8,7 +8,7 @@
 
 #import <Adium/AIControllerProtocol.h>
 
-#define AIMenuDidChnge  @"AIMenuDidChnge"
+#define AIMenuDidChange  @"AIMenuDidChange"
 
 /* Each of the items in this enum must correspond to an NSMenuItem which is:
  *		1. Declared in the AIMenuController.h interface
