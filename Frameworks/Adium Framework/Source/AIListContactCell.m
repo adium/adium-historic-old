@@ -114,6 +114,14 @@
 																	   attributes:[self labelAttributes]];
 	width += ceil([displayName size].width);
 	[displayName release];
+	
+	// Also account for idle times.
+	if (idleTimeVisible && !idleTimeIsBelow && [listObject displayArrayObjectForKey:@"IdleReadable"]) {
+		NSAttributedString	*idleDisplay = [[NSAttributedString alloc] initWithString:[listObject displayArrayObjectForKey:@"IdleReadable"]
+																		  attributes:[self statusAttributes]];
+		width += ceil([idleDisplay size].width) + NAME_STATUS_PAD;
+		[idleDisplay release];
+	}
 
 	//User icon
 	if (userIconVisible) {
