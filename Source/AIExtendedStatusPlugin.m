@@ -102,7 +102,7 @@
 		[inObject isKindOfClass:[AIListContact class]] &&
 		([(AIListContact *)inObject parentContact] == inObject)) {
 		NSMutableString	*statusMessage = nil;
-		NSString		*finalMessage = nil;
+		NSString		*finalMessage = nil, *finalIdleReadable = nil;
 		int				idle;
 
 		if (showStatus) {
@@ -133,11 +133,15 @@
 		//
 		if (idle > 0 && statusMessage) {
 			finalMessage = [NSString stringWithFormat:@"(%@) %@",[self idleStringForMinutes:idle], statusMessage];
+			finalIdleReadable = [NSString stringWithFormat:@"(%@)", [self idleStringForMinutes:idle]];
 		} else if (idle > 0) {
 			finalMessage = [NSString stringWithFormat:@"(%@)",[self idleStringForMinutes:idle]];
+			finalIdleReadable = [NSString stringWithFormat:@"(%@)", [self idleStringForMinutes:idle]];
 		} else {
 			finalMessage = statusMessage;
 		}
+		
+		[[inObject displayArrayForKey:@"IdleReadable"] setObject:finalIdleReadable withOwner:self];
 
 		[[inObject displayArrayForKey:@"ExtendedStatus"] setObject:finalMessage withOwner:self];
 		modifiedAttributes = [NSSet setWithObject:@"ExtendedStatus"];

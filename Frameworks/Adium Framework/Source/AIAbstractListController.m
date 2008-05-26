@@ -320,6 +320,11 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	[contentCell setUserIconSize:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_SIZE] intValue]];
 
 	if (windowStyle != AIContactListWindowStyleContactBubbles_Fitted) {
+		EXTENDED_STATUS_STYLE statusStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_STYLE] intValue];
+		
+		[contentCell setStatusMessageIsVisible:(statusStyle == STATUS_ONLY || statusStyle == IDLE_AND_STATUS)];
+		[contentCell setIdleTimeIsVisible:(statusStyle == IDLE_ONLY || statusStyle == IDLE_AND_STATUS)];
+		
 		[contentCell setUserIconVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]];
 		[contentCell setExtendedStatusVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue]];
 		[contentCell setStatusIconsVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS] boolValue]];
@@ -328,7 +333,21 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 		[contentCell setUserIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_POSITION] intValue]];
 		[contentCell setStatusIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_ICON_POSITION] intValue]];
 		[contentCell setServiceIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_SERVICE_ICON_POSITION] intValue]];
-		[contentCell setExtendedStatusIsBelowName:[[prefDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_POSITION] boolValue]];		
+	
+		switch ([[prefDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_POSITION] intValue]) {
+			case EXTENDED_STATUS_POSITION_BELOW_NAME:
+				[contentCell setStatusMessageIsBelowName:YES];
+				[contentCell setIdleTimeIsBelowName:YES];
+				break;
+			case EXTENDED_STATUS_POSITION_BESIDE_NAME:
+				[contentCell setIdleTimeIsBelowName:NO];
+				[contentCell setStatusMessageIsBelowName:NO];
+				break;
+			case EXTENDED_STATUS_POSITION_BOTH:
+				[contentCell setIdleTimeIsBelowName:NO];
+				[contentCell setStatusMessageIsBelowName:YES];
+				break;				
+		}
 	} else {
 		//Fitted pillows + centered text = no icons
 		BOOL allowIcons = (contentCellAlignment != NSCenterTextAlignment);
@@ -355,9 +374,6 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 			iconPosition = [self pillowsFittedIconPositionForIconPosition:iconPosition
 													 contentCellAlignment:contentCellAlignment];
 			[contentCell setServiceIconPosition:iconPosition];
-			
-			//Force extended status below the name (?)
-			[contentCell setExtendedStatusIsBelowName:YES];
 		}
 	}
 	
