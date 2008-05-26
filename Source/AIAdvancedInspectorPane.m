@@ -253,7 +253,8 @@
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount
 {
 	[contacts release]; contacts = nil;
-	contacts = [[self contactsForCurrentObjectCompatibleWithAccount:inAccount] retain];
+	if (inAccount)
+		contacts = [[self contactsForCurrentObjectCompatibleWithAccount:inAccount] retain];
 
 	//Refresh our table
 	[accountsTableView reloadData];
@@ -269,7 +270,9 @@
 	[accountsButton setMenu:[inAccountMenu menu]];
 
 	//Select an account and redisplay
-	[self accountMenu:inAccountMenu didSelectAccount:[[accountsButton selectedItem] representedObject]];
+	[self accountMenu:inAccountMenu didSelectAccount:([accountsButton numberOfItems] ?
+													  [[accountsButton selectedItem] representedObject] :
+													  nil)];
 }
 
 - (NSControlSize)controlSizeForAccountMenu:(AIAccountMenu *)inAccountMenu
@@ -287,7 +290,9 @@
 	/* Prevent reentry, as Heisenberg knows out that observing contacts may change them. */
 	if (!rebuildingContacts) {
 		rebuildingContacts = YES;
-		[self accountMenu:accountMenu didSelectAccount:[[accountsButton selectedItem] representedObject]];
+		[self accountMenu:accountMenu didSelectAccount:([accountsButton numberOfItems] ?
+														[[accountsButton selectedItem] representedObject] :
+														nil)];
 		rebuildingContacts = NO;
 	}
 }
