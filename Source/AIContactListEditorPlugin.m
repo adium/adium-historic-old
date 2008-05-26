@@ -33,9 +33,6 @@
 #import <Adium/AIListGroup.h>
 #import <Adium/AIMetaContact.h>
 
-#define ADD_BOOKMARK						@"Add Bookmark"
-#define ADD_BOOKMARK_ELLIPSIS				[ADD_BOOKMARK stringByAppendingEllipsis]
-
 #define ADD_CONTACT							AILocalizedString(@"Add Contact",nil)
 #define ADD_CONTACT_ELLIPSIS				[ADD_CONTACT stringByAppendingEllipsis]
 
@@ -59,7 +56,6 @@
 @interface AIContactListEditorPlugin (PRIVATE)
 - (void)deleteFromArray:(NSArray *)array;
 - (void)promptForNewContactOnWindow:(NSWindow *)inWindow selectedListObject:(AIListObject *)inListObject;
--(void)promptForNewBookmarkOnWindow:(NSWindow*)window;
 @end
 
 /*!
@@ -76,17 +72,6 @@
     NSMenuItem		*menuItem;
 	NSToolbarItem	*toolbarItem;
 	
-	/*
-	this piece of code is not used for the time being - may implement at later date -eb
-	
-	//Add Bookmark
-	menuItem_addBookmark = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_BOOKMARK_ELLIPSIS
-																					  target:self
-																					  action:@selector(addBookmark:)
-																			   keyEquivalent:@""];
-
-	[[adium menuController] addMenuItem:menuItem_addBookmark toLocation:LOC_Contact_Manage];
-	*/
 	//Add Contact
     menuItem_addContact = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT_ELLIPSIS
 																				target:self
@@ -196,8 +181,6 @@
 		/* The user can always add groups; accounts should simulate serverside groups if necessary */
 		return YES;
 
-	} else if (menuItem == menuItem_addBookmark) {
-		return [[[adium interfaceController] activeChat] isGroupChat];
 	}
 	
 	return YES;
@@ -209,20 +192,7 @@
 	//	AIListObject	*object = [[adium menuController] currentContextMenuObject];
 	//<renameGroup> : I wish I worked... :(	
 }
-//Add Bookmark ----------------------------------------------------------------------------------------------------------
-#pragma mark Add Bookmark
-/*!
- * @brief Promp for a new bookmark
- */
-- (IBAction)addBookmark:(id)sender
-{
-	[self promptForNewBookmarkOnWindow:nil];
-}
 
--(void)promptForNewBookmarkOnWindow:(NSWindow*)window
-{
-	NSLog(@"addBookmark");
-}
 //Add Contact ----------------------------------------------------------------------------------------------------------
 #pragma mark Add Contact
 /*!
