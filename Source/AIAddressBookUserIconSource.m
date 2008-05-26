@@ -16,6 +16,10 @@
 #define KEY_AB_IMAGE_SYNC						@"AB Image Sync"
 #define KEY_AB_PREFER_ADDRESS_BOOK_IMAGES		@"AB Prefer AB Images"
 
+@interface AIAddressBookUserIconSource (PRIVATE)
+- (BOOL)updateFromLocalImageForPerson:(ABPerson *)person object:(AIListObject *)inObject;
+@end
+
 @implementation AIAddressBookUserIconSource
 
 - (id)init
@@ -50,9 +54,36 @@
  */
 - (AIUserIconSourceQueryResult)updateUserIconForObject:(AIListObject *)inObject
 {
-	if ([self queueDelayedFetchOfImageForPerson:[[ESAddressBookIntegrationPlugin class] personForListObject:inObject]
-										 object:inObject]) {
+	if (!useABImages)
+		return AIUserIconSourceDidNotFindIcon;
+
+	ABPerson *person = [[ESAddressBookIntegrationPlugin class] personForListObject:inObject];
+	
+	if (!person)
+		return AIUserIconSourceDidNotFindIcon;
+	
+	/* Some mild complexity here. If inObject is a metacontact, we should only proceed if
+	 * none of its contained contacts have a higher-priority user icon than we will be.
+	 * This prevents a metacontact-associated address book image from overriding a serverside
+	 * contained-contact image if that isn't the sort of thing that the user might be into.
+	 */
+	if ([inObject isKindOfClass:[AIMetaContact class]]) {
+		NSEnumerator  *enumerator = [[(AIMetaContact *)inObject listContacts] objectEnumerator];
+		AIListContact *listContact;
+		while ((listContact = [enumerator nextObject])) {
+			if (![AIUserIcons userIconSource:self changeWouldBeRelevantForObject:inObject])
+				return AIUserIconSourceDidNotFindIcon;
+		}
+	}
+
+	if ([self updateFromLocalImageForPerson:person
+									 object:inObject]) {
+		return AIUserIconSourceFoundIcon;
+
+	} else if ([self queueDelayedFetchOfImageFromAnySourceForPerson:person
+															 object:inObject]) {
 		return AIUserIconSourceLookingUpIconAsynchronously;
+
 	} else {
 		return AIUserIconSourceDidNotFindIcon;
 	}
@@ -72,12 +103,13 @@
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	AIUserIconPriority oldPriority = priority;
+	BOOL oldUseABImages = useABImages;
 
 	preferAddressBookImages = [[prefDict objectForKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES] boolValue];
 	useABImages = [[prefDict objectForKey:KEY_AB_USE_IMAGES] boolValue];
 	
 	priority = (preferAddressBookImages ? AIUserIconHighPriority : AIUserIconLowPriority);
-	if (priority != oldPriority) {
+	if ((priority != oldPriority) || (oldUseABImages != useABImages)) {
 		[AIUserIcons userIconSource:self priorityDidChange:priority fromPriority:oldPriority];
 	}
 }
@@ -111,7 +143,7 @@
 		
 		//Get the object from our tracking dictionary
 		setOrObject = [trackingDict objectForKey:tagNumber];
-		
+
 		if ([setOrObject isKindOfClass:[AIListObject class]]) {
 			listObject = (AIListObject *)setOrObject;
 			
@@ -157,28 +189,12 @@
  * @param person The ABPerson to fetch the image from
  * @param inObject The AIListObject with which to ultimately associate the image
  */
-- (BOOL)queueDelayedFetchOfImageForPerson:(ABPerson *)person object:(AIListObject *)inObject
+- (BOOL)queueDelayedFetchOfImageFromAnySourceForPerson:(ABPerson *)person object:(AIListObject *)inObject
 {
-	if (!person) return NO;
-
-	/* Some mild complexity here. If inObject is a metacontact, we should only proceed if
-	 * none of its contained contacts have a higher-priority user icon than we will be.
-	 * This prevents a metacontact-associated address book image from overriding a serverside
-	 * contained-contact image if that isn't the sort of thing that the user might be into.
-	 */
-	if ([inObject isKindOfClass:[AIMetaContact class]]) {
-		NSEnumerator  *enumerator = [[(AIMetaContact *)inObject listContacts] objectEnumerator];
-		AIListContact *listContact;
-		while ((listContact = [enumerator nextObject])) {
-			if (![AIUserIcons userIconSource:self changeWouldBeRelevantForObject:inObject])
-				return NO;
-		}
-	}
-
 	int				tag;
 	NSNumber		*tagNumber;
 	NSString		*uniqueId;
-	
+
 	uniqueId = [person uniqueId];
 	
 	//Check if we already have a tag for the loading of another object with the same
@@ -192,11 +208,13 @@
 		if ([previousValue isKindOfClass:[AIListObject class]]) {
 			//If the old value is just a listObject, create an array with the old object
 			//and the new object
-			objectSet = [NSMutableSet setWithObjects:previousValue,inObject,nil];
-			
-			//Store the array in the tracking dict
-			[trackingDict setObject:objectSet forKey:tagNumber];
-			
+			if (previousValue != inObject) {
+				objectSet = [NSMutableSet setWithObjects:previousValue,inObject,nil];
+				
+				//Store the array in the tracking dict
+				[trackingDict setObject:objectSet forKey:tagNumber];
+			}
+
 		} else /*if ([previousValue isKindOfClass:[NSMutableArray class]])*/{
 			//Add the new object to the previously-created array
 			[(NSMutableSet *)previousValue addObject:inObject];
@@ -218,5 +236,32 @@
 	return YES;
 }
 
+- (BOOL)updateFromLocalImageForPerson:(ABPerson *)person object:(AIListObject *)inObject
+{
+	NSData *imageData = [person imageData];
+	NSImage *image = (imageData ? [[[NSImage alloc] initWithData:imageData] autorelease] : nil);
+
+	//Address book can feed us giant images, which we really don't want to keep around
+	if (image) {
+		NSSize size = [image size];
+		if (size.width > 96 || size.height > 96)
+			image = [image imageByScalingToSize:NSMakeSize(96, 96)];
+		
+		[AIUserIcons userIconSource:self
+			   didDetermineUserIcon:image
+					 asynchronously:NO
+						  forObject:inObject];
+		
+		int tag;
+		if ((tag = [[trackingDictPersonToTagNumber objectForKey:[person uniqueId]] intValue])) {
+			[ABPerson cancelLoadingImageDataForTag:tag];
+		}
+
+		return YES;
+
+	} else {
+		return NO;
+	}
+}
 
 @end
