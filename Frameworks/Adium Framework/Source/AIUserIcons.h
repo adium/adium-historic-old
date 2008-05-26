@@ -79,6 +79,15 @@ typedef float AIUserIconPriority;
 + (void)userIconSource:(id <AIUserIconSource>)inSource didDetermineUserIcon:(NSImage *)inUserIcon asynchronously:(BOOL)wasAsynchronous forObject:(AIListObject *)inObject;
 
 /*!
+ * @brief Set what user icon and source an object is currently using (regardless of what AIUserIcon would otherwise do)
+ *
+ * This is useful if an object knows something AIUserIcons can't. For example, AIMetaContact uses this to let AIUserIcons
+ * know how it resolved iterating through its contained contacts based on their respective priorities in order to determine
+ * which user icon should be used.  Tracking it here prevents needless repeated lookups of data.
+ */
++ (void)setActualUserIcon:(NSImage *)userIcon andSource:(id <AIUserIconSource>)inSource forObject:(AIListObject *)inObject;
+
+/*!
  * @brief Get the user icon source currently providing the icon for an object
  */
 + (id <AIUserIconSource>)userIconSourceForObject:(AIListObject *)inObject;
