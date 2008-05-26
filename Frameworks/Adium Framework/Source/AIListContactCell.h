@@ -38,6 +38,10 @@
 	BOOL				extendedStatusVisible;
 	BOOL				statusIconsVisible;
 	BOOL				serviceIconsVisible;
+	
+	BOOL				statusMessageVisible;
+	BOOL				idleTimeVisible;
+	
 	NSSize				userIconSize;
 	int					userIconRoundingRadius;
 	int					statusFontHeight;	
@@ -49,7 +53,8 @@
 	LIST_POSITION		userIconPosition;
 	LIST_POSITION		statusIconPosition;
 	LIST_POSITION		serviceIconPosition;
-	BOOL				extendedStatusIsBelowName;
+	BOOL				idleTimeIsBelow;
+	BOOL				statusMessageIsBelow;
 	BOOL				useStatusMessageAsExtendedStatus;
 
 	float				backgroundOpacity;
@@ -75,13 +80,21 @@
 - (BOOL)userIconVisible;
 - (void)setUserIconSize:(int)inSize;
 - (int)userIconSize;
+
 - (void)setExtendedStatusVisible:(BOOL)inShowStatus;
 - (BOOL)extendedStatusVisible;
+
 - (void)setStatusIconsVisible:(BOOL)inShowStatus;
 - (BOOL)statusIconsVisible;
+
 - (void)setServiceIconsVisible:(BOOL)inShowService;
 - (BOOL)serviceIconsVisible;
-- (void)setExtendedStatusIsBelowName:(BOOL)inBelowName;
+
+- (void)setIdleTimeIsBelowName:(BOOL)isBelow;
+- (void)setIdleTimeIsVisible:(BOOL)isVisible;
+- (void)setStatusMessageIsBelowName:(BOOL)isBelow;
+- (void)setStatusMessageIsVisible:(BOOL)isVisible;
+
 - (void)setUserIconPosition:(LIST_POSITION)inPosition;
 - (void)setStatusIconPosition:(LIST_POSITION)inPosition;
 - (void)setServiceIconPosition:(LIST_POSITION)inPosition;
@@ -98,7 +111,7 @@
 - (NSRect)drawUserIconInRect:(NSRect)inRect position:(IMAGE_POSITION)position;
 - (NSRect)drawStatusIconInRect:(NSRect)rect position:(IMAGE_POSITION)position;
 - (NSRect)drawServiceIconInRect:(NSRect)rect position:(IMAGE_POSITION)position;
-- (NSRect)drawUserExtendedStatusInRect:(NSRect)rect drawUnder:(BOOL)drawUnder;
+- (NSRect)drawUserExtendedStatusInRect:(NSRect)rect withMessage:(NSString *)string drawUnder:(BOOL)drawUnder;
 - (NSColor *)labelColor;
 - (NSColor *)textColor;
 - (NSImage *)userIconImage;
