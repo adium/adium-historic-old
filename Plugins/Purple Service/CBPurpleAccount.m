@@ -356,7 +356,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 #define KEY_VALUE	@"Value"
 #define KEY_TYPE	@"Type"
 
-NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
+- (NSArray *)dictionaryForPurpleNotifyUserInfo:(PurpleNotifyUserInfo *)user_info
 {
 	GList *l;
 	NSMutableArray *array = [NSMutableArray array];
@@ -382,15 +382,17 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 			{
 				if (purple_notify_user_info_entry_get_label(user_info_entry) && purple_notify_user_info_entry_get_value(user_info_entry)) {
 					[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-									  [NSString stringWithUTF8String:purple_notify_user_info_entry_get_label(user_info_entry)], KEY_KEY,
-									  [NSString stringWithUTF8String:purple_notify_user_info_entry_get_value(user_info_entry)], KEY_VALUE,
+									  processPurpleImages([NSString stringWithUTF8String:purple_notify_user_info_entry_get_label(user_info_entry)], self), KEY_KEY,
+									  processPurpleImages([NSString stringWithUTF8String:purple_notify_user_info_entry_get_value(user_info_entry)], self), KEY_VALUE,
 									  nil]];
 					
 				} else if (purple_notify_user_info_entry_get_label(user_info_entry)) {
-					[array addObject:[NSDictionary dictionaryWithObject:[NSString stringWithUTF8String:purple_notify_user_info_entry_get_label(user_info_entry)]
+					[array addObject:[NSDictionary dictionaryWithObject:
+									  processPurpleImages([NSString stringWithUTF8String:purple_notify_user_info_entry_get_label(user_info_entry)], self)
 																 forKey:KEY_KEY]];
 				} else if (purple_notify_user_info_entry_get_value(user_info_entry)) {
-					[array addObject:[NSDictionary dictionaryWithObject:[NSString stringWithUTF8String:purple_notify_user_info_entry_get_value(user_info_entry)]
+					[array addObject:[NSDictionary dictionaryWithObject:
+									  processPurpleImages([NSString stringWithUTF8String:purple_notify_user_info_entry_get_value(user_info_entry)], self)
 																 forKey:KEY_VALUE]];
 				}	
 				break;
@@ -403,7 +405,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 
 - (void)updateUserInfo:(AIListContact *)theContact withData:(PurpleNotifyUserInfo *)user_info
 {
-	NSArray		*profileContents = purple_notify_user_info_to_dictionary(user_info);
+	NSArray		*profileContents = [self dictionaryForPurpleNotifyUserInfo:user_info];
 	[theContact setProfileArray:profileContents
 					notify:NotifyLater];	
 		
