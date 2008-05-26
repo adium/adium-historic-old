@@ -171,6 +171,8 @@
 		34E1D8060CD5C4FA0071836E /* IKPictureTakerForTiger.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E1D8040CD5C4FA0071836E /* IKPictureTakerForTiger.h */; };
 		34E4692A075681AE004C3A42 /* AIVariableHeightOutlineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E46928075681AE004C3A42 /* AIVariableHeightOutlineView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34E4692B075681AE004C3A42 /* AIVariableHeightOutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E46929075681AE004C3A42 /* AIVariableHeightOutlineView.m */; };
+		34E6D03C0DEAED82002819F6 /* AIPasteboardAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E6D03A0DEAED82002819F6 /* AIPasteboardAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		34E6D03D0DEAED82002819F6 /* AIPasteboardAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E6D03B0DEAED82002819F6 /* AIPasteboardAdditions.m */; };
 		34F2E92D07C2D1E7007EAAAB /* AIFlexibleLink.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F2E92B07C2D1E7007EAAAB /* AIFlexibleLink.m */; };
 		34F2E92E07C2D1E7007EAAAB /* AIFlexibleLink.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F2E92C07C2D1E7007EAAAB /* AIFlexibleLink.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34F2E94007C2D264007EAAAB /* AITooltipUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F2E93E07C2D264007EAAAB /* AITooltipUtilities.m */; };
@@ -443,6 +445,8 @@
 		34E1D8040CD5C4FA0071836E /* IKPictureTakerForTiger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = IKPictureTakerForTiger.h; path = Source/IKPictureTakerForTiger.h; sourceTree = "<group>"; };
 		34E46928075681AE004C3A42 /* AIVariableHeightOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIVariableHeightOutlineView.h; path = Source/AIVariableHeightOutlineView.h; sourceTree = "<group>"; };
 		34E46929075681AE004C3A42 /* AIVariableHeightOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIVariableHeightOutlineView.m; path = Source/AIVariableHeightOutlineView.m; sourceTree = "<group>"; };
+		34E6D03A0DEAED82002819F6 /* AIPasteboardAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIPasteboardAdditions.h; path = Source/AIPasteboardAdditions.h; sourceTree = "<group>"; };
+		34E6D03B0DEAED82002819F6 /* AIPasteboardAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIPasteboardAdditions.m; path = Source/AIPasteboardAdditions.m; sourceTree = "<group>"; };
 		34F13FA50BA6D5E4000473DE /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt_BR; path = Resources/pt_BR.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34F2E92B07C2D1E7007EAAAB /* AIFlexibleLink.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIFlexibleLink.m; path = Source/AIFlexibleLink.m; sourceTree = "<group>"; };
 		34F2E92C07C2D1E7007EAAAB /* AIFlexibleLink.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIFlexibleLink.h; path = Source/AIFlexibleLink.h; sourceTree = "<group>"; };
@@ -900,6 +904,8 @@
 				9E2486090A359D310070153D /* NSCalendarDate+ISO8601Unparsing.m */,
 				639B3CA60ABC708700D618E9 /* AIWindowControllerAdditions.h */,
 				639B3CA70ABC708700D618E9 /* AIWindowControllerAdditions.m */,
+				34E6D03A0DEAED82002819F6 /* AIPasteboardAdditions.h */,
+				34E6D03B0DEAED82002819F6 /* AIPasteboardAdditions.m */,
 			);
 			name = Additions;
 			sourceTree = "<group>";
@@ -1471,6 +1477,7 @@
 				319EF07F0CE787E40070D159 /* AICalendarDateAdditions.h in Headers */,
 				3113CCA60CE8CB4200B13AC0 /* AIDateAdditions.h in Headers */,
 				346E5F400D60F87000ACD38C /* AIImageDrawingAdditions.h in Headers */,
+				34E6D03C0DEAED82002819F6 /* AIPasteboardAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1674,6 +1681,7 @@
 				3113CCA70CE8CB4200B13AC0 /* AIDateAdditions.m in Sources */,
 				31FA7E8D0D4A6CF800ABE634 /* AIRichTextCoercer.m in Sources */,
 				346E5F410D60F87000ACD38C /* AIImageDrawingAdditions.m in Sources */,
+				34E6D03D0DEAED82002819F6 /* AIPasteboardAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
