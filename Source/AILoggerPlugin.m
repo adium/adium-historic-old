@@ -410,14 +410,18 @@ Class LogViewerWindowControllerClass = NULL;
 			NSMutableArray *attributeKeys = [NSMutableArray arrayWithObjects:@"sender", @"time", nil];
 			NSMutableArray *attributeValues = [NSMutableArray arrayWithObjects:[[content source] UID], date, nil];
 			AIXMLAppender  *appender = [self appenderForChat:chat];
-			if([content isAutoreply])
-			{
+			if ([content isAutoreply]) {
 				[attributeKeys addObject:@"auto"];
 				[attributeValues addObject:@"true"];
 			}
+			if (![[[content source] UID] isEqualToString:[[content source] displayName]]) {
+				[attributeKeys addObject:@"alias"];
+				[attributeValues addObject:[[content source] displayName]];				
+			}
 			
 			[appender addElementWithName:@"message" 
-						  escapedContent:[xhtmlDecoder encodeHTML:[content message] imagesPath:[[appender path] stringByDeletingLastPathComponent]]
+						  escapedContent:[xhtmlDecoder encodeHTML:[content message]
+													   imagesPath:[[appender path] stringByDeletingLastPathComponent]]
 						   attributeKeys:attributeKeys
 						 attributeValues:attributeValues];
 			dirty = YES;
@@ -443,23 +447,42 @@ Class LogViewerWindowControllerClass = NULL;
 					if (translatedStatus == nil) {
 						AILogWithSignature(@"AILogger: Don't know how to translate status: %@", [(AIContentStatus *)content status]);
 					} else {
+						NSMutableArray *attributeKeys = [NSMutableArray arrayWithObjects:@"type", @"sender", @"time", nil];
+						NSMutableArray *attributeValues = [NSMutableArray arrayWithObjects:
+														   translatedStatus, 
+														   [actualObject UID], 
+														   date,
+														   nil];
+
+						if (![[actualObject UID] isEqualToString:[actualObject displayName]]) {
+							[attributeKeys addObject:@"alias"];
+							[attributeValues addObject:[actualObject displayName]];				
+						}
+						
 						[[self appenderForChat:chat] addElementWithName:@"status"
 									  escapedContent:([(AIContentStatus *)content loggedMessage] ? [xhtmlDecoder encodeHTML:[(AIContentStatus *)content loggedMessage] imagesPath:nil] : nil)
-									   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
-									 attributeValues:[NSArray arrayWithObjects:
-										 translatedStatus, 
-										 [actualObject UID], 
-										 date,
-										 nil]];
+									   attributeKeys:attributeKeys
+									 attributeValues:attributeValues];
 						dirty = YES;
 					}
 
 				} else if ([contentType isEqualToString:CONTENT_EVENT_TYPE] ||
 						   [contentType isEqualToString:CONTENT_NOTIFICATION_TYPE]) {
-					[[self appenderForChat:chat] addElementWithName:@"event"
-								  escapedContent:[xhtmlDecoder encodeHTML:[content message] imagesPath:nil]
-								   attributeKeys:[NSArray arrayWithObjects:@"type", @"sender", @"time", nil]
-								 attributeValues:[NSArray arrayWithObjects:[(AIContentEvent *)content eventType], [[content source] UID], date, nil]];
+					NSMutableArray *attributeKeys = [NSMutableArray arrayWithObjects:@"type", @"sender", @"time", nil];
+					NSMutableArray *attributeValues = [NSMutableArray arrayWithObjects:
+													   [(AIContentEvent *)content eventType], [[content source] UID], date, nil];
+					AIXMLAppender  *appender = [self appenderForChat:chat];
+
+					if (![[[content source] UID] isEqualToString:[[content source] displayName]]) {
+						[attributeKeys addObject:@"alias"];
+						[attributeValues addObject:[[content source] displayName]];				
+					}
+					
+					[appender addElementWithName:@"event"
+								  escapedContent:[xhtmlDecoder encodeHTML:[content message]
+															   imagesPath:[[appender path] stringByDeletingLastPathComponent]]
+								   attributeKeys:attributeKeys
+								 attributeValues:attributeValues];
 					dirty = YES;
 				}
 			}

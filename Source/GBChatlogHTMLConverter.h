@@ -43,6 +43,7 @@ typedef enum {
 	
 	chatLogState	state;
 	NSString		*sender;
+	NSString		*senderAlias;
 	NSString		*mySN;
 	NSString		*service;
 	NSString		*myDisplayName;

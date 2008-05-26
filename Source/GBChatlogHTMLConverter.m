@@ -95,6 +95,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	[inputFileString release];
 	[eventTranslate release];
 	[sender release];
+	[senderAlias release];
 	[mySN release];
 	[myDisplayName release];
 	[service release];
@@ -176,6 +177,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 			if([name isEqualToString:@"message"])
 			{
 				[sender release];
+				[senderAlias release];
 				[date release];
 				
 				NSString *dateStr = [attributes objectForKey:@"time"];
@@ -184,6 +186,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 				else
 					date = nil;
 				sender = [[attributes objectForKey:@"sender"] retain];
+				senderAlias = [[attributes objectForKey:@"alias"] retain];
 				autoResponse = [[attributes objectForKey:@"auto"] isEqualToString:@"true"];
 
 				//Mark the location of the message...  We can copy it directly.  Anyone know why it is off by 1?
@@ -250,7 +253,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 														 range:NSMakeRange(0, [mutableMessage length])];
 					message = [mutableMessage autorelease];
 				}
-				NSString *shownSender = sender;
+				NSString *shownSender = (senderAlias ? senderAlias : sender);
 				NSString *cssClass;
 				NSString *displayName = nil, *longDisplayName = nil;
 				
