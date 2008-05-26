@@ -29,6 +29,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIMetaContact.h>
 #import <Adium/AIListOutlineView.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
@@ -609,7 +610,6 @@
 				}
 			}
 			
-			
 			retVal = NSDragOperationPrivate;
 		}
 
@@ -629,7 +629,8 @@
 - (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
 {
 	BOOL		success = YES;
-	NSString	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
+	NSPasteboard *draggingPasteboard = [info draggingPasteboard];
+	NSString	*availableType = [draggingPasteboard availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
 	
     if ([availableType isEqualToString:@"AIListObject"]) {
 		//Kill the selection now, (in a more finder-esque way)
@@ -650,6 +651,66 @@
 			} else {
 				success = NO;
 			}
+			
+		} else if ([item isMemberOfClass:[AIMetaContact class]]) {
+			//Ordering gets implemented here.
+			NSString	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
+			
+			//No longer in a drag, so allow tooltips again
+			if ([availableType isEqualToString:@"AIListObject"]) {
+				
+				//If we don't have drag items, we are dragging from another instance; build our own dragItems array
+				//using the supplied internalObjectIDs
+				if (!dragItems) {
+					if ([[[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObjectUniqueIDs"]] isEqualToString:@"AIListObjectUniqueIDs"]) {
+						NSArray			*dragItemsUniqueIDs;
+						NSMutableArray	*arrayOfDragItems;
+						NSString		*uniqueID;
+						NSEnumerator	*enumerator;
+						
+						dragItemsUniqueIDs = [draggingPasteboard propertyListForType:@"AIListObjectUniqueIDs"];
+						arrayOfDragItems = [NSMutableArray array];
+						
+						enumerator = [dragItemsUniqueIDs objectEnumerator];
+						while ((uniqueID = [enumerator nextObject])) {
+							[arrayOfDragItems addObject:[[adium contactController] existingListObjectWithUniqueID:uniqueID]];
+						}
+						
+						//We will release this when the drag is completed
+						dragItems = [arrayOfDragItems retain];
+					}
+				}
+				
+				//The tree root is not associated with our root contact list group, so we need to make that association here
+				if (item == nil) item = contactList;
+				
+				//Move the list object to its new location
+				if ([item isKindOfClass:[AIMetaContact class]]) {
+					
+					NSMutableArray	*realDragItems = [NSMutableArray array];
+					NSEnumerator	*enumerator;
+					AIListObject	*aDragItem;
+					
+					enumerator = [dragItems objectEnumerator];
+					while ((aDragItem = [enumerator nextObject])) {
+						if ([aDragItem isMemberOfClass:[AIListContact class]]) {
+							//For listContacts, add all contacts with the same service and UID (on all accounts)
+							[realDragItems addObjectsFromArray:[[[adium contactController] allContactsWithService:[aDragItem service] 
+																											  UID:[aDragItem UID]
+																									 existingOnly:YES] allObjects]];
+						} else {
+							[realDragItems addObject:aDragItem];
+						}
+					}
+					
+					[[adium contactController] moveListObjects:realDragItems intoObject:item index:index];
+					[outlineView reloadData];
+				}
+			}
+			
+			//Call super and return its value
+			return [super outlineView:outlineView acceptDrop:info item:item childIndex:index];
+			
 			
 		} else if ([item isKindOfClass:[AIListContact class]]) {
 			NSString	*promptTitle;
