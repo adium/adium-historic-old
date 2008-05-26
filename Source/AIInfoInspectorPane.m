@@ -173,6 +173,12 @@
 												  group:PREF_GROUP_ALIASES
 								  ignoreInheritedValues:YES];
 	
+	if (!currentAlias && ![[inObject displayName] isEqualToString:[inObject formattedUID]]) {
+		[[contactAlias cell] setPlaceholderString:[inObject displayName]];
+	} else {
+		[[contactAlias cell] setPlaceholderString:nil];
+	}
+	
 	//Fill in the current alias
 	if (currentAlias) {
 		[contactAlias setStringValue:currentAlias];
