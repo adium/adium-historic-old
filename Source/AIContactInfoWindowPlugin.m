@@ -117,7 +117,7 @@
 	//Watch changes in viewContactInfoMenuItem_alternate's menu so we can maintain its alternate status
 	//(it will expand into showing both the normal and the alternate items when the menu changes)
 	[[adium notificationCenter] addObserver:self selector:@selector(menuChanged:)
-									   name:AIMenuDidChnge
+									   name:AIMenuDidChange
 									 object:[menuItem_getInfoAlternate menu]];
 	
 	//Install the Get Info (prompting for a contact name) menu item
