@@ -336,6 +336,10 @@
 		currentAlias = [[(AIListContact *)inObject parentContact] preferenceForKey:@"Alias"
 																			 group:PREF_GROUP_ALIASES
 															 ignoreInheritedValues:YES];
+	} else {
+		currentAlias = [inObject preferenceForKey:@"Alias"
+											group:PREF_GROUP_ALIASES
+							ignoreInheritedValues:YES];		
 	}
 	
 	if (!currentAlias && ![[inObject displayName] isEqualToString:[inObject formattedUID]]) {
