@@ -530,6 +530,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	
 	//Size to fit.
 	[metaPopup sizeToFit];
+	[metaPopup setNeedsDisplay:YES];
 	[self configureMetaPopupHiding];
 }
 
