@@ -382,13 +382,13 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 			{
 				if (purple_notify_user_info_entry_get_label(user_info_entry) && purple_notify_user_info_entry_get_value(user_info_entry)) {
 					[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-									  processPurpleImages([NSString stringWithUTF8String:purple_notify_user_info_entry_get_label(user_info_entry)], self), KEY_KEY,
+									  [NSString stringWithUTF8String:purple_notify_user_info_entry_get_label(user_info_entry)], KEY_KEY,
 									  processPurpleImages([NSString stringWithUTF8String:purple_notify_user_info_entry_get_value(user_info_entry)], self), KEY_VALUE,
 									  nil]];
 					
 				} else if (purple_notify_user_info_entry_get_label(user_info_entry)) {
 					[array addObject:[NSDictionary dictionaryWithObject:
-									  processPurpleImages([NSString stringWithUTF8String:purple_notify_user_info_entry_get_label(user_info_entry)], self)
+									  [NSString stringWithUTF8String:purple_notify_user_info_entry_get_label(user_info_entry)]
 																 forKey:KEY_KEY]];
 				} else if (purple_notify_user_info_entry_get_value(user_info_entry)) {
 					NSString		*value =  processPurpleImages([NSString stringWithUTF8String:purple_notify_user_info_entry_get_value(user_info_entry)], self);
