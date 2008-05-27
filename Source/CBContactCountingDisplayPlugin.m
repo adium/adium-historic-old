@@ -96,7 +96,7 @@
 		return;
 	
 	if ([group isEqualToString:PREF_GROUP_CONTACT_LIST] &&
-		([key isEqualToString:KEY_COUNT_VISIBLE_CONTACTS] || [key isEqualToString:KEY_COUNT_ALL_CONTACTS])) {
+		([key isEqualToString:KEY_COUNT_VISIBLE_CONTACTS] || [key isEqualToString:KEY_COUNT_ALL_CONTACTS] || firstTime)) {
 		countAllObjects = [[prefDict objectForKey:KEY_COUNT_ALL_CONTACTS] boolValue];
 		countVisibleObjects = [[prefDict objectForKey:KEY_COUNT_VISIBLE_CONTACTS] boolValue];
 		
