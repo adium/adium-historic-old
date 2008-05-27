@@ -139,12 +139,12 @@
 		// Create our count string for displaying in the list group's cell
 		// If the number of visible objects is the same as the number of total objects, just display one number.
 		if (countVisibleObjects && countAllObjects && (visibleObjects != totalObjects)) {
-			countString = [NSString stringWithFormat:AILocalizedString(@"(%i of %i)", "Used in the display for the contact list for the number of visible contacts out of the number of total contacts"),
+			countString = [NSString stringWithFormat:AILocalizedString(@"%i of %i", "Used in the display for the contact list for the number of visible contacts out of the number of total contacts"),
 													visibleObjects, totalObjects];
 		} else if (countAllObjects) {
-			countString = [NSString stringWithFormat:@"(%i)", totalObjects];
+			countString = [NSString stringWithFormat:@"%i", totalObjects];
 		} else {
-			countString = [NSString stringWithFormat:@"(%i)", visibleObjects];
+			countString = [NSString stringWithFormat:@"%i", visibleObjects];
 		}
 		
 		[[inObject displayArrayForKey:@"Count Text"] setObject:countString withOwner:self];
