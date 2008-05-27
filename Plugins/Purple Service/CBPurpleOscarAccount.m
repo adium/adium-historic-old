@@ -731,7 +731,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	NSString *memberSinceKey = [NSString stringWithUTF8String:_("Member Since")];
 	NSDateFormatter	*dayFormatter, *timeFormatter;
 
-	dayFormatter = [NSDateFormatter localizedShortDateFormatter];
+	dayFormatter = [NSDateFormatter localizedDateFormatter];
 	timeFormatter = [[NSDateFormatter alloc] initWithDateFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO 
 																										   showingAMorPM:YES] 
 										   allowNaturalLanguage:YES];
@@ -740,8 +740,9 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	unsigned int count = [array count];
 	for (i = 0; i < count; i++) {
 		NSDictionary *dict = [array objectAtIndex:i];
-		if ([[dict objectForKey:KEY_KEY] isEqualToString:onlineSinceKey] ||
-			[[dict objectForKey:KEY_KEY] isEqualToString:memberSinceKey]) {
+		NSString *key = [dict objectForKey:KEY_KEY];
+		if ([key isEqualToString:onlineSinceKey] ||
+			[key isEqualToString:memberSinceKey]) {
 			struct tm tm;
 
 			if (strptime([[dict objectForKey:KEY_VALUE] UTF8String], "%c", &tm) != NULL) {
@@ -764,8 +765,13 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 						replacementString = valueTime;
 						
 					} else {
-						//Show date and time
-						replacementString = [NSString stringWithFormat:@"%@, %@", valueDay, valueTime];
+						if ([key isEqualToString:memberSinceKey]) {
+							//For member since, only show the day; the time is irrelevant
+							replacementString = valueDay;
+						} else {
+							//Show date and time
+							replacementString = [NSString stringWithFormat:@"%@, %@", valueDay, valueTime];
+						}
 					}
 					
 					NSMutableDictionary *replacementDict = [dict mutableCopy];
