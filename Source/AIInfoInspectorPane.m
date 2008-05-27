@@ -409,8 +409,29 @@
 	else if (inObject != displayedObject)
 		return nil;
 	
-	// If the properties changed for our observed contact, update based on them.
-	[self updateForListObject:displayedObject];
+	// Update the status icon if it changes.
+	if (inModifiedKeys == nil ||
+		[inModifiedKeys containsObject:@"Online"] ||
+		[inModifiedKeys containsObject:@"IdleSince"] ||
+		[inModifiedKeys containsObject:@"Signed Off"] ||
+		[inModifiedKeys containsObject:@"IsMobile"] ||
+		[inModifiedKeys containsObject:@"IsBlocked"] ||
+		[inModifiedKeys containsObject:@"StatusType"]) {
+		[self updateStatusIcon:displayedObject];
+	}
+	
+	// Update the profile if it changes.	
+	if (inModifiedKeys == nil ||
+		[inModifiedKeys containsObject:@"ProfileArray"]) {
+		[self updateProfile:[self attributedStringProfileForListObject:inObject]
+					context:inObject];
+	}
+	
+	// Cause everything to update if everything's probably changed.
+	if ([inModifiedKeys containsObject:@"NotAStranger"] ||
+		[inModifiedKeys containsObject:@"Server Display Name"]) {
+		[self updateForListObject:displayedObject];
+	}
 	
 	return nil;
 }
