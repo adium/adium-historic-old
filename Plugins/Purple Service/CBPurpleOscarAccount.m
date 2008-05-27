@@ -29,6 +29,8 @@
 #import <Adium/AIService.h>
 #import <Adium/AIStatus.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
+#import <AIUtilities/NSCalendarDate+ISO8601Parsing.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIObjectAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
@@ -719,6 +721,65 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 - (BOOL)isContactIntentionallyListed:(AIListContact *)contact
 {
 	return [contact remoteGroupName] && ![[contact remoteGroupName] isEqualToString:@"Recent Buddies"];
+}
+
+- (NSMutableArray *)arrayOfDictionariesFromPurpleNotifyUserInfo:(PurpleNotifyUserInfo *)user_info
+{
+	NSMutableArray *array = [super arrayOfDictionariesFromPurpleNotifyUserInfo:user_info];
+	
+	NSString *onlineSinceKey = [NSString stringWithUTF8String:_("Online Since")];
+	NSString *memberSinceKey = [NSString stringWithUTF8String:_("Member Since")];
+	NSDateFormatter	*dayFormatter, *timeFormatter;
+
+	dayFormatter = [NSDateFormatter localizedShortDateFormatter];
+	timeFormatter = [[NSDateFormatter alloc] initWithDateFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO 
+																										   showingAMorPM:YES] 
+										   allowNaturalLanguage:YES];
+
+	int i;
+	unsigned int count = [array count];
+	for (i = 0; i < count; i++) {
+		NSDictionary *dict = [array objectAtIndex:i];
+		if ([[dict objectForKey:KEY_KEY] isEqualToString:onlineSinceKey] ||
+			[[dict objectForKey:KEY_KEY] isEqualToString:memberSinceKey]) {
+			struct tm tm;
+
+			if (strptime([[dict objectForKey:KEY_VALUE] UTF8String], "%c", &tm) != NULL) {
+				NSString	*valueDay, *valueTime, *replacementString;
+				NSDate		*date;
+				/* Not set by strptime(); tells mktime()
+				 * to determine whether daylight saving time
+				 * is in effect */
+				tm.tm_isdst = -1;
+				
+				date = [NSDate dateWithTimeIntervalSince1970:mktime(&tm)];
+
+				//Get day & time strings
+				valueDay = [dayFormatter stringForObjectValue:date];
+				valueTime = [timeFormatter stringForObjectValue:date];
+				
+				if (valueDay && valueTime) {
+					if ([[dayFormatter stringForObjectValue:[NSDate date]] isEqualToString:valueDay]) {
+						//Show time
+						replacementString = valueTime;
+						
+					} else {
+						//Show date and time
+						replacementString = [NSString stringWithFormat:@"%@, %@", valueDay, valueTime];
+					}
+					
+					NSMutableDictionary *replacementDict = [dict mutableCopy];
+					[replacementDict setObject:replacementString forKey:KEY_VALUE];
+					[array replaceObjectAtIndex:i withObject:replacementDict];
+					[replacementDict release];
+				}
+			}
+		}
+	}
+	
+	[timeFormatter release];
+
+	return array;
 }
 
 
