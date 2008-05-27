@@ -391,9 +391,26 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 									  processPurpleImages([NSString stringWithUTF8String:purple_notify_user_info_entry_get_label(user_info_entry)], self)
 																 forKey:KEY_KEY]];
 				} else if (purple_notify_user_info_entry_get_value(user_info_entry)) {
-					[array addObject:[NSDictionary dictionaryWithObject:
-									  processPurpleImages([NSString stringWithUTF8String:purple_notify_user_info_entry_get_value(user_info_entry)], self)
-																 forKey:KEY_VALUE]];
+					NSString		*value =  processPurpleImages([NSString stringWithUTF8String:purple_notify_user_info_entry_get_value(user_info_entry)], self);
+					NSEnumerator	*enumerator = [[value componentsSeparatedByString:@"<br/><b>"] objectEnumerator];
+					NSString		*valuePair;
+					
+					while ((valuePair = [enumerator nextObject])) {
+						NSRange	firstStartBold = [valuePair rangeOfString:@"<b>"];
+						NSRange	firstEndBold = [valuePair rangeOfString:@"</b>"];
+						
+						if (firstEndBold.length > 0) {
+							// Chop off <b> from the beginning and :</b> from the end.
+							[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+											  [valuePair substringWithRange:NSMakeRange(firstStartBold.length, firstEndBold.location-firstStartBold.length)], KEY_KEY,
+											  [valuePair substringFromIndex:NSMaxRange(firstEndBold)], KEY_VALUE,
+											  nil]];
+						} else {
+							[array addObject:[NSDictionary dictionaryWithObject:valuePair
+																		forKey:KEY_VALUE]];
+						}
+					}
+
 				}	
 				break;
 			}
