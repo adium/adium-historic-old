@@ -9,7 +9,7 @@
 #import "AIInfoInspectorPane.h"
 #import <Adium/AIHTMLDecoder.h>
 
-#define WIDTH_PROFILE_HEADER	 100.0f
+#define WIDTH_PROFILE_HEADER	 90.0f
 
 @interface AIInfoInspectorPane (PRIVATE)
 - (void)updateUserIcon:(AIListObject *)inObject;
@@ -71,6 +71,8 @@
 	
 	displayedObject = inObject;
 	
+	AILogWithSignature(@"%@", inObject);
+
 	[lastAlias release]; lastAlias = nil;
 	
 	if ([inObject isKindOfClass:[AIListContact class]]) {
