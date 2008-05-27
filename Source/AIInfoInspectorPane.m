@@ -192,7 +192,7 @@
     [block setWidth:1.0f type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockPadding edge:NSMinXEdge];
     [block setWidth:5.0f type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockPadding edge:NSMaxXEdge];
 
-	if (col == 0 && !header) {
+	if (col == 0 && !header && colspan == 1) {
 		[block setValue:WIDTH_PROFILE_HEADER
 				   type:NSTextBlockAbsoluteValueType
 		   forDimension:NSTextBlockWidth];
