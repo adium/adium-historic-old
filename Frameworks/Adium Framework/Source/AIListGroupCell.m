@@ -22,6 +22,7 @@
 #import <AIUtilities/AIParagraphStyleAdditions.h>
 
 #define FLIPPY_TEXT_PADDING		4
+#define GROUP_COUNT_PADDING		4
 
 @implementation AIListGroupCell
 
@@ -137,14 +138,21 @@
 - (int)cellWidth
 {
 	NSAttributedString	*displayName;
-	NSSize				nameSize; 
+	unsigned			width = [super cellWidth] + [self flippyIndent] + GROUP_COUNT_PADDING;
 	
 	//Get the size of our display name
 	displayName = [[NSAttributedString alloc] initWithString:[self labelString] attributes:[self labelAttributes]];
-	nameSize = [displayName size];
+	width += ceil([displayName size].width) + 1;
 	[displayName release];
-		
-	return [super cellWidth] + [self flippyIndent] + ceil(nameSize.width) + 1;
+	
+	if (([[listObject displayArrayObjectForKey:@"Show Count"] boolValue] || ![controlView isItemExpanded:listObject]) && 
+		[listObject displayArrayObjectForKey:@"Count Text"]) {
+		NSAttributedString *countText = [[NSAttributedString alloc] initWithString:[listObject displayArrayObjectForKey:@"Count Text"] attributes:[self labelAttributes]];
+		width += ceil([countText size].width) + 1;
+		[countText release];
+	}
+	
+	return width + 1;
 }
 
 //Calculates the distance from left margin to our display name.  This is the indent caused by group nesting.
@@ -204,7 +212,7 @@
 		NSSize				countSize = [groupCount size];
 		NSRect				rect = inRect;
 		
-		if (countSize.width > rect.size.width) countSize.width = rect.size.width;
+		if (countSize.width + GROUP_COUNT_PADDING > rect.size.width) countSize.width = rect.size.width;
 		if (countSize.height > rect.size.height) countSize.height = rect.size.height;
 		
 		rect.origin.x += (rect.size.width - countSize.width);
@@ -217,7 +225,7 @@
 										  countSize.height)];
 		[groupCount release];
 		
-		inRect.size.width -= countSize.width;
+		inRect.size.width -= countSize.width + GROUP_COUNT_PADDING;
 	}
 	
 	return inRect;
