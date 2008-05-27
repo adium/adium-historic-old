@@ -18,7 +18,7 @@
 - (void)updateStatusIcon:(AIListObject *)inObject;
 - (void)updateAlias:(AIListObject *)inObject;
 - (NSAttributedString *)attributedStringProfileForListObject:(AIListObject *)inObject;
-- (void)gotFilteredProfile:(NSAttributedString *)infoString context:(AIListObject *)object;
+- (void)updateProfile:(NSAttributedString *)infoString context:(AIListObject *)object;
 - (void)gotFilteredStatus:(NSAttributedString *)infoString context:(AIListObject *)object;
 - (void)setAttributedString:(NSAttributedString *)infoString intoTextView:(NSTextView *)textView;
 @end
@@ -77,13 +77,20 @@
 		[[adium contactController] updateListContactStatus:(AIListContact *)inObject];
 	}
 	
+	[self updateProfile:nil
+				context:inObject];
+	
+	[profileProgress startAnimation:self];
+	[profileProgress setHidden:NO];
+	
 	[self updateUserIcon:inObject];
 	[self updateAccountName:inObject];
 	[self updateServiceIcon:inObject];
 	[self updateStatusIcon:inObject];
-	[self gotFilteredProfile:[self attributedStringProfileForListObject:inObject]
-					 context:inObject];
 	[self updateAlias:inObject];
+	
+	[self updateProfile:[self attributedStringProfileForListObject:inObject]
+				context:inObject];
 }
 
 - (void)updateUserIcon:(AIListObject *)inObject
@@ -219,6 +226,11 @@
 	
 	// XXX Case out if we only have HTML (nothing currently does this)
 	
+	// Don't do anything if we have nothing to display.
+	if ([[(AIListContact *)inObject profileArray] count] == 0) {
+		return nil;
+	}
+	
 	// Create the table
 	NSTextTable		*table = [[[NSTextTable alloc] init] autorelease];
 	
@@ -258,25 +270,29 @@
 		
 		switch ([[lineDict objectForKey:KEY_TYPE] intValue]) {
 			case AIUserInfoLabelValuePair:
-				[self addAttributedString:key
-								  toTable:table
-									  row:row
-									  col:0
-								  colspan:1
-								   header:NO
-									color:[NSColor grayColor]
-								alignment:NSRightTextAlignment
-					   toAttributedString:result];
+				if (key) {
+					[self addAttributedString:key
+									  toTable:table
+										  row:row
+										  col:0
+									  colspan:1
+									   header:NO
+										color:[NSColor grayColor]
+									alignment:NSRightTextAlignment
+						   toAttributedString:result];
+				}
 				
-				[self addAttributedString:value
-								  toTable:table
-									  row:row
-									  col:(key ? 1 : 0)
-								  colspan:(key ? 1 : 2) /* If there's no key, we need to fill both columns. */
-								   header:NO
-									color:[NSColor controlTextColor]
-								alignment:NSLeftTextAlignment
-					   toAttributedString:result];
+				if (value) {
+					[self addAttributedString:value
+									  toTable:table
+										  row:row
+										  col:(key ? 1 : 0)
+									  colspan:(key ? 1 : 2) /* If there's no key, we need to fill both columns. */
+									   header:NO
+										color:[NSColor controlTextColor]
+									alignment:NSLeftTextAlignment
+						   toAttributedString:result];
+				}
 				break;
 				
 			case AIUserInfoSectionHeader:
@@ -353,22 +369,9 @@
 	[self updateAccountName:displayedObject];
 }
 
-- (void)gotFilteredProfile:(NSAttributedString *)infoString context:(AIListObject *)object
+- (void)updateProfile:(NSAttributedString *)infoString context:(AIListObject *)object
 {
-	//Prevent duplicate profiles from being set again.
-	if([[profileView string] isEqualToString:[infoString string]])
-		return;
-		
-	//If we've been called with infoString == nil, we don't have the profile information yet.
-	if(!infoString && ![displayedObject isKindOfClass:[AIListGroup class]]) {
-		//This should only run if we get a nil string and if we aren't a group.
-		[profileProgress startAnimation:self];
-		/*	We deal with the progress indicator's visibility manually, because sometimes it will 
-		corrupt text when set to hide/unhide automatically.	*/
-		[profileProgress setHidden:NO];
-		//We can freely start the progress indicator numerous times - it has no effect.
-	} else {
-		//Non-nil info string means we have some profile text and we will bet setting it.
+	if (infoString) {
 		[profileProgress stopAnimation:self];
 		[profileProgress setHidden:YES];
 	}
