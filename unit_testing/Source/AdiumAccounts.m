@@ -151,6 +151,8 @@
 /*!
  * @brief Add an account
  *
+ * Add an account to Adium's list of accounts.
+ *
  * @param inAccount AIAccount to add
  */
 - (void)addAccount:(AIAccount *)inAccount
@@ -161,6 +163,9 @@
 
 /*!
  * @brief Delete an account
+ *
+ * Delete an account from Adium's list of accounts.  If duplicate accounts exist, all 
+ * instances will be deleted.
  *
  * @param inAccount AIAccount to delete
  */
@@ -179,8 +184,10 @@
 /*!
  * @brief Move an account
  *
+ * 
+ *
  * @param inAccount AIAccount to move
- * @param destIndex Index to place the account
+ * @param destIndex Zero-based index to place the account
  * @return new index of the account
  */
 - (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex

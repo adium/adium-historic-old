@@ -80,7 +80,6 @@ static NSObject<AIAdium> *_sharedAdium = nil;
 + (void)_setSharedAdiumInstance:(NSObject<AIAdium> *)shared
 {
 	NSParameterAssert(shared != nil);
-    //NSParameterAssert(_sharedAdium == nil);
 	_sharedAdium = shared;
 #if INSTANCE_COUNT_STYLE != COUNT_NONE
 	instanceCountDict = [[NSMutableDictionary alloc] init];

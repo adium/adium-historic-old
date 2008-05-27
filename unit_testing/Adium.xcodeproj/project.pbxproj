@@ -1294,7 +1294,8 @@
 		B73E464307DB5F9200D9129E /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		B747E987058D144C00A9F037 /* AILaTeXPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B747E985058D144C00A9F037 /* AILaTeXPlugin.m */; };
 		B7D4C7C20DD3C074008AE720 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
-		B7D4CC300DD9FF57008AE720 /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7D4CC2F0DD9FF56008AE720 /* OCMock.framework */; };
+		B7D8019B0DE5DAE200F11B0F /* OCMock.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B7D8019A0DE5DAE200F11B0F /* OCMock.framework */; };
+		B7D8019E0DE5DAE800F11B0F /* OCMock.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = B7D8019A0DE5DAE200F11B0F /* OCMock.framework */; };
 		B7E23A5B0DD27DBD00A7472B /* libgcov.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B7E23A5A0DD27DBD00A7472B /* libgcov.a */; };
 		B7E23A5E0DD27DD600A7472B /* TestAdiumAccounts.m in Sources */ = {isa = PBXBuildFile; fileRef = B7E23A5D0DD27DD600A7472B /* TestAdiumAccounts.m */; };
 		B7E23A740DD2804700A7472B /* AIObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BFC33DE058D4430008F7FA2 /* AIObject.m */; };
@@ -1800,6 +1801,16 @@
 				63AF932C0AA81E2300B88299 /* Pure White.ListTheme in CopyFiles */,
 				63AF932D0AA81E2300B88299 /* Tiny (with user icons).ListLayout in CopyFiles */,
 				63AF932E0AA81E2300B88299 /* Tiny.ListLayout in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B7D801700DE5D74800F11B0F /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(BUILT_PRODUCTS_DIR)";
+			dstSubfolderSpec = 0;
+			files = (
+				B7D8019E0DE5DAE800F11B0F /* OCMock.framework in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4164,7 +4175,7 @@
 		B799BC8105793C1300338E54 /* JMSQLLoggerAdvancedPreferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = JMSQLLoggerAdvancedPreferences.h; sourceTree = "<group>"; };
 		B7AE664F0465778E0051E914 /* AISQLLoggerPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AISQLLoggerPlugin.h; path = "Plugins/SQL Logger/AISQLLoggerPlugin.h"; sourceTree = SOURCE_ROOT; };
 		B7AE66500465778E0051E914 /* AISQLLoggerPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AISQLLoggerPlugin.m; path = "Plugins/SQL Logger/AISQLLoggerPlugin.m"; sourceTree = SOURCE_ROOT; };
-		B7D4CC2F0DD9FF56008AE720 /* OCMock.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OCMock.framework; path = Frameworks/OCMock.framework; sourceTree = "<group>"; };
+		B7D8019A0DE5DAE200F11B0F /* OCMock.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OCMock.framework; path = Frameworks/OCMock.framework; sourceTree = "<group>"; };
 		B7E23A5A0DD27DBD00A7472B /* libgcov.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libgcov.a; path = UnitTests/libgcov.a; sourceTree = "<group>"; };
 		B7E23A5C0DD27DD600A7472B /* TestAdiumAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TestAdiumAccounts.h; path = UnitTests/TestAdiumAccounts.h; sourceTree = "<group>"; };
 		B7E23A5D0DD27DD600A7472B /* TestAdiumAccounts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TestAdiumAccounts.m; path = UnitTests/TestAdiumAccounts.m; sourceTree = "<group>"; };
@@ -4271,7 +4282,7 @@
 				312ED3D50C7E878300A6BDA9 /* SenTestingKit.framework in Frameworks */,
 				31A764B90DA572B8000AC729 /* AutoHyperlinks.framework in Frameworks */,
 				B7E23A5B0DD27DBD00A7472B /* libgcov.a in Frameworks */,
-				B7D4CC300DD9FF57008AE720 /* OCMock.framework in Frameworks */,
+				B7D8019B0DE5DAE200F11B0F /* OCMock.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4613,7 +4624,7 @@
 		312ED3D80C7E89CC00A6BDA9 /* Unit tests */ = {
 			isa = PBXGroup;
 			children = (
-				B7D4CC2F0DD9FF56008AE720 /* OCMock.framework */,
+				B7D8019A0DE5DAE200F11B0F /* OCMock.framework */,
 				B7E23A5C0DD27DD600A7472B /* TestAdiumAccounts.h */,
 				B7E23A5D0DD27DD600A7472B /* TestAdiumAccounts.m */,
 				B7E23A5A0DD27DBD00A7472B /* libgcov.a */,
@@ -8128,6 +8139,7 @@
 			buildConfigurationList = 312ED3CC0C7E875C00A6BDA9 /* Build configuration list for PBXNativeTarget "Unit tests" */;
 			buildPhases = (
 				B712C7A60DDA6A11008FF276 /* ShellScript */,
+				B7D801700DE5D74800F11B0F /* CopyFiles */,
 				312ED3C50C7E875B00A6BDA9 /* Resources */,
 				312ED3C60C7E875B00A6BDA9 /* Sources */,
 				312ED3C70C7E875B00A6BDA9 /* Frameworks */,
@@ -11253,9 +11265,11 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_2 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_3 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -11299,8 +11313,10 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -11331,8 +11347,10 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -11363,8 +11381,10 @@
 					"$(DEVELOPER_FRAMEWORKS_DIR_QUOTED)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
 					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_1)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_2)",
 				);
 				FRAMEWORK_SEARCH_PATHS_QUOTED_1 = "\"$(SRCROOT)/Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS_QUOTED_2 = "\"$(SRCROOT)/Frameworks\"";
 				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(SRCROOT)/Frameworks\"";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
