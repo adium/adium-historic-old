@@ -11,19 +11,20 @@
 #import "OCMock/OCMock.h"
 #import <Adium/AIService.h>
 #import <Adium/AIAccount.h>
+#import <AIPreferenceController.h>
 
 
 
 @implementation TestAdiumAccounts
 
 - (void)setUp {
-	
-	
 	id aiMock = [OCMockObject niceMockForProtocol:@protocol(AIAdium)];
 	[AIObject _setSharedAdiumInstance:aiMock];
 	
 	googleService = [[OCMockObject mockForClass:[AIService class]] retain];
-	[[[googleService stub] andReturn:@"Google"] serviceClass];	
+	[[[googleService stub] andReturn:@"Jabber"] serviceClass];	
+	[[[googleService stub] andReturn:@"libpurple-Jabber"] serviceCodeUniqueID];
+	[[[googleService stub] andReturn:@"Jabber"] serviceID];
 	
 	yahooService = [[OCMockObject mockForClass:[AIService class]] retain];
 	[[[yahooService stub] andReturn:@"Yahoo"] serviceClass];
@@ -33,11 +34,13 @@
 	
 	// Must to be a variable for the OCMOCK_VALUE macro to work
 	BOOL yes = YES;
+	BOOL no = NO;
 	
 	googleAccount = [[OCMockObject niceMockForClass:[AIAccount class]] retain];
 	[[[googleAccount stub] andReturnValue:OCMOCK_VALUE(yes)] isTemporary];
 	[[[googleAccount stub] andReturnValue:OCMOCK_VALUE(yes)] enabled];
 	[[[googleAccount stub] andReturn:googleService] service];
+	
 	
 	googleAccount2 = [[OCMockObject niceMockForClass:[AIAccount class]] retain];
 	[[[googleAccount2 stub] andReturnValue:OCMOCK_VALUE(yes)] isTemporary];
@@ -49,30 +52,27 @@
 	[[[aimAccount stub] andReturnValue:OCMOCK_VALUE(yes)] enabled];
 	[[[aimAccount stub] andReturn:aimService] service];
 	
+	permAccount = [[OCMockObject mockForClass:[AIAccount class]] retain];
+	[[[permAccount stub] andReturnValue:OCMOCK_VALUE(no)] isTemporary];
+	[[[permAccount stub] andReturnValue:OCMOCK_VALUE(yes)] enabled];
+	[[[permAccount stub] andReturn:googleService] service];
+	[[[permAccount stub] andReturn:@"permUID"] UID];
+	[[[permAccount stub] andReturn:@"permObjID"] internalObjectID];
+	
 	adiumAccounts = [[AdiumAccounts alloc] init];
 }
 
 - (void)tearDown {
 	[adiumAccounts release];
-	adiumAccounts = nil;
 	
 	[googleService release];
-	googleService = nil;
-	
 	[aimService release];
-	aimService = nil;
-	
 	[yahooService release];
-	yahooService = nil;
 	
 	[googleAccount release];
-	googleAccount = nil;
-	
 	[googleAccount2 release];
-	googleAccount2 = nil;
-	
 	[aimAccount release];
-	aimAccount = nil;
+	[permAccount release];
 }
 
 
@@ -95,11 +95,11 @@
 	[adiumAccounts addAccount:googleAccount2];
 	[adiumAccounts addAccount:aimAccount];
 	
-	NSMutableArray* googleCorrectAnswer = [NSMutableArray array];
+	NSMutableArray *googleCorrectAnswer = [NSMutableArray array];
 	[googleCorrectAnswer addObject:googleAccount];
 	[googleCorrectAnswer addObject:googleAccount2];
 	
-	NSArray* googleAnswer = [adiumAccounts accountsCompatibleWithService:googleService];
+	NSArray *googleAnswer = [adiumAccounts accountsCompatibleWithService:googleService];
 	
 	STAssertTrue([googleCorrectAnswer isEqualToArray:googleAnswer],
 						 @"Expected two accounts");
@@ -137,7 +137,10 @@
 #pragma mark Editing
 - (void)testCreateAccountWithService_UID {
 	[[aimService expect] accountWithUID:@"myUID" internalObjectID:OCMOCK_ANY];
+	[[aimService expect] accountWithUID:@"otherUID" internalObjectID:OCMOCK_ANY];
+	
 	[adiumAccounts createAccountWithService:aimService UID:@"myUID"];
+	[adiumAccounts createAccountWithService:aimService UID:@"otherUID"];
 	
 	[aimService verify];
 }
@@ -148,25 +151,121 @@
 	[adiumAccounts addAccount:googleAccount];
 	[adiumAccounts addAccount:googleAccount2];
 	[adiumAccounts addAccount:aimAccount];
+	[adiumAccounts addAccount:aimAccount];
 	
 	id accounts = [adiumAccounts accounts];
 	
-	NSMutableArray* correctAccounts = [NSMutableArray array];
-	[correctAccounts addObject:googleAccount];
-	[correctAccounts addObject:googleAccount2];
-	[correctAccounts addObject:aimAccount];
+	NSMutableArray *correctAccounts = [NSMutableArray arrayWithObjects:googleAccount, 
+									                                   googleAccount2, 
+									                                   aimAccount, 
+									                                   aimAccount, nil];
+
+	STAssertEqualObjects(accounts,  correctAccounts,
+						 @"Should have added four accounts");
 	
-	STAssertEqualObjects(accounts,
-						 correctAccounts,
-						 @"Should have added three accounts");
+	STAssertEquals([accounts count], (unsigned int) 4, 
+				   @"Duplicate accounts were not added.");
+
 }
 
 
-- (void)testDeleteAccount { }
-- (void)testMoveAccount_toIndex {}
-- (void)testAccountDidChangeUID {}
+- (void)testDeleteAccount { 
+
+	[adiumAccounts addAccount:googleAccount];
+	[adiumAccounts addAccount:googleAccount2];
+	[adiumAccounts addAccount:aimAccount];
+	[adiumAccounts addAccount:aimAccount];
+	
+	[adiumAccounts deleteAccount:googleAccount];
+	
+	NSArray *correct = [NSMutableArray arrayWithObjects:googleAccount2, aimAccount, aimAccount, nil];
+	
+	STAssertEqualObjects([adiumAccounts accounts], correct,
+						 @"Single account was not correctly deleted");
+	
+	[adiumAccounts deleteAccount:aimAccount];
+	
+	correct = [NSArray arrayWithObjects:googleAccount2, nil];
+	
+	STAssertEqualObjects([adiumAccounts accounts], correct,
+						 @"Duplicate account should have deleted all instances");
+	
+	STAssertNoThrow([adiumAccounts deleteAccount:aimAccount],
+					@"Should fail silelently when deleting an already-removed account");
+}
+
+
+
+- (void)testMoveAccount_toIndex {
+	[[[aimAccount stub] andReturn:@"aimAccount"] description];
+	
+	[adiumAccounts addAccount:googleAccount];
+	[adiumAccounts addAccount:aimAccount];
+	
+	NSArray *correct = [NSArray arrayWithObjects:googleAccount, aimAccount, nil];
+	STAssertTrue([[adiumAccounts accounts] isEqualToArray:correct],
+				 @"Accounts should be held in the same order they were added");
+	
+	[adiumAccounts moveAccount:googleAccount toIndex:1];
+	correct = [NSArray arrayWithObjects:aimAccount, googleAccount, nil];
+	STAssertTrue([[adiumAccounts accounts] isEqualToArray:correct],
+				 @"Accounts were not rearranged");
+	
+	[adiumAccounts moveAccount:aimAccount toIndex:0];
+	STAssertTrue([[adiumAccounts accounts] isEqualToArray:correct],
+				 @"Accounts were rearranged when index was equal to current position");
+
+	STAssertThrows([adiumAccounts moveAccount:aimAccount toIndex:2],
+				   @"Did not throw an exception on index one too high");
+	
+	
+	STAssertThrows([adiumAccounts moveAccount:aimAccount toIndex:-5],
+				   @"Did not throw an exception on negative index");
+	
+
+	
+
+
+}
+
 
 - (void)testGenerateUniqueObjectID {}
 
+- (void)testSaveAccounts {
+	// Special setup for shared Preference Controller expectations
+	id aiPrefControllerMock = [OCMockObject mockForProtocol:@protocol(AIPreferenceController)];
+	id dictionary = [NSDictionary dictionaryWithObjectsAndKeys:@"permObjID", @"ObjectID",
+					                                           @"Jabber", @"Service", 
+					                                           @"libpurple-Jabber", @"Type", 
+					                                           @"permUID", @"UID", nil];
+	id correctArray = [NSArray arrayWithObjects:dictionary, nil];
+	[[aiPrefControllerMock expect] setPreference:correctArray forKey:@"Accounts" group:@"Accounts"];
+	[[aiPrefControllerMock expect] setPreference:correctArray forKey:@"Accounts" group:@"Accounts"];
+	
+	// Special setup for shared Notification Center expectations
+	id aiNotifyCenterMock = [OCMockObject mockForClass:[NSNotificationCenter class]];
+	[[aiNotifyCenterMock expect] postNotificationName:@"Account_ListChanged" object:nil userInfo:nil];
+	[[aiNotifyCenterMock expect] postNotificationName:@"Account_ListChanged" object:nil userInfo:nil];
+	
+	// Tell shared adium instance to return our special controllers
+	id aiMock = [OCMockObject mockForProtocol:@protocol(AIAdium)];
+	[[[aiMock stub] andReturn:aiPrefControllerMock] preferenceController];
+	[[[aiMock stub] andReturn:aiNotifyCenterMock] notificationCenter];
+	[AIObject _setSharedAdiumInstance:aiMock];
+	adiumAccounts = [[AdiumAccounts alloc] init];
+	
+
+	// addAccount: calls _saveAccount
+	[adiumAccounts addAccount:permAccount];
+	
+	// Right now, accountDidChangeUID: just saves the new UID.  Might as well test it while we're here.
+	// If that method changes to have more interesting functionality, this should be moved into its own test.
+	[adiumAccounts accountDidChangeUID:permAccount];
+
+	[aiPrefControllerMock verify];
+	[aiNotifyCenterMock verify];
+}
+
+- (void)testLoadAccounts {}
 
 @end

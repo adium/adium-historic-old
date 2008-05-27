@@ -12,6 +12,7 @@
 	id googleAccount;
 	id googleAccount2;
 	id aimAccount;
+	id permAccount;
 }
 
 - (void)testControllerDidLoad;
@@ -26,6 +27,7 @@
 - (void)testAddAccounts;
 - (void)testDeleteAccount;
 - (void)testMoveAccount_toIndex;
-- (void)testAccountDidChangeUID;
+- (void)testSaveAccounts;
+- (void)testLoadAccounts;
 
 @end
