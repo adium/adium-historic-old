@@ -400,9 +400,9 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 						NSRange	firstEndBold = [valuePair rangeOfString:@"</b>"];
 						
 						if (firstEndBold.length > 0) {
-							// Chop off <b> from the beginning and :</b> from the end.
+							// Chop off <b> from the beginning and :</b> from the end. The extra -1 is for the colon.
 							[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-											  [valuePair substringWithRange:NSMakeRange(firstStartBold.length, firstEndBold.location-firstStartBold.length)], KEY_KEY,
+											  [valuePair substringWithRange:NSMakeRange(firstStartBold.length, firstEndBold.location-firstStartBold.length-1)], KEY_KEY,
 											  [valuePair substringFromIndex:NSMaxRange(firstEndBold)], KEY_VALUE,
 											  nil]];
 						} else {
