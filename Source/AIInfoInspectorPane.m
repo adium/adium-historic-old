@@ -328,14 +328,15 @@
 }
 
 - (void)updateAlias:(AIListObject *)inObject
-{	
-	if ([inObject isKindOfClass:[AIListContact class]]) {
-		inObject = [(AIListContact *)inObject parentContact];
-	}
+{
+	NSString *currentAlias = nil;
 	
-	NSString *currentAlias = [inObject preferenceForKey:@"Alias"
-												  group:PREF_GROUP_ALIASES
-								  ignoreInheritedValues:YES];
+	
+	if ([inObject isKindOfClass:[AIListContact class]]) {
+		currentAlias = [[(AIListContact *)inObject parentContact] preferenceForKey:@"Alias"
+																			 group:PREF_GROUP_ALIASES
+															 ignoreInheritedValues:YES];
+	}
 	
 	if (!currentAlias && ![[inObject displayName] isEqualToString:[inObject formattedUID]]) {
 		[[contactAlias cell] setPlaceholderString:[inObject displayName]];
