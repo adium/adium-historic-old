@@ -286,7 +286,7 @@
 									  col:0
 								  colspan:2
 								   header:YES
-									color:[NSColor headerColor]
+									color:[NSColor darkGrayColor]
 								alignment:NSLeftTextAlignment
 					   toAttributedString:result];
 				break;
