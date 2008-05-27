@@ -352,11 +352,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 	return (returnString ? returnString : inString);
 }
 
-#define KEY_KEY		@"Key"
-#define KEY_VALUE	@"Value"
-#define KEY_TYPE	@"Type"
-
-- (NSArray *)dictionaryForPurpleNotifyUserInfo:(PurpleNotifyUserInfo *)user_info
+- (NSMutableArray *)arrayOfDictionariesFromPurpleNotifyUserInfo:(PurpleNotifyUserInfo *)user_info
 {
 	GList *l;
 	NSMutableArray *array = [NSMutableArray array];
@@ -422,7 +418,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 
 - (void)updateUserInfo:(AIListContact *)theContact withData:(PurpleNotifyUserInfo *)user_info
 {
-	NSArray		*profileContents = [self dictionaryForPurpleNotifyUserInfo:user_info];
+	NSArray		*profileContents = [self arrayOfDictionariesFromPurpleNotifyUserInfo:user_info];
 	[theContact setProfileArray:profileContents
 					notify:NotifyLater];	
 		
@@ -491,6 +487,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact
 {
     //Request profile
+	AILogWithSignature(@"");
 	[purpleAdapter getInfoFor:[inContact UID] onAccount:self];
 }
 

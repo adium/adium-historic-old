@@ -19,6 +19,10 @@
 
 #define KEY_BROADCAST_MUSIC_INFO @"Broadcast Music Information"
 
+#define KEY_KEY		@"Key"
+#define KEY_VALUE	@"Value"
+#define KEY_TYPE	@"Type"
+
 @class SLPurpleCocoaAdapter, ESFileTransfer, AIService, AIContentMessage, AIStatus, AIWindowController;
 @protocol AIAccountControllerRemoveConfirmationDialog;
 
@@ -173,6 +177,7 @@
 - (void)renameContact:(AIListContact *)theContact toUID:(NSString *)newUID;
 - (void)updateWentIdle:(AIListContact *)theContact withData:(NSDate *)idleSinceDate;
 - (void)updateIdleReturn:(AIListContact *)theContact withData:(void *)data;
+- (NSMutableArray *)arrayOfDictionariesFromPurpleNotifyUserInfo:(PurpleNotifyUserInfo *)user_info;
 - (void)updateUserInfo:(AIListContact *)theContact withData:(PurpleNotifyUserInfo *)user_info;
 
 #pragma mark Chats
