@@ -162,6 +162,7 @@
 						row:(int)row
 						col:(int)col
 					colspan:(int)colspan
+					 header:(BOOL)header
 					  color:(NSColor *)color
 				  alignment:(NSTextAlignment)alignment
 		 toAttributedString:(NSMutableAttributedString *)text
@@ -177,24 +178,30 @@
 
     [block setVerticalAlignment:NSTextBlockTopAlignment];
 	
-    [block setWidth:10.0f type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockPadding edge:NSMinYEdge];
-    [block setWidth:10.0f type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockPadding edge:NSMaxYEdge];
+    [block setWidth:6.0f type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockPadding edge:NSMinYEdge];
+    [block setWidth:6.0f type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockPadding edge:NSMaxYEdge];
     [block setWidth:5.0f type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockPadding edge:NSMinXEdge];
     [block setWidth:5.0f type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockPadding edge:NSMaxXEdge];
-	
-	
-	if (col == 0) {
+
+	if (col == 0 && !header) {
 		[block setValue:WIDTH_PROFILE_HEADER
 				   type:NSTextBlockAbsoluteValueType
 		   forDimension:NSTextBlockWidth];
 	}
-
+	
     [style setTextBlocks:[NSArray arrayWithObject:block]];
-    [style setAlignment:alignment];
+	
+	[style setAlignment:alignment];
 	
 	[text appendAttributedString:string];
 	[text appendAttributedString:[NSAttributedString stringWithString:@"\n"]];
-
+	
+	if (header) {
+		[text addAttribute:NSFontAttributeName value:[NSFont boldSystemFontOfSize:13] range:NSMakeRange(textLength, [text length] - textLength)];
+		[block setWidth:1.0f type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockBorder edge:NSMaxYEdge];
+		[block setBorderColor:[NSColor darkGrayColor]];
+	} 
+	
 	[text addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(textLength, [text length] - textLength)];
     [text addAttribute:NSParagraphStyleAttributeName value:style range:NSMakeRange(textLength, [text length] - textLength)];
 	
@@ -249,28 +256,53 @@
 			key = [NSAttributedString stringWithString:[[lineDict objectForKey:KEY_KEY] lowercaseString]];
 		}
 		
-		if (key) {
-			// This entry's name:
-			[self addAttributedString:key
-							  toTable:table
-								  row:row
-								  col:0
-							  colspan:1
-								color:[NSColor grayColor]
-							alignment:NSRightTextAlignment
-				   toAttributedString:result];
-		}
-		
-		if (value) {
-			// This entry's value:
-			[self addAttributedString:value
-							  toTable:table
-								  row:row
-								  col:1
-							  colspan:(key ? 1 : 2) /* If there's no key, we need to fill both columns. */
-								color:[NSColor controlTextColor]
-							alignment:NSLeftTextAlignment
-				   toAttributedString:result];
+		switch ([[lineDict objectForKey:KEY_TYPE] intValue]) {
+			case AIUserInfoLabelValuePair:
+				[self addAttributedString:key
+								  toTable:table
+									  row:row
+									  col:0
+								  colspan:1
+								   header:NO
+									color:[NSColor grayColor]
+								alignment:NSRightTextAlignment
+					   toAttributedString:result];
+				
+				[self addAttributedString:value
+								  toTable:table
+									  row:row
+									  col:(key ? 1 : 0)
+								  colspan:(key ? 1 : 2) /* If there's no key, we need to fill both columns. */
+								   header:NO
+									color:[NSColor controlTextColor]
+								alignment:NSLeftTextAlignment
+					   toAttributedString:result];
+				break;
+				
+			case AIUserInfoSectionHeader:
+				[self addAttributedString:key
+								  toTable:table
+									  row:row
+									  col:0
+								  colspan:2
+								   header:YES
+									color:[NSColor headerColor]
+								alignment:NSLeftTextAlignment
+					   toAttributedString:result];
+				break;
+				
+				
+			case AIUserInfoSectionBreak:
+				[self addAttributedString:[NSAttributedString stringWithString:@" "]
+								  toTable:table
+									  row:row
+									  col:0
+								  colspan:2
+								   header:NO
+									color:[NSColor controlTextColor]
+								alignment:NSLeftTextAlignment
+					   toAttributedString:result];
+				break;
 		}
 	}
 	
