@@ -222,8 +222,9 @@
 
 - (NSArray *)metaContactProfileArrayForContact:(AIMetaContact *)metaContact
 {
-	NSMutableArray *array = [NSMutableArray array];
-	NSMutableSet   *addedKeys = [NSMutableSet set];
+	NSMutableArray		*array = [NSMutableArray array];
+	NSMutableDictionary	*addedKeysDict = [NSMutableDictionary dictionary];
+	NSMutableDictionary *ownershipDict = [NSMutableDictionary dictionary];
 
 	NSEnumerator *enumerator = [([metaContact online] ?
 								 [metaContact listContacts] :
@@ -235,28 +236,71 @@
 		NSDictionary *lineDict;
 		while ((lineDict = [profileEnumerator nextObject])) {
 			NSString *key = [lineDict objectForKey:KEY_KEY];
-			if (!key ||	![addedKeys containsObject:key]) {
-				
-				AIUserInfoEntryType entryType = [[lineDict objectForKey:KEY_TYPE] intValue];
-				switch (entryType) {
-					case AIUserInfoSectionBreak:
-						/* Skip double section breaks */
-						if ([[[array lastObject] objectForKey:KEY_TYPE] intValue] == AIUserInfoSectionBreak)
-							continue;
-						break;
-					case AIUserInfoSectionBreak:
-						/* Use the most recent header if we have multiple headers in a row */
-						if ([[[array lastObject] objectForKey:KEY_TYPE] intValue] == AIUserInfoSectionHeader)
-							[array removeLastObject];
-						break;
-					case AIUserInfoLabelValuePair:
+			AIUserInfoEntryType entryType = [[lineDict objectForKey:KEY_TYPE] intValue];
+			switch (entryType) {
+				case AIUserInfoSectionBreak:
+					/* Skip double section breaks */
+					if ([[[array lastObject] objectForKey:KEY_TYPE] intValue] == AIUserInfoSectionBreak)
+						continue;
+					break;
+				case AIUserInfoSectionHeader:
+					/* Use the most recent header if we have multiple headers in a row */
+					if ([[[array lastObject] objectForKey:KEY_TYPE] intValue] == AIUserInfoSectionHeader)
+						[array removeLastObject];
+					break;
+				case AIUserInfoLabelValuePair:
 						/* No action needed */
-						break;
-				}
-				[array addObject:lineDict];
-				if (key)
-					[addedKeys addObject:key];
+					break;
 			}
+			
+			if (key) {
+				NSMutableSet *previousDictsOnThisKey = [addedKeysDict objectForKey:key];
+				if (previousDictsOnThisKey) {
+					NSEnumerator *prevDictEnumerator = [[[previousDictsOnThisKey copy] autorelease] objectEnumerator];
+					NSValue *prevDictValue;
+					while ((prevDictValue = [prevDictEnumerator nextObject])) {
+						NSDictionary		*prevDict = [prevDictValue nonretainedObjectValue];
+						NSMutableDictionary *newDict = [prevDict mutableCopy];
+						AIListContact *ownerOfPrevDict = [[ownershipDict objectForKey:prevDictValue] nonretainedObjectValue];
+						[newDict setObject:[NSString stringWithFormat:AILocalizedString(@"%@'s %@", nil),
+											[ownerOfPrevDict formattedUID],
+											key]
+									forKey:KEY_KEY];
+						
+						//Array of dicts which will be returned
+						[array replaceObjectAtIndex:[array indexOfObjectIdenticalTo:prevDict]
+										 withObject:newDict];
+						
+						//Known dictionaries on this key
+						[previousDictsOnThisKey removeObject:prevDictValue];
+						[previousDictsOnThisKey addObject:[NSValue valueWithNonretainedObject:newDict]];
+
+						//Ownership of new dictionary
+						[ownershipDict removeObjectForKey:prevDictValue];
+						[ownershipDict setObject:[NSValue valueWithNonretainedObject:newDict]
+										  forKey:[NSValue valueWithNonretainedObject:ownerOfPrevDict]];
+						[newDict release];
+					}
+					
+					NSMutableDictionary *newDict = [lineDict mutableCopy];
+					[newDict setObject:[NSString stringWithFormat:AILocalizedString(@"%@'s %@", nil),
+										[listContact formattedUID],
+										key]
+								forKey:KEY_KEY];					
+					lineDict = [newDict autorelease];
+					
+					[previousDictsOnThisKey addObject:[NSValue valueWithNonretainedObject:lineDict]];
+
+				} else {
+					[addedKeysDict setObject:[NSMutableSet setWithObject:[NSValue valueWithNonretainedObject:lineDict]]
+									  forKey:key];
+				}
+			}
+			
+			[array addObject:lineDict];
+
+			[ownershipDict setObject:[NSValue valueWithNonretainedObject:listContact]
+							  forKey:[NSValue valueWithNonretainedObject:lineDict]];
 		}
 	}
 
