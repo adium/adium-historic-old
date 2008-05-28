@@ -215,14 +215,20 @@
 		if (countSize.width + GROUP_COUNT_PADDING > rect.size.width) countSize.width = rect.size.width;
 		if (countSize.height > rect.size.height) countSize.height = rect.size.height;
 		
-		rect.origin.x += (rect.size.width - countSize.width);
+		if ([self textAlignment] == NSRightTextAlignment) {
+			// If the alignment is on the left, we need to move the original rect's x origin to the right.
+			inRect.origin.x += countSize.width + GROUP_COUNT_PADDING;
+		} else {
+			// If alignment is on the left or center, we need to move our drawing x origin to the right.
+			rect.origin.x += (rect.size.width - countSize.width);
+		}
 		
-		//Draw (centered vertical)
 		int half = ceil((rect.size.height - labelFontHeight) / 2.0);
 		[groupCount drawInRect:NSMakeRect(rect.origin.x,
 										  rect.origin.y + half,
 										  rect.size.width,
 										  countSize.height)];
+			
 		[groupCount release];
 		
 		inRect.size.width -= countSize.width + GROUP_COUNT_PADDING;
