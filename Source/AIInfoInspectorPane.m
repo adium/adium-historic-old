@@ -247,23 +247,14 @@
 	BOOL							shownAnyContent = NO;
 	
 	for (int row = 0; (lineDict = [enumerator nextObject]); row++) {
-		NSAttributedString *value = nil, *key = nil;
-		
 		if ([[lineDict objectForKey:KEY_TYPE] intValue] == AIUserInfoSectionBreak && shownAnyContent == NO) {
 			continue;
 		}
 		
+		NSAttributedString *value = nil, *key = nil;
+		
 		if ([lineDict objectForKey:KEY_VALUE]) {
-			NSMutableString		*mutableValue = [[lineDict objectForKey:KEY_VALUE] mutableCopy];
-			
-			[mutableValue replaceOccurrencesOfString:@"</html>"
-								   withString:@""
-									  options:(NSCaseInsensitiveSearch | NSLiteralSearch)
-										range:NSMakeRange(0, [mutableValue length])];
-						
-			value = [AIHTMLDecoder decodeHTML:mutableValue];
-			
-			[mutableValue release];
+			value = [AIHTMLDecoder decodeHTML:[lineDict objectForKey:KEY_VALUE]];
 			
 			value = [[adium contentController] filterAttributedString:value
 												usingFilterType:AIFilterDisplay
