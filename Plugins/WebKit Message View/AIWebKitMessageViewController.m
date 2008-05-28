@@ -615,10 +615,10 @@ static NSArray *draggedTypes = nil;
 		contentQueueCount = 1;
 	}
 	
-	/* If we added any objects, we may want to scroll to the bottom now, having not done it as each object
+	/* If we added two or more objects, we may want to scroll to the bottom now, having not done it as each object
 	 * was added.
 	 */
-	if (objectsAdded > 0) {
+	if (objectsAdded > 1) {
 		NSString	*scrollToBottomScript;
 		
 		if ((scrollToBottomScript = [messageStyle scriptForScrollingAfterAddingMultipleContentObjects])) {
