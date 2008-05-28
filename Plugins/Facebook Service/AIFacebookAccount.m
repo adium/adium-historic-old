@@ -15,7 +15,7 @@
 #import "AIFacebookIncomingMessageManager.h"
 #import "AIFacebookStatusManager.h"
 
-#define LOGIN_PAGE	@"http://www.facebook.com/login.php"
+#define LOGIN_PAGE	@"https://login.facebook.com/login.php"
 #define FACEBOOK_HOME_PAGE	@"http://www.facebook.com/home.php"
 
 #define CONNECTION_DEBUG	TRUE
@@ -70,6 +70,24 @@
 
 	[super connect];
 
+	/*
+	 //XXX Why doesn't this work? Facebook still thinks we don't have cookies enabled!
+	[[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:[NSHTTPCookie cookieWithProperties:[NSDictionary dictionaryWithObjectsAndKeys:
+																								 @"TRUE", NSHTTPCookieDiscard,
+																								 @".facebook.com", NSHTTPCookieDomain,
+																								 @"test_cookie", NSHTTPCookieName,
+																								 @"1", NSHTTPCookieValue,
+																								 nil]]];
+	 
+	 sentLogin = YES;
+	 [self postDictionary:[NSDictionary dictionaryWithObjectsAndKeys:
+			[self UID], @"email",
+			password, @"pass",
+			@"Login", @"login",
+			nil]
+					toURL:[NSURL URLWithString:LOGIN_PAGE]];
+	 
+	 */
 	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:LOGIN_PAGE]
 														   cachePolicy:NSURLRequestUseProtocolCachePolicy
 													   timeoutInterval:120];
@@ -264,6 +282,8 @@
 		} else {
 #ifdef CONNECTION_DEBUG
 			AILogWithSignature(@"Loaded login.php initially: %@", [[dataSource representation] documentSource]);
+			AILogWithSignature(@"%@",
+							   [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:[NSURL URLWithString:LOGIN_PAGE]]);
 #endif
 			//We loaded login.php; now we can send the email and password
 			sentLogin = YES;
