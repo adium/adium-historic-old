@@ -527,8 +527,8 @@
 	// Update the profile if it changes.	
 	if (inModifiedKeys == nil ||
 		[inModifiedKeys containsObject:@"ProfileArray"]) {
-		[self updateProfile:[self attributedStringProfileForListObject:inObject]
-					context:inObject];
+		[self updateProfile:[self attributedStringProfileForListObject:displayedObject]
+					context:displayedObject];
 	}
 	
 	// Cause everything to update if everything's probably changed.
