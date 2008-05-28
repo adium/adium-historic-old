@@ -219,8 +219,54 @@
 	
 }
 
+
+- (NSArray *)metaContactProfileArrayForContact:(AIMetaContact *)metaContact
+{
+	NSMutableArray *array = [NSMutableArray array];
+	NSMutableSet   *addedKeys = [NSMutableSet set];
+
+	NSEnumerator *enumerator = [([metaContact online] ?
+								 [metaContact listContacts] :
+								 [metaContact listContactsIncludingOfflineAccounts]) objectEnumerator];
+	AIListContact *listContact;
+	
+	while ((listContact = [enumerator nextObject])) {
+		NSEnumerator *profileEnumerator = [[listContact profileArray] objectEnumerator];
+		NSDictionary *lineDict;
+		while ((lineDict = [profileEnumerator nextObject])) {
+			NSString *key = [lineDict objectForKey:KEY_KEY];
+			if (!key ||	![addedKeys containsObject:key]) {
+				
+				AIUserInfoEntryType entryType = [[lineDict objectForKey:KEY_TYPE] intValue];
+				switch (entryType) {
+					case AIUserInfoSectionBreak:
+						/* Skip double section breaks */
+						if ([[[array lastObject] objectForKey:KEY_TYPE] intValue] == AIUserInfoSectionBreak)
+							continue;
+						break;
+					case AIUserInfoSectionBreak:
+						/* Use the most recent header if we have multiple headers in a row */
+						if ([[[array lastObject] objectForKey:KEY_TYPE] intValue] == AIUserInfoSectionHeader)
+							[array removeLastObject];
+						break;
+					case AIUserInfoLabelValuePair:
+						/* No action needed */
+						break;
+				}
+				[array addObject:lineDict];
+				if (key)
+					[addedKeys addObject:key];
+			}
+		}
+	}
+
+	return array;
+}
+
 - (NSAttributedString *)attributedStringProfileForListObject:(AIListObject *)inObject
 {	
+	NSArray *profileArray;
+
 	// We don't know what to do for non-list contacts.
 	if (![inObject isKindOfClass:[AIListContact class]]) {
 		return [NSAttributedString stringWithString:@""];
@@ -228,8 +274,14 @@
 	
 	// XXX Case out if we only have HTML (nothing currently does this)
 	
+	if ([inObject isKindOfClass:[AIMetaContact class]]) {
+		profileArray = [self metaContactProfileArrayForContact:(AIMetaContact *)inObject];
+	} else {
+		profileArray = [(AIListContact *)inObject profileArray];
+	}
+
 	// Don't do anything if we have nothing to display.
-	if ([[(AIListContact *)inObject profileArray] count] == 0) {
+	if ([profileArray count] == 0) {
 		return nil;
 	}
 	
@@ -241,7 +293,7 @@
     [table setHidesEmptyCells:YES];
 
 	NSMutableAttributedString		*result = [[[NSMutableAttributedString alloc] init] autorelease];
-	NSEnumerator					*enumerator = [[(AIListContact *)inObject profileArray] objectEnumerator];
+	NSEnumerator					*enumerator = [profileArray objectEnumerator];
 	NSDictionary					*lineDict;
 	
 	BOOL							shownAnyContent = NO;
