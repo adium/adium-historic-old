@@ -244,8 +244,14 @@
 	NSEnumerator					*enumerator = [[(AIListContact *)inObject profileArray] objectEnumerator];
 	NSDictionary					*lineDict;
 	
+	BOOL							shownAnyContent = NO;
+	
 	for (int row = 0; (lineDict = [enumerator nextObject]); row++) {
 		NSAttributedString *value = nil, *key = nil;
+		
+		if ([[lineDict objectForKey:KEY_TYPE] intValue] == AIUserInfoSectionBreak && shownAnyContent == NO) {
+			continue;
+		}
 		
 		if ([lineDict objectForKey:KEY_VALUE]) {
 			NSMutableString		*mutableValue = [[lineDict objectForKey:KEY_VALUE] mutableCopy];
@@ -322,6 +328,8 @@
 					   toAttributedString:result];
 				break;
 		}
+		
+		shownAnyContent = YES;
 	}
 	
 	return result;
