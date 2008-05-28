@@ -78,6 +78,7 @@
 		if ([status isKindOfClass:[NSNull class]]) status = nil;
 
 		[listContact setFormattedUID:name notify:NotifyLater];
+	
 		[listContact setStatusMessage:(status ? 
 									   [[[NSAttributedString alloc] initWithString:status] autorelease] :
 									   nil)
@@ -199,9 +200,13 @@
 	NSDictionary *buddyListJSONDict = [receivedString JSONValue];
 
 	AILogWithSignature(@"%@", buddyListJSONDict);
-	if ([[buddyListJSONDict objectForKey:@"errorSummary"] length]) {
-		if ([[buddyListJSONDict objectForKey:@"errorSummary"] isEqualToString:@"Not Logged In"]) {
-			[account reconnect];
+	if ([[buddyListJSONDict objectForKey:@"error"] length]) {
+		if ([[buddyListJSONDict objectForKey:@"errorSummary"] length] &&
+			[[buddyListJSONDict objectForKey:@"errorSummary"] isEqualToString:@"Not Logged In"]) {
+				[account reconnect];		
+		} else if ([[buddyListJSONDict objectForKey:@"error"] isEqualToString:@"1357001"]) {
+			[account setLastDisconnectionError:AILocalizedString(@"Logged in from another location", nil)];
+			[account disconnect];
 		}
 	}
 
