@@ -258,12 +258,16 @@
 			}
 			
 			if (key) {
-				NSMutableSet *previousDictsOnThisKey = [addedKeysDict objectForKey:key];
-				if (previousDictsOnThisKey) {
-					/* XXX Shouldn't redisplay items with the same KEY_VALUE */
-					NSEnumerator *prevDictEnumerator = [[[previousDictsOnThisKey copy] autorelease] objectEnumerator];
+				NSMutableSet *previousDictValuesOnThisKey = [addedKeysDict objectForKey:key];
+				if (previousDictValuesOnThisKey) {
+					/* If any previously added dictionary has the same key and value as the this new one, skip this new one entirely */
+					NSSet *existingValues = [previousDictValuesOnThisKey valueForKeyPath:[@"nonretainedObjectValue." stringByAppendingString:KEY_VALUE]];
+					if ([existingValues containsObject:[lineDict valueForKey:KEY_VALUE]])
+						continue;
+					
+					NSEnumerator *prevDictValueEnumerator = [[[previousDictValuesOnThisKey copy] autorelease] objectEnumerator];
 					NSValue *prevDictValue;
-					while ((prevDictValue = [prevDictEnumerator nextObject])) {
+					while ((prevDictValue = [prevDictValueEnumerator nextObject])) {
 						NSDictionary		*prevDict = [prevDictValue nonretainedObjectValue];
 						NSMutableDictionary *newDict = [prevDict mutableCopy];
 						AIListContact *ownerOfPrevDict = [[ownershipDict objectForKey:prevDictValue] nonretainedObjectValue];
@@ -277,8 +281,8 @@
 										 withObject:newDict];
 						
 						//Known dictionaries on this key
-						[previousDictsOnThisKey removeObject:prevDictValue];
-						[previousDictsOnThisKey addObject:[NSValue valueWithNonretainedObject:newDict]];
+						[previousDictValuesOnThisKey removeObject:prevDictValue];
+						[previousDictValuesOnThisKey addObject:[NSValue valueWithNonretainedObject:newDict]];
 
 						//Ownership of new dictionary
 						[ownershipDict removeObjectForKey:prevDictValue];
@@ -294,7 +298,7 @@
 								forKey:KEY_KEY];					
 					lineDict = [newDict autorelease];
 					
-					[previousDictsOnThisKey addObject:[NSValue valueWithNonretainedObject:lineDict]];
+					[previousDictValuesOnThisKey addObject:[NSValue valueWithNonretainedObject:lineDict]];
 
 				} else {
 					[addedKeysDict setObject:[NSMutableSet setWithObject:[NSValue valueWithNonretainedObject:lineDict]]
