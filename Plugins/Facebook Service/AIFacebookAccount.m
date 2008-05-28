@@ -104,7 +104,7 @@
 {
 	[self postDictionary:[NSDictionary dictionaryWithObject:@"1"
 													 forKey:@"confirm"]
-				   toURL:@"http://www.facebook.com/logout.php"];
+				   toURL:[NSURL URLWithString:@"http://www.facebook.com/logout.php"]];
 
 	[buddyListManager disconnect];
 	[buddyListManager release]; buddyListManager = nil;
