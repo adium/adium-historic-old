@@ -200,11 +200,11 @@
 	NSDictionary *buddyListJSONDict = [receivedString JSONValue];
 
 	AILogWithSignature(@"%@", buddyListJSONDict);
-	if ([[buddyListJSONDict objectForKey:@"error"] length]) {
+	if ([[buddyListJSONDict objectForKey:@"error"] intValue]) {
 		if ([[buddyListJSONDict objectForKey:@"errorSummary"] length] &&
 			[[buddyListJSONDict objectForKey:@"errorSummary"] isEqualToString:@"Not Logged In"]) {
 				[account reconnect];		
-		} else if ([[buddyListJSONDict objectForKey:@"error"] isEqualToString:@"1357001"]) {
+		} else if ([[buddyListJSONDict objectForKey:@"error"] intValue] == 1357001) {
 			[account setLastDisconnectionError:AILocalizedString(@"Logged in from another location", nil)];
 			[account disconnect];
 		}
