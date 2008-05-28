@@ -10,7 +10,9 @@
 #import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIContentMessage.h>
+#import <Adium/AIContentTyping.h>
 #import <Adium/AIListContact.h>
+#import <Adium/AIChat.h>
 #import <JSON/JSON.h>
 
 @interface AIFacebookIncomingMessageManager (PRIVATE)
