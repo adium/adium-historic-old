@@ -230,8 +230,12 @@
 								 [metaContact listContacts] :
 								 [metaContact listContactsIncludingOfflineAccounts]) objectEnumerator];
 	AIListContact *listContact;
+	BOOL metaContactIsOnline = [metaContact online];
 	
 	while ((listContact = [enumerator nextObject])) {
+		//If one or more contacts are online, skip offline ones
+		if (metaContactIsOnline && ![listContact online]) continue;
+		
 		NSEnumerator *profileEnumerator = [[listContact profileArray] objectEnumerator];
 		NSDictionary *lineDict;
 		while ((lineDict = [profileEnumerator nextObject])) {
