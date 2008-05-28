@@ -15,7 +15,7 @@
 #import "AIFacebookIncomingMessageManager.h"
 #import "AIFacebookStatusManager.h"
 
-#define LOGIN_PAGE	@"https://login.facebook.com/login.php"
+#define LOGIN_PAGE	@"http://www.facebook.com/login.php"
 #define FACEBOOK_HOME_PAGE	@"http://www.facebook.com/home.php"
 
 #define CONNECTION_DEBUG	TRUE
@@ -70,14 +70,10 @@
 
 	[super connect];
 
-	[self postDictionary:[NSDictionary dictionaryWithObjectsAndKeys:
-						  [self UID], @"email",
-						  password, @"pass",
-						  @"0", @"persistent",
-						  @"Login", @"login",
-						  @"%%E2%%AC%%C2%%B4%%E2%%82%%AC%%C2%%B4%%E6%%B0%%B4%%D0%%94%%D0%%84", @"charset_test",
-						  nil]
-				   toURL:[NSURL URLWithString:LOGIN_PAGE]];
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:LOGIN_PAGE]
+														   cachePolicy:NSURLRequestUseProtocolCachePolicy
+													   timeoutInterval:120];
+	[[webView mainFrame] loadRequest:request];
 }
 
 - (NSString *)host
@@ -153,6 +149,7 @@
 	[AIFacebookOutgoingMessageManager sendTypingObject:inContentTyping];
 }
 
+
 - (NSString *)encodedAttributedStringForSendingContentMessage:(AIContentMessage *)inContentMessage
 {
 	return [[inContentMessage message] string];
@@ -226,12 +223,12 @@
 													   timeoutInterval:120];	
 	
 	NSData *postData = [AIFacebookAccount postDataForDictionary:inDict];
+	
 	[request setHTTPMethod:@"POST"];
 	[request setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
 	[request setHTTPBody:postData];
 	[request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-	[request addValue:@"test_cookie=1;" forHTTPHeaderField:@"Cookie"];	
-	[request setValue:@"*/*" forHTTPHeaderField:@"Accept"];
+	
 	[[webView mainFrame] loadRequest:request];
 }
 
@@ -251,6 +248,7 @@
 	AILogWithSignature(@"%@ resource %@ finished loading %@", sender, identifier, dataSource);
 
 	if ([identifier isEqualToString:@"Logging in"]) {
+		if (sentLogin) {
 #ifdef CONNECTION_DEBUG
 			AILogWithSignature(@"Should now be logged in; login.php result is %@", [[dataSource representation] documentSource]);
 #endif
@@ -262,7 +260,22 @@
 															   timeoutInterval:120];	
 			
 			[[webView mainFrame] loadRequest:request];
-
+			
+		} else {
+#ifdef CONNECTION_DEBUG
+			AILogWithSignature(@"Loaded login.php initially: %@", [[dataSource representation] documentSource]);
+#endif
+			//We loaded login.php; now we can send the email and password
+			sentLogin = YES;
+			[sender stopLoading:self];
+			
+			[self postDictionary:[NSDictionary dictionaryWithObjectsAndKeys:
+								  [self UID], @"email",
+								  password, @"pass",
+								  @"Login", @"login",
+								  nil]
+						   toURL:[NSURL URLWithString:LOGIN_PAGE]];
+		}
 	} else if ([identifier isEqualToString:@"Home"]) {
 		//We finished logging in and got the home page
 		[self extractLoginInfoFromHomePage:[[dataSource representation] documentSource]];
