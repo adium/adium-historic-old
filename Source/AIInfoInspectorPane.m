@@ -260,6 +260,7 @@
 			if (key) {
 				NSMutableSet *previousDictsOnThisKey = [addedKeysDict objectForKey:key];
 				if (previousDictsOnThisKey) {
+					/* XXX Shouldn't redisplay items with the same KEY_VALUE */
 					NSEnumerator *prevDictEnumerator = [[[previousDictsOnThisKey copy] autorelease] objectEnumerator];
 					NSValue *prevDictValue;
 					while ((prevDictValue = [prevDictEnumerator nextObject])) {
@@ -301,10 +302,12 @@
 				}
 			}
 			
-			[array addObject:lineDict];
-
-			[ownershipDict setObject:[NSValue valueWithNonretainedObject:listContact]
-							  forKey:[NSValue valueWithNonretainedObject:lineDict]];
+			if (lineDict) {
+				[array addObject:lineDict];
+				
+				[ownershipDict setObject:[NSValue valueWithNonretainedObject:listContact]
+								  forKey:[NSValue valueWithNonretainedObject:lineDict]];
+			}
 		}
 	}
 
