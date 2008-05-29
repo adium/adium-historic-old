@@ -715,6 +715,26 @@ NSString* serviceIDForJabberUID(NSString *UID);
 				//Add them to our set
 				[contactSet unionSet:contacts];
 			}
+			
+			if ([email hasSuffix:@"gmail.com"] || [email hasSuffix:@"googlemail.com"]) {
+				//Retrieve all appropriate contacts
+				NSSet	*contacts = [[adium contactController] allContactsWithService:[[adium accountController] firstServiceWithServiceID:@"GTalk"]
+																				UID:email
+																	   existingOnly:YES];
+				
+				//Add them to our set
+				[contactSet unionSet:contacts];
+			}
+			
+			if ([email hasSuffix:@"hotmail.com"]) {
+				//Retrieve all appropriate contacts
+				NSSet	*contacts = [[adium contactController] allContactsWithService:[[adium accountController] firstServiceWithServiceID:@"MSN"]
+																				UID:email
+																	   existingOnly:YES];
+				
+				//Add them to our set
+				[contactSet unionSet:contacts];
+			}
 		}
 	}
 	
@@ -1028,7 +1048,6 @@ NSString* serviceIDForJabberUID(NSString *UID)
 				
 				email = [emails valueAtIndex:i];
 				if ([email hasSuffix:@"@mac.com"]) {
-					
 					//@mac.com UIDs go into the AIM dictionary
 					if (!(dict = [addressBookDict objectForKey:@"AIM"])) {
 						dict = [[[NSMutableDictionary alloc] init] autorelease];
@@ -1040,6 +1059,31 @@ NSString* serviceIDForJabberUID(NSString *UID)
 					//Internally we distinguish them as .Mac addresses (for metaContact purposes below)
 					[UIDsArray addObject:email];
 					[servicesArray addObject:@"Mac"];
+
+				} else if ([email hasSuffix:@"gmail.com"] || [email hasSuffix:@"googlemail.com"]) {
+					//GTalk UIDs go into the Jabber dictionary
+					if (!(dict = [addressBookDict objectForKey:@"Jabber"])) {
+						dict = [[[NSMutableDictionary alloc] init] autorelease];
+						[addressBookDict setObject:dict forKey:@"Jabber"];
+					}
+					
+					[dict setObject:[person uniqueId] forKey:email];
+					
+					//Internally we distinguish them as Google Talk addresses (for metaContact purposes below)
+					[UIDsArray addObject:email];
+					[servicesArray addObject:@"GTalk"];
+
+				} else if ([email hasSuffix:@"hotmail.com"]) {
+					//GTalk UIDs go into the Jabber dictionary
+					if (!(dict = [addressBookDict objectForKey:@"MSN"])) {
+						dict = [[[NSMutableDictionary alloc] init] autorelease];
+						[addressBookDict setObject:dict forKey:@"MSN"];
+					}
+
+					[dict setObject:[person uniqueId] forKey:email];
+
+					[UIDsArray addObject:email];
+					[servicesArray addObject:@"MSN"];
 				}
 			}
 		}
@@ -1065,10 +1109,10 @@ NSString* serviceIDForJabberUID(NSString *UID)
 				[dict release];
 			}
 
-			BOOL					isOSCAR = ([serviceID isEqualToString:@"AIM"] || 
-											   [serviceID isEqualToString:@"ICQ"]);
-			BOOL					isJabber = [serviceID isEqualToString:@"Jabber"] ||
-                                               [serviceID isEqualToString:@"XMPP"];
+			BOOL	isOSCAR = ([serviceID isEqualToString:@"AIM"] || 
+							   [serviceID isEqualToString:@"ICQ"]);
+			BOOL	isJabber = [serviceID isEqualToString:@"Jabber"] ||
+							   [serviceID isEqualToString:@"XMPP"];
 
 			for (i = 0 ; i < nameCount ; i++) {
 				NSString	*UID = [[names valueAtIndex:i] compactedString];
