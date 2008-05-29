@@ -5,10 +5,6 @@
 //  Created by Evan Schoenberg on 4/16/08.
 //
 
-#ifdef DEBUG_BUILD
-	#define CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG	TRUE
-#endif
-
 #import "AdiumContactPropertiesObserverManager.h"
 #import "AIContactController.h"
 #import <Adium/AIAccountControllerProtocol.h>
@@ -17,8 +13,14 @@
 #import <Adium/AIMetaContact.h>
 #import <Adium/AISortController.h>
 
+/*
+ #ifdef DEBUG_BUILD
+ #define CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG	TRUE
+ #endif
+ */
+
 #ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
-#import <Foundation/NSDebug.h>
+	#import <Foundation/NSDebug.h>
 #endif
 
 @interface AdiumContactPropertiesObserverManager (PRIVATE)
