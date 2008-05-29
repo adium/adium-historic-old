@@ -92,7 +92,7 @@
 		dynamicKeys = [[NSMutableSet alloc] init];
 		attributedRefreshTimer = nil;
 		delayedUpdateStatusTimer = nil;
-		delayedUpdateStatusTarget = nil;
+		delayedUpdateStatusTargets = nil;
 		silenceAllContactUpdatesTimer = nil;
 		lastDisconnectionError = nil;
 		disconnectedByFastUserSwitch = NO;
@@ -126,7 +126,7 @@
 - (void)dealloc
 {
 	[lastDisconnectionError release];
-	[delayedUpdateStatusTarget release];
+	[delayedUpdateStatusTargets release];
 	[delayedUpdateStatusTimer invalidate]; [delayedUpdateStatusTimer release];
 
 	/* Our superclass releases internalObjectID in its dealloc, so we should set it to nil when do.
@@ -373,26 +373,32 @@
 		[self delayedUpdateContactStatus:inContact];
 		
 		//Guard against subsequent updates
-		delayedUpdateStatusTarget = nil;
 		delayedUpdateStatusTimer = [[NSTimer scheduledTimerWithTimeInterval:[self delayedUpdateStatusInterval]
 																	 target:self
 																   selector:@selector(_delayedUpdateStatusTimer:)
 																   userInfo:nil
-																	repeats:NO] retain];
+																	repeats:YES] retain];
 	} else {
 		//If there is an outstanding delay, set this contact as the target
-		[delayedUpdateStatusTarget release]; delayedUpdateStatusTarget = [inContact retain];
+		if (!delayedUpdateStatusTargets) delayedUpdateStatusTargets = [[NSMutableArray alloc] init];
+		[delayedUpdateStatusTargets addObject:inContact];
 	}
 }
 - (void)_delayedUpdateStatusTimer:(NSTimer *)inTimer
 {
-	if (delayedUpdateStatusTarget) {
-		[self delayedUpdateContactStatus:delayedUpdateStatusTarget];
-		[delayedUpdateStatusTarget release]; delayedUpdateStatusTarget = nil;
+	/* Look up info for the next contact */
+	if ([delayedUpdateStatusTargets count]) {
+		[self delayedUpdateContactStatus:[delayedUpdateStatusTargets objectAtIndex:0]];
+		[delayedUpdateStatusTargets removeObjectAtIndex:0];
 	}
-	[delayedUpdateStatusTimer invalidate];
-	[delayedUpdateStatusTimer release];
-	delayedUpdateStatusTimer = nil;
+
+	/* If we're done, release the array and stop the repeating timer */
+	if (![delayedUpdateStatusTargets count]) {
+		[delayedUpdateStatusTargets release]; delayedUpdateStatusTargets = nil;
+
+		[delayedUpdateStatusTimer invalidate];
+		[delayedUpdateStatusTimer release]; delayedUpdateStatusTimer = nil;		
+	}
 }
 
 - (void)updateLocalDisplayNameTo:(NSAttributedString *)attributedDisplayName
