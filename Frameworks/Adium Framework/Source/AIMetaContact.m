@@ -330,7 +330,8 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		
 		if ([inObject isKindOfClass:[AIListContact class]] && [(AIListContact *)inObject remoteGroupName]) {
 			//Reset it to its remote group
-			[inObject setContainingObject:nil];
+			if ([inObject containingObject] == self)
+				[inObject setContainingObject:nil];
 			noteRemoteGroupingChanged = YES;
 		} else {
 			[inObject setContainingObject:[self containingObject]];
