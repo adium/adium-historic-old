@@ -524,11 +524,7 @@
 	BOOL allowBetweenContactDrop = (index == NSOutlineViewDropOnItemIndex);
 
 	if ([types containsObject:@"AIListObject"]) {
-		if (index != NSOutlineViewDropOnItemIndex && (![[[adium contactController] activeSortController] canSortManually])) {
-			//Don't drag if automatic sort is on
-			//disable drop between for non-Manual Sort.
-			return NSDragOperationNone;
-		}
+		BOOL canSortManually = [[[adium contactController] activeSortController] canSortManually];
 		
 		NSEnumerator *enumerator = [dragItems objectEnumerator];
 		id			 dragItem;
@@ -545,7 +541,18 @@
 		if (hasGroup && hasNonGroup) return NSDragOperationNone;
 		
 		id	primaryDragItem = [dragItems objectAtIndex:0];
-		
+
+		/* If this is a reorder within a metacontact, allow it in all cases. */
+		if (([primaryDragItem isKindOfClass:[AIListContact class]] && [item isKindOfClass:[AIListContact class]]) &&
+			([(AIListContact *)primaryDragItem parentContact] == [(AIListContact *)item parentContact])) {
+			return ((index != NSOutlineViewDropOnItemIndex) ? NSDragOperationMove : NSDragOperationNone);
+		}
+				
+		if (index != NSOutlineViewDropOnItemIndex && !canSortManually) {
+			/* We're attempting a resorder, and the sort controller says there is no manual sorting allowed. */
+			return NSDragOperationNone;
+		}		
+
 		if ([primaryDragItem isKindOfClass:[AIListGroup class]]) {
 			//Disallow dragging groups into or onto other objects
 			if (item != nil) {
@@ -586,6 +593,16 @@
 			if (([contactListView rowForItem:primaryDragItem] == -1) ||
 				[primaryDragItem isKindOfClass:[AIListContact class]]) {
 				retVal = NSDragOperationCopy;
+
+				if ([primaryDragItem isKindOfClass:[AIListContact class]] &&
+					[item isKindOfClass:[AIListContact class]] &&
+					[[(AIListContact *)item parentContact] isKindOfClass:[AIMetaContact class]]) {
+					/* Dragging a contact into a contact which is already within a metacontact.
+					 * This should retarget to combine the dragged contact with the metacontact.
+					 */
+					[outlineView setDropItem:[(AIListContact *)item parentContact] dropChildIndex:NSOutlineViewDropOnItemIndex];
+				}
+
 			} else {
 				retVal = NSDragOperationMove;
 			}
