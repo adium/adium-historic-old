@@ -44,7 +44,7 @@
 #define CONTACT_ADDED_ERROR_TITLE		AILocalizedString(@"Error", nil)
 #define CONTACT_ADDED_ERROR_Message		AILocalizedString(@"An error had occurred while adding %@ to the Address Book.", nil)
 
-#define KEY_ADDRESS_BOOK_ACTIONS_INSTALLED	@"Adium:Installed Adress Book Actions 1.2"
+#define KEY_ADDRESS_BOOK_ACTIONS_INSTALLED	@"Adium:Installed Adress Book Actions 1.3"
 
 @interface ESAddressBookIntegrationPlugin(PRIVATE)
 + (ABPerson *)_searchForUID:(NSString *)UID serviceID:(NSString *)serviceID;
