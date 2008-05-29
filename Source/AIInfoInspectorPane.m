@@ -9,7 +9,7 @@
 #import "AIInfoInspectorPane.h"
 #import <Adium/AIHTMLDecoder.h>
 
-#define WIDTH_PROFILE_HEADER	 90.0f
+#define WIDTH_PROFILE_HEADER	 100.0f
 
 @interface AIInfoInspectorPane (PRIVATE)
 - (void)updateUserIcon:(AIListObject *)inObject;
@@ -70,8 +70,6 @@
 	[contactAlias fireImmediately];
 	
 	displayedObject = inObject;
-	
-	AILogWithSignature(@"%@", inObject);
 
 	[lastAlias release]; lastAlias = nil;
 	
@@ -241,6 +239,8 @@
 		while ((lineDict = [profileEnumerator nextObject])) {
 			NSString *key = [lineDict objectForKey:KEY_KEY];
 			AIUserInfoEntryType entryType = [[lineDict objectForKey:KEY_TYPE] intValue];
+			int insertionIndex = -1;
+	
 			switch (entryType) {
 				case AIUserInfoSectionBreak:
 					/* Skip double section breaks */
@@ -277,7 +277,8 @@
 									forKey:KEY_KEY];
 						
 						//Array of dicts which will be returned
-						[array replaceObjectAtIndex:[array indexOfObjectIdenticalTo:prevDict]
+						insertionIndex = [array indexOfObjectIdenticalTo:prevDict];
+						[array replaceObjectAtIndex:insertionIndex
 										 withObject:newDict];
 						
 						//Known dictionaries on this key
@@ -307,7 +308,12 @@
 			}
 			
 			if (lineDict) {
-				[array addObject:lineDict];
+				if (insertionIndex != -1) {
+					//Group items with the same key together
+					[array insertObject:lineDict atIndex:insertionIndex];					
+				} else {
+					[array addObject:lineDict];
+				}
 				
 				[ownershipDict setObject:[NSValue valueWithNonretainedObject:listContact]
 								  forKey:[NSValue valueWithNonretainedObject:lineDict]];
@@ -337,6 +343,7 @@
 
 	// Don't do anything if we have nothing to display.
 	if ([profileArray count] == 0) {
+		AILogWithSignature(@"No profile array items found for %@", inObject);
 		return nil;
 	}
 	
@@ -511,8 +518,6 @@
 
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	//This is a hold-over from the refactoring of the old Get Info Window.
-	//The code for the Get Info Window only updated the status and profile, so we only do that here.
 	//Update if our object or an object contained by our metacontact (if applicable) was updated
 	if ([displayedObject isKindOfClass:[AIMetaContact class]] &&
 		((inObject != displayedObject) && ![(AIMetaContact *)displayedObject containsObject:inObject]))
