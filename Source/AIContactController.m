@@ -788,6 +788,9 @@
 					[self removeListObject:listObject fromMetaContact:oldMetaContact];
 				
 				[self _storeListObject:listObject inMetaContact:metaContact];
+
+				//Do the update thing
+				[contactPropertiesObserverManager _updateAllAttributesOfObject:metaContact];
 			}
 		}
 	}
@@ -943,6 +946,8 @@
 	//listContacts referring to the same UID & serviceID combination - that is, on multiple accounts on the same service.
 	//We therefore request removal of the object regardless of the if (containedContactDict) check above.
 	[metaContact removeObject:listObject];
+	
+	[self _listChangedGroup:metaContact object:listObject];
 }
 
 
@@ -1946,7 +1951,12 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			}
 		} else if ([listContact isKindOfClass:[AIListContact class]]) {
 			//Move the object
+			if ([[listContact parentContact] isKindOfClass:[AIMetaContact class]]) {
+				[self removeAllListObjectsMatching:listContact fromMetaContact:(AIMetaContact *)[listContact parentContact]];
+			}
+			
 			[self _moveObjectServerside:listContact toGroup:(AIListGroup *)group];
+
 		} else if ([listContact isKindOfClass:[AIListGroup class]]) {
 			// Move contact from one contact list to another
 			[(AIListGroup *)listContact moveGroupFrom:[(AIListGroup *)listContact containingObject] to:group];
