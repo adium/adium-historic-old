@@ -141,7 +141,7 @@ typedef enum {
 	
 	//Contact update guarding
 	NSTimer						*delayedUpdateStatusTimer;
-	AIListContact				*delayedUpdateStatusTarget;
+	NSMutableArray				*delayedUpdateStatusTargets;
 	NSTimer						*silenceAllContactUpdatesTimer;
 }
 

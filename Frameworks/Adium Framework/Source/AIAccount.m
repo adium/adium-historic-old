@@ -453,7 +453,7 @@ typedef enum
  */
 - (float)delayedUpdateStatusInterval
 {
-	return 3.0;
+	return 0.5;
 }
 
 /*!
