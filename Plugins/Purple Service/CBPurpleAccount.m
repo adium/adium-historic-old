@@ -50,6 +50,7 @@
 #import <AIUtilities/AIObjectAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIImageDrawingAdditions.h>
+#import <AIUtilities/AIMutableStringAdditions.h>
 #import <AIUtilities/AISystemNetworkDefaults.h>
 #import "ESiTunesPlugin.h"
 #import "AMPurpleTuneTooltip.h"
@@ -387,10 +388,15 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 									  [NSString stringWithUTF8String:purple_notify_user_info_entry_get_label(user_info_entry)]
 																 forKey:KEY_KEY]];
 				} else if (purple_notify_user_info_entry_get_value(user_info_entry)) {
-					NSString		*value =  processPurpleImages([NSString stringWithUTF8String:purple_notify_user_info_entry_get_value(user_info_entry)], self);
-					NSEnumerator	*enumerator = [[value componentsSeparatedByString:@"<br/><b>"] objectEnumerator];
+					NSMutableString	*value = [processPurpleImages([NSString stringWithUTF8String:purple_notify_user_info_entry_get_value(user_info_entry)],
+																  self) mutableCopy];
+					NSEnumerator	*enumerator;
 					NSString		*valuePair;
-					
+					[value replaceOccurrencesOfString:@"<br>" withString:@"<br/>" options:(NSCaseInsensitiveSearch | NSLiteralSearch)];
+					[value replaceOccurrencesOfString:@"<br />" withString:@"<br/>" options:(NSCaseInsensitiveSearch | NSLiteralSearch)];
+					[value replaceOccurrencesOfString:@"<B>" withString:@"<b>" options:NSLiteralSearch];
+
+					enumerator = [[value componentsSeparatedByString:@"<br/><b>"] objectEnumerator];
 					while ((valuePair = [enumerator nextObject])) {
 						NSRange	firstStartBold = [valuePair rangeOfString:@"<b>"];
 						NSRange	firstEndBold = [valuePair rangeOfString:@"</b>"];
@@ -406,7 +412,7 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 																		forKey:KEY_VALUE]];
 						}
 					}
-
+					[value release];
 				}	
 				break;
 			}
@@ -420,28 +426,8 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 {
 	NSArray		*profileContents = [self arrayOfDictionariesFromPurpleNotifyUserInfo:user_info];
 	[theContact setProfileArray:profileContents
-					notify:NotifyLater];	
-		
-/*	
-	char *user_info_text = purple_notify_user_info_get_text_with_newline(user_info, "<BR />");
-	NSMutableString *mutablePurpleUserInfo = (user_info_text ? [NSMutableString stringWithUTF8String:user_info_text] : nil);
-	g_free(user_info_text);
-
-	//Libpurple may pass us HTML with embedded </html> tags. Yuck. Don't abort when we hit one in AIHTMLDecoder.
-	[mutablePurpleUserInfo replaceOccurrencesOfString:@"</html>"
-										 withString:@""
-											options:(NSCaseInsensitiveSearch | NSLiteralSearch)
-											  range:NSMakeRange(0, [mutablePurpleUserInfo length])];
-
-	NSString	*purpleUserInfo = mutablePurpleUserInfo;
-	purpleUserInfo = processPurpleImages(purpleUserInfo, self);
-	purpleUserInfo = [self processedIncomingUserInfo:purpleUserInfo];
-
-	AILogWithSignature(@"Decoded %@ to %@", purpleUserInfo, [AIHTMLDecoder decodeHTML:purpleUserInfo]);
-	[theContact setProfile:[AIHTMLDecoder decodeHTML:purpleUserInfo]
 					notify:NotifyLater];
-*/
-	
+
 	//Apply any changes
 	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 }
