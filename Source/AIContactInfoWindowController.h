@@ -27,7 +27,6 @@
 	IBOutlet		NSSegmentedControl				*inspectorToolbar;
 	IBOutlet		NSView							*inspectorContent;
 	IBOutlet		NSView							*inspectorBottomBar;
-	IBOutlet		NSPopUpButton					*metaPopup;
 	IBOutlet		NSBox							*bottomBarSeperator;
 	
 					NSView							*currentPane;
