@@ -9,6 +9,7 @@
 #import "AIPreferenceController.h"
 #import <Adium/AIListObject.h>
 #import <Adium/AILoginControllerProtocol.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <Adium/AIAccount.h>
@@ -22,6 +23,11 @@
 
 #define EMPTY_CACHE_DELAY		120.0
 #define	SAVE_OBJECT_PREFS_DELAY	10.0
+
+/* XXX Remove me */
+#ifdef DEBUG_BUILD
+	#define PREFERENCE_CONTAINER_DEBUG
+#endif
 
 static NSMutableDictionary	*objectPrefs = nil;
 static int					usersOfObjectPrefs = 0;
@@ -240,7 +246,10 @@ typedef enum {
 				if (errorString) {
 					NSLog(@"Error reading preferences file %@: %@", objectPrefsPath, errorString);
 					AILogWithSignature(@"Error reading preferences file %@: %@", objectPrefsPath, errorString);
-					[errorString release];
+					
+					/* Memory managed for us in 10.5+ */
+					if (![NSApp isOnLeopardOrBetter])
+						[errorString release];
 				}
 				
 				/* If we don't get a dictionary, create a new one */
@@ -439,6 +448,21 @@ typedef enum {
 	//...and now it's safe to write it out, which may take a little while.
 	[dictToSave writeToPath:[info objectForKey:@"DestinationDirectory"]
 				   withName:[info objectForKey:@"PrefsName"]];
+
+	/* Data verification */
+#ifdef PREFERENCE_CONTAINER_DEBUG
+	{
+		NSData		 *data = [NSData dataWithContentsOfFile:[[info objectForKey:@"DestinationDirectory"] stringByAppendingPathComponent:
+															 [[info objectForKey:@"PrefsName"] stringByAppendingPathExtension:@"plist"]]];
+		NSString	 *errorString = nil;
+		NSDictionary *theDict = [NSPropertyListSerialization propertyListFromData:data 
+																 mutabilityOption:NSPropertyListMutableContainers 
+																		   format:NULL 
+																 errorDescription:&errorString];
+		AILogWithSignature(@"I just wrote out a dictionary with %i items (%@) length of data was %i", [theDict count], errorString, [data length]);
+	}
+#endif
+
 	[dictToSave release];
 
 	//The timer is not a repeating one, so we can just release it
