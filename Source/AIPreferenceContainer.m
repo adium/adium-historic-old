@@ -459,7 +459,8 @@ typedef enum {
 																 mutabilityOption:NSPropertyListMutableContainers 
 																		   format:NULL 
 																 errorDescription:&errorString];
-		AILogWithSignature(@"I just wrote out a dictionary with %i items (%@) length of data was %i", [theDict count], errorString, [data length]);
+		AILogWithSignature(@"I just wrote out %@ with %i items (%@) length of data was %i",
+						   [info objectForKey:@"PrefsName"], [theDict count], errorString, [data length]);
 	}
 #endif
 
