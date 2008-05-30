@@ -308,9 +308,11 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 			[self listContacts];
 		}
 		
-		//Update the object's display name to be the same as ours if we have one set
+		//Update the object's display name to be the same as ours if we have one set, otherwise clear it
 		if ([[self displayArrayForKey:@"Display Name"] objectValue]) {
 			[inObject setDisplayName:[self displayName]];
+		} else {
+			[inObject setDisplayName:nil];
 		}
 
 		success = YES;
