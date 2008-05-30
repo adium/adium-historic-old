@@ -83,16 +83,19 @@
 - (void)setStringValue:(NSString *)inString
 {
 	[cell setStringValue:inString];
+	[self setNeedsDisplay:YES];
 }
 
 - (void)setImage:(NSImage *)inImage
 {
 	[cell setImage:inImage];
+	[self setNeedsDisplay:YES];
 }
 
 - (void)setSubString:(NSString *)inSubString
 {
 	[cell setSubString:inSubString];
+	[self setNeedsDisplay:YES];
 }
 
 @end
