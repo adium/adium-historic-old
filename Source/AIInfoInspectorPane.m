@@ -209,7 +209,9 @@
 		[block setBorderColor:[NSColor darkGrayColor]];
 	} 
 	
-	[text addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(textLength, [text length] - textLength)];
+	if (color) {
+		[text addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(textLength, [text length] - textLength)];
+	}
     [text addAttribute:NSParagraphStyleAttributeName value:style range:NSMakeRange(textLength, [text length] - textLength)];
 	
     [style release];
@@ -402,7 +404,7 @@
 										  col:(key ? 1 : 0)
 									  colspan:(key ? 1 : 2) /* If there's no key, we need to fill both columns. */
 									   header:NO
-										color:[NSColor controlTextColor]
+										color:nil
 									alignment:NSLeftTextAlignment
 						   toAttributedString:result];
 				}
