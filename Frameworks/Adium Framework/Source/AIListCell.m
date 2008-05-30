@@ -376,19 +376,24 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 #endif
 
 	if (!leftText && !rightText) {
-		return (useAliasesAsRequested ? 
+		return ([self shouldShowAlias] ? 
 				[listObject longDisplayName] :
 				([listObject formattedUID] ? [listObject formattedUID] : [listObject longDisplayName]));
 	} else {
 		//Combine left text, the object name, and right text
 		return [NSString stringWithFormat:@"%@%@%@",
 			(leftText ? leftText : @""),
-			(useAliasesAsRequested ? [listObject longDisplayName] : ([listObject formattedUID] ?
+			([self shouldShowAlias] ? [listObject longDisplayName] : ([listObject formattedUID] ?
 																	 [listObject formattedUID] :
 																	 [listObject longDisplayName])),
 			(rightText ? rightText : @"")];
 	}
 
+}
+
+- (BOOL)shouldShowAlias
+{
+	return useAliasesAsRequested;
 }
 
 - (void)setUseAliasesAsRequested:(BOOL)inFlag
