@@ -45,8 +45,6 @@
 
 - (void) dealloc
 {
-	[lastAlias release]; lastAlias = nil;
-	
 	[inspectorContentView release];
 	
 	[[adium contactController] unregisterListObjectObserver:self];
@@ -70,8 +68,6 @@
 	[contactAlias fireImmediately];
 	
 	displayedObject = inObject;
-
-	[lastAlias release]; lastAlias = nil;
 	
 	if ([inObject isKindOfClass:[AIListContact class]]) {
 		[[adium contactController] updateListContactStatus:(AIListContact *)inObject];
@@ -469,14 +465,11 @@
 	} else {
 		[contactAlias setStringValue:@""];
 	}
-	
-	// Save a copy of this current alias so we don't spam updates of the same string.
-	lastAlias = [[contactAlias stringValue] copy];
 }
 
 - (IBAction)setAlias:(id)sender
 {
-	if(!displayedObject || [[contactAlias stringValue] isEqualToString:lastAlias])
+	if(!displayedObject)
 		return;
 	
 	AIListObject *contactToUpdate = displayedObject;
