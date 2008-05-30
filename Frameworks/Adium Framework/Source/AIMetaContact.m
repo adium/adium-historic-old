@@ -307,6 +307,9 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 			//Force an immediate update of our listContacts list, which will also update our visible count
 			[self listContacts];
 		}
+		
+		//Update the object's display name to be the same as ours
+		[inObject setDisplayName:[self displayName]];
 
 		success = YES;
 	}
@@ -1043,6 +1046,25 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	}
 
 	return displayName;
+}
+
+/*!
+ * @brief Set our display name
+ *
+ * This also sets the display name of all contained objects to be the same as ours.
+ *
+ * @param alias The new display name to be set.
+ */
+- (void)setDisplayName:(NSString *)alias
+{
+	NSEnumerator		*enumerator = [[self containedObjects] objectEnumerator];
+	AIListObject		*listObject;
+	
+	while ((listObject = [enumerator nextObject])) {
+		[listObject setDisplayName:alias];
+	}
+	
+	[super setDisplayName:alias];
 }
 
 - (NSString *)phoneticName
