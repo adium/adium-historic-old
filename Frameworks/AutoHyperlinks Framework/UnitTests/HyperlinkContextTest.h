@@ -10,5 +10,6 @@
 
 }
 - (void)testSimpleDomain;
+- (void)testEmail;
 - (void)testEdgeURI;
 @end

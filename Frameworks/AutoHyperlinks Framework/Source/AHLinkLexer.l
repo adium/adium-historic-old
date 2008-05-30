@@ -61,7 +61,7 @@ urlSpecifier    ([_[:alnum:]\x80-\xf4-]+\.)+{domains}(:[0-9]+)?{urlPath}?
 ipv4address     ([0-9]{1,3}\.){3}([0-9]{1,3})
 ipURL           {ipv4address}(:[0-9]+)?{urlPath}?
 singleDomain    [[:alnum:]\x80-\xf4-]+
-mailSpecifier   [^:\/]+\@.+\.{domains}
+mailSpecifier   [^:\/[:space:]]+\@.+\.{domains}
 jabberSpec      xmpp:.+\@.+\.{domains}{urlPath}?(\?[[:alnum:]]+[;&][^[:space:]]*)?
 aolIMSpec       aim:goim\?screenname=[^\ \t\n&]+(&message=.+)?
 aolChatSpec     aim:gochat\?roomname=[^\ \t\n&]+

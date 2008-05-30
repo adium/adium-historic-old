@@ -73,6 +73,8 @@
 	[self testLaxContext:@"\f%@\f" withURI:URIString];
 	[self testLaxContext:@"\r%@\r" withURI:URIString];
 	[self testLaxContext:@" %@ " withURI:URIString];
+	
+	[self testLaxContext:@"words before %@" withURI:URIString];
 }
 
 - (void)testSimpleDomain {
@@ -80,6 +82,13 @@
 	[self testEnclosedURIFollowedByCharacter:@"example.com"];
 	[self testURIBorder:@"example.com"];
 	[self testWhitespace:@"example.com"];
+}
+
+- (void)testEmail {
+	[self testEnclosedURI:@"test@example.com"];
+	[self testEnclosedURIFollowedByCharacter:@"test@example.com"];
+	[self testURIBorder:@"test@example.com"];
+	[self testWhitespace:@"test@example.com"];
 }
 
 - (void)testEdgeURI {
