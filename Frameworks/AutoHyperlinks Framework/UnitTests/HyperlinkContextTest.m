@@ -75,6 +75,8 @@
 	[self testLaxContext:@" %@ " withURI:URIString];
 	
 	[self testLaxContext:@"words before %@" withURI:URIString];
+	[self testLaxContext:@"%@ words after" withURI:URIString];
+	[self testLaxContext:@"words before %@ and words after" withURI:URIString];
 }
 
 - (void)testSimpleDomain {
