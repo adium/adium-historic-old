@@ -56,6 +56,7 @@
 	BOOL				idleTimeIsBelow;
 	BOOL				statusMessageIsBelow;
 	BOOL				useStatusMessageAsExtendedStatus;
+	BOOL				useAliasesOnNonParentContacts;
 
 	float				backgroundOpacity;
 
@@ -119,5 +120,8 @@
 - (NSImage *)serviceImage;
 //- (BOOL)drawStatusBelowLabelInRect:(NSRect)rect;
 - (float)imageOpacityForDrawing;
+
+// Should not parent contacts have their aliases shown?
+- (void)setUseAliasesOnNonParentContacts:(BOOL)inFlag;
 
 @end

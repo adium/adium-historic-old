@@ -639,6 +639,17 @@
 	return rect;
 }
 
+- (void)setUseAliasesOnNonParentContacts:(BOOL)inFlag
+{
+	useAliasesOnNonParentContacts = inFlag;
+}
+
+- (BOOL)shouldShowAlias
+{
+	return (useAliasesAsRequested && (useAliasesOnNonParentContacts ||
+									  (!useAliasesOnNonParentContacts && [(AIListContact *)listObject parentContact] == listObject)));	
+}
+
 //Contact label color
 - (NSColor *)labelColor
 {
