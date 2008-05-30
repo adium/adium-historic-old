@@ -987,29 +987,32 @@
 		[internalObjectIDs addObject:internalObjectID];
 	}
 	
-	//Create a new metaContact is we didn't find one.
-	if (!metaContact) {
-		AILogWithSignature(@"New metacontact to group %@ on %@", UIDsArray, servicesArray);
-		metaContact = [self metaContactWithObjectID:nil];
-	}
-	
-	enumerator = [internalObjectIDs objectEnumerator];
-	while ((internalObjectID = [enumerator nextObject])) {
-		AIListObject	*existingObject;
-		if ((existingObject = [self existingListObjectWithUniqueID:internalObjectID])) {
-			/* If there is currently an object (or multiple objects) matching this internalObjectID
-			 * we should add immediately.
-			 */
-			[self addListObject:existingObject
-				  toMetaContact:metaContact];	
-		} else {
-			/* If no objects matching this internalObjectID exist, we can simply add to the 
-			 * contactToMetaContactLookupDict for use if such an object is created later.
-			 */
-			[contactToMetaContactLookupDict setObject:metaContact
-											   forKey:internalObjectID];			
+	if ([internalObjectIDs count] > 1) {
+		//Create a new metaContact is we didn't find one.
+		if (!metaContact) {
+			AILogWithSignature(@"New metacontact to group %@ on %@", UIDsArray, servicesArray);
+			metaContact = [self metaContactWithObjectID:nil];
+		}
+		
+		enumerator = [internalObjectIDs objectEnumerator];
+		while ((internalObjectID = [enumerator nextObject])) {
+			AIListObject	*existingObject;
+			if ((existingObject = [self existingListObjectWithUniqueID:internalObjectID])) {
+				/* If there is currently an object (or multiple objects) matching this internalObjectID
+				 * we should add immediately.
+				 */
+				[self addListObject:existingObject
+					  toMetaContact:metaContact];	
+			} else {
+				/* If no objects matching this internalObjectID exist, we can simply add to the 
+				 * contactToMetaContactLookupDict for use if such an object is created later.
+				 */
+				[contactToMetaContactLookupDict setObject:metaContact
+												   forKey:internalObjectID];			
+			}
 		}
 	}
+
 	[internalObjectIDs release];
 	
 	return metaContact;
