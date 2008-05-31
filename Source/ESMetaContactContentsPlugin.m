@@ -28,8 +28,8 @@
 
 #define META_TOOLTIP_ICON_SIZE NSMakeSize(11,11)
 
-#define EXPAND_CONTACT		AILocalizedString(@"Expand combined contact", nil)
-#define COLLAPSE_CONTACT	AILocalizedString(@"Collapse combined contact", nil)
+#define EXPAND_CONTACT		AILocalizedString(@"Expand Combined Contact", nil)
+#define COLLAPSE_CONTACT	AILocalizedString(@"Collapse Combined Contact", nil)
 /*!
  * @class ESMetaContactContentsPlugin
  * @brief Tooltip component: Show the contacts contained by metaContacts, with service and status state.
