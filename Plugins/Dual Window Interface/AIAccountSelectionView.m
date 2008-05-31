@@ -276,9 +276,9 @@
 	return NO;
 }
 
-- (void)rebuildAccountMenu
+- (void)rebuildAccountMenuFromMenuItems:(NSArray *)menuItems
 {
-	NSEnumerator *enumerator = [[accountMenu menuItems] objectEnumerator];
+	NSEnumerator *enumerator = [menuItems objectEnumerator];
 	NSMenuItem	 *menuItem;
 	NSMutableArray *menuItemsForAccountsWhichKnow = [NSMutableArray array];
 	NSMutableArray *menuItemsForAccountsWhichDoNotKnow = [NSMutableArray array];
@@ -320,7 +320,7 @@
  * @brief Account Menu Delegate
  */
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems {
-	[self rebuildAccountMenu];
+	[self rebuildAccountMenuFromMenuItems:menuItems];
 }
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount {
 	[[adium chatController] switchChat:chat toAccount:inAccount];
@@ -369,14 +369,8 @@
 	//Configure the contact menu
 	if (accountMenu)
 		[accountMenu rebuildMenu];
-	else {
-		/* We depend upon the accountMenu instance variable... which won't be set when the delegate methods are called initially.
-		 * We therefore renotify ourselves after AIAccountMenu creation is complete. This is cheap, because the menu items are cached
-		 * by AIAccountMenu.
-		 */
+	else
 		accountMenu = [[AIAccountMenu accountMenuWithDelegate:self submenuType:AIAccountNoSubmenu showTitleVerbs:NO] retain];
-		[self accountMenu:accountMenu didRebuildMenuItems:[accountMenu menuItems]];
-	}
 }
 
 /*!
