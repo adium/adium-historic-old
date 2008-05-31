@@ -156,16 +156,12 @@
 {
 	AIListObject *listObject = [[adium menuController] currentContextMenuObject];
 	if ([listObject isKindOfClass:[AIMetaContact class]]) {
-		BOOL currentlyExpandable = [(AIMetaContact *)listObject isExpandable];
 		BOOL currentlyExpanded = [(AIMetaContact *)listObject isExpanded];
 		
-		if (currentlyExpandable && currentlyExpanded) {
+		if (currentlyExpanded) {
 			[[adium notificationCenter] postNotificationName:AIPerformCollapseItemNotification
 													 object:listObject];
-			[(AIMetaContact *)listObject setExpandable:NO];
-
 		} else {
-			[(AIMetaContact *)listObject setExpandable:YES];
 			[[adium notificationCenter] postNotificationName:AIPerformExpandItemNotification
 													 object:listObject];
 		}
@@ -183,10 +179,9 @@
 	if (menuItem == contextualMenuItem) {
 		if ([listObject isKindOfClass:[AIMetaContact class]] &&
 			[(AIMetaContact *)listObject containsMultipleContacts]) {
-			BOOL currentlyExpandable = [(AIMetaContact *)listObject isExpandable];
 			BOOL currentlyExpanded = [(AIMetaContact *)listObject isExpanded];
 			
-			if (currentlyExpandable && currentlyExpanded) {
+			if (currentlyExpanded) {
 				[menuItem setTitle:COLLAPSE_CONTACT];
 			} else {
 				[menuItem setTitle:EXPAND_CONTACT];				

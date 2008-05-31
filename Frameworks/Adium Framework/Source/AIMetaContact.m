@@ -28,7 +28,6 @@
 #define	KEY_CONTAINING_OBJECT_ID	@"ContainingObjectInternalObjectID"
 #define	OBJECT_STATUS_CACHE			@"Object Status Cache"
 
-#define	KEY_IS_EXPANDABLE					@"IsExpandable"
 #define	KEY_EXPANDED						@"IsExpanded"
 
 @interface AIMetaContact (PRIVATE)
@@ -62,9 +61,6 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		
 		containedObjects = [[NSMutableArray alloc] init];
 		
-		isExpandable = [[self preferenceForKey:KEY_IS_EXPANDABLE
-										 group:OBJECT_STATUS_CACHE] boolValue];
-
 		expanded = [[self preferenceForKey:KEY_EXPANDED
 									 group:OBJECT_STATUS_CACHE] boolValue];
 
@@ -1252,23 +1248,9 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
     return expanded;
 }
 
-- (void)setExpandable:(BOOL)inExpandable
-{
-	if (inExpandable != isExpandable) {
-		isExpandable = inExpandable;
-
-		[self setPreference:[NSNumber numberWithBool:isExpandable]
-					 forKey:KEY_IS_EXPANDABLE
-					  group:OBJECT_STATUS_CACHE];
-		
-		[[adium notificationCenter] postNotificationName:AIDisplayableContainedObjectsDidChange
-												  object:self];
-	}
-}
-
 - (BOOL)isExpandable
 {
-	return isExpandable && !containsOnlyOneUniqueContact;
+	return !containsOnlyOneUniqueContact;
 }
 
 //Order index
