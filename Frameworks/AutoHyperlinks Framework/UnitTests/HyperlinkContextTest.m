@@ -12,6 +12,7 @@
 	NSString			*testString = [NSString stringWithFormat:linkString, URIString];
 	AHMarkedHyperlink	*link = [[scanner allURLsFromString:testString] objectAtIndex:0];
 	
+	NSLog(@"\"%@\" from \"%@\"",[[link URL] description], URIString);
 	STAssertNotNil(link, @"-[SHHyperlinkScanner nextURLFromString:] found no URI in \"%@\"", testString);
 	STAssertEqualObjects([[link parentString] substringWithRange:[link range]], URIString, @"in context: '%@'", testString);
 }
