@@ -252,6 +252,10 @@ typedef enum {
 						[errorString release];
 				}
 				
+				#ifdef PREFERENCE_CONTAINER_DEBUG
+					AILogWithSignature(@"I read in %@ with %i items", globalPrefsName, [*myGlobalPrefs count]);
+				#endif
+
 				/* If we don't get a dictionary, create a new one */
 				if (!*myGlobalPrefs) {
 					/* This wouldn't be an error if this were a new Adium installation; the below is temporary debug logging. */
@@ -443,6 +447,9 @@ typedef enum {
 	NSDictionary *dictToSave;
 	//Don't allow modification of the dictionary while we're copying it...
 	@synchronized(sourcePrefsToSave) {
+		#ifdef PREFERENCE_CONTAINER_DEBUG
+			AILogWithSignature(@"Beginning to save %@ with %i items", [info objectForKey:@"PrefsName"], [sourcePrefsToSave count]);
+		#endif
 		dictToSave = [[NSDictionary alloc] initWithDictionary:sourcePrefsToSave copyItems:YES];
 	}
 	//...and now it's safe to write it out, which may take a little while.
