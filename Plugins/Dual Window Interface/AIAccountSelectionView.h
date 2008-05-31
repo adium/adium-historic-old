@@ -27,11 +27,9 @@
 
 @interface AIAccountSelectionView : NSView {
 	NSPopUpButton		*popUp_accounts;
-	NSTextField			*label_accounts;
 	NSView				*box_accounts;
 
 	NSPopUpButton   	*popUp_contacts;
-	NSTextField			*label_contacts;
 	NSView				*box_contacts;
 	
 	AIAccountMenu		*accountMenu;	
