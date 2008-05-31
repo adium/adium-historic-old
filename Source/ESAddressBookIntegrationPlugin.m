@@ -264,9 +264,10 @@ NSString* serviceIDForJabberUID(NSString *UID);
 	
 	NSSet		*modifiedAttributes = nil;
 	
-    if (inModifiedKeys == nil) { //Only perform this when updating for all list objects
+    if (inModifiedKeys == nil) { //Only perform this when updating for all list objects or when a contact is created
         ABPerson *person = [[self class] personForListObject:inObject];
-		
+		if ([inObject isKindOfClass:[AIMetaContact class]])
+			AILogWithSignature(@"%@ --> ABPerson %p", inObject, person);
 		if (person) {
 			if (enableImport) {
 				//Load the name if appropriate
@@ -606,6 +607,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 {
 	ABPerson	*person = nil;
 	NSString	*uniqueID = [inObject preferenceForKey:KEY_AB_UNIQUE_ID group:PREF_GROUP_ADDRESSBOOK];
+	if (!uniqueID) uniqueID = [inObject valueForProperty:KEY_AB_UNIQUE_ID];
 	ABRecord	*record = nil;
 	
 	if (uniqueID)
@@ -620,7 +622,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 			
 			//Search for an ABPerson for each listContact within the metaContact; first one we find is
 			//the lucky winner.
-			enumerator = [[(AIMetaContact *)inObject listContacts] objectEnumerator];
+			enumerator = [[(AIMetaContact *)inObject listContactsIncludingOfflineAccounts] objectEnumerator];
 			while ((listContact = [enumerator nextObject]) && (person == nil)) {
 				person = [self personForListObject:listContact];
 			}
@@ -1135,8 +1137,13 @@ NSString* serviceIDForJabberUID(NSString *UID)
 		
 		if (([UIDsArray count] > 1) && createMetaContacts) {
 			/* Got a record with multiple names. Group the names together, adding them to the meta contact. */
-			[[adium contactController] groupUIDs:UIDsArray 
-									 forServices:servicesArray];
+			AIMetaContact *metaContact = [[adium contactController] groupUIDs:UIDsArray 
+																  forServices:servicesArray];
+			if (metaContact) {
+				[metaContact setValue:[person uniqueId]
+						  forProperty:KEY_AB_UNIQUE_ID
+							   notify:NotifyNever];
+			}
 		}
 	}
 }
