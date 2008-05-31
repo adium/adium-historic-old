@@ -40,7 +40,7 @@
 - (void)chatDestinationChanged:(NSNotification *)notification;
 - (void)chatSourceChanged:(NSNotification *)notification;
 - (BOOL)_accountIsAvailable:(AIAccount *)inAccount;
-- (void)_createAccountMenu;
+- (void)configureAccountMenu;
 - (void)_createContactMenu;
 - (void)_destroyAccountMenu;
 - (void)_destroyContactMenu;
@@ -202,10 +202,11 @@
 	//Update selection in contact menu
 	[popUp_contacts selectItemWithRepresentedObjectUsingCompare:[chat listObject]];
 
-	[self _destroyAccountMenu];
 	//Rebuild 'From' account menu
 	if ([self choicesAvailableForAccount]){
-		[self _createAccountMenu];
+		[self configureAccountMenu];
+	} else {
+		[self _destroyAccountMenu];	
 	}
 
 	//Reposition our menus and resize as necessary
@@ -327,6 +328,10 @@
 - (BOOL)accountMenu:(AIAccountMenu *)inAccountMenu shouldIncludeAccount:(AIAccount *)inAccount {
 	return [self _accountIsAvailable:inAccount];
 }
+- (NSControlSize)controlSizeForAccountMenu:(AIAccountMenu *)inAccountMenu;
+{
+	return NSRegularControlSize;
+}
 
 /*!
  * @brief Check if an account is available for sending content
@@ -344,27 +349,28 @@
 /*!
  * @brief Create the account menu and add it to our view
  */
-- (void)_createAccountMenu
+- (void)configureAccountMenu
 {
-	if (!popUp_accounts) {
-		//Since the account box is only a few controls, we build it by hand rather than loading it from a nib
-		box_accounts = [[self _boxWithFrame:BOX_RECT] retain];
+	[box_accounts removeFromSuperview]; [box_accounts release];
+	box_accounts = [[self _boxWithFrame:BOX_RECT] retain];
+	
+	[popUp_accounts release];
+	popUp_accounts = [[self _popUpButtonWithFrame:POPUP_RECT] retain];
+	[box_accounts addSubview:popUp_accounts];
+	
+	NSTextField *label_accounts = [self _textFieldLabelWithValue:AILocalizedString(@"From:", "Label in front of the dropdown of accounts from which to send a message")
+														   frame:LABEL_RECT];
+	[box_accounts addSubview:label_accounts];
 
-		popUp_accounts = [[self _popUpButtonWithFrame:POPUP_RECT] retain];
-		[box_accounts addSubview:popUp_accounts];
-		
-		label_accounts = [[self _textFieldLabelWithValue:AILocalizedString(@"From:", "Label in front of the dropdown of accounts from which to send a message") frame:LABEL_RECT] retain];
-		[box_accounts addSubview:label_accounts];
-		
-		//Resize the contact box to fit our view and insert it
-		[box_accounts setFrameSize:NSMakeSize([self frame].size.width, BOX_RECT.size.height)];
-		[self addSubview:box_accounts];
-		
-		//Configure the contact menu
-		accountMenu = [[AIAccountMenu accountMenuWithDelegate:self submenuType:AIAccountNoSubmenu showTitleVerbs:NO] retain];
-		[accountMenu setUseSystemFont:YES];
+	//Resize the contact box to fit our view and insert it
+	[box_accounts setFrameSize:NSMakeSize(NSWidth([self frame]), NSHeight(BOX_RECT))];
+	[self addSubview:box_accounts];
+
+	//Configure the contact menu
+	if (accountMenu)
 		[accountMenu rebuildMenu];
-	}
+	else
+		accountMenu = [[AIAccountMenu accountMenuWithDelegate:self submenuType:AIAccountNoSubmenu showTitleVerbs:NO] retain];
 }
 
 /*!
@@ -374,7 +380,6 @@
 {
 	if (popUp_accounts) {
 		[box_accounts removeFromSuperview];
-		[label_accounts release]; label_accounts = nil;
 		[popUp_accounts release]; popUp_accounts = nil;
 		[box_accounts release]; box_accounts = nil;
 		[accountMenu release]; accountMenu = nil;
@@ -417,23 +422,25 @@
  */
 - (void)_createContactMenu
 {
-	if (!popUp_contacts) {
-		//Since the contact box is only a few controls, we build it by hand rather than loading it from a nib
-		box_contacts = [[self _boxWithFrame:BOX_RECT] retain];
+	[box_contacts removeFromSuperview]; [box_contacts release];
+	box_contacts = [[self _boxWithFrame:BOX_RECT] retain];
 
-		popUp_contacts = [[self _popUpButtonWithFrame:POPUP_RECT] retain];
-		[box_contacts addSubview:popUp_contacts];
+	[popUp_contacts release];
+	popUp_contacts = [[self _popUpButtonWithFrame:POPUP_RECT] retain];
+	[box_contacts addSubview:popUp_contacts];
 		
-		label_contacts = [[self _textFieldLabelWithValue:AILocalizedString(@"To:", "Label in front of the dropdown for picking which contact to send a message to in the message window") frame:LABEL_RECT] retain];
-		[box_contacts addSubview:label_contacts];
+	NSTextField *label_contacts = [self _textFieldLabelWithValue:AILocalizedString(@"To:", "Label in front of the dropdown for picking which contact to send a message to in the message window") frame:LABEL_RECT];
+	[box_contacts addSubview:label_contacts];
 
-		//Resize the contact box to fit our view and insert it
-		[box_contacts setFrameSize:NSMakeSize([self frame].size.width, BOX_RECT.size.height)];
-		[self addSubview:box_contacts];
+	//Resize the contact box to fit our view and insert it
+	[box_contacts setFrameSize:NSMakeSize(NSWidth([self frame]), NSHeight(BOX_RECT))];
+	[self addSubview:box_contacts];
 
-		//Configure the contact menu
+	//Configure the contact menu
+	if (contactMenu)
+		[contactMenu rebuildMenu];
+	else
 		contactMenu = [[AIContactMenu contactMenuWithDelegate:self forContactsInObject:[[chat listObject] parentContact]] retain];
-	}
 }
 
 /*!
@@ -443,7 +450,6 @@
 {
 	if(popUp_contacts){
 		[box_contacts removeFromSuperview];
-		[label_contacts release]; label_contacts = nil;
 		[box_contacts release]; box_contacts = nil;
 		[popUp_contacts release]; popUp_contacts = nil;
 		[contactMenu release]; contactMenu = nil;
