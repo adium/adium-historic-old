@@ -310,7 +310,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (void)configureForListObject:(AIListObject *)inObject
 {
 	if ([inObject isKindOfClass:[AIListContact class]]) {
-		inObject = [inObject parentContact];
+		inObject = [(AIListContact *)inObject parentContact];
 	}
 	
 	//Set the title of the window.
