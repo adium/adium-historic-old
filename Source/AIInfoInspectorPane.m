@@ -269,10 +269,12 @@
 						NSDictionary		*prevDict = [prevDictValue nonretainedObjectValue];
 						NSMutableDictionary *newDict = [prevDict mutableCopy];
 						AIListContact *ownerOfPrevDict = [[ownershipDict objectForKey:prevDictValue] nonretainedObjectValue];
-						[newDict setObject:[NSString stringWithFormat:AILocalizedString(@"%@'s %@", nil),
-											[ownerOfPrevDict formattedUID],
-											key]
-									forKey:KEY_KEY];
+						if (ownerOfPrevDict) {
+							[newDict setObject:[NSString stringWithFormat:AILocalizedString(@"%@'s %@", nil),
+												[ownerOfPrevDict formattedUID],
+												key]
+										forKey:KEY_KEY];
+						}
 						
 						//Array of dicts which will be returned
 						insertionIndex = [array indexOfObjectIdenticalTo:prevDict];
@@ -291,7 +293,7 @@
 					}
 					
 					NSMutableDictionary *newDict = [lineDict mutableCopy];
-					[newDict setObject:[NSString stringWithFormat:AILocalizedString(@"%@'s %@", nil),
+					[newDict setObject:[NSString stringWithFormat:AILocalizedString(@"%@'s %@", "(name)'s (information type), e.g. tekjew's status"),
 										[listContact formattedUID],
 										key]
 								forKey:KEY_KEY];					
@@ -308,6 +310,10 @@
 			if (lineDict) {
 				if (insertionIndex != -1) {
 					//Group items with the same key together
+					if ([[[array objectAtIndex:insertionIndex] objectForKey:KEY_KEY] compare:
+						[lineDict objectForKey:KEY_KEY]] == NSOrderedAscending)
+						insertionIndex++;
+
 					[array insertObject:lineDict atIndex:insertionIndex];					
 				} else {
 					[array addObject:lineDict];
