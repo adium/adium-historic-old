@@ -18,6 +18,7 @@
 
 @interface AIOutlineView (PRIVATE)
 - (void)_initOutlineView;
+- (void)expandOrCollapseItemsOfItem;
 @end
 
 @interface AIOutlineView (KFTypeSelectTableViewSupport)
@@ -211,27 +212,33 @@
         needsReload = NO;
 
 		[super reloadData];
+		
+		[self expandOrCollapseItemsOfItem:nil];
+	}
+}
 
-		//After reloading data, we correctly expand/collapse all groups
-		if ([[self delegate] respondsToSelector:@selector(outlineView:expandStateOfItem:)]) {
-			id		delegate = [self delegate];
-			int 	numberOfRows = [delegate outlineView:self numberOfChildrenOfItem:nil];
-			int 	row;
-
-			//go through all items
-			for (row = 0; row < numberOfRows; row++) {
-				id item = [delegate outlineView:self child:row ofItem:nil];
-
-				//If the item is expandable, correctly expand/collapse it
-				if ([delegate outlineView:self isItemExpandable:item]) {
-					ignoreExpandCollapse = YES;
-					if ([delegate outlineView:self expandStateOfItem:item]) {
-						[self expandItem:item];
-					} else {
-						[self collapseItem:item];
-					}
-					ignoreExpandCollapse = NO;
+- (void)expandOrCollapseItemsOfItem:(id)rootItem
+{
+	//After reloading data, we correctly expand/collapse all groups
+	if ([[self delegate] respondsToSelector:@selector(outlineView:expandStateOfItem:)]) {
+		id		delegate = [self delegate];
+		int 	numberOfRows = [delegate outlineView:self numberOfChildrenOfItem:rootItem];
+		int 	row;
+		
+		//go through all items
+		for (row = 0; row < numberOfRows; row++) {
+			id item = [delegate outlineView:self child:row ofItem:rootItem];
+			
+			//If the item is expandable, correctly expand/collapse it
+			if ([delegate outlineView:self isItemExpandable:item]) {
+				ignoreExpandCollapse = YES;
+				if ([delegate outlineView:self expandStateOfItem:item]) {
+					[self expandItem:item];
+					[self expandOrCollapseItemsOfItem:item];
+				} else {
+					[self collapseItem:item];
 				}
+				ignoreExpandCollapse = NO;
 			}
 		}
 	}
