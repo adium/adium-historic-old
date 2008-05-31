@@ -369,8 +369,14 @@
 	//Configure the contact menu
 	if (accountMenu)
 		[accountMenu rebuildMenu];
-	else
+	else {
+		/* We depend upon the accountMenu instance variable... which won't be set when the delegate methods are called initially.
+		 * We therefore renotify ourselves after AIAccountMenu creation is complete. This is cheap, because the menu items are cached
+		 * by AIAccountMenu.
+		 */
 		accountMenu = [[AIAccountMenu accountMenuWithDelegate:self submenuType:AIAccountNoSubmenu showTitleVerbs:NO] retain];
+		[self accountMenu:accountMenu didRebuildMenuItems:[accountMenu menuItems]];
+	}
 }
 
 /*!
