@@ -51,7 +51,7 @@
 		urlSchemes = [[NSDictionary alloc] initWithObjectsAndKeys:
 			@"ftp://", @"ftp",
 			nil];
-		useStrictChecking = flag;
+		strictChecking = flag;
 		AHStringOffset = 0;
 	}
 
@@ -73,8 +73,11 @@
 
 #pragma mark primitive methods
 
-
 - (BOOL)isStringValidURL:(NSString *)inString
+{
+	return [self isStringValidURL:inString usingStrict:strictChecking];
+}
+- (BOOL)isStringValidURL:(NSString *)inString usingStrict:(BOOL)useStrictChecking
 {
     AH_BUFFER_STATE buf;  // buffer for flex to scan from
 	const char		*inStringUTF8;
@@ -374,7 +377,7 @@
 			
 			if((markedLinkURL = [markedLink URL])){
 				[linkifiedString addAttribute:NSLinkAttributeName
-										value:markedLinkURL 
+										value:[markedLinkURL absoluteURL]
 										range:[markedLink range]];
 			}
 		}
