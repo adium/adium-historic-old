@@ -41,7 +41,7 @@ extern unsigned int AHStringOffset;
 @interface AHHyperlinkScanner : NSObject
 {
 	NSDictionary				*urlSchemes;
-	BOOL						 useStrictChecking;
+	BOOL						 strictChecking;
 	AH_URI_VERIFICATION_STATUS		 validStatus;
 }
 
@@ -65,12 +65,20 @@ extern unsigned int AHStringOffset;
 - (AH_URI_VERIFICATION_STATUS)validationStatus;
 
 /*!
- * @brief Determine the validity of a given string
+ * @brief Determine the validity of a given string using the default strictness
  *
  * @param inString The string to be verified
  * @return Boolean
  */
 - (BOOL)isStringValidURL:(NSString *)inString;
+
+/*!
+ * @brief Determine the validity of a given string with a custom strictness
+ *
+ * @param inString The string to be verified
+ * @return Boolean
+ */
+- (BOOL)isStringValidURL:(NSString *)inString usingStrict:(BOOL)useStrictChecking;
 
 /*!
  * @brief Fetches all the URLs from a string
