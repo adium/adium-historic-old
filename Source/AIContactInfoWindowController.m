@@ -158,14 +158,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	return KEY_INFO_WINDOW_FRAME;
 }
 
--(void)awakeFromNib
-{
-	if ([NSApp isOnLeopardOrBetter]) {
-		[[self window] setAutorecalculatesContentBorderThickness:NO forEdge:NSMinYEdge];
-		[[self window] setContentBorderThickness:29.0 forEdge:NSMinYEdge];
-	}
-}
-
 -(void)windowWillLoad
 {
 	[super windowWillLoad];
