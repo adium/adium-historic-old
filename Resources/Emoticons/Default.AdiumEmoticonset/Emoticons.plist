@@ -47,25 +47,6 @@
 			<key>Name</key>
 			<string>Baring teeth</string>
 		</dict>
-		<key>Broken heart.png</key>
-		<dict>
-			<key>Equivalents</key>
-			<array>
-				<string>(U)</string>
-				<string>(u)</string>
-			</array>
-			<key>Name</key>
-			<string>Broken heart</string>
-		</dict>
-		<key>Cat face.png</key>
-		<dict>
-			<key>Equivalents</key>
-			<array>
-				<string>(@)</string>
-			</array>
-			<key>Name</key>
-			<string>Cat</string>
-		</dict>
 		<key>Confused.png</key>
 		<dict>
 			<key>Equivalents</key>
@@ -80,19 +61,6 @@
 			<key>Name</key>
 			<string>Confused</string>
 		</dict>
-		<key>Devil.png</key>
-		<dict>
-			<key>Equivalents</key>
-			<array>
-				<string>(6)</string>
-				<string>&gt;:)</string>
-				<string>&gt;:D</string>
-				<string>&gt;: )</string>
-				<string>&gt;: D</string>
-			</array>
-			<key>Name</key>
-			<string>Devil</string>
-		</dict>
 		<key>Disappointed.png</key>
 		<dict>
 			<key>Equivalents</key>
@@ -103,16 +71,7 @@
 			<key>Name</key>
 			<string>Disappointed</string>
 		</dict>
-		<key>Dog face.png</key>
-		<dict>
-			<key>Equivalents</key>
-			<array>
-				<string>(&amp;)</string>
-			</array>
-			<key>Name</key>
-			<string>Dog</string>
-		</dict>
-		<key>Don't Tell Anyone.png</key>
+		<key>Don&apos;t Tell Anyone.png</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -121,7 +80,7 @@
 				<string>:#</string>
 			</array>
 			<key>Name</key>
-			<string>Don't tell anyone</string>
+			<string>Don&apos;t tell anyone</string>
 		</dict>
 		<key>Eye-Rolling.gif</key>
 		<dict>
@@ -131,16 +90,6 @@
 			</array>
 			<key>Name</key>
 			<string>Eye-rolling</string>
-		</dict>
-		<key>Gift.png</key>
-		<dict>
-			<key>Equivalents</key>
-			<array>
-				<string>(G)</string>
-				<string>(g)</string>
-			</array>
-			<key>Name</key>
-			<string>Gift</string>
 		</dict>
 		<key>Grin.png</key>
 		<dict>
@@ -154,29 +103,7 @@
 			<key>Name</key>
 			<string>Open Mouthed</string>
 		</dict>
-		<key>Handcuffs.png</key>
-		<dict>
-			<key>Equivalents</key>
-			<array>
-				<string>(%)</string>
-			</array>
-			<key>Name</key>
-			<string>Handcuffs</string>
-		</dict>
-		<key>Hot.png</key>
-		<dict>
-			<key>Equivalents</key>
-			<array>
-				<string>(H)</string>
-				<string>(h)</string>
-				<string>B)</string>
-				<string>B-)</string>
-				<string>(HH)</string>
-			</array>
-			<key>Name</key>
-			<string>Cool</string>
-		</dict>
-		<key>I Don't Know.png</key>
+		<key>I Don&apos;t Know.png</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -193,7 +120,7 @@
 				<string>:2</string>
 			</array>
 			<key>Name</key>
-			<string>I don't know</string>
+			<string>I don&apos;t know</string>
 		</dict>
 		<key>Lips are Sealed.png</key>
 		<dict>
@@ -208,16 +135,6 @@
 			</array>
 			<key>Name</key>
 			<string>Lips are Sealed</string>
-		</dict>
-		<key>Martini.png</key>
-		<dict>
-			<key>Equivalents</key>
-			<array>
-				<string>(D)</string>
-				<string>(d)</string>
-			</array>
-			<key>Name</key>
-			<string>Martini</string>
 		</dict>
 		<key>Nerd.png</key>
 		<dict>
@@ -234,15 +151,6 @@
 			<key>Name</key>
 			<string>Nerd</string>
 		</dict>
-		<key>Note.png</key>
-		<dict>
-			<key>Equivalents</key>
-			<array>
-				<string>(8)</string>
-			</array>
-			<key>Name</key>
-			<string>Note</string>
-		</dict>
 		<key>Party.png</key>
 		<dict>
 			<key>Equivalents</key>
@@ -251,26 +159,6 @@
 			</array>
 			<key>Name</key>
 			<string>Party</string>
-		</dict>
-		<key>Red lips.png</key>
-		<dict>
-			<key>Equivalents</key>
-			<array>
-				<string>(K)</string>
-				<string>(k)</string>
-			</array>
-			<key>Name</key>
-			<string>Red lips</string>
-		</dict>
-		<key>Red rose.png</key>
-		<dict>
-			<key>Equivalents</key>
-			<array>
-				<string>(F)</string>
-				<string>(f)</string>
-			</array>
-			<key>Name</key>
-			<string>Rose</string>
 		</dict>
 		<key>Sad.png</key>
 		<dict>
@@ -368,15 +256,6 @@
 			<key>Name</key>
 			<string>Tongue Out</string>
 		</dict>
-		<key>Sun.png</key>
-		<dict>
-			<key>Equivalents</key>
-			<array>
-				<string>(#)</string>
-			</array>
-			<key>Name</key>
-			<string>Sun</string>
-		</dict>
 		<key>Surprised.png</key>
 		<dict>
 			<key>Equivalents</key>
@@ -421,16 +300,6 @@
 			<key>Name</key>
 			<string>Thinking</string>
 		</dict>
-		<key>Wilted rose.png</key>
-		<dict>
-			<key>Equivalents</key>
-			<array>
-				<string>(W)</string>
-				<string>(w)</string>
-			</array>
-			<key>Name</key>
-			<string>Wilted rose</string>
-		</dict>
 		<key>Wink.png</key>
 		<dict>
 			<key>Equivalents</key>
@@ -444,16 +313,6 @@
 			</array>
 			<key>Name</key>
 			<string>Wink</string>
-		</dict>
-		<key>beer.png</key>
-		<dict>
-			<key>Equivalents</key>
-			<array>
-				<string>(B)</string>
-				<string>(b)</string>
-			</array>
-			<key>Name</key>
-			<string>Beer Mug</string>
 		</dict>
 		<key>bored.png</key>
 		<dict>
@@ -471,7 +330,7 @@
 		<dict>
 			<key>Equivalents</key>
 			<array>
-				<string>:'(</string>
+				<string>:&apos;(</string>
 				<string>;(</string>
 				<string>:´(</string>
 				<string>:´-(</string>
@@ -500,15 +359,13 @@
 		<dict>
 			<key>Equivalents</key>
 			<array>
+				<string>&lt;3</string>
 				<string>(L)</string>
 				<string>(l)</string>
-				<string>&lt;3</string>
 			</array>
 			<key>Name</key>
 			<string>Heart</string>
 		</dict>
 	</dict>
-	<key>Service Class</key>
-	<string>MSN</string>
 </dict>
 </plist>
