@@ -377,7 +377,7 @@
 			
 			if((markedLinkURL = [markedLink URL])){
 				[linkifiedString addAttribute:NSLinkAttributeName
-										value:[markedLinkURL absoluteURL]
+										value:markedLinkURL
 										range:[markedLink range]];
 			}
 		}
