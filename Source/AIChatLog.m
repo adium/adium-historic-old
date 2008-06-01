@@ -15,9 +15,13 @@
  */
 
 #import "AIChatLog.h"
+#import "AIObject.h"
+#import "AILoginController.h"
 #import "AIAbstractLogViewerWindowController.h"
 #import "AILoggerPlugin.h"
 #import "AICalendarDate.h"
+
+#import <AIUtilities/NSCalendarDate+ISO8601Parsing.h>
 
 @implementation AIChatLog
 
@@ -92,10 +96,27 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
 - (NSCalendarDate *)date{
 	//Determine the date of this log lazily
 	if (!date) {
-		date = [dateFromFileName([path lastPathComponent]) retain];
+		if ([[path pathExtension] isEqualToString:@"chatlog"]) {
+			NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:[NSURL fileURLWithPath:[[[[[AIObject sharedAdiumInstance] loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByAppendingPathComponent:path]]];
+			[parser setDelegate:self];
+			[parser parse];
+			[parser release];
+		}
+		if (!date) {
+			date = [dateFromFileName([path lastPathComponent]) retain];
+		}
 	}
 		
     return date;
+}
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qualifiedName attributes:(NSDictionary *)attributeDict {
+	//Stop at the first element with a date.
+	NSString *dateString = nil;
+	if ((dateString = [attributeDict objectForKey:@"time"])) {
+		date = [[NSCalendarDate calendarDateWithString:dateString strictly:YES] retain];
+		if (date)
+			[parser abortParsing];
+	}
 }
 
 - (float)rankingPercentage
