@@ -282,12 +282,15 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 - (void)updateLayoutFromPrefDict:(NSDictionary *)prefDict andThemeFromPrefDict:(NSDictionary *)themeDict
 {
 	AIContactListWindowStyle	windowStyle = [self windowStyle];
-	NSTextAlignment		contentCellAlignment;
+	NSTextAlignment		contentCellAlignment, groupCellAlignment;
 	BOOL				pillowsOrPillowsFittedWindowStyle;
 	
 	//Cells
 	[groupCell release];
 	[contentCell release];
+
+	contentCellAlignment = [[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue];
+	groupCellAlignment = [[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT] intValue];
 
 	switch (windowStyle) {
 		case AIContactListWindowStyleStandard:
@@ -304,7 +307,12 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 			contentCell = [[AIListContactBubbleCell alloc] init];
 		break;
 		case AIContactListWindowStyleContactBubbles_Fitted:
-			groupCell = [[AIListGroupBubbleToFitCell alloc] init];
+			//Right-aligned groups need to be full-width, not fitted
+			if (groupCellAlignment == NSLeftTextAlignment)
+				groupCell = [[AIListGroupBubbleToFitCell alloc] init];
+			else
+				groupCell = [[AIListGroupBubbleCell alloc] init];
+			//Content can always be to-fit
 			contentCell = [[AIListContactBubbleToFitCell alloc] init];
 		break;
 	}
@@ -319,9 +327,8 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	[contentCell setUseStatusMessageAsExtendedStatus:[self useStatusMessageAsExtendedStatus]];
 		
 	//Alignment
-	contentCellAlignment = [[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue];
 	[contentCell setTextAlignment:contentCellAlignment];
-	[groupCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT] intValue]];
+	[groupCell setTextAlignment:groupCellAlignment];
 	[contentCell setUserIconSize:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_SIZE] intValue]];
 
 	if (windowStyle != AIContactListWindowStyleContactBubbles_Fitted) {
