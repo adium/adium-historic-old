@@ -56,7 +56,7 @@
 
 - (float)filterPriority
 {
-	return HIGH_FILTER_PRIORITY;
+	return HIGHEST_FILTER_PRIORITY;
 }
 
 @end

@@ -133,7 +133,7 @@
 
 	static NSCharacterSet *enclosureSet;
 	if(!enclosureSet){
-#define URL_ENCLOSURE_CHARACTERS @"()[]{}"
+#define URL_ENCLOSURE_CHARACTERS @"(){}"
 		enclosureSet = [[NSCharacterSet characterSetWithCharactersInString:URL_ENCLOSURE_CHARACTERS] retain];
 	}
 		
@@ -240,13 +240,13 @@
                     break;
 				
 				case AIDL_CHANGESET:
-					numString = [scanString substringWithRange:NSMakeRange(1, [scanString length] - 1)];
+					numString = [scanString substringWithRange:NSMakeRange(1, [scanString length] - 2)];
 					scanString = [@"http://trac.adiumx.com/changeset/" stringByAppendingString:numString];
                     break;
 
                 case AIDL_TICKET:
 					numString = [scanString substringFromIndex:1];
-					scanString = [@"http://trac.adiumx.com/ticket/" stringByAppendingString:scanString];
+					scanString = [@"http://trac.adiumx.com/ticket/" stringByAppendingString:numString];
                     break;
                 default:
                     break;
