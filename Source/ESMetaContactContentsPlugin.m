@@ -170,7 +170,9 @@
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
-	return ([[[adium menuController] currentContextMenuObject] isKindOfClass:[AIMetaContact class]]);
+	AIListObject *listObject = [[adium menuController] currentContextMenuObject];
+	return ([listObject isKindOfClass:[AIMetaContact class]] &&
+			[(AIMetaContact *)listObject containsMultipleContacts]);
 }
 
 - (void)menu:(NSMenu *)menu needsUpdateForMenuItem:(NSMenuItem *)menuItem
