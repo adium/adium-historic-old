@@ -1242,6 +1242,10 @@
 		7E824CE106387FAF00813072 /* SHAutoValidatingTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CD206387FAF00813072 /* SHAutoValidatingTextView.m */; };
 		7E824CE306387FAF00813072 /* SHLinkEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CD406387FAF00813072 /* SHLinkEditorWindowController.m */; };
 		7E824CEB06387FAF00813072 /* SHLinkManagementPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */; };
+		7EC2E1C00DF43AC9008C86B4 /* Developer_Links.plist in Resources */ = {isa = PBXBuildFile; fileRef = 7EC2E1BF0DF43AC8008C86B4 /* Developer_Links.plist */; };
+		7EC2E1C30DF43B6A008C86B4 /* AIDeveloperLinksPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EC2E1C20DF43B6A008C86B4 /* AIDeveloperLinksPlugin.m */; };
+		7EC2E1CE0DF43DE7008C86B4 /* AIDLLexer.l in Sources */ = {isa = PBXBuildFile; fileRef = 7EC2E1CD0DF43DE7008C86B4 /* AIDLLexer.l */; };
+		7EC2E1E10DF44225008C86B4 /* AIDLLinkScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EC2E1E00DF44224008C86B4 /* AIDLLinkScanner.m */; };
 		811033510CDE170B00EC6038 /* ssl-cdsa.c in Sources */ = {isa = PBXBuildFile; fileRef = 811033500CDE170B00EC6038 /* ssl-cdsa.c */; };
 		811034050CDE216F00EC6038 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 340C1ABE0BD58FAB00D09235 /* Security.framework */; };
 		811035180CDE783800EC6038 /* SecurityInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 811035170CDE783800EC6038 /* SecurityInterface.framework */; };
@@ -1629,6 +1633,20 @@
 			proxyType = 2;
 			remoteGlobalIDString = 7EA3B0440DD1153F002A18D1;
 			remoteInfo = Test;
+		};
+		7EC2E1A60DF43928008C86B4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133 /* Adium.Framework */;
+			remoteInfo = Adium.Framework;
+		};
+		7EC2E2710DF451C3008C86B4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3496A8E707CE6CA30055BBAB /* AutoHyperlinks.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AutoHyperlinks.framework */;
+			remoteInfo = AutoHyperlinks.framework;
 		};
 		B72537BD058C45CF004BA969 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -4076,6 +4094,15 @@
 		7E824CD406387FAF00813072 /* SHLinkEditorWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHLinkEditorWindowController.m; sourceTree = "<group>"; };
 		7E824CDB06387FAF00813072 /* SHLinkManagementPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SHLinkManagementPlugin.h; sourceTree = "<group>"; };
 		7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHLinkManagementPlugin.m; sourceTree = "<group>"; };
+		7EC2E1990DF4390A008C86B4 /* Developer Links.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Developer Links.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7EC2E1BF0DF43AC8008C86B4 /* Developer_Links.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Developer_Links.plist; path = /Users/sholt/Documents/adium/Plists/Developer_Links.plist; sourceTree = "<absolute>"; };
+		7EC2E1C10DF43B6A008C86B4 /* AIDeveloperLinksPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIDeveloperLinksPlugin.h; path = "/Users/sholt/Documents/adium/Plugins/Developer Links/AIDeveloperLinksPlugin.h"; sourceTree = "<absolute>"; };
+		7EC2E1C20DF43B6A008C86B4 /* AIDeveloperLinksPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIDeveloperLinksPlugin.m; path = "/Users/sholt/Documents/adium/Plugins/Developer Links/AIDeveloperLinksPlugin.m"; sourceTree = "<absolute>"; };
+		7EC2E1CD0DF43DE7008C86B4 /* AIDLLexer.l */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; name = AIDLLexer.l; path = "Plugins/Developer Links/AIDLLexer.l"; sourceTree = "<group>"; };
+		7EC2E1D10DF440DE008C86B4 /* AIDLLexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIDLLexer.h; path = "Plugins/Developer Links/AIDLLexer.h"; sourceTree = "<group>"; };
+		7EC2E1DF0DF44224008C86B4 /* AIDLLinkScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIDLLinkScanner.h; path = "Plugins/Developer Links/AIDLLinkScanner.h"; sourceTree = "<group>"; };
+		7EC2E1E00DF44224008C86B4 /* AIDLLinkScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIDLLinkScanner.m; path = "Plugins/Developer Links/AIDLLinkScanner.m"; sourceTree = "<group>"; };
+		7EC2E1E90DF447C6008C86B4 /* AIDeveloperLinksPlugin.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIDeveloperLinksPlugin.pch; path = "/Users/sholt/Documents/adium/Plugins/Developer Links/AIDeveloperLinksPlugin.pch"; sourceTree = "<absolute>"; };
 		811033500CDE170B00EC6038 /* ssl-cdsa.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "ssl-cdsa.c"; sourceTree = "<group>"; };
 		811035170CDE783800EC6038 /* SecurityInterface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SecurityInterface.framework; path = /System/Library/Frameworks/SecurityInterface.framework; sourceTree = "<absolute>"; };
 		811036160CDE8A2500EC6038 /* AIPurpleCertificateViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIPurpleCertificateViewer.h; path = "Plugins/Purple Service/AIPurpleCertificateViewer.h"; sourceTree = "<group>"; };
@@ -4434,6 +4461,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7EC2E1970DF4390A008C86B4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B72537BA058C4577004BA969 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -4526,6 +4560,7 @@
 				3495D92D0BBF627A000EE14C /* SQL Logger.AdiumPlugin */,
 				312ED3CA0C7E875B00A6BDA9 /* Unit tests.octest */,
 				34A6876D0DD38D03008F0430 /* Facebook.AdiumPlugin */,
+				7EC2E1990DF4390A008C86B4 /* Developer Links.AdiumPlugin */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -5852,6 +5887,7 @@
 		34DC84380A7EAA21003E1636 /* Plugins (Not included in release) */ = {
 			isa = PBXGroup;
 			children = (
+				7EC2E1BE0DF43A94008C86B4 /* Developer Links */,
 				34B3241D09B9FF6900029361 /* IRC Libpurple Plugin */,
 				B782F088058BB60B00AF4BBA /* LaTeX Plugin */,
 				38D8FA240A8A45E00078E442 /* QuickTime */,
@@ -7187,6 +7223,21 @@
 			path = "Plugins/Link Management";
 			sourceTree = "<group>";
 		};
+		7EC2E1BE0DF43A94008C86B4 /* Developer Links */ = {
+			isa = PBXGroup;
+			children = (
+				7EC2E1E90DF447C6008C86B4 /* AIDeveloperLinksPlugin.pch */,
+				7EC2E1BF0DF43AC8008C86B4 /* Developer_Links.plist */,
+				7EC2E1C10DF43B6A008C86B4 /* AIDeveloperLinksPlugin.h */,
+				7EC2E1C20DF43B6A008C86B4 /* AIDeveloperLinksPlugin.m */,
+				7EC2E1D10DF440DE008C86B4 /* AIDLLexer.h */,
+				7EC2E1CD0DF43DE7008C86B4 /* AIDLLexer.l */,
+				7EC2E1DF0DF44224008C86B4 /* AIDLLinkScanner.h */,
+				7EC2E1E00DF44224008C86B4 /* AIDLLinkScanner.m */,
+			);
+			name = "Developer Links";
+			sourceTree = "<group>";
+		};
 		8110354B0CDE7EFF00EC6038 /* Certificate Viewer */ = {
 			isa = PBXGroup;
 			children = (
@@ -8398,6 +8449,25 @@
 			productReference = 4B7F78B50597F42400162728 /* Adium Crash Reporter.app */;
 			productType = "com.apple.product-type.application";
 		};
+		7EC2E1980DF4390A008C86B4 /* Developer links */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7EC2E19F0DF4390E008C86B4 /* Build configuration list for PBXNativeTarget "Developer links" */;
+			buildPhases = (
+				7EC2E1950DF4390A008C86B4 /* Resources */,
+				7EC2E1960DF4390A008C86B4 /* Sources */,
+				7EC2E1970DF4390A008C86B4 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				7EC2E1A70DF43928008C86B4 /* PBXTargetDependency */,
+				7EC2E2720DF451C3008C86B4 /* PBXTargetDependency */,
+			);
+			name = "Developer links";
+			productName = "Developer links";
+			productReference = 7EC2E1990DF4390A008C86B4 /* Developer Links.AdiumPlugin */;
+			productType = "com.apple.product-type.bundle";
+		};
 		B72537BB058C4577004BA969 /* Latex Plugin */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DADE8E1D085507450062B664 /* Build configuration list for PBXNativeTarget "Latex Plugin" */;
@@ -8503,6 +8573,7 @@
 				34F3B9510BDF15F40011AB34 /* Touch Framework Bundles to Executable Date */,
 				312ED3C90C7E875B00A6BDA9 /* Unit tests */,
 				34A687410DD38D03008F0430 /* Facebook */,
+				7EC2E1980DF4390A008C86B4 /* Developer links */,
 			);
 		};
 /* End PBXProject section */
@@ -9037,6 +9108,14 @@
 				4B215DBE0598A71400305B3C /* crashDuck.icns in Resources */,
 				4BB7670D05B31DBA00E89FA2 /* crashDuck.png in Resources */,
 				34E0E9B807CC4B3600A82198 /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7EC2E1950DF4390A008C86B4 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7EC2E1C00DF43AC9008C86B4 /* Developer_Links.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9817,6 +9896,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7EC2E1960DF4390A008C86B4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7EC2E1C30DF43B6A008C86B4 /* AIDeveloperLinksPlugin.m in Sources */,
+				7EC2E1CE0DF43DE7008C86B4 /* AIDLLexer.l in Sources */,
+				7EC2E1E10DF44225008C86B4 /* AIDLLinkScanner.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B72537B8058C4577004BA969 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -9972,6 +10061,16 @@
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
 			targetProxy = 6C3E0151054445C000A4AE2E /* PBXContainerItemProxy */;
+		};
+		7EC2E1A70DF43928008C86B4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
+			targetProxy = 7EC2E1A60DF43928008C86B4 /* PBXContainerItemProxy */;
+		};
+		7EC2E2720DF451C3008C86B4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AutoHyperlinks.framework;
+			targetProxy = 7EC2E2710DF451C3008C86B4 /* PBXContainerItemProxy */;
 		};
 		B72537BE058C45CF004BA969 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -12160,6 +12259,115 @@
 			};
 			name = "Deployment-Debug_PPC-Only";
 		};
+		7EC2E19B0DF4390C008C86B4 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = "";
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Plugins/Developer Links/AIDeveloperLinksPlugin.pch";
+				INFOPLIST_FILE = Plists/Developer_Links.plist;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+					"-framework",
+					AutoHyperlinks,
+					"-framework",
+					Adium,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "Developer Links";
+				WRAPPER_EXTENSION = AdiumPlugin;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		7EC2E19C0DF4390C008C86B4 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = "";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Plugins/Developer Links/AIDeveloperLinksPlugin.pch";
+				INFOPLIST_FILE = Plists/Developer_Links.plist;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+					"-framework",
+					AutoHyperlinks,
+					"-framework",
+					Adium,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "Developer Links";
+				WRAPPER_EXTENSION = AdiumPlugin;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		7EC2E19D0DF4390C008C86B4 /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = "";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Plugins/Developer Links/AIDeveloperLinksPlugin.pch";
+				INFOPLIST_FILE = Plists/Developer_Links.plist;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+					"-framework",
+					AutoHyperlinks,
+					"-framework",
+					Adium,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "Developer Links";
+				WRAPPER_EXTENSION = AdiumPlugin;
+				ZERO_LINK = YES;
+			};
+			name = "Deployment-Debug";
+		};
+		7EC2E19E0DF4390C008C86B4 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = "";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Plugins/Developer Links/AIDeveloperLinksPlugin.pch";
+				INFOPLIST_FILE = Plists/Developer_Links.plist;
+				INSTALL_PATH = "";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+					"-framework",
+					AutoHyperlinks,
+					"-framework",
+					Adium,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = "Developer Links";
+				WRAPPER_EXTENSION = AdiumPlugin;
+				ZERO_LINK = YES;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
 		DACF3EDF085574F6006BFB18 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -13096,6 +13304,17 @@
 				38D8FADE0A8A4F350078E442 /* Deployment */,
 				38D8FADF0A8A4F350078E442 /* Deployment-Debug */,
 				38D8FAE00A8A4F350078E442 /* Deployment-Debug_PPC-Only */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		7EC2E19F0DF4390E008C86B4 /* Build configuration list for PBXNativeTarget "Developer links" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7EC2E19B0DF4390C008C86B4 /* Development */,
+				7EC2E19C0DF4390C008C86B4 /* Deployment */,
+				7EC2E19D0DF4390C008C86B4 /* Deployment-Debug */,
+				7EC2E19E0DF4390C008C86B4 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
