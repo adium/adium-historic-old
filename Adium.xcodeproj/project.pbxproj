@@ -1638,14 +1638,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 34BD9DAF05314751000AB133 /* Adium.Framework */;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
 			remoteInfo = Adium.Framework;
 		};
 		7EC2E2710DF451C3008C86B4 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3496A8E707CE6CA30055BBAB /* AutoHyperlinks.framework.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AutoHyperlinks.framework */;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AutoHyperlinks.framework;
 		};
 		B72537BD058C45CF004BA969 /* PBXContainerItemProxy */ = {
@@ -4095,14 +4095,14 @@
 		7E824CDB06387FAF00813072 /* SHLinkManagementPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SHLinkManagementPlugin.h; sourceTree = "<group>"; };
 		7E824CDC06387FAF00813072 /* SHLinkManagementPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHLinkManagementPlugin.m; sourceTree = "<group>"; };
 		7EC2E1990DF4390A008C86B4 /* Developer Links.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Developer Links.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
-		7EC2E1BF0DF43AC8008C86B4 /* Developer_Links.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Developer_Links.plist; path = /Users/sholt/Documents/adium/Plists/Developer_Links.plist; sourceTree = "<absolute>"; };
-		7EC2E1C10DF43B6A008C86B4 /* AIDeveloperLinksPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIDeveloperLinksPlugin.h; path = "/Users/sholt/Documents/adium/Plugins/Developer Links/AIDeveloperLinksPlugin.h"; sourceTree = "<absolute>"; };
-		7EC2E1C20DF43B6A008C86B4 /* AIDeveloperLinksPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIDeveloperLinksPlugin.m; path = "/Users/sholt/Documents/adium/Plugins/Developer Links/AIDeveloperLinksPlugin.m"; sourceTree = "<absolute>"; };
+		7EC2E1BF0DF43AC8008C86B4 /* Developer_Links.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Developer_Links.plist; path = Plists/Developer_Links.plist; sourceTree = "<group>"; };
+		7EC2E1C10DF43B6A008C86B4 /* AIDeveloperLinksPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIDeveloperLinksPlugin.h; path = "Plugins/Developer Links/AIDeveloperLinksPlugin.h"; sourceTree = "<group>"; };
+		7EC2E1C20DF43B6A008C86B4 /* AIDeveloperLinksPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIDeveloperLinksPlugin.m; path = "Plugins/Developer Links/AIDeveloperLinksPlugin.m"; sourceTree = "<group>"; };
 		7EC2E1CD0DF43DE7008C86B4 /* AIDLLexer.l */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.lex; name = AIDLLexer.l; path = "Plugins/Developer Links/AIDLLexer.l"; sourceTree = "<group>"; };
 		7EC2E1D10DF440DE008C86B4 /* AIDLLexer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIDLLexer.h; path = "Plugins/Developer Links/AIDLLexer.h"; sourceTree = "<group>"; };
 		7EC2E1DF0DF44224008C86B4 /* AIDLLinkScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIDLLinkScanner.h; path = "Plugins/Developer Links/AIDLLinkScanner.h"; sourceTree = "<group>"; };
 		7EC2E1E00DF44224008C86B4 /* AIDLLinkScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIDLLinkScanner.m; path = "Plugins/Developer Links/AIDLLinkScanner.m"; sourceTree = "<group>"; };
-		7EC2E1E90DF447C6008C86B4 /* AIDeveloperLinksPlugin.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIDeveloperLinksPlugin.pch; path = "/Users/sholt/Documents/adium/Plugins/Developer Links/AIDeveloperLinksPlugin.pch"; sourceTree = "<absolute>"; };
+		7EC2E1E90DF447C6008C86B4 /* AIDeveloperLinksPlugin.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIDeveloperLinksPlugin.pch; path = "Plugins/Developer Links/AIDeveloperLinksPlugin.pch"; sourceTree = "<group>"; };
 		811033500CDE170B00EC6038 /* ssl-cdsa.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "ssl-cdsa.c"; sourceTree = "<group>"; };
 		811035170CDE783800EC6038 /* SecurityInterface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SecurityInterface.framework; path = /System/Library/Frameworks/SecurityInterface.framework; sourceTree = "<absolute>"; };
 		811036160CDE8A2500EC6038 /* AIPurpleCertificateViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIPurpleCertificateViewer.h; path = "Plugins/Purple Service/AIPurpleCertificateViewer.h"; sourceTree = "<group>"; };
