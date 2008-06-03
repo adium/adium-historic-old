@@ -39,6 +39,8 @@
 
 #define PREF_GROUP_CONTACT_LIST					@"Contact List"
 
+#define	KEY_HIDE_CONTACT_LIST_GROUPS			@"Hide Contact List Groups"
+
 #define SLIDE_ALLOWED_RECT_EDGE_MASK			(AIMinXEdgeMask | AIMaxXEdgeMask) /* Screen edges on which sliding is allowde */
 #define DOCK_HIDING_MOUSE_POLL_INTERVAL			0.1 /* Interval at which to check the mouse position for sliding */
 #define	WINDOW_SLIDING_DELAY					0.2 /* Time after the mouse is in the right place before the window slides on screen */
@@ -184,6 +186,7 @@ static NSMutableDictionary *screenSlideBoundaryRectDictionary = nil;
 	id<AIPreferenceController> preferenceController = [adium preferenceController];
     //Observe preference changes
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 	
 	//Preference code below assumes layout is done before theme.
@@ -411,6 +414,10 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 		}
 	}
 	
+	if ([group isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]) {
+		[contactListController setUseContactListGroups:![[prefDict objectForKey:KEY_HIDE_CONTACT_LIST_GROUPS] boolValue]];
+	}
+	
 	//Layout and Theme ------------
 	BOOL groupLayout = ([group isEqualToString:PREF_GROUP_LIST_LAYOUT]);
 	BOOL groupTheme = ([group isEqualToString:PREF_GROUP_LIST_THEME]);
@@ -435,7 +442,7 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 				[contactListView setBackgroundImage:nil];
 			}
 		}
-		
+
 		//Both layout and theme
 		[contactListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
 
