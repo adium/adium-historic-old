@@ -57,11 +57,21 @@ TLDs            ({ccTLD}|{sTLD}|{uTLD}|arpa|local)
 %}
 userAndPass     [^:@]+(:[^:@]+)?
 singleDomain    [_[:alnum:]\x80-\xf4-]+
+
 urlPath         \/[^[:space:]]*
-urlSpecifier    ({singleDomain}\.)+{TLDs}(:[0-9]+)?{urlPath}?
+urlSpec         ({singleDomain}\.)+{TLDs}(:[0-9]+)?{urlPath}?
+urlCSpec        {singleDomain}(\.{singleDomain})*(:[0-9]+)?{urlPath}?
+
 ipv4address     ([0-9]{1,3}\.){3}([0-9]{1,3})
 ipURL           {ipv4address}(:[0-9]+)?{urlPath}?
-mailSpecifier   [^:\/[:space:]]+\@.+\.{TLDs}
+
+hex4            [0-9A-Fa-f]{1,4}
+ipv6HexSeq      {hex4}?(::?{hex4}){1,7}
+ipv6HexPart     ({ipv6HexSeq})|(::{ipv6HexSeq})
+ipv6Address     {ipv6HexPart}({ipv4address})?
+ipv6URL         \[{ipv6Address}](:[0-9]+)?{urlPath}?
+
+mailSpec        [^:\/[:space:]]+\@.+\.{TLDs}
 jabberSpec      xmpp:.+\@.+\.{TLDs}{urlPath}?(\?[[:alnum:]]+[;&][^[:space:]]*)?
 aolIMSpec       aim:goim\?screenname=[^\ \t\n&]+(&message=.+)?
 aolChatSpec     aim:gochat\?roomname=[^\ \t\n&]+
@@ -72,12 +82,6 @@ rdarSpec        (rdar|radr|radar|x-radar):\/\/(problems?\/)?[0-9]+(&[0-9]+)*
 spotifySpec     spotify:(track|album|artist|search|playlist|user|radio):[^<>]+
 gtalkSpec       gtalk:(chat|call|gtalk)\?jid=.+\@.+\.{TLDs}(&from_jid=.+\@.+\.{TLDs})?
 myimSpec        myim:(addContact|sendIM)\?(((uID|cID)=[0-9]*&?)|(auto=(true|false)&?))+
-
-hex4            [0-9A-Fa-f]{1,4}
-ipv6HexSeq      {hex4}?(::?{hex4}){1,7}
-ipv6HexPart     ({ipv6HexSeq})|(::{ipv6HexSeq})
-ipv6Address     {ipv6HexPart}({ipv4address})?
-ipv6URL         \[{ipv6Address}](:[0-9]+)?{urlPath}?
 
 %{
 /* Special patterns to ignore */
@@ -90,16 +94,14 @@ ignoreable      (b\.sc|m\.in)
 %x CANONICAL
 %%
 
-<CANONICAL>({userAndPass}@)?{singleDomain}(\.{singleDomain})*(:[0-9]+)?{urlPath}? |
-<CANONICAL>({userAndPass}@)?{ipURL}                                               |
-<CANONICAL>({userAndPass}@)?{ipv6URL}                                             {AHStringOffset += AHleng;
-                                                                                   AHleng += AHValidShift;
-                                                                                   BEGIN INITIAL;
-                                                                                   return AH_URL_VALID;}
+<CANONICAL>({userAndPass}@)?{urlCSpec}|{ipURL}|{ipv6URL} {AHStringOffset += AHleng;
+                                                          AHleng += AHValidShift;
+                                                          BEGIN INITIAL;
+                                                          return AH_URL_VALID;}
 
-<CANONICAL>.*                                                                     {AHStringOffset += AHleng;
-                                                                                   BEGIN INITIAL;
-                                                                                   return AH_URL_INVALID;}
+<CANONICAL>.*                                            {AHStringOffset += AHleng;
+                                                          BEGIN INITIAL;
+                                                          return AH_URL_INVALID;}
 
 {ignoreable}            {AHStringOffset += AHleng; return AH_URL_INVALID;}
 
@@ -126,12 +128,12 @@ notes:\/\/              |
 gopher:\/\/             |
 x-man-page:\/\/         {AHStringOffset += AHleng; AHValidShift = AHleng; BEGIN CANONICAL;}
 
-mailto:{mailSpecifier}  {AHStringOffset += AHleng; return AH_MAILTO_VALID;}
-{mailSpecifier}         {AHStringOffset += AHleng; return AH_MAILTO_DEGENERATE;}
+mailto:{mailSpec}       {AHStringOffset += AHleng; return AH_MAILTO_VALID;}
+{mailSpec}              {AHStringOffset += AHleng; return AH_MAILTO_DEGENERATE;}
 
-{urlSpecifier}          {AHStringOffset += AHleng; return AH_URL_DEGENERATE;}
+{urlSpec}               {AHStringOffset += AHleng; return AH_URL_DEGENERATE;}
 
-sip:{mailSpecifier}     |
+sip:{mailSpec}          |
 {myimSpec}              |
 {jabberSpec}            |
 {gtalkSpec}             |
