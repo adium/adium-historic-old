@@ -195,6 +195,7 @@ typedef enum {
 	NSArray								*draggedContacts;
 	NSString							*dragOperation;
 
+	BOOL								useContactListGroups;
 	int									indentationPerLevel[9];
 }
 
@@ -207,6 +208,7 @@ typedef enum {
 - (ESObjectWithProperties<AIContainingObject> *)contactListRoot;
 
 - (void)setHideRoot:(BOOL)inHideRoot;
+- (void)setUseContactListGroups:(BOOL)useContactListGroups;
 - (void)reloadData;
 
 - (void)setBackgroundOpacity:(float)opacity;

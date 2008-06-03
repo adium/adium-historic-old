@@ -78,6 +78,7 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 		dragItems = nil;
 		showTooltips = YES;
 		showTooltipsInBackground = NO;
+		useContactListGroups = YES;
 		backgroundOpacity = 1.0;
 
 		//Watch for drags ending so we can clear any cached drag data
@@ -170,6 +171,26 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	}
 }
 
+- (void)updateIndentationPerLevel
+{
+	if (useContactListGroups) {
+		indentationPerLevel[0] = 0;
+		indentationPerLevel[1] = 0;
+		indentationPerLevel[2] = 10;
+	} else {
+		indentationPerLevel[0] = 0;
+		indentationPerLevel[1] = 10;
+		indentationPerLevel[2] = 10;		
+	}
+}
+
+- (void)setUseContactListGroups:(BOOL)flag
+{
+	useContactListGroups = flag;
+	
+	[self updateIndentationPerLevel];
+}
+
 //Setup the window after it has loaded and our cells have been configured
 - (void)configureViewsAndTooltips
 {
@@ -192,11 +213,8 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	//We handle our own intercell spacing, so override the default (3.0, 2.0) to be (0.0, 0.0) instead.
 	[contactListView setIntercellSpacing:NSZeroSize];
 	[contactListView setIndentationPerLevel:0];
-	
-	indentationPerLevel[0] = 0;
-	indentationPerLevel[1] = 0;
-	indentationPerLevel[2] = 10;
-	
+	[self updateIndentationPerLevel];
+
 	[scrollView_contactList setDrawsBackground:NO];
     [scrollView_contactList setAutoScrollToBottom:NO];
     [scrollView_contactList setAutohidesScrollers:YES];
