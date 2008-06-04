@@ -47,7 +47,8 @@
 // return an instance of AILoginController
 + (AILoginWindowController *)loginWindowControllerWithOwner:(id)inOwner
 {
-    return [[[self alloc] initWithOwner:inOwner windowNibName:LOGIN_WINDOW_NIB] autorelease];
+	/* Release self in windowWillClose: */
+    return [[self alloc] initWithOwner:inOwner windowNibName:LOGIN_WINDOW_NIB];
 }
 
 
@@ -260,6 +261,7 @@
 {
 	[super windowWillClose:sender];
 	[loginTimer invalidate]; [loginTimer release]; loginTimer = nil;
+	[self autorelease];
 }
 
 - (void)disableLoginTimeout
