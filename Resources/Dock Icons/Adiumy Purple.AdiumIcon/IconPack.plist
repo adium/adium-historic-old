@@ -9,10 +9,33 @@
 		<key>LinkURL</key>
 		<string>http://www.artofadambetts.com/</string>
 		<key>Title</key>
-		<string>Adiumy Purple</string>
+		<string>Adiumy Black</string>
 	</dict>
 	<key>State</key>
 	<dict>
+		<key>Invisible</key>
+		<dict>
+			<key>Overlay</key>
+			<false/>
+			<key>Animated</key>
+			<false/>
+			<key>Image</key>
+			<string>Invisible.png</string>
+		</dict>
+		<key>InvisibleAlert</key>
+		<dict>
+			<key>Animated</key>
+			<true/>
+			<key>Images</key>
+			<array>
+				<string>InvisibleFlap.png</string>
+				<string>Invisible.png</string>
+			</array>
+			<key>Overlay</key>
+			<false/>
+			<key>Delay</key>
+			<real>0.5</real>
+		</dict>
 		<key>Alert</key>
 		<dict>
 			<key>Animated</key>
@@ -59,7 +82,7 @@
 			<key>Animated</key>
 			<true/>
 			<key>Delay</key>
-			<real>0.20000000000000001</real>
+			<real>0.2</real>
 			<key>Images</key>
 			<array>
 				<string>../Shared Images/Connect1.png</string>
