@@ -213,7 +213,7 @@
 			<key>Name</key>
 			<string>Cross Fingers</string>
 		</dict>
-		<key>Crying.png</key>
+		<key>Crying.gif</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -295,6 +295,15 @@
 			<key>Name</key>
 			<string>Embarrassed</string>
 		</dict>
+		<key>Eye-rolling.gif</key>
+		<dict>
+			<key>Equivalents</key>
+			<array>
+				<string>8-)</string>
+			</array>
+			<key>Name</key>
+			<string>Eye-rolling</string>
+		</dict>
 		<key>Filmstrip.png</key>
 		<dict>
 			<key>Equivalents</key>
@@ -358,7 +367,7 @@
 			<key>Name</key>
 			<string>Cool</string>
 		</dict>
-		<key>I Don't Know.png</key>
+		<key>I Don't Know.gif</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -462,8 +471,6 @@
 				<string>:-B</string>
 				<string>:B</string>
 				<string>=B</string>
-				<string>8-)</string>
-				<string>8)</string>
 				<string>=b</string>
 			</array>
 			<key>Name</key>
@@ -478,7 +485,7 @@
 			<key>Name</key>
 			<string>Note</string>
 		</dict>
-		<key>Party.png</key>
+		<key>Party.gif</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
