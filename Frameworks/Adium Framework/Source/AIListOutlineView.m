@@ -179,7 +179,7 @@
 	//Enumerate all rows, find the widest one
 	for (row = 0; row < numberOfRows; row++) {
 		id			item = [self itemAtRow:row];
-		NSCell		*cell = ([self isExpandable:item] ? groupCell : contentCell);
+		NSCell		*cell = ([theDelegate outlineView:self isGroup:item] ? groupCell : contentCell);
 	
 		[theDelegate outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
 		int	width = [(AIListCell *)cell cellWidth];
