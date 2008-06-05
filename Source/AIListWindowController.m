@@ -443,6 +443,13 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 			}
 		}
 
+		EXTENDED_STATUS_STYLE statusStyle = [[layoutDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_STYLE] intValue];
+		EXTENDED_STATUS_POSITION statusPosition = [[layoutDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_POSITION] intValue];
+		[contactListController setAutoresizeHorizontallyWithIdleTime:
+		 ((statusStyle == IDLE_ONLY || statusStyle == IDLE_AND_STATUS) &&
+		  (statusPosition == EXTENDED_STATUS_POSITION_BESIDE_NAME || statusPosition == EXTENDED_STATUS_POSITION_BOTH))];
+		[contactListController contactListDesiredSizeChanged];
+
 		//Both layout and theme
 		[contactListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
 

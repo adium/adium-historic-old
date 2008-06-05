@@ -26,15 +26,16 @@ typedef enum {
 } AIDockToBottomType;
 
 @interface AIListController : AIAbstractListController {
-    NSSize								minWindowSize;
-    BOOL								autoResizeVertically;
-    BOOL								autoResizeHorizontally;
-	int									maxWindowWidth;
-	int									forcedWindowWidth;
+    NSSize					minWindowSize;
+    BOOL					autoResizeVertically;
+    BOOL					autoResizeHorizontally;
+	BOOL					autoresizeHorizontallyWithIdleTime;
+	int						maxWindowWidth;
+	int						forcedWindowWidth;
 
-	AIDockToBottomType 					dockToBottomOfScreen;
+	AIDockToBottomType 		dockToBottomOfScreen;
 	
-	BOOL								needsAutoResize;
+	BOOL					needsAutoResize;
 }
 
 - (id)initWithContactList:(AIListObject<AIContainingObject> *)aContactList
@@ -54,6 +55,7 @@ typedef enum {
 - (void)setMinWindowSize:(NSSize)inSize;
 - (void)setMaxWindowWidth:(int)inWidth;
 - (void)setAutoresizeHorizontally:(BOOL)flag;
+- (void)setAutoresizeHorizontallyWithIdleTime:(BOOL)flag;
 - (void)setAutoresizeVertically:(BOOL)flag;
 - (void)setForcedWindowWidth:(int)inWidth;
 
