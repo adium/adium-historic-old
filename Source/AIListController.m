@@ -413,6 +413,9 @@
 - (void)setForcedWindowWidth:(int)inWidth {
 	forcedWindowWidth = inWidth;
 }
+- (void)setAutoresizeHorizontallyWithIdleTime:(BOOL)flag {
+	autoresizeHorizontallyWithIdleTime = flag;
+}
 
 //Content Updating -----------------------------------------------------------------------------------------------------
 #pragma mark Content Updating
@@ -489,7 +492,8 @@
 
     //Resize the contact list horizontally
     if (autoResizeHorizontally) {
-		if (([keys containsObject:@"Display Name"] || [keys containsObject:@"Long Display Name"])) {
+		if ([keys containsObject:@"Display Name"] || [keys containsObject:@"Long Display Name"] ||
+			(autoresizeHorizontallyWithIdleTime && [keys containsObject:@"IdleReadable"])) {
 			[self contactListDesiredSizeChanged];
 		}
     }
