@@ -131,12 +131,14 @@
 		idle = (showIdle ? [inObject integerValueForProperty:@"Idle"] : 0);
 
 		//
+		NSString *idleString = ((idle > 0) ? [self idleStringForMinutes:idle] : nil);
+
 		if (idle > 0 && statusMessage) {
-			finalMessage = [NSString stringWithFormat:@"(%@) %@",[self idleStringForMinutes:idle], statusMessage];
-			finalIdleReadable = [NSString stringWithFormat:@"(%@)", [self idleStringForMinutes:idle]];
+			finalMessage = [NSString stringWithFormat:@"(%@) %@",idleString, statusMessage];
+			finalIdleReadable = [NSString stringWithFormat:@"(%@)", idleString];
 		} else if (idle > 0) {
-			finalMessage = [NSString stringWithFormat:@"(%@)",[self idleStringForMinutes:idle]];
-			finalIdleReadable = [NSString stringWithFormat:@"(%@)", [self idleStringForMinutes:idle]];
+			finalMessage = [NSString stringWithFormat:@"(%@)",idleString];
+			finalIdleReadable = [NSString stringWithFormat:@"(%@)", idleString];
 		} else {
 			finalMessage = statusMessage;
 		}
