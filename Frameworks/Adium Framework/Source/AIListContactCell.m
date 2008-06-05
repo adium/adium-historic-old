@@ -117,7 +117,7 @@
 	[displayName release];
 	
 	// Also account for idle times.
-	if (idleTimeVisible && !idleTimeIsBelow && [listObject displayArrayObjectForKey:@"IdleReadable"]) {
+	if (extendedStatusVisible && idleTimeVisible && !idleTimeIsBelow && [listObject displayArrayObjectForKey:@"IdleReadable"]) {
 		NSString		*idleTimeString = [listObject displayArrayObjectForKey:@"IdleReadable"];
 		
 		if (statusMessageVisible && !statusMessageIsBelow && [listObject statusMessageString]) {
