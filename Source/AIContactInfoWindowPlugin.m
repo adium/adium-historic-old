@@ -56,11 +56,8 @@
 	
 	if (listObject) {
 		[NSApp activateIgnoringOtherApps:YES];
-		
-		AIContactInfoWindowController *contactInfoController = [AIContactInfoWindowController showInfoWindowForListObject:listObject];
-		[contactInfoController loadInfoForListObject:listObject];
 
-		[[contactInfoController window] makeKeyAndOrderFront:nil];
+		[AIContactInfoWindowController showInfoWindowForListObject:listObject];
 	}
 }
 
