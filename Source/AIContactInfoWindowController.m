@@ -270,6 +270,11 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 {
 	if (inObject != displayedObject) {
 		[displayedObject release];
+		
+		if ([inObject isKindOfClass:[AIListContact class]]) {
+			inObject = [(AIListContact *)inObject parentContact];
+		}
+		
 		displayedObject = [inObject retain];
 		
 		//Ensure our window is loaded
@@ -282,11 +287,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 //Change the list object
 - (void)configureForListObject:(AIListObject *)inObject
-{
-	if ([inObject isKindOfClass:[AIListContact class]]) {
-		inObject = [(AIListContact *)inObject parentContact];
-	}
-	
+{	
 	//Set the title of the window.
 	if (inObject) {
 		[[self window] setTitle:[NSString stringWithFormat:AILocalizedString(@"%@'s Info",nil), [inObject displayName]]];
