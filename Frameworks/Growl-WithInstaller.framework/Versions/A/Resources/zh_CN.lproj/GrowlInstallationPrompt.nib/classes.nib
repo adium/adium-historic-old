@@ -10,7 +10,6 @@
                 "button_install" = NSButton; 
                 "checkBox_dontAskAgain" = NSButton; 
                 "scrollView_growlInfo" = NSScrollView; 
-                spinner = NSProgressIndicator; 
                 "textView_growlInfo" = NSTextView; 
             }; 
             SUPERCLASS = NSWindowController; 
