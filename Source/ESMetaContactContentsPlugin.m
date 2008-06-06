@@ -50,6 +50,11 @@
 											 keyEquivalent:@""];
 	[[adium menuController] addContextualMenuItem:contextualMenuItem
 									   toLocation:Context_Contact_ListAction];
+
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(inspectedObjectDidChange:)
+									   name:AIContactInfoInspectorDidChangeInspectedObject
+									 object:nil];
 }
 
 - (void)dealloc
@@ -149,6 +154,31 @@
 	}
     
     return [entry autorelease];
+}
+
+#pragma mark Automatic temporary expansion
+- (void)inspectedObjectDidChange:(NSNotification *)inNotification
+{
+	AIListObject *oldListObject = [[inNotification userInfo] objectForKey:KEY_PREVIOUS_INSPECTED_OBJECT];
+	AIListObject *newListObject = [[inNotification userInfo] objectForKey:KEY_NEW_INSPECTED_OBJECT];
+
+	if (oldListObject && [oldListObject isKindOfClass:[AIMetaContact class]] &&
+		[[oldListObject valueForProperty:@"TemporaryMetaContactExpansion"] boolValue]) {
+		[oldListObject setValue:nil
+					forProperty:@"TemporaryMetaContactExpansion"
+						 notify:NotifyNever];
+		[[adium notificationCenter] postNotificationName:AIPerformCollapseItemNotification
+												  object:oldListObject];
+	}
+
+	if (newListObject && [newListObject isKindOfClass:[AIMetaContact class]] &&
+		![(AIMetaContact *)newListObject isExpanded]) {
+		[newListObject setValue:[NSNumber numberWithBool:YES]
+					forProperty:@"TemporaryMetaContactExpansion"
+						 notify:NotifyNever];
+		[[adium notificationCenter] postNotificationName:AIPerformExpandItemNotification
+												  object:newListObject];
+	}
 }
 
 #pragma mark Menu
