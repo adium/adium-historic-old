@@ -58,7 +58,8 @@ enum segments {
 };
 
 @interface AIContactInfoWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName;
+- (void)configureForListObject:(AIListObject *)inObject;
+
 -(void)segmentSelected:(id)sender animate:(BOOL)shouldAnimate;
 - (void)selectionChanged:(NSNotification *)notification;
 - (void)setupToolbarSegments;
@@ -81,12 +82,12 @@ enum segments {
 
 static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
--(IBAction)segmentSelected:(id)sender
+- (IBAction)segmentSelected:(id)sender
 {
 	[self segmentSelected:sender animate:YES];
 }
 
--(void)segmentSelected:(id)sender animate:(BOOL)shouldAnimate
+- (void)segmentSelected:(id)sender animate:(BOOL)shouldAnimate
 {
 	//Action method for the Segmented Control, which is actually the toolbar.
 	int currentSegment = [sender selectedSegment];
@@ -100,35 +101,18 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 }
 
 //Return the shared contact info window
-+ (id)showInfoWindowForListObject:(AIListObject *)listObject
++ (AIContactInfoWindowController *)showInfoWindowForListObject:(AIListObject *)listObject
 {
 	//Create the window
 	if (!sharedContactInfoInstance) {
 		sharedContactInfoInstance = [[self alloc] initWithWindowNibName:CONTACT_INFO_NIB];
 	}
 
-	//Configure and show window
-	if ([listObject isKindOfClass:[AIListContact class]]) {
-		AIListContact *parentContact = [(AIListContact *)listObject parentContact];
-		
-		/* Use the parent contact if it is a valid meta contact which contains contacts
-		 * If this contact is within a metacontact but not currently listed on any buddy list, we don't want to 
-		 * display the effectively-invisible metacontact's info but rather the info of this contact itself.
-		 */
-		if (![parentContact isKindOfClass:[AIMetaContact class]] ||
-			[[(AIMetaContact *)parentContact listContacts] count]) {
-			sharedContactInfoInstance->displayedObject = parentContact;
-		} else {
-			 sharedContactInfoInstance->displayedObject = listObject;
-		}
-	} else {
-		//We have a group, let's roll with it.
-		sharedContactInfoInstance->displayedObject = listObject;
-	}
+	[sharedContactInfoInstance setDisplayedListObject:listObject];
 	
 	[[sharedContactInfoInstance window] makeKeyAndOrderFront:nil];
 
-	return (sharedContactInfoInstance);
+	return sharedContactInfoInstance;
 }
 
 //Close the info window
@@ -183,8 +167,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (void)windowDidLoad
 {
 	[super windowDidLoad];
-	
-	[self configureForListObject:displayedObject];
 
 	//Localization
 	[self setupToolbarSegments];
@@ -203,11 +185,6 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 	[inspectorToolbar setSelectedSegment:selectedSegment];
 	[self segmentSelected:inspectorToolbar];
-	
-
-	//contactListController = [[ESContactInfoListController alloc] initWithContactListView:contactListView
-//																			inScrollView:scrollView_contactList
-//																				delegate:self];
 }
 
 - (void)windowWillClose:(NSNotification *)inNotification
@@ -285,16 +262,21 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 {
 	AIListObject	*object = [[adium interfaceController] selectedListObject];
 	if (object) {
-		[self configureForListObject:object];
+		[self setDisplayedListObject:object];
 	}
 }
 
-- (void)loadInfoForListObject:(AIListObject *)aListObject
+- (void)setDisplayedListObject:(AIListObject *)inObject
 {
-	//This method is how the Get Info toolbar item works in the Message Window Toolbar. 
-	
-	if (aListObject) {
-		[self configureForListObject:aListObject];
+	if (inObject != displayedObject) {
+		[displayedObject release];
+		displayedObject = [inObject retain];
+		
+		//Ensure our window is loaded
+		[self window];
+		
+		//Configure for the new object
+		[self configureForListObject:inObject];
 	}
 }
 

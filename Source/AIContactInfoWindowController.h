@@ -36,10 +36,10 @@
 					int								lastSegment;
 }
 
++ (AIContactInfoWindowController *)showInfoWindowForListObject:(AIListObject *)listObject;
++ (void)closeInfoWindow;
+- (void)setDisplayedListObject:(AIListObject *)inObject;
+
 - (IBAction)segmentSelected:(id)sender;
 
-+ (id)showInfoWindowForListObject:(AIListObject *)listObject;
-+ (void)closeInfoWindow;
-- (void)configureForListObject:(AIListObject *)inObject;
-- (void)loadInfoForListObject:(AIListObject *)aListObject;
 @end
