@@ -34,6 +34,8 @@
 					
 					AIListObject					*displayedObject;
 					int								lastSegment;
+	
+	BOOL											deallocating;
 }
 
 + (AIContactInfoWindowController *)showInfoWindowForListObject:(AIListObject *)listObject;

@@ -9,7 +9,17 @@
 #import <Adium/AIControllerProtocol.h>
 #import <Adium/AIPlugin.h>
 
-#define Interface_ContactSelectionChanged			@"Interface_ContactSelectionChanged"
+#define Interface_ContactSelectionChanged				@"Interface_ContactSelectionChanged"
+
+/*!
+ * @brief AIContactInfoInspectorDidChangeInspectedObject notification name
+ *
+ * userinfo is an NSDictionary with keys KEY_PREVIOUS_INSPECTED_OBJECT and KEY_NEW_INSPECTED_OBJECT and objects of class AIListObject
+ */
+#define AIContactInfoInspectorDidChangeInspectedObject	@"AIContactInfoInspectorWillChangeInspectedObject"
+#define KEY_PREVIOUS_INSPECTED_OBJECT	@"PreviousInspectedObject"
+#define KEY_NEW_INSPECTED_OBJECT		@"NewInspectedObject"
+
 #define Interface_SendEnteredMessage				@"Interface_SendEnteredMessage"
 #define Interface_WillSendEnteredMessage 			@"Interface_WillSendEnteredMessage"
 #define Interface_DidSendEnteredMessage				@"Interface_DidSendEnteredMessage"

@@ -58,7 +58,7 @@ enum segments {
 };
 
 @interface AIContactInfoWindowController (PRIVATE)
-- (void)configureForListObject:(AIListObject *)inObject;
+- (void)configureForDisplayedObject;
 
 -(void)segmentSelected:(id)sender animate:(BOOL)shouldAnimate;
 - (void)selectionChanged:(NSNotification *)notification;
@@ -127,6 +127,10 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (void)dealloc
 {
 	AILogWithSignature(@"");
+	deallocating = YES;
+
+	[self setDisplayedListObject:nil];
+
 	[displayedObject release]; displayedObject = nil;
 	[loadedContent release]; loadedContent = nil;
 	[contentController release]; contentController = nil;
@@ -268,29 +272,42 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 - (void)setDisplayedListObject:(AIListObject *)inObject
 {
+	if ([inObject isKindOfClass:[AIListContact class]]) {
+		inObject = [(AIListContact *)inObject parentContact];
+	}
+	
 	if (inObject != displayedObject) {
+		NSMutableDictionary *notificationUserInfo = [NSMutableDictionary dictionary];;
+		if (displayedObject)
+			[notificationUserInfo setObject:displayedObject
+									 forKey:KEY_PREVIOUS_INSPECTED_OBJECT];
+		if (inObject)
+			[notificationUserInfo setObject:inObject
+									 forKey:KEY_NEW_INSPECTED_OBJECT];
 		[displayedObject release];
-		
-		if ([inObject isKindOfClass:[AIListContact class]]) {
-			inObject = [(AIListContact *)inObject parentContact];
+
+		displayedObject = [inObject retain];
+
+		if (!deallocating) {
+			//Ensure our window is loaded
+			[self window];
+			
+			//Configure for the new object
+			[self configureForDisplayedObject];
 		}
 		
-		displayedObject = [inObject retain];
-		
-		//Ensure our window is loaded
-		[self window];
-		
-		//Configure for the new object
-		[self configureForListObject:inObject];
+		[[adium notificationCenter] postNotificationName:AIContactInfoInspectorDidChangeInspectedObject
+												  object:nil
+												userInfo:notificationUserInfo];
 	}
 }
 
 //Change the list object
-- (void)configureForListObject:(AIListObject *)inObject
+- (void)configureForDisplayedObject
 {	
 	//Set the title of the window.
-	if (inObject) {
-		[[self window] setTitle:[NSString stringWithFormat:AILocalizedString(@"%@'s Info",nil), [inObject displayName]]];
+	if (displayedObject) {
+		[[self window] setTitle:[NSString stringWithFormat:AILocalizedString(@"%@'s Info",nil), [displayedObject displayName]]];
 	} else {
 		[[self window] setTitle:AILocalizedString(@"Contact Info",nil)];
 	}
@@ -300,7 +317,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	NSEnumerator *paneEnumerator = [loadedContent objectEnumerator];
 	
 	while((pane = [paneEnumerator nextObject])) {
-		[pane updateForListObject:inObject];
+		[pane updateForListObject:displayedObject];
 	}
 }
 
