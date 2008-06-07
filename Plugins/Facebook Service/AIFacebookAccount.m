@@ -206,13 +206,15 @@
 	if ([statusState statusType] == AIOfflineStatusType) {
 		[self disconnect];
 	} else {
-		if ([self online]) {
-			/* This is not acceptable as-is; we'll be updating our status message way too often as this will follow global status as other accounts do */
-			// [AIFacebookStatusManager setFacebookStatusMessage:[statusMessage string] forAccount:self];
-		} else {
+		if (![self online]) {
 			[self connect];
 		}
 	}
+}
+
+- (void)setSocialNetworkingStatusMessage:(NSAttributedString *)statusMessage
+{
+	[AIFacebookStatusManager setFacebookStatusMessage:[statusMessage string] forAccount:self];
 }
 
 #pragma mark Connection processing
