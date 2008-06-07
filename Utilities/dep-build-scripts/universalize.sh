@@ -89,10 +89,10 @@ echo "Making a framework for $PURPLE_FOLDER and all dependencies..."
 python $SCRIPT_DIR/framework_maker/frameworkize.py $UNIVERSAL_DIR/$LIBPURPLE.dylib $PWD/Frameworks
 
 #msn pecan
-install_name_tool -change $UNIVERSAL_DIR/libmsn-pecan.so @executable_path/../Frameworks/Resources/libmsn-pecan.so $UNIVERSAL_DIR/libmsn-pecan.so
-install_name_tool -change $UNIVERSAL_DIR/libpurple.0.dylib @executable_path/../Frameworks/libpurple.framework/Versions/Current/libpurple $UNIVERSAL_DIR/libmsn-pecan.so
-install_name_tool -change $UNIVERSAL_DIR/libglib-2.0.0.dylib @executable_path/../Frameworks/libglib.framework/Versions/Current/libglib $UNIVERSAL_DIR/libmsn-pecan.so
-install_name_tool -change $UNIVERSAL_DIR/libgobject-2.0.0.dylib @executable_path/../Frameworks/libgobject.framework/Versions/Current/libgobject $UNIVERSAL_DIR/libmsn-pecan.so
+# install_name_tool -change $UNIVERSAL_DIR/libmsn-pecan.so @executable_path/../Frameworks/Resources/libmsn-pecan.so $UNIVERSAL_DIR/libmsn-pecan.so
+# install_name_tool -change $UNIVERSAL_DIR/libpurple.0.dylib @executable_path/../Frameworks/libpurple.framework/Versions/Current/libpurple $UNIVERSAL_DIR/libmsn-pecan.so
+# install_name_tool -change $UNIVERSAL_DIR/libglib-2.0.0.dylib @executable_path/../Frameworks/libglib.framework/Versions/Current/libglib $UNIVERSAL_DIR/libmsn-pecan.so
+# install_name_tool -change $UNIVERSAL_DIR/libgobject-2.0.0.dylib @executable_path/../Frameworks/libgobject.framework/Versions/Current/libgobject $UNIVERSAL_DIR/libmsn-pecan.so
 
 echo "Adding the Adium framework header."
 cp $SCRIPT_DIR/libpurple-full.h $PWD/Frameworks/libpurple.framework/Headers/libpurple.h
