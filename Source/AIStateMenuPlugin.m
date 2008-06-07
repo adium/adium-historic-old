@@ -16,13 +16,15 @@
 
 #import "AIStateMenuPlugin.h"
 #import <Adium/AIAccountControllerProtocol.h>
-#import "AIEditStateWindowController.h"
+#import <Adium/AIEditStateWindowController.h>
 #import <Adium/AIMenuControllerProtocol.h>
-#import "AIStatusController.h"
-#import <AIUtilities/AIMenuAdditions.h>
+#import <Adium/AIStatusControllerProtocol.h>
 #import <Adium/AIAccountMenu.h>
 #import <Adium/AIAccount.h>
+#import <Adium/AIService.h>
 #import <Adium/AIStatusMenu.h>
+#import <Adium/AISocialNetworkingStatusMenu.h>
+#import <AIUtilities/AIMenuAdditions.h>
 
 @interface AIStateMenuPlugin (PRIVATE)
 - (void)updateKeyEquivalents;
@@ -63,14 +65,14 @@
 																	   keyEquivalent:@""];
 	[[adium menuController] addMenuItem:dockStatusMenuRoot toLocation:LOC_Dock_Status];
 
-	
 	statusMenu = [[AIStatusMenu statusMenuWithDelegate:self] retain];
 
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(stateMenuSelectionsChanged:)
 									   name:AIStatusActiveStateChangedNotification
 									 object:nil];
-		
+	
+	[[adium contactController] registerListObjectObserver:self];
 }
 
 - (void)uninstallPlugin
@@ -199,6 +201,42 @@
 - (void)stateMenuSelectionsChanged:(NSNotification *)notification
 {
 	[self updateKeyEquivalents];
+}
+
+#pragma mark Social networking
+- (void)updateSocialNetworkingMenuItems
+{
+	BOOL oneOrMoreSocialNetworkingAccountsOnline = NO;
+	NSEnumerator *enumerator = [[[adium accountController] accounts] objectEnumerator];
+	AIAccount	 *account;
+	while ((account = [enumerator nextObject])) {
+		if ([account online] && [[account service] isSocialNetworkingService]) {
+			oneOrMoreSocialNetworkingAccountsOnline = YES;
+			break;
+		}
+	}
+	
+	if (oneOrMoreSocialNetworkingAccountsOnline) {
+		if (!socialNetworkingMenuItem) {
+			socialNetworkingMenuItem = [[AISocialNetworkingStatusMenu socialNetworkingSubmenuItem] retain];
+			[[adium menuController] addMenuItem:socialNetworkingMenuItem toLocation:LOC_Status_SocialNetworking];
+		}
+	} else {
+		if (socialNetworkingMenuItem) {
+			[[adium menuController] removeMenuItem:socialNetworkingMenuItem];
+			[socialNetworkingMenuItem release]; socialNetworkingMenuItem = nil;
+		}
+	}
+}
+
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
+{
+	if ([inObject isKindOfClass:[AIAccount class]] && [[(AIAccount *)inObject service] isSocialNetworkingService] &&
+		[inModifiedKeys containsObject:@"Online"]) {
+		[self updateSocialNetworkingMenuItems];
+	}
+	
+	return nil;
 }
 
 #pragma mark Account menu items

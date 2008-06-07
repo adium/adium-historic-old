@@ -565,6 +565,11 @@
 		349C6F6607C99ACF005EB896 /* ESContactListAdvancedPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 349C6F6407C99ACE005EB896 /* ESContactListAdvancedPreferences.m */; };
 		349C7C7A07C9AE1B005EB896 /* ContactListAdvancedPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 349C6F8A07C99D2C005EB896 /* ContactListAdvancedPrefs.nib */; };
 		349E2E8E07A8AF0C00EAB76A /* AIEmoticonPackPreviewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 349E2E8C07A8AF0C00EAB76A /* AIEmoticonPackPreviewController.m */; };
+		34A1A8CA0DFB246400AC78CF /* AISocialNetworkingStatusMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A1A8C80DFB246300AC78CF /* AISocialNetworkingStatusMenu.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		34A1A8CB0DFB246400AC78CF /* AISocialNetworkingStatusMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1A8C90DFB246300AC78CF /* AISocialNetworkingStatusMenu.m */; };
+		34A1A8E70DFB276E00AC78CF /* SocialNetworkingCustomStatus.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A1A8E60DFB276E00AC78CF /* SocialNetworkingCustomStatus.nib */; };
+		34A1A8ED0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A1A8EB0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.h */; };
+		34A1A8EE0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1A8EC0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.m */; };
 		34A1EDAF0DD3AF220090667A /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C103FAE057127A500F3C158 /* WebKit.framework */; };
 		34A1EE990DD3BFB00090667A /* AIFacebookBuddyListManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1EE980DD3BFB00090667A /* AIFacebookBuddyListManager.m */; };
 		34A1EFDE0DD3D4BB0090667A /* AIFacebookBuddyIconRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1EFDD0DD3D4BB0090667A /* AIFacebookBuddyIconRequest.m */; };
@@ -3034,6 +3039,11 @@
 		349FE2FF074D01D300E36B3B /* ESFileTransferProgressView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESFileTransferProgressView.h; path = Source/ESFileTransferProgressView.h; sourceTree = "<group>"; };
 		349FE300074D01D300E36B3B /* ESFileTransferProgressRow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferProgressRow.m; path = Source/ESFileTransferProgressRow.m; sourceTree = "<group>"; };
 		349FE301074D01D300E36B3B /* ESFileTransferProgressRow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESFileTransferProgressRow.h; path = Source/ESFileTransferProgressRow.h; sourceTree = "<group>"; };
+		34A1A8C80DFB246300AC78CF /* AISocialNetworkingStatusMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AISocialNetworkingStatusMenu.h; path = "Frameworks/Adium Framework/Source/AISocialNetworkingStatusMenu.h"; sourceTree = "<group>"; };
+		34A1A8C90DFB246300AC78CF /* AISocialNetworkingStatusMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AISocialNetworkingStatusMenu.m; path = "Frameworks/Adium Framework/Source/AISocialNetworkingStatusMenu.m"; sourceTree = "<group>"; };
+		34A1A8E60DFB276E00AC78CF /* SocialNetworkingCustomStatus.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = SocialNetworkingCustomStatus.nib; path = "Frameworks/Adium Framework/Resources/SocialNetworkingCustomStatus.nib"; sourceTree = "<group>"; };
+		34A1A8EB0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AICustomSocialNetworkingStatusWindowController.h; path = "Frameworks/Adium Framework/Source/AICustomSocialNetworkingStatusWindowController.h"; sourceTree = "<group>"; };
+		34A1A8EC0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AICustomSocialNetworkingStatusWindowController.m; path = "Frameworks/Adium Framework/Source/AICustomSocialNetworkingStatusWindowController.m"; sourceTree = "<group>"; };
 		34A1EE970DD3BFB00090667A /* AIFacebookBuddyListManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIFacebookBuddyListManager.h; path = "Plugins/Facebook Service/AIFacebookBuddyListManager.h"; sourceTree = "<group>"; };
 		34A1EE980DD3BFB00090667A /* AIFacebookBuddyListManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIFacebookBuddyListManager.m; path = "Plugins/Facebook Service/AIFacebookBuddyListManager.m"; sourceTree = "<group>"; };
 		34A1EFDC0DD3D4BB0090667A /* AIFacebookBuddyIconRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIFacebookBuddyIconRequest.h; path = "Plugins/Facebook Service/AIFacebookBuddyIconRequest.h"; sourceTree = "<group>"; };
@@ -6917,6 +6927,11 @@
 				34E00F7107B92AD0000DF265 /* Text and Buttons Window */,
 				4BFC3412058D48A8008F7FA2 /* AIWindowController.h */,
 				4BFC3413058D48A8008F7FA2 /* AIWindowController.m */,
+				34A1A8C80DFB246300AC78CF /* AISocialNetworkingStatusMenu.h */,
+				34A1A8C90DFB246300AC78CF /* AISocialNetworkingStatusMenu.m */,
+				34A1A8EB0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.h */,
+				34A1A8EC0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.m */,
+				34A1A8E60DFB276E00AC78CF /* SocialNetworkingCustomStatus.nib */,
 			);
 			name = Interface;
 			sourceTree = "<group>";
@@ -8134,6 +8149,8 @@
 				3403F4D60D2EFE53006B08FB /* AICachedUserIconSource.h in Headers */,
 				3403F4DB0D2EFE6D006B08FB /* AIManuallySetUserIconSource.h in Headers */,
 				3403F56B0D2F0BDE006B08FB /* AIServersideUserIconSource.h in Headers */,
+				34A1A8CA0DFB246400AC78CF /* AISocialNetworkingStatusMenu.h in Headers */,
+				34A1A8ED0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8492,6 +8509,9 @@
 /* Begin PBXProject section */
 		29B97313FDCFA39411CA2CEA /* Project object */ = {
 			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = NO;
+			};
 			buildConfigurationList = DADE8E3A085507450062B664 /* Build configuration list for PBXProject "Adium" */;
 			compatibilityVersion = "Xcode 2.4";
 			hasScannedForEncodings = 1;
@@ -9072,6 +9092,7 @@
 				3419E2DF0A81445800C3FC68 /* Localizable.strings in Resources */,
 				340D859B0ADC82D100D05B3F /* sourceListBackground.png in Resources */,
 				34F144430BA8FF3C000473DE /* EmoticonNames.strings in Resources */,
+				34A1A8E70DFB276E00AC78CF /* SocialNetworkingCustomStatus.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9822,6 +9843,8 @@
 				3403F4D70D2EFE53006B08FB /* AICachedUserIconSource.m in Sources */,
 				3403F4D80D2EFE5B006B08FB /* AIManuallySetUserIconSource.m in Sources */,
 				3403F56C0D2F0BDE006B08FB /* AIServersideUserIconSource.m in Sources */,
+				34A1A8CB0DFB246400AC78CF /* AISocialNetworkingStatusMenu.m in Sources */,
+				34A1A8EE0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -472,6 +472,17 @@ typedef enum
 }
 
 /*!
+ * @brief Set the social networking status message for this account
+ *
+ * This will only be called if [[self service] isSocialNetworkingService] returns TRUE.
+ *
+ * @param statusMessage The status message, which has already been filtered.
+ */
+- (void)setSocialNetworkingStatusMessage:(NSAttributedString *)statusMessage
+{
+	
+}
+/*!
  * @brief Should the autorefreshing attributed string associated with a key be updated at the moment?
  *
  * The default implementation causes all dynamic strings which need updating to be updated if the account is
