@@ -96,14 +96,17 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
 - (NSCalendarDate *)date{
 	//Determine the date of this log lazily
 	if (!date) {
-		if ([[path pathExtension] isEqualToString:@"chatlog"]) {
-			NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:[NSURL fileURLWithPath:[[[[[AIObject sharedAdiumInstance] loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByAppendingPathComponent:path]]];
-			[parser setDelegate:self];
-			[parser parse];
-			[parser release];
-		}
+		date = [dateFromFileName([path lastPathComponent]) retain];
+
 		if (!date) {
-			date = [dateFromFileName([path lastPathComponent]) retain];
+			//Sometimes the filename doesn't have a date (e.g., “jdoe ((null)).chatlog”). In such cases, if it's a chatlog, parse it and get the date from the first element that has one.
+			//We don't do this first because NSXMLParser uses +[NSData dataWithContentsOfURL:], which is painful for large log files.
+			if ([[path pathExtension] isEqualToString:@"chatlog"]) {
+				NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:[NSURL fileURLWithPath:[[[[[AIObject sharedAdiumInstance] loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByAppendingPathComponent:path]]];
+				[parser setDelegate:self];
+				[parser parse];
+				[parser release];
+			}
 		}
 	}
 		
