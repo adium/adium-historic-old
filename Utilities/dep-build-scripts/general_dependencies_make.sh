@@ -45,14 +45,25 @@ echo '  make && make install'
 make -j $NUMBER_OF_CORES >> $LOG_FILE 2>&1 && make install >> $LOG_FILE 2>&1
 cd ..
 
-#gettext
-# caveat - some of the build files in gettext appear to not respect CFLAGS
-# and are compiling to `arch` instead of $ARCH. Lame.
 for ARCH in ppc i386 ; do
+    #gettext
+    # caveat - some of the build files in gettext appear to not respect CFLAGS
+    # and are compiling to `arch` instead of $ARCH. Lame.
 	echo "Building gettext for $ARCH"
-	export CFLAGS="$BASE_CFLAGS -arch $ARCH"
-	export CXXFLAGS="$CFLAGS"
-	export LDFLAGS="$BASE_LDFLAGS -arch $ARCH"
+	
+    LOCAL_BIN_DIR="$TARGET_DIR_BASE-$ARCH/bin"
+	LOCAL_LIB_DIR="$TARGET_DIR_BASE-$ARCH/lib"
+	LOCAL_INCLUDE_DIR="$TARGET_DIR_BASE-$ARCH/include"
+	LOCAL_FLAGS="-L$LOCAL_LIB_DIR -I$LOCAL_INCLUDE_DIR"
+	export PKG_CONFIG="$LOCAL_BIN_DIR/pkg-config"
+	export MSGFMT="$LOCAL_BIN_DIR/msgfmt"
+
+	export CFLAGS="$LOCAL_FLAGS $BASE_CFLAGS -arch $ARCH"
+	export CPPFLAGS="$CFLAGS"
+	export LDFLAGS="$LOCAL_FLAGS $BASE_LDFLAGS -arch $ARCH"
+	
+	TARGET_DIR=$TARGET_DIR_BASE-$ARCH
+
 	case $ARCH in
 		ppc) HOST=powerpc-apple-darwin8
 			 export PATH=$PATH_PPC;;
@@ -61,35 +72,18 @@ for ARCH in ppc i386 ; do
 	esac
 	mkdir gettext-$ARCH >/dev/null 2>&1 || true
 	cd gettext-$ARCH
-	TARGET_DIR=$TARGET_DIR_BASE-$ARCH
 	echo '  Configuring...'
 	../../$GETTEXT/configure --prefix=$TARGET_DIR --disable-static \
 	    --enable-shared --host=$HOST >> $LOG_FILE 2>&1
 	echo '  make && make install'
 	make -j $NUMBER_OF_CORES >> $LOG_FILE 2>&1 && make install >> $LOG_FILE 2>&1
 	cd ..
-done
 
-#glib
-for ARCH in ppc i386; do
+    #glib
 	echo "Building glib for $ARCH"
-	LOCAL_BIN_DIR="$TARGET_DIR_BASE-$ARCH/bin"
-	LOCAL_LIB_DIR="$TARGET_DIR_BASE-$ARCH/lib"
-	LOCAL_INCLUDE_DIR="$TARGET_DIR_BASE-$ARCH/include"
-	LOCAL_FLAGS="-L$LOCAL_LIB_DIR -I$LOCAL_INCLUDE_DIR -lintl -liconv"
-	export PKG_CONFIG="$LOCAL_BIN_DIR/pkg-config"
-	export MSGFMT="$LOCAL_BIN_DIR/msgfmt"
-	
-	export CFLAGS="$LOCAL_FLAGS $BASE_CFLAGS -arch $ARCH"
-	export CPPFLAGS="$CFLAGS"
-	export LDFLAGS="$LOCAL_FLAGS $BASE_LDFLAGS -arch $ARCH"
-	case $ARCH in
-		ppc) HOST=powerpc-apple-darwin8;;
-		i386) HOST=i686-apple-darwin8;;
-	esac
 	mkdir glib-$ARCH >/dev/null 2>&1 || true
 	cd glib-$ARCH
-	TARGET_DIR=$TARGET_DIR_BASE-$ARCH
+
 	echo '  Configuring...'
 	../../$GLIB/configure \
 	   --prefix=$TARGET_DIR \
