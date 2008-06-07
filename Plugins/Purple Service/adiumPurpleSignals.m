@@ -276,10 +276,9 @@ static void typing_changed(PurpleAccount *acct, const char *name, AITypingState 
 
 static void conversation_created_cb(PurpleConversation *conv, void *data) {
 	if (purple_conversation_get_type(conv) == PURPLE_CONV_TYPE_IM) {
-		CBPurpleAccount	*account = accountLookup(acct);
-		AIChat *chat = imChatLookupFromConv(conv)
+		AIChat *chat = imChatLookupFromConv(conv);
 		//When a conversation is created, we must clear the typing flag, as libpurple won't notify us properly
-		[account typingUpdateForIMChat:chat typing:[NSNumber numberWithInt:AINotTyping]];
+		[accountLookup(purple_conversation_get_account(conv)) typingUpdateForIMChat:chat typing:[NSNumber numberWithInt:AINotTyping]];
 	}
 }
 
