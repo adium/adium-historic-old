@@ -1026,6 +1026,9 @@ static int toArraySort(id itemA, id itemB, void *context);
 		
     } else if ([identifier isEqualToString:@"Rank"]) {
 	    [currentSearchResults sortUsingSelector:(sortDirection ? @selector(compareRankReverse:) : @selector(compareRank:))];
+
+	} else if ([identifier isEqualToString:@"Service"]) {
+	    [currentSearchResults sortUsingSelector:(sortDirection ? @selector(compareServiceReverse:) : @selector(compareService:))];
 	}
 	
     [resultsLock unlock];
