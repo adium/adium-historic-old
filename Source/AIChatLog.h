@@ -48,5 +48,7 @@
 - (NSComparisonResult)compareFromReverse:(AIChatLog *)inLog;
 - (NSComparisonResult)compareDate:(AIChatLog *)inLog;
 - (NSComparisonResult)compareDateReverse:(AIChatLog *)inLog;
+- (NSComparisonResult)compareService:(AIChatLog *)inLog;
+- (NSComparisonResult)compareServiceReverse:(AIChatLog *)inLog;
 
 @end
