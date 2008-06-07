@@ -26,7 +26,7 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
 #import <Adium/AIServiceMenu.h>
-
+#import <Adium/AISocialNetworkingStatusMenu.h>
 #import <AIUtilities/AITigerCompatibility.h>
 
 //Menu titles
@@ -668,51 +668,76 @@ void updateRepresentedObjectForSubmenusOfMenuItem(NSMenuItem *menuItem, AIAccoun
 NSMenu *statusMenuForAccountMenuItem(NSArray *menuItemArray, NSMenuItem *accountMenuItem, BOOL addOriginalItems, id self)
 {
 	AIAccount			*account = [accountMenuItem representedObject];
-	NSMenu				*accountSubmenu = [[NSMenu allocWithZone:[NSMenu zone]] init];
+	NSMenu				*accountSubmenu;
 	NSEnumerator		*menuItemEnumerator;
 	NSMenuItem			*statusMenuItem;
 	
-	[accountSubmenu setMenuChangedMessagesEnabled:NO];
-	
-	//Enumerate all the menu items we were originally passed
-	menuItemEnumerator = [menuItemArray objectEnumerator];
-	while ((statusMenuItem = [menuItemEnumerator nextObject])) {
-		AIStatus		*status;
-		NSDictionary	*newRepresentedObject;
-		NSMenuItem		*actualMenuItem;
+	if ([[account service] isSocialNetworkingService]) {		
+		NSMenuItem *onlineOfflineItem;
 
-		//Set the represented object to indicate both the right status and the right account
-		if ((status = [[statusMenuItem representedObject] objectForKey:@"AIStatus"])) {
-			newRepresentedObject = [[NSDictionary alloc] initWithObjectsAndKeys:
-				status, @"AIStatus",
-				account, @"AIAccount",
-				nil];
-		} else {
-			//Custom status items don't have an associated AIStatus.
-			newRepresentedObject = [[NSDictionary alloc] initWithObjectsAndKeys:
-				account, @"AIAccount",
-				nil];
-		}
+		accountSubmenu = [AISocialNetworkingStatusMenu socialNetworkingSubmenuForAccount:account];
+		[accountSubmenu setMenuChangedMessagesEnabled:NO];
+
+		/* Put a connect/disconnect menu item at the top, since we skip the status items
+		 * By copying the accountMenuItem's target and action, it gains the action of toggling conncectivity,
+		 * which is exactly what we want.
+		 */
+		onlineOfflineItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:([account online] ?
+																						 AILocalizedString(@"Disonnect", nil) :
+																						 AILocalizedString(@"Connect", nil))
+																				 target:[accountMenuItem target]
+																				 action:[accountMenuItem action]
+																		  keyEquivalent:@""
+																	  representedObject:account];
 		
-		if (addOriginalItems) {
-			//The last time, we can use the original menu item rather than creating a copy
-			actualMenuItem = statusMenuItem;
-			[accountSubmenu addItem:statusMenuItem];
-
-		} else {
-			/* Create a copy of the item for this account and add it to our status menu
-			 * (which retains it, so we can release and continue to use the variable)
-			 */
-			NSMenuItem *newItem = [statusMenuItem copy];
-			actualMenuItem = newItem;
-			[accountSubmenu addItem:newItem];
-			[newItem release];				
-		}
+		[accountSubmenu insertItem:onlineOfflineItem atIndex:0];
+		[accountSubmenu insertItem:[NSMenuItem separatorItem] atIndex:1];
+		[onlineOfflineItem release];
 		
-		[actualMenuItem setRepresentedObject:newRepresentedObject];
-		[newRepresentedObject release];
+	} else {
+		accountSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
+		[accountSubmenu setMenuChangedMessagesEnabled:NO];
 
-		updateRepresentedObjectForSubmenusOfMenuItem(actualMenuItem, account);
+		//Enumerate all the menu items we were originally passed
+		menuItemEnumerator = [menuItemArray objectEnumerator];
+		while ((statusMenuItem = [menuItemEnumerator nextObject])) {
+			AIStatus		*status;
+			NSDictionary	*newRepresentedObject;
+			NSMenuItem		*actualMenuItem;
+			
+			//Set the represented object to indicate both the right status and the right account
+			if ((status = [[statusMenuItem representedObject] objectForKey:@"AIStatus"])) {
+				newRepresentedObject = [[NSDictionary alloc] initWithObjectsAndKeys:
+										status, @"AIStatus",
+										account, @"AIAccount",
+										nil];
+			} else {
+				//Custom status items don't have an associated AIStatus.
+				newRepresentedObject = [[NSDictionary alloc] initWithObjectsAndKeys:
+										account, @"AIAccount",
+										nil];
+			}
+			
+			if (addOriginalItems) {
+				//The last time, we can use the original menu item rather than creating a copy
+				actualMenuItem = statusMenuItem;
+				[accountSubmenu addItem:statusMenuItem];
+				
+			} else {
+				/* Create a copy of the item for this account and add it to our status menu
+				 * (which retains it, so we can release and continue to use the variable)
+				 */
+				NSMenuItem *newItem = [statusMenuItem copy];
+				actualMenuItem = newItem;
+				[accountSubmenu addItem:newItem];
+				[newItem release];				
+			}
+			
+			[actualMenuItem setRepresentedObject:newRepresentedObject];
+			[newRepresentedObject release];
+			
+			updateRepresentedObjectForSubmenusOfMenuItem(actualMenuItem, account);
+		}
 	}
 	
 	NSMenuItem *enableDisableItem;
@@ -737,7 +762,7 @@ NSMenu *statusMenuForAccountMenuItem(NSArray *menuItemArray, NSMenuItem *account
 	
 	[accountSubmenu setMenuChangedMessagesEnabled:YES];
 	
-	return [accountSubmenu autorelease];
+	return accountSubmenu;
 }
 
 /*!
