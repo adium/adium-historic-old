@@ -73,8 +73,9 @@ void purple_account_set_bool(void *account, const char *name,
 - (const char *)purpleAccountName
 {
 	NSString	*myUID = [self formattedUID];
+	BOOL		serverAppendedToUID  = ([myUID rangeOfString:@"@"].location != NSNotFound);
 
-	return [[NSString stringWithFormat:@"%@@%@", myUID, [self host]] UTF8String];
+	return [(serverAppendedToUID ? myUID : [myUID stringByAppendingString:[self serverSuffix]]) UTF8String];
 }
 
 - (void)configurePurpleAccount
@@ -98,12 +99,36 @@ void purple_account_set_bool(void *account, const char *name,
  */
 - (NSString *)host
 {
-	NSString *host = [self preferenceForKey:KEY_CONNECT_HOST group:GROUP_ACCOUNT_STATUS];
+	NSString	*host;
+	NSString	*myUID = [self UID];
 
-	if(host == nil || [host isEqualToString:@""])
-		return [self serverSuffix];
+	int location = [myUID rangeOfString:@"@"].location;
+	
+	if ((location != NSNotFound) && (location + 1 < [myUID length])) {
+		host = [myUID substringFromIndex:(location + 1)];
+		
+	} else {
+		host = [self serverSuffix];
+	}
 	
 	return host;
+}
+
+- (NSString *)displayName
+{
+	NSString *myUID = [self formattedUID];
+	unsigned int pos = [myUID rangeOfString:@"@"].location;
+	
+	if(pos == NSNotFound)
+		return myUID;
+	return [myUID substringToIndex:pos];
+}
+
+- (NSString *)formattedUIDForListDisplay
+{
+	// on IRC, the nickname isn't that important for an account, the server is
+	// (I guess the number of IRC users that use the same server with different nicks is very low)
+	return [NSString stringWithFormat:@"%@ (%@)", [self host], [self displayName]];
 }
 
 - (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact
