@@ -40,6 +40,7 @@
 	BOOL				unregisterAfterConnecting;
 	BOOL				deletePurpleAccountAfterDisconnecting;
 	BOOL				finishedConnectProcess;
+	BOOL				openPsychicChats;
 
 	PurpleConnectionError lastDisconnectionReason;
 }

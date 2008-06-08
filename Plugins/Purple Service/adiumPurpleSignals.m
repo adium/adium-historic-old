@@ -15,13 +15,9 @@
  */
 
 #import "adiumPurpleSignals.h"
-#import "AIDualWindowInterfacePlugin.h"
 #import <AIUtilities/AIObjectAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
-#import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIChatControllerProtocol.h>
-#import <Adium/AIInterfaceControllerProtocol.h>
-#import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIContentStatus.h>
@@ -283,27 +279,6 @@ static void typing_changed(PurpleAccount *acct, const char *name, AITypingState 
 	
 	AIChat *chat = [[[AIObject sharedAdiumInstance] chatController] chatWithContact:contact];
 
-	if ((typingState == AITyping) && 
-		([[[[AIObject sharedAdiumInstance] preferenceController] preferenceForKey:KEY_PSYCHIC
-																		   group:PREF_GROUP_DUAL_WINDOW_INTERFACE] boolValue]) &&
-		(![chat isOpen])) {
-		
-		[[[AIObject sharedAdiumInstance] interfaceController] openChat:chat];
-	
-		/*
-		 * Use the Libpurple "psychic" tagline. If this is found to be confusing, we should switch to your own version.
-		 * The upside of using theirs is that clever gimmicky translations already exist.
-		 */
-		AIContentStatus *statusMessage = [AIContentStatus statusInChat:chat
-															withSource:contact
-														   destination:account
-																  date:[NSDate date]
-															   message:[NSAttributedString stringWithString:[NSString stringWithUTF8String:_("You feel a disturbance in the force...")]]
-															  withType:@"psychic"];
-		
-		[[[AIObject sharedAdiumInstance] contentController] receiveContentObject:statusMessage];
-	}
-	
 	[account typingUpdateForIMChat:chat typing:[NSNumber numberWithInt:typingState]];
 }
 
