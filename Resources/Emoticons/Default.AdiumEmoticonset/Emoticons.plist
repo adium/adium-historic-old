@@ -280,7 +280,6 @@
 				<string>:-I</string>
 				<string>=-I</string>
 				<string>:|</string>
-				<string>:l</string>
 			</array>
 			<key>Name</key>
 			<string>Thinking</string>
