@@ -10,6 +10,11 @@
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIContentMessage.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
+#import "SLPurpleCocoaAdapter.h"
+
+@interface SLPurpleCocoaAdapter (PRIVATE)
+- (BOOL)attemptPurpleCommandOnMessage:(NSString *)originalMessage fromAccount:(AIAccount *)sourceAccount inChat:(AIChat *)chat;
+@end
 
 /*
 void purple_account_set_username(void *account, const char *username);
@@ -68,9 +73,8 @@ void purple_account_set_bool(void *account, const char *name,
 - (const char *)purpleAccountName
 {
 	NSString	*myUID = [self formattedUID];
-	BOOL		serverAppendedToUID  = ([myUID rangeOfString:@"@"].location != NSNotFound);
 
-	return [(serverAppendedToUID ? myUID : [myUID stringByAppendingString:[self serverSuffix]]) UTF8String];
+	return [[NSString stringWithFormat:@"%@@%@", myUID, [self host]] UTF8String];
 }
 
 - (void)configurePurpleAccount
@@ -94,17 +98,10 @@ void purple_account_set_bool(void *account, const char *name,
  */
 - (NSString *)host
 {
-	NSString	*host;
-	NSString	*myUID = [self UID];
+	NSString *host = [self preferenceForKey:KEY_CONNECT_HOST group:GROUP_ACCOUNT_STATUS];
 
-	int location = [myUID rangeOfString:@"@"].location;
-	
-	if ((location != NSNotFound) && (location + 1 < [myUID length])) {
-		host = [myUID substringFromIndex:(location + 1)];
-		
-	} else {
-		host = [self serverSuffix];
-	}
+	if(host == nil || [host isEqualToString:@""])
+		return [self serverSuffix];
 	
 	return host;
 }
