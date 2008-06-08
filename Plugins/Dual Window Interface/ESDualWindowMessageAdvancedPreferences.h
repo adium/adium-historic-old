@@ -30,6 +30,7 @@
 	IBOutlet	NSPopUpButton	*popUp_timeStampFormat;
 	
 	IBOutlet	NSButton		*checkBox_hide;
+	IBOutlet	NSButton		*checkBox_psychicOpen;
 	IBOutlet	NSPopUpButton	*popUp_windowPosition;
 }
 
