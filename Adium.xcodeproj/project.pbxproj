@@ -12187,7 +12187,6 @@
 				OTHER_CFLAGS = (
 					"$(CFLAGS)",
 					"-fconstant-cfstrings",
-					"-fms-extensions",
 				);
 				OTHER_CPLUSPLUSFLAGS = "$(OTHER_CFLAGS)";
 				PREBINDING = NO;
@@ -13061,7 +13060,6 @@
 				OTHER_CFLAGS = (
 					"$(CFLAGS)",
 					"-fconstant-cfstrings",
-					"-fms-extensions",
 				);
 				PREBINDING = NO;
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
@@ -13108,7 +13106,6 @@
 				OTHER_CFLAGS = (
 					"$(CFLAGS)",
 					"-fconstant-cfstrings",
-					"-fms-extensions",
 				);
 				PREBINDING = NO;
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
@@ -13157,7 +13154,6 @@
 				OTHER_CFLAGS = (
 					"$(CFLAGS)",
 					"-fconstant-cfstrings",
-					"-fms-extensions",
 				);
 				PREBINDING = NO;
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
