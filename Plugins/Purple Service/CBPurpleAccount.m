@@ -41,6 +41,7 @@
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIStatusControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIContentStatus.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
@@ -55,6 +56,7 @@
 #import "ESiTunesPlugin.h"
 #import "AMPurpleTuneTooltip.h"
 #import "adiumPurpleRequest.h"
+#import "AIDualWindowInterfacePlugin.h"
 
 #import "ESMSNService.h" //why oh why must the superclass know about MSN specific things!?
 
@@ -2687,6 +2689,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 
 	//Observe preferences changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_ALIASES];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 }
 
 - (BOOL)allowAccountUnregistrationIfSupportedByLibpurple
@@ -2861,6 +2864,10 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 			}
 		}
 	}
+	
+	if ([group isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE]) {
+		openPsychicChats = [[prefDict objectForKey:KEY_PSYCHIC] boolValue];
+	}
 }
 
 #pragma mark Actions for chats
@@ -2940,8 +2947,25 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 {
     AITypingState currentTypingState = [chat integerValueForProperty:KEY_TYPING];
 	AITypingState newTypingState = [typingStateNumber intValue];
-
+	
     if (currentTypingState != newTypingState) {
+		if (newTypingState == AITyping && openPsychicChats && ![chat isOpen]) {
+			[[adium interfaceController] openChat:chat];
+			
+			/*
+			 * Use the Libpurple "psychic" tagline. If this is found to be confusing, we should switch to your own version.
+			 * The upside of using theirs is that clever gimmicky translations already exist.
+			 */
+			AIContentStatus *statusMessage = [AIContentStatus statusInChat:chat
+																withSource:[chat listObject]
+															   destination:self
+																	  date:[NSDate date]
+																   message:[NSAttributedString stringWithString:[NSString stringWithUTF8String:_("You feel a disturbance in the force...")]]
+																  withType:@"psychic"];
+			
+			[[adium contentController] receiveContentObject:statusMessage];
+		}
+		
 		[chat setValue:(newTypingState ? typingStateNumber : nil)
 					   forProperty:KEY_TYPING
 					   notify:NotifyNow];
