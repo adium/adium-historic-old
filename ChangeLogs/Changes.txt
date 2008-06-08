@@ -170,7 +170,6 @@ Version 1.3
  * Fixed `%_adiumbuild` in certain situations (#9472)
  
 == URL detection ==
-(TODO cbarrett: Finish coalescing these)
  * “B.Sc.” (Bachelor of Science) is no longer detected as a link (#7910) (#9955)
  * Fixed actions (/me) that ended with URLs rendering the asterisk (*) as part of the link (#8459)
  * Fixed linkification of enclosed URIs with trailing punctuation (#1031) (#9795)
