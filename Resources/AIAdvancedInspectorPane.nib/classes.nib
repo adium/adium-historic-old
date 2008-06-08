@@ -119,24 +119,22 @@
 			<string>ObjC</string>
 			<key>OUTLETS</key>
 			<dict>
-				<key>accountsButton</key>
-				<string>NSPopUpButton</string>
-				<key>accountsLabel</key>
-				<string>NSTextField</string>
 				<key>accountsTableView</key>
 				<string>AIAlternatingRowTableView</string>
+				<key>checkBox_alwaysShow</key>
+				<string>NSButton</string>
 				<key>contactsColumn</key>
 				<string>NSTableColumn</string>
-				<key>encryptionButton</key>
-				<string>NSPopUpButton</string>
-				<key>encryptionField</key>
-				<string>NSTextField</string>
 				<key>inspectorContentView</key>
 				<string>NSView</string>
-				<key>visibilityButton</key>
-				<string>NSButton</string>
-				<key>visibilityField</key>
+				<key>label_account</key>
 				<string>NSTextField</string>
+				<key>label_encryption</key>
+				<string>NSTextField</string>
+				<key>popUp_accounts</key>
+				<string>NSPopUpButton</string>
+				<key>popUp_encryption</key>
+				<string>NSPopUpButton</string>
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>AIObject</string>
