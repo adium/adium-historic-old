@@ -137,4 +137,12 @@ void purple_account_set_bool(void *account, const char *name,
 			[[[inContact UID] lowercaseString] isEqualToString:@"chanserv"]);
 }
 
+- (BOOL)closeChat:(AIChat*)chat
+{
+	if([adium isQuitting])
+		return NO;
+	else
+		return [super closeChat:chat];
+}
+
 @end
