@@ -32,7 +32,6 @@
 				<string>:@</string>
 				<string>&lt;_&lt;</string>
 				<string>&gt;:(</string>
-				<string>&gt;:[</string>
 				<string>&gt;:</string>
 			</array>
 			<key>Name</key>
@@ -54,7 +53,6 @@
 				<string>:-S</string>
 				<string>:-s</string>
 				<string>:S</string>
-				<string>: S</string>
 				<string>S:</string>
 				<string>:s</string>
 			</array>
@@ -98,7 +96,6 @@
 				<string>:-D</string>
 				<string>:D</string>
 				<string>=D</string>
-				<string>: D</string>
 			</array>
 			<key>Name</key>
 			<string>Open Mouthed</string>
@@ -117,7 +114,6 @@
 				<string>:%</string>
 				<string>:-%</string>
 				<string>/:</string>
-				<string>:2</string>
 			</array>
 			<key>Name</key>
 			<string>I don&apos;t know</string>
@@ -171,13 +167,10 @@
 				<string>u_u</string>
 				<string>U.U</string>
 				<string>U_U</string>
-				<string>: (</string>
 				<string>):</string>
 				<string>)=</string>
 				<string>:c</string>
 				<string>:C</string>
-				<string>= (</string>
-				<string>) :</string>
 				<string>´´</string>
 			</array>
 			<key>Name</key>
@@ -220,8 +213,6 @@
 				<string>:-)</string>
 				<string>:)</string>
 				<string>=)</string>
-				<string>=]</string>
-				<string>: )</string>
 				<string>(:</string>
 				<string>(=</string>
 			</array>
@@ -250,7 +241,6 @@
 				<string>:p</string>
 				<string>=p</string>
 				<string>=-p</string>
-				<string>: P</string>
 			</array>
 			<key>Name</key>
 			<string>Tongue Out</string>
@@ -267,11 +257,8 @@
 				<string>O:</string>
 				<string>O=</string>
 				<string>O=</string>
-				<string>: O</string>
 				<string>:o</string>
 				<string>O.O</string>
-				<string>:0</string>
-				<string>=0</string>
 			</array>
 			<key>Name</key>
 			<string>Surprised</string>
@@ -294,7 +281,6 @@
 				<string>=-I</string>
 				<string>:|</string>
 				<string>:l</string>
-				<string>:1</string>
 			</array>
 			<key>Name</key>
 			<string>Thinking</string>
@@ -348,7 +334,6 @@
 				<string>:$</string>
 				<string>=$</string>
 				<string>::$</string>
-				<string>: $</string>
 				<string>$$</string>
 			</array>
 			<key>Name</key>
