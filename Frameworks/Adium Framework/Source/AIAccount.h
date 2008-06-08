@@ -157,6 +157,7 @@ typedef enum {
 - (NSAlert*)alertForAccountDeletion;
 - (void)alertForAccountDeletion:(id<AIAccountControllerRemoveConfirmationDialog>)dialog didReturn:(int)returnCode;
 - (NSString *)explicitFormattedUID;
+- (NSString *)formattedUIDForListDisplay;
 
 //Properties
 - (BOOL)supportsAutoReplies;
