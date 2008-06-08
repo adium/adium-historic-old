@@ -14,17 +14,18 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "GBChatlogHTMLConverter.h"
+#import "AIXMLChatlogConverter.h"
 #import "AIStandardListWindowController.h"
+#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIContactControllerProtocol.h>
+#import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <Adium/AIStatusControllerProtocol.h>
 #import <AIUtilities/NSCalendarDate+ISO8601Parsing.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-
 
 #define PREF_GROUP_WEBKIT_MESSAGE_DISPLAY		@"WebKit Message Display"
 #define KEY_WEBKIT_USE_NAME_FORMAT				@"Use Custom Name Format"
@@ -34,12 +35,12 @@ static void *createStructure(CFXMLParserRef parser, CFXMLNodeRef node, void *con
 static void addChild(CFXMLParserRef parser, void *parent, void *child, void *context);
 static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 
-@implementation GBChatlogHTMLConverter
+@implementation AIXMLChatlogConverter
 
-+ (NSString *)readFile:(NSString *)filePath withOptions:(NSDictionary *)options
++ (NSAttributedString *)readFile:(NSString *)filePath withOptions:(NSDictionary *)options
 {
-	GBChatlogHTMLConverter *converter = [[GBChatlogHTMLConverter alloc] init];
-	NSString *ret = [[converter readFile:filePath withOptions:options] retain];
+	AIXMLChatlogConverter *converter = [[AIXMLChatlogConverter alloc] init];
+	NSAttributedString *ret = [[converter readFile:filePath withOptions:options] retain];
 	[converter release];
 	return [ret autorelease];
 }
@@ -60,6 +61,8 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	parser = NULL;
 	status = nil;
 	
+	newlineAttributedString = [[NSAttributedString alloc] initWithString:@"\n" attributes:nil];
+
 	statusLookup = [[NSDictionary alloc] initWithObjectsAndKeys:
 		AILocalizedString(@"Online", nil), @"online",
 		AILocalizedString(@"Idle", nil), @"idle",
@@ -92,6 +95,7 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 
 - (void)dealloc
 {
+	[newlineAttributedString release];
 	[inputFileString release];
 	[eventTranslate release];
 	[sender release];
@@ -103,18 +107,23 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 	[status release];
 	[output release];
 	[statusLookup release];
+	[htmlDecoder release];
 	[super dealloc];
 }
 
-- (NSString *)readFile:(NSString *)filePath withOptions:(NSDictionary *)options
+- (NSAttributedString *)readFile:(NSString *)filePath withOptions:(NSDictionary *)options
 {
 	NSData *inputData = [NSData dataWithContentsOfFile:filePath];
 	inputFileString = [[NSString alloc] initWithData:inputData encoding:NSUTF8StringEncoding];
 	NSURL *url = [[NSURL alloc] initFileURLWithPath:filePath];
-	output = [[NSMutableString alloc] init];
-	[output appendFormat:@"<head><base href=\"%@\" /></head>", [filePath stringByDeletingLastPathComponent]];
+	output = [[NSMutableAttributedString alloc] init];
+	
+	htmlDecoder = [[AIHTMLDecoder alloc] init];
+	[htmlDecoder setBaseURL:[filePath stringByDeletingLastPathComponent]];
 	
 	showTimestamps = [[options objectForKey:@"showTimestamps"] boolValue];
+	showEmoticons = [[options objectForKey:@"showEmoticons"] boolValue];
+
 	CFXMLParserCallBacks callbacks = {
 		0,
 		createStructure,
@@ -297,11 +306,23 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 																														showingAMorPM:YES]
 																	timeZone:nil
 																	  locale:nil];
-				[output appendFormat:@"<div class=\"%@\">%@<span class=\"sender\">%@%@:</span> <pre class=\"message\">%@</pre></div>\n",
-				 ([mySN isEqualToString:sender] ? @"send" : @"receive"),
-				 (showTimestamps ? [NSString stringWithFormat:@"<span class=\"timestamp\">%@</span> ", timestampStr] : @""),
-				 shownSender, (autoResponse ? AILocalizedString(@" (Autoreply)", nil) : @""),
-				 message];
+				BOOL sentMessage = [mySN isEqualToString:sender];
+				[output appendAttributedString:[htmlDecoder decodeHTML:[NSString stringWithFormat:
+										 @"<div class=\"%@\">%@<span class=\"sender\">%@%@:</span></div> ",
+										 (sentMessage ? @"send" : @"receive"),
+										 (showTimestamps ? [NSString stringWithFormat:@"<span class=\"timestamp\">%@</span> ", timestampStr] : @""),
+										 shownSender, (autoResponse ? AILocalizedString(@" (Autoreply)", nil) : @"")]]];
+				
+				NSAttributedString *attributedMessage = [htmlDecoder decodeHTML:message];
+				if (showEmoticons) {
+					attributedMessage = [[adium contentController] filterAttributedString:attributedMessage
+																		  usingFilterType:AIFilterMessageDisplay
+																				direction:(sentMessage ? AIFilterOutgoing : AIFilterIncoming)
+																				  context:nil];				
+				}
+				[output appendAttributedString:attributedMessage];
+				[output appendAttributedString:newlineAttributedString];
+
 				state = XML_STATE_CHAT;
 			}
 			break;
@@ -326,12 +347,12 @@ static void endStructure(CFXMLParserRef parser, void *xmlType, void *context);
 					displayMessage = [NSString stringWithFormat:AILocalizedString(@"Changed status to %@", nil), [statusLookup objectForKey:status]];
 
 				if([displayMessage length])
-					[output appendFormat:@"<div class=\"status\">%@ (%@)</div>\n",
-						displayMessage,
-						[date descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:YES
-																									   showingAMorPM:YES]
-												   timeZone:nil
-													 locale:nil]];
+					[output appendAttributedString:[htmlDecoder decodeHTML:[NSString stringWithFormat:@"<div class=\"status\">%@ (%@)</div>\n",
+																			displayMessage,
+																			[date descriptionWithCalendarFormat:[NSDateFormatter localizedDateFormatStringShowingSeconds:YES
+																																						   showingAMorPM:YES]
+																									   timeZone:nil
+																										 locale:nil]]]];
 				state = XML_STATE_CHAT;
 			}			
 		case XML_STATE_CHAT:
@@ -360,7 +381,7 @@ void *createStructure(CFXMLParserRef parser, CFXMLNodeRef node, void *context)
 		{
 			NSString *name = [NSString stringWithString:(NSString *)CFXMLNodeGetString(node)];
 			const CFXMLElementInfo *info = CFXMLNodeGetInfoPtr(node);
-			[(GBChatlogHTMLConverter *)context startedElement:name info:info];
+			[(AIXMLChatlogConverter *)context startedElement:name info:info];
 			ret = (element *)malloc(sizeof(element));
 			ret->name = [name retain];
 			ret->empty = info->isEmpty;
@@ -395,7 +416,7 @@ void endStructure(CFXMLParserRef parser, void *xmlType, void *context)
 		name = [NSString stringWithString:((element *)xmlType)->name];
 		empty = ((element *)xmlType)->empty;
 	}
-	[(GBChatlogHTMLConverter *)context endedElement:name empty:empty];
+	[(AIXMLChatlogConverter *)context endedElement:name empty:empty];
 	if(xmlType != NULL)
 	{
 		[((element *)xmlType)->name release];

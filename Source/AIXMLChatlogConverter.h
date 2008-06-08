@@ -36,7 +36,9 @@ typedef enum {
 	AIScreenName = 4
 } AINameFormat;
 
-@interface GBChatlogHTMLConverter : AIObject {
+@class AIHTMLDecoder;
+
+@interface AIXMLChatlogConverter : AIObject {
 	CFXMLParserRef	parser;
 	NSString		*inputFileString;
 	NSDictionary	*eventTranslate;
@@ -51,15 +53,18 @@ typedef enum {
 	int				messageStart;
 	BOOL			autoResponse;
 	BOOL			showTimestamps;
+	BOOL			showEmoticons;
 	NSString		*status;
 	
-	NSMutableString *output;
+	NSMutableAttributedString *output;
+	NSAttributedString *newlineAttributedString;
 	NSDictionary	*statusLookup;
-	
+	AIHTMLDecoder	*htmlDecoder;
+
 	AINameFormat	nameFormat;
 }
 
-+ (NSString *)readFile:(NSString *)filePath withOptions:(NSDictionary *)options;
-- (NSString *)readFile:(NSString *)filePath withOptions:(NSDictionary *)options;
++ (NSAttributedString *)readFile:(NSString *)filePath withOptions:(NSDictionary *)options;
+- (NSAttributedString *)readFile:(NSString *)filePath withOptions:(NSDictionary *)options;
 
 @end

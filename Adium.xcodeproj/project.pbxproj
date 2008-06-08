@@ -570,6 +570,7 @@
 		34A1A8E70DFB276E00AC78CF /* SocialNetworkingCustomStatus.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A1A8E60DFB276E00AC78CF /* SocialNetworkingCustomStatus.nib */; };
 		34A1A8ED0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A1A8EB0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.h */; };
 		34A1A8EE0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1A8EC0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.m */; };
+		34A1AB6C0DFC531000AC78CF /* AIXMLChatlogConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1AB6B0DFC531000AC78CF /* AIXMLChatlogConverter.m */; };
 		34A1EDAF0DD3AF220090667A /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C103FAE057127A500F3C158 /* WebKit.framework */; };
 		34A1EE990DD3BFB00090667A /* AIFacebookBuddyListManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1EE980DD3BFB00090667A /* AIFacebookBuddyListManager.m */; };
 		34A1EFDE0DD3D4BB0090667A /* AIFacebookBuddyIconRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1EFDD0DD3D4BB0090667A /* AIFacebookBuddyIconRequest.m */; };
@@ -1320,7 +1321,6 @@
 		F51BCEEA0A15793E000FDC06 /* AutoHyperlinks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3496A8EA07CE6CA30055BBAB /* AutoHyperlinks.framework */; };
 		F551B1000B8F5130007D3A3C /* FireLogImporter.nib in Resources */ = {isa = PBXBuildFile; fileRef = F56E0DAF0A4CDF9C008D1EB5 /* FireLogImporter.nib */; };
 		F58904F20A7828B9001F0ADC /* OTR.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 341BDBBA0968BC9A00CF83F5 /* OTR.framework */; };
-		F5DA8A740A546AC5004A41D0 /* GBChatlogHTMLConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = F5DA8A720A546AC4004A41D0 /* GBChatlogHTMLConverter.m */; };
 		F5F8CA4D0A1A9C9400154550 /* GBQuestionHandlerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F8CA4B0A1A9C9400154550 /* GBQuestionHandlerPlugin.m */; };
 /* End PBXBuildFile section */
 
@@ -3044,6 +3044,8 @@
 		34A1A8E60DFB276E00AC78CF /* SocialNetworkingCustomStatus.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = SocialNetworkingCustomStatus.nib; path = "Frameworks/Adium Framework/Resources/SocialNetworkingCustomStatus.nib"; sourceTree = "<group>"; };
 		34A1A8EB0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AICustomSocialNetworkingStatusWindowController.h; path = "Frameworks/Adium Framework/Source/AICustomSocialNetworkingStatusWindowController.h"; sourceTree = "<group>"; };
 		34A1A8EC0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AICustomSocialNetworkingStatusWindowController.m; path = "Frameworks/Adium Framework/Source/AICustomSocialNetworkingStatusWindowController.m"; sourceTree = "<group>"; };
+		34A1AB6A0DFC531000AC78CF /* AIXMLChatlogConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIXMLChatlogConverter.h; path = Source/AIXMLChatlogConverter.h; sourceTree = "<group>"; };
+		34A1AB6B0DFC531000AC78CF /* AIXMLChatlogConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIXMLChatlogConverter.m; path = Source/AIXMLChatlogConverter.m; sourceTree = "<group>"; };
 		34A1EE970DD3BFB00090667A /* AIFacebookBuddyListManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIFacebookBuddyListManager.h; path = "Plugins/Facebook Service/AIFacebookBuddyListManager.h"; sourceTree = "<group>"; };
 		34A1EE980DD3BFB00090667A /* AIFacebookBuddyListManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIFacebookBuddyListManager.m; path = "Plugins/Facebook Service/AIFacebookBuddyListManager.m"; sourceTree = "<group>"; };
 		34A1EFDC0DD3D4BB0090667A /* AIFacebookBuddyIconRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIFacebookBuddyIconRequest.h; path = "Plugins/Facebook Service/AIFacebookBuddyIconRequest.h"; sourceTree = "<group>"; };
@@ -4269,8 +4271,6 @@
 		F59DB3D7033EA9CD01A8010A /* AIAdium.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAdium.m; path = Source/AIAdium.m; sourceTree = "<group>"; };
 		F59DB3E7033EB4B601A8010A /* Adium.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = Adium.h; path = "Frameworks/Adium Framework/Source/Adium.h"; sourceTree = "<group>"; };
 		F59DB6AD033EB74801A8010A /* main.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Source/main.m; sourceTree = SOURCE_ROOT; };
-		F5DA8A710A546AC4004A41D0 /* GBChatlogHTMLConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GBChatlogHTMLConverter.h; path = Source/GBChatlogHTMLConverter.h; sourceTree = "<group>"; };
-		F5DA8A720A546AC4004A41D0 /* GBChatlogHTMLConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GBChatlogHTMLConverter.m; path = Source/GBChatlogHTMLConverter.m; sourceTree = "<group>"; };
 		F5F0FE9C04B12CAC01A80106 /* AIEmoticonPreferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonPreferences.h; path = Plugins/Emoticons/AIEmoticonPreferences.h; sourceTree = "<group>"; };
 		F5F0FE9D04B12CAC01A80106 /* AIEmoticonPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonPreferences.m; path = Plugins/Emoticons/AIEmoticonPreferences.m; sourceTree = "<group>"; };
 		F5F0FEA004B1336C01A80106 /* EmoticonPrefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = EmoticonPrefs.nib; path = Plugins/Emoticons/EmoticonPrefs.nib; sourceTree = "<group>"; };
@@ -7434,8 +7434,8 @@
 			children = (
 				9ECB03E409F2A9D800996F44 /* AIXMLAppender.h */,
 				9ECB03E509F2A9D800996F44 /* AIXMLAppender.m */,
-				F5DA8A710A546AC4004A41D0 /* GBChatlogHTMLConverter.h */,
-				F5DA8A720A546AC4004A41D0 /* GBChatlogHTMLConverter.m */,
+				34A1AB6A0DFC531000AC78CF /* AIXMLChatlogConverter.h */,
+				34A1AB6B0DFC531000AC78CF /* AIXMLChatlogConverter.m */,
 			);
 			name = "XML Logging";
 			sourceTree = "<group>";
@@ -9630,7 +9630,6 @@
 				34F849590A4AF04D0002A017 /* AILogFileUpgradeWindowController.m in Sources */,
 				34382CEA0A50386C004BF6A2 /* DCMessageContextDisplayPlugin.m in Sources */,
 				348B250D0A50A1C900B2B972 /* ESSourceListBackgroundView.m in Sources */,
-				F5DA8A740A546AC5004A41D0 /* GBChatlogHTMLConverter.m in Sources */,
 				340670A90A55A4B4004E22AC /* ESGlassSplitView.m in Sources */,
 				345AFAEE0A5D9A5F00D7DA6F /* AINoisyTableColumn.m in Sources */,
 				34EA6B320A62F3420053DFEB /* AIApplication.m in Sources */,
@@ -9738,6 +9737,7 @@
 				34EBB2C30DCA8DE500B4CB6E /* AISearchFieldCell.m in Sources */,
 				EFB1C3140DDBDA3100B3973D /* AITwitterIMPlugin.m in Sources */,
 				11077B6F0DE647C100A4DD25 /* AIStatusItemView.m in Sources */,
+				34A1AB6C0DFC531000AC78CF /* AIXMLChatlogConverter.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
