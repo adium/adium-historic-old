@@ -36,14 +36,13 @@
 	IBOutlet	AIAlternatingRowTableView		*accountsTableView;
 	IBOutlet	NSTableColumn					*contactsColumn;
 	
-	IBOutlet	NSTextField						*accountsLabel;
-	IBOutlet	NSPopUpButton					*accountsButton;
+	IBOutlet	NSTextField						*label_account;
+	IBOutlet	NSPopUpButton					*popUp_accounts;
 	
-	IBOutlet	NSTextField						*encryptionField;
-	IBOutlet	NSPopUpButton					*encryptionButton;
+	IBOutlet	NSTextField						*label_encryption;
+	IBOutlet	NSPopUpButton					*popUp_encryption;
 	
-	IBOutlet	NSTextField						*visibilityField;
-	IBOutlet	NSButton						*visibilityButton;
+	IBOutlet	NSButton						*checkBox_alwaysShow;
 	
 	AIAccountMenu	*accountMenu;
 	
