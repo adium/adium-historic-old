@@ -56,10 +56,14 @@
 		if([chat isGroupChat]) {
 			NSString *messageString = [inAttributedString string];
 			AIListObject *me = [message destination];
+			NSRange range = [messageString rangeOfString:[me displayName] options:NSCaseInsensitiveSearch];
+			if(range.location == NSNotFound)
+				range = [messageString rangeOfString:[me formattedUID] options:NSCaseInsensitiveSearch];
 			
 			//TODO: This needs to respect per-room nicknames
-			if([messageString rangeOfString:[me displayName] options:NSCaseInsensitiveSearch].location != NSNotFound ||
-			   [messageString rangeOfString:[me formattedUID] options:NSCaseInsensitiveSearch].location != NSNotFound) 
+			if(range.location != NSNotFound &&
+			   (range.location == 0 || ![[NSCharacterSet alphanumericCharacterSet] characterIsMember:[messageString characterAtIndex:range.location-1]]) &&
+			   (range.location + range.length >= [messageString length] || ![[NSCharacterSet alphanumericCharacterSet] characterIsMember:[messageString characterAtIndex:range.location+range.length]]))
 			{
 				[[adium contactAlertsController] generateEvent:CONTENT_GROUP_CHAT_MENTION
 												 forListObject:[message source]
