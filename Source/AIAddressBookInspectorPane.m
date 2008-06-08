@@ -12,14 +12,14 @@
 
 @implementation AIAddressBookInspectorPane
 
-- (id) init
+- (id)init
 {
-	self = [super init];
-	if (self != nil) {
+	if ((self = [super init])) {
 		[NSBundle loadNibNamed:[self nibName] owner:self];
-		[notesLabel setLocalizedString:AILocalizedString(@"Notes:","Label beside the field for contact notes in the Settings tab of the Get Info window")];
-		//Any additional setup goes here.
+		[notesLabel setLocalizedString:AILocalizedString(@"Notes:", "Label beside the field for contact notes in the Settings tab of the Get Info window")];
+		[addressBookButton setLocalizedString:AILocalizedStringFromTable(@"Choose Card", @"Buttons", "Button title to choose an Address Book card for a contact")];
 	}
+
 	return self;
 }
 
@@ -83,7 +83,7 @@
 {
 	//This method will be different during Adium integration, until then we simply print out some details about the ABPerson
 	//that has been selected. Pretty simple.
-	
+#warning Needs completion before 1.3
 	NSArray *selectedCards = [addressBookPicker selectedRecords];
 	NSLog(@"%@", selectedCards);
 	[NSApp endSheet:addressBookPanel];	
