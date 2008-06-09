@@ -2956,13 +2956,18 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 			 * Use the Libpurple "psychic" tagline. If this is found to be confusing, we should switch to your own version.
 			 * The upside of using theirs is that clever gimmicky translations already exist.
 			 */
+			NSMutableString *forceString = [[NSString stringWithUTF8String:_("You feel a disturbance in the force...")] mutableCopy];
+			[forceString replaceOccurrencesOfString:@"..."
+										 withString:[NSString ellipsis]
+											options:NSLiteralSearch];
 			AIContentStatus *statusMessage = [AIContentStatus statusInChat:chat
 																withSource:[chat listObject]
 															   destination:self
 																	  date:[NSDate date]
-																   message:[NSAttributedString stringWithString:[NSString stringWithUTF8String:_("You feel a disturbance in the force...")]]
+																   message:[NSAttributedString stringWithString:forceString]
 																  withType:@"psychic"];
-			
+			[forceString release];
+
 			[[adium contentController] receiveContentObject:statusMessage];
 		}
 		
