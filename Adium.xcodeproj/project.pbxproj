@@ -573,6 +573,7 @@
 		34A1AB6C0DFC531000AC78CF /* AIXMLChatlogConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1AB6B0DFC531000AC78CF /* AIXMLChatlogConverter.m */; };
 		34A1AEE90DFD4BFE00AC78CF /* AIAddressBookInspectorPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A1AEE80DFD4BFE00AC78CF /* AIAddressBookInspectorPane.nib */; };
 		34A1AEEE0DFD4C4A00AC78CF /* AIAdvancedInspectorPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A1AEED0DFD4C4A00AC78CF /* AIAdvancedInspectorPane.nib */; };
+		34A1B2C30DFDBA1200AC78CF /* AIStringDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1B2C20DFDBA1200AC78CF /* AIStringDebug.m */; };
 		34A1EDAF0DD3AF220090667A /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C103FAE057127A500F3C158 /* WebKit.framework */; };
 		34A1EE990DD3BFB00090667A /* AIFacebookBuddyListManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1EE980DD3BFB00090667A /* AIFacebookBuddyListManager.m */; };
 		34A1EFDE0DD3D4BB0090667A /* AIFacebookBuddyIconRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1EFDD0DD3D4BB0090667A /* AIFacebookBuddyIconRequest.m */; };
@@ -3072,6 +3073,8 @@
 		34A1AF120DFD4C8100AC78CF /* tr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = tr; path = Resources/tr.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
 		34A1AF130DFD4C8300AC78CF /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
 		34A1AF140DFD4C8500AC78CF /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1B2C10DFDBA1200AC78CF /* AIStringDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStringDebug.h; path = Source/AIStringDebug.h; sourceTree = "<group>"; };
+		34A1B2C20DFDBA1200AC78CF /* AIStringDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIStringDebug.m; path = Source/AIStringDebug.m; sourceTree = "<group>"; };
 		34A1EE970DD3BFB00090667A /* AIFacebookBuddyListManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIFacebookBuddyListManager.h; path = "Plugins/Facebook Service/AIFacebookBuddyListManager.h"; sourceTree = "<group>"; };
 		34A1EE980DD3BFB00090667A /* AIFacebookBuddyListManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIFacebookBuddyListManager.m; path = "Plugins/Facebook Service/AIFacebookBuddyListManager.m"; sourceTree = "<group>"; };
 		34A1EFDC0DD3D4BB0090667A /* AIFacebookBuddyIconRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIFacebookBuddyIconRequest.h; path = "Plugins/Facebook Service/AIFacebookBuddyIconRequest.h"; sourceTree = "<group>"; };
@@ -5066,6 +5069,8 @@
 			children = (
 				9ECB03E209F2A9D800996F44 /* AIDictionaryDebug.h */,
 				9ECB03E309F2A9D800996F44 /* AIDictionaryDebug.m */,
+				34A1B2C10DFDBA1200AC78CF /* AIStringDebug.h */,
+				34A1B2C20DFDBA1200AC78CF /* AIStringDebug.m */,
 				34BC8F780ACA3AAC00562745 /* AIScannerDebug.h */,
 				34BC8F790ACA3AAC00562745 /* AIScannerDebug.m */,
 				34575E3607CBA874004A4FFF /* DebugWindow.nib */,
@@ -9763,6 +9768,7 @@
 				EFB1C3140DDBDA3100B3973D /* AITwitterIMPlugin.m in Sources */,
 				11077B6F0DE647C100A4DD25 /* AIStatusItemView.m in Sources */,
 				34A1AB6C0DFC531000AC78CF /* AIXMLChatlogConverter.m in Sources */,
+				34A1B2C30DFDBA1200AC78CF /* AIStringDebug.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
