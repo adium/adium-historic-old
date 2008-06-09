@@ -101,6 +101,8 @@ CFStringRef CopyTextContentForFile(CFStringRef contentTypeUTI,
 									 [[[(NSString *)pathToFile lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"xml"]];
 			
 			textContent = (CFStringRef)GetTextContentForXMLLog((NSString *)pathToFile);
+		} else {
+			textContent = nil;
 		}
 		
 	} else {
