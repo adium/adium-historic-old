@@ -79,6 +79,10 @@
 - (void) setIsGroupChat:(BOOL) flag;
 @end
 
+@interface DOMDocument (FutureWebKitPublicMethodsIKnow)
+- (DOMNodeList *)getElementsByClassName:(NSString *)className;
+@end
+
 static NSArray *draggedTypes = nil;
 
 @implementation AIWebKitMessageViewController
