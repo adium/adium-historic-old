@@ -32,6 +32,8 @@
 
 #include <AvailabilityMacros.h>
 
+#import "ESAddressBookIntegrationPlugin.h"
+
 #define KEY_BASE_WRITING_DIRECTION		@"Base Writing Direction"
 #define PREF_GROUP_WRITING_DIRECTION	@"Writing Direction"
 
@@ -757,6 +759,19 @@
 	[self setPreference:[NSNumber numberWithInt:direction]
 				 forKey:KEY_BASE_WRITING_DIRECTION
 				  group:PREF_GROUP_WRITING_DIRECTION];
+}
+
+#pragma mark Address Book
+- (ABPerson *)addressBookPerson
+{
+#warning fix me by moving ESAddressBookIntegrationPlugin to being a core helper of AIContactController
+	return [NSClassFromString(@"ESAddressBookIntegrationPlugin") personForListObject:[self parentContact]];	
+}
+- (void)setAddressBookPerson:(ABPerson *)inPerson
+{
+	[[self parentContact] setPreference:[inPerson uniqueId]
+								 forKey:KEY_AB_UNIQUE_ID
+								  group:PREF_GROUP_ADDRESSBOOK];
 }
 
 #pragma mark Applescript
