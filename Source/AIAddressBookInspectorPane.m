@@ -7,6 +7,7 @@
 //
 
 #import "AIAddressBookInspectorPane.h"
+#import <AIUtilities/AIStringAdditions.h>
 
 #define ADDRESS_BOOK_NIB_NAME (@"AIAddressBookInspectorPane")
 
@@ -16,8 +17,12 @@
 {
 	if ((self = [super init])) {
 		[NSBundle loadNibNamed:[self nibName] owner:self];
-		[notesLabel setLocalizedString:AILocalizedString(@"Notes:", "Label beside the field for contact notes in the Settings tab of the Get Info window")];
-		[addressBookButton setLocalizedString:AILocalizedStringFromTable(@"Choose Card", @"Buttons", "Button title to choose an Address Book card for a contact")];
+		[label_notes setLocalizedString:AILocalizedString(@"Notes:", "Label beside the field for contact notes in the Settings tab of the Get Info window")];
+		[button_chooseCard setLocalizedString:[AILocalizedStringFromTable(@"Choose Address Book Card", @"Buttons", "Button title to choose an Address Book card for a contact") stringByAppendingEllipsis]];
+		
+		[label_abPeoplePickerChooseAnAddressCard setLocalizedString:AILocalizedString(@"Choose an Address Card:", nil)];
+		[button_abPeoplePickerOkay setLocalizedString:AILocalizedStringFromTable(@"Choose Card", @"Buttons", nil)];
+		[button_abPeoplePickerCancel setLocalizedString:AILocalizedStringFromTable(@"Cancel", @"Buttons", nil)];
 	}
 
 	return self;
@@ -83,9 +88,12 @@
 {
 	//This method will be different during Adium integration, until then we simply print out some details about the ABPerson
 	//that has been selected. Pretty simple.
-#warning Needs completion before 1.3
 	NSArray *selectedCards = [addressBookPicker selectedRecords];
-	NSLog(@"%@", selectedCards);
+	
+	if ([selectedCards count]) {
+		[displayedObject setAddressBookPerson:[selectedCards objectAtIndex:0]];
+	}
+
 	[NSApp endSheet:addressBookPanel];	
 }
 
