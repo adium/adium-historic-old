@@ -11495,10 +11495,7 @@
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
 				OTHER_LDFLAGS = "-lsasl2";
 				PRODUCT_NAME = AdiumLibpurple;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wno-long-double",
-				);
+				WARNING_CFLAGS = "-Wall";
 			};
 			name = Development;
 		};
@@ -11543,10 +11540,7 @@
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
 				OTHER_LDFLAGS = "-lsasl2";
 				PRODUCT_NAME = AdiumLibpurple;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wno-long-double",
-				);
+				WARNING_CFLAGS = "-Wall";
 			};
 			name = Deployment;
 		};
@@ -11592,10 +11586,7 @@
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
 				OTHER_LDFLAGS = "-lsasl2";
 				PRODUCT_NAME = AdiumLibpurple;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wno-long-double",
-				);
+				WARNING_CFLAGS = "-Wall";
 			};
 			name = "Deployment-Debug";
 		};
@@ -11641,10 +11632,7 @@
 				LIBRARY_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"/Developer/SDKs/MacOSX10.4u.sdk/usr/lib\"";
 				OTHER_LDFLAGS = "-lsasl2";
 				PRODUCT_NAME = AdiumLibpurple;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wno-long-double",
-				);
+				WARNING_CFLAGS = "-Wall";
 			};
 			name = "Deployment-Debug_PPC-Only";
 		};
@@ -11951,10 +11939,7 @@
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				PRODUCT_NAME = Adium;
 				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wno-long-double",
-				);
+				WARNING_CFLAGS = "-Wall";
 			};
 			name = "Deployment-Debug_PPC-Only";
 		};
@@ -12466,10 +12451,7 @@
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				PRODUCT_NAME = Adium;
 				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wno-long-double",
-				);
+				WARNING_CFLAGS = "-Wall";
 			};
 			name = Development;
 		};
@@ -12493,10 +12475,7 @@
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				PRODUCT_NAME = Adium;
 				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wno-long-double",
-				);
+				WARNING_CFLAGS = "-Wall";
 			};
 			name = Deployment;
 		};
@@ -12520,10 +12499,7 @@
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				PRODUCT_NAME = Adium;
 				SKIP_INSTALL = YES;
-				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wno-long-double",
-				);
+				WARNING_CFLAGS = "-Wall";
 			};
 			name = "Deployment-Debug";
 		};
