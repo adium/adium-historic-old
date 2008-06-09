@@ -276,10 +276,21 @@ static void typing_changed(PurpleAccount *acct, const char *name, AITypingState 
 	if ([contact isStranger]) {
 		return;
 	}
-	
-	AIChat *chat = [[[AIObject sharedAdiumInstance] chatController] chatWithContact:contact];
 
-	[account typingUpdateForIMChat:chat typing:[NSNumber numberWithInt:typingState]];
+	AIChat *chat;
+	switch (typingState) {
+		case AINotTyping:
+			chat = [[[AIObject sharedAdiumInstance] chatController] existingChatWithContact:contact];
+			break;
+		case AITyping:
+		case AIEnteredText:
+			chat = [[[AIObject sharedAdiumInstance] chatController] chatWithContact:contact];
+			AILogWithSignature(@"Made a chat for %s: %i", name, typingState);
+			break;
+	}
+
+	if (chat)
+		[account typingUpdateForIMChat:chat typing:[NSNumber numberWithInt:typingState]];
 }
 
 static void conversation_created_cb(PurpleConversation *conv, void *data) {
