@@ -475,7 +475,7 @@
 
 //stringByEscapingForXMLWithEntities: and stringByUnescapingFromXMLWithEntities: were written by Peter Hosey and are explicitly released under the BSD license.
 /*
- Copyright © 2006 Peter Hosey
+ Copyright Â© 2006 Peter Hosey
  All rights reserved.
  
  Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
