@@ -78,4 +78,9 @@
 	return nil;
 }
 
+- (BOOL)shouldDisplayInContactInspector
+{
+	return YES;
+}
+
 @end
