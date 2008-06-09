@@ -42,8 +42,8 @@
  *											  ensures that yyleng reports whole length of the string,
  *											  without a costly call to yymore().
  */
-unsigned int AHStringOffset;
-int AHValidShift = 0;
+unsigned long AHStringOffset;
+long AHValidShift = 0;
 #include "AHLinkLexer.h"
 %}
 
