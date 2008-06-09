@@ -315,6 +315,8 @@
 		NSRange startRange = [scanString rangeOfCharacterFromSet:startSet];
 		if (startRange.location != NSNotFound) {
 			location += startRange.location + 1;
+			if(location >= [inString length])
+				location--;
 		}else{
 			location += [scanString length];
 			if(location >= [inString length])
