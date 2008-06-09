@@ -61,24 +61,30 @@
 			<string>ObjC</string>
 			<key>OUTLETS</key>
 			<dict>
-				<key>addressBookButton</key>
-				<string>NSButton</string>
 				<key>addressBookPanel</key>
 				<string>NSPanel</string>
 				<key>addressBookPicker</key>
 				<string>ABPeoplePickerView</string>
 				<key>aliasLabel</key>
 				<string>NSTextField</string>
+				<key>button_abPeoplePickerCancel</key>
+				<string>NSButton</string>
+				<key>button_abPeoplePickerOkay</key>
+				<string>NSButton</string>
+				<key>button_chooseCard</key>
+				<string>NSButton</string>
 				<key>contactAlias</key>
 				<string>AIDelayedTextField</string>
 				<key>contactNotes</key>
 				<string>AIDelayedTextField</string>
 				<key>inspectorContentView</key>
 				<string>NSView</string>
+				<key>label_abPeoplePickerChooseAnAddressCard</key>
+				<string>NSTextField</string>
+				<key>label_notes</key>
+				<string>NSTextField</string>
 				<key>notes</key>
 				<string>AIDelayedTextField</string>
-				<key>notesLabel</key>
-				<string>NSTextField</string>
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>AIObject</string>
