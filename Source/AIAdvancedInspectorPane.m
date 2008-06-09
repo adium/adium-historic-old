@@ -32,10 +32,6 @@
 		//Load Encryption menus
 		[popUp_encryption setMenu:[[adium contentController] encryptionMenuNotifyingTarget:self withDefault:YES]];
 		[[popUp_encryption menu] setAutoenablesItems:NO];
-		
-		[label_account setLocalizedString:AILocalizedString(@"Account:", nil)];
-		[label_encryption setLocalizedString:AILocalizedString(@"Encryption:", nil)];
-		[checkBox_alwaysShow setLocalizedString:AILocalizedString(@"Always show this contact", nil)];
 
 		//Configure Table view
 		[accountsTableView setUsesAlternatingRowBackgroundColors:YES];
