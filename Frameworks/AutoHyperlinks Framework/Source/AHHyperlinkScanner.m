@@ -314,7 +314,7 @@
         //step location after scanning a string
 		NSRange startRange = [scanString rangeOfCharacterFromSet:startSet];
 		if (startRange.location != NSNotFound) {
-			location += startRange.location;
+			location += startRange.location + 1;
 		}else{
 			location += [scanString length];
 			if(location >= [inString length])
