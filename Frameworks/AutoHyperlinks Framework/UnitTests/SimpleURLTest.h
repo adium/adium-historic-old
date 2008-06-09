@@ -19,6 +19,5 @@
 - (void)testIPv6URI;
 - (void)testUniqueURI;
 - (void)testEmailAddress;
-- (void)testJID;
 - (void)testUserCases;
 @end

@@ -26,5 +26,6 @@
 	testHyperlink(@"http://[1]");
 	testHyperlink(@"http://[]");
 	testHyperlink(@"http://example.com/ is not a link");
+	testHyperlink(@"jdoe@jabber.org/Adium");
 }
 @end

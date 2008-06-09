@@ -16,6 +16,17 @@
 	STAssertEqualObjects([[link parentString] substringWithRange:[link range]], URIString, @"in context: '%@'", testString);
 }
 
+- (void)testNegativeContext:(NSString *)linkString withURI:(NSString *)URIString
+{
+	AHHyperlinkScanner	*scanner = [[AHHyperlinkScanner alloc] initWithStrictChecking:NO];
+	NSString			*testString = [NSString stringWithFormat:linkString, URIString];
+	AHMarkedHyperlink	*link = [[scanner allURLsFromString:testString] objectAtIndex:0];
+	
+	STAssertNil(link, @"-[SHHyperlinkScanner nextURLFromString:] found no URI in \"%@\"", testString);
+	STAssertEqualObjects([[link parentString] substringWithRange:[link range]], nil, @"in context: '%@'", testString);
+}
+
+#pragma mark positive tests
 - (void)testEnclosedURI:(NSString *)URIString {
 	[self testLaxContext:@"<%@>" withURI:URIString];
 	[self testLaxContext:@"(%@)" withURI:URIString];
@@ -79,6 +90,71 @@
 	[self testLaxContext:@"words before %@ and words after" withURI:URIString];
 }
 
+#pragma mark negative tests
+- (void)testNegativeEnclosedURI:(NSString *)URIString {
+	[self testNegativeContext:@"<%@>" withURI:URIString];
+	[self testNegativeContext:@"(%@)" withURI:URIString];
+	[self testNegativeContext:@"[%@]" withURI:URIString];
+}
+
+- (void)testNegativeEnclosedURI:(NSString *)URIString enclosureOpeningCharacter:(unichar)openingChar enclosureClosingCharacter:(unichar)closingChar followedByCharacter:(unichar)terminalChar {
+	NSString *format = [NSString stringWithFormat:@"%C%%@%C%C", openingChar, closingChar, terminalChar];
+	[self testNegativeContext:format withURI:URIString];
+}
+- (void)testNegativeEnclosedURIFollowedByCharacter:(NSString *)URIString {
+	enum {
+		kNumEnclosureCharacters = 3U,
+		kNumTerminalCharacters = 17U
+	};
+	unichar enclosureOpeningCharacters[kNumEnclosureCharacters] = { '<', '(', '[', };
+	unichar enclosureClosingCharacters[kNumEnclosureCharacters] = { '>', ')', ']', };
+	unichar terminalCharacters[kNumTerminalCharacters] = { '.', '!', '?', '<', '>', '(', ')', '{', '}', '[', ']', '"', '\'', '-', ',', ':', ';' };
+	for (unsigned int enclosureIndex = 0U; enclosureIndex < kNumEnclosureCharacters; ++enclosureIndex) {
+		for (unsigned int terminalCharacterIndex = 0U; terminalCharacterIndex < kNumTerminalCharacters; ++terminalCharacterIndex) {
+			[self         testNegativeEnclosedURI:URIString
+				enclosureOpeningCharacter:enclosureOpeningCharacters[enclosureIndex]
+				enclosureClosingCharacter:enclosureClosingCharacters[enclosureIndex]
+					  followedByCharacter:terminalCharacters[terminalCharacterIndex]
+			];
+		}
+	}
+}
+
+- (void)testNegativeURIBorder:(NSString *)URIString {
+	[self testNegativeContext:@":%@" withURI:URIString];
+	[self testNegativeContext:@"check it out:%@" withURI:URIString];
+	[self testNegativeContext:@"%@:" withURI:URIString];
+	[self testNegativeContext:@"%@." withURI:URIString];
+}
+
+- (void)testNegativeWhitespace:(NSString *)URIString {
+	[self testNegativeContext:@"\t%@" withURI:URIString];
+	[self testNegativeContext:@"\n%@" withURI:URIString];
+	[self testNegativeContext:@"\v%@" withURI:URIString];
+	[self testNegativeContext:@"\f%@" withURI:URIString];
+	[self testNegativeContext:@"\r%@" withURI:URIString];
+	[self testNegativeContext:@" %@" withURI:URIString];
+
+	[self testNegativeContext:@"%@\t" withURI:URIString];
+	[self testNegativeContext:@"%@\n" withURI:URIString];
+	[self testNegativeContext:@"%@\v" withURI:URIString];
+	[self testNegativeContext:@"%@\f" withURI:URIString];
+	[self testNegativeContext:@"%@\r" withURI:URIString];
+	[self testNegativeContext:@"%@ " withURI:URIString];
+
+	[self testNegativeContext:@"\t%@\t" withURI:URIString];
+	[self testNegativeContext:@"\n%@\n" withURI:URIString];
+	[self testNegativeContext:@"\v%@\v" withURI:URIString];
+	[self testNegativeContext:@"\f%@\f" withURI:URIString];
+	[self testNegativeContext:@"\r%@\r" withURI:URIString];
+	[self testNegativeContext:@" %@ " withURI:URIString];
+	
+	[self testNegativeContext:@"words before %@" withURI:URIString];
+	[self testNegativeContext:@"%@ words after" withURI:URIString];
+	[self testNegativeContext:@"words before %@ and words after" withURI:URIString];
+}
+
+#pragma mark URI tests
 - (void)testSimpleDomain {
 	[self testEnclosedURI:@"example.com"];
 	[self testEnclosedURIFollowedByCharacter:@"example.com"];
@@ -94,10 +170,10 @@
 }
 
 - (void)testJID {
-	[self testEnclosedURI:@"jdoe@jabber.org/Adium"];
-	[self testEnclosedURIFollowedByCharacter:@"jdoe@jabber.org/Adium"];
-	[self testURIBorder:@"jdoe@jabber.org/Adium"];
-	[self testWhitespace:@"jdoe@jabber.org/Adium"];
+	[self testNegativeEnclosedURI:@"jdoe@jabber.org/Adium"];
+	[self testNegativeEnclosedURIFollowedByCharacter:@"jdoe@jabber.org/Adium"];
+	[self testNegativeURIBorder:@"jdoe@jabber.org/Adium"];
+	[self testNegativeWhitespace:@"jdoe@jabber.org/Adium"];
 }
 
 - (void)testEdgeURI {
