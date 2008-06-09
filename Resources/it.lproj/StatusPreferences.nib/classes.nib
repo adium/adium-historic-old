@@ -38,11 +38,40 @@
 		</dict>
 		<dict>
 			<key>CLASS</key>
+			<string>NSApplication</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSResponder</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>RBSplitView</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>delegate</key>
+				<string>id</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>RBSplitSubview</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
 			<string>NSTextField</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
 			<key>SUPERCLASS</key>
 			<string>NSControl</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>RBSplitSubview</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSView</string>
 		</dict>
 		<dict>
 			<key>CLASS</key>
@@ -65,14 +94,6 @@
 		</dict>
 		<dict>
 			<key>CLASS</key>
-			<string>AIPlasticPlusButton</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>AIPlasticButton</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
 			<string>FirstResponder</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
@@ -80,6 +101,27 @@
 			<string>NSObject</string>
 		</dict>
 		<dict>
+			<key>CLASS</key>
+			<string>AIPlasticPlusButton</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>AIPlasticButton</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>adiumPrint</key>
+				<string>id</string>
+				<key>didAdjustSubviews</key>
+				<string>RBSplitView</string>
+				<key>prefsWindowWillClose</key>
+				<string>SS_PrefsController</string>
+				<key>toggleFindPanel</key>
+				<string>id</string>
+				<key>willAdjustSubviews</key>
+				<string>RBSplitView</string>
+			</dict>
 			<key>CLASS</key>
 			<string>NSObject</string>
 			<key>LANGUAGE</key>
@@ -92,6 +134,14 @@
 			<string>ObjC</string>
 			<key>SUPERCLASS</key>
 			<string>AIModularPane</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>NSButtonCell</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSActionCell</string>
 		</dict>
 		<dict>
 			<key>CLASS</key>
@@ -111,6 +161,26 @@
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>NSButton</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>changePreference</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>AIModularPane</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>plugin</key>
+				<string>id</string>
+				<key>view</key>
+				<string>NSView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>AIObject</string>
 		</dict>
 		<dict>
 			<key>ACTIONS</key>
@@ -169,24 +239,25 @@
 			<string>AIPreferencePane</string>
 		</dict>
 		<dict>
-			<key>ACTIONS</key>
-			<dict>
-				<key>changePreference</key>
-				<string>id</string>
-			</dict>
 			<key>CLASS</key>
-			<string>AIModularPane</string>
+			<string>NSWindow</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSResponder</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>SS_PrefsController</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
 			<key>OUTLETS</key>
 			<dict>
-				<key>plugin</key>
+				<key>delegate</key>
 				<string>id</string>
-				<key>view</key>
-				<string>NSView</string>
 			</dict>
 			<key>SUPERCLASS</key>
-			<string>AIObject</string>
+			<string>NSObject</string>
 		</dict>
 		<dict>
 			<key>CLASS</key>
