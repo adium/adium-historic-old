@@ -360,6 +360,20 @@ typedef enum {
 - (void)unregisterContactListTooltipEntry:(id <AIContactListTooltipEntry>)inEntry secondaryEntry:(BOOL)isSecondary;
 
 /*!
+ * @brief Get an array of all primary contact list tooltip entries
+ *
+ * @result An NSArray of objects conforming to AIContactListTooltipEntry
+ */
+- (NSArray *)contactListTooltipPrimaryEntries;
+
+/*!
+ * @brief Get an array of all secondary contact list tooltip entries
+ *
+ * @result An NSArray of objects conforming to AIContactListTooltipEntry
+ */
+- (NSArray *)contactListTooltipSecondaryEntries;
+
+/*!
  * @brief Show an object's tooltip at a given point
  *
  * If object is not nil, the tooltip box will be shown for that object at the given point. It is created if needed;
@@ -428,6 +442,7 @@ typedef enum {
 @protocol AIContactListTooltipEntry <NSObject>
 - (NSString *)labelForObject:(AIListObject *)inObject;
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject;
+- (BOOL)shouldDisplayInContactInspector;
 @end
 
 @protocol AIFlashObserver <NSObject>
