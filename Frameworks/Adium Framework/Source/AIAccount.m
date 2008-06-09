@@ -969,6 +969,7 @@ typedef enum
 	if (![resolvedKeyDictionary objectForKey:@"newChatWindow"] && ![resolvedKeyDictionary objectForKey:@"Location"]) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
 		[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't create a chat without specifying its containing window."];
+		return nil;
 	}
 	
 	if ([participants count] == 1) {
@@ -976,6 +977,7 @@ typedef enum
 		if (!contact) {
 			[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
 			[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't find that contact!"];
+			return nil;
 		}
 		AIMessageWindowController *chatWindowController = nil;
 		int index = -1; //at end by default
@@ -994,6 +996,7 @@ typedef enum
 		if (!chatWindowController) {
 			[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
 			[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't create chat in that chat window."];
+			return nil;
 		}
 		
 		AIChat *newChat = [[[AIObject sharedAdiumInstance] chatController] chatWithContact:contact];
