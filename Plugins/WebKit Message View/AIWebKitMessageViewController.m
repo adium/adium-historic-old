@@ -415,7 +415,8 @@ static NSArray *draggedTypes = nil;
 				
 				//Cache the image under that unique ID
 				//Since we prefix the filename with TEMP, Adium will automatically clean it up on quit
-				[backgroundImage writeToFile:[self _webKitBackgroundImagePathForUniqueID:uniqueID] atomically:YES];
+				cachePath = [self _webKitBackgroundImagePathForUniqueID:uniqueID];
+				[backgroundImage writeToFile:cachePath atomically:YES];
 
 				//Remember where we cached it
 				[[adium preferenceController] setPreference:cachePath
