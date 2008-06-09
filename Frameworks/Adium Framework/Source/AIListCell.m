@@ -276,9 +276,20 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 		//Padding
 		cellFrame.origin.y += [self topPadding];
 		cellFrame.size.height -= [self bottomPadding] + [self topPadding];
-		cellFrame.origin.x += [self leftPadding] + [self indentation];
-		cellFrame.size.width -= [self rightPadding] + [self leftPadding] + [self indentation];
+		cellFrame.origin.x += [self leftPadding];
+		cellFrame.size.width -= [self rightPadding] + [self leftPadding];
 
+		switch ([self textAlignment]) {
+			case NSRightTextAlignment:
+				//Right alignment indents on the right
+				cellFrame.size.width -= [self indentation];
+				break;
+			default:
+				//All other alignments indent on the left
+				cellFrame.origin.x += [self indentation];
+				cellFrame.size.width -= [self indentation];
+				break;
+		}
 		[self drawContentWithFrame:cellFrame];
 	}
 }
