@@ -8,6 +8,8 @@
 
 #import "AIInfoInspectorPane.h"
 #import <Adium/AIHTMLDecoder.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
+#import <AddressBook/AddressBook.h>
 
 #define WIDTH_PROFILE_HEADER	 100.0f
 
@@ -17,6 +19,7 @@
 - (void)updateServiceIcon:(AIListObject *)inObject;
 - (void)updateStatusIcon:(AIListObject *)inObject;
 - (void)updateAlias:(AIListObject *)inObject;
+- (NSArray *)addAddressBookInfoToProfileArray:(NSArray *)inArray forContact:(AIListContact *)inContact;
 - (NSAttributedString *)attributedStringProfileForListObject:(AIListObject *)inObject;
 - (void)updateProfile:(NSAttributedString *)infoString context:(AIListObject *)object;
 - (void)gotFilteredStatus:(NSAttributedString *)infoString context:(AIListObject *)object;
@@ -344,6 +347,8 @@
 	} else {
 		profileArray = [(AIListContact *)inObject profileArray];
 	}
+	
+	profileArray = [self addAddressBookInfoToProfileArray:(profileArray ? profileArray : [NSMutableArray array]) forContact:(AIListContact *)inObject];
 
 	// Don't do anything if we have nothing to display.
 	if ([profileArray count] == 0) {
@@ -597,5 +602,163 @@
 	return fileName;
 }
 
+#pragma mark Address Book
+
+- (void)addMultiValue:(ABMultiValue *)value forProperty:(NSString *)property ofType:(ABPropertyType)propertyType toProfileArray:(NSMutableArray *)profileArray
+{
+	unsigned int count = [value count];
+	int i;
+	for (i = 0; i < count; i++) {
+		NSString *label = ABLocalizedPropertyOrLabel([value labelAtIndex:i]);
+		id innerValue = [value valueAtIndex:i];
+		switch (propertyType) {
+			case kABMultiStringProperty:
+				if ([(NSString *)innerValue length]) {
+					[profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+											 [NSString stringWithFormat:@"%@ (%@)", ABLocalizedPropertyOrLabel(property), label], KEY_KEY,
+											 (NSString *)innerValue, KEY_VALUE,
+											 nil]];
+				}
+				break;
+			case kABMultiIntegerProperty:
+			case kABMultiRealProperty:
+				if ([(NSNumber *)innerValue intValue] != 0) {
+					[profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+											 [NSString stringWithFormat:@"%@ (%@)", ABLocalizedPropertyOrLabel(property), label], KEY_KEY,
+											 [(NSNumber *)innerValue stringValue], KEY_VALUE,
+											 nil]];
+				}
+				break;				
+			case kABMultiDateProperty:
+				if (innerValue) {
+					[profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+											 [NSString stringWithFormat:@"%@ (%@)", ABLocalizedPropertyOrLabel(property), label], KEY_KEY,
+											 [[NSDateFormatter localizedDateFormatter] stringFromDate:(NSDate *)innerValue], KEY_VALUE,
+											 nil]];
+				}
+				break;
+			case kABMultiArrayProperty:
+			case kABMultiDictionaryProperty:
+			case kABMultiDataProperty:
+			default:
+				/* Ignore Array, Dictionary, and Data properties */
+				break;
+		}
+	}
+}
+
+- (NSArray *)addAddressBookInfoToProfileArray:(NSArray *)inArray forContact:(AIListContact *)inContact
+{
+	ABPerson *person = [inContact addressBookPerson];
+
+	if (!person) return inArray;
+	
+	NSString *title = [person valueForProperty:kABTitleProperty];
+	NSString *firstName = [person valueForProperty:kABFirstNameProperty];
+	NSString *middleName = [person valueForProperty:kABMiddleNameProperty];
+	NSString *lastName = [person valueForProperty:kABLastNameProperty];
+	NSString *suffix = [person valueForProperty:kABSuffixProperty];
+	
+	NSMutableArray *profileArray = [[inArray mutableCopy] autorelease];
+	
+	NSMutableString *name = [NSMutableString string];
+	if (title) {
+		[name appendString:title];
+		if (firstName || middleName || lastName)
+			[name appendString:@" "];
+	}
+	if (firstName) {
+		[name appendString:firstName];
+		if (middleName || lastName)
+			[name appendString:@" "];
+	}			
+	if (middleName) {
+		[name appendString:middleName];
+		if (lastName)
+			[name appendString:@" "];
+	}			
+	if (lastName) {
+		[name appendString:lastName];
+	}
+	if (suffix) {
+		if ([name length])
+			[name appendString:@", "];
+		[name appendString:suffix];
+	}
+	
+	if ([name length]) {
+		[profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+								 AILocalizedString(@"Full name", nil), KEY_KEY,
+								 name, KEY_VALUE, nil]];
+	}
+	
+	NSString *property;
+	NSEnumerator *enumerator;
+	NSSet *propertiesToExclude;
+	
+	propertiesToExclude = [NSSet setWithObjects:
+						   kABUIDProperty, kABCreationDateProperty, kABModificationDateProperty, kABGroupNameProperty, kABPersonFlags, /* Internal data */
+						   kABFirstNameProperty, kABLastNameProperty, kABFirstNamePhoneticProperty, kABLastNamePhoneticProperty, /* Name */
+						   kABMiddleNameProperty, kABMiddleNamePhoneticProperty,  /* Name */
+						   kABAIMInstantProperty, kABJabberInstantProperty, kABMSNInstantProperty, /* IM data */
+						   kABYahooInstantProperty, kABICQInstantProperty, /* IM data */
+						   nil];
+	enumerator = [[ABPerson properties] objectEnumerator];
+	while ((property = [enumerator nextObject])) {
+		/* Exclude:
+		 *	- Known unwanted properties.
+		 *  - Propeties with Java-style identifiers, most likely from other programs storing arbitrary data in the AB
+		 */
+		if (![propertiesToExclude containsObject:property] && 
+			![property hasPrefix:@"com."] && ![property hasPrefix:@"net."] && ![property hasPrefix:@"org."]) {
+			id value = [person valueForProperty:property];
+			ABPropertyType propertyType = [ABPerson typeOfProperty:property];
+			switch (propertyType) {
+				case kABErrorInProperty:
+					/* Ignore errors */
+					break;
+				case kABStringProperty:
+					if ([value length]) {
+						[profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+												 ABLocalizedPropertyOrLabel(property), KEY_KEY,
+												 (NSString *)value, KEY_VALUE,
+												 nil]];
+					}
+					break;
+				case kABIntegerProperty:
+				case kABRealProperty:
+					if ([value intValue] != 0) {
+						[profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+												 ABLocalizedPropertyOrLabel(property), KEY_KEY,
+												 [(NSNumber *)value stringValue], KEY_VALUE,
+												 nil]];
+					}
+				case kABDateProperty:
+					if (value) {
+						[profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+												 ABLocalizedPropertyOrLabel(property), KEY_KEY,
+												 [[NSDateFormatter localizedDateFormatter] stringFromDate:(NSDate *)value], KEY_VALUE,
+												 nil]];
+					}
+				case kABArrayProperty:
+				case kABDictionaryProperty:
+				case kABDataProperty:
+					/* Ignore arrays, dictionaries, and data */
+					break;
+				case kABMultiStringProperty:
+				case kABMultiIntegerProperty:
+				case kABMultiRealProperty:
+				case kABMultiDateProperty:
+				case kABMultiArrayProperty:
+				case kABMultiDictionaryProperty:
+				case kABMultiDataProperty:
+					[self addMultiValue:value forProperty:property ofType:propertyType toProfileArray:profileArray];
+					break;
+			}
+		}			
+	}
+
+	return profileArray;
+}
 
 @end
