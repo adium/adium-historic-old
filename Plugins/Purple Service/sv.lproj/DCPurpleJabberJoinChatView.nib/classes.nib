@@ -6,6 +6,9 @@
             SUPERCLASS = NSTextField;
         },
                 {
+            ACTIONS =             {
+                browse = id;
+            };
             CLASS = DCGaimJabberJoinChatViewController;
             LANGUAGE = ObjC;
             OUTLETS =             {
