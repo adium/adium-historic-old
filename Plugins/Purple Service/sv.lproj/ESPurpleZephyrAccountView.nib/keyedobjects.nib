@@ -508,7 +508,6 @@
 			<key>$classes</key>
 			<array>
 				<string>NSTextField</string>
-				<string>%NSTextField</string>
 				<string>NSControl</string>
 				<string>NSView</string>
 				<string>NSResponder</string>
@@ -1052,7 +1051,6 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 			<key>$classes</key>
 			<array>
 				<string>NSCustomResource</string>
-				<string>%NSCustomResource</string>
 				<string>NSObject</string>
 			</array>
 			<key>$classname</key>
@@ -1084,7 +1082,6 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 			<key>$classes</key>
 			<array>
 				<string>NSButtonCell</string>
-				<string>%NSButtonCell</string>
 				<string>NSActionCell</string>
 				<string>NSCell</string>
 				<string>NSObject</string>
@@ -1609,7 +1606,7 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				<integer>121</integer>
 			</dict>
 			<key>NSsFlags</key>
-			<integer>722</integer>
+			<integer>530</integer>
 			<key>NSvFlags</key>
 			<integer>274</integer>
 		</dict>
@@ -1753,11 +1750,11 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				<integer>102</integer>
 			</dict>
 			<key>NSTvFlags</key>
-			<integer>316669952</integer>
+			<integer>314572800</integer>
 			<key>NSvFlags</key>
 			<integer>256</integer>
 		</dict>
-		<string>{238, 190}</string>
+		<string>{238, 58}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -2047,7 +2044,7 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 			<key>$classname</key>
 			<string>NSTableView</string>
 		</dict>
-		<string>{{1, 1}, {223, 58}}</string>
+		<string>{{1, 1}, {238, 58}}</string>
 		<dict>
 			<key>$classes</key>
 			<array>
@@ -2070,8 +2067,6 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				<key>CF$UID</key>
 				<integer>123</integer>
 			</dict>
-			<key>NSEnabled</key>
-			<true/>
 			<key>NSFrame</key>
 			<dict>
 				<key>CF$UID</key>
@@ -2083,7 +2078,7 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				<integer>93</integer>
 			</dict>
 			<key>NSPercent</key>
-			<real>0.30526316165924072</real>
+			<real>0.22631579637527466</real>
 			<key>NSSuperview</key>
 			<dict>
 				<key>CF$UID</key>
@@ -2095,9 +2090,9 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				<integer>93</integer>
 			</dict>
 			<key>NSvFlags</key>
-			<integer>256</integer>
+			<integer>-2147483392</integer>
 		</dict>
-		<string>{{224, 1}, {15, 58}}</string>
+		<string>{{-30, 1}, {15, 58}}</string>
 		<string>_doScroller:</string>
 		<dict>
 			<key>$classes</key>
@@ -2122,8 +2117,6 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				<key>CF$UID</key>
 				<integer>123</integer>
 			</dict>
-			<key>NSEnabled</key>
-			<true/>
 			<key>NSFrame</key>
 			<dict>
 				<key>CF$UID</key>
@@ -2406,7 +2399,7 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 			<key>NSvFlags</key>
 			<integer>268</integer>
 		</dict>
-		<string>{{140, 66}, {212, 18}}</string>
+		<string>{{140, 66}, {207, 18}}</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -2940,15 +2933,7 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>144</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>10</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>41</integer>
+					<integer>93</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -2956,47 +2941,7 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>140</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>103</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>89</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>75</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
 					<integer>97</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>137</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>93</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>29</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>82</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>129</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>56</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -3004,11 +2949,35 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>133</integer>
+					<integer>85</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>85</integer>
+					<integer>103</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>29</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>140</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>137</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>144</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>58</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>129</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -3016,7 +2985,31 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>58</integer>
+					<integer>41</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>89</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>133</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>56</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>10</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>75</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>82</integer>
 				</dict>
 			</array>
 		</dict>
@@ -3043,31 +3036,7 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>2</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
 					<integer>10</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>10</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>56</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>97</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>56</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>56</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -3083,6 +3052,38 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				</dict>
 				<dict>
 					<key>CF$UID</key>
+					<integer>97</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>10</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>56</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>56</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>56</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>56</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>56</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>56</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
 					<integer>10</integer>
 				</dict>
 				<dict>
@@ -3099,15 +3100,7 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>56</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>56</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>56</integer>
+					<integer>2</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -3129,15 +3122,7 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>144</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>10</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>41</integer>
+					<integer>93</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -3145,47 +3130,7 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>140</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>103</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>89</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>75</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
 					<integer>97</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>137</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>93</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>29</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>82</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>129</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>56</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -3193,7 +3138,23 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>133</integer>
+					<integer>85</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>103</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>29</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>140</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>137</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -3201,7 +3162,11 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>85</integer>
+					<integer>144</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>58</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -3209,7 +3174,35 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>58</integer>
+					<integer>129</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>41</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>89</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>133</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>56</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>10</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>75</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>82</integer>
 				</dict>
 			</array>
 		</dict>
@@ -3232,6 +3225,10 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				<dict>
 					<key>CF$UID</key>
 					<integer>194</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>193</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -3267,10 +3264,6 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>199</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
 					<integer>203</integer>
 				</dict>
 				<dict>
@@ -3280,10 +3273,6 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				<dict>
 					<key>CF$UID</key>
 					<integer>205</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>195</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -3303,29 +3292,33 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				</dict>
 				<dict>
 					<key>CF$UID</key>
+					<integer>197</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
 					<integer>210</integer>
 				</dict>
 			</array>
 		</dict>
-		<string>NSButton41</string>
-		<string>setup</string>
-		<string>NSTextField1</string>
-		<string>NSTextField113</string>
-		<string>NSTextField21</string>
-		<string>NSTableColumn</string>
-		<string>NSTextField11321</string>
-		<string>NSTextField4414</string>
-		<string>NSTableView</string>
-		<string>View</string>
 		<string>NSScrollView1</string>
-		<string>NSTextField44142</string>
-		<string>NSTextField2</string>
-		<string>Options</string>
-		<string>View1</string>
-		<string>File's Owner</string>
+		<string>NSTextField113</string>
+		<string>NSTableView</string>
 		<string>NSTextField1132</string>
-		<string>NSButton4111</string>
+		<string>NSTableColumn</string>
+		<string>NSTextField4414</string>
+		<string>NSTextField21</string>
+		<string>View</string>
+		<string>File's Owner</string>
+		<string>NSButton41</string>
 		<string>NSButton4</string>
+		<string>NSButton4111</string>
+		<string>NSTextField2</string>
+		<string>NSTextField1</string>
+		<string>NSTextField11321</string>
+		<string>View1</string>
+		<string>Options</string>
+		<string>setup</string>
+		<string>NSTextField44142</string>
 		<dict>
 			<key>$class</key>
 			<dict>
@@ -3380,79 +3373,7 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 			<array>
 				<dict>
 					<key>CF$UID</key>
-					<integer>153</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>10</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>168</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>170</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>158</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>12</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>160</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>103</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>140</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>166</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>71</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>169</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>41</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>164</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>151</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>155</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>183</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>178</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>29</integer>
+					<integer>78</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -3460,63 +3381,15 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>78</integer>
+					<integer>29</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>85</integer>
+					<integer>140</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>144</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>162</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>89</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>75</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>97</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>137</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>93</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>129</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>179</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>133</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>185</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>56</integer>
-				</dict>
-				<dict>
-					<key>CF$UID</key>
-					<integer>82</integer>
+					<integer>164</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -3524,23 +3397,43 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>2</integer>
+					<integer>168</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>174</integer>
+					<integer>185</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>181</integer>
+					<integer>144</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>176</integer>
+					<integer>71</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
-					<integer>55</integer>
+					<integer>158</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>10</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>133</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>169</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>82</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>179</integer>
 				</dict>
 				<dict>
 					<key>CF$UID</key>
@@ -3548,7 +3441,107 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				</dict>
 				<dict>
 					<key>CF$UID</key>
+					<integer>181</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>178</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>93</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>12</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>97</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>103</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>85</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>153</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>151</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>183</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
 					<integer>58</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>55</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>2</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>176</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>129</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>137</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>160</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>41</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>89</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>162</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>170</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>155</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>75</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>56</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>166</integer>
+				</dict>
+				<dict>
+					<key>CF$UID</key>
+					<integer>174</integer>
 				</dict>
 			</array>
 		</dict>
@@ -3734,49 +3727,49 @@ Zephyr använder ditt UNIX UID eller ditt Kerberos-namn; användarnamnet ovan an
 				</dict>
 			</array>
 		</dict>
-		<integer>223</integer>
-		<integer>202</integer>
-		<integer>231</integer>
-		<integer>242</integer>
-		<integer>225</integer>
-		<integer>201</integer>
-		<integer>226</integer>
-		<integer>235</integer>
-		<integer>246</integer>
-		<integer>229</integer>
-		<integer>215</integer>
-		<integer>232</integer>
-		<integer>205</integer>
-		<integer>228</integer>
-		<integer>221</integer>
-		<integer>224</integer>
-		<integer>252</integer>
-		<integer>248</integer>
-		<integer>198</integer>
-		<integer>243</integer>
 		<integer>206</integer>
-		<integer>216</integer>
-		<integer>247</integer>
-		<integer>227</integer>
-		<integer>212</integer>
-		<integer>214</integer>
-		<integer>234</integer>
-		<integer>241</integer>
-		<integer>233</integer>
-		<integer>239</integer>
-		<integer>249</integer>
-		<integer>240</integer>
-		<integer>253</integer>
-		<integer>208</integer>
-		<integer>207</integer>
+		<integer>243</integer>
+		<integer>198</integer>
+		<integer>246</integer>
+		<integer>228</integer>
 		<integer>219</integer>
-		<integer>1</integer>
-		<integer>244</integer>
-		<integer>251</integer>
-		<integer>245</integer>
-		<integer>220</integer>
+		<integer>231</integer>
+		<integer>253</integer>
+		<integer>247</integer>
+		<integer>215</integer>
+		<integer>225</integer>
+		<integer>202</integer>
+		<integer>240</integer>
+		<integer>232</integer>
+		<integer>207</integer>
+		<integer>249</integer>
 		<integer>230</integer>
+		<integer>251</integer>
+		<integer>248</integer>
+		<integer>233</integer>
+		<integer>201</integer>
+		<integer>234</integer>
+		<integer>235</integer>
+		<integer>216</integer>
+		<integer>223</integer>
+		<integer>221</integer>
+		<integer>252</integer>
 		<integer>210</integer>
+		<integer>220</integer>
+		<integer>1</integer>
+		<integer>245</integer>
+		<integer>239</integer>
+		<integer>241</integer>
+		<integer>226</integer>
+		<integer>205</integer>
+		<integer>212</integer>
+		<integer>227</integer>
+		<integer>242</integer>
+		<integer>224</integer>
+		<integer>214</integer>
+		<integer>208</integer>
+		<integer>229</integer>
+		<integer>244</integer>
 		<dict>
 			<key>$class</key>
 			<dict>
