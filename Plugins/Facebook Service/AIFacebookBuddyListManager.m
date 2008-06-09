@@ -79,7 +79,7 @@
 
 		[listContact setFormattedUID:name notify:NotifyLater];
 	
-		[listContact setStatusMessage:(![status isEqualToString:@""] ? 
+		[listContact setStatusMessage:((status && ![status isEqualToString:@""]) ? 
 									   [[[NSAttributedString alloc] initWithString:status] autorelease] :
 									   nil)
 							   notify:NotifyLater];
