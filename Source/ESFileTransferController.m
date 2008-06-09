@@ -338,6 +338,7 @@ static ESFileTransferPreferences *preferences;
 			arguments = [NSArray arrayWithObjects:
 				@"-r", //we'll want to store recursively
 				@"-1", //use the fastest level of compression that isn't storage; the user can compress manually to do better
+				@"-y", //store symbolic links as such instead of resolving the link
 				@"-q", //shhh!
 				pathToArchive,   //output to our destination name
 				folderName, //store the folder
