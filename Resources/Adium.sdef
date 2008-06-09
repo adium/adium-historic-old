@@ -44,6 +44,9 @@
 			<responds-to name="go invisible">
 				<cocoa method="scriptingGoInvisible:"/>
 			</responds-to>
+			<responds-to name="GetURL">
+				<cocoa method="scriptingGetURL:"/>
+			</responds-to>
 		</class>
 		<class name="service" code="Csrv" description="An Adium service (a.k.a. chat protocol)">
 			<cocoa class="AIService" />
@@ -292,6 +295,10 @@
 			<parameter name="with message" code="Pmsg" description="The custom status message." type="rich text" optional="yes">
 				<cocoa key="WithMessage"/>
 			</parameter>
+		</command>
+		<command name="GetURL" code="GURLGURL" description="Tells Adium to open the specified chat, in URL form">
+			<cocoa class="NSScriptCommand" />
+			<direct-parameter description="The URL of the chat" type="text"/>
 		</command>
 		<command name="count" code="corecnte" description="Return the number elements of a particular class within an object.">
 			<cocoa class="NSCountCommand"/>

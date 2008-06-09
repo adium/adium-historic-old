@@ -18,6 +18,7 @@
 #import "AIStatusControllerProtocol.h"
 #import "AIChatControllerProtocol.h"
 #import "AIContactControllerProtocol.h"
+#import "AdiumURLHandling.h"
 
 @implementation AIApplication
 /*!
@@ -238,6 +239,13 @@
 - (void)setGlobalStatus:(AIStatus *)inGlobalStatus
 {
 	return [[[AIObject sharedAdiumInstance] statusController] setActiveStatusState:inGlobalStatus];	
+}
+
+- (id)scriptingGetURL:(NSScriptCommand *)command
+{
+	NSString *url = [command directParameter];
+	[AdiumURLHandling handleURLEvent:url];
+	return nil;
 }
 
 #pragma mark Debugging
