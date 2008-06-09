@@ -477,11 +477,6 @@
 	testHyperlink(@"foo.bar@example.com");
 }
 
-- (void)testJID {
-	testHyperlink(@"jdoe@jabber.org");
-	testHyperlink(@"jdoe@jabber.org/Adium");
-}
-
 - (void)testUserCases {
 	testHyperlink(@"http://example.com/foo_(bar)");
 	testHyperlink(@"http://acts_as_solr.railsfreaks.com/"); //#7959
