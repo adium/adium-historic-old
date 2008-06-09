@@ -7,6 +7,7 @@
 //
 
 #import "AIInfoInspectorPane.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <AIUtilities/AIDateFormatterAdditions.h>
 #import <AddressBook/AddressBook.h>
@@ -19,7 +20,8 @@
 - (void)updateServiceIcon:(AIListObject *)inObject;
 - (void)updateStatusIcon:(AIListObject *)inObject;
 - (void)updateAlias:(AIListObject *)inObject;
-- (NSArray *)addAddressBookInfoToProfileArray:(NSArray *)inArray forContact:(AIListContact *)inContact;
+- (void)addAddressBookInfoToProfileArray:(NSMutableArray *)profileArray forContact:(AIListContact *)inContact;
+- (void)addTooltipEntriesToProfileArray:(NSMutableArray *)profileArray forContact:(AIListContact *)inContact;
 - (NSAttributedString *)attributedStringProfileForListObject:(AIListObject *)inObject;
 - (void)updateProfile:(NSAttributedString *)infoString context:(AIListObject *)object;
 - (void)gotFilteredStatus:(NSAttributedString *)infoString context:(AIListObject *)object;
@@ -219,7 +221,7 @@
 }
 
 
-- (NSArray *)metaContactProfileArrayForContact:(AIMetaContact *)metaContact
+- (NSMutableArray *)metaContactProfileArrayForContact:(AIMetaContact *)metaContact
 {
 	NSMutableArray		*array = [NSMutableArray array];
 	NSMutableDictionary	*addedKeysDict = [NSMutableDictionary dictionary];
@@ -331,9 +333,53 @@
 	return array;
 }
 
+- (void)removeDuplicateEntriesFromProfileArray:(NSMutableArray *)array
+{
+	int i;
+	unsigned count = [array count];
+	for (i = 0; i < (count - 1); i++) {
+		NSDictionary *lineDict = [array objectAtIndex:i];
+		//Look only for label/value pairs
+		if ([[lineDict objectForKey:KEY_TYPE] intValue] == AIUserInfoLabelValuePair) {
+			int j;
+			NSString *thisKey = [[lineDict objectForKey:KEY_KEY] lowercaseString];
+			for (j = i + 1; j < count; j++) {
+				NSDictionary *otherLineDict = [array objectAtIndex:j];
+
+				if (([[otherLineDict objectForKey:KEY_TYPE] intValue] == AIUserInfoLabelValuePair) &&
+					[[[otherLineDict objectForKey:KEY_KEY] lowercaseString] isEqualToString:thisKey]) {
+					/* Same key. Compare values, which may be NSString or NSAttributedString objects */
+					id thisValue = [lineDict objectForKey:KEY_VALUE];
+					id otherValue = [otherLineDict objectForKey:KEY_VALUE];
+					
+					if ([lineDict isKindOfClass:[otherLineDict class]]) {
+						/* Same class. Compare directly. */
+						if ([thisValue isEqual:otherValue]) {
+							[array removeObjectAtIndex:j];
+							count--;
+						}
+					} else {
+						/* Different class. Go to NSAttributedString to compare. */
+						NSAttributedString *thisAttributedValue = ([thisValue isKindOfClass:[NSAttributedString class]] ?
+																   thisValue :
+																   (thisValue ? [NSAttributedString stringWithString:thisValue] : nil));
+						NSAttributedString *otherAttributedValue = ([otherValue isKindOfClass:[NSAttributedString class]] ?
+																   otherValue :
+																	(otherValue ? [NSAttributedString stringWithString:otherValue] : nil));
+						if ([thisAttributedValue isEqualToAttributedString:otherAttributedValue]) {
+							[array removeObjectAtIndex:j];
+							count--;
+						}
+					}
+				}					
+			}
+		}
+	}
+}
+
 - (NSAttributedString *)attributedStringProfileForListObject:(AIListObject *)inObject
 {	
-	NSArray *profileArray;
+	NSMutableArray *profileArray;
 
 	// We don't know what to do for non-list contacts.
 	if (![inObject isKindOfClass:[AIListContact class]]) {
@@ -345,16 +391,19 @@
 	if ([inObject isKindOfClass:[AIMetaContact class]]) {
 		profileArray = [self metaContactProfileArrayForContact:(AIMetaContact *)inObject];
 	} else {
-		profileArray = [(AIListContact *)inObject profileArray];
+		profileArray = [[[(AIListContact *)inObject profileArray] mutableCopy] autorelease];
 	}
-	
-	profileArray = [self addAddressBookInfoToProfileArray:(profileArray ? profileArray : [NSMutableArray array]) forContact:(AIListContact *)inObject];
+
+	[self addTooltipEntriesToProfileArray:(profileArray ? profileArray : [NSMutableArray array]) forContact:(AIListContact *)inObject];
+	[self addAddressBookInfoToProfileArray:(profileArray ? profileArray : [NSMutableArray array]) forContact:(AIListContact *)inObject];
 
 	// Don't do anything if we have nothing to display.
 	if ([profileArray count] == 0) {
 		AILogWithSignature(@"No profile array items found for %@", inObject);
 		return nil;
 	}
+	
+	[self removeDuplicateEntriesFromProfileArray:profileArray];
 	
 	// Create the table
 	NSTextTable		*table = [[[NSTextTable alloc] init] autorelease];
@@ -377,8 +426,15 @@
 		NSAttributedString *value = nil, *key = nil;
 		
 		if ([lineDict objectForKey:KEY_VALUE]) {
-			value = [AIHTMLDecoder decodeHTML:[lineDict objectForKey:KEY_VALUE]];
-			
+			id theValue = [lineDict objectForKey:KEY_VALUE];
+			if ([theValue isKindOfClass:[NSString class]]) {
+				value = [AIHTMLDecoder decodeHTML:(NSString *)theValue];
+			} else if ([theValue isKindOfClass:[NSAttributedString class]]) {
+				value = (NSAttributedString *)theValue;
+			} else {
+				NSLog(@"*** WARNING! Invalid value passed in profile array: %@", lineDict);
+			}
+
 			value = [[adium contentController] filterAttributedString:value
 												usingFilterType:AIFilterDisplay
 													  direction:AIFilterIncoming
@@ -647,20 +703,18 @@
 	}
 }
 
-- (NSArray *)addAddressBookInfoToProfileArray:(NSArray *)inArray forContact:(AIListContact *)inContact
+- (void)addAddressBookInfoToProfileArray:(NSMutableArray *)profileArray forContact:(AIListContact *)inContact
 {
 	ABPerson *person = [inContact addressBookPerson];
 
-	if (!person) return inArray;
+	if (!person) return;
 	
 	NSString *title = [person valueForProperty:kABTitleProperty];
 	NSString *firstName = [person valueForProperty:kABFirstNameProperty];
 	NSString *middleName = [person valueForProperty:kABMiddleNameProperty];
 	NSString *lastName = [person valueForProperty:kABLastNameProperty];
 	NSString *suffix = [person valueForProperty:kABSuffixProperty];
-	
-	NSMutableArray *profileArray = [[inArray mutableCopy] autorelease];
-	
+
 	NSMutableString *name = [NSMutableString string];
 	if (title) {
 		[name appendString:title];
@@ -688,7 +742,7 @@
 	
 	if ([name length]) {
 		[profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-								 AILocalizedString(@"Full name", nil), KEY_KEY,
+								 AILocalizedString(@"Full Name", nil), KEY_KEY,
 								 name, KEY_VALUE, nil]];
 	}
 	
@@ -757,8 +811,26 @@
 			}
 		}			
 	}
+}
 
-	return profileArray;
+- (void)addTooltipEntriesToProfileArray:(NSMutableArray *)profileArray forContact:(AIListContact *)inContact
+{
+	NSEnumerator *enumerator;
+	id <AIContactListTooltipEntry> tooltipEntry;
+	
+	enumerator = [[[[adium interfaceController] contactListTooltipPrimaryEntries] arrayByAddingObjectsFromArray:[[adium interfaceController] contactListTooltipSecondaryEntries]] objectEnumerator];
+	while ((tooltipEntry = [enumerator nextObject])) {
+		if ([tooltipEntry shouldDisplayInContactInspector]) {
+			id label, value;
+			if ((label = [tooltipEntry labelForObject:inContact]) &&
+				(value = [tooltipEntry entryForObject:inContact])) {
+				[profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+										 label, KEY_KEY,
+										 value, KEY_VALUE,
+										 nil]];
+			}	
+		}
+	}
 }
 
 @end
