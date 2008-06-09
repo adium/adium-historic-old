@@ -67,4 +67,9 @@
     return [entry autorelease];
 }
 
+- (BOOL)shouldDisplayInContactInspector
+{
+	return YES;
+}
+
 @end

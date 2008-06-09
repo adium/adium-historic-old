@@ -158,4 +158,9 @@
     return entry;
 }
 
+- (BOOL)shouldDisplayInContactInspector
+{
+	/* Accounts should be including this information in the profile already */
+	return NO;
+}
 @end

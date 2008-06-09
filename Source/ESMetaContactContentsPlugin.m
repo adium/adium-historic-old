@@ -126,6 +126,8 @@
 
 					[entry appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
 					[attachment release];
+
+					[entryString appendString:@" "];
 				}
 				
 				[entryString appendString:[contact formattedUID]];
@@ -154,6 +156,11 @@
 	}
     
     return [entry autorelease];
+}
+
+- (BOOL)shouldDisplayInContactInspector
+{
+	return YES;
 }
 
 #pragma mark Automatic temporary expansion
