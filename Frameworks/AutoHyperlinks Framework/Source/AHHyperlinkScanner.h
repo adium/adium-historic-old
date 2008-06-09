@@ -27,14 +27,14 @@
 
 #import "AHLinkLexer.h"
 
-extern int AHleng;
-extern int AHlex();
+extern long AHleng;
+extern long AHlex();
 typedef struct AH_buffer_state *AH_BUFFER_STATE;
 void AH_switch_to_buffer(AH_BUFFER_STATE);
 AH_BUFFER_STATE AH_scan_string (const char *);
 void AH_delete_buffer(AH_BUFFER_STATE);
 
-extern unsigned int AHStringOffset;
+extern unsigned long AHStringOffset;
 
 @class AHMarkedHyperlink;
 

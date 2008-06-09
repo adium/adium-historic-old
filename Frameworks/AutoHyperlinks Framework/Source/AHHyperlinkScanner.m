@@ -136,7 +136,7 @@
     NSString    *scanString = nil;
 
 	//get our location from AHStringOffset, so we can pick up where we left off
-    int			location = AHStringOffset;
+    long			location = AHStringOffset;
 
 	static NSCharacterSet *skipSet = nil;
     if (!skipSet) {
@@ -199,9 +199,9 @@
     [preScanner scanCharactersFromSet:startSet intoString:nil];
 
     while([preScanner scanUpToCharactersFromSet:skipSet intoString:&scanString]) {
-        unsigned int scannedLocation = [preScanner scanLocation];
+        unsigned long scannedLocation = [preScanner scanLocation];
 		if([enclosureSet characterIsMember:[scanString characterAtIndex:0]]){
-			unsigned int encIdx = [enclosureStartArray indexOfObject:[scanString substringWithRange:NSMakeRange(0, 1)]];
+			unsigned long encIdx = [enclosureStartArray indexOfObject:[scanString substringWithRange:NSMakeRange(0, 1)]];
 			NSRange encRange;
 			if(NSNotFound != encIdx) {
 				encRange = [scanString rangeOfString:[enclosureStopArray objectAtIndex:encIdx] options:NSBackwardsSearch];
@@ -215,8 +215,8 @@
 		}
 		if(![scanString length]) break;
 		
-		unsigned int localStringLen = [scanString length];
-		unsigned int finalStringLen = localStringLen;
+		unsigned long localStringLen = [scanString length];
+		unsigned long finalStringLen = localStringLen;
 		
 		// Find balanced enclosure chars
 		NSMutableArray	*enclosureStack = [NSMutableArray arrayWithCapacity:2]; // totally arbitrary.
@@ -225,7 +225,7 @@
 		NSScanner *enclosureScanner = [[[NSScanner alloc] initWithString:scanString] autorelease];
 		NSDictionary *encDict;
 		
-		unsigned int encScanLocation = 0;
+		unsigned long encScanLocation = 0;
 		
 		while(encScanLocation < [[enclosureScanner string] length]) {
 			[enclosureScanner scanUpToCharactersFromSet:enclosureSet intoString:nil];
@@ -234,14 +234,14 @@
 			if(encScanLocation >= [[enclosureScanner string] length]) break;
 			matchChar = [scanString substringWithRange:NSMakeRange(encScanLocation, 1)];
 			if([enclosureStartArray containsObject:matchChar]) {
-				encDict = [NSDictionary	dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithUnsignedInt:encScanLocation], matchChar, nil]
+				encDict = [NSDictionary	dictionaryWithObjects:[NSArray arrayWithObjects:[NSNumber numberWithUnsignedLong:encScanLocation], matchChar, nil]
 													  forKeys:encKeys];
 				[enclosureStack addObject:encDict];
 			}else if([enclosureStopArray containsObject:matchChar]) {
 				NSEnumerator *encEnumerator = [enclosureStack objectEnumerator];
 				while ((encDict = [encEnumerator nextObject])) {
-					unsigned int encTagIndex = [(NSNumber *)[encDict objectForKey:ENC_INDEX_KEY] unsignedIntValue];
-					unsigned int encStartIndex = [enclosureStartArray indexOfObjectIdenticalTo:[encDict objectForKey:ENC_CHAR_KEY]];
+					unsigned long encTagIndex = [(NSNumber *)[encDict objectForKey:ENC_INDEX_KEY] unsignedLongValue];
+					unsigned long encStartIndex = [enclosureStartArray indexOfObjectIdenticalTo:[encDict objectForKey:ENC_CHAR_KEY]];
 					if([enclosureStopArray indexOfObjectIdenticalTo:matchChar] == encStartIndex) {
 						NSRange encRange = NSMakeRange(encTagIndex, encScanLocation - encTagIndex);
 						[enclosureStack removeObject:encDict];
