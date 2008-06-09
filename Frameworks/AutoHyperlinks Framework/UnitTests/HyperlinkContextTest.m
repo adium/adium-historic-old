@@ -93,6 +93,13 @@
 	[self testWhitespace:@"test@example.com"];
 }
 
+- (void)testJID {
+	[self testEnclosedURI:@"jdoe@jabber.org/Adium"];
+	[self testEnclosedURIFollowedByCharacter:@"jdoe@jabber.org/Adium"];
+	[self testURIBorder:@"jdoe@jabber.org/Adium"];
+	[self testWhitespace:@"jdoe@jabber.org/Adium"];
+}
+
 - (void)testEdgeURI {
 	[self testEnclosedURI:@"example.com/foo_(bar)"];
 	[self testURIBorder:@"example.com/foo_(bar)"];
