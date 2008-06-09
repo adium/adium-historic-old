@@ -571,6 +571,8 @@
 		34A1A8ED0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A1A8EB0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.h */; };
 		34A1A8EE0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1A8EC0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.m */; };
 		34A1AB6C0DFC531000AC78CF /* AIXMLChatlogConverter.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1AB6B0DFC531000AC78CF /* AIXMLChatlogConverter.m */; };
+		34A1AEE90DFD4BFE00AC78CF /* AIAddressBookInspectorPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A1AEE80DFD4BFE00AC78CF /* AIAddressBookInspectorPane.nib */; };
+		34A1AEEE0DFD4C4A00AC78CF /* AIAdvancedInspectorPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A1AEED0DFD4C4A00AC78CF /* AIAdvancedInspectorPane.nib */; };
 		34A1EDAF0DD3AF220090667A /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C103FAE057127A500F3C158 /* WebKit.framework */; };
 		34A1EE990DD3BFB00090667A /* AIFacebookBuddyListManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1EE980DD3BFB00090667A /* AIFacebookBuddyListManager.m */; };
 		34A1EFDE0DD3D4BB0090667A /* AIFacebookBuddyIconRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1EFDD0DD3D4BB0090667A /* AIFacebookBuddyIconRequest.m */; };
@@ -1175,8 +1177,6 @@
 		4F1CB62E0D640D770073A1E6 /* AIAdvancedInspectorPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F1CB62B0D640D770073A1E6 /* AIAdvancedInspectorPane.m */; };
 		4F1CB62F0D640D770073A1E6 /* AIAddressBookInspectorPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F1CB62C0D640D770073A1E6 /* AIAddressBookInspectorPane.m */; };
 		4F1CB6320D640D7F0073A1E6 /* AIEventsInspectorPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F1CB6310D640D7F0073A1E6 /* AIEventsInspectorPane.m */; };
-		4F1CB6370D640D900073A1E6 /* AIAddressBookInspectorPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4F1CB6330D640D8F0073A1E6 /* AIAddressBookInspectorPane.nib */; };
-		4F1CB6380D640D900073A1E6 /* AIAdvancedInspectorPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4F1CB6340D640D8F0073A1E6 /* AIAdvancedInspectorPane.nib */; };
 		4F1CB6390D640D900073A1E6 /* AIEventsInspectorPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4F1CB6350D640D8F0073A1E6 /* AIEventsInspectorPane.nib */; };
 		4F1CB63A0D640D900073A1E6 /* AIInfoInspectorPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4F1CB6360D640D900073A1E6 /* AIInfoInspectorPane.nib */; };
 		4F1CB63F0D640DA40073A1E6 /* addressbook_segment.png in Resources */ = {isa = PBXBuildFile; fileRef = 4F1CB63B0D640DA40073A1E6 /* addressbook_segment.png */; };
@@ -3046,6 +3046,32 @@
 		34A1A8EC0DFB27A800AC78CF /* AICustomSocialNetworkingStatusWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AICustomSocialNetworkingStatusWindowController.m; path = "Frameworks/Adium Framework/Source/AICustomSocialNetworkingStatusWindowController.m"; sourceTree = "<group>"; };
 		34A1AB6A0DFC531000AC78CF /* AIXMLChatlogConverter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIXMLChatlogConverter.h; path = Source/AIXMLChatlogConverter.h; sourceTree = "<group>"; };
 		34A1AB6B0DFC531000AC78CF /* AIXMLChatlogConverter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIXMLChatlogConverter.m; path = Source/AIXMLChatlogConverter.m; sourceTree = "<group>"; };
+		34A1ABF00DFD47BE00AC78CF /* cs */ = {isa = PBXFileReference; lastKnownFileType = folder; name = cs; path = "Resources/cs.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
+		34A1ABF20DFD47CA00AC78CF /* sv */ = {isa = PBXFileReference; lastKnownFileType = folder; name = sv; path = "Resources/sv.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
+		34A1AC020DFD47D600AC78CF /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = folder; name = pt_BR; path = "Resources/pt_BR.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
+		34A1AEE80DFD4BFE00AC78CF /* AIAddressBookInspectorPane.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AIAddressBookInspectorPane.nib; path = Resources/AIAddressBookInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AEFF0DFD4C5A00AC78CF /* ca */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ca; path = Resources/ca.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF000DFD4C5D00AC78CF /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF010DFD4C5F00AC78CF /* da */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = da; path = Resources/da.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF020DFD4C6100AC78CF /* de */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = de; path = Resources/de.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF030DFD4C6200AC78CF /* en */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = en; path = Resources/en.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF040DFD4C6500AC78CF /* es */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = es; path = Resources/es.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF050DFD4C6700AC78CF /* fi */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fi; path = Resources/fi.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF060DFD4C6900AC78CF /* fr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr; path = Resources/fr.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF070DFD4C6B00AC78CF /* fr_CA */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = fr_CA; path = Resources/fr_CA.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF080DFD4C6D00AC78CF /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = Resources/is.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF090DFD4C6F00AC78CF /* it */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = it; path = Resources/it.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF0A0DFD4C7100AC78CF /* ja */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ja; path = Resources/ja.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF0B0DFD4C7300AC78CF /* nb */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nb; path = Resources/nb.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF0C0DFD4C7500AC78CF /* nl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = nl; path = Resources/nl.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF0D0DFD4C7700AC78CF /* pl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pl; path = Resources/pl.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF0E0DFD4C7900AC78CF /* pt_BR */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = pt_BR; path = Resources/pt_BR.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF0F0DFD4C7B00AC78CF /* ru */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ru; path = Resources/ru.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF100DFD4C7D00AC78CF /* sl */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sl; path = Resources/sl.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF110DFD4C7F00AC78CF /* sv */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = sv; path = Resources/sv.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF120DFD4C8100AC78CF /* tr */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = tr; path = Resources/tr.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF130DFD4C8300AC78CF /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
+		34A1AF140DFD4C8500AC78CF /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
 		34A1EE970DD3BFB00090667A /* AIFacebookBuddyListManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIFacebookBuddyListManager.h; path = "Plugins/Facebook Service/AIFacebookBuddyListManager.h"; sourceTree = "<group>"; };
 		34A1EE980DD3BFB00090667A /* AIFacebookBuddyListManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIFacebookBuddyListManager.m; path = "Plugins/Facebook Service/AIFacebookBuddyListManager.m"; sourceTree = "<group>"; };
 		34A1EFDC0DD3D4BB0090667A /* AIFacebookBuddyIconRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIFacebookBuddyIconRequest.h; path = "Plugins/Facebook Service/AIFacebookBuddyIconRequest.h"; sourceTree = "<group>"; };
@@ -3974,8 +4000,6 @@
 		4F1CB62D0D640D770073A1E6 /* AIAddressBookInspectorPane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAddressBookInspectorPane.h; path = Source/AIAddressBookInspectorPane.h; sourceTree = "<group>"; };
 		4F1CB6300D640D7F0073A1E6 /* AIEventsInspectorPane.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIEventsInspectorPane.h; path = Source/AIEventsInspectorPane.h; sourceTree = "<group>"; };
 		4F1CB6310D640D7F0073A1E6 /* AIEventsInspectorPane.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIEventsInspectorPane.m; path = Source/AIEventsInspectorPane.m; sourceTree = "<group>"; };
-		4F1CB6330D640D8F0073A1E6 /* AIAddressBookInspectorPane.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AIAddressBookInspectorPane.nib; path = Resources/AIAddressBookInspectorPane.nib; sourceTree = "<group>"; };
-		4F1CB6340D640D8F0073A1E6 /* AIAdvancedInspectorPane.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AIAdvancedInspectorPane.nib; path = Resources/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
 		4F1CB6350D640D8F0073A1E6 /* AIEventsInspectorPane.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AIEventsInspectorPane.nib; path = Resources/AIEventsInspectorPane.nib; sourceTree = "<group>"; };
 		4F1CB6360D640D900073A1E6 /* AIInfoInspectorPane.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AIInfoInspectorPane.nib; path = Resources/AIInfoInspectorPane.nib; sourceTree = "<group>"; };
 		4F1CB63B0D640DA40073A1E6 /* addressbook_segment.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = addressbook_segment.png; path = Resources/addressbook_segment.png; sourceTree = "<group>"; };
@@ -7883,10 +7907,10 @@
 				4F1CB6350D640D8F0073A1E6 /* AIEventsInspectorPane.nib */,
 				4F1CB62A0D640D770073A1E6 /* AIAdvancedInspectorPane.h */,
 				4F1CB62B0D640D770073A1E6 /* AIAdvancedInspectorPane.m */,
-				4F1CB6340D640D8F0073A1E6 /* AIAdvancedInspectorPane.nib */,
+				34A1AEED0DFD4C4A00AC78CF /* AIAdvancedInspectorPane.nib */,
 				4F1CB62D0D640D770073A1E6 /* AIAddressBookInspectorPane.h */,
 				4F1CB62C0D640D770073A1E6 /* AIAddressBookInspectorPane.m */,
-				4F1CB6330D640D8F0073A1E6 /* AIAddressBookInspectorPane.nib */,
+				34A1AEE80DFD4BFE00AC78CF /* AIAddressBookInspectorPane.nib */,
 				4F1CB6240D640D5B0073A1E6 /* AIContactInfoContentController.h */,
 				4F1CB6250D640D5B0073A1E6 /* AIContactInfoContentController.m */,
 				343ECBE80971B18200349098 /* ESShowContactInfoPromptController.h */,
@@ -8540,9 +8564,10 @@
 				fi,
 				pt_BR,
 				en,
-				English,
+				en,
 				fr_CA,
 				sl,
+				fr_ca,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* CocAIMe2 */;
 			projectDirPath = "";
@@ -9057,8 +9082,6 @@
 				345DA0680CA09AD0009F1989 /* Statuses.strings in Resources */,
 				34CA15530CAFDFB2009AA5E3 /* sidebarActionWidget.png in Resources */,
 				346196F20D31607500763051 /* SRSnapback.png in Resources */,
-				4F1CB6370D640D900073A1E6 /* AIAddressBookInspectorPane.nib in Resources */,
-				4F1CB6380D640D900073A1E6 /* AIAdvancedInspectorPane.nib in Resources */,
 				4F1CB6390D640D900073A1E6 /* AIEventsInspectorPane.nib in Resources */,
 				4F1CB63A0D640D900073A1E6 /* AIInfoInspectorPane.nib in Resources */,
 				4F1CB63F0D640DA40073A1E6 /* addressbook_segment.png in Resources */,
@@ -9068,6 +9091,8 @@
 				4F1CB64C0D640F4F0073A1E6 /* ContactInfoInspector.nib in Resources */,
 				4BB2EB220D88D76100CA7A7D /* timestamp32.png in Resources */,
 				4BB2EB230D88D76100CA7A7D /* timestamp32_transparent.png in Resources */,
+				34A1AEE90DFD4BFE00AC78CF /* AIAddressBookInspectorPane.nib in Resources */,
+				34A1AEEE0DFD4C4A00AC78CF /* AIAdvancedInspectorPane.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10137,6 +10162,9 @@
 				341EC8C50D3C2BAA007216A2 /* sl */,
 				34208D1E0D502D40003138D1 /* fr_CA */,
 				34C4E3A20DF9D73600499AC0 /* it */,
+				34A1ABF00DFD47BE00AC78CF /* cs */,
+				34A1ABF20DFD47CA00AC78CF /* sv */,
+				34A1AC020DFD47D600AC78CF /* pt_BR */,
 			);
 			name = "Shared Dock Icon Images";
 			sourceTree = "<group>";
@@ -11214,6 +11242,35 @@
 				34208CFD0D502D3F003138D1 /* fr_CA */,
 			);
 			name = Buttons.strings;
+			sourceTree = "<group>";
+		};
+		34A1AEED0DFD4C4A00AC78CF /* AIAdvancedInspectorPane.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				34A1AEFF0DFD4C5A00AC78CF /* ca */,
+				34A1AF000DFD4C5D00AC78CF /* cs */,
+				34A1AF010DFD4C5F00AC78CF /* da */,
+				34A1AF020DFD4C6100AC78CF /* de */,
+				34A1AF030DFD4C6200AC78CF /* en */,
+				34A1AF040DFD4C6500AC78CF /* es */,
+				34A1AF050DFD4C6700AC78CF /* fi */,
+				34A1AF060DFD4C6900AC78CF /* fr */,
+				34A1AF070DFD4C6B00AC78CF /* fr_CA */,
+				34A1AF080DFD4C6D00AC78CF /* is */,
+				34A1AF090DFD4C6F00AC78CF /* it */,
+				34A1AF0A0DFD4C7100AC78CF /* ja */,
+				34A1AF0B0DFD4C7300AC78CF /* nb */,
+				34A1AF0C0DFD4C7500AC78CF /* nl */,
+				34A1AF0D0DFD4C7700AC78CF /* pl */,
+				34A1AF0E0DFD4C7900AC78CF /* pt_BR */,
+				34A1AF0F0DFD4C7B00AC78CF /* ru */,
+				34A1AF100DFD4C7D00AC78CF /* sl */,
+				34A1AF110DFD4C7F00AC78CF /* sv */,
+				34A1AF120DFD4C8100AC78CF /* tr */,
+				34A1AF130DFD4C8300AC78CF /* zh_CN */,
+				34A1AF140DFD4C8500AC78CF /* zh_TW */,
+			);
+			name = AIAdvancedInspectorPane.nib;
 			sourceTree = "<group>";
 		};
 		34A6F68407D65D6200972830 /* GeneralPreferences.nib */ = {
