@@ -179,6 +179,7 @@
 	if([object isKindOfClass:[AHMarkedHyperlink class]])
 		return [[[object parentString] substringWithRange:[object range]]
 				isGreaterThan:[[self parentString] substringWithRange:[self range]]]? YES : NO;
+	return NO;
 }
 
 - (BOOL)isLessThan:(id)object
@@ -187,6 +188,7 @@
 		return [(NSURL *)object isLessThan:[self URL]]? YES : NO;
 	if([object isKindOfClass:[NSString class]])
 		return [(NSString *)object isLessThan:[self parentString]]? YES : NO;
+	return NO;
 }
 
 - (BOOL)isGreaterThanOrEqualTo:(id)object
