@@ -187,7 +187,7 @@
 			<key>Name</key>
 			<string>Sarcastic</string>
 		</dict>
-		<key>Secret telling.png</key>
+		<key>Kiss.png</key>
 		<dict>
 			<key>Equivalents</key>
 			<array>
@@ -195,7 +195,7 @@
 				<string>:*</string>
 			</array>
 			<key>Name</key>
-			<string>Secret telling</string>
+			<string>Kiss</string>
 		</dict>
 		<key>Sick.png</key>
 		<dict>
