@@ -1,0 +1,61 @@
+#
+# old_revision [4d2d20241c7dac5915e142f0aa9811c9eab40111]
+#
+# patch "libpurple/protocols/jabber/auth.c"
+#  from [8e99ca556f5791c7e113bcbcfddb8b5b02fd83f4]
+#    to [ded72d5fa5cd3e813b5acf5f39585280ae11bbee]
+# 
+# patch "libpurple/protocols/jabber/libxmpp.c"
+#  from [b56db1a878a32e93e80e36ccaa343dc7422f18cf]
+#    to [ff4386ea7a42ce7112fb36546d0d268c11cadfbc]
+#
+============================================================
+--- libpurple/protocols/jabber/auth.c	8e99ca556f5791c7e113bcbcfddb8b5b02fd83f4
++++ libpurple/protocols/jabber/auth.c	ded72d5fa5cd3e813b5acf5f39585280ae11bbee
+@@ -394,6 +394,32 @@ static void jabber_auth_start_cyrus(Jabb
+ 	} while (again);
+ 
+ 	if (js->sasl_state == SASL_CONTINUE || js->sasl_state == SASL_OK) {
++	
++		/* Adium: Avoid SASL PLAIN for 10.4 compatibility, as it's broken there */
++		if (js->current_mech && (strcmp(js->current_mech, "PLAIN") == 0) && purple_prefs_get_bool("/plugins/prpl/jabber/avoid_sasl_for_plain_auth")) {
++			js->auth_type = JABBER_AUTH_PLAIN;
++			js->sasl_state = SASL_OK;
++			sasl_dispose(&js->sasl);
++			js->sasl = NULL;
++
++			if(js->gsc == NULL && !purple_account_get_bool(js->gc->account, "auth_plain_in_clear", FALSE)) {
++				char *msg = g_strdup_printf(_("%s requires plaintext authentication over an unencrypted connection.  Allow this and continue authentication?"),
++											js->gc->account->username);
++				purple_request_yes_no(js->gc, _("Plaintext Authentication"),
++									  _("Plaintext Authentication"),
++									  msg,
++									  2,
++									  purple_connection_get_account(js->gc), NULL, NULL,
++									  purple_connection_get_account(js->gc), allow_plaintext_auth,
++									  disallow_plaintext_auth);
++				g_free(msg);
++				return;
++			}
++			finish_plaintext_authentication(js);
++
++			return;
++		}
++
+ 		auth = xmlnode_new("auth");
+ 		xmlnode_set_namespace(auth, "urn:ietf:params:xml:ns:xmpp-sasl");
+ 		xmlnode_set_attrib(auth, "mechanism", js->current_mech);
+============================================================
+--- libpurple/protocols/jabber/libxmpp.c	b56db1a878a32e93e80e36ccaa343dc7422f18cf
++++ libpurple/protocols/jabber/libxmpp.c	ff4386ea7a42ce7112fb36546d0d268c11cadfbc
+@@ -254,6 +254,10 @@ init_plugin(PurplePlugin *plugin)
+ 	if ((ret = sasl_client_init(NULL)) != SASL_OK) {
+ 		purple_debug_error("xmpp", "Error (%d) initializing SASL.\n", ret);
+ 	}
++	
++	/* Adium hack for Mac OS X 10.4 support */
++	purple_prefs_add_none("/plugins/prpl/jabber");
++	purple_prefs_add_bool("/plugins/prpl/jabber/avoid_sasl_for_plain_auth", FALSE);
+ #endif
+ 	jabber_register_commands();
+ 	

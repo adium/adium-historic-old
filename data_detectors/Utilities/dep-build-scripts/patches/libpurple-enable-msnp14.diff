@@ -1,0 +1,21 @@
+#
+# old_revision [570c5daf55a59f3c7271d3b5a50bd4d3024f7a80]
+#
+# patch "configure.ac"
+#  from [2fb6689b922a99b85b93f8e09425d84e5965a4d0]
+#    to [803239907183da7803bb4bda90244bfe36002a13]
+#
+============================================================
+--- configure.ac	2fb6689b922a99b85b93f8e09425d84e5965a4d0
++++ configure.ac	803239907183da7803bb4bda90244bfe36002a13
+@@ -941,8 +941,8 @@ AC_SUBST(GADU_CFLAGS)
+ AC_SUBST(GADU_CFLAGS)
+ 
+ # uncomment the next line to make MSNP14 the available
+-# AC_ARG_ENABLE(msnp14,[AC_HELP_STRING([--enable-msnp14], [Disable the newer MSNP14 protocol])],,enable_msnp14=no)
+-enable_msnp14=no
++AC_ARG_ENABLE(msnp14,[AC_HELP_STRING([--enable-msnp14], [Disable the newer MSNP14 protocol])],,enable_msnp14=no)
++# enable_msnp14=no
+ 
+ AC_ARG_ENABLE(distrib,,,enable_distrib=no)
+ AM_CONDITIONAL(DISTRIB, test "x$enable_distrib" = "xyes")
