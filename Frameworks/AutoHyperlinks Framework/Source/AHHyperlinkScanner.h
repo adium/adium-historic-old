@@ -34,15 +34,14 @@ void AH_switch_to_buffer(AH_BUFFER_STATE);
 AH_BUFFER_STATE AH_scan_string (const char *);
 void AH_delete_buffer(AH_BUFFER_STATE);
 
-extern unsigned long AHStringOffset;
-
 @class AHMarkedHyperlink;
 
 @interface AHHyperlinkScanner : NSObject
 {
 	NSDictionary				*urlSchemes;
 	BOOL						 strictChecking;
-	AH_URI_VERIFICATION_STATUS		 validStatus;
+	unsigned long				 stringOffset;
+	AH_URI_VERIFICATION_STATUS	 validStatus;
 }
 
 /*!
@@ -76,9 +75,11 @@ extern unsigned long AHStringOffset;
  * @brief Determine the validity of a given string with a custom strictness
  *
  * @param inString The string to be verified
+ * @param useStrictChecking Use strict rules or not
+ * @param index a pointer to the index the string starts at, for easy incrementing.
  * @return Boolean
  */
-- (BOOL)isStringValidURL:(NSString *)inString usingStrict:(BOOL)useStrictChecking;
+- (BOOL)isStringValidURL:(NSString *)inString usingStrict:(BOOL)useStrictChecking fromIndex:(unsigned long *)index;
 
 /*!
  * @brief Fetches all the URLs from a string
