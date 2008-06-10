@@ -1,0 +1,46 @@
+To set up the build environment (fetch the source trees) run:
+
+./common.sh -d
+
+The download script requires python 2.5.1 or later. Mac OS X 10.5 comes with this version.  If you don't have that version of python, you can substitute wget. First, you must install wget; then, run:
+
+(mkdir source || true) && cd source && wget -iurls.txt && cd ..
+
+*****
+Get a copy of the pidgin sources. Adium currently uses libpurple 2.4.2mtn, and patches applied during the build process depend upon this.
+
+See http://pidgin.im to download a 2.4.1 tarball. This may not compile. Use Monotone; see below.
+
+To get libpurple via Monotone, see http://developer.pidgin.im/wiki/UsingPidginMonotone .  Check out im.pidgin.pidgin.next.minor using "-b im.pidgin.pidgin.next.minor".
+    Previous instructions, for reference: Check out the v2.3.1 tag (with "-r t:v2.3.1" in place of "-b im.pidgin.pidgin" as given in the UsingPidginMonotone instructions) to get the code used by Adium.
+
+****
+BUILD REQUIREMENTS:
+You need automake 1.10 or later. 
+10.5 includes automake 1.10, but if you are on 10.4 you need to install this
+yourself. The easiest way to install this is MacPorts (port install automake).
+*****
+
+When you set up your pidgin working copy, set the environment variable
+PIDGIN_SOURCE to be the path to your WC. current_step.sh needs this to work.
+In bash/zsh: export PIDGIN_SOURCE="/path/to/im.pidgin.pidgin"
+In csh/tcsh: setenv PIDGIN_SOURCE "/path/to/im.pidgin.pidgin"
+ * Note that PIDGIN_SOURCE should be an absolute path. Don't use ~.
+ * This Pidgin checkout must be completely clean. If you use it for building Pidgin (or libpurple, or Finch), be sure to run "make distclean" in it before starting the process below.
+*****
+
+Then, once you have the source trees, the current build process is this:
+    ./general_dependencies_make.sh
+    ./purple_dependencies_make.sh
+    ./purple_make.sh
+    ./universalize.sh
+
+which will leave you with frameworks in build/Frameworks.
+
+The next step only needs to be done after a clean build or after updating to a new version of libpurple; it generates and copies in the po (localization) files:
+    ./make_po_files.sh
+
+(Once you've built the dependencies, you can simply use the steps from purple_make.sh onward to update your build.)
+
+You can then copy the frameworks to Adium itself with:
+    ./copy_frameworks.sh
