@@ -277,16 +277,11 @@ static void typing_changed(PurpleAccount *acct, const char *name, AITypingState 
 		return;
 	}
 
-	AIChat *chat;
-	switch (typingState) {
-		case AINotTyping:
-			chat = [[[AIObject sharedAdiumInstance] chatController] existingChatWithContact:contact];
-			break;
-		case AITyping:
-		case AIEnteredText:
-			chat = [[[AIObject sharedAdiumInstance] chatController] chatWithContact:contact];
-			AILogWithSignature(@"Made a chat for %s: %i", name, typingState);
-			break;
+	AIChat *chat = [[[AIObject sharedAdiumInstance] chatController] existingChatWithContact:contact];
+	
+	if (typingState == AIEnteredText && !chat) {
+		chat = [[[AIObject sharedAdiumInstance] chatController] chatWithContact:contact];
+		AILogWithSignature(@"Made a chat for %s: %i", name, typingState);
 	}
 
 	if (chat)
