@@ -1750,8 +1750,7 @@
 				);
 				PRODUCT_NAME = AIUtilities;
 				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wno-long-double",
+					"-Wall"
 				);
 				WRAPPER_EXTENSION = framework;
 				ZERO_LINK = YES;
@@ -1799,8 +1798,7 @@
 				);
 				PRODUCT_NAME = AIUtilities;
 				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wno-long-double",
+					"-Wall"
 				);
 				WRAPPER_EXTENSION = framework;
 				ZERO_LINK = NO;
@@ -1853,8 +1851,7 @@
 				);
 				PRODUCT_NAME = AIUtilities;
 				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wno-long-double",
+					"-Wall"
 				);
 				WRAPPER_EXTENSION = framework;
 				ZERO_LINK = NO;
@@ -1912,8 +1909,7 @@
 				);
 				PRODUCT_NAME = AIUtilities;
 				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wno-long-double",
+					"-Wall"
 				);
 				WRAPPER_EXTENSION = framework;
 				ZERO_LINK = YES;
@@ -1948,8 +1944,7 @@
 				);
 				PRODUCT_NAME = AIUtilities;
 				WARNING_CFLAGS = (
-					"-Wall",
-					"-Wno-long-double",
+					"-Wall"
 				);
 				WRAPPER_EXTENSION = framework;
 				ZERO_LINK = NO;
