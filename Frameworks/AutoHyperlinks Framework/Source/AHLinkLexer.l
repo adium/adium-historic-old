@@ -42,7 +42,6 @@
  *											  ensures that yyleng reports whole length of the string,
  *											  without a costly call to yymore().
  */
-unsigned long AHStringOffset;
 long AHValidShift = 0;
 #include "AHLinkLexer.h"
 %}
@@ -94,18 +93,16 @@ ignoreable      (b\.sc|m\.in)
 %x CANONICAL
 %%
 
-<CANONICAL>({userAndPass}@)?{urlCSpec}|{ipURL}|{ipv6URL} {AHStringOffset += AHleng;
-                                                          AHleng += AHValidShift;
+<CANONICAL>({userAndPass}@)?{urlCSpec}|{ipURL}|{ipv6URL} {AHleng += AHValidShift;
                                                           BEGIN INITIAL;
                                                           return AH_URL_VALID;}
 
-<CANONICAL>.*                                            {AHStringOffset += AHleng;
-                                                          BEGIN INITIAL;
+<CANONICAL>.*                                            {BEGIN INITIAL;
                                                           return AH_URL_INVALID;}
 
-{ignoreable}            {AHStringOffset += AHleng; return AH_URL_INVALID;}
+{ignoreable}            {return AH_URL_INVALID;}
 
-file:\/\/\/.*           {AHStringOffset += AHleng; return AH_FILE_VALID;}
+file:\/\/\/.*           {return AH_FILE_VALID;}
 
 https?:\/\/             |
 s?ftp:\/\/              |
@@ -126,12 +123,12 @@ webcal:\/\/             |
 svn(\+ssh)?:\/\/        |
 notes:\/\/              |
 gopher:\/\/             |
-x-man-page:\/\/         {AHStringOffset += AHleng; AHValidShift = AHleng; BEGIN CANONICAL;}
+x-man-page:\/\/         {AHValidShift = AHleng; BEGIN CANONICAL;}
 
-mailto:{mailSpec}       {AHStringOffset += AHleng; return AH_MAILTO_VALID;}
-{mailSpec}              {AHStringOffset += AHleng; return AH_MAILTO_DEGENERATE;}
+mailto:{mailSpec}       {return AH_MAILTO_VALID;}
+{mailSpec}              {return AH_MAILTO_DEGENERATE;}
 
-{urlSpec}               {AHStringOffset += AHleng; return AH_URL_DEGENERATE;}
+{urlSpec}               {return AH_URL_DEGENERATE;}
 
 sip:{mailSpec}          |
 {myimSpec}              |
@@ -141,7 +138,7 @@ sip:{mailSpec}          |
 {aolChatSpec}           |
 {yahooIMSpec}           |
 {rdarSpec}              |
-{spotifySpec}           {AHStringOffset += AHleng; return AH_URL_VALID;}
+{spotifySpec}           {return AH_URL_VALID;}
 
-.                       {AHStringOffset += AHleng; return AH_URL_INVALID;}
+.                       {return AH_URL_INVALID;}
 %%
