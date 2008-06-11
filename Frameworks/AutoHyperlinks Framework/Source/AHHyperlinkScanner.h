@@ -41,7 +41,6 @@ void AH_delete_buffer(AH_BUFFER_STATE);
 	NSDictionary				*urlSchemes;
 	BOOL						 strictChecking;
 	unsigned long				 stringOffset;
-	AH_URI_VERIFICATION_STATUS	 validStatus;
 }
 
 /*!
@@ -61,7 +60,6 @@ void AH_delete_buffer(AH_BUFFER_STATE);
  */
  - (id)initWithStrictChecking:(BOOL)flag;
 
-- (AH_URI_VERIFICATION_STATUS)validationStatus;
 
 /*!
  * @brief Determine the validity of a given string using the default strictness
@@ -79,7 +77,7 @@ void AH_delete_buffer(AH_BUFFER_STATE);
  * @param index a pointer to the index the string starts at, for easy incrementing.
  * @return Boolean
  */
-- (BOOL)isStringValidURL:(NSString *)inString usingStrict:(BOOL)useStrictChecking fromIndex:(unsigned long *)index;
++ (BOOL)isStringValidURL:(NSString *)inString usingStrict:(BOOL)useStrictChecking fromIndex:(unsigned long *)index withStatus:(AH_URI_VERIFICATION_STATUS *)validStatus;
 
 /*!
  * @brief Fetches all the URLs from a string
