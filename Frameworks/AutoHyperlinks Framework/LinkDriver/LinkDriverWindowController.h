@@ -13,6 +13,7 @@
 @interface LinkDriverWindowController : NSWindowController {
 	IBOutlet NSTextView	*linkifyView;
 	IBOutlet NSButton	*linkifyButton;
+	IBOutlet NSTextView	*otherView;
 }
 
 -(IBAction) linkifyTextView:(id)sender;

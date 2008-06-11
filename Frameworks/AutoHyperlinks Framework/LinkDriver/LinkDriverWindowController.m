@@ -11,7 +11,15 @@
 
 @implementation LinkDriverWindowController
 -(IBAction) linkifyTextView:(id)sender {
+	[NSThread	detachNewThreadSelector:@selector(performLinkification:) toTarget:self withObject:linkifyView];
+	[NSThread	detachNewThreadSelector:@selector(performLinkification:) toTarget:self withObject:otherView];
+}
+
+-(void) performLinkification:(NSTextView *)inView
+{
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	AHHyperlinkScanner	*scanner = [[AHHyperlinkScanner alloc] initWithStrictChecking:NO];
-	[scanner linkifyTextView:linkifyView];
+	[scanner linkifyTextView:[inView retain]];
+	[pool release];
 }
 @end

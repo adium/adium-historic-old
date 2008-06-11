@@ -83,7 +83,10 @@
     AH_BUFFER_STATE buf;  // buffer for flex to scan from
 	const char		*inStringUTF8;
     unsigned long	 utf8Length;
-	NSLock			*lock = [[NSLock alloc] init];
+	static NSLock	*linkLock = nil;
+	
+	if(!linkLock)
+		linkLock = [[NSLock alloc] init];
     
 	validStatus = AH_URL_INVALID; // assume the URL is invalid
 
@@ -91,7 +94,7 @@
 		return NO;
 	}
 	
-	[lock lock];
+	[linkLock lock];
 	
 	utf8Length = strlen(inStringUTF8); // length of the string in utf-8
     
@@ -110,7 +113,7 @@
         // check that the whole string was matched by flex.
         // this prevents silly things like "blah...com" from being seen as links
         if(AHleng == utf8Length){
-			[lock unlock];
+			[linkLock unlock];
             return YES;
         }
     // condition for degenerate URL's (A.K.A. URI's sans specifiers), requres strict checking to be NO.
@@ -118,18 +121,18 @@
         AH_delete_buffer(buf);
         buf = NULL;
         if(AHleng == utf8Length){
-			[lock unlock];
+			[linkLock unlock];
             return YES;
         }
     // if it ain't vaild, and it ain't degenerate, then it's invalid.
     }else{
         AH_delete_buffer(buf);
         buf = NULL;
-		[lock unlock];
+		[linkLock unlock];
         return NO;
     }
     // default case, if the range checking above fails.
-	[lock unlock];
+	[linkLock unlock];
     return NO;
 }
 
