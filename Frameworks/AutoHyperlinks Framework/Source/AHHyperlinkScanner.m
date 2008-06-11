@@ -92,7 +92,7 @@
 
 	// Find the fastest 8-bit wide encoding possible for the c string
 	NSStringEncoding stringEnc = [inString fastestEncoding];
-	if(NSUnicodeStringEncoding == stringEnc)
+	if([@" " lengthOfBytesUsingEncoding:stringEnc] > 1U)
 		stringEnc = NSUTF8StringEncoding;
 
 	if (!(inStringEnc = [inString cStringUsingEncoding:stringEnc])) {
