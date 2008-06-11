@@ -29,5 +29,6 @@
 - (void)testMoveAccount_toIndex;
 - (void)testSaveAccounts;
 - (void)testLoadAccounts;
+- (void)testLoadAccountsWhenEmpty;
 
 @end

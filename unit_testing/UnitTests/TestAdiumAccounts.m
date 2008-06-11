@@ -308,12 +308,58 @@
 	[adiumAccounts release];
 	adiumAccounts = [[AdiumAccounts alloc] init];
 	
-	[adiumAccounts _loadAccounts];
+	[adiumAccounts performSelector:@selector(_loadAccounts)];
 	
 	NSArray *correctArray = [NSArray arrayWithObjects:aimAccount, googleAccount, nil];
-	STAssertTrue([[adiumAccounts accounts] isEqualToArray:correctArray], @"Accounts were not loaded correctly");
+	
+	STAssertTrue([[adiumAccounts accounts] isEqualToArray:correctArray], 
+				 @"Accounts were not loaded correctly");
 	
 	[aiNotifyCenterMock verify];
+}
+
+
+- (void)testLoadAccountsWhenEmpty {
+	
+	STAssertTrue([[adiumAccounts accounts] isEqualToArray:[NSArray array]], 
+				 @"Accounts should initially be empty");
+	
+	// Preference Controller...
+	id aiPrefControllerMock = [OCMockObject mockForProtocol:@protocol(AIPreferenceController)];
+	NSArray *accountArray = [NSArray array];
+	[[[aiPrefControllerMock stub] andReturn:accountArray] preferenceForKey:@"Accounts" group:PREF_GROUP_ACCOUNTS];
+	
+	
+	// Account Controller...
+	id aiAccountControllerMock = [OCMockObject mockForProtocol:@protocol(AIAccountController)];
+	[[[aiAccountControllerMock stub] andReturn:aimService] serviceWithUniqueID:@"libpurple-oscar-AIM"];
+	[[[aiAccountControllerMock stub] andReturn:googleService] serviceWithUniqueID:@"libpurple-Jabber"];
+	
+	
+	// We're going to do a negative assertion. We watch for calls to Account_ListChanged and fail on them.
+	id aiNotifyCenterMock = [OCMockObject mockForClass:[NSNotificationCenter class]];
+	[[aiNotifyCenterMock expect] postNotificationName:Account_ListChanged object:nil userInfo:nil];
+	
+	id aiMock = [OCMockObject mockForProtocol:@protocol(AIAdium)];
+	[[[aiMock stub] andReturn:aiPrefControllerMock] preferenceController];
+	[[[aiMock stub] andReturn:aiAccountControllerMock] accountController];
+	[[[aiMock stub] andReturn:aiNotifyCenterMock] notificationCenter];
+	[AIObject _setSharedAdiumInstance:aiMock];
+	[adiumAccounts release];
+	adiumAccounts = [[AdiumAccounts alloc] init];
+	
+	// Let's do it!
+	[adiumAccounts performSelector:@selector(_loadAccounts)];
+	
+	NSArray *correctArray = [NSArray array];
+	
+	STAssertTrue([[adiumAccounts accounts] isEqualToArray:correctArray], 
+				 @"Accounts were loaded when none should have been loaded");
+	
+	// No notification should have been received, since the list did not change
+	STAssertThrows([aiNotifyCenterMock verify],
+				   @"Notification Center received \"postNotificationName:Account_ListChanged\".  \
+				   No notification should have been received, since the account list did not change");
 }
 
 @end
