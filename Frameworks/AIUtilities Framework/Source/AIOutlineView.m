@@ -18,7 +18,7 @@
 
 @interface AIOutlineView (PRIVATE)
 - (void)_initOutlineView;
-- (void)expandOrCollapseItemsOfItem;
+- (void)expandOrCollapseItemsOfItem:(id)rootItem;
 @end
 
 @interface AIOutlineView (KFTypeSelectTableViewSupport)
