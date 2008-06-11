@@ -683,7 +683,7 @@ NSMenu *statusMenuForAccountMenuItem(NSArray *menuItemArray, NSMenuItem *account
 		 * which is exactly what we want.
 		 */
 		onlineOfflineItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:([account online] ?
-																						 AILocalizedString(@"Disonnect", nil) :
+																						 AILocalizedString(@"Disconnect", nil) :
 																						 AILocalizedString(@"Connect", nil))
 																				 target:[accountMenuItem target]
 																				 action:[accountMenuItem action]
