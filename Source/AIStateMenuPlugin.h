@@ -15,9 +15,9 @@
  */
 
 #import <Adium/AIPlugin.h>
+#import <Adium/AIContactControllerProtocol.h>
 
 @class AIAccountMenu, AIStatusMenu;
-@protocol AIListObjectObserver;
 
 @interface AIStateMenuPlugin : AIPlugin <AIListObjectObserver> {
 	NSMenuItem		*dockStatusMenuRoot;
