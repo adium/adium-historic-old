@@ -64,31 +64,31 @@
 	[super dealloc];
 }
 
-#pragma mark utility
-
-- (AH_URI_VERIFICATION_STATUS)validationStatus
-{
-	return validStatus;
-}
-
 #pragma mark primitive methods
 
 - (BOOL)isStringValidURL:(NSString *)inString
 {
-	return [self isStringValidURL:inString usingStrict:strictChecking fromIndex:nil];
+	return [AHHyperlinkScanner isStringValidURL:inString usingStrict:strictChecking fromIndex:nil withStatus:nil];
 }
 
-- (BOOL)isStringValidURL:(NSString *)inString usingStrict:(BOOL)useStrictChecking fromIndex:(unsigned long *)index
++ (BOOL)isStringValidURL:(NSString *)inString usingStrict:(BOOL)useStrictChecking fromIndex:(unsigned long *)index withStatus:(AH_URI_VERIFICATION_STATUS *)validStatus
 {
     AH_BUFFER_STATE buf;  // buffer for flex to scan from
 	const char		*inStringEnc;
     unsigned long	 encodedLength;
 	static NSLock	*linkLock = nil;
 	
+	
 	if(!linkLock)
 		linkLock = [[NSLock alloc] init];
-    
-	validStatus = AH_URL_INVALID; // assume the URL is invalid
+	[linkLock lock];
+	
+	if(!validStatus){
+		AH_URI_VERIFICATION_STATUS newStatus = AH_URL_INVALID;
+		validStatus = &newStatus;
+	}
+	
+	*validStatus = AH_URL_INVALID; // assume the URL is invalid
 
 	// Find the fastest 8-bit wide encoding possible for the c string
 	NSStringEncoding stringEnc = [inString fastestEncoding];
@@ -96,10 +96,10 @@
 		stringEnc = NSUTF8StringEncoding;
 
 	if (!(inStringEnc = [inString cStringUsingEncoding:stringEnc])) {
+		[linkLock unlock];
 		return NO;
 	}
 	
-	[linkLock lock];
 	
 	encodedLength = strlen(inStringEnc); // length of the string in utf-8
     
@@ -107,11 +107,11 @@
     buf = AH_scan_string(inStringEnc);
 
     // call flex to parse the input
-    validStatus = AHlex();
+    *validStatus = AHlex();
 	if(index) *index += AHleng;
 	
     // condition for valid URI's
-    if(validStatus == AH_URL_VALID || validStatus == AH_MAILTO_VALID || validStatus == AH_FILE_VALID){
+    if(*validStatus == AH_URL_VALID || *validStatus == AH_MAILTO_VALID || *validStatus == AH_FILE_VALID){
         AH_delete_buffer(buf); //remove the buffer from flex.
         buf = NULL; //null the buffer pointer for safty's sake.
         
@@ -122,7 +122,7 @@
             return YES;
         }
     // condition for degenerate URL's (A.K.A. URI's sans specifiers), requres strict checking to be NO.
-    }else if((validStatus == AH_URL_DEGENERATE || validStatus == AH_MAILTO_DEGENERATE) && !useStrictChecking){
+    }else if((*validStatus == AH_URL_DEGENERATE || *validStatus == AH_MAILTO_DEGENERATE) && !useStrictChecking){
         AH_delete_buffer(buf);
         buf = NULL;
         if(AHleng == encodedLength){
@@ -281,7 +281,8 @@
         // if we have a valid URL then save the scanned string, and make a SHMarkedHyperlink out of it.
         // this way, we can preserve things like the matched string (to be converted to a NSURL),
         // parent string, it's validation status (valid, file, degenerate, etc), and it's range in the parent string
-        if((finalStringLen > 0) && [self isStringValidURL:scanString usingStrict:strictChecking fromIndex:&stringOffset]){
+		AH_URI_VERIFICATION_STATUS validStatus;
+        if((finalStringLen > 0) && [AHHyperlinkScanner isStringValidURL:scanString usingStrict:strictChecking fromIndex:&stringOffset withStatus:&validStatus]){
             AHMarkedHyperlink	*markedLink;
 			NSRange				urlRange;
 			
@@ -324,7 +325,7 @@
 														  andRange:urlRange];
             return [markedLink autorelease];
         }
-		
+
         //step location after scanning a string
 		NSRange startRange = [scanString rangeOfCharacterFromSet:startSet];
 		if (startRange.location != NSNotFound) {
