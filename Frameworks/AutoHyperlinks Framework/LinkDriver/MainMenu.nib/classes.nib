@@ -20,6 +20,8 @@
 				<string>NSButton</string>
 				<key>linkifyView</key>
 				<string>NSTextView</string>
+				<key>otherView</key>
+				<string>NSTextView</string>
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>NSWindowController</string>
