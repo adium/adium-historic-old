@@ -55,6 +55,8 @@
 - (void)rebuildActionsSubmenu:(NSMenu*)actionsSubmenu withAccount:(AIAccount*)account;
 @end
 
+static NSMenu *socialNetworkingSubmenuForAccount(AIAccount *account, id target, SEL action, id self);
+
 @implementation AIAccountMenu
 
 /*!
@@ -490,7 +492,7 @@
 			menuItem = [self menuItemForAccount:(AIAccount *)inObject];
 			
 			if (menuItem) {
-				[menuItem setSubmenu:socialNetworkingSubmenuForAccount((AIAccount *)inObject)];
+				[menuItem setSubmenu:socialNetworkingSubmenuForAccount((AIAccount *)inObject, [menuItem target], [menuItem action], self)];
 			}
 		}
 	}
@@ -673,7 +675,7 @@ void updateRepresentedObjectForSubmenusOfMenuItem(NSMenuItem *menuItem, AIAccoun
 	}
 }
 
-NSMenu *socialNetworkingSubmenuForAccount(AIAccount *account)
+static NSMenu *socialNetworkingSubmenuForAccount(AIAccount *account, id target, SEL action, id self)
 {
 	NSMenuItem *onlineOfflineItem;
 	NSMenu *accountSubmenu;
@@ -686,8 +688,8 @@ NSMenu *socialNetworkingSubmenuForAccount(AIAccount *account)
 	onlineOfflineItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:([account online] ?
 																					 AILocalizedString(@"Disconnect", nil) :
 																					 AILocalizedString(@"Connect", nil))
-																			 target:[accountMenuItem target]
-																			 action:[accountMenuItem action]
+																			 target:target
+																			 action:action
 																	  keyEquivalent:@""
 																  representedObject:account];
 	
@@ -706,7 +708,7 @@ NSMenu *statusMenuForAccountMenuItem(NSArray *menuItemArray, NSMenuItem *account
 	NSMenuItem			*statusMenuItem;
 	
 	if ([[account service] isSocialNetworkingService]) {		
-		accountSubmenu = socialNetworkingSubmenuForAccount(account);
+		accountSubmenu = socialNetworkingSubmenuForAccount(account, [accountMenuItem target], [accountMenuItem action], self);
 		[accountSubmenu setMenuChangedMessagesEnabled:NO];
 		
 	} else {
