@@ -9,30 +9,44 @@
 #import "ThreadedStressTest.h"
 #import "AutoHyperlinks.h"
 
-#define LOOP_COUNT 50
-#define THREAD_COUNT 2
+#define LOOP_COUNT 10
+#define THREAD_COUNT 8
 
 @implementation ThreadedStressTest
 -(void) threadedStressTest
 {
-	int i = THREAD_COUNT;
-	allTestsDidFinish = false;
-	NSThread	*thread1 = [[NSThread alloc] initWithTarget:self selector:@selector(performTest) object:nil];
-	NSThread	*thread2 = [[NSThread alloc] initWithTarget:self selector:@selector(performTest) object:nil];
+	AHHyperlinkScanner	*scanner = [[AHHyperlinkScanner alloc] initWithStrictChecking:NO];
 	
+	NSThread	*thread1 = [[NSThread alloc] initWithTarget:self selector:@selector(performTestWithScanner:) object:scanner];
+	NSThread	*thread2 = [[NSThread alloc] initWithTarget:self selector:@selector(performTestWithScanner:) object:scanner];
+	NSThread	*thread3 = [[NSThread alloc] initWithTarget:self selector:@selector(performTestWithScanner:) object:scanner];
+	NSThread	*thread4 = [[NSThread alloc] initWithTarget:self selector:@selector(performTestWithScanner:) object:scanner];
+	NSThread	*thread5 = [[NSThread alloc] initWithTarget:self selector:@selector(performTestWithScanner:) object:scanner];
+	NSThread	*thread6 = [[NSThread alloc] initWithTarget:self selector:@selector(performTestWithScanner:) object:scanner];
+	NSThread	*thread7 = [[NSThread alloc] initWithTarget:self selector:@selector(performTestWithScanner:) object:scanner];
+	NSThread	*thread8 = [[NSThread alloc] initWithTarget:self selector:@selector(performTestWithScanner:) object:scanner];
+
 	[thread1 start]; [thread2 start];
-	while(![thread1 isFinished] && ![thread2 isFinished]);
+	[thread3 start]; [thread4 start];
+	[thread5 start]; [thread6 start];
+	[thread7 start]; [thread8 start];
+	
+	while(![thread1 isFinished] && ![thread2 isFinished] &&
+		  ![thread3 isFinished] && ![thread4 isFinished] &&
+		  ![thread5 isFinished] && ![thread6 isFinished] &&
+		  ![thread7 isFinished] && ![thread8 isFinished]){
+		[NSThread sleepForTimeInterval:.1];
+	}
 }
 
--(void) performTest
+-(void) performTestWithScanner:(AHHyperlinkScanner *)scanner
 {
 	NSAutoreleasePool	*pool = [[NSAutoreleasePool alloc] init];
-	NSLog(@"started test thread");
 	NSError				*error = nil;
 	NSString			*stressString = [NSString stringWithContentsOfFile:[NSString stringWithUTF8String:TEST_URIS_FILE_PATHNAME] encoding:NSUTF8StringEncoding error:&error];
 	STAssertNil(error, @"stringWithContentsOfFile:encoding:error: could not read file at path '%s': %@", TEST_URIS_FILE_PATHNAME, error);
 
-	AHHyperlinkScanner	*scanner = [[AHHyperlinkScanner alloc] initWithStrictChecking:NO];
+	//AHHyperlinkScanner	*scanner = [[AHHyperlinkScanner alloc] initWithStrictChecking:NO];
 	NSAttributedString	*attrString;
 	
 	int i = LOOP_COUNT;
@@ -40,7 +54,6 @@
 		attrString = [scanner linkifyString:[[NSAttributedString alloc] initWithString:stressString]];
 		i--;
 	}
-	NSLog(@"We're done!");
 	[pool release];
 }
 @end
