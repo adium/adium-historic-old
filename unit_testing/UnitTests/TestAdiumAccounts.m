@@ -12,6 +12,7 @@
 #import <Adium/AIService.h>
 #import <Adium/AIAccount.h>
 #import <AIPreferenceController.h>
+#import <AIAccountController.h>
 
 
 
@@ -159,7 +160,7 @@
 									                                   googleAccount2, 
 									                                   aimAccount, 
 									                                   aimAccount, nil];
-
+	
 	STAssertEqualObjects(accounts,  correctAccounts,
 						 @"Should have added four accounts");
 	
@@ -252,6 +253,7 @@
 	[[[aiMock stub] andReturn:aiPrefControllerMock] preferenceController];
 	[[[aiMock stub] andReturn:aiNotifyCenterMock] notificationCenter];
 	[AIObject _setSharedAdiumInstance:aiMock];
+	[adiumAccounts release];
 	adiumAccounts = [[AdiumAccounts alloc] init];
 	
 
@@ -266,6 +268,52 @@
 	[aiNotifyCenterMock verify];
 }
 
-- (void)testLoadAccounts {}
+- (void)testLoadAccounts {
+	// Preference Controller...
+	id aiPrefControllerMock = [OCMockObject mockForProtocol:@protocol(AIPreferenceController)];
+	
+	NSDictionary *aimDictionary = [NSDictionary dictionaryWithObjectsAndKeys:@"aimAccountID", @"ObjectID",
+					                                                         @"AIM", @"Service", 
+					                                                         @"libpurple-oscar-AIM", @"Type", 
+					                                                         @"aimAccountUID", @"UID", nil];
+	
+	NSDictionary *googleDictionary = [NSDictionary dictionaryWithObjectsAndKeys:@"googleAccountID", @"ObjectID",
+									                                            @"Jabber", @"Service", 
+									                                            @"libpurple-Jabber", @"Type", 
+									                                            @"googleAccountUID", @"UID", nil];
+	
+	NSArray *accountArray = [NSArray arrayWithObjects:aimDictionary, googleDictionary, nil];
+	[[[aiPrefControllerMock stub] andReturn:accountArray] preferenceForKey:@"Accounts" group:PREF_GROUP_ACCOUNTS];
+	
+	
+	// Account Controller...
+	id aiAccountControllerMock = [OCMockObject mockForProtocol:@protocol(AIAccountController)];
+	
+	[[[aimService stub] andReturn:aimAccount] accountWithUID:@"aimAccountUID" internalObjectID:@"aimAccountID"];
+	[[[googleService stub] andReturn:googleAccount] accountWithUID:@"googleAccountUID" internalObjectID:@"googleAccountID"];
+	
+	[[[aiAccountControllerMock stub] andReturn:aimService] serviceWithUniqueID:@"libpurple-oscar-AIM"];
+	[[[aiAccountControllerMock stub] andReturn:googleService] serviceWithUniqueID:@"libpurple-Jabber"];
+	
+	// Special setup for shared Notification Center expectations
+	id aiNotifyCenterMock = [OCMockObject mockForClass:[NSNotificationCenter class]];
+	[[aiNotifyCenterMock expect] postNotificationName:@"Account_ListChanged" object:nil userInfo:nil];
+	
+	
+	id aiMock = [OCMockObject mockForProtocol:@protocol(AIAdium)];
+	[[[aiMock stub] andReturn:aiPrefControllerMock] preferenceController];
+	[[[aiMock stub] andReturn:aiAccountControllerMock] accountController];
+	[[[aiMock stub] andReturn:aiNotifyCenterMock] notificationCenter];
+	[AIObject _setSharedAdiumInstance:aiMock];
+	[adiumAccounts release];
+	adiumAccounts = [[AdiumAccounts alloc] init];
+	
+	[adiumAccounts _loadAccounts];
+	
+	NSArray *correctArray = [NSArray arrayWithObjects:aimAccount, googleAccount, nil];
+	STAssertTrue([[adiumAccounts accounts] isEqualToArray:correctArray], @"Accounts were not loaded correctly");
+	
+	[aiNotifyCenterMock verify];
+}
 
 @end
