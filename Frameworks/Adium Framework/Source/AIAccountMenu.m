@@ -485,6 +485,14 @@
 				[menuItem setSubmenu:[self actionsMenuForAccount:(AIAccount *)inObject]];
 			}
 		}
+		
+		if ((submenuType == AIAccountStatusSubmenu) && [[inObject service] isSocialNetworkingService] && [inModifiedKeys containsObject:@"Online"]) {
+			menuItem = [self menuItemForAccount:(AIAccount *)inObject];
+			
+			if (menuItem) {
+				[menuItem setSubmenu:socialNetworkingSubmenuForAccount((AIAccount *)inObject)];
+			}
+		}
 	}
 
     return nil;
@@ -665,6 +673,31 @@ void updateRepresentedObjectForSubmenusOfMenuItem(NSMenuItem *menuItem, AIAccoun
 	}
 }
 
+NSMenu *socialNetworkingSubmenuForAccount(AIAccount *account)
+{
+	NSMenuItem *onlineOfflineItem;
+	NSMenu *accountSubmenu;
+	accountSubmenu = [AISocialNetworkingStatusMenu socialNetworkingSubmenuForAccount:account];
+	
+	/* Put a connect/disconnect menu item at the top, since we skip the status items
+	 * By copying the accountMenuItem's target and action, it gains the action of toggling conncectivity,
+	 * which is exactly what we want.
+	 */
+	onlineOfflineItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:([account online] ?
+																					 AILocalizedString(@"Disconnect", nil) :
+																					 AILocalizedString(@"Connect", nil))
+																			 target:[accountMenuItem target]
+																			 action:[accountMenuItem action]
+																	  keyEquivalent:@""
+																  representedObject:account];
+	
+	[accountSubmenu insertItem:onlineOfflineItem atIndex:0];
+	[accountSubmenu insertItem:[NSMenuItem separatorItem] atIndex:1];
+	[onlineOfflineItem release];	
+	
+	return accountSubmenu;
+}
+
 NSMenu *statusMenuForAccountMenuItem(NSArray *menuItemArray, NSMenuItem *accountMenuItem, BOOL addOriginalItems, id self)
 {
 	AIAccount			*account = [accountMenuItem representedObject];
@@ -673,26 +706,8 @@ NSMenu *statusMenuForAccountMenuItem(NSArray *menuItemArray, NSMenuItem *account
 	NSMenuItem			*statusMenuItem;
 	
 	if ([[account service] isSocialNetworkingService]) {		
-		NSMenuItem *onlineOfflineItem;
-
-		accountSubmenu = [AISocialNetworkingStatusMenu socialNetworkingSubmenuForAccount:account];
+		accountSubmenu = socialNetworkingSubmenuForAccount(account);
 		[accountSubmenu setMenuChangedMessagesEnabled:NO];
-
-		/* Put a connect/disconnect menu item at the top, since we skip the status items
-		 * By copying the accountMenuItem's target and action, it gains the action of toggling conncectivity,
-		 * which is exactly what we want.
-		 */
-		onlineOfflineItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:([account online] ?
-																						 AILocalizedString(@"Disconnect", nil) :
-																						 AILocalizedString(@"Connect", nil))
-																				 target:[accountMenuItem target]
-																				 action:[accountMenuItem action]
-																		  keyEquivalent:@""
-																	  representedObject:account];
-		
-		[accountSubmenu insertItem:onlineOfflineItem atIndex:0];
-		[accountSubmenu insertItem:[NSMenuItem separatorItem] atIndex:1];
-		[onlineOfflineItem release];
 		
 	} else {
 		accountSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
