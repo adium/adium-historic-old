@@ -850,6 +850,8 @@
 	
 	if ([group isEqualToString:PREF_GROUP_STATUS_PREFERENCES]) {
 		showConversationCount = [[prefDict objectForKey:KEY_STATUS_CONVERSATION_COUNT] boolValue];
+		
+		[self updateUnreadCount];
 	}
 }
 
