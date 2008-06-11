@@ -34,6 +34,13 @@
 		7EB5501D0DDC810E000DC0D6 /* AutoHyperlinks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC2EF5B0486A6940098B216 /* AutoHyperlinks.framework */; };
 		7EB550200DDC813D000DC0D6 /* LinkDriverMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EB5501F0DDC813D000DC0D6 /* LinkDriverMain.m */; };
 		7EB5514A0DDC8272000DC0D6 /* LinkDriverWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EB551490DDC8272000DC0D6 /* LinkDriverWindowController.m */; };
+		7ED4FDC10E002652004C5F4B /* AHLinkLexer.l in Sources */ = {isa = PBXBuildFile; fileRef = 3496A81E07CE69270055BBAB /* AHLinkLexer.l */; };
+		7ED4FDC20E002652004C5F4B /* AHHyperlinkScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 3496A82007CE69270055BBAB /* AHHyperlinkScanner.m */; };
+		7ED4FDC30E002652004C5F4B /* AHMarkedHyperlink.m in Sources */ = {isa = PBXBuildFile; fileRef = 3496A82207CE69270055BBAB /* AHMarkedHyperlink.m */; };
+		7ED4FDC60E002652004C5F4B /* ThreadedStressTestMain.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED4FDBB0E0025DA004C5F4B /* ThreadedStressTestMain.m */; };
+		7ED4FDC80E002652004C5F4B /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EA3B04D0DD11627002A18D1 /* SenTestingKit.framework */; };
+		7ED4FDC90E002652004C5F4B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
+		7ED4FDE70E00273E004C5F4B /* ThreadedStressTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 7ED4FDBA0E00258F004C5F4B /* ThreadedStressTest.m */; };
 		7EF1C0220DDC846B00CFC182 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 7EF1C0210DDC846B00CFC182 /* MainMenu.nib */; };
 		8DC2EF530486A6940098B216 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C1666FE841158C02AAC07 /* InfoPlist.strings */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
@@ -83,6 +90,10 @@
 		7EB551490DDC8272000DC0D6 /* LinkDriverWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = LinkDriverWindowController.m; path = LinkDriver/LinkDriverWindowController.m; sourceTree = "<group>"; };
 		7EC75F180DDC9EC60004F634 /* StressTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StressTest.h; path = UnitTests/StressTest.h; sourceTree = "<group>"; };
 		7EC75F190DDC9EC60004F634 /* StressTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StressTest.m; path = UnitTests/StressTest.m; sourceTree = "<group>"; };
+		7ED4FDB90E00258F004C5F4B /* ThreadedStressTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ThreadedStressTest.h; path = UnitTests/ThreadedStressTest.h; sourceTree = SOURCE_ROOT; };
+		7ED4FDBA0E00258F004C5F4B /* ThreadedStressTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ThreadedStressTest.m; path = UnitTests/ThreadedStressTest.m; sourceTree = SOURCE_ROOT; };
+		7ED4FDBB0E0025DA004C5F4B /* ThreadedStressTestMain.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ThreadedStressTestMain.m; path = Source/ThreadedStressTestMain.m; sourceTree = "<group>"; };
+		7ED4FDD00E002653004C5F4B /* AHThreadedStressTester */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AHThreadedStressTester; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EF1C0210DDC846B00CFC182 /* MainMenu.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = MainMenu.nib; path = LinkDriver/MainMenu.nib; sourceTree = "<group>"; };
 		7EF1C0410DDC8F3600CFC182 /* LinkDriver.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = LinkDriver.pch; path = LinkDriver/LinkDriver.pch; sourceTree = "<group>"; };
 		8DC2EF5A0486A6940098B216 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = Info.plist; path = Resources/Info.plist; sourceTree = "<group>"; };
@@ -116,6 +127,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7ED4FDC70E002652004C5F4B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7ED4FDC80E002652004C5F4B /* SenTestingKit.framework in Frameworks */,
+				7ED4FDC90E002652004C5F4B /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		8DC2EF560486A6940098B216 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -134,6 +154,7 @@
 				7EA3B0440DD1153F002A18D1 /* Test.octest */,
 				7EB550100DDC80DB000DC0D6 /* LinkDriver.app */,
 				31C460380DE1D17100C4265B /* AHStressTester */,
+				7ED4FDD00E002653004C5F4B /* AHThreadedStressTester */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -210,6 +231,7 @@
 			isa = PBXGroup;
 			children = (
 				31C4604A0DE1D1D800C4265B /* StressTestMain.m */,
+				7ED4FDBB0E0025DA004C5F4B /* ThreadedStressTestMain.m */,
 			);
 			name = "Stress Tester";
 			sourceTree = "<group>";
@@ -234,6 +256,8 @@
 				7E4C24370DD20C9900DF1359 /* HyperlinkContextTest.m */,
 				7EC75F180DDC9EC60004F634 /* StressTest.h */,
 				7EC75F190DDC9EC60004F634 /* StressTest.m */,
+				7ED4FDB90E00258F004C5F4B /* ThreadedStressTest.h */,
+				7ED4FDBA0E00258F004C5F4B /* ThreadedStressTest.m */,
 			);
 			name = UnitTests;
 			sourceTree = "<group>";
@@ -321,6 +345,22 @@
 			productReference = 7EB550100DDC80DB000DC0D6 /* LinkDriver.app */;
 			productType = "com.apple.product-type.application";
 		};
+		7ED4FDBF0E002652004C5F4B /* ThreadedStressTester */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7ED4FDCA0E002652004C5F4B /* Build configuration list for PBXNativeTarget "ThreadedStressTester" */;
+			buildPhases = (
+				7ED4FDC00E002652004C5F4B /* Sources */,
+				7ED4FDC70E002652004C5F4B /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ThreadedStressTester;
+			productName = StressTester;
+			productReference = 7ED4FDD00E002653004C5F4B /* AHThreadedStressTester */;
+			productType = "com.apple.product-type.tool";
+		};
 		8DC2EF4F0486A6940098B216 /* AutoHyperlinks.framework */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DA8A8083085549EE00F24BB3 /* Build configuration list for PBXNativeTarget "AutoHyperlinks.framework" */;
@@ -357,6 +397,7 @@
 				7EA3B0430DD1153F002A18D1 /* UnitTests */,
 				7EB5500F0DDC80DB000DC0D6 /* LinkDriver */,
 				31C460370DE1D17100C4265B /* StressTester */,
+				7ED4FDBF0E002652004C5F4B /* ThreadedStressTester */,
 			);
 		};
 /* End PBXProject section */
@@ -437,6 +478,18 @@
 			files = (
 				7EB550200DDC813D000DC0D6 /* LinkDriverMain.m in Sources */,
 				7EB5514A0DDC8272000DC0D6 /* LinkDriverWindowController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7ED4FDC00E002652004C5F4B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7ED4FDC10E002652004C5F4B /* AHLinkLexer.l in Sources */,
+				7ED4FDC20E002652004C5F4B /* AHHyperlinkScanner.m in Sources */,
+				7ED4FDC30E002652004C5F4B /* AHMarkedHyperlink.m in Sources */,
+				7ED4FDC60E002652004C5F4B /* ThreadedStressTestMain.m in Sources */,
+				7ED4FDE70E00273E004C5F4B /* ThreadedStressTest.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1008,6 +1061,156 @@
 			};
 			name = "Deployment-Debug_PPC-Only";
 		};
+		7ED4FDCB0E002652004C5F4B /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_FRAMEWORKS_DIR)\"";
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/UnitTests/AutoHyperlinks.framework_Test_Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "TEST_URIS_FILE_PATHNAME=\"\\\"$(SRCROOT)/TestURIs.txt\\\"\"";
+				INSTALL_PATH = /usr/local/bin;
+				LD_RUNPATH_SEARCH_PATHS = "$(DEVELOPER_FRAMEWORKS_DIR)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = AHThreadedStressTester;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				ZERO_LINK = YES;
+			};
+			name = Development;
+		};
+		7ED4FDCC0E002652004C5F4B /* Development-libgaim_oscar */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_FRAMEWORKS_DIR)\"";
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/UnitTests/AutoHyperlinks.framework_Test_Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "TEST_URIS_FILE_PATHNAME=\"\\\"$(SRCROOT)/TestURIs.txt\\\"\"";
+				INSTALL_PATH = /usr/local/bin;
+				LD_RUNPATH_SEARCH_PATHS = "$(DEVELOPER_FRAMEWORKS_DIR)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = AHThreadedStressTester;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				ZERO_LINK = YES;
+			};
+			name = "Development-libgaim_oscar";
+		};
+		7ED4FDCD0E002652004C5F4B /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_FRAMEWORKS_DIR)\"";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/UnitTests/AutoHyperlinks.framework_Test_Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "TEST_URIS_FILE_PATHNAME=\"\\\"$(SRCROOT)/TestURIs.txt\\\"\"";
+				INSTALL_PATH = /usr/local/bin;
+				LD_RUNPATH_SEARCH_PATHS = "$(DEVELOPER_FRAMEWORKS_DIR)";
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
+				MACOSX_DEPLOYMENT_TARGET_i386 = 10.5;
+				MACOSX_DEPLOYMENT_TARGET_ppc = 10.5;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = AHThreadedStressTester;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				SDKROOT_i386 = /Developer/SDKs/MacOSX10.5.sdk;
+				SDKROOT_ppc = /Developer/SDKs/MacOSX10.5.sdk;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		7ED4FDCE0E002652004C5F4B /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_FRAMEWORKS_DIR)\"";
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/UnitTests/AutoHyperlinks.framework_Test_Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "TEST_URIS_FILE_PATHNAME=\"\\\"$(SRCROOT)/TestURIs.txt\\\"\"";
+				INSTALL_PATH = /usr/local/bin;
+				LD_RUNPATH_SEARCH_PATHS = "$(DEVELOPER_FRAMEWORKS_DIR)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = AHThreadedStressTester;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				ZERO_LINK = YES;
+			};
+			name = "Deployment-Debug";
+		};
+		7ED4FDCF0E002652004C5F4B /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1)",
+				);
+				FRAMEWORK_SEARCH_PATHS_QUOTED_FOR_TARGET_1 = "\"$(DEVELOPER_FRAMEWORKS_DIR)\"";
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SRCROOT)/UnitTests/AutoHyperlinks.framework_Test_Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "TEST_URIS_FILE_PATHNAME=\"\\\"$(SRCROOT)/TestURIs.txt\\\"\"";
+				INSTALL_PATH = /usr/local/bin;
+				LD_RUNPATH_SEARCH_PATHS = "$(DEVELOPER_FRAMEWORKS_DIR)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = AHThreadedStressTester;
+				SDKROOT = /Developer/SDKs/MacOSX10.5.sdk;
+				ZERO_LINK = YES;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
 		DA8A8084085549EE00F24BB3 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1133,6 +1336,18 @@
 				7EB550150DDC80DB000DC0D6 /* Deployment */,
 				7EB550160DDC80DB000DC0D6 /* Deployment-Debug */,
 				7EB550170DDC80DB000DC0D6 /* Deployment-Debug_PPC-Only */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		7ED4FDCA0E002652004C5F4B /* Build configuration list for PBXNativeTarget "ThreadedStressTester" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7ED4FDCB0E002652004C5F4B /* Development */,
+				7ED4FDCC0E002652004C5F4B /* Development-libgaim_oscar */,
+				7ED4FDCD0E002652004C5F4B /* Deployment */,
+				7ED4FDCE0E002652004C5F4B /* Deployment-Debug */,
+				7ED4FDCF0E002652004C5F4B /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
