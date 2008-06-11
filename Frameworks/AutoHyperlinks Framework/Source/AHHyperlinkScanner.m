@@ -81,8 +81,8 @@
 - (BOOL)isStringValidURL:(NSString *)inString usingStrict:(BOOL)useStrictChecking fromIndex:(unsigned long *)index
 {
     AH_BUFFER_STATE buf;  // buffer for flex to scan from
-	const char		*inStringUTF8;
-    unsigned long	 utf8Length;
+	const char		*inStringEnc;
+    unsigned long	 encodedLength;
 	static NSLock	*linkLock = nil;
 	
 	if(!linkLock)
@@ -90,16 +90,21 @@
     
 	validStatus = AH_URL_INVALID; // assume the URL is invalid
 
-	if (!(inStringUTF8 = [inString UTF8String])) {
+	// Find the fastest 8-bit wide encoding possible for the c string
+	NSStringEncoding stringEnc = [inString fastestEncoding];
+	if(NSUnicodeStringEncoding == stringEnc)
+		stringEnc = NSUTF8StringEncoding;
+
+	if (!(inStringEnc = [inString cStringUsingEncoding:stringEnc])) {
 		return NO;
 	}
 	
 	[linkLock lock];
 	
-	utf8Length = strlen(inStringUTF8); // length of the string in utf-8
+	encodedLength = strlen(inStringEnc); // length of the string in utf-8
     
 	// initialize the buffer (flex automatically switches to the buffer in this function)
-    buf = AH_scan_string(inStringUTF8);
+    buf = AH_scan_string(inStringEnc);
 
     // call flex to parse the input
     validStatus = AHlex();
@@ -112,7 +117,7 @@
         
         // check that the whole string was matched by flex.
         // this prevents silly things like "blah...com" from being seen as links
-        if(AHleng == utf8Length){
+        if(AHleng == encodedLength){
 			[linkLock unlock];
             return YES;
         }
@@ -120,7 +125,7 @@
     }else if((validStatus == AH_URL_DEGENERATE || validStatus == AH_MAILTO_DEGENERATE) && !useStrictChecking){
         AH_delete_buffer(buf);
         buf = NULL;
-        if(AHleng == utf8Length){
+        if(AHleng == encodedLength){
 			[linkLock unlock];
             return YES;
         }
