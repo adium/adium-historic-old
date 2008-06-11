@@ -91,7 +91,7 @@
 	NSArray *selectedCards = [addressBookPicker selectedRecords];
 	
 	if ([selectedCards count]) {
-		[displayedObject setAddressBookPerson:[selectedCards objectAtIndex:0]];
+		[(AIListContact *)displayedObject setAddressBookPerson:[selectedCards objectAtIndex:0]];
 	}
 
 	[NSApp endSheet:addressBookPanel];	
