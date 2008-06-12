@@ -44,7 +44,7 @@
 #define CONTACT_ADDED_ERROR_TITLE		AILocalizedString(@"Error", nil)
 #define CONTACT_ADDED_ERROR_Message		AILocalizedString(@"An error had occurred while adding %@ to the Address Book.", nil)
 
-#define KEY_ADDRESS_BOOK_ACTIONS_INSTALLED	@"Adium:Installed Adress Book Actions 1.2"
+#define KEY_ADDRESS_BOOK_ACTIONS_INSTALLED	@"Adium:Installed Adress Book Actions 1.3"
 
 @interface ESAddressBookIntegrationPlugin(PRIVATE)
 + (ABPerson *)_searchForUID:(NSString *)UID serviceID:(NSString *)serviceID;
@@ -264,14 +264,10 @@ NSString* serviceIDForJabberUID(NSString *UID);
 	
 	NSSet		*modifiedAttributes = nil;
 	
-    if (inModifiedKeys == nil) { //Only perform this when updating for all list objects
+    if (inModifiedKeys == nil) { //Only perform this when updating for all list objects or when a contact is created
         ABPerson *person = [[self class] personForListObject:inObject];
-		
-		if ([AIUserIcons userIconSource:addressBookUserIconSource changeWouldBeRelevantForObject:inObject]) {
-			//This object's user icon would be changed if we have a new icon Update!
-			[addressBookUserIconSource queueDelayedFetchOfImageForPerson:person object:inObject];
-		}
-
+		if ([inObject isKindOfClass:[AIMetaContact class]])
+			AILogWithSignature(@"%@ --> ABPerson %p", inObject, person);
 		if (person) {
 			if (enableImport) {
 				//Load the name if appropriate
@@ -611,6 +607,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 {
 	ABPerson	*person = nil;
 	NSString	*uniqueID = [inObject preferenceForKey:KEY_AB_UNIQUE_ID group:PREF_GROUP_ADDRESSBOOK];
+	if (!uniqueID) uniqueID = [inObject valueForProperty:KEY_AB_UNIQUE_ID];
 	ABRecord	*record = nil;
 	
 	if (uniqueID)
@@ -625,7 +622,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 			
 			//Search for an ABPerson for each listContact within the metaContact; first one we find is
 			//the lucky winner.
-			enumerator = [[(AIMetaContact *)inObject listContacts] objectEnumerator];
+			enumerator = [[(AIMetaContact *)inObject listContactsIncludingOfflineAccounts] objectEnumerator];
 			while ((listContact = [enumerator nextObject]) && (person == nil)) {
 				person = [self personForListObject:listContact];
 			}
@@ -717,6 +714,26 @@ NSString* serviceIDForJabberUID(NSString *UID);
 																				  UID:email
 																		 existingOnly:YES];
 
+				//Add them to our set
+				[contactSet unionSet:contacts];
+			}
+			
+			if ([email hasSuffix:@"gmail.com"] || [email hasSuffix:@"googlemail.com"]) {
+				//Retrieve all appropriate contacts
+				NSSet	*contacts = [[adium contactController] allContactsWithService:[[adium accountController] firstServiceWithServiceID:@"GTalk"]
+																				UID:email
+																	   existingOnly:YES];
+				
+				//Add them to our set
+				[contactSet unionSet:contacts];
+			}
+			
+			if ([email hasSuffix:@"hotmail.com"]) {
+				//Retrieve all appropriate contacts
+				NSSet	*contacts = [[adium contactController] allContactsWithService:[[adium accountController] firstServiceWithServiceID:@"MSN"]
+																				UID:email
+																	   existingOnly:YES];
+				
 				//Add them to our set
 				[contactSet unionSet:contacts];
 			}
@@ -1033,7 +1050,6 @@ NSString* serviceIDForJabberUID(NSString *UID)
 				
 				email = [emails valueAtIndex:i];
 				if ([email hasSuffix:@"@mac.com"]) {
-					
 					//@mac.com UIDs go into the AIM dictionary
 					if (!(dict = [addressBookDict objectForKey:@"AIM"])) {
 						dict = [[[NSMutableDictionary alloc] init] autorelease];
@@ -1045,6 +1061,31 @@ NSString* serviceIDForJabberUID(NSString *UID)
 					//Internally we distinguish them as .Mac addresses (for metaContact purposes below)
 					[UIDsArray addObject:email];
 					[servicesArray addObject:@"Mac"];
+
+				} else if ([email hasSuffix:@"gmail.com"] || [email hasSuffix:@"googlemail.com"]) {
+					//GTalk UIDs go into the Jabber dictionary
+					if (!(dict = [addressBookDict objectForKey:@"Jabber"])) {
+						dict = [[[NSMutableDictionary alloc] init] autorelease];
+						[addressBookDict setObject:dict forKey:@"Jabber"];
+					}
+					
+					[dict setObject:[person uniqueId] forKey:email];
+					
+					//Internally we distinguish them as Google Talk addresses (for metaContact purposes below)
+					[UIDsArray addObject:email];
+					[servicesArray addObject:@"GTalk"];
+
+				} else if ([email hasSuffix:@"hotmail.com"]) {
+					//GTalk UIDs go into the Jabber dictionary
+					if (!(dict = [addressBookDict objectForKey:@"MSN"])) {
+						dict = [[[NSMutableDictionary alloc] init] autorelease];
+						[addressBookDict setObject:dict forKey:@"MSN"];
+					}
+
+					[dict setObject:[person uniqueId] forKey:email];
+
+					[UIDsArray addObject:email];
+					[servicesArray addObject:@"MSN"];
 				}
 			}
 		}
@@ -1070,10 +1111,10 @@ NSString* serviceIDForJabberUID(NSString *UID)
 				[dict release];
 			}
 
-			BOOL					isOSCAR = ([serviceID isEqualToString:@"AIM"] || 
-											   [serviceID isEqualToString:@"ICQ"]);
-			BOOL					isJabber = [serviceID isEqualToString:@"Jabber"] ||
-                                               [serviceID isEqualToString:@"XMPP"];
+			BOOL	isOSCAR = ([serviceID isEqualToString:@"AIM"] || 
+							   [serviceID isEqualToString:@"ICQ"]);
+			BOOL	isJabber = [serviceID isEqualToString:@"Jabber"] ||
+							   [serviceID isEqualToString:@"XMPP"];
 
 			for (i = 0 ; i < nameCount ; i++) {
 				NSString	*UID = [[names valueAtIndex:i] compactedString];
@@ -1096,8 +1137,13 @@ NSString* serviceIDForJabberUID(NSString *UID)
 		
 		if (([UIDsArray count] > 1) && createMetaContacts) {
 			/* Got a record with multiple names. Group the names together, adding them to the meta contact. */
-			[[adium contactController] groupUIDs:UIDsArray 
-									 forServices:servicesArray];
+			AIMetaContact *metaContact = [[adium contactController] groupUIDs:UIDsArray 
+																  forServices:servicesArray];
+			if (metaContact) {
+				[metaContact setValue:[person uniqueId]
+						  forProperty:KEY_AB_UNIQUE_ID
+							   notify:NotifyNever];
+			}
 		}
 	}
 }

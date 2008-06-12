@@ -27,22 +27,20 @@
 
 #import "AHLinkLexer.h"
 
-extern int AHleng;
-extern int AHlex();
+extern long AHleng;
+extern long AHlex();
 typedef struct AH_buffer_state *AH_BUFFER_STATE;
 void AH_switch_to_buffer(AH_BUFFER_STATE);
 AH_BUFFER_STATE AH_scan_string (const char *);
 void AH_delete_buffer(AH_BUFFER_STATE);
-
-extern unsigned int AHStringOffset;
 
 @class AHMarkedHyperlink;
 
 @interface AHHyperlinkScanner : NSObject
 {
 	NSDictionary				*urlSchemes;
-	BOOL						 useStrictChecking;
-	AH_URI_VERIFICATION_STATUS		 validStatus;
+	BOOL						 strictChecking;
+	unsigned long				 stringOffset;
 }
 
 /*!
@@ -62,15 +60,24 @@ extern unsigned int AHStringOffset;
  */
  - (id)initWithStrictChecking:(BOOL)flag;
 
-- (AH_URI_VERIFICATION_STATUS)validationStatus;
 
 /*!
- * @brief Determine the validity of a given string
+ * @brief Determine the validity of a given string using the default strictness
  *
  * @param inString The string to be verified
  * @return Boolean
  */
 - (BOOL)isStringValidURL:(NSString *)inString;
+
+/*!
+ * @brief Determine the validity of a given string with a custom strictness
+ *
+ * @param inString The string to be verified
+ * @param useStrictChecking Use strict rules or not
+ * @param index a pointer to the index the string starts at, for easy incrementing.
+ * @return Boolean
+ */
++ (BOOL)isStringValidURL:(NSString *)inString usingStrict:(BOOL)useStrictChecking fromIndex:(unsigned long *)index withStatus:(AH_URI_VERIFICATION_STATUS *)validStatus;
 
 /*!
  * @brief Fetches all the URLs from a string

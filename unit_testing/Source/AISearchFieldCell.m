@@ -7,6 +7,7 @@
 
 #import "AISearchFieldCell.h"
 #import <AIUtilities/AIBezierPathAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 
 @implementation AISearchFieldCell
 
@@ -35,6 +36,11 @@
 	if (backgroundColor != inBackgroundColor) {
 		[backgroundColor release];
 		backgroundColor = [inBackgroundColor retain];
+	}
+	
+	if (![NSApp isOnLeopardOrBetter]) {
+		/* On 10.4, we need to set our background color, too */
+		[self setBackgroundColor:(backgroundColor ? backgroundColor : [NSColor whiteColor])];
 	}
 }
 

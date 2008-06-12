@@ -80,7 +80,8 @@ typedef enum {
 
 typedef enum {
 	EXTENDED_STATUS_POSITION_BESIDE_NAME = 0,
-	EXTENDED_STATUS_POSITION_BELOW_NAME
+	EXTENDED_STATUS_POSITION_BELOW_NAME,
+	EXTENDED_STATUS_POSITION_BOTH
 } EXTENDED_STATUS_POSITION;
 
 typedef enum {
@@ -194,6 +195,7 @@ typedef enum {
 	NSArray								*draggedContacts;
 	NSString							*dragOperation;
 
+	BOOL								useContactListGroups;
 	int									indentationPerLevel[9];
 }
 
@@ -206,6 +208,7 @@ typedef enum {
 - (ESObjectWithProperties<AIContainingObject> *)contactListRoot;
 
 - (void)setHideRoot:(BOOL)inHideRoot;
+- (void)setUseContactListGroups:(BOOL)useContactListGroups;
 - (void)reloadData;
 
 - (void)setBackgroundOpacity:(float)opacity;

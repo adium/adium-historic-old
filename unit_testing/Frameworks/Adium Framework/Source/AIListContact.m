@@ -32,6 +32,8 @@
 
 #include <AvailabilityMacros.h>
 
+#import "ESAddressBookIntegrationPlugin.h"
+
 #define KEY_BASE_WRITING_DIRECTION		@"Base Writing Direction"
 #define PREF_GROUP_WRITING_DIRECTION	@"Writing Direction"
 
@@ -117,10 +119,13 @@
 - (void)setRemoteGroupName:(NSString *)inName
 {
 	if ((!remoteGroupName && inName) || ![inName isEqualToString:remoteGroupName]) {
-		//Autorelease so we don't have to worry about whether (remoteGroupName == inName) or not
-		[remoteGroupName autorelease];
-		remoteGroupName = [inName retain];
-		
+		if (!remoteGroupName || !inName)
+			[AIUserIcons flushCacheForObject:self];
+
+		if (remoteGroupName != inName) {
+			[remoteGroupName release];
+			remoteGroupName = [inName retain];
+		}
 		[[adium contactController] listObjectRemoteGroupingChanged:self];
 		
 		AIListObject	*myContainingObject = [self containingObject];
@@ -410,6 +415,24 @@
 - (int)warningLevel
 {
 	return [self integerValueForProperty:@"Warning"];
+}
+
+/*!
+ * @brief Set the profile array
+ */
+- (void)setProfileArray:(NSArray *)array notify:(NotifyTiming)notify
+{
+	[self setValue:array
+	   forProperty:@"ProfileArray"
+			notify:notify];
+}
+
+/*!
+ * @brief The profile array
+ */
+- (NSArray *)profileArray
+{
+	return [self valueForProperty:@"ProfileArray"];	
 }
 
 /*!
@@ -736,6 +759,19 @@
 	[self setPreference:[NSNumber numberWithInt:direction]
 				 forKey:KEY_BASE_WRITING_DIRECTION
 				  group:PREF_GROUP_WRITING_DIRECTION];
+}
+
+#pragma mark Address Book
+- (ABPerson *)addressBookPerson
+{
+#warning fix me by moving ESAddressBookIntegrationPlugin to being a core helper of AIContactController
+	return [NSClassFromString(@"ESAddressBookIntegrationPlugin") personForListObject:[self parentContact]];	
+}
+- (void)setAddressBookPerson:(ABPerson *)inPerson
+{
+	[[self parentContact] setPreference:[inPerson uniqueId]
+								 forKey:KEY_AB_UNIQUE_ID
+								  group:PREF_GROUP_ADDRESSBOOK];
 }
 
 #pragma mark Applescript

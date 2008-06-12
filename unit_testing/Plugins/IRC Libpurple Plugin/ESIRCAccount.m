@@ -10,6 +10,11 @@
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIContentMessage.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
+#import "SLPurpleCocoaAdapter.h"
+
+@interface SLPurpleCocoaAdapter (PRIVATE)
+- (BOOL)attemptPurpleCommandOnMessage:(NSString *)originalMessage fromAccount:(AIAccount *)sourceAccount inChat:(AIChat *)chat;
+@end
 
 /*
 void purple_account_set_username(void *account, const char *username);
@@ -109,10 +114,35 @@ void purple_account_set_bool(void *account, const char *name,
 	return host;
 }
 
+- (NSString *)displayName
+{
+	NSString *myUID = [self formattedUID];
+	unsigned int pos = [myUID rangeOfString:@"@"].location;
+	
+	if(pos == NSNotFound)
+		return myUID;
+	return [myUID substringToIndex:pos];
+}
+
+- (NSString *)formattedUIDForListDisplay
+{
+	// on IRC, the nickname isn't that important for an account, the server is
+	// (I guess the number of IRC users that use the same server with different nicks is very low)
+	return [NSString stringWithFormat:@"%@ (%@)", [self host], [self displayName]];
+}
+
 - (BOOL)canSendOfflineMessageToContact:(AIListContact *)inContact
 {
 	return ([[[inContact UID] lowercaseString] isEqualToString:@"nickserv"] ||
 			[[[inContact UID] lowercaseString] isEqualToString:@"chanserv"]);
+}
+
+- (BOOL)closeChat:(AIChat*)chat
+{
+	if([adium isQuitting])
+		return NO;
+	else
+		return [super closeChat:chat];
 }
 
 @end

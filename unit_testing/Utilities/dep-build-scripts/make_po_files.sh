@@ -1,27 +1,29 @@
 #!/bin/sh
 
-PATCHDIR="$PWD"
+source common.sh
+setupDirStructure
+cd "$BUILDDIR"
 
 pushd $PIDGIN_SOURCE
 
-for patch in "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" ; do
-    echo "Applying $patch"
-	cat $patch | patch --forward -p0
-done
+	for patch in "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" ; do
+    	echo "Applying $patch"
+		patch --forward -p0 < $patch || true
+	done
 
 popd
 
-pushd $PATCHDIR/build/libpurple-i386/po
-#make update-po && make all && make install
-make all && make install
+pushd $BUILDDIR/libpurple-i386/po
+	#make update-po && make all && make install
+	make all && make install
 popd
 
-pushd $PATCHDIR/build/root-i386/share/locale
-mkdir $PATCHDIR/build/Frameworks/libpurple.framework/Resources || true
-cp -v -r * $PATCHDIR/build/Frameworks/libpurple.framework/Resources
+pushd $BUILDDIR/root-i386/share/locale
+	mkdir $BUILDDIR/Frameworks/libpurple.framework/Resources || true
+	cp -v -r * $BUILDDIR/Frameworks/libpurple.framework/Resources
 popd
 
-pushd $PATCHDIR/build/Frameworks/libpurple.framework/Resources
-find . \( -name gettext-runtime.mo -or -name gettext-tools.mo -or -name glib20.mo \) -type f -delete
+pushd $BUILDDIR/Frameworks/libpurple.framework/Resources
+	find . \( -name gettext-runtime.mo -or -name gettext-tools.mo -or -name glib20.mo \) -type f -delete
 popd
 

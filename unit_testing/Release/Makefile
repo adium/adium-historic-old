@@ -14,10 +14,10 @@
 # - make all
 ###########
 
-VERSION=1.3svn
-BUILD_IN_DEBUG_MODE=FALSE
-BETA=FALSE
-OFFICIAL_BUILD=TRUE
+VERSION=1.3b2
+BUILD_IN_DEBUG_MODE?=TRUE
+BETA?=TRUE
+OFFICIAL_BUILD?=TRUE
 
 # Always builds in debug mode.
 NIGHTLY?=FALSE
@@ -148,6 +148,7 @@ ifeq ($(OFFICIAL_BUILD),TRUE)
 		security unlock-keychain -p `cat ~/adium-password`; \
 	fi
 	codesign -v -s Adium $(ADIUM_DIR)/Adium.app/Contents/MacOS/Adium
+endif
 
 createfolder:
 	@# clean build directory
@@ -165,7 +166,6 @@ createfolder:
 	
 	@# symlink /Applications
 	./mkalias -r /Applications $(ADIUM_DIR)/Applications
-endif
 
 diskimage:
 	rm "$(BUILD_DIR)/$(RELEASE_NAME).dmg" || true

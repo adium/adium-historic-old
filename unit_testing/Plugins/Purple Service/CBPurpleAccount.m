@@ -16,6 +16,7 @@
 
 #import "CBPurpleAccount.h"
 
+#import <libpurple/notify.h>
 #import <libpurple/cmds.h>
 #import <AdiumLibpurple/SLPurpleCocoaAdapter.h>
 #import <Adium/AIAccount.h>
@@ -40,6 +41,7 @@
 #import <Adium/AIInterfaceControllerProtocol.h>
 #import <Adium/AIStatusControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
+#import <Adium/AIContentStatus.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
@@ -49,10 +51,12 @@
 #import <AIUtilities/AIObjectAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIImageDrawingAdditions.h>
+#import <AIUtilities/AIMutableStringAdditions.h>
 #import <AIUtilities/AISystemNetworkDefaults.h>
 #import "ESiTunesPlugin.h"
 #import "AMPurpleTuneTooltip.h"
 #import "adiumPurpleRequest.h"
+#import "AIDualWindowInterfacePlugin.h"
 
 #import "ESMSNService.h" //why oh why must the superclass know about MSN specific things!?
 
@@ -60,6 +64,8 @@
 
 #define	PREF_GROUP_ALIASES			@"Aliases"		//Preference group to store aliases in
 #define NEW_ACCOUNT_DISPLAY_TEXT		AILocalizedString(@"<New Account>", "Placeholder displayed as the name of a new account")
+
+#define	KEY_PRIVACY_OPTION	@"Privacy Option"
 
 @interface CBPurpleAccount (PRIVATE)
 - (NSString *)_mapIncomingGroupName:(NSString *)name;
@@ -292,16 +298,40 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 
 	//Apply any changes
 	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
-}   
+}
+
+
+- (void)clearIconForContact:(AIListContact *)theContact
+{
+	[theContact setServersideIconData:nil
+							   notify:NotifyLater];
+	
+	//Apply any changes
+	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];	
+}
 
 //Buddy Icon
 - (void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData
 {
-	[theContact setServersideIconData:userIconData
-							   notify:NotifyLater];
+	[NSObject cancelPreviousPerformRequestsWithTarget:self
+											 selector:@selector(clearIconForContact:)
+											   object:theContact];
+	if (userIconData) {
+		[theContact setServersideIconData:userIconData
+								   notify:NotifyLater];
+		
+		//Apply any changes
+		[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
 
-	//Apply any changes
-	[theContact notifyOfChangedPropertiesSilently:silentAndDelayed];
+	} else {
+		/* We may receive an empty icon update just before an actual change. We don't want to flicker through no-icon.
+		 * We therefore cancel empty icon updates when we receive a new icon, and we do the actual clearing on a delay in case
+		 * this is what is about to happen.
+		 */
+		[self performSelector:@selector(clearIconForContact:)
+				   withObject:theContact
+				   afterDelay:10.0];
+	}
 }
 
 - (void)updateMobileStatus:(AIListContact *)theContact withData:(BOOL)isMobile
@@ -325,48 +355,66 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 	return (returnString ? returnString : inString);
 }
 
-#if 0
-
-#define KEY_KEY		@"Key"
-#define KEY_VALUE	@"Value"
-#define KEY_TYPE	@"Type"
-
-NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
+- (NSMutableArray *)arrayOfDictionariesFromPurpleNotifyUserInfo:(PurpleNotifyUserInfo *)user_info
 {
 	GList *l;
-	NSMutableArray *array = [NSMutableArray dictionary];
+	NSMutableArray *array = [NSMutableArray array];
 	
-	for (l = user_info->user_info_entries; l != NULL; l = l->next) {
+	for (l = purple_notify_user_info_get_entries(user_info); l != NULL; l = l->next) {
 		PurpleNotifyUserInfoEntry *user_info_entry = l->data;
-
-		switch (user_info_entry->type) {
+		
+		switch (purple_notify_user_info_entry_get_type(user_info_entry)) {
 			case PURPLE_NOTIFY_USER_INFO_ENTRY_SECTION_HEADER:
 				[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-								  [NSString stringWithUTF8String:user_info_entry->label], KEY_LABEL,
-								  [NSNumber numberWithValue:AIUserInfoSectionHeader], KEY_TYPE,
+								  [NSString stringWithUTF8String:purple_notify_user_info_entry_get_label(user_info_entry)], KEY_KEY,
+								  [NSNumber numberWithInt:AIUserInfoSectionHeader], KEY_TYPE,
 								  nil]];
 				
 				break;
 			case PURPLE_NOTIFY_USER_INFO_ENTRY_SECTION_BREAK:
 				[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-								  [NSNumber numberWithValue:AIUserInfoSectionBreak], KEY_TYPE,
+								  [NSNumber numberWithInt:AIUserInfoSectionBreak], KEY_TYPE,
 								  nil]];
 				break;
 				
 			case PURPLE_NOTIFY_USER_INFO_ENTRY_PAIR:
 			{
-				if (user_info_entry->label && user_info_entry->value) {
+				if (purple_notify_user_info_entry_get_label(user_info_entry) && purple_notify_user_info_entry_get_value(user_info_entry)) {
 					[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-									  [NSString stringWithUTF8String:user_info_entry->label], KEY_LABEL,
-									  [NSString stringWithUTF8String:user_info_entry->value], KEY_VALUE,
+									  [NSString stringWithUTF8String:purple_notify_user_info_entry_get_label(user_info_entry)], KEY_KEY,
+									  processPurpleImages([NSString stringWithUTF8String:purple_notify_user_info_entry_get_value(user_info_entry)], self), KEY_VALUE,
 									  nil]];
 					
-				} else if (user_info_entry->label) {
-					[array addObject:[NSDictionary dictionaryWithObject:[NSString stringWithUTF8String:user_info_entry->label]
-																 forKey:KEY_LABEL]];
-				} else if (user_info_entry->value) {
-					[array addObject:[NSDictionary dictionaryWithObject:[NSString stringWithUTF8String:user_info_entry->value]
-																 forKey:KEY_VALUE]];
+				} else if (purple_notify_user_info_entry_get_label(user_info_entry)) {
+					[array addObject:[NSDictionary dictionaryWithObject:
+									  [NSString stringWithUTF8String:purple_notify_user_info_entry_get_label(user_info_entry)]
+																 forKey:KEY_KEY]];
+				} else if (purple_notify_user_info_entry_get_value(user_info_entry)) {
+					NSMutableString	*value = [processPurpleImages([NSString stringWithUTF8String:purple_notify_user_info_entry_get_value(user_info_entry)],
+																  self) mutableCopy];
+					NSEnumerator	*enumerator;
+					NSString		*valuePair;
+					[value replaceOccurrencesOfString:@"<br>" withString:@"<br/>" options:(NSCaseInsensitiveSearch | NSLiteralSearch)];
+					[value replaceOccurrencesOfString:@"<br />" withString:@"<br/>" options:(NSCaseInsensitiveSearch | NSLiteralSearch)];
+					[value replaceOccurrencesOfString:@"<B>" withString:@"<b>" options:NSLiteralSearch];
+
+					enumerator = [[value componentsSeparatedByString:@"<br/><b>"] objectEnumerator];
+					while ((valuePair = [enumerator nextObject])) {
+						NSRange	firstStartBold = [valuePair rangeOfString:@"<b>"];
+						NSRange	firstEndBold = [valuePair rangeOfString:@"</b>"];
+						
+						if (firstEndBold.length > 0) {
+							// Chop off <b> from the beginning and :</b> from the end. The extra -1 is for the colon.
+							[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+											  [valuePair substringWithRange:NSMakeRange(firstStartBold.length, firstEndBold.location-firstStartBold.length-1)], KEY_KEY,
+											  [valuePair substringFromIndex:NSMaxRange(firstEndBold)], KEY_VALUE,
+											  nil]];
+						} else {
+							[array addObject:[NSDictionary dictionaryWithObject:valuePair
+																		forKey:KEY_VALUE]];
+						}
+					}
+					[value release];
 				}	
 				break;
 			}
@@ -375,26 +423,11 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 
 	return array;
 }
-#endif
 
 - (void)updateUserInfo:(AIListContact *)theContact withData:(PurpleNotifyUserInfo *)user_info
 {
-	char *user_info_text = purple_notify_user_info_get_text_with_newline(user_info, "<BR />");
-	NSMutableString *mutablePurpleUserInfo = (user_info_text ? [NSMutableString stringWithUTF8String:user_info_text] : nil);
-	g_free(user_info_text);
-
-	//Libpurple may pass us HTML with embedded </html> tags. Yuck. Don't abort when we hit one in AIHTMLDecoder.
-	[mutablePurpleUserInfo replaceOccurrencesOfString:@"</html>"
-										 withString:@""
-											options:(NSCaseInsensitiveSearch | NSLiteralSearch)
-											  range:NSMakeRange(0, [mutablePurpleUserInfo length])];
-
-	NSString	*purpleUserInfo = mutablePurpleUserInfo;
-	purpleUserInfo = processPurpleImages(purpleUserInfo, self);
-	purpleUserInfo = [self processedIncomingUserInfo:purpleUserInfo];
-
-	AILogWithSignature(@"Decoded %@ to %@", purpleUserInfo, [AIHTMLDecoder decodeHTML:purpleUserInfo]);
-	[theContact setProfile:[AIHTMLDecoder decodeHTML:purpleUserInfo]
+	NSArray		*profileContents = [self arrayOfDictionariesFromPurpleNotifyUserInfo:user_info];
+	[theContact setProfileArray:profileContents
 					notify:NotifyLater];
 
 	//Apply any changes
@@ -442,6 +475,7 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact
 {
     //Request profile
+	AILogWithSignature(@"");
 	[purpleAdapter getInfoFor:[inContact UID] onAccount:self];
 }
 
@@ -495,6 +529,9 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 			if (shouldUnref)
 				purple_buddy_icon_unref(buddyIcon);
 		}
+
+	} else {
+		AILogWithSignature(@"Could not get serverside icon data for %@. account is %p", contact, account);
 	}
 	
 	return data;
@@ -663,6 +700,9 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 	AILogWithSignature(@"");
 
 	//Open the chat
+	if ([chat isOpen])
+		[self displayYouHaveConnectedInChat:chat];
+
 	[[adium interfaceController] openChat:chat];
 	
 	[chat accountDidJoinChat];
@@ -1299,10 +1339,17 @@ NSArray *purple_notify_user_info_to_dictionary(PurpleNotifyUserInfo *user_info)
 				break;
 			
 		}
-		account->perm_deny = privacyType;
-		serv_set_permit_deny(purple_account_get_connection(account));
-		AILog(@"Set privacy options for %@ (%x %x) to %i",
-			  self,account,purple_account_get_connection(account),account->perm_deny);
+		
+		if (account->perm_deny != privacyType) {
+			account->perm_deny = privacyType;
+			serv_set_permit_deny(purple_account_get_connection(account));
+			AILog(@"Set privacy options for %@ (%x %x) to %i",
+				  self,account,purple_account_get_connection(account),account->perm_deny);
+
+			[self setPreference:[NSNumber numberWithInt:option]
+						 forKey:KEY_PRIVACY_OPTION
+						  group:GROUP_ACCOUNT_STATUS];			
+		}
 	} else {
 		AILog(@"Couldn't set privacy options for %@ (%x %x)",self,account,purple_account_get_connection(account));
 	}
@@ -2377,6 +2424,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 			}
 		}
 
+		AILogWithSignature(@"%@ setting icon data of length %i", self, [buddyIconData length]);
 		[purpleAdapter setBuddyIcon:buddyIconData onAccount:self];
 	}
 	
@@ -2641,6 +2689,7 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 
 	//Observe preferences changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_ALIASES];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 }
 
 - (BOOL)allowAccountUnregistrationIfSupportedByLibpurple
@@ -2815,6 +2864,10 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 			}
 		}
 	}
+	
+	if ([group isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE]) {
+		openPsychicChats = [[prefDict objectForKey:KEY_PSYCHIC] boolValue];
+	}
 }
 
 #pragma mark Actions for chats
@@ -2894,8 +2947,30 @@ static void prompt_host_ok_cb(CBPurpleAccount *self, const char *host) {
 {
     AITypingState currentTypingState = [chat integerValueForProperty:KEY_TYPING];
 	AITypingState newTypingState = [typingStateNumber intValue];
-
+	
     if (currentTypingState != newTypingState) {
+		if (newTypingState == AITyping && openPsychicChats && ![chat isOpen]) {
+			[[adium interfaceController] openChat:chat];
+			
+			/*
+			 * Use the Libpurple "psychic" tagline. If this is found to be confusing, we should switch to your own version.
+			 * The upside of using theirs is that clever gimmicky translations already exist.
+			 */
+			NSMutableString *forceString = [[NSString stringWithUTF8String:_("You feel a disturbance in the force...")] mutableCopy];
+			[forceString replaceOccurrencesOfString:@"..."
+										 withString:[NSString ellipsis]
+											options:NSLiteralSearch];
+			AIContentStatus *statusMessage = [AIContentStatus statusInChat:chat
+																withSource:[chat listObject]
+															   destination:self
+																	  date:[NSDate date]
+																   message:[NSAttributedString stringWithString:forceString]
+																  withType:@"psychic"];
+			[forceString release];
+
+			[[adium contentController] receiveContentObject:statusMessage];
+		}
+		
 		[chat setValue:(newTypingState ? typingStateNumber : nil)
 					   forProperty:KEY_TYPING
 					   notify:NotifyNow];

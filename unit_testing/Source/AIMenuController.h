@@ -42,6 +42,7 @@
     IBOutlet	id		menu_View_Appearance_Toggles;
     IBOutlet	id		menu_View_Additions;
 	IBOutlet	id		menu_Status_State;
+	IBOutlet	id		menu_Status_SocialNetworking;
     IBOutlet	id		menu_Status_Accounts;
     IBOutlet	id		menu_Status_Additions;
     IBOutlet	id		menu_Format_Styles;

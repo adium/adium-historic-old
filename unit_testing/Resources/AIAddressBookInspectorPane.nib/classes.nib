@@ -34,6 +34,14 @@
 			<string>NSControl</string>
 		</dict>
 		<dict>
+			<key>CLASS</key>
+			<string>RBSplitSubview</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSView</string>
+		</dict>
+		<dict>
 			<key>ACTIONS</key>
 			<dict>
 				<key>cancelABPanel</key>
@@ -53,35 +61,33 @@
 			<string>ObjC</string>
 			<key>OUTLETS</key>
 			<dict>
-				<key>addressBookButton</key>
-				<string>NSButton</string>
 				<key>addressBookPanel</key>
 				<string>NSPanel</string>
 				<key>addressBookPicker</key>
 				<string>ABPeoplePickerView</string>
 				<key>aliasLabel</key>
 				<string>NSTextField</string>
+				<key>button_abPeoplePickerCancel</key>
+				<string>NSButton</string>
+				<key>button_abPeoplePickerOkay</key>
+				<string>NSButton</string>
+				<key>button_chooseCard</key>
+				<string>NSButton</string>
 				<key>contactAlias</key>
 				<string>AIDelayedTextField</string>
 				<key>contactNotes</key>
 				<string>AIDelayedTextField</string>
 				<key>inspectorContentView</key>
 				<string>NSView</string>
+				<key>label_abPeoplePickerChooseAnAddressCard</key>
+				<string>NSTextField</string>
+				<key>label_notes</key>
+				<string>NSTextField</string>
 				<key>notes</key>
 				<string>AIDelayedTextField</string>
-				<key>notesLabel</key>
-				<string>NSTextField</string>
 			</dict>
 			<key>SUPERCLASS</key>
 			<string>AIObject</string>
-		</dict>
-		<dict>
-			<key>CLASS</key>
-			<string>RBSplitSubview</string>
-			<key>LANGUAGE</key>
-			<string>ObjC</string>
-			<key>SUPERCLASS</key>
-			<string>NSView</string>
 		</dict>
 		<dict>
 			<key>ACTIONS</key>
@@ -101,6 +107,25 @@
 			<string>NSObject</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>AILocalizationButton</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>view_anchorToLeftSide</key>
+				<string>NSView</string>
+				<key>view_anchorToRightSide</key>
+				<string>NSView</string>
+				<key>window_anchorOnLeftSide</key>
+				<string>NSWindow</string>
+				<key>window_anchorOnRightSide</key>
+				<string>NSWindow</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSButton</string>
 		</dict>
 		<dict>
 			<key>CLASS</key>
@@ -131,6 +156,25 @@
 			<string>AIDelayedTextField</string>
 			<key>LANGUAGE</key>
 			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSTextField</string>
+		</dict>
+		<dict>
+			<key>CLASS</key>
+			<string>AILocalizationTextField</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>view_anchorToLeftSide</key>
+				<string>NSView</string>
+				<key>view_anchorToRightSide</key>
+				<string>NSView</string>
+				<key>window_anchorOnLeftSide</key>
+				<string>NSWindow</string>
+				<key>window_anchorOnRightSide</key>
+				<string>NSWindow</string>
+			</dict>
 			<key>SUPERCLASS</key>
 			<string>NSTextField</string>
 		</dict>

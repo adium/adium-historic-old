@@ -192,8 +192,8 @@ typedef enum {
 	listContact = [[adium contactController] contactWithService:service
 	                                                    account:self
 	                                                        UID:[self UIDForContact:contact]];  
-
 	if ([contact status] == AWEzvUndefined) {
+		AILogWithSignature(@"Warning: Received a status update for a contact with an undefined status. This shouldn't happen.");
 		[listContact setRemoteGroupName:nil];
 		[listContact setOnline:NO notify:NotifyLater silently:silentAndDelayed];
 
@@ -269,7 +269,8 @@ typedef enum {
 	                                                            account:self 
 	                                                                UID:inUID];
 
-	[listContact setRemoteGroupName:nil];	
+	[listContact setRemoteGroupName:nil];
+	[listContact setOnline:NO notify:NotifyNow silently:silentAndDelayed];
 }
 
 - (void)userLoggedOut:(AWEzvContact *)contact

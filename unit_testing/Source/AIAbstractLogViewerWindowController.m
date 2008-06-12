@@ -11,7 +11,7 @@
 #import "AILogToGroup.h"
 #import "AILoggerPlugin.h"
 #import "ESRankingCell.h" 
-#import "GBChatlogHTMLConverter.h"
+#import "AIXMLChatlogConverter.h"
 #import "AILogDateFormatter.h"
 
 #import <Adium/AIAccountControllerProtocol.h>
@@ -719,12 +719,20 @@ static int toArraySort(id itemA, id itemB, void *context);
 		
 		if ([[theLog path] hasSuffix:@".AdiumHTMLLog"] || [[theLog path] hasSuffix:@".html"] || [[theLog path] hasSuffix:@".html.bak"]) {
 			//HTML log
-			NSString *logFileText = [NSString stringWithContentsOfFile:[logBasePath stringByAppendingPathComponent:[theLog path]]];
-			
+			NSString		   *logFileText = [NSString stringWithContentsOfFile:[logBasePath stringByAppendingPathComponent:[theLog path]]];
+			NSAttributedString *attributedLogFileText = [AIHTMLDecoder decodeHTML:logFileText];
+
+			if (showEmoticons) {
+				attributedLogFileText = [[adium contentController] filterAttributedString:attributedLogFileText
+																		  usingFilterType:AIFilterMessageDisplay
+																				direction:AIFilterOutgoing
+																				  context:nil];						
+			}			
+
 			if (displayText) {
-				[displayText appendAttributedString:[AIHTMLDecoder decodeHTML:logFileText]];
+				[displayText appendAttributedString:attributedLogFileText];
 			} else {
-				displayText = [[AIHTMLDecoder decodeHTML:logFileText] mutableCopy];
+				displayText = [attributedLogFileText mutableCopy];
 			}
 
 		} else if ([[theLog path] hasSuffix:@".chatlog"]){
@@ -737,45 +745,17 @@ static int toArraySort(id itemA, id itemB, void *context);
 				if (isDir) logFullPath = [logFullPath stringByAppendingPathComponent:
 										 [[[logFullPath lastPathComponent] stringByDeletingPathExtension] stringByAppendingPathExtension:@"xml"]];
 			}
-			
-			//If this log begins with a malformed UTF-8 BOM (which was written out by Adium for a brief time between 1.0b7 and 1.0b8), fix it before trying to read it in.
-			enum {
-				failedUtf8BomLength = 6
-			};
-			NSData *data = [NSData dataWithContentsOfMappedFile:logFullPath];
-			const unsigned char *ptr = [data bytes];
-			unsigned len = [data length];
-			if ((len >= failedUtf8BomLength)
-				&&  (ptr[0] == 0xC3)
-				&&  (ptr[1] == 0x94)
-				&&  (ptr[2] == 0xC2)
-				&&  (ptr[3] == 0xAA)
-				&&  (ptr[4] == 0xC3)
-				&&  (ptr[5] == 0xB8)
-				) {
-				//Yup. Back up the old file, then strip it off.
-				NSLog(@"Transcript file at %@ has unwanted bytes at the front of it. (This is a bug in a previous version of Adium, not this version.) Attempting recovery.", logFullPath);
-				NSString *backupPath = [logFullPath stringByAppendingPathExtension:@"bak"];
-				if(![[NSFileManager defaultManager] movePath:logFullPath toPath:backupPath handler:nil])
-					NSLog(@"Could not back up file; recovery failed. This transcript will probably appear blank in the transcript viewer.");
-				else {
-					NSRange range = { failedUtf8BomLength, len - failedUtf8BomLength };
-					NSData *theRestOfIt = [data subdataWithRange:range];
-					if([theRestOfIt writeToFile:logFullPath atomically:YES])
-						NSLog(@"Wrote fixed version to same file. The corrupted version was renamed to %@; you may remove this file at your leisure after you are satisfied that the recovery succeeded. You can test this by viewing the transcript (%@) in the transcript viewer.", backupPath, [logFullPath lastPathComponent]);
-					else
-						NSLog(@"Could not write fix!");
-				}
-			}
-			
-			NSDictionary *options = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:showTimestamps]
-																forKey:@"showTimestamps"];
-			NSString *logFileText = [GBChatlogHTMLConverter readFile:logFullPath withOptions:options];
-			if (logFileText) {
+
+			NSDictionary *options = [NSDictionary dictionaryWithObjectsAndKeys:
+									 [NSNumber numberWithBool:showTimestamps], @"showTimestamps",
+									 [NSNumber numberWithBool:showEmoticons], @"showEmoticons", 
+									 nil];
+			NSAttributedString *attributedLogFileText = [AIXMLChatlogConverter readFile:logFullPath withOptions:options];
+			if (attributedLogFileText) {
 				if (displayText)
-					[displayText appendAttributedString:[AIHTMLDecoder decodeHTML:logFileText]];
+					[displayText appendAttributedString:attributedLogFileText];
 				else
-					displayText = [[AIHTMLDecoder decodeHTML:logFileText] mutableCopy];
+					displayText = [attributedLogFileText mutableCopy];
 			}
 
 		} else {
@@ -783,12 +763,19 @@ static int toArraySort(id itemA, id itemB, void *context);
 			NSString *logFileText = [NSString stringWithContentsOfFile:[logBasePath stringByAppendingPathComponent:[theLog path]]];
 			if (logFileText) {
 				AITextAttributes *textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
+				NSAttributedString *attributedLogFileText = [[[NSAttributedString alloc] initWithString:logFileText 
+																							 attributes:[textAttributes dictionary]] autorelease];
+				if (showEmoticons) {
+					attributedLogFileText = [[adium contentController] filterAttributedString:attributedLogFileText
+																			  usingFilterType:AIFilterMessageDisplay
+																					direction:AIFilterOutgoing
+																					  context:nil];						
+				}
 				
 				if (displayText) {
-					[displayText appendAttributedString:[[[NSAttributedString alloc] initWithString:logFileText 
-																						 attributes:[textAttributes dictionary]] autorelease]];
+					[displayText appendAttributedString:attributedLogFileText];
 				} else {
-					displayText = [[NSMutableAttributedString alloc] initWithString:logFileText attributes:[textAttributes dictionary]];
+					displayText = [attributedLogFileText mutableCopy];
 				}
 			}
 		}
@@ -884,15 +871,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 			[searchWordsArray release];
 		}
 		
-		//Filter emoticons
-		if (showEmoticons) {
-			finalDisplayText = [[adium contentController] filterAttributedString:displayText
-																 usingFilterType:AIFilterMessageDisplay
-																	   direction:AIFilterOutgoing
-																		 context:nil];
-		} else {
-			finalDisplayText = displayText;
-		}
+		finalDisplayText = displayText;
 	}
 
 	if (finalDisplayText) {
@@ -1026,6 +1005,9 @@ static int toArraySort(id itemA, id itemB, void *context);
 		
     } else if ([identifier isEqualToString:@"Rank"]) {
 	    [currentSearchResults sortUsingSelector:(sortDirection ? @selector(compareRankReverse:) : @selector(compareRank:))];
+
+	} else if ([identifier isEqualToString:@"Service"]) {
+	    [currentSearchResults sortUsingSelector:(sortDirection ? @selector(compareServiceReverse:) : @selector(compareService:))];
 	}
 	
     [resultsLock unlock];
@@ -1596,8 +1578,18 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
     return value;
 }
 
-//
 - (void)tableViewSelectionDidChange:(NSNotification *)notification
+{
+	[NSObject cancelPreviousPerformRequestsWithTarget:self
+											 selector:@selector(tableViewSelectionDidChangeDelayed)
+											   object:nil];
+	
+	[self performSelector:@selector(tableViewSelectionDidChangeDelayed)
+			   withObject:nil
+			   afterDelay:0.05];
+}
+
+- (void)tableViewSelectionDidChangeDelayed
 {
     if (!ignoreSelectionChange) {
 		NSArray		*selectedLogs;
@@ -1844,7 +1836,19 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 	[self deleteSelection:nil];
 }
 
+
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
+{
+	[NSObject cancelPreviousPerformRequestsWithTarget:self
+											 selector:@selector(outlineViewSelectionDidChangeDelayed)
+											   object:nil];
+	
+	[self performSelector:@selector(outlineViewSelectionDidChangeDelayed)
+			   withObject:nil
+			   afterDelay:0.05];
+}
+
+- (void)outlineViewSelectionDidChangeDelayed
 {
 	NSArray *selectedItems = [outlineView_contacts arrayOfSelectedItems];
 

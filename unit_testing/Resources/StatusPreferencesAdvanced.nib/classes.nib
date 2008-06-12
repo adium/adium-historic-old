@@ -148,6 +148,8 @@
 				<string>NSButton</string>
 				<key>checkBox_statusMenuItemBadge</key>
 				<string>NSButton</string>
+				<key>checkBox_statusMenuItemCount</key>
+				<string>NSButton</string>
 				<key>checkBox_statusMenuItemFlash</key>
 				<string>NSButton</string>
 				<key>checkBox_statusWindowAlwaysOnTop</key>

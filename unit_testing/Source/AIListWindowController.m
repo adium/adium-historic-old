@@ -39,6 +39,8 @@
 
 #define PREF_GROUP_CONTACT_LIST					@"Contact List"
 
+#define	KEY_HIDE_CONTACT_LIST_GROUPS			@"Hide Contact List Groups"
+
 #define SLIDE_ALLOWED_RECT_EDGE_MASK			(AIMinXEdgeMask | AIMaxXEdgeMask) /* Screen edges on which sliding is allowde */
 #define DOCK_HIDING_MOUSE_POLL_INTERVAL			0.1 /* Interval at which to check the mouse position for sliding */
 #define	WINDOW_SLIDING_DELAY					0.2 /* Time after the mouse is in the right place before the window slides on screen */
@@ -53,7 +55,6 @@
 + (NSString *)nibName;
 
 - (void)_configureAutoResizing;
-- (void)_configureToolbar;
 + (void)updateScreenSlideBoundaryRect:(id)sender;
 - (BOOL)shouldSlideWindowOffScreen_mousePositionStrategy;
 - (void)slideWindowIfNeeded:(id)sender;
@@ -65,6 +66,8 @@
 @end
 
 @implementation AIListWindowController
+
+static NSMutableDictionary *screenSlideBoundaryRectDictionary = nil;
 
 + (void)initialize
 {
@@ -183,6 +186,7 @@
 	id<AIPreferenceController> preferenceController = [adium preferenceController];
     //Observe preference changes
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 	
 	//Preference code below assumes layout is done before theme.
@@ -410,6 +414,10 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 		}
 	}
 	
+	if ([group isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]) {
+		[contactListController setUseContactListGroups:![[prefDict objectForKey:KEY_HIDE_CONTACT_LIST_GROUPS] boolValue]];
+	}
+	
 	//Layout and Theme ------------
 	BOOL groupLayout = ([group isEqualToString:PREF_GROUP_LIST_LAYOUT]);
 	BOOL groupTheme = ([group isEqualToString:PREF_GROUP_LIST_THEME]);
@@ -434,7 +442,14 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 				[contactListView setBackgroundImage:nil];
 			}
 		}
-		
+
+		EXTENDED_STATUS_STYLE statusStyle = [[layoutDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_STYLE] intValue];
+		EXTENDED_STATUS_POSITION statusPosition = [[layoutDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_POSITION] intValue];
+		[contactListController setAutoresizeHorizontallyWithIdleTime:
+		 ((statusStyle == IDLE_ONLY || statusStyle == IDLE_AND_STATUS) &&
+		  (statusPosition == EXTENDED_STATUS_POSITION_BESIDE_NAME || statusPosition == EXTENDED_STATUS_POSITION_BOTH))];
+		[contactListController contactListDesiredSizeChanged];
+
 		//Both layout and theme
 		[contactListController updateLayoutFromPrefDict:layoutDict andThemeFromPrefDict:themeDict];
 
@@ -562,7 +577,7 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 // Auto-resizing support ------------------------------------------------------------------------------------------------
 #pragma mark Auto-resizing support
 
-- (void)screenParametersChanged:(NSNotification *)notification
+- (void)respondToScreenParametersChanged:(NSNotification *)notification
 {
 	NSWindow	*window = [self window];
 	
@@ -575,29 +590,32 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 			windowScreen = [NSScreen mainScreen];
 		}
 	}
-
-	NSRect newScreenFrame = [windowScreen frame];
 	
-	if ([[NSScreen screens] count] &&
-		(windowScreen == [[NSScreen screens] objectAtIndex:0])) {
-			newScreenFrame.size.height -= [NSMenuView menuBarHeight];
+	NSRect newScreenFrame = [[screenSlideBoundaryRectDictionary objectForKey:[NSValue valueWithNonretainedObject:windowScreen]] rectValue];
+
+	if ([self windowSlidOffScreenEdgeMask] != AINoEdges) {
+		NSRect newWindowFrame = AIRectByAligningRect_edge_toRect_edge_([window frame], [self windowSlidOffScreenEdgeMask],
+																	   newScreenFrame, [self windowSlidOffScreenEdgeMask]);
+		[[self window] setFrame:newWindowFrame display:NO];
+
+		[self delayWindowSlidingForInterval:2];
+		[self slideWindowOnScreenWithAnimation:NO];
+		
 	}
 
-	NSRect listFrame = [window frame];
-	
-//XXX TODO: This should happen on the next run loop so that the other screen params changed callback is guaranteed to have been called
-//XXX TODO: We should use the known edges rather than scaling to find a new location. Also, do not unhide if hidden.
-	oldFrame.origin.x *= ((newScreenFrame.size.width - listFrame.size.width) / ((currentScreenFrame.size.width - listFrame.size.width) + 0.00001));
-	oldFrame.origin.y *= ((newScreenFrame.size.height - listFrame.size.height) / ((currentScreenFrame.size.height - listFrame.size.height) + 0.00001));
-	
-	[self delayWindowSlidingForInterval:2];
-	[self slideWindowOnScreenWithAnimation:NO];
-
 	[contactListController contactListDesiredSizeChanged];
-
+	
 	currentScreen = [window screen];
 	currentScreenFrame = newScreenFrame;
 	[self setSavedFrame:[window frame]];
+}
+
+- (void)screenParametersChanged:(NSNotification *)notification
+{
+	/* Wait until the next run loop so the class method has definitely updated our screen sliding borders. */
+	[self performSelector:@selector(respondToScreenParametersChanged:)
+			   withObject:notification
+			   afterDelay:0];
 }
 
 // Printing
@@ -610,7 +628,6 @@ int levelForAIWindowLevel(AIWindowLevel windowLevel)
 // Dock-like hiding -----------------------------------------------------------------------------------------------------
 #pragma mark Dock-like hiding
 
-static NSMutableDictionary *screenSlideBoundaryRectDictionary = nil;
 + (void)updateScreenSlideBoundaryRect:(id)sender
 {
 	NSArray *screens = [NSScreen screens];

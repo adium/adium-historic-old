@@ -92,8 +92,21 @@
 	AIListObject	*inObject = [notification object];
 	NSSet			*keys = [[notification userInfo] objectForKey:@"Keys"];
 	
-	if (inObject && [keys containsObject:KEY_USER_ICON]) {
-		[self updateToolbarItemForObject:inObject];
+	if ([keys containsObject:KEY_USER_ICON]) {
+		if (inObject) {
+			[self updateToolbarItemForObject:inObject];
+		} else {
+			NSEnumerator *enumerator = [[[adium interfaceController] openChats] objectEnumerator];
+			AIChat *chat;
+			while ((chat = [enumerator nextObject])) {
+				NSWindow *window = [[adium interfaceController] windowForChat:chat];
+				if (window) {
+					[self _updateToolbarIconOfChat:chat
+										  inWindow:window];
+				}
+			}
+		}
+			
 	}
 }
 

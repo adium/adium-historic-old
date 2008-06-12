@@ -10,7 +10,9 @@
 #import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
 #import <Adium/AIContentMessage.h>
+#import <Adium/AIContentTyping.h>
 #import <Adium/AIListContact.h>
+#import <Adium/AIChat.h>
 #import <JSON/JSON.h>
 
 @interface AIFacebookIncomingMessageManager (PRIVATE)
@@ -61,24 +63,40 @@
 
 	//Don't display messages we send, which will be mirrored back to us here.
 	if ([fromUID isEqualToString:[account facebookUID]]) return;
-	
-	NSDictionary		*messageTextDict = [messageDict objectForKey:@"msg"];
-	
-	NSString			*text = [[messageTextDict objectForKey:@"text"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
-	NSString			*timeString = [messageTextDict objectForKey:@"time"];
-
 
 	AIListContact		*listContact = [account contactWithUID:fromUID];
-	AIContentMessage	*messageObject;
+	AIChat				*chat = [[adium chatController] chatWithContact:listContact];
+	NSDictionary		*messageTextDict = [messageDict objectForKey:@"msg"];
+	if (messageTextDict) {
+		NSString			*text = [[messageTextDict objectForKey:@"text"] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+		NSString			*timeString = [messageTextDict objectForKey:@"time"];
+		AIContentMessage	*messageObject;
+		
+		messageObject = [AIContentMessage messageInChat:chat
+											 withSource:listContact
+											destination:account
+												   date:([timeString isKindOfClass:[NSString class]] ? [NSDate dateWithTimeIntervalSince1970:[timeString doubleValue]] : nil)
+												message:[[[NSAttributedString alloc] initWithString:text] autorelease]
+											  autoreply:NO];
+		
+		[[adium contentController] receiveContentObject:messageObject];
+	}
 	
-	messageObject = [AIContentMessage messageInChat:[[adium chatController] chatWithContact:listContact]
-										 withSource:listContact
-										destination:account
-											   date:([timeString isKindOfClass:[NSString class]] ? [NSDate dateWithTimeIntervalSince1970:[timeString doubleValue]] : nil)
-											message:[[[NSAttributedString alloc] initWithString:text] autorelease]
-										  autoreply:NO];
-	
-	[[adium contentController] receiveContentObject:messageObject];
+	NSDictionary *typingDict = [messageDict objectForKey:@"typ"];
+	if (typingDict) {
+		if ([[typingDict objectForKey:@"st"] isEqualToString:@"1"]) {
+			[chat setValue:[NSNumber numberWithInt:AITyping]
+			   forProperty:KEY_TYPING
+					notify:YES];
+
+		} else {
+			[chat setValue:nil
+			   forProperty:KEY_TYPING
+					notify:YES];
+		}
+	}
+		
+		
 }
 
 #pragma mark Initiating the connection
@@ -129,6 +147,7 @@
 
 	} else if ([command isEqualToString:@"continue"]) {
 		//Just keep waiting; do nothing besides reconfiguring our connection monitoring
+
 	} else if ([command isEqualToString:@"msg"]) {
 		//We got a message! (It's an array, so we might have gotten more than one at once, actually)
 		NSEnumerator *enumerator = [[reply objectForKey:@"ms"] objectEnumerator];

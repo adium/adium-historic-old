@@ -30,12 +30,9 @@
 		[NSBundle loadNibNamed:[self nibName] owner:self];
 		
 		//Load Encryption menus
-		[encryptionButton setMenu:[[adium contentController] encryptionMenuNotifyingTarget:self withDefault:YES]];
-		[[encryptionButton menu] setAutoenablesItems:NO];
-		
-		//Table view setup methods
-		[accountsLabel setLocalizedString:AILocalizedString(@"Accounts:",nil)];
-				
+		[popUp_encryption setMenu:[[adium contentController] encryptionMenuNotifyingTarget:self withDefault:YES]];
+		[[popUp_encryption menu] setAutoenablesItems:NO];
+
 		//Configure Table view
 		[accountsTableView setUsesAlternatingRowBackgroundColors:YES];
 		[accountsTableView setAcceptsFirstMouse:YES];
@@ -141,13 +138,13 @@
 	encryption = [inObject preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE group:GROUP_ENCRYPTION];
 	
 	if(!encryption) {
-		[encryptionButton compatibleSelectItemWithTag:EncryptedChat_Default];
+		[popUp_encryption compatibleSelectItemWithTag:EncryptedChat_Default];
 	}
 	
-	[encryptionButton compatibleSelectItemWithTag:[encryption intValue]];
+	[popUp_encryption compatibleSelectItemWithTag:[encryption intValue]];
 	
-	[visibilityButton setEnabled:![inObject isKindOfClass:[AIListGroup class]]];
-	[visibilityButton setState:[inObject alwaysVisible]];
+	[checkBox_alwaysShow setEnabled:![inObject isKindOfClass:[AIListGroup class]]];
+	[checkBox_alwaysShow setState:[inObject alwaysVisible]];
 }
 
 - (IBAction)selectedEncryptionPreference:(id)sender
@@ -164,7 +161,7 @@
 	if(!displayedObject)
 		return;
 	
-	[displayedObject setAlwaysVisible:[visibilityButton state]];
+	[displayedObject setAlwaysVisible:[checkBox_alwaysShow state]];
 }
 
 #pragma mark Accounts Table View methods
@@ -253,7 +250,8 @@
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount
 {
 	[contacts release]; contacts = nil;
-	contacts = [[self contactsForCurrentObjectCompatibleWithAccount:inAccount] retain];
+	if (inAccount)
+		contacts = [[self contactsForCurrentObjectCompatibleWithAccount:inAccount] retain];
 
 	//Refresh our table
 	[accountsTableView reloadData];
@@ -266,10 +264,12 @@
 
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems
 {
-	[accountsButton setMenu:[inAccountMenu menu]];
+	[popUp_accounts setMenu:[inAccountMenu menu]];
 
 	//Select an account and redisplay
-	[self accountMenu:inAccountMenu didSelectAccount:[[accountsButton selectedItem] representedObject]];
+	[self accountMenu:inAccountMenu didSelectAccount:([popUp_accounts numberOfItems] ?
+													  [[popUp_accounts selectedItem] representedObject] :
+													  nil)];
 }
 
 - (NSControlSize)controlSizeForAccountMenu:(AIAccountMenu *)inAccountMenu
@@ -287,7 +287,9 @@
 	/* Prevent reentry, as Heisenberg knows out that observing contacts may change them. */
 	if (!rebuildingContacts) {
 		rebuildingContacts = YES;
-		[self accountMenu:accountMenu didSelectAccount:[[accountsButton selectedItem] representedObject]];
+		[self accountMenu:accountMenu didSelectAccount:([popUp_accounts numberOfItems] ?
+														[[popUp_accounts selectedItem] representedObject] :
+														nil)];
 		rebuildingContacts = NO;
 	}
 }
@@ -344,7 +346,7 @@
 	BOOL			accountOnline;
 		
 	//account =  [accounts objectAtIndex:row];
-	account = [[accountsButton selectedItem] representedObject];
+	account = [[popUp_accounts selectedItem] representedObject];
 	accountOnline = [account online];
 
 	exactContact = [contacts objectAtIndex:row];				
@@ -396,7 +398,7 @@
 
 			//Retrieve an AIListContact on this account
 			exactContact = [[adium contactController] contactWithService:[contactOnClickedRow service]
-																 account:[[accountsButton selectedItem] representedObject]
+																 account:[[popUp_accounts selectedItem] representedObject]
 																	 UID:[contactOnClickedRow UID]];
 
 			if (group) {				

@@ -236,7 +236,8 @@
 {	
 	if ([containedObjects containsObject:inObject]) {		
 		//Remove the object
-		[inObject setContainingObject:nil];
+		if ([inObject containingObject] == self)
+			[inObject setContainingObject:nil];
 		[containedObjects removeObject:inObject];
 		
 		//Update our visible count

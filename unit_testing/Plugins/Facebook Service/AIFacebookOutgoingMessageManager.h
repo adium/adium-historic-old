@@ -7,12 +7,13 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIContentMessage;
+@class AIContentMessage, AIContentTyping;
 
 @interface AIFacebookOutgoingMessageManager : NSObject {
 
 }
 
 + (void)sendMessageObject:(AIContentMessage *)inContentMessage;
++ (void)sendTypingObject:(AIContentTyping *)inContentTyping;
 
 @end

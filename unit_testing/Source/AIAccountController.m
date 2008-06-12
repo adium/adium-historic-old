@@ -174,12 +174,6 @@
 - (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact {
 	return [adiumPreferredAccounts preferredAccountForSendingContentType:inType toContact:inContact];
 }
-- (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact includeOffline:(BOOL)includeOffline {
-	return [adiumPreferredAccounts preferredAccountForSendingContentType:inType toContact:inContact includeOffline:includeOffline];
-}
-- (AIAccount *)firstAccountAvailableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact includeOffline:(BOOL)includeOffline {
-	return [adiumPreferredAccounts firstAccountAvailableForSendingContentType:inType toContact:inContact includeOffline:includeOffline];
-}
 
 - (void)disconnectAllAccounts
 {

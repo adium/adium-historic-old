@@ -92,7 +92,7 @@
 		dynamicKeys = [[NSMutableSet alloc] init];
 		attributedRefreshTimer = nil;
 		delayedUpdateStatusTimer = nil;
-		delayedUpdateStatusTarget = nil;
+		delayedUpdateStatusTargets = nil;
 		silenceAllContactUpdatesTimer = nil;
 		lastDisconnectionError = nil;
 		disconnectedByFastUserSwitch = NO;
@@ -126,7 +126,7 @@
 - (void)dealloc
 {
 	[lastDisconnectionError release];
-	[delayedUpdateStatusTarget release];
+	[delayedUpdateStatusTargets release];
 	[delayedUpdateStatusTimer invalidate]; [delayedUpdateStatusTimer release];
 
 	/* Our superclass releases internalObjectID in its dealloc, so we should set it to nil when do.
@@ -373,26 +373,32 @@
 		[self delayedUpdateContactStatus:inContact];
 		
 		//Guard against subsequent updates
-		delayedUpdateStatusTarget = nil;
 		delayedUpdateStatusTimer = [[NSTimer scheduledTimerWithTimeInterval:[self delayedUpdateStatusInterval]
 																	 target:self
 																   selector:@selector(_delayedUpdateStatusTimer:)
 																   userInfo:nil
-																	repeats:NO] retain];
+																	repeats:YES] retain];
 	} else {
 		//If there is an outstanding delay, set this contact as the target
-		[delayedUpdateStatusTarget release]; delayedUpdateStatusTarget = [inContact retain];
+		if (!delayedUpdateStatusTargets) delayedUpdateStatusTargets = [[NSMutableArray alloc] init];
+		[delayedUpdateStatusTargets addObject:inContact];
 	}
 }
 - (void)_delayedUpdateStatusTimer:(NSTimer *)inTimer
 {
-	if (delayedUpdateStatusTarget) {
-		[self delayedUpdateContactStatus:delayedUpdateStatusTarget];
-		[delayedUpdateStatusTarget release]; delayedUpdateStatusTarget = nil;
+	/* Look up info for the next contact */
+	if ([delayedUpdateStatusTargets count]) {
+		[self delayedUpdateContactStatus:[delayedUpdateStatusTargets objectAtIndex:0]];
+		[delayedUpdateStatusTargets removeObjectAtIndex:0];
 	}
-	[delayedUpdateStatusTimer invalidate];
-	[delayedUpdateStatusTimer release];
-	delayedUpdateStatusTimer = nil;
+
+	/* If we're done, release the array and stop the repeating timer */
+	if (![delayedUpdateStatusTargets count]) {
+		[delayedUpdateStatusTargets release]; delayedUpdateStatusTargets = nil;
+
+		[delayedUpdateStatusTimer invalidate];
+		[delayedUpdateStatusTimer release]; delayedUpdateStatusTimer = nil;		
+	}
 }
 
 - (void)updateLocalDisplayNameTo:(NSAttributedString *)attributedDisplayName
@@ -1075,6 +1081,21 @@
 	return YES;
 }
 
+- (void)displayYouHaveConnectedInChat:(AIChat *)chat
+{
+	//Display a connected message
+	AIContentStatus *statusMessage = [AIContentStatus statusInChat:chat
+														withSource:[chat account]
+													   destination:[chat account]
+															  date:[NSDate date]
+														   message:[[[NSAttributedString alloc] initWithString:AILocalizedStringFromTableInBundle(@"You have connected", nil, [NSBundle bundleForClass:[AIAccount class]], "Displayed in an open chat when its account has been connected")] autorelease]
+														  withType:@"connected"];
+	
+	[statusMessage setCoalescingKey:ACCOUNT_STATUS_UPDATE_COALESCING_KEY];
+	
+	[[adium contentController] receiveContentObject:statusMessage];
+}
+
 /*!
  * @brief The account did connect
  *
@@ -1094,17 +1115,7 @@
 				// always be true at the moment
 				[self rejoinChat:chat];
 			} else {
-				//Display a connected message in all open chats
-				AIContentStatus *statusMessage = [AIContentStatus statusInChat:chat
-																	withSource:[chat account]
-																   destination:[chat account]
-																		  date:[NSDate date]
-																	   message:[[[NSAttributedString alloc] initWithString:AILocalizedStringFromTableInBundle(@"You have connected", nil, [NSBundle bundleForClass:[AIAccount class]], "Displayed in an open chat when its account has been connected")] autorelease]
-																	  withType:@"connected"];
-				
-				[statusMessage setCoalescingKey:ACCOUNT_STATUS_UPDATE_COALESCING_KEY];
-				
-				[[adium contentController] receiveContentObject:statusMessage];
+				[self displayYouHaveConnectedInChat:chat];
 			}
 		}
 	}
@@ -1207,11 +1218,8 @@
 	AIListContact	*listContact;
 	
 	while ((listContact = [enumerator nextObject])) {
-		NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 		[listContact setRemoteGroupName:nil];
-		[AIUserIcons flushCacheForObject:listContact];
 		[self removePropetyValuesFromContact:listContact silently:YES];
-		[pool release];
 	}
 	
 	[[adium contactController] endListObjectNotificationsDelay];
@@ -1256,6 +1264,9 @@
 				[statusMessage setCoalescingKey:ACCOUNT_STATUS_UPDATE_COALESCING_KEY];
 
 				[[adium contentController] receiveContentObject:statusMessage];
+				
+				if ([chat isGroupChat])
+					[chat removeAllParticipatingContactsSilently];
 			}
 		}
 	}

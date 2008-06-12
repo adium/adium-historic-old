@@ -281,6 +281,14 @@ typedef enum
 	return [self formattedUID];
 }
 
+/*!
+ * @brief A formatted UID which can be used for being displayed in a list of accounts
+ */
+- (NSString *)formattedUIDForListDisplay
+{
+	return [self formattedUID];
+}
+
 //Properties -----------------------------------------------------------------------------------------------------------
 #pragma mark Properties
 /*!
@@ -453,7 +461,7 @@ typedef enum
  */
 - (float)delayedUpdateStatusInterval
 {
-	return 3.0;
+	return 0.5;
 }
 
 /*!
@@ -471,6 +479,17 @@ typedef enum
 	
 }
 
+/*!
+ * @brief Set the social networking status message for this account
+ *
+ * This will only be called if [[self service] isSocialNetworkingService] returns TRUE.
+ *
+ * @param statusMessage The status message, which has already been filtered.
+ */
+- (void)setSocialNetworkingStatusMessage:(NSAttributedString *)statusMessage
+{
+	
+}
 /*!
  * @brief Should the autorefreshing attributed string associated with a key be updated at the moment?
  *
@@ -950,6 +969,7 @@ typedef enum
 	if (![resolvedKeyDictionary objectForKey:@"newChatWindow"] && ![resolvedKeyDictionary objectForKey:@"Location"]) {
 		[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
 		[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't create a chat without specifying its containing window."];
+		return nil;
 	}
 	
 	if ([participants count] == 1) {
@@ -957,6 +977,7 @@ typedef enum
 		if (!contact) {
 			[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
 			[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't find that contact!"];
+			return nil;
 		}
 		AIMessageWindowController *chatWindowController = nil;
 		int index = -1; //at end by default
@@ -975,6 +996,7 @@ typedef enum
 		if (!chatWindowController) {
 			[[NSScriptCommand currentCommand] setScriptErrorNumber:errOSACantAssign];
 			[[NSScriptCommand currentCommand] setScriptErrorString:@"Can't create chat in that chat window."];
+			return nil;
 		}
 		
 		AIChat *newChat = [[[AIObject sharedAdiumInstance] chatController] chatWithContact:contact];

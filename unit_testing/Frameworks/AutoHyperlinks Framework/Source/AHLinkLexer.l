@@ -42,8 +42,7 @@
  *											  ensures that yyleng reports whole length of the string,
  *											  without a costly call to yymore().
  */
-unsigned int AHStringOffset;
-int AHValidShift = 0;
+long AHValidShift = 0;
 #include "AHLinkLexer.h"
 %}
 
@@ -51,27 +50,19 @@ ccTLD           (ac|ad|ae|af|ag|ai|al|am|an|ao|aq|ar|as|at|au|aw|az|ba|bb|bd|be|
 sTLD            (com|edu|gov|int|mil|net|org|biz|info|name|pro)
 uTLD            (aero|coop|museum|mobi|cat|jobs|travel)
 
-domains         ({ccTLD}|{sTLD}|{uTLD}|arpa|local)
+TLDs            ({ccTLD}|{sTLD}|{uTLD}|arpa|local)
 %{
 /*The Unicode standard, version 4.1, table 3-6, says that the highest byte that will occur in a valid UTF-8 sequence is 0xF4.*/
 %}
 userAndPass     [^:@]+(:[^:@]+)?
+singleDomain    [_[:alnum:]\x80-\xf4-]+
+
 urlPath         \/[^[:space:]]*
-urlSpecifier    ([_[:alnum:]\x80-\xf4-]+\.)+{domains}(:[0-9]+)?{urlPath}?
+urlSpec         ({singleDomain}\.)+{TLDs}(:[0-9]+)?{urlPath}?
+urlCSpec        {singleDomain}(\.{singleDomain})*(:[0-9]+)?{urlPath}?
+
 ipv4address     ([0-9]{1,3}\.){3}([0-9]{1,3})
 ipURL           {ipv4address}(:[0-9]+)?{urlPath}?
-singleDomain    [[:alnum:]\x80-\xf4-]+
-mailSpecifier   [^:\/]+\@.+\.{domains}
-jabberSpec      xmpp:.+\@.+\.{domains}{urlPath}?(\?[[:alnum:]]+[;&][^[:space:]]*)?
-aolIMSpec       aim:goim\?screenname=[^\ \t\n&]+(&message=.+)?
-aolChatSpec     aim:gochat\?roomname=[^\ \t\n&]+
-yahooIMSpecOld  (ymsgr|yahoo):sendim\?.+
-yahooIMSpecNew	(ymsgr|yahoo):(\/\/)?im\?to=.+
-yahooIMSpec     {yahooIMSpecOld}|{yahooIMSpecNew}
-rdarSpec        (rdar|radr|radar|x-radar):\/\/(problems?\/)?[0-9]+(&[0-9]+)*
-spotifySpec     spotify:(track|album|artist|search|playlist|user|radio):[^<>]+
-gtalkSpec       gtalk:(chat|call|gtalk)\?jid=.+\@.+\.{domains}(&from_jid=.+\@.+\.{domains})?
-myimSpec        myim:(addContact|sendIM)\?(((uID|cID)=[0-9]*&?)|(auto=(true|false)&?))+
 
 hex4            [0-9A-Fa-f]{1,4}
 ipv6HexSeq      {hex4}?(::?{hex4}){1,7}
@@ -79,25 +70,39 @@ ipv6HexPart     ({ipv6HexSeq})|(::{ipv6HexSeq})
 ipv6Address     {ipv6HexPart}({ipv4address})?
 ipv6URL         \[{ipv6Address}](:[0-9]+)?{urlPath}?
 
+mailSpec        [^:\/[:space:]]+\@.+\.{TLDs}
+jabberSpec      xmpp:.+\@.+\.{TLDs}{urlPath}?(\?[[:alnum:]]+[;&][^[:space:]]*)?
+aolIMSpec       aim:goim\?screenname=[^\ \t\n&]+(&message=.+)?
+aolChatSpec     aim:gochat\?roomname=[^\ \t\n&]+
+yahooIMSpecOld  (ymsgr|yahoo):sendim\?.+
+yahooIMSpecNew	(ymsgr|yahoo):(\/\/)?im\?to=.+
+yahooIMSpec     {yahooIMSpecOld}|{yahooIMSpecNew}
+rdarSpec        (rdar|radr|radar|x-radar):\/\/(problems?\/)?[0-9]+(&[0-9]+)*
+spotifySpec     spotify:(track|album|artist|search|playlist|user|radio):[^<>]+
+gtalkSpec       gtalk:(chat|call|gtalk)\?jid=.+\@.+\.{TLDs}(&from_jid=.+\@.+\.{TLDs})?
+myimSpec        myim:(addContact|sendIM)\?(((uID|cID)=[0-9]*&?)|(auto=(true|false)&?))+
+
+%{
+/* Special patterns to ignore */
+%}
+
+ignoreable      (b\.sc|m\.in)
+
 %option noyywrap nounput 8bit caseless never-interactive prefix="AH"
 
 %x CANONICAL
 %%
 
-<CANONICAL>({userAndPass}@)?{urlSpecifier}                                       |
-<CANONICAL>({userAndPass}@)?{ipURL}                                              |
-<CANONICAL>({userAndPass}@)?{singleDomain}(\.{singleDomain})*(:[0-9]+)?{urlPath} |
-<CANONICAL>({userAndPass}@)?{singleDomain}(:[0-9]+)?{urlPath}?                   |
-<CANONICAL>({userAndPass}@)?{ipv6URL}                                            {AHStringOffset += AHleng;
-                                                                                  AHleng += AHValidShift;
-                                                                                  BEGIN INITIAL;
-                                                                                  return AH_URL_VALID;}
+<CANONICAL>({userAndPass}@)?{urlCSpec}|{ipURL}|{ipv6URL} {AHleng += AHValidShift;
+                                                          BEGIN INITIAL;
+                                                          return AH_URL_VALID;}
 
-<CANONICAL>.*                                                                    {AHStringOffset += AHleng;
-                                                                                  BEGIN INITIAL;
-                                                                                  return AH_URL_INVALID;}
+<CANONICAL>.*                                            {BEGIN INITIAL;
+                                                          return AH_URL_INVALID;}
 
-file:\/\/\/.*           {AHStringOffset += AHleng; return AH_FILE_VALID;}
+{ignoreable}            {return AH_URL_INVALID;}
+
+file:\/\/\/.*           {return AH_FILE_VALID;}
 
 https?:\/\/             |
 s?ftp:\/\/              |
@@ -118,14 +123,14 @@ webcal:\/\/             |
 svn(\+ssh)?:\/\/        |
 notes:\/\/              |
 gopher:\/\/             |
-x-man-page:\/\/         {AHStringOffset += AHleng; AHValidShift = AHleng; BEGIN CANONICAL;}
+x-man-page:\/\/         {AHValidShift = AHleng; BEGIN CANONICAL;}
 
-mailto:{mailSpecifier}  {AHStringOffset += AHleng; return AH_MAILTO_VALID;}
-{mailSpecifier}         {AHStringOffset += AHleng; return AH_MAILTO_DEGENERATE;}
+mailto:{mailSpec}       {return AH_MAILTO_VALID;}
+{mailSpec}              {return AH_MAILTO_DEGENERATE;}
 
-{urlSpecifier}          {AHStringOffset += AHleng; return AH_URL_DEGENERATE;}
+{urlSpec}               {return AH_URL_DEGENERATE;}
 
-sip:{mailSpecifier}     |
+sip:{mailSpec}          |
 {myimSpec}              |
 {jabberSpec}            |
 {gtalkSpec}             |
@@ -133,7 +138,7 @@ sip:{mailSpecifier}     |
 {aolChatSpec}           |
 {yahooIMSpec}           |
 {rdarSpec}              |
-{spotifySpec}           {AHStringOffset += AHleng; return AH_URL_VALID;}
+{spotifySpec}           {return AH_URL_VALID;}
 
 .                       {return AH_URL_INVALID;}
 %%

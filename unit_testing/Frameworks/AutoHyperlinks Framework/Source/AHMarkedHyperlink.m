@@ -84,11 +84,6 @@
 	return urlStatus;
 }
 
-- (BOOL)parentStringMatchesString:(NSString *)inString
-{
-	return [pString isEqualToString:inString];
-}
-
 #pragma mark Transformers
 
 - (void)setRange:(NSRange)inRange
@@ -133,7 +128,7 @@
 	}
 }
 
-#pragma mark Copying
+#pragma mark NSCopying
 
 - (id)copyWithZone:(NSZone *)zone
 {
@@ -144,4 +139,65 @@
 	return newLink;
 }
 
+#pragma mark NSComparisonMethods
+- (BOOL)doesContain:(id)object
+{
+	if([object isKindOfClass:[NSURL class]])
+		return [(NSURL *)object isEqualTo:[self URL]]? YES : NO;
+	if([object isKindOfClass:[NSString class]])
+		return [(NSString *)object isEqualTo:[self parentString]]? YES : NO;
+	
+	return NO;
+}
+
+- (BOOL)isLike:(NSString *)aString
+{
+	return [[[self parentString] substringWithRange:[self range]] isLike:aString] ||
+			[[[self URL] absoluteString] isLike:aString];
+}
+
+- (BOOL)isCaseInsensitiveLike:(NSString *)aString
+{
+	return [[[self parentString] substringWithRange:[self range]] isCaseInsensitiveLike:aString] ||
+			[[[self URL] absoluteString] isCaseInsensitiveLike:aString];
+}
+
+- (BOOL)isEqualTo:(id)object
+{
+	if([object isKindOfClass:[AHMarkedHyperlink class]] &&
+	   [(AHMarkedHyperlink *) object validationStatus] == [self validationStatus] &&
+	   [(AHMarkedHyperlink *)object range].location == [self range].location &&
+	   [(AHMarkedHyperlink *)object range].length == [self range].length &&
+	   [[(AHMarkedHyperlink *)object parentString] isEqualTo:[self parentString]] &&
+	   [[(AHMarkedHyperlink *)object URL] isEqualTo:[self URL]])
+		return YES;
+	return NO;
+}
+
+- (BOOL)isGreaterThan:(id)object
+{
+	if([object isKindOfClass:[AHMarkedHyperlink class]])
+		return [[[object parentString] substringWithRange:[object range]]
+				isGreaterThan:[[self parentString] substringWithRange:[self range]]]? YES : NO;
+	return NO;
+}
+
+- (BOOL)isLessThan:(id)object
+{
+	if([object isKindOfClass:[NSURL class]])
+		return [(NSURL *)object isLessThan:[self URL]]? YES : NO;
+	if([object isKindOfClass:[NSString class]])
+		return [(NSString *)object isLessThan:[self parentString]]? YES : NO;
+	return NO;
+}
+
+- (BOOL)isGreaterThanOrEqualTo:(id)object
+{
+	return [self isGreaterThan:object] || [self isEqualTo:object];
+}
+
+- (BOOL)isLessThanOrEqualTo:(id)object
+{
+	return [self isLessThan:object] || [self isEqualTo:object];
+}
 @end

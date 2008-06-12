@@ -20,6 +20,6 @@
     NSMutableDictionary *trackingDict;
 }
 
-- (BOOL)queueDelayedFetchOfImageForPerson:(ABPerson *)person object:(AIListObject *)inObject;
+- (BOOL)queueDelayedFetchOfImageFromAnySourceForPerson:(ABPerson *)person object:(AIListObject *)inObject;
 
 @end

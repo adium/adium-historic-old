@@ -30,7 +30,6 @@
 #define KEY_AB_USE_NICKNAME						@"AB Use NickName"
 #define KEY_AB_USE_MIDDLE						@"AB Use Middle Name"
 #define	KEY_AB_CREATE_METACONTACTS				@"AB Create MetaContacts"
-#define KEY_AB_UNIQUE_ID						@"AB Unique ID"
 
 #define AB_DISPLAYFORMAT_DEFAULT_PREFS			@"AB Display Format Defaults"
 

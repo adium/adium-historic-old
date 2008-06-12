@@ -366,7 +366,7 @@ static void hostResolvedCallback(CFHostRef theHost, CFHostInfoType typeInfo,  co
 }
 
 /*
- * @brief We obtained an SCNetweorkReachabilityRef for a host/observer pair
+ * @brief We obtained an SCNetworkReachabilityRef for a host/observer pair
  *
  * We can now effectively monitor connectivity between us and the host.
  *

@@ -9,7 +9,17 @@
 #import <Adium/AIControllerProtocol.h>
 #import <Adium/AIPlugin.h>
 
-#define Interface_ContactSelectionChanged			@"Interface_ContactSelectionChanged"
+#define Interface_ContactSelectionChanged				@"Interface_ContactSelectionChanged"
+
+/*!
+ * @brief AIContactInfoInspectorDidChangeInspectedObject notification name
+ *
+ * userinfo is an NSDictionary with keys KEY_PREVIOUS_INSPECTED_OBJECT and KEY_NEW_INSPECTED_OBJECT and objects of class AIListObject
+ */
+#define AIContactInfoInspectorDidChangeInspectedObject	@"AIContactInfoInspectorWillChangeInspectedObject"
+#define KEY_PREVIOUS_INSPECTED_OBJECT	@"PreviousInspectedObject"
+#define KEY_NEW_INSPECTED_OBJECT		@"NewInspectedObject"
+
 #define Interface_SendEnteredMessage				@"Interface_SendEnteredMessage"
 #define Interface_WillSendEnteredMessage 			@"Interface_WillSendEnteredMessage"
 #define Interface_DidSendEnteredMessage				@"Interface_DidSendEnteredMessage"
@@ -350,6 +360,20 @@ typedef enum {
 - (void)unregisterContactListTooltipEntry:(id <AIContactListTooltipEntry>)inEntry secondaryEntry:(BOOL)isSecondary;
 
 /*!
+ * @brief Get an array of all primary contact list tooltip entries
+ *
+ * @result An NSArray of objects conforming to AIContactListTooltipEntry
+ */
+- (NSArray *)contactListTooltipPrimaryEntries;
+
+/*!
+ * @brief Get an array of all secondary contact list tooltip entries
+ *
+ * @result An NSArray of objects conforming to AIContactListTooltipEntry
+ */
+- (NSArray *)contactListTooltipSecondaryEntries;
+
+/*!
  * @brief Show an object's tooltip at a given point
  *
  * If object is not nil, the tooltip box will be shown for that object at the given point. It is created if needed;
@@ -418,6 +442,7 @@ typedef enum {
 @protocol AIContactListTooltipEntry <NSObject>
 - (NSString *)labelForObject:(AIListObject *)inObject;
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject;
+- (BOOL)shouldDisplayInContactInspector;
 @end
 
 @protocol AIFlashObserver <NSObject>

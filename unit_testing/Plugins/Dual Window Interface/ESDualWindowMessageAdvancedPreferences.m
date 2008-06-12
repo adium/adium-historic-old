@@ -64,7 +64,12 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
 											 forKey:KEY_WINDOW_HIDE
 											  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-
+		
+	} else if (sender == checkBox_psychicOpen) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state] == NSOnState)]
+											 forKey:KEY_PSYCHIC
+											  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+	
 	} else if (sender == checkBox_customNameFormatting) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_WEBKIT_USE_NAME_FORMAT
@@ -131,6 +136,7 @@
 	}
 	
 	[checkBox_hide setState:[[prefDict objectForKey:KEY_WINDOW_HIDE] boolValue]];
+	[checkBox_psychicOpen setState:[[prefDict objectForKey:KEY_PSYCHIC] boolValue]];
 
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	[popUp_nameFormat compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_WEBKIT_NAME_FORMAT] intValue]];

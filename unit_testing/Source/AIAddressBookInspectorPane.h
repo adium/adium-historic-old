@@ -17,21 +17,22 @@
 	IBOutlet	NSView					*inspectorContentView;
 				AIListObject			*displayedObject;
 	
-	IBOutlet	NSTextField				*aliasLabel;
-	IBOutlet	AIDelayedTextField		*contactAlias;
-	
-	IBOutlet	NSTextField				*notesLabel;
+	IBOutlet	NSTextField				*label_notes;
 	IBOutlet	AIDelayedTextField		*contactNotes;
 
+	IBOutlet	NSButton				*button_chooseCard;
+
 	IBOutlet	NSPanel					*addressBookPanel;
-	IBOutlet	NSButton				*addressBookButton;
 	IBOutlet	ABPeoplePickerView		*addressBookPicker;
+
+	IBOutlet	NSTextField				*label_abPeoplePickerChooseAnAddressCard;
+	IBOutlet	NSButton				*button_abPeoplePickerOkay;
+	IBOutlet	NSButton				*button_abPeoplePickerCancel;
 }
 -(NSString *)nibName;
 -(NSView *)inspectorContentView;
 -(void)updateForListObject:(AIListObject *)inObject;
 
-- (IBAction)setAlias:(id)sender;
 - (IBAction)setNotes:(id)sender;
 
 //Address Book panel methods.

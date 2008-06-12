@@ -254,7 +254,7 @@
 		} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND_GROUP]) {
 			format = AILocalizedString(@"When %@ sends a message to you in a background group chat",nil);
 		} else if ([eventID isEqualToString:CONTENT_GROUP_CHAT_MENTION]) {
-			description = AILocalizedString(@"When %@ sends a message that mentions your name in a group chat", nil);
+			format = AILocalizedString(@"When %@ sends a message that mentions your name in a group chat", nil);
 		} else {
 			format = nil;
 		}

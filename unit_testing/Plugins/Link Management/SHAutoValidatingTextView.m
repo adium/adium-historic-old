@@ -72,14 +72,12 @@
 - (void)textDidChange:(NSNotification *)notification
 {
     if (continuousURLValidation) {//call the URL validatation if set
-        AHHyperlinkScanner  *laxScanner = [[AHHyperlinkScanner alloc] initWithStrictChecking:NO];
 		NSString			*linkURL = [self linkURL];
 
-        URLIsValid = ([laxScanner isStringValidURL:linkURL] &&
-					  ([NSURL URLWithString:linkURL] != nil));
-        validStatus = [laxScanner validationStatus];
-
-		[laxScanner release];
+        URLIsValid = [AHHyperlinkScanner isStringValidURL:linkURL
+											  usingStrict:YES
+												fromIndex:nil
+											   withStatus:&validStatus];
     }
 }
 

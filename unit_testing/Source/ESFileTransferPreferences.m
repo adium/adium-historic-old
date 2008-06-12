@@ -101,7 +101,7 @@
 	[label_safeFilesDescription setLocalizedString:AILocalizedString(@"\"Safe\" files include movies, pictures,\nsounds, text documents, and archives.","Description of safe files (files which Adium can open automatically without danger to the user). This description should be on two lines; the lines are separated by \n.")];
 	[label_transferProgress setLocalizedString:AILocalizedString(@"Progress:","File Transfer preferences label")];
 	
-	[checkBox_autoAcceptFiles setLocalizedString:AILocalizedString(@"Automatically accept files and images...","File Transfer preferences")];
+	[checkBox_autoAcceptFiles setLocalizedString:[AILocalizedString(@"Automatically accept files and images","File Transfer preferences") stringByAppendingEllipsis]];
 	[checkBox_autoAcceptOnlyFromCLList setLocalizedString:AILocalizedString(@"only from contacts on my Contact List","File Transfer preferences")];
 	[checkBox_autoOpenFiles setLocalizedString:AILocalizedString(@"Open \"Safe\" files after receiving","File Transfer preferences")];
 	[checkBox_showProgress setLocalizedString:AILocalizedString(@"Show the File Transfers window automatically","File Transfer preferences")];
@@ -125,7 +125,7 @@
 	
 	//Create the menu item for the current download folder
 	userPreferredDownloadFolder = [[adium preferenceController] userPreferredDownloadFolder];
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[userPreferredDownloadFolder lastPathComponent]
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[[NSFileManager defaultManager] displayNameAtPath:userPreferredDownloadFolder]
 																	 target:nil
 																	 action:nil
 															  keyEquivalent:@""] autorelease];

@@ -141,7 +141,7 @@ typedef enum {
 	
 	//Contact update guarding
 	NSTimer						*delayedUpdateStatusTimer;
-	AIListContact				*delayedUpdateStatusTarget;
+	NSMutableArray				*delayedUpdateStatusTargets;
 	NSTimer						*silenceAllContactUpdatesTimer;
 }
 
@@ -157,6 +157,7 @@ typedef enum {
 - (NSAlert*)alertForAccountDeletion;
 - (void)alertForAccountDeletion:(id<AIAccountControllerRemoveConfirmationDialog>)dialog didReturn:(int)returnCode;
 - (NSString *)explicitFormattedUID;
+- (NSString *)formattedUIDForListDisplay;
 
 //Properties
 - (BOOL)supportsAutoReplies;
@@ -174,6 +175,7 @@ typedef enum {
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact;
 - (float)delayedUpdateStatusInterval;
 - (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage;
+- (void)setSocialNetworkingStatusMessage:(NSAttributedString *)statusMessage;
 - (BOOL)shouldUpdateAutorefreshingAttributedStringForKey:(NSString *)inKey;
 
 //Messaging, Chatting, Strings

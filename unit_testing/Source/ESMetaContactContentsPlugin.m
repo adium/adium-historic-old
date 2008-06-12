@@ -28,8 +28,8 @@
 
 #define META_TOOLTIP_ICON_SIZE NSMakeSize(11,11)
 
-#define EXPAND_CONTACT		AILocalizedString(@"Expand combined contact", nil)
-#define COLLAPSE_CONTACT	AILocalizedString(@"Collapse combined contact", nil)
+#define EXPAND_CONTACT		AILocalizedString(@"Expand Combined Contact", nil)
+#define COLLAPSE_CONTACT	AILocalizedString(@"Collapse Combined Contact", nil)
 /*!
  * @class ESMetaContactContentsPlugin
  * @brief Tooltip component: Show the contacts contained by metaContacts, with service and status state.
@@ -50,6 +50,11 @@
 											 keyEquivalent:@""];
 	[[adium menuController] addContextualMenuItem:contextualMenuItem
 									   toLocation:Context_Contact_ListAction];
+
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(inspectedObjectDidChange:)
+									   name:AIContactInfoInspectorDidChangeInspectedObject
+									 object:nil];
 }
 
 - (void)dealloc
@@ -121,6 +126,8 @@
 
 					[entry appendAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]];
 					[attachment release];
+
+					[entryString appendString:@" "];
 				}
 				
 				[entryString appendString:[contact formattedUID]];
@@ -151,20 +158,47 @@
     return [entry autorelease];
 }
 
+- (BOOL)shouldDisplayInContactInspector
+{
+	return YES;
+}
+
+#pragma mark Automatic temporary expansion
+- (void)inspectedObjectDidChange:(NSNotification *)inNotification
+{
+	AIListObject *oldListObject = [[inNotification userInfo] objectForKey:KEY_PREVIOUS_INSPECTED_OBJECT];
+	AIListObject *newListObject = [[inNotification userInfo] objectForKey:KEY_NEW_INSPECTED_OBJECT];
+
+	if (oldListObject && [oldListObject isKindOfClass:[AIMetaContact class]] &&
+		[[oldListObject valueForProperty:@"TemporaryMetaContactExpansion"] boolValue]) {
+		[oldListObject setValue:nil
+					forProperty:@"TemporaryMetaContactExpansion"
+						 notify:NotifyNever];
+		[[adium notificationCenter] postNotificationName:AIPerformCollapseItemNotification
+												  object:oldListObject];
+	}
+
+	if (newListObject && [newListObject isKindOfClass:[AIMetaContact class]] &&
+		![(AIMetaContact *)newListObject isExpanded]) {
+		[newListObject setValue:[NSNumber numberWithBool:YES]
+					forProperty:@"TemporaryMetaContactExpansion"
+						 notify:NotifyNever];
+		[[adium notificationCenter] postNotificationName:AIPerformExpandItemNotification
+												  object:newListObject];
+	}
+}
+
 #pragma mark Menu
 - (void)toggleMetaContactExpansion:(id)sender
 {
 	AIListObject *listObject = [[adium menuController] currentContextMenuObject];
 	if ([listObject isKindOfClass:[AIMetaContact class]]) {
-		BOOL currentlyExpandable = [(AIMetaContact *)listObject isExpandable];
+		BOOL currentlyExpanded = [(AIMetaContact *)listObject isExpanded];
 		
-		if (currentlyExpandable) {
+		if (currentlyExpanded) {
 			[[adium notificationCenter] postNotificationName:AIPerformCollapseItemNotification
 													 object:listObject];
-			[(AIMetaContact *)listObject setExpandable:NO];
-
 		} else {
-			[(AIMetaContact *)listObject setExpandable:YES];
 			[[adium notificationCenter] postNotificationName:AIPerformExpandItemNotification
 													 object:listObject];
 		}
@@ -173,7 +207,9 @@
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
-	return ([[[adium menuController] currentContextMenuObject] isKindOfClass:[AIMetaContact class]]);
+	AIListObject *listObject = [[adium menuController] currentContextMenuObject];
+	return ([listObject isKindOfClass:[AIMetaContact class]] &&
+			[(AIMetaContact *)listObject containsMultipleContacts]);
 }
 
 - (void)menu:(NSMenu *)menu needsUpdateForMenuItem:(NSMenuItem *)menuItem
@@ -182,8 +218,9 @@
 	if (menuItem == contextualMenuItem) {
 		if ([listObject isKindOfClass:[AIMetaContact class]] &&
 			[(AIMetaContact *)listObject containsMultipleContacts]) {
-			BOOL currentlyExpandable = [(AIMetaContact *)listObject isExpandable];
-			if (currentlyExpandable) {
+			BOOL currentlyExpanded = [(AIMetaContact *)listObject isExpanded];
+			
+			if (currentlyExpanded) {
 				[menuItem setTitle:COLLAPSE_CONTACT];
 			} else {
 				[menuItem setTitle:EXPAND_CONTACT];				

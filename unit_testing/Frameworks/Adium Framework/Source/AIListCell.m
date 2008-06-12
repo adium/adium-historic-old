@@ -276,9 +276,20 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 		//Padding
 		cellFrame.origin.y += [self topPadding];
 		cellFrame.size.height -= [self bottomPadding] + [self topPadding];
-		cellFrame.origin.x += [self leftPadding] + [self indentation];
-		cellFrame.size.width -= [self rightPadding] + [self leftPadding] + [self indentation];
+		cellFrame.origin.x += [self leftPadding];
+		cellFrame.size.width -= [self rightPadding] + [self leftPadding];
 
+		switch ([self textAlignment]) {
+			case NSRightTextAlignment:
+				//Right alignment indents on the right
+				cellFrame.size.width -= [self indentation];
+				break;
+			default:
+				//All other alignments indent on the left
+				cellFrame.origin.x += [self indentation];
+				cellFrame.size.width -= [self indentation];
+				break;
+		}
 		[self drawContentWithFrame:cellFrame];
 	}
 }
@@ -287,6 +298,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 //Custom highlighting (This is a private cell method we're overriding that handles selection drawing)
 - (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)inControlView
 {
+	AILogWithSignature(@"");
 	//Cell spacing
 	cellFrame.origin.y += [self topSpacing];
 	cellFrame.size.height -= [self bottomSpacing] + [self topSpacing];
@@ -376,19 +388,24 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 #endif
 
 	if (!leftText && !rightText) {
-		return (useAliasesAsRequested ? 
+		return ([self shouldShowAlias] ? 
 				[listObject longDisplayName] :
 				([listObject formattedUID] ? [listObject formattedUID] : [listObject longDisplayName]));
 	} else {
 		//Combine left text, the object name, and right text
 		return [NSString stringWithFormat:@"%@%@%@",
 			(leftText ? leftText : @""),
-			(useAliasesAsRequested ? [listObject longDisplayName] : ([listObject formattedUID] ?
+			([self shouldShowAlias] ? [listObject longDisplayName] : ([listObject formattedUID] ?
 																	 [listObject formattedUID] :
 																	 [listObject longDisplayName])),
 			(rightText ? rightText : @"")];
 	}
 
+}
+
+- (BOOL)shouldShowAlias
+{
+	return useAliasesAsRequested;
 }
 
 - (void)setUseAliasesAsRequested:(BOOL)inFlag

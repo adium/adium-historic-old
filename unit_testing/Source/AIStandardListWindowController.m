@@ -822,7 +822,7 @@
 {
 	if (filterBarIsVisible) {
 		[self hideFilterBarWithAnimation:YES];
-	} else {
+	} else if ([contactListView numberOfRows] > 0) {
 		[self showFilterBarWithAnimation:YES];
 	}
 }

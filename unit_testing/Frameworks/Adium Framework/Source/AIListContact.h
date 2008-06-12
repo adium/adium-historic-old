@@ -18,6 +18,10 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIListGroup.h>
 
+#define KEY_AB_UNIQUE_ID		@"AB Unique ID"
+
+@class ABPerson;
+
 @interface AIListContact : AIListObject {
 	AIAccount		*account;
     NSString		*remoteGroupName;
@@ -61,7 +65,9 @@
 - (void)setWarningLevel:(int)warningLevel notify:(NotifyTiming)notify;
 - (int)warningLevel;
 
+- (void)setProfileArray:(NSArray *)array notify:(NotifyTiming)notify;
 - (void)setProfile:(NSAttributedString *)profile notify:(NotifyTiming)notify;
+- (NSArray *)profileArray;
 - (NSAttributedString *)profile;
 
 - (void)setServersideAlias:(NSString *)alias 
@@ -72,5 +78,8 @@
 
 - (NSWritingDirection)baseWritingDirection;
 - (void)setBaseWritingDirection:(NSWritingDirection)direction;
+
+- (ABPerson *)addressBookPerson;
+- (void)setAddressBookPerson:(ABPerson *)inPerson;
 
 @end

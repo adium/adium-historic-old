@@ -28,8 +28,6 @@
 #import <AIUtilities/AIEventAdditions.h>
 #import "AISCLViewPlugin.h"
 
-#define MINIMUM_HEIGHT				48
-
 @interface AIListOutlineView (PRIVATE)
 - (void)_initListOutlineView;
 @end
@@ -168,8 +166,7 @@
 // Returns our desired size
 - (int)desiredHeight
 {
-	int desiredHeight = [self totalHeight] + desiredHeightPadding;
-	return ((desiredHeight > MINIMUM_HEIGHT || [self numberOfRows]) ? desiredHeight : MINIMUM_HEIGHT);
+	return ([self totalHeight] + desiredHeightPadding);
 }
 
 - (int)desiredWidth
@@ -182,7 +179,7 @@
 	//Enumerate all rows, find the widest one
 	for (row = 0; row < numberOfRows; row++) {
 		id			item = [self itemAtRow:row];
-		NSCell		*cell = ([self isExpandable:item] ? groupCell : contentCell);
+		NSCell		*cell = ([theDelegate outlineView:self isGroup:item] ? groupCell : contentCell);
 	
 		[theDelegate outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
 		int	width = [(AIListCell *)cell cellWidth];
