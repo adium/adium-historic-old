@@ -353,8 +353,8 @@
 {
 	NSString	*style = [[popUp_styles selectedItem] representedObject];
 
-	/* Save the new image.  We store the images in a separate preference group since they may get big. It'll be cached in memory
-	 * in any case, but this will lete loading other groups not be affected by its presence.
+	/* Save the new image.  We store the images in a separate preference group since they may get big.
+	 * This will let loading other groups not be affected by its presence.
 	 */
 	[[adium preferenceController] setPreference:[image PNGRepresentation]
 										 forKey:[plugin styleSpecificKey:@"Background" forStyle:style]
