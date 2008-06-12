@@ -315,7 +315,8 @@
 	STAssertTrue([[adiumAccounts accounts] isEqualToArray:correctArray], 
 				 @"Accounts were not loaded correctly");
 	
-	[aiNotifyCenterMock verify];
+	STAssertNoThrow([aiNotifyCenterMock verify],
+					@"No errors should have occurred");
 }
 
 
@@ -358,8 +359,8 @@
 	
 	// No notification should have been received, since the list did not change
 	STAssertThrows([aiNotifyCenterMock verify],
-				   @"Notification Center received \"postNotificationName:Account_ListChanged\".  \
-				   No notification should have been received, since the account list did not change");
+				   @"Notification Center probably received \"postNotificationName:Account_ListChanged\".  \
+				   No notification should have been received, since the account list did not change.");
 }
 
 @end
