@@ -47,7 +47,6 @@
 static	NSConditionLock     *threadPreparednessLock = nil;
 static	NDRunLoopMessenger  *bonjourThreadMessenger = nil;
 static	AWEzv               *_libezvThreadProxy = nil;
-static	NSAutoreleasePool   *currentAutoreleasePool = nil;
 
 typedef enum {
 	AIThreadPreparing = 0,
@@ -730,25 +729,15 @@ typedef enum {
 {
 	[_libezvThreadProxy release]; _libezvThreadProxy = nil;
 	[bonjourThreadMessenger release]; bonjourThreadMessenger = nil;
-	[currentAutoreleasePool release]; currentAutoreleasePool = nil;
 }
 
 - (void)prepareBonjourThread
 {
-	NSTimer	*autoreleaseTimer;
-
-	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 	[threadPreparednessLock lock];
 
 	bonjourThreadMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
 	_libezvThreadProxy = [[bonjourThreadMessenger target:libezv] retain];
-
-	//Use a timer to periodically release our autorelease pool so we don't continually grow in memory usage
-	autoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:AUTORELEASE_POOL_REFRESH
-	                                                     target:self
-	                                                   selector:@selector(refreshAutoreleasePool:)
-	                                                   userInfo:NULL
-	                                                    repeats:YES] retain];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self 
 	                                         selector:@selector(threadWillExit:) 
@@ -757,11 +746,15 @@ typedef enum {
 
 	//We're good to go; release that lock
 	[threadPreparednessLock unlockWithCondition:AIThreadReady];
-	CFRunLoopRun();
+	
+	while(true) {
+		[[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:AUTORELEASE_POOL_REFRESH]];
+		[pool release];
+		pool = [[NSAutoreleasePool alloc] init];
+	}
 
 	[self clearBonjourThreadInfo];
-	[autoreleaseTimer invalidate]; 
-	[autoreleaseTimer release];
+	[pool release];
 }
 
 /*!
@@ -779,19 +772,6 @@ typedef enum {
 	                                              object:[inNotification object]];
 
 	[self clearBonjourThreadInfo];
-}
-
-/*!
- * @brief Release and recreate our autorelease pool
- *
- * Our autoreleased objects will only be released when the outermost autorelease pool is released.
- * This is handled automatically in the main thread, but we need to do it manually here.
- * Release the current pool, then create a new one.
- */
-- (void)refreshAutoreleasePool:(NSTimer *)inTimer
-{
-	[currentAutoreleasePool release];
-	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
 }
 
 @end
