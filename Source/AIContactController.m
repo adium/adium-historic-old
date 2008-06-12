@@ -1730,10 +1730,9 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	AIListContact	*tempListContact = [[AIListContact alloc] initWithUID:inUID
 																service:theService];
 	AIAccount		*account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
-																				 toContact:tempListContact
-																			includeOffline:YES];
+																				 toContact:tempListContact];
 	[tempListContact release];
-	
+
 	return [self contactWithService:theService account:account UID:inUID];
 }
 
