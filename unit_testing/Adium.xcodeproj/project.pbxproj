@@ -9171,7 +9171,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Remove coverage files from previous builds\n/bin/rm -rf \"$OBJECT_FILE_DIR_normal/*/*.gcno\"\n/bin/rm -rf \"$OBJECT_FILE_DIR_normal/*/*.gcda\"";
+			shellScript = "# Remove coverage files from previous builds\n/bin/rm -rf \"${OBJECT_FILE_DIR_normal}\"/*/*.gcno\n/bin/rm -rf \"${OBJECT_FILE_DIR_normal}\"/*/*.gcda";
 		};
 		F53C25AD0A2F95F100F7B73D /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
