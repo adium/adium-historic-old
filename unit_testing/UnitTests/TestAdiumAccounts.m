@@ -20,6 +20,7 @@
 
 - (void)setUp {
 	id aiMock = [OCMockObject niceMockForProtocol:@protocol(AIAdium)];
+	STAssertNotNil(aiMock, @"Mock object creation is not working");
 	[AIObject _setSharedAdiumInstance:aiMock];
 	
 	googleService = [[OCMockObject mockForClass:[AIService class]] retain];
