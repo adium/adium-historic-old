@@ -408,7 +408,7 @@ static NSArray *draggedTypes = nil;
 			if (backgroundImage) {
 				//Generate a unique cache ID for this image
 				int	uniqueID = [[[adium preferenceController] preferenceForKey:@"BackgroundCacheUniqueID"
-																		 group:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES] intValue] + 1;
+																		 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] intValue] + 1;
 				[[adium preferenceController] setPreference:[NSNumber numberWithInt:uniqueID]
 													 forKey:@"BackgroundCacheUniqueID"
 													  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
