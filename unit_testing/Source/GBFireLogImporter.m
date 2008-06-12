@@ -264,7 +264,6 @@ static Boolean errorStructure (CFXMLParserRef parser, CFXMLParserStatusCode erro
 		[newStr appendString:@">"];
 		AILog(@"Fire log import: %@ has broken XML, you should fix this and re-import it", inFile);
 		NSLog(@"Fire log import: %@ has broken XML, you should fix this and re-import it", inFile);
-#warning Surely we shouldn't log both, but this should be rare.  Maybe put up a dialog?, thoughts?  Same for below too
 	}
 	NSData *data = [newStr dataUsingEncoding:NSUTF8StringEncoding];
 	parser = CFXMLParserCreate(NULL, (CFDataRef)data, NULL,kCFXMLParserSkipMetaData | kCFXMLParserSkipWhitespace, kCFXMLNodeCurrentVersion, &callbacks, &context);

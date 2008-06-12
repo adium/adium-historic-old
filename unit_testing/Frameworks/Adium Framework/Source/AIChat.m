@@ -565,6 +565,14 @@ static int nextChatNumber = 0;
 		[self removeObject:[self objectAtIndex:0]];
 }
 
+- (void)removeAllParticipatingContactsSilently
+{
+	[participatingListObjects removeAllObjects];
+
+	[[adium notificationCenter] postNotificationName:Chat_ParticipatingListObjectsChanged
+											  object:self];
+}
+
 - (void)setExpanded:(BOOL)inExpanded
 {
 	expanded = inExpanded;

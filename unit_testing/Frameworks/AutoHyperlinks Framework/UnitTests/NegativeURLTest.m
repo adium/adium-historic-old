@@ -18,12 +18,14 @@
 	testHyperlink(@"adium");
 	testHyperlink(@"http://");
 	testHyperlink(@"example.co");
+	testHyperlink(@"b.sc");
+	testHyperlink(@"m.in");
+	testHyperlink(@"test.not.a.tld");
 	testHyperlink(@"http://[::]");
 	testHyperlink(@"http://[::1:]");
 	testHyperlink(@"http://[1]");
 	testHyperlink(@"http://[]");
-	testHyperlink(@"http://example.not.a.tld");
-	testHyperlink(@"http://example.not.a.tld:8080");
 	testHyperlink(@"http://example.com/ is not a link");
+	testHyperlink(@"jdoe@jabber.org/Adium");
 }
 @end

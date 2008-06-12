@@ -194,8 +194,14 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 - (void)_selectPreferredAccountInAccountMenu:(AIAccountMenu *)inAccountMenu
 {
 	if ([popUp_service numberOfItems]) {
-		AIAccount   *preferredAccount = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
-																							   toContact:nil];
+		//First online account in our list
+		NSEnumerator *enumerator = [[[adium accountController] accounts] objectEnumerator];
+		AIAccount    *preferredAccount;
+		while ((preferredAccount = [enumerator nextObject])) {
+			if ([preferredAccount online])
+				break;
+		}
+		
 		NSMenuItem	*menuItem = [inAccountMenu menuItemForAccount:preferredAccount];
 
 		AILog(@"%@: _selectPreferredAccountInAccountMenu: %@: menuItem for %@ is %@",self,inAccountMenu,preferredAccount,menuItem);

@@ -17,7 +17,8 @@
 #import "AIDockUnviewedContentPlugin.h"
 #import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIContentControllerProtocol.h>
-#import "AIDockController.h"
+#import <Adium/AIStatusControllerProtocol.h>
+#import <Adium/AIDockControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
@@ -102,7 +103,16 @@
         if ([inChat unviewedContentCount]) {
             //If this is the first contact with unviewed content, animate the dock
             if (!unviewedState) {
-                [[adium dockController] setIconStateNamed:@"Alert"];
+				NSString *iconState;
+
+				if (([[[adium statusController] activeStatusState] statusType] == AIInvisibleStatusType) &&
+					[[adium dockController] currentIconSupportsIconStateNamed:@"InvisibleAlert"]) {
+					iconState = @"InvisibleAlert";					
+				} else {
+					iconState = @"Alert";
+				}
+
+                [[adium dockController] setIconStateNamed:iconState];
                 unviewedState = YES;
             }
 

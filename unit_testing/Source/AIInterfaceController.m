@@ -1324,6 +1324,16 @@ withAttributedDescription:[[[NSAttributedString alloc] initWithString:inDesc
         [contactListTooltipEntryArray removeObject:inEntry];
 }
 
+- (NSArray *)contactListTooltipPrimaryEntries
+{
+	return contactListTooltipEntryArray;
+}
+
+- (NSArray *)contactListTooltipSecondaryEntries
+{
+	return contactListTooltipSecondaryEntryArray;
+}
+
 //list object tooltips
 - (void)showTooltipForListObject:(AIListObject *)object atScreenPoint:(NSPoint)point onWindow:(NSWindow *)inWindow 
 {

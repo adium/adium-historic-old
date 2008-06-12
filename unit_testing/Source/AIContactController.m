@@ -377,7 +377,7 @@
 						  contactList);
 			
 			//NSLog(@"listObjectRemoteGroupingChanged: %@: remoteGroupName %@ --> %@",inContact,remoteGroupName,localGroup);
-			
+				
 			[self _moveContactLocally:inContact
 							  toGroup:localGroup];
 			
@@ -788,6 +788,9 @@
 					[self removeListObject:listObject fromMetaContact:oldMetaContact];
 				
 				[self _storeListObject:listObject inMetaContact:metaContact];
+
+				//Do the update thing
+				[contactPropertiesObserverManager _updateAllAttributesOfObject:metaContact];
 			}
 		}
 	}
@@ -943,6 +946,8 @@
 	//listContacts referring to the same UID & serviceID combination - that is, on multiple accounts on the same service.
 	//We therefore request removal of the object regardless of the if (containedContactDict) check above.
 	[metaContact removeObject:listObject];
+	
+	[self _listChangedGroup:metaContact object:listObject];
 }
 
 
@@ -982,29 +987,32 @@
 		[internalObjectIDs addObject:internalObjectID];
 	}
 	
-	//Create a new metaContact is we didn't find one.
-	if (!metaContact) {
-		AILogWithSignature(@"New metacontact to group %@ on %@", UIDsArray, servicesArray);
-		metaContact = [self metaContactWithObjectID:nil];
-	}
-	
-	enumerator = [internalObjectIDs objectEnumerator];
-	while ((internalObjectID = [enumerator nextObject])) {
-		AIListObject	*existingObject;
-		if ((existingObject = [self existingListObjectWithUniqueID:internalObjectID])) {
-			/* If there is currently an object (or multiple objects) matching this internalObjectID
-			 * we should add immediately.
-			 */
-			[self addListObject:existingObject
-				  toMetaContact:metaContact];	
-		} else {
-			/* If no objects matching this internalObjectID exist, we can simply add to the 
-			 * contactToMetaContactLookupDict for use if such an object is created later.
-			 */
-			[contactToMetaContactLookupDict setObject:metaContact
-											   forKey:internalObjectID];			
+	if ([internalObjectIDs count] > 1) {
+		//Create a new metaContact is we didn't find one.
+		if (!metaContact) {
+			AILogWithSignature(@"New metacontact to group %@ on %@", UIDsArray, servicesArray);
+			metaContact = [self metaContactWithObjectID:nil];
+		}
+		
+		enumerator = [internalObjectIDs objectEnumerator];
+		while ((internalObjectID = [enumerator nextObject])) {
+			AIListObject	*existingObject;
+			if ((existingObject = [self existingListObjectWithUniqueID:internalObjectID])) {
+				/* If there is currently an object (or multiple objects) matching this internalObjectID
+				 * we should add immediately.
+				 */
+				[self addListObject:existingObject
+					  toMetaContact:metaContact];	
+			} else {
+				/* If no objects matching this internalObjectID exist, we can simply add to the 
+				 * contactToMetaContactLookupDict for use if such an object is created later.
+				 */
+				[contactToMetaContactLookupDict setObject:metaContact
+												   forKey:internalObjectID];			
+			}
 		}
 	}
+
 	[internalObjectIDs release];
 	
 	return metaContact;
@@ -1722,10 +1730,9 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	AIListContact	*tempListContact = [[AIListContact alloc] initWithUID:inUID
 																service:theService];
 	AIAccount		*account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
-																				 toContact:tempListContact
-																			includeOffline:YES];
+																				 toContact:tempListContact];
 	[tempListContact release];
-	
+
 	return [self contactWithService:theService account:account UID:inUID];
 }
 
@@ -1946,7 +1953,12 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			}
 		} else if ([listContact isKindOfClass:[AIListContact class]]) {
 			//Move the object
+			if ([[listContact parentContact] isKindOfClass:[AIMetaContact class]]) {
+				[self removeAllListObjectsMatching:listContact fromMetaContact:(AIMetaContact *)[listContact parentContact]];
+			}
+			
 			[self _moveObjectServerside:listContact toGroup:(AIListGroup *)group];
+
 		} else if ([listContact isKindOfClass:[AIListGroup class]]) {
 			// Move contact from one contact list to another
 			[(AIListGroup *)listContact moveGroupFrom:[(AIListGroup *)listContact containingObject] to:group];

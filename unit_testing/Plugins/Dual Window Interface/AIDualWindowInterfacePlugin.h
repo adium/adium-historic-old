@@ -43,6 +43,7 @@
 #define KEY_ARRANGE_TABS_BY_GROUP			@"Arrange Tabs By Group"
 #define	KEY_WINDOW_LEVEL					@"Window Level"
 #define KEY_WINDOW_HIDE						@"Hide While in Background"
+#define KEY_PSYCHIC							@"Open Chats When typing Begins"
 
 @interface AIDualWindowInterfacePlugin : AIPlugin <AIInterfaceComponent> {
     

@@ -59,6 +59,7 @@
 	[label_statusMenuItem setLocalizedString:AILocalizedString(@"Status Menu Item", nil)];
 	[checkBox_statusMenuItemBadge setLocalizedString:AILocalizedString(@"Badge the menu item with current status", nil)];
 	[checkBox_statusMenuItemFlash setLocalizedString:AILocalizedString(@"Flash when there are unread messages", nil)];
+	[checkBox_statusMenuItemCount setLocalizedString:AILocalizedString(@"Show unread message count in the menu bar", nil)];
 	
 	[label_quitConfirmation setLocalizedString:AILocalizedString(@"Quit Confirmation", @"Preference")];
 	[checkBox_quitConfirmEnabled setLocalizedString:AILocalizedString(@"Confirm before quitting Adium", @"Quit Confirmation preference")];

@@ -1,18 +1,11 @@
-if [ `sw_vers -productVersion | cut -f 1,2 -d '.'` == 10.4 ] ; then
-    IS_ON_10_4=TRUE
-else
-    IS_ON_10_4=FALSE
-fi
+#!/bin/sh
+
+source common.sh
+setupDirStructure
+cd "$BUILDDIR"
 
 DEBUG_SYMBOLS=TRUE
-
-GLIB=glib-2.15.4
-MEANWHILE=meanwhile-1.0.2
-GADU=libgadu-1.7.1
-INTLTOOL=intltool-0.36.2
 PROTOCOLS="bonjour gg irc jabber msn myspace novell oscar qq sametime simple yahoo zephyr"
-PATCHDIR="$PWD"
-
 MSN_PECAN_DIR="$PWD/msn-pecan-0.0.12"
 
 if [ "x$PIDGIN_SOURCE" == "x" ] ; then
@@ -21,57 +14,44 @@ if [ "x$PIDGIN_SOURCE" == "x" ] ; then
 	exit 1
 fi
 
-SDK_ROOT="/Developer/SDKs/MacOSX10.4u.sdk"
-BASE_CFLAGS="-mmacosx-version-min=10.4 -isysroot $SDK_ROOT"
-BASE_LDFLAGS="-mmacosx-version-min=10.4 -headerpad_max_install_names -Wl,-syslibroot,$SDK_ROOT"
-
-NUMBER_OF_CORES=`sysctl -n hw.activecpu`
-
-mkdir build || true
-cd build
-mkdir universal || true
-
-TARGET_DIR_PPC="$PWD/root-ppc"
-TARGET_DIR_I386="$PWD/root-i386"
-TARGET_DIR_BASE="$PWD/root"
-export PATH_PPC="$TARGET_DIR_PPC/bin:$PATH"
-export PATH_I386="$TARGET_DIR_I386/bin:$PATH"
+echo "Using Pidgin source from: $PIDGIN_SOURCE"
 
 # Apply our openssl patch - enables using OpenSSL and allows libgadu with SSL
 # support. This is OK because OpenSSL is part of the base system on OS X.
 
-pushd $PIDGIN_SOURCE
+pushd $PIDGIN_SOURCE > /dev/null 2>&1
 ###
 # Patches bringing in forward changes from libpurple:
 #
 ###
 # Patches for our own hackery
 #
-# libpurple_jabber_avoid_sasl_option_hack.diff is needed to avoid using PLAIN via SASL on Mac OS X 10.4, where it doesn't work properly
+# libpurple_jabber_avoid_sasl_option_hack.diff is needed to avoid using PLAIN via SASL on Mac OS X 10.4, 
+#		where it doesn't work properly
 # libpurple_makefile_linkage_hacks.diff fixes some linkage problems
-#
-#  libpurple_jabber_parser_error_handler.diff adds a handler for jabber errors
-#  which may fix crashes in __xmlRaiseError() --> _structuredErrorFunc().
-#
-#  libpurple_xmlnode_parser_error_handler does the same for other xml parsing.
-#
-# libpurple_disable_last_seen_tracking.diff disables the last-seen tracking, avoiding unnecessary blist.xml writes, since we don't ever use the information (we keep track of it ourselves).
+# libpurple_jabber_parser_error_handler.diff adds a handler for jabber errors
+# 		which may fix crashes in __xmlRaiseError() --> _structuredErrorFunc().
+# libpurple_xmlnode_parser_error_handler does the same for other xml parsing.
+# libpurple_disable_last_seen_tracking.diff disables the last-seen tracking, 
+# 		avoiding unnecessary blist.xml writes, since we don't ever use the information (we keep track of it ourselves).
 ###
 # Add
 #    "$PATCHDIR/libpurple-enable-msnp14.diff" \ 
 # to allow enabling msnp14. Needs change below.
 ###
-for patch in "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
-             "$PATCHDIR/libpurple_disable_last_seen_tracking.diff" \
-             "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" \
-             "$PATCHDIR/libpurple_jabber_parser_error_handler.diff" \
-             "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
-             "$PATCHDIR/libpurple_xmlnode_parser_error_handler.diff" \
-             "$PATCHDIR/libpurple_zephyr_fix_krb4_flags.diff" ; do
+LIBPURPLE_PATCHES=("$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
+					"$PATCHDIR/libpurple_disable_last_seen_tracking.diff" \
+					"$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" \
+					"$PATCHDIR/libpurple_jabber_parser_error_handler.diff" \
+					"$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
+					"$PATCHDIR/libpurple_xmlnode_parser_error_handler.diff" \
+					"$PATCHDIR/libpurple_zephyr_fix_krb4_flags.diff")
+             
+for patch in ${LIBPURPLE_PATCHES[@]} ; do
     echo "Applying $patch"
-	cat $patch | patch --forward -p0
+	patch --forward -p0 < $patch || true
 done
-popd
+popd > /dev/null 2>&1
 
 for ARCH in ppc i386 ; do
     case $ARCH in
@@ -86,14 +66,14 @@ for ARCH in ppc i386 ; do
 			  export PKG_CONFIG_PATH="$TARGET_DIR_I386/lib/pkgconfig"
 			  TARGET_DIR=$TARGET_DIR_I386;;
 	esac
-	
+
 	#Get access to the sasl headers
     mkdir -p $TARGET_DIR/include/sasl || true
-	cp $PATCHDIR/cyrus-sasl-2.1.18/include/*.h $TARGET_DIR/include/sasl
+	cp $SOURCEDIR/cyrus-sasl-2.1.18/include/*.h $TARGET_DIR/include/sasl
 
     #Note that whether we use openssl or cdsa the same underlying workarounds (as seen in jabber.c, only usage at present 12/07) are needed
     export CFLAGS="$BASE_CFLAGS -arch $ARCH -I$TARGET_DIR/include -I$SDK_ROOT/usr/include/kerberosIV -DHAVE_SSL -DHAVE_OPENSSL -fno-common"
-    
+
     if [ "$DEBUG_SYMBOLS" = "TRUE" ] ; then
         export CFLAGS="$CFLAGS -gdwarf-2 -g3" 
     fi
@@ -103,14 +83,18 @@ for ARCH in ppc i386 ; do
     export MSGFMT="`which msgfmt`"
 
     mkdir libpurple-$ARCH || true
-    pushd libpurple-$ARCH
+    pushd libpurple-$ARCH > /dev/null 2>&1
         export ARCH
+    	echo Compiling for $ARCH
+		echo LDFLAGS is $LDFLAGS
+		echo PKG_CONFIG is $PKG_CONFIG
+
     	# this part is really ew. We actually re-run autogen.sh per-arch.
     	# we pass configure --help so that it bails out and doesn't fubar the source
     	# tree, because otherwise we'd have to un-configure it. Stupid autotools.
-    	pushd $PIDGIN_SOURCE
+    	pushd $PIDGIN_SOURCE > /dev/null 2>&1
     	   ./autogen.sh --help
-    	popd
+    	popd > /dev/null 2>&1
     	# we don't need pkg-config for this
     	export LIBXML_CFLAGS='-I/usr/include/libxml2' 
     	export LIBXML_LIBS='-lxml2'
@@ -137,11 +121,10 @@ for ARCH in ppc i386 ; do
                 --disable-gstreamer \
                 --disable-avahi \
                 --disable-dbus \
-                --enable-gnutls=no --enable-nss=no --enable-openssl=no $@ || exit 1
-        pushd libpurple
-            make -j $NUMBER_OF_CORES || exit 1
-            make install || exit 1
-        popd
+                --enable-gnutls=no --enable-nss=no --enable-openssl=no $@
+        pushd libpurple > /dev/null 2>&1
+            make -j $NUMBER_OF_CORES && make install
+        popd > /dev/null 2>&1
     popd
     # HACK ALERT! We use the following internal-only headers:
     cp $PIDGIN_SOURCE/libpurple/protocols/oscar/oscar.h \
@@ -162,10 +145,6 @@ for ARCH in ppc i386 ; do
        $PIDGIN_SOURCE/libpurple/protocols/jabber/jabber.h \
 	   $TARGET_DIR/include/libpurple
 
-echo Compiling for $ARCH
-echo LDFLAGS is $LDFLAGS
-echo PKG_CONFIG is $PKG_CONFIG
-
 #    pushd $MSN_PECAN_DIR
 #       make clean || exit 1
 #       make -j $NUMBER_OF_CORES || exit 1
@@ -173,14 +152,10 @@ echo PKG_CONFIG is $PKG_CONFIG
 #    popd
 done
 
-pushd $PIDGIN_SOURCE
-for patch in "$PATCHDIR/libpurple_jabber_avoid_sasl_option_hack.diff" \
-             "$PATCHDIR/libpurple_jabber_parser_error_handler.diff" \
-             "$PATCHDIR/libpurple-restrict-potfiles-to-libpurple.diff" \
-             "$PATCHDIR/libpurple_makefile_linkage_hacks.diff" \
-             "$PATCHDIR/libpurple_disable_last_seen_tracking.diff" \
-             "$PATCHDIR/libpurple_xmlnode_parser_error_handler.diff" \
-             "$PATCHDIR/libpurple_zephyr_fix_krb4_flags.diff" ; do
-	patch -R -p0 < $patch
-done
-popd
+pushd $PIDGIN_SOURCE > /dev/null 2>&1
+	for patch in ${LIBPURPLE_PATCHES[@]} ; do
+		patch -R -p0 < $patch || true
+	done
+popd > /dev/null 2>&1
+
+echo "Done - now run ./universalize.sh"

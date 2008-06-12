@@ -7,15 +7,23 @@
 //
 
 #import "AIInfoInspectorPane.h"
+#import <Adium/AIInterfaceControllerProtocol.h>
+#import <Adium/AIHTMLDecoder.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
+#import <AddressBook/AddressBook.h>
 
+#define WIDTH_PROFILE_HEADER	 100.0f
 
 @interface AIInfoInspectorPane (PRIVATE)
 - (void)updateUserIcon:(AIListObject *)inObject;
--(void)updateAccountName:(AIListObject *)inObject;
--(void)updateServiceIcon:(AIListObject *)inObject;
--(void)updateStatusIcon:(AIListObject *)inObject;
--(void)updateProfileView:(AIListObject *)inObject;
-- (void)gotFilteredProfile:(NSAttributedString *)infoString context:(AIListObject *)object;
+- (void)updateAccountName:(AIListObject *)inObject;
+- (void)updateServiceIcon:(AIListObject *)inObject;
+- (void)updateStatusIcon:(AIListObject *)inObject;
+- (void)updateAlias:(AIListObject *)inObject;
+- (void)addAddressBookInfoToProfileArray:(NSMutableArray *)profileArray forContact:(AIListContact *)inContact;
+- (void)addTooltipEntriesToProfileArray:(NSMutableArray *)profileArray forContact:(AIListContact *)inContact;
+- (NSAttributedString *)attributedStringProfileForListObject:(AIListObject *)inObject;
+- (void)updateProfile:(NSAttributedString *)infoString context:(AIListObject *)object;
 - (void)gotFilteredStatus:(NSAttributedString *)infoString context:(AIListObject *)object;
 - (void)setAttributedString:(NSAttributedString *)infoString intoTextView:(NSTextView *)textView;
 @end
@@ -34,6 +42,8 @@
 		[userIcon setAnimates:YES];
 		[userIcon setMaxSize:NSMakeSize(256,256)];
 		[userIcon setDelegate:self];
+		
+		[aliasLabel setLocalizedString:AILocalizedString(@"Alias:","Label beside the field for a contact's alias in the settings tab of the Get Infow indow")];
 	}
 	return self;
 }
@@ -60,17 +70,28 @@
 
 -(void)updateForListObject:(AIListObject *)inObject
 {
+	[contactAlias fireImmediately];
+	
 	displayedObject = inObject;
 	
 	if ([inObject isKindOfClass:[AIListContact class]]) {
 		[[adium contactController] updateListContactStatus:(AIListContact *)inObject];
 	}
 	
+	[self updateProfile:nil
+				context:inObject];
+	
+	[profileProgress startAnimation:self];
+	[profileProgress setHidden:NO];
+	
 	[self updateUserIcon:inObject];
 	[self updateAccountName:inObject];
 	[self updateServiceIcon:inObject];
 	[self updateStatusIcon:inObject];
-	[self updateProfileView:inObject];
+	[self updateAlias:inObject];
+	
+	[self updateProfile:[self attributedStringProfileForListObject:inObject]
+				context:inObject];
 }
 
 - (void)updateUserIcon:(AIListObject *)inObject
@@ -111,12 +132,9 @@
 		return;
 	}
 	
-	NSString *displayName;
-			
-	if ([inObject isKindOfClass:[AIListContact class]] &&
-		inObject != [(AIListContact *)inObject parentContact]) {
-		displayName = [(AIListContact *)inObject ownDisplayName];
-	} else {
+	NSString *displayName = [inObject formattedUID];
+	
+	if (!displayName) {
 		displayName = [inObject displayName];
 	}
 	
@@ -143,35 +161,399 @@
 	}
 }
 
--(void)updateProfileView:(AIListObject *)inObject
-{	
-	[[adium contentController] filterAttributedString:([inObject isKindOfClass:[AIListContact class]] ?
-													   [(AIListContact *)inObject profile] :
-													   nil)
-									  usingFilterType:AIFilterDisplay
-											direction:AIFilterIncoming
-										filterContext:inObject
-									  notifyingTarget:self
-											 selector:@selector(gotFilteredProfile:context:)
-											  context:inObject];
+#define KEY_KEY		@"Key"
+#define KEY_VALUE	@"Value"
+#define KEY_TYPE	@"Type"
+
+- (void)addAttributedString:(NSAttributedString *)string
+					toTable:(NSTextTable *)table
+						row:(int)row
+						col:(int)col
+					colspan:(int)colspan
+					 header:(BOOL)header
+					  color:(NSColor *)color
+				  alignment:(NSTextAlignment)alignment
+		 toAttributedString:(NSMutableAttributedString *)text
+{
+	NSTextTableBlock		*block = [[NSTextTableBlock alloc] initWithTable:table
+														   startingRow:row
+															   rowSpan:1
+														startingColumn:col
+															columnSpan:colspan];
+	NSMutableParagraphStyle	*style = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+	
+	int textLength = [text length];
+
+    [block setVerticalAlignment:NSTextBlockTopAlignment];
+	
+    [block setWidth:5.0f type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockPadding edge:NSMinYEdge];
+    [block setWidth:5.0f type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockPadding edge:NSMaxYEdge];
+    [block setWidth:1.0f type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockPadding edge:NSMinXEdge];
+    [block setWidth:5.0f type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockPadding edge:NSMaxXEdge];
+
+	if (col == 0 && !header && colspan == 1) {
+		[block setValue:WIDTH_PROFILE_HEADER
+				   type:NSTextBlockAbsoluteValueType
+		   forDimension:NSTextBlockWidth];
+	}
+	
+    [style setTextBlocks:[NSArray arrayWithObject:block]];
+	
+	[style setAlignment:alignment];
+	
+	[text appendAttributedString:string];
+	[text appendAttributedString:[NSAttributedString stringWithString:@"\n"]];
+	
+	if (header) {
+		[text addAttribute:NSFontAttributeName value:[NSFont boldSystemFontOfSize:13] range:NSMakeRange(textLength, [text length] - textLength)];
+		[block setWidth:1.0f type:NSTextBlockAbsoluteValueType forLayer:NSTextBlockBorder edge:NSMaxYEdge];
+		[block setBorderColor:[NSColor darkGrayColor]];
+	} 
+	
+	if (color) {
+		[text addAttribute:NSForegroundColorAttributeName value:color range:NSMakeRange(textLength, [text length] - textLength)];
+	}
+    [text addAttribute:NSParagraphStyleAttributeName value:style range:NSMakeRange(textLength, [text length] - textLength)];
+	
+    [style release];
+    [block release];
+	
 }
 
-- (void)gotFilteredProfile:(NSAttributedString *)infoString context:(AIListObject *)object
+
+- (NSMutableArray *)metaContactProfileArrayForContact:(AIMetaContact *)metaContact
 {
-	//Prevent duplicate profiles from being set again.
-	if([[profileView string] isEqualToString:[infoString string]])
-		return;
+	NSMutableArray		*array = [NSMutableArray array];
+	NSMutableDictionary	*addedKeysDict = [NSMutableDictionary dictionary];
+	NSMutableDictionary *ownershipDict = [NSMutableDictionary dictionary];
+
+	NSEnumerator *enumerator = [([metaContact online] ?
+								 [metaContact listContacts] :
+								 [metaContact listContactsIncludingOfflineAccounts]) objectEnumerator];
+	AIListContact *listContact;
+	BOOL metaContactIsOnline = [metaContact online];
+	
+	while ((listContact = [enumerator nextObject])) {
+		//If one or more contacts are online, skip offline ones
+		if (metaContactIsOnline && ![listContact online]) continue;
 		
-	//If we've been called with infoString == nil, we don't have the profile information yet.
-	if(!infoString && ![displayedObject isKindOfClass:[AIListGroup class]]) {
-		//This should only run if we get a nil string and if we aren't a group.
-		[profileProgress startAnimation:self];
-		/*	We deal with the progress indicator's visibility manually, because sometimes it will 
-		corrupt text when set to hide/unhide automatically.	*/
-		[profileProgress setHidden:NO];
-		//We can freely start the progress indicator numerous times - it has no effect.
+		NSEnumerator *profileEnumerator = [[listContact profileArray] objectEnumerator];
+		NSDictionary *lineDict;
+		while ((lineDict = [profileEnumerator nextObject])) {
+			NSString *key = [lineDict objectForKey:KEY_KEY];
+			AIUserInfoEntryType entryType = [[lineDict objectForKey:KEY_TYPE] intValue];
+			int insertionIndex = -1;
+	
+			switch (entryType) {
+				case AIUserInfoSectionBreak:
+					/* Skip double section breaks */
+					if ([[[array lastObject] objectForKey:KEY_TYPE] intValue] == AIUserInfoSectionBreak)
+						continue;
+					break;
+				case AIUserInfoSectionHeader:
+					/* Use the most recent header if we have multiple headers in a row */
+					if ([[[array lastObject] objectForKey:KEY_TYPE] intValue] == AIUserInfoSectionHeader)
+						[array removeLastObject];
+					break;
+				case AIUserInfoLabelValuePair:
+						/* No action needed */
+					break;
+			}
+			
+			if (key) {
+				NSMutableSet *previousDictValuesOnThisKey = [addedKeysDict objectForKey:key];
+				if (previousDictValuesOnThisKey) {
+					/* If any previously added dictionary has the same key and value as the this new one, skip this new one entirely */
+					NSSet *existingValues = [previousDictValuesOnThisKey valueForKeyPath:[@"nonretainedObjectValue." stringByAppendingString:KEY_VALUE]];
+					if ([existingValues containsObject:[lineDict valueForKey:KEY_VALUE]])
+						continue;
+					
+					NSEnumerator *prevDictValueEnumerator = [[[previousDictValuesOnThisKey copy] autorelease] objectEnumerator];
+					NSValue *prevDictValue;
+					while ((prevDictValue = [prevDictValueEnumerator nextObject])) {
+						NSDictionary		*prevDict = [prevDictValue nonretainedObjectValue];
+						NSMutableDictionary *newDict = [prevDict mutableCopy];
+						AIListContact *ownerOfPrevDict = [[ownershipDict objectForKey:prevDictValue] nonretainedObjectValue];
+						if (ownerOfPrevDict) {
+							[newDict setObject:[NSString stringWithFormat:AILocalizedString(@"%@'s %@", nil),
+												[ownerOfPrevDict formattedUID],
+												key]
+										forKey:KEY_KEY];
+						}
+						
+						//Array of dicts which will be returned
+						insertionIndex = [array indexOfObjectIdenticalTo:prevDict];
+						[array replaceObjectAtIndex:insertionIndex
+										 withObject:newDict];
+						
+						//Known dictionaries on this key
+						[previousDictValuesOnThisKey removeObject:prevDictValue];
+						[previousDictValuesOnThisKey addObject:[NSValue valueWithNonretainedObject:newDict]];
+
+						//Ownership of new dictionary
+						[ownershipDict removeObjectForKey:prevDictValue];
+						[ownershipDict setObject:[NSValue valueWithNonretainedObject:newDict]
+										  forKey:[NSValue valueWithNonretainedObject:ownerOfPrevDict]];
+						[newDict release];
+					}
+					
+					NSMutableDictionary *newDict = [lineDict mutableCopy];
+					[newDict setObject:[NSString stringWithFormat:AILocalizedString(@"%@'s %@", "(name)'s (information type), e.g. tekjew's status"),
+										[listContact formattedUID],
+										key]
+								forKey:KEY_KEY];					
+					lineDict = [newDict autorelease];
+					
+					[previousDictValuesOnThisKey addObject:[NSValue valueWithNonretainedObject:lineDict]];
+
+				} else {
+					[addedKeysDict setObject:[NSMutableSet setWithObject:[NSValue valueWithNonretainedObject:lineDict]]
+									  forKey:key];
+				}
+			}
+			
+			if (lineDict) {
+				if (insertionIndex != -1) {
+					//Group items with the same key together
+					if ([[[array objectAtIndex:insertionIndex] objectForKey:KEY_KEY] compare:
+						[lineDict objectForKey:KEY_KEY]] == NSOrderedAscending)
+						insertionIndex++;
+
+					[array insertObject:lineDict atIndex:insertionIndex];					
+				} else {
+					[array addObject:lineDict];
+				}
+				
+				[ownershipDict setObject:[NSValue valueWithNonretainedObject:listContact]
+								  forKey:[NSValue valueWithNonretainedObject:lineDict]];
+			}
+		}
+	}
+
+	return array;
+}
+
+- (void)removeDuplicateEntriesFromProfileArray:(NSMutableArray *)array
+{
+	int i;
+	unsigned count = [array count];
+	for (i = 0; i < (count - 1); i++) {
+		NSDictionary *lineDict = [array objectAtIndex:i];
+		//Look only for label/value pairs
+		if ([[lineDict objectForKey:KEY_TYPE] intValue] == AIUserInfoLabelValuePair) {
+			int j;
+			NSString *thisKey = [[lineDict objectForKey:KEY_KEY] lowercaseString];
+			for (j = i + 1; j < count; j++) {
+				NSDictionary *otherLineDict = [array objectAtIndex:j];
+
+				if (([[otherLineDict objectForKey:KEY_TYPE] intValue] == AIUserInfoLabelValuePair) &&
+					[[[otherLineDict objectForKey:KEY_KEY] lowercaseString] isEqualToString:thisKey]) {
+					/* Same key. Compare values, which may be NSString or NSAttributedString objects */
+					id thisValue = [lineDict objectForKey:KEY_VALUE];
+					id otherValue = [otherLineDict objectForKey:KEY_VALUE];
+					
+					if ([lineDict isKindOfClass:[otherLineDict class]]) {
+						/* Same class. Compare directly. */
+						if ([thisValue isEqual:otherValue]) {
+							[array removeObjectAtIndex:j];
+							count--;
+						}
+					} else {
+						/* Different class. Go to NSAttributedString to compare. */
+						NSAttributedString *thisAttributedValue = ([thisValue isKindOfClass:[NSAttributedString class]] ?
+																   thisValue :
+																   (thisValue ? [NSAttributedString stringWithString:thisValue] : nil));
+						NSAttributedString *otherAttributedValue = ([otherValue isKindOfClass:[NSAttributedString class]] ?
+																   otherValue :
+																	(otherValue ? [NSAttributedString stringWithString:otherValue] : nil));
+						if ([thisAttributedValue isEqualToAttributedString:otherAttributedValue]) {
+							[array removeObjectAtIndex:j];
+							count--;
+						}
+					}
+				}					
+			}
+		}
+	}
+}
+
+- (NSAttributedString *)attributedStringProfileForListObject:(AIListObject *)inObject
+{	
+	NSMutableArray *profileArray;
+
+	// We don't know what to do for non-list contacts.
+	if (![inObject isKindOfClass:[AIListContact class]]) {
+		return [NSAttributedString stringWithString:@""];
+	}
+	
+	// XXX Case out if we only have HTML (nothing currently does this)
+	
+	if ([inObject isKindOfClass:[AIMetaContact class]]) {
+		profileArray = [self metaContactProfileArrayForContact:(AIMetaContact *)inObject];
 	} else {
-		//Non-nil info string means we have some profile text and we will bet setting it.
+		profileArray = [[[(AIListContact *)inObject profileArray] mutableCopy] autorelease];
+	}
+
+	[self addTooltipEntriesToProfileArray:(profileArray ? profileArray : [NSMutableArray array]) forContact:(AIListContact *)inObject];
+	[self addAddressBookInfoToProfileArray:(profileArray ? profileArray : [NSMutableArray array]) forContact:(AIListContact *)inObject];
+
+	// Don't do anything if we have nothing to display.
+	if ([profileArray count] == 0) {
+		AILogWithSignature(@"No profile array items found for %@", inObject);
+		return nil;
+	}
+	
+	[self removeDuplicateEntriesFromProfileArray:profileArray];
+	
+	// Create the table
+	NSTextTable		*table = [[[NSTextTable alloc] init] autorelease];
+	
+	[table setNumberOfColumns:2];
+    [table setLayoutAlgorithm:NSTextTableAutomaticLayoutAlgorithm];
+    [table setHidesEmptyCells:YES];
+
+	NSMutableAttributedString		*result = [[[NSMutableAttributedString alloc] init] autorelease];
+	NSEnumerator					*enumerator = [profileArray objectEnumerator];
+	NSDictionary					*lineDict;
+	
+	BOOL							shownAnyContent = NO;
+	
+	for (int row = 0; (lineDict = [enumerator nextObject]); row++) {
+		if ([[lineDict objectForKey:KEY_TYPE] intValue] == AIUserInfoSectionBreak && shownAnyContent == NO) {
+			continue;
+		}
+		
+		NSAttributedString *value = nil, *key = nil;
+		
+		if ([lineDict objectForKey:KEY_VALUE]) {
+			id theValue = [lineDict objectForKey:KEY_VALUE];
+			if ([theValue isKindOfClass:[NSString class]]) {
+				value = [AIHTMLDecoder decodeHTML:(NSString *)theValue];
+			} else if ([theValue isKindOfClass:[NSAttributedString class]]) {
+				value = (NSAttributedString *)theValue;
+			} else {
+				NSLog(@"*** WARNING! Invalid value passed in profile array: %@", lineDict);
+			}
+
+			value = [[adium contentController] filterAttributedString:value
+												usingFilterType:AIFilterDisplay
+													  direction:AIFilterIncoming
+														context:inObject];
+		}
+		
+		if ([lineDict objectForKey:KEY_KEY]) {
+			// We don't need to filter the key.
+			key = [NSAttributedString stringWithString:[[lineDict objectForKey:KEY_KEY] lowercaseString]];
+		}
+		
+		switch ([[lineDict objectForKey:KEY_TYPE] intValue]) {
+			case AIUserInfoLabelValuePair:
+				if (key) {
+					[self addAttributedString:key
+									  toTable:table
+										  row:row
+										  col:0
+									  colspan:1
+									   header:NO
+										color:[NSColor grayColor]
+									alignment:NSRightTextAlignment
+						   toAttributedString:result];
+				}
+				
+				if (value) {
+					[self addAttributedString:value
+									  toTable:table
+										  row:row
+										  col:(key ? 1 : 0)
+									  colspan:(key ? 1 : 2) /* If there's no key, we need to fill both columns. */
+									   header:NO
+										color:nil
+									alignment:NSLeftTextAlignment
+						   toAttributedString:result];
+				}
+				break;
+				
+			case AIUserInfoSectionHeader:
+				[self addAttributedString:key
+								  toTable:table
+									  row:row
+									  col:0
+								  colspan:2
+								   header:YES
+									color:[NSColor darkGrayColor]
+								alignment:NSLeftTextAlignment
+					   toAttributedString:result];
+				break;
+				
+				
+			case AIUserInfoSectionBreak:
+				[self addAttributedString:[NSAttributedString stringWithString:@" "]
+								  toTable:table
+									  row:row
+									  col:0
+								  colspan:2
+								   header:NO
+									color:[NSColor controlTextColor]
+								alignment:NSLeftTextAlignment
+					   toAttributedString:result];
+				break;
+		}
+		
+		shownAnyContent = YES;
+	}
+	
+	return result;
+}
+
+- (void)updateAlias:(AIListObject *)inObject
+{
+	NSString *currentAlias = nil;
+	
+	
+	if ([inObject isKindOfClass:[AIListContact class]]) {
+		currentAlias = [[(AIListContact *)inObject parentContact] preferenceForKey:@"Alias"
+																			 group:PREF_GROUP_ALIASES
+															 ignoreInheritedValues:YES];
+	} else {
+		currentAlias = [inObject preferenceForKey:@"Alias"
+											group:PREF_GROUP_ALIASES
+							ignoreInheritedValues:YES];		
+	}
+	
+	if (!currentAlias && ![[inObject displayName] isEqualToString:[inObject formattedUID]]) {
+		[[contactAlias cell] setPlaceholderString:[inObject displayName]];
+	} else {
+		[[contactAlias cell] setPlaceholderString:nil];
+	}
+	
+	//Fill in the current alias
+	if (currentAlias) {
+		[contactAlias setStringValue:currentAlias];
+	} else {
+		[contactAlias setStringValue:@""];
+	}
+}
+
+- (IBAction)setAlias:(id)sender
+{
+	if(!displayedObject)
+		return;
+	
+	AIListObject *contactToUpdate = displayedObject;
+	
+	if ([contactToUpdate isKindOfClass:[AIListContact class]]) {
+		contactToUpdate = [(AIListContact *)contactToUpdate parentContact];
+	}
+	
+	NSString *currentAlias = [contactAlias stringValue];
+	[contactToUpdate setDisplayName:currentAlias];
+	
+	[self updateAccountName:displayedObject];
+}
+
+- (void)updateProfile:(NSAttributedString *)infoString context:(AIListObject *)object
+{
+	if (infoString) {
 		[profileProgress stopAnimation:self];
 		[profileProgress setHidden:YES];
 	}
@@ -198,21 +580,36 @@
 
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	//This is a hold-over from the refactoring of the old Get Info Window.
-	//The code for the Get Info Window only updated the status and profile, so we only do that here.
 	//Update if our object or an object contained by our metacontact (if applicable) was updated
 	if ([displayedObject isKindOfClass:[AIMetaContact class]] &&
 		((inObject != displayedObject) && ![(AIMetaContact *)displayedObject containsObject:inObject]))
 		return nil;
 	else if (inObject != displayedObject)
 		return nil;
-
-	//We've added the status icon, since we may get this notification in the middle of viewing an object
-	//and we'd like to have the right icon.
-	[self updateStatusIcon:displayedObject];
-
-	if (!inModifiedKeys || [inModifiedKeys containsObject:@"TextProfile"])
-		[self updateProfileView:displayedObject];
+	
+	// Update the status icon if it changes.
+	if (inModifiedKeys == nil ||
+		[inModifiedKeys containsObject:@"Online"] ||
+		[inModifiedKeys containsObject:@"IdleSince"] ||
+		[inModifiedKeys containsObject:@"Signed Off"] ||
+		[inModifiedKeys containsObject:@"IsMobile"] ||
+		[inModifiedKeys containsObject:@"IsBlocked"] ||
+		[inModifiedKeys containsObject:@"StatusType"]) {
+		[self updateStatusIcon:displayedObject];
+	}
+	
+	// Update the profile if it changes.	
+	if (inModifiedKeys == nil ||
+		[inModifiedKeys containsObject:@"ProfileArray"]) {
+		[self updateProfile:[self attributedStringProfileForListObject:displayedObject]
+					context:displayedObject];
+	}
+	
+	// Cause everything to update if everything's probably changed.
+	if ([inModifiedKeys containsObject:@"NotAStranger"] ||
+		[inModifiedKeys containsObject:@"Server Display Name"]) {
+		[self updateForListObject:displayedObject];
+	}
 	
 	return nil;
 }
@@ -261,5 +658,179 @@
 	return fileName;
 }
 
+#pragma mark Address Book
+
+- (void)addMultiValue:(ABMultiValue *)value forProperty:(NSString *)property ofType:(ABPropertyType)propertyType toProfileArray:(NSMutableArray *)profileArray
+{
+	unsigned int count = [value count];
+	int i;
+	for (i = 0; i < count; i++) {
+		NSString *label = ABLocalizedPropertyOrLabel([value labelAtIndex:i]);
+		id innerValue = [value valueAtIndex:i];
+		switch (propertyType) {
+			case kABMultiStringProperty:
+				if ([(NSString *)innerValue length]) {
+					[profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+											 [NSString stringWithFormat:@"%@ (%@)", ABLocalizedPropertyOrLabel(property), label], KEY_KEY,
+											 (NSString *)innerValue, KEY_VALUE,
+											 nil]];
+				}
+				break;
+			case kABMultiIntegerProperty:
+			case kABMultiRealProperty:
+				if ([(NSNumber *)innerValue intValue] != 0) {
+					[profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+											 [NSString stringWithFormat:@"%@ (%@)", ABLocalizedPropertyOrLabel(property), label], KEY_KEY,
+											 [(NSNumber *)innerValue stringValue], KEY_VALUE,
+											 nil]];
+				}
+				break;				
+			case kABMultiDateProperty:
+				if (innerValue) {
+					[profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+											 [NSString stringWithFormat:@"%@ (%@)", ABLocalizedPropertyOrLabel(property), label], KEY_KEY,
+											 [[NSDateFormatter localizedDateFormatter] stringFromDate:(NSDate *)innerValue], KEY_VALUE,
+											 nil]];
+				}
+				break;
+			case kABMultiArrayProperty:
+			case kABMultiDictionaryProperty:
+			case kABMultiDataProperty:
+			default:
+				/* Ignore Array, Dictionary, and Data properties */
+				break;
+		}
+	}
+}
+
+- (void)addAddressBookInfoToProfileArray:(NSMutableArray *)profileArray forContact:(AIListContact *)inContact
+{
+	ABPerson *person = [inContact addressBookPerson];
+
+	if (!person) return;
+	
+	NSString *title = [person valueForProperty:kABTitleProperty];
+	NSString *firstName = [person valueForProperty:kABFirstNameProperty];
+	NSString *middleName = [person valueForProperty:kABMiddleNameProperty];
+	NSString *lastName = [person valueForProperty:kABLastNameProperty];
+	NSString *suffix = [person valueForProperty:kABSuffixProperty];
+
+	NSMutableString *name = [NSMutableString string];
+	if (title) {
+		[name appendString:title];
+		if (firstName || middleName || lastName)
+			[name appendString:@" "];
+	}
+	if (firstName) {
+		[name appendString:firstName];
+		if (middleName || lastName)
+			[name appendString:@" "];
+	}			
+	if (middleName) {
+		[name appendString:middleName];
+		if (lastName)
+			[name appendString:@" "];
+	}			
+	if (lastName) {
+		[name appendString:lastName];
+	}
+	if (suffix) {
+		if ([name length])
+			[name appendString:@", "];
+		[name appendString:suffix];
+	}
+	
+	if ([name length]) {
+		[profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+								 AILocalizedString(@"Full Name", nil), KEY_KEY,
+								 name, KEY_VALUE, nil]];
+	}
+	
+	NSString *property;
+	NSEnumerator *enumerator;
+	NSSet *propertiesToExclude;
+	
+	propertiesToExclude = [NSSet setWithObjects:
+						   kABUIDProperty, kABCreationDateProperty, kABModificationDateProperty, kABGroupNameProperty, kABPersonFlags, /* Internal data */
+						   kABFirstNameProperty, kABLastNameProperty, kABFirstNamePhoneticProperty, kABLastNamePhoneticProperty, /* Name */
+						   kABMiddleNameProperty, kABMiddleNamePhoneticProperty,  /* Name */
+						   kABAIMInstantProperty, kABJabberInstantProperty, kABMSNInstantProperty, /* IM data */
+						   kABYahooInstantProperty, kABICQInstantProperty, /* IM data */
+						   nil];
+	enumerator = [[ABPerson properties] objectEnumerator];
+	while ((property = [enumerator nextObject])) {
+		/* Exclude:
+		 *	- Known unwanted properties.
+		 *  - Propeties with Java-style identifiers, most likely from other programs storing arbitrary data in the AB
+		 */
+		if (![propertiesToExclude containsObject:property] && 
+			![property hasPrefix:@"com."] && ![property hasPrefix:@"net."] && ![property hasPrefix:@"org."]) {
+			id value = [person valueForProperty:property];
+			ABPropertyType propertyType = [ABPerson typeOfProperty:property];
+			switch (propertyType) {
+				case kABErrorInProperty:
+					/* Ignore errors */
+					break;
+				case kABStringProperty:
+					if ([value length]) {
+						[profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+												 ABLocalizedPropertyOrLabel(property), KEY_KEY,
+												 (NSString *)value, KEY_VALUE,
+												 nil]];
+					}
+					break;
+				case kABIntegerProperty:
+				case kABRealProperty:
+					if ([value intValue] != 0) {
+						[profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+												 ABLocalizedPropertyOrLabel(property), KEY_KEY,
+												 [(NSNumber *)value stringValue], KEY_VALUE,
+												 nil]];
+					}
+				case kABDateProperty:
+					if (value) {
+						[profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+												 ABLocalizedPropertyOrLabel(property), KEY_KEY,
+												 [[NSDateFormatter localizedDateFormatter] stringFromDate:(NSDate *)value], KEY_VALUE,
+												 nil]];
+					}
+				case kABArrayProperty:
+				case kABDictionaryProperty:
+				case kABDataProperty:
+					/* Ignore arrays, dictionaries, and data */
+					break;
+				case kABMultiStringProperty:
+				case kABMultiIntegerProperty:
+				case kABMultiRealProperty:
+				case kABMultiDateProperty:
+				case kABMultiArrayProperty:
+				case kABMultiDictionaryProperty:
+				case kABMultiDataProperty:
+					[self addMultiValue:value forProperty:property ofType:propertyType toProfileArray:profileArray];
+					break;
+			}
+		}			
+	}
+}
+
+- (void)addTooltipEntriesToProfileArray:(NSMutableArray *)profileArray forContact:(AIListContact *)inContact
+{
+	NSEnumerator *enumerator;
+	id <AIContactListTooltipEntry> tooltipEntry;
+	
+	enumerator = [[[[adium interfaceController] contactListTooltipPrimaryEntries] arrayByAddingObjectsFromArray:[[adium interfaceController] contactListTooltipSecondaryEntries]] objectEnumerator];
+	while ((tooltipEntry = [enumerator nextObject])) {
+		if ([tooltipEntry shouldDisplayInContactInspector]) {
+			id label, value;
+			if ((label = [tooltipEntry labelForObject:inContact]) &&
+				(value = [tooltipEntry entryForObject:inContact])) {
+				[profileArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+										 label, KEY_KEY,
+										 value, KEY_VALUE,
+										 nil]];
+			}	
+		}
+	}
+}
 
 @end

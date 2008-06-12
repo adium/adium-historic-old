@@ -71,8 +71,6 @@
 - (NSDictionary *)dictionaryOfServiceClassesAndListContacts;
 - (NSArray *)servicesOfContainedObjects;
 
-- (void)setExpandable:(BOOL)inExpandable;
-
 // (PRIVATE: For contact controller ONLY)
 - (BOOL)addObject:(AIListObject *)inObject;
 - (void)removeObject:(AIListObject *)inObject;

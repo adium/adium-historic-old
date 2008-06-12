@@ -5,10 +5,6 @@
 //  Created by Evan Schoenberg on 4/16/08.
 //
 
-#ifdef DEBUG_BUILD
-	#define CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG	TRUE
-#endif
-
 #import "AdiumContactPropertiesObserverManager.h"
 #import "AIContactController.h"
 #import <Adium/AIAccountControllerProtocol.h>
@@ -17,8 +13,14 @@
 #import <Adium/AIMetaContact.h>
 #import <Adium/AISortController.h>
 
+/*
+ #ifdef DEBUG_BUILD
+ #define CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG	TRUE
+ #endif
+ */
+
 #ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
-#import <Foundation/NSDebug.h>
+	#import <Foundation/NSDebug.h>
 #endif
 
 @interface AdiumContactPropertiesObserverManager (PRIVATE)
@@ -346,6 +348,9 @@
 		
 		observer = [observerValue nonretainedObjectValue];
 #ifdef CONTACT_OBSERVER_MEMORY_MANAGEMENT_DEBUG
+		/* This will log a warning in 10.4 about +[Object allocWithZone:] being a compatibility method.
+		 * It is only used in debug builds, so that's fine.
+		 */
 		if (NSIsFreedObject(observer)) {
 			AILogWithSignature(@"%p is a released observer! This is a crash.", observer);
 			NSAssert1(FALSE, @"%p is a released observer. Please check the Adium Debug Log. If it wasn't logging to file, do that next time.", observer);

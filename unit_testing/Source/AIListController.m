@@ -29,9 +29,11 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIMetaContact.h>
 #import <Adium/AIListOutlineView.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
+#import <AIUtilities/AIPasteboardAdditions.h>
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AIOutlineViewAdditions.h>
 #import <AIUtilities/AIObjectAdditions.h>
@@ -48,6 +50,7 @@
 
 @interface AIListController (PRIVATE)
 - (void)contactListChanged:(NSNotification *)notification;
+- (void)promptToCombineItems:(NSArray *)items withContact:(AIListContact *)inContact;
 @end
 
 @implementation AIListController
@@ -410,6 +413,9 @@
 - (void)setForcedWindowWidth:(int)inWidth {
 	forcedWindowWidth = inWidth;
 }
+- (void)setAutoresizeHorizontallyWithIdleTime:(BOOL)flag {
+	autoresizeHorizontallyWithIdleTime = flag;
+}
 
 //Content Updating -----------------------------------------------------------------------------------------------------
 #pragma mark Content Updating
@@ -486,7 +492,8 @@
 
     //Resize the contact list horizontally
     if (autoResizeHorizontally) {
-		if (([keys containsObject:@"Display Name"] || [keys containsObject:@"Long Display Name"])) {
+		if ([keys containsObject:@"Display Name"] || [keys containsObject:@"Long Display Name"] ||
+			(autoresizeHorizontallyWithIdleTime && [keys containsObject:@"IdleReadable"])) {
 			[self contactListDesiredSizeChanged];
 		}
     }
@@ -522,11 +529,7 @@
 	BOOL allowBetweenContactDrop = (index == NSOutlineViewDropOnItemIndex);
 
 	if ([types containsObject:@"AIListObject"]) {
-		if (index != NSOutlineViewDropOnItemIndex && (![[[adium contactController] activeSortController] canSortManually])) {
-			//Don't drag if automatic sort is on
-			//disable drop between for non-Manual Sort.
-			return NSDragOperationNone;
-		}
+		BOOL canSortManually = [[[adium contactController] activeSortController] canSortManually];
 		
 		NSEnumerator *enumerator = [dragItems objectEnumerator];
 		id			 dragItem;
@@ -543,7 +546,18 @@
 		if (hasGroup && hasNonGroup) return NSDragOperationNone;
 		
 		id	primaryDragItem = [dragItems objectAtIndex:0];
-		
+
+		/* If this is a reorder within a metacontact, allow it in all cases. */
+		if (([primaryDragItem isKindOfClass:[AIListContact class]] && [item isKindOfClass:[AIListContact class]]) &&
+			([(AIListContact *)primaryDragItem parentContact] == [(AIListContact *)item parentContact])) {
+			return ((index != NSOutlineViewDropOnItemIndex) ? NSDragOperationMove : NSDragOperationNone);
+		}
+				
+		if (index != NSOutlineViewDropOnItemIndex && !canSortManually) {
+			/* We're attempting a resorder, and the sort controller says there is no manual sorting allowed. */
+			return NSDragOperationNone;
+		}		
+
 		if ([primaryDragItem isKindOfClass:[AIListGroup class]]) {
 			//Disallow dragging groups into or onto other objects
 			if (item != nil) {
@@ -584,6 +598,16 @@
 			if (([contactListView rowForItem:primaryDragItem] == -1) ||
 				[primaryDragItem isKindOfClass:[AIListContact class]]) {
 				retVal = NSDragOperationCopy;
+
+				if ([primaryDragItem isKindOfClass:[AIListContact class]] &&
+					[item isKindOfClass:[AIListContact class]] &&
+					[[(AIListContact *)item parentContact] isKindOfClass:[AIMetaContact class]]) {
+					/* Dragging a contact into a contact which is already within a metacontact.
+					 * This should retarget to combine the dragged contact with the metacontact.
+					 */
+					[outlineView setDropItem:[(AIListContact *)item parentContact] dropChildIndex:NSOutlineViewDropOnItemIndex];
+				}
+
 			} else {
 				retVal = NSDragOperationMove;
 			}
@@ -609,14 +633,14 @@
 				}
 			}
 			
-			
 			retVal = NSDragOperationPrivate;
 		}
 
 	} else if ([types containsObject:NSFilenamesPboardType] ||
 			   [types containsObject:NSRTFPboardType] ||
 			   [types containsObject:NSURLPboardType] ||
-			   [types containsObject:NSStringPboardType]) {
+			   [types containsObject:NSStringPboardType] ||
+			   [types containsObject:AIiTunesTrackPboardType]) {
 		retVal = ((item && [item isKindOfClass:[AIListContact class]]) ? NSDragOperationLink : NSDragOperationNone);
 
 	} else if (!allowBetweenContactDrop) {
@@ -626,18 +650,59 @@
 	return retVal;
 }
 
+- (NSArray *)arrayOfAllContactsFromArray:(NSArray *)inArray
+{
+	NSEnumerator   *enumerator = [inArray objectEnumerator];
+	NSMutableArray *realDragItems = [NSMutableArray array];
+	AIListObject   *aDragItem;
+	while ((aDragItem = [enumerator nextObject])) {
+		if ([aDragItem isKindOfClass:[AIMetaContact class]]) {
+			[realDragItems addObjectsFromArray:[(AIMetaContact *)aDragItem containedObjects]];
+
+		} else if ([aDragItem isKindOfClass:[AIListContact class]]) {
+			//For listContacts, add all contacts with the same service and UID (on all accounts)
+			[realDragItems addObjectsFromArray:[[[adium contactController] allContactsWithService:[aDragItem service] 
+																							  UID:[aDragItem UID]
+																					 existingOnly:YES] allObjects]];
+		}
+	}
+	
+	return realDragItems;
+}
+
 - (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
 {
 	BOOL		success = YES;
-	NSString	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
+	NSPasteboard *draggingPasteboard = [info draggingPasteboard];
+	NSString	*availableType;
 	
-    if ([availableType isEqualToString:@"AIListObject"]) {
+    if ((availableType = [draggingPasteboard availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]])) {
 		//Kill the selection now, (in a more finder-esque way)
 		[outlineView deselectAll:nil];
 
 		//The tree root is not associated with our root contact list group, so we need to make that association here
 		if (item == nil) 
 			item = contactList;
+
+		//If we don't have drag items, we are dragging from another instance; build our own dragItems array
+		//using the supplied internalObjectIDs
+		if (!dragItems) {
+			NSArray			*dragItemsUniqueIDs;
+			NSMutableArray	*arrayOfDragItems;
+			NSString		*uniqueID;
+			NSEnumerator	*enumerator;
+			
+			dragItemsUniqueIDs = [draggingPasteboard propertyListForType:@"AIListObjectUniqueIDs"];
+			arrayOfDragItems = [NSMutableArray array];
+			
+			enumerator = [dragItemsUniqueIDs objectEnumerator];
+			while ((uniqueID = [enumerator nextObject])) {
+				[arrayOfDragItems addObject:[[adium contactController] existingListObjectWithUniqueID:uniqueID]];
+			}
+			
+			//We will release this when the drag is completed
+			dragItems = [arrayOfDragItems retain];
+		}		
 
 		//Move the list object to its new location
 		if ([item isKindOfClass:[AIListGroup class]]) {
@@ -651,52 +716,59 @@
 				success = NO;
 			}
 			
-		} else if ([item isKindOfClass:[AIListContact class]]) {
-			NSString	*promptTitle;
-			
-			//Appropriate prompt
-			if ([dragItems count] == 1) {
-				promptTitle = [NSString stringWithFormat:AILocalizedString(@"Combine %@ and %@?","Title of the prompt when combining two contacts. Each %@ will be filled with a contact name."), [[dragItems objectAtIndex:0] displayName], [item displayName]];
-			} else {
-				promptTitle = [NSString stringWithFormat:AILocalizedString(@"Combine these contacts with %@?","Title of the prompt when combining two or more contacts with another.  %@ will be filled with a contact name."),[item displayName]];
-			}
-			
-			//Metacontact creation, prompt the user
-			NSDictionary	*context = [NSDictionary dictionaryWithObjectsAndKeys:
-				item, @"item",
-				dragItems, @"dragitems", nil];
-			
-			NSBeginInformationalAlertSheet(promptTitle,
-										   AILocalizedString(@"Combine","Button title for accepting the action of combining multiple contacts into a metacontact"),
-										   AILocalizedString(@"Cancel",nil),
-										   nil,
-										   nil,
-										   self,
-										   @selector(mergeContactSheetDidEnd:returnCode:contextInfo:),
-										   nil,
-										   [context retain], //we're responsible for retaining the content object
-										   AILocalizedString(@"Once combined, Adium will treat these contacts as a single individual both on your contact list and when sending messages.\n\nYou may un-combine these contacts by getting info on the combined contact.","Explanation of metacontact creation"));
-		}
-	} else if ([[[info draggingPasteboard] types] containsObject:NSFilenamesPboardType]) {
-		//Drag and Drop file transfer for the contact list.
-		NSString		*file;
-		NSArray			*files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
-		NSEnumerator	*enumerator = [files objectEnumerator];
+		} else if ([item isKindOfClass:[AIMetaContact class]]) {
+			if ([[dragItems objectAtIndex:0] isKindOfClass:[AIListContact class]] &&
+				([(AIListContact *)[dragItems objectAtIndex:0] parentContact] != item)) {
+				/* We are dragging a contact into a metacontact, and that contact isn't already part
+				 * of that metacontact. This needs confirmation! */
+				[self promptToCombineItems:dragItems withContact:item];
 
+			} else {
+				/* We're moving things around within a metacontact. Only get the contacts which are actually within it. */
+				NSArray *startingArray = [self arrayOfAllContactsFromArray:dragItems];
+				NSMutableSet *set = [NSMutableSet setWithArray:startingArray];
+				[set intersectSet:[NSSet setWithArray:[(AIMetaContact *)item containedObjects]]];
+
+				[[adium contactController] moveListObjects:[set allObjects]
+												intoObject:item
+													 index:index];
+			}
+			[outlineView reloadData];
+
+		} else if ([item isKindOfClass:[AIListContact class]]) {
+			[self promptToCombineItems:dragItems withContact:item];
+		}
+
+		
+	} else if ((availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:
+																				   NSFilenamesPboardType, AIiTunesTrackPboardType, nil]])) {
+		//Drag and Drop file transfer for the contact list.
 		AIListContact	*targetFileTransferContact = [[adium contactController] preferredContactForContentType:CONTENT_FILE_TRANSFER_TYPE
 																							  forListContact:item];
 		if (targetFileTransferContact) {
+			NSArray			*files = nil;
+			NSString		*file;
+			NSEnumerator	*enumerator;
+			
+			if ([availableType isEqualToString:NSFilenamesPboardType]) {
+				files = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
+				
+			} else if ([availableType isEqualToString:AIiTunesTrackPboardType]) {
+				files = [[info draggingPasteboard] filesFromITunesDragPasteboard];
+			}
+
+			enumerator = [files objectEnumerator];
 			while ((file = [enumerator nextObject])) {
 				[[adium fileTransferController] sendFile:file toListContact:targetFileTransferContact];
 			}
+
 		} else {
 			AILogWithSignature(@"No contact available to receive files");
 			NSBeep();
 		}
 
-	} else if ([[[info draggingPasteboard] types] containsObject:NSRTFPboardType] ||
-				[[[info draggingPasteboard] types] containsObject:NSURLPboardType] ||
-				[[[info draggingPasteboard] types] containsObject:NSStringPboardType]) {
+	} else if ((availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSRTFPboardType,
+																				   NSURLPboardType, NSStringPboardType, nil]])) {
 		//Drag and drop text sending via the contact list.
 		if ([item isKindOfClass:[AIListContact class]]) {
 			/* This will send the message. Alternately, we could just insert it into the text view... */
@@ -704,17 +776,17 @@
 			AIContentMessage				*messageContent;
 			NSAttributedString				*messageAttributedString = nil;
 			
-			if([[[info draggingPasteboard] types] containsObject:NSRTFPboardType]) {
+			if ([availableType isEqualToString:NSRTFPboardType]) {
 				//for RTF data, we want to preserve the formatting, so use dataForType:
 				messageAttributedString = [NSAttributedString stringWithData:[[info draggingPasteboard] dataForType:NSRTFPboardType]];
 			}
-			else if([[[info draggingPasteboard] types] containsObject:NSURLPboardType]) {
+			else if ([availableType isEqualToString:NSURLPboardType]) {
 				//NSURLPboardType contains an NSURL object
-				messageAttributedString = [NSAttributedString stringWithString:[[NSURL URLFromPasteboard:[info draggingPasteboard]]absoluteString]];
+				messageAttributedString = [NSAttributedString stringWithString:[[NSURL URLFromPasteboard:[info draggingPasteboard]] absoluteString]];
 			}
-			else if([[[info draggingPasteboard] types] containsObject:NSStringPboardType]) {
+			else if ([availableType isEqualToString:NSStringPboardType]) {
 				//this is just plain text, so stringForType: works fine
-				messageAttributedString = [NSAttributedString stringWithString:[[info draggingPasteboard]stringForType:NSStringPboardType]];
+				messageAttributedString = [NSAttributedString stringWithString:[[info draggingPasteboard] stringForType:NSStringPboardType]];
 			}
 			
 			if(messageAttributedString && [messageAttributedString length] !=0) {
@@ -746,6 +818,36 @@
     return success;
 }
 
+- (void)promptToCombineItems:(NSArray *)items withContact:(AIListContact *)inContact
+{
+	NSString	*promptTitle;
+	
+	//Appropriate prompt
+	if ([items count] == 1) {
+		promptTitle = [NSString stringWithFormat:AILocalizedString(@"Combine %@ and %@?","Title of the prompt when combining two contacts. Each %@ will be filled with a contact name."),
+					   [[items objectAtIndex:0] displayName], [inContact displayName]];
+	} else {
+		promptTitle = [NSString stringWithFormat:AILocalizedString(@"Combine these contacts with %@?","Title of the prompt when combining two or more contacts with another.  %@ will be filled with a contact name."),
+					   [inContact displayName]];
+	}
+	
+	//Metacontact creation, prompt the user
+	NSDictionary	*context = [NSDictionary dictionaryWithObjectsAndKeys:
+								inContact, @"item",
+								items, @"dragitems", nil];
+	
+	NSBeginInformationalAlertSheet(promptTitle,
+								   AILocalizedString(@"Combine","Button title for accepting the action of combining multiple contacts into a metacontact"),
+								   AILocalizedString(@"Cancel",nil),
+								   nil,
+								   nil,
+								   self,
+								   @selector(mergeContactSheetDidEnd:returnCode:contextInfo:),
+								   nil,
+								   [context retain], //we're responsible for retaining the content object
+								   AILocalizedString(@"Once combined, Adium will treat these contacts as a single individual both on your contact list and when sending messages.\n\nYou may un-combine these contacts by getting info on the combined contact.","Explanation of metacontact creation"));
+}	
+
 - (void)mergeContactSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
 	NSDictionary	*context = (NSDictionary *)contextInfo;
@@ -758,9 +860,10 @@
 		//Keep track of where it was before
 		AIListObject<AIContainingObject> *oldContainingObject = [[item containingObject] retain];
 		float oldIndex = [item orderIndex];
-		
+
 		//Group the destination and then the dragged items into a metaContact
-		metaContact = [[adium contactController] groupListContacts:[[NSArray arrayWithObject:item] arrayByAddingObjectsFromArray:draggedItems]];
+		metaContact = [[adium contactController] groupListContacts:[[NSArray arrayWithObject:item]
+																	arrayByAddingObjectsFromArray:[self arrayOfAllContactsFromArray:draggedItems]]];
 
 		//Position the metaContact in the group & index the drop point was before
 		[[adium contactController] moveListObjects:[NSArray arrayWithObject:metaContact]

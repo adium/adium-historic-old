@@ -15,16 +15,19 @@
  */
 
 #import <Adium/AIPlugin.h>
+#import <Adium/AIContactControllerProtocol.h>
 
 @class AIAccountMenu, AIStatusMenu;
 
-@interface AIStateMenuPlugin : AIPlugin {	
+@interface AIStateMenuPlugin : AIPlugin <AIListObjectObserver> {
 	NSMenuItem		*dockStatusMenuRoot;
 	AIAccountMenu	*accountMenu;
 	AIStatusMenu	*statusMenu;
 
 	NSArray			*currentMenuItemArray;
 	NSArray			*installedMenuItems;
+	
+	NSMenuItem		*socialNetworkingMenuItem;
 }
 
 @end

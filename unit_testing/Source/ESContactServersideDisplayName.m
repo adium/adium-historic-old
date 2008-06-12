@@ -66,4 +66,10 @@
     return [entry autorelease];
 }
 
+- (BOOL)shouldDisplayInContactInspector
+{
+	/* This information is already included by accounts */
+	return NO;
+}
+
 @end

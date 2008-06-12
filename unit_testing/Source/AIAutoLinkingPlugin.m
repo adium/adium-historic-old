@@ -64,7 +64,7 @@
 	NSRange						linkRange = NSMakeRange(0,0);
 	unsigned					stringLength = [replacementMessage length];
 
-	if([hyperlinkScanner isStringValidURL:[replacementMessage string]]){
+	if([AHHyperlinkScanner isStringValidURL:[replacementMessage string] usingStrict:YES fromIndex:nil withStatus:nil]){
 		NSString *linkString = (NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
 													(CFStringRef)[replacementMessage string],
 													(CFStringRef)@"#%",

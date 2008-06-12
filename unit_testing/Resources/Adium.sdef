@@ -44,6 +44,9 @@
 			<responds-to name="go invisible">
 				<cocoa method="scriptingGoInvisible:"/>
 			</responds-to>
+			<responds-to name="GetURL">
+				<cocoa method="scriptingGetURL:"/>
+			</responds-to>
 		</class>
 		<class name="service" code="Csrv" description="An Adium service (a.k.a. chat protocol)">
 			<cocoa class="AIService" />
@@ -108,9 +111,12 @@
             <property name="date opened" code="CDop" type="date" access="r" description="The date and time at which this chat was opened">
             	<cocoa key="dateOpened" />
             </property>
-
 			<property name="index" code="pidx" type="integer" access="r" description="The index of this tab in the chat window" />
 			<property name="window" code="cwin" type="window" access="r" description="The window this chat is in" />
+			<property name="unread message count" code="Pumc" type="integer" access="r" description="The number of unread messages for this chat">
+				<cocoa key="unviewedContentCount" />
+			</property>
+			
 			<element type="contact">
 				<cocoa key="containedObjects" />
 			</element>
@@ -289,6 +295,10 @@
 			<parameter name="with message" code="Pmsg" description="The custom status message." type="rich text" optional="yes">
 				<cocoa key="WithMessage"/>
 			</parameter>
+		</command>
+		<command name="GetURL" code="GURLGURL" description="Tells Adium to open the specified chat, in URL form">
+			<cocoa class="NSScriptCommand" />
+			<direct-parameter description="The URL of the chat" type="text"/>
 		</command>
 		<command name="count" code="corecnte" description="Return the number elements of a particular class within an object.">
 			<cocoa class="NSCountCommand"/>

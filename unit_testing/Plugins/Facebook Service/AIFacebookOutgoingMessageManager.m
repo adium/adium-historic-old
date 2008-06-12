@@ -8,6 +8,7 @@
 
 #import "AIFacebookOutgoingMessageManager.h"
 #import <Adium/AIContentMessage.h>
+#import <Adium/AIContentTyping.h>
 #import "AIFacebookAccount.h"
 
 @implementation AIFacebookOutgoingMessageManager
@@ -30,6 +31,26 @@
 	[request setHTTPBody:postData];
 
 	AILogWithSignature(@"Sending %@",dict);
+	[[NSURLConnection alloc] initWithRequest:request delegate:self];
+}
+
++ (void)sendTypingObject:(AIContentTyping *)inContentTyping
+{
+	//This can not be https:// - the message fails to send
+	NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:@"http://www.facebook.com/ajax/chat/typ.php"]
+														   cachePolicy:NSURLRequestUseProtocolCachePolicy
+													   timeoutInterval:120];
+	NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
+						  (([inContentTyping typingState] == AITyping) ? @"1" : @"0"), @"typ",
+						  [[inContentTyping destination] UID], @"to",
+						  [(AIFacebookAccount *)[inContentTyping source] postFormID], @"post_form_id",
+						  nil];
+
+	NSData *postData = [AIFacebookAccount postDataForDictionary:dict];
+	[request setHTTPMethod:@"POST"];
+	[request setValue:[NSString stringWithFormat:@"%d", [postData length]] forHTTPHeaderField:@"Content-Length"];
+	[request setHTTPBody:postData];
+	
 	[[NSURLConnection alloc] initWithRequest:request delegate:self];
 }
 

@@ -18,6 +18,7 @@
 #import <Adium/AIListObject.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIParagraphStyleAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIUserIcons.h>
 
@@ -82,7 +83,7 @@
 	int		largestElementHeight;
 		
 	//Display Name Height (And status text if below name)
-	if (extendedStatusVisible && extendedStatusIsBelowName) {
+	if (extendedStatusVisible && (idleTimeIsBelow || statusMessageIsBelow)) {
 		largestElementHeight = labelFontHeight + statusFontHeight;
 	} else {
 		largestElementHeight = labelFontHeight;
@@ -96,7 +97,7 @@
 	}
 	
 	//Status text height (If beside name)
-	if (extendedStatusVisible && !extendedStatusIsBelowName) {
+	if (extendedStatusVisible && !(idleTimeIsBelow || statusMessageIsBelow)) {
 		if (statusFontHeight > largestElementHeight) {
 			largestElementHeight = statusFontHeight;
 		}
@@ -114,6 +115,21 @@
 																	   attributes:[self labelAttributes]];
 	width += ceil([displayName size].width);
 	[displayName release];
+	
+	// Also account for idle times.
+	if (extendedStatusVisible && idleTimeVisible && !idleTimeIsBelow && [listObject displayArrayObjectForKey:@"IdleReadable"]) {
+		NSString		*idleTimeString = [listObject displayArrayObjectForKey:@"IdleReadable"];
+		
+		if (statusMessageVisible && !statusMessageIsBelow && [listObject statusMessageString]) {
+			// Account for the size of the ellipsis if there's a status message.
+			idleTimeString = [idleTimeString stringByAppendingEllipsis];
+		}
+		
+		NSAttributedString	*idleDisplay = [[NSAttributedString alloc] initWithString:idleTimeString
+																		  attributes:[self statusAttributes]];
+		width += ceil([idleDisplay size].width) + NAME_STATUS_PAD;
+		[idleDisplay release];
+	}
 
 	//User icon
 	if (userIconVisible) {
@@ -287,9 +303,21 @@
 }
 
 //Element Positioning
-- (void)setExtendedStatusIsBelowName:(BOOL)inBelowName{
-	extendedStatusIsBelowName = inBelowName;
+- (void)setIdleTimeIsBelowName:(BOOL)isBelow{
+	idleTimeIsBelow = isBelow;
 }
+
+- (void)setStatusMessageIsBelowName:(BOOL)isBelow{
+	statusMessageIsBelow = isBelow;
+}
+
+- (void)setStatusMessageIsVisible:(BOOL)isVisible{
+	statusMessageVisible = isVisible;
+}
+- (void)setIdleTimeIsVisible:(BOOL)isVisible{
+	idleTimeVisible = isVisible;	
+}
+
 - (void)setUserIconPosition:(LIST_POSITION)inPosition{
 	userIconPosition = inPosition;
 }
@@ -371,10 +399,53 @@
 		rect.size.width -= TEXT_WITH_IMAGES_RIGHT_PAD;
 	}
 
-	//Extended Status
-	if (extendedStatusIsBelowName) rect = [self drawUserExtendedStatusInRect:rect drawUnder:YES];
-	rect = [self drawDisplayNameWithFrame:rect];
-	if (!extendedStatusIsBelowName) rect = [self drawUserExtendedStatusInRect:rect drawUnder:NO];
+	// For the case of either in the same place, use the extended status.
+	if (idleTimeIsBelow && statusMessageIsBelow) {
+		rect = [self drawUserExtendedStatusInRect:rect
+									  withMessage:(useStatusMessageAsExtendedStatus ?
+												   [listObject statusMessageString] : 
+												   [listObject displayArrayObjectForKey:@"ExtendedStatus"])
+										drawUnder:YES];
+		
+		rect = [self drawDisplayNameWithFrame:rect];
+		
+	} else if (!idleTimeIsBelow && !statusMessageIsBelow) {
+		// Draw the display name before
+		rect = [self drawDisplayNameWithFrame:rect];
+		
+		rect = [self drawUserExtendedStatusInRect:rect
+									  withMessage:(useStatusMessageAsExtendedStatus ?
+												   [listObject statusMessageString] : 
+												   [listObject displayArrayObjectForKey:@"ExtendedStatus"])
+										drawUnder:NO];	
+	} else {
+		if (statusMessageIsBelow && statusMessageVisible) {
+			rect = [self drawUserExtendedStatusInRect:rect
+										  withMessage:[listObject statusMessageString]
+											drawUnder:YES];	
+		}
+		
+		if (idleTimeIsBelow && idleTimeVisible) {
+			rect = [self drawUserExtendedStatusInRect:rect
+										  withMessage:[listObject displayArrayObjectForKey:@"IdleReadable"]
+											drawUnder:YES];
+		}
+		
+		// Draw the display name after we've drawn things that go below it.
+		rect = [self drawDisplayNameWithFrame:rect];
+
+		if (!statusMessageIsBelow && statusMessageVisible) {
+			rect = [self drawUserExtendedStatusInRect:rect
+										  withMessage:[listObject statusMessageString]
+											drawUnder:NO];	
+		}
+		
+		if (!idleTimeIsBelow && idleTimeVisible) {
+			rect = [self drawUserExtendedStatusInRect:rect
+										  withMessage:[listObject displayArrayObjectForKey:@"IdleReadable"]
+											drawUnder:NO];
+		}
+	}
 }
 
 //Draw the background of our cell
@@ -501,12 +572,13 @@
 }
 
 //User Extended Status
-- (NSRect)drawUserExtendedStatusInRect:(NSRect)rect drawUnder:(BOOL)drawUnder
+- (NSRect)drawUserExtendedStatusInRect:(NSRect)rect withMessage:(NSString *)string drawUnder:(BOOL)drawUnder
 {
 	if (extendedStatusVisible && (drawUnder || [self textAlignment] != NSCenterTextAlignment)) {
+		/*
 		NSString 	*string = (useStatusMessageAsExtendedStatus ?
 							   [listObject statusMessageString] : 
-							   [listObject displayArrayObjectForKey:@"ExtendedStatus"]);
+							   [listObject displayArrayObjectForKey:@"ExtendedStatus"]);*/
 
 		if (string) {
 			int	halfHeight = rect.size.height / 2;
@@ -565,6 +637,17 @@
 		}
 	}
 	return rect;
+}
+
+- (void)setUseAliasesOnNonParentContacts:(BOOL)inFlag
+{
+	useAliasesOnNonParentContacts = inFlag;
+}
+
+- (BOOL)shouldShowAlias
+{
+	return (useAliasesAsRequested && (useAliasesOnNonParentContacts ||
+									  (!useAliasesOnNonParentContacts && [(AIListContact *)listObject parentContact] == listObject)));	
 }
 
 //Contact label color

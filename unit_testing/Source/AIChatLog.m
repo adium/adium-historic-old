@@ -15,9 +15,13 @@
  */
 
 #import "AIChatLog.h"
+#import "AIObject.h"
+#import "AILoginController.h"
 #import "AIAbstractLogViewerWindowController.h"
 #import "AILoggerPlugin.h"
 #import "AICalendarDate.h"
+
+#import <AIUtilities/NSCalendarDate+ISO8601Parsing.h>
 
 @implementation AIChatLog
 
@@ -93,9 +97,29 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
 	//Determine the date of this log lazily
 	if (!date) {
 		date = [dateFromFileName([path lastPathComponent]) retain];
+
+		if (!date) {
+			//Sometimes the filename doesn't have a date (e.g., “jdoe ((null)).chatlog”). In such cases, if it's a chatlog, parse it and get the date from the first element that has one.
+			//We don't do this first because NSXMLParser uses +[NSData dataWithContentsOfURL:], which is painful for large log files.
+			if ([[path pathExtension] isEqualToString:@"chatlog"]) {
+				NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:[NSURL fileURLWithPath:[[[[[AIObject sharedAdiumInstance] loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByAppendingPathComponent:path]]];
+				[parser setDelegate:self];
+				[parser parse];
+				[parser release];
+			}
+		}
 	}
 		
     return date;
+}
+- (void)parser:(NSXMLParser *)parser didStartElement:(NSString *)elementName namespaceURI:(NSString *)namespaceURI qualifiedName:(NSString *)qualifiedName attributes:(NSDictionary *)attributeDict {
+	//Stop at the first element with a date.
+	NSString *dateString = nil;
+	if ((dateString = [attributeDict objectForKey:@"time"])) {
+		date = [[NSCalendarDate calendarDateWithString:dateString strictly:YES] retain];
+		if (date)
+			[parser abortParsing];
+	}
 }
 
 - (float)rankingPercentage
@@ -173,6 +197,38 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
 - (NSComparisonResult)compareFromReverse:(AIChatLog *)inLog
 {
     NSComparisonResult  result = [[inLog from] caseInsensitiveCompare:from];
+    if (result == NSOrderedSame) {
+		NSTimeInterval		interval = [date timeIntervalSinceDate:[inLog date]];
+		
+		if (interval < 0) {
+			result = NSOrderedAscending;
+		} else if (interval > 0) {
+			result = NSOrderedDescending;
+		}
+	}
+    
+    return result;
+}
+
+//Sort by From, then Date
+- (NSComparisonResult)compareService:(AIChatLog *)inLog
+{
+    NSComparisonResult  result = [serviceClass caseInsensitiveCompare:[inLog serviceClass]];
+    if (result == NSOrderedSame) {
+		NSTimeInterval		interval = [date timeIntervalSinceDate:[inLog date]];
+		
+		if (interval < 0) {
+			result = NSOrderedAscending;
+		} else if (interval > 0) {
+			result = NSOrderedDescending;
+		}
+	} 
+	
+    return result;
+}
+- (NSComparisonResult)compareServiceReverse:(AIChatLog *)inLog
+{
+    NSComparisonResult  result = [[inLog serviceClass] caseInsensitiveCompare:serviceClass];
     if (result == NSOrderedSame) {
 		NSTimeInterval		interval = [date timeIntervalSinceDate:[inLog date]];
 		

@@ -6,7 +6,8 @@
 #import <SenTestingKit/SenTestingKit.h>
 #import "AutoHyperlinks.h"
 
-#define testHyperlink(x) STAssertTrue([scanner isStringValidURL: x ], nil)
+#define testHyperlink(x) STAssertTrue([scanner isStringValidURL: x ],\
+					@"\"%@\" Should be a valid URI.", x )
 
 @interface SimpleURLTest : SenTestCase {
 	AHHyperlinkScanner	*scanner;

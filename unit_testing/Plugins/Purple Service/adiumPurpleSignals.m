@@ -16,9 +16,11 @@
 
 #import "adiumPurpleSignals.h"
 #import <AIUtilities/AIObjectAdditions.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
 #import <Adium/AIChatControllerProtocol.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
+#import <Adium/AIContentStatus.h>
 #import <Adium/ESFileTransfer.h>
 
 static void buddy_status_changed_cb(PurpleBuddy *buddy, PurpleStatus *oldstatus, PurpleStatus *status, PurpleBuddyEvent event);
@@ -227,11 +229,6 @@ static void node_aliased_cb(PurpleBlistNode *node, char *old_alias)
 	}
 }
 
-static void conversation_created_cb(PurpleConversation *conv, void *data) {
-	if (purple_conversation_get_type(conv) == PURPLE_CONV_TYPE_IM)
-		[[imChatLookupFromConv(conv) listObject] setValue:[NSNumber numberWithInt:AINotTyping] forProperty:KEY_TYPING notify:NotifyNow];
-}
-
 static NSDictionary *dictionaryFromHashTable(GHashTable *data)
 {
 	NSMutableDictionary *dict = [NSMutableDictionary dictionary];
@@ -272,10 +269,39 @@ static void chat_join_failed_cb(PurpleConnection *gc, GHashTable *components)
 
 static void typing_changed(PurpleAccount *acct, const char *name, AITypingState typingState)
 {
+	CBPurpleAccount	*account = accountLookup(acct);
 	AIListContact *contact = contactLookupFromBuddy(purple_find_buddy(acct, name));
-	[contact setValue:[NSNumber numberWithInt:typingState] forProperty:KEY_TYPING notify:NotifyNow];	
+	
+	// Don't do anything for those who aren't on our contact list.
+	if ([contact isStranger]) {
+		return;
+	}
+
+	AIChat *chat = [[[AIObject sharedAdiumInstance] chatController] existingChatWithContact:contact];
+	
+	if (typingState != AINotTyping && !chat) {
+		chat = [[[AIObject sharedAdiumInstance] chatController] chatWithContact:contact];
+		AILogWithSignature(@"Made a chat for %s: %i", name, typingState);
+	}
+
+	if (chat)
+		[account typingUpdateForIMChat:chat typing:[NSNumber numberWithInt:typingState]];
 }
 
+static void conversation_created_cb(PurpleConversation *conv, void *data) {
+	if (purple_conversation_get_type(conv) == PURPLE_CONV_TYPE_IM) {
+		AIChat *chat = imChatLookupFromConv(conv);
+		//When a conversation is created, we must clear the typing flag, as libpurple won't notify us properly
+		[accountLookup(purple_conversation_get_account(conv)) typingUpdateForIMChat:chat typing:[NSNumber numberWithInt:AINotTyping]];
+	}
+}
+
+/* The buddy-typing, buddy-typed, and buddy-typing-stopped signals will only be sent
+ * when there isn't an open conversation, so we're not duplicating typing information here.
+ *
+ * adiumPurpleConversation has the typing code for open conversations.
+ */
+ 
 static void
 buddy_typing_cb(PurpleAccount *acct, const char *name, void *data) {
 	typing_changed(acct, name, AITyping);

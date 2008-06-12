@@ -74,6 +74,11 @@
 								  forService:self];
 }
 
+- (BOOL)isSocialNetworkingService
+{
+	return YES;
+}
+
 /*!
  * @brief Default icon
  *

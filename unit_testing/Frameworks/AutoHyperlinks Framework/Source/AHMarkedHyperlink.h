@@ -28,7 +28,7 @@
 #import "AHLinkLexer.h"
 
 
-@interface AHMarkedHyperlink : NSObject {
+@interface AHMarkedHyperlink : NSObject <NSCopying> {
     NSRange                      linkRange;
     NSURL                       *linkURL;
     NSString                    *pString;
@@ -40,7 +40,6 @@
 -(NSRange)range;
 -(NSURL *)URL;
 -(AH_URI_VERIFICATION_STATUS)validationStatus;
--(BOOL)parentStringMatchesString:(NSString *)inString;
 
 -(void)setRange:(NSRange)inRange;
 -(void)setURL:(NSURL *)inURL;

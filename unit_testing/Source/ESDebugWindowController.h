@@ -25,7 +25,7 @@
 	NSMutableArray					*fullDebugLogArray;
 	NSMutableParagraphStyle			*debugParagraphStyle;
 	IBOutlet	NSButton			*checkBox_logWriting;
-	
+	IBOutlet	NSButton			*button_clear;
 	NSString						*filter;
 }
 

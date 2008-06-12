@@ -27,20 +27,21 @@
 	IBOutlet		NSSegmentedControl				*inspectorToolbar;
 	IBOutlet		NSView							*inspectorContent;
 	IBOutlet		NSView							*inspectorBottomBar;
-	IBOutlet		NSPopUpButton					*metaPopup;
 	IBOutlet		NSBox							*bottomBarSeperator;
 	
 					NSView							*currentPane;
 					NSArray							*loadedContent;
 					
 					AIListObject					*displayedObject;
-					int								lastSegmentForContact;
+					int								lastSegment;
+	
+	BOOL											deallocating;
 }
+
++ (AIContactInfoWindowController *)showInfoWindowForListObject:(AIListObject *)listObject;
++ (void)closeInfoWindow;
+- (void)setDisplayedListObject:(AIListObject *)inObject;
 
 - (IBAction)segmentSelected:(id)sender;
 
-+ (id)showInfoWindowForListObject:(AIListObject *)listObject;
-+ (void)closeInfoWindow;
-- (void)configureForListObject:(AIListObject *)inObject;
-- (void)loadInfoForListObject:(AIListObject *)aListObject;
 @end

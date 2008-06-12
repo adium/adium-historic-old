@@ -45,20 +45,19 @@
 - (IBAction)showContactInfo:(id)sender
 {
 	AIListObject *listObject = nil;
-	
-	if ((sender == menuItem_getInfoContextualContact) || (sender == menuItem_getInfoContextualGroup)) {
-		listObject = [[adium menuController] currentContextMenuObject];
-	} else {
+
+	if ((sender == menuItem_getInfoAlternate) || (sender == menuItem_getInfo) || ([sender isKindOfClass:[NSToolbarItem class]])) {
 		listObject = [[adium interfaceController] selectedListObject];
+	}
+	
+	if (!listObject) {
+		listObject = [[adium menuController] currentContextMenuObject];
 	}
 	
 	if (listObject) {
 		[NSApp activateIgnoringOtherApps:YES];
-		
-		AIContactInfoWindowController *contactInfoController = [AIContactInfoWindowController showInfoWindowForListObject:listObject];
-		[contactInfoController loadInfoForListObject:listObject];
-		
-		[[contactInfoController window] makeKeyAndOrderFront:nil];
+
+		[AIContactInfoWindowController showInfoWindowForListObject:listObject];
 	}
 }
 
@@ -115,7 +114,7 @@
 	//Watch changes in viewContactInfoMenuItem_alternate's menu so we can maintain its alternate status
 	//(it will expand into showing both the normal and the alternate items when the menu changes)
 	[[adium notificationCenter] addObserver:self selector:@selector(menuChanged:)
-									   name:AIMenuDidChnge
+									   name:AIMenuDidChange
 									 object:[menuItem_getInfoAlternate menu]];
 	
 	//Install the Get Info (prompting for a contact name) menu item
@@ -127,15 +126,15 @@
 	[[adium menuController] addMenuItem:menuItem_getInfoWithPrompt toLocation:LOC_Contact_Info];
 	
 	//Add our get info toolbar item
-	NSToolbarItem   *toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"ShowInfo"
-																		   label:AILocalizedString(@"Info",nil)
-																	paletteLabel:TITLE_SHOW_INFO
-																		 toolTip:TOOLTIP_SHOW_INFO
-																		  target:self
-																 settingSelector:@selector(setImage:)
-																	 itemContent:[NSImage imageNamed:@"pref-personal" forClass:[self class] loadLazily:YES]
-																		  action:@selector(showContactInfo:)
-																			menu:nil];
+	NSToolbarItem *toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"ShowInfo"
+																		 label:AILocalizedString(@"Info",nil)
+																  paletteLabel:TITLE_SHOW_INFO
+																	   toolTip:TOOLTIP_SHOW_INFO
+																		target:self
+															   settingSelector:@selector(setImage:)
+																   itemContent:[NSImage imageNamed:@"pref-personal" forClass:[self class] loadLazily:YES]
+																		action:@selector(showContactInfo:)
+																		  menu:nil];
 	[[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
 }
 

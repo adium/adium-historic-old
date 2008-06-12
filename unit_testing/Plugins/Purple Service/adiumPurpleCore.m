@@ -139,10 +139,7 @@ static void adiumPurpleCoreDebugInit(void)
 #if (PURPLE_DEBUG)
 	AILog(@"adiumPurpleCoreDebugInit()");
     purple_debug_set_ui_ops(adium_purple_debug_get_ui_ops());
-#endif
-	
-	//Initialize all external plugins.
-	init_all_plugins();
+#endif	
 }
 
 static void associateLibpurpleAccounts(void)
@@ -166,7 +163,7 @@ static void associateLibpurpleAccounts(void)
 /* The core is ready... finish configuring libpurple and its plugins */
 static void adiumPurpleCoreUiInit(void)
 {		
-	bindtextdomain("pidgin", [[[NSBundle bundleWithIdentifier:@"im.pidgin.libpurple"] resourcePath] UTF8String]);
+	bindtextdomain("pidgin", [[[NSBundle bundleWithIdentifier:@"im.pidgin.libpurple"] resourcePath] fileSystemRepresentation]);
 	bind_textdomain_codeset("pidgin", "UTF-8");
 	textdomain("pidgin");
 	
@@ -177,6 +174,9 @@ static void adiumPurpleCoreUiInit(void)
 	//So we'll set the environment variable for this process, which does work
 	setenv("LC_ALL", preferredLocale, /* overwrite? */ 1);
 	setenv("LC_MESSAGES", preferredLocale, /* overwrite? */ 1);
+
+	//Initialize all external plugins.
+	init_all_plugins();
 
 	AILog(@"adiumPurpleCoreUiInit");
 	//Initialize the core UI ops

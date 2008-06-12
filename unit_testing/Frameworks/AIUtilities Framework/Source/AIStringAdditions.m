@@ -320,35 +320,6 @@
 
 
 
-
-
-
-//char intToHex(int digit)
-//{
-//    if (digit > 9) {
-//        return ('a' + digit - 10);
-//    } else {
-//        return ('0' + digit);
-//    }
-//}
-//
-//int hexToInt(char hex)
-//{
-//    if (hex >= '0' && hex <= '9') {
-//        return (hex - '0');
-//		
-//    } else if (hex >= 'a' && hex <= 'f') {
-//        return (hex - 'a' + 10);
-//		
-//    } else if (hex >= 'A' && hex <= 'F') {
-//        return (hex - 'A' + 10);
-//		
-//    } else {
-//        return 0;
-//		
-//    }
-//}
-
 //stringByEncodingURLEscapes
 // Percent escape all characters except for a-z, A-Z, 0-9, '_', and '-'
 // Convert spaces to '+'
@@ -476,8 +447,14 @@
 		unsigned char	ch = UTF8[sourceIndex++];
 
 		if (ch == '%') {
-#warning Unsafe: This statement assumes that the two characters really are a hex value.
-			destPtr[destIndex] = ( hexToInt(UTF8[sourceIndex]) * 0x10 ) + hexToInt(UTF8[sourceIndex+1]);
+			int firstHexValue = hexToInt(UTF8[sourceIndex]);
+			int secondHexValue = hexToInt(UTF8[sourceIndex+1]);
+			
+			if ((firstHexValue != -1) && (secondHexValue != -1)) 
+				destPtr[destIndex] = (firstHexValue  * 0x10 ) + secondHexValue;
+			else
+				destPtr[destIndex] = '?';
+
 			sourceIndex += 2;
 		} else {
 			destPtr[destIndex] = translationTable[ch];

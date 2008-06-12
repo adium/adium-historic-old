@@ -12,6 +12,7 @@
 #import <Adium/AIStatusControllerProtocol.h>
 #import <Adium/AIEditStateWindowController.h>
 #import <Adium/AIStatusIcons.h>
+#import <Adium/AISocialNetworkingStatusMenu.h>
 #import <Adium/AIAccountControllerProtocol.h>
 #import <Adium/AIMenuControllerProtocol.h>
 #import <Adium/AIPreferenceControllerProtocol.h>
@@ -136,7 +137,6 @@
 	[menuItem setTag:statusType];
 	
 	return [menuItem autorelease];
-				
 }
 
 /*!
@@ -225,13 +225,13 @@
 	}
 	
 	if (currentStatusType != AIOfflineStatusType) {
-		/* Add the last "Custom..." state optior for the last statusType we handled,
-		* which didn't get a "Custom..." item yet.  At present, our last status type should always be
-		* our AIOfflineStatusType, so this will never be executed and just exists for completeness.
-		*/
+		/* Add the last "Custom..." state option for the last statusType we handled,
+		 * which didn't get a "Custom..." item yet.  At present, our last status type should always be
+		 * our AIOfflineStatusType, so this will never be executed and just exists for completeness.
+		 */
 		[menuItemArray addObject:[self customMenuItemForStatusType:currentStatusType]];
 	}
-	
+
 	//Now that we are done creating the menu items, tell the plugin about them
 	[delegate statusMenu:self didRebuildStatusMenuItems:menuItemArray];
 	

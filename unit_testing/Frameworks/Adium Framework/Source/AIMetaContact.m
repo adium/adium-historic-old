@@ -28,7 +28,6 @@
 #define	KEY_CONTAINING_OBJECT_ID	@"ContainingObjectInternalObjectID"
 #define	OBJECT_STATUS_CACHE			@"Object Status Cache"
 
-#define	KEY_IS_EXPANDABLE					@"IsExpandable"
 #define	KEY_EXPANDED						@"IsExpanded"
 
 @interface AIMetaContact (PRIVATE)
@@ -62,9 +61,6 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		
 		containedObjects = [[NSMutableArray alloc] init];
 		
-		isExpandable = [[self preferenceForKey:KEY_IS_EXPANDABLE
-										 group:OBJECT_STATUS_CACHE] boolValue];
-
 		expanded = [[self preferenceForKey:KEY_EXPANDED
 									 group:OBJECT_STATUS_CACHE] boolValue];
 
@@ -330,7 +326,8 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		
 		if ([inObject isKindOfClass:[AIListContact class]] && [(AIListContact *)inObject remoteGroupName]) {
 			//Reset it to its remote group
-			[inObject setContainingObject:nil];
+			if ([inObject containingObject] == self)
+				[inObject setContainingObject:nil];
 			noteRemoteGroupingChanged = YES;
 		} else {
 			[inObject setContainingObject:[self containingObject]];
@@ -596,32 +593,25 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 		if (([listObject isKindOfClass:[AIListContact class]]) &&
 			([(AIListContact *)listObject remoteGroupName] || includeOfflineAccounts)) {
-			//We want to offer up a completely flat list, so recurse into each contact we contain which also contains contacts
-            NSEnumerator *enumerator = (([listObject conformsToProtocol:@protocol(AIContainingObject)] && [(AIListContact <AIContainingObject> *)listObject containsMultipleContacts]) ?
-										[[(AIListContact <AIContainingObject> *)listObject listContacts] objectEnumerator] :
-										[[NSArray arrayWithObject:listObject] objectEnumerator]); 
-            AIListObject *innerListObject; 
 
-            while ((innerListObject = [enumerator nextObject])) { 
-                NSString        *listObjectInternalObjectID = [innerListObject internalObjectID]; 
-                unsigned int listContactIndex = [uniqueObjectIDs indexOfObject:listObjectInternalObjectID]; 
-                
-                if (listContactIndex == NSNotFound) { 
-                    //This contact isn't in the array yet, so add it 
-                    [listContacts addObject:innerListObject]; 
-                    [uniqueObjectIDs addObject:listObjectInternalObjectID]; 
-                    
-                } else { 
-                    /* If it is found, but it is offline and this contact is online, swap 'em out so our array 
-                    * has the best possible listContacts (making display elsewhere more straightforward) 
-                    */ 
-                    if (![[listContacts objectAtIndex:listContactIndex] online] && 
-                        [innerListObject online]) { 
-                        
-                        [listContacts replaceObjectAtIndex:listContactIndex 
-                                                withObject:innerListObject]; 
-                    } 
-                } 
+			NSString        *listObjectInternalObjectID = [listObject internalObjectID]; 
+			unsigned int listContactIndex = [uniqueObjectIDs indexOfObject:listObjectInternalObjectID]; 
+			
+			if (listContactIndex == NSNotFound) { 
+				//This contact isn't in the array yet, so add it 
+				[listContacts addObject:listObject]; 
+				[uniqueObjectIDs addObject:listObjectInternalObjectID]; 
+				
+			} else { 
+				/* If it is found, but it is offline and this contact is online, swap 'em out so our array 
+				 * has the best possible listContacts (making display elsewhere more straightforward) 
+				 */ 
+				if (![[listContacts objectAtIndex:listContactIndex] online] && 
+					[listObject online]) { 
+					
+					[listContacts replaceObjectAtIndex:listContactIndex 
+											withObject:listObject]; 
+				}
             }
 		}
 	}
@@ -992,7 +982,10 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
  */
 - (NSImage *)userIcon
 {
-	NSImage *userIcon = [self internalUserIcon];
+	NSImage		 *internalUserIcon = [self internalUserIcon];
+	NSImage		 *userIcon = internalUserIcon;
+	AIListObject *sourceListObject = self;
+
 	BOOL	useOwnIconAsLastResort = NO;
 
 	id <AIUserIconSource> myUserIconSource = [AIUserIcons userIconSourceForObject:self];
@@ -1003,23 +996,35 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 			 */
 			useOwnIconAsLastResort = YES;
 			userIcon = nil;
+			sourceListObject = nil;
 		}
 	}
+	
 	if (!userIcon) {
-		userIcon = [[self preferredContact] userIcon];
+		sourceListObject = [self preferredContact];
+		userIcon = [sourceListObject userIcon];
 	}
 	if (!userIcon) {
-		NSArray		*theContainedObjects = [self containedObjects];
-		
+		NSArray		*theContainedObjects = [self listContacts];
+
 		unsigned int count = [theContainedObjects count];
 		unsigned int i = 0;
 		while ((i < count) && !userIcon) {
-			userIcon = [[theContainedObjects objectAtIndex:i] userIcon];
+			sourceListObject = [theContainedObjects objectAtIndex:i];
+			userIcon = [sourceListObject userIcon];
 			i++;
 		}
 	}
+
 	if (!userIcon && useOwnIconAsLastResort) {
-		userIcon = [self internalUserIcon];
+		sourceListObject = self;
+		userIcon = internalUserIcon;
+	}
+
+	if (userIcon && (sourceListObject != self)) {
+		[AIUserIcons setActualUserIcon:userIcon
+							 andSource:[AIUserIcons userIconSourceForObject:sourceListObject]
+							 forObject:self];
 	}
 
 	return userIcon;
@@ -1034,6 +1039,25 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	}
 
 	return displayName;
+}
+
+/*!
+ * @brief Set our display name
+ *
+ * This also sets the display name of all contained objects to be the same as ours.
+ *
+ * @param alias The new display name to be set.
+ */
+- (void)setDisplayName:(NSString *)alias
+{
+	NSEnumerator		*enumerator = [[self containedObjects] objectEnumerator];
+	AIListObject		*listObject;
+	
+	while ((listObject = [enumerator nextObject])) {
+		[listObject setDisplayName:alias];
+	}
+	
+	[super setDisplayName:alias];
 }
 
 - (NSString *)phoneticName
@@ -1217,23 +1241,9 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
     return expanded;
 }
 
-- (void)setExpandable:(BOOL)inExpandable
-{
-	if (inExpandable != isExpandable) {
-		isExpandable = inExpandable;
-
-		[self setPreference:[NSNumber numberWithBool:isExpandable]
-					 forKey:KEY_IS_EXPANDABLE
-					  group:OBJECT_STATUS_CACHE];
-		
-		[[adium notificationCenter] postNotificationName:AIDisplayableContainedObjectsDidChange
-												  object:self];
-	}
-}
-
 - (BOOL)isExpandable
 {
-	return isExpandable && !containsOnlyOneUniqueContact;
+	return !containsOnlyOneUniqueContact;
 }
 
 //Order index

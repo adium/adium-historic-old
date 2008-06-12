@@ -412,7 +412,18 @@
 - (NSString *)defaultUserName 
 { 
 	return @""; 
-} 	
+}
+
+/*!
+ * @brief Is this a social networking service like Twitter or Facebook?
+ *
+ * If YES, accounts on this service treat status very differently than non-social-networking accounts.
+ * For example, global status messages dont apply to social networking services, and their status is handled uniquely.
+ */
+- (BOOL)isSocialNetworkingService
+{
+	return NO;
+}
 
 //Utilities ------------------------------------------------------------------------------------------------------------
 #pragma mark Utilities

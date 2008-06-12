@@ -63,6 +63,7 @@ typedef enum {
 - (BOOL)supportsPassword;
 - (BOOL)requiresPassword;
 - (void)registerStatuses;
+- (BOOL)isSocialNetworkingService;
 - (NSString *)defaultUserName;
 
 //Utilities

@@ -60,7 +60,7 @@
 		menu_Edit_Bottom, menu_Edit_Links, menu_Edit_Additions,
 		menu_View_General, menu_View_Sorting, menu_View_Toggles, menu_View_Counting_Toggles, menu_View_Appearance_Toggles, menu_View_Additions, 
 		menu_Contact_Manage, menu_Contact_Info, menu_Contact_Action, menu_Contact_NegativeAction, menu_Contact_Additions,
-		menu_Status_State, menu_Status_Accounts, menu_Status_Additions,
+		menu_Status_State, menu_Status_SocialNetworking, menu_Status_Accounts, menu_Status_Additions,
 		menu_Format_Styles, menu_Format_Palettes, menu_Format_Additions,
 		menu_Window_Top, menu_Window_Commands, menu_Window_Auxiliary, menu_Window_Fixed,
 		menu_Help_Local, menu_Help_Web, menu_Help_Additions,
@@ -119,7 +119,7 @@
 	//update the location array
 	[locationArray replaceObjectAtIndex:location withObject:newItem];
 
-	[[adium notificationCenter] postNotificationName:AIMenuDidChnge object:[newItem menu] userInfo:nil];
+	[[adium notificationCenter] postNotificationName:AIMenuDidChange object:[newItem menu] userInfo:nil];
 }
 
 //Remove a menu item
@@ -169,7 +169,7 @@
 		 * It's not currently needed in that situation so this is a very small performance hack... it could move outside the
 		 * conditional if necessary. -evands
 		 */
-		[[adium notificationCenter] postNotificationName:AIMenuDidChnge object:targetMenu userInfo:nil];
+		[[adium notificationCenter] postNotificationName:AIMenuDidChange object:targetMenu userInfo:nil];
 	}
 }
 

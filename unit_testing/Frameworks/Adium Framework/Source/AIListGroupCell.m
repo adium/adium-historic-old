@@ -22,6 +22,7 @@
 #import <AIUtilities/AIParagraphStyleAdditions.h>
 
 #define FLIPPY_TEXT_PADDING		4
+#define GROUP_COUNT_PADDING		4
 
 @implementation AIListGroupCell
 
@@ -137,14 +138,21 @@
 - (int)cellWidth
 {
 	NSAttributedString	*displayName;
-	NSSize				nameSize; 
+	unsigned			width = [super cellWidth] + [self flippyIndent] + GROUP_COUNT_PADDING;
 	
 	//Get the size of our display name
 	displayName = [[NSAttributedString alloc] initWithString:[self labelString] attributes:[self labelAttributes]];
-	nameSize = [displayName size];
+	width += ceil([displayName size].width) + 1;
 	[displayName release];
-		
-	return [super cellWidth] + [self flippyIndent] + ceil(nameSize.width) + 1;
+	
+	if (([[listObject displayArrayObjectForKey:@"Show Count"] boolValue] || ![controlView isItemExpanded:listObject]) && 
+		[listObject displayArrayObjectForKey:@"Count Text"]) {
+		NSAttributedString *countText = [[NSAttributedString alloc] initWithString:[listObject displayArrayObjectForKey:@"Count Text"] attributes:[self labelAttributes]];
+		width += ceil([countText size].width) + 1;
+		[countText release];
+	}
+	
+	return width + 1;
 }
 
 //Calculates the distance from left margin to our display name.  This is the indent caused by group nesting.
@@ -188,8 +196,45 @@
 		rect.origin.x += rect.size.height*.4 + rect.size.height*.2 + FLIPPY_TEXT_PADDING;
 		rect.size.width -= rect.size.height*.4 + rect.size.height*.2 + FLIPPY_TEXT_PADDING;
 //	}
+	
+	if ([[listObject displayArrayObjectForKey:@"Show Count"] boolValue] || ![controlView isItemExpanded:listObject]) {
+		rect = [self drawGroupCountWithFrame:rect];
+	}
+	rect = [self drawDisplayNameWithFrame:rect];
+}
 
-	[self drawDisplayNameWithFrame:rect];
+- (NSRect)drawGroupCountWithFrame:(NSRect)inRect
+{
+	if ([listObject displayArrayObjectForKey:@"Count Text"]) {
+		NSAttributedString	*groupCount = [[NSAttributedString alloc] initWithString:[listObject displayArrayObjectForKey:@"Count Text"]
+																		  attributes:[self labelAttributes]];
+		
+		NSSize				countSize = [groupCount size];
+		NSRect				rect = inRect;
+		
+		if (countSize.width + GROUP_COUNT_PADDING > rect.size.width) countSize.width = rect.size.width;
+		if (countSize.height > rect.size.height) countSize.height = rect.size.height;
+		
+		if ([self textAlignment] == NSRightTextAlignment) {
+			// If the alignment is on the left, we need to move the original rect's x origin to the right.
+			inRect.origin.x += countSize.width + GROUP_COUNT_PADDING;
+		} else {
+			// If alignment is on the left or center, we need to move our drawing x origin to the right.
+			rect.origin.x += (rect.size.width - countSize.width);
+		}
+		
+		int half = ceil((rect.size.height - labelFontHeight) / 2.0);
+		[groupCount drawInRect:NSMakeRect(rect.origin.x,
+										  rect.origin.y + half,
+										  rect.size.width,
+										  countSize.height)];
+			
+		[groupCount release];
+		
+		inRect.size.width -= countSize.width + GROUP_COUNT_PADDING;
+	}
+	
+	return inRect;
 }
 
 //Draw the background of our cell

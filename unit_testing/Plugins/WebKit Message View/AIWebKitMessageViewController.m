@@ -79,6 +79,10 @@
 - (void) setIsGroupChat:(BOOL) flag;
 @end
 
+@interface DOMDocument (FutureWebKitPublicMethodsIKnow)
+- (DOMNodeList *)getElementsByClassName:(NSString *)className;
+@end
+
 static NSArray *draggedTypes = nil;
 
 @implementation AIWebKitMessageViewController
@@ -404,14 +408,15 @@ static NSArray *draggedTypes = nil;
 			if (backgroundImage) {
 				//Generate a unique cache ID for this image
 				int	uniqueID = [[[adium preferenceController] preferenceForKey:@"BackgroundCacheUniqueID"
-																		 group:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES] intValue] + 1;
+																		 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] intValue] + 1;
 				[[adium preferenceController] setPreference:[NSNumber numberWithInt:uniqueID]
 													 forKey:@"BackgroundCacheUniqueID"
 													  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 				
 				//Cache the image under that unique ID
 				//Since we prefix the filename with TEMP, Adium will automatically clean it up on quit
-				[backgroundImage writeToFile:[self _webKitBackgroundImagePathForUniqueID:uniqueID] atomically:YES];
+				cachePath = [self _webKitBackgroundImagePathForUniqueID:uniqueID];
+				[backgroundImage writeToFile:cachePath atomically:YES];
 
 				//Remember where we cached it
 				[[adium preferenceController] setPreference:cachePath
@@ -615,7 +620,7 @@ static NSArray *draggedTypes = nil;
 		contentQueueCount = 1;
 	}
 	
-	/* If we added multiple objects, we may want to scroll to the bottom now, having not done it as each object
+	/* If we added two or more objects, we may want to scroll to the bottom now, having not done it as each object
 	 * was added.
 	 */
 	if (objectsAdded > 1) {
@@ -1069,32 +1074,37 @@ static NSArray *draggedTypes = nil;
     AIListObject	*inObject = [notification object];
     NSSet			*keys = [[notification userInfo] objectForKey:@"Keys"];
 	
-	if (inObject &&
-		([keys containsObject:KEY_USER_ICON])) {
-		AIListObject	*actualObject = nil;
-		
-		if ([chat account] == inObject) {
-			//The account is the object actually in the chat
-			actualObject = inObject;
-		} else {
-			/*
-			 * We are notified of a change to the metacontact's icon. Find the contact inside the chat which we will
-			 * be displaying as changed.
-			 */
-			NSEnumerator	*enumerator;
-			AIListContact	*participatingListObject;
+	if ([keys containsObject:KEY_USER_ICON]) {
+		if (inObject) {
+			AIListObject	*actualObject = nil;
 			
-			enumerator = [[chat containedObjects] objectEnumerator];
-			while ((participatingListObject = [enumerator nextObject])) {
-				if ([participatingListObject parentContact] == inObject) {
-					actualObject = participatingListObject;
-					break;
+			if ([chat account] == inObject) {
+				//The account is the object actually in the chat
+				actualObject = inObject;
+			} else {
+				/*
+				 * We are notified of a change to the metacontact's icon. Find the contact inside the chat which we will
+				 * be displaying as changed.
+				 */
+				NSEnumerator	*enumerator;
+				AIListContact	*participatingListObject;
+				
+				enumerator = [[chat containedObjects] objectEnumerator];
+				while ((participatingListObject = [enumerator nextObject])) {
+					if ([participatingListObject parentContact] == inObject) {
+						actualObject = participatingListObject;
+						break;
+					}
 				}
 			}
-		}
-		
-		if (actualObject) {
-			[self userIconForObjectDidChange:actualObject];
+
+			if (actualObject) {
+				[self userIconForObjectDidChange:actualObject];
+			}
+
+		} else {
+			//We don't know what changed, if anything, that is relevant to our chat. Update source and destination icons.
+			[self sourceOrDestinationChanged:nil];
 		}
 	}
 }

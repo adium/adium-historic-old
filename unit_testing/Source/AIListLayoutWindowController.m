@@ -625,6 +625,13 @@
 	[menuItem setTag:EXTENDED_STATUS_POSITION_BESIDE_NAME];
 	[extendedStatusPositionMenu addItem:menuItem];
 	
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Idle Beside, Status Below",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
+	[menuItem setTag:EXTENDED_STATUS_POSITION_BOTH];
+	[extendedStatusPositionMenu addItem:menuItem];
+	
 	return extendedStatusPositionMenu;
 }
 
@@ -647,7 +654,7 @@
 	[menuItem setTag:IDLE_ONLY];
 	[extendedStatusStyleMenu addItem:menuItem];
 	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"(Idle) Status",nil)
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Idle and Status",nil)
 																	 target:nil
 																	 action:nil
 															  keyEquivalent:@""] autorelease];

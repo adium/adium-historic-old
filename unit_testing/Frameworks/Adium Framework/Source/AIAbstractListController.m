@@ -39,6 +39,7 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIOutlineViewAdditions.h>
+#import <AIUtilities/AIPasteboardAdditions.h>
 #import <Adium/KFTypeSelectTableView.h>
 #import "AIMessageWindowController.h"
 #import "DCInviteToChatWindowController.h"
@@ -77,6 +78,7 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 		dragItems = nil;
 		showTooltips = YES;
 		showTooltipsInBackground = NO;
+		useContactListGroups = YES;
 		backgroundOpacity = 1.0;
 
 		//Watch for drags ending so we can clear any cached drag data
@@ -169,6 +171,26 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	}
 }
 
+- (void)updateIndentationPerLevel
+{
+	if (useContactListGroups) {
+		indentationPerLevel[0] = 0;
+		indentationPerLevel[1] = 0;
+		indentationPerLevel[2] = 10;
+	} else {
+		indentationPerLevel[0] = 0;
+		indentationPerLevel[1] = 10;
+		indentationPerLevel[2] = 10;		
+	}
+}
+
+- (void)setUseContactListGroups:(BOOL)flag
+{
+	useContactListGroups = flag;
+	
+	[self updateIndentationPerLevel];
+}
+
 //Setup the window after it has loaded and our cells have been configured
 - (void)configureViewsAndTooltips
 {
@@ -191,17 +213,17 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	//We handle our own intercell spacing, so override the default (3.0, 2.0) to be (0.0, 0.0) instead.
 	[contactListView setIntercellSpacing:NSZeroSize];
 	[contactListView setIndentationPerLevel:0];
-	
-	indentationPerLevel[0] = 0;
-	indentationPerLevel[1] = 0;
-	indentationPerLevel[2] = 10;
-	
+	[self updateIndentationPerLevel];
+
 	[scrollView_contactList setDrawsBackground:NO];
     [scrollView_contactList setAutoScrollToBottom:NO];
     [scrollView_contactList setAutohidesScrollers:YES];
 
 	//Dragging
-	[contactListView registerForDraggedTypes:[NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs", NSFilenamesPboardType, NSURLPboardType, NSStringPboardType, nil]];
+	[contactListView registerForDraggedTypes:
+	 [NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs",
+	  NSFilenamesPboardType, NSURLPboardType,
+	  AIiTunesTrackPboardType, NSStringPboardType, nil]];
 	
 	[contactListView reloadData];
 
@@ -278,12 +300,15 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 - (void)updateLayoutFromPrefDict:(NSDictionary *)prefDict andThemeFromPrefDict:(NSDictionary *)themeDict
 {
 	AIContactListWindowStyle	windowStyle = [self windowStyle];
-	NSTextAlignment		contentCellAlignment;
+	NSTextAlignment		contentCellAlignment, groupCellAlignment;
 	BOOL				pillowsOrPillowsFittedWindowStyle;
 	
 	//Cells
 	[groupCell release];
 	[contentCell release];
+
+	contentCellAlignment = [[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue];
+	groupCellAlignment = [[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT] intValue];
 
 	switch (windowStyle) {
 		case AIContactListWindowStyleStandard:
@@ -300,7 +325,12 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 			contentCell = [[AIListContactBubbleCell alloc] init];
 		break;
 		case AIContactListWindowStyleContactBubbles_Fitted:
-			groupCell = [[AIListGroupBubbleToFitCell alloc] init];
+			//Right-aligned groups need to be full-width, not fitted
+			if (groupCellAlignment == NSLeftTextAlignment)
+				groupCell = [[AIListGroupBubbleToFitCell alloc] init];
+			else
+				groupCell = [[AIListGroupBubbleCell alloc] init];
+			//Content can always be to-fit
 			contentCell = [[AIListContactBubbleToFitCell alloc] init];
 		break;
 	}
@@ -310,16 +340,21 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	
 	//"Preferences" determined by the subclass of AIAbstractListController
 	[contentCell setUseAliasesAsRequested:[self useAliasesInContactListAsRequested]];
+	[contentCell setUseAliasesOnNonParentContacts:NO];
 	[contentCell setShouldUseContactTextColors:[self shouldUseContactTextColors]];
 	[contentCell setUseStatusMessageAsExtendedStatus:[self useStatusMessageAsExtendedStatus]];
 		
 	//Alignment
-	contentCellAlignment = [[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue];
 	[contentCell setTextAlignment:contentCellAlignment];
-	[groupCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT] intValue]];
+	[groupCell setTextAlignment:groupCellAlignment];
 	[contentCell setUserIconSize:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_SIZE] intValue]];
 
 	if (windowStyle != AIContactListWindowStyleContactBubbles_Fitted) {
+		EXTENDED_STATUS_STYLE statusStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_STYLE] intValue];
+		
+		[contentCell setStatusMessageIsVisible:(statusStyle == STATUS_ONLY || statusStyle == IDLE_AND_STATUS)];
+		[contentCell setIdleTimeIsVisible:(statusStyle == IDLE_ONLY || statusStyle == IDLE_AND_STATUS)];
+		
 		[contentCell setUserIconVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]];
 		[contentCell setExtendedStatusVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue]];
 		[contentCell setStatusIconsVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS] boolValue]];
@@ -328,7 +363,21 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 		[contentCell setUserIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_POSITION] intValue]];
 		[contentCell setStatusIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_ICON_POSITION] intValue]];
 		[contentCell setServiceIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_SERVICE_ICON_POSITION] intValue]];
-		[contentCell setExtendedStatusIsBelowName:[[prefDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_POSITION] boolValue]];		
+	
+		switch ([[prefDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_POSITION] intValue]) {
+			case EXTENDED_STATUS_POSITION_BELOW_NAME:
+				[contentCell setStatusMessageIsBelowName:YES];
+				[contentCell setIdleTimeIsBelowName:YES];
+				break;
+			case EXTENDED_STATUS_POSITION_BESIDE_NAME:
+				[contentCell setIdleTimeIsBelowName:NO];
+				[contentCell setStatusMessageIsBelowName:NO];
+				break;
+			case EXTENDED_STATUS_POSITION_BOTH:
+				[contentCell setIdleTimeIsBelowName:NO];
+				[contentCell setStatusMessageIsBelowName:YES];
+				break;				
+		}
 	} else {
 		//Fitted pillows + centered text = no icons
 		BOOL allowIcons = (contentCellAlignment != NSCenterTextAlignment);
@@ -355,9 +404,6 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 			iconPosition = [self pillowsFittedIconPositionForIconPosition:iconPosition
 													 contentCellAlignment:contentCellAlignment];
 			[contentCell setServiceIconPosition:iconPosition];
-			
-			//Force extended status below the name (?)
-			[contentCell setExtendedStatusIsBelowName:YES];
 		}
 	}
 	
@@ -374,11 +420,11 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 	[groupCell setFont:(theFont ? theFont : GROUP_FONT_IF_FONT_NOT_FOUND)];
 
 	//Standard special cases.  Add an extra line of padding to the bottom of the standard window.
-	//if (windowStyle == AIContactListWindowStyleStandard) {
-	//	[contactListView setDesiredHeightPadding:3];   //1 pixel border at the top and bottom + extra line at bottom
-	//} else {
-	[contactListView setDesiredHeightPadding:2];   //Accounts for the 1 pixel border at the top and bottom
-	//}
+	if (windowStyle == AIContactListWindowStyleStandard) {
+		[contactListView setDesiredHeightPadding:1];
+	} else {
+		[contactListView setDesiredHeightPadding:2];
+	}
 	
 	//Bubbles special cases
 	pillowsOrPillowsFittedWindowStyle = (windowStyle == AIContactListWindowStyleContactBubbles || windowStyle == AIContactListWindowStyleContactBubbles_Fitted);
