@@ -1253,6 +1253,11 @@
 		7EC2E1C30DF43B6A008C86B4 /* AIDeveloperLinksPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EC2E1C20DF43B6A008C86B4 /* AIDeveloperLinksPlugin.m */; };
 		7EC2E1CE0DF43DE7008C86B4 /* AIDLLexer.l in Sources */ = {isa = PBXBuildFile; fileRef = 7EC2E1CD0DF43DE7008C86B4 /* AIDLLexer.l */; };
 		7EC2E1E10DF44225008C86B4 /* AIDLLinkScanner.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EC2E1E00DF44224008C86B4 /* AIDLLinkScanner.m */; };
+		7EE32FE60E02DB55000577E8 /* SyncServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EE32FE50E02DB55000577E8 /* SyncServices.framework */; };
+		7EE32FF90E02DB82000577E8 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
+		7EE32FFA0E02DB8C000577E8 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
+		7EE32FFB0E02DB91000577E8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 349C2FEF0867AD65000BF883 /* Foundation.framework */; };
+		7EE330000E02DBC4000577E8 /* AdiumSyncHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 7EE32FFF0E02DBC4000577E8 /* AdiumSyncHelper.m */; };
 		811033510CDE170B00EC6038 /* ssl-cdsa.c in Sources */ = {isa = PBXBuildFile; fileRef = 811033500CDE170B00EC6038 /* ssl-cdsa.c */; };
 		811034050CDE216F00EC6038 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 340C1ABE0BD58FAB00D09235 /* Security.framework */; };
 		811035180CDE783800EC6038 /* SecurityInterface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 811035170CDE783800EC6038 /* SecurityInterface.framework */; };
@@ -1653,6 +1658,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AutoHyperlinks.framework;
+		};
+		7EE32F530E02D864000577E8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3496A8E707CE6CA30055BBAB /* AutoHyperlinks.framework.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 7ED4FDD00E002653004C5F4B /* AHThreadedStressTester */;
+			remoteInfo = ThreadedStressTester;
 		};
 		B72537BD058C45CF004BA969 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -4143,6 +4155,10 @@
 		7EC2E1DF0DF44224008C86B4 /* AIDLLinkScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIDLLinkScanner.h; path = "Plugins/Developer Links/AIDLLinkScanner.h"; sourceTree = "<group>"; };
 		7EC2E1E00DF44224008C86B4 /* AIDLLinkScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIDLLinkScanner.m; path = "Plugins/Developer Links/AIDLLinkScanner.m"; sourceTree = "<group>"; };
 		7EC2E1E90DF447C6008C86B4 /* AIDeveloperLinksPlugin.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIDeveloperLinksPlugin.pch; path = "Plugins/Developer Links/AIDeveloperLinksPlugin.pch"; sourceTree = "<group>"; };
+		7EE32FD90E02DB37000577E8 /* AdiumSyncHelper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = AdiumSyncHelper; path = build/Development/AdiumSyncHelper; sourceTree = "<group>"; };
+		7EE32FE50E02DB55000577E8 /* SyncServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SyncServices.framework; path = System/Library/Frameworks/SyncServices.framework; sourceTree = SDKROOT; };
+		7EE32FFE0E02DBC4000577E8 /* AdiumSyncHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumSyncHelper.h; path = SyncServices/source/AdiumSyncHelper.h; sourceTree = SOURCE_ROOT; };
+		7EE32FFF0E02DBC4000577E8 /* AdiumSyncHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumSyncHelper.m; path = SyncServices/source/AdiumSyncHelper.m; sourceTree = SOURCE_ROOT; };
 		811033500CDE170B00EC6038 /* ssl-cdsa.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "ssl-cdsa.c"; sourceTree = "<group>"; };
 		811035170CDE783800EC6038 /* SecurityInterface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SecurityInterface.framework; path = /System/Library/Frameworks/SecurityInterface.framework; sourceTree = "<absolute>"; };
 		811036160CDE8A2500EC6038 /* AIPurpleCertificateViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIPurpleCertificateViewer.h; path = "Plugins/Purple Service/AIPurpleCertificateViewer.h"; sourceTree = "<group>"; };
@@ -4506,6 +4522,17 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		7EE32FD70E02DB37000577E8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7EE32FE60E02DB55000577E8 /* SyncServices.framework in Frameworks */,
+				7EE32FF90E02DB82000577E8 /* Adium.framework in Frameworks */,
+				7EE32FFA0E02DB8C000577E8 /* AIUtilities.framework in Frameworks */,
+				7EE32FFB0E02DB91000577E8 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B72537BA058C4577004BA969 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -4599,6 +4626,7 @@
 				312ED3CA0C7E875B00A6BDA9 /* Unit tests.octest */,
 				34A6876D0DD38D03008F0430 /* Facebook.AdiumPlugin */,
 				7EC2E1990DF4390A008C86B4 /* Developer Links.AdiumPlugin */,
+				7EE32FD90E02DB37000577E8 /* AdiumSyncHelper */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4623,6 +4651,7 @@
 				34611C7D09B6756D00870036 /* AdiumSpotlightImporter.xcodeproj */,
 				349C2F310867ACF7000BF883 /* ApplescriptRunner */,
 				312ED3D80C7E89CC00A6BDA9 /* Unit tests */,
+				7EE32FFD0E02DB9B000577E8 /* Sync Services */,
 				29B97323FDCFA39411CA2CEA /* Linked Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
 			);
@@ -4632,6 +4661,7 @@
 		29B97323FDCFA39411CA2CEA /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				7EE32FE50E02DB55000577E8 /* SyncServices.framework */,
 				312ED3D40C7E878300A6BDA9 /* SenTestingKit.framework */,
 				31E0CD800C5EEF5200271DB1 /* CoreAudio.framework */,
 				31918ED70C5E486C00717F0A /* QTKit.framework */,
@@ -5521,6 +5551,7 @@
 				7E78DA9C0DD135DE00B9388F /* Test.octest */,
 				EFB1C3D80DDCA0A900B3973D /* LinkDriver.app */,
 				3416394D0DE58A1A009E9550 /* AHStressTester */,
+				7EE32F540E02D864000577E8 /* AHThreadedStressTester */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -7283,6 +7314,15 @@
 			name = "Developer Links";
 			sourceTree = "<group>";
 		};
+		7EE32FFD0E02DB9B000577E8 /* Sync Services */ = {
+			isa = PBXGroup;
+			children = (
+				7EE32FFE0E02DBC4000577E8 /* AdiumSyncHelper.h */,
+				7EE32FFF0E02DBC4000577E8 /* AdiumSyncHelper.m */,
+			);
+			name = "Sync Services";
+			sourceTree = "<group>";
+		};
 		8110354B0CDE7EFF00EC6038 /* Certificate Viewer */ = {
 			isa = PBXGroup;
 			children = (
@@ -8515,6 +8555,22 @@
 			productReference = 7EC2E1990DF4390A008C86B4 /* Developer Links.AdiumPlugin */;
 			productType = "com.apple.product-type.bundle";
 		};
+		7EE32FD80E02DB37000577E8 /* AdiumSyncHelper */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 7EE32FE90E02DB57000577E8 /* Build configuration list for PBXNativeTarget "AdiumSyncHelper" */;
+			buildPhases = (
+				7EE32FD60E02DB37000577E8 /* Sources */,
+				7EE32FD70E02DB37000577E8 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = AdiumSyncHelper;
+			productName = AdiumSyncHelper;
+			productReference = 7EE32FD90E02DB37000577E8 /* AdiumSyncHelper */;
+			productType = "com.apple.product-type.tool";
+		};
 		B72537BB058C4577004BA969 /* Latex Plugin */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DADE8E1D085507450062B664 /* Build configuration list for PBXNativeTarget "Latex Plugin" */;
@@ -8625,6 +8681,7 @@
 				312ED3C90C7E875B00A6BDA9 /* Unit tests */,
 				34A687410DD38D03008F0430 /* Facebook */,
 				7EC2E1980DF4390A008C86B4 /* Developer links */,
+				7EE32FD80E02DB37000577E8 /* AdiumSyncHelper */,
 			);
 		};
 /* End PBXProject section */
@@ -8733,6 +8790,13 @@
 			fileType = wrapper.cfbundle;
 			path = Test.octest;
 			remoteRef = 7E78DA9B0DD135DE00B9388F /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		7EE32F540E02D864000577E8 /* AHThreadedStressTester */ = {
+			isa = PBXReferenceProxy;
+			fileType = "compiled.mach-o.executable";
+			path = AHThreadedStressTester;
+			remoteRef = 7EE32F530E02D864000577E8 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		EFB1C3D80DDCA0A900B3973D /* LinkDriver.app */ = {
@@ -9958,6 +10022,14 @@
 				7EC2E1C30DF43B6A008C86B4 /* AIDeveloperLinksPlugin.m in Sources */,
 				7EC2E1CE0DF43DE7008C86B4 /* AIDLLexer.l in Sources */,
 				7EC2E1E10DF44225008C86B4 /* AIDLLinkScanner.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7EE32FD60E02DB37000577E8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7EE330000E02DBC4000577E8 /* AdiumSyncHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -12440,6 +12512,92 @@
 			};
 			name = "Deployment-Debug_PPC-Only";
 		};
+		7EE32FE10E02DB3A000577E8 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = NO;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = AdiumSyncHelper;
+			};
+			name = Development;
+		};
+		7EE32FE20E02DB3A000577E8 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = AdiumSyncHelper;
+				ZERO_LINK = NO;
+			};
+			name = Deployment;
+		};
+		7EE32FE30E02DB3A000577E8 /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = AdiumSyncHelper;
+			};
+			name = "Deployment-Debug";
+		};
+		7EE32FE40E02DB3A000577E8 /* Deployment-Debug_PPC-Only */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				PREBINDING = NO;
+				PRODUCT_NAME = AdiumSyncHelper;
+			};
+			name = "Deployment-Debug_PPC-Only";
+		};
 		DACF3EDF085574F6006BFB18 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -13375,6 +13533,17 @@
 				7EC2E19C0DF4390C008C86B4 /* Deployment */,
 				7EC2E19D0DF4390C008C86B4 /* Deployment-Debug */,
 				7EC2E19E0DF4390C008C86B4 /* Deployment-Debug_PPC-Only */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Development;
+		};
+		7EE32FE90E02DB57000577E8 /* Build configuration list for PBXNativeTarget "AdiumSyncHelper" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7EE32FE10E02DB3A000577E8 /* Development */,
+				7EE32FE20E02DB3A000577E8 /* Deployment */,
+				7EE32FE30E02DB3A000577E8 /* Deployment-Debug */,
+				7EE32FE40E02DB3A000577E8 /* Deployment-Debug_PPC-Only */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Development;
