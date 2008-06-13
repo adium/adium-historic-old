@@ -318,6 +318,18 @@ buddy_typing_stopped_cb(PurpleAccount *acct, const char *name, void *data) {
 }
 
 static void
+chat_joined_cb(PurpleConversation *conv, void *data) {
+	//Pass chats along to the account
+	if (purple_conversation_get_type(conv) == PURPLE_CONV_TYPE_CHAT) {
+		
+		AIChat *chat = groupChatLookupFromConv(conv);
+		
+		[accountLookup(purple_conversation_get_account(conv)) addChat:chat];
+	}	
+}
+
+
+static void
 file_recv_request_cb(PurpleXfer *xfer)
 {
 	ESFileTransfer  *fileTransfer;
@@ -390,6 +402,9 @@ void configureAdiumPurpleSignals(void)
 
 	purple_signal_connect(purple_conversations_get_handle(), "conversation-created",
 						  handle, PURPLE_CALLBACK(conversation_created_cb),
+						  NULL);
+	purple_signal_connect(purple_conversations_get_handle(), "chat-joined",
+						  handle, PURPLE_CALLBACK(chat_joined_cb),
 						  NULL);
 	purple_signal_connect(purple_conversations_get_handle(), "chat-join-failed",
 						  handle, PURPLE_CALLBACK(chat_join_failed_cb),
