@@ -772,13 +772,8 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 {
 	if (pboard == [NSPasteboard pasteboardWithName:NSDragPboard]) {
 		//Begin the drag
-		if (dragItems != items) {
-			[dragItems release];
-			dragItems = [items retain];
-		}
-		[self setDraggedContacts:dragItems];
 		[[adium notificationCenter] postNotificationName:@"AIListControllerDraggedItems"
-											  	  object:dragItems];
+											  	  object:items];
 	}
 	
 	[pboard declareTypes:[NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs", NSURLPboardType, NSStringPboardType, AIWebURLsWithTitlesPboardType, nil] owner:self];
@@ -963,27 +958,6 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 - (void)setShowTooltipsInBackground:(BOOL)inShowTooltipsInBackground
 {
 	showTooltipsInBackground = inShowTooltipsInBackground;
-}
-
-
-/*!
- *@brief accessor methods for draggedContactsArray
- */
- 
--(void)setDraggedContacts:(NSArray*)contacts
-{
-	if(draggedContacts != contacts)
-	{
-		[draggedContacts release];
-		draggedContacts = contacts;
-	}
-	[draggedContacts retain];
-
-}
-
--(NSArray*)draggedContacts
-{
-	return [[draggedContacts retain] autorelease];
 }
 
 #pragma mark Find Panel

@@ -192,7 +192,6 @@ typedef enum {
 	BOOL								showTooltips;
 	BOOL								showTooltipsInBackground;
 
-	NSArray								*draggedContacts;
 	NSString							*dragOperation;
 
 	BOOL								useContactListGroups;
@@ -234,8 +233,6 @@ typedef enum {
 
 - (void)setShowTooltips:(BOOL)inShowTooltips;
 - (void)setShowTooltipsInBackground:(BOOL)inShowTooltipsInBackground;
-- (void)setDraggedContacts:(NSArray*)contacts;
-- (NSArray*)draggedContacts;
 - (void)pasteboard:(NSPasteboard *)sender provideDataForType:(NSString *)type;
 
 //Drag & Drop
