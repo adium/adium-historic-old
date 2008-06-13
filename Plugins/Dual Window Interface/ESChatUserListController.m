@@ -69,7 +69,7 @@
 	BOOL			success = NO;
 	AIChat			*activeChat = [[adium interfaceController] activeChatInWindow:[info draggingDestinationWindow]];
 	AIAccount		*activeChatAccount = [activeChat account];
-	NSEnumerator	*enumerator = [[self draggedContacts] objectEnumerator];
+	NSEnumerator	*enumerator = [dragItems objectEnumerator];
 	AIListObject	*listObject;
 	
 	while ((listObject = [enumerator nextObject])) {
@@ -102,7 +102,7 @@
  */
 - (NSDragOperation)outlineView:(NSOutlineView*)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
 {
-	NSEnumerator	*enumerator = [[self draggedContacts] objectEnumerator];
+	NSEnumerator	*enumerator = [dragItems objectEnumerator];
 	AIListObject	*listObject;
 	AIChat			*activeChat = [[adium interfaceController] activeChatInWindow:[info draggingDestinationWindow]];
 	AIAccount		*activeChatAccount = [activeChat account];
