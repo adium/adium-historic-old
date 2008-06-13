@@ -103,9 +103,7 @@
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	if (object) {
-		if ([AIUserIcons userIconSource:self changeWouldBeRelevantForObject:object]) {
-			[AIUserIcons updateUserIconForObject:object];
-		}
+		[AIUserIcons userIconSource:self didChangeForObject:object];
 
 	} else {
 		AIUserIconPriority oldPriority = priority;
