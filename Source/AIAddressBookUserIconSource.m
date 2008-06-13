@@ -102,15 +102,22 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	AIUserIconPriority oldPriority = priority;
-	BOOL oldUseABImages = useABImages;
+	if (object) {
+		if ([AIUserIcons userIconSource:self changeWouldBeRelevantForObject:object]) {
+			[AIUserIcons updateUserIconForObject:object];
+		}
 
-	preferAddressBookImages = [[prefDict objectForKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES] boolValue];
-	useABImages = [[prefDict objectForKey:KEY_AB_USE_IMAGES] boolValue];
-	
-	priority = (preferAddressBookImages ? AIUserIconHighPriority : AIUserIconLowPriority);
-	if ((priority != oldPriority) || (oldUseABImages != useABImages)) {
-		[AIUserIcons userIconSource:self priorityDidChange:priority fromPriority:oldPriority];
+	} else {
+		AIUserIconPriority oldPriority = priority;
+		BOOL oldUseABImages = useABImages;
+		
+		preferAddressBookImages = [[prefDict objectForKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES] boolValue];
+		useABImages = [[prefDict objectForKey:KEY_AB_USE_IMAGES] boolValue];
+		
+		priority = (preferAddressBookImages ? AIUserIconHighPriority : AIUserIconLowPriority);
+		if ((priority != oldPriority) || (oldUseABImages != useABImages)) {
+			[AIUserIcons userIconSource:self priorityDidChange:priority fromPriority:oldPriority];
+		}
 	}
 }
 
