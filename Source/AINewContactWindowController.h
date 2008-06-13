@@ -21,6 +21,7 @@
 #define KEY_ADD_CONTACT_TO		@"Add Contacts to account"
 
 @class AIAccount, AIService, AILocalizationButton, AILocalizationTextField;
+@class ABPerson;
 
 @interface AINewContactWindowController : AIWindowController <AIListObjectObserver> {
 	IBOutlet	NSPopUpButton				*popUp_contactType;
@@ -46,7 +47,7 @@
 	NSString						*contactName;
 	AIService						*service;
 	AIAccount						*initialAccount;
-	NSString						*uniqueID;
+	ABPerson						*person;
 }
 
 + (void)promptForNewContactOnWindow:(NSWindow *)parentWindow name:(NSString *)contact service:(AIService *)inService  account:(AIAccount *)inAccount;

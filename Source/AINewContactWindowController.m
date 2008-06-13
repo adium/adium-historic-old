@@ -89,12 +89,12 @@
  */
 - (id)initWithWindowNibName:(NSString *)windowNibName contactName:(NSString *)inName service:(AIService *)inService account:(AIAccount *)inAccount
 {
-    self = [super initWithWindowNibName:windowNibName];
-
-	service = [inService retain];
-	initialAccount = [inAccount retain];
-	contactName = [inName retain];
-	uniqueID = nil;
+    if ((self = [super initWithWindowNibName:windowNibName])) {
+		service = [inService retain];
+		initialAccount = [inAccount retain];
+		contactName = [inName retain];
+		person = nil;
+	}
 	
 	return self;
 }
@@ -108,7 +108,7 @@
 	[contactName release];
 	[service release];
 	[initialAccount release];
-	[uniqueID release];
+	[person release];
 	[checkedAccounts release];
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -213,8 +213,8 @@
 				[contactArray addObject:contact];
 				
 				//Remember the ABPerson's unique ID associated with this contact
-				if (uniqueID)
-					[contact setPreference:uniqueID forKey:KEY_AB_UNIQUE_ID group:PREF_GROUP_ADDRESSBOOK];
+				if (person)
+					[contact setAddressBookPerson:person];
 
 				//Force this contact to show up on the user's list for a little bit, even if it is offline
 				//Otherwise they have no good feedback that a contact was added at all.
@@ -269,7 +269,8 @@
 			[self selectServiceType:nil];
 		}
 		
-		uniqueID = [[selectedPerson uniqueId] retain];
+		[person release];
+		person = [selectedPerson retain];
 		
 		[self configureControlDimming];
 	}
