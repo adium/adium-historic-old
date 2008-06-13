@@ -1663,7 +1663,7 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 3496A8E707CE6CA30055BBAB /* AutoHyperlinks.framework.xcodeproj */;
 			proxyType = 2;
-			remoteGlobalIDString = 7ED4FDD00E002653004C5F4B /* AHThreadedStressTester */;
+			remoteGlobalIDString = 7ED4FDD00E002653004C5F4B;
 			remoteInfo = ThreadedStressTester;
 		};
 		B72537BD058C45CF004BA969 /* PBXContainerItemProxy */ = {
@@ -4139,6 +4139,7 @@
 		77D903500B78CF1000B86C42 /* zhm */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; name = zhm; path = "Plugins/Purple Service/zhm"; sourceTree = "<group>"; };
 		7E1E8176063A3EEC00EB00F7 /* AIContextMenuTextView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContextMenuTextView.h; path = "Frameworks/Adium Framework/Source/AIContextMenuTextView.h"; sourceTree = "<group>"; };
 		7E1E8177063A3EEC00EB00F7 /* AIContextMenuTextView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContextMenuTextView.m; path = "Frameworks/Adium Framework/Source/AIContextMenuTextView.m"; sourceTree = "<group>"; };
+		7E81056F0E02DF330070A7E2 /* AdiumSyncHelper.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumSyncHelper.pch; path = SyncServices/source/AdiumSyncHelper.pch; sourceTree = "<group>"; };
 		7E824CCE06387FAF00813072 /* LinkEditor.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = LinkEditor.nib; path = Resources/LinkEditor.nib; sourceTree = SOURCE_ROOT; };
 		7E824CD106387FAF00813072 /* SHAutoValidatingTextView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SHAutoValidatingTextView.h; sourceTree = "<group>"; };
 		7E824CD206387FAF00813072 /* SHAutoValidatingTextView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SHAutoValidatingTextView.m; sourceTree = "<group>"; };
@@ -4155,7 +4156,7 @@
 		7EC2E1DF0DF44224008C86B4 /* AIDLLinkScanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIDLLinkScanner.h; path = "Plugins/Developer Links/AIDLLinkScanner.h"; sourceTree = "<group>"; };
 		7EC2E1E00DF44224008C86B4 /* AIDLLinkScanner.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIDLLinkScanner.m; path = "Plugins/Developer Links/AIDLLinkScanner.m"; sourceTree = "<group>"; };
 		7EC2E1E90DF447C6008C86B4 /* AIDeveloperLinksPlugin.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIDeveloperLinksPlugin.pch; path = "Plugins/Developer Links/AIDeveloperLinksPlugin.pch"; sourceTree = "<group>"; };
-		7EE32FD90E02DB37000577E8 /* AdiumSyncHelper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = AdiumSyncHelper; path = build/Development/AdiumSyncHelper; sourceTree = "<group>"; };
+		7EE32FD90E02DB37000577E8 /* AdiumSyncHelper */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AdiumSyncHelper; sourceTree = BUILT_PRODUCTS_DIR; };
 		7EE32FE50E02DB55000577E8 /* SyncServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SyncServices.framework; path = System/Library/Frameworks/SyncServices.framework; sourceTree = SDKROOT; };
 		7EE32FFE0E02DBC4000577E8 /* AdiumSyncHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumSyncHelper.h; path = SyncServices/source/AdiumSyncHelper.h; sourceTree = SOURCE_ROOT; };
 		7EE32FFF0E02DBC4000577E8 /* AdiumSyncHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumSyncHelper.m; path = SyncServices/source/AdiumSyncHelper.m; sourceTree = SOURCE_ROOT; };
@@ -7317,6 +7318,7 @@
 		7EE32FFD0E02DB9B000577E8 /* Sync Services */ = {
 			isa = PBXGroup;
 			children = (
+				7E81056F0E02DF330070A7E2 /* AdiumSyncHelper.pch */,
 				7EE32FFE0E02DBC4000577E8 /* AdiumSyncHelper.h */,
 				7EE32FFF0E02DBC4000577E8 /* AdiumSyncHelper.m */,
 			);
@@ -12522,7 +12524,7 @@
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_PREFIX_HEADER = SyncServices/source/AdiumSyncHelper.pch;
 				INSTALL_PATH = /usr/local/bin;
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -12544,7 +12546,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_PREFIX_HEADER = SyncServices/source/AdiumSyncHelper.pch;
 				INSTALL_PATH = /usr/local/bin;
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -12565,7 +12567,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_PREFIX_HEADER = SyncServices/source/AdiumSyncHelper.pch;
 				INSTALL_PATH = /usr/local/bin;
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -12585,7 +12587,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				GCC_PREFIX_HEADER = SyncServices/source/AdiumSyncHelper.pch;
 				INSTALL_PATH = /usr/local/bin;
 				OTHER_LDFLAGS = (
 					"-framework",

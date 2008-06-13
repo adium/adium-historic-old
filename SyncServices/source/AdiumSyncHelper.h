@@ -6,8 +6,8 @@
 //  Copyright 2008 Adium. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-
+#define ADIUM_SYNC_PATHNAME @"SyncServices"
+#define ADIUM_SYNC_SCHEMA_NAME @"AdiumSyncSchema.syncschema"
 
 @interface AdiumSyncHelper : NSObject {
 
