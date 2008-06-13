@@ -472,7 +472,10 @@ NSString* serviceIDForJabberUID(NSString *UID);
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if (object) return;
+	if (object) {
+		[[adium contactController] updateContacts:[NSSet setWithObject:object] forObserver:self];
+		return;
+	}
 
     if ([group isEqualToString:PREF_GROUP_ADDRESSBOOK]) {
 		BOOL			oldCreateMetaContacts = createMetaContacts;
