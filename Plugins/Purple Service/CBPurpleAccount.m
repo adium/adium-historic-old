@@ -682,6 +682,35 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 //Chats ------------------------------------------------------------
 #pragma mark Chats
 
+- (void)updateUserListForChat:(AIChat *)chat
+{
+	PurpleConversation *conv = [[chat identifier] pointerValue];
+	if (conv) {
+		GList *l;
+		GList *users = purple_conv_chat_get_users(purple_conversation_get_chat_data(conv));
+		NSMutableArray *usersArray = [NSMutableArray array];
+		NSMutableArray *flagsArray = [NSMutableArray array];
+		NSMutableArray *aliasesArray = [NSMutableArray array];
+		
+		for (l = users; l; l = l->next) {
+			PurpleConvChatBuddy *cb = (PurpleConvChatBuddy *)l->data;
+			const char *name = purple_conv_chat_cb_get_name(cb);
+			const char *alias = cb->alias;
+			PurpleConvChatBuddyFlags flags = cb->flags;
+			
+			[usersArray addObject:[NSString stringWithUTF8String:name]];
+			[flagsArray addObject:[NSNumber numberWithInt:flags]];
+			[aliasesArray addObject:(alias ? [NSString stringWithUTF8String:alias] : @"")];
+		}
+		AILogWithSignature(@"Adding %@ back to chat", usersArray);
+		[self addUsersArray:usersArray
+				  withFlags:flagsArray
+				 andAliases:aliasesArray
+				newArrivals:[NSNumber numberWithBool:NO]
+					 toChat:chat];
+	}	
+}
+
 /*!
  * @brief Called by Purple code when a chat should be opened by the interface
  *
@@ -700,8 +729,15 @@ static SLPurpleCocoaAdapter *purpleAdapter = nil;
 	AILogWithSignature(@"");
 
 	//Open the chat
-	if ([chat isOpen])
+	if ([chat isOpen]) {
 		[self displayYouHaveConnectedInChat:chat];
+		
+		if ([chat isGroupChat]) {
+			[self performSelector:@selector(updateUserListForChat:)
+					   withObject:chat
+					   afterDelay:0];
+		}
+	}
 
 	[[adium interfaceController] openChat:chat];
 	
