@@ -43,6 +43,7 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIMutableStringAdditions.h>
+#import <AIUtilities/AIPasteboardAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 
 #define KEY_WEBKIT_CHATS_USING_CACHED_ICON @"WebKit:Chats Using Cached Icon"
@@ -334,6 +335,7 @@ static NSArray *draggedTypes = nil;
 	if (!draggedTypes) {
 		draggedTypes = [[NSArray alloc] initWithObjects:
 			NSFilenamesPboardType,
+			AIiTunesTrackPboardType,
 			NSTIFFPboardType,
 			NSPDFPboardType,
 			NSPICTPboardType,
