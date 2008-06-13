@@ -12,3 +12,13 @@
 @implementation AdiumSyncHelper
 
 @end
+
+int main(int argc, const char *argv[])
+{
+	NSAutoreleasePool	*pool = [[NSAutoreleasePool alloc] init];
+	AdiumSyncHelper *syncHelper = [[AdiumSyncHelper alloc] init];
+	if([[ISyncManager sharedManager] isEnabled]) {
+		[ISyncSession beginSessionWithClient:[syncHelper sessionClient] entityNames:[syncHelper entities] beforeDate:[NSDate distantFuture]];
+	}
+	[pool release];
+}
