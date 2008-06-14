@@ -165,7 +165,7 @@ typedef enum {
 
 @interface NSObject(AIListControllerOptionalDelegateMethods)
 - (void)toggleFindPanel:(id)sender;
-- (void)forwardKeyEventToFindPanel:(NSEvent *)theEvent;
+- (BOOL)forwardKeyEventToFindPanel:(NSEvent *)theEvent;
 @end
 
 @interface AIAbstractListController : AIObject <AISmoothTooltipTrackerDelegate> {	

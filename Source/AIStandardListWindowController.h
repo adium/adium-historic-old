@@ -63,7 +63,6 @@ typedef enum {
 										 ownDisplayNameAccounts:(NSMutableSet *)ownDisplayNameAccounts;
 
 - (void)toggleFindPanel:(id)sender;
-- (void)forwardKeyEventToFindPanel:(NSEvent *)theEvent;
 - (IBAction)hideFilterBar:(id)sender;
 - (IBAction)filterContacts:(id)sender;
 
