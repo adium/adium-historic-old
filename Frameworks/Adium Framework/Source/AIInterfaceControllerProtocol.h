@@ -472,8 +472,9 @@ typedef enum {
  * The returned array has zero or more NSDictionary objects with the following information for each container
  *	Key			Value
  *	@"ID"		NSString of the containerID
- *  @"Frame"	NSString of the window's [NSWindow frame]
+ *	@"Frame"	NSString of the window's [NSWindow frame]
  *	@"Content"	NSArray of the AIChat objects within that container
+ *	@"ActiveChat"	AIChat that is currently active
  *	@"Name"		NSString of the container's name
  */
 - (NSArray *)openContainersAndChats;
