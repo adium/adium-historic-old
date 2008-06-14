@@ -9,5 +9,9 @@
 
 
 @implementation AIFacebookAccountViewController
-
+//Options view
+- (NSView *)optionsView
+{
+    return nil;
+}
 @end
