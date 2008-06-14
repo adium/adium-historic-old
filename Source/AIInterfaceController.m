@@ -407,7 +407,7 @@
 	// If there's no data, we can't restore anything.
 	if (!savedData)
 		return;
-
+	
 	NSEnumerator		*enumerator = [[NSKeyedUnarchiver unarchiveObjectWithData:savedData] objectEnumerator];
 	NSDictionary		*dict;
 	
@@ -420,12 +420,13 @@
 		
 		NSEnumerator			*chatEnumerator = [[dict objectForKey:@"Content"] objectEnumerator];
 		NSDictionary			*chatDict;
+		AIChat					*containerActiveChat = nil;
 		
 		while ((chatDict = [chatEnumerator nextObject])) {
 			AIChat			*chat = nil;
 			AIService		*service = [[adium accountController] firstServiceWithServiceID:[chatDict objectForKey:@"serviceID"]];
 			AIAccount		*account = [[adium accountController] accountWithInternalObjectID:[chatDict objectForKey:@"AccountID"]];
-				
+					
 			if ([[chatDict objectForKey:@"IsGroupChat"] boolValue]) {
 				chat = [[adium chatController] chatWithName:[chatDict objectForKey:@"Name"]
 												 identifier:nil
@@ -433,8 +434,8 @@
 										   chatCreationInfo:[chatDict objectForKey:@"ChatCreationInfo"]];
 			} else {
 				AIListContact		*contact = [[adium contactController] contactWithService:service
-																				account:account
-																					UID:[chatDict objectForKey:@"UID"]];
+																					account:account
+																						UID:[chatDict objectForKey:@"UID"]];
 				
 				chat = [[adium chatController] chatWithContact:contact];
 			}
@@ -443,10 +444,17 @@
 			[chat setValue:[NSNumber numberWithBool:YES]
 			   forProperty:@"Restored Chat"
 					notify:NotifyNow];
+			
+			if ([[chatDict objectForKey:@"ActiveChat"] boolValue]) {
+				containerActiveChat = chat;
+			}
 					
 			// Open the chat into the container we've created above.
 			[self openChat:chat inContainerWithID:[dict objectForKey:@"ID"] atIndex:-1];
 		}
+		
+		if (containerActiveChat)
+			[self setActiveChat:containerActiveChat];
 	}
 }
 
@@ -469,7 +477,7 @@
 		// Don't save anything if we're not set to.
 		return;
 	}
-	
+
 	// Save active containers.
 	NSMutableArray		*savedContainers = [NSMutableArray array];
 	NSEnumerator		*enumerator = [[interfacePlugin openContainersAndChats] objectEnumerator];
@@ -484,27 +492,32 @@
 			NSMutableDictionary		*newContainerDict = [NSMutableDictionary dictionary];
 
 			[newContainerDict setObject:[[chat account] internalObjectID] forKey:@"AccountID"];
-
+			
 			// Save chat-specific information.
 			if ([chat isGroupChat]) {
 				// -chatCreationDictionary may be nil, so put it last.
 				[newContainerDict addEntriesFromDictionary:[NSDictionary dictionaryWithObjectsAndKeys:
 															[NSNumber numberWithBool:YES], @"IsGroupChat",
+															[NSNumber numberWithBool:([dict objectForKey:@"ActiveChat"] == chat)], @"ActiveChat",
 															[chat name], @"Name",
 															[chat chatCreationDictionary], @"ChatCreationInfo",nil]];
 			} else {
 				[newContainerDict addEntriesFromDictionary:[NSDictionary dictionaryWithObjectsAndKeys:
+															[NSNumber numberWithBool:([dict objectForKey:@"ActiveChat"] == chat)], @"ActiveChat",
 															[[chat listObject] UID], @"UID",
 															[[chat listObject] serviceID], @"serviceID",
 															[[chat account] internalObjectID], @"AccountID",nil]];
 			}
-			
+					
 			[containerContents addObject:newContainerDict];
 		}
 		
 		// Replace the "Content" key in -openContainersAndChats with our version of the content.
+		// Remove the ActiveChat reference
 		// We use the same keys otherwise that -openContainersAndChats provides (Name, ID, Frame)
 		NSMutableDictionary *saveDict = [[dict mutableCopy] autorelease];
+
+		[saveDict removeObjectForKey:@"ActiveChat"];
 		
 		[saveDict setObject:containerContents
 					 forKey:@"Content"];
