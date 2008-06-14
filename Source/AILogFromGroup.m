@@ -94,7 +94,7 @@
 
 - (void)removeToGroup:(AILogToGroup *)toGroup
 {
-	[[NSFileManager defaultManager] trashFileAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[toGroup path]]];
+	[[NSFileManager defaultManager] trashFileAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[toGroup relativePath]]];
 
 	[toGroupArray removeObjectIdenticalTo:toGroup];
 }

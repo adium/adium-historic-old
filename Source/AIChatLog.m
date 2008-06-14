@@ -30,7 +30,7 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
 - (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo serviceClass:(NSString *)inServiceClass
 {
     if ((self = [super init])) {
-		path = [inPath retain];
+		relativePath = [inPath retain];
 		from = [inFrom retain];
 		to = [inTo retain];
 		serviceClass = [inServiceClass retain];
@@ -42,7 +42,7 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
 
 - (id)initWithPath:(NSString *)inPath
 {
-	NSString *parentPath = [path stringByDeletingLastPathComponent];
+	NSString *parentPath = [inPath stringByDeletingLastPathComponent];
 	NSString *toUID = [parentPath lastPathComponent];
 	NSString *serviceAndFromUID = [[parentPath stringByDeletingLastPathComponent] lastPathComponent];
 
@@ -72,7 +72,7 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
 
 - (void)dealloc
 {
-    [path release];
+    [relativePath release];
     [from release];
     [to release];
 	[serviceClass release];
@@ -81,8 +81,8 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
     [super dealloc];
 }
 
-- (NSString *)path{
-    return path;
+- (NSString *)relativePath{
+    return relativePath;
 }
 - (NSString *)from{
     return from;
@@ -96,13 +96,13 @@ static NSCalendarDate *dateFromFileName(NSString *fileName);
 - (NSCalendarDate *)date{
 	//Determine the date of this log lazily
 	if (!date) {
-		date = [dateFromFileName([path lastPathComponent]) retain];
+		date = [dateFromFileName([relativePath lastPathComponent]) retain];
 
 		if (!date) {
 			//Sometimes the filename doesn't have a date (e.g., “jdoe ((null)).chatlog”). In such cases, if it's a chatlog, parse it and get the date from the first element that has one.
 			//We don't do this first because NSXMLParser uses +[NSData dataWithContentsOfURL:], which is painful for large log files.
-			if ([[path pathExtension] isEqualToString:@"chatlog"]) {
-				NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:[NSURL fileURLWithPath:[[[[[AIObject sharedAdiumInstance] loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByAppendingPathComponent:path]]];
+			if ([[relativePath pathExtension] isEqualToString:@"chatlog"]) {
+				NSXMLParser *parser = [[NSXMLParser alloc] initWithContentsOfURL:[NSURL fileURLWithPath:[[[[[AIObject sharedAdiumInstance] loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByAppendingPathComponent:relativePath]]];
 				[parser setDelegate:self];
 				[parser parse];
 				[parser release];

@@ -289,7 +289,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 
 				if ((currentTo = [currentToGroup to])) {
 					//Store currentToGroup on a key in the form "SERVICE.ACCOUNT_NAME/TARGET_CONTACT"
-					[logToGroupDict setObject:currentToGroup forKey:[currentToGroup path]];
+					[logToGroupDict setObject:currentToGroup forKey:[currentToGroup relativePath]];
 				}
 			}
 
@@ -717,9 +717,9 @@ static int toArraySort(id itemA, id itemB, void *context);
 					   withAttributes:[[AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:NSBoldFontMask size:12] dictionary]];
 		}
 		
-		if ([[theLog path] hasSuffix:@".AdiumHTMLLog"] || [[theLog path] hasSuffix:@".html"] || [[theLog path] hasSuffix:@".html.bak"]) {
+		if ([[theLog relativePath] hasSuffix:@".AdiumHTMLLog"] || [[theLog relativePath] hasSuffix:@".html"] || [[theLog relativePath] hasSuffix:@".html.bak"]) {
 			//HTML log
-			NSString		   *logFileText = [NSString stringWithContentsOfFile:[logBasePath stringByAppendingPathComponent:[theLog path]]];
+			NSString		   *logFileText = [NSString stringWithContentsOfFile:[logBasePath stringByAppendingPathComponent:[theLog relativePath]]];
 			NSAttributedString *attributedLogFileText = [AIHTMLDecoder decodeHTML:logFileText];
 
 			if (showEmoticons) {
@@ -735,9 +735,9 @@ static int toArraySort(id itemA, id itemB, void *context);
 				displayText = [attributedLogFileText mutableCopy];
 			}
 
-		} else if ([[theLog path] hasSuffix:@".chatlog"]){
+		} else if ([[theLog relativePath] hasSuffix:@".chatlog"]){
 			//XML log
-			NSString *logFullPath = [logBasePath stringByAppendingPathComponent:[theLog path]];
+			NSString *logFullPath = [logBasePath stringByAppendingPathComponent:[theLog relativePath]];
 			
 			BOOL isDir;
 			if ([[NSFileManager defaultManager] fileExistsAtPath:logFullPath isDirectory:&isDir]) {
@@ -760,7 +760,7 @@ static int toArraySort(id itemA, id itemB, void *context);
 
 		} else {
 			//Fallback: Plain text log
-			NSString *logFileText = [NSString stringWithContentsOfFile:[logBasePath stringByAppendingPathComponent:[theLog path]]];
+			NSString *logFileText = [NSString stringWithContentsOfFile:[logBasePath stringByAppendingPathComponent:[theLog relativePath]]];
 			if (logFileText) {
 				AITextAttributes *textAttributes = [AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12];
 				NSAttributedString *attributedLogFileText = [[[NSAttributedString alloc] initWithString:logFileText 
@@ -1369,10 +1369,10 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 		NSString		*toPath = [NSString stringWithFormat:@"%@/%@",
 			[pathComponents objectAtIndex:numPathComponents-3],
 			[pathComponents objectAtIndex:numPathComponents-2]];
-		NSString		*path = [NSString stringWithFormat:@"%@/%@",toPath,[pathComponents objectAtIndex:numPathComponents-1]];
+		NSString		*relativePath = [NSString stringWithFormat:@"%@/%@",toPath,[pathComponents objectAtIndex:numPathComponents-1]];
 		AIChatLog		*theLog;
 		
-		theLog = [[logToGroupDict objectForKey:toPath] logAtPath:path];
+		theLog = [[logToGroupDict objectForKey:toPath] logAtPath:relativePath];
 		
 		shouldDisplayDocument = [self chatLogMatchesDateFilter:theLog];
 	}
@@ -2419,7 +2419,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 
 	enumerator = [deletedLogs objectEnumerator];
 	while ((aLog = [enumerator nextObject])) {
-		NSString *logPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[aLog path]];
+		NSString *logPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[aLog relativePath]];
 		
 		[fileManager createDirectoriesForPath:[logPath stringByDeletingLastPathComponent]];
 		
@@ -2447,24 +2447,24 @@ static int toArraySort(id itemA, id itemB, void *context)
 		
 		enumerator = [selectedLogs objectEnumerator];
 		while ((aLog = [enumerator nextObject])) {
-			NSString *logPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[aLog path]];
+			NSString *logPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[aLog relativePath]];
 			
 			[[adium notificationCenter] postNotificationName:ChatLog_WillDelete object:aLog userInfo:nil];
-			AILogToGroup	*logToGroup = [logToGroupDict objectForKey:[NSString stringWithFormat:@"%@.%@/%@",[aLog serviceClass],[aLog from],[aLog to]]];
+			AILogToGroup	*logToGroup = [logToGroupDict objectForKey:[[aLog relativePath] stringByDeletingLastPathComponent]];
 
 			// Success will be unused in deployment builds as AILog turns to nothing
 #ifdef DEBUG_BUILD
 			BOOL success = [logToGroup trashLog:aLog];
-			AILog(@"Trashing %@: %i",[aLog path], success);
+			AILog(@"Trashing %@: %i",[aLog relativePath], success);
 #else
 			[logToGroup trashLog:aLog];
 #endif
 			//Clear the to group out if it no longer has anything of interest
 			if ([logToGroup logCount] == 0) {
-				AILogFromGroup	*logFromGroup = [logFromGroupDict objectForKey:[NSString stringWithFormat:@"%@.%@",[aLog serviceClass],[aLog from]]];
+				AILogFromGroup	*logFromGroup = [logFromGroupDict objectForKey:[[[aLog relativePath] stringByDeletingLastPathComponent] stringByDeletingLastPathComponent]];
 				[logFromGroup removeToGroup:logToGroup];
 			}
-			
+
 			[logPaths addObject:logPath];
 			[currentSearchResults removeObjectIdenticalTo:aLog];
 		}
@@ -2560,7 +2560,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 
 	enumerator = [toGroups objectEnumerator];
 	while ((toGroup = [enumerator nextObject])) {
-		NSString *toGroupPath = [logBasePath stringByAppendingPathComponent:[toGroup path]];
+		NSString *toGroupPath = [logBasePath stringByAppendingPathComponent:[toGroup relativePath]];
 
 		[fileManager createDirectoriesForPath:[toGroupPath stringByDeletingLastPathComponent]];
 		if ([fileManager fileExistsAtPath:toGroupPath]) {
@@ -2577,7 +2577,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 		AIChatLog	 *aLog;
 	
 		while ((aLog = [logEnumerator nextObject])) {
-			[plugin markLogDirtyAtPath:[logBasePath stringByAppendingPathComponent:[aLog path]]];
+			[plugin markLogDirtyAtPath:[logBasePath stringByAppendingPathComponent:[aLog relativePath]]];
 		}
 	}
 	
@@ -2599,7 +2599,7 @@ static int toArraySort(id itemA, id itemB, void *context)
 			
 			logEnumerator = [logToGroup logEnumerator];
 			while ((aLog = [logEnumerator nextObject])) {
-				NSString *logPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[aLog path]];
+				NSString *logPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[aLog relativePath]];
 				[logPaths addObject:logPath];
 			}
 			
