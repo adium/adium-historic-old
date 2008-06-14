@@ -1,19 +1,49 @@
-{
-    IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {
-            ACTIONS = {cancel = id; dontAskAgain = id; installGrowl = id; }; 
-            CLASS = GrowlInstallationPrompt; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                "button_cancel" = NSButton; 
-                "button_install" = NSButton; 
-                "checkBox_dontAskAgain" = NSButton; 
-                "scrollView_growlInfo" = NSScrollView; 
-                "textView_growlInfo" = NSTextView; 
-            }; 
-            SUPERCLASS = NSWindowController; 
-        }
-    ); 
-    IBVersion = 1; 
-}
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IBClasses</key>
+	<array>
+		<dict>
+			<key>CLASS</key>
+			<string>FirstResponder</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>SUPERCLASS</key>
+			<string>NSObject</string>
+		</dict>
+		<dict>
+			<key>ACTIONS</key>
+			<dict>
+				<key>cancel</key>
+				<string>id</string>
+				<key>dontAskAgain</key>
+				<string>id</string>
+				<key>installGrowl</key>
+				<string>id</string>
+			</dict>
+			<key>CLASS</key>
+			<string>GrowlInstallationPrompt</string>
+			<key>LANGUAGE</key>
+			<string>ObjC</string>
+			<key>OUTLETS</key>
+			<dict>
+				<key>button_cancel</key>
+				<string>NSButton</string>
+				<key>button_install</key>
+				<string>NSButton</string>
+				<key>checkBox_dontAskAgain</key>
+				<string>NSButton</string>
+				<key>scrollView_growlInfo</key>
+				<string>NSScrollView</string>
+				<key>textView_growlInfo</key>
+				<string>NSTextView</string>
+			</dict>
+			<key>SUPERCLASS</key>
+			<string>NSWindowController</string>
+		</dict>
+	</array>
+	<key>IBVersion</key>
+	<string>1</string>
+</dict>
+</plist>
