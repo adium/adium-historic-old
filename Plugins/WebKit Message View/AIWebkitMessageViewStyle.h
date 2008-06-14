@@ -102,7 +102,7 @@ typedef enum {
 	BOOL				allowsCustomBackground;
 	BOOL				transparentDefaultBackground;
 	BOOL				allowsUserIcons;
-	BOOL				usingCustomBaseHTML;
+	BOOL				usingCustomTemplateHTML;
 
 	//Behavior
 	NSDateFormatter		*timeStampFormatter;
