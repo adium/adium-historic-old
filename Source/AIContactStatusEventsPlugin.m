@@ -321,7 +321,6 @@
 
 				//Update away/not-away
 				newAwayNumber = [NSNumber numberWithBool:([inObject statusType] == AIAwayStatusType)];
-				
 				awayChanged = [self updateCache:awayCache
 										 forKey:@"Away"
 									   newValue:newAwayNumber
@@ -334,7 +333,8 @@
 												 forKey:@"StatusMessage"
 											   newValue:newStatusMessage
 											 listObject:inObject
-										 performCompare:YES];				
+										 performCompare:YES];
+
 				if (statusMessageChanged && !silent) {
 					if (newStatusMessage != nil) {
 						//Evan: Not yet a contact alert, but we use the notification - how could/should we use this?
@@ -400,7 +400,7 @@
 
 	if ((newStatus && !oldStatus) ||
 	   (oldStatus && !newStatus) ||
-	   ((performCompare && newStatus && oldStatus && ![newStatus performSelector:@selector(compare:) withObject:oldStatus] == 0))) {
+	   ((performCompare && newStatus && oldStatus && ![newStatus performSelector:@selector(compare:) withObject:oldStatus] == NSOrderedSame))) {
 		
 		if (newStatus) {
 			[cache setObject:newStatus forKey:[inObject internalObjectID]];
