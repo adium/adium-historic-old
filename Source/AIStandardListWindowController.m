@@ -816,14 +816,18 @@
 
 #pragma mark Filtering
 /*!
- * @brief Toggles the find bar on and off
+ * @brief Toggles the find bar on, or brings it into focus if it is already visible
  */
 - (void)toggleFindPanel:(id)sender;
 {
 	if (filterBarIsVisible) {
-		[self hideFilterBarWithAnimation:YES];
+		[[self window] makeFirstResponder:searchField]; 
+
 	} else if ([contactListView numberOfRows] > 0) {
 		[self showFilterBarWithAnimation:YES];
+
+	} else {
+		NSBeep();
 	}
 }
 
