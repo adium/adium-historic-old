@@ -17,7 +17,7 @@
 #import "ESWebKitMessageViewPreferences.h"
 #import "AIWebKitMessageViewPlugin.h"
 #import "AIWebkitMessageViewStyle.h"
-#import "AIWebKitMessageViewController.h"
+#import "AIWebKitPreviewMessageViewController.h"
 #import "AIPreviewChat.h"
 #import "ESWebView.h"
 #import <Adium/AIAccountControllerProtocol.h>
@@ -460,13 +460,13 @@
 	
 	NSDictionary *listObjects;
 	previewChat = [self previewChatWithDictionary:previewDict fromPath:previewPath listObjects:&listObjects];
-	previewController = [[AIWebKitMessageViewController messageDisplayControllerForChat:previewChat
-																		  withPlugin:plugin] retain];
+	previewController = [[AIWebKitPreviewMessageViewController messageDisplayControllerForChat:previewChat
+																					withPlugin:plugin] retain];
 
 	//Enable live refreshing of our preview
 	[previewController setShouldReflectPreferenceChanges:YES];	
 	[previewController setPreferencesChangedDelegate:self];
-
+	
 	//Add fake users and content to our chat
 	[self _fillContentOfChat:previewChat withDictionary:previewDict fromPath:previewPath listObjects:listObjects];
 	[previewDict release];
