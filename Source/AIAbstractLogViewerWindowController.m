@@ -1549,7 +1549,11 @@ NSArray *pathComponentsForDocument(SKDocumentRef inDocument)
 																																		UID:[theLog to]]];
 			if (listObject) {
 				//Use the longDisplayName, following the user's contact list preferences as this is presumably how she wants to view contacts' names.
-				value = [listObject longDisplayName];
+				if (![[listObject displayName] isEqualToString:[listObject UID]]) {
+					value = [NSString stringWithFormat:@"%@ (%@)", [listObject displayName], [listObject UID]];
+				} else {
+					value = [listObject formattedUID];
+				}
 
 			} else {
 				//No username available
