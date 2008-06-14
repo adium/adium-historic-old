@@ -356,8 +356,6 @@ static NSArray *validSenderColors;
 			(footerHTML ? footerHTML : @"")];
 	}
 
-	AILogWithSignature(@"templateHTML: %@", templateHTML);
-	
 	return [self fillKeywordsForBaseTemplate:templateHTML chat:chat];
 }
 
