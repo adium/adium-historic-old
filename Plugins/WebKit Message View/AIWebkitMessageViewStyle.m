@@ -150,6 +150,7 @@ static NSArray *validSenderColors;
 		 *            The default variant is now a separate file in /variants like all other variants.
 		 *			  Template.html now includes appendMessageNoScroll() and appendNextMessageNoScroll() which behave
 		 *				the same as appendMessage() and appendNextMessage() in Versions 1 and 2 but without scrolling.
+		 * Version 4: Template.html now includes replaceLastMessage()
 		 */
 		styleVersion = [[styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_VERSION] intValue];
 
@@ -355,6 +356,8 @@ static NSArray *validSenderColors;
 			(footerHTML ? footerHTML : @"")];
 	}
 
+	AILogWithSignature(@"templateHTML: %@", templateHTML);
+	
 	return [self fillKeywordsForBaseTemplate:templateHTML chat:chat];
 }
 
@@ -470,10 +473,18 @@ static NSArray *validSenderColors;
 	newHTML = [self fillKeywords:newHTML forContent:content similar:contentIsSimilar];
 	
 	//BOM scripts vary by style version
-	if (styleVersion >= 3) {
+	if (!usingCustomTemplateHTML || styleVersion >= 4) {
+		/* If we're using the built-in template HTML, we know that it supports our most modern scripts */
 		if (replaceLastContent)
 			script = REPLACE_LAST_MESSAGE;
 		else if (willAddMoreContentObjects) {
+			script = (contentIsSimilar ? APPEND_NEXT_MESSAGE_NO_SCROLL : APPEND_MESSAGE_NO_SCROLL);
+		} else {
+			script = (contentIsSimilar ? APPEND_NEXT_MESSAGE : APPEND_MESSAGE);
+		}
+		
+	} else  if (styleVersion >= 3) {
+		if (willAddMoreContentObjects) {
 			script = (contentIsSimilar ? APPEND_NEXT_MESSAGE_NO_SCROLL : APPEND_MESSAGE_NO_SCROLL);
 		} else {
 			script = (contentIsSimilar ? APPEND_NEXT_MESSAGE : APPEND_MESSAGE);
