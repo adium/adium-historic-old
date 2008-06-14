@@ -32,7 +32,7 @@
 {
     if ((self = [super init]))
 	{
-		path = [inPath retain];
+		relativePath = [inPath retain];
 		from = [inFrom retain];
 		to = [inTo retain];
 		serviceClass = [handleSpecialCasesForUIDAndServiceClass(to, inServiceClass) retain];
@@ -48,7 +48,7 @@
 //Dealloc
 - (void)dealloc
 {
-    [path release];
+    [relativePath release];
     [to release];
     [from release];
     [serviceClass release];
@@ -71,9 +71,9 @@
     return to;
 }
 
-- (NSString *)path
+- (NSString *)relativePath
 {
-	return path;
+	return relativePath;
 }
 
 - (NSString *)serviceClass
@@ -109,11 +109,11 @@
 			}
 			
 			logBasePath = [AILoggerPlugin logBasePath];
-			fullPath = [logBasePath stringByAppendingPathComponent:path];
+			fullPath = [logBasePath stringByAppendingPathComponent:relativePath];
 			enumerator = [[defaultManager directoryContentsAtPath:fullPath] objectEnumerator];
 			while ((fileName = [enumerator nextObject])) {			
 				if (![fileName hasPrefix:@"."]) {
-					NSString	*relativeLogPath = [path stringByAppendingPathComponent:fileName];
+					NSString	*relativeLogPath = [relativePath stringByAppendingPathComponent:fileName];
 					
 					if (![logDict objectForKey:relativeLogPath]) {
 						AIChatLog	*theLog;
@@ -182,13 +182,13 @@
  */
 - (BOOL)trashLog:(AIChatLog *)aLog
 {
-	NSString *logPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[aLog path]];
+	NSString *logPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[aLog relativePath]];
 	BOOL	 success;
 	success = [[NSFileManager defaultManager] trashFileAtPath:logPath];
 
 	//Remove from our dictionaries so we don't reference the removed log
-	[logDict removeObjectForKey:[aLog path]];
-	[partialLogDict removeObjectForKey:[aLog path]];
+	[logDict removeObjectForKey:[aLog relativePath]];
+	[partialLogDict removeObjectForKey:[aLog relativePath]];
 	
 	return success;
 }

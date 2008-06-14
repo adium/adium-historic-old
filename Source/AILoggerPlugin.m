@@ -556,7 +556,7 @@ Class LogViewerWindowControllerClass = NULL;
 	AIXMLAppender *appender = [activeAppenders objectForKey:chatID];
 	
 	if (appender) {
-		if ([[appender path] hasSuffix:[chatLog path]]) {
+		if ([[appender path] hasSuffix:[chatLog relativePath]]) {
 			[NSObject cancelPreviousPerformRequestsWithTarget:self
 													 selector:@selector(finishClosingAppender:) 
 													   object:chatID];
@@ -1158,7 +1158,7 @@ int sortPaths(NSString *path1, NSString *path2, void *context)
 				//since it will be accessed from outside this thread as well
 				[dirtyLogLock lock];
 				if (theLog != nil) {
-					[dirtyLogArray addObject:[logBasePath stringByAppendingPathComponent:[theLog path]]];
+					[dirtyLogArray addObject:[logBasePath stringByAppendingPathComponent:[theLog relativePath]]];
 				}
 				[dirtyLogLock unlock];
 			}

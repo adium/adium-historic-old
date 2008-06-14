@@ -17,7 +17,7 @@
 #define ChatLog_WillDelete			@"ChatLog_WillDelete"
 
 @interface AIChatLog : NSObject {
-    NSString	    *path;
+    NSString	    *relativePath;
     NSString	    *from;
     NSString	    *to;
 	NSString		*serviceClass;
@@ -30,7 +30,7 @@
 - (id)initWithPath:(NSString *)inPath;
 
 //Accessors
-- (NSString *)path;
+- (NSString *)relativePath;
 - (NSString *)from;
 - (NSString *)to;
 - (NSString *)serviceClass;

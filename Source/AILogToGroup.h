@@ -17,11 +17,11 @@
 @class AIChatLog;
 
 @interface AILogToGroup : NSObject {
-    NSString			*path;
+    NSString			*relativePath;
     NSString			*to;
     NSString			*from;
 	NSString			*serviceClass;
-	
+
 	NSMutableDictionary	*logDict;
 	NSMutableDictionary	*partialLogDict;
 	
@@ -31,7 +31,7 @@
 - (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo serviceClass:(NSString *)inServiceClass;
 - (NSEnumerator *)logEnumerator;
 - (int)logCount;
-- (NSString *)path;
+- (NSString *)relativePath;
 - (NSString *)from;
 - (NSString *)to;
 - (NSString *)serviceClass;
