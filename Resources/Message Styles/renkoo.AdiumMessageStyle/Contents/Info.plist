@@ -23,7 +23,7 @@
 	<key>DefaultFontSize</key>
 	<integer>13</integer>
 	<key>MessageViewVersion</key>
-	<integer>2</integer>
+	<integer>4</integer>
 	<key>DisableCombineConsecutive</key> 
     <false/>
 </dict>

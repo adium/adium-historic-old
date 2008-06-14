@@ -237,6 +237,27 @@
 			alignChat(true);
 		}
 		
+        function appendMessageNoScroll(html) {
+			//Remove any existing insertion point
+			var insert = document.getElementById("insert");
+			
+			if(insert) insert.parentNode.removeChild(insert);
+			
+			//Append the new message to the bottom of our chat block
+			var chat = document.getElementById("Chat");
+			var range = document.createRange();
+			range.selectNode(chat);
+			var documentFragment = range.createContextualFragment(html);
+            var myFrag = chat.appendChild(documentFragment);
+            var frag = document.getElementById("insert").parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+            
+            try {
+                var fader = new Fadomatic(frag, 9, 0, 0, 95);
+            } catch(e) {
+                trace(e);
+            }
+            fader.fadeIn();
+		}
 		
 		function appendNextMessage(html){
 			var shouldScroll = nearBottom();
@@ -256,7 +277,42 @@
 
 			alignChat(true);
 		}
+
+		function appendNextMessageNoScroll(html){
+			//Locate the insertion point
+			var insert = document.getElementById("insert");
 		
+			//make new node
+			range = document.createRange();
+			range.selectNode(insert.parentNode);
+			newNode = range.createContextualFragment(html);
+			
+			//swap
+			var pointer = insert.parentNode;
+			insert.parentNode.replaceChild(newNode,insert);
+			var els = pointer.getElementsByTagName("div");
+		}
+
+	    function replaceLastMessage(html){
+            shouldScroll = nearBottom();
+
+            //Retrieve the current insertion point, then remove it
+            //This requires that there have been an insertion point... is there a better way to retrieve the last element? -evands
+			var insert = document.getElementById("insert");
+            var parentNode = insert.parentNode;
+   			var lastMessage = insert.previousSibling;
+   			parentNode.removeChild(insert);
+			parentNode.removeChild(lastMessage);
+
+            //Now append the message itself
+			var range = document.createRange();
+			var chat = document.getElementById("Chat");
+			range.selectNode(chat);
+			documentFragment = range.createContextualFragment(html);
+			chat.appendChild(documentFragment);
+			
+            alignChat(shouldScroll);
+		}
 		
 		//Auto-scroll to bottom.  Use nearBottom to determine if a scrollToBottom is desired.
 		function nearBottom() {
@@ -350,7 +406,16 @@
 		//]]>
 	</script>
 
-	<style id="mainStyle" type="text/css" media="screen,print">	@import url( "%@" ); </style>
+	<!-- This style is shared by all variants. !-->
+	<style id="baseStyle" type="text/css" media="screen,print">	
+		%@
+	</style>
+
+	<!-- Although we call this mainStyle for legacy reasons, it's actually the variant style !-->
+	<style id="mainStyle" type="text/css" media="screen,print">	
+		@import url( "%@" );
+	</style>
+
 
 </head>
 <body style="==bodyBackground==" id="bodyNode" onload="initEvents()">
