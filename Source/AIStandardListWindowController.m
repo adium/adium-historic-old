@@ -1010,13 +1010,28 @@
 /*!
  * @brief Forward typing events from the contact list to the filter bar
  */
-- (void)forwardKeyEventToFindPanel:(NSEvent *)theEvent;
+- (BOOL)forwardKeyEventToFindPanel:(NSEvent *)theEvent;
 {
 	//if we were not searching something before, we need to show the filter bar first without animation
-	[self showFilterBarWithAnimation:NO];
-	
-	[[self window] makeFirstResponder:searchField];
-	[[[self window] fieldEditor:YES forObject:searchField] keyDown:theEvent];
+	NSString	*charString = [theEvent charactersIgnoringModifiers];
+	unichar		pressedChar = 0;
+
+	//Get the pressed character
+	if ([charString length] == 1) pressedChar = [charString characterAtIndex:0];
+
+#define NSEscapeFunctionKey 27
+	if ((pressedChar == NSEscapeFunctionKey) && ([contactListView selectedRow] != -1)) {
+		return NO;
+
+	} else {
+		if (!filterBarIsVisible)
+			[self showFilterBarWithAnimation:NO];
+
+		[[self window] makeFirstResponder:searchField];
+		[[[self window] fieldEditor:YES forObject:searchField] keyDown:theEvent];
+		
+		return YES;
+	}
 }
 
 /*!

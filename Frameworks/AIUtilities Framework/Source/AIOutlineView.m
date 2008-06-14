@@ -128,12 +128,11 @@
 			* if KFTypeSelectTableView is being used via posing */
 			[self findNext:self];
 
-		} else if([[self delegate] respondsToSelector:@selector(outlineView:forwardKeyEventToFindPanel:)] && 
-				  !([theEvent modifierFlags] & NSCommandKeyMask) && 
-				  !([theEvent modifierFlags] & NSControlKeyMask) &&
-				  [[[NSCharacterSet controlCharacterSet]invertedSet]characterIsMember:pressedChar]) {
+		} else if ([[self delegate] respondsToSelector:@selector(outlineView:forwardKeyEventToFindPanel:)] && 
+				   !([theEvent modifierFlags] & NSCommandKeyMask) && 
+				   !([theEvent modifierFlags] & NSControlKeyMask)) {
 			//handle any key we have not alredy handled that is a visable character and likely not to be a shortcut key (no command or control key modifiers) by asking the delegate to add it to the search string
-			if(![[self delegate]outlineView:self forwardKeyEventToFindPanel:theEvent]) {
+			if (![[self delegate] outlineView:self forwardKeyEventToFindPanel:theEvent]) {
 				//the delegate's find panel could not handle the event, so we just pass it to super
 				[super keyDown:theEvent];
 			}
