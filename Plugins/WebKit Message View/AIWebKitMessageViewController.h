@@ -31,7 +31,6 @@
 	
 	id							plugin;
 	ESWebView					*webView;
-	id							preferencesChangedDelegate;
 	AIChat						*chat;
 	BOOL						shouldReflectPreferenceChanges;
 	BOOL						isUpdatingWebViewForCurrentPreferences;
@@ -106,5 +105,7 @@
  */
 - (NSString *)chatContentSource;
 
-- (void)setPreferencesChangedDelegate:(id)inDelegate;
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object
+					preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime;
+
 @end

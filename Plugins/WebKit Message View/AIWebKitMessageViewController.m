@@ -172,7 +172,6 @@ static NSArray *draggedTypes = nil;
 {
 	[self releaseAllCachedIcons];
 
-	[preferencesChangedDelegate release]; preferencesChangedDelegate = nil;
 	[plugin release]; plugin = nil;
 	[objectsWithUserIconsArray release]; objectsWithUserIconsArray = nil;
 	[objectIconPathDict release]; objectIconPathDict = nil;
@@ -209,26 +208,6 @@ static NSArray *draggedTypes = nil;
 		}
 	} else {
 		[storedContentObjects release]; storedContentObjects = nil;
-	}
-}
-
-- (void)setPreferencesChangedDelegate:(id)inDelegate
-{
-	if (inDelegate != preferencesChangedDelegate) {
-		[preferencesChangedDelegate release];
-		preferencesChangedDelegate = [inDelegate retain];
-		
-		[preferencesChangedDelegate preferencesChangedForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY
-														   key:nil
-														object:nil
-												preferenceDict:[[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]
-													 firstTime:YES];
-		
-		[preferencesChangedDelegate preferencesChangedForGroup:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES
-														   key:nil
-														object:nil
-												preferenceDict:[[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES]
-													 firstTime:YES];
 	}
 }
 
@@ -308,15 +287,7 @@ static NSArray *draggedTypes = nil;
 			[self _updateWebViewForCurrentPreferences];
 			isUpdatingWebViewForCurrentPreferences = NO;
 		}
-	}
-	
-	if (preferencesChangedDelegate) {
-		[preferencesChangedDelegate preferencesChangedForGroup:group
-														   key:key
-														object:object
-												preferenceDict:prefDict
-													 firstTime:firstTime];
-	}
+	}	
 }
 
 /*!

@@ -574,6 +574,7 @@
 		34A1AEE90DFD4BFE00AC78CF /* AIAddressBookInspectorPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A1AEE80DFD4BFE00AC78CF /* AIAddressBookInspectorPane.nib */; };
 		34A1AEEE0DFD4C4A00AC78CF /* AIAdvancedInspectorPane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A1AEED0DFD4C4A00AC78CF /* AIAdvancedInspectorPane.nib */; };
 		34A1B2C30DFDBA1200AC78CF /* AIStringDebug.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1B2C20DFDBA1200AC78CF /* AIStringDebug.m */; };
+		34A1B5A00E03409F00AC78CF /* AIWebKitPreviewMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1B59F0E03409F00AC78CF /* AIWebKitPreviewMessageViewController.m */; };
 		34A1EDAF0DD3AF220090667A /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C103FAE057127A500F3C158 /* WebKit.framework */; };
 		34A1EE990DD3BFB00090667A /* AIFacebookBuddyListManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1EE980DD3BFB00090667A /* AIFacebookBuddyListManager.m */; };
 		34A1EFDE0DD3D4BB0090667A /* AIFacebookBuddyIconRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A1EFDD0DD3D4BB0090667A /* AIFacebookBuddyIconRequest.m */; };
@@ -3075,6 +3076,8 @@
 		34A1AF140DFD4C8500AC78CF /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/AIAdvancedInspectorPane.nib; sourceTree = "<group>"; };
 		34A1B2C10DFDBA1200AC78CF /* AIStringDebug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIStringDebug.h; path = Source/AIStringDebug.h; sourceTree = "<group>"; };
 		34A1B2C20DFDBA1200AC78CF /* AIStringDebug.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIStringDebug.m; path = Source/AIStringDebug.m; sourceTree = "<group>"; };
+		34A1B59E0E03409F00AC78CF /* AIWebKitPreviewMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIWebKitPreviewMessageViewController.h; path = "Plugins/WebKit Message View/AIWebKitPreviewMessageViewController.h"; sourceTree = "<group>"; };
+		34A1B59F0E03409F00AC78CF /* AIWebKitPreviewMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIWebKitPreviewMessageViewController.m; path = "Plugins/WebKit Message View/AIWebKitPreviewMessageViewController.m"; sourceTree = "<group>"; };
 		34A1EE970DD3BFB00090667A /* AIFacebookBuddyListManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIFacebookBuddyListManager.h; path = "Plugins/Facebook Service/AIFacebookBuddyListManager.h"; sourceTree = "<group>"; };
 		34A1EE980DD3BFB00090667A /* AIFacebookBuddyListManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIFacebookBuddyListManager.m; path = "Plugins/Facebook Service/AIFacebookBuddyListManager.m"; sourceTree = "<group>"; };
 		34A1EFDC0DD3D4BB0090667A /* AIFacebookBuddyIconRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIFacebookBuddyIconRequest.h; path = "Plugins/Facebook Service/AIFacebookBuddyIconRequest.h"; sourceTree = "<group>"; };
@@ -7383,6 +7386,8 @@
 				6360B2590BF2EB93004CD99B /* AIWebKitDelegate.m */,
 				4B539C5105EFD6FA00E5921A /* AIWebKitMessageViewController.h */,
 				4B539C5205EFD6FB00E5921A /* AIWebKitMessageViewController.m */,
+				34A1B59E0E03409F00AC78CF /* AIWebKitPreviewMessageViewController.h */,
+				34A1B59F0E03409F00AC78CF /* AIWebKitPreviewMessageViewController.m */,
 				4B539C4B05EFD6CD00E5921A /* AIWebKitMessageViewPlugin.h */,
 				4B539C4C05EFD6CD00E5921A /* AIWebKitMessageViewPlugin.m */,
 				4BD62D7E07CE8F240099EBA2 /* AIWebkitMessageViewStyle.h */,
@@ -9327,6 +9332,7 @@
 				34182F4B0AC2CA3C0067DEF3 /* AIPreviewChat.m in Sources */,
 				6360B25A0BF2EB93004CD99B /* AIWebKitDelegate.m in Sources */,
 				34FA28110C820C3A00FEA944 /* AIPreviewContentMessage.m in Sources */,
+				34A1B5A00E03409F00AC78CF /* AIWebKitPreviewMessageViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
