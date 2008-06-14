@@ -4,6 +4,12 @@
 /* No comment provided by engineer. */
 "Cancel" = "Annuler";
 
+/* Button title to choose an Address Book card for a contact */
+"Choose Address Book Card" = "Choisir une fiche du Carnet d'adresses";
+
+/* Button title to choose an Address Book card for a contact */
+"Choose Card" = "Choisir une fiche";
+
 /* No comment provided by engineer. */
 "Close" = "Fermer";
 
@@ -15,6 +21,9 @@
 
 /* Verb 'edit' on a button */
 "Edit" = "Modifier";
+
+/* 'Get Info' on a button; when pressed, the information for a specified contact will be displayed */
+"Get Info" = "Lire les informations";
 
 /* Button in the Xtras Manager to go to adiumxtras.com to get more adiumxtras */
 "Get More Xtras" = "Plus d'Xtras";

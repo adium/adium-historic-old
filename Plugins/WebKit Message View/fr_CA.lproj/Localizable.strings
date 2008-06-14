@@ -4,6 +4,9 @@
 /* No comment provided by engineer. */
 "Centered" = "Centré";
 
+/* Clears the display window for the currently open message window */
+"Clear Display" = "Effacer l’écran";
+
 /* %@ will be a file name */
 "Download %@" = "Télécharger %@";
 
@@ -28,4 +31,10 @@
 "Save Image As" = "Enregistrer l'image sous";
 
 /* No comment provided by engineer. */
+"Scaled" = "À l'échelle";
+
+/* No comment provided by engineer. */
 "Tiled" = "Motif répété";
+
+/* No comment provided by engineer. */
+"Tiled (Centered)" = "En mosaïque (Centré)";

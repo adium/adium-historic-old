@@ -65,6 +65,9 @@
 "Configure the selected action" = "Configurer l'action sélectionnée";
 
 /* No comment provided by engineer. */
+"Connect" = "Connexion";
+
+/* No comment provided by engineer. */
 "Connect All Accounts" = "Se connecter à tous les comptes";
 
 /* Connect account prefix */
@@ -105,6 +108,9 @@
 
 /* Disconnect account prefix */
 "Disconnect: %@" = "Se déconnecter : %@";
+
+/* No comment provided by engineer. */
+"Disonnect" = "Se déconnecter";
 
 /* Button which indicates that the editing sheet is done */
 "Done" = "Terminé";
@@ -188,6 +194,18 @@
 "Rename" = "Renommer";
 
 /* No comment provided by engineer. */
+"Set to Current Adium Status" = "Régler sur l'état actuel d'Adium";
+
+/* No comment provided by engineer. */
+"Social Networking" = "Réseau social";
+
+/* No comment provided by engineer. */
+"Social Networking Status" = "État du réseau social";
+
+/* No comment provided by engineer. */
+"Social Networking Status:" = "État du réseau social :";
+
+/* No comment provided by engineer. */
 "Sound set upgrade failed" = "Mise à jour de la banque de son échouée";
 
 /* No comment provided by engineer. */
@@ -219,6 +237,9 @@
 
 /* Displayed in an open chat when its account has been disconnected. */
 "You have disconnected" = "Vous êtes débranché";
+
+/* Message displayed when you send a buzz/nudge/other notification. %@ will be the other person's name. */
+"You requested %@'s attention" = "Vous avez demandé l'attention de %@";
 
 /* No comment provided by engineer. */
 "Your attention is requested!" = "Votre attention est requise !";
