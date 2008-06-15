@@ -320,13 +320,13 @@
 				NSSet		*previouslyPerformedActionIDs = nil;
 
 				//Update away/not-away
-				newAwayNumber = [NSNumber numberWithBool:([inObject statusType] == AIAwayStatusType)];
+				newAwayNumber = ([inObject statusType] == AIAwayStatusType) ? [NSNumber numberWithBool:YES] : nil;
 				awayChanged = [self updateCache:awayCache
 										 forKey:@"Away"
 									   newValue:newAwayNumber
 									 listObject:inObject
 								 performCompare:YES];
-
+				
 				//Update status message
 				newStatusMessage = [[inObject statusMessage] string];
 				statusMessageChanged = [self updateCache:statusMessageCache 
