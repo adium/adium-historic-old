@@ -1041,25 +1041,6 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return displayName;
 }
 
-/*!
- * @brief Set our display name
- *
- * This also sets the display name of all contained objects to be the same as ours.
- *
- * @param alias The new display name to be set.
- */
-- (void)setDisplayName:(NSString *)alias
-{
-	NSEnumerator		*enumerator = [[self containedObjects] objectEnumerator];
-	AIListObject		*listObject;
-	
-	while ((listObject = [enumerator nextObject])) {
-		[listObject setDisplayName:alias];
-	}
-	
-	[super setDisplayName:alias];
-}
-
 - (NSString *)phoneticName
 {
 	NSString	*phoneticName = [[self displayArrayForKey:@"Phonetic Name"] objectValue];
