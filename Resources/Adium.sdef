@@ -101,7 +101,9 @@
 		</class>
 		<class name="chat" code="Chat" description="A chat in Adium">
 			<cocoa class="AIChat" />
-			<property name="name" code="pnam" type="text" access="r" description="The name of the chat" />
+			<property name="name" code="pnam" type="text" access="r" description="The name of the chat">
+				<cocoa key="scriptingName" />
+			</property>
 			<property name="ID" code="ID  " type="text" access="r" description="The unique identifier of the chat.">
 				<cocoa key="uniqueChatID"/>
 			</property>
