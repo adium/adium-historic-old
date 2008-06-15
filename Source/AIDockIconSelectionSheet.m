@@ -105,7 +105,7 @@
 //When the xtras are changed, update our icons
 - (void)xtrasChanged:(NSNotification *)notification
 {
-	if (!notification || [[notification object] caseInsensitiveCompare:@"AdiumIcon"] == 0) {
+	if (!notification || [[notification object] caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame) {
 		[iconArray release];
 		iconArray = [[NSMutableArray alloc] init];
 		

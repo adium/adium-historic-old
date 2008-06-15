@@ -151,7 +151,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
  */
 - (void)xtrasChanged:(NSNotification *)notification
 {
-	if ([[notification object] caseInsensitiveCompare:@"AdiumScripts"] == 0) {
+	if ([[notification object] caseInsensitiveCompare:@"AdiumScripts"] == NSOrderedSame) {
 		[self buildScriptMenu];
 				
 		[self registerToolbarItem];
