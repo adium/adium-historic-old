@@ -1114,10 +1114,13 @@ typedef enum
 /**
  * @brief Sets the status message to the NSAttributedString message
  */
-- (void)setScriptingStatusMessageWithAttributedString:(NSAttributedString *)message
+- (void)setScriptingStatusMessageWithAttributedString:(NSString *)message
 {
 	AIStatus *currentStatus = [self createMutableCopyOfCurrentStatusIfBuiltIn];
-	[currentStatus setStatusMessage:message];
+	if ([message isKindOfClass:[NSAttributedString class]])
+		[currentStatus setStatusMessage:(NSAttributedString *)message];
+	else
+		[currentStatus setStatusMessageString:message];
 	[[adium statusController] setActiveStatusState:currentStatus forAccount:self];
 }
 
@@ -1126,7 +1129,8 @@ typedef enum
  */
 - (void)setScriptingStatusMessageFromScriptCommand:(NSScriptCommand *)c
 {
-	NSAttributedString	*messageString = [[c evaluatedArguments] objectForKey:@"WithMessage"];
+	//messageString could also be an NSTextStorage, due to WithMessage being able to also accept rich text
+	NSString *messageString = [[c evaluatedArguments] objectForKey:@"WithMessage"];
 	if (messageString)
 		[self setScriptingStatusMessageWithAttributedString:messageString];	
 }
