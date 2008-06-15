@@ -1192,7 +1192,6 @@ NSString* serviceIDForJabberUID(NSString *UID)
  */
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
-	NSLog(@"Validating %@ for %@", menuItem, [[adium menuController] currentContextMenuObject]);
 	BOOL	hasABEntry = ([[self class] personForListObject:[[adium menuController] currentContextMenuObject]] != nil);
 	BOOL	result = NO;
 	
