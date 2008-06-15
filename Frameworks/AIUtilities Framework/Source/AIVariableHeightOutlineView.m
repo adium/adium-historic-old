@@ -73,6 +73,30 @@
 	[super dealloc];
 }
 
+//Handle mouseDown events to toggle expandable items when they are clicked 
+- (void)mouseDown:(NSEvent *)theEvent 
+{ 
+	NSPoint viewPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil]; 
+	int             row = [self rowAtPoint:viewPoint]; 
+	id              item = [self itemAtRow:row]; 
+	
+	//Expand/Collapse groups on mouse DOWN instead of mouse up (Makes it feel a ton faster) 
+	if ((item) && 
+		([self isExpandable:item]) && 
+		(viewPoint.x < [self frameOfCellAtColumn:0 row:row].size.height)) { 
+		//XXX - This is kind of a hack.  We need to check < WidthOfDisclosureTriangle, and are using the fact that 
+		//      the disclosure width is about the same as the height of the row to fudge it. -ai 
+		
+		if ([self isItemExpanded:item]) { 
+			[self collapseItem:item]; 
+		} else { 
+			[self expandItem:item]; 
+		} 
+	} else { 
+		[super mouseDown:theEvent]; 
+	} 
+} 
+
 //Row height cache -----------------------------------------------------------------------------------------------------
 #pragma mark Row height cache
 - (void)resetRowHeightCache
