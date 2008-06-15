@@ -116,6 +116,7 @@ NSString* serviceIDForJabberUID(NSString *UID);
 																			   action:@selector(showInAddressBook)
 																		keyEquivalent:@""] autorelease];
 	[showInABContextualMenuItem setTarget:self];
+	[showInABContextualMenuItem setTag:AIRequiresAddressBookEntry];
 	
 	editInABContextualMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:EDIT_IN_AB_CONTEXTUAL_MENU_TITLE
 																					   action:@selector(editInAddressBook)
@@ -123,11 +124,13 @@ NSString* serviceIDForJabberUID(NSString *UID);
 	[editInABContextualMenuItem setTarget:self];
 	[editInABContextualMenuItem setKeyEquivalentModifierMask:NSAlternateKeyMask];
 	[editInABContextualMenuItem setAlternate:YES];
+	[editInABContextualMenuItem setTag:AIRequiresAddressBookEntry];
 	
 	addToABContexualMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_TO_AB_CONTEXTUAL_MENU_TITLE
 																					 action:@selector(addToAddressBook)
 																			  keyEquivalent:@""] autorelease];
 	[addToABContexualMenuItem setTarget:self];
+	[addToABContexualMenuItem setTag:AIRequiresNoAddressBookEntry];
 	
 	//Install our menues
 	[[adium menuController] addContextualMenuItem:addToABContexualMenuItem toLocation:Context_Contact_Action];
@@ -1189,13 +1192,15 @@ NSString* serviceIDForJabberUID(NSString *UID)
  */
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
+	NSLog(@"Validating %@ for %@", menuItem, [[adium menuController] currentContextMenuObject]);
 	BOOL	hasABEntry = ([[self class] personForListObject:[[adium menuController] currentContextMenuObject]] != nil);
 	BOOL	result = NO;
 	
-	if ([menuItem isEqual:showInABContextualMenuItem] || [menuItem isEqual:editInABContextualMenuItem])
+	if ([menuItem tag] == AIRequiresAddressBookEntry) {
 		result = hasABEntry;
-	else if ([menuItem isEqual:addToABContexualMenuItem])
+	} else if ([menuItem tag] == AIRequiresNoAddressBookEntry) {
 		result = !hasABEntry;
+	}
 	
 	return result;
 }

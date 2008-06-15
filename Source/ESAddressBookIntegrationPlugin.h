@@ -43,6 +43,11 @@ typedef enum {
 	FirstLastInitial
 } NameStyle;
 
+typedef enum {
+	AIRequiresAddressBookEntry,
+	AIRequiresNoAddressBookEntry
+} AIAddressBookContextMenuTag;
+
 @interface ESAddressBookIntegrationPlugin : AIPlugin <AIListObjectObserver, ABImageClient> {
     ESAddressBookIntegrationAdvancedPreferences *advancedPreferences;
 	
