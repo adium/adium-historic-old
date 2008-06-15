@@ -232,6 +232,15 @@
 	// This allows us to show *all* contacts when searching, and rehide them when searching is complete.
 	if ([searchString isEqualToString:@""]) {
 		[[adium contactController] updateAllListObjectsForObserver:self];
+		
+		// Restore all group chats to visible
+		NSEnumerator		*enumerator = [[[adium contactController] allBookmarks] objectEnumerator];
+		AIListBookmark		*bookmark;
+		
+		while ((bookmark = [enumerator nextObject])) {
+			[bookmark setVisible:YES];
+		}
+		
 		return;
 	}
 	
