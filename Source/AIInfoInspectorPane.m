@@ -748,23 +748,20 @@
 	
 	NSString *property;
 	NSEnumerator *enumerator;
-	NSSet *propertiesToExclude;
+	NSArray *propertiesToInclude;
 	
-	propertiesToExclude = [NSSet setWithObjects:
-						   kABUIDProperty, kABCreationDateProperty, kABModificationDateProperty, kABGroupNameProperty, kABPersonFlags, /* Internal data */
-						   kABFirstNameProperty, kABLastNameProperty, kABFirstNamePhoneticProperty, kABLastNamePhoneticProperty, /* Name */
-						   kABMiddleNameProperty, kABMiddleNamePhoneticProperty,  /* Name */
-						   kABAIMInstantProperty, kABJabberInstantProperty, kABMSNInstantProperty, /* IM data */
-						   kABYahooInstantProperty, kABICQInstantProperty, /* IM data */
+	propertiesToInclude = [NSArray arrayWithObjects:
+						   kABJobTitleProperty, kABDepartmentProperty, kABOrganizationProperty,		/* Work info */
+						   kABHomePageProperty, kABURLsProperty,									/* Web sites */
+						   kABEmailProperty, kABPhoneProperty, kABAddressProperty,					/* Contact info */
+						   kABBirthdayProperty, kABOtherDatesProperty,								/* Dates */
+						   kABRelatedNamesProperty,													/* Relationships */
+						   kABNoteProperty,															/* Notes */
 						   nil];
-	enumerator = [[ABPerson properties] objectEnumerator];
+
+	enumerator = [propertiesToInclude objectEnumerator];
 	while ((property = [enumerator nextObject])) {
-		/* Exclude:
-		 *	- Known unwanted properties.
-		 *  - Propeties with Java-style identifiers, most likely from other programs storing arbitrary data in the AB
-		 */
-		if (![propertiesToExclude containsObject:property] && 
-			![property hasPrefix:@"com."] && ![property hasPrefix:@"net."] && ![property hasPrefix:@"org."]) {
+		if ([person valueForProperty:property]) {
 			id value = [person valueForProperty:property];
 			ABPropertyType propertyType = [ABPerson typeOfProperty:property];
 			switch (propertyType) {
