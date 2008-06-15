@@ -407,6 +407,10 @@ static NSString *AIWebURLsWithTitlesPboardType = @"WebURLsWithTitlesPboardType";
 		}
 	}
 	
+	//Collapsed group counting
+	//The preference is to hide (so that by default it's NO), so invert it
+	[groupCell setShowCollapsedCount:![[[NSUserDefaults standardUserDefaults] objectForKey:@"AIHideCollapsedGroupCount"] boolValue]];
+	
 	//Fonts
 	NSFont	*theFont;
 	
