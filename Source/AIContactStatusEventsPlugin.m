@@ -400,7 +400,7 @@
 
 	if ((newStatus && !oldStatus) ||
 	   (oldStatus && !newStatus) ||
-	   ((performCompare && newStatus && oldStatus && ![newStatus performSelector:@selector(compare:) withObject:oldStatus] == NSOrderedSame))) {
+	   ((performCompare && newStatus && oldStatus && [newStatus performSelector:@selector(compare:) withObject:oldStatus] != NSOrderedSame))) {
 		
 		if (newStatus) {
 			[cache setObject:newStatus forKey:[inObject internalObjectID]];
