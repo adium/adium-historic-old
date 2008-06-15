@@ -715,7 +715,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 
 - (void)xtrasChanged:(NSNotification *)notification
 {
-	if (notification == nil || [[notification object] caseInsensitiveCompare:@"AdiumEmoticonset"] == 0) {
+	if (notification == nil || [[notification object] caseInsensitiveCompare:@"AdiumEmoticonset"] == NSOrderedSame) {
 		[self resetAvailableEmoticons];
 		[prefs emoticonXtrasDidChange];
 	}
