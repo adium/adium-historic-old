@@ -734,6 +734,14 @@ static int nextChatNumber = 0;
 	
 }*/
 
+- (NSString *)scriptingName
+{
+	NSString *aName = [self name];
+	if (!aName)
+		aName = [[self listObject] UID];
+	return aName;
+}
+
 - (NSWindow *)window
 {
 	id<AIChatContainer> messageTab = [self valueForProperty:@"MessageTabViewItem"];
