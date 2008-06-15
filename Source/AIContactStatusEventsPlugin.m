@@ -326,11 +326,7 @@
 									   newValue:newAwayNumber
 									 listObject:inObject
 								 performCompare:YES];
-				
-				NSLog(@"List contact %@", inObject);
-				NSLog(@"\tOld status = %@", [awayCache objectForKey:[inObject internalObjectID]]);
-				NSLog(@"\tNew status = %@", newAwayNumber);
-				
+
 				//Update status message
 				newStatusMessage = [[inObject statusMessage] string];
 				statusMessageChanged = [self updateCache:statusMessageCache 
